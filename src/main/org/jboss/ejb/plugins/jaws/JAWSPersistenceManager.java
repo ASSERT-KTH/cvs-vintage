@@ -1,1 +1,1417 @@
-/* * jBoss, the OpenSource EJB server * * Distributable under GPL license. * See terms of license at gnu.org. */package org.jboss.ejb.plugins.jaws;import java.beans.Beans;import java.beans.beancontext.BeanContextServicesSupport;import java.lang.reflect.Method;import java.lang.reflect.Field;import java.lang.reflect.InvocationTargetException;import java.rmi.RemoteException;import java.rmi.NoSuchObjectException;import java.rmi.ServerException;import java.util.Collection;import java.util.ArrayList;import java.util.Iterator;import java.util.StringTokenizer;import java.util.HashMap;import java.sql.Types;import java.sql.SQLException;import java.sql.ResultSet;import java.sql.DriverManager;import java.sql.PreparedStatement;import java.sql.Connection;import java.text.MessageFormat;import javax.ejb.EJBObject;import javax.ejb.EntityBean;import javax.ejb.CreateException;import javax.ejb.DuplicateKeyException;import javax.ejb.FinderException;import javax.ejb.RemoveException;import javax.naming.Context;import javax.naming.InitialContext;import javax.sql.DataSource;import org.jboss.ejb.Container;import org.jboss.ejb.EntityContainer;import org.jboss.ejb.EntityPersistenceManager;import org.jboss.ejb.EntityEnterpriseContext;import org.jboss.logging.Log;import com.dreambean.ejx.ejb.EjbReference;import org.jboss.ejb.plugins.jaws.deployment.JawsFileManager;import org.jboss.ejb.plugins.jaws.deployment.JawsFileManagerFactory;import org.jboss.ejb.plugins.jaws.deployment.JawsEjbJar;import org.jboss.ejb.plugins.jaws.deployment.JawsEnterpriseBeans;import org.jboss.ejb.plugins.jaws.deployment.JawsEjbReference;import org.jboss.ejb.plugins.jaws.deployment.JawsEntity;import org.jboss.ejb.plugins.jaws.deployment.JawsCMPField;import org.jboss.ejb.plugins.jaws.deployment.Finder;/** *   Just Another Web Store - an O/R mapper * * * Note: This is a really long class, but I thought that splitting it up  * would only make things more confusing. To compensate for the size * I have tried to make many helper methods to keep each method small. *       * @see <related> * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a> * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a> * @author <a href="mailto:shevlandj@kpi.com.au">Joe Shevland</a> * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a> * @version $Revision: 1.16 $ */public class JAWSPersistenceManager   implements EntityPersistenceManager{   // Constants -----------------------------------------------------      // Attributes ----------------------------------------------------   EntityContainer container;      Method ejbStore;   Method ejbLoad;   Method ejbActivate;   Method ejbPassivate;   Method ejbRemove;      // Pre-calculated fields to speed things up   ArrayList pkFields = new ArrayList(); // Field's in entity class   ArrayList pkClassFields = new ArrayList(); // Field's in pk class   ArrayList pkColumns = new ArrayList(); // String's   String pkColumnList; // Comma-separated list of column names   String pkColumnWhereList; // Comma-separated list of column names (for WHERE clauses)   ArrayList cmpFields = new ArrayList(); // The fields from the actual Bean    ArrayList CMPFields = new ArrayList(); // The JawsCMPField representation   ArrayList jdbcTypes = new ArrayList(); // Integer's   ArrayList pkJdbcTypes = new ArrayList(); // Integer's describing pk   ArrayList ejbRefs = new ArrayList(); // EJB-references		HashMap definedFinders = new HashMap();      boolean compoundKey;   Class primaryKeyClass;      JawsEntity entity;   String dbName;   String tableName;      String createSql;   String insertSql;   String existSql;   //   String updateSql; Calculated dynamically (=tuned updates)   String selectSql;   String removeSql;   String dropSql;      Context javaCtx;      Log log = new Log("JAWS");      DataSource ds;   String url;      boolean readOnly;   long readOnlyTimeOut;      // Static --------------------------------------------------------      // Constructors --------------------------------------------------      // Public --------------------------------------------------------   public void setContainer(Container c)   {      container = (EntityContainer)c;   }      public void init()      throws Exception   {      log.debug("Initializing JAWS plugin for "+container.getMetaData().getEjbName());            javaCtx = (Context)new InitialContext().lookup("java:comp/env");            JawsFileManager jfm = (JawsFileManager)new JawsFileManagerFactory().createFileManager();            // Setup beancontext      BeanContextServicesSupport beanCtx = new BeanContextServicesSupport();      beanCtx.add(Beans.instantiate(getClass().getClassLoader(), "com.dreambean.ejx.xml.ProjectX"));      beanCtx.add(jfm);            // Load XML, if the URL doesn't have default information the filemanager uses defaults      JawsEjbJar jar = jfm.load(container.getApplication().getURL());            // Extract meta-info      entity = (JawsEntity)jar.getEnterpriseBeans().getEjb(container.getMetaData().getEjbName());      Iterator fields = entity.getCMPFields();      while (fields.hasNext())      {         JawsCMPField field = (JawsCMPField)fields.next();                CMPFields.add(field);         cmpFields.add(container.getBeanClass().getField(field.getFieldName()));         // Identify JDBC-type                jdbcTypes.add(new Integer(getJDBCType(field.getJdbcType())));                  // EJB-reference         if (field.getJdbcType().equals("REF"))         {            ejbRefs.add(getPkColumns(field));         }      }            // Read-only?      readOnly = entity.getReadOnly();      readOnlyTimeOut = entity.getTimeOut();            // Identify pk      pkColumnList = "";      pkColumnWhereList = "";      compoundKey = entity.getPrimaryKeyField().equals("");      if (compoundKey)      {         // Compound key         Field[] pkClassFieldList = container.getClassLoader().loadClass(entity.getPrimaryKeyClass()).getFields();                  // Build pk field list and SQL-pk string         for (int i = 0; i < pkClassFieldList.length; i++)         {            pkClassFields.add(pkClassFieldList[i]);            Field field = container.getBeanClass().getField(pkClassFieldList[i].getName());            pkFields.add(field);            for (int j = 0; j < CMPFields.size(); j++)            {               JawsCMPField cmpField = (JawsCMPField)CMPFields.get(j);               if (cmpField.getFieldName().equals(field.getName()))               {                  pkColumnList += ((i == 0)?"":",") + cmpField.getColumnName();                  pkColumnWhereList += ((i == 0)?"":" AND ") + cmpField.getColumnName()+"=?";                  pkJdbcTypes.add(new Integer(getJDBCType(cmpField.getJdbcType())));                  pkColumns.add(cmpFields.get(j));                  break;               }            }         }                  // Get compound key class         primaryKeyClass = container.getClassLoader().loadClass(entity.getPrimaryKeyClass());      } else      {         // Primitive key         pkFields.add(container.getBeanClass().getField(entity.getPrimaryKeyField()));         for (int j = 0; j < CMPFields.size(); j++)         {            JawsCMPField cmpField = (JawsCMPField)CMPFields.get(j);            if (cmpField.getFieldName().equals(entity.getPrimaryKeyField()))            {               pkColumnList = cmpField.getColumnName();               pkColumnWhereList = cmpField.getColumnName()+"=?";               pkJdbcTypes.add(new Integer(getJDBCType(cmpField.getJdbcType())));               pkColumns.add(cmpFields.get(j));               break;            }         }      }            // Create SQL commands      makeSql();           // Find EJB-methods      ejbStore = EntityBean.class.getMethod("ejbStore", new Class[0]);      ejbLoad = EntityBean.class.getMethod("ejbLoad", new Class[0]);      ejbActivate = EntityBean.class.getMethod("ejbActivate", new Class[0]);      ejbPassivate = EntityBean.class.getMethod("ejbPassivate", new Class[0]);      ejbRemove = EntityBean.class.getMethod("ejbRemove", new Class[0]);   }      public void start()      throws Exception   {      // Find datasource      url = ((JawsEjbJar)entity.getBeanContext().getBeanContext()).getDataSource();      if (!url.startsWith("jdbc:"))      {         ds = (DataSource)new InitialContext().lookup(((JawsEjbJar)entity.getBeanContext().getBeanContext()).getDataSource());      }            // Create table if necessary      if (entity.getCreateTable())      {                 // Try to create it         Connection con = null;         PreparedStatement stmt = null;         ResultSet rs = null;         try         {            con = getConnection();            stmt = con.prepareStatement(createSql);            stmt.executeQuery();            log.debug("Table "+tableName+" created");         } catch (SQLException e)         {         // For debug only          // e.printStackTrace();         log.debug("Table "+tableName+" exists");         } finally         {            if (rs != null) try { rs.close(); } catch (Exception e) { e.printStackTrace(); }            if (stmt != null) try { stmt.close(); } catch (Exception e) { e.printStackTrace(); }            if (con != null) try { con.close(); } catch (Exception e) { e.printStackTrace(); }         }      }   }   public void stop()   {   }      public void destroy()   {      if (entity.getRemoveTable())      {         // Remove it!         Connection con = null;         PreparedStatement stmt = null;         ResultSet rs = null;         try         {            con = getConnection();            stmt = con.prepareStatement(dropSql);            stmt.executeUpdate();            log.debug("Table "+tableName+" removed");         } catch (SQLException e)         {            log.debug("Table "+tableName+" could not be removed");         } finally         {            if (rs != null) try { rs.close(); } catch (Exception e) { e.printStackTrace(); }            if (stmt != null) try { stmt.close(); } catch (Exception e) { e.printStackTrace(); }            if (con != null) try { con.close(); } catch (Exception e) { e.printStackTrace(); }         }      }   }      public void createEntity(Method m, Object[] args, EntityEnterpriseContext ctx)      throws RemoteException, CreateException   {      // Get methods      try      {         Method createMethod = container.getBeanClass().getMethod("ejbCreate", m.getParameterTypes());         Method postCreateMethod = container.getBeanClass().getMethod("ejbPostCreate", m.getParameterTypes());               // Call ejbCreate         createMethod.invoke(ctx.getInstance(), args);                  // Extract pk         Object id = null;         if (compoundKey)         {            try            {               id = primaryKeyClass.newInstance();            } catch (InstantiationException e)            {               throw new ServerException("Could not create primary key",e);            }                        for (int i = 0; i < pkFields.size(); i++)            {               Field from = (Field)pkFields.get(i);               Field to = (Field)pkClassFields.get(i);               to.set(id,from.get(ctx.getInstance()));            }         } else         {            id = ((Field)pkFields.get(0)).get(ctx.getInstance());         }                  log.debug("Create, id is "+id);                  // Check duplicate         if (beanExists(id)) {                   // it exists, we need the DuplicateKey thingy          throw new DuplicateKeyException("Entity with key "+id+" already exists");       }              // We know we are OK and can proceed with the insert       // Set id         ctx.setId(id);          // Lock instance in cache         ((EntityContainer)container).getInstanceCache().insert(ctx);                  // Create EJBObject         ctx.setEJBObject(container.getContainerInvoker().getEntityEJBObject(id));         // Insert in db         log.debug("Insert");         Connection con = null;         PreparedStatement stmt = null;         ResultSet rs = null;         try         {            con = getConnection();            log.debug("SQL:"+insertSql);            stmt = con.prepareStatement(insertSql);                        int idx = 1; // Parameter-index            int refIdx = 0; // EJB-reference index, into ejbRefs            for (int i = 0; i < cmpFields.size(); i++)            {               int jdbcType = getCMPFieldJDBCType(i);               Object value = getCMPFieldValue(ctx.getInstance(), i);               if (jdbcType == Types.REF)               {                  idx = setForeignKey(stmt, idx, refIdx++, value);               } else               {                  setParameter(stmt, idx++, jdbcType, value);               }            }                        stmt.executeUpdate();         } catch (SQLException e)         {          log.exception(e);            throw new CreateException("Could not create entity:"+e);         } finally         {            if (rs != null) try { rs.close(); } catch (Exception e) { e.printStackTrace(); }            if (stmt != null) try { stmt.close(); } catch (Exception e) { e.printStackTrace(); }            if (con != null) try { con.close(); } catch (Exception e) { e.printStackTrace(); }         }                  // Store state to be able to do tuned updates         PersistenceContext pCtx = new PersistenceContext();                  // If read-only, set last read to now         if (readOnly) pCtx.lastRead = System.currentTimeMillis();                  // Save initial state for tuned updates         pCtx.state = getState(ctx);                  ctx.setPersistenceContext(pCtx);                  // Invoke postCreate         postCreateMethod.invoke(ctx.getInstance(), args);      } catch (InvocationTargetException e)      {                     throw new CreateException("Create failed:"+e);      } catch (NoSuchMethodException e)      {         throw new CreateException("Create methods not found:"+e);      } catch (IllegalAccessException e)      {         throw new CreateException("Could not create entity:"+e);      }    }      /*   *  beanExists   *   *  Checks in the database that the backend already holds the entity   *     */   public boolean beanExists(EntityEnterpriseContext ctx) 	{            return beanExists(ctx.getId());   }      public boolean beanExists(Object id) 	{      Connection con = null;            PreparedStatement stmt = null;            ResultSet rs = null;            boolean exists = false;            try 		{         //Get the connection             con = getConnection();                  stmt = con.prepareStatement(existSql);         log.debug("SQL:"+existSql);                  // Primary key in WHERE-clause         if (compoundKey) 			{            // Compound key            for (int i = 0; i < pkClassFields.size(); i++) 				{               int jdbcType = getPkFieldJDBCType(i);               Object value = getPkFieldValue(id, i);                              // Set this field of the key                setParameter(stmt, i+1, jdbcType, value);            }           } else // We have a Field key			{            // So just set that field            int jdbcType = getPkFieldJDBCType(0);            setParameter(stmt, 1, jdbcType, id);         }                  rs = stmt.executeQuery();                  // Unlikely we'll fall into the next if statement, as the         // COUNT(*) should always return a value, unless something dubious occurs                  if ( !rs.next() ) {            stmt.close();            throw new SQLException("Unable to check for EJB in database");         }         			int total = rs.getInt("Total");						log.debug("Object count:"+total);			         if ( total >= 1 )            exists = true;         else            exists = false;                  stmt.close();      }            catch (Exception e ) {                  log.exception(e);                  // An exception means something erroneous has occurred, either         // the table doesn't exist or something else. Either way, indicate         // we failed to find the bean                  exists = false;      }            finally {                  // Ensure our database connection is released         try {                  if ( con != null ) con.close();         } catch ( SQLException se ) {                     log.exception(se);         }                  return exists;      }   }      public Object findByPrimaryKey(Object id) throws FinderException 	{			if (beanExists(id)) 		{		  return id;		}		else 		{		   throw new FinderException ("Object with primary key "+		                        id+ 		                              " not found in storage");		}   }     public Object findEntity(Method finderMethod, Object[] args, EntityEnterpriseContext ctx)      throws RemoteException, FinderException   {      if (finderMethod.getName().equals("findByPrimaryKey"))      {                  return findByPrimaryKey(args[0]);      }      else      {         ArrayList result = (ArrayList)findEntities(finderMethod, args, ctx);         if (result.size() == 0)            throw new FinderException("No such entity!");         else            return result.get(0);      }   }        public Collection findEntities(Method finderMethod, Object[] args, EntityEnterpriseContext ctx)      throws RemoteException, FinderException   {      Connection con = null;      PreparedStatement stmt = null;      ResultSet rs = null;            try      {         // Try defined finders			DefinedFinder df = (DefinedFinder)definedFinders.get(finderMethod.getName());               			if (df != null)					{				con = getConnection();				log.debug("SQL:"+df.sql);				stmt = con.prepareStatement(df.sql);								// Set parameters				for (int i = 0; i < df.parameters.length; i++)				{					stmt.setObject(i+1, args[df.parameters[i]]);				}			}         else          {            if (finderMethod.getName().equals("findAll"))            {               // Try findAll               con = getConnection();               stmt = con.prepareStatement("SELECT "+pkColumnList+" FROM "+tableName);            } else if (finderMethod.getName().startsWith("findBy"))            {               // Try findByX               String cmpFieldName = finderMethod.getName().substring(6).toLowerCase();               System.out.println("Finder:"+cmpFieldName);                              for (int i = 0; i < CMPFields.size(); i++)               {                  JawsCMPField cmpField = (JawsCMPField)CMPFields.get(i);                                    // Find field                  if (cmpFieldName.equals(cmpField.getFieldName().toLowerCase()))                  {                     int jdbcType = getCMPFieldJDBCType(i);                                          // Is reference?                     if (jdbcType == Types.REF)                     {                        // TODO: Precompute SQL                        String sql = "SELECT "+pkColumnList+" FROM "+tableName+ " WHERE ";                                                // TODO: Fix this.. I mean it's already been computed once..                         JawsCMPField[] cmpFields = getPkColumns(cmpField);                        for (int j = 0; j < cmpFields.length; j++)                        {                           sql += (j==0?"":" AND ") + cmpField.getColumnName()+"_"+cmpFields[j].getColumnName()+"=?";                        }                                                con = getConnection();                        log.debug("SQL:"+sql);                        stmt = con.prepareStatement(sql);                                                // Set parameters                        setForeignKey(stmt, 1, 0, args[0]);                     } else                     {                        // Find in db                        // TODO: Precompute SQL                        String sql = "SELECT "+pkColumnList+" FROM "+tableName+ " WHERE "+cmpField.getColumnName()+"=?";                                                con = getConnection();                        log.debug("SQL:"+sql);                        stmt = con.prepareStatement(sql);                                                // Set parameters                        setParameter(stmt, 1, jdbcType, args[0]);                     }                  }               }            } else            {               log.warning("No finder for this method:"+finderMethod.getName());               return new java.util.ArrayList();            }         }               // Compute result         rs = stmt.executeQuery();         ArrayList result = new ArrayList();         if (compoundKey)         {            // Compound key            try            {               while (rs.next())               {                  Object pk = primaryKeyClass.newInstance();                  for (int i = 0; i < pkClassFields.size(); i++)                  {                     Field field = (Field)pkClassFields.get(i);                     field.set(pk, rs.getObject(i+1));                  }                  result.add(pk);               }            } catch (Exception e)            {               throw new ServerException("Finder failed",e);            }         } else         {            // Primitive key            while (rs.next())            {               result.add(rs.getObject(1));            }         }                  return result;      } catch (SQLException e)      {         log.exception(e);         throw new FinderException("Find failed");      } finally      {         if (rs != null) try { rs.close(); } catch (Exception e) { e.printStackTrace(); }         if (stmt != null) try { stmt.close(); } catch (Exception e) { e.printStackTrace(); }         if (con != null) try { con.close(); } catch (Exception e) { e.printStackTrace(); }      }   }   public void activateEntity(EntityEnterpriseContext ctx)      throws RemoteException   {      // Call bean      try      {         ejbActivate.invoke(ctx.getInstance(), new Object[0]);      } catch (Exception e)      {         throw new ServerException("Activation failed", e);      }            // Set new persistence context      ctx.setPersistenceContext(new PersistenceContext());   }      public void loadEntity(EntityEnterpriseContext ctx)      throws RemoteException   {      // Check read only      if (readOnly)      {         PersistenceContext pCtx = (PersistenceContext)ctx.getPersistenceContext();                  // Timeout has expired for this entity?         if ((pCtx.lastRead + readOnlyTimeOut) > System.currentTimeMillis())            return; // State is still "up to date"      }         Connection con = null;      PreparedStatement stmt = null;      ResultSet rs = null;            try      {         // Load from db         con = getConnection();         stmt = con.prepareStatement(selectSql);                  log.debug("Load SQL:"+selectSql);                  // Primary key in WHERE-clause         if (compoundKey)         {            // Compound key            for (int i = 0; i < pkClassFields.size(); i++)            {               int jdbcType = getPkFieldJDBCType(i);               Object value = getPkFieldValue(ctx.getId(), i);               setParameter(stmt, i+1, jdbcType, value);            }         } else         {            // Primitive key            Object value = ctx.getId();            int jdbcType = getPkFieldJDBCType(0);            setParameter(stmt, 1, jdbcType, value);         }                  rs = stmt.executeQuery();                  if (!rs.next())            throw new NoSuchObjectException("Entity "+ctx.getId()+" not found");                  // Set values         int idx = 1;         int refIdx = 0;         for (int i = 0; i < CMPFields.size(); i++)         {            JawsCMPField cmpField = (JawsCMPField)CMPFields.get(i);            if (((Integer)jdbcTypes.get(i)).intValue() == Types.REF)            {               // Create pk               JawsCMPField[] pkFields = (JawsCMPField[])ejbRefs.get(refIdx++);               JawsEntity referencedEntity = (JawsEntity)pkFields[0].getBeanContext();               Object pk;               if (referencedEntity.getPrimaryKeyField().equals(""))               {                  // Compound key                  pk = container.getClassLoader().loadClass(referencedEntity.getPrimaryKeyClass()).newInstance();                  Field[] fields = pk.getClass().getFields();                  for(int j = 0; j < fields.length; j++)                  {							Object val = rs.getObject(idx++);                     fields[j].set(pk, val);	                  log.debug("Referenced pk field:"+val);                  }               } else               {                  // Primitive key                  pk = rs.getObject(idx++);						log.debug("Referenced pk:"+pk);               }                              // Find referenced entity               try               {                  Object home = javaCtx.lookup(cmpField.getSqlType());                  Method[] homeMethods = home.getClass().getMethods();                  Method finder = null;                                    // We have to locate fBPK iteratively since we don't really know the pk-class                  for (int j = 0; j < homeMethods.length; j++)                     if (homeMethods[j].getName().equals("findByPrimaryKey"))                     {                        finder = homeMethods[j];                        break;                     }                                    if (finder == null)                     throw new NoSuchMethodException("FindByPrimaryKey method not found in home interface");                     						log.debug("PK="+pk);	                  Object ref = finder.invoke(home, new Object[] { pk });                                    // Set found entity                  ((Field)cmpFields.get(i)).set(ctx.getInstance(), ref);               } catch (Exception e)               {                  throw new ServerException("Could not restore reference", e);               }            } else            {               // Load primitive                              // TODO: this probably needs to be fixed for BLOB's etc.               ((Field)cmpFields.get(i)).set(ctx.getInstance(), rs.getObject(idx++));            }         }                  // Store state to be able to do tuned updates         PersistenceContext pCtx = (PersistenceContext)ctx.getPersistenceContext();         if (readOnly) pCtx.lastRead = System.currentTimeMillis();                  // Call ejbLoad on bean instance         ejbLoad.invoke(ctx.getInstance(), new Object[0]);                  // Done      } catch (Exception e)      {         throw new ServerException("Load failed", e);      } finally      {         if (rs != null) try { rs.close(); } catch (Exception e) { e.printStackTrace(); }         if (stmt != null) try { stmt.close(); } catch (Exception e) { e.printStackTrace(); }         if (con != null) try { con.close(); } catch (Exception e) { e.printStackTrace(); }      }   }          /*    * storeEntity(EntityEnterpriseContext ctx)     *    * if the readOnly flag is specified in the xml file this won't store.    * if not a tuned update is issued.    *    */   public void storeEntity(EntityEnterpriseContext ctx)   throws RemoteException   {      // Check for read-only      if (readOnly)         return;            Connection con = null;      PreparedStatement stmt = null;      try      {         // Call bean         ejbStore.invoke(ctx.getInstance(), new Object[0]);                  // Create tuned update         String updateSql = "UPDATE "+tableName+" SET ";         Object[] currentState = getState(ctx);         boolean[] dirtyField = new boolean[currentState.length];         Object[] oldState = ((PersistenceContext)ctx.getPersistenceContext()).state;         boolean dirty = false;         int refIdx = 0;                  System.out.println("THE CURRENTSTATE "+getState(ctx));         for (int i = 0;i < currentState.length; i++)         {            if (((Integer)jdbcTypes.get(i)).intValue() == Types.REF) {               if (((currentState[i] != null) &&                      (oldState[i] == null || !currentState[i].equals(oldState[i]))) ||                  (oldState[i] != null))               {                  JawsCMPField[] pkFields = (JawsCMPField[])ejbRefs.get(refIdx);                  for (int j = 0; j < pkFields.length; j++)                  {                     updateSql += (dirty?",":"") + ((JawsCMPField)CMPFields.get(i)).getColumnName()+"_"+pkFields[j].getColumnName()+"=?";                     dirty = true;                  }                  dirtyField[i] = true;               }               refIdx++;            } else            {               if (((currentState[i] != null) &&                      (oldState[i] == null || !currentState[i].equals(oldState[i]))) ||                  (oldState[i] != null))               {                  updateSql += (dirty?",":"") + ((JawsCMPField)CMPFields.get(i)).getColumnName()+"=?";                  dirty = true;                  dirtyField[i] = true;               }            }         }                  if (!dirty)         {            return;         } else         {            updateSql += " WHERE "+pkColumnWhereList;         }                  // Update database         con = getConnection();         stmt = con.prepareStatement(updateSql);                  int idx = 1;         refIdx = 0;         for (int i = 0;i < dirtyField.length; i++)         {            int jdbcType = getCMPFieldJDBCType(i);            if (jdbcType == Types.REF)            {               if (dirtyField[i])               {                  idx = setForeignKey(stmt, idx, refIdx++, currentState[i]);               }            } else            {               if (dirtyField[i])               {                  setParameter(stmt, idx++, jdbcType, currentState[i]);               }            }         }                  // Primary key in WHERE-clause         for (int i = 0; i < pkFields.size(); i++)         {            int jdbcType = getPkFieldJDBCType(i);            Object value = getCMPFieldValue(ctx.getInstance(), i);            setParameter(stmt, idx++, jdbcType, value);         }                  // Execute update         stmt.execute();      } catch (Exception e)      {         throw new ServerException("Store failed", e);      } finally      {         if (stmt != null) try { stmt.close(); } catch (Exception e) { e.printStackTrace(); }         if (con != null) try { con.close(); } catch (Exception e) { e.printStackTrace(); }      }      }   public void passivateEntity(EntityEnterpriseContext ctx)      throws RemoteException   {      // Call bean      try      {         ejbPassivate.invoke(ctx.getInstance(), new Object[0]);      } catch (Exception e)      {         throw new ServerException("Passivation failed", e);      }   }         public void removeEntity(EntityEnterpriseContext ctx)      throws RemoteException, RemoveException   {      Connection con = null;      PreparedStatement stmt = null;            try      {         // Call ejbRemove         ejbRemove.invoke(ctx.getInstance(), new Object[0]);               // Remove from DB         con = getConnection();         stmt = con.prepareStatement(removeSql);                  // Primary key in WHERE-clause         if (compoundKey)         {            // Compound key            for (int i = 0; i < pkClassFields.size(); i++)            {               int jdbcType = getPkFieldJDBCType(i);               Object value = getPkFieldValue(ctx.getId(), i);               setParameter(stmt, i+1, jdbcType, value);            }         } else         {            // Primitive key            Object value = ctx.getId();            int jdbcType = getPkFieldJDBCType(0);            setParameter(stmt, 1, jdbcType, value);         }                  int count = stmt.executeUpdate();                  if (count == 0)         {            throw new RemoveException("Could not remove entity");         }   //      System.out.println("Removed file for"+ctx.getId());      } catch (Exception e)      {         throw new RemoveException("Could not remove "+ctx.getId());      } finally      {         if (stmt != null) try { stmt.close(); } catch (Exception e) { e.printStackTrace(); }         if (con != null) try { con.close(); } catch (Exception e) { e.printStackTrace(); }      }   }      // Z implementation ----------------------------------------------       // Package protected ---------------------------------------------       // Protected -----------------------------------------------------      // Private -------------------------------------------------------   private Connection getConnection()      throws SQLException   {      if (ds != null)         return ds.getConnection();      else         return DriverManager.getConnection(url,"sa","");   }      private void makeSql()   {     // initialize the table name we replace the . by - because some dbs die on it...      tableName = entity.getTableName().replace('.','_');           // Remove SQL      removeSql = "DELETE FROM "+tableName+" WHERE "+pkColumnWhereList;      log.debug("Remove:"+removeSql);            // Drop table      dropSql   = "DROP TABLE "+tableName;      log.debug("Drop:"+dropSql);            // Create table      createSql = "CREATE TABLE "+tableName+" (";            int refIdx = 0;      for (int i = 0;i < CMPFields.size(); i++)      {         if (((Integer)jdbcTypes.get(i)).intValue() == Types.REF)         {            JawsCMPField[] pkFields = (JawsCMPField[])ejbRefs.get(refIdx);            for (int j = 0; j < pkFields.length; j++)            {               createSql += (i==0 && j==0?"":",") + ((JawsCMPField)CMPFields.get(i)).getColumnName()+"_"+pkFields[j].getColumnName()+" "+pkFields[j].getSqlType();            }            refIdx++;         } else         {            JawsCMPField field = (JawsCMPField)CMPFields.get(i);            createSql += (i==0?"":",") + field.getColumnName()+" "+field.getSqlType();         }      }            createSql += ")";            log.debug("Create table:"+createSql);            // Insert SQL fields      insertSql = "INSERT INTO "+tableName;      String fieldSql = "";      String valueSql = "";      refIdx = 0;      for (int i = 0;i < CMPFields.size(); i++)      {         if (((Integer)jdbcTypes.get(i)).intValue() == Types.REF)         {            JawsCMPField[] pkFields = (JawsCMPField[])ejbRefs.get(refIdx);            for (int j = 0; j < pkFields.length; j++)            {               fieldSql += (fieldSql.equals("") ? "":",") + ((JawsCMPField)CMPFields.get(i)).getColumnName()+"_"+pkFields[j].getColumnName();               valueSql += (valueSql.equals("") ? "?":",?");            }            refIdx++;         } else         {            JawsCMPField field = (JawsCMPField)CMPFields.get(i);            fieldSql += (fieldSql.equals("") ? "":",") + field.getColumnName();            valueSql += (valueSql.equals("") ? "?":",?");         }      }            insertSql += " ("+fieldSql+") VALUES ("+valueSql+")";      log.debug("Insert:"+insertSql);            // Select SQL fields      selectSql = "SELECT ";      refIdx = 0;      for (int i = 0;i < CMPFields.size(); i++)      {         if (((Integer)jdbcTypes.get(i)).intValue() == Types.REF)         {            JawsCMPField[] pkFields = (JawsCMPField[])ejbRefs.get(refIdx);            for (int j = 0; j < pkFields.length; j++)            {               selectSql += (i==0 && j==0?"":",") + ((JawsCMPField)CMPFields.get(i)).getColumnName()+"_"+pkFields[j].getColumnName();            }            refIdx++;         } else         {            JawsCMPField field = (JawsCMPField)CMPFields.get(i);            selectSql += (i==0?"":",") + field.getColumnName();         }      }      selectSql += " FROM "+tableName+ " WHERE "+pkColumnWhereList;      log.debug("Select:"+selectSql);                // Exist SQL query     existSql = "SELECT COUNT(*) AS Total FROM " + tableName+ " WHERE "+pkColumnWhereList;         log.debug("Exists:"+existSql);           /*      // Update SQL fields      updateSql = "UPDATE "+tableName+" SET ";      fieldSql = "";      for (int i = 0; i < CMPFields.length; i++)      {         CMPField field = CMPFields[i];         if (field.getJdbcType().equals("REF"))         {            String[] pk = getPkColumn(field);                                                     fieldSql += (fieldSql.equals("") ? "":",")+pk[0]+"=?";         } else         {            fieldSql += (fieldSql.equals("") ? "":",")+field.getColumnName()+"=?";         }               }      updateSql += fieldSql +" WHERE "+idColumn+"=?";            log.debug("Update:"+updateSql);*/            // Defined finders      Iterator finders = entity.getFinders();      while(finders.hasNext())      {         Finder f = (Finder)finders.next();			         // Replace placeholders with ?         String query = "";			StringTokenizer finderQuery = new StringTokenizer(f.getQuery(),"{}", true);			ArrayList parameters = new ArrayList();			while (finderQuery.hasMoreTokens())			{				String t = finderQuery.nextToken();				if (t.equals("{"))				{					query += "?";					String idx = finderQuery.nextToken(); // Remove number					parameters.add(new Integer(idx));					finderQuery.nextToken(); // Remove }				} else					query += t;			}						// Copy index numbers to array			int[] parameterArray = new int[parameters.size()];			for (int i = 0; i < parameterArray.length; i++)				parameterArray[i] = ((Integer)parameters.get(i)).intValue();                  // Construct SQL         String sql = "SELECT "+pkColumnList+(f.getOrder().equals("")?"":","+f.getOrder())+" FROM "+tableName+" WHERE "+query;         if (!f.getOrder().equals(""))         {            sql += " ORDER BY "+f.getOrder();         }						log.debug(f.getName()+"="+sql);						// Store in map			DefinedFinder df = new DefinedFinder();			df.sql = sql;			df.parameters = parameterArray;			definedFinders.put(f.getName(), df);		}   }      private Object[] getState(EntityEnterpriseContext ctx)   {      Object[] state = new Object[cmpFields.size()];      for (int i = 0; i < state.length; i++)      {         try         {            state[i] = ((Field)cmpFields.get(i)).get(ctx.getInstance());         } catch (Exception e)         {            return null;         }      }            return state;   }      private int getJDBCType(String name)   {      try      {               Integer constant = (Integer)Types.class.getField(name).get(null);         return constant.intValue();      } catch (Exception e)      {         e.printStackTrace();         return Types.OTHER;      }   }      private JawsCMPField[] getPkColumns(JawsCMPField field)      throws RemoteException   {      // Find reference      Iterator enum = ((JawsEntity)field.getBeanContext()).getEjbReferences();      while (enum.hasNext())      {         JawsEjbReference ref = (JawsEjbReference)enum.next();         if (ref.getName().equals(field.getSqlType()))         {            // Find referenced entity            JawsEnterpriseBeans eb = (JawsEnterpriseBeans)field.getBeanContext().getBeanContext();            JawsEntity referencedEntity = (JawsEntity)eb.getEjb(ref.getLink());            // Extract pk            String pk = referencedEntity.getPrimaryKeyField();            if (pk.equals(""))            {               // Compound key               try               {                  Class pkClass = container.getClassLoader().loadClass(referencedEntity.getPrimaryKeyClass());                  Field[] pkFields = pkClass.getFields();                  ArrayList result = new ArrayList();                  for (int i = 0; i < pkFields.length; i++)                  {                     // Find db mapping for pk field                     Iterator fieldEnum = referencedEntity.getCMPFields();                     while (fieldEnum.hasNext())                     {                        JawsCMPField pkField = (JawsCMPField)fieldEnum.next();                        if (pkField.getFieldName().equals(pkFields[i].getName()))                           result.add(pkField);                     }                  }                  return (JawsCMPField[])result.toArray(new JawsCMPField[0]);               } catch (ClassNotFoundException e)               {                  throw new ServerException("Could not load pk class of referenced entity",e);               }            } else            {               // Find db mapping for pk               Iterator fieldEnum = referencedEntity.getCMPFields();               while (fieldEnum.hasNext())               {                  JawsCMPField pkField = (JawsCMPField)fieldEnum.next();                  if (pkField.getFieldName().equals(pk))                     return new JawsCMPField[] { pkField };               }               return new JawsCMPField[0];            }         }      }            throw new ServerException("Could not find EJB reference. Must be defined in XML-descriptor");   }      private void setParameter(PreparedStatement stmt,                             int idx,                             int jdbcType,                             Object value)      throws SQLException   {      if (value == null)      {         stmt.setNull(idx, jdbcType);      } else      {			System.out.println("Set parameter:"+value);         stmt.setObject(idx, value, jdbcType);      }   }      private int setForeignKey(PreparedStatement stmt,                             int idx,                             int refIdx,                              Object value)      throws SQLException   {      JawsCMPField[] pkInfo = (JawsCMPField[])ejbRefs.get(refIdx);      Object pk = null;            if (value != null)      {         try         {            pk = ((EJBObject)value).getPrimaryKey();         } catch (RemoteException e)         {            throw new SQLException("Could not extract primary key from EJB reference:"+e);         }      }            if (!((JawsEntity)pkInfo[0].getBeanContext()).getPrimaryKeyField().equals(""))      {         // Primitive key         int jdbcType = getJawsCMPFieldJDBCType(pkInfo[0]);         Object fieldValue = (value == null) ? null : pk;         setParameter(stmt, idx, jdbcType, fieldValue);         return idx+1;      } else      {         // Compound key         // ***** PROBLEM ***** pk may be null         Field[] fields = pk.getClass().getFields();         try         {            for (int i = 0; i < pkInfo.length; i++)            {               int jdbcType = getJawsCMPFieldJDBCType(pkInfo[i]);               Object fieldValue = (value == null) ? null : fields[i].get(pk);               setParameter(stmt, idx+i, jdbcType, fieldValue);            }         } catch (IllegalAccessException e)         {            throw new SQLException("Could not extract fields from primary key:"+e);         }         return idx+pkInfo.length;      }   }      private Object getCMPFieldValue(Object instance, int i)       throws IllegalAccessException   {      Field field = (Field)cmpFields.get(i);      return field.get(instance);   }      private Object getPkFieldValue(Object pk, int i)      throws IllegalAccessException   {      Field field = (Field)pkClassFields.get(i);      return field.get(pk);   }      private int getCMPFieldJDBCType(int i)   {      return ((Integer)jdbcTypes.get(i)).intValue();   }      private int getPkFieldJDBCType(int i)   {      return ((Integer)pkJdbcTypes.get(i)).intValue();   }      private int getJawsCMPFieldJDBCType(JawsCMPField fieldInfo)   {      return getJDBCType(fieldInfo.getJdbcType());   }         // Inner classes -------------------------------------------------      static class PersistenceContext   {      Object[] state;      long lastRead = -1;   }		static class DefinedFinder	{		String sql; // The SQL to be executed in prepared statement form		int[] parameters; // List of finder method indices	}}
+/*
+ * jBoss, the OpenSource EJB server
+ *
+ * Distributable under GPL license.
+ * See terms of license at gnu.org.
+ */
+package org.jboss.ejb.plugins.jaws;
+
+import java.beans.Beans;
+import java.beans.beancontext.BeanContextServicesSupport;
+import java.lang.reflect.Method;
+import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.rmi.RemoteException;
+import java.rmi.NoSuchObjectException;
+import java.rmi.ServerException;
+import java.util.Collection;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.StringTokenizer;
+import java.util.HashMap;
+import java.sql.Types;
+import java.sql.SQLException;
+import java.sql.ResultSet;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.Connection;
+import java.text.MessageFormat;
+
+import javax.ejb.EJBObject;
+import javax.ejb.EntityBean;
+import javax.ejb.CreateException;
+import javax.ejb.DuplicateKeyException;
+import javax.ejb.FinderException;
+import javax.ejb.RemoveException;
+import javax.naming.Context;
+import javax.naming.InitialContext;
+import javax.sql.DataSource;
+
+import org.jboss.ejb.Container;
+import org.jboss.ejb.EntityContainer;
+import org.jboss.ejb.EntityPersistenceManager;
+import org.jboss.ejb.EntityEnterpriseContext;
+
+import org.jboss.logging.Log;
+
+import com.dreambean.ejx.ejb.EjbReference;
+import org.jboss.ejb.plugins.jaws.deployment.JawsFileManager;
+import org.jboss.ejb.plugins.jaws.deployment.JawsFileManagerFactory;
+import org.jboss.ejb.plugins.jaws.deployment.JawsEjbJar;
+import org.jboss.ejb.plugins.jaws.deployment.JawsEnterpriseBeans;
+import org.jboss.ejb.plugins.jaws.deployment.JawsEjbReference;
+import org.jboss.ejb.plugins.jaws.deployment.JawsEntity;
+import org.jboss.ejb.plugins.jaws.deployment.JawsCMPField;
+import org.jboss.ejb.plugins.jaws.deployment.Finder;
+
+/**
+ *   Just Another Web Store - an O/R mapper
+ *
+ *
+ * Note: This is a really long class, but I thought that splitting it up 
+ * would only make things more confusing. To compensate for the size
+ * I have tried to make many helper methods to keep each method small.
+ *      
+ * @see <related>
+ * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
+ * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
+ * @author <a href="mailto:shevlandj@kpi.com.au">Joe Shevland</a>
+ * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
+ * @version $Revision: 1.17 $
+ */
+public class JAWSPersistenceManager
+   implements EntityPersistenceManager
+{
+   // Constants -----------------------------------------------------
+   
+   // Attributes ----------------------------------------------------
+   EntityContainer container;
+   
+   Method ejbStore;
+   Method ejbLoad;
+   Method ejbActivate;
+   Method ejbPassivate;
+   Method ejbRemove;
+   
+   // Pre-calculated fields to speed things up
+   ArrayList pkFields = new ArrayList(); // Field's in entity class
+   ArrayList pkClassFields = new ArrayList(); // Field's in pk class
+   ArrayList pkColumns = new ArrayList(); // String's
+   String pkColumnList; // Comma-separated list of column names
+   String pkColumnWhereList; // Comma-separated list of column names (for WHERE clauses)
+   ArrayList cmpFields = new ArrayList(); // The fields from the actual Bean 
+   ArrayList CMPFields = new ArrayList(); // The JawsCMPField representation
+   ArrayList jdbcTypes = new ArrayList(); // Integer's
+   ArrayList pkJdbcTypes = new ArrayList(); // Integer's describing pk
+   ArrayList ejbRefs = new ArrayList(); // EJB-references
+	
+	HashMap definedFinders = new HashMap();
+   
+   boolean compoundKey;
+   Class primaryKeyClass;
+   
+   JawsEntity entity;
+   String dbName;
+   String tableName;
+   
+   String createSql;
+   String insertSql;
+   String existSql;
+   //   String updateSql; Calculated dynamically (=tuned updates)
+   String selectSql;
+   String removeSql;
+   String dropSql;
+   
+   Context javaCtx;
+   
+   Log log = new Log("JAWS");
+   
+   DataSource ds;
+   String url;
+   
+   boolean readOnly;
+   long readOnlyTimeOut;
+   
+   // Static --------------------------------------------------------
+   
+   // Constructors --------------------------------------------------
+   
+   // Public --------------------------------------------------------
+   public void setContainer(Container c)
+   {
+      container = (EntityContainer)c;
+   }
+   
+   public void init()
+      throws Exception
+   {
+      log.debug("Initializing JAWS plugin for "+container.getMetaData().getEjbName());
+      
+      javaCtx = (Context)new InitialContext().lookup("java:comp/env");
+      
+      JawsFileManager jfm = (JawsFileManager)new JawsFileManagerFactory().createFileManager();
+      
+      // Setup beancontext
+      BeanContextServicesSupport beanCtx = new BeanContextServicesSupport();
+      beanCtx.add(Beans.instantiate(getClass().getClassLoader(), "com.dreambean.ejx.xml.ProjectX"));
+      beanCtx.add(jfm);
+      
+      // Load XML, if the URL doesn't have default information the filemanager uses defaults
+      JawsEjbJar jar = jfm.load(container.getApplication().getURL());
+      
+      // Extract meta-info
+      entity = (JawsEntity)jar.getEnterpriseBeans().getEjb(container.getMetaData().getEjbName());
+      Iterator fields = entity.getCMPFields();
+      while (fields.hasNext())
+      {
+         JawsCMPField field = (JawsCMPField)fields.next();
+       
+         CMPFields.add(field);
+         cmpFields.add(container.getBeanClass().getField(field.getFieldName()));
+         // Identify JDBC-type
+       
+         jdbcTypes.add(new Integer(getJDBCType(field.getJdbcType())));
+         
+         // EJB-reference
+         if (field.getJdbcType().equals("REF"))
+         {
+            ejbRefs.add(getPkColumns(field));
+         }
+      }
+      
+      // Read-only?
+      readOnly = entity.getReadOnly();
+      readOnlyTimeOut = entity.getTimeOut();
+      
+      // Identify pk
+      pkColumnList = "";
+      pkColumnWhereList = "";
+      compoundKey = entity.getPrimaryKeyField().equals("");
+      if (compoundKey)
+      {
+         // Compound key
+         Field[] pkClassFieldList = container.getClassLoader().loadClass(entity.getPrimaryKeyClass()).getFields();
+         
+         // Build pk field list and SQL-pk string
+         for (int i = 0; i < pkClassFieldList.length; i++)
+         {
+            pkClassFields.add(pkClassFieldList[i]);
+            Field field = container.getBeanClass().getField(pkClassFieldList[i].getName());
+            pkFields.add(field);
+            for (int j = 0; j < CMPFields.size(); j++)
+            {
+               JawsCMPField cmpField = (JawsCMPField)CMPFields.get(j);
+               if (cmpField.getFieldName().equals(field.getName()))
+               {
+                  pkColumnList += ((i == 0)?"":",") + cmpField.getColumnName();
+                  pkColumnWhereList += ((i == 0)?"":" AND ") + cmpField.getColumnName()+"=?";
+                  pkJdbcTypes.add(new Integer(getJDBCType(cmpField.getJdbcType())));
+                  pkColumns.add(cmpFields.get(j));
+                  break;
+               }
+            }
+         }
+         
+         // Get compound key class
+         primaryKeyClass = container.getClassLoader().loadClass(entity.getPrimaryKeyClass());
+      } else
+      {
+         // Primitive key
+         pkFields.add(container.getBeanClass().getField(entity.getPrimaryKeyField()));
+         for (int j = 0; j < CMPFields.size(); j++)
+         {
+            JawsCMPField cmpField = (JawsCMPField)CMPFields.get(j);
+            if (cmpField.getFieldName().equals(entity.getPrimaryKeyField()))
+            {
+               pkColumnList = cmpField.getColumnName();
+               pkColumnWhereList = cmpField.getColumnName()+"=?";
+               pkJdbcTypes.add(new Integer(getJDBCType(cmpField.getJdbcType())));
+               pkColumns.add(cmpFields.get(j));
+               break;
+            }
+         }
+      }
+      
+      // Create SQL commands
+      makeSql();
+      
+     // Find EJB-methods
+      ejbStore = EntityBean.class.getMethod("ejbStore", new Class[0]);
+      ejbLoad = EntityBean.class.getMethod("ejbLoad", new Class[0]);
+      ejbActivate = EntityBean.class.getMethod("ejbActivate", new Class[0]);
+      ejbPassivate = EntityBean.class.getMethod("ejbPassivate", new Class[0]);
+      ejbRemove = EntityBean.class.getMethod("ejbRemove", new Class[0]);
+   }
+   
+   public void start()
+      throws Exception
+   {
+      // Find datasource
+      url = ((JawsEjbJar)entity.getBeanContext().getBeanContext()).getDataSource();
+      if (!url.startsWith("jdbc:"))
+      {
+         ds = (DataSource)new InitialContext().lookup(((JawsEjbJar)entity.getBeanContext().getBeanContext()).getDataSource());
+      }
+      
+      // Create table if necessary
+      if (entity.getCreateTable())
+      {
+        
+         // Try to create it
+         Connection con = null;
+         PreparedStatement stmt = null;
+         ResultSet rs = null;
+         try
+         {
+            con = getConnection();
+            stmt = con.prepareStatement(createSql);
+            stmt.executeQuery();
+            log.debug("Table "+tableName+" created");
+         } catch (SQLException e)
+         {
+         // For debug only 
+         // e.printStackTrace();
+         log.debug("Table "+tableName+" exists");
+         } finally
+         {
+            if (rs != null) try { rs.close(); } catch (Exception e) { e.printStackTrace(); }
+            if (stmt != null) try { stmt.close(); } catch (Exception e) { e.printStackTrace(); }
+            if (con != null) try { con.close(); } catch (Exception e) { e.printStackTrace(); }
+         }
+      }
+   }
+
+   public void stop()
+   {
+   }
+   
+   public void destroy()
+   {
+      if (entity.getRemoveTable())
+      {
+         // Remove it!
+         Connection con = null;
+         PreparedStatement stmt = null;
+         ResultSet rs = null;
+         try
+         {
+            con = getConnection();
+            stmt = con.prepareStatement(dropSql);
+            stmt.executeUpdate();
+            log.debug("Table "+tableName+" removed");
+         } catch (SQLException e)
+         {
+            log.debug("Table "+tableName+" could not be removed");
+         } finally
+         {
+            if (rs != null) try { rs.close(); } catch (Exception e) { e.printStackTrace(); }
+            if (stmt != null) try { stmt.close(); } catch (Exception e) { e.printStackTrace(); }
+            if (con != null) try { con.close(); } catch (Exception e) { e.printStackTrace(); }
+         }
+      }
+   }
+   
+   public void createEntity(Method m, Object[] args, EntityEnterpriseContext ctx)
+      throws RemoteException, CreateException
+   {
+      // Get methods
+      try
+      {
+         Method createMethod = container.getBeanClass().getMethod("ejbCreate", m.getParameterTypes());
+         Method postCreateMethod = container.getBeanClass().getMethod("ejbPostCreate", m.getParameterTypes());
+      
+         // Call ejbCreate
+         createMethod.invoke(ctx.getInstance(), args);
+         
+         // Extract pk
+         Object id = null;
+         if (compoundKey)
+         {
+            try
+            {
+               id = primaryKeyClass.newInstance();
+            } catch (InstantiationException e)
+            {
+               throw new ServerException("Could not create primary key",e);
+            }
+            
+            for (int i = 0; i < pkFields.size(); i++)
+            {
+               Field from = (Field)pkFields.get(i);
+               Field to = (Field)pkClassFields.get(i);
+               to.set(id,from.get(ctx.getInstance()));
+            }
+         } else
+         {
+            id = ((Field)pkFields.get(0)).get(ctx.getInstance());
+         }
+         
+         log.debug("Create, id is "+id);
+         
+         // Check duplicate
+         if (beanExists(id)) {
+          
+         // it exists, we need the DuplicateKey thingy
+          throw new DuplicateKeyException("Entity with key "+id+" already exists");
+       }
+       
+       // We know we are OK and can proceed with the insert
+       // Set id
+         ctx.setId(id);
+ 
+         // Lock instance in cache
+         ((EntityContainer)container).getInstanceCache().insert(ctx);
+         
+         // Create EJBObject
+         ctx.setEJBObject(container.getContainerInvoker().getEntityEJBObject(id));
+
+         // Insert in db
+         log.debug("Insert");
+         Connection con = null;
+         PreparedStatement stmt = null;
+         ResultSet rs = null;
+         try
+         {
+            con = getConnection();
+            log.debug("SQL:"+insertSql);
+            stmt = con.prepareStatement(insertSql);
+            
+            int idx = 1; // Parameter-index
+            int refIdx = 0; // EJB-reference index, into ejbRefs
+            for (int i = 0; i < cmpFields.size(); i++)
+            {
+               int jdbcType = getCMPFieldJDBCType(i);
+               Object value = getCMPFieldValue(ctx.getInstance(), i);
+               if (jdbcType == Types.REF)
+               {
+                  idx = setForeignKey(stmt, idx, refIdx++, value);
+               } else
+               {
+                  setParameter(stmt, idx++, jdbcType, value);
+               }
+            }
+            
+            stmt.executeUpdate();
+         } catch (SQLException e)
+         {
+          log.exception(e);
+            throw new CreateException("Could not create entity:"+e);
+         } finally
+         {
+            if (rs != null) try { rs.close(); } catch (Exception e) { e.printStackTrace(); }
+            if (stmt != null) try { stmt.close(); } catch (Exception e) { e.printStackTrace(); }
+            if (con != null) try { con.close(); } catch (Exception e) { e.printStackTrace(); }
+         }
+         
+         // Store state to be able to do tuned updates
+         PersistenceContext pCtx = new PersistenceContext();
+         
+         // If read-only, set last read to now
+         if (readOnly) pCtx.lastRead = System.currentTimeMillis();
+         
+         // Save initial state for tuned updates
+         pCtx.state = getState(ctx);
+         
+         ctx.setPersistenceContext(pCtx);
+         
+         // Invoke postCreate
+         postCreateMethod.invoke(ctx.getInstance(), args);
+      } catch (InvocationTargetException e)
+      {    
+        
+         throw new CreateException("Create failed:"+e);
+      } catch (NoSuchMethodException e)
+      {
+         throw new CreateException("Create methods not found:"+e);
+      } catch (IllegalAccessException e)
+      {
+         throw new CreateException("Could not create entity:"+e);
+      } 
+   }
+   
+   /*
+   *  beanExists
+   *
+   *  Checks in the database that the backend already holds the entity
+   *  
+   */
+   public boolean beanExists(EntityEnterpriseContext ctx) 
+	{
+      
+      return beanExists(ctx.getId());
+   }
+   
+   public boolean beanExists(Object id) 
+	{
+      Connection con = null;
+      
+      PreparedStatement stmt = null;
+      
+      ResultSet rs = null;
+      
+      boolean exists = false;
+      
+      try 
+		{
+         //Get the connection    
+         con = getConnection();
+         
+         stmt = con.prepareStatement(existSql);
+         log.debug("SQL:"+existSql);
+         
+         // Primary key in WHERE-clause
+         if (compoundKey) 
+			{
+            // Compound key
+            for (int i = 0; i < pkClassFields.size(); i++) 
+				{
+               int jdbcType = getPkFieldJDBCType(i);
+               Object value = getPkFieldValue(id, i);
+               
+               // Set this field of the key 
+               setParameter(stmt, i+1, jdbcType, value);
+            }  
+         } else // We have a Field key
+			{
+            // So just set that field
+            int jdbcType = getPkFieldJDBCType(0);
+            setParameter(stmt, 1, jdbcType, id);
+         }
+         
+         rs = stmt.executeQuery();
+         
+         // Unlikely we'll fall into the next if statement, as the
+         // COUNT(*) should always return a value, unless something dubious occurs
+         
+         if ( !rs.next() ) {
+            stmt.close();
+            throw new SQLException("Unable to check for EJB in database");
+         }
+         
+			int total = rs.getInt("Total");
+			
+			log.debug("Object count:"+total);
+			
+         if ( total >= 1 )
+            exists = true;
+         else
+            exists = false;
+         
+         stmt.close();
+      }
+      
+      catch (Exception e ) {
+         
+         log.exception(e);
+         
+         // An exception means something erroneous has occurred, either
+         // the table doesn't exist or something else. Either way, indicate
+         // we failed to find the bean
+         
+         exists = false;
+      }
+      
+      finally {
+         
+         // Ensure our database connection is released
+         try {
+      
+            if ( con != null ) con.close();
+         } catch ( SQLException se ) {
+         
+            log.exception(se);
+         }
+         
+         return exists;
+      }
+   }
+   
+   public Object findByPrimaryKey(Object id) throws FinderException 
+	{	
+		if (beanExists(id)) 
+		{
+		  return id;
+		}
+		else 
+		{
+		   throw new FinderException ("Object with primary key "+
+		                        id+ 
+		                              " not found in storage");
+		}
+   }
+  
+   public Object findEntity(Method finderMethod, Object[] args, EntityEnterpriseContext ctx)
+      throws RemoteException, FinderException
+   {
+      if (finderMethod.getName().equals("findByPrimaryKey"))
+      {
+         
+         return findByPrimaryKey(args[0]);
+      }
+      else
+      {
+         ArrayList result = (ArrayList)findEntities(finderMethod, args, ctx);
+         if (result.size() == 0)
+            throw new FinderException("No such entity!");
+         else
+            return result.get(0);
+      }
+   }
+     
+   public Collection findEntities(Method finderMethod, Object[] args, EntityEnterpriseContext ctx)
+      throws RemoteException, FinderException
+   {
+      Connection con = null;
+      PreparedStatement stmt = null;
+      ResultSet rs = null;
+      
+      try
+      {
+         // Try defined finders
+			DefinedFinder df = (DefinedFinder)definedFinders.get(finderMethod.getName());
+               
+			if (df != null)		
+			{
+				con = getConnection();
+				log.debug("SQL:"+df.sql);
+				stmt = con.prepareStatement(df.sql);
+				
+				// Set parameters
+				for (int i = 0; i < df.parameters.length; i++)
+				{
+					stmt.setObject(i+1, args[df.parameters[i]]);
+				}
+			}
+         else 
+         {
+            if (finderMethod.getName().equals("findAll"))
+            {
+               // Try findAll
+               con = getConnection();
+               stmt = con.prepareStatement("SELECT "+pkColumnList+" FROM "+tableName);
+            } else if (finderMethod.getName().startsWith("findBy"))
+            {
+               // Try findByX
+               String cmpFieldName = finderMethod.getName().substring(6).toLowerCase();
+               System.out.println("Finder:"+cmpFieldName);
+               
+               for (int i = 0; i < CMPFields.size(); i++)
+               {
+                  JawsCMPField cmpField = (JawsCMPField)CMPFields.get(i);
+                  
+                  // Find field
+                  if (cmpFieldName.equals(cmpField.getFieldName().toLowerCase()))
+                  {
+                     int jdbcType = getCMPFieldJDBCType(i);
+                     
+                     // Is reference?
+                     if (jdbcType == Types.REF)
+                     {
+                        // TODO: Precompute SQL
+                        String sql = "SELECT "+pkColumnList+" FROM "+tableName+ " WHERE ";
+                        
+                        // TODO: Fix this.. I mean it's already been computed once.. 
+                        JawsCMPField[] cmpFields = getPkColumns(cmpField);
+                        for (int j = 0; j < cmpFields.length; j++)
+                        {
+                           sql += (j==0?"":" AND ") + cmpField.getColumnName()+"_"+cmpFields[j].getColumnName()+"=?";
+                        }
+                        
+                        con = getConnection();
+                        log.debug("SQL:"+sql);
+                        stmt = con.prepareStatement(sql);
+                        
+                        // Set parameters
+                        setForeignKey(stmt, 1, 0, args[0]);
+                     } else
+                     {
+                        // Find in db
+                        // TODO: Precompute SQL
+                        String sql = "SELECT "+pkColumnList+" FROM "+tableName+ " WHERE "+cmpField.getColumnName()+"=?";
+                        
+                        con = getConnection();
+                        log.debug("SQL:"+sql);
+                        stmt = con.prepareStatement(sql);
+                        
+                        // Set parameters
+                        setParameter(stmt, 1, jdbcType, args[0]);
+                     }
+                  }
+               }
+            } else
+            {
+               log.warning("No finder for this method:"+finderMethod.getName());
+               return new java.util.ArrayList();
+            }
+         }
+      
+         // Compute result
+         rs = stmt.executeQuery();
+         ArrayList result = new ArrayList();
+         if (compoundKey)
+         {
+            // Compound key
+            try
+            {
+               while (rs.next())
+               {
+                  Object pk = primaryKeyClass.newInstance();
+                  for (int i = 0; i < pkClassFields.size(); i++)
+                  {
+                     Field field = (Field)pkClassFields.get(i);
+                     field.set(pk, rs.getObject(i+1));
+                  }
+                  result.add(pk);
+               }
+            } catch (Exception e)
+            {
+               throw new ServerException("Finder failed",e);
+            }
+         } else
+         {
+            // Primitive key
+            while (rs.next())
+            {
+               result.add(rs.getObject(1));
+            }
+         }
+         
+         return result;
+      } catch (SQLException e)
+      {
+         log.exception(e);
+         throw new FinderException("Find failed");
+      } finally
+      {
+         if (rs != null) try { rs.close(); } catch (Exception e) { e.printStackTrace(); }
+         if (stmt != null) try { stmt.close(); } catch (Exception e) { e.printStackTrace(); }
+         if (con != null) try { con.close(); } catch (Exception e) { e.printStackTrace(); }
+      }
+   }
+
+   public void activateEntity(EntityEnterpriseContext ctx)
+      throws RemoteException
+   {
+      // Call bean
+      try
+      {
+         ejbActivate.invoke(ctx.getInstance(), new Object[0]);
+      } catch (Exception e)
+      {
+         throw new ServerException("Activation failed", e);
+      }
+      
+      // Set new persistence context
+      ctx.setPersistenceContext(new PersistenceContext());
+   }
+   
+   public void loadEntity(EntityEnterpriseContext ctx)
+      throws RemoteException
+   {
+      // Check read only
+      if (readOnly)
+      {
+         PersistenceContext pCtx = (PersistenceContext)ctx.getPersistenceContext();
+         
+         // Timeout has expired for this entity?
+         if ((pCtx.lastRead + readOnlyTimeOut) > System.currentTimeMillis())
+            return; // State is still "up to date"
+      }
+   
+      Connection con = null;
+      PreparedStatement stmt = null;
+      ResultSet rs = null;
+      
+      try
+      {
+         // Load from db
+         con = getConnection();
+         stmt = con.prepareStatement(selectSql);
+         
+         log.debug("Load SQL:"+selectSql);
+         
+         // Primary key in WHERE-clause
+         if (compoundKey)
+         {
+            // Compound key
+            for (int i = 0; i < pkClassFields.size(); i++)
+            {
+               int jdbcType = getPkFieldJDBCType(i);
+               Object value = getPkFieldValue(ctx.getId(), i);
+               setParameter(stmt, i+1, jdbcType, value);
+            }
+         } else
+         {
+            // Primitive key
+            Object value = ctx.getId();
+            int jdbcType = getPkFieldJDBCType(0);
+            setParameter(stmt, 1, jdbcType, value);
+         }
+         
+         rs = stmt.executeQuery();
+         
+         if (!rs.next())
+            throw new NoSuchObjectException("Entity "+ctx.getId()+" not found");
+         
+         // Set values
+         int idx = 1;
+         int refIdx = 0;
+         for (int i = 0; i < CMPFields.size(); i++)
+         {
+            JawsCMPField cmpField = (JawsCMPField)CMPFields.get(i);
+            if (((Integer)jdbcTypes.get(i)).intValue() == Types.REF)
+            {
+               // Create pk
+               JawsCMPField[] pkFields = (JawsCMPField[])ejbRefs.get(refIdx++);
+               JawsEntity referencedEntity = (JawsEntity)pkFields[0].getBeanContext();
+               Object pk;
+               if (referencedEntity.getPrimaryKeyField().equals(""))
+               {
+                  // Compound key
+                  pk = container.getClassLoader().loadClass(referencedEntity.getPrimaryKeyClass()).newInstance();
+                  Field[] fields = pk.getClass().getFields();
+                  for(int j = 0; j < fields.length; j++)
+                  {
+							Object val = rs.getObject(idx++);
+                     fields[j].set(pk, val);
+	                  log.debug("Referenced pk field:"+val);
+                  }
+               } else
+               {
+                  // Primitive key
+                  pk = rs.getObject(idx++);
+						log.debug("Referenced pk:"+pk);
+               }
+               
+               // Find referenced entity
+               try
+               {
+                  Object home = javaCtx.lookup(cmpField.getSqlType());
+                  Method[] homeMethods = home.getClass().getMethods();
+                  Method finder = null;
+                  
+                  // We have to locate fBPK iteratively since we don't really know the pk-class
+                  for (int j = 0; j < homeMethods.length; j++)
+                     if (homeMethods[j].getName().equals("findByPrimaryKey"))
+                     {
+                        finder = homeMethods[j];
+                        break;
+                     }
+                  
+                  if (finder == null)
+                     throw new NoSuchMethodException("FindByPrimaryKey method not found in home interface");
+                     
+						log.debug("PK="+pk);	
+                  Object ref = finder.invoke(home, new Object[] { pk });
+                  
+                  // Set found entity
+                  ((Field)cmpFields.get(i)).set(ctx.getInstance(), ref);
+               } catch (Exception e)
+               {
+                  throw new ServerException("Could not restore reference", e);
+               }
+            } else
+            {
+               // Load primitive
+               
+               // TODO: this probably needs to be fixed for BLOB's etc.
+               ((Field)cmpFields.get(i)).set(ctx.getInstance(), rs.getObject(idx++));
+            }
+         }
+         
+         // Store state to be able to do tuned updates
+         PersistenceContext pCtx = (PersistenceContext)ctx.getPersistenceContext();
+         if (readOnly) pCtx.lastRead = System.currentTimeMillis();
+         
+         // Call ejbLoad on bean instance
+         ejbLoad.invoke(ctx.getInstance(), new Object[0]);
+         
+         // Done
+      } catch (Exception e)
+      {
+         throw new ServerException("Load failed", e);
+      } finally
+      {
+         if (rs != null) try { rs.close(); } catch (Exception e) { e.printStackTrace(); }
+         if (stmt != null) try { stmt.close(); } catch (Exception e) { e.printStackTrace(); }
+         if (con != null) try { con.close(); } catch (Exception e) { e.printStackTrace(); }
+      }
+   }
+      
+    /*
+    * storeEntity(EntityEnterpriseContext ctx) 
+    *
+    * if the readOnly flag is specified in the xml file this won't store.
+    * if not a tuned update is issued.
+	*
+	* MF: FIXME: In case of findByPrimaryKey existing it seems the "oldState" variable is null
+	* This is a quick fix that tests for the "null" old state, better fixed when retrieving
+    *
+    */
+   public void storeEntity(EntityEnterpriseContext ctx)
+   throws RemoteException
+   {
+      // Check for read-only
+      if (readOnly)
+         return;
+      
+      Connection con = null;
+      PreparedStatement stmt = null;
+      try
+      {
+         // Call bean
+         ejbStore.invoke(ctx.getInstance(), new Object[0]);
+         
+         // Create tuned update
+         String updateSql = "UPDATE "+tableName+" SET ";
+		 //MF: PERF???
+         Object[] currentState = getState(ctx);
+         boolean[] dirtyField = new boolean[currentState.length];
+         //MF: PERF???
+		 Object[] oldState = ((PersistenceContext)ctx.getPersistenceContext()).state;
+         boolean dirty = false;
+         int refIdx = 0;
+         	 
+         //System.out.println("THE CURRENTSTATE "+getState(ctx));
+         for (int i = 0;i < currentState.length; i++)
+         {
+            if (((Integer)jdbcTypes.get(i)).intValue() == Types.REF) {
+               /*if (((currentState[i] != null) && 
+                     (oldState[i] == null || !currentState[i].equals(oldState[i]))) ||
+                  (oldState[i] != null))
+               */
+			   if (
+				    // The field must be non null
+					(currentState[i] != null) &&
+				    // Old field or object null qualify automatically
+					((oldState == null || oldState[i] == null) ||
+					// Otherwise condition is "non-equality" 
+					!currentState[i].equals(oldState[i]))
+					)
+			   {
+                  JawsCMPField[] pkFields = (JawsCMPField[])ejbRefs.get(refIdx);
+                  for (int j = 0; j < pkFields.length; j++)
+                  {
+                     updateSql += (dirty?",":"") + ((JawsCMPField)CMPFields.get(i)).getColumnName()+"_"+pkFields[j].getColumnName()+"=?";
+                     dirty = true;
+                  }
+                  dirtyField[i] = true;
+               }
+               refIdx++;
+            } else
+            {
+				System.out.println("CURRENTSTATE I"+ currentState[i]);
+				System.out.println("OLDSTATE ARRAY" + oldState);
+				//System.out.println("OLDSTATE I"+ oldState[i]);
+				
+				// MF FIXME I can't make sense of the following if...
+				// also it dies on a method call after an existing id
+				/*
+               if (
+					((currentState[i] != null) && 
+					 (oldState[i] == null || !currentState[i].equals(oldState[i]))) ||
+                  	(oldState[i] != null)
+					// MF What? if the oldState[i] is not null it qualifies automatically? makes no sense
+				  )
+			    */
+				
+				// MF I want to use the following, seems to work
+				
+				if (
+				    // The field must be non null
+					(currentState[i] != null) &&
+				    // Old field or old object null qualify automatically
+					((oldState == null || oldState[i] == null) ||
+					// Otherwise condition is "non-equality" 
+					!currentState[i].equals(oldState[i]))
+					)
+					
+               {
+                  updateSql += (dirty?",":"") + ((JawsCMPField)CMPFields.get(i)).getColumnName()+"=?";
+                  dirty = true;
+                  dirtyField[i] = true;
+               }
+            }
+         }
+         
+         if (!dirty)
+         {
+            return;
+         } else
+         {
+            updateSql += " WHERE "+pkColumnWhereList;
+         }
+         
+         // Update database
+         con = getConnection();
+         stmt = con.prepareStatement(updateSql);
+         
+         int idx = 1;
+         refIdx = 0;
+         for (int i = 0;i < dirtyField.length; i++)
+         {
+            int jdbcType = getCMPFieldJDBCType(i);
+            if (jdbcType == Types.REF)
+            {
+               if (dirtyField[i])
+               {
+                  idx = setForeignKey(stmt, idx, refIdx++, currentState[i]);
+               }
+            } else
+            {
+               if (dirtyField[i])
+               {
+                  setParameter(stmt, idx++, jdbcType, currentState[i]);
+               }
+            }
+         }
+         
+         // Primary key in WHERE-clause
+         for (int i = 0; i < pkFields.size(); i++)
+         {
+            int jdbcType = getPkFieldJDBCType(i);
+            Object value = getCMPFieldValue(ctx.getInstance(), i);
+            setParameter(stmt, idx++, jdbcType, value);
+         }
+         
+         // Execute update
+         stmt.execute();
+      } catch (Exception e)
+      {
+         throw new ServerException("Store failed", e);
+      } finally
+      {
+         if (stmt != null) try { stmt.close(); } catch (Exception e) { e.printStackTrace(); }
+         if (con != null) try { con.close(); } catch (Exception e) { e.printStackTrace(); }
+      }
+   
+   }
+
+   public void passivateEntity(EntityEnterpriseContext ctx)
+      throws RemoteException
+   {
+      // Call bean
+      try
+      {
+         ejbPassivate.invoke(ctx.getInstance(), new Object[0]);
+      } catch (Exception e)
+      {
+         throw new ServerException("Passivation failed", e);
+      }
+   }
+      
+   public void removeEntity(EntityEnterpriseContext ctx)
+      throws RemoteException, RemoveException
+   {
+      Connection con = null;
+      PreparedStatement stmt = null;
+      
+      try
+      {
+         // Call ejbRemove
+         ejbRemove.invoke(ctx.getInstance(), new Object[0]);
+      
+         // Remove from DB
+         con = getConnection();
+         stmt = con.prepareStatement(removeSql);
+         
+         // Primary key in WHERE-clause
+         if (compoundKey)
+         {
+            // Compound key
+            for (int i = 0; i < pkClassFields.size(); i++)
+            {
+               int jdbcType = getPkFieldJDBCType(i);
+               Object value = getPkFieldValue(ctx.getId(), i);
+               setParameter(stmt, i+1, jdbcType, value);
+            }
+         } else
+         {
+            // Primitive key
+            Object value = ctx.getId();
+            int jdbcType = getPkFieldJDBCType(0);
+            setParameter(stmt, 1, jdbcType, value);
+         }
+         
+         int count = stmt.executeUpdate();
+         
+         if (count == 0)
+         {
+            throw new RemoveException("Could not remove entity");
+         }
+   //      System.out.println("Removed file for"+ctx.getId());
+      } catch (Exception e)
+      {
+         throw new RemoveException("Could not remove "+ctx.getId());
+      } finally
+      {
+         if (stmt != null) try { stmt.close(); } catch (Exception e) { e.printStackTrace(); }
+         if (con != null) try { con.close(); } catch (Exception e) { e.printStackTrace(); }
+      }
+   }
+   
+   // Z implementation ----------------------------------------------
+    
+   // Package protected ---------------------------------------------
+    
+   // Protected -----------------------------------------------------
+   
+   // Private -------------------------------------------------------
+   private Connection getConnection()
+      throws SQLException
+   {
+      if (ds != null)
+         return ds.getConnection();
+      else
+         return DriverManager.getConnection(url,"sa","");
+   }
+   
+   private void makeSql()
+   {
+     // initialize the table name we replace the . by - because some dbs die on it... 
+     tableName = entity.getTableName().replace('.','_');
+     
+      // Remove SQL
+      removeSql = "DELETE FROM "+tableName+" WHERE "+pkColumnWhereList;
+      log.debug("Remove:"+removeSql);
+      
+      // Drop table
+      dropSql   = "DROP TABLE "+tableName;
+      log.debug("Drop:"+dropSql);
+      
+      // Create table
+      createSql = "CREATE TABLE "+tableName+" (";
+      
+      int refIdx = 0;
+      for (int i = 0;i < CMPFields.size(); i++)
+      {
+         if (((Integer)jdbcTypes.get(i)).intValue() == Types.REF)
+         {
+            JawsCMPField[] pkFields = (JawsCMPField[])ejbRefs.get(refIdx);
+            for (int j = 0; j < pkFields.length; j++)
+            {
+               createSql += (i==0 && j==0?"":",") + ((JawsCMPField)CMPFields.get(i)).getColumnName()+"_"+pkFields[j].getColumnName()+" "+pkFields[j].getSqlType();
+            }
+            refIdx++;
+         } else
+         {
+            JawsCMPField field = (JawsCMPField)CMPFields.get(i);
+            createSql += (i==0?"":",") + field.getColumnName()+" "+field.getSqlType();
+         }
+      }
+      
+      createSql += ")";
+      
+      log.debug("Create table:"+createSql);
+      
+      // Insert SQL fields
+      insertSql = "INSERT INTO "+tableName;
+      String fieldSql = "";
+      String valueSql = "";
+      refIdx = 0;
+      for (int i = 0;i < CMPFields.size(); i++)
+      {
+         if (((Integer)jdbcTypes.get(i)).intValue() == Types.REF)
+         {
+            JawsCMPField[] pkFields = (JawsCMPField[])ejbRefs.get(refIdx);
+            for (int j = 0; j < pkFields.length; j++)
+            {
+               fieldSql += (fieldSql.equals("") ? "":",") + ((JawsCMPField)CMPFields.get(i)).getColumnName()+"_"+pkFields[j].getColumnName();
+               valueSql += (valueSql.equals("") ? "?":",?");
+            }
+            refIdx++;
+         } else
+         {
+            JawsCMPField field = (JawsCMPField)CMPFields.get(i);
+            fieldSql += (fieldSql.equals("") ? "":",") + field.getColumnName();
+            valueSql += (valueSql.equals("") ? "?":",?");
+         }
+      }
+      
+      insertSql += " ("+fieldSql+") VALUES ("+valueSql+")";
+      log.debug("Insert:"+insertSql);
+      
+      // Select SQL fields
+      selectSql = "SELECT ";
+      refIdx = 0;
+      for (int i = 0;i < CMPFields.size(); i++)
+      {
+         if (((Integer)jdbcTypes.get(i)).intValue() == Types.REF)
+         {
+            JawsCMPField[] pkFields = (JawsCMPField[])ejbRefs.get(refIdx);
+            for (int j = 0; j < pkFields.length; j++)
+            {
+               selectSql += (i==0 && j==0?"":",") + ((JawsCMPField)CMPFields.get(i)).getColumnName()+"_"+pkFields[j].getColumnName();
+            }
+            refIdx++;
+         } else
+         {
+            JawsCMPField field = (JawsCMPField)CMPFields.get(i);
+            selectSql += (i==0?"":",") + field.getColumnName();
+         }
+      }
+
+      selectSql += " FROM "+tableName+ " WHERE "+pkColumnWhereList;
+      log.debug("Select:"+selectSql);
+     
+     
+      // Exist SQL query
+     existSql = "SELECT COUNT(*) AS Total FROM " + tableName+ " WHERE "+pkColumnWhereList;
+    
+     log.debug("Exists:"+existSql);
+
+     
+      
+/*      // Update SQL fields
+      updateSql = "UPDATE "+tableName+" SET ";
+      fieldSql = "";
+      for (int i = 0; i < CMPFields.length; i++)
+      {
+         CMPField field = CMPFields[i];
+         if (field.getJdbcType().equals("REF"))
+         {
+            String[] pk = getPkColumn(field);                                         
+            fieldSql += (fieldSql.equals("") ? "":",")+pk[0]+"=?";
+         } else
+         {
+            fieldSql += (fieldSql.equals("") ? "":",")+field.getColumnName()+"=?";
+         }
+         
+      }
+      updateSql += fieldSql +" WHERE "+idColumn+"=?";
+      
+      log.debug("Update:"+updateSql);
+*/      
+
+      // Defined finders
+      Iterator finders = entity.getFinders();
+      while(finders.hasNext())
+      {
+         Finder f = (Finder)finders.next();
+			
+         // Replace placeholders with ?
+         String query = "";
+			StringTokenizer finderQuery = new StringTokenizer(f.getQuery(),"{}", true);
+			ArrayList parameters = new ArrayList();
+			while (finderQuery.hasMoreTokens())
+			{
+				String t = finderQuery.nextToken();
+				if (t.equals("{"))
+				{
+					query += "?";
+					String idx = finderQuery.nextToken(); // Remove number
+					parameters.add(new Integer(idx));
+					finderQuery.nextToken(); // Remove }
+				} else
+					query += t;
+			}
+			
+			// Copy index numbers to array
+			int[] parameterArray = new int[parameters.size()];
+			for (int i = 0; i < parameterArray.length; i++)
+				parameterArray[i] = ((Integer)parameters.get(i)).intValue();
+         
+         // Construct SQL
+         String sql = "SELECT "+pkColumnList+(f.getOrder().equals("")?"":","+f.getOrder())+" FROM "+tableName+" WHERE "+query;
+         if (!f.getOrder().equals(""))
+         {
+            sql += " ORDER BY "+f.getOrder();
+         }
+			
+			log.debug(f.getName()+"="+sql);
+			
+			// Store in map
+			DefinedFinder df = new DefinedFinder();
+			df.sql = sql;
+			df.parameters = parameterArray;
+			definedFinders.put(f.getName(), df);
+		}
+   }
+   
+   //MF: PERF!!!!!!!
+   private Object[] getState(EntityEnterpriseContext ctx)
+   {
+      Object[] state = new Object[cmpFields.size()];
+      for (int i = 0; i < state.length; i++)
+      {
+         try
+         {
+            state[i] = ((Field)cmpFields.get(i)).get(ctx.getInstance());
+         } catch (Exception e)
+         {
+            return null;
+         }
+      }
+      
+      return state;
+   }
+   
+   private int getJDBCType(String name)
+   {
+      try
+      {
+      
+         Integer constant = (Integer)Types.class.getField(name).get(null);
+         return constant.intValue();
+      } catch (Exception e)
+      {
+         e.printStackTrace();
+         return Types.OTHER;
+      }
+   }
+   
+   private JawsCMPField[] getPkColumns(JawsCMPField field)
+      throws RemoteException
+   {
+      // Find reference
+      Iterator enum = ((JawsEntity)field.getBeanContext()).getEjbReferences();
+      while (enum.hasNext())
+      {
+         JawsEjbReference ref = (JawsEjbReference)enum.next();
+         if (ref.getName().equals(field.getSqlType()))
+         {
+            // Find referenced entity
+            JawsEnterpriseBeans eb = (JawsEnterpriseBeans)field.getBeanContext().getBeanContext();
+            JawsEntity referencedEntity = (JawsEntity)eb.getEjb(ref.getLink());
+            // Extract pk
+            String pk = referencedEntity.getPrimaryKeyField();
+            if (pk.equals(""))
+            {
+               // Compound key
+               try
+               {
+                  Class pkClass = container.getClassLoader().loadClass(referencedEntity.getPrimaryKeyClass());
+                  Field[] pkFields = pkClass.getFields();
+                  ArrayList result = new ArrayList();
+                  for (int i = 0; i < pkFields.length; i++)
+                  {
+                     // Find db mapping for pk field
+                     Iterator fieldEnum = referencedEntity.getCMPFields();
+                     while (fieldEnum.hasNext())
+                     {
+                        JawsCMPField pkField = (JawsCMPField)fieldEnum.next();
+                        if (pkField.getFieldName().equals(pkFields[i].getName()))
+                           result.add(pkField);
+                     }
+                  }
+                  return (JawsCMPField[])result.toArray(new JawsCMPField[0]);
+               } catch (ClassNotFoundException e)
+               {
+                  throw new ServerException("Could not load pk class of referenced entity",e);
+               }
+            } else
+            {
+               // Find db mapping for pk
+               Iterator fieldEnum = referencedEntity.getCMPFields();
+               while (fieldEnum.hasNext())
+               {
+                  JawsCMPField pkField = (JawsCMPField)fieldEnum.next();
+                  if (pkField.getFieldName().equals(pk))
+                     return new JawsCMPField[] { pkField };
+               }
+               return new JawsCMPField[0];
+            }
+         }
+      }
+      
+      throw new ServerException("Could not find EJB reference. Must be defined in XML-descriptor");
+   }
+   
+   private void setParameter(PreparedStatement stmt,
+                             int idx,
+                             int jdbcType,
+                             Object value)
+      throws SQLException
+   {
+      if (value == null)
+      {
+         stmt.setNull(idx, jdbcType);
+      } else
+      {
+			System.out.println("Set parameter:"+value);
+         stmt.setObject(idx, value, jdbcType);
+      }
+   }
+   
+   private int setForeignKey(PreparedStatement stmt,
+                             int idx,
+                             int refIdx, 
+                             Object value)
+      throws SQLException
+   {
+      JawsCMPField[] pkInfo = (JawsCMPField[])ejbRefs.get(refIdx);
+      Object pk = null;
+      
+      if (value != null)
+      {
+         try
+         {
+            pk = ((EJBObject)value).getPrimaryKey();
+         } catch (RemoteException e)
+         {
+            throw new SQLException("Could not extract primary key from EJB reference:"+e);
+         }
+      }
+      
+      if (!((JawsEntity)pkInfo[0].getBeanContext()).getPrimaryKeyField().equals(""))
+      {
+         // Primitive key
+         int jdbcType = getJawsCMPFieldJDBCType(pkInfo[0]);
+         Object fieldValue = (value == null) ? null : pk;
+         setParameter(stmt, idx, jdbcType, fieldValue);
+         return idx+1;
+      } else
+      {
+         // Compound key
+         // ***** PROBLEM ***** pk may be null
+         Field[] fields = pk.getClass().getFields();
+         try
+         {
+            for (int i = 0; i < pkInfo.length; i++)
+            {
+               int jdbcType = getJawsCMPFieldJDBCType(pkInfo[i]);
+               Object fieldValue = (value == null) ? null : fields[i].get(pk);
+               setParameter(stmt, idx+i, jdbcType, fieldValue);
+            }
+         } catch (IllegalAccessException e)
+         {
+            throw new SQLException("Could not extract fields from primary key:"+e);
+         }
+         return idx+pkInfo.length;
+      }
+   }
+   
+   private Object getCMPFieldValue(Object instance, int i) 
+      throws IllegalAccessException
+   {
+      Field field = (Field)cmpFields.get(i);
+      return field.get(instance);
+   }
+   
+   private Object getPkFieldValue(Object pk, int i)
+      throws IllegalAccessException
+   {
+      Field field = (Field)pkClassFields.get(i);
+      return field.get(pk);
+   }
+   
+   private int getCMPFieldJDBCType(int i)
+   {
+      return ((Integer)jdbcTypes.get(i)).intValue();
+   }
+   
+   private int getPkFieldJDBCType(int i)
+   {
+      return ((Integer)pkJdbcTypes.get(i)).intValue();
+   }
+   
+   private int getJawsCMPFieldJDBCType(JawsCMPField fieldInfo)
+   {
+      return getJDBCType(fieldInfo.getJdbcType());
+   }
+   
+   
+   // Inner classes -------------------------------------------------
+   
+   static class PersistenceContext
+   {
+      Object[] state;
+      long lastRead = -1;
+   }
+	
+	static class DefinedFinder
+	{
+		String sql; // The SQL to be executed in prepared statement form
+		int[] parameters; // List of finder method indices
+	}
+}
