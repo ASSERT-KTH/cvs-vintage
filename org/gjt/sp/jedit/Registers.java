@@ -37,7 +37,7 @@ import org.gjt.sp.util.Log;
  * jEdit's registers are an extension of the clipboard metaphor.
  *
  * @author Slava Pestov
- * @version $Id: Registers.java,v 1.3 2002/01/05 03:26:28 spestov Exp $
+ * @version $Id: Registers.java,v 1.4 2002/03/10 04:12:49 spestov Exp $
  */
 public class Registers
 {
@@ -187,6 +187,8 @@ public class Registers
 
 			// preserve magic pos for easy insertion of the
 			// same string at the start of multiple lines
+
+			// XXX: getMagicCaretPosition() is deprecated
 			int magic = textArea.getMagicCaretPosition();
 			textArea.setSelectedText(selection);
 

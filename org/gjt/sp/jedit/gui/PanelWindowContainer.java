@@ -39,7 +39,7 @@ import org.gjt.sp.jedit.*;
  * A container for dockable windows. This class should never be used
  * directly.
  * @author Slava Pestov
- * @version $Id: PanelWindowContainer.java,v 1.29 2002/03/10 02:02:29 spestov Exp $
+ * @version $Id: PanelWindowContainer.java,v 1.30 2002/03/10 04:12:50 spestov Exp $
  * @since jEdit 4.0pre1
  */
 public class PanelWindowContainer implements DockableWindowContainer
@@ -463,7 +463,7 @@ public class PanelWindowContainer implements DockableWindowContainer
 			FontRenderContext fontRenderContext
 				= new FontRenderContext(null,true,true);
 			glyphs = font.createGlyphVector(fontRenderContext,text);
-			width = (int)glyphs.getLogicalBounds().getWidth() + 2;
+			width = (int)glyphs.getLogicalBounds().getWidth() + 4;
 			//height = (int)glyphs.getLogicalBounds().getHeight();
 
 			LineMetrics lineMetrics = font.getLineMetrics(text,fontRenderContext);
@@ -509,14 +509,14 @@ public class PanelWindowContainer implements DockableWindowContainer
 			//{{{ No rotation
 			if(rotate == RotatedTextIcon.NONE)
 			{
-				g2d.drawGlyphVector(glyphs,x + 1,y + ascent);
+				g2d.drawGlyphVector(glyphs,x + 2,y + ascent);
 			} //}}}
 			//{{{ Clockwise rotation
 			else if(rotate == RotatedTextIcon.CW)
 			{
 				AffineTransform trans = new AffineTransform();
 				trans.concatenate(oldTransform);
-				trans.translate(x,y + 1);
+				trans.translate(x,y + 2);
 				trans.rotate(Math.PI / 2,
 					height / 2, width / 2);
 				g2d.setTransform(trans);
@@ -529,7 +529,7 @@ public class PanelWindowContainer implements DockableWindowContainer
 			{
 				AffineTransform trans = new AffineTransform();
 				trans.concatenate(oldTransform);
-				trans.translate(x,y - 1);
+				trans.translate(x,y - 2);
 				trans.rotate(Math.PI * 3 / 2,
 					height / 2, width / 2);
 				g2d.setTransform(trans);

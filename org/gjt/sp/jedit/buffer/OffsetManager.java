@@ -38,7 +38,7 @@ import org.gjt.sp.util.Log;
  * called through, implements such protection.
  *
  * @author Slava Pestov
- * @version $Id: OffsetManager.java,v 1.24 2002/03/07 10:03:25 spestov Exp $
+ * @version $Id: OffsetManager.java,v 1.25 2002/03/10 04:12:49 spestov Exp $
  * @since jEdit 4.0pre1
  */
 public class OffsetManager
@@ -425,7 +425,7 @@ public class OffsetManager
 	 * 48-55: visibility bit flags
 	 * 56: fold level valid flag
 	 * 57: context valid flag
-	 * 58-62: number of screen lines (currently unused, reserved for 4.1)
+	 * 58-62: number of screen lines (currently unused, reserved for jEdit 4.1)
 	 * 63: reserved
 	 *
 	 * Having all the info packed into a long is not very OO and makes the

@@ -50,7 +50,7 @@ import org.gjt.sp.util.Log;
  * jEdit's text component.
  *
  * @author Slava Pestov
- * @version $Id: JEditTextArea.java,v 1.106 2002/03/10 02:02:29 spestov Exp $
+ * @version $Id: JEditTextArea.java,v 1.107 2002/03/10 04:12:50 spestov Exp $
  */
 public class JEditTextArea extends JComponent
 {
@@ -675,7 +675,7 @@ public class JEditTextArea extends JComponent
 		}
 		else if(screenLine >= visibleLines - _electricScroll)
 		{
-			int count = _electricScroll - visibleLines + screenLine;
+			int count = _electricScroll - visibleLines + screenLine + 1;
 			while(count > 0 && firstLine <= getVirtualLineCount())
 			{
 				count -= chunkCache.getLineInfosForPhysicalLine(physFirstLine).length;
