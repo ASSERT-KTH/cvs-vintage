@@ -46,7 +46,7 @@ import org.jboss.util.deadlock.DeadlockDetector;
  * @author <a href="bill@burkecentral.com">Bill Burke</a>
  * @author <a href="pete@subx.com">Peter Murray</a>
  *
- * @version $Revision: 1.29 $
+ * @version $Revision: 1.30 $
  */
 public class QueuedPessimisticEJBLock extends BeanLockSupport
 {
@@ -81,6 +81,7 @@ public class QueuedPessimisticEJBLock extends BeanLockSupport
       public int id = 0;
       public String threadName;
       public boolean isQueued;
+      public Object deadlocker;
 
       public TxLock(Transaction trans)
       {
@@ -90,6 +91,11 @@ public class QueuedPessimisticEJBLock extends BeanLockSupport
          {
             if (txIdGen < 0) txIdGen = 0;
             this.id = txIdGen++;
+            deadlocker = Thread.currentThread();
+         }
+         else
+         {
+            deadlocker = trans;
          }
          this.isQueued = true;
       }
@@ -359,11 +365,6 @@ public class QueuedPessimisticEJBLock extends BeanLockSupport
       {
          setTransaction(miTx);
       }
-      else
-      {
-         if( deadlockDetection == true )
-            DeadlockDetector.singleton.removeWaiting(deadlocker);
-      }
       return wasScheduled;
    }
 
@@ -394,6 +395,8 @@ public class QueuedPessimisticEJBLock extends BeanLockSupport
          // new incoming calls
          setTransaction(thelock.waitingTx);
          //         log.debug(Thread.currentThread()+" handing off to "+lock.threadName);
+         if( deadlockDetection == true )
+            DeadlockDetector.singleton.removeWaiting(thelock.deadlocker);
          synchronized (thelock)
          {
             // notify All threads waiting on this transaction.
