@@ -1,4 +1,4 @@
-// $Id: Critic.java,v 1.38 2004/09/05 10:32:51 mvw Exp $
+// $Id: Critic.java,v 1.39 2004/10/21 10:02:47 mkl Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: Critic.java
 // Classes: Critic
 // Original Author: jrobbins@ics.uci.edu
-// $Id: Critic.java,v 1.38 2004/09/05 10:32:51 mvw Exp $
+// $Id: Critic.java,v 1.39 2004/10/21 10:02:47 mkl Exp $
 
 
 package org.argouml.cognitive.critics;
@@ -49,6 +49,7 @@ import org.argouml.cognitive.Poster;
 import org.argouml.cognitive.ToDoItem;
 import org.argouml.i18n.Translator;
 import org.argouml.kernel.Wizard;
+import org.argouml.kernel.WizardItem;
 import org.tigris.gef.util.VectorSet;
 
 /** "Abstract" base class for design critics.  Each subclass should define
@@ -708,7 +709,7 @@ public class Critic implements Poster, Serializable {
 	if (wizClass != null) {
 	    try {
 		Wizard w = (Wizard) wizClass.newInstance();
-		w.setToDoItem(item);
+		w.setToDoItem((WizardItem)item);
 		initWizard(w);
 		return w;
 	    }
