@@ -56,7 +56,7 @@
 /***************************************************************************
  * Description: ISAPI plugin for IIS/PWS                                   *
  * Author:      Gal Shachor <shachor@il.ibm.com>                           *
- * Version:     $Revision: 1.2 $                                               *
+ * Version:     $Revision: 1.3 $                                               *
  ***************************************************************************/
 
 #include <httpext.h>
@@ -84,6 +84,7 @@
  */
 #define URI_HEADER_NAME         ("TOMCATURI:")
 #define WORKER_HEADER_NAME      ("TOMCATWORKER:")
+#define CONTENT_LENGTH          ("CONTENT_LENGTH:")
 
 #define HTTP_URI_HEADER_NAME     ("HTTP_TOMCATURI")
 #define HTTP_WORKER_HEADER_NAME  ("HTTP_TOMCATWORKER")
@@ -872,10 +873,12 @@ static int init_ws_service(isapi_private_data_t *private_data,
             char *headers_buf = jk_pool_strdup(&private_data->p, huge_buf);
             unsigned i;
             unsigned len_of_http_prefix = strlen("HTTP_");
+            BOOL need_content_length_header = (s->content_length == 0);
             
             cnt -= 2; /* For our two special headers */
-            s->headers_names  = jk_pool_alloc(&private_data->p, cnt * sizeof(char *));
-            s->headers_values = jk_pool_alloc(&private_data->p, cnt * sizeof(char *));
+            /* allocate an extra header slot in case we need to add a content-length header */
+            s->headers_names  = jk_pool_alloc(&private_data->p, (cnt + 1) * sizeof(char *));
+            s->headers_values = jk_pool_alloc(&private_data->p, (cnt + 1) * sizeof(char *));
 
             if(!s->headers_names || !s->headers_values || !headers_buf) {
                 return JK_FALSE;
@@ -890,6 +893,9 @@ static int init_ws_service(isapi_private_data_t *private_data,
                 if(!strnicmp(tmp, URI_HEADER_NAME, strlen(URI_HEADER_NAME)) ||
                    !strnicmp(tmp, WORKER_HEADER_NAME, strlen(WORKER_HEADER_NAME))) {
                     real_header = JK_FALSE;
+                } else if(need_content_length_header &&
+                   !strnicmp(tmp, CONTENT_LENGTH, strlen(CONTENT_LENGTH))) {
+                    need_content_length_header = FALSE;
                 } else {
                     s->headers_names[i]  = tmp;
                 }
@@ -928,6 +934,15 @@ static int init_ws_service(isapi_private_data_t *private_data,
                 if(real_header) {
                     i++;
                 }
+            }
+            /* Add a content-length = 0 header if needed.
+             * Ajp13 assumes an absent content-length header means an unknown,
+             * but non-zero length body.
+             */
+            if(need_content_length_header) {
+                s->headers_names[cnt] = "content-length";
+                s->headers_values[cnt] = "0";
+                cnt++;
             }
             s->num_headers = cnt;
         } else {
