@@ -270,6 +270,8 @@ public class IMAPFolder extends RemoteFolder {
 	 * @param flagsList
 	 */
 	protected void updateFlags(Flags[] flagsList) {
+		
+		
 
 		// ALP 04/29/03
 		// Reset the number of seen/resent/existing messages. Otherwise you
@@ -281,9 +283,20 @@ public class IMAPFolder extends RemoteFolder {
 		// END ADDS ALP 04/29/03
 
 		for (int i = 0; i < flagsList.length; i++) {
+			
+			
 			IMAPFlags flags = (IMAPFlags) flagsList[i];
-			Flags localFlags =
-				((ColumbaHeader) headerList.get(flags.getUid())).getFlags();
+			
+			Object uid = flags.getUid();
+				
+			ColumbaHeader header = (ColumbaHeader) headerList.get(uid);
+			
+			// if the parser didn't return a complete flags object
+			// the UID in the flags object is totally wrong
+			// -> just skip this flags update
+			if ( header == null ) continue;
+			
+			Flags localFlags = header.getFlags();
 
 			localFlags.setFlags(flags.getFlags());
 
@@ -307,7 +320,7 @@ public class IMAPFolder extends RemoteFolder {
 		if (hasChanged()) {
 			cache.save();
 			setChanged(false);
-		}
+		}		
 	}
 
 	/**
@@ -700,7 +713,7 @@ public class IMAPFolder extends RemoteFolder {
 
 		FolderItem item = getFolderItem();
 		item.set("property", "accessrights", "user");
-		item.set("property", "subfolder", "true");
+		item.set("property", "subfolder", "true");		
 	}
 
 	/* (non-Javadoc)
@@ -709,18 +722,17 @@ public class IMAPFolder extends RemoteFolder {
 	public void addSubfolder(FolderTreeNode child) throws Exception {
 		super.addSubfolder(child);
 
-		String path =
-			getImapPath() + getStore().getDelimiter() + child.getName();
+		String path = getImapPath() + getStore().getDelimiter() + child.getName();
 
 		boolean result = getStore().createFolder(path);
-
+		
 	}
 
 	/* (non-Javadoc)
 	 * @see org.columba.mail.folder.Folder#getObservable()
 	 */
 	public StatusObservable getObservable() {
-		return ((IMAPRootFolder) getRootFolder()).getObservable();
+		return ((IMAPRootFolder)getRootFolder()).getObservable();
 	}
 
 	/* (non-Javadoc)
