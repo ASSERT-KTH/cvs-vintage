@@ -80,7 +80,7 @@ import org.tigris.scarab.util.EmailContext;
  * This class is responsible for assigning users to attributes.
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: AssignIssue.java,v 1.105 2004/11/02 10:22:37 dabbous Exp $
+ * @version $Id: AssignIssue.java,v 1.106 2004/11/02 13:09:20 dabbous Exp $
  */
 public class AssignIssue extends BaseModifyIssue
 {
@@ -390,8 +390,11 @@ public class AssignIssue extends BaseModifyIssue
                 }
             }
             if (activitySet != null) {
-                Exception e = emailNotify(activitySet, issue);
-                if(e != null)
+                try
+                {
+                    emailNotify(activitySet, issue);
+                }
+                catch(Exception e)
                 {
                     L10NMessage l10nMessage = new L10NMessage(EMAIL_ERROR,e);
                     scarabR.setAlertMessage(l10nMessage);
@@ -421,11 +424,11 @@ public class AssignIssue extends BaseModifyIssue
      * @param issue a <code>Issue</code> to notify users about being assigned to.
      * @param action <code>String</code> text to email to others.
      */
-    private Exception emailNotify(ActivitySet activitySet, Issue issue)
+    private void emailNotify(ActivitySet activitySet, Issue issue) throws Exception
     {
         if (issue == null)
         {
-            return null;
+            return;
         }
 
         String template = Turbine.getConfiguration().
@@ -435,15 +438,7 @@ public class AssignIssue extends BaseModifyIssue
         EmailContext ectx = new EmailContext();
         ectx.setSubjectTemplate("AssignIssueModifyIssueSubject.vm");
         Exception exception;
-        try{
-            activitySet.sendEmail(ectx, issue, template);
-            exception=null;
-        }
-        catch(Exception e)
-        {
-            exception = e;
-        }
-        return exception;
+        activitySet.sendEmail(ectx, issue, template);
     }
 
 
