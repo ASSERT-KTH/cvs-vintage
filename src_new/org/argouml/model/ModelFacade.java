@@ -1,4 +1,4 @@
-// $Id: ModelFacade.java,v 1.119 2003/09/08 00:36:42 bobtarling Exp $
+// $Id: ModelFacade.java,v 1.120 2003/09/08 14:07:07 thierrylach Exp $
 // Copyright (c) 2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -264,12 +264,20 @@ public class ModelFacade {
     public static final Object COMPOSITE_AGGREGATIONKIND =
         MAggregationKind.COMPOSITE;
 
+    /** Singleton instance */        
+	private static ModelFacade singleton = new ModelFacade();
 
     /** Constructor that forbids instantiation.
      */
     private ModelFacade() {
     }
 
+	/**
+	 * @return
+	 */
+	public static ModelFacade getFacade() {
+		return singleton;
+	}
     ////////////////////////////////////////////////////////////////
     // Recognizer methods for the UML model (in alphabetic order)
 
@@ -291,14 +299,23 @@ public class ModelFacade {
         return handle instanceof MAction;
     }
 
-    /**
-     * Recognizer for ActionSequence
-     * @param handle
-     * @return
-     */
-    public static boolean isAActionSequence(Object handle) {
-        return handle instanceof MActionSequence;
-    }
+	/**
+	 * Recognizer for ActionExpression
+	 * @param handle
+	 * @return
+	 */
+	public static boolean isAActionExpression(Object handle) {
+		return handle instanceof MActionExpression;
+	}
+
+	/**
+	 * Recognizer for ActionSequence
+	 * @param handle
+	 * @return
+	 */
+	public static boolean isAActionSequence(Object handle) {
+		return handle instanceof MActionSequence;
+	}
 
     /**
      * Recognizer for Action state
@@ -4612,4 +4629,5 @@ public class ModelFacade {
     private static Collection emptyCollection() {
         return Collections.EMPTY_LIST;
     }
+
 }
