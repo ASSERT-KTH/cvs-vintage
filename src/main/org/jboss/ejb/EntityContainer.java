@@ -14,6 +14,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Collection;
 import java.util.Hashtable;
+import java.util.Enumeration;
 
 import javax.ejb.Handle;
 import javax.ejb.HomeHandle;
@@ -50,7 +51,7 @@ import org.jboss.util.collection.SerializableEnumeration;
  * @author <a href="mailto:bill@burkecentral.com">Bill Burke</a>
  * @author <a href="mailto:andreas.schaefer@madplanet.com">Andreas Schaefer</a>
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.116 $
+ * @version $Revision: 1.117 $
  *
  * @jmx.mbean extends="org.jboss.ejb.ContainerMBean"
  */
@@ -612,7 +613,8 @@ public class EntityContainer
       boolean syncOnCommitOnly = metaData.getContainerConfiguration().getSyncOnCommitOnly();
       Transaction tx = mi.getTransaction();
 
-      if (!method.getReturnType().equals(getLocalClass()))
+      Class returnType = method.getReturnType();
+      if (Collection.class.isAssignableFrom(returnType) || returnType == Enumeration.class)
       {
          // as per the spec 9.6.4, entities must be synchronized with the datastore when an ejbFind<METHOD> is called.
          if (!syncOnCommitOnly)
@@ -627,20 +629,12 @@ public class EntityContainer
          Collection ec = localProxyFactory.getEntityLocalCollection(c);
 
          // BMP entity finder methods are allowed to return java.util.Enumeration.
-         try
+         if (returnType == Enumeration.class)
          {
-            if (method.getReturnType().equals(Class.forName("java.util.Enumeration")))
-            {
-               return java.util.Collections.enumeration(ec);
-            }
-            else
-            {
-               return ec;
-            }
+            return java.util.Collections.enumeration(ec);
          }
-         catch (ClassNotFoundException e)
+         else
          {
-            // shouldn't happen
             return ec;
          }
       }
@@ -675,7 +669,8 @@ public class EntityContainer
       boolean syncOnCommitOnly = metaData.getContainerConfiguration().getSyncOnCommitOnly();
       Transaction tx = mi.getTransaction();
 
-      if (!method.getReturnType().equals(getRemoteClass()))
+      Class returnType = method.getReturnType();
+      if (Collection.class.isAssignableFrom(returnType) || returnType == Enumeration.class)
       {
          // as per the spec 9.6.4, entities must be synchronized with the datastore when an ejbFind<METHOD> is called.
          if (!syncOnCommitOnly)
@@ -691,20 +686,12 @@ public class EntityContainer
 
          // BMP entity finder methods are allowed to return java.util.Enumeration.
          // We need a serializable Enumeration, so we can't use Collections.enumeration()
-         try
+         if (returnType == Enumeration.class)
          {
-            if (method.getReturnType().equals(Class.forName("java.util.Enumeration")))
-            {
-               return new SerializableEnumeration(ec);
-            }
-            else
-            {
-               return ec;
-            }
+            return new SerializableEnumeration(ec);
          }
-         catch (ClassNotFoundException e)
+         else
          {
-            // shouldn't happen
             return ec;
          }
       }
