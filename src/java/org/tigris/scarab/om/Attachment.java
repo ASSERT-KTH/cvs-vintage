@@ -4,13 +4,11 @@ package org.tigris.scarab.om;
 import java.util.*;
 
 // Turbine classes
+import org.apache.turbine.services.db.util.Criteria;
 import org.apache.turbine.services.db.om.*;
-// import org.apache.turbine.om.peer.BasePeer;
-import org.apache.turbine.util.db.Criteria;
 import org.apache.turbine.util.ObjectUtils;
 import org.apache.turbine.util.StringUtils;
 import org.apache.turbine.util.ParameterParser;
-// import org.apache.turbine.util.Log;
 import org.apache.turbine.services.upload.FileItem;
 
 /** 
