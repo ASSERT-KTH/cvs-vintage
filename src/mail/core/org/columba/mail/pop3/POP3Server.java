@@ -34,6 +34,7 @@ import org.columba.mail.config.AccountItem;
 import org.columba.mail.config.PopItem;
 import org.columba.mail.config.SpecialFoldersItem;
 import org.columba.mail.folder.MessageFolder;
+import org.columba.mail.folder.headercache.CachedHeaderfields;
 import org.columba.mail.main.MailInterface;
 import org.columba.mail.message.ColumbaHeader;
 import org.columba.mail.message.ColumbaMessage;
@@ -211,6 +212,9 @@ public class POP3Server {
         header.getAttributes().put("columba.accountuid",
             new Integer(accountItem.getInteger("uid")));
 
+        // remove useless headers to save memory
+        header = CachedHeaderfields.stripHeaders(header);
+        
         headerCache.getHeaderList().add(header, uid);
         
         // set headercache dirty flag
