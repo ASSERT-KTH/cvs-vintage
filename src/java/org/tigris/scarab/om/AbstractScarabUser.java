@@ -77,7 +77,7 @@ import org.tigris.scarab.util.ScarabConstants;
  * 
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: AbstractScarabUser.java,v 1.86 2003/07/28 16:53:39 jmcnally Exp $
+ * @version $Id: AbstractScarabUser.java,v 1.87 2003/08/19 18:10:23 jmcnally Exp $
  */
 public abstract class AbstractScarabUser 
     extends BaseObject 
@@ -906,7 +906,7 @@ public abstract class AbstractScarabUser
                 {
                     MITListItem item = (MITListItem)mitItems.next();
                     if (mitList.getModule(item) != null 
-                        && mitList.getIssueType(item) != null) 
+                        && item.getIssueType() != null) 
                     {                  
                         if (addAnd) 
                         {
@@ -920,8 +920,7 @@ public abstract class AbstractScarabUser
                             .append(" AND ")
                             .append(RModuleIssueTypePeer.ISSUE_TYPE_ID)
                             .append('=')
-                            .append(mitList.getIssueType(item)
-                                    .getIssueTypeId())
+                            .append(item.getIssueType().getIssueTypeId())
                             .append(')');
                         addAnd = true;
                     }

@@ -70,7 +70,7 @@ import org.tigris.scarab.util.Log;
  *
  * @author <a href="mailto:jon@latchkey.com">Jon S. Stevens</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: MITList.java,v 1.34 2003/07/30 15:30:30 dlr Exp $
+ * @version $Id: MITList.java,v 1.35 2003/08/19 18:10:23 jmcnally Exp $
  */
 public  class MITList 
     extends org.tigris.scarab.om.BaseMITList
@@ -334,22 +334,7 @@ public  class MITList
             throw new IllegalStateException("method should not be called on" +
                 " a list including more than one issue type.");
         }
-        return getIssueType(getFirstItem());
-    }
-
-    IssueType getIssueType(MITListItem item)
-        throws Exception
-    {
-        IssueType it = null;
-        if (item.getIssueTypeId() == null) 
-        {
-            it = getScarabUser().getCurrentIssueType();
-        }
-        else 
-        {
-            it = item.getIssueType();
-        }
-        return it;
+        return getFirstItem().getIssueType();
     }
 
     Module getModule(MITListItem item)
@@ -408,7 +393,7 @@ public  class MITList
         MITListItem item = getFirstItem();
         
         List rmas = getModule(item)
-            .getRModuleAttributes(getIssueType(item));
+            .getRModuleAttributes(item.getIssueType());
         for (Iterator i = rmas.iterator(); i.hasNext();) 
         {
             RModuleAttribute rma = (RModuleAttribute)i.next();
@@ -490,7 +475,7 @@ public  class MITList
         MITListItem item = getFirstItem();
         
         List rmas = getModule(item)
-            .getRModuleAttributes(getIssueType(item));
+            .getRModuleAttributes(item.getIssueType());
         Iterator i = rmas.iterator();
         while (i.hasNext()) 
         {
@@ -518,7 +503,7 @@ public  class MITList
         MITListItem item = getFirstItem();
         
         List rmas = getModule(item)
-            .getRModuleAttributes(getIssueType(item));
+            .getRModuleAttributes(item.getIssueType());
         Iterator i = rmas.iterator();
         while (i.hasNext()) 
         {
@@ -551,7 +536,7 @@ public  class MITList
             List matchingAttributes = new ArrayList();
             MITListItem item = getFirstItem();
             List rmas = getModule(item)
-                .getRModuleAttributes(getIssueType(item), activeOnly, 
+                .getRModuleAttributes(item.getIssueType(), activeOnly, 
                                       Module.USER);
             Iterator i = rmas.iterator();
             while (i.hasNext()) 
@@ -672,7 +657,7 @@ public  class MITList
             // First try saved RMUAs for first module-issuetype pair
             MITListItem item = getFirstItem();
             Module module = getModule(item);
-            IssueType issueType = getIssueType(item);
+            IssueType issueType = item.getIssueType();
             rmuas = user.getRModuleUserAttributes(module, issueType);
             // Next try default RMUAs for first module-issuetype pair
             if (rmuas.isEmpty())
@@ -795,7 +780,7 @@ public  class MITList
         List matchingRMOs = new ArrayList();
         MITListItem item = getFirstItem();
         List rmos = getModule(item)
-            .getLeafRModuleOptions(attribute, getIssueType(item));
+            .getLeafRModuleOptions(attribute, item.getIssueType());
         if (rmos != null)
         {
             for (Iterator i = rmos.iterator(); i.hasNext(); )
@@ -823,7 +808,7 @@ public  class MITList
         List matchingRMOs = new ArrayList();
         MITListItem item = getFirstItem();
         List rmos = getModule(item)
-            .getOptionTree(attribute, getIssueType(item));
+            .getOptionTree(attribute, item.getIssueType());
         if (rmos != null)
         {
             for (Iterator i = rmos.iterator(); i.hasNext(); )
@@ -853,7 +838,7 @@ public  class MITList
         while (items.hasNext()) 
         {
             MITListItem item = (MITListItem)items.next();
-            IssueType issueType = getIssueType(item);
+            IssueType issueType = item.getIssueType();
             RModuleOption parent = getModule(item)
                 .getRModuleOption(option, issueType);
             if (parent != null) 
@@ -1060,7 +1045,7 @@ public  class MITList
                         Module module = modules[i];
                         if (item.isSingleIssueType()) 
                         {
-                            IssueType type = getIssueType(item);
+                            IssueType type = item.getIssueType();
                             if (module.getRModuleIssueType(type) != null) 
                             {
                                 MITListItem newItem = 
