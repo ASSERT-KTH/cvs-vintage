@@ -31,7 +31,7 @@ import org.w3c.dom.Element;
  *            extends="org.jboss.deployment.SubDeployerMBean"
  *
  * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
- * @version $Revision: 1.26 $
+ * @version $Revision: 1.27 $
  */
 public class EARDeployer
    extends SubDeployerSupport
@@ -51,11 +51,6 @@ public class EARDeployer
    public boolean init(DeploymentInfo di)
       throws DeploymentException
    {
-      if (!super.init(di)) 
-      {
-         return false;
-      } // end of if ()
-      
       try
       {
          log.info("Init J2EE application: " + di.url);
@@ -189,6 +184,8 @@ public class EARDeployer
       {
          throw new DeploymentException("Error in accessing application metadata: ", e);
       }
+
+      super.init(di);
  
       return true;
    }
