@@ -3,50 +3,70 @@ $page.setTitle("Attribute Editor")
 #set ($user = $scarabR.User)
 #set ($module = $user.CurrentModule)
 
+<h1>Global Attributes</h1>
+
 <p>
-Please select an attribute from the list below, then click the "Modify
-Attribute" button:
+This page is for editing the Attributes which are defined globally.
 </p>
 
+<div class="functnbar">
+<table width="100%" cellpadding="3" cellspacing="2" border="1">
+<tr>
+ <td><input type="submit" value="create" class="buttonfunc"/>&#160;new attribute</td>
+</tr>
+</table>
+</div>
+
+<div class="grouper">
+<div class="datatitle">
+<table width="100%" cellpadding="3" cellspacing="2" border="1">
+<tr>
+<td>Attributes</td>
+</tr>
+</table>
+</div>
+
 <p>#actionErrorMsg()</p>
+
+<div class="datatable">
 
 <form action="$link.setPage("admin,AttributeShow.vm")" method="GET">
     <input type="hidden" name="action" value="admin.ModifyAttributes">
     <input type="hidden" name="nextTemplate" value="admin,AttributeEdit.vm">
-   
-#set ( $attgroup = $intake.Attribute.Default )
 
-## default to first attribute if none was selected previously
-#if ( $attgroup.Id.isSet() )
-    #set ($selectedId = $attgroup.Id.Value)
-    #set ($selected = "")
-#else
-    #set ($selected = " selected")
-#end
+<table width="100%" border="1" cellspacing="2" cellpadding="3">
+<tr>
+<th><a href="#"><img src="/scarab/images/icon_uparrow.gif" width="13" height="8" alt="sort" border="0"/></a><a href="#"><img src="/scarab/images/icon_downarrow.gif" width="13" height="8" alt="sort" border="0" /></a></th>
+<th><a href="#">attribute name:</a></th>
+<th><a href="#">input type:</a></th>
+<th><a href="#">description:</a></th>
+<th><a href="#">author:</a></th>
+<th><a href="#">creation date:</a></th>
+</tr>
 
+#set ( $attgroup = $intake.Attribute.Default ) 
 
-<p>
-    #if ( !$attgroup.Id.isValid() )
-        <font color="red">$attgroup.Id.Message</font>
-    #end
-</p>
-
-    <select name="$attgroup.Id.Key" size="5">
 #foreach( $attribute in $module.AllAttributes )
-
-    <option value="$attribute.AttributeId"$selected>$attribute.Name</option>
-
-    ## this moves forward in the list, in case of editting multiple attributes
-    #if ($selectedId && $selectedId == $attribute.AttributeId)
-        #set ($selected = " selected")
-    #else
-        #set ($selected = "")
+<tr class="a">
+<td><input type="checkbox"/></td>
+<td>$attribute.Name (<a href="$link.setPage("admin,AttributeShow.vm").setAction("admin.ModifyAttributes").addPathInfo("eventSubmit_doSelectattribute", "Modify Attribute").addPathInfo("$attgroup.Id.Key", "$attribute.AttributeId").addPathInfo("nextTemplate","admin,AttributeEdit.vm")">edit</a>)</td>
+<td>
+    #set ($attType = $attribute.AttributeType)
+    #foreach ( $atype in $attribute.AllAttributeTypes )
+      #if($attType.AttributeTypeId == $atype.AttributeTypeId)
+        $atype.Name
+      #end
     #end
+</td>
+<td>descr. X</td>
+<td>x (x@xxx.com)</td>
+<td>xx/xx/2001</td>
+<td><a href="#">copy</a></td>
+</tr>
 #end
-    </select>
+</table>
 
-<p>
-<input type="submit" name="eventSubmit_doSelectattribute" value="Modify Attribute">
-</p>
+</div>
+
 $intake.declareGroups()
 </form>
