@@ -68,7 +68,7 @@ import org.tigris.scarab.baseom.peer.*;
     implementation needs.
 
     @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
-    @version $Id: ScarabUser.java,v 1.8 2001/01/19 00:24:08 jon Exp $
+    @version $Id: ScarabUser.java,v 1.9 2001/01/22 04:17:21 jon Exp $
 */
 public class ScarabUser extends org.apache.turbine.om.security.TurbineUser
 {    
@@ -134,7 +134,7 @@ public class ScarabUser extends org.apache.turbine.om.security.TurbineUser
         // get a unique id for validating the user
         String uniqueId = TurbineUniqueId.getPseudorandomId().substring(0,10);
         // add it to the perm table
-        setConfirmed(false, uniqueId);
+        setConfirmed(uniqueId);
         TurbineSecurity.addUser (this, getPassword());
     }
     
