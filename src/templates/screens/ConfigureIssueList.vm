@@ -13,14 +13,14 @@
 
 <div class="functnbar">
 <!--  <input type="submit" value="$l10n.ResetToDefault"  name="eventSubmit_doUsedefaults" />&#160; -->
-  <input type="submit" value="$l10n.Done" name="eventSubmit_doDone" />&#160; 
+  <input type="submit" value="$l10n.Done" name="eventSubmit_doSave" />&#160;
   <input type="submit" value="$l10n.Cancel" name="eventSubmit_doCancel" />
 </div>
 
 <h3>$l10n.Attributes</h3>
 <table width="100%" border="1" cellspacing="2" cellpadding="3">
  <tr>
-  <th>$l10n.AttributeName</th>
+  <th>$l10n.Name</th>
   <th>$l10n.ColumnSequence</th>
  </tr>
 
@@ -51,7 +51,7 @@
 
 <div class="functnbar2">
 <!--  <input type="submit" value="$l10n.ResetToDefault"  name="eventSubmit_doUsedefaults" />&#160; -->
-  <input type="submit" value="$l10n.Done" name="eventSubmit_doDone" />&#160; 
+  <input type="submit" value="$l10n.Done" name="eventSubmit_doSave" />&#160;
   <input type="submit" value="$l10n.Cancel" name="eventSubmit_doCancel" />
 </div>
 
