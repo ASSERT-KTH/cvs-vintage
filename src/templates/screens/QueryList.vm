@@ -36,16 +36,17 @@ $page.setTitle("Stored query list")
   <img src="$data.Request.ContextPath/images/icon_uparrow.gif" width="13" height="8" alt="sort ascending" title="sort ascending" border="0" />
   <img src="$data.Request.ContextPath/images/icon_downarrow.gif" width="13" height="8" alt="sort descending" title="sort descending" border="0" />
   </th>
-  <th>Name</th>
-  <th>Description</th>
+  <th>Query name</th>
+  <th>Query description</th>
   <th>Location</th>
   <th>Initiated by</th>
-  <th>Default?</th>
-  <th>Subscribed?</th>
-  <th>Subscription frequency</th>
+  <th>Default</th>
+  <th>Subscr</th>
+  <th>Subscr frequency</th>
  </tr>
  #foreach ( $query in $module.getAllUserQueries($user, $issueType) )
   #set ($rqu = $query.getRQueryUser($user))
+  #set ($rquGroup = $intake.RQueryUser.mapTo($rqu))
   #indexedRows($velocityCount)
   <td><input type="checkbox" name="action_$query.QueryId" /></td>
   <td><a href="$query.getEditLink($link.setPage("EditQuery.vm").toString())">$query.Name</a></td>
@@ -59,20 +60,10 @@ $page.setTitle("Stored query list")
   <td><a href="mailTo:$createdUser.Email">$createdUser.FirstName $createdUser.LastName</a></td>
   <td><input type="radio" name="default" value="$query.QueryId" 
           #if ($rqu.Isdefault) checked="checked" #end /></td>
-  <td>
-    #if ($rqu.isSubscribed)
-      y
-    #else
-      n
-    #end
-  </td>
-  <td>
-    <select name="frequency_$query.QueryId">
-      #if ($rqu.isSubscribed)
+  <td>#booleanCheckbox($rquGroup.Subscribed) </td>
+  <td>#fieldErrorMsg ($rquGroup.Frequency "<br>")
+    <select name="$rquGroup.Frequency.Key">
         #frequencySelectBox ($rqu.SubscriptionFrequency)
-      #else
-        #frequencySelectBox (1)
-      #end
     </select>
   </td>
   </tr>
@@ -80,12 +71,12 @@ $page.setTitle("Stored query list")
 </table>
 
 <div class="functnbar3">		
-<input type="submit" value="Copy" name="eventSubmit_doCopyquery" />
+<input type="submit" value="save" name="eventSubmit_doSave" />
+<input type="submit" value="copy" name="eventSubmit_doCopyquery" />
   #if ($scarabR.hasPermission($scarabG.Permission.ITEM__DELETE) || !$module.getPrivateQueries($user).isEmpty())
    &nbsp;<input type="submit" value="delete selected" name="eventSubmit_doDeletequeries" />&#160;
-  &nbsp;<input type="submit" value="subscribe to selected" name="eventSubmit_doSubscribe" />&#160;
-  &nbsp;<input type="submit" value="unsubscribe to selected" name="eventSubmit_doUnsubscribe" />
   #end
+   &nbsp;<input type="submit" value="create new query" name="eventSubmit_doNewquery" />&#160;
 </div>
 
 
@@ -96,5 +87,6 @@ $page.setTitle("Stored query list")
 <input type="submit" value="Done"  name="eventSubmit_doSave" />&nbsp;<input type="submit" value="Cancel"  name="eventSubmit_doCancel" />&nbsp;
 </div>
 
+$intake.declareGroups()
 </form>
 </div>
