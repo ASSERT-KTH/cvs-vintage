@@ -24,7 +24,7 @@
 // File: TabStyle.java
 // Classes: TabStyle
 // Original Author:
-// $Id: TabStyle.java,v 1.5 2002/12/30 12:43:25 kataka Exp $
+// $Id: TabStyle.java,v 1.6 2002/12/31 04:43:40 mkl Exp $
 
 // 12 Apr 2002: Jeremy Bennett (mail@jeremybennett.com). Extended to support
 // use case style panel that handles optional display of extension points.
@@ -105,6 +105,20 @@ implements TabFigTarget, PropertyChangeListener, DelayedVChangeListener {
     _panels.put(FigGeneralization.class, spfeme);
     _panels.put(FigRealization.class, spfeme);
   }
+
+   /** Adds a style panel to the internal list. This allows a plugin to
+   *  add and register a new style panel at run-time. This property style will
+   *  then be displayed in the detatils pane whenever an element of the given 
+   *  metaclass is selected.
+   *
+   * @param c the metaclass whose details show be displayed in the property panel p
+   * @param s an instance of the style panel for the metaclass m
+   *
+   */
+  public void addPanel(Class c, StylePanel s) {
+    _panels.put(c,s);
+  }
+
 
   ////////////////////////////////////////////////////////////////
   // accessors
