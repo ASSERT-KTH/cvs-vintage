@@ -15,6 +15,8 @@ import java.lang.reflect.Proxy;
 import java.lang.reflect.UndeclaredThrowableException;
 import java.util.Hashtable;
 import java.util.ArrayList;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 import javax.management.MBeanServerConnection;
 import javax.management.ObjectName;
 import javax.naming.Context;
@@ -34,7 +36,7 @@ import org.jnp.interfaces.NamingContext;
  * A JMX client that uses an MBeanServerConnection to shutdown a remote JBoss
  * server.
  *
- * @version <tt>$Revision: 1.18 $</tt>
+ * @version <tt>$Revision: 1.19 $</tt>
  * @author  <a href="mailto:jason@planet57.com">Jason Dillon</a>
  * @author  Scott.Stark@jboss.org
  */
@@ -81,6 +83,7 @@ public class Shutdown
       {
          new LongOpt("help", LongOpt.NO_ARGUMENT, null, 'h'),
          new LongOpt("server", LongOpt.REQUIRED_ARGUMENT, null, 's'),
+         new LongOpt("adapter", LongOpt.REQUIRED_ARGUMENT, null, 'a'),
          new LongOpt("serverName", LongOpt.REQUIRED_ARGUMENT, null, 'n'),
          new LongOpt("shutdown", LongOpt.NO_ARGUMENT, null, 'S'),
          new LongOpt("exit", LongOpt.REQUIRED_ARGUMENT, null, 'e'),
@@ -146,6 +149,7 @@ public class Shutdown
                break;
             case 'n':
                serverJMXName = new ObjectName(getopt.getOptarg());
+               break;
             case 'S':
                // nothing...
                break;
@@ -172,7 +176,16 @@ public class Shutdown
       }
       
       InitialContext ctx;
-      
+
+      // If there was a username specified, but no password prompt for it
+      if( username != null && password == null )
+      {
+         System.out.print("Enter password for "+username+": ");
+         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+         password = br.readLine();
+         SecurityAssociation.setCredential(password);
+      }
+
       if (serverURL == null)
       {
          ctx = new InitialContext();
