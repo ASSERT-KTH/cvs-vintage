@@ -10,7 +10,7 @@
 <!--                                                                        -->
 <!-- ====================================================================== -->
 
-<!-- $Id: build.xml,v 1.38 2001/11/12 04:24:18 schaefera Exp $ -->
+<!-- $Id: build.xml,v 1.39 2001/12/03 04:33:06 starksm Exp $ -->
 
 <project default="main" name="JBoss/Server">
 
@@ -188,6 +188,14 @@ os.version:      ${os.version}
       <pathelement path="${sun.jaas.lib}/jaas.jar"/>
     </path>
 
+    <!-- Java Secure Socket Extension (JSSE) -->
+    <property name="sun.jsse.root" value="${project.thirdparty}/sun/jsse"/>
+    <property name="sun.jsse.lib" value="${sun.jsse.root}/lib"/>
+    <path id="sun.jsse.classpath">
+      <pathelement path="${sun.jaas.lib}/jsse.jar"/>
+      <pathelement path="${sun.jaas.lib}/jnet.jar"/>
+    </path>
+
     <!-- JavaBeans Activation Framework (JAF) -->
     <property name="sun.jaf.root" value="${project.thirdparty}/sun/jaf"/>
     <property name="sun.jaf.lib" value="${sun.jaf.root}/lib"/>
@@ -268,6 +276,7 @@ os.version:      ${os.version}
       <path refid="sun.jmx.classpath"/>
       <path refid="sun.jaxp.classpath"/>
       <path refid="sun.jaas.classpath"/>
+      <path refid="sun.jsse.classpath"/>
       <path refid="sun.jaf.classpath"/>
       <path refid="sun.javamail.classpath"/>
       <path refid="sun.jts.classpath"/>
