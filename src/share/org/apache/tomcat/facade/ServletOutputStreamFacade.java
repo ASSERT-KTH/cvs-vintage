@@ -80,7 +80,8 @@ final class ServletOutputStreamFacade extends ServletOutputStream {
     protected boolean closed = false;
 
     Response resA;
-    ByteBuffer bb;
+    OutputBuffer ob;
+    //ByteBuffer bb;
     
     /** Encoding - first time print() is used.
 	IMPORTANT: print() is _bad_, if you want to write Strings and mix
@@ -94,13 +95,16 @@ final class ServletOutputStreamFacade extends ServletOutputStream {
     
     protected ServletOutputStreamFacade( Response resA) {
 	this.resA=resA;
-	bb=resA.getOutputBuffer();
+	ob=resA.getBuffer();
+	// 	bb=resA.getOutputBuffer();
+	// 	bb.addBufferListener( new  BufferResponseAdapter());
     }
 
     // -------------------- Write methods --------------------
     
     public void write(int i) throws IOException {
-	bb.write(i);
+	//	bb.write(i);
+	ob.write(i);
     }
 
     public void write(byte[] b) throws IOException {
@@ -108,7 +112,8 @@ final class ServletOutputStreamFacade extends ServletOutputStream {
     }
     
     public void write(byte[] b, int off, int len) throws IOException {
-	bb.write( b, off, len );
+	//	bb.write( b, off, len );
+	ob.write( b, off, len );
     }
 
     // -------------------- Servlet Output Stream methods --------------------
@@ -147,11 +152,13 @@ final class ServletOutputStreamFacade extends ServletOutputStream {
     /** Will send the buffer to the client.
      */
     public void flush() throws IOException {
-	bb.flush(); // send it now !
+	//	bb.flush(); // send it now !
+	ob.flush();
     }
 
     public void close() throws IOException {
-	bb.flush(); // send it now !
+	//	bb.flush(); // send it now !
+	ob.flush();
 	closed = true;
     }
 
@@ -165,5 +172,34 @@ final class ServletOutputStreamFacade extends ServletOutputStream {
 	gotEnc=false;
     }
 
+//     // -------------------- ByteBuffer
+//     // Initial experimental support - this will change.
+//     // This is an adapter between ByteBuffer and server adapters implementing
+//     // doWrite
+//     class BufferResponseAdapter implements BufferListener {
+// 	BufferResponseAdapter() {
+// 	}
+
+// 	public void bufferEmpty( BufferEvent ev ) {
+// 	    return;
+// 	}
+    
+// 	public void bufferFull( BufferEvent ev ) {
+// 	    try {
+// 		// Find if this is the first chunk , if so do send head 
+// 		//	    log( "Buffer full event ");
+// 		ByteBuffer bb=(ByteBuffer)ev.getSource();
+// 		Response res=(Response)bb.getParent();
+// 		Request request=res.getRequest();
+// 		request.getContextManager().doWrite( request, res,
+// 						     ev.getByteBuffer(),
+// 						     ev.getOffset(),
+// 						     ev.getLength() );
+// 	    } catch( IOException ex ) {
+// 		ex.printStackTrace();
+// 		// XXX mark exception ?
+// 	    }
+// 	}
+//     }
 }
 

@@ -68,8 +68,7 @@ import org.apache.tomcat.util.*;
 /**
  * This is the input stream returned by ServletRequest.getInputStream().
  * It is the adapter between the ServletInputStream interface expected
- * by webapps and Request.doRead() methods. It will also use
- * the ByteBuffer.
+ * by webapps and Request.doRead() methods. 
  *
  * This will also deal with the "contentLength" limit.
  * <b>Important</b> Only the methods in ServletInputStream can be public.
@@ -79,7 +78,7 @@ public class ServletInputStreamFacade extends ServletInputStream {
     private int limit = -1;
 
     private Request reqA;
-    private ByteBuffer inBuffer;
+    //    private ByteBuffer inBuffer;
     
     ServletInputStreamFacade() {
     }
@@ -94,7 +93,7 @@ public class ServletInputStreamFacade extends ServletInputStream {
     
     void setRequest(Request reqA ) {
 	this.reqA=reqA;
-	inBuffer=reqA.getInputBuffer();
+	//	inBuffer=reqA.getInputBuffer();
     }
 
     void recycle() {
@@ -105,12 +104,12 @@ public class ServletInputStreamFacade extends ServletInputStream {
      *  use the old method.
      */
     private int doRead() throws IOException {
-	if( inBuffer!=null ) return inBuffer.read();
+	//	if( inBuffer!=null ) return inBuffer.read();
 	return reqA.doRead();
     }
 
     private int doRead(byte[] b, int off, int len) throws IOException {
-	if( inBuffer!=null ) return inBuffer.read(b,off,len);
+	//	if( inBuffer!=null ) return inBuffer.read(b,off,len);
 	return reqA.doRead(b,off,len);
     }
 

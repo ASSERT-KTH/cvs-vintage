@@ -58,36 +58,21 @@
  */ 
 
 
-package org.apache.tomcat.util;
+package org.apache.tomcat.core;
 
 import java.io.*;
 
 /**
- * Un-synchronized byte buffer. We have methods to write and read from the
- * buffer, and helpers can convert various data formats.
+ * The buffer used by tomcat response. It allows writting chars and
+ * bytes. It does the mixing in order to implement ServletOutputStream
+ * ( which has both byte and char methods ) and to allow a number of
+ * optimizations (like a jsp pre-computing the byte[], but using char for
+ * non-static content).
  *
- * The idea is to minimize the number of buffers and the amount of copy from
- * layer to layer. It's _not_ premature optimization - it's the way things
- * should work.
- *
- * The Request and Response will use several buffers, same for the protocol
- * adapters.
- *
- * Note that the Buffer owns his byte[], while the Chunk is just a light
- * cursor.
- *
- * 
  * @author Costin Manolache
  */
-public class ByteBuffer {
-    // everything happens inside one thread !!!
-
-    BufferEvent bufferEvent=new BufferEvent(this);
-
-    BufferListener listeners[]=new BufferListener[10];
-    int listenerCount=0;
-    
-    protected static final int DEFAULT_BUFFER_SIZE = 8*1024;
+public final class OutputBuffer {
+    public static final int DEFAULT_BUFFER_SIZE = 8*1024;
     int defaultBufferSize = DEFAULT_BUFFER_SIZE;
     int bytesWritten = 0;
 
@@ -100,67 +85,39 @@ public class ByteBuffer {
     
     /**
      * The index one greater than the index of the last valid byte in 
-     * the buffer. 
+     * the buffer. count==-1 for end of stream
      */
     public int count;
-    // count==-1 for end of stream
-    
-    Object parent; // Who "owns" this buffer
-    
-    /**
-     * The current position in the buffer. This is the index of the next 
-     * character to be read from the buf. 
-     */
-    public int pos;
 
     final static int debug=0;
+
+    Response resp;
+    Request req;
+    ContextManager cm;
     
-    public ByteBuffer() {
+    public OutputBuffer(Response resp) {
 	buf=new byte[defaultBufferSize];
+	this.resp=resp;
+	req=resp.getRequest();
+	cm=req.getContextManager();
     }
 
     public void recycle() {
 	bytesWritten=0;
 	count=0;
-	pos=0;
     }
 
-    public Object getParent() {
-	return parent;
+    /** This method will call the interceptors and then write the buf[]
+     *  to the adapter's doWrite.
+     */
+    void doWrite( byte buf[], int off, int count ) throws IOException {
+	cm.doWrite( req, resp, buf, off, count );
     }
 
-    public void setParent( Object o ) {
-	parent=o;
-    }
-    
-    public void addBufferListener( BufferListener l ) {
-	listeners[listenerCount]=l;
-	listenerCount++;
-    }
-    
-    public void doWrite( byte buf[], int off, int count ) {
-	bufferEvent.setByteBuffer( buf );
-	bufferEvent.setOffset( off );
-	bufferEvent.setLength( count );
-	for( int i=0; i< listenerCount; i++ )
-	    listeners[i].bufferFull( bufferEvent );
-    }
-
-    public int doRead( byte buf[], int off, int count ) {
-	if( debug > 1 ) log("doRead " + off + " " + count);
-	bufferEvent.setByteBuffer( buf );
-	bufferEvent.setOffset( off );
-	bufferEvent.setLength( count );
-	for( int i=0; i< listenerCount; i++ )
-	    listeners[i].bufferEmpty( bufferEvent );
-	return bufferEvent.getLength();
-    }
-    
     // -------------------- Adding to the buffer -------------------- 
     // Like BufferedOutputStream, without sync
 
     public void write(int b) throws IOException {
-	if( debug>0 ) log( "write(b)");
 	if( debug>1 )System.out.write( b );
 	if (count >= buf.length) {
 	    flush();
@@ -170,15 +127,15 @@ public class ByteBuffer {
     }
 
     public void write(byte b[], int off, int len) throws IOException {
-	if( debug>0 ) log( "write(b[])" );
 	if( debug>1 ) System.out.write( b, off, len );
 	int avail=buf.length - count;
+
+	bytesWritten += len;
 
 	// fit in buffer, great.
 	if( len <= avail ) {
 	    System.arraycopy(b, off, buf, count, len);
 	    count += len;
-	    bytesWritten += len;
 	    return;
 	}
 
@@ -196,8 +153,8 @@ public class ByteBuffer {
 	    */
 	    System.arraycopy(b, off, buf, count, avail);
 	    count += avail;
-	    flush(); // count will be 0
-
+	    flush();
+	    
 	    System.arraycopy(b, off+avail, buf, count, len - avail);
 	    count+= len - avail;
 	    bytesWritten += len - avail;
@@ -211,89 +168,15 @@ public class ByteBuffer {
 	return;
     }
 
-    public void flush() {
-	if( debug > 0 ) log("Flush");
-	if (count > 0) {
-	    doWrite(buf, 0, count);
-	    count = 0;
-        }
-    }
-
-//     public void close() {
-// 	// a write with count=0 will make sure
-// 	// the listeners are at least once called.
-// 	// we need to add a close() notification
-// 	System.out.println("Buffer.close()");
-// 	doWrite( buf, 0, count);
-// 	count=0;
-//     }
-    
-    // -------------------- Extracting from buffer --------------------
-    // Like BufferedInputStream, without sync and without mark
-    
-    public int read() {
-	if( count == -1 ) return -1;
-	if (pos >= count) {
-	    fill();
-	    if (count <0 )
-		return -1;
-	}
-	return buf[pos++] & 0xff;
-    }
-
-    public int read(byte b[], int off, int len)
-	throws IOException
-    {
-	if (len == 0) {
-	    return 0;
-	}
-	int n=0; // how many bytes we copy
-	int avail = count - pos;
-
-	// copy from our buffer to the result
-	if( avail > 0 ) {
-	    int cnt = (avail < len) ? avail : len;
-	    System.arraycopy(buf, pos, b, off, cnt);
-	    pos += cnt;
-	    n=cnt;
-	}
-
-	if( n >= len ) return n;
-	
-	// now our buffer is empty
-	/* If the requested length is at least as large as the buffer
-	   do not bother to copy the bytes into the local buffer.
-	*/
-	if (len - n >= buf.length ) {
-	    return n + doRead(b, off+n, len-n);
-	}
-	
-	// fill the buffer, copy the remaining
-
-	fill();
-	avail = count - pos;
-
-	// EOF, we may have copied something from the buff
-	if (avail <= 0) return n;
-	
-	// copy the remaining
-	int cnt = (avail < len - n ) ? avail : len - n ;
-	System.arraycopy(buf, pos, b, off+n, cnt);
-	pos += cnt;
-	n+=cnt;
-
-	return n;
-    }
-
-    private  void fill() {
-	pos=0;
-	count = doRead( buf, 0, buf.length );
-	if( count==0) count=-1; // end of stream
-    }
-
-
     // --------------------  BufferedOutputStream compatibility
 
+    public void flush() throws IOException {
+	if( count > 0) {
+	    doWrite( buf, 0, count );
+	    count=0;
+	}
+    }
+    
     public int getBytesWritten() {
 	return bytesWritten;
     }
@@ -317,7 +200,7 @@ public class ByteBuffer {
     // -------------------- Utils
 
     void log( String s ) {
-	System.out.println("ByteBuffer: " + s );
+	System.out.println("OutputBuffer: " + s );
     }
     
 }

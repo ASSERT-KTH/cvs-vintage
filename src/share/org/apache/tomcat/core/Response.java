@@ -126,7 +126,7 @@ public interface Response {
     /** Either re-implement getOutputStream or return BufferedServletOutputStream(this)
      *  and implement doWrite();
      */
-    public ServletOutputStream getOutputStream() ;
+    public ServletOutputStream getOutputStream() throws IOException;
 
     public void doWrite( byte buffer[], int pos, int count) throws IOException;
     
@@ -151,6 +151,8 @@ public interface Response {
     public void setBufferSize(int size) throws IllegalStateException ;
 
     public boolean isBufferCommitted() ;
+
+    public void setBufferCommitted(boolean v) ;
 
     public void reset() throws IllegalStateException ;
 
@@ -204,9 +206,12 @@ public interface Response {
 
     // -------------------- Buffers --------------------
 
-    public ByteBuffer getOutputBuffer();
+    public OutputBuffer getBuffer();
 
-    public void  setOutputBuffer(ByteBuffer buf);
+    // @deprecated
+    //    public ByteBuffer getOutputBuffer();
+
+    //    public void  setOutputBuffer(ByteBuffer buf);
 
     
     // -------------------- Internal methods --------------------

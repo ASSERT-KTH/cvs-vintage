@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/ResponseImpl.java,v 1.35 2000/07/29 18:33:09 costin Exp $
- * $Revision: 1.35 $
- * $Date: 2000/07/29 18:33:09 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/ResponseImpl.java,v 1.36 2000/07/31 02:35:15 costin Exp $
+ * $Revision: 1.36 $
+ * $Date: 2000/07/31 02:35:15 $
  *
  * ====================================================================
  *
@@ -100,9 +100,10 @@ public class ResponseImpl implements Response {
 
     protected MimeHeaders headers = new MimeHeaders();
 
-    protected BufferedServletOutputStream out;
+    //    protected BufferedServletOutputStream out;
     protected PrintWriter writer;
-    protected ByteBuffer bBuffer;
+    //    protected ByteBuffer bBuffer;
+    protected OutputBuffer oBuffer;
 
     protected boolean usingStream = false;
     protected boolean usingWriter = false;
@@ -113,12 +114,23 @@ public class ResponseImpl implements Response {
 
     // default implementation will just append everything here
     StringBuffer body=null;
-
+    
     public ResponseImpl() {
-	out=new BufferedServletOutputStream();
-	out.setResponse(this);
+	// 	if( useBuffer ) {
+	// 	    bBuffer=new ByteBuffer();
+	// 	    bBuffer.setParent( this );
+	// 	    out=null;
+	// 	} else {
+	// 	    out=new BufferedServletOutputStream();
+	// 	    out.setResponse( this );
+	// 	}
     }
 
+    void init() {
+	// init must be called from CM - we need req, etc.
+	oBuffer=new OutputBuffer( this );
+    }
+    
     public HttpServletResponse getFacade() {
         if( responseFacade==null ) {
 	    Context ctx= request.getContext();
@@ -157,7 +169,9 @@ public class ResponseImpl implements Response {
 
 	}
     }
-    
+
+    /** If the writer/output stream was requested
+     */
     public boolean isStarted() {
 	return started;
     }
@@ -179,8 +193,9 @@ public class ResponseImpl implements Response {
 	notIncluded=true;
 	// adapter
 	body=null;
-	if( out != null ) out.recycle();
-	if( bBuffer != null ) bBuffer.recycle();
+	// 	if( out != null ) out.recycle();
+	// 	if( bBuffer != null ) bBuffer.recycle();
+	oBuffer.recycle();
 	headers.clear();
     }
 
@@ -189,15 +204,19 @@ public class ResponseImpl implements Response {
 	    writer.flush();
 	    writer.close();
 	}
-	if( bBuffer != null) {
-	    bBuffer.flush();
-	    request.getContextManager().doAfterBody(request, this);
-	    return;
-	}
-	out.flush();
-	out.reallyFlush();
+	oBuffer.flush();
+
+	// 	if( bBuffer != null) {
+	// 	    bBuffer.flush();
+	// 	    request.getContextManager().doAfterBody(request, this);
+	// 	    return;
+	// 	}
+	
+	// 	out.flush();
+	// 	out.reallyFlush();
+	
 	request.getContextManager().doAfterBody(request, this);
-	out.close();
+	//	out.close();
     }
 
     public boolean containsHeader(String name) {
@@ -221,11 +240,19 @@ public class ResponseImpl implements Response {
 
     public void setUsingWriter( boolean writer ) {
 	usingWriter=writer;
-	out.setUsingWriter (true);
+	//	if( out!=null ) out.setUsingWriter(true);
     }
 
     public PrintWriter getWriter() throws IOException {
-	return getWriter( out );
+	// 	if( out !=null )
+	// 	    return getWriter( out );
+	
+	// it will know what to do. This method is here
+	// just to keep old code happy ( internal error handlers)
+	if( usingStream ) {
+	    return getWriter( getFacade().getOutputStream());
+	}
+	return getFacade().getWriter();
     }
 
     public PrintWriter getWriter(ServletOutputStream outs) throws IOException {
@@ -256,31 +283,31 @@ public class ResponseImpl implements Response {
 	}
     }
 
-    public ByteBuffer getOutputBuffer() {
-	return bBuffer;
+    public OutputBuffer getBuffer() {
+	return oBuffer;
     }
+    
+//     public ByteBuffer getOutputBuffer() {
+// 	started=true;
+// 	return bBuffer;
+//     }
 
-    public void setOutputBuffer(ByteBuffer buf) {
-	bBuffer=buf;
-	if( buf!= null) buf.setParent( this );
-    }
+//     public void setOutputBuffer(ByteBuffer buf) {
+// 	bBuffer=buf;
+// 	if( buf!= null) buf.setParent( this );
+//     }
     
     /** Either implement ServletOutputStream or return BufferedServletOutputStream(this)
 	and implement doWrite();
 	@deprecated 
      */
-    public ServletOutputStream getOutputStream() {
+    public ServletOutputStream getOutputStream() throws IOException {
 	started = true;
-	return out; // out.getServletOutputStreamFacade();
+// 	if( out!=null)
+// 	    return out; 
+	return getFacade().getOutputStream();
     }
 
-//     /** Either implement ServletOutputStream or return BufferedServletOutputStream(this)
-// 	and implement doWrite();
-//      */
-//     public BufferedServletOutputStream getBufferedOutputStream() {
-// 	return out;
-//     }
-    
 
     // -------------------- Headers --------------------
     public MimeHeaders getMimeHeaders() {
@@ -328,26 +355,31 @@ public class ResponseImpl implements Response {
     }
 
     public int getBufferSize() {
-	if( bBuffer != null ) return bBuffer.getBufferSize();
-	return out.getBufferSize();
+	// 	if( out!=null ) return out.getBufferSize();
+	// 	if( bBuffer != null ) return bBuffer.getBufferSize();
+	return oBuffer.getBufferSize();
     }
 
     public void setBufferSize(int size) throws IllegalStateException {
 	// Force the PrintWriter to flush the data to the OutputStream.
 	if (usingWriter == true && writer != null ) writer.flush();
 
-	if( bBuffer != null ) {
-	    if( bBuffer.isContentWritten() ) {
-		throw new IllegalStateException ( sm.getString("servletOutputStreamImpl.setbuffer.ise"));
-	    }
-	    bBuffer.setBufferSize(size);
-	    return;
-	}
-	
-	if (out.isContentWritten() == true) {
+	if( oBuffer.getBytesWritten() >0  ) {
 	    throw new IllegalStateException ( sm.getString("servletOutputStreamImpl.setbuffer.ise"));
 	}
-	out.setBufferSize(size);
+	oBuffer.setBufferSize( size );
+	// 	if( bBuffer != null ) {
+	// 	    if( bBuffer.getBytesWritten() >0  ) {
+	// 		throw new IllegalStateException ( sm.getString("servletOutputStreamImpl.setbuffer.ise"));
+	// 	    }
+	// 	    bBuffer.setBufferSize(size);
+	// 	    return;
+	// 	}
+	
+	// 	if (out.isContentWritten()  ) {
+	// 	    throw new IllegalStateException ( sm.getString("servletOutputStreamImpl.setbuffer.ise"));
+	// 	}
+	// 	out.setBufferSize(size);
     }
 
     /*
@@ -378,7 +410,13 @@ public class ResponseImpl implements Response {
 
 	body=null;
 	// Reset the stream
-	out.reset();
+	if( commited ) {
+	    String msg = sm.getString("servletOutputStreamImpl.reset.ise"); 
+	    throw new IllegalStateException(msg);
+	}
+	oBuffer.reset();
+	// 	if (bBuffer!=null ) bBuffer.reset();
+	// 	if( out!=null ) out.reset();
 
         // Clear the cookies and such
 
@@ -391,16 +429,24 @@ public class ResponseImpl implements Response {
 	if( usingWriter && writer != null )
 	    writer.flush();
 
-	out.reset();	// May throw IllegalStateException
+	if( commited ) {
+	    String msg = sm.getString("servletOutputStreamImpl.reset.ise"); 
+	    throw new IllegalStateException(msg);
+	}
+	oBuffer.reset();
+	// 	if (bBuffer!=null ) bBuffer.reset();
+	// 	if( out!=null ) out.reset();	// May throw IllegalStateException
 
     }
 
     public void flushBuffer() throws IOException {
 	//	if( notIncluded) {
-	    if (usingWriter == true && writer != null)
-		writer.flush();
-	    
-	    out.reallyFlush();
+	if (usingWriter == true && writer != null)
+	    writer.flush();
+
+	oBuffer.flush();
+	// 	if( out!=null ) out.reallyFlush();
+	// 	if(bBuffer!=null) bBuffer.flush();
 	    //} 
     }
 
@@ -587,5 +633,5 @@ public class ResponseImpl implements Response {
 	}
 	loghelper.log(s, level);
     }		       
-    
+
 }

@@ -342,9 +342,9 @@ public interface Request  {
     public Request getTop();
     // -------------------- Buffers --------------------
 
-    public ByteBuffer getInputBuffer();
+    //    public ByteBuffer getInputBuffer();
 
-    public void setInputBuffer(ByteBuffer buf);
+    //    public void setInputBuffer(ByteBuffer buf);
 
     // -------------------- Notes --------------------
     /** Add a per/request internal attribute.

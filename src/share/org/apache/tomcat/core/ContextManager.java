@@ -605,6 +605,7 @@ public class ContextManager implements LogAware {
 	resp.setRequest( req );
 	req.setResponse( resp );
 	req.setContextManager( this );
+	((ResponseImpl)resp).init();
     }
 
     /** This is the entry point in tomcat - the connectors ( or any other
@@ -761,6 +762,25 @@ public class ContextManager implements LogAware {
 	return 0;
     }
 
+    /** Implement the write logic, calling the interceptors
+     * and making sure the headers are sent before. This used to
+     *	be part of BufferedServletOutputStream, but it's better
+     *	to have it here for all output streams.
+     */
+    public void doWrite(Request req, Response res, byte buf[], int off, int cnt )
+	throws IOException
+    {
+	if (!res.isBufferCommitted()) {
+	    res.endHeaders();
+	    res.setBufferCommitted(true);
+	}
+	if( cnt>0 ) {
+	    doBeforeCommit( req, res );
+
+	    res.doWrite( buf, off, cnt );
+	}
+    }
+    
     int doPreService( Request req, Response res ) {
 	RequestInterceptor reqI[]= getRequestInterceptors(req);
 

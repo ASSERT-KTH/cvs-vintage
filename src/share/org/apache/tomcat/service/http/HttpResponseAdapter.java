@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/http/Attic/HttpResponseAdapter.java,v 1.12 2000/07/11 03:48:58 alex Exp $
- * $Revision: 1.12 $
- * $Date: 2000/07/11 03:48:58 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/http/Attic/HttpResponseAdapter.java,v 1.13 2000/07/31 02:35:16 costin Exp $
+ * $Revision: 1.13 $
+ * $Date: 2000/07/31 02:35:16 $
  *
  * ====================================================================
  *
@@ -132,7 +132,13 @@ public class HttpResponseAdapter extends  ResponseImpl {
     */
     protected void sendStatus( int status, String message ) throws IOException {
 	printHead("HTTP/1.0 ");
-	printHead(String.valueOf(status));
+	switch( status ) {
+	case 200: printHead("200");
+	    break;
+	    
+	default:
+	    printHead(String.valueOf(status));
+	}
 	if(message!=null) {
 	    printHead(" ");
 	    printHead(message);
