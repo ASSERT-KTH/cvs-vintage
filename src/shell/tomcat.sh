@@ -1,6 +1,6 @@
 #!/bin/sh
 #
-# $Id: tomcat.sh,v 1.15 2000/03/16 20:43:26 costin Exp $
+# $Id: tomcat.sh,v 1.16 2000/03/31 20:31:31 craigmcc Exp $
 
 # Shell script to start and stop the server
 
@@ -60,6 +60,17 @@ if [ "$TOMCAT_HOME" = "" ] ; then
     exit 1
 fi
 
+if [ "$TOMCAT_OPTS" = "" ] ; then
+  TOMCAT_OPTS=""
+fi
+
+if [ "$ANT_OPTS" = "" ] ; then
+  ANT_OPTS=""
+fi
+
+if [ "$JSPC_OPTS" = "" ] ; then
+  JSPC_OPTS=""
+fi
 
 if [ -z "$JAVA_HOME" ] ;  then
   JAVA=`which java`
@@ -107,31 +118,31 @@ export CLASSPATH
 if [ "$1" = "start" ] ; then 
   shift 
   echo Using classpath: ${CLASSPATH}
-  $JAVACMD  -Dtomcat.home=${TOMCAT_HOME}  org.apache.tomcat.startup.Tomcat "$@" &
+  $JAVACMD $TOMCAT_OPTS -Dtomcat.home=${TOMCAT_HOME}  org.apache.tomcat.startup.Tomcat "$@" &
 #   $JAVACMD org.apache.tomcat.shell.Startup "$@" &
 
 elif [ "$1" = "stop" ] ; then 
   shift 
   echo Using classpath: ${CLASSPATH}
-  $JAVACMD  -Dtomcat.home=${TOMCAT_HOME} org.apache.tomcat.startup.Tomcat -stop "$@"
+  $JAVACMD $TOMCAT_OPTS -Dtomcat.home=${TOMCAT_HOME} org.apache.tomcat.startup.Tomcat -stop "$@"
 #   $JAVACMD org.apache.tomcat.shell.Shutdown "$@"
 
 elif [ "$1" = "run" ] ; then 
   shift 
   echo Using classpath: ${CLASSPATH}
-  $JAVACMD  -Dtomcat.home=${TOMCAT_HOME} org.apache.tomcat.startup.Tomcat "$@" 
+  $JAVACMD $TOMCAT_OPTS -Dtomcat.home=${TOMCAT_HOME} org.apache.tomcat.startup.Tomcat "$@" 
 #  $JAVACMD org.apache.tomcat.shell.Startup "$@" 
   # no &
 
 elif [ "$1" = "ant" ] ; then 
   shift 
 
-  $JAVACMD -Dant.home=${TOMCAT_HOME} -Dtomcat.home=${TOMCAT_HOME} org.apache.tools.ant.Main $@
+  $JAVACMD $ANT_OPTS -Dant.home=${TOMCAT_HOME} -Dtomcat.home=${TOMCAT_HOME} org.apache.tools.ant.Main $@
 
 elif [ "$1" = "jspc" ] ; then 
   shift 
 
-  $JAVACMD -Dtomcat.home=${TOMCAT_HOME} org.apache.jasper.JspC "$@"
+  $JAVACMD $JSPC_OPTS -Dtomcat.home=${TOMCAT_HOME} org.apache.jasper.JspC "$@"
 
 elif [ "$1" = "env" ] ; then 
   ## Call it with source tomcat.sh to set the env for tomcat
