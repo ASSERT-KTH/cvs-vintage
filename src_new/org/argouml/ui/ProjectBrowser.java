@@ -1,4 +1,4 @@
-// $Id: ProjectBrowser.java,v 1.116 2003/09/19 21:28:42 d00mst Exp $
+// $Id: ProjectBrowser.java,v 1.117 2003/09/21 14:19:24 alexb Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -513,53 +513,6 @@ public class ProjectBrowser
         if (getTarget() != o) {
 
             cat.debug("setting project target = " + o);
-
-            // _editorPane.setTarget(o);
-	    /*
-	      _target = o;
-	      if (o instanceof MNamespace) {
-	      ProjectManager
-	      .getManager()
-	      .getCurrentProject()
-	      .setCurrentNamespace(
-	      (MNamespace) o);
-	      } else if (o instanceof MModelElement) {
-	      if (((MModelElement) o).getNamespace() != null) {
-	      ProjectManager
-	      .getManager()
-	      .getCurrentProject()
-	      .setCurrentNamespace(
-	      ((MModelElement) o).getNamespace());
-	      } else
-	      ProjectManager
-	      .getManager()
-	      .getCurrentProject()
-	      .setCurrentNamespace(
-	      (MNamespace) ProjectManager
-	      .getManager()
-	      .getCurrentProject()
-	      .getRoot());
-	      }
-
-	      if (o instanceof ArgoDiagram) {
-	      ProjectManager
-	      .getManager()
-	      .getCurrentProject()
-	      .setActiveDiagram(
-	      (ArgoDiagram) o);
-	      if (o instanceof UMLDiagram) {
-	      MNamespace m = ((UMLDiagram) o).getNamespace();
-	      if (m != null)
-	      ProjectManager
-	      .getManager()
-	      .getCurrentProject()
-	      .setCurrentNamespace(
-	      m);
-	      }
-	      }
-            */
-            // getNavigatorPane().getTree().setTarget(o);
-            
             
         }
         TargetManager.getInstance().setTarget(o);
