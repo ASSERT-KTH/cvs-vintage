@@ -72,7 +72,7 @@ import org.tigris.scarab.om.ScarabUser;
  * Default.java Screen except that it has a few helper methods.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: RequireLoginFirstAction.java,v 1.31 2002/03/08 06:40:51 elicia Exp $    
+ * @version $Id: RequireLoginFirstAction.java,v 1.32 2002/03/26 20:30:32 elicia Exp $    
  */
 public abstract class RequireLoginFirstAction extends TemplateSecureAction
 {
@@ -82,6 +82,9 @@ public abstract class RequireLoginFirstAction extends TemplateSecureAction
     protected static final String ERROR_MESSAGE = 
         "More information was required to submit your request. Please " +
         "scroll down to see error messages."; 
+
+    protected static final String NO_PERMISSION_MESSAGE = 
+         "You do not have permission to perform this action.";
 
     /**
      * sets the template to template.login if the user hasn't logged in yet

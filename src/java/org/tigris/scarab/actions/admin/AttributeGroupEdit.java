@@ -78,12 +78,13 @@ import org.tigris.scarab.om.Module;
 import org.tigris.scarab.util.ScarabConstants;
 import org.tigris.scarab.tools.ScarabRequestTool;
 import org.tigris.scarab.services.cache.ScarabCache; 
+import org.tigris.scarab.services.security.ScarabSecurity;
 
 /**
  * action methods on RModuleAttribute table
  *      
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: AttributeGroupEdit.java,v 1.17 2002/03/20 01:23:06 elicia Exp $
+ * @version $Id: AttributeGroupEdit.java,v 1.18 2002/03/26 20:30:32 elicia Exp $
  */
 public class AttributeGroupEdit extends RequireLoginFirstAction
 {
@@ -150,9 +151,16 @@ public class AttributeGroupEdit extends RequireLoginFirstAction
         throws Exception
     {
         ScarabRequestTool scarabR = getScarabRequestTool(context);
-        ScarabUser user = (ScarabUser)data.getUser();
         Module module = scarabR.getCurrentModule();
         IssueType issueType = scarabR.getIssueType();
+        ScarabUser user = (ScarabUser)data.getUser();
+
+        if (!user.hasPermission(ScarabSecurity.MODULE__EDIT, module))
+        {
+            data.setMessage(NO_PERMISSION_MESSAGE);
+            return;
+        }
+       
         ParameterParser params = data.getParameters();
         Object[] keys = params.getKeys();
         String key;
@@ -169,86 +177,9 @@ public class AttributeGroupEdit extends RequireLoginFirstAction
                attributeId = key.substring(11);
                Attribute attribute = AttributeManager
                    .getInstance(new NumberKey(attributeId), false);
-
-               // Remove attribute - module mapping
-               RModuleAttribute rma = module
-                   .getRModuleAttribute(attribute, issueType);
-               try
-               {
-                   rma.delete(user);
-               }
-               catch (Exception e)
-               {
-                   data.setMessage(ScarabConstants.NO_PERMISSION_MESSAGE);
-                   log().debug("Remove attribute-module mapping - unsuccessful");
-               }
-
-               // Remove attribute - module mapping from template type
-               RModuleAttribute rma2 = module
-                   .getRModuleAttribute(attribute, 
-                   scarabR.getIssueType(issueType.getTemplateId().toString()));
-               try
-               {
-                   rma2.delete(user);
-               }
-               catch (Exception e)
-               {
-                   data.setMessage(ScarabConstants.NO_PERMISSION_MESSAGE);
-                   log().debug(
-                       "Remove template attribute-module mapping - unsuccessful");
-               }
-
-               // Remove attribute - group mapping
-               RAttributeAttributeGroup raag = 
-                   ag.getRAttributeAttributeGroup(attribute);
-               
-               try
-               {
-                   raag.delete(user);
-               }
-               catch (Exception e)
-               {
-                  data.setMessage(ScarabConstants.NO_PERMISSION_MESSAGE);
-                  log().debug("Remove attribute-group mapping - unsuccessful");
-               }
-
-               if (attribute.isOptionAttribute())
-               {
-                   // Remove module-option mapping
-                   List rmos = module.getRModuleOptions(attribute, issueType);
-                   if (rmos != null)
-                   {
-                       rmos.addAll(module.getRModuleOptions(attribute, 
-                             scarabR.getIssueType(issueType.getTemplateId()
-                                                  .toString())));
-                       for (int j = 0; j<rmos.size();j++)
-                       {
-                           RModuleOption rmo = (RModuleOption)rmos.get(j);
-                           // rmo's may be inherited by the parent module.
-                           // don't delete unless they are directly associated
-                           // with this module.  Will know by the first one.
-                           if (rmo.getModuleId().equals(module.getModuleId())) 
-                           {
-                               try
-                               {
-                                   rmo.delete(user);
-                               }
-                               catch (Exception e)
-                               {
-                                   data.setMessage(ScarabConstants.NO_PERMISSION_MESSAGE);
-                                   log().debug(
-                                        "Remove option-module mapping - unsuccessful");
-                               }
-                           }
-                           else 
-                           {
-                               break;
-                           }
-                       }
-                    }
-                }
+               ag.deleteAttribute(attribute, user);
             }
-        }        
+        }
 
         // If there are no attributes in any of the dedupe
         // Attribute groups, turn off deduping in the module

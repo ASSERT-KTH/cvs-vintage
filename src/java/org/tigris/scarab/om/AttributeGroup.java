@@ -206,16 +206,6 @@ public  class AttributeGroup
         return result;
     }
 
-    public RAttributeAttributeGroup addRAttributeAttributeGroup( Attribute attribute )
-         throws Exception
-    {                
-        RAttributeAttributeGroup raag = new RAttributeAttributeGroup();
-        raag.setGroupId(getAttributeGroupId());
-        raag.setAttributeId(attribute.getAttributeId());
-        raag.setOrder(getAttributes().size() +1 );
-        return raag;
-    }
-
 
     public void delete( ScarabUser user )
          throws Exception
@@ -292,4 +282,64 @@ public  class AttributeGroup
         }
         getAttributes().add(attribute);
     }
+
+    public void deleteAttribute( Attribute attribute, ScarabUser user )
+         throws Exception
+    {                
+        IssueType issueType = getIssueType();
+        Module module = getModule();
+
+        // Remove attribute - module mapping
+        RModuleAttribute rma = module
+            .getRModuleAttribute(attribute, issueType);
+        rma.delete(user);
+
+        // Remove attribute - module mapping from template type
+        IssueType template = IssueTypeManager.getInstance
+                             (issueType.getTemplateId());
+        RModuleAttribute rma2 = module
+            .getRModuleAttribute(attribute, template);
+        rma2.delete(user);
+
+        // Remove attribute - group mapping
+        RAttributeAttributeGroup raag = 
+            getRAttributeAttributeGroup(attribute);
+        raag.delete(user);
+
+        if (attribute.isOptionAttribute())
+        {
+            // Remove module-option mapping
+            List rmos = module.getRModuleOptions(attribute, issueType);
+            if (rmos != null)
+            {
+                rmos.addAll(module.getRModuleOptions(attribute, template));
+                for (int j = 0; j<rmos.size();j++)
+                {
+                    RModuleOption rmo = (RModuleOption)rmos.get(j);
+                    // rmo's may be inherited by the parent module.
+                    // don't delete unless they are directly associated
+                    // with this module.  Will know by the first one.
+                    if (rmo.getModuleId().equals(module.getModuleId())) 
+                    {
+                         rmo.delete(user);
+                     }
+                     else 
+                     {
+                         break;
+                     } 
+                 }
+             }
+         }
+    }
+
+    private RAttributeAttributeGroup addRAttributeAttributeGroup( Attribute attribute )
+         throws Exception
+    {                
+        RAttributeAttributeGroup raag = new RAttributeAttributeGroup();
+        raag.setGroupId(getAttributeGroupId());
+        raag.setAttributeId(attribute.getAttributeId());
+        raag.setOrder(getAttributes().size() +1 );
+        return raag;
+    }
+
 }
