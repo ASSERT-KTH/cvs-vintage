@@ -789,7 +789,15 @@ final class JasperLiaison {
 	if( debug>0 )
 	    log.log("origin = " + dep.getOrigin() + " " +
 		    dep.getOrigin().lastModified());
-	ctx.getDependManager().addDependency( dep );
+	try {
+	    DependManager dm=(DependManager)ctx.getContainer().
+		getNote("DependManager");
+	    if( dm!=null ) {
+		dm.addDependency( dep );
+	    }
+	} catch( TomcatException ex ) {
+	    ex.printStackTrace();
+	}
 	info.setDependency( dep );
 	return dep;
     }

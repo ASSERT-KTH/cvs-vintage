@@ -149,10 +149,13 @@ public class LoaderInterceptor11 extends BaseInterceptor {
 		log("    " + classP[i].toString() );
 	}
 
-	DependManager dm=context.getDependManager();
+	DependManager dm=(DependManager)context.getContainer().
+	    getNote("DependManager");
+	//context.getDependManager();
 	if( dm==null ) {
 	    dm=new DependManager();
-	    context.setDependManager( dm );
+	    context.getContainer().setNote("DependManager", dm);
+	    //setDependManager( dm );
 	}
 
 	ClassLoader parent=null;
@@ -188,7 +191,8 @@ public class LoaderInterceptor11 extends BaseInterceptor {
 	}
 
 	DependManager dm=new DependManager();
-	context.setDependManager( dm );
+	context.getContainer().setNote("DependManager", dm);
+	//setDependManager( dm );
 	ClassLoader oldLoader=context.getClassLoader();
 	int oldLoaderNote=cm.getNoteId( ContextManager.CONTAINER_NOTE,
 					"oldLoader");

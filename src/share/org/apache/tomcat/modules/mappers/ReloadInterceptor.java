@@ -77,10 +77,16 @@ public class ReloadInterceptor extends  BaseInterceptor
 {
     // Stop and start the context.
     boolean fullReload=true;
+    int dependManagerNote=-1;
     
     public ReloadInterceptor() {
     }
 
+    public void engineInit( ContextManager cm ) throws TomcatException {
+	dependManagerNote=cm.getNoteId(ContextManager.CONTAINER_NOTE,
+				       "DependManager");
+    }
+    
     /** A full reload will stop and start the context, without
      *  saving any state. It's the cleanest form of reload, equivalent
      *  with (partial) server restart.
@@ -96,10 +102,13 @@ public class ReloadInterceptor extends  BaseInterceptor
 	throws TomcatException
     {
         ContextManager cm = context.getContextManager();
-	DependManager dm=context.getDependManager();
+	DependManager dm=(DependManager)context.getContainer().
+	    getNote("DependManager");
+	// getDependManager();
 	if( dm==null ) {
 	    dm=new DependManager();
-	    context.setDependManager( dm );
+	    context.getContainer().setNote("DependManager", dm);
+	    //setDependManager( dm );
 	}
 
 	File inf_xml = new File(context.getAbsolutePath() +
@@ -121,7 +130,9 @@ public class ReloadInterceptor extends  BaseInterceptor
 	// XXX This interceptor will be added per/context.
 	if( ! ctx.getReloadable() ) return 0;
 
-	if( ! ctx.shouldReload() ) return 0;
+	DependManager dm=(DependManager)ctx.getContainer().
+	    getNote(dependManagerNote);
+	if( ! dm.shouldReload() ) return 0;
 
 	if( debug> 0 )
 	    log( "Detected changes in " + ctx.toString());
