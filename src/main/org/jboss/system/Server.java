@@ -32,7 +32,7 @@ import org.jboss.Version;
  *      
  * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
  * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
- * @version $Revision: 1.7 $
+ * @version $Revision: 1.8 $
  */
 public class Server
     implements ServerMBean
@@ -52,7 +52,13 @@ public class Server
    
    /** When the server was started. */
    private final Date started;
-   
+
+   /** The JVM shutdown hook */
+   private final ShutdownHook shutdownHook;
+
+   /** Exit on shutdown flag. */
+   private boolean exitOnShutdown = false;
+
    /** 
     * Creates a new instance of Server.
     *
@@ -145,9 +151,9 @@ public class Server
       }
       
       // Install the shutdown hook
+      shutdownHook = new ShutdownHook(controllerName);
       try {
-	  ShutdownHook hook = new ShutdownHook(controllerName);
-	  Runtime.getRuntime().addShutdownHook(hook);
+	  Runtime.getRuntime().addShutdownHook(shutdownHook);
 	  log.debug("Shutdown hook added");
       }
       catch (Exception e) {
@@ -245,37 +251,106 @@ public class Server
          UnifiedClassLoader loader = new UnifiedClassLoader(url);
       }
    }
+
+   /**
+    * Enable or disable exiting the JVM when {@link #shutdown} is called.
+    * If enabled, then shutdown calls {@link #exit}.  If disabled, then
+    * only the shutdown hook will be run.
+    *
+    * @param flag    True to enable calling exit on shutdown.
+    */
+   public void setExitOnShutdown(final boolean flag) {
+      exitOnShutdown = flag;
+   }
+
+    /**
+     * Get the current value of the exit on shutdown flag.  Default value is
+     * false, though it will be set to true when bootstrapped with 
+     * {@link org.jboss.Main}.
+     *
+     * @return    The current value of the exit on shutdown flag.
+     */
+   public boolean getExitOnShutdown() {
+      return exitOnShutdown;
+   }
+
+   /**
+    * Shutdown the server and run shutdown hooks.  If the exit on shutdown
+    * flag is true, then {@link exit} is called, else only the shutdown hook 
+    * is run.
+    */
+   public void shutdown() {
+      final Server server = this;
+
+      log.info("Shutting down");
+      if (log.isDebugEnabled()) {
+	  log.debug("exitOnShutdown: " + exitOnShutdown);
+      }
+
+      if (exitOnShutdown) {
+	  server.exit(0);
+      }
+      else {
+	  // start in new thread to give positive
+	  // feedback to requesting client of success.
+	  new Thread() {
+	      public void run() {
+		// just run the hook, don't call System.exit, as we may
+		// be embeded in a vm that would not like that very much
+		shutdownHook.run();
+	      }
+	  }.start();
+      }
+   }
    
    /**
-    * Shutdown the server, virtual machine and run shutdown hooks.
+    * Shutdown the server, the JVM and run shutdown hooks.
     *
-    * @throws Exception   Failed to shutdown.
+    * @param exitcode   The exit code returned to the operating system.
     */
-   public void shutdown() throws Exception {
-      // start in new thread so that we might have a chance to gice positive
+   public void exit(final int exitcode) {
+      // start in new thread so that we might have a chance to give positive
       // feed back to requesting client of success.
       new Thread() {
          public void run() {
-            log.info("Shutting down");
-            System.exit(0); // This will execute the shutdown hook
+	    log.info("Shutting down the JVM now!");
+            Runtime.getRuntime().exit(exitcode);
+         }
+      }.start();
+   }
+   
+   /**
+    * Shutdown the server, the JVM and run shutdown hooks.  Exits with 
+    * code 1. 
+    */
+   public void exit() {
+       exit(1);
+   }
+
+   /** 
+    * Forcibly terminates the currently running Java virtual machine.
+    *
+    * @param exitcode   The exit code returned to the operating system.
+    */
+   public void halt(final int exitcode) {
+      // start in new thread so that we might have a chance to give positive
+      // feed back to requesting client of success.
+      new Thread() {
+         public void run() {
+            System.err.println("Halting the system now!");
+            Runtime.getRuntime().halt(exitcode);
          }
       }.start();
    }
    
    /** 
-    * Forcibly terminates the currently running Java virtual machine.
+    * Forcibly terminates the currently running Java virtual machine. 
+    * Exits with code 1. 
     */
    public void halt() {
-      // start in new thread so that we might have a chance to gice positive
-      // feed back to requesting client of success.
-      new Thread() {
-         public void run() {
-            System.err.println("Halting the system now!");
-            Runtime.getRuntime().halt(0);
-         }
-      }.start();
+      halt(1);
    }
-   
+
    
    ///////////////////////////////////////////////////////////////////////////
    //                            Runtime Access                             //

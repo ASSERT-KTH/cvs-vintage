@@ -42,7 +42,7 @@ import org.jboss.system.ServiceMBeanSupport;
 * Takes a series of URL to watch, detects changes and calls the appropriate Deployers 
 *
 * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
-* @version $Revision: 1.7 $
+* @version $Revision: 1.8 $
 *
 *
 */
@@ -365,6 +365,8 @@ implements MainDeployerMBean, Runnable
    public void deploy(DeploymentInfo deployment) 
    throws DeploymentException
    {      
+      boolean debug = log.isDebugEnabled();
+
       try {
          // If we are already deployed return
          if (deployments.containsKey(deployment.url)) return;
@@ -389,18 +391,17 @@ implements MainDeployerMBean, Runnable
          if (deployment.deployer != null) deployment.deployer.deploy(deployment);
             
          deployment.status="Deployed";
-         
-         log.info("Done deploying "+deployment.shortName);
-      
+
+         if (debug) {
+	    log.debug("Done deploying " + deployment.shortName);
+	 }
       }  
       catch (DeploymentException e) 
       { 
-         
          deployment.status="Deployment FAILED reason: "+e.getMessage();
          
          throw e;
       }
-      
       finally 
       {
          // whether you do it or not, for the autodeployer
@@ -413,7 +414,9 @@ implements MainDeployerMBean, Runnable
          if (!deployment.url.toString().startsWith("file:"+System.getProperty("jboss.system.home")+File.separator+"tmp"+File.separator+"deploy"))
          {
             deploymentsList.add(deployment);
-            if (log.isDebugEnabled()) log.debug("Watching new file: " + deployment.url);  
+            if (debug) {
+	       log.debug("Watching new file: " + deployment.url);  
+	    }
          }
       }
    }

@@ -25,7 +25,7 @@ import org.w3c.dom.NodeList;
  * @see Service
  * 
  * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
- * @version $Revision: 1.11 $
+ * @version $Revision: 1.12 $
  * 
  * <p><b>Revisions:</b>
  * <p><b>2001/08/03 marcf </b>
@@ -90,7 +90,9 @@ public class ServiceCreator
       // Create the MBean instance
       try 
       {
-         log.info("code "+code);
+         if (debug) {
+	    log.debug("code: " + code);
+	 }
          ObjectInstance instance = server.createMBean(code,
                                                       name,
                                                       loader,

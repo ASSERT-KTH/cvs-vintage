@@ -28,7 +28,7 @@ import org.jboss.system.ServerConfig;
  *
  * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
  * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
- * @version $Revision: 1.63 $
+ * @version $Revision: 1.64 $
  */
 public class Main
    implements Runnable
@@ -206,6 +206,7 @@ public class Main
 
       // Create & start the server
       Server server = new Server(config);
+      server.setExitOnShutdown(true);
    }
    
    /**
