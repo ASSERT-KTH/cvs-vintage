@@ -9,7 +9,19 @@ package org.columba.mail.command;
 import org.columba.mail.folder.Folder;
 
 /**
- * @author frd
+ * Helper class which makes it easy to distinguish the source-, destination-
+ * and update-reference.
+ * <p>
+ * Source reference is usually the source-folder and an UID array representing
+ * the selected messages. There can be of course many source-folders with message.
+ * UIDs. Think of Virtual Folders which don't contain messages, but references
+ * to messages in other folders.
+ * <p>
+ * Destination reference is usually only one item, containing the destination folder.
+ * <p>
+ * Update reference is only needed in order to be able to update the Virtual Folder.
+ * 
+ * @author fdietz
  */
 public class FolderCommandAdapter {
 
@@ -23,6 +35,11 @@ public class FolderCommandAdapter {
 		else length = c.length;
 	}
 	
+	/**
+	 * Get array of source references.
+	 * 
+	 * @return		source references
+	 */
 	public FolderCommandReference[] getSourceFolderReferences()
 	{
 		FolderCommandReference[] result = new FolderCommandReference[length-2];
@@ -33,11 +50,21 @@ public class FolderCommandAdapter {
 		
 	}
 	
+	/**
+	 * Get destination reference
+	 * 
+	 * @return		destination reference
+	 */
 	public Folder getDestinationFolder()
 	{
 		return (Folder) c[ length-2].getFolder();
 	}
 	
+	/**
+	 * Get update reference
+	 * 
+	 * @return		update reference
+	 */
 	public FolderCommandReference getUpdateReferences()
 	{
 		

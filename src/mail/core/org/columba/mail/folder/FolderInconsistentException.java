@@ -16,6 +16,15 @@
 
 package org.columba.mail.folder;
 
+/**
+ * Folders throw this exception if they find themselves in 
+ * a non-consistent state.
+ * <p>
+ * Goal is to make it possible to start an automatic recreation
+ * of the header cache, etc. to fix the folder consistency.
+ *
+ * @author fdietz
+ */
 public class FolderInconsistentException extends Exception {
 
 }

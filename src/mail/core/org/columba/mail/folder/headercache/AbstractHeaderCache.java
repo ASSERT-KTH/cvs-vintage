@@ -30,9 +30,13 @@ import org.columba.mail.message.HeaderList;
 import org.columba.ristretto.message.HeaderInterface;
 
 /**
- * @author fdietz
- *
+ * Provides basic support for saving and loading email headers as
+ * fast as possible.
+ * <p>
+ * It therefor tries to compress the data to make it as small as possible,
+ * which improves performance dramatically
  * 
+ * @author fdietz
  */
 public abstract class AbstractHeaderCache {
 

@@ -30,12 +30,20 @@ import org.columba.mail.folder.LocalFolder;
 import org.columba.ristretto.message.io.FileSource;
 
 /**
- * @author freddy
- *
- * To change this generated comment edit the template variable "typecomment":
- * Window>Preferences>Java>Templates.
- * To enable and disable the creation of type comments go to
- * Window>Preferences>Java>Code Generation.
+ * MH-style local mailbox {@link DataStorage}
+ * <p>
+ * Every message is saved in a single file, which is contrary to 
+ * the mbox-style format where a complete mailbox is saved in 
+ * one file.
+ * <p>
+ * Following the mh-mailbox standard, we use the message UID, 
+ * consisting of numbers, to name the message files.
+ * <p>
+ * This data storage ignores every file starting with a "."
+ * <p>
+ * Note, that headercache is stored in the file ".headercache".
+ * 
+ * @author fdietz
  */
 public class MHDataStorage implements DataStorageInterface {
 

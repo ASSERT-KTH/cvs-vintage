@@ -38,11 +38,12 @@ import org.columba.ristretto.parser.HeaderParser;
 import org.columba.ristretto.parser.MessageParser;
 
 /**
- * @author fdietz
- *
- * <class>CachedFolder</class> adds a header-cache
- * facility to <class>LocalFolder</class> to be 
+ * 
+ * CachedFolderadds a header-cache
+ * facility to {@link LocalFolder} to be 
  * able to quickly show a message summary, etc.
+ * 
+ * @author fdietz
  */
 public abstract class CachedFolder extends LocalFolder {
 

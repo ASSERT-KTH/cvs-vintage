@@ -28,12 +28,10 @@ import org.columba.mail.util.MailResourceLoader;
 import org.columba.ristretto.message.HeaderInterface;
 
 /**
- * @author freddy
+ * IMAP-specific implementation of a header cache.
+ * 
  *
- * To change this generated comment edit the template variable "typecomment":
- * Window>Preferences>Java>Templates.
- * To enable and disable the creation of type comments go to
- * Window>Preferences>Java>Code Generation.
+ * @author fdietz
  */
 public class RemoteHeaderCache extends AbstractFolderHeaderCache {
 

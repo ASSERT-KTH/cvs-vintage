@@ -19,8 +19,12 @@ import org.columba.core.xml.XmlElement;
 import org.columba.mail.config.FolderItem;
 
 /**
- * @author Timo Stich (tstich@users.sourceforge.net)
+ * Root treenode, is actually not visible and only needed by
+ * the inner structure of Columba.
+ * <p>
+ * Its only used to have a determined root.
  * 
+ * @author Timo Stich (tstich@users.sourceforge.net)
  */
 public class Root extends FolderTreeNode {
 

@@ -33,6 +33,16 @@ import org.columba.ristretto.message.HeaderInterface;
 import org.columba.ristretto.message.io.CharSequenceSource;
 import org.columba.ristretto.parser.MessageParser;
 
+/**
+ * Additionally to {@CachedMHFolder} is capable of saving {@link SendableMessage} 
+ * objects. 
+ * <p>
+ * It is used to store messages to send them later all at once.
+ * 
+ * 
+ *
+ * @author fdietz
+ */
 public class OutboxFolder extends CachedMHFolder {
 
 	private SendListManager[] sendListManager = new SendListManager[2];

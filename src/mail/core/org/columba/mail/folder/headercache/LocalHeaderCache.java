@@ -36,11 +36,10 @@ import org.columba.ristretto.message.io.CharSequenceSource;
 import org.columba.ristretto.parser.HeaderParser;
 
 /**
- * @author freddy
+ * Implementation of a local headercache facility, which is
+ * also able to resync itself with the {@DataStorageInterface}.
  * 
- * To change this generated comment edit the template variable "typecomment":
- * Window>Preferences>Java>Templates. To enable and disable the creation of
- * type comments go to Window>Preferences>Java>Code Generation.
+ * @author fdietz
  */
 public class LocalHeaderCache extends AbstractFolderHeaderCache {
 

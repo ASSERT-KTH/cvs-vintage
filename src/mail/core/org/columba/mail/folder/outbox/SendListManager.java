@@ -22,7 +22,12 @@ import java.util.Vector;
 
 import org.columba.mail.composer.SendableMessage;
 
-
+/**
+ * Keeps a list of {@SenableMessage} objects.
+ * 
+ *
+ * @author fdietz
+ */
 public class SendListManager
 {
     private List sendAccounts;

@@ -23,12 +23,15 @@ import org.columba.mail.folder.FolderTreeNode;
 import org.columba.mail.message.ColumbaMessage;
 
 /**
- * @author freddy
+ * This is a reference implemention suitable for folders containing
+ * messages.
+ * <p>
+ * Its main purpose is to store source and/or destination folders and
+ * arrays of message UIDs.
+ * <p>
+ * 
  *
- * To change this generated comment edit the template variable "typecomment":
- * Window>Preferences>Java>Templates.
- * To enable and disable the creation of type comments go to
- * Window>Preferences>Java>Code Generation.
+ * @author fdietz
  */
 public class FolderCommandReference extends DefaultCommandReference {
 	private FolderTreeNode folder;

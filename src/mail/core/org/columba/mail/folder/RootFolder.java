@@ -16,6 +16,15 @@
 
 package org.columba.mail.folder;
 
+/**
+ * Root folders like {@link LocalRootFolder} and {@link IMAPRootFolder} should
+ * implement this interface.
+ * <p>
+ * It provides an easy way to determine the inbox- and trash-folder for 
+ * root folders.
+ *
+ * @author fdietz
+ */
 public interface RootFolder {
 	
 	public FolderTreeNode getTrashFolder();

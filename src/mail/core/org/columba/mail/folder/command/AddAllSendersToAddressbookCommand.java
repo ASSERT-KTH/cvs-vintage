@@ -62,14 +62,18 @@ public class AddAllSendersToAddressbookCommand extends FolderCommand {
 	 * @see org.columba.core.command.Command#execute(org.columba.core.command.Worker)
 	 */
 	public void execute(Worker worker) throws Exception {
+		// get reference
 		FolderCommandReference[] r = (FolderCommandReference[]) getReferences();
 
+		// selected messages
 		Object[] uids = r[0].getUids();
+		// selected folder
 		Folder folder = (Folder) r[0].getFolder();
 		
 		// register for status events
 		((StatusObservableImpl)folder.getObservable()).setWorker(worker);
 		
+		// open addressbook selection dialog
 		SelectAddressbookFolderDialog dialog =
 			MainInterface
 				.addressbookTreeModel
@@ -80,11 +84,13 @@ public class AddAllSendersToAddressbookCommand extends FolderCommand {
 		if (selectedFolder == null)
 			return;
 
+		// for every message
 		for (int i = 0; i < uids.length; i++) {
-
+			// get header of message
 			HeaderInterface header = folder.getMessageHeader(uids[i]);
 			String sender = (String) header.get("From");
 
+			// add sender to addressbook
 			addSender(sender);
 
 			sender = (String) header.get("Cc");
@@ -98,6 +104,13 @@ public class AddAllSendersToAddressbookCommand extends FolderCommand {
 		
 	}
 
+	/**
+	 * Add sender to selected addressbook.
+	 * <p>
+	 * TODO: This code should most probably moved to the addressbook component
+	 * 
+	 * @param sender	email address of sender
+	 */
 	public void addSender(String sender) {
 		if (sender == null)
 			return;

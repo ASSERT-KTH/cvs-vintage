@@ -21,12 +21,13 @@ import org.columba.core.gui.util.ImageLoader;
 import org.columba.mail.config.FolderItem;
 
 /**
- * @author freddy
+ * Top-level folder of all local folders. 
+ * <p>
+ * Only purpose of this folder is to allow for a better structure
+ * of the folder hierachy, where local and remote folders are
+ * very easy to distinct.
  *
- * To change this generated comment edit the template variable "typecomment":
- * Window>Preferences>Java>Templates.
- * To enable and disable the creation of type comments go to
- * Window>Preferences>Java>Code Generation.
+ *  @author fdietz
  */
 public class LocalRootFolder extends FolderTreeNode implements RootFolder {
 

@@ -19,6 +19,15 @@ import org.columba.core.xml.XmlElement;
 import org.columba.mail.config.FolderItem;
 import org.columba.mail.filter.FilterList;
 
+/**
+ * Top-level folder of every IMAP account. 
+ * <p>
+ * Only purpose of this folder is to allow for a better structure
+ * of the folder hierachy, where local and remote folders are
+ * very easy to distinct.
+ *
+ *  @author fdietz
+ */
 public abstract class RemoteFolder extends Folder {
 
 	//protected RemoteSearchEngine searchEngine;

@@ -57,9 +57,9 @@ import org.columba.ristretto.message.MimeTree;
  * org.columba.mail.folder.headercache. An implementation 
  * example can be found in org.columba.mail.folder.mh.
  * <p>
- * Please note, that you only need to implement <class>DataStorageInstance</class>
+ * Please note, that you only need to implement {@link DataStorageInstance}
  * which should be trivial in most cases. Then create a class extending
- * <class>CachedFolder</class> and plug your datastorage in this folder
+ * {@link CachedFolder} and plug your datastorage in this folder
  * in overwriting getDataStorageInstance() method.
  * <p>
  * Last, don't forget to register your folder plugin:<p>

@@ -27,6 +27,14 @@ import org.columba.ristretto.message.MessageFolderInfo;
 import org.columba.ristretto.message.MimePart;
 import org.columba.ristretto.message.MimeTree;
 
+/**
+ * Every mailbox which actually contains message should implement
+ * this interface.
+ * <p>
+ * Note, that this also means to subclass {@link Folder}.
+ *
+ * @author fdietz
+ */
 public interface MailboxInterface {
 
 	/**

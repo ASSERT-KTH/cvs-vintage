@@ -65,6 +65,16 @@ public class CopyMessageCommand extends FolderCommand {
 		MailInterface.treeModel.nodeChanged(destFolder);
 	}
 
+	/**
+	 * Copying messages between folders which are of the same mailbox
+	 * format, and/or exist on the same IMAP server.
+	 * 
+	 * @param srcFolder
+	 * @param destFolder
+	 * @param uids
+	 * @param worker
+	 * @throws Exception
+	 */
 	protected void innerCopy(
 		Folder srcFolder,
 		Folder destFolder,
@@ -76,6 +86,16 @@ public class CopyMessageCommand extends FolderCommand {
 
 	}
 
+	/**
+	 * Simple fall-back copy method, which first copies the message
+	 * to the folder, using the raw message source stream.
+	 * 
+	 * @param srcFolder
+	 * @param destFolder
+	 * @param uids
+	 * @param worker
+	 * @throws Exception
+	 */
 	protected void defaultCopy(
 		Folder srcFolder,
 		Folder destFolder,

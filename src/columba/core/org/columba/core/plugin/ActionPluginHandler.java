@@ -33,7 +33,7 @@ import org.columba.core.xml.XmlIO;
  * The core actions are listed in the org.columba.core.action.action.xml
  * <p>
  * These actions are used to generate the menu and the toolbar dynamically.
- *
+ * 
  * @author fdietz
  */
 public class ActionPluginHandler extends AbstractPluginHandler {

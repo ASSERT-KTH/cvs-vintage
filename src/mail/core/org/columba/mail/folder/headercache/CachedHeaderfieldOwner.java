@@ -25,12 +25,13 @@ import org.columba.mail.config.MailConfig;
 import org.columba.mail.message.ColumbaHeader;
 
 /**
- * @author fdietz
+ * 
  *
  * These class holds a collection of all cached headerfields, 
  * which Columba needs to be able to quickly show the message
  * summary, etc. to the user
  * 
+ * @author fdietz
  */
 public class CachedHeaderfieldOwner {
 
