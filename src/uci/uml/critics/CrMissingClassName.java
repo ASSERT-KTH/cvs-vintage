@@ -26,7 +26,7 @@
 // File: CrMissingClassName.java
 // Classes: CrMissingClassName
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrMissingClassName.java,v 1.15 1999/03/17 03:19:14 jrobbins Exp $
+// $Id: CrMissingClassName.java,v 1.16 1999/04/28 23:17:46 jrobbins Exp $
 
 package uci.uml.critics;
 
@@ -79,7 +79,7 @@ public class CrMissingClassName extends CrUML {
       int count = 1;
       if (me.getNamespace() != null)
 	count = me.getNamespace().getOwnedElement().size();
-      sug = "Class" + (count + 1);
+      sug = me.getOCLTypeStr() + (count + 1);
       ((WizMEName)w).setInstructions(ins);
       ((WizMEName)w).setSuggestion(sug);
     }

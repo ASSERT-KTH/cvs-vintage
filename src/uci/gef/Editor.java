@@ -26,7 +26,7 @@
 // File: Editor.java
 // Classes: Editor
 // Original Author: ics125 spring 1996
-// $Id: Editor.java,v 1.28 1999/04/27 00:19:54 jrobbins Exp $
+// $Id: Editor.java,v 1.29 1999/04/28 23:17:39 jrobbins Exp $
 
 package uci.gef;
 
@@ -191,6 +191,20 @@ implements Serializable, MouseListener, MouseMotionListener, KeyListener {
   public void postLoad() {
     //- if (_redrawer == null) _redrawer = new RedrawManager(this);
     _layerManager.postLoad();
+  }
+
+  /** Return true if the Grid layer is currently hidden. */
+  public boolean getGridHidden() {
+    boolean h = false;
+    Layer l = _layerManager.findLayerNamed( "Grid" );
+    if( l != null ) h = l.getHidden();
+    return h;
+  }
+
+  /** Set the hidden state of the Grid layer. */
+  public void setGridHidden( boolean b ) {
+    Layer l = _layerManager.findLayerNamed( "Grid" );
+    if( l != null ) l.setHidden( b );
   }
 
   /** Clone the receiving editor. Called from ActionSpawn. Subclasses

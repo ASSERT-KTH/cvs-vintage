@@ -26,7 +26,7 @@
 // File: Layer.java
 // Classes: Layer
 // Original Author: jrobbins@ics.uci.edu
-// $Id: Layer.java,v 1.14 1999/04/20 01:51:44 jrobbins Exp $
+// $Id: Layer.java,v 1.15 1999/04/28 23:17:41 jrobbins Exp $
 
 package uci.gef;
 
@@ -140,7 +140,7 @@ public abstract class Layer implements java.io.Serializable {
   public void setName(String n) { _name = n; }
 
   public void setHidden(boolean b) { _hidden = b; }
-  public boolean fetHidden() { return _hidden; }
+  public boolean getHidden() { return _hidden; }
 
   public void setGrayed(boolean b) { _grayed = b; }
   public boolean getGrayed() { return _grayed; }
