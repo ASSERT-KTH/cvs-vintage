@@ -1,4 +1,4 @@
-// $Id: ModelFacade.java,v 1.215 2004/11/04 14:41:27 bobtarling Exp $
+// $Id: ModelFacade.java,v 1.216 2004/12/04 13:04:23 mvw Exp $
 // Copyright (c) 2003-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -422,7 +422,8 @@ public class ModelFacade {
     /** Pseudo state kind: JUNCTION_PSEUDOSTATEKIND */
     public static final Object JUNCTION_PSEUDOSTATEKIND =
         MPseudostateKind.JUNCTION;
-    /** Pseudo state kind: BRANCH_PSEUDOSTATEKIND */
+    /** Pseudo state kind: BRANCH_PSEUDOSTATEKIND 
+     * This is a Choice ! */
     public static final Object BRANCH_PSEUDOSTATEKIND = MPseudostateKind.BRANCH;
 
     /** Visibility kind: PUBLIC_VISIBILITYKIND */
