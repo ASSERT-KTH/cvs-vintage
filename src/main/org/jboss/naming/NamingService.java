@@ -19,7 +19,7 @@ import org.jboss.util.ServiceMBeanSupport;
  *      
  *   @see <related>
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
- *   @version $Revision: 1.3 $
+ *   @version $Revision: 1.4 $
  */
 public class NamingService
    extends ServiceMBeanSupport
@@ -39,6 +39,16 @@ public class NamingService
    }
    
    // Public --------------------------------------------------------
+   public void setPort(int port)
+   {
+      naming.setPort(port);
+   }
+   
+   public int  getPort()
+   {
+      return naming.getPort();
+   }
+   
    public ObjectName getObjectName(MBeanServer server, ObjectName name)
       throws javax.management.MalformedObjectNameException
    {
@@ -58,9 +68,6 @@ public class NamingService
       // buggy classloader that disallows finding the resource properly
       System.getProperties().load(Thread.currentThread().getContextClassLoader().getResourceAsStream("jndi.properties"));
    
-      naming.start();
-      log.log("Naming started on port "+naming.getPort());
-      
       // Create "java:comp/env"
       RefAddr refAddr = new StringRefAddr("nns", "ENC");
       Reference envRef = new Reference("javax.naming.Context", refAddr, ENCFactory.class.getName(), null);
@@ -68,9 +75,17 @@ public class NamingService
       ctx.rebind("comp", envRef);
    }
    
-   public void destroyService()
+   public void startService()
+      throws Exception
+   {
+      naming.start();
+      log.log("Naming started on port "+naming.getPort());
+   }
+      
+   public void stopService()
    {
       naming.stop();
+      log.log("JNP server stopped");
    }
 
    // Protected -----------------------------------------------------
