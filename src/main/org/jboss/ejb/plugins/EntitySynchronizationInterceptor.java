@@ -43,7 +43,7 @@ import org.jboss.metadata.ConfigurationMetaData;
  * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
  * @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>
  * @author <a href="mailto:bill@burkecentral.com">Bill Burke</a>
- * @version $Revision: 1.62 $
+ * @version $Revision: 1.63 $
  *
  * <p><b>Revisions:</b><br>
  * <p><b>2001/06/28: marcf</b>
@@ -175,22 +175,30 @@ public class EntitySynchronizationInterceptor
       if( trace )
          log.trace("register, ctx="+ctx+", tx="+tx);
   
-      // Create a new synchronization
-      Synchronization synch = createSynchronization(tx, ctx);
-  
       EntityContainer ctxContainer = null;
       try
       {
          ctxContainer = (EntityContainer) ctx.getContainer();
-         // We want to be notified when the transaction commits
-         tx.registerSynchronization(synch);
+	 if (!ctx.hasTxSynchronization()) 
+	 {
+	    // Create a new synchronization
+	    Synchronization synch = createSynchronization(tx, ctx);
+  
+	    // We want to be notified when the transaction commits
+	    tx.registerSynchronization(synch);
    
-         // associate the entity bean with the transaction so that
-         // we can do things like synchronizeEntitiesWithinTransaction
-         // do this after registerSynchronization, just in case there was an exception
-         ctxContainer.getTxEntityMap().associate(tx, ctx);
+	    // associate the entity bean with the transaction so that
+	    // we can do things like synchronizeEntitiesWithinTransaction
+	    // do this after registerSynchronization, just in case there was an exception
+	    ctxContainer.getTxEntityMap().associate(tx, ctx);
    
-         ctx.hasTxSynchronization(true);
+	    ctx.hasTxSynchronization(true);
+	 }
+	 //mark it dirty in global tx entity map if it is not read only
+	 if (!ctxContainer.isReadOnly())
+	 {
+	    ctxContainer.getGlobalTxEntityMap().associate(tx, ctx);
+	 }
       }
       catch (RollbackException e)
       {
@@ -236,10 +244,6 @@ public class EntitySynchronizationInterceptor
                lock.schedule(mi);
                register(ctx, tx); // Set tx
                lock.releaseMethodLock();
-               //The entity may be dirty, even after create, for instance if it has relationship
-               //fields populated in ejbPostCreate.  cf bug 523627
-               EntityContainer ctxContainer = (EntityContainer) ctx.getContainer();
-	       ctxContainer.getGlobalTxEntityMap().associate(tx, ctx);
             }
             finally
             {
@@ -303,14 +307,7 @@ public class EntitySynchronizationInterceptor
          {
             //register the wrapper with the transaction monitor (but only register once).
             // The transaction demarcation will trigger the storage operations
-            if (!ctx.hasTxSynchronization()) register(ctx,tx);
-	    //mark it dirty in global tx entity map if it reports it is modified
-	    EntityContainer ctxContainer = (EntityContainer) ctx.getContainer();
-	    if (!ctxContainer.isReadOnly() 
-		&& ctxContainer.getPersistenceManager().isModified(ctx))
-	    {
-	       ctxContainer.getGlobalTxEntityMap().associate(tx, ctx);
-	    }
+            register(ctx,tx);
          }
       }
       //
