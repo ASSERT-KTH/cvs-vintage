@@ -1,22 +1,3 @@
-#macro ( attrValueSelect $issue $attKey )
-    #set ( $attrValue = $issue.ModuleAttributeValuesMap.get($attKey) )
-    #set ( $attr = $attrValue.Attribute )
-    #set ( $attrInput = $intake.AttributeValue.mapTo($attrValue) ) 
-        <input type="hidden" name="$attrInput.CID" value="$attrInput.OID">
-
-        <select name="$attrInput.OptionId.Key">
-            <option value="">Choose...</option>
-            #foreach ($option in $attr.AttributeOptions)
-              #set ( $selected = "" )
-              #if ( $option.OptionId == $attrInput.OptionId.Value.Value )
-                #set ( $selected = " selected" )
-              #end
-              <option$selected value="$option.OptionId">
-                  $option.DisplayValue</option>
-            #end    
-        </select>
-#end
-
 #macro ( attrValueErrorMsg $issue $attKey )
     #set ( $attrValue = $issue.ModuleAttributeValuesMap.get($attKey) )
     #set ( $attrInput = $intake.AttributeValue.mapTo($attrValue) ) 
@@ -26,7 +7,6 @@
         $attrInput.Value.Message
     #end
 #end
-
 
 ## skip the dedupe for now
 #set ( $action = $link.setPage("entry/Wizard1.vm").setAction("ReportIssue").addPathInfo("nextTemplate", "entry/Wizard3.vm") )
@@ -124,12 +104,12 @@
       <TD>
           Platform:<BR>
           #attrValueErrorMsg ($issue "PLATFORM") <br>
-          #attrValueSelect ($issue "PLATFORM")
+          #attrValueSelect ($issue "PLATFORM" "")
       </TD>
       <TD>
           OS:<br>
           #attrValueErrorMsg ($issue "OPERATING SYSTEM") <br>
-          #attrValueSelect ($issue "OPERATING SYSTEM")
+          #attrValueSelect ($issue "OPERATING SYSTEM" "")
       </TD>
   </tr>
 </table>

@@ -1,0 +1,20 @@
+#macro ( attrValueSelect $issue $attKey $size )
+    #set ( $attrValue = $issue.ModuleAttributeValuesMap.get($attKey) )
+    #set ( $attr = $attrValue.Attribute )
+    #set ( $attrInput = $intake.AttributeValue.mapTo($attrValue) ) 
+        <input type="hidden" name="$attrInput.CID" value="$attrInput.OID">
+
+        <select name="$attrInput.OptionId.Key" #if($size.length())size="$size"#end>
+            #if ($size.length() == 0)
+            <option value="">Choose...</option>
+            #end
+            #foreach ($option in $attr.AttributeOptions)
+              #set ( $selected = "" )
+              #if ( $option.OptionId == $attrInput.OptionId.Value.Value )
+                #set ( $selected = " selected" )
+              #end
+              <option$selected value="$option.OptionId">
+                  $option.DisplayValue</option>
+            #end
+        </select>
+#end
