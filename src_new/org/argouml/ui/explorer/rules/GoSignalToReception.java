@@ -1,4 +1,4 @@
-// $Id: GoSignalToReception.java,v 1.8 2004/06/24 06:25:40 linus Exp $
+// $Id: GoSignalToReception.java,v 1.9 2004/08/31 18:50:07 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -32,6 +32,7 @@ import org.argouml.i18n.Translator;
 import org.argouml.model.ModelFacade;
 
 /**
+ * Rule for Signal->Reception.
  * PerspectiveRule to navigate from signal to reception.
  * Causes reception to be shown as child of signal.
  * 
@@ -39,6 +40,9 @@ import org.argouml.model.ModelFacade;
  */
 public class GoSignalToReception extends AbstractPerspectiveRule {
 	
+    /**
+     * @see org.argouml.ui.explorer.rules.PerspectiveRule#getRuleName()
+     */
     public String getRuleName() {
     	return Translator.localize ("Tree", "Signal->Reception");
     }
@@ -53,6 +57,9 @@ public class GoSignalToReception extends AbstractPerspectiveRule {
 	return null;
     }
 
+    /**
+     * @see org.argouml.ui.explorer.rules.PerspectiveRule#getDependencies(java.lang.Object)
+     */
     public Set getDependencies(Object parent) {
         if (ModelFacade.isASignal(parent)) {
 	    Set set = new HashSet();

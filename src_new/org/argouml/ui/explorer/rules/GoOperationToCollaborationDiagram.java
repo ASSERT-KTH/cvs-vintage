@@ -1,4 +1,4 @@
-// $Id: GoOperationToCollaborationDiagram.java,v 1.7 2004/06/24 06:25:40 linus Exp $
+// $Id: GoOperationToCollaborationDiagram.java,v 1.8 2004/08/31 18:50:06 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -37,6 +37,7 @@ import org.argouml.ui.ArgoDiagram;
 import org.argouml.uml.diagram.collaboration.ui.UMLCollaborationDiagram;
 
 /**
+ * Rule for Operation->Collaboration Diagram.
  * @since Oct 7, 2002
  * @author jaap.branderhorst@xs4all.nl
  */
@@ -67,6 +68,9 @@ public class GoOperationToCollaborationDiagram extends AbstractPerspectiveRule {
         return null;
     }
 
+    /**
+     * @see org.argouml.ui.explorer.rules.PerspectiveRule#getDependencies(java.lang.Object)
+     */
     public Set getDependencies(Object parent) {
         // TODO: What?
 	return null;

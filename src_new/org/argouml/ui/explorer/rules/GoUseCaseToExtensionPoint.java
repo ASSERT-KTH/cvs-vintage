@@ -1,4 +1,4 @@
-// $Id: GoUseCaseToExtensionPoint.java,v 1.7 2004/07/17 22:29:05 linus Exp $
+// $Id: GoUseCaseToExtensionPoint.java,v 1.8 2004/08/31 18:50:07 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -32,6 +32,7 @@ import org.argouml.i18n.Translator;
 import org.argouml.model.ModelFacade;
 
 /**
+ * Rule for Use Case->Extension Point.
  * Provides a rule to display extension points in the navigation pane.<p>
  *
  * @author  16 Apr 2002. Jeremy Bennett (mail@jeremybennett.com).

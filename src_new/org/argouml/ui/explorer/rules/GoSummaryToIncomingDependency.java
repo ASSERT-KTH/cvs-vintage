@@ -1,4 +1,4 @@
-// $Id: GoSummaryToIncomingDependency.java,v 1.9 2004/06/24 06:25:41 linus Exp $
+// $Id: GoSummaryToIncomingDependency.java,v 1.10 2004/08/31 18:50:07 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -34,6 +34,7 @@ import java.util.Set;
 import org.argouml.model.ModelFacade;
 
 /**
+ * Rule for Summary->IncomingDependency.
  * This class is a Go Rule for the "Class - centric" Navigation perspective.
  *
  * @author  alexb, d00mst
@@ -41,10 +42,16 @@ import org.argouml.model.ModelFacade;
  */
 public class GoSummaryToIncomingDependency extends AbstractPerspectiveRule {
 
+    /**
+     * @see org.argouml.ui.explorer.rules.PerspectiveRule#getRuleName()
+     */
     public String getRuleName() {
 	return "Summary->IncomingDependency";
     }
 
+    /**
+     * @see org.argouml.ui.explorer.rules.PerspectiveRule#getChildren(java.lang.Object)
+     */
     public Collection getChildren(Object parent) {
 	if (parent instanceof IncomingDependencyNode) {
 	    List list = new ArrayList();
@@ -66,6 +73,9 @@ public class GoSummaryToIncomingDependency extends AbstractPerspectiveRule {
 	return null;
     }
 
+    /**
+     * @see org.argouml.ui.explorer.rules.PerspectiveRule#getDependencies(java.lang.Object)
+     */
     public Set getDependencies(Object parent) {
         if (parent instanceof IncomingDependencyNode) {
 	    Set set = new HashSet();

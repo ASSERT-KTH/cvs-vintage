@@ -1,4 +1,4 @@
-// $Id: GoOperationToSequenceDiagram.java,v 1.6 2004/06/24 06:25:40 linus Exp $
+// $Id: GoOperationToSequenceDiagram.java,v 1.7 2004/08/31 18:50:07 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -38,6 +38,7 @@ import org.argouml.uml.diagram.sequence.SequenceDiagramGraphModel;
 import org.argouml.uml.diagram.sequence.ui.UMLSequenceDiagram;
 
 /**
+ * Rule for Operation->Sequence diagram.
  * Go rule from represented operation to sequence diagram representing it
  * @author : jaap.branderhorst@xs4all.nl
  */
@@ -77,6 +78,9 @@ public class GoOperationToSequenceDiagram extends AbstractPerspectiveRule {
         return null;
     }
 
+    /**
+     * @see org.argouml.ui.explorer.rules.PerspectiveRule#getDependencies(java.lang.Object)
+     */
     public Set getDependencies(Object parent) {
         // TODO: What?
 	return null;

@@ -1,4 +1,4 @@
-// $Id: GoStateToDoActivity.java,v 1.5 2004/06/24 06:25:40 linus Exp $
+// $Id: GoStateToDoActivity.java,v 1.6 2004/08/31 18:50:07 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -22,7 +22,7 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $Id: GoStateToDoActivity.java,v 1.5 2004/06/24 06:25:40 linus Exp $
+// $Id: GoStateToDoActivity.java,v 1.6 2004/08/31 18:50:07 mvw Exp $
 
 package org.argouml.ui.explorer.rules;
 
@@ -57,6 +57,9 @@ public class GoStateToDoActivity extends AbstractPerspectiveRule {
         return null;
     }
 
+    /**
+     * @see org.argouml.ui.explorer.rules.PerspectiveRule#getDependencies(java.lang.Object)
+     */
     public Set getDependencies(Object parent) {
         if (ModelFacade.isAState(parent)) {
 	    Set set = new HashSet();

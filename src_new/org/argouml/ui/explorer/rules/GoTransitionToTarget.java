@@ -1,4 +1,4 @@
-// $Id: GoTransitionToTarget.java,v 1.5 2004/06/24 06:25:41 linus Exp $
+// $Id: GoTransitionToTarget.java,v 1.6 2004/08/31 18:50:07 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -31,10 +31,20 @@ import java.util.Set;
 
 import org.argouml.model.ModelFacade;
 
+/**
+ * Rule for Transition->Target State.
+ *
+ */
 public class GoTransitionToTarget extends AbstractPerspectiveRule {
 
+    /**
+     * @see org.argouml.ui.explorer.rules.PerspectiveRule#getRuleName()
+     */
     public String getRuleName() { return "Transition->Target State"; }
 
+    /**
+     * @see org.argouml.ui.explorer.rules.PerspectiveRule#getChildren(java.lang.Object)
+     */
     public Collection getChildren(Object parent) { 
 	if (ModelFacade.isATransition(parent)) {
 	    Collection col = new ArrayList();
@@ -44,6 +54,9 @@ public class GoTransitionToTarget extends AbstractPerspectiveRule {
 	return null;
     }
 
+    /**
+     * @see org.argouml.ui.explorer.rules.PerspectiveRule#getDependencies(java.lang.Object)
+     */
     public Set getDependencies(Object parent) {
         if (ModelFacade.isATransition(parent)) {
 	    Set set = new HashSet();

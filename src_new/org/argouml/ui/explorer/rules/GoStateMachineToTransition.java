@@ -1,4 +1,4 @@
-// $Id: GoStateMachineToTransition.java,v 1.6 2004/06/24 06:25:40 linus Exp $
+// $Id: GoStateMachineToTransition.java,v 1.7 2004/08/31 18:50:07 mvw Exp $
 // Copyright (c) 2003-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -31,15 +31,16 @@ import java.util.Set;
 import org.argouml.model.ModelFacade;
 
 /**
+ * Rule for Statemachine->Transition.
+ * 
  * @author Jaap
  *
- * To change this generated comment edit the template variable "typecomment":
- * Window>Preferences>Java>Templates.
- * To enable and disable the creation of type comments go to
- * Window>Preferences>Java>Code Generation.
  */
 public class GoStateMachineToTransition extends AbstractPerspectiveRule {
 
+    /**
+     * @see org.argouml.ui.explorer.rules.PerspectiveRule#getRuleName()
+     */
     public String getRuleName() { return "Statemachine->Transition"; }
 
     /**
@@ -52,6 +53,9 @@ public class GoStateMachineToTransition extends AbstractPerspectiveRule {
 	return null;
     }
 
+    /**
+     * @see org.argouml.ui.explorer.rules.PerspectiveRule#getDependencies(java.lang.Object)
+     */
     public Set getDependencies(Object parent) {
         if (ModelFacade.isAStateMachine(parent)) {
 	    Set set = new HashSet();

@@ -1,4 +1,4 @@
-// $Id: GoNamespaceToOwnedElements.java,v 1.8 2004/07/17 13:10:28 kataka Exp $
+// $Id: GoNamespaceToOwnedElements.java,v 1.9 2004/08/31 18:50:06 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -32,12 +32,22 @@ import java.util.Set;
 
 import org.argouml.model.ModelFacade;
 
+/**
+ * Rule for Namespace->Owned Elements.
+ *
+ */
 public class GoNamespaceToOwnedElements extends AbstractPerspectiveRule {
 
+    /**
+     * @see org.argouml.ui.explorer.rules.PerspectiveRule#getRuleName()
+     */
     public String getRuleName() {
         return "Namespace->Owned Elements";
     }
 
+    /**
+     * @see org.argouml.ui.explorer.rules.PerspectiveRule#getChildren(java.lang.Object)
+     */
     public Collection getChildren(Object parent) {
         
         if (!ModelFacade.isANamespace(parent))
@@ -59,6 +69,9 @@ public class GoNamespaceToOwnedElements extends AbstractPerspectiveRule {
         return ret;
     }
 
+    /**
+     * @see org.argouml.ui.explorer.rules.PerspectiveRule#getDependencies(java.lang.Object)
+     */
     public Set getDependencies(Object parent) {
         if (ModelFacade.isANamespace(parent)) {
 	    Set set = new HashSet();
