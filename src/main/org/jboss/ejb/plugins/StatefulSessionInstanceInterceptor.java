@@ -39,7 +39,7 @@ import java.rmi.RemoteException;
  * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
  * @author <a href="mailto:bill@burkecentral.com">Bill Burke</a>
  * @author <a href="mailto:scott.stark@jboss.org">Scott Stark</a>
- * @version $Revision: 1.47 $
+ * @version $Revision: 1.48 $
  *
  */
 public class StatefulSessionInstanceInterceptor
@@ -103,10 +103,13 @@ public class StatefulSessionInstanceInterceptor
    public Object invokeHome(Invocation mi)
       throws Exception
    {
+      // Disabled, because the AbstractTxInterceptorBMT wants to access
+      // the ctx -> ctx.getEJBContext().getUserTransaction()
+      //
       // Invocation on the handle, we don't need a bean instance
-      if (getEJBObject.equals(mi.getMethod()))
-         return getNext().invokeHome(mi);
-      
+      //if (getEJBObject.equals(mi.getMethod()))
+      //   return getNext().invokeHome(mi);
+
       // get a new context from the pool (this is a home method call)
       InstancePool pool = container.getInstancePool();
       EnterpriseContext ctx = pool.get();
@@ -120,7 +123,7 @@ public class StatefulSessionInstanceInterceptor
       // Set the current security information
       ctx.setPrincipal(mi.getPrincipal());
  
-      AllowedOperationsAssociation.pushInMethodFlag(EnterpriseContext.IN_EJB_HOME);
+      AllowedOperationsAssociation.pushInMethodFlag(IN_EJB_HOME);
 
       try
       {
@@ -139,7 +142,7 @@ public class StatefulSessionInstanceInterceptor
             // Still free? Not free if create() was called successfully
             if (ctx.getId() == null)
             {
-               container.getInstancePool().free(ctx);
+               pool.free(ctx);
             }
          }
       }
@@ -281,9 +284,9 @@ public class StatefulSessionInstanceInterceptor
          ctx.setPrincipal(mi.getPrincipal());
 
          if (ejbTimeout.equals(mi.getMethod()))
-            AllowedOperationsAssociation.pushInMethodFlag(EnterpriseContext.IN_EJB_TIMEOUT);
+            AllowedOperationsAssociation.pushInMethodFlag(IN_EJB_TIMEOUT);
          else
-            AllowedOperationsAssociation.pushInMethodFlag(EnterpriseContext.IN_BUSINESS_METHOD);
+            AllowedOperationsAssociation.pushInMethodFlag(IN_BUSINESS_METHOD);
 
          boolean validContext = true;
          try
@@ -433,7 +436,7 @@ public class StatefulSessionInstanceInterceptor
          {
             try
             {
-               AllowedOperationsAssociation.pushInMethodFlag(EnterpriseContext.IN_AFTER_BEGIN);
+               AllowedOperationsAssociation.pushInMethodFlag(IN_AFTER_BEGIN);
                afterBegin.invoke(ctx.getInstance(), new Object[0]);
             }
             catch (Exception e)
@@ -458,7 +461,7 @@ public class StatefulSessionInstanceInterceptor
          {
             try
             {
-               AllowedOperationsAssociation.pushInMethodFlag(EnterpriseContext.IN_BEFORE_COMPLETION);
+               AllowedOperationsAssociation.pushInMethodFlag(IN_BEFORE_COMPLETION);
                beforeCompletion.invoke(ctx.getInstance(), new Object[0]);
             }
             catch (Exception e)
@@ -492,7 +495,7 @@ public class StatefulSessionInstanceInterceptor
                
                try
                {
-                  AllowedOperationsAssociation.pushInMethodFlag(EnterpriseContext.IN_AFTER_COMPLETION);
+                  AllowedOperationsAssociation.pushInMethodFlag(IN_AFTER_COMPLETION);
                   if (status == Status.STATUS_COMMITTED)
                   {
                      afterCompletion.invoke(ctx.getInstance(), new Object[]{Boolean.TRUE});
