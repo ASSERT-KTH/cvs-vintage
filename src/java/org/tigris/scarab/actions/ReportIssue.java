@@ -95,7 +95,7 @@ import org.tigris.scarab.tools.ScarabRequestTool;
  * This class is responsible for report issue forms.
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: ReportIssue.java,v 1.74 2002/01/07 20:27:47 kminshull Exp $
+ * @version $Id: ReportIssue.java,v 1.75 2002/01/08 15:36:04 richard Exp $
  */
 public class ReportIssue extends RequireLoginFirstAction
 {
@@ -340,8 +340,7 @@ public class ReportIssue extends RequireLoginFirstAction
 
                         String uploadFile = attachment
                             .getRepositoryDirectory(scarabR.getIssue().getModule().getCode())
-                            + File.separator + fileName 
-                            + "_" + attachment.getPrimaryKey().toString();
+                            + File.separator + attachment.getPrimaryKey().toString() + "_" + fileName; 
                         
                         file.write(uploadFile);
                         attachment.setFilePath(uploadFile);
