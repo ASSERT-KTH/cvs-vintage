@@ -1,5 +1,5 @@
-// $Id: PropPanelStructuralFeature.java,v 1.7 2004/02/08 12:45:27 mvw Exp $
-// Copyright (c) 1996-2002 The Regents of the University of California. All
+// $Id: PropPanelStructuralFeature.java,v 1.8 2004/04/25 00:45:18 d00mst Exp $
+// Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
 // agreement is hereby granted, provided that the above copyright notice
@@ -22,7 +22,7 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $Id: PropPanelStructuralFeature.java,v 1.7 2004/02/08 12:45:27 mvw Exp $
+// $Id: PropPanelStructuralFeature.java,v 1.8 2004/04/25 00:45:18 d00mst Exp $
 package org.argouml.uml.ui.foundation.core;
 
 import org.argouml.i18n.Translator;
@@ -71,6 +71,7 @@ public class PropPanelStructuralFeature extends PropPanelFeature {
 		new UMLComboBox2(
 				 multiplicityComboBoxModel,
 				 ActionSetStructuralFeatureMultiplicity.SINGLETON);
+	    _multiplicityComboBox.setEditable(true);
 	}
 	return _multiplicityComboBox;
     }
