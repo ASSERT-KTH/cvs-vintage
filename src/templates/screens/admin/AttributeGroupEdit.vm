@@ -5,8 +5,8 @@
 <div class="app" id="div2-1-4-0">
 
 #if (!$groupId)
-<p class="alert">Group not found. Please click 
-<a href="$link.setPage("admin,ManageArtifactTypes.vm")>here</a> to proceed.</p>
+<p class="alert">$l10n.GroupNotFound
+<a href="$link.setPage("admin,ManageArtifactTypes.vm")>here</a>.</p>
 #else
 
 <form method="post" action="$link.setPage("admin,AttributeGroupEdit.vm")">
@@ -18,11 +18,11 @@
 <input type="hidden" name="$scarabG.Constant.CANCEL_TEMPLATE" value="admin,ArtifactTypeEdit.vm" />
 
 <div class="functnbar">
-<input type="submit" value="Done"  name="eventSubmit_doDone" />
-<input type="submit" value="Cancel"  name="eventSubmit_doCancel" />
+<input type="submit" value="$l10n.Done"  name="eventSubmit_doDone" />
+<input type="submit" value="$l10n.Cancel"  name="eventSubmit_doCancel" />
 </div>
 
-<h3>Attribute group information</h3>
+<h3>$l10n.AttributeGroupInfo</h3>
 
 #set ($agGroup = $intake.AttributeGroup.mapTo($group))
 <div class="axial">
@@ -32,28 +32,28 @@
  <td><input type="text" size="25" name="$agGroup.Name.Key" value="$!agGroup.Name" /></td>
  </tr>
  <tr>
- <th>Description</th>
+ <th>$l10n.Description</th>
  <td>#textAreaMedium("$agGroup.Description.Key" $agGroup.Description.Value)</td>
  </tr>
  </table>
 </div>
 
 <div class="functnbar3">
-<input type="submit" value="Save" name="eventSubmit_doSaveinfo" />&#160;
+<input type="submit" value="$l10n.Save" name="eventSubmit_doSaveinfo" />&#160;
 </div>
 
-<h3>Attributes in this group</h3>
+<h3>$l10n.AttributesInGroup</h3>
 #if (!$group.Attributes.isEmpty())
 <table width="100%" border="1" cellspacing="2" cellpadding="3">
 <tr>
-<th>Select</th>
-<th>Name</th>
-<th>Per project name</th>
-<th>Active</th>
-<th>Required</th>
-<th>Included in custom query</th>
-<th>Default text</th>
-<th>Sequence #</th>
+<th>$l10n.Select</th>
+<th>$l10n.Name</th>
+<th>$l10n.PerProjectName</th>
+<th>$l10n.Active</th>
+<th>$l10n.Required</th>
+<th>$l10n.IncludedInCustomQuery</th>
+<th>$l10n.DefaultTxt</th>
+<th>$l10n.Sequence</th>
 </tr>
 #foreach ($attribute in $group.Attributes)
    #set ($rma = $scarabR.CurrentModule.getRModuleAttribute($attribute, $group.IssueType))
@@ -98,25 +98,25 @@
 </table>
 <p><small>$l10n.DefaultText </small></p>
 #else
-  <p class="alert">Click the Add button to add attributes to this group.</p>
+  <p class="alert">$l10n.ClickAddButton</p>
 #end
 
 <div class="functnbar3">
 #if (!$group.Attributes.isEmpty())
-<input type="submit" value="Save" name="eventSubmit_doSave" />&#160;
+<input type="submit" value="$l10n.Save" name="eventSubmit_doSave" />&#160;
 #end
-<input type="submit" value="Add new" name="eventSubmit_doGotoothertemplate" />&#160;
-##<input type="submit" value="Copy selected" />&#160;
+<input type="submit" value="$l10n.AddNew" name="eventSubmit_doGotoothertemplate" />&#160;
+##<input type="submit" value="$l10n.CopySelected" />&#160;
 #if (!$group.Attributes.isEmpty())
-<input type="submit" value="Delete selected" name="eventSubmit_doDeleteattributes" />&#160;
-<input type="submit" value="Resort" name="eventSubmit_doSave" />
+<input type="submit" value="$l10n.DeleteSelected" name="eventSubmit_doDeleteattributes" />&#160;
+<input type="submit" value="$l10n.Resort" name="eventSubmit_doSave" />
 #end
 </div>
 
 
 <div class="functnbar2">
-<input type="submit" value="Done"  name="eventSubmit_doDone" />
-<input type="submit" value="Cancel"  name="eventSubmit_doCancel" />
+<input type="submit" value="$l10n.Done"  name="eventSubmit_doDone" />
+<input type="submit" value="$l10n.Cancel"  name="eventSubmit_doCancel" />
 </div>
 
 $intake.declareGroups()
