@@ -15,10 +15,9 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003.
 //
 //All Rights Reserved.
+
 package org.columba.core.command;
 
-import org.columba.core.gui.statusbar.event.WorkerListChangeListener;
-import org.columba.core.gui.statusbar.event.WorkerListChangedEvent;
 import org.columba.core.util.Mutex;
 import org.columba.core.util.SwingWorker.ThreadVar;
 
@@ -26,11 +25,10 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
 
-
 /**
  * TaskManager keeps a list of currently running {@link Worker} objects.
  * <p>
- * The {@link StatusBar} listens for {@link WorkerListChangedEvent} to
+ * The {@link StatusBar} listens for {@link TaskManagerEvent} to
  * provide visual feedback. This includes a status message text and
  * the progress bar.
  * <p>
@@ -55,7 +53,7 @@ public class TaskManager {
     /**
      * Listeners which are interested in status changes
      */
-    protected List workerListChangeListeners;
+    protected List workerListListeners;
 
     /**
      * Default constructor
@@ -65,7 +63,7 @@ public class TaskManager {
 
         workerListMutex = new Mutex("workerListMutex");
 
-        workerListChangeListeners = new Vector();
+        workerListListeners = new Vector();
     }
 
     /**
@@ -73,8 +71,8 @@ public class TaskManager {
      *
      * @return        list of workers
      */
-    public List getWorkerList() {
-        return workerList;
+    public Worker[] getWorkers() {
+        return (Worker[])workerList.toArray(new Worker[0]);
     }
 
     /**
@@ -92,43 +90,7 @@ public class TaskManager {
      * @param w                new worker
      */
     private void addWorker(Worker w) {
-        Worker compareWorker;
-        int workerPriority = w.getPriority();
-
-        for (int i = 0; i < workerList.size(); i++) {
-            compareWorker = (Worker) workerList.get(i);
-
-            if (compareWorker.getPriority() < workerPriority) {
-                workerList.add(i, w);
-
-                return;
-            }
-        }
-
-        // Lowest Priority
         workerList.add(w);
-    }
-
-    /**
-     * Get worker with index.
-     *
-     * @param index                index of worker
-     * @return                        worker
-     */
-    public Worker get(int index) {
-        Worker w;
-        boolean needToRelease = false;
-
-        try {
-            needToRelease = workerListMutex.getMutex();
-            w = (Worker) workerList.get(index);
-        } finally {
-            if (needToRelease) {
-                workerListMutex.releaseMutex();
-            }
-        }
-
-        return w;
     }
 
     /**
@@ -137,24 +99,19 @@ public class TaskManager {
      * @param t                new worker
      */
     public void register(Worker t) {
-        WorkerListChangedEvent changeEvent = new WorkerListChangedEvent();
         boolean needToRelease = false;
 
         try {
             needToRelease = workerListMutex.getMutex();
 
-            changeEvent.setOldValue(workerList.size());
-
             addWorker(t);
-
-            changeEvent.setNewValue(workerList.size());
         } finally {
             if (needToRelease) {
                 workerListMutex.releaseMutex();
             }
         }
 
-        fireWorkerListChangedEvent(changeEvent);
+        fireWorkerAdded(new TaskManagerEvent(this, t));
     }
 
     /**
@@ -165,22 +122,16 @@ public class TaskManager {
     public void unregister(ThreadVar tvar) {
         Worker worker;
         boolean needToRelease = false;
-        WorkerListChangedEvent e = new WorkerListChangedEvent();
-        e.setType(WorkerListChangedEvent.SIZE_CHANGED);
 
         try {
             needToRelease = workerListMutex.getMutex();
-
-            int size = workerList.size();
-            e.setOldValue(size);
 
             for (Iterator it = workerList.iterator(); it.hasNext();) {
                 worker = (Worker) it.next();
 
                 if (tvar == worker.getThreadVar()) {
                     workerList.remove(worker);
-                    e.setNewValue(workerList.size());
-
+                    fireWorkerRemoved(new TaskManagerEvent(this, worker));
                     break;
                 }
             }
@@ -189,8 +140,6 @@ public class TaskManager {
                 workerListMutex.releaseMutex();
             }
         }
-
-        fireWorkerListChangedEvent(e);
     }
 
     /**
@@ -198,8 +147,15 @@ public class TaskManager {
      *
      * @param l                listener
      */
-    public void addWorkerListChangeListener(WorkerListChangeListener l) {
-        workerListChangeListeners.add(l);
+    public void addTaskManagerListener(TaskManagerListener l) {
+        workerListListeners.add(l);
+    }
+    
+    /**
+     * Remove a previously registered listener.
+     */
+    public void removeTaskManagerListener(TaskManagerListener l) {
+        workerListListeners.remove(l);
     }
 
     /**
@@ -207,9 +163,15 @@ public class TaskManager {
      *
      * @param e                event
      */
-    protected void fireWorkerListChangedEvent(WorkerListChangedEvent e) {
-        for (Iterator it = workerListChangeListeners.iterator(); it.hasNext();) {
-            ((WorkerListChangeListener) it.next()).workerListChanged(e);
+    protected void fireWorkerAdded(TaskManagerEvent e) {
+        for (Iterator it = workerListListeners.iterator(); it.hasNext();) {
+            ((TaskManagerListener) it.next()).workerAdded(e);
+        }
+    }
+    
+    protected void fireWorkerRemoved(TaskManagerEvent e) {
+        for (Iterator it = workerListListeners.iterator(); it.hasNext();) {
+            ((TaskManagerListener) it.next()).workerRemoved(e);
         }
     }
 }

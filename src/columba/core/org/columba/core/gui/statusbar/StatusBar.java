@@ -13,12 +13,10 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
+
 package org.columba.core.gui.statusbar;
 
-import org.columba.core.command.TaskManager;
-import org.columba.core.command.Worker;
-import org.columba.core.gui.statusbar.event.WorkerListChangeListener;
-import org.columba.core.gui.statusbar.event.WorkerListChangedEvent;
+import org.columba.core.command.*;
 import org.columba.core.gui.statusbar.event.WorkerStatusChangeListener;
 import org.columba.core.gui.statusbar.event.WorkerStatusChangedEvent;
 import org.columba.core.gui.toolbar.ToolbarButton;
@@ -42,17 +40,15 @@ import javax.swing.border.Border;
 import javax.swing.border.CompoundBorder;
 import javax.swing.border.EmptyBorder;
 
-
-public class StatusBar extends JComponent implements WorkerListChangeListener,
+public class StatusBar extends JComponent implements TaskManagerListener,
     ActionListener, WorkerStatusChangeListener {
+    
     private JLabel label;
     private JProgressBar progressBar;
     private Border border;
     private JPanel mainRightPanel;
     private JButton taskButton;
     private JPanel leftMainPanel;
-    private int displayedWorkerIndex;
-    private int workerListSize;
     private Worker displayedWorker;
     private TaskManager taskManager;
     private ImageSequenceTimer imageSequenceTimer;
@@ -64,14 +60,12 @@ public class StatusBar extends JComponent implements WorkerListChangeListener,
 
     public StatusBar(TaskManager tm) {
         taskManager = tm;
-        tm.addWorkerListChangeListener(this);
+        tm.addTaskManagerListener(this);
 
-        imageSequenceTimer = new ImageSequenceTimer();
+        imageSequenceTimer = new ImageSequenceTimer(tm);
 
         setBorder(BorderFactory.createEmptyBorder(1, 2, 1, 2));
 
-        displayedWorkerIndex = 0;
-        workerListSize = 0;
         label = new JLabel("");
         label.setAlignmentX(Component.LEFT_ALIGNMENT);
 
@@ -114,9 +108,9 @@ public class StatusBar extends JComponent implements WorkerListChangeListener,
 
         taskPanel.setBorder(new CompoundBorder(border, margin));
 
-        taskPanel.add(taskButton, BorderLayout.CENTER);
+        //taskPanel.add(taskButton, BorderLayout.CENTER);
 
-        //leftMainPanel.add(taskPanel, BorderLayout.WEST);
+        leftMainPanel.add(taskPanel, BorderLayout.WEST);
         JPanel labelPanel = new JPanel();
         labelPanel.setLayout(new BorderLayout());
         margin = new EmptyBorder(0, 10, 0, 10);
@@ -152,8 +146,6 @@ public class StatusBar extends JComponent implements WorkerListChangeListener,
         //rightPanel.add(onlinePanel, BorderLayout.EAST);
         add(rightPanel, BorderLayout.EAST);
 
-        initActions();
-
         // init timer
         initClearTextTimer();
     }
@@ -166,21 +158,15 @@ public class StatusBar extends JComponent implements WorkerListChangeListener,
         setText(message);
     }
 
-    protected void setTaskCount(int i) {
-        final int n = i;
-
+    protected void updateTaskCount() {
         Runnable run = new Runnable() {
                 public void run() {
-                    //taskButton.setText("Tasks: " + n);
+                    //taskButton.setText("Tasks: " + taskManager.count());
                 }
             };
 
         try {
-            if (!SwingUtilities.isEventDispatchThread()) {
-                SwingUtilities.invokeAndWait(run);
-            } else {
-                SwingUtilities.invokeLater(run);
-            }
+            SwingUtilities.invokeLater(run);
         } catch (Exception ex) {
         }
     }
@@ -199,11 +185,7 @@ public class StatusBar extends JComponent implements WorkerListChangeListener,
             };
 
         try {
-            if (!SwingUtilities.isEventDispatchThread()) {
-                SwingUtilities.invokeAndWait(run);
-            } else {
-                SwingUtilities.invokeLater(run);
-            }
+            SwingUtilities.invokeLater(run);
         } catch (Exception ex) {
         }
     }
@@ -219,11 +201,7 @@ public class StatusBar extends JComponent implements WorkerListChangeListener,
             };
 
         try {
-            if (!SwingUtilities.isEventDispatchThread()) {
-                SwingUtilities.invokeAndWait(run);
-            } else {
-                SwingUtilities.invokeLater(run);
-            }
+            SwingUtilities.invokeLater(run);
         } catch (Exception ex) {
         }
     }
@@ -240,11 +218,7 @@ public class StatusBar extends JComponent implements WorkerListChangeListener,
             };
 
         try {
-            if (!SwingUtilities.isEventDispatchThread()) {
-                SwingUtilities.invokeAndWait(run);
-            } else {
-                SwingUtilities.invokeLater(run);
-            }
+            SwingUtilities.invokeLater(run);
         } catch (Exception ex) {
         }
     }
@@ -259,60 +233,21 @@ public class StatusBar extends JComponent implements WorkerListChangeListener,
             };
 
         try {
-            if (!SwingUtilities.isEventDispatchThread()) {
-                SwingUtilities.invokeAndWait(run);
-            } else {
-                SwingUtilities.invokeLater(run);
-            }
+            SwingUtilities.invokeLater(run);
         } catch (Exception ex) {
         }
     }
 
-    protected void displayWorker(int index) {
-        // set to default state
-        setMaximumAndValue(100, 100);
-
-        //setText("");
-        // now switch to worker
-        Worker w = taskManager.get(index);
-
-        if (w.getDisplayText().length() != 0) {
-            setText(w.getDisplayText());
-        }
-
-        setMaximumAndValue(w.getProgressBarValue(), w.getProgessBarMaximum());
-
-        if (displayedWorker != null) {
-            displayedWorker.removeWorkerStatusChangeListener(this);
-        }
-
-        w.addWorkerStatusChangeListener(this);
-        displayedWorker = w;
+    public void workerAdded(TaskManagerEvent e) {
+        updateTaskCount();
+        setDisplayedWorker(e.getWorker());
     }
-
-    public void workerListChanged(WorkerListChangedEvent e) {
-        if (e.getType() == WorkerListChangedEvent.SIZE_CHANGED) {
-            workerListSize = e.getNewValue();
-
-            setTaskCount(workerListSize);
-
-            if (displayedWorkerIndex > (workerListSize - 1)) {
-                displayedWorkerIndex = workerListSize - 1;
-            }
-
-            if (displayedWorkerIndex < 0) {
-                displayedWorkerIndex = 0;
-            }
-
-            if ((workerListSize > 0) && (e.getOldValue() == 0)) {
-                displayWorker(0);
-            }
-
-            /*
-            if( (workerListSize > 1) && (e.getOldValue() <= 1) ) {
-                    right.setEnabled( true );
-            }
-            */
+    
+    public void workerRemoved(TaskManagerEvent e) {
+        updateTaskCount();
+        if (e.getWorker() == displayedWorker) {
+            Worker[] workers = taskManager.getWorkers();
+            setDisplayedWorker(workers.length > 0 ? workers[0] : null);
         }
     }
 
@@ -342,14 +277,6 @@ public class StatusBar extends JComponent implements WorkerListChangeListener,
 
         case WorkerStatusChangedEvent.PROGRESSBAR_VALUE_CHANGED:
             setValue(((Integer) e.getNewValue()).intValue());
-
-            break;
-
-        case WorkerStatusChangedEvent.FINISHED:
-
-            if (workerListSize > 0) {
-                displayWorker(0);
-            }
         }
     }
 
@@ -366,9 +293,6 @@ public class StatusBar extends JComponent implements WorkerListChangeListener,
                         setText("");
                     }
                 });
-    }
-
-    protected void initActions() {
     }
 
     public void actionPerformed(ActionEvent e) {
@@ -418,9 +342,31 @@ public class StatusBar extends JComponent implements WorkerListChangeListener,
             displayedWorker.cancel();
         }
     }
+    
+    /**
+     * Sets the worker to be displayed.
+     */
+    protected void setDisplayedWorker(Worker w) {
+        if (displayedWorker != null) {
+            displayedWorker.removeWorkerStatusChangeListener(this);
+        }
+        displayedWorker = w;
+        
+        if (w == null) {
+            setText("");
+            setMaximumAndValue(0, 0);
+        } else {
+            setText(w.getDisplayText());
+            setMaximumAndValue(w.getProgressBarValue(), w.getProgessBarMaximum());
+            w.addWorkerStatusChangeListener(this);
+        }
+    }
 
-    public void cancelDisplayedWorker() {
-        displayedWorker.cancel();
+    /**
+     * Returns the worker currently displayed.
+     */
+    public Worker getDisplayedWorker() {
+        return displayedWorker;
     }
 
     /**
@@ -429,5 +375,12 @@ public class StatusBar extends JComponent implements WorkerListChangeListener,
      */
     public ImageSequenceTimer getImageSequenceTimer() {
         return imageSequenceTimer;
+    }
+    
+    /**
+     * Returns the task manager this status bar is attached to.
+     */
+    public TaskManager getTaskManager() {
+        return taskManager;
     }
 }

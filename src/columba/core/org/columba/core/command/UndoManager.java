@@ -17,8 +17,6 @@
 package org.columba.core.command;
 
 import org.columba.core.action.AbstractColumbaAction;
-import org.columba.core.gui.statusbar.event.WorkerListChangeListener;
-import org.columba.core.gui.statusbar.event.WorkerListChangedEvent;
 import org.columba.core.gui.util.ImageLoader;
 
 import org.columba.mail.util.MailResourceLoader;
@@ -31,13 +29,13 @@ import java.util.Vector;
 
 import javax.swing.KeyStroke;
 
-public class UndoManager implements WorkerListChangeListener {
+public class UndoManager implements TaskManagerListener {
     protected List undoQueue;
     protected List redoQueue;
     public AbstractColumbaAction undoAction;
     public AbstractColumbaAction redoAction;
     protected DefaultCommandProcessor processor;
-    protected int runningTasks = 0;
+    protected int runningTasks;
 
     public UndoManager(DefaultCommandProcessor processor) {
         undoQueue = new Vector();
@@ -47,7 +45,9 @@ public class UndoManager implements WorkerListChangeListener {
 
         initActions();
 
-        processor.getTaskManager().addWorkerListChangeListener(this);
+        TaskManager taskManager = processor.getTaskManager();
+        taskManager.addTaskManagerListener(this);
+        runningTasks = taskManager.count();
     }
 
     public void initActions() {
@@ -169,14 +169,13 @@ public class UndoManager implements WorkerListChangeListener {
         updateActions();
     }
 
-    /**
-     * @see org.columba.core.gui.statusbar.event.WorkerListChangeListener#workerListChanged(WorkerListChangedEvent)
-     */
-    public void workerListChanged(WorkerListChangedEvent e) {
-        if (e.getType() == WorkerListChangedEvent.SIZE_CHANGED) {
-            runningTasks = e.getNewValue();
-        }
-
+    public void workerAdded(TaskManagerEvent e) {
+        runningTasks++;
+        updateActions();
+    }
+    
+    public void workerRemoved(TaskManagerEvent e) {
+        runningTasks--;
         updateActions();
     }
 

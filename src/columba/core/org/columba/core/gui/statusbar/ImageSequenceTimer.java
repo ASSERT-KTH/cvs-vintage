@@ -13,13 +13,11 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
+
 package org.columba.core.gui.statusbar;
 
-import org.columba.core.main.MainInterface;
-import org.columba.core.main.MainInterface;
+import org.columba.core.command.*;
 import org.columba.core.config.ThemeItem;
-import org.columba.core.gui.statusbar.event.WorkerListChangeListener;
-import org.columba.core.gui.statusbar.event.WorkerListChangedEvent;
 import org.columba.core.gui.toolbar.ToolbarButton;
 import org.columba.core.gui.util.ImageLoader;
 import org.columba.core.main.MainInterface;
@@ -35,22 +33,24 @@ import java.util.Properties;
 
 import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
-
+import javax.swing.Timer;
 
 /**
  * Animated image showing background activity.
  * <p>
  * Can be found in the toolbar in the right topmost corner of Columba.
  * <p>
- * ImageSequenceTimer actually only listens for {@link WorkerListChangeEvent}
+ * ImageSequenceTimer actually only listens for {@link TaskManagerEvent}
  * and starts/stops as appropriate.
  *
  * @author fdietz
  */
 public class ImageSequenceTimer extends ToolbarButton implements ActionListener,
-    WorkerListChangeListener {
+    TaskManagerListener {
+    
     private static int DELAY = 100;
-    private javax.swing.Timer timer;
+    private TaskManager taskManager;
+    private Timer timer;
     private ImageIcon[] images;
     private ImageIcon restImage;
     private int frameNumber;
@@ -59,10 +59,10 @@ public class ImageSequenceTimer extends ToolbarButton implements ActionListener,
     private int imageWidth;
     private int imageHeight;
 
-    public ImageSequenceTimer() {
+    public ImageSequenceTimer(TaskManager taskManager) {
         super();
 
-        timer = new javax.swing.Timer(DELAY, this);
+        timer = new Timer(DELAY, this);
         timer.setInitialDelay(0);
         timer.setCoalesce(true);
         setMargin(new Insets(0, 0, 0, 0));
@@ -74,7 +74,8 @@ public class ImageSequenceTimer extends ToolbarButton implements ActionListener,
         init();
 
         // register interested on changes in the running worker list
-        MainInterface.processor.getTaskManager().addWorkerListChangeListener(this);
+        this.taskManager = taskManager;
+        taskManager.addTaskManagerListener(this);
     }
 
     /**
@@ -222,10 +223,18 @@ public class ImageSequenceTimer extends ToolbarButton implements ActionListener,
         }
     }
 
-    public void workerListChanged(WorkerListChangedEvent e) {
+    public void workerAdded(TaskManagerEvent e) {
+        updateTimer();
+    }
+    
+    public void workerRemoved(TaskManagerEvent e) {
+        updateTimer();
+    }
+    
+    protected void updateTimer() {
         // just the animation, if there are more than zero
         // workers running
-        if (e.getNewValue() != 0) {
+        if (taskManager.count() > 0) {
             start();
         } else {
             stop();

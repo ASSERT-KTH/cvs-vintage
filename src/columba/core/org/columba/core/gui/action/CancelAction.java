@@ -13,12 +13,12 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
+
 package org.columba.core.gui.action;
 
 import org.columba.core.action.AbstractColumbaAction;
+import org.columba.core.command.*;
 import org.columba.core.gui.frame.FrameMediator;
-import org.columba.core.gui.statusbar.event.WorkerListChangeListener;
-import org.columba.core.gui.statusbar.event.WorkerListChangedEvent;
 import org.columba.core.gui.util.ImageLoader;
 import org.columba.core.main.MainInterface;
 import org.columba.core.util.GlobalResourceLoader;
@@ -28,9 +28,11 @@ import java.awt.event.KeyEvent;
 
 import javax.swing.KeyStroke;
 
-
 public class CancelAction extends AbstractColumbaAction
-    implements WorkerListChangeListener {
+    implements TaskManagerListener {
+    
+    protected TaskManager taskManager;
+    
     public CancelAction(FrameMediator controller) {
         super(controller,
             GlobalResourceLoader.getString(null, null, "menu_file_cancel"));
@@ -45,21 +47,24 @@ public class CancelAction extends AbstractColumbaAction
 
         // set JavaHelp topic ID
         //setTopicID("cancel");
-        setEnabled(false);
-        MainInterface.processor.getTaskManager().addWorkerListChangeListener(this);
+        
+        taskManager = getFrameMediator().getStatusBar().getTaskManager();
+        setEnabled(taskManager.count() > 0);
+        taskManager.addTaskManagerListener(this);
     }
 
     /* (non-Javadoc)
      * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
      */
     public void actionPerformed(ActionEvent evt) {
-        getFrameMediator().getStatusBar().cancelDisplayedWorker();
+        getFrameMediator().getStatusBar().getDisplayedWorker().cancel();
     }
 
-    /* (non-Javadoc)
-     * @see org.columba.core.gui.statusbar.event.WorkerListChangeListener#workerListChanged(org.columba.core.gui.statusbar.event.WorkerListChangedEvent)
-     */
-    public void workerListChanged(WorkerListChangedEvent e) {
-        setEnabled(e.getNewValue() != 0);
+    public void workerAdded(TaskManagerEvent e) {
+        setEnabled(taskManager.count() > 0);
+    }
+    
+    public void workerRemoved(TaskManagerEvent e) {
+        setEnabled(taskManager.count() > 0);
     }
 }

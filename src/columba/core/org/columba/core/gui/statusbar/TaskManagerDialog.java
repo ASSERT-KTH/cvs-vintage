@@ -18,41 +18,22 @@ package org.columba.core.gui.statusbar;
 
 import net.javaprog.ui.wizard.plaf.basic.SingleSideEtchedBorder;
 
-import org.columba.core.command.TaskManager;
-import org.columba.core.gui.statusbar.event.WorkerListChangeListener;
-import org.columba.core.gui.statusbar.event.WorkerListChangedEvent;
+import org.columba.core.command.*;
 import org.columba.core.gui.statusbar.event.WorkerStatusChangeListener;
 import org.columba.core.gui.statusbar.event.WorkerStatusChangedEvent;
 import org.columba.core.gui.util.ButtonWithMnemonic;
 import org.columba.core.help.HelpManager;
 import org.columba.core.main.MainInterface;
+import org.columba.core.util.GlobalResourceLoader;
 
 import org.columba.mail.gui.config.filter.FilterTransferHandler;
-import org.columba.mail.util.MailResourceLoader;
 
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Component;
-import java.awt.Dimension;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.GridLayout;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 
-import javax.swing.BorderFactory;
-import javax.swing.Box;
-import javax.swing.DefaultListModel;
-import javax.swing.JButton;
-import javax.swing.JComponent;
-import javax.swing.JDialog;
-import javax.swing.JList;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.KeyStroke;
-import javax.swing.SwingConstants;
-import javax.swing.SwingUtilities;
+import javax.swing.*;
 
 /**
  * Dialog showing all running tasks.
@@ -62,42 +43,42 @@ import javax.swing.SwingUtilities;
  * @author fdietz
  */
 public class TaskManagerDialog extends JDialog
-    implements WorkerListChangeListener, ActionListener,
+    implements TaskManagerListener, ActionListener,
         WorkerStatusChangeListener {
+    
     private static TaskManagerDialog instance;
+    
+    private TaskManager taskManager;
     private JButton cancelButton;
     private JButton killButton;
     private JList list;
 
-    public TaskManagerDialog() {
-        super();
-
-        setTitle("Task Manager");
+    public TaskManagerDialog(TaskManager tm) {
+        super((JFrame)null, "Task Manager", false);
+        this.taskManager = tm;
 
         initComponents();
         pack();
         setLocationRelativeTo(null);
 
-        MainInterface.processor.getTaskManager().addWorkerListChangeListener(this);
-
-        //setVisible(true);
+        tm.addTaskManagerListener(this);
     }
 
     public static TaskManagerDialog createInstance() {
         if (instance == null) {
-            instance = new TaskManagerDialog();
+            instance = new TaskManagerDialog(MainInterface.processor.getTaskManager());
         }
 
         if (!instance.isVisible()) {
             instance.setVisible(true);
         }
+        instance.toFront();
 
         return instance;
     }
 
     public void initComponents() {
-        JPanel mainPanel = new JPanel();
-        mainPanel.setLayout(new BorderLayout());
+        JPanel mainPanel = new JPanel(new BorderLayout());
         mainPanel.setBorder(BorderFactory.createEmptyBorder(12, 12, 12, 12));
         getContentPane().add(mainPanel);
 
@@ -140,8 +121,12 @@ public class TaskManagerDialog extends JDialog
         // centerpanel
         JPanel centerPanel = new JPanel(new BorderLayout());
         centerPanel.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 6));
-        list = new JList();
-        list.setModel(new DefaultListModel());
+        DefaultListModel model = new DefaultListModel();
+        Worker[] workers = taskManager.getWorkers();
+        for (int i = 0; i < workers.length; i++) {
+            model.addElement(workers[i]);
+        }
+        list = new JList(model);
         list.setCellRenderer(new TaskRenderer());
         
         JScrollPane scrollPane = new JScrollPane(list);
@@ -158,14 +143,14 @@ public class TaskManagerDialog extends JDialog
         JPanel buttonPanel = new JPanel(new GridLayout(1, 2, 6, 0));
         buttonPanel.setBorder(BorderFactory.createEmptyBorder(12, 12, 12, 12));
 
-        ButtonWithMnemonic closeButton = new ButtonWithMnemonic(MailResourceLoader.getString(
-                    "global", "close"));
+        ButtonWithMnemonic closeButton = new ButtonWithMnemonic(
+                GlobalResourceLoader.getString("", "global", "close"));
         closeButton.setActionCommand("CLOSE"); //$NON-NLS-1$
         closeButton.addActionListener(this);
         buttonPanel.add(closeButton);
 
-        ButtonWithMnemonic helpButton = new ButtonWithMnemonic(MailResourceLoader.getString(
-                    "global", "help"));
+        ButtonWithMnemonic helpButton = new ButtonWithMnemonic(
+                GlobalResourceLoader.getString("", "global", "help"));
         buttonPanel.add(helpButton);
         bottomPanel.add(buttonPanel, BorderLayout.EAST);
         getContentPane().add(bottomPanel, BorderLayout.SOUTH);
@@ -186,43 +171,30 @@ public class TaskManagerDialog extends JDialog
 
         if (action.equals("CLOSE")) {
             setVisible(false);
+        } else if (action.equals("CANCEL")) {
+            
+        } else if (action.equals("KILL")) {
+            
         }
     }
 
-    public void updateList() {
-        Runnable run = new Runnable() {
-                public void run() {
-                    // recreate list
-                    DefaultListModel model = ((DefaultListModel) list.getModel());
-                    model.removeAllElements();
-
-                    TaskManager tm = MainInterface.processor.getTaskManager();
-
-                    for (int i = 0; i < tm.count(); i++) {
-                        model.addElement(tm.get(i));
-                    }
-                }
-            };
-
-        try {
-            if (!SwingUtilities.isEventDispatchThread()) {
-                SwingUtilities.invokeAndWait(run);
-            } else {
-                SwingUtilities.invokeLater(run);
+    public void workerAdded(final TaskManagerEvent e) {
+        SwingUtilities.invokeLater(new Runnable() {
+           public void run() {
+               ((DefaultListModel)list.getModel()).addElement(e.getWorker());
+           }
+        });
+    }
+    
+    public void workerRemoved(final TaskManagerEvent e) {
+        SwingUtilities.invokeLater(new Runnable() {
+            public void run() {
+                ((DefaultListModel)list.getModel()).removeElement(e.getWorker());
             }
-        } catch (Exception ex) {
-        }
-    }
-
-    public void workerListChanged(WorkerListChangedEvent e) {
-        if (e.getType() == WorkerListChangedEvent.SIZE_CHANGED) {
-            int workerListSize = e.getNewValue();
-            updateList();
-        }
+        });
     }
 
     public void workerStatusChanged(WorkerStatusChangedEvent e) {
-        
         switch (e.getType()) {
             
         case WorkerStatusChangedEvent.DISPLAY_TEXT_CHANGED:
@@ -239,6 +211,4 @@ public class TaskManagerDialog extends JDialog
 
         case WorkerStatusChangedEvent.FINISHED:}
     }
-    
-   
 }

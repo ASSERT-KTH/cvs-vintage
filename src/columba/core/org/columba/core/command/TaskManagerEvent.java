@@ -13,35 +13,32 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
-package org.columba.core.gui.statusbar.event;
 
-public class WorkerListChangedEvent {
-    public static final int SIZE_CHANGED = 0;
-    private int type;
-    private int oldValue;
-    private int newValue;
+package org.columba.core.command;
 
-    public int getType() {
-        return type;
+import org.columba.core.command.Worker;
+
+import java.util.EventObject;
+
+/**
+ * Encapsulates an event from a worker list.
+ */
+public class TaskManagerEvent extends EventObject {
+    protected Worker worker;
+    
+    /**
+     * Creates a new event from the given source with the given
+     * worker that has changed.
+     */
+    public TaskManagerEvent(Object source, Worker worker) {
+        super(source);
+        this.worker = worker;
     }
-
-    public void setType(int type) {
-        this.type = type;
-    }
-
-    public int getOldValue() {
-        return oldValue;
-    }
-
-    public void setOldValue(int oldSize) {
-        this.oldValue = oldSize;
-    }
-
-    public int getNewValue() {
-        return newValue;
-    }
-
-    public void setNewValue(int newSize) {
-        this.newValue = newSize;
+    
+    /**
+     * Returns the worker that has been added or removed.
+     */
+    public Worker getWorker() {
+        return worker;
     }
 }
