@@ -66,7 +66,7 @@ public class AccountDialog implements ActionListener, ListSelectionListener {
 	public AccountDialog(AccountItem item) {
 		dialog = DialogStore.getDialog();
 		dialog.setTitle(
-			MailResourceLoader.getString("dialog", "account", "dialog_title"));
+			MailResourceLoader.getString("dialog", "account", "preferences_for") + " " + item.getName());
 		this.accountItem = item;
 		createPanels();
 		initComponents();
@@ -74,12 +74,7 @@ public class AccountDialog implements ActionListener, ListSelectionListener {
 		//panelChooser.addListSelectionListener(this);
 
 		dialog.pack();
-		//		for jdk1.3 compatibility, this is called dynamically
-		Compatibility.simpleSetterInvoke(
-			dialog,
-			"setLocationRelativeTo",
-			Component.class,
-			null);
+		dialog.setLocationRelativeTo(null);
 		dialog.setVisible(true);
 	}
 
