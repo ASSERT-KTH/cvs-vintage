@@ -106,7 +106,10 @@ public class MetricsInterceptor extends AbstractInterceptor
             return super.invokeHome(mi);
         }
         finally {
-            addEntry(mi, begin, System.currentTimeMillis());
+            if(mi.getMethod() != null) 
+            {
+                addEntry(mi, begin, System.currentTimeMillis());
+            }
         }
    }
 
@@ -118,7 +121,10 @@ public class MetricsInterceptor extends AbstractInterceptor
             return super.invoke(mi);
         }
         finally {
-            addEntry(mi, begin, System.currentTimeMillis());
+            if(mi.getMethod() != null) 
+            {
+                addEntry(mi, begin, System.currentTimeMillis());
+            }
         }
    }
 

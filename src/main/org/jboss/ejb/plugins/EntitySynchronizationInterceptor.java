@@ -6,6 +6,7 @@
 */
 package org.jboss.ejb.plugins;
 
+import java.lang.reflect.Method;
 import java.util.HashSet;
 
 import javax.ejb.EJBException;
@@ -43,56 +44,7 @@ import org.jboss.metadata.ConfigurationMetaData;
  * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
  * @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>
  * @author <a href="mailto:bill@burkecentral.com">Bill Burke</a>
- * @version $Revision: 1.65 $
- *
- * <p><b>Revisions:</b><br>
- * <p><b>2001/06/28: marcf</b>
- * <ol>
- *   <li>Moved to new synchronization
- *   <li>afterCompletion doesn't return to pool anymore, idea is to simplify
- *       design by not mucking with reuse of the instances
- *   <li>before completion checks for a rolledback tx and doesn't call the
- *       store in case of a rollback we are notified but we don't register
- *       the resource
- * </ol>
- * <p><b>2001/07/12: starksm</b>
- * <ol>
- *   <li>Fixed invalid use of the ctx.transaction in beforeCompletion
- *   <li>Added clearContextTx to make sure clean up of ctx.tx was done consistently
- *   <li>Clean up the EntityContainer cast-fest
- * </ol>
- * <p><b>2001/07/26: billb</b>
- * <ol>
- *   <li>Locking is now separate from EntityEnterpriseContext objects and is now
- *   encapsulated in BeanLock and BeanLockManager.  Did this because the lifetime
- *   of an EntityLock is sometimes longer than the lifetime of the ctx.
- * </ol>
- * <p><b>2001/08/01: marcf</b>
- * <ol>
- *   <li>Updated BeanLock to work in new interceptor and out of InstanceInterceptor so we update
- *   here as well to use the new interceptor lock logic and the BeanLock that bill introduced
- *   <li>Make use of clearContextTx in all exceptional cases
- * </ol>
- * <p><b>2001/08/02: marcf</b>
- * <ol>
- *   <li>Moved policy to pluggable framework. Work through the interface of the lock only
- *   Use of "endTransaction" and "wontSynchronize" to communicate with the lock
- * </ol>
- * <p><b>2001/08/07: billb</b>
- * <ol>
- *   <li>Moved storeEntity to EntityContainer.
- *   <li>invokeHome is now scheduled
- *   <li>made InstanceSynchronization protected so that I could inherit from it
- *   <li>made a protected method createSynchronization for inheritance purposes.
- * </ol>
- * <p><b>2001/10/11: billb</b>
- * <ol>
- *   <li>Do not cache.release a removed entity or removed entity can be put back into cache
- * </ol>
- * <p><b>2001/10/18: billb</b>
- * <ol>
- *   <li>Do not lock bean on an exception
- * </ol>
+ * @version $Revision: 1.66 $
  */
 public class EntitySynchronizationInterceptor
    extends AbstractInterceptor
@@ -312,9 +264,19 @@ public class EntitySynchronizationInterceptor
          catch (Exception ex)
          {
             // readonly does not synchronize, lock or belong with transaction.
-            if (!container.isReadOnly() && !container.getBeanMetaData().isMethodReadOnly(mi.getMethod().getName()))
+            if(!container.isReadOnly()) 
             {
-               clearContextTx("loadEntity Exception", ctx, tx, log.isTraceEnabled());
+               Method method = mi.getMethod();
+               if(method == null ||
+                  !container.getBeanMetaData().isMethodReadOnly(
+                        method.getName()))
+               {
+                  clearContextTx(
+                        "loadEntity Exception", 
+                        ctx, 
+                        tx, 
+                        log.isTraceEnabled());
+               }
             }
             throw ex;
          }
@@ -330,11 +292,17 @@ public class EntitySynchronizationInterceptor
       if (tx != null && tx.getStatus() != Status.STATUS_NO_TRANSACTION)
       {
          // readonly does not synchronize, lock or belong with transaction.
-         if (!container.isReadOnly() && !container.getBeanMetaData().isMethodReadOnly(mi.getMethod().getName()))
+         if(!container.isReadOnly()) 
          {
-            //register the wrapper with the transaction monitor (but only register once).
-            // The transaction demarcation will trigger the storage operations
-            register(ctx,tx);
+            Method method = mi.getMethod();
+            if(method == null ||
+               !container.getBeanMetaData().isMethodReadOnly(method.getName()))
+            {
+               // register the wrapper with the transaction monitor (but only 
+               // register once). The transaction demarcation will trigger the 
+               // storage operations
+               register(ctx,tx);
+            }
          }
          //Invoke down the chain
          return getNext().invoke(mi);  

@@ -34,12 +34,13 @@ import org.jboss.ejb.Interceptor;
 import org.jboss.invocation.Invocation;
 import org.jboss.metadata.BeanMetaData;
 
-/** An interceptor used to log call invocations. It also handles any
- unexpected exceptions.
+/** 
+ * An interceptor used to log all invocations. It also handles any
+ * unexpected exceptions.
  *
- *   @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
- *   @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>
- *   @version $Revision: 1.21 $
+ * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
+ * @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>
+ * @version $Revision: 1.22 $
  */
 public class LogInterceptor
    extends AbstractInterceptor
@@ -80,7 +81,15 @@ public class LogInterceptor
       throws Exception
    {
       NDC.push(ejbName);
-      String methodName = mi.getMethod().getName();
+
+      String methodName;
+      if(mi.getMethod() != null) {
+         methodName = mi.getMethod().getName();
+      } else
+      {
+         methodName ="<no method>";
+      }
+      
       boolean trace = log.isTraceEnabled();
       if( trace )
          log.trace("Start method="+methodName);
@@ -136,7 +145,15 @@ public class LogInterceptor
       throws Exception
    {
       NDC.push(ejbName);
-      String methodName = mi.getMethod().getName();
+
+      String methodName;
+      if(mi.getMethod() != null) {
+         methodName = mi.getMethod().getName();
+      } else 
+      {
+         methodName ="<no method>";
+      }
+
       boolean trace = log.isTraceEnabled();
       if( trace )
          log.trace("Start method="+methodName);

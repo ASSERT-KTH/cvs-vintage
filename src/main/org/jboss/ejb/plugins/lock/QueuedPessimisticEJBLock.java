@@ -7,6 +7,7 @@
 
 package org.jboss.ejb.plugins.lock;
 
+import java.lang.reflect.Method;
 import java.util.LinkedList;
 import java.util.HashMap;
 
@@ -43,17 +44,7 @@ import org.jboss.ejb.EntityContainer;
  * @author <a href="bill@burkecentral.com">Bill Burke</a>
  * @author <a href="pete@subx.com">Peter Murray</a>
  *
- * @version $Revision: 1.10 $
- *
- * <p><b>Revisions:</b><br>
- * <p><b>2001/08/03: billb</b>
- *  <ol>
- *  <li>Initial revision
- *  </ol>
- * <p><b>2002/04/10: billb </b>
- *  <ol>
- *  <li>Applied Peter Murray's read-only locking mechanisms.
- *  </ol>
+ * @version $Revision: 1.11 $
  */
 public class QueuedPessimisticEJBLock extends BeanLockSupport
 {
@@ -153,7 +144,17 @@ public class QueuedPessimisticEJBLock extends BeanLockSupport
       {
          // Promote the txlock into a writeLock if we're not a readonly method
          // isReadOnlyTxLock will be reset in nextTransaction()
-         isReadOnlyTxLock = isReadOnlyTxLock && (((EntityContainer)container).isReadOnly() || container.getBeanMetaData().isMethodReadOnly(mi.getMethod().getName()));
+         Method method = mi.getMethod();
+         isReadOnlyTxLock = 
+            isReadOnlyTxLock && 
+            (
+               ((EntityContainer)container).isReadOnly() || 
+               (
+                  method != null &&
+                  container.getBeanMetaData().isMethodReadOnly(method.getName())
+               )
+            );
+
       }
    }
    /**

@@ -42,7 +42,7 @@ import org.jboss.naming.ENCThreadLocalKey;
  * 
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  * @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>
- * @version $Revision: 1.2 $
+ * @version $Revision: 1.3 $
  */
 public class ProxyFactoryFinderInterceptor
    extends AbstractInterceptor
@@ -85,8 +85,16 @@ public class ProxyFactoryFinderInterceptor
       Object proxyFactory = container.lookupProxyFactory(invokerBinding);
       if (proxyFactory == null)
       {
+         String methodName;
+         if(mi.getMethod() != null) {
+            methodName = mi.getMethod().getName();
+         } else 
+         {
+            methodName ="<no method>";
+         }
+
          log.error("***************** proxyFactory is null ********");
-         log.error("Method name: " + mi.getMethod().getName());
+         log.error("Method name: " + methodName);
          log.error("jmx name: " + container.getJmxName().toString());
          log.error("invokerBinding: " + invokerBinding);
          log.error("Stack trace", new Throwable());
