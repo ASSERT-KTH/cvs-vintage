@@ -222,7 +222,11 @@ public class JasperMangler implements Mangler{
 	    pkgDir=JavaGeneratorTool.manglePackage(pkgDir);
 	    pkgDir=pkgDir.replace('.', '_');
 	    pkgDir=fixInvalidChars( pkgDir );
-	    classDir=workDir + File.separator + pkgDir;
+	    if ( "/".equals(File.separator) )
+		classDir=workDir + File.separator + pkgDir;
+            else
+		classDir=workDir + File.separator +
+                	pkgDir.replace('/',File.separatorChar);
 	} else {
 	    classDir=workDir;
 	}
