@@ -47,7 +47,7 @@ from, etc.
 running in your browser, use of a SecurityManager while running Tomcat
 can protect your server from trojan servlets, JSP's, JSP beans, and tag
 libraries.&nbsp; Or even inadvertent mistakes.
-<p>Imagine if someone who is authorized to publish JSP's on your site invadvertently
+<p>Imagine if someone who is authorized to publish JSP's on your site inadvertently
 included the following in their JSP:
 <blockquote>
 <pre>&lt;% System.exit(1); %></pre>
@@ -105,11 +105,11 @@ were running Tomcat without a SecurityManager.
 <a NAME="config"></a>Configuring Tomcat for use with a SecurityManager</h3>
 <b>tomcat.policy</b>
 <p>The security policies implemented by the Java SecurityManager are configured
-in the <b>tomcat.policy </b>file located in the tomcat conf directory.&nbsp;
+in the <b>tomcat.policy </b>file located in the tomcat <code>conf</code> directory.&nbsp;
 The tomcat.policy file replaces any system java.policy file.&nbsp; The
 tomcat.policy file can be edited by hand or you can use the <b>policytool
 </b>application
-that comes with Java 1.2.
+that comes with Java 1.2, or later.
 <p>Entries in the tomcat.policy file use the standard java.policy file
 format as follows:
 <table border=0><tr><td><pre>// Example policy file entry
@@ -205,15 +205,11 @@ grant codeBase "file:${tomcat.home}/webapps/examples" {
 &nbsp; permission java.util.PropertyPermission "*","read";
 };</td></tr></table></pre>
 
-<p><br><b>server.xml</b>
-<p>Uncomment out the entry in server.xml for the ContextInterceptor which
-defines the class named PolicyInterceptor.
-<br>&nbsp;
 <h3>
 <a NAME="start"></a>Starting Tomcat with a SecurityManager</h3>
-Once you have configured the tomcat.policy and server.xml files for use
+Once you have configured the tomcat.policy for use
 with a SecurityManager, Tomcat can be started with the SecurityManager
-in place by using the "-security" option to bin/startup.bat or bin/startup.sh.
+in place by adding the "-security" option to bin/startup.bat or bin/startup.sh.
 <br>&nbsp;
 <h3>
 <a NAME="violation"></a>What happens when the SecurityManager detects a
@@ -224,6 +220,21 @@ the SecurityManager detects a security policy violation.
 <h2>
 <a NAME="trouble"></a>Trouble shooting tomcat.policy configuration and
 Security Violations</h2>
+You can turn on Java SecurityManager debug logging by setting the environmental
+variable:
+<pre>
+    TOMCAT_OPTS=-Djava.security.debug=all
+</pre>
+The debug output will be written to Tomcat's log file, or the console if no log
+file is defined.<br>
+<br><strong>Note:</strong> This gives the most complete debugging information,
+but generates many MB's of output, for less verbose security debug output, use:
+<pre>
+    TOMCAT_OPTS=-Djava.security.debug=access,failure
+</pre>
+Use the following shell command to determine all the security debug options
+available: <tt>java -Djava.security.debug=help</tt><br>
+<br>
 <b>JSP Compile using JVM internal javac fails with AccessControlException
 for RuntimePermission accessClassInPackage sun.tools.javac.</b>
 <p>Check your JAVA_HOME/jre/lib/security/java.security file configuration.&nbsp;
