@@ -40,11 +40,11 @@
   <tr>
     <td width="50%" align="left">
         <a href="http://jakarta.apache.org/index.html">
-          <img src="uguide/images/banner.gif" width="350" height="100" alt="The Jakarta Project" border="0">
+          <img src="images/banner.gif" width="350" height="100" alt="The Jakarta Project" border="0">
         </a>
     </td>
     <td width="50%" align="right">
-      <img border="0" src="uguide/images/tomcat.gif" width="100" height="71" alt="The mighty Tomcat - Meow!">
+      <img border="0" src="images/tomcat.gif" width="100" height="71" alt="The mighty Tomcat - Meow!">
     </td>
   </tr>
 </table>
@@ -183,7 +183,7 @@ iPlanet).</p>
 
 <ol>
  <li>Remove your old mod_jserv configuration. mod_jk and mod_jserv cannot coexist !!</li>
- <li>Obtaining mod_jk</li>
+ <li>Obtaining or building mod_jk</li>
  <li><i>(optional)</i> Configuring Tomcat to use the Ajpv13 protocol</li>
  <li>Defining workers for mod_jk (or selecting the quick start option)</li>
  <li>Configuring Apache to use mod_jk and configure mod_jk internals (or selecting the quick start option)</li>
@@ -199,10 +199,13 @@ If you've already configured Apache to use mod_jserv, remove any <tt>ApJServMoun
 <div class=subsection>
 Binaries are available for Linux and Win32 under the bin directory where you obtained
 the Tomcat distribution file. For Linux, mod_jk is available as mod_jk.so. For Win32,
-mod_jk is available as mod_jk.dll.  If there isn't a prebuilt mod_jk available or
+mod_jk is available as mod_jk.dll. 
+
+<p> If there isn't a prebuilt mod_jk available or
 you wish to build your own copy, you can build it yourself from the source.
-First, download the <b>Source Distribution</b> for Tomcat. There are a large number
-of files in the download directory, but the only one you need is <tt>jakarta-tomcat</tt>.
+First, download the <b><a href="http://jakarta.apache.org/downloads/sourceindex.html">Source Distribution</a></b> for Tomcat. There are a large number
+of files in the download directory, but the only one you need is
+<tt>jakarta-tomcat[.zip|.tar.Z|.tar.gz]</tt>.
 
 <h3>On NT</h3>
 
@@ -237,9 +240,35 @@ menu.</p>
 <h4>For Apache</h4>
 
 <ol>
- <li>Make sure you have Perl 5 installed. The <tt>apxs</tt> script used to build the module is written in Perl.
- <li>Change directory to <tt>jakarta-tomcat/src/native/apache1.3</tt> (or <tt>apache2.0</tt>).
-  <li>Run the <tt>apxs</tt> command that came with your apache distribution (hint: look in /usr/local/apache/bin, /usr/sbin, or wherever you intalled apache). Type the command all on one line.<BR><BR>
+ <li>Make sure you have Perl 5 installed. The <tt>apxs</tt> script
+ used to build the module is written in Perl.  
+
+ <li>Change directory to
+ <tt>jakarta-tomcat/src/native/apache1.3</tt> (or <tt>apache2.0</tt>).
+
+ <li>Build mod_jk.so. <br /><br /> 
+
+ Following are three alternate techniques you can try, in order of
+ simplicity.
+
+ <ul>
+ <li><b>Option 1</b>: Run <tt>./build-unix.sh</tt> . This script will set some
+ variables, call <tt>apxs</tt> as below, and try to copy mod_jk.so to
+ $APACHE_HOME/libexec.  If it fails, you may need to do the following:
+ <ul>
+ <li>set JAVA_HOME in your shell, e.g. "<tt>set JAVA_HOME=/usr/local/jdk1.2.2; export JAVA_HOME</tt>"</li>
+ <li>set APACHE_HOME in your shell, e.g. "<tt>set APACHE_HOME=/usr/local/apache; export APACHE_HOME</tt>"</li>
+ <li>uncomment the following line in the <tt>build-unix.sh</tt> file,
+ replacing "linux" with the name of your platform as specified in the
+ Java include directory for your installation 
+<blockquote><tt>
+# JAVA_INCLUDE="-I ${JAVA_HOME}/include -I ${JAVA_HOME}/include/linux"
+</tt></blockquote>
+ </ul></li>
+ <li> <b>Option 2</b>: If build-unix.sh fails, you may have better luck with the
+ Makefiles in the same directory.  E.g. "<tt>make -f Makefile.linux mod_jk.so</tt>"
+ </li>
+ <li> <b>Option 3</b>: Finally, you can try to build it manually. Run the <tt>apxs</tt> command that came with your apache distribution (hint: look in /usr/local/apache/bin, /usr/sbin, or wherever you intalled apache). Type the command all on one line.<BR><BR>
   For Solaris:<BR>
   <blockquote><tt>apxs -o mod_jk.so -DSOLARIS -I../jk -I/usr/java/include -I/usr/java/include/solaris -c *.c ../jk/*.c</tt></blockquote>
   <i>On some systems, this will build the module correctly, but will fail at runtime with a </i>"<tt>symbol "fdatasync" not found</tt>"<i>. To fix, add </i><tt>-lposix4</tt><i> just before the </i><tt>-c</tt><i> in the above command.</i><BR><BR>
@@ -247,8 +276,12 @@ menu.</p>
   <blockquote><tt>apxs -o mod_jk.so -I../jk -I/usr/local/jdk/include -I/usr/local/jdk/include/linux -c *.c ../jk/*.c</tt></blockquote>
   <i>Your build may fail because the object files from the <tt>../jk</tt> directory have been compiled to the current directory, rather than their source directory. Running </i><tt>gcc -shared -o mod_jk.so *.o</tt><i> should finish the build.</i><BR><BR>
   (If you've installed Java in another directory, adjust accordingly). For other *nixes you should be able to work it out, but remember that <b>the order of the arguments to <tt>apxs</tt> is important!</b>.
+ <br /><br /> 
   </li>
- <li>Copy mod_jk.so to Apache's libexec directory</li>
+ </ul></li>
+ <li>Copy mod_jk.so to Apache's libexec directory.  (Note that
+ build-unix.sh attempts to do this, but you may have to "su root"
+ first.) </li>
 </ol>
 
 <h4>For other Webservers</h4>
@@ -268,7 +301,7 @@ Add the following block to your <tt>TOMCAT_HOME/conf/server.xml</tt> file.
   &lt;Parameter name=&quot;port&quot; value=&quot;8009&quot;/&gt;
 &lt;/Connector&gt;
 </pre></blockquote>
-The <tt>servlet.xml</tt> file already has a block similar to this for Ajp12 connections on port 8007 (as delivered by mod_jserv). Even if you think you're only using Ajp13, you probably don't want to delete this connector - it's required to shut down Tomcat.
+The <tt>server.xml</tt> file already has a block similar to this for Ajp12 connections on port 8007 (as delivered by mod_jserv). Even if you think you're only using Ajp13, you probably don't want to delete this connector - it's required to shut down Tomcat.
 </div>
 <h3><a name=s64>4. Defining &quot;workers&quot;</a></h3>
 
@@ -296,6 +329,11 @@ the file <tt>TOMCAT_HOME/conf/mod_jk.conf-auto</tt> is generated when
 tomcat starts, so you'll need to start Tomcat before Apache. Tomcat will
 overwrite <tt>TOMCAT_HOME/conf/mod_jk.conf-auto</tt> each startup so
 customized configuration should be kept elsewhere.</p>
+<p class=note><b>Tomcat 3.3:</b> The default location of mod_jk.conf and
+mod_jk.conf-auto has changed.  They are now in
+<tt>TOMCAT_HOME/conf/jk/mod_jk.conf</tt> and
+<tt>TOMCAT_HOME/conf/jk/mod_jk.conf-auto</tt>. 
+</p>
 </div>
 
 <h4>Configuring workers manually.</h4>
