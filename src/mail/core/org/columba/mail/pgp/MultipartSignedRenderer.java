@@ -71,7 +71,7 @@ public class MultipartSignedRenderer extends MimePartRenderer {
 		streams.add(new ByteArrayInputStream(startBoundary));
 		streams.add(
 			MimeTreeRenderer.getInstance().renderMimePart(
-				(StreamableMimePart) part.getChild(0)));
+				part.getChild(0)));
 
 		// Add the signature
 		streams.add(new ByteArrayInputStream(startBoundary));
@@ -86,7 +86,7 @@ public class MultipartSignedRenderer extends MimePartRenderer {
 				signatureHeader,
 				controller.sign(
 					MimeTreeRenderer.getInstance().renderMimePart(
-						(StreamableMimePart) part.getChild(0)),
+						part.getChild(0)),
 					pgpItem));
 
 		streams.add(
