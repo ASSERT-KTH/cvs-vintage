@@ -25,6 +25,7 @@ package org.gjt.sp.jedit.buffer;
 //{{{ Imports
 import javax.swing.text.Position;
 import java.util.*;
+import org.gjt.sp.util.Log;
 //}}}
 
 /**
@@ -35,7 +36,7 @@ import java.util.*;
  * called through, implements such protection.
  *
  * @author Slava Pestov
- * @version $Id: PositionManager.java,v 1.32 2003/08/22 18:49:54 spestov Exp $
+ * @version $Id: PositionManager.java,v 1.33 2003/08/31 00:43:58 spestov Exp $
  * @since jEdit 4.2pre3
  */
 public class PositionManager
@@ -64,11 +65,13 @@ public class PositionManager
 		Iterator iter = positions.tailMap(new PosBottomHalf(offset))
 			.keySet().iterator();
 
+		iteration = true;
 		while(iter.hasNext())
 		{
 			PosBottomHalf bh = (PosBottomHalf)iter.next();
 			bh.offset += length;
 		}
+		iteration = false;
 	} //}}}
 
 	//{{{ contentRemoved() method
@@ -81,6 +84,7 @@ public class PositionManager
 		Iterator iter = positions.tailMap(new PosBottomHalf(offset))
 			.keySet().iterator();
 
+		iteration = true;
 		while(iter.hasNext())
 		{
 			PosBottomHalf bh = (PosBottomHalf)iter.next();
@@ -89,8 +93,11 @@ public class PositionManager
 			else
 				bh.offset -= length;
 		}
+		iteration = false;
 
 	} //}}}
+
+	boolean iteration;
 
 	//{{{ Private members
 	private SortedMap positions = new TreeMap();
@@ -163,6 +170,8 @@ public class PositionManager
 		//{{{ compareTo() method
 		public int compareTo(Object o)
 		{
+			if(iteration)
+				Log.log(Log.ERROR,this,"Consistency failure");
 			return offset - ((PosBottomHalf)o).offset;
 		} //}}}
 	} //}}}

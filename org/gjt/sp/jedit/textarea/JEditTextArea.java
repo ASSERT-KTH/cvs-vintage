@@ -57,7 +57,7 @@ import org.gjt.sp.util.Log;
  *
  * @author Slava Pestov
  * @author John Gellene (API documentation)
- * @version $Id: JEditTextArea.java,v 1.284 2003/08/29 03:31:48 spestov Exp $
+ * @version $Id: JEditTextArea.java,v 1.285 2003/08/31 00:43:59 spestov Exp $
  */
 public class JEditTextArea extends JComponent
 {
@@ -5418,10 +5418,11 @@ loop:			for(int i = lineNo + 1; i < getLineCount(); i++)
 		if(queuedCaretUpdate)
 			return;
 
-		if(buffer.isTransactionInProgress())
-			queuedCaretUpdate = true;
-		else
+		queuedCaretUpdate = true;
+
+		if(!buffer.isTransactionInProgress())
 			_finishCaretUpdate();
+		/* otherwise DisplayManager.BufferChangeHandler calls */
 	} //}}}
 
 	//{{{ fireCaretEvent() method
