@@ -1,4 +1,4 @@
-// $Id: FigCompartment.java,v 1.7 2004/11/21 22:10:58 mvw Exp $
+// $Id: FigCompartment.java,v 1.8 2004/11/21 23:32:18 bobtarling Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -35,13 +35,19 @@ public abstract class FigCompartment extends FigGroup {
      * @see org.tigris.gef.presentation.Fig#getLineWidth()
      */
     public int getLineWidth() {
-        return super.getLineWidth();
+        // For the moment we access deprecated variables in GEF in order to get over a nasty
+        // side effect in the getLineWidth() method of GEF.
+        // This will be resolved in GEF 0.10.9
+        return _lineWidth;
     }
     
     /**
      * @see org.tigris.gef.presentation.Fig#setLineWidth(int)
      */
     public void setLineWidth(int w) {
-        super.setLineWidth(w);
+        // For the moment we access deprecated variables in GEF in order to get over a nasty
+        // side effect in the setLineWidth(int) method of GEF.
+        // This will be resolved in GEF 0.10.9
+        _lineWidth = w;
     }
 }
