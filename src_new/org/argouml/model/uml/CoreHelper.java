@@ -1,4 +1,4 @@
-// $Id: CoreHelper.java,v 1.4 2004/12/16 19:29:39 mvw Exp $
+// $Id: CoreHelper.java,v 1.5 2004/12/21 16:21:41 bobtarling Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -97,7 +97,7 @@ public class CoreHelper {
     /**
      * Singleton instance.
      */
-    private static final CoreHelper SINGLETON = new CoreHelper();
+    private static final CoreHelper INSTANCE = new CoreHelper();
 
     /**
      * Singleton instance access method.
@@ -105,9 +105,21 @@ public class CoreHelper {
      * @return The instance.
      */
     public static CoreHelper getHelper() {
-        return SINGLETON;
+        return INSTANCE;
     }
-
+    
+    /**
+     * Determine if a meta type is a subtype of another.
+     * @param type The parent metatype.
+     * @param subType The metatype to test for being a subtype.
+     * @return true is subType is a sub-type of type.
+     */
+    public boolean isSubType(Object type, Object subType) {
+        if (!(type instanceof Class) || !(subType instanceof Class))
+                throw new IllegalArgumentException("Metatypes are expected");
+           return ((Class) type).isAssignableFrom((Class) subType);
+    }
+    
     /** This method returns all Classifiers of which this class is a
      *	direct or indirect subtype.
      *

@@ -1,4 +1,4 @@
-// $Id: PropPanelParameter.java,v 1.55 2004/12/21 14:01:30 mvw Exp $
+// $Id: PropPanelParameter.java,v 1.56 2004/12/21 16:21:41 bobtarling Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -56,11 +56,11 @@ public class PropPanelParameter extends PropPanelModelElement {
 	      "Parameter",
 	      lookupIcon("Parameter"),
 	      ConfigLoader.getTabPropsOrientation());
-        Class[] namesToWatch = {
-	    (Class) ModelFacade.STEREOTYPE,
-	    (Class) ModelFacade.OPERATION,
-	    (Class) ModelFacade.PARAMETER,
-	    (Class) ModelFacade.CLASSIFIER 
+        Object[] namesToWatch = {
+	    ModelFacade.STEREOTYPE,
+	    ModelFacade.OPERATION,
+	    ModelFacade.PARAMETER,
+	    ModelFacade.CLASSIFIER 
 	};
         setNameEventListening(namesToWatch);
 

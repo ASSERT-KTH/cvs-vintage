@@ -1,4 +1,4 @@
-// $Id: PropPanelStimulus.java,v 1.46 2004/12/20 23:15:07 mvw Exp $
+// $Id: PropPanelStimulus.java,v 1.47 2004/12/21 16:21:41 bobtarling Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -60,8 +60,8 @@ public class PropPanelStimulus extends PropPanelModelElement {
         super("Stimulus Properties", lookupIcon("Stimulus"), 
                 ConfigLoader.getTabPropsOrientation());
 
-        Class[] namesToWatch = {
-	    (Class) ModelFacade.ACTION
+        Object[] namesToWatch = {
+	    ModelFacade.ACTION
 	};
         setNameEventListening(namesToWatch);
 

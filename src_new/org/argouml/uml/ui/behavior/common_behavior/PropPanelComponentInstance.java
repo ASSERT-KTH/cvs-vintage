@@ -1,4 +1,4 @@
-// $Id: PropPanelComponentInstance.java,v 1.38 2004/12/20 23:15:07 mvw Exp $
+// $Id: PropPanelComponentInstance.java,v 1.39 2004/12/21 16:21:41 bobtarling Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -51,8 +51,8 @@ public class PropPanelComponentInstance extends PropPanelInstance {
         super("Component Instance", lookupIcon("ComponentInstance"), 
                 ConfigLoader.getTabPropsOrientation());
 
-        Class[] namesToWatch = {(Class) ModelFacade.STEREOTYPE,
-            (Class) ModelFacade.NAMESPACE, (Class) ModelFacade.CLASSIFIER };
+        Object[] namesToWatch = {ModelFacade.STEREOTYPE,
+            ModelFacade.NAMESPACE, ModelFacade.CLASSIFIER };
 
         setNameEventListening(namesToWatch);
 

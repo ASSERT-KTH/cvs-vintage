@@ -1,4 +1,4 @@
-// $Id: PropPanelOperation.java,v 1.72 2004/12/20 23:15:10 mvw Exp $
+// $Id: PropPanelOperation.java,v 1.73 2004/12/21 16:21:41 bobtarling Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -63,9 +63,9 @@ public class PropPanelOperation extends PropPanelFeature {
          * anytime a stereotype, namespace or classifier
          * has its name, ownedElement or baseClass changed 
          * anywhere in the model. */
-//        Class[] namesToWatch = {(Class) ModelFacade.STEREOTYPE,
-//            (Class) ModelFacade.NAMESPACE, (Class) ModelFacade.CLASSIFIER,
-//            (Class) ModelFacade.PARAMETER};
+//        Object[] namesToWatch = {ModelFacade.STEREOTYPE,
+//            ModelFacade.NAMESPACE, ModelFacade.CLASSIFIER,
+//            ModelFacade.PARAMETER};
 //        setNameEventListening(namesToWatch);
 
         addField(Translator.localize("label.name"),
