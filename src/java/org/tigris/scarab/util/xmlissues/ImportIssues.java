@@ -89,7 +89,7 @@ import org.tigris.scarab.om.Module;
  * initialized, there is no need to call the init() method.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ImportIssues.java,v 1.15 2003/04/04 18:09:18 jon Exp $
+ * @version $Id: ImportIssues.java,v 1.16 2003/04/21 19:39:15 jackrepenning Exp $
  */
 public class ImportIssues
 {
@@ -483,8 +483,6 @@ public class ImportIssues
 
     private Locale getLocale()
     {
-        return new Locale(
-            Localization.getDefaultLanguage(), 
-            Localization.getDefaultCountry());
+        return ScarabConstants.DEFAULT_LOCALE;
     }
 }

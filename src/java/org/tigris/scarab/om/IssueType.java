@@ -49,7 +49,6 @@ package org.tigris.scarab.om;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.Locale;
 
 import org.apache.torque.util.Criteria;
 import org.apache.torque.om.Persistent;
@@ -61,13 +60,14 @@ import org.tigris.scarab.services.cache.ScarabCache;
 import org.tigris.scarab.om.Module;
 import org.tigris.scarab.om.IssuePeer;
 import org.tigris.scarab.util.ScarabException;
+import org.tigris.scarab.util.ScarabConstants;
 
 /** 
  * This class represents an IssueType.
  *
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: IssueType.java,v 1.46 2003/04/17 22:35:32 elicia Exp $
+ * @version $Id: IssueType.java,v 1.47 2003/04/21 19:39:14 jackrepenning Exp $
  */
 public  class IssueType 
     extends org.tigris.scarab.om.BaseIssueType
@@ -377,11 +377,8 @@ public  class IssueType
         AttributeGroup ag = new AttributeGroup();
 
         // Make default group name 'new attribute group' 
-        Locale defaultLocale = new Locale(
-            Localization.getDefaultLanguage(), 
-            Localization.getDefaultCountry());
         ag.setName(Localization.getString("ScarabBundle",
-                defaultLocale, "NewAttributeGroup"));
+                ScarabConstants.DEFAULT_LOCALE, "NewAttributeGroup"));
         ag.setActive(true);
         ag.setIssueTypeId(getIssueTypeId());
         if (module != null)

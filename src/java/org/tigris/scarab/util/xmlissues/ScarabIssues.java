@@ -82,7 +82,7 @@ import org.tigris.scarab.util.ScarabConstants;
  * inValidationMode set to false will do actual insert of the xml issues.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ScarabIssues.java,v 1.31 2003/04/04 18:09:18 jon Exp $
+ * @version $Id: ScarabIssues.java,v 1.32 2003/04/21 19:39:15 jackrepenning Exp $
  */
 public class ScarabIssues implements java.io.Serializable
 {
@@ -1164,8 +1164,6 @@ public class ScarabIssues implements java.io.Serializable
 
     private Locale getLocale()
     {
-        return new Locale(
-            Localization.getDefaultLanguage(), 
-            Localization.getDefaultCountry());
+        return ScarabConstants.DEFAULT_LOCALE;
     }
 }

@@ -71,7 +71,7 @@ import org.tigris.scarab.om.Module;
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: AttributeValue.java,v 1.94 2003/04/12 20:01:53 jackrepenning Exp $
+ * @version $Id: AttributeValue.java,v 1.95 2003/04/21 19:39:14 jackrepenning Exp $
  */
 public abstract class AttributeValue 
     extends BaseAttributeValue
@@ -944,9 +944,7 @@ Leaving here so that John can remove or fix.
      */
     private Locale getLocale()
     {
-        return new Locale
-            (Localization.getDefaultLanguage(),
-             Localization.getDefaultCountry());
+        return ScarabConstants.DEFAULT_LOCALE;
     }
 }
 

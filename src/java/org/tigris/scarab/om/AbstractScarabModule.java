@@ -123,7 +123,7 @@ import org.tigris.scarab.reports.ReportBridge;
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: AbstractScarabModule.java,v 1.93 2003/04/17 23:50:51 jon Exp $
+ * @version $Id: AbstractScarabModule.java,v 1.94 2003/04/21 19:39:14 jackrepenning Exp $
  */
 public abstract class AbstractScarabModule
     extends BaseObject
@@ -168,11 +168,6 @@ public abstract class AbstractScarabModule
         "getDefaultTextAttribute";
     protected static final String GET_AVAILABLE_ISSUE_TYPES =
         "getAvailableIssueTypes";
-
-    // default to use if a module specific locale is not specified
-    private static final Locale DEFAULT_LOCALE = new Locale(
-        Localization.getDefaultLanguage(), 
-        Localization.getDefaultCountry());
 
     private List parentModules = null;
 
@@ -962,7 +957,7 @@ public abstract class AbstractScarabModule
         throws Exception
     {
         List types = null;
-        Boolean activeOnlyValue = activeOnly == true ? Boolean.TRUE : Boolean.FALSE;
+        Boolean activeOnlyValue = activeOnly ? Boolean.TRUE : Boolean.FALSE;
         Object obj = ScarabCache.get(this, GET_ISSUE_TYPES, activeOnlyValue);
         if (obj == null) 
         {        
@@ -2232,7 +2227,7 @@ public abstract class AbstractScarabModule
      */
     public Locale getLocale()
     {
-        return DEFAULT_LOCALE;
+        return ScarabConstants.DEFAULT_LOCALE;
     }
 
     /**
