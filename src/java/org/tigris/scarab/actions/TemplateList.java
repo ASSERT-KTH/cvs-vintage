@@ -81,6 +81,7 @@ import org.tigris.scarab.tools.ScarabLocalizationTool;
 import org.tigris.scarab.om.AttributeOption;
 import org.tigris.scarab.om.AttributeOptionManager;
 import org.tigris.scarab.util.ScarabException;
+import org.tigris.scarab.util.ScarabConstants;
 
 
 /**
@@ -88,7 +89,7 @@ import org.tigris.scarab.util.ScarabException;
  * templates.
  *   
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: TemplateList.java,v 1.56 2003/08/26 16:30:21 venkatesh Exp $
+ * @version $Id: TemplateList.java,v 1.57 2003/09/08 10:12:50 parun Exp $
  */
 public class TemplateList extends RequireLoginFirstAction
 {
@@ -172,19 +173,21 @@ public class TemplateList extends RequireLoginFirstAction
                                       scarabR.getCurrentModule(), context);
                     if (success)
                     {
-                        scarabR.setConfirmMessage(l10n.get("NewTemplateCreated"));
-
                         // For a module-scoped template which is now
                         // pending approval, the user may not have
                         // permission to edit the new issue template.
-                        if (info.canEdit((ScarabUser) data.getUser()))
+                        if (info.canEdit(user))
                         {
                             data.getParameters().add
                                 ("templateId", issue.getIssueId().toString());
+                            scarabR.setConfirmMessage(l10n.get(
+                                            "NewTemplateCreated"));
                         }
                         else
                         {
                             // Display the list of issue templates.
+                            scarabR.setInfoMessage(l10n.format(
+                                    "NotifyPendingApproval", "template"));
                             setTarget(data, "TemplateList.vm");
                             doPerform(data, context);
                         }
@@ -323,7 +326,7 @@ public class TemplateList extends RequireLoginFirstAction
         {
             infoGroup.setProperties(info);
             info.setIssueId(issue.getIssueId());
-            if (checkForDupes(info, infoGroup.get("Name").toString(), 
+            if (checkForDupes(info, infoGroup.get("Name").toString(),
                               user, issue))
             {
                 success = false;
@@ -334,9 +337,19 @@ public class TemplateList extends RequireLoginFirstAction
                 // Save template info
                 info.saveAndSendEmail(user, scarabR.getCurrentModule(), context);
                 data.getParameters().add("templateId", issue.getIssueId().toString());
-                scarabR.setConfirmMessage(l10n.get("TemplateModified"));
+                if (info.canEdit(user))
+                {
+                    scarabR.setConfirmMessage(l10n.get("TemplateModified"));
+                }
+                else
+                {
+                    scarabR.setInfoMessage(l10n.format(
+                                    "NotifyPendingApproval", "template"));
+                    setTarget(data, data.getParameters().getString(
+                                    ScarabConstants.CANCEL_TEMPLATE));
+                }
             }
-        } 
+        }
         else
         {
             success = false;

@@ -89,7 +89,7 @@ import org.tigris.scarab.util.export.ExportFormat;
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: Search.java,v 1.139 2003/09/03 22:15:00 dlr Exp $
+ * @version $Id: Search.java,v 1.140 2003/09/08 10:12:50 parun Exp $
  */
 public class Search extends RequireLoginFirstAction
 {
@@ -99,7 +99,7 @@ public class Search extends RequireLoginFirstAction
     private static final String USER_LIST = "user_list";
     private static final String ANY = "any";
     private static final String CREATED_BY = "created_by";
-    
+
     /**
      *
      */
@@ -122,7 +122,7 @@ public class Search extends RequireLoginFirstAction
             else if (StringUtils.isNotEmpty(next))
             {
                 // Redirect to View, Assign, or Move/Copy
-                List issueIds = null; 
+                List issueIds = null;
                 ScarabUser user = (ScarabUser) data.getUser();
                 if (next.indexOf("All") > -1)
                 {
@@ -146,21 +146,21 @@ public class Search extends RequireLoginFirstAction
                     scarabR.getIssues(issueIds));
                 if (next.indexOf("assign") > -1)
                 {
-                    if (user.hasPermission(ScarabSecurity.ISSUE__ASSIGN, modules)) 
+                    if (user.hasPermission(ScarabSecurity.ISSUE__ASSIGN, modules))
                     {
                         if (issueIds.size() <= ScarabConstants.ISSUE_MAX_ASSIGN)
                         {
-                        scarabR.resetAssociatedUsers();
-                        setTarget(data, "AssignIssue.vm");
-                    }
-                    else 
-                    {
+                            scarabR.resetAssociatedUsers();
+                            setTarget(data, "AssignIssue.vm");
+                        }
+                        else
+                        {
                             scarabR.setAlertMessage(l10n.format("IssueLimitExceeded",
                                  String.valueOf(ScarabConstants.ISSUE_MAX_ASSIGN)));
                             return;
                         }
                     }
-                    else 
+                    else
                     {
                         scarabR.setAlertMessage(l10n.get(NO_PERMISSION_MESSAGE));
                         return;
@@ -168,14 +168,14 @@ public class Search extends RequireLoginFirstAction
                 }
                 else if (next.indexOf("view") > -1)
                 {
-                    if (user.hasPermission(ScarabSecurity.ISSUE__VIEW, modules)) 
+                    if (user.hasPermission(ScarabSecurity.ISSUE__VIEW, modules))
                     {
                         if (issueIds.size() <= ScarabConstants.ISSUE_MAX_VIEW)
                         {
-                        setTarget(data, "ViewIssueLong.vm");            
-                    }
-                    else
-                    {
+                            setTarget(data, "ViewIssueLong.vm");
+                        }
+                        else
+                        {
                             scarabR.setAlertMessage(l10n.format("IssueLimitExceeded",
                                  String.valueOf(ScarabConstants.ISSUE_MAX_VIEW)));
                             return;
@@ -186,54 +186,54 @@ public class Search extends RequireLoginFirstAction
                         scarabR.setAlertMessage(l10n.get(NO_PERMISSION_MESSAGE));
                         return;
                     }
-                } 
+                }
                 else if (next.indexOf("copy") > -1)
                 {
                     if (user.hasPermission(ScarabSecurity.ISSUE__ENTER, modules))
                     {
                         if (issueIds.size() <= ScarabConstants.ISSUE_MAX_COPY)
                         {
-                        data.getParameters().add("mv_0rb", "copy");
-                        setTarget(data, "MoveIssue.vm");                    
-                    }
-                    else 
-                    {
+                            data.getParameters().add("mv_0rb", "copy");
+                            setTarget(data, "MoveIssue.vm");
+                        }
+                        else
+                        {
                             scarabR.setAlertMessage(l10n.format("IssueLimitExceeded",
                                  String.valueOf(ScarabConstants.ISSUE_MAX_COPY)));
                             return;
                         }
                     }
-                    else 
+                    else
                     {
                         scarabR.setAlertMessage(l10n.get(NO_PERMISSION_MESSAGE));
                     }
                 }
                 else if (next.indexOf("move") > -1)
                 {
-                    if (user.hasPermission(ScarabSecurity.ISSUE__MOVE, modules)) 
+                    if (user.hasPermission(ScarabSecurity.ISSUE__MOVE, modules))
                     {
                         if (issueIds.size() <= ScarabConstants.ISSUE_MAX_MOVE)
                         {
-                        data.getParameters().add("mv_0rb", "move");
-                        setTarget(data, "MoveIssue.vm");                    
-                    }
-                    else 
-                    {
+                            data.getParameters().add("mv_0rb", "move");
+                            setTarget(data, "MoveIssue.vm");
+                        }
+                        else
+                        {
                             scarabR.setAlertMessage(l10n.format("IssueLimitExceeded",
                                  String.valueOf(ScarabConstants.ISSUE_MAX_MOVE)));
                             return;
                         }
                     }
-                    else 
+                    else
                     {
                         scarabR.setAlertMessage(l10n.get(NO_PERMISSION_MESSAGE));
                     }
                 }
             }
             else
-            { 
+            {
                 String template = data.getParameters()
-                    .getString(ScarabConstants.NEXT_TEMPLATE, 
+                    .getString(ScarabConstants.NEXT_TEMPLATE,
                                "IssueList.vm");
                 setTarget(data, template);
             }
@@ -354,7 +354,15 @@ public class Search extends RequireLoginFirstAction
             {
                 query.saveAndSendEmail(user, module, context);
                 scarabR.resetSelectedUsers();
-                scarabR.setConfirmMessage(l10n.get(DEFAULT_MSG));
+                if (query.canEdit(user))
+                {
+                    scarabR.setConfirmMessage(l10n.get(DEFAULT_MSG));
+                }
+                else
+                {
+                    scarabR.setInfoMessage(l10n.format("NotifyPendingApproval",
+                                                "query"));
+                }
                 setTarget(data, "QueryList.vm");
             }
         }
@@ -388,6 +396,18 @@ public class Search extends RequireLoginFirstAction
             {
                 query.saveAndSendEmail(user, module, context);
                 success = true;
+                if (query.canEdit(user))
+                {
+                    scarabR.setConfirmMessage(l10n.get("QueryModified"));
+                }
+                else
+                {
+                    scarabR.setInfoMessage(l10n.format("NotifyPendingApproval",
+                                                    "query"));
+                    setTarget(data, data.getParameters().getString(
+                                    ScarabConstants.CANCEL_TEMPLATE));
+                }
+
             }
         }
         else

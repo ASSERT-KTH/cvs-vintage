@@ -20,13 +20,9 @@
 <input type="hidden" name="$scarabG.Constant.CANCEL_TEMPLATE" value="$cancelTemplate" />
 <input type="hidden" name="$scarabG.Constant.CURRENT_ISSUE_TYPE" value="$issueType.QueryKey" />
 
-#if ($templateId && $templateInfo && !$templateInfo.canEdit($data.User))
-<p class="infomark"><em>$l10n.CannotEditTemplate</em></p>
-<input type="submit" value="$l10n.Cancel" name="eventSubmit_doCancel" />
-#else
-  #if (!$data.User.hasPermission($scarabG.Permission.ITEM__APPROVE, $module))
+#if (!$data.User.hasPermission($scarabG.Permission.ITEM__APPROVE, $module))
      <p class="warningmark"><strong>$l10n.TemplateWarning</strong></p>
-  #end
+#end
 #macro (saveTemplateBar $id)
 <div class="functnbar$id">
 
@@ -150,7 +146,6 @@
 #saveTemplateBar('2')
 
 $intake.declareGroups()
-#end
 #end
 
 </form>
