@@ -18,12 +18,16 @@ package org.columba.mail.gui.table.command;
 import java.awt.Rectangle;
 
 import org.columba.core.command.Command;
+import org.columba.core.command.CompoundCommand;
 import org.columba.core.command.DefaultCommandReference;
 import org.columba.core.command.SelectiveGuiUpdateCommand;
 import org.columba.core.command.Worker;
 import org.columba.core.gui.frame.AbstractFrameController;
 import org.columba.core.main.MainInterface;
 import org.columba.mail.command.FolderCommandReference;
+import org.columba.mail.config.FolderItem;
+import org.columba.mail.filter.Filter;
+import org.columba.mail.filter.FilterList;
 import org.columba.mail.folder.Folder;
 import org.columba.mail.gui.frame.MailFrameController;
 import org.columba.mail.gui.table.TableChangedEvent;
@@ -53,22 +57,27 @@ public class ViewHeaderListCommand extends SelectiveGuiUpdateCommand {
 	 */
 	public void updateGUI() throws Exception {
 
-		
-		((TableSelectionHandler)frameController.getSelectionManager().getHandler("mail.table")).setFolder(folder);
+		(
+			(TableSelectionHandler) frameController
+				.getSelectionManager()
+				.getHandler(
+				"mail.table")).setFolder(
+			folder);
 		((MailFrameController) frameController)
 			.tableController
 			.getHeaderTableModel()
 			.setHeaderList(headerList);
-		
+
 		TableChangedEvent ev =
-			new TableChangedEvent(TableChangedEvent.UPDATE, folder);		
-		
+			new TableChangedEvent(TableChangedEvent.UPDATE, folder);
+
 		MailFrameController.tableChanged(ev);
-		
+
 		((MailFrameController) frameController)
-					.tableController.getView().scrollRectToVisible(new Rectangle(0,0,0,0));
-					
-		
+			.tableController
+			.getView()
+			.scrollRectToVisible(new Rectangle(0, 0, 0, 0));
+
 		boolean enableThreadedView =
 			folder.getFolderItem().getBoolean(
 				"property",
@@ -90,13 +99,13 @@ public class ViewHeaderListCommand extends SelectiveGuiUpdateCommand {
 			.tableController
 			.getView()
 			.clearSelection();
-		
+
 		/*
 		((MailFrameController) frameController)
 			.tableController
 			.getActionListener()
 			.changeMessageActions();
-*/
+		*/
 
 		MainInterface.treeModel.nodeChanged(folder);
 
@@ -111,6 +120,37 @@ public class ViewHeaderListCommand extends SelectiveGuiUpdateCommand {
 		FolderCommandReference[] r = (FolderCommandReference[]) getReferences();
 
 		folder = (Folder) r[0].getFolder();
+
+		FolderItem item = folder.getFolderItem();
+		if (item.get("type").equals("IMAPFolder")) {
+			boolean applyFilter =
+				item.getBoolean(
+					"property",
+					"automatically_apply_filter",
+					false);
+			if (applyFilter==true) {
+				FilterList list = folder.getFilterList();
+
+				worker.setDisplayText(
+					"Applying filter to " + folder.getName() + "...");
+				worker.setProgressBarMaximum(list.count());
+
+				for (int i = 0; i < list.count(); i++) {
+					worker.setProgressBarValue(i);
+					Filter filter = list.get(i);
+
+					Object[] result = folder.searchMessages(filter, worker);
+					if (result.length != 0) {
+						CompoundCommand command =
+							filter.getCommand(folder, result);
+
+						MainInterface.processor.addOp(command);
+					}
+					//processAction( srcFolder, filter, result, worker );
+				}
+			}
+		}
+
 		headerList = (folder).getHeaderList(worker);
 	}
 }
