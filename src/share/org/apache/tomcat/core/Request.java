@@ -714,6 +714,8 @@ public class Request {
     public ServerSession getSession(boolean create) {
 	if (serverSession!=null && !serverSession.isValid())
 	    serverSession=null;
+	if (serverSession != null && !serverSession.getId().equals(sessionId) )
+	    serverSession=null;
 
 	if( ! create || serverSession!=null )
 	    return serverSession;
