@@ -185,7 +185,7 @@ public class ContextManager {
      */
     public void init()  throws TomcatException {
 	String cp=System.getProperty( "java.class.path");
-	log( "<l:tomcat install=\"" + tomcatHome + "\" home=\"" + home + "\" classPath=\"" + cp + "\" />");
+	log( "<l:tomcat install=\"" + getTomcatHome() + "\" home=\"" + home + "\" classPath=\"" + cp + "\" />");
 	//	long time=System.currentTimeMillis();
 	ContextInterceptor cI[]=getContextInterceptors();
 	for( int i=0; i< cI.length; i++ ) {
@@ -461,7 +461,8 @@ public class ContextManager {
         try {
             return  f.getCanonicalPath();
         } catch (IOException ioe) {
-             return name; // oh well, we tried...
+	    ioe.printStackTrace();
+	    return name; // oh well, we tried...
         }
     }
     
@@ -474,7 +475,7 @@ public class ContextManager {
      * not affect that.
      */
     public void setHome(String home) {
-	home=getCanonicalPath( home ); 
+	this.home=getCanonicalPath( home ); 
 	log( "Setting home to " + this.home );
     }
     
