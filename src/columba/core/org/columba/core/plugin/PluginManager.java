@@ -80,6 +80,7 @@ public class PluginManager {
 			elements[i] = element;
 			String id = element.getAttribute("id");
 			ids[i] = id;
+			
 
 			//String extensionPoint = element.getAttribute("extension_point");
 
@@ -162,6 +163,8 @@ public class PluginManager {
         
 	protected int getIndex(String id) {
 		for (int i = 0; i < ids.length; i++) {
+			if ( ids[i] == null ) continue;
+			
 			if (ids[i].equals(id))
 				return i;
 		}
