@@ -1,4 +1,4 @@
-/* $Id: ApacheConfig.java,v 1.12 2001/07/03 23:32:26 costin Exp $
+/* $Id: ApacheConfig.java,v 1.13 2001/07/03 23:50:32 costin Exp $
  * ====================================================================
  *
  * The Apache Software License, Version 1.1
@@ -105,7 +105,7 @@ import org.apache.tomcat.modules.server.Ajp13Interceptor;
     <p>
     @author Costin Manolache
     @author Mel Martinez
-	@version $Revision: 1.12 $ $Date: 2001/07/03 23:32:26 $
+	@version $Revision: 1.13 $ $Date: 2001/07/03 23:50:32 $
  */
 public class ApacheConfig  extends BaseInterceptor { 
     
@@ -347,7 +347,10 @@ public class ApacheConfig  extends BaseInterceptor {
     	    Enumeration  enum = cm.getContexts();
     	    while (enum.hasMoreElements()) {
                 Context context = (Context)enum.nextElement();
-		generateContextMappings( context, mod_jk );
+		if( forwardAll )
+		    generateStupidMappings( context, mod_jk );
+		else
+		    generateContextMappings( context, mod_jk );
     	    }
 
     	    mod_jk.close();        
@@ -435,6 +438,36 @@ public class ApacheConfig  extends BaseInterceptor {
 	mod_jk.println();
     }
 
+    /** Forward all requests for a context to tomcat.
+	The default.
+     */
+    private void generateStupidMappings(Context context, PrintWriter mod_jk ) {
+	String path  = context.getPath();
+	String vhost = context.getHost();
+	
+	if( vhost != null ) {
+	    // Generate Apache VirtualHost section for this host
+	    // You'll have to do it manually right now
+	    return;
+	}
+	if( path.length() > 1) {
+	    
+	    mod_jk.println("<Location \"" + path + "\">");
+	    mod_jk.println("    SetHandler jakarta-servlet");
+	    mod_jk.println("</Location>");
+	} else {
+	    // the root context
+	    // XXX If tomcat has a root context it should get all requests
+	    // - which means apache will have absolutely nothing to do except
+	    // forwarding requests.
+
+	    // We should at least try to see if the root context has
+	    // a mappable configuration and generate a smart mapping
+	    
+	}
+    }    
+
+    
     private void generateContextMappings(Context context, PrintWriter mod_jk ) {
 	String path  = context.getPath();
 	String vhost = context.getHost();
@@ -446,35 +479,10 @@ public class ApacheConfig  extends BaseInterceptor {
 	    return;
 	}
 	if( path.length() > 1) {
-	    
-	    // It's not the root context
-	    // assert path.startsWith( "/" )
-	    
-	    // Calculate the absolute path of the document base
-	    String docBase = context.getDocBase();
-	    if (!FileUtil.isAbsolute(docBase)){
-		docBase = tomcatHome + "/" + docBase;
-	    }
-	    docBase = FileUtil.patch(docBase);
-	    if (File.separatorChar == '\\')
-		docBase = docBase.replace('\\','/');// use separator preferred by Apache
-	    
-	    // Static files will be served by Apache
-	    mod_jk.println("#########################################################");		    
-	    mod_jk.println("# Auto configuration for the " + path + " context starts.");
-	    mod_jk.println("#########################################################");		    
-	    mod_jk.println();
-	    
-	    mod_jk.println("#");		    
-	    mod_jk.println("# The following line makes apache aware of the location of the " + path + " context");
-	    mod_jk.println("#");                        
-	    mod_jk.println("Alias " + path + " \"" + docBase + "\"");
-	    mod_jk.println("<Directory \"" + docBase + "\">");
-	    mod_jk.println("    Options Indexes FollowSymLinks");
-	    mod_jk.println("</Directory>");
-	    mod_jk.println();            
-	    
 	    // Dynamic /servet pages go to Tomcat
+	    
+	    generateStaticMappings( context, mod_jk );
+	    
 	    mod_jk.println("#");		    
 	    mod_jk.println("# The following line mounts all JSP files and the /servlet/ uri to tomcat");
 	    mod_jk.println("#");                        
@@ -485,61 +493,72 @@ public class ApacheConfig  extends BaseInterceptor {
 			   path+" context");
 	    mod_jk.println("#");
 	    mod_jk.println("JkMount " + path + "/*j_security_check " + jkProto);
-	    
-	    
-	    
-	    // Deny serving any files from WEB-INF
-	    mod_jk.println();            
-	    mod_jk.println("#");		    
-	    mod_jk.println("# The following line prohibits users from directly accessing WEB-INF");
-	    mod_jk.println("#");                        
-	    mod_jk.println("<Location \"" + path + "/WEB-INF/\">");
-	    mod_jk.println("    AllowOverride None");
-	    mod_jk.println("    deny from all");
-	    mod_jk.println("</Location>");
-	    if (File.separatorChar == '\\') {
-		mod_jk.println("#");		    
-		mod_jk.println("# Use Directory too. On Windows, Location doesn't work unless case matches");
-		mod_jk.println("#");                        
-		mod_jk.println("<Directory \"" + docBase + "/WEB-INF/\">");
-		mod_jk.println("    AllowOverride None");
-		mod_jk.println("    deny from all");
-		mod_jk.println("</Directory>");
-	    }
-	    
-	    // Deny serving any files from META-INF
-	    mod_jk.println();            
-	    mod_jk.println("#");		    
-	    mod_jk.println("# The following line prohibits users from directly accessing META-INF");
-	    mod_jk.println("#");                        
-	    mod_jk.println("<Location \"" + path + "/META-INF/\">");
-	    mod_jk.println("    AllowOverride None");
-	    mod_jk.println("    deny from all");
-	    mod_jk.println("</Location>");
-	    if (File.separatorChar == '\\') {
-		mod_jk.println("#");		    
-		mod_jk.println("# Use Directory too. On Windows, Location doesn't work unless case matches");
-		mod_jk.println("#");                        
-		mod_jk.println("<Directory \"" + docBase + "/META-INF/\">");
-		mod_jk.println("    AllowOverride None");
-		mod_jk.println("    deny from all");
-		mod_jk.println("</Directory>");
-	    }
 	    mod_jk.println();
-	    
-	    mod_jk.println("#######################################################");		    
-	    mod_jk.println("# Auto configuration for the " + path + " context ends.");
-	    mod_jk.println("#######################################################");		    
-	    mod_jk.println();
-	    
-	    
+
 	    // XXX ErrorDocument
+	    // Security and filter mappings
 	    
-	    // XXX mime types - AddEncoding, AddLanguage, TypesConfig
 	} else {
 	    // the root context
 	    // XXX use a non-conflicting name
 	}
+    }
+
+
+    /** Mappings for static content. XXX need to add welcome files,
+     *  mime mappings ( all will be handled by Mime and Static modules of apache ).
+     */
+    private void generateStaticMappings(Context context, PrintWriter mod_jk ) {
+	String path  = context.getPath();
+	// Calculate the absolute path of the document base
+	String docBase = context.getDocBase();
+	if (!FileUtil.isAbsolute(docBase)){
+	    docBase = tomcatHome + "/" + docBase;
+	}
+	docBase = FileUtil.patch(docBase);
+	if (File.separatorChar == '\\')
+	    docBase = docBase.replace('\\','/');// use separator preferred by Apache
+	
+	// Static files will be served by Apache
+	mod_jk.println("#");		    
+	mod_jk.println("# The following line allow apache to serve static files for " + path );
+	mod_jk.println("#");                        
+	mod_jk.println("Alias " + path + " \"" + docBase + "\"");
+	mod_jk.println("<Directory \"" + docBase + "\">");
+	mod_jk.println("    Options Indexes FollowSymLinks");
+	mod_jk.println("</Directory>");
+	mod_jk.println();            
+	
+
+	// Deny serving any files from WEB-INF
+	mod_jk.println();            
+	mod_jk.println("# Deny direct access to WEB-INF and META-INF");
+	mod_jk.println("#");                        
+	mod_jk.println("<Location \"" + path + "/WEB-INF/\">");
+	mod_jk.println("    AllowOverride None");
+	mod_jk.println("    deny from all");
+	mod_jk.println("</Location>");
+	// Deny serving any files from META-INF
+	mod_jk.println();            
+	mod_jk.println("<Location \"" + path + "/META-INF/\">");
+	mod_jk.println("    AllowOverride None");
+	mod_jk.println("    deny from all");
+	mod_jk.println("</Location>");
+	if (File.separatorChar == '\\') {
+	    mod_jk.println("#");		    
+	    mod_jk.println("# Use Directory too. On Windows, Location doesn't work unless case matches");
+	    mod_jk.println("#");                        
+	    mod_jk.println("<Directory \"" + docBase + "/WEB-INF/\">");
+	    mod_jk.println("    AllowOverride None");
+	    mod_jk.println("    deny from all");
+	    mod_jk.println("</Directory>");
+	    mod_jk.println();
+	    mod_jk.println("<Directory \"" + docBase + "/META-INF/\">");
+	    mod_jk.println("    AllowOverride None");
+	    mod_jk.println("    deny from all");
+	    mod_jk.println("</Directory>");
+	}
+	mod_jk.println();
     }    
 
     // -------------------- Utils --------------------
