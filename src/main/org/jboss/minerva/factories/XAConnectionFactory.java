@@ -6,6 +6,7 @@
  */
 package org.jboss.minerva.factories;
 
+import java.io.PrintWriter;
 import java.sql.*;
 import javax.sql.*;
 import javax.naming.*;
@@ -21,7 +22,7 @@ import org.jboss.minerva.xa.*;
  * and any work done isn't associated with the java.sql.Connection anyway.
  * <P><B>Note:</B> This implementation requires that the TransactionManager
  * be bound to a JNDI name.</P>
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  * @author Aaron Mulder (ammulder@alumni.princeton.edu)
  */
 public class XAConnectionFactory extends PoolObjectFactory {
@@ -33,6 +34,7 @@ public class XAConnectionFactory extends PoolObjectFactory {
     private ConnectionEventListener listener;
     private TransactionListener transListener;
     private ObjectPool pool;
+    private PrintWriter log;
 
     /**
      * Creates a new factory.  You must set the XADataSource and
@@ -51,16 +53,19 @@ public class XAConnectionFactory extends PoolObjectFactory {
 
             private void closeConnection(ConnectionEvent evt, int status) {
                 XAConnection con = (XAConnection)evt.getSource();
+                boolean transaction = false;
                 try {
                     TransactionManager tm = (TransactionManager)ctx.lookup(tmJndiName);
-                    if(tm.getStatus() != Status.STATUS_NO_TRANSACTION)
+                    if(tm.getStatus() != Status.STATUS_NO_TRANSACTION) {
+                        transaction = true;
                         tm.getTransaction().delistResource(con.getXAResource(), status);
+                    }
                 } catch(Exception e) {
                     e.printStackTrace();
                     throw new RuntimeException("Unable to deregister with TransactionManager: "+e);
                 }
                 con.removeConnectionEventListener(listener);
-                if(!(con instanceof XAConnectionImpl))
+                if(!transaction || !(con instanceof XAConnectionImpl))
                     pool.releaseObject(con);
             }
         };
@@ -120,8 +125,9 @@ public class XAConnectionFactory extends PoolObjectFactory {
     /**
      * Verifies that the data source and transaction manager are accessible.
      */
-    public void poolStarted(ObjectPool pool) {
-        super.poolStarted(pool);
+    public void poolStarted(ObjectPool pool, PrintWriter log) {
+        super.poolStarted(pool, log);
+        this.log = log;
         this.pool = pool;
         if(source == null)
             throw new IllegalStateException("Must specify XADataSource to "+getClass().getName());
@@ -162,14 +168,14 @@ public class XAConnectionFactory extends PoolObjectFactory {
             TransactionManager tm = (TransactionManager)ctx.lookup(tmJndiName);
             if(tm.getStatus() != Status.STATUS_NO_TRANSACTION) {
                 tm.getTransaction().enlistResource(con.getXAResource());
-System.out.println("Enlisted with transaction.");
+                con.addConnectionEventListener(listener);
+                if(log != null) log.println("Enlisted with transaction.");
             }
-System.out.println("No transaction right now.");
+            if(log != null) log.println("No transaction right now.");
         } catch(Exception e) {
             e.printStackTrace();
             throw new RuntimeException("Unable to register with TransactionManager: "+e);
         }
-        con.addConnectionEventListener(listener);
         if(con instanceof XAConnectionImpl)
             ((XAConnectionImpl)con).setTransactionListener(transListener);
         return con;

@@ -6,6 +6,7 @@
  */
 package org.jboss.minerva.factories;
 
+import java.io.PrintWriter;
 import java.sql.*;
 import java.util.Properties;
 import org.jboss.minerva.pools.*;
@@ -17,7 +18,7 @@ import org.jboss.minerva.jdbc.*;
  * you're interested in creating transactional-aware connections, see
  * XAConnectionFactory, which complies with the JDBC 2.0 standard extension.
  * @see org.jboss.minerva.factories.XAConnectionFactory
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  * @author Aaron Mulder (ammulder@alumni.princeton.edu)
  */
 public class JDBCConnectionFactory extends PoolObjectFactory {
@@ -25,6 +26,7 @@ public class JDBCConnectionFactory extends PoolObjectFactory {
     private Properties props;
     private String userName;
     private String password;
+    private PrintWriter log;
 
     /**
      * Creates a new factory.  You must configure it with JDBC properties
@@ -79,8 +81,8 @@ public class JDBCConnectionFactory extends PoolObjectFactory {
     /**
      * Validates that connection properties were set (at least a URL).
      */
-    public void poolStarted(ObjectPool pool) {
-        super.poolStarted(pool);
+    public void poolStarted(ObjectPool pool, PrintWriter log) {
+        super.poolStarted(pool, log);
         if(url == null)
             throw new IllegalStateException("Must specify JDBC connection URL to "+getClass().getName());
     }
