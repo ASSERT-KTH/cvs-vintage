@@ -1,0 +1,47 @@
+<?xml version="1.0"?>
+<project name="columba" default="jar" basedir=".">
+
+	<property name="columba_src" value="./../../classes" />
+	<property name="src" value="src/core" />
+	<property name="build" value="build" />
+	<property name="user.name" value="The Columba Team" />
+	<property name="version" value="1.0" />
+	<property name="dest" value="LogDisplay" />
+	<property name="plugin-id" value="org.columba.core.gui.util.LogDisplay" />
+	<property name="ownclasspath" value="${classpath}:${columba_src}:${columba_src}/lib/junit.jar::${columba_src}/../lib/frappucino-1.0pre1.jar" />
+
+	<!-- compile the classes -->
+	<target name="compile">
+		<mkdir dir="${build}" />
+		<javac srcdir="${src}" destdir="${build}" classpath="${ownclasspath}" encoding="ISO-8859-1" debug="yes" />
+	</target>
+
+	<target name="jar" depends="compile">
+		<echo message="plug-in is going to be ${dest}.jar" />
+		<jar basedir="${build}" jarfile="${dest}.jar">
+			<include name="**/*.class" />
+			<exclude name="${dest}.jar" />
+			<exclude name="build.xml" />
+			<exclude name="plugin.xml" />
+			<manifest>
+			</manifest>
+		</jar>
+	</target>
+
+	<target name="clean">
+		<delete dir="${build}" />
+	</target>
+
+	<target name="release" depends="jar">
+		<echo message="zip-file is going to ../${plugin-id}.zip" />
+		<zip zipfile="../${plugin-id}.zip" update="true">
+			<zipfileset dir="." prefix="${plugin-id}">
+				<include name="${dest}.jar" />
+				<include name="plugin.xml" />
+				<include name="Readme.txt" />
+				<include name="lib/**" />
+			</zipfileset>
+		</zip>
+	</target>
+
+</project>
