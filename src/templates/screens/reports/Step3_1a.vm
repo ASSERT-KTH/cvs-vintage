@@ -26,6 +26,7 @@
              <td>
                 <input type="text" size="20" name="$intakeReport.NewDate.Key"
                     value="$intakeReport.NewDate" />
+                <p>Leave blank for current date/time</p>
             </td>
         </tr>
   <tr>
