@@ -22,7 +22,7 @@
 
 <div class="functnbar">
    <input type="submit" value="$l10n.Done" name="eventSubmit_doDone" />&#160;
-  <input type="submit" name="eventSubmit_doRunstoredquery" value="$l10n.ExecuteQuery" />&#160; 
+  <input type="submit" name="eventSubmit_doSearch" value="$l10n.ExecuteQuery" />&#160; 
    <input type="submit" value="$l10n.Cancel" name="eventSubmit_doCancel" />
 </div>
 
@@ -107,7 +107,7 @@
 
 <div class="functnbar2">
    <input type="submit" value="$l10n.Done" name="eventSubmit_doDone" />&#160;
-   <input type="submit" name="eventSubmit_doRunstoredquery" value="$l10n.ExecuteQuery" />&#160; 
+   <input type="submit" name="eventSubmit_doSearch" value="$l10n.ExecuteQuery" />&#160; 
    <input type="submit" value="$l10n.Cancel" name="eventSubmit_doCancel" />
 </div>
 

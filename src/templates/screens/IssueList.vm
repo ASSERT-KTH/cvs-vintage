@@ -227,7 +227,7 @@ $link.setPage("ConfigureIssueList.vm").setLabel($l10n.AddRemoreAttributesFromVie
     <tr>
        <th>$l10n.MaxPerPage</td>
  <td>
-     #resultsPerPageRadioSelect($resultsPerPage)
+     #resultsPerPageRadioSelect($resultsPerPage true)
      <input type="submit" name="eventSubmit_doRefresh" value="$l10n.Refresh" />
  </td>
    </tr>

@@ -12,8 +12,8 @@
 #else
 
 #set ($selectAction = $moveIssueGroup.Action.Value)
-#set ($newModuleId = $context.get("newModuleId"))
-#set ($newIssueTypeId = $context.get("newIssueTypeId"))
+#set ($newModuleId = $moveIssueGroup.ModuleId.Value)
+#set ($newIssueTypeId = $moveIssueGroup.IssueTypeId.Value)
 #set ($newModule = $scarabR.getModule("$newModuleId"))
 #set ($newIssueType = $scarabR.getIssueType("$newIssueTypeId"))
 #set ($module = $issue.Module)

@@ -90,13 +90,14 @@
         #end
 #end
 
-#macro (templateAttrValueText $attrValue $size $value)
+#macro (templateAttrValueText $attrValue $size $templAttrValue)
 #set ($attrInput = $intake.AttributeValue.mapTo($attrValue))
+#set ($value = $templAttrValue.Value)
 #set ($currentValue = "")
 #if ($attrInput.Value.toString().length() > 0)
      #set ($currentValue = $attrInput.Value)
-#elseif ($templAttrInput.Value.toString().length() > 0)
-     #set ($currentValue = $templAttrInput.Value)
+#elseif ($value.length() > 0)
+     #set ($currentValue = $value)
 #end
 #if ($attVal.Attribute.AttributeType.Name == "long-string")
    #textAreaMedium("$attrInput.Value.Key" $currentValue)
@@ -385,7 +386,7 @@
     value="$optionModel.Value">$optionModel.Name</option>
 #end
 
-#macro (resultsPerPageRadioSelect $resultsPerPage)
+#macro (resultsPerPageRadioSelect $resultsPerPage $showAll)
 
 #if (!$resultsPerPage || $resultsPerPage == 0) 
   #set ($resultsPerPage = 25)
@@ -393,7 +394,9 @@
 #foreach ($num in [25, 50, 75, 100])
  <input type="radio" value="$num" name="resultsPerPage" #if ($resultsPerPage == $num) checked="checked" #end /> $num
 #end
- ##<input type="radio" value="-1" name="resultsPerPage" #if ($resultsPerPage == -1) checked="checked" #end /> $l10n.All
+#if ($showAll.toString().equals("true"))
+ <input type="radio" value="-1" name="resultsPerPage" #if ($resultsPerPage == -1) checked="checked" #end /> $l10n.All
+#end
 
 #end
 
@@ -633,7 +636,7 @@ $scarabR.IssuePosInList of $scarabR.CurrentSearchResultsSize
      <tr>
        <th>$l10n.MaxPerPage</th>
        <td>
-           #resultsPerPageRadioSelect($resultsPerPage)
+           #resultsPerPageRadioSelect($resultsPerPage false)
            &#160;<input type="submit" value="$l10n.Refresh" />
        </td>
      </tr>

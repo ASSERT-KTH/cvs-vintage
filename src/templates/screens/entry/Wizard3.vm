@@ -87,7 +87,7 @@
                  #end
               #else
                #if ($templAttVal.Value)
-                  #templateAttrValueText ( $attVal $templAttVal "50")  
+                  #templateAttrValueText ( $attVal "50" $templAttVal)  
                #else
                  #attrValueText ( $attVal "50" )
                #end

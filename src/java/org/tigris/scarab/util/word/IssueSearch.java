@@ -55,6 +55,8 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.HashSet;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -216,6 +218,8 @@ public class IssueSearch
         IssuePeer.TYPE_ID + "=sortRMO.ISSUE_TYPE_ID AND sortRMO.OPTION_ID=";
 
     private static int NO_ATTRIBUTE_SORT = -1;
+
+    private static NumberKey NUMBERKEY_0 = new NumberKey(0);
 
     /**
      * The managed database connection used while iterating over large
@@ -1360,7 +1364,7 @@ public class IssueSearch
      * @param attValues a <code>List</code> value
      */
     private void addSelectedAttributes(StringBuffer fromClause,  
-                                       List attValues)
+                                       List attValues, Set tableAliases)
         throws Exception
     {
         Map attrMap = new HashMap((int)(attValues.size()*1.25));
@@ -1412,6 +1416,7 @@ public class IssueSearch
             // might want to add redundant av2.ISSUE_ID=av5.ISSUE_ID. might
             // not be necessary with sql92 join format?
             fromClause.append(joinClause);
+            tableAliases.add(alias);
         }
     }
 
@@ -1739,8 +1744,8 @@ public class IssueSearch
         NumberKey newOptionId = getStateChangeToOptionId();
         Date minUtilDate = parseDate(getStateChangeFromDate(), false);
         Date maxUtilDate = parseDate(getStateChangeToDate(), true);
-        if (oldOptionId != null || newOptionId != null 
-            || !oldOptionId.equals(new NumberKey(0)) || !newOptionId.equals(new NumberKey(0))
+        if ((oldOptionId != null &&  !oldOptionId.equals(NUMBERKEY_0))
+            || (newOptionId != null && !newOptionId.equals(NUMBERKEY_0))
             || minUtilDate != null || maxUtilDate != null)
         {
             from.append(INNER_JOIN + ActivityPeer.TABLE_NAME + ON +
@@ -1783,7 +1788,8 @@ public class IssueSearch
     }
 
     private NumberKey[] addCoreSearchCriteria(StringBuffer fromClause, 
-                                              StringBuffer whereClause)
+                                              StringBuffer whereClause,
+                                              Set tableAliases)
         throws Exception
     {
         if (isXMITSearch()) 
@@ -1808,7 +1814,7 @@ public class IssueSearch
 
         // remove unset AttributeValues before searching
         List setAttValues = removeUnsetValues(lastUsedAVList);        
-        addSelectedAttributes(fromClause, setAttValues);
+        addSelectedAttributes(fromClause, setAttValues, tableAliases);
 
         // search for issues based on text
         NumberKey[] matchingIssueIds = getTextMatches(setAttValues);
@@ -1857,9 +1863,11 @@ public class IssueSearch
         else if (lastQueryResults == null) 
         {
             List rows = null;
+            Set tableAliases = new HashSet();
             StringBuffer from = new StringBuffer();
             StringBuffer where = new StringBuffer();
-            NumberKey[] matchingIssueIds = addCoreSearchCriteria(from, where);
+            NumberKey[] matchingIssueIds = addCoreSearchCriteria(from, where,
+                                                                 tableAliases);
             // the matchingIssueIds are text search matches.  if length == 0,
             // then no need to search further.  if null then there was no
             // text to search, so continue the search process.
@@ -1874,7 +1882,7 @@ public class IssueSearch
                     .append(IssuePeer.ID_PREFIX).append(',')
                     .append(IssuePeer.ID_COUNT);
 
-                lastQueryResults = sortResults(sql, from, where);
+                lastQueryResults = sortResults(sql, from, where, tableAliases);
             }
             else 
             {
@@ -1911,10 +1919,10 @@ public class IssueSearch
         throws Exception
     {
         int count = 0;
-        Criteria crit = new Criteria();
         StringBuffer from = new StringBuffer();
         StringBuffer where = new StringBuffer();
-        NumberKey[] matchingIssueIds = addCoreSearchCriteria(from, where);
+        NumberKey[] matchingIssueIds = addCoreSearchCriteria(from, where,
+                                                             new HashSet());
         if (matchingIssueIds == null || matchingIssueIds.length > 0) 
         {
             StringBuffer sql = new StringBuffer("SELECT count(DISTINCT ");
@@ -1946,8 +1954,8 @@ public class IssueSearch
      * <code>java.sql.DatabaseMetaData.nullsAreSortedAtEnd()</code>
      * method may be able to help us here.
      */
-    private List sortResults(StringBuffer select, 
-                             StringBuffer from, StringBuffer where)
+    private List sortResults(StringBuffer select, StringBuffer from,
+                             StringBuffer where, Set tableAliases)
         throws Exception
     {
         NumberKey sortAttrId = getSortAttributeId();
@@ -1991,7 +1999,7 @@ public class IssueSearch
                 selectColumns.append(',').append(alias).append(".VALUE");
                 // if no criteria was specified for a displayed attribute
                 // add it as an outer join
-                if (fromString.indexOf(alias) < 0)
+                if (!tableAliases.contains(alias))
                 {
                     outerJoin.append(" LEFT OUTER JOIN ")
                         .append(AttributeValuePeer.TABLE_NAME).append(' ')
@@ -2000,6 +2008,7 @@ public class IssueSearch
                         .append(alias).append(".ISSUE_ID AND ").append(alias)
                         .append(".DELETED=0 AND ").append(alias)
                         .append(".ATTRIBUTE_ID=").append(id).append(')');
+                    tableAliases.add(alias);
                 }
             }
 

@@ -74,7 +74,7 @@ import org.tigris.scarab.services.cache.ScarabCache;
  * This class deals with modifying Global Attributes.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: GlobalAttributeEdit.java,v 1.39 2003/03/04 17:27:18 jmcnally Exp $
+ * @version $Id: GlobalAttributeEdit.java,v 1.40 2003/03/21 17:59:12 jmcnally Exp $
  */
 public class GlobalAttributeEdit extends RequireLoginFirstAction
 {
@@ -147,7 +147,6 @@ public class GlobalAttributeEdit extends RequireLoginFirstAction
         ScarabRequestTool scarabR = (ScarabRequestTool)context
            .get(ScarabConstants.SCARAB_REQUEST_TOOL);
         ScarabLocalizationTool l10n = getLocalizationTool(context);
-        boolean newAdded = false;
 
         if (intake.isAllValid()) 
         {
@@ -244,6 +243,55 @@ public class GlobalAttributeEdit extends RequireLoginFirstAction
                     {
                         // assign the form data to the object
                         newPCAOGroup.setProperties(newPCAO);
+                        // only add a new entry if there is a name defined
+                        if (newPCAO.getName() != null && newPCAO.getName().length() > 0)
+                        {
+                            // save the new PCAO
+                            newPCAO.setAttributeId(new NumberKey(attribute.getAttributeId()));
+                            try
+                            {
+                                newPCAO.save();
+                                pcaoList.add(newPCAO);
+                                IssueType issueType = null;
+                                AttributeOption option = null;
+
+                                // If user came from editing a module,
+                                // Add new option to module.
+                                String cancelTemplate = getCancelTemplate(data);
+                                if (cancelTemplate != null
+                                    && (cancelTemplate.equals("admin,AttributeOptionSelect.vm")
+                                        || cancelTemplate.equals("admin,GlobalAttributeOptionSelect.vm")))
+                                {
+                                    issueType = scarabR.getIssueType();
+                                    option = scarabR.getAttributeOption(newPCAO.getOptionId());
+                                }
+                                // add new option to current module
+                                if (cancelTemplate.equals("admin,AttributeOptionSelect.vm"))
+                                {
+                                    scarabR.getCurrentModule()
+                                       .addAttributeOption(issueType, option);
+                                    data.getParameters().setString(
+                                         ScarabConstants.CANCEL_TEMPLATE, 
+                                         "admin,ModuleAttributeEdit.vm");
+                                }
+                                // add new option to current issue type
+                                else if (cancelTemplate.equals("admin,GlobalAttributeOptionSelect.vm"))
+                                {
+                                    issueType.addRIssueTypeOption(option);
+                                    data.getParameters().setString(
+                                         ScarabConstants.CANCEL_TEMPLATE, 
+                                         "admin,IssueTypeAttributeEdit.vm");
+                                }
+                                scarabR.setConfirmMessage(
+                                    l10n.get("AttributeOptionAdded") + 
+                                    l10n.get(DEFAULT_MSG));
+                            }
+                            catch (Exception e)
+                            {
+                                log().error(e);
+                                scarabR.setAlertMessage(e.getMessage());
+                            }
+                        }
                     }
                     catch (Exception se)
                     {
@@ -251,60 +299,6 @@ public class GlobalAttributeEdit extends RequireLoginFirstAction
                         scarabR.setAlertMessage(se.getMessage());
                         log().error(se);
                         return;
-                    }
-                    // only add a new entry if there is a name defined
-                    if (newPCAO.getName() != null 
-                        && newPCAO.getName().length() > 0)
-                    {
-                        // save the new PCAO
-                        newPCAO.setAttributeId(new NumberKey(attribute.getAttributeId()));
-                        try
-                        {
-                            newPCAO.save();
-                            pcaoList.add(newPCAO);
-                            newAdded = true;
-                        }
-                        catch (Exception e)
-                        {
-                            log().error(e);
-                            scarabR.setAlertMessage(e.getMessage());
-                        }
-
-                        // If user came from editing a module,
-                        // Add new option to module.
-                        String lastTemplate = getCancelTemplate(data);
-                        if (newAdded && lastTemplate != null)
-                        {
-                            IssueType issueType = scarabR.getIssueType();
-                            AttributeOption option = null;
-                            try
-                            {
-                                option = scarabR.getAttributeOption(newPCAO.getOptionId());
-                            }
-                            catch(Exception e)
-                            {
-                                log().error(e);
-                            }
-                            // add new option to current module
-                            if (lastTemplate.equals("admin,AttributeOptionSelect.vm"))
-                            {
-                                scarabR.getCurrentModule()
-                                   .addAttributeOption(issueType, option);
-                                data.getParameters().setString(ScarabConstants.CANCEL_TEMPLATE, "admin,ModuleAttributeEdit.vm");
-                            }
-                            // add new option to current issue type
-                            else if (lastTemplate.equals("admin,GlobalAttributeOptionSelect.vm"))
-                            {
-                                issueType.addRIssueTypeOption(option);
-                                data.getParameters().setString(ScarabConstants.CANCEL_TEMPLATE, "admin,IssueTypeAttributeEdit.vm");
-                            }
-                        }
-                    }
-                    if (newAdded)
-                    {
-                        scarabR.setConfirmMessage(
-                            l10n.get("AttributeOptionAdded") + 
-                            l10n.get(DEFAULT_MSG));
                     }
 
                     // now remove the group to set the page stuff to null

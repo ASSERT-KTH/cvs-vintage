@@ -184,7 +184,7 @@ $l10n.NoMoreIssueTypes
      <tr>
        <th>$l10n.MaxPerPage</th>
        <td>
-        #resultsPerPageRadioSelect($resultsPerPage)
+        #resultsPerPageRadioSelect($resultsPerPage true)
         &#160;<input type="submit" value="$l10n.Refresh" />
        </td>
      </tr>

@@ -98,7 +98,7 @@ import org.apache.commons.lang.StringUtils;
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: Issue.java,v 1.279 2003/03/20 00:57:31 jon Exp $
+ * @version $Id: Issue.java,v 1.280 2003/03/21 17:59:13 jmcnally Exp $
  */
 public class Issue 
     extends BaseIssue
@@ -167,6 +167,8 @@ public class Issue
         "getInitialActivitySet";
     protected static final String GET_HISTORY_LIMIT =
         "getHistoryLimit";
+
+    private static NumberKey NUMBERKEY_0 = new NumberKey(0);
 
     /** storage for any attachments which have not been saved yet */
     private List unSavedAttachments = null;
@@ -480,7 +482,7 @@ public class Issue
         }
         catch (Exception e)
         {
-            throw new Exception("Invaild federated id: " + id);
+            throw new Exception("Invalid federated id: " + id);
         }
         return fid;
     }
@@ -488,9 +490,18 @@ public class Issue
     /**
      * Whether this issue is an enter issue template.
      */
-    public boolean isTemplate() throws Exception
+    public boolean isTemplate() 
     {
-        return (!getIssueType().getParentId().equals(new NumberKey(0)));
+        boolean isTemplate = false;
+        try
+        {
+            isTemplate = !getIssueType().getParentId().equals(NUMBERKEY_0);
+        }
+        catch (Exception e)
+        {
+            log().error("Problem determining whether issue is template");
+        }
+        return isTemplate;
     }
 
     /**
@@ -2019,18 +2030,28 @@ public class Issue
             }
         }
 
-        if (isNew()) 
+        if (isNew())
         {
             // set the issue id
             setIdDomain(module.getDomain());
             setIdPrefix(module.getCode());
-            try
-            {
-                setIdCount(getNextIssueId(dbCon));
+
+            // for an enter issue template, do not give issue id
+            // set id count to -1 so does not show up as an issue
+            if (isTemplate())
+            { 
+                setIdCount(-1);
             }
-            catch (Exception e)
+            else
             {
-                throw new TorqueException(e);
+                try
+                {
+                    setIdCount(getNextIssueId(dbCon));
+                }
+                catch (Exception e)
+                {
+                    throw new TorqueException(e);
+                }
             }
         }
         super.save(dbCon);
@@ -2433,7 +2454,7 @@ public class Issue
             "MovedIssueDescription", args);
 
         Attribute zeroAttribute = AttributeManager
-            .getInstance(new NumberKey("0"));
+            .getInstance(NUMBERKEY_0);
         ActivityManager
             .createTextActivity(newIssue, zeroAttribute, activitySet2,
                                 desc, null,

@@ -72,7 +72,7 @@ import org.tigris.scarab.util.Log;
  * 
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: AbstractScarabUser.java,v 1.64 2003/03/20 00:57:31 jon Exp $
+ * @version $Id: AbstractScarabUser.java,v 1.65 2003/03/21 17:59:13 jmcnally Exp $
  */
 public abstract class AbstractScarabUser 
     extends BaseObject 
@@ -1305,6 +1305,16 @@ public abstract class AbstractScarabUser
             }
             mostRecentQueryMap.put(key, queryString);
             MITList list = getCurrentMITList(key);
+            /*
+            FIXME! currently searches that occur on the current issue type
+            do not save the issue type that they used along with the query
+            this means that if first, a query is run against defects that 
+            returns a list of defects, then the current issue type is changed
+            to patches, finally followed by executing the 'Most recent' query,
+            it will return patches (if anything).  The code below is my (jdm)
+            attempt to quickly fix this but had unforeseen consequences.
+            Need to think about it some more.
+
             if (list == null) 
             {
                 try 
@@ -1319,7 +1329,7 @@ public abstract class AbstractScarabUser
                         e);
                 }
             }
-            
+            */            
             mostRecentQueryMITMap.put(key, list);
         }
     }

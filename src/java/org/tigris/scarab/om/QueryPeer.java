@@ -58,7 +58,7 @@ import org.tigris.scarab.om.Module;
  * This is the QueryPeer class
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: QueryPeer.java,v 1.17 2003/03/15 21:56:58 jon Exp $
+ * @version $Id: QueryPeer.java,v 1.18 2003/03/21 17:59:13 jmcnally Exp $
  */
 public class QueryPeer 
     extends org.tigris.scarab.om.BaseQueryPeer
@@ -124,6 +124,8 @@ public class QueryPeer
             Criteria.Criterion cGlob = crit.getNewCriterion(
                 QueryPeer.SCOPE_ID, Scope.MODULE__PK, 
                 Criteria.EQUAL);
+            cGlob.and(crit.getNewCriterion(QueryPeer.APPROVED, 
+                                           Boolean.TRUE, Criteria.EQUAL));
             Criteria.Criterion cPriv = crit.getNewCriterion(
                 QueryPeer.USER_ID, user.getUserId(), Criteria.EQUAL);
             cPriv.and(crit.getNewCriterion(
