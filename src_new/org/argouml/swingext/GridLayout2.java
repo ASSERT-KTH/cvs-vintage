@@ -1,4 +1,4 @@
-// $Id: GridLayout2.java,v 1.8 2003/06/30 18:00:23 linus Exp $
+// $Id: GridLayout2.java,v 1.9 2003/11/10 12:23:11 jhraigniac Exp $
 // Copyright (c) 2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -570,7 +570,7 @@ public class GridLayout2 implements LayoutManager, java.io.Serializable {
     {
         int w = 0;
         int h = 0;
-        if (cellSizing == this.ROWCOLPREFERRED) {
+        if (cellSizing == GridLayout2.ROWCOLPREFERRED) {
             for (int c = 0; c < actualCols; ++c) w += colWidth[c];
             for (int r = 0; r < actualRows; ++r) h += rowHeight[r];
         }

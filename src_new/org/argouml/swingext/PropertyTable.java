@@ -1,4 +1,4 @@
-// $Id: PropertyTable.java,v 1.4 2003/06/30 18:00:23 linus Exp $
+// $Id: PropertyTable.java,v 1.5 2003/11/10 12:23:11 jhraigniac Exp $
 // Copyright (c) 2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -191,5 +191,5 @@ public class PropertyTable extends JTable {
                 _properties[rowIndex].setCurrentValue(aValue);
             }
         }
-    };
+    }
 }
