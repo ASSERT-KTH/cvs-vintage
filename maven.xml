@@ -17,6 +17,18 @@
     <attainGoal name="torque:om"/>
   </preGoal>
 
+  <preGoal name="test:test-resources">
+    <ant:filterset id="scarab.test.filter">
+      <ant:filter token="SCARAB_MODULE_CODE_LENGTH"
+                value="${scarab.module.code.length}" />
+    </ant:filterset>
+    <ant:copy todir="${maven.build.dir}/test-config">
+      <ant:fileset dir="${maven.src.dir}/conf/conf"
+          includes="**/*.*"/>
+      <ant:filterset refid="scarab.test.filter"/>
+    </ant:copy>
+  </preGoal>
+  
   <preGoal name="war:webapp">
     <ant:tstamp/>
     <ant:filterset id="scarab.filter">
