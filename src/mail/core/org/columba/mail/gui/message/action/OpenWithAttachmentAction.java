@@ -23,7 +23,6 @@ import org.columba.core.gui.frame.FrameMediator;
 import org.columba.mail.gui.frame.MessageViewOwner;
 import org.columba.mail.gui.message.MessageController;
 import org.columba.mail.gui.message.command.OpenWithAttachmentCommand;
-import org.columba.mail.gui.message.viewer.AttachmentsViewer;
 import org.columba.mail.util.MailResourceLoader;
 
 /**
@@ -34,8 +33,6 @@ import org.columba.mail.util.MailResourceLoader;
  */
 public class OpenWithAttachmentAction extends AbstractColumbaAction {
 
-	private AttachmentsViewer viewer;
-
 	public OpenWithAttachmentAction(FrameMediator frameMediator) {
 		super(frameMediator, MailResourceLoader.getString("menu", "mainframe",
 				"attachmentopen_with"));
@@ -43,8 +40,7 @@ public class OpenWithAttachmentAction extends AbstractColumbaAction {
 		// tooltip text
 		putValue(SHORT_DESCRIPTION, MailResourceLoader.getString("menu",
 				"mainframe", "attachmentopen_with_tooltip").replaceAll("&", ""));
-		this.viewer = ((MessageController) ((MessageViewOwner) frameMediator)
-				.getMessageController()).getAttachmentsViewer();
+
 	}
 
 	/*
@@ -54,7 +50,10 @@ public class OpenWithAttachmentAction extends AbstractColumbaAction {
 	 */
 	public void actionPerformed(ActionEvent evt) {
 		CommandProcessor.getInstance().addOp(
-				new OpenWithAttachmentCommand(viewer.getLocalReference()));
+				new OpenWithAttachmentCommand(
+						((MessageController) ((MessageViewOwner) frameMediator)
+								.getMessageController())
+								.getAttachmentSelectionReference()));
 	}
 
 }

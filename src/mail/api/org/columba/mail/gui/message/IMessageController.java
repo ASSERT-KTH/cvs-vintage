@@ -27,15 +27,7 @@ import org.columba.mail.folder.IMailbox;
  *
  */
 public interface IMessageController {
-	//MessageView getView();
-
-	Object getUid();
-
-	IMailbox getFolder();
-
-	void setFolder(IMailbox f);
-
-	void setUid(Object o);
+	
 
 	/**
 	 * Show message in messages viewer.

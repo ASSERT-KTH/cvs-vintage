@@ -57,6 +57,7 @@ import org.columba.core.gui.menu.ColumbaPopupMenu;
 import org.columba.core.gui.mimetype.MimeTypeViewer;
 import org.columba.core.gui.util.FontProperties;
 import org.columba.mail.command.IMailFolderCommandReference;
+import org.columba.mail.command.MailFolderCommandReference;
 import org.columba.mail.folder.IMailbox;
 import org.columba.mail.gui.composer.ComposerController;
 import org.columba.mail.gui.composer.ComposerModel;
@@ -248,75 +249,6 @@ public class MessageController extends JScrollPane implements
 	public JPopupMenu getPopupMenu() {
 		return menu;
 	}
-
-	public void setViewerFont(Font font) {
-		//textPane.setFont( font );
-	}
-
-	public Object getUid() {
-		return uid;
-	}
-
-	public IMailbox getFolder() {
-		return folder;
-	}
-
-	public void setFolder(IMailbox f) {
-		this.folder = f;
-	}
-
-	public void setUid(Object o) {
-		this.uid = o;
-	}
-
-	/*
-	 * public void showMessage(ColumbaHeader header, MimePart bodyPart, MimeTree
-	 * mimePartTree) throws Exception { if ((header == null) || (bodyPart ==
-	 * null)) { return; } // Which Charset shall we use ? Charset charset =
-	 * ((CharsetOwnerInterface) getFrameController()).getCharset();
-	 * 
-	 * if (charset == null) { String charsetName =
-	 * bodyPart.getHeader().getContentParameter("charset"); // There is no
-	 * charset info -> the default system charset is used if (charsetName !=
-	 * null) { charset = Charset.forName(charsetName);
-	 * 
-	 * ((CharsetOwnerInterface) getFrameController()).setCharset(charset); } } //
-	 * Shall we use the HTML-Viewer? boolean htmlViewer =
-	 * bodyPart.getHeader().getMimeType().getSubtype() .equals("html");
-	 * 
-	 * InputStream bodyStream = ((StreamableMimePart)
-	 * bodyPart).getInputStream();
-	 * 
-	 * int encoding = bodyPart.getHeader().getContentTransferEncoding();
-	 * 
-	 * switch (encoding) { case MimeHeader.QUOTED_PRINTABLE: { bodyStream = new
-	 * QuotedPrintableDecoderInputStream(bodyStream);
-	 * 
-	 * break; }
-	 * 
-	 * case MimeHeader.BASE64: { bodyStream = new
-	 * Base64DecoderInputStream(bodyStream);
-	 * 
-	 * break; } }
-	 * 
-	 * if (charset == null) { charset =
-	 * Charset.forName(System.getProperty("file.encoding")); }
-	 * 
-	 * bodyStream = new CharsetDecoderInputStream(bodyStream, charset);
-	 * 
-	 * boolean hasAttachments = header.hasAttachments().booleanValue();
-	 * 
-	 * attachmentController.setMimePartTree(mimePartTree);
-	 * 
-	 * getView().setDoc(header, bodyStream, htmlViewer, hasAttachments);
-	 * 
-	 * getView().getVerticalScrollBar().setValue(0); }
-	 */
-
-	/*
-	 * public void setPGPMessage(int value, String message) {
-	 * getView().getPgp().setValue(value, message); }
-	 */
 
 	public void hyperlinkUpdate(HyperlinkEvent e) {
 	}
@@ -652,6 +584,10 @@ public class MessageController extends JScrollPane implements
 	public BodyTextViewer getBodytextViewer() {
 		return bodytextViewer;
 	}
+	
+	public String getSelectedText() {
+		return getBodytextViewer().getSelectedText();
+	}
 
 	/**
 	 * @return Returns the spamStatus.
@@ -750,5 +686,13 @@ public class MessageController extends JScrollPane implements
 	 */
 	public AttachmentsViewer getAttachmentsViewer() {
 		return attachmentsViewer;
+	}
+	
+	public MailFolderCommandReference getAttachmentSelectionReference() {
+		return getAttachmentsViewer().getLocalReference();
+	}
+	
+	public void setAttachmentSelectionReference(MailFolderCommandReference ref) {
+		getAttachmentsViewer().setLocalReference(ref);
 	}
 }

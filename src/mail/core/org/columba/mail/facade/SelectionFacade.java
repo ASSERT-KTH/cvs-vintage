@@ -63,8 +63,7 @@ public class SelectionFacade implements ISelectionFacade {
 	public IMailFolderCommandReference getAttachmentSelection(
 			MailFrameMediator mediator) {
 		return ((MessageController) ((MessageViewOwner) mediator)
-				.getMessageController()).getAttachmentsViewer()
-				.getLocalReference();
+				.getMessageController()).getAttachmentSelectionReference();
 	}
 
 	/**
@@ -76,7 +75,7 @@ public class SelectionFacade implements ISelectionFacade {
 	 */
 	public String getTextSelection(MailFrameMediator mediator) {
 		return ((MessageController) ((MessageViewOwner) mediator)
-				.getMessageController()).getBodytextViewer().getSelectedText();
+				.getMessageController()).getSelectedText();
 	}
 
 }

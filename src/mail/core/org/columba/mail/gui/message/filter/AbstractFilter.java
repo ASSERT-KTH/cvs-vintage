@@ -72,7 +72,7 @@ public abstract class AbstractFilter implements Filter {
 
         // this is needed to be able to open attachments of the decrypted
         // message
-        messageController.getAttachmentsViewer().setLocalReference(local);
+        messageController.setAttachmentSelectionReference(local);
         
         return local;
     }

@@ -25,7 +25,6 @@ import org.columba.mail.command.MailFolderCommandReference;
 import org.columba.mail.gui.frame.MessageViewOwner;
 import org.columba.mail.gui.message.MessageController;
 import org.columba.mail.gui.message.command.OpenAttachmentCommand;
-import org.columba.mail.gui.message.viewer.AttachmentsViewer;
 import org.columba.mail.util.MailResourceLoader;
 
 /**
@@ -35,8 +34,6 @@ import org.columba.mail.util.MailResourceLoader;
  * Generation>Code and Comments
  */
 public class OpenAttachmentAction extends AbstractColumbaAction {
-
-	private AttachmentsViewer viewer;
 
 	public OpenAttachmentAction(FrameMediator frameMediator) {
 		super(frameMediator, MailResourceLoader.getString("menu", "mainframe",
@@ -50,9 +47,6 @@ public class OpenAttachmentAction extends AbstractColumbaAction {
 		putValue(SMALL_ICON, ImageLoader.getSmallImageIcon("folder-open.png"));
 		putValue(LARGE_ICON, ImageLoader.getSmallImageIcon("folder-open.png"));
 
-		this.viewer = ((MessageController) ((MessageViewOwner) frameMediator)
-				.getMessageController()).getAttachmentsViewer();
-
 	}
 
 	/*
@@ -62,7 +56,8 @@ public class OpenAttachmentAction extends AbstractColumbaAction {
 	 */
 	public void actionPerformed(ActionEvent evt) {
 		// bug #999990 (fdietz) check if attachment is really selected
-		MailFolderCommandReference ref = viewer.getLocalReference();
+		MailFolderCommandReference ref = ((MessageController) ((MessageViewOwner) frameMediator)
+				.getMessageController()).getAttachmentSelectionReference();
 
 		if (ref.getAddress() != null)
 			CommandProcessor.getInstance()

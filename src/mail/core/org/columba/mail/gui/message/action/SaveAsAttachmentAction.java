@@ -24,15 +24,12 @@ import org.columba.core.gui.util.ImageLoader;
 import org.columba.mail.gui.frame.MessageViewOwner;
 import org.columba.mail.gui.message.MessageController;
 import org.columba.mail.gui.message.command.SaveAttachmentAsCommand;
-import org.columba.mail.gui.message.viewer.AttachmentsViewer;
 import org.columba.mail.util.MailResourceLoader;
 
 /**
  * @author frdietz
  */
 public class SaveAsAttachmentAction extends AbstractColumbaAction {
-
-	private AttachmentsViewer viewer;
 
 	/**
 	 * Creates a SaveAs Action.
@@ -53,14 +50,15 @@ public class SaveAsAttachmentAction extends AbstractColumbaAction {
 				.getSmallImageIcon("stock_save_as-16.png"));
 		putValue(LARGE_ICON, ImageLoader.getImageIcon("stock_save_as.png"));
 
-		this.viewer = ((MessageController) ((MessageViewOwner) frameMediator)
-				.getMessageController()).getAttachmentsViewer();
 	}
 
 	/** {@inheritDoc} */
 	public void actionPerformed(ActionEvent evt) {
 		CommandProcessor.getInstance().addOp(
-				new SaveAttachmentAsCommand(viewer.getLocalReference()));
+				new SaveAttachmentAsCommand(
+						((MessageController) ((MessageViewOwner) frameMediator)
+								.getMessageController())
+								.getAttachmentSelectionReference()));
 	}
 
 }
