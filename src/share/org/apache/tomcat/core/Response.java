@@ -60,11 +60,14 @@
 
 package org.apache.tomcat.core;
 
-import java.io.*;
-import java.net.*;
-import java.util.*;
-import org.apache.tomcat.util.*;
-import org.apache.tomcat.helper.*;
+import java.io.IOException;
+import java.util.Locale;
+
+import org.apache.tomcat.util.StringManager;
+import org.apache.tomcat.util.MimeHeaders;
+
+// XXX 
+import org.apache.tomcat.helper.RequestUtil;
 
 /**
  *

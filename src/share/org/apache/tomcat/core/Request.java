@@ -60,15 +60,22 @@
 
 package org.apache.tomcat.core;
 
-import org.apache.tomcat.util.*;
+import org.apache.tomcat.util.MimeHeaders;
+import org.apache.tomcat.util.Counters;
+import org.apache.tomcat.util.SimplePrincipal;
+import org.apache.tomcat.util.MessageBytes;
+
+// XXX 
+import org.apache.tomcat.helper.RequestUtil;
+
 import org.apache.tomcat.util.http.*;
-import org.apache.tomcat.helper.*;
+
 import org.apache.tomcat.session.ServerSession;
+
+import java.security.Principal;
 import java.io.IOException;
-import java.io.*;
-import java.net.*;
-import java.security.*;
-import java.util.*;
+import java.util.Enumeration;
+import java.util.Hashtable;
 
 /**
  *

@@ -58,8 +58,13 @@
  */ 
 package org.apache.tomcat.core;
 
-import java.io.*;
-import java.util.*;
+import java.io.Writer;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+
+import java.util.Hashtable;
 
 /**
  * The buffer used by tomcat response. It allows writting chars and

@@ -59,11 +59,9 @@
 
 package org.apache.tomcat.core;
 
-import org.apache.tomcat.util.*;
 import org.apache.tomcat.util.hooks.*;
-import java.io.*;
-import java.net.*;
-import java.util.*;
+import java.util.Hashtable;
+import java.util.Enumeration;
 
 // XXX better names: Location, URLPattern,  
 

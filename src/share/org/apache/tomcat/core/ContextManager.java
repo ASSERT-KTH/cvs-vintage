@@ -59,11 +59,12 @@
 
 package org.apache.tomcat.core;
 
-import org.apache.tomcat.util.*;
 import org.apache.tomcat.util.log.*;
-import java.io.*;
-import java.net.*;
-import java.util.*;
+
+import java.util.Hashtable;
+import java.util.Vector;
+import java.util.Enumeration;
+
 
 /**
   ContextManager is the entry point and "controler" of the servlet execution.

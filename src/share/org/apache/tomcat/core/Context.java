@@ -61,13 +61,16 @@
 package org.apache.tomcat.core;
 
 import org.apache.tomcat.util.depend.*;
-import org.apache.tomcat.util.*;
-import java.security.*;
-import java.lang.reflect.*;
+import org.apache.tomcat.util.MimeMap;
 import org.apache.tomcat.util.log.*;
-import java.io.*;
-import java.net.*;
-import java.util.*;
+
+import java.io.File;
+import java.net.FileNameMap;
+import java.net.URL;
+
+import java.util.Hashtable;
+import java.util.Vector;
+import java.util.Enumeration;
 
 
 /**

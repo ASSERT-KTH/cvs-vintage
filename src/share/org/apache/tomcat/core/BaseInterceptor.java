@@ -60,13 +60,7 @@
 
 package org.apache.tomcat.core;
 
-import org.apache.tomcat.core.*;
-import org.apache.tomcat.util.*;
 import org.apache.tomcat.util.log.*;
-import java.io.*;
-import java.net.*;
-import java.util.*;
-import java.lang.reflect.*;
 
 /** Implement "Chain of Responsiblity" pattern ( == hooks ).
  *
