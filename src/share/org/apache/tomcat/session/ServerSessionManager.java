@@ -1,8 +1,4 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/ServerSessionManager.java,v 1.5 2000/01/07 19:14:11 costin Exp $
- * $Revision: 1.5 $
- * $Date: 2000/01/07 19:14:11 $
- *
  * ====================================================================
  *
  * The Apache Software License, Version 1.1
@@ -62,9 +58,10 @@
  */ 
 
 
-package org.apache.tomcat.core;
+package org.apache.tomcat.session;
 
 import org.apache.tomcat.util.*;
+import org.apache.tomcat.core.*;
 import java.io.*;
 import java.net.*;
 import java.util.*;
@@ -77,7 +74,7 @@ import javax.servlet.http.*;
  * @author James Todd [gonzo@eng.sun.com]
  */
 
-public class ServerSessionManager {
+public class ServerSessionManager implements SessionManager {
 
     private StringManager sm =
         StringManager.getManager(Constants.Package);
@@ -137,7 +134,7 @@ public class ServerSessionManager {
 	    Cookie cookie = cookies[i]; // (Cookie)enum.nextElement();
 
 	    if (cookie.getName().equals(
-                Constants.Cookie.SESSION_COOKIE_NAME)) {
+                Constants.SESSION_COOKIE_NAME)) {
 		sessionId = cookie.getValue();
 
 		if (sessionId != null) {
@@ -151,7 +148,7 @@ public class ServerSessionManager {
 	    if (sessionId == null) {
 		sessionId = SessionIdGenerator.generateId();
 		Cookie cookie = new Cookie(
-                    Constants.Cookie.SESSION_COOKIE_NAME, sessionId);
+                    Constants.SESSION_COOKIE_NAME, sessionId);
 
 		cookie.setMaxAge(-1);
 		cookie.setPath("/");
@@ -191,7 +188,7 @@ public class ServerSessionManager {
 	sessions.remove(id);
     }
 
-    void removeApplicationSessions(Context context) {
+    public void removeSessions(Context context) {
 	Enumeration enum = sessions.keys();
 
 	while (enum.hasMoreElements()) {

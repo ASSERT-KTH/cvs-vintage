@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Request.java,v 1.12 2000/01/07 19:14:11 costin Exp $
- * $Revision: 1.12 $
- * $Date: 2000/01/07 19:14:11 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Request.java,v 1.13 2000/01/07 21:11:37 costin Exp $
+ * $Revision: 1.13 $
+ * $Date: 2000/01/07 21:11:37 $
  *
  * ====================================================================
  *
@@ -400,8 +400,8 @@ public class Request  {
 // 		    ServerSessionManager.getManager()
 // 		    .getServerSession(this, response, create);
 // 		serverSession.accessed();
-		serverSession =ServerSessionManager.getManager()
- 		    .getSession(this, response, create);
+		SessionManager sM=getContext().getSessionManager();
+		serverSession =sM.getSession(this, response, create);
  		
 	    }
 	}

@@ -94,8 +94,8 @@ public class Context {
     private ClassLoader classLoader = null;
     private String classPath = ""; // classpath used by the classloader.
     //private Hashtable sessions = new Hashtable();
-    private ServerSessionManager sessionManager =
-	ServerSessionManager.getManager();
+    // XXX XXX XXX hardcoded ! 
+    private SessionManager sessionManager;
     private ServletContextFacade contextFacade;
     private Hashtable initializationParameters = new Hashtable();
     private Hashtable attributes = new Hashtable();
@@ -488,6 +488,18 @@ public class Context {
         }
     }
 
+    public SessionManager getSessionManager() {
+	if( sessionManager==null ) {
+	    // default - will change when a better one exists
+	    sessionManager = org.apache.tomcat.session.ServerSessionManager.getManager();
+	}
+	return sessionManager;
+    }
+
+    public void setSessionManager( SessionManager manager ) {
+	sessionManager= manager;
+    }
+    
     public void shutdown() {
 	// shut down container
 
@@ -495,7 +507,7 @@ public class Context {
 
 	// shut down any sessions
 
-	sessionManager.removeApplicationSessions(this);
+	getSessionManager().removeSessions(this);
 
 	if (! isWorkDirPersistent) {
             clearDir(workDir);

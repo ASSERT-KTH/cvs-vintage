@@ -58,38 +58,58 @@
  */ 
 
 
-package org.apache.tomcat.request;
+package org.apache.tomcat.session;
 
 import org.apache.tomcat.core.*;
 import org.apache.tomcat.util.*;
-import org.apache.tomcat.deployment.*;
-import java.io.*;
-import java.net.*;
-import java.util.*;
-import javax.servlet.http.*;
 
 /**
+ * The reaper is a background thread with which ticks every minute
+ * and calls registered objects to allow reaping of old session
+ * data.
  * 
+ * @author James Duncan Davidson [duncan@eng.sun.com]
  */
-public class SessionInterceptor implements RequestInterceptor {
+
+public class Reaper extends Thread {
+
+    private static Reaper reaper;
     
-    public SessionInterceptor() {
+    static {
+	reaper = new Reaper();
     }
-	
-    public int handleRequest(Request request ) {
-	// look for session id -- cookies only right now
+    
+    static Reaper getReaper() {
+	return reaper;
+    }
 
-	SessionManager sM=request.getContext().getSessionManager();
-	HttpSession session= sM.getSession(request, request.getResponse(), false);
+    private int interval = 1000 * 60; //ms    
+    private ServerSessionManager serverSessionMgr;
+    
+    private Reaper() {
+	this.setDaemon(true);
+    }
+    
+    void setServerSessionManager(ServerSessionManager serverSessionMgr) {
+	this.serverSessionMgr = serverSessionMgr;
+    }
+    
+    public void run() {
 
-	// ServerSession session =
-	// 	    sessionManager.getServerSession(request, request.getResponse(), false);
+	// XXX
+	// eventually, to be nice, this should know when everything
+	// goes down so that it's not continuing to tick in the background
 
-	if (session != null) {
-	    sM.accessed( session );
+	while (true) {
+	    try {
+		this.sleep(interval);
+	    } catch (InterruptedException ie) {
+		// sometimes will happen
+	    }
+
+	    if (serverSessionMgr != null) {
+		serverSessionMgr.reap();
+	    }
 	}
-
-	request.setSession(session);  // may be null
-	return 0;
     }
 }

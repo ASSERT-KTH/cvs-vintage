@@ -58,11 +58,9 @@
  */ 
 
 
-package org.apache.tomcat.request;
+package org.apache.tomcat.core;
 
-import org.apache.tomcat.core.*;
 import org.apache.tomcat.util.*;
-import org.apache.tomcat.deployment.*;
 import java.io.*;
 import java.net.*;
 import java.util.*;
@@ -70,26 +68,23 @@ import javax.servlet.http.*;
 
 /**
  * 
+ * @author costin@dnt.ro
  */
-public class SessionInterceptor implements RequestInterceptor {
-    
-    public SessionInterceptor() {
-    }
-	
-    public int handleRequest(Request request ) {
-	// look for session id -- cookies only right now
+public interface SessionManager {
 
-	SessionManager sM=request.getContext().getSessionManager();
-	HttpSession session= sM.getSession(request, request.getResponse(), false);
+    /**
+     * Called by Request.getSession() to create/get a new session object.
+     * May also be called by RequestInterceptors to find the session that
+     * needs to be marked as accessed
+     */
+    public HttpSession getSession(Request request, Response response,boolean create);
 
-	// ServerSession session =
-	// 	    sessionManager.getServerSession(request, request.getResponse(), false);
+    /** Will mark the session lastAccess time.
+     *  Will be called for each request by a SessionInterceptor
+     */
+    public void accessed(HttpSession session);
 
-	if (session != null) {
-	    sM.accessed( session );
-	}
-
-	request.setSession(session);  // may be null
-	return 0;
-    }
+    /** Used by context when stoped, need to remove all sessions used by that context
+     */
+    public void removeSessions( Context ctx );
 }

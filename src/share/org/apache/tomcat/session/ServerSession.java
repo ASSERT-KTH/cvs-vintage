@@ -1,8 +1,4 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/ServerSession.java,v 1.1 1999/10/09 00:30:18 duncan Exp $
- * $Revision: 1.1 $
- * $Date: 1999/10/09 00:30:18 $
- *
  * ====================================================================
  *
  * The Apache Software License, Version 1.1
@@ -62,8 +58,9 @@
  */ 
 
 
-package org.apache.tomcat.core;
+package org.apache.tomcat.session;
 
+import org.apache.tomcat.core.*;
 import org.apache.tomcat.util.StringManager;
 import java.io.*;
 import java.net.*;

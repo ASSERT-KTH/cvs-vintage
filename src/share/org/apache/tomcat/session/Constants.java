@@ -1,8 +1,4 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/Reaper.java,v 1.2 1999/11/01 20:50:47 costin Exp $
- * $Revision: 1.2 $
- * $Date: 1999/11/01 20:50:47 $
- *
  * ====================================================================
  *
  * The Apache Software License, Version 1.1
@@ -62,57 +58,16 @@
  */ 
 
 
-package org.apache.tomcat.core;
-
-import org.apache.tomcat.util.*;
+package org.apache.tomcat.session;
 
 /**
- * The reaper is a background thread with which ticks every minute
- * and calls registered objects to allow reaping of old session
- * data.
- * 
- * @author James Duncan Davidson [duncan@eng.sun.com]
+ *
+ * @author James Todd [gonzo@eng.sun.com]
  */
 
-public class Reaper extends Thread {
+public class Constants {
 
-    private static Reaper reaper;
-    
-    static {
-	reaper = new Reaper();
-    }
-    
-    static Reaper getReaper() {
-	return reaper;
-    }
+    public static final String Package = "org.apache.tomcat.session";
 
-    private int interval = 1000 * 60; //ms    
-    private ServerSessionManager serverSessionMgr;
-    
-    private Reaper() {
-	this.setDaemon(true);
-    }
-    
-    void setServerSessionManager(ServerSessionManager serverSessionMgr) {
-	this.serverSessionMgr = serverSessionMgr;
-    }
-    
-    public void run() {
-
-	// XXX
-	// eventually, to be nice, this should know when everything
-	// goes down so that it's not continuing to tick in the background
-
-	while (true) {
-	    try {
-		this.sleep(interval);
-	    } catch (InterruptedException ie) {
-		// sometimes will happen
-	    }
-
-	    if (serverSessionMgr != null) {
-		serverSessionMgr.reap();
-	    }
-	}
-    }
+    public static final String SESSION_COOKIE_NAME = "JSESSIONID";
 }
