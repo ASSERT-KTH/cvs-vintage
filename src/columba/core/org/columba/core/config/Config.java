@@ -1,4 +1,5 @@
-//The contents of this file are subject to the Mozilla Public License Version 1.1
+// The contents of this file are subject to the Mozilla Public License Version
+// 1.1
 //(the "License"); you may not use this file except in compliance with the
 //License. You may obtain a copy of the License at http://www.mozilla.org/MPL/
 //
@@ -9,7 +10,8 @@
 //
 //The Original Code is "The Columba Project"
 //
-//The Initial Developers of the Original Code are Frederik Dietz and Timo Stich.
+//The Initial Developers of the Original Code are Frederik Dietz and Timo
+// Stich.
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003.
 //
 //All Rights Reserved.
@@ -26,44 +28,45 @@ import java.io.IOException;
 import java.util.*;
 import java.util.logging.Logger;
 
-
-
 /**
  * Main entrypoint for configuration management.
  * <p>
- * Example on how to get a {@link XmlElement} xml treenode:
- * <pre>
- * XmlElement gui = MainInterface.config.get("options").getElement("/options/gui");
- * </pre>
+ * Stores a list of all xml files in a hashtable. Hashtable key is the name of 
+ * the xml file. Value is {@link XmlIO} object.
  * <p>
- * This would address the file <b>options.xml</b>. Following a little
- * example on how this file would look like:
+ * Mail and Addressbook components are just wrappers, encapsulating this 
+ * class. Using these wrapper classes, you don't need to specify the module
+ * name (for example: mail, or addressbook) manually.
  * <p>
- * <pre>
- * <?xml version="1.0" encoding="UTF-8"?>
- *  <options>
- *   <gui enabled="true">
- *    .. your options here
- *   </gui>
- *  </options>
- * </pre>
+ * Note that all configuration file have default templates in the /res directory
+ * in package org.columba.core.config. These default configuration files are
+ * copied into the users's configuration directory the first time Columba is
+ * started.
  * <p>
- * Note that all configuration file have default templates in
- * the /res directory in package org.columba.core.config.
+ * Config creates the top-level directory for Columba's configuration in
+ * ".columba", which usually resides in the user's home directory or on
+ * older Windows versions in Columba's program folder.
  * <p>
- *
+ * Saving and loading of all configuration files is handled here, too.
+ * <p>
+ * @see org.columba.mail.config.MailConfig
+ * @see org.columba.addressbook.config.AddressbookConfig
+ *  
  * @author fdietz
  */
 public class Config {
 
     private static final String CORE_STR = "core";
-    private static final Logger LOG = Logger.getLogger("org.columba.core.config");
 
-    protected OptionsXmlConfig optionsConfig;
+    private static final Logger LOG = Logger
+            .getLogger("org.columba.core.config");
+    
     protected Map pluginList = new Hashtable();
-    protected Map templatePluginList = new Hashtable();
+
     protected File path;
+
     protected File optionsFile;
+
     protected File toolsFile;
 
     /**
@@ -99,34 +102,36 @@ public class Config {
      */
     public void init() {
         ShutdownManager.getShutdownManager().register(new Runnable() {
-                public void run() {
-                    try {
-                        save();
-                    } catch (Exception e) {
-                        LOG.severe(e.getMessage());
-                    }
+
+            public void run() {
+                try {
+                    save();
+                } catch (Exception e) {
+                    LOG.severe(e.getMessage());
                 }
-            });
+            }
+        });
 
         LOG.info("Loading configuration from " + path.toString());
 
-        registerPlugin(CORE_STR, optionsFile.getName(),
-            new OptionsXmlConfig(optionsFile));
+        registerPlugin(CORE_STR, optionsFile.getName(), new OptionsXmlConfig(
+                optionsFile));
 
-        registerPlugin(CORE_STR, toolsFile.getName(),
-            new DefaultXmlConfig(toolsFile));
+        registerPlugin(CORE_STR, toolsFile.getName(), new DefaultXmlConfig(
+                toolsFile));
 
         load();
     }
 
     /**
      * Method registerPlugin.
+     * 
      * @param moduleName
      * @param id
      * @param configPlugin
      */
     public void registerPlugin(String moduleName, String id,
-        DefaultXmlConfig configPlugin) {
+            DefaultXmlConfig configPlugin) {
         File directory;
 
         if (moduleName.equals(CORE_STR)) {
@@ -154,21 +159,9 @@ public class Config {
         addPlugin(moduleName, id, configPlugin);
     }
 
-    public void registerTemplatePlugin(String moduleName, String id,
-        DefaultXmlConfig configPlugin) {
-        String hstr = "org/columba/" + moduleName + "/config/" + id;
-        configPlugin.setURL(DiskIO.getResourceURL(hstr));
-
-        if (!templatePluginList.containsKey(moduleName)) {
-            Map map = new Hashtable();
-            templatePluginList.put(moduleName, map);
-        }
-
-        addTemplatePlugin(moduleName, id, configPlugin);
-    }
-
     /**
      * Method getPlugin.
+     * 
      * @param moduleName
      * @param id
      * @return DefaultXmlConfig
@@ -187,38 +180,16 @@ public class Config {
         return null;
     }
 
-    public DefaultXmlConfig getTemplatePlugin(String moduleName, String id) {
-        if (templatePluginList.containsKey(moduleName)) {
-            Map map = (Map) templatePluginList.get(moduleName);
-
-            if (map.containsKey(id)) {
-                DefaultXmlConfig plugin = (DefaultXmlConfig) map.get(id);
-
-                return plugin;
-            }
-        }
-
-        return null;
-    }
-
     /**
      * Method addPlugin.
+     * 
      * @param moduleName
      * @param id
      * @param configPlugin
      */
     public void addPlugin(String moduleName, String id,
-        DefaultXmlConfig configPlugin) {
+            DefaultXmlConfig configPlugin) {
         Map map = (Map) pluginList.get(moduleName);
-
-        if (map != null) {
-            map.put(id, configPlugin);
-        }
-    }
-
-    public void addTemplatePlugin(String moduleName, String id,
-        DefaultXmlConfig configPlugin) {
-        Map map = (Map) templatePluginList.get(moduleName);
 
         if (map != null) {
             map.put(id, configPlugin);
@@ -227,6 +198,7 @@ public class Config {
 
     /**
      * Method getPluginList.
+     * 
      * @return List
      */
     public List getPluginList() {
@@ -235,27 +207,6 @@ public class Config {
         for (Iterator keys = pluginList.keySet().iterator(); keys.hasNext();) {
             String key = (String) keys.next();
             Map map = (Map) pluginList.get(key);
-
-            if (map != null) {
-                for (Iterator keys2 = map.keySet().iterator(); keys2.hasNext();) {
-                    String key2 = (String) keys2.next();
-                    DefaultXmlConfig plugin = (DefaultXmlConfig) map.get(key2);
-
-                    list.add(plugin);
-                }
-            }
-        }
-
-        return list;
-    }
-
-    public List getTemplatePluginList() {
-        List list = new LinkedList();
-
-        for (Iterator keys = templatePluginList.keySet().iterator();
-                keys.hasNext();) {
-            String key = (String) keys.next();
-            Map map = (Map) templatePluginList.get(key);
 
             if (map != null) {
                 for (Iterator keys2 = map.keySet().iterator(); keys2.hasNext();) {
@@ -292,7 +243,6 @@ public class Config {
      */
     protected void load() {
         List list = getPluginList();
-        list.addAll(getTemplatePluginList());
 
         for (Iterator it = list.iterator(); it.hasNext();) {
             DefaultXmlConfig plugin = (DefaultXmlConfig) it.next();
@@ -313,6 +263,7 @@ public class Config {
 
     /**
      * Method getOptionsMainInterface.config.
+     * 
      * @return OptionsXmlConfig
      */
     public OptionsXmlConfig getOptionsConfig() {

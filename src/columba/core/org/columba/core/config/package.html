@@ -35,7 +35,29 @@ their configuration files at {@link Config}. This can be seen in the configurati
 structure of the user's configuration directory. Where mail and addressbook have their
 own folders for storing preferences.
 <p> 
-
+ Example on how to get a {@link XmlElement}xml treenode:
+  
+  <pre>
+  
+  XmlElement gui = MainInterface.config.get(&quot;options&quot;).getElement(&quot;/options/gui&quot;);
+  </pre>
+  
+  <p>
+  This would address the file <b>options.xml </b>. Following a little example
+  on how this file would look like:
+  <p>
+  
+  <pre>
+  
+   &lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+    &lt;options&gt;
+     &lt;gui enabled=&quot;true&quot;&gt;
+      .. your options here
+     &lt;/gui&gt;
+    &lt;/options&gt;
+   
+  </pre>
+  
 
 </body>
 </html>

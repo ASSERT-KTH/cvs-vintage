@@ -1,28 +1,33 @@
-//The contents of this file are subject to the Mozilla Public License Version 1.1
-//(the "License"); you may not use this file except in compliance with the 
+// The contents of this file are subject to the Mozilla Public License Version
+// 1.1
+//(the "License"); you may not use this file except in compliance with the
 //License. You may obtain a copy of the License at http://www.mozilla.org/MPL/
 //
 //Software distributed under the License is distributed on an "AS IS" basis,
-//WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License 
+//WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
 //for the specific language governing rights and
 //limitations under the License.
 //
 //The Original Code is "The Columba Project"
 //
-//The Initial Developers of the Original Code are Frederik Dietz and Timo Stich.
-//Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
+//The Initial Developers of the Original Code are Frederik Dietz and Timo
+// Stich.
+//Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003.
 //
 //All Rights Reserved.
 package org.columba.mail.config;
 
+import java.net.URL;
+
 import org.columba.core.config.DefaultItem;
+import org.columba.core.io.DiskIO;
 import org.columba.core.xml.XmlElement;
-
-import org.columba.mail.main.MailInterface;
-
+import org.columba.core.xml.XmlIO;
 
 public class AccountList extends DefaultItem {
+
     int nextUid;
+
     AccountItem defaultAccount;
 
     public AccountList(XmlElement root) {
@@ -52,11 +57,11 @@ public class AccountList extends DefaultItem {
         //XmlElement.printNode(e,"");
 
         /*
-        if ((index >= 0) && (index < list.size()))
-                return (AccountItem) list.get(index);
-
-        return null;
-        */
+         * if ((index >= 0) && (index < list.size())) return (AccountItem)
+         * list.get(index);
+         * 
+         * return null;
+         */
         return new AccountItem(e);
     }
 
@@ -68,9 +73,7 @@ public class AccountList extends DefaultItem {
 
             int u = Integer.parseInt(e.getAttribute("uid"));
 
-            if (uid == u) {
-                return new AccountItem(e);
-            }
+            if (uid == u) { return new AccountItem(e); }
         }
 
         return null;
@@ -78,7 +81,7 @@ public class AccountList extends DefaultItem {
 
     /*
      * search for PGPItem based on To headerfield
-     *
+     *  
      */
     public PGPItem getPGPItem(String to) {
         int result = -1;
@@ -93,31 +96,28 @@ public class AccountList extends DefaultItem {
 
             if (to.indexOf(id) != -1) {
                 return pgpItem;
-            } else if (id.indexOf(to) != -1) {
-                return pgpItem;
-            }
+            } else if (id.indexOf(to) != -1) { return pgpItem; }
         }
 
         return null;
     }
-    
+
     /**
      * Get account using the email address to identify it.
      * 
-     * @param address		email address
-     * @return				account item
+     * @param address
+     *            email address
+     * @return account item
      */
     public AccountItem getAccount(String address) {
-        
-        for ( int i=0; i<count(); i++) {
+
+        for (int i = 0; i < count(); i++) {
             AccountItem item = get(i);
             IdentityItem identity = item.getIdentityItem();
             String str = (String) identity.get("address");
-            if ( address.indexOf(str) != -1 )
-            {
-                // found match
-                return item;
-            }
+            if (address.indexOf(str) != -1) {
+            // found match
+            return item; }
         }
         return null;
     }
@@ -127,9 +127,7 @@ public class AccountList extends DefaultItem {
         XmlElement server;
         XmlElement identity;
 
-        if (address == null) {
-            return get(0);
-        }
+        if (address == null) { return get(0); }
 
         for (int i = 0; i < count(); i++) {
             account = getChildElement(i);
@@ -140,9 +138,8 @@ public class AccountList extends DefaultItem {
                 server = account.getElement("imapserver");
             }
 
-            if (server.getAttribute("host").equals(host)) {
-                return new AccountItem(account);
-            }
+            if (server.getAttribute("host").equals(host)) { return new AccountItem(
+                    account); }
         }
 
         for (int i = 0; i < count(); i++) {
@@ -150,42 +147,40 @@ public class AccountList extends DefaultItem {
 
             identity = account.getElement("identity");
 
-            if (identity.getAttribute("address").indexOf(address) != -1) {
-                return new AccountItem(account);
-            }
+            if (identity.getAttribute("address").indexOf(address) != -1) { return new AccountItem(
+                    account); }
         }
 
         return null;
     }
 
     /*
-    public String hostGetAccountName(String host) {
-            for (int i = 0; i < count(); i++) {
-                    AccountItem item = (AccountItem) get(i);
-                    String s = null;
-                    if (item.isPopAccount()) {
-                            PopItem pop = item.getPopItem();
-                            s = pop.getHost();
-                    } else {
-                            ImapItem imap = item.getImapItem();
-                            s = imap.getHost();
-                    }
-
-                    if (s.equals(host))
-                            return item.getName();
-            }
-
-            return null;
-    }
-    */
+     * public String hostGetAccountName(String host) { for (int i = 0; i <
+     * count(); i++) { AccountItem item = (AccountItem) get(i); String s = null;
+     * if (item.isPopAccount()) { PopItem pop = item.getPopItem(); s =
+     * pop.getHost(); } else { ImapItem imap = item.getImapItem(); s =
+     * imap.getHost(); }
+     * 
+     * if (s.equals(host)) return item.getName(); }
+     * 
+     * return null; }
+     */
     public AccountItem addEmptyAccount(String type) {
-        AccountTemplateXmlConfig template = MailInterface.config.getAccountTemplateConfig();
-
-        XmlElement emptyAccount = template.getRoot().getElement("/template/" +
-                type + "/account");
+        
+        // path to account templates for POP3/IMAP
+        String hstr = "org/columba/mail/config/account_template.xml";
+        URL url = DiskIO.getResourceURL(hstr);
+        XmlIO xmlIo = new XmlIO();
+        // load xml document
+        xmlIo.load(url);
+        XmlElement root = xmlIo.getRoot();
+        // get pop3 or imap account xml node
+        XmlElement emptyAccount = root.getElement("/template/" + type
+                + "/account");
 
         if (emptyAccount != null) {
-            AccountItem newAccount = new AccountItem((XmlElement) emptyAccount.clone());
+            AccountItem newAccount = new AccountItem((XmlElement) emptyAccount
+                    .clone());
             newAccount.set("uid", getNextUid());
             add(newAccount);
 
@@ -219,7 +214,7 @@ public class AccountList extends DefaultItem {
         return nextUid++;
     }
 
-    /**************************** default account ********************/
+    /** ************************** default account ******************* */
     public void setDefaultAccount(int uid) {
         set("default", uid);
         defaultAccount = null;
