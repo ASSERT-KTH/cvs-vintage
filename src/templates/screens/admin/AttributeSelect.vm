@@ -10,6 +10,7 @@
 #end
 #if ($canEditDomain)
     <input type="submit" value="Create new" name="eventSubmit_doCreatenewglobalattribute"/>&#160;
+    <input type="submit" value="Cancel" name="eventSubmit_doCancel"/>&#160;
 #end
 </div>
 #end

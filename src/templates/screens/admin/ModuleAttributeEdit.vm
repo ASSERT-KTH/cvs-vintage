@@ -23,6 +23,7 @@ $link.setPage("admin,ManageArtifactTypes.vm").setLabel("here") to proceed.</p>
 
 <div class="functnbar">
 <input type="submit" value="Done"  name="eventSubmit_doDone" />
+<input type="submit" value="Cancel"  name="eventSubmit_doCancel" />
 </div>
 
 <h3>Attribute Information</h3>
@@ -125,6 +126,7 @@ $link.setPage("admin,ManageArtifactTypes.vm").setLabel("here") to proceed.</p>
 #end
 <div class="functnbar2">
 <input type="submit" value="Done"  name="eventSubmit_doDone" />
+<input type="submit" value="Cancel"  name="eventSubmit_doCancel" />
 </div>
 
 $intake.declareGroups()

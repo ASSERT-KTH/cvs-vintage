@@ -17,7 +17,6 @@
 
  <div class="functnbar">
    <input type="submit" value="Submit" name="eventSubmit_doSubmit" />&#160; 
-   <input type="submit" value="Cancel" name="eventSubmit_doCancel" />
  </div>
 
  <table width="100%" border="1" cellspacing="2" cellpadding="3">
@@ -97,7 +96,6 @@
 
 <div class="functnbar2">
   <input type="submit" value="Submit" name="eventSubmit_doSubmit" />&#160; 
-  <input type="submit" value="Cancel" name="eventSubmit_doCancel" />&#160; 
   <input type="submit" value="Clear form" />
 </div>
 
