@@ -31,7 +31,7 @@ import org.gjt.sp.jedit.*;
  * Manages low-level text display tasks.
  * @since jEdit 4.2pre1
  * @author Slava Pestov
- * @version $Id: DisplayManager.java,v 1.1 2003/03/22 21:44:38 spestov Exp $
+ * @version $Id: DisplayManager.java,v 1.2 2003/03/22 23:20:30 spestov Exp $
  */
 public class DisplayManager
 {
@@ -55,7 +55,8 @@ public class DisplayManager
 		{
 			public void changed()
 			{
-				
+				System.err.println("screen line count changed: "
+					+ scrollLineCount.scrollLine);
 			}
 		};
 		offsetMgr.addAnchor(scrollLineCount);
@@ -630,16 +631,32 @@ public class DisplayManager
 	//{{{ BufferChangeHandler method
 	class BufferChangeHandler extends BufferChangeAdapter
 	{
+		boolean queuedNotifyScreenLineChanges;
+
 		public void contentInserted(Buffer buffer, int startLine,
 			int offset, int numLines, int length)
 		{
-			if(!textArea.softWrap)
-				return;
-			// not needed? move to getScrollLineCount()
-			for(int i = 0; i < numLines; i++)
+			for(int i = 0; i <= numLines; i++)
 			{
-				getScreenLineCount(i);
+				getScreenLineCount(startLine + i);
 			}
+
+			queuedNotifyScreenLineChanges = true;
+			if(!buffer.isTransactionInProgress())
+				transactionComplete(buffer);
+		}
+
+		public void contentRemoved(Buffer buffer, int startLine,
+			int offset, int numLines, int length)
+		{
+			queuedNotifyScreenLineChanges = true;
+			if(!buffer.isTransactionInProgress())
+				transactionComplete(buffer);
+		}
+
+		public void transactionComplete(Buffer buffer)
+		{
+			offsetMgr.notifyScreenLineChanges();
 		}
 	} //}}}
 }

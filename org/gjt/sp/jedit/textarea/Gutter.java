@@ -45,7 +45,7 @@ import org.gjt.sp.jedit.*;
  * @see JEditTextArea
  *
  * @author Mike Dillon and Slava Pestov
- * @version $Id: Gutter.java,v 1.33 2003/03/22 20:00:50 spestov Exp $
+ * @version $Id: Gutter.java,v 1.34 2003/03/22 23:20:30 spestov Exp $
  */
 public class Gutter extends JComponent implements SwingConstants
 {
@@ -578,7 +578,7 @@ public class Gutter extends JComponent implements SwingConstants
 		{
 			int _y = y + lineHeight / 2;
 			gfx.setColor(foldColor);
-			if(textArea.getFoldVisibilityManager()
+			if(textArea.getDisplayManager()
 				.isLineVisible(physicalLine + 1))
 			{
 				gfx.drawLine(1,_y - 3,10,_y - 3);
