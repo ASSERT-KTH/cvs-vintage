@@ -74,7 +74,7 @@ public class ScarabModulePeer
     public static Class getOMClass()
         throws Exception
     {
-        return ModuleManager.getModuleClass();
+        return ModuleManager.getOMClass();
     }
 
     /**
