@@ -4,14 +4,14 @@
  * Distributable under GPL license.
  * See terms of license at gnu.org.
  */
-package org.jboss.naming.java;
+package org.jboss.naming;
 
 import java.util.Hashtable;
 import javax.naming.*;
 import javax.naming.spi.*;
 
-import org.jnp.interfaces.NamingContext;
 import org.jnp.server.NamingServer;
+import org.jnp.interfaces.NamingContext;
 
 import org.jboss.ejb.BeanClassLoader;
 
@@ -23,29 +23,18 @@ import org.jboss.ejb.BeanClassLoader;
  *   be threadlocal
  *     
  *   @see <related>
- *   @author Rickard Öberg (rickard.oberg@telkel.com)
- *   @version $Revision: 1.3 $
+ *   @author Rickard Oberg (rickard.oberg@telkel.com)
+ *   @version $Revision: 1.1 $
  */
-public class javaURLContextFactory
+public class ENCFactory
    implements ObjectFactory
 {
    // Constants -----------------------------------------------------
     
    // Attributes ----------------------------------------------------
+   static Hashtable encs = new Hashtable();
     
    // Static --------------------------------------------------------
-   static NamingServer root;
-   
-   static
-   {
-      try
-      {
-         root = new NamingServer();
-      } catch (NamingException e)
-      {
-         e.printStackTrace();
-      }
-   }
    
    // Constructors --------------------------------------------------
    
@@ -58,7 +47,19 @@ public class javaURLContextFactory
                                 Hashtable environment)
                          throws Exception
    {
-      return new NamingContext(environment, name, root);
+      synchronized (encs)
+      {
+         // Get naming for this component
+         NamingServer srv = (NamingServer)encs.get(Thread.currentThread().getContextClassLoader());
+      
+         // If this is the first time we see this name
+         if (srv == null)
+         {
+            srv = new NamingServer();
+            encs.put(Thread.currentThread().getContextClassLoader(), srv);
+         }
+         return new NamingContext(environment, null, srv);
+      }
    }
     
    // Y overrides ---------------------------------------------------

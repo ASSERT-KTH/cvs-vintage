@@ -7,6 +7,7 @@
 package org.jboss.naming;
 
 import javax.management.*;
+import javax.naming.*;
 
 import org.jnp.server.Main;
 
@@ -18,7 +19,7 @@ import org.jboss.util.ServiceMBeanSupport;
  *      
  *   @see <related>
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
- *   @version $Revision: 1.1 $
+ *   @version $Revision: 1.2 $
  */
 public class NamingService
    extends ServiceMBeanSupport
@@ -54,6 +55,12 @@ public class NamingService
    {
       naming.start();
       log.log("Naming started on port "+naming.getPort());
+      
+      // Create "java:comp/env"
+      RefAddr refAddr = new StringRefAddr("nns", "ENC");
+      Reference envRef = new Reference("javax.naming.Context", refAddr, ENCFactory.class.getName(), null);
+      Context ctx = (Context)new InitialContext().lookup("java:");
+      ctx.rebind("comp", envRef);
    }
    
    public void destroyService()
