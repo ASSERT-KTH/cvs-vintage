@@ -53,24 +53,20 @@ import org.apache.turbine.TurbineException;
 import org.apache.turbine.pipeline.AbstractValve;
 import org.apache.turbine.ValveContext;
 import org.apache.fulcrum.mimetype.TurbineMimeTypes;
-import org.apache.log4j.Category;
 
 /**
  * This valve determines the charset to use when parsing request parameters.
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: DetermineCharsetValve.java,v 1.7 2003/03/15 21:56:58 jon Exp $
+ * @version $Id: DetermineCharsetValve.java,v 1.8 2003/03/27 23:59:27 jon Exp $
  */
 public class DetermineCharsetValve 
     extends AbstractValve
 {
-    private static final Category log = 
-        Category.getInstance(DetermineCharsetValve.class);
-        
     private static final String KEY = 
         ResetCacheValve.class.getName() + ".start";
 
-    private static final String requiredCharset = Turbine.getConfiguration().
+    private static final String REQUIRED_CHARSET = Turbine.getConfiguration().
         getString("locale.default.charset");
 
     /**
@@ -82,7 +78,7 @@ public class DetermineCharsetValve
         // if we are forcing a particular charset, use it.  Hopefully
         // client has encoded for this default. This is the same 
         // property that will force the charset in our responses.
-        String encoding = requiredCharset;   
+        String encoding = REQUIRED_CHARSET;   
 
         if (encoding == null) 
         {
