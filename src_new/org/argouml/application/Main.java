@@ -1,4 +1,4 @@
-// $Id: Main.java,v 1.76 2003/08/24 15:13:47 linus Exp $
+// $Id: Main.java,v 1.77 2003/08/27 17:50:18 linus Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -207,6 +207,15 @@ public class Main {
             }
         }
 
+	// Register the default notation.
+	org.argouml.uml.generator.GeneratorDisplay.getInstance();
+
+	// Initialize NSUML
+	MFactoryImpl.setEventPolicy(MFactoryImpl.EVENT_POLICY_IMMEDIATE);
+
+	// Initialize the UMLActions
+	Actions.getInstance();
+                
 	// The reason the gui is initialized before the commands are run
 	// is that some of the commands will use the projectbrowser.
 	st.mark("initialize gui");
@@ -501,14 +510,6 @@ public class Main {
     
     private static void initializeGUI(boolean doSplash, String themeMemory) 
     {
-	// Register the default notation.
-	org.argouml.uml.generator.GeneratorDisplay.getInstance();
-
-	MFactoryImpl.setEventPolicy(MFactoryImpl.EVENT_POLICY_IMMEDIATE);
-
-	// Initialize the UMLActions
-	Actions.getInstance();
-                
 	// initialize the correct look and feel
 	LookAndFeelMgr.SINGLETON.initializeLookAndFeel();
 	if (themeMemory != null)
