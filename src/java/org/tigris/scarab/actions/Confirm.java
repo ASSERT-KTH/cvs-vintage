@@ -74,7 +74,7 @@ import org.tigris.scarab.actions.base.ScarabTemplateAction;
  * Action.
  *   
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: Confirm.java,v 1.20 2001/10/02 23:51:40 jon Exp $
+ * @version $Id: Confirm.java,v 1.21 2001/10/08 04:08:21 jon Exp $
  */
 public class Confirm extends ScarabTemplateAction
 {
@@ -141,8 +141,13 @@ public class Confirm extends ScarabTemplateAction
                         // Intake Group
                         org.apache.fulcrum.security.entity.Group group = 
                             (org.apache.fulcrum.security.entity.Group) itr.next();
-                        group.grant((User)confirmedUser, role);
-                        ((ModuleEntity)group).save();
+                        // only give access to the non-global modules
+                        if (!group.getName()
+                            .startsWith("global" + ModuleEntity.NAME_DELIMINATOR))
+                        {
+                            group.grant((User)confirmedUser, role);
+                            ((ModuleEntity)group).save();
+                        }
                     }
                 }
                 else

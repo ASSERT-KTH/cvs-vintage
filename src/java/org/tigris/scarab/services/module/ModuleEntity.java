@@ -63,10 +63,16 @@ import org.apache.torque.util.Criteria;
  * This class describes a Module within the Scarab system
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ModuleEntity.java,v 1.18 2001/10/01 03:57:28 jmcnally Exp $
+ * @version $Id: ModuleEntity.java,v 1.19 2001/10/08 04:08:22 jon Exp $
  */
 public interface ModuleEntity
 {
+    /**
+     * The deliminator between parent/child Modules
+     * This is used to build up the getName() results.
+     */
+    public static final String NAME_DELIMINATOR = " -> ";
+
     /**
      * This method is only used by the Turbine Group interface.
      * The implementation of getName() returns a unique name for

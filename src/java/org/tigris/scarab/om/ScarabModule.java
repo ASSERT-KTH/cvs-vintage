@@ -87,7 +87,7 @@ import org.tigris.scarab.security.SecurityFactory;
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: ScarabModule.java,v 1.32 2001/10/08 04:00:25 jmcnally Exp $
+ * @version $Id: ScarabModule.java,v 1.33 2001/10/08 04:08:21 jon Exp $
  */
 public class ScarabModule
     extends BaseScarabModule
@@ -112,8 +112,6 @@ public class ScarabModule
      */
     private String name = null;
 
-    private static final String NAME_DELIMINATOR = " -> ";
-        
     /**
      * This method is an implementation of the Group.getName() method
      * and returns a module along with its parents

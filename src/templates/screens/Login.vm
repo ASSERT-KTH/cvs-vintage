@@ -8,13 +8,16 @@ $page.setTitle("Welcome to Scarab")
   <li>New users, <a href="$link.setPage("Register.vm")">register here</a>.</li>
  </ul>
 
+#set ($paramNext = $data.Parameters.getString($scarabG.Constant.NEXT_TEMPLATE))
+
 <form action="$link.setPage("Login.vm")" method="post" name="login">
   <input type="hidden" name="action" value="Login" /> 
 #if ($nextTemplate && $nextTemplate.length() > 0)
 <input type="hidden" name="$scarabG.Constant.NEXT_TEMPLATE" value="$nextTemplate" /> 
-#else 
+#elseif ($paramNext && $paramNext.length() > 0)
+<input type="hidden" name="$scarabG.Constant.NEXT_TEMPLATE" value="$paramNext" /> 
+#else
 <input type="hidden" name="$scarabG.Constant.NEXT_TEMPLATE" value="Links.vm" /> 
-<input type="hidden" name="id" value="1" /> 
 #end 
 
 #set ( $loginGroup = $intake.Login.Default )
