@@ -34,7 +34,7 @@ import org.jboss.invocation.Invocation;
 *
 *   @see <related>
 *   @author  <a href="mailto:marc@jboss.org">Marc Fleury</a>
-*   @version $Revision: 1.5 $
+*   @version $Revision: 1.6 $
 *   Revisions:
 *
 *   <p><b>Revisions:</b>
@@ -189,7 +189,8 @@ public class MarshalledInvocation
    
    public MarshalledInvocation(Invocation invocation) 
    {
-      this(invocation.payload, invocation.as_is_payload);
+      super(invocation.payload);
+      this.as_is_payload = invocation.as_is_payload;
    
    public MarshalledInvocation(Map payload) 
    {   
