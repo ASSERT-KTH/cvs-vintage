@@ -13,8 +13,8 @@
     <property file="${user.home}/scarab.build.properties" /> 
     <property file="${user.home}/build.properties" />
     <property file="${basedir}/${configuration.file}" />
-    <property file="${basedir}/default.${scarab.database.type}.properties" />
     <property file="${basedir}/default.properties" />
+    <property file="${basedir}/default.${scarab.database.type}.properties" />
 
     <property name="ant.home" value="."/>
 
@@ -330,7 +330,18 @@
                 <exclude name="**/servlet*.jar"/>
                 <exclude name="**/xalan*.jar"/>
                 <exclude name="**/${torque.zip}"/>
+                <exclude name="**/*mysql*.jar"/>
+                <exclude name="**/*postgresql*.jar"/>
+                <exclude name="**/*oracle*.jar"/>
                 <include name="**/*.jar"/>
+            </fileset>
+        </copy>
+
+        <echo>Copying ${scarab.database.type} JDBC driver from:
+    ${lib.dir}/${scarab.jdbc.driver.jar}</echo>
+        <copy todir="${build.project.webinf}/lib" filtering="no">
+            <fileset dir="${lib.dir}/">
+                <include name="**/${scarab.jdbc.driver.jar}"/>
             </fileset>
         </copy>
 
