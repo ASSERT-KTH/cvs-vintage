@@ -61,7 +61,7 @@ import org.tigris.scarab.services.module.ModuleEntity;
  * long as it does not already exist in the output directory.
  *
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: RQueryUser.java,v 1.3 2001/09/30 18:31:38 jon Exp $
+ * @version $Id: RQueryUser.java,v 1.4 2001/10/26 00:38:17 elicia Exp $
  */
 public  class RQueryUser 
     extends org.tigris.scarab.om.BaseRQueryUser
@@ -70,23 +70,13 @@ public  class RQueryUser
     /**
      * Delete the subscription.
      */
-    public void doDelete(ScarabUser user, ModuleEntity module) throws Exception
+    public void delete() throws Exception
                                                              
     { 
-        ScarabSecurity security = SecurityFactory.getInstance();
-        if (user.getUserId().equals(getUserId())
-            || security.hasPermission(ScarabSecurity.ITEM__APPROVE, user,
-                                      module))
-        {
-            Criteria c = new Criteria()
-                .add(RQueryUserPeer.USER_ID, getUserId())
-                .add(RQueryUserPeer.QUERY_ID, getQueryId());
-            RQueryUserPeer.doDelete(c);
-        }
-        else
-        {
-            throw new ScarabException(ScarabConstants.NO_PERMISSION_MESSAGE);
-        }
+        Criteria c = new Criteria()
+            .add(RQueryUserPeer.USER_ID, getUserId())
+            .add(RQueryUserPeer.QUERY_ID, getQueryId());
+        RQueryUserPeer.doDelete(c);
     }
     
 }
