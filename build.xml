@@ -36,7 +36,7 @@
 	</target>
 
 	<target name="init">
-		<echo message="you are runnning java version ${ant.java.version}"/>
+		<echo message="you are running java version ${ant.java.version}"/>
 		<mkdir dir="${dest}"/>
 	</target>
 	
