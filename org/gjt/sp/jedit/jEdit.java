@@ -45,7 +45,7 @@ import org.gjt.sp.util.Log;
 /**
  * The main class of the jEdit text editor.
  * @author Slava Pestov
- * @version $Id: jEdit.java,v 1.158 2003/05/06 20:24:34 spestov Exp $
+ * @version $Id: jEdit.java,v 1.159 2003/05/07 03:35:31 spestov Exp $
  */
 public class jEdit
 {
@@ -2903,7 +2903,7 @@ public class jEdit
 	//{{{ initResources() method
 	private static void initResources()
 	{
-		builtInActionSet = new ActionSet(null,null,
+		builtInActionSet = new ActionSet(null,null,null,
 			jEdit.class.getResource("actions.xml"));
 		builtInActionSet.setLabel(getProperty("action-set.jEdit"));
 		builtInActionSet.load();
