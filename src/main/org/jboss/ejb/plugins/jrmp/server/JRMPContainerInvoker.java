@@ -65,7 +65,7 @@ import org.w3c.dom.Element;
 *  @author <a href="mailto:jplindfo@cc.helsinki.fi">Juha Lindfors</a>
 *  @author <a href="mailto:osh@sparre.dk">Ole Husgaard</a>
 *  @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>
-*  @version $Revision: 1.46 $
+*  @version $Revision: 1.47 $
 */
 public class JRMPContainerInvoker
    extends RemoteServer
@@ -603,7 +603,8 @@ public class JRMPContainerInvoker
       // Create delegate depending on JDK version
       if (jdk122)
       {
-         ciDelegate = new org.jboss.ejb.plugins.jrmp12.server.JRMPContainerInvoker(this);
+          throw new Error("You need a 1.3 JVM (Proxy package) to run JBoss, you are running a 1.2.2 or earlier version");
+         //ciDelegate = new org.jboss.ejb.plugins.jrmp12.server.JRMPContainerInvoker(this);
       } else
       {
          ciDelegate = new org.jboss.ejb.plugins.jrmp13.server.JRMPContainerInvoker(this);
