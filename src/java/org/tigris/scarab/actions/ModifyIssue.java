@@ -94,7 +94,7 @@ import org.tigris.scarab.util.ScarabConstants;
     This class is responsible for edit issue forms.
     ScarabIssueAttributeValue
     @author <a href="mailto:elicia@collab.net">Elicia David</a>
-    @version $Id: ModifyIssue.java,v 1.31 2001/09/07 00:35:38 jmcnally Exp $
+    @version $Id: ModifyIssue.java,v 1.32 2001/09/11 00:02:31 elicia Exp $
 */
 public class ModifyIssue extends TemplateAction
 {
@@ -343,6 +343,36 @@ public class ModifyIssue extends TemplateAction
                           .getString(ScarabConstants.NEXT_TEMPLATE, "ViewIssue");
         setTarget(data, template);            
    } 
+
+    /**
+    *  Edits a comment.
+    */
+   public void doEditcomment (RunData data, TemplateContext context )
+        throws Exception
+    {                          
+        ParameterParser params = data.getParameters();
+        Object[] keys = params.getKeys();
+        String key;
+        String attachmentId;
+        String newComment = null;
+        ScarabUser user = (ScarabUser)data.getUser();
+        String id = data.getParameters().getString("id");
+        Issue issue = (Issue) IssuePeer.retrieveByPK(new NumberKey(id));
+
+        for (int i =0; i<keys.length; i++)
+        {
+            key = keys[i].toString();
+            if (key.startsWith("edit_comment"))
+            {
+               attachmentId = key.substring(13);
+               newComment = params.getString(key);
+               Attachment attachment = (Attachment) AttachmentPeer
+                                     .retrieveByPK(new NumberKey(attachmentId));
+               attachment.setDataAsString(newComment);
+               attachment.save();
+            }
+        }
+    }
 
     /**
     *  Deletes an url.
