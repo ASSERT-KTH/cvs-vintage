@@ -17,16 +17,20 @@
 //All Rights Reserved.
 package org.columba.mail.folder.headercache;
 
+import java.io.InputStream;
+import java.util.Arrays;
+import java.util.Enumeration;
+import java.util.List;
+import java.util.Vector;
+
 import org.columba.core.logging.ColumbaLogger;
 import org.columba.core.util.Mutex;
-
 import org.columba.mail.config.FolderItem;
 import org.columba.mail.folder.LocalFolder;
 import org.columba.mail.folder.command.MarkMessageCommand;
 import org.columba.mail.message.ColumbaHeader;
 import org.columba.mail.message.ColumbaMessage;
 import org.columba.mail.message.HeaderList;
-
 import org.columba.ristretto.message.Flags;
 import org.columba.ristretto.message.Header;
 import org.columba.ristretto.message.Message;
@@ -34,12 +38,6 @@ import org.columba.ristretto.message.io.CharSequenceSource;
 import org.columba.ristretto.message.io.Source;
 import org.columba.ristretto.parser.HeaderParser;
 import org.columba.ristretto.parser.MessageParser;
-
-import java.io.InputStream;
-
-import java.util.Enumeration;
-import java.util.List;
-import java.util.Vector;
 
 
 /**
@@ -327,7 +325,8 @@ public abstract class CachedFolder extends LocalFolder {
         throws Exception {
         ColumbaHeader h = (ColumbaHeader) getCachedHeaderList().get(uid);
         Flags flags = getFlags(uid);
-
+        if ( flags == null ) return;
+        
         switch (variant) {
         case MarkMessageCommand.MARK_AS_READ: {
             if (flags.getRecent()) {
@@ -587,12 +586,19 @@ public abstract class CachedFolder extends LocalFolder {
         // -> complete message source
         boolean parsingNeeded = false;
 
+        // cached headerfield list
+        List list = Arrays.asList(CachedHeaderfields.getCachedHeaderfieldArray());
+             
         for (int i = 0; i < keys.length; i++) {
             if (header.get(keys[i]) != null) {
                 // headerfield found
                 result.set(keys[i], header.get(keys[i]));
             } else {
-                parsingNeeded = true;
+                // check if this headerfield is in the cache
+                // -> if its not a cached headerfield, we need to fetch it
+                
+                if ( !list.contains(keys[i]) )
+                    parsingNeeded = true;
             }
         }
 

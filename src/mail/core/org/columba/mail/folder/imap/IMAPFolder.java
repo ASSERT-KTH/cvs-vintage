@@ -20,12 +20,19 @@
 //
 package org.columba.mail.folder.imap;
 
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Enumeration;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+
 import org.columba.core.command.StatusObservable;
 import org.columba.core.io.StreamUtils;
 import org.columba.core.logging.ColumbaLogger;
 import org.columba.core.util.ListTools;
 import org.columba.core.xml.XmlElement;
-
 import org.columba.mail.config.FolderItem;
 import org.columba.mail.config.ImapItem;
 import org.columba.mail.filter.Filter;
@@ -34,6 +41,7 @@ import org.columba.mail.folder.MailboxInterface;
 import org.columba.mail.folder.RemoteFolder;
 import org.columba.mail.folder.RootFolder;
 import org.columba.mail.folder.command.MarkMessageCommand;
+import org.columba.mail.folder.headercache.CachedHeaderfields;
 import org.columba.mail.folder.headercache.RemoteHeaderCache;
 import org.columba.mail.folder.search.DefaultSearchEngine;
 import org.columba.mail.folder.search.IMAPQueryEngine;
@@ -42,7 +50,6 @@ import org.columba.mail.message.ColumbaHeader;
 import org.columba.mail.message.ColumbaMessage;
 import org.columba.mail.message.HeaderList;
 import org.columba.mail.util.MailResourceLoader;
-
 import org.columba.ristretto.imap.IMAPFlags;
 import org.columba.ristretto.message.Flags;
 import org.columba.ristretto.message.Header;
@@ -52,14 +59,6 @@ import org.columba.ristretto.message.MimeTree;
 import org.columba.ristretto.message.StreamableMimePart;
 import org.columba.ristretto.message.io.Source;
 import org.columba.ristretto.message.io.SourceInputStream;
-
-import java.io.InputStream;
-
-import java.util.ArrayList;
-import java.util.Enumeration;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
 
 
 public class IMAPFolder extends RemoteFolder {
@@ -557,7 +556,8 @@ public class IMAPFolder extends RemoteFolder {
         throws Exception {
         ColumbaHeader h = (ColumbaHeader) cache.getHeaderList().get(uid);
         Flags flags = getFlags(uid);
-
+        if ( flags == null ) return;
+        
         switch (variant) {
         case MarkMessageCommand.MARK_AS_READ: {
             if (flags.getRecent()) {
@@ -884,12 +884,21 @@ public class IMAPFolder extends RemoteFolder {
         // -> missing headerfields
         boolean parsingNeeded = false;
 
+
+        // cached headerfield list
+        List list = Arrays.asList(CachedHeaderfields.getCachedHeaderfieldArray());
+        
         for (int i = 0; i < keys.length; i++) {
             if (header.get(keys[i]) != null) {
                 // headerfield found
                 result.set(keys[i], header.get(keys[i]));
             } else {
-                parsingNeeded = true;
+                
+                // check if this headerfield is in the cache
+                // -> if its not a cached headerfield, we need to fetch it
+                
+                if ( !list.contains(keys[i]) )
+                    parsingNeeded = true;
             }
         }
 
