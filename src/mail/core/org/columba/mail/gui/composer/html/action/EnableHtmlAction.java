@@ -25,12 +25,9 @@ import org.columba.mail.main.MailInterface;
 import org.columba.mail.util.MailResourceLoader;
 
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 import java.util.Observable;
 import java.util.Observer;
-
-import javax.swing.JCheckBoxMenuItem;
 
 /**
  * CheckBox menu item for switching between HTML and text messages.
@@ -40,8 +37,7 @@ import javax.swing.JCheckBoxMenuItem;
  *
  * @author fdietz, Karl Peder Olesen
  */
-public class EnableHtmlAction extends AbstractSelectableAction implements ActionListener,
-    Observer {
+public class EnableHtmlAction extends AbstractSelectableAction implements Observer {
     /**
      * @param frameMediator
      * @param name
