@@ -1,18 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<jaws>
-    <datasource>java:/DefaultDS</datasource>
-    <type-mapping>Hypersonic SQL</type-mapping>
-    <debug>true</debug>
-
-    <default-entity>
-       <create-table>true</create-table>
-       <remove-table>false</remove-table>
-       <tuned-updates>false</tuned-updates>
-       <read-only>false</read-only>
-       <time-out>300</time-out>
-       <select-for-update>false</select-for-update>
-    </default-entity>
-
+<jbosscmp-jdbc>
+	
+	<defaults>
+		<datasource>java:/DefaultDS</datasource>
+		<type-mapping>Hypersonic SQL</type-mapping>
+		<debug>true</debug>
+		
+		<create-table>true</create-table>
+		<remove-table>false</remove-table>
+		<read-only>false</read-only>
+		<time-out>300</time-out>
+		<select-for-update>false</select-for-update>
+		<preferred-relation-mapping>foreign-key</preferred-relation-mapping>
+	</defaults>
+	
     <type-mappings>
         <type-mapping>
             <name>InterBase</name>
@@ -1245,4 +1246,4 @@
       </type-mapping> 
 
     </type-mappings>
-</jaws>
+</jbosscmp-jdbc>
