@@ -32,7 +32,6 @@ import javax.swing.JTextField;
 
 import org.columba.addressbook.folder.ContactCard;
 import org.columba.addressbook.gui.util.LabelTextFieldPanel;
-import org.columba.core.util.Compatibility;
 
 public class FullNameDialog extends JDialog implements ActionListener
 {
@@ -52,34 +51,22 @@ public class FullNameDialog extends JDialog implements ActionListener
 	JTextField suffixTextField;
 	
 	JButton okButton;
-	
 	JButton changeButton;
-	
 	
 	IdentityPanel identityPanel;
 	
 	public FullNameDialog( JDialog frame, IdentityPanel identityPanel )
 	{
-	
 		super(frame, true);
-	
 		this.identityPanel = identityPanel;
-			
 		initComponents();
-		
 		pack();
-		
-		//		for jdk1.3 compatibility, this is called dynamically
-		Compatibility.simpleSetterInvoke(
-			this,
-			"setLocationRelativeTo",
-			Component.class,
-			null);
+                setLocationRelativeTo(null);
 	}
 	
 	public void updateComponents( ContactCard card, boolean b )
 	{
-		if ( b == true )
+		if (b)
 		{
 			titleTextField.setText( card.get("n","prefix") );
 			lastnameTextField.setText( card.get("n","family") );
@@ -156,15 +143,12 @@ public class FullNameDialog extends JDialog implements ActionListener
 	public void actionPerformed(ActionEvent event)
 	{
 		String action = event.getActionCommand();
-
 		if (action.equals("OK"))
 		{
 			setVisible(false);
-			
 			if ( identityPanel.fnIsEmpty() == true )
 				setFormattedName();
 		}
-		
 		else if (action.equals("CHANGE"))
 		{
 			setFormattedName();	
@@ -191,5 +175,4 @@ public class FullNameDialog extends JDialog implements ActionListener
 		
 		identityPanel.setFn( buf.toString() );
 	}
-	
 }
