@@ -7,8 +7,8 @@ The DOCTYPE is:
       "-//JBoss//DTD JBOSS 3.2//EN"
       "http://www.jboss.org/j2ee/dtd/jboss_3_2.dtd">
 
-$Id: jboss_3_2.dtd,v 1.5 2004/05/21 03:43:08 ejort Exp $
-$Revision: 1.5 $
+$Id: jboss_3_2.dtd,v 1.6 2004/05/21 17:40:02 ejort Exp $
+$Revision: 1.6 $
 
 Overview of the architecture of jboss.xml
 
@@ -349,7 +349,7 @@ jnp-context?)>
 
   Used in: enterprise-beans
 -->
-<!ELEMENT entity (ejb-name , jndi-name? , local-jndi-name? call-by-value? , read-only? ,
+<!ELEMENT entity (ejb-name , jndi-name? , local-jndi-name? , call-by-value? , read-only? ,
  configuration-name? , invoker-bindings?, security-proxy? , ejb-ref* , ejb-local-ref* , resource-ref* ,
  resource-env-ref* , method-attributes? , clustered? , cluster-config?,
  cache-invalidation? , cache-invalidation-config?, depends*)>
