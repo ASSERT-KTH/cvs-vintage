@@ -28,7 +28,9 @@ import javax.swing.JPanel;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
+import org.columba.core.gui.util.CheckBoxWithMnemonic;
 import org.columba.core.gui.util.DefaultFormBuilder;
+import org.columba.core.gui.util.LabelWithMnemonic;
 import org.columba.mail.config.AccountItem;
 import org.columba.mail.config.IdentityItem;
 import org.columba.mail.config.MailConfig;
@@ -133,82 +135,102 @@ public class IdentityPanel extends DefaultPanel implements ActionListener {
 
 	protected void initComponents() {
 		accountnameLabel =
-			new JLabel(
+			new LabelWithMnemonic(
 				MailResourceLoader.getString(
 					"dialog",
 					"account",
 					"identity_accountname"));
+					
+		/*
 		accountnameLabel.setDisplayedMnemonic(
 			MailResourceLoader.getMnemonic(
 				"dialog",
 				"account",
 				"identity_accountname"));
+				*/
 		accountnameTextField = new JTextField();
 		accountnameLabel.setLabelFor(accountnameTextField);
 		defaultAccountCheckBox =
-			new JCheckBox(
+			new CheckBoxWithMnemonic(
 				MailResourceLoader.getString(
 					"dialog",
 					"account",
 					"defaultaccount"));
+		/*
 		defaultAccountCheckBox.setMnemonic(
 			MailResourceLoader.getMnemonic(
 				"dialog",
 				"account",
 				"defaultaccount"));
+		*/
+		
 		nameLabel =
-			new JLabel(
+			new LabelWithMnemonic(
 				MailResourceLoader.getString("dialog", "account", "yourname"));
+		/*
 		nameLabel.setDisplayedMnemonic(
 			MailResourceLoader.getMnemonic("dialog", "account", "yourname"));
+		*/
+		
 		nameTextField = new JTextField();
 		nameLabel.setLabelFor(nameTextField);
 		addressLabel =
-			new JLabel(
+			new LabelWithMnemonic(
 				MailResourceLoader.getString("dialog", "account", "address"));
+		/*
 		addressLabel.setDisplayedMnemonic(
 			MailResourceLoader.getMnemonic("dialog", "account", "address"));
+		*/
 		addressTextField = new JTextField();
 		addressLabel.setLabelFor(addressTextField);
 		replyaddressLabel =
-			new JLabel(
+			new LabelWithMnemonic(
 				MailResourceLoader.getString(
 					"dialog",
 					"account",
 					"replytoaddress"));
+		/*
 		replyaddressLabel.setDisplayedMnemonic(
 			MailResourceLoader.getMnemonic(
 				"dialog",
 				"account",
 				"replytoaddress"));
+		*/
+		
 		organisationLabel =
-			new JLabel(
+			new LabelWithMnemonic(
 				MailResourceLoader.getString(
 					"dialog",
 					"account",
 					"organisation"));
+					
+		/*
 		organisationLabel.setDisplayedMnemonic(
 			MailResourceLoader.getMnemonic(
 				"dialog",
 				"account",
 				"organisation"));
+		*/
+		
 		replyaddressTextField = new JTextField();
 		replyaddressLabel.setLabelFor(replyaddressTextField);
 		organisationTextField = new JTextField();
 		organisationLabel.setLabelFor(organisationTextField);
 
 		attachsignatureCheckBox =
-			new JCheckBox(
+			new CheckBoxWithMnemonic(
 				MailResourceLoader.getString(
 					"dialog",
 					"account",
 					"attachthissignature"));
+		/*
 		attachsignatureCheckBox.setMnemonic(
 			MailResourceLoader.getMnemonic(
 				"dialog",
 				"account",
 				"attachthissignature"));
-
+		*/
+		
 		selectSignatureButton = new JButton("~/.signature");
 		selectSignatureButton.setActionCommand("CHOOSE");
 		selectSignatureButton.addActionListener(this);

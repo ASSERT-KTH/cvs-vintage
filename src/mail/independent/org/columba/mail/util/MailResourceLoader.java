@@ -41,12 +41,21 @@ public class MailResourceLoader extends GlobalResourceLoader {
 			sID);
 	}
 
+	/**
+	 * 
+	 * @deprecated
+	 */
 	public static char getMnemonic(String sPath, String sName, String sID) {
 		return GlobalResourceLoader.getMnemonic(
 			generateBundlePath(MAIL_RESOURCE_PATH, sPath),
 			sName,
 			sID);
 	}
+	
+	/**
+	 * 
+	 * @deprecated
+	 */
 	public static char getMnemonic(String sName, String sID) {
 		return GlobalResourceLoader.getMnemonic(
 			generateBundlePath(MAIL_RESOURCE_PATH, sName),

@@ -46,6 +46,7 @@ import javax.swing.event.ListSelectionListener;
 import net.javaprog.ui.wizard.plaf.basic.SingleSideEtchedBorder;
 
 import org.columba.core.config.Config;
+import org.columba.core.gui.util.ButtonWithMnemonic;
 import org.columba.core.gui.util.DialogStore;
 import org.columba.core.help.HelpManager;
 import org.columba.core.main.MainInterface;
@@ -157,30 +158,40 @@ public class ConfigFrame
 		mainPanel.setBorder(border2);
 		*/
 
-		addButton = new JButton(MailResourceLoader.getString("dialog", "account", "addaccount")); //$NON-NLS-1$
+		addButton = new ButtonWithMnemonic(MailResourceLoader.getString("dialog", "account", "addaccount")); //$NON-NLS-1$
+		/*
 		addButton.setMnemonic(
 			MailResourceLoader.getMnemonic("dialog", "account", "addacount"));
+			*/
+			
 		//addButton.setIcon( ImageLoader.getImageIcon("stock_add_16.png") );
 		addButton.setActionCommand("ADD"); //$NON-NLS-1$
 		addButton.addActionListener(this);
 
-		removeButton = new JButton(MailResourceLoader.getString("dialog", "account", "removeaccount")); //$NON-NLS-1$
+		removeButton = new ButtonWithMnemonic(MailResourceLoader.getString("dialog", "account", "removeaccount")); //$NON-NLS-1$
+		
+		/*
 		removeButton.setMnemonic(
 			MailResourceLoader.getMnemonic(
 				"dialog",
 				"account",
 				"removeacount"));
+				*/
+				
 		removeButton.setActionCommand("REMOVE"); //$NON-NLS-1$
 		//removeButton.setIcon( ImageLoader.getImageIcon("stock_remove_16.png") );
 		removeButton.setEnabled(false);
 		removeButton.addActionListener(this);
 
-		editButton = new JButton(MailResourceLoader.getString("dialog", "account", "editsettings")); //$NON-NLS-1$
-		editButton.setMnemonic(
+		editButton = new ButtonWithMnemonic(MailResourceLoader.getString("dialog", "account", "editsettings")); //$NON-NLS-1$
+		/*
+		 editButton.setMnemonic(
 			MailResourceLoader.getMnemonic(
 				"dialog",
 				"account",
 				"editsettings"));
+				*/
+				
 		editButton.setActionCommand("EDIT"); //$NON-NLS-1$
 		//editButton.setIcon( ImageLoader.getImageIcon("stock_properties_16.png") );
 		editButton.setEnabled(false);

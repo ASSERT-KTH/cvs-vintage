@@ -255,6 +255,16 @@ public class GlobalResourceLoader {
 		}
 	}
 
+	/**
+	 * Return mnemonic.
+	 * 
+	 * @param sPath
+	 * @param sName
+	 * @param sID
+	 * @return
+	 * 
+	 * @deprecated
+	 */
 	public static char getMnemonic(String sPath, String sName, String sID) {
 		/*
 			Example: MailResourceLoader.getMnemonic("dialog", "filter", "chose_folder");
