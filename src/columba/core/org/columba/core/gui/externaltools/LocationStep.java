@@ -17,6 +17,8 @@ package org.columba.core.gui.externaltools;
 
 import java.awt.BorderLayout;
 import java.awt.Font;
+import java.awt.FlowLayout;
+import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
@@ -33,6 +35,7 @@ import net.javaprog.ui.wizard.DataLookup;
 import net.javaprog.ui.wizard.DataModel;
 
 import org.columba.core.externaltools.AbstractExternalToolsPlugin;
+import org.columba.core.gui.util.ButtonWithMnemonic;
 import org.columba.core.gui.util.LabelWithMnemonic;
 import org.columba.core.gui.util.MultiLineLabel;
 import org.columba.core.gui.util.WizardTextField;
@@ -45,12 +48,10 @@ import org.columba.core.gui.util.WizardTextField;
  * 
  * @author fdietz
  */
-public class LocationStep extends AbstractStep implements ActionListener {
+class LocationStep extends AbstractStep implements ActionListener {
 
 	protected DataModel data;
-
 	protected JButton sourceButton;
-
 	protected File sourceFile;
 
 	/**
@@ -59,7 +60,7 @@ public class LocationStep extends AbstractStep implements ActionListener {
 	 */
 	public LocationStep(DataModel data) {
 		// TODO: i18n
-		super("Location", "Location Description");
+		super("Determine location", "Specify the location of the tool's executable");
 
 		this.data = data;
 
@@ -76,9 +77,7 @@ public class LocationStep extends AbstractStep implements ActionListener {
 	 * @see net.javaprog.ui.wizard.AbstractStep#createComponent()
 	 */
 	protected JComponent createComponent() {
-
-		JPanel panel = new JPanel();
-		panel.setLayout(new BorderLayout());
+		JPanel panel = new JPanel(new BorderLayout());
 
 		AbstractExternalToolsPlugin plugin =
 			(AbstractExternalToolsPlugin) data.getData("Plugin");
@@ -94,50 +93,32 @@ public class LocationStep extends AbstractStep implements ActionListener {
 				new LabelWithMnemonic("Choose &Location:");
 			middlePanel.add(sourceLabel);
 
-			sourceButton = new JButton("Browse...");
+			sourceButton = new ButtonWithMnemonic("&Browse...");
 			sourceLabel.setLabelFor(sourceButton);
 			sourceButton.addActionListener(this);
 			middlePanel.add(sourceButton);
 
 			panel.add(middlePanel, BorderLayout.CENTER);
 		} else {
+			JPanel northPanel = new JPanel(new GridLayout(2, 1, 0, 15));
 			MultiLineLabel label =
 				new MultiLineLabel("Successfully detected external tool. Just press the finish button to end the configuration.");
+			northPanel.add(label);
 
-			JLabel label2 = new JLabel(sourceFile.getPath());
+			JPanel sourceFilePanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 20, 0));
+                        JLabel label2 = new JLabel(sourceFile.getPath());
 			Font font = (Font) UIManager.getFont("Label.font");
 			font = font.deriveFont(Font.BOLD);
 			label2.setFont(font);
-			JPanel p = new JPanel();
-			p.setLayout(new BorderLayout(0, 10));
-			p.add(label, BorderLayout.NORTH);
-			p.add(label2, BorderLayout.CENTER);
+			sourceFilePanel.add(label2);
 
-			panel.add(p, BorderLayout.NORTH);
-
-			JPanel bottom = new JPanel();
-			bottom.setLayout( new BorderLayout(0,5) );
-			
-			WizardTextField middlePanel = new WizardTextField();
-			LabelWithMnemonic sourceLabel =
-				new LabelWithMnemonic("Choose &Location:");
-			middlePanel.add(sourceLabel);
-
-			sourceButton = new JButton("Browse...");
-			sourceLabel.setLabelFor(sourceButton);
+			sourceButton = new ButtonWithMnemonic("&Change...");
 			sourceButton.addActionListener(this);
-			middlePanel.add(sourceButton);
-
-			bottom.add( middlePanel, BorderLayout.CENTER);
-			
-			MultiLineLabel l = new MultiLineLabel("If you wish to, you can overwrite these settings manually here:");
-			bottom.add(l, BorderLayout.NORTH);
-			
-			panel.add(bottom, BorderLayout.SOUTH);
-
-			updateCanFinish();
+                        sourceFilePanel.add(sourceButton);
+                        
+                        northPanel.add(sourceFilePanel);
+			panel.add(northPanel, BorderLayout.NORTH);
 		}
-
 		return panel;
 	}
 
@@ -145,7 +126,9 @@ public class LocationStep extends AbstractStep implements ActionListener {
 	 * @see net.javaprog.ui.wizard.Step#prepareRendering()
 	 */
 	public void prepareRendering() {
-
+                // init component before querying for sourceFile
+                getComponent();
+		updateCanFinish();
 	}
 
 	protected void updateCanFinish() {
@@ -166,9 +149,7 @@ public class LocationStep extends AbstractStep implements ActionListener {
 				sourceButton.setText(sourceFile.getPath());
 
 			}
-
 			updateCanFinish();
 		}
 	}
-
 }
