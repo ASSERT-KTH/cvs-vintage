@@ -20,7 +20,7 @@ import org.w3c.dom.NodeList;
 /** The configuration information for an EJB container.
  *   @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
  *   @author <a href="mailto:scott.stark@jboss.org">Scott Stark</a>
- *   @version $Revision: 1.33 $
+ *   @version $Revision: 1.34 $
  *
  *  <p><b>Revisions:</b><br>
  *  <p><b>2001/08/02: marcf</b>
@@ -199,8 +199,9 @@ public class ConfigurationMetaData extends MetaData
 
       commitOption = stringToCommitOption(commit);
 
-      //get the refresh rate for option D
-      String refresh = getElementContent(getOptionalChild(element, "optiond-refresh-rate"), Long.toString(optionDRefreshRate));
+      //get the refresh rate for option D which is specified in seconds
+      String refresh = getElementContent(getOptionalChild(element, "optiond-refresh-rate"),
+         Long.toString(optionDRefreshRate / 1000));
       optionDRefreshRate = stringToRefreshRate(refresh);
 
       // the classes which can understand the following are dynamically loaded during deployment :
@@ -249,7 +250,13 @@ public class ConfigurationMetaData extends MetaData
       throw new DeploymentException("Invalid commit option: '" + commitOption + "'");
    }
 
-   private static long stringToRefreshRate(String refreshRate) throws DeploymentException
+   /** Parse the refresh rate string into a long
+    * @param refreshRate in seconds
+    * @return refresh rate in milliseconds suitable for use in Thread.sleep
+    * @throws DeploymentException on failure to parse refreshRate as a long
+    */
+   private static long stringToRefreshRate(String refreshRate)
+      throws DeploymentException
    {
       try
       {
@@ -259,7 +266,8 @@ public class ConfigurationMetaData extends MetaData
          return rate;
       } catch ( Exception e)
       {
-         throw new DeploymentException("Invalid optiond-refresh-rate \"" + refreshRate + "\". Should be a number"); 
+         throw new DeploymentException("Invalid optiond-refresh-rate '"
+            + refreshRate + "'. Should be a number"); 
       }
 
    }
