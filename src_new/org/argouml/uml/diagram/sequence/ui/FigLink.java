@@ -1,4 +1,4 @@
-// $Id: FigLink.java,v 1.4 2004/02/29 12:35:43 linus Exp $
+// $Id: FigLink.java,v 1.5 2004/03/08 07:07:50 linus Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -47,7 +47,8 @@ public abstract class FigLink
 
     /**
      * Contructs a new figlink and sets the owner of the figlink.
-     * @param owner
+     *
+     * @param owner is the owner.
      */
     public FigLink(Object owner) {
         super();
@@ -116,17 +117,17 @@ public abstract class FigLink
             if (_useNearest) {
                 if (p.getNumPoints() == 2) {
                     //? two iterations of refinement, maybe should be a for-loop
-                    srcPt = getSourcePortFig().connectionPoint(p.getPoints(1));
+                    srcPt = getSourcePortFig().connectionPoint(p.getPoint(1));
                     dstPt =
                         getDestPortFig().connectionPoint(
-                            p.getPoints(p.getNumPoints() - 2));
+                            p.getPoint(p.getNumPoints() - 2));
                     srcPt = getSourcePortFig().connectionPoint(dstPt);
                     dstPt = getDestPortFig().connectionPoint(srcPt);
                 } else {
-                    srcPt = getSourcePortFig().connectionPoint(p.getPoints(1));
+                    srcPt = getSourcePortFig().connectionPoint(p.getPoint(1));
                     dstPt =
                         getDestPortFig().connectionPoint(
-                            p.getPoints(p.getNumPoints() - 2));
+                            p.getPoint(p.getNumPoints() - 2));
                 }
             }
             setEndPoints(srcPt, dstPt);

@@ -1,4 +1,4 @@
-// $Id: FigLinkPort.java,v 1.2 2004/02/29 12:35:43 linus Exp $
+// $Id: FigLinkPort.java,v 1.3 2004/03/08 07:07:50 linus Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -55,7 +55,7 @@ public class FigLinkPort extends FigLine {
      * </ul>
      */
     public static final int ACTIVATION_CUTOFF_STATUS = 1;
-	
+
     /**
      * If a figlinkport has this activation status, the activation to
      * which it is attached will not be cutt off. The following type
@@ -72,19 +72,19 @@ public class FigLinkPort extends FigLine {
      * </ul>
      */
     public static final int ACTIVATION_CONTINUOUS_STATUS = 2;
-	
+
     private int _activationStatus;
 
     /**
      * Creates a new horizontal FigLinkPort that's not displayed
      *
-     * @param x
-     * @param y
-     * @param x2
+     * @param x first x coordinate.
+     * @param y y coordinate.
+     * @param x2 second x coordinate.
      */
     public FigLinkPort(int x, int y, int x2) {
         super(x, y, x2, y);
-        setDisplayed(false);
+        setVisible(false);
     }
 
     /**
@@ -111,8 +111,9 @@ public class FigLinkPort extends FigLine {
      * indicate if the activation to which this figlinkport is
      * attached should continue after the y-coordinate of this
      * figlinkport or should be terminated (cut off) after this
-     * y-coordinate.
-     * @param i
+     * y-coordinate.<p>
+     *
+     * @param i is the new activation status.
      */
     public void setActivationStatus(int i) {
         _activationStatus = i;
