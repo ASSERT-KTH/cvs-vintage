@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE actionlist SYSTEM "actions.dtd">
 
 <actionlist>
  <action name="Move Message" main_class="org.columba.mail.filter.plugins.MoveMessageAction" gui_class="org.columba.mail.gui.config.filter.plugins.FolderChooserActionRow" />

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!ELEMENT actionlist (action+)>
+
+<!ELEMENT action EMPTY>
+<!ATTLIST action
+ name CDATA #REQUIRED
+ main_class CDATA #REQUIRED
+ gui_class CDATA #REQUIRED
+>

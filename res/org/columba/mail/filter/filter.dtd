@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!ELEMENT filterlist (filter+)>
+<!ATTLIST filterlist
+ type (local|remote) #REQUIRED
+>
+
+<!ELEMENT filter EMPTY>
+<!ATTLIST filter
+ name CDATA #REQUIRED
+ main_class CDATA #REQUIRED
+ gui_class CDATA #REQUIRED
+>
