@@ -44,7 +44,10 @@
         </ant:fileset>
         <ant:fileset dir="build/">
             <ant:include name="*.log"/>
-        </ant:fileset>        
+        </ant:fileset>    
+        <ant:fileset dir="src/test/logs">
+            <ant:include name="*.log"/>
+        </ant:fileset>     
      </ant:delete>  
   </postGoal>
   
