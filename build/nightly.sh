@@ -5,9 +5,14 @@ echo "You have 10 seconds to hit ctrl-c now"
 echo "if you don't know what you are doing"
 sleep 10
 
-StopTomcat()
+Bar()
 {
 echo "---------------------------------"
+}
+
+StopTomcat()
+{
+Bar
 cd ${DIR}
 if [ -d ${SCARAB}/target/bin ] ; then
   echo "Stopping Tomcat..."
@@ -15,12 +20,12 @@ if [ -d ${SCARAB}/target/bin ] ; then
   ./bin/catalina.sh stop
 fi
 sleep 5
-echo "---------------------------------"
+Bar
 }
 
 StartTomcat()
 {
-echo "---------------------------------"
+Bar
 cd ${DIR}
 if [ -d ${SCARAB}/target/bin ] ; then
   echo "Starting Tomcat..."
@@ -28,7 +33,7 @@ if [ -d ${SCARAB}/target/bin ] ; then
   ./bin/catalina.sh start
 fi
 sleep 5
-echo "---------------------------------"
+Bar
 }
 
 echo "Runbox update started: "
@@ -189,9 +194,11 @@ echo "Recreating the database..."
 cd ${DIR}; cd ${SCARAB}/src/sql
 ./create-db.sh
 
+Bar
 echo "Running the test suite..."
 cd ${DIR}; cd ${SCARAB}/build
 ant -f run-tests.xml
+Bar
 
 echo "Recreating the database (to clear out the test data)..."
 cd ${DIR}; cd ${SCARAB}/src/sql
