@@ -46,7 +46,7 @@ import org.jboss.ejb.plugins.cmp.bridge.FieldBridge;
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @author <a href="mailto:alex@jboss.org">Alexey Loubyansky</a>
- * @version $Revision: 1.8 $
+ * @version $Revision: 1.9 $
  */                            
 public class EJBQLParser {
    private Catalog catalog;
@@ -401,7 +401,9 @@ void ComparisonExpression() #void :
          <EQ> { jjtThis.opp="="; } |
          <GT> { jjtThis.opp=">"; } |
          <LT> { jjtThis.opp="<"; } |
-         <NE> { jjtThis.opp="<>"; } 
+         <NE> { jjtThis.opp="<>"; } |
+         <GE> { jjtThis.opp=">="; } |
+         <LE> { jjtThis.opp="<="; }
       )
       DatetimeExpression()
    ) #DatetimeComparison
