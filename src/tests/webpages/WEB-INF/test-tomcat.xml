@@ -16,7 +16,7 @@
         early tests.
     -->
 
-     <property name="revision" value="$Revision: 1.22 $" />  
+     <property name="revision" value="$Revision: 1.23 $" />  
      <property name="host" value="127.0.0.1" />
      <property name="port"     value="8080" />
      <property name="outputType"     value="text" />
@@ -96,6 +96,16 @@
 
   <!-- ==================== Parameters tests ==================== -->
 
+  <target name="headers" depends="init">
+      <httpClient>
+          <comment>Set Content-Type and Content-Length, get OS</comment>
+          <httpRequest path="/test/servlet/headers.HeaderOS" />
+          <httpStatusMatch match="200" />
+          <headerMatch name="Content-Type" value="test/foobar" />
+          <headerMatch name="Content-Length" value="5" />
+      </httpClient>
+  </target>
+  
   <target name="params" depends="init">
       <httpClient>
           <comment>Simple GET with parmeters</comment>
@@ -1089,7 +1099,7 @@ mod_webapp into mod_jk )
    </target>
 
    <!-- ==================== All targets ====================  -->
-   <target name="client" depends="file,params,dispatch,get,requestMap,post,wrong_request,restricted,jsp,unavailable">
+   <target name="client" depends="file,params,dispatch,get,requestMap,post,wrong_request,restricted,jsp,unavailable,headers">
    </target>
 
    <!-- ==================== Aux targets ==================== -->
