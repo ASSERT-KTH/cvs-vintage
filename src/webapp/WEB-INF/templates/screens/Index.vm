@@ -25,7 +25,7 @@ module?" width="260" height="105" />
 *#
 
 <p>
-$l10n.SelectModule1<a href="$link.setPage("SelectModule.vm").addPathInfo("$scarabG.Constant.NEXT_TEMPLATE","Index.vm")"><strong>$l10n.Module</strong></a>.
+$l10n.SelectModule1 <a href="$link.setPage("SelectModule.vm").addPathInfo("$scarabG.Constant.NEXT_TEMPLATE","Index.vm")"><strong>$l10n.Module</strong></a>.
 $l10n.SelectModule2
 </p>
 

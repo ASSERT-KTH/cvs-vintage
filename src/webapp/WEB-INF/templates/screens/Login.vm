@@ -40,7 +40,7 @@
  </tr>
 
  <tr>
-  <th nowrap="nowrap">$l10n.ForgotPassword</th>
+  <th style="width:1%;" nowrap="nowrap">$l10n.ForgotPassword</th>
   <td colspan="2">
    <a style="text-decoration:none;" href='$link.omitModule().setPage("ForgotPassword.vm")'>
      $l10n.ResetPassword
