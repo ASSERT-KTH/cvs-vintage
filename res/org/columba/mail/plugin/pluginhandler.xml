@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<handlerlist>
+ <handler id="org.columba.mail.filter" class="org.columba.mail.plugin.FilterPluginHandler"/>
+ <handler id="org.columba.mail.filteraction" class="org.columba.mail.plugin.FilterActionPluginHandler"/>
+ <handler id="org.columba.mail.folderoptions" class="org.columba.mail.plugin.FolderOptionsPluginHandler"/>
+ <handler id="org.columba.mail.folder" class="org.columba.mail.plugin.FolderPluginHandler"/>
+ <handler id="org.columba.mail.import" class="org.columba.mail.plugin.ImportPluginHandler"/>
+ <handler id="org.columba.mail.tablerenderer" class="org.columba.mail.plugin.TableRendererPluginHandler"/>
+ <handler id="org.columba.mail.menu" class="org.columba.mail.plugin.MailMenuPluginHandler"/>
+ <handler id="org.columba.mail.composer.menu" class="org.columba.mail.plugin.ComposerMenuPluginHandler"/>
+ <handler id="org.columba.mail.pop3preprocessingfilter" class="org.columba.mail.plugin.POP3PreProcessingFilterPluginHandler"/>
+</handlerlist>

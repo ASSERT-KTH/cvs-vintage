@@ -30,14 +30,6 @@ import org.columba.core.gui.util.FontProperties;
 import org.columba.core.gui.util.StartUpFrame;
 import org.columba.core.logging.ColumbaLogger;
 import org.columba.core.plugin.PluginManager;
-import org.columba.core.pluginhandler.ActionPluginHandler;
-import org.columba.core.pluginhandler.ConfigPluginHandler;
-import org.columba.core.pluginhandler.ExternalToolsPluginHandler;
-import org.columba.core.pluginhandler.FramePluginHandler;
-import org.columba.core.pluginhandler.InterpreterHandler;
-import org.columba.core.pluginhandler.MenuPluginHandler;
-import org.columba.core.pluginhandler.ThemePluginHandler;
-import org.columba.core.pluginhandler.ViewPluginHandler;
 import org.columba.core.session.ColumbaServer;
 import org.columba.core.session.SessionController;
 import org.columba.core.util.GlobalResourceLoader;
@@ -91,22 +83,9 @@ public class Main {
 
         MainInterface.pluginManager = new PluginManager();
 
-        MainInterface.pluginManager.registerHandler(new InterpreterHandler());
-
-        MainInterface.pluginManager.registerHandler(new ExternalToolsPluginHandler());
-
-        MainInterface.pluginManager.registerHandler(new ActionPluginHandler());
-
-        MainInterface.pluginManager.registerHandler(new MenuPluginHandler(
-                "org.columba.core.menu"));
-        MainInterface.pluginManager.registerHandler(new ConfigPluginHandler());
-
-        MainInterface.pluginManager.registerHandler(new FramePluginHandler());
-
-        MainInterface.pluginManager.registerHandler(new ThemePluginHandler());
-
-        MainInterface.pluginManager.registerHandler(new ViewPluginHandler());
-
+        // load core plugin handlers 
+        MainInterface.pluginManager.addHandlers("org/columba/core/plugin/pluginhandler.xml");
+        
         MainInterface.backgroundTaskManager = new BackgroundTaskManager();
 
         addressbook.initPlugins();

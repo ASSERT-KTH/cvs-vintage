@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE handlerlist SYSTEM "pluginhandler.dtd">
+
+<handlerlist>
+ <handler id="org.columba.core.interpreter" class="org.columba.core.pluginhandler.InterpreterHandler"/>
+ <handler id="org.columba.core.action" class="org.columba.core.pluginhandler.ActionPluginHandler"/>
+ <handler id="org.columba.core.config" class="org.columba.core.pluginhandler.ConfigPluginHandler"/>
+ <handler id="org.columba.core.frame" class="org.columba.core.pluginhandler.FramePluginHandler"/>
+ <handler id="org.columba.core.theme" class="org.columba.core.pluginhandler.ThemePluginHandler"/>
+ <handler id="org.columba.core.view" class="org.columba.core.pluginhandler.ViewPluginHandler"/>
+ <handler id="org.columba.core.externaltools" class="org.columba.core.pluginhandler.ExternalToolsPluginHandler"/>
+ <handler id="org.columba.core.menu" class="org.columba.core.pluginhandler.CoreMenuPluginHandler"/>
+ 
+</handlerlist>

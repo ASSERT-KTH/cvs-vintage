@@ -1,4 +1,5 @@
-//The contents of this file are subject to the Mozilla Public License Version 1.1
+// The contents of this file are subject to the Mozilla Public License Version
+// 1.1
 //(the "License"); you may not use this file except in compliance with the
 //License. You may obtain a copy of the License at http://www.mozilla.org/MPL/
 //
@@ -9,79 +10,81 @@
 //
 //The Original Code is "The Columba Project"
 //
-//The Initial Developers of the Original Code are Frederik Dietz and Timo Stich.
+//The Initial Developers of the Original Code are Frederik Dietz and Timo
+// Stich.
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003.
 //
 //All Rights Reserved.
 package org.columba.core.plugin;
 
-import org.columba.core.gui.util.NotifyDialog;
-import org.columba.core.xml.XmlElement;
-import org.columba.core.xml.XmlIO;
-
 import java.io.File;
-
 import java.net.MalformedURLException;
 import java.net.URL;
-
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Hashtable;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Vector;
 import java.util.logging.Logger;
 
+import org.columba.core.gui.plugin.AbstractConfigPlugin;
+import org.columba.core.gui.util.NotifyDialog;
+import org.columba.core.io.DiskIO;
+import org.columba.core.main.MainInterface;
+import org.columba.core.xml.XmlElement;
+import org.columba.core.xml.XmlIO;
 
 /**
- *
- * The plugin manager is the central place for all plugin related
- * operations.
+ * 
+ * The plugin manager is the central place for all plugin related operations.
  * <p>
- * It manages all plugin handlers. Plugin handlers need to register
- * at the plugin handler.
+ * It manages all plugin handlers. Plugin handlers need to register at the
+ * plugin handler.
  * <p>
- * On startup the plugin manager goes through all plugins found in the
- * plugins directory and registers them at the plugin handlers.
+ * On startup the plugin manager goes through all plugins found in the plugins
+ * directory and registers them at the plugin handlers.
  * <p>
- * It offers a common set of operations all plugins share. These are:
- * - enable/disable plugin
- * - get URL of readme.txt/readme.html file shipped with plugin
- * - get folder of plugin
- * - get plugin.xml configuration
+ * It offers a common set of operations all plugins share. These are: -
+ * enable/disable plugin - get URL of readme.txt/readme.html file shipped with
+ * plugin - get folder of plugin - get plugin.xml configuration
  * <p>
- * It therefore saves all plugin id's in a list. Additionally it uses a
- * HashMap to save all plugin folders.
- *
+ * It therefore saves all plugin id's in a list. Additionally it uses a HashMap
+ * to save all plugin folders.
+ * 
  * @author fdietz
  */
 public class PluginManager {
 
-    private static final Logger LOG = Logger.getLogger("org.columba.core.plugin");
+    private static final Logger LOG = Logger
+            .getLogger("org.columba.core.plugin");
 
     Map elements;
 
     /**
-     *
-     * Save all plugin directories in this <interface>Map</interface>.
-     * Use plugin id as key, <class>File</class> storing the directory as value.
-     *
+     * 
+     * Save all plugin directories in this <interface>Map </interface>. Use
+     * plugin id as key, <class>File </class> storing the directory as value.
+     *  
      */
     Map folders;
 
     /**
-     *
-     * Save all plugin id's in this <interface>List</interface>.
-     *
+     * 
+     * Save all plugin id's in this <interface>List </interface>.
+     *  
      */
     List ids;
+
     Map jarFiles;
 
     /**
-     *
-     * Save all plugin handlers in this <interface>Map</interface>.
-     * Use plugin handler id as key, <interface>PluginHandlerInterface</interface> as value
-     *
+     * 
+     * Save all plugin handlers in this <interface>Map </interface>. Use plugin
+     * handler id as key, <interface>PluginHandlerInterface </interface> as
+     * value
+     *  
      */
     Hashtable pluginHandlers;
 
@@ -103,13 +106,9 @@ public class PluginManager {
         // skip if it doesn't exist
         File xmlFile = new File(folder, "plugin.xml");
 
-        if (xmlFile == null) {
-            return null;
-        }
+        if (xmlFile == null) { return null; }
 
-        if (!xmlFile.exists()) {
-            return null;
-        }
+        if (!xmlFile.exists()) { return null; }
 
         XmlIO config = new XmlIO();
 
@@ -156,7 +155,8 @@ public class PluginManager {
                 if (pluginHandlers.containsKey(extensionPoint)) {
                     // we have a plugin-handler for this kind of plugin
                     try {
-                        AbstractPluginHandler handler = (AbstractPluginHandler) pluginHandlers.get(extensionPoint);
+                        AbstractPluginHandler handler = (AbstractPluginHandler) pluginHandlers
+                                .get(extensionPoint);
 
                         File file = null;
                         file = folder;
@@ -168,7 +168,8 @@ public class PluginManager {
                         LOG.severe(ex.getMessage());
                     }
                 } else {
-                    LOG.severe("No suitable plugin handler with name "+extensionPoint+" found");
+                    LOG.severe("No suitable plugin handler with name "
+                            + extensionPoint + " found");
                 }
             }
         }
@@ -179,11 +180,12 @@ public class PluginManager {
     /**
      * Gets top level tree xml node of config.xml
      * <p>
-     * This can be used in conjunction with {@link AbstractConfigPlugin} as
-     * an easy way to configure plugins.
-     *
-     * @param id        id of plugin
-     * @return                top leve xml treenode
+     * This can be used in conjunction with {@link AbstractConfigPlugin}as an
+     * easy way to configure plugins.
+     * 
+     * @param id
+     *            id of plugin
+     * @return top leve xml treenode
      */
     public XmlIO getConfiguration(String id) {
         try {
@@ -199,23 +201,25 @@ public class PluginManager {
     }
 
     /**
-             * @param id
-             *
-             * @return directory of this plugin
-             */
+     * @param id
+     * 
+     * @return directory of this plugin
+     */
     public File getFolder(String id) {
         return (File) folders.get(id);
     }
 
     /**
-     *
+     * 
      * get plugin handler
-     * @param id                ID of plugin handler
-     * @return        plugin handler
+     * 
+     * @param id
+     *            ID of plugin handler
+     * @return plugin handler
      * @throws PluginHandlerNotFoundException
      */
     public AbstractPluginHandler getHandler(String id)
-        throws PluginHandlerNotFoundException {
+            throws PluginHandlerNotFoundException {
         if (pluginHandlers.containsKey(id)) {
             return (AbstractPluginHandler) pluginHandlers.get(id);
         } else {
@@ -234,14 +238,12 @@ public class PluginManager {
     }
 
     /**
-     * @return        URL of Readme.html, readme.txt, etc.
+     * @return URL of Readme.html, readme.txt, etc.
      */
     public URL getInfoURL(String id) {
         File pluginDirectory = getFolder(id);
 
-        if (pluginDirectory == null) {
-            return null;
-        }
+        if (pluginDirectory == null) { return null; }
 
         try {
             // try all possible version of readme files...
@@ -274,7 +276,7 @@ public class PluginManager {
 
     /**
      * @param id
-     *
+     * 
      * @return
      */
     public File getJarFile(String id) {
@@ -283,22 +285,20 @@ public class PluginManager {
 
     /**
      * @param id
-     *
-     * @return        parent xml treenode of "plugin.xml"
+     * 
+     * @return parent xml treenode of "plugin.xml"
      */
     public XmlElement getPluginElement(String id) {
         String searchId;
 
         /*
-        int index = id.indexOf("$");
-
-        if (index != -1)
-                searchId = id.substring(0, id.indexOf("$"));
-        else
-                searchId = id;
-
-        return (XmlElement) elements.get(searchId);
-        */
+         * int index = id.indexOf("$");
+         * 
+         * if (index != -1) searchId = id.substring(0, id.indexOf("$")); else
+         * searchId = id;
+         * 
+         * return (XmlElement) elements.get(searchId);
+         */
         return (XmlElement) elements.get(id);
     }
 
@@ -313,9 +313,7 @@ public class PluginManager {
         // find all possible plugin directories
         File[] pluginFolders = PluginFinder.searchPlugins();
 
-        if (pluginFolders == null) {
-            return;
-        }
+        if (pluginFolders == null) { return; }
 
         folders = new HashMap();
         elements = new HashMap();
@@ -330,16 +328,53 @@ public class PluginManager {
     }
 
     public void removeHandler(String id) {
-        if ( pluginHandlers.containsKey(id)) {
-            AbstractPluginHandler h = (AbstractPluginHandler) pluginHandlers.get(id);
-            
+        if (pluginHandlers.containsKey(id)) {
+            AbstractPluginHandler h = (AbstractPluginHandler) pluginHandlers
+                    .get(id);
+
             pluginHandlers.remove(id);
-            
+
         }
     }
+
+    /**
+     * Add a list of handlers specified in path to the plugin manager.
+     * 
+     * @param path
+     *            xml-file validating against pluginhandler.dtd
+     */
+    public void addHandlers(String path) {
+        XmlIO xmlFile = new XmlIO(DiskIO.getResourceURL(path));
+        xmlFile.load();
+
+        XmlElement list = xmlFile.getRoot().getElement("handlerlist");
+        Iterator it = list.getElements().iterator();
+        while (it.hasNext()) {
+            XmlElement child = (XmlElement) it.next();
+            String id = child.getAttribute("id");
+            String clazz = child.getAttribute("class");
+
+            AbstractPluginHandler handler = null;
+            try {
+                Class c = Class.forName(clazz);
+
+                handler = (AbstractPluginHandler) c.newInstance();
+
+                registerHandler(handler);
+            } catch (ClassNotFoundException e) {
+                if (MainInterface.DEBUG) e.printStackTrace();
+            } catch (InstantiationException e1) {
+                if (MainInterface.DEBUG) e1.printStackTrace();
+            } catch (IllegalAccessException e1) {
+                if (MainInterface.DEBUG) e1.printStackTrace();
+            }
+
+        }
+    }
+
     /**
      * register plugin handler at plugin manager
-     *
+     * 
      * @param handler
      */
     public void registerHandler(AbstractPluginHandler handler) {
@@ -348,9 +383,8 @@ public class PluginManager {
     }
 
     /**
-     * enable/disable plugin
-     * -> save changes in plugin.xml
-     *
+     * enable/disable plugin -> save changes in plugin.xml
+     * 
      * @param b
      */
     public void setEnabled(String id, boolean b) {
@@ -367,9 +401,7 @@ public class PluginManager {
             //get xml tree node
             XmlElement e = io.getRoot().getElement("/plugin");
 
-            if (e == null) {
-                return;
-            }
+            if (e == null) { return; }
 
             // update XmlElement reference in HashMap cache
             elements.put(id, e);

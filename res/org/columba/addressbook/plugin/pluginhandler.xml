@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<handlerlist>
+ <handler id="org.columba.addressbook.folder" class="org.columba.addressbook.plugin.FolderPluginHandler"/>
+ <handler id="org.columba.addressbook.import" class="org.columba.addressbook.plugin.ImportPluginHandler"/>
+ <handler id="org.columba.addressbook.menu" class="org.columba.addressbook.plugin.AddressbookMenuPluginHandler"/>
+ 
+</handlerlist>

@@ -15,38 +15,28 @@
 //All Rights Reserved.
 package org.columba.mail.main;
 
+import java.util.Enumeration;
+
 import org.columba.core.backgroundtask.TaskInterface;
 import org.columba.core.main.DefaultMain;
 import org.columba.core.main.MainInterface;
 import org.columba.core.plugin.PluginHandlerNotFoundException;
 import org.columba.core.pluginhandler.ActionPluginHandler;
-import org.columba.core.pluginhandler.MenuPluginHandler;
 import org.columba.core.shutdown.ShutdownManager;
-
 import org.columba.mail.config.MailConfig;
-import org.columba.mail.folder.MessageFolder;
 import org.columba.mail.folder.AbstractFolder;
+import org.columba.mail.folder.MessageFolder;
 import org.columba.mail.folder.headercache.CachedHeaderfields;
 import org.columba.mail.gui.config.accountwizard.AccountWizardLauncher;
 import org.columba.mail.gui.tree.TreeModel;
 import org.columba.mail.mailchecking.MailCheckingManager;
 import org.columba.mail.pgp.MultipartEncryptedRenderer;
 import org.columba.mail.pgp.MultipartSignedRenderer;
-import org.columba.mail.plugin.FilterActionPluginHandler;
-import org.columba.mail.plugin.FilterPluginHandler;
-import org.columba.mail.plugin.FolderOptionsPluginHandler;
-import org.columba.mail.plugin.FolderPluginHandler;
-import org.columba.mail.plugin.ImportPluginHandler;
-import org.columba.mail.plugin.POP3PreProcessingFilterPluginHandler;
-import org.columba.mail.plugin.TableRendererPluginHandler;
 import org.columba.mail.pop3.POP3ServerCollection;
 import org.columba.mail.shutdown.SaveAllFoldersPlugin;
 import org.columba.mail.shutdown.SavePOP3CachePlugin;
 import org.columba.mail.spam.SaveSpamDBPlugin;
-
 import org.columba.ristretto.composer.MimeTreeRenderer;
-
-import java.util.Enumeration;
 
 
 /**
@@ -123,20 +113,8 @@ public class MailMain extends DefaultMain {
         renderer.addMimePartRenderer(new MultipartEncryptedRenderer());
 
         // Init Plugins
-        MainInterface.pluginManager.registerHandler(new FilterActionPluginHandler());
-        MainInterface.pluginManager.registerHandler(new FilterPluginHandler());
-        MainInterface.pluginManager.registerHandler(new FolderPluginHandler());
-        MainInterface.pluginManager.registerHandler(new POP3PreProcessingFilterPluginHandler());
-        MainInterface.pluginManager.registerHandler(new TableRendererPluginHandler());
-        MainInterface.pluginManager.registerHandler(new FolderOptionsPluginHandler());
-        MainInterface.pluginManager.registerHandler(new MenuPluginHandler(
-                "org.columba.mail.menu"));
-
-        MainInterface.pluginManager.registerHandler(new MenuPluginHandler(
-                "org.columba.mail.composer.menu"));
-
-        MainInterface.pluginManager.registerHandler(new ImportPluginHandler());
-
+        MainInterface.pluginManager.addHandlers("org/columba/mail/plugin/pluginhandler.xml");
+        
         try {
             ((ActionPluginHandler) MainInterface.pluginManager.getHandler(
                 "org.columba.core.action")).addActionList(
@@ -144,7 +122,7 @@ public class MailMain extends DefaultMain {
         } catch (PluginHandlerNotFoundException ex) {
             ex.printStackTrace();
         }
-
+        
         TaskInterface plugin = new SaveAllFoldersPlugin();
         MainInterface.backgroundTaskManager.register(plugin);
 

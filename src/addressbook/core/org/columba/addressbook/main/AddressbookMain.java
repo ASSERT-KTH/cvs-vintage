@@ -17,16 +17,12 @@ package org.columba.addressbook.main;
 
 import org.columba.addressbook.config.AddressbookConfig;
 import org.columba.addressbook.gui.tree.AddressbookTreeModel;
-import org.columba.addressbook.plugin.FolderPluginHandler;
-import org.columba.addressbook.plugin.ImportPluginHandler;
 import org.columba.addressbook.shutdown.SaveAllAddressbooksPlugin;
-
 import org.columba.core.backgroundtask.TaskInterface;
 import org.columba.core.main.DefaultMain;
 import org.columba.core.main.MainInterface;
 import org.columba.core.plugin.PluginHandlerNotFoundException;
 import org.columba.core.pluginhandler.ActionPluginHandler;
-import org.columba.core.pluginhandler.MenuPluginHandler;
 import org.columba.core.shutdown.ShutdownManager;
 
 
@@ -71,13 +67,9 @@ public class AddressbookMain extends DefaultMain {
      * @see org.columba.core.main.DefaultMain#initPlugins()
      */
     public void initPlugins() {
-        MainInterface.pluginManager.registerHandler(new FolderPluginHandler());
-
-        MainInterface.pluginManager.registerHandler(new ImportPluginHandler());
-
-        MainInterface.pluginManager.registerHandler(new MenuPluginHandler(
-                "org.columba.addressbook.menu"));
-
+        // init addressbook plugin handlers
+        MainInterface.pluginManager.addHandlers("org/columba/addressbook/plugin/pluginhandler.xml");
+       
         try {
             ((ActionPluginHandler) MainInterface.pluginManager.getHandler(
                 "org.columba.core.action")).addActionList(

@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!ELEMENT handlerlist (handler)>
+
+<!ATTLIST handler
+  id CDATA #REQUIRED
+  class CDATA #REQUIRED
+>
