@@ -12,7 +12,6 @@ package org.jboss.ejb.plugins.jms;
 import java.util.Hashtable;
 import java.util.Enumeration;
 
-import javax.naming.InitialContext;
 import javax.naming.Context;
 import javax.jms.Session;
 import javax.jms.QueueConnection;
@@ -22,13 +21,13 @@ import javax.jms.QueueSender;
 import javax.jms.Queue;
 import javax.jms.Message;
 import javax.jms.JMSException;
+import javax.jms.Destination;
 import javax.transaction.Status;
 import javax.transaction.Synchronization;
 import javax.transaction.Transaction;
 
 import org.w3c.dom.Element;
 
-import org.jboss.logging.Logger;
 import org.jboss.deployment.DeploymentException;
 import org.jboss.metadata.MetaData;
 import org.jboss.jms.jndi.JMSProviderAdapter;
@@ -61,7 +60,7 @@ import org.jboss.system.ServiceMBeanSupport;
  *
  * Created: Thu Aug 23 21:17:26 2001
  *
- * @version <tt>$Revision: 1.16 $</tt>
+ * @version <tt>$Revision: 1.17 $</tt>
  * @author ???
  * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
  */
@@ -69,11 +68,11 @@ public class DLQHandler
    extends ServiceMBeanSupport
 {
    /** JMS property name holding original destination. */
-   public static final String JBOSS_ORIG_DESTINATION ="JBOSS_ORIG_DESTINATION";
-   
+   public static final String JBOSS_ORIG_DESTINATION = "JBOSS_ORIG_DESTINATION";
+
    /** JMS property name holding original JMS message id. */
-   public static final String JBOSS_ORIG_MESSAGEID="JBOSS_ORIG_MESSAGEID";
-   
+   public static final String JBOSS_ORIG_MESSAGEID = "JBOSS_ORIG_MESSAGEID";
+
    /** Properties copied from org.jboss.mq.SpyMessage */
    private static final String JMS_JBOSS_REDELIVERY_COUNT = "JMS_JBOSS_REDELIVERY_COUNT";
    private static final String JMS_JBOSS_REDELIVERY_LIMIT = "JMS_JBOSS_REDELIVERY_LIMIT";
@@ -88,7 +87,7 @@ public class DLQHandler
     * <tt>DestinationQueue</tt> element.
     */
    private String destinationJNDI = "queue/DLQ";
-   
+
    /**
     * Maximum times a message is alowed to be resent.
     *
@@ -96,7 +95,7 @@ public class DLQHandler
     * <tt>MaxTimesRedelivered</tt> element.
     */
    private int maxResent = 10;
-   
+
    /**
     * Time to live for the message.
     *
@@ -119,7 +118,7 @@ public class DLQHandler
 
    /** The dlq password for the connection */
    private String dlqPass;
-   
+
    // Private stuff
    private QueueConnection connection;
    private Queue dlq;
@@ -141,20 +140,21 @@ public class DLQHandler
    protected void createService() throws Exception
    {
       Context ctx = providerAdapter.getInitialContext();
-      
-      try {
+
+      try
+      {
          String factoryName = providerAdapter.getQueueFactoryRef();
          QueueConnectionFactory factory = (QueueConnectionFactory)
             ctx.lookup(factoryName);
          log.debug("Using factory: " + factory);
-         
+
          if (dlqUser == null)
             connection = factory.createQueueConnection();
          else
             connection = factory.createQueueConnection(dlqUser, dlqPass);
          log.debug("Created connection: " + connection);
 
-         dlq = (Queue)ctx.lookup(destinationJNDI);
+         dlq = (Queue) ctx.lookup(destinationJNDI);
          log.debug("Using Queue: " + dlq);
       }
       catch (Exception e)
@@ -168,7 +168,8 @@ public class DLQHandler
             throw x;
          }
       }
-      finally {
+      finally
+      {
          ctx.close();
       }
    }
@@ -182,7 +183,7 @@ public class DLQHandler
    {
       connection.stop();
    }
-   
+
    protected void destroyService() throws Exception
    {
       // Help the GC
@@ -210,12 +211,12 @@ public class DLQHandler
       String id = null;
       boolean jbossmq = true;
       int count = 0;
-      
+
       try
       {
 
          if (msg.propertyExists(JMS_JBOSS_REDELIVERY_LIMIT))
-            max = msg.getIntProperty(JMS_JBOSS_REDELIVERY_LIMIT); 
+            max = msg.getIntProperty(JMS_JBOSS_REDELIVERY_LIMIT);
 
          if (msg.propertyExists(JMS_JBOSS_REDELIVERY_COUNT))
             count = msg.getIntProperty(JMS_JBOSS_REDELIVERY_COUNT);
@@ -231,12 +232,12 @@ public class DLQHandler
             count = incrementResentCount(id);
             jbossmq = false;
          }
-         
+
          if (count > max)
          {
             id = msg.getJMSMessageID();
             log.warn("Message resent too many times; sending it to DLQ; message id=" + id);
-            
+
             sendMessage(msg);
             deleteFromBuffer(id);
 
@@ -262,7 +263,7 @@ public class DLQHandler
          // If we can't send it ahead, we do not dare to just drop it...or?
          log.error("Could not send message to Dead Letter Queue", e);
       }
-      
+
       return handled;
    }
 
@@ -272,7 +273,7 @@ public class DLQHandler
    protected void sendMessage(Message msg) throws JMSException
    {
       boolean trace = log.isTraceEnabled();
-      
+
       QueueSession session = null;
       QueueSender sender = null;
 
@@ -281,24 +282,27 @@ public class DLQHandler
          msg = makeWritable(msg, trace); // Don't know yet if we are gona clone or not
          
          // Set the properties
-         msg.setStringProperty(JBOSS_ORIG_MESSAGEID,
-         msg.getJMSMessageID());
-         msg.setStringProperty(JBOSS_ORIG_DESTINATION,
-         msg.getJMSDestination().toString());
-         
+         msg.setStringProperty(JBOSS_ORIG_MESSAGEID, msg.getJMSMessageID());
+         // Some providers (say Websphere MQ) don't set this to something we can use
+         Destination d = msg.getJMSDestination();
+         if (d != null)
+            msg.setStringProperty(JBOSS_ORIG_DESTINATION, d.toString());
+
          session = connection.createQueueSession(false, Session.AUTO_ACKNOWLEDGE);
          sender = session.createSender(dlq);
-         if (trace) {
+         if (trace)
+         {
             log.trace("Sending message to DLQ; destination=" +
-                      dlq + ", session=" + session + ", sender=" + sender);
+               dlq + ", session=" + session + ", sender=" + sender);
          }
 
          sender.send(msg, deliveryMode, priority, timeToLive);
 
-         if (trace) {
+         if (trace)
+         {
             log.trace("Message sent.");
          }
-         
+
       }
       finally
       {
@@ -307,7 +311,7 @@ public class DLQHandler
             if (sender != null) sender.close();
             if (session != null) session.close();
          }
-         catch(Exception e)
+         catch (Exception e)
          {
             log.warn("Failed to close sender or session; ignoring", e);
          }
@@ -323,24 +327,25 @@ public class DLQHandler
    {
       BufferEntry entry = null;
       boolean trace = log.isTraceEnabled();
-      if(!resentBuffer.containsKey(id))
+      if (!resentBuffer.containsKey(id))
       {
          if (trace)
-         log.trace("Making new entry for id " + id);
+            log.trace("Making new entry for id " + id);
          entry = new BufferEntry();
          entry.id = id;
          entry.count = 1;
-         resentBuffer.put(id,entry);
-      } else
+         resentBuffer.put(id, entry);
+      }
+      else
       {
-         entry = (BufferEntry)resentBuffer.get(id);
+         entry = (BufferEntry) resentBuffer.get(id);
          entry.count++;
          if (trace)
-         log.trace("Incremented old entry for id " + id + " count " + entry.count);
+            log.trace("Incremented old entry for id " + id + " count " + entry.count);
       }
       return entry.count;
    }
-   
+
    /**
     * Delete the entry in the message counter buffer for specifyed JMS id.
     */
@@ -348,7 +353,7 @@ public class DLQHandler
    {
       resentBuffer.remove(id);
    }
-   
+
    /**
     * Make the Message properties writable.
     *
@@ -359,15 +364,15 @@ public class DLQHandler
       Hashtable tmp = new Hashtable();
 
       // Save properties
-      for (Enumeration en=msg.getPropertyNames(); en.hasMoreElements();)
+      for (Enumeration en = msg.getPropertyNames(); en.hasMoreElements();)
       {
-         String key = (String)en.nextElement();
+         String key = (String) en.nextElement();
          tmp.put(key, msg.getObjectProperty(key));
       }
       
       // Make them writable
       msg.clearProperties();
-      
+
       Enumeration keys = tmp.keys();
       while (keys.hasMoreElements())
       {
@@ -382,10 +387,10 @@ public class DLQHandler
                log.trace("Could not copy message property " + key, ignored);
          }
       }
-      
+
       return msg;
    }
-   
+
    /**
     * Takes an MDBConfig Element
     */
@@ -393,40 +398,46 @@ public class DLQHandler
    {
       destinationJNDI = MetaData.getElementContent
          (MetaData.getUniqueChild(element, "DestinationQueue"));
-      
+
       try
       {
          String mr = MetaData.getElementContent
             (MetaData.getUniqueChild(element, "MaxTimesRedelivered"));
          maxResent = Integer.parseInt(mr);
       }
-      catch (Exception ignore) {}
+      catch (Exception ignore)
+      {
+      }
 
-      try {
+      try
+      {
          String ttl = MetaData.getElementContent
             (MetaData.getUniqueChild(element, "TimeToLive"));
          timeToLive = Long.parseLong(ttl);
-         
-         if (timeToLive < 0) {
+
+         if (timeToLive < 0)
+         {
             log.warn("Invalid TimeToLive: " + timeToLive + "; using default");
             timeToLive = Message.DEFAULT_TIME_TO_LIVE;
          }
       }
-      catch (Exception ignore) {}
+      catch (Exception ignore)
+      {
+      }
 
       dlqUser = MetaData.getElementContent(MetaData.getOptionalChild(element, "DLQUser"));
       dlqPass = MetaData.getElementContent(MetaData.getOptionalChild(element, "DLQPassword"));
    }
-   
+
    public String toString()
    {
       return super.toString() +
-         "{ destinationJNDI=" +  destinationJNDI +
+         "{ destinationJNDI=" + destinationJNDI +
          ", maxResent=" + maxResent +
          ", timeToLive=" + timeToLive +
          " }";
    }
-   
+
    private class BufferEntry
    {
       int count;
