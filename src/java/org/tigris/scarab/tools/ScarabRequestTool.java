@@ -577,9 +577,9 @@ try{
 
     public AttributeOption getAttributeOption(String key)
          throws Exception
-        {
-            return getAttributeOption(new NumberKey(key));
-        }    
+    {
+        return getAttributeOption(new NumberKey(key));
+    }    
 
     /**
      * First attempts to get the RModuleUserAttributes from the user.
