@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/StoredCharDataGenerator.java,v 1.2 2001/03/09 22:26:14 costin Exp $
- * $Revision: 1.2 $
- * $Date: 2001/03/09 22:26:14 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/StoredCharDataGenerator.java,v 1.3 2001/04/27 20:30:10 larryi Exp $
+ * $Revision: 1.3 $
+ * $Date: 2001/04/27 20:30:10 $
  *
  * ====================================================================
  * 
@@ -97,12 +97,12 @@ public class StoredCharDataGenerator
     private final void generateInit(ServletWriter writer) {
         if (stringId == 0) {
             String name = writer.quoteString(fileName);
-            writer.println("ObjectInputStream oin = null;");
+            writer.println("java.io.ObjectInputStream oin = null;");
             writer.println("int numStrings = 0;");
             writer.println("try {");
             writer.pushIndent();
-            writer.println("FileInputStream fin = new FileInputStream("+name+");");
-            writer.println("oin = new ObjectInputStream(fin);");
+            writer.println("java.io.FileInputStream fin = new java.io.FileInputStream("+name+");");
+            writer.println("oin = new java.io.ObjectInputStream(fin);");
             writer.println("_jspx_html_data = (char[][]) oin.readObject();");
             writer.popIndent();
             writer.println("} catch (Exception ex) {");
