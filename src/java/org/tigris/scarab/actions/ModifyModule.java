@@ -76,7 +76,7 @@ import org.tigris.scarab.services.module.ModuleManager;
  * This class is responsible for creating / updating Scarab Modules
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ModifyModule.java,v 1.3 2001/10/22 23:57:15 elicia Exp $
+ * @version $Id: ModifyModule.java,v 1.4 2001/10/23 00:40:42 elicia Exp $
  */
 public class ModifyModule extends RequireLoginFirstAction
 {
@@ -88,32 +88,37 @@ public class ModifyModule extends RequireLoginFirstAction
     {
         String template = getCurrentTemplate(data, null);
         String nextTemplate = getNextTemplate(data, template);
-        String moduleId = data.getParameters().getString("moduleId");
+        ModuleEntity me = null;
 
         IntakeTool intake = getIntakeTool(context);
         if (intake.isAllValid())
         {
-            ModuleEntity me = getScarabRequestTool(context)
-                                            .getModule(moduleId);
+            try
+            {
+                me = getScarabRequestTool(context)
+                                  .getModule();
+            }
+            catch (Exception e)
+            {
+                throw new Exception("Could not locate module");
+            }
+
             Group moduleGroup = intake.get
                 ("Module",me.getQueryKey(), false);
             if (moduleGroup == null)
             {
-                throw new Exception("Could not locate module");
+                setTarget(data, data.getParameters().getString(
+                ScarabConstants.CANCEL_TEMPLATE, "Login.vm"));
+                data.setMessage("Could not locate module.");
+                return;
             }
-            try
+            else
             {
                 moduleGroup.setProperties(me);
                 me.save();
                 intake.remove(moduleGroup);
+                setTarget(data, nextTemplate);
             }
-            catch (Exception e)
-            {
-                setTarget(data, template);
-                data.setMessage(e.getMessage());
-                return;
-            }
-            setTarget(data, nextTemplate);
         }
     }
 
