@@ -68,7 +68,7 @@ import org.tigris.scarab.util.ScarabException;
  * instantiating OM's.
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: AbstractOMService.java,v 1.1 2001/11/01 00:20:11 jmcnally Exp $
+ * @version $Id: AbstractOMService.java,v 1.2 2001/11/16 17:38:20 jmcnally Exp $
  */
 public abstract class AbstractOMService 
     extends BaseService 
@@ -98,9 +98,17 @@ public abstract class AbstractOMService
         cache = (TurbineGlobalCacheService)TurbineServices
             .getInstance().getService(GlobalCacheService.SERVICE_NAME);
 
+        doInit();
         setInit(true);
     }
     
+    /**
+     * Called by init() to allow concrete implementations to add 
+     * initialization.
+     */
+    protected abstract void doInit()
+        throws InitializationException;
+
     /**
      * Get the Class instance
      */
