@@ -67,7 +67,7 @@ import org.jnp.server.NamingServer;
  *   @see ContainerFactory
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
  *   @author <a href="marc.fleury@telkel.com">Marc Fleury</a>
- *   @version $Revision: 1.23 $
+ *   @version $Revision: 1.24 $
  */
 public abstract class Container
 {
@@ -400,16 +400,18 @@ public abstract class Container
 
                 if (ref.getLink() != null)
                 {
-                   // External link
-                   Logger.debug("Binding "+ref.getName()+" to external JNDI source: "+ref.getLink());
+                   // Internal link
+                   Logger.debug("Binding "+ref.getName()+" to internal JNDI source: "+ref.getLink());
                    bind(ctx, ref.getName(), new LinkRef(ref.getLink()));
                 }
                 else
                 {
-                   // Internal link
-                   String link = getBeanMetaData().getApplicationMetaData().getJndiFromHome(ref.getHome());
-				   Logger.debug("Binding "+ref.getName()+" to internal JNDI source: "+link);
-                   bind(ctx, ref.getName(), new LinkRef(link));
+                   // External link
+				   if (ref.getJndiName() == null) {
+					   throw new DeploymentException("ejb-ref "+ref.getName()+", expected either ejb-link in ejb-jar.xml or jndi-name in jboss.xml");
+				   }
+				   Logger.debug("Binding "+ref.getName()+" to external JNDI source: "+ref.getJndiName());
+                   bind(ctx, ref.getName(), new LinkRef(ref.getJndiName()));
                 }
              }
           }
