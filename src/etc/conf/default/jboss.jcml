@@ -420,19 +420,19 @@
   <!-- ==================================================================== -->
   <!-- Scheduler Service                                                    -->
   <!-- ==================================================================== -->
-  <!-- Uncomment this to enable Scheduling
+  <!-- Uncomment this to enable Scheduling - ->
   <mbean code="org.jboss.util.Scheduler" name=":service=Scheduler">
     <constructor>
       <arg type="java.lang.String" value=":server=Scheduler"/>
       <arg type="java.lang.String" value="org.jboss.util.Scheduler$SchedulableExample"/>
-      <arg type="java.lang.String" value=""/>
-      <arg type="java.lang.String" value=""/>
+      <arg type="java.lang.String" value="Schedulabe Test,12345"/>
+      <arg type="java.lang.String" value="java.lang.String,int"/>
       <arg type="long" value="0"/>
       <arg type="long" value="10000"/>
       <arg type="long" value="-1"/>
     </constructor>
   </mbean>
-  -->
+  <!- - -->
 
   <!-- ==================================================================== -->
   <!-- Add your custom MBeans here                                          -->
