@@ -41,13 +41,14 @@
 #end
 #set ($module = $scarabR.CurrentModule)
 #set ($exportEncoding = $scarabG.getTurbineConfiguration().getString("scarab.dataexport.encoding"))
-#if ($exportEncoding.length > 0)
+#if ($exportEncoding.trim().length() > 0)
   #set ($encoding = $exportEncoding)
 #else
   #set ($encoding = "UTF-8")
 #end
 <?xml version="1.0" encoding="$encoding" standalone="no"?>
 <!DOCTYPE scarab-issues SYSTEM "$dtdURI">
+<!--$exportEncoding-->
 <scarab-issues>
   <import-type>create-different-db</import-type>
   <module>
