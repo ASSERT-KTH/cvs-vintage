@@ -1,4 +1,4 @@
-// $Id: ParserDisplay.java,v 1.85 2003/11/10 12:35:01 jhraigniac Exp $
+// $Id: ParserDisplay.java,v 1.86 2003/12/12 10:56:10 d00mst Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: ParserDisplay.java
 // Classes: ParserDisplay
 // Original Author:
-// $Id: ParserDisplay.java,v 1.85 2003/11/10 12:35:01 jhraigniac Exp $
+// $Id: ParserDisplay.java,v 1.86 2003/12/12 10:56:10 d00mst Exp $
 
 
 
@@ -188,7 +188,10 @@ public class ParserDisplay extends Parser {
 			public void found(Object element, String value)
 			{
 			    if (ModelFacade.isAStructuralFeature(element))
-				ModelFacade.setChangeable(element, (value != null && value.equalsIgnoreCase("false")));
+				if ("false".equalsIgnoreCase(value))
+				    ModelFacade.setChangeability(element, ModelFacade.CHANGEABLE_CHANGEABLEKIND);
+				else
+				    ModelFacade.setChangeability(element, ModelFacade.FROZEN_CHANGEABLEKIND);
 			}
 		    });
 	_attributeSpecialStrings[1] =
@@ -196,8 +199,12 @@ public class ParserDisplay extends Parser {
 		    new PropertyOperation() {
 			public void found(Object element, String value)
 			{
-			    if (ModelFacade.isAStructuralFeature(element))
-				ModelFacade.setChangeable(element, ("false".equalsIgnoreCase(value)));
+			    if (ModelFacade.isAStructuralFeature(element)) {
+				if ("false".equalsIgnoreCase(value))
+				    ModelFacade.setChangeability(element, ModelFacade.CHANGEABLE_CHANGEABLEKIND);
+				else
+				    ModelFacade.setChangeability(element, ModelFacade.ADD_ONLY_CHANGEABLEKIND);
+			    }
 			}
 		    });
 	_attributeCustomSep = new Vector();
