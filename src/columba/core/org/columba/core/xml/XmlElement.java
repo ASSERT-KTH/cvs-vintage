@@ -23,6 +23,7 @@ import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Observable;
 import java.util.Vector;
 /////////////////////////////////////////////////////////////////////////////
 //                                 CODE                                    //
@@ -31,10 +32,41 @@ import java.util.Vector;
 /**
  * The XmlElement is a generic containment class for elements within an XML
  * file.
+ * <p>
+ * 
+ * It extends Observable which should be used for gui elements which are interested 
+ * in configuration changes.
+ * <p>
+ * 
+ * Show interested in:
+ * 
+ * <pre>
+ *  xmlElement.addObserver( yourObserver );
+ * </pre>
+ * 
+ * <p>
+ * When making bigger changes on XmlElement and probably its
+ * subnodes and/or a greater number of attributes at once,
+ * you should just change XmlElement directly and manually
+ * notify the Observers by calling:
+ * <p>
+ * 
+ * <pre>
+ *  xmlElement.setChanged();
+ *  xmlElement.notifyObservers();
+ * </pre>
+ * 
+ * <p> 
+ * There a good introduction for the Observable/Observer pattern in
+ * Model/View/Controller based applications at www.javaworld.com:
+ * - http://www.javaworld.com/javaworld/jw-10-1996/jw-10-howto.html
+ * 
+ * @see org.columba.mail.gui.config.general.MailOptionsDialog#initObservables()
+ * @see org.columba.mail.gui.table.util.MarkAsReadTimer
  *
- * @author       Tony Parent
+ * @author       Tony Parent, fdietz
  */
-public class XmlElement {
+public class XmlElement extends Observable {
 	String name;
 	String data;
 	Hashtable attributes;
@@ -90,17 +122,29 @@ public class XmlElement {
 		this.data = data;
 		subElements = new Vector();
 	}
+
 	/**
-	 * **FIXME** This function needs documentation
-	 *
-	 * @return  Object
-	 * @param String Name
-	 * @param  String Value
-	 *
+	 * Add attribute to this xml element.
+	 * 
+	 * Note that this method automatically notifies all listening
+	 * Observers.
+	 * 
+	 * @param name		name of key
+	 * @param value		new attribute value
+	 * @return			new attribute value
+	 * 
 	 */
 	public Object addAttribute(String name, String value) {
-		if( (value != null) && (name!=null) )
-			return (attributes.put(name, value));
+		if ((value != null) && (name != null)) {
+			Object returnValue = (attributes.put(name, value));
+			
+			// notify observers
+			setChanged();
+			notifyObservers();
+			
+			return returnValue;
+		}
+
 		return null;
 	}
 	/**
@@ -113,14 +157,12 @@ public class XmlElement {
 	public String getAttribute(String name) {
 		return ((String) attributes.get(name));
 	}
-	
-	public String getAttribute(String name, String defaultValue)
-	{
-		if ( getAttribute(name) == null )
-		{
+
+	public String getAttribute(String name, String defaultValue) {
+		if (getAttribute(name) == null) {
 			addAttribute(name, defaultValue);
 		}
-	
+
 		return getAttribute(name);
 	}
 	/**
@@ -166,13 +208,13 @@ public class XmlElement {
 
 	public XmlElement removeElement(XmlElement e) {
 		XmlElement child = null;
-		 for (int i = 0; i < subElements.size(); i++) {
-			 child = (XmlElement) subElements.get(i);
+		for (int i = 0; i < subElements.size(); i++) {
+			child = (XmlElement) subElements.get(i);
 			// FIXME -- This will most likely not work.
 			//          You want the element removed if the contents are the same
 			//          Not just if the element reference is the same.
 			if (child == e) {
-				 subElements.remove(i);
+				subElements.remove(i);
 			}
 		}
 		return (child);
@@ -185,7 +227,7 @@ public class XmlElement {
 	public void removeAllElements() {
 		subElements.clear();
 	}
-	
+
 	/**
 	 * convienience method for the TreeView
 	 * 
@@ -194,19 +236,17 @@ public class XmlElement {
 	 * DefaultMutableTreeNode wraps XmlElement for this purpose
 	 * 
 	 */
-	public void removeFromParent()
-	{
+	public void removeFromParent() {
 		XmlElement parent = getParent();
-		if( parent == null) return;
-		
+		if (parent == null)
+			return;
+
 		parent.removeElement(this);
 	}
-	
-	
-	public void append( XmlElement e )
-	{
+
+	public void append(XmlElement e) {
 		e.removeFromParent();
-		
+
 		addElement(e);
 	}
 	/**
@@ -216,10 +256,9 @@ public class XmlElement {
 	 * @param e
 	 * @param index
 	 */
-	public void insertElement( XmlElement e, int index)
-	{
+	public void insertElement(XmlElement e, int index) {
 		e.removeFromParent();
-		
+
 		subElements.add(index, e);
 		e.setParent(this);
 	}
@@ -261,7 +300,7 @@ public class XmlElement {
 		}
 		int j;
 		for (j = 0; j < subElements.size(); j++) {
-			 if (((XmlElement) subElements.get(j)).getName().equals(topName)) {
+			if (((XmlElement) subElements.get(j)).getName().equals(topName)) {
 				if (subName != null) {
 					return (
 						((XmlElement) subElements.get(j)).getElement(subName));
@@ -316,7 +355,7 @@ public class XmlElement {
 		e.setData(data);
 		e.setParent(this);
 		subElements.add(e);
-		
+
 		return e;
 	}
 
@@ -398,14 +437,14 @@ public class XmlElement {
 		_writeSpace(out, indent);
 		out.print("<" + Name);
 		//if ( Attributes.size()>1) out.print(" ");
-
+	
 		for (Enumeration e = Attributes.keys(); e.hasMoreElements();) {
 			String K = (String) e.nextElement();
 			out.print(K + "=\"" + Attributes.get(K) + "\" b");
-
+	
 		}
 		out.print(">");
-
+	
 		if (Data != null && !Data.equals("")) {
 			if (Data.length() > 20) {
 				out.println("");
@@ -423,7 +462,7 @@ public class XmlElement {
 			_writeSpace(out, indent);
 		}
 		out.println("</" + Name + ">");
-
+	
 	}
 	*/
 	/**
@@ -433,15 +472,15 @@ public class XmlElement {
 	 * @param numSpaces Number of spaces to print
 	 *
 	 */
-	
+
 	/*
 	private void _writeSpace(PrintWriter out, int numSpaces)
 		throws IOException {
-
+	
 		for (int i = 0; i < numSpaces; i++)
 			out.print(" ");
 	}
-
+	
 	public static void printNode(XmlElement Node, String indent) {
 		String Data = Node.getData();
 		if (Data == null || Data.equals("")) {
@@ -456,47 +495,48 @@ public class XmlElement {
 		}
 	}
 	*/
-	
+
 	public static void printNode(XmlElement node, String indent) {
-			String data = node.getData();
-			if (data == null || data.equals("")) {
-				System.out.println(indent + node.getName());
-			} else {
-				System.out.println(indent + node.getName() + " = '" + data + "'");
-			}
-			
-			// print attributes
-			for (Enumeration enum = node.getAttributes().keys(); enum.hasMoreElements();)
-			{
-				String key =  (String) enum.nextElement();
-				String value = node.getAttribute( key);
-				System.out.println(indent+key+":"+value);
-			}
-			
-			List subs = node.getElements();
-			int i, j;
-			for (Iterator it = subs.iterator(); it.hasNext();) {
-				printNode((XmlElement) it.next(), indent + "    ");
-			// for (i = 0; i < subs.size(); i++) {
-				// printNode((XmlElement) subs.get(i), indent + "    ");
-			}
+		String data = node.getData();
+		if (data == null || data.equals("")) {
+			System.out.println(indent + node.getName());
+		} else {
+			System.out.println(indent + node.getName() + " = '" + data + "'");
 		}
-		
-	public Object clone() {			
+
+		// print attributes
+		for (Enumeration enum = node.getAttributes().keys();
+			enum.hasMoreElements();
+			) {
+			String key = (String) enum.nextElement();
+			String value = node.getAttribute(key);
+			System.out.println(indent + key + ":" + value);
+		}
+
+		List subs = node.getElements();
+		int i, j;
+		for (Iterator it = subs.iterator(); it.hasNext();) {
+			printNode((XmlElement) it.next(), indent + "    ");
+			// for (i = 0; i < subs.size(); i++) {
+			// printNode((XmlElement) subs.get(i), indent + "    ");
+		}
+	}
+
+	public Object clone() {
 		XmlElement clone = new XmlElement(new String(getName()));
 		clone.setName(getName());
-		clone.setAttributes((Hashtable)getAttributes().clone());
+		clone.setAttributes((Hashtable) getAttributes().clone());
 		clone.setData(new String(getData()));
-		
+
 		List childs = getElements();
 		XmlElement child;
 		for (Iterator it = childs.iterator(); it.hasNext();) {
-			child = (XmlElement)  it.next();
-		// for( int i=0; i<childs.size(); i++ ) {
+			child = (XmlElement) it.next();
+			// for( int i=0; i<childs.size(); i++ ) {
 			// child = (XmlElement) childs.get(i);
-			clone.addSubElement((XmlElement)child.clone());
+			clone.addSubElement((XmlElement) child.clone());
 		}
-					
+
 		return clone;
 	}
 	/**

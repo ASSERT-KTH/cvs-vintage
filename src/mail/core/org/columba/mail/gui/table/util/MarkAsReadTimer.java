@@ -22,7 +22,6 @@ import java.util.Observer;
 
 import javax.swing.Timer;
 
-import org.columba.core.config.ConfigObservableManager;
 import org.columba.core.gui.selection.SelectionChangedEvent;
 import org.columba.core.gui.selection.SelectionListener;
 import org.columba.core.logging.ColumbaLogger;
@@ -71,7 +70,7 @@ public class MarkAsReadTimer
 		XmlElement markasread =
 			MailConfig.get("options").getElement("/options/markasread");
 
-		ConfigObservableManager.register(markasread, this);
+		markasread.addObserver(this);
 
 		String delay = markasread.getAttribute("delay", "2");
 		this.maxValue = Integer.parseInt(delay);

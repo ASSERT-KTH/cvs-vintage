@@ -40,9 +40,7 @@ import javax.swing.SwingConstants;
 import net.javaprog.ui.wizard.plaf.basic.SingleSideEtchedBorder;
 
 import org.columba.core.config.Config;
-import org.columba.core.config.ConfigObservableManager;
 import org.columba.core.config.GuiItem;
-import org.columba.core.config.XmlElementObservable;
 import org.columba.core.gui.util.DefaultFormBuilder;
 import org.columba.core.xml.XmlElement;
 import org.columba.mail.config.MailConfig;
@@ -80,8 +78,7 @@ public class MailOptionsDialog extends JDialog implements ActionListener {
 	JLabel forwardLabel;
 	JComboBox forwardComboBox;
 	
-	// configuration nodes
-	XmlElementObservable markAsReadObservable;
+	
 
 	public MailOptionsDialog(JFrame frame) {
 		super(
@@ -93,7 +90,7 @@ public class MailOptionsDialog extends JDialog implements ActionListener {
 
 		layoutComponents();
 
-		initObservables();
+		
 
 		updateComponents(true);
 
@@ -104,12 +101,7 @@ public class MailOptionsDialog extends JDialog implements ActionListener {
 		setVisible(true);
 	}
 
-	protected void initObservables() {
-		XmlElement markasread =
-			MailConfig.get("options").getElement("/options/markasread");
-			
-		markAsReadObservable = ConfigObservableManager.addObservable(markasread);
-	}
+	
 
 	public void updateComponents(boolean b) {
 
@@ -166,16 +158,13 @@ public class MailOptionsDialog extends JDialog implements ActionListener {
 
 		} else {
 
-			/*
+			
 			XmlElement markasread =
 				MailConfig.get("options").getElement("/options/markasread");
 
+			// changing the attribute also notifies all Observers
 			markasread.addAttribute("delay", markTextField.getText());
-			ConfigObservableManager.notifyObservers(markasread);
-			*/
 			
-			// change the configuration and notify gui of changes
-			markAsReadObservable.addAttribute("delay", markTextField.getText());
 			
 			XmlElement html =
 				MailConfig.getMainFrameOptionsConfig().getRoot().getElement(
