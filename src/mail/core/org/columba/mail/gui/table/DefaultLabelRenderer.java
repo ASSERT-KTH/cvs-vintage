@@ -198,22 +198,27 @@ public class DefaultLabelRenderer extends JLabel implements TableCellRenderer {
 		this.foreground = foreground;
 	}
 
+	/*************** optimization *****************/
+
+
+	// if graphics doesn't seem to work correctly
+	//  -> comment the following lines
+
+	/*
+	public void paint(Graphics g) {
+		ui.update(g, this);
+	}
+	public void repaint() {
+	}
+	*/
+	
+
+	/*
 	protected void firePropertyChange(
 		String propertyName,
 		Object oldValue,
 		Object newValue) {
 		// this is only needed when using HTML text labels
 	}
-
-	/*************** optimization *****************/
-
-	// if graphics doesn't seem to work correctly
-	//  -> comment the following lines
-
-	public void paint(Graphics g) {
-		ui.update(g, this);
-	}
-	public void repaint() {
-	}
-
+	*/
 }

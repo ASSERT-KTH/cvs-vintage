@@ -71,7 +71,7 @@ public class FrameView extends JFrame implements WindowListener {
 	public void loadWindowPosition(ViewItem viewItem) {
 		int x = viewItem.getInteger("window", "width");
 		int y = viewItem.getInteger("window", "height");
-		boolean maximized = viewItem.getBoolean("window", "maximized");
+		boolean maximized = viewItem.getBoolean("window", "maximized", true);
 		
 		if (maximized)
 			maximize();

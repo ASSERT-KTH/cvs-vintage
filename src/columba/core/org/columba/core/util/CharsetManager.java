@@ -24,6 +24,7 @@ import javax.swing.JMenu;
 
 import org.columba.core.gui.util.CMenu;
 import org.columba.core.gui.util.CMenuItem;
+import org.columba.core.gui.util.ImageLoader;
 import org.columba.mail.util.MailResourceLoader;
 
 /**
@@ -118,6 +119,7 @@ public class CharsetManager implements ActionListener{
 
 		subMenu =
 			new CMenu(MailResourceLoader.getString("menu","mainframe", "menu_view_charset"));
+		subMenu.setIcon( ImageLoader.getImageIcon("stock_font_16.png"));
 
 
 		selectedMenuItem = new CharsetMenuItem( 

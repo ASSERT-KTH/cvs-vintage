@@ -32,9 +32,12 @@ import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
 
 import org.columba.core.gui.util.DialogStore;
+import org.columba.core.main.MainInterface;
+import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.config.FolderItem;
 import org.columba.mail.folder.Folder;
-import org.columba.core.main.MainInterface;
+import org.columba.mail.gui.tree.TreeController;
+import org.columba.mail.gui.tree.command.CreateSubFolderCommand;
 
 public class SelectFolderDialog
 	implements ActionListener, TreeSelectionListener {
@@ -54,20 +57,23 @@ public class SelectFolderDialog
 	private Folder selectedFolder;
 
 	//private JFrame frame;
-	
-	protected JDialog dialog;
 
-	public SelectFolderDialog() {
-		dialog = DialogStore.getDialog("Select Folder...");
+	protected JDialog dialog;
+	
+	
+
+	public SelectFolderDialog( ) {
 		
+		
+		dialog = DialogStore.getDialog("Select Folder...");
+
 		//this.treeController = treeController;
 		//this.frame = frame;
 
 		name = new String("name");
 
 		init();
-		
-		
+
 	}
 
 	public void init() {
@@ -165,6 +171,30 @@ public class SelectFolderDialog
 			dialog.dispose();
 		} else if (action.equals("NEW")) {
 
+			EditFolderDialog dialog = new EditFolderDialog("New Folder");
+			dialog.showDialog();
+
+			String name;
+
+			if (dialog.success() == true) {
+				// ok pressed
+				name = dialog.getName();
+			} else {
+				// cancel pressed
+				return;
+			}
+
+			/*
+			FolderCommandReference[] r =
+				(FolderCommandReference[]) treeController
+					.getTreeSelectionManager()
+					.getSelection();
+			*/
+			FolderCommandReference[] r = new FolderCommandReference[1];
+			r[0] = new FolderCommandReference( getSelectedFolder() );
+			r[0].setFolderName(name);
+
+			MainInterface.processor.addOp(new CreateSubFolderCommand(r));
 			/*
 			EditFolderDialog dialog =
 				treeController.getEditFolderDialog("New Folder");
