@@ -34,8 +34,8 @@ import org.jboss.ejb.InstanceCache;
 import org.jboss.ejb.InstancePool;
 import org.jboss.ejb.MethodInvocation;
 import org.jboss.ejb.CacheKey;
+import org.jboss.logging.log4j.JBossCategory;
 import org.jboss.metadata.EntityMetaData;
-import org.jboss.logging.Logger;
 import org.jboss.util.Sync;
 
 /**
@@ -57,7 +57,8 @@ import org.jboss.util.Sync;
  *    before changing.
  *    
  * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
- * @version $Revision: 1.33 $
+ * @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>
+ * @version $Revision: 1.34 $
  *
  * <p><b>Revisions:</b><br>
  * <p><b>2001/06/28: marcf</b>
@@ -67,6 +68,12 @@ import org.jboss.util.Sync;
  *   <li>two levels of syncrhonization with Tx and ctx
  *   <li>remove busy wait from previous mechanisms
  * </ol>
+ * <p><b>2001/07/11: starksm</b>
+ * <ol>
+ *   <li>Fix a thread starvation problem due to incomplete condition notification
+ *   <li>Add support for trace level diagnositics
+ * </ol>
+
  */
 public class EntityInstanceInterceptor
    extends AbstractInterceptor
@@ -78,7 +85,9 @@ public class EntityInstanceInterceptor
    protected EntityContainer container;
 	
    // Static --------------------------------------------------------
-	
+   /** Use a JBoss custom log4j category for trace level logging */
+   static JBossCategory log = (JBossCategory) JBossCategory.getInstance(EntityInstanceInterceptor.class);
+
    // Constructors --------------------------------------------------
 	
    // Public --------------------------------------------------------
@@ -88,7 +97,7 @@ public class EntityInstanceInterceptor
       this.container = (EntityContainer)container;
    }
 	
-   public  Container getContainer()
+   public Container getContainer()
    {
       return container;
    }
@@ -139,10 +148,14 @@ public class EntityInstanceInterceptor
 		
       // And it must correspond to the key.
       CacheKey key = (CacheKey) mi.getId();
-		
+      boolean trace = log.isTraceEnabled();
+      if( trace )
+         log.trace("Begin invoke, key="+key);
       while (ctx == null)
       {
          ctx = (EntityEnterpriseContext) container.getInstanceCache().get(key);
+         if( trace )
+            log.trace("Begin while ctx==null, ctx="+ctx);
 			
          //Next test is independent of whether the context is locked or not, it is purely transactional
          // Is the instance involved with another transaction? if so we implement pessimistic locking
@@ -157,17 +170,25 @@ public class EntityInstanceInterceptor
             {
                // That's no good, only one transaction per context
                // Let's put the thread to sleep the transaction demarcation will wake them up
-               Logger.debug("Transactional contention on context"+ctx.getId());
-					
+               if( trace )
+                  log.trace("Transactional contention on context"+ctx.getId());
+
                // Wait for it to finish, note that we use wait() and not wait(5000), why? 
                // cause we got cojones, if there a problem in this code we want a freeze not illusion
                // Threads finishing the transaction must notifyAll() on the ctx.txLock
-               try {ctx.getTxLock().wait();}
-					
+               try
+               {
+                  if( trace )
+                     log.trace("Begin wait on TxLock="+tx);
+                  ctx.getTxLock().wait();
+                  if( trace )
+                     log.trace("End wait on TxLock="+tx);
+               }
+
                // We need to try again
                finally {ctx = null; continue;}
             }
-				
+
             /*
               In future versions we can use copies of the instance per transaction
             */
@@ -176,6 +197,8 @@ public class EntityInstanceInterceptor
          // The next test is the pure serialization from the EJB specification.  
          synchronized(ctx) 
          {
+            if( trace )
+               log.trace("Begin synchronized(ctx), ctx="+ctx);		
             // synchronized is a time gap, when the thread enters here it can be after "sleep"
             // we need to make sure that stuff is still kosher
 				
@@ -190,6 +213,8 @@ public class EntityInstanceInterceptor
                // This will happen when the instance is removed from cache 
                // We need to go through the same mechs and get the new ctx
                ctx = null;
+               if( trace )
+                  log.trace("End synchronized(ctx), ctx="+ctx+", null id");		
                continue;
             }
             // So the ctx is still valid and the transaction is still game and we own the context
@@ -205,36 +230,54 @@ public class EntityInstanceInterceptor
                {
                   // This instance is in use and you are not permitted to reenter
                   // Go to sleep and wait for the lock to be released
-                  Logger.debug("Thread contention on context"+key);
-						
+                  if( trace )
+                     log.trace("Thread contention on context"+key);
+
                   // we want to know about freezes so we wait(), let us know if this locks  
                   // Threads finishing invocation will come here and notify() on the ctx
-                  try {ctx.wait();}
+                  try
+                  {
+                     if( trace )
+                        log.trace("Begin ctx.wait(), ctx="+ctx);
+                     ctx.wait();
+                  }
                   catch (InterruptedException ignored) {}					
                   // We need to try again
-                  finally {ctx = null; continue;}
+                  finally
+                  {
+                     if( trace )
+                        log.trace("End ctx.wait(), ctx="+ctx+", isLocked="+ctx.isLocked());
+                     ctx = null;
+                     continue;
+                  }
                }
                else
                {
                   //We are in a valid reentrant call so take the lock, take it!
                   ctx.lock();
+                  if( trace )
+                     log.trace("In synchronized(ctx), ctx="+ctx+", reentrant call, have lock");		
                }
             }
             // No one is using that context
             else 
             {
-					
                // We are now using the context
-               ctx.lock(); 
+               ctx.lock();
+               if( trace )
+                  log.trace("In synchronized(ctx), ctx="+ctx+", unused ctx, have lock");		
             }
-				
+
             // The transaction is associated with the ctx while we own the lock 
             ctx.setTransaction(mi.getTransaction());
-			
+            if( trace )
+               log.trace("End synchronized(ctx), ctx="+ctx);		
+
          }// end sychronized(ctx)
-		
+         if( trace )
+            log.trace("End while ctx==null, ctx="+ctx);		
       }
-		
+
       // Set context on the method invocation
       mi.setEnterpriseContext(ctx);
 		
@@ -243,8 +286,12 @@ public class EntityInstanceInterceptor
       try {
 			
          // Go on, you won
-         return getNext().invoke(mi);
-		
+         if( trace )
+            log.trace("Begin next invoker");
+         Object returnValue = getNext().invoke(mi);
+         if( trace )
+            log.trace("End next invoker");
+         return returnValue;
       }
       catch (RemoteException e)
       {
@@ -269,7 +316,9 @@ public class EntityInstanceInterceptor
             synchronized(ctx) 
             {
                ctx.unlock();
-					
+               if( trace )
+                  log.trace("Ending invoke, unlock ctx="+ctx);
+
                Transaction tx = ctx.getTransaction();
 					
                // If an exception has been thrown, 
@@ -282,19 +331,16 @@ public class EntityInstanceInterceptor
                   // Discard instance
                   // EJB 1.1 spec 12.3.1
                   container.getInstanceCache().remove(key);
-						
-                  // A cache removal wakes everyone up
-                  ctx.notifyAll();
+						if( trace )
+                     log.trace("Ending invoke, exceptionThrown, ctx="+ctx);
                }
 					
                else if (ctx.getId() == null)
                {
                   // The key from the MethodInvocation still identifies the right cachekey
                   container.getInstanceCache().remove(key);
-
-                  // A cache removal wakes everyone up
-                  ctx.notifyAll();
-
+                  if( trace )
+                     log.trace("Ending invoke, cache removal, ctx="+ctx);
                   // no more pool return
                }
 					
@@ -304,12 +350,16 @@ public class EntityInstanceInterceptor
                // we will wake up a thread that will go back to sleep and the next coming out of 
                // the body of code will wake the next one etc until we reach 0.  Reentrants are a pain
                // a minor though and I really suspect not checking for 0 is quite ok in all cases.
-               ctx.notify();
+               if( trace )
+                  log.trace("Ending invoke, send notifyAll ctx="+ctx);
+               ctx.notifyAll();
             }
          }// synchronized ctx
+         if( trace )
+            log.trace("End invoke, key="+key+", ctx="+ctx);
       } // finally
    }
-	
+
    // Private --------------------------------------------------------
 	
    private static Method getEJBHome;
