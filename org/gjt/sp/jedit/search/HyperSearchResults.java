@@ -40,7 +40,7 @@ import org.gjt.sp.jedit.*;
 /**
  * HyperSearch results window.
  * @author Slava Pestov
- * @version $Id: HyperSearchResults.java,v 1.32 2004/06/08 20:25:43 spestov Exp $
+ * @version $Id: HyperSearchResults.java,v 1.33 2004/07/12 19:25:08 spestov Exp $
  */
 public class HyperSearchResults extends JPanel implements EBComponent,
 	DefaultFocusComponent
@@ -483,7 +483,7 @@ public class HyperSearchResults extends JPanel implements EBComponent,
 			Object value, boolean sel, boolean expanded,
 			boolean leaf, int row, boolean hasFocus)
 		{
-			Component comp = super.getTreeCellRendererComponent(tree,value,sel,
+			super.getTreeCellRendererComponent(tree,value,sel,
 				expanded,leaf,row,hasFocus);
 			setIcon(null);
 			DefaultMutableTreeNode node = (DefaultMutableTreeNode)value;

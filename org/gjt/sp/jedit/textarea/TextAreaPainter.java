@@ -49,7 +49,7 @@ import org.gjt.sp.util.Log;
  * @see JEditTextArea
  *
  * @author Slava Pestov
- * @version $Id: TextAreaPainter.java,v 1.98 2004/07/05 18:25:23 spestov Exp $
+ * @version $Id: TextAreaPainter.java,v 1.99 2004/07/12 19:25:08 spestov Exp $
  */
 public class TextAreaPainter extends JComponent implements TabExpander
 {
@@ -685,8 +685,6 @@ public class TextAreaPainter extends JComponent implements TabExpander
 		Buffer buffer = textArea.getBuffer();
 		if(!buffer.isLoaded())
 			return;
-
-		int x = textArea.getHorizontalOffset();
 
 		int height = fm.getHeight();
 		if(height == 0)

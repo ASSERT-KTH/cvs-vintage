@@ -38,7 +38,7 @@ import org.gjt.sp.util.Log;
 /**
  * A VFS that lists local root filesystems.
  * @author Slava Pestov
- * @version $Id: FileRootsVFS.java,v 1.17 2003/12/10 20:13:06 spestov Exp $
+ * @version $Id: FileRootsVFS.java,v 1.18 2004/07/12 19:25:07 spestov Exp $
  */
 public class FileRootsVFS extends VFS
 {
@@ -93,10 +93,7 @@ public class FileRootsVFS extends VFS
 
 		VFS.DirectoryEntry[] rootDE = new VFS.DirectoryEntry[roots.length];
 		for(int i = 0; i < roots.length; i++)
-		{
-			String name = roots[i].getPath();
 			rootDE[i] = new RootsEntry(roots[i]);
-		}
 
 		return rootDE;
 	} //}}}

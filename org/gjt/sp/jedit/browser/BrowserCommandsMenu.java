@@ -33,7 +33,7 @@ import org.gjt.sp.jedit.*;
 //}}}
 
 /**
- * @version $Id: BrowserCommandsMenu.java,v 1.24 2004/05/29 01:55:24 spestov Exp $
+ * @version $Id: BrowserCommandsMenu.java,v 1.25 2004/07/12 19:25:07 spestov Exp $
  * @author Slava Pestov and Jason Ginchereau
  */
 public class BrowserCommandsMenu extends JPopupMenu
@@ -262,7 +262,6 @@ public class BrowserCommandsMenu extends JPopupMenu
 	{
 		public void actionPerformed(ActionEvent evt)
 		{
-			View view = browser.getView();
 			String actionCommand = evt.getActionCommand();
 
 			if(actionCommand.equals("auto-detect"))

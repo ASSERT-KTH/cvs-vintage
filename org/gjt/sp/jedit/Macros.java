@@ -52,7 +52,7 @@ import org.gjt.sp.util.Log;
  * the methods in the {@link GUIUtilities} class instead.
  *
  * @author Slava Pestov
- * @version $Id: Macros.java,v 1.39 2004/04/06 20:18:44 spestov Exp $
+ * @version $Id: Macros.java,v 1.40 2004/07/12 19:25:07 spestov Exp $
  */
 public class Macros
 {
@@ -707,9 +707,6 @@ file_loop:			for(int i = 0; i < paths.length; i++)
 	 */
 	private static void recordMacro(View view, Buffer buffer, boolean temporary)
 	{
-		Handler handler = getHandler("beanshell");
-		String path = buffer.getPath();
-
 		view.setMacroRecorder(new Recorder(view,buffer,temporary));
 
 		// setting the message to 'null' causes the status bar to check

@@ -47,7 +47,7 @@ import org.gjt.sp.util.Log;
 /**
  * The main class of the jEdit text editor.
  * @author Slava Pestov
- * @version $Id: jEdit.java,v 1.230 2004/06/28 06:45:25 spestov Exp $
+ * @version $Id: jEdit.java,v 1.231 2004/07/12 19:25:07 spestov Exp $
  */
 public class jEdit
 {
@@ -3597,11 +3597,6 @@ loop:		for(int i = 0; i < list.length; i++)
 	{
 		synchronized(bufferListLock)
 		{
-			boolean caseInsensitiveFilesystem =
-				OperatingSystem.isDOSDerived()
-				|| OperatingSystem.isMacOS();
-			String path = buffer.getPath();
-
 			String symlinkPath = buffer.getSymlinkPath();
 			if((VFSManager.getVFSForPath(symlinkPath).getCapabilities()
 				& VFS.CASE_INSENSITIVE_CAP) != 0)

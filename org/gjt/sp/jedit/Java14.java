@@ -44,7 +44,7 @@ import org.gjt.sp.util.Log;
  * this file out.
  * @since jEdit 4.0pre4
  * @author Slava Pestov
- * @version $Id: Java14.java,v 1.35 2004/03/28 01:42:45 spestov Exp $
+ * @version $Id: Java14.java,v 1.36 2004/07/12 19:25:07 spestov Exp $
  */
 public class Java14
 {
@@ -378,10 +378,7 @@ public class Java14
 					return false;
 				/* if user drops into a selection,
 				replace selection */
-				int start = s.getStart();
 				textArea.setSelectedText(s,str);
-				/* textArea.setSelection(new Selection.Range(
-					start,start + str.length())); */
 			}
 			/* otherwise just insert the text */
 			else

@@ -28,7 +28,7 @@ import gnu.regexp.*;
 /**
  * A parser rule.
  * @author mike dillon, Slava Pestov
- * @version $Id: ParserRule.java,v 1.13 2003/04/28 18:52:35 spestov Exp $
+ * @version $Id: ParserRule.java,v 1.14 2004/07/12 19:25:08 spestov Exp $
  */
 public class ParserRule
 {
@@ -89,8 +89,6 @@ public class ParserRule
 	public static final ParserRule createSequenceRule(
 		int posMatch, String seq, ParserRuleSet delegate, byte id)
 	{
-		int ruleAction = SEQ;
-
 		return new ParserRule(SEQ, seq.charAt(0),
 			posMatch, seq.toCharArray(), null,
 			0, null, delegate, id);

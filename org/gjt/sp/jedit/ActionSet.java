@@ -137,7 +137,7 @@ import org.gjt.sp.util.Log;
  *
  * @author Slava Pestov
  * @author John Gellene (API documentation)
- * @version $Id: ActionSet.java,v 1.30 2004/06/01 20:01:40 spestov Exp $
+ * @version $Id: ActionSet.java,v 1.31 2004/07/12 19:25:07 spestov Exp $
  * @since jEdit 4.0pre1
  */
 public class ActionSet
@@ -341,7 +341,6 @@ public class ActionSet
 	{
 		LinkedList retVal = new LinkedList();
 		Enumeration e = actions.elements();
-		int i = 0;
 		while(e.hasMoreElements())
 		{
 			Object obj = e.nextElement();

@@ -44,7 +44,7 @@ import org.gjt.sp.util.Log;
 /**
  * The main class of the VFS browser.
  * @author Slava Pestov
- * @version $Id: VFSBrowser.java,v 1.108 2004/06/09 16:48:40 spestov Exp $
+ * @version $Id: VFSBrowser.java,v 1.109 2004/07/12 19:25:07 spestov Exp $
  */
 public class VFSBrowser extends JPanel implements EBComponent, DefaultFocusComponent
 {
@@ -1433,7 +1433,6 @@ check_selected: for(int i = 0; i < selectedFiles.length; i++)
 				{
 					// if any directories are selected, add
 					// them, otherwise add current directory
-					ArrayList toAdd = new ArrayList();
 					VFS.DirectoryEntry[] selected = getSelectedFiles();
 					if(selected == null || selected.length == 0)
 					{
