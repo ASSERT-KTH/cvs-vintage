@@ -62,7 +62,8 @@ import org.jnp.server.NamingServer;
  *
  *   @see ContainerFactory
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
- *   @version $Revision: 1.9 $
+ *	 @author <a href="marc.fleury@telkel.com">Marc Fleury</a>
+ *   @version $Revision: 1.10 $
  */
 public abstract class Container
 {
@@ -97,6 +98,15 @@ public abstract class Container
    
    // This is the TransactionManager
    protected TransactionManager tm;
+   
+   // These are the mappings between the home interface methods and the container methods
+   protected Map homeMapping;
+	
+   // These are the mappings between the remote interface methods and the bean methods
+   protected Map beanMapping;
+   
+	// This is the container invoker for this container
+   protected ContainerInvoker containerInvoker;
 	
    // Public --------------------------------------------------------
 	
@@ -211,9 +221,9 @@ public abstract class Container
 		
 		// Setup "java:" namespace
       setupEnvironment();
-      
+	  
 		// Initialize pool 
-		// MF FIXME: the instancePool does not belong here
+		// MF FIXME: the instancePool does not belong here, it belongs to statelessC and entityC
       if (instancePool != null) instancePool.init();
       
  	   // Initialize the interceptor by calling the chain
