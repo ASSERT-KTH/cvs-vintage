@@ -49,6 +49,7 @@ package org.tigris.scarab.tools;
 // Turbine
 import org.apache.turbine.services.security.entity.User;
 import org.apache.turbine.services.db.om.NumberKey;
+import org.apache.turbine.services.db.om.ObjectKey;
 import org.apache.turbine.services.db.om.ComboKey;
 import org.apache.turbine.RunData;
 import org.apache.turbine.services.intake.IntakeTool;
@@ -59,6 +60,7 @@ import org.apache.turbine.services.pool.Recyclable;
 
 // Scarab
 import org.tigris.scarab.om.ScarabUser;
+import org.tigris.scarab.om.ScarabUserImplPeer;
 import org.tigris.scarab.om.Issue;
 import org.tigris.scarab.om.IssuePeer;
 import org.tigris.scarab.om.Query;
@@ -229,6 +231,13 @@ try{
         if (user == null)
             this.user = (ScarabUser)data.getUser();
         return (ScarabUser)data.getUser();
+    }
+
+    public ScarabUser getUser(String id)
+     throws Exception
+    {
+        ObjectKey pk = (ObjectKey)new NumberKey(id);
+        return (ScarabUser)ScarabUserImplPeer.retrieveScarabUserImplByPK(pk);
     }
 
     /**
