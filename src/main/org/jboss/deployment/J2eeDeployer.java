@@ -54,7 +54,7 @@ import org.w3c.dom.Element;
 *  (ContainerFactory for jBoss and EmbededTomcatService for Tomcat).
 *
 *   @author <a href="mailto:daniel.schulze@telkel.com">Daniel Schulze</a>
-*   @version $Revision: 1.6 $
+*   @version $Revision: 1.7 $
 */
 public class J2eeDeployer 
 extends ServiceMBeanSupport
@@ -469,7 +469,7 @@ implements J2eeDeployerMBean
    {
       Deployment.Module m = _d.newModule ();
       m.name = getAppName (_source);
-      log.log ("intalling ejb package: " + m.name);
+      log.log ("installing ejb package: " + m.name);
       
       // the base dir for this EJB package
       URL destDir = URLWizzard.createTempDir (_d.localUrl, "ejb");
@@ -505,7 +505,7 @@ implements J2eeDeployerMBean
    {
       Deployment.Module m = _d.newModule ();
       m.name = getAppName (_source);
-      log.log ("intalling web package: " + m.name);
+      log.log ("installing web package: " + m.name);
       
       // the base dir for this WAR package
       URL destDir = URLWizzard.createTempDir (_d.localUrl, "war");
@@ -590,7 +590,8 @@ implements J2eeDeployerMBean
          log.log ("file tree "+url.toString ()+" deleted.");
       } catch (MalformedURLException _mfe) { // should never happen
       } catch (IOException _ioe) {
-         throw _ioe;
+         log.log ("could not remove file: "+url.toString ());
+         // throw _ioe;
       }
    }
    
