@@ -13,6 +13,7 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
+
 package org.columba.mail.pop3;
 
 import java.awt.event.ActionEvent;
@@ -91,7 +92,6 @@ public class POP3ServerController implements ActionListener {
 		manageAction.setEnabled(false);
 		
 		restartTimer();
-
 	}
 
 	public POP3Server getServer() {
@@ -158,11 +158,8 @@ public class POP3ServerController implements ActionListener {
 	}
 
 	public void fetch() {
-		POP3ServerController controller = (POP3ServerController) this;
-		
-		
 		POP3CommandReference[] r = new POP3CommandReference[1];
-		r[0] = new POP3CommandReference(controller.getServer());
+		r[0] = new POP3CommandReference(getServer());
 
 		FetchNewMessagesCommand c =
 			new FetchNewMessagesCommand( r);
@@ -171,10 +168,8 @@ public class POP3ServerController implements ActionListener {
 	}
 	
 	public void check() {
-		POP3ServerController controller = (POP3ServerController) this;
-
 		POP3CommandReference[] r = new POP3CommandReference[1];
-		r[0] = new POP3CommandReference(controller.getServer());
+		r[0] = new POP3CommandReference(getServer());
 
 		CheckForNewMessagesCommand c =
 			new CheckForNewMessagesCommand( r);
@@ -214,8 +209,8 @@ public class POP3ServerController implements ActionListener {
 		}
 
 	}
+        
 	public int getUid() {
 		return uid;
 	}
-
 }
