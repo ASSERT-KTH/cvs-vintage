@@ -15,7 +15,7 @@
 #end
 
 	
-<P>
+<p>
 
 <form name="IssueListForm" action="$action" method="post">
 <input type="hidden" name="queryString" value="$queryString">
@@ -38,12 +38,23 @@
 
 
 
-<p class="functnbar"><input type="submit" value="view selected (verbose)" name="eventSubmit_doViewselected" name="eventSubmit_doViewselected" />&#160;<input type="submit" value="view all (verbose)" name="eventSubmit_doViewall" /></p>
+<p class="functnbar">
+    <input type="submit" value="view selected (verbose)" 
+        name="eventSubmit_doViewselected" name="eventSubmit_doViewselected" />&#160;
+    <input type="submit" value="view all (verbose)" 
+        name="eventSubmit_doViewall" />
+</p>
 
-<p class="functnbar"><input type="submit" value="reassign selected" name="eventSubmit_doReassignselected" />&#160;<sup>|</sup>&#160;<input type="submit" value="reassign all" name="eventSubmit_doReassignall" />
+<p class="functnbar">
+    <input type="submit" value="reassign selected" 
+        name="eventSubmit_doReassignselected" />&#160;<sup>|</sup>&#160;
+    <input type="submit" value="reassign all" name="eventSubmit_doReassignall" />
 #if ($searchType.equals("advanced"))
-&#160;<sup>|</sup>
-&#160;<input type="submit" value="save query" name="eventSubmit_doRedirecttosavequery" />#end</p>
+    &#160;<sup>|</sup>&#160;
+    <input type="submit" value="save query" 
+        name="eventSubmit_doRedirecttosavequery" />
+#end
+</p>
 	
 
 	<h3>Search Results</h3>
@@ -51,7 +62,11 @@
 	<div class="datatable">
 		<table width="100%" border="1" cellspacing="2" cellpadding="3">
 		<tr>
-		<th nowrap="nowrap"><a href="#"><img src="scarab/images/icon_uparrow.gif" width="13" height="8" alt="sort" border="0" /></a><a href="#"><img src="scarab/images/icon_downarrow.gif" width="13" height="8" alt="sort" border="0" /></a></th>
+		<th nowrap="nowrap"><a href="#"><img 
+            src="scarab/images/icon_uparrow.gif" width="13" height="8" 
+            alt="sort" border="0" /></a><a href="#"><img 
+            src="scarab/images/icon_downarrow.gif" width="13" height="8" 
+            alt="sort" border="0" /></a></th>
 		<th><a href="#" class="header" title="sort">issue ID:</a></th>
 #foreach( $userAttribute in $user.getAttributesForIssueList($module))
 		<th><a href="#" class="header" title="sort">$userAttribute.Name:</a></th>
@@ -84,14 +99,31 @@
 #end
 		</table>
 	</div>
-	<div class="misc">issues per page:&#160; <input type="radio"  value="2" name="resultsPerPage" #if( $resultsPerPage == 2 ) checked="checked" #end /> 2 <input type="radio" " name="resultsPerPage" value="50" #if( $resultsPerPage == 50 ) checked="checked" #end /> 50 <input type="radio" name="resultsPerPage"  value="75" #if( $resultsPerPage == 75 ) checked="checked" #end /> 75 <input type="radio"  name="resultsPerPage" value="100" #if( $resultsPerPage == 100 ) checked="checked" #end /> 100&nbsp; <input type="submit" name="eventSubmit_doSearch" value="Refresh"></div>
 
-<p class="functnbar"><input type="submit" value="view selected (verbose)" name="eventSubmit_doViewselected" name="eventSubmit_doViewselected" />&#160;<input type="submit" value="view all (verbose)" name="eventSubmit_doViewall" /></p>
+	<div class="misc">
+        issues per page:&#160; 
+        <input type="radio"  value="2" name="resultsPerPage" #if( $resultsPerPage == 2 ) checked="checked" #end /> 2 
+        <input type="radio" " name="resultsPerPage" value="50" #if( $resultsPerPage == 50 ) checked="checked" #end /> 50 
+        <input type="radio" name="resultsPerPage"  value="75" #if( $resultsPerPage == 75 ) checked="checked" #end /> 75 
+        <input type="radio"  name="resultsPerPage" value="100" #if( $resultsPerPage == 100 ) checked="checked" #end /> 100&nbsp; 
+        <input type="submit" name="eventSubmit_doSearch" value="Refresh">
+    </div>
 
-<p class="functnbar"><input type="submit" value="reassign selected" name="eventSubmit_doReassignselected" />&#160;<sup>|</sup>&#160;<input type="submit" value="reassign all" name="eventSubmit_doReassignall" />
+<p class="functnbar">
+    <input type="submit" value="view selected (verbose)" 
+        name="eventSubmit_doViewselected" name="eventSubmit_doViewselected" />&#160;
+    <input type="submit" value="view all (verbose)" name="eventSubmit_doViewall" />
+</p>
+
+<p class="functnbar">
+    <input type="submit" value="reassign selected" 
+        name="eventSubmit_doReassignselected" />&#160;<sup>|</sup>&#160;
+    <input type="submit" value="reassign all" name="eventSubmit_doReassignall" />
 #if ($searchType.equals("advanced"))
-&#160;<sup>|</sup>
-&#160;<input type="submit" value="save query" name="eventSubmit_doRedirecttosavequery" />#end</p>
+    &#160;<sup>|</sup>&#160;
+    <input type="submit" value="save query" name="eventSubmit_doRedirecttosavequery" />
+#end
+</p>
 	
 	
 #if( $paginated)
