@@ -47,9 +47,9 @@ import javax.xml.parsers.DocumentBuilder;
 
 import org.apache.log4j.Category;
 
-import org.jboss.util.Service;
-import org.jboss.util.ServiceFactory;
-import org.jboss.util.ServiceMBeanSupport;
+import org.jboss.system.Service;
+import org.jboss.system.ServiceFactory;
+import org.jboss.system.ServiceMBeanSupport;
 import org.jboss.util.XmlHelper;
 
 /**
@@ -61,13 +61,13 @@ import org.jboss.util.XmlHelper;
  *    specific mbean services that wish to be controlled by the JBoss
  *    {@link ServiceControl}/{@link Service} lifecycle service.
  *
- * @see org.jboss.util.Service
- * @see org.jboss.util.ServiceControl
+ * @see org.jboss.system.Service
+ * @see org.jboss.system.ServiceControl
  *
  * @author  <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>.
  * @author  <a href="mailto:Scott_Stark@displayscape.com">Scott Stark</a>.
  * @author  <a href="mailto:jason@planet57.com">Jason Dillon</a>
- * @version $Revision: 1.38 $
+ * @version $Revision: 1.39 $
  * Revisions:
  *
  * 20010622 scott.stark: Clean up the unsafe downcast of Throwable to Exception
@@ -780,7 +780,7 @@ implements ConfigurationServiceMBean
       if (service != null)
       {
          Object[] args = { service };
-         String[] signature = { "org.jboss.util.Service" };
+         String[] signature = { "org.jboss.system.Service" };
          try
          {
             server.invoke(serviceControl, "register", args, signature);
@@ -819,7 +819,7 @@ implements ConfigurationServiceMBean
       else
       {
          MBeanOperationInfo[] opInfo = info.getOperations();
-         Class[] interfaces = { org.jboss.util.Service.class };
+         Class[] interfaces = { org.jboss.system.Service.class };
          InvocationHandler handler = new ServiceProxy(objectName, opInfo);
          service = (Service) Proxy.newProxyInstance(loader, interfaces, handler);
       }
