@@ -697,9 +697,11 @@ class StatusHandler extends Handler {
 		.append("</h2>");
 	}
 
-	buf.append("\r\n<b>")
-	    .append(msg)
-	    .append("</b><br>\r\n");
+	if (msg != null){
+            buf.append("\r\n<b>")
+                .append(msg)
+                .append("</b><br>\r\n");
+        }
 
 	// add unavailable time if present
 	if ( sc == 503) {
