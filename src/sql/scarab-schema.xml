@@ -2,7 +2,7 @@
 <!DOCTYPE app-data SYSTEM
           "http://jakarta.apache.org/turbine/dtd/database.dtd">
 
-<!-- $Id: scarab-schema.xml,v 1.6 2001/04/10 01:13:24 fedor Exp $ -->
+<!-- $Id: scarab-schema.xml,v 1.7 2001/04/11 07:19:34 fedor Exp $ -->
 
 <app-data>
 <database>
@@ -654,7 +654,10 @@
     <!-- word's rating. The less frequent word has the higher rating. For now rating = 100000 / (total number of occurences) -->
     <column name="RATING" required="true" type="INTEGER"/>
     <!-- set to one to ignore the word when indexing. this should be 1 for words like "is", "it", "on" etc...-->
-    <column name="INGNORE" default="0" type="INTEGER"/>
+    <column name="IGNORE" default="0" type="INTEGER"/>
+    <index name="IX_IGNORE">
+        <index-column name="IGNORE"/>
+    </index>
     <unique name="UK_WORD">
         <unique-column name="WORD"/>
     </unique>
@@ -684,7 +687,7 @@
 <!--
     Dummy table for where the USER_ID lives. In most cases, this will be a
     foreign table outside of the scope of Scarab itself. For example, if you are
-    using Scarab with Turbine, then this will be defined as TURBINE_USER. For 
+    using Scarab with Turbine, then this will be defined as TURBINE_USER. For
     use in other systems, you will want to define this to be the name of your 
     own USER table and update the FK references in this file to point at the new 
     name. Then, all you need to do is regenerate the OR code to use the new 
