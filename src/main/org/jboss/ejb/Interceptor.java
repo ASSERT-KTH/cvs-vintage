@@ -7,6 +7,7 @@
 package org.jboss.ejb;
 
 import org.jboss.invocation.Invocation;
+import org.w3c.dom.Element;
 
 
 /**
@@ -14,7 +15,7 @@ import org.jboss.invocation.Invocation;
  *      
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
- * @version $Revision: 1.10 $
+ * @version $Revision: 1.11 $
  *
  *<p><b>20011219 marc fleury:</b>
  * <ul>
@@ -24,6 +25,9 @@ import org.jboss.invocation.Invocation;
 public interface Interceptor
    extends ContainerPlugin
 {
+
+   void setConfiguration(Element config);
+
    /**
     * Set the next interceptor in the chain.
     *
