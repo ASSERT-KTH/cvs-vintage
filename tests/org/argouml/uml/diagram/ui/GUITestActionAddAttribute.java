@@ -1,4 +1,4 @@
-// $Id: TestActionNewReception.java,v 1.2 2004/10/27 16:05:59 mkl Exp $
+// $Id: GUITestActionAddAttribute.java,v 1.1 2004/10/29 12:47:00 mkl Exp $
 // Copyright (c) 2003-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -23,7 +23,7 @@
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
 
-package org.argouml.uml.ui.behavior.common_behavior;
+package org.argouml.uml.diagram.ui;
 
 import javax.swing.Action;
 
@@ -32,18 +32,17 @@ import junit.framework.TestCase;
 import org.argouml.i18n.Translator;
 
 
-
 /**
  * 
  * @author mkl
  *
  */
-public class TestActionNewReception extends TestCase {
+public class GUITestActionAddAttribute extends TestCase {
+
     
-    public TestActionNewReception(String arg0) {
+    public GUITestActionAddAttribute(String arg0) {
         super(arg0);
     }
-
     /*
      * @see TestCase#setUp()
      */
@@ -53,7 +52,7 @@ public class TestActionNewReception extends TestCase {
     }
     
     public void testHasIcon() {
-        ActionNewReception action = new ActionNewReception();
+        ActionAddAttribute action = ActionAddAttribute.getSingleton();
         assertNotNull(action.getValue(Action.SMALL_ICON));
     }
 
