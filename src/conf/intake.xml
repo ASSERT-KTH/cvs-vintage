@@ -96,6 +96,7 @@
             <rule name="maxLength" value="255"/>
         </field>
         <field name="Template" key="tem" type="boolean"/>
+        <field name="Deleted" key="del" type="boolean"/>
 </group>
 
 <group name="AttributeType" key="attt" mapToObject="om.AttributeType">
@@ -156,6 +157,20 @@
                 mapToProperty="Order">
            <rule name="maxValue" value="99">Please enter a value less than 99</rule>
            <rule name="minValue" value="1">Please enter a value greater than 0</rule>
+        </field>
+        <field name="History" key="hist" type="int" >
+           <rule name="maxValue" value="99">Please enter a value less than 99</rule>
+           <rule name="minValue" value="1">Please enter a value greater than 0</rule>
+        </field>
+        <field name="Comments" key="com" type="int" >
+           <rule name="maxValue" value="99">Please enter a value less than 99</rule>
+           <rule name="minValue" value="1">Please enter a value greater than 0</rule>
+        </field>
+        <field name="DisplayName" key="name" type="String">
+        <rule name="maxLength" value="255">Please keep the display name to less than 256 characters</rule>
+        </field>
+        <field name="DisplayDesc" key="desc" type="String" mapToProperty="DisplayDescription">
+        <rule name="maxLength" value="255">Please keep the display description to less than 256 characters</rule>
         </field>
 </group>
 
