@@ -32,7 +32,7 @@ import org.w3c.dom.Element;
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @author <a href="sebastien.alborini@m4x.org">Sebastien Alborini</a>
- * @version $Revision: 1.12 $
+ * @version $Revision: 1.13 $
  */
 public final class JDBCApplicationMetaData
 {
@@ -82,6 +82,11 @@ public final class JDBCApplicationMetaData
    private final Map entitiesByAbstractSchemaName = new HashMap();
 
    /**
+    * Map from entity interface(s) java type to entity name
+    */
+   private final Map entitiesByInterface = new HashMap();
+
+    /**
     * Constructs jdbc application meta data with the data from the 
     * applicationMetaData.
     *
@@ -118,8 +123,21 @@ public final class JDBCApplicationMetaData
                      new JDBCEntityMetaData(this, entity);
 
                entities.put(entity.getEjbName(), jdbcEntity);
-               entitiesByAbstractSchemaName.put(
-                     jdbcEntity.getAbstractSchemaName(), jdbcEntity);
+
+               String schemaName = jdbcEntity.getAbstractSchemaName();
+               if(schemaName != null) {
+                  entitiesByAbstractSchemaName.put(schemaName, jdbcEntity);
+               }
+
+               Class remote = jdbcEntity.getRemoteClass();
+               if(remote != null) {
+                  entitiesByInterface.put(remote, jdbcEntity);
+               }
+
+               Class local = jdbcEntity.getLocalClass();
+               if(local != null) {
+                  entitiesByInterface.put(local, jdbcEntity);
+               }
 
                // initialized the entity roles collection 
                entityRoles.put(entity.getEjbName(), new HashSet());
@@ -192,11 +210,28 @@ public final class JDBCApplicationMetaData
          }
       }
 
+      // dependent-value-objects
+      valueClasses.putAll(defaultValues.valueClasses);
+      Element valueClassesElement = 
+            MetaData.getOptionalChild(element, "dependent-value-classes");
+      if(valueClassesElement != null) {
+         for(Iterator i = MetaData.getChildrenByTagName(
+                     valueClassesElement, "dependent-value-class");
+               i.hasNext(); ) {
+
+            Element valueClassElement = (Element)i.next();
+            JDBCValueClassMetaData valueClass = 
+                  new JDBCValueClassMetaData(valueClassElement, classLoader);
+            valueClasses.put(valueClass.getJavaType(), valueClass);
+         }
+      }
+
       // defaults: apply defaults for entities (optional, always
       // set in standardjbosscmp-jdbc.xml)
       entities.putAll(defaultValues.entities);
       entitiesByAbstractSchemaName.putAll(
             defaultValues.entitiesByAbstractSchemaName);
+      entitiesByInterface.putAll(defaultValues.entitiesByInterface);
       Element defaults = MetaData.getOptionalChild(element, "defaults");
       if(defaults != null) {
          ArrayList values = new ArrayList(entities.values());
@@ -213,6 +248,16 @@ public final class JDBCApplicationMetaData
             String schemaName = entityMetaData.getAbstractSchemaName();
             if(schemaName != null) {
                entitiesByAbstractSchemaName.put(schemaName, entityMetaData);
+            }
+
+            Class remote = entityMetaData.getRemoteClass();
+            if(remote != null) {
+               entitiesByInterface.put(remote, entityMetaData);
+            }
+
+            Class local = entityMetaData.getLocalClass();
+            if(local != null) {
+               entitiesByInterface.put(local, entityMetaData);
             }
          }
       }
@@ -246,6 +291,16 @@ public final class JDBCApplicationMetaData
             String schemaName = entityMetaData.getAbstractSchemaName();
             if(schemaName != null) {
                entitiesByAbstractSchemaName.put(schemaName, entityMetaData);
+            }
+
+            Class remote = entityMetaData.getRemoteClass();
+            if(remote != null) {
+               entitiesByInterface.put(remote, entityMetaData);
+            }
+
+            Class local = entityMetaData.getLocalClass();
+            if(local != null) {
+               entitiesByInterface.put(local, entityMetaData);
             }
          }
       }
@@ -355,22 +410,7 @@ public final class JDBCApplicationMetaData
          }
       }
 
-      // dependent-value-objects
-      valueClasses.putAll(defaultValues.valueClasses);
-      Element valueClassesElement = 
-            MetaData.getOptionalChild(element, "dependent-value-classes");
-      if(valueClassesElement != null) {
-         for(Iterator i = MetaData.getChildrenByTagName(
-                     valueClassesElement, "dependent-value-class");
-               i.hasNext(); ) {
-
-            Element valueClassElement = (Element)i.next();
-            JDBCValueClassMetaData valueClass = 
-                  new JDBCValueClassMetaData(valueClassElement, classLoader);
-            valueClasses.put(valueClass.getJavaType(), valueClass);
-         }
-      }
-   }
+  }
 
    /**
     * Gets the type mapping with the specified name
@@ -434,5 +474,15 @@ public final class JDBCApplicationMetaData
     */
    public JDBCEntityMetaData getBeanByAbstractSchemaName(String name) {
       return (JDBCEntityMetaData)entitiesByAbstractSchemaName.get(name);
+   }
+   
+   /**
+    * Gets the metadata for an entity bean by the interface.
+    * @param intf the remote or local interface of the entity meta data 
+    *    to return
+    * @return the entity meta data for the specified interface
+    */
+   public JDBCEntityMetaData getBeanByInterface(Class intf) {
+      return (JDBCEntityMetaData)entitiesByInterface.get(intf);
    }
 }
