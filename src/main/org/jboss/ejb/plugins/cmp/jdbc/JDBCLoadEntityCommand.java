@@ -39,7 +39,7 @@ import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCCMPFieldBridge;
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
  * @author <a href="mailto:dirk@jboss.de">Dirk Zimmermann</a>
  * @author <a href="mailto:danch@nvisia.com">danch (Dan Christopherson)</a>
- * @version $Revision: 1.5 $
+ * @version $Revision: 1.6 $
  */
 public class JDBCLoadEntityCommand
    extends JDBCQueryCommand
@@ -117,7 +117,8 @@ public class JDBCLoadEntityCommand
       ArrayList fields = new ArrayList(eagerFields.length);
 
       for(int i=0; i<eagerFields.length; i++) {
-         if(eagerFields[i].isReadTimedOut(ctx)) {
+         if(!eagerFields[i].isPrimaryKeyMember() &&
+            eagerFields[i].isReadTimedOut(ctx)) {
             fields.add(eagerFields[i]);
          }
       }
