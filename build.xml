@@ -72,25 +72,25 @@
 
 	<target name="copy-resources">
 		<copy todir="${dest}">
-			<fileset dir="${dest}/res/"> 
+			<fileset dir="${src}/res/"> 
 			 <include name="**"/>
 			</fileset>
 			<!--
- 			<fileset dir="${dest}/src/core/core/"> 
+ 			<fileset dir="${src}/src/core/core/"> 
 			 <include name="**"/>
 			</fileset>
-			<fileset dir="${dest}/src/mail/core/"> 
+			<fileset dir="${src}/src/mail/core/"> 
 			 <include name="**"/>
 			</fileset>
-			<fileset dir="${dest}/src/mail/independent/"> 
+			<fileset dir="${src}/src/mail/independent/"> 
 			 <include name="**"/>
 			</fileset>
-			<fileset dir="${dest}/src/addressbook/core/"> 
+			<fileset dir="${src}/src/addressbook/core/"> 
 			 <include name="**"/>
 			</fileset>
 			-->
 			<!-- need to uncomment this when adding resource files 
-			<fileset dir="${dest}/src/addressbook/independent/"> 
+			<fileset dir="${src}/src/addressbook/independent/"> 
 			 <include name="**"/>
 			</fileset>
 			-->
