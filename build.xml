@@ -12,7 +12,7 @@
 <!--                                                                        -->
 <!-- ====================================================================== -->
 
-<!-- $Id: build.xml,v 1.84 2002/05/08 06:33:04 schaefera Exp $ -->
+<!-- $Id: build.xml,v 1.85 2002/05/09 03:27:45 user57 Exp $ -->
 
 <project default="main" name="JBoss/Server">
 
@@ -331,7 +331,7 @@
     -->
   <target name="compile" 
 	  depends="generate-parsers,
-	                compile-bean-sources, 
+                   compile-bean-sources, 
                    compile-mbean-sources,
                    compile-classes, 
                    compile-rmi, 
@@ -381,6 +381,7 @@
 	     classpath="${xdoclet.task.classpath}"
 	     excludedtags="@version,@author">
       <fileset dir="${source.java}">
+        <include name="org/jboss/invocation/**/*.java"/>
         <include name="org/jboss/ejb/EjbModule.java"/>
       </fileset>
       <mbeaninterface/>
