@@ -76,4 +76,5 @@ public interface ITableController {
 	
 	void restartMarkAsReadTimer(IMailFolderCommandReference reference);
 	
+	void clear();
 }

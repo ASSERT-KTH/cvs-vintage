@@ -133,6 +133,11 @@ public class HeaderTableModel extends AbstractTreeTableModel implements IHeaderT
 		if ((headerList == null) || (headerList.count() == 0)) {
 			// table is empty
 			// -> just display empty table
+			
+			getTreeModel().nodeStructureChanged(getRootNode());
+			
+			fireTableDataChanged();
+			
 			return;
 		}
 
@@ -199,6 +204,8 @@ public class HeaderTableModel extends AbstractTreeTableModel implements IHeaderT
 
 	public void setHeaderList(HeaderList list) {
 		headerList = list;
+		
+		update();
 	}
 
 	public MessageNode getMessageNode(Object uid) {

@@ -286,7 +286,7 @@ public abstract class AbstractHeaderCache {
 		}
 
 		// save default headerfields, as defined in RFC822
-		columnNames = CachedHeaderfields.DEFAULT_HEADERFIELDS;
+		columnNames = CachedHeaderfields.getDefaultHeaderfields();
 
 		for (int j = 0; j < columnNames.length; j++) {
 			String v = (String) h.get(columnNames[j]);

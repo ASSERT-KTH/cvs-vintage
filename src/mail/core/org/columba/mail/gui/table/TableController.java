@@ -442,10 +442,10 @@ public class TableController implements FocusOwner, ListSelectionListener,
 				.load(folder, FolderOptionsController.STATE_BEFORE);
 
 		// send an update notification to the table model
-		/*
-		 * TableModelChangedEvent ev = new TableModelChangedEvent(
-		 * TableModelChangedEvent.SET, folder, headerList); tableChanged(ev);
-		 */
+		
+		  //TableModelChangedEvent ev = new TableModelChangedEvent(
+		  //TableModelChangedEvent.SET, folder, headerList); tableChanged(ev);
+		 
 		getHeaderTableModel().set(headerList);
 		
 		((ThreePaneMailFrameController) getFrameController())

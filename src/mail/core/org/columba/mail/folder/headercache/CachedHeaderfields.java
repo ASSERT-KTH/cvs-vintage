@@ -18,6 +18,7 @@
 package org.columba.mail.folder.headercache;
 
 import java.awt.Color;
+import java.util.Arrays;
 import java.util.Date;
 
 import org.columba.mail.message.ColumbaHeader;
@@ -139,6 +140,8 @@ public class CachedHeaderfields {
 	}
 
 	public static String[] getDefaultHeaderfields() {
-		return DEFAULT_HEADERFIELDS;
+		String[] result = new String[DEFAULT_HEADERFIELDS.length];
+		System.arraycopy(DEFAULT_HEADERFIELDS,0, result, 0, DEFAULT_HEADERFIELDS.length);
+		return result;
 	}
-}
+};

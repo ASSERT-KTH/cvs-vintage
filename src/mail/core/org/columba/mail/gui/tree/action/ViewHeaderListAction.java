@@ -58,6 +58,8 @@ public class ViewHeaderListAction extends AbstractColumbaAction {
 			ITableController c = ((TableViewOwner) getFrameMediator())
 					.getTableController();
 
+			c.clear();
+			
 			// clear message-list selection
 			c.clearSelection();
 

@@ -101,9 +101,6 @@ public class LocalHeaderCache extends AbstractHeaderCache {
 		int mcount = ((AbstractLocalFolder) folder).getDataStorageInstance()
 				.getMessageCount();
 
-		System.out.println("message count="+mcount);
-		System.out.println("header count="+capacity);
-		
 		if (capacity != mcount) {
 			return true;
 		}
@@ -188,7 +185,7 @@ public class LocalHeaderCache extends AbstractHeaderCache {
 
 		} catch (Exception e) {
 			LOG.severe(e.getMessage());
-			
+
 			if (Main.DEBUG) {
 				e.printStackTrace();
 			}
@@ -309,12 +306,14 @@ public class LocalHeaderCache extends AbstractHeaderCache {
 
 					// message size should be at least 1 KB
 					int size = Math.max(source.length() / 1024, 1);
-					header.getAttributes().put("columba.size", new Integer(size));
+					header.getAttributes().put("columba.size",
+							new Integer(size));
 
 					// set the attachment flag
 					String contentType = (String) header.get("Content-Type");
 
-					header.getAttributes().put("columba.attachment", header.hasAttachments());
+					header.getAttributes().put("columba.attachment",
+							header.hasAttachments());
 
 					header.getAttributes().put("columba.uid", uids[i]);
 
@@ -362,7 +361,8 @@ public class LocalHeaderCache extends AbstractHeaderCache {
 	}
 
 	protected void saveHeader(ColumbaHeader h) throws Exception {
-		writer.writeInt( ((Integer)h.getAttributes().get("columba.uid")).intValue());
+		writer.writeInt(((Integer) h.getAttributes().get("columba.uid"))
+				.intValue());
 
 		super.saveHeader(h);
 	}

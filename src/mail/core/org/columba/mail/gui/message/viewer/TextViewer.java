@@ -544,7 +544,7 @@ public class TextViewer extends JTextPane implements IMimePartViewer, Observer,
 				// HTML
 				// text
 				StringSelection selection = new StringSelection(HtmlParser
-						.htmlToText(htmlSelection.toString()));
+						.htmlToText(htmlSelection.toString(), true));
 				clipboard.setContents(selection, selection);
 			} catch (IOException e) {
 				e.printStackTrace();
