@@ -45,7 +45,7 @@ import org.jboss.util.Sync;
 *   @author Rickard Öberg (rickard.oberg@telkel.com)
 *   @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
 *   @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
-*   @version $Revision: 1.27 $
+*   @version $Revision: 1.28 $
 */
 public class EntityInstanceInterceptor
 extends AbstractInterceptor
@@ -237,6 +237,16 @@ extends AbstractInterceptor
 
 							// It has been removed -> send to the pool
 							container.getInstancePool().free(ctx);
+						}
+						else 
+						{
+							// We want to remove the bean, but it has a Tx associated with 
+							// the remove() method. We remove it from the cache, to avoid
+							// that a successive insertion with same pk will break the
+							// cache. Anyway we don't free the context, since the tx must
+							// finish. The EnterpriseContext instance will be GC and not
+							// recycled.
+							cache.remove(key);
 						}
 					}
 					else
