@@ -1,11 +1,11 @@
 /*
-* JBoss, the OpenSource J2EE webOS
-*
-* Distributable under LGPL license.
-* See terms of license at gnu.org.
-*/
-package org.jboss.invocation.local;
+ * JBoss, the OpenSource J2EE webOS
+ *
+ * Distributable under LGPL license.
+ * See terms of license at gnu.org.
+ */
 
+package org.jboss.invocation.local;
 
 import java.net.InetAddress;
 import javax.management.ObjectName;
@@ -24,140 +24,84 @@ import org.jboss.system.ServiceMBeanSupport;
 import org.jboss.logging.Logger;
 
 /**
-*  The Invoker is a local gate in the JMX system.
-*  
-*  @author <a href="mailto:marc.fleury@jboss.org>Marc Fleury</a>
-*
-*  @version $Revision: 1.4 $
-*
-*/
-
+ * The Invoker is a local gate in the JMX system.
+ *  
+ * @author <a href="mailto:marc.fleury@jboss.org>Marc Fleury</a>
+ * @version $Revision: 1.5 $
+ */
 public class LocalInvoker
-extends ServiceMBeanSupport
-implements Invoker, LocalInvokerMBean
+   extends ServiceMBeanSupport
+   implements Invoker, LocalInvokerMBean
 {
-   // Constants -----------------------------------------------------
-   protected static Logger log = Logger.getLogger(LocalInvoker.class);
-   
-   // Attributes ----------------------------------------------------
-   
-   // The MBean Server
-   protected MBeanServer server;
-   
-   // The ObjectName for the local invoker
-   protected ObjectName name;
-   // Static --------------------------------------------------------
-   
-   // Constructors --------------------------------------------------
-   
-   // Public --------------------------------------------------------
-   
-   // Service implementation -------------------------------
-   
-   public String getName() { return "LocalInvoker";}
-   
-   public void create()
-   throws Exception
+   protected void createService() throws Exception
    {
-      //note on design: We need to call it ourselves as opposed to letting the client JRMPDelegate look it 
-      // up through the use of Registry, the reason being including the classes in the client. 
-      // If we move to a JNDI format (with local calls) for the registry we could remove the call below
+      // note on design: We need to call it ourselves as opposed to 
+      // letting the client JRMPDelegate look it 
+      // up through the use of Registry, the reason being including
+      // the classes in the client. 
+      // If we move to a JNDI format (with local calls) for the
+      // registry we could remove the call below
       JRMPInvokerProxy.setLocal(this);
       
-      Registry.bind(name, this);
+      Registry.bind(serviceName, this);
    }
    
-   
-   public void start()
-   throws Exception
+   protected void startService() throws Exception
    {
-      
-      GenericProxy.setTransactionManager((TransactionManager)new InitialContext().lookup("java:/TransactionManager"));
-      
+      InitialContext ctx = new InitialContext();
+      try {
+         TransactionManager tm = (TransactionManager)ctx.lookup("java:/TransactionManager");
+         GenericProxy.setTransactionManager(tm);
+      }
+      finally {
+         ctx.close();
+      }
+         
       log.debug("Local invoker for JMX node started");
    }
    
-   public void stop()
+   protected void destroyService()
    {
-   }
-   
-   public void destroy()
-   {
-      Registry.unbind(name);
+      Registry.unbind(serviceName);
    }
    
    // Invoker implementation --------------------------------
    
    public String getServerHostName() 
    { 
-      try {return InetAddress.getLocalHost().getHostName();}
-         
-      catch (Exception ignored) {return null;}
+      try {
+         return InetAddress.getLocalHost().getHostName();
+      }
+      catch (Exception ignored) {
+         return null;
+      }
    }
    
-   
    /**
-   *  Invoke a  method.
-   */
-   public Object invoke(Invocation invocation)
-   throws Exception
+    * Invoke a method.
+    */
+   public Object invoke(Invocation invocation) throws Exception
    {     
-      
       ClassLoader oldCl = Thread.currentThread().getContextClassLoader();
       
       try
       {         
+         ObjectName mbean = (ObjectName)
+            Registry.lookup((Integer)invocation.getContainer());
          
-         
-         ObjectName mbean = (ObjectName) Registry.lookup((Integer) invocation.getContainer());
-        
-         return server.invoke(mbean, "",  new Object[] {invocation}, new String[] {"java.lang.Object"}); 
+         return server.invoke(mbean,
+                              "",
+                              new Object[] { invocation },
+                              Invocation.INVOKE_SIGNATURE);
       }
-      
-      catch (MBeanException mbe) { throw mbe.getTargetException(); }
-      
+      catch (MBeanException e)
+      {
+         throw e.getTargetException();
+      }
       finally
       {
          Thread.currentThread().setContextClassLoader(oldCl);
       }      
    }
-   
-   // Package protected ---------------------------------------------
-   
-   // Protected -----------------------------------------------------
-   
-   // Private -------------------------------------------------------
-   
-   // MBeanRegistration implementation -------------------------------------------------------
-   
-   public ObjectName preRegister(MBeanServer server, ObjectName name)
-   throws Exception
-   {
-      this.server = server;
-      
-      this.name = name;
-      
-      log.info("Local Invoker MBean online");
-      //return name == null ? new ObjectName(OBJECT_NAME) : name;
-      return name;
-   }
-   
-   public void postRegister(Boolean registrationDone)
-   {
-      if (!registrationDone.booleanValue())
-      {
-         log.info( "Registration of JRMP Invoker MBean failed" );
-      }
-   }
-   
-   public void preDeregister()
-   throws Exception
-   {
-   }
-   
-   public void postDeregister()
-   {
-   }
-   // Inner classes -------------------------------------------------
 }
 
