@@ -22,14 +22,14 @@
         <!-- Separated Context -->
         <ContextXmlReader config="conf/apps.xml" />
 
-        <AutoDeploy source="webapps" target="webapps" />
-
-        <AutoWebApp dir="webapps" host="DEFAULT" />
-
         <AutoDeploy source="internal" target="internal" 
 		    redeploy="true" />
 
         <AutoWebApp dir="internal" host="DEFAULT" trusted="true"/>
+
+        <AutoDeploy source="webapps" target="webapps" />
+
+        <AutoWebApp dir="webapps" host="DEFAULT" />
 
         <PolicyLoader securityManagerClass="java.lang.SecurityManager"
 		      policyFile="conf/tomcat.policy" />
@@ -59,6 +59,8 @@
 		   verbosityLevel = "INFORMATION"  />
 
         <LoaderInterceptor11  useApplicationLoader="true" />
+
+        <TrustedLoader />
 
         <WebXmlReader validate="true" />
 
