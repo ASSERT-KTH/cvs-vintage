@@ -22,6 +22,14 @@
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
 
+// File: GeneratorDisplay.java
+// Classes: GeneratorDisplay
+// Original Author: jrobbins@ics.uci.edu
+// $Id: GeneratorDisplay.java,v 1.12 2002/03/13 18:01:55 jeremybennett Exp $
+
+// 5 Mar 2002: Jeremy Bennett (mail@jeremybennett.com). Return text for
+// operations that have no return parameter made "" rather than ": void??"
+
 
 package org.argouml.uml.generator;
 import org.argouml.application.api.*;
@@ -108,7 +116,7 @@ implements PluggableNotation {
 	    s += ": " + generateClassifierRef(rp.getType());
 	}
 	else {
-	    s += ": void??";
+            s += "";   // Patch by Jeremy Bennett
 	}
     }
     return s;
