@@ -44,6 +44,7 @@ import org.jboss.jms.asf.ServerSessionPoolFactory;
 import org.jboss.jms.asf.StdServerSessionPool;
 import org.jboss.jms.jndi.JMSProviderAdapter;
 import org.jboss.logging.Logger;
+import org.jboss.metadata.ActivationConfigPropertyMetaData;
 import org.jboss.metadata.InvokerProxyBindingMetaData;
 import org.jboss.metadata.MessageDrivenMetaData;
 import org.jboss.metadata.MetaData;
@@ -57,7 +58,7 @@ import org.w3c.dom.Element;
  * @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
  * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
- * @version <tt>$Revision: 1.65 $</tt>
+ * @version <tt>$Revision: 1.66 $</tt>
  * @jmx:mbean extends="org.jboss.system.ServiceMBean"
  */
 public class JMSContainerInvoker
@@ -564,13 +565,28 @@ public class JMSContainerInvoker
       
       // Selector
       String messageSelector = config.getMessageSelector();
+      String activationConfig = getActivationConfigProperty("messageSelector");
+      if (activationConfig != null)
+         messageSelector = activationConfig;
       
       // Queue or Topic - optional unfortunately
       String destinationType = config.getDestinationType();
+      activationConfig = getActivationConfigProperty("destinationType");
+      if (activationConfig != null)
+         destinationType = activationConfig;
       
       // Is container managed?
       isContainerManagedTx = config.isContainerManagedTx();
       acknowledgeMode = config.getAcknowledgeMode();
+      activationConfig = getActivationConfigProperty("acknowledgeMode");
+      if (activationConfig != null)
+      {
+         if (activationConfig.equals("DUPS_OK_ACKNOWLEDGE"))
+            acknowledgeMode = MessageDrivenMetaData.DUPS_OK_ACKNOWLEDGE_MODE;
+         else
+            acknowledgeMode = MessageDrivenMetaData.AUTO_ACKNOWLEDGE_MODE;
+      }
+      
       byte txType = config.getMethodTransactionType("onMessage",
          new Class[]{Message.class},
          InvocationType.LOCAL);
@@ -578,6 +594,10 @@ public class JMSContainerInvoker
       
       // Get configuration data from jboss.xml
       String destinationJNDI = config.getDestinationJndiName();
+      activationConfig = getActivationConfigProperty("destination");
+      if (activationConfig != null)
+         destinationJNDI = activationConfig;
+      
       String user = config.getUser();
       String password = config.getPasswd();
       
@@ -626,6 +646,10 @@ public class JMSContainerInvoker
          // Fix: ClientId is necessary for durable subscriptions.
 
          String clientId = config.getClientId();
+         activationConfig = getActivationConfigProperty("clientID");
+         if (activationConfig != null)
+            clientId = activationConfig;
+
          log.debug("Using client id: " + clientId);
          if (clientId != null && clientId.length() > 0)
             connection.setClientID(clientId);
@@ -662,9 +686,18 @@ public class JMSContainerInvoker
             true, // tx
             acknowledgeMode,
             new MessageListenerImpl(this));
-         
+
+         int subscriptionDurablity = config.getSubscriptionDurability();
+         activationConfig = getActivationConfigProperty("subscriptionDurablity");
+         if (activationConfig != null)
+         {
+            if (activationConfig.equals("Durable"))
+               subscriptionDurablity = MessageDrivenMetaData.DURABLE_SUBSCRIPTION;
+            else
+               subscriptionDurablity = MessageDrivenMetaData.NON_DURABLE_SUBSCRIPTION;
+         }
          // To be no-durable or durable
-         if (config.getSubscriptionDurability() != MessageDrivenMetaData.DURABLE_SUBSCRIPTION)
+         if (subscriptionDurablity != MessageDrivenMetaData.DURABLE_SUBSCRIPTION)
          {
             // Create non durable
             connectionConsumer =
@@ -677,6 +710,9 @@ public class JMSContainerInvoker
          {
             // Durable subscription
             String durableName = config.getSubscriptionId();
+            activationConfig = getActivationConfigProperty("subscriptionName");
+            if (activationConfig != null)
+               durableName = activationConfig;
 
             connectionConsumer =
                tConnection.createDurableConnectionConsumer(topic,
@@ -707,6 +743,10 @@ public class JMSContainerInvoker
 
          // Set the optional client id
          String clientId = config.getClientId();
+         activationConfig = getActivationConfigProperty("clientID");
+         if (activationConfig != null)
+            clientId = activationConfig;
+         
          log.debug("Using client id: " + clientId);
          if (clientId != null && clientId.length() > 0)
             connection.setClientID(clientId);
@@ -1053,6 +1093,16 @@ public class JMSContainerInvoker
       }
    }
 
+   protected String getActivationConfigProperty(String property)
+   {
+      MessageDrivenMetaData mdmd = getMetaData();
+      ActivationConfigPropertyMetaData acpmd = mdmd.getActivationConfigProperty(property);
+      if (acpmd != null)
+         return acpmd.getValue();
+      else
+         return null;
+   }
+   
    /**
     * Create a server session pool for the given connection.
     * @param connection The connection to use.
