@@ -1,4 +1,4 @@
-// $Id: ProjectMemberTodoList.java,v 1.13 2004/09/11 19:14:21 mvw Exp $
+// $Id: ProjectMemberTodoList.java,v 1.14 2004/09/13 21:11:30 bobtarling Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -32,8 +32,6 @@ import java.io.PrintWriter;
 import java.io.Writer;
 import java.util.Vector;
 import org.apache.log4j.Logger;
-
-import org.xml.sax.SAXException;
 
 import org.argouml.kernel.Project;
 import org.argouml.kernel.ProjectMember;
@@ -146,17 +144,6 @@ public class ProjectMemberTodoList extends ProjectMember {
      */
     public void load(InputStream is) {
         TodoParser.getSingleton().readTodoList(is, true);
-    }
-
-    /**
-     * @see org.argouml.kernel.ProjectMember#load()
-     */
-    public void load() throws IOException, SAXException {
-    	InputStream is = null;
-    	if (getURL() != null) {
-    	    is = getURL().openStream();
-    	    load(is);
-    	}
     }
 
     /**

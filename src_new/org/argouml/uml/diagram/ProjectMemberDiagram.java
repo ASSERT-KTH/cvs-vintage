@@ -1,4 +1,4 @@
-// $Id: ProjectMemberDiagram.java,v 1.24 2004/09/11 19:14:18 mvw Exp $
+// $Id: ProjectMemberDiagram.java,v 1.25 2004/09/13 21:11:30 bobtarling Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -36,7 +36,6 @@ import org.argouml.kernel.Project;
 import org.argouml.kernel.ProjectMember;
 import org.argouml.kernel.SaveException;
 import org.argouml.ui.ArgoDiagram;
-import org.argouml.xml.pgml.PGMLParser;
 import org.tigris.gef.ocl.ExpansionException;
 import org.tigris.gef.ocl.OCLExpander;
 import org.tigris.gef.ocl.TemplateReader;
@@ -107,19 +106,6 @@ public class ProjectMemberDiagram extends ProjectMember {
      */
     public String getFileExtension() {
         return FILE_EXT;
-    }
-
-    /**
-     * @see org.argouml.kernel.ProjectMember#load()
-     */
-    public void load() {
-        LOG.debug("Reading " + getURL());
-        PGMLParser.getSingleton().setOwnerRegistry(getProject().getUUIDRefs());
-        ArgoDiagram d =
-	    (ArgoDiagram) PGMLParser.getSingleton().readDiagram(getURL());
-        setDiagram(d);
-        getProject().addDiagram(d);
-
     }
 
     /**

@@ -1,4 +1,4 @@
-// $Id: ZargoFilePersister.java,v 1.9 2004/09/13 15:26:46 mvw Exp $
+// $Id: ZargoFilePersister.java,v 1.10 2004/09/13 21:11:30 bobtarling Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -156,7 +156,7 @@ public class ZargoFilePersister extends AbstractFilePersister {
                     if (LOG.isInfoEnabled()) {
                         LOG.info("Saving member: "
                               + ((ProjectMember) project.getMembers()
-                                    .elementAt(i)).getURL());
+                                    .elementAt(i)).getName());
                     }
                     String name = projectMember.getName();
                     String originalName = name;

@@ -1,4 +1,4 @@
-// $Id: ProjectMemberModel.java,v 1.25 2004/09/11 19:14:20 mvw Exp $
+// $Id: ProjectMemberModel.java,v 1.26 2004/09/13 21:11:30 bobtarling Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -36,7 +36,6 @@ import org.argouml.kernel.Project;
 import org.argouml.kernel.ProjectMember;
 import org.argouml.kernel.SaveException;
 import org.argouml.model.ModelFacade;
-import org.argouml.xml.xmi.XMIParser;
 
 import ru.novosoft.uml.model_management.MModel;
 import ru.novosoft.uml.xmi.IncompleteXMIException;
@@ -124,17 +123,6 @@ public class ProjectMemberModel extends ProjectMember {
 
     ////////////////////////////////////////////////////////////////
     // actions
-
-    /**
-     * @see org.argouml.kernel.ProjectMember#load()
-     */
-    public void load() throws java.io.IOException, org.xml.sax.SAXException {
-        LOG.info("Reading " + getURL());
-        XMIParser.getSingleton().readModels(getProject(), getURL());
-        model = XMIParser.getSingleton().getCurModel();
-        getProject().setUUIDRefs(XMIParser.getSingleton().getUUIDRefs());
-        LOG.info("Done reading " + getURL());
-    }
 
     /**
      * Save the project model to XMI.

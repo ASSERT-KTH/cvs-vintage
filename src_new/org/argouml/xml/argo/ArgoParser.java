@@ -1,4 +1,4 @@
-// $Id: ArgoParser.java,v 1.21 2004/09/12 23:52:47 bobtarling Exp $
+// $Id: ArgoParser.java,v 1.22 2004/09/13 21:11:30 bobtarling Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -84,9 +84,6 @@ public class ArgoParser extends SAXParserBase {
 
     ////////////////////////////////////////////////////////////////
     // main parsing methods
-
-    // TODO: should be able to merge an existing project into
-    // the current one.
 
     /**
      * @param theUrl the url of the project to read
@@ -291,7 +288,7 @@ public class ArgoParser extends SAXParserBase {
     /**
      * @param e the element
      */
-    protected void handleMember(XMLElement e) {
+    protected void handleMember(XMLElement e) throws SAXException {
         if (addMembers) {
             String name = e.getAttribute("name").trim();
             String type = e.getAttribute("type").trim();
@@ -306,15 +303,7 @@ public class ArgoParser extends SAXParserBase {
      * @param type The type of the member. 
      *         One of <tt>"pgml"</tt>, <tt>"xmi"</tt> or <tt>"todo"</tt>.
      */
-    private void createProjectMember(String name, String type) {
-        
-        URL memberURL = proj.findMemberURLInSearchPath(name);
-        if (memberURL == null) {
-            LOG.debug("null memberURL");
-            return;
-        } else {
-            LOG.debug("memberURL = " + memberURL);
-        }
+    private void createProjectMember(String name, String type) throws SAXException {
         ProjectMember pm = proj.findMemberByName(name);
         if (pm != null) {
             return;
