@@ -1,8 +1,8 @@
 /*
  * Sample user
  */
-insert into Visitor (VISITORID, LOGINID, PASSWORD_VALUE, FIRST_NAME, LAST_NAME, CONFIRM_VALUE ) 
-    values (2, 'jon@latchkey.com', '1', 'Jon', 'Stevens', 'CONFIRMED' );
+insert into TURBINE_USER (USER_ID, LOGIN_NAME, PASSWORD_VALUE, FIRST_NAME, LAST_NAME, EMAIL, CONFIRM_VALUE ) 
+    values (2, 'jon@latchkey.com', '1', 'Jon', 'Stevens', 'jon@latchkey.com', 'CONFIRMED' );
 
 /*
  * Sample Project
