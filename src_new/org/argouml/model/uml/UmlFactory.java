@@ -1,4 +1,4 @@
-// $Id: UmlFactory.java,v 1.33 2003/09/09 18:10:54 thierrylach Exp $
+// $Id: UmlFactory.java,v 1.34 2003/09/10 02:58:39 thierrylach Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -1143,7 +1143,12 @@ public class UmlFactory extends AbstractUmlModelFactory {
         
         // Allow for testing of the proxy capability
         if (this.jmiProxyCreated) {
-            return RefBaseObjectProxy.newInstance(obj);
+        	// TODO implement RefPackageProxy handling
+        	
+			// if (obj instanceof MPackage) {
+			//     return RefPackageProxy.newInstance(obj);
+			// }
+			return RefBaseObjectProxy.newInstance(obj);
         }
         return obj;
     }
