@@ -29,8 +29,11 @@
 
 <form action="$actionLink" method="post">
 <input type="hidden" name="action" value="AssignIssue" />
+#set ($cancelPage = $data.Parameters.getString("$scarabG.Constant.CANCEL_TEMPLATE", "Search.vm"))
+<input type="hidden" name="$scarabG.Constant.CANCEL_TEMPLATE" value="$cancelPage" />
 #foreach ($issueId in $issueList)
   <input type="hidden" name="issue_ids" value="$issueId" />
+  <input type="hidden" name="id" value="$issueId" />
 #end
   
 <div class="functnbar">
@@ -44,9 +47,6 @@
   #set ($thisIssue = "this issue")
 #end
 
-<p>
-<a href="#add">Click here</a> to select users to associate with ${thisIssue}.
-</p>
 
 ##ASSIGNEE LIST
 ## Determine if there are any users to show up in the added/assigned list
@@ -72,6 +72,7 @@
 
     #if ($noUsers.equals("true"))
      <p><strong class="alert">None assigned.</strong></p>
+     <p><a href="#add">Click here</a> to select users to associate with ${thisIssue}.  </p>
     #else
 		
 		<table width="100%" border="1" cellspacing="2" cellpadding="3">
@@ -123,9 +124,6 @@ $intake.declareGroups()
 #foreach ($issueId in $issueList)
  <input type="hidden" name="issue_ids" value="$issueId" />
 #end
-<div class="functnbar2">
-<input type="submit" value="Done" name="eventSubmit_doDone" />
-</div>
 </form>
 
 
@@ -205,6 +203,7 @@ $intake.declareGroups()
 <input type="hidden" name="action" value="AssignIssue" />
 #foreach ($issueId in $issueList)
  <input type="hidden" name="issue_ids" value="$issueId" />
+ <input type="hidden" name="id" value="$issueId" />
 #end
 <input type="hidden" name="mod_ts" value="$now" />
 
@@ -289,6 +288,12 @@ $intake.declareGroups()
        </td>
      </tr>
   </table>
+</div>
+
+#set ($cancelPage = $data.Parameters.getString("$scarabG.Constant.CANCEL_TEMPLATE", "Search.vm"))
+<input type="hidden" name="$scarabG.Constant.CANCEL_TEMPLATE" value="$cancelPage" />
+<div class="functnbar2">
+<input type="submit" value="Done" name="eventSubmit_doDone" />
 </div>
 
 $intake.declareGroups()

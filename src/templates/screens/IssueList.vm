@@ -35,6 +35,7 @@
 
 <form action="$link.setPage("IssueList.vm").setAction("Search")" method="post">
 <input type="hidden" name="pageNum" value="$pageNum" />
+<input type="hidden" name="$scarabG.Constant.CANCEL_TEMPLATE" value="IssueList.vm" />
 
 #set ($queryString = $data.Parameters.getString("queryString",""))
 #if (!$queryString.equals(""))

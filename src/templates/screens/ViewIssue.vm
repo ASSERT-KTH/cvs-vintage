@@ -24,6 +24,7 @@ You are viewing an issue in a different Module than is currently selected.
  <form method="post" enctype="multipart/form-data" action="$link.setPage("ViewIssue.vm")">
    <input type="hidden" name="action" value="ModifyIssue" />
    <input type="hidden" name="$scarabG.Constant.NEXT_TEMPLATE" value="ViewIssue.vm" />
+   <input type="hidden" name="$scarabG.Constant.CANCEL_TEMPLATE" value="ViewIssue.vm" />
    <input type="hidden" name="mod_ts" value="$scarabG.Now.Time" />
 
  #if ($fullHistory)
