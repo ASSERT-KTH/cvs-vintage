@@ -142,10 +142,11 @@ thread context ClassLoader as was used to dispatch the http service request.
    extends="org.jboss.deployment.SubDeployerMBean"
 
 @author  Scott.Stark@jboss.org
-@version $Revision: 1.17 $
+@version $Revision: 1.18 $
 */
 public abstract class AbstractWebDeployer
 {
+   public static final String ERROR = "org.jboss.web.AbstractWebContainer.error";
    protected Logger log;
 
    protected MBeanServer server;
@@ -370,6 +371,7 @@ public abstract class AbstractWebDeployer
       }
       catch(DeploymentException e)
       {
+         di.context.put(ERROR, e);
          throw e;
       }
       catch(Exception e)
