@@ -72,11 +72,17 @@ A: All you need is a correct version of JDK (1.1.x or 1.2).
 
 Q: Where are the classes for JSPs and Servlets?
 
-A: webserver.jar	     -- class files for Servlet Engine.
-   lib/jspengine.jar         -- class files for JSP Engine.
-   lib/servlet.jar           -- Public APIs for Servlet.
-   lib/jsp.jar               -- Public APIs for JSP.
-   lib/xml.jar               -- classes for parsing XML document.
+A: lib/facade22.jar	      -- Servlet Engine classes.
+   lib/jaxp.jar               -- Public APIs for XML parser interface
+   lib/parser.jar             -- Public XML parser reference implementation
+   lib/tomcat_core.jar        -- Tomcat web server core classes
+   lib/tomcat_modules.jar     -- Tomcat module classes
+   lib/tomcat-startup.jar     -- Tomcat start/stop classes
+   lib/common/servlet.jar     -- Public APIs for Servlet.
+   lib/shared/jasper.jar      -- JSP Engine classes
+   lib/shared/tomcat_util.jar -- Utility classes.
+   lib/tomcat.jar             -- Executable jar for starting Tomcat
+   lib/stop-tomcat.jar        -- Executable jar for stopping Tomcat
 
 Q: Can I combine these classes with other webservers?
 
@@ -115,12 +121,20 @@ A: A web-application is a collection of resources such as jsps, servlets,
    To add "baseball" application you can make the following additions to 
    the file (at the appropriate place):
 
-   <Context path="/baseball" docBase="baseball"
-      defaultSessionTimeOut="30" isWARExpanded="true"
-      isWARValidated="false" isInvokerEnabled="true"
-      isWorkDirPersistent="false"/>
+   <Context path="/baseball" docBase="<baseball>"
+      debug="0" reloadable="true"/>
+
+   Replace <baseball> with an absolute path to the "baseball" directory,
+   or a relative path that is relative to the Tomcat home directory.
 
    Please read "server.xml" for more details.
+
+   In addition, thanks to the AutoSetup interceptor, you may create or
+   copy the "baseball" directory to the "webapps" directory found under
+   the Tomcat home directory.  When placed there, it will be served
+   automcatically with the default settings.  A <Context ... /> entry
+   in the server.xml is not required unless you want to override the
+   default settings.
 
    a) To install servlets within a web-application, you can do the following:
 
@@ -191,30 +205,45 @@ A: First, the web-server will match the beginning of the requested URI
 Q: What do different init parameters for the JSP engine mean?
 
    * keepgenerated: 
-        Whether to keep the generated java file or no. Can take a
-        value of true/false. If value is true then the generated files 
-        are kept else they are deleted.
+        Whether to keep the generated java file or not. Can take a
+        value of true/false. If value is true, then the generated files 
+        are kept, otherwise they are deleted. The default is true.
 
    * scratchdir: 
 	The work dir which will be created for storing all the
 	generated code. This can be set to any dir. That directory will be 
 	created under the docbase.
 
-   * largeFile: 
+   * largefile: 
 	Can take a value of true/false. If the file is really large then 
 	all the static html is stored is a separate data file if the value 
-	of this param is set to true.
+	of this param is set to true. If true, this setting overrides
+        the mappedfile param. The default is false.
+
+   * mappedfile: 
+	Can take a value of true/false. If you prefer each line of static
+        html be output separately, set this parameter true.  If largefile
+        is set true, this param is ignored.  If neither largefile or
+        mappedfile is true, the static html is output in blocks up to 32K
+        in length. The default is false.
 
    * sendErrToClient: 
 	Can take a value of true/false. If set to true then all
 	the compilation/parsing errors will be sent as part of the response 
-	to the client.
+	to the client. The default is false.
 
    * ieClassId: 
 	This is used with the plugin. This is a particular id that is
 	set to activate the plugin. The default value for IE 4 and 5 are 
-	set as of now. This is for future use incase the classId for IE 
+	set as of now. This is for future use in case the classId for IE 
 	changes in the future. 
+
+   * classdebuginfo: 
+	Whether to include debugging information in the class file. Can take
+        a value of true/false. If the value is true, then class debugging
+        information is included in the servlet class file when it is
+        compiled. The default is false.
+
 
    To set any of these to a value other than the default you need to
    explicitely define the JSP engine servlet and a mapping for the
@@ -225,7 +254,7 @@ Q: What do different init parameters for the JSP engine mean?
           jsp
       </servlet-name>
       <servlet-class>
-          org.apache.jasper.runtime.JSPServlet
+          org.apache.jasper.servlet.JspServlet
       </servlet-class>
       <init-param>
           <param-name>
