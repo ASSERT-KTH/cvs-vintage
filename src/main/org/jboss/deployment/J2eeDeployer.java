@@ -60,7 +60,7 @@ import org.jboss.management.j2ee.J2EEApplication;
  * @author <a href="mailto:toby.allsopp@peace.com">Toby Allsopp</a>
  * @author <a href="mailto:Scott_Stark@displayscape.com">Scott Stark</a>.
  * @author <a href="mailto:Christoph.Jung@infor.de">Christoph G. Jung</a>.
- * @version $Revision: 1.48 $
+ * @version $Revision: 1.49 $
  */
 
 public class J2eeDeployer
@@ -196,16 +196,10 @@ implements J2eeDeployerMBean
    {
       URL url = new URL(_url);
       
-      // <comment author="cgjung">factored out for subclass access </comment>
-      ObjectName lCollector = createCollectorName();
-      
       // undeploy first if it is a redeploy
       try
       {
          undeploy(_url);
-         // Remove application data by its id
-         // <comment author="cgjung"> factored out for subclass access </comment>
-         removeFromCollector(_url,lCollector);
       }
       catch (Exception _e)
       {
@@ -253,43 +247,6 @@ implements J2eeDeployerMBean
             log.error("fatal error:", _e);
             throw new J2eeDeploymentException("fatal error: "+_e);
          }
-      }
-   }
-   
-   /** creation of collector name  factored out.
-    *  @author schaefera
-    *  @author cgjung
-    */
-   protected ObjectName createCollectorName()
-   {
-      try
-      {
-         return new ObjectName( "Management", "service", "Collector" );
-      }
-      catch( Exception e )
-      {
-         return null;
-      }
-   }
-   
-   /** report of removal to data collector factored out for subclass access
-    *  a try/catch for dealing with an uninstalled collector has been added.
-    *  @author schaefera
-    *  @author cgjung
-    */
-   protected void removeFromCollector(String _url, ObjectName lCollector)
-   {
-      try
-      {
-         server.invoke(lCollector,
-            "removeApplication",
-            new Object[] { _url },
-            new String[]{ "java.lang.String" }
-         );
-      }
-      catch(Exception e)
-      {
-         log.info("Report of undeployment of J2EE application: " + _url + " could not be reported.");
       }
    }
    
