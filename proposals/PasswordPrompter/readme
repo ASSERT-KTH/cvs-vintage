@@ -1,0 +1,129 @@
+$Id: readme,v 1.1 2002/03/15 11:34:02 larryi Exp $
+
+                           Release Notes for:
+                           ====================
+                           PasswordPrompter 1.1
+                           ====================
+
+0.  TABLE OF CONTENTS:
+
+    1.  Introduction
+    2.  Installation
+    3.  Configuration
+
+
+=============================================================================
+1.  INTRODUCTION
+
+PasswordPrompter is an add-on module for Tomcat 3.3(a) and later (i.e Tomcat
+3.3.x versions).  The purpose of this add-on module is to allow the passwords
+for modules that need them to be entered by keyboard during startup.  This
+helps avoid the security risk of embedding them in the server.xml file.
+However, this is a weakness in the prompting in that the user entered value
+is visible on the console.  It attempts to "clear" the value from the screen
+by scrolling it off the screen using a configurable scroll parameter.  The
+default value for scroll is 25.
+
+This version differs significantly in how configurable it is from the version
+that shipped with Tomcat 3.3(a).  This version uses introspection to allow
+many attributes, not just passwords, to be set on most any module.  The
+default configuration in this release defines behavior identical to the
+version that shipped with Tomcat 3.3(a).  Examples are provided for
+additional passwords that might also be useful.
+
+
+=============================================================================
+2.  INSTALLATION
+
+To install simply place the PasswordPrompter.war in Tomcat's "modules"
+directory.  When Tomcat is started, this War file will be expanded and the
+PasswordPrompter module defined in the WEB-INF/interceptor.xml file will be
+added to the server.  This allows it to participate in how Tomcat behaves.
+                          
+
+=============================================================================
+3.  CONFIGURATION
+
+The configuration of what to prompt for is defined in the <PasswordPrompter>
+entry in the interceptors.xml file found in the WEB-INF directory.  The
+default configuration will prompt for the "keypass" password for any secure
+Http10Connector modules whose "keypass" attribute isn't already set.  It will
+also prompt for the "connectionPassword" for any JDBCRealm modules found
+whose password isn't already set.  There are additional examples provided
+in the interceptors.xml file, plus it is easy to define new ones.  Before
+modifications to interceptors.xml can be made, you will need to start Tomcat
+once after placing the PasswordPrompter.war in the "modules" directory,
+or manually expand the PasswordPrompter.war file.
+
+Any number of prompts may be included in the <PasswordPrompter ...> entry
+in interceptors.xml.  They are specified as attributes, each with a unique
+name that begins with "prompt".  The syntax of the prompt string is as
+follows:
+
+<module name or class>|<test method>|<is set method>|<set method>|<prompt>
+
+The pieces separated by the '|' character are defined as follows:
+
+<module name or class>
+
+    The name of the module, or the class of the module.  If the specified
+    string does not contain a period, it is assumed to be a module name.
+    PasswordPrompter will attempt to translate the name to a class using
+    the modules defined in the conf/modules.xml file.  If not successful,
+    it will use the name as a class name.  If the string contains at least
+    one period, it is assumed to already be the name of the class.
+
+<test method> and <is set method>
+
+    These are specifications of two methods to be called to determine if
+    the prompt should occur.  Their name suggests their intended purpose,
+    i.e. test if the module meets a certain condition and determine if
+    the attribute to be set is already set, implying that it doesn't need
+    to be set again.  The syntax of these strings is as follows:
+
+    [!]<method>[:<string>]
+
+    The <method> should be the name of a method that returns a boolean value.
+    If the <string> is not specified, the method should have no arguments.
+    If <string> is specified, the method will be called with the specified
+    string as the argument.  Thus, "isAttributeSet:keypass" implies that
+    the equivalent of isAttributeSet("keypass") will be called.
+
+    Beginning the specification with the '!' inverts the expected return
+    value for "success".  The <test method> expects a return value of true
+    for success, or false, if '!' is included.  <is set method> expects a
+    return value of false (i.e. isn't already set) for success, or true, if
+    '!' is included.  Either test may be forced to "success" by specifying
+    "always" as the specification string.  Both must succeed before the
+    prompt occurs.
+
+<set method>
+
+    This specification defines the setter method to use to set the user
+    entered value in the module.  The syntax of this string is as follows:
+
+    <method>[:<string>]
+
+    The <method> should be the name of a method that has accepts one
+    string argument if <string> is not specified, or two string arguments
+    if <string> is specified.  If <string> is not specified, the method
+    is called with the user entered string as the only argument.  If
+    <string> is specified, the <string> argument will be the first
+    argument and the user entered string will be the second argument.
+    Thus, "setAttribute:keypass" implies that the equivalent of
+    setAttribute("keypass", userstring) will be called.
+
+<prompt>
+
+    This is the single line prompt that will be displayed if prompting
+    a the user value occurs.  In the case of context local modules, the
+    context name will be displayed on the line preceding the prompt.
+
+The <PasswordPrompter ...> entry also accepts a "scroll" attribute which
+specifies the number of lines to scroll following a user entered value.
+For example:
+
+    <PasswordPrompter scroll="32"
+	prompt1="..." />
+
+would scroll 32 lines.
