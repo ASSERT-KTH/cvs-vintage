@@ -46,22 +46,21 @@ package org.tigris.scarab.util.word;
  * individuals on behalf of Collab.Net.
  */ 
 
-import java.util.List;
-
-import org.apache.torque.om.NumberKey;
 
 import org.tigris.scarab.test.BaseTestCase;
 import org.tigris.scarab.om.Module;
 import org.tigris.scarab.om.IssueType;
 import org.tigris.scarab.om.AttributeValue;
+import org.tigris.scarab.om.AttributeManager;
 import org.tigris.scarab.om.AttributeOptionManager;
 import org.tigris.scarab.om.AttributeOption;
+import org.tigris.scarab.util.IteratorWithSize;
 
 /**
  * A Testing Suite for the om.IssueSearch class.
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: IssueSearchTest.java,v 1.5 2003/07/25 17:31:20 thierrylach Exp $
+ * @version $Id: IssueSearchTest.java,v 1.6 2003/09/10 00:51:03 jmcnally Exp $
  */
 public class IssueSearchTest extends BaseTestCase
 {
@@ -92,6 +91,7 @@ public class IssueSearchTest extends BaseTestCase
         testUserWithAssignedTo();
         testUserWithAssignedToAndCreatedDate();
         testSingleOptionAndUserWithAny();
+        testLargeQuery();
     }
 
     private IssueSearch getSearch()
@@ -113,10 +113,10 @@ public class IssueSearchTest extends BaseTestCase
         AttributeValue platformAV = AttributeValue
             .getNewInstance(getPlatformAttribute(), search);
         AttributeOption sgi = 
-            AttributeOptionManager.getInstance(new NumberKey(21));
+            AttributeOptionManager.getInstance(new Integer(21));
         platformAV.setAttributeOption(sgi);
         search.addAttributeValue(platformAV);
-        List results = search.getQueryResults();
+        IteratorWithSize results = search.getQueryResults();
         assertTrue("Should be one result.", (results.size() == 1));
         IssueSearchFactory.INSTANCE.notifyDone();
     }
@@ -128,10 +128,10 @@ public class IssueSearchTest extends BaseTestCase
         AttributeValue platformAV = AttributeValue
             .getNewInstance(getPlatformAttribute(), search);
         AttributeOption notsgi = 
-            AttributeOptionManager.getInstance(new NumberKey(20));
+            AttributeOptionManager.getInstance(new Integer(20));
         platformAV.setAttributeOption(notsgi);
         search.addAttributeValue(platformAV);
-        List results = search.getQueryResults();
+        IteratorWithSize results = search.getQueryResults();
         assertTrue("Should be no result.", (results.size() == 0));
         IssueSearchFactory.INSTANCE.notifyDone();
     }
@@ -142,7 +142,7 @@ public class IssueSearchTest extends BaseTestCase
         IssueSearch search = getSearch();
         search.addUserCriteria(getUser5().getUserId().toString(), 
                                IssueSearch.ANY_KEY);
-        List results = search.getQueryResults();
+        IteratorWithSize results = search.getQueryResults();
         assertTrue("Should be one result.", (results.size() == 1));
         IssueSearchFactory.INSTANCE.notifyDone();
     }
@@ -153,7 +153,7 @@ public class IssueSearchTest extends BaseTestCase
         IssueSearch search = getSearch();
         search.addUserCriteria(getUser5().getUserId().toString(), 
                                IssueSearch.CREATED_BY_KEY);
-        List results = search.getQueryResults();
+        IteratorWithSize results = search.getQueryResults();
         assertTrue("Should be one result.", (results.size() == 1));
         IssueSearchFactory.INSTANCE.notifyDone();
     }
@@ -164,7 +164,7 @@ public class IssueSearchTest extends BaseTestCase
         IssueSearch search = getSearch();
         search.addUserCriteria(getUser5().getUserId().toString(), 
             getAssignAttribute().getAttributeId().toString());
-        List results = search.getQueryResults();
+        IteratorWithSize results = search.getQueryResults();
         assertTrue("Should be no results.", (results.size() == 0));
         IssueSearchFactory.INSTANCE.notifyDone();
     }
@@ -176,7 +176,7 @@ public class IssueSearchTest extends BaseTestCase
         search.addUserCriteria(getUser5().getUserId().toString(), 
             getAssignAttribute().getAttributeId().toString());
         search.setMinDate("01/01/2000");
-        List results = search.getQueryResults();
+        IteratorWithSize results = search.getQueryResults();
         assertTrue("Should be no results.", (results.size() == 0));
         IssueSearchFactory.INSTANCE.notifyDone();
     }
@@ -189,13 +189,62 @@ public class IssueSearchTest extends BaseTestCase
         AttributeValue platformAV = AttributeValue
             .getNewInstance(getPlatformAttribute(), search);
         AttributeOption sgi = 
-            AttributeOptionManager.getInstance(new NumberKey(21));
+            AttributeOptionManager.getInstance(new Integer(21));
         platformAV.setAttributeOption(sgi);
         search.addAttributeValue(platformAV);
         search.addUserCriteria(getUser5().getUserId().toString(), 
                                IssueSearch.ANY_KEY);
-        List results = search.getQueryResults();
+        IteratorWithSize results = search.getQueryResults();
         assertTrue("Should be one result.", (results.size() == 1));
+        IssueSearchFactory.INSTANCE.notifyDone();
+    }
+
+    private int[] attributeIds = {3, 4, 6, 7, 8}; //, 9, 12};
+    private int[] optionIds = {1, 8, 24, 54, 58}; //, 62, 88};
+    private void testLargeQuery()
+        throws Exception
+    {
+        IssueSearch search = getSearch();
+        search.setMinDate("01/01/2000"); // 1
+        AttributeValue av;
+        AttributeOption o;
+        for (int i = 0; i < attributeIds.length; i++) 
+        {
+            av = AttributeValue.getNewInstance(AttributeManager.getInstance(
+                 new Integer(attributeIds[i])), search);     
+            o = AttributeOptionManager.getInstance(new Integer(optionIds[i]));
+            av.setAttributeOption(o);
+            search.addAttributeValue(av); // 6
+        }
+        
+        search.addUserCriteria(getUser5().getUserId().toString(), 
+                               IssueSearch.ANY_KEY); // 7
+
+        search.setStateChangeFromOptionId(new Integer(2));
+        search.setStateChangeToOptionId(new Integer(1)); // 8
+        search.setStateChangeFromDate("01/01/2000");
+        search.setStateChangeToDate("01/01/2004"); // 9
+
+        IteratorWithSize results = search.getQueryResults();
+        assertTrue("Should be no results.", (results.size() == 0));
+        IssueSearchFactory.INSTANCE.notifyDone();
+
+        av = AttributeValue.getNewInstance(getPlatformAttribute(), search);
+        o = AttributeOptionManager.getInstance(new Integer(21));
+        av.setAttributeOption(o);
+        System.out.println("av size=" + search.getAttributeValues().size());
+        search.addAttributeValue(av); // 11
+        System.out.println("after av size=" + search.getAttributeValues().size());
+
+        try 
+        {
+            search.getQueryResults();
+            fail("Should have thrown ComplexQueryException");            
+        }
+        catch (ComplexQueryException e)
+        {
+            // expected
+        }
         IssueSearchFactory.INSTANCE.notifyDone();
     }
 }

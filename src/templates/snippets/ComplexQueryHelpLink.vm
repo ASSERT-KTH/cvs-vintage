@@ -1,0 +1,1 @@
+#enterHelp($link.setPage("help,UserQueryComplex.vm") "" "$l10n.ClickHere")

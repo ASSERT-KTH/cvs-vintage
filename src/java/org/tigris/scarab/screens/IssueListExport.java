@@ -147,19 +147,15 @@ public class IssueListExport extends DataExport
             ScarabLocalizationTool l10n, ScarabRequestTool scarabR, List rmuas)
         throws Exception
     {
-        List issueIdList = scarabR.getCurrentSearchResults();
-        if (containsElements(issueIdList)) 
+        for (Iterator i = scarabR.getCurrentSearchResults();i.hasNext();)
         {
-            for (Iterator i = issueIdList.iterator();i.hasNext();)
-            {
-                printer.println();
-                QueryResult queryResult = (QueryResult)i.next();
-                writeRow(printer, mitlist, l10n, rmuas, queryResult);
-            }
-            // print a newline when we're done to complete the last line;
-            // this also ensures that the output is flushed
             printer.println();
+            QueryResult queryResult = (QueryResult)i.next();
+            writeRow(printer, mitlist, l10n, rmuas, queryResult);
         }
+        // print a newline when we're done to complete the last line;
+        // this also ensures that the output is flushed
+        printer.println();
     }
 
     /**

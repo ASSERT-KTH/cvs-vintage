@@ -81,10 +81,12 @@ import org.tigris.scarab.om.Attachment;
 import org.tigris.scarab.om.AttachmentManager;
 import org.tigris.scarab.om.RModuleAttribute;
 import org.tigris.scarab.util.Log;
+import org.tigris.scarab.util.IteratorWithSize;
 import org.tigris.scarab.util.ScarabConstants;
 import org.tigris.scarab.util.word.IssueSearch;
 import org.tigris.scarab.util.word.IssueSearchFactory;
 import org.tigris.scarab.util.word.MaxConcurrentSearchException;
+import org.tigris.scarab.util.word.ComplexQueryException;
 import org.tigris.scarab.util.word.QueryResult;
 import org.tigris.scarab.tools.ScarabRequestTool;
 import org.tigris.scarab.tools.ScarabLocalizationTool;
@@ -94,7 +96,7 @@ import org.tigris.scarab.services.security.ScarabSecurity;
  * This class is responsible for report issue forms.
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: ReportIssue.java,v 1.178 2003/08/19 23:56:36 jmcnally Exp $
+ * @version $Id: ReportIssue.java,v 1.179 2003/09/10 00:41:45 jmcnally Exp $
  */
 public class ReportIssue extends RequireLoginFirstAction
 {
@@ -250,20 +252,18 @@ public class ReportIssue extends RequireLoginFirstAction
             }
         }
         
-        
-        List queryResults = search.getQueryResults();
-
         // set the template to dedupe unless none exist, then skip
         // to final entry screen
+        IteratorWithSize queryResults = search.getQueryResults();
         dupThresholdExceeded = (queryResults.size() > threshold);
         if (dupThresholdExceeded)
         {
             List matchingIssueIds = new ArrayList(maxResults);
             // limit the number of matching issues to maxResults
-            for (int i = 0; i < queryResults.size() && i <= maxResults; i++) 
+            for (int i = 0; queryResults.hasNext() && i <= maxResults; i++) 
             {
                 matchingIssueIds.add(
-                    ((QueryResult)queryResults.get(i)).getUniqueId());
+                    ((QueryResult)queryResults.next()).getUniqueId());
             }
             context.put("issueList", matchingIssueIds);
             template = "entry,Wizard2.vm";
@@ -278,6 +278,12 @@ public class ReportIssue extends RequireLoginFirstAction
             getScarabRequestTool(context).setInfoMessage(
                 getLocalizationTool(context)
                 .get("DupeCheckSkippedForLackOfResources"));            
+        }
+        catch (ComplexQueryException e)
+        {
+            getScarabRequestTool(context).setInfoMessage(
+                getLocalizationTool(context)
+                .get("DupeCheckSkippedBecauseComplexity"));            
         }
         finally
         {

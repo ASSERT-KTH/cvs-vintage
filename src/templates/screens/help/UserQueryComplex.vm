@@ -1,0 +1,60 @@
+<div class="docs" id="userquerycomplex"> 
+  <div id="toc"> 
+    <ul>
+      <li>$l10n.ScarabHelp 
+        <ul>
+          <li><a href="$link.setPage("help,Introduction.vm")">$l10n.IntroToScarab</a></li>
+          <li><a href="$link.setPage("help,UserIssues.vm")">$l10n.ManagingIssues</a> </li>
+          <li>$l10n.SearchingDatabase 
+            <ul>
+              <li><a href="$link.setPage("help,UserQuery.vm")">$l10n.SearchingOverview</a></li>
+              <li><strong>$l10n.AdvancedQueries</strong> 
+                <ul>
+                  <li><a href="#knowledge">$l10n.SearchingKnowledge</a></li>
+                  <li><a href="#personnel">$l10n.SearchingPerson</a></li>
+                  <li><a href="#state">$l10n.SearchingChange</a></li>
+                </ul>
+              </li>
+              <li><a href="$link.setPage("help,UserQueryAdvanced.vm")">$l10n.AdvancedQueries</a></li>
+              <li><a href="$link.setPage("help,UserQueryCustom.vm")">$l10n.CustomQueries</a></li>
+              <li><a href="$link.setPage("help,UserQuerySaved.vm")">$l10n.SavedQueries</a></li>
+              <li><a href="$link.setPage("help,UserQueryCrossProject.vm")">$l10n.CrossProjectQueries</a></li>
+            </ul>
+          </li>
+          <li><a href="$link.setPage("help,UserReports.vm")">$l10n.HelpReports</a></li>
+          <li><a href="$link.setPage("help,ScarabBestPractices.vm")">$l10n.ScarabGuidelines</a></li>
+          <li><a href="$link.setPage("help,ScarabFaq.vm")">$l10n.HelpFAQ</a></li>
+          <li><a href="$link.setPage("help,ScarabGlossary.vm")">$l10n.HelpGlossary</a></li>
+        </ul>
+      </li>
+    </ul>
+  </div>
+  <p> 
+
+<h3>$l10n.QueryLimits</h3>
+<p>Project Tracker can not generate results for queries that are overly 
+complex.  In order to figure out the complexity of a query a point system is 
+used.  If you exceed $scarabG.Constant.QUERY_MAX_FILTER_CRITERIA points, you 
+cannot generate the query. Points are added for using the following when 
+specifying a query:</p>
+
+<ul>
+<li>1 point for each option attribute. Text attributes do not use any points.
+</li>
+<li>1 point for one or more personnel associations. It does not matter how many
+personnel associations are specified; the point is added for only the first 
+one.</li>
+<li>1 point for the "Created" items, either the 'creation date range', or one 
+or more user associations of 'Created by'.  Only one point is added if both the
+'creation date range' and one or more 'created by' user associations are used.
+</li>
+<li>1 point for the State change query criteria, with an additional 1 point if
+dates are specified</li>
+</ul>
+
+<p>The points are added together to determine if a query can be generated or 
+not.  If the number of points is greater than 
+$scarabG.Constant.QUERY_MAX_FILTER_CRITERIA then an alert message will be
+shown and the query will not be generated.</p>
+
+</div>

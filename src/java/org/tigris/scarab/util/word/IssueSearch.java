@@ -57,6 +57,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.HashSet;
+import java.util.NoSuchElementException;
 import java.sql.Connection;
 import java.sql.Statement;
 import java.sql.ResultSet;
@@ -104,6 +105,7 @@ import org.tigris.scarab.om.ScarabUser;
 import org.tigris.scarab.attribute.OptionAttribute;
 import org.tigris.scarab.attribute.StringAttribute;
 import org.tigris.scarab.util.Log;
+import org.tigris.scarab.util.IteratorWithSize;
 import org.tigris.scarab.util.ScarabConstants;
 import org.tigris.scarab.util.ScarabException;
 import org.tigris.scarab.services.security.ScarabSecurity;
@@ -114,11 +116,14 @@ import org.tigris.scarab.services.security.ScarabSecurity;
  * not a more specific type of Issue.
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: IssueSearch.java,v 1.110 2003/09/05 22:08:10 dlr Exp $
+ * @version $Id: IssueSearch.java,v 1.111 2003/09/10 00:50:31 jmcnally Exp $
  */
 public class IssueSearch 
     extends Issue
 {
+    private static final int MAX_INNER_JOIN = 
+        ScarabConstants.QUERY_MAX_FILTER_CRITERIA;
+
     private static final int MAX_JOIN = 
         ScarabConstants.QUERY_MAX_JOIN;
 
@@ -220,6 +225,13 @@ public class IssueSearch
         " LEFT OUTER JOIN " + RModuleOptionPeer.TABLE_NAME + " sortRMO ON " +
         '(' + IssuePeer.MODULE_ID + "=sortRMO.MODULE_ID AND " +
         IssuePeer.TYPE_ID + "=sortRMO.ISSUE_TYPE_ID AND sortRMO.OPTION_ID=";
+    private static final String AV = "av";
+    private static final String DOT_OPTION_ID_PAREN = ".OPTION_ID)";
+    private static final String DOT_VALUE = ".VALUE";
+    private static final String SORTRMO_PREFERRED_ORDER = 
+        "sortRMO.PREFERRED_ORDER";
+
+
 
     private static final int NO_ATTRIBUTE_SORT = -1;
 
@@ -233,13 +245,32 @@ public class IssueSearch
      * request)!
      */
     private Connection conn;
+
     /**
-     * The statement that will be used by the connection to obtain the
-     * ResultSet for the query.  Statements should be closed when no longer
-     * needed and closing a Statement will release any associated ResultSets
-     * for a compliant jdbc driver.
+     * The statement that will be used by the connection to get the issue
+     * ids for the query.
      */
-    private Statement stmt;
+    private Statement searchStmt; 
+    /**
+     * The ResultSet(s) that contains the issue ids for a query.
+     */
+    private ResultSet searchRS;
+
+    /**
+     * The statement(s) that will be used by the connection to obtain the
+     * ResultSet for column data to be shown for the query.  Statements should
+     * be closed when no longer needed. Closing a Statement will release any 
+     * associated ResultSets for a compliant jdbc driver, but we don't rely 
+     * on this behavior.
+     */
+    private List stmtList;
+    /**
+     * The ResultSet(s) that contain query result column data.  We store the 
+     * size along with the RS in a ResultSetAndSize object, where size is
+     * the number of columns in the RS.
+     */
+    private List rsList;
+
     /**
      * used to track how long we hold the connection
      */
@@ -273,7 +304,7 @@ public class IssueSearch
 
     private int lastTotalIssueCount = -1;
     private List lastMatchingIssueIds = null;
-    private List lastQueryResults = null;
+    private IteratorWithSize lastQueryResults = null;
 
     // the attribute columns that will be shown
     private List issueListAttributeColumns;
@@ -1436,8 +1467,8 @@ public class IssueSearch
                 c2 = alias + '.' + AV_OPTION_ID + " IN ("
                     + StringUtils.join(options.iterator(), ",") + ')';
             }
-        
-            String joinClause = " INNER JOIN " + AttributeValuePeer.TABLE_NAME
+            joinCounter++;
+            String joinClause = INNER_JOIN + AttributeValuePeer.TABLE_NAME
                 + ' ' + alias + " ON (" + 
                 alias + '.' + AV_ISSUE_ID + '=' + IssuePeer.ISSUE_ID + 
                 AND + c2 + AND + 
@@ -1516,6 +1547,7 @@ public class IssueSearch
         {
             if (dateRangeSql != null) 
             {
+                joinCounter++;
                 // just dates
                 from.append(INNER_JOIN).append(ActivitySetPeer.TABLE_NAME) 
                     .append(' ').append(ACTIVITYSETALIAS).append(ON).append(
@@ -1572,6 +1604,7 @@ public class IssueSearch
 
             // All users are compared using OR, so use a single alias
             // for activities related to users.
+            joinCounter++;
             StringBuffer fromClause = new StringBuffer(100);
             fromClause.append(INNER_JOIN).append(ActivityPeer.TABLE_NAME)
                 .append(' ').append(ACTIVITYALIAS).append(ON)
@@ -1623,6 +1656,7 @@ public class IssueSearch
                     whereClause = '(' + attrCrit.toString() + ')';
                 }
 
+                joinCounter++;
                 fromClause.append(')').append(INNER_JOIN)
                     .append(ActivitySetPeer.TABLE_NAME) 
                     .append(' ').append(ACTIVITYSETALIAS).append(ON).append(
@@ -1775,6 +1809,7 @@ public class IssueSearch
             || (newOptionId != null && !newOptionId.equals(NUMBERKEY_0))
             || minUtilDate != null || maxUtilDate != null)
         {
+            joinCounter++;
             from.append(INNER_JOIN + ActivityPeer.TABLE_NAME + ON +
                         ActivityPeer.ISSUE_ID + '=' + IssuePeer.ISSUE_ID);
 
@@ -1801,6 +1836,7 @@ public class IssueSearch
             // add dates, if given
             if (minUtilDate != null || maxUtilDate != null) 
             {
+                joinCounter++;
                 from.append(INNER_JOIN + ActivitySetPeer.TABLE_NAME + ON +
                              ActivitySetPeer.TRANSACTION_ID + '=' +
                              ActivityPeer.TRANSACTION_ID);
@@ -1837,7 +1873,7 @@ public class IssueSearch
         whereClause.append(AND).append(IssuePeer.DELETED).append("=0");
 
         // add option values
-        lastUsedAVList = getAttributeValues();
+        lastUsedAVList = new ArrayList(getAttributeValues());
 
         // remove unset AttributeValues before searching
         List setAttValues = removeUnsetValues(lastUsedAVList);        
@@ -1879,13 +1915,13 @@ public class IssueSearch
      * @return a <code>List</code> value
      * @exception Exception if an error occurs
      */
-    public List getQueryResults()
-        throws Exception
+    public IteratorWithSize getQueryResults()
+        throws ComplexQueryException, Exception
     {
         checkModified();
         if (!isSearchAllowed) 
         {
-            lastQueryResults = Collections.EMPTY_LIST;            
+            lastQueryResults = IteratorWithSize.EMPTY;            
         }
         else if (lastQueryResults == null) 
         {
@@ -1893,27 +1929,23 @@ public class IssueSearch
             Set tableAliases = new HashSet();
             StringBuffer from = new StringBuffer();
             StringBuffer where = new StringBuffer();
+            joinCounter = 0;
             Long[] matchingIssueIds = addCoreSearchCriteria(from, where,
                                                                  tableAliases);
+            if (joinCounter > MAX_INNER_JOIN) 
+            {
+                throw new ComplexQueryException("Query is too complex");
+            }
             // the matchingIssueIds are text search matches.  if length == 0,
             // then no need to search further.  if null then there was no
             // text to search, so continue the search process.
             if (matchingIssueIds == null || matchingIssueIds.length > 0) 
             {            
-                // Get matching issues, with sort criteria
-                StringBuffer sql = new StringBuffer(255);
-                sql.append(SELECT_DISTINCT)
-                    .append(IssuePeer.ISSUE_ID).append(',')
-                    .append(IssuePeer.MODULE_ID).append(',')
-                    .append(IssuePeer.TYPE_ID).append(',')
-                    .append(IssuePeer.ID_PREFIX).append(',')
-                    .append(IssuePeer.ID_COUNT);
-
-                lastQueryResults = sortResults(sql, from, where, tableAliases);
+                lastQueryResults = getQueryResults(from, where);
             }
             else 
             {
-                lastQueryResults = Collections.EMPTY_LIST;
+                lastQueryResults = IteratorWithSize.EMPTY;
             }            
         }
         
@@ -1922,7 +1954,7 @@ public class IssueSearch
 
 
     public int getIssueCount()
-        throws Exception
+        throws ComplexQueryException, Exception
     {
         checkModified();
         int count = 0;
@@ -1943,13 +1975,19 @@ public class IssueSearch
     }
 
     private int countFromDB()
-        throws Exception
+        throws ComplexQueryException, Exception
     {
         int count = 0;
         StringBuffer from = new StringBuffer();
         StringBuffer where = new StringBuffer();
+        joinCounter = 0;
         Long[] matchingIssueIds = addCoreSearchCriteria(from, where,
                                                         new HashSet());
+        if (joinCounter > MAX_INNER_JOIN) 
+        {
+            throw new ComplexQueryException("Query is too complex");
+        }
+        
         if (matchingIssueIds == null || matchingIssueIds.length > 0) 
         {
             StringBuffer sql = new StringBuffer("SELECT count(DISTINCT ");
@@ -2024,146 +2062,146 @@ public class IssueSearch
         }        
     }
 
-
-    /**
-     * FIXME: If we are sorting on an attribute column (determined by
-     * <code>sortAttrPos >= 0</code>) and some rows have null
-     * (non-existent) values for that attribute, we'd like to separate
-     * them for presentation at the end of the list.  Otherwise, for
-     * certain polarity (such as when sorting in ascending order) they
-     * will be shown first.  The
-     * <code>java.sql.DatabaseMetaData.nullsAreSortedAtEnd()</code>
-     * method may be able to help us here.
-     */
-    private List sortResults(StringBuffer select, StringBuffer from,
-                             StringBuffer where, Set tableAliases)
-        throws Exception
+    private String setupSortColumn(Integer sortAttrId, 
+                                   StringBuffer sortOuterJoin)
+        throws TorqueException
     {
+        String alias = AV + sortAttrId;
+            sortOuterJoin.append(LEFT_OUTER_JOIN)
+                .append(AttributeValuePeer.TABLE_NAME).append(' ')
+                .append(alias).append(ON)
+                .append(IssuePeer.ISSUE_ID).append('=')
+                .append(alias).append(".ISSUE_ID AND ").append(alias)
+                .append(".DELETED=0 AND ").append(alias)
+                .append(".ATTRIBUTE_ID=").append(sortAttrId).append(')');
+            String sortColumn;
+            Attribute att = AttributeManager.getInstance(sortAttrId); 
+            if (att.isOptionAttribute())
+            {
+                // add the sort column
+                sortColumn = SORTRMO_PREFERRED_ORDER;
+                // join the RMO table to the alias we are sorting
+                sortOuterJoin.append(BASE_OPTION_SORT_LEFT_JOIN).append(alias)
+                    .append(DOT_OPTION_ID_PAREN);
+            }
+            else 
+            {
+                sortColumn = alias + DOT_VALUE;
+            }
+            return sortColumn;
+    }
+
+    private List getSearchSqlPieces(StringBuffer from, StringBuffer where)
+        throws TorqueException
+    {
+        List searchStuff = new ArrayList(3);
         Integer sortAttrId = getSortAttributeId();
+
+        // Get matching issues, with sort criteria
+        StringBuffer sql = getSelectStart();
+        sql.append(',').append(IssuePeer.MODULE_ID)
+            .append(',').append(IssuePeer.TYPE_ID);
+        String sortColumn = null;
+        StringBuffer sortOuterJoin = null;
+        if (sortAttrId != null) 
+        {
+            sortOuterJoin = new StringBuffer(128);
+            sortColumn = setupSortColumn(sortAttrId, sortOuterJoin);
+            sql.append(',').append(sortColumn);
+        }
+
+        sql.append(FROM).append(IssuePeer.TABLE_NAME);
+        if (from.length() > 0) 
+        {
+            sql.append(' ').append(from.toString());
+        }
+        if (sortOuterJoin != null) 
+        {
+            sql.append(sortOuterJoin);    
+        }
+        if (where.length() > 0) 
+        {
+            sql.append(WHERE).append(where);
+        }
+        addOrderByClause(sql, sortColumn);
+        searchStuff.add(sql.toString());
 
         // add the attribute value columns that will be shown in the list.
         // these are joined using a left outer join, so the additional
         // columns do not affect the results of the search (no additional
-        // criteria are added to the where clause.)  Criteria object does
-        // not provide support for outer joins, so we will need to manipulate
-        // the query manually
-        StringBuffer sb = new StringBuffer(select.length() + 500);
-        sb.append(select);
-        // use this to track already added aliases, need to use a better method
-        String fromString = from.toString();
-
-        String sortColumn = null;
-        int sortAttrPos = NO_ATTRIBUTE_SORT;
-        StringBuffer outerJoin = null;
-        int valueListSize = -1;
+        // criteria are added to the where clause.)          
         List rmuas = getIssueListAttributeColumns();
-        int outerJoinCounter = 0;
-        if (rmuas != null) 
+        if (rmuas != null)
         {
-            valueListSize = rmuas.size();
-            outerJoin = new StringBuffer(10 * valueListSize + 20);
+            int valueListSize = rmuas.size();
+            StringBuffer outerJoin = new StringBuffer(10 * valueListSize + 20);
             StringBuffer selectColumns = new StringBuffer(20 * valueListSize);
 
-            boolean sortAttributeAdded = false;
-            int outerJoinLimit = MAX_JOIN - joinCounter;
             int count = 0;
-            for (Iterator i = rmuas.iterator(); i.hasNext(); count++) 
+            int maxJoin = MAX_JOIN - 2;
+            //List columnSqlList = new ArrayList(valueListSize/maxJoin + 1);
+            StringBuffer partialSql = getSelectStart();
+            Set tableAliases = new HashSet(MAX_JOIN);
+            boolean sortColumnAdded = false;
+            for (Iterator i = rmuas.iterator(); i.hasNext();) 
             {
                 RModuleUserAttribute rmua = (RModuleUserAttribute)i.next();
-                // locate the sort attribute position so we can move any 
-                // unset results to the end of the list.
                 Integer attrPK = rmua.getAttributeId();
-                String id = attrPK.toString();
-                String alias = "av" + id;
-                if (outerJoinCounter < outerJoinLimit || 
-                    tableAliases.contains(alias)) 
-                {
                 if (attrPK.equals(sortAttrId)) 
                 {
-                    sortAttrPos = count;
-                        sortAttributeAdded = true;
+                    sortColumnAdded = true;
                 }
+                
+                String id = attrPK.toString();
+                String alias = AV + id;
                 // add column to SELECT column clause
-                selectColumns.append(',').append(alias).append(".VALUE");
+                partialSql.append(',').append(alias).append(DOT_VALUE);
                 // if no criteria was specified for a displayed attribute
                 // add it as an outer join
-                if (!tableAliases.contains(alias))
+                if (!tableAliases.contains(alias) 
+                    && !attrPK.equals(sortAttrId))
                 {
                     outerJoin.append(LEFT_OUTER_JOIN)
                         .append(AttributeValuePeer.TABLE_NAME).append(' ')
                         .append(alias).append(ON)
                         .append(IssuePeer.ISSUE_ID).append('=')
-                            .append(alias).append(".ISSUE_ID AND ")
-                            .append(alias)
+                        .append(alias).append(".ISSUE_ID AND ").append(alias)
                         .append(".DELETED=0 AND ").append(alias)
                         .append(".ATTRIBUTE_ID=").append(id).append(')');
                     tableAliases.add(alias);
                 }
-            }
-                else 
-                {
-                    i.remove();
-                    valueListSize--;
-                }                
-            }
 
-            // we need add more sql for attribute/option sorting
-            if (sortAttributeAdded) 
-            {
-                String sortId = sortAttrId.toString();
-                Attribute att = AttributeManager.getInstance(sortAttrId);
-                if (att.isOptionAttribute())
+                count++;
+                if (count == maxJoin || !i.hasNext()) 
                 {
-                    // add the sort column
-                    sortColumn = "sortRMO.PREFERRED_ORDER";
-                    selectColumns.append(',').append(sortColumn);
-                    // join the RMO table to the AttributeValue alias we are sorting
-                    outerJoin.append(BASE_OPTION_SORT_LEFT_JOIN).append("av")
-                        .append(sortId).append(".OPTION_ID)");
-                }
-                else 
-                {
-                    sortColumn = "av" + sortId + ".VALUE";
+                    ColumnBundle cb = new ColumnBundle();
+                    cb.size = count;
+                    if (sortAttrId != null) 
+                    {
+                        cb.sortColumn = setupSortColumn(sortAttrId, outerJoin);
+                        partialSql.append(',').append(
+                            cb.sortColumn);
+                    }
+                    cb.select = partialSql;
+                    cb.outerJoins = outerJoin;
+                    searchStuff.add(cb);
+
+                    partialSql = getSelectStart();
+                    outerJoin = new StringBuffer(512);
+                    tableAliases = new HashSet(MAX_JOIN);
+                    sortColumnAdded = false;
+                    count = 0;
                 }
             }
-            // add attribute columns for the table
-            sb.append(selectColumns);
         }
+        return searchStuff;
+    }
 
-        sb.append(FROM).append(IssuePeer.TABLE_NAME);
-        if (from.length() > 0) 
-        {
-            sb.append(' ').append(fromString);
-        }
-        if (outerJoin != null) 
-        {
-            // add left outer join
-            sb.append(outerJoin);    
-        }
-        if (where.length() > 0) 
-        {
-            sb.append(WHERE).append(where);
-        }
-
-        // add order by clause
-        if (sortColumn == null) 
-        {
-            sb.append(ORDER_BY).append(IssuePeer.ID_PREFIX);
-            sb.append(' ').append(getSortPolarity());
-            sb.append(',').append(IssuePeer.ID_COUNT);
-            sb.append(' ').append(getSortPolarity());
-        }
-        else 
-        {
-            sb.append(ORDER_BY).append(sortColumn);
-            sb.append(' ').append(getSortPolarity());
-            // add pk sort so that rows can be combined easily
-            sb.append(',').append(IssuePeer.ISSUE_ID).append(" ASC");
-        }
-        String searchSql = sb.toString();
-                
+    private IteratorWithSize getQueryResults(StringBuffer from, StringBuffer where)
+        throws TorqueException, ComplexQueryException, Exception
+    {
         // return a List of QueryResult objects
-        List result = null;
+        IteratorWithSize result = null;
         try
         {
             if (conn == null)
@@ -2180,32 +2218,56 @@ public class IssueSearch
             int count = getIssueCount();
             if (count > 0) 
             {
-                long queryStartTime = System.currentTimeMillis();
-                // Get a bi-directionally scrollable ResultSet, necessary
-                // for random access by QueryResultList.
-                stmt = conn.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, 
-                                            ResultSet.CONCUR_READ_ONLY);
-                ResultSet resultSet = stmt.executeQuery(searchSql);
-                logTime(searchSql + 
-                    "\nTime to only execute the query, not return the results.",
-                    System.currentTimeMillis() - queryStartTime, 
-                    50L, 500L);
-                result = new QueryResultList(this, resultSet, valueListSize);
+                result = new QueryResultIterator(this, count, from, where);
             }
             else 
             {
-                result = Collections.EMPTY_LIST;
+                result = IteratorWithSize.EMPTY;
             }
         }
         catch (SQLException e)
         {
             close();
-            Log.get(LOGGER).warn("Search sql:\n" + searchSql + 
-                "\nresulted in an exception: " + e.getMessage());
             throw e;
         }
+        /*
+        catch (TorqueException e)
+        {
+            close();
+            throw e;
+        }
+        */
         return result;
     }
+
+    private void addOrderByClause(StringBuffer sql, String sortColumn)
+    {
+        if (sortColumn == null) 
+        {
+            sql.append(ORDER_BY).append(IssuePeer.ID_PREFIX);
+            sql.append(' ').append(getSortPolarity());
+            sql.append(',').append(IssuePeer.ID_COUNT);
+            sql.append(' ').append(getSortPolarity());
+        }
+        else 
+        {
+            sql.append(ORDER_BY).append(sortColumn);
+            sql.append(' ').append(getSortPolarity());
+            // add pk sort so that rows can be combined easily
+            sql.append(',').append(IssuePeer.ISSUE_ID).append(" ASC");
+        }
+    }
+
+    private StringBuffer getSelectStart()
+    {
+        StringBuffer sql = new StringBuffer(512);
+        sql.append(SELECT_DISTINCT)
+            .append(IssuePeer.ISSUE_ID).append(',')
+            .append(IssuePeer.ID_PREFIX).append(',')
+            .append(IssuePeer.ID_COUNT);
+        return sql;
+    }
+
 
     /**
      * Used by QueryResult to avoid multiple db hits in the event caching
@@ -2308,11 +2370,48 @@ public class IssueSearch
             {
                 try 
                 {
-                    if (this.stmt != null) 
+                    if (searchRS != null) 
                     {
-                        this.stmt.close();
-                        this.stmt = null;
+                        searchRS.close();
+                        searchRS = null;
                     }
+                }
+                catch (Exception e)
+                {
+                    try
+                    {
+                        Log.get(LOGGER).warn(
+                            "Unable to close jdbc Statement", e);
+                    }
+                    catch (Exception ignore)
+                    {
+                    }
+                }
+                try 
+                {
+                    if (searchStmt != null) 
+                    {
+                        searchStmt.close();
+                        searchStmt = null;
+                    }
+                }
+                catch (Exception e)
+                {
+                    try
+                    {
+                        Log.get(LOGGER).warn(
+                            "Unable to close jdbc Statement", e);
+                    }
+                    catch (Exception ignore)
+                    {
+                    }
+                }
+
+                try 
+                {
+                    closeStatementsAndResultSets();
+                    stmtList = null;
+                    rsList = null;
                 }
                 catch (Exception e)
                 {
@@ -2336,130 +2435,288 @@ public class IssueSearch
         }
     }
 
-    /**
-     * Prefer sequential access of uncached QueryResult objects, as
-     * non-sequential access does not scale.
-     *
-     * TODO: This should be an Iterator or Collection, not a List, as
-     * support of true random access is both unnecessary for our use
-     * case and inefficient.
-     */
-    private static class QueryResultList extends AbstractList
-        implements QueryResultCollator
+    
+    private void closeStatementsAndResultSets()
+        throws SQLException
     {
-        /**
-         * The size of our cache of recently created {@link
-         * QueryResult} objects.
-         */
-        private static final int CACHE_SIZE = 5;
+        if (rsList != null) 
+        {
+            for (Iterator iter = rsList.iterator(); iter.hasNext();) 
+            {
+                ((ResultSetAndSize)iter.next()).resultSet.close();
+            }
+            rsList.clear();            
+        }
+        
+        if (stmtList != null) 
+        {
+            for (Iterator iter = stmtList.iterator(); iter.hasNext();) 
+            {
+                ((Statement)iter.next()).close();
+            }
+            stmtList.clear();            
+        }
+    }        
 
-        private IssueSearch search;
-        private QueryResultCursor cursor;
-        private int valueListSize;
+    private class QueryResultIterator implements IteratorWithSize
+    {
+        final IssueSearch search;
+        final List searchStuff;
+        final int size;
 
-        // A LRU-ish cache of indices -> QueryResult
-        private int[] recentlyCreatedIndices = new int[CACHE_SIZE];
-        private QueryResult[] recentlyCreatedValues =
-            new QueryResult[CACHE_SIZE];
-        private int nextCreatedIndex = 0;
+        QueryResult[]  cachedQRs;
 
         /**
          * @param issues The issue query results.
          */
-        public QueryResultList(IssueSearch search, ResultSet issues,
-                               int valueListSize)
-            throws SQLException
+        public QueryResultIterator(IssueSearch search, int size, 
+                                   StringBuffer from, StringBuffer where)
+            throws SQLException, TorqueException
         {
-            this.cursor = new QueryResultCursor(issues);
             this.search = search;
-            this.valueListSize = valueListSize;
+            this.size = size;
+            searchStuff = getSearchSqlPieces(from, where);
+
+            int numQueries = searchStuff.size();
+            stmtList = new ArrayList(numQueries);
+            rsList = new ArrayList(numQueries);
+            
+            long queryStartTime = System.currentTimeMillis();
+            searchStmt = conn.createStatement();
+            String searchSql = (String)searchStuff.get(0);
+            try 
+            {
+                searchRS = searchStmt.executeQuery(searchSql);                
+                logTime(searchSql + 
+                    "\nTime to only execute the query, not return results.",
+                    System.currentTimeMillis() - queryStartTime, 
+                    50L, 500L);
+            }
+            catch (SQLException e)
+            {
+                Log.get(LOGGER).warn("Search sql:\n" + searchSql + 
+                    "\nresulted in an exception: " + e.getMessage());
+                throw e;
+                
+            }
         }
 
-        /**
-         * Delegates to <code>QueryResultCursor</code>, and performs
-         * caching of most recently created {@link QueryResult}
-         * objects.  Since the number of rows in our ResultSet is
-         * usually greater than the number of QueryResults, we can
-         * only random access the beginning (TODO: or end) of the
-         * list.  Because of this, only sequential access is
-         * supported!
-         */
-        public Object get(int index)
+        public int size()
         {
-            if (index < 0 || index >= size())
+            return size;
+        }
+
+        // ----------------------------------------------------------------
+        // Iterator implementation
+
+        private QueryResult nextQueryResult;
+        public Object next()
+        {
+            if (hasNext()) 
             {
-                throw new IndexOutOfBoundsException
-                    ("Attempted to access non-existent QueryResult at index '"
-                     + index + "': Valid range is 0 through '" + (size() - 1)
-                     + '\'');
+                hasNext = null;
+                return nextQueryResult;
             }
-
-            QueryResult qr = findRecentlyCreated(index);
-            if (qr == null)
+            else 
             {
-                try
-                {
-                    cursor.setDirection(index);
+                throw new NoSuchElementException("Iterator is exhausted");
+            }
+        }
 
-                    if (cursor.isNonSequentialAccess(index))
+
+        private Boolean hasNext;
+        public boolean hasNext()
+        {
+            if (hasNext == null) 
+            {
+                hasNext = (prepareNextQueryResult()) 
+                    ? Boolean.TRUE : Boolean.FALSE;
+            }
+            return hasNext.booleanValue();
+        }
+
+
+        public void remove()
+        {
+            throw new UnsupportedOperationException(
+                "'remove' is not implemented");
+        }
+
+
+        int index = -1;
+        /**
+         * nextQueryResult should be non-null at the end of this method
+         * if it returns true, otherwise false should be returned.
+         *
+         * @return a <code>boolean</code> value
+         */
+        private boolean prepareNextQueryResult()
+        {
+            boolean anyMoreResults;
+            try 
+            {
+                anyMoreResults = doPrepareNextQueryResult();
+            }
+            catch (Exception e)
+            {
+                anyMoreResults = false;
+                Log.get(LOGGER).warn(
+                    "An exception prevented getting the next result.", e);
+            }
+            return anyMoreResults;
+        }            
+
+        private boolean doPrepareNextQueryResult()
+            throws TorqueException, SQLException
+        {
+            boolean anyMoreResults = true;
+            
+            if (index < 0 || index >= 1000)
+            {
+                if (cachedQRs == null) 
+                {
+                    cachedQRs = new QueryResult[1000];
+                }
+                else 
+                {
+                    // remove the old
+                    for (int i = cachedQRs.length - 1; i >= 0; i--) 
                     {
-                        cursor.scroll(index);
+                        cachedQRs[i] = null;
                     }
-
-                    qr = cursor.fetchQueryResult(this);
+                    closeStatementsAndResultSets();
                 }
-                catch (SQLException e)
+                
+                int count = 0;
+                QueryResult qr;
+                String previousPK = null;
+                StringBuffer pks = new StringBuffer(512);
+                while (count < 1000 && searchRS.next()) 
                 {
-                    Log.get("org.apache.torque")
-                        .error("Error processing query results", e);
-                    throw new RuntimeException
-                        ("Error processing query results: " + e.getMessage());
+                    String pk = searchRS.getString(1);
+                    if (!pk.equals(previousPK)) 
+                    {
+                        previousPK = pk;
+                        pks.append(pk).append(',');
+                        qr = new QueryResult(search);
+                        qr.setIssueId(pk);
+                        qr.setIdPrefix(searchRS.getString(2));
+                        qr.setIdCount(searchRS.getString(3));
+                        qr.setModuleId(new Integer(searchRS.getInt(4)));
+                        qr.setIssueTypeId(new Integer(searchRS.getInt(5)));
+                        cachedQRs[count++] = qr;
+                    }                    
+                }                
+
+                anyMoreResults = count > 0;
+                if (anyMoreResults) 
+                {
+                    index = 0;
+                    pks.setLength(pks.length() - 1);
+
+                    // execute column result queries
+                    if (searchStuff.size() > 1) 
+                    {
+                        Iterator i = searchStuff.iterator();
+                        i.next();
+                        while (i.hasNext()) 
+                        {
+                            ColumnBundle cb = (ColumnBundle)i.next();
+                            StringBuffer sql = new StringBuffer(512);
+                            sql.append(cb.select);
+
+                            sql.append(FROM).append(IssuePeer.TABLE_NAME);
+                            if (cb.outerJoins != null) 
+                            {
+                                sql.append(cb.outerJoins);    
+                            }
+                            sql.append(WHERE).append(IssuePeer.ISSUE_ID)
+                                .append(IN).append(pks).append(')');
+                            addOrderByClause(sql, cb.sortColumn);
+                            Statement stmt = conn.createStatement();
+                            ResultSet rs = stmt.executeQuery(sql.toString());
+                            rs.next();
+                            stmtList.add(stmt);
+                            rsList.add(new ResultSetAndSize(rs, cb.size));
+                        }
+                    }
                 }
-
-                cacheRecentlyCreated(index, qr);
             }
-
-            return qr;
-        }
-
-        private QueryResult findRecentlyCreated(int index)
-        {
-            for (int i = 0; i < CACHE_SIZE; i++)
+            else if (cachedQRs[index] == null)
             {
-                if (recentlyCreatedIndices[i] == index)
-                {
-                    return recentlyCreatedValues[i];
-                }
+                anyMoreResults = false;                
             }
-            return null;
+
+            if (anyMoreResults) 
+            {
+                // remove old results to allow gc, if needed
+                if (index > 0) 
+                {
+                    cachedQRs[index-1] = null;
+                }
+                nextQueryResult = cachedQRs[index++];
+                buildQueryResult(nextQueryResult);            
+            }
+
+            return anyMoreResults;
         }
+
 
         /**
-         * A no-op if <code>qr</code> is <code>null</code>.
+         * Assembles one or more rows from a <code>ResultSet</code> into a
+         * single {@link QueryResult} object.  Assumes that rows in the
+         * <code>ResultSet</code> are grouped by issue.
+         *
+         * @return A single {@link QueryResult} object.
+         * @exception SQLException If a database error occurs.
          */
-        private void cacheRecentlyCreated(int index, QueryResult qr)
-        {
-            if (qr != null)
-            {
-                // Write newly created QueryResult to our cache.
-                recentlyCreatedIndices[nextCreatedIndex] = index;
-                recentlyCreatedValues[nextCreatedIndex] = qr;
-                if (++nextCreatedIndex >= CACHE_SIZE)
-                {
-                    nextCreatedIndex = 0;
-                }
-            }
-        }
-
-        public QueryResult queryResultStarted(ResultSet rs)
+        private void buildQueryResult(QueryResult qr)
             throws SQLException
         {
-            QueryResult qr = new QueryResult(search);
-            qr.setIssueId(rs.getString(1));
-            qr.setModuleId(new Integer(rs.getInt(2)));
-            qr.setIssueTypeId(new Integer(rs.getInt(3)));
-            qr.setIdPrefix(rs.getString(4));
-            qr.setIdCount(rs.getString(5));
+            String queryResultPK = qr.getIssueId();
+            Logger scarabLog = Log.get("org.tigris.scarab");
+
+            // add column values
+            int index = 0;
+            for (Iterator iter = rsList.iterator(); iter.hasNext();) 
+            {
+                ResultSetAndSize rss = (ResultSetAndSize)iter.next();
+                ResultSet resultSet = rss.resultSet;
+                int size = rss.size;
+                String pk = resultSet.getString(1);
+                while (queryResultPK.equals(pk))
+                {
+                    List values = qr.getAttributeValues();
+                    // Each attribute can result in a separate record.  As we
+                    // have sorted on the primary key column in addition to
+                    // any other sort, all attributes for a given issue will
+                    // be grouped.  Map these multiple records into a single
+                    // QueryResult per issue.
+                    if (values == null || index >= values.size()) 
+                    {
+                        queryResultStarted(resultSet, qr, size);
+                        if (scarabLog.isDebugEnabled())
+                        {
+                            scarabLog.debug("Fetching query result at index "
+                                            + index + " with ID of "
+                                            + queryResultPK);
+                        }
+                    }
+                    else 
+                    {
+                        queryResultContinued(resultSet, qr, index, size);
+                    }
+                    
+                    pk = (resultSet.next()) ? resultSet.getString(1): null;
+                }
+                index += size;
+            }
+        }
+
+        private void queryResultStarted(ResultSet rs, QueryResult qr, 
+                                        int valueListSize)
+            throws SQLException
+        {
             if (valueListSize > 0) 
             {
                 // Some attributes can be multivalued.
@@ -2467,15 +2724,23 @@ public class IssueSearch
                 for (int j = 0; j < valueListSize; j++) 
                 {
                     ArrayList multiVal = new ArrayList(2);
-                    multiVal.add(rs.getString(j + 6));
+                    multiVal.add(rs.getString(j + 4));
                     values.add(multiVal);
                 }
-                qr.setAttributeValues(values);
+                List lastValues = qr.getAttributeValues();
+                if (lastValues == null) 
+                {
+                    qr.setAttributeValues(values);                    
+                }
+                else 
+                {
+                    lastValues.addAll(values);
+                }
             }
-            return qr;
         }
 
-        public void queryResultContinued(ResultSet rs, QueryResult qr)
+        private void queryResultContinued(ResultSet rs, QueryResult qr, 
+                                          int base, int valueListSize)
             throws SQLException
         {
             if (valueListSize > 0)
@@ -2483,7 +2748,7 @@ public class IssueSearch
                 List values = qr.getAttributeValues();
                 for (int j = 0; j < valueListSize; j++)
                 {
-                    String s = rs.getString(j + 6);
+                    String s = rs.getString(j + 4);
 
                     // As it's possible that multiple rows
                     // could have the same value for a given
@@ -2493,7 +2758,7 @@ public class IssueSearch
                     // block about 10 lines down to see how
                     // the values lists are arranged to allow
                     // for multiple values.
-                    List prevValues = (List) values.get(j);
+                    List prevValues = (List) values.get(j + base);
                     boolean newValue = true;
                     for (int k = 0; k < prevValues.size(); k++)
                     {
@@ -2510,233 +2775,25 @@ public class IssueSearch
                 }
             }
         }
-
-        /**
-         * Delegates to {@link IssueSearch#getIssueCount()}.
-         *
-         * @see IssueSearch#getIssueCount()
-         */
-        public final int size()
-        {
-            try
-            {
-                return search.getIssueCount();
-            }
-            catch (Exception e)
-            {
-                Log.get("org.apache.torque")
-                    .error("Unable to determine issue count", e);
-                throw new RuntimeException
-                    ("Unable to determine issue count: " + e.getMessage());
-            }
-        }
     }
 
-    private static class QueryResultCursor implements QueryResultCollator
+    private static class ColumnBundle
     {
-        static final boolean FORWARD = true;
-        static final boolean REVERSE = false;
+        int size;
+        StringBuffer select;
+        StringBuffer outerJoins;
+        String sortColumn;
+    }
 
+    private static class ResultSetAndSize
+    {
         private ResultSet resultSet;
-
-        /**
-         * Used to assure sequential scrolling for access of uncached
-         * QueryResults.  Non-sequential access would necessitate
-         * per-row offset caching.
-         */
-        private int index = 0;
-
-        private boolean direction = FORWARD;
-
-        public QueryResultCursor(ResultSet resultSet)
-            throws SQLException
+        private int size;
+        ResultSetAndSize(ResultSet rs, int s)
         {
-            int type = resultSet.getType();
-            if (type != ResultSet.TYPE_SCROLL_INSENSITIVE
-                && type != ResultSet.TYPE_SCROLL_SENSITIVE)
-            {
-                throw new IllegalArgumentException
-                    ("ResultSet type must be TYPE_SCROLL_INSENSITIVE");
-            }
-            this.resultSet = resultSet;
+            resultSet = rs;
+            size = s;
         }
-
-        /**
-         * Assembles one or more rows from a <code>ResultSet</code> into a
-         * single {@link QueryResult} object.  Assumes that rows in the
-         * <code>ResultSet</code> are grouped by issue.
-         *
-         * @return A single {@link QueryResult} object.
-         * @exception SQLException If a database error occurs.
-         */
-        private QueryResult fetchQueryResult(QueryResultCollator collator)
-            throws SQLException
-        {
-            QueryResult qr = null;
-            String queryResultPK = null;
-            Logger scarabLog = Log.get("org.tigris.scarab");
-
-            boolean buildingResult = true;
-            if ((direction == FORWARD && resultSet.isBeforeFirst())
-                || (direction == REVERSE && resultSet.isAfterLast()))
-            {
-                buildingResult = advanceRow();
-            }
-
-            // Each attribute can result in a separate record.  As we
-            // have sorted on the primary key column in addition to
-            // any other sort, all attributes for a given issue will
-            // be grouped.  Map these multiple records into a single
-            // QueryResult per issue.
-            while (buildingResult)
-            {
-                String pk = resultSet.getString(1);
-
-                if (pk.equals(queryResultPK))
-                {
-                    collator.queryResultContinued(resultSet, qr);
-                }
-                else if (queryResultPK == null)
-                {
-                    // The current row starts a new issue.
-                    queryResultPK = pk;
-                    if (scarabLog.isDebugEnabled())
-                    {
-                        scarabLog.debug("Fetching query result at index "
-                                        + this.index + " with ID of "
-                                        + queryResultPK);
-                    }
-                    qr = collator.queryResultStarted(resultSet);
-                }
-                else
-                {
-                    // We've gotten a full QueryResult and are now looking
-                    // at the start of the next one.
-                    index = (direction == FORWARD ? index + 1 : index - 1);
-                    break;
-                }
-
-                buildingResult = advanceRow();
-            }
-
-            return qr;
-        }
-
-        /**
-         * Moves the cursor one row in the desired direction.
-         */
-        private boolean advanceRow()
-            throws SQLException
-        {
-            return (direction ? resultSet.next() : resultSet.previous());
-        }
-
-        public void setDirection(int index)
-            throws SQLException
-        {
-            boolean lastDirection = this.direction;
-
-            // Determine new direction.
-            this.direction = (index >= this.index ? FORWARD : REVERSE);
-
-            // Handle direction change.
-            if (this.direction != lastDirection)
-            {
-                Logger scarabLog = Log.get("org.tigris.scarab");
-                if (scarabLog.isDebugEnabled())
-                {
-                    scarabLog.debug("Changing direction from "
-                                    + (lastDirection ? "forward" : "reverse")
-                                    + " to "
-                                    + (direction ? "forward" : "reverse")
-                                    + " to reach index " + index +
-                                    " from index " + this.index);
-                }
-
-                // Based on our new direction, reposition the cursor
-                // on the row starting the next QueryResult
-                if (direction == REVERSE)
-                {
-                    if (!resultSet.isAfterLast())
-                    {
-                        this.index--;
-                    }
-                    resultSet.previous();
-                }
-                else if (direction == FORWARD)
-                {
-                    if (!resultSet.isBeforeFirst())
-                    {
-                        this.index++;
-                    }
-                    resultSet.next();
-                }
-
-                // Optimize fetch direction.
-                resultSet.setFetchDirection(direction == FORWARD
-                                            ? ResultSet.FETCH_FORWARD
-                                            : ResultSet.FETCH_REVERSE);
-            }
-        }
-
-        /**
-         * @return Whether the next call to
-         * <code>fetchQueryResult()</code> will get the {@link
-         * QueryResult} at list position <code>index</code>.
-         */
-        public final boolean isNonSequentialAccess(int index)
-        {
-            return (index != this.index);
-        }
-
-        /**
-         * Since the query result list index differs from the
-         * ResultSet list index, we must walk the ResultSet until we
-         * hit just before the desired query result list index.
-         *
-         * @param index The new list index to scroll to immediately
-         * before.
-         */
-        public void scroll(int index)
-            throws SQLException
-        {
-            Logger scarabLog = Log.get("org.tigris.scarab");
-            if (scarabLog.isDebugEnabled())
-            {
-                scarabLog.debug("Scrolling ResultSet "
-                                + (direction ? "forward" : "reverse")
-                                + " from index " + this.index
-                                + " towards index " + index);
-            }
-
-            // Scroll over the proper number of query results.
-            int distance = Math.abs(index - this.index);
-            while (distance > 0)
-            {
-                fetchQueryResult(this);
-                distance--;
-            }
-        }
-
-        public QueryResult queryResultStarted(ResultSet rs)
-        {
-            return null;
-        }
-
-        public void queryResultContinued(ResultSet rs, QueryResult qr)
-        {
-        }
-    }
-
-    /**
-     * Defines callbacks invoked by <code>fetchQueryResult()</code>.
-     */
-    interface QueryResultCollator
-    {
-        QueryResult queryResultStarted(ResultSet rs)
-            throws SQLException;
-
-        void queryResultContinued(ResultSet rs, QueryResult qr)
-            throws SQLException;
     }
 }
+

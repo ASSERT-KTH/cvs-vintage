@@ -14,7 +14,7 @@
 #set ($pageNum = $data.Parameters.getInt('pageNum', 1))
 #set ($paginated = $resultsPerPage > 0 && $issueListSize > $resultsPerPage)
 #if ($paginated)
- #set ($queryResults = $scarabR.getPaginatedList($queryResults, $pageNum, $resultsPerPage))
+ #set ($queryResults = $scarabR.getPaginatedIterator($queryResults, $pageNum, $resultsPerPage))
  #set ($issueListSize = $queryResults.size())
 #end
 
@@ -151,21 +151,10 @@ $link.setPage('ConfigureIssueList.vm').setLabel($l10n.AddRemoreAttributesFromVie
 
 #set ($showModule = $mitlist && !$mitlist.isSingleModule())
 #set ($showIssueType = $mitlist && !$mitlist.isSingleIssueType())
-#foreach ($result in $queryResults)
+ #set ($listOffset = ($pageNum - 1) * $resultsPerPage)
+#set ($qrIterator = $scarabR.getIssueListIterator($queryResults, $listOffset, $totalCount))
+#foreach ($result in $qrIterator)
 
- #set ($issueLink = $link.setPage("ViewIssue.vm").setPathInfo("id", $result.UniqueId.toString()))
-
- ## append some of the neighbor ids, so that we do not always have to rerun
- ## the query to create prev/next links
- #set ($min = $velocityCount - 2)
- #set ($max = $velocityCount + 2)
- #set ($prevNextList = $scarabG.subset($queryResults, $min, $max))
- #set ($listOffset = (($pageNum - 1) * $resultsPerPage) + $min)
- #set ($dummy = $issueLink.addPathInfo("issueList", $listOffset))
- #set ($dummy = $issueLink.addPathInfo("issueList", $totalCount))
- #foreach ($prevNextQueryResult in $prevNextList)
-    #set ($dummy = $issueLink.addPathInfo("issueList", $prevNextQueryResult.UniqueId))
- #end
 
  #indexedRows($velocityCount)
   <td>
@@ -178,7 +167,8 @@ $link.setPage('ConfigureIssueList.vm').setLabel($l10n.AddRemoreAttributesFromVie
  #if ($showIssueType)
   <td>$result.RModuleIssueType.DisplayName</td> 
  #end
-  <td><a href="$issueLink">$result.UniqueId</a></td>
+  $qrIterator.initializeLink($link)
+  <td><a href="$link">$result.UniqueId</a></td>
 #if (!$noAttrs)
 #foreach ($value in $result.AttributeValuesAsCSV)
   <td>
@@ -200,7 +190,8 @@ $link.setPage('ConfigureIssueList.vm').setLabel($l10n.AddRemoreAttributesFromVie
        <th>$l10n.MaxPerPage</th>
  <td>
      #resultsPerPageRadioSelect($resultsPerPage true)
-     <input type="submit" name="eventSubmit_doRefresh" value="$l10n.Refresh" />
+     <input type="submit" name="eventSubmit_doRefreshresultsperpage" 
+         value="$l10n.Refresh" />
      <input type="hidden" name="oldResultsPerPage" value="$resultsPerPage" />
  </td>
    </tr>

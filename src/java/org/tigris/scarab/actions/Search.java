@@ -79,6 +79,7 @@ import org.tigris.scarab.tools.ScarabRequestTool;
 import org.tigris.scarab.tools.ScarabLocalizationTool;
 import org.tigris.scarab.util.word.IssueSearch;
 import org.tigris.scarab.util.Log;
+import org.tigris.scarab.util.IteratorWithSize;
 import org.tigris.scarab.util.ScarabConstants;
 import org.tigris.scarab.util.ScarabUtil;
 import org.tigris.scarab.util.export.ExportFormat;
@@ -89,7 +90,7 @@ import org.tigris.scarab.util.export.ExportFormat;
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: Search.java,v 1.141 2003/09/09 14:16:39 parun Exp $
+ * @version $Id: Search.java,v 1.142 2003/09/10 00:41:45 jmcnally Exp $
  */
 public class Search extends RequireLoginFirstAction
 {
@@ -107,8 +108,8 @@ public class Search extends RequireLoginFirstAction
         throws Exception
     {
         ScarabRequestTool scarabR = getScarabRequestTool(context);
-        List queryResults = scarabR.getCurrentSearchResults();
-        if (queryResults != null && !queryResults.isEmpty())
+        IteratorWithSize queryResults = scarabR.getCurrentSearchResults();
+        if (queryResults != null && queryResults.hasNext())
         {
             context.put("queryResults", queryResults);
             String next = ScarabUtil.findValue(data, "next");
@@ -528,7 +529,7 @@ public class Search extends RequireLoginFirstAction
             }
             if (go.equals("myIssues") || go.equals("mostRecent"))
             {
-                List searchResults = null;
+                IteratorWithSize searchResults = null;
                 try
                 {
                     searchResults = scarabR.getCurrentSearchResults();
