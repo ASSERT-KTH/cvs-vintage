@@ -69,7 +69,7 @@ import org.tigris.scarab.om.IssueType;
  * duplication of code.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: Default.java,v 1.28 2001/11/09 21:59:59 jon Exp $
+ * @version $Id: Default.java,v 1.29 2001/11/09 22:46:19 jon Exp $
  */
 public class Default extends TemplateSecureScreen
 {
@@ -112,11 +112,8 @@ public class Default extends TemplateSecureScreen
             ModuleEntity currentModule = scarabR.getCurrentModule();
             IssueType currentIssueType = scarabR.getCurrentIssueType();
             ScarabUser user = (ScarabUser)data.getUser();
-            System.out.println ("template: " + template);
-            System.out.println ("currentIssueType: " + currentIssueType);
             if (perm != null)
             {
-            System.out.println ("perm: " + perm);
                 if (! user.hasLoggedIn() 
                     && !user.hasPermission(perm, currentModule))
                 {
