@@ -83,7 +83,7 @@ import org.tigris.scarab.om.AttributeOptionManager;
     This class is responsible for report managing enter issue templates.
     ScarabIssueAttributeValue
     @author <a href="mailto:elicia@collab.net">Elicia David</a>
-    @version $Id: TemplateList.java,v 1.30 2002/05/07 20:23:22 elicia Exp $
+    @version $Id: TemplateList.java,v 1.31 2002/07/03 17:44:30 jon Exp $
 */
 public class TemplateList extends RequireLoginFirstAction
 {
@@ -293,8 +293,8 @@ public class TemplateList extends RequireLoginFirstAction
     {
         IntakeTool intake = getIntakeTool(context);
         intake.removeAll();
-        String template = getOtherTemplate(data);
-        setTarget(data, template);
+        ScarabRequestTool scarabR = getScarabRequestTool(context);
+        setTarget(data, scarabR.getNextEntryTemplate());
     }
     
     public void doSave(RunData data, TemplateContext context)
