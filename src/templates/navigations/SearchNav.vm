@@ -13,7 +13,7 @@
 <form action="$link.setPage("IssueList.vm").setAction("Search")" method="get">
  <input type="hidden" name="$scarabG.Constant.NEXT_TEMPLATE" value="ViewIssue.vm" />
  <input type="text" name="id" size="15" maxlength="255" tabindex="1" />
-    &#160;<input type="submit" value="Issue Id" name="eventSubmit_doGonext" tabindex="2" />
+    &#160;<input type="submit" value="$l10n.IssueId" name="eventSubmit_doGonext" tabindex="2" />
 </form>
 </td>
 
@@ -34,7 +34,7 @@
 ## give actionEvent as hidden field so user does not have to click Go,
 ## if javascript is enabled. show button only if script disabled.
   <input type="hidden" value="foo" name="eventSubmit_doSelect" />
-  <noscript><input type="submit" value="Go" name="eventSubmit_doSelect" 
+  <noscript><input type="submit" value="$l10n.Go" name="eventSubmit_doSelect" 
       tabindex="4" /></noscript>
 </form>
 </td>
@@ -44,11 +44,11 @@
 <form action="$link.setPage("Index.vm").setAction("Search")" method="get">
 <input type="hidden" name="$scarabG.Constant.NEXT_TEMPLATE" value="Index.vm" />
   <select name="go" tabindex="3" onChange="this.form.submit();">
-    <option value="AdvancedQuery.vm">Select query...</option>
-    <option value="AdvancedQuery.vm">&#160;Advanced</option>
-    <option value="Search.vm">&#160;Custom</option>
+    <option value="AdvancedQuery.vm">$l10n.SelectQuery</option>
+    <option value="AdvancedQuery.vm">&#160;$l10n.Advanced</option>
+    <option value="Search.vm">&#160;$l10n.Custom</option>
     #if ($scarabR.CurrentIssueType && $data.User.hasMostRecentQuery())
-        <option value="IssueList.vm">&#160;Most recent</option>
+        <option value="IssueList.vm">&#160;$l10n.MostRecent</option>
     #end
     #if ($scarabR.CurrentIssueType && $data.User.getDefaultQuery($module, $scarabR.CurrentIssueType))
         <option value="$data.User.getDefaultQuery($module, $scarabR.CurrentIssueType).QueryId" >&#160;Default query</option> 
@@ -58,14 +58,14 @@
 #set ($globalQueries = $scarabR.GlobalQueries)
 
 #if ($privateQueries && $privateQueries.size() > 0)
-    <option value="QueryList.vm">Saved queries (personal)...</option>
+    <option value="QueryList.vm">$l10n.SavedPersonalQueries</option>
    #foreach ($query in $privateQueries)
     <option value="$query.QueryId">&#160;$query.Name</option>
    #end
 #end
 
 #if ($globalQueries && $globalQueries.size() > 0)
-    <option value="QueryList.vm">Saved queries (project)...</option>
+    <option value="QueryList.vm">$l10n.SavedProjectQueries</option>
    #foreach ($query in $globalQueries)
     <option value="$query.QueryId">&#160;$query.Name</option>
    #end
@@ -74,7 +74,7 @@
 ## give actionEvent as hidden field so user does not have to click Go,
 ## if javascript is enabled. show button only if script disabled.
   <input type="hidden" value="foo" name="eventSubmit_doSelectquery" />
-  <noscript><input type="submit" value="Go" name="eventSubmit_doSelectquery" tabindex="4" /></noscript>
+  <noscript><input type="submit" value="$l10n.Go" name="eventSubmit_doSelectquery" tabindex="4" /></noscript>
 </form>
   </td>
 
@@ -98,7 +98,7 @@
     #set ($user = $data.User)
     #set ($permItemDelete = $scarabR.hasPermission($scarabG.Permission.ITEM__DELETE, $module))
     <select name="templateId" tabindex="5" onChange="this.form.submit();">
-         <option value="0">Select template...</option>
+         <option value="0">$l10n.SelectTemplate</option>
      #foreach ($template in $allTemplates)
        #set ($isCreatedBy = $template.isCreatingUser($user))
        #if ($permItemDelete || $isCreatedBy)
@@ -106,7 +106,7 @@
        #end
      #end
     </select>
-    <noscript><input type="submit" value="Go" name="eventSubmit_doUsetemplate" tabindex="6" /></noscript>
+    <noscript><input type="submit" value="$l10n.Go" name="eventSubmit_doUsetemplate" tabindex="6" /></noscript>
     </form>
     #end
     </td>
