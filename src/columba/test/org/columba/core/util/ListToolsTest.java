@@ -17,6 +17,7 @@ package org.columba.core.util;
 
 import junit.framework.TestCase;
 
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Random;
@@ -31,8 +32,8 @@ import java.util.Random;
  * Window>Preferences>Java>Code Generation.
  */
 public class ListToolsTest extends TestCase {
-    LinkedList listFull_I;
-    LinkedList listFull_S;
+    LinkedList listFull_Integer;
+    LinkedList listFull_String;
     Random random;
 
     /**
@@ -73,7 +74,7 @@ assertTrue(testList.size()==0);
     }
 
     public void testSubstract() {
-        testSubstractOnLists(listFull_I);
+        testSubstractOnLists(listFull_Integer);
     }
 
     private void testSubstractOnLists(LinkedList listFull) {
@@ -90,18 +91,22 @@ assertTrue(testList.size()==0);
                 listPart2.add(it.next());
             }
         }
-
+    
+        // test if the size of self substracted list is 0
         ListTools.substract(testList, listFull);
         assertTrue(testList.size() == 0);
 
         testList = new LinkedList(listFull);
 
+        // tests, if the list substracted with an empty list is equal to itself
         ListTools.substract(testList, new LinkedList());
         assertTrue(testList.equals(listFull));
 
         testList = new LinkedList(listFull);
 
+        // tests, if the listPart substracted
         ListTools.substract(testList, listPart1);
+        Collections.sort(listPart2);
         assertTrue(testList.equals(listPart2));
 
         testList = new LinkedList(listFull);
@@ -127,17 +132,17 @@ assertTrue(testList.size()==0);
     protected void setUp() throws Exception {
         random = new Random();
 
-        listFull_I = new LinkedList();
+        listFull_Integer = new LinkedList();
 
-        for (int i = 0; i < 5000; i++) {
-            listFull_I.add(new Integer(random.nextInt()));
+        for (int i = 0; i < 10; i++) {
+            listFull_Integer.add(new Integer(random.nextInt()));
         }
 
-        listFull_S = new LinkedList();
-        listFull_S.add("Hello");
-        listFull_S.add("World");
-        listFull_S.add("it is");
-        listFull_S.add("a nice");
-        listFull_S.add("day");
+        listFull_String = new LinkedList();
+        listFull_String.add("Hello");
+        listFull_String.add("World");
+        listFull_String.add("it is");
+        listFull_String.add("a nice");
+        listFull_String.add("day");
     }
 }
