@@ -13,17 +13,18 @@ import java.rmi.RemoteException;
 import java.security.Principal;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import javax.management.InstanceNotFoundException;
 import javax.management.ListenerNotFoundException;
 import javax.management.MBeanServer;
+import javax.management.Notification;
 import javax.management.NotificationFilter;
+import javax.management.NotificationListener;
 import javax.management.ObjectName;
 
 import org.jboss.invocation.Invocation;
 import org.jboss.invocation.MarshalledInvocation;
-import org.jboss.jmx.adaptor.rmi.NotificationListenerDelegate;
-import org.jboss.jmx.adaptor.rmi.RMIAdaptor;
 import org.jboss.jmx.adaptor.rmi.RMINotificationListener;
 import org.jboss.mx.server.ServerConstants;
 import org.jboss.security.SecurityAssociation;
@@ -42,17 +43,14 @@ import org.jboss.system.ServiceMBeanSupport;
  * from the other method arguments to avoid unmarshalling them
  * before the classloader is determined from the ObjectName.<p>
  *
- * The interface is configurable, it must be similar to
- * MBeanServerConnection, though not necessarily derived from it.
- * The default interface is the org.
- * <p>
+ * The interface is configurable, it must be similar to MBeanServer,
+ * though not necessarily derived from it<p>
  *
  * The invoker is configurable and must be specified
  *
- * @see org.jboss.jmx.adaptor.rmi.RMIAdaptor
  * @author <a href="mailto:Adrian.Brock@HappeningTimes.com">Adrian Brock</a>
  * @author Scott.Stark@jboss.org
- * @version $Revision: 1.3 $
+ * @version $Revision: 1.4 $
  *
  * @jmx:mbean name="jboss.jmx:type=adaptor,protocol=INVOKER"
  *            extends="org.jboss.system.ServiceMBean"
@@ -61,28 +59,15 @@ public class InvokerAdaptorService
    extends ServiceMBeanSupport
    implements InvokerAdaptorServiceMBean, ServerConstants
 {
-   private static ObjectName mbeanRegistry;
-
-   static
-   {
-      try
-      {
-         mbeanRegistry = new ObjectName(MBEAN_REGISTRY);
-      }
-      catch (Exception e)
-      {
-         throw new RuntimeException(e.toString());
-      }
-   }
-
+   private ObjectName mbeanRegistry;
    /** */
    private Map marshalledInvocationMapping = new HashMap();
-   /** The supported interface, defaults to RMIAdaptor*/
-   private Class exportedInterface = RMIAdaptor.class;
-   /** The RMIAdaptor.addNotificationListener method */
-   private Method addNotificationListener;
-   /** The RMIAdaptor.removeNotificationListener method */
-   private Method removeNotificationListener;
+   /** */
+   private Class[] exportedInterfaces;
+   /** A HashSet<Method> addNotificationListener methods */
+   private HashSet addNotificationListeners = new HashSet();
+   /** A HashSet<Method> removeNotificationListener methods */
+   private HashSet removeNotificationListeners = new HashSet();
    /** A HashSet<RMINotificationListener, NotificationListenerDelegate> for the
     registered listeners */
    protected HashMap remoteListeners = new HashMap();
@@ -94,61 +79,68 @@ public class InvokerAdaptorService
    /**
     * @jmx:managed-attribute
     */
-   public Class getExportedInterface()
+   public Class[] getExportedInterfaces()
    {
-      return exportedInterface;
+      return exportedInterfaces;
    }
-
    /**
     * @jmx:managed-attribute
     */
-   public void setExportedInterface(Class exportedInterface)
+   public void setExportedInterfaces(Class[] exportedInterfaces)
    {
-      this.exportedInterface = exportedInterface;
+      this.exportedInterfaces = exportedInterfaces;
    }
 
    protected void startService()
       throws Exception
    {
+      mbeanRegistry = new ObjectName(MBEAN_REGISTRY);
+
       // Build the interface method map
-      Method[] methods = exportedInterface.getMethods();
-      HashMap tmpMap = new HashMap(methods.length);
-      for(int m = 0; m < methods.length; m ++)
+      HashMap tmpMap = new HashMap(61);
+      for(int n = 0; n < exportedInterfaces.length; n ++)
       {
-         Method method = methods[m];
-         Long hash = new Long(MarshalledInvocation.calculateHash(method));
-         tmpMap.put(hash, method);
+         Class iface = exportedInterfaces[n];
+         Method[] methods = iface.getMethods();
+         for(int m = 0; m < methods.length; m ++)
+         {
+            Method method = methods[m];
+            Long hash = new Long(MarshalledInvocation.calculateHash(method));
+            tmpMap.put(hash, method);
+         }
+         /* Look for a void addNotificationListener(ObjectName name,
+               RMINotificationListener listener, NotificationFilter filter,
+               Object handback)
+         */
+         try
+         {
+            Class[] sig = {ObjectName.class, RMINotificationListener.class,
+               NotificationFilter.class, Object.class};
+            Method addNotificationListener = iface.getMethod(
+               "addNotificationListener", sig);
+            addNotificationListeners.add(addNotificationListener);
+         }
+         catch(Exception e)
+         {
+            log.debug(iface+"No addNotificationListener(ObjectName, RMINotificationListener)");
+         }
+
+         /* Look for a void removeNotificationListener(ObjectName,
+            RMINotificationListener)
+         */
+         try
+         {
+            Class[] sig = {ObjectName.class, RMINotificationListener.class};
+            Method removeNotificationListener = iface.getMethod(
+               "removeNotificationListener", sig);
+            removeNotificationListeners.add(removeNotificationListener);
+         }
+         catch(Exception e)
+         {
+            log.debug(iface+"No removeNotificationListener(ObjectName, RMINotificationListener)");
+         }            
       }
       marshalledInvocationMapping = Collections.unmodifiableMap(tmpMap);
-
-      /* Look for a void addNotificationListener(ObjectName name,
-            RMINotificationListener listener, NotificationFilter filter,
-            Object handback)
-      */
-      try
-      {
-         Class[] sig = {ObjectName.class, RMINotificationListener.class,
-            NotificationFilter.class, Object.class};
-         addNotificationListener = exportedInterface.getMethod(
-            "addNotificationListener", sig);
-      }
-      catch(Exception e)
-      {
-         log.debug("No removeNotificationListener(ObjectName, RMINotificationListener)", e);
-      }
-      /* Look for a void removeNotificationListener(ObjectName,
-         RMINotificationListener)
-      */
-      try
-      {
-         Class[] sig = {ObjectName.class, RMINotificationListener.class};
-         removeNotificationListener = exportedInterface.getMethod(
-            "removeNotificationListener", sig);
-      }
-      catch(Exception e)
-      {
-         log.debug("No removeNotificationListener(ObjectName, RMINotificationListener)", e);
-      }
 
       // Place our ObjectName hash into the Registry so invokers can resolve it
       Registry.bind(new Integer(serviceName.hashCode()), serviceName);
@@ -157,6 +149,14 @@ public class InvokerAdaptorService
    protected void stopService()
       throws Exception
    {
+      // Remove the method hashses
+      if( exportedInterfaces != null )
+      {
+         for(int n = 0; n < exportedInterfaces.length; n ++)
+            MarshalledInvocation.removeHashes(exportedInterfaces[n]);
+      }
+      marshalledInvocationMapping = null;
+      remoteListeners.clear();
       Registry.unbind(new Integer(serviceName.hashCode()));
    }
 
@@ -225,7 +225,7 @@ public class InvokerAdaptorService
 
          try
          {
-            if( method.equals(addNotificationListener) )
+            if( addNotificationListeners.contains(method) )
             {
                ObjectName name = (ObjectName) args[0];
                RMINotificationListener listener = (RMINotificationListener)
@@ -234,7 +234,7 @@ public class InvokerAdaptorService
                Object handback = args[3];
                addNotificationListener(name, listener, filter, handback);
             }
-            else if( method.equals(removeNotificationListener) )
+            else if( removeNotificationListeners.contains(method) )
             {
                ObjectName name = (ObjectName) args[0];
                RMINotificationListener listener = (RMINotificationListener)
@@ -275,7 +275,8 @@ public class InvokerAdaptorService
       Object handback)
       throws InstanceNotFoundException, RemoteException
    {
-      NotificationListenerDelegate delegate = new NotificationListenerDelegate(listener);
+      NotificationListenerDelegate delegate =
+         new NotificationListenerDelegate(listener, name);
       remoteListeners.put(listener, delegate);
       getServer().addNotificationListener(name, delegate, filter, handback);
    }
@@ -290,6 +291,47 @@ public class InvokerAdaptorService
       if( delegate == null )
          throw new ListenerNotFoundException("No listener matches: "+listener);
       getServer().removeNotificationListener(name, delegate);
+   }
+
+   private class NotificationListenerDelegate
+      implements NotificationListener
+   {
+      /** The remote client */
+      private RMINotificationListener client;
+      /** The mbean the client is monitoring */
+      private ObjectName targetName;
+
+      public NotificationListenerDelegate(RMINotificationListener client,
+         ObjectName targetName)
+      {
+         this.client = client;
+         this.targetName = targetName;
+      }
+
+      public void handleNotification(Notification notification,
+         Object handback)
+      {
+         try
+         {
+            if( log.isTraceEnabled() )
+            {
+               log.trace("Sending notification to client, event:"+notification);
+            }
+            client.handleNotification(notification, handback);
+         }
+         catch(Throwable t)
+         {
+            log.debug("Failed to notify client, unregistering listener", t);
+            try
+            {
+               removeNotificationListener(targetName, client);
+            }
+            catch(Exception e)
+            {
+               log.debug("Failed to unregister listener", e);
+            }
+         }
+      }
    }
 
 }
