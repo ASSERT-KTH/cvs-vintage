@@ -23,7 +23,7 @@ import javax.swing.event.TreeModelListener;
 import javax.swing.tree.TreeModel;
 import javax.swing.tree.TreePath;
 
-import org.columba.addressbook.config.*;
+import org.columba.addressbook.config.AdapterNode;
 import org.w3c.dom.Document;
 
 public class DomToTreeModelAdapter implements TreeModel 
