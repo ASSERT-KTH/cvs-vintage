@@ -16,7 +16,7 @@
         early tests.
     -->
 
-     <property name="revision" value="$Revision: 1.34 $" />  
+     <property name="revision" value="$Revision: 1.35 $" />  
      <property name="host" value="127.0.0.1" />
      <property name="port"     value="8080" />
      <property name="outputType"     value="text" />
@@ -137,6 +137,13 @@
              <param name="a" value="Inscrie%C5%A3i-v%C4%83" />
           </httpRequest>
           <httpStatusMatch match="200" />
+      </httpClient>
+      <httpClient>
+          <comment>Japanese</comment>
+          <httpRequest path="/test/servlet/ja">
+             <param name="lang" value="ja" />
+          </httpRequest>
+          <responseMatch match="Location = &#xBD;&#xEA;&#xBA;&#xDF;&#xC3;&#xCF;" />
       </httpClient>
   </target>
 
