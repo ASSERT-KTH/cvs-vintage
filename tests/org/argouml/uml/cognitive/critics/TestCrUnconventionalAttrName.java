@@ -1,4 +1,4 @@
-// $Id: TestCrUnconventionalAttrName.java,v 1.1 2004/10/29 15:08:23 mkl Exp $
+// $Id: TestCrUnconventionalAttrName.java,v 1.2 2004/10/30 09:44:54 mvw Exp $
 // Copyright (c) 2003-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -29,36 +29,58 @@ import junit.framework.TestCase;
 
 
 /**
+ * Tests for the CrUnconventionalAttrName class.
  * 
  * @author mkl
  *
  */
 public class TestCrUnconventionalAttrName extends TestCase {
     
+    /**
+     * The constructor.
+     * 
+     * @param arg0 the name of the test
+     */
     public TestCrUnconventionalAttrName(String arg0) {
         super(arg0);
     }
 
+    /**
+     * Not giving a name should not result in a suggestion.
+     */
     public void testNullName() {
         CrUnconventionalAttrName cr = new CrUnconventionalAttrName();
         assertEquals("", cr.computeSuggestion(null));
     }
     
+    /**
+     * A name not starting with a capital should capitalize the first character.
+     */
     public void testNoUnderscoreName() {
         CrUnconventionalAttrName cr = new CrUnconventionalAttrName();
         assertEquals("test", cr.computeSuggestion("Test"));
     }
     
+    /**
+     * A name not starting with a capital should capitalize 
+     * the first non-underscore character.
+     */
     public void testSmallUnderscoreName() {
         CrUnconventionalAttrName cr = new CrUnconventionalAttrName();
         assertEquals("_x", cr.computeSuggestion("_X"));
     }
     
+    /**
+     * ...and only the first character, not the 2nd.
+     */
     public void testLongUnderscoreName() {
         CrUnconventionalAttrName cr = new CrUnconventionalAttrName();
         assertEquals("_xx", cr.computeSuggestion("_Xx"));
     }
     
+    /**
+     * A name that consists of a single underscore should remain untouched.
+     */
     public void testOnlyUnderscoreName() {
         CrUnconventionalAttrName cr = new CrUnconventionalAttrName();
         assertEquals("_", cr.computeSuggestion("_"));

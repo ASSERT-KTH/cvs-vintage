@@ -1,4 +1,4 @@
-// $Id: GUITestActionAddAttribute.java,v 1.1 2004/10/29 12:47:00 mkl Exp $
+// $Id: GUITestActionAddAttribute.java,v 1.2 2004/10/30 09:44:54 mvw Exp $
 // Copyright (c) 2003-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -33,6 +33,7 @@ import org.argouml.i18n.Translator;
 
 
 /**
+ * Test the ActionAddAttribute.
  * 
  * @author mkl
  *
@@ -40,10 +41,16 @@ import org.argouml.i18n.Translator;
 public class GUITestActionAddAttribute extends TestCase {
 
     
+    /**
+     * The constructor.
+     * 
+     * @param arg0 the test name
+     */
     public GUITestActionAddAttribute(String arg0) {
         super(arg0);
     }
-    /*
+    
+    /**
      * @see TestCase#setUp()
      */
     protected void setUp() throws Exception {
@@ -51,8 +58,11 @@ public class GUITestActionAddAttribute extends TestCase {
         Translator.init();
     }
     
+    /**
+     * Test if the action has an icon. 
+     */
     public void testHasIcon() {
-        ActionAddAttribute action = ActionAddAttribute.getSingleton();
+        ActionAddAttribute action = new ActionAddAttribute();
         assertNotNull(action.getValue(Action.SMALL_ICON));
     }
 

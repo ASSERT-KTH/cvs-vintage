@@ -1,4 +1,4 @@
-// $Id: GUITestActionNewReception.java,v 1.1 2004/10/29 12:48:35 mkl Exp $
+// $Id: GUITestActionNewReception.java,v 1.2 2004/10/30 09:44:54 mvw Exp $
 // Copyright (c) 2003-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -34,17 +34,23 @@ import org.argouml.i18n.Translator;
 
 
 /**
+ * Test for the ActionNewReception.
  * 
  * @author mkl
  *
  */
 public class GUITestActionNewReception extends TestCase {
     
+    /**
+     * The constructor.
+     * 
+     * @param arg0 the name of the test
+     */
     public GUITestActionNewReception(String arg0) {
         super(arg0);
     }
 
-    /*
+    /**
      * @see TestCase#setUp()
      */
     protected void setUp() throws Exception {
@@ -52,7 +58,8 @@ public class GUITestActionNewReception extends TestCase {
         Translator.init();
     }
     
-    /** test whether the icon of this action can be found 
+    /** 
+     * Test whether the icon of this action can be found. 
      * 
      */
     public void testHasIcon() {
