@@ -7,7 +7,8 @@
  
 package org.jboss.ejb.plugins.cmp.bridge;
 
-import org.jboss.ejb.EntityEnterpriseContext;
+import java.util.Collection;
+import java.util.List;
 
 /**
  * EntityBridge follows the Bridge pattern [Gamma et. al, 1995].
@@ -23,30 +24,11 @@ import org.jboss.ejb.EntityEnterpriseContext;
  *      One per cmp entity bean type.       
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.4 $
+ * @version $Revision: 1.5 $
  */                            
 public interface EntityBridge {
    public String getEntityName();
    
-   public Class getPrimaryKeyClass();
-   public CMPFieldBridge[] getPrimaryKeyFields();
-   
-   public CMPFieldBridge[] getCMPFields();
-   public CMRFieldBridge[] getCMRFields();
-   public SelectorBridge[] getSelectors();
-   
-   /**
-    * Has the instance in the context passed through ejbCreate?
-    */
-   public boolean isCreated(EntityEnterpriseContext ctx);
-
-   /**
-    * Mark each field every as clean.
-    */
-   public void setClean(EntityEnterpriseContext ctx);
-   
-   /**
-    * Get every field that isDirty
-    */
-   public CMPFieldBridge[] getDirtyFields(EntityEnterpriseContext ctx);
+   public List getFields();
+   public Collection getSelectors();
 }

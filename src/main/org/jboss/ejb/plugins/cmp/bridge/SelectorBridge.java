@@ -20,12 +20,11 @@ import javax.ejb.FinderException;
  *      One for each entity bean ejbSelect method.       
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.4 $
+ * @version $Revision: 1.5 $
  */                            
 public interface SelectorBridge {
    public String getSelectorName();
    public Method getMethod();
-   public Class getReturnType();
       
    public Object execute(Object[] args) throws FinderException;
 }

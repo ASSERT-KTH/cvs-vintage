@@ -10,8 +10,10 @@ package org.jboss.ejb.plugins.cmp.bridge;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 
-import java.util.Map;
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 
 import javax.ejb.EJBException;
 
@@ -33,16 +35,15 @@ import org.jboss.proxy.compiler.InvocationHandler;
  *      One per cmp entity bean instance, including beans in pool.       
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.10 $
+ * @version $Revision: 1.11 $
  */                            
 public class EntityBridgeInvocationHandler implements InvocationHandler {
-   protected EntityContainer container;
-   protected EntityBridge entityBridge;
-   protected Class beanClass;
-   protected EntityEnterpriseContext ctx;
-   protected Map cmpFieldMap;
-   protected Map cmrFieldMap;
-   protected Map selectorMap;
+   private EntityContainer container;
+   private EntityBridge entityBridge;
+   private Class beanClass;
+   private EntityEnterpriseContext ctx;
+   private Map fieldMap;
+   private Map selectorMap;
    
    /**
     * Creates an invocation handler for the specified entity.
@@ -61,10 +62,7 @@ public class EntityBridgeInvocationHandler implements InvocationHandler {
       this.entityBridge = entityBridge;
       this.beanClass = beanClass;
 
-      Map abstractAccessors = getAbstractAccessors();
-      setupCMPFieldMap(abstractAccessors);
-      setupCMRFieldMap(abstractAccessors);
-      
+      setupFieldMap();
       setupSelectorMap();
    }
    
@@ -79,53 +77,27 @@ public class EntityBridgeInvocationHandler implements InvocationHandler {
          throws Throwable {
 
       String methodName = method.getName();
-      
-      // is this a cmp field accessor
-      CMPFieldBridge cmpField = (CMPFieldBridge) cmpFieldMap.get(method);
-      if(cmpField != null) {
-         if(methodName.startsWith("get")) {
-            return cmpField.getInstanceValue(ctx);
-         } else if(methodName.startsWith("set")) {
-            if(cmpField.isReadOnly()) {
-               throw new EJBException("Field is read-only: " +
-                     cmpField.getFieldName());
-            }
-            if(cmpField.isPrimaryKeyMember() && entityBridge.isCreated(ctx)) {
-               throw new IllegalStateException("A field that is a member " +
-                     "of the primary key can only be set in ejbCreate");
-            }
 
-            cmpField.setInstanceValue(ctx, args[0]);
+      // is this a field accessor
+      FieldBridge field = (FieldBridge) fieldMap.get(method);
+      if(field != null) {
+         if(methodName.startsWith("get")) {
+            return field.getInstanceValue(ctx);
+         } else if(methodName.startsWith("set")) {
+            if(field.isReadOnly()) {
+               throw new EJBException("Field is read-only: " +
+                     field.getFieldName());
+            }
+            field.setInstanceValue(ctx, args[0]);
             return null;
          }
-         Exception e = new EJBException("Unknown cmp field method: " +
+         Exception e = new EJBException("Unknown field method: " +
                methodName);
 
          e.printStackTrace();
          throw e;
       }
 
-      CMRFieldBridge cmrField = (CMRFieldBridge) cmrFieldMap.get(method);
-      if(cmrField != null) {
-         if(methodName.startsWith("get")) {
-            return cmrField.getValue(ctx);
-         } else if(methodName.startsWith("set")) {
-            if(cmrField.isReadOnly()) {
-               throw new EJBException("Field is read-only: " +
-                     cmrField.getFieldName());
-            }
-            if(!entityBridge.isCreated(ctx)) {
-               throw new IllegalStateException("A CMR field cannot be set " +
-                     "in ejbCreate; this should be done in the ejbPostCreate " +
-                     "method instead.");
-            }
-
-            cmrField.setValue(ctx, args[0]);
-            return null;
-         }
-         throw new EJBException("Unknown cmr field method: " + methodName);
-      }
-      
       SelectorBridge selector = (SelectorBridge) selectorMap.get(method);
       if(selector != null) {
          container.synchronizeEntitiesWithinTransaction(ctx.getTransaction());
@@ -137,7 +109,7 @@ public class EntityBridgeInvocationHandler implements InvocationHandler {
       throw e;
    }
    
-   protected Map getAbstractAccessors() {
+   private Map getAbstractAccessors() {
       Method[] methods = beanClass.getMethods();
       Map abstractAccessors = new HashMap(methods.length);
       
@@ -152,106 +124,51 @@ public class EntityBridgeInvocationHandler implements InvocationHandler {
       return abstractAccessors;
    }
    
-   protected void setupCMPFieldMap(Map abstractAccessors)
-         throws DeploymentException {
+   private void setupFieldMap() throws DeploymentException {
 
-      CMPFieldBridge[] cmpFields = entityBridge.getCMPFields();
-      cmpFieldMap = new HashMap(cmpFields.length * 2);
-   
-      for(int i=0; i<cmpFields.length; i++) {
-         setupCMPFieldGetter(abstractAccessors, cmpFields[i]);
-         setupCMPFieldSetter(abstractAccessors, cmpFields[i]);
-      }
-   }
+      Map abstractAccessors = getAbstractAccessors();
 
-   protected void setupCMPFieldGetter(
-         Map abstractAccessors,
-         CMPFieldBridge cmpField)  throws DeploymentException {
+      Collection fields = entityBridge.getFields();
+      fieldMap = new HashMap(fields.size() * 2);
+      for(Iterator iter = fields.iterator(); iter.hasNext();) {
+         FieldBridge field = (FieldBridge)iter.next();
 
-      String fieldName = cmpField.getFieldName();
-      String getterName = "get" + Character.toUpperCase(fieldName.charAt(0)) +
+         // get the names
+         String fieldName = field.getFieldName();
+         String fieldBaseName = Character.toUpperCase(fieldName.charAt(0)) +
             fieldName.substring(1);
+         String getterName = "get" + fieldBaseName;
+         String setterName = "set" + fieldBaseName;
    
-      Method getterMethod = (Method)abstractAccessors.get(getterName);
-      if(getterMethod != null) {
-         cmpFieldMap.put(getterMethod, cmpField);
-         abstractAccessors.remove(getterName);
-      } else {
-         throw new DeploymentException("No getter found for cmp field: " +
-               fieldName);
-      }
-   }
-   
-   protected void setupCMPFieldSetter(
-         Map abstractAccessors,
-         CMPFieldBridge cmpField)  throws DeploymentException {
+         // get the accessor methods
+         Method getterMethod = (Method)abstractAccessors.get(getterName);
+         Method setterMethod = (Method)abstractAccessors.get(setterName);
 
-      String fieldName = cmpField.getFieldName();
-      String setterName = "set" + Character.toUpperCase(fieldName.charAt(0)) +
-            fieldName.substring(1);
-   
-      Method setterMethod = (Method)abstractAccessors.get(setterName);
-      if(setterMethod != null) {
-         cmpFieldMap.put(setterMethod, cmpField);
-         abstractAccessors.remove(setterName);
-      } else {
-         throw new DeploymentException("No setter found for cmp field: " +
-               fieldName);
-      }
-   }
-   
-   protected void setupCMRFieldMap(Map abstractAccessors)
-         throws DeploymentException {
+         // getters and setters must come in pairs
+         if(getterMethod != null && setterMethod == null) {
+            throw new DeploymentException("Getter was found but, no setter " +
+                  "was found for field: " + fieldName);
+         } else if(getterMethod == null && setterMethod != null) {
+            throw new DeploymentException("Setter was found but, no getter " +
+                  "was found for field: " + fieldName);
+         } else if(getterMethod != null && setterMethod != null) {
+            // add methods
+            fieldMap.put(getterMethod, field);
+            fieldMap.put(setterMethod, field);
 
-      CMRFieldBridge[] cmrFields = entityBridge.getCMRFields();
-      cmrFieldMap = new HashMap(cmrFields.length * 2);
-   
-      for(int i=0; i<cmrFields.length; i++) {
-         // in unidirectional relationships only one side has
-         // a field name
-         if(cmrFields[i].getFieldName() != null) {
-            setupCMRFieldGetter(abstractAccessors, cmrFields[i]);
-            setupCMRFieldSetter(abstractAccessors, cmrFields[i]);
+            // remove the accessors (they have been used)
+            abstractAccessors.remove(getterName);
+            abstractAccessors.remove(setterName);
          }
       }
    }
 
-   protected void setupCMRFieldGetter(
-         Map abstractAccessors,
-         CMRFieldBridge cmrField) throws DeploymentException {
-
-      String fieldName = cmrField.getFieldName();
-      String getterName = "get" + Character.toUpperCase(fieldName.charAt(0)) +
-            fieldName.substring(1);
-   
-      Method getterMethod = (Method)abstractAccessors.get(getterName);
-      if(getterMethod != null) {
-         cmrFieldMap.put(getterMethod, cmrField);
-         abstractAccessors.remove(getterName);
-      }
-   }
-   
-   protected void setupCMRFieldSetter(
-         Map abstractAccessors,
-         CMRFieldBridge cmrField) throws DeploymentException {
-      
-      String fieldName = cmrField.getFieldName();
-      String setterName = "set" + Character.toUpperCase(fieldName.charAt(0)) +
-            fieldName.substring(1);
-   
-      Method setterMethod = (Method)abstractAccessors.get(setterName);
-      if(setterMethod != null) {
-         cmrFieldMap.put(setterMethod, cmrField);
-         abstractAccessors.remove(setterName);
-      }
-   }
-   
-   protected void setupSelectorMap() {
-      SelectorBridge[] selectors = entityBridge.getSelectors();
-      selectorMap = new HashMap(selectors.length);
-
-      for(int i=0; i<selectors.length; i++) {
-         selectorMap.put(selectors[i].getMethod(), selectors[i]);
+   private void setupSelectorMap() {
+      Collection selectors = entityBridge.getSelectors();
+      selectorMap = new HashMap(selectors.size());
+      for(Iterator iter = selectors.iterator(); iter.hasNext();) {
+         SelectorBridge selector = (SelectorBridge)iter.next();
+         selectorMap.put(selector.getMethod(), selector);
       }
    }
 }
