@@ -94,7 +94,7 @@ import org.apache.commons.lang.StringUtils;
  * @author <a href="mailto:jmcnally@collab.new">John McNally</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: Issue.java,v 1.192 2002/09/05 18:27:43 jmcnally Exp $
+ * @version $Id: Issue.java,v 1.193 2002/09/24 20:00:55 elicia Exp $
  */
 public class Issue 
     extends BaseIssue
@@ -918,10 +918,49 @@ public class Issue
         return eligibleUsers;
     }
 
+    /**
+     * Returns users assigned to user attributes that get emailed 
+     * When issue is modified. Plus creating user.
+     */
+    public List getUsersToEmailThisIssueOnly(String action, Issue issue, List users) 
+        throws Exception
+    {
+        ScarabUser createdBy = issue.getCreatedBy();
+        if (action.equals(AttributePeer.EMAIL_TO) && !users.contains(createdBy))
+        {
+            users.add(createdBy);
+        }
+        Criteria crit = new Criteria()
+            .add(AttributeValuePeer.ISSUE_ID, issue.getIssueId())
+            .addJoin(AttributeValuePeer.ATTRIBUTE_ID,
+                     AttributePeer.ATTRIBUTE_ID)
+            .add(AttributePeer.ACTION, action)
+            .add(AttributeValuePeer.DELETED, 0);
+        List userAttVals = AttributeValuePeer.doSelect(crit);
+        for (int i=0;i<userAttVals.size();i++)
+        {
+            AttributeValue attVal = (AttributeValue)userAttVals.get(i);
+            try
+            {
+                ScarabUser su = ScarabUserManager.getInstance(attVal.getUserId());
+                if (!users.contains(su))
+                {
+                    users.add(su);
+                }
+            }
+            catch (Exception e)
+            {
+                throw new Exception("Error in retrieving users.");
+            }
+        }
+        return users;
+    }
+
 
     /**
      * Returns users assigned to user attributes that get emailed 
      * When issue is modified. Plus creating user.
+     * Adds users to email for dependant issues as well.
      */
     public List getUsersToEmail(String action) throws Exception
     {
@@ -930,32 +969,19 @@ public class Issue
         if ( obj == null ) 
         {        
             List users = new ArrayList();
-            if (action.equals(AttributePeer.EMAIL_TO))
+            try
             {
-                users.add(getCreatedBy());
+                users = getUsersToEmailThisIssueOnly(action, this, users);
+                List children = getChildren();
+                for (int i=0;i<children.size();i++)
+                {
+                    Issue depIssue = IssueManager.getInstance(((Depend)children.get(i)).getObserverId());
+                    users = getUsersToEmailThisIssueOnly(action, depIssue, users);
+                }
             }
-            Criteria crit = new Criteria()
-                .add(AttributeValuePeer.ISSUE_ID, getIssueId())
-                .addJoin(AttributeValuePeer.ATTRIBUTE_ID,
-                         AttributePeer.ATTRIBUTE_ID)
-                .add(AttributePeer.ACTION, action)
-                .add(AttributeValuePeer.DELETED, 0);
-            List userAttVals = AttributeValuePeer.doSelect(crit);
-            for (int i=0;i<userAttVals.size();i++)
+            catch (Exception e)
             {
-                AttributeValue attVal = (AttributeValue)userAttVals.get(i);
-                try
-                {
-                    ScarabUser su = ScarabUserManager.getInstance(attVal.getUserId());
-                    if (!users.contains(su))
-                    {
-                        users.add(su);
-                    }
-                }
-                catch (Exception e)
-                {
-                    throw new Exception("Error in retrieving users.");
-                }
+                throw new Exception("Error in retrieving users.");
             }
             result = users;
             ScarabCache.put(result, this, GET_USERS_TO_EMAIL, action);
