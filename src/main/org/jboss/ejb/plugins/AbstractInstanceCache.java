@@ -14,6 +14,7 @@ import java.util.Map;
 
 import org.jboss.deployment.DeploymentException;
 import org.jboss.ejb.BeanLock;
+import org.jboss.ejb.BeanLockExt;
 import org.jboss.ejb.Container;
 import org.jboss.ejb.EnterpriseContext;
 import org.jboss.ejb.InstanceCache;
@@ -39,7 +40,8 @@ import org.w3c.dom.Element;
  * @author <a href="mailto:simone.bordet@compaq.com">Simone Bordet</a>
  * @author <a href="bill@burkecentral.com">Bill Burke</a>
  * @author <a href="marc.fleury@jboss.org">Marc Fleury</a>
- * @version $Revision: 1.42 $
+ * @author Scott.Stark@jboss.org
+ * @version $Revision: 1.43 $
  * @jmx:mbean
  */
 public abstract class AbstractInstanceCache
@@ -142,9 +144,34 @@ public abstract class AbstractInstanceCache
       Object id = ctx.getId();
       if (id == null) return;
       BeanLock lock = getContainer().getLockManager().getLock(id);
+      boolean lockedBean = false;
       try
       {
-         lock.sync();
+         /* If this is a BeanLockExt only attempt the lock as the call to
+         remove is going to have to acquire the cache lock, but this may already
+         be held since this method is called by passivation policies without
+         the cache lock. This can lead to a deadlock as in the case of a size based
+         eviction during a cache get attempts to lock the bean that has been
+         locked by an age based background thread as seen in bug 987389 on
+         sourceforge.
+         */
+         if( lock instanceof BeanLockExt )
+         {
+            BeanLockExt lock2 = (BeanLockExt) lock;
+            lockedBean = lock2.attemptSync();
+            if( lockedBean == false )
+            {
+               log.warn("Unable to passivate due to ctx lock, id="+id);
+               return;
+            }
+         }
+         else
+         {
+            // Use the blocking sync
+            lock.sync();
+            lockedBean = true;
+         }
+
          if (canPassivate(ctx))
          {
             try
@@ -171,7 +198,8 @@ public abstract class AbstractInstanceCache
       }
       finally
       {
-         lock.releaseSync();
+         if( lockedBean )
+            lock.releaseSync();
          getContainer().getLockManager().removeLockRef(id);
       }
    }
