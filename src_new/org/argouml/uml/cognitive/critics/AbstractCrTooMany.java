@@ -1,4 +1,4 @@
-// $Id: AbstractCrTooMany.java,v 1.2 2004/11/02 12:15:22 mkl Exp $
+// $Id: AbstractCrTooMany.java,v 1.3 2004/12/26 18:48:07 linus Exp $
 // Copyright (c) 2003-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -37,23 +37,35 @@ import org.argouml.cognitive.ToDoItem;
 public abstract class AbstractCrTooMany extends CrUML {
 
     private static final String THRESHOLD = "Threshold";
-    
+
+    /**
+     * Set the threshold.
+     *
+     * TODO: Should this be protected?
+     *
+     * @param threshold The threshold to compare to.
+     */
     public void setThreshold(int threshold) {
         setArg(THRESHOLD, new Integer(threshold));
     }
-    
+
+    /**
+     * Gets the current threshold.
+     *
+     * TODO: Should this be protected?
+     *
+     * @return The current threshold.
+     */
     public int getThreshold() {
         return ((Integer) getArg(THRESHOLD)).intValue();
     }
-    
+
     /**
      * Provide a default wizard to adjust the threshold.
      *
      * @see org.argouml.cognitive.critics.Critic#getWizardClass(org.argouml.cognitive.ToDoItem)
      */
-    public Class getWizardClass(ToDoItem item) { 
-        return WizTooMany.class; 
+    public Class getWizardClass(ToDoItem item) {
+        return WizTooMany.class;
     }
-    
-
 }

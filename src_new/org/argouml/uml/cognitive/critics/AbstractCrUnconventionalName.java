@@ -1,4 +1,4 @@
-// $Id: AbstractCrUnconventionalName.java,v 1.1 2004/11/02 08:29:46 mkl Exp $
+// $Id: AbstractCrUnconventionalName.java,v 1.2 2004/12/26 18:48:07 linus Exp $
 // Copyright (c) 2003-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,18 +27,19 @@ package org.argouml.uml.cognitive.critics;
 
 
 /**
- * 
+ *
  * @author mkl
  *
  */
 public abstract class AbstractCrUnconventionalName extends CrUML {
 
-    /** based on the input of a model element name this method
+    /**
+     * Based on the input of a model element name this method
      * should compute a suggestion for the wizard to present
-     * to the user. Please write tests against this method for 
+     * to the user. Please write tests against this method for
      * concrete implementations.
-     * 
-     * @param name
+     *
+     * @param name The unconventional name.
      * @return a wizard suggestion
      */
     public abstract String computeSuggestion(String name);
