@@ -166,7 +166,7 @@ public class TableView extends JTreeTable {
 			TableColumn tc = null;
 			try {
 				tc = getColumn("Subject");
-				tc.setCellRenderer(new HeaderTableCommonRenderer(getTree()));
+				tc.setCellRenderer(new HeaderTableCommonRenderer(getTree(), "Subject"));
 
 			} catch (Exception ex) {
 				System.out.println(
@@ -245,7 +245,8 @@ public class TableView extends JTreeTable {
 					"Attachment",
 					new BooleanRenderer(getTree(),
 						true,
-						ImageLoader.getSmallImageIcon("attachment.png")),
+						ImageLoader.getSmallImageIcon("attachment.png"),
+						"columba.attachment"),
 					new BooleanHeaderRenderer(
 						true,
 						name,
@@ -281,7 +282,7 @@ public class TableView extends JTreeTable {
 
 				registerRenderer(
 					"Subject",
-					new HeaderTableCommonRenderer(getTree()),
+					new HeaderTableCommonRenderer(getTree(), "Subject"),
 					new CommonHeaderRenderer(
 						name,
 						MailResourceLoader.getString("header", "subject"),
@@ -305,7 +306,7 @@ public class TableView extends JTreeTable {
 				if (str.length() == 0)
 					registerRenderer(
 						name,
-						new HeaderTableCommonRenderer(getTree()),
+						new HeaderTableCommonRenderer(getTree(), "Subject"),
 						new CommonHeaderRenderer(
 							name,
 							name,
@@ -317,7 +318,7 @@ public class TableView extends JTreeTable {
 				else
 					registerRenderer(
 						name,
-						new HeaderTableCommonRenderer(getTree()),
+						new HeaderTableCommonRenderer(getTree(), "Subject"),
 						new CommonHeaderRenderer(
 							name,
 							str,

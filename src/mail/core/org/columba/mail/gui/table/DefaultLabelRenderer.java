@@ -3,7 +3,6 @@ package org.columba.mail.gui.table;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Font;
-import java.awt.Graphics;
 
 import javax.swing.BorderFactory;
 import javax.swing.Icon;
@@ -13,7 +12,6 @@ import javax.swing.JTree;
 import javax.swing.UIManager;
 import javax.swing.border.Border;
 import javax.swing.table.TableCellRenderer;
-import javax.swing.tree.TreePath;
 
 import org.columba.mail.gui.table.util.MessageNode;
 import org.columba.mail.message.HeaderInterface;
@@ -140,8 +138,8 @@ public class DefaultLabelRenderer extends JLabel implements TableCellRenderer {
 			}
 		}
 
-		TreePath path = tree.getPathForRow(row);
-		MessageNode messageNode = (MessageNode) path.getLastPathComponent();
+		//TreePath path = tree.getPathForRow(row);
+		MessageNode messageNode = (MessageNode) value;
 
 		HeaderInterface header = messageNode.getHeader();
 		if (header == null) {

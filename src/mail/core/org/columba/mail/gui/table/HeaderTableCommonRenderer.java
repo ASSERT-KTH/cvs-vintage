@@ -19,19 +19,17 @@ import java.awt.Component;
 import javax.swing.JTable;
 import javax.swing.JTree;
 
+import org.columba.mail.gui.table.util.MessageNode;
+
 public class HeaderTableCommonRenderer extends DefaultLabelRenderer {
 
-	
 	private JTree tree;
+	private String key;
 
-	
-
-	
-
-	public HeaderTableCommonRenderer(JTree tree) {
+	public HeaderTableCommonRenderer(JTree tree, String key) {
 		super(tree);
 		this.tree = tree;
-		
+		this.key = key;
 
 	}
 
@@ -48,8 +46,6 @@ public class HeaderTableCommonRenderer extends DefaultLabelRenderer {
 		int row,
 		int column) {
 
-		
-
 		if (value == null) {
 			setText("");
 			return this;
@@ -57,7 +53,7 @@ public class HeaderTableCommonRenderer extends DefaultLabelRenderer {
 
 		String str = null;
 		try {
-			str = (String) value;
+			str = (String) ((MessageNode)value).getHeader().get(key);
 		} catch (ClassCastException ex) {
 			System.out.println("headertablecommonrenderer: " + ex.getMessage());
 			str = new String();
@@ -66,12 +62,12 @@ public class HeaderTableCommonRenderer extends DefaultLabelRenderer {
 		setText(str);
 		//return this;
 		return super.getTableCellRendererComponent(
-					table,
-					value,
-					isSelected,
-					hasFocus,
-					row,
-					column);
+			table,
+			value,
+			isSelected,
+			hasFocus,
+			row,
+			column);
 	}
 
 }

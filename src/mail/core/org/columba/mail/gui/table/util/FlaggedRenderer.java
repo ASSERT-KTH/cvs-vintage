@@ -62,10 +62,11 @@ public class FlaggedRenderer extends DefaultLabelRenderer {
 			return this;
 		}
 
-		if (value instanceof String)
-			return this;
-
-		if (((Boolean) value).booleanValue()) {
+		boolean flagged = ((MessageNode)value).getHeader().getFlags().getFlagged();
+		
+		
+		
+		if (flagged) {
 			setIcon(image1);
 		} else {
 			setIcon(null);

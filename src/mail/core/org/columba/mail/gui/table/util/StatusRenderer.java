@@ -78,7 +78,7 @@ public class StatusRenderer extends DefaultLabelRenderer {
 			return this;
 		}
 
-		Flags flags = (Flags) value;
+		Flags flags = (Flags) ((MessageNode)value).getHeader().getFlags();
 
 		if (flags.getDeleted()) {
 

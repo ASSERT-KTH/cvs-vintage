@@ -22,6 +22,8 @@ import javax.swing.JTree;
 import javax.swing.SwingConstants;
 import javax.swing.UIManager;
 
+import org.columba.mail.gui.table.util.MessageNode;
+
 public class HeaderTableSizeRenderer extends DefaultLabelRenderer {
 
 	private JTree tree;
@@ -65,7 +67,7 @@ public class HeaderTableSizeRenderer extends DefaultLabelRenderer {
 			return this;
 		}
 
-		setText(value.toString() + "KB");
+		setText( ((MessageNode)value).getHeader().get("columba.size")  + "KB");
 
 		return super.getTableCellRendererComponent(
 		table,

@@ -28,13 +28,15 @@ public class BooleanRenderer extends DefaultLabelRenderer {
 	boolean bool;
 	//String str;
 	ImageIcon image;
-
-	public BooleanRenderer(JTree tree, boolean bool, ImageIcon image) {
+	String key;
+	
+	public BooleanRenderer(JTree tree, boolean bool, ImageIcon image, String key) {
 		super(tree);
 	
 		this.bool = bool;
 		//this.str = str;
 		this.image = image;
+		this.key = key;
 		setHorizontalAlignment(SwingConstants.CENTER);
 		//setOpaque(true); //MUST do this for background to show up.
 	}
@@ -63,8 +65,9 @@ public class BooleanRenderer extends DefaultLabelRenderer {
 		if (value instanceof String)
 			return this;
 
+		
 		if (bool == true) {
-			Boolean b = (Boolean) value;
+			Boolean b = (Boolean) ( (MessageNode)value).getHeader().get(key);
 			if (b == null)
 				return this;
 
@@ -84,7 +87,7 @@ public class BooleanRenderer extends DefaultLabelRenderer {
 				setIcon(null);
 			}
 		}
-
+		
 		return this;
 	}
 }

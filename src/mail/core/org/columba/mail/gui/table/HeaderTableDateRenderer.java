@@ -26,6 +26,8 @@ import javax.swing.JTable;
 import javax.swing.JTree;
 import javax.swing.UIManager;
 
+import org.columba.mail.gui.table.util.MessageNode;
+
 public class HeaderTableDateRenderer extends DefaultLabelRenderer {
 
 	static SimpleDateFormat dfWeek =
@@ -95,7 +97,7 @@ public class HeaderTableDateRenderer extends DefaultLabelRenderer {
 			return this;
 		*/
 		
-		Date date = (Date) value;
+		Date date = (Date) ((MessageNode)value).getHeader().get("columba.date");
 
 		if (date == null)
 			return this;

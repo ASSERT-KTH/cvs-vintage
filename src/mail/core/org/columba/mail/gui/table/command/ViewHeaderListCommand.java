@@ -16,6 +16,8 @@
 
 package org.columba.mail.gui.table.command;
 
+import java.awt.Rectangle;
+
 import org.columba.core.command.Command;
 import org.columba.core.command.DefaultCommandReference;
 import org.columba.core.command.SelectiveGuiUpdateCommand;
@@ -63,6 +65,10 @@ public class ViewHeaderListCommand extends SelectiveGuiUpdateCommand {
 		
 		
 		MainInterface.frameModel.tableChanged(ev);
+		
+		((MailFrameController) frameController)
+					.tableController.getView().scrollRectToVisible(new Rectangle(0,0,0,0));
+					
 		
 		boolean enableThreadedView =
 			folder.getFolderItem().getBoolean(

@@ -59,7 +59,6 @@ public class HeaderTableModel extends AbstractTreeTableModel {
 		//super(null);
 		this.item = item;
 
-
 		/*
 		Vector v = new Vector();
 		for (int i = 0; i < item.getChildCount(); i++) {
@@ -69,7 +68,7 @@ public class HeaderTableModel extends AbstractTreeTableModel {
 			if 	
 		}
 		*/
-				
+
 		tableModelPlugins = new Vector();
 
 		root = new MessageNode("root", null);
@@ -118,7 +117,7 @@ public class HeaderTableModel extends AbstractTreeTableModel {
 			MessageNode node = (MessageNode) uidList.get(uids[i]);
 
 			if (node != null) {
-				
+
 				HeaderInterface header = node.getHeader();
 				switch (subMode) {
 					case MarkMessageCommand.MARK_AS_READ :
@@ -143,7 +142,7 @@ public class HeaderTableModel extends AbstractTreeTableModel {
 							break;
 						}
 				}
-				
+
 				if (uids.length < 100)
 					nodeChanged(node);
 			} else {
@@ -333,15 +332,15 @@ public class HeaderTableModel extends AbstractTreeTableModel {
 
 	public int getColumnCount() {
 		int count = 0;
-		
-		for ( int i=0; i<item.count(); i++ )
-		{
+
+		for (int i = 0; i < item.count(); i++) {
 			HeaderItem headerItem = item.getHeaderItem(i);
 			boolean enabled = headerItem.getBoolean("enabled");
-			
-			if ( enabled == true ) count++;
+
+			if (enabled == true)
+				count++;
 		}
-		
+
 		return count;
 	}
 
@@ -366,6 +365,13 @@ public class HeaderTableModel extends AbstractTreeTableModel {
 		//return getValueAt( getRoot() , column).getClass();
 		//return cTypes[column];
 		String name = getColumnName(column);
+		if (name.equalsIgnoreCase("subject"))
+			return TreeTableModel.class;
+		else
+			return getValueAt(getRoot(), column).getClass();
+
+		/*
+		String name = getColumnName(column);
 		if (name.equalsIgnoreCase("subject")) {
 			return TreeTableModel.class;
 		} else if (name.equalsIgnoreCase("date")) {
@@ -386,13 +392,15 @@ public class HeaderTableModel extends AbstractTreeTableModel {
 			return Boolean.class;
 		} else
 			return String.class;
+		*/
 	}
 
-	
-	
 	public Object getValueAt(Object node, int col) {
 
-		DefaultMutableTreeNode treeNode = (DefaultMutableTreeNode) node;
+		MessageNode treeNode = (MessageNode) node;
+		return treeNode;
+
+		/*
 		HeaderInterface header = null;
 		if (treeNode.equals(getRootNode()))
 			return null;
@@ -402,7 +410,7 @@ public class HeaderTableModel extends AbstractTreeTableModel {
 			//System.out.println("found message instance");
 			header = (ColumbaHeader) treeNode.getUserObject();
 		}
-
+		
 		if (header == null)
 			return "";
 		String column = getColumnName(col);
@@ -419,7 +427,7 @@ public class HeaderTableModel extends AbstractTreeTableModel {
 				Date date = (Date) header.get("columba.date");
 				return date;
 			} else {
-
+		
 				return (String) header.get("columba.date");
 			}
 		} else if (column.equals("Attachment")) {
@@ -443,7 +451,7 @@ public class HeaderTableModel extends AbstractTreeTableModel {
 			}
 			return object;
 		}
-
+		*/
 	}
 
 }

@@ -21,7 +21,6 @@ import javax.swing.ImageIcon;
 import javax.swing.JTree;
 import javax.swing.UIManager;
 import javax.swing.tree.DefaultTreeCellRenderer;
-import javax.swing.tree.TreePath;
 
 import org.columba.core.gui.util.ImageLoader;
 import org.columba.mail.gui.table.TableView;
@@ -36,22 +35,18 @@ import org.columba.mail.message.HeaderInterface;
  * @version 1.0
  */
 
-public class SubjectTreeCellRenderer extends DefaultTreeCellRenderer
-{
+public class SubjectTreeCellRenderer extends DefaultTreeCellRenderer {
 	private ImageIcon image1;
 	private ImageIcon image2;
-	private Font plainFont, boldFont;
+	private Font plainFont, boldFont, font;
 
 	private TableView headerTable;
 
 	private JTree tree1;
 
-	public SubjectTreeCellRenderer(JTree tree)
-	{
+	public SubjectTreeCellRenderer(JTree tree) {
 		super();
 		this.tree1 = tree;
-
-		
 
 		image1 = ImageLoader.getSmallImageIcon("folder.png");
 
@@ -62,6 +57,8 @@ public class SubjectTreeCellRenderer extends DefaultTreeCellRenderer
 		boldFont = boldFont.deriveFont(Font.BOLD);
 
 		plainFont = UIManager.getFont("Label.font");
+		
+		font = plainFont;
 
 	}
 
@@ -72,9 +69,9 @@ public class SubjectTreeCellRenderer extends DefaultTreeCellRenderer
 		boolean expanded,
 		boolean leaf,
 		int row,
-		boolean hasFocus)
-	{
+		boolean hasFocus) {
 
+		
 		super.getTreeCellRendererComponent(
 			tree,
 			value,
@@ -83,35 +80,37 @@ public class SubjectTreeCellRenderer extends DefaultTreeCellRenderer
 			leaf,
 			row,
 			hasFocus);
-
+		
+		
+		/*
 		TreePath path = tree1.getPathForRow(row);
 		if (path == null)
 			return this;
+		*/
 
-		MessageNode messageNode = (MessageNode) path.getLastPathComponent();
+		//MessageNode messageNode = (MessageNode) path.getLastPathComponent();
+		MessageNode messageNode = (MessageNode) value;
 
+		
 		if ( messageNode.getUserObject().equals("root") )
 			{
 				setText("...");
 				setIcon(null);
 				return this;
 			}
-			
+		
 		HeaderInterface header = messageNode.getHeader();
-		if (header == null)
-		{
+		if (header == null) {
 			System.out.println("header is null");
 			return this;
 		}
 
-		if (header.getFlags() != null)
-		{
-			if (header.getFlags().getRecent())
-			{
+		if (header.getFlags() != null) {
+			if (header.getFlags().getRecent()) {
+				font = boldFont;
 				setFont(boldFont);
-			}
-			else
-			{
+			} else {
+				font = plainFont;
 				setFont(plainFont);
 			}
 		}
@@ -126,4 +125,11 @@ public class SubjectTreeCellRenderer extends DefaultTreeCellRenderer
 
 		return this;
 	}
+	/**
+	 * @see java.awt.MenuContainer#getFont()
+	 */
+	public Font getFont() {
+		return font;
+	}
+
 }

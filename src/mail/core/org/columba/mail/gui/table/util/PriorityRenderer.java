@@ -60,7 +60,9 @@ public class PriorityRenderer extends DefaultLabelRenderer {
 			return this;
 		}
 
-		Integer in = (Integer) value;
+		Integer priority = (Integer) ((MessageNode)value).getHeader().get("columba.priority");
+		
+		Integer in = priority;
 		if (in == null)
 			return this;
 
