@@ -6,8 +6,8 @@ import javax.swing as swing
 class HelloWorldGui (DefaultActionRow):
 	t = swing.JTextField(20)
 
-	def __init__(self, actionList, filterAction):
-		DefaultActionRow.__init__(self, actionList, filterAction)
+	def __init__(self, mediator, actionList, filterAction):
+		DefaultActionRow.__init__(self, mediator, actionList, filterAction)
 
 	def initComponents(self):
 		DefaultActionRow.initComponents(self)
