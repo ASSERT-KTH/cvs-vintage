@@ -29,17 +29,17 @@ import org.jboss.Version;
 
 /**
  * The main container component of a JBoss server instance.
- *      
+ *
  * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
  * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
- * @version $Revision: 1.15 $
+ * @version $Revision: 1.16 $
  */
 public class Server
-   implements ServerMBean
+implements ServerMBean
 {
    /** Class logger */
-   private static final BootstrapLogger log = 
-      BootstrapLogger.getLogger(Server.class);
+   private static final BootstrapLogger log =
+   BootstrapLogger.getLogger(Server.class);
    
    /** Container for version information. */
    private final Version version = Version.getInstance();
@@ -52,30 +52,27 @@ public class Server
    
    /** When the server was started. */
    private final Date started;
-
+   
    /** The JVM shutdown hook */
    private final ShutdownHook shutdownHook;
-
-   /** 
+   
+   /**
     * Creates a new instance of Server.
     *
     * @param config   The basic configuration of the server instance.
     *
     * @throws Exception   Failed to initialize server instance.
     */
-   public Server(final ServerConfig config) throws Exception {
+   public Server(final ServerConfig config) throws Exception
+   {
       if (config == null)
          throw new IllegalArgumentException("config is null");
       
-      boolean debug = log.isDebugEnabled();
-
-      this.config = config;
-      if (debug) {
-	 log.debug("Using config: " + config);
-      }
+      Package mainPkg = Package.getPackage("org.jboss");
       
-      log.info("JBoss (MX MicroKernel) " + 
-               version + " [" + version.getName() + "]");
+      this.config = config;
+      log.info("Using config: " + config);
+      log.info("JBoss Release: "+mainPkg.getImplementationTitle());
       
       // remeber when we we started
       started = new Date();
@@ -83,9 +80,7 @@ public class Server
       
       // Create the MBeanServer
       server = MBeanServerFactory.createMBeanServer("jboss");
-      if (debug) {
-	 log.debug("Created MBeanServer: " + server);
-      }
+      log.debug("Created MBeanServer: " + server);
       
       // Register server components
       server.registerMBean(this, ServerMBean.OBJECT_NAME);
@@ -98,14 +93,12 @@ public class Server
       initBootLibraries();
       
       // Create MBeanClassLoader for the base system
-      ObjectName loaderName = 
-	 new ObjectName("jboss.system", "service", "ServiceClassLoader");
+      ObjectName loaderName =
+      new ObjectName("jboss.system", "service", "ServiceClassLoader");
       
       MBeanClassLoader mcl = new MBeanClassLoader(loaderName);
       server.registerMBean(mcl, loaderName);
-      if (debug) {
-	 log.debug("Registered service classloader: " + loaderName);
-      }
+      log.debug("Registered service classloader: " + loaderName);
       
       // Set ServiceClassLoader as classloader for the construction of
       // the basic system
@@ -128,27 +121,26 @@ public class Server
       server.createMBean("org.jboss.system.Info", null, loaderName);
       
       // Service Controller
-      ObjectName controllerName = 
-         server.createMBean("org.jboss.system.ServiceController", null, loaderName).getObjectName();
-      
-      if (debug) {
-	 log.debug("Registered service controller: " + controllerName);
-      }
+      ObjectName controllerName =
+      server.createMBean("org.jboss.system.ServiceController", null, loaderName).getObjectName();
+      log.debug("Registered service controller: " + controllerName);
       
       // Install the shutdown hook
       shutdownHook = new ShutdownHook(controllerName);
-      try {
-	 Runtime.getRuntime().addShutdownHook(shutdownHook);
-	 log.debug("Shutdown hook added");
+      try
+      {
+         Runtime.getRuntime().addShutdownHook(shutdownHook);
+         log.debug("Shutdown hook added");
       }
-      catch (Exception e) {
-	 log.warn("Failed to add shutdown hook", e);
+      catch (Exception e)
+      {
+         log.warn("Failed to add shutdown hook", e);
       }
       
       // Main Deployer
-      ObjectName mainDeployer = 
-	 server.createMBean("org.jboss.deployment.MainDeployer", null, loaderName).getObjectName();
-
+      ObjectName mainDeployer =
+      server.createMBean("org.jboss.deployment.MainDeployer", null, loaderName).getObjectName();
+      
       // Initialize the MainDeployer
       server.invoke(mainDeployer, "create", new Object[0], new String[0]);
       
@@ -156,11 +148,11 @@ public class Server
       server.createMBean("org.jboss.deployment.SARDeployer", null, loaderName);
       
       // Ok, now do a first deploy of JBoss' jboss-service.xml
-      server.invoke(mainDeployer, 
-                    "deploy", 
-                    new Object[] { config.getConfigURL() + "jboss-service.xml" },
-                    new String[] { "java.lang.String" });
-      
+      server.invoke(mainDeployer,
+      "deploy",
+         new Object[] { config.getConfigURL() + "jboss-service.xml" },
+         new String[] { "java.lang.String" });
+
       // Start the main deployer thread
       server.invoke(mainDeployer, "start", new Object[0], new String[0]);
       
@@ -171,16 +163,17 @@ public class Server
       long milliseconds = (lapsedTime - 60000 * minutes - 1000 * seconds);
       
       // Tell the world how fast it was =)
-      log.info("JBoss (MX MicroKernel) " + 
-	       version + " [" + version.getName() + "]" + 
-	       " Started in " + minutes  + "m:" + 
-	       seconds  + "s:" + milliseconds +"ms");
+      log.info("JBoss (MX MicroKernel) " +
+         " [" + mainPkg.getImplementationVersion() + "]" +
+         " Started in " + minutes  + "m:" +
+         seconds  + "s:" + milliseconds +"ms");
    }
    
    /**
     * Initialize the boot libraries.
     */
-   private void initBootLibraries() throws Exception {
+   private void initBootLibraries() throws Exception
+   {
       boolean debug = log.isDebugEnabled();
       
       // Build the list of URL for the spine to boot
@@ -189,22 +182,25 @@ public class Server
       // Add the patch URL.  If the url protocol is file, then
       // add the contents of the directory it points to
       URL patchURL = config.getPatchURL();
-      if (patchURL != null) {
-         if (patchURL.getProtocol().equals("file")) {
+      if (patchURL != null)
+      {
+         if (patchURL.getProtocol().equals("file"))
+         {
             File dir = new File(patchURL.getFile());
-            if (dir.exists()) {
+            if (dir.exists())
+            {
                // Add the local file patch directory
                list.add(dir.toURL());
                
                // Add the contents of the directory too
                File[] jars = dir.listFiles(new FileFilter()
+               {
+                  public boolean accept(File file)
                   {
-                     public boolean accept(File file)
-                     {
-                        String name = file.getName().toLowerCase();
-                        return name.endsWith(".jar") || name.endsWith(".zip");
-                     }
-                  });
+                     String name = file.getName().toLowerCase();
+                     return name.endsWith(".jar") || name.endsWith(".zip");
+                  }
+               });
                
                for (int j = 0; jars != null && j < jars.length; j++)
                {
@@ -212,7 +208,8 @@ public class Server
                }
             }
          }
-         else {
+         else
+         {
             list.add(patchURL);
          }
       }
@@ -229,9 +226,11 @@ public class Server
       // Create loaders for each URL
       Iterator iter = list.iterator();
       
-      while (iter.hasNext()) {
+      while (iter.hasNext())
+      {
          URL url = (URL)iter.next();
-         if (debug) {
+         if (debug)
+         {
             log.debug("Creating loader for URL: " + url);
          }
          
@@ -242,30 +241,36 @@ public class Server
          UnifiedClassLoader loader = new UnifiedClassLoader(url);
       }
    }
-
+   
    /**
     * Shutdown the server and run shutdown hooks.  If the exit on shutdown
-    * flag is true, then {@link exit} is called, else only the shutdown hook 
+    * flag is true, then {@link exit} is called, else only the shutdown hook
     * is run.
     */
-   public void shutdown() {
+   public void shutdown()
+   {
       final Server server = this;
-
+      
       log.info("Shutting down");
-
+      
       boolean exitOnShutdown = config.getExitOnShutdown();
-      if (log.isDebugEnabled()) {
+      if (log.isDebugEnabled())
+      {
          log.debug("exitOnShutdown: " + exitOnShutdown);
       }
-
-      if (exitOnShutdown) {
+      
+      if (exitOnShutdown)
+      {
          server.exit(0);
       }
-      else {
+      else
+      {
          // start in new thread to give positive
          // feedback to requesting client of success.
-         new Thread() {
-            public void run() {
+         new Thread()
+         {
+            public void run()
+            {
                // just run the hook, don't call System.exit, as we may
                // be embeded in a vm that would not like that very much
                shutdownHook.run();
@@ -279,59 +284,69 @@ public class Server
     *
     * @param exitcode   The exit code returned to the operating system.
     */
-   public void exit(final int exitcode) {
+   public void exit(final int exitcode)
+   {
       // start in new thread so that we might have a chance to give positive
       // feed back to requesting client of success.
-      new Thread() {
-         public void run() {
-	    log.info("Shutting down the JVM now!");
+      new Thread()
+      {
+         public void run()
+         {
+            log.info("Shutting down the JVM now!");
             Runtime.getRuntime().exit(exitcode);
          }
       }.start();
    }
    
    /**
-    * Shutdown the server, the JVM and run shutdown hooks.  Exits with 
-    * code 1. 
+    * Shutdown the server, the JVM and run shutdown hooks.  Exits with
+    * code 1.
     */
-   public void exit() {
+   public void exit()
+   {
       exit(1);
    }
-
-   /** 
+   
+   /**
     * Forcibly terminates the currently running Java virtual machine.
     *
     * @param exitcode   The exit code returned to the operating system.
     */
-   public void halt(final int exitcode) {
+   public void halt(final int exitcode)
+   {
       // start in new thread so that we might have a chance to give positive
       // feed back to requesting client of success.
-      new Thread() {
-         public void run() {
+      new Thread()
+      {
+         public void run()
+         {
             System.err.println("Halting the system now!");
             Runtime.getRuntime().halt(exitcode);
          }
       }.start();
    }
    
-   /** 
-    * Forcibly terminates the currently running Java virtual machine. 
-    * Exits with code 1. 
+   /**
+    * Forcibly terminates the currently running Java virtual machine.
+    * Exits with code 1.
     */
-   public void halt() {
+   public void halt()
+   {
       halt(1);
    }
-
+   
    
    ///////////////////////////////////////////////////////////////////////////
    //                            Runtime Access                             //
    ///////////////////////////////////////////////////////////////////////////
    
-   private void logMemoryUsage(final Runtime rt) {
+   private void logMemoryUsage(final Runtime rt)
+   {
       log.info("Total/free memory: " + rt.totalMemory() + "/" + rt.freeMemory());
    }
    
-   public void runGarbageCollector() {
+   public void runGarbageCollector()
+   {
       Runtime rt = Runtime.getRuntime();
       
       logMemoryUsage(rt);
@@ -340,7 +355,8 @@ public class Server
       logMemoryUsage(rt);
    }
    
-   public void runFinalization() {
+   public void runFinalization()
+   {
       Runtime.getRuntime().runFinalization();
       log.info("Hinted to the JVM to run any pending object finalizations");
    }
@@ -348,14 +364,16 @@ public class Server
    /**
     * Enable or disable tracing method calls at the Runtime level.
     */
-   public void traceMethodCalls(final Boolean flag) {
+   public void traceMethodCalls(final Boolean flag)
+   {
       Runtime.getRuntime().traceMethodCalls(flag.booleanValue());
    }
    
    /**
     * Enable or disable tracing instructions the Runtime level.
     */
-   public void traceInstructions(final Boolean flag) {
+   public void traceInstructions(final Boolean flag)
+   {
       Runtime.getRuntime().traceInstructions(flag.booleanValue());
    }
    
@@ -364,41 +382,50 @@ public class Server
    //                          Server Information                           //
    ///////////////////////////////////////////////////////////////////////////
    
-   public Date getStarted() {
+   public Date getStarted()
+   {
       return started;
    }
    
-   public Long getTotalMemory() {
+   public Long getTotalMemory()
+   {
       return new Long(Runtime.getRuntime().totalMemory());
    }
    
-   public Long getFreeMemory() {
+   public Long getFreeMemory()
+   {
       return new Long(Runtime.getRuntime().freeMemory());
    }
    
-   public Long getMaxMemory() {
+   public Long getMaxMemory()
+   {
       // Uncomment when JDK 1.4 is the base JVM
       // return new Long(Runtime.getRuntime().maxMemory());
       return new Long(-1);
    }
    
-   public String getVersion() {
+   public String getVersion()
+   {
       return version.toString();
    }
    
-   public String getVersionName() {
+   public String getVersionName()
+   {
       return version.getName();
    }
    
-   public String getBuildNumber() {
+   public String getBuildNumber()
+   {
       return version.getBuildNumber();
    }
    
-   public String getBuildID() {
+   public String getBuildID()
+   {
       return version.getBuildID();
    }
    
-   public String getBuildDate() {
+   public String getBuildDate()
+   {
       return version.getBuildDate();
    }
    
@@ -408,18 +435,20 @@ public class Server
    ///////////////////////////////////////////////////////////////////////////
    
    private class ShutdownHook
-      extends Thread
+   extends Thread
    {
       /** The ServiceController which we will ask to shut things down with. */
       private ObjectName contollerName;
       
-      public ShutdownHook(final ObjectName contollerName) {
+      public ShutdownHook(final ObjectName contollerName)
+      {
          super("JBoss Shutdown Hook");
          
          this.contollerName = contollerName;
       }
       
-      public void run() {
+      public void run()
+      {
          log.info("Shutting down all services");
          System.out.println("Shutting down");
          
@@ -440,9 +469,9 @@ public class Server
          {
             // get the deployed objects from ServiceController
             server.invoke(contollerName,
-                          "shutdown",
-                          new Object[0],
-                          new String[0]);
+            "shutdown",
+            new Object[0],
+            new String[0]);
          }
          catch (MBeanException e)
          {
