@@ -62,7 +62,7 @@ import org.tigris.scarab.migration.JDBCTask;
  * SCARAB_TRANSACTION table. 
  *
  * @author <a href="mailto:jon@collab.net">John McNally</a>
- * @version $Id: DB_1_MoveIssueCreateInfo.java,v 1.5 2003/07/25 21:43:44 jmcnally Exp $
+ * @version $Id: DB_1_MoveIssueCreateInfo.java,v 1.6 2003/07/26 21:19:03 jmcnally Exp $
  */
 public class DB_1_MoveIssueCreateInfo extends JDBCTask
 {
@@ -79,7 +79,7 @@ public class DB_1_MoveIssueCreateInfo extends JDBCTask
         boolean proceed = false;
         try
         {
-            // check whether this script has already run
+            // check whether SCARAB_ISSUE already has changes
             Connection conn = null;
             Statement stmt = null;
             try 
@@ -104,14 +104,66 @@ public class DB_1_MoveIssueCreateInfo extends JDBCTask
 
             if (proceed) 
             {
-                upgrade();
+                upgradeScarabIssue();
             }        
         }
         catch (Exception e)
         {
             throw new BuildException(e);
         }
+
+        addNewIndices();
     }
+
+    private void addNewIndices()
+    {
+        Connection conn = null;
+        Statement stmt = null;
+        try 
+        {
+            setAutocommit(true);
+            conn = getConnection();
+            String sql = "CREATE INDEX IX_ATTACHMENT on SCARAB_ACTIVITY (ATTACHMENT_ID)";
+            try 
+            {
+                stmt = conn.createStatement();
+                stmt.execute(sql);
+            }
+            catch (SQLException e)
+            {
+                System.out.println("index SCARAB_ACTIVITY.IX_ATTACHMENT was not created.  verify that it already exists.");
+            }
+            close(stmt, null);
+            
+            sql = "CREATE INDEX IX_ISSUE_ATTACHTYPE on SCARAB_ATTACHMENT (ISSUE_ID, ATTACHMENT_TYPE_ID)";
+            try 
+            {
+                stmt = conn.createStatement();
+                stmt.execute(sql);
+            }
+            catch (SQLException e)
+            {
+                System.out.println("index SCARAB_ATTACHMENT.IX_ISSUE_ATTACHTYPE  was not created.  verify that it already exists.");
+            }
+            close(stmt, null);
+            
+            sql = "CREATE INDEX IX_DEPEND on SCARAB_ACTIVITY (DEPEND_ID)";
+            try 
+            {
+                stmt = conn.createStatement();
+                stmt.execute(sql);
+            }
+            catch (SQLException e)
+            {
+                System.out.println("index SCARAB_ACTIVITY.IX_DEPEND was not created.  verify that it already exists.");
+            }
+        } 
+        finally 
+        {
+            close(stmt, conn);
+        }
+    }
+
 
     private static final String MYSQL = "mysql";
     private static final String POSTGRESQL = "postgres";
@@ -155,7 +207,7 @@ public class DB_1_MoveIssueCreateInfo extends JDBCTask
         return result;
     }
 
-    private void upgrade()
+    private void upgradeScarabIssue()
         throws SQLException
     {
         Connection conn = null;
@@ -247,9 +299,9 @@ public class DB_1_MoveIssueCreateInfo extends JDBCTask
      * @return a <code>ActivitySet</code> value
      * @exception Exception if an error occurs
      */
-    public Map getCreateInfoFromInitialActivitySets(long startIssueId, 
-                                                    long endIssueId, 
-                                                    Connection conn)
+    private Map getCreateInfoFromInitialActivitySets(long startIssueId, 
+                                                     long endIssueId, 
+                                                     Connection conn)
         throws SQLException
     {
         Map result = new HashMap(1500);

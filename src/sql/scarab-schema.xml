@@ -2,7 +2,7 @@
 <!DOCTYPE database SYSTEM
           "http://db.apache.org/torque/dtd/database_3_0_1.dtd">
 
-<!-- $Id: scarab-schema.xml,v 1.134 2003/06/23 11:18:09 mpoeschl Exp $ -->
+<!-- $Id: scarab-schema.xml,v 1.135 2003/07/26 21:19:03 jmcnally Exp $ -->
 
 <database name="@DATABASE_PROP_NAME@" defaultJavaType="object">
 <!--
@@ -120,6 +120,12 @@
     <index name="IX_TRANSACTION">
         <index-column name="TRANSACTION_ID"/>
     </index>
+    <index name="IX_ATTACHMENT">
+        <index-column name="ATTACHMENT_ID"/>
+    </index>
+    <index name="IX_DEPEND">
+        <index-column name="DEPEND_ID"/>
+    </index>
     <!-- 
          This index is useful in reports.  My first guess was that including 
          END_DATE in the index would be useful, but it appears to slow things 
@@ -205,6 +211,10 @@
     -->
     <column name="DELETED" required="false" type="BOOLEANINT" 
             default="0" size="1" javaType="primitive"></column>
+    <index name="IX_ISSUE_ATTACHTYPE">
+        <index-column name="ISSUE_ID"/>
+        <index-column name="ATTACHMENT_TYPE_ID"/>
+    </index>
     <foreign-key foreignTable="SCARAB_ISSUE">
         <reference local="ISSUE_ID" foreign="ISSUE_ID"/>
     </foreign-key>
