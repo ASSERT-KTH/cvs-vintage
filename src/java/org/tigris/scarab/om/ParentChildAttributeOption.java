@@ -46,6 +46,7 @@ package org.tigris.scarab.om;
  * individuals on behalf of Collab.Net.
  */ 
 
+import org.apache.torque.TorqueException;
 import org.apache.torque.om.NumberKey;
 import org.apache.fulcrum.intake.Retrievable;
 
@@ -62,7 +63,7 @@ import org.tigris.scarab.util.ScarabException;
   * to create combination of a ROptionOption and a AttributeOption
   *
   * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
-  * @version $Id: ParentChildAttributeOption.java,v 1.10 2002/03/14 01:13:10 jmcnally Exp $
+  * @version $Id: ParentChildAttributeOption.java,v 1.11 2002/05/17 00:24:47 jon Exp $
   */
 public class ParentChildAttributeOption 
     implements Retrievable, java.io.Serializable
@@ -171,14 +172,29 @@ public class ParentChildAttributeOption
         this.attributeId = attributeId;
     }
 
+    /**
+     * The 'child' optionid
+     */
     public NumberKey getOptionId()
     {
         return this.optionId;
     }
 
+    /**
+     * The 'child' optionid
+     */
     public void setOptionId(NumberKey key)
     {
         this.optionId = key;
+    }
+
+    /**
+     * The 'child' AttributeOption
+     */
+    public AttributeOption getChildOption()
+        throws TorqueException
+    {
+        return AttributeOptionManager.getInstance(getOptionId());
     }
 
     public NumberKey getParentId()
@@ -193,6 +209,12 @@ public class ParentChildAttributeOption
     public void setParentId(NumberKey id)
     {
         this.parentId = id;
+    }
+
+    public AttributeOption getParentOption()
+        throws TorqueException
+    {
+        return AttributeOptionManager.getInstance(getParentId());
     }
 
     public boolean getDeleted()
