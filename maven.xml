@@ -4,12 +4,10 @@
     xmlns:u="jelly:util"
     xmlns:ant="jelly:ant">
 
-  <!-- ================================================================== -->
-  <!-- W A R : W E B A P P   P O S T - G O A L                            -->
-  <!-- ================================================================== -->
-  <!-- executed after the building of the war:webapp, it copies all the   -->
-  <!-- various resource files into the webapp build directory             -->
-  <!-- ================================================================== -->
+  <preGoal name="site"> 
+    <attainGoal name="docbook:transform"/>
+  </preGoal>
+
   <postGoal name="war:webapp"> 
     <j:set var="warWebappBuildDir"
         value="${pom.getPluginContext('maven-war-plugin').getVariable('maven.war.webapp.dir')}"/>

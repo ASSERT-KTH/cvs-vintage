@@ -18,6 +18,9 @@
       <item name="Properties"             href="/properties.html" />
     </menu>   
     <menu name="Documentation">
+      <item name="Admin Guide"            href="/scarab-admin.html"/>
+      <item name="Admin Guide (FR)"       href="/scarab-admin-fr.html"/>
+      <item name="Admin User (FR)"        href="/scarab-user-fr.html"/>
       <item name="Changes"                href="/changes-report.html"/>
       <item name="FAQ"                    href="/faq.html"/>
       <item name="How-To's"               href="/howto/index.html"/>
