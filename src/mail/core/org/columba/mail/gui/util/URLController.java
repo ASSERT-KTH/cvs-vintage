@@ -24,7 +24,7 @@ import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 
 import org.columba.addressbook.gui.tree.AddressbookTreeModel;
-import org.columba.addressbook.gui.tree.util.SelectAddressbookFolderDialog;
+import org.columba.addressbook.gui.tree.util.ISelectFolderDialog;
 import org.columba.addressbook.model.Contact;
 import org.columba.addressbook.model.IContact;
 import org.columba.addressbook.model.VCARD;
@@ -116,7 +116,7 @@ FrameModel.getInstance().openView("Composer");
 
     public void contact(String address) {
         //TODO (@author fdietz): remove dependency to addressbook here
-        SelectAddressbookFolderDialog dialog = 
+        ISelectFolderDialog dialog = 
         	AddressbookTreeModel.getInstance().getSelectAddressbookFolderDialog();
 
         org.columba.addressbook.folder.AbstractFolder selectedFolder = dialog.getSelectedFolder();

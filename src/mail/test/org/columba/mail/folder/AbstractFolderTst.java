@@ -92,14 +92,14 @@ public class AbstractFolderTst extends TestCase {
 		Main.DEBUG = true;
 		ColumbaLogger.createDefaultHandler();
 
-//		 init mail component
-		MailMain.getInstance();
-		
-		AddressbookMain.getInstance();
+		//		 init mail component
+		new MailMain();
+
+		//new AddressbookMain();
 
 		// now load all available plugins
 		PluginManager.getInstance().initPlugins();
-		
+
 		folders = new HashSet();
 		sourceFolder = factory.createFolder(folderId++);
 		folders.add(sourceFolder);
@@ -119,10 +119,12 @@ public class AbstractFolderTst extends TestCase {
 	 * @see junit.framework.TestCase#tearDown()
 	 */
 	protected void tearDown() throws Exception {
-		if ( folders == null ) return;
-		
+		if (folders == null)
+			return;
+
 		for (Iterator iterator = folders.iterator(); iterator.hasNext();) {
-			AbstractMessageFolder folder = (AbstractMessageFolder) iterator.next();
+			AbstractMessageFolder folder = (AbstractMessageFolder) iterator
+					.next();
 			File f = folder.getDirectoryFile();
 
 			// delete all mails in folder

@@ -19,6 +19,7 @@ package org.columba.addressbook.folder;
 
 import org.columba.addressbook.model.ContactItemMap;
 import org.columba.addressbook.model.IContactItem;
+import org.columba.addressbook.model.IContactItemMap;
 
 /**
  * Contact item cache storage.
@@ -34,7 +35,7 @@ import org.columba.addressbook.model.IContactItem;
  */
 public interface ContactItemCacheStorage {
 
-	ContactItemMap getContactItemMap() throws Exception;
+	IContactItemMap getContactItemMap() throws Exception;
 	
 	void add(Object uid, IContactItem item) throws Exception;
 	

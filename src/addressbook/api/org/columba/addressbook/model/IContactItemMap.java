@@ -15,17 +15,26 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003.
 //
 //All Rights Reserved.
-package org.columba.addressbook.facade;
+package org.columba.addressbook.model;
 
-import org.columba.addressbook.gui.autocomplete.IAddressCollector;
+import java.util.Iterator;
 
 /**
  * @author fdietz
  *
  */
-public interface IContactFacade {
+public interface IContactItemMap {
+	void add(Object uid, IContactItem contactItem);
 
-	void addContact(int uid, String address);
-	void addContactToCollectedAddresses(String address);
-	IAddressCollector getAddressCollector();
+	ContactItem get(Object uid);
+
+	void remove(Object uid);
+
+	boolean exists(Object uid);
+
+	int count();
+
+	Iterator iterator();
+
+	void clear();
 }

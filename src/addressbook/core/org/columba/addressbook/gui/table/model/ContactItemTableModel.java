@@ -20,6 +20,7 @@ import javax.swing.table.TableModel;
 import org.columba.addressbook.model.ContactItem;
 import org.columba.addressbook.model.ContactItemMap;
 import org.columba.addressbook.model.IContactItem;
+import org.columba.addressbook.model.IContactItemMap;
 
 
 /**
@@ -28,9 +29,9 @@ import org.columba.addressbook.model.IContactItem;
  * @author fdietz
  */
 public interface ContactItemTableModel extends TableModel {
-    void setContactItemMap(ContactItemMap list);
+    void setContactItemMap(IContactItemMap list);
 
-    ContactItemMap getContactItemMap();
+    IContactItemMap getContactItemMap();
     
     IContactItem getContactItem(int index);
 }

@@ -51,7 +51,7 @@ public final class FolderFactory {
 		return f;
 	}
 
-	public static GroupFolder createGroupFolder(AbstractFolder parent,
+	public static IGroupFolder createGroupFolder(AbstractFolder parent,
 			IGroup group) {
 		XmlElement folder = new XmlElement("folder");
 		folder.addAttribute("uid", (AddressbookTreeNode.generateNextFolderUid())

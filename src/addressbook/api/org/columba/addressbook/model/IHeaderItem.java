@@ -1,4 +1,3 @@
-package org.columba.addressbook.model;
 // The contents of this file are subject to the Mozilla Public License Version
 // 1.1
 //(the "License"); you may not use this file except in compliance with the
@@ -16,18 +15,45 @@ package org.columba.addressbook.model;
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003.
 //
 //All Rights Reserved.
+package org.columba.addressbook.model;
+
 /**
  * @author fdietz
  *
  */
 public interface IHeaderItem {
 	/**
-	 * @see java.lang.Object#clone()
+	 * @return Returns the contact.
 	 */
-	public abstract Object clone();
+	boolean isContact();
 
 	/**
-	 * @see java.lang.Object#toString()
+	 * @param contact
+	 *            The contact to set.
 	 */
-	public abstract String toString();
+	void setContact(boolean contact);
+
+	/**
+	 * @return Returns the displayName.
+	 */
+	String getDisplayName();
+
+	/**
+	 * @param displayName
+	 *            The displayName to set.
+	 */
+	void setDisplayName(String displayName);
+
+	/**
+	 * @return Returns the header.
+	 */
+	String getHeader();
+
+	/**
+	 * @param header
+	 *            The header to set.
+	 */
+	void setHeader(String header);
+	
+	Object clone();
 }

@@ -47,7 +47,7 @@ import org.columba.addressbook.util.AddressbookResourceLoader;
 import org.columba.core.gui.util.ButtonWithMnemonic;
 
 public class SelectAddressbookFolderDialog extends JDialog implements
-		ActionListener, TreeSelectionListener {
+		ActionListener, TreeSelectionListener, ISelectFolderDialog {
 	private String name;
 
 	//private MainInterface mainInterface;

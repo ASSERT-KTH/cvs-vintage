@@ -17,6 +17,7 @@ package org.columba.mail.gui.composer.action;
 
 import java.awt.event.ActionEvent;
 
+import org.columba.addressbook.gui.ISelectAddressDialog;
 import org.columba.addressbook.gui.SelectAddressDialog;
 import org.columba.core.action.AbstractColumbaAction;
 import org.columba.core.gui.util.ImageLoader;
@@ -57,7 +58,7 @@ public class AddressbookAction extends AbstractColumbaAction {
 	public void actionPerformed(ActionEvent evt) {
 		ComposerController composerController = ((ComposerController) getFrameMediator());
 
-		SelectAddressDialog dialog = new SelectAddressDialog(composerController
+		ISelectAddressDialog dialog = new SelectAddressDialog(composerController
 				.getView().getFrame(), composerController.getHeaderController()
 				.getHeaderItemLists());
 

@@ -23,6 +23,7 @@ import org.columba.addressbook.folder.AddressbookFolder;
 import org.columba.addressbook.folder.AddressbookTreeNode;
 import org.columba.addressbook.folder.FolderFactory;
 import org.columba.addressbook.folder.GroupFolder;
+import org.columba.addressbook.folder.IGroupFolder;
 import org.columba.addressbook.gui.dialog.group.EditGroupDialog;
 import org.columba.addressbook.gui.frame.AddressbookFrameMediator;
 import org.columba.addressbook.gui.tree.AddressbookTreeModel;
@@ -78,7 +79,7 @@ public class AddGroupCardAction extends DefaultTreeAction {
 		if (dialog.getResult()) {
 
 			// add new group to folder
-			GroupFolder groupFolder = FolderFactory.createGroupFolder(folder,
+			IGroupFolder groupFolder = FolderFactory.createGroupFolder(folder,
 					group);
 
 			// get parent

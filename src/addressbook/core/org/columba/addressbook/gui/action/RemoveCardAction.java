@@ -27,6 +27,7 @@ import javax.swing.tree.TreePath;
 import org.columba.addressbook.folder.AbstractFolder;
 import org.columba.addressbook.folder.AddressbookTreeNode;
 import org.columba.addressbook.folder.GroupFolder;
+import org.columba.addressbook.folder.IGroupFolder;
 import org.columba.addressbook.gui.frame.AddressbookFrameMediator;
 import org.columba.addressbook.gui.table.TableController;
 import org.columba.addressbook.gui.tree.AddressbookTreeModel;
@@ -105,7 +106,7 @@ public class RemoveCardAction extends DefaultTableAction implements
 				}
 			}
 
-			if (folder instanceof GroupFolder)
+			if (folder instanceof IGroupFolder)
 				//		 re-select folder
 				mediator.getTree().setSelectedFolder(folder);
 		} else {
@@ -183,7 +184,7 @@ public class RemoveCardAction extends DefaultTableAction implements
 			}
 
 			// enable, if more than zero treenodes selected
-			if ((path != null) && (treeNode instanceof GroupFolder)) {
+			if ((path != null) && (treeNode instanceof IGroupFolder)) {
 				setEnabled(true);
 			} else
 				setEnabled(false);

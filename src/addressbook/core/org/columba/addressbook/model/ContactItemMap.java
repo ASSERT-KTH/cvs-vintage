@@ -25,7 +25,7 @@ import java.util.Map;
  * @author fdietz
  *
  */
-public class ContactItemMap {
+public class ContactItemMap implements IContactItemMap {
 
 	private Map map;
 	

@@ -27,6 +27,7 @@ import org.columba.addressbook.config.FolderItem;
 import org.columba.addressbook.folder.AddressbookTreeNode;
 import org.columba.addressbook.folder.IFolder;
 import org.columba.addressbook.folder.Root;
+import org.columba.addressbook.gui.tree.util.ISelectFolderDialog;
 import org.columba.addressbook.gui.tree.util.SelectAddressbookFolderDialog;
 import org.columba.addressbook.plugin.FolderPluginHandler;
 import org.columba.core.config.DefaultXmlConfig;
@@ -55,8 +56,8 @@ public class AddressbookTreeModel extends DefaultTreeModel implements TreeModel 
 		return instance;
 	}
 
-	public SelectAddressbookFolderDialog getSelectAddressbookFolderDialog() {
-		SelectAddressbookFolderDialog dialog = new SelectAddressbookFolderDialog(
+	public ISelectFolderDialog getSelectAddressbookFolderDialog() {
+		ISelectFolderDialog dialog = new SelectAddressbookFolderDialog(
 				this);
 
 		return dialog;

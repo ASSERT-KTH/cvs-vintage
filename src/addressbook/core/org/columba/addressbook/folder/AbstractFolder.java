@@ -30,6 +30,7 @@ import org.columba.addressbook.model.GroupItem;
 import org.columba.addressbook.model.HeaderItemList;
 import org.columba.addressbook.model.IContact;
 import org.columba.addressbook.model.IContactItem;
+import org.columba.addressbook.model.IContactItemMap;
 import org.columba.addressbook.model.IHeaderItemList;
 import org.columba.core.command.WorkerStatusController;
 import org.columba.core.config.Config;
@@ -168,7 +169,7 @@ public abstract class AbstractFolder extends AddressbookTreeNode implements
 	/**
 	 * @see org.columba.addressbook.folder.IContactStorage#getHeaderItemList()
 	 */
-	public ContactItemMap getContactItemMap() throws Exception {
+	public IContactItemMap getContactItemMap() throws Exception {
 		return cacheStorage.getContactItemMap();
 	}
 
@@ -314,7 +315,7 @@ public abstract class AbstractFolder extends AddressbookTreeNode implements
 
 		// add group items
 		for (int i = 0; i < getChildCount(); i++) {
-			GroupFolder groupFolder = (GroupFolder) getChildAt(i);
+			IGroupFolder groupFolder = (IGroupFolder) getChildAt(i);
 			GroupItem groupItem = new GroupItem(groupFolder.getGroup());
 			list.add(groupItem);
 		}

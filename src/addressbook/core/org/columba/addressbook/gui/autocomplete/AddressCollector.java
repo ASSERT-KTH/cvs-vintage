@@ -26,20 +26,20 @@ import org.columba.addressbook.gui.tree.AddressbookTreeModel;
 import org.columba.addressbook.model.ContactItem;
 import org.columba.addressbook.model.GroupItem;
 import org.columba.addressbook.model.HeaderItem;
-import org.columba.addressbook.model.HeaderItemList;
 import org.columba.addressbook.model.IHeaderItem;
 import org.columba.addressbook.model.IHeaderItemList;
 import org.frapuccino.addresscombobox.ItemProvider;
 
-public class AddressCollector implements ItemProvider {
+public class AddressCollector implements ItemProvider, IAddressCollector {
 
-	private Hashtable _adds;
+	private	Hashtable _adds = new Hashtable();
+	private static AddressCollector instance = new AddressCollector();
 
-	private static AddressCollector instance;
-
-	public AddressCollector() {
-		_adds = new Hashtable();
-
+	private AddressCollector() {
+	}
+	
+	public static AddressCollector getInstance() {
+		return instance;
 	}
 
 	/**
@@ -83,13 +83,6 @@ public class AddressCollector implements ItemProvider {
 				}
 			}
 		}
-	}
-
-	public static AddressCollector getInstance() {
-		if (instance == null)
-			instance = new AddressCollector();
-
-		return instance;
 	}
 
 	public void addAddress(String add, IHeaderItem item) {

@@ -23,13 +23,13 @@ import java.util.List;
 import java.util.Vector;
 
 import org.columba.addressbook.facade.IFolderFacade;
-import org.columba.addressbook.folder.GroupFolder;
 import org.columba.addressbook.folder.IContactStorage;
 import org.columba.addressbook.folder.IFolder;
-import org.columba.addressbook.model.ContactItemMap;
-import org.columba.addressbook.model.HeaderItem;
+import org.columba.addressbook.folder.IGroupFolder;
 import org.columba.addressbook.model.IContact;
 import org.columba.addressbook.model.IContactItem;
+import org.columba.addressbook.model.IContactItemMap;
+import org.columba.addressbook.model.IHeaderItem;
 import org.columba.addressbook.model.IHeaderItemList;
 import org.columba.addressbook.model.VCARD;
 import org.columba.core.main.Main;
@@ -72,9 +72,9 @@ public class ListBuilder {
 
 			// if its a group item
 			if (f != null) {
-				ContactItemMap map = null;
+				IContactItemMap map = null;
 				try {
-					map = ((GroupFolder) f).getContactItemMap();
+					map = ((IGroupFolder) f).getContactItemMap();
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -148,7 +148,7 @@ public class ListBuilder {
 		List result = new Vector();
 
 		for (Iterator it = list.iterator(); it.hasNext();) {
-			HeaderItem item = (HeaderItem) it.next();
+			IHeaderItem item = (IHeaderItem) it.next();
 
 			if (item == null) {
 				continue;

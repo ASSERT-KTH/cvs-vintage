@@ -25,6 +25,7 @@ import javax.swing.table.AbstractTableModel;
 import org.columba.addressbook.model.ContactItem;
 import org.columba.addressbook.model.ContactItemMap;
 import org.columba.addressbook.model.IContactItem;
+import org.columba.addressbook.model.IContactItemMap;
 
 /**
  * Simple table model, using an extended TableModel interface.
@@ -42,14 +43,14 @@ public class AddressbookTableModel extends AbstractTableModel
 	private String[] columns = {"displayname", "email;internet", "url"};
 	private ContactItem[] rows;
 
-	private ContactItemMap headerItemList;
+	private IContactItemMap headerItemList;
 
 	public AddressbookTableModel() {
 		super();
 
 	}
 
-	public void setContactItemMap(ContactItemMap list) {
+	public void setContactItemMap(IContactItemMap list) {
 		
 		
 		if ( list == null) {
@@ -137,7 +138,7 @@ public class AddressbookTableModel extends AbstractTableModel
 	/**
 	 * @return Returns the headerItemList.
 	 */
-	public ContactItemMap getContactItemMap() {
+	public IContactItemMap getContactItemMap() {
 		return headerItemList;
 	}
 }

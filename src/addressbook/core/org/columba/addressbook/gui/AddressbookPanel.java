@@ -36,6 +36,7 @@ import org.columba.addressbook.gui.list.AddressbookDNDListView;
 import org.columba.addressbook.gui.list.AddressbookListModel;
 import org.columba.addressbook.model.ContactItemMap;
 import org.columba.addressbook.model.HeaderItemList;
+import org.columba.addressbook.model.IContactItemMap;
 import org.columba.addressbook.util.AddressbookResourceLoader;
 import org.columba.core.gui.util.CTabbedPane;
 import org.columba.mail.gui.composer.ComposerController;
@@ -170,7 +171,7 @@ setHeaderList(folder.getHeaderItemList());
         return panel;
     }
 
-    public void setHeaderList(ContactItemMap map) {
+    public void setHeaderList(IContactItemMap map) {
       
 
         addressbook.setHeaderItemList(new HeaderItemList(map));

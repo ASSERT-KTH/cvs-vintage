@@ -28,6 +28,7 @@ import org.columba.addressbook.folder.AbstractFolder;
 import org.columba.addressbook.folder.AddressbookTreeNode;
 import org.columba.addressbook.folder.IContactStorage;
 import org.columba.addressbook.folder.GroupFolder;
+import org.columba.addressbook.folder.IGroupFolder;
 import org.columba.addressbook.gui.dialog.contact.ContactDialog;
 import org.columba.addressbook.gui.dialog.group.EditGroupDialog;
 import org.columba.addressbook.gui.frame.AddressbookFrameMediator;
@@ -208,7 +209,7 @@ public class EditPropertiesAction extends DefaultTableAction implements
 			}
 
 			// enable, if more than zero treenodes selected
-			if ((path != null) && (treeNode instanceof GroupFolder)) {
+			if ((path != null) && (treeNode instanceof IGroupFolder)) {
 				setEnabled(true);
 			} else
 				setEnabled(false);

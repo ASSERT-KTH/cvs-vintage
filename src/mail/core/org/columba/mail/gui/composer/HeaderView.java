@@ -21,7 +21,11 @@ import java.awt.event.ActionListener;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 
+import org.columba.addressbook.facade.IContactFacade;
 import org.columba.addressbook.gui.autocomplete.AddressCollector;
+import org.columba.addressbook.gui.autocomplete.IAddressCollector;
+import org.columba.core.services.ServiceNotFoundException;
+import org.columba.mail.connector.ServiceConnector;
 import org.columba.mail.gui.composer.action.AddressbookAction;
 import org.columba.mail.gui.composer.util.FocusAddressComboBox;
 import org.frapuccino.addresscombobox.AddressComboBox;
@@ -65,10 +69,22 @@ public class HeaderView extends JPanel implements ActionListener {
 	 *  
 	 */
 	public void initAutocompletion() {
+		
+		IAddressCollector addressCollector = null;
+		IContactFacade facade;
+		try {
+			facade = ServiceConnector.getContactFacade();
+			addressCollector = facade.getAddressCollector();
+		} catch (ServiceNotFoundException e) {
+			e.printStackTrace();
+		}
+		
+		if (addressCollector != null) {
 		// pass contact data along to AddressComboBox
-		toComboBox.setItemProvider(AddressCollector.getInstance());
-		ccComboBox.setItemProvider(AddressCollector.getInstance());
-		bccComboBox.setItemProvider(AddressCollector.getInstance());
+		toComboBox.setItemProvider(addressCollector);
+		ccComboBox.setItemProvider(addressCollector);
+		bccComboBox.setItemProvider(addressCollector);
+		}
 	}
 
 	/**

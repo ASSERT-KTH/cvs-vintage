@@ -25,7 +25,7 @@ import org.columba.core.backgroundtask.BackgroundTaskManager;
 import org.columba.core.backgroundtask.TaskInterface;
 import org.columba.core.gui.frame.FrameModel;
 import org.columba.core.main.ColumbaCmdLineParser;
-import org.columba.core.main.IModuleMain;
+import org.columba.core.main.IComponentPlugin;
 import org.columba.core.main.Main;
 import org.columba.core.plugin.PluginHandlerNotFoundException;
 import org.columba.core.plugin.PluginLoadingFailedException;
@@ -35,77 +35,80 @@ import org.columba.core.services.ServiceManager;
 import org.columba.core.shutdown.ShutdownManager;
 import org.columba.core.util.GlobalResourceLoader;
 
-
 /**
  * Main entrypoint for addressbook component
  * 
  * @author fdietz
  */
-public class AddressbookMain implements IModuleMain {
-    /** JDK 1.4+ logging framework logger, used for logging. */
-    private static final Logger LOG = Logger.getLogger("org.columba.addressbook.main");
+public class AddressbookMain implements IComponentPlugin {
+	/** JDK 1.4+ logging framework logger, used for logging. */
+	private static final Logger LOG = Logger
+			.getLogger("org.columba.addressbook.main");
 
-    private static final String RESOURCE_PATH = "org.columba.addressbook.i18n.global";
-    
-    
-	private static AddressbookMain instance = new AddressbookMain(); 
-	
-	private AddressbookMain() {	
+	private static final String RESOURCE_PATH = "org.columba.addressbook.i18n.global";
+
+	public AddressbookMain() {
 	}
-	
-	public static AddressbookMain getInstance() {
-		return instance;
-	}
-	
+
 	/**
-	 * @see org.columba.core.main.IModuleMain#handleCommandLineParameters()
+	 * @see org.columba.core.main.IComponentPlugin#handleCommandLineParameters()
 	 */
 	public void handleCommandLineParameters(CommandLine commandLine) {
 		if (commandLine.hasOption("addressbook")) {
 			try {
-				FrameModel.getInstance().openView( "Addressbook");
+				FrameModel.getInstance().openView("Addressbook");
 
 				Main.getInstance().setRestoreLastSession(false);
 			} catch (PluginLoadingFailedException e) {
 				LOG.severe(e.getLocalizedMessage());
-			}			
+			}
 		}
 	}
+
 	/**
-	 * @see org.columba.core.main.IModuleMain#init()
+	 * @see org.columba.core.main.IComponentPlugin#init()
 	 */
 	public void init() {
-		 // init addressbook plugin handlers
-		PluginManager.getInstance().addHandlers("org/columba/addressbook/plugin/pluginhandler.xml");
-       
-        try {
-            ((ActionPluginHandler) PluginManager.getInstance().getHandler(
-                "org.columba.core.action")).addActionList(
-                "org/columba/addressbook/action/action.xml");
-        } catch (PluginHandlerNotFoundException ex) {
-        }
+		// init addressbook plugin handlers
+		PluginManager.getInstance().addHandlers(
+				"org/columba/addressbook/plugin/pluginhandler.xml");
 
-        TaskInterface plugin = new SaveAllAddressbooksPlugin();
-        BackgroundTaskManager.getInstance().register(plugin);
-        ShutdownManager.getShutdownManager().register(plugin);
-        
-        ServiceManager.getInstance().register(AddressbookServiceProvider.CONTACT, "org.columba.addressbook.facade.ContactFacade");
-        ServiceManager.getInstance().register(AddressbookServiceProvider.FOLDER, "org.columba.addressbook.facade.FolderFacade");
-        ServiceManager.getInstance().register(AddressbookServiceProvider.CONFIG, "org.columba.addressbook.facade.ConfigFacade");		
+		try {
+			((ActionPluginHandler) PluginManager.getInstance().getHandler(
+					"org.columba.core.action"))
+					.addActionList("org/columba/addressbook/action/action.xml");
+		} catch (PluginHandlerNotFoundException ex) {
+		}
+
+		TaskInterface plugin = new SaveAllAddressbooksPlugin();
+		BackgroundTaskManager.getInstance().register(plugin);
+		ShutdownManager.getShutdownManager().register(plugin);
+
+		ServiceManager.getInstance().register(
+				AddressbookServiceProvider.CONTACT,
+				"org.columba.addressbook.facade.ContactFacade");
+		ServiceManager.getInstance().register(
+				AddressbookServiceProvider.FOLDER,
+				"org.columba.addressbook.facade.FolderFacade");
+		ServiceManager.getInstance().register(
+				AddressbookServiceProvider.CONFIG,
+				"org.columba.addressbook.facade.ConfigFacade");
 	}
+
 	/**
-	 * @see org.columba.core.main.IModuleMain#postStartup()
+	 * @see org.columba.core.main.IComponentPlugin#postStartup()
 	 */
 	public void postStartup() {
 	}
+
 	/**
-	 * @see org.columba.core.main.IModuleMain#registerCommandLineArguments()
+	 * @see org.columba.core.main.IComponentPlugin#registerCommandLineArguments()
 	 */
 	public void registerCommandLineArguments() {
 		ColumbaCmdLineParser parser = ColumbaCmdLineParser.getInstance();
 
-		parser.addOption(new Option("addressbook", GlobalResourceLoader.getString(
-				RESOURCE_PATH, "global", "cmdline_addressbook")));
-		
+		parser.addOption(new Option("addressbook", GlobalResourceLoader
+				.getString(RESOURCE_PATH, "global", "cmdline_addressbook")));
+
 	}
 }

@@ -26,6 +26,7 @@ import org.columba.addressbook.model.ContactItemMap;
 import org.columba.addressbook.model.Group;
 import org.columba.addressbook.model.IContact;
 import org.columba.addressbook.model.IContactItem;
+import org.columba.addressbook.model.IContactItemMap;
 import org.columba.addressbook.model.IGroup;
 import org.columba.core.command.WorkerStatusController;
 import org.columba.core.gui.util.ImageLoader;
@@ -39,7 +40,7 @@ import org.columba.core.xml.XmlElement;
  * @author fdietz
  *  
  */
-public class GroupFolder extends AbstractFolder implements IContactStorage {
+public class GroupFolder extends AbstractFolder implements IContactStorage, IGroupFolder {
 
 	private IGroup group;
 
@@ -138,10 +139,10 @@ public class GroupFolder extends AbstractFolder implements IContactStorage {
 	/**
 	 * @see org.columba.addressbook.folder.IContactStorage#getHeaderItemList()
 	 */
-	public ContactItemMap getContactItemMap() throws Exception {
+	public IContactItemMap getContactItemMap() throws Exception {
 		AbstractFolder parent = (AbstractFolder) getParent();
 
-		ContactItemMap filter = new ContactItemMap();
+		IContactItemMap filter = new ContactItemMap();
 
 		Integer[] members = group.getMembers();
 		for (int i = 0; i < members.length; i++) {

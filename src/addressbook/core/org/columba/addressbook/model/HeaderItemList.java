@@ -34,7 +34,7 @@ public class HeaderItemList implements IHeaderItemList {
 	}
 	
 	
-	public HeaderItemList(ContactItemMap map) {
+	public HeaderItemList(IContactItemMap map) {
 		Iterator it = map.iterator();
 		list = new ArrayList();
 		while (it.hasNext()) {

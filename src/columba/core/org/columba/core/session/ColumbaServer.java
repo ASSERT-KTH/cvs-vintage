@@ -222,8 +222,9 @@ public class ColumbaServer {
             try {
 				CommandLine commandLine = ColumbaCmdLineParser.getInstance().parse((String[]) list.toArray(new String[0]));
 				
-				MailMain.getInstance().handleCommandLineParameters(commandLine);
-				AddressbookMain.getInstance().handleCommandLineParameters(commandLine);
+				// FIXME: we don't need this - isn't it?
+				//MailMain.getInstance().handleCommandLineParameters(commandLine);
+				//AddressbookMain.getInstance().handleCommandLineParameters(commandLine);
 			} catch (ParseException e) {
 				e.printStackTrace();
 			}

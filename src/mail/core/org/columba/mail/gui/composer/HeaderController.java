@@ -19,12 +19,15 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.logging.Logger;
 
-import org.columba.addressbook.gui.autocomplete.AddressCollector;
+import org.columba.addressbook.facade.IContactFacade;
+import org.columba.addressbook.gui.autocomplete.IAddressCollector;
 import org.columba.addressbook.model.ContactItem;
-import org.columba.addressbook.model.HeaderItem;
 import org.columba.addressbook.model.HeaderItemList;
+import org.columba.addressbook.model.IHeaderItem;
 import org.columba.addressbook.model.IHeaderItemList;
 import org.columba.core.gui.util.NotifyDialog;
+import org.columba.core.services.ServiceNotFoundException;
+import org.columba.mail.connector.ServiceConnector;
 import org.columba.mail.parser.ListBuilder;
 import org.columba.mail.parser.ListParser;
 import org.columba.mail.util.MailResourceLoader;
@@ -44,6 +47,8 @@ public class HeaderController {
 
 	private HeaderView view;
 
+	private IAddressCollector addressCollector;
+
 	public HeaderController(ComposerController controller) {
 		this.controller = controller;
 
@@ -51,13 +56,22 @@ public class HeaderController {
 
 		//view.getTable().addKeyListener(this);
 
-		// clear autocomplete hashmap
-		AddressCollector.getInstance().clear();
+		IContactFacade facade;
+		try {
+			facade = ServiceConnector.getContactFacade();
+			addressCollector = facade.getAddressCollector();
+		} catch (ServiceNotFoundException e) {
+			e.printStackTrace();
+		}
 
-		// fill hashmap with all available contacts and groups
-		AddressCollector.getInstance().addAllContacts(101, true);
-		AddressCollector.getInstance().addAllContacts(102, true);
-		
+		if (addressCollector != null) {
+			// clear autocomplete hashmap
+			addressCollector.clear();
+
+			// fill hashmap with all available contacts and groups
+			addressCollector.addAllContacts(101, true);
+			addressCollector.addAllContacts(102, true);
+		}
 		view.initAutocompletion();
 
 	}
@@ -75,7 +89,7 @@ public class HeaderController {
 		Iterator it = getHeaderItemList(0).iterator();
 
 		while (it.hasNext()) {
-			HeaderItem item = (HeaderItem) it.next();
+			IHeaderItem item = (IHeaderItem) it.next();
 			if (isValid(item))
 				return true;
 		}
@@ -87,7 +101,7 @@ public class HeaderController {
 		return false;
 	}
 
-	protected boolean isValid(HeaderItem headerItem) {
+	protected boolean isValid(IHeaderItem headerItem) {
 		if (headerItem.isContact()) {
 			/*
 			 * String address = (String) headerItem.get("email;internet");
@@ -174,7 +188,9 @@ public class HeaderController {
 			if (s.length() == 0)
 				continue;
 
-			HeaderItem item = AddressCollector.getInstance().getHeaderItem(s);
+				
+			IHeaderItem item = null;
+			if ( addressCollector != null) item = addressCollector.getHeaderItem(s);
 			if (item == null) {
 				item = new ContactItem();
 				item.setDisplayName(s);

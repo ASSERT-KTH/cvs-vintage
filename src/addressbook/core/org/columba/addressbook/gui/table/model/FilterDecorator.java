@@ -26,6 +26,7 @@ import javax.swing.event.TableModelEvent;
 import org.columba.addressbook.model.ContactItem;
 import org.columba.addressbook.model.ContactItemMap;
 import org.columba.addressbook.model.IContactItem;
+import org.columba.addressbook.model.IContactItemMap;
 
 /**
  * @author fdietz
@@ -58,7 +59,7 @@ public class FilterDecorator extends TableModelDecorator {
 	/**
 	 * @see org.columba.addressbook.gui.table.model.ContactItemTableModel#setContactItemMap(org.columba.addressbook.model.ContactItemMap)
 	 */
-	public void setContactItemMap(ContactItemMap list) {
+	public void setContactItemMap(IContactItemMap list) {
 		super.setContactItemMap(list);
 
 		filter();

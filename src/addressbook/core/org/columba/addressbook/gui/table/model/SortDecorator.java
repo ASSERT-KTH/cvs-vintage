@@ -23,6 +23,7 @@ import javax.swing.table.TableModel;
 import org.columba.addressbook.model.ContactItem;
 import org.columba.addressbook.model.ContactItemMap;
 import org.columba.addressbook.model.IContactItem;
+import org.columba.addressbook.model.IContactItemMap;
 
 /**
  * Decorates TableModel which additional sorting functionality.
@@ -53,7 +54,7 @@ public class SortDecorator extends TableModelDecorator {
 	/**
 	 * @see org.columba.addressbook.gui.table.model.ContactItemTableModel#setHeaderItemList(org.columba.addressbook.folder.HeaderItemList)
 	 */
-	public void setContactItemMap(ContactItemMap list) {
+	public void setContactItemMap(IContactItemMap list) {
 
 		super.setContactItemMap(list);
 

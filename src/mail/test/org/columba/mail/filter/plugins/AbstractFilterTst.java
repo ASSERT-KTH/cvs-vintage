@@ -92,9 +92,9 @@ public class AbstractFilterTst extends TestCase {
 		ColumbaLogger.createDefaultHandler();
 
 		//		 init mail component
-		MailMain.getInstance();
+		new MailMain().init();
 
-		AddressbookMain.getInstance();
+		//new AddressbookMain();
 
 		// now load all available plugins
 		PluginManager.getInstance().initPlugins();

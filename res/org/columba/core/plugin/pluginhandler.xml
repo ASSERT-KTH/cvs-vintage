@@ -10,5 +10,6 @@
  <handler id="org.columba.core.view" class="org.columba.core.pluginhandler.ViewPluginHandler"/>
  <handler id="org.columba.core.externaltools" class="org.columba.core.pluginhandler.ExternalToolsPluginHandler"/>
  <handler id="org.columba.core.menu" class="org.columba.core.pluginhandler.CoreMenuPluginHandler"/>
+ <handler id="org.columba.core.component" class="org.columba.core.pluginhandler.ComponentPluginHandler"/>
  
 </handlerlist>

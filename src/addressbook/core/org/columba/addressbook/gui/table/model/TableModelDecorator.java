@@ -22,6 +22,7 @@ import javax.swing.event.TableModelListener;
 import org.columba.addressbook.model.ContactItem;
 import org.columba.addressbook.model.ContactItemMap;
 import org.columba.addressbook.model.IContactItem;
+import org.columba.addressbook.model.IContactItemMap;
 
 /**
  * Decorator for TableModel.
@@ -89,14 +90,14 @@ public abstract class TableModelDecorator
 	/**
 	 * @see org.columba.addressbook.gui.table.model.ContactItemTableModel#getContactItemMap()
 	 */
-	public ContactItemMap getContactItemMap() {
+	public IContactItemMap getContactItemMap() {
 		return realModel.getContactItemMap();
 	}
 
 	/**
 	 * @see org.columba.addressbook.gui.table.model.ContactItemTableModel#setHeaderItemList(org.columba.addressbook.folder.HeaderItemList)
 	 */
-	public void setContactItemMap(ContactItemMap list) {
+	public void setContactItemMap(IContactItemMap list) {
 		realModel.setContactItemMap(list);
 	}
 

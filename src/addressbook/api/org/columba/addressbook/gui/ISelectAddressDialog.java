@@ -15,17 +15,19 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003.
 //
 //All Rights Reserved.
-package org.columba.addressbook.facade;
+package org.columba.addressbook.gui;
 
-import org.columba.addressbook.gui.autocomplete.IAddressCollector;
+import org.columba.addressbook.model.IHeaderItemList;
 
 /**
  * @author fdietz
  *
  */
-public interface IContactFacade {
+public interface ISelectAddressDialog {
+	IHeaderItemList[] getHeaderItemLists();
 
-	void addContact(int uid, String address);
-	void addContactToCollectedAddresses(String address);
-	IAddressCollector getAddressCollector();
+	/**
+	 * @return Returns the success.
+	 */
+	boolean isSuccess();
 }

@@ -52,6 +52,7 @@ import org.columba.addressbook.model.ContactItemMap;
 import org.columba.addressbook.model.Group;
 import org.columba.addressbook.model.HeaderItem;
 import org.columba.addressbook.model.IContactItem;
+import org.columba.addressbook.model.IContactItemMap;
 import org.columba.addressbook.model.IGroup;
 import org.columba.addressbook.model.IHeaderItem;
 import org.columba.addressbook.util.AddressbookResourceLoader;
@@ -247,7 +248,7 @@ public class EditGroupDialog extends JDialog implements ActionListener,
             Integer[] m = group.getMembers();
            
             try {
-				ContactItemMap l = parentFolder.getContactItemMap();
+				IContactItemMap l = parentFolder.getContactItemMap();
 				
 				for (int i = 0; i < m.length; i++) {
 					

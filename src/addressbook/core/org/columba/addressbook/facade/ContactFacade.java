@@ -18,6 +18,8 @@
 package org.columba.addressbook.facade;
 
 import org.columba.addressbook.folder.AbstractFolder;
+import org.columba.addressbook.gui.autocomplete.AddressCollector;
+import org.columba.addressbook.gui.autocomplete.IAddressCollector;
 import org.columba.addressbook.gui.tree.AddressbookTreeModel;
 import org.columba.addressbook.model.Contact;
 import org.columba.addressbook.model.IContact;
@@ -88,6 +90,13 @@ public final class ContactFacade implements IContactFacade{
 	 */
 	public void addContactToCollectedAddresses(String address) {
 		addContact(102, address);
+	}
+
+	/**
+	 * @see org.columba.addressbook.facade.IContactFacade#getAddressCollector()
+	 */
+	public IAddressCollector getAddressCollector() {
+		return AddressCollector.getInstance();
 	}
 
 }

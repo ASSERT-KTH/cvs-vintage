@@ -18,6 +18,7 @@
 package org.columba.addressbook.folder;
 
 import org.columba.addressbook.model.ContactItemMap;
+import org.columba.addressbook.model.IContactItemMap;
 import org.columba.addressbook.model.IHeaderItemList;
 
 /**
@@ -38,7 +39,7 @@ public interface IContactFolder extends IContactStorage{
 	/**
 	 * @see org.columba.addressbook.folder.IContactStorage#getHeaderItemList()
 	 */
-	ContactItemMap getContactItemMap() throws Exception;
+	IContactItemMap getContactItemMap() throws Exception;
 
 	/**
 	 * save header-cache (HeaderItemList)

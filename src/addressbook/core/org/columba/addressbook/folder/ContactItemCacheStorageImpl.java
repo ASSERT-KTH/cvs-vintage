@@ -27,6 +27,7 @@ import org.columba.addressbook.model.ContactItem;
 import org.columba.addressbook.model.ContactItemMap;
 import org.columba.addressbook.model.IContact;
 import org.columba.addressbook.model.IContactItem;
+import org.columba.addressbook.model.IContactItemMap;
 import org.columba.addressbook.model.WrongFileFormatException;
 import org.columba.core.main.Main;
 import org.columba.core.xml.XmlNewIO;
@@ -50,7 +51,7 @@ public class ContactItemCacheStorageImpl implements ContactItemCacheStorage {
 	 * keeps a list of HeaderItem's we need for the table-view
 	 *  
 	 */
-	private ContactItemMap headerItemList;
+	private IContactItemMap headerItemList;
 
 	/**
 	 * 
@@ -112,7 +113,7 @@ public class ContactItemCacheStorageImpl implements ContactItemCacheStorage {
 	/**
 	 * @see org.columba.addressbook.folder.ContactItemCacheStorage#getHeaderItemMap()
 	 */
-	public ContactItemMap getContactItemMap() throws Exception {
+	public IContactItemMap getContactItemMap() throws Exception {
 		return headerItemList;
 	}
 
