@@ -43,7 +43,7 @@ import org.jboss.logging.Logger;
  * @author <a href="mailto:alex@jboss.org">Alex Loubyansky</a>
  * @author <a href="mailto:heiko.rupp@cellent.de">Heiko W.Rupp</a>
  * @author <a href="mailto:joachim@cabsoft.be">Joachim Van der Auwera</a>
- * @version $Revision: 1.49 $
+ * @version $Revision: 1.50 $
  */
 public final class JDBCStartCommand
 {
@@ -165,7 +165,7 @@ public final class JDBCStartCommand
                   }
                   if(!hasIndex(oldIndexes, field))
                   {
-                     createCMPIndex(entity.getDataSource(), field);
+                     createCMPIndex( entity.getDataSource(), field, oldIndexes.getIndexNames() );
                   }
 
                }
@@ -198,7 +198,9 @@ public final class JDBCStartCommand
          // create indices only if table did not yet exist.
          if(!tableExisted)
          {
-            createCMPIndices(dataSource);
+            createCMPIndices( dataSource,
+                              SQLUtil.getOldIndexes( entity.getQualifiedTableName(),
+                                                     entity.getDataSource() ).getIndexNames() );
          }
          else
          {
@@ -771,7 +773,7 @@ public final class JDBCStartCommand
     * @param dataSource
     * @throws DeploymentException
     */
-   private void createCMPIndices(DataSource dataSource)
+   private void createCMPIndices(DataSource dataSource, ArrayList indexNames)
       throws DeploymentException
    {
       // Only create indices on CMP fields
@@ -783,7 +785,7 @@ public final class JDBCStartCommand
 
          if(fieldMD != null && fieldMD.isIndexed())
          {
-            createCMPIndex(dataSource, field);
+            createCMPIndex(dataSource, field, indexNames);
          }
       }
 
@@ -800,7 +802,7 @@ public final class JDBCStartCommand
                {
                   for(int fkInd = 0; fkInd < fkFields.length; ++fkInd)
                   {
-                     createCMPIndex(dataSource, fkFields[fkInd]);
+                     createCMPIndex(dataSource, fkFields[fkInd], indexNames);
                   }
                }
             }
@@ -815,24 +817,37 @@ public final class JDBCStartCommand
     * @param field      to create index for
     * @throws DeploymentException
     */
-   private void createCMPIndex(DataSource dataSource, JDBCFieldBridge field)
+   private void createCMPIndex(DataSource dataSource, JDBCFieldBridge field, ArrayList indexNames)
       throws DeploymentException
    {
       StringBuffer sql;
       log.debug("Creating index for field " + field.getFieldName());
       sql = new StringBuffer();
       sql.append(SQLUtil.CREATE_INDEX);
-      sql.append(entity.getQualifiedTableName() + IDX_POSTFIX + idxCount);// index name
+      String indexName;
+      boolean indexExists;
+      do
+      {
+         indexName = entity.getQualifiedTableName() + IDX_POSTFIX + idxCount;
+         idxCount++;
+         indexExists = false;
+         if ( indexNames != null )
+         {
+            for ( int i = 0 ; i < indexNames.size() && !indexExists ; i++ )
+            {
+               indexExists = indexName.equalsIgnoreCase( ( (String) indexNames.get( i ) ) );
+            }
+         }
+      }
+      while ( indexExists );
+
+      sql.append( indexName );
       sql.append(SQLUtil.ON);
       sql.append(entity.getQualifiedTableName() + " (");
       SQLUtil.getColumnNamesClause(field, sql);
       sql.append(")");
 
-      createIndex(dataSource,
-         entity.getQualifiedTableName(),
-         entity.getQualifiedTableName() + IDX_POSTFIX + idxCount,
-         sql.toString());
-      idxCount++;
+      createIndex(dataSource, entity.getQualifiedTableName(), indexName, sql.toString());
    }
 
    private void createCMRIndex(DataSource dataSource, JDBCAbstractCMRFieldBridge field)
