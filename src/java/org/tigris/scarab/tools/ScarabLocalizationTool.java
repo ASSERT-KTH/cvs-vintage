@@ -107,6 +107,16 @@ public class ScarabLocalizationTool
         super();
     }
 
+    public String get(String key)
+    {
+        String value = super.get(key);
+        if (value == null)
+        {
+            value = super.get(DEFAULT_SCOPE + '.', key);
+        }
+        return value;
+    }
+
     /**
      * Provides <code>$l10n.Title</code> to templates, grabbing it
      * from the <code>title</code> property for the current template.
@@ -154,16 +164,14 @@ public class ScarabLocalizationTool
             {
                 templateName = DEFAULT_SCOPE;
             }
-            setPrefix(templateName + '.');
-
-            String propName = "template." + getPrefix(null) + property;
+            String propName = "template." + templateName + '.' + property;
             String l10nKey = (String) properties.getString(propName);
             Log.get().debug("ScarabLocalizationTool: Property name '" + propName +
                         "' -> localization key '" + l10nKey + '\'');
 
             if (l10nKey != null)
             {
-                value = get(l10nKey);
+                value = get(templateName + '.', l10nKey);
                 Log.get().debug("ScarabLocalizationTool: Localized value is '" +
                             value + '\'');
             }
@@ -184,6 +192,12 @@ public class ScarabLocalizationTool
         {
             data = (RunData) runData;
             properties = Turbine.getConfiguration();
+            String templateName = data.getTarget();
+            if (templateName == null)
+            {
+                templateName = DEFAULT_SCOPE;
+            }
+            setPrefix(templateName + '.');
         }
     }
 
