@@ -226,7 +226,12 @@ public class Http10Interceptor extends PoolTcpConnector
 	    catch (IOException e) { /* ignore */ }
         }
     }
- 
+
+    /** Internal constants for getInfo */ 
+    private static final int GET_OTHER = 0;
+    private static final int GET_CIPHER_SUITE = 1;
+    private static final int GET_PEER_CERTIFICATE_CHAIN = 2;
+
      /**
        getInfo calls for SSL data
  
@@ -238,28 +243,39 @@ public class Http10Interceptor extends PoolTcpConnector
        // attributes hand;ed here are HTTP. If you change that
        // you MUST change the test for sslSupport==null --EKR
  
-       HttpRequest httpReq;
+       if (key != null) {
+         int infoRequested = GET_OTHER;
+         if(key.equals("javax.servlet.request.cipher_suite"))
+           infoRequested = GET_CIPHER_SUITE;
+         else if(key.equals("javax.servlet.request.X509Certificate"))
+           infoRequested = GET_PEER_CERTIFICATE_CHAIN;
 
-       
-       try {
- 	httpReq=(HttpRequest)request;
-       } catch (ClassCastException e){
- 	return null;
-       }
+         if(infoRequested != GET_OTHER) {
+           HttpRequest httpReq;
+
+           try {
+             httpReq=(HttpRequest)request;
+           } catch (ClassCastException e){
+             return null;
+           }
  
-       if(key!=null && httpReq!=null && httpReq.sslSupport!=null){
- 	  try {
- 	      if(key.equals("javax.servlet.request.cipher_suite"))
- 		  return httpReq.sslSupport.getCipherSuite();
- 	      if(key.equals("javax.servlet.request.X509Certificate"))
- 		  return httpReq.sslSupport.getPeerCertificateChain();
- 	  } catch (Exception e){
- 	      log("Exception getting SSL attribute " + key,e,Log.WARNING);
- 	      return null;
- 	  }
-       }
+           if (httpReq!=null && httpReq.sslSupport!=null){
+             try {
+               switch (infoRequested) {
+                 case GET_CIPHER_SUITE:
+                   return httpReq.sslSupport.getCipherSuite();
+                 case GET_PEER_CERTIFICATE_CHAIN:
+                   return httpReq.sslSupport.getPeerCertificateChain();
+               }
+             } catch (Exception e){
+               log("Exception getting SSL attribute " + key,e,Log.WARNING);
+               return null;
+             }
+           } // if req != null
+         } // if asking for ssl attribute
+       } // if key != null
        return super.getInfo(ctx,request,id,key);
-     }
+     } // getInfo
 }
 
 class HttpRequest extends Request {
