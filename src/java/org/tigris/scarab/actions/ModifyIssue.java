@@ -96,6 +96,8 @@ import org.tigris.scarab.om.ScarabUser;
 import org.tigris.scarab.tools.ScarabRequestTool;
 import org.tigris.scarab.services.cache.ScarabCache; 
 import org.tigris.scarab.services.security.ScarabSecurity;
+import org.tigris.scarab.util.ScarabException;
+
 import org.apache.fulcrum.TurbineServices;
 import org.apache.fulcrum.upload.TurbineUploadService;
 import org.apache.fulcrum.upload.UploadService;
@@ -106,11 +108,11 @@ import org.tigris.scarab.attribute.OptionAttribute;
 import org.tigris.scarab.util.ScarabConstants;
 
 /**
-    This class is responsible for edit issue forms.
-    ScarabIssueAttributeValue
-    @author <a href="mailto:elicia@collab.net">Elicia David</a>
-    @version $Id: ModifyIssue.java,v 1.115 2002/08/09 00:23:06 elicia Exp $
-*/
+ * This class is responsible for edit issue forms.
+ * ScarabIssueAttributeValue
+ * @author <a href="mailto:elicia@collab.net">Elicia David</a>
+ * @version $Id: ModifyIssue.java,v 1.116 2002/08/15 20:12:50 jon Exp $
+ */
 public class ModifyIssue extends BaseModifyIssue
 {
 
@@ -123,25 +125,21 @@ public class ModifyIssue extends BaseModifyIssue
         }
 
         ScarabRequestTool scarabR = getScarabRequestTool(context);
-        String id = data.getParameters().getString("id");
-        if (id == null || id.length() == 0)
+        Issue issue = null;
+        try
         {
-            scarabR.setAlertMessage("Could not locate issue.");
-            return;
+            issue = getIssueFromRequest(data.getParameters());
         }
-        Issue issue = Issue.getIssueById(id);
-        if (issue == null)
+        catch (ScarabException se)
         {
-            scarabR.setAlertMessage("Could not locate issue: " + id);
+            scarabR.setAlertMessage(se.getMessage());
             return;
         }
         IssueType issueType = issue.getIssueType();
         ScarabUser user = (ScarabUser)data.getUser();
 
-        IntakeTool intake = getIntakeTool(context);
-       
+        IntakeTool intake = getIntakeTool(context);       
         // Comment field is required to modify attributes
-        Attachment attachment = AttachmentManager.getInstance();
         Group commentGroup = intake.get("Attachment", "attCommentKey", false);
         Field commentField = null;
         commentField = commentGroup.get("DataAsString");
@@ -193,17 +191,6 @@ public class ModifyIssue extends BaseModifyIssue
 
         if (intake.isAllValid()) 
         {
-            // Save explanatory comment
-            commentGroup.setProperties(attachment);
-            attachment.setTextFields(user, issue, 
-                                     Attachment.MODIFICATION__PK);
-            attachment.save();
-
-            // Create activitySet record
-            ActivitySet activitySet = issue.getActivitySet(user, attachment,
-                                      ActivitySetTypePeer.EDIT_ISSUE__PK);
-            activitySet.save();
-
             // Set the attribute values entered 
             SequencedHashMap avMap = issue.getModuleAttributeValuesMap(); 
             Iterator iter2 = avMap.iterator();
@@ -230,7 +217,7 @@ public class ModifyIssue extends BaseModifyIssue
                         newValue = group.get("Value").toString();
                         oldValue = aval.getValue();
                     }
-                    if (!newValue.equals("") && 
+                    if (newValue.length() != 0 && 
                         (oldValue == null  || !oldValue.equals(newValue)))
                     {
                         group.setProperties(aval2);
@@ -238,16 +225,19 @@ public class ModifyIssue extends BaseModifyIssue
                     }
                 }
             } 
-            String msg = issue.setProperties(newAttVals, activitySet, user);
-            if (msg == null)
+
+            Attachment attachment = AttachmentManager.getInstance();
+            commentGroup.setProperties(attachment);
+            try
             {
+                ActivitySet activitySet = issue.setAttributeValues(newAttVals, attachment, user);
                 intake.removeAll();
                 sendEmail(activitySet, issue, DEFAULT_MSG, context, data);
                 scarabR.setConfirmMessage("Your changes have been saved.");
             }
-            else
+            catch (Exception se)
             {
-                scarabR.setAlertMessage(msg);
+                scarabR.setAlertMessage(se.getMessage());
             }
         } 
         else
@@ -268,16 +258,14 @@ public class ModifyIssue extends BaseModifyIssue
         }
         
         ScarabRequestTool scarabR = getScarabRequestTool(context);
-        String id = data.getParameters().getString("id");
-        if (id == null || id.length() == 0)
+        Issue issue = null;
+        try
         {
-            scarabR.setAlertMessage("Could not locate issue.");
-            return;
+            issue = getIssueFromRequest(data.getParameters());
         }
-        Issue issue = Issue.getIssueById(id);
-        if (issue == null)
+        catch (ScarabException se)
         {
-            scarabR.setAlertMessage("Could not locate issue: " + id);
+            scarabR.setAlertMessage(se.getMessage());
             return;
         }
         List urls = issue.getAttachments();
@@ -389,18 +377,14 @@ public class ModifyIssue extends BaseModifyIssue
         // validate intake
         if (intake.isAllValid())
         {
-            // get the issue id
-            String id = data.getParameters().getString("id");
-            if (id == null || id.length() == 0)
+            Issue issue = null;
+            try
             {
-                scarabR.setAlertMessage("Could not locate issue.");
-                return;
+                issue = getIssueFromRequest(data.getParameters());
             }
-            // get the issue object
-            Issue issue = Issue.getIssueById(id);
-            if (issue == null)
+            catch (ScarabException se)
             {
-                scarabR.setAlertMessage("Could not locate issue: " + id);
+                scarabR.setAlertMessage(se.getMessage());
                 return;
             }
             // create the new attachment
@@ -533,16 +517,14 @@ public class ModifyIssue extends BaseModifyIssue
         String newComment = null;
         ScarabUser user = (ScarabUser)data.getUser();
         ScarabRequestTool scarabR = getScarabRequestTool(context);
-        String id = data.getParameters().getString("id");
-        if (id == null || id.length() == 0)
+        Issue issue = null;
+        try
         {
-            scarabR.setAlertMessage("Could not locate issue.");
-            return;
+            issue = getIssueFromRequest(data.getParameters());
         }
-        Issue issue = Issue.getIssueById(id);
-        if (issue == null)
+        catch (ScarabException se)
         {
-            scarabR.setAlertMessage("Could not locate issue: " + id);
+            scarabR.setAlertMessage(se.getMessage());
             return;
         }
 
@@ -593,16 +575,14 @@ public class ModifyIssue extends BaseModifyIssue
         String attachmentId;
         ScarabUser user = (ScarabUser)data.getUser();
         ScarabRequestTool scarabR = getScarabRequestTool(context);
-        String id = data.getParameters().getString("id");
-        if (id == null || id.length() == 0)
+        Issue issue = null;
+        try
         {
-            scarabR.setAlertMessage("Could not locate issue.");
-            return;
+            issue = getIssueFromRequest(data.getParameters());
         }
-        Issue issue = Issue.getIssueById(id);
-        if (issue == null)
+        catch (ScarabException se)
         {
-            scarabR.setAlertMessage("Could not locate issue: " + id);
+            scarabR.setAlertMessage(se.getMessage());
             return;
         }
 
@@ -646,16 +626,14 @@ public class ModifyIssue extends BaseModifyIssue
         String attachmentId;
         ScarabUser user = (ScarabUser)data.getUser();
         ScarabRequestTool scarabR = getScarabRequestTool(context);
-        String id = data.getParameters().getString("id");
-        if (id == null || id.length() == 0)
+        Issue issue = null;
+        try
         {
-            scarabR.setAlertMessage("Could not locate issue.");
-            return;
+            issue = getIssueFromRequest(data.getParameters());
         }
-        Issue issue = Issue.getIssueById(id);
-        if (issue == null)
+        catch (ScarabException se)
         {
-            scarabR.setAlertMessage("Could not locate issue: " + id);
+            scarabR.setAlertMessage(se.getMessage());
             return;
         }
 
@@ -726,16 +704,14 @@ public class ModifyIssue extends BaseModifyIssue
         if (intake.isAllValid())
         {
             ScarabUser user = (ScarabUser)data.getUser();
-            String id = data.getParameters().getString("id");
-            if (id == null || id.length() == 0)
+            Issue currentIssue = null;
+            try
             {
-                scarabR.setAlertMessage("Could not locate issue.");
-                return;
+                currentIssue = getIssueFromRequest(data.getParameters());
             }
-            Issue currentIssue = Issue.getIssueById(id);
-            if (currentIssue == null)
+            catch (ScarabException se)
             {
-                scarabR.setAlertMessage("Could not locate issue: " + id);
+                scarabR.setAlertMessage(se.getMessage());
                 return;
             }
 
@@ -817,16 +793,14 @@ public class ModifyIssue extends BaseModifyIssue
         }
         
         ScarabRequestTool scarabR = getScarabRequestTool(context);
-        String id = data.getParameters().getString("id");
-        if (id == null || id.length() == 0)
+        Issue issue = null;
+        try
         {
-            scarabR.setAlertMessage("Could not locate issue.");
-            return;
+            issue = getIssueFromRequest(data.getParameters());
         }
-        Issue issue = Issue.getIssueById(id);
-        if (issue == null)
+        catch (ScarabException se)
         {
-            scarabR.setAlertMessage("Could not locate issue: " + id);
+            scarabR.setAlertMessage(se.getMessage());
             return;
         }
         ScarabUser user = (ScarabUser)data.getUser();
@@ -947,16 +921,14 @@ public class ModifyIssue extends BaseModifyIssue
         IntakeTool intake = getIntakeTool(context);
         intake.removeAll();
         ScarabRequestTool scarabR = getScarabRequestTool(context);
-        String id = data.getParameters().getString("id");
-        if (id == null || id.length() == 0)
+        Issue issue = null;
+        try
         {
-            scarabR.setAlertMessage("Could not locate issue.");
-            return;
+            issue = getIssueFromRequest(data.getParameters());
         }
-        Issue issue = Issue.getIssueById(id);
-        if (issue == null)
+        catch (ScarabException se)
         {
-            scarabR.setAlertMessage("Could not locate issue: " + id);
+            scarabR.setAlertMessage(se.getMessage());
             return;
         }
         ScarabUser user = (ScarabUser)data.getUser();
