@@ -22,7 +22,7 @@
  * USA
  *
  * --------------------------------------------------------------------------
- * $Id: JRMPRegistry.java,v 1.10 2005/03/10 12:21:46 benoitf Exp $
+ * $Id: JRMPRegistry.java,v 1.11 2005/03/15 09:53:27 benoitf Exp $
  * --------------------------------------------------------------------------
  */
 package org.objectweb.carol.jndi.ns;
@@ -33,6 +33,7 @@ import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
 
 import org.objectweb.carol.jndi.registry.ManageableRegistry;
+import org.objectweb.carol.jndi.registry.RMIFixedPortFirewallSocketFactory;
 import org.objectweb.carol.rmi.util.PortNumber;
 import org.objectweb.carol.util.configuration.CarolDefaultValues;
 import org.objectweb.carol.util.configuration.TraceCarol;
@@ -75,22 +76,26 @@ public class JRMPRegistry extends AbsRegistry implements NameService {
             TraceCarol.debugJndiCarol("JRMPRegistry.start() on port:" + getPort());
         }
         try {
+            // Set factory which allow to fix rmi port if defined and if running inside a server
+            if (System.getProperty(CarolDefaultValues.SERVER_MODE, "false").equalsIgnoreCase("true")) {
+                if (getConfigProperties() != null) {
+                    String propertyName = CarolDefaultValues.SERVER_JRMP_PORT;
+                    objectPort = PortNumber.strToint(getConfigProperties().getProperty(propertyName, "0"),
+                            propertyName);
+                } else {
+                    TraceCarol.debugCarol("No properties '" + CarolDefaultValues.SERVER_JRMP_PORT
+                            + "' defined in carol.properties file.");
+                }
+            }
+            if (objectPort > 0) {
+                RMIFixedPortFirewallSocketFactory.register(objectPort);
+            }
+
+
             if (!isStarted()) {
 
-                // Fix jrmp port if running inside a server
-                if (System.getProperty(CarolDefaultValues.SERVER_MODE, "false").equalsIgnoreCase("true")) {
-                    if (getConfigProperties() != null) {
-                        String propertyName = CarolDefaultValues.SERVER_JRMP_PORT;
-                        int jrmpPort = PortNumber.strToint(getConfigProperties().getProperty(propertyName, "0"),
-                                propertyName);
-                        if (jrmpPort > 0) {
-                            TraceCarol.infoCarol("Using JRMP fixed server port number '" + jrmpPort + "'.");
-                            objectPort = jrmpPort;
-                        }
-                    } else {
-                        TraceCarol.debugCarol("No properties '" + CarolDefaultValues.SERVER_IIOP_PORT
-                                + "' defined in carol.properties file.");
-                    }
+                if (objectPort > 0) {
+                    TraceCarol.infoCarol("Using JRMP fixed server port number '" + objectPort + "'.");
                 }
 
                 if (getPort() >= 0) {
