@@ -6,10 +6,10 @@
  */
 package org.jboss.webservice.metadata.jaxrpcmapping;
 
-// $Id: JavaWsdlMappingFactory.java,v 1.12 2004/12/26 14:19:09 loubyansky Exp $
+// $Id: JavaWsdlMappingFactory.java,v 1.13 2004/12/26 15:02:04 loubyansky Exp $
 
 import org.jboss.logging.Logger;
-import org.jboss.xml.binding.ContentNavigator;
+import org.jboss.xml.binding.UnmarshallingContext;
 import org.jboss.xml.binding.ObjectModelFactory;
 import org.jboss.xml.binding.Unmarshaller;
 import org.jboss.xml.binding.UnmarshallerFactory;
@@ -71,7 +71,7 @@ public class JavaWsdlMappingFactory implements ObjectModelFactory
     * This method is called on the factory by the object model builder when the parsing starts.
     */
    public Object newRoot(Object root,
-                         ContentNavigator navigator,
+                         UnmarshallingContext navigator,
                          String namespaceURI,
                          String localName,
                          Attributes attrs)
@@ -83,7 +83,7 @@ public class JavaWsdlMappingFactory implements ObjectModelFactory
     * Called when parsing of a new element started.
     */
    public Object newChild(JavaWsdlMapping javaWsdlMapping,
-                          ContentNavigator navigator,
+                          UnmarshallingContext navigator,
                           String namespaceURI,
                           String localName,
                           Attributes attrs)
@@ -115,7 +115,7 @@ public class JavaWsdlMappingFactory implements ObjectModelFactory
    /**
     * Called when parsing character is complete.
     */
-   public void addChild(JavaWsdlMapping javaWsdlMapping, PackageMapping packageMapping, ContentNavigator navigator, String namespaceURI, String localName)
+   public void addChild(JavaWsdlMapping javaWsdlMapping, PackageMapping packageMapping, UnmarshallingContext navigator, String namespaceURI, String localName)
    {
       log.trace("addChild: [obj=" + javaWsdlMapping + ",child=" + packageMapping + "]");
       javaWsdlMapping.addPackageMapping(packageMapping);
@@ -124,7 +124,7 @@ public class JavaWsdlMappingFactory implements ObjectModelFactory
    /**
     * Called when parsing character is complete.
     */
-   public void addChild(JavaWsdlMapping javaWsdlMapping, JavaXmlTypeMapping typeMapping, ContentNavigator navigator, String namespaceURI, String localName)
+   public void addChild(JavaWsdlMapping javaWsdlMapping, JavaXmlTypeMapping typeMapping, UnmarshallingContext navigator, String namespaceURI, String localName)
    {
       log.trace("addChild: [obj=" + javaWsdlMapping + ",child=" + typeMapping + "]");
       javaWsdlMapping.addJavaXmlTypeMappings(typeMapping);
@@ -135,7 +135,7 @@ public class JavaWsdlMappingFactory implements ObjectModelFactory
     */
    public void addChild(JavaWsdlMapping javaWsdlMapping,
                         ExceptionMapping exceptionMapping,
-                        ContentNavigator navigator, String namespaceURI, String localName)
+                        UnmarshallingContext navigator, String namespaceURI, String localName)
    {
       log.trace("addChild: [obj=" + javaWsdlMapping + ",child=" + exceptionMapping + "]");
       javaWsdlMapping.addExceptionMappings(exceptionMapping);
@@ -146,7 +146,7 @@ public class JavaWsdlMappingFactory implements ObjectModelFactory
     */
    public void addChild(JavaWsdlMapping javaWsdlMapping,
                         ServiceInterfaceMapping siMapping,
-                        ContentNavigator navigator, String namespaceURI, String localName)
+                        UnmarshallingContext navigator, String namespaceURI, String localName)
    {
       log.trace("addChild: [obj=" + javaWsdlMapping + ",child=" + siMapping + "]");
       javaWsdlMapping.addServiceInterfaceMappings(siMapping);
@@ -157,7 +157,7 @@ public class JavaWsdlMappingFactory implements ObjectModelFactory
     */
    public void addChild(JavaWsdlMapping javaWsdlMapping,
                         ServiceEndpointInterfaceMapping seiMapping,
-                        ContentNavigator navigator, String namespaceURI, String localName)
+                        UnmarshallingContext navigator, String namespaceURI, String localName)
    {
       log.trace("addChild: [obj=" + javaWsdlMapping + ",child=" + seiMapping + "]");
       javaWsdlMapping.addServiceEndpointInterfaceMappings(seiMapping);
@@ -167,7 +167,7 @@ public class JavaWsdlMappingFactory implements ObjectModelFactory
     * Called when a new simple child element with text value was read from the XML content.
     */
    public void setValue(PackageMapping packageMapping,
-                        ContentNavigator navigator,
+                        UnmarshallingContext navigator,
                         String namespaceURI,
                         String localName,
                         String value)
@@ -187,7 +187,7 @@ public class JavaWsdlMappingFactory implements ObjectModelFactory
     * Called when parsing of a new element started.
     */
    public Object newChild(JavaXmlTypeMapping typeMapping,
-                          ContentNavigator navigator,
+                          UnmarshallingContext navigator,
                           String namespaceURI,
                           String localName,
                           Attributes attrs)
@@ -203,7 +203,7 @@ public class JavaWsdlMappingFactory implements ObjectModelFactory
    /**
     * Called when parsing character is complete.
     */
-   public void addChild(JavaXmlTypeMapping typeMapping, VariableMapping variableMapping, ContentNavigator navigator, String namespaceURI, String localName)
+   public void addChild(JavaXmlTypeMapping typeMapping, VariableMapping variableMapping, UnmarshallingContext navigator, String namespaceURI, String localName)
    {
       log.trace("addChild: [obj=" + typeMapping + ",child=" + variableMapping + "]");
       typeMapping.addVariableMapping(variableMapping);
@@ -213,7 +213,7 @@ public class JavaWsdlMappingFactory implements ObjectModelFactory
     * Called when a new simple child element with text value was read from the XML content.
     */
    public void setValue(JavaXmlTypeMapping typeMapping,
-                        ContentNavigator navigator,
+                        UnmarshallingContext navigator,
                         String namespaceURI,
                         String localName,
                         String value)
@@ -247,7 +247,7 @@ public class JavaWsdlMappingFactory implements ObjectModelFactory
     * Called when a new simple child element with text value was read from the XML content.
     */
    public void setValue(ExceptionMapping exceptionMapping,
-                        ContentNavigator navigator,
+                        UnmarshallingContext navigator,
                         String namespaceURI,
                         String localName,
                         String value)
@@ -271,7 +271,7 @@ public class JavaWsdlMappingFactory implements ObjectModelFactory
     * Called when parsing of a new element started.
     */
    public Object newChild(ServiceInterfaceMapping siMapping,
-                          ContentNavigator navigator,
+                          UnmarshallingContext navigator,
                           String namespaceURI,
                           String localName,
                           Attributes attrs)
@@ -287,7 +287,7 @@ public class JavaWsdlMappingFactory implements ObjectModelFactory
    /**
     * Called when parsing character is complete.
     */
-   public void addChild(ServiceInterfaceMapping siMapping, PortMapping portMapping, ContentNavigator navigator, String namespaceURI, String localName)
+   public void addChild(ServiceInterfaceMapping siMapping, PortMapping portMapping, UnmarshallingContext navigator, String namespaceURI, String localName)
    {
       log.trace("addChild: [obj=" + siMapping + ",child=" + portMapping + "]");
       siMapping.addPortMapping(portMapping);
@@ -297,7 +297,7 @@ public class JavaWsdlMappingFactory implements ObjectModelFactory
     * Called when a new simple child element with text value was read from the XML content.
     */
    public void setValue(ServiceInterfaceMapping siMapping,
-                        ContentNavigator navigator,
+                        UnmarshallingContext navigator,
                         String namespaceURI,
                         String localName,
                         String value)
@@ -317,7 +317,7 @@ public class JavaWsdlMappingFactory implements ObjectModelFactory
     * Called when parsing of a new element started.
     */
    public Object newChild(ServiceEndpointInterfaceMapping seiMapping,
-                          ContentNavigator navigator,
+                          UnmarshallingContext navigator,
                           String namespaceURI,
                           String localName,
                           Attributes attrs)
@@ -335,7 +335,7 @@ public class JavaWsdlMappingFactory implements ObjectModelFactory
     */
    public void addChild(ServiceEndpointInterfaceMapping seiMapping,
                         ServiceEndpointMethodMapping seiMethodMapping,
-                        ContentNavigator navigator, String namespaceURI, String localName)
+                        UnmarshallingContext navigator, String namespaceURI, String localName)
    {
       log.trace("addChild: [obj=" + seiMapping + ",child=" + seiMapping + "]");
       seiMapping.addServiceEndpointMethodMapping(seiMethodMapping);
@@ -345,7 +345,7 @@ public class JavaWsdlMappingFactory implements ObjectModelFactory
     * Called when a new simple child element with text value was read from the XML content.
     */
    public void setValue(ServiceEndpointInterfaceMapping seiMapping,
-                        ContentNavigator navigator,
+                        UnmarshallingContext navigator,
                         String namespaceURI,
                         String localName,
                         String value)
@@ -369,7 +369,7 @@ public class JavaWsdlMappingFactory implements ObjectModelFactory
     * Called when a new simple child element with text value was read from the XML content.
     */
    public void setValue(VariableMapping variableMapping,
-                        ContentNavigator navigator,
+                        UnmarshallingContext navigator,
                         String namespaceURI,
                         String localName,
                         String value)
@@ -401,7 +401,7 @@ public class JavaWsdlMappingFactory implements ObjectModelFactory
     * Called when a new simple child element with text value was read from the XML content.
     */
    public void setValue(PortMapping portMapping,
-                        ContentNavigator navigator,
+                        UnmarshallingContext navigator,
                         String namespaceURI,
                         String localName,
                         String value)
@@ -421,7 +421,7 @@ public class JavaWsdlMappingFactory implements ObjectModelFactory
     * Called when parsing of a new element started.
     */
    public Object newChild(ServiceEndpointMethodMapping methodMapping,
-                          ContentNavigator navigator,
+                          UnmarshallingContext navigator,
                           String namespaceURI,
                           String localName,
                           Attributes attrs)
@@ -443,7 +443,7 @@ public class JavaWsdlMappingFactory implements ObjectModelFactory
     */
    public void addChild(ServiceEndpointMethodMapping methodMapping,
                         MethodParamPartsMapping partsMapping,
-                        ContentNavigator navigator, String namespaceURI, String localName)
+                        UnmarshallingContext navigator, String namespaceURI, String localName)
    {
       log.trace("addChild: [obj=" + methodMapping + ",child=" + partsMapping + "]");
       methodMapping.addMethodParamPartsMapping(partsMapping);
@@ -454,7 +454,7 @@ public class JavaWsdlMappingFactory implements ObjectModelFactory
     */
    public void addChild(ServiceEndpointMethodMapping methodMapping,
                         WsdlReturnValueMapping returnValueMapping,
-                        ContentNavigator navigator, String namespaceURI, String localName)
+                        UnmarshallingContext navigator, String namespaceURI, String localName)
    {
       log.trace("addChild: [obj=" + methodMapping + ",child=" + returnValueMapping + "]");
       methodMapping.setWsdlReturnValueMapping(returnValueMapping);
@@ -464,7 +464,7 @@ public class JavaWsdlMappingFactory implements ObjectModelFactory
     * Called when a new simple child element with text value was read from the XML content.
     */
    public void setValue(ServiceEndpointMethodMapping methodMapping,
-                        ContentNavigator navigator,
+                        UnmarshallingContext navigator,
                         String namespaceURI,
                         String localName,
                         String value)
@@ -488,7 +488,7 @@ public class JavaWsdlMappingFactory implements ObjectModelFactory
     * Called when parsing of a new element started.
     */
    public Object newChild(MethodParamPartsMapping partsMapping,
-                          ContentNavigator navigator,
+                          UnmarshallingContext navigator,
                           String namespaceURI,
                           String localName,
                           Attributes attrs)
@@ -506,7 +506,7 @@ public class JavaWsdlMappingFactory implements ObjectModelFactory
     */
    public void addChild(MethodParamPartsMapping partsMapping,
                         WsdlMessageMapping msgMapping,
-                        ContentNavigator navigator, String namespaceURI, String localName)
+                        UnmarshallingContext navigator, String namespaceURI, String localName)
    {
       log.trace("addChild: [obj=" + partsMapping + ",child=" + msgMapping + "]");
       partsMapping.setWsdlMessageMapping(msgMapping);
@@ -516,7 +516,7 @@ public class JavaWsdlMappingFactory implements ObjectModelFactory
     * Called when a new simple child element with text value was read from the XML content.
     */
    public void setValue(MethodParamPartsMapping partsMapping,
-                        ContentNavigator navigator,
+                        UnmarshallingContext navigator,
                         String namespaceURI,
                         String localName,
                         String value)
@@ -536,7 +536,7 @@ public class JavaWsdlMappingFactory implements ObjectModelFactory
     * Called when a new simple child element with text value was read from the XML content.
     */
    public void setValue(WsdlReturnValueMapping retValueMapping,
-                        ContentNavigator navigator,
+                        UnmarshallingContext navigator,
                         String namespaceURI,
                         String localName,
                         String value)
@@ -560,7 +560,7 @@ public class JavaWsdlMappingFactory implements ObjectModelFactory
     * Called when a new simple child element with text value was read from the XML content.
     */
    public void setValue(WsdlMessageMapping msgMapping,
-                        ContentNavigator navigator,
+                        UnmarshallingContext navigator,
                         String namespaceURI,
                         String localName,
                         String value)
