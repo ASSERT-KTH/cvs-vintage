@@ -2,8 +2,7 @@
 
 <project>
   <pomVersion>3</pomVersion>
-  <groupId>scarab</groupId>
-  <artifactId>scarab</artifactId>
+  <id>scarab</id>
   <name>scarab</name>
   <currentVersion>1.0-b18-dev</currentVersion>
   <organization>
