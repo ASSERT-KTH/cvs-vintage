@@ -12,7 +12,7 @@
 <!--                                                                        -->
 <!-- ====================================================================== -->
 
-<!-- $Id: build.xml,v 1.108 2002/08/25 23:13:39 schaefera Exp $ -->
+<!-- $Id: build.xml,v 1.109 2002/08/30 20:02:20 loubyansky Exp $ -->
 
 <project default="main" name="JBoss/Server">
 
@@ -569,6 +569,9 @@
 
         <!-- Exclude JMX Connector stuff we will use the connector SAR for that -->
         <exclude name="org/jboss/jmx/**"/>
+
+        <!-- Exclude key factory stuff -->
+        <exclude name="org/jboss/ejb/plugins/keygenerator/uuid/**"/>
       </fileset>
       
       <!-- HACK -->
@@ -805,6 +808,16 @@
       </fileset>
     </jar>
 
+    <!-- uuid-key-generator.sar -->
+    <jar jarfile="${build.lib}/uuid-key-generator.sar"
+         manifest="${build.etc}/default.mf">
+      <fileset dir="${build.classes}">
+        <include name="org/jboss/ejb/plugins/keygenerator/uuid/**"/>
+      </fileset>
+      <fileset dir="${build.resources}/uuid-key-generator">
+        <include name="**/*"/>
+      </fileset>
+    </jar>
   </target>
 
 
