@@ -47,7 +47,6 @@ package org.tigris.scarab.tools;
  */ 
 
 import java.text.DateFormat;
-//import java.text.SimpleDateFormat;
 import java.text.ParseException;
 import java.util.List;
 import java.util.ArrayList;
@@ -986,7 +985,15 @@ try{
     {
         if (currentIssueType == null)
         {
-            if (currentModule != null)
+            // if the current issue_type_id is present in the parameter list
+            //then select that issue as the current issue_type
+            if(data.getParameters()
+               .containsKey(ScarabConstants.CURRENT_ISSUE_TYPE))
+            {
+                currentIssueType = getIssueType(data.getParameters()
+                    .getString(ScarabConstants.CURRENT_ISSUE_TYPE));
+            }
+            else if (getCurrentModule() != null)
             {
                 List navIssueTypes = getCurrentModule().getNavIssueTypes();
                 List activeIssueTypes = getCurrentModule().getIssueTypes(true);
@@ -1950,15 +1957,16 @@ try{
     public DateFormat getDateFormat()
     {
         Locale locale = Localization.getLocale(data.getRequest());
-        DateFormat df = DateFormat.getDateTimeInstance(DateFormat.MEDIUM, 
-                                                       DateFormat.MEDIUM, locale);
+        DateFormat df = DateFormat
+            .getDateTimeInstance(DateFormat.MEDIUM, DateFormat.MEDIUM, locale);
         if (timezone != null) 
         {
             df.setTimeZone(timezone);
         }
         return df;
-// We may want to eventually format the date other than default, 
-// this is how you would do it.
+
+        // We may want to eventually format the date other than default, 
+        // this is how you would do it.
         //SimpleDateFormat sdf = new SimpleDateFormat(
         //    "yyyy/MM/dd hh:mm:ss a z", locale);
         //return (DateFormat) sdf;
