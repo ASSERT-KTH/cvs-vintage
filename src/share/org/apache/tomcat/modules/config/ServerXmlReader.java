@@ -129,7 +129,7 @@ public class ServerXmlReader extends BaseInterceptor {
 	setPropertiesRules( cm, xh );
 	setTagRules( xh );
 	addDefaultTags(cm, xh);
-	addTagRules( cm, xh );
+	//addTagRules( cm, xh );
 	setBackward( xh );
 
 	// load the config file(s)
@@ -165,7 +165,7 @@ public class ServerXmlReader extends BaseInterceptor {
 
     // -------------------- Xml reading details --------------------
 
-    public static void loadConfigFile(XmlMapper xh, File f, ContextManager cm)
+    public static void loadConfigFile(XmlMapper xh, File f, Object cm)
 	throws TomcatException
     {
 	try {
@@ -229,16 +229,19 @@ public class ServerXmlReader extends BaseInterceptor {
 	    String tag=(String)keys.nextElement();
 	    String classN=(String)modules.get( tag );
 
-	    xh.addRule( tag ,
-			xh.objectCreate( classN, null ));
-	    xh.addRule( tag ,
-			xh.setProperties());
-	    xh.addRule( tag,
-			xh.addChild( "addInterceptor",
-				     "org.apache.tomcat.core.BaseInterceptor"));
+	    addTagRule( xh, tag, classN );
 	}
     }
 
+    public static void addTagRule( XmlMapper xh, String tag, String classN ) {
+	xh.addRule( tag ,
+		    xh.objectCreate( classN, null ));
+	xh.addRule( tag ,
+		    xh.setProperties());
+	xh.addRule( tag,
+		    xh.addChild( "addInterceptor",
+				 "org.apache.tomcat.core.BaseInterceptor"));
+    }
 
     public static void setTagRules( XmlMapper xh ) {
 	xh.addRule( "module",  new XmlAction() {
@@ -251,6 +254,7 @@ public class ServerXmlReader extends BaseInterceptor {
 		    ContextManager cm=(ContextManager)ctx.currentObject();
 		    Hashtable modules=(Hashtable)cm.getNote("modules");
 		    modules.put( name, classN );
+		    addTagRule( ctx.getMapper(), name, classN );
 		    if( ctx.getDebug() > 0 ) ctx.log("Adding " + name + " " + classN );
 		}
 	    });
