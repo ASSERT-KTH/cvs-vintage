@@ -1604,7 +1604,7 @@ try{
                 else 
                 {
                     loggedInUser.getCurrentMITList().addToCriteria(tempCrit);
-                    System.out.println("Adding MITList to criteria: " + tempCrit);
+//                    System.out.println("Adding MITList to criteria: " + tempCrit);
                 }
                 
 
