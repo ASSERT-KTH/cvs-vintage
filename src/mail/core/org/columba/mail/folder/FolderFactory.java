@@ -43,6 +43,10 @@ public class FolderFactory {
     private static FolderFactory instance;
     private FolderPluginHandler handler;
     private XmlElement folderlistElement;
+    
+    // parent directory for mail folders
+	// for example: ".columba/mail/"
+	private String path = MainInterface.config.getConfigDirectory() + "/mail/";
 
     protected FolderFactory() {
         // Get the handler
@@ -138,8 +142,9 @@ public class FolderFactory {
      */
     public FolderTreeNode createChild(FolderTreeNode parent, String name,
         String childType) throws Exception {
+    	
         FolderTreeNode child = (FolderTreeNode) handler.getPlugin(childType,
-                new Object[] { name, childType });
+                new Object[] { name, childType, path });
 
         // Add child to parent
         parent.addSubfolder(child);

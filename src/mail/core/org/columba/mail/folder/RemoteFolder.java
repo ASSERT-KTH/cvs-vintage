@@ -36,8 +36,8 @@ public abstract class RemoteFolder extends Folder {
      * Constructs a RemoteFolder.
      * @param item information about the folder.
      */
-    public RemoteFolder(FolderItem item) {
-        super(item);
+    public RemoteFolder(FolderItem item, String path) {
+        super(item, path);
 
         XmlElement filterListElement = node.getElement(FilterList.XML_NAME);
 
@@ -54,7 +54,7 @@ public abstract class RemoteFolder extends Folder {
      * @param name the name of the folder.
      * @param type the type of a folder.
      */
-    public RemoteFolder(String name, String type) {
-        super(name, type);
+    public RemoteFolder(String name, String type, String path) {
+        super(name, type, path);
     }
 }

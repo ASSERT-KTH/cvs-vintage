@@ -26,6 +26,7 @@ import org.columba.core.command.CommandCancelledException;
 import org.columba.core.command.DefaultCommandReference;
 import org.columba.core.command.StatusObservableImpl;
 import org.columba.core.command.Worker;
+import org.columba.core.command.WorkerStatusController;
 import org.columba.core.main.MainInterface;
 import org.columba.mail.command.ComposerCommandReference;
 import org.columba.mail.command.FolderCommand;
@@ -75,7 +76,7 @@ public class SendMessageCommand extends FolderCommand {
     /**
      * @see org.columba.core.command.Command#execute(Worker)
      */
-    public void execute(Worker worker) throws Exception {
+    public void execute(WorkerStatusController worker) throws Exception {
         ComposerCommandReference[] r = (ComposerCommandReference[]) getReferences();
 
         //	display status message

@@ -24,6 +24,7 @@ import java.util.List;
 import org.columba.core.command.DefaultCommandReference;
 import org.columba.core.command.StatusObservableImpl;
 import org.columba.core.command.Worker;
+import org.columba.core.command.WorkerStatusController;
 import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.gui.util.ExceptionDialog;
 import org.columba.core.io.CloneStreamMaster;
@@ -106,7 +107,7 @@ public class ScoreMessageCommand extends FolderCommand {
 	/**
 	 * @see org.columba.core.command.Command#execute(org.columba.core.command.Worker)
 	 */
-	public void execute(Worker worker) throws Exception {
+	public void execute(WorkerStatusController worker) throws Exception {
 		//		use wrapper class for easier handling of references array
 		adapter=
 			new FolderCommandAdapter(

@@ -36,7 +36,17 @@ public class LocalRootFolder extends FolderTreeNode implements RootFolder {
             "localhost.png");
 
     //ImageLoader.getSmallImageIcon("16_computer.png");
-    public LocalRootFolder(FolderItem item) {
+    /**
+     * Constructor
+     * <p>
+     * Due to limitations of the current plugin system, every folder
+     * which is loaded dynamically needs to have the same constructor
+     * behaviour.
+     * <p>
+     * I've added "String path" for this reason. (fdietz)
+     * 
+     */
+    public LocalRootFolder(FolderItem item, String path) {
         super(item);
     }
 

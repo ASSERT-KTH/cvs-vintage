@@ -63,12 +63,12 @@ public class TempFolder extends Folder {
     /**
      * Constructor for TempFolder.
      *
-     * @param name
+     * @param path		example: /home/donald/mail/
      */
-    public TempFolder() {
+    public TempFolder(String path) {
         super();
 
-        String dir = MainInterface.config.getConfigDirectory() + "/mail/" + "temp";
+        String dir = path + "temp";
 
         if (DiskIO.ensureDirectory(dir)) {
             directoryFile = new File(dir);

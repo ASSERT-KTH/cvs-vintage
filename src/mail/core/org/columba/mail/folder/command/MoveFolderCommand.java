@@ -20,6 +20,7 @@ import javax.swing.tree.TreeNode;
 import org.columba.core.command.Command;
 import org.columba.core.command.DefaultCommandReference;
 import org.columba.core.command.Worker;
+import org.columba.core.command.WorkerStatusController;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.folder.Folder;
 import org.columba.mail.folder.FolderTreeNode;
@@ -58,7 +59,7 @@ public class MoveFolderCommand extends Command {
     }
 
     /** {@inheritDoc} */
-    public void execute(Worker worker) throws Exception {
+    public void execute(WorkerStatusController worker) throws Exception {
         // get folder that is going to be moved
         Folder movedFolder = (Folder) ((FolderCommandReference) getReferences()[0]).getFolder();
         parentSourceFolder = movedFolder.getParent();

@@ -19,10 +19,10 @@ import net.javaprog.ui.wizard.DataModel;
 import net.javaprog.ui.wizard.WizardModelEvent;
 import net.javaprog.ui.wizard.WizardModelListener;
 
+import org.columba.core.main.MainInterface;
 import org.columba.mail.config.AccountItem;
 import org.columba.mail.config.IdentityItem;
 import org.columba.mail.config.ImapItem;
-import org.columba.mail.main.MailInterface;
 import org.columba.mail.config.PopItem;
 import org.columba.mail.folder.FolderTreeNode;
 import org.columba.mail.folder.imap.IMAPFolder;
@@ -63,7 +63,15 @@ class AccountCreator implements WizardModelListener {
 			imap.set("host", (String) data.getData("IncomingServer.host"));
 			imap.set("user", (String) data.getData("IncomingServer.login"));
 
-			IMAPRootFolder parentFolder= new IMAPRootFolder(account);
+			// TODO: All this code for creating a new IMAPRootFolder should
+			//       be moved to a FolderFactory
+			//       -> this way "path" would be handled in the factory, too
+			
+			// parent directory for mail folders
+	        // for example: ".columba/mail/"
+	        String path = MainInterface.config.getConfigDirectory() + "/mail/";  
+	        
+			IMAPRootFolder parentFolder= new IMAPRootFolder(account, path);
 			((FolderTreeNode) MailInterface.treeModel.getRoot()).add(
 				parentFolder);
 			((FolderTreeNode) MailInterface.treeModel.getRoot())
@@ -75,7 +83,7 @@ class AccountCreator implements WizardModelListener {
 				parentFolder.getParent());
 
 			try {
-				FolderTreeNode inbox= new IMAPFolder("INBOX", "IMAPFolder");
+				FolderTreeNode inbox= new IMAPFolder("INBOX", "IMAPFolder", path);
 				parentFolder.add(inbox);
 				parentFolder.getNode().addElement(inbox.getNode());
 			} catch (Exception ex) {

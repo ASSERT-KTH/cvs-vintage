@@ -18,6 +18,7 @@ package org.columba.mail.gui.tree.command;
 import org.columba.core.command.Command;
 import org.columba.core.command.DefaultCommandReference;
 import org.columba.core.command.Worker;
+import org.columba.core.command.WorkerStatusController;
 
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.folder.FolderFactory;
@@ -61,7 +62,7 @@ public class CreateSubFolderCommand extends Command {
     /**
      * @see org.columba.core.command.Command#execute(Worker)
      */
-    public void execute(Worker worker) throws Exception {
+    public void execute(WorkerStatusController worker) throws Exception {
         parentFolder = ((FolderCommandReference) getReferences()[0]).getFolder();
 
         String name = ((FolderCommandReference) getReferences()[0]).getFolderName();

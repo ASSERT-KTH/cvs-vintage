@@ -56,6 +56,13 @@ public class IMAPRootFolder extends FolderTreeNode implements RootFolder {
     //    private ImapOperator operator;
     private AccountItem accountItem;
     private IMAPStore store;
+    
+    /**
+     * parent directory for mail folders
+     * 
+     * for example: "/home/donald/.columba/mail/"
+     */
+    private String parentPath;
 
     /**
      * Status information updates are handled in using StatusObservable.
@@ -65,9 +72,14 @@ public class IMAPRootFolder extends FolderTreeNode implements RootFolder {
      */
     protected StatusObservable observable;
 
-    public IMAPRootFolder(FolderItem folderItem) {
+    public IMAPRootFolder(FolderItem folderItem, String path) {
         //super(node, folderItem);
         super(folderItem);
+        
+        // remember parent path 
+        // (this is necessary for IMAPRootFolder sync operations)
+        parentPath = path;
+        
         observable = new StatusObservableImpl();
 
         accountItem =
@@ -77,12 +89,16 @@ public class IMAPRootFolder extends FolderTreeNode implements RootFolder {
         updateConfiguration();
     }
 
-    public IMAPRootFolder(AccountItem accountItem) {
+    public IMAPRootFolder(AccountItem accountItem, String path) {
         //super(node, folderItem);
         //super(getDefaultItem("IMAPRootFolder", getDefaultProperties()));
         super(accountItem.get("name"), "IMAPRootFolder");
         observable = new StatusObservableImpl();
 
+        // remember parent path 
+        // (this is necessary for IMAPRootFolder sync operations)
+        parentPath = path;
+        
         this.accountItem = accountItem;
 
         getFolderItem().set("account_uid", accountItem.getInteger("uid"));
@@ -139,7 +155,7 @@ public class IMAPRootFolder extends FolderTreeNode implements RootFolder {
 
             // if folder doesn't exist already
             if (subFolder == null) {
-                subFolder = new IMAPFolder(subchild, "IMAPFolder");
+                subFolder = new IMAPFolder(subchild, "IMAPFolder", getParentPath());
                 parent.add(subFolder);
                 parent.getNode().addElement(subFolder.getNode());
                 MailInterface.treeModel.insertNodeInto(
@@ -172,7 +188,7 @@ public class IMAPRootFolder extends FolderTreeNode implements RootFolder {
                 (FolderTreeNode) parent.findChildWithName(name, false);
 
             if (subFolder == null) {
-                subFolder = new IMAPFolder(name, "IMAPFolder");
+                subFolder = new IMAPFolder(name, "IMAPFolder", getParentPath());
                 parent.add(subFolder);
                 parent.getNode().addElement(subFolder.getNode());
                 MailInterface.treeModel.insertNodeInto(
@@ -388,4 +404,16 @@ public class IMAPRootFolder extends FolderTreeNode implements RootFolder {
     public FolderTreeNode getInboxFolder() {
         return (IMAPFolder) this.findChildWithName("INBOX", false);
     }
+    
+	/**
+	 * Parent directory for mail folders.
+	 * <p>
+	 * For example: /home/donald/.columba/mail
+	 * 
+	 * @return Returns the parentPath.
+	 */
+	public String getParentPath() {
+		return parentPath;
+	}
+	
 }

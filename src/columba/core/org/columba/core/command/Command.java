@@ -139,7 +139,7 @@ public abstract class Command {
      * @param worker
      * @throws Exception
      */
-    public abstract void execute(Worker worker) throws Exception;
+    public abstract void execute(WorkerStatusController worker) throws Exception;
 
     /**
      * Command must implement this method

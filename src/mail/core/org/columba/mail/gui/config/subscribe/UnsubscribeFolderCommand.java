@@ -18,6 +18,7 @@ package org.columba.mail.gui.config.subscribe;
 
 import org.columba.core.command.Command;
 import org.columba.core.command.Worker;
+import org.columba.core.command.WorkerStatusController;
 import org.columba.mail.folder.imap.IMAPRootFolder;
 import org.columba.mail.imap.IMAPStore;
 
@@ -35,7 +36,7 @@ public class UnsubscribeFolderCommand extends Command {
     /* (non-Javadoc)
      * @see org.columba.core.command.Command#execute(org.columba.core.command.Worker)
      */
-    public void execute(Worker worker) throws Exception {
+    public void execute(WorkerStatusController worker) throws Exception {
         SubscribeCommandReference subscribeReference = (SubscribeCommandReference)getReferences()[0];
         root = (IMAPRootFolder) subscribeReference.getFolder();
         

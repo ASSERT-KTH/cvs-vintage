@@ -22,6 +22,7 @@ import java.util.List;
 
 import org.columba.core.command.DefaultCommandReference;
 import org.columba.core.command.Worker;
+import org.columba.core.command.WorkerStatusController;
 import org.columba.core.xml.XmlElement;
 import org.columba.mail.command.FolderCommand;
 import org.columba.mail.command.FolderCommandReference;
@@ -73,7 +74,7 @@ public class OpenMessageWithComposerCommand extends FolderCommand {
         controller.updateComponents(true);
     }
 
-    public void execute(Worker worker) throws Exception {
+    public void execute(WorkerStatusController worker) throws Exception {
         model = new ComposerModel();
 
         // get selected folder

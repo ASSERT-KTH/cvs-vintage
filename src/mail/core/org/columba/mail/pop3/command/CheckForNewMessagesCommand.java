@@ -20,6 +20,7 @@ import org.columba.core.command.CommandCancelledException;
 import org.columba.core.command.DefaultCommandReference;
 import org.columba.core.command.StatusObservableImpl;
 import org.columba.core.command.Worker;
+import org.columba.core.command.WorkerStatusController;
 
 import org.columba.mail.command.POP3CommandReference;
 import org.columba.mail.pop3.POP3Server;
@@ -44,7 +45,7 @@ public class CheckForNewMessagesCommand extends Command {
     /**
      * @see org.columba.core.command.Command#execute(Worker)
      */
-    public void execute(Worker worker) throws Exception {
+    public void execute(WorkerStatusController worker) throws Exception {
         FetchNewMessagesCommand command = new FetchNewMessagesCommand(getReferences());
 
         POP3CommandReference[] r = (POP3CommandReference[]) getReferences(FIRST_EXECUTION);

@@ -58,8 +58,8 @@ public abstract class CachedFolder extends LocalFolder {
      *            <class>FolderItem</class> contains xml configuration of
      *            this folder
      */
-    public CachedFolder(FolderItem item) {
-        super(item);
+    public CachedFolder(FolderItem item, String path) {
+        super(item, path);
 
         mutex = new Mutex(getName());
     }
@@ -67,8 +67,8 @@ public abstract class CachedFolder extends LocalFolder {
     /**
      * @param type
      */
-    public CachedFolder(String name, String type) {
-        super(name, type);
+    public CachedFolder(String name, String type, String path) {
+        super(name, type,  path);
 
         mutex = new Mutex(getName());
     }

@@ -67,7 +67,23 @@ public class GlobalResourceLoader {
     private static final String GLOBAL_BUNDLE_PATH = "org.columba.core.i18n.global.global";
 
     static {
-        XmlElement locale = MainInterface.config.get("options").getElement("/options/locale");
+    	// use english as default
+    	XmlElement locale = new XmlElement("locale");
+        locale.addAttribute("language", "en");
+        
+        String language = locale.getAttribute("language");
+        String country = locale.getAttribute("country", "");
+        String variant = locale.getAttribute("variant", "");
+        Locale.setDefault(new Locale(language, country, variant));
+        
+    }
+    
+    /**
+     * Initialize in org.columba.core.main.Main to use user-definable
+     * language pack.
+     */
+    public static void loadLanguage() {
+    	XmlElement locale = MainInterface.config.get("options").getElement("/options/locale");
 
         // no configuration available, create default config
         if (locale == null) {

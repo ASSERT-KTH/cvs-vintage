@@ -15,6 +15,8 @@
 //All Rights Reserved.
 package org.columba.core.command;
 
+import org.columba.core.gui.statusbar.event.WorkerStatusChangeListener;
+
 public interface WorkerStatusController {
     /**
      * Set the text to be displayed in the status bar
@@ -71,4 +73,8 @@ public interface WorkerStatusController {
     public void cancel();
 
     public boolean cancelled();
+    
+    public void addWorkerStatusChangeListener(WorkerStatusChangeListener l);
+    
+    public int getTimeStamp();
 }

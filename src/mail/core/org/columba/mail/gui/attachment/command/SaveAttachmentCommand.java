@@ -19,6 +19,7 @@ package org.columba.mail.gui.attachment.command;
 
 import org.columba.core.command.DefaultCommandReference;
 import org.columba.core.command.Worker;
+import org.columba.core.command.WorkerStatusController;
 import org.columba.core.io.StreamUtils;
 import org.columba.core.util.cFileChooser;
 import org.columba.core.util.cFileFilter;
@@ -71,7 +72,7 @@ public class SaveAttachmentCommand extends FolderCommand {
     /**
 	 * @see org.columba.core.command.Command#execute(Worker)
 	 */
-    public void execute(Worker worker) throws Exception {
+    public void execute(WorkerStatusController worker) throws Exception {
         FolderCommandReference[] r = (FolderCommandReference[]) getReferences();
         Folder folder = (Folder) r[0].getFolder();
         Object[] uids = r[0].getUids();

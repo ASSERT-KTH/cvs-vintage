@@ -17,6 +17,7 @@ package org.columba.mail.folder.command;
 
 import org.columba.core.command.DefaultCommandReference;
 import org.columba.core.command.Worker;
+import org.columba.core.command.WorkerStatusController;
 import org.columba.core.gui.frame.FrameMediator;
 
 import org.columba.mail.command.FolderCommand;
@@ -68,7 +69,7 @@ public class ExportFolderCommand extends FolderCommand {
     /* (non-Javadoc)
      * @see org.columba.core.command.Command#execute(org.columba.core.command.Worker)
      */
-    public void execute(Worker worker) throws Exception {
+    public void execute(WorkerStatusController worker) throws Exception {
         // get references
         FolderCommandReference[] references = (FolderCommandReference[]) getReferences();
 

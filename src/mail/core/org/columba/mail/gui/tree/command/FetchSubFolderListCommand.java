@@ -18,6 +18,7 @@ package org.columba.mail.gui.tree.command;
 import org.columba.core.command.Command;
 import org.columba.core.command.DefaultCommandReference;
 import org.columba.core.command.Worker;
+import org.columba.core.command.WorkerStatusController;
 import org.columba.core.logging.ColumbaLogger;
 
 import org.columba.mail.command.FolderCommand;
@@ -56,7 +57,7 @@ public class FetchSubFolderListCommand extends FolderCommand {
     /**
      * @see org.columba.core.command.Command#execute(Worker)
      */
-    public void execute(Worker worker) throws Exception {
+    public void execute(WorkerStatusController worker) throws Exception {
         ColumbaLogger.log.info("reference=" +
             getReferences(Command.UNDOABLE_OPERATION));
 

@@ -21,6 +21,7 @@ package org.columba.mail.folder.command;
 import org.columba.core.command.DefaultCommandReference;
 import org.columba.core.command.StatusObservableImpl;
 import org.columba.core.command.Worker;
+import org.columba.core.command.WorkerStatusController;
 import org.columba.core.main.MainInterface;
 import org.columba.core.io.DiskIO;
 import org.columba.core.io.StreamUtils;
@@ -112,7 +113,7 @@ public class SaveMessageBodyAsCommand extends FolderCommand {
 	 * @param worker
 	 * @see org.columba.core.command.Command#execute(Worker)
 	 */
-    public void execute(Worker worker) throws Exception {
+    public void execute(WorkerStatusController worker) throws Exception {
         FolderCommandReference[] r = (FolderCommandReference[]) getReferences();
         Object[] uids = r[0].getUids(); // uid for messages to save
         Folder srcFolder = (Folder) r[0].getFolder();
@@ -371,7 +372,7 @@ public class SaveMessageBodyAsCommand extends FolderCommand {
     private StreamableMimePart getMessageBodyPart(
         Object uid,
         Folder srcFolder,
-        Worker worker)
+        WorkerStatusController worker)
         throws Exception {
         // Does the user prefer html or plain text?
         XmlElement html =

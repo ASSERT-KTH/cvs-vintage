@@ -19,6 +19,7 @@ package org.columba.mail.folder.command;
 import org.columba.core.command.DefaultCommandReference;
 import org.columba.core.command.StatusObservableImpl;
 import org.columba.core.command.Worker;
+import org.columba.core.command.WorkerStatusController;
 
 import org.columba.mail.command.FolderCommand;
 import org.columba.mail.command.FolderCommandReference;
@@ -42,7 +43,7 @@ public class SaveFolderConfigurationCommand extends FolderCommand {
     /* (non-Javadoc)
      * @see org.columba.core.command.Command#execute(org.columba.core.command.Worker)
      */
-    public void execute(Worker worker) throws Exception {
+    public void execute(WorkerStatusController worker) throws Exception {
         // skip if no reference available
         if (getReferences().length == 0 || getReferences()[0] == null) {
             return;

@@ -18,6 +18,7 @@ package org.columba.mail.gui.message.command;
 import org.columba.core.command.DefaultCommandReference;
 import org.columba.core.command.StatusObservableImpl;
 import org.columba.core.command.Worker;
+import org.columba.core.command.WorkerStatusController;
 import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.io.TempFileStore;
 
@@ -71,7 +72,7 @@ public class ViewMessageSourceCommand extends FolderCommand {
     /**
      * @see org.columba.core.command.Command#execute(Worker)
      */
-    public void execute(Worker worker) throws Exception {
+    public void execute(WorkerStatusController worker) throws Exception {
         AbstractMailFrameController mailFrameController = (AbstractMailFrameController) frameMediator;
 
         FolderCommandReference[] r = (FolderCommandReference[]) getReferences();

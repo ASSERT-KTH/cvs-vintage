@@ -20,6 +20,7 @@ package org.columba.mail.folder.command;
 import org.columba.core.command.DefaultCommandReference;
 import org.columba.core.command.StatusObservableImpl;
 import org.columba.core.command.Worker;
+import org.columba.core.command.WorkerStatusController;
 
 import org.columba.mail.command.FolderCommand;
 import org.columba.mail.command.FolderCommandAdapter;
@@ -89,7 +90,7 @@ public class ExpungeFolderCommand extends FolderCommand {
     /**
      * @see org.columba.core.command.Command#execute(Worker)
      */
-    public void execute(Worker worker) throws Exception {
+    public void execute(WorkerStatusController worker) throws Exception {
         // use wrapper for references
         adapter = new FolderCommandAdapter((FolderCommandReference[]) getReferences());
 

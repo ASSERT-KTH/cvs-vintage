@@ -21,6 +21,7 @@ package org.columba.mail.folder.command;
 import org.columba.core.command.DefaultCommandReference;
 import org.columba.core.command.StatusObservableImpl;
 import org.columba.core.command.Worker;
+import org.columba.core.command.WorkerStatusController;
 import org.columba.core.main.MainInterface;
 import org.columba.core.io.DiskIO;
 import org.columba.core.io.StreamUtils;
@@ -184,7 +185,7 @@ public class PrintMessageCommand extends FolderCommand {
 	 * 
 	 * @see org.columba.core.command.Command#execute(Worker)
 	 */
-    public void execute(Worker worker) throws Exception {
+    public void execute(WorkerStatusController worker) throws Exception {
         /*
 		 * *20030604, karlpeder* Fixed minor flaws to be able to print text
 		 * messages. Further more added support for html messages.

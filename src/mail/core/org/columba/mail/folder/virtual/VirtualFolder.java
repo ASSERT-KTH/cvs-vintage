@@ -62,8 +62,8 @@ public class VirtualFolder extends Folder {
 
     // FIXME: Reduce redundancy in both constructors, eventually create
     // private method that cares for the missing XmlElement.
-    public VirtualFolder(FolderItem item) {
-        super(item);
+    public VirtualFolder(FolderItem item, String path) {
+        super(item, path);
 
         headerList = new HeaderList();
 
@@ -96,8 +96,8 @@ public class VirtualFolder extends Folder {
         //searchFilter = new Search(this);
     }
 
-    public VirtualFolder(String name, String type) {
-        super(name, type);
+    public VirtualFolder(String name, String type, String path) {
+        super(name, type, path);
 
         FolderItem item = getFolderItem();
         item.set("property", "accessrights", "user");

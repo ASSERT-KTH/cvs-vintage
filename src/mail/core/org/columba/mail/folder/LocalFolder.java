@@ -80,8 +80,8 @@ public abstract class LocalFolder extends Folder implements MailboxInterface {
     /**
      * @param item        <class>FolderItem</class> contains xml configuration of this folder
      */
-    public LocalFolder(FolderItem item) {
-        super(item);
+    public LocalFolder(FolderItem item, String path) {
+        super(item, path);
 
         // create filterlist datastructure
         XmlElement filterListElement = node.getElement(FilterList.XML_NAME);
@@ -101,8 +101,8 @@ public abstract class LocalFolder extends Folder implements MailboxInterface {
      * @param name the name of the folder.
      * @param type type of folder.
      */
-    public LocalFolder(String name, String type) {
-        super(name, type);
+    public LocalFolder(String name, String type, String path) {
+        super(name, type, path);
 
         // create filterlist datastructure
         XmlElement filterListElement = node.getElement(FilterList.XML_NAME);

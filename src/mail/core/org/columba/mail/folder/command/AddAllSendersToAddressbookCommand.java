@@ -25,6 +25,7 @@ import org.columba.addressbook.parser.AddressParser;
 import org.columba.core.command.DefaultCommandReference;
 import org.columba.core.command.StatusObservableImpl;
 import org.columba.core.command.Worker;
+import org.columba.core.command.WorkerStatusController;
 import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.main.MainInterface;
 
@@ -69,7 +70,7 @@ public class AddAllSendersToAddressbookCommand extends FolderCommand {
     /**
      * @see org.columba.core.command.Command#execute(org.columba.core.command.Worker)
      */
-    public void execute(Worker worker) throws Exception {
+    public void execute(WorkerStatusController worker) throws Exception {
         // get reference
         FolderCommandReference[] r = (FolderCommandReference[]) getReferences();
 

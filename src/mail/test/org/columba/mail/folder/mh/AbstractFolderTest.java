@@ -1,0 +1,90 @@
+//The contents of this file are subject to the Mozilla Public License Version
+//1.1
+//(the "License"); you may not use this file except in compliance with the
+//License. You may obtain a copy of the License at http://www.mozilla.org/MPL/
+//
+//Software distributed under the License is distributed on an "AS IS" basis,
+//WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
+//for the specific language governing rights and
+//limitations under the License.
+//
+//The Original Code is "The Columba Project"
+//
+//The Initial Developers of the Original Code are Frederik Dietz and Timo
+//Stich.
+//Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003.
+//
+//All Rights Reserved.
+package org.columba.mail.folder.mh;
+import java.io.File;
+import junit.framework.TestCase;
+import org.columba.mail.folder.FolderTestHelper;
+/**
+ * Abstract testcase creates a folder in setUp and removes it in tearDown.
+ * <p>
+ * Create new testcases by subclassing this classes and using getFolder()
+ * directly.
+ * 
+ * @author fdietz
+ */
+public abstract class AbstractFolderTest extends TestCase {
+	protected CachedMHFolder sourceFolder;
+	
+	protected CachedMHFolder destFolder;
+	
+	/**
+	 * Constructor for CachedMHFolderTest.
+	 * 
+	 * @param arg0
+	 */
+	public AbstractFolderTest(String arg0) {
+		super(arg0);
+	}
+	/**
+	 * @see TestCase#setUp()
+	 */
+	protected void setUp() throws Exception {
+		// create MH folder
+		// -> use homeDirectory as top-level folder
+		// -> this has to be an absolute path
+		sourceFolder = new CachedMHFolder("test", "CachedMHFolder",
+				FolderTestHelper.homeDirectory + "/folders/");
+		
+		destFolder = new CachedMHFolder("test2", "CachedMHFolder",
+				FolderTestHelper.homeDirectory + "/folders/");
+	}
+	/**
+	 * @return Returns the folder.
+	 */
+	public CachedMHFolder getSourceFolder() {
+		return sourceFolder;
+	}
+	/**
+	 * @see junit.framework.TestCase#tearDown()
+	 */
+	protected void tearDown() throws Exception {
+		File f = sourceFolder.getDirectoryFile();
+		// delete all mails in folder
+		File[] list = f.listFiles();
+		for (int i = 0; i < list.length; i++) {
+			list[i].delete();
+		}
+		// delete folder
+		f.delete();
+		
+		f = destFolder.getDirectoryFile();
+		// delete all mails in folder
+		list = f.listFiles();
+		for (int i = 0; i < list.length; i++) {
+			list[i].delete();
+		}
+		// delete folder
+		f.delete();
+	}
+	/**
+	 * @return Returns the destFolder.
+	 */
+	public CachedMHFolder getDestFolder() {
+		return destFolder;
+	}
+}

@@ -20,6 +20,7 @@ import org.columba.core.command.CompoundCommand;
 import org.columba.core.command.DefaultCommandReference;
 import org.columba.core.command.StatusObservableImpl;
 import org.columba.core.command.Worker;
+import org.columba.core.command.WorkerStatusController;
 import org.columba.core.main.MainInterface;
 
 import org.columba.mail.command.FolderCommandReference;
@@ -48,7 +49,7 @@ public class ApplyFilterCommand extends Command {
     /**
      * @see org.columba.core.command.Command#execute(Worker)
      */
-    public void execute(Worker worker) throws Exception {
+    public void execute(WorkerStatusController worker) throws Exception {
         // get references
         FolderCommandReference[] r = (FolderCommandReference[]) getReferences();
 

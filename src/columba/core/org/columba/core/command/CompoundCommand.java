@@ -78,7 +78,7 @@ public class CompoundCommand extends Command {
     /**
      * @see org.columba.core.command.Command#execute(Worker)
      */
-    public void execute(Worker worker) throws Exception {
+    public void execute(WorkerStatusController worker) throws Exception {
         Command c;
 
         for (Iterator it = commandList.iterator(); it.hasNext();) {

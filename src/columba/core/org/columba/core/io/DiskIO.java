@@ -16,9 +16,6 @@
 
 package org.columba.core.io;
 
-import org.columba.core.main.MainInterface;
-import org.columba.core.logging.ColumbaLogger;
-
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -28,8 +25,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
-
 import java.net.URL;
+
+import org.columba.core.logging.ColumbaLogger;
+import org.columba.core.main.MainInterface;
 
 /**
  * The startup default for installation directory is the system propertry "user.dir".
@@ -58,13 +57,20 @@ public class DiskIO {
             throw new IllegalArgumentException("dir = null");
         }
 
+        // FIXME: do we really need this check here?
+        // --> this dependency on configuration should be removed
+
+        /*
         if (!dir.isAbsolute()) {
             dir = new File(MainInterface.config.getConfigDirectory(), dir.getPath());
         }
+        */
+        
 
         if (!dir.isDirectory()) {
             success = !dir.isFile() && dir.mkdirs();
 
+            
             if (success) {
                 ColumbaLogger.log.info("created directory: " + dir.toString());
             } else {
@@ -72,6 +78,9 @@ public class DiskIO {
                     "failed while trying to create directory: " +
                     dir.toString());
             }
+            
+            
+            
         }
 
         return success;

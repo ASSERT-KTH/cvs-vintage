@@ -27,6 +27,7 @@ import org.columba.core.command.CommandCancelledException;
 import org.columba.core.command.DefaultCommandReference;
 import org.columba.core.command.StatusObservableImpl;
 import org.columba.core.command.Worker;
+import org.columba.core.command.WorkerStatusController;
 import org.columba.core.logging.ColumbaLogger;
 import org.columba.core.main.MainInterface;
 import org.columba.mail.command.FolderCommandReference;
@@ -66,7 +67,7 @@ public class FetchNewMessagesCommand extends Command {
     /**
      * @see org.columba.core.command.Command#execute(Worker)
      */
-    public void execute(Worker worker) throws Exception {
+    public void execute(WorkerStatusController worker) throws Exception {
         POP3CommandReference[] r = (POP3CommandReference[]) getReferences(FIRST_EXECUTION);
 
         server = r[0].getServer();
@@ -128,7 +129,7 @@ public class FetchNewMessagesCommand extends Command {
             message);
     }
 
-    public void downloadMessage(Object serverUID, Worker worker)
+    public void downloadMessage(Object serverUID, WorkerStatusController worker)
         throws Exception {
         // server message numbers start with 1
         // whereas List numbers start with 0
@@ -168,7 +169,7 @@ public class FetchNewMessagesCommand extends Command {
         return totalSize / 1024;
     }
 
-    public void downloadNewMessages(List newMessagesUIDList, Worker worker)
+    public void downloadNewMessages(List newMessagesUIDList, WorkerStatusController worker)
         throws Exception {
         ColumbaLogger.log.fine("need to fetch " + newMessagesUIDList.size() +
             " messages.");

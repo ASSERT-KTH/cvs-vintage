@@ -28,6 +28,7 @@ import org.columba.core.shutdown.ShutdownManager;
 import org.columba.mail.config.MailConfig;
 import org.columba.mail.folder.Folder;
 import org.columba.mail.folder.FolderTreeNode;
+import org.columba.mail.folder.headercache.CachedHeaderfields;
 import org.columba.mail.gui.config.accountwizard.AccountWizardLauncher;
 import org.columba.mail.gui.tree.TreeModel;
 import org.columba.mail.mailchecking.MailCheckingManager;
@@ -67,6 +68,8 @@ public class MailMain extends DefaultMain {
                 System.getProperty("java.protocol.handler.pkgs", "") +
                 "|org.columba.mail.url");
         MailInterface.config = new MailConfig(MainInterface.config);
+        
+        
     }
 
     /* (non-Javadoc)
@@ -148,5 +151,9 @@ public class MailMain extends DefaultMain {
         plugin = new SaveSpamDBPlugin();
         MainInterface.backgroundTaskManager.register(plugin);
         ShutdownManager.getShutdownManager().register(plugin);
+        
+        // initialize cached headers which can be configured by the user
+        // -> see documentation in class
+        CachedHeaderfields.addConfiguration();
     }
 }

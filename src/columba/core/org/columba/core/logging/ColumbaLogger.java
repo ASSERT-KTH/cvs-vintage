@@ -18,10 +18,13 @@ package org.columba.core.logging;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.logging.ConsoleHandler;
+import java.util.logging.FileHandler;
+import java.util.logging.Handler;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import java.util.logging.SimpleFormatter;
 
-import java.util.logging.*;
-
-import org.columba.core.main.MainInterface;
 import org.columba.core.main.MainInterface;
 import org.columba.ristretto.log.RistrettoLogger;
 
@@ -48,7 +51,21 @@ public class ColumbaLogger {
     static {
         log = Logger.getLogger("org.columba");
         log.setUseParentHandlers(false);
-
+        
+        // TODO: only add console handler if command line option is given
+        // init console handler
+        Handler handler = new ConsoleHandler();
+        log.addHandler(handler);
+    }
+    
+    /**
+     * Default logger configuration used by Columba.
+     * <p>
+     * This is called by org.columba.core.main.Main if user didn't overwrite
+     * logger properties using commandline arguments
+     *
+     */
+    public static void addDefaultFileHandler() {
         // create logging file in users config-folder
         File loggingFile = new File(MainInterface.config.getConfigDirectory(), "columba.log");
         Handler handler;
@@ -62,10 +79,7 @@ public class ColumbaLogger {
             // TODO: how to handle this?
         }
 
-        // TODO: only add console handler if command line option is given
-        // init console handler
-        handler = new ConsoleHandler();
-        log.addHandler(handler);
+        
 
         if (MainInterface.DEBUG) {
             log.setLevel(Level.ALL);

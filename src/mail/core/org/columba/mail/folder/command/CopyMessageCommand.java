@@ -19,6 +19,7 @@ import org.columba.core.command.Command;
 import org.columba.core.command.DefaultCommandReference;
 import org.columba.core.command.StatusObservableImpl;
 import org.columba.core.command.Worker;
+import org.columba.core.command.WorkerStatusController;
 import org.columba.core.logging.ColumbaLogger;
 
 import org.columba.mail.command.FolderCommand;
@@ -75,7 +76,7 @@ public class CopyMessageCommand extends FolderCommand {
     /**
      * @see org.columba.core.command.Command#execute(Worker)
      */
-    public void execute(Worker worker) throws Exception {
+    public void execute(WorkerStatusController worker) throws Exception {
         // get references
         FolderCommandReference[] references = (FolderCommandReference[]) getReferences();
 

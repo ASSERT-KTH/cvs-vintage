@@ -17,12 +17,6 @@
 //All Rights Reserved.
 package org.columba.mail.gui.util;
 
-import org.columba.core.command.Worker;
-import org.columba.core.gui.statusbar.event.WorkerStatusChangeListener;
-import org.columba.core.gui.statusbar.event.WorkerStatusChangedEvent;
-import org.columba.core.gui.util.ButtonWithMnemonic;
-import org.columba.core.gui.util.ImageLoader;
-
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.HeadlessException;
@@ -36,6 +30,15 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JProgressBar;
+
+import org.columba.core.command.Command;
+import org.columba.core.command.DefaultProcessor;
+import org.columba.core.command.Worker;
+import org.columba.core.command.WorkerStatusController;
+import org.columba.core.gui.statusbar.event.WorkerStatusChangeListener;
+import org.columba.core.gui.statusbar.event.WorkerStatusChangedEvent;
+import org.columba.core.gui.util.ButtonWithMnemonic;
+import org.columba.core.gui.util.ImageLoader;
 
 
 /**
@@ -54,13 +57,13 @@ public class SendMessageDialog extends JDialog
     private JProgressBar progressBar;
     private JButton cancelButton;
     private JLabel label;
-    private Worker worker;
+    private WorkerStatusController worker;
 
     /**
      * @param arg0
      * @throws java.awt.HeadlessException
      */
-    public SendMessageDialog(Worker worker) throws HeadlessException {
+    public SendMessageDialog(WorkerStatusController worker) throws HeadlessException {
         super(new JFrame(), false);
 
         setTitle("Sending message...");
@@ -166,7 +169,7 @@ public class SendMessageDialog extends JDialog
      * @param worker
      *            The worker to set.
      */
-    public void setWorker(Worker worker) {
+    public void setWorker(WorkerStatusController worker) {
         this.worker = worker;
 
         worker.addWorkerStatusChangeListener(this);

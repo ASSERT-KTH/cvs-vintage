@@ -19,7 +19,6 @@ package org.columba.core.main;
 import java.io.File;
 
 import org.columba.addressbook.main.AddressbookMain;
-
 import org.columba.core.backgroundtask.BackgroundTaskManager;
 import org.columba.core.command.DefaultProcessor;
 import org.columba.core.config.Config;
@@ -29,7 +28,6 @@ import org.columba.core.gui.frame.FrameModel;
 import org.columba.core.gui.themes.ThemeSwitcher;
 import org.columba.core.gui.util.FontProperties;
 import org.columba.core.gui.util.StartUpFrame;
-import org.columba.core.help.HelpManager;
 import org.columba.core.logging.ColumbaLogger;
 import org.columba.core.plugin.ActionPluginHandler;
 import org.columba.core.plugin.ConfigPluginHandler;
@@ -40,13 +38,14 @@ import org.columba.core.plugin.MenuPluginHandler;
 import org.columba.core.plugin.PluginManager;
 import org.columba.core.plugin.ThemePluginHandler;
 import org.columba.core.session.SessionController;
-
+import org.columba.core.util.GlobalResourceLoader;
 import org.columba.mail.main.MailMain;
 
 public class Main {
     private Main() {}
     
     public static void main(String[] args) {
+    
         ColumbaCmdLineParser cmdLineParser = new ColumbaCmdLineParser();
         try {
             cmdLineParser.parseCmdLine(args);
@@ -59,11 +58,17 @@ public class Main {
         String path = cmdLineParser.getPathOption();
         MainInterface.config = new Config(path == null ? null : new File(path));
 
+        // if user doesn't overwrite logger settings with commandline arguments
+        // just initialize default logging 
+        ColumbaLogger.addDefaultFileHandler();
+        
         SessionController.passToRunningSessionAndExit(args);
         
+        
+		
         StartUpFrame frame = new StartUpFrame();
         frame.setVisible(true);
-
+        
         AddressbookMain addressbook = new AddressbookMain();
         addressbook.initConfiguration();
 
@@ -72,6 +77,9 @@ public class Main {
 
         MainInterface.config.init();
 
+        // load user-customized language pack
+        GlobalResourceLoader.loadLanguage();
+        
         MainInterface.clipboardManager = new ClipboardManager();
         MainInterface.focusManager = new FocusManager();
 

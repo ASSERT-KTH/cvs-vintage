@@ -22,7 +22,6 @@ import javax.swing.tree.TreeNode;
 
 import org.columba.core.command.StatusObservable;
 import org.columba.core.command.StatusObservableImpl;
-import org.columba.core.main.MainInterface;
 import org.columba.core.io.DiskIO;
 import org.columba.core.xml.XmlElement;
 import org.columba.mail.config.FolderItem;
@@ -101,6 +100,13 @@ public abstract class Folder
      * accessing the folder.
      */
     protected StatusObservable observable;
+    
+    /**
+     * parent directory for mail folders
+     * 
+     * for example: "/home/donald/.columba/mail/"
+     */
+    private String parentPath;
 
     /**
      * Standard constructor.
@@ -108,7 +114,7 @@ public abstract class Folder
      * @param item <class>FolderItem</class> contains information about
      *             the folder
      */
-    public Folder(FolderItem item) {
+    public Folder(FolderItem item, String path) {
         super(item);
 
         // FIXME: why is this needed?
@@ -118,7 +124,11 @@ public abstract class Folder
 
         changed = false;
 
-        String dir = MainInterface.config.getConfigDirectory() + "/mail/" + getUid();
+        // remember parent path 
+        // (this is necessary for IMAPRootFolder sync operations)
+        parentPath = path;
+        
+        String dir = path + getUid();
 
         if (DiskIO.ensureDirectory(dir)) {
             directoryFile = new File(dir);
@@ -142,14 +152,18 @@ public abstract class Folder
     /**
      * @param type
      */
-    public Folder(String name, String type) {
+    public Folder(String name, String type, String path) {
         super(name, type);
 
         messageFolderInfo = new MessageFolderInfo();
 
         changed = false;
 
-        String dir = MainInterface.config.getConfigDirectory() + "/mail/" + getUid();
+        // remember parent path 
+        // (this is necessary for IMAPFolder sync operations)
+        parentPath = path;
+        
+        String dir = path + getUid();
 
         if (DiskIO.ensureDirectory(dir)) {
             directoryFile = new File(dir);
@@ -448,4 +462,15 @@ public abstract class Folder
     public boolean isTrashFolder() {
         return false;
     }
+    
+	/**
+	 * Parent directory for mail folders.
+	 * <p>
+	 * For example: /home/donald/.columba/mail
+	 * 
+	 * @return Returns the parentPath.
+	 */
+	public String getParentPath() {
+		return parentPath;
+	}
 }

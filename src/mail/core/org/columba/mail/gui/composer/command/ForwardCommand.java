@@ -19,6 +19,7 @@ package org.columba.mail.gui.composer.command;
 
 import org.columba.core.command.DefaultCommandReference;
 import org.columba.core.command.Worker;
+import org.columba.core.command.WorkerStatusController;
 import org.columba.mail.command.FolderCommand;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.composer.MessageBuilderHelper;
@@ -62,7 +63,7 @@ public class ForwardCommand extends FolderCommand {
         controller.updateComponents(true);
     }
 
-    public void execute(Worker worker) throws Exception {
+    public void execute(WorkerStatusController worker) throws Exception {
         // get selected folder
         Folder folder =
             (Folder) ((FolderCommandReference) getReferences()[0]).getFolder();

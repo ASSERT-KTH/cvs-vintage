@@ -118,8 +118,8 @@ public class IMAPFolder extends RemoteFolder {
     /**
      * @see org.columba.mail.folder.FolderTreeNode#FolderTreeNode(org.columba.mail.config.FolderItem)
      */
-    public IMAPFolder(FolderItem folderItem) {
-        super(folderItem);
+    public IMAPFolder(FolderItem folderItem, String path) {
+        super(folderItem, path);
 
         cache = new RemoteHeaderCache(this);
 
@@ -134,8 +134,8 @@ public class IMAPFolder extends RemoteFolder {
     /**
      * @param type
      */
-    public IMAPFolder(String name, String type) throws Exception {
-        super(name, type);
+    public IMAPFolder(String name, String type, String path) throws Exception {
+        super(name, type, path);
 
         existsOnServer = true;
 

@@ -128,6 +128,6 @@ class TestCommand extends Command {
     public void updateGUI() {
     }
 
-    public void execute(Worker worker) throws Exception {
+    public void execute(WorkerStatusController worker) throws Exception {
     }
 }

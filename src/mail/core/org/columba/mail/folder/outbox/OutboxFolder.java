@@ -47,8 +47,8 @@ public class OutboxFolder extends CachedMHFolder {
     private boolean isSending;
     private OutboxHeaderCache cache;
 
-    public OutboxFolder(FolderItem item) {
-        super(item);
+    public OutboxFolder(FolderItem item, String path) {
+        super(item, path);
 
         sendListManager[0] = new SendListManager();
         sendListManager[1] = new SendListManager();

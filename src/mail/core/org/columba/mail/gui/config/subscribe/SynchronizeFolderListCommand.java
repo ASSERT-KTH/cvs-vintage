@@ -30,6 +30,7 @@ import javax.swing.tree.TreeNode;
 
 import org.columba.core.command.Command;
 import org.columba.core.command.Worker;
+import org.columba.core.command.WorkerStatusController;
 import org.columba.core.gui.checkabletree.CheckableItemImpl;
 import org.columba.core.util.ListTools;
 import org.columba.mail.folder.imap.IMAPRootFolder;
@@ -55,7 +56,7 @@ public class SynchronizeFolderListCommand extends Command {
     /* (non-Javadoc)
      * @see org.columba.core.command.Command#execute(org.columba.core.command.Worker)
      */
-    public void execute(Worker worker) throws Exception {
+    public void execute(WorkerStatusController worker) throws Exception {
         root = (IMAPRootFolder) ((SubscribeCommandReference)getReferences()[0]).getFolder();
         
         store = root.getStore();

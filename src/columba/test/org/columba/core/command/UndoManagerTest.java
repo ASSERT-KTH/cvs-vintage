@@ -170,7 +170,7 @@ class TestUndoCommand extends Command {
     public void updateGUI() {
     }
 
-    public void execute(Worker worker) throws Exception {
+    public void execute(WorkerStatusController worker) throws Exception {
     }
 
     public void undo(Worker worker) throws Exception {
@@ -190,6 +190,6 @@ class TestNoChangeCommand extends Command {
     public void updateGUI() {
     }
 
-    public void execute(Worker worker) throws Exception {
+    public void execute(WorkerStatusController worker) throws Exception {
     }
 }

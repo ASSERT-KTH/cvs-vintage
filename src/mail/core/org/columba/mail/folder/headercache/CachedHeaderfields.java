@@ -40,6 +40,17 @@ public class CachedHeaderfields {
     protected static XmlElement headercache;
 
     static {
+        // initialize user-defined element as empty 
+    	// -> this is necessary to also work with testcases
+    	// -> which don't use Columba's configuration
+    	headercache = new XmlElement("headercache");
+    }
+    
+    /**
+     * Call this from MailMain to add user-defined headerfields
+     *
+     */
+    public static void addConfiguration() {
         // see if we have to cache additional headerfields
         // which are added by the user
         XmlElement options = MailInterface.config.get("options").getElement("/options");
