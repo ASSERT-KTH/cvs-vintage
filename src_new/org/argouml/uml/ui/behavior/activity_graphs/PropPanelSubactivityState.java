@@ -1,4 +1,4 @@
-// $Id: PropPanelCallState.java,v 1.2 2004/08/02 21:35:42 mvw Exp $
+// $Id: PropPanelSubactivityState.java,v 1.1 2004/08/02 21:35:42 mvw Exp $
 // Copyright (c) 2003-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -24,36 +24,21 @@
 
 package org.argouml.uml.ui.behavior.activity_graphs;
 
-import javax.swing.ImageIcon;
-
-import org.argouml.i18n.Translator;
-import org.argouml.swingext.Orientation;
+import org.argouml.uml.ui.behavior.state_machines.PropPanelSubmachineState;
 import org.argouml.util.ConfigLoader;
 
 /**
- * 
- * @author mkl
- *  
- */
-public class PropPanelCallState extends PropPanelActionState {
+* 
+* @author mvw
+*  
+*/
+public class PropPanelSubactivityState extends PropPanelSubmachineState {
 
-    /**
-     *  
-     */
-    public PropPanelCallState() {
-        this("CallState", _callStateIcon, ConfigLoader
-                .getTabPropsOrientation());
+ /**
+  * Constructor
+  */
+    public PropPanelSubactivityState() { 
+        super("SubactivityState", _subactivityStateIcon, ConfigLoader
+             .getTabPropsOrientation());    
     }
-
-    /**
-     * @param name
-     * @param icon
-     * @param orientation
-     */
-    public PropPanelCallState(String name, ImageIcon icon,
-            Orientation orientation) {
-        super(name, icon, orientation);
-        
-    }
-
 }

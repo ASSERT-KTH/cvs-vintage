@@ -1,4 +1,4 @@
-// $Id: ResourceLoaderWrapper.java,v 1.16 2004/07/18 10:52:24 linus Exp $
+// $Id: ResourceLoaderWrapper.java,v 1.17 2004/08/02 21:35:44 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -76,6 +76,14 @@ public final class ResourceLoaderWrapper {
 	ResourceLoader.lookupIconResource("SignalSending");
     private static ImageIcon commentIcon =
 	ResourceLoader.lookupIconResource("Note");
+    private static ImageIcon callStateIcon =
+        ResourceLoader.lookupIconResource("CallState");
+    private static ImageIcon objectFlowStateIcon =
+        ResourceLoader.lookupIconResource("ObjectFlowState");
+    private static ImageIcon subactivityStateIcon =
+        ResourceLoader.lookupIconResource("SubactivityState");
+
+
 
     private Hashtable iconCache = new Hashtable();
 
@@ -260,10 +268,10 @@ public final class ResourceLoaderWrapper {
 		if (helper.equalsINITIALKind(kind)) {
 		    icon = initialStateIcon;
 		}
-		if (helper.equalsDEEP_HISTORYKind(kind)) {
+		if (helper.equalsDeepHistoryKind(kind)) {
 		    icon = deepIcon;
 		}
-		if (helper.equalsSHALLOW_HISTORYKind(kind)) {
+		if (helper.equalsShallowHistoryKind(kind)) {
 		    icon = shallowIcon;
 		}
 		if (helper.equalsFORKKind(kind)) {

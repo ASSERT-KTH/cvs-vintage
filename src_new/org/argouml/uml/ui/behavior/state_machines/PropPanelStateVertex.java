@@ -1,4 +1,4 @@
-// $Id: PropPanelStateVertex.java,v 1.16 2004/07/31 08:31:57 mkl Exp $
+// $Id: PropPanelStateVertex.java,v 1.17 2004/08/02 21:35:42 mvw Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -54,6 +54,9 @@ public abstract class PropPanelStateVertex extends PropPanelModelElement {
     protected static ImageIcon _compositeStateIcon = ResourceLoaderWrapper
             .lookupIconResource("CompositeState");
 
+    protected static ImageIcon _submachineStateIcon = ResourceLoaderWrapper
+        .lookupIconResource("SubmachineState");
+
     protected static ImageIcon _simpleStateIcon = ResourceLoaderWrapper
             .lookupIconResource("SimpleState");
 
@@ -74,6 +77,15 @@ public abstract class PropPanelStateVertex extends PropPanelModelElement {
 
     protected static ImageIcon _joinIcon = ResourceLoaderWrapper
             .lookupIconResource("Join");
+    
+    protected static ImageIcon _callStateIcon = ResourceLoaderWrapper
+            .lookupIconResource("CallState");
+    
+    protected static ImageIcon _objectFlowStateIcon = ResourceLoaderWrapper
+            .lookupIconResource("ObjectFlowState");
+    
+    protected static ImageIcon _subactivityStateIcon = ResourceLoaderWrapper
+            .lookupIconResource("SubactivityState");
 
     protected static ImageIcon _transitionIcon = ResourceLoaderWrapper
             .lookupIconResource("Transition");

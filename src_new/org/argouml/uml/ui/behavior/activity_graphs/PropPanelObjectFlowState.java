@@ -1,4 +1,4 @@
-// $Id: PropPanelObjectFlowState.java,v 1.1 2004/07/31 08:31:57 mkl Exp $
+// $Id: PropPanelObjectFlowState.java,v 1.2 2004/08/02 21:35:42 mvw Exp $
 // Copyright (c) 2003-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -34,8 +34,11 @@ import org.argouml.util.ConfigLoader;
  */
 public class PropPanelObjectFlowState extends PropPanelSimpleState {
 
+    /**
+     * Constructor
+     */
     public PropPanelObjectFlowState() {
-        super("ObjectFlowState", _actionStateIcon, ConfigLoader
+        super("ObjectFlowState", _objectFlowStateIcon, ConfigLoader
                 .getTabPropsOrientation());    
     }
 }

@@ -1,4 +1,4 @@
-// $Id: PropPanelActionState.java,v 1.17 2004/07/31 08:31:57 mkl Exp $
+// $Id: PropPanelActionState.java,v 1.18 2004/08/02 21:35:42 mvw Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: PropPanelState.java
 // Classes: PropPanelState
 // Original Author: your email address here
-// $Id: PropPanelActionState.java,v 1.17 2004/07/31 08:31:57 mkl Exp $
+// $Id: PropPanelActionState.java,v 1.18 2004/08/02 21:35:42 mvw Exp $
 
 package org.argouml.uml.ui.behavior.activity_graphs;
 
@@ -51,7 +51,7 @@ public class PropPanelActionState extends PropPanelState {
     public PropPanelActionState(String name, ImageIcon icon,
             Orientation orientation) {
 
-        super("Action State", _actionStateIcon, orientation);
+        super(name, _actionStateIcon, orientation);
 
         addField(Translator.localize("UMLMenu", "label.name"),
                 getNameTextField());

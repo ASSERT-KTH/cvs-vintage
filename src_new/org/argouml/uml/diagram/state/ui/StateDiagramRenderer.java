@@ -1,4 +1,4 @@
-// $Id: StateDiagramRenderer.java,v 1.21 2004/07/18 18:56:03 kataka Exp $
+// $Id: StateDiagramRenderer.java,v 1.22 2004/08/02 21:35:44 mvw Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -71,15 +71,12 @@ import org.tigris.gef.presentation.FigNode;
 public class StateDiagramRenderer
     implements GraphNodeRenderer, GraphEdgeRenderer
 {
-    /** @deprecated by MVW in 0.16. Use LOG instead.
-    */
-    protected static Logger cat = 
-        Logger.getLogger(StateDiagramRenderer.class);
-    
     private static final Logger LOG = 
         Logger.getLogger(StateDiagramRenderer.class);
 
-    /** Return a Fig that can be used to represent the given node 
+    /** 
+     * Return a Fig that can be used to represent the given node 
+     *
      * @see org.tigris.gef.graph.GraphNodeRenderer#getFigNodeFor(org.tigris.gef.graph.GraphModel, org.tigris.gef.base.Layer, java.lang.Object)
      */
     public FigNode getFigNodeFor(GraphModel gm, Layer lay, Object node) {
