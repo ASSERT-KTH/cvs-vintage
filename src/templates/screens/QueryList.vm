@@ -10,7 +10,7 @@
 <input type="hidden" name="$scarabG.Constant.NEXT_TEMPLATE" value="QueryList.vm" />
 
 
-<p>Click query name to edit. Click on location to execute.</p>
+<p>Click on name to modify the saved query. Click on availability to execute.</p>
 
 <div class="functnbar">        
 <input type="submit" value="Done"  name="eventSubmit_doSave" />&#160;
@@ -64,11 +64,11 @@
   <th nowrap="nowrap">Select</th>
   <th>Subscribe</th>
   <th>Subscribe frequency</th>
-  <th>#sort ("name" "Query name")
-  <th>#sort ("desc" "Query description")</th>
+  <th>#sort ("name" "Name")
+  <th>#sort ("desc" "Description")</th>
   <th>Default</th>
   <th>#sort ("avail" "Availability")</th>
-  <th>#sort ("user" "Initiated by")</th>
+  <th>#sort ("user" "Created by")</th>
  </tr>
  
  #foreach ($query in $allQueries)
