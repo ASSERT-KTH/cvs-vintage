@@ -58,6 +58,7 @@ import org.apache.turbine.TemplateContext;
 import org.apache.turbine.modules.ContextAdapter;
 
 import org.apache.torque.om.NumberKey; 
+import org.apache.torque.om.ObjectKey; 
 import org.apache.torque.util.Criteria;
 
 // Scarab Stuff
@@ -76,6 +77,7 @@ import org.tigris.scarab.om.AttributeValue;
 import org.tigris.scarab.om.Transaction;
 import org.tigris.scarab.om.Activity;
 import org.tigris.scarab.om.ScarabUser;
+import org.tigris.scarab.om.ScarabUserImplPeer;
 import org.tigris.scarab.om.ScarabModule;
 import org.tigris.scarab.om.ScarabModulePeer;
 import org.tigris.scarab.attribute.OptionAttribute;
@@ -85,7 +87,7 @@ import org.tigris.scarab.attribute.OptionAttribute;
     This class is responsible for moving/copying an issue from one module to another.
     ScarabIssueAttributeValue
     @author <a href="mailto:elicia@collab.net">Elicia David</a>
-    @version $Id: MoveIssue.java,v 1.3 2001/09/04 22:02:08 elicia Exp $
+    @version $Id: MoveIssue.java,v 1.4 2001/09/04 23:08:38 elicia Exp $
 */
 public class MoveIssue extends TemplateAction
 {
@@ -189,8 +191,22 @@ public class MoveIssue extends TemplateAction
             for (int i=0;i<orphanAttributes.size();i++)
             {
                AttributeValue attVal = (AttributeValue) orphanAttributes.get(i);
+System.out.println(attVal + "=" + attVal.getAttributeOption());
                dataBuf.append(attVal.getAttribute().getName());
-               dataBuf.append("=").append(attVal.getAttributeOption().getName());
+               String field = null;
+               if (attVal.getAttribute().getAttributeType().getName().equals("combo-box"))
+               {
+                   field = attVal.getAttributeOption().getName();
+               } 
+               else if (attVal.getAttribute().getAttributeType().getName().equals("user"))
+               {
+                   ScarabUser assignedUser = (ScarabUser) ScarabUserImplPeer
+                                  .retrieveScarabUserImplByPK((ObjectKey)attVal.getUserId());
+                   field = assignedUser.getUserName();
+               } 
+            
+           
+               dataBuf.append("=").append(field);
                if (i < orphanAttributes.size()-1 )
                {
                   dataBuf.append(",");
