@@ -85,7 +85,7 @@ deployed
 3- the deployer can specify runtime jndi names for resource managers.
 
 -->
-<!ELEMENT jboss (enforce-ejb-restrictions? , security-domain? , unauthenticated-principal?, enterprise-beans? , resource-managers? , container-configurations?)>
+<!ELEMENT jboss (enforce-ejb-restrictions? , security-domain? , unauthenticated-principal? , enterprise-beans? , resource-managers? , container-configurations?)>
 
 <!--
   The enforce-ejb-restrictions element tells the container to enforce ejb1.1 restrictions
@@ -161,7 +161,7 @@ any other beans.
     
     Used in: enterprise-beans
     -->
-<!ELEMENT message-driven (ejb-name, destination-jndi-name, configuration-name? , security-proxy? , ejb-ref* , resource-ref* , resource-env-ref*)>
+<!ELEMENT message-driven (ejb-name , destination-jndi-name , configuration-name? , security-proxy? , ejb-ref* , resource-ref* , resource-env-ref*)>
 
 <!-- 
       The ejb-name element gives the name of the bean, it must correspond to 
@@ -190,6 +190,7 @@ any other beans.
       Used in: entity, session, and message-driven
       -->
 <!ELEMENT configuration-name (#PCDATA)>
+
 <!ELEMENT destination-jndi-name (#PCDATA)>
 
 <!-- The security-proxy gives the class name of the security proxy implementation.
@@ -587,8 +588,11 @@ default if metricsEnabled is not explicitly given.
         Used in: container-invoker-conf for JRMPContainerInvoker
 	-->
 <!ELEMENT RMIServerSocketFactory (#PCDATA)>
+
 <!ELEMENT JMSProviderAdapterJNDI (#PCDATA)>
+
 <!ELEMENT ServerSessionPoolFactoryJNDI (#PCDATA)>
+
 <!ELEMENT MaxMessages (#PCDATA)>
 
 <!-- 
@@ -690,7 +694,7 @@ default if metricsEnabled is not explicitly given.
 
       Used in: container-configuration
       -->
-<!ELEMENT container-pool-conf (MaximumSize , MinimumSize)>
+<!ELEMENT container-pool-conf ((MaximumSize , MinimumSize) | Synchronized)>
 
 <!-- 
         This element is only valid if the instance pool is a subclass of
@@ -713,6 +717,18 @@ default if metricsEnabled is not explicitly given.
         Used in: container-pool-conf for AbstractInstancePool subclasses
         -->
 <!ELEMENT MinimumSize (#PCDATA)>
+
+<!--
+         This element is only valid if the instance pool is 
+StatelessSessionInstancePool.
+
+         The Synchronized element instructs the the pool to synchronize 
+calls to the Session bean.
+         Its value must be true or false.
+
+         Used in: container-pool-conf for StatelessSessionInstancePool
+ -->
+<!ELEMENT Synchronized (#PCDATA)>
 
 <!--
       This option is only used for entity container configurations.
