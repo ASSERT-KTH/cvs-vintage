@@ -219,7 +219,8 @@
 <td><select name="template_code">
 <option value="1"
   #if ($userPref == 1) selected="selected" #end>Enter new issue </option>
-#if ($scarabR.hasPermission($scarabG.Permission.ISSUE__ASSIGN, $module))
+#if (($scarabR.hasPermission($scarabG.Permission.ISSUE__ASSIGN, $module))
+     && (!$module.getUserAttributes($issueType).isEmpty()))
   <option value="2"
   #if ($userPref == 0 || $userPref == 2) selected="selected" #end>Assign issue</option>
 #end
