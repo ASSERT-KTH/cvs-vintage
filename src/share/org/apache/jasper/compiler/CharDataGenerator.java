@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/CharDataGenerator.java,v 1.5 2001/12/04 02:21:04 larryi Exp $
- * $Revision: 1.5 $
- * $Date: 2001/12/04 02:21:04 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/CharDataGenerator.java,v 1.6 2002/08/18 01:53:38 keith Exp $
+ * $Revision: 1.6 $
+ * $Date: 2002/08/18 01:53:38 $
  *
  * ====================================================================
  * 
@@ -123,7 +123,7 @@ public class CharDataGenerator
 		sb.append("\\t");
 		break;
 	    default:
-		sb.append((char) ch);
+		this.writeChar((char) ch, sb);
 	    }
 	}
 	writer.print(sb.toString());
@@ -131,6 +131,18 @@ public class CharDataGenerator
 	writer.println();
     }
 
-
+    protected void writeChar( char c, StringBuffer buf ) {
+        if ( c < 128 )
+    	// if char is pure ASCII -> write it
+            buf.append( c );
+        else {
+        // if char isn't pure ASCII -> write it's unicode
+            buf.append( "\\u" );
+            String hexa = Integer.toHexString( c );
+            for( int i = hexa.length() ; i < 4 ; i++ )
+                buf.append( '0' );
+            buf.append( hexa );
+        }
+    }
 
 }
