@@ -25,7 +25,7 @@
 // File: PropPanelComponent.java
 // Classes: PropPanelComponent
 // Original Author: 5eichler@informatik.uni-hamburg.de
-// $Id: PropPanelComponent.java,v 1.15 2002/12/06 10:54:51 kataka Exp $
+// $Id: PropPanelComponent.java,v 1.16 2002/12/06 20:48:22 kataka Exp $
 
 // 21 Mar 2002: Jeremy Bennett (mail@jeremybennett.com). Changed to use the
 // labels "Generalizes:" and "Specializes:" for inheritance.
@@ -37,15 +37,15 @@
 
 package org.argouml.uml.ui.foundation.core;
 
-import java.awt.*;
-import java.util.Vector;
+import java.awt.GridLayout;
 
-import javax.swing.*;
-import ru.novosoft.uml.foundation.core.*;
+import javax.swing.JPanel;
 
-import org.argouml.application.api.*;
-import org.argouml.model.uml.foundation.core.CoreHelper;
-import org.argouml.uml.ui.*;
+import org.argouml.application.api.Argo;
+import org.argouml.uml.ui.PropPanelButton;
+import org.argouml.uml.ui.UMLCheckBox;
+import org.argouml.uml.ui.UMLReflectionBooleanProperty;
+import ru.novosoft.uml.foundation.core.MComponent;
 
 
 public class PropPanelComponent extends PropPanelClassifier {
