@@ -1,4 +1,4 @@
-// $Id: FigNodeModelElement.java,v 1.142 2005/01/23 20:41:15 mvw Exp $
+// $Id: FigNodeModelElement.java,v 1.143 2005/01/23 21:08:59 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -235,7 +235,7 @@ public abstract class FigNodeModelElement
     private ItemUID itemUid;
 
     /**
-     * Set the removeFromDiagram to false if this edge may not 
+     * Set the removeFromDiagram to false if this node may not 
      * be removed from the diagram.
      */
     private boolean removeFromDiagram = true;

@@ -1,4 +1,4 @@
-// $Id: CommentEdge.java,v 1.7 2005/01/22 22:08:44 bobtarling Exp $
+// $Id: CommentEdge.java,v 1.8 2005/01/23 21:08:58 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -108,8 +108,9 @@ public class CommentEdge {
         if (ModelFacade.isAComment(source)) {
             Model.getCoreHelper().removeAnnotatedElement(source, dest);
         } else {
-            // save to presume the destination is the comment
-            Model.getCoreHelper().removeAnnotatedElement(dest, source);
+            // not save to presume the destination is the comment
+            if (ModelFacade.isAComment(dest))
+                Model.getCoreHelper().removeAnnotatedElement(dest, source);
         }
     }
 }

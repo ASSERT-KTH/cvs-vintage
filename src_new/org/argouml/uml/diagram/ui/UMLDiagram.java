@@ -1,4 +1,4 @@
-// $Id: UMLDiagram.java,v 1.65 2005/01/09 14:58:57 linus Exp $
+// $Id: UMLDiagram.java,v 1.66 2005/01/23 21:08:59 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -94,8 +94,9 @@ public abstract class UMLDiagram
      * Tool to add a comment node.
      */
     private static Action actionComment =
-	new RadioAction(new CmdCreateNode(ModelFacade.COMMENT, "Note"));
-
+//	new RadioAction(new CmdCreateNode(ModelFacade.COMMENT, "Note"));
+        new RadioAction(new ActionAddNote());
+        
     /**
      * Tool to create an relationship between a comment node and some other node
      * using a polyedge.<p>

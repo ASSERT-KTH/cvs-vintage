@@ -1,4 +1,4 @@
-// $Id: FigInterface.java,v 1.87 2005/01/20 23:20:39 linus Exp $
+// $Id: FigInterface.java,v 1.88 2005/01/23 21:08:58 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -256,7 +256,7 @@ public class FigInterface extends FigNodeModelElement
         // Add ...
         ArgoJMenu addMenu = new ArgoJMenu("menu.popup.add");
         addMenu.add(new ActionAddOperation());
-        addMenu.add(ActionAddNote.getSingleton());
+        addMenu.add(new ActionAddNote());
         popUpActions.insertElementAt(addMenu,
             popUpActions.size() - POPUP_ADD_OFFSET);
 
@@ -546,7 +546,8 @@ public class FigInterface extends FigNodeModelElement
 	        && (ModelFacade.isAComponent(encloser.getOwner()))) {
             Object component = /*(MComponent)*/ encloser.getOwner();
             Object in = /*(MInterface)*/ getOwner();
-            Model.getCoreHelper().setImplementationLocation(resident, component);
+            Model.getCoreHelper().setImplementationLocation(resident, 
+                    component);
             Model.getCoreHelper().setResident(resident, in);
         } else {
             Model.getCoreHelper().setImplementationLocation(resident, null);

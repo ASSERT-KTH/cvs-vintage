@@ -1,4 +1,4 @@
-// $Id: FigClass.java,v 1.129 2005/01/22 12:55:26 bobtarling Exp $
+// $Id: FigClass.java,v 1.130 2005/01/23 21:08:58 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -283,7 +283,7 @@ public class FigClass extends FigNodeModelElement
         ArgoJMenu addMenu = new ArgoJMenu("menu.popup.add");
         addMenu.add(new ActionAddAttribute());
         addMenu.add(new ActionAddOperation());
-        addMenu.add(ActionAddNote.getSingleton());
+        addMenu.add(new ActionAddNote());
         popUpActions.insertElementAt(addMenu,
             popUpActions.size() - POPUP_ADD_OFFSET);
 
@@ -1024,7 +1024,8 @@ public class FigClass extends FigNodeModelElement
         if (isCheckSize()) {
             height = ROWHEIGHT * attributeCount + 2 + extraEach;
         } else if (newH > currentY - y && attributeCount + operationCount > 0) {
-            height = (newH + y - currentY) * attributeCount / (attributeCount + operationCount) + 1;
+            height = (newH + y - currentY) * attributeCount 
+                        / (attributeCount + operationCount) + 1;
         } else {
             height = 1;
         }
