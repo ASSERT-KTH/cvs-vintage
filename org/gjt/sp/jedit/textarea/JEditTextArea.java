@@ -50,7 +50,7 @@ import org.gjt.sp.util.Log;
  * jEdit's text component.
  *
  * @author Slava Pestov
- * @version $Id: JEditTextArea.java,v 1.140 2002/06/20 05:22:33 spestov Exp $
+ * @version $Id: JEditTextArea.java,v 1.141 2002/06/20 10:33:20 spestov Exp $
  */
 public class JEditTextArea extends JComponent
 {
@@ -6143,10 +6143,12 @@ loop:			for(int i = lineNo + 1; i < getLineCount(); i++)
 			if(dragStartOffset == getLineLength(dragStartLine))
 				dragStartOffset--;
 
+			boolean joinNonWordChars =
+				jEdit.getBooleanProperty("view.joinNonWordChars");
 			int wordStart = TextUtilities.findWordStart(lineText,
-				dragStartOffset,noWordSep);
+				dragStartOffset,noWordSep,joinNonWordChars);
 			int wordEnd = TextUtilities.findWordEnd(lineText,
-				dragStartOffset+1,noWordSep);
+				dragStartOffset+1,noWordSep,joinNonWordChars);
 
 			int lineStart = getLineStartOffset(dragStartLine);
 			addToSelection(new Selection.Range(lineStart + wordStart,

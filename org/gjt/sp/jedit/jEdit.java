@@ -50,7 +50,7 @@ import org.gjt.sp.util.Log;
 /**
  * The main class of the jEdit text editor.
  * @author Slava Pestov
- * @version $Id: jEdit.java,v 1.77 2002/06/19 05:12:22 spestov Exp $
+ * @version $Id: jEdit.java,v 1.78 2002/06/20 10:33:20 spestov Exp $
  */
 public class jEdit
 {
@@ -581,7 +581,7 @@ public class jEdit
 		{
 			try
 			{
-				return Integer.parseInt(value);
+				return Integer.parseInt(value.trim());
 			}
 			catch(NumberFormatException nf)
 			{
@@ -589,6 +589,26 @@ public class jEdit
 			}
 		}
 	} //}}}
+
+	//{{{ getDoubleProperty() method
+	public static double getDoubleProperty(String name, double def)
+	{
+		String value = getProperty(name);
+		if(value == null)
+			return def;
+		else
+		{
+			try
+			{
+				return Double.parseDouble(value.trim());
+			}
+			catch(NumberFormatException nf)
+			{
+				return def;
+			}
+		}
+	}
+	//}}}
 
 	//{{{ getFontProperty() method
 	/**
@@ -771,26 +791,6 @@ public class jEdit
 	public static final void setDoubleProperty(String name, double value)
 	{
 		setProperty(name,String.valueOf(value));
-	}
-	//}}}
-
-	//{{{ getDoubleProperty() method
-	public static double getDoubleProperty(String name, double def)
-	{
-		String value = getProperty(name);
-		if(value == null)
-			return def;
-		else
-		{
-			try
-			{
-				return Double.parseDouble(value);
-			}
-			catch(NumberFormatException nf)
-			{
-				return def;
-			}
-		}
 	}
 	//}}}
 

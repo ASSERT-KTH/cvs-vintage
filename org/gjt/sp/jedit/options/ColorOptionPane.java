@@ -41,7 +41,7 @@ import org.gjt.sp.jedit.*;
 /**
  * Color option pane.
  * @author Slava Pestov
- * @version $Id: ColorOptionPane.java,v 1.7 2002/05/14 10:52:02 spestov Exp $
+ * @version $Id: ColorOptionPane.java,v 1.8 2002/06/20 10:33:20 spestov Exp $
  */
 public class ColorOptionPane extends AbstractOptionPane
 {
@@ -152,7 +152,7 @@ class ColorTableModel extends AbstractTableModel
 		addColorChoice("options.color.gutterCurrentLineColor",
 			"view.gutter.currentLineColor");
 		addColorChoice("options.color.gutterBracketHighlightColor",
-			"view.bracketHighlightColor");
+			"view.gutter.bracketHighlightColor");
 		addColorChoice("options.color.gutterMarkerColor",
 			"view.gutter.markerColor");
 		addColorChoice("options.color.gutterFoldColor",
