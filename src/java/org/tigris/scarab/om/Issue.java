@@ -267,6 +267,28 @@ public class Issue
         attachment.setMimeType("text/plain");
         attachment.save();
     }
+    
+    /**
+     * Adds an attachment file to this issue
+     */
+    public void addFile(Attachment attachment)
+        throws Exception
+    {
+        attachment.setTypeId(Attachment.FILE__PK);
+        addAttachment(attachment);
+    }
+    
+    /** 
+     * Remove an attachment file
+     */
+    public void removeFile(String index)
+        throws Exception
+    {
+        //note the following code minus 1 because velocityCount start from 1
+        //but Vector start from 0
+        getAttachments().remove(Integer.parseInt(index) - 1);
+    }
+    
 
     /**
      * Use this instead of setScarabModule.
@@ -380,10 +402,6 @@ public class Issue
         return aval;
     }
 
-
-    /**
-     * Returns AttributeValues for the Attribute (which have not been deleted.)
-     */
     public List getAttributeValues(Attribute attribute)
        throws Exception
     {
@@ -392,6 +410,11 @@ public class Issue
             .add(AttributeValuePeer.ATTRIBUTE_ID, attribute.getAttributeId());
 
         return getAttributeValues(crit);
+/*
+        AttributeValue[] avalsArray = new AttributeValue[avals.size()];
+        
+        return (AttributeValue[]) avals.toArray(avalsArray);
+*/
     }
 
     public boolean isAttributeValue(AttributeValue attVal)
@@ -533,36 +556,18 @@ public class Issue
     /**
      * Users who can be assigned to this issue.  if a user has already
      * been assigned to this issue, they will not show up in this list.
-     * use module.getEligibleUsers(Attribute) to get a complete list.
-     *
-     * FIXME!  this method should be removed as there should be no special
-     * treatment of this attribute.  Places where it is used should be made
-     * more general and then use the getEligibleUsers(Attribute) method.
      *
      * @return a <code>List</code> value
      */
     public List getEligibleAssignees()
         throws Exception
     {
-        Attribute assigneeAttribute = Attribute
+        // get users who are candidates for the assigned_to attribute
+        Attribute attribute = Attribute
             .getInstance(AttributePeer.ASSIGNED_TO__PK);
-        return getEligibleUsers(assigneeAttribute);
-    }
-
-    /**
-     * Users who are valid values to the attribute this issue.  
-     * if a user has already
-     * been assigned to this issue, they will not show up in this list.
-     * use module.getEligibleUsers(Attribute) to get a complete list.
-     *
-     * @return a <code>List</code> value
-     */
-    public List getEligibleUsers(Attribute attribute)
-        throws Exception
-    {
         ScarabUser[] users = getModule().getEligibleUsers(attribute);
         // remove those already assigned
-        List assigneeAVs = getAttributeValues(attribute);
+        List assigneeAVs = getAssigneeAttributeValues();
         if ( users != null && assigneeAVs != null ) 
         {        
             for ( int i=users.length-1; i>=0; i-- ) 
@@ -596,6 +601,24 @@ public class Issue
     }
 
     /**
+     * Returns userids, the value of the "AssignedTo" Attribute 
+     */
+    public List getAssigneeAttributeValues() throws Exception
+    {
+        ArrayList assignees = new ArrayList();
+        Criteria crit = new Criteria()
+            .add(AttributeValuePeer.ATTRIBUTE_ID,AttributePeer.ASSIGNED_TO__PK)
+            .add(AttributeValuePeer.DELETED, false);
+        List attValues = getAttributeValues(crit);
+        for ( int i=0; i<attValues.size(); i++ ) 
+        {
+            AttributeValue attVal = (AttributeValue) attValues.get(i);
+            assignees.add(attVal.getValue());
+        }
+        return attValues;
+    }
+
+    /**
      * Returns list of user(s) who are assigned to the issue,
      * Plus the user who created the issue, and who last modified it.
      */
@@ -615,11 +638,10 @@ public class Issue
             associatedUsersIds.add(tmp.getUserId());
         }
 
-        // get users who are candidates for the assigned_to attribute
-        Iterator iter =  getEligibleAssignees().iterator();   
+        Iterator iter =  getAssigneeAttributeValues().iterator();   
         while ( iter.hasNext() ) 
         {
-           associatedUsersIds.add(((ScarabUser)iter.next()).getUserId()); 
+           associatedUsersIds.add(((AttributeValue)iter.next()).getUserId()); 
         }
 
         for ( int i=0; i<associatedUsersIds.size(); i++ ) 
