@@ -1,0 +1,68 @@
+- I tested the scripts on linux and solaris - only standard bourne shell
+ is used
+
+- this is based on my early attempt based on ant - I'll try again later,
+now .sh does the job and it's enough
+
+To run the tests: 
+
+1. make sure .antrc and .antproperties are clean
+2. You need the following directory structure ( or edit the .sh files to
+match your - the scripts are not very configurable, it's just a tool to
+build ):
+
+$HOME: ( the home directory of the user who have the crontab job ):
+
+$HOME/bin/nightly/* -> the scripts
+$HOME/java/jsse -> jsse jars ( jcert.jar jnet.jar jsse.jar)
+$HOME/java/xml -> jaxp jars ( jaxp.jar parser.jar )
+$HOME/java/java1.1 -> link to a working 1.1 jdk installation
+$HOME/java/java1.2 -> link to a working 1.2+ jdk
+$HOME/opt/ant-1.2 -> link to ant 1.2
+$HOME/opt/ant-1.1 -> link to ant 1.1 ( needed by watchdog )
+$HOME/opt/ws/log -> empty dir
+$HOME/opt/ws/zip -> empty dir
+$HOME/opt/ws/build -> empty dir
+
+You must do "cvs login" first, so the passowrd is stored in .cvspass.
+
+- If behind a firewall, you can use "runsocks nightly.sh" ( or 
+"socksify nightly.sh" ).
+
+You must run "weekly.sh" to get the initial CVS repository and build 
+servletapi and watchdog for the first time.
+
+Then nightly.sh will only update ( cvs update ) to minimize time.
+
+What's inside ?
+===============
+
+weekly.sh -> get jakarta-tomcat, watchdog, tools, build everything for the 
+             first time ( it's a fresh checkout - old dirs are removed )
+
+nightly.sh -> main driver, call various build and test functions and
+            scripts with  various JDKs and CLASSPATHS
+
+start_tomcat.sh -> a tricky one - start tomcat and wait till it's ready 
+             ( by grep-ping the log file for HttpInterceptor starting )
+
+stop_tomcat.sh -> ATTENTION: it'll first try to be nice, but then it'll
+             kill all java processes ( pkill, killall ) - use a separate
+             account for building ( and not root ) (XXX do a grep first )
+
+run_watchdog.sh -> start, run watchdog 3 times, run sanity, grep the
+             results for error counts 
+
+cvs_get.sh -> update or clean checkoug, for tomcat or all
+
+build_tomcat.sh -> just build and zip the result ( after adding jaxp )
+
+functions_build.sh -> various shell functions ( I use to source it and 
+             use them in command line to repeat individual steps )
+
+
+NOTE: don't expect nice code, it's just a hack to build and test tomcat.
+It may be useful - if it's not, ignore this directory.
+
+
+Costin 
