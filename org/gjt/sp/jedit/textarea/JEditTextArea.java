@@ -47,7 +47,7 @@ import org.gjt.sp.util.Log;
  * jEdit's text component.
  *
  * @author Slava Pestov
- * @version $Id: JEditTextArea.java,v 1.49 2001/12/23 08:42:59 spestov Exp $
+ * @version $Id: JEditTextArea.java,v 1.50 2001/12/24 03:19:19 spestov Exp $
  */
 public class JEditTextArea extends JComponent
 {
@@ -702,6 +702,8 @@ public class JEditTextArea extends JComponent
 	 */
 	public int offsetToX(int line, int offset)
 	{
+		return 0;
+		/*
 		getLineText(line,lineSegment);
 
 		TextAreaPainter.Chunk chunks = painter.lineToChunkList(lineSegment,
@@ -729,7 +731,7 @@ public class JEditTextArea extends JComponent
 			chunks = chunks.next;
 		}
 
-		return (int)(x + horizontalOffset);
+		return (int)(x + horizontalOffset);*/
 	} //}}}
 
 	//{{{ xToOffset() method
@@ -753,6 +755,8 @@ public class JEditTextArea extends JComponent
 	 */
 	public int xToOffset(int line, int x, boolean round)
 	{
+		return 0;
+		/*
 		x -= horizontalOffset;
 
 		getLineText(line,lineSegment);
@@ -780,7 +784,7 @@ public class JEditTextArea extends JComponent
 			chunks = chunks.next;
 		}
 
-		return length;
+		return length;*/
 	} //}}}
 
 	//{{{ xyToOffset() method
