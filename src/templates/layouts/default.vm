@@ -12,7 +12,7 @@
     <tr>
      <!-- Top -->
 
-     <td id="globalnav" colspan="2"><a href="#">globalfeaturenav</a> | <a href="#">item1</a> | <a href="#">item2</a> </td>
+     <td class="globalnav" colspan="2"><a href="#">globalfeaturenav</a> | <a href="#">item1</a> | <a href="#">item2</a> </td>
      <!-- Top -->
     </tr>
 
