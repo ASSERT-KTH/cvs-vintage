@@ -80,16 +80,6 @@ import java.util.*;
  * @author Hans Bergsten [hans@gefionsoftware.com]
  */
 public class Request {
-    public static final int ACC_PRE_CMAP=0;
-    public static final int ACC_PRE_RMAP=1;
-    public static final int ACC_POST_MAP=2;
-    public static final int ACC_PRE_SERVICE=3;
-    public static final int ACC_POST_SERVICE=4;
-    public static final int ACC_IN_OUT=5;
-    public static final int ACC_OUT_COUNT=6;
-
-    public static final int ACCOUNTS=7;
-
     public static final String SESSIONID_FROM_COOKIE="cookie";
     public static final String SESSIONID_FROM_URL="url";
     public static final int MAX_INCLUDE=10;
@@ -191,7 +181,7 @@ public class Request {
 
     private Object notes[]=new Object[ContextManager.MAX_NOTES];
     // Accounting
-    private Counters cntr=new Counters(ACCOUNTS);
+    private Counters cntr=new Counters(ContextManager.MAX_NOTES);
 
     // -------------------- Constructor --------------------
 
@@ -245,12 +235,10 @@ public class Request {
 	return response;
     }
 
+    // -------------------- 
+    
     public MimeHeaders getMimeHeaders() {
 	return headers;
-    }
-
-    public final Counters getCounters() {
-	return cntr;
     }
 
     // -------------------- Request data --------------------
@@ -270,15 +258,19 @@ public class Request {
     public MessageBytes queryString() {
 	return queryMB;
     }
+
+    public MessageBytes servletPath() {
+	return servletPathMB;
+    }
+
+    public MessageBytes pathInfo() {
+	return pathInfoMB;
+    }
+
+    public MessageBytes protocol() {
+	return protoMB;
+    }
     
-    public String getProtocol() {
-        return protoMB.toString();
-    }
-
-    public void setProtocol( String protocol ) {
-	protoMB.setString(protocol);
-    }
-
     /** Return the buffer holding the server name, if
      *  any. Use isNull() to check if there is no value
      *  set.
@@ -288,49 +280,25 @@ public class Request {
     public MessageBytes serverName() {
 	return serverNameMB;
     }
-
-//     /** Return the server name. If none was set,
-//      *  extract it from the host header.
-//      *
-//      */
-//     public String getServerName() {
-//         return serverName;
-//     }
-
-//     /** Virtual host */
-//     public void setServerName(String serverName) {
-// 	this.serverName = serverName;
-//     }
-
     
     public int getServerPort() {
         return serverPort;
+    }
+
+    public void setServerPort(int serverPort ) {
+	this.serverPort=serverPort;
     }
 
     public String getRemoteAddr() {
         return remoteAddr;
     }
 
-    public String getRemoteHost() {
-	return remoteHost;
-    }
-
-    public void setPathInfo(String pathInfo) {
-        pathInfoMB.setString( pathInfo );
-    }
-
-//     // What's between context path and servlet name ( /servlet )
-//     // A smart server may use arbitrary prefixes and rewriting
-//     public String getServletPrefix() {
-// 	return null;
-//     }
-
-    public void setServerPort(int serverPort ) {
-	this.serverPort=serverPort;
-    }
-
     public void setRemoteAddr( String remoteAddr ) {
 	this.remoteAddr=remoteAddr;
+    }
+
+    public String getRemoteHost() {
+	return remoteHost;
     }
 
     public void setRemoteHost(String remoteHost) {
@@ -368,15 +336,7 @@ public class Request {
         return parameters.keys();
     }
 
-    // --------------------
-
-    public void setAuthType(String authType) {
-        this.authType = authType;
-    }
-    
-    public String getAuthType() {
-    	return authType;
-    }
+    // -------------------- encoding/type --------------------
 
     public String getCharacterEncoding() {
         if(charEncoding!=null) return charEncoding;
@@ -414,11 +374,14 @@ public class Request {
 	this.contentType=type;
     }
 
-    // XXX XXX Servlet API conflicts with the CGI specs -
-    // PathInfo should be "" if no path info is requested ( as it is in CGI ).
-    // We are following the spec, but IMHO it's a bug ( in the spec )
-    public String getPathInfo() {
-        return pathInfoMB.toString();
+    // -------------------- Security info -------------------- 
+    
+    public void setAuthType(String authType) {
+        this.authType = authType;
+    }
+    
+    public String getAuthType() {
+    	return authType;
     }
 
     public void setRemoteUser(String s) {
@@ -435,15 +398,15 @@ public class Request {
 	    // Call all authentication callbacks. If any of them is able to
 	    // 	identify the user it will set the principal in req.
 	    int status=0;
-	    BaseInterceptor reqI[]= getContext().getContainer().getInterceptors(Container.H_authenticate);
-            //.getInterceptors(this,);
+	    BaseInterceptor reqI[]= getContext().getContainer().
+		getInterceptors(Container.H_authenticate);
 	    for( int i=0; i< reqI.length; i++ ) {
 		status=reqI[i].authenticate( this, response );
 		if ( status != 0 ) {
 		    break;
 		}
 	    }
-	    // 	    context.log("Auth " + remoteUser );
+	    //context.log("Auth " + remoteUser );
 	}
 	return remoteUser;
     }
@@ -483,7 +446,7 @@ public class Request {
 	return userRoles;
     }
 
-    String checkRoles[]=new String[1];
+    private String checkRoles[]=new String[1];
     public boolean isUserInRole(String role) {
 	checkRoles[0]=role;
 
@@ -500,16 +463,6 @@ public class Request {
 	}
 	return status==0;
     }
-
-    public String getServletPath() {
-        return servletPathMB.toString();
-    }
-
-    public void setServletPath(String servletPath) {
-	servletPathMB.setString( servletPath );
-    }
-
-
 
     // -------------------- Session --------------------
     // GS - return the jvm load balance route
@@ -598,34 +551,6 @@ public class Request {
 	return scookies;
     }
     
-//     public int getCookieCount() {
-// 	if( cookieCount == -1 ) {
-// 	    cookieCount=0;
-// 	    // compute cookies
-// 	    CookieTools.processCookies( this );
-// 	}
-// 	return cookieCount;
-//     }
-
-//     public ServerCookie getCookie( int idx ) {
-// 	if( cookieCount == -1 ) {
-// 	    getCookieCount(); // will also update the cookies
-// 	}
-// 	return scookies[idx];
-//     }
-
-//     public void addCookie( ServerCookie c ) {
-// 	// not really needed - happen in 1 thread
-// 	synchronized ( this ) {
-// 	    if( cookieCount >= scookies.length  ) {
-// 		ServerCookie scookiesTmp[]=new ServerCookie[2*cookieCount];
-// 		System.arraycopy( scookies, 0, scookiesTmp, 0, cookieCount);
-// 		scookies=scookiesTmp;
-// 	    }
-// 	    scookies[cookieCount++]=c;
-// 	}
-//     }
-
     // -------------------- LookupResult
 
     /** As result of mapping the request a "handler" will be associated
@@ -698,7 +623,6 @@ public class Request {
     }
 
     public void setAttribute(String name, Object value) {
-	//	contextM.log( "setAttribure " + name +  " " + value );
 	if(name!=null && value!=null)
 	    attributes.put(name, value);
     }
@@ -827,8 +751,9 @@ public class Request {
 	sb.append( "R( ");
 	if( context!=null) {
 	    sb.append( context.getPath() );
-	    if( getServletPath() != null )
-		sb.append( " + " + getServletPath() + " + " + getPathInfo());
+	    if( ! servletPathMB.isNull() )
+		sb.append( " + " + servletPathMB.toString() + " + " +
+			   pathInfoMB.toString());
 	} else {
 	    sb.append(requestURI().toString());
 	}
@@ -844,6 +769,10 @@ public class Request {
 
     public final Object getNote( int pos ) {
 	return notes[pos];
+    }
+
+    public final Counters getCounters() {
+	return cntr;
     }
 
     // -------------------- Recycling -------------------- 
@@ -875,11 +804,6 @@ public class Request {
         sessionIdSource = null;
 	sessionId=null;
 	
-// 	for( int i=0; i< cookieCount; i++ ) {
-// 	    if( scookies[i]!=null )
-// 		scookies[i].recycle();
-// 	}
-// 	cookieCount=-1;
 	scookies.recycle();
 	
 	// counters and notes
@@ -912,7 +836,5 @@ public class Request {
         protoMB.setString("HTTP/1.0");
         remoteAddr="127.0.0.1";
         remoteHost="localhost";
-//        localHost="localhost";
-
     }
 }
