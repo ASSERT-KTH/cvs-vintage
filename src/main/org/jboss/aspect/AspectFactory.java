@@ -20,6 +20,7 @@ import org.jboss.aspect.util.IAspectEditor;
 import org.jboss.aspect.util.XMLConfiguration;
 import org.jboss.proxy.compiler.InvocationHandler;
 import org.jboss.proxy.compiler.Proxy;
+import org.jboss.util.Classes;
 
 /**
  * The AspectFactory creates new instances of aspects objects.
@@ -216,7 +217,7 @@ public class AspectFactory {
 		InvocationHandler h = new AspectInvocationHandler(composition, targetObject);
 		Class interfaces[] = composition.interfaces;
 		interfaces = AspectSupport.appendInterfaces(interfaces, targetObject.getClass());
-		return Proxy.newProxyInstance(Thread.currentThread().getContextClassLoader(), interfaces, h);
+		return Proxy.newProxyInstance(Classes.getContextClassLoader(), interfaces, h);
 	}
 
 	/**
@@ -237,7 +238,7 @@ public class AspectFactory {
 		if (targetClass!=null) 
 			interfaces = AspectSupport.appendInterfaces(interfaces, targetClass);
 			
-		return Proxy.newProxyInstance(Thread.currentThread().getContextClassLoader(), interfaces, h);
+		return Proxy.newProxyInstance(Classes.getContextClassLoader(), interfaces, h);
 	}
 			
 	private AspectDefinition getDefinition(String aspect) {

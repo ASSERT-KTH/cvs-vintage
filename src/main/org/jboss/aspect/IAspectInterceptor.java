@@ -18,7 +18,7 @@ import org.jboss.aspect.proxy.AspectInvocation;
  * <p>
  * 
  * You must keep in mind all AspectInterceptor implementations must be 
- * stateless and thread safe.  A single AspectInterceptor instance will
+ * thread safe.  A single AspectInterceptor instance will
  * be used to fillter through the method calls made on multiple
  * aspect objects.
  * <p>
@@ -33,9 +33,10 @@ import org.jboss.aspect.proxy.AspectInvocation;
  */
 public interface IAspectInterceptor {
 
+   public static final Class NO_INTERFACES[] = new Class[]{};
+
 	/**
-	 * Used to translate the interceptor configuration attributes into 
-	 * an implementation specific configuration object. 
+	 * Used to initialize the interceptor.
 	 * <p>
 	 * 
 	 * The properties map will contain all the attribute 
@@ -43,12 +44,10 @@ public interface IAspectInterceptor {
 	 * in an aspect definition. The name and value objects will
 	 * be String types.
 	 * 
-	 * @return Object Any configuration object that the interceptor 
-	 *          want to associate with an aspect definition.
 	 * @throws AspectInitizationException if the configuration 
 	 *          object could due to any error.
 	 */	
-	public Object translateConfiguration(Map properties) throws AspectInitizationException;
+	public void init(Map properties) throws AspectInitizationException;
 
 	/**
 	 * Lists the interfaces this interceptor will be adding 
@@ -64,10 +63,9 @@ public interface IAspectInterceptor {
 	 * 
 	 * If no interfaces are exposed by the interceptor, return an empty array.
 	 * 
-	 * @param configuration a configuration object that this interceptor translated earlier via <code>translateConfiguration(...)</code>
 	 * @return the list of interfaces that this interceptor will be implementing.
 	 */	
-	public Class[] getInterfaces(Object configuration);
+	public Class[] getInterfaces();
 
    /**
     * Used to know if an Interceptor would be doing some
@@ -75,7 +73,7 @@ public interface IAspectInterceptor {
     * 
     * @return true if the interceptor is interested in the method call.
     */   
-   public boolean isIntrestedInMethodCall(Object configuration, Method method);
+   public boolean isIntrestedInMethodCall(Method method);
 
 	/**
 	 * Process or filter through a method invocation made on an aspect

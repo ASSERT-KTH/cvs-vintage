@@ -7,6 +7,7 @@
 package org.jboss.aspect.proxy;
 
 import java.lang.reflect.Method;
+import java.util.Set;
 
 import org.jboss.proxy.compiler.InvocationHandler;
 import org.jboss.proxy.compiler.ProxyImplementationFactory;
@@ -67,30 +68,30 @@ public class AspectInvocationHandler implements InvocationHandler, IAspectEditor
       return composition.interceptors.length;
    }
 
-   public void insertInterceptor(int position, IAspectInterceptor interceptor, Object config, Object attachment)
+   public void insertInterceptor(int position, IAspectInterceptor interceptor, Set filteredMethod, Object attachment)
       throws AspectInitizationException
    {
-      if( interceptor.getInterfaces(config).length > 0 )
+      if( interceptor.getInterfaces().length > 0 )
          throw new IllegalArgumentException("Only detyped interceptors can be added.");
       
       IAspectInterceptor interceptors[] = new IAspectInterceptor[getInterceptorListSize()+1];
       arrayinsert( composition.interceptors, interceptors, position );
       interceptors[position] = interceptor;
       
-      Object interceptorConfigs[] = new Object[getInterceptorListSize()+1];
-      arrayinsert( composition.interceptorConfigs, interceptorConfigs, position );
-      interceptorConfigs[position] = config;
+      Set filteredMethods[] = new Set[getInterceptorListSize()+1];
+      arrayinsert( composition.filteredMethods, filteredMethods, position );
+      filteredMethods[position] = filteredMethod;
 
       Object attachments[] = new Object[getInterceptorListSize()+1];
       arrayinsert( this.attachments, attachments, position );
       attachments[position] = attachment;
       this.attachments = attachments;
-      
+
       composition = new AspectDefinition(
          composition.name,
          interceptors,
-         interceptorConfigs,
          composition.interfaces,
+         filteredMethods,
          composition.targetClass);
          
    }
@@ -98,16 +99,15 @@ public class AspectInvocationHandler implements InvocationHandler, IAspectEditor
    public void removeInterceptor(int position)
    {
       
-      if( composition.interceptors[position].getInterfaces(
-            composition.interceptorConfigs[position]).length > 0 )
+      if( composition.interceptors[position].getInterfaces().length > 0 )
          throw new IllegalArgumentException("Only detyped interceptors can be removed.");
       
       IAspectInterceptor interceptors[] = new IAspectInterceptor[getInterceptorListSize()-1];
       arrayremove( composition.interceptors, interceptors, position );
       
-      Object interceptorConfigs[] = new Object[getInterceptorListSize()-1];
-      arrayremove( composition.interceptorConfigs, interceptorConfigs, position );
-
+      Set filteredMethods[] = new Set[getInterceptorListSize()-1];
+      arrayremove( composition.filteredMethods, filteredMethods, position );
+            
       Object attachments[] = new Object[getInterceptorListSize()-1];
       arrayremove( this.attachments, attachments, position );
       this.attachments = attachments;
@@ -115,8 +115,8 @@ public class AspectInvocationHandler implements InvocationHandler, IAspectEditor
       composition = new AspectDefinition(
          composition.name,
          interceptors,
-         interceptorConfigs,
          composition.interfaces,
+         filteredMethods,
          composition.targetClass);
    }
    

@@ -92,8 +92,7 @@ final public class AspectInvocation {
    public boolean isNextIntrestedInMethodCall() {
       for( int i=currentInterceptor+1; i < handler.composition.interceptors.length; i++ ) {
          IAspectInterceptor ai = handler.composition.interceptors[currentInterceptor];
-         Object config = handler.composition.interceptorConfigs[currentInterceptor];
-         if( ai.isIntrestedInMethodCall(config,method) )
+         if( ai.isIntrestedInMethodCall(method) )
             return true;
       }
       return false;
@@ -101,21 +100,9 @@ final public class AspectInvocation {
 
    private boolean isIntrestedInMethodCall() {
       IAspectInterceptor i = handler.composition.interceptors[currentInterceptor];
-      Object config = handler.composition.interceptorConfigs[currentInterceptor];
-      return i.isIntrestedInMethodCall(config,method);
+      return i.isIntrestedInMethodCall(method);
    }
 	
-	/**
-	 * Returns the configuration Object that the current 
-	 * interceptor created for the aspect configuration.
-	 * 
-	 * This configuration object will be shared by multiple
-	 * aspect object created from the same aspect defintion.
-	 */
-	public Object getInterceptorConfig() {
-		return handler.composition.interceptorConfigs[currentInterceptor];
-	}
-
 	/**
 	 * Returns the attachment object that that was previously
 	 * attached by the current interceptor.  The attachement 

@@ -18,6 +18,11 @@ import org.dom4j.Element;
 import org.dom4j.io.SAXReader;
 
 import org.jboss.aspect.AspectDefinition;
+import org.jboss.aspect.model.Aspect;
+import org.jboss.aspect.model.Attribute;
+import org.jboss.aspect.model.Interceptor;
+import org.jboss.aspect.model.InterfaceFilter;
+import org.jboss.aspect.model.MethodFilter;
 import org.jboss.aspect.proxy.AspectInitizationException;
 
 /**
@@ -60,39 +65,49 @@ final public class XMLConfiguration {
 	 * 
 	 */
 	final static public AspectDefinition loadAspectObjectDefinition(Element aoXML) throws AspectInitizationException {
-		
-		String name = aoXML.attribute("name").getValue();
-		String targetClass = aoXML.attribute("target-class")==null 
-			? null : aoXML.attribute("target-class").getValue();
-		
-		ArrayList interceptorList = new ArrayList();
-		ArrayList interceptorConfigList = new ArrayList();
+		Aspect aspect = new Aspect();
+		aspect.setName(aoXML.attribute("name").getValue());
+		if( aoXML.attribute("target-class")!=null )
+			aspect.setTargetClass(aoXML.attribute("target-class").getValue());
 		
 		// Get the interceptor stack configuration.
     	Iterator j = aoXML.elements("interceptor").iterator();
     	while( j.hasNext() ) {
+         Interceptor interceptor = new Interceptor();
     		Element interceptorXML = (Element)j.next();
-    		String interceptorClass = interceptorXML.attribute("class").getValue();
-    		interceptorList.add(interceptorClass);
+         
+    		interceptor.setClassname(interceptorXML.attribute("class").getValue());
 
-			// Get this interceptor's attribute configuration.
-			Map interceptorConfig = new HashMap();
 	    	Iterator k = interceptorXML.elements("attribute").iterator();
 	    	while( k.hasNext() ) {
-	    		Element attribute = (Element)k.next();
-	    		String n=attribute.attribute("name").getValue();
-	    		String v=attribute.attribute("value").getValue();
-	    		interceptorConfig.put( n, v );
+            Attribute attribute = new Attribute();
+	    		Element attributeXML = (Element)k.next();
+	    		attribute.setName(attributeXML.attribute("name").getValue());
+	    		attribute.setValue(attributeXML.attribute("value").getValue());
+            interceptor.add( attribute );
 	    	}
-	    	interceptorConfigList.add( interceptorConfig );
-    	}			
-    	
-    	String interceptors[] = new String[interceptorList.size()];
-    	interceptorList.toArray(interceptors);
-    	Map interceptorConfigs[] = new Map[interceptorConfigList.size()];
-    	interceptorConfigList.toArray(interceptorConfigs);
-    	
-		return new AspectDefinition(name, interceptors, interceptorConfigs, targetClass);		
+         
+
+         k = interceptorXML.elements("filter-interface").iterator();
+         while( k.hasNext() ) {
+            InterfaceFilter interfaceFilter = new InterfaceFilter();
+            Element interfaceFilterXML = (Element)k.next();
+            interfaceFilter.setClassname(interfaceFilterXML.attribute("name").getValue());
+            interceptor.add( interfaceFilter );
+         }
+         
+         k = interceptorXML.elements("filter-method").iterator();
+         while( k.hasNext() ) {
+            MethodFilter methodFilter = new MethodFilter();
+            Element methodFilterXML = (Element)k.next();
+            methodFilter.setSignature(methodFilterXML.attribute("name").getValue());
+            interceptor.add( methodFilter );
+         }
+         
+         aspect.add(interceptor);
+    	}
+      
+		return new AspectDefinition(aspect);
 	}	
 
 }

@@ -19,6 +19,7 @@ import org.jboss.aspect.IAspectInterceptor;
 import org.jboss.aspect.proxy.AspectInitizationException;
 import org.jboss.aspect.proxy.AspectInvocation;
 import org.jboss.aspect.util.*;
+import org.jboss.util.Classes;
 
 /**
  * The DelegatingInterceptor allows you delegate method calls to 
@@ -42,26 +43,23 @@ import org.jboss.aspect.util.*;
  */
 public class DelegatingInterceptor implements IAspectInterceptor {
 
-	private static class Config {
-		public Object singeltonObject;
-		public Class  []interfaces;
-		public Class  implementingClass;
-		public Set    exposedMethods;
-	}
+	public Object singeltonObject;
+	public Class  []interfaces;
+	public Class  implementingClass;
+	public Set    exposedMethods;
 
 	/**
 	 * @see com.chirino.aspect.AspectInterceptor#invoke(AspectInvocation)
 	 */
 	public Object invoke(AspectInvocation invocation) throws Throwable {
-		Config c = (Config)invocation.getInterceptorConfig();
             
 		Object delegate = null;		
-		if( c.singeltonObject != null) {
-			delegate = c.singeltonObject;
+		if( singeltonObject != null) {
+			delegate = singeltonObject;
 		} else {
 			delegate = invocation.getInterceptorAttachment();
 			if( delegate == null ) {
-				delegate = AspectSupport.createAwareInstance(c.implementingClass, invocation.handler);
+				delegate = AspectSupport.createAwareInstance(implementingClass, invocation.handler);
 				invocation.setInterceptorAttachment(delegate);
 			}
 		}
@@ -70,40 +68,35 @@ public class DelegatingInterceptor implements IAspectInterceptor {
 	}
 
 	/**
-	 * Builds a Config object for the interceptor.
-	 * 
-	 * @see com.chirino.aspect.AspectInterceptor#translateConfiguration(Element)
+	 * @see com.chirino.aspect.AspectInterceptor#init(Map)
 	 */
-	public Object translateConfiguration(Map properties) throws AspectInitizationException {
+	public void init(Map properties) throws AspectInitizationException {
 		try {
-			Config rc= new Config();
 			
 			String className = (String)properties.get("delegate");
-			rc.implementingClass = Thread.currentThread().getContextClassLoader().loadClass(className);
-			rc.interfaces = rc.implementingClass.getInterfaces();
-			rc.exposedMethods = AspectSupport.getExposedMethods(rc.interfaces);				
+			implementingClass = Classes.loadClass(className);
+			interfaces = implementingClass.getInterfaces();
+			exposedMethods = AspectSupport.getExposedMethods(interfaces);				
 			
 			String singlton = (String)properties.get("singleton");
 			if( "true".equals(singlton) )
-				rc.singeltonObject = rc.implementingClass.newInstance();
+				singeltonObject = implementingClass.newInstance();
 				
-			return rc;
 		} catch (Exception e) {
 			throw new AspectInitizationException("Aspect Interceptor missconfigured: "+e);
 		}
 	}
 	
 	/**
-	 * @see AspectInterceptor#getInterfaces(Object)
+	 * @see AspectInterceptor#getInterfaces()
 	 */
-	public Class[] getInterfaces(Object configuration) {
-		Config c = (Config)configuration;
-		return c.interfaces;
+	public Class[] getInterfaces() {
+		return interfaces;
 	}
    
-   public boolean isIntrestedInMethodCall(Object configuration, Method method)
+   public boolean isIntrestedInMethodCall(Method method)
    {
-      return ((Config)configuration).exposedMethods.contains(method);
+      return exposedMethods.contains(method);
    }
 
 }
