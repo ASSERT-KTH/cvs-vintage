@@ -10,9 +10,11 @@ import java.security.Principal;
 import java.util.Map;
 import java.util.Set;
 import javax.ejb.EJBException;
+import javax.security.auth.Subject;
 
 import org.jboss.ejb.Container;
 import org.jboss.invocation.Invocation;
+import org.jboss.invocation.PayloadKey;
 import org.jboss.metadata.ApplicationMetaData;
 import org.jboss.metadata.AssemblyDescriptorMetaData;
 import org.jboss.metadata.BeanMetaData;
@@ -27,7 +29,7 @@ import org.jboss.security.SecurityAssociation;
  *
  * @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>.
  * @author <a href="mailto:Thomas.Diesler@jboss.org">Thomas Diesler</a>.
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  */
 public class JaasAuthenticationInterceptor extends AbstractInterceptor
 {
@@ -75,6 +77,9 @@ public class JaasAuthenticationInterceptor extends AbstractInterceptor
 
    public Object invokeHome(Invocation mi) throws Exception
    {
+      // Save the incoming authenticated identity thread association
+      Subject prevSubject = SecurityActions.getSubject();
+
       // Authenticate the subject and apply any declarative security checks
       checkSecurityAssociation(mi);
 
@@ -82,10 +87,7 @@ public class JaasAuthenticationInterceptor extends AbstractInterceptor
        by this bean will have the runAsRole available for declarative
        security checks.
       */
-      if (runAsIdentity != null)
-      {
-         SecurityActions.pushRunAsIdentity(runAsIdentity);
-      }
+      SecurityActions.pushRunAsIdentity(runAsIdentity);
 
       try
       {
@@ -94,26 +96,29 @@ public class JaasAuthenticationInterceptor extends AbstractInterceptor
       }
       finally
       {
-         if (runAsIdentity != null)
-         {
-            SecurityActions.popRunAsIdentity();
-         }
+         SecurityActions.popRunAsIdentity();
+         SecurityActions.setSubject(prevSubject);
       }
    }
 
    public Object invoke(Invocation mi) throws Exception
    {
+      // Save the incoming authenticated identity thread association
+      Subject prevSubject = SecurityActions.getSubject();
+
       // Authenticate the subject and apply any declarative security checks
       checkSecurityAssociation(mi);
+
+      // Save any existing caller run-as in the invocation for other interceptors
+      RunAsIdentity callerRunAsIdentity = SecurityActions.peekRunAsIdentity();
+      if( callerRunAsIdentity != null )
+         mi.setValue("RunAsIdentity", callerRunAsIdentity, PayloadKey.TRANSIENT);
 
       /* If a run-as role was specified, push it so that any calls made
        by this bean will have the runAsRole available for declarative
        security checks.
       */
-      if (runAsIdentity != null)
-      {
-         SecurityActions.pushRunAsIdentity(runAsIdentity);
-      }
+      SecurityActions.pushRunAsIdentity(runAsIdentity);
 
       try
       {
@@ -122,10 +127,8 @@ public class JaasAuthenticationInterceptor extends AbstractInterceptor
       }
       finally
       {
-         if (runAsIdentity != null)
-         {
-            SecurityActions.popRunAsIdentity();
-         }
+         SecurityActions.popRunAsIdentity();
+         SecurityActions.setSubject(prevSubject);
       }
    }
 
@@ -144,6 +147,7 @@ public class JaasAuthenticationInterceptor extends AbstractInterceptor
       {
          // Allow for the progatation of caller info to other beans
          SecurityActions.setPrincipalInfo(principal, credential);
+         SecurityActions.setSubject(null);
          return;
       }
 
