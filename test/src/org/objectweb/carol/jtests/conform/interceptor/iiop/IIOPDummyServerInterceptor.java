@@ -1,7 +1,5 @@
 /**
- * @(#) IIOPDummyServerInterceptor.java	1.0 02/07/15
- *
- * Copyright (C) 2002 - INRIA (www.inria.fr)
+ * Copyright (C) 2002,2005 - INRIA (www.inria.fr)
  *
  * CAROL: Common Architecture for RMI ObjectWeb Layer
  *
@@ -23,11 +21,12 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  * USA
  *
- *
+ * --------------------------------------------------------------------------
+ * $Id: IIOPDummyServerInterceptor.java,v 1.4 2005/02/08 10:03:48 benoitf Exp $
+ * --------------------------------------------------------------------------
  */
 package org.objectweb.carol.jtests.conform.interceptor.iiop;
 
-// java import
 import org.omg.CORBA.LocalObject;
 import org.omg.IOP.ServiceContext;
 import org.omg.PortableInterceptor.ForwardRequest;
@@ -38,7 +37,6 @@ import org.omg.PortableInterceptor.ServerRequestInterceptor;
  * Class <code>IIOPDummyServerInterceptor</code> is a IIOP Dummy server
  * interceptor for carol testing
  * @author Guillaume Riviere (Guillaume.Riviere@inrialpes.fr)
- * @version 1.0, 15/07/2002
  */
 public class IIOPDummyServerInterceptor extends LocalObject implements ServerRequestInterceptor {
 

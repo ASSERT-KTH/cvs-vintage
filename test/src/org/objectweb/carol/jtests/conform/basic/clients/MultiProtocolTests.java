@@ -1,7 +1,5 @@
 /**
- * @(#) MultiProtocolTests.java	1.0 02/07/15
- *
- * Copyright (C) 2002 - INRIA (www.inria.fr)
+ * Copyright (C) 2002,2005 - INRIA (www.inria.fr)
  *
  * CAROL: Common Architecture for RMI ObjectWeb Layer
  *
@@ -23,11 +21,12 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  * USA
  *
- *
+ * --------------------------------------------------------------------------
+ * $Id: MultiProtocolTests.java,v 1.8 2005/02/08 10:03:48 benoitf Exp $
+ * --------------------------------------------------------------------------
  */
 package org.objectweb.carol.jtests.conform.basic.clients;
 
-// java import
 import javax.naming.InitialContext;
 import javax.rmi.PortableRemoteObject;
 
@@ -42,7 +41,6 @@ import org.objectweb.carol.jtests.conform.basic.server.BasicObjectItf;
  * Class <code>MultiProtocolTests</code> is a Junit BasicTest Test : Test The
  * InitialContext and the PortableRemoteObject situation with remote object
  * @author Guillaume Riviere (Guillaume.Riviere@inrialpes.fr)
- * @version 1.0, 15/07/2002
  */
 public class MultiProtocolTests extends TestCase {
 
@@ -101,8 +99,7 @@ public class MultiProtocolTests extends TestCase {
 
         // lookup to the remote objects
         ba = (BasicObjectItf) PortableRemoteObject.narrow(ic.lookup(basicName), BasicObjectItf.class);
-        bma = (BasicMultiObjectItf) PortableRemoteObject.narrow(ic.lookup(basicMultiName),
-                                                                BasicMultiObjectItf.class);
+        bma = (BasicMultiObjectItf) PortableRemoteObject.narrow(ic.lookup(basicMultiName), BasicMultiObjectItf.class);
     }
 
     /**

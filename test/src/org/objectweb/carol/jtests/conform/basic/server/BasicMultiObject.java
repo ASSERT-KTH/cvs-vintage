@@ -1,7 +1,5 @@
 /**
- * @(#) BasicMultiObject.java	1.0 02/07/15
- *
- * Copyright (C) 2002 - INRIA (www.inria.fr)
+ * Copyright (C) 2002,2005 - INRIA (www.inria.fr)
  *
  * CAROL: Common Architecture for RMI ObjectWeb Layer
  *
@@ -23,11 +21,12 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  * USA
  *
- *
+ * --------------------------------------------------------------------------
+ * $Id: BasicMultiObject.java,v 1.4 2005/02/08 10:03:48 benoitf Exp $
+ * --------------------------------------------------------------------------
  */
 package org.objectweb.carol.jtests.conform.basic.server;
 
-// java import
 import java.rmi.RemoteException;
 
 import javax.naming.InitialContext;
@@ -37,7 +36,6 @@ import javax.rmi.PortableRemoteObject;
  * Class <code>BasicMultiObject</code> is a basic remote object with reference
  * to another object
  * @author Guillaume Riviere (Guillaume.Riviere@inrialpes.fr)
- * @version 1.0, 15/07/2002
  */
 public class BasicMultiObject extends PortableRemoteObject implements BasicMultiObjectItf {
 

@@ -1,7 +1,5 @@
 /**
- * @(#) DummyServerInterceptor.java	1.0 02/07/15
- *
- * Copyright (C) 2002 - INRIA (www.inria.fr)
+ * Copyright (C) 2002,2005 - INRIA (www.inria.fr)
  *
  * CAROL: Common Architecture for RMI ObjectWeb Layer
  *
@@ -23,24 +21,23 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  * USA
  *
- *
+ * --------------------------------------------------------------------------
+ * $Id: DummyServerInterceptor.java,v 1.4 2005/02/08 10:03:48 benoitf Exp $
+ * --------------------------------------------------------------------------
  */
 package org.objectweb.carol.jtests.conform.interceptor.jrmp;
 
-// java import
 import java.io.IOException;
 
 import org.objectweb.carol.rmi.jrmp.interceptor.JServerRequestInfo;
 import org.objectweb.carol.rmi.jrmp.interceptor.JServerRequestInterceptor;
 
 /**
- * Class <code>DummyClientServiceContext</code> is a  JRMP Interface for Interceptor implementation
- * for carol testing
- *
- * @author  Guillaume Riviere (Guillaume.Riviere@inrialpes.fr)
- * @version 1.0, 15/07/2002
+ * Class <code>DummyClientServiceContext</code> is a JRMP Interface for
+ * Interceptor implementation for carol testing
+ * @author Guillaume Riviere (Guillaume.Riviere@inrialpes.fr)
  */
-public class DummyServerInterceptor implements  JServerRequestInterceptor {
+public class DummyServerInterceptor implements JServerRequestInterceptor {
 
     /**
      * Server dummy context id
@@ -55,14 +52,14 @@ public class DummyServerInterceptor implements  JServerRequestInterceptor {
     /**
      * interceptor name
      */
-   private String interceptorName = null;
+    private String interceptorName = null;
 
     /**
      * constructor
      * @param String name
      */
     public DummyServerInterceptor(String name) {
-    interceptorName = name;
+        interceptorName = name;
     }
 
     /**
@@ -71,8 +68,9 @@ public class DummyServerInterceptor implements  JServerRequestInterceptor {
      * @exception IOException if an exception occur with the ObjectOutput
      */
     public void receive_request(JServerRequestInfo jri) throws IOException {
-    //System.out.print("JRMP ServerInterceptor Get/Receive Dummy Client Service Context:");
-    //System.out.println((DummyClientServiceContext)jri.get_request_service_context(CLIENT_CTX_ID));
+        //System.out.print("JRMP ServerInterceptor Get/Receive Dummy Client
+        // Service Context:");
+        //System.out.println((DummyClientServiceContext)jri.get_request_service_context(CLIENT_CTX_ID));
     }
 
     /**
@@ -80,20 +78,20 @@ public class DummyServerInterceptor implements  JServerRequestInterceptor {
      * @param JServerRequestInfo the jrmp server request information
      * @exception IOException if an exception occur with the ObjectOutput
      */
-    public void send_reply(JServerRequestInfo jri)throws IOException {
-    //System.out.println("JRMP ServerInterceptor Add/Send Dummy Server Service Context");
-    jri.add_reply_service_context(new DummyServerServiceContext(SERVER_CTX_ID, java.net.InetAddress.getLocalHost().getHostName()));
+    public void send_reply(JServerRequestInfo jri) throws IOException {
+        //System.out.println("JRMP ServerInterceptor Add/Send Dummy Server
+        // Service Context");
+        jri.add_reply_service_context(new DummyServerServiceContext(SERVER_CTX_ID, java.net.InetAddress.getLocalHost()
+                .getHostName()));
     }
 
-
-     /**
+    /**
      * get the name of this interceptor
      * @return name
      */
     public String name() {
-    return interceptorName;
+        return interceptorName;
     }
-
 
     public void send_exception(JServerRequestInfo jri) throws IOException {
     }

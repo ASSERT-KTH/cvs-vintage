@@ -1,7 +1,5 @@
 /**
- * @(#) IIOPInitializer.java	1.0 02/07/15
- *
- * Copyright (C) 2002 - INRIA (www.inria.fr)
+ * Copyright (C) 2002,2005 - INRIA (www.inria.fr)
  *
  * CAROL: Common Architecture for RMI ObjectWeb Layer
  *
@@ -23,11 +21,12 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  * USA
  *
- *
+ * --------------------------------------------------------------------------
+ * $Id: IIOPInitializer.java,v 1.3 2005/02/08 10:03:48 benoitf Exp $
+ * --------------------------------------------------------------------------
  */
 package org.objectweb.carol.jtests.conform.interceptor.iiop;
 
-// omg import
 import org.omg.CORBA.LocalObject;
 import org.omg.PortableInterceptor.ORBInitInfo;
 import org.omg.PortableInterceptor.ORBInitializer;
@@ -36,7 +35,6 @@ import org.omg.PortableInterceptor.ORBInitializer;
  * Class <code>IIOPInitializer</code> is a IIOP Interceptor initialisation for
  * carol testing
  * @author Guillaume Riviere (Guillaume.Riviere@inrialpes.fr)
- * @version 1.0, 15/07/2002
  */
 public class IIOPInitializer extends LocalObject implements ORBInitializer {
 

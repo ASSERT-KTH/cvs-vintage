@@ -1,7 +1,5 @@
 /**
- * @(#) DummyClientInterceptor.java	1.0 02/07/15
- *
- * Copyright (C) 2002 - INRIA (www.inria.fr)
+ * Copyright (C) 2002,2005 - INRIA (www.inria.fr)
  *
  * CAROL: Common Architecture for RMI ObjectWeb Layer
  *
@@ -23,21 +21,21 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  * USA
  *
- *
+ * --------------------------------------------------------------------------
+ * $Id: DummyClientInterceptor.java,v 1.4 2005/02/08 10:03:48 benoitf Exp $
+ * --------------------------------------------------------------------------
  */
 package org.objectweb.carol.jtests.conform.interceptor.jrmp;
 
-// java import
 import java.io.IOException;
 
 import org.objectweb.carol.rmi.jrmp.interceptor.JClientRequestInfo;
 import org.objectweb.carol.rmi.jrmp.interceptor.JClientRequestInterceptor;
 
 /**
- * Class <code>DummyClientServiceContext</code> is a JRMP Dummy client interceptor
- * for carol testing
- *
- * @author  Guillaume Riviere (Guillaume.Riviere@inrialpes.fr)
+ * Class <code>DummyClientServiceContext</code> is a JRMP Dummy client
+ * interceptor for carol testing
+ * @author Guillaume Riviere (Guillaume.Riviere@inrialpes.fr)
  * @version 1.0, 15/07/2002
  */
 public class DummyClientInterceptor implements JClientRequestInterceptor {
@@ -62,7 +60,7 @@ public class DummyClientInterceptor implements JClientRequestInterceptor {
      * @param String name
      */
     public DummyClientInterceptor(String name) {
-    interceptorName = name;
+        interceptorName = name;
     }
 
     /**
@@ -70,18 +68,21 @@ public class DummyClientInterceptor implements JClientRequestInterceptor {
      * @return name
      */
     public String name() {
-    return interceptorName;
+        return interceptorName;
     }
 
     /**
-     * send client context with the request. The sendingRequest method of the JPortableInterceptors
-     * is called prior to marshalling arguments and contexts
+     * send client context with the request. The sendingRequest method of the
+     * JPortableInterceptors is called prior to marshalling arguments and
+     * contexts
      * @param JClientRequestInfo jri the jrmp client info
      * @exception IOException if an exception occur with the ObjectOutput
      */
     public void send_request(JClientRequestInfo jri) throws IOException {
-    //	System.out.println("JRMP ClientInterceptor Add/Send Dummy Client Service Context");
-    jri.add_request_service_context(new DummyClientServiceContext(CLIENT_CTX_ID, java.net.InetAddress.getLocalHost().getHostName()));
+        //	System.out.println("JRMP ClientInterceptor Add/Send Dummy Client
+        // Service Context");
+        jri.add_request_service_context(new DummyClientServiceContext(CLIENT_CTX_ID, java.net.InetAddress
+                .getLocalHost().getHostName()));
     }
 
     /**
@@ -89,9 +90,10 @@ public class DummyClientInterceptor implements JClientRequestInterceptor {
      * @param JClientRequestInfo jri the jrmp client info
      * @exception IOException if an exception occur with the ObjectOutput
      */
-    public void receive_reply(JClientRequestInfo jri)throws IOException{
-    //System.out.print("JRMP ClientInterceptor Get/Receive Dummy Server Service Context: ");
-    //System.out.println((DummyServerServiceContext)jri.get_reply_service_context(SERVER_CTX_ID));
+    public void receive_reply(JClientRequestInfo jri) throws IOException {
+        //System.out.print("JRMP ClientInterceptor Get/Receive Dummy Server
+        // Service Context: ");
+        //System.out.println((DummyServerServiceContext)jri.get_reply_service_context(SERVER_CTX_ID));
 
     }
 

@@ -1,7 +1,5 @@
 /**
- * @(#) BasicServer.java	1.0 02/07/15
- *
- * Copyright (C) 2002 - INRIA (www.inria.fr)
+ * Copyright (C) 2002,2005 - INRIA (www.inria.fr)
  *
  * CAROL: Common Architecture for RMI ObjectWeb Layer
  *
@@ -23,7 +21,9 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  * USA
  *
- *
+ * --------------------------------------------------------------------------
+ * $Id: BasicServer.java,v 1.8 2005/02/08 10:03:48 benoitf Exp $
+ * --------------------------------------------------------------------------
  */
 package org.objectweb.carol.jtests.conform.basic.server;
 
@@ -60,10 +60,15 @@ public class BasicServer {
     private static String basicObjectRefName = "basicrefname";
 
     private Context ic;
+
     private BasicObjectItf ba;
+
     private BasicMultiObjectItf bma;
+
     private BasicObjectRef bref;
+
     private final int port;
+
     private boolean startedSuccessfully;
 
     /**
@@ -71,9 +76,7 @@ public class BasicServer {
      */
     public static void main(String[] args) {
         if (args.length != 1) {
-            throw new IllegalArgumentException
-                ("expected the port number, but got: " +
-                 Arrays.asList(args));
+            throw new IllegalArgumentException("expected the port number, but got: " + Arrays.asList(args));
         }
         new BasicServer(Integer.parseInt(args[0])).advertiseReadiness();
     }
@@ -113,15 +116,15 @@ public class BasicServer {
         }
     }
 
-
     /**
      * Advertise readiness to the external world by binding to the specified TCP
      * port.
-     *
-     * <p>The purpose of this method is to indicate to Ant's <wait> task that
-     * this BasicServer has registered all the necessary objects in the registry
-     * and it is ok for the clients to start making remote calls. </p>
-     **/
+     * <p>
+     * The purpose of this method is to indicate to Ant's <wait>task that this
+     * BasicServer has registered all the necessary objects in the registry and
+     * it is ok for the clients to start making remote calls.
+     * </p>
+     */
     private void advertiseReadiness() {
         ServerSocket serverSocket;
         try {

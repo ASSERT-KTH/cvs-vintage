@@ -1,7 +1,5 @@
 /**
- * @(#) DummyClientServiceContext.java	1.0 02/07/15
- *
- * Copyright (C) 2002 - INRIA (www.inria.fr)
+ * Copyright (C) 2002,2005 - INRIA (www.inria.fr)
  *
  * CAROL: Common Architecture for RMI ObjectWeb Layer
  *
@@ -23,45 +21,42 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  * USA
  *
- *
+ * --------------------------------------------------------------------------
+ * $Id: Initializer.java,v 1.3 2005/02/08 10:03:48 benoitf Exp $
+ * --------------------------------------------------------------------------
  */
 package org.objectweb.carol.jtests.conform.interceptor.jrmp;
 
-// arol import
 import org.objectweb.carol.rmi.jrmp.interceptor.JInitInfo;
 import org.objectweb.carol.rmi.jrmp.interceptor.JInitializer;
 
 /**
- * Class <code>DummyClientServiceContext</code> is a JRMP Interface for Interceptor initialisation
- * for carol testing
- *
- * @author  Guillaume Riviere (Guillaume.Riviere@inrialpes.fr)
- * @version 1.0, 15/07/2002
+ * Class <code>DummyClientServiceContext</code> is a JRMP Interface for
+ * Interceptor initialisation for carol testing
+ * @author Guillaume Riviere (Guillaume.Riviere@inrialpes.fr)
  */
-public class Initializer implements JInitializer{
+public class Initializer implements JInitializer {
 
     /**
-     * In JRMP the 2 method( per and post init have the same
-     * consequences ...
+     * In JRMP the 2 method( per and post init have the same consequences ...
      * @param JInitInfo the JInit Information
      */
-    public void pre_init(JInitInfo info){
-    try {
-        info.add_client_request_interceptor(new DummyClientInterceptor("client interceptor"));
-        info.add_server_request_interceptor(new DummyServerInterceptor("server interceptor"));
-    } catch (Exception e) {
-        System.out.println("could'nt instantiate Interceptor" + e);
-        e.printStackTrace();
-    }
+    public void pre_init(JInitInfo info) {
+        try {
+            info.add_client_request_interceptor(new DummyClientInterceptor("client interceptor"));
+            info.add_server_request_interceptor(new DummyServerInterceptor("server interceptor"));
+        } catch (Exception e) {
+            System.out.println("could'nt instantiate Interceptor" + e);
+            e.printStackTrace();
+        }
     }
 
     /**
-     * In JRMP the 2 method( per and post init have the same
-     * consequences ...
+     * In JRMP the 2 method( per and post init have the same consequences ...
      * @param JInitInfo the JInit Information
      */
-    public void post_init(JInitInfo info){
-    // do nothing
+    public void post_init(JInitInfo info) {
+        // do nothing
     }
 
 }

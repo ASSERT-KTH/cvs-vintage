@@ -1,7 +1,5 @@
 /**
- * @(#) BasicObjectRefFactory.java	1.0 02/07/15
- *
- * Copyright (C) 2002 - INRIA (www.inria.fr)
+ * Copyright (C) 2002,2005 - INRIA (www.inria.fr)
  *
  * CAROL: Common Architecture for RMI ObjectWeb Layer
  *
@@ -23,11 +21,12 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  * USA
  *
- *
+ * --------------------------------------------------------------------------
+ * $Id: BasicObjectRefFactory.java,v 1.3 2005/02/08 10:03:48 benoitf Exp $
+ * --------------------------------------------------------------------------
  */
 package org.objectweb.carol.jtests.conform.basic.server;
 
-// java import
 import java.util.Hashtable;
 
 import javax.naming.Context;
@@ -40,7 +39,6 @@ import javax.naming.spi.ObjectFactory;
  * Class <code>BasicObjectRefFactory</code> is a Basic referenceable factory
  * (and serializable) class for testing
  * @author Guillaume Riviere (Guillaume.Riviere@inrialpes.fr)
- * @version 1.0, 15/07/2002
  */
 public class BasicObjectRefFactory implements ObjectFactory {
 

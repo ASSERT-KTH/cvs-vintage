@@ -1,7 +1,5 @@
 /**
- * @(#) DummyClientServiceContext.java	1.0 02/07/15
- *
- * Copyright (C) 2002 - INRIA (www.inria.fr)
+ * Copyright (C) 2002,2005 - INRIA (www.inria.fr)
  *
  * CAROL: Common Architecture for RMI ObjectWeb Layer
  *
@@ -23,11 +21,12 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  * USA
  *
- *
+ * --------------------------------------------------------------------------
+ * $Id: DummyClientServiceContext.java,v 1.5 2005/02/08 10:03:48 benoitf Exp $
+ * --------------------------------------------------------------------------
  */
 package org.objectweb.carol.jtests.conform.interceptor.jrmp;
 
-// java import
 import java.io.Externalizable;
 import java.io.IOException;
 import java.io.ObjectInput;
@@ -36,10 +35,9 @@ import java.io.ObjectOutput;
 import org.objectweb.carol.rmi.jrmp.interceptor.JServiceContext;
 
 /**
- * Class <code>DummyClientServiceContext</code> is a JRMP Interface for Interceptor implementation
- * for carol testing
- *
- * @author  Guillaume Riviere (Guillaume.Riviere@inrialpes.fr)
+ * Class <code>DummyClientServiceContext</code> is a JRMP Interface for
+ * Interceptor implementation for carol testing
+ * @author Guillaume Riviere (Guillaume.Riviere@inrialpes.fr)
  * @version 1.0, 15/07/2002
  */
 public class DummyClientServiceContext implements JServiceContext, Externalizable {
@@ -58,7 +56,7 @@ public class DummyClientServiceContext implements JServiceContext, Externalizabl
      * the JServiceContext id
      */
     public int getContextId() {
-    return context_id;
+        return context_id;
     }
 
     /**
@@ -73,12 +71,12 @@ public class DummyClientServiceContext implements JServiceContext, Externalizabl
      * @param byte[] the context data
      */
     public DummyClientServiceContext(int context_id, String address) {
-    this.context_id=context_id;
-    this.address = address;
+        this.context_id = context_id;
+        this.address = address;
     }
 
     public String toString() {
-    return "Client Dummy Context From "+ address;
+        return "Client Dummy Context From " + address;
     }
 
     /**
@@ -86,17 +84,17 @@ public class DummyClientServiceContext implements JServiceContext, Externalizabl
      * @param in the ObjectInput
      */
     public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException {
-    context_id = in.readInt();
-    address = (String)in.readObject();
+        context_id = in.readInt();
+        address = (String) in.readObject();
     }
 
     /**
      * writeExternal
      * @param out the object output stream
-    */
+     */
     public void writeExternal(ObjectOutput out) throws IOException {
-    out.writeInt(context_id);
-    out.writeObject(address);
+        out.writeInt(context_id);
+        out.writeObject(address);
     }
 
 }
