@@ -24,7 +24,7 @@
 // File: DisplayTextTree.java
 // Classes: DisplayTextTree
 // Original Author:
-// $Id: DisplayTextTree.java,v 1.13 2002/11/23 22:04:41 kataka Exp $
+// $Id: DisplayTextTree.java,v 1.14 2002/11/24 00:04:52 kataka Exp $
 
 
 // 26 Apr 2002: Jeremy Bennett (mail@jeremybennett.com). Patch to give a better
@@ -176,8 +176,10 @@ implements MElementListener {
 
 
   public void setModel(TreeModel newModel) {
-    super.setModel(newModel);
     Object r = newModel.getRoot();
+    if (r != null)
+        super.setModel(newModel);
+    
     if (r instanceof MBase) {
       // UmlModelEventPump.getPump().removeModelEventListener(this, (MBase)r);
       UmlModelEventPump.getPump().addModelEventListener(this, (MBase)r);
