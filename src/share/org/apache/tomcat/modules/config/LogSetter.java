@@ -66,9 +66,7 @@ import java.io.*;
 import java.net.*;
 import java.util.*;
 
-/**
-  Add a Logger.
-  
+/*
   Logging in Tomcat is quite flexible; we can either have a log
   file per module (example: ContextManager) or we can have one
   for Servlets and one for Jasper, or we can just have one
@@ -121,7 +119,21 @@ import java.util.*;
   Some components accept a "debug" attribute.  This further
   enhances log output.  If you set the "debug" level for a
   component, it may output extra debugging information.
+*/
 
+
+/**
+ *  Define a logger with the specified name, using the logger
+ *  implementation in org.apache.tomcat.util.log.QueueLogger
+ *
+ *  Tomcat uses the util.log.Log class - if you want to use
+ *  a different logger ( like log4j or jsrXXX ) you need to create a
+ *  new interceptor that will use your favorite logger and
+ *  create a small adapter ( class extending Log and directing
+ *  the output to your favorite logger.
+ *
+ *  The only contract used in tomcat for logging is the util.Log.
+ * 
  */
 public class LogSetter extends  BaseInterceptor {
     String name;
@@ -164,14 +176,33 @@ public class LogSetter extends  BaseInterceptor {
     {
 	if( module!=this ) return;
 
+	if( name==null ) {
+	    if( servletLogger )
+		name="org/apache/tomcat/facade";
+	    else
+		name="org/apache/tomcat/core";
+	}
+
 	if( path!=null && ! FileUtil.isAbsolute( path ) ) {
 	    File wd= new File(cm.getHome(), path);
 	    path= wd.getAbsolutePath();
 	}
+	
+	// workarounds for legacy log names
+	if( "tc_log".equals( name ) )
+	    name="org/apache/tomcat/core";
+	if( servletLogger || "servlet_log".equals( name ) )
+	    name="org/apache/tomcat/facade";
 
+	if( ctx != null ) {
+	    // this logger is local to a context
+	    name=name +  "/"  + ctx.getId();
+	}
+
+	log( "Constructing logger " + name + " " + path + " " + ctx );
+	
+	// construct a queue logger
 	QueueLogger ql=new QueueLogger();
-	if( name==null )
-	    throw new TomcatException( "Invalid name for logger " );
 	ql.setName(name);
 
 	if( path!=null )
@@ -181,14 +212,20 @@ public class LogSetter extends  BaseInterceptor {
 
 	ql.open();
 
-	//	if( debug>-1) log("Adding logger " + name + " " + servletLogger + " " + ctx );
-	cm.addLogger( ql );
+	Logger.putLogger( ql );
+
+	if( "org/apache/tomcat/core".equals( name ) ) {
+	    // this will be the Log interface to the log we just created
+	    // ( the way logs and channels are created is a bit
+	    // complicated - work for later )
+	    cm.setLog( Log.getLog( name, "ContextManager");
+	}
 
 	if( ctx!=null ) {
 	    if( servletLogger ) {
-		ctx.setServletLogger( ql );
+		ctx.setServletLog( Log.getLog( name, ctx.getId() ) );
 	    } else {
-		ctx.setLogger( ql );
+		ctx.setLog( Log.getLog( name, ctx.getId() ) );
 	    }
 	}  
 
