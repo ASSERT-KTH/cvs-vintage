@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/runtime/Attic/JspServlet.java,v 1.3 1999/10/17 22:21:32 mandar Exp $
- * $Revision: 1.3 $
- * $Date: 1999/10/17 22:21:32 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/runtime/Attic/JspServlet.java,v 1.4 1999/10/18 17:40:56 mandar Exp $
+ * $Revision: 1.4 $
+ * $Date: 1999/10/18 17:40:56 $
  *
  * ====================================================================
  * 
@@ -341,27 +341,7 @@ public class JspServlet extends HttpServlet {
             }
 
             serviceJspFile(request, response, jspUri, null, preCompile(request));
-
-	} catch (HandleErrorPageException ex) {
-	    try {
-		if (ex.errorPage.endsWith(".html") || 
-		    ex.errorPage.endsWith(".htm")) 
-		{
-		    String rdir = new File(request.getPathInfo()).getParent();
-		    String path = rdir + ex.errorPage;
-		    response.sendRedirect(path);
-		}
-		else {
-                    String errorPage = ex.errorPage;
-                    if (!ex.errorPage.startsWith("/")) {
-                        File jspFile = new File(request.getServletPath());
-                        errorPage = jspFile.getParent()+File.separatorChar+ex.errorPage;
-                    }
-		    serviceJspFile(request, response, errorPage, ex.exception, false);
-		}
-	    } catch (Throwable t) {
-		unknownException(response, t);
-	    }
+	    
 	} catch (RuntimeException e) {
 	    throw e;
 	} catch (ServletException e) {
