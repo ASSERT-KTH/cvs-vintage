@@ -1196,8 +1196,10 @@ public class IssueSearch
                         IssuePeer.ISSUE_ID, Criteria.CUSTOM); 
                     crit.addAlias("av"+index, AttributeValuePeer.TABLE_NAME);
                     c2 = buildOptionCriterion(aval);
-                    c1.and(c2);
                     aliasIndices.put(index, c2);
+                    Criteria.Criterion c3 = crit.getNewCriterion("av"+index,
+                        "DELETED", Boolean.FALSE, Criteria.EQUAL);
+                    c1.and(c2).and(c3);
                     if ( c == null ) 
                     {
                         c = c1;
