@@ -64,7 +64,7 @@ import org.tigris.scarab.util.SkipFiltering;
 /**
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: EmailLink.java,v 1.3 2003/05/15 23:53:21 dlr Exp $
+ * @version $Id: EmailLink.java,v 1.4 2003/05/31 04:02:31 dlr Exp $
  */
 public class EmailLink
     implements InitableRecyclable, SkipFiltering
@@ -88,6 +88,15 @@ public class EmailLink
 
     /** HTTPS protocol. */
     public static final String HTTPS = "https";
+
+    /**
+     * Constructor to allow factory instantiation of 
+     * EmailLinks. setCurrentModule must be called before
+     * first use.
+     */
+    public EmailLink()
+    {
+    }
 
     /**
      * Constructor.
@@ -284,12 +293,7 @@ public class EmailLink
      */
     public String getServerName()
     {
-        String result = null;
-        if (currentModule != null)
-        {
-            result = currentModule.getDomain();
-        }
-        return result;
+        return (currentModule != null ? currentModule.getDomain() : null);
     }
 
     /**

@@ -81,7 +81,7 @@ import org.tigris.scarab.services.email.VelocityEmail;
  * @author <a href="mailto:jon@collab.net">Jon Scott Stevens</a>
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: Email.java,v 1.34 2003/05/06 07:50:06 jon Exp $
+ * @version $Id: Email.java,v 1.35 2003/05/31 04:02:31 dlr Exp $
  */
 public class Email extends TemplateEmail
 {
@@ -289,7 +289,7 @@ public class Email extends TemplateEmail
         }        
         te.setContext(context);
 
-        EmailLink el = new EmailLink(module);
+        EmailLink el = EmailLinkFactory.getInstance(module);
         context.setLinkTool(el);
 
         String[] nameAndAddr = getNameAndAddress(fromUser);
