@@ -248,9 +248,10 @@
         <copy file="${src.conf.dir}/torque.props" 
               overwrite="true" tofile="${torque.dir.scarab}/build.properties"/>
         <ant antfile="build.xml"
-                dir="${torque.dir.scarab}" target="project-sql">
+                dir="${torque.dir.scarab}" target="project-sql" inheritAll="false">
             <property name="torque.home" value="${torque.dir.scarab}"/>
             <property name="lib.dir" value="${lib.dir}"/>
+            <property name="build.properties" value="${torque.dir.scarab}/build.properties"/>
         </ant>
 
         <move file="${src.sql.dir}/${project}-schema.sql"
@@ -275,10 +276,11 @@
         <copy file="${src.conf.dir}/torque.props"
               overwrite="true" tofile="${torque.dir.scarab}/build.properties"/>
         <ant antfile="build.xml"
-                dir="${torque.dir.scarab}" target="project-datadtd">
+                dir="${torque.dir.scarab}" target="project-datadtd" inheritAll="false">
             <property name="torque.home" value="${torque.dir.scarab}"/>
             <property name="databaseName" value="default"/>
             <property name="lib.dir" value="${lib.dir}"/>
+            <property name="build.properties" value="${torque.dir.scarab}/build.properties"/>
         </ant>
 
         <move file="${src.java.dir.scarab}/${project}-data.dtd"
@@ -298,9 +300,10 @@
         <copy file="${src.conf.dir}/torque.props" overwrite="true"
             tofile="${torque.dir.scarab}/build.properties"/>
         <ant antfile="build.xml" dir="${torque.dir.scarab}"
-            target="project-datasql">
+            target="project-datasql" inheritAll="false">
             <property name="torque.home" value="${torque.dir.scarab}"/>
             <property name="lib.dir" value="${lib.dir}"/>
+            <property name="build.properties" value="${torque.dir.scarab}/build.properties"/>
         </ant>
         <move file="${src.java.dir.scarab}/${project}-data.sql"
             tofile="${src.sql.dir}/${project}-data.sql"/>
@@ -335,6 +338,7 @@
                 target="project-om" inheritAll="false">
             <property name="torque.home" value="${torque.dir.scarab}"/>
             <property name="lib.dir" value="${lib.dir}"/>
+            <property name="build.properties" value="${torque.dir.scarab}/build.properties"/>
         </ant>
 
         <move todir="${build.src.scarab}/org" filtering="yes">
