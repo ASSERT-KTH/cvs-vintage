@@ -220,6 +220,11 @@ public class DefaultSearchEngine {
      */
     public Object[] searchMessages(Filter filter, Object[] uids)
         throws Exception {
+        if (!filter.getEnabled()) {
+            // filter is disabled
+            return new Object[] {  };
+        }
+
         long startTime = System.currentTimeMillis();
 
         List notDefaultEngineResult = null;

@@ -16,11 +16,14 @@ import org.columba.ristretto.message.Header;
  * @author fdietz
  */
 public class ToOrCcFilter extends HeaderfieldFilter {
+    private String criteria;
+    private String pattern;
+
     /**
      * Constructor for ToOrCcFilter.
      */
-    public ToOrCcFilter(FilterCriteria filter) {
-        super(filter);
+    public ToOrCcFilter() {
+        super();
     }
 
     /**
@@ -28,12 +31,6 @@ public class ToOrCcFilter extends HeaderfieldFilter {
      */
     public boolean process(Object[] args, Folder folder, Object uid)
         throws Exception {
-        //          before/after
-        String criteria = getFilterCriteria().get("criteria");
-
-        // string to search
-        String pattern = getFilterCriteria().get("pattern");
-
         // get the header of the message
         Header header = folder.getHeaderFields(uid, new String[] { "To", "Cc" });
 
@@ -58,5 +55,16 @@ public class ToOrCcFilter extends HeaderfieldFilter {
 
         // return the result as boolean value true or false
         return result;
+    }
+
+    /**
+     * @see org.columba.mail.filter.plugins.AbstractFilter#setUp(org.columba.mail.filter.FilterCriteria)
+     */
+    public void setUp(FilterCriteria f) {
+        //  before/after
+        criteria = f.get("criteria");
+
+        // string to search
+        pattern = f.get("pattern");
     }
 }
