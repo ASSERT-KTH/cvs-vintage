@@ -1,4 +1,4 @@
-// $Id: UMLScriptExpressionModel.java,v 1.2 2004/09/14 20:12:16 mvw Exp $
+// $Id: UMLScriptExpressionModel.java,v 1.3 2004/12/11 19:15:41 mvw Exp $
 // Copyright (c) 2003-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,8 +25,7 @@
 package org.argouml.uml.ui;
 
 import org.argouml.model.ModelFacade;
-
-import ru.novosoft.uml.foundation.data_types.MActionExpression;
+import org.argouml.model.uml.DataTypesFactory;
 
 /**
  * 
@@ -64,7 +63,7 @@ public class UMLScriptExpressionModel extends UMLExpressionModel2 {
      * @see org.argouml.uml.ui.UMLExpressionModel2#newExpression()
      */
     public Object newExpression() {
-        return new MActionExpression("", "");
+        return DataTypesFactory.getFactory().createActionExpression("", "");
     }
 
 }
