@@ -1,4 +1,4 @@
-// $Id: UMLAction.java,v 1.32 2004/12/26 11:14:44 mvw Exp $
+// $Id: UMLAction.java,v 1.33 2004/12/28 12:56:45 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -141,7 +141,9 @@ public class UMLAction extends AbstractAction {
     }
 
     /** 
-     * Perform the work the action is supposed to do.
+     * Perform the work the action is supposed to do. 
+     * This method needs to be overridden by all actions, 
+     * since it only shows a fake progressbar...
      * 
      * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
      */
