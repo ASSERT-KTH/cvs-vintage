@@ -15,9 +15,11 @@ import java.net.URLClassLoader;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Iterator;
+import java.util.Map;
 import javax.ejb.EJBLocalHome;
 import javax.naming.InitialContext;
 import javax.management.MBeanServer;
@@ -78,7 +80,7 @@ import org.jboss.util.jmx.ObjectNameFactory;
  * @author <a href="mailto:d_jencks@users.sourceforge.net">David Jencks</a>
  * @author <a href="mailto:reverbel@ime.usp.br">Francisco Reverbel</a>
  * @author <a href="mailto:Adrian.Brock@HappeningTimes.com">Adrian.Brock</a>
- * @version $Revision: 1.17 $
+ * @version $Revision: 1.18 $
  *
  * @jmx:mbean extends="org.jboss.system.ServiceMBean"
  */
@@ -130,6 +132,9 @@ public class EjbModule
 
    private ServiceControllerMBean serviceController;
 
+   private final Map moduleData = 
+         Collections.synchronizedMap(new HashMap());
+   
    //private MBeanServer server;
    
    // Static --------------------------------------------------------
@@ -147,6 +152,26 @@ public class EjbModule
       this.name = deploymentInfo.url.toString();
    }
 
+   public Map getModuleDataMap()
+   {
+      return moduleData;
+   }
+   
+   public Object getModuleData(Object key)
+   {
+      return moduleData.get(key);
+   }
+   
+   public void putModuleData(Object key, Object value)
+   {
+      moduleData.put(key, value);
+   }
+   
+   public void removeModuleData(Object key)
+   {
+      moduleData.remove(key);
+   }
+ 
    /**
     * Add a container to this deployment unit.
     *
@@ -642,6 +667,7 @@ public class EjbModule
       // For loading resources that must come from the local jar.  Not for loading classes!
       container.setLocalClassLoader( new URLClassLoader( new URL[ 0 ], localCl ) );
       // Set metadata (do it *before* creating the container's WebClassLoader)
+      container.setEjbModule( this );
       container.setBeanMetaData( bean );
 
       // Create the container's WebClassLoader 

@@ -28,6 +28,7 @@ import javax.transaction.TransactionManager;
 
 import org.jboss.deployment.DeploymentException;
 import org.jboss.ejb.Container;
+import org.jboss.ejb.EjbModule;
 import org.jboss.ejb.EntityContainer;
 import org.jboss.ejb.EntityPersistenceStore;
 import org.jboss.ejb.EntityEnterpriseContext;
@@ -60,7 +61,7 @@ import org.jboss.util.LRUCachePolicy;
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @see org.jboss.ejb.EntityPersistenceStore
- * @version $Revision: 1.32 $
+ * @version $Revision: 1.33 $
  */
 public class JDBCStoreManager implements EntityPersistenceStore
 {
@@ -70,9 +71,10 @@ public class JDBCStoreManager implements EntityPersistenceStore
     */
    private static final Object TX_DATA_KEY = "TX_DATA_KEY";
    
-   private static final Map applicationData =
-   Collections.synchronizedMap(new HashMap());
+//   private static final Map applicationData =
+//   Collections.synchronizedMap(new HashMap());
    
+   private EjbModule ejbModule;
    private EntityContainer container;
    private Logger log;
    
@@ -135,9 +137,12 @@ public class JDBCStoreManager implements EntityPersistenceStore
       this.container = (EntityContainer) container;
       if( container != null )
       {
+         ejbModule = container.getEjbModule();
          String categoryName = this.getClass().getName() +
             "." + container.getBeanMetaData().getEjbName();
          this.log = Logger.getLogger(categoryName);
+      } else {
+         ejbModule = null;
       }
    }
 
@@ -176,22 +181,22 @@ public class JDBCStoreManager implements EntityPersistenceStore
    //
    public Map getApplicationDataMap()
    {
-      return applicationData;
+      return ejbModule.getModuleDataMap();
    }
    
    public Object getApplicationData(Object key)
    {
-      return applicationData.get(key);
+      return ejbModule.getModuleData(key);
    }
    
    public void putApplicationData(Object key, Object value)
    {
-      applicationData.put(key, value);
+      ejbModule.putModuleData(key, value);
    }
    
    public void removeApplicationData(Object key)
    {
-      applicationData.remove(key);
+      ejbModule.removeModuleData(key);
    }
    
    public Map getApplicationTxDataMap()
@@ -290,13 +295,14 @@ public class JDBCStoreManager implements EntityPersistenceStore
    
    private void initApplicationDataMap()
    {
-      synchronized(applicationData)
+      Map moduleData = ejbModule.getModuleDataMap();
+      synchronized(moduleData)
       {
-         Map txDataMap = (Map)getApplicationData(TX_DATA_KEY);
+         Map txDataMap = (Map)moduleData.get(TX_DATA_KEY);
          if(txDataMap == null)
          {
             txDataMap = new HashMap();
-            putApplicationData(TX_DATA_KEY, txDataMap);
+            moduleData.put(TX_DATA_KEY, txDataMap);
          }
       }
    }
@@ -307,7 +313,7 @@ public class JDBCStoreManager implements EntityPersistenceStore
    public void create() throws Exception
    {
       log.debug("Initializing CMP plugin for " +
-      container.getBeanMetaData().getEjbName());
+            container.getBeanMetaData().getEjbName());
       
       // initializes the generic data containers
       initApplicationDataMap();
@@ -320,8 +326,8 @@ public class JDBCStoreManager implements EntityPersistenceStore
       
       // setup the type factory, which is used to map java types to sql types.
       typeFactory = new JDBCTypeFactory(
-      metaData.getTypeMapping(),
-      metaData.getJDBCApplication().getValueClasses());
+            metaData.getTypeMapping(),
+            metaData.getJDBCApplication().getValueClasses());
       
       // create the bridge between java land and this engine (sql land)
       entityBridge = new JDBCEntityBridge(metaData, this);
