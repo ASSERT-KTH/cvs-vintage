@@ -47,7 +47,7 @@ import org.gjt.sp.util.Log;
 /**
  * The main class of the jEdit text editor.
  * @author Slava Pestov
- * @version $Id: jEdit.java,v 1.236 2004/08/12 22:42:43 spestov Exp $
+ * @version $Id: jEdit.java,v 1.237 2004/08/21 01:49:05 spestov Exp $
  */
 public class jEdit
 {
@@ -3579,7 +3579,10 @@ loop:		for(int i = 0; i < list.length; i++)
 				if(view != null && view.getBuffer() == buffer)
 					view.getTextArea().setCaretPosition(pos);
 				else
+				{
 					buffer.setIntegerProperty(Buffer.CARET,pos);
+					buffer.unsetProperty(Buffer.SCROLL_VERT);
+				}
 			}
 		});
 	} //}}}

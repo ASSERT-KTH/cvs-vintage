@@ -70,7 +70,7 @@ import org.gjt.sp.util.Log;
  *
  * @author Slava Pestov
  * @author John Gellene (API documentation)
- * @version $Id: MiscUtilities.java,v 1.76 2004/08/17 06:37:35 spestov Exp $
+ * @version $Id: MiscUtilities.java,v 1.77 2004/08/21 01:49:05 spestov Exp $
  */
 public class MiscUtilities
 {
@@ -412,7 +412,8 @@ public class MiscUtilities
 			return false;
 
 		String protocol = str.substring(0,cIndex);
-		if(VFSManager.getVFSForProtocol(protocol) != null)
+		VFS vfs = VFSManager.getVFSForProtocol(protocol);
+		if(vfs != null && !(vfs instanceof UrlVFS))
 			return true;
 
 		try

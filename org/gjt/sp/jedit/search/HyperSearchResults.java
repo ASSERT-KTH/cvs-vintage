@@ -40,7 +40,7 @@ import org.gjt.sp.jedit.*;
 /**
  * HyperSearch results window.
  * @author Slava Pestov
- * @version $Id: HyperSearchResults.java,v 1.33 2004/07/12 19:25:08 spestov Exp $
+ * @version $Id: HyperSearchResults.java,v 1.34 2004/08/21 01:49:06 spestov Exp $
  */
 public class HyperSearchResults extends JPanel implements EBComponent,
 	DefaultFocusComponent
@@ -497,8 +497,15 @@ public class HyperSearchResults extends JPanel implements EBComponent,
 				{
 					resultCount += node.getChildAt(i).getChildCount();
 				}
+
+				String property = "hypersearch-results.result-caption";
+				if (bufferCount == 1)
+				{
+					property += resultCount == 1 ? "1" : "2";
+				}
+
 				Object[] pp = { node.toString(), new Integer(resultCount), new Integer(bufferCount) };
-				setText(jEdit.getProperty("hypersearch-results.result-caption",pp));
+				setText(jEdit.getProperty(property,pp));
 			}
 			else if(node.getUserObject() instanceof String)
 			{
