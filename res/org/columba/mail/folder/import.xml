@@ -2,6 +2,9 @@
 <!-- <!DOCTYPE folderlist SYSTEM "import.dtd"> -->
 
 <importlist>
- <importer name="mh" class="org.columba.mail.folder.mailboximport.MHImporter"/>
- <importer name="mbox" class="org.columba.mail.folder.mailboximport.MBOXImporter"/>
+ <importer name="default mh" class="org.columba.mail.folder.mailboximport.MHImporter"/>
+ <importer name="default mbox" class="org.columba.mail.folder.mailboximport.MBOXImporter"/>
+ <importer name="Mozilla mbox" class="org.columba.mail.folder.mailboximport.MozillaImporter"/>
+ <importer name="Evolution mbox" class="org.columba.mail.folder.mailboximport.EvolutionImporter"/>
+ <importer name="PegasusMail mbox" class="org.columba.mail.folder.mailboximport.PegasusMailImporter"/>
 </importlist>
