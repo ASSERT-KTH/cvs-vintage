@@ -3,7 +3,7 @@
                                  Release Notes
                                  =============
 
-$Id: RELEASE-NOTES-3.3.2.txt,v 1.19 2003/09/14 04:43:20 billbarker Exp $
+$Id: RELEASE-NOTES-3.3.2.txt,v 1.20 2003/09/26 04:27:48 billbarker Exp $
 
 
 This document describes the changes that have been made since the
@@ -71,6 +71,9 @@ Bug No.  Description
 
          Updated DecodeInterceptor to treat URL paths containing null
          characters as unsafe.
+
+	 Fix problem where the AccessLog was printing the content-length of the
+	 Request instead of the Response.
 
 Jasper:
 
