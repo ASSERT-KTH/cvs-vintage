@@ -39,7 +39,7 @@ import org.jboss.util.FinderResults;
  * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  * @author <a href="mailto:shevlandj@kpi.com.au">Joe Shevland</a>
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
- * @version $Revision: 1.35 $
+ * @version $Revision: 1.36 $
  *
  *   <p><b>Revisions:</b>
  *
@@ -92,7 +92,7 @@ public class JAWSPersistenceManager
       container = (EntityContainer)c;
    }
 
-   public void init() throws Exception
+   public void create() throws Exception
    {
       log.debug("Initializing JAWS plugin for " +
                 container.getBeanMetaData().getEjbName());

@@ -21,7 +21,7 @@ import org.jboss.metadata.XmlFileLoader;
  *
  *	@see <related>
  *	@author <a href="sebastien.alborini@m4x.org">Sebastien Alborini</a>
- *	@version $Revision: 1.9 $
+ *	@version $Revision: 1.10 $
  *
  *   <p><b>Revisions:</b>
  *
@@ -78,7 +78,7 @@ public class JawsXmlFileLoader
       }
       
       // this can only be done once all the beans are built
-      jamd.init();
+      jamd.create();
       
       return jamd;
    }

@@ -32,7 +32,7 @@ import org.apache.log4j.Category;
  *
  * @see <related>
  * @author <a href="sebastien.alborini@m4x.org">Sebastien Alborini</a>
- * @version $Revision: 1.12 $
+ * @version $Revision: 1.13 $
  *
  *   <p><b>Revisions:</b>
  *
@@ -83,7 +83,7 @@ public class JawsApplicationMetaData extends MetaData implements XmlLoadable {
       // initialisation of this object goes as follows:
       //  - constructor
       //  - importXml() for standardjaws.xml and jaws.xml
-      //  - init()
+      //  - create()
 
       // the classloader is the same for all the beans in the application
       classLoader = cl;
@@ -127,7 +127,7 @@ public class JawsApplicationMetaData extends MetaData implements XmlLoadable {
       return (JawsEntityMetaData)entities.get(name);
    }
 
-   public void init()
+   public void create()
       throws DeploymentException
    {
       // find the datasource
