@@ -314,6 +314,7 @@
 
         <!-- the source code directory -->
         <filter token="OM" value="org.tigris.scarab.om"/>
+        <touch file="${src.java.dir.scarab}/org/tigris/scarab/tools/ScarabRequestTool.java" />
         <copy todir="${build.src.scarab}/org" filtering="yes">
             <fileset dir="${src.java.dir.scarab}/org" defaultexcludes="no">
                 <include name="**/*.java"/>
