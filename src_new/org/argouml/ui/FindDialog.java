@@ -1,4 +1,4 @@
-// $Id: FindDialog.java,v 1.28 2004/10/17 19:35:43 mvw Exp $
+// $Id: FindDialog.java,v 1.29 2004/10/18 17:14:12 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -76,7 +76,7 @@ public class FindDialog extends ArgoDialog
     private static int numFinds = 0;
     
     /** Insets in pixels  */
-    private static int insetPx = 3;
+    private static final int INSET_PX = 3;
 
     ////////////////////////////////////////////////////////////////
     // instance variables
@@ -298,7 +298,7 @@ public class FindDialog extends ArgoDialog
         JTextArea helpText = new JTextArea();
         helpText.setText(Translator.localize("dialog.find.helptext"));
         helpText.setEditable(false);
-        helpText.setMargin(new Insets(insetPx, insetPx, insetPx, insetPx));
+        helpText.setMargin(new Insets(INSET_PX, INSET_PX, INSET_PX, INSET_PX));
         help.add(new JScrollPane(helpText), BorderLayout.CENTER);
     }
 
