@@ -87,6 +87,7 @@ import org.tigris.scarab.attribute.OptionAttribute;
 import org.tigris.scarab.util.ScarabConstants;
 import org.tigris.scarab.workflow.WorkflowFactory;
 import org.tigris.scarab.om.IssuePeer;
+import org.tigris.scarab.util.EmailContext;
 
 import org.apache.commons.lang.StringUtils;
 
@@ -96,7 +97,7 @@ import org.apache.commons.lang.StringUtils;
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: Issue.java,v 1.296 2003/05/02 00:15:37 jon Exp $
+ * @version $Id: Issue.java,v 1.297 2003/05/07 00:20:44 beril Exp $
  */
 public class Issue 
     extends BaseIssue
@@ -3781,7 +3782,9 @@ public class Issue
                 .createTextActivity(this, null, activitySet,
                                     desc, attachment,
                                     oldComment, newComment);
-                                    
+             
+             EmailContext context = new EmailContext();
+             activitySet.sendEmail(context, this);                       
         }
         return activitySet;
     }
