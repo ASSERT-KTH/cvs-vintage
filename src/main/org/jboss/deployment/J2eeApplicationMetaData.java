@@ -6,7 +6,7 @@
  */
 package org.jboss.deployment;
 
-// $Id: J2eeApplicationMetaData.java,v 1.6 2004/04/05 10:26:36 tdiesler Exp $
+// $Id: J2eeApplicationMetaData.java,v 1.7 2004/04/22 20:36:40 ejort Exp $
 
 import java.util.Collection;
 import java.util.HashSet;
@@ -27,7 +27,7 @@ import javax.management.ObjectName;
  * descriptors.
  *
  * @author Thomas.Diesler@jboss.org
- * @version $Revision: 1.6 $
+ * @version $Revision: 1.7 $
  * @see org.jboss.metadata.XmlLoadable
  */
 public class J2eeApplicationMetaData
@@ -198,6 +198,14 @@ public class J2eeApplicationMetaData
             srMetaData.addPrincipalName(principalName);
          }
          securityRoles.put(roleName, srMetaData);
+      }
+
+      // extract modules...
+      for (Iterator it = getChildrenByTagName(rootElement, "module"); it.hasNext();)
+      {
+         J2eeModuleMetaData moduleMetaData = new J2eeModuleMetaData();
+         moduleMetaData.importXml((Element) it.next());
+         modules.add(moduleMetaData);
       }
    }
 }

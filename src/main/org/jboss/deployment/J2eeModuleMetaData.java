@@ -6,7 +6,7 @@
  */
 package org.jboss.deployment;
 
-// $Id: J2eeModuleMetaData.java,v 1.8 2004/04/05 10:26:36 tdiesler Exp $
+// $Id: J2eeModuleMetaData.java,v 1.9 2004/04/22 20:36:40 ejort Exp $
 
 import org.jboss.metadata.MetaData;
 
@@ -17,7 +17,7 @@ import org.w3c.dom.Element;
  *
  * @author <a href="mailto:daniel.schulze@telkel.com">Daniel Schulze</a>
  * @author Thomas.Diesler@jboss.org
- * @version $Revision: 1.8 $
+ * @version $Revision: 1.9 $
  */
 public class J2eeModuleMetaData
         extends MetaData
@@ -87,21 +87,15 @@ public class J2eeModuleMetaData
    public void importXml(Element rootElement) throws DeploymentException
    {
       String rootTag = rootElement.getOwnerDocument().getDocumentElement().getTagName();
-      if( rootTag.equals("application") )
-      {
-         importApplicationXml(rootElement);
-      }
-      else if( rootTag.equals("jboss-app") )
-      {
-         importJBossAppXml(rootElement);
-      }
+      if (rootTag.equals("application"))
+         importXml(rootElement, false);
+      else if (rootTag.equals("jboss-app"))
+         importXml(rootElement, true);
       else
-      {
          throw new DeploymentException("Unrecognized root tag: " + rootTag);
-      }
    }
 
-   protected void importApplicationXml(Element element) throws DeploymentException
+   protected void importXml(Element element, boolean jbossSpecific) throws DeploymentException
    {
       String name = element.getTagName();
       if (name.equals("module"))
@@ -119,7 +113,8 @@ public class J2eeModuleMetaData
             switch (type)
             {
                case SERVICE:
-                  throw new DeploymentException("Service archives must be in jboss-app.xml");
+                  if (jbossSpecific == false)
+                     throw new DeploymentException("Service archives must be in jboss-app.xml");
                case EJB:
                case CLIENT:
                case CONNECTOR:
@@ -152,9 +147,4 @@ public class J2eeModuleMetaData
          throw new DeploymentException("non-module tag in application dd: " + name);
       }
    }
-
-   protected void importJBossAppXml(Element element) throws DeploymentException
-   {
-   }
-
 }
