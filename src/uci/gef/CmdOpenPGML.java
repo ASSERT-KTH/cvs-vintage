@@ -24,7 +24,7 @@
 // File: CmdOpen.java
 // Classes: CmdOpen
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CmdOpenPGML.java,v 1.2 1999/03/11 01:11:40 jrobbins Exp $
+// $Id: CmdOpenPGML.java,v 1.3 1999/04/20 01:51:19 jrobbins Exp $
 
 package uci.gef;
 
@@ -44,7 +44,7 @@ import uci.xml.pgml.*;
 public class CmdOpenPGML extends Cmd implements FilenameFilter {
 
   public CmdOpenPGML() {
-    super("Open PGML...");
+    super("Open PGML...", NO_ICON);
     setArg("filterPattern", "*.pgml");
   }
 

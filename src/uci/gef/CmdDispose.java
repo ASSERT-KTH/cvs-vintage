@@ -26,7 +26,7 @@
 // File: CmdDispose.java
 // Classes: CmdDispose
 // Original Author: ics125 spring 1996
-// $Id: CmdDispose.java,v 1.7 1999/02/19 22:17:51 jrobbins Exp $
+// $Id: CmdDispose.java,v 1.8 1999/04/20 01:51:14 jrobbins Exp $
 
 package uci.gef;
 
@@ -42,7 +42,7 @@ import java.awt.Event;
 
 public class CmdDispose extends Cmd {
 
-  public CmdDispose() { super("Remove From Model"); }
+  public CmdDispose() { super("Remove From Model", NO_ICON); }
 
   public void doIt() {
     Editor ce = Globals.curEditor();

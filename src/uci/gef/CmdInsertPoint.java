@@ -27,7 +27,7 @@
 // File: CmdInsertPoint.java
 // Classes: CmdInsertPoint
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CmdInsertPoint.java,v 1.7 1999/02/19 22:17:55 jrobbins Exp $
+// $Id: CmdInsertPoint.java,v 1.8 1999/04/20 01:51:18 jrobbins Exp $
 
 package uci.gef;
 
@@ -41,9 +41,9 @@ import java.awt.Event;
 public class CmdInsertPoint extends Cmd {
 
   protected int _selectedHandle = 0;
-  
+
   public CmdInsertPoint(int i) { this(); _selectedHandle = i; }
-  public CmdInsertPoint() { super("Insert a new point"); }
+  public CmdInsertPoint() { super("Insert a new point", NO_ICON); }
 
   /** Ask the current editor's selected Fig to Insert a point. */
   public void doIt() {

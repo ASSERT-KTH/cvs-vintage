@@ -26,7 +26,7 @@
 // File: CmdSpawn.java
 // Classes: CmdSpawn
 // Original Author: ics125 spring 1996
-// $Id: CmdSpawn.java,v 1.8 1999/02/19 22:18:12 jrobbins Exp $
+// $Id: CmdSpawn.java,v 1.9 1999/04/20 01:51:30 jrobbins Exp $
 
 package uci.gef;
 
@@ -42,7 +42,7 @@ import java.awt.*;
 
 public class CmdSpawn extends Cmd {
 
-  public CmdSpawn() { super("Spawn Editor"); }
+  public CmdSpawn() { super("Spawn Editor", NO_ICON); }
 
   public void doIt() {
     Editor ce = Globals.curEditor();

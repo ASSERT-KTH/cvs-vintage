@@ -26,7 +26,7 @@
 // File: CmdDelete.java
 // Classes: CmdDelete
 // Original Author: ics125 spring 1996
-// $Id: CmdDelete.java,v 1.7 1999/02/19 22:17:50 jrobbins Exp $
+// $Id: CmdDelete.java,v 1.8 1999/04/20 01:51:13 jrobbins Exp $
 
 package uci.gef;
 
@@ -44,7 +44,7 @@ import java.awt.Event;
 
 public class CmdDelete extends Cmd {
 
-  public CmdDelete() { super("Delete from Diagram"); }
+  public CmdDelete() { super("Delete from Diagram", NO_ICON); }
 
   /** Tell the selected Figs to remove themselves from the
    *  the diagram it is in (and thus all editors). */

@@ -27,7 +27,7 @@
 // File: ColorEditor.java
 // Interfaces: ColorEditor
 // Original Author: jrobbins@ics.uci.edu
-// $Id: ColorEditor.java,v 1.7 1999/03/17 03:18:30 jrobbins Exp $
+// $Id: ColorEditor.java,v 1.8 1999/04/20 01:51:06 jrobbins Exp $
 
 package uci.beans.editors;
 
@@ -54,8 +54,8 @@ implements PropertyEditor { //, MouseListener {
   public ColorEditor() {
     setLayout(null);
     //addNotify();
-    resize(insets().left + insets().right + 20,
-	   insets().top + insets().bottom + 20);
+    setSize(getInsets().left + getInsets().right + 20,
+	    getInsets().top + getInsets().bottom + 20);
     setForeground(Color.lightGray);
   }
 

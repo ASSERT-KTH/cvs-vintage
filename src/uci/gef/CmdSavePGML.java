@@ -28,7 +28,7 @@
 // File: CmdSave.java
 // Classes: CmdSave
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CmdSavePGML.java,v 1.2 1999/03/11 01:11:41 jrobbins Exp $
+// $Id: CmdSavePGML.java,v 1.3 1999/04/20 01:51:23 jrobbins Exp $
 
 package uci.gef;
 
@@ -77,7 +77,7 @@ public class CmdSavePGML extends Cmd implements FilenameFilter {
     _expander = new OCLExpander(_templates);
   }
 
-  public CmdSavePGML() { super("Save as PGML..."); }
+  public CmdSavePGML() { super("Save as PGML...", NO_ICON); }
 
   /** Only allow the user to select files that match the fiven
    *  filename pattern. Needs-More-Work: this is not used yet. */

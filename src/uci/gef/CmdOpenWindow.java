@@ -27,7 +27,7 @@
 // File: CmdOpenWindow.java
 // Classes: CmdOpenWindow
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CmdOpenWindow.java,v 1.7 1999/02/19 22:17:59 jrobbins Exp $
+// $Id: CmdOpenWindow.java,v 1.8 1999/04/20 01:51:20 jrobbins Exp $
 
 package uci.gef;
 
@@ -44,7 +44,7 @@ import java.util.*;
 public class CmdOpenWindow extends Cmd {
 
   public CmdOpenWindow(String className, String name) {
-    super(name);
+    super(name, NO_ICON);
     setArg("className", className);
   }
 

@@ -27,7 +27,7 @@
 // File: CmdAdjustGuide.java
 // Classes: CmdAdjustGuide
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CmdAdjustGuide.java,v 1.7 1999/02/19 22:17:46 jrobbins Exp $
+// $Id: CmdAdjustGuide.java,v 1.8 1999/04/20 01:51:11 jrobbins Exp $
 
 package uci.gef;
 
@@ -40,7 +40,7 @@ import java.awt.Event;
 
 public class CmdAdjustGuide extends Cmd {
 
-  public CmdAdjustGuide() { super("Adjust Grid Snap"); }
+  public CmdAdjustGuide() { super("Adjust Grid Snap", NO_ICON); }
 
   public void doIt() {
     Editor ce = Globals.curEditor();

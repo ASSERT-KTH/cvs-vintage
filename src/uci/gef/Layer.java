@@ -26,7 +26,7 @@
 // File: Layer.java
 // Classes: Layer
 // Original Author: jrobbins@ics.uci.edu
-// $Id: Layer.java,v 1.13 1999/02/19 22:18:46 jrobbins Exp $
+// $Id: Layer.java,v 1.14 1999/04/20 01:51:44 jrobbins Exp $
 
 package uci.gef;
 
@@ -194,6 +194,12 @@ public abstract class Layer implements java.io.Serializable {
    *  intersect given Rectangle. */
   public Enumeration elementsIn(Rectangle r) {
     return new EnumerationPredicate(elements(), new PredFigInRect(r));
+  }
+
+  /** Reply an enumeration of all the FigNodes in this Layer that 
+   *  intersect given Rectangle. */
+  public Enumeration nodesIn(Rectangle r) {
+    return new EnumerationPredicate(elements(), new PredFigNodeInRect(r));
   }
 
   /** Given an object from the net-level model (e.g., NetNode or

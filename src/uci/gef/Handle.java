@@ -27,7 +27,7 @@
 // File: Handle.java
 // Classes: Handle
 // Original Author: jrobbins@ics.uci.edu
-// $Id: Handle.java,v 1.5 1999/02/19 22:18:43 jrobbins Exp $
+// $Id: Handle.java,v 1.6 1999/04/20 01:51:42 jrobbins Exp $
 
 package uci.gef;
 
@@ -48,6 +48,13 @@ public class Handle {
 
   /** Index of the handle on some Fig that was clicked on. */
   public int index;
+
+  /** Instructions to be shown when the user's mouse is hovering over
+   *  or is dragging this handle */
+  public String instructions = " ";
+
+  /** Mouse cursor Cursor while hovering or dragging */
+  public Cursor cursor = null;
 
   ////////////////////////////////////////////////////////////////
   // constructors

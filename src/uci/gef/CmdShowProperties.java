@@ -27,7 +27,7 @@
 // File: CmdShowProperties.java
 // Classes: CmdShowProperties
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CmdShowProperties.java,v 1.4 1999/02/19 22:18:10 jrobbins Exp $
+// $Id: CmdShowProperties.java,v 1.5 1999/04/20 01:51:29 jrobbins Exp $
 
 package uci.gef;
 
@@ -44,7 +44,7 @@ import java.util.*;
 public class CmdShowProperties extends Cmd {
 
   public CmdShowProperties() {
-    super("Show Properties");
+    super("Show Properties", NO_ICON);
   }
 
   public void doIt() {

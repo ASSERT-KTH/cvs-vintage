@@ -27,7 +27,7 @@
 // File: ModeModify.java
 // Classes: ModeModify
 // Original Author: ics125 spring 1996
-// $Id: ModeModify.java,v 1.23 1999/03/18 02:13:13 jrobbins Exp $
+// $Id: ModeModify.java,v 1.24 1999/04/20 01:51:51 jrobbins Exp $
 
 package uci.gef;
 
@@ -195,7 +195,8 @@ public class ModeModify extends Mode {
     /* needs-more-work: _anchor point sign convention is backwards */
     _anchor.x = x;
     _anchor.y = y;
-    _curHandle.index = sm.hitHandle(new Rectangle(x-4, y-4, 8, 8));
+    sm.hitHandle(new Rectangle(x-4, y-4, 8, 8), _curHandle);
+    Globals.showStatus(_curHandle.instructions);
     sm.endTrans();
     synchronized (snapPt) {
       snapPt.setLocation(x, y);

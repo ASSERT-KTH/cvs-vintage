@@ -27,7 +27,7 @@
 // File: CmdUngroup.java
 // Classes: CmdUngroup
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CmdUngroup.java,v 1.7 1999/02/19 22:18:13 jrobbins Exp $
+// $Id: CmdUngroup.java,v 1.8 1999/04/20 01:51:31 jrobbins Exp $
 
 package uci.gef;
 
@@ -41,7 +41,7 @@ import java.awt.*;
 
 public class CmdUngroup extends Cmd {
 
-  public CmdUngroup() { super("Ungroup"); }
+  public CmdUngroup() { super("Ungroup", NO_ICON); }
 
   public void doIt() {
     Vector ungroupedItems = new Vector();

@@ -27,7 +27,7 @@
 // File: CmdSetMode.java
 // Classes: CmdSetMode
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CmdSetMode.java,v 1.8 1999/03/17 03:18:35 jrobbins Exp $
+// $Id: CmdSetMode.java,v 1.9 1999/04/20 01:51:28 jrobbins Exp $
 
 package uci.gef;
 
@@ -75,7 +75,7 @@ public class CmdSetMode extends Cmd {
   }
 
   public CmdSetMode(Class modeClass, String arg, Object value) {
-    super("Set Editor Mode");
+    super("Set Editor Mode", NO_ICON);
     _modeArgs = new Hashtable(1);
     _modeArgs.put(arg, value);
     setArg("desiredModeClass", modeClass);

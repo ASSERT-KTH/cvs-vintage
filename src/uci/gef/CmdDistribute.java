@@ -26,7 +26,7 @@
 // File: CmdDistribute.java
 // Classes: CmdDistribute
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CmdDistribute.java,v 1.5 1999/02/19 22:17:52 jrobbins Exp $
+// $Id: CmdDistribute.java,v 1.6 1999/04/20 01:51:15 jrobbins Exp $
 
 package uci.gef;
 
@@ -36,7 +36,7 @@ import java.util.*;
 /** An Cmd to align 2 or more objects relative to each other. */
 
 public class CmdDistribute extends Cmd {
-  
+
   ////////////////////////////////////////////////////////////////
   // constants
 

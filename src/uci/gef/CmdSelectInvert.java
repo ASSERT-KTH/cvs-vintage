@@ -27,7 +27,7 @@
 // File: CmdSelectInvert.java
 // Classes: CmdSelectInvert
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CmdSelectInvert.java,v 1.7 1999/02/19 22:18:06 jrobbins Exp $
+// $Id: CmdSelectInvert.java,v 1.8 1999/04/20 01:51:26 jrobbins Exp $
 
 package uci.gef;
 
@@ -41,7 +41,7 @@ import java.util.*;
 
 public class CmdSelectInvert extends Cmd {
 
-  public CmdSelectInvert() { super("Invert Selection"); }
+  public CmdSelectInvert() { super("Invert Selection", NO_ICON); }
 
   public void doIt() {
     Editor ce = Globals.curEditor();

@@ -27,7 +27,7 @@
 // File: CmdUseResize.java
 // Classes: CmdUseResize
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CmdUseResize.java,v 1.7 1999/02/19 22:18:15 jrobbins Exp $
+// $Id: CmdUseResize.java,v 1.8 1999/04/20 01:51:33 jrobbins Exp $
 
 package uci.gef;
 
@@ -44,7 +44,7 @@ import java.util.*;
 
 public class CmdUseResize extends Cmd {
 
-  public CmdUseResize() { super("Use Resize Handles"); }
+  public CmdUseResize() { super("Use Resize Handles", NO_ICON); }
 
   public void doIt() {
     Editor ce = Globals.curEditor();

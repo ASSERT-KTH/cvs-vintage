@@ -24,7 +24,7 @@
 // File: Fig.java
 // Classes: Fig
 // Original Author: ics125 spring 1996
-// $Id: Fig.java,v 1.26 1999/03/25 16:06:43 jrobbins Exp $
+// $Id: Fig.java,v 1.27 1999/04/20 01:51:37 jrobbins Exp $
 
 package uci.gef;
 
@@ -440,6 +440,11 @@ implements Cloneable, java.io.Serializable, PropertyChangeListener, PopupGenerat
     else delete();
   }
 
+  /** Returns a custom Selection object for use when this Fig is
+   *  selected by the user.  Normally SelectionManger makes the
+   *  Selection using its own rules.  This is for special cases. */
+  public Selection makeSelection() { return null; }
+
   /** Returns true if this Fig can be moved around by the user. */
   public boolean isMovable() { return true; }
 
@@ -472,7 +477,7 @@ implements Cloneable, java.io.Serializable, PropertyChangeListener, PopupGenerat
    *  startTrans() MUST be matched with a call to endTrans(). */
   public void startTrans() {
     damage();
-    RedrawManager.lock(); // helps avoid dirt
+    //RedrawManager.lock(); // helps avoid dirt
   }
 
   /** This is called after an Cmd mondifies a Fig and the Fig needs to
@@ -482,7 +487,7 @@ implements Cloneable, java.io.Serializable, PropertyChangeListener, PopupGenerat
    * endTrans(). */
   public void endTrans() {
     damage();
-    RedrawManager.unlock();  // helps avoid dirt
+    //RedrawManager.unlock();  // helps avoid dirt
   }
 
 

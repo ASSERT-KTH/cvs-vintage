@@ -27,7 +27,7 @@
 // File: CmdUseReshape.java
 // Classes: CmdUseReshape
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CmdUseReshape.java,v 1.7 1999/02/19 22:18:14 jrobbins Exp $
+// $Id: CmdUseReshape.java,v 1.8 1999/04/20 01:51:32 jrobbins Exp $
 
 package uci.gef;
 
@@ -44,7 +44,7 @@ import java.util.*;
 
 public class CmdUseReshape extends Cmd {
 
-  public CmdUseReshape() { super("Use Reshape Handles"); }
+  public CmdUseReshape() { super("Use Reshape Handles", NO_ICON); }
 
   public void doIt() {
     Editor ce = Globals.curEditor();

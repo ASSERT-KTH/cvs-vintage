@@ -27,7 +27,7 @@
 // File: CmdSelectNext.java
 // Classes: CmdSelectNext
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CmdSelectNext.java,v 1.7 1999/02/19 22:18:07 jrobbins Exp $
+// $Id: CmdSelectNext.java,v 1.8 1999/04/20 01:51:27 jrobbins Exp $
 
 package uci.gef;
 
@@ -58,7 +58,7 @@ public class CmdSelectNext extends Cmd {
     this(next ? DIR_NEXT : DIR_PREV);
   }
   public CmdSelectNext(String d) {
-    super("Select " + d);
+    super("Select " + d, NO_ICON);
     setArg(DIR, d);
   }
 

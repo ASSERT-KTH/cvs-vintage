@@ -23,32 +23,38 @@
 
 
 
-
-// File: CmdExit.java
-// Classes: CmdExit
+// File: PredFigNodeInRect.java
+// Classes: PredFigNodeInRect
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CmdExit.java,v 1.8 1999/04/20 01:51:16 jrobbins Exp $
+// $Id: PredFigNodeInRect.java,v 1.1 1999/04/20 01:51:54 jrobbins Exp $
 
 package uci.gef;
 
 import java.awt.*;
-import java.util.*;
+import uci.util.*;
 
-/** Cmd to close all windows and exit the application.
- *  Needs-More-Work: Needs to keep track of all open windows. */
+/** Predicate that returns true for FigNode's that intersect the
+ *  rectangle given in the constructor.  Useful for making a
+ *  EnumerationPredicate that finds Figs intersecting a given
+ *  Rectangle. */
+public class PredFigNodeInRect implements Predicate {
 
-public class CmdExit extends Cmd {
+  ////////////////////////////////////////////////////////////////
+  // instance variables
 
-  public CmdExit() { super("Exit", NO_ICON); }
+  Rectangle _r;
 
-  public void doIt() {
-    Globals.quit();
+  ////////////////////////////////////////////////////////////////
+  // constructor
+
+  public PredFigNodeInRect(Rectangle r) { _r = r; }
+
+  ////////////////////////////////////////////////////////////////
+  // Predicate API
+
+  public boolean predicate(Object o) {
+    if (!(o instanceof FigNode)) return false;
+    return ((Fig)o).intersects(_r);
   }
 
-  public void undoIt() {
-    System.out.println("Undo does not make sense for CmdExit");
-  }
-
-  static final long serialVersionUID = -4375051821931525151L;
-
-} /* end class CmdExit */
+} /* end class PredFigInRect */

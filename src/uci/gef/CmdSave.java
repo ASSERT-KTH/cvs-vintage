@@ -28,7 +28,7 @@
 // File: CmdSave.java
 // Classes: CmdSave
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CmdSave.java,v 1.8 1999/02/19 22:18:03 jrobbins Exp $
+// $Id: CmdSave.java,v 1.9 1999/04/20 01:51:22 jrobbins Exp $
 
 package uci.gef;
 
@@ -65,7 +65,7 @@ import java.io.*;
 
 public class CmdSave extends Cmd implements FilenameFilter {
 
-  public CmdSave() { super("Save..."); }
+  public CmdSave() { super("Save...", NO_ICON); }
 
   /** Only allow the user to select files that match the fiven
    *  filename pattern. Needs-More-Work: this is not used yet. */

@@ -27,7 +27,7 @@
 // File: CmdGroup.java
 // Classes: CmdGroup
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CmdGroup.java,v 1.7 1999/02/19 22:17:54 jrobbins Exp $
+// $Id: CmdGroup.java,v 1.8 1999/04/20 01:51:17 jrobbins Exp $
 
 package uci.gef;
 
@@ -42,7 +42,7 @@ import java.util.*;
 
 public class CmdGroup extends Cmd {
 
-  public CmdGroup() { super("Group"); }
+  public CmdGroup() { super("Group", NO_ICON); }
 
   public void doIt() {
     Editor ce = Globals.curEditor();

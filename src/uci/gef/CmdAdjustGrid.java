@@ -27,7 +27,7 @@
 // File: CmdAdjustGrid.java
 // Classes: CmdAdjustGrid
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CmdAdjustGrid.java,v 1.7 1999/02/19 22:17:45 jrobbins Exp $
+// $Id: CmdAdjustGrid.java,v 1.8 1999/04/20 01:51:10 jrobbins Exp $
 
 package uci.gef;
 
@@ -39,7 +39,7 @@ import java.awt.Event;
  *  box or use property sheet.  */
 public class CmdAdjustGrid extends Cmd {
 
-  public CmdAdjustGrid() { super("Adjust Grid"); }
+  public CmdAdjustGrid() { super("Adjust Grid", NO_ICON); }
 
   public void doIt() {
     Editor ce = Globals.curEditor();

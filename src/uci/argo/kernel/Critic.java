@@ -24,7 +24,7 @@
 // File: Critic.java
 // Classes: Critic
 // Original Author: jrobbins@ics.uci.edu
-// $Id: Critic.java,v 1.17 1999/03/25 16:06:35 jrobbins Exp $
+// $Id: Critic.java,v 1.18 1999/04/20 01:51:01 jrobbins Exp $
 
 package uci.argo.kernel;
 
@@ -560,7 +560,7 @@ public class Critic implements Poster, java.io.Serializable {
     int len = s.length();
     for (int i = 0; i < len; i++) {
       char c = s.charAt(i);
-      if (Character.isJavaLetterOrDigit(c)) res += c;
+      if (Character.isJavaIdentifierPart(c)) res += c;
     }
     return res;
   }

@@ -26,7 +26,7 @@
 // File: CmdAlign.java
 // Classes: CmdAlign
 // Original Author: ics125 spring 1996
-// $Id: CmdAlign.java,v 1.9 1999/02/19 22:17:47 jrobbins Exp $
+// $Id: CmdAlign.java,v 1.10 1999/04/20 01:51:12 jrobbins Exp $
 
 package uci.gef;
 
@@ -36,7 +36,7 @@ import java.util.*;
 /** An Cmd to align 2 or more objects relative to each other. */
 
 public class CmdAlign extends Cmd {
-  
+
   ////////////////////////////////////////////////////////////////
   // constants
 

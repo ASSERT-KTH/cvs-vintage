@@ -27,7 +27,7 @@
 // File: CmdUseRotate.java
 // Classes: CmdUseRotate
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CmdUseRotate.java,v 1.7 1999/02/19 22:18:16 jrobbins Exp $
+// $Id: CmdUseRotate.java,v 1.8 1999/04/20 01:51:34 jrobbins Exp $
 
 package uci.gef;
 
@@ -44,7 +44,7 @@ import java.util.*;
 
 public class CmdUseRotate extends Cmd {
 
-  public CmdUseRotate() { super("Use Rotation Handles"); }
+  public CmdUseRotate() { super("Use Rotation Handles", NO_ICON); }
 
   public void doIt() {
     Editor ce = Globals.curEditor();

@@ -26,7 +26,7 @@
 // File: ModeSelect.java
 // Classes: ModeSelect
 // Original Author: ics125 spring 1996
-// $Id: ModeSelect.java,v 1.20 1999/03/20 04:36:35 jrobbins Exp $
+// $Id: ModeSelect.java,v 1.21 1999/04/20 01:51:53 jrobbins Exp $
 
 package uci.gef;
 
@@ -112,6 +112,14 @@ public class ModeSelect extends Mode {
     /* Check if multiple things are selected and user clicked one of them. */
     Fig underMouse = _editor.hit(_selectAnchor);
     if (underMouse == null && !sm.hit(hitRect)) return;
+
+    Handle h = new Handle(-1);
+    sm.hitHandle(new Rectangle(x-4, y-4, 8, 8), h);
+    if (h.index >= 0) {
+      gotoModifyMode(me);
+      me.consume();
+      return;
+    }
 
     if (underMouse != null) {
       if (_toggleSelection) sm.toggle(underMouse);

@@ -27,7 +27,7 @@
 // File: PrefsEditor.java
 // Classes: PrefsEditor
 // Original Author: jrobbins@ics.uci.edu
-// $Id: PrefsEditor.java,v 1.6 1999/02/19 22:19:28 jrobbins Exp $
+// $Id: PrefsEditor.java,v 1.7 1999/04/20 01:51:55 jrobbins Exp $
 
 package uci.gef;
 
@@ -121,11 +121,11 @@ public class PrefsEditor extends Frame {
       return true;
     }
     if (e.target == _moreRepaints) {
-      RedrawManager.moreRepairs();
+      //RedrawManager.moreRepairs();
       return true;
     }
     if (e.target == _fewerRepaints) {
-      RedrawManager.fewerRepairs();
+      //RedrawManager.fewerRepairs();
       return true;
     }
     else if (e.target == _close) {

@@ -27,7 +27,7 @@
 // File: CmdScroll.java
 // Classes: CmdSroll
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CmdScroll.java,v 1.7 1999/02/19 22:18:04 jrobbins Exp $
+// $Id: CmdScroll.java,v 1.8 1999/04/20 01:51:24 jrobbins Exp $
 
 package uci.gef;
 
@@ -55,7 +55,7 @@ public class CmdScroll extends Cmd {
   // constructor
 
   public CmdScroll(int dir) {
-    super("Scroll " + wordFor(dir));
+    super("Scroll " + wordFor(dir), NO_ICON);
     _direction = dir;
     _magnitude = 16; // Needs-More-Work: prefs
   }

@@ -27,7 +27,7 @@
 // File: CmdAdjustPageBreaks.java
 // Classes: CmdAdjustPageBreaks
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CmdAdjustPageBreaks.java,v 1.7 1999/02/19 22:17:47 jrobbins Exp $
+// $Id: CmdAdjustPageBreaks.java,v 1.8 1999/04/20 01:51:11 jrobbins Exp $
 
 package uci.gef;
 
@@ -42,7 +42,7 @@ public class CmdAdjustPageBreaks extends Cmd {
 
   /** Construct a new CmdAdjustPageBreaks */
   public CmdAdjustPageBreaks() {
-    super("Adjust PageBreaks");
+    super("Adjust PageBreaks", NO_ICON);
   }
 
   public void doIt() {

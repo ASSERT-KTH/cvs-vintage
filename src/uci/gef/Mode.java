@@ -26,7 +26,7 @@
 // File: Mode.java
 // Classes: Mode
 // Original Author: ics125 spring 1996
-// $Id: Mode.java,v 1.8 1999/02/19 22:18:54 jrobbins Exp $
+// $Id: Mode.java,v 1.9 1999/04/20 01:51:46 jrobbins Exp $
 
 package uci.gef;
 
@@ -110,6 +110,10 @@ implements Serializable, KeyListener, MouseListener, MouseMotionListener {
   // Arguments
 
   public void setArgs(Hashtable args) { _args = args; }
+  public void setArg(String key, Object value) {
+    if (_args == null) _args = new Hashtable();
+    _args.put(key, value);
+  }
   public Hashtable getArgs() { return _args; }
   public Object getArg(String s) {
     if (_args == null) return null;

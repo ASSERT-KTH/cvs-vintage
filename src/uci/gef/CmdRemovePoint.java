@@ -27,7 +27,7 @@
 // File: CmdRemovePoint.java
 // Classes: CmdRemovePoint
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CmdRemovePoint.java,v 1.7 1999/02/19 22:18:02 jrobbins Exp $
+// $Id: CmdRemovePoint.java,v 1.8 1999/04/20 01:51:21 jrobbins Exp $
 
 package uci.gef;
 
@@ -42,7 +42,7 @@ public class CmdRemovePoint extends Cmd {
 
   protected int _selectedHandle = 0;
 
-  public CmdRemovePoint() { super("Remove Point From Polygon"); }
+  public CmdRemovePoint() { super("Remove Point From Polygon", NO_ICON); }
 
   public CmdRemovePoint(int i) { this(); _selectedHandle = i; }
 

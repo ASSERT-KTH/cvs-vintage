@@ -27,7 +27,7 @@
 // File: CmdSelectAll.java
 // Classes: CmdSelectAll
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CmdSelectAll.java,v 1.7 1999/02/19 22:18:05 jrobbins Exp $
+// $Id: CmdSelectAll.java,v 1.8 1999/04/20 01:51:25 jrobbins Exp $
 
 package uci.gef;
 
@@ -39,7 +39,7 @@ import java.util.*;
 
 public class CmdSelectAll extends Cmd {
 
-  public CmdSelectAll() { super("Select All"); }
+  public CmdSelectAll() { super("Select All", NO_ICON); }
 
   public void doIt() {
     Editor ce = Globals.curEditor();

@@ -27,7 +27,7 @@
 // File: CmdNull.java
 // Classes: CmdNull
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CmdNull.java,v 1.7 1999/02/19 22:17:57 jrobbins Exp $
+// $Id: CmdNull.java,v 1.8 1999/04/20 01:51:18 jrobbins Exp $
 
 package uci.gef;
 
@@ -42,7 +42,7 @@ import java.util.*;
 
 public class CmdNull extends Cmd {
 
-  public CmdNull() { super("Do nothing"); }
+  public CmdNull() { super("Do nothing", NO_ICON); }
 
   /** Do nothing */
   public void doIt() { }
