@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<!-- $Id: standard.xml,v 1.8 2003/10/12 16:35:36 linus Exp $ -->
+<!-- $Id: standard.xml,v 1.9 2003/11/07 23:53:59 linus Exp $ -->
 
 <chapter id="standards">
   <title>Standards for coding in ArgoUML</title>
@@ -211,6 +211,28 @@ Code Conventions for the Java Programming Language
       </listitem>
 
     </itemizedlist>
+
+    <para>
+Some of these rules are checked by a tool named checkstyle.
+Checkstyle is available with the ArgoUML development environment
+preconfigured for these rules.
+The current configuration can be found in
+<filename>argouml/tools/checkstyle/checkstyle_argouml.xml</filename>.
+</para>
+    <para>
+To run checkstyle run the command
+<command>build checkstyle</command> from the
+<filename class="directory">argouml/src_new</filename>
+directory.
+This requires you to have checked out the directories
+<filename class="directory">argouml/tools</filename>,
+<filename class="directory">argouml/tests</filename>, and
+<filename class="directory">argouml/src_new</filename>.
+</para>
+    <para>
+The last couple of checkstyle result are also available in 
+the Xenofarm result.
+</para>
   </sect1>
 
   <sect1>
