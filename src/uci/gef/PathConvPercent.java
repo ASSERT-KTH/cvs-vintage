@@ -19,7 +19,7 @@
 // File: PathConvPercent.java
 // Classes: PathConvPercent
 // Original Author: abonner@ics.uci.edu
-// $Id: PathConvPercent.java,v 1.2 1998/03/09 22:13:35 abonner Exp $
+// $Id: PathConvPercent.java,v 1.3 1998/04/13 18:46:08 abonner Exp $
 
 package uci.gef;
 
@@ -28,7 +28,7 @@ import java.awt.*;
 import java.io.*;
 import java.util.*;
 
-class PathConvPercent extends PathConv
+public class PathConvPercent extends PathConv
 {
 	float percent = 0;
 	int offset = 0;
