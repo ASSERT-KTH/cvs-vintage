@@ -15,13 +15,15 @@
 //All Rights Reserved.
 package org.columba.mail.smtp.command;
 
+import java.util.List;
+import java.util.Vector;
+
 import org.columba.core.command.DefaultCommandReference;
 import org.columba.core.command.StatusObservableImpl;
 import org.columba.core.command.Worker;
 import org.columba.core.command.WorkerStatusController;
 import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.main.MainInterface;
-
 import org.columba.mail.command.FolderCommand;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.composer.SendableMessage;
@@ -34,136 +36,136 @@ import org.columba.mail.main.MailInterface;
 import org.columba.mail.smtp.SMTPServer;
 import org.columba.mail.util.MailResourceLoader;
 
-import org.columba.ristretto.smtp.SMTPException;
-
-import java.util.List;
-import java.util.Vector;
-
-import javax.swing.JOptionPane;
-
-
 /**
  * @author fdietz
- *
+ * 
  * Send all messages in folder Outbox
- *
+ *  
  */
 public class SendAllMessagesCommand extends FolderCommand {
-    protected SendListManager sendListManager = new SendListManager();
-    protected OutboxFolder outboxFolder;
+	protected SendListManager sendListManager = new SendListManager();
+	protected OutboxFolder outboxFolder;
 
-    /**
-     * Constructor for SendAllMessagesCommand.
-     *
-     *
-     * @param frameMediator
-     * @param references
-     */
-    public SendAllMessagesCommand(FrameMediator frameMediator,
-        DefaultCommandReference[] references) {
-        super(frameMediator, references);
-    }
+	/**
+	 * Constructor for SendAllMessagesCommand.
+	 * 
+	 * 
+	 * @param frameMediator
+	 * @param references
+	 */
+	public SendAllMessagesCommand(FrameMediator frameMediator,
+			DefaultCommandReference[] references) {
+		super(frameMediator, references);
+	}
 
-    /**
-     * @see org.columba.core.command.Command#execute(Worker)
-     */
-    public void execute(WorkerStatusController worker)
-        throws Exception {
-        FolderCommandReference[] r = (FolderCommandReference[]) getReferences();
+	/**
+	 * @see org.columba.core.command.Command#execute(Worker)
+	 */
+	public void execute(WorkerStatusController worker) throws Exception {
+		FolderCommandReference[] r = (FolderCommandReference[]) getReferences();
 
-        // display status message
-        worker.setDisplayText(MailResourceLoader.getString("statusbar",
-                "message", "send_message"));
+		// display status message
+		worker.setDisplayText(MailResourceLoader.getString("statusbar",
+				"message", "send_message"));
 
-        // get Outbox folder from reference
-        outboxFolder = (OutboxFolder) r[0].getFolder();
+		// get Outbox folder from reference
+		outboxFolder = (OutboxFolder) r[0].getFolder();
 
-        // get UID list of messages
-        Object[] uids = outboxFolder.getUids();
+		// get UID list of messages
+		Object[] uids = outboxFolder.getUids();
 
-        // save every message in a list
-        for (int i = 0; i < uids.length; i++) {
-            if (outboxFolder.exists(uids[i]) == true) {
-                SendableMessage message = outboxFolder.getSendableMessage(uids[i]);
-                sendListManager.add(message);
-            }
-        }
+		// save every message in a list
+		for (int i = 0; i < uids.length; i++) {
+			if (outboxFolder.exists(uids[i]) == true) {
+				SendableMessage message = outboxFolder
+						.getSendableMessage(uids[i]);
+				sendListManager.add(message);
+			}
+		}
 
-        int actAccountUid = -1;
-        List sentList = new Vector();
-        boolean open = false;
-        SMTPServer smtpServer = null;
-        MessageFolder sentFolder = null;
+		int actAccountUid = -1;
+		List sentList = new Vector();
+		boolean open = false;
+		SMTPServer smtpServer = null;
+		MessageFolder sentFolder = null;
 
-        // send all messages 
-        while (sendListManager.hasMoreMessages()) {
-            SendableMessage message = sendListManager.getNextMessage();
+		// send all messages
+		while (sendListManager.hasMoreMessages()) {
+			SendableMessage message = sendListManager.getNextMessage();
 
-            // get account information from message
-            if (message.getAccountUid() != actAccountUid) {
-                actAccountUid = message.getAccountUid();
+			// get account information from message
+			if (message.getAccountUid() != actAccountUid) {
+				actAccountUid = message.getAccountUid();
 
-                AccountItem accountItem = MailInterface.config.getAccountList()
-                                                              .uidGet(actAccountUid);
+				AccountItem accountItem = MailInterface.config.getAccountList()
+						.uidGet(actAccountUid);
 
-                // Sent folder
-                sentFolder = (MessageFolder) MailInterface.treeModel.getFolder(Integer.parseInt(
-                            accountItem.getSpecialFoldersItem().get("sent")));
+				// Sent folder
+				sentFolder = (MessageFolder) MailInterface.treeModel
+						.getFolder(Integer.parseInt(accountItem
+								.getSpecialFoldersItem().get("sent")));
 
-                // open connection to SMTP server
-                smtpServer = new SMTPServer(accountItem);
+				// open connection to SMTP server
+				smtpServer = new SMTPServer(accountItem);
 
-                open = smtpServer.openConnection();
+				open = smtpServer.openConnection();
 
-                //				show interest on status information
-                ((StatusObservableImpl) smtpServer.getObservable()).setWorker(worker);
-            }
+				//				show interest on status information
+				((StatusObservableImpl) smtpServer.getObservable())
+						.setWorker(worker);
+			}
 
-            // if success, send message
-            if (open) {
-                try {
-                    smtpServer.sendMessage(message, worker);
+			// if success, send message
+			if (open) {
+				/*
+				 * try { smtpServer.sendMessage(message, worker);
+				 * 
+				 * sentList.add(message.getHeader().get("columba.uid")); } catch
+				 * (SMTPException e) { JOptionPane.showMessageDialog(null,
+				 * e.getMessage(), "Error while sending",
+				 * JOptionPane.ERROR_MESSAGE); }
+				 */
 
-                    sentList.add(message.getHeader().get("columba.uid"));
-                } catch (SMTPException e) {
-                    JOptionPane.showMessageDialog(null, e.getMessage(),
-                        "Error while sending", JOptionPane.ERROR_MESSAGE);
-                }
-            }
-        }
+				smtpServer.sendMessage(message, worker);
 
-        // we are done - clear status text with a delay
-        // (if this is not done, the initial text will stay in 
-        // case no messages were sent)
-        worker.clearDisplayTextWithDelay();
+				sentList.add(message.getHeader().get("columba.uid"));
+			}
+		}
 
-        // move all successfully send messages to the Sent folder
-        if (sentList.size() > 0) {
-            moveToSentFolder(sentList, sentFolder);
-            sentList.clear();
-        }
-    }
+		// we are done - clear status text with a delay
+		// (if this is not done, the initial text will stay in
+		// case no messages were sent)
+		worker.clearDisplayTextWithDelay();
 
-    /**
-     *
-     * Move all send messages to the Sent folder
-     *
-     * @param v                list of SendableMessage objects
-     *
-     * @param sentFolder        Sent folder
-     */
-    protected void moveToSentFolder(List v, MessageFolder sentFolder) {
-        FolderCommandReference[] r = new FolderCommandReference[2];
+		// move all successfully send messages to the Sent folder
+		if (sentList.size() > 0) {
+			moveToSentFolder(sentList, sentFolder);
+			sentList.clear();
+		}
+	}
 
-        // source folder
-        r[0] = new FolderCommandReference(outboxFolder, v.toArray());
+	/**
+	 * 
+	 * Move all send messages to the Sent folder
+	 * 
+	 * @param v
+	 *            list of SendableMessage objects
+	 * 
+	 * @param sentFolder
+	 *            Sent folder
+	 */
+	protected void moveToSentFolder(List v, MessageFolder sentFolder) {
+		FolderCommandReference[] r = new FolderCommandReference[2];
 
-        // destination folder
-        r[1] = new FolderCommandReference(sentFolder);
+		// source folder
+		r[0] = new FolderCommandReference(outboxFolder, v.toArray());
 
-        // start move command
-        MoveMessageCommand c = new MoveMessageCommand(r);
+		// destination folder
+		r[1] = new FolderCommandReference(sentFolder);
 
-        MainInterface.processor.addOp(c);
-    }
+		// start move command
+		MoveMessageCommand c = new MoveMessageCommand(r);
+
+		MainInterface.processor.addOp(c);
+	}
 }

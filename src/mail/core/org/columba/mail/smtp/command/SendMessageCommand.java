@@ -134,6 +134,7 @@ public class SendMessageCommand extends FolderCommand {
         // open connection
         SMTPServer server = new SMTPServer(item);
 
+        /*
         try {
             server.openConnection();
         } catch (UnknownHostException e2) {
@@ -156,6 +157,18 @@ public class SendMessageCommand extends FolderCommand {
             showComposer = true;
             throw new CommandCancelledException();
         }
+        */
+        
+        try {
+			server.openConnection();
+		} catch (Exception e2) {
+			
+			//e2.printStackTrace();
+			showComposer = true;
+			
+			throw e2;
+		}
+        
 
         // show interest on status information
         ((StatusObservableImpl) server.getObservable()).setWorker(worker);
@@ -196,17 +209,19 @@ public class SendMessageCommand extends FolderCommand {
             // display status message
             worker.setDisplayText(MailResourceLoader.getString("statusbar",
                     "message", "send_message_success"));
-        } catch (SMTPException e) {
+        } /*catch (SMTPException e) {
             JOptionPane.showMessageDialog(null, e.getMessage(),
                 "Error while sending", JOptionPane.ERROR_MESSAGE);
 
             // open composer view
             showComposer = true;
-        } catch (Exception e) {
-            e.printStackTrace();
+        }*/ catch (Exception e) {
+            //e.printStackTrace();
 
             // open composer view
             showComposer = true;
+            
+            throw e;
         }
     }
 

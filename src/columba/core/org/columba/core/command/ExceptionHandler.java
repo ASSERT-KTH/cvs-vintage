@@ -27,11 +27,10 @@ import java.net.SocketException;
 import java.net.SocketTimeoutException;
 import java.net.UnknownHostException;
 import java.net.UnknownServiceException;
+import java.text.MessageFormat;
 
-import javax.swing.JOptionPane;
-
+import org.columba.core.gui.util.ErrorDialog;
 import org.columba.core.gui.util.ExceptionDialog;
-import org.columba.core.gui.util.ImageLoader;
 import org.columba.mail.util.MailResourceLoader;
 
 /**
@@ -110,8 +109,9 @@ public class ExceptionHandler {
             errorMessage = MailResourceLoader.getString("dialog", "error",
                     "socket_timeout_error");
         } else if (e instanceof UnknownHostException) {
-            errorMessage = MailResourceLoader.getString("dialog", "error",
-                    "unknown_host_error");
+            errorMessage = MessageFormat.format(
+            		MailResourceLoader.getString("dialog", "error",
+                    "unknown_host_error"), new Object[] { e.getMessage()});
         } else if (e instanceof UnknownServiceException) {
             errorMessage = MailResourceLoader.getString("dialog", "error",
                     "unknown_service_error");
@@ -128,13 +128,7 @@ public class ExceptionHandler {
      * @param e
      *            exception to process
      */
-    private void showErrorDialog(String errorMessage, Exception e) {
-        Object[] options = new String[] { MailResourceLoader.getString("",
-                "global", "ok").replaceAll("&", "")};
-        int result = JOptionPane.showOptionDialog(null, errorMessage, e
-                .getLocalizedMessage(), JOptionPane.DEFAULT_OPTION,
-                JOptionPane.ERROR_MESSAGE, ImageLoader
-                        .getImageIcon("stock_dialog_error_48.png"), options,
-                options[0]);
+    private void showErrorDialog(String details, Exception e) {
+    	new ErrorDialog(details, e);
     }
 }
