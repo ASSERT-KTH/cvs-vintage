@@ -46,7 +46,7 @@ import org.jboss.util.deadlock.DeadlockDetector;
  * @author <a href="bill@burkecentral.com">Bill Burke</a>
  * @author <a href="pete@subx.com">Peter Murray</a>
  *
- * @version $Revision: 1.28 $
+ * @version $Revision: 1.29 $
  */
 public class QueuedPessimisticEJBLock extends BeanLockSupport
 {
@@ -56,11 +56,22 @@ public class QueuedPessimisticEJBLock extends BeanLockSupport
 
    private int txIdGen = 0;
    protected LockMonitor lockMonitor = null;
+   /** A flag that disables the deadlock detection check */
+   protected boolean deadlockDetection = true;
 
    public void setContainer(Container container)
    {
       this.container = container;
       lockMonitor = container.getLockManager().getLockMonitor();
+   }
+
+   public boolean getDeadlockDetection()
+   {
+      return deadlockDetection;
+   }
+   public void setDeadlockDetection(boolean flag)
+   {
+      this.deadlockDetection = flag;
    }
 
    private class TxLock
@@ -273,7 +284,8 @@ public class QueuedPessimisticEJBLock extends BeanLockSupport
          // Check for a deadlock on every cycle
          try
          {
-            DeadlockDetector.singleton.deadlockDetection(deadlocker, this);
+            if( deadlockDetection == true )
+               DeadlockDetector.singleton.deadlockDetection(deadlocker, this);
          }
          catch (Exception e)
          {
@@ -335,7 +347,8 @@ public class QueuedPessimisticEJBLock extends BeanLockSupport
             }
             if (miTx != null)
             {
-               DeadlockDetector.singleton.removeWaiting(deadlocker);
+               if( deadlockDetection == true )
+                  DeadlockDetector.singleton.removeWaiting(deadlocker);
             }
             throw new RuntimeException("Transaction marked for rollback, possibly a timeout");
          }
@@ -348,7 +361,8 @@ public class QueuedPessimisticEJBLock extends BeanLockSupport
       }
       else
       {
-         DeadlockDetector.singleton.removeWaiting(deadlocker);
+         if( deadlockDetection == true )
+            DeadlockDetector.singleton.removeWaiting(deadlocker);
       }
       return wasScheduled;
    }
