@@ -252,9 +252,6 @@
         <copy file="${src.sql.dir}/turbine-schema.xml" 
               todir="${torque.dir.scarab}/schema"
               filtering="true" overwrite="true"/>
-        <copy file="${src.sql.dir}/scheduler-schema.xml" 
-              todir="${torque.dir.scarab}/schema"
-              filtering="true" overwrite="true"/>
     </target>
 
     <!-- ================================================================== -->
@@ -266,7 +263,6 @@
                   targetfile="${build.sql.scarab}/${scarab.database.type}/${project}.sql">
             <srcfiles dir="${src.sql.dir}" includes="turbine-schema.xml"/>
             <srcfiles dir="${src.sql.dir}" includes="id-table-schema.xml"/>
-            <srcfiles dir="${src.sql.dir}" includes="scheduler-schema.xml"/>
             <srcfiles dir="${src.sql.dir}" includes="${project}-schema.xml"/>
             <srcfiles dir="${user.home}" includes="scarab.build.properties"/>
             <srcfiles dir="${user.home}" includes="build.properties"/>
@@ -334,8 +330,6 @@
             tofile="${build.sql.scarab}/${generatesql.database.type}/${project}.sql"/>
         <move file="${src.sql.dir}/turbine-schema.sql"
             tofile="${build.sql.scarab}/${generatesql.database.type}/turbine.sql"/>
-        <move file="${src.sql.dir}/scheduler-schema.sql"
-            tofile="${build.sql.scarab}/${generatesql.database.type}/scheduler.sql"/>
         <move file="${src.sql.dir}/id-table-schema.sql"
             tofile="${build.sql.scarab}/${generatesql.database.type}/id-table.sql"/>
     </target>
@@ -363,7 +357,6 @@
         <!-- we don't want to generate the OM objects for Turbine 
              tables because they already exists in the fulcrum.jar -->
         <delete file="${torque.dir.scarab}/schema/turbine-schema.xml"/>
-        <delete file="${torque.dir.scarab}/schema/scheduler-schema.xml"/>
 
         <ant antfile="build-torque.xml" target="om" inheritAll="false">
             <property name="torque.home" value="${torque.dir.scarab}"/>
@@ -472,7 +465,6 @@
 
             <transaction src="${build.sql.scarab}/${scarab.database.type}/turbine.sql"/>
             <transaction src="${build.sql.scarab}/${scarab.database.type}/${project}.sql"/>
-            <transaction src="${build.sql.scarab}/${scarab.database.type}/scheduler.sql"/>
             <transaction src="${build.sql.scarab}/${scarab.database.type}/id-table.sql"/>
             <transaction src="${build.sql.scarab}/turbine-id-table-init.sql"/>
             <transaction src="${build.sql.scarab}/${project}-id-table-init.sql"/>
@@ -569,7 +561,6 @@
 
             <transaction src="${build.sql.scarab}/${scarab.database.type}/turbine.sql"/>
             <transaction src="${build.sql.scarab}/${scarab.database.type}/${project}.sql"/>
-            <transaction src="${build.sql.scarab}/${scarab.database.type}/scheduler.sql"/>
             <transaction src="${build.sql.scarab}/${scarab.database.type}/id-table.sql"/>
             <transaction src="${build.sql.scarab}/turbine-id-table-init.sql"/>
             <transaction src="${build.sql.scarab}/${project}-id-table-init.sql"/>

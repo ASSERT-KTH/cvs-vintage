@@ -42,6 +42,5 @@ create table TURBINE_GROUP (A char(1));
 create table TURBINE_PERMISSION (A char(1));
 create table TURBINE_ROLE (A char(1));
 create table TURBINE_ROLE_PERMISSION (A char(1));
-create table TURBINE_SCHEDULED_JOB (A char(1));
 create table TURBINE_USER (A char(1));
 create table TURBINE_USER_GROUP_ROLE (A char(1));

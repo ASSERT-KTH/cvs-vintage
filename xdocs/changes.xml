@@ -2,11 +2,17 @@
 <document>
   <properties>
     <title>Changes</title>
-    <author email="epugh@upstate.com">Eric Pugh</author>
+    <author email="epugh@opensourceconnections.com">Eric Pugh</author>
   </properties>
 
   <body>
     <release version="b19" date="in cvs">  
+      <action dev="epugh" type="update">
+        Removed references to Turbine Scheduler that wasn't used.
+      </action>      
+      <action dev="hdabbous" type="add">
+        If you are using Ant1.6, you get a nice error message.  Need to use Ant 1.5.4 right now.
+      </action>    
       <action dev="pledbrook" type="update">
         Renamed the locale resource bundles to minimise duplicates and to
         follow a more standard form.

@@ -77,8 +77,7 @@ This usually manifests itself with an error similar to the following:
 
 There is currently no resolution to this problem.
 <p>
-A workaround is to edit the <code>webapps/scarab/WEB-INF/sql/turbine.sql</code> and
-<code>webapps/scarab/WEB-INF/sql/scheduler.sql</code> files,
+A workaround is to edit the <code>webapps/scarab/WEB-INF/sql/turbine.sql</code> file,
 and change the columns defined as <code>BLOB</code>
 to <code>VARCHAR2(4000)</code>. 
 
