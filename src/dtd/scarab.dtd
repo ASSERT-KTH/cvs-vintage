@@ -1,9 +1,9 @@
 <!ELEMENT activities ( activity+ ) >
-<!ELEMENT activity ( id?, attribute?, old-numeric-value?, new-numeric-value?, old-user?, new-user?, old-option?, new-option?, old-value?, new-value?, dependency?, description, end-date, attachment? ) >
+<!ELEMENT activity ( id?, attribute?, old-numeric-value?, new-numeric-value?, old-user?, new-user?, old-option?, new-option?, old-value?, new-value?, dependency?, description, end-date?, attachment? ) >
 <!ELEMENT activity-set ( id, type, created-by, created-date, activities, attachment? ) >
 <!ELEMENT activity-sets ( activity-set+ ) >
 <!ELEMENT artifact-type ( #PCDATA ) >
-<!ELEMENT attachment ( id, name, type, filename, data, mimetype, created-date, modified-date, created-by, modified-by, deleted ) >
+<!ELEMENT attachment ( id, name, (type|filename), data, mimetype, created-date, modified-date, created-by, modified-by, deleted ) >
 <!ELEMENT attribute ( #PCDATA ) >
 <!ELEMENT child ( #PCDATA ) >
 <!ELEMENT code ( #PCDATA ) >
