@@ -1,5 +1,5 @@
 Manifest-Version: 1.0
 Main-Class: org.apache.tomcat.startup.EmbededTomcat
-Class-Path: tomcat_core.jar servlet.jar jasper-runtime.jar core_util.jar connector_util.jar
+Class-Path: tomcat_core.jar servlet.jar jasper-runtime.jar core_util.jar connector_util.jar container_util.jar tomcat-util.jar commons-logging.jar log4-core.jar log4j.jar tomcat_modules.jar facade22.jar
 
 
