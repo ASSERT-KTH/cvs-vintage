@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/ServletClassLoader.java,v 1.4 2000/01/08 15:09:26 costin Exp $
- * $Revision: 1.4 $
- * $Date: 2000/01/08 15:09:26 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/ServletClassLoader.java,v 1.5 2000/01/08 15:52:21 costin Exp $
+ * $Revision: 1.5 $
+ * $Date: 2000/01/08 15:52:21 $
  *
  * ====================================================================
  *
@@ -68,141 +68,12 @@ import java.io.*;
 import java.net.*;
 import java.util.*;
 
-/**
- * This class now extends NetworkClassLoader. Previous
- * implementation of ServletClassLoader was called ServletLoader.
- * This implementation is a complete rewrite of the earlier
- * class loader. This should speed up performance compared
- * to the earlier class loader.
- *
- * @author Harish Prabandham
- */
+public interface ServletClassLoader {
 
-//
-// WARNING: Some of the APIs in this class are used by J2EE. 
-// Please talk to harishp@eng.sun.com before making any changes.
-//
-class ServletClassLoader extends NetworkClassLoader {
-    private Context  context;
-    
-    ServletClassLoader(Context context) {
-        super(context.getClassLoader());
-	this.context = context;
-        initURLs(); 
-    }
+    public Class loadServlet(ServletWrapper wrapper, String name)
+	throws ClassNotFoundException;
 
-    private void initURLs() {
-        URL baseURL = context.getServletBase();
-        String protocol = baseURL.getProtocol();
-        int port = baseURL.getPort();
-        String hostname = baseURL.getHost();
-        
-        String basepath = baseURL.getFile();
-
-        // The classes directory...
-        for(Enumeration e = context.getClassPaths();
-            e.hasMoreElements(); ) {
-            String cpath = (String) e.nextElement();
-            try {
-                URL classesURL = new URL(protocol,hostname,port,
-                                         basepath + cpath + "/");
-                addURL(classesURL);
-            }catch(MalformedURLException mue) {
-            }
-        }
-
-        // The jars in the lib directory...
-        // This will not work if the URL is not a file URL.
-        // An alternate way of figuring out the jar files should
-        // be specified in the spec. Probably in the deployment
-        // descriptor's web.xml ???
-        for(Enumeration e = context.getLibPaths();
-            e.hasMoreElements(); ) {
-            String libpath = (String) e.nextElement();
-            File f =  new File(basepath + libpath + "/");
-            Vector jars = new Vector();
-            getJars(jars, f);
-            
-            for(int i=0; i < jars.size(); ++i) {
-                try {
-                    String jarfile = (String) jars.elementAt(i);
-                    URL jarURL = new URL(protocol,hostname,port,
-                                         basepath + jarfile);
-                    addURL(jarURL);
-                }catch(MalformedURLException mue) {
-                }
-            }
-        }
-    }
-
-    synchronized Class loadServlet(ServletWrapper wrapper, String name)
-        throws ClassNotFoundException {
-	Class clazz = loadClass(name, true);
-	// do whatever marking we need to do
-	return clazz;
-    }
-
-    protected synchronized Class loadClass(String name, boolean resolve)
-        throws ClassNotFoundException {
-        // This is a bad idea. Unfortunately the class loader may
-        // be set on the context at any point.
-        setParent(context.getClassLoader());
-        return super.loadClass(name, resolve);
-    }
-
-    String getClassPath() {
-        String separator = System.getProperty("path.separator", ":");
-        String cpath = "";
-
-        for(Enumeration e = getURLs(); e.hasMoreElements(); ) {
-            URL url = (URL) e.nextElement();
-            cpath = cpath + separator + url.getFile();
-        }
-
-        return cpath;
-    }
-
-    private void getJars(Vector v, File f) {
-        FilenameFilter jarfilter = new JarFileFilter();
-        FilenameFilter dirfilter = new DirectoryFilter();
-        
-        if(f.exists() && f.isDirectory() && f.isAbsolute()) {
-            String[] jarlist = f.list(jarfilter);
-
-            for(int i=0; (jarlist != null) && (i < jarlist.length); ++i) {
-                v.addElement(jarlist[i]);
-            }
-
-            String[] dirlist = f.list(dirfilter);
-
-            for(int i=0; (dirlist != null) && (i < dirlist.length); ++i) {
-                File dir = new File(f, dirlist[i]);
-                getJars(v, dir);
-            }
-        }
-    }
-}
-
-
-class JarFileFilter implements FilenameFilter {
-
-    public boolean accept(File dir, String fname) {
-        if(fname.endsWith(".jar"))
-            return true;
-
-        return false;
-    }
-}
-
-class DirectoryFilter implements FilenameFilter {
-
-    public boolean accept(File dir, String fname) {
-        File f = new File(dir, fname);
-        if(f.isDirectory())
-            return true;
-
-        return false;
-    }
+    public String getClassPath();
 }
 
 

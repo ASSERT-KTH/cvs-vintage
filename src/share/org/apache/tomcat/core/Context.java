@@ -90,8 +90,6 @@ public class Context {
     private String description = null;
     private boolean isDistributable = false;
     private String engineHeader = null;
-    private ClassLoader classLoader = null;
-    private String classPath = ""; // classpath used by the classloader.
     //private Hashtable sessions = new Hashtable();
     // XXX XXX XXX hardcoded ! 
     private SessionManager sessionManager;
@@ -120,16 +118,20 @@ public class Context {
     private RequestSecurityProvider rsProvider =
         DefaultRequestSecurityProvider.getInstance();
 
-    // from Container
-    private ServletClassLoader servletLoader;
     private Hashtable servlets = new Hashtable();
     private Hashtable prefixMappedServlets = new Hashtable();
     private Hashtable extensionMappedServlets = new Hashtable();
     private Hashtable pathMappedServlets = new Hashtable();
     private ServletWrapper defaultServlet = null;
     private URL servletBase = null;
+
+    
+    // Class Loading 
+    private String classPath = ""; // classpath used by the classloader.
     private Vector classPaths = new Vector();
     private Vector libPaths = new Vector();
+    private ServletClassLoader servletLoader;
+    private ClassLoader classLoader = null;
 
     
     public Context() {
@@ -255,35 +257,6 @@ public class Context {
         this.isWARValidated = isWARValidated;
     }
 
-    public ClassLoader getClassLoader() {
-      return this.classLoader;
-    }
-
-    public void setClassLoader(ClassLoader classLoader) {
-      this.classLoader = classLoader;
-    }
-
-    public String getClassPath() {
-        String cp = this.classPath.trim();
-        String servletLoaderClassPath =
-            this.getLoader().getClassPath();
-
-        if (servletLoaderClassPath != null &&
-            servletLoaderClassPath.trim().length() > 0) {
-            cp += ((cp.length() > 0) ? File.pathSeparator : "") +
-                servletLoaderClassPath;
-        }
-
-        return cp;
-    }
-    
-    public void setClassPath(String classPath) {
-        if (this.classPath.trim().length() > 0) {
-	    this.classPath += File.pathSeparator;
-	}
-
-        this.classPath += classPath;
-    }
     
     /**
      * Adds an interceptor for init() method.
@@ -949,13 +922,6 @@ public class Context {
 
 
     // -------------------- From Container
-    ServletClassLoader getLoader() {
-	if(servletLoader == null) {
-	    servletLoader = new ServletClassLoader(this);
-	}
-
-	return servletLoader;
-    }
 
     public URL getServletBase() {
         return this.servletBase;
@@ -963,22 +929,6 @@ public class Context {
 
     public void setServletBase(URL servletBase) {
         this.servletBase = servletBase;
-    }
-
-    public Enumeration getClassPaths() {
-        return this.classPaths.elements();
-    }
-
-    public void addClassPath(String path) {
-        this.classPaths.addElement(path);
-    }
-
-    public Enumeration getLibPaths() {
-        return this.libPaths.elements();
-    }
-
-    public void addLibPath(String path) {
-        this.libPaths.addElement(path);
     }
 
     /**
@@ -1330,5 +1280,62 @@ public class Context {
         return wrappers;
     }
 
+
+    // -------------------- Class Loading --------------------
+    public ClassLoader getClassLoader() {
+      return this.classLoader;
+    }
+
+    public void setClassLoader(ClassLoader classLoader) {
+      this.classLoader = classLoader;
+    }
+
+    void setLoader(ServletClassLoader loader ) {
+	this.servletLoader=loader;
+    }
     
+    ServletClassLoader getLoader() {
+	if(servletLoader == null) {
+	    servletLoader = new ServletClassLoaderImpl(this);
+	}
+	return servletLoader;
+    }
+
+    public Enumeration getClassPaths() {
+        return this.classPaths.elements();
+    }
+
+    public void addClassPath(String path) {
+        this.classPaths.addElement(path);
+    }
+
+    public Enumeration getLibPaths() {
+        return this.libPaths.elements();
+    }
+
+    public void addLibPath(String path) {
+        this.libPaths.addElement(path);
+    }
+
+    public String getClassPath() {
+        String cp = this.classPath.trim();
+        String servletLoaderClassPath =
+            this.getLoader().getClassPath();
+
+        if (servletLoaderClassPath != null &&
+            servletLoaderClassPath.trim().length() > 0) {
+            cp += ((cp.length() > 0) ? File.pathSeparator : "") +
+                servletLoaderClassPath;
+        }
+
+        return cp;
+    }
+    
+    public void setClassPath(String classPath) {
+        if (this.classPath.trim().length() > 0) {
+	    this.classPath += File.pathSeparator;
+	}
+
+        this.classPath += classPath;
+    }
 }
