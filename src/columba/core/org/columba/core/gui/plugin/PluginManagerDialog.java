@@ -375,13 +375,10 @@ centerPanel.add(scrollPane);
 
         File pluginDirectory = ZipFileIO.getFirstFile(file);
 
-        if (pluginDirectory.isDirectory()) {
+        if (pluginDirectory != null) {
             String id = MainInterface.pluginManager.addPlugin(pluginDirectory);
             XmlElement e = MainInterface.pluginManager.getPluginElement(id);
             table.addPlugin(e);
-        } else {
-            NotifyDialog d = new NotifyDialog();
-            d.showDialog("Failure while trying to install plugin.\n");
-        }
+        } 
     }
 }
