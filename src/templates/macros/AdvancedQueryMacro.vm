@@ -55,7 +55,7 @@ from:&#160;<input type="text" size="20"
 ##PERSONNEL
 #set ($loopVar = 0)
 <h3>$l10n.PersonnelSearch</h3>
-<div class="colbar"><strong>Note:</strong> Query results will include only those artifacts associtated with <strong>all</strong> users listed below.</div>
+<div class="colbar">$l10n.UserSearchOr</div>
 
 
 <table width="100%" border="1" cellspacing="2" cellpadding="3">
