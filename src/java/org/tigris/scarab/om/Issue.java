@@ -94,7 +94,7 @@ import org.apache.commons.lang.StringUtils;
  * @author <a href="mailto:jmcnally@collab.new">John McNally</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: Issue.java,v 1.182 2002/08/20 22:48:07 jon Exp $
+ * @version $Id: Issue.java,v 1.183 2002/08/20 22:52:47 jon Exp $
  */
 public class Issue 
     extends BaseIssue
@@ -2700,20 +2700,13 @@ public class Issue
         {
             oldAttVal = (AttributeValue)avMap.get(iter.next());
             newAttVal = (AttributeValue)newAttVals.get(oldAttVal.getAttributeId());
-System.out.println ("h1");
             if (newAttVal != null)
             {
-System.out.println ("h2");
-System.out.println ("old: " + oldAttVal + " new: " + newAttVal); 
-System.out.println ("oldOptionId: " + oldAttVal.getOptionId());
-System.out.println ("newAttisOptionAttr: " + newAttVal.getAttribute().isOptionAttribute());
                 if (newAttVal.getAttribute().isOptionAttribute())
                 {
-System.out.println ("h3");
                     oldAttVal.startActivitySet(activitySet);
                     oldAttVal.setProperties(newAttVal);
                     oldAttVal.save();
-System.out.println ("h4");
                 }
             }
         }
