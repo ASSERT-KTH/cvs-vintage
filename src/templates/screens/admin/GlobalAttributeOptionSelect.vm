@@ -3,7 +3,6 @@
 #set ($issueTypeId = $data.Parameters.getString("issuetypeid"))
 #set ($editIssueType = $scarabR.getIssueType($issueTypeId))
 #set ($availOptions = $editIssueType.getAvailableAttributeOptions($attribute))
-$availOptions
 
 <div class="app" id="GlobalAttributeOptionSelect">
 
