@@ -393,7 +393,8 @@ public class TableController implements FocusOwner, ListSelectionListener {
         // re-select previous selection
         if (previouslySelectedRows != null) {
             // only re-select if only a single row was formerly selected
-            if (previouslySelectedRows.length == 1) {            	
+            if ((previouslySelectedRows.length == 1) && 
+                (previouslySelectedNodes.length > 0)) {
             	int row = getHeaderTableModel().getRow(previouslySelectedNodes[0]);           	
             	if ( row != -1)
             		// message still exists
