@@ -40,7 +40,9 @@ import javax.swing.SwingConstants;
 import net.javaprog.ui.wizard.plaf.basic.SingleSideEtchedBorder;
 
 import org.columba.core.config.Config;
+import org.columba.core.config.ConfigObservableManager;
 import org.columba.core.config.GuiItem;
+import org.columba.core.config.XmlElementObservable;
 import org.columba.core.gui.util.DefaultFormBuilder;
 import org.columba.core.xml.XmlElement;
 import org.columba.mail.config.MailConfig;
@@ -55,12 +57,10 @@ import com.jgoodies.forms.layout.FormLayout;
  */
 public class MailOptionsDialog extends JDialog implements ActionListener {
 
-
 	JButton okButton;
 	JButton cancelButton;
 	JButton helpButton;
 
-	JLabel markLabel2;
 	JCheckBox markCheckBox;
 	JTextField markTextField;
 	JCheckBox preferHtmlCheckBox;
@@ -79,6 +79,9 @@ public class MailOptionsDialog extends JDialog implements ActionListener {
 
 	JLabel forwardLabel;
 	JComboBox forwardComboBox;
+	
+	// configuration nodes
+	XmlElementObservable markAsReadObservable;
 
 	public MailOptionsDialog(JFrame frame) {
 		super(
@@ -90,6 +93,8 @@ public class MailOptionsDialog extends JDialog implements ActionListener {
 
 		layoutComponents();
 
+		initObservables();
+
 		updateComponents(true);
 
 		pack();
@@ -97,6 +102,13 @@ public class MailOptionsDialog extends JDialog implements ActionListener {
 		setLocationRelativeTo(null);
 
 		setVisible(true);
+	}
+
+	protected void initObservables() {
+		XmlElement markasread =
+			MailConfig.get("options").getElement("/options/markasread");
+			
+		markAsReadObservable = ConfigObservableManager.addObservable(markasread);
 	}
 
 	public void updateComponents(boolean b) {
@@ -154,11 +166,17 @@ public class MailOptionsDialog extends JDialog implements ActionListener {
 
 		} else {
 
+			/*
 			XmlElement markasread =
 				MailConfig.get("options").getElement("/options/markasread");
 
 			markasread.addAttribute("delay", markTextField.getText());
-
+			ConfigObservableManager.notifyObservers(markasread);
+			*/
+			
+			// change the configuration and notify gui of changes
+			markAsReadObservable.addAttribute("delay", markTextField.getText());
+			
 			XmlElement html =
 				MailConfig.getMainFrameOptionsConfig().getRoot().getElement(
 					"/options/html");
@@ -218,10 +236,6 @@ public class MailOptionsDialog extends JDialog implements ActionListener {
 					"mark_messages_read"));
 
 		markTextField = new JTextField(3);
-
-		markLabel2 =
-			new JLabel(
-				MailResourceLoader.getString("dialog", "general", "seconds"));
 
 		//TODO:LOCALIZE
 		emptyTrashCheckBox = new JCheckBox("Empty trash on exit");
@@ -288,8 +302,8 @@ public class MailOptionsDialog extends JDialog implements ActionListener {
 		emptySubjectCheckBox.setEnabled(false);
 
 		// TODO: LOCALIZE
-		forwardLabel = new JLabel("Forward message ");
-		String[] items = { "As Attachment", "Quoted" };
+		forwardLabel = new JLabel("Forward message as");
+		String[] items = { "Attachment", "Quoted" };
 
 		forwardComboBox = new JComboBox(items);
 
@@ -317,20 +331,20 @@ public class MailOptionsDialog extends JDialog implements ActionListener {
 		JPanel contentPane = new JPanel();
 		setContentPane(contentPane);
 		contentPane.setLayout(new BorderLayout());
-		
+
 		// Create a FormLayout instance. 
-			FormLayout layout =
-				new FormLayout(
-					"12dlu, pref, 3dlu, min(10dlu;pref), 3dlu, pref",
-		// 3 columns
-	"");
+		FormLayout layout =
+			new FormLayout(
+				"12dlu, default, 3dlu, max(10dlu;default), 3dlu, default",
+			// 3 columns
+	""); // rows are added dynamically (no need to define them here)
 
 		// create a form builder
 		DefaultFormBuilder builder = new DefaultFormBuilder(layout);
-		
+
 		// create EmptyBorder between components and dialog-frame 
 		builder.setDefaultDialogBorder();
-		
+
 		// skip the first column
 		builder.setLeadingColumnOffset(1);
 
@@ -348,7 +362,7 @@ public class MailOptionsDialog extends JDialog implements ActionListener {
 		builder.append(quotedColorCheckBox, quotedColorButton);
 		builder.nextLine();
 
-		builder.append(markCheckBox, markTextField, markLabel2);
+		builder.append(markCheckBox, markTextField);
 
 		builder.nextLine();
 
@@ -366,22 +380,22 @@ public class MailOptionsDialog extends JDialog implements ActionListener {
 		builder.append(spellLabel, spellButton);
 		builder.nextLine();
 		*/
-		
+
 		contentPane.add(builder.getPanel(), BorderLayout.CENTER);
 
 		// init bottom panel with OK, Cancel buttons
-		
+
 		JPanel bottomPanel = new JPanel(new BorderLayout(0, 0));
 		bottomPanel.setBorder(new SingleSideEtchedBorder(SwingConstants.TOP));
 		JPanel buttonPanel = new JPanel(new GridLayout(1, 2, 5, 0));
 		buttonPanel.setBorder(BorderFactory.createEmptyBorder(11, 11, 11, 11));
-		
+
 		buttonPanel.add(okButton);
-		
+
 		buttonPanel.add(cancelButton);
 		bottomPanel.add(buttonPanel, BorderLayout.EAST);
 		contentPane.add(bottomPanel, BorderLayout.SOUTH);
-		
+
 		getRootPane().setDefaultButton(okButton);
 		getRootPane().registerKeyboardAction(
 			this,

@@ -17,9 +17,12 @@ package org.columba.mail.gui.table.util;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Observable;
+import java.util.Observer;
 
 import javax.swing.Timer;
 
+import org.columba.core.config.ConfigObservableManager;
 import org.columba.core.gui.selection.SelectionChangedEvent;
 import org.columba.core.gui.selection.SelectionListener;
 import org.columba.core.logging.ColumbaLogger;
@@ -43,7 +46,8 @@ import org.columba.mail.gui.table.selection.TableSelectionChangedEvent;
  * @version 1.0
  */
 
-public class MarkAsReadTimer implements ActionListener, SelectionListener {
+public class MarkAsReadTimer
+	implements ActionListener, SelectionListener, Observer {
 	// timer to use
 	private Timer timer;
 	// definition of a second
@@ -67,6 +71,8 @@ public class MarkAsReadTimer implements ActionListener, SelectionListener {
 		XmlElement markasread =
 			MailConfig.get("options").getElement("/options/markasread");
 
+		ConfigObservableManager.register(markasread, this);
+
 		String delay = markasread.getAttribute("delay", "2");
 		this.maxValue = Integer.parseInt(delay);
 
@@ -75,12 +81,16 @@ public class MarkAsReadTimer implements ActionListener, SelectionListener {
 	}
 
 	/**
-	* currently not used
+	* Sets a new maximum interval value for the Timer
+	* and restarts the Timer.
+	* 
 	*/
 	public void setMaxValue(int i) {
 		maxValue = i;
 
 		timer = new Timer(ONE_SECOND * maxValue, this);
+		
+		timer.restart();
 	}
 
 	/**
@@ -118,7 +128,8 @@ public class MarkAsReadTimer implements ActionListener, SelectionListener {
 		timer.stop();
 
 		FolderCommandReference[] r = new FolderCommandReference[] { message };
-
+		if ( r[0] == null ) return;
+		
 		r[0].setMarkVariant(MarkMessageCommand.MARK_AS_READ);
 
 		MarkMessageCommand c = new MarkMessageCommand(r);
@@ -137,7 +148,22 @@ public class MarkAsReadTimer implements ActionListener, SelectionListener {
 		if (uids.length > 0) {
 			stopTimer();
 		}
+
+	}
+
+	/* (non-Javadoc)
+	 * @see java.util.Observer#update(java.util.Observable, java.lang.Object)
+	 */
+	public void update(Observable arg0, Object arg1) {
+		ColumbaLogger.log.debug("/options/markasread#delay has changed");
 		
+		// configuration has changed
+		XmlElement markasread =
+			MailConfig.get("options").getElement("/options/markasread");
+		String delay = markasread.getAttribute("delay", "2");
+		
+		// restart Timer with new value
+		setMaxValue(Integer.parseInt(delay));
 
 	}
 
