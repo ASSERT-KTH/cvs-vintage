@@ -56,7 +56,7 @@ import java.util.List;
  * This is the interface that describes a UserService implementation
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: UserService.java,v 1.1 2001/08/25 01:26:43 jmcnally Exp $
+ * @version $Id: UserService.java,v 1.2 2001/09/13 17:26:47 jmcnally Exp $
  */
 public interface UserService extends Service
 {
@@ -84,6 +84,11 @@ public interface UserService extends Service
      * @exception Exception if an error occurs
      */
     public ScarabUser getInstance(ObjectKey key) throws Exception;
+
+    /**
+     * Return an instance of User based on username
+     */
+    public ScarabUser getInstance(String username) throws Exception;
 
     /**
      * Gets a list of ScarabUsers based on usernames.

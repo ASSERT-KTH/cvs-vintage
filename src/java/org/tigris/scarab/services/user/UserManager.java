@@ -62,7 +62,7 @@ import org.apache.torque.util.Criteria;
  * This class has static methods for working with a ScarabUser object
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: UserManager.java,v 1.1 2001/08/25 01:26:43 jmcnally Exp $
+ * @version $Id: UserManager.java,v 1.2 2001/09/13 17:26:47 jmcnally Exp $
  */
 public abstract class UserManager
 {
@@ -88,6 +88,12 @@ public abstract class UserManager
         throws Exception
     {
         return getService().getInstance(id);
+    }
+
+    public static ScarabUser getInstance(String username)
+        throws Exception
+    {
+        return getService().getInstance(username);
     }
 
     public static List getUsers(String[] usernames)

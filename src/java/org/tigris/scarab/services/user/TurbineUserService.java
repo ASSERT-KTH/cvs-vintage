@@ -63,7 +63,7 @@ import org.tigris.scarab.om.ScarabUserImplPeer;
  * Scarab.properties file.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: TurbineUserService.java,v 1.1 2001/08/25 01:26:43 jmcnally Exp $
+ * @version $Id: TurbineUserService.java,v 1.2 2001/09/13 17:26:47 jmcnally Exp $
  */
 public class TurbineUserService 
     extends BaseService 
@@ -115,6 +115,30 @@ public class TurbineUserService
         throws Exception
     {
         return ScarabUserImplPeer.retrieveScarabUserImplByPK(userId);
+    }
+
+    /**
+     * Return an instance of User based on username
+     */
+    public ScarabUser getInstance(String username) 
+        throws Exception
+    {
+        ScarabUser user = null;
+        if ( username != null ) 
+        {
+            Criteria crit = new Criteria();
+            crit.add(ScarabUserImplPeer.USERNAME, username);
+            List users = ScarabUserImplPeer.doSelect(crit);
+            if ( users.size() == 1 ) 
+            {
+                user = (ScarabUser)users.get(0);
+            }
+            else if ( users.size() > 1 ) 
+            {
+                throw new ScarabException("duplicate usernames exist");
+            }
+        }
+        return user;
     }
 
     /**
