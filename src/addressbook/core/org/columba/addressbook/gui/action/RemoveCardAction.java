@@ -118,6 +118,8 @@ public class RemoveCardAction extends DefaultTableAction implements
 			AddressbookTreeNode parent = (AddressbookTreeNode) folder
 					.getParent();
 
+			mediator.getTree().setSelectedFolder((AbstractFolder) parent);
+			
 			// remove folder from parent
 			folder.removeFromParent();
 
@@ -125,7 +127,7 @@ public class RemoveCardAction extends DefaultTableAction implements
 			AddressbookInterface.addressbookTreeModel
 					.nodeStructureChanged(parent);
 
-			mediator.getTree().setSelectedFolder((AbstractFolder) parent);
+			
 		}
 	}
 
