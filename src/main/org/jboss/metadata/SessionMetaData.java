@@ -17,7 +17,7 @@ import org.jboss.deployment.DeploymentException;
  *   @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
  *   @author Scott.Stark@jboss.org
  *   @author <a href="mailto:Christoph.Jung@infor.de">Christoph G. Jung</a>.
- *   @version $Revision: 1.24 $
+ *   @version $Revision: 1.25 $
  */
 public class SessionMetaData extends BeanMetaData
 {
@@ -149,7 +149,7 @@ public class SessionMetaData extends BeanMetaData
    public void importJbossXml(Element element) throws DeploymentException
    {
       super.importJbossXml(element);
-      // ior-security-config optional element
+      // port-component optional element
       Element portElement = getOptionalChild(element, "port-component");
       if( portElement != null )
       {
