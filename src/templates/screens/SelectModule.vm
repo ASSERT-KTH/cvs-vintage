@@ -40,6 +40,8 @@
 </form>
 #else
 <p><strong class="alert">
-Sorry, you do not have access to select any other modules.
+Sorry, you do not have access to select any other modules. Please
+<a href="$link.setPage("Login.vm")">Login</a> with an account that
+has permissions to select a Module.
 </strong></p>
 #end

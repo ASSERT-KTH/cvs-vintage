@@ -1,6 +1,14 @@
 <div class="app" id="advancedquery">
-<h2>Advanced Query (2.2.0)</h2>
+<h3>Advanced Query</h3>
 
+#set ($module = $scarabR.CurrentModule)
+
+#if (!$module)
+<div class="alert">
+The currently selected module is invalid.
+Please select another module.
+</div>
+#else
 
 <form action="$link.setPage("AdvancedQuery.vm")" method="post">
 <input type="hidden" name="nextTemplate" value="IssueList.vm" />
@@ -29,3 +37,4 @@ $intake.declareGroups()
 </form>
 
 </div>
+#end
