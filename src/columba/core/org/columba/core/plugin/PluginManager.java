@@ -56,10 +56,11 @@ public class PluginManager {
 
 		for (int i = 0; i < pluginFolders.length; i++) {
 			File folder = pluginFolders[i];
-			if (folder.getName().equals("CVS")) {
+			if ((!folder.isDirectory()) ||(folder.getName().equals("CVS"))) {
 				ids[i] = "";
 				continue;
 			}
+			
 
 			if (MainInterface.DEBUG) {
                                 ColumbaLogger.log.info("registering plugin: " + folder);
@@ -188,6 +189,7 @@ public class PluginManager {
                         XmlElement runtime = elements[getIndex(id)].getElement("runtime");
                         return runtime.getAttribute("type");
                 } else {
+                		ColumbaLogger.log.error("runtime attribute not found");
                         return null;
                 }
 	}
