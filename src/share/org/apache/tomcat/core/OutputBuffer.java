@@ -78,10 +78,10 @@ import org.apache.tomcat.util.buf.*;
  * @author Costin Manolache
  */
 public final class OutputBuffer extends Writer
-    implements ByteBuffer.ByteOutputChannel, CharBuffer.CharOutputChannel 
+    implements ByteChunk.ByteOutputChannel, CharChunk.CharOutputChannel 
         // sink for conversion bytes[]
 {
-    public static final String DEFAULT_ENCODING="8859_1";
+    public static final String DEFAULT_ENCODING="ISO-8859-1";
     public static final int DEFAULT_BUFFER_SIZE = 8*1024;
     private int defaultBufferSize = DEFAULT_BUFFER_SIZE;
     private int defaultCharBufferSize = DEFAULT_BUFFER_SIZE / 2 ;
@@ -104,8 +104,8 @@ public final class OutputBuffer extends Writer
 
     /** The buffer
      */
-    private ByteBuffer bb;
-    private CharBuffer cb;
+    private ByteChunk bb;
+    private CharChunk cb;
     
     String enc;
     boolean gotEnc=false;
@@ -120,10 +120,10 @@ public final class OutputBuffer extends Writer
 
     public OutputBuffer(int size) {
 	//	buf=new byte[size];
-	bb=new ByteBuffer( size );
+	bb=new ByteChunk( size );
 	bb.setLimit( size );
 	bb.setByteOutputChannel( this );
- 	cb=new CharBuffer( size );
+ 	cb=new CharChunk( size );
 	cb.setCharOutputChannel( this );
 	cb.setLimit( size );
     }
@@ -148,14 +148,14 @@ public final class OutputBuffer extends Writer
      *  @deprecated Used only in Ajp13Packet for a hack
      */
     public int getByteOff() {
-	return bb.getPos();
+	return bb.getOffset();
     }
 
     /** Set the write position in the byte buffer
      *  @deprecated Used only in Ajp13Packet for a hack
      */
     public void setByteOff(int c) {
-	bb.setPos(c);
+	bb.setOffset(c);
     }
 
     void log( String s ) {
@@ -256,7 +256,7 @@ public final class OutputBuffer extends Writer
 
     public void write(char c[], int off, int len) throws IOException {
 	state=CHAR_STATE;
-	if( debug > 0 ) log("write(c,off,len)" + cb.getPos() + " " +
+	if( debug > 0 ) log("write(c,off,len)" + cb.getLength() + " " +
 			    cb.getLimit());
 
 	cb.append( c, off, len );
@@ -290,7 +290,7 @@ public final class OutputBuffer extends Writer
     } 
 
     public void flushChars() throws IOException {
-     	if( debug > 0 ) log("flushChars() " + cb.getPos());
+     	if( debug > 0 ) log("flushChars() " + cb.getLength());
 	cb.flushBuffer();
 	state=BYTE_STATE;
     }
@@ -327,7 +327,7 @@ public final class OutputBuffer extends Writer
     }
 
     public void realWriteChars( char c[], int off, int len ) throws IOException {
-	if( debug > 0 ) log("realWrite(c,o,l) " + cb.getPos() + " " + len);
+	if( debug > 0 ) log("realWrite(c,o,l) " + cb.getOffset() + " " + len);
 	if( !gotEnc ) setConverter();
 	
 	if( debug > 0 ) log("encoder:  " + conv + " " + gotEnc);
@@ -362,7 +362,7 @@ public final class OutputBuffer extends Writer
     /** Real write - this buffer will be sent to the client
      */
     public void flushBytes() throws IOException {
-	if( debug > 0 ) log("flushBytes() " + bb.getLen());
+	if( debug > 0 ) log("flushBytes() " + bb.getLength());
 	bb.flushBuffer();
     }
     
