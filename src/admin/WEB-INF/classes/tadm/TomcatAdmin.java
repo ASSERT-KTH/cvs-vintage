@@ -33,6 +33,9 @@ public class TomcatAdmin extends TagSupport {
 	    HttpServletRequest req=(HttpServletRequest)pageContext.
 		getRequest();
 	    init(req);
+	    if( cm==null ) {
+		return SKIP_BODY;
+	    }
 	    pageContext.setAttribute("cm", cm);
 	    Context ctx=null;
 	    if( ctxPath==null && ctxPathParam!=null ) {
@@ -70,10 +73,6 @@ public class TomcatAdmin extends TagSupport {
 	return EVAL_PAGE;
     }
     
-//     public void setPageContext(PageContext pctx ) {
-// 	this.pageContext=pctx;
-//     }
-
     public void setParent( Tag parent ) {
 	super.setParent( parent);
     }
@@ -84,7 +83,7 @@ public class TomcatAdmin extends TagSupport {
     private void init(HttpServletRequest request) {
 	Request realRequest = (Request)
 	    request.getAttribute( Request.ATTRIB_REAL_REQUEST);
-	if( cm==null )
+	if( realRequest==null )
 	    pageContext.getServletContext().log("Untrusted Application");
 	else
 	    cm = realRequest.getContext().getContextManager();

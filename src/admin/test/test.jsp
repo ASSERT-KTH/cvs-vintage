@@ -56,31 +56,33 @@ You can see the context log <a href="/test/context_log.txt">here</a>
 <h1>FAILED Tests</h1>
 
 <adm:iterate name="failures" enumeration="<%= gtestTestFailures.elements() %>" 
-               type="org.apache.tomcat.util.test.GTest" >
+               type="org.apache.tomcat.util.test.Matcher" >
+
 <% // Need more tags - if, etc 
 %>
-<a href='<%= failures.getHttpClient().getURI() %>'> 
-<font color='red'> FAIL </font></a> ( <%= failures.getDescription() %> )
-    <%= failures.getHttpClient().getRequestLine() %>
+<a href='<%= failures.getHttpRequest().getURI() %>'> 
+<font color='red'> FAIL </font></a> ( <%=
+                  failures.getHttpClient().getComment() %> )
+    <%= failures.getHttpRequest().getRequestLine() %>
 <br>
-TEST: <%= failures.getMatchDescription() %>
+TEST: <%= failures.getTestDescription() %>
 <br>
 <b>Request: </b>
 <pre>
-  <%= failures.getHttpClient().getFullRequest() %>
+  <%= failures.getHttpRequest().getFullRequest() %>
 </pre>
 <b>Comments: </b>
-  <%= failures.getComment() %>
+  <%= failures.getHttpClient().getComment() %>
 <br>
 <b>Message: </b>
 <pre>
-  <%= failures.getFailureMessage() %>
+  <%= failures.getMessage() %>
 </pre>
 
 <% // use a tag %>
 <% if( request.getParameter("debug" ) != null ) { %>
   <b>Response status: </b> 
-  <%= failures.getHttpClient().getResponse().getResponseLine() %>
+  <%= failures.getHttpResponse().getResponseLine() %>
   <br>
   <b>Response headers: </b>
    (I'm not sure how to do embeded iterations, need JSP expert )
@@ -88,7 +90,7 @@ TEST: <%= failures.getMatchDescription() %>
   
   <b>Response body: </b>
   <pre>
-  <%= failures.getHttpClient().getResponse().getResponseBody() %>
+  <%= failures.getHttpResponse().getResponseBody() %>
   </pre>
 <% } %>  
 
@@ -100,13 +102,11 @@ TEST: <%= failures.getMatchDescription() %>
 <h1>PASSED Tests</h1>
 
 <adm:iterate name="success" enumeration="<%= gtestTestSuccess.elements() %>" 
-               type="org.apache.tomcat.util.test.GTest" >
+               type="org.apache.tomcat.util.test.HttpClient" >
 
-<a href='<%= success.getHttpClient().getURI() %>'> 
-OK</a> ( <%= success.getDescription() %> ) 
-    <%= success.getHttpClient().getRequestLine() %>
-<br>
-TEST: <%= success.getMatchDescription() %>
+<a href='<%= success.getFirstRequest().getURI() %>'> 
+OK</a> ( <%= success.getComment() %> ) 
+    <%= success.getFirstRequest().getRequestLine() %>
 <br>
 </adm:iterate>
 </body>
