@@ -69,7 +69,7 @@ import org.tigris.scarab.services.cache.ScarabCache;
  *
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
  * @author <a href="mailto:jon@collab.net">Jon Scott Stevens</a>
- * @version $Id: GlobalArtifactTypes.java,v 1.32 2003/02/02 23:35:42 jon Exp $
+ * @version $Id: GlobalArtifactTypes.java,v 1.33 2003/02/02 23:51:07 jon Exp $
  */
 public class GlobalArtifactTypes extends RequireLoginFirstAction
 {
@@ -116,12 +116,12 @@ public class GlobalArtifactTypes extends RequireLoginFirstAction
             else if (saved)
             {
                 scarabR.setConfirmMessage(
-                    l10n.get("YourChangesWereSaved"));
+                    l10n.get(DEFAULT_MSG));
             }
             else
             {
                 scarabR.setInfoMessage(
-                    l10n.get("NoChangesMade"));
+                    l10n.get(NO_CHANGES_MADE));
             }
         }
     }
@@ -156,7 +156,7 @@ public class GlobalArtifactTypes extends RequireLoginFirstAction
         }
         else
         {
-            scarabR.setInfoMessage(l10n.get("NoChangesMade"));
+            scarabR.setInfoMessage(l10n.get(NO_CHANGES_MADE));
         }
     }
 
@@ -208,7 +208,7 @@ public class GlobalArtifactTypes extends RequireLoginFirstAction
         }
         else
         {
-            scarabR.setInfoMessage(l10n.get("NoChangesMade"));
+            scarabR.setInfoMessage(l10n.get(NO_CHANGES_MADE));
         }
     }
 
