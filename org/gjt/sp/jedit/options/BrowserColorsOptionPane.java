@@ -37,7 +37,7 @@ import org.gjt.sp.jedit.*;
 /**
  * Browser color editor.
  * @author Slava Pestov
- * @version $Id: BrowserColorsOptionPane.java,v 1.3 2001/11/25 03:42:15 spestov Exp $
+ * @version $Id: BrowserColorsOptionPane.java,v 1.4 2002/08/02 17:31:58 spestov Exp $
  */
 public class BrowserColorsOptionPane extends AbstractOptionPane
 {
@@ -308,7 +308,7 @@ class BrowserColorsModel extends AbstractTableModel
 		public ColorRenderer()
 		{
 			setOpaque(true);
-			setBorder(StyleOptionPane.noFocusBorder);
+			setBorder(SyntaxHiliteOptionPane.noFocusBorder);
 		} //}}}
 
 		//{{{ getTableCellRendererComponent() method
@@ -336,7 +336,7 @@ class BrowserColorsModel extends AbstractTableModel
 
 			setBorder((cellHasFocus) ? UIManager.getBorder(
 				"Table.focusCellHighlightBorder")
-				: StyleOptionPane.noFocusBorder);
+				: SyntaxHiliteOptionPane.noFocusBorder);
 			return this;
 		} //}}}
 	} //}}}

@@ -41,7 +41,7 @@ import org.gjt.sp.jedit.*;
 /**
  * Color option pane.
  * @author Slava Pestov
- * @version $Id: ColorOptionPane.java,v 1.8 2002/06/20 10:33:20 spestov Exp $
+ * @version $Id: ColorOptionPane.java,v 1.9 2002/08/02 17:31:58 spestov Exp $
  */
 public class ColorOptionPane extends AbstractOptionPane
 {
@@ -265,7 +265,7 @@ class ColorTableModel extends AbstractTableModel
 		public ColorRenderer()
 		{
 			setOpaque(true);
-			setBorder(StyleOptionPane.noFocusBorder);
+			setBorder(SyntaxHiliteOptionPane.noFocusBorder);
 		} //}}}
 
 		//{{{ getTableCellRendererComponent() method
@@ -293,7 +293,7 @@ class ColorTableModel extends AbstractTableModel
 
 			setBorder((cellHasFocus) ? UIManager.getBorder(
 				"Table.focusCellHighlightBorder")
-				: StyleOptionPane.noFocusBorder);
+				: SyntaxHiliteOptionPane.noFocusBorder);
 			return this;
 		} //}}}
 	} //}}}
