@@ -1,4 +1,4 @@
-// $Id: DisplayTextTree.java,v 1.43 2004/07/17 22:29:05 linus Exp $
+// $Id: DisplayTextTree.java,v 1.44 2004/08/20 19:28:26 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -84,8 +84,18 @@ public class DisplayTextTree extends JTree {
      * override default JTree implementation to display the
      * appropriate text for any object that will be displayed in
      * the todo list.
-     *
+     * 
+     * @param value the given object
+     * @param selected ignored
+     * @param expanded ignored
+     * @param leaf ignored
+     * @param row ignored
+     * @param hasFocus ignored
+     * 
      * @return the value converted to text.
+     *
+     * @see javax.swing.JTree#convertValueToText(java.lang.Object, 
+     * boolean, boolean, boolean, int, boolean)
      */
     public String convertValueToText(
         Object value,
@@ -156,6 +166,8 @@ public class DisplayTextTree extends JTree {
 
     /**
      * called in reexpand()
+     *
+     * @return a Vector containing all expanded paths
      */
     protected Vector getExpandedPaths() {
 

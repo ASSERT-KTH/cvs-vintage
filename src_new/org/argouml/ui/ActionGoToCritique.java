@@ -1,4 +1,4 @@
-// $Id: ActionGoToCritique.java,v 1.5 2004/07/17 16:52:03 linus Exp $
+// $Id: ActionGoToCritique.java,v 1.6 2004/08/20 19:28:26 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -26,7 +26,7 @@
 // File: ActionGoToCritique.java
 // Classes: ActionGoToCritique
 // Original Author: agauthie
-// $Id: ActionGoToCritique.java,v 1.5 2004/07/17 16:52:03 linus Exp $
+// $Id: ActionGoToCritique.java,v 1.6 2004/08/20 19:28:26 mvw Exp $
 
 package org.argouml.ui;
 
@@ -35,6 +35,10 @@ import java.awt.event.ActionEvent;
 import org.argouml.cognitive.ToDoItem;
 import org.argouml.uml.ui.UMLAction;
 
+/**
+ * Action to display the todo pane.
+ *
+ */
 public class ActionGoToCritique extends UMLAction {
     private ToDoItem item = null;
 

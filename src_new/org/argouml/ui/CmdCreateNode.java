@@ -1,4 +1,4 @@
-// $Id: CmdCreateNode.java,v 1.14 2004/06/23 07:02:44 linus Exp $
+// $Id: CmdCreateNode.java,v 1.15 2004/08/20 19:28:26 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -48,7 +48,7 @@ import org.argouml.model.uml.UmlFactory;
  */
 public class CmdCreateNode extends org.tigris.gef.base.CmdCreateNode {
 
-    private static Logger LOG = Logger.getLogger(CmdCreateNode.class);
+    private static final Logger LOG = Logger.getLogger(CmdCreateNode.class);
 
     private static Hashtable cache = new Hashtable();
 

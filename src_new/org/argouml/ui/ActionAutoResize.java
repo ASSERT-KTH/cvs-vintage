@@ -1,4 +1,4 @@
-// $Id: ActionAutoResize.java,v 1.10 2004/07/17 16:52:03 linus Exp $
+// $Id: ActionAutoResize.java,v 1.11 2004/08/20 19:28:26 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -37,10 +37,16 @@ public class ActionAutoResize extends UMLAction {
 
     private static boolean autoResize = false;
   
+    /**
+     * The constructor.
+     */
     public ActionAutoResize() {
         super("action.toggle-auto-resizing",  NO_ICON);
     }
 
+    /**
+     * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
+     */
     public void actionPerformed(ActionEvent ae) {
         autoResize = !autoResize;
     }
