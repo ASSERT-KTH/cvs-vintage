@@ -10,7 +10,7 @@
     <html>
         <head>
             <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1"/>
-            <title>Scarab - Search for Issue by ID</title>
+            <title>Scarab - Quick search for Issues</title>
         </head>
 
         <body bgcolor="#ffffff" text="#000000" link="#525D76">        
@@ -54,7 +54,7 @@
                                                                 <table border="0" cellspacing="1" bgcolor="#cccccc">
   <tr>
     <td bgcolor="white" align="right" valign="top"><b>Name:</b></td>
-        <td bgcolor="white" valign="top">UC-02 - Search for Issue by ID</td>
+        <td bgcolor="white" valign="top">UC-03 - Quick search for Issues</td>
   </tr>
   <tr>
     <td bgcolor="white" align="right" valign="top"><b>Extends:</b></td>
@@ -63,8 +63,9 @@
   <tr>
     <td bgcolor="white" align="right" valign="top"><b>Description:</b></td>
     <td bgcolor="white" valign="top">
-       User enters Issue ID and sees the details of the specified Issue
-       or an appropriate message.
+       User enters a few terms and sees a list of Issues that are
+       likely to be relevant.  Next, the user can drill into a
+       specific Issue from the list to see its details.
 </td>
   </tr>
   <tr>
@@ -84,12 +85,8 @@
     <td bgcolor="white" align="right" valign="top"><b>Stakeholders:</b></td>
     <td bgcolor="white" valign="top">
     <ul>
-            <li>Project Participant : wants to be able to specify issue
-      unamgiously via an easy-to-type-or-say string.  This is often
-      done via email, in code comments, in chat, or verbally on phone
-      or in meetings.  Challenge is that unambiguous specification is
-      at odds with brevity.  Assumes project name or URL as shared
-      knowledge.
+            <li>Project Participant : Wants to be able to search for 
+    an Issue and quickly find it.
     </li>
         </ul>
     </td>
@@ -101,7 +98,7 @@
             <li>Logged in</li>
             <li>Project set up</li>
             <li>Existing Issue</li>
-            <li>User knows Issue ID</li>
+            <li>User knows some search terms</li>
         </ul>
     </td>
   </tr>
@@ -110,7 +107,8 @@
     <td bgcolor="white" valign="top">
     <ul>
             <li>
-Details of the Issue is displayed
+A list of matching Issues are displayed or go directly to the Issue if only
+one matches.
 </li>
         </ul>
     </td>
@@ -119,7 +117,7 @@ Details of the Issue is displayed
     <td bgcolor="white" align="right" valign="top"><b>DataSets:</b></td>
     <td bgcolor="white" valign="top">
     <ul>
-            <li>Issue ID</li>
+            <li>Query Terms</li>
         </ul>
     </td>
   </tr>
@@ -157,11 +155,32 @@ Details of the Issue is displayed
     <td bgcolor="white" valign="top">
         
       <ol>
-        <li>User: visit ProjectIssues, or any Scarab page in project context.</li>
-        <li>User: Enter issue ID into small field and hit button</li>
-        <li>[validation] Scarab: validates issue number</li>
-        <li>[validation] Scarab: validates user role permissions</li>
-        <li>Scarab: display IssueView details</li>
+        <li>User: visit query page</li> 
+        <li>User: Enter search criteria into field and hits 'search' button</li>
+        <li>[validation] Scarab: validates search criteria</li>
+        <li>Scarab: searches for matching issues</li>
+        <li>Scarab: filters search based on users role permissions.</li>
+        <li>if results.size( ) == 0:
+             <ul type="a">
+               <li>Scarab: display message on search page with field
+               data as entered and status message</li>
+               <li>User: Modify search criteria and repeat</li>
+             </ul>
+        </li>
+        <li>if results.size( ) == 1: 
+             <ul type="a">
+               <li>Scarab: display the issue view page</li>
+             </ul>
+        </li>
+        <li>if results.size( ) &gt; 1:
+             <ul type="a">
+               <li>Scarab: display the issue list page</li>
+               <li>User: survey resulting list</li>
+               <li>User: select one of the presented issues</li>
+               <li>User: sort issues based on column heading</li>
+               <li>User: modify displayed column headings</li>
+             </ul>
+        </li>
       </ol>
     </td>
   </tr>

@@ -10,7 +10,7 @@
     <html>
         <head>
             <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1"/>
-            <title>Scarab - Search for Issue by ID</title>
+            <title>Scarab - Save Issue query</title>
         </head>
 
         <body bgcolor="#ffffff" text="#000000" link="#525D76">        
@@ -54,17 +54,17 @@
                                                                 <table border="0" cellspacing="1" bgcolor="#cccccc">
   <tr>
     <td bgcolor="white" align="right" valign="top"><b>Name:</b></td>
-        <td bgcolor="white" valign="top">UC-02 - Search for Issue by ID</td>
+        <td bgcolor="white" valign="top">UC-05 - Save Issue query</td>
   </tr>
   <tr>
     <td bgcolor="white" align="right" valign="top"><b>Extends:</b></td>
-    <td bgcolor="white" valign="top">None</td>
+    <td bgcolor="white" valign="top"><a href="usecase03.html">UC-03</a>, <a href="usecase04.html">UC-04</a></td>
   </tr>
   <tr>
     <td bgcolor="white" align="right" valign="top"><b>Description:</b></td>
     <td bgcolor="white" valign="top">
-       User enters Issue ID and sees the details of the specified Issue
-       or an appropriate message.
+       User performs query on the database. User is then given the
+       option to save the query for use at a later date.
 </td>
   </tr>
   <tr>
@@ -84,12 +84,9 @@
     <td bgcolor="white" align="right" valign="top"><b>Stakeholders:</b></td>
     <td bgcolor="white" valign="top">
     <ul>
-            <li>Project Participant : wants to be able to specify issue
-      unamgiously via an easy-to-type-or-say string.  This is often
-      done via email, in code comments, in chat, or verbally on phone
-      or in meetings.  Challenge is that unambiguous specification is
-      at odds with brevity.  Assumes project name or URL as shared
-      knowledge.
+            <li>Project Participant : Wants to be able to search for an
+    Issue with great detail (including all Attribute fields) and then be
+    able to save it for reuse at a later date.
     </li>
         </ul>
     </td>
@@ -101,7 +98,7 @@
             <li>Logged in</li>
             <li>Project set up</li>
             <li>Existing Issue</li>
-            <li>User knows Issue ID</li>
+            <li>User knows some search terms</li>
         </ul>
     </td>
   </tr>
@@ -110,7 +107,17 @@
     <td bgcolor="white" valign="top">
     <ul>
             <li>
-Details of the Issue is displayed
+After the search, a list of matching Issues are displayed or go directly
+to the Issue if only one matches. A button and small text box is
+presented on the results page that gives the user the chance to save the
+query with a value that is typed in. If no value is typed in, then a
+default value "Saved Query X" is assigned (where X is a number). After the
+query has been saved, the query results page is displayed again.
+</li>
+            <li>
+There should also be a text entry box on the Issue Search page where the User
+can type in the name for a saved query. This will save the query when the
+search is done. The result is to show the search results page.
 </li>
         </ul>
     </td>
@@ -119,7 +126,8 @@ Details of the Issue is displayed
     <td bgcolor="white" align="right" valign="top"><b>DataSets:</b></td>
     <td bgcolor="white" valign="top">
     <ul>
-            <li>Issue ID</li>
+            <li>Query Terms</li>
+            <li>Saved Query Name</li>
         </ul>
     </td>
   </tr>
@@ -127,20 +135,6 @@ Details of the Issue is displayed
     <td bgcolor="white" align="right" valign="top"><b>Q/A:</b></td>
     <td bgcolor="white" valign="top">
     <ul>
-            <li>If all Issues are in project context,               is there a quick way to jump to Issue in another project?
-            <ul>
-            <li><font color="green">
-        If possible a link to the other project should be provided.
-    </font></li>
-            </ul>
-        </li>
-            <li>How can this functionality be put on tigris StartPage?
-            <ul>
-            <li><font color="green">
-        As a small text entry box.
-    </font></li>
-            </ul>
-        </li>
         </ul>
     </td>
   </tr>
@@ -148,7 +142,8 @@ Details of the Issue is displayed
     <td bgcolor="white" align="right" valign="top"><b>Notes:</b></td>
     <td bgcolor="white" valign="top">
     <ul>
-            <li>If validation fails, Scarab displays an error</li>
+            <li>Need to consider the ability to modify saved searches. This
+    functionality should go into a search editor usecase.</li>
         </ul>
     </td>
   </tr>
@@ -157,11 +152,39 @@ Details of the Issue is displayed
     <td bgcolor="white" valign="top">
         
       <ol>
-        <li>User: visit ProjectIssues, or any Scarab page in project context.</li>
-        <li>User: Enter issue ID into small field and hit button</li>
-        <li>[validation] Scarab: validates issue number</li>
-        <li>[validation] Scarab: validates user role permissions</li>
-        <li>Scarab: display IssueView details</li>
+        <li>User: click 'Search' link</li>
+        <li>Scarab: display Search page</li>
+        <li>User: Enter search criteria into field
+            <ul type="a">
+                <li>User: Enter name of saved query</li>
+            </ul>
+        </li>
+        <li>User: hits 'search' button.</li>
+        <li>[validation] Scarab: validates search criteria</li>
+        <li>Scarab: searches for matching issues</li>
+        <li>Scarab: filters search based on users role permissions.</li>
+        <li>if results.size( ) == 0:
+             <ul type="a">
+               <li>Scarab: display message on ProjectIssues with field data as entered</li>
+               <li>User: Modify search criteria and repeat</li>
+             </ul>
+        </li>
+        <li>if results.size( ) == 1: 
+             <ul type="a">
+               <li>Scarab: display issue view page</li>
+               <li>User: enter name of search to save. Clicks save button</li>
+             </ul>
+        </li>
+        <li> if results.size( ) &gt; 1:
+             <ul type="a">
+               <li>Scarab: display issue list page</li>
+               <li>User: survey resulting list</li>
+               <li>User: select one of the presented issues</li>
+               <li>User: sort issues based on column heading</li>
+               <li>User: modify displayed column headings</li>
+               <li>User: enter name of search to save. Clicks save button</li>
+             </ul>
+        </li>
       </ol>
     </td>
   </tr>

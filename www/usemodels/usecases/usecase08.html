@@ -10,7 +10,7 @@
     <html>
         <head>
             <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1"/>
-            <title>Scarab - Search for Issue by ID</title>
+            <title>Scarab - Review resulting Issues long format</title>
         </head>
 
         <body bgcolor="#ffffff" text="#000000" link="#525D76">        
@@ -54,17 +54,16 @@
                                                                 <table border="0" cellspacing="1" bgcolor="#cccccc">
   <tr>
     <td bgcolor="white" align="right" valign="top"><b>Name:</b></td>
-        <td bgcolor="white" valign="top">UC-02 - Search for Issue by ID</td>
+        <td bgcolor="white" valign="top">UC-08 - Review resulting Issues long format</td>
   </tr>
   <tr>
     <td bgcolor="white" align="right" valign="top"><b>Extends:</b></td>
-    <td bgcolor="white" valign="top">None</td>
+    <td bgcolor="white" valign="top"><a href="usecase03.html">UC-03</a>, <a href="usecase04.html">UC-04</a></td>
   </tr>
   <tr>
     <td bgcolor="white" align="right" valign="top"><b>Description:</b></td>
     <td bgcolor="white" valign="top">
-       User enters Issue ID and sees the details of the specified Issue
-       or an appropriate message.
+       View a large number of issues at once.  Useful for printing or comparison.
 </td>
   </tr>
   <tr>
@@ -84,12 +83,7 @@
     <td bgcolor="white" align="right" valign="top"><b>Stakeholders:</b></td>
     <td bgcolor="white" valign="top">
     <ul>
-            <li>Project Participant : wants to be able to specify issue
-      unamgiously via an easy-to-type-or-say string.  This is often
-      done via email, in code comments, in chat, or verbally on phone
-      or in meetings.  Challenge is that unambiguous specification is
-      at odds with brevity.  Assumes project name or URL as shared
-      knowledge.
+            <li>Project Participant : Wants to be able to quickly view lots of Issues.
     </li>
         </ul>
     </td>
@@ -101,7 +95,7 @@
             <li>Logged in</li>
             <li>Project set up</li>
             <li>Existing Issue</li>
-            <li>User knows Issue ID</li>
+            <li>View Issue</li>
         </ul>
     </td>
   </tr>
@@ -110,7 +104,7 @@
     <td bgcolor="white" valign="top">
     <ul>
             <li>
-Details of the Issue is displayed
+User views bunch of Issues in one single long page.
 </li>
         </ul>
     </td>
@@ -127,20 +121,6 @@ Details of the Issue is displayed
     <td bgcolor="white" align="right" valign="top"><b>Q/A:</b></td>
     <td bgcolor="white" valign="top">
     <ul>
-            <li>If all Issues are in project context,               is there a quick way to jump to Issue in another project?
-            <ul>
-            <li><font color="green">
-        If possible a link to the other project should be provided.
-    </font></li>
-            </ul>
-        </li>
-            <li>How can this functionality be put on tigris StartPage?
-            <ul>
-            <li><font color="green">
-        As a small text entry box.
-    </font></li>
-            </ul>
-        </li>
         </ul>
     </td>
   </tr>
@@ -148,7 +128,7 @@ Details of the Issue is displayed
     <td bgcolor="white" align="right" valign="top"><b>Notes:</b></td>
     <td bgcolor="white" valign="top">
     <ul>
-            <li>If validation fails, Scarab displays an error</li>
+            <li>None</li>
         </ul>
     </td>
   </tr>
@@ -157,11 +137,8 @@ Details of the Issue is displayed
     <td bgcolor="white" valign="top">
         
       <ol>
-        <li>User: visit ProjectIssues, or any Scarab page in project context.</li>
-        <li>User: Enter issue ID into small field and hit button</li>
-        <li>[validation] Scarab: validates issue number</li>
-        <li>[validation] Scarab: validates user role permissions</li>
-        <li>Scarab: display IssueView details</li>
+        <li>User: view existing Issue</li>
+        <li>Scarab: display existing Issue</li>
       </ol>
     </td>
   </tr>
