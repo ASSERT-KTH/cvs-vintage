@@ -19,7 +19,7 @@
 
     <property name="Name" value="JBoss"/>
     <property name="name" value="jboss"/>
-    <property name="version" value="2.0"/>
+    <property name="version" value="2.1-beta"/>
 
     <property name="bin.dir" value="${basedir}/bin"/>
     <property name="src.bin.dir" value="${basedir}/src/bin"/>
@@ -55,8 +55,10 @@
 
     <property name="util.classpath"             value="${build.util.classes.dir};${src.lib.dir}/ejb.jar;${lib.dir}/jmxri.jar"/>
 
-    <!-- to use other xml parsers - add them to this list (yuck) - these jars get put into jboss' main classpath - from whence everything else is loaded -->
-    <property name="bootstrap.jars"             value="parser.jar,jaxp.jar,jaas.jar,jdbc2_0-stdext.jar,jboss-jaas.jar,xerces*.jar"/>    
+    <!-- to use other xml parsers - add them to this list (yuck) - these jars get put into jboss' main classpath - from whence everything else is loaded.
+	The xml.jar is only here to support the ejx editor app.
+     -->
+    <property name="bootstrap.jars"             value="crimson.jar,jaxp.jar,jaas.jar,jdbc2_0-stdext.jar,jboss-jaas.jar,xml.jar"/>
 
   <!-- Build classpath -->
   <path id="classpath">
