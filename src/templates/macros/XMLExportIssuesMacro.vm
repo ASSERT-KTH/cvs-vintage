@@ -6,11 +6,12 @@
 <?xml version="1.0" standalone="no"?>
 <!DOCTYPE scarab SYSTEM "$staticLink.setPath("/dtd/scarab-issues.dtd")">
 <scarab-issues>
+<modules>
   <module>
     <id>$module.ModuleId</id>
     <parent-id>$module.ParentId</parent-id>
     <name>$module.RealName</name>
-    <owner-id>$scarabR.getUser($module.OwnerId).UserName</owner-id>
+    <owner>$scarabR.getUser($module.OwnerId).UserName</owner>
     <description>$module.Description</description>
     <url>$module.Url</url>
     <domain>$!module.Domain</domain>
@@ -140,5 +141,6 @@
 #end
 
   </module>
+</modules>
 </scarab-issues>
 #end
