@@ -187,7 +187,7 @@ public class POP3HeaderCache extends AbstractHeaderCache {
 	/**
 	 * @see org.columba.mail.folder.headercache.AbstractHeaderCache#add(org.columba.mail.message.ColumbaHeader)
 	 */
-	public void add(ColumbaHeader header) throws Exception {
+	public void add(ColumbaHeader header)  {
 		ColumbaHeader strippedHeader = new ColumbaHeader();
 		for( int i=0; i < CachedHeaderfields.POP3_HEADERFIELDS.length; i++) {
 			strippedHeader.set(CachedHeaderfields.POP3_HEADERFIELDS[i], header.get(CachedHeaderfields.POP3_HEADERFIELDS[i]));

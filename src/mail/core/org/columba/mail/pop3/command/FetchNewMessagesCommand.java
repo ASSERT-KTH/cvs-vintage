@@ -16,6 +16,7 @@
 package org.columba.mail.pop3.command;
 
 import java.io.IOException;
+import java.net.SocketException;
 import java.text.MessageFormat;
 import java.util.Iterator;
 import java.util.List;
@@ -122,7 +123,7 @@ public class FetchNewMessagesCommand extends Command {
 						new Object[]{new Integer(newMessageCount)}));
 			}
 		} catch (CommandCancelledException e) {
-			server.forceLogout();
+			server.logout();
 
 			// clear statusbar message
 			server.getObservable().clearMessage();
@@ -173,8 +174,13 @@ public class FetchNewMessagesCommand extends Command {
 		worker.addWorkerStatusChangeListener(listener);
 		
 		// download message
-		ColumbaMessage message = server.getMessage(serverUID, worker);
-		
+		ColumbaMessage message;
+		try {
+			message = server.getMessage(serverUID, worker);
+		} catch (SocketException e) {
+			if( !worker.cancelled()) throw e;
+			else throw new CommandCancelledException();
+		}
 		// not needed anymore
 		worker.removeWorkerStatusChangeListener(listener);
 

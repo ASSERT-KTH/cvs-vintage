@@ -124,9 +124,8 @@ public abstract class AbstractHeaderCache {
 
 	/**
 	 * @param header
-	 * @throws Exception
 	 */
-	public void add(ColumbaHeader header) throws Exception {
+	public void add(ColumbaHeader header)  {
 		headerList.add(header, header.get("columba.uid"));
 	}
 

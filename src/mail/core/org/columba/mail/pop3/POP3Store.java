@@ -172,7 +172,9 @@ public class POP3Store {
     }
     
     public void logout() throws IOException, POP3Exception {
-        protocol.quit();
+        if( protocol.getState() != POP3Protocol.CONNECTION_CLOSED ) {
+        	protocol.quit();
+        }
         uidMap = null;
         sizeList = null;
         messageCount = -1;

@@ -47,6 +47,7 @@ import org.columba.ristretto.io.Source;
 import org.columba.ristretto.io.TempSourceFactory;
 import org.columba.ristretto.message.Header;
 import org.columba.ristretto.parser.HeaderParser;
+import org.columba.ristretto.parser.ParserException;
 import org.columba.ristretto.pop3.MessageNotOnServerException;
 import org.columba.ristretto.pop3.POP3Exception;
 
@@ -128,10 +129,6 @@ public class POP3Server {
 	}
 
 	public void logout() throws Exception {
-		getStore().logout();
-	}
-
-	public void forceLogout() throws Exception {
 		getStore().logout();
 	}
 
@@ -224,7 +221,7 @@ public class POP3Server {
 	}
 
 	public ColumbaMessage getMessage(Object uid, WorkerStatusController worker)
-			throws Exception {
+			throws IOException, POP3Exception, CommandCancelledException, ParserException {
 		InputStream messageStream = new ProgressObservedInputStream(getStore()
 				.fetchMessage(store.getIndex(uid)), worker, true);
 
