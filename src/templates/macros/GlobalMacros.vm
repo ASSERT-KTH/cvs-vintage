@@ -502,7 +502,7 @@ $scarabR.IssuePosInList of $scarabR.CurrentSearchResultsSize
 <option value="" selected="selected">$l10n.ExportResultsTo</option>
 <option value="excel">$l10n.Excel</option>
 <option value="tsv">$l10n.TabSeparatedValues</option>
-##<option value="xml">XML</option>
+##<option value="xml">$l10n.XML</option>
 </select>
 <noscript>
 <input type="submit" name="$action" value="$l10n.Go" />
@@ -527,7 +527,7 @@ selected the radio button.
  #if ($format.equalsIgnoreCase('tsv'))checked="checked"#end
  />$l10n.TabSeparatedValues
  #* <input type="radio" name="$paramName" value="xml"
- #if ($format.equalsIgnoreCase('xml'))checked="checked"#end />XML *#
+ #if ($format.equalsIgnoreCase('xml'))checked="checked"#end />$l10n.XML *#
 </td>
 </tr>
 #end
