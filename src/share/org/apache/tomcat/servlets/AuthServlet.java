@@ -109,7 +109,8 @@ public class AuthServlet extends HttpServlet {
 
 	// Default is BASIC
 	if(realm==null) realm="default";
-	response.setHeader( "WWW-Authenticate", "Basic \"" + realm + "\"");
+	response.setHeader( "WWW-Authenticate",
+			    "Basic realm=\"" + realm + "\"");
 	response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
     }
 
