@@ -1,48 +1,97 @@
 #!/bin/sh
+### ====================================================================== ###
+##                                                                          ##
+##  JBoss Bootstrap Script                                                  ##
+##                                                                          ##
+### ====================================================================== ###
 
-# Minimal jar file to get JBoss started.
+### $Id: run.sh,v 1.23 2001/08/11 23:50:55 user57 Exp $ ###
 
-#assumed that this script will start in the bin directory
+DIRNAME=`dirname $0`
+PROGNAME=`basename $0`
+GREP="grep"
 
-#but just in case use JBOSS_HOME if found
-if [ "$JBOSS_HOME" ]; then
-   cd $JBOSS_HOME/bin
-   echo Using JBOSS_HOME to set current directory to $JBOSS_HOME/bin
-fi 
-
-JBOSS_CLASSPATH=$JBOSS_CLASSPATH:run.jar
-
-# Add all login modules for JAAS-based security
-# and all libraries that are used by them here
-JBOSS_CLASSPATH=$JBOSS_CLASSPATH
-
-# Check for SUN(tm) JVM w/ HotSpot support
 #
-HOTSPOT=`java -version 2>&1 | grep HotSpot`"x"
-# only set the HOTSPOT variable if JAVA_OPTS is not set
-# assumed user knows what they want if they set it explicitly
-if [ "${JAVA_OPTS}x" = "x" -a "$HOTSPOT" != "x" ]; then
-       HOTSPOT="-server"
+# Helper to complain.
+#
+die() {
+    echo "${PROGNAME}: $*"
+    exit 1
+}
+
+# Setup JBOSS_HOME
+if [ "x$JBOSS_HOME" = "x" ]; then
+    JBOSS_HOME=`cd $DIRNAME/..; pwd`
+fi
+export JBOSS_HOME
+
+# Setup the JVM
+if [ "x$JAVA_HOME" != "x" ]; then
+    JAVA=$JAVA_HOME/bin/java
 else
-       HOTSPOT=""
+    JAVA="java"
 fi
 
-# Add the XML parser jars and set the JAXP factory names
-# Crimson parser JAXP setup(default)
-JBOSS_CLASSPATH=$JBOSS_CLASSPATH:../lib/crimson.jar
-JAXP=-Djavax.xml.parsers.DocumentBuilderFactory=org.apache.crimson.jaxp.DocumentBuilderFactoryImpl
-JAXP="$JAXP -Djavax.xml.parsers.SAXParserFactory=org.apache.crimson.jaxp.SAXParserFactoryImpl"
+# Setup the classpath
+JBOSS_BOOT_CLASSPATH="$JBOSS_HOME/bin/run.jar"
+if [ "x$JBOSS_CLASSPATH" = "x" ]; then
+    JBOSS_CLASSPATH="$JBOSS_BOOT_CLASSPATH"
+else
+    JBOSS_CLASSPATH="${JBOSS_CLASSPATH}:$JBOSS_BOOT_CLASSPATH"
+fi
 
-echo =======================================================
-echo =======================================================
-echo Environment settings
-echo "HOTSPOT   = $HOTSPOT"
-echo "JAVA_OPTS = $JAVA_OPTS"
-echo "CLASSPATH = $JBOSS_CLASSPATH"
-echo "JAXP      = $JAXP"
-echo =======================================================
-echo =======================================================
+# Check for SUN(tm) JVM w/ HotSpot support
+HAS_HOTSPOT=`$JAVA -version 2>&1 | $GREP HotSpot`
 
-echo JBOSS_CLASSPATH=$JBOSS_CLASSPATH
-java $HOTSPOT $JAVA_OPTS $JAXP -classpath $JBOSS_CLASSPATH org.jboss.Main $@
+# If JAVA_OPTS is not set and the JVM is HOTSPOT enabled, then the server mode
+if [ "x$JAVA_OPTS" = "x" -a "x$HOTSPOT" != "x" ]; then
+    JAVA_OPTS="-server"
+fi
 
+# Setup the JAXP parser to use
+if [ "x$JAXP" = "x" ]; then
+    # Default to crimson
+    JAXP="crimson"
+fi
+
+case "$JAXP" in
+    crimson)
+	JAXP_DOM_FACTORY="org.apache.crimson.jaxp.DocumentBuilderFactoryImpl"
+	JAXP_SAX_FACTORY="org.apache.crimson.jaxp.SAXParserFactoryImpl"
+	JAXP_CLASSPATH="$JBOSS_HOME/lib/crimson.jar"
+	;;
+
+    *)
+	if [ "x$JAXP_DOM_FACTORY" = "x" ] && 
+	   [ "x$JAXP_SAX_FACTORY" = "x" ] && 
+	   [ "x$JAXP_CLASSPATH" = "x" ]; then
+	    die "unsupported JAXP parser: $JAXP"
+	fi
+	;;
+esac
+
+JBOSS_CLASSPATH="${JBOSS_CLASSPATH}:$JAXP_CLASSPATH"
+JAVA_OPTS="$JAVA_OPTS -Djavax.xml.parsers.DocumentBuilderFactory=$JAXP_DOM_FACTORY"
+JAVA_OPTS="$JAVA_OPTS -Djavax.xml.parsers.SAXParserFactory=$JAXP_SAX_FACTORY"
+
+# Display our environment
+echo "================================================================================"
+echo " JBoss Bootstrap Environment"
+echo ""
+echo " JAVA: $JAVA"
+echo ""
+echo " JAVA_OPTS: $JAVA_OPTS"
+echo ""
+echo " CLASSPATH: $JBOSS_CLASSPATH"
+echo ""
+echo "================================================================================"
+echo ""
+
+# Make sure we are in the correctly directory
+cd $JBOSS_HOME/bin
+
+# Execute the JVM
+exec java \
+    $JAVA_OPTS \
+    -classpath $JBOSS_CLASSPATH \
+    org.jboss.Main "$@"
