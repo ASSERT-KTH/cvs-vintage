@@ -157,10 +157,10 @@ ul, ol, dd	{
 
 /* Scarab/App - styles start here */
 .functnbar {
-	background: #000;
+	background: #666 url(../images/nw_min.gif) no-repeat top left;
 	}
 .functnbar2 {
-	background: #666;
+	background: #666 url(../images/sw_min.gif) no-repeat bottom left;
 	}
 #topmodule {
 	border-top: 1px solid white;
