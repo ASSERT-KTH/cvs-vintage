@@ -1,4 +1,4 @@
-// $Id: ZargoFilePersister.java,v 1.4 2004/09/05 16:57:48 bobtarling Exp $
+// $Id: ZargoFilePersister.java,v 1.5 2004/09/06 16:46:23 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -63,8 +63,14 @@ public class ZargoFilePersister extends AbstractFilePersister {
      * Sets the extensionname and the description. 
      */
     public ZargoFilePersister() {
-        extension = "zargo";
         desc = "Argo compressed project file";
+    }
+
+    /**
+     * @see org.argouml.kernel.AbstractFilePersister#getExtension()
+     */
+    public String getExtension() {
+        return "zargo";
     }
     
     /**

@@ -1,4 +1,4 @@
-// $Id: ArgoFilePersister.java,v 1.4 2004/09/06 16:37:55 mvw Exp $
+// $Id: ArgoFilePersister.java,v 1.5 2004/09/06 16:46:23 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -59,8 +59,14 @@ public class ArgoFilePersister extends AbstractFilePersister {
      * Sets the extensionname and the description. 
      */
     public ArgoFilePersister() {
-        extension = "argo";
         desc = "Argo project file";
+    }
+    
+    /**
+     * @see org.argouml.kernel.AbstractFilePersister#getExtension()
+     */
+    public String getExtension() {
+        return "argo";
     }
     
     /**
