@@ -26,25 +26,36 @@
 // File: PropPanelAttribute.java
 // Classes: PropPanelAttribute
 // Original Author: jrobbins@ics.uci.edu
-// $Id: PropPanelAttribute.java,v 1.20 2002/11/23 22:04:46 kataka Exp $
+// $Id: PropPanelAttribute.java,v 1.21 2002/11/24 00:59:48 kataka Exp $
 
 package org.argouml.uml.ui.foundation.core;
 
-import java.awt.*;
-import javax.swing.*;
+import java.awt.GridLayout;
 
-import ru.novosoft.uml.MElementEvent;
-import ru.novosoft.uml.foundation.core.*;
-import ru.novosoft.uml.foundation.data_types.*;
-import ru.novosoft.uml.foundation.extension_mechanisms.*;
-import sun.security.action.GetPropertyAction;
+import javax.swing.JList;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 
-import org.argouml.application.api.*;
-import org.argouml.kernel.Project;
+import org.argouml.application.api.Argo;
 import org.argouml.model.uml.UmlFactory;
-import org.argouml.ui.ProjectBrowser;
-import org.argouml.uml.MMUtil;
-import org.argouml.uml.ui.*;
+import org.argouml.uml.ui.PropPanelButton;
+import org.argouml.uml.ui.UMLCheckBox;
+import org.argouml.uml.ui.UMLComboBox2;
+import org.argouml.uml.ui.UMLComboBoxNavigator;
+import org.argouml.uml.ui.UMLEnumerationBooleanProperty;
+import org.argouml.uml.ui.UMLInitialValueComboBox;
+import org.argouml.uml.ui.UMLList;
+import org.argouml.uml.ui.UMLMultiplicityComboBox;
+import org.argouml.uml.ui.UMLReflectionListModel;
+import org.argouml.uml.ui.UMLTaggedBooleanProperty;
+import org.argouml.uml.ui.UMLVisibilityPanel;
+import ru.novosoft.uml.foundation.core.MAttribute;
+import ru.novosoft.uml.foundation.core.MClassifier;
+import ru.novosoft.uml.foundation.core.MModelElement;
+import ru.novosoft.uml.foundation.core.MNamespace;
+import ru.novosoft.uml.foundation.data_types.MChangeableKind;
+import ru.novosoft.uml.foundation.data_types.MScopeKind;
+import ru.novosoft.uml.foundation.extension_mechanisms.MStereotype;
 
 
 public class PropPanelAttribute extends PropPanelModelElement {
