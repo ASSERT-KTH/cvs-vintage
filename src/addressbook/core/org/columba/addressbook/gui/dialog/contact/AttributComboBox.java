@@ -175,8 +175,9 @@ public class AttributComboBox
 		selection = (String) list.get(0);
 
 		for (Iterator it = list.iterator(); it.hasNext();) {
-			JCheckBoxMenuItem menuItem = new JCheckBoxMenuItem((String) it.next());
-			menuItem.setActionCommand((String) it.next());
+			String next = (String)it.next();
+			JCheckBoxMenuItem menuItem = new JCheckBoxMenuItem(next);
+			menuItem.setActionCommand(next);
 //		for (int i = 0; i < list.size(); i++)
 //		{
 //			JCheckBoxMenuItem menuItem = new JCheckBoxMenuItem((String) list.get(i));
