@@ -10,8 +10,8 @@
 <!-- This is the XML schema use by Torque to generate the SQL for         -->
 <!-- ID_TABLE table used by the id broker mechanism in Turbine.           -->
 <!-- ==================================================================== -->
-<!-- @author: <a href="mailto:jvanzyl@periapt.com">Jason van Zyl</a>      -->
-<!-- @version $Id: id-table-schema.xml,v 1.2 2002/02/04 18:10:25 jmcnally Exp $ -->
+<!-- @author: <a href="mailto:jvanzyl@apache.org">Jason van Zyl</a>      -->
+<!-- @version $Id: id-table-schema.xml,v 1.3 2002/02/04 18:12:54 jon Exp $ -->
 <!-- ==================================================================== -->
 
 <database name="@DATABASE_NAME@">
