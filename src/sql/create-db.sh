@@ -1,7 +1,7 @@
 #!/bin/sh
 
 #
-# $Id: create-db.sh,v 1.20 2003/03/04 17:27:20 jmcnally Exp $
+# $Id: create-db.sh,v 1.21 2003/04/07 17:40:05 jon Exp $
 #
 
 CMDNAME=`basename "$0"`
@@ -118,6 +118,17 @@ if [ "${usage}" ] ; then
     exit 0
 fi
 
+## Verify that we have a valid looking password...
+if [ -z "${DB_USER}" ] ; then
+    echo "WARNING: There is no username specified for the database."
+    echo "If you get access denied errors, you can specify one"
+    echo "on the command line with the -u option or by editing your"
+    echo "build.properties file and specifying the scarab.database.username"
+    echo "property.  You may also want to use the -p option to force a "
+    echo "prompt for the password or specify the scarab.database.password"
+    echo "in your build.properties."
+fi
+
 if [ -f "${POPULATION_SCRIPT_DIR}/mysql" ] ; then
     dbtype="mysql"
 elif [ -f "${POPULATION_SCRIPT_DIR}/postgresql" ] ; then
@@ -127,14 +138,14 @@ elif [ -f "${POPULATION_SCRIPT_DIR}/oracle" ] ; then
 fi
 
 if [ -z "${quiet}" ] ; then
-echo ""
+echo
 echo "-----------------------------------------------------"
 echo "Note: The .sql files are imported into the db from:"
 echo "${POPULATION_SCRIPT_DIR}"
 echo "If you change a .sql file in the scarab/src/sql directory,"
 echo "then you need to make sure to re-run the Ant build system."
 echo "-----------------------------------------------------"
-echo ""
+echo
 fi
 
 # If user wants password, then...
