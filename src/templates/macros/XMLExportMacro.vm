@@ -42,6 +42,19 @@
 </scarab>
 #end
 
+#macro (xmlUser $module $user)
+#set ($roles = $securityAdmin.getACL($user).getRoles($module).getRolesArray())
+
+    <user>
+      <firstname>$user.FirstName</firstname>
+      <lastname>$user.LastName</lastname>
+      <email>$user.Email</email>
+      <username>$user.UserName</username>
+      #foreach ($role in $roles)
+<role>$role.Name</role>
+      #end</user>
+#end
+
 #macro (xmlModuleHeader $module)
 
   <module id="$module.ModuleId" parent="$module.ParentId">
@@ -51,18 +64,21 @@
     <url>$module.Url</url>
     <domain>$!module.Domain</domain>
     <code>$module.Code</code>
+
+  #foreach ($user in $module.getUsers($securityAdmin.getPermissionsAsStrings()))
+    #xmlUser($module $user)
+  #end
 #end
 
 #macro (xmlIssue $issue)
 
     <issue id="$issue.IdCount">
       <artifact-type>$issue.IssueType.Name</artifact-type>
-      #set ($currentTransaction = -1)
       #foreach ($activity in $issue.getActivity(true))
-        #if ($currentTransaction == -1)
+        #if (! $currentTransaction)
           #xmlTransactionHeader($activity.Transaction)
           #set ($currentTransaction = $activity.TransactionId)
-        #elseif ($currentTransaction != $activity.TransactionId)
+        #elseif ($currentTransaction && $currentTransaction != $activity.TransactionId)
 
             </transaction>
             #xmlTransactionHeader($activity.Transaction)
@@ -147,5 +163,10 @@
             *#<type>$activity.Attribute.AttributeType.Name</type>
           </attribute>
           <description>$activity.Description</description>
+          #if ($activity.EndDate)
+          <end-date format="$sdf.toPattern()">$sdf.format($activity.EndDate)</end-date>
+          #else
+          <end-date></end-date>
+          #end
         </activity>
 #end
