@@ -1,4 +1,4 @@
-// $Id: PersistenceManager.java,v 1.2 2004/12/29 22:20:43 linus Exp $
+// $Id: PersistenceManager.java,v 1.3 2004/12/30 14:29:31 bobtarling Exp $
 // Copyright (c) 2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,8 +25,8 @@
 package org.argouml.persistence;
 
 import java.io.ByteArrayOutputStream;
-import java.io.FileNotFoundException;
 import java.io.OutputStream;
+import java.io.PrintStream;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -172,11 +172,12 @@ public class PersistenceManager {
     public String getQuickViewDump(Project project) {
         OutputStream stream = new ByteArrayOutputStream();
         try {
-            quickViewDump.generateProject(project, stream);
+            quickViewDump.writeProject(project, stream);
         } catch (SaveException e) {
-            return "Could not save project: " + e;
-        } catch (FileNotFoundException e) {
-            return "Could not save project: " + e;
+            // If anything goes wrong return the stack
+            // trace as a string so that we get some
+            // useful feedback.
+            e.printStackTrace(new PrintStream(stream));
         }
         return stream.toString();
     }
