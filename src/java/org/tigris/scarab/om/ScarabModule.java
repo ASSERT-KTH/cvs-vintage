@@ -95,7 +95,7 @@ import org.apache.fulcrum.security.impl.db.entity
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: ScarabModule.java,v 1.68 2001/11/09 23:43:36 dlr Exp $
+ * @version $Id: ScarabModule.java,v 1.69 2001/11/10 02:25:07 elicia Exp $
  */
 public class ScarabModule
     extends BaseScarabModule
@@ -463,32 +463,56 @@ public class ScarabModule
      * gets highest sequence number for module-attribute map
      * so that a new RModuleAttribute can be added at the end.
      */
-    public int getHighestSequence(IssueType issueType)
+    public int getLastAttribute(IssueType issueType)
         throws Exception
     {
         List moduleAttributes = getRModuleAttributes(issueType);
-        int highest = 0;
+        int last = 0;
 
         for ( int i=0; i<moduleAttributes.size(); i++ )
         {
                int order = ((RModuleAttribute) moduleAttributes.get(i))
                          .getOrder();
-               if (order > highest)
+               if (order > last)
                {
-                   highest = order;
+                   last = order;
                }
         }
-        return highest;
+        return last;
     }
 
     /**
-     * gets a list of all of the Attributes that are not associated with 
-     * this module
+     * FIXME: can this be done more efficently?
+     * gets highest sequence number for module-attribute map
+     * so that a new RModuleAttribute can be added at the end.
      */
-    public List getAvailableAttributes()
+    public int getLastAttributeOption(Attribute attribute, 
+                                      IssueType issueType)
         throws Exception
     {
-        List rModuleAttributes = getRModuleAttributes();
+        List moduleOptions = getRModuleOptions(attribute, issueType);
+        int last = 0;
+
+        for ( int i=0; i<moduleOptions.size(); i++ )
+        {
+               int order = ((RModuleOption) moduleOptions.get(i))
+                         .getOrder();
+               if (order > last)
+               {
+                   last = order;
+               }
+        }
+        return last;
+    }
+
+    /**
+     * gets a list of all of the global Attributes that are not 
+     * associated with this module and issue type
+     */
+    public List getAvailableAttributes(IssueType issueType)
+        throws Exception
+    {
+        List rModuleAttributes = getRModuleAttributes(issueType);
         List moduleAttributes = new ArrayList();
         for ( int i=0; i<rModuleAttributes.size(); i++ )
         {
@@ -508,6 +532,36 @@ public class ScarabModule
             }
         }
         return availAttributes;
+    }
+
+    /**
+     * gets a list of all of the Attribute options that are not
+     * associated with this module and attribute.
+     */
+    public List getAvailableAttributeOptions(Attribute attribute,
+                                             IssueType issueType)
+        throws Exception
+    {
+        List rModuleOptions = getRModuleOptions(attribute, issueType);
+        List moduleOptions = new ArrayList();
+        for ( int i=0; i<rModuleOptions.size(); i++ )
+        {
+            moduleOptions.add(
+               ((RModuleOption) rModuleOptions.get(i)).getAttributeOption());
+        }
+
+        List allOptions = attribute.getAttributeOptions(true);
+        List availOptions = new ArrayList();
+
+        for ( int i=0; i<allOptions.size(); i++ )
+        {
+            AttributeOption option = (AttributeOption)allOptions.get(i);
+            if (!moduleOptions.contains(option))
+            {
+                availOptions.add(option);
+            }
+        }
+        return availOptions;
     }
 
     /**
