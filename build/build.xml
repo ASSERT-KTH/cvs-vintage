@@ -516,7 +516,6 @@
         <!-- onerror of the actual creation class to "continue", this  -->
         <!-- pre-creates dummy tables (ignoring any errors if the      -->
         <!-- tables already exist) so that they can be dropped.        -->
-        <!--
         <sql
             rdbms="oracle"
             onerror="continue"
@@ -528,7 +527,6 @@
             <transaction 
                 src="${build.sql.scarab}/prepare-oracle-dummy-tables.sql"/>
         </sql>
--->
 
         <echo message=
             "Connecting to ${scarab.database.type} at ${scarab.database.url}"/>
