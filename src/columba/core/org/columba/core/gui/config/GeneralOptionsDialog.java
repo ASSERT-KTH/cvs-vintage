@@ -369,7 +369,7 @@ public class GeneralOptionsDialog extends JDialog implements ActionListener {
 		JPanel bottomPanel = new JPanel(new BorderLayout(0, 0));
 		bottomPanel.setBorder(new SingleSideEtchedBorder(SwingConstants.TOP));
 		JPanel buttonPanel = new JPanel(new GridLayout(1, 2, 5, 0));
-		buttonPanel.setBorder(BorderFactory.createEmptyBorder(12, 17, 11, 11));
+		buttonPanel.setBorder(BorderFactory.createEmptyBorder(17, 12, 11, 11));
 
 		buttonPanel.add(okButton);
 
