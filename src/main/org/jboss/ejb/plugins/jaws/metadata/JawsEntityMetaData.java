@@ -30,7 +30,7 @@ import org.jboss.metadata.XmlLoadable;
  *      
  *	@see <related>
  *	@author <a href="sebastien.alborini@m4x.org">Sebastien Alborini</a>
- *	@version $Revision: 1.1 $
+ *	@version $Revision: 1.2 $
  */
 public class JawsEntityMetaData extends MetaData implements XmlLoadable {
 	// Constants -----------------------------------------------------
@@ -216,7 +216,11 @@ public class JawsEntityMetaData extends MetaData implements XmlLoadable {
 		while (iterator.hasNext()) {
 			Element cmpField = (Element)iterator.next();
 			String fieldName = getElementContent(getUniqueChild(cmpField, "field-name"));
+			
 			CMPFieldMetaData cmpFieldMetaData = getCMPFieldByName(fieldName);
+            if (cmpFieldMetaData == null) 
+				throw new DeploymentException("cmp-field '"+fieldName+"' found in jaws.xml but not in ejb-jar.xml");
+				
 			cmpFieldMetaData.importXml(cmpField);
 		}
 		
