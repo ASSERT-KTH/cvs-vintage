@@ -665,6 +665,11 @@ class StatusHandler extends Handler {
 	// status is already set
 	int sc=res.getStatus();
 	
+        if( sc == 304 ) {
+          //NotModified must not return a body
+          return;
+        }
+
 	if( sbNote==0 ) {
 	    sbNote=req.getContextManager().getNoteId(ContextManager.REQUEST_NOTE,
 						     "StatusHandler.buff");
