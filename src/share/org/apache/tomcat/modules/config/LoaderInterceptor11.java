@@ -83,6 +83,7 @@ public class LoaderInterceptor11 extends BaseInterceptor {
     boolean useCommonL=false;
     boolean useContainerL=false;
     boolean useNoParent=false;
+    boolean use11Loader=false;
 
     boolean addJaxp=true;
     
@@ -112,6 +113,13 @@ public class LoaderInterceptor11 extends BaseInterceptor {
 	useNoParent=b;
     }
 
+    /** Use the 1.1 loader even if running under Java2.
+     *  This allows for a work-around to the currently broken URLClassLoader
+     *  which can't reload classes from changed jar files.
+     */
+    public void setUse11Loader( boolean b ) {
+	use11Loader = b;
+    }
 
     /** Directory where jaxp jars are installed. Defaults to
 	tomcat_install/lib/container, where the parser used by
@@ -324,7 +332,12 @@ public class LoaderInterceptor11 extends BaseInterceptor {
 	    parent=this.getClass().getClassLoader();
 	}
 	
-	ClassLoader loader=jdk11Compat.newClassLoaderInstance( classP, parent);
+	ClassLoader loader=null;
+	if( use11Loader ) {
+	    loader = new SimpleClassLoader(classP, parent);
+	} else {
+	    loader=jdk11Compat.newClassLoaderInstance( classP, parent);
+	}
 	if( debug > 0 )
 	    log("Loader " + loader.getClass().getName() + " " + parent);
 
