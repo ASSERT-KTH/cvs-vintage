@@ -125,7 +125,7 @@ import org.tigris.scarab.reports.ReportBridge;
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: AbstractScarabModule.java,v 1.100 2003/06/27 20:58:01 dlr Exp $
+ * @version $Id: AbstractScarabModule.java,v 1.101 2003/06/30 18:11:06 dlr Exp $
  */
 public abstract class AbstractScarabModule
     extends BaseObject
@@ -461,28 +461,7 @@ public abstract class AbstractScarabModule
     public int getDedupeSequence(IssueType issueType)
         throws Exception
     {
-        List groups = issueType.getAttributeGroups(this, false);
-        int sequence = groups.size() + 1;
-        for (int i=1; i<=groups.size(); i++)
-        {
-            int order;
-            int previousOrder;
-            try
-            {
-                order = ((AttributeGroup)groups.get(i)).getOrder();
-                previousOrder = ((AttributeGroup)groups.get(i-1)).getOrder();
-            }
-            catch (Exception e)
-            {
-                return sequence;
-            }
-            if (order != previousOrder + 1)
-            {
-                sequence = order-1;
-                break;
-            }
-        }
-        return sequence;
+        return issueType.getDedupeSequence(this);
     }    
 
     public ScarabUser[] getEligibleIssueReporters()
