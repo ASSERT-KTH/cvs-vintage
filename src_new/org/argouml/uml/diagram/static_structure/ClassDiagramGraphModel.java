@@ -24,7 +24,7 @@
 // File: ClassDiagramGraphModel.java
 // Classes: ClassDiagramGraphModel
 // Original Author: jrobbins@ics.uci.edu
-// $Id: ClassDiagramGraphModel.java,v 1.10 2002/09/08 19:24:12 kataka Exp $
+// $Id: ClassDiagramGraphModel.java,v 1.11 2002/09/11 20:32:13 linus Exp $
 
 package org.argouml.uml.diagram.static_structure;
 
@@ -307,7 +307,7 @@ implements MutableGraphModel, VetoableChangeListener, MElementListener {
 
   /** Contruct and add a new edge of a kind determined by the ports */
   public Object connect(Object fromPort, Object toPort) {
-      throw new Error("should not enter here! connect2");
+      throw new UnsupportedOperationException("should not enter here!");
   }
 
   /** Contruct and add a new edge of the given kind */
@@ -475,7 +475,7 @@ implements MutableGraphModel, VetoableChangeListener, MElementListener {
           }
       }
     
-      throw new Error("should not enter here! connect3");
+      throw new UnsupportedOperationException("should not enter here!");
   }
 
 

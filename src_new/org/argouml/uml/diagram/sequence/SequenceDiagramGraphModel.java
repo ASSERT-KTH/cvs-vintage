@@ -25,7 +25,7 @@
 // File: SequenceDiagramGraphModel.java
 // Classes: SequenceDiagramGraphModel
 // Original Author: 5eichler@informatik.uni-hamburg.de
-// $Id: SequenceDiagramGraphModel.java,v 1.6 2002/08/27 16:55:48 bobtarling Exp $
+// $Id: SequenceDiagramGraphModel.java,v 1.7 2002/09/11 20:32:13 linus Exp $
 
 package org.argouml.uml.diagram.sequence;
 
@@ -215,7 +215,7 @@ implements MutableGraphModel, MElementListener, VetoableChangeListener {
 
   /** Contruct and add a new edge of a kind determined by the ports */
   public Object connect(Object fromPort, Object toPort) {
-      throw new Error("should not enter here! connect2");
+      throw new UnsupportedOperationException("should not enter here!");
   }
 
   /** Contruct and add a new edge of the given kind */

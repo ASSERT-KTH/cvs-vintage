@@ -24,7 +24,7 @@
 // File: StateDiagramGraphModel.java
 // Classes: StateDiagramGraphModel
 // Original Author: your email address here
-// $Id: StateDiagramGraphModel.java,v 1.8 2002/09/10 15:54:19 kataka Exp $
+// $Id: StateDiagramGraphModel.java,v 1.9 2002/09/11 20:32:13 linus Exp $
 
 package org.argouml.uml.diagram.state;
 import org.argouml.model.uml.UmlFactory;
@@ -262,7 +262,7 @@ implements MutableGraphModel, VetoableChangeListener, MElementListener {
 
   /** Contruct and add a new edge of a kind determined by the ports */
   public Object connect(Object fromPort, Object toPort) {
-      throw new Error("should not enter here! connect2");
+      throw new UnsupportedOperationException("should not enter here!");
   }
 
   /** Contruct and add a new edge of the given kind */

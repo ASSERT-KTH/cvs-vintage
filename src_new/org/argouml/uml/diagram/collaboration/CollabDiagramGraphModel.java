@@ -25,7 +25,7 @@
 // File: CollabDiagramGraphModel.java
 // Classes: CollabDiagramGraphModel
 // Original Author: agauthie@ics.uci.edu
-// $Id: CollabDiagramGraphModel.java,v 1.7 2002/09/10 21:28:21 kataka Exp $
+// $Id: CollabDiagramGraphModel.java,v 1.8 2002/09/11 20:32:12 linus Exp $
 
 package org.argouml.uml.diagram.collaboration;
 import org.argouml.model.uml.UmlFactory;
@@ -235,7 +235,7 @@ implements MutableGraphModel, MElementListener, VetoableChangeListener {
 
   /** Contruct and add a new edge of a kind determined by the ports */
   public Object connect(Object fromPort, Object toPort) {
-      throw new Error("should not enter here! connect2");
+      throw new UnsupportedOperationException("should not enter here! connect2");
   }
 
   /** Contruct and add a new edge of the given kind */

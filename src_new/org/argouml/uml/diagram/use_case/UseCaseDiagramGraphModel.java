@@ -25,7 +25,7 @@
 // File: UseCaseDiagramGraphModel.java
 // Classes: UseCaseDiagramGraphModel
 // Original Author: your email address here
-// $Id: UseCaseDiagramGraphModel.java,v 1.9 2002/08/19 20:43:50 kataka Exp $
+// $Id: UseCaseDiagramGraphModel.java,v 1.10 2002/09/11 20:32:13 linus Exp $
 
 // 3 Apr 2002: Jeremy Bennett (mail@jeremybennett.com). Extended to support
 // the Extend and Include relationships. JavaDoc added for clarity. Adding edge
@@ -781,9 +781,7 @@ public class UseCaseDiagramGraphModel extends MutableGraphSupport
      */
 
     public Object connect(Object fromPort, Object toPort) {
-        throw new Error(this.getClass().toString() +
-			": connect(fromPort, toPort) - " +
-			"should not enter here!");
+        throw new UnsupportedOperationException("should not enter here!");
     }
 
 
