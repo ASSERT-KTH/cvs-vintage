@@ -36,7 +36,7 @@ import org.jboss.invocation.InvocationType;
  *
  * @author <a href="mailto:osh@sparre.dk">Ole Husgaard</a>
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.17 $
+ * @version $Revision: 1.18 $
  */
 abstract class AbstractTxInterceptor
    extends AbstractInterceptor
@@ -67,7 +67,7 @@ abstract class AbstractTxInterceptor
     * @param inheritedTx If <code>true</code> the transaction has just been started 
     * in this interceptor.
     *
-    * @throws Excetion if an exception occures in the interceptor chain.  The
+    * @throws Exception if an exception occures in the interceptor chain.  The
     * actual exception throw is governed by the rules in the EJB 2.0 
     * specification section 18.3
     */
