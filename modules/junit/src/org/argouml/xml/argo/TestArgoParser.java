@@ -1,4 +1,4 @@
-// $Id: TestArgoParser.java,v 1.12 2004/09/28 19:45:09 mvw Exp $
+// $Id: TestArgoParser.java,v 1.13 2004/12/21 00:49:53 bobtarling Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -30,6 +30,7 @@ import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
 
+import org.argouml.kernel.LastLoadInfo;
 import org.argouml.kernel.Project;
 import org.argouml.kernel.ZargoFilePersister;
 
@@ -73,7 +74,7 @@ public class TestArgoParser extends TestCase {
             ZargoFilePersister persister = new ZargoFilePersister();
             Project p = persister.loadProject(url);
             assertTrue("Load Status for " + filename + ".",
-                   ArgoParser.getInstance().getLastLoadStatus());
+                   LastLoadInfo.getInstance().getLastLoadStatus());
         } catch (java.net.MalformedURLException e) {
             assertTrue("Incorrect test case, malformed filename: " 
                    + filename + ".", false);
@@ -108,7 +109,7 @@ public class TestArgoParser extends TestCase {
             ZargoFilePersister persister = new ZargoFilePersister();
             Project p = persister.loadProject(url);
             assertTrue("Load Status", 
-                    !ArgoParser.getInstance().getLastLoadStatus());
+                    !LastLoadInfo.getInstance().getLastLoadStatus());
         } catch (java.net.MalformedURLException e) {
             assertTrue("Incorrect test case.", false);
         } catch (Exception io) {
