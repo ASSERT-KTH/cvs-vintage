@@ -106,9 +106,16 @@
   <!-- Uncomment to add embedded tomcat service  
   <mbean code="org.jboss.tomcat.EmbeddedTomcatService" name="DefaultDomain:service=EmbeddedTomcat" />
    -->
+
+  <!-- Uncomment and set file URL to add Jetty service (you can set config more than once)
+  <mbean code="org.jboss.jetty.JettyService" name="DefaultDomain:service=Jetty">
+    <attribute name="Configuration">file URL to jetty.xml e.g. file:/usr/local/jboss/dist/conf/default/jetty.xml</attribute>
+  </mbean>
+   -->
    
   <mbean code="org.jboss.spydermq.SpyderMQService" name="DefaultDomain:service=SpyderMQ" />
 
+  <!-- Make sure you change EmbeddedTomcat to Jetty if you are using Jetty  -->
   <mbean code="org.jboss.deployment.J2eeDeployer" name="J2EE:service=J2eeDeployer">
     <attribute name="DeployerName">Default</attribute>
     <attribute name="JarDeployerName">:service=ContainerFactory</attribute>
