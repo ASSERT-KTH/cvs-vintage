@@ -1,4 +1,4 @@
-// $Id: NavigatorPane.java,v 1.61 2003/12/22 23:00:15 alexb Exp $
+// $Id: NavigatorPane.java,v 1.62 2004/01/08 20:31:20 jjones Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -55,7 +55,7 @@ import org.tigris.toolbar.ToolBar;
  *
  * <p>Perspectives are now built in the Perspective Manager.
  *
- * $Id: NavigatorPane.java,v 1.61 2003/12/22 23:00:15 alexb Exp $
+ * $Id: NavigatorPane.java,v 1.62 2004/01/08 20:31:20 jjones Exp $
  */
 public class NavigatorPane
     extends JPanel
@@ -203,7 +203,7 @@ public class NavigatorPane
     
     class ActionPerspectiveConfig extends UMLAction {
         
-        public ActionPerspectiveConfig() { super("action.nav-config"); }
+        public ActionPerspectiveConfig() { super("action.configure-perspectives"); }
         
         public void actionPerformed(ActionEvent ae) {
             
