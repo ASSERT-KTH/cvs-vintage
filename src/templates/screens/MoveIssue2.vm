@@ -26,7 +26,8 @@
  #set ($actionText = "Copy")
 #end
 
-<form method="post" action="$link.setPage("MoveIssue2.vm").setAction("MoveIssue")">
+<form method="post" action="$link.setPage("MoveIssue2.vm")">
+<input type="hidden" name="action" value="MoveIssue" />
 <input type="hidden" name="$scarabG.Constant.NEXT_TEMPLATE" value="ViewIssue.vm" />
 <input type="hidden" name="$scarabG.Constant.CANCEL_TEMPLATE" value="MoveIssue.vm" />
 <input type="hidden" name="id" value="$issueId" />
