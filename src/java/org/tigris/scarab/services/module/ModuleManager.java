@@ -61,7 +61,7 @@ import org.apache.torque.util.Criteria;
  * This class has static methods for working with a Module object
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ModuleManager.java,v 1.11 2001/08/28 00:51:55 jon Exp $
+ * @version $Id: ModuleManager.java,v 1.12 2001/08/30 19:26:35 jmcnally Exp $
  */
 public abstract class ModuleManager
 {
@@ -98,7 +98,8 @@ public abstract class ModuleManager
         gets a single project
         @return null on error
     */
-    public static ModuleEntity getProject(ObjectKey project_id) throws Exception
+    public static ModuleEntity getProject(ObjectKey project_id) 
+        throws Exception
     {
         ModuleEntity project = null;
         try
