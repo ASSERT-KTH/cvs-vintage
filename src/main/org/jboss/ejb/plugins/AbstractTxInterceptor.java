@@ -42,7 +42,7 @@ import org.jboss.invocation.InvocationType;
  *
  * @author <a href="mailto:osh@sparre.dk">Ole Husgaard</a>
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.20 $
+ * @version $Revision: 1.21 $
  */
 abstract class AbstractTxInterceptor
         extends AbstractInterceptor
@@ -56,6 +56,7 @@ abstract class AbstractTxInterceptor
 
    public void create() throws Exception
    {
+      super.create();
       tm = getContainer().getTransactionManager();
       ejbTimeout = TimedObject.class.getMethod("ejbTimeout", new Class[]{Timer.class});
    }

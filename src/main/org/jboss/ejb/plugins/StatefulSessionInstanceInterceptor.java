@@ -13,6 +13,8 @@ import java.rmi.RemoteException;
 import javax.ejb.EJBException;
 import javax.ejb.EJBObject;
 import javax.ejb.NoSuchObjectLocalException;
+import javax.ejb.TimedObject;
+import javax.ejb.Timer;
 import javax.transaction.RollbackException;
 import javax.transaction.Status;
 import javax.transaction.Synchronization;
@@ -36,17 +38,8 @@ import org.jboss.security.SecurityAssociation;
  * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
  * @author <a href="mailto:bill@burkecentral.com">Bill Burke</a>
  * @author <a href="mailto:scott.stark@jboss.org">Scott Stark</a>
- * @version $Revision: 1.43 $
+ * @version $Revision: 1.44 $
  *
- * <p><b>Revisions:</b>
- * <p><b>20010704 marcf</b>
- * <ul>
- * <li>- Moved to new synchronization
- * </ul>
- * <p><b>20010726 billb</b>
- * <ul>
- * <li>- externalized bean locking in separate object BeanLock
- * </ul>
  */
 public class StatefulSessionInstanceInterceptor
    extends AbstractInterceptor
@@ -67,7 +60,8 @@ public class StatefulSessionInstanceInterceptor
    private static Method getPrimaryKey;
    private static Method isIdentical;
    private static Method remove;
-   
+   private static Method ejbTimeout;
+
    static
    {
       try
@@ -76,9 +70,9 @@ public class StatefulSessionInstanceInterceptor
          getEJBHome = EJBObject.class.getMethod("getEJBHome", noArg);
          getHandle = EJBObject.class.getMethod("getHandle", noArg);
          getPrimaryKey = EJBObject.class.getMethod("getPrimaryKey", noArg);
-         isIdentical = EJBObject.class.getMethod("isIdentical", new Class[]
-         {EJBObject.class});
+         isIdentical = EJBObject.class.getMethod("isIdentical", new Class[]{EJBObject.class});
          remove = EJBObject.class.getMethod("remove", noArg);
+         ejbTimeout = TimedObject.class.getMethod("ejbTimeout", new Class[]{Timer.class});
       }
       catch (Exception e)
       {
@@ -275,11 +269,14 @@ public class StatefulSessionInstanceInterceptor
          // Set the current security information
          ctx.setPrincipal(mi.getPrincipal());
 
+         if (ejbTimeout.equals(mi.getMethod()))
+            ctx.pushInMethodFlag(EnterpriseContext.IN_EJB_TIMEOUT);
+         else
+            ctx.pushInMethodFlag(EnterpriseContext.IN_BUSINESS_METHOD);
+
          boolean validContext = true;
          try
          {
-            ctx.pushInMethodFlag(EnterpriseContext.IN_BUSINESS_METHOD);
-
             // Invoke through interceptors
             Object ret = getNext().invoke(mi);
             return ret;

@@ -7,6 +7,7 @@
 package org.jboss.ejb.plugins;
 
 import java.rmi.RemoteException;
+import java.lang.reflect.Method;
 
 import org.jboss.ejb.Container;
 import org.jboss.invocation.Invocation;
@@ -14,13 +15,16 @@ import org.jboss.ejb.EnterpriseContext;
 import org.jboss.ejb.StatelessSessionContainer;
 import org.jboss.ejb.InstancePool;
 
+import javax.ejb.TimedObject;
+import javax.ejb.Timer;
+
 /**
  * This container acquires the given instance. This must be used after
  * the EnvironmentInterceptor, since acquiring instances requires a proper
  * JNDI environment to be set
  *
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
- * @version $Revision: 1.18 $
+ * @version $Revision: 1.19 $
  */
 public class StatelessSessionInstanceInterceptor
    extends AbstractInterceptor
@@ -30,7 +34,9 @@ public class StatelessSessionInstanceInterceptor
    // Attributes ----------------------------------------------------
 
    protected StatelessSessionContainer container;
-   
+
+   private Method ejbTimeout;
+
    // Static --------------------------------------------------------
 
    // Constructors --------------------------------------------------
@@ -41,6 +47,12 @@ public class StatelessSessionInstanceInterceptor
    {
       super.setContainer(container);
       this.container = (StatelessSessionContainer)container;
+   }
+
+   public void create() throws Exception
+   {
+      super.create();
+      ejbTimeout = TimedObject.class.getMethod("ejbTimeout", new Class[]{Timer.class});
    }
 
    // Interceptor implementation --------------------------------------
@@ -63,29 +75,41 @@ public class StatelessSessionInstanceInterceptor
       // Use this context
       mi.setEnterpriseContext(ctx);
 
+      if (ejbTimeout.equals(mi.getMethod()))
+         ctx.pushInMethodFlag(EnterpriseContext.IN_EJB_TIMEOUT);
+      else
+         ctx.pushInMethodFlag(EnterpriseContext.IN_BUSINESS_METHOD);
+
       // There is no need for synchronization since the instance is always fresh also there should
       // never be a tx associated with the instance.
-	 
+
       try
       {
-         // Invoke through interceptors
-         return getNext().invoke(mi);
-      } catch (RuntimeException e) // Instance will be GC'ed at MI return
+         Object obj = getNext().invoke(mi);
+         return obj;
+
+      }
+      catch (RuntimeException e) // Instance will be GC'ed at MI return
       {
          mi.setEnterpriseContext(null);
          throw e;
-      } catch (RemoteException e) // Instance will be GC'ed at MI return
+      }
+      catch (RemoteException e) // Instance will be GC'ed at MI return
       {
          mi.setEnterpriseContext(null);
          throw e;
-      } catch (Error e) // Instance will be GC'ed at MI return
+      }
+      catch (Error e) // Instance will be GC'ed at MI return
       {
          mi.setEnterpriseContext(null);
          throw e;
-      } finally
+      }
+      finally
       {
+         ctx.popInMethodFlag();
+         
          // Return context
-         if ( mi.getEnterpriseContext() != null)
+         if (mi.getEnterpriseContext() != null)
          {
             pool.free(((EnterpriseContext) mi.getEnterpriseContext()));
          }

@@ -11,6 +11,8 @@ import java.rmi.NoSuchObjectException;
 import java.rmi.RemoteException;
 
 import javax.ejb.NoSuchObjectLocalException;
+import javax.ejb.TimedObject;
+import javax.ejb.Timer;
 import javax.transaction.Transaction;
 
 import org.jboss.ejb.BeanLock;
@@ -18,6 +20,7 @@ import org.jboss.ejb.Container;
 import org.jboss.ejb.EntityContainer;
 import org.jboss.ejb.EntityEnterpriseContext;
 import org.jboss.ejb.InstanceCache;
+import org.jboss.ejb.EnterpriseContext;
 import org.jboss.invocation.Invocation;
 import org.jboss.util.NestedRuntimeException;
 
@@ -42,7 +45,7 @@ import org.jboss.util.NestedRuntimeException;
 * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
 * @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>
 * @author <a href="mailto:bill@burkecentral.com">Bill Burke</a>
-* @version $Revision: 1.69 $
+* @version $Revision: 1.70 $
 */
 public class EntityInstanceInterceptor
    extends AbstractInterceptor
@@ -52,8 +55,9 @@ public class EntityInstanceInterceptor
    // Attributes ----------------------------------------------------
 	
    protected EntityContainer container;
-	
-   // Static --------------------------------------------------------	
+   protected Method ejbTimeout;
+
+   // Static --------------------------------------------------------
    // Constructors --------------------------------------------------
 	
 	// Public --------------------------------------------------------
@@ -69,6 +73,12 @@ public class EntityInstanceInterceptor
    }
 
    // Interceptor implementation --------------------------------------
+
+   public void create() throws Exception
+   {
+      super.create();
+      ejbTimeout = TimedObject.class.getMethod("ejbTimeout", new Class[]{Timer.class});
+   }
 
    public Object invokeHome(Invocation mi)
       throws Exception
@@ -170,9 +180,15 @@ public class EntityInstanceInterceptor
 
       Throwable exceptionThrown = null;
 
+      if (ejbTimeout.equals(mi.getMethod()))
+         ctx.pushInMethodFlag(EnterpriseContext.IN_EJB_TIMEOUT);
+      else
+         ctx.pushInMethodFlag(EnterpriseContext.IN_BUSINESS_METHOD);
+
       try
       {
-         return getNext().invoke(mi);
+         Object obj = getNext().invoke(mi);
+         return obj;
       }
       catch (RemoteException e)
       {
@@ -205,6 +221,8 @@ public class EntityInstanceInterceptor
          // example when activating a bean.
          if (ctx != null)
          {
+            ctx.popInMethodFlag();
+
             // Make sure we clear the transaction on an error before synchronization.
             // But avoid a race with a transaction rollback on a synchronization
             // that may have moved the context onto a different transaction
