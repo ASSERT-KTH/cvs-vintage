@@ -1,4 +1,4 @@
-// $Id: RadioAction.java,v 1.8 2004/08/06 17:11:41 mvw Exp $
+// $Id: RadioAction.java,v 1.9 2004/08/06 17:12:40 mvw Exp $
 // Copyright (c) 2003-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -32,7 +32,6 @@ import javax.swing.Action;
 import javax.swing.Icon;
 import org.argouml.kernel.ProjectManager;
 
-import org.argouml.uml.diagram.ui.UMLDiagram;
 import org.tigris.gef.base.Editor;
 import org.tigris.gef.base.Globals;
 import org.tigris.toolbar.toolbutton.AbstractButtonAction;
