@@ -39,7 +39,7 @@ Please enter the confirmation code that was sent to you in an email.
 
 <form method="post" action="$link.setPage("Confirm.vm")">
  <input type="hidden" name="action" value="Confirm" />
- <input type="hidden" name="$scarabG.Constant.NEXT_TEMPLATE" value="Index.vm" />
+ <input type="hidden" name="$scarabG.Constant.NEXT_TEMPLATE" value="Login.vm" />
  <input type="hidden" name="$scarabG.Constant.CANCEL_TEMPLATE" value="Login.vm" />
 
 <h3>Confirmation Information</h3>
