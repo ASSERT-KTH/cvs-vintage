@@ -31,7 +31,7 @@ import org.w3c.dom.Element;
  * @author <a href="mailto:loubyansky@hotmail.com">Alex Loubyansky</a>
  * @author <a href="mailto:heiko.rupp@cellent.de">Heiko W. Rupp</a>
  *
- * @version $Revision: 1.37 $
+ * @version $Revision: 1.38 $
  */
 public final class JDBCEntityMetaData
 {
@@ -232,7 +232,6 @@ public final class JDBCEntityMetaData
    {
       this.jdbcApplication = jdbcApplication;
       entityName = entity.getEjbName();
-      abstractSchemaName = entity.getAbstractSchemaName();
       listCacheMax = 1000;
       fetchSize = 0;
 
@@ -256,6 +255,16 @@ public final class JDBCEntityMetaData
       }
 
       isCMP1x = entity.isCMP1x();
+      if(isCMP1x)
+      {
+         abstractSchemaName = (entity.getAbstractSchemaName() == null ?
+            entityName : entity.getAbstractSchemaName());
+      }
+      else
+      {
+         abstractSchemaName = entity.getAbstractSchemaName();
+      }
+
       primaryKeyFieldName = entity.getPrimKeyField();
 
       String home = entity.getHome();
@@ -410,7 +419,6 @@ public final class JDBCEntityMetaData
 
       // set default values
       entityName = defaultValues.getName();
-      abstractSchemaName = defaultValues.getAbstractSchemaName();
       entityClass = defaultValues.getEntityClass();
       primaryKeyClass = defaultValues.getPrimaryKeyClass();
       isCMP1x = defaultValues.isCMP1x;
@@ -420,6 +428,16 @@ public final class JDBCEntityMetaData
       localHomeClass = defaultValues.getLocalHomeClass();
       localClass = defaultValues.getLocalClass();
       queryFactory = new JDBCQueryMetaDataFactory(this);
+
+      if(isCMP1x)
+      {
+         abstractSchemaName = (defaultValues.getAbstractSchemaName() == null ?
+            entityName : defaultValues.getAbstractSchemaName());
+      }
+      else
+      {
+         abstractSchemaName = defaultValues.getAbstractSchemaName();
+      }
 
       // datasource name
       String dataSourceNameString = MetaData.getOptionalChildContent(element, "datasource");

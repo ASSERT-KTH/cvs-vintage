@@ -16,7 +16,7 @@ import org.jboss.metadata.MetaData;
  * Immutable class which contains information about an JBossQL query.
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.9 $
+ * @version $Revision: 1.10 $
  */
 public final class JDBCJBossQLQueryMetaData implements JDBCQueryMetaData
 {
@@ -59,9 +59,8 @@ public final class JDBCJBossQLQueryMetaData implements JDBCQueryMetaData
    /**
     * Constructs a JDBCJBossQLQueryMetaData with JBossQL declared in the
     * jboss-ql elemnt and is invoked by the specified method.
-    * @param jdbcQueryMetaData the metadata about this query
     */
-   public JDBCJBossQLQueryMetaData(JDBCQueryMetaData jdbcQueryMetaData,
+   public JDBCJBossQLQueryMetaData(boolean isResultTypeMappingLocal,
                                    Element element,
                                    Method method,
                                    JDBCReadAheadMetaData readAhead,
@@ -75,7 +74,7 @@ public final class JDBCJBossQLQueryMetaData implements JDBCQueryMetaData
       {
          throw new DeploymentException("jboss-ql element is empty");
       }
-      resultTypeMappingLocal = jdbcQueryMetaData.isResultTypeMappingLocal();
+      this.resultTypeMappingLocal = isResultTypeMappingLocal;
 
       this.compiler = compiler;
    }

@@ -18,7 +18,7 @@ import org.jboss.metadata.MetaData;
  * Imutable class contains information about a declated query.
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- *   @version $Revision: 1.19 $
+ *   @version $Revision: 1.20 $
  */
 public final class JDBCDeclaredQueryMetaData implements JDBCQueryMetaData
 {
@@ -122,7 +122,7 @@ public final class JDBCDeclaredQueryMetaData implements JDBCQueryMetaData
     * @param method the method which invokes this query
     * @param readAhead the read-ahead properties for this query
     */
-   public JDBCDeclaredQueryMetaData(JDBCQueryMetaData jdbcQueryMetaData,
+   public JDBCDeclaredQueryMetaData(boolean isResultTypeMappingLocal,
                                     Element queryElement,
                                     Method method,
                                     JDBCReadAheadMetaData readAhead,
@@ -139,7 +139,7 @@ public final class JDBCDeclaredQueryMetaData implements JDBCQueryMetaData
       order = nullIfEmpty(MetaData.getOptionalChildContent(queryElement, "order"));
       other = nullIfEmpty(MetaData.getOptionalChildContent(queryElement, "other"));
 
-      resultTypeMappingLocal = jdbcQueryMetaData.isResultTypeMappingLocal();
+      this.resultTypeMappingLocal = isResultTypeMappingLocal;
 
       // load ejbSelect info
       Element selectElement = MetaData.getOptionalChild(queryElement, "select");

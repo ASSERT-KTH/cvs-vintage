@@ -20,16 +20,19 @@ import org.jboss.metadata.MetaData;
 import org.jboss.metadata.QueryMetaData;
 import org.jboss.util.Classes;
 import org.jboss.ejb.plugins.cmp.jdbc.JDBCQueryManager;
+import org.jboss.logging.Logger;
 
 /**
  * JDBCQueryMetaDataFactory constructs a JDBCQueryMetaData object based
  * on the query specifiection type.
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.21 $
+ * @version $Revision: 1.22 $
  */
 public class JDBCQueryMetaDataFactory
 {
+   private final static Logger log = Logger.getLogger(JDBCQueryMetaDataFactory.class);
+
    private JDBCEntityMetaData entity;
 
    public JDBCQueryMetaDataFactory(JDBCEntityMetaData entity)
@@ -75,7 +78,8 @@ public class JDBCQueryMetaDataFactory
 
          if(defaultValue == null)
          {
-            throw new DeploymentException("Unknown query method : " + methods[i]);
+            //throw new DeploymentException("Unknown query method : " + methods[i]);
+            log.warn("The query method is not defined in ejb-jar.xml: " + methods[i]);
          }
 
          JDBCQueryMetaData jdbcQueryData = createJDBCQueryMetaData(
@@ -155,12 +159,15 @@ public class JDBCQueryMetaDataFactory
 
       final Class qlCompiler = JDBCQueryManager.getQLCompiler(queryElement, entity);
 
+      final boolean isResultTypeMappingLocal = (jdbcQueryMetaData == null ?
+         false : jdbcQueryMetaData.isResultTypeMappingLocal());
+
       // JBOSS-QL
       Element jbossQL = MetaData.getOptionalChild(queryElement, "jboss-ql");
       if(jbossQL != null)
       {
          return new JDBCJBossQLQueryMetaData(
-            jdbcQueryMetaData,
+            isResultTypeMappingLocal,
             jbossQL,
             method,
             readAhead,
@@ -172,7 +179,7 @@ public class JDBCQueryMetaDataFactory
       if(dynamicQL != null)
       {
          return new JDBCDynamicQLQueryMetaData(
-            jdbcQueryMetaData,
+            isResultTypeMappingLocal,
             method,
             readAhead,
             qlCompiler);
@@ -183,7 +190,7 @@ public class JDBCQueryMetaDataFactory
       if(delcaredSql != null)
       {
          return new JDBCDeclaredQueryMetaData(
-            jdbcQueryMetaData,
+            isResultTypeMappingLocal,
             delcaredSql,
             method,
             readAhead,
