@@ -60,7 +60,7 @@ public class ViewMessageCommand extends FolderCommand {
 			DefaultCommandReference[] references) {
 		super(frame, references);
 
-		//priority = Command.REALTIME_PRIORITY;
+		priority = Command.REALTIME_PRIORITY;
 		commandType = Command.NORMAL_OPERATION;
 	}
 

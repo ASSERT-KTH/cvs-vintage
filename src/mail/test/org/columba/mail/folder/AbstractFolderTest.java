@@ -27,7 +27,7 @@ import junit.framework.TestCase;
 import org.columba.addressbook.config.AddressbookConfig;
 import org.columba.addressbook.main.AddressbookInterface;
 import org.columba.core.backgroundtask.BackgroundTaskManager;
-import org.columba.core.command.DefaultCommandProcessor;
+import org.columba.core.command.CommandProcessor;
 import org.columba.core.config.Config;
 import org.columba.core.logging.ColumbaLogger;
 import org.columba.core.main.MainInterface;
@@ -90,7 +90,7 @@ public class AbstractFolderTest extends TestCase {
      */
     protected void setUp() throws Exception {
     	
-    	MainInterface.processor = new DefaultCommandProcessor();
+    	MainInterface.processor = new CommandProcessor();
     	
     	// create config-folder
         File file = new File("test_config");

@@ -63,7 +63,7 @@ public class TaskManager {
     public TaskManager() {
         workerList = new Vector();
 
-        workerListMutex = new Mutex("workerListMutex");
+        workerListMutex = new Mutex();
     }
 
     /**
@@ -90,16 +90,12 @@ public class TaskManager {
      * @param t                new worker
      */
     public void register(Worker t) {
-        boolean needToRelease = false;
-
         try {
-            needToRelease = workerListMutex.getMutex();
+            workerListMutex.lock();
 
             workerList.add(t);
         } finally {
-            if (needToRelease) {
-                workerListMutex.releaseMutex();
-            }
+            workerListMutex.release();
         }
 
         fireWorkerAdded(t);
@@ -112,10 +108,9 @@ public class TaskManager {
      */
     public void unregister(ThreadVar tvar) {
         Worker worker;
-        boolean needToRelease = false;
 
         try {
-            needToRelease = workerListMutex.getMutex();
+            workerListMutex.lock();
 
             for (Iterator it = workerList.iterator(); it.hasNext();) {
                 worker = (Worker) it.next();
@@ -127,9 +122,7 @@ public class TaskManager {
                 }
             }
         } finally {
-            if (needToRelease) {
-                workerListMutex.releaseMutex();
-            }
+           workerListMutex.release();
         }
     }
 

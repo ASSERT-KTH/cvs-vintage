@@ -46,7 +46,7 @@ public abstract class AbstractHeaderListStorage implements HeaderListStorage {
     public AbstractHeaderListStorage() {
         super();
         //mutex = new Mutex(getName());
-        mutex = new Mutex("name");
+        mutex = new Mutex();
     }
 
     public abstract AbstractHeaderCache getHeaderCacheInstance();
@@ -225,10 +225,10 @@ public abstract class AbstractHeaderListStorage implements HeaderListStorage {
         HeaderList result;
 
         try {
-            mutex.getMutex();
+            mutex.lock();
             result = getHeaderCacheInstance().getHeaderList();
         } finally {
-            mutex.releaseMutex();
+            mutex.release();
         }
 
         return result;

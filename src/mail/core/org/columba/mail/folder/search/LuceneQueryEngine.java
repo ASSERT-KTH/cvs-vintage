@@ -155,7 +155,7 @@ public class LuceneQueryEngine implements QueryEngine {
         //if( getReader().numDocs() != folder.size() ) {
         //  recreateIndex();
         //}
-        indexMutex = new Mutex("indexMutex");
+        indexMutex = new Mutex();
     }
 
     protected void createIndex() throws IOException {
@@ -290,7 +290,7 @@ public class LuceneQueryEngine implements QueryEngine {
         LinkedList result = new LinkedList();
 
         try {
-            needToRelease = indexMutex.getMutex();
+            //needToRelease = indexMutex.getMutex();
 
             if (getFileReader().numDocs() > 0) {
                 Hits hitsFile = new IndexSearcher(getFileReader()).search(query);
@@ -311,7 +311,7 @@ public class LuceneQueryEngine implements QueryEngine {
             }
         } finally {
             if (needToRelease) {
-                indexMutex.releaseMutex();
+                indexMutex.release();
             }
         }
 
@@ -336,7 +336,7 @@ public class LuceneQueryEngine implements QueryEngine {
         boolean needToRelease = false;
 
         try {
-            needToRelease = indexMutex.getMutex();
+            //needToRelease = indexMutex.getMutex();
 
             IndexWriter writer = new IndexWriter(ramIndexDir, analyzer, false);
             writer.addDocument(messageDoc);
@@ -344,7 +344,7 @@ public class LuceneQueryEngine implements QueryEngine {
             incOperationCounter();
         } finally {
             if (needToRelease) {
-                indexMutex.releaseMutex();
+                indexMutex.release();
             }
         }
     }

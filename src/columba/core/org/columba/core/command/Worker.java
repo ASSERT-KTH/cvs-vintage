@@ -52,7 +52,7 @@ public class Worker extends SwingWorker implements WorkerStatusController {
 
     protected int operationMode;
 
-    protected DefaultCommandProcessor boss;
+    protected CommandProcessor boss;
 
     protected String displayText;
 
@@ -66,7 +66,7 @@ public class Worker extends SwingWorker implements WorkerStatusController {
 
     private int timeStamp;
 
-    public Worker(DefaultCommandProcessor parent) {
+    public Worker(CommandProcessor parent) {
         super();
 
         this.boss = parent;
