@@ -112,28 +112,50 @@ public  class RModuleIssueType
         else
         {
             throw new ScarabException(ScarabConstants.NO_PERMISSION_MESSAGE);
-        }            
+        }
     }
 
     /**
-     * Gets name to display.
+     * Not really sure why getDisplayText was created because 
+     * it really should just be getDisplayName() (JSS)
+     *
+     * @see #getDisplayText()
      */
-    public String getDisplayText() throws Exception
-    {    
-        String display = getIssueType().getName();            
-        if (super.getDisplayName() != null)
+    public String getDisplayName()
+    {
+        String display = super.getDisplayName();
+        if (display == null)
         {
-            display = super.getDisplayName();
+            try
+            {
+                display = getIssueType().getName();
+            }
+            catch (TorqueException e)
+            {
+                log().error("Error getting the issue type name: ", e);
+            }
         }
         return display;
     }
-            
+
+    /**
+     * Gets name to display. First tries to get the DisplayName 
+     * for the RMIT, if that is null, then it will get the IssueType's
+     * name and use that.
+     *
+     * @deprecated use getDisplayName() instead
+     */
+    public String getDisplayText()
+    {
+        return this.getDisplayName();
+    }
+
     /**
      * Copies object.
      */
     public RModuleIssueType copy()
          throws TorqueException
-    {                
+    {
         RModuleIssueType rmit2 = new RModuleIssueType();
         rmit2.setModuleId(getModuleId());
         rmit2.setIssueTypeId(getIssueTypeId());
