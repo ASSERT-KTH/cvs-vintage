@@ -46,7 +46,7 @@ import org.jboss.util.ServiceMBeanSupport;
  *   @see org.jboss.deployment.J2eeDeployer
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
  *   @author Toby Allsopp (toby.allsopp@peace.com)
- *   @version $Revision: 1.16 $
+ *   @version $Revision: 1.17 $
  */
 public class AutoDeployer
 	extends ServiceMBeanSupport
@@ -91,34 +91,33 @@ public class AutoDeployer
    {
       this("");
    }
-   
+
    public AutoDeployer(String urlList)
    {
-	   this ("J2EE:service=J2eeDeployer", urlList);
+      this ("J2EE:service=J2eeDeployer", urlList);
    }
-	
 
    public AutoDeployer(String _namedDeployer, String urlList)
    {
-	   setDeployers(_namedDeployer);
-	   setURLs(urlList);
+      setDeployers(_namedDeployer);
+      setURLs(urlList);
    }
 
-	public void setURLs(String urlList)
-	{
+   public void setURLs(String urlList)
+   {
       this.urlList = urlList;
    }
-   
+
    public String getURLs()
    {
       return urlList;
    }
-   
+
    public void setDeployers(String deployers)
    {
       this.deployerList = deployers;
    }
-   
+
    public String getDeployers()
    {
       return deployerList;
@@ -258,16 +257,16 @@ public class AutoDeployer
       for (int i=0; i<deployerNames.length && deployers.hasMoreTokens(); ++i)
       {
          String deployerName = deployers.nextToken().trim();
-	 try
-	 {
-	    deployerNames[i] = new ObjectName(deployerName);
-	 }
-	 catch (MalformedObjectNameException mfone)
-	 {
-	    log.warning("The string '" + deployerName + "'is not a valid " +
-			"object name - ignoring it.");
-	    continue;
-	 }
+         try
+         {
+            deployerNames[i] = new ObjectName(deployerName);
+         }
+         catch (MalformedObjectNameException mfone)
+         {
+            log.warning("The string '" + deployerName + "'is not a valid " +
+                        "object name - ignoring it.");
+            continue;
+         }
 
          // Ask the deployer for a filter to detect deployable files
          try
