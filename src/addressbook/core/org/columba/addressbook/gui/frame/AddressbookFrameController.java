@@ -30,9 +30,9 @@ import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
 
 import org.columba.addressbook.config.AddressbookConfig;
+import org.columba.addressbook.folder.AddressbookTreeNode;
 import org.columba.addressbook.gui.table.FilterToolbar;
 import org.columba.addressbook.gui.table.TableController;
-import org.columba.addressbook.gui.tree.AddressbookTreeNode;
 import org.columba.addressbook.gui.tree.TreeController;
 import org.columba.addressbook.util.AddressbookResourceLoader;
 import org.columba.core.config.ViewItem;

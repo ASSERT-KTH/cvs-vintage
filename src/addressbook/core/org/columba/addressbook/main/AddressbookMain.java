@@ -22,6 +22,7 @@ import org.columba.core.main.DefaultMain;
 import org.columba.core.plugin.PluginHandlerNotFoundException;
 import org.columba.core.plugin.PluginManager;
 import org.columba.core.pluginhandler.ActionPluginHandler;
+import org.columba.core.services.ServiceManager;
 import org.columba.core.shutdown.ShutdownManager;
 
 
@@ -48,6 +49,10 @@ public class AddressbookMain extends DefaultMain {
         TaskInterface plugin = new SaveAllAddressbooksPlugin();
         BackgroundTaskManager.getInstance().register(plugin);
         ShutdownManager.getShutdownManager().register(plugin);
+        
+        ServiceManager.getInstance().register("IContactFacade", "org.columba.addressbook.facade.ContactFacade");
+        ServiceManager.getInstance().register("IFolderFacade", "org.columba.addressbook.facade.FolderFacade");
+        ServiceManager.getInstance().register("IConfigFacade", "org.columba.addressbook.facade.ConfigFacade");
 		
 	}
 	

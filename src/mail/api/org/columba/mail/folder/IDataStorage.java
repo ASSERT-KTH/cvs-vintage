@@ -36,7 +36,7 @@ import org.columba.ristretto.io.Source;
  *
  * @author fdietz
  */
-public interface DataStorageInterface {
+public interface IDataStorage {
     /**
  * Remove message from datastorage
  *

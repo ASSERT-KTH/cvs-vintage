@@ -18,7 +18,7 @@ package org.columba.mail.filter.plugins;
 import org.columba.core.plugin.Plugin;
 
 import org.columba.mail.filter.FilterCriteria;
-import org.columba.mail.folder.MessageFolder;
+import org.columba.mail.folder.AbstractMessageFolder;
 
 
 /**
@@ -50,7 +50,7 @@ public abstract class AbstractFilter implements Plugin {
   * Execute the plugin
   *
   *
-  * @param folder        MessageFolder on which the filter gets applied
+  * @param folder        AbstractMessageFolder on which the filter gets applied
   * @param uid           uid of Message object
   *                      on the Statusbar
   * @return boolean      true if match, otherwise false
@@ -58,6 +58,6 @@ public abstract class AbstractFilter implements Plugin {
   * @throws Exception    pass exception one level higher to handle it in the
   *                      correct  place
   */
-    public abstract boolean process(MessageFolder folder, Object uid)
+    public abstract boolean process(AbstractMessageFolder folder, Object uid)
         throws Exception;
 }

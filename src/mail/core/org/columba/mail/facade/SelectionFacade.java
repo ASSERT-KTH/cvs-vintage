@@ -17,7 +17,7 @@
 //All Rights Reserved.
 package org.columba.mail.facade;
 
-import org.columba.mail.command.FolderCommandReference;
+import org.columba.mail.command.IFolderCommandReference;
 import org.columba.mail.gui.frame.MailFrameMediator;
 import org.columba.mail.gui.frame.MessageViewOwner;
 
@@ -26,7 +26,7 @@ import org.columba.mail.gui.frame.MessageViewOwner;
  * 
  * @author fdietz
  */
-public class SelectionFacade {
+public class SelectionFacade implements ISelectionFacade {
 
 	/**
 	 * Get currently selected folder in JTree.
@@ -34,7 +34,7 @@ public class SelectionFacade {
 	 * @param mediator		top-level frame mediator		
 	 * @return				selected folder
 	 */
-	public static FolderCommandReference getTreeSelection(
+	public IFolderCommandReference getTreeSelection(
 			MailFrameMediator mediator) {
 		return mediator.getTreeSelection();
 	}
@@ -45,7 +45,7 @@ public class SelectionFacade {
 	 * @param mediator		top-level frame mediator
 	 * @return				selected messages
 	 */
-	public static FolderCommandReference getTableSelection(
+	public IFolderCommandReference getTableSelection(
 			MailFrameMediator mediator) {
 		return mediator.getTableSelection();
 	}
@@ -56,7 +56,7 @@ public class SelectionFacade {
 	 * @param mediator		top-level frame mediator
 	 * @return				selected attachments
 	 */
-	public static FolderCommandReference getAttachmentSelection(
+	public IFolderCommandReference getAttachmentSelection(
 			MailFrameMediator mediator) {
 		return mediator.getAttachmentSelection();
 	}
@@ -67,7 +67,7 @@ public class SelectionFacade {
 	 * @param mediator		top-level frame mediator
 	 * @return				selected text
 	 */
-	public static String getTextSelection(MailFrameMediator mediator) {
+	public String getTextSelection(MailFrameMediator mediator) {
 		return ((MessageViewOwner) mediator).getMessageController()
 				.getBodytextViewer().getSelectedText();
 	}

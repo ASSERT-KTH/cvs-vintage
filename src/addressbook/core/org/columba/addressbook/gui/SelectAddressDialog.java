@@ -46,6 +46,8 @@ import org.columba.addressbook.gui.tree.AddressbookTreeModel;
 import org.columba.addressbook.gui.tree.util.SelectAddressbookFolderDialog;
 import org.columba.addressbook.model.HeaderItem;
 import org.columba.addressbook.model.HeaderItemList;
+import org.columba.addressbook.model.IHeaderItem;
+import org.columba.addressbook.model.IHeaderItemList;
 import org.columba.addressbook.util.AddressbookResourceLoader;
 import org.columba.core.gui.util.ButtonWithMnemonic;
 import org.columba.core.gui.util.DoubleClickListener;
@@ -94,7 +96,7 @@ public class SelectAddressDialog extends JDialog implements ActionListener {
 	// models for addressbook/recipients lists
 	private AddressbookListModel[] dialogAddressbookListModel;
 
-	private HeaderItemList[] headerItemList;
+	private IHeaderItemList[] headerItemList;
 
 	private ButtonWithMnemonic cancelButton;
 
@@ -102,7 +104,7 @@ public class SelectAddressDialog extends JDialog implements ActionListener {
 
 	private boolean success;
 
-	public SelectAddressDialog(JFrame frame, HeaderItemList[] list) {
+	public SelectAddressDialog(JFrame frame, IHeaderItemList[] list) {
 		super(frame, true);
 
 		setTitle(AddressbookResourceLoader.getString("dialog",
@@ -130,7 +132,7 @@ public class SelectAddressDialog extends JDialog implements ActionListener {
 		setVisible(true);
 	}
 
-	public HeaderItemList[] getHeaderItemLists() {
+	public IHeaderItemList[] getHeaderItemLists() {
 		return headerItemList;
 	}
 
@@ -399,7 +401,7 @@ public class SelectAddressDialog extends JDialog implements ActionListener {
 						item.setHeader("Bcc");
 					}
 
-					headerItemList[i].add((HeaderItem) item.clone());
+					headerItemList[i].add((IHeaderItem) item.clone());
 
 				}
 			}
@@ -407,33 +409,33 @@ public class SelectAddressDialog extends JDialog implements ActionListener {
 
 			int[] array = addressbook.getSelectedIndices();
 			ListModel model = addressbook.getModel();
-			HeaderItem item;
+			IHeaderItem item;
 
 			for (int j = 0; j < array.length; j++) {
-				item = (HeaderItem) model.getElementAt(array[j]);
-				dialogAddressbookListModel[0].addElement((HeaderItem) item
+				item = (IHeaderItem) model.getElementAt(array[j]);
+				dialogAddressbookListModel[0].addElement((IHeaderItem) item
 						.clone());
 			}
 		} else if (command.equals("CC")) { //$NON-NLS-1$
 
 			int[] array = addressbook.getSelectedIndices();
 			ListModel model = addressbook.getModel();
-			HeaderItem item;
+			IHeaderItem item;
 
 			for (int j = 0; j < array.length; j++) {
-				item = (HeaderItem) model.getElementAt(array[j]);
-				dialogAddressbookListModel[1].addElement((HeaderItem) item
+				item = (IHeaderItem) model.getElementAt(array[j]);
+				dialogAddressbookListModel[1].addElement((IHeaderItem) item
 						.clone());
 			}
 		} else if (command.equals("BCC")) { //$NON-NLS-1$
 
 			int[] array = addressbook.getSelectedIndices();
 			ListModel model = addressbook.getModel();
-			HeaderItem item;
+			IHeaderItem item;
 
 			for (int j = 0; j < array.length; j++) {
-				item = (HeaderItem) model.getElementAt(array[j]);
-				dialogAddressbookListModel[2].addElement((HeaderItem) item
+				item = (IHeaderItem) model.getElementAt(array[j]);
+				dialogAddressbookListModel[2].addElement((IHeaderItem) item
 						.clone());
 			}
 		} else if (command.equals("TO_REMOVE")) { //$NON-NLS-1$
@@ -442,7 +444,7 @@ public class SelectAddressDialog extends JDialog implements ActionListener {
 
 			for (int j = 0; j < array.length; j++) {
 				dialogAddressbookListModel[0]
-						.removeElement((HeaderItem) array[j]);
+						.removeElement((IHeaderItem) array[j]);
 			}
 		} else if (command.equals("CC_REMOVE")) { //$NON-NLS-1$
 
@@ -450,7 +452,7 @@ public class SelectAddressDialog extends JDialog implements ActionListener {
 
 			for (int j = 0; j < array.length; j++) {
 				dialogAddressbookListModel[1]
-						.removeElement((HeaderItem) array[j]);
+						.removeElement((IHeaderItem) array[j]);
 			}
 		} else if (command.equals("BCC_REMOVE")) { //$NON-NLS-1$
 
@@ -458,7 +460,7 @@ public class SelectAddressDialog extends JDialog implements ActionListener {
 
 			for (int j = 0; j < array.length; j++) {
 				dialogAddressbookListModel[2]
-						.removeElement((HeaderItem) array[j]);
+						.removeElement((IHeaderItem) array[j]);
 			}
 		} else if (command.equals("CHOOSE")) { //$NON-NLS-1$
 
@@ -470,7 +472,7 @@ public class SelectAddressDialog extends JDialog implements ActionListener {
 			if (selectedFolder != null) {
 				try {
 					//ContactItemMap list = selectedFolder.getContactItemMap();
-					HeaderItemList itemList = selectedFolder
+					IHeaderItemList itemList = selectedFolder
 							.getHeaderItemList();
 					addressbook.setHeaderItemList(itemList);
 					chooseButton.setText(selectedFolder.getName());

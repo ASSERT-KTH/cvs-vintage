@@ -23,6 +23,7 @@ import java.io.FileInputStream;
 
 import org.columba.addressbook.folder.AbstractFolder;
 import org.columba.addressbook.model.Contact;
+import org.columba.addressbook.model.IContact;
 import org.columba.addressbook.parser.VCardParser;
 
 /**
@@ -56,7 +57,7 @@ public class VCardImporter extends DefaultAddressbookImporter {
 		BufferedInputStream in = new BufferedInputStream(new FileInputStream(
 				file));
 		
-		Contact c = VCardParser.read(in);
+		IContact c = VCardParser.read(in);
 
 		saveContact(c);
 	}

@@ -43,8 +43,9 @@ import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.gui.util.ButtonWithMnemonic;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.folder.AbstractFolder;
-import org.columba.mail.folder.MessageFolder;
+import org.columba.mail.folder.AbstractMessageFolder;
 import org.columba.mail.gui.frame.TreeViewOwner;
+import org.columba.mail.gui.tree.ISelectFolderDialog;
 import org.columba.mail.gui.tree.TreeModel;
 import org.columba.mail.gui.tree.command.CreateAndSelectSubFolderCommand;
 import org.columba.mail.util.MailResourceLoader;
@@ -57,7 +58,7 @@ import org.frapuccino.swing.SortedTreeModelDecorator;
  * @author fdietz
  */
 public class SelectFolderDialog extends JDialog implements ActionListener,
-		TreeSelectionListener {
+		TreeSelectionListener, ISelectFolderDialog {
 
 	private String name;
 
@@ -208,8 +209,8 @@ public class SelectFolderDialog extends JDialog implements ActionListener,
 		return bool;
 	}
 
-	public MessageFolder getSelectedFolder() {
-		return (MessageFolder) selectedFolder;
+	public AbstractMessageFolder getSelectedFolder() {
+		return (AbstractMessageFolder) selectedFolder;
 	}
 
 	public void actionPerformed(ActionEvent e) {
@@ -259,8 +260,8 @@ public class SelectFolderDialog extends JDialog implements ActionListener,
 			return;
 		}
 
-		if (node instanceof MessageFolder) {
-			selectedFolder = (MessageFolder) node;
+		if (node instanceof AbstractMessageFolder) {
+			selectedFolder = (AbstractMessageFolder) node;
 		}
 
 		if (node.supportsAddMessage()) {

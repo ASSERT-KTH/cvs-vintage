@@ -17,16 +17,18 @@
 //All Rights Reserved.
 package org.columba.mail.folder.command;
 
-import org.columba.addressbook.facade.ContactFacade;
+import org.columba.addressbook.facade.IContactFacade;
 import org.columba.addressbook.gui.tree.AddressbookTreeModel;
 import org.columba.addressbook.gui.tree.util.SelectAddressbookFolderDialog;
 import org.columba.core.command.DefaultCommandReference;
 import org.columba.core.command.StatusObservableImpl;
 import org.columba.core.command.WorkerStatusController;
 import org.columba.core.gui.frame.FrameMediator;
+import org.columba.core.services.ServiceManager;
+import org.columba.core.services.ServiceNotFoundException;
 import org.columba.mail.command.FolderCommand;
 import org.columba.mail.command.FolderCommandReference;
-import org.columba.mail.folder.MessageFolder;
+import org.columba.mail.folder.AbstractMessageFolder;
 import org.columba.ristretto.message.Header;
 
 /**
@@ -70,7 +72,7 @@ public class AddAllSendersToAddressbookCommand extends FolderCommand {
 		Object[] uids = r.getUids();
 
 		// selected folder
-		MessageFolder folder = (MessageFolder) r.getFolder();
+		AbstractMessageFolder folder = (AbstractMessageFolder) r.getFolder();
 
 		// register for status events
 		((StatusObservableImpl) folder.getObservable()).setWorker(worker);
@@ -85,6 +87,16 @@ public class AddAllSendersToAddressbookCommand extends FolderCommand {
 			return;
 		}
 
+		IContactFacade contactFacade=null;
+		try {
+			contactFacade = (IContactFacade) ServiceManager.getInstance().createService("IContactFacade");
+		} catch (ServiceNotFoundException e) {
+			
+			e.printStackTrace();
+		}
+		
+		if ( contactFacade == null ) return;
+		
 		// for every message
 		for (int i = 0; i < uids.length; i++) {
 			// get header of message
@@ -94,15 +106,15 @@ public class AddAllSendersToAddressbookCommand extends FolderCommand {
 			String sender = (String) header.get("From");
 
 			// add sender to addressbook
-			ContactFacade.addContact(selectedFolder.getUid(), sender);
+			contactFacade.addContact(selectedFolder.getUid(), sender);
 
 			sender = (String) header.get("Cc");
 
-			ContactFacade.addContact(selectedFolder.getUid(), sender);
+			contactFacade.addContact(selectedFolder.getUid(), sender);
 
 			sender = (String) header.get("Bcc");
 
-			ContactFacade.addContact(selectedFolder.getUid(), sender);
+			contactFacade.addContact(selectedFolder.getUid(), sender);
 		}
 	}
 

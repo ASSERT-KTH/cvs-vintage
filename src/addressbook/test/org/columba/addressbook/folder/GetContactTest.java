@@ -18,6 +18,7 @@
 package org.columba.addressbook.folder;
 
 import org.columba.addressbook.model.Contact;
+import org.columba.addressbook.model.IContact;
 import org.columba.addressbook.model.VCARD;
 
 /**
@@ -35,13 +36,13 @@ public class GetContactTest extends AbstractFolderTstCase {
 	}
 
 	public void testGet() throws Exception {
-		Contact c = new Contact();
+		IContact c = new Contact();
 
 		c.set(VCARD.NICKNAME, "nickname");
 
 		Object uid = getSourceFolder().add(c);
 
-		Contact c2 = getSourceFolder().get(uid);
+		IContact c2 = getSourceFolder().get(uid);
 
 		assertEquals("same nickname", c.get(VCARD.NICKNAME), c2
 				.get(VCARD.NICKNAME));

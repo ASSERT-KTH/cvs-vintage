@@ -46,8 +46,8 @@ import org.columba.ristretto.parser.ParserException;
 
 /**
  * LocalFolder is a near-to working folder, which only needs a specific
- * {@link DataStorageInterface},{@link DefaultSearchEngine}and
- * {@link HeaderListStorage}"plugged in" to make it work.
+ * {@link IDataStorage},{@link DefaultSearchEngine}and
+ * {@link IHeaderListStorage}"plugged in" to make it work.
  * <p>
  * This class is abstract becaused, instead use {@link MHCachedFolder}a
  * complete implementation.
@@ -65,7 +65,7 @@ import org.columba.ristretto.parser.ParserException;
  * 
  * @author fdietz
  */
-public abstract class LocalFolder extends MessageFolder {
+public abstract class LocalFolder extends AbstractMessageFolder {
 
 	/** JDK 1.4+ logging framework logger, used for logging. */
 	private static final Logger LOG = Logger
@@ -86,7 +86,7 @@ public abstract class LocalFolder extends MessageFolder {
 	 * implement your own mailbox format here
 	 */
 
-	protected DataStorageInterface dataStorage;
+	protected IDataStorage dataStorage;
 
 	/**
 	 * @param item
@@ -96,7 +96,7 @@ public abstract class LocalFolder extends MessageFolder {
 	public LocalFolder(FolderItem item, String path) {
 		super(item, path);
 
-		// TODO (@author fdietz): move this to MessageFolder constructor
+		// TODO (@author fdietz): move this to AbstractMessageFolder constructor
 		// create filterlist datastructure
 		XmlElement filterListElement = node.getElement(FilterList.XML_NAME);
 
@@ -170,15 +170,15 @@ public abstract class LocalFolder extends MessageFolder {
 
 	/**
 	 * 
-	 * Implement a <class>DataStorageInterface </class> for the mailbox format
+	 * Implement a <class>IDataStorage </class> for the mailbox format
 	 * of your pleasure.
 	 * 
-	 * @return instance of <class>DataStorageInterface </class>
+	 * @return instance of <class>IDataStorage </class>
 	 */
-	public abstract DataStorageInterface getDataStorageInstance();
+	public abstract IDataStorage getDataStorageInstance();
 
 	/**
-	 * @see org.columba.mail.folder.MailboxInterface#getMimePart(java.lang.Object,
+	 * @see org.columba.mail.folder.IMailbox#getMimePart(java.lang.Object,
 	 *      java.lang.Integer[])
 	 * @TODO dont use deprecated method
 	 */
@@ -193,7 +193,7 @@ public abstract class LocalFolder extends MessageFolder {
 	}
 
 	/**
-	 * @see org.columba.mail.folder.MailboxInterface#getMimePartTree(java.lang.Object)
+	 * @see org.columba.mail.folder.IMailbox#getMimePartTree(java.lang.Object)
 	 */
 	public MimeTree getMimePartTree(Object uid) throws Exception {
 		// get message with UID
@@ -242,10 +242,10 @@ public abstract class LocalFolder extends MessageFolder {
 	 * First we copy the message source to the destination folder. Then we also
 	 * copy the flags attribute of this message.
 	 * 
-	 * @see org.columba.mail.folder.MailboxInterface#innerCopy(org.columba.mail.folder.MailboxInterface,
+	 * @see org.columba.mail.folder.IMailbox#innerCopy(org.columba.mail.folder.IMailbox,
 	 *      java.lang.Object[])
 	 */
-	public void innerCopy(MailboxInterface destFolder, Object[] uids)
+	public void innerCopy(IMailbox destFolder, Object[] uids)
 			throws Exception {
 		if (getObservable() != null) {
 			getObservable().setMax(uids.length);
@@ -406,7 +406,7 @@ public abstract class LocalFolder extends MessageFolder {
 	}
 
 	/**
-	 * @see org.columba.mail.folder.MailboxInterface#getMessageHeader(java.lang.Object)
+	 * @see org.columba.mail.folder.IMailbox#getMessageHeader(java.lang.Object)
 	 * @TODO dont use deprecated method
 	 */
 	public ColumbaHeader getMessageHeader(Object uid) throws Exception {
@@ -447,7 +447,7 @@ public abstract class LocalFolder extends MessageFolder {
 	}
 
 	/**
-	 * @see org.columba.mail.folder.MailboxInterface#removeMessage(java.lang.Object)
+	 * @see org.columba.mail.folder.IMailbox#removeMessage(java.lang.Object)
 	 */
 	public void removeMessage(Object uid) throws Exception {
 		// remove message from disk
@@ -513,7 +513,7 @@ public abstract class LocalFolder extends MessageFolder {
 	 * This method first tries to find the requested header in the header cache.
 	 * If the headerfield is not cached, the message source is parsed.
 	 * 
-	 * @see org.columba.mail.folder.MailboxInterface#getHeaderFields(java.lang.Object,
+	 * @see org.columba.mail.folder.IMailbox#getHeaderFields(java.lang.Object,
 	 *      java.lang.String[])
 	 *  
 	 */
@@ -551,7 +551,7 @@ public abstract class LocalFolder extends MessageFolder {
 	}
 
 	/**
-	 * @see org.columba.mail.folder.MailboxInterface#expungeFolder()
+	 * @see org.columba.mail.folder.IMailbox#expungeFolder()
 	 */
 	public void expungeFolder() throws Exception {
 		// make sure to close all file handles
@@ -566,7 +566,7 @@ public abstract class LocalFolder extends MessageFolder {
 	}
 
 	/**
-	 * @see org.columba.mail.folder.MailboxInterface#getAllHeaderFields(java.lang.Object)
+	 * @see org.columba.mail.folder.IMailbox#getAllHeaderFields(java.lang.Object)
 	 */
 	public Header getAllHeaderFields(Object uid) throws Exception {
 

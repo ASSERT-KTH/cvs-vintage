@@ -27,6 +27,7 @@ import javax.swing.JFileChooser;
 import org.columba.addressbook.folder.AddressbookFolder;
 import org.columba.addressbook.gui.frame.AddressbookFrameMediator;
 import org.columba.addressbook.model.Contact;
+import org.columba.addressbook.model.IContact;
 import org.columba.addressbook.parser.VCardParser;
 import org.columba.addressbook.util.AddressbookResourceLoader;
 import org.columba.core.gui.frame.FrameMediator;
@@ -83,7 +84,7 @@ public class AddVCardAction extends DefaultTreeAction {
 					in.close();
 
 					// create contact card
-					Contact card = VCardParser.read(new SourceInputStream(
+					IContact card = VCardParser.read(new SourceInputStream(
 							new CharSequenceSource(strbuf.toString())));
 
 					// add to folder

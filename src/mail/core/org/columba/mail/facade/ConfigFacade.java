@@ -23,7 +23,7 @@ import org.columba.mail.config.MailConfig;
  * 
  * @author fdietz
  */
-public class MailFacade {
+public class ConfigFacade implements IConfigFacade {
 	/**
 	 * @param configName
 	 *            id of config-file example: - options - tree - account
@@ -32,7 +32,7 @@ public class MailFacade {
 	 * 
 	 * @return XmlElement represents an xml-treenode
 	 */
-	public static XmlElement getConfigElement(String configName) {
+	public XmlElement getConfigElement(String configName) {
 		XmlElement root = MailConfig.getInstance().get(configName);
 
 		return root;

@@ -19,7 +19,7 @@ import java.io.InputStream;
 
 import org.columba.core.io.StreamUtils;
 import org.columba.mail.filter.FilterCriteria;
-import org.columba.mail.folder.MessageFolder;
+import org.columba.mail.folder.AbstractMessageFolder;
 
 
 /**
@@ -36,7 +36,7 @@ public class BodyFilter extends AbstractFilter {
      *          org.columba.mail.folder.Folder, java.lang.Object,
      *          org.columba.core.command.WorkerStatusController)
      */
-    public boolean process(MessageFolder folder, Object uid) throws Exception {
+    public boolean process(AbstractMessageFolder folder, Object uid) throws Exception {
         // get message body
 
         InputStream messageSourceStream = folder.getMessageSourceStream(uid);

@@ -17,8 +17,8 @@
 package org.columba.mail.folder.mh;
 
 import org.columba.mail.config.FolderItem;
-import org.columba.mail.folder.DataStorageInterface;
-import org.columba.mail.folder.HeaderListStorage;
+import org.columba.mail.folder.IDataStorage;
+import org.columba.mail.folder.IHeaderListStorage;
 import org.columba.mail.folder.LocalFolder;
 import org.columba.mail.folder.headercache.LocalHeaderListStorage;
 import org.columba.mail.folder.search.DefaultSearchEngine;
@@ -56,7 +56,7 @@ public class CachedMHFolder extends LocalFolder {
         item.set("property", "subfolder", "true");
     }
 
-    public DataStorageInterface getDataStorageInstance() {
+    public IDataStorage getDataStorageInstance() {
         if (dataStorage == null) {
             dataStorage = new MHDataStorage(this);
         }
@@ -67,7 +67,7 @@ public class CachedMHFolder extends LocalFolder {
     /**
      * @see org.columba.mail.folder.AbstractFolder#getHeaderListStorage()
      */
-    public HeaderListStorage getHeaderListStorage() {
+    public IHeaderListStorage getHeaderListStorage() {
         if (headerListStorage == null) {
             headerListStorage = new LocalHeaderListStorage(this);
         }

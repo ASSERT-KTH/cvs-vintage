@@ -21,7 +21,7 @@ import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Map;
 
-import org.columba.mail.folder.MailboxInterface;
+import org.columba.mail.folder.IMailbox;
 import org.columba.mail.folder.headercache.CachedHeaderfields;
 
 
@@ -29,7 +29,7 @@ import org.columba.mail.folder.headercache.CachedHeaderfields;
  * Wrapper around a Hashtable to allow typesafe
  * mapping of {@link ColumbaHeader} objects.
  * <p>
- * Every {@link MailboxInterface} uses this headerlist
+ * Every {@link IMailbox} uses this headerlist
  * internally to store headerfields.
  * <p>
  *

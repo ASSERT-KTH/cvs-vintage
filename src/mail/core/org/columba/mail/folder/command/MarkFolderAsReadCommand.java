@@ -22,7 +22,7 @@ import org.columba.core.command.DefaultCommandReference;
 import org.columba.core.command.WorkerStatusController;
 import org.columba.mail.command.FolderCommand;
 import org.columba.mail.command.FolderCommandReference;
-import org.columba.mail.folder.MessageFolder;
+import org.columba.mail.folder.AbstractMessageFolder;
 import org.columba.mail.util.MailResourceLoader;
 
 /**
@@ -41,7 +41,7 @@ import org.columba.mail.util.MailResourceLoader;
 public class MarkFolderAsReadCommand extends FolderCommand {
 
     /** The folder that is supposed to be marked as read. */
-    private MessageFolder folderToBeRead;
+    private AbstractMessageFolder folderToBeRead;
     
     /**
      * Command doing the actual work.
@@ -58,7 +58,7 @@ public class MarkFolderAsReadCommand extends FolderCommand {
     /** {@inheritDoc} */
     public void execute(WorkerStatusController worker) throws Exception {
         // get folder that is going to be moved
-        folderToBeRead = (MessageFolder) ((FolderCommandReference) getReference()).getFolder();
+        folderToBeRead = (AbstractMessageFolder) ((FolderCommandReference) getReference()).getFolder();
 
         worker.setDisplayText(MessageFormat.format(
                 MailResourceLoader.getString("statusbar", "message",

@@ -52,7 +52,7 @@ import org.columba.core.xml.XmlElement;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.config.FolderItem;
 import org.columba.mail.folder.LocalFolder;
-import org.columba.mail.folder.MessageFolder;
+import org.columba.mail.folder.AbstractMessageFolder;
 import org.columba.mail.folder.command.ExportFolderCommand;
 import org.columba.mail.folder.command.RenameFolderCommand;
 import org.columba.mail.folder.command.SyncSearchEngineCommand;
@@ -71,7 +71,7 @@ import com.jgoodies.forms.layout.CellConstraints;
 import com.jgoodies.forms.layout.FormLayout;
 
 /**
- * MessageFolder Options Dialog.
+ * AbstractMessageFolder Options Dialog.
  * 
  * @author fdietz
  */
@@ -84,7 +84,7 @@ public class FolderOptionsDialog extends JDialog implements ActionListener,
 
 	private JPanel advPanel;
 
-	private MessageFolder folder;
+	private AbstractMessageFolder folder;
 
 	private JLabel nameLabel;
 
@@ -141,7 +141,7 @@ public class FolderOptionsDialog extends JDialog implements ActionListener,
 	 * @param renameFolder
 	 *            this is a "rename folder" operation
 	 */
-	public FolderOptionsDialog(MessageFolder folder, boolean renameFolder,
+	public FolderOptionsDialog(AbstractMessageFolder folder, boolean renameFolder,
 			MailFrameMediator mediator) {
 		super(mediator.getView().getFrame(), MailResourceLoader.getString(
 				"dialog", "folderoptions", "dialog_title"), true);
@@ -172,7 +172,7 @@ public class FolderOptionsDialog extends JDialog implements ActionListener,
 	 * @param folder
 	 *            selected folder
 	 */
-	public FolderOptionsDialog(MessageFolder folder, MailFrameMediator mediator) {
+	public FolderOptionsDialog(AbstractMessageFolder folder, MailFrameMediator mediator) {
 		super(mediator.getView().getFrame(), MailResourceLoader.getString(
 				"dialog", "folderoptions", "dialog_title"), true);
 
@@ -505,7 +505,7 @@ public class FolderOptionsDialog extends JDialog implements ActionListener,
 				boolean bool = enableTextIndexingCheckBox.isSelected();
 				item.set("property", "enable_lucene", bool); //$NON-NLS-1$ //$NON-NLS-2$
 
-				// cast to Local MessageFolder is safe here
+				// cast to Local AbstractMessageFolder is safe here
 				LocalFolder localFolder = (LocalFolder) folder;
 
 				DefaultSearchEngine engine = null;

@@ -32,9 +32,9 @@ import org.columba.mail.filter.Filter;
 import org.columba.mail.filter.FilterCriteria;
 import org.columba.mail.folder.AbstractFolder;
 import org.columba.mail.folder.FolderFactory;
-import org.columba.mail.folder.HeaderListStorage;
-import org.columba.mail.folder.MailboxInterface;
-import org.columba.mail.folder.MessageFolder;
+import org.columba.mail.folder.IHeaderListStorage;
+import org.columba.mail.folder.IMailbox;
+import org.columba.mail.folder.AbstractMessageFolder;
 import org.columba.mail.folder.headercache.CachedHeaderfields;
 import org.columba.mail.folder.imap.IMAPFolder;
 import org.columba.mail.folder.search.DefaultSearchEngine;
@@ -61,7 +61,7 @@ import org.columba.ristretto.message.MimeTree;
  * @author fdietz
  *  
  */
-public class VirtualFolder extends MessageFolder {
+public class VirtualFolder extends AbstractMessageFolder {
 	protected int nextUid;
 
 	protected HeaderList headerList;
@@ -177,7 +177,7 @@ public class VirtualFolder extends MessageFolder {
 		// we only want 10 subfolders
 		// -> if more children exist remove them
 		if (searchFolder.getChildCount() >= 10) {
-			MessageFolder child = (MessageFolder) searchFolder.getChildAt(0);
+			AbstractMessageFolder child = (AbstractMessageFolder) searchFolder.getChildAt(0);
 			child.removeFromParent();
 		}
 
@@ -266,7 +266,7 @@ public class VirtualFolder extends MessageFolder {
 
 	protected void applySearch() throws Exception {
 		int uid = getConfiguration().getInteger("property", "source_uid");
-		MessageFolder srcFolder = (MessageFolder) TreeModel.getInstance()
+		AbstractMessageFolder srcFolder = (AbstractMessageFolder) TreeModel.getInstance()
 				.getFolder(uid);
 
 		XmlElement filter = getConfiguration().getRoot().getElement("filter");
@@ -297,9 +297,9 @@ public class VirtualFolder extends MessageFolder {
 				.getFolder(106);
 	}
 
-	protected void applySearch(MessageFolder parent, Filter filter)
+	protected void applySearch(AbstractMessageFolder parent, Filter filter)
 			throws Exception {
-		MessageFolder folder = parent;
+		AbstractMessageFolder folder = parent;
 
 		Object[] resultUids = folder.searchMessages(filter);
 		String[] headerfields = CachedHeaderfields.getCachedHeaderfields();
@@ -312,7 +312,7 @@ public class VirtualFolder extends MessageFolder {
 					//	get source folder reference
 					VirtualHeader virtualHeader = ((VirtualFolder) folder)
 							.getVirtualHeader(resultUids[i]);
-					MessageFolder sourceFolder = virtualHeader.getSrcFolder();
+					AbstractMessageFolder sourceFolder = virtualHeader.getSrcFolder();
 					Object sourceUid = virtualHeader.getSrcUid();
 
 					Header h = sourceFolder.getHeaderFields(sourceUid,
@@ -339,7 +339,7 @@ public class VirtualFolder extends MessageFolder {
 
 		if (isInclude) {
 			for (Enumeration e = parent.children(); e.hasMoreElements();) {
-				folder = (MessageFolder) e.nextElement();
+				folder = (AbstractMessageFolder) e.nextElement();
 
 				if (folder instanceof VirtualFolder) {
 					continue;
@@ -358,7 +358,7 @@ public class VirtualFolder extends MessageFolder {
 		return new Filter(getConfiguration().getRoot().getElement("filter"));
 	}
 
-	public void add(ColumbaHeader header, MessageFolder f, Object uid)
+	public void add(ColumbaHeader header, AbstractMessageFolder f, Object uid)
 			throws Exception {
 		Object newUid = generateNextUid();
 
@@ -389,7 +389,7 @@ public class VirtualFolder extends MessageFolder {
 		for (int i = 0; i < uids.length; i++) {
 			// get source folder reference
 			VirtualHeader h = (VirtualHeader) headerList.get(uids[i]);
-			MessageFolder sourceFolder = h.getSrcFolder();
+			AbstractMessageFolder sourceFolder = h.getSrcFolder();
 			Object sourceUid = h.getSrcUid();
 
 			// virtual folder: update mailfolderinfo -> fire treenode change
@@ -412,7 +412,7 @@ public class VirtualFolder extends MessageFolder {
 
 		// get source folder reference
 		VirtualHeader h = (VirtualHeader) headerList.get(uid);
-		MessageFolder sourceFolder = h.getSrcFolder();
+		AbstractMessageFolder sourceFolder = h.getSrcFolder();
 		Object sourceUid = h.getSrcUid();
 
 		// remove from source folder
@@ -430,7 +430,7 @@ public class VirtualFolder extends MessageFolder {
 	public MimePart getMimePart(Object uid, Integer[] address) throws Exception {
 
 		VirtualHeader h = (VirtualHeader) headerList.get(uid);
-		MessageFolder sourceFolder = h.getSrcFolder();
+		AbstractMessageFolder sourceFolder = h.getSrcFolder();
 		Object sourceUid = h.getSrcUid();
 
 		return sourceFolder.getMimePart(sourceUid, address);
@@ -443,7 +443,7 @@ public class VirtualFolder extends MessageFolder {
 	public MimeTree getMimePartTree(Object uid) throws Exception {
 
 		VirtualHeader h = (VirtualHeader) headerList.get(uid);
-		MessageFolder sourceFolder = h.getSrcFolder();
+		AbstractMessageFolder sourceFolder = h.getSrcFolder();
 		Object sourceUid = h.getSrcUid();
 
 		return sourceFolder.getMimePartTree(sourceUid);
@@ -456,7 +456,7 @@ public class VirtualFolder extends MessageFolder {
 	 */
 	public ColumbaHeader getMessageHeader(Object uid) throws Exception {
 		VirtualHeader h = (VirtualHeader) headerList.get(uid);
-		MessageFolder sourceFolder = h.getSrcFolder();
+		AbstractMessageFolder sourceFolder = h.getSrcFolder();
 		Object sourceUid = h.getSrcUid();
 
 		return (ColumbaHeader) sourceFolder.getMessageHeader(sourceUid);
@@ -485,7 +485,7 @@ public class VirtualFolder extends MessageFolder {
 		for (int i = 0; i < uids.length; i++) {
 			// get source folder reference
 			VirtualHeader h = (VirtualHeader) headerList.get(uids[i]);
-			MessageFolder sourceFolder = h.getSrcFolder();
+			AbstractMessageFolder sourceFolder = h.getSrcFolder();
 			Object sourceUid = h.getSrcUid();
 
 			Object[] result = sourceFolder.searchMessages(filter,
@@ -536,7 +536,7 @@ public class VirtualFolder extends MessageFolder {
 	 * Hashtable list = new Hashtable();
 	 * 
 	 * for (int i = 0; i < uids.length; i++) { VirtualHeader virtualHeader =
-	 * (VirtualHeader) headerList .get(uids[i]); MessageFolder srcFolder =
+	 * (VirtualHeader) headerList .get(uids[i]); AbstractMessageFolder srcFolder =
 	 * virtualHeader.getSrcFolder(); Object srcUid = virtualHeader.getSrcUid();
 	 * 
 	 * if (list.containsKey(srcFolder)) { // bucket for this folder exists
@@ -549,8 +549,8 @@ public class VirtualFolder extends MessageFolder {
 	 * 
 	 * int i = 0;
 	 * 
-	 * for (Enumeration e = list.keys(); e.hasMoreElements();) { MessageFolder
-	 * srcFolder = (MessageFolder) e.nextElement(); List v = (Vector)
+	 * for (Enumeration e = list.keys(); e.hasMoreElements();) { AbstractMessageFolder
+	 * srcFolder = (AbstractMessageFolder) e.nextElement(); List v = (Vector)
 	 * list.get(srcFolder);
 	 * 
 	 * newReference[i] = new FolderCommandReference(srcFolder);
@@ -564,7 +564,7 @@ public class VirtualFolder extends MessageFolder {
 	 * i++; }
 	 * 
 	 * if (r.length > 1) { newReference[i] = new
-	 * FolderCommandReference((MessageFolder) r[1] .getFolder()); } else {
+	 * FolderCommandReference((AbstractMessageFolder) r[1] .getFolder()); } else {
 	 * newReference[i] = null; }
 	 * 
 	 * newReference[i + 1] = r[0];
@@ -592,7 +592,7 @@ public class VirtualFolder extends MessageFolder {
 		for (int i = 0; i < uids.length; i++) {
 			VirtualHeader h = (VirtualHeader) headerList.get(uids[i]);
 
-			MessageFolder sourceFolder = h.getSrcFolder();
+			AbstractMessageFolder sourceFolder = h.getSrcFolder();
 			Object sourceUid = h.getSrcUid();
 			success &= sourceFolder.tryToGetLock(locker);
 
@@ -603,7 +603,7 @@ public class VirtualFolder extends MessageFolder {
 			// release all folder locks
 			for (int i = 0; i < uids.length; i++) {
 				VirtualHeader h = (VirtualHeader) headerList.get(uids[i]);
-				MessageFolder sourceFolder = h.getSrcFolder();
+				AbstractMessageFolder sourceFolder = h.getSrcFolder();
 				sourceFolder.releaseLock(locker);
 
 			}
@@ -630,7 +630,7 @@ public class VirtualFolder extends MessageFolder {
 		//		 release all folder locks
 		for (int i = 0; i < uids.length; i++) {
 			VirtualHeader h = (VirtualHeader) headerList.get(uids[i]);
-			MessageFolder sourceFolder = h.getSrcFolder();
+			AbstractMessageFolder sourceFolder = h.getSrcFolder();
 			sourceFolder.releaseLock(locker);
 
 		}
@@ -656,7 +656,7 @@ public class VirtualFolder extends MessageFolder {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.columba.mail.folder.MailboxInterface#addMessage(java.io.InputStream)
+	 * @see org.columba.mail.folder.IMailbox#addMessage(java.io.InputStream)
 	 */
 	public Object addMessage(InputStream in) throws Exception {
 		// not supported
@@ -666,12 +666,12 @@ public class VirtualFolder extends MessageFolder {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.columba.mail.folder.MailboxInterface#getAttribute(java.lang.Object,
+	 * @see org.columba.mail.folder.IMailbox#getAttribute(java.lang.Object,
 	 *      java.lang.String)
 	 */
 	public Object getAttribute(Object uid, String key) throws Exception {
 		VirtualHeader h = (VirtualHeader) headerList.get(uid);
-		MessageFolder sourceFolder = h.getSrcFolder();
+		AbstractMessageFolder sourceFolder = h.getSrcFolder();
 		Object sourceUid = h.getSrcUid();
 
 		return sourceFolder.getAttribute(sourceUid, key);
@@ -680,12 +680,12 @@ public class VirtualFolder extends MessageFolder {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.columba.mail.folder.MailboxInterface#getFlags(java.lang.Object)
+	 * @see org.columba.mail.folder.IMailbox#getFlags(java.lang.Object)
 	 */
 	public Flags getFlags(Object uid) throws Exception {
 
 		VirtualHeader h = (VirtualHeader) headerList.get(uid);
-		MessageFolder sourceFolder = h.getSrcFolder();
+		AbstractMessageFolder sourceFolder = h.getSrcFolder();
 		Object sourceUid = h.getSrcUid();
 
 		return sourceFolder.getFlags(sourceUid);
@@ -694,13 +694,13 @@ public class VirtualFolder extends MessageFolder {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.columba.mail.folder.MailboxInterface#getHeaderFields(java.lang.Object,
+	 * @see org.columba.mail.folder.IMailbox#getHeaderFields(java.lang.Object,
 	 *      java.lang.String[])
 	 */
 	public Header getHeaderFields(Object uid, String[] keys) throws Exception {
 
 		VirtualHeader h = (VirtualHeader) headerList.get(uid);
-		MessageFolder sourceFolder = h.getSrcFolder();
+		AbstractMessageFolder sourceFolder = h.getSrcFolder();
 		Object sourceUid = h.getSrcUid();
 
 		return sourceFolder.getHeaderFields(sourceUid, keys);
@@ -709,12 +709,12 @@ public class VirtualFolder extends MessageFolder {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.columba.mail.folder.MailboxInterface#getMessageSourceStream(java.lang.Object)
+	 * @see org.columba.mail.folder.IMailbox#getMessageSourceStream(java.lang.Object)
 	 */
 	public InputStream getMessageSourceStream(Object uid) throws Exception {
 
 		VirtualHeader h = (VirtualHeader) headerList.get(uid);
-		MessageFolder sourceFolder = h.getSrcFolder();
+		AbstractMessageFolder sourceFolder = h.getSrcFolder();
 		Object sourceUid = h.getSrcUid();
 
 		return sourceFolder.getMessageSourceStream(sourceUid);
@@ -723,14 +723,14 @@ public class VirtualFolder extends MessageFolder {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.columba.mail.folder.MailboxInterface#getMimePartBodyStream(java.lang.Object,
+	 * @see org.columba.mail.folder.IMailbox#getMimePartBodyStream(java.lang.Object,
 	 *      java.lang.Integer[])
 	 */
 	public InputStream getMimePartBodyStream(Object uid, Integer[] address)
 			throws Exception {
 
 		VirtualHeader h = (VirtualHeader) headerList.get(uid);
-		MessageFolder sourceFolder = h.getSrcFolder();
+		AbstractMessageFolder sourceFolder = h.getSrcFolder();
 		Object sourceUid = h.getSrcUid();
 
 		return sourceFolder.getMimePartBodyStream(sourceUid, address);
@@ -739,14 +739,14 @@ public class VirtualFolder extends MessageFolder {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.columba.mail.folder.MailboxInterface#getMimePartSourceStream(java.lang.Object,
+	 * @see org.columba.mail.folder.IMailbox#getMimePartSourceStream(java.lang.Object,
 	 *      java.lang.Integer[])
 	 */
 	public InputStream getMimePartSourceStream(Object uid, Integer[] address)
 			throws Exception {
 
 		VirtualHeader h = (VirtualHeader) headerList.get(uid);
-		MessageFolder sourceFolder = h.getSrcFolder();
+		AbstractMessageFolder sourceFolder = h.getSrcFolder();
 		Object sourceUid = h.getSrcUid();
 
 		return sourceFolder.getMimePartSourceStream(sourceUid, address);
@@ -777,7 +777,7 @@ public class VirtualFolder extends MessageFolder {
 	/**
 	 * Not implemented.
 	 */
-	public void innerCopy(MailboxInterface destFolder, Object[] uids) {
+	public void innerCopy(IMailbox destFolder, Object[] uids) {
 	}
 
 	public void setAttribute(Object uid, String key, Object value)
@@ -790,7 +790,7 @@ public class VirtualFolder extends MessageFolder {
 		
 		VirtualHeader h = (VirtualHeader) headerList.get(uid);
 		h.getAttributes().put(key, value);
-		MessageFolder sourceFolder = h.getSrcFolder();
+		AbstractMessageFolder sourceFolder = h.getSrcFolder();
 		Object sourceUid = h.getSrcUid();
 
 		sourceFolder.setAttribute(sourceUid, key, value);
@@ -798,7 +798,7 @@ public class VirtualFolder extends MessageFolder {
 
 	public Attributes getAttributes(Object uid) throws Exception {
 		VirtualHeader h = (VirtualHeader) headerList.get(uid);
-		MessageFolder sourceFolder = h.getSrcFolder();
+		AbstractMessageFolder sourceFolder = h.getSrcFolder();
 		Object sourceUid = h.getSrcUid();
 
 		return sourceFolder.getAttributes(sourceUid);
@@ -812,7 +812,7 @@ public class VirtualFolder extends MessageFolder {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.columba.mail.folder.MailboxInterface#addMessage(java.io.InputStream,
+	 * @see org.columba.mail.folder.IMailbox#addMessage(java.io.InputStream,
 	 *      org.columba.ristretto.message.Attributes)
 	 */
 	public Object addMessage(InputStream in, Attributes attributes, Flags flags)
@@ -826,7 +826,7 @@ public class VirtualFolder extends MessageFolder {
 	/**
 	 * @see org.columba.mail.folder.Folder#getHeaderListStorage()
 	 */
-	public HeaderListStorage getHeaderListStorage() {
+	public IHeaderListStorage getHeaderListStorage() {
 
 		// not necessary
 
@@ -841,11 +841,11 @@ public class VirtualFolder extends MessageFolder {
 	}
 
 	/**
-	 * @see org.columba.mail.folder.MailboxInterface#getAllHeaderFields(java.lang.Object)
+	 * @see org.columba.mail.folder.IMailbox#getAllHeaderFields(java.lang.Object)
 	 */
 	public Header getAllHeaderFields(Object uid) throws Exception {
 		VirtualHeader h = (VirtualHeader) headerList.get(uid);
-		MessageFolder sourceFolder = h.getSrcFolder();
+		AbstractMessageFolder sourceFolder = h.getSrcFolder();
 		Object sourceUid = h.getSrcUid();
 
 		return sourceFolder.getAllHeaderFields(sourceUid);

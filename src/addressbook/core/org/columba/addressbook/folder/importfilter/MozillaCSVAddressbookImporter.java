@@ -23,6 +23,7 @@ import java.io.FileReader;
 
 import org.columba.addressbook.folder.AbstractFolder;
 import org.columba.addressbook.model.Contact;
+import org.columba.addressbook.model.IContact;
 import org.columba.addressbook.util.AddressbookResourceLoader;
 
 
@@ -49,7 +50,7 @@ public class MozillaCSVAddressbookImporter extends DefaultAddressbookImporter {
         while ((str = in.readLine()) != null) {
             // start parsing line
             int counter = -1;
-            Contact card = new Contact();
+            IContact card = new Contact();
 
             StringBuffer token = new StringBuffer();
             int pos = 0;

@@ -18,12 +18,12 @@ package org.columba.mail.folderoptions;
 import org.columba.core.plugin.Plugin;
 import org.columba.core.xml.XmlElement;
 import org.columba.mail.config.FolderItem;
-import org.columba.mail.folder.MessageFolder;
+import org.columba.mail.folder.AbstractMessageFolder;
 import org.columba.mail.gui.frame.MailFrameMediator;
 
 
 /**
- * MessageFolder options plugin abstract class.
+ * AbstractMessageFolder options plugin abstract class.
  * <p>
  * Plugins implementing this abstract class can load/save
  * their configuration data. They don't need to take care
@@ -32,8 +32,8 @@ import org.columba.mail.gui.frame.MailFrameMediator;
  * The most interest methods which you need to implement are:
  * <ul>
  *  <li>createDefaultElement(boolean)</li>
- *  <li>loadOptionsFromXml(MessageFolder)</li>
- *  <li>saveOptionsToXml(MessageFolder)</li>
+ *  <li>loadOptionsFromXml(AbstractMessageFolder)</li>
+ *  <li>saveOptionsToXml(AbstractMessageFolder)</li>
  * </ul>
  * <p>
  * Note, that every {@link MailFrameMediator} keeps its own
@@ -89,14 +89,14 @@ public abstract class AbstractFolderOptionsPlugin implements Plugin {
 *
 * @param folder     selected folder
 */
-    public abstract void saveOptionsToXml(MessageFolder folder);
+    public abstract void saveOptionsToXml(AbstractMessageFolder folder);
 
     /**
  * Load options of this plugin.
  *
  * @param folder       selected folder
  */
-    public abstract void loadOptionsFromXml(MessageFolder folder);
+    public abstract void loadOptionsFromXml(AbstractMessageFolder folder);
 
     /**
  * Get frame mediator
@@ -125,7 +125,7 @@ public abstract class AbstractFolderOptionsPlugin implements Plugin {
  * @param folder        currently selected folder
  * @return              xml node
  */
-    public XmlElement getConfigNode(MessageFolder folder) {
+    public XmlElement getConfigNode(AbstractMessageFolder folder) {
         // global option
         if (folder == null) {
             return FolderItem.getGlobalOptions().getElement(getName());

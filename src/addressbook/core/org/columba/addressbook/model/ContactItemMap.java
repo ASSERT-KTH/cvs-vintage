@@ -34,7 +34,7 @@ public class ContactItemMap {
 	}
 	
 	
-	public void add(Object uid, ContactItem contactItem) {
+	public void add(Object uid, IContactItem contactItem) {
 		map.put(uid, contactItem);
 	}
 	

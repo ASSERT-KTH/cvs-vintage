@@ -22,7 +22,7 @@ import org.columba.core.plugin.PluginHandlerNotFoundException;
 import org.columba.core.plugin.PluginManager;
 import org.columba.core.xml.XmlElement;
 import org.columba.mail.config.FolderItem;
-import org.columba.mail.folder.MessageFolder;
+import org.columba.mail.folder.AbstractMessageFolder;
 import org.columba.mail.gui.frame.MailFrameMediator;
 import org.columba.mail.gui.table.TableController;
 import org.columba.mail.plugin.FolderOptionsPluginHandler;
@@ -125,7 +125,7 @@ public class FolderOptionsController {
      *
      * @param folder        selected folder
      */
-    public void load(MessageFolder folder, int state) {
+    public void load(AbstractMessageFolder folder, int state) {
         // get list of plugins
         String[] ids = handler.getPluginIdList(state);
 
@@ -140,7 +140,7 @@ public class FolderOptionsController {
      *
      * @param folder        selected folder
      */
-    public void save(MessageFolder folder) {
+    public void save(AbstractMessageFolder folder) {
         // get list of plugins
         String[] ids = handler.getPluginIdList();
 
@@ -178,7 +178,7 @@ public class FolderOptionsController {
      * @param name          name of plugin (example: ColumnOptions)
      * @return              parent configuration node
      */
-    public XmlElement getConfigNode(MessageFolder folder, String name) {
+    public XmlElement getConfigNode(AbstractMessageFolder folder, String name) {
         XmlElement parent = null;
         boolean global = false;
 
@@ -226,7 +226,7 @@ public class FolderOptionsController {
      *
      * @param folder                selected folder
      */
-    public void createDefaultSettings(MessageFolder folder) {
+    public void createDefaultSettings(AbstractMessageFolder folder) {
         FolderItem item = folder.getConfiguration();
         XmlElement parent = item.getElement("property");
 
@@ -246,7 +246,7 @@ public class FolderOptionsController {
      * @param folder                selected folder
      * @return                                true, if any option is overridden. False, otherwise.
      */
-    private boolean isOverwritingDefaults(MessageFolder folder) {
+    private boolean isOverwritingDefaults(AbstractMessageFolder folder) {
         FolderItem item = folder.getConfiguration();
         XmlElement parent = item.getElement("property");
         boolean result = false;
@@ -274,10 +274,10 @@ public class FolderOptionsController {
      */
     /*
     public void saveGlobalSettings(AbstractFolder folder) {
-        if (folder instanceof MessageFolder) {
-            if (isOverwritingDefaults((MessageFolder) folder)) {
+        if (folder instanceof AbstractMessageFolder) {
+            if (isOverwritingDefaults((AbstractMessageFolder) folder)) {
                 
-            	save((MessageFolder)folder);
+            	save((AbstractMessageFolder)folder);
             } else {
             	save(null);
             }

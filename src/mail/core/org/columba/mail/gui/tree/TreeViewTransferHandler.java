@@ -26,7 +26,7 @@ import org.columba.core.command.CommandProcessor;
 import org.columba.core.facade.DialogFacade;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.folder.AbstractFolder;
-import org.columba.mail.folder.MessageFolder;
+import org.columba.mail.folder.AbstractMessageFolder;
 import org.columba.mail.folder.command.CopyMessageCommand;
 import org.columba.mail.folder.command.MoveFolderCommand;
 import org.columba.mail.folder.command.MoveMessageCommand;
@@ -98,7 +98,7 @@ public class TreeViewTransferHandler extends TransferHandler {
 		boolean dataWasImported = false;
 
 		AbstractFolder destFolder = treeView.getDropTargetFolder();
-		MessageFolder draggedFolder = transferable.getFolderReference();
+		AbstractMessageFolder draggedFolder = transferable.getFolderReference();
 
 		if ((destFolder != null) && (draggedFolder != null)) {
 			// We're always doing a MOVE
@@ -124,7 +124,7 @@ public class TreeViewTransferHandler extends TransferHandler {
 			MessageReferencesTransfer transferable) {
 		boolean dataWasImported = false;
 
-		MessageFolder destFolder = (MessageFolder) treeView
+		AbstractMessageFolder destFolder = (AbstractMessageFolder) treeView
 				.getDropTargetFolder();
 
 		FolderCommandReference result = transferable.getFolderReferences();
@@ -143,7 +143,7 @@ public class TreeViewTransferHandler extends TransferHandler {
 			TreeView treeView = (TreeView) source;
 
 			if (data instanceof FolderTransfer) {
-				MessageFolder draggedFolder = ((FolderTransfer) data)
+				AbstractMessageFolder draggedFolder = ((FolderTransfer) data)
 						.getFolderReference();
 				exportFolder(treeView, draggedFolder);
 			}
@@ -159,7 +159,7 @@ public class TreeViewTransferHandler extends TransferHandler {
 	 * @param folder
 	 *            the folder to move.
 	 */
-	private void exportFolder(TreeView treeView, MessageFolder folder) {
+	private void exportFolder(TreeView treeView, AbstractMessageFolder folder) {
 		FolderCommandReference commandRef = new FolderCommandReference(folder);
 		commandRef.setDestinationFolder(treeView.getDropTargetFolder());
 		treeView.resetDropTargetFolder();
@@ -190,7 +190,7 @@ public class TreeViewTransferHandler extends TransferHandler {
 					.getLastPathComponent();
 
 			if (folderNode.supportsMove()) {
-				exportObject = new FolderTransfer((MessageFolder) folderNode);
+				exportObject = new FolderTransfer((AbstractMessageFolder) folderNode);
 			}
 		}
 

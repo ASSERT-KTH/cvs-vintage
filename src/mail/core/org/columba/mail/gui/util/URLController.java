@@ -26,6 +26,7 @@ import javax.swing.JPopupMenu;
 import org.columba.addressbook.gui.tree.AddressbookTreeModel;
 import org.columba.addressbook.gui.tree.util.SelectAddressbookFolderDialog;
 import org.columba.addressbook.model.Contact;
+import org.columba.addressbook.model.IContact;
 import org.columba.addressbook.model.VCARD;
 import org.columba.core.gui.frame.FrameModel;
 import org.columba.core.plugin.PluginLoadingFailedException;
@@ -125,7 +126,7 @@ FrameModel.getInstance().openView("Composer");
         }
 
         try {
-            Contact card = new Contact();
+            IContact card = new Contact();
             card.set(VCARD.DISPLAYNAME, address);
             card.set(VCARD.EMAIL, address);
             

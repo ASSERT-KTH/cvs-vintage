@@ -27,7 +27,7 @@ import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.filter.FilterCriteria;
 import org.columba.mail.filter.FilterRule;
 import org.columba.mail.folder.FolderFactory;
-import org.columba.mail.folder.MessageFolder;
+import org.columba.mail.folder.AbstractMessageFolder;
 import org.columba.mail.folder.virtual.VirtualFolder;
 import org.columba.mail.gui.config.filter.ConfigFrame;
 import org.columba.mail.gui.tree.TreeModel;
@@ -59,7 +59,7 @@ public class CreateVFolderOnMessageCommand extends FolderCommand {
     private String vfolderType;
 
     /** Parent for the virtual folder */
-    private MessageFolder parentFolder = null;
+    private AbstractMessageFolder parentFolder = null;
 
     /** Virtual folder created created */
     private VirtualFolder vfolder = null;
@@ -117,7 +117,7 @@ public class CreateVFolderOnMessageCommand extends FolderCommand {
         }
 
         Object uid = uids[0];
-        parentFolder = (MessageFolder) r.getFolder();
+        parentFolder = (AbstractMessageFolder) r.getFolder();
 
         //register for status events
         ((StatusObservableImpl) parentFolder.getObservable()).setWorker(worker);
@@ -155,7 +155,7 @@ public class CreateVFolderOnMessageCommand extends FolderCommand {
      * @return The filter created
      */
     public VirtualFolder createVirtualFolder(String folderName,
-        String headerField, String pattern, MessageFolder parent) {
+        String headerField, String pattern, AbstractMessageFolder parent) {
         // create virtual folder
         VirtualFolder vfolder;
 

@@ -23,6 +23,7 @@ import org.columba.addressbook.folder.AddressbookFolder;
 import org.columba.addressbook.gui.dialog.contact.ContactDialog;
 import org.columba.addressbook.gui.frame.AddressbookFrameMediator;
 import org.columba.addressbook.model.Contact;
+import org.columba.addressbook.model.IContact;
 import org.columba.addressbook.util.AddressbookResourceLoader;
 import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.gui.util.ErrorDialog;
@@ -64,7 +65,7 @@ public class AddContactCardAction extends DefaultTreeAction {
 		AddressbookFolder folder = (AddressbookFolder) mediator.getTree()
 				.getSelectedFolder();
 
-		Contact card = new Contact();
+		IContact card = new Contact();
 
 		ContactDialog dialog = new ContactDialog(mediator.getView().getFrame(),
 				card);

@@ -25,11 +25,11 @@ import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.TreePath;
 
 import org.columba.addressbook.folder.AbstractFolder;
+import org.columba.addressbook.folder.AddressbookTreeNode;
 import org.columba.addressbook.folder.GroupFolder;
 import org.columba.addressbook.gui.frame.AddressbookFrameMediator;
 import org.columba.addressbook.gui.table.TableController;
 import org.columba.addressbook.gui.tree.AddressbookTreeModel;
-import org.columba.addressbook.gui.tree.AddressbookTreeNode;
 import org.columba.addressbook.gui.tree.TreeController;
 import org.columba.addressbook.util.AddressbookResourceLoader;
 import org.columba.core.gui.focus.FocusManager;

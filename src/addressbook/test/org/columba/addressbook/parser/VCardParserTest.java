@@ -26,6 +26,7 @@ import java.io.FileOutputStream;
 import junit.framework.TestCase;
 
 import org.columba.addressbook.model.Contact;
+import org.columba.addressbook.model.IContact;
 import org.columba.core.xml.XmlNewIO;
 import org.jdom.Document;
 
@@ -41,7 +42,7 @@ public class VCardParserTest extends TestCase {
 
 		Document doc = XmlNewIO.load(file);
 
-		Contact c = new Contact(doc, new Integer(0));
+		IContact c = new Contact(doc, new Integer(0));
 
 		BufferedOutputStream out = new BufferedOutputStream(
 				new FileOutputStream("test.vcf"));
@@ -55,7 +56,7 @@ public class VCardParserTest extends TestCase {
 
 		BufferedInputStream in = new BufferedInputStream(new FileInputStream(
 				file));
-		Contact c = VCardParser.read(in);
+		IContact c = VCardParser.read(in);
 	}
 
 }

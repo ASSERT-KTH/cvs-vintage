@@ -28,7 +28,7 @@ import org.columba.core.gui.frame.FrameMediator;
 import org.columba.mail.command.FolderCommand;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.folder.FolderInconsistentException;
-import org.columba.mail.folder.MessageFolder;
+import org.columba.mail.folder.AbstractMessageFolder;
 import org.columba.mail.gui.frame.MessageViewOwner;
 import org.columba.mail.gui.frame.TableViewOwner;
 import org.columba.mail.gui.message.MessageController;
@@ -47,7 +47,7 @@ public class ViewMessageCommand extends FolderCommand {
 
 	private Flags flags;
 
-	private MessageFolder srcFolder;
+	private AbstractMessageFolder srcFolder;
 
 	private Object uid;
 
@@ -97,7 +97,7 @@ public class ViewMessageCommand extends FolderCommand {
 		FolderCommandReference r = (FolderCommandReference) getReference();
 
 		// get selected folder
-		srcFolder = (MessageFolder) r.getFolder();
+		srcFolder = (AbstractMessageFolder) r.getFolder();
 
 		// register for status events
 		((StatusObservableImpl) srcFolder.getObservable()).setWorker(wsc);
@@ -138,7 +138,7 @@ public class ViewMessageCommand extends FolderCommand {
 
 		// pass work along to MessageController
 		if (newRefs != null) {
-			srcFolder = (MessageFolder) newRefs.getFolder();
+			srcFolder = (AbstractMessageFolder) newRefs.getFolder();
 			uid = newRefs.getUids()[0];
 			mimePartTree = srcFolder.getMimePartTree(uid);
 		}

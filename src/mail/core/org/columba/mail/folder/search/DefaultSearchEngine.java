@@ -31,7 +31,7 @@ import org.columba.mail.filter.Filter;
 import org.columba.mail.filter.FilterCriteria;
 import org.columba.mail.filter.FilterRule;
 import org.columba.mail.filter.plugins.AbstractFilter;
-import org.columba.mail.folder.MessageFolder;
+import org.columba.mail.folder.AbstractMessageFolder;
 import org.columba.mail.folder.event.FolderEvent;
 import org.columba.mail.folder.event.FolderListener;
 import org.columba.mail.plugin.AbstractFilterPluginHandler;
@@ -55,9 +55,9 @@ public class DefaultSearchEngine {
     private static Hashtable filterCache;
 
     /**
- * MessageFolder on which the search is applied
+ * AbstractMessageFolder on which the search is applied
  */
-    private MessageFolder folder;
+    private AbstractMessageFolder folder;
 
     /**
  * The default query engine used by the search-engine
@@ -69,7 +69,7 @@ public class DefaultSearchEngine {
  *
  * @param folder        folder on which the search is applied
  */
-    public DefaultSearchEngine(MessageFolder folder) {
+    public DefaultSearchEngine(AbstractMessageFolder folder) {
         this.folder = folder;
         filterCache = new Hashtable();
         nonDefaultEngine = new DummyQueryEngine();

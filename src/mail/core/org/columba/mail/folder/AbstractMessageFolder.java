@@ -47,7 +47,7 @@ import org.columba.ristretto.message.MailboxInfo;
 import org.columba.ristretto.message.MimeHeader;
 
 /**
- * Abstract Basic MessageFolder class. It is subclassed by every folder class
+ * Abstract Basic AbstractMessageFolder class. It is subclassed by every folder class
  * containing messages and therefore offering methods to alter the mailbox.
  * <p>
  * Folders are plugins and therefore dynamically created. This should make it
@@ -74,8 +74,8 @@ import org.columba.ristretto.message.MimeHeader;
  * @author freddy
  * @created 19. Juni 2001
  */
-public abstract class MessageFolder extends AbstractFolder implements
-		MailboxInterface {
+public abstract class AbstractMessageFolder extends AbstractFolder implements
+		IMailbox {
 
 	/** JDK 1.4+ logging framework logger, used for logging. */
 	private static final Logger LOG = Logger
@@ -122,7 +122,7 @@ public abstract class MessageFolder extends AbstractFolder implements
 	// implement your own search-engine here
 	protected DefaultSearchEngine searchEngine;
 
-	protected HeaderListStorage headerListStorage;
+	protected IHeaderListStorage headerListStorage;
 
 	/**
 	 * Standard constructor.
@@ -131,7 +131,7 @@ public abstract class MessageFolder extends AbstractFolder implements
 	 *            <class>FolderItem </class> contains information about the
 	 *            folder
 	 */
-	public MessageFolder(FolderItem item, String path) {
+	public AbstractMessageFolder(FolderItem item, String path) {
 		super(item);
 
 		String dir = path + System.getProperty("file.separator") + getUid();
@@ -143,14 +143,14 @@ public abstract class MessageFolder extends AbstractFolder implements
 		loadMessageFolderInfo();
 	}
 
-	protected MessageFolder() {
+	protected AbstractMessageFolder() {
 		super();
 	}
 
 	/**
 	 * @param type
 	 */
-	public MessageFolder(String name, String type, String path) {
+	public AbstractMessageFolder(String name, String type, String path) {
 		super(name, type);
 
 		String dir = path + System.getProperty("file.separator") + getUid();
@@ -678,7 +678,7 @@ public abstract class MessageFolder extends AbstractFolder implements
 	}
 
 	/**
-	 * @see org.columba.mail.folder.MailboxInterface#markMessage(java.lang.Object[],
+	 * @see org.columba.mail.folder.IMailbox#markMessage(java.lang.Object[],
 	 *      int)
 	 */
 	public void markMessage(Object[] uids, int variant) throws Exception {
@@ -725,7 +725,7 @@ public abstract class MessageFolder extends AbstractFolder implements
 	 * <p>
 	 * @author: fdietz
 	 * This method was intentionally changed to public also it isn't 
-	 * accessed from outside. This is why it isn't found in MailboxInterface.
+	 * accessed from outside. This is why it isn't found in IMailbox.
 	 * Only the VirtualFolder uses this public call.
 	 * 
 	 * 
@@ -741,36 +741,36 @@ public abstract class MessageFolder extends AbstractFolder implements
 		getHeaderListStorage().removeMessage(uid);
 	}
 
-	/** ****************************** AttributeStorage *********************** */
+	/** ****************************** IAttributeStorage *********************** */
 
 	/**
 	 * @return Returns the attributeStorage.
 	 */
-	public abstract HeaderListStorage getHeaderListStorage();
+	public abstract IHeaderListStorage getHeaderListStorage();
 
 	/**
-	 * @see org.columba.mail.folder.MailboxInterface#exists(java.lang.Object)
+	 * @see org.columba.mail.folder.IMailbox#exists(java.lang.Object)
 	 */
 	public boolean exists(Object uid) throws Exception {
 		return getHeaderListStorage().exists(uid);
 	}
 
 	/**
-	 * @see org.columba.mail.folder.MailboxInterface#getHeaderList()
+	 * @see org.columba.mail.folder.IMailbox#getHeaderList()
 	 */
 	public HeaderList getHeaderList() throws Exception {
 		return getHeaderListStorage().getHeaderList();
 	}
 
 	/**
-	 * @see org.columba.mail.folder.MailboxInterface#getUids()
+	 * @see org.columba.mail.folder.IMailbox#getUids()
 	 */
 	public Object[] getUids() throws Exception {
 		return getHeaderListStorage().getUids();
 	}
 
 	/**
-	 * @see org.columba.mail.folder.MailboxInterface#setAttribute(java.lang.Object,
+	 * @see org.columba.mail.folder.IMailbox#setAttribute(java.lang.Object,
 	 *      java.lang.String, java.lang.Object)
 	 */
 	public void setAttribute(Object uid, String key, Object value)
@@ -783,21 +783,21 @@ public abstract class MessageFolder extends AbstractFolder implements
 	}
 
 	/**
-	 * @see org.columba.mail.folder.MailboxInterface#getFlags(java.lang.Object)
+	 * @see org.columba.mail.folder.IMailbox#getFlags(java.lang.Object)
 	 */
 	public Flags getFlags(Object uid) throws Exception {
 		return getHeaderListStorage().getFlags(uid);
 	}
 
 	/**
-	 * @see org.columba.mail.folder.MailboxInterface#getAttributes(java.lang.Object)
+	 * @see org.columba.mail.folder.IMailbox#getAttributes(java.lang.Object)
 	 */
 	public Attributes getAttributes(Object uid) throws Exception {
 		return getHeaderListStorage().getAttributes(uid);
 	}
 
 	/**
-	 * @see org.columba.mail.folder.MailboxInterface#getAttribute(java.lang.Object,
+	 * @see org.columba.mail.folder.IMailbox#getAttribute(java.lang.Object,
 	 *      java.lang.String)
 	 */
 	public Object getAttribute(Object uid, String key) throws Exception {
@@ -884,7 +884,7 @@ public abstract class MessageFolder extends AbstractFolder implements
 	}
 
 	/**
-	 * @see org.columba.mail.folder.MailboxInterface#isReadOnly()
+	 * @see org.columba.mail.folder.IMailbox#isReadOnly()
 	 */
 	public boolean isReadOnly() {
 		return false;

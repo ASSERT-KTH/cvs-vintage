@@ -30,14 +30,13 @@ public class AddressLabel extends JPanel implements MouseListener //, ActionList
     private String address;
     private JLabel[] list = new JLabel[3];
 
-    //private AddressbookXmlConfig addressbookXmlConfig;
+  
     private JPopupMenu popup;
 
     public AddressLabel(String str) {
         super();
 
-        //this.frame = MainInterface.frameMediator.getView();
-        //this.addressbookXmlConfig = MainInterface.config.getAddressbookConfig();
+        
         setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
         setBorder(null);
         this.address = str;

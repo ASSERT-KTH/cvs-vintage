@@ -51,7 +51,7 @@ public class IMAPTstFactory implements MailboxTstFactory {
 	/**
 	 * @see org.columba.mail.folder.MailboxTstFactory#createFolder(int)
 	 */
-	public MessageFolder createFolder(int folderId) {
+	public AbstractMessageFolder createFolder(int folderId) {
 		try {
 			IMAPFolder folder = new IMAPFolder(namebase + Integer.toString(folderId),"IMAPFolder", FolderTstHelper.homeDirectory + "/folders/");
 			inbox.addSubfolder( folder );

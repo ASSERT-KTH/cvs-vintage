@@ -1,0 +1,99 @@
+// The contents of this file are subject to the Mozilla Public License Version
+// 1.1
+//(the "License"); you may not use this file except in compliance with the
+//License. You may obtain a copy of the License at http://www.mozilla.org/MPL/
+//
+//Software distributed under the License is distributed on an "AS IS" basis,
+//WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
+//for the specific language governing rights and
+//limitations under the License.
+//
+//The Original Code is "The Columba Project"
+//
+//The Initial Developers of the Original Code are Frederik Dietz and Timo
+// Stich.
+//Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003.
+//
+//All Rights Reserved.
+package org.columba.mail.command;
+
+import java.io.File;
+
+import org.columba.mail.folder.AbstractFolder;
+import org.columba.mail.message.ColumbaMessage;
+
+/**
+ * @author fdietz
+ *
+ */
+public interface IFolderCommandReference {
+	AbstractFolder getFolder();
+
+	void setFolder(AbstractFolder folder);
+
+	Object[] getUids();
+
+	Integer[] getAddress();
+
+	void setUids(Object[] uids);
+
+	ColumbaMessage getMessage();
+
+	void setMessage(ColumbaMessage message);
+
+	void reduceToFirstUid();
+
+	/**
+	 * Returns the markVariant.
+	 * @return int
+	 */
+	int getMarkVariant();
+
+	/**
+	 * Sets the markVariant.
+	 * @param markVariant The markVariant to set
+	 */
+	void setMarkVariant(int markVariant);
+
+	/**
+	 * Returns the folderName.
+	 * @return String
+	 */
+	String getFolderName();
+
+	/**
+	 * Sets the folderName.
+	 * @param folderName The folderName to set
+	 */
+	void setFolderName(String folderName);
+
+	/**
+	 * @return
+	 */
+	File getDestFile();
+
+	/**
+	 * @param destFile
+	 */
+	void setDestFile(File destFile);
+
+	/**
+	 * @return Returns the colorValue.
+	 */
+	int getColorValue();
+
+	/**
+	 * @param colorValue The colorValue to set.
+	 */
+	void setColorValue(int colorValue);
+
+	/**
+	 * @return Returns the destinationFolder.
+	 */
+	AbstractFolder getDestinationFolder();
+
+	/**
+	 * @param destinationFolder The destinationFolder to set.
+	 */
+	void setDestinationFolder(AbstractFolder destinationFolder);
+}

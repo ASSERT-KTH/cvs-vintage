@@ -22,7 +22,7 @@ import org.columba.core.command.StatusObservableImpl;
 import org.columba.core.command.Worker;
 import org.columba.core.command.WorkerStatusController;
 import org.columba.mail.command.FolderCommandReference;
-import org.columba.mail.folder.MessageFolder;
+import org.columba.mail.folder.AbstractMessageFolder;
 import org.columba.mail.message.ColumbaMessage;
 import org.columba.ristretto.io.SourceInputStream;
 
@@ -35,7 +35,7 @@ import org.columba.ristretto.io.SourceInputStream;
  * @author fdietz
  */
 public class AddMessageCommand extends Command {
-    private MessageFolder folder;
+    private AbstractMessageFolder folder;
 
     /**
      * Constructor for AddMessageCommand.
@@ -55,7 +55,7 @@ public class AddMessageCommand extends Command {
         FolderCommandReference r = (FolderCommandReference) getReference();
 
         // get source folder
-        folder = (MessageFolder) r.getFolder();
+        folder = (AbstractMessageFolder) r.getFolder();
 
         // register for status events
         ((StatusObservableImpl) folder.getObservable()).setWorker(worker);

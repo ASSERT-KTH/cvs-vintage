@@ -29,6 +29,7 @@ import org.columba.core.main.DefaultMain;
 import org.columba.core.plugin.PluginHandlerNotFoundException;
 import org.columba.core.plugin.PluginManager;
 import org.columba.core.pluginhandler.ActionPluginHandler;
+import org.columba.core.services.ServiceManager;
 import org.columba.core.shutdown.ShutdownManager;
 import org.columba.mail.config.MailConfig;
 import org.columba.mail.folder.headercache.CachedHeaderfields;
@@ -82,6 +83,11 @@ public class MailMain extends DefaultMain {
         // -> see documentation in class
         CachedHeaderfields.addConfiguration();
         
+        ServiceManager.getInstance().register("IConfigFactory", "org.columba.mail.facade.ConfigFactory");
+        ServiceManager.getInstance().register("IComposerFactory", "org.columba.mail.facade.ComposerFactory");
+        ServiceManager.getInstance().register("IDialogFactory", "org.columba.mail.facade.DialogFactory");
+        ServiceManager.getInstance().register("IFolderFactory", "org.columba.mail.facade.FolderFactory");
+        ServiceManager.getInstance().register("ISelectionFactory", "org.columba.mail.facade.SelectionFactory");
 	}
 	
 	public static MailMain getInstance() {

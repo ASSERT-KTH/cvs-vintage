@@ -21,11 +21,12 @@ package org.columba.addressbook.gui.table;
 import java.awt.event.MouseEvent;
 
 import org.columba.addressbook.folder.AbstractFolder;
-import org.columba.addressbook.folder.ContactStorage;
+import org.columba.addressbook.folder.IContactStorage;
 import org.columba.addressbook.folder.GroupFolder;
 import org.columba.addressbook.gui.dialog.contact.ContactDialog;
 import org.columba.addressbook.gui.frame.AddressbookFrameMediator;
 import org.columba.addressbook.model.Contact;
+import org.columba.addressbook.model.IContact;
 import org.columba.core.gui.util.DoubleClickListener;
 import org.columba.core.gui.util.ErrorDialog;
 import org.columba.core.main.Main;
@@ -58,16 +59,16 @@ public class TableMouseListener extends DoubleClickListener
       Object[] uids = mediator.getTable().getUids();
 
       // get selected folder
-      ContactStorage folder = (ContactStorage) mediator.getTree()
+      IContactStorage folder = (IContactStorage) mediator.getTree()
                                                        .getSelectedFolder();
 
       if (uids.length == 0)
         return;
 
-      Contact card = null;
+      IContact card = null;
       try
       {
-        card = (Contact) folder.get(uids[0]);
+        card = (IContact) folder.get(uids[0]);
       }
       catch (Exception ex)
       {

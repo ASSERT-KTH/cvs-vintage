@@ -18,7 +18,7 @@ package org.columba.mail.gui.tree.comparator;
 import java.util.Comparator;
 
 import org.columba.mail.folder.AbstractFolder;
-import org.columba.mail.folder.MessageFolder;
+import org.columba.mail.folder.AbstractMessageFolder;
 
 
 /**
@@ -49,11 +49,11 @@ public class FolderComparator implements Comparator {
         if ((o1 instanceof AbstractFolder) && (o2 instanceof AbstractFolder)) {
             // If it isnt a message folder, then it must be a root, and those
             // should not be sorted.
-            if (!(o1 instanceof MessageFolder)) {
+            if (!(o1 instanceof AbstractMessageFolder)) {
                 compValue = 0;
             } else {
-                MessageFolder folder1 = (MessageFolder) o1;
-                MessageFolder folder2 = (MessageFolder) o2;
+                AbstractMessageFolder folder1 = (AbstractMessageFolder) o1;
+                AbstractMessageFolder folder2 = (AbstractMessageFolder) o2;
 
                 boolean folder1IsInbox = folder1.isInboxFolder();
                 boolean folder2IsInbox = folder2.isInboxFolder();
@@ -89,7 +89,7 @@ public class FolderComparator implements Comparator {
      * @return a negative integer, zero, or a positive integer as the first argument is
      *      less than, equal to, or greater than the second.
      */
-    protected int compareFolders(MessageFolder folder1, MessageFolder folder2) {
+    protected int compareFolders(AbstractMessageFolder folder1, AbstractMessageFolder folder2) {
         return folder1.getName().toLowerCase().compareTo(folder2.getName().toLowerCase());
     }
 

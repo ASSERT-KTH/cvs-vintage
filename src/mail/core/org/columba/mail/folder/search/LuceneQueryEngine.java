@@ -49,7 +49,7 @@ import org.columba.core.util.ListTools;
 import org.columba.core.util.Mutex;
 import org.columba.mail.filter.FilterCriteria;
 import org.columba.mail.filter.FilterRule;
-import org.columba.mail.folder.DataStorageInterface;
+import org.columba.mail.folder.IDataStorage;
 import org.columba.mail.folder.LocalFolder;
 import org.columba.mail.message.ColumbaHeader;
 import org.columba.mail.message.ColumbaMessage;
@@ -506,7 +506,7 @@ public class LuceneQueryEngine implements QueryEngine {
     /** {@inheritDoc} */
     public void sync() throws Exception {
         //ColumbaLogger.log.severe("Lucene Index inconsistent - recreation forced");
-        DataStorageInterface ds = ((LocalFolder) folder).getDataStorageInstance();
+        IDataStorage ds = ((LocalFolder) folder).getDataStorageInstance();
         HeaderList hl = ((LocalFolder) folder).getHeaderList();
 
         if (getObservable() != null) {

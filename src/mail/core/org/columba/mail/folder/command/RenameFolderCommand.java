@@ -22,7 +22,7 @@ import org.columba.core.command.Worker;
 import org.columba.core.command.WorkerStatusController;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.folder.AbstractFolder;
-import org.columba.mail.folder.MessageFolder;
+import org.columba.mail.folder.AbstractMessageFolder;
 
 /**
  * Rename selected folder.
@@ -61,6 +61,6 @@ public class RenameFolderCommand extends Command {
 		String name = ((FolderCommandReference) getReference()).getFolderName();
 
 		// rename folder
-		((MessageFolder) selectedFolder).setName(name);
+		((AbstractMessageFolder) selectedFolder).setName(name);
 	}
 }

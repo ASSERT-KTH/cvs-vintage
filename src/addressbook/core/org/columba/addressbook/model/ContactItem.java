@@ -22,7 +22,7 @@ package org.columba.addressbook.model;
  * @author fdietz
  *  
  */
-public class ContactItem extends HeaderItem {
+public class ContactItem extends HeaderItem implements IContactItem {
 
 	private Object uid;
 
@@ -42,7 +42,7 @@ public class ContactItem extends HeaderItem {
 	/**
 	 * @param contact
 	 */
-	public ContactItem(Contact contact) {
+	public ContactItem(IContact contact) {
 		super();
 
 		setDisplayName(contact.get(VCARD.DISPLAYNAME));

@@ -22,7 +22,7 @@ import org.columba.core.config.DefaultItem;
 import org.columba.core.plugin.PluginManager;
 import org.columba.core.xml.XmlElement;
 import org.columba.mail.filter.plugins.AbstractFilterAction;
-import org.columba.mail.folder.MessageFolder;
+import org.columba.mail.folder.AbstractMessageFolder;
 import org.columba.mail.plugin.AbstractFilterPluginHandler;
 import org.columba.mail.plugin.FilterActionPluginHandler;
 
@@ -129,7 +129,7 @@ public class Filter extends DefaultItem {
 	 * @return CompoundCommand return Collection of Commands
 	 * @throws Exception
 	 */
-	public CompoundCommand getCommand(MessageFolder srcFolder, Object[] uids)
+	public CompoundCommand getCommand(AbstractMessageFolder srcFolder, Object[] uids)
 			throws Exception {
 		// instanciate CompoundCommand
 		CompoundCommand c = new CompoundCommand();

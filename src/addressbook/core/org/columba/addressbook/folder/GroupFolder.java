@@ -24,6 +24,9 @@ import org.columba.addressbook.model.Contact;
 import org.columba.addressbook.model.ContactItem;
 import org.columba.addressbook.model.ContactItemMap;
 import org.columba.addressbook.model.Group;
+import org.columba.addressbook.model.IContact;
+import org.columba.addressbook.model.IContactItem;
+import org.columba.addressbook.model.IGroup;
 import org.columba.core.command.WorkerStatusController;
 import org.columba.core.gui.util.ImageLoader;
 import org.columba.core.xml.XmlElement;
@@ -36,9 +39,9 @@ import org.columba.core.xml.XmlElement;
  * @author fdietz
  *  
  */
-public class GroupFolder extends AbstractFolder implements ContactStorage {
+public class GroupFolder extends AbstractFolder implements IContactStorage {
 
-	private Group group;
+	private IGroup group;
 
 	private ImageIcon groupImageIcon = ImageLoader
 			.getSmallImageIcon("group_small.png");
@@ -72,9 +75,9 @@ public class GroupFolder extends AbstractFolder implements ContactStorage {
 	}
 
 	/**
-	 * @see org.columba.addressbook.folder.ContactStorage#add(org.columba.addressbook.model.Contact)
+	 * @see org.columba.addressbook.folder.IContactStorage#add(org.columba.addressbook.model.Contact)
 	 */
-	public Object add(Contact contact) throws Exception {
+	public Object add(IContact contact) throws Exception {
 		Object uid = contact.getUid();
 
 		group.addMember(uid);
@@ -85,7 +88,7 @@ public class GroupFolder extends AbstractFolder implements ContactStorage {
 	}
 
 	/**
-	 * @see org.columba.addressbook.folder.ContactStorage#count()
+	 * @see org.columba.addressbook.folder.IContactStorage#count()
 	 */
 	public int count() {
 
@@ -93,7 +96,7 @@ public class GroupFolder extends AbstractFolder implements ContactStorage {
 	}
 
 	/**
-	 * @see org.columba.addressbook.folder.ContactStorage#exists(java.lang.Object)
+	 * @see org.columba.addressbook.folder.IContactStorage#exists(java.lang.Object)
 	 */
 	public boolean exists(Object uid) {
 
@@ -101,9 +104,9 @@ public class GroupFolder extends AbstractFolder implements ContactStorage {
 	}
 
 	/**
-	 * @see org.columba.addressbook.folder.ContactStorage#get(java.lang.Object)
+	 * @see org.columba.addressbook.folder.IContactStorage#get(java.lang.Object)
 	 */
-	public Contact get(Object uid) throws Exception {
+	public IContact get(Object uid) throws Exception {
 
 		AbstractFolder parent = (AbstractFolder) getParent();
 
@@ -111,10 +114,10 @@ public class GroupFolder extends AbstractFolder implements ContactStorage {
 	}
 
 	/**
-	 * @see org.columba.addressbook.folder.ContactStorage#modify(java.lang.Object,
+	 * @see org.columba.addressbook.folder.IContactStorage#modify(java.lang.Object,
 	 *      org.columba.addressbook.model.Contact)
 	 */
-	public void modify(Object uid, Contact contact) throws Exception {
+	public void modify(Object uid, IContact contact) throws Exception {
 		AbstractFolder parent = (AbstractFolder) getParent();
 
 		parent.modify(uid, contact);
@@ -124,7 +127,7 @@ public class GroupFolder extends AbstractFolder implements ContactStorage {
 	}
 
 	/**
-	 * @see org.columba.addressbook.folder.ContactStorage#remove(java.lang.Object)
+	 * @see org.columba.addressbook.folder.IContactStorage#remove(java.lang.Object)
 	 */
 	public void remove(Object uid) throws Exception {
 		group.remove(uid);
@@ -133,7 +136,7 @@ public class GroupFolder extends AbstractFolder implements ContactStorage {
 	}
 
 	/**
-	 * @see org.columba.addressbook.folder.ContactStorage#getHeaderItemList()
+	 * @see org.columba.addressbook.folder.IContactStorage#getHeaderItemList()
 	 */
 	public ContactItemMap getContactItemMap() throws Exception {
 		AbstractFolder parent = (AbstractFolder) getParent();
@@ -142,14 +145,14 @@ public class GroupFolder extends AbstractFolder implements ContactStorage {
 
 		Integer[] members = group.getMembers();
 		for (int i = 0; i < members.length; i++) {
-			Contact c = parent.get(members[i]);
+			IContact c = parent.get(members[i]);
 			if (c == null) {
 				// contact doesn't exist in parent folder anymore
 				// -> remove it
 
 				remove(members[i]);
 			} else {
-				ContactItem item = new ContactItem(c);
+				IContactItem item = new ContactItem(c);
 				item.setUid(members[i]);
 				
 				filter.add(members[i], item);
@@ -162,12 +165,12 @@ public class GroupFolder extends AbstractFolder implements ContactStorage {
 	/**
 	 * @return Returns the group.
 	 */
-	public Group getGroup() {
+	public IGroup getGroup() {
 		return group;
 	}
 
 	/**
-	 * @see org.columba.addressbook.gui.tree.AddressbookTreeNode#getIcon()
+	 * @see org.columba.addressbook.folder.AddressbookTreeNode#getIcon()
 	 */
 	public ImageIcon getIcon() {
 		return groupImageIcon;

@@ -24,6 +24,7 @@ import javax.swing.JOptionPane;
 
 import org.columba.addressbook.folder.AbstractFolder;
 import org.columba.addressbook.model.Contact;
+import org.columba.addressbook.model.IContact;
 import org.columba.addressbook.util.AddressbookResourceLoader;
 import org.columba.core.gui.frame.FrameModel;
 import org.columba.core.plugin.Plugin;
@@ -126,7 +127,7 @@ public abstract class DefaultAddressbookImporter implements Plugin {
     /**
      * use this method to save a message to the specified destination folder
      */
-    protected void saveContact(Contact card) throws Exception {
+    protected void saveContact(IContact card) throws Exception {
         destinationFolder.add(card);
 
         counter++;

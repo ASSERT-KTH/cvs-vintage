@@ -34,7 +34,7 @@ import org.columba.mail.message.ColumbaMessage;
  *
  * @author fdietz
  */
-public class FolderCommandReference extends DefaultCommandReference {
+public class FolderCommandReference extends DefaultCommandReference implements IFolderCommandReference {
     private AbstractFolder folder;
     private AbstractFolder destinationFolder;
     

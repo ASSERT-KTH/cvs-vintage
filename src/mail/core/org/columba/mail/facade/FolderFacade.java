@@ -20,6 +20,8 @@ package org.columba.mail.facade;
 import java.util.Enumeration;
 
 import org.columba.mail.folder.AbstractFolder;
+import org.columba.mail.folder.IFolder;
+import org.columba.mail.folder.IMailbox;
 import org.columba.mail.gui.tree.TreeModel;
 
 /**
@@ -27,7 +29,7 @@ import org.columba.mail.gui.tree.TreeModel;
  * 
  * @author fdietz
  */
-public class FolderFacade {
+public class FolderFacade implements IFolderFacade {
 
 	/**
 	 * Get folder with uid.
@@ -36,8 +38,8 @@ public class FolderFacade {
 	 *            folder uid
 	 * @return folder
 	 */
-	public AbstractFolder getFolder(int uid) {
-		return TreeModel.getInstance().getFolder(uid);
+	public IFolder getFolder(int uid) {
+		return (IFolder) TreeModel.getInstance().getFolder(uid);
 	}
 
 	/**
@@ -47,8 +49,8 @@ public class FolderFacade {
 	 *            folder name
 	 * @return folder
 	 */
-	public AbstractFolder getFolder(String name) {
-		return TreeModel.getInstance().findFolder(
+	public IFolder getFolder(String name) {
+		return (IFolder) TreeModel.getInstance().findFolder(
 				(AbstractFolder) TreeModel.getInstance().getRoot(), name);
 	}
 
@@ -79,8 +81,8 @@ public class FolderFacade {
 	 * 
 	 * @return		inbox folder
 	 */
-	public AbstractFolder getLocalInboxFolder() {
-		return TreeModel.getInstance().getFolder(101);
+	public IMailbox getLocalInboxFolder() {
+		return (IMailbox) TreeModel.getInstance().getFolder(101);
 	}
 
 	/**
@@ -88,8 +90,8 @@ public class FolderFacade {
 	 * 
 	 * @return		trash folder
 	 */
-	public AbstractFolder getLocalTrashFolder() {
-		return TreeModel.getInstance().getFolder(105);
+	public IMailbox getLocalTrashFolder() {
+		return (IMailbox) TreeModel.getInstance().getFolder(105);
 	}
 
 	/**
@@ -97,8 +99,8 @@ public class FolderFacade {
 	 * 
 	 * @return	drafts folder
 	 */
-	public AbstractFolder getLocalDraftsFolder() {
-		return TreeModel.getInstance().getFolder(102);
+	public IMailbox getLocalDraftsFolder() {
+		return (IMailbox) TreeModel.getInstance().getFolder(102);
 	}
 
 	/**
@@ -106,8 +108,8 @@ public class FolderFacade {
 	 * 
 	 * @return		templates folder
 	 */
-	public AbstractFolder getLocalTemplatesFolder() {
-		return TreeModel.getInstance().getFolder(107);
+	public IMailbox getLocalTemplatesFolder() {
+		return (IMailbox) TreeModel.getInstance().getFolder(107);
 	}
 
 	
@@ -116,8 +118,8 @@ public class FolderFacade {
 	 * 
 	 * @return		outbox folder
 	 */
-	public AbstractFolder getLocalOutboxFolder() {
-		return TreeModel.getInstance().getFolder(103);
+	public IMailbox getLocalOutboxFolder() {
+		return (IMailbox) TreeModel.getInstance().getFolder(103);
 	}
 
 	/**
@@ -125,8 +127,8 @@ public class FolderFacade {
 	 * 
 	 * @return		sent folder
 	 */
-	public AbstractFolder getLocalSentFolder() {
-		return TreeModel.getInstance().getFolder(104);
+	public IMailbox getLocalSentFolder() {
+		return (IMailbox) TreeModel.getInstance().getFolder(104);
 	}
 
 }

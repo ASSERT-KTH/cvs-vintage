@@ -19,7 +19,7 @@ import org.columba.core.command.NullWorkerStatusController;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.folder.AbstractFolderTst;
 import org.columba.mail.folder.MailboxTstFactory;
-import org.columba.mail.folder.MessageFolder;
+import org.columba.mail.folder.AbstractMessageFolder;
 import org.columba.mail.folder.imap.IMAPFolder;
 import org.columba.mail.folder.temp.TempFolder;
 
@@ -45,7 +45,7 @@ public class MoveFolderCommandTest extends AbstractFolderTst {
 	 *             thrown for any bad reason if the command goes wrong.
 	 */
 	public void testMoveFolder() throws Exception {
-		MessageFolder rootFolder = createFolder();
+		AbstractMessageFolder rootFolder = createFolder();
 
 		// Is not supported by IMAP and TempFolder
 		if (rootFolder instanceof IMAPFolder
@@ -53,10 +53,10 @@ public class MoveFolderCommandTest extends AbstractFolderTst {
 			return;
 		}
 
-		MessageFolder folderToBeMoved = createFolder();
+		AbstractMessageFolder folderToBeMoved = createFolder();
 		rootFolder.append(folderToBeMoved);
 
-		MessageFolder destinationFolder = createFolder();
+		AbstractMessageFolder destinationFolder = createFolder();
 		rootFolder.append(destinationFolder);
 
 		//      create Command reference

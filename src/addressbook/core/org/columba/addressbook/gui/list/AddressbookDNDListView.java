@@ -37,6 +37,7 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
 import org.columba.addressbook.model.HeaderItem;
+import org.columba.addressbook.model.IHeaderItem;
 
 
 //import sun.security.krb5.internal.i;
@@ -62,8 +63,8 @@ public class AddressbookDNDListView extends AddressbookListView
  */
     DragSource dragSource = null;
     boolean acceptDrop = true;
-    private HeaderItem[] selection1;
-    private HeaderItem[] selection2;
+    private IHeaderItem[] selection1;
+    private IHeaderItem[] selection2;
     int index = -1;
     private boolean dndAction = false;
     private BufferedImage _imgGhost; // The 'drag image'
@@ -150,11 +151,11 @@ public class AddressbookDNDListView extends AddressbookListView
 
         Transferable transferable = event.getTransferable();
 
-        HeaderItem[] items = HeaderItemDNDManager.getInstance()
+        IHeaderItem[] items = HeaderItemDNDManager.getInstance()
                                                  .getHeaderItemList();
 
         for (int i = 0; i < items.length; i++) {
-            addElement((HeaderItem) ((HeaderItem) items[i]).clone());
+            addElement((IHeaderItem) ((IHeaderItem) items[i]).clone());
         }
 
         event.getDropTargetContext().dropComplete(true);
@@ -181,12 +182,12 @@ public class AddressbookDNDListView extends AddressbookListView
         HeaderItemDNDManager.getInstance().setHeaderItemList(items);
 */
             if (selection1 == null) {
-                HeaderItem[] items = new HeaderItem[1];
-                items[0] = (HeaderItem) getSelectedValue();
+                IHeaderItem[] items = new IHeaderItem[1];
+                items[0] = (IHeaderItem) getSelectedValue();
 
                 HeaderItemDNDManager.getInstance().setHeaderItemList(items);
             } else if (selection1.length != 0) {
-                HeaderItem[] items = new HeaderItem[selection1.length];
+                IHeaderItem[] items = new IHeaderItem[selection1.length];
                 items = selection1;
                 HeaderItemDNDManager.getInstance().setHeaderItemList(items);
             }
@@ -207,12 +208,12 @@ HeaderItem[] items = new HeaderItem[selection2.length];
         HeaderItemDNDManager.getInstance().setHeaderItemList(items);
 */
             if (selection2.length != 0) {
-                HeaderItem[] items = new HeaderItem[selection2.length];
+                IHeaderItem[] items = new IHeaderItem[selection2.length];
                 items = selection2;
                 HeaderItemDNDManager.getInstance().setHeaderItemList(items);
             } else {
-                HeaderItem[] items = new HeaderItem[1];
-                items[0] = (HeaderItem) getSelectedValue();
+                IHeaderItem[] items = new IHeaderItem[1];
+                items[0] = (IHeaderItem) getSelectedValue();
 
                 HeaderItemDNDManager.getInstance().setHeaderItemList(items);
             }
@@ -244,7 +245,7 @@ dragSource.startDrag(
     public void dragDropEnd(DragSourceDropEvent event) {
         if (event.getDropSuccess()) {
             if (acceptDrop == true) {
-                HeaderItem[] items = HeaderItemDNDManager.getInstance()
+                IHeaderItem[] items = HeaderItemDNDManager.getInstance()
                                                          .getHeaderItemList();
 
                 for (int i = 0; i < items.length; i++) {
@@ -295,27 +296,27 @@ dragSource.startDrag(
  * removes an element from itself
  */
     public void removeElement() {
-        ((AddressbookListModel) getModel()).removeElement((HeaderItem)getSelectedValue());
+        ((AddressbookListModel) getModel()).removeElement((IHeaderItem)getSelectedValue());
     }
 
     public void valueChanged(ListSelectionEvent e) {
         if (dndAction == true) {
             Object[] list = getSelectedValues();
 
-            selection1 = new HeaderItem[list.length];
+            selection1 = new IHeaderItem[list.length];
 
             for (int i = 0; i < list.length; i++) {
-                selection1[i] = (HeaderItem) list[i];
+                selection1[i] = (IHeaderItem) list[i];
             }
 
             dndAction = false;
         } else {
             Object[] list = getSelectedValues();
 
-            selection2 = new HeaderItem[list.length];
+            selection2 = new IHeaderItem[list.length];
 
             for (int i = 0; i < list.length; i++) {
-                selection2[i] = (HeaderItem) list[i];
+                selection2[i] = (IHeaderItem) list[i];
             }
 
             dndAction = true;

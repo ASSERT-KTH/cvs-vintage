@@ -22,7 +22,7 @@ package org.columba.addressbook.model;
  * @author fdietz
  *
  */
-public class GroupItem extends HeaderItem {
+public class GroupItem extends HeaderItem implements IGroupItem {
 
 	private String description;
 	
@@ -40,7 +40,7 @@ public class GroupItem extends HeaderItem {
 	/**
 	 * @param group
 	 */
-	public GroupItem(Group group) {
+	public GroupItem(IGroup group) {
 		super();
 		
 		setDisplayName(group.getName());

@@ -24,12 +24,12 @@ import org.columba.core.plugin.PluginLoadingFailedException;
  * 
  * @author fdietz
  */
-public class ComposerFacade {
+public class ComposerFacade implements IComposerFacade {
     
     /**
      * Open up composer window.
      */
-    public static void openComposer() {
+    public void openComposer() {
         // Choice btw. text and html will be based on stored option
         try {
         	FrameModel.getInstance().openView("Composer");

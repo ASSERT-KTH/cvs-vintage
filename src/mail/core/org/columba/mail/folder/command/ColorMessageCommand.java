@@ -26,7 +26,7 @@ import org.columba.core.command.WorkerStatusController;
 import org.columba.core.gui.util.ColorFactory;
 import org.columba.mail.command.FolderCommand;
 import org.columba.mail.command.FolderCommandReference;
-import org.columba.mail.folder.MessageFolder;
+import org.columba.mail.folder.AbstractMessageFolder;
 
 /**
  * Mark selected messages with specific variant.
@@ -61,7 +61,7 @@ public class ColorMessageCommand extends FolderCommand {
 		Object[] uids = r.getUids();
 
 		// get source folder
-		MessageFolder srcFolder = (MessageFolder) r.getFolder();
+		AbstractMessageFolder srcFolder = (AbstractMessageFolder) r.getFolder();
 
 		// register for status events
 		((StatusObservableImpl) srcFolder.getObservable()).setWorker(worker);

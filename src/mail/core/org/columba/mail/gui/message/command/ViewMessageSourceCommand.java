@@ -31,7 +31,7 @@ import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.io.TempFileStore;
 import org.columba.mail.command.FolderCommand;
 import org.columba.mail.command.FolderCommandReference;
-import org.columba.mail.folder.MessageFolder;
+import org.columba.mail.folder.AbstractMessageFolder;
 import org.columba.mail.gui.frame.AbstractMailFrameController;
 import org.columba.mail.gui.mimetype.MimeTypeViewer;
 import org.columba.ristretto.message.MimeHeader;
@@ -78,7 +78,7 @@ public class ViewMessageSourceCommand extends FolderCommand {
 
         Object[] uids = r.getUids();
 
-        MessageFolder folder = (MessageFolder) r.getFolder();
+        AbstractMessageFolder folder = (AbstractMessageFolder) r.getFolder();
 
         //		register for status events
         ((StatusObservableImpl) folder.getObservable()).setWorker(worker);

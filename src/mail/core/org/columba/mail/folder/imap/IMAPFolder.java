@@ -38,8 +38,8 @@ import org.columba.mail.config.AccountItem;
 import org.columba.mail.config.FolderItem;
 import org.columba.mail.config.ImapItem;
 import org.columba.mail.folder.AbstractFolder;
-import org.columba.mail.folder.HeaderListStorage;
-import org.columba.mail.folder.MailboxInterface;
+import org.columba.mail.folder.IHeaderListStorage;
+import org.columba.mail.folder.IMailbox;
 import org.columba.mail.folder.RemoteFolder;
 import org.columba.mail.folder.RootFolder;
 import org.columba.mail.folder.command.ApplyFilterCommand;
@@ -104,12 +104,12 @@ public class IMAPFolder extends RemoteFolder {
 	/**
 	 *  
 	 */
-	private HeaderListStorage attributeStorage;
+	private IHeaderListStorage attributeStorage;
 	
 	private boolean readOnly;
 
 	/**
-	 * @see org.columba.mail.folder.MailboxInterface#isReadOnly()
+	 * @see org.columba.mail.folder.IMailbox#isReadOnly()
 	 */
 	public boolean isReadOnly() {
 		return readOnly;
@@ -609,10 +609,10 @@ public class IMAPFolder extends RemoteFolder {
 	 * The IMAP copy command also keeps the flags intact. So, there's no need to
 	 * change these manually.
 	 * 
-	 * @see org.columba.mail.folder.Folder#innerCopy(org.columba.mail.folder.MailboxInterface,
+	 * @see org.columba.mail.folder.Folder#innerCopy(org.columba.mail.folder.IMailbox,
 	 *      java.lang.Object, org.columba.core.command.WorkerStatusController)
 	 */
-	public void innerCopy(MailboxInterface destiny, Object[] uids)
+	public void innerCopy(IMailbox destiny, Object[] uids)
 			throws Exception {
 		IMAPFolder destFolder = (IMAPFolder) destiny;
 
@@ -780,7 +780,7 @@ public class IMAPFolder extends RemoteFolder {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.columba.mail.folder.MailboxInterface#addMessage(java.io.InputStream)
+	 * @see org.columba.mail.folder.IMailbox#addMessage(java.io.InputStream)
 	 */
 	public Object addMessage(InputStream in, Attributes attributes, Flags flags)
 			throws Exception {
@@ -815,7 +815,7 @@ public class IMAPFolder extends RemoteFolder {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.columba.mail.folder.MailboxInterface#getHeaderFields(java.lang.Object,
+	 * @see org.columba.mail.folder.IMailbox#getHeaderFields(java.lang.Object,
 	 *      java.lang.String[])
 	 */
 	public Header getHeaderFields(Object uid, String[] keys) throws Exception {
@@ -855,7 +855,7 @@ public class IMAPFolder extends RemoteFolder {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.columba.mail.folder.MailboxInterface#getMessageSourceStream(java.lang.Object)
+	 * @see org.columba.mail.folder.IMailbox#getMessageSourceStream(java.lang.Object)
 	 */
 	public InputStream getMessageSourceStream(Object uid) throws Exception {
 		return getServer().getMessageSourceStream(uid, this);
@@ -864,7 +864,7 @@ public class IMAPFolder extends RemoteFolder {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.columba.mail.folder.MailboxInterface#getMimePartSourceStream(java.lang.Object,
+	 * @see org.columba.mail.folder.IMailbox#getMimePartSourceStream(java.lang.Object,
 	 *      java.lang.Integer[])
 	 */
 	public InputStream getMimePartSourceStream(Object uid, Integer[] address)
@@ -875,7 +875,7 @@ public class IMAPFolder extends RemoteFolder {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.columba.mail.folder.MailboxInterface#getMimePartBodyStream(java.lang.Object,
+	 * @see org.columba.mail.folder.IMailbox#getMimePartBodyStream(java.lang.Object,
 	 *      java.lang.Integer[])
 	 */
 	public InputStream getMimePartBodyStream(Object uid, Integer[] address)
@@ -916,7 +916,7 @@ public class IMAPFolder extends RemoteFolder {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.columba.mail.folder.MailboxInterface#addMessage(java.io.InputStream,
+	 * @see org.columba.mail.folder.IMailbox#addMessage(java.io.InputStream,
 	 *      org.columba.ristretto.message.Attributes)
 	 */
 	public Object addMessage(InputStream in) throws Exception {
@@ -939,7 +939,7 @@ public class IMAPFolder extends RemoteFolder {
 	/**
 	 * @see org.columba.mail.folder.Folder#getHeaderListStorage()
 	 */
-	public HeaderListStorage getHeaderListStorage() {
+	public IHeaderListStorage getHeaderListStorage() {
 		if (attributeStorage == null)
 			attributeStorage = new RemoteHeaderListStorage(this);
 
@@ -959,7 +959,7 @@ public class IMAPFolder extends RemoteFolder {
 	}
 
 	/**
-	 * @see org.columba.mail.folder.MailboxInterface#getAllHeaderFields(java.lang.Object)
+	 * @see org.columba.mail.folder.IMailbox#getAllHeaderFields(java.lang.Object)
 	 */
 	public Header getAllHeaderFields(Object uid) throws Exception {
 		return getServer().getAllHeaders(uid, this);

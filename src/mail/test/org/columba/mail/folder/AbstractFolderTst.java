@@ -43,10 +43,10 @@ import org.columba.mail.main.MailMain;
 public class AbstractFolderTst extends TestCase {
 
 	/** A source folder. */
-	protected MessageFolder sourceFolder;
+	protected AbstractMessageFolder sourceFolder;
 
 	/** A destination folder. */
-	protected MessageFolder destFolder;
+	protected AbstractMessageFolder destFolder;
 
 	/** A set with all created folders. */
 	private Set folders;
@@ -108,8 +108,8 @@ public class AbstractFolderTst extends TestCase {
 
 	}
 
-	public MessageFolder createFolder() {
-		MessageFolder folder = factory.createFolder(folderId++);
+	public AbstractMessageFolder createFolder() {
+		AbstractMessageFolder folder = factory.createFolder(folderId++);
 		folders.add(folder);
 
 		return folder;
@@ -122,7 +122,7 @@ public class AbstractFolderTst extends TestCase {
 		if ( folders == null ) return;
 		
 		for (Iterator iterator = folders.iterator(); iterator.hasNext();) {
-			MessageFolder folder = (MessageFolder) iterator.next();
+			AbstractMessageFolder folder = (AbstractMessageFolder) iterator.next();
 			File f = folder.getDirectoryFile();
 
 			// delete all mails in folder
@@ -142,14 +142,14 @@ public class AbstractFolderTst extends TestCase {
 	/**
 	 * @return Returns the folder.
 	 */
-	public MessageFolder getSourceFolder() {
+	public AbstractMessageFolder getSourceFolder() {
 		return sourceFolder;
 	}
 
 	/**
 	 * @return Returns the destFolder.
 	 */
-	public MessageFolder getDestFolder() {
+	public AbstractMessageFolder getDestFolder() {
 		return destFolder;
 	}
 

@@ -34,7 +34,7 @@ import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.gui.menu.ColumbaPopupMenu;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.folder.AbstractFolder;
-import org.columba.mail.folder.MessageFolder;
+import org.columba.mail.folder.AbstractMessageFolder;
 import org.columba.mail.folder.event.FolderEventDelegator;
 import org.columba.mail.folderoptions.FolderOptionsController;
 import org.columba.mail.gui.frame.MailFrameMediator;
@@ -65,7 +65,7 @@ import org.frapuccino.treetable.Tree;
  * <p>
  * Folder-specific configuration options are handled by
  * {@link FolderOptionsController}and can be configured by the user in the
- * MessageFolder Options Dialog.
+ * AbstractMessageFolder Options Dialog.
  * 
  * @author fdietz
  */
@@ -144,7 +144,7 @@ public class TableController implements FocusOwner, ListSelectionListener,
 	/**
 	 * previously selected folder
 	 */
-	private MessageFolder previouslySelectedFolder;
+	private AbstractMessageFolder previouslySelectedFolder;
 
 	/**
 	 * tooltip mouse handler
@@ -452,7 +452,7 @@ public class TableController implements FocusOwner, ListSelectionListener,
 	 * @see org.columba.mail.gui.frame.ViewHeaderListInterface#showHeaderList(org.columba.mail.folder.Folder,
 	 *      org.columba.mail.message.HeaderList)
 	 */
-	public void showHeaderList(MessageFolder folder, HeaderList headerList)
+	public void showHeaderList(AbstractMessageFolder folder, HeaderList headerList)
 			throws Exception {
 
 		// save previously selected folder options

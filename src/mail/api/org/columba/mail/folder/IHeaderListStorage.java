@@ -22,7 +22,7 @@ import org.columba.ristretto.message.Flags;
 import org.columba.ristretto.message.Header;
 
 /**
- * Combination of {@link HeaderStorage} and {@link AttributeStorage}.
+ * Combination of {@link IHeaderStorage} and {@link IAttributeStorage}.
  * <p>
  * The current implementation combines both storage models. 
  * <p>
@@ -32,7 +32,7 @@ import org.columba.ristretto.message.Header;
  * 
  * @author fdietz 
  */
-public interface HeaderListStorage extends HeaderStorage{
+public interface IHeaderListStorage extends IHeaderStorage{
 
     /**
      * Gets a attribute from the message
@@ -104,19 +104,19 @@ public interface HeaderListStorage extends HeaderStorage{
     throws Exception;
     
     /**
-     * @see org.columba.mail.folder.HeaderStorage#removeMessage(java.lang.Object)
+     * @see org.columba.mail.folder.IHeaderStorage#removeMessage(java.lang.Object)
      */
     void removeMessage(Object uid) throws Exception;
     
     
     
     /**
-     * @see org.columba.mail.folder.HeaderStorage#save()
+     * @see org.columba.mail.folder.IHeaderStorage#save()
      */
     public void save() throws Exception;
     
     /**
-     * @see org.columba.mail.folder.HeaderStorage#load()
+     * @see org.columba.mail.folder.IHeaderStorage#load()
      */
     public void load() throws Exception;
     

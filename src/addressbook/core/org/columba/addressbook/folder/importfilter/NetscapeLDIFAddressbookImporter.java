@@ -24,6 +24,7 @@ import java.nio.ByteBuffer;
 
 import org.columba.addressbook.folder.AbstractFolder;
 import org.columba.addressbook.model.Contact;
+import org.columba.addressbook.model.IContact;
 import org.columba.addressbook.util.AddressbookResourceLoader;
 import org.columba.ristretto.coder.Base64;
 
@@ -44,7 +45,7 @@ public class NetscapeLDIFAddressbookImporter extends DefaultAddressbookImporter 
     public void importAddressbook(File file) throws Exception {
         BufferedReader in = new BufferedReader(new FileReader(file));
         String str;
-        Contact card = new Contact();
+        IContact card = new Contact();
 
         while ((str = in.readLine()) != null) {
             // start parsing line by line

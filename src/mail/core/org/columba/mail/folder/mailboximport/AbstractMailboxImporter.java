@@ -23,7 +23,7 @@ import javax.swing.JOptionPane;
 import org.columba.core.command.WorkerStatusController;
 import org.columba.core.gui.frame.FrameModel;
 import org.columba.core.gui.util.ImageLoader;
-import org.columba.mail.folder.MessageFolder;
+import org.columba.mail.folder.AbstractMessageFolder;
 import org.columba.ristretto.io.CharSequenceSource;
 import org.columba.ristretto.io.SourceInputStream;
 
@@ -34,11 +34,11 @@ public abstract class AbstractMailboxImporter {
     public static final int TYPE_FILE = 0;
     public static final int TYPE_DIRECTORY = 1;
 
-    protected MessageFolder destinationFolder;
+    protected AbstractMessageFolder destinationFolder;
     protected File[] sourceFiles;
     protected int counter = 0;
 
-    public AbstractMailboxImporter(MessageFolder destinationFolder, File[] sourceFiles) {
+    public AbstractMailboxImporter(AbstractMessageFolder destinationFolder, File[] sourceFiles) {
         this();
         setDestinationFolder(destinationFolder);
         setSourceFiles(sourceFiles);
@@ -62,7 +62,7 @@ public abstract class AbstractMailboxImporter {
      * should be read and passed to the folder using saveMessage.
      */
     public abstract void importMailboxFile(File file,
-        WorkerStatusController worker, MessageFolder destFolder)
+        WorkerStatusController worker, AbstractMessageFolder destFolder)
         throws Exception;
 
     /**
@@ -81,7 +81,7 @@ public abstract class AbstractMailboxImporter {
     /**
      * Set the destination folder.
      */
-    public void setDestinationFolder(MessageFolder folder) {
+    public void setDestinationFolder(AbstractMessageFolder folder) {
         destinationFolder = folder;
     }
 
@@ -158,7 +158,7 @@ public abstract class AbstractMailboxImporter {
      * Use this method to save a message in the specified destination folder.
      */
     protected void saveMessage(String rawString, WorkerStatusController worker,
-        MessageFolder destFolder) throws Exception {
+        AbstractMessageFolder destFolder) throws Exception {
         /*
          * *20031231, karlpeder* Using InputStream instead of rawString
          * directly. Ensures size is set correctly by addMessage (bug #843657)
@@ -178,7 +178,7 @@ public abstract class AbstractMailboxImporter {
     /**
      * Returns the folder new messages will be added to.
      */
-    public MessageFolder getDestinationFolder() {
+    public AbstractMessageFolder getDestinationFolder() {
         return destinationFolder;
     }
 

@@ -31,7 +31,7 @@ import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.composer.MessageBuilderHelper;
 import org.columba.mail.config.AccountItem;
 import org.columba.mail.config.MailConfig;
-import org.columba.mail.folder.MessageFolder;
+import org.columba.mail.folder.AbstractMessageFolder;
 import org.columba.mail.gui.composer.ComposerController;
 import org.columba.mail.gui.composer.ComposerModel;
 import org.columba.ristretto.coder.Base64DecoderInputStream;
@@ -57,7 +57,7 @@ import org.columba.ristretto.parser.MessageParser;
 public class OpenMessageWithComposerCommand extends FolderCommand {
 	protected ComposerController controller;
 	protected ComposerModel model;
-	protected MessageFolder folder;
+	protected AbstractMessageFolder folder;
 	protected Object uid;
 
 	/**
@@ -86,7 +86,7 @@ public class OpenMessageWithComposerCommand extends FolderCommand {
 		model = new ComposerModel();
 
 		// get selected folder
-		folder = (MessageFolder) ((FolderCommandReference) getReference())
+		folder = (AbstractMessageFolder) ((FolderCommandReference) getReference())
 				.getFolder();
 
 		// get selected messages

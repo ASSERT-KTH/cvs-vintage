@@ -28,12 +28,12 @@ import org.columba.ristretto.message.Flags;
  * including message {@link Flags} and Columba-specific items.
  * <p>
  * NOTE: This interface is not used at all.
- * @see HeaderListStorage
+ * @see IHeaderListStorage
  *
  * @author fdietz
  *
  */
-public interface AttributeStorage {
+public interface IAttributeStorage {
     /**
      * Gets a attribute from the message
      * 

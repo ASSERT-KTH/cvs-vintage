@@ -28,7 +28,7 @@ import org.columba.core.gui.util.ImageLoader;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.config.FolderItem;
 import org.columba.mail.folder.AbstractFolder;
-import org.columba.mail.folder.MessageFolder;
+import org.columba.mail.folder.AbstractMessageFolder;
 import org.columba.mail.folder.command.RemoveFolderCommand;
 import org.columba.mail.gui.frame.MailFrameMediator;
 import org.columba.mail.gui.tree.selection.TreeSelectionChangedEvent;
@@ -101,7 +101,7 @@ public class RemoveFolderAction extends AbstractColumbaAction implements
 			AbstractFolder folder = ((TreeSelectionChangedEvent) e)
 					.getSelected()[0];
 
-			if ((folder != null) && folder instanceof MessageFolder) {
+			if ((folder != null) && folder instanceof AbstractMessageFolder) {
 				FolderItem item = folder.getConfiguration();
 
 				if (item.get("property", "accessrights").equals("user")) {

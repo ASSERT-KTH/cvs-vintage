@@ -17,6 +17,8 @@
 package org.columba.addressbook.facade;
 
 import org.columba.addressbook.folder.AbstractFolder;
+import org.columba.addressbook.folder.IContactFolder;
+import org.columba.addressbook.folder.IFolder;
 import org.columba.addressbook.gui.tree.AddressbookTreeModel;
 
 /**
@@ -24,32 +26,43 @@ import org.columba.addressbook.gui.tree.AddressbookTreeModel;
  * 
  * @author fdietz
  */
-public class FolderFacade {
+public class FolderFacade implements IFolderFacade {
 
-    /**
-     * 
-     * Return a Folder object
-     * 
-     * @param uid
-     *            id of folder
-     * @return Folder
-     */
-    public static AbstractFolder getAddressbook(int uid) {
-        return (AbstractFolder) AddressbookTreeModel.getInstance()
-                .getFolder(uid);
-    }
+	/**
+	 * 
+	 * Return a Folder object
+	 * 
+	 * @param uid
+	 *            id of folder
+	 * @return Folder
+	 */
+	public IFolder getAddressbook(int uid) {
+		return (IFolder) AddressbookTreeModel.getInstance().getFolder(uid);
+	}
 
-    /**
-     * 
-     * Returns a reference to the system addressbook which automatically
-     * collects addresses
-     * 
-     * @return Folder
-     */
-    public static AbstractFolder getCollectedAddresses() {
-        AddressbookTreeModel model = AddressbookTreeModel.getInstance();
-        if (model != null) return (AbstractFolder) model.getFolder(102);
+	/**
+	 * 
+	 * Returns a reference to the system addressbook which automatically
+	 * collects addresses
+	 * 
+	 * @return Folder
+	 */
+	public IContactFolder getCollectedAddresses() {
+		AddressbookTreeModel model = AddressbookTreeModel.getInstance();
+		if (model != null)
+			return (AbstractFolder) model.getFolder(102);
 
-        return null;
-    }
+		return null;
+	}
+
+	/**
+	 * @see org.columba.addressbook.facade.IFolderFacade#getLocalAddressbook()
+	 */
+	public IContactFolder getLocalAddressbook() {
+		AddressbookTreeModel model = AddressbookTreeModel.getInstance();
+		if (model != null)
+			return (AbstractFolder) model.getFolder(101);
+
+		return null;
+	}
 }

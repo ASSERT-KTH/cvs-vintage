@@ -28,7 +28,7 @@ import org.columba.core.config.ViewItem;
 import org.columba.core.gui.frame.ContentPane;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.config.MailConfig;
-import org.columba.mail.folder.MessageFolder;
+import org.columba.mail.folder.AbstractMessageFolder;
 import org.columba.mail.gui.attachment.selection.AttachmentSelectionHandler;
 import org.columba.mail.gui.frame.AbstractMailFrameController;
 import org.columba.mail.gui.frame.TableViewOwner;
@@ -127,7 +127,7 @@ public class MessageFrameController extends AbstractMailFrameController
 		try {
 			
 			// Get the subject from the cached Header
-			MessageFolder folder = (MessageFolder) references.getFolder();
+			AbstractMessageFolder folder = (AbstractMessageFolder) references.getFolder();
 			ColumbaHeader header = folder.getHeaderList().get(references.getUids()[0]);
 			String subject = (String)header.get("columba.subject");
 			

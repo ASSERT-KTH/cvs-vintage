@@ -29,6 +29,7 @@ import javax.swing.JTextField;
 
 import org.columba.addressbook.gui.util.LabelTextFieldPanel;
 import org.columba.addressbook.model.Contact;
+import org.columba.addressbook.model.IContact;
 
 public class AddressPanel extends JPanel {
 	private JTextField phone1TextField;
@@ -39,9 +40,9 @@ public class AddressPanel extends JPanel {
 
 	private AttributComboBox addressComboBox;
 
-	private Contact contact;
+	private IContact contact;
 
-	public AddressPanel(Contact card) {
+	public AddressPanel(IContact card) {
 		this.contact = card;
 		initComponent();
 	}

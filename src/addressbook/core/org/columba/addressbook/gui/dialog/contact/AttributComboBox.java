@@ -37,6 +37,7 @@ import javax.swing.text.Document;
 import javax.swing.text.JTextComponent;
 
 import org.columba.addressbook.model.Contact;
+import org.columba.addressbook.model.IContact;
 import org.columba.core.gui.util.ImageLoader;
 
 /**
@@ -57,10 +58,10 @@ public class AttributComboBox extends JPanel
 	private String name;
 	private List menuList;
 
-	private Contact contact;
+	private IContact contact;
 
 	public AttributComboBox(String name, List list, JTextComponent textField,
-			Contact contact) {
+			IContact contact) {
 		super();
 
 		this.name = name;

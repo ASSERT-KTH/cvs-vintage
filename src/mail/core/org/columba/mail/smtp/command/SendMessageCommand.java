@@ -31,7 +31,7 @@ import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.composer.MessageComposer;
 import org.columba.mail.composer.SendableMessage;
 import org.columba.mail.config.AccountItem;
-import org.columba.mail.folder.MessageFolder;
+import org.columba.mail.folder.AbstractMessageFolder;
 import org.columba.mail.folder.command.MarkMessageCommand;
 import org.columba.mail.gui.composer.ComposerController;
 import org.columba.mail.gui.composer.ComposerModel;
@@ -158,7 +158,7 @@ public class SendMessageCommand extends FolderCommand {
 		AccountItem item = model.getAccountItem();
 
 		// sent folder
-		MessageFolder sentFolder = (MessageFolder) TreeModel.getInstance()
+		AbstractMessageFolder sentFolder = (AbstractMessageFolder) TreeModel.getInstance()
 				.getFolder(item.getSpecialFoldersItem().getInteger("sent"));
 
 		// get the SendableMessage object

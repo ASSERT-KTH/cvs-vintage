@@ -22,7 +22,7 @@ import javax.swing.JTree;
 import javax.swing.border.Border;
 import javax.swing.tree.DefaultTreeCellRenderer;
 
-import org.columba.addressbook.gui.tree.AddressbookTreeNode;
+import org.columba.addressbook.folder.AddressbookTreeNode;
 import org.columba.core.gui.util.ImageLoader;
 
 

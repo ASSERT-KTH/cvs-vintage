@@ -18,8 +18,8 @@
 package org.columba.addressbook.folder;
 
 import org.columba.addressbook.config.FolderItem;
-import org.columba.addressbook.gui.tree.AddressbookTreeNode;
 import org.columba.addressbook.model.Group;
+import org.columba.addressbook.model.IGroup;
 import org.columba.core.xml.XmlElement;
 
 /**
@@ -52,7 +52,7 @@ public final class FolderFactory {
 	}
 
 	public static GroupFolder createGroupFolder(AbstractFolder parent,
-			Group group) {
+			IGroup group) {
 		XmlElement folder = new XmlElement("folder");
 		folder.addAttribute("uid", (AddressbookTreeNode.generateNextFolderUid())
 				.toString());

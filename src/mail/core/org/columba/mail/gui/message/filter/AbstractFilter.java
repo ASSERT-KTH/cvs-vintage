@@ -18,7 +18,7 @@ package org.columba.mail.gui.message.filter;
 
 import org.columba.core.gui.frame.FrameMediator;
 import org.columba.mail.command.FolderCommandReference;
-import org.columba.mail.folder.MessageFolder;
+import org.columba.mail.folder.AbstractMessageFolder;
 import org.columba.mail.folder.temp.TempFolder;
 import org.columba.mail.gui.attachment.selection.AttachmentSelectionHandler;
 import org.columba.mail.gui.table.selection.TableSelectionHandler;
@@ -46,7 +46,7 @@ public abstract class AbstractFilter implements Filter {
      * @return 
      * @see org.columba.mail.gui.message.filter.Filter#filter(org.columba.mail.folder.Folder, java.lang.Object)
      */
-    public FolderCommandReference filter(MessageFolder folder, Object uid, ColumbaMessage message) throws Exception {
+    public FolderCommandReference filter(AbstractMessageFolder folder, Object uid, ColumbaMessage message) throws Exception {
 //      map selection to this temporary message
         TempFolder tempFolder = TreeModel.getInstance().getTempFolder();
 

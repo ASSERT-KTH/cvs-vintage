@@ -21,7 +21,7 @@ package org.columba.addressbook.model;
  * @author fdietz
  *  
  */
-public class HeaderItem {
+public class HeaderItem implements IHeaderItem {
 
 	private String displayName;
 

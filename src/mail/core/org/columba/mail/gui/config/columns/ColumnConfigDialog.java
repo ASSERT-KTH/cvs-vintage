@@ -48,7 +48,7 @@ import org.columba.core.gui.util.ButtonWithMnemonic;
 import org.columba.core.help.HelpManager;
 import org.columba.core.xml.XmlElement;
 import org.columba.mail.command.FolderCommandReference;
-import org.columba.mail.folder.MessageFolder;
+import org.columba.mail.folder.AbstractMessageFolder;
 import org.columba.mail.folderoptions.ColumnOptionsPlugin;
 import org.columba.mail.gui.frame.MailFrameMediator;
 import org.columba.mail.util.MailResourceLoader;
@@ -306,7 +306,7 @@ public class ColumnConfigDialog extends JDialog implements ActionListener,
 
             // make sure this configuration is also visually working immediately
             FolderCommandReference r = mediator.getTreeSelection();
-            plugin.loadOptionsFromXml((MessageFolder) r.getFolder());
+            plugin.loadOptionsFromXml((AbstractMessageFolder) r.getFolder());
         } else if (action.equals("CANCEL")) {
             setVisible(false);
         } else if (action.equals("SHOW")) {

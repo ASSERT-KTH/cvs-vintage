@@ -28,7 +28,7 @@ import org.columba.core.gui.util.ImageLoader;
 import org.columba.mail.config.FolderItem;
 import org.columba.mail.folder.AbstractFolder;
 import org.columba.mail.folder.LocalRootFolder;
-import org.columba.mail.folder.MessageFolder;
+import org.columba.mail.folder.AbstractMessageFolder;
 import org.columba.mail.folder.imap.IMAPRootFolder;
 import org.columba.mail.folder.virtual.VirtualFolder;
 import org.columba.ristretto.message.MailboxInfo;
@@ -113,8 +113,8 @@ public class FolderTreeCellRenderer extends DefaultTreeCellRenderer {
 		setText(treeNode.getName());
 		setIcon(getFolderIcon(treeNode, expanded));
 
-		if (value instanceof MessageFolder) {
-			MessageFolder folder = (MessageFolder) value;
+		if (value instanceof AbstractMessageFolder) {
+			AbstractMessageFolder folder = (AbstractMessageFolder) value;
 
 			// getting folder info
 			MailboxInfo info = folder.getMessageFolderInfo();
@@ -214,8 +214,8 @@ public class FolderTreeCellRenderer extends DefaultTreeCellRenderer {
 			return imapRootFolderIcon;
 		} else if (node instanceof VirtualFolder) {
 			return virtualFolderIcon;
-		} else if (node instanceof MessageFolder) {
-			MessageFolder folder = (MessageFolder) node;
+		} else if (node instanceof AbstractMessageFolder) {
+			AbstractMessageFolder folder = (AbstractMessageFolder) node;
 			if (folder.isInboxFolder()) {
 				return inboxIcon;
 			} else if (folder.getUid() == 103) {

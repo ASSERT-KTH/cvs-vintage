@@ -25,7 +25,7 @@ import org.columba.core.command.NullWorkerStatusController;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.folder.AbstractFolderTst;
 import org.columba.mail.folder.MailboxTstFactory;
-import org.columba.mail.folder.MessageFolder;
+import org.columba.mail.folder.AbstractMessageFolder;
 
 /**
  * @author redsolo
@@ -49,7 +49,7 @@ public class MarkFolderAsReadCommandTest extends AbstractFolderTst {
      * @throws Exception thrown by the command itself.
      */
     public void testExecute() throws Exception {
-        MessageFolder folder = getSourceFolder();
+        AbstractMessageFolder folder = getSourceFolder();
 
         Object uid1 = folder.addMessage(createMessageStream("sub1", "body1"));
         Object uid2 = folder.addMessage(createMessageStream("sub2", "body2"));

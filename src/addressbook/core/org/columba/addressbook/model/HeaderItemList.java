@@ -25,7 +25,7 @@ import java.util.List;
  * @author fdietz
  *
  */
-public class HeaderItemList {
+public class HeaderItemList implements IHeaderItemList {
 
 	private List list;
 	
@@ -38,33 +38,33 @@ public class HeaderItemList {
 		Iterator it = map.iterator();
 		list = new ArrayList();
 		while (it.hasNext()) {
-			ContactItem item = (ContactItem) it.next();
+			IContactItem item = (IContactItem) it.next();
 			list.add(item);
 		}
 	}
 	
-	public void replace(int index, HeaderItem item) {
+	public void replace(int index, IHeaderItem item) {
 		if ( list.size()> index && index >= 0)
 		list.set(index, item);
 	}
 	
-	public void add(HeaderItem item) {
+	public void add(IHeaderItem item) {
 		list.add(item);
 	}
 	
-	public HeaderItem get(int index) {
-		return (HeaderItem) list.get(index);
+	public IHeaderItem get(int index) {
+		return (IHeaderItem) list.get(index);
 	}
 	
 	public void remove(int index) {
 		list.remove(index);
 	}
 	
-	public void remove(HeaderItem item) {
+	public void remove(IHeaderItem item) {
 		list.remove(item);
 	}
 	
-	public int indexOf(HeaderItem item) {
+	public int indexOf(IHeaderItem item) {
 		return list.indexOf(item);
 	}
 	

@@ -31,7 +31,7 @@ import org.columba.core.gui.menu.ColumbaPopupMenu;
 import org.columba.core.xml.XmlElement;
 import org.columba.mail.config.FolderItem;
 import org.columba.mail.folder.AbstractFolder;
-import org.columba.mail.folder.MessageFolder;
+import org.columba.mail.folder.AbstractMessageFolder;
 import org.columba.mail.gui.frame.MailFrameMediator;
 import org.columba.mail.gui.table.command.ViewHeaderListCommand;
 import org.columba.mail.gui.tree.action.ViewHeaderListAction;
@@ -109,7 +109,7 @@ public class TreeController implements TreeWillExpandListener,
 	 * @param folder
 	 *            the new selected folder.
 	 */
-	public void setSelected(MessageFolder folder) {
+	public void setSelected(AbstractMessageFolder folder) {
 		view.clearSelection();
 
 		TreePath path = folder.getSelectionTreePath();

@@ -24,7 +24,7 @@ import org.columba.core.xml.XmlElement;
 
 
 /**
- * MessageFolder specific options.
+ * AbstractMessageFolder specific options.
  *
  * @author fdietz
  */

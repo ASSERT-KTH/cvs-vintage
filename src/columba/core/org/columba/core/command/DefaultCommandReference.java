@@ -22,7 +22,7 @@ import org.columba.core.util.Lock;
  * 
  * @author fdietz, tstich
  */
-public class DefaultCommandReference {
+public class DefaultCommandReference implements ICommandReference {
 	/**
 	 * a lock to claim access on some resource
 	 */

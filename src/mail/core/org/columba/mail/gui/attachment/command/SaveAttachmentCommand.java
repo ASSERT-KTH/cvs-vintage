@@ -27,7 +27,7 @@ import org.columba.core.command.WorkerStatusController;
 import org.columba.core.io.StreamUtils;
 import org.columba.mail.command.FolderCommand;
 import org.columba.mail.command.FolderCommandReference;
-import org.columba.mail.folder.MessageFolder;
+import org.columba.mail.folder.AbstractMessageFolder;
 import org.columba.ristretto.coder.Base64DecoderInputStream;
 import org.columba.ristretto.coder.EncodedWord;
 import org.columba.ristretto.coder.QuotedPrintableDecoderInputStream;
@@ -54,7 +54,7 @@ public abstract class SaveAttachmentCommand extends FolderCommand {
      */
     public void execute(WorkerStatusController worker) throws Exception {
         FolderCommandReference r = (FolderCommandReference) getReference();
-        MessageFolder folder = (MessageFolder) r.getFolder();
+        AbstractMessageFolder folder = (AbstractMessageFolder) r.getFolder();
         Object[] uids = r.getUids();
 
         Integer[] address = r.getAddress();

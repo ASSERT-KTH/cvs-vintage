@@ -17,18 +17,29 @@
 //All Rights Reserved.
 package org.columba.addressbook.folder;
 
-import org.columba.addressbook.model.Contact;
+import org.columba.addressbook.model.IContact;
 
 /**
- * Contact storage backend.
+ * Contact storage facility.
  * 
  * @author fdietz
- *
+ *  
  */
-public interface DataStorage {
+public interface IContactStorage {
 
-	Contact load(Object uid) throws Exception;
-	void save(Object uid, Contact contact) throws Exception;
-	void modify(Object uid, Contact contact) throws Exception;
+	int count();
+
+	Object exists(String contact) throws Exception;
+	
+	boolean exists(Object uid) throws Exception;
+
+	IContact get(Object uid) throws Exception;
+
 	void remove(Object uid) throws Exception;
+
+	void modify(Object uid, IContact contact) throws Exception;
+
+	Object add(IContact contact) throws Exception;
+	
+	
 }

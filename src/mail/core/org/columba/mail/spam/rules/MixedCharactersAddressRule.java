@@ -17,7 +17,7 @@
 //All Rights Reserved.
 package org.columba.mail.spam.rules;
 
-import org.columba.mail.folder.MessageFolder;
+import org.columba.mail.folder.AbstractMessageFolder;
 import org.columba.ristretto.message.Header;
 
 /**
@@ -34,10 +34,10 @@ public class MixedCharactersAddressRule extends AbstractRule {
     }
 
     /**
-     * @see org.columba.mail.spam.rules.Rule#score(org.columba.mail.folder.MessageFolder,
+     * @see org.columba.mail.spam.rules.Rule#score(org.columba.mail.folder.AbstractMessageFolder,
      *      java.lang.Object)
      */
-    public float score(MessageFolder folder, Object uid) throws Exception {
+    public float score(AbstractMessageFolder folder, Object uid) throws Exception {
         Header header = folder.getHeaderFields(uid, new String[] { "From"});
         String from = header.get("From");
         if (from == null) return NEARLY_ZERO;

@@ -51,6 +51,9 @@ import org.columba.addressbook.model.ContactItem;
 import org.columba.addressbook.model.ContactItemMap;
 import org.columba.addressbook.model.Group;
 import org.columba.addressbook.model.HeaderItem;
+import org.columba.addressbook.model.IContactItem;
+import org.columba.addressbook.model.IGroup;
+import org.columba.addressbook.model.IHeaderItem;
 import org.columba.addressbook.util.AddressbookResourceLoader;
 import org.columba.core.gui.util.ButtonWithMnemonic;
 
@@ -77,7 +80,7 @@ public class EditGroupDialog extends JDialog implements ActionListener,
     private ButtonWithMnemonic cancelButton;
 
     
-    private Group group;
+    private IGroup group;
     
     private AbstractFolder parentFolder;
     
@@ -90,7 +93,7 @@ public class EditGroupDialog extends JDialog implements ActionListener,
  *            null, if you want to create a new group. Otherwise, the
  *            groupNode will be modified.
  */
-    public EditGroupDialog(JFrame frame, Group group, AbstractFolder parentFolder) {
+    public EditGroupDialog(JFrame frame, IGroup group, AbstractFolder parentFolder) {
         super(frame, true);
 
         this.group = group;
@@ -268,7 +271,7 @@ public class EditGroupDialog extends JDialog implements ActionListener,
 
             // add children
             for (int i = 0; i < members.getSize(); i++) {
-                ContactItem item = (ContactItem) members.get(i);
+                IContactItem item = (IContactItem) members.get(i);
                 Object uid = item.getUid();
                 group.addMember(((Integer) uid).toString());
             }
@@ -285,7 +288,7 @@ public class EditGroupDialog extends JDialog implements ActionListener,
 
         if (o != null) {
             // this is a headeritem from autocompletion
-            members.addElement((HeaderItem) o);
+            members.addElement((IHeaderItem) o);
             addComboBox.setText(""); //$NON-NLS-1$
         } else {
             JOptionPane.showMessageDialog(null,

@@ -25,9 +25,9 @@ import org.columba.core.command.WorkerStatusController;
 import org.columba.core.io.DiskIO;
 import org.columba.mail.config.FolderItem;
 import org.columba.mail.filter.Filter;
-import org.columba.mail.folder.HeaderListStorage;
-import org.columba.mail.folder.MailboxInterface;
-import org.columba.mail.folder.MessageFolder;
+import org.columba.mail.folder.IHeaderListStorage;
+import org.columba.mail.folder.IMailbox;
+import org.columba.mail.folder.AbstractMessageFolder;
 import org.columba.mail.folder.imap.IMAPFolder;
 import org.columba.mail.folder.search.DefaultSearchEngine;
 import org.columba.mail.message.ColumbaHeader;
@@ -47,7 +47,7 @@ import org.columba.ristretto.parser.MessageParser;
 /**
  * @author freddy
  */
-public class TempFolder extends MessageFolder {
+public class TempFolder extends AbstractMessageFolder {
 
     /** JDK 1.4+ logging framework logger, used for logging. */
     private static final Logger LOG = Logger.getLogger("org.columba.mail.folder.temp");
@@ -202,7 +202,7 @@ public class TempFolder extends MessageFolder {
 
     // FIXME (@author fdietz): Do we need this implementation in a TempFolder?
     // If not, just put an empty method here, just like in VirtualFolder.
-    public void innerCopy(MailboxInterface destFolder, Object[] uids)
+    public void innerCopy(IMailbox destFolder, Object[] uids)
         throws Exception {
         for (int i = 0; i < uids.length; i++) {
 
@@ -245,7 +245,7 @@ public class TempFolder extends MessageFolder {
     /*
      * (non-Javadoc)
      *
-     * @see org.columba.mail.folder.MailboxInterface#getAttribute(java.lang.Object,
+     * @see org.columba.mail.folder.IMailbox#getAttribute(java.lang.Object,
      *      java.lang.String)
      */
     public Object getAttribute(Object uid, String key)
@@ -256,7 +256,7 @@ public class TempFolder extends MessageFolder {
     /*
      * (non-Javadoc)
      *
-     * @see org.columba.mail.folder.MailboxInterface#getFlags(java.lang.Object)
+     * @see org.columba.mail.folder.IMailbox#getFlags(java.lang.Object)
      */
     public Flags getFlags(Object uid) throws Exception {
         return ((ColumbaHeader) headerList.get(uid)).getFlags();
@@ -273,7 +273,7 @@ public class TempFolder extends MessageFolder {
     /*
      * (non-Javadoc)
      *
-     * @see org.columba.mail.folder.MailboxInterface#getHeaderFields(java.lang.Object,
+     * @see org.columba.mail.folder.IMailbox#getHeaderFields(java.lang.Object,
      *      java.lang.String[])
      */
     public Header getHeaderFields(Object uid, String[] keys)
@@ -297,7 +297,7 @@ public class TempFolder extends MessageFolder {
     /*
      * (non-Javadoc)
      *
-     * @see org.columba.mail.folder.MailboxInterface#getMessageSourceStream(java.lang.Object)
+     * @see org.columba.mail.folder.IMailbox#getMessageSourceStream(java.lang.Object)
      */
     public InputStream getMessageSourceStream(Object uid)
         throws Exception {
@@ -307,7 +307,7 @@ public class TempFolder extends MessageFolder {
     /*
      * (non-Javadoc)
      *
-     * @see org.columba.mail.folder.MailboxInterface#getMimePartBodyStream(java.lang.Object,
+     * @see org.columba.mail.folder.IMailbox#getMimePartBodyStream(java.lang.Object,
      *      java.lang.Integer[])
      */
     public InputStream getMimePartBodyStream(Object uid, Integer[] address)
@@ -323,7 +323,7 @@ public class TempFolder extends MessageFolder {
     /*
      * (non-Javadoc)
      *
-     * @see org.columba.mail.folder.MailboxInterface#getMimePartSourceStream(java.lang.Object,
+     * @see org.columba.mail.folder.IMailbox#getMimePartSourceStream(java.lang.Object,
      *      java.lang.Integer[])
      */
     public InputStream getMimePartSourceStream(Object uid, Integer[] address)
@@ -345,7 +345,7 @@ public class TempFolder extends MessageFolder {
     }
 
     /* (non-Javadoc)
-     * @see org.columba.mail.folder.MailboxInterface#addMessage(java.io.InputStream, org.columba.ristretto.message.Attributes)
+     * @see org.columba.mail.folder.IMailbox#addMessage(java.io.InputStream, org.columba.ristretto.message.Attributes)
      */
     public Object addMessage(InputStream in) throws Exception {
         return addMessage(in, null, null);
@@ -372,7 +372,7 @@ public class TempFolder extends MessageFolder {
     /**
      * @see org.columba.mail.folder.Folder#getHeaderListStorage()
      */
-    public HeaderListStorage getHeaderListStorage() {
+    public IHeaderListStorage getHeaderListStorage() {
         
         return null;
     }
@@ -385,7 +385,7 @@ public class TempFolder extends MessageFolder {
 	}
 
 	/**
-	 * @see org.columba.mail.folder.MailboxInterface#getAllHeaderFields(java.lang.Object)
+	 * @see org.columba.mail.folder.IMailbox#getAllHeaderFields(java.lang.Object)
 	 */
 	public Header getAllHeaderFields(Object uid) throws Exception {
 		ColumbaHeader header = ((ColumbaMessage) messageList.get(uid)).getHeader();

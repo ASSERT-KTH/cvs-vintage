@@ -15,7 +15,7 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003.
 //
 //All Rights Reserved.
-package org.columba.addressbook.gui.tree;
+package org.columba.addressbook.folder;
 
 import java.lang.reflect.Method;
 import java.util.Hashtable;
@@ -24,13 +24,12 @@ import javax.swing.ImageIcon;
 import javax.swing.tree.DefaultMutableTreeNode;
 
 import org.columba.addressbook.config.FolderItem;
-import org.columba.addressbook.folder.AbstractFolder;
 import org.columba.core.command.WorkerStatusController;
 import org.columba.core.gui.util.ImageLoader;
 import org.columba.core.util.Lock;
 import org.columba.core.xml.XmlElement;
 
-public abstract class AddressbookTreeNode extends DefaultMutableTreeNode {
+public abstract class AddressbookTreeNode extends DefaultMutableTreeNode implements IFolder {
 	protected final static ImageIcon collapsedIcon = ImageLoader
 			.getSmallImageIcon("folder.png");
 

@@ -32,7 +32,7 @@ import org.columba.core.gui.selection.SelectionChangedEvent;
 import org.columba.core.gui.selection.SelectionListener;
 import org.columba.mail.config.FolderItem;
 import org.columba.mail.folder.AbstractFolder;
-import org.columba.mail.folder.MessageFolder;
+import org.columba.mail.folder.AbstractMessageFolder;
 import org.columba.mail.gui.tree.selection.TreeSelectionChangedEvent;
 import org.columba.mail.gui.tree.util.FolderTreeCellRenderer;
 import org.columba.ristretto.message.MailboxInfo;
@@ -137,9 +137,9 @@ public class FolderInfoPanel extends ContainerInfoPanel implements SelectionList
             return;
         }
 
-        if  (!( newFolder instanceof MessageFolder) ) return;
+        if  (!( newFolder instanceof AbstractMessageFolder) ) return;
         
-        info = ((MessageFolder) newFolder).getMessageFolderInfo();
+        info = ((AbstractMessageFolder) newFolder).getMessageFolderInfo();
 
         if (info == null) {
             return;
@@ -170,7 +170,7 @@ public void folderSelectionChanged(AbstractFolder newFolder) {
         if (newFolder == null)
                 return;
 
-        setFolder((MessageFolder) newFolder);
+        setFolder((AbstractMessageFolder) newFolder);
 
 }
 */
@@ -178,10 +178,10 @@ public void folderSelectionChanged(AbstractFolder newFolder) {
         TreeSelectionChangedEvent treeEvent = (TreeSelectionChangedEvent) e;
 
         // we are only interested in folders containing messages 
-        // meaning of instance MessageFolder and not of instance FolderTreeNode
+        // meaning of instance AbstractMessageFolder and not of instance FolderTreeNode
         // -> casting here to Folder
         if (treeEvent.getSelected()[0] != null) {
-            setFolder((MessageFolder) treeEvent.getSelected()[0]);
+            setFolder((AbstractMessageFolder) treeEvent.getSelected()[0]);
         }
     }
 }

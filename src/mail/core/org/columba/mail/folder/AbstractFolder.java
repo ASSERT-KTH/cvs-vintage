@@ -36,7 +36,7 @@ import org.columba.mail.folder.event.FolderListener;
  * 
  * @author fdietz
  */
-public abstract class AbstractFolder extends DefaultMutableTreeNode {
+public abstract class AbstractFolder extends DefaultMutableTreeNode implements IFolder {
 
 	/** JDK 1.4+ logging framework logger, used for logging. */
 	private static final Logger LOG = Logger
@@ -330,7 +330,7 @@ public abstract class AbstractFolder extends DefaultMutableTreeNode {
 
 	public AbstractFolder findChildWithUID(int uid, boolean recurse) {
 		for (int i = 0; i < getChildCount(); i++) {
-			AbstractFolder child = (MessageFolder) getChildAt(i);
+			AbstractFolder child = (AbstractMessageFolder) getChildAt(i);
 			int childUid = child.getUid();
 
 			if (uid == childUid) {

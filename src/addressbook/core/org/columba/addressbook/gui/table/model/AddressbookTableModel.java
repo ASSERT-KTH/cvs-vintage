@@ -24,6 +24,7 @@ import javax.swing.table.AbstractTableModel;
 
 import org.columba.addressbook.model.ContactItem;
 import org.columba.addressbook.model.ContactItemMap;
+import org.columba.addressbook.model.IContactItem;
 
 /**
  * Simple table model, using an extended TableModel interface.
@@ -129,7 +130,7 @@ public class AddressbookTableModel extends AbstractTableModel
 	/**
 	 * @see org.columba.addressbook.gui.table.model.ContactItemTableModel#getHeaderItem(int)
 	 */
-	public ContactItem getContactItem(int index) {
+	public IContactItem getContactItem(int index) {
 
 		return rows[index];
 	}

@@ -36,7 +36,7 @@ public class TempFolderFactory implements MailboxTstFactory {
     /**
      * @see org.columba.mail.folder.MailboxTstFactory#createSourceFolder(int)
      */
-    public MessageFolder createFolder(int folderId) {
+    public AbstractMessageFolder createFolder(int folderId) {
         return new TempFolder(FolderTstHelper.homeDirectory + "/folders/"
                 + folderId);
     }

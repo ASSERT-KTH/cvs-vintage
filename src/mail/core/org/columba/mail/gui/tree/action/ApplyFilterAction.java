@@ -71,7 +71,7 @@ public class ApplyFilterAction extends AbstractColumbaAction implements
 		FolderCommandReference r = ((AbstractMailFrameController) getFrameMediator())
 				.getTreeSelection();
 
-		//Folder folder = (MessageFolder) r[0].getFolder();
+		//Folder folder = (AbstractMessageFolder) r[0].getFolder();
 		CommandProcessor.getInstance().addOp(new ApplyFilterCommand(r));
 	}
 

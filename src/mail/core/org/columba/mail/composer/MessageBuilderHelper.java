@@ -23,8 +23,10 @@ import java.nio.charset.Charset;
 import java.nio.charset.UnsupportedCharsetException;
 import java.util.regex.Pattern;
 
-import org.columba.addressbook.facade.ContactFacade;
+import org.columba.addressbook.facade.IContactFacade;
 import org.columba.core.io.StreamUtils;
+import org.columba.core.services.ServiceManager;
+import org.columba.core.services.ServiceNotFoundException;
 import org.columba.core.xml.XmlElement;
 import org.columba.mail.config.AccountItem;
 import org.columba.mail.config.AccountList;
@@ -429,8 +431,18 @@ public class MessageBuilderHelper {
 	 *  
 	 */
 	public static void addAddressesToAddressbook(Address[] addresses) {
+		IContactFacade contactFacade=null;
+		try {
+			contactFacade = (IContactFacade) ServiceManager.getInstance().createService("IContactFacade");
+		} catch (ServiceNotFoundException e) {
+			
+			e.printStackTrace();
+		}
+		
+		if ( contactFacade == null ) return;
+		
 		for (int i = 0; i < addresses.length; i++) {
-			ContactFacade.addContactToCollectedAddresses(addresses[i]
+			contactFacade.addContactToCollectedAddresses(addresses[i]
 					.getMailAddress());
 
 		}

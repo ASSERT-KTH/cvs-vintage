@@ -23,7 +23,7 @@ import org.columba.core.xml.XmlElement;
  * @author fdietz
  *  
  */
-public class Group {
+public class Group implements IGroup {
 
 	private XmlElement root;
 	private int folderUid;

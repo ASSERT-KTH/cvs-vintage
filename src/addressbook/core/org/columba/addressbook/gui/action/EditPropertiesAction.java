@@ -25,16 +25,18 @@ import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.TreePath;
 
 import org.columba.addressbook.folder.AbstractFolder;
-import org.columba.addressbook.folder.ContactStorage;
+import org.columba.addressbook.folder.AddressbookTreeNode;
+import org.columba.addressbook.folder.IContactStorage;
 import org.columba.addressbook.folder.GroupFolder;
 import org.columba.addressbook.gui.dialog.contact.ContactDialog;
 import org.columba.addressbook.gui.dialog.group.EditGroupDialog;
 import org.columba.addressbook.gui.frame.AddressbookFrameMediator;
 import org.columba.addressbook.gui.table.TableController;
-import org.columba.addressbook.gui.tree.AddressbookTreeNode;
 import org.columba.addressbook.gui.tree.TreeController;
 import org.columba.addressbook.model.Contact;
 import org.columba.addressbook.model.Group;
+import org.columba.addressbook.model.IContact;
+import org.columba.addressbook.model.IGroup;
 import org.columba.addressbook.util.AddressbookResourceLoader;
 import org.columba.core.gui.focus.FocusManager;
 import org.columba.core.gui.focus.FocusOwner;
@@ -94,16 +96,16 @@ public class EditPropertiesAction extends DefaultTableAction implements
 			Object[] uids = mediator.getTable().getUids();
 
 			// get selected folder
-			ContactStorage folder = (ContactStorage) mediator.getTree()
+			IContactStorage folder = (IContactStorage) mediator.getTree()
 					.getSelectedFolder();
 
 			if (uids.length == 0) {
 				return;
 			}
 
-			Contact card = null;
+			IContact card = null;
 			try {
-				card = (Contact) folder.get(uids[0]);
+				card = (IContact) folder.get(uids[0]);
 			} catch (Exception e) {
 
 				if (Main.DEBUG)
@@ -140,7 +142,7 @@ public class EditPropertiesAction extends DefaultTableAction implements
 			GroupFolder folder = (GroupFolder) mediator.getTree()
 					.getSelectedFolder();
 
-			Group card = folder.getGroup();
+			IGroup card = folder.getGroup();
 
 			EditGroupDialog dialog = new EditGroupDialog(mediator.getView()
 					.getFrame(), card, (AbstractFolder) folder.getParent());

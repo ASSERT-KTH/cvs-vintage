@@ -17,6 +17,7 @@ package org.columba.mail.facade;
 
 import javax.swing.JFrame;
 
+import org.columba.mail.gui.tree.ISelectFolderDialog;
 import org.columba.mail.gui.tree.util.SelectFolderDialog;
 
 /**
@@ -24,14 +25,14 @@ import org.columba.mail.gui.tree.util.SelectFolderDialog;
  * 
  * @author fdietz 
  */
-public class DialogFacade {
+public class DialogFacade implements IDialogFacade {
 	/**
 	 * opens a dialog which lets the user choose a folder
 	 * 
 	 * 
 	 * @return SelectedFolderDialog
 	 */
-	public SelectFolderDialog getSelectFolderDialog() {
+	public ISelectFolderDialog getSelectFolderDialog() {
 		return new SelectFolderDialog(new JFrame());
 	}
 }

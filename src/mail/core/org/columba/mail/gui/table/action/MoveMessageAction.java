@@ -27,7 +27,7 @@ import org.columba.core.gui.selection.SelectionChangedEvent;
 import org.columba.core.gui.selection.SelectionListener;
 import org.columba.core.gui.util.ImageLoader;
 import org.columba.mail.command.FolderCommandReference;
-import org.columba.mail.folder.MessageFolder;
+import org.columba.mail.folder.AbstractMessageFolder;
 import org.columba.mail.folder.command.MoveMessageCommand;
 import org.columba.mail.gui.frame.MailFrameMediator;
 import org.columba.mail.gui.table.selection.TableSelectionChangedEvent;
@@ -80,7 +80,7 @@ public class MoveMessageAction extends AbstractColumbaAction implements
 		SelectFolderDialog dialog = new SelectFolderDialog(getFrameMediator());
 
 		if (dialog.success()) {
-			MessageFolder destFolder = dialog.getSelectedFolder();
+			AbstractMessageFolder destFolder = dialog.getSelectedFolder();
 
 			FolderCommandReference result = ((MailFrameMediator) getFrameMediator())
 					.getTableSelection();

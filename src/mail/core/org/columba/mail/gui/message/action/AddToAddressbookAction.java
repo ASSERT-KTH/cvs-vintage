@@ -19,12 +19,14 @@ import java.awt.event.ActionEvent;
 import java.util.Observable;
 import java.util.Observer;
 
-import org.columba.addressbook.facade.ContactFacade;
+import org.columba.addressbook.facade.IContactFacade;
 import org.columba.addressbook.gui.tree.AddressbookTreeModel;
 import org.columba.addressbook.gui.tree.util.SelectAddressbookFolderDialog;
 import org.columba.core.action.AbstractColumbaAction;
 import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.gui.util.ImageLoader;
+import org.columba.core.services.ServiceManager;
+import org.columba.core.services.ServiceNotFoundException;
 import org.columba.mail.gui.frame.MessageViewOwner;
 import org.columba.mail.gui.message.URLObservable;
 import org.columba.mail.gui.message.util.ColumbaURL;
@@ -71,11 +73,21 @@ public class AddToAddressbookAction extends AbstractColumbaAction
             return;
         }
 
+        IContactFacade contactFacade=null;
+		try {
+			contactFacade = (IContactFacade) ServiceManager.getInstance().createService("IContactFacade");
+		} catch (ServiceNotFoundException e) {
+			
+			e.printStackTrace();
+		}
+		
+		if ( contactFacade == null ) return;
+        
         try {
 			// create Address from URL
 			Address address = Address.parse(url.getSender());
 			// add contact to addressbook
-			ContactFacade.addContact(selectedFolder.getUid(), address.toString());
+			contactFacade.addContact(selectedFolder.getUid(), address.toString());
 		} catch (ParserException e) {
 			e.printStackTrace();
 		}

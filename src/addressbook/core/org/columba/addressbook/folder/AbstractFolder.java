@@ -24,12 +24,13 @@ import java.util.logging.Logger;
 import javax.swing.event.EventListenerList;
 
 import org.columba.addressbook.config.FolderItem;
-import org.columba.addressbook.gui.tree.AddressbookTreeNode;
-import org.columba.addressbook.model.Contact;
 import org.columba.addressbook.model.ContactItem;
 import org.columba.addressbook.model.ContactItemMap;
 import org.columba.addressbook.model.GroupItem;
 import org.columba.addressbook.model.HeaderItemList;
+import org.columba.addressbook.model.IContact;
+import org.columba.addressbook.model.IContactItem;
+import org.columba.addressbook.model.IHeaderItemList;
 import org.columba.core.command.WorkerStatusController;
 import org.columba.core.config.Config;
 import org.columba.core.io.DiskIO;
@@ -41,7 +42,7 @@ import org.columba.core.io.DiskIO;
  *
  */
 public abstract class AbstractFolder extends AddressbookTreeNode implements
-		ContactStorage {
+		IContactStorage, IContactFolder {
 
 	/** JDK 1.4+ logging framework logger, used for logging. */
 	private static final Logger LOG = Logger
@@ -165,7 +166,7 @@ public abstract class AbstractFolder extends AddressbookTreeNode implements
 	}
 
 	/**
-	 * @see org.columba.addressbook.folder.ContactStorage#getHeaderItemList()
+	 * @see org.columba.addressbook.folder.IContactStorage#getHeaderItemList()
 	 */
 	public ContactItemMap getContactItemMap() throws Exception {
 		return cacheStorage.getContactItemMap();
@@ -240,12 +241,12 @@ public abstract class AbstractFolder extends AddressbookTreeNode implements
 	 */
 
 	/**
-	 * @see org.columba.addressbook.folder.ContactStorage#add(org.columba.addressbook.folder.Contact)
+	 * @see org.columba.addressbook.folder.IContactStorage#add(org.columba.addressbook.folder.Contact)
 	 */
-	public Object add(Contact contact) throws Exception {
+	public Object add(IContact contact) throws Exception {
 		Object uid = generateNextMessageUid();
 
-		ContactItem item = new ContactItem(contact);
+		IContactItem item = new ContactItem(contact);
 		item.setUid(uid);
 
 		cacheStorage.add(uid, item);
@@ -257,12 +258,12 @@ public abstract class AbstractFolder extends AddressbookTreeNode implements
 
 	/**
 	 * 
-	 * @see org.columba.addressbook.folder.ContactStorage#modify(java.lang.Object,
+	 * @see org.columba.addressbook.folder.IContactStorage#modify(java.lang.Object,
 	 *      org.columba.addressbook.folder.Contact)
 	 */
-	public void modify(Object uid, Contact contact) throws Exception {
+	public void modify(Object uid, IContact contact) throws Exception {
 
-		ContactItem item = new ContactItem(contact);
+		IContactItem item = new ContactItem(contact);
 
 		item.setUid(uid);
 
@@ -272,7 +273,7 @@ public abstract class AbstractFolder extends AddressbookTreeNode implements
 	}
 
 	/**
-	 * @see org.columba.addressbook.folder.ContactStorage#remove(java.lang.Object)
+	 * @see org.columba.addressbook.folder.IContactStorage#remove(java.lang.Object)
 	 */
 	public void remove(Object uid) throws Exception {
 		cacheStorage.remove(uid);
@@ -281,19 +282,19 @@ public abstract class AbstractFolder extends AddressbookTreeNode implements
 	}
 
 	/**
-	 * @see org.columba.addressbook.folder.ContactStorage#get(java.lang.Object)
+	 * @see org.columba.addressbook.folder.IContactStorage#get(java.lang.Object)
 	 */
-	public abstract Contact get(Object uid) throws Exception;
+	public abstract IContact get(Object uid) throws Exception;
 
 	/**
-	 * @see org.columba.addressbook.folder.ContactStorage#count()
+	 * @see org.columba.addressbook.folder.IContactStorage#count()
 	 */
 	public int count() {
 		return cacheStorage.count();
 	}
 
 	/**
-	 * @see org.columba.addressbook.folder.ContactStorage#exists(java.lang.Object)
+	 * @see org.columba.addressbook.folder.IContactStorage#exists(java.lang.Object)
 	 */
 	public boolean exists(Object uid) {
 		return cacheStorage.exists(uid);
@@ -307,9 +308,9 @@ public abstract class AbstractFolder extends AddressbookTreeNode implements
 	 * 
 	 * @return
 	 */
-	public HeaderItemList getHeaderItemList() throws Exception {
+	public IHeaderItemList getHeaderItemList() throws Exception {
 		// create list containing all contact item of this folder
-		HeaderItemList list = new HeaderItemList(getContactItemMap());
+		IHeaderItemList list = new HeaderItemList(getContactItemMap());
 
 		// add group items
 		for (int i = 0; i < getChildCount(); i++) {

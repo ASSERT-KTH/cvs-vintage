@@ -17,8 +17,11 @@
 //All Rights Reserved.
 package org.columba.mail.filter.plugins;
 
+import org.columba.addressbook.facade.IFolderFacade;
+import org.columba.core.services.ServiceManager;
+import org.columba.core.services.ServiceNotFoundException;
 import org.columba.mail.filter.FilterCriteria;
-import org.columba.mail.folder.MessageFolder;
+import org.columba.mail.folder.AbstractMessageFolder;
 import org.columba.ristretto.message.Address;
 import org.columba.ristretto.message.Header;
 import org.columba.ristretto.parser.AddressParser;
@@ -31,45 +34,58 @@ import org.columba.ristretto.parser.AddressParser;
  */
 public class AddressbookFilter extends AbstractFilter {
 
-    public AddressbookFilter() {
+	public AddressbookFilter() {
 
-    }
+	}
 
-    /**
-     * @see org.columba.mail.filter.plugins.AbstractFilter#process(org.columba.mail.folder.Folder,
-     *      java.lang.Object)
-     */
-    public boolean process(MessageFolder folder, Object uid) throws Exception {
-        Header header = folder.getHeaderFields(uid, new String[] { "From"});
-        String from = header.get("From");
+	/**
+	 * @see org.columba.mail.filter.plugins.AbstractFilter#process(org.columba.mail.folder.Folder,
+	 *      java.lang.Object)
+	 */
+	public boolean process(AbstractMessageFolder folder, Object uid) throws Exception {
+		Header header = folder.getHeaderFields(uid, new String[] { "From" });
+		String from = header.get("From");
 
-        Address address = null;
-        try {
-            address = AddressParser.parseAddress(from);
-        } catch (Exception ex) {
-            return false;
-        }
+		Address address = null;
+		try {
+			address = AddressParser.parseAddress(from);
+		} catch (Exception ex) {
+			return false;
+		}
 
-        org.columba.addressbook.folder.AbstractFolder addressbook = org.columba.addressbook.facade.FolderFacade
-                .getCollectedAddresses();
+		IFolderFacade folderFacade = null;
+		try {
+			folderFacade = (IFolderFacade) ServiceManager.getInstance()
+					.createService("IContactFacade");
+		} catch (ServiceNotFoundException e) {
 
-        Object contactUid = addressbook.exists(address.getMailAddress());
-        if (contactUid != null) return true;
+			e.printStackTrace();
+		}
 
-        addressbook = org.columba.addressbook.facade.FolderFacade
-                .getAddressbook(101);
+		if (folderFacade == null)
+			return false;
 
-        contactUid = addressbook.exists(address.getMailAddress());
-        
-        if (contactUid != null) return true;
+		org.columba.addressbook.folder.IContactFolder addressbook = folderFacade
+				.getCollectedAddresses();
 
-        return false;
-    }
+		Object contactUid = addressbook.exists(address.getMailAddress());
+		if (contactUid != null)
+			return true;
 
-    /**
-     * @see org.columba.mail.filter.plugins.AbstractFilter#setUp(org.columba.mail.filter.FilterCriteria)
-     */
-    public void setUp(FilterCriteria f) {
+		addressbook = folderFacade.getLocalAddressbook();
 
-    }
+		contactUid = addressbook.exists(address.getMailAddress());
+
+		if (contactUid != null)
+			return true;
+
+		return false;
+	}
+
+	/**
+	 * @see org.columba.mail.filter.plugins.AbstractFilter#setUp(org.columba.mail.filter.FilterCriteria)
+	 */
+	public void setUp(FilterCriteria f) {
+
+	}
 }

@@ -20,13 +20,14 @@ package org.columba.addressbook.gui.action;
 import java.awt.event.ActionEvent;
 
 import org.columba.addressbook.folder.AddressbookFolder;
+import org.columba.addressbook.folder.AddressbookTreeNode;
 import org.columba.addressbook.folder.FolderFactory;
 import org.columba.addressbook.folder.GroupFolder;
 import org.columba.addressbook.gui.dialog.group.EditGroupDialog;
 import org.columba.addressbook.gui.frame.AddressbookFrameMediator;
 import org.columba.addressbook.gui.tree.AddressbookTreeModel;
-import org.columba.addressbook.gui.tree.AddressbookTreeNode;
 import org.columba.addressbook.model.Group;
+import org.columba.addressbook.model.IGroup;
 import org.columba.addressbook.util.AddressbookResourceLoader;
 import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.gui.util.ImageLoader;
@@ -69,7 +70,7 @@ public class AddGroupCardAction extends DefaultTreeAction {
 			return;
 		}
 
-		Group group = new Group();
+		IGroup group = new Group();
 
 		EditGroupDialog dialog = new EditGroupDialog(mediator.getView()
 				.getFrame(), group, folder);

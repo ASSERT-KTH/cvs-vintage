@@ -20,6 +20,7 @@ package org.columba.addressbook.folder;
 import java.io.File;
 
 import org.columba.addressbook.model.Contact;
+import org.columba.addressbook.model.IContact;
 import org.columba.core.xml.XmlNewIO;
 import org.jdom.Document;
 
@@ -46,14 +47,14 @@ public class XmlDataStorage implements DataStorage {
 	/**
 	 * @see org.columba.addressbook.folder.DataStorage#load(java.lang.Object)
 	 */
-	public Contact load(Object uid) throws Exception {
+	public IContact load(Object uid) throws Exception {
 		File file = getFile(uid);
 
 		Document doc = XmlNewIO.load(file);
 
 		if ( doc == null) return null;
 		
-		Contact contact = new Contact(doc, uid);
+		IContact contact = new Contact(doc, uid);
 		
 
 		return contact;
@@ -73,7 +74,7 @@ public class XmlDataStorage implements DataStorage {
 	 * @see org.columba.addressbook.folder.DataStorage#save(java.lang.Object,
 	 *      org.columba.addressbook.folder.Contact)
 	 */
-	public void save(Object uid, Contact contact) throws Exception {
+	public void save(Object uid, IContact contact) throws Exception {
 		File file = getFile(uid);
 
 		XmlNewIO.save(contact.getDocument(), file);
@@ -84,7 +85,7 @@ public class XmlDataStorage implements DataStorage {
 	 * @see org.columba.addressbook.folder.DataStorage#modify(java.lang.Object,
 	 *      org.columba.addressbook.folder.Contact)
 	 */
-	public void modify(Object uid, Contact contact) throws Exception {
+	public void modify(Object uid, IContact contact) throws Exception {
 		save(uid, contact);
 
 	}

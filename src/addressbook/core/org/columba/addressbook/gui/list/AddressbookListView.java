@@ -20,6 +20,8 @@ import javax.swing.JList;
 
 import org.columba.addressbook.model.HeaderItem;
 import org.columba.addressbook.model.HeaderItemList;
+import org.columba.addressbook.model.IHeaderItem;
+import org.columba.addressbook.model.IHeaderItemList;
 
 
 public class AddressbookListView extends JList {
@@ -45,7 +47,7 @@ public class AddressbookListView extends JList {
         setBorder(BorderFactory.createEmptyBorder(2, 2, 2, 2));
     }
 
-    public void setHeaderItemList(HeaderItemList list) {
+    public void setHeaderItemList(IHeaderItemList list) {
         removeAll();
 
         model.setHeaderItemList(list);
@@ -56,12 +58,12 @@ public class AddressbookListView extends JList {
         super.setModel(model);
     }
 
-    public void addElement(HeaderItem item) {
+    public void addElement(IHeaderItem item) {
         model.addElement(item);
     }
 
-    public HeaderItem get(int index) {
-        HeaderItem item = (HeaderItem) model.get(index);
+    public IHeaderItem get(int index) {
+        IHeaderItem item = (IHeaderItem) model.get(index);
 
         return item;
     }

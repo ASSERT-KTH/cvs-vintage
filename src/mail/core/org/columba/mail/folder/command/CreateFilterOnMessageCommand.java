@@ -26,7 +26,7 @@ import org.columba.core.xml.XmlElement;
 import org.columba.mail.command.FolderCommand;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.filter.Filter;
-import org.columba.mail.folder.MessageFolder;
+import org.columba.mail.folder.AbstractMessageFolder;
 import org.columba.mail.gui.config.filter.FilterDialog;
 import org.columba.ristretto.message.Header;
 
@@ -59,7 +59,7 @@ public class CreateFilterOnMessageCommand extends FolderCommand {
     private Filter filter = null;
 
     /** The source folder where the filter should be added to. */
-    private MessageFolder srcFolder;
+    private AbstractMessageFolder srcFolder;
 
     /**
      * Constructor for CreateFilterOnMessageCommand. Calls super constructor
@@ -113,7 +113,7 @@ public class CreateFilterOnMessageCommand extends FolderCommand {
         }
 
         Object uid = uids[0];
-        srcFolder = (MessageFolder) r.getFolder();
+        srcFolder = (AbstractMessageFolder) r.getFolder();
 
         // register for status events
         ((StatusObservableImpl) srcFolder.getObservable()).setWorker(worker);

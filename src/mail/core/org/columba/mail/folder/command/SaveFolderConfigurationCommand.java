@@ -21,7 +21,7 @@ import org.columba.core.command.WorkerStatusController;
 import org.columba.mail.command.FolderCommand;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.folder.AbstractFolder;
-import org.columba.mail.folder.MessageFolder;
+import org.columba.mail.folder.AbstractMessageFolder;
 
 /**
  * Save folder configuration including MessageFolderInfo and headercache to
@@ -52,10 +52,10 @@ public class SaveFolderConfigurationCommand extends FolderCommand {
 				.getFolder();
 
 		// if folder is message folder
-		// ->TODO: there should be an interface, instead of the MessageFolder
+		// ->TODO: there should be an interface, instead of the AbstractMessageFolder
 		// class
-		if (folderTreeNode instanceof MessageFolder) {
-			MessageFolder folder = (MessageFolder) folderTreeNode;
+		if (folderTreeNode instanceof AbstractMessageFolder) {
+			AbstractMessageFolder folder = (AbstractMessageFolder) folderTreeNode;
 
 			// register for status events
 			((StatusObservableImpl) folder.getObservable()).setWorker(worker);

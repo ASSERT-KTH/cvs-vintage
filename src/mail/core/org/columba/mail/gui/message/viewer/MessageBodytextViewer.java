@@ -47,7 +47,7 @@ import org.columba.core.io.DiskIO;
 import org.columba.core.io.TempFileStore;
 import org.columba.core.xml.XmlElement;
 import org.columba.mail.config.MailConfig;
-import org.columba.mail.folder.MessageFolder;
+import org.columba.mail.folder.AbstractMessageFolder;
 import org.columba.mail.gui.frame.MailFrameMediator;
 import org.columba.mail.gui.message.util.DocumentParser;
 import org.columba.mail.parser.text.HtmlParser;
@@ -193,7 +193,7 @@ public class MessageBodytextViewer extends JTextPane implements Viewer,
 	 * @see org.columba.mail.gui.message.viewer.Viewer#getViewer(org.columba.mail.folder.Folder,
 	 *      java.lang.Object)
 	 */
-	public void view(MessageFolder folder, Object uid,
+	public void view(AbstractMessageFolder folder, Object uid,
 			MailFrameMediator mediator) throws Exception {
 		MimePart bodyPart = null;
 		InputStream bodyStream;

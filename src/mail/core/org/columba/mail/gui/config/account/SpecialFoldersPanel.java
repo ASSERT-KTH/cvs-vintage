@@ -37,7 +37,7 @@ import org.columba.core.gui.util.LabelWithMnemonic;
 import org.columba.mail.config.AccountItem;
 import org.columba.mail.config.MailConfig;
 import org.columba.mail.config.SpecialFoldersItem;
-import org.columba.mail.folder.MessageFolder;
+import org.columba.mail.folder.AbstractMessageFolder;
 import org.columba.mail.gui.tree.TreeModel;
 import org.columba.mail.gui.tree.util.SelectFolderDialog;
 import org.columba.mail.gui.tree.util.TreeNodeList;
@@ -75,7 +75,7 @@ public class SpecialFoldersPanel extends DefaultPanel implements ActionListener 
     protected String getPath(String uid) {
         Integer u = new Integer(uid);
 
-        MessageFolder f = (MessageFolder) TreeModel.getInstance().getFolder(u.intValue());
+        AbstractMessageFolder f = (AbstractMessageFolder) TreeModel.getInstance().getFolder(u.intValue());
 
         if (f == null) {
             return ""; //$NON-NLS-1$
@@ -86,7 +86,7 @@ public class SpecialFoldersPanel extends DefaultPanel implements ActionListener 
 
     protected String getUid(String treePath) {
         TreeNodeList list = new TreeNodeList(treePath);
-        MessageFolder f = (MessageFolder) TreeModel.getInstance().getFolder(list);
+        AbstractMessageFolder f = (AbstractMessageFolder) TreeModel.getInstance().getFolder(list);
 
         if (f == null) {
             return ""; //$NON-NLS-1$
@@ -334,7 +334,7 @@ public class SpecialFoldersPanel extends DefaultPanel implements ActionListener 
 
 
             if (dialog.success()) {
-                MessageFolder selectedFolder = dialog.getSelectedFolder();
+                AbstractMessageFolder selectedFolder = dialog.getSelectedFolder();
                 String path = selectedFolder.getTreePath();
 
                 trashButton.setText(path);
@@ -348,7 +348,7 @@ public class SpecialFoldersPanel extends DefaultPanel implements ActionListener 
 
 
             if (dialog.success()) {
-                MessageFolder selectedFolder = dialog.getSelectedFolder();
+                AbstractMessageFolder selectedFolder = dialog.getSelectedFolder();
                 String path = selectedFolder.getTreePath();
 
                 inboxButton.setText(path);
@@ -362,7 +362,7 @@ public class SpecialFoldersPanel extends DefaultPanel implements ActionListener 
 
 
             if (dialog.success()) {
-                MessageFolder selectedFolder = dialog.getSelectedFolder();
+                AbstractMessageFolder selectedFolder = dialog.getSelectedFolder();
                 String path = selectedFolder.getTreePath();
 
                 draftsButton.setText(path);
@@ -376,7 +376,7 @@ public class SpecialFoldersPanel extends DefaultPanel implements ActionListener 
 
 
             if (dialog.success()) {
-                MessageFolder selectedFolder = dialog.getSelectedFolder();
+                AbstractMessageFolder selectedFolder = dialog.getSelectedFolder();
                 String path = selectedFolder.getTreePath();
 
                 templatesButton.setText(path);
@@ -390,7 +390,7 @@ public class SpecialFoldersPanel extends DefaultPanel implements ActionListener 
 
 
             if (dialog.success()) {
-                MessageFolder selectedFolder = dialog.getSelectedFolder();
+                AbstractMessageFolder selectedFolder = dialog.getSelectedFolder();
                 String path = selectedFolder.getTreePath();
 
                 sentButton.setText(path);

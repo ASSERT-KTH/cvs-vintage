@@ -29,7 +29,7 @@ import org.columba.ristretto.message.Header;
  * @author fdietz
  *
  */
-public interface HeaderStorage {
+public interface IHeaderStorage {
     /**
      * @param uid
      *            UID of message

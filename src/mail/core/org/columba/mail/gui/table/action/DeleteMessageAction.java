@@ -27,7 +27,7 @@ import org.columba.core.gui.selection.SelectionChangedEvent;
 import org.columba.core.gui.selection.SelectionListener;
 import org.columba.core.gui.util.ImageLoader;
 import org.columba.mail.command.FolderCommandReference;
-import org.columba.mail.folder.MessageFolder;
+import org.columba.mail.folder.AbstractMessageFolder;
 import org.columba.mail.folder.RootFolder;
 import org.columba.mail.folder.command.ExpungeFolderCommand;
 import org.columba.mail.folder.command.MarkMessageCommand;
@@ -87,11 +87,11 @@ public class DeleteMessageAction extends AbstractColumbaAction
         FolderCommandReference r = ((MailFrameMediator) getFrameMediator()).getTableSelection();
         r.setMarkVariant(MarkMessageCommand.MARK_AS_EXPUNGED);
 
-        MessageFolder folder = (MessageFolder) r.getFolder();
+        AbstractMessageFolder folder = (AbstractMessageFolder) r.getFolder();
         int uid = folder.getConfiguration().getInteger("uid");
-        MessageFolder trash = (MessageFolder) ((RootFolder) folder.getRootFolder()).getTrashFolder();
+        AbstractMessageFolder trash = (AbstractMessageFolder) ((RootFolder) folder.getRootFolder()).getTrashFolder();
 
-        //Folder trash = (MessageFolder) MainInterface.treeModel.getTrashFolder();
+        //Folder trash = (AbstractMessageFolder) MainInterface.treeModel.getTrashFolder();
         // trash folder has uid==105
         if (uid == trash.getUid()) {
             // trash folder is selected
@@ -101,7 +101,7 @@ public class DeleteMessageAction extends AbstractColumbaAction
         	CommandProcessor.getInstance().addOp(new ExpungeFolderCommand(r));
         } else {
             // -> move messages to trash
-            MessageFolder destFolder = trash;
+            AbstractMessageFolder destFolder = trash;
 
             FolderCommandReference result = ((MailFrameMediator) getFrameMediator()).getTableSelection();
             result.setDestinationFolder(destFolder);

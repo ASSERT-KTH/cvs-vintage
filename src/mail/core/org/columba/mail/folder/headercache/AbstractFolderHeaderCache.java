@@ -18,7 +18,7 @@ package org.columba.mail.folder.headercache;
 import java.io.File;
 
 import org.columba.core.command.StatusObservable;
-import org.columba.mail.folder.MessageFolder;
+import org.columba.mail.folder.AbstractMessageFolder;
 
 
 /**
@@ -28,12 +28,12 @@ import org.columba.mail.folder.MessageFolder;
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
 public abstract class AbstractFolderHeaderCache extends AbstractHeaderCache {
-    protected MessageFolder folder;
+    protected AbstractMessageFolder folder;
 
     /**
  * @param folder
  */
-    public AbstractFolderHeaderCache(MessageFolder folder) {
+    public AbstractFolderHeaderCache(AbstractMessageFolder folder) {
         super(new File(folder.getDirectoryFile(), ".header"));
         this.folder = folder;
     }

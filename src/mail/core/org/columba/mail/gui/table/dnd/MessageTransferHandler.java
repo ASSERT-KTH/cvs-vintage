@@ -27,7 +27,7 @@ import javax.swing.TransferHandler;
 
 import org.columba.core.command.CommandProcessor;
 import org.columba.mail.command.FolderCommandReference;
-import org.columba.mail.folder.MessageFolder;
+import org.columba.mail.folder.AbstractMessageFolder;
 import org.columba.mail.folder.command.CopyMessageCommand;
 import org.columba.mail.gui.frame.MailFrameMediator;
 import org.columba.mail.gui.table.TableController;
@@ -103,7 +103,7 @@ public class MessageTransferHandler extends TransferHandler {
 		 */
 
 		// do the work here
-		MessageFolder destFolder = (MessageFolder) target.getSelectionPath()
+		AbstractMessageFolder destFolder = (AbstractMessageFolder) target.getSelectionPath()
 				.getLastPathComponent();
 		reference.setDestinationFolder(destFolder);
 

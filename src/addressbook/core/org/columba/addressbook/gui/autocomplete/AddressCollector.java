@@ -27,6 +27,8 @@ import org.columba.addressbook.model.ContactItem;
 import org.columba.addressbook.model.GroupItem;
 import org.columba.addressbook.model.HeaderItem;
 import org.columba.addressbook.model.HeaderItemList;
+import org.columba.addressbook.model.IHeaderItem;
+import org.columba.addressbook.model.IHeaderItemList;
 import org.frapuccino.addresscombobox.ItemProvider;
 
 public class AddressCollector implements ItemProvider {
@@ -47,7 +49,7 @@ public class AddressCollector implements ItemProvider {
 	 * @param includeGroup	add groups if true. No groups, otherwise.
 	 */
 	public void addAllContacts(int uid, boolean includeGroup) {
-		HeaderItemList list = null;
+		IHeaderItemList list = null;
 
 		try {
 			AbstractFolder folder = (AbstractFolder) AddressbookTreeModel.getInstance()
@@ -90,7 +92,7 @@ public class AddressCollector implements ItemProvider {
 		return instance;
 	}
 
-	public void addAddress(String add, HeaderItem item) {
+	public void addAddress(String add, IHeaderItem item) {
 		if (add != null) {
 			_adds.put(add, item);
 		}

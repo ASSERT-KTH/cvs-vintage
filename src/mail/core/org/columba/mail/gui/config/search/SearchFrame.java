@@ -53,7 +53,7 @@ import org.columba.core.gui.util.ImageLoader;
 import org.columba.core.gui.util.LabelWithMnemonic;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.filter.FilterRule;
-import org.columba.mail.folder.MessageFolder;
+import org.columba.mail.folder.AbstractMessageFolder;
 import org.columba.mail.folder.virtual.VirtualFolder;
 import org.columba.mail.gui.config.filter.CriteriaList;
 import org.columba.mail.gui.frame.MailFrameMediator;
@@ -91,7 +91,7 @@ public class SearchFrame extends JDialog implements ActionListener {
 
 	private FrameMediator frameController;
 
-	public SearchFrame(FrameMediator frameController, MessageFolder searchFolder) {
+	public SearchFrame(FrameMediator frameController, AbstractMessageFolder searchFolder) {
 		super(frameController.getView().getFrame(), true);
 
 		this.frameController = frameController;
@@ -108,7 +108,7 @@ public class SearchFrame extends JDialog implements ActionListener {
 	}
 
 	public SearchFrame(FrameMediator frameController,
-			MessageFolder searchFolder, MessageFolder sourceFolder) {
+			AbstractMessageFolder searchFolder, AbstractMessageFolder sourceFolder) {
 		super(frameController.getView().getFrame(), true);
 
 		this.frameController = frameController;
@@ -302,15 +302,15 @@ public class SearchFrame extends JDialog implements ActionListener {
 			int uid = destFolder.getConfiguration().getInteger("property",
 					"source_uid");
 
-			MessageFolder f = (MessageFolder) TreeModel.getInstance()
+			AbstractMessageFolder f = (AbstractMessageFolder) TreeModel.getInstance()
 					.getFolder(uid);
 
-			// If f==null because of deleted MessageFolder fallback to Inbox
+			// If f==null because of deleted AbstractMessageFolder fallback to Inbox
 			if (f == null) {
 				uid = 101;
 				destFolder.getConfiguration()
 						.set("property", "source_uid", uid);
-				f = (MessageFolder) TreeModel.getInstance().getFolder(uid);
+				f = (AbstractMessageFolder) TreeModel.getInstance().getFolder(uid);
 			}
 
 			selectButton.setText(f.getTreePath());
@@ -337,7 +337,7 @@ public class SearchFrame extends JDialog implements ActionListener {
 
 			String path = selectButton.getText();
 			TreeNodeList list = new TreeNodeList(path);
-			MessageFolder folder = (MessageFolder) TreeModel.getInstance()
+			AbstractMessageFolder folder = (AbstractMessageFolder) TreeModel.getInstance()
 					.getFolder(list);
 			int uid = folder.getUid();
 			destFolder.getConfiguration().set("property", "source_uid", uid);
@@ -346,7 +346,7 @@ public class SearchFrame extends JDialog implements ActionListener {
 		}
 	}
 
-	public void setSourceFolder(MessageFolder f) {
+	public void setSourceFolder(AbstractMessageFolder f) {
 		selectButton.setText(f.getTreePath());
 	}
 
@@ -362,7 +362,7 @@ public class SearchFrame extends JDialog implements ActionListener {
 			SelectFolderDialog dialog = new SelectFolderDialog(frameController);
 
 			if (dialog.success()) {
-				MessageFolder folder = dialog.getSelectedFolder();
+				AbstractMessageFolder folder = dialog.getSelectedFolder();
 				String path = folder.getTreePath();
 
 				selectButton.setText(path);

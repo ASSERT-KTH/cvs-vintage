@@ -21,6 +21,7 @@ import javax.swing.JTree;
 import javax.swing.ListSelectionModel;
 
 import org.columba.addressbook.folder.AbstractFolder;
+import org.columba.addressbook.folder.AddressbookTreeNode;
 import org.columba.addressbook.gui.frame.AddressbookFrameController;
 import org.columba.addressbook.gui.tree.util.AddressbookTreeCellRenderer;
 

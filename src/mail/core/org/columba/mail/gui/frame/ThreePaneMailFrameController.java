@@ -39,7 +39,7 @@ import org.columba.core.pluginhandler.MenuPluginHandler;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.config.MailConfig;
 import org.columba.mail.folder.AbstractFolder;
-import org.columba.mail.folder.MessageFolder;
+import org.columba.mail.folder.AbstractMessageFolder;
 import org.columba.mail.gui.attachment.selection.AttachmentSelectionHandler;
 import org.columba.mail.gui.composer.HeaderController;
 import org.columba.mail.gui.infopanel.FolderInfoPanel;
@@ -321,8 +321,8 @@ public class ThreePaneMailFrameController extends AbstractMailFrameController
 
 			// folder-based configuration
 			
-			 if (folder instanceof MessageFolder) 
-			 	getFolderOptionsController().save((MessageFolder)folder);
+			 if (folder instanceof AbstractMessageFolder) 
+			 	getFolderOptionsController().save((AbstractMessageFolder)folder);
 		}
 	}
 

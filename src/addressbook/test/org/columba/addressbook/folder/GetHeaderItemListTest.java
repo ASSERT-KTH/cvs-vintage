@@ -20,6 +20,7 @@ package org.columba.addressbook.folder;
 import org.columba.addressbook.model.Contact;
 import org.columba.addressbook.model.ContactItemMap;
 import org.columba.addressbook.model.HeaderItem;
+import org.columba.addressbook.model.IContact;
 import org.columba.addressbook.model.VCARD;
 
 /**
@@ -40,7 +41,7 @@ public class GetHeaderItemListTest extends AbstractFolderTstCase {
 	 * Class under test for HeaderItemList getHeaderItemList()
 	 */
 	public void testGetHeaderItemList() throws Exception {
-		Contact c = new Contact();
+		IContact c = new Contact();
 
 		c.set(VCARD.DISPLAYNAME, "displayname");
 

@@ -25,7 +25,7 @@ import org.columba.core.gui.selection.SelectionHandler;
 import org.columba.core.gui.selection.SelectionListener;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.folder.AbstractFolder;
-import org.columba.mail.folder.MessageFolder;
+import org.columba.mail.folder.AbstractMessageFolder;
 import org.columba.mail.gui.attachment.AttachmentController;
 import org.columba.mail.gui.attachment.AttachmentView;
 import org.columba.mail.gui.frame.TableViewOwner;
@@ -40,7 +40,7 @@ public class AttachmentSelectionHandler extends SelectionHandler implements
 	private static final Logger LOG = Logger
 			.getLogger("org.columba.mail.gui.attachment");
 
-	private MessageFolder folder;
+	private AbstractMessageFolder folder;
 
 	private Object messageUid;
 
@@ -103,7 +103,7 @@ public class AttachmentSelectionHandler extends SelectionHandler implements
 
 	public void setLocalReference(FolderCommandReference r) {
 		// set selection
-		this.folder = (MessageFolder) r.getFolder();
+		this.folder = (AbstractMessageFolder) r.getFolder();
 		this.messageUid = r.getUids()[0];
 
 		useLocalSelection = true;
@@ -118,7 +118,7 @@ public class AttachmentSelectionHandler extends SelectionHandler implements
 		Object[] uids = ((TableSelectionChangedEvent) e).getUids();
 
 		if (uids.length != 0) {
-			this.folder = (MessageFolder) folder;
+			this.folder = (AbstractMessageFolder) folder;
 			this.messageUid = uids[0];
 		} else {
 			this.folder = null;

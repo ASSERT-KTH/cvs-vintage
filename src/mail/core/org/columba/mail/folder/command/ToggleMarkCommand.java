@@ -30,7 +30,7 @@ import org.columba.mail.command.FolderCommand;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.config.AccountItem;
 import org.columba.mail.folder.AbstractFolder;
-import org.columba.mail.folder.MessageFolder;
+import org.columba.mail.folder.AbstractMessageFolder;
 import org.columba.mail.folder.RootFolder;
 import org.columba.mail.gui.tree.TreeModel;
 import org.columba.mail.spam.command.CommandHelper;
@@ -87,7 +87,7 @@ public class ToggleMarkCommand extends FolderCommand {
 		Object[] uids = r.getUids();
 
 		// get source folder
-		MessageFolder srcFolder = (MessageFolder) r.getFolder();
+		AbstractMessageFolder srcFolder = (AbstractMessageFolder) r.getFolder();
 
 		// register for status events
 		((StatusObservableImpl) srcFolder.getObservable()).setWorker(worker);
@@ -176,7 +176,7 @@ public class ToggleMarkCommand extends FolderCommand {
 	 *            mark variant (spam/not spam)
 	 * @throws Exception
 	 */
-	private void processSpamFilter(Object[] uids, MessageFolder srcFolder,
+	private void processSpamFilter(Object[] uids, AbstractMessageFolder srcFolder,
 			int markVariant) throws Exception {
 
 		// update status message
@@ -245,7 +245,7 @@ public class ToggleMarkCommand extends FolderCommand {
 
 			} else {
 				// move message to trash
-				MessageFolder trash = (MessageFolder) ((RootFolder) srcFolder
+				AbstractMessageFolder trash = (AbstractMessageFolder) ((RootFolder) srcFolder
 						.getRootFolder()).getTrashFolder();
 
 				// create reference

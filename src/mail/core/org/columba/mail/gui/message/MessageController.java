@@ -45,7 +45,7 @@ import org.columba.core.gui.focus.FocusManager;
 import org.columba.core.gui.focus.FocusOwner;
 import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.gui.menu.ColumbaPopupMenu;
-import org.columba.mail.folder.MessageFolder;
+import org.columba.mail.folder.AbstractMessageFolder;
 import org.columba.mail.gui.attachment.AttachmentController;
 import org.columba.mail.gui.frame.MailFrameMediator;
 import org.columba.mail.gui.message.command.ViewMessageCommand;
@@ -64,7 +64,7 @@ import org.columba.mail.gui.util.URLController;
 public class MessageController implements HyperlinkListener, MouseListener,
         CharsetListener, FocusOwner, CaretListener {
 
-    private MessageFolder folder;
+    private AbstractMessageFolder folder;
 
     private Object uid;
 
@@ -151,11 +151,11 @@ public class MessageController implements HyperlinkListener, MouseListener,
         return uid;
     }
 
-    public MessageFolder getFolder() {
+    public AbstractMessageFolder getFolder() {
         return folder;
     }
 
-    public void setFolder(MessageFolder f) {
+    public void setFolder(AbstractMessageFolder f) {
         this.folder = f;
     }
 
@@ -559,7 +559,7 @@ public class MessageController implements HyperlinkListener, MouseListener,
      * @param uid			selected message UID
      * @throws Exception
      */
-    public void showMessage(MessageFolder folder, Object uid) throws Exception {
+    public void showMessage(AbstractMessageFolder folder, Object uid) throws Exception {
 
         getBodytextViewer().view(folder, uid,
                 (MailFrameMediator) frameController);

@@ -21,7 +21,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
 
-import org.columba.addressbook.folder.ContactStorage;
+import org.columba.addressbook.folder.IContactStorage;
 import org.columba.addressbook.folder.GroupFolder;
 import org.columba.addressbook.gui.tree.AddressbookTreeModel;
 import org.columba.addressbook.model.Contact;
@@ -29,6 +29,9 @@ import org.columba.addressbook.model.ContactItem;
 import org.columba.addressbook.model.ContactItemMap;
 import org.columba.addressbook.model.HeaderItem;
 import org.columba.addressbook.model.HeaderItemList;
+import org.columba.addressbook.model.IContact;
+import org.columba.addressbook.model.IContactItem;
+import org.columba.addressbook.model.IHeaderItemList;
 import org.columba.addressbook.model.VCARD;
 import org.columba.core.main.Main;
 
@@ -70,7 +73,7 @@ public class ListBuilder {
 	
 				Iterator it2 = map.iterator();
 				while (it2.hasNext()) {
-					ContactItem i = (ContactItem) it2.next();
+					IContactItem i = (IContactItem) it2.next();
 					String address = i.getAddress();
 	
 					if (address == null) {
@@ -94,13 +97,13 @@ public class ListBuilder {
 				// -> if so, retrieve email address from contact folder
 				
 				// look into both folders
-				ContactStorage personal = (ContactStorage) AddressbookTreeModel.getInstance()
+				IContactStorage personal = (IContactStorage) AddressbookTreeModel.getInstance()
 						.getFolder(101);
-				ContactStorage collected = (ContactStorage) AddressbookTreeModel.getInstance()
+				IContactStorage collected = (IContactStorage) AddressbookTreeModel.getInstance()
 						.getFolder(102);
 	
 				// try to find a matching contact item
-				Contact item = null;
+				IContact item = null;
 				try {
 	
 					Object uid = personal.exists(s);
@@ -138,7 +141,7 @@ public class ListBuilder {
 	 *            HeaderItemList containing HeaderItem objects
 	 * @return list containing only strings
 	 */
-	public static List createStringListFromItemList(HeaderItemList list) {
+	public static List createStringListFromItemList(IHeaderItemList list) {
 		List result = new Vector();
 	
 		for (Iterator it = list.iterator(); it.hasNext();) {

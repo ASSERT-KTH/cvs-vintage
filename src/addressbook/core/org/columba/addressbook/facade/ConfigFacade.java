@@ -24,8 +24,8 @@ import org.columba.core.xml.XmlElement;
  * 
  * @author fdietz
  */
-public class AddressbookFacade {
-    public static XmlElement getConfigElement(String configName) {
+public class ConfigFacade implements IConfigFacade {
+    public XmlElement getConfigElement(String configName) {
         XmlElement root = AddressbookConfig.getInstance().get(configName);
 
         return root;

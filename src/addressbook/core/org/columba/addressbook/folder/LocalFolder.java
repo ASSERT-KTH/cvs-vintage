@@ -19,17 +19,18 @@ import java.util.logging.Logger;
 
 import org.columba.addressbook.config.FolderItem;
 import org.columba.addressbook.model.Contact;
+import org.columba.addressbook.model.IContact;
 
 
 /**
  *
  * LocalFolder-class gives as an additional abstraction-layer:
- *  --> DataStorageInterface
+ *  --> IDataStorage
  *
  * this makes it very easy to add other folder-formats
  *
  * the important methods from Folder are just mapped to
- * the corresponding methods from DataStorageInterface
+ * the corresponding methods from IDataStorage
  *
  *
  */
@@ -54,9 +55,9 @@ public abstract class LocalFolder extends AbstractFolder {
 
   
 	/**
-	 * @see org.columba.addressbook.folder.ContactStorage#add(org.columba.addressbook.folder.Contact)
+	 * @see org.columba.addressbook.folder.IContactStorage#add(org.columba.addressbook.folder.Contact)
 	 */
-	public Object add(Contact contact) throws Exception{
+	public Object add(IContact contact) throws Exception{
 		Object uid = super.add(contact);
 
         getDataStorageInstance().save(uid, contact);
@@ -64,22 +65,22 @@ public abstract class LocalFolder extends AbstractFolder {
         return uid;
 	}
 	/**
-	 * @see org.columba.addressbook.folder.ContactStorage#get(java.lang.Object)
+	 * @see org.columba.addressbook.folder.IContactStorage#get(java.lang.Object)
 	 */
-	public Contact get(Object uid) throws Exception{
+	public IContact get(Object uid) throws Exception{
 		return getDataStorageInstance().load(uid);
 	}
 	/**
-	 * @see org.columba.addressbook.folder.ContactStorage#modify(java.lang.Object, org.columba.addressbook.folder.Contact)
+	 * @see org.columba.addressbook.folder.IContactStorage#modify(java.lang.Object, org.columba.addressbook.folder.Contact)
 	 */
-	public void modify(Object uid, Contact contact) throws Exception{
+	public void modify(Object uid, IContact contact) throws Exception{
 		super.modify(uid, contact);
 		
 		getDataStorageInstance().modify(uid, contact);
 
 	}
 	/**
-	 * @see org.columba.addressbook.folder.ContactStorage#remove(java.lang.Object)
+	 * @see org.columba.addressbook.folder.IContactStorage#remove(java.lang.Object)
 	 */
 	public void remove(Object uid) throws Exception{
 		super.remove(uid);

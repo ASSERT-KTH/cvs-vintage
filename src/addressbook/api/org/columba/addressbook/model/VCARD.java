@@ -1,3 +1,4 @@
+package org.columba.addressbook.model;
 // The contents of this file are subject to the Mozilla Public License Version
 // 1.1
 //(the "License"); you may not use this file except in compliance with the
@@ -15,8 +16,6 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003.
 //
 //All Rights Reserved.
-package org.columba.addressbook.model;
-
 /**
  * All VCARD features Columba is able to handle.
  * <p>
@@ -25,7 +24,7 @@ package org.columba.addressbook.model;
  * 
  * @author fdietz
  */
-public class VCARD {
+public interface VCARD {
 
 	/** *********************** Identification Types *********************** */
 

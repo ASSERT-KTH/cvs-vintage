@@ -20,7 +20,7 @@ import org.columba.core.command.DefaultCommandReference;
 import org.columba.core.command.WorkerStatusController;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.folder.AbstractFolder;
-import org.columba.mail.folder.MessageFolder;
+import org.columba.mail.folder.AbstractMessageFolder;
 
 
 /**
@@ -67,7 +67,7 @@ public class MoveFolderCommand extends Command {
     /** {@inheritDoc} */
     public void execute(WorkerStatusController worker) throws Exception {
         // get folder that is going to be moved
-        MessageFolder movedFolder = (MessageFolder) ((FolderCommandReference) getReference()).getFolder();
+        AbstractMessageFolder movedFolder = (AbstractMessageFolder) ((FolderCommandReference) getReference()).getFolder();
 
         // get destination folder
         destParentFolder = ((FolderCommandReference) getReference()).getFolder();

@@ -20,6 +20,7 @@ package org.columba.addressbook.facade;
 import org.columba.addressbook.folder.AbstractFolder;
 import org.columba.addressbook.gui.tree.AddressbookTreeModel;
 import org.columba.addressbook.model.Contact;
+import org.columba.addressbook.model.IContact;
 import org.columba.addressbook.model.VCARD;
 import org.columba.core.main.Main;
 import org.columba.ristretto.message.Address;
@@ -30,7 +31,7 @@ import org.columba.ristretto.parser.ParserException;
  * 
  * @author fdietz   
  */
-public final class ContactFacade {
+public final class ContactFacade implements IContactFacade{
 
 	
 	/**
@@ -39,7 +40,7 @@ public final class ContactFacade {
 	 * @param uid		selected addressbook	
 	 * @param address	email address
 	 */
-	public static void addContact(int uid, String address) {
+	public void addContact(int uid, String address) {
 		if (address == null) {
             return;
         }
@@ -62,7 +63,7 @@ public final class ContactFacade {
 				.getFolder(uid);
 		try {
 			if (selectedFolder.exists(adr.getMailAddress()) == null) {
-				Contact card = new Contact();
+				IContact card = new Contact();
 
 				String fn = adr.getShortAddress();
 				
@@ -85,7 +86,7 @@ public final class ContactFacade {
 	 * 
 	 * @param address		email address
 	 */
-	public static void addContactToCollectedAddresses(String address) {
+	public void addContactToCollectedAddresses(String address) {
 		addContact(102, address);
 	}
 

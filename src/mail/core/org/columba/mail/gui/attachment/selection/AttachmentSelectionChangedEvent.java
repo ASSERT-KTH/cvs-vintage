@@ -16,15 +16,15 @@
 package org.columba.mail.gui.attachment.selection;
 
 import org.columba.core.gui.selection.SelectionChangedEvent;
-import org.columba.mail.folder.MessageFolder;
+import org.columba.mail.folder.AbstractMessageFolder;
 
 
 public class AttachmentSelectionChangedEvent extends SelectionChangedEvent {
-    private MessageFolder folder;
+    private AbstractMessageFolder folder;
     private Object messageUid;
     private Integer[] address;
 
-    public AttachmentSelectionChangedEvent(MessageFolder folder, Object messageUid,
+    public AttachmentSelectionChangedEvent(AbstractMessageFolder folder, Object messageUid,
         Integer[] address) {
         this.folder = folder;
         this.messageUid = messageUid;
@@ -41,7 +41,7 @@ public class AttachmentSelectionChangedEvent extends SelectionChangedEvent {
     /**
  * @return Folder
  */
-    public MessageFolder getFolder() {
+    public AbstractMessageFolder getFolder() {
         return folder;
     }
 

@@ -30,7 +30,7 @@ import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.config.AccountItem;
 import org.columba.mail.config.MailConfig;
 import org.columba.mail.config.PGPItem;
-import org.columba.mail.folder.MessageFolder;
+import org.columba.mail.folder.AbstractMessageFolder;
 import org.columba.mail.gui.message.viewer.SecurityInformationController;
 import org.columba.mail.message.ColumbaHeader;
 import org.columba.mail.message.ColumbaMessage;
@@ -109,7 +109,7 @@ public class PGPMessageFilter extends AbstractFilter {
 	 * @see org.columba.mail.gui.message.filter.Filter#filter(org.columba.mail.folder.Folder,
 	 *      java.lang.Object)
 	 */
-	public FolderCommandReference filter(MessageFolder folder, Object uid)
+	public FolderCommandReference filter(AbstractMessageFolder folder, Object uid)
 			throws Exception {
 
 		mimePartTree = folder.getMimePartTree(uid);
@@ -175,7 +175,7 @@ public class PGPMessageFilter extends AbstractFilter {
 	 * @throws Exception
 	 * @throws IOException
 	 */
-	private FolderCommandReference decrypt(MessageFolder folder, Object uid,
+	private FolderCommandReference decrypt(AbstractMessageFolder folder, Object uid,
 			boolean pgpActive) throws Exception, IOException {
 		InputStream decryptedStream = null;
 		LOG.fine("start decrypting");
@@ -313,7 +313,7 @@ public class PGPMessageFilter extends AbstractFilter {
 	 * @throws Exception
 	 * @throws IOException
 	 */
-	private FolderCommandReference verify(MessageFolder folder, Object uid,
+	private FolderCommandReference verify(AbstractMessageFolder folder, Object uid,
 			boolean pgpActive) throws Exception, IOException {
 		if (!pgpActive) {
 			pgpMessage = "";

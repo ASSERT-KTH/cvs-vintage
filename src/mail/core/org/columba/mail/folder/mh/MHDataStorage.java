@@ -26,9 +26,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.logging.Logger;
 
-import org.columba.addressbook.folder.DataStorage;
 import org.columba.core.io.StreamUtils;
-import org.columba.mail.folder.DataStorageInterface;
+import org.columba.mail.folder.IDataStorage;
 import org.columba.mail.folder.LocalFolder;
 import org.columba.ristretto.io.FileSource;
 import org.columba.ristretto.io.Source;
@@ -50,7 +49,7 @@ import org.columba.ristretto.io.Source;
  *
  * @author fdietz
  */
-public class MHDataStorage implements DataStorageInterface {
+public class MHDataStorage implements IDataStorage {
 
     /** JDK 1.4+ logging framework logger, used for logging. */
     private static final Logger LOG = Logger.getLogger("org.columba.mail.folder.mh");
@@ -92,7 +91,7 @@ public class MHDataStorage implements DataStorageInterface {
     }
 
     /* (non-Javadoc)
-     * @see org.columba.mail.folder.DataStorageInterface#getMessages()
+     * @see org.columba.mail.folder.IDataStorage#getMessages()
      */
     public Object[] getMessageUids() {
         File[] list = folder.getDirectoryFile().listFiles(MHMessageFileFilter.getInstance());
@@ -110,7 +109,7 @@ public class MHDataStorage implements DataStorageInterface {
     }
 
     /* (non-Javadoc)
-     * @see org.columba.mail.folder.DataStorageInterface#getFileSource(java.lang.Object)
+     * @see org.columba.mail.folder.IDataStorage#getFileSource(java.lang.Object)
      */
     public Source getMessageSource(Object uid) throws Exception {
         File file = new File(folder.getDirectoryFile() + File.separator + ((Integer) uid).toString());
@@ -119,7 +118,7 @@ public class MHDataStorage implements DataStorageInterface {
     }
 
     /* (non-Javadoc)
-     * @see org.columba.mail.folder.DataStorageInterface#saveInputStream(java.lang.Object, java.io.InputStream)
+     * @see org.columba.mail.folder.IDataStorage#saveInputStream(java.lang.Object, java.io.InputStream)
      */
     public void saveMessage(Object uid, InputStream source)
         throws IOException {
@@ -134,7 +133,7 @@ public class MHDataStorage implements DataStorageInterface {
     }
 
 	/**
-	 * @see org.columba.mail.folder.DataStorageInterface#getMessageStream(java.lang.Object)
+	 * @see org.columba.mail.folder.IDataStorage#getMessageStream(java.lang.Object)
 	 */
 	public InputStream getMessageStream(Object uid) throws Exception {
 		

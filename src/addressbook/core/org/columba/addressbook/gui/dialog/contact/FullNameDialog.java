@@ -37,6 +37,7 @@ import javax.swing.SwingConstants;
 import net.javaprog.ui.wizard.plaf.basic.SingleSideEtchedBorder;
 
 import org.columba.addressbook.model.Contact;
+import org.columba.addressbook.model.IContact;
 import org.columba.addressbook.model.VCARD;
 import org.columba.addressbook.util.AddressbookResourceLoader;
 import org.columba.core.gui.util.ButtonWithMnemonic;
@@ -63,9 +64,9 @@ public class FullNameDialog extends JDialog implements ActionListener {
     private JButton cancelButton;
     private IdentityPanel identityPanel;
     
-    private Contact contact;
+    private IContact contact;
     
-    public FullNameDialog(JDialog frame, IdentityPanel identityPanel, Contact contact) {
+    public FullNameDialog(JDialog frame, IdentityPanel identityPanel, IContact contact) {
         super(frame, AddressbookResourceLoader.getString("dialog", "contact",
             "edit_fullname"), true);
         

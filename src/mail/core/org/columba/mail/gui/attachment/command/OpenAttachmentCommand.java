@@ -30,7 +30,7 @@ import org.columba.core.gui.frame.DefaultContainer;
 import org.columba.core.io.StreamUtils;
 import org.columba.core.io.TempFileStore;
 import org.columba.mail.command.FolderCommandReference;
-import org.columba.mail.folder.MessageFolder;
+import org.columba.mail.folder.AbstractMessageFolder;
 import org.columba.mail.folder.temp.TempFolder;
 import org.columba.mail.gui.message.command.ViewMessageCommand;
 import org.columba.mail.gui.messageframe.MessageFrameController;
@@ -105,7 +105,7 @@ public class OpenAttachmentCommand extends SaveAttachmentCommand {
 	 */
 	public void execute(WorkerStatusController worker) throws Exception {
 		FolderCommandReference r = (FolderCommandReference) getReference();
-		MessageFolder folder = (MessageFolder) r.getFolder();
+		AbstractMessageFolder folder = (AbstractMessageFolder) r.getFolder();
 		Object[] uids = r.getUids();
 
 		Integer[] address = r.getAddress();

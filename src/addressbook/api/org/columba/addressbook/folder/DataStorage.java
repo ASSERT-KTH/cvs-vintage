@@ -17,36 +17,18 @@
 //All Rights Reserved.
 package org.columba.addressbook.folder;
 
-import org.columba.addressbook.model.ContactItem;
-import org.columba.addressbook.model.ContactItemMap;
+import org.columba.addressbook.model.IContact;
 
 /**
- * Contact item cache storage.
- * <p>
- * All items needed by JTable to display a contact folder contents
- * are cached here to allow faster loading time.
- * <p>
- * These items currently include a displayname, the email address
- * and the website of a contact.
+ * Contact storage backend.
  * 
  * @author fdietz
  *
  */
-public interface ContactItemCacheStorage {
+public interface DataStorage {
 
-	ContactItemMap getContactItemMap() throws Exception;
-	
-	void add(Object uid, ContactItem item) throws Exception;
-	
+	IContact load(Object uid) throws Exception;
+	void save(Object uid, IContact contact) throws Exception;
+	void modify(Object uid, IContact contact) throws Exception;
 	void remove(Object uid) throws Exception;
-	
-	void modify(Object uid, ContactItem item) throws Exception;
-	
-	int count();
-	
-	boolean exists(Object uid);
-	
-	void save() throws Exception;
-	
-	void load() throws Exception;
 }

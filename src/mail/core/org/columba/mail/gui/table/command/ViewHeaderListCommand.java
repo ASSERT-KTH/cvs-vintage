@@ -22,7 +22,7 @@ import org.columba.core.command.Worker;
 import org.columba.core.command.WorkerStatusController;
 import org.columba.core.gui.frame.FrameMediator;
 import org.columba.mail.command.FolderCommandReference;
-import org.columba.mail.folder.MessageFolder;
+import org.columba.mail.folder.AbstractMessageFolder;
 import org.columba.mail.gui.frame.TableViewOwner;
 import org.columba.mail.message.HeaderList;
 
@@ -33,7 +33,7 @@ import org.columba.mail.message.HeaderList;
 public class ViewHeaderListCommand extends Command {
 	private HeaderList headerList;
 
-	private MessageFolder folder;
+	private AbstractMessageFolder folder;
 
 	public ViewHeaderListCommand(FrameMediator frame,
 			DefaultCommandReference reference) {
@@ -59,7 +59,7 @@ public class ViewHeaderListCommand extends Command {
 	public void execute(WorkerStatusController worker) throws Exception {
 		FolderCommandReference r = (FolderCommandReference) getReference();
 
-		folder = (MessageFolder) r.getFolder();
+		folder = (AbstractMessageFolder) r.getFolder();
 
 		//		register for status events
 		((StatusObservableImpl) folder.getObservable()).setWorker(worker);

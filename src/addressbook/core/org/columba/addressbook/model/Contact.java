@@ -35,7 +35,7 @@ import org.jdom.Element;
  * @see VCARD
  * @author fdietz
  */
-public class Contact {
+public class Contact implements IContact {
 
 	private Document doc;
 

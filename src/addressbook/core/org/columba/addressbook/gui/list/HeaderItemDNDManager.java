@@ -16,6 +16,7 @@
 package org.columba.addressbook.gui.list;
 
 import org.columba.addressbook.model.HeaderItem;
+import org.columba.addressbook.model.IHeaderItem;
 
 
 /**
@@ -28,7 +29,7 @@ import org.columba.addressbook.model.HeaderItem;
  */
 public class HeaderItemDNDManager {
     private static HeaderItemDNDManager instance;
-    HeaderItem[] array;
+    IHeaderItem[] array;
 
     public static HeaderItemDNDManager getInstance() {
         if (instance == null) {
@@ -38,11 +39,11 @@ public class HeaderItemDNDManager {
         return instance;
     }
 
-    public void setHeaderItemList(HeaderItem[] array) {
+    public void setHeaderItemList(IHeaderItem[] array) {
         this.array = array;
     }
 
-    public HeaderItem[] getHeaderItemList() {
+    public IHeaderItem[] getHeaderItemList() {
         return this.array;
     }
 }

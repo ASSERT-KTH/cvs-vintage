@@ -28,15 +28,16 @@ import javax.swing.table.JTableHeader;
 import javax.swing.table.TableColumnModel;
 
 import org.columba.addressbook.folder.AbstractFolder;
-import org.columba.addressbook.folder.ContactStorage;
+import org.columba.addressbook.folder.AddressbookTreeNode;
+import org.columba.addressbook.folder.IContactStorage;
 import org.columba.addressbook.folder.FolderEvent;
 import org.columba.addressbook.folder.FolderListener;
 import org.columba.addressbook.gui.frame.AddressbookFrameMediator;
 import org.columba.addressbook.gui.table.model.AddressbookTableModel;
 import org.columba.addressbook.gui.table.model.FilterDecorator;
 import org.columba.addressbook.gui.table.model.SortDecorator;
-import org.columba.addressbook.gui.tree.AddressbookTreeNode;
 import org.columba.addressbook.model.ContactItem;
+import org.columba.addressbook.model.IContactItem;
 import org.columba.core.gui.focus.FocusManager;
 import org.columba.core.gui.focus.FocusOwner;
 import org.columba.core.gui.util.ErrorDialog;
@@ -143,7 +144,7 @@ public class TableController implements TreeSelectionListener, FolderListener,
 			return;
 		}
 
-		if (node instanceof ContactStorage) {
+		if (node instanceof IContactStorage) {
 			try {
 
 				((AbstractFolder) node).removeFolderListener(this);
@@ -174,10 +175,10 @@ public class TableController implements TreeSelectionListener, FolderListener,
 		int[] rows = getView().getSelectedRows();
 		Object[] uids = new Object[rows.length];
 
-		ContactItem item;
+		IContactItem item;
 
 		for (int i = 0; i < rows.length; i++) {
-			item = (ContactItem) filterDecorator.getContactItem(rows[i]);
+			item = (IContactItem) filterDecorator.getContactItem(rows[i]);
 
 			Object uid = item.getUid();
 			uids[i] = uid;
@@ -193,11 +194,11 @@ public class TableController implements TreeSelectionListener, FolderListener,
 		return addressbookModel;
 	}
 
-	public ContactItem getSelectedItem() {
+	public IContactItem getSelectedItem() {
 		int row = getView().getSelectedRow();
 
 		// we use the SortDecorator, because the indices are sorted
-		ContactItem item = (ContactItem) sortDecorator.getContactItem(row);
+		IContactItem item = (IContactItem) sortDecorator.getContactItem(row);
 
 		return item;
 	}

@@ -26,7 +26,7 @@ import org.columba.mail.command.FolderCommand;
 import org.columba.mail.composer.MessageComposer;
 import org.columba.mail.composer.SendableMessage;
 import org.columba.mail.config.AccountItem;
-import org.columba.mail.folder.MessageFolder;
+import org.columba.mail.folder.AbstractMessageFolder;
 import org.columba.mail.gui.composer.ComposerController;
 import org.columba.mail.gui.composer.ComposerModel;
 import org.columba.mail.gui.frame.TableUpdater;
@@ -39,7 +39,7 @@ import org.columba.mail.util.MailResourceLoader;
  * @author freddy
  */
 public class SaveMessageCommand extends FolderCommand {
-    private MessageFolder folder;
+    private AbstractMessageFolder folder;
 
     /**
      * Constructor for SaveMessageCommand.
@@ -77,7 +77,7 @@ public class SaveMessageCommand extends FolderCommand {
         if (message == null) {
             message = new MessageComposer(((ComposerModel) composerController.getModel())).compose(worker);
         }
-        folder = (MessageFolder) r.getFolder();
+        folder = (AbstractMessageFolder) r.getFolder();
         
         worker.setDisplayText(MailResourceLoader.getString("statusbar",
 				"message", "save_message"));

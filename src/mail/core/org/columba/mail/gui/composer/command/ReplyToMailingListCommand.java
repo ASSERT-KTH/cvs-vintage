@@ -20,7 +20,7 @@ package org.columba.mail.gui.composer.command;
 import org.columba.core.command.DefaultCommandReference;
 import org.columba.mail.composer.MessageBuilderHelper;
 import org.columba.mail.config.AccountItem;
-import org.columba.mail.folder.MessageFolder;
+import org.columba.mail.folder.AbstractMessageFolder;
 import org.columba.ristretto.message.Address;
 import org.columba.ristretto.message.BasicHeader;
 import org.columba.ristretto.message.Header;
@@ -49,7 +49,7 @@ public class ReplyToMailingListCommand extends ReplyCommand {
         super(reference);
     }
 
-    protected void initHeader(MessageFolder folder, Object[] uids)
+    protected void initHeader(AbstractMessageFolder folder, Object[] uids)
         throws Exception {
         // get headerfields
         Header header = folder.getHeaderFields(uids[0], headerfields);

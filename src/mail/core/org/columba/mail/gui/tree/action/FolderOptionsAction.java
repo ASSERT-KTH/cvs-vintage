@@ -24,7 +24,7 @@ import org.columba.core.gui.selection.SelectionListener;
 import org.columba.core.gui.util.ImageLoader;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.folder.AbstractFolder;
-import org.columba.mail.folder.MessageFolder;
+import org.columba.mail.folder.AbstractMessageFolder;
 import org.columba.mail.gui.config.folder.FolderOptionsDialog;
 import org.columba.mail.gui.frame.AbstractMailFrameController;
 import org.columba.mail.gui.frame.MailFrameMediator;
@@ -33,7 +33,7 @@ import org.columba.mail.util.MailResourceLoader;
 
 
 /**
- * Opens MessageFolder Options Dialog.
+ * Opens AbstractMessageFolder Options Dialog.
  *
  * @author fdietz
  */
@@ -68,14 +68,14 @@ public class FolderOptionsAction extends AbstractColumbaAction
         AbstractFolder folder = r.getFolder();
 
         // cast to Folder
-        new FolderOptionsDialog((MessageFolder) folder,true,
+        new FolderOptionsDialog((AbstractMessageFolder) folder,true,
             (AbstractMailFrameController) frameMediator);
     }
 
     public void selectionChanged(SelectionChangedEvent e) {
         AbstractFolder[] r = ((TreeSelectionChangedEvent) e).getSelected();
 
-        if ((r.length > 0) && r[0] instanceof MessageFolder) {
+        if ((r.length > 0) && r[0] instanceof AbstractMessageFolder) {
             setEnabled(true);
         } else {
             setEnabled(false);

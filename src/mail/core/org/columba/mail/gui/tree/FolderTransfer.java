@@ -20,7 +20,7 @@ import java.awt.datatransfer.Transferable;
 import java.awt.datatransfer.UnsupportedFlavorException;
 import java.io.IOException;
 
-import org.columba.mail.folder.MessageFolder;
+import org.columba.mail.folder.AbstractMessageFolder;
 
 
 /**
@@ -40,13 +40,13 @@ public class FolderTransfer implements Transferable {
         }
     }
 
-    private MessageFolder folderReference;
+    private AbstractMessageFolder folderReference;
 
     /**
  * Creates a transferable for transfering folders.
  * @param folder the folder that is being transfered.
  */
-    public FolderTransfer(MessageFolder folder) {
+    public FolderTransfer(AbstractMessageFolder folder) {
         folderReference = folder;
     }
 
@@ -54,7 +54,7 @@ public class FolderTransfer implements Transferable {
  * Returns the folder reference for this transfer.
  * @return a Folder
  */
-    public MessageFolder getFolderReference() {
+    public AbstractMessageFolder getFolderReference() {
         return folderReference;
     }
 

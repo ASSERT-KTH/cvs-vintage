@@ -22,7 +22,7 @@ import org.columba.core.command.StatusObservableImpl;
 import org.columba.core.command.Worker;
 import org.columba.core.command.WorkerStatusController;
 import org.columba.mail.command.FolderCommandReference;
-import org.columba.mail.folder.MessageFolder;
+import org.columba.mail.folder.AbstractMessageFolder;
 
 /**
  * Move selected messages from source to destination folder.
@@ -56,10 +56,10 @@ public class MoveMessageCommand extends CopyMessageCommand {
 		r = (FolderCommandReference) getReference();
 
 		// get source folder
-		MessageFolder srcFolder = (MessageFolder) r.getFolder();
+		AbstractMessageFolder srcFolder = (AbstractMessageFolder) r.getFolder();
 
 		// get destination foldedr
-		destFolder = (MessageFolder) r.getDestinationFolder();
+		destFolder = (AbstractMessageFolder) r.getDestinationFolder();
 
 		// cancel, if source equals destination folder
 		if ( srcFolder.getUid() == destFolder.getUid() ) return;

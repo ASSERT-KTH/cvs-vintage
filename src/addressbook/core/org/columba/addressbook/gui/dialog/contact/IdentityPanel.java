@@ -27,6 +27,7 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 
 import org.columba.addressbook.model.Contact;
+import org.columba.addressbook.model.IContact;
 import org.columba.addressbook.model.VCARD;
 import org.columba.addressbook.util.AddressbookResourceLoader;
 import org.columba.core.gui.util.ButtonWithMnemonic;
@@ -56,9 +57,9 @@ public class IdentityPanel extends JPanel implements ActionListener {
     
     public FullNameDialog dialog;
     
-    private Contact contact;
+    private IContact contact;
 
-    public IdentityPanel(Contact contact) {
+    public IdentityPanel(IContact contact) {
     	this.contact = contact;
     	
         initComponent();
@@ -73,7 +74,7 @@ public class IdentityPanel extends JPanel implements ActionListener {
         return nameTextField.getText().length() == 0;
     }
 
-    private void set(Contact card, String key, JTextField textField) {
+    private void set(IContact card, String key, JTextField textField) {
         String value = card.get(key);
 
         if (value != null) {
@@ -81,7 +82,7 @@ public class IdentityPanel extends JPanel implements ActionListener {
         }
     }
 
-    private void get(Contact card, String key, JTextField textField) {
+    private void get(IContact card, String key, JTextField textField) {
         card.set(key, textField.getText());
     }
 

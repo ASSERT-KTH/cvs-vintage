@@ -29,7 +29,7 @@ import javax.swing.JOptionPane;
 
 import org.columba.core.main.Main;
 import org.columba.core.util.ListTools;
-import org.columba.mail.folder.DataStorageInterface;
+import org.columba.mail.folder.IDataStorage;
 import org.columba.mail.folder.LocalFolder;
 import org.columba.mail.message.ColumbaHeader;
 import org.columba.mail.message.HeaderList;
@@ -42,7 +42,7 @@ import org.columba.ristretto.parser.HeaderParser;
 
 /**
  * Implementation of a local headercache facility, which is also able to resync
- * itself with the {@DataStorageInterface}.
+ * itself with the {@IDataStorage}.
  * 
  * @author fdietz
  */
@@ -290,7 +290,7 @@ public class LocalHeaderCache extends AbstractFolderHeaderCache {
 					folder.getName() + ": Syncing headercache...");
 		}
 
-		DataStorageInterface ds = ((LocalFolder) folder)
+		IDataStorage ds = ((LocalFolder) folder)
 				.getDataStorageInstance();
 
 		Object[] uids = ds.getMessageUids();
@@ -432,7 +432,7 @@ public class LocalHeaderCache extends AbstractFolderHeaderCache {
 						"<html></body><p>Columba recognized that you just changed the headerfield caching setup."
 								+ " This makes it necessary to reorganize the cache and will take a bit longer than generally.</p></body></html>");
 
-		DataStorageInterface ds = ((LocalFolder) folder)
+		IDataStorage ds = ((LocalFolder) folder)
 				.getDataStorageInstance();
 
 		Object[] uids = ds.getMessageUids();

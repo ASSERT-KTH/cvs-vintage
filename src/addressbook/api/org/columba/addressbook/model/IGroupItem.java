@@ -1,3 +1,4 @@
+package org.columba.addressbook.model;
 // The contents of this file are subject to the Mozilla Public License Version
 // 1.1
 //(the "License"); you may not use this file except in compliance with the
@@ -15,31 +16,28 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003.
 //
 //All Rights Reserved.
-package org.columba.addressbook.folder;
-
-import org.columba.addressbook.model.Contact;
-
 /**
- * Contact storage facility.
- * 
  * @author fdietz
- *  
+ *
  */
-public interface ContactStorage {
+public interface IGroupItem {
+	/**
+	 * @return Returns the description.
+	 */
+	public abstract String getDescription();
 
-	int count();
+	/**
+	 * @param description The description to set.
+	 */
+	public abstract void setDescription(String description);
 
-	Object exists(String contact) throws Exception;
-	
-	boolean exists(Object uid) throws Exception;
+	/**
+	 * @return Returns the folderUid.
+	 */
+	public abstract int getFolderUid();
 
-	Contact get(Object uid) throws Exception;
-
-	void remove(Object uid) throws Exception;
-
-	void modify(Object uid, Contact contact) throws Exception;
-
-	Object add(Contact contact) throws Exception;
-	
-	
+	/**
+	 * @param folderUid The folderUid to set.
+	 */
+	public abstract void setFolderUid(int folderUid);
 }

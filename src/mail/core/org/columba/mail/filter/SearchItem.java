@@ -105,7 +105,7 @@ VirtualFolder folder =
 
 if (folder.getChildCount() >= 10)
 {
-        MessageFolder child = (MessageFolder) folder.getChildAt(0);
+        AbstractMessageFolder child = (AbstractMessageFolder) folder.getChildAt(0);
         child.removeFromParent();
 }
 

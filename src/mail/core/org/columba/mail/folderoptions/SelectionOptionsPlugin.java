@@ -19,7 +19,7 @@ package org.columba.mail.folderoptions;
 
 import org.columba.core.config.DefaultItem;
 import org.columba.core.xml.XmlElement;
-import org.columba.mail.folder.MessageFolder;
+import org.columba.mail.folder.AbstractMessageFolder;
 import org.columba.mail.gui.frame.MailFrameMediator;
 import org.columba.mail.gui.frame.TableViewOwner;
 import org.columba.mail.gui.table.TableController;
@@ -53,7 +53,7 @@ public class SelectionOptionsPlugin extends AbstractFolderOptionsPlugin {
 	 * 
 	 * @see org.columba.mail.folderoptions.AbstractFolderOptionsPlugin#saveOptionsToXml(org.columba.mail.folder.Folder)
 	 */
-	public void saveOptionsToXml(MessageFolder folder) {
+	public void saveOptionsToXml(AbstractMessageFolder folder) {
 		XmlElement parent = getConfigNode(folder);
 		DefaultItem item = new DefaultItem(parent);
 
@@ -76,7 +76,7 @@ public class SelectionOptionsPlugin extends AbstractFolderOptionsPlugin {
 	 * 
 	 * @see org.columba.mail.folderoptions.AbstractFolderOptionsPlugin#loadOptionsFromXml(org.columba.mail.folder.Folder)
 	 */
-	public void loadOptionsFromXml(MessageFolder folder) {
+	public void loadOptionsFromXml(AbstractMessageFolder folder) {
 		XmlElement parent = getConfigNode(folder);
 		DefaultItem item = new DefaultItem(parent);
 

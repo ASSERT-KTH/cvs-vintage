@@ -30,7 +30,7 @@ import org.columba.core.plugin.PluginManager;
 import org.columba.mail.folder.FolderTstHelper;
 import org.columba.mail.folder.MHFolderFactory;
 import org.columba.mail.folder.MailboxTstFactory;
-import org.columba.mail.folder.MessageFolder;
+import org.columba.mail.folder.AbstractMessageFolder;
 import org.columba.mail.main.MailMain;
 
 /**
@@ -43,7 +43,7 @@ import org.columba.mail.main.MailMain;
  */
 public class AbstractFilterTst extends TestCase {
 
-	protected MessageFolder sourceFolder;
+	protected AbstractMessageFolder sourceFolder;
 
 	protected MailboxTstFactory factory;
 
@@ -73,7 +73,7 @@ public class AbstractFilterTst extends TestCase {
 	/**
 	 * @return Returns the folder.
 	 */
-	public MessageFolder getSourceFolder() {
+	public AbstractMessageFolder getSourceFolder() {
 		return sourceFolder;
 	}
 

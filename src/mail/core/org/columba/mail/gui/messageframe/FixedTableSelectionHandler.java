@@ -9,7 +9,7 @@ package org.columba.mail.gui.messageframe;
 import org.columba.core.command.DefaultCommandReference;
 import org.columba.core.gui.selection.SelectionHandler;
 import org.columba.mail.command.FolderCommandReference;
-import org.columba.mail.folder.MessageFolder;
+import org.columba.mail.folder.AbstractMessageFolder;
 import org.columba.mail.gui.table.selection.TableSelectionChangedEvent;
 
 /**
@@ -47,7 +47,7 @@ public class FixedTableSelectionHandler extends SelectionHandler {
 		this.tableReference = (FolderCommandReference) selection;
 
 		fireSelectionChanged(new TableSelectionChangedEvent(
-				(MessageFolder) tableReference.getFolder(), tableReference
+				(AbstractMessageFolder) tableReference.getFolder(), tableReference
 						.getUids()));
 	}
 }

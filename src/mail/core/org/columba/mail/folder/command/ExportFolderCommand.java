@@ -30,7 +30,7 @@ import org.columba.core.command.WorkerStatusController;
 import org.columba.core.gui.frame.FrameMediator;
 import org.columba.mail.command.FolderCommand;
 import org.columba.mail.command.FolderCommandReference;
-import org.columba.mail.folder.MessageFolder;
+import org.columba.mail.folder.AbstractMessageFolder;
 import org.columba.mail.util.MailResourceLoader;
 
 /**
@@ -76,14 +76,14 @@ public class ExportFolderCommand extends FolderCommand {
 			os = new BufferedOutputStream(new FileOutputStream(r.getDestFile()));
 
 			int counter = 0;
-			MessageFolder srcFolder;
+			AbstractMessageFolder srcFolder;
 			Object[] uids;
 			InputStream in;
 			int read;
 			byte[] buffer = new byte[1024];
 
 			// get source folder
-			srcFolder = (MessageFolder) r.getFolder();
+			srcFolder = (AbstractMessageFolder) r.getFolder();
 
 			// get array of message UIDs
 			uids = srcFolder.getUids();

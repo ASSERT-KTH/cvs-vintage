@@ -25,7 +25,7 @@ import javax.swing.JOptionPane;
 
 import org.columba.core.main.Main;
 import org.columba.core.util.ListTools;
-import org.columba.mail.folder.MessageFolder;
+import org.columba.mail.folder.AbstractMessageFolder;
 import org.columba.mail.message.ColumbaHeader;
 import org.columba.mail.message.HeaderList;
 import org.columba.mail.util.MailResourceLoader;
@@ -49,7 +49,7 @@ public class RemoteHeaderCache extends AbstractFolderHeaderCache {
      *
      * @param folder
      */
-    public RemoteHeaderCache(MessageFolder folder) {
+    public RemoteHeaderCache(AbstractMessageFolder folder) {
         super(folder);
 
         configurationChanged = false;

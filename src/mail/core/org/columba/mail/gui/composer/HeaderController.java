@@ -23,6 +23,7 @@ import org.columba.addressbook.gui.autocomplete.AddressCollector;
 import org.columba.addressbook.model.ContactItem;
 import org.columba.addressbook.model.HeaderItem;
 import org.columba.addressbook.model.HeaderItemList;
+import org.columba.addressbook.model.IHeaderItemList;
 import org.columba.addressbook.parser.ListBuilder;
 import org.columba.addressbook.parser.ListParser;
 import org.columba.core.gui.util.NotifyDialog;
@@ -140,8 +141,8 @@ public class HeaderController {
 		}
 	}
 
-	private HeaderItemList getHeaderItemList(int recipient) {
-		HeaderItemList list = new HeaderItemList();
+	private IHeaderItemList getHeaderItemList(int recipient) {
+		IHeaderItemList list = new HeaderItemList();
 
 		String header = null;
 		String str = null;
@@ -188,8 +189,8 @@ public class HeaderController {
 		return list;
 	}
 
-	public HeaderItemList[] getHeaderItemLists() {
-		HeaderItemList[] lists = new HeaderItemList[3];
+	public IHeaderItemList[] getHeaderItemLists() {
+		IHeaderItemList[] lists = new IHeaderItemList[3];
 		lists[0] = getHeaderItemList(0);
 		lists[1] = getHeaderItemList(1);
 		lists[2] = getHeaderItemList(2);
@@ -197,7 +198,7 @@ public class HeaderController {
 		return lists;
 	}
 
-	public void setHeaderItemLists(HeaderItemList[] lists) {
+	public void setHeaderItemLists(IHeaderItemList[] lists) {
 		((ComposerModel) controller.getModel()).setToList(ListBuilder
 				.createStringListFromItemList(lists[0]));
 

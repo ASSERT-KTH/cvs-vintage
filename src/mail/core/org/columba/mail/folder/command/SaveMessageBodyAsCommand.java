@@ -42,7 +42,7 @@ import org.columba.core.xml.XmlElement;
 import org.columba.mail.command.FolderCommand;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.config.MailConfig;
-import org.columba.mail.folder.MessageFolder;
+import org.columba.mail.folder.AbstractMessageFolder;
 import org.columba.mail.gui.attachment.AttachmentModel;
 import org.columba.mail.gui.message.util.DocumentParser;
 import org.columba.mail.message.ColumbaHeader;
@@ -106,7 +106,7 @@ public class SaveMessageBodyAsCommand extends FolderCommand {
         throws Exception {
         FolderCommandReference r = (FolderCommandReference) getReference();
         Object[] uids = r.getUids(); // uid for messages to save
-        MessageFolder srcFolder = (MessageFolder) r.getFolder();
+        AbstractMessageFolder srcFolder = (AbstractMessageFolder) r.getFolder();
 
         //	register for status events
         ((StatusObservableImpl) srcFolder.getObservable()).setWorker(worker);
@@ -316,11 +316,11 @@ public class SaveMessageBodyAsCommand extends FolderCommand {
      * @param uid
      *            ID of message
      * @param srcFolder
-     *            MessageFolder containing the message
+     *            AbstractMessageFolder containing the message
      * @param worker
      * @return body part of message
      */
-    private StreamableMimePart getMessageBodyPart(Object uid, MessageFolder srcFolder,
+    private StreamableMimePart getMessageBodyPart(Object uid, AbstractMessageFolder srcFolder,
         WorkerStatusController worker) throws Exception {
         // Does the user prefer html or plain text?
         XmlElement html = MailConfig.getInstance().getMainFrameOptionsConfig()

@@ -33,7 +33,7 @@ import org.columba.mail.command.FolderCommand;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.config.AccountItem;
 import org.columba.mail.filter.plugins.AddressbookFilter;
-import org.columba.mail.folder.MessageFolder;
+import org.columba.mail.folder.AbstractMessageFolder;
 import org.columba.mail.folder.command.MarkMessageCommand;
 import org.columba.mail.spam.SpamController;
 import org.columba.mail.spam.rules.RuleList;
@@ -51,7 +51,7 @@ public class ScoreMessageCommand extends FolderCommand {
 
 	private Object[] uids;
 
-	private MessageFolder srcFolder;
+	private AbstractMessageFolder srcFolder;
 
 	private WorkerStatusController worker;
 
@@ -99,7 +99,7 @@ public class ScoreMessageCommand extends FolderCommand {
 		uids = r.getUids();
 
 		// get source folder
-		srcFolder = (MessageFolder) r.getFolder();
+		srcFolder = (AbstractMessageFolder) r.getFolder();
 
 		// register for status events
 		((StatusObservableImpl) srcFolder.getObservable()).setWorker(worker);

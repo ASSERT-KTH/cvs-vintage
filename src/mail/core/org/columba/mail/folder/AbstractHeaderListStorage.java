@@ -36,7 +36,7 @@ import org.columba.ristretto.message.Header;
  * 
  * @author fdietz
  */
-public abstract class AbstractHeaderListStorage implements HeaderListStorage {
+public abstract class AbstractHeaderListStorage implements IHeaderListStorage {
 
 	protected Mutex mutex;
 
@@ -52,7 +52,7 @@ public abstract class AbstractHeaderListStorage implements HeaderListStorage {
 	public abstract AbstractHeaderCache getHeaderCacheInstance();
 
 	/**
-	 * @see org.columba.mail.folder.HeaderStorage#exists(java.lang.Object)
+	 * @see org.columba.mail.folder.IHeaderStorage#exists(java.lang.Object)
 	 */
 	public boolean exists(Object uid) throws Exception {
 
@@ -61,7 +61,7 @@ public abstract class AbstractHeaderListStorage implements HeaderListStorage {
 	}
 
 	/**
-	 * @see org.columba.mail.folder.HeaderStorage#getHeaderFields(java.lang.Object,
+	 * @see org.columba.mail.folder.IHeaderStorage#getHeaderFields(java.lang.Object,
 	 *      java.lang.String[])
 	 */
 	public Header getHeaderFields(Object uid, String[] keys) throws Exception {
@@ -84,7 +84,7 @@ public abstract class AbstractHeaderListStorage implements HeaderListStorage {
 	}
 
 	/**
-	 * @see org.columba.mail.folder.HeaderStorage#getHeaderList()
+	 * @see org.columba.mail.folder.IHeaderStorage#getHeaderList()
 	 */
 	public HeaderList getHeaderList() throws Exception {
 
@@ -92,7 +92,7 @@ public abstract class AbstractHeaderListStorage implements HeaderListStorage {
 	}
 
 	/**
-	 * @see org.columba.mail.folder.HeaderListStorage#getAttribute(java.lang.Object,
+	 * @see org.columba.mail.folder.IHeaderListStorage#getAttribute(java.lang.Object,
 	 *      java.lang.String)
 	 */
 	public Object getAttribute(Object uid, String key) throws Exception {
@@ -104,7 +104,7 @@ public abstract class AbstractHeaderListStorage implements HeaderListStorage {
 	}
 
 	/**
-	 * @see org.columba.mail.folder.HeaderListStorage#getAttributes(java.lang.Object)
+	 * @see org.columba.mail.folder.IHeaderListStorage#getAttributes(java.lang.Object)
 	 */
 	public Attributes getAttributes(Object uid) throws Exception {
 
@@ -116,7 +116,7 @@ public abstract class AbstractHeaderListStorage implements HeaderListStorage {
 	}
 
 	/**
-	 * @see org.columba.mail.folder.HeaderListStorage#setAttribute(java.lang.Object,
+	 * @see org.columba.mail.folder.IHeaderListStorage#setAttribute(java.lang.Object,
 	 *      java.lang.String, java.lang.Object)
 	 */
 	public void setAttribute(Object uid, String key, Object value)
@@ -129,7 +129,7 @@ public abstract class AbstractHeaderListStorage implements HeaderListStorage {
 	}
 
 	/**
-	 * @see org.columba.mail.folder.HeaderListStorage#addMessage(org.columba.ristretto.message.io.Source,
+	 * @see org.columba.mail.folder.IHeaderListStorage#addMessage(org.columba.ristretto.message.io.Source,
 	 *      org.columba.ristretto.message.Attributes)
 	 */
 	public Object addMessage(Object newUid, Header header,
@@ -164,7 +164,7 @@ public abstract class AbstractHeaderListStorage implements HeaderListStorage {
 	}
 
 	/**
-	 * @see org.columba.mail.folder.HeaderListStorage#getFlags(java.lang.Object)
+	 * @see org.columba.mail.folder.IHeaderListStorage#getFlags(java.lang.Object)
 	 */
 	public Flags getFlags(Object uid) throws Exception {
 
@@ -176,7 +176,7 @@ public abstract class AbstractHeaderListStorage implements HeaderListStorage {
 	}
 
 	/**
-	 * @see org.columba.mail.folder.HeaderListStorage#setFlags(java.lang.Object,
+	 * @see org.columba.mail.folder.IHeaderListStorage#setFlags(java.lang.Object,
 	 *      org.columba.ristretto.message.Flags)
 	 */
 	public void setFlags(Object uid, Flags flags) throws Exception {
@@ -187,7 +187,7 @@ public abstract class AbstractHeaderListStorage implements HeaderListStorage {
 	}
 
 	/**
-	 * @see org.columba.mail.folder.HeaderListStorage#removeMessage(java.lang.Object)
+	 * @see org.columba.mail.folder.IHeaderListStorage#removeMessage(java.lang.Object)
 	 */
 	public void removeMessage(Object uid) throws Exception {
 		//      remove message from headercache
@@ -212,7 +212,7 @@ public abstract class AbstractHeaderListStorage implements HeaderListStorage {
 	 * for the first time before we do any operation.
 	 * 
 	 * This is a speciality of the headercache implementation which has nothing
-	 * to do with our MessageFolder locking system and is put here for this
+	 * to do with our AbstractMessageFolder locking system and is put here for this
 	 * reason.
 	 * 
 	 * @return <class>HeaderList </class>
@@ -233,7 +233,7 @@ public abstract class AbstractHeaderListStorage implements HeaderListStorage {
 	}
 
 	/**
-	 * @see org.columba.mail.folder.HeaderListStorage#getUids()
+	 * @see org.columba.mail.folder.IHeaderListStorage#getUids()
 	 */
 	public Object[] getUids() throws Exception {
 		int count = getHeaderList().count();
@@ -254,7 +254,7 @@ public abstract class AbstractHeaderListStorage implements HeaderListStorage {
 	}
 
 	/**
-	 * @see org.columba.mail.folder.HeaderListStorage#load()
+	 * @see org.columba.mail.folder.IHeaderListStorage#load()
 	 */
 	public void load() throws Exception {
 		getHeaderCacheInstance().load();
@@ -262,7 +262,7 @@ public abstract class AbstractHeaderListStorage implements HeaderListStorage {
 	}
 
 	/**
-	 * @see org.columba.mail.folder.HeaderListStorage#save()
+	 * @see org.columba.mail.folder.IHeaderListStorage#save()
 	 */
 	public void save() throws Exception {
 		getHeaderCacheInstance().save();

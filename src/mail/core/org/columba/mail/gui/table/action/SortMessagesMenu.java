@@ -33,7 +33,7 @@ import org.columba.core.gui.selection.SelectionListener;
 import org.columba.core.gui.util.ImageLoader;
 import org.columba.core.xml.XmlElement;
 import org.columba.mail.folder.AbstractFolder;
-import org.columba.mail.folder.MessageFolder;
+import org.columba.mail.folder.AbstractMessageFolder;
 import org.columba.mail.gui.frame.MailFrameMediator;
 import org.columba.mail.gui.frame.TableViewOwner;
 import org.columba.mail.gui.table.SortingStateObservable;
@@ -48,7 +48,7 @@ public class SortMessagesMenu extends IMenu implements ActionListener, Observer,
     private JRadioButtonMenuItem ascendingMenuItem;
     private JRadioButtonMenuItem descendingMenuItem;
     private Observable observable;
-    private MessageFolder selectedFolder;
+    private AbstractMessageFolder selectedFolder;
 
     public SortMessagesMenu(FrameMediator controller) {
         super(controller,
@@ -195,11 +195,11 @@ public class SortMessagesMenu extends IMenu implements ActionListener, Observer,
         AbstractFolder[] selection = ((TreeSelectionChangedEvent) e).getSelected();
 
         if (selection.length == 1) {
-            if (!(selection[0] instanceof MessageFolder)) {
+            if (!(selection[0] instanceof AbstractMessageFolder)) {
                 return;
             }
 
-            selectedFolder = (MessageFolder) selection[0];
+            selectedFolder = (AbstractMessageFolder) selection[0];
 
             createSubMenu();
 

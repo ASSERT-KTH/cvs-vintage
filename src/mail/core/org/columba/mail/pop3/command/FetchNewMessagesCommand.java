@@ -32,7 +32,7 @@ import org.columba.core.command.WorkerStatusController;
 import org.columba.core.main.Main;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.command.POP3CommandReference;
-import org.columba.mail.folder.MessageFolder;
+import org.columba.mail.folder.AbstractMessageFolder;
 import org.columba.mail.message.ColumbaMessage;
 import org.columba.mail.pop3.POP3Server;
 import org.columba.mail.util.MailResourceLoader;
@@ -166,7 +166,7 @@ public class FetchNewMessagesCommand extends Command {
 		message.getHeader().getFlags().setSeen(false);
 
 		//get inbox-folder from pop3-server preferences
-		MessageFolder inboxFolder = server.getFolder();
+		AbstractMessageFolder inboxFolder = server.getFolder();
 
 		// start command which adds message to folder
 		// and calls apply-filter on this specific message

@@ -37,6 +37,7 @@ import net.wimpi.pim.contact.model.PersonalIdentity;
 import net.wimpi.pim.factory.ContactIOFactory;
 
 import org.columba.addressbook.model.Contact;
+import org.columba.addressbook.model.IContact;
 import org.columba.addressbook.model.VCARD;
 
 /**
@@ -54,7 +55,7 @@ public class VCardParser {
 	 * @param out
 	 *            outputstream
 	 */
-	public static void write(Contact c, OutputStream out) {
+	public static void write(IContact c, OutputStream out) {
 		ContactIOFactory ciof = Pim.getContactIOFactory();
 		ContactMarshaller marshaller = ciof.createContactMarshaller();
 		marshaller.setEncoding("UTF-8");
@@ -136,7 +137,7 @@ public class VCardParser {
 	 *            inputstream to vCard data
 	 * @return contact
 	 */
-	public static Contact read(InputStream in) {
+	public static IContact read(InputStream in) {
 		ContactIOFactory ciof = Pim.getContactIOFactory();
 		ContactUnmarshaller unmarshaller = ciof.createContactUnmarshaller();
 		unmarshaller.setEncoding("UTF-8");
@@ -144,7 +145,7 @@ public class VCardParser {
 		net.wimpi.pim.contact.model.Contact importContact = unmarshaller
 				.unmarshallContact(in);
 
-		Contact c = new Contact();
+		IContact c = new Contact();
 
 		OrganizationalIdentity organisationalIdentity = importContact
 				.getOrganizationalIdentity();

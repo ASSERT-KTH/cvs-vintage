@@ -39,7 +39,7 @@ public class GetMessageSourceStreamTest extends AbstractFolderTst {
     }
 
     /**
-     * Test if MailboxInterface.getMessageSourceStream() returns the
+     * Test if IMailbox.getMessageSourceStream() returns the
      * correct data.
      *
      */

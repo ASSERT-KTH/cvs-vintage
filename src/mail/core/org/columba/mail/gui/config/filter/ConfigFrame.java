@@ -63,7 +63,7 @@ import org.columba.core.xml.XmlElement;
 import org.columba.core.xml.XmlIO;
 import org.columba.mail.filter.Filter;
 import org.columba.mail.filter.FilterList;
-import org.columba.mail.folder.MessageFolder;
+import org.columba.mail.folder.AbstractMessageFolder;
 import org.columba.mail.util.MailResourceLoader;
 
 /**
@@ -102,7 +102,7 @@ public class ConfigFrame extends JDialog
 	private JButton movedownButton;
 	private JButton importButton;
 	private JButton exportButton;
-	private MessageFolder folder;
+	private AbstractMessageFolder folder;
 
 	private FrameMediator mediator;
 	/**
@@ -111,7 +111,7 @@ public class ConfigFrame extends JDialog
 	 * @param messageFolder
 	 *            folder to set filter actions for.
 	 */
-	public ConfigFrame(FrameMediator mediator, MessageFolder messageFolder) {
+	public ConfigFrame(FrameMediator mediator, AbstractMessageFolder messageFolder) {
 		super(mediator.getView().getFrame(), true);
 		this.mediator = mediator;
 		

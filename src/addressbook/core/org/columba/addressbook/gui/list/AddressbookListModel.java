@@ -21,6 +21,8 @@ import javax.swing.AbstractListModel;
 
 import org.columba.addressbook.model.HeaderItem;
 import org.columba.addressbook.model.HeaderItemList;
+import org.columba.addressbook.model.IHeaderItem;
+import org.columba.addressbook.model.IHeaderItemList;
 
 
 /**
@@ -28,7 +30,7 @@ import org.columba.addressbook.model.HeaderItemList;
  * @author
  */
 public class AddressbookListModel extends AbstractListModel {
-   private HeaderItemList list;
+   private IHeaderItemList list;
    
     private String patternString = "";
 
@@ -39,7 +41,7 @@ public class AddressbookListModel extends AbstractListModel {
     }
 
     public Object getElementAt(int index) {
-        return (HeaderItem) list.get(index);
+        return (IHeaderItem) list.get(index);
     }
 
     public int getSize() {
@@ -60,7 +62,7 @@ public class AddressbookListModel extends AbstractListModel {
         list.clear();
     }
 
-    public void addElement(HeaderItem item) {
+    public void addElement(IHeaderItem item) {
         list.add(item);
 
         int index = list.indexOf(item);
@@ -68,7 +70,7 @@ public class AddressbookListModel extends AbstractListModel {
         fireIntervalAdded(this, index, index);
     }
 
-    public void setHeaderItemList(HeaderItemList l) {
+    public void setHeaderItemList(IHeaderItemList l) {
       
 
       this.list = l;
@@ -76,8 +78,8 @@ public class AddressbookListModel extends AbstractListModel {
         fireContentsChanged(this, 0, list.count() - 1);
     }
 
-    public HeaderItem get(int i) {
-        return (HeaderItem) list.get(i);
+    public IHeaderItem get(int i) {
+        return (IHeaderItem) list.get(i);
     }
 
     public boolean addItem(HeaderItem header) {
@@ -118,7 +120,7 @@ public class AddressbookListModel extends AbstractListModel {
         fireIntervalRemoved(this, index, index);
     }
 
-    public void removeElement(HeaderItem item) {
+    public void removeElement(IHeaderItem item) {
         int index = list.indexOf(item);
 
         remove(index);

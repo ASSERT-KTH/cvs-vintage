@@ -32,7 +32,7 @@ import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.composer.MessageBuilderHelper;
 import org.columba.mail.config.AccountItem;
 import org.columba.mail.config.MailConfig;
-import org.columba.mail.folder.MessageFolder;
+import org.columba.mail.folder.AbstractMessageFolder;
 import org.columba.mail.gui.composer.ComposerController;
 import org.columba.mail.gui.composer.ComposerModel;
 import org.columba.mail.gui.composer.util.QuoteFilterInputStream;
@@ -96,7 +96,7 @@ public class ReplyCommand extends FolderCommand {
         model = new ComposerModel();
 
         // get selected folder
-        MessageFolder folder = (MessageFolder) ((FolderCommandReference) getReference())
+        AbstractMessageFolder folder = (AbstractMessageFolder) ((FolderCommandReference) getReference())
                 .getFolder();
 
         // get first selected message
@@ -159,7 +159,7 @@ public class ReplyCommand extends FolderCommand {
         }
     }
 
-    protected void initHeader(MessageFolder folder, Object[] uids) throws Exception {
+    protected void initHeader(AbstractMessageFolder folder, Object[] uids) throws Exception {
         // get headerfields
         Header header = folder.getHeaderFields(uids[0], headerfields);
 
@@ -191,7 +191,7 @@ public class ReplyCommand extends FolderCommand {
         model.setAccountItem(accountItem);
     }
 
-    protected String createQuotedBody(MimeHeader header, MessageFolder folder, Object[] uids,
+    protected String createQuotedBody(MimeHeader header, AbstractMessageFolder folder, Object[] uids,
             Integer[] address) throws IOException, Exception {
         InputStream bodyStream = folder.getMimePartBodyStream(uids[0], address);
         

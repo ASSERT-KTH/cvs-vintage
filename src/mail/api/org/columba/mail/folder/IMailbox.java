@@ -37,7 +37,7 @@ import org.columba.ristretto.message.MimeTree;
  * 
  * @author fdietz
  */
-public interface MailboxInterface {
+public interface IMailbox extends IFolder{
 
     /**
      * Get the {@link MailboxInfo} of this mailbox
@@ -148,7 +148,7 @@ public interface MailboxInterface {
      *            an array of UID's identifying the messages
      * @throws Exception
      */
-    public void innerCopy(MailboxInterface destFolder, Object[] uids)
+    public void innerCopy(IMailbox destFolder, Object[] uids)
             throws Exception;
 
     /**

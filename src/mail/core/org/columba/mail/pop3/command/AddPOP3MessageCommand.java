@@ -25,7 +25,7 @@ import org.columba.mail.config.AccountItem;
 import org.columba.mail.filter.Filter;
 import org.columba.mail.filter.FilterList;
 import org.columba.mail.folder.AbstractFolder;
-import org.columba.mail.folder.MessageFolder;
+import org.columba.mail.folder.AbstractMessageFolder;
 import org.columba.mail.folder.RootFolder;
 import org.columba.mail.folder.command.MarkMessageCommand;
 import org.columba.mail.folder.command.MoveMessageCommand;
@@ -47,7 +47,7 @@ import org.columba.ristretto.io.SourceInputStream;
  */
 public class AddPOP3MessageCommand extends FolderCommand {
 
-	private MessageFolder inboxFolder;
+	private AbstractMessageFolder inboxFolder;
 
 	/**
 	 * @param references
@@ -61,7 +61,7 @@ public class AddPOP3MessageCommand extends FolderCommand {
 	public void execute(WorkerStatusController worker) throws Exception {
 		FolderCommandReference r = (FolderCommandReference) getReference();
 
-		inboxFolder = (MessageFolder) r.getFolder();
+		inboxFolder = (AbstractMessageFolder) r.getFolder();
 
 		ColumbaMessage message = (ColumbaMessage) r.getMessage();
 
@@ -122,7 +122,7 @@ public class AddPOP3MessageCommand extends FolderCommand {
 		if (item.getSpamItem().isMoveIncomingJunkMessagesEnabled()) {
 			if (item.getSpamItem().isIncomingTrashSelected()) {
 				// move message to trash
-				MessageFolder trash = (MessageFolder) ((RootFolder) inboxFolder
+				AbstractMessageFolder trash = (AbstractMessageFolder) ((RootFolder) inboxFolder
 						.getRootFolder()).getTrashFolder();
 
 				// create reference

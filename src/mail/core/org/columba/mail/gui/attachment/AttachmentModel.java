@@ -19,7 +19,7 @@ package org.columba.mail.gui.attachment;
 
 import java.util.List;
 
-import org.columba.mail.folder.MessageFolder;
+import org.columba.mail.folder.AbstractMessageFolder;
 import org.columba.ristretto.message.MimePart;
 import org.columba.ristretto.message.MimeTree;
 import org.columba.ristretto.message.StreamableMimePart;
@@ -33,7 +33,7 @@ import org.columba.ristretto.message.StreamableMimePart;
  * type comments go to Window>Preferences>Java>Code Generation.
  */
 public class AttachmentModel {
-    private MessageFolder folder;
+    private AbstractMessageFolder folder;
     private Object uid;
     private List displayedMimeParts;
     private MimeTree collection;
@@ -41,7 +41,7 @@ public class AttachmentModel {
     public AttachmentModel() {
     }
 
-    public synchronized void setFolder(MessageFolder folder) {
+    public synchronized void setFolder(AbstractMessageFolder folder) {
         this.folder = folder;
     }
 
@@ -49,7 +49,7 @@ public class AttachmentModel {
         this.uid = uid;
     }
 
-    public MessageFolder getFolder() {
+    public AbstractMessageFolder getFolder() {
         return folder;
     }
 

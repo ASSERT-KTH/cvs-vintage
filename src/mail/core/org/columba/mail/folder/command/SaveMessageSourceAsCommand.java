@@ -33,7 +33,7 @@ import org.columba.core.command.Worker;
 import org.columba.core.command.WorkerStatusController;
 import org.columba.mail.command.FolderCommand;
 import org.columba.mail.command.FolderCommandReference;
-import org.columba.mail.folder.MessageFolder;
+import org.columba.mail.folder.AbstractMessageFolder;
 import org.columba.mail.util.MailResourceLoader;
 
 
@@ -67,7 +67,7 @@ public class SaveMessageSourceAsCommand extends FolderCommand {
         throws Exception {
         FolderCommandReference r = (FolderCommandReference) getReference();
         Object[] uids = r.getUids(); // uid for messages to save
-        MessageFolder srcFolder = (MessageFolder) r.getFolder();
+        AbstractMessageFolder srcFolder = (AbstractMessageFolder) r.getFolder();
 
         //	register for status events
         ((StatusObservableImpl) srcFolder.getObservable()).setWorker(worker);

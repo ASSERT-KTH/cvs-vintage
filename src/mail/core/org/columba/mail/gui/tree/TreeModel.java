@@ -31,7 +31,7 @@ import org.columba.mail.config.FolderItem;
 import org.columba.mail.config.FolderXmlConfig;
 import org.columba.mail.config.MailConfig;
 import org.columba.mail.folder.AbstractFolder;
-import org.columba.mail.folder.MessageFolder;
+import org.columba.mail.folder.AbstractMessageFolder;
 import org.columba.mail.folder.Root;
 import org.columba.mail.folder.imap.IMAPRootFolder;
 import org.columba.mail.folder.temp.TempFolder;
@@ -79,9 +79,9 @@ public class TreeModel extends DefaultTreeModel {
                         e.hasMoreElements();) {
                     child = (AbstractFolder) e.nextElement();
 
-                    if (child instanceof MessageFolder) {
+                    if (child instanceof AbstractMessageFolder) {
                         try {
-                            ((MessageFolder) child).save();
+                            ((AbstractMessageFolder) child).save();
                         } catch (Exception ex) {
                             ex.printStackTrace();
                         }

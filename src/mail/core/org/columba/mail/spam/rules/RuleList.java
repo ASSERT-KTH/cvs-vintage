@@ -22,7 +22,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.logging.Logger;
 
-import org.columba.mail.folder.MessageFolder;
+import org.columba.mail.folder.AbstractMessageFolder;
 import org.macchiato.maps.ProbabilityMap;
 import org.macchiato.maps.ProbabilityMapImpl;
 import org.macchiato.tokenizer.Token;
@@ -63,7 +63,7 @@ public class RuleList {
         return instance;
     }
 
-    public ProbabilityMap getProbabilities(MessageFolder folder, Object uid)
+    public ProbabilityMap getProbabilities(AbstractMessageFolder folder, Object uid)
             throws Exception {
 
         ProbabilityMap map = new ProbabilityMapImpl();

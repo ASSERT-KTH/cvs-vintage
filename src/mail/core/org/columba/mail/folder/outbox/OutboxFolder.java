@@ -22,7 +22,7 @@ import java.io.InputStream;
 import org.columba.mail.composer.SendableMessage;
 import org.columba.mail.config.FolderItem;
 import org.columba.mail.folder.AbstractFolder;
-import org.columba.mail.folder.HeaderListStorage;
+import org.columba.mail.folder.IHeaderListStorage;
 import org.columba.mail.folder.mh.CachedMHFolder;
 import org.columba.mail.message.ColumbaMessage;
 import org.columba.ristretto.message.Attributes;
@@ -94,7 +94,7 @@ public class OutboxFolder extends CachedMHFolder {
     }
 
     /**
-     * @see org.columba.mail.folder.MailboxInterface#addMessage(java.io.InputStream,
+     * @see org.columba.mail.folder.IMailbox#addMessage(java.io.InputStream,
      *      org.columba.ristretto.message.Attributes)
      */
     public Object addMessage(InputStream in, Attributes attributes, Flags flags)
@@ -107,9 +107,9 @@ public class OutboxFolder extends CachedMHFolder {
     }
 
     /**
-     * @see org.columba.mail.folder.MessageFolder#getHeaderListStorage()
+     * @see org.columba.mail.folder.AbstractMessageFolder#getHeaderListStorage()
      */
-    public HeaderListStorage getHeaderListStorage() {
+    public IHeaderListStorage getHeaderListStorage() {
         if (headerListStorage == null) {
             headerListStorage = new OutboxHeaderListStorage(this);
         }
