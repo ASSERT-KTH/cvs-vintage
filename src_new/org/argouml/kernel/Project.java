@@ -1,4 +1,4 @@
-// $Id: Project.java,v 1.69 2003/06/01 09:36:57 linus Exp $
+// $Id: Project.java,v 1.70 2003/06/08 08:25:28 kataka Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -50,10 +50,8 @@ import java.util.zip.ZipOutputStream;
 import javax.xml.parsers.ParserConfigurationException;
 
 import org.apache.log4j.Category;
-import org.argouml.application.api.Argo;
-import org.argouml.application.api.ArgoEventListener;
-import org.argouml.application.events.ArgoEventPump;
 import org.argouml.application.ArgoVersion;
+import org.argouml.application.api.Argo;
 import org.argouml.cognitive.Designer;
 import org.argouml.cognitive.ProjectMemberTodoList;
 import org.argouml.cognitive.ToDoList;
@@ -91,9 +89,9 @@ import org.argouml.uml.diagram.ui.UMLDiagram;
 import org.argouml.uml.diagram.use_case.ui.UMLUseCaseDiagram;
 import org.argouml.uml.generator.GenerationPreferences;
 import org.argouml.util.ChangeRegistry;
+import org.argouml.util.FileConstants;
 import org.argouml.util.SubInputStream;
 import org.argouml.util.Trash;
-import org.argouml.util.FileConstants;
 import org.argouml.xml.argo.ArgoParser;
 import org.argouml.xml.pgml.PGMLParser;
 import org.argouml.xml.xmi.XMIReader;

@@ -21,7 +21,7 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $Id: UMLListCellRenderer2.java,v 1.7 2003/05/24 21:12:08 kataka Exp $
+// $Id: UMLListCellRenderer2.java,v 1.8 2003/06/08 08:25:28 kataka Exp $
 package org.argouml.uml.ui;
 
 import java.awt.Component;
@@ -65,10 +65,7 @@ public class UMLListCellRenderer2 extends DefaultListCellRenderer {
     /**
      * @see javax.swing.ListCellRenderer#getListCellRendererComponent(javax.swing.JList, java.lang.Object, int, boolean, boolean)
      */
-    public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
-        if (value == null || value.equals("")) {
-            return new JLabel(" ");
-        }
+    public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {       
         JLabel label = (JLabel) super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
 
         if (value instanceof MBase) {
@@ -76,13 +73,17 @@ public class UMLListCellRenderer2 extends DefaultListCellRenderer {
             label.setText(text);
             if (_showIcon) {
                 Icon icon = ResourceLoaderWrapper.getResourceLoaderWrapper().lookupIcon(value);
-                if (icon != null)
+                // if (icon != null)
                     label.setIcon(icon);
             } else {
                 // hack to make sure that the right hight is applied when no icon is used.
                 label = (JLabel) super.getListCellRendererComponent(list, text, index, isSelected, cellHasFocus);
             }
 
+        } else
+        if (value == null || value.equals("")) {      
+            label = new JLabel(" ");      
+            label.setIcon(null);
         }
         
 

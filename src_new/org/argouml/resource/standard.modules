@@ -1,5 +1,5 @@
 #
-# $Id: standard.modules,v 1.13 2003/03/19 13:48:03 lepekhine Exp $
+# $Id: standard.modules,v 1.14 2003/06/08 08:25:28 kataka Exp $
 #
 # The sequence of modules within this file may be significant.
 #
@@ -36,3 +36,4 @@ module.propertypanel.model=org.argouml.uml.ui.model_management.PropPanelModel
 # #module.bottomright.history=org.argouml.uml.ui.TabHistory
 # #module.bottomright.hash=org.argouml.uml.ui.TabHash
 #
+module.menu.file.export.xmi=org.argouml.ui.ActionExportXMI
