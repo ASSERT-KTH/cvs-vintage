@@ -80,7 +80,7 @@ public class SQLGenerator {
       // get a list of all fields to be loaded
       List loadFields = new ArrayList();
       loadFields.addAll(selectEntity.getPrimaryKeyFields());
-      if(!readAhead.isOnFind()) {
+      if(readAhead.isOnFind()) {
          String eagerLoadGroupName = readAhead.getEagerLoadGroup();
          loadFields.addAll(selectEntity.getLoadGroup(eagerLoadGroupName));
       }

@@ -33,7 +33,7 @@ import org.jboss.util.FinderResults;
  * Loads relations for a particular entity from a relation table.
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.11 $
+ * @version $Revision: 1.12 $
  */
 public class JDBCLoadRelationCommand {
    private final JDBCStoreManager manager;
@@ -315,8 +315,20 @@ public class JDBCLoadRelationCommand {
       if(!cmrField.getReadAhead().isOnFind()) {
          return Collections.EMPTY_LIST;
       }
+
+      JDBCCMRFieldBridge relatedCMRField = cmrField.getRelatedCMRField();
       String eagerLoadGroup = cmrField.getReadAhead().getEagerLoadGroup();
-      return cmrField.getRelatedEntity().getLoadGroup(eagerLoadGroup);
+      List eagerLoad = relatedCMRField.getEntity().getLoadGroup(eagerLoadGroup);
+      
+      // add all the eagerload fields except for the related cmr field
+      List preloadFields = new ArrayList(eagerLoad.size());
+      for(Iterator fields = eagerLoad.iterator(); fields.hasNext();) {
+         JDBCFieldBridge field = (JDBCFieldBridge)fields.next();
+         if(!field.equals(relatedCMRField)) {
+            preloadFields.add(field);
+         }
+      }
+      return Collections.unmodifiableList(preloadFields);
    }
 
    private String getRelationTable(JDBCCMRFieldBridge cmrField) {

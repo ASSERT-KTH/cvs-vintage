@@ -21,7 +21,7 @@ import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCReadAheadMetaData;
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
- * @version $Revision: 1.3 $
+ * @version $Revision: 1.4 $
  */
 public class JDBCFindByPrimaryKeyQuery extends JDBCAbstractQueryCommand {
 
@@ -34,7 +34,7 @@ public class JDBCFindByPrimaryKeyQuery extends JDBCAbstractQueryCommand {
 
       // set the preload fields
       JDBCReadAheadMetaData readAhead = q.getReadAhead();
-      if(!readAhead.isOnFind()) {
+      if(readAhead.isOnFind()) {
          String eagerLoadGroupName = readAhead.getEagerLoadGroup();
          setPreloadFields(entity.getLoadGroup(eagerLoadGroupName));
       }
