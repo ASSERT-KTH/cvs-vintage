@@ -1,9 +1,7 @@
 $page.setTitle("Assign users to issue")
 
 <div class="app" id="assignissue">
-
 <h2>$page.Title</h2>
-
 #if (!$scarabR.Issue.isNew())
  #set ($issue = $scarabR.Issue)
 #elseif ( $scarabR.Issues )
@@ -60,8 +58,8 @@ $page.setTitle("Assign users to issue")
    <input type="hidden" name="$issueGroup.Ids.Key" value="$issue.IssueId" />
   #end
  #end
-#else
- <input type="hidden" name="$issueGroup.Id.Key" value="$issueGroup.Id" />
+#else $issueGroup.Id.Key
+ <input type="hidden" name="$issueGroup.Id.Key" value="$issue.UniqueId" />
 #end
 
 <div class="sidebyside">
