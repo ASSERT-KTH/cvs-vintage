@@ -1,5 +1,5 @@
 --------------------------------------------------------------------------
-$Id: README.txt,v 1.2 2002/01/24 22:38:23 jon Exp $
+$Id: README.txt,v 1.3 2002/02/26 22:21:09 jon Exp $
 --------------------------------------------------------------------------
 
 The files in this directory are here for your convenience in building
@@ -118,12 +118,6 @@ considered 'standard' and well supported in our community circles.
 
   http://java.sun.com/products/javamail/index.html
 
-* mm.mysql-*.jar
-
-  MM MySQL JDBC Driver
-  
-  http://mmmysql.sourceforge.net/
-
 * servlet-*.jar
 
   This is the Servlet API 2.2 or greater. We include version 2.2 of the
@@ -178,6 +172,22 @@ considered 'standard' and well supported in our community circles.
   http://xml.apache.org/xerces-j/
   
 
+DATABASE JDBC DRIVERS
+=====================
+
+* mm.mysql-*.jar
+
+  MM MySQL JDBC Driver
+  
+  http://mmmysql.sourceforge.net/
+
+* postgresql-*.jar
+
+  Postgresql JDBC Driver
+
+  http://www.postgresql.org/
+
+
 BUILD TOOLS
 ===========
 These libraries are used when building Scarab. These are not necessary
@@ -188,3 +198,4 @@ for the operation of Scarab itself.
   Java build tool.
 
   http://jakarta.apache.org/ant/
+
