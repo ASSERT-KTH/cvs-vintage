@@ -49,6 +49,7 @@ package org.tigris.scarab.actions;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
+import java.util.ArrayList;
 import java.io.File;
 
 // Turbine Stuff 
@@ -97,7 +98,7 @@ import org.tigris.scarab.tools.ScarabRequestTool;
  * This class is responsible for report issue forms.
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: ReportIssue.java,v 1.80 2002/01/10 19:53:01 jmcnally Exp $
+ * @version $Id: ReportIssue.java,v 1.81 2002/01/10 21:03:23 elicia Exp $
  */
 public class ReportIssue extends RequireLoginFirstAction
 {
@@ -388,14 +389,9 @@ public class ReportIssue extends RequireLoginFirstAction
                     .getString(ScarabConstants.NEXT_TEMPLATE, "ViewIssue.vm");
                 if (template != null && template.equals("AssignIssue.vm"))
                 {
-                    data.getParameters().add("intake-grp", "issue"); 
-                    /*
-                     data.getParameters().add("issue", "_0"); 
-                     data.getParameters().add("issue_0id", 
-                     issue.getIssueId().toString());
-                     */
-                    data.getParameters().add("id", 
-                                             issue.getUniqueId().toString());
+                    List issueIdList = new ArrayList();
+                    issueIdList.add(scarabR.getIssue().getIssueId());
+                    context.put("issueIdList", issueIdList);
                 }
                 setTarget(data, template);
                 

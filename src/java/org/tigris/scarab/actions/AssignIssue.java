@@ -96,7 +96,7 @@ import org.tigris.scarab.util.ScarabLink;
  * This class is responsible for report issue forms.
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: AssignIssue.java,v 1.24 2002/01/10 20:11:51 elicia Exp $
+ * @version $Id: AssignIssue.java,v 1.25 2002/01/10 21:03:23 elicia Exp $
  */
 public class AssignIssue extends RequireLoginFirstAction
 {
@@ -193,9 +193,7 @@ public class AssignIssue extends RequireLoginFirstAction
                              group.setProperties(attVal);
                              attVal.save();
                              data.getParameters().add("isChanged", "true");
-                             emailAssignIssueToUser(scarabR.getIssue(),  
-                                                    assignee, emailAction, context);
-                        }
+                             emailAssignIssueToUser(issue, assignee, emailAction, context); }
                     }
                 }
            }
@@ -283,8 +281,7 @@ public class AssignIssue extends RequireLoginFirstAction
                             attVal.setValue(user.getUserName());
                             attVal.save();
                             data.getParameters().add("isChanged", "true");
-                            emailAssignIssueToUser(scarabR.getIssue(), user,
-                                                   action, context);
+                            emailAssignIssueToUser(issue, user, action, context);
                         }
                     }
                 }
@@ -299,7 +296,7 @@ public class AssignIssue extends RequireLoginFirstAction
      * with a comment.
      *
      * @param issue a <code>Issue</code> to notify users about being assigned to.
-     * @param users a <code>List</code> of users to be notified.
+     * @param users a <code>ScarabUser</code> user to be notified.
      * @param comment <code>String</code>
      * @param context <code>TemplateContext</code>
      */
