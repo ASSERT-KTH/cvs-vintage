@@ -14,7 +14,7 @@ $link in modules which you are not currently associated.
     <th>$l10n.Name</th>
     <th>$l10n.Description</th>
 </tr>
-<tr>
+<tr class="a">
     <td>
     $currentModule.Name
     </td>
