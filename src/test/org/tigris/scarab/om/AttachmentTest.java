@@ -60,7 +60,7 @@ import org.apache.commons.fileupload.FileItem;
  * A Testing Suite for the om.Attachment class.
  *
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: AttachmentTest.java,v 1.4 2002/05/28 23:10:24 jmcnally Exp $
+ * @version $Id: AttachmentTest.java,v 1.5 2002/10/01 00:11:07 jmcnally Exp $
  */
 public class AttachmentTest extends BaseTestCase
 {
@@ -102,7 +102,7 @@ public class AttachmentTest extends BaseTestCase
         System.out.println("\ntestSaveComment()");
         // save comment
         comment.setName("comment");
-        comment.setDataAsString("Test comment");
+        comment.setData("Test comment");
         comment.setTextFields(getUser1(),issue, Attachment.COMMENT__PK);
         comment.save();
 
@@ -162,13 +162,13 @@ public class AttachmentTest extends BaseTestCase
         url.setTypeId(AttachmentTypePeer.URL_PK);
         url.setMimeType("");
         url.setName("foo");
-        url.setDataAsString("www.foo.com");
+        url.setData("www.foo.com");
         url.save();
         assertEquals(url.getName(),"foo");
-        assertEquals(url.getDataAsString(),"http://www.foo.com");
+        assertEquals(url.getData(),"http://www.foo.com");
 
-        url.setDataAsString("mailto:admin@foo.com");
+        url.setData("mailto:admin@foo.com");
         url.save();
-        assertEquals(url.getDataAsString(),"mailto:admin@foo.com");
+        assertEquals(url.getData(),"mailto:admin@foo.com");
     }
 }

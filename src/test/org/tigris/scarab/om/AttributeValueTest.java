@@ -59,7 +59,7 @@ import java.util.List;
  * A Testing Suite for the om.Query class.
  *
  * @author <a href="mailto:mumbly@oneofus.org">Tim McNerney</a>
- * @version $Id: AttributeValueTest.java,v 1.3 2002/07/31 00:57:19 jmcnally Exp $
+ * @version $Id: AttributeValueTest.java,v 1.4 2002/10/01 00:11:07 jmcnally Exp $
  */
 public class AttributeValueTest extends BaseTestCase
 {
@@ -104,7 +104,7 @@ public class AttributeValueTest extends BaseTestCase
         newAttVal = attVal.copy();
         Attachment attachment = AttachmentManager.getInstance();
         attachment.setName("activitySet test");
-        attachment.setDataAsString("Test comment");
+        attachment.setData("Test comment");
         attachment.setTextFields(getUser1(), issue, Attachment.COMMENT__PK);
         attachment.save();
         ActivitySet trans = new ActivitySet();

@@ -58,7 +58,7 @@ import java.util.List;
  * A Testing Suite for the om.ActivitySet class.
  *
  * @author <a href="mailto:mumbly@oneofus.org">Tim McNerney</a>
- * @version $Id: ActivitySetTest.java,v 1.1 2002/07/31 00:57:19 jmcnally Exp $
+ * @version $Id: ActivitySetTest.java,v 1.2 2002/10/01 00:11:07 jmcnally Exp $
  */
 public class ActivitySetTest extends BaseTestCase
 {
@@ -91,7 +91,7 @@ public class ActivitySetTest extends BaseTestCase
         Issue issue = IssueManager.getInstance(new NumberKey("1"));
         Attachment attachment = AttachmentManager.getInstance();
         attachment.setName("activitySet test");
-        attachment.setDataAsString("Test comment");
+        attachment.setData("Test comment");
         attachment.setTextFields(getUser1(), issue, Attachment.COMMENT__PK);
         attachment.save();
         
