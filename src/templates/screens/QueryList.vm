@@ -7,6 +7,20 @@ $page.setTitle("Stored query list")
 #set ($issueType = $scarabR.CurrentIssueType)
 #set ($user = $data.User)
 
+<div class="tabs">
+<table cellpadding="3" cellspacing="0" border="0">
+<tr>
+<td><a href="#" title="view advanced query information">Advanced query</a></td>
+<td><a href="#" title="view custom query information">Custom</a></td>
+<th>Saved queries</th>
+</tr>
+</table>
+</div>
+
+<div class="functnbar">		
+<input type="submit" value="Done"  name="eventSubmit_doSave" />&nbsp;<input type="submit" value="Cancel"  name="eventSubmit_doCancel" />&nbsp;
+</div>
+
 #if ($module.getAllUserQueries($user, $issueType).isEmpty())
 <h3>Saved Queries</h3>
  <p><strong class="alert">There are no stored queries.
@@ -19,27 +33,6 @@ $page.setTitle("Stored query list")
 #set ($action = $link.setPage("QueryList.vm").setAction("QueryList").addPathInfo("$scarabG.Constant.NEXT_TEMPLATE", "QueryList.vm").toString())
 <form method="post" action="$action">
 
-<div class="functnbar">
- <table cellpadding="4" cellspacing="0" border="1">
- <tr>
-  <td class="firstchild">
-  <div>General functions</div>
-   <input type="submit" value="Save" name="eventSubmit_doSave" />&#160;
-   <input type="submit" value="Cancel" name="eventSubmit_doCancel" />&#160;
-   <input type="submit" value="New" name="eventSubmit_doNewquery" />
-  </td>
-  <td>
-  <div>Select list item(s) to</div>
-  <input type="submit" value="Copy" name="eventSubmit_doCopyquery" />&#160;
-  #if ($scarabR.hasPermission($scarabG.Permission.ITEM__DELETE) || !$module.getPrivateQueries($user).isEmpty())
-   <input type="submit" value="Delete" name="eventSubmit_doDeletequeries" />&#160;
-  #end
-  <input type="submit" value="Subscribe" name="eventSubmit_doSubscribe" />&#160;
-  <input type="submit" value="Unsubscribe" name="eventSubmit_doUnsubscribe" />
-  </td>
- </tr>
- </table>
-</div>
 
 ##   <p>&#171; previous | 1 of 1 | next &#187; </p>
 
@@ -96,31 +89,22 @@ $page.setTitle("Stored query list")
  #end
 </table>
 
+<div class="functnbar3">		
+<input type="submit" value="Copy" name="eventSubmit_doCopyquery" />
+  #if ($scarabR.hasPermission($scarabG.Permission.ITEM__DELETE) || !$module.getPrivateQueries($user).isEmpty())
+   &nbsp;<input type="submit" value="delete selected" name="eventSubmit_doDeletequeries" />&#160;
+  &nbsp;<input type="submit" value="subscribe to selected" name="eventSubmit_doSubscribe" />&#160;
+  &nbsp;<input type="submit" value="unsubscribe to selected" name="eventSubmit_doUnsubscribe" />
+  #end
+</div>
+
+
 ##    <p>&#171; previous | 1 of 1 | next &#187; </p>
 
-#if ($user.UserId)
-<div class="functnbar2">
- <table cellpadding="4" cellspacing="0" border="1">
- <tr>
-  <td class="firstchild">
-  <div>General functions</div>
-   <input type="submit" value="Save" name="eventSubmit_doSave" />&#160;
-   <input type="submit" value="Cancel" name="eventSubmit_doCancel" />&#160;
-   <input type="submit" value="New" name="eventSubmit_doNewquery" />
-  </td>
-  <td>
-  <div>Select list item(s) to</div>
-  <input type="submit" value="Copy" name="eventSubmit_doCopyquery" />&#160;
-  #if ($scarabR.hasPermission($scarabG.Permission.ITEM__DELETE) || !$module.getPrivateQueries($user).isEmpty())
-   <input type="submit" value="Delete" name="eventSubmit_doDeletequeries" />&#160;
-  #end
-  <input type="submit" value="Subscribe" name="eventSubmit_doSubscribe" />&#160;
-  <input type="submit" value="Unsubscribe" name="eventSubmit_doUnsubscribe" />
-  </td>
- </tr>
- </table>
+#end
+<div class="functnbar2">		
+<input type="submit" value="Done"  name="eventSubmit_doSave" />&nbsp;<input type="submit" value="Cancel"  name="eventSubmit_doCancel" />&nbsp;
 </div>
-#end
+
 </form>
-#end
 </div>

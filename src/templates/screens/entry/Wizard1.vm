@@ -17,14 +17,14 @@ $page.setTitle("Enter New: $scarabR.CurrentIssueType.Name")
 <div class="tabs">
 <table cellpadding="3" cellspacing="0" border="0">
 <tr>
-<th>1: Summary info</th>
-<td>2: Duplicate check</td>
-<td>3: Verbose info</td>
-</tr>
+  <th>1: Duplicate attributes</td>
+  <td>2: Duplicate check</td>
+  <td>3: Non-duplicate attributes</th>
 </table>
 </div>
 <form method="post" action="$link.setPage("entry,Wizard1.vm").setAction("ReportIssue")">
 <input type="hidden" name="$scarabG.Constant.NEXT_TEMPLATE" value="entry,Wizard3.vm" />
+
 
 #set ($privateTemplateList = $module.getPrivateTemplates($user,$issueType))
 #set ($globalTemplateList = $module.getGlobalTemplates($issueType))
@@ -43,7 +43,7 @@ $page.setTitle("Enter New: $scarabR.CurrentIssueType.Name")
  <option value="$template.IssueId">$template.TemplateInfo.Name</option>
 #end
 </select>
-      &#160;<input type="submit" value="Select" name="eventSubmit_doUsetemplates" /> 
+      &#160;<input type="submit" value="select" name="eventSubmit_doUsetemplates" /> 
       &#160;<a href="$link.setPage("TemplateList.vm")">View all patch templates</a>
  </td>
  </tr>

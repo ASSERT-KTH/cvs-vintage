@@ -18,9 +18,9 @@ $page.setTitle("Enter issue")
 <div class="tabs">
   <table cellpadding="3" cellspacing="0" border="0">
   <tr>
-  <td>1: Summary info</td>
+  <td>1: Duplicate attributes</td>
   <td>2: Duplicate check</td>
-  <th>3: Verbose info</th>
+  <th>3: Non-duplicate attributes</th>
   </tr>
   </table>
 </div>
@@ -60,18 +60,10 @@ $page.setTitle("Enter issue")
 <form method="get" action="$link.setPage("entry,Wizard3.vm")">
 <input type="hidden" name="action" value="ReportIssue" />
 
-<div class="functnbar">
-<table cellpadding="4" cellspacing="0" border="1">
- <tr>
-  <td class="firstchild">
-  <input type="submit" name="eventSubmit_doEnterissue" value="Save" />
-  </td>
- </tr>
-</table>
-</div>
-
+<p class="functnbar"><input type="submit" value="Submit issue"  name="eventSubmit_doEnterissue" />&#160;<input type="reset" value="Reset form" />&#160;<input type="reset" value="Cancel" /></p>
+	
 <div class="axial">
-<h3>Input your issue</h3>
+<h3>$scarabR.CurrentIssueType.Name</h3>
     <table cellpadding="3" cellspacing="2" border="0">
 #foreach ($attKey in $attrValues.sequence())
   #set ($attVal = $attrValues.get($attKey))
@@ -178,15 +170,7 @@ $page.setTitle("Enter issue")
     </table>
 </div>
 
-<div class="functnbar2">
-<table cellpadding="4" cellspacing="0" border="1">
- <tr>
-  <td class="firstchild">
-  <input type="submit" name="eventSubmit_doEnterissue" value="Save" />
-  </td>
- </tr>
-</table>
-</div>
+<p class="functnbar2"><input type="submit" value="Submit issue"  name="eventSubmit_doEnterissue" />&#160;<input type="reset" value="Reset form" />&#160;<input type="reset" value="Cancel" /></p>
 
 $intake.declareGroups()
 </form>

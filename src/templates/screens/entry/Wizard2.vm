@@ -9,9 +9,9 @@ $page.setTitle("Identified as duplicate")
 <div class="tabs">
   <table cellpadding="3" cellspacing="0" border="0">
   <tr>
-  <td>1: Summary info</td>
-  <th>2: Duplicate check</th>
-  <td>3: Verbose info</td>
+  <td>1: Duplicate attributes</td>
+  <th>2: Duplicate check</td>
+  <td>3: Non-duplicate attributes</th>
   </tr>
   </table>
 </div>
@@ -58,8 +58,7 @@ $page.setTitle("Identified as duplicate")
 <table width="100%" border="1" cellspacing="2" cellpadding="3">
 <tr>
 <th>
-<img src="$data.Request.ContextPath/images/icon_uparrow.gif" width="13" height="8" alt="sort ascending" title="sort ascending" border="0" />
-<img src="$data.Request.ContextPath/images/icon_downarrow.gif" width="13" height="8" alt="sort descending" title="sort descending" border="0" />
+<img src="$data.Request.ContextPath/images/icon_uparrow_off.gif" width="13" height="8" alt="sort ascending" title="sort ascending" border="0" /><img src="$data.Request.ContextPath/images/icon_downarrow_on.gif" width="13" height="8" alt="sort descending" title="sort descending" border="0" />
 </th>
 <th>Issue ID</th>
 #set ($attrValues = $currentIssue.ModuleAttributeValuesMap)

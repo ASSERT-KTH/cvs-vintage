@@ -26,14 +26,15 @@ $page.setTitle("View Issue")
     | <a href="$nextLink">&raquo;</a> next
   #end
 #end
-
-  <form method="post" action="$action">
   #set ($currentModule = $scarabR.CurrentModule)
   #foreach ($currentIssue in $issueList)
+  <form method="post" action="$action">
+    <input type="hidden" name="id" value="$currentIssue.UniqueId">
+    <input type="hidden" name="resultsPerPage" value="$resultsPerPage">
     #viewIssue ($currentIssue $currentModule)
-  #end
   $intake.declareGroups()
   </form>
+  #end
 #else
    <p><strong class="alert">You have not selected any issues to view.</strong></p>
 #end

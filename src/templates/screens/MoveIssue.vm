@@ -6,7 +6,6 @@ $page.setTitle("Copy/move issue")
 #set ($user = $data.User)
 #set ($issueId = $data.Parameters.getString("id"))
 #set ($issue = $scarabR.getIssue($issueId))
-
 #if (!$issueId || $issueId.length() == 0 || !$issue)
 
 <p><strong class="alert">Sorry, the requested issue could not be found.</strong></p>
@@ -17,13 +16,13 @@ $page.setTitle("Copy/move issue")
 #set ($attrValues = $issue.AllAttributeValuesMap)
 #set ($attVal = $attrValues.get("SUMMARY"))
 #set ($attrInput = $intake.AttributeValue.mapTo($attVal))
-
 <form method="post" action="$link.setPage("MoveIssue.vm").setAction("MoveIssue")">
 <input type="hidden" name="$moveIssueGroup.IssueId.key" value="$issue.UniqueId" />
 ## need to also pass id so that if we re-display this page, the right value is kept around
 <input type="hidden" name="id" value="$issueId" />
 <input type="hidden" name="$scarabG.Constant.NEXT_TEMPLATE" value="MoveIssue2.vm" />
 
+$attVal
 <h3>Issue to be copied/moved</h3>
 <table width="100%" border="1" cellspacing="2" cellpadding="3">
  <tr>
@@ -39,7 +38,7 @@ $page.setTitle("Copy/move issue")
    $attVal.Value
   </td>
 #end
-  <td>$format.getDate($scarabR.DateFormat, $issue.CreatedDate)</td>
+  ##<td>$format.getDate($scarabR.DateFormat, $issue.CreatedDate)</td>
   <td>
    #set ($createdUser = $issue.CreatedBy)
    <a href="mailTo:$createdUser.Email">$createdUser.FirstName $createdUser.LastName</a>
@@ -94,5 +93,4 @@ $intake.declareGroups()
 </form>
 
 #end
-
 </div>

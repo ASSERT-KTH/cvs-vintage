@@ -10,16 +10,18 @@ $page.setTitle("Custom Search")
 <input type="hidden" name="action" value="Search" />
 <input type="hidden" name="searchType" value="custom" />
 
-<div class="functnbar">
-<table cellpadding="4" cellspacing="0" border="1">
- <tr>
-  <td class="firstchild">
-  <input type="submit" name="eventSubmit_doSearch" value="Search" />&#160;
-  <input type="submit" name="eventSubmit_doCancel" value="Cancel" />
-  </td>
- </tr>
+<div class="tabs">
+<table cellpadding="3" cellspacing="0" border="0">
+<tr>
+	<td><a href="$link.setPage("AdvancedQuery.vm")" title="view advanced query information">Avanced query</a></td>
+	<th>Custom</th>
+	<td><a href="$link.setPage("QueryList.vm")" title="view saved queries">Saved queries</a></td>
+</tr>
 </table>
 </div>
+		
+<p class="functnbar"><input type="submit" value="search" name="eventSubmit_doSearch" />&#160;<input type="submit" value="cancel" name="eventSubmit_doCancel" /></p>
+		
 
 #set ($search = $scarabR.Search)
 #set ($searchGroup = $intake.SearchIssue.mapTo($search))
@@ -32,7 +34,7 @@ $page.setTitle("Custom Search")
 <div class="axial">
   <table border="0" cellspacing="2" cellpadding="3">
   <tr>
-   <th width="120">Select text attributes</th>
+   <th width="120">select text attributes</th>
    <td>
     ## default to first attribute if none was selected previously
     #if ($searchGroup.TextScope.isSet())
@@ -63,7 +65,7 @@ $page.setTitle("Custom Search")
   </tr>
 
   <tr>
-   <th width="120">Enter search string</th>
+   <th width="120">enter search string</th>
    <td>
       <textarea name="$searchGroup.SearchWords.Key"
           rows="2" cols="30">$!searchGroup.SearchWords</textarea>
@@ -94,27 +96,44 @@ $page.setTitle("Custom Search")
  </table>
  </div>
 
-<p>
-Issues per page:
+<h3>Results display options</h3>
+		
+<div class="axial">
+  <table cellpadding="3" cellspacing="2" border="0">
+<div class="axial">
+<table width="100%" cellpadding="3" cellspacing="2" border="1">
+#* 
+ FIXME - implement sort
+	<tr>
+	<th width="120">sort by</th>
+	<td><select>
+	<option>
+	attriute X
+	</option>
+	</select>&nbsp;<select>
+	<option>
+	ascending
+	</option>
+	<option>
+	descending
+	</option>
+	</select></td>
+	</tr>
+*#
+       <tr>
+       <th>Max items per page</th>
 <input type="hidden" name="pageNum" value="1" />
-<input type="radio" name="resultsPerPage" value="25" checked="checked" /> 25
-<input type="radio" name="resultsPerPage" value="50" /> 50
-<input type="radio" name="resultsPerPage" value="75" /> 75
-<input type="radio" name="resultsPerPage" value="100" /> 100
-</p>
-
-<p><a href="#">edit custom search - not implemented</a></p>
-<div class="functnbar2">
-<table cellpadding="4" cellspacing="0" border="1">
-<tr>
- <td class="firstchild">
-  <input type="submit" name="eventSubmit_doSearch" value="Search" />&#160;
-  <input type="submit" name="eventSubmit_doCancel" value="Cancel" />
- </td>
-</tr>
-</table>
+       <td><input type="radio" name="resultsPerPage" checked="checked" /> 25 <input type="radio" name="resultsPerPage" /> 50 <input type="radio" name="resultsPerPage" /> 75 <input type="radio" name="resultsPerPage" /></td>
+     </tr>
+      </table>
 </div>
 
+
+<p><a href="#">edit custom search - not implemented</a></p>
+
+<p class="functnbar2"><input type="submit" value="search" name="eventSubmit_doSearch" />&#160;<input type="submit" value="cancel" name="eventSubmit_doCancel" /></p>
+
+		
  $intake.declareGroups()
 </form>
 </div>
