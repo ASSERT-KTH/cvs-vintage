@@ -1,9 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE folderlist SYSTEM "folder.dtd">
+<!-- <!DOCTYPE folderlist SYSTEM "folder.dtd"> -->
 
 <folderlist>
- <folder name="Root" class="org.columba.addressbook.folder.Root"/>
- <folder name="localroot" class="org.columba.addressbook.folder.LocalRootFolder"/>
- <folder name="remoteroot" class="org.columba.addressbook.folder.RemoteRootFolder"/>
- <folder name="addresses" class="org.columba.addressbook.folder.AddressbookFolder"/>
-</folderlist>
+  <folder   <folder name="Root" class="org.columba.addressbook.folder.Root"/>
+         name="Root"   <folder name="localroot" class="org.columba.addressbook.folder.LocalRootFolder"/>
+         class="org.columba.addressbook.folder.Root" />   <folder name="remoteroot" class="org.columba.addressbook.folder.RemoteRootFolder"/>
+  <folder   <folder name="addresses" class="org.columba.addressbook.folder.AddressbookFolder"/>
+         name="LocalRootFolder"  
+         class="org.columba.addressbook.folder.LocalRootFolder" />  
+  <folder  
+         name="RemoteRootFolder"  
+         class="org.columba.addressbook.folder.RemoteRootFolder" />  
+  <folder  
+         name="AddressbookFolder"  
+         class="org.columba.addressbook.folder.AddressbookFolder" />  
+ </folderlist>
