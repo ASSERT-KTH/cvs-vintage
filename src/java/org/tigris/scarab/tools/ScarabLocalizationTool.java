@@ -366,16 +366,6 @@ public class ScarabLocalizationTool
         return name;
     }
 
-    /**
-     * Gets the Accept-Language: HTTP header from the request.
-     * If data is null, then it will return null.
-     */
-    public String getAcceptLanguage()
-    {
-        return (data != null) ?
-            data.getRequest().getHeader(LocalizationService.ACCEPT_LANGUAGE) :
-            null;
-    }
 
     // ---- ApplicationTool implementation  ----------------------------------
 

@@ -1,7 +1,7 @@
 package org.tigris.scarab.om;
 
 /* ================================================================
- * Copyright (c) 2000-2003 CollabNet.  All rights reserved.
+ * Copyright (c) 2000-2002 CollabNet.  All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are
@@ -16,7 +16,7 @@ package org.tigris.scarab.om;
  * 
  * 3. The end-user documentation included with the redistribution, if
  * any, must include the following acknowlegement: "This product includes
- * software developed by CollabNet <http://www.collab.net/>."
+ * software developed by Collab.Net <http://www.Collab.Net/>."
  * Alternately, this acknowlegement may appear in the software itself, if
  * and wherever such third-party acknowlegements normally appear.
  * 
@@ -26,7 +26,7 @@ package org.tigris.scarab.om;
  * 
  * 5. Products derived from this software may not use the "Tigris" or 
  * "Scarab" names nor may "Tigris" or "Scarab" appear in their names without 
- * prior written permission of CollabNet.
+ * prior written permission of Collab.Net.
  * 
  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESSED OR IMPLIED
  * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
@@ -43,7 +43,7 @@ package org.tigris.scarab.om;
  * ====================================================================
  * 
  * This software consists of voluntary contributions made by many
- * individuals on behalf of CollabNet.
+ * individuals on behalf of Collab.Net.
  */ 
 
 import java.util.Arrays;
@@ -53,6 +53,8 @@ import java.util.Map;
 import java.util.Calendar;
 import java.util.Collections;
 
+import org.apache.commons.lang.StringUtils;
+import org.apache.commons.util.GenerateUniqueId;
 import org.apache.fulcrum.localization.Localization;
 import org.apache.fulcrum.security.entity.User;
 import org.apache.fulcrum.security.entity.Group;
@@ -64,7 +66,6 @@ import org.apache.fulcrum.security.impl.db.entity.TurbineUserGroupRolePeer;
 import org.apache.fulcrum.security.util.AccessControlList;
 import org.apache.torque.TorqueException;
 import org.apache.torque.util.Criteria;
-import org.apache.commons.util.GenerateUniqueId;
 
 import org.tigris.scarab.reports.ReportBridge;
 import org.tigris.scarab.services.security.ScarabSecurity;
@@ -82,7 +83,7 @@ import org.apache.log4j.Logger;
  * implementation needs.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ScarabUserImpl.java,v 1.100 2003/04/10 20:24:12 elicia Exp $
+ * @version $Id: ScarabUserImpl.java,v 1.101 2003/04/10 22:14:58 dlr Exp $
  */
 public class ScarabUserImpl 
     extends BaseScarabUserImpl 
@@ -101,6 +102,9 @@ public class ScarabUserImpl
      */
     private static final int UNIQUE_ID_MAX_LEN = 10;
 
+    /**
+     * The user's preferred locale.
+     */
     private Locale locale = null;
 
     /**
@@ -985,17 +989,34 @@ public class ScarabUserImpl
     }
 
     /**
-     * Sets the users default locale to the users preferences.
-     * No need to call user.save() as this method will save the
-     * preferences for us.
+     * Saves the user's locale preference iff they don't already have
+     * one (calling {@link #save()} internally).  The locale preferece
+     * is stored in the style of a HTTP <code>Accept-Language</code>
+     * header.
+     *
+     * @see org.tigris.scarab.om.ScarabUser#noticeLocale(Object)
      */
-    public void setLocale(String language)
+    public void noticeLocale(Object localeInfo)
         throws Exception
     {
-        UserPreference up = UserPreferenceManager.getInstance(getUserId());
-        up.setLanguage(language);
-        up.save();
-        locale = Localization.getLocale(language);
+        UserPreference pref = UserPreferenceManager.getInstance(getUserId());
+        String preferredLocale = pref.getLocale();
+        if (StringUtils.isEmpty(preferredLocale))
+        {
+            if (localeInfo instanceof Locale)
+            {
+                Locale l = (Locale) localeInfo;
+                StringBuffer buf = new StringBuffer(l.getLanguage());
+                String country = l.getCountry();
+                if (StringUtils.isNotEmpty(country))
+                {
+                    buf.append('-').append(country);
+                }
+                localeInfo = buf;
+            }
+            pref.setLocale(localeInfo.toString());
+            pref.save();
+        }
     }
 
     /**
@@ -1007,8 +1028,7 @@ public class ScarabUserImpl
         if (locale == null)
         {
             UserPreference up = UserPreferenceManager.getInstance(getUserId());
-            String header = up.getLanguage();
-            locale = Localization.getLocale(header);
+            locale = Localization.getLocale(up.getLocale());
         }
         return locale;
     }

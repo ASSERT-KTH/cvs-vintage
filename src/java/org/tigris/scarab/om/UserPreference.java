@@ -55,7 +55,7 @@ import org.apache.torque.TorqueException;
  * to come up with a real system for dealing with this.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: UserPreference.java,v 1.9 2003/04/10 17:50:04 dlr Exp $
+ * @version $Id: UserPreference.java,v 1.10 2003/04/10 22:14:58 dlr Exp $
  */
 public class UserPreference 
     extends org.tigris.scarab.om.BaseUserPreference
@@ -66,12 +66,11 @@ public class UserPreference
      * have an adverse affect because the <code>Accept-Language</code>
      * header parser generally only needs the first few characters.
      *
-     * @param lang The Locale information.
+     * @param locale The Locale information.
      */
-    public void setLanguage(String lang)
+    public void setLocale(String locale)
     {
-        String newLang = (lang != null && lang.length() > 255) ? 
-                         lang.substring(0, 255) : lang;
-        super.setLanguage(newLang);
+        super.setLocale((locale != null && locale.length() > 255)
+                        ? locale.substring(0, 255) : locale);
     }
 }

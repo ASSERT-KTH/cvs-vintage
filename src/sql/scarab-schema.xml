@@ -2,7 +2,7 @@
 <!DOCTYPE database SYSTEM
           "http://jakarta.apache.org/turbine/dtd/database.dtd">
 
-<!-- $Id: scarab-schema.xml,v 1.129 2003/04/09 00:42:06 jon Exp $ -->
+<!-- $Id: scarab-schema.xml,v 1.130 2003/04/10 22:14:58 dlr Exp $ -->
 
 <database name="@DATABASE_PROP_NAME@" defaultJavaType="object">
 <!--
@@ -1401,11 +1401,12 @@
             de-de,de-ch;q=0.8,en-us;q=0.5,en;q=0.3
             en-us, en;q=0.50
             
-        If this value cannot be parsed or is null, then the Modules default
-        language will be used. If the Module does not have a default language
-        then the JVM's default language will be used.
+        If this value cannot be parsed or is null, the current
+        Module's default locale will be used.  If the Module does not
+        have a default locale, the LocalizationService's default
+        language will be used.
     -->
-    <column name="LANGUAGE" type="VARCHAR" size="255"/>
+    <column name="LOCALE" type="VARCHAR" size="255"/>
 
     <foreign-key foreignTable="TURBINE_USER">
         <reference local="USER_ID" foreign="USER_ID"/>

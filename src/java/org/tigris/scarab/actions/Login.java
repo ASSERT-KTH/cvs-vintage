@@ -47,6 +47,7 @@ package org.tigris.scarab.actions;
  */ 
 
 import java.util.List;
+import java.util.Locale;
 
 // Turbine Stuff 
 import org.apache.turbine.TemplateContext;
@@ -55,6 +56,7 @@ import org.apache.turbine.RunData;
 import org.apache.fulcrum.security.TurbineSecurity;
 import org.apache.turbine.tool.IntakeTool;
 import org.apache.fulcrum.intake.model.Group;
+import org.apache.fulcrum.localization.LocalizationService;
 import org.apache.fulcrum.security.util.UnknownEntityException;
 import org.apache.fulcrum.security.util.TurbineSecurityException;
 
@@ -65,6 +67,8 @@ import org.tigris.scarab.util.ScarabConstants;
 import org.tigris.scarab.util.Log;
 import org.tigris.scarab.om.ScarabUser;
 import org.tigris.scarab.om.Module;
+import org.tigris.scarab.om.UserPreference;
+import org.tigris.scarab.om.UserPreferenceManager;
 import org.tigris.scarab.actions.base.ScarabTemplateAction;
 
 /**
@@ -72,7 +76,7 @@ import org.tigris.scarab.actions.base.ScarabTemplateAction;
  * Action.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: Login.java,v 1.43 2003/04/04 18:09:17 jon Exp $
+ * @version $Id: Login.java,v 1.44 2003/04/10 22:14:58 dlr Exp $
  */
 public class Login extends ScarabTemplateAction
 {
@@ -200,9 +204,11 @@ public class Login extends ScarabTemplateAction
             // save the User object into the session
             data.save();
             
-            // Sets the users Accept-Language: header preference based on their
-            // browser setting during login.
-            user.setLocale(l10n.getAcceptLanguage());
+            // If the user doesn't yet have a locale preference
+            // recorded, note it now based on their browser
+            // configuration.
+            user.noticeLocale(data.getRequest()
+                              .getHeader(LocalizationService.ACCEPT_LANGUAGE));
         }
         catch (TurbineSecurityException e)
         {
