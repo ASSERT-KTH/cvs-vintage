@@ -49,7 +49,7 @@ import org.jboss.util.Sync;
 *   @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
 *   @author <a href="mailto:danch@nvisia.com">Dan Christopherson</a>
 *   @author <a href="mailto:bill@burkecentral.com">Bill Burke</a>
-*   @version $Revision: 1.24 $
+*   @version $Revision: 1.25 $
 *
 *   Revisions:
 *   20010621 Bill Burke: removed loadEntities call because CMP read-ahead is now
@@ -317,6 +317,8 @@ public class CMPPersistenceManager
          }
       }
 
+      // The implementation of the call can be left absolutely empty, the propagation of the call
+		// is just a notification for stores that would need to know that an instance is being activated
       store.activateEntity(ctx);
    }
 
