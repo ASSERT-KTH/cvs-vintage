@@ -74,7 +74,7 @@ import org.tigris.scarab.actions.base.RequireLoginFirstAction;
 /**
     This class is responsible for the user configuration of the issue list.
     @author <a href="mailto:elicia@collab.net">Elicia David</a>
-    @version $Id: ConfigureIssueList.java,v 1.15 2001/10/24 23:03:41 jon Exp $
+    @version $Id: ConfigureIssueList.java,v 1.16 2001/12/06 21:13:18 elicia Exp $
 */
 public class ConfigureIssueList extends RequireLoginFirstAction
 {
@@ -100,9 +100,11 @@ public class ConfigureIssueList extends RequireLoginFirstAction
         {
             try
             {
-                mua = (RModuleUserAttribute)RModuleUserAttributePeer.retrieveByPK(moduleId, 
-                      user.getUserId(), issueType.getIssueTypeId(),
-                      ((RModuleUserAttribute)currentAttributes.get(i)).getAttributeId());
+                mua = (RModuleUserAttribute)RModuleUserAttributePeer
+                       .retrieveByPK(moduleId, user.getUserId(), 
+                       issueType.getIssueTypeId(),
+                      ((RModuleUserAttribute)currentAttributes.get(i))
+                      .getAttributeId());
                 mua.delete();
             }
             catch (Exception e)
@@ -137,6 +139,7 @@ public class ConfigureIssueList extends RequireLoginFirstAction
             }
         }
 
+        data.setMessage("Changes were saved.");
         String template = data.getParameters()
             .getString(ScarabConstants.NEXT_TEMPLATE);
         setTemplate(data, template);            
@@ -153,15 +156,6 @@ public class ConfigureIssueList extends RequireLoginFirstAction
     }
         
         
-    /**
-        This redirects back to issue list.
-    */
-    public void doGoissuelist( RunData data, TemplateContext context ) 
-        throws Exception
-    {
-        setTemplate(data, "IssueList.vm");            
-    }
-
     /**
         This manages clicking the cancel button
     */
