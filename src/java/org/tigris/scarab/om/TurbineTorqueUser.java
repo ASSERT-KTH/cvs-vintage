@@ -11,15 +11,4 @@ import org.apache.turbine.services.db.om.NumberKey;
 public abstract class TurbineTorqueUser 
     extends org.apache.turbine.om.security.TurbineUser
 {
-
-    /**
-     * Returns the PrimaryKey as a NumberKey.
-     *
-     * @return a <code>NumberKey</code> value
-     */
-    public NumberKey getUserId()
-    {
-        return (NumberKey)getPrimaryKey();
-    }
-
 }
