@@ -61,7 +61,7 @@ import org.apache.torque.util.Criteria;
  * This class has static methods for working with a Module object
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ModuleManager.java,v 1.12 2001/08/30 19:26:35 jmcnally Exp $
+ * @version $Id: ModuleManager.java,v 1.13 2001/09/29 01:24:14 jon Exp $
  */
 public abstract class ModuleManager
 {
@@ -92,98 +92,5 @@ public abstract class ModuleManager
     public static Class getModuleClass()
     {
         return getService().getModuleClass();
-    }
-
-    /**
-        gets a single project
-        @return null on error
-    */
-    public static ModuleEntity getProject(ObjectKey project_id) 
-        throws Exception
-    {
-        ModuleEntity project = null;
-        try
-        {
-            Criteria criteria = new Criteria();
-            criteria.add(ScarabModulePeer.MODULE_ID, project_id);
-            // get the Project object
-            Vector projectVec = ScarabModulePeer.doSelect(criteria);
-            if (projectVec.size() == 1)
-                project = (ModuleEntity)projectVec.elementAt(0);
-        }
-        catch (Exception e)
-        {
-        }
-        return project;    
-    }
-
-    /**
-        give me a list of components that match the parent project id
-    */
-    public static Vector getComponents(ObjectKey parent_project_id)
-        throws Exception
-    {
-        Criteria crit = new Criteria();
-        crit.add (ScarabModulePeer.PARENT_ID, parent_project_id);
-        return ScarabModulePeer.doSelect(crit);
-    }
-    
-    /**
-        create a new ScarabModule based on form input.
-        
-        it will optionally try to validate the data. if there is an error, it will
-        throw an exception.
-    public static ModuleEntity getModule(RunData data, boolean validate)
-        throws Exception
-    {
-        String project_id = data.getParameters().getString("project_id", null);
-        String name = data.getParameters().getString("project_name",null);
-        String desc = data.getParameters().getString("project_description",null);
-
-        ModuleEntity sm = (ModuleEntity) getInstance();
-        sm.setPrimaryKey(project_id);
-//        sm.setName( StringUtils.makeString( name ));
-//        sm.setDescription( StringUtils.makeString( desc ));
-//        sm.setUrl( StringUtils.makeString(data.getParameters().getString("project_url") ));
-        if (validate)
-        {
-            if (project_id == null)
-                throw new Exception ( "Missing project_id!" );
-            if (! StringUtils.isValid(name))
-                throw new Exception ( "Missing project name!" );
-            if (! StringUtils.isValid(desc))
-                throw new Exception ( "Missing project description!" );
-
-            User project_owner = TurbineSecurity.getUser(
-                data.getParameters().getString("project_owner", ""));
-            User project_qacontact = TurbineSecurity.getUser(
-                data.getParameters().getString("project_qacontact", ""));
-            
-            if (project_owner == null)
-                throw new Exception ("Could not find a registered user for the project owner!");
-            if (project_qacontact == null )
-                throw new Exception ("Could not find a registered user for the project qa contact!");
-
-//            sm.setOwnerId((NumberKey)((ScarabUser)project_owner).getPrimaryKey() );
-//            sm.setQaContactId((NumberKey)((ScarabUser)
-//                                project_qacontact).getPrimaryKey() );
-        }
-        return sm;
-    }
-    */
-    
-    /**
-        check for a duplicate project name
-    */
-    public static void checkForDuplicateProject(ModuleEntity module)
-        throws Exception
-    {
-        Criteria crit = new Criteria();
-        crit.add (ScarabModulePeer.MODULE_NAME, module.getName());
-        crit.setSingleRecord(true);
-        Vector result = ScarabModulePeer.doSelect(crit);
-        if (result.size() > 0)
-            throw new Exception ("Project: " + module.getName() + 
-            " already exists. Please choose another name!" );        
     }
 }
