@@ -13,6 +13,7 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
+
 package org.columba.mail.smtp;
 
 import java.io.BufferedReader;
@@ -29,6 +30,7 @@ import org.columba.core.command.WorkerStatusController;
 import org.columba.core.main.MainInterface;
 import org.columba.mail.coder.Base64Decoder;
 import org.columba.mail.coder.Base64Encoder;
+import org.columba.mail.util.MailResourceLoader;
 
 public class SMTPProtocol {
 	public final static int SMTP = 0;
@@ -49,7 +51,7 @@ public class SMTPProtocol {
 
 	private boolean isEsmtp;
 
-	public SMTPProtocol(String hostName, int portNr) throws Exception {
+	public SMTPProtocol(String hostName, int portNr) {
 		capabilities = new Hashtable();
 
 		decoder = new Base64Decoder();
@@ -57,18 +59,10 @@ public class SMTPProtocol {
 
 		host = hostName;
 		port = portNr;
-
 	}
 
 	public SMTPProtocol(String hostName) {
-		capabilities = new Hashtable();
-
-		decoder = new Base64Decoder();
-		encoder = new Base64Encoder();
-
-		host = hostName;
-		port = 25;
-
+                this(hostName, 25);
 	}
 
 	private void checkAnswer(String answer, String start)
@@ -142,9 +136,8 @@ public class SMTPProtocol {
 			checkAnswer(in.readLine(), "2");
 
 		} else {
-			throw (new SMTPException("Unsupported authentication type!"));
+			throw new SMTPException("Unsupported authentication type!");
 		}
-
 	}
 
 	public int openPort() throws Exception {
@@ -235,7 +228,10 @@ public class SMTPProtocol {
 
 		int progressCounter = 0;
 
-		workerStatusController.setDisplayText("Sending Message...");
+		workerStatusController.setDisplayText(MailResourceLoader.getString(
+                                "statusbar",
+                                "message",
+                                "send_message"));
 		workerStatusController.setProgressBarMaximum(message.length()/1024);
 		
 		out.writeBytes("DATA\r\n");
