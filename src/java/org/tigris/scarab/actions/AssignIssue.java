@@ -97,10 +97,10 @@ import org.tigris.scarab.util.ScarabLink;
 import org.tigris.scarab.util.Email;
 
 /**
- * This class is responsible for report issue forms.
+ * This class is responsible for assigning users to attributes.
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: AssignIssue.java,v 1.43 2002/04/13 02:39:32 jmcnally Exp $
+ * @version $Id: AssignIssue.java,v 1.44 2002/04/19 20:44:29 jmcnally Exp $
  */
 public class AssignIssue extends RequireLoginFirstAction
 {
