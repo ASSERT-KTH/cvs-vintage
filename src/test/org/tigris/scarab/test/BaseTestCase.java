@@ -55,6 +55,8 @@ import junit.framework.TestCase;
 
 import org.tigris.scarab.om.ModuleManager;
 import org.tigris.scarab.om.Issue;
+import org.tigris.scarab.om.IssueType;
+import org.tigris.scarab.om.IssueTypeManager;
 import org.tigris.scarab.om.IssueManager;
 import org.tigris.scarab.om.Activity;
 import org.tigris.scarab.om.Attribute;
@@ -73,7 +75,7 @@ import org.tigris.scarab.om.Module;
  *
  * @author <a href="mailto:jon@latchkey.com">Jon S. Stevens</a>
  * @author <a href="mailto:dlr@finemaltcoding.com">Daniel Rall</a>
- * @version $Id: BaseTestCase.java,v 1.12 2002/03/14 02:16:37 jmcnally Exp $
+ * @version $Id: BaseTestCase.java,v 1.13 2002/03/16 03:18:44 elicia Exp $
  */
 public class BaseTestCase extends TestCase
 {
@@ -81,6 +83,7 @@ public class BaseTestCase extends TestCase
     private static final String TR_PROPS = "/WEB-INF/conf/TurbineResourcesTest.properties";
 
     private static Module module = null;
+    private static IssueType defaultIssueType = null;
     protected static int nbrDfltModules = 7;
     protected static int nbrDfltIssueTypes = 5;
     private ScarabUser user0 = null;
@@ -139,6 +142,7 @@ public class BaseTestCase extends TestCase
         throws Exception
     {
         module = (Module) ModuleManager.getInstance(new NumberKey(5), false);
+        defaultIssueType = (IssueType) IssueTypeManager.getInstance(new NumberKey(1), false);
     }
 
     /**
@@ -150,6 +154,11 @@ public class BaseTestCase extends TestCase
     protected Module getModule()
     {
         return this.module;
+    }
+
+    protected IssueType getDefaultIssueType()
+    {
+        return this.defaultIssueType;
     }
 
     protected ScarabUser getUser0()
@@ -167,7 +176,7 @@ public class BaseTestCase extends TestCase
     {
         if (user1 == null)
         {
-            user1 = (ScarabUser) ScarabUserManager.getInstance(new NumberKey(2), false);
+            user1 = (ScarabUser) ScarabUserManager.getInstance(new NumberKey(1), false);
         }
         return user1;
     }
@@ -177,7 +186,7 @@ public class BaseTestCase extends TestCase
     {
         if (user2 == null)
         {
-            user2 = (ScarabUser) ScarabUserManager.getInstance(new NumberKey(3), false);
+            user2 = (ScarabUser) ScarabUserManager.getInstance(new NumberKey(2), false);
         }
         return user2;
     }
