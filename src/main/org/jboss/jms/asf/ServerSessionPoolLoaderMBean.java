@@ -18,26 +18,46 @@
 package org.jboss.jms.asf;
 
 import org.jboss.util.ServiceMBean;
-/**
- * ServerSessionPoolLoaderMBean.java
- *
- *
- * Created: Wed Nov 29 16:20:17 2000
- *
- * @author 
- * @version
- */
 
+/**
+ * The management interface for the <tt>ServerSessionPoolLoader</tt>.
+ *
+ * <p>Created: Wed Nov 29 16:20:17 2000
+ *
+ * @author <a href="mailto:peter.antman@tim.se">Peter Antman</a>.
+ * @version $Revision: 1.3 $
+ */
 public interface ServerSessionPoolLoaderMBean 
    extends ServiceMBean 
 {
-   public static final String OBJECT_NAME = ":service=ServerSessionPoolMBean";
+   /** The default MBean object name. */
+   String OBJECT_NAME = ":service=ServerSessionPoolMBean";
 
-   public void setPoolName(String name);
-   
-   public String getPoolName();
-   
-   public void setPoolFactoryClass(String clazz);
-   
-   public String getPoolFactoryClass();
+   /**
+    * Set the pool name.
+    *
+    * @param name    The pool name.
+    */
+   void setPoolName(String name);
+
+   /**
+    * Get the pool name.
+    *
+    * @return    The pool name.
+    */
+   String getPoolName();
+
+   /**
+    * Set the classname of pool factory to use.
+    *
+    * @param classname    The name of the pool factory class.
+    */
+   void setPoolFactoryClass(String classname);
+
+   /**
+    * Get the classname of pool factory to use.
+    *
+    * @return    The name of the pool factory class.
+    */
+   String getPoolFactoryClass();
 }

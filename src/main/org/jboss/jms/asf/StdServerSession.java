@@ -17,12 +17,11 @@
  */
 package org.jboss.jms.asf;
 
-import java.lang.Runnable;
-
 import javax.jms.JMSException;
 import javax.jms.ServerSession;
 import javax.jms.Session;
 import javax.jms.XASession;
+
 import javax.naming.InitialContext;
 
 import javax.transaction.Status;
@@ -30,186 +29,227 @@ import javax.transaction.Transaction;
 import javax.transaction.TransactionManager;
 import javax.transaction.xa.XAResource;
 
-import org.jboss.logging.Logger;
+import org.apache.log4j.Category;
+
+import org.jboss.tm.TransactionManagerService;
 
 /**
- * StdServerSession.java
+ * An implementation of ServerSession.
  *
+ * <p>Created: Thu Dec  7 18:25:40 2000
  *
- * Created: Thu Dec  7 18:25:40 2000
- *
- * @author 
- * @version
+ * @author <a href="mailto:peter.antman@tim.se">Peter Antman</a>.
+ * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
+ * @version $Revision: 1.6 $
  */
+public class StdServerSession
+   implements Runnable, ServerSession
+{
+   /** Instance logger. */
+   private final Category log = Category.getInstance(this.getClass());
 
-public class StdServerSession implements Runnable, ServerSession {
-	private StdServerSessionPool serverSessionPool = null;
-	private Session session = null;
-	private XASession xaSession = null;
-	private TransactionManager tm;
+   /** The server session pool which we belong to. */
+   private StdServerSessionPool serverSessionPool; // = null;
 
-    
-	StdServerSession(StdServerSessionPool pool, Session session, XASession xaSession) throws JMSException{
+   /** Our session resource. */
+   private Session session; // = null;
 
-	serverSessionPool = pool;
-	this.session = session;
-	this.xaSession = xaSession;
+   /** Our XA session resource. */
+   private XASession xaSession; // = null;
 
-	try {
-		tm = (TransactionManager)new InitialContext().lookup("java:/TransactionManager");
-	} catch ( Exception e ) {
-		throw new JMSException("Transation Manager was not found");
-	}
+   /** The transaction manager that we will use for transactions. */
+   private TransactionManager tm;
 
-	}
+   /**
+    * Create a <tt>StdServerSession</tt>.
+    *
+    * @param pool         The server session pool which we belong to.
+    * @param session      Our session resource.
+    * @param xaSession    Our XA session resource.
+    *
+    * @throws JMSException    Transation manager was not found.
+    */
+   StdServerSession(final StdServerSessionPool pool,
+                    final Session session,
+                    final XASession xaSession)
+      throws JMSException
+   {
+      this.serverSessionPool = pool;
+      this.session = session;
+      this.xaSession = xaSession;
 
-	// --- Impl of JMS standard API
+      if (log.isDebugEnabled()) {
+         log.debug("initializing (pool, session, xaSession): " +
+                   pool + ", " + session + ", " + xaSession);
+      }
+      
+      InitialContext ctx = null;
+      try {
+         ctx = new InitialContext();
+         tm = (TransactionManager)
+            ctx.lookup(TransactionManagerService.JNDI_NAME);
+      }
+      catch (Exception e) {
+         throw new JMSException("Transation manager was not found");
+      }
+      finally {
+         if (ctx != null) {
+            try {
+               ctx.close();
+            }
+            catch (Exception ignore) {}
+         }
+      }
+   }
+
+   // --- Impl of JMS standard API
 	
-	/**
-	 * Implementation of ServerSession.getSession
-	 *
-	 * This simply returns what it has fetched from the connection. It is
-	 * up to the jms provider to typecast it and have a private API to stuff
-	 * messages into it.
-	 */
-	public Session getSession() 
-		throws JMSException
-	{
-		return session;
-	}
+   /**
+    * Returns the session.
+    *
+    * <p>This simply returns what it has fetched from the connection. It is
+    *    up to the jms provider to typecast it and have a private API to stuff
+    *    messages into it.
+    *
+    * @return    The session.
+    */
+   public Session getSession() throws JMSException
+   {
+      return session;
+   }
+
+   /**
+    * Start the session and begin consuming messages.
+    *
+    * @throws JMSException    No listener has been specified.
+    */
+   public void start() throws JMSException {
+      log.debug("starting invokes on server session");
+
+      if (session != null) {
+         try {
+            serverSessionPool.getExecutor().execute(this);
+         }
+         catch (InterruptedException ignore) {}
+      }
+      else {
+         throw new JMSException("No listener has been specified");
+      }
+   }
     
-	// implementation of ServerSession.start
-	public void start() throws JMSException {
-	    //Logger.debug("Start invokes on server session");
-	    if (session != null) {
-	        try {
-	            serverSessionPool.getExecutor().execute(this);
-	        } catch ( InterruptedException e ) {
-	        }
-	    } else {
-	        throw new JMSException("No listener has been specified");
-	    }
-	}
-    
-	//--- Protected parts, used by other in the package
+   //--- Protected parts, used by other in the package
 	
-	/**
-	 * Runs in an own thread, basically calls the session.run(), it is up
-	 * to the session to have been filled with messages and it will run
-	 * against the listener set in StdServerSessionPool. When it has send
-	 * all its messages it returns.
-	 *
-	 * HC: run() also starts a transaction with the TransactionManager and
-	 * enlists the XAResource of the JMS XASession if a XASession was abvailable.
-	 * A good JMS implementation should provide the XASession for use in the ASF.
-	 * So we optimize for the case where we have an XASession.  So, for the case
-	 * where we do not have an XASession and the bean is not transacted, we 
-	 * have the unneeded overhead of creating a Transaction.  I'm leaving it
-	 * this way since it keeps the code simpler and that case should not be too 
-	 * common (JBossMQ provides XASessions).
-	 *
-	 */
-	public void run() {
+   /**
+    * Runs in an own thread, basically calls the session.run(), it is up
+    * to the session to have been filled with messages and it will run
+    * against the listener set in StdServerSessionPool. When it has send
+    * all its messages it returns.
+    *
+    * HC: run() also starts a transaction with the TransactionManager and
+    * enlists the XAResource of the JMS XASession if a XASession was
+    * available.  A good JMS implementation should provide the XASession
+    * for use in the ASF.  So we optimize for the case where we have an
+    * XASession.  So, for the case where we do not have an XASession and
+    * the bean is not transacted, we have the unneeded overhead of creating
+    * a Transaction.  I'm leaving it this way since it keeps the code simpler
+    * and that case should not be too common (JBossMQ provides XASessions).
+    */
+   public void run() {
+      log.debug("running...");
+      
+      Transaction trans = null;
+      try {
+         tm.begin();
+         trans = tm.getTransaction();
+	    
+         if (xaSession != null) {
+            XAResource res = xaSession.getXAResource();
+            trans.enlistResource(res);
+            if (log.isDebugEnabled()) {
+               log.debug("XAResource '"+res+"' enlisted.");
+            }
+         } 
 
-	Transaction trans=null;
+         // run the session
+         session.run();
+      }
+      catch (Exception e) {
+         log.error("session failed to run; setting rollback only", e);
+	    
+         try {
+            // The transaction will be rolledback in the finally
+            trans.setRollbackOnly();
+         }
+         catch (Exception x) {
+            log.error("failed to set rollback only", x);
+         }
+      }
+      finally {
+         try {
+            // Marked rollback
+            if (trans.getStatus() == Status.STATUS_MARKED_ROLLBACK) {
+               log.info("Rolling back JMS transaction");
+               // actually roll it back 
+               trans.rollback();
+		    
+               // NO XASession? then manually rollback.  
+               // This is not so good but
+               // it's the best we can do if we have no XASession.
+               if (xaSession == null && serverSessionPool.isTransacted()) {
+                  session.rollback();
+               }
+            } else if (trans.getStatus() == Status.STATUS_ACTIVE) {
+               // Commit tx
+               // This will happen if
+               // a) everything goes well
+               // b) app. exception was thrown
+               trans.commit();
+		    
+               // NO XASession? then manually commit.  This is not so good but
+               // it's the best we can do if we have no XASession.
+               if (xaSession == null && serverSessionPool.isTransacted()) {
+                  session.commit();
+               }
+            }
+         }
+         catch (Exception e) {
+            log.error("failed to commit/rollback", e);
+         }
+	    
+         StdServerSession.this.recycle();
+      }
 
-	try {
-
-	    //Logger.debug("Invoking run on session");
-	    
-	    //Logger.debug("Starting the Message Driven Bean transaction");
-	    tm.begin();
-	    trans = tm.getTransaction();
-	    
-	    if( xaSession != null ) {
-		
-		   	XAResource res = xaSession.getXAResource();
-		   	trans.enlistResource(res);
-		   	//Logger.debug("XAResource '"+res+"' enlisted.");
-		
-	    } 
-	    
-	    session.run();
-	    
-	}catch (Exception ex) {
-	    
-	    Logger.exception( ex );
-	    
-	    try {
-		// The transaction will be rolledback in the finally
-		trans.setRollbackOnly();
-	    } catch( Exception e ) {
-		Logger.exception( e );
-	    }
-	    
-	} finally {
-	    
-	    
-	    try {
-		
-		//Logger.debug("Ending the Message Driven Bean transaction");
-		
-			// Marked rollback
-			if ( trans.getStatus() == Status.STATUS_MARKED_ROLLBACK) {
-		    Logger.log("Rolling back JMS transaction");
-		    // actually roll it back 
-		    trans.rollback();
-		    
-		   // NO XASession? then manually rollback.  
-		   // This is not so good but
-		   // it's the best we can do if we have no XASession.
-		    if( xaSession==null && serverSessionPool.isTransacted() ) 
-			session.rollback();
-		    
-			} else if(trans.getStatus() == Status.STATUS_ACTIVE) {
-		    
-		    // Commit tx
-		    // This will happen if
-		    // a) everything goes well
-		    // b) app. exception was thrown
-		    
-		    trans.commit();
-		    
-		    // NO XASession? then manually commit.  This is not so good but
-		    // it's the best we can do if we have no XASession.
-		    if( xaSession==null && serverSessionPool.isTransacted() ) 
-			session.commit();
-		    
-			}
-		
-	    } catch(Exception e) {
-		// There was a problem doing the commit/rollback.
-		Logger.exception(e);
-	    }
-	    
-	    StdServerSession.this.recycle();
-	}
-	}
+      log.debug("done");
+   }
     
-	/**
-	 * This method is called by the ServerSessionPool when it is ready to
-	 * be recycled intot the pool
-	 */
-	void recycle()
-	{
-	serverSessionPool.recycle(this);
-	}
+   /**
+    * This method is called by the ServerSessionPool when it is ready to
+    * be recycled intot the pool
+    */
+   void recycle()
+   {
+      serverSessionPool.recycle(this);
+   }
 
-	/**
-	 * Called by the ServerSessionPool when the sessions should be closed.
-	 */
-	void close() {
-	if (session != null) {
-	    try {
-		session.close();
-	    }catch(Exception ex) {}
-	    session = null;
-	}
-	if (xaSession != null) {
-	    try {
-		xaSession.close();
-	    }catch(Exception ex) {}
-	    xaSession = null;
-	}
-	}
+   /**
+    * Called by the ServerSessionPool when the sessions should be closed.
+    */
+   void close() {
+      if (session != null) {
+         try {
+            session.close();
+         } catch (Exception ignore) {}
+         
+         session = null;
+      }
+      
+      if (xaSession != null) {
+         try {
+            xaSession.close();
+         } catch (Exception ignore) {}
+         xaSession = null;
+      }
+
+      log.debug("closed");
+   }
 }

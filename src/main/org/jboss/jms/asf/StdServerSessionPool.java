@@ -44,11 +44,10 @@ import org.apache.log4j.Category;
 /**
  * Implementation of ServerSessionPool.
  *
- *
- * Created: Thu Dec  7 17:02:03 2000
+ * <p>Created: Thu Dec  7 17:02:03 2000
  *
  * @author <a href="mailto:peter.antman@tim.se">Peter Antman</a>.
- * @version $Revision: 1.8 $
+ * @version $Revision: 1.9 $
  */
 public class StdServerSessionPool
    implements ServerSessionPool

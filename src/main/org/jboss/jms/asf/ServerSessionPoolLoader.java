@@ -19,6 +19,7 @@ package org.jboss.jms.asf;
 
 import javax.management.ObjectName;
 import javax.management.MBeanServer;
+import javax.management.MalformedObjectNameException;
 
 import javax.naming.Context;
 import javax.naming.Name;
@@ -26,119 +27,163 @@ import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import javax.naming.NameNotFoundException;
 
+import org.apache.log4j.Category;
+
 import org.jboss.util.ServiceMBeanSupport;
-import org.jboss.logging.Logger;
 
 /**
- * ServerSessionPoolLoader.java
+ * A loader for <tt>ServerSessionPools</tt>.
  *
+ * <p>Created: Wed Nov 29 16:14:46 2000
  *
- * Created: Wed Nov 29 16:14:46 2000
- *
- * @author 
- * @version
+ * @author <a href="mailto:peter.antman@tim.se">Peter Antman</a>.
+ * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
+ * @version $Revision: 1.3 $
  */
-
 public class ServerSessionPoolLoader 
    extends ServiceMBeanSupport
    implements ServerSessionPoolLoaderMBean
 {
+   /** Instance logger. */
+   private final Category log = Category.getInstance(this.getClass());
+
+   /** The factory used to create server session pools. */
    private ServerSessionPoolFactory poolFactory;
+
+   /** The name of the pool. */
    private String name;
+
+   /** The type of pool factory to use. */
    private String poolFactoryClass;
-   
-   public void setPoolName(String name)
+
+   /**
+    * Set the pool name.
+    *
+    * @param name    The pool name.
+    */
+   public void setPoolName(final String name)
    {
       this.name = name;
    }
    
+   /**
+    * Get the pool name.
+    *
+    * @return    The pool name.
+    */
    public String getPoolName()
    {
       return name;
    }
-   
-   public void setPoolFactoryClass(String clazz)
+
+   /**
+    * Set the classname of pool factory to use.
+    *
+    * @param classname    The name of the pool factory class.
+    */
+   public void setPoolFactoryClass(final String classname)
    {
-      this.poolFactoryClass = clazz;
+      this.poolFactoryClass = classname;
    }
-   
+
+   /**
+    * Get the classname of pool factory to use.
+    *
+    * @return    The name of the pool factory class.
+    */
    public String getPoolFactoryClass()
    {
       return poolFactoryClass;
    }
-   
-   public ObjectName getObjectName(MBeanServer parm1, ObjectName parm2) 
-      throws javax.management.MalformedObjectNameException
+
+   /**
+    * Get the JMX object name for this MBean.
+    *
+    * @param server    The server which this bean is loaded.
+    * @param name      The user specified name.
+    *
+    * @throws MalformedObjectNameException
+    */
+   public ObjectName getObjectName(final MBeanServer server,
+                                   final ObjectName name)
+      throws MalformedObjectNameException
    {
-      return (parm2 == null) ? new ObjectName(OBJECT_NAME) : parm2;
+      return (name == null) ? new ObjectName(OBJECT_NAME) : name;
    }
 
+   /**
+    * Get the name of this service.
+    *
+    * @return   The pool name.
+    */
    public String getName()
    {
       return name;
    }
-   
-   public void initService()
-      throws Exception
+
+   /**
+    * Initialize the service.
+    *
+    * <p>Setup the pool factory.
+    *
+    * @throws ClassNotFoundException   Could not find pool factory class.
+    * @throws Exception                Failed to create pool factory instance.
+    */
+   protected void initService() throws Exception
    {
       Class cls = Class.forName(poolFactoryClass);
       poolFactory = (ServerSessionPoolFactory)cls.newInstance();
       poolFactory.setName(name);
+
+      log.debug("initalized with pool factory: " + poolFactory);
    }
-   
-   public void startService() 
-      throws Exception
+
+   /**
+    * Start the service.
+    *
+    * <p>Bind the pool factory into JNDI.
+    *
+    * @throws Exception
+    */
+   protected void startService() throws Exception
    {
-      Context ctx = null;
-      Object mgr = null;
-
-      // Bind in JNDI
-      bind(new InitialContext(), "java:/"+poolFactory.getName(),poolFactory);
-
-      log.log("JMS provider Adapter "+poolFactory.getName()+" bound to java:/"+poolFactory.getName());
+      InitialContext ctx = new InitialContext();
+      String name = poolFactory.getName();
+      String jndiname = "java:/" + name;
+      try {
+         org.jboss.naming.Util.bind(ctx, jndiname, poolFactory);
+         log.info("pool factory " + name + " bound to "  + jndiname);
+      }
+      finally {
+         ctx.close();
+      }
    }
 
-   public void stopService()
+   /**
+    * Stop the service.
+    *
+    * <p>Unbind from JNDI.
+    */
+   protected void stopService()
    {
       // Unbind from JNDI
-      try 
-      {
+      InitialContext ctx = null;
+      try {
+         ctx = new InitialContext();
          String name = poolFactory.getName();
-         new InitialContext().unbind("java:/"+name);
-         log.log("JMA Provider Adapter "+name+" removed from JNDI");
-         //source.close();
-         //log.log("XA Connection pool "+name+" shut down");
-      } catch (NamingException e)
-      {
-         // Ignore
+         String jndiname = "java:/" + name;
+         
+         ctx.unbind(jndiname);
+         log.info("pool factory " + name + " unbound from " + jndiname);
       }
-   }
-
-   // Private -------------------------------------------------------
-
-   private void bind(Context ctx, String name, Object val) throws NamingException
-   {
-      // Bind val to name in ctx, and make sure that all intermediate contexts exist
-      Name n = ctx.getNameParser("").parse(name);
-      while (n.size() > 1)
-      {
-         String ctxName = n.get(0);
-         try
-         {
-            ctx = (Context)ctx.lookup(ctxName);
-         } catch (NameNotFoundException e)
-         {
-            ctx = ctx.createSubcontext(ctxName);
+      catch (NamingException ignore) {}
+      finally {
+         if (ctx != null) {
+            try {
+               ctx.close();
+            }
+            catch (NamingException ignore) {}
          }
-         n = n.getSuffix(1);
       }
-
-      ctx.bind(n.get(0), val);
    }
-   
-   public static void main(String[] args)
-   {
-
-   }
-
-} // ServerSessionPoolLoader
+}

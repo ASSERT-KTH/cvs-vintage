@@ -25,12 +25,12 @@ import javax.jms.Connection;
 import javax.jms.JMSException;
 
 /**
- * StdServerSessionPoolFactory.java
+ * An implementation of ServerSessionPoolFactory.
  *
- * Created: Fri Dec 22 09:47:41 2000
+ * <p>Created: Fri Dec 22 09:47:41 2000
  *
  * @author <a href="mailto:peter.antman@tim.se">Peter Antman</a>.
- * @version $Revision: 1.4 $
+ * @version $Revision: 1.5 $
  */
 public class StdServerSessionPoolFactory
    implements ServerSessionPoolFactory, Serializable
@@ -75,11 +75,11 @@ public class StdServerSessionPoolFactory
     *
     * @throws JMSException
     */
-   public ServerSessionPool getServerSessionPool(Connection con,
-                                                 int maxSession,
-                                                 boolean isTransacted,
-                                                 int ack,
-                                                 MessageListener listener)
+   public ServerSessionPool getServerSessionPool(final Connection con,
+                                                 final int maxSession,
+                                                 final boolean isTransacted,
+                                                 final int ack,
+                                                 final MessageListener listener)
       throws JMSException
    {
       ServerSessionPool pool = (ServerSessionPool)

@@ -21,21 +21,47 @@ import javax.jms.Connection;
 import javax.jms.MessageListener;
 import javax.jms.ServerSessionPool;
 import javax.jms.JMSException;
+
 /**
- * ServerSessionPoolFactory.java
+ * Defines the model for creating <tt>ServerSessionPoolFactory</tt> objects.
  *
+ * <p>Created: Wed Nov 29 15:55:21 2000
  *
- * Created: Wed Nov 29 15:55:21 2000
- *
- * @author 
- * @version
+ * @author <a href="mailto:peter.antman@tim.se">Peter Antman</a>.
+ * @version $Revision: 1.2 $
  */
+public interface ServerSessionPoolFactory
+{
+   /**
+    * Set the name of the factory.
+    *
+    * @param name    The name of the factory.
+    */
+   void setName(String name);
 
-public interface ServerSessionPoolFactory {
-    
-    public void setName(String name);
-    public String getName();
-    public ServerSessionPool getServerSessionPool(Connection con, int maxSession, boolean isTransacted, int ack, MessageListener listener)throws JMSException;
+   /**
+    * Get the name of the factory.
+    *
+    * @return    The name of the factory.
+    */
+   String getName();
 
-    
-} // ServerSessionPoolFactory
+   /**
+    * Create a new <tt>ServerSessionPool</tt>.
+    *
+    * @param con
+    * @param maxSession
+    * @param isTransacted
+    * @param ack
+    * @param listener
+    * @return                A new pool.
+    *
+    * @throws JMSException
+    */
+   ServerSessionPool getServerSessionPool(Connection con,
+                                          int maxSession,
+                                          boolean isTransacted,
+                                          int ack,
+                                          MessageListener listener)
+      throws JMSException;
+}
