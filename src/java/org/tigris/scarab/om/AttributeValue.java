@@ -49,16 +49,20 @@ package org.tigris.scarab.om;
 // JDK classes
 import java.util.List;
 import java.util.ArrayList;
+import java.util.Locale;
+import java.sql.Connection;
 
 import org.apache.commons.lang.ObjectUtils;
+
 // Turbine classes
 import org.apache.torque.TorqueException;
 import org.apache.torque.om.Persistent;
 import org.apache.torque.om.ObjectKey;
 import org.apache.torque.om.NumberKey;
-import java.sql.Connection;
 import org.apache.torque.util.Criteria;
+import org.apache.fulcrum.localization.Localization;
 
+import org.tigris.scarab.util.ScarabConstants;
 import org.tigris.scarab.util.ScarabException;
 import org.tigris.scarab.util.Log;
 import org.tigris.scarab.om.ScarabUserManager;
@@ -70,7 +74,7 @@ import org.tigris.scarab.om.Module;
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: AttributeValue.java,v 1.88 2003/02/06 23:40:07 tenersen Exp $
+ * @version $Id: AttributeValue.java,v 1.89 2003/02/12 02:13:07 jon Exp $
  */
 public abstract class AttributeValue 
     extends BaseAttributeValue
@@ -794,16 +798,17 @@ Leaving here so that John can remove or fix.
     {
         if (isModified() && !getAttribute().isUserAttribute())
         {
+            String desc = null;
             try
             {
                 checkActivitySet("Cannot save an AttributeValue outside of an ActivitySet");
+                desc = getActivityDescription();
             }
             catch (Exception e)
             {
                 throw new TorqueException(e);
             }
             // Save activity record
-            String desc = getActivityDescription();
             if (getDeleted())
             {
                 saveActivity = ActivityManager
@@ -851,55 +856,67 @@ Leaving here so that John can remove or fix.
 
     /**
      * Not sure it is a good idea to save description in activity record
-     * the description can be generated from the other data and it brings
-     * up i18n issues.
+     * the description can be generated from the other data.
      */
     private String getActivityDescription()
-        throws TorqueException
+        throws Exception
     {
         if (activityDescription != null)
         {
             return activityDescription;
         }
-        String name = getAttribute().getName();
+        String attributeName = getRModuleAttribute().getDisplayValue();
         String newValue = getValue();
-        StringBuffer sb = new StringBuffer()
-            .append(name);
+
+        String result = null;
         if (getDeleted())
         {
-            sb.append(" has been undefined.");        
+            result = Localization.format(
+                ScarabConstants.DEFAULT_BUNDLE_NAME,
+                Locale.getDefault(),
+                "AttributeHasBeenUndefined", attributeName);
         }
         else
         {
+            if (newValue.length() > 30) 
+            {
+                newValue = newValue.substring(0,30) + "...";
+            }
             if (oldValue == null) 
             {
-                sb.append(" set");
+                Object[] args = {
+                    attributeName,
+                    newValue
+                };
+                result = Localization.format(
+                    ScarabConstants.DEFAULT_BUNDLE_NAME,
+                    Locale.getDefault(),
+                    "AttributeSetToNewValue", args);
             }
             else
             {
-                sb.append(" changed from '");
+                // so that we don't modify the existing oldValue
+                String tmpOldValue = null;
                 if (oldValue.length() > 30) 
                 {
-                    sb.append(oldValue.substring(0,30)).append("...");
+                    tmpOldValue = oldValue.substring(0,30) + "...";
                 }
                 else
                 {
-                    sb.append(oldValue);
+                    tmpOldValue = oldValue;
                 }
-                sb.append('\'');
+                Object[] args = {
+                    attributeName,
+                    tmpOldValue,
+                    newValue 
+                };
+                result = Localization.format(
+                    ScarabConstants.DEFAULT_BUNDLE_NAME,
+                    Locale.getDefault(),
+                    "AttributeChangedFromToNewValue", args);
             }
-            sb.append(" to '");
-            if (newValue.length() > 30) 
-            {
-                sb.append(newValue.substring(0,30)).append("...");
-            }
-            else
-            {
-                sb.append(newValue);
-            }
-            sb.append('\'');
         }
-        return sb.toString();
+        return result;
     }
 
     /**
