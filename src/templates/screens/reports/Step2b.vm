@@ -97,9 +97,11 @@ column.</p>
       #indexedRows($velocityCount)
       <td>
        <select name="ofg$attOption.QueryKey">
+        #set ($selectedOption = $data.Parameters.getString("ofg$attOption.QueryKey", ""))
         #foreach ($optionGroup in $report.OptionGroups)
           #set ($optionValue = $velocityCount - 1)
-          <option value="$optionValue">$optionGroup.DisplayValue</option>
+          <option #if($selectedOption == "$optionValue")selected="selected"#end
+              value="$optionValue">$optionGroup.DisplayValue</option>
         #end
        </select>
       </td>
