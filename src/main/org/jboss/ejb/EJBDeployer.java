@@ -45,7 +45,7 @@ import org.w3c.dom.Element;
  *
  * @see Container
  *
- * @version <tt>$Revision: 1.41 $</tt>
+ * @version <tt>$Revision: 1.42 $</tt>
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  * @author <a href="mailto:jplindfo@helsinki.fi">Juha Lindfors</a>
@@ -474,13 +474,7 @@ public class EJBDeployer
    private boolean isJSR109Deployment(DeploymentInfo di)
    {
       // look for web service deployments
-      URL webServiceUrl = di.localCl.getResource("META-INF/webservices.xml");
-      if (webServiceUrl != null && jsr109ServiceName != null)
-      {
-         return true;
-      }
-
-      return false;
+      return di.localCl.getResource("META-INF/webservices.xml") != null;
    }
 
    public synchronized void create(DeploymentInfo di)
@@ -583,7 +577,7 @@ public class EJBDeployer
          serviceController.create(di.deployedObject);
 
          // create the webservice
-         if (isJSR109Deployment(di))
+         if (isJSR109Deployment(di) && jsr109ServiceName != null)
          {
             getServer().invoke(jsr109ServiceName, "webserviceCreate", new Object[]{di}, new String[]{DeploymentInfo.class.getName()});
          }
@@ -616,7 +610,7 @@ public class EJBDeployer
          deployments.put(di.url, di);
 
          // start the webservice
-         if (isJSR109Deployment(di))
+         if (isJSR109Deployment(di) && jsr109ServiceName != null)
          {
             getServer().invoke(jsr109ServiceName, "webserviceStart", new Object[]{di}, new String[]{DeploymentInfo.class.getName()});
          }
@@ -637,7 +631,7 @@ public class EJBDeployer
       try
       {
          // stop the webservice
-         if (isJSR109Deployment(di))
+         if (isJSR109Deployment(di) && jsr109ServiceName != null)
          {
             getServer().invoke(jsr109ServiceName, "webserviceStop", new Object[]{di}, new String[]{DeploymentInfo.class.getName()});
          }
@@ -661,7 +655,7 @@ public class EJBDeployer
       try
       {
          // destroy the webservice
-         if (isJSR109Deployment(di))
+         if (isJSR109Deployment(di) && jsr109ServiceName != null)
          {
             getServer().invoke(jsr109ServiceName, "webserviceDestroy", new Object[]{di}, new String[]{DeploymentInfo.class.getName()});
          }
