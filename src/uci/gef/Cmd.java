@@ -28,7 +28,7 @@
 // File: Action.java
 // Classes: Action
 // Original Author: jrobbins@ics.uci.edu
-// $Id: Cmd.java,v 1.4 1998/04/18 01:25:49 jrobbins Exp $
+// $Id: Cmd.java,v 1.5 1998/06/23 23:56:46 jrobbins Exp $
 
 package uci.gef;
 
@@ -101,7 +101,7 @@ implements java.io.Serializable {
     int len = s.length();
     for (int i = 0; i < len; i++) {
       char c = s.charAt(i);
-      if (Character.isJavaLetterOrDigit(c)) res += c;
+      if (Character.isJavaIdentifierPart(c)) res += c;
     }
     return res;
   }
