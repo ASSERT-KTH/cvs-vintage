@@ -46,7 +46,7 @@ import org.jboss.ejb.plugins.cmp.bridge.FieldBridge;
  * This class parses JBossQL into an abstract syntax tree.
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  */                            
 public class JBossQLParser {
    private Catalog catalog;
@@ -289,19 +289,25 @@ void BetweenExpression() #Between :
       ArithmeticExpression() <AND> ArithmeticExpression()
 }
 
+////////////////////// New or changed elements /////////////////////////////
+
 void InExpression() #In :
 {}
 {
    StringValuedPath() [<NOT> { jjtThis.not=true; } ] <IN> 
-      <LPAREN> StringLiteral() ( <COMMA> StringLiteral() )* <RPAREN>
+      <LPAREN> ( StringLiteral() | StringValuedParameter() )
+      ( <COMMA> ( StringLiteral() | StringValuedParameter() ) )* <RPAREN>
 }
 
 void LikeExpression() #Like :
 {}
 {
    StringValuedPath() [<NOT> { jjtThis.not=true; } ] <LIKE>
-      StringLiteral() [<ESCAPE> StringLiteral()]
+      ( StringLiteral() | StringValuedParameter() )
+      [<ESCAPE> ( StringLiteral() | StringValuedParameter() ) ]
 }
+
+////////////////////////////////////////////////////////////////////////////
 
 void NullComparisonExpression() #NullComparison :
 {}
