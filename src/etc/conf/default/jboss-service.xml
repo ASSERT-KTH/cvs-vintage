@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- $Id: jboss-service.xml,v 1.127 2005/02/22 18:00:03 telrod Exp $ -->
+<!-- $Id: jboss-service.xml,v 1.128 2005/02/22 19:09:24 telrod Exp $ -->
 
 <!-- ===================================================================== -->
 <!--  JBoss Server Configuration                                           -->
@@ -359,32 +359,128 @@
    <!-- Remoting services 						                                   -->
    <!-- ==================================================================== -->
 
+   <!-- For detailed description of all these configuration attributes, please see the -->
+   <!-- JBoss Remoting User's Guide or wiki (http://www.jboss.org/wiki/Wiki.jsp?page=Remoting_configuration) -->
+
+    <!-- The NetworkRegistry contains all the local and remote -->
+    <!-- servers that it recognizes.  The remote ones registered -->
+    <!-- are dependant on the detectors running and which domains -->
+    <!-- they are configured to identify.                         -->
     <mbean code="org.jboss.remoting.network.NetworkRegistry"
            name="jboss.remoting:service=NetworkRegistry"/>
 
+    <!-- The Connector is the core component of the remoting server service. -->
+    <!-- It binds the remoting invoker (transport protocol, callback configuration, -->
+    <!-- data marshalling, etc.) with the invocation handlers.  -->
     <mbean code="org.jboss.remoting.transport.Connector"
            xmbean-dd="org/jboss/remoting/transport/Connector.xml"
            name="jboss.remoting:service=Connector,transport=socket"
            display-name="Socket transport Connector">
 
+        <!-- Can either just specify the InvokerLocator attribute and not the invoker element in the -->
+        <!-- Configuration attribute, or do the full invoker configuration in the in invoker element -->
+        <!-- of the Configuration attribute. -->
+
+        <!-- Remember that if you do use more than one param on the uri, will have to include as a CDATA, -->
+        <!-- otherwise, parser will complain. -->
         <attribute name="InvokerLocator"><![CDATA[socket://localhost:4446/?datatype=invocation]]></attribute>
 
         <attribute name="Configuration">
+           <!-- The following <invoker> element has been commented out since using the InvokerLocator above. -->
+           <!-- If wanted to use any of the parameters below, can just add them as parameters to the url above. -->
+
+           <!-- Other than transport type and handler, none of these configurations are required (will just use defaults). -->
+           <!--  <invoker transport="socket">-->
+           <!-- The following are specific to socket invoker -->
+           <!-- <attribute name="numAcceptThreads">1</attribute>-->
+           <!-- <attribute name="maxPoolSize">303</attribute>-->
+           <!-- <attribute name="clientMaxPoolSize" isParam="true">304</attribute>-->
+           <!-- <attribute name="socketTimeout">60000</attribute>-->
+           <!-- <attribute name="serverBindAddress">${jboss.bind.address}</attribute>-->
+           <!-- <attribute name="serverBindPort">6666</attribute>-->
+           <!-- <attribute name="clientConnectAddress">216.23.33.2</attribute> -->
+           <!-- <attribute name="clientConnectPort">7777</attribute> -->
+           <!-- <attribute name="enableTcpNoDelay" isParam="true">false</attribute>-->
+           <!-- <attribute name="backlog">200</attribute>-->
+           <!-- The following is for callback configuration and is independant of invoker type -->
+           <!-- <attribute name="callbackMemCeiling">30</attribute>-->
+           <!-- indicates callback store by fully qualified class name -->
+           <!-- <attribute name="callbackStore">org.jboss.remoting.CallbackStore</attribute>-->
+           <!-- indicates callback store by object name -->
+           <!-- <attribute name="callbackStore">jboss.remoting:service=CallbackStore,type=Serializable</attribute> -->
+           <!-- config params for callback store.  if were declaring callback store via object name, -->
+           <!-- could have specified these config params there. -->
+           <!-- StoreFilePath indicates to which directory to write the callback objects. -->
+           <!-- The default value is the property value of 'jboss.server.data.dir' and if this is not set, -->
+           <!-- then will be 'data'. Will then append 'remoting' and the callback client's session id. -->
+           <!-- An example would be 'data\remoting\5c4o05l-9jijyx-e5b6xyph-1-e5b6xyph-2'. -->
+           <!-- <attribute name="StoreFilePath">callback</attribute>-->
+           <!-- StoreFileSuffix indicates the file suffix to use for the callback objects written to disk. -->
+           <!-- The default value for file suffix is 'ser'. -->
+           <!-- <attribute name="StoreFileSuffix">cst</attribute>-->
+           <!-- </invoker>-->
+
+           <!-- At least one handler is required by the connector.  If have more than one, must decalre -->
+           <!-- different subsystem values.  Otherwise, all invocations will be routed to the only one -->
+           <!-- that is declared. -->
             <handlers>
+                <!-- can also specify handler by fully qualified classname -->
                 <handler subsystem="invoker">jboss:service=invoker,type=unified</handler>
             </handlers>
         </attribute>
 	<depends>jboss.remoting:service=NetworkRegistry</depends>
     </mbean>
 
+   <!-- Zero or more detectors are allowed.  Currently only have implementation for multicast and jndi -->
+
+    <!-- The multicast detector uses multicase to broadcast detection messages -->
     <mbean code="org.jboss.remoting.detection.multicast.MulticastDetector"
            name="jboss.remoting:service=Detector,transport=multicast">
-        <!-- you can specifically bind the detector to a specific IP address here
-        <attribute name="BindAddress">localhost</attribute>
-        -->
+        <!-- The address to bind to for the network interface. -->
+        <!-- <attribute name="BindAddress">${jboss.bind.address}</attribute> -->
+        <!-- The IP that is used to broadcast detection messages on via multicast. -->
+        <!-- To be more specific, will be the ip of the multicast group the detector will join. -->
+        <!-- This attribute is ignored if the Address has already been set when started. -->
+        <!-- Default is 224.1.9.1. -->
+        <!-- The IP of the multicast group that the detector will join. -->
+        <!-- The default will be that of the DefaultIP if not explicitly set. -->
+        <!-- <attribute name="Address">224.1.9.3</attribute> -->
+        <!-- <attribute name="DefaultTimeDelay">10000</attribute> -->
+        <!-- <attribute name="HeartbeatTimeDelay">5000</attribute> -->
+        <!-- Multicast group port that the detector will join on.  Default is 2410 -->
         <attribute name="Port">5555</attribute>
     </mbean>
 
+   <!-- <mbean code="org.jboss.remoting.detection.jndi.JNDIDetector"-->
+   <!--      name="jboss.remoting:service=Detector,transport=jndi">-->
+   <!-- host to which the detector will connect to for the JNDI server. -->
+   <!-- <attribute name="Host">localhost</attribute>-->
+   <!-- port to which detector will connect to for the JNDI server. -->
+   <!-- <attribute name="Port">5555</attribute>-->
+   <!-- context factory string used when connecting to the JNDI server. -->
+   <!-- The default is org.jnp.interfaces.NamingContextFactory. -->
+   <!-- <attribute name="ContextFactory">org.acme.NamingContextFactory</attribute> -->
+   <!-- url package string to use when connecting to the JNDI server. -->
+   <!-- The default is org.jboss.naming:org.jnp.interfaces. -->
+   <!-- <attribute name="URLPackage">org.acme.naming</attribute> -->
+   <!-- Sets the number of detection iterations before manually pinging -->
+   <!-- remote server to make sure still alive. This is needed since remote server -->
+   <!-- could crash and yet still have an entry in the JNDI server, -->
+   <!-- thus making it appear that it is still there. The default value is 5. -->
+   <!-- <attribute name="CleanDetectionNumber">20</attribute>-->
+
+   <!-- Specifies the domains in which the detector will recognize -->
+   <!-- detections.  If servers are not configured to be in these -->
+   <!-- domains, they will not be added to NetworkRegistry. -->
+   <!--      <attribute name="Configuration">-->
+   <!--         <domains>-->
+   <!--            <domain>roxanne</domain>-->
+   <!--            <domain>sparky</domain>-->
+   <!--         </domains>-->
+   <!--      </attribute>-->
+   <!--   </mbean>-->
+
+    <!-- MBean service to provide access to remoting client. -->
     <mbean code="org.jboss.remoting.ClientInvokerAdapter"
            xmbean-dd="org/jboss/remoting/ClientInvokerAdapter.xml"
            name="jboss.remoting:service=InterceptorAdapter">
