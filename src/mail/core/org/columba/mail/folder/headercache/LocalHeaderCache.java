@@ -23,11 +23,12 @@ import org.columba.core.logging.ColumbaLogger;
 import org.columba.mail.folder.DataStorageInterface;
 import org.columba.mail.folder.FolderInconsistentException;
 import org.columba.mail.folder.LocalFolder;
-import org.columba.mail.folder.MessageFolderInfo;
 import org.columba.mail.message.ColumbaHeader;
-import org.columba.mail.message.HeaderInterface;
 import org.columba.mail.message.HeaderList;
-import org.columba.mail.parser.Rfc822Parser;
+import org.columba.ristretto.message.HeaderInterface;
+import org.columba.ristretto.message.MessageFolderInfo;
+import org.columba.ristretto.message.io.CharSequenceSource;
+import org.columba.ristretto.parser.HeaderParser;
 
 /**
  * @author freddy
@@ -213,7 +214,6 @@ public class LocalHeaderCache extends AbstractFolderHeaderCache {
 
 		// parse all message files to recreate the header cache
 
-		Rfc822Parser parser = new Rfc822Parser();
 		ColumbaHeader header;
 		MessageFolderInfo messageFolderInfo = folder.getMessageFolderInfo();
 
@@ -230,11 +230,8 @@ public class LocalHeaderCache extends AbstractFolderHeaderCache {
 					continue;
 				}
 
-				header = parser.parseHeader(source);
-
+				header = new ColumbaHeader( HeaderParser.parse(new CharSequenceSource(source)) );
 				ColumbaHeader h = CachedHeaderfieldOwner.stripHeaders(header);
-
-				parser.addColumbaHeaderFields(h);
 
 				int size = source.length() >> 10; // Size in KB
 				h.set("columba.size", new Integer(size));

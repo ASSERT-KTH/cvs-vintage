@@ -37,14 +37,15 @@ import org.columba.mail.folder.RemoteFolder;
 import org.columba.mail.folder.command.MarkMessageCommand;
 import org.columba.mail.folder.headercache.RemoteHeaderCache;
 import org.columba.mail.imap.IMAPStore;
-import org.columba.mail.imap.parser.IMAPFlags;
-import org.columba.mail.message.AbstractMessage;
+import org.columba.mail.message.ColumbaMessage;
 import org.columba.mail.message.ColumbaHeader;
 import org.columba.mail.message.HeaderList;
-import org.columba.mail.message.Message;
-import org.columba.mail.message.MimePart;
-import org.columba.mail.message.MimePartTree;
 import org.columba.mail.util.MailResourceLoader;
+import org.columba.ristretto.imap.IMAPFlags;
+import org.columba.ristretto.message.Flags;
+import org.columba.ristretto.message.MessageFolderInfo;
+import org.columba.ristretto.message.MimePart;
+import org.columba.ristretto.message.MimeTree;
 
 public class IMAPFolder extends RemoteFolder {
 
@@ -64,7 +65,7 @@ public class IMAPFolder extends RemoteFolder {
 	/**
 	 *
 	 */
-	private Message aktMessage;
+	private ColumbaMessage aktMessage;
 
 	/**
 	 *
@@ -260,7 +261,7 @@ public class IMAPFolder extends RemoteFolder {
                                 "message",
                                 "fetch_flags_list"));
 
-		IMAPFlags[] flags = getStore().fetchFlagsList(getImapPath());
+		Flags[] flags = getStore().fetchFlagsList(getImapPath());
 
 		getObservable().setMessage(MailResourceLoader.getString(
                                 "statusbar",
@@ -286,12 +287,12 @@ public class IMAPFolder extends RemoteFolder {
 	 * Method updateFlags.
 	 * @param flagsList
 	 */
-	protected void updateFlags(IMAPFlags[] flagsList) {
+	protected void updateFlags(Flags[] flagsList) {
 
 		// ALP 04/29/03
 		// Reset the number of seen/resent/existing messages. Otherwise you
 		// just keep adding to the number.
-		org.columba.mail.folder.MessageFolderInfo info = getMessageFolderInfo();
+		MessageFolderInfo info = getMessageFolderInfo();
 		info.setExists(0);
 		info.setRecent(0);
 		info.setUnseen(0);
@@ -299,24 +300,16 @@ public class IMAPFolder extends RemoteFolder {
 
 		for (int i = 0; i < flagsList.length; i++) {
 			IMAPFlags flags = (IMAPFlags) flagsList[i];
-			ColumbaHeader header =
-				(ColumbaHeader) headerList.get(flags.getUid());
-			if (header == null)
-				continue;
+			Flags localFlags =
+				((ColumbaHeader) headerList.get(flags.getUid())).getFlags();
 
-			if (flags.isSeen())
-				header.set("columba.flags.seen", Boolean.TRUE);
-			else
+			localFlags.setFlags(flags.getFlags());
+
+			if (!flags.get(Flags.SEEN)) {
 				info.incUnseen();
+			}
 
-			if (flags.isAnswered())
-				header.set("columba.flags.answered", Boolean.TRUE);
-			if (flags.isDeleted())
-				header.set("columba.flags.expunged", Boolean.TRUE);
-			if (flags.isFlagged())
-				header.set("columba.flags.flagged", Boolean.TRUE);
-			if (flags.isRecent()) {
-				header.set("columba.flags.recent", Boolean.TRUE);
+			if (flags.get(Flags.RECENT)) {
 				info.incRecent();
 			}
 
@@ -443,7 +436,7 @@ public class IMAPFolder extends RemoteFolder {
 	/**
 	 * @see org.columba.mail.folder.Folder#getMimePartTree(java.lang.Object, org.columba.core.command.WorkerStatusController)
 	 */
-	public MimePartTree getMimePartTree(
+	public MimeTree getMimePartTree(
 		Object uid)
 		throws Exception {
 
@@ -487,7 +480,7 @@ public class IMAPFolder extends RemoteFolder {
 	 * @see org.columba.mail.folder.Folder#addMessage(org.columba.mail.message.AbstractMessage, org.columba.core.command.WorkerStatusController)
 	 */
 	public Object addMessage(
-		AbstractMessage message)
+		ColumbaMessage message)
 		throws Exception {
 		return null;
 	}
@@ -679,10 +672,10 @@ public class IMAPFolder extends RemoteFolder {
 	 * @return AbstractMessage
 	 * @throws Exception
 	 */
-	public AbstractMessage getMessage(
+	public ColumbaMessage getMessage(
 		Object uid)
 		throws Exception {
-		return new Message((ColumbaHeader) headerList.getHeader((String) uid));
+		return new ColumbaMessage((ColumbaHeader) headerList.getHeader((String) uid));
 	}
 
 	/**

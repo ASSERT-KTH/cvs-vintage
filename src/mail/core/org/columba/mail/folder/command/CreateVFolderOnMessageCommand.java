@@ -34,7 +34,7 @@ import org.columba.mail.folder.Folder;
 import org.columba.mail.folder.FolderTreeNode;
 import org.columba.mail.folder.virtual.VirtualFolder;
 import org.columba.mail.gui.frame.AbstractMailFrameController;
-import org.columba.mail.message.HeaderInterface;
+import org.columba.ristretto.message.HeaderInterface;
 
 /**
  * This class is used to create a virtual folder based on the

@@ -15,11 +15,9 @@
 //All Rights Reserved.
 package org.columba.mail.folder.virtual;
 
-import java.util.Enumeration;
-
 import org.columba.mail.folder.Folder;
 import org.columba.mail.message.ColumbaHeader;
-import org.columba.mail.message.HeaderInterface;
+import org.columba.ristretto.message.HeaderInterface;
 
 /**
  * @author freddy
@@ -41,22 +39,9 @@ public class VirtualHeader extends ColumbaHeader implements HeaderInterface {
 		Object srcUid) {
 		super();
 		
-		if( header == null )
-			System.out.println("test");
-
-		for (Enumeration e = header.getHashtable().keys();
-			e.hasMoreElements();
-			) {
-			Object o = e.nextElement();
-
-			getHashtable().put(
-				(String) o,
-				header.getHashtable().get((String) o));
-
-		}
-
 		this.srcFolder = srcFolder;
 		this.srcUid = srcUid;
+		this.srcHeader = header;
 	}
 
 	/**

@@ -34,11 +34,12 @@ import org.columba.mail.filter.Filter;
 import org.columba.mail.filter.FilterList;
 import org.columba.mail.gui.config.filter.ConfigFrame;
 import org.columba.mail.gui.frame.AbstractMailFrameController;
-import org.columba.mail.message.AbstractMessage;
+import org.columba.mail.message.ColumbaMessage;
 import org.columba.mail.message.ColumbaHeader;
 import org.columba.mail.message.HeaderList;
-import org.columba.mail.message.MimePart;
-import org.columba.mail.message.MimePartTree;
+import org.columba.ristretto.message.MessageFolderInfo;
+import org.columba.ristretto.message.MimePart;
+import org.columba.ristretto.message.MimeTree;
 
 /**
  *   
@@ -164,6 +165,7 @@ public abstract class Folder extends FolderTreeNode {
 		if (DiskIO.ensureDirectory(dir))
 			directoryFile = new File(dir);
 			
+		observable = new StatusObservableImpl();
 
 	}
 
@@ -311,7 +313,7 @@ public abstract class Folder extends FolderTreeNode {
 	 * @throws Exception
 	 */
 	public abstract Object addMessage(
-		AbstractMessage message)
+		ColumbaMessage message)
 		throws Exception;
 
 	/**
@@ -403,7 +405,7 @@ public abstract class Folder extends FolderTreeNode {
 	 * @return MimePartTree		return mimepart structure
 	 * @throws Exception
 	 */
-	public abstract MimePartTree getMimePartTree(
+	public abstract MimeTree getMimePartTree(
 		Object uid)
 		throws Exception;
 

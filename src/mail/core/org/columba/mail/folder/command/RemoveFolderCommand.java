@@ -17,7 +17,6 @@ package org.columba.mail.folder.command;
 
 import org.columba.core.command.Command;
 import org.columba.core.command.DefaultCommandReference;
-import org.columba.core.command.StatusObservableImpl;
 import org.columba.core.command.Worker;
 import org.columba.core.main.MainInterface;
 import org.columba.mail.command.FolderCommandReference;

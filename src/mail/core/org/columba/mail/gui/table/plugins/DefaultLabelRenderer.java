@@ -28,7 +28,9 @@ import javax.swing.table.TableCellRenderer;
 
 import org.columba.core.plugin.PluginInterface;
 import org.columba.mail.gui.table.model.MessageNode;
-import org.columba.mail.message.HeaderInterface;
+import org.columba.mail.message.ColumbaHeader;
+import org.columba.ristretto.message.Flags;
+import org.columba.ristretto.message.HeaderInterface;
 
 /**
  * @author frd
@@ -118,9 +120,11 @@ public class DefaultLabelRenderer extends JLabel implements TableCellRenderer, P
 			return this;
 		}
 
-		if (header.getFlags() != null) {
+		Flags flags = ((ColumbaHeader)header).getFlags();
+
+		if (flags != null) {
 			// mark as bold if message is unseen
-			if (!header.getFlags().getSeen()) {
+			if (!flags.getSeen()) {
 				if (!getFont().equals(boldFont))
 					setFont(boldFont);
 			} else if (messageNode.isHasRecentChildren()) {

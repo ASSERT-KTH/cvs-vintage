@@ -30,7 +30,7 @@ import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.filter.Filter;
 import org.columba.mail.folder.Folder;
 import org.columba.mail.gui.config.filter.FilterDialog;
-import org.columba.mail.message.HeaderInterface;
+import org.columba.ristretto.message.HeaderInterface;
 
 /**
  * This class is used to create a filter based on the currently selected

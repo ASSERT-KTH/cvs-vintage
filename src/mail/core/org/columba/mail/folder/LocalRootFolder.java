@@ -20,11 +20,11 @@ import javax.swing.ImageIcon;
 import org.columba.core.gui.util.ImageLoader;
 import org.columba.mail.config.FolderItem;
 import org.columba.mail.filter.Filter;
-import org.columba.mail.message.AbstractMessage;
+import org.columba.mail.message.ColumbaMessage;
 import org.columba.mail.message.ColumbaHeader;
 import org.columba.mail.message.HeaderList;
-import org.columba.mail.message.MimePart;
-import org.columba.mail.message.MimePartTree;
+import org.columba.ristretto.message.MimePart;
+import org.columba.ristretto.message.MimeTree;
 
 /**
  * @author freddy
@@ -54,7 +54,7 @@ public class LocalRootFolder extends Folder {
 	 * @see org.columba.mail.folder.Folder#addMessage(org.columba.mail.message.AbstractMessage, org.columba.core.command.WorkerStatusController)
 	 */
 	public Object addMessage(
-		AbstractMessage message)
+		ColumbaMessage message)
 		throws Exception {
 		return null;
 	}
@@ -120,7 +120,7 @@ public class LocalRootFolder extends Folder {
 	/**
 	 * @see org.columba.mail.folder.Folder#getMimePartTree(java.lang.Object, org.columba.core.command.WorkerStatusController)
 	 */
-	public MimePartTree getMimePartTree(
+	public MimeTree getMimePartTree(
 		Object uid)
 		throws Exception {
 		return null;

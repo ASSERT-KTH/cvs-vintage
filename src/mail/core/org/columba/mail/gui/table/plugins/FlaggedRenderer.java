@@ -23,6 +23,7 @@ import javax.swing.SwingConstants;
 
 import org.columba.core.gui.util.ImageLoader;
 import org.columba.mail.gui.table.model.MessageNode;
+import org.columba.mail.message.ColumbaHeader;
 
 public class FlaggedRenderer extends DefaultLabelRenderer {
 
@@ -59,7 +60,7 @@ public class FlaggedRenderer extends DefaultLabelRenderer {
 			return this;
 		}
 
-		boolean flagged = ((MessageNode)value).getHeader().getFlags().getFlagged();
+		boolean flagged = ((ColumbaHeader)((MessageNode)value).getHeader()).getFlags().getFlagged();
 		
 		
 		

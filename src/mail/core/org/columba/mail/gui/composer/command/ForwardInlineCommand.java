@@ -13,7 +13,6 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
-
 package org.columba.mail.gui.composer.command;
 
 import org.columba.core.command.DefaultCommandReference;
@@ -26,10 +25,13 @@ import org.columba.mail.config.MailConfig;
 import org.columba.mail.folder.Folder;
 import org.columba.mail.gui.composer.ComposerController;
 import org.columba.mail.gui.composer.ComposerModel;
+import org.columba.mail.message.ColumbaMessage;
 import org.columba.mail.message.ColumbaHeader;
-import org.columba.mail.message.Message;
-import org.columba.mail.message.MimePart;
-import org.columba.mail.message.MimePartTree;
+import org.columba.ristretto.message.LocalMimePart;
+import org.columba.ristretto.message.MimeHeader;
+import org.columba.ristretto.message.MimePart;
+import org.columba.ristretto.message.MimeTree;
+import org.columba.ristretto.message.io.CharSequenceSource;
 
 /**
  * @author freddy
@@ -67,12 +69,12 @@ public class ForwardInlineCommand extends FolderCommand {
 			(Folder) ((FolderCommandReference) getReferences()[0]).getFolder();
 		Object[] uids = ((FolderCommandReference) getReferences()[0]).getUids();
 
-		Message message = new Message();
+		ColumbaMessage message = new ColumbaMessage();
 
 		ColumbaHeader header =
 			(ColumbaHeader) folder.getMessageHeader(uids[0]);
 		message.setHeader(header);
-		MimePartTree mimePartTree = folder.getMimePartTree(uids[0]);
+		MimeTree mimePartTree = folder.getMimePartTree(uids[0]);
 		message.setMimePartTree(mimePartTree);
 
 		XmlElement html =
@@ -90,8 +92,8 @@ public class ForwardInlineCommand extends FolderCommand {
 			bodyPart = mimePartTree.getFirstTextPart("plain");
 
 		if (bodyPart == null) {
-			bodyPart = new MimePart();
-			bodyPart.setBody(new String("<No Message-Text>"));
+			bodyPart = new LocalMimePart(new MimeHeader( header.getHeader() ));
+			((LocalMimePart)bodyPart).setBody(new CharSequenceSource("<No Message-Text>"));
 		} else
 			bodyPart =
 				folder.getMimePart(uids[0], bodyPart.getAddress());
@@ -102,7 +104,7 @@ public class ForwardInlineCommand extends FolderCommand {
 		
 		controller = new ComposerController();
 
-		MessageBuilder.createMessage(
+		MessageBuilder.getInstance().createMessage(
 			message,
 			model,
 			MessageBuilder.FORWARD_INLINE);
@@ -113,10 +115,13 @@ public class ForwardInlineCommand extends FolderCommand {
 	/**
 	 * @see org.columba.core.command.Command#undo(Worker)
 	 */
-	public void undo(Worker worker) throws Exception {}
+	public void undo(Worker worker) throws Exception {
+	}
 
 	/**
 	 * @see org.columba.core.command.Command#redo(Worker)
 	 */
-	public void redo(Worker worker) throws Exception {}
+	public void redo(Worker worker) throws Exception {
+	}
+
 }

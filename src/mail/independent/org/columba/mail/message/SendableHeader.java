@@ -15,10 +15,11 @@
 //All Rights Reserved.
 package org.columba.mail.message;
 
-import java.util.Enumeration;
-import java.util.Hashtable;
 import java.util.List;
-import java.util.Vector;
+
+import org.columba.ristretto.message.Attributes;
+import org.columba.ristretto.message.Flags;
+import org.columba.ristretto.message.Header;
 
 /**
  * @author freddy
@@ -28,61 +29,40 @@ import java.util.Vector;
  * To enable and disable the creation of type comments go to
  * Window>Preferences>Java>Code Generation.
  */
-public class SendableHeader extends ColumbaHeader implements HeaderInterface{
+public class SendableHeader extends ColumbaHeader{
 	
-	private List recipients;
-    private int accountUid;
-    
 	public SendableHeader()
 	{
 		super();
-		
-		recipients = new Vector();
 	}
 	
 	 public int getAccountUid()
     {
-        return accountUid;
+        return ((Integer)attributes.get("columba.accountuid")).intValue();
     }
 
 
     public List getRecipients()
     {
-        return recipients;
+        return ((List)attributes.get("columba.recipients"));
     }
 
     public void setAccountUid( int uid )
     {
-        accountUid = uid;
+        attributes.put( "columba.accountuid" , new Integer(uid));
     }
 
     public void setRecipients( List rcpt )
     {
-        recipients = rcpt;
+        attributes.put("columba.recipients", rcpt);
     }
     
     public Object clone() {
-
-		SendableHeader header = new SendableHeader();
-		Hashtable ht = new Hashtable();
-
-		for (Enumeration e = getHashtable().keys(); e.hasMoreElements();) {
-			Object o = e.nextElement();
-			ht.put(o, getHashtable().get(o));
-
-		}
-		header.setHashtable(ht);
+		SendableHeader clone = new SendableHeader();
+		clone.attributes = (Attributes) this.attributes.clone();
+		clone.flags = (Flags) this.flags.clone();
+		clone.header = (Header) this.header.clone();
 		
-		header.setRecipients( getRecipients() );
-		
-		header.setAccountUid( getAccountUid() );
-
-		//header.setHashtable( (Hashtable) hashTable.clone() );
-
-		//ColumbaHeader header = (ColumbaHeader) super.clone();
-
-		return header;
-	}
-	
-
+		return clone;
+    }
 }

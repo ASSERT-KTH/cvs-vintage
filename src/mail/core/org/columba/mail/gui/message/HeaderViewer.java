@@ -18,6 +18,8 @@ package org.columba.mail.gui.message;
 import java.awt.Font;
 import java.awt.Insets;
 import java.net.URL;
+import java.text.DateFormat;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.StringTokenizer;
@@ -32,8 +34,11 @@ import org.columba.core.io.DiskIO;
 import org.columba.core.logging.ColumbaLogger;
 import org.columba.core.xml.XmlElement;
 import org.columba.mail.config.MailConfig;
-import org.columba.mail.message.HeaderInterface;
+import org.columba.mail.message.ColumbaHeader;
 import org.columba.mail.parser.text.HtmlParser;
+import org.columba.ristretto.message.Address;
+import org.columba.ristretto.message.AddressListRenderer;
+import org.columba.ristretto.message.BasicHeader;
 
 /**
  * @author freddy
@@ -145,7 +150,7 @@ public class HeaderViewer extends JTextPane {
 
 	}
 
-	void setHeader(HeaderInterface header, boolean hasAttachments)
+	void setHeader(ColumbaHeader header, boolean hasAttachments)
 		throws Exception {
 		// border #949494
 		// background #989898
@@ -188,14 +193,42 @@ public class HeaderViewer extends JTextPane {
 			buf.append("<TD " + RIGHT_COLUMN_PROPERTIES + ">");
 
 			// set right column text
-			String str = (String) header.get(key);
-
-			// substitute special characters like:
-			//  <,>,&,\t,\n,"
-			str = HtmlParser.substituteSpecialCharactersInHeaderfields(str);
+			// look for special headers like subject, to, date
+			String str = null;
+			if( key.equals("Subject")) {
+			 str = (String) header.get("columba.subject");
+			 // substitute special characters like:
+			 //  <,>,&,\t,\n,"
+			 str = HtmlParser.substituteSpecialCharactersInHeaderfields(str);
+			} else if( key.equals("To") ) {
+				BasicHeader bHeader = new BasicHeader(header.getHeader());
+				str = AddressListRenderer.renderToHTMLWithLinks( bHeader.getTo() ).toString();
+				
+			} else if( key.equals("Reply-To") ) {
+				BasicHeader bHeader = new BasicHeader(header.getHeader());
+				str = AddressListRenderer.renderToHTMLWithLinks( bHeader.getReplyTo() ).toString();
+				
+			} else if( key.equals("From") ) {
+				BasicHeader bHeader = new BasicHeader(header.getHeader());
+				str = AddressListRenderer.renderToHTMLWithLinks( new Address[] { (Address) bHeader.getFrom()} ).toString();
+				
+			} else if( key.equals("Date")) {
+				DateFormat df = DateFormat.getDateTimeInstance(
+													DateFormat.LONG, DateFormat.MEDIUM);
+				str = df.format((Date) header.get("columba.date"));
+				// substitute special characters like:
+				//  <,>,&,\t,\n,"
+				str = HtmlParser.substituteSpecialCharactersInHeaderfields(str);
+			} else {
+				str = (String) header.get(key);
+				// substitute special characters like:
+				//  <,>,&,\t,\n,"
+				str = HtmlParser.substituteSpecialCharactersInHeaderfields(str);
+			}
+			
 
 			// parse for email addresses and substite with HTML-code
-			str = HtmlParser.substituteEmailAddress(str);
+			//str = HtmlParser.substituteEmailAddress(str);
 
 			// append HTML-code
 			buf.append(" " + str + "</TD>");

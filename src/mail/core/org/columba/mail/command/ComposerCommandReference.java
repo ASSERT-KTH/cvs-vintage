@@ -17,7 +17,7 @@ package org.columba.mail.command;
 
 import org.columba.mail.folder.FolderTreeNode;
 import org.columba.mail.gui.composer.ComposerController;
-import org.columba.mail.message.Message;
+import org.columba.mail.message.ColumbaMessage;
 
 /**
  * @author freddy
@@ -46,7 +46,7 @@ public class ComposerCommandReference extends FolderCommandReference {
 	 * @param folder
 	 * @param message
 	 */
-	public ComposerCommandReference(FolderTreeNode folder, Message message) {
+	public ComposerCommandReference(FolderTreeNode folder, ColumbaMessage message) {
 		super(folder, message);
 	}
 

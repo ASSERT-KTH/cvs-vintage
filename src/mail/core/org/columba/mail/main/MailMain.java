@@ -11,11 +11,6 @@ import org.columba.core.main.DefaultMain;
 import org.columba.core.main.MainInterface;
 import org.columba.core.plugin.ActionPluginHandler;
 import org.columba.core.plugin.PluginHandlerNotFoundException;
-import org.columba.mail.coder.Base64Decoder;
-import org.columba.mail.coder.Base64Encoder;
-import org.columba.mail.coder.CoderRouter;
-import org.columba.mail.coder.QuotedPrintableDecoder;
-import org.columba.mail.coder.QuotedPrintableEncoder;
 import org.columba.mail.config.MailConfig;
 import org.columba.mail.folder.headercache.CachedHeaderfieldOwner;
 import org.columba.mail.gui.tree.TreeModel;
@@ -52,13 +47,6 @@ public class MailMain extends DefaultMain {
 	 */
 	public void initConfiguration() {
 		new MailConfig();
-
-
-		new CoderRouter();
-		new QuotedPrintableDecoder();
-		new QuotedPrintableEncoder();
-		new Base64Decoder();
-		new Base64Encoder();
 
 	}
 

@@ -6,8 +6,9 @@
  */
 package org.columba.mail.gui.table.model;
 
-import org.columba.mail.message.Flags;
-import org.columba.mail.message.HeaderInterface;
+import org.columba.mail.message.ColumbaHeader;
+import org.columba.ristretto.message.Flags;
+import org.columba.ristretto.message.HeaderInterface;
 
 /**
  * @author fdietz
@@ -137,7 +138,7 @@ public class BasicTableModelFilter extends TreeTableModelDecorator{
 		boolean flags1 = false;
 		boolean flags2 = false;
 
-		Flags flags = header.getFlags();
+		Flags flags = ((ColumbaHeader) header).getFlags();
 
 		if (flags == null) {
 			System.out.println("flags is null");

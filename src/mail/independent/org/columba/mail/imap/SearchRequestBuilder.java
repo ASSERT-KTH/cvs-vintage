@@ -21,8 +21,8 @@ import java.util.Vector;
 
 import org.columba.mail.filter.FilterCriteria;
 import org.columba.mail.filter.FilterRule;
-import org.columba.mail.imap.protocol.Arguments;
-import org.columba.mail.imap.protocol.Atom;
+import org.columba.ristretto.imap.protocol.Arguments;
+import org.columba.ristretto.imap.protocol.Atom;
 
 /**
  * @author freddy

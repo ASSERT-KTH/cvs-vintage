@@ -18,11 +18,15 @@ package org.columba.mail.gui.config.accountwizard;
 
 import javax.help.CSH;
 
-import net.javaprog.ui.wizard.*;
+import net.javaprog.ui.wizard.DataModel;
+import net.javaprog.ui.wizard.DefaultWizardModel;
+import net.javaprog.ui.wizard.JavaHelpSupport;
+import net.javaprog.ui.wizard.Step;
+import net.javaprog.ui.wizard.Wizard;
+import net.javaprog.ui.wizard.WizardModel;
 
 import org.columba.core.gui.util.ImageLoader;
 import org.columba.core.help.HelpManager;
-
 import org.columba.mail.config.MailConfig;
 import org.columba.mail.util.MailResourceLoader;
 

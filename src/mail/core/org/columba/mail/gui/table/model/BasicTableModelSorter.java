@@ -21,8 +21,8 @@ import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
-import org.columba.mail.message.Flags;
-import org.columba.mail.message.HeaderInterface;
+import org.columba.mail.message.ColumbaHeader;
+import org.columba.ristretto.message.Flags;
 
 /**
  * @author fdietz
@@ -155,8 +155,8 @@ public class BasicTableModelSorter extends TreeTableModelDecorator {
 			MessageNode node1 = (MessageNode) o1;
 			MessageNode node2 = (MessageNode) o2;
 
-			HeaderInterface header1 = (HeaderInterface) node1.getUserObject();
-			HeaderInterface header2 = (HeaderInterface) node2.getUserObject();
+			ColumbaHeader header1 = (ColumbaHeader) node1.getUserObject();
+			ColumbaHeader header2 = (ColumbaHeader) node2.getUserObject();
 
 			if ((header1 == null) || (header2 == null))
 				return 0;

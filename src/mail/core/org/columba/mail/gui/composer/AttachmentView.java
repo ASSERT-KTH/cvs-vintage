@@ -28,8 +28,8 @@ import javax.swing.event.ListDataEvent;
 import javax.swing.event.ListDataListener;
 
 import org.columba.core.gui.util.ImageLoader;
-import org.columba.mail.message.MimeHeader;
-import org.columba.mail.message.MimePart;
+import org.columba.ristretto.message.MimeHeader;
+import org.columba.ristretto.message.MimePart;
 
 /**
  * @author frd
@@ -127,8 +127,8 @@ public class AttachmentView extends JList implements ListDataListener {
 				return this;
 
 			MimeHeader header = mp.getHeader();
-			String type = header.contentType;
-			String subtype = header.contentSubtype;
+			String type = header.getContentType();
+			String subtype = header.getContentSubtype();
 
 			StringBuffer buf = new StringBuffer();
 

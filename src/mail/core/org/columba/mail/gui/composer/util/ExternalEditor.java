@@ -26,8 +26,8 @@ import org.columba.core.config.Config;
 import org.columba.core.io.TempFileStore;
 import org.columba.mail.gui.composer.AbstractEditorController;
 import org.columba.mail.gui.mimetype.MimeTypeViewer;
-import org.columba.mail.message.MimeHeader;
 import org.columba.mail.util.MailResourceLoader;
+import org.columba.ristretto.message.MimeHeader;
 
 public class ExternalEditor {
 

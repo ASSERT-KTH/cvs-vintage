@@ -16,6 +16,7 @@
 package org.columba.mail.gui.message.command;
 
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.LinkedList;
 
 import org.columba.core.command.Command;
@@ -33,11 +34,16 @@ import org.columba.mail.folder.Folder;
 import org.columba.mail.gui.attachment.AttachmentSelectionHandler;
 import org.columba.mail.gui.frame.AbstractMailFrameController;
 import org.columba.mail.gui.frame.ThreePaneMailFrameController;
-import org.columba.mail.message.AbstractMessage;
-import org.columba.mail.message.HeaderInterface;
-import org.columba.mail.message.MimePart;
-import org.columba.mail.message.MimePartTree;
-import org.columba.mail.parser.Rfc822Parser;
+import org.columba.mail.message.ColumbaMessage;
+import org.columba.mail.message.ColumbaHeader;
+import org.columba.ristretto.message.HeaderInterface;
+import org.columba.ristretto.message.LocalMimePart;
+import org.columba.ristretto.message.MimeHeader;
+import org.columba.ristretto.message.MimeTree;
+import org.columba.ristretto.message.StreamableMimePart;
+import org.columba.ristretto.message.io.CharSequenceSource;
+import org.columba.ristretto.parser.MessageParser;
+import org.columba.ristretto.parser.ParserException;
 
 /**
  * @author Timo Stich (tstich@users.sourceforge.net)
@@ -45,9 +51,9 @@ import org.columba.mail.parser.Rfc822Parser;
  */
 public class ViewMessageCommand extends FolderCommand {
 
-	MimePart bodyPart;
-	MimePartTree mimePartTree;
-	HeaderInterface header;
+	StreamableMimePart bodyPart;
+	MimeTree mimePartTree;
+	ColumbaHeader header;
 	Folder srcFolder;
 	Object uid;
 	Object[] uids;
@@ -106,10 +112,10 @@ public class ViewMessageCommand extends FolderCommand {
 				"application/octet-stream");
 
 		// get first one -> this is the one we need to decrypt
-		MimePart mimePart = (MimePart) list.getFirst();
+		LocalMimePart mimePart = (LocalMimePart) list.getFirst();
 
 		// get encrypted string
-		String encryptedBodyPart = mimePart.getBody();
+		String encryptedBodyPart = mimePart.getBody().toString();
 
 		// get PGPItem, use To-headerfield and search through
 		// all accounts to find a matching PGP id
@@ -121,12 +127,19 @@ public class ViewMessageCommand extends FolderCommand {
 		//String decryptedBodyPart = PGPController.getInstance().decrypt(encryptedBodyPart, pgpItem);
 
 		// construct new Message from decrypted string
-		AbstractMessage message =
-			new Rfc822Parser().parse(decryptedBodyPart, null);
+		ColumbaMessage message;
+		try {
+			message =
+				new ColumbaMessage(
+					MessageParser.parse(new CharSequenceSource(decryptedBodyPart)));
+			mimePartTree = message.getMimePartTree();
 
-		mimePartTree = message.getMimePartTree();
-
-		header = message.getHeader();
+			header = (ColumbaHeader) message.getHeaderInterface();
+		} catch (ParserException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 	protected void verifyMessage() {
@@ -239,7 +252,7 @@ public class ViewMessageCommand extends FolderCommand {
 			// security check, i dont know if we need this (waffel)
 			if (frameController instanceof ThreePaneMailFrameController) {
 				// if the message it not yet seen
-				if (!header.getFlags().getSeen()) {
+				if (!((ColumbaHeader)header).getFlags().getSeen()) {
 					// restart timer which marks the message as read
 					// after a user configurable time interval
 					((ThreePaneMailFrameController) frameController).getTableController()
@@ -309,13 +322,13 @@ public class ViewMessageCommand extends FolderCommand {
 			// Which Bodypart shall be shown? (html/plain)
 
 			if (viewhtml)
-				bodyPart = mimePartTree.getFirstTextPart("html");
+				bodyPart = (StreamableMimePart) mimePartTree.getFirstTextPart("html");
 			else
-				bodyPart = mimePartTree.getFirstTextPart("plain");
+				bodyPart = (StreamableMimePart) mimePartTree.getFirstTextPart("plain");
 
 			if (bodyPart == null) {
-				bodyPart = new MimePart();
-				bodyPart.setBody(new String("<No Message-Text>"));
+				bodyPart = new LocalMimePart(new MimeHeader());
+				((LocalMimePart)bodyPart).setBody(new CharSequenceSource("<No Message-Text>"));
 			} else if (encryptedMessage == true) {
 
 				// meaning, bodyPart already contains the correct
@@ -324,7 +337,7 @@ public class ViewMessageCommand extends FolderCommand {
 			} else {
 
 				bodyPart =
-					srcFolder.getMimePart(uid, bodyPart.getAddress());
+				(StreamableMimePart) srcFolder.getMimePart(uid, bodyPart.getAddress());
 			}
 		}
 	}

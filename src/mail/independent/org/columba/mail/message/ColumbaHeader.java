@@ -16,9 +16,13 @@
 
 package org.columba.mail.message;
 
-import java.util.Date;
-import java.util.Enumeration;
-import java.util.Hashtable;
+import org.columba.ristretto.message.Address;
+import org.columba.ristretto.message.Attributes;
+import org.columba.ristretto.message.BasicHeader;
+import org.columba.ristretto.message.Flags;
+import org.columba.ristretto.message.Header;
+import org.columba.ristretto.message.HeaderInterface;
+import org.columba.ristretto.parser.HeaderParser;
 
 /**
  * represents a Rfc822-compliant header
@@ -38,57 +42,177 @@ import java.util.Hashtable;
  *  - priority, Integer
  */
 
-public class ColumbaHeader extends Rfc822Header implements HeaderInterface {
+public class ColumbaHeader implements HeaderInterface {
+
+	protected Header header;
+	protected Attributes attributes;
+	protected Flags flags;
 
 	public ColumbaHeader() {
-		super();
-		//flags = new Flags( this );
-
-		set("columba.fetchstate", new Boolean(false));
-
-		set("columba.flags.seen", new Boolean(false));
-		set("columba.flags.recent", new Boolean(false));
-		set("columba.flags.answered", new Boolean(false));
-		set("columba.flags.flagged", new Boolean(false));
-		set("columba.flags.expunged", new Boolean(false));
-		set("columba.flags.draft", new Boolean(false));
-
-		set("columba.priority", new Integer(3));
-		set("columba.from", new String());
-		set("columba.host", new String());
-		set("columba.date", new Date());
+		this(new Header());
 	}
 
-	public Object clone() {
+	public ColumbaHeader(Header header) {
+		this.header = header;
+		flags = new Flags();
+		attributes = new Attributes();
 
-		ColumbaHeader header = new ColumbaHeader();
+		BasicHeader basicHeader = new BasicHeader( header );
 
-		Hashtable ht = new Hashtable();
-
-		for (Enumeration e = getHashtable().keys(); e.hasMoreElements();) {
-			Object o = e.nextElement();
-			ht.put(o, getHashtable().get(o));
-
+		attributes.put("columba.fetchstate", new Boolean(false));
+		attributes.put("columba.priority", new Integer( basicHeader.getPriority()));
+		Address from = basicHeader.getFrom();
+		if( from != null ) attributes.put("columba.from", from.toString());
+		attributes.put("columba.host", new String());
+		attributes.put("columba.date", basicHeader.getDate());
+		String subject = basicHeader.getSubject();
+		if( subject != null) {
+			attributes.put("columba.subject", subject);
+		} else {
+			attributes.put("columba.subject", "");			
 		}
-		header.setHashtable(ht);
+		attributes.put("columba.attachment", new Boolean(false));
+		attributes.put("columba.size", new Integer(0));
+	}
 
-		//header.setHashtable( (Hashtable) hashTable.clone() );
 
-		return header;
+	public Object clone() {
+		ColumbaHeader clone = new ColumbaHeader();
+		clone.attributes = (Attributes) this.attributes.clone();
+		clone.flags = (Flags) this.flags.clone();
+		clone.header = (Header) this.header.clone();
+		
+		return clone;
 	}
 
 	public void copyColumbaKeys(ColumbaHeader header) {
-		if (header != null) {
-			Hashtable oldTable = header.hashTable;
-			Hashtable newTable = this.hashTable;
+		header.flags = (Flags) flags.clone();
+		header.attributes = (Attributes) attributes.clone();
+	}
 
-			for (Enumeration keys = oldTable.keys(); keys.hasMoreElements();) {
-				String aktKey = (String) keys.nextElement();
-				if (aktKey.startsWith("columba."))
-					newTable.put(aktKey, oldTable.get(aktKey));
+	/* (non-Javadoc)
+	 * @see org.columba.mail.message.HeaderInterface#count()
+	 */
+	public int count() {
+		return attributes.count() + header.count() + 5;
+	}
+
+	/* (non-Javadoc)
+	 * @see org.columba.mail.message.HeaderInterface#getFlags()
+	 */
+	public Flags getFlags() {
+		return flags;
+	}
+
+
+	/* (non-Javadoc)
+	 * @see org.columba.mail.message.HeaderInterface#get(java.lang.String)
+	 */
+	public Object get(String s) {
+		if( s.startsWith("columba.flags.")) {
+			String flag = s.substring("columba.flags.".length());
+			if( flag.equals("seen")) {
+				return new Boolean( flags.get(Flags.SEEN) ); 
 			}
-
+			if( flag.equals("recent")) {
+				return new Boolean( flags.get(Flags.RECENT) ); 
+			}
+			if( flag.equals("answered")) {
+				return new Boolean( flags.get(Flags.ANSWERED) ); 
+			}
+			if( flag.equals("deleted")) {
+				return new Boolean( flags.get(Flags.DELETED) ); 
+			}
+			if( flag.equals("draft")) {
+				return new Boolean( flags.get(Flags.DRAFT) ); 
+			}
+			if( flag.equals("flagged")) {
+				return new Boolean( flags.get(Flags.FLAGGED) ); 
+			}
+			if( flag.equals("expunged")) {
+				return new Boolean( flags.get(Flags.RECENT) ); 
+			}
 		}
+		
+		if( s.startsWith("columba.")) {
+			return attributes.get(s);
+		}
+		
+		return header.get(HeaderParser.normalizeKey(s));
+	}
+
+	/* (non-Javadoc)
+	 * @see org.columba.mail.message.HeaderInterface#set(java.lang.String, java.lang.Object)
+	 */
+	public void set(String s, Object o) {
+		if( s.startsWith("columba.flags")) {
+			String flag = s.substring("columba.flags.".length());
+			boolean value = ((Boolean) o).booleanValue();
+			if( flag.equals("seen")) {				
+				flags.set(Flags.SEEN, value);
+				return; 
+			}
+			if( flag.equals("recent")) {
+				flags.set(Flags.RECENT, value);
+				return; 
+			}
+			if( flag.equals("answered")) {
+				flags.set(Flags.ANSWERED, value );
+				return; 
+			}
+			if( flag.equals("deleted")) {
+				flags.set(Flags.DELETED, value);
+				return; 
+			}
+			if( flag.equals("draft")) {
+				flags.set(Flags.DRAFT, value );
+				return; 
+			}
+			if( flag.equals("flagged")) {
+				flags.set(Flags.FLAGGED,value ); 
+			}
+		}
+		
+		if( s.startsWith("columba.")) {
+			attributes.put(s, o);
+		} else {
+			header.set(HeaderParser.normalizeKey(s), (String) o);
+		}
+	}
+
+	/**
+	 * @return
+	 */
+	public Header getHeader() {
+		return header;
+	}
+
+	/**
+	 * @return
+	 */
+	public Attributes getAttributes() {
+		return attributes;
+	}
+
+	/**
+	 * @param attributes
+	 */
+	public void setAttributes(Attributes attributes) {
+		this.attributes = attributes;
+	}
+
+	/**
+	 * @param flags
+	 */
+	public void setFlags(Flags flags) {
+		this.flags = flags;
+	}
+
+	/**
+	 * @param header
+	 */
+	public void setHeader(Header header) {
+		this.header = header;
 	}
 
 }

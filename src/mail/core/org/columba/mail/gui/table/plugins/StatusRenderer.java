@@ -23,7 +23,8 @@ import javax.swing.SwingConstants;
 
 import org.columba.core.gui.util.ImageLoader;
 import org.columba.mail.gui.table.model.MessageNode;
-import org.columba.mail.message.Flags;
+import org.columba.mail.message.ColumbaHeader;
+import org.columba.ristretto.message.Flags;
 
 public class StatusRenderer extends DefaultLabelRenderer {
 	boolean bool;
@@ -78,7 +79,7 @@ public class StatusRenderer extends DefaultLabelRenderer {
 			return this;
 		}
 
-		Flags flags = (Flags) ((MessageNode)value).getHeader().getFlags();
+		Flags flags = ((ColumbaHeader) ((MessageNode)value).getHeader()).getFlags();
 
 		if (flags.getDeleted()) {
 

@@ -33,7 +33,7 @@ import org.columba.mail.filter.FilterCriteria;
 import org.columba.mail.filter.FilterRule;
 import org.columba.mail.filter.plugins.AbstractFilter;
 import org.columba.mail.folder.Folder;
-import org.columba.mail.message.AbstractMessage;
+import org.columba.mail.message.ColumbaMessage;
 import org.columba.mail.plugin.AbstractFilterPluginHandler;
 import org.columba.mail.util.MailResourceLoader;
 
@@ -68,7 +68,7 @@ public abstract class AbstractSearchEngine {
 		return folder.getObservable();
 	}
 
-	public void messageAdded(AbstractMessage message) throws Exception {
+	public void messageAdded(ColumbaMessage message) throws Exception {
 	};
 
 	public void messageRemoved(Object uid) throws Exception {

@@ -30,9 +30,9 @@ import org.columba.mail.folder.Folder;
 import org.columba.mail.gui.composer.ComposerController;
 import org.columba.mail.gui.composer.ComposerModel;
 import org.columba.mail.gui.composer.command.SaveMessageCommand;
-import org.columba.mail.smtp.SMTPException;
 import org.columba.mail.smtp.SMTPServer;
 import org.columba.mail.util.MailResourceLoader;
+import org.columba.ristretto.smtp.SMTPException;
 
 /**
  * @author fdietz

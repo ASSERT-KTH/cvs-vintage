@@ -35,12 +35,12 @@ import org.columba.mail.folder.Folder;
 import org.columba.mail.folder.search.DefaultSearchEngine;
 import org.columba.mail.gui.config.search.SearchFrame;
 import org.columba.mail.gui.frame.AbstractMailFrameController;
-import org.columba.mail.message.AbstractMessage;
+import org.columba.mail.message.ColumbaMessage;
 import org.columba.mail.message.ColumbaHeader;
-import org.columba.mail.message.HeaderInterface;
 import org.columba.mail.message.HeaderList;
-import org.columba.mail.message.MimePart;
-import org.columba.mail.message.MimePartTree;
+import org.columba.ristretto.message.HeaderInterface;
+import org.columba.ristretto.message.MimePart;
+import org.columba.ristretto.message.MimeTree;
 
 public class VirtualFolder extends Folder {
 
@@ -386,7 +386,7 @@ public class VirtualFolder extends Folder {
 	 * @see org.columba.modules.mail.folder.Folder#addMessage(AbstractMessage, WorkerStatusController)
 	 */
 	public Object addMessage(
-		AbstractMessage message)
+		ColumbaMessage message)
 		throws Exception {
 		return null;
 	}
@@ -451,7 +451,7 @@ public class VirtualFolder extends Folder {
 	/**
 	 * @see org.columba.modules.mail.folder.Folder#getMimePartTree(Object, WorkerStatusController)
 	 */
-	public MimePartTree getMimePartTree(
+	public MimeTree getMimePartTree(
 		Object uid)
 		throws Exception {
 
@@ -471,7 +471,7 @@ public class VirtualFolder extends Folder {
 	/**
 	 * @see org.columba.modules.mail.folder.Folder#getMessage(Object, WorkerStatusController)
 	 */
-	public AbstractMessage getMessage(
+	public ColumbaMessage getMessage(
 		Object uid,
 		WorkerStatusController worker)
 		throws Exception {

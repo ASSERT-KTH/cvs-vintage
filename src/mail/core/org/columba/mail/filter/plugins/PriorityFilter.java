@@ -17,7 +17,7 @@ package org.columba.mail.filter.plugins;
 
 import org.columba.mail.filter.FilterCriteria;
 import org.columba.mail.folder.Folder;
-import org.columba.mail.message.HeaderInterface;
+import org.columba.ristretto.message.HeaderInterface;
 
 /**
  * @author freddy

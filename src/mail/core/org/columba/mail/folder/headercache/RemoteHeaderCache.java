@@ -23,9 +23,9 @@ import java.util.Enumeration;
 import org.columba.core.logging.ColumbaLogger;
 import org.columba.mail.folder.Folder;
 import org.columba.mail.message.ColumbaHeader;
-import org.columba.mail.message.HeaderInterface;
 import org.columba.mail.message.HeaderList;
 import org.columba.mail.util.MailResourceLoader;
+import org.columba.ristretto.message.HeaderInterface;
 
 /**
  * @author freddy

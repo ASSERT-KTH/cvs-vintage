@@ -21,7 +21,7 @@ import java.util.List;
 
 import org.columba.mail.filter.FilterRule;
 import org.columba.mail.folder.Folder;
-import org.columba.mail.message.AbstractMessage;
+import org.columba.mail.message.ColumbaMessage;
 
 /**
  * @author frd
@@ -93,7 +93,7 @@ public class LocalSearchEngine extends AbstractSearchEngine {
 	/* (non-Javadoc)
 	 * @see org.columba.mail.folder.search.AbstractSearchEngine#messageAdded(org.columba.mail.message.AbstractMessage)
 	 */
-	public void messageAdded(AbstractMessage message) throws Exception {
+	public void messageAdded(ColumbaMessage message) throws Exception {
 
 	}
 

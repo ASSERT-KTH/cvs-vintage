@@ -18,13 +18,15 @@ package org.columba.mail.gui.message;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.event.MouseListener;
+import java.io.InputStream;
 
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.event.HyperlinkListener;
 
 import org.columba.mail.gui.attachment.AttachmentView;
-import org.columba.mail.message.HeaderInterface;
+import org.columba.mail.message.ColumbaHeader;
+import org.columba.ristretto.message.HeaderInterface;
 
 public class MessageView extends JScrollPane {
 
@@ -79,7 +81,7 @@ public class MessageView extends JScrollPane {
 	}
 
 	public void setDoc(
-		HeaderInterface header,
+		ColumbaHeader header,
 		String str,
 		boolean html,
 		boolean hasAttachments)
@@ -92,4 +94,20 @@ public class MessageView extends JScrollPane {
 
 	}
 
+	public void setDoc(
+		ColumbaHeader header,
+		InputStream in,
+		boolean html,
+		boolean hasAttachments)
+		throws Exception {
+
+		StringBuffer text = new StringBuffer();
+		int next = in.read();
+		while( next != -1 ) {
+			text.append((char) next);
+			next = in.read();
+		}
+		
+		setDoc( header, text.toString(), html, hasAttachments);
+	}
 }

@@ -23,9 +23,7 @@ import org.columba.mail.composer.MessageBuilder;
 import org.columba.mail.folder.Folder;
 import org.columba.mail.gui.composer.ComposerController;
 import org.columba.mail.gui.composer.ComposerModel;
-import org.columba.mail.message.ColumbaHeader;
-import org.columba.mail.message.Message;
-import org.columba.mail.message.MimePartTree;
+import org.columba.ristretto.message.io.CharSequenceSource;
 
 /**
  * @author freddy
@@ -63,22 +61,12 @@ public class OpenMessageWithComposerCommand extends FolderCommand {
 			(Folder) ((FolderCommandReference) getReferences()[0]).getFolder();
 		Object[] uids = ((FolderCommandReference) getReferences()[0]).getUids();
 
-		Message message = new Message();
-
-		ColumbaHeader header =
-			(ColumbaHeader) folder.getMessageHeader(uids[0]);
-		message.setHeader(header);
-		MimePartTree mimePartTree = folder.getMimePartTree(uids[0]);
-		message.setMimePartTree(mimePartTree);
-
 		String source = folder.getMessageSource(uids[0]);
-		message.setSource(source);
-
 		ComposerModel model = new ComposerModel();
 		
 		controller = new ComposerController();
 
-		MessageBuilder.openMessage(message, model);
+		MessageBuilder.openMessage(new CharSequenceSource( source ), model);
 		
 		controller.setComposerModel(model);
 	}

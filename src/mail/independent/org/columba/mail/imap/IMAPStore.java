@@ -19,7 +19,6 @@ package org.columba.mail.imap;
 import java.io.IOException;
 import java.net.SocketException;
 import java.text.MessageFormat;
-import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Vector;
@@ -30,34 +29,39 @@ import org.columba.core.command.StatusObservable;
 import org.columba.core.logging.ColumbaLogger;
 import org.columba.mail.config.ImapItem;
 import org.columba.mail.filter.FilterRule;
-import org.columba.mail.folder.MessageFolderInfo;
+import org.columba.mail.folder.command.MarkMessageCommand;
 import org.columba.mail.folder.headercache.CachedHeaderfieldOwner;
 import org.columba.mail.folder.imap.IMAPRootFolder;
 import org.columba.mail.gui.util.PasswordDialog;
-import org.columba.mail.imap.parser.FlagsParser;
-import org.columba.mail.imap.parser.HeaderParser;
-import org.columba.mail.imap.parser.IMAPFlags;
-import org.columba.mail.imap.parser.ListInfo;
-import org.columba.mail.imap.parser.MessageFolderInfoParser;
-import org.columba.mail.imap.parser.MessageSet;
-import org.columba.mail.imap.parser.MessageSourceParser;
-import org.columba.mail.imap.parser.MimePartParser;
-import org.columba.mail.imap.parser.MimePartTreeParser;
-import org.columba.mail.imap.parser.SearchResultParser;
-import org.columba.mail.imap.parser.UIDParser;
-import org.columba.mail.imap.protocol.Arguments;
-import org.columba.mail.imap.protocol.BadCommandException;
-import org.columba.mail.imap.protocol.CommandFailedException;
-import org.columba.mail.imap.protocol.DisconnectedException;
-import org.columba.mail.imap.protocol.IMAPException;
-import org.columba.mail.imap.protocol.IMAPProtocol;
 import org.columba.mail.message.ColumbaHeader;
 import org.columba.mail.message.HeaderList;
-import org.columba.mail.message.MimePart;
-import org.columba.mail.message.MimePartTree;
-import org.columba.mail.parser.DateParser;
-import org.columba.mail.parser.Rfc822Parser;
 import org.columba.mail.util.MailResourceLoader;
+import org.columba.ristretto.imap.IMAPResponse;
+import org.columba.ristretto.imap.parser.FlagsParser;
+import org.columba.ristretto.imap.parser.ImapHeaderParser;
+import org.columba.ristretto.imap.parser.ListInfo;
+import org.columba.ristretto.imap.parser.MessageFolderInfoParser;
+import org.columba.ristretto.imap.parser.MessageSet;
+import org.columba.ristretto.imap.parser.MessageSourceParser;
+import org.columba.ristretto.imap.parser.MimePartParser;
+import org.columba.ristretto.imap.parser.MimeTreeParser;
+import org.columba.ristretto.imap.parser.SearchResultParser;
+import org.columba.ristretto.imap.parser.UIDParser;
+import org.columba.ristretto.imap.protocol.Arguments;
+import org.columba.ristretto.imap.protocol.BadCommandException;
+import org.columba.ristretto.imap.protocol.CommandFailedException;
+import org.columba.ristretto.imap.protocol.DisconnectedException;
+import org.columba.ristretto.imap.protocol.IMAPException;
+import org.columba.ristretto.imap.protocol.IMAPProtocol;
+import org.columba.ristretto.message.Flags;
+import org.columba.ristretto.message.LocalMimePart;
+import org.columba.ristretto.message.MessageFolderInfo;
+import org.columba.ristretto.message.MimePart;
+import org.columba.ristretto.message.MimeTree;
+import org.columba.ristretto.message.io.CharSequenceSource;
+import org.columba.ristretto.parser.HeaderParser;
+import org.columba.ristretto.parser.ParserException;
+import org.columba.ristretto.progress.ProgressObserver;
 
 /**
  * @author freddy
@@ -85,7 +89,7 @@ public class IMAPStore {
 
 	private IMAPRootFolder parent;
 
-	private MimePartTree aktMimePartTree;
+	private MimeTree aktMimePartTree;
 	private String aktMessageUid;
 
 	private MessageFolderInfo messageFolderInfo;
@@ -101,7 +105,7 @@ public class IMAPStore {
 				item.getInteger("port"),
 				item.getBoolean("enable_ssl", true));
 
-		imap.setObservable(root.getObservable());
+		imap.registerInterest((ProgressObserver)root.getObservable());
 		state = 0;
 
 		delimiter = "/";
@@ -576,12 +580,12 @@ public class IMAPStore {
 		}
 	}
 
-	public IMAPFlags[] fetchFlagsList(
+	public Flags[] fetchFlagsList(
 		
 		String path)
 		throws Exception {
 
-		IMAPFlags[] result = null;
+		Flags[] result = null;
 
 		isLogin();
 		isSelected( path);
@@ -609,101 +613,13 @@ public class IMAPStore {
 
 	private ColumbaHeader parseMessage(String headerString) {
 
-		Rfc822Parser parser = new Rfc822Parser();
-		ColumbaHeader h = parser.parseHeader(headerString.toString());
-
-		/*
-		Message message = new Message(h);
-		
-		h = message.getHeader();
-		*/
-
-		int size = -1;
-
-		// FIXME
-		/*
-		Integer octetString = parser.parseSize(imap.answer);
-		size = Math.round(octetString.intValue() / 1024);
-		if (size == 0)
-			size = 1;
-		
-		h.set("columba.size", new Integer(size));
-		*/
-
-		// FIXME
-		/*
-		h.set("columba.host", item.getHost());
-		*/
-
-		if (h.get("Date") instanceof String) {
-			Date date = DateParser.parseString((String) h.get("Date"));
-			h.set("columba.date", date);
-			//message.setDate( date );
+		try {
+			ColumbaHeader h = new ColumbaHeader( HeaderParser.parse(new CharSequenceSource(headerString)));
+			
+			return h;
+		} catch (ParserException e) {
+			return null;
 		}
-
-		String shortFrom = (String) h.get("From");
-		if (shortFrom != null) {
-			if (shortFrom.indexOf("<") != -1) {
-				shortFrom = shortFrom.substring(0, shortFrom.indexOf("<"));
-				if (shortFrom.length() > 0) {
-					if (shortFrom.startsWith("\""))
-						shortFrom =
-							shortFrom.substring(1, shortFrom.length() - 1);
-					if (shortFrom.endsWith("\""))
-						shortFrom =
-							shortFrom.substring(0, shortFrom.length() - 1);
-				}
-
-			}
-
-			h.set("columba.from", shortFrom);
-			//message.setShortFrom( shortFrom );
-		} else {
-			//message.setShortFrom("");
-			h.set("columba.from", new String(""));
-		}
-
-		String priority = (String) h.get("X-Priority");
-		if (priority != null) {
-			int prio = -1;
-
-			if (priority.indexOf("1") != -1) {
-				prio = 1;
-
-			} else if (priority.indexOf("2") != -1) {
-				prio = 2;
-			} else if (priority.indexOf("3") != -1) {
-				prio = 3;
-			} else if (priority.indexOf("4") != -1) {
-				prio = 4;
-			} else if (priority.indexOf("5") != -1) {
-				prio = 5;
-			}
-
-			//message.setPriority( prio );
-			h.set("columba.priority", new Integer(prio));
-		} else {
-			//message.setPriority( 3 );
-			h.set("columba.priority", new Integer(3));
-		}
-
-		String attachment = (String) h.get("Content-Type");
-		if (attachment != null) {
-			attachment = attachment.toLowerCase();
-
-			if (attachment.indexOf("multipart") != -1) {
-				//message.setAttachment(true);
-				h.set("columba.attachment", Boolean.TRUE);
-			} else {
-				h.set("columba.attachment", Boolean.FALSE);
-				//message.setAttachment(false);
-			}
-		} else {
-			h.set("columba.attachment", Boolean.FALSE);
-			//message.setAttachment(false);
-		}
-
-		return h;
 	}
 
 	/*
@@ -849,7 +765,8 @@ public class IMAPStore {
 					} else {
 						Object uid = null;
 						ColumbaHeader header =
-							parseMessage(HeaderParser.parse(r));
+							parseMessage(ImapHeaderParser.parse(r));
+						
 						if (header != null) {
 							header.set("columba.uid", list.get(i));
 							headerList.add(header, list.get(i));
@@ -884,7 +801,7 @@ public class IMAPStore {
 		}
 	}
 
-	public MimePartTree getMimePartTree(
+	public MimeTree getMimePartTree(
 		Object uid,
 		
 		String path)
@@ -897,7 +814,7 @@ public class IMAPStore {
 			IMAPResponse[] responses =
 				getProtocol().fetchMimePartTree((String) uid);
 
-			MimePartTree mptree = MimePartTreeParser.parse(responses);
+			MimeTree mptree = MimeTreeParser.parse(responses);
 
 			aktMessageUid = (String) uid;
 			aktMimePartTree = mptree;
@@ -926,15 +843,15 @@ public class IMAPStore {
 			getMimePartTree(uid,  path);
 		}
 
-		MimePart part = aktMimePartTree.getFromAddress(address);
+		LocalMimePart part = new LocalMimePart( aktMimePartTree.getFromAddress(address).getHeader() );
 
 		try {
 			IMAPResponse[] responses =
 				getProtocol().fetchMimePart(
 					(String) uid,
-					part.getAddress());
+					address);
 
-			part.setBody(MimePartParser.parse(responses));
+			part.setBody(new CharSequenceSource(MimePartParser.parse(responses)));
 
 			return part;
 		} catch (BadCommandException ex) {
@@ -984,7 +901,7 @@ public class IMAPStore {
 		try {
 			MessageSet set = new MessageSet(uids);
 
-			String flagsString = FlagsParser.parseVariant(variant);
+			String flagsString = parseVariant(variant);
 			ColumbaLogger.log.debug("flags=" + flagsString);
 
 			// unset flags command
@@ -1160,4 +1077,49 @@ public class IMAPStore {
 		}
 		return true;
 	}
+	
+	private String parseVariant(int variant) {
+		StringBuffer buf = new StringBuffer();
+		List arg = new Vector();
+		switch (variant) {
+			case MarkMessageCommand.MARK_AS_READ :
+			case MarkMessageCommand.MARK_AS_UNREAD :
+				{
+					arg.add("\\Seen");
+					break;
+				}
+			case MarkMessageCommand.MARK_AS_FLAGGED :
+			case MarkMessageCommand.MARK_AS_UNFLAGGED :
+				{
+					arg.add("\\Flagged");
+					break;
+				}
+			case MarkMessageCommand.MARK_AS_EXPUNGED :
+			case MarkMessageCommand.MARK_AS_UNEXPUNGED :
+				{
+					arg.add("\\Deleted");
+					break;
+				}
+			case MarkMessageCommand.MARK_AS_ANSWERED :
+				{
+					arg.add("\\Answered");
+					break;
+				}
+		}
+
+		//if (arg.size() > 1)
+		buf.append("(");
+		for (int i = 0; i < arg.size(); i++) {
+			buf.append((String) arg.get(i));
+			if (i != arg.size() - 1)
+				buf.append(" ");
+		}
+		//if (arg.size() > 1)
+		buf.append(")");
+
+		return buf.toString();
+	}
+
+
+	
 }

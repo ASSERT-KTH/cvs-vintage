@@ -18,8 +18,8 @@ package org.columba.mail.filter.plugins;
 import org.columba.mail.filter.FilterCriteria;
 import org.columba.mail.folder.Folder;
 import org.columba.mail.folder.headercache.CachedFolder;
-import org.columba.mail.message.AbstractMessage;
-import org.columba.mail.message.HeaderInterface;
+import org.columba.mail.message.ColumbaMessage;
+import org.columba.ristretto.message.HeaderInterface;
 
 /**
  * @author freddy
@@ -86,8 +86,8 @@ public class HeaderfieldFilter extends AbstractFilter{
 				CachedFolder f = (CachedFolder) folder;
 				
 				// parse message
-				AbstractMessage m = f.getMessage(uid);
-				HeaderInterface h = m.getHeader();
+				ColumbaMessage m = f.getMessage(uid);
+				HeaderInterface h = m.getHeaderInterface();
 				
 				headerItem = (String) h.get( (String) args[0]);
 				

@@ -111,7 +111,7 @@ public class TableView extends TreeTable {
 			TableColumn tc = null;
 			try {
 				tc = getColumn("Subject");
-				tc.setCellRenderer(new BasicRenderer("Subject"));
+				tc.setCellRenderer(new BasicRenderer("columba.subject"));
 
 			} catch (Exception ex) {
 				System.out.println(

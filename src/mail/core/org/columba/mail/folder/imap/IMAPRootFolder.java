@@ -39,13 +39,13 @@ import org.columba.mail.folder.FolderTreeNode;
 import org.columba.mail.folder.Root;
 import org.columba.mail.folder.command.CheckForNewMessagesCommand;
 import org.columba.mail.imap.IMAPStore;
-import org.columba.mail.imap.parser.ListInfo;
-import org.columba.mail.imap.protocol.IMAPProtocol;
-import org.columba.mail.message.AbstractMessage;
+import org.columba.mail.message.ColumbaMessage;
 import org.columba.mail.message.ColumbaHeader;
 import org.columba.mail.message.HeaderList;
-import org.columba.mail.message.MimePart;
-import org.columba.mail.message.MimePartTree;
+import org.columba.ristretto.imap.parser.ListInfo;
+import org.columba.ristretto.imap.protocol.IMAPProtocol;
+import org.columba.ristretto.message.MimePart;
+import org.columba.ristretto.message.MimeTree;
 
 public class IMAPRootFolder extends Folder implements ActionListener {
 	protected final static ImageIcon imapRootIcon =
@@ -666,7 +666,7 @@ public class IMAPRootFolder extends Folder implements ActionListener {
 	 * @see org.columba.mail.folder.Folder#addMessage(org.columba.mail.message.AbstractMessage, org.columba.core.command.WorkerStatusController)
 	 */
 	public Object addMessage(
-		AbstractMessage message)
+		ColumbaMessage message)
 		throws Exception {
 		return null;
 	}
@@ -732,7 +732,7 @@ public class IMAPRootFolder extends Folder implements ActionListener {
 	/**
 	 * @see org.columba.mail.folder.Folder#getMimePartTree(java.lang.Object, org.columba.core.command.WorkerStatusController)
 	 */
-	public MimePartTree getMimePartTree(
+	public MimeTree getMimePartTree(
 		Object uid)
 		throws Exception {
 		return null;

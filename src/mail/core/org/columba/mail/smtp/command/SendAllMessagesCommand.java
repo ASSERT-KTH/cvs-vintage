@@ -34,9 +34,9 @@ import org.columba.mail.folder.Folder;
 import org.columba.mail.folder.command.MoveMessageCommand;
 import org.columba.mail.folder.outbox.OutboxFolder;
 import org.columba.mail.folder.outbox.SendListManager;
-import org.columba.mail.smtp.SMTPException;
 import org.columba.mail.smtp.SMTPServer;
 import org.columba.mail.util.MailResourceLoader;
+import org.columba.ristretto.smtp.SMTPException;
 
 /**
  * @author fdietz
@@ -132,7 +132,7 @@ public class SendAllMessagesCommand extends FolderCommand {
 				try {
 					smtpServer.sendMessage(message, worker);
 
-					sentList.add(message.getHeader().get("columba.uid"));
+					sentList.add(message.getHeaderInterface().get("columba.uid"));
 				} catch (SMTPException e) {
 					JOptionPane.showMessageDialog(
 						null,

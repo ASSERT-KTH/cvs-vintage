@@ -15,22 +15,23 @@
 //All Rights Reserved.
 package org.columba.mail.gui.attachment.command;
 
-import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.InputStream;
 
 import org.columba.core.command.Command;
 import org.columba.core.command.DefaultCommandReference;
 import org.columba.core.command.Worker;
+import org.columba.core.io.StreamUtils;
 import org.columba.core.io.TempFileStore;
-import org.columba.mail.coder.CoderRouter;
-import org.columba.mail.coder.Decoder;
 import org.columba.mail.command.FolderCommand;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.folder.Folder;
 import org.columba.mail.gui.mimetype.MimeTypeViewer;
-import org.columba.mail.message.MimeHeader;
-import org.columba.mail.message.MimePart;
+import org.columba.ristretto.coder.Base64DecoderInputStream;
+import org.columba.ristretto.coder.QuotedPrintableDecoderInputStream;
+import org.columba.ristretto.message.LocalMimePart;
+import org.columba.ristretto.message.MimeHeader;
 
 /**
  * @author freddy
@@ -41,7 +42,7 @@ import org.columba.mail.message.MimePart;
  * Window>Preferences>Java>Code Generation.
  */
 public class OpenWithAttachmentCommand extends FolderCommand {
-	MimePart part;
+	LocalMimePart part;
 	File tempFile;
 
 	public OpenWithAttachmentCommand(DefaultCommandReference[] references) {
@@ -72,9 +73,8 @@ public class OpenWithAttachmentCommand extends FolderCommand {
 
 		Integer[] address = r[0].getAddress();
 
-		part = folder.getMimePart(uids[0], address);
+		part = (LocalMimePart) folder.getMimePart(uids[0], address);
 
-		Decoder decoder;
 		MimeHeader header;
 		tempFile = null;
 
@@ -87,13 +87,17 @@ public class OpenWithAttachmentCommand extends FolderCommand {
 			} else
 				tempFile = TempFileStore.createTempFile();
 
-			decoder = CoderRouter.getDecoder(header.contentTransferEncoding);
-
-			decoder.decode(
-				new ByteArrayInputStream(part.getBody().getBytes("ISO_8859_1")),
-				new FileOutputStream(tempFile));
-
-			//decoder.run();
+			InputStream bodyStream = part.getInputStream();
+			String encoding = header.getContentTransferEncoding();
+			if( encoding != null ) {
+				if( encoding.equals("quoted-printable") ) {
+					bodyStream = new QuotedPrintableDecoderInputStream(bodyStream);
+				} else if ( encoding.equals("base64")) {
+					bodyStream = new Base64DecoderInputStream( bodyStream );
+				}
+			}
+				
+			StreamUtils.streamCopy(bodyStream, new FileOutputStream(tempFile));
 
 		} catch (Exception ex) {
 			ex.printStackTrace();

@@ -26,8 +26,8 @@ import java.util.Date;
 import org.columba.core.logging.ColumbaLogger;
 import org.columba.core.util.BooleanCompressor;
 import org.columba.mail.message.ColumbaHeader;
-import org.columba.mail.message.HeaderInterface;
 import org.columba.mail.message.HeaderList;
+import org.columba.ristretto.message.HeaderInterface;
 
 /**
  * @author fdietz
@@ -223,6 +223,8 @@ public abstract class AbstractHeaderCache {
 
 		h.set("columba.host", p.readUTF());
 
+		h.set("columba.subject", p.readUTF());
+
 		loadColumnNames();
 
 		int classCode;
@@ -285,6 +287,8 @@ public abstract class AbstractHeaderCache {
 		p.writeInt(((Integer) h.get("columba.priority")).intValue());
 
 		p.writeUTF((String) h.get("columba.host"));
+		
+		p.writeUTF((String) h.get("columba.subject"));
 
 		loadColumnNames();
 

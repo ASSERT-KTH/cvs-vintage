@@ -19,12 +19,12 @@ package org.columba.mail.pop3.menu;
 import java.util.ListIterator;
 
 import org.columba.core.action.IMenu;
-import org.columba.mail.pop3.event.ModelChangeListener;
-import org.columba.mail.pop3.event.ModelChangedEvent;
 import org.columba.core.gui.frame.AbstractFrameController;
 import org.columba.core.main.MainInterface;
 import org.columba.mail.pop3.POP3ServerCollection;
 import org.columba.mail.pop3.POP3ServerController;
+import org.columba.mail.pop3.event.ModelChangeListener;
+import org.columba.mail.pop3.event.ModelChangedEvent;
 import org.columba.mail.util.MailResourceLoader;
 
 public class ManageServerSubMenu extends IMenu implements ModelChangeListener {

@@ -18,18 +18,20 @@ package org.columba.mail.folder.temp;
 import java.util.Enumeration;
 import java.util.Hashtable;
 
+import org.columba.core.command.StatusObservableImpl;
 import org.columba.core.logging.ColumbaLogger;
 import org.columba.mail.filter.Filter;
 import org.columba.mail.folder.DataStorageInterface;
 import org.columba.mail.folder.Folder;
 import org.columba.mail.folder.search.AbstractSearchEngine;
 import org.columba.mail.folder.search.DefaultSearchEngine;
-import org.columba.mail.message.AbstractMessage;
 import org.columba.mail.message.ColumbaHeader;
+import org.columba.mail.message.ColumbaMessage;
 import org.columba.mail.message.HeaderList;
-import org.columba.mail.message.MimePart;
-import org.columba.mail.message.MimePartTree;
-import org.columba.mail.parser.Rfc822Parser;
+import org.columba.ristretto.message.MimePart;
+import org.columba.ristretto.message.MimeTree;
+import org.columba.ristretto.message.io.CharSequenceSource;
+import org.columba.ristretto.parser.MessageParser;
 
 /**
  * @author freddy
@@ -45,7 +47,7 @@ public class TempFolder extends Folder {
 	protected Hashtable messageList;
 
 	protected int nextUid;
-	protected AbstractMessage aktMessage;
+	protected ColumbaMessage aktMessage;
 	protected DataStorageInterface dataStorage;
 	protected DefaultSearchEngine searchEngine;
 
@@ -106,14 +108,14 @@ public class TempFolder extends Folder {
 	 * @see org.columba.modules.mail.folder.Folder#addMessage(AbstractMessage, WorkerStatusController)
 	 */
 	public Object addMessage(
-		AbstractMessage message)
+		ColumbaMessage message)
 		throws Exception {
 		Object newUid = generateNextUid();
 
 		ColumbaLogger.log.debug("new UID=" + newUid);
 
 		ColumbaHeader h =
-			(ColumbaHeader) ((ColumbaHeader) message.getHeader()).clone();
+			(ColumbaHeader) ((ColumbaHeader) message.getHeaderInterface()).clone();
 
 		h.set("columba.uid", newUid);
 
@@ -131,27 +133,9 @@ public class TempFolder extends Folder {
 		throws Exception {
 		Object newUid = generateNextUid();
 
-		Rfc822Parser parser = new Rfc822Parser();
+		ColumbaMessage m = new ColumbaMessage( MessageParser.parse(new CharSequenceSource(source)));
 
-		/*
-		ColumbaHeader header = parser.parseHeader(source);
-
-		AbstractMessage m = new Message(header);
-		ColumbaHeader h = (ColumbaHeader) m.getHeader();
-		*/
-		
-		
-		AbstractMessage m = parser.parse(source, null);
-		ColumbaHeader h = (ColumbaHeader) m.getHeader();
-		parser.addColumbaHeaderFields(h);
-
-		Integer sizeInt = new Integer(source.length());
-		int size = Math.round(sizeInt.intValue() / 1024);
-		h.set("columba.size", new Integer(size));
-
-		h.set("columba.uid", newUid);
-
-		headerList.add(h, newUid);
+		headerList.add(m.getHeaderInterface(), newUid);
 
 		messageList.put(newUid, m);
 
@@ -197,7 +181,7 @@ public class TempFolder extends Folder {
 		Object uid,
 		Integer[] address)
 		throws Exception {
-		AbstractMessage message = (AbstractMessage) messageList.get(uid);
+		ColumbaMessage message = (ColumbaMessage) messageList.get(uid);
 
 		MimePart mimePart = message.getMimePartTree().getFromAddress(address);
 
@@ -210,7 +194,7 @@ public class TempFolder extends Folder {
 	public String getMessageSource(Object uid)
 		throws Exception {
 
-		AbstractMessage message = getMessage(uid);
+		ColumbaMessage message = getMessage(uid);
 		if (message == null) {
 			System.out.println("no message for uid=" + uid);
 			System.out.println("list-count=" + headerList.count());
@@ -222,18 +206,18 @@ public class TempFolder extends Folder {
 
 		}
 
-		return message.getSource();
+		return message.getStringSource();
 	}
 
 	/**
 	 * @see org.columba.modules.mail.folder.Folder#getMimePartTree(Object, WorkerStatusController)
 	 */
-	public MimePartTree getMimePartTree(
+	public MimeTree getMimePartTree(
 		Object uid)
 		throws Exception {
-		AbstractMessage message = (AbstractMessage) messageList.get(uid);
+		ColumbaMessage message = (ColumbaMessage) messageList.get(uid);
 
-		MimePartTree mptree = message.getMimePartTree();
+		MimeTree mptree = message.getMimePartTree();
 
 		return mptree;
 	}
@@ -253,10 +237,10 @@ public class TempFolder extends Folder {
 	/**
 	 * @see org.columba.modules.mail.folder.Folder#getMessage(Object, WorkerStatusController)
 	 */
-	public AbstractMessage getMessage(
+	public ColumbaMessage getMessage(
 		Object uid)
 		throws Exception {
-		AbstractMessage message = (AbstractMessage) messageList.get(uid);
+		ColumbaMessage message = (ColumbaMessage) messageList.get(uid);
 
 		return message;
 	}

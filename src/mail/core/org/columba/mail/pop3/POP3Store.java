@@ -30,14 +30,17 @@ import org.columba.core.plugin.PluginHandlerNotFoundException;
 import org.columba.core.xml.XmlElement;
 import org.columba.mail.config.PopItem;
 import org.columba.mail.gui.util.PasswordDialog;
+import org.columba.mail.message.ColumbaMessage;
 import org.columba.mail.message.ColumbaHeader;
-import org.columba.mail.message.Message;
-import org.columba.mail.parser.Rfc822Parser;
 import org.columba.mail.plugin.POP3PreProcessingFilterPluginHandler;
-import org.columba.mail.pop3.parser.SizeListParser;
-import org.columba.mail.pop3.parser.UIDListParser;
 import org.columba.mail.pop3.plugins.AbstractPOP3PreProcessingFilter;
-import org.columba.mail.pop3.protocol.POP3Protocol;
+import org.columba.ristretto.message.Header;
+import org.columba.ristretto.message.io.CharSequenceSource;
+import org.columba.ristretto.message.io.Source;
+import org.columba.ristretto.parser.HeaderParser;
+import org.columba.ristretto.pop3.parser.SizeListParser;
+import org.columba.ristretto.pop3.parser.UIDListParser;
+import org.columba.ristretto.pop3.protocol.POP3Protocol;
 
 /**
  * @author freddy
@@ -62,6 +65,8 @@ public class POP3Store {
 
 	private Hashtable filterCache;
 
+	private StatusObservableImpl observable;
+
 	/**
 	 * Constructor for POP3Store.
 	 */
@@ -78,7 +83,8 @@ public class POP3Store {
 				popItem.getBoolean("enable_ssl", true));
 
 		// add status information observable
-		protocol.setObservable( new StatusObservableImpl() );
+		observable = new StatusObservableImpl();
+		protocol.registerInterest( observable );
 		
 		try {
 
@@ -223,10 +229,7 @@ public class POP3Store {
 
 	}
 
-	public Message fetchMessage(int index) throws Exception {
-		ColumbaHeader header = new ColumbaHeader();
-		Rfc822Parser parser = new Rfc822Parser();
-
+	public ColumbaMessage fetchMessage(int index) throws Exception {
 		isLogin();
 
 		String rawString = protocol.fetchMessage(new Integer(index).toString());
@@ -236,21 +239,17 @@ public class POP3Store {
 		// pipe through preprocessing filter
 		if (popItem.getBoolean("enable_pop3preprocessingfilter", false))
 			rawString = modifyMessage(rawString);
+		
+		Source source = new CharSequenceSource( rawString );
 
-		int i = rawString.indexOf("\n\n");
-		String headerString = rawString.substring(0, i);
+		Header header = HeaderParser.parse( source );
 
-		header = parser.parseHeader(rawString);
+		ColumbaMessage m = new ColumbaMessage(header);
+		ColumbaHeader h = (ColumbaHeader) m.getHeaderInterface();
 
-		Message m = new Message(header);
-		ColumbaHeader h = (ColumbaHeader) m.getHeader();
-		m.setSource(rawString);
-
-		parser.addColumbaHeaderFields(h);
-
-		h.set("columba.host", popItem.get("host"));
-
-		h.set("columba.fetchstate", new Boolean(true));
+		m.setStringSource(rawString);
+		m.setAttribute("columba.host", popItem.get("host"));
+		m.setAttribute("columba.fetchstate", new Boolean(true));
 
 		//h.set("columba.pop3uid", (String) uids.get(number - 1));
 
@@ -312,8 +311,7 @@ public class POP3Store {
 
 				} else {
 					// cancel pressed
-					//worker.cancel();
-					getObservable().cancel(true);
+					protocol.cancelCurrent();
 
 					throw new CommandCancelledException();
 				}
@@ -367,6 +365,6 @@ public class POP3Store {
 	}
 
 	public StatusObservable getObservable() {
-		return protocol.getObservable();
+		return observable;
 	}
 }

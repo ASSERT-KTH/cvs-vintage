@@ -18,14 +18,19 @@ package org.columba.mail.gui.config.mailboximport;
 
 import javax.help.CSH;
 
-import net.javaprog.ui.wizard.*;
+import net.javaprog.ui.wizard.DataLookup;
+import net.javaprog.ui.wizard.DataModel;
+import net.javaprog.ui.wizard.DefaultWizardModel;
+import net.javaprog.ui.wizard.JavaHelpSupport;
+import net.javaprog.ui.wizard.Step;
+import net.javaprog.ui.wizard.Wizard;
+import net.javaprog.ui.wizard.WizardModel;
 
 import org.columba.core.gui.util.ImageLoader;
 import org.columba.core.gui.util.NotifyDialog;
 import org.columba.core.help.HelpManager;
 import org.columba.core.main.MainInterface;
 import org.columba.core.plugin.PluginHandlerNotFoundException;
-
 import org.columba.mail.plugin.ImportPluginHandler;
 import org.columba.mail.util.MailResourceLoader;
 

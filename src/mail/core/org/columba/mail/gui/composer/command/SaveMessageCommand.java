@@ -28,7 +28,7 @@ import org.columba.mail.gui.composer.ComposerController;
 import org.columba.mail.gui.composer.ComposerModel;
 import org.columba.mail.gui.frame.TableUpdater;
 import org.columba.mail.gui.table.TableChangedEvent;
-import org.columba.mail.message.HeaderInterface;
+import org.columba.ristretto.message.HeaderInterface;
 
 /**
  * @author freddy
@@ -84,7 +84,7 @@ public class SaveMessageCommand extends FolderCommand {
 		// -> IMAP only supports sending sources
 		//Object uid = folder.addMessage(message, worker);
 		
-		Object uid = folder.addMessage(message.getSource());
+		Object uid = folder.addMessage(message.getStringSource());
 		
 
 		// IMAP can't give you this information

@@ -20,8 +20,8 @@ import java.util.Enumeration;
 
 import org.columba.core.config.TableItem;
 import org.columba.mail.message.ColumbaHeader;
-import org.columba.mail.message.HeaderInterface;
 import org.columba.mail.message.HeaderList;
+import org.columba.ristretto.message.HeaderInterface;
 
 public class HeaderTableModel
 	extends BasicHeaderTableModel

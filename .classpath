@@ -8,12 +8,17 @@
     <classpathentry kind="src" path="src/addressbook/core"/>
     <classpathentry kind="src" path="src/addressbook/independent"/>
     <classpathentry kind="src" path="res"/>
-    <classpathentry kind="var" path="JRE_LIB"/>
     <classpathentry kind="lib" path="lib/junit.jar"/>
     <classpathentry kind="lib" path="lib/log4j.jar"/>
     <classpathentry kind="lib" path="lib/jakarta-oro-2.0.6.jar"/>
     <classpathentry kind="lib" path="lib/jargs.jar"/>
     <classpathentry kind="lib" path="lib/lucene-1.3-rc1.jar"/>
     <classpathentry kind="lib" path="lib/jwizz-0.1.1.jar"/>
+    <classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+    <classpathentry kind="lib" path="lib/forms.jar"/>
+    <classpathentry kind="lib" path="lib/jhall.jar"/>
+    <classpathentry kind="lib" path="lib/plastic.jar"/>
+    <classpathentry kind="lib" path="lib/usermanual.jar"/>
+    <classpathentry kind="lib" path="lib/ristretto-1.0pre1.jar"/>
     <classpathentry kind="output" path="classes"/>
 </classpath>

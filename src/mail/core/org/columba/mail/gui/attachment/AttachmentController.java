@@ -25,7 +25,7 @@ import javax.swing.JScrollPane;
 
 import org.columba.core.gui.frame.AbstractFrameController;
 import org.columba.mail.gui.attachment.action.OpenAction;
-import org.columba.mail.message.MimePartTree;
+import org.columba.ristretto.message.MimeTree;
 
 /**
  * This class shows the attachmentlist
@@ -87,7 +87,7 @@ public class AttachmentController {
 		return model;
 	}
 
-	public boolean setMimePartTree(MimePartTree collection) {
+	public boolean setMimePartTree(MimeTree collection) {
 		return getView().setMimePartTree(collection);
 	}
 

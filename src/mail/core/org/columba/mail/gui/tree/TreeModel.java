@@ -21,6 +21,7 @@ import java.util.MissingResourceException;
 
 import javax.swing.tree.DefaultTreeModel;
 
+import org.columba.core.command.StatusObservableImpl;
 import org.columba.core.gui.util.NotifyDialog;
 import org.columba.core.main.MainInterface;
 import org.columba.core.plugin.PluginHandlerNotFoundException;
@@ -59,6 +60,7 @@ public class TreeModel extends DefaultTreeModel {
 		createDirectories(
 			((FolderTreeNode) getRoot()).getNode(),
 			(FolderTreeNode) getRoot());
+			
 	}
 
 	public void createDirectories(

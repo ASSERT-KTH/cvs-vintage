@@ -20,10 +20,12 @@ import java.awt.Color;
 import java.awt.Font;
 import java.io.File;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
+import java.io.InputStream;
 import java.lang.reflect.Array;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.nio.charset.Charset;
+import java.nio.charset.UnsupportedCharsetException;
 import java.text.DateFormat;
 import java.util.Date;
 import java.util.List;
@@ -33,6 +35,7 @@ import org.columba.core.command.StatusObservableImpl;
 import org.columba.core.command.Worker;
 import org.columba.core.config.Config;
 import org.columba.core.io.DiskIO;
+import org.columba.core.io.StreamUtils;
 import org.columba.core.io.TempFileStore;
 import org.columba.core.logging.ColumbaLogger;
 import org.columba.core.print.cCmUnit;
@@ -45,19 +48,24 @@ import org.columba.core.print.cPrintObject;
 import org.columba.core.print.cPrintVariable;
 import org.columba.core.print.cVGroup;
 import org.columba.core.xml.XmlElement;
-import org.columba.mail.coder.CoderRouter;
-import org.columba.mail.coder.Decoder;
 import org.columba.mail.command.FolderCommand;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.config.MailConfig;
 import org.columba.mail.folder.Folder;
 import org.columba.mail.gui.attachment.AttachmentModel;
+import org.columba.mail.message.ColumbaMessage;
 import org.columba.mail.message.ColumbaHeader;
-import org.columba.mail.message.Message;
-import org.columba.mail.message.MimePart;
-import org.columba.mail.message.MimePartTree;
 import org.columba.mail.parser.text.HtmlParser;
 import org.columba.mail.util.MailResourceLoader;
+import org.columba.ristretto.coder.Base64DecoderInputStream;
+import org.columba.ristretto.coder.CharsetDecoderInputStream;
+import org.columba.ristretto.coder.QuotedPrintableDecoderInputStream;
+import org.columba.ristretto.message.LocalMimePart;
+import org.columba.ristretto.message.MimeHeader;
+import org.columba.ristretto.message.MimePart;
+import org.columba.ristretto.message.MimeTree;
+import org.columba.ristretto.message.StreamableMimePart;
+import org.columba.ristretto.message.io.CharSequenceSource;
 
 /**
  * Print the selected message.
@@ -184,9 +192,9 @@ public class PrintMessageCommand extends FolderCommand {
 			Object uid = uids[j];
 			ColumbaLogger.log.debug("Printing UID=" + uid);
 
-			Message message = new Message();
+			ColumbaMessage message = new ColumbaMessage();
 			ColumbaHeader header = srcFolder.getMessageHeader(uid);
-			MimePartTree mimePartTree = srcFolder.getMimePartTree(uid);
+			MimeTree mimePartTree = srcFolder.getMimePartTree(uid);
 
 			// Does the user prefer html or plain text?
 			XmlElement html =
@@ -203,8 +211,8 @@ public class PrintMessageCommand extends FolderCommand {
 				bodyPart = mimePartTree.getFirstTextPart("plain");
 
 			if (bodyPart == null) {
-				bodyPart = new MimePart();
-				bodyPart.setBody(new String("<No Message-Text>"));
+				bodyPart = new LocalMimePart(new MimeHeader(header.getHeader()));
+				((LocalMimePart)bodyPart).setBody(new CharSequenceSource("<No Message-Text>"));
 			} else
 				bodyPart = srcFolder.getMimePart(uid, bodyPart.getAddress());
 
@@ -256,9 +264,9 @@ public class PrintMessageCommand extends FolderCommand {
 			List attachments = attMod.getDisplayedMimeParts();
 
 			for (int i = 0; i < attachments.size(); i++) {
-				MimePart mp = (MimePart) attachments.get(i);
-				String contentType = mp.getHeader().contentType;
-				String contentSubtype = mp.getHeader().contentSubtype;
+				StreamableMimePart mp = (StreamableMimePart) attachments.get(i);
+				String contentType = mp.getHeader().getContentType();
+				String contentSubtype = mp.getHeader().getContentSubtype();
 
 				if (mp.getHeader().getFileName() != null) {
 					// one line is added to the header for each attachment
@@ -283,9 +291,9 @@ public class PrintMessageCommand extends FolderCommand {
 			// Add body of message to print
 			String mimesubtype = bodyPart.getHeader().getContentSubtype();
 			if (mimesubtype.equals("html")) {
-				messageDoc.appendPrintObject(getHTMLBodyPrintObject(bodyPart));
+				messageDoc.appendPrintObject(getHTMLBodyPrintObject((StreamableMimePart)bodyPart));
 			} else {
-				messageDoc.appendPrintObject(getPlainBodyPrintObject(bodyPart));
+				messageDoc.appendPrintObject(getPlainBodyPrintObject((StreamableMimePart)bodyPart));
 			}
 
 			// print the print document (i.e. the message)
@@ -305,7 +313,7 @@ public class PrintMessageCommand extends FolderCommand {
 	 * @return	Print object ready to be appended to the print document
 	 * @author	Karl Peder Olesen (karlpeder), 20030531
 	 */
-	private cPrintObject getPlainBodyPrintObject(MimePart bodyPart) {
+	private cPrintObject getPlainBodyPrintObject(StreamableMimePart bodyPart) throws IOException {
 
 		// decode message body with respect to charset
 		String decodedBody = getDecodedMessageBody(bodyPart);
@@ -359,7 +367,7 @@ public class PrintMessageCommand extends FolderCommand {
 	 * @return	Print object ready to be appended to the print document
 	 * @author	Karl Peder Olesen (karlpeder), 20030531
 	 */
-	private cPrintObject getHTMLBodyPrintObject(MimePart bodyPart) {
+	private cPrintObject getHTMLBodyPrintObject(StreamableMimePart bodyPart) throws IOException {
 
 		// decode message body with respect to charset
 		String decodedBody = getDecodedMessageBody(bodyPart);
@@ -394,38 +402,40 @@ public class PrintMessageCommand extends FolderCommand {
 	 * @return	Decoded message body
 	 * @author 	Karl Peder Olesen (karlpeder), 20030601
 	 */
-	private String getDecodedMessageBody(MimePart bodyPart) {
+	private String getDecodedMessageBody(StreamableMimePart bodyPart) throws IOException {
 		// First determine which charset to use
 		String charsetToUse;
 		if (charset.equals("auto")) {
 			// get charset from message
 			charsetToUse = bodyPart.getHeader().getContentParameter("charset");
 		} else {
+			// use default charset
 			charsetToUse = charset;
 		}
 
+
+		MimeHeader header = bodyPart.getHeader();
 		// Decode message according to charset
-		Decoder decoder =
-			CoderRouter.getDecoder(
-				bodyPart.getHeader().contentTransferEncoding);
-		String decodedBody = null;
-		try {
-			// decode using specified charset
-			decodedBody = decoder.decode(bodyPart.getBody(), charsetToUse);
-		} catch (UnsupportedEncodingException ex) {
-			ColumbaLogger.log.info(
-				"charset "
-					+ charsetToUse
-					+ " isn't supported, falling back to default...");
-			try {
-				// decode using default charset
-				decodedBody = decoder.decode(bodyPart.getBody(), null);
-			} catch (UnsupportedEncodingException never) {
-				// should never happen!?
-				never.printStackTrace();
+		InputStream bodyStream = bodyPart.getInputStream();
+		String encoding = header.getContentTransferEncoding();
+		if( encoding != null ) {
+			if( encoding.equals("quoted-printable") ) {
+				bodyStream = new QuotedPrintableDecoderInputStream(bodyStream);
+			} else if ( encoding.equals("base64")) {
+				bodyStream = new Base64DecoderInputStream( bodyStream );
 			}
 		}
+		
+		Charset charset;
+		try {
+			charset = Charset.forName(charsetToUse );
+		} catch (UnsupportedCharsetException ex) {
+			// decode using default charset
+			charset = Charset.forName(System.getProperty("file.encoding"));
+		}
 
-		return decodedBody;
+		bodyStream = new CharsetDecoderInputStream( bodyStream, charset);
+
+		return StreamUtils.readInString(bodyStream).toString();
 	}
 }

@@ -19,7 +19,7 @@ package org.columba.mail.gui.mimetype;
 import java.io.File;
 import java.net.URL;
 
-import org.columba.mail.message.MimeHeader;
+import org.columba.ristretto.message.MimeHeader;
 
 public abstract class AbstractViewer
 {

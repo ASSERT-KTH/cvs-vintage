@@ -18,7 +18,7 @@ package org.columba.mail.folder;
 import java.util.EventObject;
 
 import org.columba.mail.gui.table.model.MessageNode;
-import org.columba.mail.message.Message;
+import org.columba.mail.message.ColumbaMessage;
 
 public class FolderEvent extends EventObject {
 	public final static int UPDATE = 0;
@@ -30,7 +30,7 @@ public class FolderEvent extends EventObject {
 	private int subMode;
 	private Object uid;
 	public Object[] uids;
-	private Message message;
+	private ColumbaMessage message;
 	private MessageNode node;
 
 	public FolderEvent(Object source, int mode) {
@@ -51,7 +51,7 @@ public class FolderEvent extends EventObject {
 		this.uids = uids;
 	}
 
-	public FolderEvent(Object source, Message message, int mode) {
+	public FolderEvent(Object source, ColumbaMessage message, int mode) {
 		super(source);
 		this.mode = mode;
 		this.message = message;
@@ -79,7 +79,7 @@ public class FolderEvent extends EventObject {
 		return uids;
 	}
 
-	public Message getMessage() {
+	public ColumbaMessage getMessage() {
 		return message;
 	}
 

@@ -53,12 +53,16 @@ import org.columba.mail.filter.FilterCriteria;
 import org.columba.mail.filter.FilterRule;
 import org.columba.mail.folder.DataStorageInterface;
 import org.columba.mail.folder.LocalFolder;
-import org.columba.mail.message.AbstractMessage;
+import org.columba.mail.message.ColumbaMessage;
 import org.columba.mail.message.ColumbaHeader;
 import org.columba.mail.message.HeaderList;
-import org.columba.mail.message.MimePart;
-import org.columba.mail.parser.Rfc822Parser;
 import org.columba.mail.util.MailResourceLoader;
+import org.columba.ristretto.message.LocalMimePart;
+import org.columba.ristretto.message.Message;
+import org.columba.ristretto.message.io.CharSequenceSource;
+import org.columba.ristretto.message.io.Source;
+import org.columba.ristretto.parser.MessageParser;
+import org.columba.ristretto.parser.ParserException;
 
 /**
  * @author timo
@@ -93,8 +97,6 @@ public class LuceneSearchEngine
 
 	Mutex indexMutex;
 
-	private Rfc822Parser rfcParser;
-
 	private final static String[] caps =
 		{ "Body", "Subject", "From", "To", "Cc", "Bcc", "Custom Headerfield" };
 
@@ -105,8 +107,6 @@ public class LuceneSearchEngine
 		super(folder);
 
 		MainInterface.shutdownManager.register(this);
-
-		rfcParser = new Rfc822Parser();
 
 		analyzer = new CAnalyzer();
 
@@ -339,7 +339,7 @@ public class LuceneSearchEngine
 	/**
 	 * @see org.columba.mail.folder.SearchEngineInterface#messageAdded(org.columba.mail.message.AbstractMessage)
 	 */
-	public void messageAdded(AbstractMessage message) throws Exception {
+	public void messageAdded(ColumbaMessage message) throws Exception {
 		Document messageDoc = getDocument(message);
 
 		boolean needToRelease = false;
@@ -356,32 +356,36 @@ public class LuceneSearchEngine
 		}
 	}
 
-	private Document getDocument(AbstractMessage message) {
+	private Document getDocument(ColumbaMessage message) {
 		Document messageDoc = new Document();
-		ColumbaHeader header = (ColumbaHeader) message.getHeader();
+		ColumbaHeader header = (ColumbaHeader) message.getHeaderInterface();
 
 		messageDoc.add(Field.Keyword("uid", message.getUID().toString()));
 
 		if (message.getMimePartTree() == null) {
-			String source = message.getSource();
-
-			message = rfcParser.parse(source, header);
-			message.setSource(source);
-		}
-
-		Enumeration headerEntries = header.getHashtable().keys();
-		String key;
-
-		while (headerEntries.hasMoreElements()) {
-			key = (String) headerEntries.nextElement();
-			if ((key != "Return-Path") && !(key.startsWith("columba."))) {
-				messageDoc.add(Field.UnStored(key, header.get(key).toString()));
+			try {
+				Source source = new CharSequenceSource( message.getStringSource() );
+				Message m = MessageParser.parse( source );
+				message.setMimePartTree( m.getMimePartTree() );
+			} catch (IOException e) {
+				e.printStackTrace();
+			} catch (ParserException e) {
+				e.printStackTrace();
 			}
 		}
 
-		MimePart body = message.getMimePartTree().getFirstTextPart("plain");
+		String value;
+
+		for( int i=0; i< caps.length; i++) {
+			value = (String) header.get(caps[i]);
+			if( value != null ) {
+				messageDoc.add(Field.UnStored(caps[i], value));
+			}
+		}
+
+		LocalMimePart body = (LocalMimePart) message.getMimePartTree().getFirstTextPart("plain");
 		if (body != null)
-			messageDoc.add(Field.UnStored("body", body.getBody()));
+			messageDoc.add(Field.UnStored("body", body.getBody().toString()));
 		return messageDoc;
 	}
 
@@ -535,9 +539,8 @@ public class LuceneSearchEngine
 
 				String source = ds.loadMessage(uid );
 
-				AbstractMessage message =
-					rfcParser.parse(source, (ColumbaHeader) hl.getHeader(uid));
-				message.setSource(source);
+				ColumbaMessage message = new ColumbaMessage( (ColumbaHeader) hl.getHeader(uid), MessageParser.parse(new CharSequenceSource(source)));
+				message.setStringSource(source);
 				
 				Document doc = getDocument(message);
 

@@ -32,7 +32,7 @@ import org.columba.core.main.MainInterface;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.command.POP3CommandReference;
 import org.columba.mail.folder.Folder;
-import org.columba.mail.message.Message;
+import org.columba.mail.message.ColumbaMessage;
 import org.columba.mail.pop3.POP3Server;
 import org.columba.mail.util.MailResourceLoader;
 
@@ -133,7 +133,7 @@ public class FetchNewMessagesCommand extends Command {
 		// server message numbers start with 1
 		// whereas List numbers start with 0
 		//  -> always increase fetch number
-		Message message = server.getMessage(index + 1, serverUID);
+		ColumbaMessage message = server.getMessage(index + 1, serverUID);
 		if (message == null) {
 
 			ColumbaLogger.log.error(
@@ -145,10 +145,10 @@ public class FetchNewMessagesCommand extends Command {
 			return;
 		}
 		
-		message.getHeader().set(
+		message.getHeaderInterface().set(
 			"columba.size",
 			new Integer(Math.round(size / 1024)));
-		message.getHeader().set("columba.flags.seen", Boolean.FALSE);
+		message.getHeaderInterface().set("columba.flags.seen", Boolean.FALSE);
 
 		//get inbox-folder from pop3-server preferences
 		Folder inboxFolder = server.getFolder();

@@ -21,16 +21,17 @@ import java.util.Vector;
 
 import org.columba.core.logging.ColumbaLogger;
 import org.columba.core.util.Mutex;
-import org.columba.mail.coder.EncodedWordDecoder;
 import org.columba.mail.config.FolderItem;
 import org.columba.mail.folder.Folder;
 import org.columba.mail.folder.LocalFolder;
 import org.columba.mail.folder.command.MarkMessageCommand;
-import org.columba.mail.message.AbstractMessage;
+import org.columba.mail.message.ColumbaMessage;
 import org.columba.mail.message.ColumbaHeader;
-import org.columba.mail.message.HeaderInterface;
 import org.columba.mail.message.HeaderList;
-import org.columba.mail.parser.Rfc822Parser;
+import org.columba.ristretto.message.HeaderInterface;
+import org.columba.ristretto.message.Message;
+import org.columba.ristretto.message.io.CharSequenceSource;
+import org.columba.ristretto.parser.MessageParser;
 
 /**
  * @author fdietz
@@ -58,7 +59,7 @@ public abstract class CachedFolder extends LocalFolder {
 	 * @see org.columba.mail.folder.Folder#addMessage(org.columba.mail.message.AbstractMessage, org.columba.core.command.WorkerStatusController)
 	 */
 	public Object addMessage(
-		AbstractMessage message)
+		ColumbaMessage message)
 		throws Exception {
 
 		if ( message == null ) return null;
@@ -74,30 +75,9 @@ public abstract class CachedFolder extends LocalFolder {
 		// this message was already parsed and so we
 		// re-use the header to save us some cpu time
 		ColumbaHeader h =
-			(ColumbaHeader) ((ColumbaHeader) message.getHeader()).clone();
+			(ColumbaHeader) ((ColumbaHeader) message.getHeaderInterface()).clone();
 
 		// decode all headerfields:
-
-		// init encoded word decoder
-		EncodedWordDecoder decoder = new EncodedWordDecoder();
-
-		// get list of used-defined headerfields
-		String[] list = CachedHeaderfieldOwner.getCachedHeaderfieldArray();
-
-		//TableItem v = MailConfig.getMainFrameOptionsConfig().getTableItem();
-		String column;
-		for (int j = 0; j < list.length; j++) {
-
-			column = (String) list[j];
-
-			Object item = h.get(column);
-
-			// only decode strings
-			if (item instanceof String) {
-				String str = (String) item;
-				h.set(column, decoder.decode(str));
-			}
-		}
 
 		// remove all unnecessary headerfields which doesn't
 		// need to be cached
@@ -223,7 +203,7 @@ public abstract class CachedFolder extends LocalFolder {
 	/**
 	 * @see org.columba.mail.folder.LocalFolder#getMessage(java.lang.Object, org.columba.core.command.WorkerStatusController)
 	 */
-	public AbstractMessage getMessage(
+	public ColumbaMessage getMessage(
 		Object uid)
 		throws Exception {
 
@@ -234,7 +214,7 @@ public abstract class CachedFolder extends LocalFolder {
 				// -> no need to parse it again
 
 				//return (AbstractMessage) aktMessage.clone();
-				return (AbstractMessage) aktMessage;
+				return (ColumbaMessage) aktMessage;
 			}
 		}
 
@@ -246,13 +226,14 @@ public abstract class CachedFolder extends LocalFolder {
 			(ColumbaHeader) getCachedHeaderList().get(uid);
 
 		// generate message object from source
-		AbstractMessage message = new Rfc822Parser().parse(source, header);
+		Message m = MessageParser.parse( new CharSequenceSource(source)); 
+		ColumbaMessage message = new ColumbaMessage(header, m);
 
 		// set message uid
 		message.setUID(uid);
 
 		// set message source
-		message.setSource(source);
+		message.setStringSource(source);
 		if (source == null) {
 			source = new String();
 		}
@@ -264,7 +245,7 @@ public abstract class CachedFolder extends LocalFolder {
 		// there's no need to clone() here
 		
 		//return (AbstractMessage) message.clone();
-		return (AbstractMessage) message;
+		return (ColumbaMessage) message;
 	}
 
 	/**
@@ -280,10 +261,10 @@ public abstract class CachedFolder extends LocalFolder {
 			// try to compare the headerfield count of
 			// the actually parsed message with the cached
 			// headerfield count
-			AbstractMessage message = getMessage(uid);
+			ColumbaMessage message = getMessage(uid);
 
 			// number of headerfields
-			int size = message.getHeader().count();
+			int size = message.getHeaderInterface().count();
 
 			// get header from cache
 			HeaderInterface h =
@@ -298,7 +279,7 @@ public abstract class CachedFolder extends LocalFolder {
 
 			// if header contains from fields than the cached header
 			if (size > cachedSize)
-				return (ColumbaHeader) message.getHeader();
+				return (ColumbaHeader) message.getHeaderInterface();
 
 			return (ColumbaHeader) h;
 		} else
@@ -341,7 +322,7 @@ public abstract class CachedFolder extends LocalFolder {
 			Object uid = uids[i];
 
 			if (exists(uid)) {
-				AbstractMessage message = getMessage(uid);
+				ColumbaMessage message = getMessage(uid);
 				if ( message != null )
 					destFolder.addMessage(message);
 			}

@@ -18,6 +18,8 @@ package org.columba.mail.message;
 
 import java.util.Hashtable;
 
+import org.columba.ristretto.message.HeaderInterface;
+
 public class HeaderList extends Hashtable{
 	/*
 	Vector headers;

@@ -15,6 +15,8 @@
 //All Rights Reserved.
 package org.columba.core.command;
 
+import org.columba.ristretto.progress.ProgressObserver;
+
 /**
  * 
  * Represents the clue between the gui and all the folders which want
@@ -35,7 +37,7 @@ package org.columba.core.command;
  * 
  * @author fdietz
  */
-public class StatusObservableImpl implements StatusObservable {
+public class StatusObservableImpl implements StatusObservable, ProgressObserver {
 
 	/**
 	 * encapsulated worker
@@ -108,6 +110,20 @@ public class StatusObservableImpl implements StatusObservable {
 	public void cancel( boolean b )
 	{
 		worker.setCancel(b);
+	}
+
+	/* (non-Javadoc)
+	 * @see org.columba.ristretto.progress.ProgressObserver#maximumChanged(int)
+	 */
+	public void maximumChanged(int maximum) {
+		if( worker != null) worker.setProgressBarMaximum( maximum );
+	}
+
+	/* (non-Javadoc)
+	 * @see org.columba.ristretto.progress.ProgressObserver#valueChanged(int)
+	 */
+	public void valueChanged(int value) {
+		if( worker != null) worker.setProgressBarValue( value );
 	}
 
 }

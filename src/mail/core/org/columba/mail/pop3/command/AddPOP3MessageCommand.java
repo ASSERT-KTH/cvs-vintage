@@ -18,8 +18,8 @@ import org.columba.mail.filter.FilterList;
 import org.columba.mail.folder.Folder;
 import org.columba.mail.gui.frame.TableUpdater;
 import org.columba.mail.gui.table.TableChangedEvent;
-import org.columba.mail.message.HeaderInterface;
-import org.columba.mail.message.Message;
+import org.columba.mail.message.ColumbaMessage;
+import org.columba.ristretto.message.HeaderInterface;
 
 /**
  * @author frd
@@ -57,7 +57,7 @@ public class AddPOP3MessageCommand extends FolderCommand {
 		FolderCommandReference[] r = (FolderCommandReference[]) getReferences();
 
 		inboxFolder = (Folder) r[0].getFolder();
-		Message message = (Message) r[0].getMessage();
+		ColumbaMessage message = (ColumbaMessage) r[0].getMessage();
 
 		// add message to folder
 		Object uid = inboxFolder.addMessage(message);
@@ -66,7 +66,7 @@ public class AddPOP3MessageCommand extends FolderCommand {
 
 		// generate headerlist we need to update the table viewer
 		headerList = new HeaderInterface[1];
-		headerList[0] = message.getHeader();
+		headerList[0] = message.getHeaderInterface();
 		headerList[0].set("columba.uid", uid);
 
 		// apply filter on message

@@ -16,7 +16,7 @@
 package org.columba.mail.gui.tree.event;
 
 import org.columba.mail.folder.Folder;
-import org.columba.mail.folder.MessageFolderInfo;
+import org.columba.ristretto.message.MessageFolderInfo;
 
 public class FolderInfoChangeEvent {
 

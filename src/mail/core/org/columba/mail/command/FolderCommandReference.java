@@ -20,8 +20,7 @@ import java.lang.reflect.Array;
 
 import org.columba.core.command.DefaultCommandReference;
 import org.columba.mail.folder.FolderTreeNode;
-import org.columba.mail.message.AbstractMessage;
-import org.columba.mail.message.Message;
+import org.columba.mail.message.ColumbaMessage;
 
 /**
  * @author freddy
@@ -35,7 +34,7 @@ public class FolderCommandReference extends DefaultCommandReference {
 	private FolderTreeNode folder;
 	private Object[] uids;
 	private Integer[] address;
-	private AbstractMessage message;
+	private ColumbaMessage message;
 	private int markVariant;
 	private String folderName;
 	
@@ -50,7 +49,7 @@ public class FolderCommandReference extends DefaultCommandReference {
 		
 	}
 	
-	public FolderCommandReference(FolderTreeNode folder, Message message) {
+	public FolderCommandReference(FolderTreeNode folder, ColumbaMessage message) {
 		this.folder = folder;
 		this.message = message;
 		
@@ -103,12 +102,12 @@ public class FolderCommandReference extends DefaultCommandReference {
 		this.uids = uids;
 	}
 	
-	public AbstractMessage getMessage()
+	public ColumbaMessage getMessage()
 	{
 		return message;
 	}
 	
-	public void setMessage( AbstractMessage message )
+	public void setMessage( ColumbaMessage message )
 	{
 		this.message = message;
 	}

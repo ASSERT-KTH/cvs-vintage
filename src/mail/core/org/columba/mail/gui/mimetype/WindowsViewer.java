@@ -25,7 +25,7 @@ import java.net.URL;
 
 import org.columba.core.logging.ColumbaLogger;
 import org.columba.core.util.OSInfo;
-import org.columba.mail.message.MimeHeader;
+import org.columba.ristretto.message.MimeHeader;
 
 public class WindowsViewer extends AbstractViewer {
 

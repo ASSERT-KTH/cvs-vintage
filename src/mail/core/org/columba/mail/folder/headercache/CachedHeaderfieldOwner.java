@@ -54,7 +54,8 @@ public class CachedHeaderfieldOwner {
 			"columba.host",
 			"columba.date",
 			"columba.attachment",
-			"columba.size" };
+			"columba.size",
+			"columba.subject"};
 
 	// these are cached by default
 	// -> options.xml: /options/headercache
@@ -96,6 +97,9 @@ public class CachedHeaderfieldOwner {
 	 * @return
 	 */
 	public static ColumbaHeader stripHeaders(ColumbaHeader h) {
+		
+		return h;
+		/*
 		ColumbaHeader strippedHeader = new ColumbaHeader();
 
 		//		copy all internally used headerfields
@@ -125,7 +129,7 @@ public class CachedHeaderfieldOwner {
 			}
 		}
 
-		return strippedHeader;
+		return strippedHeader;*/
 	}
 
 	/**

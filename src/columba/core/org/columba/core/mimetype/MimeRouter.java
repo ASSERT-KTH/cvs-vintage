@@ -19,7 +19,7 @@ package org.columba.core.mimetype;
 import org.columba.core.config.Config;
 import org.columba.core.config.OptionsXmlConfig;
 import org.columba.core.xml.XmlElement;
-import org.columba.mail.message.MimeHeader;
+import org.columba.ristretto.message.MimeHeader;
 
 public class MimeRouter {
 
@@ -70,14 +70,14 @@ public class MimeRouter {
 	/*
 	public MimeTypeParser getTypeParser(MimeHeader input) {
 		// If no ContentType specified return StandardParser
-		if (input.contentType == null)
+		if (input.getContentType() == null)
 			return standardParser;
 	
 		MimeTypeParser parser;
 	
 		// First try to find parser for "type/subtype"
 	
-		if ( input.contentType.equals("multipart") )
+		if ( input.getContentType().equals("multipart") )
 		{
 		
 			parser = new MimeMultipartParser();
@@ -96,13 +96,13 @@ public class MimeRouter {
 	public String getViewer(MimeHeader input) {
 		String output;
 
-		output = getViewer(input.contentType, input.contentSubtype);
+		output = getViewer(input.getContentType(), input.getContentSubtype());
 
 		return output;
 	}
 
 	public void setViewer(MimeHeader input, String viewer) {
-		setViewer(input.contentType, input.contentSubtype, viewer);
+		setViewer(input.getContentType(), input.getContentSubtype(), viewer);
 	}
 
 	public String getViewer(String contentType, String subType) {

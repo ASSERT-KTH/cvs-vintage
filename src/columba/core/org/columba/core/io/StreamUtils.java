@@ -20,10 +20,12 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.ByteBuffer;
+import java.nio.charset.Charset;
 
 public class StreamUtils {
 	
 	private static final int BUFFERSIZE = 8000;
+	private static final Charset _8BitCharset = Charset.forName("ISO-8859-1");
 
 	/**
 	 * Copied all bytes from an InputStream to an OutputStream. The Bufsize should be 8000 bytes or 16000 bytes. This
@@ -72,10 +74,10 @@ public class StreamUtils {
 		
 		while( read > 0 ) {
 			buffer.limit( read );
-			result.append(buffer.asCharBuffer());
+			result.append( _8BitCharset.decode(buffer));
 
 			buffer.clear();
-			in.read( buffer.array() );
+			read = in.read( buffer.array() );
 		}
 		
 		return result;		

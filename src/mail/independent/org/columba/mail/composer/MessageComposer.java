@@ -20,24 +20,26 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.util.Date;
 import java.util.List;
 
 import org.columba.addressbook.parser.ListParser;
 import org.columba.core.command.WorkerStatusController;
-import org.columba.mail.coder.EncodedWordEncoder;
 import org.columba.mail.config.AccountItem;
 import org.columba.mail.config.IdentityItem;
-import org.columba.mail.config.PGPItem;
 import org.columba.mail.gui.composer.ComposerModel;
-import org.columba.mail.message.MessageIDGenerator;
-import org.columba.mail.message.MimeHeader;
-import org.columba.mail.message.MimePart;
 import org.columba.mail.message.PgpMimePart;
 import org.columba.mail.message.SendableHeader;
-import org.columba.mail.pgp.PGPController;
-import org.columba.mail.util.RFC822Date;
+import org.columba.ristretto.composer.MimeTreeRenderer;
+import org.columba.ristretto.message.LocalMimePart;
+import org.columba.ristretto.message.MessageIDGenerator;
+import org.columba.ristretto.message.MimeHeader;
+import org.columba.ristretto.message.MimePart;
+import org.columba.ristretto.message.RFC822Date;
+import org.columba.ristretto.message.StreamableMimePart;
+import org.columba.ristretto.message.io.CharSequenceSource;
 
 public class MessageComposer {
 	private ComposerModel model;
@@ -51,7 +53,6 @@ public class MessageComposer {
 
 	protected SendableHeader initHeader() {
 		SendableHeader header = new SendableHeader();
-		EncodedWordEncoder encoder = new EncodedWordEncoder();
 
 		// RFC822 - Header
 
@@ -64,15 +65,7 @@ public class MessageComposer {
 		if (model.getBccList().size() > 0)
 			header.set("Bcc", ListParser.parse(model.getBccList()));
 
-		// TODO : Add EncodedWord-Support to TO,CC,FROM -> like Subject!
-		// FIXME : this is responsible for the strange subject line
-
-		try {
-			header.set(
-				"Subject",
-				encoder.encode(model.getSubject(), model.getCharsetName()));
-		} catch (UnsupportedEncodingException e) {
-		}
+		header.set("Subject", model.getSubject());
 
 		AccountItem item = model.getAccountItem();
 		IdentityItem identity = item.getIdentityItem();
@@ -140,7 +133,7 @@ public class MessageComposer {
 		// date
 		Date date = new Date();
 		header.set("columba.date", date);
-		header.set("Date", RFC822Date.toRFC822String(date));
+		header.set("Date", RFC822Date.toString(date));
 
 		return header;
 	}
@@ -225,13 +218,14 @@ public class MessageComposer {
 		}
 	*/
 
-	private MimePart composeTextMimePart() {
-		MimePart bodyPart = new MimePart();
+	private StreamableMimePart composeTextMimePart() {
+		LocalMimePart bodyPart =
+			new LocalMimePart(new MimeHeader("text", "plain"));
 		// Init Mime-Header with Default-Values (text/plain)	
 
 		// Set Default Charset or selected		
 		String charsetName = model.getCharsetName();
-		bodyPart.getHeader().contentParameter.put("charset", charsetName);
+		bodyPart.getHeader().putContentParameter("charset", charsetName);
 
 		String body = model.getBodyText();
 
@@ -243,7 +237,7 @@ public class MessageComposer {
 			String signature = getSignature(identity);
 
 			if (signature != null) {
-				body = body + "\n\n" + signature;
+				body = body + "\r\n\r\n" + signature;
 
 			}
 		}
@@ -256,12 +250,13 @@ public class MessageComposer {
 			body = " ";
 		}
 
-		bodyPart.setBody(body);
+		bodyPart.setBody(new CharSequenceSource(body));
 
 		return bodyPart;
 	}
 
-	public SendableMessage compose(WorkerStatusController workerStatusController) {
+	public SendableMessage compose(WorkerStatusController workerStatusController)
+		throws IOException {
 		this.accountUid = model.getAccountItem().getUid();
 
 		workerStatusController.setDisplayText("Composing Message...");
@@ -275,7 +270,7 @@ public class MessageComposer {
 
 		List mimeParts = model.getAttachments();
 
-		MimePart body = composeTextMimePart();
+		StreamableMimePart body = composeTextMimePart();
 		if (body != null)
 			mimeParts.add(0, body);
 
@@ -284,7 +279,7 @@ public class MessageComposer {
 			root = new MimePart(new MimeHeader("multipart", "mixed"));
 
 			for (int i = 0; i < mimeParts.size(); i++) {
-				root.addChild((MimePart) mimeParts.get(i));
+				root.addChild((StreamableMimePart) mimeParts.get(i));
 			}
 		} else {
 			root = (MimePart) mimeParts.get(0);
@@ -307,12 +302,15 @@ public class MessageComposer {
 
 		header.set("columba.attachment", new Boolean(true));
 
-		composedMessage.append(header.getHeader());
+		root.getHeader().getHeader().merge(header.getHeader());
 
-		composedMessage.append(
-			renderer.renderMimePart(root, workerStatusController));
-
-		message.setSource(composedMessage.toString());
+		InputStream in = renderer.renderMimePart(root);
+		int next = in.read();
+		while (next != -1) {
+			composedMessage.append((char) next);
+			next = in.read();
+		}
+		message.setStringSource(composedMessage.toString());
 
 		// size
 		int size = composedMessage.length() / 1024;

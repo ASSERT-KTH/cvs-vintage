@@ -13,7 +13,6 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
-
 package org.columba.mail.gui.composer.command;
 
 import org.columba.core.command.DefaultCommandReference;
@@ -24,9 +23,9 @@ import org.columba.mail.composer.MessageBuilder;
 import org.columba.mail.folder.Folder;
 import org.columba.mail.gui.composer.ComposerController;
 import org.columba.mail.gui.composer.ComposerModel;
+import org.columba.mail.message.ColumbaMessage;
 import org.columba.mail.message.ColumbaHeader;
-import org.columba.mail.message.Message;
-import org.columba.mail.message.MimePartTree;
+import org.columba.ristretto.message.MimeTree;
 
 /**
  * @author freddy
@@ -52,6 +51,7 @@ public class ForwardCommand extends FolderCommand {
 	 * @see org.columba.core.command.Command#updateGUI()
 	 */
 	public void updateGUI() throws Exception {
+		
 		controller.updateComponents(true);
 	}
 
@@ -59,40 +59,45 @@ public class ForwardCommand extends FolderCommand {
 	 * @see org.columba.core.command.Command#execute(Worker)
 	 */
 	public void execute(Worker worker) throws Exception {
+
 		Folder folder =
 			(Folder) ((FolderCommandReference) getReferences()[0]).getFolder();
 		Object[] uids = ((FolderCommandReference) getReferences()[0]).getUids();
 
-		Message message = new Message();
+		ColumbaMessage message = new ColumbaMessage();
 
 		ColumbaHeader header =
 			(ColumbaHeader) folder.getMessageHeader(uids[0]);
 		message.setHeader(header);
-		MimePartTree mimePartTree = folder.getMimePartTree(uids[0]);
+		MimeTree mimePartTree = folder.getMimePartTree(uids[0]);
 		message.setMimePartTree(mimePartTree);
 		String source = folder.getMessageSource(uids[0]);
-		message.setSource(source);
+		message.setStringSource(source);
 
 		ComposerModel model = new ComposerModel();
 		
 		controller = new ComposerController();
 
-		MessageBuilder.createMessage(
+		MessageBuilder.getInstance().createMessage(
 			message,
 			model,
 			MessageBuilder.FORWARD);
 			
 		
 		controller.setComposerModel(model);
+
 	}
 
 	/**
 	 * @see org.columba.core.command.Command#undo(Worker)
 	 */
-	public void undo(Worker worker) throws Exception {}
+	public void undo(Worker worker) throws Exception {
+	}
 
 	/**
 	 * @see org.columba.core.command.Command#redo(Worker)
 	 */
-	public void redo(Worker worker) throws Exception {}
+	public void redo(Worker worker) throws Exception {
+	}
+
 }

@@ -30,7 +30,9 @@ import org.columba.mail.config.PopItem;
 import org.columba.mail.config.SmtpItem;
 import org.columba.mail.config.SpecialFoldersItem;
 import org.columba.mail.gui.util.PasswordDialog;
-import org.columba.mail.pop3.protocol.POP3Protocol;
+import org.columba.ristretto.pop3.protocol.POP3Protocol;
+import org.columba.ristretto.progress.ProgressObserver;
+import org.columba.ristretto.smtp.SMTPProtocol;
 
 /**
  * @author fdietz
@@ -51,6 +53,8 @@ public class SMTPServer {
 	protected AccountItem accountItem;
 	protected IdentityItem identityItem;
 	protected String fromAddress;
+	
+	protected Object observer;
 	
 	/**
 	 * Constructor for SMTPServer.
@@ -131,7 +135,7 @@ public class SMTPServer {
 			smtpProtocol = new SMTPProtocol(host, smtpItem.getInteger("port"), smtpItem.getBoolean("enable_ssl", true));
 			
 			// add observable
-			smtpProtocol.setObservable( new StatusObservableImpl() );
+			setObservable( new StatusObservableImpl() );
 
 		} catch (Exception e) {
 			if (e instanceof UnknownHostException) {
@@ -365,7 +369,7 @@ public class SMTPServer {
 			message.getRecipients());
 
 		// now send message source 
-		smtpProtocol.sendMessage(message.getSource(), workerStatusController);
+		smtpProtocol.sendMessage(message.getStringSource());
 	}
 	
 	/**
@@ -374,11 +378,12 @@ public class SMTPServer {
 	 */
 	public StatusObservable getObservable()
 	{
-		return smtpProtocol.getObservable();
+		return (StatusObservable) observer;
 	}
 	
-	public void setObservable( StatusObservable observable )
+	public void setObservable( ProgressObserver observable )
 	{
-		smtpProtocol.setObservable(observable);
+		observer = observable;
+		smtpProtocol.registerInterest(observable);
 	}
 }

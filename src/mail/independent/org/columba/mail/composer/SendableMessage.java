@@ -17,68 +17,38 @@
 package org.columba.mail.composer;
 
 import java.util.List;
-import java.util.Vector;
 
-import org.columba.mail.message.AbstractMessage;
-import org.columba.mail.message.HeaderInterface;
+import org.columba.mail.message.ColumbaMessage;
 import org.columba.mail.message.SendableHeader;
 
-public class SendableMessage extends AbstractMessage {
-	SendableHeader header;
-
+public class SendableMessage extends ColumbaMessage {
+	
 	public SendableMessage() {
 		super();
-
-		header = new SendableHeader();
-
 	}
 
 	public SendableMessage(int accountUid, List recipients, String message) {
 		super();
-		setSource(message);
+		setStringSource(message);
 
-		header = new SendableHeader();
-
-		header.setRecipients(recipients);
-		header.setAccountUid(accountUid);
-	}
-
-	public HeaderInterface getHeader() {
-		return header;
-	}
-
-	public void setHeader(HeaderInterface h) {
-		this.header = (SendableHeader) h;
+		attributes.put("columba.recipients", recipients);
+		attributes.put( "columba.accountuid" , new Integer(accountUid));
 	}
 
 	public int getAccountUid() {
-		return ((SendableHeader) getHeader()).getAccountUid();
+		return ((SendableHeader) getHeaderInterface()).getAccountUid();
 	}
 
 	public List getRecipients() {
-		return ((SendableHeader) getHeader()).getRecipients();
+		return ((SendableHeader) getHeaderInterface()).getRecipients();
 	}
 
 	public void setAccountUid(int uid) {
-		((SendableHeader) getHeader()).setAccountUid(uid);
+		((SendableHeader) getHeaderInterface()).setAccountUid(uid);
 	}
 
 	public void setRecipients(List rcpt) {
-		((SendableHeader) getHeader()).setRecipients(rcpt);
-	}
-
-	public Object clone() {
-		SendableMessage message = new SendableMessage();
-
-		message.setHeader((SendableHeader) header.clone());
-
-		message.setSource(new String(getSource()));
-
-		message.setRecipients((List) ((Vector)getRecipients()).clone() );
-
-		message.setAccountUid(getAccountUid());
-
-		return message;
+		((SendableHeader) getHeaderInterface()).setRecipients(rcpt);
 	}
 
 }

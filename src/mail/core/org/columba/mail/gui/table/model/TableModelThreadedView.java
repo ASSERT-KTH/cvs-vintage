@@ -26,8 +26,9 @@ import java.util.List;
 import java.util.StringTokenizer;
 
 import org.columba.core.logging.ColumbaLogger;
-import org.columba.mail.message.HeaderInterface;
+import org.columba.mail.message.ColumbaHeader;
 import org.columba.mail.message.HeaderList;
+import org.columba.ristretto.message.HeaderInterface;
 
 /**
  * Title:
@@ -430,7 +431,7 @@ public class TableModelThreadedView
 		for (int i = 0; i < parent.getChildCount(); i++) {
 			MessageNode child = (MessageNode) parent.getChildAt(i);
 
-			if (child.getHeader().getFlags().getRecent()) {
+			if (((ColumbaHeader)child.getHeader()).getFlags().getRecent()) {
 				// recent found
 
 				ColumbaLogger.log.debug("found recent message");

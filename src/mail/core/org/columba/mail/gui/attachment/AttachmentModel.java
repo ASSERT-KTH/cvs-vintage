@@ -19,8 +19,9 @@ package org.columba.mail.gui.attachment;
 import java.util.List;
 
 import org.columba.mail.folder.Folder;
-import org.columba.mail.message.MimePart;
-import org.columba.mail.message.MimePartTree;
+import org.columba.ristretto.message.MimePart;
+import org.columba.ristretto.message.MimeTree;
+import org.columba.ristretto.message.StreamableMimePart;
 
 /**
  * @author freddy
@@ -37,7 +38,7 @@ public class AttachmentModel {
 
 	private List displayedMimeParts;
 
-	private MimePartTree collection;
+	private MimeTree collection;
 
 	public AttachmentModel() {}
 
@@ -61,7 +62,7 @@ public class AttachmentModel {
 	 * Returns the collection.
 	 * @return MimePartTree
 	 */
-	public MimePartTree getCollection() {
+	public MimeTree getCollection() {
 		return collection;
 	}
 
@@ -69,20 +70,20 @@ public class AttachmentModel {
 	 * Sets the collection.
 	 * @param collection The collection to set
 	 */
-	public void setCollection(MimePartTree collection) {
+	public void setCollection(MimeTree collection) {
 		this.collection = collection;
 
 		// Get all MimeParts
 		displayedMimeParts = collection.getAllLeafs();
 
 		// Remove the BodyPart(s) if any
-		MimePart bodyPart = collection.getFirstTextPart("plain");
+		StreamableMimePart bodyPart = (StreamableMimePart) collection.getFirstTextPart("plain");
 		if (bodyPart != null) {
-			MimePart bodyParent = (MimePart) bodyPart.getParent();
+			MimePart bodyParent = bodyPart.getParent();
 			if (bodyParent != null) {
 				if (bodyParent
 					.getHeader()
-					.contentSubtype
+					.getContentSubtype()
 					.equals("alternative")) {
 					List bodyParts = bodyParent.getChilds();
 					displayedMimeParts.removeAll(bodyParts);

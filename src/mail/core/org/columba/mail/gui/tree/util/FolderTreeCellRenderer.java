@@ -29,7 +29,7 @@ import org.columba.core.gui.util.ImageLoader;
 import org.columba.mail.config.FolderItem;
 import org.columba.mail.folder.Folder;
 import org.columba.mail.folder.FolderTreeNode;
-import org.columba.mail.folder.MessageFolderInfo;
+import org.columba.ristretto.message.MessageFolderInfo;
 
 /**
  * This class is used for the mail folder tree. It it extended from JLabel and shows the folder names in a tree.

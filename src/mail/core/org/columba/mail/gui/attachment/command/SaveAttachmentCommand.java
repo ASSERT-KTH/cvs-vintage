@@ -15,24 +15,25 @@
 //All Rights Reserved.
 package org.columba.mail.gui.attachment.command;
 
-import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.InputStream;
 
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 
 import org.columba.core.command.DefaultCommandReference;
 import org.columba.core.command.Worker;
+import org.columba.core.io.StreamUtils;
 import org.columba.core.util.cFileChooser;
 import org.columba.core.util.cFileFilter;
-import org.columba.mail.coder.CoderRouter;
-import org.columba.mail.coder.Decoder;
 import org.columba.mail.command.FolderCommand;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.folder.Folder;
-import org.columba.mail.message.MimeHeader;
-import org.columba.mail.message.MimePart;
+import org.columba.ristretto.coder.Base64DecoderInputStream;
+import org.columba.ristretto.coder.QuotedPrintableDecoderInputStream;
+import org.columba.ristretto.message.LocalMimePart;
+import org.columba.ristretto.message.MimeHeader;
 
 /**
  * @author freddy
@@ -45,7 +46,7 @@ import org.columba.mail.message.MimePart;
 public class SaveAttachmentCommand extends FolderCommand {
 
 	File tempFile = null;
-	MimePart part;
+	LocalMimePart part;
 	static File lastDir = null;
 
 	/**
@@ -53,8 +54,7 @@ public class SaveAttachmentCommand extends FolderCommand {
 	 * @param frameController
 	 * @param references
 	 */
-	public SaveAttachmentCommand(
-		DefaultCommandReference[] references) {
+	public SaveAttachmentCommand(DefaultCommandReference[] references) {
 		super(references);
 	}
 
@@ -74,7 +74,7 @@ public class SaveAttachmentCommand extends FolderCommand {
 
 		Integer[] address = r[0].getAddress();
 
-		part = folder.getMimePart(uids[0], address);
+		part = (LocalMimePart) folder.getMimePart(uids[0], address);
 
 		String fileName = part.getHeader().getContentParameter("name");
 		if (fileName == null)
@@ -94,40 +94,42 @@ public class SaveAttachmentCommand extends FolderCommand {
 		if (fileName != null)
 			fileChooser.forceSelectedFile(new File(fileName));
 		fileChooser.setSelectFilter(fileFilter);
-                
-                while (true) {
-                        if (fileChooser.showSaveDialog(null) != JFileChooser.APPROVE_OPTION) {
-                                return;
-                        }
-                        tempFile = fileChooser.getSelectedFile();
-                        lastDir = tempFile.getParentFile();
-                        if (tempFile.exists()) {
-                                if (JOptionPane.showConfirmDialog(
-                                null, "Overwrite File?", "Warning",
-				JOptionPane.YES_NO_OPTION,
-				JOptionPane.WARNING_MESSAGE) == JOptionPane.YES_OPTION) {
-                                        break;
-                                }
-                        } else {
-                                break;
-                        }
+
+		while (true) {
+			if (fileChooser.showSaveDialog(null)
+				!= JFileChooser.APPROVE_OPTION) {
+				return;
+			}
+			tempFile = fileChooser.getSelectedFile();
+			lastDir = tempFile.getParentFile();
+			if (tempFile.exists()) {
+				if (JOptionPane
+					.showConfirmDialog(
+						null,
+						"Overwrite File?",
+						"Warning",
+						JOptionPane.YES_NO_OPTION,
+						JOptionPane.WARNING_MESSAGE)
+					== JOptionPane.YES_OPTION) {
+					break;
+				}
+			} else {
+				break;
+			}
 		}
 
-		Decoder decoder;
 		MimeHeader header;
-
 		header = part.getHeader();
-		try {
-			decoder = CoderRouter.getDecoder(header.contentTransferEncoding);
-
-			decoder.decode(
-				new ByteArrayInputStream(part.getBody().getBytes("ISO_8859_1")),
-				new FileOutputStream(tempFile));
-
-		} catch (Exception ex) {
-			ex.printStackTrace();
-
-			//setCancel(true);
+		InputStream bodyStream = part.getInputStream();
+		String encoding = header.getContentTransferEncoding();
+		if( encoding != null ) {
+			if( encoding.equals("quoted-printable") ) {
+				bodyStream = new QuotedPrintableDecoderInputStream(bodyStream);
+			} else if ( encoding.equals("base64")) {
+				bodyStream = new Base64DecoderInputStream( bodyStream );
+			}
 		}
+				
+		StreamUtils.streamCopy(bodyStream, new FileOutputStream(tempFile));
 	}
 }

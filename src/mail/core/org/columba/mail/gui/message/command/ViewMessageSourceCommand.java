@@ -28,7 +28,7 @@ import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.folder.Folder;
 import org.columba.mail.gui.frame.AbstractMailFrameController;
 import org.columba.mail.gui.mimetype.MimeTypeViewer;
-import org.columba.mail.message.MimeHeader;
+import org.columba.ristretto.message.MimeHeader;
 
 /**
  * @author freddy

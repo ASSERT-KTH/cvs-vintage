@@ -23,12 +23,13 @@ package org.columba.mail.folder.command;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
+import java.io.InputStream;
+import java.nio.charset.Charset;
+import java.nio.charset.UnsupportedCharsetException;
 import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Enumeration;
-import java.util.Hashtable;
 import java.util.List;
 
 import javax.swing.JCheckBox;
@@ -41,10 +42,9 @@ import org.columba.core.command.StatusObservableImpl;
 import org.columba.core.command.Worker;
 import org.columba.core.config.Config;
 import org.columba.core.io.DiskIO;
+import org.columba.core.io.StreamUtils;
 import org.columba.core.logging.ColumbaLogger;
 import org.columba.core.xml.XmlElement;
-import org.columba.mail.coder.CoderRouter;
-import org.columba.mail.coder.Decoder;
 import org.columba.mail.command.FolderCommand;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.config.MailConfig;
@@ -52,10 +52,18 @@ import org.columba.mail.folder.Folder;
 import org.columba.mail.gui.attachment.AttachmentModel;
 import org.columba.mail.gui.message.util.DocumentParser;
 import org.columba.mail.message.ColumbaHeader;
-import org.columba.mail.message.MimePart;
-import org.columba.mail.message.MimePartTree;
 import org.columba.mail.parser.text.HtmlParser;
 import org.columba.mail.util.MailResourceLoader;
+import org.columba.ristretto.coder.Base64DecoderInputStream;
+import org.columba.ristretto.coder.CharsetDecoderInputStream;
+import org.columba.ristretto.coder.QuotedPrintableDecoderInputStream;
+import org.columba.ristretto.message.BasicHeader;
+import org.columba.ristretto.message.LocalMimePart;
+import org.columba.ristretto.message.MimeHeader;
+import org.columba.ristretto.message.MimePart;
+import org.columba.ristretto.message.MimeTree;
+import org.columba.ristretto.message.StreamableMimePart;
+import org.columba.ristretto.message.io.CharSequenceSource;
 
 /**
  * This class is used to save a message to file either as 
@@ -115,7 +123,7 @@ public class SaveMessageBodyAsCommand extends FolderCommand {
 
 			// get headers, body part and attachment for message
 			ColumbaHeader header = srcFolder.getMessageHeader(uid);
-			MimePart bodyPart = getMessageBodyPart(uid, srcFolder, worker);
+			StreamableMimePart bodyPart = getMessageBodyPart(uid, srcFolder, worker);
 			AttachmentModel attMod = new AttachmentModel();
 			attMod.setCollection(srcFolder.getMimePartTree(uid));
 			List attachments = attMod.getDisplayedMimeParts();
@@ -308,7 +316,7 @@ public class SaveMessageBodyAsCommand extends FolderCommand {
 	 * @param	worker
 	 * @return	body part of message
 	 */
-	private MimePart getMessageBodyPart(Object uid, 
+	private StreamableMimePart getMessageBodyPart(Object uid, 
 				Folder srcFolder, Worker worker) 
 					throws Exception {
 		// Does the user prefer html or plain text?
@@ -319,7 +327,7 @@ public class SaveMessageBodyAsCommand extends FolderCommand {
 			new Boolean(html.getAttribute("prefer")).booleanValue();
 
 		// Get body of message depending on user preferences
-		MimePartTree mimePartTree = 
+		MimeTree mimePartTree = 
 				srcFolder.getMimePartTree(uid);
 
 		MimePart bodyPart = null;
@@ -329,14 +337,14 @@ public class SaveMessageBodyAsCommand extends FolderCommand {
 			bodyPart = mimePartTree.getFirstTextPart("plain");
 
 		if (bodyPart == null) {
-			bodyPart = new MimePart();
-			bodyPart.setBody(new String("<No Message-Text>"));
+			bodyPart = new LocalMimePart(new MimeHeader("text", "plain"));
+			((LocalMimePart)bodyPart).setBody(new CharSequenceSource("<No Message-Text>"));
 		} else
 			bodyPart =
 				srcFolder.getMimePart(uid, bodyPart.getAddress());
 		
 		// return the body part found (or constructed)
-		return bodyPart;
+		return (StreamableMimePart) bodyPart;
 	}
 	
 	/**
@@ -345,7 +353,7 @@ public class SaveMessageBodyAsCommand extends FolderCommand {
 	 * @return	Decoded message body
 	 * @author 	Karl Peder Olesen (karlpeder), 20030601
 	 */
-	private String getDecodedMessageBody(MimePart bodyPart) {
+	private String getDecodedMessageBody(StreamableMimePart bodyPart) throws IOException {
 		// First determine which charset to use
 		String charsetToUse;
 		if (charset.equals("auto")) {
@@ -356,29 +364,30 @@ public class SaveMessageBodyAsCommand extends FolderCommand {
 			charsetToUse = charset;
 		}
 
+
+		MimeHeader header = bodyPart.getHeader();
 		// Decode message according to charset
-		Decoder decoder =
-			CoderRouter.getDecoder(
-				bodyPart.getHeader().contentTransferEncoding);
-		String decodedBody = null;
-		try {
-			// decode using specified charset
-			decodedBody = decoder.decode(bodyPart.getBody(), charsetToUse);
-		} catch (UnsupportedEncodingException ex) {
-			ColumbaLogger.log.info(
-				"charset "
-					+ charsetToUse
-					+ " isn't supported, falling back to default...");
-			try {
-				// decode using default charset
-				decodedBody = decoder.decode(bodyPart.getBody(), null);
-			} catch (UnsupportedEncodingException never) {
-				// should never happen!?
-				never.printStackTrace();
+		InputStream bodyStream = bodyPart.getInputStream();
+		String encoding = header.getContentTransferEncoding();
+		if( encoding != null ) {
+			if( encoding.equals("quoted-printable") ) {
+				bodyStream = new QuotedPrintableDecoderInputStream(bodyStream);
+			} else if ( encoding.equals("base64")) {
+				bodyStream = new Base64DecoderInputStream( bodyStream );
 			}
 		}
+		
+		Charset charset;
+		try {
+			charset = Charset.forName(charsetToUse );
+		} catch (UnsupportedCharsetException ex) {
+			// decode using default charset
+			charset = Charset.forName(System.getProperty("file.encoding"));
+		}
 
-		return decodedBody;
+		bodyStream = new CharsetDecoderInputStream( bodyStream, charset);
+
+		return StreamUtils.readInString(bodyStream).toString();
 	}
 
 	/**
@@ -393,10 +402,10 @@ public class SaveMessageBodyAsCommand extends FolderCommand {
 	 * @param	file			File to output to
 	 */
 	private void saveMsgBodyAsHtml(ColumbaHeader header,
-							       MimePart bodyPart, 
+							       StreamableMimePart bodyPart, 
 							       List attachments,
 							       boolean inclAllHeaders,
-							       File file) {
+							       File file) throws IOException {
 
 		// decode message body with respect to charset
 		String decodedBody = getDecodedMessageBody(bodyPart);
@@ -542,10 +551,10 @@ public class SaveMessageBodyAsCommand extends FolderCommand {
 	 * @param	file			File to output to
 	 */
 	private void saveMsgBodyAsText(ColumbaHeader header, 
-							       MimePart bodyPart,
+							       StreamableMimePart bodyPart,
 							   	   List attachments, 
 							   	   boolean inclAllHeaders, 
-							   	   File file) {
+							   	   File file) throws IOException {
 		//DocumentParser parser = new DocumentParser();
 		
 		// decode message body with respect to charset
@@ -578,13 +587,9 @@ public class SaveMessageBodyAsCommand extends FolderCommand {
 		String msg = buf.toString() + body;
 
 		// save message
-		try {
 			DiskIO.saveStringInFile(file, msg);
 			ColumbaLogger.log.info("Text msg saved as " + 
 					file.getAbsolutePath());
-		} catch (IOException ioe) {
-			ColumbaLogger.log.error("Error saving message to file", ioe);
-		}
 	}
 
 	/**
@@ -602,22 +607,25 @@ public class SaveMessageBodyAsCommand extends FolderCommand {
 									    boolean inclAll) {
 		List keyList   = new ArrayList();
 		List valueList = new ArrayList();
-		String from = "";
-		String to   = "";
-		String date = "";
-		String subj = "";
+		BasicHeader basicHeader = new BasicHeader( header.getHeader() );
+		
+		String from = (header.get("columba.from")).toString();
+		String to   = (basicHeader.getTo()[0]).toString();
+		
+		DateFormat df = DateFormat.getDateTimeInstance(
+									DateFormat.LONG, DateFormat.MEDIUM);
+		String date = df.format((Date) header.get("columba.date"));
+
+		String subject = (String) header.get("columba.subject");
 
 		// loop over all headers 
-		Hashtable headerItems = header.getHashtable();
-		Enumeration keys = headerItems.keys();
+		
+		Enumeration keys = header.getHeader().getKeys();
 		while (keys.hasMoreElements()) {
 			String key = (String) keys.nextElement();
 			if (key.equals("From")) {
-				from = (String) headerItems.get(key);
 			} else if (key.equals("To")) {
-				to = (String) headerItems.get(key);
-			} else if (key.equals("Subject")) {
-				subj = (String) headerItems.get(key);
+			} else if (key.equals("Subject")) {				
 			} else if (key.equals("Date")) {
 				// ignore - columba.date is used instead
 			} else if (key.startsWith("Content-")) {
@@ -627,9 +635,7 @@ public class SaveMessageBodyAsCommand extends FolderCommand {
 				// ignore
 			} else if (key.startsWith("columba")) {
 				if (key.equals("columba.date")) {
-					DateFormat df = DateFormat.getDateTimeInstance(
-							DateFormat.LONG, DateFormat.MEDIUM);
-					date = df.format((Date) headerItems.get(key));
+					
 				} else {
 					// ignore
 				}
@@ -637,7 +643,7 @@ public class SaveMessageBodyAsCommand extends FolderCommand {
 				if (inclAll) {
 					// all headers should be included
 					keyList.add(key);
-					valueList.add((String) headerItems.get(key));
+					valueList.add((String) header.get(key));
 				}
 			}
 		}
@@ -650,10 +656,10 @@ public class SaveMessageBodyAsCommand extends FolderCommand {
 		keyList.add(MailResourceLoader.getString("header", "date"));
 		valueList.add(date);
 		keyList.add(MailResourceLoader.getString("header", "subject"));
-		valueList.add(subj);
+		valueList.add(subject);
 
 		for (int i = 0; i < attachments.size(); i++) {
-			String name = ((MimePart) attachments.get(i))
+			String name = ((StreamableMimePart) attachments.get(i))
 								.getHeader().getFileName();
 			if (name != null) {
 				keyList.add(MailResourceLoader.getString(

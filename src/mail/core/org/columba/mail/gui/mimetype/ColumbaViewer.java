@@ -23,7 +23,7 @@ import java.net.URL;
 import javax.swing.JOptionPane;
 
 import org.columba.core.mimetype.MimeRouter;
-import org.columba.mail.message.MimeHeader;
+import org.columba.ristretto.message.MimeHeader;
 
 public class ColumbaViewer extends AbstractViewer {
 
@@ -32,8 +32,8 @@ public class ColumbaViewer extends AbstractViewer {
 		boolean save = false;
 		ChooseViewerDialog viewerDialog =
 			new ChooseViewerDialog(
-				header.contentType,
-				header.contentSubtype,
+				header.getContentType(),
+				header.getContentSubtype(),
 				save);
 		String viewer = viewerDialog.getViewer();
 		if (viewer == null)
@@ -64,8 +64,8 @@ public class ColumbaViewer extends AbstractViewer {
 			boolean save = false;
 			ChooseViewerDialog viewerDialog =
 				new ChooseViewerDialog(
-					header.contentType,
-					header.contentSubtype,
+					header.getContentType(),
+					header.getContentSubtype(),
 					save);
 			viewer = viewerDialog.getViewer();
 			if (viewer == null)

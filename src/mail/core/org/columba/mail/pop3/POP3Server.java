@@ -30,10 +30,10 @@ import org.columba.mail.config.AccountItem;
 import org.columba.mail.config.PopItem;
 import org.columba.mail.config.SpecialFoldersItem;
 import org.columba.mail.folder.Folder;
+import org.columba.mail.message.ColumbaMessage;
 import org.columba.mail.message.ColumbaHeader;
 import org.columba.mail.message.HeaderList;
-import org.columba.mail.message.Message;
-import org.columba.mail.pop3.protocol.POP3Protocol;
+import org.columba.ristretto.pop3.protocol.POP3Protocol;
 
 public class POP3Server {
 
@@ -173,14 +173,14 @@ public class POP3Server {
 		return getStore().fetchMessageCount();
 	}
 
-	public Message getMessage(int index, Object uid) throws Exception {
+	public ColumbaMessage getMessage(int index, Object uid) throws Exception {
 
-		Message message = getStore().fetchMessage(index);
+		ColumbaMessage message = getStore().fetchMessage(index);
 
 		if (message == null)
 			return null;
 
-		ColumbaHeader header = (ColumbaHeader) message.getHeader();
+		ColumbaHeader header = (ColumbaHeader) message.getHeaderInterface();
 		header.set("columba.pop3uid", uid);
 		header.set("columba.flags.recent", Boolean.TRUE);
 

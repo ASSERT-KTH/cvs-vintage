@@ -16,27 +16,30 @@
 
 package org.columba.mail.composer;
 
-import java.io.UnsupportedEncodingException;
-import java.util.Enumeration;
-import java.util.Hashtable;
+import java.io.IOException;
 import java.util.Iterator;
 import java.util.List;
 
 import org.columba.addressbook.folder.ContactCard;
 import org.columba.addressbook.parser.AddressParser;
 import org.columba.addressbook.parser.ListParser;
-import org.columba.mail.coder.CoderRouter;
-import org.columba.mail.coder.Decoder;
 import org.columba.mail.config.AccountItem;
 import org.columba.mail.config.MailConfig;
 import org.columba.mail.gui.composer.ComposerModel;
 import org.columba.mail.message.ColumbaHeader;
-import org.columba.mail.message.Message;
-import org.columba.mail.message.MimeHeader;
-import org.columba.mail.message.MimePart;
-import org.columba.mail.parser.Rfc822Parser;
+import org.columba.mail.message.ColumbaMessage;
 import org.columba.mail.parser.text.BodyTextParser;
 import org.columba.mail.parser.text.HtmlParser;
+import org.columba.ristretto.message.BasicHeader;
+import org.columba.ristretto.message.Header;
+import org.columba.ristretto.message.LocalMimePart;
+import org.columba.ristretto.message.Message;
+import org.columba.ristretto.message.MimeHeader;
+import org.columba.ristretto.message.MimePart;
+import org.columba.ristretto.message.MimeType;
+import org.columba.ristretto.message.io.Source;
+import org.columba.ristretto.parser.MessageParser;
+import org.columba.ristretto.parser.ParserException;
 
 /**
  * 
@@ -60,7 +63,18 @@ public class MessageBuilder {
 
 	public final static int OPEN = 6;
 
-	private MessageBuilder() {}
+	private static MessageBuilder instance;
+
+	public MessageBuilder() {
+
+	}
+
+	public static MessageBuilder getInstance() {
+		if (instance == null)
+			instance = new MessageBuilder();
+
+		return instance;
+	}
 
 	/**
 	 * 
@@ -72,13 +86,17 @@ public class MessageBuilder {
 	 *                to search for.
 	 **/
 	public static boolean isAlreadyReply(String subject, String pattern) {
-		if (subject == null || subject.length() == 0)
+
+		if (subject == null)
+			return false;
+
+		if (subject.length() == 0)
 			return false;
 
 		String str = subject.toLowerCase();
 
 		// for example: "Re: this is a subject"
-		if (str.startsWith(pattern))
+		if (str.startsWith(pattern) == true)
 			return true;
 
 		// for example: "[columba-users]Re: this is a subject"
@@ -187,10 +205,12 @@ public class MessageBuilder {
 		StringBuffer buf = new StringBuffer();
 		buf.append(sender);
 		if (to != null) {
+
 			buf.append(",");
 			buf.append(to);
 		}
 		if (cc != null) {
+
 			buf.append(",");
 			buf.append(cc);
 		}
@@ -256,6 +276,7 @@ public class MessageBuilder {
 			if (references != null) {
 				references = references + " " + messageId;
 				model.setHeaderField("References", references);
+
 			}
 		}
 	}
@@ -268,7 +289,7 @@ public class MessageBuilder {
 	 *               the headerfields of the message we want
 	 * 	             reply/forward.
 	 */
-	private static AccountItem getAccountItem(ColumbaHeader header) {
+	private static AccountItem getAccountItem(Header header) {
 		String host = (String) header.get("columba.host");
 		String address = (String) header.get("To");
 
@@ -288,25 +309,14 @@ public class MessageBuilder {
 	 *                the bodytext of the message we want
 	 * 	              reply/forward.
 	 */
-	private static String createBodyText(Message message) {
-		String bodyText = "";
+	private static String createBodyText(ColumbaMessage message) {
+		CharSequence bodyText = "";
 
-		MimePart bodyPart = message.getBodyPart();
+		LocalMimePart bodyPart = (LocalMimePart) message.getBodyPart();
 
 		String charset = bodyPart.getHeader().getContentParameter("charset");
 
-		// init decoder with appropriate content-transfer-encoding
-		Decoder decoder =
-			CoderRouter.getDecoder(
-				bodyPart.getHeader().contentTransferEncoding);
-
-		// decode bodytext
-		try {
-			bodyText = decoder.decode(bodyPart.getBody(), charset);
-		} catch (UnsupportedEncodingException e) {
-		}
-
-		return bodyText;
+		return bodyPart.getBody().toString();
 	}
 
 	/**
@@ -321,7 +331,7 @@ public class MessageBuilder {
 	 * FIXME: we should make this configureable
 	 * 
 	 */
-	private static String createQuotedBodyText(Message message) {
+	private static String createQuotedBodyText(ColumbaMessage message) {
 		String bodyText = createBodyText(message);
 
 		/*
@@ -333,7 +343,10 @@ public class MessageBuilder {
 			bodyText = HtmlParser.htmlToText(bodyText);
 		}
 
-		return BodyTextParser.quote(bodyText);
+		String quotedBodyText = BodyTextParser.quote(bodyText);
+
+		return quotedBodyText;
+
 	}
 
 	/** 
@@ -352,12 +365,12 @@ public class MessageBuilder {
 	 *                  (for example: MessageBuilder.REPLY, .REPLY_TO_ALL)
 	 * 
 	 */
-	public static void createMessage(
-		Message message,
+	public void createMessage(
+		ColumbaMessage message,
 		ComposerModel model,
 		int operation) {
 
-		ColumbaHeader header = (ColumbaHeader) message.getHeader();
+		ColumbaHeader header = (ColumbaHeader) message.getHeaderInterface();
 
 		MimePart bodyPart = message.getBodyPart();
 
@@ -392,7 +405,7 @@ public class MessageBuilder {
 			createMailingListHeaderItems(header, model);
 
 		if ((operation != FORWARD) && (operation != FORWARD_INLINE)) {
-			AccountItem accountItem = getAccountItem(header);
+			AccountItem accountItem = getAccountItem(header.getHeader());
 			model.setAccountItem(accountItem);
 		}
 
@@ -401,11 +414,10 @@ public class MessageBuilder {
 			if (message.getSource() != null) {
 				// initialize MimeHeader as RFC822-compliant-message
 				MimeHeader mimeHeader = new MimeHeader();
-				mimeHeader.contentType = new String("Message");
-				mimeHeader.contentSubtype = new String("Rfc822");
+				mimeHeader.setMimeType(new MimeType("message", "rfc822"));
 
 				model.addMimePart(
-					new MimePart(mimeHeader, message.getSource()));
+					new LocalMimePart(mimeHeader, message.getSource()));
 			}
 		} else {
 			// prepend "> " to every line of the bodytext
@@ -415,6 +427,7 @@ public class MessageBuilder {
 			}
 			model.setBodyText(bodyText);
 		}
+
 	}
 
 	/** 
@@ -432,74 +445,29 @@ public class MessageBuilder {
 	 *                  pass the information to.
 	 * 
 	 */
-	public static void openMessage(Message message, ComposerModel model) {
-		ColumbaHeader header = (ColumbaHeader) message.getHeader();
-
+	public static void openMessage(Source messagesource, ComposerModel model) throws ParserException, IOException {
+		Message message = MessageParser.parse( messagesource );
+		Header header= message.getHeader();
+		BasicHeader basicHeader = new BasicHeader(header);
+		
 		// copy every headerfield the original message contains
-		Hashtable hashtable = header.getHashtable();
-		for (Enumeration e = hashtable.keys(); e.hasMoreElements();) {
-			Object key = e.nextElement();
+		model.setHeader( header );
 
-			try {
-				model.setHeaderField(
-					(String) key,
-					(String) header.get((String) key));
-			} catch (ClassCastException ex) {
-				System.out.println("skipping header item");
-			}
-		}
-
-		model.setTo((String) header.get("To"));
+		model.setTo(header.get("To"));
 
 		AccountItem accountItem = getAccountItem(header);
 		model.setAccountItem(accountItem);
+		
+		model.setSubject( basicHeader.getSubject() );
 
-		/* 
-		   parse the whole message. this is for:
-		    -> creating the MimePart-objects
-		    -> decoding the bodytext
-		        -> in ordner to add MimeParts to the ComposerModel
-		           we need to decode them. the MimeParts become
-		           encoded before sending them (quoted-printable
-		           or base64). Not decoding them here, would make
-		           them become encoded twice times.
-		*/
-		Message parsedMessage =
-			new Rfc822Parser().parse(
-				message.getSource(),
-				(ColumbaHeader) message.getHeader());
+		LocalMimePart bodyPart = (LocalMimePart) message.getMimePartTree().getFirstTextPart("html");
 
-		int count = parsedMessage.getMimePartTree().count();
-		Decoder decoder;
-		for (int i = 0; i < count; i++) {
-			MimePart mp = parsedMessage.getMimePartTree().get(i);
-			MimeHeader mimeHeader = mp.getHeader();
-			decoder =
-				CoderRouter.getDecoder(mimeHeader.contentTransferEncoding);
-
-			String str = "";
-			try {
-				str = decoder.decode(mp.getBody(), null);
-			} catch (UnsupportedEncodingException e) {
-			}
-
-			// first MimePart is the bodytext of the message
-			if (i == 0) {
-				/*
-				 * *20030621, karlpeder* tags are stripped if the 
-				 * message body part is html
-				 */
-				if (mimeHeader.getContentSubtype().equals("html")) {
-					model.setBodyText(HtmlParser.htmlToText(str));
-				} else {
-					model.setBodyText(str);
-				}
-				//model.setBodyText(str);
-			} else {
-				mp.setBody(str);
-				model.addMimePart(mp);
-			}
+		if( bodyPart.getHeader().getMimeType().getSubtype().equals("html") ) {
+			model.setBodyText(HtmlParser.htmlToText(bodyPart.getBody().toString()));
+		} else {
+			model.setBodyText(bodyPart.getBody().toString());
 		}
+
 	}
 
 	/********************** addressbook stuff ***********************/
@@ -513,35 +481,45 @@ public class MessageBuilder {
 	 *        -> should be in core, or even better addressbook
 	 *
 	 */
-	public static void addSenderToAddressbook(String sender) {
-		if (sender != null && sender.length() > 0) {
-                        org.columba.addressbook.folder.Folder selectedFolder =
-                                org
-                                        .columba
-                                        .addressbook
-                                        .facade
-                                        .FolderFacade
-                                        .getCollectedAddresses();
+	public void addSenderToAddressbook(String sender) {
 
-                        // this can be a list of recipients
-                        List list = ListParser.parseString(sender);
-                        Iterator it = list.iterator();
-                        while (it.hasNext()) {
-                                String address =
-                                        AddressParser.getAddress((String) it.next());
+		if (sender != null) {
+			if (sender.length() > 0) {
 
-                                if (!selectedFolder.exists(address)) {
-                                        ContactCard card = new ContactCard();
+				org.columba.addressbook.folder.Folder selectedFolder =
+					org
+						.columba
+						.addressbook
+						.facade
+						.FolderFacade
+						.getCollectedAddresses();
 
-                                        String fn = AddressParser.getDisplayname(sender);
+				// this can be a list of recipients
+				List list = ListParser.parseString(sender);
+				Iterator it = list.iterator();
+				while (it.hasNext()) {
+					String address =
+						AddressParser.getAddress((String) it.next());
+					System.out.println("address:" + address);
 
-                                        card.set("fn", fn);
-                                        card.set("displayname", fn);
-                                        card.set("email", "internet", address);
+					if (!selectedFolder.exists(address)) {
+						ContactCard card = new ContactCard();
 
-                                        selectedFolder.add(card);
+						String fn = AddressParser.getDisplayname(sender);
+						System.out.println("fn=" + fn);
+
+						card.set("fn", fn);
+						card.set("displayname", fn);
+						card.set("email", "internet", address);
+
+						selectedFolder.add(card);
+					}
+
 				}
+
 			}
 		}
+
 	}
+
 }

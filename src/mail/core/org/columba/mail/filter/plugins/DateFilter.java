@@ -20,7 +20,7 @@ import java.util.Date;
 import org.columba.core.logging.ColumbaLogger;
 import org.columba.mail.filter.FilterCriteria;
 import org.columba.mail.folder.Folder;
-import org.columba.mail.message.HeaderInterface;
+import org.columba.ristretto.message.HeaderInterface;
 
 /**
  * @author freddy

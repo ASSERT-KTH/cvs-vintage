@@ -20,7 +20,7 @@ import java.io.File;
 import java.net.URL;
 
 import org.columba.core.util.OSInfo;
-import org.columba.mail.message.MimeHeader;
+import org.columba.ristretto.message.MimeHeader;
 
 public class MimeTypeViewer
 {

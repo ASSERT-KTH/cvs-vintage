@@ -25,8 +25,9 @@ import org.columba.addressbook.parser.ListParser;
 import org.columba.core.logging.ColumbaLogger;
 import org.columba.mail.config.AccountItem;
 import org.columba.mail.config.MailConfig;
-import org.columba.mail.message.Message;
-import org.columba.mail.message.MimePart;
+import org.columba.mail.message.ColumbaMessage;
+import org.columba.ristretto.message.Header;
+import org.columba.ristretto.message.StreamableMimePart;
 
 /**
  * @author frd
@@ -36,7 +37,7 @@ import org.columba.mail.message.MimePart;
  */
 public class ComposerModel {
 
-	Message message;
+	ColumbaMessage message;
 	AccountItem accountItem;
 	String bodytext;
 	String charsetName;
@@ -58,30 +59,35 @@ public class ComposerModel {
 	 */
 	public ComposerModel() {
 		this(null, false);		// default ~ plain text
-		/*
-		message = new Message();
+		/*	
+		message = new ColumbaMessage();
+
 		toList = new Vector();
 		ccList = new Vector();
 		bccList = new Vector();
-		attachments = new Vector();
-		charsetName = "auto";
-		*/
-	}
 
+		attachments = new Vector();
+
+		charsetName = "auto";*/
+	}
 	/**
 	 * Creates a new model with a plain text message
 	 * @param message	Initial message to hold in the model
 	 */
-	public ComposerModel(Message message) {
-		this(message, false);	// default ~ plain text
+
+	public ComposerModel(ColumbaMessage message) {
+		this(message,false);
 		/*
 		this.message = message;
+
 		toList = new Vector();
 		ccList = new Vector();
 		bccList = new Vector();
+
 		attachments = new Vector();
+
 		charsetName = "auto";
-		*/
+*/
 	}
 
 	/**
@@ -99,10 +105,10 @@ public class ComposerModel {
 	 * @param message	Initial message to hold in the model
 	 * @param html		True for a html message, false for plain text
 	 */
-	public ComposerModel(Message message, boolean html) {
+	public ComposerModel(ColumbaMessage message, boolean html) {
 		// set message
 		if (message == null)
-			this.message = new Message();
+			this.message = new ColumbaMessage();
 		else
 			this.message = message;
 
@@ -116,7 +122,6 @@ public class ComposerModel {
 		attachments = new Vector();
 		charsetName = "auto";
 	}
-	
 
 	public void setTo(String s) {
 
@@ -166,11 +171,15 @@ public class ComposerModel {
 	}
 
 	public void setHeaderField(String key, String value) {
-		message.getHeader().set(key, value);
+		message.getHeaderInterface().set(key, value);
+	}
+	
+	public void setHeader(Header header) {
+		message.setHeader(header);
 	}
 
 	public String getHeaderField(String key) {
-		return (String) message.getHeader().get(key);
+		return (String) message.getHeaderInterface().get(key);
 	}
 
 	public void setToList(List v) {
@@ -208,19 +217,19 @@ public class ComposerModel {
 			return accountItem;
 	}
 
-	public void setMessage(Message message) {
+	public void setMessage(ColumbaMessage message) {
 		this.message = message;
 	}
 
-	public Message getMessage() {
+	public ColumbaMessage getMessage() {
 		return message;
 	}
 
 	public String getHeader(String key) {
-		return (String) message.getHeader().get(key);
+		return (String) message.getHeaderInterface().get(key);
 	}
 
-	public void addMimePart(MimePart mp) {
+	public void addMimePart(StreamableMimePart mp) {
 		attachments.add(mp);
 
 		//notifyListeners();
@@ -243,11 +252,11 @@ public class ComposerModel {
 	}
 
 	public String getSubject() {
-		return (String) message.getHeader().get("Subject");
+		return (String) message.getHeaderInterface().get("Subject");
 	}
 
 	public void setSubject(String s) {
-		message.getHeader().set("Subject", s);
+		message.getHeaderInterface().set("Subject", s);
 	}
 
 	public List getAttachments() {
@@ -312,14 +321,14 @@ public class ComposerModel {
 	}
 
 	public String getPriority() {
-		if (message.getHeader().get("X-Priority") == null)
+		if (message.getHeaderInterface().get("X-Priority") == null)
 			return "Normal";
 		else
-			return (String) message.getHeader().get("X-Priority");
+			return (String) message.getHeaderInterface().get("X-Priority");
 	}
 
 	public void setPriority(String s) {
-		message.getHeader().set("X-Priority", s);
+		message.getHeaderInterface().set("X-Priority", s);
 	}
 
 	/**

@@ -16,7 +16,7 @@
 package org.columba.mail.command;
 
 import org.columba.mail.folder.FolderTreeNode;
-import org.columba.mail.message.Message;
+import org.columba.mail.message.ColumbaMessage;
 
 /**
  * @author freddy
@@ -41,7 +41,7 @@ public class SMTPCommandReference extends FolderCommandReference {
 	 * @param folder
 	 * @param message
 	 */
-	public SMTPCommandReference(FolderTreeNode folder, Message message) {
+	public SMTPCommandReference(FolderTreeNode folder, ColumbaMessage message) {
 		super(folder, message);
 	}
 

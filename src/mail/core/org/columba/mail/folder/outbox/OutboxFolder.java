@@ -26,10 +26,11 @@ import org.columba.mail.config.FolderItem;
 import org.columba.mail.folder.headercache.CachedFolder;
 import org.columba.mail.folder.headercache.LocalHeaderCache;
 import org.columba.mail.folder.mh.CachedMHFolder;
-import org.columba.mail.message.AbstractMessage;
-import org.columba.mail.message.HeaderInterface;
+import org.columba.mail.message.ColumbaMessage;
 import org.columba.mail.message.SendableHeader;
-import org.columba.mail.parser.Rfc822Parser;
+import org.columba.ristretto.message.HeaderInterface;
+import org.columba.ristretto.message.io.CharSequenceSource;
+import org.columba.ristretto.parser.MessageParser;
 
 public class OutboxFolder extends CachedMHFolder {
 
@@ -52,7 +53,7 @@ public class OutboxFolder extends CachedMHFolder {
 
 	}
 
-	public AbstractMessage getMessage(
+	public ColumbaMessage getMessage(
 		Object uid)
 		throws Exception {
 		if (aktMessage != null) {
@@ -66,15 +67,14 @@ public class OutboxFolder extends CachedMHFolder {
 
 		String source = getMessageSource(uid);
 
-		AbstractMessage message =
-			new Rfc822Parser().parse(source, null);
+		ColumbaMessage message = new ColumbaMessage( MessageParser.parse( new CharSequenceSource(source)));			
 		message.setUID(uid);
 
 		SendableHeader header = (SendableHeader) getHeaderList().get(uid);
 		SendableMessage sendableMessage = new SendableMessage();
 		sendableMessage.setHeader(header);
 		sendableMessage.setMimePartTree(message.getMimePartTree());
-		sendableMessage.setSource(source);
+		sendableMessage.setStringSource(source);
 
 		aktMessage = sendableMessage;
 

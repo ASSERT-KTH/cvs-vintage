@@ -31,8 +31,8 @@ import org.columba.core.gui.selection.SelectionListener;
 import org.columba.core.gui.util.CInfoPanel;
 import org.columba.mail.config.FolderItem;
 import org.columba.mail.folder.Folder;
-import org.columba.mail.folder.MessageFolderInfo;
 import org.columba.mail.gui.tree.selection.TreeSelectionChangedEvent;
+import org.columba.ristretto.message.MessageFolderInfo;
 
 public class FolderInfoPanel extends CInfoPanel implements SelectionListener {
 	private JLabel leftLabel, readLabel, unreadLabel, recentLabel;

@@ -30,7 +30,9 @@ import javax.swing.UIManager;
 import javax.swing.tree.DefaultTreeCellRenderer;
 
 import org.columba.mail.gui.table.model.MessageNode;
-import org.columba.mail.message.HeaderInterface;
+import org.columba.mail.message.ColumbaHeader;
+import org.columba.ristretto.message.Flags;
+import org.columba.ristretto.message.HeaderInterface;
 
 public class SubjectTreeRenderer extends DefaultTreeCellRenderer {
 
@@ -86,9 +88,10 @@ public class SubjectTreeRenderer extends DefaultTreeCellRenderer {
 		}
 
 		//if (getFont() != null) {
+		Flags flags = ((ColumbaHeader)header).getFlags();
 
-		if (header.getFlags() != null) {
-			if (!header.getFlags().getSeen()) {
+		if (flags != null) {
+			if (!flags.getSeen()) {
 				//if (!getFont().equals(boldFont))
 				setFont(boldFont);
 			} else if (messageNode.isHasRecentChildren()) {
@@ -100,11 +103,11 @@ public class SubjectTreeRenderer extends DefaultTreeCellRenderer {
 
 		//}
 
-		String subject = (String) header.get("Subject");
+		String subject = (String) header.get("columba.subject");
 		if (subject != null)
-			setText(subject);
+			setText("test");//subject);
 		else
-			setText("");
+			setText("null");
 
 		setIcon(null);
 

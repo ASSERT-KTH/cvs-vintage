@@ -24,8 +24,8 @@ import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.folder.Folder;
 import org.columba.mail.gui.frame.TableUpdater;
 import org.columba.mail.gui.table.TableChangedEvent;
-import org.columba.mail.message.AbstractMessage;
-import org.columba.mail.message.HeaderInterface;
+import org.columba.mail.message.ColumbaMessage;
+import org.columba.ristretto.message.HeaderInterface;
 
 /**
  * Add message to folder
@@ -70,7 +70,7 @@ public class AddMessageCommand extends Command {
 //		register for status events
 		((StatusObservableImpl)folder.getObservable()).setWorker(worker);
 		
-		AbstractMessage message = (AbstractMessage) r[0].getMessage();
+		ColumbaMessage message = (ColumbaMessage) r[0].getMessage();
 
 		Object uid = folder.addMessage(message);
 

@@ -23,8 +23,8 @@ import javax.swing.ImageIcon;
 
 import org.columba.mail.gui.attachment.util.AttachmentImageIconLoader;
 import org.columba.mail.gui.attachment.util.IconPanel;
-import org.columba.mail.message.MimePart;
-import org.columba.mail.message.MimePartTree;
+import org.columba.ristretto.message.MimeTree;
+import org.columba.ristretto.message.StreamableMimePart;
 
 /**
  * @author freddy
@@ -47,11 +47,11 @@ public class AttachmentView extends IconPanel {
 		return model;
 	}
 
-	public MimePart getSelectedMimePart() {
-		return (MimePart) model.getDisplayedMimeParts().get(getSelected());
+	public StreamableMimePart getSelectedMimePart() {
+		return (StreamableMimePart) model.getDisplayedMimeParts().get(getSelected());
 	}
 
-	public boolean setMimePartTree(MimePartTree collection) {
+	public boolean setMimePartTree(MimeTree collection) {
 		String contentType;
 		String contentSubtype;
 		String text = new String();
@@ -66,10 +66,10 @@ public class AttachmentView extends IconPanel {
 		// Display resulting MimeParts
 
 		for (int i = 0; i < displayedMimeParts.size(); i++) {
-			MimePart mp = (MimePart) displayedMimeParts.get(i);
+			StreamableMimePart mp = (StreamableMimePart) displayedMimeParts.get(i);
 
-			contentType = mp.getHeader().contentType;
-			contentSubtype = mp.getHeader().contentSubtype;
+			contentType = mp.getHeader().getContentType();
+			contentSubtype = mp.getHeader().getContentSubtype();
 
 			if (mp.getHeader().getFileName() != null) {
 				text =
@@ -82,8 +82,8 @@ public class AttachmentView extends IconPanel {
 
 			icon =
 				AttachmentImageIconLoader.getImageIcon(
-					mp.getHeader().contentType,
-					mp.getHeader().contentSubtype);
+					mp.getHeader().getContentType(),
+					mp.getHeader().getContentSubtype());
 
 			add(icon, text);
 			output = true;

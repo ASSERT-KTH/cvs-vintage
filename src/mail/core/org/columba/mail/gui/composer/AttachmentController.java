@@ -22,6 +22,7 @@ import java.awt.event.KeyListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
+import java.io.IOException;
 import java.net.FileNameMap;
 import java.net.URLConnection;
 
@@ -32,10 +33,11 @@ import javax.swing.event.ListSelectionListener;
 
 import org.columba.core.gui.focus.FocusOwner;
 import org.columba.core.main.MainInterface;
-import org.columba.mail.message.ComposerAttachment;
-import org.columba.mail.message.MimeHeader;
-import org.columba.mail.message.MimePart;
 import org.columba.mail.util.MailResourceLoader;
+import org.columba.ristretto.message.LocalMimePart;
+import org.columba.ristretto.message.MimeHeader;
+import org.columba.ristretto.message.StreamableMimePart;
+import org.columba.ristretto.message.io.FileSource;
 
 /**
  * @author frd
@@ -89,21 +91,21 @@ public class AttachmentController implements KeyListener, FocusOwner, ListSelect
 			for (int i = 0;
 				i < controller.getModel().getAttachments().size();
 				i++) {
-				MimePart p =
-					(MimePart) controller.getModel().getAttachments().get(i);
+				StreamableMimePart p =
+					(StreamableMimePart) controller.getModel().getAttachments().get(i);
 				view.add(p);
 			}
 		} else {
 			controller.getModel().getAttachments().clear();
 
 			for (int i = 0; i < view.count(); i++) {
-				MimePart mp = view.get(i);
+				StreamableMimePart mp = (StreamableMimePart) view.get(i);
 				controller.getModel().getAttachments().add(mp);
 			}
 		}
 	}
 
-	public void add(MimePart part) {
+	public void add(StreamableMimePart part) {
 		view.add(part);
 		((ComposerModel) controller.getModel()).getAttachments().add(part);
 	}
@@ -111,7 +113,7 @@ public class AttachmentController implements KeyListener, FocusOwner, ListSelect
 	public void removeSelected() {
 		Object[] mp = view.getSelectedValues();
 		for (int i = 0; i < mp.length; i++) {
-			view.remove((MimePart) mp[i]);
+			view.remove((StreamableMimePart) mp[i]);
 		}
 
 	}
@@ -139,11 +141,20 @@ public class AttachmentController implements KeyListener, FocusOwner, ListSelect
 					new MimeHeader(
 						mimetype.substring(0, mimetype.indexOf('/')),
 						mimetype.substring(mimetype.indexOf('/') + 1));
+						
+				header.putContentParameter("name", file.getName());
+				header.setContentDisposition("attachment");
+				header.putDispositionParameter("filename",file.getName());
+				header.setContentTransferEncoding("base64");
 
-				ComposerAttachment mimePart =
-					new ComposerAttachment(header, file);
-
-				view.add(mimePart);
+				try {
+					LocalMimePart mimePart =
+						new LocalMimePart(header, new FileSource( file ));
+					
+					view.add(mimePart);
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
 			}
 		}
 	}

@@ -18,6 +18,8 @@ package org.columba.mail.gui.message;
 import java.awt.Font;
 import java.awt.Insets;
 import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
 import java.net.URL;
 
 import javax.swing.JTextPane;

@@ -15,17 +15,16 @@
 //All Rights Reserved.
 package org.columba.mail.gui.attachment.command;
 
-import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.InputStream;
 
 import org.columba.core.command.Command;
 import org.columba.core.command.DefaultCommandReference;
 import org.columba.core.command.Worker;
+import org.columba.core.io.StreamUtils;
 import org.columba.core.io.TempFileStore;
 import org.columba.core.main.MainInterface;
-import org.columba.mail.coder.CoderRouter;
-import org.columba.mail.coder.Decoder;
 import org.columba.mail.command.FolderCommand;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.folder.Folder;
@@ -33,8 +32,10 @@ import org.columba.mail.folder.temp.TempFolder;
 import org.columba.mail.gui.message.command.ViewMessageCommand;
 import org.columba.mail.gui.messageframe.MessageFrameController;
 import org.columba.mail.gui.mimetype.MimeTypeViewer;
-import org.columba.mail.message.MimeHeader;
-import org.columba.mail.message.MimePart;
+import org.columba.ristretto.coder.Base64DecoderInputStream;
+import org.columba.ristretto.coder.QuotedPrintableDecoderInputStream;
+import org.columba.ristretto.message.MimeHeader;
+import org.columba.ristretto.message.StreamableMimePart;
 
 /**
  * @author freddy
@@ -46,7 +47,7 @@ import org.columba.mail.message.MimePart;
  */
 public class OpenAttachmentCommand extends FolderCommand {
 
-	MimePart part;
+	StreamableMimePart part;
 	File tempFile;
 	// true, if showing a message as attachment
 	boolean inline = false;
@@ -105,9 +106,8 @@ public class OpenAttachmentCommand extends FolderCommand {
 
 		Integer[] address = r[0].getAddress();
 
-		part = folder.getMimePart(uids[0], address);
+		part = (StreamableMimePart) folder.getMimePart(uids[0], address);
 
-		Decoder decoder;
 		MimeHeader header;
 		tempFile = null;
 
@@ -120,7 +120,7 @@ public class OpenAttachmentCommand extends FolderCommand {
 			tempFolder = MainInterface.treeModel.getTempFolder();
 			tempMessageUid =
 				tempFolder.addMessage(//(AbstractMessage) part.getContent(),
-				(String) part.getContent());
+				StreamUtils.readInString(part.getInputStream()).toString());
 
 			inline = true;
 		} else {
@@ -131,17 +131,18 @@ public class OpenAttachmentCommand extends FolderCommand {
 					tempFile = TempFileStore.createTempFile(filename);
 				} else
 					tempFile = TempFileStore.createTempFile();
-
-				decoder =
-					CoderRouter.getDecoder(header.contentTransferEncoding);
-
-				decoder.decode(
-					new ByteArrayInputStream(
-						part.getBody().getBytes("ISO_8859_1")),
-					new FileOutputStream(tempFile));
-
-				//decoder.run();
-
+				
+				InputStream bodyStream = part.getInputStream();
+				String encoding = header.getContentTransferEncoding();
+				if( encoding != null ) {
+					if( encoding.equals("quoted-printable") ) {
+						bodyStream = new QuotedPrintableDecoderInputStream(bodyStream);
+					} else if ( encoding.equals("base64")) {
+						bodyStream = new Base64DecoderInputStream( bodyStream );
+					}
+				}
+				
+				StreamUtils.streamCopy(bodyStream, new FileOutputStream(tempFile));
 			} catch (Exception ex) {
 				ex.printStackTrace();
 

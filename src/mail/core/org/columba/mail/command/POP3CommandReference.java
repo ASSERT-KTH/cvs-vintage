@@ -17,7 +17,7 @@ package org.columba.mail.command;
 
 import org.columba.core.command.DefaultCommandReference;
 import org.columba.mail.folder.Folder;
-import org.columba.mail.message.Message;
+import org.columba.mail.message.ColumbaMessage;
 import org.columba.mail.pop3.POP3Server;
 import org.columba.mail.pop3.POP3ServerController;
 
@@ -33,14 +33,14 @@ public class POP3CommandReference extends DefaultCommandReference {
 
 	protected POP3ServerController controller;
 	protected Object[] uids;
-	protected Message message;
+	protected ColumbaMessage message;
 	protected Folder folder;
 
 	public POP3CommandReference(POP3ServerController c) {
 		this.controller = c;
 	}
 
-	public POP3CommandReference(Folder folder, Message message) {
+	public POP3CommandReference(Folder folder, ColumbaMessage message) {
 		this.folder = folder;
 		this.message = message;
 
@@ -71,7 +71,7 @@ public class POP3CommandReference extends DefaultCommandReference {
 	/**
 	 * @return
 	 */
-	public Message getMessage() {
+	public ColumbaMessage getMessage() {
 		return message;
 	}
 

@@ -18,9 +18,10 @@ package org.columba.mail.gui.message;
 import java.awt.Font;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.io.UnsupportedEncodingException;
+import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.nio.charset.Charset;
 
 import javax.swing.JButton;
 import javax.swing.JComponent;
@@ -42,10 +43,7 @@ import org.columba.core.charset.CharsetOwnerInterface;
 import org.columba.core.config.Config;
 import org.columba.core.gui.focus.FocusOwner;
 import org.columba.core.gui.frame.AbstractFrameController;
-import org.columba.core.logging.ColumbaLogger;
 import org.columba.core.main.MainInterface;
-import org.columba.mail.coder.CoderRouter;
-import org.columba.mail.coder.Decoder;
 import org.columba.mail.folder.Folder;
 import org.columba.mail.gui.attachment.AttachmentController;
 import org.columba.mail.gui.frame.AbstractMailFrameController;
@@ -55,9 +53,13 @@ import org.columba.mail.gui.message.action.MessagePopupListener;
 import org.columba.mail.gui.message.command.ViewMessageCommand;
 import org.columba.mail.gui.table.selection.TableSelectionListener;
 import org.columba.mail.gui.util.URLController;
-import org.columba.mail.message.HeaderInterface;
-import org.columba.mail.message.MimePart;
-import org.columba.mail.message.MimePartTree;
+import org.columba.mail.message.ColumbaHeader;
+import org.columba.ristretto.coder.Base64DecoderInputStream;
+import org.columba.ristretto.coder.CharsetDecoderInputStream;
+import org.columba.ristretto.coder.QuotedPrintableDecoderInputStream;
+import org.columba.ristretto.message.MimePart;
+import org.columba.ristretto.message.MimeTree;
+import org.columba.ristretto.message.StreamableMimePart;
 
 /**
  * this class shows the messagebody
@@ -161,9 +163,9 @@ public class MessageController
 	}
 
 	public void showMessage(
-		HeaderInterface header,
+		ColumbaHeader header,
 		MimePart bodyPart,
-		MimePartTree mimePartTree)
+		MimeTree mimePartTree)
 		throws Exception {
 
 		if (header == null || bodyPart == null) {
@@ -172,56 +174,49 @@ public class MessageController
 
 		// Which Charset shall we use ?
 
-		String charset;
+		String charsetName;
 
 		if (activeCharset.equals("auto")) {
-			charset = bodyPart.getHeader().getContentParameter("charset");
+			charsetName = bodyPart.getHeader().getContentParameter("charset");
 
 			((CharsetOwnerInterface) getFrameController())
 				.getCharsetManager()
-				.displayCharset(charset);
+				.displayCharset(charsetName);
 
 		} else {
-			charset = activeCharset;
+			charsetName = activeCharset;
 		}
 
-		Decoder decoder =
-			CoderRouter.getDecoder(
-				bodyPart.getHeader().contentTransferEncoding);
 
 		// Shall we use the HTML-Viewer?
 
 		boolean htmlViewer =
-			bodyPart.getHeader().contentSubtype.equalsIgnoreCase("html");
+			bodyPart.getHeader().getContentSubtype().equals("html");
 
-		String decodedBody = null;
+		InputStream bodyStream = ((StreamableMimePart) bodyPart).getInputStream();
 
-		// Decode the Text using the specified Charset
-		try {
-			decodedBody = decoder.decode(bodyPart.getBody(), charset);
-		} catch (UnsupportedEncodingException ex) {
-			// If Charset not supported fall back to standard Charset
-			ColumbaLogger.log.info(
-				"charset "
-					+ charset
-					+ " isn't supported, falling back to default...");
-
-			try {
-				decodedBody = decoder.decode(bodyPart.getBody(), null);
-			} catch (UnsupportedEncodingException never) {
-				never.printStackTrace();
+		String encoding = bodyPart.getHeader().getContentTransferEncoding();
+		if( encoding != null ) {
+			if( encoding.equals("quoted-printable")) {
+				bodyStream = new QuotedPrintableDecoderInputStream( bodyStream );
+			} else if( encoding.equals("base64") ) {
+				bodyStream = new Base64DecoderInputStream( bodyStream );				
 			}
+		}		
+		
+		if( charsetName != null ) {
+			Charset charset	= Charset.forName( charsetName );
+			bodyStream = new CharsetDecoderInputStream( bodyStream, charset );
 		}
-
 		boolean hasAttachments = false;
 
 		if ((mimePartTree.count() > 1)
-			|| (!mimePartTree.get(0).getHeader().contentType.equals("text")))
+			|| (!mimePartTree.get(0).getHeader().getContentType().equals("text")))
 			hasAttachments = true;
 
 		attachmentController.setMimePartTree(mimePartTree);
 
-		getView().setDoc(header, decodedBody, htmlViewer, hasAttachments);
+		getView().setDoc(header, bodyStream, htmlViewer, hasAttachments);
 
 		getView().getVerticalScrollBar().setValue(0);
 
