@@ -48,8 +48,11 @@
     <javac srcdir="${tomcat.build.modules}/PasswordPrompter/WEB-INF/classes" 
 	   optimize="${optimize}"
            debug="${debug}"
-	   destdir="${tomcat.build.modules}/PasswordPrompter/WEB-INF/classes" 
-	   classpath="${tomcat.build}/classes;${tomcat.build}/lib/common/tomcat-util.jar"/>
+	   destdir="${tomcat.build.modules}/PasswordPrompter/WEB-INF/classes">
+       <classpath location="${tomcat.build}/classes"/>
+       <classpath location="${tomcat.build}/lib/common/tomcat-util.jar"/>
+       <classpath location="${tomcat.build}/lib/common/commons-logging.jar"/>
+    </javac>
 
     <mkdir dir="${tomcat.build.modules}/PasswordPrompter/WEB-INF/lib"/>
 
