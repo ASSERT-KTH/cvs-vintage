@@ -19,7 +19,7 @@ import org.jboss.ejb.plugins.jrmp.server.JRMPContainerInvoker;
  *      
  *      @see <related>
  *      @author Rickard Öberg (rickard.oberg@telkel.com)
- *      @version $Revision: 1.8 $
+ *      @version $Revision: 1.9 $
  */
 public class StatefulSessionProxy
    extends GenericProxy
@@ -62,7 +62,8 @@ public class StatefulSessionProxy
 	      RemoteMethodInvocation rmi = new RemoteMethodInvocation(id, m, args);
 	      if (tm != null)
 	         rmi.setTransaction(tm.getTransaction());
-	      return ((MarshalledObject)container.invoke(new MarshalledObject(rmi))).get();
+			 
+	      return container.invoke(new MarshalledObject(rmi));
 	   }
    }
 
