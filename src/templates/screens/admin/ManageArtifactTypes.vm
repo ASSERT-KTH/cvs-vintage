@@ -19,7 +19,11 @@ $page.setTitle("Attribute Editor")
     </td>
     <td nowrap="nowrap">
       <div>Artifact type management:</div>
+      
+#set ($issueTypes = $scarabR.CurrentModule.AvailableIssueTypes)
+#if (!$issueTypes.isEmpty())
       <input type="submit" value="Add existing" name="eventSubmit_doGotoartifactselect" />&#160;
+#end
       <input type="submit" value="Create new" name="eventSubmit_doGotoartifactpage" />&#160;
       <!-- FIXME: <input type="submit" value="Copy" />&#160; -->
       <!-- FIXME: <input type="submit" value="Resort" /> -->
@@ -65,7 +69,10 @@ $page.setTitle("Attribute Editor")
     </td>
     <td nowrap="nowrap">
       <div>Artifact type management:</div>
+#set ($issueTypes = $scarabR.CurrentModule.AvailableIssueTypes)
+#if (!$issueTypes.isEmpty())
       <input type="submit" value="Add existing" name="eventSubmit_doGotoartifactselect" />&#160;
+#end
       <input type="submit" value="Create new" name="eventSubmit_doGotoartifactpage" />&#160;
       <!-- FIXME: <input type="submit" value="Copy" />&#160; -->
       <!-- FIXME: <input type="submit" value="Resort" /> -->
