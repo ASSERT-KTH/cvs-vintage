@@ -24,6 +24,9 @@
    String curTarget = request.getParameter("target");
    if (curTarget == null)
      curTarget = "client";
+   String curPort = request.getParameter("port");
+   if (curPort == null)
+     curPort = String.valueOf(request.getServerPort());
    String curProto = request.getParameter("server.proto");
    if ( curProto == null )
      curProto = "HTTP/1.0";
@@ -49,7 +52,7 @@
     <td valign="top">The host web server to test.</td></tr>
 <tr><td valign="top">Host HTTP Port:</td>
     <td valign="top"><input type="text" name="port"
-        value="<%= request.getServerPort() %>" size="10"></td>
+        value="<%= curPort %>" size="10"></td>
     <td valign="top">HTTP port being used by the host web server.<br>
         Specify 8080 for Tomcat and 80 for others.</td></tr>
 <tr><td valign="top">Expected protocol:</td>
