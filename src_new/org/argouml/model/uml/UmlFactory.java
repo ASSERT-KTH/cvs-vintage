@@ -1,4 +1,4 @@
-// $Id: UmlFactory.java,v 1.30 2003/09/08 14:04:25 thierrylach Exp $
+// $Id: UmlFactory.java,v 1.31 2003/09/08 19:54:00 thierrylach Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -1086,7 +1086,7 @@ public class UmlFactory extends AbstractUmlModelFactory {
 	 * @param entity Class to create - must implement {@link org.argouml.model.uml.Uml.Entity}
 	 * @throws InvalidObjectRequestException if it cannot create the class.
 	 */
-	public Object create(Class entity) {
+	public Object create(Uml.UmlEntity entity) {
 		ObjectCreateInfo oi = (ObjectCreateInfo) elements.get(entity);
 		if (oi == null) {
 			return null;
