@@ -81,7 +81,7 @@ import org.tigris.scarab.util.Log;
  * 
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: AbstractScarabUser.java,v 1.53 2002/08/26 17:10:09 jmcnally Exp $
+ * @version $Id: AbstractScarabUser.java,v 1.54 2002/08/26 23:05:39 jmcnally Exp $
  */
 public abstract class AbstractScarabUser 
     extends BaseObject 
@@ -901,7 +901,9 @@ public abstract class AbstractScarabUser
     {
         List result = null;
         Module[] userModules = getModules(ScarabSecurity.ISSUE__SEARCH);
-        if (userModules != null && userModules.length > 0) 
+        if (userModules != null && (userModules.length > 1 ||
+                userModules.length == 1 && !userModules[0].isGlobalModule())
+            ) 
         {
             List moduleIds = new ArrayList(userModules.length);
             for (int i=0; i<userModules.length; i++) 
