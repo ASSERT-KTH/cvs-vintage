@@ -76,7 +76,7 @@ import org.jboss.logging.Logger;
 *   @author <a href="mailto:jplindfo@helsinki.fi">Juha Lindfors</a>
 *   @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
 *
-*   @version $Revision: 1.34 $
+*   @version $Revision: 1.35 $
 */
 public class ContainerFactory
 	extends org.jboss.util.ServiceMBeanSupport
@@ -89,6 +89,9 @@ public class ContainerFactory
 	public static String DEFAULT_ENTITY_CMP_CONFIGURATION = "Default CMP EntityBean";
 
 	// Attributes ----------------------------------------------------
+   // Temp directory where deployed jars are stored
+	File tmpDir;
+   
 	// The logger of this service
 	Log log = new Log(getName());
 
@@ -128,6 +131,37 @@ public class ContainerFactory
 	   return "Container factory";
 	}
 
+    /**
+     * Implements the template method in superclass. This method inits the factory
+     */
+   public void initService()
+   {
+      URL tmpFile = getClass().getResource("/tmp.properties");
+      if (tmpFile != null)
+      {
+         tmpDir = new File(new File(tmpFile.getFile()).getParent(),"deploy/");    
+         tmpDir.mkdirs();
+         
+         log.log("Temporary directory set to:"+tmpDir);
+         
+         // Clear tmp directory of previously deployed files
+         // This is to clear up if jBoss previously crashed, hence not removing files properly
+         File[] files = tmpDir.listFiles();
+         for (int i = 0; i < files.length; i++)
+         {
+            files[i].delete();
+         }
+         
+         if (files.length > 0)
+         {
+            log.log("Previous deployments removed");
+         }
+      } else
+      {
+         log.log("Using the systems temporary directory");
+      }
+   }
+ 
     /**
      * Implements the template method in superclass. This method stops all the
      * applications in this server.
@@ -246,10 +280,19 @@ public class ContainerFactory
 			URL origUrl = url;
 			
 			// copy the jar file to prevent locking - redeploy failure
-			if (url.getProtocol().startsWith("file") && url.getFile().endsWith(".jar")) 
+			if (url.getProtocol().startsWith("file") && !url.getFile().endsWith("/")) 
          {
+            System.out.println(tmpDir);
+         
 				File jarFile = new File(url.getFile());
-				File tmp = File.createTempFile("tmpejbjar",".jar");
+            File tmp;
+            if (tmpDir == null)
+            {
+               tmp = File.createTempFile("tmpejbjar",".jar");
+            } else
+            {
+               tmp = File.createTempFile("tmpejbjar",".jar", tmpDir);
+            }
          	tmp.deleteOnExit();
          	FileInputStream fin = new FileInputStream(jarFile);
          	byte[] bytes = new byte[(int)jarFile.length()];

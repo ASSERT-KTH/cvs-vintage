@@ -1,5 +1,5 @@
 <?xml version='1.0'?>
-<kawaproject timestamp="Wed Jun 21 11:42:55 2000">
+<kawaproject timestamp="Mon Aug 21 07:50:40 2000">
 <versioninfo>
 <documentversion>
 <major>"0"</major>
@@ -29,229 +29,77 @@
 <userinteger>"0"</userinteger>
 </scmstatus>
 <virtualfolder>
-<name>"beaninfo"</name>
-<file>
-<dirty>"1"</dirty>
-<relativepath>"beaninfo\ContainerConfiguration.xml"</relativepath>
-<scmstatus id="0">
-<userstring>""</userstring>
-<userinteger>"0"</userinteger>
-</scmstatus>
-</file>
-<file>
-<dirty>"0"</dirty>
-<relativepath>"beaninfo\ContainerConfigurations.xml"</relativepath>
-<scmstatus id="0">
-<userstring>""</userstring>
-<userinteger>"0"</userinteger>
-</scmstatus>
-</file>
-<file>
-<dirty>"1"</dirty>
-<relativepath>"beaninfo\EntityContainerConfiguration.xml"</relativepath>
-<scmstatus id="0">
-<userstring>""</userstring>
-<userinteger>"0"</userinteger>
-</scmstatus>
-</file>
-<file>
-<dirty>"0"</dirty>
-<relativepath>"beaninfo\EntityInstancePoolConfiguration.xml"</relativepath>
-<scmstatus id="0">
-<userstring>""</userstring>
-<userinteger>"842795533"</userinteger>
-</scmstatus>
-</file>
+<name>"bin"</name>
 <virtualfolder>
-<name>"jaws"</name>
+<name>"CVS"</name>
 <file>
-<dirty>"1"</dirty>
-<relativepath>"beaninfo\jaws\Finder.xml"</relativepath>
+<dirty>"0"</dirty>
+<relativepath>"..\bin\CVS\Entries"</relativepath>
 <scmstatus id="0">
 <userstring>""</userstring>
 <userinteger>"0"</userinteger>
 </scmstatus>
 </file>
 <file>
-<dirty>"1"</dirty>
-<relativepath>"beaninfo\jaws\JawsCMPField.xml"</relativepath>
+<dirty>"0"</dirty>
+<relativepath>"..\bin\CVS\Repository"</relativepath>
 <scmstatus id="0">
 <userstring>""</userstring>
-<userinteger>"145"</userinteger>
-</scmstatus>
-</file>
-<file>
-<dirty>"1"</dirty>
-<relativepath>"beaninfo\jaws\JawsEjbJar.xml"</relativepath>
-<scmstatus id="0">
-<userstring>""</userstring>
-<userinteger>"704"</userinteger>
-</scmstatus>
-</file>
-<file>
-<dirty>"1"</dirty>
-<relativepath>"beaninfo\jaws\JawsEnterpriseBeans.xml"</relativepath>
-<scmstatus id="0">
-<userstring>""</userstring>
-<userinteger>"145"</userinteger>
-</scmstatus>
-</file>
-<file>
-<dirty>"1"</dirty>
-<relativepath>"beaninfo\jaws\JawsEntity.xml"</relativepath>
-<scmstatus id="0">
-<userstring>""</userstring>
-<userinteger>"118155200"</userinteger>
+<userinteger>"0"</userinteger>
 </scmstatus>
 </file>
 <file>
 <dirty>"0"</dirty>
-<relativepath>"beaninfo\jaws\Mapping.xml"</relativepath>
+<relativepath>"..\bin\CVS\Root"</relativepath>
 <scmstatus id="0">
 <userstring>""</userstring>
-<userinteger>"164"</userinteger>
-</scmstatus>
-</file>
-<file>
-<dirty>"0"</dirty>
-<relativepath>"beaninfo\jaws\TypeMapping.xml"</relativepath>
-<scmstatus id="0">
-<userstring>""</userstring>
-<userinteger>"113"</userinteger>
-</scmstatus>
-</file>
-<file>
-<dirty>"0"</dirty>
-<relativepath>"beaninfo\jaws\TypeMappings.xml"</relativepath>
-<scmstatus id="0">
-<userstring>""</userstring>
-<userinteger>"32"</userinteger>
+<userinteger>"0"</userinteger>
 </scmstatus>
 </file>
 </virtualfolder>
 <file>
-<dirty>"1"</dirty>
-<relativepath>"beaninfo\jBossEjbJar.xml"</relativepath>
-<scmstatus id="0">
-<userstring>""</userstring>
-<userinteger>"19"</userinteger>
-</scmstatus>
-</file>
-<file>
-<dirty>"1"</dirty>
-<relativepath>"beaninfo\jBossEjbReference.xml"</relativepath>
-<scmstatus id="0">
-<userstring>""</userstring>
-<userinteger>"4"</userinteger>
-</scmstatus>
-</file>
-<file>
-<dirty>"1"</dirty>
-<relativepath>"beaninfo\jBossEnterpriseBeans.xml"</relativepath>
-<scmstatus id="0">
-<userstring>""</userstring>
-<userinteger>"-1"</userinteger>
-</scmstatus>
-</file>
-<file>
-<dirty>"1"</dirty>
-<relativepath>"beaninfo\jBossEntity.xml"</relativepath>
-<scmstatus id="0">
-<userstring>""</userstring>
-<userinteger>"33241"</userinteger>
-</scmstatus>
-</file>
-<file>
-<dirty>"1"</dirty>
-<relativepath>"beaninfo\jBossResourceReference.xml"</relativepath>
-<scmstatus id="0">
-<userstring>""</userstring>
-<userinteger>"1265"</userinteger>
-</scmstatus>
-</file>
-<file>
-<dirty>"1"</dirty>
-<relativepath>"beaninfo\jBossSession.xml"</relativepath>
+<dirty>"0"</dirty>
+<relativepath>"..\bin\ejx.jar"</relativepath>
 <scmstatus id="0">
 <userstring>""</userstring>
 <userinteger>"0"</userinteger>
-</scmstatus>
-</file>
-<file>
-<dirty>"1"</dirty>
-<relativepath>"beaninfo\JDBCResource.xml"</relativepath>
-<scmstatus id="0">
-<userstring>""</userstring>
-<userinteger>"1864397921"</userinteger>
-</scmstatus>
-</file>
-<file>
-<dirty>"1"</dirty>
-<relativepath>"beaninfo\JRMPContainerInvokerConfiguration.xml"</relativepath>
-<scmstatus id="0">
-<userstring>""</userstring>
-<userinteger>"1734960750"</userinteger>
-</scmstatus>
-</file>
-<file>
-<dirty>"1"</dirty>
-<relativepath>"beaninfo\NoPassivationEntityInstanceCacheConfiguration.xml"</relativepath>
-<scmstatus id="0">
-<userstring>""</userstring>
-<userinteger>"173"</userinteger>
-</scmstatus>
-</file>
-<file>
-<dirty>"1"</dirty>
-<relativepath>"beaninfo\RandomEntityInstanceCacheConfiguration.xml"</relativepath>
-<scmstatus id="0">
-<userstring>""</userstring>
-<userinteger>"3659872"</userinteger>
 </scmstatus>
 </file>
 <file>
 <dirty>"0"</dirty>
-<relativepath>"beaninfo\ResourceManagers.xml"</relativepath>
-<scmstatus id="0">
-<userstring>""</userstring>
-<userinteger>"105750976"</userinteger>
-</scmstatus>
-</file>
-<file>
-<dirty>"1"</dirty>
-<relativepath>"beaninfo\SingletonStatelessSessionInstancePoolConfiguration.xml"</relativepath>
+<relativepath>"..\bin\jndi.properties"</relativepath>
 <scmstatus id="0">
 <userstring>""</userstring>
 <userinteger>"0"</userinteger>
-</scmstatus>
-</file>
-<file>
-<dirty>"1"</dirty>
-<relativepath>"beaninfo\StatefulSessionContainerConfiguration.xml"</relativepath>
-<scmstatus id="0">
-<userstring>""</userstring>
-<userinteger>"0"</userinteger>
-</scmstatus>
-</file>
-<file>
-<dirty>"1"</dirty>
-<relativepath>"beaninfo\StatelessSessionContainerConfiguration.xml"</relativepath>
-<scmstatus id="0">
-<userstring>""</userstring>
-<userinteger>"137169172"</userinteger>
 </scmstatus>
 </file>
 <file>
 <dirty>"0"</dirty>
-<relativepath>"beaninfo\StatelessSessionInstancePoolConfiguration.xml"</relativepath>
+<relativepath>"..\bin\run.bat"</relativepath>
 <scmstatus id="0">
 <userstring>""</userstring>
-<userinteger>"102194232"</userinteger>
+<userinteger>"0"</userinteger>
 </scmstatus>
 </file>
 <file>
-<dirty>"1"</dirty>
-<relativepath>"beaninfo\URLResource.xml"</relativepath>
+<dirty>"0"</dirty>
+<relativepath>"..\bin\run.sh"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"0"</dirty>
+<relativepath>"..\bin\TestBeanClient.bat"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"0"</dirty>
+<relativepath>"..\bin\TestBeanClient.sh"</relativepath>
 <scmstatus id="0">
 <userstring>""</userstring>
 <userinteger>"0"</userinteger>
@@ -261,7 +109,7 @@
 <virtualfolder>
 <name>"build"</name>
 <file>
-<dirty>"1"</dirty>
+<dirty>"0"</dirty>
 <relativepath>"..\build\build.bat"</relativepath>
 <scmstatus id="0">
 <userstring>""</userstring>
@@ -284,9 +132,632 @@
 <userinteger>"0"</userinteger>
 </scmstatus>
 </file>
+<virtualfolder>
+<name>"CVS"</name>
+<file>
+<dirty>"0"</dirty>
+<relativepath>"..\build\CVS\Entries"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"0"</dirty>
+<relativepath>"..\build\CVS\Repository"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"0"</dirty>
+<relativepath>"..\build\CVS\Root"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+</virtualfolder>
 </virtualfolder>
 <virtualfolder>
-<name>"config"</name>
+<name>"client"</name>
+<virtualfolder>
+<name>"CVS"</name>
+<file>
+<dirty>"0"</dirty>
+<relativepath>"..\client\CVS\Entries"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"0"</dirty>
+<relativepath>"..\client\CVS\Repository"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"0"</dirty>
+<relativepath>"..\client\CVS\Root"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+</virtualfolder>
+<file>
+<dirty>"0"</dirty>
+<relativepath>"..\client\ejb.jar"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"0"</dirty>
+<relativepath>"..\client\jndi.jar"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"0"</dirty>
+<relativepath>"..\client\jnp-client.jar"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"0"</dirty>
+<relativepath>"..\client\jta-spec1_0_1.jar"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"0"</dirty>
+<relativepath>"..\client\TestBeanClient.jar"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+</virtualfolder>
+<virtualfolder>
+<name>"CVS"</name>
+<file>
+<dirty>"0"</dirty>
+<relativepath>"..\CVS\Entries"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"0"</dirty>
+<relativepath>"..\CVS\Repository"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"0"</dirty>
+<relativepath>"..\CVS\Root"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+</virtualfolder>
+<virtualfolder>
+<name>"deploy"</name>
+<virtualfolder>
+<name>"CVS"</name>
+<file>
+<dirty>"0"</dirty>
+<relativepath>"..\deploy\CVS\Entries"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"0"</dirty>
+<relativepath>"..\deploy\CVS\Repository"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"0"</dirty>
+<relativepath>"..\deploy\CVS\Root"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+</virtualfolder>
+<file>
+<dirty>"0"</dirty>
+<relativepath>"..\deploy\TestBeans.jar"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+</virtualfolder>
+<virtualfolder>
+<name>"docs"</name>
+<file>
+<dirty>"0"</dirty>
+<relativepath>"..\docs\container.html"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<virtualfolder>
+<name>"CVS"</name>
+<file>
+<dirty>"0"</dirty>
+<relativepath>"..\docs\CVS\Entries"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"0"</dirty>
+<relativepath>"..\docs\CVS\Repository"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"0"</dirty>
+<relativepath>"..\docs\CVS\Root"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+</virtualfolder>
+<file>
+<dirty>"0"</dirty>
+<relativepath>"..\docs\ejb.html"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<virtualfolder>
+<name>"images"</name>
+<file>
+<dirty>"0"</dirty>
+<relativepath>"..\docs\images\confgui.gif"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<virtualfolder>
+<name>"CVS"</name>
+<file>
+<dirty>"0"</dirty>
+<relativepath>"..\docs\images\CVS\Entries"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"0"</dirty>
+<relativepath>"..\docs\images\CVS\Repository"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"0"</dirty>
+<relativepath>"..\docs\images\CVS\Root"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+</virtualfolder>
+<file>
+<dirty>"0"</dirty>
+<relativepath>"..\docs\images\Entity_container_call.gif"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"0"</dirty>
+<relativepath>"..\docs\images\jawsgui.gif"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"0"</dirty>
+<relativepath>"..\docs\images\jbossgui.gif"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+</virtualfolder>
+<file>
+<dirty>"0"</dirty>
+<relativepath>"..\docs\index.html"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"0"</dirty>
+<relativepath>"..\docs\server.html"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"0"</dirty>
+<relativepath>"..\docs\styles.css"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"0"</dirty>
+<relativepath>"..\docs\tomcat.html"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+</virtualfolder>
+<virtualfolder>
+<name>"etc"</name>
+<virtualfolder>
+<name>"beaninfo"</name>
+<file>
+<dirty>"0"</dirty>
+<relativepath>"beaninfo\ContainerConfiguration.xml"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"0"</dirty>
+<relativepath>"beaninfo\ContainerConfigurations.xml"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<virtualfolder>
+<name>"CVS"</name>
+<file>
+<dirty>"0"</dirty>
+<relativepath>"beaninfo\CVS\Entries"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"0"</dirty>
+<relativepath>"beaninfo\CVS\Repository"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"0"</dirty>
+<relativepath>"beaninfo\CVS\Root"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+</virtualfolder>
+<file>
+<dirty>"0"</dirty>
+<relativepath>"beaninfo\EntityContainerConfiguration.xml"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"0"</dirty>
+<relativepath>"beaninfo\EntityInstancePoolConfiguration.xml"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<virtualfolder>
+<name>"jaws"</name>
+<virtualfolder>
+<name>"CVS"</name>
+<file>
+<dirty>"0"</dirty>
+<relativepath>"beaninfo\jaws\CVS\Entries"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"0"</dirty>
+<relativepath>"beaninfo\jaws\CVS\Repository"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"0"</dirty>
+<relativepath>"beaninfo\jaws\CVS\Root"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+</virtualfolder>
+<file>
+<dirty>"0"</dirty>
+<relativepath>"beaninfo\jaws\Finder.xml"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"0"</dirty>
+<relativepath>"beaninfo\jaws\JawsCMPField.xml"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"0"</dirty>
+<relativepath>"beaninfo\jaws\JawsEjbJar.xml"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"0"</dirty>
+<relativepath>"beaninfo\jaws\JawsEnterpriseBeans.xml"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"0"</dirty>
+<relativepath>"beaninfo\jaws\JawsEntity.xml"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"0"</dirty>
+<relativepath>"beaninfo\jaws\Mapping.xml"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"0"</dirty>
+<relativepath>"beaninfo\jaws\TypeMapping.xml"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"0"</dirty>
+<relativepath>"beaninfo\jaws\TypeMappings.xml"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+</virtualfolder>
+<file>
+<dirty>"0"</dirty>
+<relativepath>"beaninfo\jBossEjbJar.xml"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"0"</dirty>
+<relativepath>"beaninfo\jBossEjbReference.xml"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"0"</dirty>
+<relativepath>"beaninfo\jBossEnterpriseBeans.xml"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"0"</dirty>
+<relativepath>"beaninfo\jBossEntity.xml"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"0"</dirty>
+<relativepath>"beaninfo\jBossResourceReference.xml"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"0"</dirty>
+<relativepath>"beaninfo\jBossSession.xml"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"0"</dirty>
+<relativepath>"beaninfo\JDBCResource.xml"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"0"</dirty>
+<relativepath>"beaninfo\JRMPContainerInvokerConfiguration.xml"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"0"</dirty>
+<relativepath>"beaninfo\NoPassivationEntityInstanceCacheConfiguration.xml"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"0"</dirty>
+<relativepath>"beaninfo\RandomEntityInstanceCacheConfiguration.xml"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"0"</dirty>
+<relativepath>"beaninfo\ResourceManagers.xml"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"0"</dirty>
+<relativepath>"beaninfo\SingletonStatelessSessionInstancePoolConfiguration.xml"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"0"</dirty>
+<relativepath>"beaninfo\StatefulSessionContainerConfiguration.xml"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"0"</dirty>
+<relativepath>"beaninfo\StatelessSessionContainerConfiguration.xml"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"0"</dirty>
+<relativepath>"beaninfo\StatelessSessionInstancePoolConfiguration.xml"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"0"</dirty>
+<relativepath>"beaninfo\URLResource.xml"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+</virtualfolder>
+<file>
+<dirty>"1"</dirty>
+<relativepath>"class.java"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<virtualfolder>
+<name>"conf"</name>
+<virtualfolder>
+<name>"CVS"</name>
+<file>
+<dirty>"0"</dirty>
+<relativepath>"conf\CVS\Entries"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"0"</dirty>
+<relativepath>"conf\CVS\Repository"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"0"</dirty>
+<relativepath>"conf\CVS\Root"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+</virtualfolder>
 <file>
 <dirty>"0"</dirty>
 <relativepath>"conf\instantdb.properties"</relativepath>
@@ -304,7 +775,7 @@
 </scmstatus>
 </file>
 <file>
-<dirty>"1"</dirty>
+<dirty>"0"</dirty>
 <relativepath>"conf\jboss.jcml"</relativepath>
 <scmstatus id="0">
 <userstring>""</userstring>
@@ -312,7 +783,7 @@
 </scmstatus>
 </file>
 <file>
-<dirty>"1"</dirty>
+<dirty>"0"</dirty>
 <relativepath>"conf\jboss.properties"</relativepath>
 <scmstatus id="0">
 <userstring>""</userstring>
@@ -320,16 +791,24 @@
 </scmstatus>
 </file>
 <file>
-<dirty>"1"</dirty>
-<relativepath>"conf\jboss2.conf"</relativepath>
+<dirty>"0"</dirty>
+<relativepath>"conf\jndi.properties"</relativepath>
 <scmstatus id="0">
 <userstring>""</userstring>
 <userinteger>"0"</userinteger>
 </scmstatus>
 </file>
 <file>
-<dirty>"1"</dirty>
-<relativepath>"conf\jndi.properties"</relativepath>
+<dirty>"0"</dirty>
+<relativepath>"conf\jnp.properties"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"0"</dirty>
+<relativepath>"conf\preferences.properties"</relativepath>
 <scmstatus id="0">
 <userstring>""</userstring>
 <userinteger>"0"</userinteger>
@@ -343,38 +822,52 @@
 <userinteger>"0"</userinteger>
 </scmstatus>
 </file>
-</virtualfolder>
-<virtualfolder>
-<name>"docs"</name>
-<file>
-<dirty>"1"</dirty>
-<relativepath>"..\docs\index.html"</relativepath>
-<scmstatus id="0">
-<userstring>""</userstring>
-<userinteger>"105851224"</userinteger>
-</scmstatus>
-</file>
 <file>
 <dirty>"0"</dirty>
-<relativepath>"..\docs\styles.css"</relativepath>
+<relativepath>"conf\server.policy"</relativepath>
 <scmstatus id="0">
 <userstring>""</userstring>
-<userinteger>"33"</userinteger>
+<userinteger>"0"</userinteger>
 </scmstatus>
 </file>
 </virtualfolder>
 <virtualfolder>
-<name>"etc"</name>
+<name>"CVS"</name>
 <file>
-<dirty>"1"</dirty>
-<relativepath>"class.java"</relativepath>
+<dirty>"0"</dirty>
+<relativepath>"CVS\Entries"</relativepath>
 <scmstatus id="0">
 <userstring>""</userstring>
 <userinteger>"0"</userinteger>
 </scmstatus>
 </file>
 <file>
-<dirty>"1"</dirty>
+<dirty>"0"</dirty>
+<relativepath>"CVS\Repository"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"0"</dirty>
+<relativepath>"CVS\Root"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+</virtualfolder>
+<file>
+<dirty>"0"</dirty>
+<relativepath>"db.properties"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"0"</dirty>
 <relativepath>"deploy.mf"</relativepath>
 <scmstatus id="0">
 <userstring>""</userstring>
@@ -382,19 +875,19 @@
 </scmstatus>
 </file>
 <file>
-<dirty>"1"</dirty>
+<dirty>"0"</dirty>
 <relativepath>"ejxjaws.mf"</relativepath>
 <scmstatus id="0">
 <userstring>""</userstring>
-<userinteger>"33"</userinteger>
+<userinteger>"0"</userinteger>
 </scmstatus>
 </file>
 <file>
-<dirty>"1"</dirty>
+<dirty>"0"</dirty>
 <relativepath>"ejxjboss.mf"</relativepath>
 <scmstatus id="0">
 <userstring>""</userstring>
-<userinteger>"114291764"</userinteger>
+<userinteger>"0"</userinteger>
 </scmstatus>
 </file>
 <file>
@@ -406,7 +899,7 @@
 </scmstatus>
 </file>
 <file>
-<dirty>"1"</dirty>
+<dirty>"0"</dirty>
 <relativepath>"jboss-client.mf"</relativepath>
 <scmstatus id="0">
 <userstring>""</userstring>
@@ -414,7 +907,7 @@
 </scmstatus>
 </file>
 <file>
-<dirty>"1"</dirty>
+<dirty>"0"</dirty>
 <relativepath>"jboss.mf"</relativepath>
 <scmstatus id="0">
 <userstring>""</userstring>
@@ -422,7 +915,15 @@
 </scmstatus>
 </file>
 <file>
-<dirty>"1"</dirty>
+<dirty>"0"</dirty>
+<relativepath>"log.properties"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"0"</dirty>
 <relativepath>"run.mf"</relativepath>
 <scmstatus id="0">
 <userstring>""</userstring>
@@ -431,14 +932,6 @@
 </file>
 <file>
 <dirty>"0"</dirty>
-<relativepath>"conf\server.policy"</relativepath>
-<scmstatus id="0">
-<userstring>""</userstring>
-<userinteger>"17"</userinteger>
-</scmstatus>
-</file>
-<file>
-<dirty>"1"</dirty>
 <relativepath>"stop.mf"</relativepath>
 <scmstatus id="0">
 <userstring>""</userstring>
@@ -446,14 +939,222 @@
 </scmstatus>
 </file>
 </virtualfolder>
+<virtualfolder>
+<name>"lib"</name>
 <file>
-<dirty>"1"</dirty>
-<relativepath>"..\..\docs\index.html"</relativepath>
+<dirty>"0"</dirty>
+<relativepath>"..\lib\activation.jar"</relativepath>
 <scmstatus id="0">
 <userstring>""</userstring>
 <userinteger>"0"</userinteger>
 </scmstatus>
 </file>
+<file>
+<dirty>"0"</dirty>
+<relativepath>"..\lib\awt.jar"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<virtualfolder>
+<name>"CVS"</name>
+<file>
+<dirty>"0"</dirty>
+<relativepath>"..\lib\CVS\Entries"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"0"</dirty>
+<relativepath>"..\lib\CVS\Repository"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"0"</dirty>
+<relativepath>"..\lib\CVS\Root"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+</virtualfolder>
+<file>
+<dirty>"0"</dirty>
+<relativepath>"..\lib\dynaserver.jar"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"0"</dirty>
+<relativepath>"..\lib\ejb.jar"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"0"</dirty>
+<relativepath>"..\lib\ejxeditor.jar"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"0"</dirty>
+<relativepath>"..\lib\ejxejb.jar"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"0"</dirty>
+<relativepath>"..\lib\hsql.jar"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"0"</dirty>
+<relativepath>"..\lib\idb.jar"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"0"</dirty>
+<relativepath>"..\lib\jdbc2_0-stdext.jar"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"0"</dirty>
+<relativepath>"..\lib\jmxtools.jar"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"0"</dirty>
+<relativepath>"..\lib\jndi.jar"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"0"</dirty>
+<relativepath>"..\lib\jnpserver.jar"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"0"</dirty>
+<relativepath>"..\lib\jpl-util-0_5b.jar"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"0"</dirty>
+<relativepath>"..\lib\jta-spec1_0_1.jar"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"0"</dirty>
+<relativepath>"..\lib\mail.jar"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"0"</dirty>
+<relativepath>"..\lib\xml.jar"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+</virtualfolder>
+<virtualfolder>
+<name>"main"</name>
+<virtualfolder>
+<name>"CVS"</name>
+<file>
+<dirty>"0"</dirty>
+<relativepath>"..\main\CVS\Entries"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"0"</dirty>
+<relativepath>"..\main\CVS\Repository"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"0"</dirty>
+<relativepath>"..\main\CVS\Root"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+</virtualfolder>
+<virtualfolder>
+<name>"org"</name>
+<virtualfolder>
+<name>"CVS"</name>
+<file>
+<dirty>"0"</dirty>
+<relativepath>"..\main\org\CVS\Entries"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"0"</dirty>
+<relativepath>"..\main\org\CVS\Repository"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"0"</dirty>
+<relativepath>"..\main\org\CVS\Root"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+</virtualfolder>
 <virtualfolder>
 <name>"jboss"</name>
 <virtualfolder>
@@ -469,6 +1170,60 @@
 <file>
 <dirty>"1"</dirty>
 <relativepath>"..\main\org\jboss\configuration\ConfigurationServiceMBean.java"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<virtualfolder>
+<name>"CVS"</name>
+<file>
+<dirty>"0"</dirty>
+<relativepath>"..\main\org\jboss\configuration\CVS\Entries"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"0"</dirty>
+<relativepath>"..\main\org\jboss\configuration\CVS\Repository"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"0"</dirty>
+<relativepath>"..\main\org\jboss\configuration\CVS\Root"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+</virtualfolder>
+</virtualfolder>
+<virtualfolder>
+<name>"CVS"</name>
+<file>
+<dirty>"0"</dirty>
+<relativepath>"..\main\org\jboss\CVS\Entries"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"0"</dirty>
+<relativepath>"..\main\org\jboss\CVS\Repository"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"0"</dirty>
+<relativepath>"..\main\org\jboss\CVS\Root"</relativepath>
 <scmstatus id="0">
 <userstring>""</userstring>
 <userinteger>"0"</userinteger>
@@ -558,6 +1313,33 @@
 </scmstatus>
 </file>
 <virtualfolder>
+<name>"CVS"</name>
+<file>
+<dirty>"0"</dirty>
+<relativepath>"..\main\org\jboss\ejb\CVS\Entries"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"0"</dirty>
+<relativepath>"..\main\org\jboss\ejb\CVS\Repository"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"0"</dirty>
+<relativepath>"..\main\org\jboss\ejb\CVS\Root"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+</virtualfolder>
+<virtualfolder>
 <name>"deployment"</name>
 <file>
 <dirty>"1"</dirty>
@@ -575,6 +1357,33 @@
 <userinteger>"0"</userinteger>
 </scmstatus>
 </file>
+<virtualfolder>
+<name>"CVS"</name>
+<file>
+<dirty>"0"</dirty>
+<relativepath>"..\main\org\jboss\ejb\deployment\CVS\Entries"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"0"</dirty>
+<relativepath>"..\main\org\jboss\ejb\deployment\CVS\Repository"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"0"</dirty>
+<relativepath>"..\main\org\jboss\ejb\deployment\CVS\Root"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+</virtualfolder>
 <virtualfolder>
 <name>"editors"</name>
 <file>
@@ -601,6 +1410,33 @@
 <userinteger>"0"</userinteger>
 </scmstatus>
 </file>
+<virtualfolder>
+<name>"CVS"</name>
+<file>
+<dirty>"0"</dirty>
+<relativepath>"..\main\org\jboss\ejb\deployment\editors\CVS\Entries"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"0"</dirty>
+<relativepath>"..\main\org\jboss\ejb\deployment\editors\CVS\Repository"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"0"</dirty>
+<relativepath>"..\main\org\jboss\ejb\deployment\editors\CVS\Root"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+</virtualfolder>
 <file>
 <dirty>"1"</dirty>
 <relativepath>"..\main\org\jboss\ejb\deployment\editors\EntityInstanceCacheTypeEditor.java"</relativepath>
@@ -901,6 +1737,14 @@
 </file>
 <file>
 <dirty>"1"</dirty>
+<relativepath>"..\main\org\jboss\ejb\EntityPersistenceStore.java"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"1"</dirty>
 <relativepath>"..\main\org\jboss\ejb\InstanceCache.java"</relativepath>
 <scmstatus id="0">
 <userstring>""</userstring>
@@ -960,6 +1804,33 @@
 <virtualfolder>
 <name>"activation"</name>
 <virtualfolder>
+<name>"CVS"</name>
+<file>
+<dirty>"0"</dirty>
+<relativepath>"..\main\org\jboss\ejb\plugins\activation\CVS\Entries"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"0"</dirty>
+<relativepath>"..\main\org\jboss\ejb\plugins\activation\CVS\Repository"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"0"</dirty>
+<relativepath>"..\main\org\jboss\ejb\plugins\activation\CVS\Root"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+</virtualfolder>
+<virtualfolder>
 <name>"server"</name>
 <file>
 <dirty>"1"</dirty>
@@ -969,6 +1840,33 @@
 <userinteger>"0"</userinteger>
 </scmstatus>
 </file>
+<virtualfolder>
+<name>"CVS"</name>
+<file>
+<dirty>"0"</dirty>
+<relativepath>"..\main\org\jboss\ejb\plugins\activation\server\CVS\Entries"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"0"</dirty>
+<relativepath>"..\main\org\jboss\ejb\plugins\activation\server\CVS\Repository"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"0"</dirty>
+<relativepath>"..\main\org\jboss\ejb\plugins\activation\server\CVS\Root"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+</virtualfolder>
 </virtualfolder>
 </virtualfolder>
 <file>
@@ -987,6 +1885,41 @@
 <userinteger>"0"</userinteger>
 </scmstatus>
 </file>
+<file>
+<dirty>"1"</dirty>
+<relativepath>"..\main\org\jboss\ejb\plugins\CMPPersistenceManager.java"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<virtualfolder>
+<name>"CVS"</name>
+<file>
+<dirty>"0"</dirty>
+<relativepath>"..\main\org\jboss\ejb\plugins\CVS\Entries"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"0"</dirty>
+<relativepath>"..\main\org\jboss\ejb\plugins\CVS\Repository"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"0"</dirty>
+<relativepath>"..\main\org\jboss\ejb\plugins\CVS\Root"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+</virtualfolder>
 <file>
 <dirty>"1"</dirty>
 <relativepath>"..\main\org\jboss\ejb\plugins\EntityInstanceInterceptor.java"</relativepath>
@@ -1013,10 +1946,99 @@
 </file>
 <virtualfolder>
 <name>"jaws"</name>
+<file>
+<dirty>"1"</dirty>
+<relativepath>"..\main\org\jboss\ejb\plugins\jaws\CMPFieldInfo.java"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<virtualfolder>
+<name>"CVS"</name>
+<file>
+<dirty>"0"</dirty>
+<relativepath>"..\main\org\jboss\ejb\plugins\jaws\CVS\Entries"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"0"</dirty>
+<relativepath>"..\main\org\jboss\ejb\plugins\jaws\CVS\Repository"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"0"</dirty>
+<relativepath>"..\main\org\jboss\ejb\plugins\jaws\CVS\Root"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+</virtualfolder>
 <virtualfolder>
 <name>"deployment"</name>
 <virtualfolder>
+<name>"CVS"</name>
+<file>
+<dirty>"0"</dirty>
+<relativepath>"..\main\org\jboss\ejb\plugins\jaws\deployment\CVS\Entries"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"0"</dirty>
+<relativepath>"..\main\org\jboss\ejb\plugins\jaws\deployment\CVS\Repository"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"0"</dirty>
+<relativepath>"..\main\org\jboss\ejb\plugins\jaws\deployment\CVS\Root"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+</virtualfolder>
+<virtualfolder>
 <name>"editors"</name>
+<virtualfolder>
+<name>"CVS"</name>
+<file>
+<dirty>"0"</dirty>
+<relativepath>"..\main\org\jboss\ejb\plugins\jaws\deployment\editors\CVS\Entries"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"0"</dirty>
+<relativepath>"..\main\org\jboss\ejb\plugins\jaws\deployment\editors\CVS\Repository"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"0"</dirty>
+<relativepath>"..\main\org\jboss\ejb\plugins\jaws\deployment\editors\CVS\Root"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+</virtualfolder>
 <file>
 <dirty>"1"</dirty>
 <relativepath>"..\main\org\jboss\ejb\plugins\jaws\deployment\editors\JavaTypeEditor.java"</relativepath>
@@ -1150,7 +2172,325 @@
 <file>
 <dirty>"1"</dirty>
 <relativepath>"..\main\org\jboss\ejb\plugins\jaws\JAWSPersistenceManager.java"</relativepath>
-<scmstatus id="2">
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<virtualfolder>
+<name>"jdbc"</name>
+<virtualfolder>
+<name>"CVS"</name>
+<file>
+<dirty>"0"</dirty>
+<relativepath>"..\main\org\jboss\ejb\plugins\jaws\jdbc\CVS\Entries"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"0"</dirty>
+<relativepath>"..\main\org\jboss\ejb\plugins\jaws\jdbc\CVS\Repository"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"0"</dirty>
+<relativepath>"..\main\org\jboss\ejb\plugins\jaws\jdbc\CVS\Root"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+</virtualfolder>
+<file>
+<dirty>"1"</dirty>
+<relativepath>"..\main\org\jboss\ejb\plugins\jaws\jdbc\JDBCActivateEntityCommand.java"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"1"</dirty>
+<relativepath>"..\main\org\jboss\ejb\plugins\jaws\jdbc\JDBCBeanExistsCommand.java"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"1"</dirty>
+<relativepath>"..\main\org\jboss\ejb\plugins\jaws\jdbc\JDBCCommand.java"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"1"</dirty>
+<relativepath>"..\main\org\jboss\ejb\plugins\jaws\jdbc\JDBCCommandFactory.java"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"1"</dirty>
+<relativepath>"..\main\org\jboss\ejb\plugins\jaws\jdbc\JDBCCreateEntityCommand.java"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"1"</dirty>
+<relativepath>"..\main\org\jboss\ejb\plugins\jaws\jdbc\JDBCDefinedFinderCommand.java"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"1"</dirty>
+<relativepath>"..\main\org\jboss\ejb\plugins\jaws\jdbc\JDBCDestroyCommand.java"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"1"</dirty>
+<relativepath>"..\main\org\jboss\ejb\plugins\jaws\jdbc\JDBCFindAllCommand.java"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"1"</dirty>
+<relativepath>"..\main\org\jboss\ejb\plugins\jaws\jdbc\JDBCFindByCommand.java"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"1"</dirty>
+<relativepath>"..\main\org\jboss\ejb\plugins\jaws\jdbc\JDBCFindEntitiesCommand.java"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"1"</dirty>
+<relativepath>"..\main\org\jboss\ejb\plugins\jaws\jdbc\JDBCFindEntityCommand.java"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"1"</dirty>
+<relativepath>"..\main\org\jboss\ejb\plugins\jaws\jdbc\JDBCFinderCommand.java"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"1"</dirty>
+<relativepath>"..\main\org\jboss\ejb\plugins\jaws\jdbc\JDBCInitCommand.java"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"1"</dirty>
+<relativepath>"..\main\org\jboss\ejb\plugins\jaws\jdbc\JDBCLoadEntityCommand.java"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"1"</dirty>
+<relativepath>"..\main\org\jboss\ejb\plugins\jaws\jdbc\JDBCPassivateEntityCommand.java"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"1"</dirty>
+<relativepath>"..\main\org\jboss\ejb\plugins\jaws\jdbc\JDBCQueryCommand.java"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"1"</dirty>
+<relativepath>"..\main\org\jboss\ejb\plugins\jaws\jdbc\JDBCRemoveEntityCommand.java"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"1"</dirty>
+<relativepath>"..\main\org\jboss\ejb\plugins\jaws\jdbc\JDBCStartCommand.java"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"1"</dirty>
+<relativepath>"..\main\org\jboss\ejb\plugins\jaws\jdbc\JDBCStopCommand.java"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"1"</dirty>
+<relativepath>"..\main\org\jboss\ejb\plugins\jaws\jdbc\JDBCStoreEntityCommand.java"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"1"</dirty>
+<relativepath>"..\main\org\jboss\ejb\plugins\jaws\jdbc\JDBCUpdateCommand.java"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+</virtualfolder>
+<file>
+<dirty>"1"</dirty>
+<relativepath>"..\main\org\jboss\ejb\plugins\jaws\JPMActivateEntityCommand.java"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"1"</dirty>
+<relativepath>"..\main\org\jboss\ejb\plugins\jaws\JPMCommandFactory.java"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"1"</dirty>
+<relativepath>"..\main\org\jboss\ejb\plugins\jaws\JPMCreateEntityCommand.java"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"1"</dirty>
+<relativepath>"..\main\org\jboss\ejb\plugins\jaws\JPMDestroyCommand.java"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"1"</dirty>
+<relativepath>"..\main\org\jboss\ejb\plugins\jaws\JPMFindEntitiesCommand.java"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"1"</dirty>
+<relativepath>"..\main\org\jboss\ejb\plugins\jaws\JPMFindEntityCommand.java"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"1"</dirty>
+<relativepath>"..\main\org\jboss\ejb\plugins\jaws\JPMInitCommand.java"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"1"</dirty>
+<relativepath>"..\main\org\jboss\ejb\plugins\jaws\JPMLoadEntityCommand.java"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"1"</dirty>
+<relativepath>"..\main\org\jboss\ejb\plugins\jaws\JPMPassivateEntityCommand.java"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"1"</dirty>
+<relativepath>"..\main\org\jboss\ejb\plugins\jaws\JPMRemoveEntityCommand.java"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"1"</dirty>
+<relativepath>"..\main\org\jboss\ejb\plugins\jaws\JPMStartCommand.java"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"1"</dirty>
+<relativepath>"..\main\org\jboss\ejb\plugins\jaws\JPMStopCommand.java"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"1"</dirty>
+<relativepath>"..\main\org\jboss\ejb\plugins\jaws\JPMStoreEntityCommand.java"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"1"</dirty>
+<relativepath>"..\main\org\jboss\ejb\plugins\jaws\MetaInfo.java"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"1"</dirty>
+<relativepath>"..\main\org\jboss\ejb\plugins\jaws\PkFieldInfo.java"</relativepath>
+<scmstatus id="0">
 <userstring>""</userstring>
 <userinteger>"0"</userinteger>
 </scmstatus>
@@ -1158,6 +2498,33 @@
 </virtualfolder>
 <virtualfolder>
 <name>"jrmp"</name>
+<virtualfolder>
+<name>"CVS"</name>
+<file>
+<dirty>"0"</dirty>
+<relativepath>"..\main\org\jboss\ejb\plugins\jrmp\CVS\Entries"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"0"</dirty>
+<relativepath>"..\main\org\jboss\ejb\plugins\jrmp\CVS\Repository"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"0"</dirty>
+<relativepath>"..\main\org\jboss\ejb\plugins\jrmp\CVS\Root"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+</virtualfolder>
 <virtualfolder>
 <name>"interfaces"</name>
 <file>
@@ -1168,6 +2535,33 @@
 <userinteger>"0"</userinteger>
 </scmstatus>
 </file>
+<virtualfolder>
+<name>"CVS"</name>
+<file>
+<dirty>"0"</dirty>
+<relativepath>"..\main\org\jboss\ejb\plugins\jrmp\interfaces\CVS\Entries"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"0"</dirty>
+<relativepath>"..\main\org\jboss\ejb\plugins\jrmp\interfaces\CVS\Repository"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"0"</dirty>
+<relativepath>"..\main\org\jboss\ejb\plugins\jrmp\interfaces\CVS\Root"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+</virtualfolder>
 <file>
 <dirty>"1"</dirty>
 <relativepath>"..\main\org\jboss\ejb\plugins\jrmp\interfaces\EJBMetaDataImpl.java"</relativepath>
@@ -1202,6 +2596,14 @@
 </file>
 <file>
 <dirty>"1"</dirty>
+<relativepath>"..\main\org\jboss\ejb\plugins\jrmp\interfaces\HomeHandleImpl.java"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"1"</dirty>
 <relativepath>"..\main\org\jboss\ejb\plugins\jrmp\interfaces\HomeProxy.java"</relativepath>
 <scmstatus id="0">
 <userstring>""</userstring>
@@ -1218,6 +2620,14 @@
 </file>
 <file>
 <dirty>"1"</dirty>
+<relativepath>"..\main\org\jboss\ejb\plugins\jrmp\interfaces\MethodInvocation.java"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"1"</dirty>
 <relativepath>"..\main\org\jboss\ejb\plugins\jrmp\interfaces\RemoteMethodInvocation.java"</relativepath>
 <scmstatus id="0">
 <userstring>""</userstring>
@@ -1227,6 +2637,14 @@
 <file>
 <dirty>"1"</dirty>
 <relativepath>"..\main\org\jboss\ejb\plugins\jrmp\interfaces\SecureSocketFactory.java"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"1"</dirty>
+<relativepath>"..\main\org\jboss\ejb\plugins\jrmp\interfaces\StatefulHandleImpl.java"</relativepath>
 <scmstatus id="0">
 <userstring>""</userstring>
 <userinteger>"0"</userinteger>
@@ -1259,6 +2677,33 @@
 </virtualfolder>
 <virtualfolder>
 <name>"server"</name>
+<virtualfolder>
+<name>"CVS"</name>
+<file>
+<dirty>"0"</dirty>
+<relativepath>"..\main\org\jboss\ejb\plugins\jrmp\server\CVS\Entries"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"0"</dirty>
+<relativepath>"..\main\org\jboss\ejb\plugins\jrmp\server\CVS\Repository"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"0"</dirty>
+<relativepath>"..\main\org\jboss\ejb\plugins\jrmp\server\CVS\Root"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+</virtualfolder>
 <file>
 <dirty>"1"</dirty>
 <relativepath>"..\main\org\jboss\ejb\plugins\jrmp\server\JRMPContainerInvoker.java"</relativepath>
@@ -1272,7 +2717,61 @@
 <virtualfolder>
 <name>"jrmp12"</name>
 <virtualfolder>
+<name>"CVS"</name>
+<file>
+<dirty>"0"</dirty>
+<relativepath>"..\main\org\jboss\ejb\plugins\jrmp12\CVS\Entries"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"0"</dirty>
+<relativepath>"..\main\org\jboss\ejb\plugins\jrmp12\CVS\Repository"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"0"</dirty>
+<relativepath>"..\main\org\jboss\ejb\plugins\jrmp12\CVS\Root"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+</virtualfolder>
+<virtualfolder>
 <name>"interfaces"</name>
+<virtualfolder>
+<name>"CVS"</name>
+<file>
+<dirty>"0"</dirty>
+<relativepath>"..\main\org\jboss\ejb\plugins\jrmp12\interfaces\CVS\Entries"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"0"</dirty>
+<relativepath>"..\main\org\jboss\ejb\plugins\jrmp12\interfaces\CVS\Repository"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"0"</dirty>
+<relativepath>"..\main\org\jboss\ejb\plugins\jrmp12\interfaces\CVS\Root"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+</virtualfolder>
 <file>
 <dirty>"1"</dirty>
 <relativepath>"..\main\org\jboss\ejb\plugins\jrmp12\interfaces\EntityProxy.java"</relativepath>
@@ -1284,6 +2783,14 @@
 <file>
 <dirty>"1"</dirty>
 <relativepath>"..\main\org\jboss\ejb\plugins\jrmp12\interfaces\HomeProxy.java"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"0"</dirty>
+<relativepath>"..\main\org\jboss\ejb\plugins\jrmp12\interfaces\interfaces.dfPackage"</relativepath>
 <scmstatus id="0">
 <userstring>""</userstring>
 <userinteger>"0"</userinteger>
@@ -1306,11 +2813,54 @@
 </scmstatus>
 </file>
 </virtualfolder>
+<file>
+<dirty>"0"</dirty>
+<relativepath>"..\main\org\jboss\ejb\plugins\jrmp12\jrmp.dfPackage"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
 <virtualfolder>
 <name>"server"</name>
+<virtualfolder>
+<name>"CVS"</name>
+<file>
+<dirty>"0"</dirty>
+<relativepath>"..\main\org\jboss\ejb\plugins\jrmp12\server\CVS\Entries"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"0"</dirty>
+<relativepath>"..\main\org\jboss\ejb\plugins\jrmp12\server\CVS\Repository"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"0"</dirty>
+<relativepath>"..\main\org\jboss\ejb\plugins\jrmp12\server\CVS\Root"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+</virtualfolder>
 <file>
 <dirty>"1"</dirty>
 <relativepath>"..\main\org\jboss\ejb\plugins\jrmp12\server\JRMPContainerInvoker.java"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"0"</dirty>
+<relativepath>"..\main\org\jboss\ejb\plugins\jrmp12\server\server.dfPackage"</relativepath>
 <scmstatus id="0">
 <userstring>""</userstring>
 <userinteger>"0"</userinteger>
@@ -1321,7 +2871,61 @@
 <virtualfolder>
 <name>"jrmp13"</name>
 <virtualfolder>
+<name>"CVS"</name>
+<file>
+<dirty>"0"</dirty>
+<relativepath>"..\main\org\jboss\ejb\plugins\jrmp13\CVS\Entries"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"0"</dirty>
+<relativepath>"..\main\org\jboss\ejb\plugins\jrmp13\CVS\Repository"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"0"</dirty>
+<relativepath>"..\main\org\jboss\ejb\plugins\jrmp13\CVS\Root"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+</virtualfolder>
+<virtualfolder>
 <name>"interfaces"</name>
+<virtualfolder>
+<name>"CVS"</name>
+<file>
+<dirty>"0"</dirty>
+<relativepath>"..\main\org\jboss\ejb\plugins\jrmp13\interfaces\CVS\Entries"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"0"</dirty>
+<relativepath>"..\main\org\jboss\ejb\plugins\jrmp13\interfaces\CVS\Repository"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"0"</dirty>
+<relativepath>"..\main\org\jboss\ejb\plugins\jrmp13\interfaces\CVS\Root"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+</virtualfolder>
 <file>
 <dirty>"1"</dirty>
 <relativepath>"..\main\org\jboss\ejb\plugins\jrmp13\interfaces\EntityProxy.java"</relativepath>
@@ -1357,6 +2961,33 @@
 </virtualfolder>
 <virtualfolder>
 <name>"server"</name>
+<virtualfolder>
+<name>"CVS"</name>
+<file>
+<dirty>"0"</dirty>
+<relativepath>"..\main\org\jboss\ejb\plugins\jrmp13\server\CVS\Entries"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"0"</dirty>
+<relativepath>"..\main\org\jboss\ejb\plugins\jrmp13\server\CVS\Repository"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"0"</dirty>
+<relativepath>"..\main\org\jboss\ejb\plugins\jrmp13\server\CVS\Root"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+</virtualfolder>
 <file>
 <dirty>"1"</dirty>
 <relativepath>"..\main\org\jboss\ejb\plugins\jrmp13\server\JRMPContainerInvoker.java"</relativepath>
@@ -1531,6 +3162,33 @@
 <userinteger>"0"</userinteger>
 </scmstatus>
 </file>
+<virtualfolder>
+<name>"CVS"</name>
+<file>
+<dirty>"0"</dirty>
+<relativepath>"..\main\org\jboss\jdbc\CVS\Entries"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"0"</dirty>
+<relativepath>"..\main\org\jboss\jdbc\CVS\Repository"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"0"</dirty>
+<relativepath>"..\main\org\jboss\jdbc\CVS\Root"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+</virtualfolder>
 <file>
 <dirty>"1"</dirty>
 <relativepath>"..\main\org\jboss\jdbc\DataSourceImpl.java"</relativepath>
@@ -1632,6 +3290,33 @@
 <name>"jmx"</name>
 <virtualfolder>
 <name>"client"</name>
+<virtualfolder>
+<name>"CVS"</name>
+<file>
+<dirty>"0"</dirty>
+<relativepath>"..\main\org\jboss\jmx\client\CVS\Entries"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"0"</dirty>
+<relativepath>"..\main\org\jboss\jmx\client\CVS\Repository"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"0"</dirty>
+<relativepath>"..\main\org\jboss\jmx\client\CVS\Root"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+</virtualfolder>
 <file>
 <dirty>"1"</dirty>
 <relativepath>"..\main\org\jboss\jmx\client\Deployer.java"</relativepath>
@@ -1650,7 +3335,61 @@
 </file>
 </virtualfolder>
 <virtualfolder>
+<name>"CVS"</name>
+<file>
+<dirty>"0"</dirty>
+<relativepath>"..\main\org\jboss\jmx\CVS\Entries"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"0"</dirty>
+<relativepath>"..\main\org\jboss\jmx\CVS\Repository"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"0"</dirty>
+<relativepath>"..\main\org\jboss\jmx\CVS\Root"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+</virtualfolder>
+<virtualfolder>
 <name>"interfaces"</name>
+<virtualfolder>
+<name>"CVS"</name>
+<file>
+<dirty>"0"</dirty>
+<relativepath>"..\main\org\jboss\jmx\interfaces\CVS\Entries"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"0"</dirty>
+<relativepath>"..\main\org\jboss\jmx\interfaces\CVS\Repository"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"0"</dirty>
+<relativepath>"..\main\org\jboss\jmx\interfaces\CVS\Root"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+</virtualfolder>
 <file>
 <dirty>"1"</dirty>
 <relativepath>"..\main\org\jboss\jmx\interfaces\JMXAdaptor.java"</relativepath>
@@ -1662,6 +3401,33 @@
 </virtualfolder>
 <virtualfolder>
 <name>"server"</name>
+<virtualfolder>
+<name>"CVS"</name>
+<file>
+<dirty>"0"</dirty>
+<relativepath>"..\main\org\jboss\jmx\server\CVS\Entries"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"0"</dirty>
+<relativepath>"..\main\org\jboss\jmx\server\CVS\Repository"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"0"</dirty>
+<relativepath>"..\main\org\jboss\jmx\server\CVS\Root"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+</virtualfolder>
 <file>
 <dirty>"1"</dirty>
 <relativepath>"..\main\org\jboss\jmx\server\JMXAdaptorImpl.java"</relativepath>
@@ -1706,6 +3472,33 @@
 <userinteger>"0"</userinteger>
 </scmstatus>
 </file>
+<virtualfolder>
+<name>"CVS"</name>
+<file>
+<dirty>"0"</dirty>
+<relativepath>"..\main\org\jboss\logging\CVS\Entries"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"0"</dirty>
+<relativepath>"..\main\org\jboss\logging\CVS\Repository"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"0"</dirty>
+<relativepath>"..\main\org\jboss\logging\CVS\Root"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+</virtualfolder>
 <file>
 <dirty>"1"</dirty>
 <relativepath>"..\main\org\jboss\logging\FileLogging.java"</relativepath>
@@ -1788,12 +3581,208 @@
 </scmstatus>
 </file>
 <virtualfolder>
+<name>"metadata"</name>
+<file>
+<dirty>"1"</dirty>
+<relativepath>"..\main\org\jboss\metadata\ApplicationMetaData.java"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"1"</dirty>
+<relativepath>"..\main\org\jboss\metadata\BeanMetaData.java"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"1"</dirty>
+<relativepath>"..\main\org\jboss\metadata\ConfigurationMetaData.java"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<virtualfolder>
+<name>"CVS"</name>
+<file>
+<dirty>"0"</dirty>
+<relativepath>"..\main\org\jboss\metadata\CVS\Entries"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"0"</dirty>
+<relativepath>"..\main\org\jboss\metadata\CVS\Repository"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"0"</dirty>
+<relativepath>"..\main\org\jboss\metadata\CVS\Root"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+</virtualfolder>
+<file>
+<dirty>"1"</dirty>
+<relativepath>"..\main\org\jboss\metadata\EjbRefMetaData.java"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"1"</dirty>
+<relativepath>"..\main\org\jboss\metadata\EntityMetaData.java"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"1"</dirty>
+<relativepath>"..\main\org\jboss\metadata\EnvEntryMetaData.java"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"1"</dirty>
+<relativepath>"..\main\org\jboss\metadata\MetaData.java"</relativepath>
+<scmstatus id="2">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"1"</dirty>
+<relativepath>"..\main\org\jboss\metadata\MethodMetaData.java"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"1"</dirty>
+<relativepath>"..\main\org\jboss\metadata\ResourceRefMetaData.java"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"1"</dirty>
+<relativepath>"..\main\org\jboss\metadata\SecurityRoleRefMetaData.java"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"1"</dirty>
+<relativepath>"..\main\org\jboss\metadata\SessionMetaData.java"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"1"</dirty>
+<relativepath>"..\main\org\jboss\metadata\XmlFileLoader.java"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"1"</dirty>
+<relativepath>"..\main\org\jboss\metadata\XmlLoadable.java"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+</virtualfolder>
+<virtualfolder>
 <name>"minerva"</name>
 <virtualfolder>
+<name>"CVS"</name>
+<file>
+<dirty>"0"</dirty>
+<relativepath>"..\main\org\jboss\minerva\CVS\Entries"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"0"</dirty>
+<relativepath>"..\main\org\jboss\minerva\CVS\Repository"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"0"</dirty>
+<relativepath>"..\main\org\jboss\minerva\CVS\Root"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+</virtualfolder>
+<virtualfolder>
 <name>"datasource"</name>
+<virtualfolder>
+<name>"CVS"</name>
+<file>
+<dirty>"0"</dirty>
+<relativepath>"..\main\org\jboss\minerva\datasource\CVS\Entries"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"0"</dirty>
+<relativepath>"..\main\org\jboss\minerva\datasource\CVS\Repository"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"0"</dirty>
+<relativepath>"..\main\org\jboss\minerva\datasource\CVS\Root"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+</virtualfolder>
 <file>
 <dirty>"1"</dirty>
 <relativepath>"..\main\org\jboss\minerva\datasource\JDBCPoolDataSource.java"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"0"</dirty>
+<relativepath>"..\main\org\jboss\minerva\datasource\package.html"</relativepath>
 <scmstatus id="0">
 <userstring>""</userstring>
 <userinteger>"0"</userinteger>
@@ -1818,9 +3807,44 @@
 </virtualfolder>
 <virtualfolder>
 <name>"factories"</name>
+<virtualfolder>
+<name>"CVS"</name>
+<file>
+<dirty>"0"</dirty>
+<relativepath>"..\main\org\jboss\minerva\factories\CVS\Entries"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"0"</dirty>
+<relativepath>"..\main\org\jboss\minerva\factories\CVS\Repository"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"0"</dirty>
+<relativepath>"..\main\org\jboss\minerva\factories\CVS\Root"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+</virtualfolder>
 <file>
 <dirty>"1"</dirty>
 <relativepath>"..\main\org\jboss\minerva\factories\JDBCConnectionFactory.java"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"0"</dirty>
+<relativepath>"..\main\org\jboss\minerva\factories\package.html"</relativepath>
 <scmstatus id="0">
 <userstring>""</userstring>
 <userinteger>"0"</userinteger>
@@ -1853,6 +3877,41 @@
 <userinteger>"0"</userinteger>
 </scmstatus>
 </file>
+<virtualfolder>
+<name>"CVS"</name>
+<file>
+<dirty>"0"</dirty>
+<relativepath>"..\main\org\jboss\minerva\jdbc\CVS\Entries"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"0"</dirty>
+<relativepath>"..\main\org\jboss\minerva\jdbc\CVS\Repository"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"0"</dirty>
+<relativepath>"..\main\org\jboss\minerva\jdbc\CVS\Root"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+</virtualfolder>
+<file>
+<dirty>"0"</dirty>
+<relativepath>"..\main\org\jboss\minerva\jdbc\package.html"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
 <file>
 <dirty>"1"</dirty>
 <relativepath>"..\main\org\jboss\minerva\jdbc\ResultSetInPool.java"</relativepath>
@@ -1870,8 +3929,43 @@
 </scmstatus>
 </file>
 </virtualfolder>
+<file>
+<dirty>"0"</dirty>
+<relativepath>"..\main\org\jboss\minerva\minerva.html"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
 <virtualfolder>
 <name>"pools"</name>
+<virtualfolder>
+<name>"CVS"</name>
+<file>
+<dirty>"0"</dirty>
+<relativepath>"..\main\org\jboss\minerva\pools\CVS\Entries"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"0"</dirty>
+<relativepath>"..\main\org\jboss\minerva\pools\CVS\Repository"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"0"</dirty>
+<relativepath>"..\main\org\jboss\minerva\pools\CVS\Root"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+</virtualfolder>
 <file>
 <dirty>"1"</dirty>
 <relativepath>"..\main\org\jboss\minerva\pools\ObjectPool.java"</relativepath>
@@ -1883,6 +3977,14 @@
 <file>
 <dirty>"1"</dirty>
 <relativepath>"..\main\org\jboss\minerva\pools\ObjectRecord.java"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"0"</dirty>
+<relativepath>"..\main\org\jboss\minerva\pools\package.html"</relativepath>
 <scmstatus id="0">
 <userstring>""</userstring>
 <userinteger>"0"</userinteger>
@@ -1931,6 +4033,41 @@
 </virtualfolder>
 <virtualfolder>
 <name>"xa"</name>
+<virtualfolder>
+<name>"CVS"</name>
+<file>
+<dirty>"0"</dirty>
+<relativepath>"..\main\org\jboss\minerva\xa\CVS\Entries"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"0"</dirty>
+<relativepath>"..\main\org\jboss\minerva\xa\CVS\Repository"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"0"</dirty>
+<relativepath>"..\main\org\jboss\minerva\xa\CVS\Root"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+</virtualfolder>
+<file>
+<dirty>"0"</dirty>
+<relativepath>"..\main\org\jboss\minerva\xa\package.html"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
 <file>
 <dirty>"1"</dirty>
 <relativepath>"..\main\org\jboss\minerva\xa\TransactionListener.java"</relativepath>
@@ -1976,7 +4113,61 @@
 <virtualfolder>
 <name>"naming"</name>
 <virtualfolder>
+<name>"CVS"</name>
+<file>
+<dirty>"0"</dirty>
+<relativepath>"..\main\org\jboss\naming\CVS\Entries"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"0"</dirty>
+<relativepath>"..\main\org\jboss\naming\CVS\Repository"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"0"</dirty>
+<relativepath>"..\main\org\jboss\naming\CVS\Root"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+</virtualfolder>
+<virtualfolder>
 <name>"java"</name>
+<virtualfolder>
+<name>"CVS"</name>
+<file>
+<dirty>"0"</dirty>
+<relativepath>"..\main\org\jboss\naming\java\CVS\Entries"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"0"</dirty>
+<relativepath>"..\main\org\jboss\naming\java\CVS\Repository"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"0"</dirty>
+<relativepath>"..\main\org\jboss\naming\java\CVS\Root"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+</virtualfolder>
 <file>
 <dirty>"1"</dirty>
 <relativepath>"..\main\org\jboss\naming\java\javaURLContextFactory.java"</relativepath>
@@ -2005,6 +4196,33 @@
 </virtualfolder>
 <virtualfolder>
 <name>"proxy"</name>
+<virtualfolder>
+<name>"CVS"</name>
+<file>
+<dirty>"0"</dirty>
+<relativepath>"..\main\org\jboss\proxy\CVS\Entries"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"0"</dirty>
+<relativepath>"..\main\org\jboss\proxy\CVS\Repository"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"0"</dirty>
+<relativepath>"..\main\org\jboss\proxy\CVS\Root"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+</virtualfolder>
 <file>
 <dirty>"1"</dirty>
 <relativepath>"..\main\org\jboss\proxy\InvocationHandler.java"</relativepath>
@@ -2063,7 +4281,198 @@
 </file>
 </virtualfolder>
 <virtualfolder>
+<name>"security"</name>
+<file>
+<dirty>"1"</dirty>
+<relativepath>"..\main\org\jboss\security\CacheRealmMapping.java"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"1"</dirty>
+<relativepath>"..\main\org\jboss\security\CacheRealmMappingService.java"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"1"</dirty>
+<relativepath>"..\main\org\jboss\security\CacheRealmMappingServiceMBean.java"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<virtualfolder>
+<name>"CVS"</name>
+<file>
+<dirty>"0"</dirty>
+<relativepath>"..\main\org\jboss\security\CVS\Entries"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"0"</dirty>
+<relativepath>"..\main\org\jboss\security\CVS\Repository"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"0"</dirty>
+<relativepath>"..\main\org\jboss\security\CVS\Root"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+</virtualfolder>
+<file>
+<dirty>"1"</dirty>
+<relativepath>"..\main\org\jboss\security\EJBSecurityManagerDefaultImpl.java"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"1"</dirty>
+<relativepath>"..\main\org\jboss\security\EJBSecurityManagerService.java"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"1"</dirty>
+<relativepath>"..\main\org\jboss\security\EJBSecurityManagerServiceMBean.java"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"1"</dirty>
+<relativepath>"..\main\org\jboss\security\SimpleRealmMapping.java"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"1"</dirty>
+<relativepath>"..\main\org\jboss\security\SimpleRealmMappingService.java"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"1"</dirty>
+<relativepath>"..\main\org\jboss\security\SimpleRealmMappingServiceMBean.java"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+</virtualfolder>
+<virtualfolder>
+<name>"system"</name>
+<virtualfolder>
+<name>"CVS"</name>
+<file>
+<dirty>"0"</dirty>
+<relativepath>"..\main\org\jboss\system\CVS\Entries"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"0"</dirty>
+<relativepath>"..\main\org\jboss\system\CVS\Repository"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"0"</dirty>
+<relativepath>"..\main\org\jboss\system\CVS\Root"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+</virtualfolder>
+<file>
+<dirty>"1"</dirty>
+<relativepath>"..\main\org\jboss\system\EJBSecurityManager.java"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"1"</dirty>
+<relativepath>"..\main\org\jboss\system\RealmMapping.java"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"1"</dirty>
+<relativepath>"..\main\org\jboss\system\SecurityAssociation.java"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"1"</dirty>
+<relativepath>"..\main\org\jboss\system\SimplePrincipal.java"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+</virtualfolder>
+<virtualfolder>
 <name>"tm"</name>
+<virtualfolder>
+<name>"CVS"</name>
+<file>
+<dirty>"0"</dirty>
+<relativepath>"..\main\org\jboss\tm\CVS\Entries"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"0"</dirty>
+<relativepath>"..\main\org\jboss\tm\CVS\Repository"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"0"</dirty>
+<relativepath>"..\main\org\jboss\tm\CVS\Root"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+</virtualfolder>
 <file>
 <dirty>"1"</dirty>
 <relativepath>"..\main\org\jboss\tm\TransactionImpl.java"</relativepath>
@@ -2090,6 +4499,14 @@
 </file>
 <file>
 <dirty>"1"</dirty>
+<relativepath>"..\main\org\jboss\tm\TxCapsule.java"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"1"</dirty>
 <relativepath>"..\main\org\jboss\tm\TxManager.java"</relativepath>
 <scmstatus id="0">
 <userstring>""</userstring>
@@ -2107,6 +4524,33 @@
 </virtualfolder>
 <virtualfolder>
 <name>"tomcat"</name>
+<virtualfolder>
+<name>"CVS"</name>
+<file>
+<dirty>"0"</dirty>
+<relativepath>"..\main\org\jboss\tomcat\CVS\Entries"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"0"</dirty>
+<relativepath>"..\main\org\jboss\tomcat\CVS\Repository"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"0"</dirty>
+<relativepath>"..\main\org\jboss\tomcat\CVS\Root"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+</virtualfolder>
 <file>
 <dirty>"1"</dirty>
 <relativepath>"..\main\org\jboss\tomcat\TomcatService.java"</relativepath>
@@ -2142,6 +4586,33 @@
 <userinteger>"0"</userinteger>
 </scmstatus>
 </file>
+<virtualfolder>
+<name>"CVS"</name>
+<file>
+<dirty>"0"</dirty>
+<relativepath>"..\main\org\jboss\util\CVS\Entries"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"0"</dirty>
+<relativepath>"..\main\org\jboss\util\CVS\Repository"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"0"</dirty>
+<relativepath>"..\main\org\jboss\util\CVS\Root"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+</virtualfolder>
 <file>
 <dirty>"1"</dirty>
 <relativepath>"..\main\org\jboss\util\Executor.java"</relativepath>
@@ -2153,6 +4624,14 @@
 <file>
 <dirty>"1"</dirty>
 <relativepath>"..\main\org\jboss\util\ExecutorMBean.java"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"1"</dirty>
+<relativepath>"..\main\org\jboss\util\FastKey.java"</relativepath>
 <scmstatus id="0">
 <userstring>""</userstring>
 <userinteger>"0"</userinteger>
@@ -2177,6 +4656,14 @@
 <file>
 <dirty>"1"</dirty>
 <relativepath>"..\main\org\jboss\util\MBeanProxy.java"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"1"</dirty>
+<relativepath>"..\main\org\jboss\util\SerializableEnumeration.java"</relativepath>
 <scmstatus id="0">
 <userstring>""</userstring>
 <userinteger>"0"</userinteger>
@@ -2234,18 +4721,64 @@
 </scmstatus>
 </file>
 <virtualfolder>
-<name>"event"</name>
+<name>"CVS"</name>
 <file>
-<dirty>"1"</dirty>
-<relativepath>"..\main\org\jboss\verifier\event\VerificationEvent.java"</relativepath>
+<dirty>"0"</dirty>
+<relativepath>"..\main\org\jboss\verifier\CVS\Entries"</relativepath>
 <scmstatus id="0">
 <userstring>""</userstring>
 <userinteger>"0"</userinteger>
 </scmstatus>
 </file>
 <file>
+<dirty>"0"</dirty>
+<relativepath>"..\main\org\jboss\verifier\CVS\Repository"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"0"</dirty>
+<relativepath>"..\main\org\jboss\verifier\CVS\Root"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+</virtualfolder>
+<virtualfolder>
+<name>"event"</name>
+<virtualfolder>
+<name>"CVS"</name>
+<file>
+<dirty>"0"</dirty>
+<relativepath>"..\main\org\jboss\verifier\event\CVS\Entries"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"0"</dirty>
+<relativepath>"..\main\org\jboss\verifier\event\CVS\Repository"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"0"</dirty>
+<relativepath>"..\main\org\jboss\verifier\event\CVS\Root"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+</virtualfolder>
+<file>
 <dirty>"1"</dirty>
-<relativepath>"..\main\org\jboss\verifier\event\VerificationEventFactory.java"</relativepath>
+<relativepath>"..\main\org\jboss\verifier\event\VerificationEvent.java"</relativepath>
 <scmstatus id="0">
 <userstring>""</userstring>
 <userinteger>"0"</userinteger>
@@ -2277,6 +4810,60 @@
 </file>
 </virtualfolder>
 <virtualfolder>
+<name>"factory"</name>
+<virtualfolder>
+<name>"CVS"</name>
+<file>
+<dirty>"0"</dirty>
+<relativepath>"..\main\org\jboss\verifier\factory\CVS\Entries"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"0"</dirty>
+<relativepath>"..\main\org\jboss\verifier\factory\CVS\Repository"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"0"</dirty>
+<relativepath>"..\main\org\jboss\verifier\factory\CVS\Root"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+</virtualfolder>
+<file>
+<dirty>"1"</dirty>
+<relativepath>"..\main\org\jboss\verifier\factory\DefaultEventFactory.java"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"1"</dirty>
+<relativepath>"..\main\org\jboss\verifier\factory\VerificationEventFactory.java"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+</virtualfolder>
+<file>
+<dirty>"1"</dirty>
+<relativepath>"..\main\org\jboss\verifier\Section.java"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<virtualfolder>
 <name>"strategy"</name>
 <file>
 <dirty>"1"</dirty>
@@ -2286,6 +4873,33 @@
 <userinteger>"0"</userinteger>
 </scmstatus>
 </file>
+<virtualfolder>
+<name>"CVS"</name>
+<file>
+<dirty>"0"</dirty>
+<relativepath>"..\main\org\jboss\verifier\strategy\CVS\Entries"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"0"</dirty>
+<relativepath>"..\main\org\jboss\verifier\strategy\CVS\Repository"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"0"</dirty>
+<relativepath>"..\main\org\jboss\verifier\strategy\CVS\Root"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+</virtualfolder>
 <file>
 <dirty>"1"</dirty>
 <relativepath>"..\main\org\jboss\verifier\strategy\EJBVerifier11.java"</relativepath>
@@ -2322,6 +4936,33 @@
 </virtualfolder>
 <virtualfolder>
 <name>"web"</name>
+<virtualfolder>
+<name>"CVS"</name>
+<file>
+<dirty>"0"</dirty>
+<relativepath>"..\main\org\jboss\web\CVS\Entries"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"0"</dirty>
+<relativepath>"..\main\org\jboss\web\CVS\Repository"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"0"</dirty>
+<relativepath>"..\main\org\jboss\web\CVS\Root"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+</virtualfolder>
 <file>
 <dirty>"1"</dirty>
 <relativepath>"..\main\org\jboss\web\ThreadPool.java"</relativepath>
@@ -2356,10 +4997,385 @@
 </file>
 </virtualfolder>
 </virtualfolder>
+</virtualfolder>
 <virtualfolder>
-<name>"resources"</name>
+<name>"test"</name>
+<virtualfolder>
+<name>"CVS"</name>
+<file>
+<dirty>"0"</dirty>
+<relativepath>"..\main\test\CVS\Entries"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"0"</dirty>
+<relativepath>"..\main\test\CVS\Repository"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"0"</dirty>
+<relativepath>"..\main\test\CVS\Root"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+</virtualfolder>
+<virtualfolder>
+<name>"jboss"</name>
+<virtualfolder>
+<name>"CVS"</name>
+<file>
+<dirty>"0"</dirty>
+<relativepath>"..\main\test\jboss\CVS\Entries"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"0"</dirty>
+<relativepath>"..\main\test\jboss\CVS\Repository"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"0"</dirty>
+<relativepath>"..\main\test\jboss\CVS\Root"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+</virtualfolder>
 <file>
 <dirty>"1"</dirty>
+<relativepath>"..\main\test\jboss\JBossTestSuite.java"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<virtualfolder>
+<name>"minerva"</name>
+<virtualfolder>
+<name>"CVS"</name>
+<file>
+<dirty>"0"</dirty>
+<relativepath>"..\main\test\jboss\minerva\CVS\Entries"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"0"</dirty>
+<relativepath>"..\main\test\jboss\minerva\CVS\Repository"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"0"</dirty>
+<relativepath>"..\main\test\jboss\minerva\CVS\Root"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+</virtualfolder>
+<virtualfolder>
+<name>"factories"</name>
+<virtualfolder>
+<name>"CVS"</name>
+<file>
+<dirty>"0"</dirty>
+<relativepath>"..\main\test\jboss\minerva\factories\CVS\Entries"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"0"</dirty>
+<relativepath>"..\main\test\jboss\minerva\factories\CVS\Repository"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"0"</dirty>
+<relativepath>"..\main\test\jboss\minerva\factories\CVS\Root"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+</virtualfolder>
+<file>
+<dirty>"1"</dirty>
+<relativepath>"..\main\test\jboss\minerva\factories\JDBCFactoryTest.java"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+</virtualfolder>
+<virtualfolder>
+<name>"pools"</name>
+<virtualfolder>
+<name>"CVS"</name>
+<file>
+<dirty>"0"</dirty>
+<relativepath>"..\main\test\jboss\minerva\pools\CVS\Entries"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"0"</dirty>
+<relativepath>"..\main\test\jboss\minerva\pools\CVS\Repository"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"0"</dirty>
+<relativepath>"..\main\test\jboss\minerva\pools\CVS\Root"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+</virtualfolder>
+<file>
+<dirty>"1"</dirty>
+<relativepath>"..\main\test\jboss\minerva\pools\ObjectPoolTest.java"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+</virtualfolder>
+</virtualfolder>
+<virtualfolder>
+<name>"testdb"</name>
+<virtualfolder>
+<name>"CVS"</name>
+<file>
+<dirty>"0"</dirty>
+<relativepath>"..\main\test\jboss\testdb\CVS\Entries"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"0"</dirty>
+<relativepath>"..\main\test\jboss\testdb\CVS\Repository"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"0"</dirty>
+<relativepath>"..\main\test\jboss\testdb\CVS\Root"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+</virtualfolder>
+<file>
+<dirty>"1"</dirty>
+<relativepath>"..\main\test\jboss\testdb\TestConnection.java"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"1"</dirty>
+<relativepath>"..\main\test\jboss\testdb\TestDBDriver.java"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+</virtualfolder>
+</virtualfolder>
+</virtualfolder>
+</virtualfolder>
+<virtualfolder>
+<name>"resources"</name>
+<virtualfolder>
+<name>"CVS"</name>
+<file>
+<dirty>"0"</dirty>
+<relativepath>"..\resources\CVS\Entries"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"0"</dirty>
+<relativepath>"..\resources\CVS\Repository"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"0"</dirty>
+<relativepath>"..\resources\CVS\Root"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+</virtualfolder>
+<virtualfolder>
+<name>"org"</name>
+<virtualfolder>
+<name>"CVS"</name>
+<file>
+<dirty>"0"</dirty>
+<relativepath>"..\resources\org\CVS\Entries"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"0"</dirty>
+<relativepath>"..\resources\org\CVS\Repository"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"0"</dirty>
+<relativepath>"..\resources\org\CVS\Root"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+</virtualfolder>
+<virtualfolder>
+<name>"jboss"</name>
+<virtualfolder>
+<name>"CVS"</name>
+<file>
+<dirty>"0"</dirty>
+<relativepath>"..\resources\org\jboss\CVS\Entries"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"0"</dirty>
+<relativepath>"..\resources\org\jboss\CVS\Repository"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"0"</dirty>
+<relativepath>"..\resources\org\jboss\CVS\Root"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+</virtualfolder>
+<virtualfolder>
+<name>"ejb"</name>
+<virtualfolder>
+<name>"CVS"</name>
+<file>
+<dirty>"0"</dirty>
+<relativepath>"..\resources\org\jboss\ejb\CVS\Entries"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"0"</dirty>
+<relativepath>"..\resources\org\jboss\ejb\CVS\Repository"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"0"</dirty>
+<relativepath>"..\resources\org\jboss\ejb\CVS\Root"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+</virtualfolder>
+<virtualfolder>
+<name>"deployment"</name>
+<virtualfolder>
+<name>"CVS"</name>
+<file>
+<dirty>"0"</dirty>
+<relativepath>"..\resources\org\jboss\ejb\deployment\CVS\Entries"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"0"</dirty>
+<relativepath>"..\resources\org\jboss\ejb\deployment\CVS\Repository"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"0"</dirty>
+<relativepath>"..\resources\org\jboss\ejb\deployment\CVS\Root"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+</virtualfolder>
+<file>
+<dirty>"0"</dirty>
+<relativepath>"..\resources\org\jboss\ejb\deployment\defaultjboss.xml"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<virtualfolder>
+<name>"editors"</name>
+<file>
+<dirty>"0"</dirty>
 <relativepath>"..\resources\org\jboss\ejb\deployment\editors\commitoptions.properties"</relativepath>
 <scmstatus id="0">
 <userstring>""</userstring>
@@ -2367,43 +5383,54 @@
 </scmstatus>
 </file>
 <file>
-<dirty>"1"</dirty>
+<dirty>"0"</dirty>
 <relativepath>"..\resources\org\jboss\ejb\deployment\editors\containerinvoker.properties"</relativepath>
 <scmstatus id="0">
 <userstring>""</userstring>
-<userinteger>"101"</userinteger>
+<userinteger>"0"</userinteger>
 </scmstatus>
 </file>
 <file>
-<dirty>"1"</dirty>
+<dirty>"0"</dirty>
 <relativepath>"..\resources\org\jboss\ejb\deployment\editors\containertypes.properties"</relativepath>
 <scmstatus id="0">
 <userstring>""</userstring>
 <userinteger>"0"</userinteger>
 </scmstatus>
 </file>
+<virtualfolder>
+<name>"CVS"</name>
 <file>
 <dirty>"0"</dirty>
-<relativepath>"..\resources\org\jboss\ejb\plugins\jaws\deployment\defaultjaws.xml"</relativepath>
+<relativepath>"..\resources\org\jboss\ejb\deployment\editors\CVS\Entries"</relativepath>
 <scmstatus id="0">
 <userstring>""</userstring>
 <userinteger>"0"</userinteger>
 </scmstatus>
 </file>
 <file>
-<dirty>"1"</dirty>
-<relativepath>"..\resources\org\jboss\ejb\deployment\defaultjboss.xml"</relativepath>
+<dirty>"0"</dirty>
+<relativepath>"..\resources\org\jboss\ejb\deployment\editors\CVS\Repository"</relativepath>
 <scmstatus id="0">
 <userstring>""</userstring>
 <userinteger>"0"</userinteger>
 </scmstatus>
 </file>
+<file>
+<dirty>"0"</dirty>
+<relativepath>"..\resources\org\jboss\ejb\deployment\editors\CVS\Root"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+</virtualfolder>
 <file>
 <dirty>"0"</dirty>
 <relativepath>"..\resources\org\jboss\ejb\deployment\editors\entityinstancecache.properties"</relativepath>
 <scmstatus id="0">
 <userstring>""</userstring>
-<userinteger>"96"</userinteger>
+<userinteger>"0"</userinteger>
 </scmstatus>
 </file>
 <file>
@@ -2419,9 +5446,293 @@
 <relativepath>"..\resources\org\jboss\ejb\deployment\editors\entitypersistencemanager.properties"</relativepath>
 <scmstatus id="0">
 <userstring>""</userstring>
-<userinteger>"117608072"</userinteger>
+<userinteger>"0"</userinteger>
 </scmstatus>
 </file>
+<file>
+<dirty>"0"</dirty>
+<relativepath>"..\resources\org\jboss\ejb\deployment\editors\resourcetypes.properties"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"0"</dirty>
+<relativepath>"..\resources\org\jboss\ejb\deployment\editors\statefulsessioninstancecache.properties"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"0"</dirty>
+<relativepath>"..\resources\org\jboss\ejb\deployment\editors\statefulsessionpersistencemanager.properties"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"0"</dirty>
+<relativepath>"..\resources\org\jboss\ejb\deployment\editors\statelessinstancepool.properties"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+</virtualfolder>
+</virtualfolder>
+<virtualfolder>
+<name>"plugins"</name>
+<virtualfolder>
+<name>"CVS"</name>
+<file>
+<dirty>"0"</dirty>
+<relativepath>"..\resources\org\jboss\ejb\plugins\CVS\Entries"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"0"</dirty>
+<relativepath>"..\resources\org\jboss\ejb\plugins\CVS\Repository"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"0"</dirty>
+<relativepath>"..\resources\org\jboss\ejb\plugins\CVS\Root"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+</virtualfolder>
+<virtualfolder>
+<name>"jaws"</name>
+<virtualfolder>
+<name>"CVS"</name>
+<file>
+<dirty>"0"</dirty>
+<relativepath>"..\resources\org\jboss\ejb\plugins\jaws\CVS\Entries"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"0"</dirty>
+<relativepath>"..\resources\org\jboss\ejb\plugins\jaws\CVS\Repository"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"0"</dirty>
+<relativepath>"..\resources\org\jboss\ejb\plugins\jaws\CVS\Root"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+</virtualfolder>
+<virtualfolder>
+<name>"deployment"</name>
+<virtualfolder>
+<name>"CVS"</name>
+<file>
+<dirty>"0"</dirty>
+<relativepath>"..\resources\org\jboss\ejb\plugins\jaws\deployment\CVS\Entries"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"0"</dirty>
+<relativepath>"..\resources\org\jboss\ejb\plugins\jaws\deployment\CVS\Repository"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"0"</dirty>
+<relativepath>"..\resources\org\jboss\ejb\plugins\jaws\deployment\CVS\Root"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+</virtualfolder>
+<file>
+<dirty>"0"</dirty>
+<relativepath>"..\resources\org\jboss\ejb\plugins\jaws\deployment\defaultjaws.xml"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<virtualfolder>
+<name>"editors"</name>
+<virtualfolder>
+<name>"CVS"</name>
+<file>
+<dirty>"0"</dirty>
+<relativepath>"..\resources\org\jboss\ejb\plugins\jaws\deployment\editors\CVS\Entries"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"0"</dirty>
+<relativepath>"..\resources\org\jboss\ejb\plugins\jaws\deployment\editors\CVS\Repository"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"0"</dirty>
+<relativepath>"..\resources\org\jboss\ejb\plugins\jaws\deployment\editors\CVS\Root"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+</virtualfolder>
+<file>
+<dirty>"0"</dirty>
+<relativepath>"..\resources\org\jboss\ejb\plugins\jaws\deployment\editors\javatypes.properties"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"0"</dirty>
+<relativepath>"..\resources\org\jboss\ejb\plugins\jaws\deployment\editors\jdbctypes.properties"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+</virtualfolder>
+</virtualfolder>
+</virtualfolder>
+</virtualfolder>
+</virtualfolder>
+<virtualfolder>
+<name>"metadata"</name>
+<virtualfolder>
+<name>"CVS"</name>
+<file>
+<dirty>"0"</dirty>
+<relativepath>"..\resources\org\jboss\metadata\CVS\Entries"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"0"</dirty>
+<relativepath>"..\resources\org\jboss\metadata\CVS\Repository"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"0"</dirty>
+<relativepath>"..\resources\org\jboss\metadata\CVS\Root"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+</virtualfolder>
+<file>
+<dirty>"0"</dirty>
+<relativepath>"..\resources\org\jboss\metadata\standardjboss.xml"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+</virtualfolder>
+<virtualfolder>
+<name>"verifier"</name>
+<virtualfolder>
+<name>"CVS"</name>
+<file>
+<dirty>"0"</dirty>
+<relativepath>"..\resources\org\jboss\verifier\CVS\Entries"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"0"</dirty>
+<relativepath>"..\resources\org\jboss\verifier\CVS\Repository"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"0"</dirty>
+<relativepath>"..\resources\org\jboss\verifier\CVS\Root"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+</virtualfolder>
+<file>
+<dirty>"0"</dirty>
+<relativepath>"..\resources\org\jboss\verifier\DefaultMessages.properties"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+</virtualfolder>
+<virtualfolder>
+<name>"web"</name>
+<virtualfolder>
+<name>"CVS"</name>
+<file>
+<dirty>"0"</dirty>
+<relativepath>"..\resources\org\jboss\web\CVS\Entries"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"0"</dirty>
+<relativepath>"..\resources\org\jboss\web\CVS\Repository"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"0"</dirty>
+<relativepath>"..\resources\org\jboss\web\CVS\Root"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+</virtualfolder>
 <file>
 <dirty>"0"</dirty>
 <relativepath>"..\resources\org\jboss\web\mime.types"</relativepath>
@@ -2430,38 +5741,9 @@
 <userinteger>"0"</userinteger>
 </scmstatus>
 </file>
-<file>
-<dirty>"1"</dirty>
-<relativepath>"..\resources\org\jboss\ejb\deployment\editors\resourcetypes.properties"</relativepath>
-<scmstatus id="0">
-<userstring>""</userstring>
-<userinteger>"0"</userinteger>
-</scmstatus>
-</file>
-<file>
-<dirty>"1"</dirty>
-<relativepath>"..\resources\org\jboss\ejb\deployment\editors\statefulsessioninstancecache.properties"</relativepath>
-<scmstatus id="0">
-<userstring>""</userstring>
-<userinteger>"0"</userinteger>
-</scmstatus>
-</file>
-<file>
-<dirty>"1"</dirty>
-<relativepath>"..\resources\org\jboss\ejb\deployment\editors\statefulsessionpersistencemanager.properties"</relativepath>
-<scmstatus id="0">
-<userstring>""</userstring>
-<userinteger>"0"</userinteger>
-</scmstatus>
-</file>
-<file>
-<dirty>"1"</dirty>
-<relativepath>"..\resources\org\jboss\ejb\deployment\editors\statelessinstancepool.properties"</relativepath>
-<scmstatus id="0">
-<userstring>""</userstring>
-<userinteger>"2"</userinteger>
-</scmstatus>
-</file>
+</virtualfolder>
+</virtualfolder>
+</virtualfolder>
 </virtualfolder>
 </folder>
 </items>

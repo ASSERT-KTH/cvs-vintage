@@ -159,12 +159,14 @@
      <mkdir dir="${dist.dir}/db"/>
      <mkdir dir="${dist.dir}/conf"/>
      <mkdir dir="${dist.dir}/client"/>
+     <mkdir dir="${dist.dir}/tmp"/>
 
      <copyfile src="${lib.dir}/jmxri.jar" dest="${dist.dir}/lib/jmxri.jar"/>
      <copyfile src="${etc.dir}/jboss.conf" dest="${dist.dir}/conf/jboss.conf"/>
      <copyfile src="${etc.dir}/jboss.jcml" dest="${dist.dir}/conf/jboss.jcml"/>
      <copyfile src="${etc.dir}/log.properties" dest="${dist.dir}/log/log.properties"/>
      <copyfile src="${etc.dir}/db.properties" dest="${dist.dir}/db/db.properties"/>
+     <copyfile src="${etc.dir}/tmp.properties" dest="${dist.dir}/tmp/tmp.properties"/>
 
      <copydir src="${etc.dir}/conf" dest="${dist.dir}/conf"/>
      <copydir src="${src.bin.dir}" dest="${dist.dir}/bin"/>
