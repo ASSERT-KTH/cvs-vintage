@@ -77,9 +77,11 @@ abstract class TagGeneratorBase extends GeneratorBase {
     class TagVariableData {
         String tagHandlerInstanceName;
         String tagEvalVarName;
+        String tagExceptionCheckName;
         TagVariableData(String tagHandlerInstanceName, String tagEvalVarName) {
             this.tagHandlerInstanceName = tagHandlerInstanceName;
             this.tagEvalVarName = tagEvalVarName;
+            this.tagExceptionCheckName = tagHandlerInstanceName + "_exceptionCheck";
         }
     }
 

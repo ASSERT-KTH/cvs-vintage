@@ -131,6 +131,10 @@ public class JspParseEventListener extends BaseJspListener {
     private Stack tagHandlerStack;
     private Hashtable tagVarNumbers;
 
+    // This variable keeps track of tag pools.  We only need
+    // one tag pool per tag reuse scope.
+    private Vector tagPools = new Vector();
+
     final void addGenerator(Generator gen) throws JasperException {
         gen.init(ctxt);
         generators.addElement(gen);
@@ -269,12 +273,17 @@ public class JspParseEventListener extends BaseJspListener {
         writer.println("}");
         writer.println();
 
-        writer.println("private static boolean _jspx_inited = false;");
+        writer.println("private boolean _jspx_inited = false;");
         writer.println();
 
-        writer.println("public final void _jspx_init() throws org.apache.jasper.JasperException {");
+        writer.println("public final synchronized void _jspx_init() throws org.apache.jasper.JasperException {");
+        writer.pushIndent();
+        writer.println("if (! _jspx_inited) {");
         writer.pushIndent();
 	generateAll(InitMethodPhase.class);
+        writer.println("_jspx_inited = true;");
+        writer.popIndent();
+        writer.println("}");
         writer.popIndent();
         writer.println("}");
         writer.println();
@@ -304,14 +313,11 @@ public class JspParseEventListener extends BaseJspListener {
 	writer.println("String  _value = null;");
 	writer.println("try {");
 	writer.pushIndent();
+        writer.println("try {");
+        writer.pushIndent();
 
 	writer.println();
-        writer.println("if (_jspx_inited == false) {");
-        writer.pushIndent();
         writer.println("_jspx_init();");
-        writer.println("_jspx_inited = true;");
-        writer.popIndent();
-        writer.println("}");
 
 	writer.println("_jspxFactory = JspFactory.getDefaultFactory();");
 	if (this.contentTypeDir == true)
@@ -351,6 +357,16 @@ public class JspParseEventListener extends BaseJspListener {
 	writer.popIndent();
 	writer.println("if (pageContext != null) pageContext.handlePageException(ex);");
 	writer.popIndent();
+        writer.println("} catch (Error error) {");
+        writer.pushIndent();
+        writer.println("throw error;");
+        writer.popIndent();
+        writer.println("} catch (Throwable throwable) {");
+        writer.pushIndent();
+        writer.println("throw new ServletException(throwable);");
+        writer.popIndent();
+        writer.println("}");
+        writer.popIndent();
 	writer.println("} finally {");
 	writer.pushIndent();
 	/* Do stuff here for finally actions... */
@@ -908,6 +924,21 @@ public class JspParseEventListener extends BaseJspListener {
         Generator gen = new GeneratorWrapper(tbg, start, stop);
 
 	addGenerator(gen);
+
+        // If this is the first tag, then generate code to store reference
+        // to tag pool manager.
+        if (tagPools.size() == 0) {
+            addGenerator(new TagPoolManagerGenerator());
+        }
+
+        // if we haven't added a tag pool generator for this tag, then add one
+        String tagPoolVarName = TagPoolGenerator.getPoolName(tli, ti, attrs);
+        if (! tagPools.contains(tagPoolVarName)) {
+            tagPools.add(tagPoolVarName);
+            TagPoolGenerator tpg = new TagPoolGenerator(prefix, shortTagName, attrs, tli, ti);
+            gen = new GeneratorWrapper(tpg, start, stop);
+            addGenerator(gen);
+        }
     }
 
     public void handleTagEnd(Mark start, Mark stop, String prefix,

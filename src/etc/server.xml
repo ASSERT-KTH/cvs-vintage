@@ -121,6 +121,33 @@
 
         <Servlet22Interceptor />
 
+
+        <!-- Tag pooling support.
+             To enable the reuse of tag handlers as described in
+             the JSP spec, uncomment the following.  If your pages
+             use a lot of custom tags, you should see a nice performance
+             gain.
+             
+             Note that placing the interceptor here will enable
+             Tag pooling for all of the web applicatitions loaded -
+             this may be a bad thing if all tags are not coded to
+             handle reuse. To enable pooling only for specific web
+             applications i.e. Contexts, place the interceptor inside of 
+             the Context's definition.
+             
+             To view information about tag usage uncomment the tag
+             LogSetter. Set verbosityLevel to DEBUG to see everytime
+             a tag is obtained and released.
+        -->
+        <!--
+        <LogSetter  name="tag_pool_log" timestamps="true" 
+            path="logs/tagpool-${yyyyMMdd}.log" 
+            verbosityLevel="INFORMATION" />
+
+        <TagPoolManagerInterceptor debug="0"/>
+        -->
+
+
       <!-- ==================== Connectors ==================== -->
 
        <!-- new http adapter. Attributes:

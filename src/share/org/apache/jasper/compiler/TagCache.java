@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/TagCache.java,v 1.1 1999/10/20 11:22:54 akv Exp $
- * $Revision: 1.1 $
- * $Date: 1999/10/20 11:22:54 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/TagCache.java,v 1.2 2001/03/24 06:49:29 clucas Exp $
+ * $Revision: 1.2 $
+ * $Date: 2001/03/24 06:49:29 $
  *
  * ====================================================================
  * 

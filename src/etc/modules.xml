@@ -507,4 +507,10 @@ in ServerXmlReader to use a simpler syntax.
 </module>
 
 
+<module name="TagPoolManagerInterceptor" javaClass="org.apache.tomcat.modules.tagpool.TagPoolManagerInterceptor">
+<category name="tagpool"/>
+<doc>Not yet</doc>
+</module>
+
+
 </modules>

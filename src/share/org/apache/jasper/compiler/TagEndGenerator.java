@@ -100,6 +100,7 @@ public class TagEndGenerator
         TagVariableData tvd = tagEnd();
         String thVarName = tvd.tagHandlerInstanceName;
         String evalVarName = tvd.tagEvalVarName;
+        String exceptionCheckName = tvd.tagExceptionCheckName;
 
         VariableInfo[] vi = ti.getVariableInfo(new TagData(attrs));
 
@@ -157,9 +158,30 @@ public class TagEndGenerator
         //          writer.popIndent();
         /** FIXME: REMOVE END */
 
-	writer.println("} finally {");
-	writer.pushIndent();
+        writer.println("} catch (Throwable throwable) {");
+        writer.pushIndent();
+        writer.println(exceptionCheckName + " = true;");
+        writer.println("throw throwable;");
+        writer.popIndent();
+        writer.println("}");
+        writer.popIndent();
+        writer.println("} finally {");
+        writer.pushIndent();
+        String poolName = TagPoolGenerator.getPoolVariableName(tli, ti, attrs);
+        writer.println("if (" + poolName + " != null && " + thVarName + " != null) {");
+        writer.pushIndent();
+        writer.println(poolName + ".releaseHandler(" + thVarName + ", " + exceptionCheckName + ");");
+        //writer.println(poolName + ".releaseHandler(" + thVarName + ");");
+        writer.popIndent();
+        writer.println("} else {");
+        writer.pushIndent();
+        writer.println("if (" + thVarName + " != null) {");
+        writer.pushIndent();
 	writer.println(thVarName+".release();");
+        writer.popIndent();
+        writer.println("}");
+        writer.popIndent();
+        writer.println("}");
 	writer.popIndent();
 	writer.println("}");
 

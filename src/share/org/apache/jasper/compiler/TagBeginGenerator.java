@@ -279,23 +279,40 @@ public class TagBeginGenerator
         String parent = top == null ? null : top.tagHandlerInstanceName;
 
         String evalVar = "_jspx_eval_"+baseVarName;
-	tagBegin(new TagVariableData(thVarName, evalVar));
+        TagVariableData tvd = new TagVariableData(thVarName, evalVar);
+        String exceptionCheckName = tvd.tagExceptionCheckName;
+	tagBegin(tvd);
 
         writer.println("/* ----  "+prefix+":"+shortTagName+" ---- */");
-
-        writer.println(ti.getTagClassName()+" "+thVarName+" = new "+ti.getTagClassName()+"();");
-
-        generateSetters(writer, parent);
-
-        VariableInfo[] vi = ti.getVariableInfo(tagData);
-
+        
+	writer.println(ti.getTagClassName() + " " + thVarName + " = null;");
+        // set the exception check variable to false by default.
+        // it will be set to true if an exception is caught.
+        writer.println("boolean " + exceptionCheckName + " = false;");
+        
+	VariableInfo[] vi = ti.getVariableInfo(tagData);
+	
         // Just declare AT_BEGIN here...
         declareVariables(writer, vi, true, false, VariableInfo.AT_BEGIN);
+	
+        // this first try is for tag cleanup
+        writer.println("try {");
+        writer.pushIndent();
+        writer.println("try {");
+        writer.pushIndent();
+        String poolName = TagPoolGenerator.getPoolVariableName(tli, ti, attrs);
+        writer.println("if (" + poolName + " != null) {");
+        writer.pushIndent();
+        writer.println(thVarName + " = (" + ti.getTagClassName() + ") " + poolName + ".getHandler();");
+        writer.popIndent();
+        writer.println("}");
+        writer.println("if (" + thVarName + " == null) {");
+        writer.pushIndent();
+        writer.println(thVarName + " = new " + ti.getTagClassName() + "();");
+        writer.popIndent();
+        writer.println("}");
 
-	writer.println("try {");
-	writer.pushIndent();
-
-
+        generateSetters(writer, parent);
 
         writer.println("int "+evalVar+" = "
                        +thVarName+".doStartTag();");
