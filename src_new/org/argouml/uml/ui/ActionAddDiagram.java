@@ -21,7 +21,7 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $Id: ActionAddDiagram.java,v 1.12 2003/05/04 10:09:03 kataka Exp $
+// $Id: ActionAddDiagram.java,v 1.13 2003/05/04 15:13:59 kataka Exp $
 
 package org.argouml.uml.ui;
 
@@ -32,6 +32,7 @@ import org.argouml.kernel.Project;
 import org.argouml.kernel.ProjectManager;
 import org.argouml.model.ModelFacade;
 import org.argouml.ui.ProjectBrowser;
+import org.argouml.ui.targetmanager.TargetManager;
 import org.argouml.uml.diagram.ui.UMLDiagram;
 
 /**
@@ -59,7 +60,7 @@ public abstract class ActionAddDiagram extends UMLChangeAction {
         ProjectBrowser pb = ProjectBrowser.getInstance();
         Project p = ProjectManager.getManager().getCurrentProject();
         // find the right namespace for the diagram
-        Object target = pb.getTarget();
+        Object target = TargetManager.getInstance().getModelTarget();
         Object ns = null;
         if (target == null || !ModelFacade.isABase(target)) {
             target = p.getRoot();
@@ -130,5 +131,7 @@ public abstract class ActionAddDiagram extends UMLChangeAction {
      * @return UMLDiagram
      */
     public abstract UMLDiagram createDiagram(Object ns);
+    
+    
 
 }
