@@ -217,6 +217,13 @@
             </fileset>
         </copy>
 
+        <!-- clean out any accidentally left over generated .sql 
+             files which should not be in the src.sql.dir -->
+        <delete file="${src.sql.dir}/${project}-schema.sql" quiet="true" />
+        <delete file="${src.sql.dir}/turbine-schema.sql" quiet="true" />
+        <delete file="${src.sql.dir}/scheduler-schema.sql" quiet="true" />
+        <delete file="${src.sql.dir}/id-table-schema.sql" quiet="true" />
+
         <!-- the SQL data population scripts directory -->
         <copy todir="${build.sql.scarab}" filtering="yes">
             <fileset dir="${src.sql.dir}">
@@ -338,10 +345,14 @@
     <!-- Generate SQL from Torque                                           -->
     <!-- ================================================================== -->
     <target name="schema-check">
-        <echo message="checking: ${build.sql.scarab}/${scarab.database.type}-${project}.sql"/>
+        <echo message="checking: ${build.sql.scarab}/${project}.sql"/>
         <uptodate property="schema.uptodate"
-            targetfile="${build.sql.scarab}/${scarab.database.type}-${project}.sql">
+            targetfile="${build.sql.scarab}/${project}.sql">
+            <srcfiles dir="${src.sql.dir}" includes="turbine-schema.xml"/>
+            <srcfiles dir="${src.sql.dir}" includes="id-table-schema.xml"/>
+            <srcfiles dir="${src.sql.dir}" includes="scheduler-schema.xml"/>
             <srcfiles dir="${src.sql.dir}" includes="scarab-schema.xml"/>
+            <srcfiles dir="${user.home}" includes="scarab.build.properties"/>
             <srcfiles dir="${user.home}" includes="build.properties"/>
             <srcfiles dir="${basedir}" includes="build.properties"/>
         </uptodate>
@@ -359,7 +370,7 @@
 
         <!-- move the generated .sql files into the target directory -->
         <move file="${src.sql.dir}/${project}-schema.sql"
-            tofile="${build.sql.scarab}/${scarab.database.type}-${project}.sql"/>
+            tofile="${build.sql.scarab}/${project}.sql"/>
         <move file="${src.sql.dir}/turbine-schema.sql"
             tofile="${build.sql.scarab}/turbine.sql"/>
         <move file="${src.sql.dir}/scheduler-schema.sql"
@@ -949,7 +960,7 @@
     <!-- Packages the distribution with ZIP                                 -->
     <!-- ================================================================== -->
     <target name="package-zip" depends="dist">
-        <delete file="../${final.name}.zip"/>
+        <delete file="../${final.name}.zip" quiet="true" />
         <zip zipfile="../${final.name}.zip" 
              basedir="../" includes="**/${final.name}/**"/>
     </target>
@@ -958,8 +969,8 @@
     <!-- Packages the distribution with TAR-GZIP                            -->
     <!-- ================================================================== -->
     <target name="package-tgz" depends="dist">
-        <delete file="../${final.name}.tar"/>
-        <delete file="../${final.name}.tar.gz"/>
+        <delete file="../${final.name}.tar" quiet="true"/>
+        <delete file="../${final.name}.tar.gz" quiet="true" />
         <tar longfile="gnu" tarfile="../${final.name}.tar" 
              basedir="../" includes="**/${final.name}/**"/>
         <gzip zipfile="../${final.name}.tar.gz" 
@@ -971,7 +982,7 @@
     <!-- Creates the Binary distribution directory                          -->
     <!-- ================================================================== -->
     <target name="dist">
-        <delete dir="${final.dir}"/>
+        <delete dir="${final.dir}" quiet="true" />
         <mkdir dir="${final.dir}"/>
 
         <copy todir="${final.dir}" preservelastmodified="true"
