@@ -71,7 +71,7 @@ public class BodyTextViewer extends JTextPane implements Observer {
 
 	public BodyTextViewer() {
 		setMargin(new Insets(5, 5, 5, 5));
-		setEditable(true);
+		setEditable(false);
 
 		htmlEditorKit = new HTMLEditorKit();
 		setEditorKit(htmlEditorKit);
