@@ -444,7 +444,7 @@ public class JspInterceptor extends BaseInterceptor {
 	if( h!= null ) {
 	    log( "Name already exists " + servletName +
 		 " while mapping " + uri);
-	    return null; // exception ?
+	    return (ServletHandler)h; // exception ?
 	}
 	
 	ServletHandler wrapper=new ServletHandler();
