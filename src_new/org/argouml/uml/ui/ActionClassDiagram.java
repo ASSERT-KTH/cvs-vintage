@@ -1,4 +1,4 @@
-// $Id: ActionClassDiagram.java,v 1.10 2003/05/02 11:11:20 kataka Exp $
+// $Id: ActionClassDiagram.java,v 1.11 2003/05/02 12:12:50 kataka Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -28,9 +28,6 @@ import org.apache.log4j.Category;
 import org.argouml.model.ModelFacade;
 import org.argouml.uml.diagram.static_structure.ui.UMLClassDiagram;
 import org.argouml.uml.diagram.ui.UMLDiagram;
-
-import ru.novosoft.uml.foundation.core.MNamespace;
-import ru.novosoft.uml.model_management.MPackage;
 
 /** Action to trigger creation of new class diagram.
  *  @stereotype singleton
