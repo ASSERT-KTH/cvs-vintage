@@ -64,7 +64,7 @@ import org.gjt.sp.util.*;
  * </ul>
  *
  * @author Slava Pestov
- * @version $Id: Buffer.java,v 1.135 2003/03/16 20:55:39 spestov Exp $
+ * @version $Id: Buffer.java,v 1.136 2003/03/17 00:20:07 spestov Exp $
  */
 public class Buffer implements EBComponent
 {
@@ -1020,9 +1020,47 @@ public class Buffer implements EBComponent
 		}
 	} //}}}
 
+	//{{{ getScreenLineCount() method
+	/**
+	 * Returns the number of screen lines that the specified physical line
+	 * is split into, or 0 if this information is not available.
+	 * @since jEdit 4.2pre1
+	 */
+	public int getScreenLineCount(int line)
+	{
+		try
+		{
+			readLock();
+			return offsetMgr.getScreenLineCount(line);
+		}
+		finally
+		{
+			readUnlock();
+		}
+	} //}}}
+
+	//{{{ setScreenLineCount() method
+	/**
+	 * Sets the number of screen lines that the specified physical line
+	 * is split into.
+	 * @since jEdit 4.2pre1
+	 */
+	public void setScreenLineCount(int line, int count)
+	{
+		try
+		{
+			writeLock();
+			offsetMgr.setScreenLineCount(line,count);
+		}
+		finally
+		{
+			writeUnlock();
+		}
+	} //}}}
+
 	//}}}
 
-	//{{{ Text getters are setters
+	//{{{ Text getters and setters
 
 	//{{{ getLineText() method
 	/**

@@ -45,7 +45,7 @@ import org.gjt.sp.jedit.*;
  * @see JEditTextArea
  *
  * @author Mike Dillon and Slava Pestov
- * @version $Id: Gutter.java,v 1.30 2003/03/16 20:55:48 spestov Exp $
+ * @version $Id: Gutter.java,v 1.31 2003/03/17 00:20:10 spestov Exp $
  */
 public class Gutter extends JComponent implements SwingConstants
 {
@@ -112,8 +112,6 @@ public class Gutter extends JComponent implements SwingConstants
 		int lastLine = (clip.y + clip.height - 1) / lineHeight;
 
 		int y = (clip.y - clip.y % lineHeight);
-
-		textArea.chunkCache.updateChunksUpTo(lastLine);
 
 		for (int line = firstLine; line <= lastLine;
 			line++, y += lineHeight)
@@ -757,7 +755,6 @@ public class Gutter extends JComponent implements SwingConstants
 
 				int screenLine = e.getY() / textArea.getPainter()
 					.getFontMetrics().getHeight();
-				textArea.chunkCache.updateChunksUpTo(screenLine);
 
 				int line = textArea.chunkCache.getLineInfo(screenLine)
 					.physicalLine;

@@ -74,7 +74,7 @@ import org.gjt.sp.jedit.textarea.*;
  *
  * @author Slava Pestov
  * @author John Gellene (API documentation)
- * @version $Id: View.java,v 1.63 2003/03/16 20:55:42 spestov Exp $
+ * @version $Id: View.java,v 1.64 2003/03/17 00:20:08 spestov Exp $
  */
 public class View extends JFrame implements EBComponent
 {
@@ -1441,6 +1441,8 @@ public class View extends JFrame implements EBComponent
 
 			if(comp != editPane)
 				setEditPane((EditPane)comp);
+			else
+				updateGutterBorders();
 		}
 	} //}}}
 
