@@ -1,5 +1,4 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/javax/servlet/jsp/tagext/Attic/BodyTagSupport.java,v 1.3 1999/11/03 23:42:36 costin Exp $ $Date: 1999/11/03 23:42:36 $ $Revision: 1.3 $
  * 
  * The Apache Software License, Version 1.1
  *

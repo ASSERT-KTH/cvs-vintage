@@ -41,16 +41,16 @@ public class FooTag
      *
      * @return EVAL_BODY_INCLUDE
      */
-    public int doStartTag() {
+    public int doStartTag() throws JspException {
 	return EVAL_BODY_TAG;
     }
 
-    public void doInitBody() throws JspError {
+    public void doInitBody() throws JspException {
         pageContext.setAttribute("member", atts[i]);
         i++;
     }
     
-    public int doAfterBody() throws JspError {
+    public int doAfterBody() throws JspException {
         try {
             if (i == 3) {
                 bodyOut.writeOut(bodyOut.getEnclosingWriter());
@@ -60,7 +60,7 @@ public class FooTag
             i++;
             return EVAL_BODY_TAG;
         } catch (IOException ex) {
-            throw new JspError(ex.toString());
+            throw new JspTagException(ex.toString());
         }
     }
 }

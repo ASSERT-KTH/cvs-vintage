@@ -32,10 +32,10 @@ public abstract class ExampleTagBase implements Tag {
 
     // Default implementations for BodyTag methods as well
     // just in case a tag decides to implement BodyTag.
-    public void doInitBody() throws JspError {
+    public void doInitBody() throws JspException {
     }
 
-    public int doAfterBody() throws JspError {
+    public int doAfterBody() throws JspException {
         return SKIP_BODY;
     }
 

@@ -24,11 +24,11 @@ public class LogTag
             toBrowser = false;
     }
 
-    public int doStartTag() {
+    public int doStartTag() throws JspException {
         return EVAL_BODY_TAG;
     }
     
-    public int doAfterBody() throws JspError {
+    public int doAfterBody() throws JspException {
         try {
             String s = bodyOut.getString();
             System.err.println(s);
@@ -36,7 +36,7 @@ public class LogTag
                 bodyOut.writeOut(bodyOut.getEnclosingWriter());
             return SKIP_BODY;
         } catch (IOException ex) {
-            throw new JspError(ex.toString());
+            throw new JspTagException(ex.toString());
         }
     }
 }

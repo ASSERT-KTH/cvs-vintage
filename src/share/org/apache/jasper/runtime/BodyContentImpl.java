@@ -1,9 +1,4 @@
 /*
- * $Id: BodyContentImpl.java,v 1.3 1999/11/03 23:43:49 costin Exp $
- * $Revision: 1.3 $
- * $Date: 1999/11/03 23:43:49 $
- *
- * ====================================================================
  * 
  * The Apache Software License, Version 1.1
  *

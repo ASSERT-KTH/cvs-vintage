@@ -1,9 +1,4 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/javax/servlet/jsp/tagext/Attic/TagAttributeInfo.java,v 1.5 1999/11/03 23:42:37 costin Exp $
- * $Revision: 1.5 $
- * $Date: 1999/11/03 23:42:37 $
- *
- * ====================================================================
  * 
  * The Apache Software License, Version 1.1
  *

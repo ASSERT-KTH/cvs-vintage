@@ -1,9 +1,4 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/runtime/Attic/JspServlet.java,v 1.8 1999/11/04 01:39:39 costin Exp $
- * $Revision: 1.8 $
- * $Date: 1999/11/04 01:39:39 $
- *
- * ====================================================================
  * 
  * The Apache Software License, Version 1.1
  *
@@ -335,7 +330,7 @@ public class JspServlet extends HttpServlet {
                 System.err.println("\t     ServletPath: "+request.getServletPath());
                 System.err.println("\t        PathInfo: "+request.getPathInfo());
 		System.err.println("\t        RealPath: "
-                                   +getServletConfig().getServletContext().getRealPath(request.getRequestURI()));
+                                   +getServletConfig().getServletContext().getRealPath(jspUri));
                 System.err.println("\t      RequestURI: "+request.getRequestURI());
                 System.err.println("\t     QueryString: "+request.getQueryString());
                 System.err.println("\t  Request Params: ");

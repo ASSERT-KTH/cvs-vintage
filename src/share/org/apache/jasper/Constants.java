@@ -1,9 +1,4 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/Constants.java,v 1.7 1999/11/03 23:42:55 costin Exp $
- * $Revision: 1.7 $
- * $Date: 1999/11/03 23:42:55 $
- *
- * ====================================================================
  * 
  * The Apache Software License, Version 1.1
  *

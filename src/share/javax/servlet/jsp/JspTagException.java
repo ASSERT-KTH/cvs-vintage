@@ -1,9 +1,5 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/javax/servlet/jsp/Attic/JspError.java,v 1.4 1999/10/20 11:37:17 akv Exp $
- * $Revision: 1.4 $
- * $Date: 1999/10/20 11:37:17 $
- *
- * ====================================================================
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/javax/servlet/jsp/Attic/JspTagException.java,v 1.2 1999/11/08 03:13:50 akv Exp $ $Date: 1999/11/08 03:13:50 $ $Revision: 1.2 $
  * 
  * The Apache Software License, Version 1.1
  *
@@ -57,28 +53,28 @@
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
  *
- */ 
-
+ */
 package javax.servlet.jsp;
 
 /**
- * Error found; stop generating all output and forward to errorpage. 
- * Message should be used...
- * TODO -- details of how to use the message yet to be investigated.
+ * Exception to be used by a Tag Handler to indicate some unrecoverable
+ * error.
+ * This error is to be caught by the top level of the JSP page and will result
+ * in an error page.
  */
 
-public class JspError extends JspException {
+public class JspTagException extends JspException {
     /**
      * Constructor with a message.
      */
-    public JspError(String msg) {
+    public JspTagException(String msg) {
 	super(msg);
     }
 
     /**
      * No message
      */
-    public JspError() {
+    public JspTagException() {
 	super();
     }
 }

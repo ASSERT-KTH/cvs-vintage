@@ -1,5 +1,4 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/javax/servlet/jsp/tagext/Attic/TagSupport.java,v 1.3 1999/11/03 23:42:40 costin Exp $ $Date: 1999/11/03 23:42:40 $ $Revision: 1.3 $
  * 
  * The Apache Software License, Version 1.1
  *

@@ -1,9 +1,4 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/TagBeginGenerator.java,v 1.6 1999/11/03 23:43:16 costin Exp $
- * $Revision: 1.6 $
- * $Date: 1999/11/03 23:43:16 $
- *
- * ====================================================================
  * 
  * The Apache Software License, Version 1.1
  *

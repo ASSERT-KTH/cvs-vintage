@@ -1,10 +1,4 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/TagEndGenerator.java,v 1.4 1999/11/03 23:43:18 costin Exp $
- * $Revision: 1.4 $
- * $Date: 1999/11/03 23:43:18 $
- *
- * ====================================================================
- * 
  * The Apache Software License, Version 1.1
  *
  * Copyright (c) 1999 The Apache Software Foundation.  All rights 

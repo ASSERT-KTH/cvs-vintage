@@ -1,10 +1,4 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/SetPropertyGenerator.java,v 1.2 1999/11/03 23:43:12 costin Exp $
- * $Revision: 1.2 $
- * $Date: 1999/11/03 23:43:12 $
- *
- * ====================================================================
- * 
  * The Apache Software License, Version 1.1
  *
  * Copyright (c) 1999 The Apache Software Foundation.  All rights 
