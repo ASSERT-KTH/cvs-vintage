@@ -24,18 +24,22 @@
  - USA
  -
  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- - $Id: ow_carol_core.xml,v 1.3 2005/03/11 14:02:55 benoitf Exp $
+ - $Id: ow_carol-all.xml,v 1.1 2005/03/18 10:20:40 benoitf Exp $
  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
  -->
-<project name="ow_carol_core.archive" default="dist.jar">
+
+<project name="carol.archive" default="dist.jar">
   <target name="dist.jar">
-    <!-- CAROL CORE JAR -->
-    <jar destfile="${dist.lib}/ow_carol_core.jar">
+    <!-- CAROL JAR -->
+    <jar destfile="${dist.lib}/ow_carol-all.jar">
       <fileset dir="${build}/classes">
         <include name="**/*.class" />
         <include name="carol-defaults.properties" />
         <exclude name="**/jtests/**/*.class" />
-        <exclude name="org/objectweb/carol/cmi/compiler/*.class" />
+      </fileset>
+      <fileset dir="${src}">
+        <include name="org/objectweb/carol/cmi/compiler/dtd/*.dtd" />
+        <include name="org/objectweb/carol/cmi/compiler/*.vm" />
       </fileset>
       <manifest>
         <attribute name="Specification-Title" value="${carol.name}" />
