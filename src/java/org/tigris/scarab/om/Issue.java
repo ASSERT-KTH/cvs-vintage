@@ -56,6 +56,7 @@ import java.util.Date;
 import java.sql.Connection;
 
 // Turbine classes
+import org.apache.torque.om.ObjectKey;
 import org.apache.torque.om.NumberKey;
 import org.apache.torque.om.Persistent;
 import org.apache.torque.util.Criteria;
@@ -267,12 +268,12 @@ public class Issue
     }
 
     /**
-     * FIXME: Should use ModuleManager.  Use this instead of setScarabModule.
+     * Use this instead of setScarabModule.
      */
     public void setModule(ModuleEntity me)
         throws Exception
     {
-        super.setScarabModule((ScarabModule)me);
+        setModuleId(me.getModuleId());
     }
 
     /**
@@ -283,7 +284,14 @@ public class Issue
     public ModuleEntity getModule()
         throws Exception
     {
-        return getScarabModule();
+        ModuleEntity module = null;
+        ObjectKey id = getModuleId();
+        if ( id != null ) 
+        {
+            module = ModuleManager.getInstance(getModuleId());
+        }
+        
+        return module;
     }
 
     public static Issue getIssueById(String id)
