@@ -68,7 +68,7 @@ public class AntTag extends TagSupport {
     }
 
     public void setDebug( String s ) {
-	args.setProperty( "debug", s);
+	args.put( "debug", s);
     }
 
     // -------------------- Implementation methods --------------------
