@@ -290,7 +290,7 @@ public class MessageController implements MessageSelectionListener//implements C
 
 		// Shall we use the HTML-Viewer?
 
-		htmlViewer = bodyPart.getHeader().contentSubtype.equals("html");
+		htmlViewer = bodyPart.getHeader().contentSubtype.equalsIgnoreCase("html");
 
 		// Update the MessageHeaderPane
 		/*

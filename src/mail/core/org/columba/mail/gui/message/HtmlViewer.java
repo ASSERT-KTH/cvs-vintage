@@ -46,72 +46,75 @@ public class HtmlViewer
 
 	private File tempFile = null;
 
-	public HtmlViewer()
-	{
+	public HtmlViewer() {
 		super();
 		setMargin(new Insets(5, 5, 5, 5));
 		setEditable(false);
-		setEditorKit( new HTMLEditorKit() );
+		setEditorKit(new HTMLEditorKit());
 		addHyperlinkListener(this);
 	}
-	
-	public void setHeader( Component header )
-	{
-		
+
+	public void setHeader(Component header) {
+
 	}
 
-	private String validateHTMLString( String input ) {
+	private String validateHTMLString(String input) {
 		StringBuffer output = new StringBuffer(input);
 		int index = 0;
 
+		String lowerCaseInput = input.trim();
+
 		// Check for missing  <html> tag
-		if( input.indexOf( "<html>" ) == -1 ) {
-			if( input.indexOf( "<!DOCTYPE" ) != -1 )
-				index = input.indexOf( "\n", input.indexOf( "<!DOCTYPE" ) )+1;
-			output.insert( index, "<html>" );
+		if (lowerCaseInput.indexOf("<html>") == -1) {
+			if (lowerCaseInput.indexOf("<!doctype") != -1)
+				index =
+					lowerCaseInput.indexOf(
+						"\n",
+						lowerCaseInput.indexOf("<!doctype"))
+						+ 1;
+			output.insert(index, "<html>");
 		}
 
 		// Check for missing  </html> tag
-		if( input.indexOf( "</html>" ) == -1 ) {
-			output.append( "</html>" );
+		if (lowerCaseInput.indexOf("</html>") == -1) {
+			output.append("</html>");
 		}
 
 		return output.toString();
 	}
 
-	public void clearDoc() {}
+	public void clearDoc() {
+	}
 
 	public void setDoc(String str) {
 
-		
-	
-
-		HTMLDocument newdoc = (HTMLDocument) getEditorKit().createDefaultDocument();
+		HTMLDocument newdoc =
+			(HTMLDocument) getEditorKit().createDefaultDocument();
 
 		try {
-			
-			
-			String validated = validateHTMLString( str );
-		
-			/*
-			newdoc.getParser().parse( new StringReader( validated ), newdoc.getReader(0), true );
-			
-			
-			setDocument( newdoc );
-			*/
-			setText( validated );
-			
-			setCaretPosition( 0 );
 
-		} catch( Exception e ) {
+			String validated = validateHTMLString(str);
+			//System.out.println("validate:\n"+validated);
+
+			newdoc.getParser().parse(
+				new StringReader(validated),
+				newdoc.getReader(0),
+				true);
+			setDocument(newdoc);
+
+			//setText( str );
+
+			//setCaretPosition(0);
+
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 
 	}
 
-	public void print( Graphics g ) {
+	public void print(Graphics g) {
 		setMargin(new Insets(0, 0, 0, 0));
-		super.print( g );
+		super.print(g);
 		setMargin(new Insets(5, 5, 5, 5));
 	}
 
