@@ -24,6 +24,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.columba.core.command.StatusObservable;
 import org.columba.core.command.WorkerStatusController;
 import org.columba.core.logging.ColumbaLogger;
 import org.columba.core.main.MainInterface;
@@ -708,6 +709,13 @@ public class IMAPFolder extends RemoteFolder {
 
 		boolean result = getStore().createFolder(path);
 		
+	}
+
+	/* (non-Javadoc)
+	 * @see org.columba.mail.folder.Folder#getObservable()
+	 */
+	public StatusObservable getObservable() {
+		return ((IMAPRootFolder)getRootFolder()).getObservable();
 	}
 
 }
