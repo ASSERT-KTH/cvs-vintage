@@ -3,6 +3,7 @@
 <!ELEMENT module (name, description, code, user*, issue*)>
 <!ATTLIST module id CDATA #REQUIRED>
 <!ATTLIST module parent CDATA #REQUIRED>
+<!ATTLIST module owner-id CDATA #IMPLIED>
 
 <!ELEMENT user (firstname, lastname, email, role*)>
 
