@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/InvokerServlet.java,v 1.1 1999/10/09 00:30:12 duncan Exp $
- * $Revision: 1.1 $
- * $Date: 1999/10/09 00:30:12 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/InvokerServlet.java,v 1.2 1999/10/16 01:32:03 duncan Exp $
+ * $Revision: 1.2 $
+ * $Date: 1999/10/16 01:32:03 $
  *
  * ====================================================================
  *
@@ -261,12 +261,6 @@ public class InvokerServlet extends HttpServlet {
 
     public void doError(HttpServletResponse response)
     throws ServletException, IOException {
-        response.setStatus(403);
-	response.setContentType("text/html");
-
-	PrintWriter out = response.getWriter();
-
-	out.println("<html><body>Invoker could not find a servlet</body>");
-	out.println("</html>");
+        response.sendError(404);
     }    
 }
