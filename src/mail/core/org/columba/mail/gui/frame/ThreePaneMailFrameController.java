@@ -27,6 +27,8 @@ import org.columba.mail.gui.table.action.CopyAction;
 import org.columba.mail.gui.table.action.CutAction;
 import org.columba.mail.gui.table.action.DeleteAction;
 import org.columba.mail.gui.table.action.PasteAction;
+import org.columba.mail.gui.table.action.UpAction;
+import org.columba.mail.gui.table.action.DownAction;
 import org.columba.mail.gui.table.selection.TableSelectionHandler;
 import org.columba.mail.gui.tree.TreeController;
 import org.columba.mail.gui.tree.selection.TreeSelectionHandler;
@@ -95,7 +97,20 @@ public class ThreePaneMailFrameController
 		treeController.getView().getActionMap().put(
 			"PASTE",
 			new PasteAction(this));
-
+			
+		tableController.getView().getInputMap().put(
+		  KeyStroke.getKeyStroke(KeyEvent.VK_UP, 0),
+			"UP");
+		tableController.getView().getActionMap().put(
+		 "UP",
+		 new UpAction(this));
+		 
+		tableController.getView().getInputMap().put(
+			KeyStroke.getKeyStroke(KeyEvent.VK_DOWN, 0),
+				"DOWN");
+		tableController.getView().getActionMap().put(
+		 "DOWN",
+		new DownAction(this));
 	}
 
 	public AbstractFrameView createView() {
