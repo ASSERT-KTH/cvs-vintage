@@ -14,6 +14,7 @@ import java.util.HashMap;
 import java.util.Set;
 import java.util.HashSet;
 
+import org.w3c.dom.DocumentType;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
@@ -27,14 +28,19 @@ import org.jboss.ejb.DeploymentException;
  *   @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
  *   @author <a href="mailto:peter.antman@tim.se">Peter Antman</a>.
  *   @author <a href="mailto:Scott_Stark@displayscape.com">Scott Stark</a>.
- *   @version $Revision: 1.18 $
+ *   @version $Revision: 1.19 $
  */
 public class ApplicationMetaData extends MetaData
 {
     // Constants -----------------------------------------------------
-    
+    public static final int EJB_1x = 1;
+	 public static final int EJB_2x = 2;
+        
     // Attributes ----------------------------------------------------
     private URL url;
+
+	 // verion of the dtd used to create ejb-jar.xml
+	 private int ejbVersion;
 
     private ArrayList beans = new ArrayList();
     private ArrayList securityRoles = new ArrayList();
@@ -62,6 +68,14 @@ public class ApplicationMetaData extends MetaData
 
     public void setUrl(URL u) { url = u; } 
     
+    public boolean isEJB1x() {
+		 return ejbVersion == 1;
+	 }
+	 
+    public boolean isEJB2x() {
+		 return ejbVersion == 2;
+	 }
+	 
     public Iterator getEnterpriseBeans() {
        return beans.iterator(); 
     }
@@ -113,6 +127,18 @@ public class ApplicationMetaData extends MetaData
 
     public void importEjbJarXml (Element element) throws DeploymentException {
        
+       // EJB version is determined by the doc type that
+       // was used to verify the ejb-jar.xml.
+       DocumentType docType = element.getOwnerDocument().getDoctype(); 
+       if(docType!=null && docType.getPublicId().startsWith(
+              "-//Sun Microsystems, Inc.//DTD Enterprise JavaBeans 2.0")) {
+         // 2.0 dtd
+         ejbVersion = 2;
+       } else {
+         // default is 1.x DTD
+         ejbVersion = 1;
+       }
+
        // find the beans		
        Element enterpriseBeans = getUniqueChild(element, "enterprise-beans");
        
