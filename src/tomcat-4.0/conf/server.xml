@@ -136,7 +136,9 @@
              document roots in places other than the virtual host's appBase
              directory.  -->
         <!-- Tomcat Root Context -->
-        <Context path="" docBase="scarab" reloadable="true"/>
+        <Context path="" docBase="scarab" reloadable="true">
+           <Loader checkInterval="3"/>
+        </Context>
 
       </Host>
 
