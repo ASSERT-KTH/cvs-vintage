@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/session/Attic/StandardSession.java,v 1.12 2000/06/10 21:55:31 costin Exp $
- * $Revision: 1.12 $
- * $Date: 2000/06/10 21:55:31 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/session/Attic/StandardSession.java,v 1.13 2000/06/18 20:14:13 jon Exp $
+ * $Revision: 1.13 $
+ * $Date: 2000/06/18 20:14:13 $
  *
  * ====================================================================
  *
@@ -90,10 +90,14 @@ import org.apache.tomcat.util.StringManager;
  * However, because the class itself is not declared public, Java logic outside
  * of the <code>org.apache.tomcat.session</code> package cannot cast an
  * HttpSession view of this instance back to a Session view.
+ * <p>
+ * <b>IMPLEMENTATION NOTE</b>: If you add fields to this class, you must
+ * make sure that you carry them over in the read/writeObject methods so
+ * that this class is properly serialized.
  *
  * @author Craig R. McClanahan
  * @author <a href="mailto:jon@latchkey.com">Jon S. Stevens</a>
- * @version $Revision: 1.12 $ $Date: 2000/06/10 21:55:31 $
+ * @version $Revision: 1.13 $ $Date: 2000/06/18 20:14:13 $
  */
 
 final class StandardSession
@@ -747,11 +751,15 @@ final class StandardSession
 		creationTime = ((Long) stream.readObject()).longValue();
 		id = (String) stream.readObject();
 		lastAccessedTime = ((Long) stream.readObject()).longValue();
+                thisAccessedTime = ((Long) stream.readObject()).longValue();
 		maxInactiveInterval = ((Integer) stream.readObject()).intValue();
 		isNew = ((Boolean) stream.readObject()).booleanValue();
 		isValid = ((Boolean) stream.readObject()).booleanValue();
 
 		attributes = (Hashtable) stream.readObject();
+
+                // Set constant instance variables
+                sm = StringManager.getManager("org.apache.tomcat.session");
     }
 
 
@@ -785,6 +793,7 @@ final class StandardSession
 		stream.writeObject(new Long(creationTime));
 		stream.writeObject(id);
 		stream.writeObject(new Long(lastAccessedTime));
+                stream.writeObject(new Long(thisAccessedTime));
 		stream.writeObject(new Integer(maxInactiveInterval));
 		stream.writeObject(new Boolean(isNew));
 		stream.writeObject(new Boolean(isValid));

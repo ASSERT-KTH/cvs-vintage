@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/session/Attic/StandardManager.java,v 1.10 2000/06/15 19:34:59 jon Exp $
- * $Revision: 1.10 $
- * $Date: 2000/06/15 19:34:59 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/session/Attic/StandardManager.java,v 1.11 2000/06/18 20:14:13 jon Exp $
+ * $Revision: 1.11 $
+ * $Date: 2000/06/18 20:14:13 $
  *
  * ====================================================================
  *
@@ -102,7 +102,7 @@ import org.apache.tomcat.core.Request;
  * @author Craig R. McClanahan
  * @author costin@eng.sun.com
  * @author <a href="mailto:jon@latchkey.com">Jon S. Stevens</a>
- * @version $Revision: 1.10 $ $Date: 2000/06/15 19:34:59 $
+ * @version $Revision: 1.11 $ $Date: 2000/06/18 20:14:13 $
  */
 public final class StandardManager implements Runnable  {
     // ----------------------------------------------------- Instance Variables
@@ -328,6 +328,16 @@ public final class StandardManager implements Runnable  {
                 that given.
         */
         public void setSessions(Hashtable sessions) {
+            
+                // make sure all the sessions know they belong to us
+                Enumeration e = sessions.keys();
+                while (e.hasMoreElements())
+                {
+                    StandardSession sess 
+                        = (StandardSession)sessions.get(e.nextElement());
+                    sess.setManager(this);
+                }
+            
                 this.sessions = sessions;
         }
 	

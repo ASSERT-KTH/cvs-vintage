@@ -106,12 +106,14 @@ public final class SessionSerializer
 
                         // put the new sessions into the manager
                         sessionM.setSessions(sessions);
-
-                        // and replace the current session in the current
-                        // request
-                        HttpSession newSession = 
-                            (HttpSession)sessions.get(req.getRequestedSessionId());
-                        req.setSession(newSession);
+                        
+                        if (req.getSession(false) != null)
+                        {
+                            // replace the current session in the current request
+                            HttpSession newSession = 
+                                (HttpSession)sessions.get(req.getRequestedSessionId());
+                            req.setSession(newSession);
+                        }
 			
 		} catch (Exception e) {
 		    // log the error. there shouldn't be one here though.
