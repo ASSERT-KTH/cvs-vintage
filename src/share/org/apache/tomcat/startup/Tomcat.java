@@ -39,10 +39,10 @@ public class Tomcat {
 
     // Set the mappings
     void setHelper( XmlMapper xh ) {
- 	xh.addRule( "ContextManager", xh.objectCreate("org.apache.tomcat.core.ContextManager") );
+ 	// xh.addRule( "ContextManager", xh.objectCreate("org.apache.tomcat.core.ContextManager") );
 	xh.addRule( "ContextManager", xh.setProperties() );
 	//	xh.addRule( "ContextManager", xh.setParent( "setServer" ) );
-	xh.addRule( "ContextManager", xh.addChild( "setContextManager", null) );
+	//	xh.addRule( "ContextManager", xh.addChild( "setContextManager", null) );
 	
  	xh.addRule( "ContextManager/Context", xh.objectCreate("org.apache.tomcat.core.Context"));
 	xh.addRule( "ContextManager/Context", xh.setParent( "setContextManager") );
@@ -69,11 +69,11 @@ public class Tomcat {
 
 	XmlMapper xh=new XmlMapper();
 	xh.setDebug( 0 );
-	ContextManager cm=null;
+	ContextManager cm=new ContextManager();
 	setHelper( xh );
-	org.apache.tomcat.server.HttpServer server=new org.apache.tomcat.server.HttpServer();
-	xh.readXml(f,server);
-	cm=server.getContextManager();
+	//	org.apache.tomcat.server.HttpServer server=new org.apache.tomcat.server.HttpServer();
+	xh.readXml(f,cm);
+	//	cm=server.getContextManager();
 
 	if( doStop ) {
 	    stopTomcat(cm);

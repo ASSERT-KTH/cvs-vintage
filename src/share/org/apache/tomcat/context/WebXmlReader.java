@@ -84,6 +84,11 @@ public class WebXmlReader extends BaseContextInterceptor  implements ContextInte
 	    xh.addRule("web-app/servlet/servlet-name", xh.methodSetter("setServletName",0) ); 
 	    xh.addRule("web-app/servlet/servlet-class", xh.methodSetter("setServletClass",0));
 	    xh.addRule("web-app/servlet/jsp-file",xh.methodSetter("setPath",0));
+
+	    xh.addRule("web-app/servlet/security-role-ref", xh.methodSetter("addSecurityMapping", 3) ); 
+	    xh.addRule("web-app/servlet/security-role-ref/role-name", xh.methodParam(0) );
+	    xh.addRule("web-app/servlet/security-role-ref/role-link", xh.methodParam(1) );
+	    xh.addRule("web-app/servlet/security-role-ref/description", xh.methodParam(2) ); 
 	    
 	    xh.addRule("web-app/servlet/init-param", xh.methodSetter("addInitParam", 2) ); // addXXX
 	    xh.addRule("web-app/servlet/init-param/param-name", xh.methodParam(0) );

@@ -32,10 +32,6 @@
     <copyfile src="${ant.home}/lib/xml.jar" dest="${tomcat.build}/lib/xml.jar"/>
     <copyfile src="${ant.home}/lib/ant.jar" dest="${tomcat.build}/lib/ant.jar"/>
 
-    <copyfile src="src/share/org/apache/tomcat/deployment/web.xml"
-              dest="${tomcat.build}/conf/web.xml"/>
-    <copyfile src="src/share/org/apache/tomcat/deployment/web.dtd"
-              dest="${tomcat.build}/conf/web.dtd"/>
     <copyfile src="LICENSE" dest="${tomcat.build}/LICENSE"/>
 
     <chmod perm="+x" src="${tomcat.build}/bin/tomcat.sh"/>

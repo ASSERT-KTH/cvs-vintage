@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/ServletWrapper.java,v 1.18 2000/02/09 21:43:53 costin Exp $
- * $Revision: 1.18 $
- * $Date: 2000/02/09 21:43:53 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/ServletWrapper.java,v 1.19 2000/02/09 23:26:28 costin Exp $
+ * $Revision: 1.19 $
+ * $Date: 2000/02/09 23:26:28 $
  *
  * ====================================================================
  *
@@ -108,6 +108,9 @@ public class ServletWrapper {
     protected int serviceCount = 0;
 
     int loadOnStartup=0;
+
+    Hashtable initArgs=null;
+    Hashtable securityRoleRefs=new Hashtable();
     
     public ServletWrapper() {
         config = new ServletConfigImpl();
@@ -177,9 +180,18 @@ public class ServletWrapper {
 	config.setServletClassName(servletClassName);
     }
 
+    /** Security Role Ref represent a mapping between servlet role names and
+     *  server roles
+     */
+    public void addSecurityMapping( String name, String role, String description ) {
+	securityRoleRefs.put( name, role );
+    }
 
-    Hashtable initArgs=null;
+    public String getSecurityRole( String name ) {
+	return (String)securityRoleRefs.get( name );
+    }
     
+
     public void addInitParam( String name, String value ) {
 	if( initArgs==null) {
 	    initArgs=new Hashtable();

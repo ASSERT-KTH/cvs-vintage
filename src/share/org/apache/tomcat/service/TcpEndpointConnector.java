@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/Attic/TcpEndpointConnector.java,v 1.2 2000/01/27 01:24:50 costin Exp $
- * $Revision: 1.2 $
- * $Date: 2000/01/27 01:24:50 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/Attic/TcpEndpointConnector.java,v 1.3 2000/02/09 23:26:28 costin Exp $
+ * $Revision: 1.3 $
+ * $Date: 2000/02/09 23:26:28 $
  *
  * ====================================================================
  *
@@ -71,7 +71,7 @@ import java.io.*;
 import java.net.*;
 import java.util.*;
 
-import org.apache.tomcat.server.HttpServer;
+//import org.apache.tomcat.server.HttpServer;
 
 /* Similar with MPM module in Apache2.0. Handles all the details related with
    "tcp server" functionality - thread management, accept policy, etc.
@@ -89,6 +89,16 @@ import org.apache.tomcat.server.HttpServer;
  * @author costin@eng.sun.com
  */
 public class TcpEndpointConnector  implements ServerConnector {
+    // Attributes we accept ( to support the old model of
+    // configuration, will be deprecated )
+    public static final String VHOST_PORT="vhost_port";
+    public static final String VHOST_NAME="vhost_name";
+
+    // needed only as a "hack" to HttpServerConnector
+    public static final String SERVER="server";
+    public static final String VHOST_ADDRESS="vhost_address";
+    public static final String SOCKET_FACTORY="socketFactory";
+
     // XXX define ConnectorException
     // XXX replace strings with sm.get...
     // XXX replace static strings with constants
@@ -168,20 +178,20 @@ public class TcpEndpointConnector  implements ServerConnector {
 
     // XXX use constants, remove dep on HttpServer
     public void setAttribute( String prop, Object value) {
-	if(HttpServer.VHOST_NAME.equals(prop) ) {
+	if(VHOST_NAME.equals(prop) ) {
 	    //vhost=(String)value;
 	}
-	if(HttpServer.VHOST_PORT.equals(prop) ) {
+	if(VHOST_PORT.equals(prop) ) {
 	    vport=((Integer)value).intValue();
 	}
 
-	if(HttpServer.VHOST_ADDRESS.equals(prop)) {
+	if(VHOST_ADDRESS.equals(prop)) {
 	    address=(InetAddress)value;
 	}
-	if(HttpServer.SERVER.equals(prop)) {
+	if(SERVER.equals(prop)) {
 	    //server=(HttpServer)value;
 	}
-	if(HttpServer.SOCKET_FACTORY.equals(prop)) {
+	if(SOCKET_FACTORY.equals(prop)) {
 	    socketFactory=(ServerSocketFactory)value;
 	}
     }
