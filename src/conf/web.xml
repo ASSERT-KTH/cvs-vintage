@@ -85,4 +85,8 @@
         <auth-method>BASIC</auth-method>
         <realm-name>Templates</realm-name>
     </login-config>
+    <security-role>
+        <description>This is the administrator role.</description>
+        <role-name>admin</role-name>
+    </security-role>
 </web-app>
