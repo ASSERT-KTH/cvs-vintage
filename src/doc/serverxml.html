@@ -4,7 +4,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
 <head>
-  <!-- $Id: serverxml.html,v 1.31 2002/11/07 13:23:32 hgomez Exp $ -->
+  <!-- $Id: serverxml.html,v 1.32 2003/09/29 07:42:59 hgomez Exp $ -->
   <!-- Copyright 1999-2001 Apache Software Foundation -->
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" >
   <link rel="stylesheet" href="style.css">
@@ -2160,9 +2160,9 @@ than 5.</p>
 <h4>Description</h4>
 
 <p>JMX MBeans support has been added to Tomcat 3.3.2, which allow you to manage
-Tomcat from any JMX console or via a simple browser by the build in HTTP Adaptor</p>
+Tomcat from any JMX console (JRMP) or via a simple browser by the build in HTTP Adaptor</p>
 <p>To enable JMX, you should add the &lt;MxInterceptor /&gt; in server.xml</p>
-<p>To also activate the HTTP Adaptor you should at least define the listen port</p>
+<p>To also activate the HTTP/JRMP Adaptor you should at least define the port</p>
 
 <h4>Attributes</h4>
 
@@ -2173,13 +2173,18 @@ Tomcat from any JMX console or via a simple browser by the build in HTTP Adaptor
     <th>Default</th>
   </tr>
   <tr valign="top">
+    <td>type</td>
+    <td>indicate what kind of adapter you want to use, HTTP or JRMP.</td>
+    <td>HTTP</td>
+  </tr>
+  <tr valign="top">
     <td>port</td>
-    <td>port where the JMX HTTP Adaptor will listen to, HTTP Adaptor will only be loaded if the port is set</td>
-    <td>-1, no http adaptor loaded</td>
+    <td>port where the JMX HTTP/JRMP adaptor will listen to, no adaptor will be loaded if not set</td>
+    <td>no adaptor</td>
   </tr>
   <tr valign="top">
     <td>host</td>
-    <td>host/ip where the JMX HTTP Adaptor will listen to, only available when using <code>MX4J</code> HTTP Adaptor</td>
+    <td>host/ip where the JMX HTTP/JRMP Adaptor will listen to, only available when using <code>MX4J</code> implementation</td>
     <td>null</td>
   </tr>
   <tr valign="top">
@@ -2205,8 +2210,7 @@ Tomcat from any JMX console or via a simple browser by the build in HTTP Adaptor
 <h4>Example(s)</h4>
 
 <pre>
-&lt;MxInterceptor port=&quot;8999&quot; host=&quot;mysystem&quot; authentication=&quot;basic&quot; user=&quot;admin&quot; password=&quot;changeillico&quot;/&gt;
-&lt;erceptor /&gt;
+&lt;MxInterceptor type=&quot;HTTP&quot; port=&quot;8999&quot; host=&quot;mysystem&quot; authentication=&quot;basic&quot; user=&quot;admin&quot; password=&quot;changeillico&quot; /&gt;
 </pre>
 
 <hr size="5">

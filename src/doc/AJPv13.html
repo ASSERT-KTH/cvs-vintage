@@ -235,6 +235,11 @@ server can send the following messages to the servlet container:
     <TD>Shutdown</TD>
     <TD>The web server asks the container to shut itself down.
   </TR>
+  <TR>
+    <TD ALIGN=CENTER>8</TD>
+    <TD>Ping</TD>
+    <TD>The web server asks the container to quickly respond with a Pong.
+  </TR>
 </TABLE>
 
 <P>The servlet container can send the following types of messages to the web
@@ -271,6 +276,12 @@ server:
     <TD>Get Body Chunk</TD>
     <TD>Get further data from the request if it hasn't all been transferred
     yet.</TD>
+  </TR>
+  </TR>
+    <TR>
+    <TD ALIGN=CENTER>9</TD>
+    <TD>Pong</TD>
+    <TD>Reply to a Ping request.</TD>
   </TR>
 </TABLE>
 
