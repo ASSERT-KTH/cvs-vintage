@@ -76,6 +76,6 @@ public class ActivityAttributeDescriptionRule extends BaseRule
     {
         Category cat = Category.getInstance(org.tigris.scarab.util.xml.DBImport.class);
         cat.debug("(" + state + ") activity attribute description body: " + text);
-        super.body(text);
+        super.digesterPush(text);
     }
 }

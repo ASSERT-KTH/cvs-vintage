@@ -59,16 +59,16 @@ import org.tigris.scarab.om.IssueType;
  * @author <a href="mailto:kevin.minshull@bitonic.com">Kevin Minshull</a>
  * @author <a href="mailto:richard.han@bitonic.com">Richard Han</a>
  */
-public class ArtifactTypeRule extends Rule
+public class ArtifactTypeRule extends BaseRule
 {
-    private String state;
-    private DependencyTree dependTree;
     
-    public ArtifactTypeRule(Digester digester, String state, DependencyTree dependTree)
+    /**
+     * Sets the state and DependencyTree and calls super(digester)
+     */
+    public ArtifactTypeRule(Digester digester, String state, 
+                            DependencyTree dependTree)
     {
-        super(digester);
-        this.state = state;
-        this.dependTree = dependTree;
+        super(digester, state, dependTree);
     }
     
     /**
@@ -82,17 +82,11 @@ public class ArtifactTypeRule extends Rule
     {
         Category cat = Category.getInstance(org.tigris.scarab.util.xml.DBImport.class);
         cat.debug("("+state+") artifact-type body: " + text);
-        if(state.equals(DBImport.STATE_DB_INSERTION))
-        {
-            doInsertionAtBody(text);
-        }
-        else if (state.equals(DBImport.STATE_DB_VALIDATION))
-        {
-            doValidationAtBody(text);
-        }
+        super.doInsertionOrValidationAtBody(text);
     }
     
-    private void doInsertionAtBody(String artifactTypeName) throws Exception
+    protected void doInsertionAtBody(String artifactTypeName)
+        throws Exception
     {
         String xmlIssueId = (String)digester.pop();
         ScarabModule module = (ScarabModule)digester.pop();
@@ -101,15 +95,17 @@ public class ArtifactTypeRule extends Rule
         Issue issue = Issue.getNewInstance(module, issueType);
         issue.save();
         
-        //note the xmlIssueId here doesn't contain the module prefix,but we need the prefix for 
-        //the key of dependency tree
+        // note the xmlIssueId here doesn't contain the module 
+        // prefix,but we need the prefix for 
+        // the key of dependency tree
         String xmlId = module.getCode()+ xmlIssueId;
         dependTree.addIssueId(xmlId, issue.getIssueId());
         digester.push(module);
         digester.push(issue);
     }
     
-    private void doValidationAtBody(String artifactTypeName)
+    protected void doValidationAtBody(String artifactTypeName)
+        throws Exception
     {
         String xmlIssueId = (String)digester.pop();
         String moduleCode = (String)digester.pop();

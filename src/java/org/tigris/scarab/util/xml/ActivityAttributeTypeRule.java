@@ -56,14 +56,14 @@ import org.tigris.scarab.om.AttributeType;
  * @author <a href="mailto:kevin.minshull@bitonic.com">Kevin Minshull</a>
  * @author <a href="mailto:richard.han@bitonic.com">Richard Han</a>
  */
-public class ActivityAttributeTypeRule extends Rule
+public class ActivityAttributeTypeRule extends BaseRule
 {
-    private String state;
-    
+    /**
+     * Constructor just calls super
+     */
     public ActivityAttributeTypeRule(Digester digester, String state)
     {
-        super(digester);
-        this.state = state;
+        super(digester, state);
     }
     
     /**
@@ -77,30 +77,24 @@ public class ActivityAttributeTypeRule extends Rule
     {
         Category cat = Category.getInstance(org.tigris.scarab.util.xml.DBImport.class);
         cat.debug("("+state+") activity-attribute-type body: " + text);
-        if(state.equals(DBImport.STATE_DB_INSERTION))
-        {
-            doInsertionAtBody(text);
-        }
-        else if (state.equals(DBImport.STATE_DB_VALIDATION))
-        {
-            doValidationAtBody(text);
-        }
+        super.doInsertionOrValidationAtBody(text);
     }
     
     /**
      * Handler for the insertion
      */
-    private void doInsertionAtBody(String attributeTypeName)throws Exception
+    protected void doInsertionAtBody(String attributeTypeName)
+        throws Exception
     {
         AttributeType issueType = AttributeType.getInstance(attributeTypeName);
         digester.push(issueType);
     }
-    
-    
+        
     /**
      * Handler for the validation
      */
-    private void doValidationAtBody(String attributeTypeName) throws Exception
+    protected void doValidationAtBody(String attributeTypeName)
+        throws Exception
     {
         AttributeType.getInstance(attributeTypeName);
     }

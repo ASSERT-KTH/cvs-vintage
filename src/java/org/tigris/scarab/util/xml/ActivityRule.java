@@ -66,14 +66,11 @@ import org.tigris.scarab.om.ParentChildAttributeOption;
  * @author <a href="mailto:kevin.minshull@bitonic.com">Kevin Minshull</a>
  * @author <a href="mailto:richard.han@bitonic.com">Richard Han</a>
  */
-public class ActivityRule extends Rule
+public class ActivityRule extends BaseRule
 {
-    private String state;
-    
     public ActivityRule(Digester digester, String state)
     {
-        super(digester);
-        this.state = state;
+        super(digester, state);
     }
     
     /**

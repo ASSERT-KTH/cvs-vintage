@@ -55,14 +55,14 @@ import org.apache.log4j.Category;
  * @author <a href="mailto:kevin.minshull@bitonic.com">Kevin Minshull</a>
  * @author <a href="mailto:richard.han@bitonic.com">Richard Han</a>
  */
-public class ActivityAttributeOldValueRule extends Rule
+public class ActivityAttributeOldValueRule extends BaseRule
 {
-    private String state;
-    
+    /**
+     * Constructor just calls super
+     */
     public ActivityAttributeOldValueRule(Digester digester, String state)
     {
-        super(digester);
-        this.state = state;
+        super(digester, state);
     }
 
     /**
@@ -76,9 +76,6 @@ public class ActivityAttributeOldValueRule extends Rule
     {
         Category cat = Category.getInstance(org.tigris.scarab.util.xml.DBImport.class);
         cat.debug("(" + state + ") activity attribute old value body: " + text);
-        if(state.equals(DBImport.STATE_DB_INSERTION))
-        {
-            digester.push(text);
-        }
+        super.digesterPush(text);
     }
 }

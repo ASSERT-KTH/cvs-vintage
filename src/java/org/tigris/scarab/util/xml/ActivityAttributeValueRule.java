@@ -55,14 +55,11 @@ import org.apache.log4j.Category;
  * @author <a href="mailto:kevin.minshull@bitonic.com">Kevin Minshull</a>
  * @author <a href="mailto:richard.han@bitonic.com">Richard Han</a>
  */
-public class ActivityAttributeValueRule extends Rule
+public class ActivityAttributeValueRule extends BaseRule
 {
-    private String state;
-    
     public ActivityAttributeValueRule(Digester digester, String state)
     {
-        super(digester);
-        this.state = state;
+        super(digester, state);
     }
 
     /**
@@ -76,9 +73,6 @@ public class ActivityAttributeValueRule extends Rule
     {
         Category cat = Category.getInstance(org.tigris.scarab.util.xml.DBImport.class);
         cat.debug("(" + state + ") activity attribute value body: " + text);
-        if(state.equals(DBImport.STATE_DB_INSERTION))
-        {
-            digester.push(text);
-        }
+        super.digesterPush(text);
     }
 }

@@ -59,16 +59,28 @@ import org.apache.log4j.Category;
 public class BaseRule extends Rule
 {
     protected String state = null;
+    protected DependencyTree dependTree = null;
 
     /**
      * Sets the state and calls super(digester)
      */
-    public BaseRule(Digester digester, String state)
+    protected BaseRule(Digester digester, String state)
     {
         super(digester);
         this.state = state;
     }
     
+    /**
+     * Sets the state and DependencyTree and calls super(digester)
+     */
+    protected BaseRule(Digester digester, String state, 
+                    DependencyTree dependTree)
+    {
+        super(digester);
+        this.state = state;
+        this.dependTree = dependTree;
+    }
+
     /**
      * This method is called when the body of a matching XML element
      * is encountered.  If the element has no body, this method is
@@ -76,11 +88,42 @@ public class BaseRule extends Rule
      *
      * @param text The text of the body of this element
      */
-    public void body(String text) throws Exception
+    protected void digesterPush(String text) throws Exception
     {
         if(state.equals(DBImport.STATE_DB_INSERTION))
         {
             digester.push(text);
         }
+    }
+
+    /**
+     * This method is called when the body of a matching XML element
+     * is encountered.  If the element has no body, this method is
+     * not called at all.
+     *
+     * @param text The text of the body of this element
+     */
+    protected void doInsertionOrValidationAtBody(String text) throws Exception
+    {
+        if(state.equals(DBImport.STATE_DB_INSERTION))
+        {
+            doInsertionAtBody(text);
+        }
+        else if (state.equals(DBImport.STATE_DB_VALIDATION))
+        {
+            doValidationAtBody(text);
+        }
+    }
+
+    protected void doInsertionAtBody(String value)
+        throws Exception
+    {
+        throw new Exception("You should extend this method and implement it.");
+    }
+
+    protected void doValidationAtBody(String value)
+        throws Exception
+    {
+        throw new Exception("You should extend this method and implement it.");
     }
 }
