@@ -11,6 +11,7 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.Set;
 import java.rmi.RemoteException;
+
 import javax.ejb.CreateException;
 import javax.ejb.EJBException;
 import javax.ejb.FinderException;
@@ -37,21 +38,10 @@ import javax.management.ObjectName;
 import javax.management.ObjectInstance;
 import javax.management.QueryExp;
 import javax.management.ReflectionException;
+import javax.management.j2ee.ManagementHome;
 import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
-
-import javax.management.j2ee.MEJBServer;
-//import javax.management.j2ee.Attribute;
-//import javax.management.j2ee.AttributeList;
-/*
-import javax.management.j2ee.;
-import javax.management.j2ee.;
-import javax.management.j2ee.;
-import javax.management.j2ee.;
-import javax.management.j2ee.;
-import javax.management.j2ee.;
-*/
 
 import org.jboss.jmx.connector.RemoteMBeanServer;
 import org.jboss.management.j2ee.J2EEManagedObject;
@@ -62,19 +52,24 @@ import org.jboss.management.j2ee.J2EEManagedObject;
 *
 * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
 * @author <a href="mailto:andreas@jboss.org">Andreas Schaefer</a>
-* @version $Revision: 1.4 $
+* @version $Revision: 1.1 $
 *
 * @ejb:bean name="MEJB"
 *           display-name="JBoss Management EJB (MEJB)"
 *           type="Stateless"
 *           jndi-name="ejb/mgmt/J2EEManagement"
-* @ejb:interface extends="javax.management.j2ee.MEJBServer"
+* @--ejb:interface generate="none"
+*                remote-class="javax.management.j2ee.Management"
+* @ejb:interface extends="javax.management.j2ee.Management"
+* @--ejb:home extends="javax.management.j2ee.ManagementHome"
+* @ejb:home generate="none"
+*           remote-class="javax.management.j2ee.ManagementHome"
 * @ejb:env-entry description="JNDI-Name of the MBeanServer to be used to look it up. If 'null' the first of all listed local MBeanServer is taken"
 *                name="Server-Name"
 *                value="null"
 *
 **/
-public class MEJBBean
+public class ManagementBean
    implements SessionBean
 {
    // -------------------------------------------------------------------------
@@ -102,14 +97,14 @@ public class MEJBBean
    * @ejb:interface-method view-type="remote"
    **/
    public Object getAttribute( ObjectName pName, String pAttribute )
-      throws RemoteException
+      throws
+         MBeanException,
+         AttributeNotFoundException,
+         InstanceNotFoundException,
+         ReflectionException,
+         RemoteException
    {
-      try {
       return mConnector.getAttribute( pName, pAttribute );
-      }
-      catch( Exception e ) {
-         throw new RemoteException( "MEJBBean.getAttribute(), got JMX exception", e );
-      }
    }
    
    /**
@@ -118,14 +113,12 @@ public class MEJBBean
    * @ejb:interface-method view-type="remote"
    **/
    public AttributeList getAttributes( ObjectName pName, String[] pAttributes )
-      throws RemoteException
+      throws
+         InstanceNotFoundException,
+         ReflectionException,
+         RemoteException
    {
-      try {
       return mConnector.getAttributes( pName, pAttributes );
-      }
-      catch( Exception e ) {
-         throw new RemoteException( "MEJBBean.getAttributes(), got JMX exception", e );
-      }
    }
    
    /**
@@ -144,7 +137,7 @@ public class MEJBBean
    *
    * @ejb:interface-method view-type="remote"
    **/
-   public Integer getManagedObjectCount()
+   public Integer getMBeanCount()
       throws RemoteException
    {
       try {
@@ -159,32 +152,50 @@ public class MEJBBean
       return new Integer( 0 );
    }
    
-   /**
-   * @throws RemoteException Necessary for a EJB
-   *
-   * @ejb:interface-method view-type="remote"
-   **/
-   public Object invoke( ObjectName pName, String pOperationName, Object[] pParams, String[] pSignature )
+   public MBeanInfo getMBeanInfo( ObjectName pName )
+      throws
+         IntrospectionException,
+         InstanceNotFoundException,
+         ReflectionException,
+         RemoteException
+   {
+      return mConnector.getMBeanInfo( pName );
+   }
+   
+   public ListenerRegistration getListenerRegistry()
       throws RemoteException
    {
-      try {
+      return new ListenerRegistration(
+         (ManagementHome) mContext.getEJBObject().getEJBHome(),
+         new String[] {}
+      );
+   }
+   
+   /**
+    * @throws RemoteException Necessary for a EJB
+    *
+    * @ejb:interface-method view-type="remote"
+    **/
+   public Object invoke( ObjectName pName, String pOperationName, Object[] pParams, String[] pSignature )
+      throws
+         InstanceNotFoundException,
+         MBeanException,
+         ReflectionException,
+         RemoteException
+   {
       return mConnector.invoke(
          pName,
          pOperationName,
          pParams,
          pSignature
       );
-      }
-      catch( Exception e ) {
-         throw new RemoteException( "MEJBBean.invoke(), got JMX exception", e );
-      }
    }
    
    /**
-   * @throws RemoteException Necessary for a EJB
-   *
-   * @ejb:interface-method view-type="remote"
-   **/
+    * @throws RemoteException Necessary for a EJB
+    *
+    * @ejb:interface-method view-type="remote"
+    **/
    public boolean isRegistered( ObjectName pName )
       throws RemoteException
    {
@@ -192,10 +203,10 @@ public class MEJBBean
    }
    
    /**
-   * @throws RemoteException Necessary for a EJB
-   *
-   * @ejb:interface-method view-type="remote"
-   **/
+    * @throws RemoteException Necessary for a EJB
+    *
+    * @ejb:interface-method view-type="remote"
+    **/
    public Set queryNames( ObjectName pName )
       throws RemoteException
    {
@@ -203,35 +214,107 @@ public class MEJBBean
    }
    
    /**
-   * @throws RemoteException Necessary for a EJB
-   *
-   * @ejb:interface-method view-type="remote"
-   **/
+    * @throws RemoteException Necessary for a EJB
+    *
+    * @ejb:interface-method view-type="remote"
+    **/
    public void setAttribute( ObjectName pName, Attribute pAttribute )
-      throws RemoteException
+      throws
+         AttributeNotFoundException,
+         InstanceNotFoundException,
+         InvalidAttributeValueException,
+         MBeanException,
+         ReflectionException,
+         RemoteException
    {
-      try {
       mConnector.setAttribute( pName, pAttribute );
-      }
-      catch( Exception e ) {
-         throw new RemoteException( "MEJBBean.setAttribute(), got JMX exception", e );
-      }
    }
    
    /**
-   * @throws RemoteException Necessary for a EJB
-   *
-   * @ejb:interface-method view-type="remote"
-   **/
+    * @throws RemoteException Necessary for a EJB
+    *
+    * @ejb:interface-method view-type="remote"
+    **/
    public AttributeList setAttributes( ObjectName pName, AttributeList pAttributes )
-      throws RemoteException
+      throws
+         InstanceNotFoundException,
+         ReflectionException,
+         RemoteException
    {
-      try {
       return mConnector.setAttributes( pName, pAttributes );
-      }
-      catch( Exception e ) {
-         throw new RemoteException( "MEJBBean.setAttributes(), got JMX exception", e );
-      }
+   }
+   
+   /**
+    * @throws RemoteException Necessary for a EJB
+    *
+    * @ejb:interface-method view-type="remote"
+    **/
+   public ObjectInstance createMBean(
+      String pClass,
+      ObjectName pName,
+      Object[] pParameters,
+      String[] pSignature
+   )
+      throws
+         InstanceAlreadyExistsException,
+         MBeanException,
+         MBeanRegistrationException,
+         NotCompliantMBeanException,
+         ReflectionException,
+         RemoteException
+   {
+      return mConnector.createMBean( pClass, pName, pParameters, pSignature );
+   }
+   
+   /**
+    * @throws RemoteException Necessary for a EJB
+    *
+    * @ejb:interface-method view-type="remote"
+    **/
+   public void unregisterMBean(
+      ObjectName pName
+   )
+      throws
+         InstanceNotFoundException,
+         MBeanRegistrationException,
+         RemoteException
+   {
+      mConnector.unregisterMBean( pName );
+   }
+   
+   /**
+    * @throws RemoteException Necessary for a EJB
+    *
+    * @ejb:interface-method view-type="remote"
+    **/
+   public void addNotificationListener(
+      ObjectName pBroadcaster,
+      ObjectName pListener,
+      NotificationFilter pFilter,
+      Object pHandback
+   )
+      throws
+         InstanceNotFoundException,
+         RemoteException
+   {
+      mConnector.addNotificationListener( pBroadcaster, pListener, pFilter, pHandback );
+   }
+   
+   /**
+    * @throws RemoteException Necessary for a EJB
+    *
+    * @ejb:interface-method view-type="remote"
+    **/
+   public void removeNotificationListener(
+      ObjectName pBroadcaster,
+      ObjectName pListener
+   )
+      throws
+         InstanceNotFoundException,
+         ListenerNotFoundException,
+         RemoteException
+   {
+      mConnector.removeNotificationListener( pBroadcaster, pListener );
    }
    
    /**
@@ -295,7 +378,7 @@ public class MEJBBean
    **/
    public String toString()
    {
-      return "MEJB [ " + " ]";
+      return "Management [ " + " ]";
    }
    
    // -------------------------------------------------------------------------
