@@ -24,7 +24,7 @@
 // File: PropPanelUseCase.java
 // Classes: PropPanelUseCase
 // Original Author: your email address here
-// $Id: PropPanelUseCase.java,v 1.28 2003/01/27 20:06:59 kataka Exp $
+// $Id: PropPanelUseCase.java,v 1.29 2003/04/29 13:32:19 jhraigniac Exp $
 
 // 21 Mar 2002: Jeremy Bennett (mail@jeremybennett.com). Changed to use the
 // labels "Generalizes:" for inheritance (needs Specializes some time).
@@ -96,7 +96,7 @@ public class PropPanelUseCase extends PropPanelClassifier {
 		addField(Argo.localize("UMLMenu", "label.modifiers"),mPanel);
             	
     JList extensionPoints = new UMLMutableLinkedList(new UMLUseCaseExtensionPointListModel(), null, ActionNewUseCaseExtensionPoint.SINGLETON);
-    addField(Argo.localize("UMLMenu", "label.extensionpoints"), 
+    addField(Argo.localize("UMLMenu", "label.extension-points"), 
         new JScrollPane(extensionPoints));
 		
     add(LabelledLayout.getSeperator());
