@@ -65,7 +65,7 @@ public class POP3MailCheckingAction extends AbstractMailCheckingAction {
 	public boolean isCheckAll() {
         POP3Server controller = MailInterface.popServerCollection.uidGet(accountUid);
 
-        return controller.getAccountItem().getPopItem()
+        return !controller.getAccountItem().getPopItem()
         .getBoolean("exclude_from_checkall",
                 false);
 	}

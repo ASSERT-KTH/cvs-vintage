@@ -61,7 +61,7 @@ public class IMAPMailCheckingAction extends AbstractMailCheckingAction {
 	 */
 	public boolean isCheckAll() {
         IMAPRootFolder imapRootFolder = (IMAPRootFolder) MailInterface.treeModel.getImapFolder(accountUid);
-        return imapRootFolder.getAccountItem().getImapItem().getBoolean("exclude_from_checkall",
+        return !imapRootFolder.getAccountItem().getImapItem().getBoolean("exclude_from_checkall",
                 false);
 	}
 }
