@@ -44,7 +44,7 @@ import org.jboss.net.sockets.DefaultSocketFactory;
  * is nearly the same as the MBeanServer Interface but
  * has an additional RemoteException.
  *
- * @version <tt>$Revision: 1.6 $</tt>
+ * @version <tt>$Revision: 1.7 $</tt>
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  * @author <A href="mailto:andreas.schaefer@madplanet.com">Andreas &quot;Mad&quot; Schaefer</A>
  * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
@@ -88,17 +88,17 @@ public class RMIAdaptorImpl
    {
       return mbeanServer.instantiate(className);
    }
-   
-   public Object instantiate(String className, ObjectName loaderName) 
+
+   public Object instantiate(String className, ObjectName loaderName)
       throws ReflectionException, MBeanException, InstanceNotFoundException, RemoteException
    {
       return mbeanServer.instantiate(className, loaderName);
    }
-   
+
    public Object instantiate(String className, Object[] params, String[] signature)
       throws ReflectionException, MBeanException, RemoteException
    {
-      return mbeanServer.instantiate(className, params, signature);      
+      return mbeanServer.instantiate(className, params, signature);
    }
 
    public Object instantiate(String className,
@@ -109,7 +109,7 @@ public class RMIAdaptorImpl
    {
       return mbeanServer.instantiate(className, loaderName, params, signature);
    }
-   
+
    public ObjectInstance createMBean(String pClassName, ObjectName pName)
       throws ReflectionException,
              InstanceAlreadyExistsException,
@@ -165,7 +165,7 @@ public class RMIAdaptorImpl
       return mbeanServer.createMBean( pClassName, pName, pLoaderName, pParams, pSignature );
    }
 
-   public ObjectInstance registerMBean(Object object, ObjectName name) 
+   public ObjectInstance registerMBean(Object object, ObjectName name)
       throws InstanceAlreadyExistsException,
              MBeanRegistrationException,
              NotCompliantMBeanException,
@@ -173,7 +173,7 @@ public class RMIAdaptorImpl
    {
       return mbeanServer.registerMBean(object, name);
    }
-   
+
    public void unregisterMBean(ObjectName pName)
       throws InstanceNotFoundException,
              MBeanRegistrationException,
@@ -247,7 +247,7 @@ public class RMIAdaptorImpl
       return attrs;
    }
 
-   public void setAttribute(ObjectName pName, Attribute pAttribute) 
+   public void setAttribute(ObjectName pName, Attribute pAttribute)
       throws InstanceNotFoundException,
              AttributeNotFoundException,
              InvalidAttributeValueException,
@@ -341,4 +341,10 @@ public class RMIAdaptorImpl
          throw new ListenerNotFoundException("No listener matches: "+listener);
       mbeanServer.removeNotificationListener(name, delegate);
    }
+
+    public String[] getDomains() throws RemoteException
+    {
+       return mbeanServer.getDomains();
+    }
+
 }
