@@ -35,7 +35,7 @@ import org.jboss.util.SerializableEnumeration;
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
  *   @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  *   @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
- *   @version $Revision: 1.18 $
+ *   @version $Revision: 1.19 $
  */
 public class EntityContainer
    extends Container
@@ -362,7 +362,9 @@ public class EntityContainer
    public Object find(MethodInvocation mi)
       throws java.rmi.RemoteException, FinderException
    {
-      // Multi-finder?
+      
+	  System.out.println("***************************** I make it in the find");
+	  // Multi-finder?
       if (!mi.getMethod().getReturnType().equals(getRemoteClass()))
       {
          // Iterator finder
@@ -391,13 +393,6 @@ public class EntityContainer
 														
 		 //First we create the EJBObject
 		 EJBObject ejbObject = (EJBObject)containerInvoker.getEntityEJBObject(id);
-		 
-		 //MF FIXME: this is not right, the EJBObject should not really have an instance associated
-		 // to it yet (it does for the finder but it is a fluke).  In other words this fix is 
-		 // temporary (bug does fix the "getEJBObject" problem.  It is temporary. Working on a fix
-		 
-		 // Set the context with the EJBObject
-		 ((EntityEnterpriseContext)mi.getEnterpriseContext()).setEJBObject(ejbObject);
 	
 		 return ejbObject;
 		 
@@ -421,68 +416,6 @@ public class EntityContainer
 											 (EntityEnterpriseContext) mi.getEnterpriseContext());
 		return ((EntityEnterpriseContext)mi.getEnterpriseContext()).getEJBObject();
 	}
-	/*
-		
-		try {                                                                                                    	EntityEnterpriseContext ctx = (EntityEnterpriseContext) mi.getEnterpriseContext();
-	
-		   EntityEnterpriseContext ctx = (EntityEnterpriseContext) mi.getEnterpriseContext();
-	
-			Method createMethod = getBeanClass().getMethod("ejbCreate", mi.getMethod().getParameterTypes())
-			Method postCreateMethod = getBeanClass().getMethod("ejbPostCreate", mi.getMethod().getParameterTypes())
-			
-			if (((jBossEntity) bean).getPersistenceType().equals("Bean")) {
-				
-				// The return is the primaryKey
-				Object id = createMethod.invoke(ctx.getInstance(), mi.getArguments());
-				
-				// Set it on the context
-				ctx.setId(id);
-				
-				// Lock instance in cache
-				getInstanceCache().insert(ctx);
-			
-				// Deal with the persistence in the persistence manager
-				getPersistenceManager().createEntity(mi.getMethod(), mi.getArguments(), ctx);
-			
-				// Create EJBObject
-				ctx.setEJBObject(getContainerInvoker().getEntityEJBObject(id));
-			
-				// Invoke postCreate
-				postCreateMethod.invoke(ctx.getInstance(),mi.getArguments());
-			}
-			
-			else {  // We are in the CMP case
-			
-				// The primary key is computed by the PM
-				createMethod.invoke(ctx.getInstance(), mi.getArguments());
-				
-				// Lock instance in cache
-				getInstanceCache().insert(ctx);
-			
-				// The PM returns the PrimaryKey in case of CMP
-				// Compute it and set it on the context
-				ctx.setId(getPersistenceManager().createEntity(mi.getMethod(), mi.getArguments(), ctx));
-			
-				// Create EJBObject
-				ctx.setEJBObject(getContainerInvoker().getEntityEJBObject(ctx.getId()));
-			
-				// Invoke postCreate
-				postCreateMethod.invoke(ctx.getInstance(),mi.getArguments());
-			}
-			
-			return ctx.getEJBObject();
-		
-		}  catch (InvocationTargetException e) {    
-			
-			throw new CreateException("Create failed:"+e);
-		} catch (NoSuchMethodException e) {
-			
-			throw new CreateException("Create methods not found:"+e);
-		} catch (IllegalAccessException e) {
-			
-			throw new CreateException("Could not create entity:"+e);
-		} 
-		*/
 	
 		
    // EJBHome implementation ----------------------------------------
