@@ -104,13 +104,14 @@ public class SearchFrame extends JDialog implements ActionListener {
 		this.destFolder = (VirtualFolder) folder;
 
 		JPanel contentPane = new JPanel(new BorderLayout());
-		contentPane.setBorder(BorderFactory.createEmptyBorder(12, 12, 12, 12));
+		//contentPane.setBorder(BorderFactory.createEmptyBorder(12, 12, 12, 12));
 		//contentPane.add(createTopPanel("Search messages","Specify your search criteria...",ImageLoader.getImageIcon("virtualfolder.png")));
 		contentPane.add(createCenterPanel(), BorderLayout.NORTH);
 		JPanel bottom = new JPanel(new BorderLayout());
 		bottom.setBorder(new SingleSideEtchedBorder(SwingConstants.TOP));
-		bottom.setBorder(BorderFactory.createEmptyBorder(12, 0, 0, 0));
+		
 		JPanel buttonPanel = new JPanel(new GridLayout(1, 3, 6, 0));
+		buttonPanel.setBorder(BorderFactory.createEmptyBorder(12, 12, 12, 12));
 		searchButton =
 			new JButton(
 				MailResourceLoader.getString("dialog", "filter", "search"));
@@ -148,7 +149,8 @@ public class SearchFrame extends JDialog implements ActionListener {
 
 		JPanel rootPanel = new JPanel();
 		rootPanel.setLayout(new BorderLayout(0, 10));
-
+		rootPanel.setBorder(BorderFactory.createEmptyBorder(12, 12, 12, 12));
+		
 		JPanel folderPanel = new JPanel();
 		folderPanel.setLayout(new BoxLayout(folderPanel, BoxLayout.X_AXIS));
 		folderLabel =
