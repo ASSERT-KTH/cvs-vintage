@@ -118,17 +118,6 @@ public class Attachment
     }    
  
     /**
-     * Delete the attachment.
-     * @acl AccessControlList for deleting user.
-     * TODO: permission
-     */
-    public void delete() throws Exception 
-    { 
-        //hasPermission(acl);
-        setDeleted(true);
-    }
-
-    /**
      * Populates fields for a text (non-file) type of attachment.
      */
     public void setTextFields(ScarabUser user, Issue issue, NumberKey typeId) 
