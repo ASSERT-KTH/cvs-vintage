@@ -93,7 +93,7 @@ import org.apache.commons.lang.StringUtils;
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: Issue.java,v 1.249 2002/12/21 01:54:37 jon Exp $
+ * @version $Id: Issue.java,v 1.250 2002/12/25 00:10:31 elicia Exp $
  */
 public class Issue 
     extends BaseIssue
@@ -2722,7 +2722,7 @@ public class Issue
         UserAttribute attVal = new UserAttribute();
 
         // Save activitySet if it has not been already
-        if (activitySet.getActivitySetId() == null)
+        if (activitySet == null)
         { 
             activitySet = ActivitySetManager
                 .getInstance(ActivitySetTypePeer.EDIT_ISSUE__PK, assigner, 
@@ -2876,7 +2876,7 @@ public class Issue
         Attribute attr = attVal.getAttribute();
 
         // Save activitySet record if it has not been already
-        if (activitySet.getActivitySetId() == null)
+        if (activitySet == null)
         { 
             activitySet = ActivitySetManager
                 .getInstance(ActivitySetTypePeer.EDIT_ISSUE__PK, assigner, attachment);
