@@ -91,6 +91,7 @@
   <!-- Deployer library build classpath -->
   <path id="deployer.classpath">
       <pathelement location="${build.deployer.classes.dir}"/>
+      <pathelement location="${src.lib.dir}/log4j.jar"/>
       <pathelement location="${lib.dir}/jmxri.jar"/>
   </path>
 
