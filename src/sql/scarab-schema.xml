@@ -2,7 +2,7 @@
 <!DOCTYPE app-data SYSTEM
           "http://jakarta.apache.org/turbine/dtd/database.dtd">
 
-<!-- $Id: scarab-schema.xml,v 1.27 2001/07/17 02:04:37 jmcnally Exp $ -->
+<!-- $Id: scarab-schema.xml,v 1.28 2001/07/18 23:10:19 elicia Exp $ -->
 
 <app-data>
 <database>
@@ -777,6 +777,10 @@
         Attribute.
     -->
     <column name="ATTRIBUTE_ID" primaryKey="true" required="true" type="INTEGER"></column>
+    <!--
+        Column order.
+    -->
+    <column name="PREFERRED_ORDER" javaName="Order" required="true" default="0" type="INTEGER"/>
     <!--
         Flag, which marks that association has been deleted.
     -->
