@@ -57,7 +57,7 @@
  * Description: ajpv1.2 worker, used to call local or remote jserv hosts   *
  * Author:      Gal Shachor <shachor@il.ibm.com>                           *
  * Based on:    jserv_ajpv12.c from Jserv                                  *
- * Version:     $Revision: 1.3 $                                               *
+ * Version:     $Revision: 1.4 $                                               *
  ***************************************************************************/
 
 #include "jk_ajp12_worker.h"
@@ -383,7 +383,9 @@ static int ajpv12_handle_request(ajp12_endpoint_t *p,
            ajpv12_sendstring(p, s->protocol)    &&
            ajpv12_sendstring(p, 0)              && /* SERVER_SIGNATURE */ 
            ajpv12_sendstring(p, s->server_software) &&
-           ajpv12_sendstring(p, s->jvm_route)); /* JSERV_ROUTE" */
+           ajpv12_sendstring(p, s->jvm_route)   && /* JSERV_ROUTE */
+           ajpv12_sendstring(p, "")             && /* JSERV ajpv12 compatibility */
+           ajpv12_sendstring(p, ""));              /* JSERV ajpv12 compatibility */
 
     if(!ret) {
         jk_log(l, JK_LOG_ERROR, "In ajpv12_handle_request, failed to send the ajp12 start sequence\n");

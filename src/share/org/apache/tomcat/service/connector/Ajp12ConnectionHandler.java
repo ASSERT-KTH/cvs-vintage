@@ -198,6 +198,8 @@ class AJP12RequestAdapter extends RequestImpl {
 	String dummy,token1,token2;
 	int marker;
 	int signal;
+//      Hashtable env_vars=new Hashtable();
+
 
 	try {
 	    boolean more=true;
@@ -292,18 +294,41 @@ class AJP12RequestAdapter extends RequestImpl {
 		    if( doLog ) log("AJP: Server jvmRoute=" + jvmRoute);
 		    
 		    
-		    /**
-		     * The two following lines are commented out because we don't
-		     * want to depend on unreleased versions of the jserv module.
-		     *                                            - costin
-		     */
-		    //		dummy = ajpin.readString("");                     //SSL_CLIENT_DN
-		    //		dummy = ajpin.readString("");                     //SSL_CLIENT_IDN
+                    /**
+                     * The two following lines are commented out because we don't
+                     * want to depend on unreleased versions of the jserv module.
+                     *                                            - costin
+                     * The two following lines are uncommented because JServ 1.1 final
+                     * is far behind.
+                     * NB: you need a recent mod_jserv to use the latest protocol version.
+                     * Theses env vars are simply ignored. (just here for compatibility)
+                     *                                            - jluc
+                     */
+                     dummy = ajpin.readString(""); 
+                     dummy = ajpin.readString("");
 		    // XXX all dummy fields will be used after core is changed to make use
 		    // of them!
 		    
 		    break;
 		    
+                    
+                    /**
+                     * Marker = 5 will be used by mod_jserv to send environment vars
+                     * as key+value (dynamically configurable).
+                     * can be considered as "reserved", and safely ignored by other connectors.
+                     * env_vars is (above in this  code) commented out for performance issues.
+                     * so theses env vars are simply ignored. (just here for compatibility)
+                     * but it is where mod_jserv would place SSL_* env vars (by exemple)
+                     * See the new parameter for mod_jserv (version > 1.1):
+                     * ApJServEnvVar localname remotename
+                     *                                            - jluc
+                     */
+                case 5: // Environment vars
+                    token1 = ajpin.readString(null);
+                    token2 = ajpin.readString("");
+//                  env_vars.put(token1, token2);
+                    break;
+      
 		case 3: // Header
 		    token1 = ajpin.readString(null);
 		    token2 = ajpin.readString("");
