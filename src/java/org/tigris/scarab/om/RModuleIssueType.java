@@ -1,5 +1,6 @@
 package org.tigris.scarab.om;
 
+import java.util.List;
 
 import org.apache.torque.om.Persistent;
 import org.apache.torque.util.Criteria;
@@ -46,19 +47,24 @@ public  class RModuleIssueType
     {                
         ModuleEntity module = getModule();
 
+        if (user.hasPermission(ScarabSecurity.MODULE__EDIT, module))
+        {
+            // Delete attribute groups first
+            List attGroups = getIssueType().getAttributeGroups(); 
+            for (int j=0; j<attGroups.size(); j++)
+            {
+                // delete attribute-attribute group map
+                AttributeGroup attGroup = 
+                              (AttributeGroup)attGroups.get(j);
+                attGroup.delete(user);
+            }
+
             Criteria c = new Criteria()
                 .add(RModuleIssueTypePeer.MODULE_ID, getModuleId())
                 .add(RModuleIssueTypePeer.ISSUE_TYPE_ID, getIssueTypeId());
             RModuleIssueTypePeer.doDelete(c);
             save();
-        if (user.hasPermission(ScarabSecurity.MODULE__EDIT, module))
-        {
-            c = new Criteria()
-                .add(RModuleIssueTypePeer.MODULE_ID, getModuleId())
-                .add(RModuleIssueTypePeer.ISSUE_TYPE_ID, getIssueTypeId());
-            RModuleIssueTypePeer.doDelete(c);
-            save();
-        } 
+        }
         else
         {
             throw new ScarabException(ScarabConstants.NO_PERMISSION_MESSAGE);

@@ -82,7 +82,7 @@ import org.tigris.scarab.tools.ScarabRequestTool;
  * action methods on RModuleAttribute table
  *      
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: ModifyModuleAttributes.java,v 1.48 2001/11/28 20:17:26 jon Exp $
+ * @version $Id: ModifyModuleAttributes.java,v 1.49 2001/12/05 01:14:30 elicia Exp $
  */
 public class ModifyModuleAttributes extends RequireLoginFirstAction
 {
@@ -378,10 +378,10 @@ public class ModifyModuleAttributes extends RequireLoginFirstAction
             key = keys[i].toString();
             if (key.startsWith("delete_"))
             {
-                if (rmits.size() - 1 < 1)
+                if (rmits.size() < 1)
                 {
                     data.setMessage("You cannot have fewer than one "
-                                    + "artifact group.");
+                                    + "artifact type.");
                     break;
                 }
                 else
@@ -389,47 +389,23 @@ public class ModifyModuleAttributes extends RequireLoginFirstAction
                     try
                     {
                         issueTypeId = key.substring(7);
-                        IssueType issueType = (IssueType) IssueTypePeer
-                            .retrieveByPK(new NumberKey(issueTypeId));
-                        RModuleIssueType rmit = module
+                        IssueType issueType = scarabR.getIssueType(issueTypeId);
+                        if (issueType != null)
+                        {
+                            foundOne = true;
+                            // delete module-issue type mappings
+                            RModuleIssueType rmit = module
                                .getRModuleIssueType(issueType);
+                            rmit.delete(user);
 
-                        // delete attribute groups 
-                        List attGroups = issueType.getAttributeGroups(); 
-                        for (int j=0; j<attGroups.size(); j++)
-                        {
-                            // delete attribute-attribute group map
-                            AttributeGroup attGroup = 
-                               (AttributeGroup)attGroups.get(j);
-                            List raags = attGroup
-                                .getRAttributeAttributeGroups();
-                            for (int k=0; k<raags.size(); k++)
-                            {
-                                RAttributeAttributeGroup raag = 
-                                    (RAttributeAttributeGroup)raags.get(k);
-                                raag.delete(user);
-                            }
-                  
-                            attGroup.delete(user);
+                            data.setMessage("The selected Artifact Types have"
+                                            + " been removed from the module.");
                         }
-                         
-                        List rmas = module.getRModuleAttributes(issueType);
-                        // delete module-attribute mappings
-                        for (int m=0; m<rmas.size(); m++)
-                        {
-                            RModuleAttribute rma = (RModuleAttribute)rmas.get(0);
-                            rma.delete(user);
-                        }
-
-                        // delete module-issue type mappings
-                        rmit.delete(user);
-
                     }
                     catch (Exception e)
                     {
                         data.setMessage(ScarabConstants.NO_PERMISSION_MESSAGE);
                     }
-                    foundOne = true;
                 }
             }
         }
@@ -438,11 +414,6 @@ public class ModifyModuleAttributes extends RequireLoginFirstAction
         {
             data.setMessage("Please select an Artifact Type " + 
                 "to delete from the module.");
-        }
-        else
-        {
-            data.setMessage("The selected Artifact Types have " + 
-                "been removed from the module.");
         }
         String nextTemplate = data.getParameters()
             .getString(ScarabConstants.NEXT_TEMPLATE);
