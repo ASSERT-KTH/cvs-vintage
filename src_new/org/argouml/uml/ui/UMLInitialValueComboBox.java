@@ -1,4 +1,4 @@
-// $Id: UMLInitialValueComboBox.java,v 1.39 2005/01/02 16:43:46 linus Exp $
+// $Id: UMLInitialValueComboBox.java,v 1.40 2005/01/02 23:09:31 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -37,10 +37,10 @@ import ru.novosoft.uml.MElementEvent;
 /**
  * Handles communication between the initial value JComboBox and the
  * Collection.  This class also causes NSUML to refresh and so keeps
- * the diagram in synch with the model.
+ * the diagram in synch with the model. <p>
  *
- * Method PropertySet listens for MElementEvent events and updates the
- * other elements, such as type, visibility and changeability.
+ * Method <code>propertySet</code> listens for MElementEvent events and 
+ * updates the other elements, such as type, visibility and changeability. <p>
  * Modified psager@tigris.org
  *
  * @deprecated as of ArgoUml 0.13.5 (10-may-2003), to be replaced by
@@ -61,7 +61,7 @@ public class UMLInitialValueComboBox extends JComboBox
     private String[] listItems = {"", "0", "1", "2", "null"};
 
     /** 
-     * Creates new BooleanChangeListener.
+     * The constructor creates a new UMLInitialValueComboBox.
      * 
      * @param container the container of UML user interface components
      */

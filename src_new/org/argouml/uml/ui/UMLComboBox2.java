@@ -1,4 +1,4 @@
-// $Id: UMLComboBox2.java,v 1.21 2004/09/15 19:17:05 mvw Exp $
+// $Id: UMLComboBox2.java,v 1.22 2005/01/02 23:09:31 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -34,9 +34,11 @@ import org.argouml.ui.targetmanager.TargetListener;
 import org.argouml.ui.targetmanager.TargettableModelView;
 
 /**
- * ComboBox for UML modelelements. This implementation does not use 
+ * ComboBox for UML modelelements. <p>
+ * 
+ * This implementation does not use 
  * reflection and seperates Model, View and Controller better then does
- * UMLComboBox. In the future UMLComboBoxModel and UMLComboBox will be
+ * UMLComboBox. The ancient UMLComboBoxModel and UMLComboBox are
  * replaced with this implementation to improve performance.
  */
 public class UMLComboBox2
@@ -52,7 +54,6 @@ public class UMLComboBox2
         super(arg0);
         setFont(LookAndFeelMgr.getInstance().getSmallFont());
         addActionListener(this);
-
     }
     
     /**
