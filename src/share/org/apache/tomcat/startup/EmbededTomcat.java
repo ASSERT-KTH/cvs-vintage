@@ -106,6 +106,7 @@ public class EmbededTomcat {
     boolean autoDeploy=true;
     
     boolean serverXml=true;
+    boolean help;
 
     // prevent tomcat from starting.
     boolean nostart=false;
@@ -167,6 +168,10 @@ public class EmbededTomcat {
 
     public void setRun(boolean b) {
 	setStart(true);
+    }
+
+    public void setHelp(boolean b) {
+	help=b;
     }
     
     // -------------------- Generic properties --------------------
@@ -531,6 +536,10 @@ public class EmbededTomcat {
     public void execute1() throws Exception {
 	if( args!=null )
 	    processArgs( args );
+        if( help ) {
+            printUsage();
+            return;
+        }
 	// Init 
 	if( ! initialized ) {
 	    long time1=System.currentTimeMillis();
@@ -827,17 +836,18 @@ public class EmbededTomcat {
 	PrintStream out=System.out;
 	out.println("Usage: java org.apache.tomcat.startup.EmbeddedTomcat {options}");
 	out.println("  Options are:");
-        out.println("    -ajpid file                Use this file instead of conf/ajp12.id");
-        out.println("                                 Use with -stop option");
 	out.println("    -config file (or -f file)  Use this file instead of server.xml");
-        out.println("    -enableAdmin               Updates admin webapp config to \"trusted\"");
-	out.println("    -help (or help)            Show this usage report");
+        out.println("    -debug level               Sets specified debug level on EmbeddedTomcat,");
+        out.println("                                   ContextManager, \"Xml\" modules, and contexts");
+        out.println("    -estart                    Starts Tomcat without reading server.xml");
+        out.println("    -help                      Show this usage report");
 	out.println("    -home dir                  Use this directory as tomcat.home");
 	out.println("    -install dir (or -i dir)   Use this directory as tomcat.install");
+        out.println("    -jkconf                    Write mod_jk configuration files, without");
+        out.println("                                   starting Tomcat");
         out.println("    -sandbox                   Enable security manager (includes java.policy)");
-	out.println("    -stop                      Shut down currently running Tomcat");
+        out.println("Note: the '-' on the options is optional.");
         out.println();
-        out.println("In the absence of \"-enableAdmin\" and \"-stop\", Tomcat will be started");
     }
 
     // -------------------- Override --------------------
