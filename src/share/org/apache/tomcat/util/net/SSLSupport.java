@@ -71,7 +71,7 @@ import java.net.*;
 
 public interface SSLSupport {
     public String getCipherSuite() throws IOException;
-    public java.security.cert.Certificate[] getPeerCertificateChain()
+    public Object[] getPeerCertificateChain()
 	throws IOException;
 
     /**

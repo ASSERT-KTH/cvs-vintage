@@ -92,7 +92,7 @@ class JSSESupport implements SSLSupport {
 	return "Unknown";
     }
 
-    public java.security.cert.Certificate[] getPeerCertificateChain()
+    public Object[] getPeerCertificateChain()
     throws IOException
     {
         // Look up the current SSLSession

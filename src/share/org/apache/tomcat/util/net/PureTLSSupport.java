@@ -92,7 +92,7 @@ class PureTLSSupport implements SSLSupport {
 	return SSLPolicyInt.getCipherSuiteName(cs);
     }
 
-    public java.security.cert.Certificate[] getPeerCertificateChain()
+    public Object[] getPeerCertificateChain()
 	throws IOException
     {
 	Vector v=ssl.getCertificateChain();
