@@ -92,7 +92,7 @@ import org.tigris.scarab.util.Log;
  * This class is responsible for edit issue forms.
  * ScarabIssueAttributeValue
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: ModifyIssue.java,v 1.141 2002/12/20 00:06:15 jon Exp $
+ * @version $Id: ModifyIssue.java,v 1.142 2002/12/20 03:26:06 jon Exp $
  */
 public class ModifyIssue extends BaseModifyIssue
 {
@@ -126,22 +126,22 @@ public class ModifyIssue extends BaseModifyIssue
         }
 
         IntakeTool intake = getIntakeTool(context);       
-        // Comment field is required to modify attributes
-        Group commentGroup = intake.get("Attachment", "attCommentKey", false);
-        Field commentField = null;
-        commentField = commentGroup.get("Data");
-        commentField.setRequired(true);
+        // Reason field is required to modify attributes
+        Group reasonGroup = intake.get("Attachment", "attCommentKey", false);
+        Field reasonField = null;
+        reasonField = reasonGroup.get("Data");
+        reasonField.setRequired(true);
         // make sure to trim the whitespace
-        String commentFieldString = commentField.toString();
-        if (commentFieldString != null)
+        String reasonFieldString = reasonField.toString();
+        if (reasonFieldString != null)
         {
-            commentFieldString = commentFieldString.trim();
+            reasonFieldString = reasonFieldString.trim();
         }
-        if (commentGroup == null || !commentField.isValid() ||
-            commentFieldString.length() == 0)
+        if (reasonGroup == null || !reasonField.isValid() ||
+            reasonFieldString.length() == 0)
         {
-            commentField.setMessage(
-                "ExplanatoryCommentRequiredToModifyAttributes");
+            reasonField.setMessage(
+                "ExplanatoryReasonRequiredToModifyAttributes");
         }
 
         // Set any other required flags
@@ -187,12 +187,11 @@ public class ModifyIssue extends BaseModifyIssue
             HashMap newAttVals = new HashMap();
 
             // Set the attribute values entered 
-            SequencedHashMap avMap = issue.getModuleAttributeValuesMap(); 
-            Iterator iter2 = avMap.iterator();
+            Iterator iter2 = modMap.iterator();
             boolean modifiedAttribute = false;
             while (iter2.hasNext())
             {
-                aval = (AttributeValue)avMap.get(iter2.next());
+                aval = (AttributeValue)modMap.get(iter2.next());
                 aval2 = AttributeValue.getNewInstance(aval.getAttributeId(), 
                                                       aval.getIssue());
                 aval2.setProperties(aval);
@@ -217,16 +216,16 @@ public class ModifyIssue extends BaseModifyIssue
                     // The old value is different from the new, or is unset:
                     // Set new value.
                     if (newValue.length() > 0
-                         && ((oldValue != null && !oldValue.equals(newValue))
-                             || oldValue == null))
+                         && ((oldValue == null) ||
+                            (oldValue != null && !oldValue.equals(newValue))))
                     {
                         group.setProperties(aval2);
                         newAttVals.put(aval.getAttributeId(), aval2);
                         modifiedAttribute = true;
                     }
                     // The attribute is being undefined. 
-                    else if (newValue.length() == 0 && oldValue != null
-                             && oldValue.length() !=0 )
+                    else if (oldValue != null && newValue.length() == 0 && 
+                             oldValue.length() != 0 )
                     {
                         aval2.setValue(null);
                         newAttVals.put(aval.getAttributeId(), aval2);
@@ -240,7 +239,7 @@ public class ModifyIssue extends BaseModifyIssue
                 return;
             }
             Attachment attachment = AttachmentManager.getInstance();
-            commentGroup.setProperties(attachment);
+            reasonGroup.setProperties(attachment);
             try
             {
                 ActivitySet activitySet = issue.setAttributeValues(null, 
