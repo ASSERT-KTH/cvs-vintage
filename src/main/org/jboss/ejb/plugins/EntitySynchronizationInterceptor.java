@@ -48,7 +48,7 @@ import org.jboss.logging.Logger;
 *   @see <related>
 *   @author Rickard Öberg (rickard.oberg@telkel.com)
 *   @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
-*   @version $Revision: 1.23 $
+*   @version $Revision: 1.24 $
 */
 public class EntitySynchronizationInterceptor
 extends AbstractInterceptor
@@ -360,17 +360,17 @@ extends AbstractInterceptor
 							boolean dirty = true;
 							if (isModified != null)
 							{
-                        try
-                        {
-                           dirty = ((Boolean)isModified.invoke(ctx.getInstance(), new Object[0])).booleanValue();
-                        } catch (Exception e)
-                        {
-                           // Ignore
-                           e.printStackTrace();
-                        }
+                                try
+                                {
+                                   dirty = ((Boolean)isModified.invoke(ctx.getInstance(), new Object[0])).booleanValue();
+                                } catch (Exception e)
+                                {
+                                    // Ignore
+                                    e.printStackTrace();
+                                }
 							}
 							
-                     if (dirty)
+                            if (dirty)
 							   container.getPersistenceManager().storeEntity(ctx);
 						}
 					} catch (NoSuchEntityException e) {
@@ -391,11 +391,12 @@ extends AbstractInterceptor
 				} 
 				finally {
 				    
-					Thread.currentThread().setContextClassLoader(oldCl));
+					Thread.currentThread().setContextClassLoader(oldCl);
 				}
 			}
 		}
 	
+    
 	public void afterCompletion(int status)
 	{
 		
@@ -483,5 +484,6 @@ extends AbstractInterceptor
 			}
 		}
 	}
+    }
 }
 
