@@ -68,7 +68,7 @@ import org.apache.torque.util.Criteria;
  * This class describes a Module within the Scarab system
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ModuleEntity.java,v 1.44 2001/12/10 02:38:38 jmcnally Exp $
+ * @version $Id: ModuleEntity.java,v 1.45 2001/12/20 01:53:58 elicia Exp $
  */
 public interface ModuleEntity
 {
@@ -258,14 +258,6 @@ public interface ModuleEntity
      * List of global Issue Template objects associated with this module.
      */
     public List getGlobalTemplates(IssueType issueType)
-        throws Exception;
-
-    /**
-     * Array of Attributes used for deduping.
-     *
-     * @return an <code>Attribute[]</code> value
-     */
-    public Attribute[] getDedupeAttributes(IssueType issueType)
         throws Exception;
 
     /**

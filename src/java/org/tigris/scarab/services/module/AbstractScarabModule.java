@@ -113,7 +113,7 @@ import org.apache.turbine.Log;
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: AbstractScarabModule.java,v 1.5 2001/12/13 20:53:07 elicia Exp $
+ * @version $Id: AbstractScarabModule.java,v 1.6 2001/12/20 01:53:58 elicia Exp $
  */
 public abstract class AbstractScarabModule
     extends BaseObject
@@ -672,19 +672,6 @@ public abstract class AbstractScarabModule
         rmo.setOptionId(option.getOptionId());
         rmo.setDisplayValue(option.getName());
         return rmo;
-    }
-
-    /**
-     * Array of Attributes used for deduping.
-     *
-     * @return an <code>Attribute[]</code> value
-     */
-    public Attribute[] getDedupeAttributes(IssueType issueType)
-        throws Exception
-    {
-        Criteria crit = new Criteria(3);
-        addActiveAndOrderByClause(crit, issueType);
-        return getAttributes(crit);
     }
 
 
