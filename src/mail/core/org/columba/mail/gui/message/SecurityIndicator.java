@@ -17,11 +17,14 @@
 package org.columba.mail.gui.message;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 
+import javax.swing.BorderFactory;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import org.columba.core.gui.util.ImageLoader;
+import org.columba.mail.parser.text.HtmlParser;
 import org.columba.mail.util.MailResourceLoader;
 
 public class SecurityIndicator extends JPanel {
@@ -29,85 +32,168 @@ public class SecurityIndicator extends JPanel {
 	public static final int DECRYPTION_FAILURE = 1;
 	public static final int VERIFICATION_SUCCESS = 2;
 	public static final int VERIFICATION_FAILURE = 3;
-	public static final int NOKEY = 4;
+	public static final int NO_KEY = 4;
 	public static final int NOOP = 5;
 
-	protected JLabel display;
-
+	protected JLabel icon;
+	protected JLabel text;
+	protected JPanel left;
+	
 	public SecurityIndicator() {
-		super(new BorderLayout());
-		display = new JLabel();
-		//display.setHorizontalAlignment(JLabel.RIGHT);
-		add(display);
-		//setValue(NOOP,"");
-		setValue(DECRYPTION_FAILURE, "<html><body><p>Verification failed</p></body></html>");
+		super();
+
+		setLayout(new BorderLayout());
+
+		left = new JPanel();
+		left.setLayout( new BorderLayout() );
+		left.setBorder(BorderFactory.createEmptyBorder(0,5,5,5));
+		
+		icon = new JLabel();
+		left.add(icon, BorderLayout.NORTH);
+
+		add(left, BorderLayout.WEST);
+		text = new JLabel();
+		add(text, BorderLayout.CENTER);
+
+		setValue(NOOP, "");
+				
+		updateUI();
+	}
+
+	public void updateUI() {
+		super.updateUI();
+		
+		setBackground(Color.white);
+		if (icon != null)
+			icon.setBackground(Color.white);
+		if (text != null)
+			text.setBackground(Color.white);
+			
+		if ( left != null )
+			left.setBackground(Color.white);
+			
+	}
+
+	protected String transformToHTML(String title, String message) {
+		// convert special characters
+		String html=null;
+		if ( message!=null)
+			html = HtmlParser.substituteSpecialCharacters(message);
+
+		StringBuffer buf = new StringBuffer();
+
+		buf.append("<html><body><p>");
+		buf.append("<b>" + title + "</b><br>");
+		buf.append(html);
+		buf.append("</p></body></html>");
+
+		return buf.toString();
 	}
 
 	public void setValue(int value, String message) {
-		
-		display.setText(message);
+
 		
 		switch (value) {
 			case DECRYPTION_SUCCESS :
 				{
-					display.setIcon(
+					icon.setIcon(
 						ImageLoader.getImageIcon("pgp-signature-ok.png"));
-					display.setToolTipText(
+					icon.setToolTipText(
 						MailResourceLoader.getString(
 							"menu",
 							"mainframe",
 							"security_encrypt_success"));
+					text.setText(
+						transformToHTML(
+							MailResourceLoader.getString(
+								"menu",
+								"mainframe",
+								"security_encrypt_success"),
+							message));
 					break;
 				}
 			case DECRYPTION_FAILURE :
 				{
-					display.setIcon(
+					icon.setIcon(
 						ImageLoader.getImageIcon("pgp-signature-bad.png"));
-					display.setToolTipText(
+					icon.setToolTipText(
 						MailResourceLoader.getString(
 							"menu",
 							"mainframe",
 							"security_encrypt_fail"));
+					text.setText(
+						transformToHTML(
+							MailResourceLoader.getString(
+								"menu",
+								"mainframe",
+								"security_encrypt_fail"),
+							message));
 					break;
 				}
 			case VERIFICATION_SUCCESS :
 				{
-					display.setIcon(
+					icon.setIcon(
 						ImageLoader.getImageIcon("pgp-signature-ok.png"));
-					display.setToolTipText(
+					icon.setToolTipText(
 						MailResourceLoader.getString(
 							"menu",
 							"mainframe",
 							"security_verify_success"));
+					text.setText(
+						transformToHTML(
+							MailResourceLoader.getString(
+								"menu",
+								"mainframe",
+								"security_verify_success"),
+							message));
+
 					break;
 				}
 			case VERIFICATION_FAILURE :
 				{
-					display.setIcon(
+					icon.setIcon(
 						ImageLoader.getImageIcon("pgp-signature-bad.png"));
-					display.setToolTipText(
+					icon.setToolTipText(
 						MailResourceLoader.getString(
 							"menu",
 							"mainframe",
 							"security_verify_fail"));
+					text.setText(
+						transformToHTML(
+							MailResourceLoader.getString(
+								"menu",
+								"mainframe",
+								"security_verify_fail"),
+							message));
 					break;
 				}
-			case NOKEY :
+			case NO_KEY :
 				{
-					display.setIcon(
+					icon.setIcon(
 						ImageLoader.getImageIcon("pgp-signature-nokey.png"));
-					display.setToolTipText(
+					icon.setToolTipText(
 						MailResourceLoader.getString(
 							"menu",
 							"mainframe",
 							"security_verify_nokey"));
+					text.setText(
+						transformToHTML(
+							MailResourceLoader.getString(
+								"menu",
+								"mainframe",
+								"security_verify_nokey"),
+							message));
 					break;
 				}
 			case NOOP :
 				{
-					display.setText("");
+					text.setText("");
+					icon.setIcon(null);
 					break;
 				}
+
 		}
+
+		updateUI();
 	}
 }

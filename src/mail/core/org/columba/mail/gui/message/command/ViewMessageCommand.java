@@ -19,6 +19,8 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 
+import javax.swing.JOptionPane;
+
 import org.columba.core.command.Command;
 import org.columba.core.command.DefaultCommandReference;
 import org.columba.core.command.StatusObservableImpl;
@@ -35,10 +37,14 @@ import org.columba.mail.folder.Folder;
 import org.columba.mail.gui.attachment.AttachmentSelectionHandler;
 import org.columba.mail.gui.frame.AbstractMailFrameController;
 import org.columba.mail.gui.frame.ThreePaneMailFrameController;
+import org.columba.mail.gui.message.MessageController;
 import org.columba.mail.gui.message.SecurityIndicator;
 import org.columba.mail.message.ColumbaHeader;
 import org.columba.mail.message.ColumbaMessage;
+import org.columba.mail.pgp.MissingPublicKeyException;
 import org.columba.mail.pgp.PGPController;
+import org.columba.mail.pgp.PGPException;
+import org.columba.mail.pgp.WrongPassphraseException;
 import org.columba.ristretto.message.LocalMimePart;
 import org.columba.ristretto.message.MimeHeader;
 import org.columba.ristretto.message.MimePart;
@@ -62,7 +68,7 @@ public class ViewMessageCommand extends FolderCommand {
 	Object uid;
 	Object[] uids;
 
-	String pgpMessage;
+	String pgpMessage = "";
 	int pgpMode = SecurityIndicator.NOOP;
 
 	// true if we view an encrypted message
@@ -81,9 +87,10 @@ public class ViewMessageCommand extends FolderCommand {
 		commandType = Command.NORMAL_OPERATION;
 	}
 
-	protected void decryptEncryptedPart( MimePart encryptedMultipart ) throws Exception {
+	protected void decryptEncryptedPart(MimePart encryptedMultipart)
+		throws Exception {
 		encryptedMessage = true;
-		
+
 		// the first child must be the control part
 		InputStream controlPart =
 			srcFolder.getMimePartBodyStream(
@@ -95,19 +102,36 @@ public class ViewMessageCommand extends FolderCommand {
 			srcFolder.getMimePartBodyStream(
 				uid,
 				encryptedMultipart.getChild(1).getAddress());
-				
+
 		// get PGPItem, use To-headerfield and search through
 		// all accounts to find a matching PGP id
 		String to = (String) header.get("To");
 		PGPItem pgpItem = MailConfig.getAccountList().getPGPItem(to);
-				
+
 		// decrypt string
 		// getting controller Instance
 		PGPController controller = PGPController.getInstance();
 		// creating Stream for encrypted Body part and decrypt it
-		InputStream decryptedStream =
-			controller.decrypt( encryptedPart,
-				pgpItem);
+		InputStream decryptedStream = null;
+
+		try {
+			decryptedStream = controller.decrypt(encryptedPart, pgpItem);
+
+			pgpMode = SecurityIndicator.DECRYPTION_SUCCESS;
+
+			pgpMessage = controller.getPgpMessage();
+
+		} catch (WrongPassphraseException e) {
+			e.printStackTrace();
+			pgpMode = SecurityIndicator.DECRYPTION_FAILURE;
+			
+		} catch (PGPException e) {
+
+			e.printStackTrace();
+
+			pgpMode = SecurityIndicator.DECRYPTION_FAILURE;
+		}
+
 		try {
 			// TODO should be removed if we only use Streams!
 			String decryptedBodyPart =
@@ -127,11 +151,10 @@ public class ViewMessageCommand extends FolderCommand {
 			//header = (ColumbaHeader) message.getHeaderInterface();
 		} catch (ParserException e) {
 			e.printStackTrace();
-			pgpMode = SecurityIndicator.DECRYPTION_FAILURE;
+
 		} catch (IOException e) {
 			e.printStackTrace();
 
-			pgpMode = SecurityIndicator.DECRYPTION_FAILURE;
 		}
 	}
 
@@ -157,15 +180,34 @@ public class ViewMessageCommand extends FolderCommand {
 
 		// getting controller Instance
 		PGPController controller = PGPController.getInstance();
-		// verify
-		boolean ok = controller.verifySignature(signedPart, signature, pgpItem);
-		if (ok) {
+
+		try {
+			// verify
+			controller.verifySignature(signedPart, signature, pgpItem);
+
+			// if everything is ok, verification is a success
 			pgpMode = SecurityIndicator.VERIFICATION_SUCCESS;
-			ColumbaLogger.log.error(controller.getPGPResultStream());
-		} else {
+			pgpMessage = controller.getPgpMessage();
+
+		} catch (MissingPublicKeyException e) {
+
+			// we don't have the senders public key in our keyring
+			// -> just attach a status message
+			// -> we don't complain to the user with a dialog box here
+			pgpMode = SecurityIndicator.NO_KEY;
+			pgpMessage = e.getMessage();
+
+			System.out.println("comand-message=" + pgpMessage);
+
+		} catch (PGPException e) {
+			e.printStackTrace();
+
+			// something really got wrong here -> show error dialog
+			JOptionPane.showMessageDialog(null, e.getMessage());
+
 			pgpMode = SecurityIndicator.VERIFICATION_FAILURE;
-			ColumbaLogger.log.debug(controller.getPGPErrorStream());
 		}
+
 	}
 
 	/**
@@ -182,29 +224,16 @@ public class ViewMessageCommand extends FolderCommand {
 		if (h != null)
 			h.setMessage(srcFolder, uid);
 
+		MessageController messageController =
+			((AbstractMailFrameController) frameController).messageController;
+
 		if (header != null && bodyPart != null) {
-			if (pgpMode != SecurityIndicator.NOOP) {
-				// update pgp security indicator
-				(
-					(
-						AbstractMailFrameController) frameController)
-							.messageController
-							.setPGPMessage(
-					pgpMode,
-					pgpMessage);
-			} else {
-				// TODO: Hide SecurityIndicator
-			}
+
+			// update pgp security indicator
+			messageController.setPGPMessage(pgpMode, pgpMessage);
 
 			// show message in gui component
-			(
-				(
-					AbstractMailFrameController) frameController)
-						.messageController
-						.showMessage(
-				header,
-				bodyPart,
-				mimePartTree);
+			messageController.showMessage(header, bodyPart, mimePartTree);
 
 			// security check, i dont know if we need this (waffel)
 			if (frameController instanceof ThreePaneMailFrameController) {

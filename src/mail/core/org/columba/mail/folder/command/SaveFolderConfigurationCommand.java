@@ -43,6 +43,11 @@ public class SaveFolderConfigurationCommand extends FolderCommand {
 	 * @see org.columba.core.command.Command#execute(org.columba.core.command.Worker)
 	 */
 	public void execute(Worker worker) throws Exception {
+		// skip if no reference available
+		if ( getReferences().length == 0 ) return;
+		
+		if ( getReferences()[0] == null ) return;
+		
 		FolderTreeNode folderTreeNode =
 			(FolderTreeNode) ((FolderCommandReference) getReferences()[0])
 				.getFolder();

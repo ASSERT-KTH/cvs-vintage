@@ -44,6 +44,8 @@ public class PGPController {
 
 	private static PGPController myInstance;
 
+	private String pgpMessage;
+	
 	/**
 	 * here are the utils, from which you can sign, verify, encrypt and decrypt messages
 	 * at the moment there are only one tool - gpg, the gnu pgp programm which
@@ -84,16 +86,30 @@ public class PGPController {
 		return exitVal;
 	}
 
+	public InputStream decrypt(InputStream cryptMessage, PGPItem item)
+		throws PGPException {
 
-	public InputStream decrypt(InputStream cryptMessage, PGPItem item) {
 		int exitVal = -1;
+
 		this.getPassphrase(item);
-		
+
+		String error = null;
+		String output = null;
 		try {
 			exitVal = utils[GPG].decrypt(item, cryptMessage);
+
+			error = utils[GPG].parse(utils[GPG].getErrorString());
+			output = utils[GPG].parse(utils[GPG].getOutputString());
 		} catch (Exception e) {
-			JOptionPane.showMessageDialog(null, utils[GPG].getErrorString());
+			e.printStackTrace();
+
+			throw new PGPException(error);
 		}
+		
+		pgpMessage = new String(error);
+		
+		if ( exitVal == 2 ) throw new WrongPassphraseException(error);
+		
 		return utils[GPG].getStreamResult();
 	}
 	/**
@@ -106,25 +122,39 @@ public class PGPController {
 	 * @param signature Signature wich should be verify for the given message.
 	 * @return true if the signature can be verify for the given message, else false.
 	 */
-	public boolean verifySignature(InputStream message, InputStream signature, PGPItem item) {
+	public void verifySignature(
+		InputStream message,
+		InputStream signature,
+		PGPItem item)
+		throws PGPException {
+
 		int exitVal = -1;
+		String error = null;
+		String output = null;
 		try {
 			exitVal = utils[GPG].verify(item, message, signature);
+
+			error = utils[GPG].parse(utils[GPG].getErrorString());
+			output = utils[GPG].parse(utils[GPG].getOutputString());
 		} catch (Exception e) {
-			JOptionPane.showMessageDialog(null, utils[GPG].getErrorString());
+			e.printStackTrace();
+
+			throw new PGPException(error);
 		}
-		if (exitVal == 0) {
-			return true;
-		} 
-		return false;
+
+		pgpMessage = error;
+		
+		if (exitVal == 2)
+			throw new MissingPublicKeyException(error);
+
 	}
 	/** 
 	 * Encryptes a given message  and returnes the encrypted Stream. The given pgp-item should have a entry with
 	 * all recipients seperated via space. The entry is called recipients. If an error occurse the error result is
-     * shown to the user via a dialog.
+	 * shown to the user via a dialog.
 	 * @param message The message to be encrypt
 	 * @param item the item which holds information like path to pgp-tool and recipients for which the message should be
-     * encrypted.
+	 * encrypted.
 	 * @return the encrypted message if all is ok, else an empty input-stream
 	 * TODO better using the exception mechanism instead of showing th user a dialog from this component.
 	 */
@@ -215,7 +245,6 @@ public class PGPController {
 			return null;
 		}
 
-
 		if (save == false)
 			item.clearPassphrase();
 		ColumbaLogger.log.debug(utils[GPG].getResult());
@@ -253,7 +282,7 @@ public class PGPController {
 		}
 		return ret;
 	}
-	
+
 	/**
 	 * Returnes the Result from the GPG Util as an InputStream. On each operation with the GPG Util this Stream is
 	 *  overidden. The ResultStream can be empty if it has earliyer readed out.
@@ -262,7 +291,7 @@ public class PGPController {
 	public InputStream getPGPResultStream() {
 		return utils[GPG].getStreamResult();
 	}
-	
+
 	/**
 	 * Returns the ErrorResult from the GPG Util as an InputStream. On each operation with the GPG Util this Stream is
 	 *  overidden. The ResultStream can be empty if it has earliyer readed out.
@@ -270,6 +299,15 @@ public class PGPController {
 	 */
 	public InputStream getPGPErrorStream() {
 		return utils[GPG].getErrorStream();
+	}
+
+	/**
+	 * Gets the pgp commandline output.
+	 * 
+	 * @return	output of the commandline
+	 */
+	public String getPgpMessage() {
+		return pgpMessage;
 	}
 
 }
