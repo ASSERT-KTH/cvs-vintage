@@ -1,7 +1,18 @@
 <project name="carol.daemon.archive" default="dist.jar">
   <target name="dist.jar">
     <!-- CAROL JAR -->
-    <jar jarfile="${dist.lib}/daemon.jar"
-      manifest="${archive}/daemon.mf"/>
+    <jar jarfile="${dist.lib}/daemon.jar">
+      <manifest>
+        <attribute name="Manifest-Version" value="1.0"/>
+        <attribute name="Specification-Title" value="carol daemon"/>
+        <attribute name="Specification-Version" value="${carol.version}"/>
+        <attribute name="Specification-Vendor" value="ObjectWeb"/>
+        <attribute name="Implementation-Title" value="org.objectweb.carol.util.bootstrap"/>
+        <attribute name="Implementation-Version" value="${carol.version}"/>
+        <attribute name="Implementation-Vendor" value="INRIA"/>
+        <attribute name="Main-Class" value="org.objectweb.carol.util.bootstrap.ProcessesDaemon"/>
+        <attribute name="Class-Path" value="carol.jar commons-cli.jar"/>
+      </manifest>
+    </jar>
   </target>
 </project>

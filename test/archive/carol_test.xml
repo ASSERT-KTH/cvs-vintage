@@ -2,7 +2,17 @@
   <target name="test.dist.jar">
     <!-- CAROL JAR -->
     <jar jarfile="${test.dist.lib}/carol_test.jar" basedir="${test.build}/classes"
-      manifest="${test.archive}/carol_test.mf"
-      includes="**/jtests/**/*.class"/>
+      includes="**/jtests/**/*.class">
+
+      <manifest>
+        <attribute name="Manifest-Version" value="1.0"/>
+        <attribute name="Specification-Title" value="CAROL_TEST"/>
+        <attribute name="Specification-Version" value="1.0"/>
+        <attribute name="Specification-Vendor" value="ObjectWeb"/>
+        <attribute name="Implementation-Title" value="org.objectweb.carol.jtests"/>
+        <attribute name="Implementation-Version" value="1.0"/>
+        <attribute name="Implementation-Vendor" value="INRIA"/>
+      </manifest>
+    </jar>
   </target>
 </project>

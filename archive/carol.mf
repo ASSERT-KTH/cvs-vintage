@@ -1,7 +1,0 @@
-Manifest-Version: 1.5.2
-Specification-Title: "CAROL"
-Specification-Version: "1.5.2"
-Specification-Vendor: "ObjectWeb"
-Implementation-Title: "org.objectweb.carol"
-Implementation-Version: "1.5.2"
-Implementation-Vendor: "INRIA"

@@ -1,7 +1,0 @@
-Manifest-Version: 1.0
-Specification-Title: "CAROL_TEST"
-Specification-Version: "1.0"
-Specification-Vendor: "ObjectWeb"
-Implementation-Title: "org.objectweb.carol.jtests"
-Implementation-Version: "1.0"
-Implementation-Vendor: "INRIA"
