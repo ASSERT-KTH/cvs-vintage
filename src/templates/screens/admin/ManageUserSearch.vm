@@ -1,18 +1,20 @@
 #**
 @author <a href="mailto:dr@bitonic.com">Douglas B. Robertson</a>
 @author <a href="mailto:jon@collab.net">Jon Stevens</a>
-@version $Id: ManageUserSearch.vm,v 1.11 2002/02/16 00:31:04 jon Exp $
+@version $Id: ManageUserSearch.vm,v 1.12 2002/02/27 23:20:28 maartenc Exp $
 *#
 
 $page.setTitle("User Search")
 
-#set ($formSearchCriteria = "")
 #set ($user = $data.User)
 #set ($searchCommand = $data.Parameters.getString("searchCommand"))
 #set ($resultsPerPage = $data.Parameters.getInt("resultsPerPage"))
 #set ($pageNum = $data.Parameters.getInt("pageNum"))
-#set ($formSearchCriteria = $data.Parameters.getString("searchCriteria"))
-#set ($formOrderBy = $data.Parameters.getString("orderbyField"))
+#set ($searchField = $data.Parameters.getString("searchField"))
+#set ($searchCriteria = "")
+#set ($searchCriteria = $data.Parameters.getString("searchCriteria"))
+#set ($orderByField = $data.Parameters.getString("orderbyField"))
+#set ($ascOrDesc = $data.Parameters.getString("ascOrDesc"))
 
 #if ($resultsPerPage == 0)
   #set ($resultsPerPage = 25)
@@ -38,23 +40,23 @@ $page.setTitle("User Search")
 <tr>
 <td>
 <select name="searchField">
- <option value="FIRST_NAME" #if ($data.Parameters.getString("searchField").equals("FIRST_NAME")) selected="selected" #end>First Name</option>
- <option value="LAST_NAME" #if ($data.Parameters.getString("searchField").equals("LAST_NAME")) selected="selected" #end>Last Name</option>
- <option value="EMAIL" #if ($data.Parameters.getString("searchField").equals("EMAIL")) selected="selected" #end>E-mail Address</option>
- <option value="LOGIN_NAME" #if ($data.Parameters.getString("searchField").equals("LOGIN_NAME")) selected="selected" #end>Login Name</option>
+ <option value="FIRST_NAME" #if ($searchField.equals("FIRST_NAME")) selected="selected" #end>First name</option>
+ <option value="LAST_NAME" #if ($searchField.equals("LAST_NAME")) selected="selected" #end>Last name</option>
+ <option value="EMAIL" #if ($searchField.equals("EMAIL")) selected="selected" #end>E-mail address</option>
+ <option value="LOGIN_NAME" #if ($searchField.equals("LOGIN_NAME")) selected="selected" #end>Login name</option>
 </select>
-<input type="text" name="searchCriteria" value="$formSearchCriteria" />
+<input type="text" name="searchCriteria" value="$searchCriteria" />
 </td>
 <td>
 Order by: <select name="orderbyField">
- <option value="FIRST_NAME" #if ($data.Parameters.getString("orderbyField").equals("FIRST_NAME")) selected="selected" #end>First Name</option>
- <option value="LAST_NAME" #if ($data.Parameters.getString("orderbyField").equals("LAST_NAME")) selected="selected" #end>Last Name</option>
- <option value="EMAIL" #if ($data.Parameters.getString("orderbyField").equals("EMAIL")) selected="selected" #end>E-mail Address</option>
- <option value="LOGIN_NAME" #if ($data.Parameters.getString("orderbyField").equals("LOGIN_NAME")) selected="selected" #end>Login Name</option>
+ <option value="FIRST_NAME" #if ($orderByField.equals("FIRST_NAME")) selected="selected" #end>First name</option>
+ <option value="LAST_NAME" #if ($orderByField.equals("LAST_NAME")) selected="selected" #end>Last name</option>
+ <option value="EMAIL" #if ($orderByField.equals("EMAIL")) selected="selected" #end>E-mail address</option>
+ <option value="LOGIN_NAME" #if ($orderByField.equals("LOGIN_NAME")) selected="selected" #end>Login name</option>
 </select>
 <select name="ascOrDesc">
-  <option value="ASC">Ascending</option>
-  <option value="DESC">Descending</option>
+  <option value="ASC" #if ($ascOrDesc.equals("ASC")) selected="selected" #end>Ascending</option>
+  <option value="DESC" #if ($ascOrDesc.equals("DESC")) selected="selected" #end>Descending</option>
 </select>  
 </td>
 </tr>
@@ -80,10 +82,9 @@ Results per page:
 
 <h3>Search results</h3>
 
- #set ($userList = $scarabG.getSearchUsers($data.Parameters.searchField,$data.Parameters.searchCriteria,$data.Parameters.orderbyField,$data.Parameters.ascOrDesc))
-
+ #set ($userList = $scarabG.getSearchUsers($searchField,$searchCriteria,$orderByField,$ascOrDesc))
  #if ($userList.size() == 0)
-<p class="warn">There are no users matching the specified crieteria.</p>
+<p class="warn">There are no users matching the specified criteria.</p>
  #else
 
 <form name="ManageUserSearchForm" action="$link.setPage("admin,ManageUserSearch.vm")" method="post">
@@ -93,33 +94,29 @@ Results per page:
 <table cellspacing="0" cellpadding="2" width="100%">
  <tr>
    <th>Select</th>
-   <th>Username</th>
+   <th>Login name</th>
    <th>Name</th>
  </tr>
 
 ## this is the results list stuff
 #if ($userList.size() > $resultsPerPage)
  #set ($paginated = "true")
- #set ($userList = $scarabR.getPaginatedList($userList, $pageNum, $resultsPerPage))
+ #set ($userList = $scarabR.getPaginatedList($userList, $pageNum.toString(), $resultsPerPage.toString()))
  #set ($totalPages = $scarabR.NbrPages)
- #set ($searchField = $data.Parameters.getString("searchField"))
- #set ($searchCriteria = $data.Parameters.getString("searchCriteria"))
- #set ($orderbyField = $data.Parameters.getString("orderByField"))
- #set ($ascOrDesc = $data.Parameters.getString("ascOrDesc"))
 #end
 
 ## PAGINATION
 #if ($paginated)
  <p class="paginate">
  #if($scarabR.PrevPage != 0)
-  #set ($prevLink = $link.setPathInfo("searchCommand", "search").setPathInfo("searchField", "$searchField").setPathInfo("searchCriteria", "$searchCriteria").setPathInfo("orderbyField", "$orderbyField").setPathInfo("ascOrDesc", "$ascOrDesc").setPathInfo("resultsperpage", "$resultsPerPage").setPathInfo("pageNum", "$scarabR.PrevPage").setPage("admin,ManageUserSearch.vm").toString())
+  #set ($prevLink = $link.setPathInfo("searchCommand", "search").setPathInfo("searchField", "$searchField").setPathInfo("searchCriteria", "$searchCriteria").setPathInfo("orderbyField", "$orderbyField").setPathInfo("ascOrDesc", "$ascOrDesc").setPathInfo("resultsperpage", "$resultsPerPage.toString()").setPathInfo("pageNum", "$scarabR.PrevPage").setPage("admin,ManageUserSearch.vm").toString())
   <a href="$prevLink">&laquo;</a> previous |
  #end
 
  $pageNum of $totalPages
 
  #if ($scarabR.NextPage != 0)
-  #set ($nextLink = $link.setPathInfo("searchCommand", "search").setPathInfo("searchField", "$searchField").setPathInfo("searchCriteria", "$searchCriteria").setPathInfo("orderbyField", "$orderbyField").setPathInfo("ascOrDesc", "$ascOrDesc").setPathInfo("resultsperpage", "$resultsPerPage").setPathInfo("pageNum", "$scarabR.NextPage").setPage("admin,ManageUserSearch.vm").toString())
+  #set ($nextLink = $link.setPathInfo("searchCommand", "search").setPathInfo("searchField", "$searchField").setPathInfo("searchCriteria", "$searchCriteria").setPathInfo("orderbyField", "$orderbyField").setPathInfo("ascOrDesc", "$ascOrDesc").setPathInfo("resultsperpage", "$resultsPerPage.toString()").setPathInfo("pageNum", "$scarabR.NextPage").setPage("admin,ManageUserSearch.vm").toString())
   | next <a href="$nextLink">&raquo;</a>
  #end
  </p>
@@ -136,6 +133,22 @@ Results per page:
 #end
 
 </table>
+
+#if ($paginated)
+ <p class="paginate">
+ #if($scarabR.PrevPage != 0)
+  #set ($prevLink = $link.setPathInfo("searchCommand", "search").setPathInfo("searchField", "$searchField").setPathInfo("searchCriteria", "$searchCriteria").setPathInfo("orderbyField", "$orderbyField").setPathInfo("ascOrDesc", "$ascOrDesc").setPathInfo("resultsperpage", "$resultsPerPage.toString()").setPathInfo("pageNum", "$scarabR.PrevPage").setPage("admin,ManageUserSearch.vm").toString())
+  <a href="$prevLink">&laquo;</a> previous |
+ #end
+
+ $pageNum of $totalPages
+
+ #if ($scarabR.NextPage != 0)
+  #set ($nextLink = $link.setPathInfo("searchCommand", "search").setPathInfo("searchField", "$searchField").setPathInfo("searchCriteria", "$searchCriteria").setPathInfo("orderbyField", "$orderbyField").setPathInfo("ascOrDesc", "$ascOrDesc").setPathInfo("resultsperpage", "$resultsPerPage.toString()").setPathInfo("pageNum", "$scarabR.NextPage").setPage("admin,ManageUserSearch.vm").toString())
+  | next <a href="$nextLink">&raquo;</a>
+ #end
+ </p>
+#end
 
 #if ($userList.size() > 0)
 <div class="functnbar2">
