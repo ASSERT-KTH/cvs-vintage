@@ -11,7 +11,9 @@
 #set ($queryString = $data.Parameters.getString("queryString"))
 
 #if ($queryString)
-<form method="post" action="$link.setPage("SaveQuery.vm").setAction("Search")" >
+<form method="post" action="$link.setPage("SaveQuery.vm")">
+<input type="hidden" name="action" value="Search" />
+<input type="hidden" name="eventSubmit_doSavequery" value="foo" />
 <input type="hidden" name="$scarabG.Constant.NEXT_TEMPLATE" value="QueryList.vm" />
 <input type="hidden" name="$queryGroup.Value.Key" value="$queryString" />
 
