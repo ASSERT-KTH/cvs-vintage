@@ -56,6 +56,9 @@ public class AntProperty extends TagSupport {
 	if( value != null )
 	    antTag.setProperty( name, value );
 
+   // reset value to default null
+   value = null;
+
 	return SKIP_BODY;
     }
 
