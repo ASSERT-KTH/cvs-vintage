@@ -27,7 +27,7 @@
 // Classes: FigEdgeModelElement
 // Original Author: abonner
 
-// $Id: FigEdgeModelElement.java,v 1.29 2003/05/16 12:22:27 mkl Exp $
+// $Id: FigEdgeModelElement.java,v 1.30 2003/05/16 12:25:16 mkl Exp $
 
 
 package org.argouml.uml.diagram.ui;
@@ -91,7 +91,6 @@ import org.tigris.gef.presentation.FigText;
 import ru.novosoft.uml.MBase;
 import ru.novosoft.uml.MElementEvent;
 import ru.novosoft.uml.MElementListener;
-import ru.novosoft.uml.foundation.core.MClassifier;
 import ru.novosoft.uml.foundation.core.MModelElement;
 import ru.novosoft.uml.foundation.core.MRelationship;
 import ru.novosoft.uml.foundation.extension_mechanisms.MStereotype;
