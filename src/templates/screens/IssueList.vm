@@ -4,6 +4,7 @@
 #set ($module = $user.CurrentModule)
 #set($search = $scarabR.Search)
 #set ( $searchGroup = $intake.SearchIssue.mapTo($search) ) 
+#set ($searchType = $data.Parameters.getString("searchType"))
 
 	
 	<p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip</p>
@@ -17,7 +18,10 @@
 
 <p class="functnbar"><input type="submit" value="view selected (verbose)" name="eventSubmit_doViewselected" name="eventSubmit_doViewselected" />&#160;<input type="submit" value="view all (verbose)" name="eventSubmit_doViewall" /></p>
 
-<p class="functnbar"><input type="submit" value="reassign selected" name="eventSubmit_doReassignselected" />&#160;<sup>|</sup>&#160;<input type="submit" value="reassign all" name="eventSubmit_doReassignall" />&#160;<sup>|</sup>&#160;<input type="submit" value="save query" name="eventSubmit_doSavequery" /></p>
+<p class="functnbar"><input type="submit" value="reassign selected" name="eventSubmit_doReassignselected" />&#160;<sup>|</sup>&#160;<input type="submit" value="reassign all" name="eventSubmit_doReassignall" />
+#if ($searchType.equals("advanced"))
+&#160;<sup>|</sup>
+&#160;<input type="submit" value="save query" name="eventSubmit_doSavequery" />#end</p>
 	
 	<h3>Search Results</h3>
 
@@ -63,7 +67,11 @@
 
 <p class="functnbar"><input type="submit" value="view selected (verbose)" name="eventSubmit_doViewselected" name="eventSubmit_doViewselected" />&#160;<input type="submit" value="view all (verbose)" name="eventSubmit_doViewall" /></p>
 
-<p class="functnbar"><input type="submit" value="reassign selected" name="eventSubmit_doReassignselected" />&#160;<sup>|</sup>&#160;<input type="submit" value="reassign all" name="eventSubmit_doReassignall" />&#160;<sup>|</sup>&#160;<input type="submit" value="save query" name="eventSubmit_doSavequery" /></p>
+<p class="functnbar"><input type="submit" value="reassign selected" name="eventSubmit_doReassignselected" />&#160;<sup>|</sup>&#160;<input type="submit" value="reassign all" name="eventSubmit_doReassignall" />
+#if ($searchType.equals("advanced"))
+&#160;<sup>|</sup>
+&#160;<input type="submit" value="save query" name="eventSubmit_doSavequery" />#end</p>
+	
 	
 	<div class="misc"><a href="#">&laquo;</a> <a href="#">previous</a> | 3 of 5 | <a href="#">next</a> <a href="#">&raquo;</a> (<a href="ConfigureIssueList.vm">add/remove attributes from view</a>)</div>
 $intake.declareGroups()
