@@ -1,4 +1,4 @@
-// $Id: ActionNewEvent.java,v 1.4 2004/07/17 13:10:31 kataka Exp $
+// $Id: ActionNewEvent.java,v 1.5 2004/08/14 21:47:20 mvw Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -44,14 +44,18 @@ public abstract class ActionNewEvent extends AbstractActionNewModelElement {
      * transition, this is filled with "trigger". The values are defined in the
      * interface Roles
      */
-    public final static String ROLE = "role";
+    public static final String ROLE = "role";
 
+    /**
+     * 
+     *
+     */
     public static interface Roles {
 
         /**
          * The trigger for some transition
          */
-        public final static String TRIGGER = "trigger";
+        public static final  String TRIGGER = "trigger";
 
     }
     /**
@@ -76,7 +80,8 @@ public abstract class ActionNewEvent extends AbstractActionNewModelElement {
         super.actionPerformed(e);
         Object event = createEvent();
         if (getValue(ROLE).equals(Roles.TRIGGER)) {
-            StateMachinesHelper.getHelper().setEventAsTrigger(getTarget(), event);
+            StateMachinesHelper.getHelper()
+                        .setEventAsTrigger(getTarget(), event);
         }
         TargetManager.getInstance().setTarget(event);
     }

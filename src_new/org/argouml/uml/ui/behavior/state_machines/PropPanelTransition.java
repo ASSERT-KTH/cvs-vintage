@@ -1,4 +1,4 @@
-// $Id: PropPanelTransition.java,v 1.26 2004/07/31 08:31:57 mkl Exp $
+// $Id: PropPanelTransition.java,v 1.27 2004/08/14 21:47:20 mvw Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: PropPanelTransition.java
 // Classes: PropPanelTransition
 // Original Author: jrobbins@ics.uci.edu
-// $Id: PropPanelTransition.java,v 1.26 2004/07/31 08:31:57 mkl Exp $
+// $Id: PropPanelTransition.java,v 1.27 2004/08/14 21:47:20 mvw Exp $
 
 package org.argouml.uml.ui.behavior.state_machines;
 
@@ -85,7 +85,7 @@ public class PropPanelTransition extends PropPanelModelElement {
                 new JScrollPane(triggerList));
         JList guardList = new UMLMutableLinkedList(
                 new UMLTransitionGuardListModel(), null,
-                ActionNewGuard.SINGLETON);
+                ActionNewGuard.getSingleton());
         guardList.setVisibleRowCount(1);
         addField(Translator.localize("UMLMenu", "label.guard"),
                 new JScrollPane(guardList));

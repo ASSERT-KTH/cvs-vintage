@@ -1,4 +1,4 @@
-// $Id: ActionNewFinalState.java,v 1.3 2003/11/25 10:58:15 jhraigniac Exp $
+// $Id: ActionNewFinalState.java,v 1.4 2004/08/14 21:47:20 mvw Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -39,14 +39,15 @@ import org.argouml.uml.ui.AbstractActionNewModelElement;
  */
 public class ActionNewFinalState extends AbstractActionNewModelElement {
 
-    public static ActionNewFinalState SINGLETON = new ActionNewFinalState();
+    private static ActionNewFinalState singleton = new ActionNewFinalState();
     
     /**
      * Constructor for ActionNewFinalState.
      */
     protected ActionNewFinalState() {
         super();
-        putValue(Action.NAME, Translator.localize("UMLMenu", "button.new-finalstate"));
+        putValue(Action.NAME, Translator.localize("UMLMenu", 
+                                                  "button.new-finalstate"));
     }
     
     /**
@@ -55,6 +56,13 @@ public class ActionNewFinalState extends AbstractActionNewModelElement {
     public void actionPerformed(ActionEvent e) {
         super.actionPerformed(e);
         StateMachinesFactory.getFactory().buildFinalState(getTarget());
+    }
+
+    /**
+     * @return Returns the singleton.
+     */
+    public static ActionNewFinalState getSingleton() {
+        return singleton;
     }
 
 }

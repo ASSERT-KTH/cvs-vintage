@@ -1,4 +1,4 @@
-// $Id: UMLCompositeStateSubvertexList.java,v 1.8 2004/07/17 13:10:31 kataka Exp $
+// $Id: UMLCompositeStateSubvertexList.java,v 1.9 2004/08/14 21:47:20 mvw Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -48,18 +48,18 @@ public class UMLCompositeStateSubvertexList extends UMLMutableLinkedList {
             
             JMenu newMenu = new JMenu();
             newMenu.setText(Translator.localize("action.new"));
-            ActionNewPseudoState.SINGLETON.setTarget(getTarget());
-            newMenu.add(ActionNewPseudoState.SINGLETON);
+            ActionNewPseudoState.getSingleton().setTarget(getTarget());
+            newMenu.add(ActionNewPseudoState.getSingleton());
             newMenu.add(ActionNewSynchState.SINGLETON);
             ActionNewSynchState.SINGLETON.setTarget(getTarget());
             newMenu.add(ActionNewStubState.SINGLETON);
             ActionNewStubState.SINGLETON.setTarget(getTarget());
-            newMenu.add(ActionNewCompositeState.SINGLETON);
-            ActionNewCompositeState.SINGLETON.setTarget(getTarget());
-            newMenu.add(ActionNewSimpleState.SINGLETON);
-            ActionNewSimpleState.SINGLETON.setTarget(getTarget());
-            newMenu.add(ActionNewFinalState.SINGLETON);
-            ActionNewFinalState.SINGLETON.setTarget(getTarget());
+            newMenu.add(ActionNewCompositeState.getSingleton());
+            ActionNewCompositeState.getSingleton().setTarget(getTarget());
+            newMenu.add(ActionNewSimpleState.getSingleton());
+            ActionNewSimpleState.getSingleton().setTarget(getTarget());
+            newMenu.add(ActionNewFinalState.getSingleton());
+            ActionNewFinalState.getSingleton().setTarget(getTarget());
             newMenu.add(ActionNewSubmachineState.SINGLETON);
             ActionNewSubmachineState.SINGLETON.setTarget(getTarget());
             add(newMenu);

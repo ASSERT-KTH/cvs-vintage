@@ -1,4 +1,4 @@
-// $Id: ActionNewChangeEvent.java,v 1.5 2004/06/01 19:32:05 mvw Exp $
+// $Id: ActionNewChangeEvent.java,v 1.6 2004/08/14 21:47:20 mvw Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -34,14 +34,15 @@ import org.argouml.model.uml.behavioralelements.statemachines.StateMachinesFacto
  */
 public class ActionNewChangeEvent extends ActionNewEvent {
 
-    public static ActionNewChangeEvent SINGLETON = new ActionNewChangeEvent();
+    private static ActionNewChangeEvent singleton = new ActionNewChangeEvent();
 
     /**
      * Constructor for ActionNewChangeEvent.
      */
     protected ActionNewChangeEvent() {
         super();
-        putValue(NAME, Translator.localize("UMLMenu", "button.new-changeevent"));
+        putValue(NAME, Translator.localize("UMLMenu", 
+                                            "button.new-changeevent"));
     }
 
     /**
@@ -49,6 +50,13 @@ public class ActionNewChangeEvent extends ActionNewEvent {
      */
     protected Object createEvent() {
         return StateMachinesFactory.getFactory().buildChangeEvent();
+    }
+
+    /**
+     * @return Returns the singleton.
+     */
+    public static ActionNewChangeEvent getSingleton() {
+        return singleton;
     }
 
 }

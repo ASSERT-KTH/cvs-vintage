@@ -1,4 +1,4 @@
-// $Id: ActionNewCallEvent.java,v 1.4 2003/11/25 10:58:15 jhraigniac Exp $
+// $Id: ActionNewCallEvent.java,v 1.5 2004/08/14 21:47:20 mvw Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -34,7 +34,7 @@ import org.argouml.model.uml.behavioralelements.statemachines.StateMachinesFacto
  */
 public class ActionNewCallEvent extends ActionNewEvent {
 
-    public static ActionNewCallEvent SINGLETON = new ActionNewCallEvent();
+    private static ActionNewCallEvent singleton = new ActionNewCallEvent();
 
     /**
      * Constructor for ActionNewCallEvent.
@@ -49,6 +49,13 @@ public class ActionNewCallEvent extends ActionNewEvent {
      */
     protected Object createEvent() {
         return StateMachinesFactory.getFactory().buildCallEvent();
+    }
+
+    /**
+     * @return Returns the singleton.
+     */
+    public static ActionNewCallEvent getSingleton() {
+        return singleton;
     }
 
 }

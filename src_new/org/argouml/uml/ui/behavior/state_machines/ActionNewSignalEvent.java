@@ -1,4 +1,4 @@
-// $Id: ActionNewSignalEvent.java,v 1.5 2004/06/01 19:32:05 mvw Exp $
+// $Id: ActionNewSignalEvent.java,v 1.6 2004/08/14 21:47:20 mvw Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -34,14 +34,15 @@ import org.argouml.model.uml.behavioralelements.statemachines.StateMachinesFacto
  */
 public class ActionNewSignalEvent extends ActionNewEvent {
 
-    public static ActionNewSignalEvent SINGLETON = new ActionNewSignalEvent();
+    private static ActionNewSignalEvent singleton = new ActionNewSignalEvent();
 
     /**
      * Constructor for ActionNewSignalEvent.
      */
     protected ActionNewSignalEvent() {
         super();
-        putValue(NAME, Translator.localize("UMLMenu", "button.new-signalevent"));
+        putValue(NAME, Translator.localize("UMLMenu", 
+                                           "button.new-signalevent"));
     }
 
     /**
@@ -49,6 +50,13 @@ public class ActionNewSignalEvent extends ActionNewEvent {
      */
     protected Object createEvent() {
         return StateMachinesFactory.getFactory().buildSignalEvent();
+    }
+
+    /**
+     * @return Returns the singleton.
+     */
+    public static ActionNewSignalEvent getSingleton() {
+        return singleton;
     }
 
 }
