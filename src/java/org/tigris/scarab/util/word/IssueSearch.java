@@ -114,7 +114,7 @@ import org.tigris.scarab.services.security.ScarabSecurity;
  * not a more specific type of Issue.
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: IssueSearch.java,v 1.117 2003/10/17 10:02:06 dep4b Exp $
+ * @version $Id: IssueSearch.java,v 1.118 2003/11/06 15:37:49 dep4b Exp $
  */
 public class IssueSearch 
     extends Issue
@@ -1935,7 +1935,7 @@ public class IssueSearch
             // text to search, so continue the search process.
             if (matchingIssueIds == null || matchingIssueIds.length > 0) 
             {            
-                lastQueryResults = getQueryResults(from, where);
+                lastQueryResults = getQueryResults(from, where, tableAliases);
             }
             else 
             {
@@ -2057,10 +2057,13 @@ public class IssueSearch
     }
 
     private String setupSortColumn(Integer sortAttrId, 
-                                   StringBuffer sortOuterJoin)
+                                   StringBuffer sortOuterJoin,
+                                   Set tableAliases)
         throws TorqueException
     {
         String alias = AV + sortAttrId;
+        if (!tableAliases.contains(alias)) 
+        {
             sortOuterJoin.append(LEFT_OUTER_JOIN)
                 .append(AttributeValuePeer.TABLE_NAME).append(' ')
                 .append(alias).append(ON)
@@ -2068,6 +2071,7 @@ public class IssueSearch
                 .append(alias).append(".ISSUE_ID AND ").append(alias)
                 .append(".DELETED=0 AND ").append(alias)
                 .append(".ATTRIBUTE_ID=").append(sortAttrId).append(')');
+        }        
             String sortColumn;
             Attribute att = AttributeManager.getInstance(sortAttrId); 
             if (att.isOptionAttribute())
@@ -2085,7 +2089,8 @@ public class IssueSearch
             return sortColumn;
     }
 
-    private List getSearchSqlPieces(StringBuffer from, StringBuffer where)
+    private List getSearchSqlPieces(StringBuffer from, StringBuffer where,
+                                    Set tableAliases)
         throws TorqueException
     {
         List searchStuff = new ArrayList(3);
@@ -2100,7 +2105,8 @@ public class IssueSearch
         if (sortAttrId != null) 
         {
             sortOuterJoin = new StringBuffer(128);
-            sortColumn = setupSortColumn(sortAttrId, sortOuterJoin);
+            sortColumn = setupSortColumn(sortAttrId, sortOuterJoin,
+                                         tableAliases);
             sql.append(',').append(sortColumn);
         }
 
@@ -2135,7 +2141,7 @@ public class IssueSearch
             int maxJoin = MAX_JOIN - 2;
             //List columnSqlList = new ArrayList(valueListSize/maxJoin + 1);
             StringBuffer partialSql = getSelectStart();
-            Set tableAliases = new HashSet(MAX_JOIN);
+            tableAliases = new HashSet(MAX_JOIN);
             boolean sortColumnAdded = false;
             for (Iterator i = rmuas.iterator(); i.hasNext();) 
             {
@@ -2172,7 +2178,8 @@ public class IssueSearch
                     cb.size = count;
                     if (sortAttrId != null) 
                     {
-                        cb.sortColumn = setupSortColumn(sortAttrId, outerJoin);
+                        cb.sortColumn = setupSortColumn(sortAttrId, outerJoin,
+                                                        tableAliases);
                         partialSql.append(',').append(
                             cb.sortColumn);
                     }
@@ -2182,7 +2189,7 @@ public class IssueSearch
 
                     partialSql = getSelectStart();
                     outerJoin = new StringBuffer(512);
-                    tableAliases = new HashSet(MAX_JOIN);
+                    tableAliases.clear();
                     sortColumnAdded = false;
                     count = 0;
                 }
@@ -2191,7 +2198,9 @@ public class IssueSearch
         return searchStuff;
     }
 
-    private IteratorWithSize getQueryResults(StringBuffer from, StringBuffer where)
+    private IteratorWithSize getQueryResults(StringBuffer from, 
+                                             StringBuffer where,
+                                             Set tableAliases)
         throws TorqueException, ComplexQueryException, Exception
     {
         // return a List of QueryResult objects
@@ -2212,7 +2221,8 @@ public class IssueSearch
             int count = getIssueCount();
             if (count > 0) 
             {
-                result = new QueryResultIterator(this, count, from, where);
+                result = new QueryResultIterator(this, count, from, where,
+                                                 tableAliases);
             }
             else 
             {
@@ -2463,13 +2473,14 @@ public class IssueSearch
         /**
          * @param issues The issue query results.
          */
-        public QueryResultIterator(IssueSearch search, int size, 
-                                   StringBuffer from, StringBuffer where)
+        private QueryResultIterator(IssueSearch search, int size, 
+                                    StringBuffer from, StringBuffer where,
+                                    Set tableAliases)
             throws SQLException, TorqueException
         {
             this.search = search;
             this.size = size;
-            searchStuff = getSearchSqlPieces(from, where);
+            searchStuff = getSearchSqlPieces(from, where, tableAliases);
 
             int numQueries = searchStuff.size();
             stmtList = new ArrayList(numQueries);
