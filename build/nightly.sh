@@ -53,13 +53,19 @@ fi
 
 ## Update things from CVS
 if [ ${CVSUPDATE} -gt 0 ] ; then
-    echo "Updating Turbine From CVS..."
+    echo "Updating Turbine From CVS Start..."
+    date
     cd ${DIR}; cd ${TURBINE}
     cvs update
-    
-    echo "Updating Scarab From CVS..."
+    echo "Updating Turbine From CVS Finish..."
+    date
+
+    echo "Updating Scarab From CVS Start..."
+    date
     cd ${DIR}; cd ${SCARAB}
     cvs update
+    echo "Updating Scarab From CVS Finish..."
+    date
 else
     echo "Skipping CVS update..."
 fi
