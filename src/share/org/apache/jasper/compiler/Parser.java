@@ -96,6 +96,13 @@ public class Parser {
     Mark tmplStart;
     Mark tmplStop;
 
+    /*
+     * Name of the current file.
+     * Useful to preserve the line number information in
+     * case of an include.
+     */
+    String currentFile;
+
     public interface Action {
         void execute(Mark start, Mark stop) throws JasperException;
     }
@@ -111,6 +118,7 @@ public class Parser {
                                                        }
                                                    });
 	this.caw = new CharArrayWriter();
+	this.currentFile = reader.mark().getFile();
     }
 
     static final Vector coreElements = new Vector();
@@ -828,7 +836,8 @@ public class Parser {
                                 // it is JSP body content, so accept all core elements
                                 parser.parse(tagEnd);
                             reader.advance(tagEnd.length());
-                            listener.handleTagEnd(bodyStart, reader.mark(), prefix, 
+			    listener.setTemplateInfo(parser.tmplStart, parser.tmplStop);
+                            listener.handleTagEnd(parser.tmplStop, reader.mark(), prefix, 
                                                   shortTagName, attrs, tli, ti);
                         } else
                             throw new ParseException(start, 
@@ -1037,6 +1046,14 @@ public class Parser {
             if (until != null && reader.matches(until)) 
                 return;
 
+	    // If the file has changed because of a 'push' or a 'pop'
+	    // we must flush the character data for the old file.
+	    if (!reader.mark().getFile().equals(currentFile)) {
+		flushCharData(tmplStart, tmplStop);
+		currentFile = reader.mark().getFile();
+		tmplStart = reader.mark();
+	    }
+	    
 	    Enumeration e = coreElements.elements(); 
 
             if (accept != null) {
@@ -1081,3 +1098,4 @@ public class Parser {
 	flushCharData(tmplStart, tmplStop);
     }
 }
+

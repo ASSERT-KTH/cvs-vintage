@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/MappedCharDataGenerator.java,v 1.1 2000/02/23 02:23:44 mandar Exp $
- * $Revision: 1.1 $
- * $Date: 2000/02/23 02:23:44 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/MappedCharDataGenerator.java,v 1.2 2000/03/06 00:33:51 mandar Exp $
+ * $Revision: 1.2 $
+ * $Date: 2000/03/06 00:33:51 $
  *
  * ====================================================================
  * 
@@ -71,14 +71,10 @@ package org.apache.jasper.compiler;
  *
  * @author Mandar Raje
  */
-public class MappedCharDataGenerator 
-    extends GeneratorBase
-    implements ServiceMethodPhase
-{
-    char[] chars;
+public class MappedCharDataGenerator extends CharDataGenerator {
     
     public MappedCharDataGenerator(char[] chars) {
-	this.chars = chars;
+	super(chars);
     }
 
     public void generate(ServletWriter writer, Class phase) {
