@@ -8,9 +8,10 @@
 #end
 #set ($issueListSize = $issueIdList.size())
 #set ($modules = $scarabG.getModulesFromIssueList($scarabR.getIssues($issueIdList)))
+#set ($mitlist = $user.CurrentMITList)
 #if ($issueListSize == 0)
 <h3>
-#if ($user.CurrentMITList)
+#if ($mitlist)
   $page.Title  
 #else
   $page.Title for $scarabR.CurrentRModuleIssueType.DisplayName
@@ -56,14 +57,14 @@
 #end
 
 <h3>
-#if ($user.CurrentMITList)
+#if ($mitlist)
   $page.Title for the following modules and/or issue types  
 #else
   $page.Title for $scarabR.CurrentRModuleIssueType.DisplayName
 #end
 (No. of issues: $issueListSize)</h3>
 
-#if ($user.CurrentMITList)
+#if ($mitlist)
   <div class="colbar">
   #set ($list = $user.CurrentMITList)
   #if ($list.isModifiable())
@@ -96,6 +97,12 @@ $link.setPage("ConfigureIssueList.vm").setLabel("Add/remove attributes from view
  <table width="100%" border="1" cellspacing="2" cellpadding="3">
   <tr>
   <th width="70">Select</th>
+ #if ($mitlist && !$mitlist.isSingleModule())
+  <th>$l10n.CapModule</th> 
+ #end
+ #if ($mitlist && !$mitlist.isSingleIssueType())
+  <th>$l10n.IssueType</th> 
+ #end
   <th>
      #if (!$sortColumn || $sortColumn.length() == 0)
         #if ($sortPolarity.equals("desc"))
@@ -140,6 +147,12 @@ $link.setPage("ConfigureIssueList.vm").setLabel("Add/remove attributes from view
  #set ($issueLink = $link.setPage("ViewIssue.vm").setPathInfo("id", $issue.UniqueId.toString()).setPathInfo("issueList", "true"))
  #indexedRows($velocityCount)
   <td><input type="checkbox" name="selected_$issue.UniqueId" /></td>
+ #if ($mitlist && !$mitlist.isSingleModule())
+  <td>$issue.Module.RealName</td> 
+ #end
+ #if ($mitlist && !$mitlist.isSingleIssueType())
+  <td>$issue.RModuleIssueType.DisplayName</td> 
+ #end
   <td><a href="$issueLink">$issue.UniqueId</a></td>
 #foreach ($rmua in $rmuas)
  #set ($userAttribute = $rmua.Attribute)
