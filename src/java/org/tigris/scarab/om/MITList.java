@@ -226,6 +226,11 @@ public  class MITList
     public void setScarabUser(ScarabUser v) 
         throws TorqueException
     {
+        if (v == null) 
+        {
+            throw new IllegalArgumentException("cannot set user to null.");
+        }
+        
         super.setScarabUser(v);
         aScarabUser = v;
     }
@@ -519,6 +524,7 @@ public  class MITList
             crit.add(RModuleUserAttributePeer.MODULE_ID, null);
             crit.add(RModuleUserAttributePeer.ISSUE_TYPE_ID, null);            
         }
+        crit.addAscendingOrderByColumn(RModuleUserAttributePeer.PREFERRED_ORDER);
                 
         return RModuleUserAttributePeer.doSelect(crit);
     }
