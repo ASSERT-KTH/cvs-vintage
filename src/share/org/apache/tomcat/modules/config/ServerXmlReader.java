@@ -159,8 +159,9 @@ public class ServerXmlReader extends BaseInterceptor {
                 loadConfigFile(xh,f,cm);
 		cm.log(sm.getString("tomcat.loading") + " " + f);
             }
-	    
         }
+        else
+            log("Warning: Server configuration file " + f + " was not found!");
     }
 
     // -------------------- Xml reading details --------------------
@@ -324,7 +325,7 @@ public class ServerXmlReader extends BaseInterceptor {
 	    }
 	}
         else
-            log("Warning: No modules.xml file found!");
+            log("Warning: Modules configuration file " + f + " was not found!");
     }
 
     void loadCachedModules( File f, Properties mods ) {
