@@ -50,11 +50,11 @@ import org.tigris.scarab.om.AttributePeer;
 import org.apache.torque.om.NumberKey;
 
 /**
-    A place to put public final static strings and other constants.
-    
-    @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
-    @version $Id: ScarabConstants.java,v 1.25 2001/11/10 02:22:56 elicia Exp $
-*/
+ * A place to put public final static strings and other constants.
+ *
+ * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
+ * @version $Id: ScarabConstants.java,v 1.26 2001/11/30 20:50:27 jon Exp $
+ */
 public interface ScarabConstants
 {
     /** 
