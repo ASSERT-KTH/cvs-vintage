@@ -1,4 +1,4 @@
-// $Id: UmlFactory.java,v 1.47 2004/07/23 17:53:55 linus Exp $
+// $Id: UmlFactory.java,v 1.48 2004/08/03 12:18:24 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -400,6 +400,11 @@ public class UmlFactory extends AbstractUmlModelFactory {
 	    new ObjectCreateInfo(MPartition.class, factory, "createPartition"));
         elements.put(Uml.STATE,
             new ObjectCreateInfo(MState.class, factory, "createState"));
+        elements.put(Uml.CALL_STATE,
+            new ObjectCreateInfo(
+                MCallState.class, 
+                factory, 
+                "createCallState"));
         elements.put(Uml.COMPOSITE_STATE,
             new ObjectCreateInfo(
                 MCompositeState.class,
@@ -410,6 +415,16 @@ public class UmlFactory extends AbstractUmlModelFactory {
                 MPseudostate.class,
                 factory,
                 "createPseudostate"));
+        elements.put(Uml.OBJECT_FLOW_STATE,
+                new ObjectCreateInfo(
+                    MObjectFlowState.class,
+                    factory,
+                    "createObjectFlowState"));
+        elements.put(Uml.SUBACTIVITY_STATE,
+                new ObjectCreateInfo(
+                    MSubactivityState.class,
+                    factory,
+                    "createSubactivityState"));
         elements.put(Uml.USE_CASE,
             new ObjectCreateInfo(MUseCase.class, factory, "createUseCase"));
         elements.put(Uml.ACTION,

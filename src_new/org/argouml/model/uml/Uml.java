@@ -1,4 +1,4 @@
-// $Id: Uml.java,v 1.7 2004/08/02 21:35:44 mvw Exp $
+// $Id: Uml.java,v 1.8 2004/08/03 12:18:24 mvw Exp $
 // Copyright (c) 2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -461,7 +461,7 @@ public final class Uml {
         umlClassList.add(Uml.BOOLEAN_EXPRESSION);
         umlClassList.add(Uml.CALL_ACTION);
         umlClassList.add(Uml.CALL_EVENT);
-        //umlClassList.add(Uml.CALL_STATE);
+        umlClassList.add(Uml.CALL_STATE);
         umlClassList.add(Uml.CHANGE_EVENT);
         umlClassList.add(Uml.CLASS);
         umlClassList.add(Uml.CLASSIFIER);
@@ -511,7 +511,7 @@ public final class Uml {
         umlClassList.add(Uml.NODE);
         umlClassList.add(Uml.NODE_INSTANCE);
         umlClassList.add(Uml.OBJECT);
-        //umlClassList.add(Uml.OBJECT_FLOW_STATE);
+        umlClassList.add(Uml.OBJECT_FLOW_STATE);
         umlClassList.add(Uml.OBJECT_SET_EXPRESSION);
         umlClassList.add(Uml.OPERATION);
         umlClassList.add(Uml.PACKAGE);
@@ -535,7 +535,7 @@ public final class Uml {
         umlClassList.add(Uml.STIMULUS);
         umlClassList.add(Uml.STRUCTURAL_FEATURE);
         umlClassList.add(Uml.STUB_STATE);
-        //umlClassList.add(Uml.SUBACTIVITY_STATE);
+        umlClassList.add(Uml.SUBACTIVITY_STATE);
         umlClassList.add(Uml.SUBMACHINE_STATE);
         umlClassList.add(Uml.SUBSYSTEM);
         umlClassList.add(Uml.SYNCH_STATE);
