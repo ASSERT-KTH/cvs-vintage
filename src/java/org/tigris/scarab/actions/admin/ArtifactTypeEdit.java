@@ -84,7 +84,7 @@ import org.tigris.scarab.services.cache.ScarabCache;
  * action methods on RModuleAttribute table
  *      
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: ArtifactTypeEdit.java,v 1.23 2002/05/08 22:32:50 elicia Exp $
+ * @version $Id: ArtifactTypeEdit.java,v 1.24 2002/06/06 00:27:52 elicia Exp $
  */
 public class ArtifactTypeEdit extends RequireLoginFirstAction
 {
@@ -209,7 +209,6 @@ public class ArtifactTypeEdit extends RequireLoginFirstAction
                 attGroup.save();
             }
 
-            ScarabCache.clear();
             // Set dedupe property for module-issueType
             if (!areThereDedupeAttrs 
                 || module.getAttributeGroups(issueType).size() < 2)

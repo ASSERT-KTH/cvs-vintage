@@ -73,7 +73,7 @@ import org.tigris.scarab.services.cache.ScarabCache;
 
 /**
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: ManageArtifactTypes.java,v 1.14 2002/05/31 21:49:40 jon Exp $
+ * @version $Id: ManageArtifactTypes.java,v 1.15 2002/06/06 00:27:52 elicia Exp $
  */
 public class ManageArtifactTypes extends RequireLoginFirstAction
 {
@@ -118,9 +118,8 @@ public class ManageArtifactTypes extends RequireLoginFirstAction
                                  rmit.getQueryKey(), false);
                 rmitGroup.setProperties(rmit);
                 rmit.save();
-                ScarabCache.clear();
             }
-
+            ScarabCache.clear();
         } 
     }
 
@@ -193,13 +192,13 @@ public class ManageArtifactTypes extends RequireLoginFirstAction
                 }
                 else
                 {
-                    try
+                    issueTypeId = key.substring(7);
+                    IssueType issueType = scarabR.getIssueType(issueTypeId);
+                    if (issueType != null)
                     {
-                        issueTypeId = key.substring(7);
-                        IssueType issueType = scarabR.getIssueType(issueTypeId);
-                        if (issueType != null)
+                        foundOne = true;
+                        try
                         {
-                            foundOne = true;
                             // delete module-issue type mappings
                             RModuleIssueType rmit = module
                                .getRModuleIssueType(issueType);
@@ -207,30 +206,30 @@ public class ManageArtifactTypes extends RequireLoginFirstAction
                             // delete module-issue type mappings
                             // for template type
                             IssueType template = scarabR
-                                .getIssueType(issueType
-                                .getTemplateId().toString());
+                                    .getIssueType(issueType
+                                    .getTemplateId().toString());
                             RModuleIssueType rmit2 = module
                                .getRModuleIssueType(template);
                             rmit2.delete(user);
-
-                            scarabR.setConfirmMessage(
-                                "The selected issue types have"
-                                + " been removed from the module.");
-                            module.getNavIssueTypes().remove(issueType);
                         }
-                    }
-                    catch (Exception e)
-                    {
-                        scarabR.setAlertMessage(ScarabConstants.NO_PERMISSION_MESSAGE);
+                        catch (Exception e)
+                        {
+                            scarabR.setAlertMessage(e.getMessage());
+                        }
+
+                        scarabR.setConfirmMessage(
+                            "The selected issue types have"
+                            + " been removed from the module.");
+                        module.getNavIssueTypes().remove(issueType);
                     }
                 }
             }
-        }
-
-        if (!foundOne)
-        {
+         
+         }
+         if (!foundOne)
+         { 
             scarabR.setAlertMessage("Please select an issue type " + 
                 "to delete from the module.");
-        }
+         }
     }
 }
