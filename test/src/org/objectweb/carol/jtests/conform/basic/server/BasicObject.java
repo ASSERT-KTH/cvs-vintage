@@ -22,7 +22,7 @@
  * USA
  *
  * --------------------------------------------------------------------------
- * $Id: BasicObject.java,v 1.3 2005/02/08 10:03:48 benoitf Exp $
+ * $Id: BasicObject.java,v 1.4 2005/02/11 11:02:51 benoitf Exp $
  * --------------------------------------------------------------------------
  */
 package org.objectweb.carol.jtests.conform.basic.server;
@@ -39,8 +39,9 @@ public class BasicObject extends PortableRemoteObject implements BasicObjectItf 
 
     /**
      * Constructor
+     * @throws RemoteException (super constructor)
      */
-    public BasicObject() throws Exception {
+    public BasicObject() throws RemoteException {
         super();
     }
 
@@ -48,7 +49,7 @@ public class BasicObject extends PortableRemoteObject implements BasicObjectItf 
      * Basic method
      * @return String "string"
      */
-    public String getString() throws RemoteException {
+    public String getString() {
         return "string";
     }
 

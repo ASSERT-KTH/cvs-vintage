@@ -22,7 +22,7 @@
  * USA
  *
  * --------------------------------------------------------------------------
- * $Id: BasicMultiObjectItf.java,v 1.3 2005/02/08 10:03:48 benoitf Exp $
+ * $Id: BasicMultiObjectItf.java,v 1.4 2005/02/11 11:02:51 benoitf Exp $
  * --------------------------------------------------------------------------
  */
 package org.objectweb.carol.jtests.conform.basic.server;
@@ -39,18 +39,21 @@ public interface BasicMultiObjectItf extends Remote {
     /**
      * Basic multi method
      * @return String "string"
+     * @throws RemoteException in case of failure
      */
-    public String getMultiString() throws RemoteException;
+    String getMultiString() throws RemoteException;
 
     /**
      * Basic multi method this method get the BasicObjectItf stub
      * @return BasicObjectItf
+     * @throws RemoteException in case of failure
      */
-    public BasicObjectItf getBasicObject() throws RemoteException;
+    BasicObjectItf getBasicObject() throws RemoteException;
 
     /**
      * Basic Ref String, method this method get the BasicObjectItf stub
      * @return String of the reference
+     * @throws RemoteException in case of failure
      */
-    public String getBasicRefString() throws RemoteException;
+    String getBasicRefString() throws RemoteException;
 }

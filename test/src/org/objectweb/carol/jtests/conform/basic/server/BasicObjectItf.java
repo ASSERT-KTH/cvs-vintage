@@ -22,13 +22,12 @@
  * USA
  *
  * --------------------------------------------------------------------------
- * $Id: BasicObjectItf.java,v 1.3 2005/02/08 10:03:48 benoitf Exp $
+ * $Id: BasicObjectItf.java,v 1.4 2005/02/11 11:02:51 benoitf Exp $
  * --------------------------------------------------------------------------
  */
 package org.objectweb.carol.jtests.conform.basic.server;
 
 import java.rmi.Remote;
-import java.rmi.RemoteException;
 
 /**
  * Class <code>BasicObject</code> is a basic remote interface
@@ -40,6 +39,6 @@ public interface BasicObjectItf extends Remote {
      * Basic method
      * @return String "string"
      */
-    public String getString() throws RemoteException;
+    String getString();
 
 }

@@ -22,7 +22,7 @@
  * USA
  *
  * --------------------------------------------------------------------------
- * $Id: BasicServer.java,v 1.8 2005/02/08 10:03:48 benoitf Exp $
+ * $Id: BasicServer.java,v 1.9 2005/02/11 11:02:51 benoitf Exp $
  * --------------------------------------------------------------------------
  */
 package org.objectweb.carol.jtests.conform.basic.server;
@@ -59,20 +59,39 @@ public class BasicServer {
      */
     private static String basicObjectRefName = "basicrefname";
 
-    private Context ic;
+    /**
+     * Initial context
+     */
+    private Context ic = null;
 
+    /**
+     * Instance of basic object
+     */
     private BasicObjectItf ba;
 
+    /**
+     * Instance of basic multi object
+     */
     private BasicMultiObjectItf bma;
 
+    /**
+     * Instance of basic object ref
+     */
     private BasicObjectRef bref;
 
-    private final int port;
+    /**
+     * Port number
+     */
+    private int port;
 
+    /**
+     * Start was successful ?
+     */
     private boolean startedSuccessfully;
 
     /**
      * This method binds all the names in the registry.
+     * @param args arguments for launching the test
      */
     public static void main(String[] args) {
         if (args.length != 1) {
@@ -81,6 +100,10 @@ public class BasicServer {
         new BasicServer(Integer.parseInt(args[0])).advertiseReadiness();
     }
 
+    /**
+     * Constructor
+     * @param port port number to use
+     */
     private BasicServer(int port) {
         this.port = port;
         startedSuccessfully = true;

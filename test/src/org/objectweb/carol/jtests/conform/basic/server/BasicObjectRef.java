@@ -22,14 +22,13 @@
  * USA
  *
  * --------------------------------------------------------------------------
- * $Id: BasicObjectRef.java,v 1.4 2005/02/08 10:03:48 benoitf Exp $
+ * $Id: BasicObjectRef.java,v 1.5 2005/02/11 11:02:51 benoitf Exp $
  * --------------------------------------------------------------------------
  */
 package org.objectweb.carol.jtests.conform.basic.server;
 
 import java.io.Serializable;
 
-import javax.naming.NamingException;
 import javax.naming.Reference;
 import javax.naming.Referenceable;
 import javax.naming.StringRefAddr;
@@ -44,19 +43,20 @@ public class BasicObjectRef implements Referenceable, Serializable {
     /**
      * String object content
      */
-    String content = "string";
+    private String content = "string";
 
     /**
      * Constructor
+     * @param content given content
      */
-    public BasicObjectRef(String content) throws Exception {
+    public BasicObjectRef(String content) {
         this.content = content;
     }
 
     /**
-     * get Reference methode
+     * @return a Object reference
      */
-    public Reference getReference() throws NamingException {
+    public Reference getReference()  {
         return new Reference(BasicObjectRef.class.getName(), new StringRefAddr("content", "string2"),
                 BasicObjectRefFactory.class.getName(), null);
     }

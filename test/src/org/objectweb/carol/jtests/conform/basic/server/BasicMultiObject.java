@@ -22,7 +22,7 @@
  * USA
  *
  * --------------------------------------------------------------------------
- * $Id: BasicMultiObject.java,v 1.4 2005/02/08 10:03:48 benoitf Exp $
+ * $Id: BasicMultiObject.java,v 1.5 2005/02/11 11:02:51 benoitf Exp $
  * --------------------------------------------------------------------------
  */
 package org.objectweb.carol.jtests.conform.basic.server;
@@ -41,8 +41,9 @@ public class BasicMultiObject extends PortableRemoteObject implements BasicMulti
 
     /**
      * Constructor
+     * @throws RemoteException (super constructor)
      */
-    public BasicMultiObject() throws Exception {
+    public BasicMultiObject() throws RemoteException {
         super();
     }
 
@@ -50,6 +51,7 @@ public class BasicMultiObject extends PortableRemoteObject implements BasicMulti
      * Basic multi method this method get the name for the BasicObjectItf from
      * jndi and return the result of getSting added with a multi
      * @return String "string"
+     * @throws RemoteException if lookup/narrow fails
      */
     public String getMultiString() throws RemoteException {
         try {
@@ -69,6 +71,7 @@ public class BasicMultiObject extends PortableRemoteObject implements BasicMulti
     /**
      * Basic multi method this method get the BasicObjectItf stub
      * @return BasicObjectItf
+     * @throws RemoteException if lookup/narrow fails
      */
     public BasicObjectItf getBasicObject() throws RemoteException {
         try {
@@ -86,6 +89,7 @@ public class BasicMultiObject extends PortableRemoteObject implements BasicMulti
     /**
      * Basic Ref String, method this method get the BasicObjectItf stub
      * @return String of the reference
+     * @throws RemoteException if lookup/narrow fails
      */
     public String getBasicRefString() throws RemoteException {
         try {

@@ -22,7 +22,7 @@
  * USA
  *
  * --------------------------------------------------------------------------
- * $Id: BasicObjectRefFactory.java,v 1.3 2005/02/08 10:03:48 benoitf Exp $
+ * $Id: BasicObjectRefFactory.java,v 1.4 2005/02/11 11:02:51 benoitf Exp $
  * --------------------------------------------------------------------------
  */
 package org.objectweb.carol.jtests.conform.basic.server;
@@ -42,10 +42,29 @@ import javax.naming.spi.ObjectFactory;
  */
 public class BasicObjectRefFactory implements ObjectFactory {
 
+    /**
+     * Default constructor
+     */
     public BasicObjectRefFactory() {
     }
 
-    public Object getObjectInstance(Object obj, Name name, Context ctx, Hashtable env) throws Exception {
+    /**
+     * Creates an object using the location or reference information specified.
+     * @param obj The possibly null object containing location or reference
+     *        information that can be used in creating an object.
+     * @param name The name of this object relative to <code>nameCtx</code>,
+     *        or null if no name is specified.
+     * @param nameCtx The context relative to which the <code>name</code>
+     *        parameter is specified, or null if <code>name</code> is relative
+     *        to the default initial context.
+     * @param environment The possibly null environment that is used in creating
+     *        the object.
+     * @return The object created; null if an object cannot be created.
+     * @exception Exception if this object factory encountered an exception
+     *            while attempting to create an object, and no other object
+     *            factories are to be tried.
+     */
+    public Object getObjectInstance(Object obj, Name name, Context nameCtx, Hashtable environment) throws Exception {
         if (obj instanceof Reference) {
             Reference ref = (Reference) obj;
             if (ref.getClassName().equals(BasicObjectRef.class.getName())) {
