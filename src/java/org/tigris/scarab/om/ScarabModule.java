@@ -88,7 +88,7 @@ import org.tigris.scarab.security.SecurityFactory;
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: ScarabModule.java,v 1.56 2001/10/24 23:41:57 jon Exp $
+ * @version $Id: ScarabModule.java,v 1.57 2001/10/26 00:38:50 elicia Exp $
  */
 public class ScarabModule
     extends BaseScarabModule
@@ -325,6 +325,18 @@ public class ScarabModule
             .add(QueryPeer.SCOPE_ID, Scope.GLOBAL__PK);
         queries = QueryPeer.doSelect(crit);
         return queries;
+    }
+
+    /**
+     * List of all queries for this user.
+     */
+    public List getAllUserQueries(ScarabUser user)
+        throws Exception
+    {
+        List allQueries = new ArrayList();
+        allQueries.addAll(getPrivateQueries(user));
+        allQueries.addAll(getGlobalQueries());
+        return allQueries;
     }
 
     /**
