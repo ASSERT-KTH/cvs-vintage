@@ -24,10 +24,10 @@
 
 
 
-// File: FigLink.java
-// Classes: FigLink
-// Original Author: your email address here
-// $Id: FigLink.java,v 1.3 1998/09/10 21:42:16 jrobbins Exp $
+// File: FigRealization.java
+// Classes: FigRealization
+// Original Author: agauthie@ics.uci.edu
+// $Id: FigRealization.java,v 1.1 1998/09/10 21:43:48 jrobbins Exp $
 
 
 package uci.uml.visual;
@@ -38,26 +38,30 @@ import uci.gef.*;
 import uci.uml.ui.*;
 import uci.uml.Foundation.Core.*;
 
-public class FigLink extends FigEdgeLine {
+public class FigRealization extends FigEdgeLine {
 
-  public FigLink(Object edge) {
+  public FigRealization(Object edge) {
     super();
     setOwner(edge);
 
-    // set whatever arrow heads and colors are appropriate
-    _fig.setLineColor(Color.black);
-    setBetweenNearestPoints(true);
+    ((FigLine)_fig).setDashed(true);
 
+    ArrowHeadTriangle endArrow = new ArrowHeadTriangle();
+    endArrow.setFillColor(Color.white);
+
+    setDestArrowHead(endArrow);
+    setBetweenNearestPoints(true);
   }
 
   public void dispose() {
-    if (!(getOwner() instanceof Element)) return;
-    Element elmt = (Element) getOwner();
+    if (!(getOwner() instanceof Realization)) return;
+    Realization gen = (Realization) getOwner();
+    if (gen == null) return;
     Project p = ProjectBrowser.TheInstance.getProject();
-    p.moveToTrash(elmt);
+    p.moveToTrash(gen);
     super.dispose();
   }
-  
 
-} /* end class FigLink */
+
+} /* end class FigRealization */
 

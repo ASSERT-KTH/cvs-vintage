@@ -37,9 +37,40 @@ import uci.uml.Foundation.Core.*;
 // needs-more-work
 
 public class Instance extends ModelElementImpl {
+    
+  public Vector _linkEnd = new Vector();
+  public Classifier _classifier = null;
+
 
   public Instance() { }
   public Instance(Name name) { super(name); }
   public Instance(String nameStr) { super(new Name(nameStr)); }
+  
+  public void addLinkEnd(LinkEnd x) throws PropertyVetoException {
+    if (_linkEnd == null) _linkEnd = new Vector();
+    fireVetoableChange("linkEnd", _linkEnd, x);
+    _linkEnd.addElement(x);
+    x.setInstance(this);
+  }
+  
+  public Vector getLinkEnd() { return _linkEnd; }
+  
+  public void removeLinkEnd(LinkEnd x) throws PropertyVetoException {
+    if (_linkEnd == null) return;
+    fireVetoableChange("linkEnd", _linkEnd, x);
+    _linkEnd.removeElement(x);
+  }
+  
+  public void setLinkEnd(Vector x) throws PropertyVetoException {
+    if (_linkEnd == null) _linkEnd = new Vector();
+    fireVetoableChange("linkEnd", _linkEnd, x);
+    _linkEnd = x;
+  }
+
+  public void setClassifier(Classifier x) throws PropertyVetoException {
+    fireVetoableChange("Classifier", _classifier, x);
+    _classifier = x;
+  }
+ 
 
 }

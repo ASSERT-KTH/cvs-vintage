@@ -13,7 +13,7 @@
 // research purposes and is advised not to rely exclusively on the program for
 // any reason. IN NO EVENT SHALL THE UNIVERSITY OF CALIFORNIA BE LIABLE TO ANY
 // PARTY FOR DIRECT, INDIRECT, SPECIAL, INCIDENTAL, OR CONSEQUENTIAL DAMAGES,
-// INCLUDING LOST PROFITS, ARISING OUT OF THE USE OF THIS SOFTWARE AND ITS
+// INCLUDING LOST PROFITS,s ARISING OUT OF THE USE OF THIS SOFTWARE AND ITS
 // DOCUMENTATION, EVEN IF THE UNIVERSITY OF CALIFORNIA HAS BEEN ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE. THE UNIVERSITY OF CALIFORNIA SPECIFICALLY
 // DISCLAIMS ANY WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
@@ -24,40 +24,45 @@
 
 
 
-// File: FigLink.java
-// Classes: FigLink
-// Original Author: your email address here
-// $Id: FigLink.java,v 1.3 1998/09/10 21:42:16 jrobbins Exp $
 
+package uci.uml.Foundation.Core;
 
-package uci.uml.visual;
+import java.util.*;
+import java.beans.*;
 
-import java.awt.*;
+import uci.uml.Foundation.Data_Types.Name;
 
-import uci.gef.*;
-import uci.uml.ui.*;
-import uci.uml.Foundation.Core.*;
+/** By default a Realization is in the Namespace of the sub class. */
+public class Realization extends ModelElementImpl {
+  public Classifier _subtype;
+  public Classifier _supertype;
 
-public class FigLink extends FigEdgeLine {
-
-  public FigLink(Object edge) {
+  public Realization() { }
+  public Realization(Name name) { super(name); }
+  public Realization(String nameStr) { super(new Name(nameStr)); }
+  public Realization(Classifier sub, Classifier sup)
+  throws PropertyVetoException {
     super();
-    setOwner(edge);
-
-    // set whatever arrow heads and colors are appropriate
-    _fig.setLineColor(Color.black);
-    setBetweenNearestPoints(true);
-
+    setSubtype(sub);
+    setSupertype(sup);
+    System.out.println("ppp1");
+    sub.addRealization(this);
+    System.out.println("ppp2");
+    sup.addSpecialization(this);
+    System.out.println("ppp3");
   }
 
-  public void dispose() {
-    if (!(getOwner() instanceof Element)) return;
-    Element elmt = (Element) getOwner();
-    Project p = ProjectBrowser.TheInstance.getProject();
-    p.moveToTrash(elmt);
-    super.dispose();
+  public Classifier getSubtype() { return _subtype; }
+  public void setSubtype(Classifier x) throws PropertyVetoException {
+    fireVetoableChange("subtype", _subtype, x);
+    _subtype = x;
+    //if (x != null) setNamespace(x.getNamespace());
   }
-  
+  public Classifier getSupertype() { return _supertype; }
+  public void setSupertype(Classifier x) throws PropertyVetoException {
+    fireVetoableChange("supertype", _supertype, x);
+    _supertype = x;
+  }
 
-} /* end class FigLink */
 
+}
