@@ -143,11 +143,21 @@ public class PolicyInterceptor extends PolicyLoader { //  BaseInterceptor {
 	}
 
 	// Add default read "-" FilePermission for docBase, classes, lib
-	// Default per context permissions
 	FilePermission fp = new FilePermission(base + File.separator + "-",
 					       "read");
-	if( fp != null )
-	    p.add((Permission)fp);
+	p.add(fp);
+
+	// Add default write "-" FilePermission for docBase 
+	fp = new FilePermission(base + File.separator + "-",
+				"write");
+	p.add(fp);
+	fp = new FilePermission(context.getWorkDir() + File.separator + "-",
+				"read");
+	p.add(fp);
+	fp = new FilePermission(context.getWorkDir() + File.separator + "-",
+				"write");
+	p.add(fp);
+	
 	// JspFactory.getPageContext() runs in JSP Context and needs the below
 	// permission during the init of a servlet generated from a JSP.
 	PropertyPermission pp = new PropertyPermission("line.separator","read");
