@@ -1,16 +1,16 @@
 //The contents of this file are subject to the Mozilla Public License Version 1.1
-//(the "License"); you may not use this file except in compliance with the 
+//(the "License"); you may not use this file except in compliance with the
 //License. You may obtain a copy of the License at http://www.mozilla.org/MPL/
 //
 //Software distributed under the License is distributed on an "AS IS" basis,
-//WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License 
+//WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
 //for the specific language governing rights and
 //limitations under the License.
 //
 //The Original Code is "The Columba Project"
 //
 //The Initial Developers of the Original Code are Frederik Dietz and Timo Stich.
-//Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
+//Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003.
 //
 //All Rights Reserved.
 package org.columba.core.logging;
@@ -29,7 +29,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.logging.SimpleFormatter;
 
-
 /**
  * Depending on the debug flag (--debug command line option reflected
  * in MainInterface.DEBUG) the logger will either show all debug messages
@@ -38,74 +37,101 @@ import java.util.logging.SimpleFormatter;
  * <p>
  * Note, that ColumbaLogger must not be called before MainInterface.DEBUG,
  * was set. Otherwise, the logger won't show the correct debug level.
- * 
- * @see org.columba.core.main.Main 
+ * <p>
+ * If the user has defined their own logging config file, then this will take
+ * precedence over Columba defined logging handlers, ie. Columba will not create
+ * its own default logging handlers. All has already been defined in the
+ * system property <b>java.util.logging.config.file</b>.
+ * <p>
+ * @see org.columba.core.main.Main
+ * @see java.util.logging.Logger
+ * @author redsolo
  */
-public class ColumbaLogger {
-    /**
- * A static reference to the actual logger. This reference is final so
- * that it cannot be reassigned. However, you are free to add further
- * handlers to the logger.
- */
-    public static final Logger log;
+public final class ColumbaLogger {
 
-    static {
-        log = Logger.getLogger("org.columba");
-        log.setUseParentHandlers(false);
-
-        // TODO: only add console handler if command line option is given
-        // init console handler
-        Handler handler = new ConsoleHandler();
-        log.addHandler(handler);
-    }
+    private static final Logger LOG = Logger.getLogger("org.columba");
 
     /**
- * Don't instanciate this class.
- */
+    * Don't instanciate this class.
+    */
     private ColumbaLogger() {
     }
 
     /**
- * Default logger configuration used by Columba.
- * <p>
- * This is called by org.columba.core.main.Main if user didn't overwrite
- * logger properties using commandline arguments
- *
- */
-    public static void addDefaultFileHandler() {
-        // create logging file in users config-folder
-        File loggingFile = new File(MainInterface.config.getConfigDirectory(),
-                "columba.log");
-        Handler handler;
+     * Returns true if the user has defined a logging config file.
+     * The user can define a config file using the system property <code>java.util.logging.config.file</code>.
+     * @return true if the user has defined a logging config file; false otherwise.
+     */
+    private static boolean userHasDefinedLogging() {
+        return (System.getProperty("java.util.logging.config.file") != null);
+    }
 
-        try {
-            handler = new FileHandler(loggingFile.getPath(), false);
+    /**
+     * Creates the console handler.
+     * The console handler outputs only the severest logging message unless
+     * the MainInterface.DEBUG flag is set.
+     */
+    public static void createDefaultHandler() {
 
-            // don't use standard XML formatting
-            handler.setFormatter(new SimpleFormatter());
-            log.addHandler(handler);
-        } catch (IOException ioe) {
-            // TODO: how to handle this?
+        if (!userHasDefinedLogging()) {
+
+            //Since Columba is doing its own logging handlers, we should not
+            //use handlers in the parent logger.
+            LOG.setUseParentHandlers(false);
+            LOG.setLevel(Level.ALL);
+
+            //TODO only add console handler if command line option is given
+            // init console handler
+            Handler consoleHandler = new ConsoleHandler();
+
+            if (MainInterface.DEBUG) {
+                consoleHandler.setFormatter(new DebugFormatter());
+                consoleHandler.setLevel(Level.ALL);
+                System.setProperty("javax.net.debug", "ssl,handshake,data,trustmanager"); // init java.net.ssl debugging
+
+                //TODO Ristretto should handle their own logging stuff, not relying on outside applications.
+                RistrettoLogger.setLogStream(System.out);
+                RistrettoLogger.setParentLogger(LOG);
+            } else {
+                consoleHandler.setFormatter(new OneLineFormatter());
+                consoleHandler.setLevel(Level.SEVERE);
+            }
+            LOG.addHandler(consoleHandler);
         }
+    }
 
-        if (MainInterface.DEBUG) {
-            log.setLevel(Level.ALL);
+    /**
+     * Default logger configuration used by Columba.
+     * <p>
+     * If the user has not defined their own config file for the logging framework, then
+     * this will create a log file named <code>columba.log</code>, in the default config
+     * directory.
+     */
+    public static void createDefaultFileHandler() {
 
-            // init java.net.ssl debugging
-            System.setProperty("javax.net.debug",
-                "ssl,handshake,data,trustmanager");
-        } else {
-            log.setLevel(Level.SEVERE);
-        }
+        if (!userHasDefinedLogging()) {
+            String logConfigFile = System.getProperty("java.util.logging.config.file");
+            if (logConfigFile == null) {
 
-        /*
- Ristretto is a singleton library and doesn't know about Columba.
- We need to connect ristretto's logger with Columba's logger therefore.
- */
-        RistrettoLogger.setParentLogger(log);
+                // create logging file in users config-folder
+                File loggingFile = new File(MainInterface.config.getConfigDirectory(), "columba.log");
 
-        if (MainInterface.DEBUG) {
-            RistrettoLogger.setLogStream(System.out);
+                // Setup file logging
+                try {
+                    Handler handler = new FileHandler(loggingFile.getPath(), false);
+                    handler.setFormatter(new SimpleFormatter()); // don't use standard XML formatting
+
+                    if (MainInterface.DEBUG) {
+                        handler.setLevel(Level.ALL);
+                    } else {
+                        handler.setLevel(Level.WARNING);
+                    }
+
+                    LOG.addHandler(handler);
+                } catch (IOException ioe) {
+                    LOG.severe("Could not start the file logging due to: " + ioe);
+                }
+            }
         }
     }
 }

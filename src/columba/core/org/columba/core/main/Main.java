@@ -60,8 +60,9 @@ public class Main {
         MainInterface.config = new Config(path == null ? null : new File(path));
 
         // if user doesn't overwrite logger settings with commandline arguments
-        // just initialize default logging 
-        ColumbaLogger.addDefaultFileHandler();
+        // just initialize default logging
+        ColumbaLogger.createDefaultHandler();
+        ColumbaLogger.createDefaultFileHandler();
         
         SessionController.passToRunningSessionAndExit(args);
 		
