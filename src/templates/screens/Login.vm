@@ -3,7 +3,9 @@ $page.setTitle("Welcome to Scarab")
 Welcome to Scarab, a Bug Tracking and Issue Reporting Tool
 
 		<ul>
-			<li>New users, <a href="$link.setPage("register.vm")">register here</a>.
+			<li>New users, 
+                            <a href="$link.setPage("Register.vm")">register here</a>.
+                        </li>
 		</ul>
 
 #if ($data.getMessage())
