@@ -367,6 +367,12 @@ public class ServletWrapper extends Handler {
 	}
 
 	if( unavailable!=null  ) {
+	    // Don't load at all if permanently unavailable 
+	    if (((UnavailableException) unavailable).getUnavailableSeconds() == -1) { 
+		   initialized = false; 
+		   return; 
+	    } 
+
 	    // Don't load if Unavailable timer is in place
 	    if(  stillUnavailable() ) {
 		handleUnavailable( req, res );
