@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/Compiler.java,v 1.9 2000/02/03 02:13:12 mandar Exp $
- * $Revision: 1.9 $
- * $Date: 2000/02/03 02:13:12 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/Compiler.java,v 1.10 2000/02/07 07:51:18 shemnon Exp $
+ * $Revision: 1.10 $
+ * $Date: 2000/02/07 07:51:18 $
  *
  * ====================================================================
  * 
@@ -164,7 +164,7 @@ public abstract class Compiler {
 
         ctxt.setReader(reader);
         ctxt.setWriter(writer);
-        
+
         ParseEventListener listener = new JspParseEventListener(ctxt);
         
         Parser p = new Parser(reader, listener);
@@ -206,7 +206,13 @@ public abstract class Compiler {
          * anything to the constructor which will be less. 
          */
         ByteArrayOutputStream out = new ByteArrayOutputStream (256);
-    
+
+        // if no compiler was set we can kick out now
+
+        if (javac == null) {
+            return true;
+        }
+
         /**
          * Configure the compiler object
          */

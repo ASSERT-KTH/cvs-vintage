@@ -77,7 +77,10 @@ import org.apache.jasper.JasperException;
 import org.apache.jasper.Constants;
 import org.apache.jasper.Options;
 import org.apache.jasper.EmbededServletOptions;
+import org.apache.jasper.JspCompilationContext;
+import org.apache.jasper.JspEngineContext;
 
+import org.apache.jasper.compiler.Compiler;
 
 /**
  * The JSP engine (a.k.a Jasper)! 
@@ -86,6 +89,7 @@ import org.apache.jasper.EmbededServletOptions;
  * @author Harish Prabandham
  */
 public class JspServlet extends HttpServlet {
+
     class JspServletWrapper {
 	HttpJspPage theServlet;
 	String jspUri;
@@ -99,7 +103,8 @@ public class JspServlet extends HttpServlet {
 	
 	private void load() throws JasperException, ServletException {
 	    try {  
-		Class servletClass = loader.getJspServletClass(jspUri);
+		Class servletClass = (Class) loadedJSPs.get(jspUri);
+			//loader.getJspServletClass(jspUri);
 		// This is for the original protocol.
 		destroy();
 		theServlet = (HttpJspPage) servletClass.newInstance();
@@ -135,7 +140,9 @@ public class JspServlet extends HttpServlet {
                               new Object[] { accordingto, cp }, 
                               Constants.MED_VERBOSITY);
 
-	    if (loader.loadJSP(jspUri, cp, isErrorPage, req, res) || theServlet == null) {
+	    //if (loader.loadJSP(jspUri, cp, isErrorPage, req, res) || theServlet == null) {
+            if (loadJSP(jspUri, cp, isErrorPage, req, res) 
+                    || theServlet == null) {
                 load();
             }
 	}
@@ -182,6 +189,7 @@ public class JspServlet extends HttpServlet {
 	
     ServletContext context = null;
     Hashtable jsps = new Hashtable();
+    Hashtable loadedJSPs = new Hashtable();
     ServletConfig config;
     JspLoader loader;
     Options options;
@@ -222,8 +230,7 @@ public class JspServlet extends HttpServlet {
                                   "<none>"
                               }, Constants.MED_VERBOSITY);
             }
-            this.loader = new JspLoader(context, 
-                                        parentClassLoader, 
+            this.loader = new JspLoader(parentClassLoader, 
                                         options);
 
             if (firstTime) {
@@ -377,6 +384,55 @@ public class JspServlet extends HttpServlet {
 	Enumeration servlets = jsps.elements();
 	while (servlets.hasMoreElements()) 
 	    ((JspServletWrapper) servlets.nextElement()).destroy();
+    }
+
+
+    /*  Check if we need to reload a JSP page.
+     *
+     *  Side-effect: re-compile the JSP page.
+     *
+     *  @param classpath explicitly set the JSP compilation path.
+     *  @return true if JSP files is newer
+     */
+    public synchronized boolean loadJSP(String name, String classpath, 
+	boolean isErrorPage, HttpServletRequest req, HttpServletResponse res) 
+	throws JasperException, FileNotFoundException 
+    {
+	Class jspClass = (Class) loadedJSPs.get(name);
+	boolean firstTime = jspClass == null;
+
+        JspCompilationContext ctxt = new JspEngineContext(loader, classpath,
+                                                     context, name, 
+                                                     isErrorPage, options,
+                                                     req, res);
+	boolean outDated = false; 
+
+        Compiler compiler = ctxt.createCompiler();
+        
+        try {
+            outDated = compiler.compile();
+        } catch (FileNotFoundException ex) {
+            throw ex;
+        } catch (JasperException ex) {
+            throw ex;
+        } catch (Exception ex) {
+            throw new JasperException(Constants.getString("jsp.error.unable.compile"),
+                                      ex);
+        }
+
+	// Reload only if it's outdated
+	if((jspClass == null) || outDated) {
+	    try {
+		jspClass = loader.loadClass(ctxt.getFullClassName());
+                        //loadClass(ctxt.getFullClassName(), true);
+	    } catch (ClassNotFoundException cex) {
+		throw new JasperException(Constants.getString("jsp.error.unable.load"), 
+					  cex);
+	    }
+	    loadedJSPs.put(name, jspClass);
+	}
+	
+	return outDated;
     }
 
 }

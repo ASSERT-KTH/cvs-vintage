@@ -64,7 +64,13 @@ import org.apache.jasper.JasperException;
 
 /**
  * JspCompiler is an implementation of Compiler with a funky code
- * mangling and code generation scheme! 
+ * mangling and code generation scheme!
+ *
+ * The reason that it is both a sub-class of compiler and an implementation
+ * of mangler is because the isOutDated method that is overridden and the
+ * name mangulation both depend on the actual existance of other class and
+ * java files.  I.e. the value of a mangled name is a function of both the
+ * name to be mangled and also of the state of the scratchdir.
  *
  * @author Anil K. Vijendran
  */

@@ -39,6 +39,7 @@
     <copyfile src="LICENSE" dest="${tomcat.build}/LICENSE"/>
 
     <chmod perm="+x" src="${tomcat.build}/bin/tomcat.sh"/>
+    <chmod perm="+x" src="${tomcat.build}/bin/jspc.sh"/>
     <chmod perm="+x" src="${tomcat.build}/bin/ant"/>
     <chmod perm="+x" src="${tomcat.build}/bin/startup.sh"/>
     <chmod perm="+x" src="${tomcat.build}/bin/shutdown.sh"/>
@@ -118,6 +119,7 @@
 
     <!-- Change permissions for unix -->
     <chmod perm="+x" src="${tomcat.home}/bin/tomcat.sh"/>
+    <chmod perm="+x" src="${tomcat.home}/bin/jspc.sh"/>
     <chmod perm="+x" src="${tomcat.home}/bin/ant"/>
     <chmod perm="+x" src="${tomcat.home}/bin/startup.sh"/>
     <chmod perm="+x" src="${tomcat.home}/bin/shutdown.sh"/>

@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/runtime/JspLoader.java,v 1.4 2000/01/24 05:54:52 shemnon Exp $
- * $Revision: 1.4 $
- * $Date: 2000/01/24 05:54:52 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/runtime/JspLoader.java,v 1.5 2000/02/07 07:51:21 shemnon Exp $
+ * $Revision: 1.5 $
+ * $Date: 2000/02/07 07:51:21 $
  *
  * ====================================================================
  * 
@@ -73,10 +73,6 @@ import java.util.Vector;
 import java.util.zip.ZipFile;
 import java.util.zip.ZipEntry;
 
-import javax.servlet.ServletContext;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import org.apache.jasper.JasperException;
 import org.apache.jasper.Constants;
 import org.apache.jasper.JspCompilationContext;
@@ -102,24 +98,19 @@ import org.apache.jasper.compiler.Compiler;
  * @author Harish Prabandham
  */
 public class JspLoader extends ClassLoader {
-    Hashtable loadedJSPs = new Hashtable();
     ClassLoader parent;
-    ServletContext context;
     Options options;
     
 
-    JspLoader(ServletContext context, 
-              ClassLoader cl, Options options)
+    /*
+     * This should be factoried out
+     */
+    public JspLoader(ClassLoader cl, Options options)
     {
 	//	super(cl); // JDK 1.2 FIXME
 	super();
-        this.context = context;
 	this.parent = cl;
         this.options = options;
-    }
-
-    public Class getJspServletClass(String name) {
-	return (Class) loadedJSPs.get(name);
     }
 
     protected synchronized Class loadClass(String name, boolean resolve)
@@ -158,8 +149,9 @@ public class JspLoader extends ClassLoader {
 		className.lastIndexOf(".")+1;
 	    int end = className.lastIndexOf("_jsp_");
 
-	    if (end <= 0) {     // this is a class that the JSP file depends on (example: class
-                                // in a tag library)
+	    if (end <= 0) {     
+                // this is a class that the JSP file depends on 
+                // (example: class in a tag library)
                 byte[] classBytes = loadClassDataFromJar(className);
                 if (classBytes == null)
                     throw new ClassNotFoundException(className);
@@ -187,7 +179,7 @@ public class JspLoader extends ClassLoader {
                 return defClass(className, classBytes);
             }
 	} catch (Exception ex) {
-	    throw new ClassNotFoundException(Constants.getString(
+            throw new ClassNotFoundException(Constants.getString(
 	    				     "jsp.error.unable.loadclass", 
 					      new Object[] {className}));
 	}
@@ -201,65 +193,21 @@ public class JspLoader extends ClassLoader {
         return defineClass(className, classData, 0, classData.length);
     }
 
-    /*  Check if we need to reload a JSP page.
-     *
-     *  Side-effect: re-compile the JSP page.
-     *
-     *  @param classpath explicitly set the JSP compilation path.
-     *  @return true if JSP files is newer
-     */
-    public synchronized boolean loadJSP(String name, String classpath, 
-	boolean isErrorPage, HttpServletRequest req, HttpServletResponse res) 
-	throws JasperException, FileNotFoundException 
-    {
-	Class jspClass = (Class) loadedJSPs.get(name);
-	boolean firstTime = jspClass == null;
-
-        JspCompilationContext ctxt = new JspEngineContext(this, classpath,
-                                                     context, name, 
-                                                     isErrorPage, options,
-                                                     req, res);
-	boolean outDated = false; 
-
-        Compiler compiler = ctxt.createCompiler();
-        
-        try {
-            outDated = compiler.compile();
-        } catch (FileNotFoundException ex) {
-            throw ex;
-        } catch (JasperException ex) {
-            throw ex;
-        } catch (Exception ex) {
-            throw new JasperException(Constants.getString("jsp.error.unable.compile"),
-                                      ex);
-        }
-
-	// Reload only if it's outdated
-	if((jspClass == null) || outDated) {
-	    try {
-		jspClass = loadClass(ctxt.getFullClassName(), true);
-	    } catch (ClassNotFoundException cex) {
-		throw new JasperException(Constants.getString("jsp.error.unable.load"), 
-					  cex);
-	    }
-	    loadedJSPs.put(name, jspClass);
-	}
-	
-	return outDated;
-    }
-
     private Vector jars = new Vector();
     
     private byte[] loadClassDataFromJar(String className) {
         String entryName = className.replace('.','/')+".class";
 	InputStream classStream = null;
-        
+	//System.out.println("Loading " + className);
+
         for(int i = 0; i < jars.size(); i++) {
             File thisFile = new File((String) jars.elementAt(i));
             try {
+                //System.out.println(" - trying " + thisFile.getAbsolutePath());
                 // check if it exists...
-                if (!thisFile.exists())
-                    return null;
+                if (!thisFile.exists()) {
+                    continue; 
+                };
                 
                 if (thisFile.isFile()) {
                     ZipFile zip = new ZipFile(thisFile);
@@ -273,8 +221,9 @@ public class JspLoader extends ClassLoader {
 			zip.close();
 		    }
                 } else { // its a directory...
-                    File classFile = new File(thisFile,
-                                              entryName.replace('/', File.separatorChar));
+                    File classFile = 
+                        new File(thisFile,
+                                 entryName.replace('/', File.separatorChar));
                     if (classFile.exists()) {
                         classStream = new FileInputStream(classFile);
                         byte[] classData = getClassData(classStream);
