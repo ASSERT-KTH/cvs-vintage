@@ -102,6 +102,7 @@ import org.tigris.scarab.om.RAttributeAttributeGroup;
 import org.tigris.scarab.om.RAttributeAttributeGroupPeer;
 import org.tigris.scarab.util.ScarabException;
 import org.tigris.scarab.services.security.ScarabSecurity;
+import org.tigris.scarab.services.cache.ScarabCache;
 
 
 import org.apache.turbine.Log;
@@ -117,7 +118,7 @@ import org.apache.turbine.Log;
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: AbstractScarabModule.java,v 1.33 2002/02/14 23:46:44 elicia Exp $
+ * @version $Id: AbstractScarabModule.java,v 1.34 2002/02/17 19:16:57 jmcnally Exp $
  */
 public abstract class AbstractScarabModule
     extends BaseObject
@@ -126,6 +127,46 @@ public abstract class AbstractScarabModule
 
     private static final Category log = 
         Category.getInstance("org.tigris.scarab.AbstractScarabModule");
+
+    // the following Strings are method names that are used in caching results
+    private static final String GET_R_MODULE_ATTRIBUTES = 
+        "getRModuleAttributes";
+    private static final String GET_ATTRIBUTE_GROUPS = 
+        "getAttributeGroups";
+    private static final String GET_ATTRIBUTE_GROUP = 
+        "getAttributeGroup";
+    private static final String GET_SAVED_REPORTS = 
+        "getSavedReports";
+    private static final String GET_PRIVATE_QUERIES = 
+        "getPrivateQueries";
+    private static final String GET_GLOBAL_QUERIES = 
+        "getGlobalQueries";
+    private static final String GET_PRIVATE_TEMPLATES = 
+        "getPrivateTemplates";
+    private static final String GET_GLOBAL_TEMPLATES = 
+        "getGlobalTemplates";
+    private static final String GET_DEFAULT_RMODULE_USERATTRIBUTES = 
+        "getDefaultRModuleUserAttributes";
+    private static final String GET_ISSUE_TYPES = 
+        "getIssueTypes";
+    private static final String GET_NAV_ISSUE_TYPES = 
+        "getNavIssueTypes";
+    private static final String GET_QUICK_SEARCH_ATTRIBUTES = 
+        "getQuickSearchAttributes";
+    private static final String GET_REQUIRED_ATTRIBUTES = 
+        "getRequiredAttributes";
+    private static final String GET_ALL_R_MODULE_OPTIONS = 
+        "getAllRModuleOptions";
+    private static final String GET_R_MODULE_ISSUE_TYPES = 
+        "getRModuleIssueTypes";
+    private static final String GET_R_MODULE_ISSUE_TYPE = 
+        "getRModuleIssueType";
+    private static final String GET_TEMPLATE_TYPES = 
+        "getTemplateTypes";
+    private static final String GET_UNAPPROVED_QUERIES = 
+        "getUnapprovedQueries";
+    private static final String GET_UNAPPROVED_TEMPLATES = 
+        "getUnapprovedTemplates";
 
     /* removing the internal cache until it can be fixed using artifact_types
     private List allRModuleAttributes;
@@ -292,22 +333,37 @@ public abstract class AbstractScarabModule
         return getAttributeGroups(issueType, true);
     }
 
+
     /**
      * List of attribute groups associated with this module).
      */
     public List getAttributeGroups(IssueType issueType, boolean activeOnly)
         throws Exception
     {
-        Criteria crit = new Criteria()
-            .add(AttributeGroupPeer.MODULE_ID, getModuleId())
-            .add(AttributeGroupPeer.ISSUE_TYPE_ID, issueType.getIssueTypeId())
-            .addAscendingOrderByColumn(AttributeGroupPeer.PREFERRED_ORDER);
-        if (activeOnly)
-        {
+        List groups = null;
+        Object obj = ScarabCache.get(this, GET_ATTRIBUTE_GROUPS, 
+                                     issueType, new Boolean(activeOnly)); 
+        if ( obj == null ) 
+        {        
+            Criteria crit = new Criteria()
+                .add(AttributeGroupPeer.MODULE_ID, getModuleId())
+                .add(AttributeGroupPeer.ISSUE_TYPE_ID, issueType.getIssueTypeId())
+                .addAscendingOrderByColumn(AttributeGroupPeer.PREFERRED_ORDER);
+            if (activeOnly)
+            {
             crit.add(AttributeGroupPeer.ACTIVE, true);
+            }
+            groups = AttributeGroupPeer.doSelect(crit);
+            ScarabCache.put(groups, this, GET_ATTRIBUTE_GROUPS, 
+                            issueType, new Boolean(activeOnly));
         }
-        return AttributeGroupPeer.doSelect(crit);
+        else 
+        {
+            groups = (List)obj;
+        }
+        return groups;
     }
+
 
     /**
      * Get this attribute's attribute group.
@@ -317,17 +373,29 @@ public abstract class AbstractScarabModule
         throws Exception
     {
         AttributeGroup group = null;
-        Criteria crit = new Criteria()
-          .add(AttributeGroupPeer.MODULE_ID, getModuleId())
-          .add(AttributeGroupPeer.ISSUE_TYPE_ID, issueType.getIssueTypeId())
-          .addJoin(RAttributeAttributeGroupPeer.GROUP_ID, 
+        Object obj = ScarabCache.get(this, GET_ATTRIBUTE_GROUP, 
+                                     issueType, attribute); 
+        if ( obj == null ) 
+        {        
+            Criteria crit = new Criteria()
+                .add(AttributeGroupPeer.MODULE_ID, getModuleId())
+                .add(AttributeGroupPeer.ISSUE_TYPE_ID, 
+                     issueType.getIssueTypeId())
+                .addJoin(RAttributeAttributeGroupPeer.GROUP_ID, 
                    AttributeGroupPeer.ATTRIBUTE_GROUP_ID)
-          .add(RAttributeAttributeGroupPeer.ATTRIBUTE_ID, 
-               attribute.getAttributeId());
-        List results = AttributeGroupPeer.doSelect(crit);
-        if (results.size() > 0)
+                .add(RAttributeAttributeGroupPeer.ATTRIBUTE_ID, 
+                     attribute.getAttributeId());
+            List results = AttributeGroupPeer.doSelect(crit);
+            if (results.size() > 0)
+            {
+                group = (AttributeGroup)results.get(0);
+                ScarabCache.put(group, this, GET_ATTRIBUTE_GROUP, 
+                                issueType, attribute);
+            }   
+        }
+        else 
         {
-            group = (AttributeGroup)results.get(0);
+            group = (AttributeGroup)obj;
         }
         return group;
     }
@@ -453,6 +521,7 @@ public abstract class AbstractScarabModule
     public abstract ModuleEntity getParent() 
         throws Exception;
 
+
     /**
      * List of saved reports associated with this module and
      * created by this user.
@@ -460,11 +529,22 @@ public abstract class AbstractScarabModule
     public List getSavedReports(ScarabUser user)
         throws Exception
     {
-        Criteria crit = new Criteria()
-            .add(ReportPeer.MODULE_ID, getModuleId())
-            .add(ReportPeer.DELETED, 0)
-            .add(ReportPeer.USER_ID, user.getUserId());
-        return ReportPeer.doSelect(crit);
+        List reports = null;
+        Object obj = ScarabCache.get(this, GET_SAVED_REPORTS, user); 
+        if ( obj == null ) 
+        {        
+            Criteria crit = new Criteria()
+                .add(ReportPeer.MODULE_ID, getModuleId())
+                .add(ReportPeer.DELETED, 0)
+                .add(ReportPeer.USER_ID, user.getUserId());
+            reports = ReportPeer.doSelect(crit);
+            ScarabCache.put(reports, this, GET_SAVED_REPORTS, user);
+        }
+        else 
+        {
+            reports = (List)obj;
+        }
+        return reports;
     }
 
 
@@ -476,15 +556,27 @@ public abstract class AbstractScarabModule
         throws Exception
     {
         List queries = null;
-        Criteria crit = new Criteria()
-            .add(QueryPeer.MODULE_ID, getModuleId())
-            .add(QueryPeer.ISSUE_TYPE_ID, issueType.getIssueTypeId())
-            .add(QueryPeer.DELETED, 0)
-            .add(QueryPeer.USER_ID, user.getUserId())
-            .add(QueryPeer.SCOPE_ID, Scope.PERSONAL__PK);
-        queries = QueryPeer.doSelect(crit);
+        Object obj = ScarabCache.get(this, GET_PRIVATE_QUERIES, 
+                                     user, issueType); 
+        if ( obj == null ) 
+        {        
+            Criteria crit = new Criteria()
+                .add(QueryPeer.MODULE_ID, getModuleId())
+                .add(QueryPeer.ISSUE_TYPE_ID, issueType.getIssueTypeId())
+                .add(QueryPeer.DELETED, 0)
+                .add(QueryPeer.USER_ID, user.getUserId())
+                .add(QueryPeer.SCOPE_ID, Scope.PERSONAL__PK);
+            queries = QueryPeer.doSelect(crit);
+            ScarabCache.put(queries, this, GET_PRIVATE_QUERIES, 
+                            user, issueType);
+        }
+        else 
+        {
+            queries = (List)obj;
+        }
         return queries;
     }
+
 
     /**
      * List of global Query objects associated with this module.
@@ -493,14 +585,25 @@ public abstract class AbstractScarabModule
         throws Exception
     {
         List queries = null;
-        Criteria crit = new Criteria()
-            .add(QueryPeer.MODULE_ID, getModuleId())
-            .add(QueryPeer.ISSUE_TYPE_ID, issueType.getIssueTypeId())
-            .add(QueryPeer.DELETED, 0)
-            .add(QueryPeer.SCOPE_ID, Scope.GLOBAL__PK);
-        queries = QueryPeer.doSelect(crit);
+        Object obj = ScarabCache.get(this, GET_GLOBAL_QUERIES, issueType); 
+        if ( obj == null ) 
+        {        
+            Criteria crit = new Criteria()
+                .add(QueryPeer.MODULE_ID, getModuleId())
+                .add(QueryPeer.ISSUE_TYPE_ID, issueType.getIssueTypeId())
+                .add(QueryPeer.DELETED, 0)
+                .add(QueryPeer.SCOPE_ID, Scope.GLOBAL__PK);
+            queries = QueryPeer.doSelect(crit);
+            ScarabCache.put(queries, this, GET_GLOBAL_QUERIES, issueType);
+        }
+        else 
+        {
+            queries = (List)obj;
+        }
+
         return queries;
     }
+
 
     /**
      * List of all queries for this user.
@@ -514,6 +617,7 @@ public abstract class AbstractScarabModule
         return allQueries;
     }
 
+
     /**
      * List of Issue Template objects associated with this module.
      * And issue type.
@@ -522,20 +626,32 @@ public abstract class AbstractScarabModule
         throws Exception
     {
         List templates = null;
-        Criteria crit = new Criteria()
-            .add(IssuePeer.MODULE_ID, getModuleId())
-            .add(IssuePeer.DELETED, 0)
-            .addJoin(TransactionPeer.TRANSACTION_ID, 
-                     ActivityPeer.TRANSACTION_ID) 
-            .add(TransactionPeer.CREATED_BY, user.getUserId())
-            .add(IssuePeer.TYPE_ID, issueType.getTemplateId())
-            .addJoin(IssueTemplateInfoPeer.ISSUE_ID,
-                     IssuePeer.ISSUE_ID)
-            .add(IssueTemplateInfoPeer.SCOPE_ID, Scope.PERSONAL__PK);
-        crit.setDistinct();
-        templates = IssuePeer.doSelect(crit);
+        Object obj = ScarabCache.get(this, GET_PRIVATE_TEMPLATES, 
+                                     user, issueType); 
+        if ( obj == null ) 
+        {        
+            Criteria crit = new Criteria()
+                .add(IssuePeer.MODULE_ID, getModuleId())
+                .add(IssuePeer.DELETED, 0)
+                .addJoin(TransactionPeer.TRANSACTION_ID, 
+                         ActivityPeer.TRANSACTION_ID) 
+                .add(TransactionPeer.CREATED_BY, user.getUserId())
+                .add(IssuePeer.TYPE_ID, issueType.getTemplateId())
+                .addJoin(IssueTemplateInfoPeer.ISSUE_ID,
+                         IssuePeer.ISSUE_ID)
+                .add(IssueTemplateInfoPeer.SCOPE_ID, Scope.PERSONAL__PK);
+            crit.setDistinct();
+            templates = IssuePeer.doSelect(crit);
+            ScarabCache.put(templates, this, GET_PRIVATE_TEMPLATES, 
+                            user, issueType);
+        }
+        else 
+        {
+            templates = (List)obj;
+        }
         return templates;
     }
+
 
     /**
      * List of global Issue Template objects associated with this module.
@@ -544,14 +660,23 @@ public abstract class AbstractScarabModule
         throws Exception
     {
         List templates = null;
-        Criteria crit = new Criteria()
-            .add(IssuePeer.MODULE_ID, getModuleId())
-            .add(IssuePeer.DELETED, 0)
-            .add(IssuePeer.TYPE_ID, issueType.getTemplateId())
-            .addJoin(IssueTemplateInfoPeer.ISSUE_ID,
-                     IssuePeer.ISSUE_ID)
-            .add(IssueTemplateInfoPeer.SCOPE_ID, Scope.GLOBAL__PK);
-        templates = IssuePeer.doSelect(crit);
+        Object obj = ScarabCache.get(this, GET_GLOBAL_TEMPLATES, issueType); 
+        if ( obj == null ) 
+        {        
+            Criteria crit = new Criteria()
+                .add(IssuePeer.MODULE_ID, getModuleId())
+                .add(IssuePeer.DELETED, 0)
+                .add(IssuePeer.TYPE_ID, issueType.getTemplateId())
+                .addJoin(IssueTemplateInfoPeer.ISSUE_ID,
+                         IssuePeer.ISSUE_ID)
+                .add(IssueTemplateInfoPeer.SCOPE_ID, Scope.GLOBAL__PK);
+            templates = IssuePeer.doSelect(crit);
+            ScarabCache.put(templates, this, GET_GLOBAL_TEMPLATES, issueType);
+        }
+        else 
+        {
+            templates = (List)obj;
+        }
         return templates;
     }
 
@@ -740,18 +865,32 @@ public abstract class AbstractScarabModule
         return availOptions;
     }
 
+
     /**
      * Returns default issue list attributes for this module.
      */
     public List getDefaultRModuleUserAttributes(IssueType issueType)
         throws Exception
     {
-        Criteria crit = new Criteria(2)
-           .add(RModuleUserAttributePeer.USER_ID, 0)
-           .add(RModuleUserAttributePeer.ISSUE_TYPE_ID, 
+        List uatts = null;
+        Object obj = ScarabCache.get(this, GET_DEFAULT_RMODULE_USERATTRIBUTES, 
+                                     issueType); 
+        if ( obj == null ) 
+        {        
+            Criteria crit = new Criteria(2)
+                .add(RModuleUserAttributePeer.USER_ID, 0)
+                .add(RModuleUserAttributePeer.ISSUE_TYPE_ID, 
                 issueType.getIssueTypeId());
-        crit.setDistinct();
-        return RModuleUserAttributePeer.doSelect(crit);
+            crit.setDistinct();
+            uatts = RModuleUserAttributePeer.doSelect(crit);
+            ScarabCache.put(uatts, this, GET_DEFAULT_RMODULE_USERATTRIBUTES, 
+                            issueType);
+        }
+        else 
+        {
+            uatts = (List)obj;
+        }
+        return uatts;
     }
 
     /**
@@ -764,6 +903,7 @@ public abstract class AbstractScarabModule
         return getIssueTypes(true); 
     }
 
+
     /**
      * gets a list of the Issue Types for this module. only shows
      * active issue types
@@ -771,19 +911,33 @@ public abstract class AbstractScarabModule
     public List getIssueTypes( boolean activeOnly)
         throws Exception
     {
-        Criteria crit = new Criteria();
-        crit.addJoin(RModuleIssueTypePeer.ISSUE_TYPE_ID, 
-                     IssueTypePeer. ISSUE_TYPE_ID);
-        crit.add(RModuleIssueTypePeer.MODULE_ID, getModuleId());
-        if (activeOnly)
-        {
-            crit.add(RModuleIssueTypePeer.ACTIVE, true);
+        List types = null;
+        Object obj = ScarabCache.get(this, GET_ISSUE_TYPES, 
+                                     new Boolean(activeOnly)); 
+        if ( obj == null ) 
+        {        
+            Criteria crit = new Criteria();
+            crit.addJoin(RModuleIssueTypePeer.ISSUE_TYPE_ID, 
+                         IssueTypePeer. ISSUE_TYPE_ID);
+            crit.add(RModuleIssueTypePeer.MODULE_ID, getModuleId());
+            if (activeOnly)
+            {
+                crit.add(RModuleIssueTypePeer.ACTIVE, true);
+            }
+            crit.add(IssueTypePeer.PARENT_ID, 0);
+            crit.add(IssueTypePeer.DELETED, 0);
+            crit.addAscendingOrderByColumn(RModuleIssueTypePeer.PREFERRED_ORDER);
+            types = IssueTypePeer.doSelect(crit);
+            ScarabCache.put(types, this, "getIssueTypes", 
+                            new Boolean(activeOnly));
         }
-        crit.add(IssueTypePeer.PARENT_ID, 0);
-        crit.add(IssueTypePeer.DELETED, 0);
-        crit.addAscendingOrderByColumn(RModuleIssueTypePeer.PREFERRED_ORDER);
-        return IssueTypePeer.doSelect(crit);
+        else 
+        {
+            types = (List)obj;
+        }
+        return types;
     }
+
 
     /**
      * gets a list of the Issue Types for this module.
@@ -792,16 +946,28 @@ public abstract class AbstractScarabModule
     public List getNavIssueTypes()
         throws Exception
     {
-        Criteria crit = new Criteria();
-        crit.addJoin(RModuleIssueTypePeer.ISSUE_TYPE_ID, 
-                     IssueTypePeer. ISSUE_TYPE_ID);
-        crit.add(RModuleIssueTypePeer. MODULE_ID, getModuleId());
-        crit.add(RModuleIssueTypePeer.ACTIVE, true);
-        crit.add(RModuleIssueTypePeer.DISPLAY, true);
-        crit.add(IssueTypePeer.PARENT_ID, 0);
-        crit.add(IssueTypePeer.DELETED, 0);
-        crit.addAscendingOrderByColumn(RModuleIssueTypePeer.PREFERRED_ORDER);
-        return IssueTypePeer.doSelect(crit);
+        List types = null;
+        Object obj = ScarabCache.get(this, "getNavIssueTypes"); 
+        if ( obj == null ) 
+        {        
+            Criteria crit = new Criteria();
+            crit.addJoin(RModuleIssueTypePeer.ISSUE_TYPE_ID, 
+                         IssueTypePeer. ISSUE_TYPE_ID);
+            crit.add(RModuleIssueTypePeer. MODULE_ID, getModuleId());
+            crit.add(RModuleIssueTypePeer.ACTIVE, true);
+            crit.add(RModuleIssueTypePeer.DISPLAY, true);
+            crit.add(IssueTypePeer.PARENT_ID, 0);
+            crit.add(IssueTypePeer.DELETED, 0);
+            crit.addAscendingOrderByColumn(
+                RModuleIssueTypePeer.PREFERRED_ORDER);
+            types = IssueTypePeer.doSelect(crit);
+            ScarabCache.put(types, this, "getNavIssueTypes");
+        }
+        else 
+        {
+            types = (List)obj;
+        }
+        return types;
     }
 
     /**
@@ -915,10 +1081,23 @@ public abstract class AbstractScarabModule
     public Attribute[] getQuickSearchAttributes(IssueType issueType)
         throws Exception
     {
-        Criteria crit = new Criteria(3)
-            .add(RModuleAttributePeer.QUICK_SEARCH, true);
-        addActiveAndOrderByClause(crit, issueType);
-        return getAttributes(crit);
+        Attribute[] attributes = null;
+        Object obj = ScarabCache.get(this, GET_QUICK_SEARCH_ATTRIBUTES, 
+                                     issueType); 
+        if ( obj == null ) 
+        {        
+            Criteria crit = new Criteria(3)
+                .add(RModuleAttributePeer.QUICK_SEARCH, true);
+            addActiveAndOrderByClause(crit, issueType);
+            attributes = getAttributes(crit);
+            ScarabCache.put(attributes, this, GET_QUICK_SEARCH_ATTRIBUTES, 
+                            issueType);
+        }
+        else 
+        {
+            attributes = (Attribute[])obj;
+        }
+        return attributes;
     }
 
 
@@ -930,21 +1109,36 @@ public abstract class AbstractScarabModule
     public List getRequiredAttributes(IssueType issueType)
         throws Exception
     {
-        Criteria crit = new Criteria(3)
-            .add(RModuleAttributePeer.REQUIRED, true);
-        addActiveAndOrderByClause(crit, issueType);
-        Attribute[] temp =  getAttributes(crit);
-        List requiredAttributes  = new ArrayList();
-        for (int i=0; i <temp.length; i++)
-        {
-            Attribute att = (Attribute)temp[i];
-            AttributeGroup group = getAttributeGroup(issueType, att);
-            if (group != null && group.getActive())
+
+        List attributes = null;
+        Object obj = ScarabCache.get(this, GET_REQUIRED_ATTRIBUTES, 
+                                     issueType); 
+        if ( obj == null ) 
+        {        
+            Criteria crit = new Criteria(3)
+                .add(RModuleAttributePeer.REQUIRED, true);
+            addActiveAndOrderByClause(crit, issueType);
+            Attribute[] temp =  getAttributes(crit);
+            List requiredAttributes  = new ArrayList();
+            for (int i=0; i <temp.length; i++)
             {
-                requiredAttributes.add(att);
+                Attribute att = (Attribute)temp[i];
+                AttributeGroup group = getAttributeGroup(issueType, att);
+                if (group != null && group.getActive())
+                {
+                    requiredAttributes.add(att);
+                }
             }
+            attributes = requiredAttributes;
+            ScarabCache.put(attributes, this, GET_REQUIRED_ATTRIBUTES, 
+                            issueType);
         }
-        return requiredAttributes;
+        else 
+        {
+            attributes = (List)obj;
+        }
+        return attributes;
+
     }
 
     /**
@@ -1016,38 +1210,54 @@ public abstract class AbstractScarabModule
         return getRModuleAttributes(issueType, activeOnly, "all");
     }
 
+
     public List getRModuleAttributes(IssueType issueType, boolean activeOnly,
                                      String attributeType)
         throws Exception
     {
-        Criteria crit = new Criteria();
-        crit.add(RModuleAttributePeer.MODULE_ID, 
-                 getModuleId());
-        crit.add(RModuleAttributePeer.ISSUE_TYPE_ID, 
-                 issueType.getIssueTypeId());
-        crit.addAscendingOrderByColumn(RModuleAttributePeer.PREFERRED_ORDER);
-        crit.addAscendingOrderByColumn(RModuleAttributePeer.DISPLAY_VALUE);
-        crit.addJoin(RModuleAttributePeer.ATTRIBUTE_ID, AttributePeer.ATTRIBUTE_ID);
-
-        if ( activeOnly )
-        {
-            crit.add(RModuleAttributePeer.ACTIVE, true);
+        List rmas = null;
+        Object obj = ScarabCache.get(this, GET_R_MODULE_ATTRIBUTES, issueType, 
+                                     new Boolean(activeOnly), attributeType); 
+        if ( obj == null ) 
+        {        
+            Criteria crit = new Criteria();
+            crit.add(RModuleAttributePeer.MODULE_ID, 
+                     getModuleId());
+            crit.add(RModuleAttributePeer.ISSUE_TYPE_ID, 
+                     issueType.getIssueTypeId());
+            crit.addAscendingOrderByColumn(
+                RModuleAttributePeer.PREFERRED_ORDER);
+            crit.addAscendingOrderByColumn(
+                RModuleAttributePeer.DISPLAY_VALUE);
+            crit.addJoin(RModuleAttributePeer.ATTRIBUTE_ID, 
+                         AttributePeer.ATTRIBUTE_ID);
+            
+            if ( activeOnly )
+            {
+                crit.add(RModuleAttributePeer.ACTIVE, true);
+            }
+            
+            if (attributeType.equals(USER))
+            {
+                crit.add(AttributePeer.ATTRIBUTE_TYPE_ID, 
+                         AttributeTypePeer.USER_TYPE_KEY);
+            }
+            else if (attributeType.equals(NON_USER))
+            {
+                crit.add(AttributePeer.ATTRIBUTE_TYPE_ID, 
+                         AttributeTypePeer.USER_TYPE_KEY,
+                         Criteria.NOT_EQUAL);
+            }
+            
+            rmas = RModuleAttributePeer.doSelect(crit);
+            ScarabCache.put(rmas, this, GET_R_MODULE_ATTRIBUTES, issueType, 
+                            new Boolean(activeOnly), attributeType);
         }
-
-        if (attributeType.equals(USER))
+        else 
         {
-           crit.add(AttributePeer.ATTRIBUTE_TYPE_ID, 
-                    AttributeTypePeer.USER_TYPE_KEY);
+            rmas = (List)obj;
         }
-        else if (attributeType.equals(NON_USER))
-        {
-           crit.add(AttributePeer.ATTRIBUTE_TYPE_ID, 
-                    AttributeTypePeer.USER_TYPE_KEY,
-                Criteria.NOT_EQUAL);
-        }
-     
-
-        return RModuleAttributePeer.doSelect(crit);
+        return rmas;
     }
 
 
@@ -1094,44 +1304,56 @@ if (allRModuleOptions != null)
         return allRModuleOptions;
     }
 
+
     private List getAllRModuleOptions(Attribute attribute, IssueType issueType)
         throws Exception
     {
         List rModOpts = null;
-        List options = attribute.getAttributeOptions(true);
-        NumberKey[] optIds = null;
-        if (options == null)
-        {
-            optIds = new NumberKey[0];
-        }
-        else
-        {
-            optIds = new NumberKey[options.size()];
-        }
-        for ( int i=optIds.length-1; i>=0; i-- )
-        {
-            optIds[i] = ((AttributeOption)options.get(i)).getOptionId();
-        }
-
-        if (optIds.length > 0)
-        { 
-            Criteria crit = new Criteria();
-            crit.add(RModuleOptionPeer.ISSUE_TYPE_ID, issueType.getIssueTypeId());
-            crit.add(RModuleOptionPeer.MODULE_ID, getModuleId());
-            crit.addIn(RModuleOptionPeer.OPTION_ID, optIds);
-            crit.addAscendingOrderByColumn(RModuleOptionPeer.PREFERRED_ORDER);
-            crit.addAscendingOrderByColumn(RModuleOptionPeer.DISPLAY_VALUE);
-
-            AbstractScarabModule module = this;
-            AbstractScarabModule prevModule = null;
-            do
+        Object obj = ScarabCache.get(this, GET_ALL_R_MODULE_OPTIONS, 
+                                     attribute, issueType); 
+        if ( obj == null ) 
+        {        
+            List options = attribute.getAttributeOptions(true);
+            NumberKey[] optIds = null;
+            if (options == null)
             {
-                rModOpts = module.getRModuleOptions(crit);
-                prevModule = module;
-                module = (AbstractScarabModule)prevModule.getParent();
+                optIds = new NumberKey[0];
             }
-            while ( rModOpts.size() == 0 &&
-                   !ROOT_ID.equals(prevModule.getPrimaryKey()));
+            else
+            {
+                optIds = new NumberKey[options.size()];
+            }
+            for ( int i=optIds.length-1; i>=0; i-- )
+            {
+                optIds[i] = ((AttributeOption)options.get(i)).getOptionId();
+            }
+            
+            if (optIds.length > 0)
+            { 
+                Criteria crit = new Criteria();
+                crit.add(RModuleOptionPeer.ISSUE_TYPE_ID, issueType.getIssueTypeId());
+                crit.add(RModuleOptionPeer.MODULE_ID, getModuleId());
+                crit.addIn(RModuleOptionPeer.OPTION_ID, optIds);
+                crit.addAscendingOrderByColumn(RModuleOptionPeer.PREFERRED_ORDER);
+                crit.addAscendingOrderByColumn(RModuleOptionPeer.DISPLAY_VALUE);
+                
+                AbstractScarabModule module = this;
+                AbstractScarabModule prevModule = null;
+                do
+                {
+                    rModOpts = module.getRModuleOptions(crit);
+                    prevModule = module;
+                    module = (AbstractScarabModule)prevModule.getParent();
+                }
+                while ( rModOpts.size() == 0 &&
+                        !ROOT_ID.equals(prevModule.getPrimaryKey()));
+            }
+            ScarabCache.put(rModOpts, this, GET_ALL_R_MODULE_OPTIONS, 
+                            attribute, issueType); 
+        }
+        else 
+        {
+            rModOpts = (List)obj;
         }
         return rModOpts;
     }
@@ -1311,17 +1533,31 @@ try{
 
     }
 
+
     public Vector getRModuleIssueTypes()
         throws Exception
     {
-        Criteria crit = new Criteria();
-        crit.add(RModuleIssueTypePeer.MODULE_ID, getModuleId())
-        .addJoin(RModuleIssueTypePeer.ISSUE_TYPE_ID, 
-                     IssueTypePeer.ISSUE_TYPE_ID)
-        .add(IssueTypePeer.PARENT_ID, 0)
-        .add(IssueTypePeer.DELETED, 0)
-        .addAscendingOrderByColumn(RModuleIssueTypePeer.PREFERRED_ORDER);
-        return RModuleIssueTypePeer.doSelect(crit);
+        Vector types = null;
+        Object obj = ScarabCache.get(this, GET_R_MODULE_ISSUE_TYPES); 
+        if ( obj == null ) 
+        {        
+            Criteria crit = new Criteria();
+            crit.add(RModuleIssueTypePeer.MODULE_ID, getModuleId())
+                .addJoin(RModuleIssueTypePeer.ISSUE_TYPE_ID, 
+                         IssueTypePeer.ISSUE_TYPE_ID)
+                .add(IssueTypePeer.PARENT_ID, 0)
+                .add(IssueTypePeer.DELETED, 0)
+                .addAscendingOrderByColumn(
+                    RModuleIssueTypePeer.PREFERRED_ORDER);
+            types = RModuleIssueTypePeer.doSelect(crit);
+            ScarabCache.put(types, this, GET_R_MODULE_ISSUE_TYPES);
+        }
+        else 
+        {
+            types = (Vector)obj;
+        }
+        return types;
+
     }
 
     public void addRModuleIssueType(IssueType issueType)
@@ -1348,28 +1584,51 @@ try{
         throws Exception
     {
         RModuleIssueType rmit = null;
-        Criteria crit = new Criteria(2);
-        crit.add(RModuleIssueTypePeer.MODULE_ID, getModuleId())
-           .add(RModuleIssueTypePeer.ISSUE_TYPE_ID, issueType.getIssueTypeId());
-        List results = RModuleIssueTypePeer.doSelect(crit);
-        if (results.size() > 0)
+        Object obj = ScarabCache.get(this, GET_R_MODULE_ISSUE_TYPE, issueType);
+        if ( obj == null ) 
+        {        
+            Criteria crit = new Criteria(2);
+            crit.add(RModuleIssueTypePeer.MODULE_ID, getModuleId())
+                .add(RModuleIssueTypePeer.ISSUE_TYPE_ID, 
+                     issueType.getIssueTypeId());
+            List results = RModuleIssueTypePeer.doSelect(crit);
+            if (results.size() > 0)
+            {
+                rmit = (RModuleIssueType)results.get(0);
+            }
+
+            ScarabCache.put(rmit, this, GET_R_MODULE_ISSUE_TYPE, issueType);
+        }
+        else 
         {
-            rmit = (RModuleIssueType)results.get(0);
+            rmit = (RModuleIssueType)obj;
         }
         return rmit;
     }
 
+
     public List getTemplateTypes()
         throws Exception
     {
-        Criteria crit = new Criteria();
-        crit.add(RModuleIssueTypePeer.MODULE_ID, getModuleId())
-        .addJoin(RModuleIssueTypePeer.ISSUE_TYPE_ID, 
+        List types = null;
+        Object obj = ScarabCache.get(this, GET_TEMPLATE_TYPES); 
+        if ( obj == null ) 
+        {        
+            Criteria crit = new Criteria();
+            crit.add(RModuleIssueTypePeer.MODULE_ID, getModuleId())
+                .addJoin(RModuleIssueTypePeer.ISSUE_TYPE_ID, 
                      IssueTypePeer.ISSUE_TYPE_ID)
-        .add(IssueTypePeer.PARENT_ID, 0, Criteria.NOT_EQUAL)
-        .add(IssueTypePeer.DELETED, 0)
-        .addAscendingOrderByColumn(RModuleIssueTypePeer.PREFERRED_ORDER);
-        return (List)RModuleIssueTypePeer.doSelect(crit);
+                .add(IssueTypePeer.PARENT_ID, 0, Criteria.NOT_EQUAL)
+                .add(IssueTypePeer.DELETED, 0)
+                .addAscendingOrderByColumn(RModuleIssueTypePeer.PREFERRED_ORDER);
+            types = RModuleIssueTypePeer.doSelect(crit);
+            ScarabCache.put(types, this, GET_TEMPLATE_TYPES);
+        }
+        else 
+        {
+            types = (List)obj;
+        }
+        return types;
     }
 
     /**
@@ -1394,27 +1653,51 @@ try{
         return 1;
     }
 
+
     /**
      * Returns list of queries needing approval.
      */
     public List getUnapprovedQueries() throws Exception
     {
-        Criteria crit = new Criteria(3);
-        crit.add(QueryPeer.APPROVED, 0)
-           .add(QueryPeer.DELETED, 0);
-        return (List) QueryPeer.doSelect(crit);
+        List queries = null;
+        Object obj = ScarabCache.get(this, GET_UNAPPROVED_QUERIES); 
+        if ( obj == null ) 
+        {        
+            Criteria crit = new Criteria(3);
+            crit.add(QueryPeer.APPROVED, 0)
+                .add(QueryPeer.DELETED, 0);
+            queries = QueryPeer.doSelect(crit);
+            ScarabCache.put(queries, this, GET_UNAPPROVED_QUERIES);
+        }
+        else 
+        {
+            queries = (List)obj;
+        }
+        return queries;
     }
+
 
     /**
      * Returns list of enter issue templates needing approval.
      */
     public List getUnapprovedTemplates() throws Exception
     {
-        Criteria crit = new Criteria(3);
-        crit.add(IssueTemplateInfoPeer.APPROVED, 0)
-            .addJoin(IssuePeer.ISSUE_ID, IssueTemplateInfoPeer.ISSUE_ID)
-            .add(IssuePeer.DELETED, 0);
-        return (List) IssuePeer.doSelect(crit);
+        List templates = null;
+        Object obj = ScarabCache.get(this, GET_UNAPPROVED_TEMPLATES); 
+        if ( obj == null ) 
+        {        
+            Criteria crit = new Criteria(3);
+            crit.add(IssueTemplateInfoPeer.APPROVED, 0)
+                .addJoin(IssuePeer.ISSUE_ID, IssueTemplateInfoPeer.ISSUE_ID)
+                .add(IssuePeer.DELETED, 0);
+            templates = IssuePeer.doSelect(crit);
+            ScarabCache.put(templates, this, GET_UNAPPROVED_TEMPLATES);
+        }
+        else 
+        {
+            templates = (List)obj;
+        }
+        return templates;
     }
 
     /**
