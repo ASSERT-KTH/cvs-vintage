@@ -38,7 +38,7 @@ import org.gjt.sp.util.Log;
 
 /**
  * @author Slava Pestov
- * @version $Id: VFSDirectoryEntryTable.java,v 1.11 2003/05/10 02:47:59 spestov Exp $
+ * @version $Id: VFSDirectoryEntryTable.java,v 1.12 2003/05/14 02:25:10 spestov Exp $
  * @since jEdit 4.2pre1
  */
 public class VFSDirectoryEntryTable extends JTable
@@ -68,6 +68,24 @@ public class VFSDirectoryEntryTable extends JTable
 		//setCellSelectionEnabled(false);
 
 		setAutoResizeMode(AUTO_RESIZE_OFF);
+	} //}}}
+
+	//{{{ selectFile() method
+	public boolean selectFile(String path)
+	{
+		for(int i = 0; i < getRowCount(); i++)
+		{
+			VFSDirectoryEntryTableModel.Entry entry =
+				(VFSDirectoryEntryTableModel.Entry)
+				getValueAt(i,1);
+			if(entry.dirEntry.path.equals(path))
+			{
+				setSelectedRow(i);
+				return true;
+			}
+		}
+
+		return false;
 	} //}}}
 
 	//{{{ doTypeSelect() method
