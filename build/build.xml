@@ -36,6 +36,9 @@
             <include name="**/*.jar"/>
             <exclude name="**/xalan*.jar"/>
         </fileset>
+        <fileset dir="${ant.home}/lib">
+            <include name="**/ant*.jar"/>
+        </fileset>
     </path>
 
     <!-- ================================================================== -->
