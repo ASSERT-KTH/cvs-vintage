@@ -1,6 +1,4 @@
-#if ($scarabR.CurrentModule)
-  #set ($currentModule = $scarabR.CurrentModule)
-#end
+#set ($currentModule = $scarabR.CurrentModule)
 <div id="selectmodule" class="app">
 
 <h2>$page.Title</h2>
