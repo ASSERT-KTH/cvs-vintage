@@ -75,7 +75,7 @@ import org.tigris.scarab.services.cache.ScarabCache;
  * This class deals with modifying Global Attributes.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: GlobalAttributeEdit.java,v 1.52 2003/06/04 12:10:08 venkatesh Exp $
+ * @version $Id: GlobalAttributeEdit.java,v 1.53 2003/06/04 19:47:50 venkatesh Exp $
  */
 public class GlobalAttributeEdit extends RequireLoginFirstAction
 {
@@ -443,8 +443,13 @@ public class GlobalAttributeEdit extends RequireLoginFirstAction
         }
         if (success)
         {
-            log().debug("calling doCancel");
-            doCancel(data, context);
+            //if "deleting" is set, do not call 'doCancel' since the control
+            //should go to 'confirm delete' page.
+            if(!"deleting".equals(context.get("deleting")))
+            {
+                log().debug("calling doCancel");
+                doCancel(data, context);
+            }
         }
     }
     
