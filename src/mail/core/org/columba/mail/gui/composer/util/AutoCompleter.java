@@ -123,7 +123,8 @@ public class AutoCompleter implements KeyListener, ItemListener {
 			if (address == null)
 				address = (String) item.get("email;internet");
 
-			_editor.moveCaretPosition(cursor_pos);
+			_editor.setCaretPosition(cursor_pos);
+			//_editor.moveCaretPosition(cursor_pos);
 
 			if (_comboBox != null) {
 				try {
