@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/JspC.java,v 1.10 2000/03/30 04:28:06 shemnon Exp $
- * $Revision: 1.10 $
- * $Date: 2000/03/30 04:28:06 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/JspC.java,v 1.11 2000/05/25 15:57:42 shemnon Exp $
+ * $Revision: 1.11 $
+ * $Date: 2000/05/25 15:57:42 $
  *
  * ====================================================================
  * 
@@ -435,7 +435,20 @@ public class JspC implements Options { //, JspCompilationContext {
                         if (f.exists() && f.isDirectory()) {
                             tUriBase = "/" + f.getName() + "/" + tUriBase;
                         };
-                        f = new File(f.getParent());
+                        
+                        String fParent = f.getParent();
+                        if (fParent == null) {
+                            f = new File(args[argPos]);
+                            fParent = f.getParent();
+                            if (fParent == null) {
+                                fParent = File.separator;
+                            }
+                            uriRoot = new File(fParent).getCanonicalPath();
+                            uriBase = "/";
+                            break;
+                        } else {
+                            f = new File(fParent);
+                        }
 
                         // If there is no acceptible candidate, uriRoot will
                         // remain null to indicate to the CompilerContext to
