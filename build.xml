@@ -10,6 +10,27 @@
 	<property name="version" value="0.9.9"/>
 	<property name="dest" value="../columba-${version}"/>
 
+	<!-- definition of the task to check the style of the java-code -->
+	<taskdef name="checkstyle" classname="com.puppycrawl.tools.checkstyle.CheckStyleTask">
+		<classpath>
+			<pathelement location="${src}/ext/checkstyle-all-2.1.jar"/>
+		</classpath>
+	</taskdef>
+
+	<!-- the task that realy checks the style -->
+	<target name="verify">
+		<checkstyle lcurlyType="nlow" 
+								lcurlyMethod="nlow"
+								lcurlyOther="nlow"
+								maxLineLen="160"
+								allowTabs="true"
+								ignoreWhitespace="true"
+								ignoreCastWhitespace="true"
+								failOnViolation="false"> 
+     <fileset dir="${src}" includes="**/*.java"/>
+    </checkstyle>
+	</target>
+
 	<!-- creating the destination directory -->
 	<target name="init">
 		<echo message="you run java with version ${ant.java.version}"/>
@@ -41,6 +62,7 @@
 				<include name="run_source_jdk13.sh"/>
 				<exclude name="build.xml"/>
 				<exclude name="ant.dtd"/>
+				<exclude name="ext/checkstyle-all-2.1.jar"/>
 			</fileset>
 		</copy>
 	</target>
@@ -147,6 +169,22 @@ else echo "cannot find columba.jar in `pwd`"; fi
 	<!-- only for build the class-files -->
 	<target name="build" depends="compile"/>
 
+	<!-- to build an javadoc documentation -->
+	<target name="doc" depends="init">
+		<echo message="the documentation will go to ${dest}/javadoc"/>
+		<echo message="sopurcepath: ${src}/org/columba"/>
+		<javadoc sourcepath="${src}" 
+						 destdir="${dest}/javadoc" 
+						 packagenames="org.columba.*"
+						 author="true"
+						 version="true"
+						 use="true"
+						 package="true"
+						 windowtitle="columba API documentation">
+    <doctitle><![CDATA[<h1>columba API documentation</h1>]]></doctitle>
+		</javadoc>
+	</target>
+	
 	<!-- to clean up the dest-directory -->
 	<target name="clean">
 		<delete dir="${dest}"/>
