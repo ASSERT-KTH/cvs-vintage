@@ -52,6 +52,8 @@ import org.jboss.web.WebClassLoader;
 import org.jboss.web.WebServiceMBean;
 import org.w3c.dom.Element;
 
+import org.jboss.management.j2ee.EjbModule;
+
 /**
  * A ContainerFactory is used to deploy EJB applications. It can be given a
  * URL to an EJB-jar or EJB-JAR XML file, which will be used to instantiate
@@ -68,7 +70,7 @@ import org.w3c.dom.Element;
 * @author <a href="mailto:peter.antman@tim.se">Peter Antman</a>.
 * @author <a href="mailto:scott.stark@jboss.org">Scott Stark</a>
 * @author <a href="mailto:sacha.labourey@cogito-info.ch">Sacha Labourey</a>
-* @version $Revision: 1.98 $
+* @version $Revision: 1.99 $
 */
 public class ContainerFactory
    extends ServiceMBeanSupport
@@ -274,27 +276,17 @@ public class ContainerFactory
       this.validateDTDs = validate;
    }
 
-   /**
-    * Deploy the file at this URL. This method is typically called from
-    * remote administration tools that cannot handle java.net.URL's as
-    * parameters to methods
-    *
-    * @param url
-    *
-    * @throws MalformedURLException
-    * @throws DeploymentException
-    */
-   public void deploy( String url, String appId )
+   public void deploy( String pParentId, String url, String appId )
       throws MalformedURLException, DeploymentException
    {
       // Delegate to "real" deployment
-      deploy( new URL( url ), appId );
+      deploy( pParentId, new URL( url ), appId );
    }
 
    //
    // Richard Gyger
    //
-   public void deploy( String appUrl, String[] jarUrls, String appId )
+   public void deploy( String pParentId, String appUrl, String[] jarUrls, String appId )
       throws MalformedURLException, DeploymentException
    {
       getLog().info("got to deploy in ContainerFactory");
@@ -304,7 +296,7 @@ public class ContainerFactory
       for( int i = 0; i < tmp.length; i++ )
          tmp[ i ] = new URL( jarUrls[ i ] );
 
-      deploy( new URL( appUrl ), tmp, appId );
+      deploy( pParentId, new URL( appUrl ), tmp, appId );
    }
 
    /**
@@ -335,16 +327,16 @@ public class ContainerFactory
     *
     * @throws DeploymentException
     */
-   public synchronized void deploy( URL url, String appId )
+   public synchronized void deploy( String pParentId, URL url, String appId )
       throws DeploymentException
    {
-      deploy( url, new URL[]{ url }, appId );
+      deploy( pParentId, url, new URL[]{ url }, appId );
    }
 
    //
    // Richard Gyger
    //
-   public synchronized void deploy( URL appUrl, URL[] jarUrls, String appId )
+   public synchronized void deploy( String pParentId, URL appUrl, URL[] jarUrls, String appId )
       throws DeploymentException
    {
       // Create application
@@ -373,7 +365,7 @@ public class ContainerFactory
          cl.setWebURLs(codebase);
 
          for( int i = 0; i < jarUrls.length; i++ )
-            deploy( app, jarUrls[ i ], cl );
+            deploy( app, jarUrls[ i ], cl, pParentId, appId );
 
          // Init application
          //app.init();
@@ -398,26 +390,20 @@ public class ContainerFactory
 
          throw new DeploymentException( "Could not deploy " + appUrl.toString(), e );
       }
-      // Inform the Data Collector that new/old EJBs were deployed
-/* AS Temporary not available
-      try
-      {
-         getServer().invoke(new ObjectName( "Management", "service", "Collector" ),
-                            "refresh",
-                            new Object[] {},
-                            new String[] {}
-                            );
-      }
-      catch( Exception e )
-      {
-         Logger.exception(e);
-      }
-*/
    }
 
-   private void deploy( Application app, URL url, ClassLoader cl )
+   private void deploy( Application app, URL url, ClassLoader cl, String pParentId, String pAppId )
       throws NamingException, Exception
    {
+      // Create JSR-77 EJB-Module
+      String lModule = EjbModule.create(
+         getServer(),
+         pParentId,
+         pAppId,
+         url
+      ).toString();
+      app.setModuleName( lModule );
+
       // Create a file loader with which to load the files
       XmlFileLoader efm = new XmlFileLoader(validateDTDs);
 
@@ -518,6 +504,8 @@ public class ContainerFactory
       } finally {
          // Remove deployment
          deployments.remove( url );
+         // Remove JSR-77 Module
+         EjbModule.destroy( getServer(), app.getModuleName() );
          // Done
          log.info( "Undeployed application: " + app.getName() );
       }

@@ -1,9 +1,9 @@
 /*
-* JBoss, the OpenSource J2EE webOS
-*
-* Distributable under LGPL license.
-* See terms of license at gnu.org.
-*/
+ * JBoss, the OpenSource J2EE webOS
+ *
+ * Distributable under LGPL license.
+ * See terms of license at gnu.org.
+ */
 package org.jboss.management.j2ee;
 
 import java.io.Serializable;
@@ -22,42 +22,63 @@ import javax.management.j2ee.StatisticsProvider;
 import org.jboss.system.ServiceMBeanSupport;
 
 /**
-* JBoss specific implementation.
-*
-* @author Marc Fleury
-**/
+ * Root class of the JBoss JSR-77 implementation of
+ * {@link javax.management.j2ee.J2EEManagedObject J2EEManagedObject}.
+ *
+ * @author  <a href="mailto:andreas@jboss.org">Andreas Schaefer</a>.
+ * @version $Revision: 1.5 $
+ *   
+ * <p><b>Revisions:</b>
+ *
+ * <p><b>20011123 Andreas Schaefer:</b>
+ * <ul>
+ * <li> Adjustments to the JBoss Guidelines as well as adding some
+ *      static helper methods
+ * </ul>
+ **/
 public abstract class J2EEManagedObject
    extends ServiceMBeanSupport
    implements javax.management.j2ee.J2EEManagedObject, Serializable
 {
-   // -------------------------------------------------------------------------
-   // Static
-   // -------------------------------------------------------------------------  
+
+   // Constants -----------------------------------------------------
+   
+   public static final String TYPE = "type";
+   public static final String NAME = "name";
+   
+   // Attributes ----------------------------------------------------
+   
+   private ObjectName mParent = null;
+   private ObjectName mName = null;
+
+   // Static --------------------------------------------------------
    
    private static String sDomainName = null;
-//   protected static MBeanServer sServer = null;
    
    public static String getDomainName() {
       return sDomainName;
    }
-   
-/*   
-   public static MBeanServer getServer() {
-      return sServer;
+
+   /**
+    * Retrieves the type out of an JSR-77 object name
+    *
+    * @param pName Object Name to check if null then
+    *              it will be treated like NO type found
+    *
+    * @return The type of the given Object Name or an EMPTY
+    *         string if either Object Name null or type not found
+    **/
+   protected static String getType( ObjectName pName ) {
+      String lType = null;
+      if( pName != null ) {
+         lType = (String) pName.getKeyPropertyList().get( TYPE );
+      }
+      // Return an empty string if type not found
+      return lType == null ? "" : lType;
    }
-*/
    
-   // -------------------------------------------------------------------------
-   // Members
-   // -------------------------------------------------------------------------  
-
-   private ObjectName mParent = null;
-   private ObjectName mName = null;
-
-   // -------------------------------------------------------------------------
-   // Constructors
-   // -------------------------------------------------------------------------
-
+   // Constructors --------------------------------------------------
+   
    /**
    * Constructor for the root J2EEManagement object
    *
@@ -76,8 +97,8 @@ public abstract class J2EEManagedObject
       }
       sDomainName = pDomainName;
       Hashtable lProperties = new Hashtable();
-      lProperties.put( "type", pType );
-      lProperties.put( "name", pName );
+      lProperties.put( TYPE, pType );
+      lProperties.put( NAME, pName );
       mName = new ObjectName( getDomainName(), lProperties );
       System.out.println( "J2EEManagedObject(), create root with name: " + mName );
    }
@@ -97,56 +118,23 @@ public abstract class J2EEManagedObject
          MalformedObjectNameException,
          InvalidParentException
    {
-      try {
       Hashtable lProperties = (Hashtable) pParent.getKeyPropertyList().clone();
-      System.out.println( "J2EEManagedObject(), parent properties: " + lProperties );
-      System.out.println( "J2EEManagedObject(), parent type: " + lProperties.get( "type" ) );
-      System.out.println( "J2EEManagedObject(), parent name: " + lProperties.get( "name" ) );
       lProperties.put( lProperties.get( "type" ), lProperties.get( "name" ) );
-      lProperties.put( "type", pType );
-      lProperties.put( "name", pName );
+      lProperties.put( TYPE, pType );
+      lProperties.put( NAME, pName );
       mName = new ObjectName( getDomainName(), lProperties );
-      System.out.println( "J2EEManagedObject(), properties: " + lProperties );
       setParent( pParent );
-      }
-      catch( Exception e ) {
-         e.printStackTrace();
-      }
    }
 
-   // -------------------------------------------------------------------------
-   // Properties (Getters/Setters)
-   // -------------------------------------------------------------------------  
-
-   public String getName() {
-      return mName.toString();
-   }
+   // Public --------------------------------------------------------
+   
+   // J2EEManagedObjectMBean implementation ----------------------------------------------
    
    public ObjectName getObjectName() {
       System.out.println( "J2EEManagedObject.getObjectName(), name: " + mName );
       return mName;
    }
 
-   public ObjectName getObjectName( MBeanServer pServer, ObjectName pName ) {
-      return getObjectName();
-   }
-
-   public boolean isStateManageable() {
-      return this instanceof StateManageable;
-   }
-
-   public boolean isStatisticsProvider() {
-      return this instanceof StatisticsProvider;
-   }
-   
-   public boolean isEventProvider() {
-      return this instanceof EventProvider;
-   }
-   
-   public String toString() {
-      return "J2EEManagedObject [ name: " + mName + ", parent: " + mParent + " ];";
-   }
-   
    public ObjectName getParent() {
       return mParent;
    }
@@ -159,6 +147,37 @@ public abstract class J2EEManagedObject
          throw new InvalidParameterException( "Parent must be set" );
       }
       mParent = pParent;
+   }
+   
+   public void addChild( ObjectName pChild ) {
+      //AS ToDo: Remove later is just here to compile
+   }
+   public void removeChild( ObjectName pChild ) {
+      //AS ToDo: Remove later is just here to compile
+   }
+
+   // J2EEManagedObject implementation ----------------------------------------------
+   
+   public String getName() {
+      return mName.toString();
+   }
+   
+   public boolean isStateManageable() {
+      return this instanceof StateManageable;
+   }
+
+   public boolean isStatisticsProvider() {
+      return this instanceof StatisticsProvider;
+   }
+   
+   public boolean isEventProvider() {
+      return this instanceof EventProvider;
+   }
+   
+   // ServiceMBeanSupport overrides ---------------------------------------------------
+   
+   public ObjectName getObjectName( MBeanServer pServer, ObjectName pName ) {
+      return getObjectName();
    }
    
    public void postRegister( java.lang.Boolean pRegistrationDone ) {
@@ -182,10 +201,38 @@ public abstract class J2EEManagedObject
       }
    }
    
-   public void addChild( ObjectName pChild ) {
-      //AS ToDo: Remove later is just here to compile
+   public void preDeregister()
+      throws Exception
+   {
+      System.out.println( "J2EEManagedObject.preDeregister(), parent: " + mParent );
+      try {
+         // Only remove child if it is a child (root has not parent)
+         if( mParent != null ) {
+            // Notify the parent about its new child
+            getServer().invoke(
+               mParent,
+               "removeChild",
+               new Object[] { mName },
+               new String [] { ObjectName.class.getName() }
+            );
+         }
+      }
+      catch( JMException jme ) {
+         jme.printStackTrace();
+      }
    }
-   public void removeChild( ObjectName pChild ) {
-      //AS ToDo: Remove later is just here to compile
+   
+   // Object overrides ---------------------------------------------------
+   
+   public String toString() {
+      return "J2EEManagedObject [ name: " + mName + ", parent: " + mParent + " ];";
    }
+   
+   // Package protected ---------------------------------------------
+   
+   // Protected -----------------------------------------------------
+   
+   // Private -------------------------------------------------------
+   
+   // Inner classes -------------------------------------------------
 }

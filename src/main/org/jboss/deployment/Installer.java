@@ -12,10 +12,12 @@ import java.io.File;
 import java.io.ObjectOutputStream;
 import java.io.FileInputStream;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.FileNotFoundException;
+import java.io.StringWriter;
 import java.util.Iterator;
 import java.util.Hashtable;
 import java.util.Vector;
@@ -36,6 +38,9 @@ import org.w3c.dom.Element;
 import org.jboss.logging.Logger;
 import org.jboss.metadata.XmlFileLoader;
 
+import org.apache.log4j.Category;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 
 /** 
  * A class intended to encapsulate the complex task of making an URL pointed
@@ -46,7 +51,7 @@ import org.jboss.metadata.XmlFileLoader;
  * 
  * @author <a href="mailto:daniel.schulze@telkel.com">Daniel Schulze</a>
  * @author <a href="mailto:Christoph.Jung@infor.de">Christoph G. Jung</a>
- * @version $Revision: 1.17 $
+ * @version $Revision: 1.18 $
  */
 
 public class Installer
@@ -172,6 +177,7 @@ public class Installer
        // reading the deployment descriptor...
        JarFile jarFile = new JarFile(localCopy);
        J2eeApplicationMetaData app = null;
+
        try
        {
            InputStream in = jarFile.getInputStream(jarFile.getEntry(files[EAR_MODULE]));
@@ -193,6 +199,26 @@ public class Installer
            throw new J2eeDeploymentException("unexpected error: application.xml was found once but not a second time?!", e);
        }
 
+       // Read application deployment descriptor
+       try {
+           InputStreamReader lInput = new InputStreamReader(
+               jarFile.getInputStream(
+                   jarFile.getEntry( files[ EAR_MODULE ] )
+               )
+           );
+           StringWriter lOutput = new StringWriter();
+           char[] lBuffer = new char[ 1024 ];
+           int lLength = 0;
+           while( ( lLength = lInput.read( lBuffer ) ) > 0 ) {
+               lOutput.write( lBuffer, 0, lLength );
+           }
+           d.applicationDeploymentDescriptor = lOutput.toString();
+           lInput.close();
+       }
+       catch( Exception e ) {
+           e.printStackTrace();
+       }
+       
        // iterating the modules and install them
        // the library url is used to root the embedded classpaths
        libraryRoot=new URL("jar:file:"+localCopy.getAbsolutePath()+"!/");

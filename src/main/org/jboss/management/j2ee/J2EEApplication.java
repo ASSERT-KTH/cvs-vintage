@@ -1,44 +1,51 @@
 /*
-* JBoss, the OpenSource J2EE webOS
-*
-* Distributable under LGPL license.
-* See terms of license at gnu.org.
-*/
+ * JBoss, the OpenSource J2EE webOS
+ *
+ * Distributable under LGPL license.
+ * See terms of license at gnu.org.
+ */
 package org.jboss.management.j2ee;
 
-import java.io.InputStreamReader;
-import java.io.StringWriter;
 import java.net.URL;
 import java.security.InvalidParameterException;
 import java.util.Arrays;
 import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.List;
-import java.util.jar.JarEntry;
-import java.util.jar.JarFile;
 
 import javax.management.MalformedObjectNameException;
 import javax.management.MBeanServer;
 import javax.management.ObjectName;
 
 /**
-* This class is the connection between the JSR and the
-* JBoss specific implementation.
-*
-* @author <a href="mailto:andreas@jboss.org">Andreas Schafer</a>
-* @version $Revision: 1.3 $
-*/
+ * Root class of the JBoss JSR-77 implementation of
+ * {@link javax.management.j2ee.J2EEApplication J2EEApplication}.
+ *
+ * @author  <a href="mailto:andreas@jboss.org">Andreas Schaefer</a>.
+ * @version $Revision: 1.4 $
+ *   
+ * <p><b>Revisions:</b>
+ *
+ * <p><b>20011123 Andreas Schaefer:</b>
+ * <ul>
+ * <li> Adjustments to the JBoss Guidelines and implementing of the
+ *      the destroy() helper method
+ * </ul>
+ **/
 public class J2EEApplication
-  extends J2EEDeployedObject
-  implements J2EEApplicationMBean
+   extends J2EEDeployedObject
+   implements J2EEApplicationMBean
 {
-   // -------------------------------------------------------------------------
-   // Members
-   // -------------------------------------------------------------------------  
 
+   // Constants -----------------------------------------------------
+   
+   // Attributes ----------------------------------------------------
+   
    private List mModules = new ArrayList();
    
-   public static ObjectName create( MBeanServer pServer, String pName, URL pURL ) {
+   // Static --------------------------------------------------------
+   
+   public static ObjectName create( MBeanServer pServer, String pName, String pDescriptor ) {
       String lDD = null;
       ObjectName lServer = null;
       try {
@@ -46,20 +53,6 @@ public class J2EEApplication
              new ObjectName( J2EEManagedObject.getDomainName() + ":type=J2EEServer,*" ),
              null
          ).iterator().next();
-         // First get the deployement descriptor
-         System.out.println( "URL: " + pURL.getFile() );
-         JarFile lFile = new JarFile( pURL.getFile() );
-         JarEntry lDDEntry = lFile.getJarEntry( "META-INF/application.xml" );
-         if( lDDEntry != null ) {
-            InputStreamReader lInput = new InputStreamReader( lFile.getInputStream( lDDEntry ) );
-            StringWriter lOutput = new StringWriter();
-            char[] lBuffer = new char[ 1024 ];
-            int lLength = 0;
-            while( ( lLength = lInput.read( lBuffer ) ) > 0 ) {
-               lOutput.write( lBuffer, 0, lLength );
-            }
-            lDD = lOutput.toString();
-         }
       }
       catch( Exception e ) {
          e.printStackTrace();
@@ -72,7 +65,7 @@ public class J2EEApplication
             new Object[] {
                pName,
                lServer,
-               lDD
+               pDescriptor
             },
             new String[] {
                String.class.getName(),
@@ -82,14 +75,31 @@ public class J2EEApplication
          ).getObjectName();
       }
       catch( Exception e ) {
+         e.printStackTrace();
          return null;
       }
    }
-
-   // -------------------------------------------------------------------------
-   // Constructors
-   // -------------------------------------------------------------------------
-
+   
+   public static void destroy( MBeanServer pServer, String pName ) {
+      try {
+         // Find the Object to be destroyed
+         ObjectName lSearch = new ObjectName(
+            J2EEManagedObject.getDomainName() + ":type=J2EEApplication,name=" + pName + ",*"
+         );
+         ObjectName lApplication = (ObjectName) pServer.queryNames(
+            lSearch,
+            null
+         ).iterator().next();
+         // Now remove the J2EEApplication
+         pServer.unregisterMBean( lApplication );
+      }
+      catch( Exception e ) {
+         e.printStackTrace();
+      }
+   }
+   
+   // Constructors --------------------------------------------------
+   
    /**
    * Constructor taking the Name of this Object
    *
@@ -107,7 +117,9 @@ public class J2EEApplication
    }
    
    // Public --------------------------------------------------------
-
+   
+   // J2EEApplication implementation --------------------------------
+   
    public ObjectName[] getModules() {
       return (ObjectName[]) mModules.toArray( new ObjectName[ 0 ] );
    }
@@ -120,9 +132,10 @@ public class J2EEApplication
       return null;
    }
    
+   // J2EEManagedObjectMBean implementation -------------------------
+   
    public void addChild( ObjectName pChild ) {
-      Hashtable lProperties = pChild.getKeyPropertyList();
-      String lType = lProperties.get( "type" ) + "";
+      String lType = J2EEManagedObject.getType( pChild );
       if( "EJBModule".equals( lType ) ) {
          mModules.add( pChild );
       } else if( "WebModule".equals( lType ) ) {
@@ -133,13 +146,29 @@ public class J2EEApplication
    }
    
    public void removeChild( ObjectName pChild ) {
-      //AS ToDo
+      String lType = J2EEManagedObject.getType( pChild );
+      if( "EJBModule".equals( lType ) ) {
+         mModules.remove( pChild );
+      } else if( "WebModule".equals( lType ) ) {
+         mModules.remove( pChild );
+      } else if( "ConnectorModule".equals( lType ) ) {
+         mModules.remove( pChild );
+      }
    }
 
+   // Object overrides ---------------------------------------------------
+   
    public String toString() {
       return "J2EEApplication { " + super.toString() + " } [ " +
          "modules: " + mModules +
          " ]";
    }
 
+   // Package protected ---------------------------------------------
+   
+   // Protected -----------------------------------------------------
+   
+   // Private -------------------------------------------------------
+   
+   // Inner classes -------------------------------------------------
 }

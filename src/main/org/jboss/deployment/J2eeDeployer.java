@@ -60,7 +60,7 @@ import org.jboss.management.j2ee.J2EEApplication;
  * @author <a href="mailto:toby.allsopp@peace.com">Toby Allsopp</a>
  * @author <a href="mailto:Scott_Stark@displayscape.com">Scott Stark</a>.
  * @author <a href="mailto:Christoph.Jung@infor.de">Christoph G. Jung</a>.
- * @version $Revision: 1.47 $
+ * @version $Revision: 1.48 $
  */
 
 public class J2eeDeployer
@@ -472,7 +472,7 @@ implements J2eeDeployerMBean
       ObjectName lApplication = J2EEApplication.create(
          getServer(),
          _d.getName(),
-         _d.getSourceUrl()
+         _d.getApplicationDeploymentDescriptor()
       );
       
       // save the old classloader
@@ -514,10 +514,19 @@ implements J2eeDeployerMBean
          // Call the ContainerFactory that is loaded in the JMX server
          getLog().info("about to invoke deploy on jardeployer:" + jarDeployer);
          server.invoke(jarDeployer, "deploy",
-         new Object[]
-         { _d.localUrl.toString(), jarUrls, moduleName },
-         new String[]
-         { String.class.getName(), String[].class.getName(), String.class.getName() } );
+            new Object[]{
+               _d.getName(),
+               _d.localUrl.toString(),
+               jarUrls,
+               moduleName,
+            },
+            new String[]{
+               String.class.getName(),
+               String.class.getName(),
+               String[].class.getName(),
+               String.class.getName()
+            }
+         );
          
          // Deploy the web application modules
          it = _d.webModules.iterator();
@@ -665,6 +674,12 @@ implements J2eeDeployerMBean
          // should only happen for tomcat (i=1)
          log.warn("Cannot find rar deployer anymore!");
       }
+      
+      // Destroy the appropriate JSR-77 instance
+      J2EEApplication.destroy(
+         getServer(),
+         _d.getName()
+      );
       
       if (!error.toString().equals("")) // there was at least one error...
          throw new J2eeDeploymentException("Error(s) on stopping application "+_d.name+":\n"+error.toString());

@@ -1,3 +1,9 @@
+/*
+ * JBoss, the OpenSource J2EE webOS
+ *
+ * Distributable under LGPL license.
+ * See terms of license at gnu.org.
+ */
 package org.jboss.management.j2ee;
 
 import java.util.ArrayList;
@@ -9,19 +15,27 @@ import javax.management.MalformedObjectNameException;
 import javax.management.ObjectName;
 
 /**
-* Is the access point to management information for a single J2EE Server
-* Core implementation representing a logical core server of one instance
-* of a J2EE platform product.
-*
-* @author <a href="mailto:andreas@jboss.org">Andreas Schaefer</a>
-**/
+ * JBoss implementation of the JSR-77 {@link javax.management.j2ee.J2EEServer
+ * J2EEServer}.
+ *
+ * @author <a href="mailto:andreas@jboss.org">Andreas Schaefer</a>
+ * @version $Revision: 1.4 $
+ *   
+ * <p><b>Revisions:</b>
+ *
+ * <p><b>20011123 Andreas Schaefer:</b>
+ * <ul>
+ * <li> Adjustments to the JBoss Guidelines and adding of the
+ *      {@link #removeChild removeChild()} implementation.
+ * </ul>
+ **/
 public class J2EEServer
   extends J2EEManagedObject
   implements J2EEServerMBean
 {
-   // -------------------------------------------------------------------------
-   // Members
-   // -------------------------------------------------------------------------
+   // Constants -----------------------------------------------------
+   
+   // Attributes ----------------------------------------------------
    
    private List mApplications = new ArrayList();
    
@@ -33,9 +47,9 @@ public class J2EEServer
    
    private String mJ2eeVendor = null;
    
-   // -------------------------------------------------------------------------
-   // Constructors
-   // -------------------------------------------------------------------------
+   // Static --------------------------------------------------------
+   
+   // Constructors --------------------------------------------------
    
    public J2EEServer( String pName, ObjectName pDomain, String pJ2eeVendor )
       throws
@@ -46,30 +60,7 @@ public class J2EEServer
       mJ2eeVendor = pJ2eeVendor;
    }
    
-   public J2EEServer(
-      String pName,
-      ObjectName pDomain,
-      ObjectName[] pApplications,
-      ObjectName[] pResources,
-      ObjectName[] pNodes,
-      ObjectName[] pJVMs,
-      String pJ2eeVendor
-   )
-      throws
-         MalformedObjectNameException,
-         InvalidParentException
-   {
-      super( "J2EEServer", pName, pDomain );
-      mApplications.addAll( Arrays.asList( pApplications ) );
-      mResources.addAll( Arrays.asList( pResources ) );
-      mNodes.addAll( Arrays.asList( pNodes ) );
-      mJVMs.addAll( Arrays.asList( pJVMs ) );
-      mJ2eeVendor = pJ2eeVendor;
-   }
-   
-   // -------------------------------------------------------------------------
-   // Properties (Getters/Setters)
-   // -------------------------------------------------------------------------  
+   // Public --------------------------------------------------------
 
    public ObjectName[] getApplications() {
       return (ObjectName[]) mApplications.toArray( new ObjectName[ 0 ] );
@@ -120,8 +111,7 @@ public class J2EEServer
    }
    
    public void addChild( ObjectName pChild ) {
-      Hashtable lProperties = pChild.getKeyPropertyList();
-      String lType = lProperties.get( "type" ) + "";
+      String lType = J2EEManagedObject.getType( pChild );
       if( "J2EEApplication".equals( lType ) ) {
          mApplications.add( pChild );
       } else if( "Node".equals( lType ) ) {
@@ -134,7 +124,16 @@ public class J2EEServer
    }
    
    public void removeChild( ObjectName pChild ) {
-      //AS ToDo
+      String lType = J2EEManagedObject.getType( pChild );
+      if( "J2EEApplication".equals( lType ) ) {
+         mApplications.remove( pChild );
+      } else if( "Node".equals( lType ) ) {
+         mNodes.remove( pChild );
+      } else if( "JVM".equals( lType ) ) {
+         mJVMs.remove( pChild );
+      } else if( "Resource".equals( lType ) ) {
+         mResources.remove( pChild );
+      }
    }
 
    public String toString() {
@@ -147,4 +146,15 @@ public class J2EEServer
          " ]";
    }
 
+   // Z implementation ----------------------------------------------
+   
+   // Y overrides ---------------------------------------------------
+   
+   // Package protected ---------------------------------------------
+   
+   // Protected -----------------------------------------------------
+   
+   // Private -------------------------------------------------------
+   
+   // Inner classes -------------------------------------------------
 }

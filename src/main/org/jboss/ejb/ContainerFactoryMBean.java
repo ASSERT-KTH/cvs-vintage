@@ -20,7 +20,7 @@ import org.jboss.system.ServiceMBean;
  * 
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  * @author <a href="mailto:juha.lindfors@jboss.org">Juha Lindfors</a>
- * @version $Revision: 1.17 $
+ * @version $Revision: 1.18 $
  */
 public interface ContainerFactoryMBean
    extends ServiceMBean
@@ -36,6 +36,7 @@ public interface ContainerFactoryMBean
    /**
     * Deploy an application
     *
+    * @param pParentId  Id of the Parent or Container of this application
     * @param url      URL to the directory with the given EJBs to be deployed
     * @param appId    Id of the application this EJBs belongs to
     *                 used for management
@@ -43,12 +44,13 @@ public interface ContainerFactoryMBean
     * @throws MalformedURLException
     * @throws DeploymentException
     */
-   void deploy(String url, String appId )
+   void deploy( String pParentId, String url, String appId )
       throws MalformedURLException, DeploymentException;
 
    /**
     * Deploy an application
     *
+    * @param pParentId  Id of the Parent or Container of this application
     * @param appUrl     Url to the application itself
     * @param jarUrls    Array of URLs to the JAR files containing the EJBs
     * @param appId      Id of the application this EJBs belongs to
@@ -57,7 +59,7 @@ public interface ContainerFactoryMBean
     * @throws MalformedURLException
     * @throws DeploymentException
     */
-   void deploy( String appUurl, String[] jarUrls, String appId )
+   void deploy( String pParentId, String appUrl, String[] jarUrls, String appId )
       throws MalformedURLException, DeploymentException;
 
    /**

@@ -28,7 +28,7 @@ import org.jboss.system.Service;
  * @see ContainerFactory
  * 
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
- * @version $Revision: 1.21 $
+ * @version $Revision: 1.22 $
  */
 public class Application
    implements Service
@@ -49,6 +49,9 @@ public class Application
    
    /** Url where this application was deployed from. */
    URL url;
+   
+   /** Module Object Name (JSr-77) **/
+   private String moduleName;
    
    // Static --------------------------------------------------------
 
@@ -180,6 +183,14 @@ public class Application
       // if name hasn't been set yet, use the url
       if (name.equals(""))
          name = url.toString();
+   }
+   
+   public String getModuleName() {
+      return moduleName;
+   }
+   
+   public void setModuleName( String pModuleName ) {
+      moduleName = pModuleName;
    }
 	
    // Service implementation ----------------------------------------

@@ -24,7 +24,7 @@ import java.util.jar.Manifest;
  *
  * @author <a href="mailto:daniel.schulze@telkel.com">Daniel Schulze</a>
  * @author <a href="mailto:Christoph.Jung@infor.de">Christoph G. Jung</a>
- * @version $Revision: 1.14 $
+ * @version $Revision: 1.15 $
  */
 public class Deployment
 implements java.io.Serializable {
@@ -55,6 +55,9 @@ implements java.io.Serializable {
     
     /** the connector modules */
     protected Vector connectorModules;
+    
+    /** Content of the EAR deployment descriptor **/
+    protected String applicationDeploymentDescriptor;
     
     /** the manifest entry of the deployment (if any)
      *  manifest is not serializable ... is only needed
@@ -201,6 +204,13 @@ implements java.io.Serializable {
      */
     public Manifest getManifest() {
         return manifest;
+    }
+    
+    /**
+     * @return EAR deployment descriptor content
+     **/
+    public String getApplicationDeploymentDescriptor() {
+        return applicationDeploymentDescriptor;
     }
     
     /** returns all files (URLs) that are needed to run this deployment properly */
