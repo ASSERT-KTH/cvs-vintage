@@ -93,7 +93,7 @@ import org.apache.commons.lang.StringUtils;
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: Issue.java,v 1.206 2002/11/01 02:49:41 jon Exp $
+ * @version $Id: Issue.java,v 1.207 2002/11/04 23:41:28 elicia Exp $
  */
 public class Issue 
     extends BaseIssue
@@ -2501,30 +2501,39 @@ public class Issue
     /**
      * Assigns user to issue, and creates attachment to hold reason.
      */
-    public void assignUser(ScarabUser assignee, ScarabUser assigner,
-                           String attachmentText, Attribute attribute,
-                           String reason)
+    public ActivitySet assignUser(ActivitySet activitySet, 
+                                  ScarabUser assignee, ScarabUser assigner,
+                                  Attribute attribute, String reason)
         throws Exception
     {                
         UserAttribute attVal = new UserAttribute();
         Attachment attachment = null;
 
-        // Save attachment, to hold reason for assignment
-        if (!reason.equals(""))
-        {
-            attachment = new Attachment();
-            attachment.setTextFields(assignee, this,
-                                     Attachment.MODIFICATION__PK);
-            attachment.setName("comment");
-            attachment.setData(reason);
-            attachment.save();
+        // Save activitySet if it has not been already
+        if (activitySet.getActivitySetId() == null)
+        { 
+            activitySet = ActivitySetManager
+                .getInstance(ActivitySetTypePeer.EDIT_ISSUE__PK, assigner, attachment);
+            activitySet.save();
+            attVal.startActivitySet(activitySet);
+            // Save attachment, to hold reason for assignment
+            if (reason != null && reason.length() > 0)
+            {
+                attachment = new Attachment();
+                attachment.setTextFields(assignee, this,
+                                         Attachment.MODIFICATION__PK);
+                attachment.setName("comment");
+                attachment.setData(reason);
+                attachment.save();
+            }
         }
 
-        // Save activitySet record
-        ActivitySet activitySet = ActivitySetManager
-            .getInstance(ActivitySetTypePeer.EDIT_ISSUE__PK, assigner, attachment);
-        activitySet.save();
-        attVal.startActivitySet(activitySet);
+        String actionString = getAssignUserChangeString(assignee, assigner, attribute);
+        // Save activity record
+        ActivityManager
+            .createUserActivity(this, attribute, activitySet,
+                                actionString, attachment,
+                                assignee.getUserId(), null);
 
         // Save user attribute values
         attVal.setIssue(this);
@@ -2532,12 +2541,194 @@ public class Issue
         attVal.setUserId(assignee.getUserId());
         attVal.setValue(assignee.getUserName());
         attVal.save();
+
+        return activitySet;
     }
+
+    /**
+     * Get the message that is emailed to associated users,
+     * And that is saved in the activity description,
+     * When a user is assigned.
+     */
+    public String getAssignUserChangeString(ScarabUser assigner,
+                                            ScarabUser assignee,
+                                            Attribute attr)
+        throws Exception
+    {
+        String attrDisplayName = getModule()
+              .getRModuleAttribute(attr, getIssueType()).getDisplayValue();
+        Object[] args = {
+            assigner.getUserName(),
+            assignee.getUserName(),
+            attrDisplayName
+        };
+        String actionString = Localization.format(
+            ScarabConstants.DEFAULT_BUNDLE_NAME,
+            Locale.getDefault(),
+            "AssignIssueEmailAddedUserAction", args);
+        return actionString;
+    }
+
+
+    /**
+     * Used to change a user attribute value from one user attribute
+     * to a new one. 
+     */
+    public ActivitySet changeUserAttributeValue(ActivitySet activitySet,
+                                                ScarabUser assignee, 
+                                                ScarabUser assigner, 
+                                                AttributeValue oldAttVal,
+                                                Attribute newAttr,
+                                                String reason)
+        throws Exception
+    {
+        // Create attachments and email notification text
+        // For assigned user, and for other associated users
+        Attachment attachment = null;
+        Attribute oldAttr = oldAttVal.getAttribute();
+        String actionString = getUserAttributeChangeString(assignee,
+                                                     assigner,
+                                                     oldAttr,
+                                                     newAttr);
+
+        // Save activitySet if it has not been already
+        if (activitySet.getActivitySetId() == null)
+        { 
+            activitySet = ActivitySetManager
+                .getInstance(ActivitySetTypePeer.EDIT_ISSUE__PK, assigner, attachment);
+            activitySet.save();
+            oldAttVal.startActivitySet(activitySet);
+            if (reason != null && reason.length() > 0)
+            {
+                // Save attachment if reason has been provided
+                attachment = new Attachment();
+                attachment.setName("comment");
+                attachment.setData(reason);
+                attachment.setTextFields(assigner, this, 
+                                         Attachment.MODIFICATION__PK);
+                attachment.save();
+            }
+        }
+
+        // Save activity record
+        ActivityManager
+            .createUserActivity(this, newAttr, activitySet,
+                                actionString, attachment,
+                                assignee.getUserId(), null);
+
+        // Save assignee value
+        oldAttVal.setAttributeId(newAttr.getAttributeId());
+        oldAttVal.save();
+        
+        return activitySet;
+    }
+
+    /**
+     * Get the message that is emailed to associated users,
+     * And that is saved in the activity description,
+     * When a user is changed from one user attribute to another.
+     */
+    public String getUserAttributeChangeString(ScarabUser assigner,
+                                               ScarabUser assignee, 
+                                               Attribute oldAttr,
+                                               Attribute newAttr)
+        throws Exception
+    {
+        String oldAttrDisplayName = getModule()
+             .getRModuleAttribute(oldAttr, getIssueType()).getDisplayValue();
+        String newAttrDisplayName = getModule()
+             .getRModuleAttribute(newAttr, getIssueType()).getDisplayValue();
+        Object[] args = {
+            assignee.getUserName(), assigner.getUserName(),
+            oldAttrDisplayName, newAttrDisplayName
+        };
+        String actionString = Localization.format(
+            ScarabConstants.DEFAULT_BUNDLE_NAME,
+            Locale.getDefault(),
+            "AssignIssueEmailChangedUserAttributeAction", args);
+        return actionString;
+    }
+
+
+    /**
+     * Used to delete a user attribute value.
+     * Returns a string array (size 2) that contains the messages 
+     * used for sending the emails (first string: message to person who
+     * is being deleted; second string: message to everyone else associated
+     * to the issue).
+     */
+    public ActivitySet deleteUser(ActivitySet activitySet, ScarabUser assignee, 
+                                  ScarabUser assigner,
+                                  AttributeValue attVal, String reason)
+        throws Exception
+    {
+        // Create attachments and email notification text
+        // For assigned user, and for other associated users
+        Attachment attachment = null;
+        Attribute attr = attVal.getAttribute();
+
+        // Save activitySet record
+        if (activitySet.getActivitySetId() == null)
+        { 
+            activitySet = ActivitySetManager
+                .getInstance(ActivitySetTypePeer.EDIT_ISSUE__PK, assigner, attachment);
+            activitySet.save();
+            attVal.startActivitySet(activitySet);
+
+            if (reason != null && reason.length() > 0)
+            {
+                attachment = new Attachment();
+                attachment.setData(reason);
+                attachment.setName("comment");
+                attachment.setTextFields(assigner, this,
+                                         Attachment.MODIFICATION__PK);
+                attachment.save();
+            }
+        }
+
+        String actionString = getUserDeleteString(assigner, assignee, attr);
+        // Save activity record
+        ActivityManager
+            .createUserActivity(attVal.getIssue(), attVal.getAttribute(), activitySet,
+                                actionString, attachment,
+                                assignee.getUserId(), null);
+
+        attVal.setDeleted(true);
+        attVal.save();
+
+        return activitySet;
+    }
+
+    /**
+     * Get the message that is emailed to associated users,
+     * And that is saved in the activity description,
+     * When a user is removed from a user attribute.
+     */
+    public String getUserDeleteString(ScarabUser assigner,
+                                      ScarabUser assignee, 
+                                      Attribute attr)
+        throws Exception
+    {
+        String attrDisplayName = getModule()
+             .getRModuleAttribute(attr, getIssueType())
+             .getDisplayValue();
+        Object[] args = {
+            assigner.getUserName(), assignee.getUserName(),
+            attrDisplayName
+        };
+        String actionString = Localization.format(
+            ScarabConstants.DEFAULT_BUNDLE_NAME,
+            Locale.getDefault(),
+            "AssignIssueEmailRemovedUserAction", args);
+        return actionString;
+    }
+
 
     /**
      * Deletes a specific dependency on this issue.
      */
-    public ActivitySet doDeleteDependency(ActivitySet activitySet, Depend depend, ScarabUser user)
+    public ActivitySet doDeleteDependency(ActivitySet activitySet, 
+                                          Depend depend, ScarabUser user)
         throws Exception
     {
         depend.setDeleted(true);
@@ -2622,126 +2813,6 @@ public class Issue
                                     oldName, newName);
         }
         return activitySet;
-    }
-
-    /**
-     * Used to change a user attribute value from one user attribute
-     * to a new one. This is generally used for creating the association
-     * of user to an issue (through the oldAttributeValue).
-     * returns a string array (size 2) that contains the messages 
-     * used for sending the emails (first string: message to person who
-     * is being switched; second string: message to everyone else associated
-     * to the issue).
-     */
-    public String doChangeUserAttributeValue(ScarabUser assignee, 
-                                               ScarabUser assigner, 
-                                               AttributeValue oldAttVal, 
-                                               Attribute newUserAttribute, 
-                                               String reason)
-        throws Exception
-    {
-        Attribute oldAttribute = oldAttVal.getAttribute();
-        // Create attachments and email notification text
-        // For assigned user, and for other associated users
-        Attachment attachment = null;
-        String oldAttrDisplayName = this.getModule()
-             .getRModuleAttribute(oldAttribute, this.getIssueType())
-             .getDisplayValue();
-        String newAttrDisplayName = this.getModule()
-             .getRModuleAttribute(newUserAttribute, this.getIssueType())
-             .getDisplayValue();
-
-        Object[] args = {
-            assigner.getUserName(), assignee.getUserName(),
-            oldAttrDisplayName, newAttrDisplayName
-        };
-        String action = Localization.format(
-            ScarabConstants.DEFAULT_BUNDLE_NAME,
-            Locale.getDefault(),
-            "AssignIssueEmailChangedUserAttributeAction", args);
-
-        if (reason != null && reason.length() > 0)
-        {
-            // Save attachment if reason has been provided
-            attachment = new Attachment();
-            attachment.setName("comment");
-            attachment.setData(reason);
-            attachment.setTextFields(assigner, this, 
-                                     Attachment.MODIFICATION__PK);
-            attachment.save();
-        }
-
-        // Save activitySet record
-        ActivitySet activitySet = ActivitySetManager
-            .getInstance(ActivitySetTypePeer.EDIT_ISSUE__PK, assigner, attachment);
-        activitySet.save();
-        oldAttVal.startActivitySet(activitySet);
-
-        // Save assignee value
-        oldAttVal.setAttributeId(newUserAttribute.getAttributeId());
-        oldAttVal.save();
-        
-        return action;
-    }
-
-    /**
-     * Used to delete a user attribute value.
-     * Returns a string array (size 2) that contains the messages 
-     * used for sending the emails (first string: message to person who
-     * is being deleted; second string: message to everyone else associated
-     * to the issue).
-     */
-    public String[] deleteUser(ScarabUser assignee, ScarabUser assigner,
-                               AttributeValue attVal, String reason)
-        throws Exception
-    {
-        // Create attachments and email notification text
-        // For assigned user, and for other associated users
-        Attribute attribute = attVal.getAttribute();
-        String attrDisplayName = getModule()
-             .getRModuleAttribute(attribute, getIssueType())
-             .getDisplayValue();
-        StringBuffer buf1 = new StringBuffer("You have been "
-                                             + "removed from ");
-        buf1.append(attrDisplayName).append(".");
-        String userAction = buf1.toString();
-         
-        StringBuffer buf2 = new StringBuffer("User " );
-        buf2.append(assigner.getUserName() + " deleted user ");
-        buf2.append(assignee.getUserName()).append(" from ");
-        buf2.append(attrDisplayName);
-        String othersAction = buf2.toString();
- 
-        Attachment attachment = null;
-        if (!reason.equals(""))
-        {
-            attachment = new Attachment();
-            attachment.setData(reason);
-            attachment.setName("comment");
-            attachment.setTextFields(assigner, attVal.getIssue(), 
-                                     Attachment.MODIFICATION__PK);
-            attachment.save();
-        }
-
-        // Save activitySet record
-        ActivitySet activitySet = ActivitySetManager
-            .getInstance(ActivitySetTypePeer.EDIT_ISSUE__PK, assigner, attachment);
-        activitySet.save();
-        attVal.startActivitySet(activitySet);
-
-        // Save activity record
-        ActivityManager
-            .createUserActivity(attVal.getIssue(), attVal.getAttribute(), activitySet,
-                                othersAction, attachment,
-                                assignee.getUserId(), null);
-
-        attVal.setDeleted(true);
-        attVal.save();
-
-        String[] results = new String[2];
-        results[0] = userAction;
-        results[1] = othersAction;
-        return results;
     }
 
     /**
@@ -3019,13 +3090,13 @@ public class Issue
         return activitySet;
     }
 
+
     /**
      * Returns users assigned to all user attributes.
      */
     public List getAssociatedUsers() throws Exception
     {
         List users = null;
-        List item = new ArrayList(2);
         Object obj = ScarabCache.get(this, GET_ASSOCIATED_USERS); 
         if ( obj == null ) 
         {        
@@ -3055,6 +3126,7 @@ public class Issue
                 List attValues = getAttributeValues(crit);
                 for ( int i=0; i<attValues.size(); i++ ) 
                 {
+                    List item = new ArrayList(2);
                     AttributeValue attVal = (AttributeValue) attValues.get(i);
                     ScarabUser su = ScarabUserManager.getInstance(attVal.getUserId());
                     Attribute attr = AttributeManager.getInstance(attVal.getAttributeId());

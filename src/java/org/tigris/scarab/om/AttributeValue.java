@@ -75,7 +75,7 @@ import org.tigris.scarab.om.Module;
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: AttributeValue.java,v 1.75 2002/10/24 22:59:26 jon Exp $
+ * @version $Id: AttributeValue.java,v 1.76 2002/11/04 23:41:28 elicia Exp $
  */
 public abstract class AttributeValue 
     extends BaseAttributeValue
@@ -740,7 +740,7 @@ public abstract class AttributeValue
     public void save(Connection dbcon)
         throws TorqueException
     {
-        if ( isModified() && !getDeleted())
+        if ( isModified() && !getDeleted() && !getAttribute().isUserAttribute())
         {
             try
             {

@@ -48,6 +48,7 @@ package org.tigris.scarab.actions;
 
 import java.util.List;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Locale;
 
 // Turbine Stuff 
@@ -63,7 +64,10 @@ import org.apache.fulcrum.localization.Localization;
 // Scarab Stuff
 import org.tigris.scarab.actions.base.BaseModifyIssue;
 import org.tigris.scarab.om.ScarabUser;
+import org.tigris.scarab.om.ScarabUserManager;
 import org.tigris.scarab.om.Issue;
+import org.tigris.scarab.om.IssueType;
+import org.tigris.scarab.om.ActivitySet;
 import org.tigris.scarab.om.AttributeValue;
 import org.tigris.scarab.om.Attribute;
 import org.tigris.scarab.om.AttributeManager;
@@ -80,7 +84,7 @@ import org.tigris.scarab.services.security.ScarabSecurity;
  * This class is responsible for assigning users to attributes.
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: AssignIssue.java,v 1.67 2002/10/28 23:16:22 jon Exp $
+ * @version $Id: AssignIssue.java,v 1.68 2002/11/04 23:41:28 elicia Exp $
  */
 public class AssignIssue extends BaseModifyIssue
 {
@@ -89,11 +93,12 @@ public class AssignIssue extends BaseModifyIssue
     private static final String REMOVE_USER = "remove_user";
     private static final int REMOVE_USER_LENGTH = REMOVE_USER.length() + 1;
 
-    private static final String TEMP = "temp";
-    private static final String FINAL = "final";
+    //private static final String TEMP = "temp";
+    //private static final String FINAL = "final";
 
-    private static final String TEMP_LIST_CONTEXT = "tempList";
+    //private static final String TEMP_LIST_CONTEXT = "tempList";
 
+        
     /**
      * Adds users to temporary working list.
      */
@@ -102,91 +107,134 @@ public class AssignIssue extends BaseModifyIssue
     {
         ScarabUser user = (ScarabUser)data.getUser();
         ScarabRequestTool scarabR = getScarabRequestTool(context);
-        if (user.hasPermission(ScarabSecurity.ISSUE__ASSIGN, 
-                               user.getCurrentModule()))
+        //List tempList = getWorkingList(data);
+        HashMap userMap = scarabR.getAssociatedUsers();
+        ValueParser params = data.getParameters();
+        Object[] keys =  params.getKeys();
+        for (int i =0; i<keys.length; i++)
         {
-            List tempList = getWorkingList(data, TEMP);
-            ValueParser params = data.getParameters();
-            Object[] keys =  params.getKeys();
-            for (int i =0; i<keys.length; i++)
+            String key = keys[i].toString();
+            if (key.startsWith(ADD_USER))
             {
-                String key = keys[i].toString();
-                if (key.startsWith(ADD_USER))
+                List item = new ArrayList();
+                String userId = key.substring(ADD_USER_LENGTH);
+                String attrId = params.get("user_attr_" + userId);
+                Attribute attribute = null;
+                ScarabUser su = null;
+                try
                 {
-                    List pair = new ArrayList();
-                    String userId = key.substring(ADD_USER_LENGTH);
-                    String attrId = params.get("user_attr_" + userId);
-                    pair.add(attrId);
-                    pair.add(userId);
-                    tempList.add(pair);
+                    attribute = AttributeManager.getInstance(new NumberKey(attrId));
+                    su = ScarabUserManager.getInstance(new NumberKey(userId));
+                }
+                catch (Exception e)
+                {
+                    scarabR.setAlertMessage(e.getMessage());
+                }
+                item.add(attribute);
+                item.add(su);
+                List issues = scarabR.getIssues();
+                for (int j=0; j<issues.size(); j++)
+                {
+                    Issue issue = (Issue)issues.get(j);
+                    NumberKey issueId = issue.getIssueId();
+                    List userList = (List)userMap.get(issueId);
+                    if (userList == null)
+                    {
+                        userList = new ArrayList();
+                    }
+                    userList.add(item);
+                    userMap.put(issueId, userList);
+                    scarabR.setAssociatedUsers(userMap);
                 }
             }
-            context.put(TEMP_LIST_CONTEXT, tempList);
-        }
-        else 
-        {
-            data.setTarget(user.getHomePage());
-            ScarabLocalizationTool l10n = getLocalizationTool(context);
-            scarabR.setAlertMessage(l10n.get(NO_PERMISSION_MESSAGE));
         }
     }
         
     /**
      * Removes users from temporary working list.
      */
-    public void doRemove(RunData data, TemplateContext context) 
+    private void remove(RunData data, TemplateContext context, NumberKey issueId) 
         throws Exception
     {
         ScarabUser user = (ScarabUser)data.getUser();
         ScarabRequestTool scarabR = getScarabRequestTool(context);
-        if (user.hasPermission(ScarabSecurity.ISSUE__ASSIGN, 
-                               user.getCurrentModule()))
+        HashMap userMap = scarabR.getAssociatedUsers();
+        List userList = (List)userMap.get(issueId);
+        ValueParser params = data.getParameters();
+        Object[] keys =  params.getKeys();
+        for (int i =0; i<keys.length; i++)
         {
-            List tempList = getWorkingList(data, TEMP);
-            ValueParser params = data.getParameters();
-            Object[] keys =  params.getKeys();
-            for (int i =0; i<keys.length; i++)
+            String key = keys[i].toString();
+            if (key.startsWith(REMOVE_USER))
             {
-                String key = keys[i].toString();
-                if (key.startsWith(REMOVE_USER))
+                List item = new ArrayList();
+                String userId = key.substring(REMOVE_USER_LENGTH);
+                String attrId = params.get(key);
+                Attribute attribute = null;
+                ScarabUser su = null;
+                try
                 {
-                    List pair = new ArrayList();
-                    String userId = key.substring(REMOVE_USER_LENGTH);
-                    String attrId = params.get("temp_user_attr_" + userId);
-                    pair.add(attrId);
-                    pair.add(userId);
-                    tempList.remove(pair);
+                    attribute = AttributeManager.getInstance(new NumberKey(attrId));
+                    su = ScarabUserManager.getInstance(new NumberKey(userId));
                 }
+                catch (Exception e)
+                {
+                    scarabR.setAlertMessage(e.getMessage());
+                }
+                item.add(attribute);
+                item.add(su);
+                userList.remove(item);
+                userMap.put(issueId, userList);
+                scarabR.setAssociatedUsers(userMap);
             }
-            context.put(TEMP_LIST_CONTEXT, tempList);
-        }
-        else 
-        {
-            data.setTarget(user.getHomePage());
-            ScarabLocalizationTool l10n = getLocalizationTool(context);
-            scarabR.setAlertMessage(l10n.get(NO_PERMISSION_MESSAGE));
         }
     }
 
     /**
-     * Adds or removes users, sends email, and return to previous page.
+     * Removes users from temporary working list.
      */
-    public void doDone(RunData data, TemplateContext context) 
+    private void update(RunData data, TemplateContext context, NumberKey issueId) 
         throws Exception
     {
         ScarabUser user = (ScarabUser)data.getUser();
         ScarabRequestTool scarabR = getScarabRequestTool(context);
-        if (user.hasPermission(ScarabSecurity.ISSUE__ASSIGN, 
-                               user.getCurrentModule()))
+        HashMap userMap = scarabR.getAssociatedUsers();
+        List userList = (List)userMap.get(issueId);
+        ValueParser params = data.getParameters();
+        Object[] keys =  params.getKeys();
+        for (int i =0; i<keys.length; i++)
         {
-            commitAssigneeChanges(data, context, scarabR);
-            ScarabCache.clear();
-        }
-        else 
-        {
-            data.setTarget(user.getHomePage());
-            ScarabLocalizationTool l10n = getLocalizationTool(context);
-            scarabR.setAlertMessage(l10n.get(NO_PERMISSION_MESSAGE));
+            String key = keys[i].toString();
+            if (key.startsWith(REMOVE_USER))
+            {
+                List item = new ArrayList();
+                List newItem = new ArrayList();
+                String userId = key.substring(REMOVE_USER_LENGTH);
+                String attrId = params.get(key);
+                Attribute attribute = null;
+                ScarabUser su = null;
+                try
+                {
+                    attribute = AttributeManager.getInstance(new NumberKey(attrId));
+                    su = ScarabUserManager.getInstance(new NumberKey(userId));
+                }
+                catch (Exception e)
+                {
+                    scarabR.setAlertMessage(e.getMessage());
+                }
+                item.add(attribute);
+                item.add(su);
+                userList.remove(item);
+
+                String newKey = "asso_user_{" + userId + "}_issue_{" + issueId + "}";
+                String newAttrId = params.get(newKey);
+                Attribute newAttribute = AttributeManager.getInstance(new NumberKey(newAttrId));
+                newItem.add(newAttribute);
+                newItem.add(su);
+                userList.add(newItem);
+                userMap.put(issueId, userList);
+                scarabR.setAssociatedUsers(userMap);
+            }
         }
     }
 
@@ -196,70 +244,67 @@ public class AssignIssue extends BaseModifyIssue
     {
         ScarabLocalizationTool l10n = getLocalizationTool(context);
         List issues = scarabR.getIssues();
-        List finalList = getWorkingList(data, FINAL);
-        String action = null;
+        HashMap userMap = scarabR.getAssociatedUsers();
+        String actionString = null;
         ScarabUser assigner = (ScarabUser)data.getUser();
         String reason = data.getParameters().getString("reason", "");
+        ActivitySet activitySet = new ActivitySet();
 
         for (int i=0; i < issues.size(); i++)
         {
             Issue issue = (Issue)issues.get(i);
+            IssueType issueType = issue.getIssueType();
+            Module module = issue.getModule();
+            List userList = (List)userMap.get(issue.getIssueId());
             List oldAssignees = issue.getUserAttributeValues();
            
             // loops through users in temporary working list
-            for (int j=0; j<finalList.size();j++)
+            for (int j=0; j<userList.size();j++)
             {
-                List pair = (List)finalList.get(j);
-                String attrId = (String)pair.get(0);
-                String assigneeId = (String)pair.get(1);
-                ScarabUser assignee = scarabR.getUser(new NumberKey(assigneeId));
-                Attribute newUserAttribute = AttributeManager
-                    .getInstance(new NumberKey(attrId));
+                List item = (List)userList.get(j);
+                Attribute newAttr = (Attribute)item.get(0);
+                ScarabUser assignee = (ScarabUser)item.get(1);
+                NumberKey assigneeId = assignee.getUserId();
                 boolean alreadyAssigned = false;
 
                 for (int k=0; k < oldAssignees.size(); k++)
                 {
                     AttributeValue oldAttVal = (AttributeValue)oldAssignees.get(k);
+                    Attribute oldAttr = oldAttVal.getAttribute();
                     // ignore already assigned users
-                    if (assigneeId.equals(oldAttVal.getUserId().toString()))
+                    if (assigneeId.equals(oldAttVal.getUserId()))
                     {
                         // unless user has different attribute id, then
                         // switch their user attribute
                         alreadyAssigned = true;
-                        if (!attrId.equals(oldAttVal.getAttributeId().toString()))
+                        if (!newAttr.getAttributeId().equals(oldAttr.getAttributeId()))
                         {
-                            action = issue.doChangeUserAttributeValue(
-                                assignee, assigner, oldAttVal, 
-                                newUserAttribute, reason);
+                            activitySet = issue.changeUserAttributeValue(
+                                                  activitySet,
+                                                  assignee, assigner, 
+                                                  oldAttVal, newAttr, reason);
+                            actionString = issue.getUserAttributeChangeString(
+                                                  assignee, assigner,
+                                                  oldAttr,
+                                                  newAttr);
 
                             if (!notify(context, issue, assignee, assigner, 
-                                        action))
+                                        actionString))
                             {
                                 scarabR.setAlertMessage(l10n.get(EMAIL_ERROR));
                             }
                         }
                     }
                 }
-                // if user was not already assigned, assigned them
+                // if user was not already assigned, assign them
                 if (!alreadyAssigned)
                 {
-                    String attrDisplayName = issue.getModule()
-                       .getRModuleAttribute(newUserAttribute, issue.getIssueType())
-                       .getDisplayValue();
-                    Object[] args = {
-                        assigner.getUserName(),
-                        assignee.getUserName(),
-                        attrDisplayName
-                    };
-                    action = Localization.format(
-                        ScarabConstants.DEFAULT_BUNDLE_NAME,
-                        Locale.getDefault(),
-                        "AssignIssueEmailAddedUserAction", args);
-                    issue.assignUser(assignee, assigner, action, 
-                                     newUserAttribute, reason);
+                    activitySet = issue.assignUser(activitySet, assignee, assigner,  
+                                                   newAttr, reason);
                     
                     // Notification email
-                    if (!notify(context, issue, assignee, assigner, action))
+                    actionString = issue.getAssignUserChangeString(assigner, assignee, newAttr);
+                    if (!notify(context, issue, assignee, assigner, actionString))
                     {
                          scarabR.setAlertMessage(l10n.get(EMAIL_ERROR));
                     }
@@ -271,12 +316,12 @@ public class AssignIssue extends BaseModifyIssue
             {
                 boolean userStillAssigned = false;
                 AttributeValue oldAttVal = (AttributeValue)oldAssignees.get(m);
-                for (int n=0; n<finalList.size();n++)
+                Attribute oldAttr = oldAttVal.getAttribute();
+                for (int n=0; n<userList.size();n++)
                 {
-                    List pair = (List)finalList.get(n);
-//                    String attrId = (String)pair.get(0);
-                    String assigneeId = (String)pair.get(1);
-                    if (assigneeId.equals(oldAttVal.getUserId().toString()))
+                    List item = (List)userList.get(n);
+                    ScarabUser assignee = (ScarabUser)item.get(1);
+                    if (assignee.getUserId().equals(oldAttVal.getUserId()))
                     {
                          userStillAssigned = true;
                     }
@@ -285,21 +330,11 @@ public class AssignIssue extends BaseModifyIssue
                 {
                     ScarabUser assignee = scarabR.getUser(oldAttVal.getUserId());
                     // delete the user
-                    issue.deleteUser(assignee, assigner, oldAttVal, reason);
-                    String attrDisplayName = issue.getModule()
-                       .getRModuleAttribute(oldAttVal.getAttribute(), issue.getIssueType())
-                       .getDisplayValue();
-                    Object[] args = {
-                        assigner.getUserName(),
-                        assignee.getUserName(),
-                        attrDisplayName
-                    };
-                    action = Localization.format(
-                        ScarabConstants.DEFAULT_BUNDLE_NAME,
-                        Locale.getDefault(),
-                        "AssignIssueEmailRemovedUserAction", args);
-                    if (!notify(context, oldAttVal.getIssue(), assignee, 
-                                assigner, action))
+                    activitySet = issue.deleteUser(activitySet, assignee, 
+                                                   assigner, oldAttVal, reason);
+                    actionString = issue.getUserDeleteString(assigner, assignee, oldAttr);
+                    if (!notify(context, issue, assignee, 
+                                assigner, actionString))
                     {
                         scarabR.setAlertMessage(l10n.get(EMAIL_ERROR));
                     }
@@ -322,37 +357,7 @@ public class AssignIssue extends BaseModifyIssue
         // go back to the previous page...really a doDone, but...
         doCancel(data, context);
     }
-
-    /**
-     * Gets temporary working list of assigned users.
-     */
-    private List getWorkingList(RunData data,
-                                String whichList)
-        throws Exception
-    {
-        List workingList =  new ArrayList();
-        ValueParser params = data.getParameters();
-        Object[] keys =  params.getKeys();
-        String key = "temp_user_attr_";
-        if (whichList.equals(FINAL))
-        {
-            key = "finl_user_attr_";
-        }
-        for (int i =0; i<keys.length; i++)
-        {
-            String tempKey = keys[i].toString();
-            if (tempKey.startsWith(key))
-            {
-                List pair = new ArrayList();
-                String userId = tempKey.substring(15);
-                String attrId = params.getString(tempKey);
-                pair.add(attrId);
-                pair.add(userId);
-                workingList.add(pair);
-            }
-        }
-        return workingList;
-    }
+     
 
     /**
      * Takes care of giving an email notice about an issue to a list of users 
@@ -365,7 +370,7 @@ public class AssignIssue extends BaseModifyIssue
      */
     private boolean notify(TemplateContext context, Issue issue, 
                            ScarabUser assignee, ScarabUser assigner,
-                           String action)     
+                           String actionString)     
         throws Exception
     {
         if (issue == null)
@@ -391,7 +396,7 @@ public class AssignIssue extends BaseModifyIssue
                 "AssignIssueEmailSubject", subjArgs);
 
         // email users associated with issue as well as the assignee
-        context.put("action", action);
+        context.put("actionString", actionString);
         List toUsers = issue.getUsersToEmail(AttributePeer.EMAIL_TO);
         List ccUsers = issue.getUsersToEmail(AttributePeer.CC_TO);
         boolean assigneeIncluded = false;
@@ -424,4 +429,38 @@ public class AssignIssue extends BaseModifyIssue
         }
         return success;
     }
+
+    /**
+     * Adds or removes users, sends email, and return to previous page.
+     */
+    public void doDone(RunData data, TemplateContext context) 
+        throws Exception
+    {
+        ScarabUser user = (ScarabUser)data.getUser();
+        ScarabRequestTool scarabR = getScarabRequestTool(context);
+        commitAssigneeChanges(data, context, scarabR);
+        ScarabCache.clear();
+    }
+
+    public void doPerform(RunData data, TemplateContext context) 
+        throws Exception
+    {
+        ValueParser params = data.getParameters();
+        Object[] keys =  params.getKeys();
+        for (int i =0; i<keys.length; i++)
+        {
+            String key = keys[i].toString();
+            if (key.startsWith("eventsubmit_doremove"))
+            {
+                String issueId = key.substring(21);
+                remove(data, context, new NumberKey(issueId));
+            }
+            else if (key.startsWith("eventsubmit_doupdate"))
+            {
+                String issueId = key.substring(21);
+                update(data, context, new NumberKey(issueId));
+            }
+        }
+    }
+
 }
