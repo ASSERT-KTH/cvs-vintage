@@ -1,5 +1,3 @@
-$page.setTitle("Manage issue types")
-
 #set ($issueTypes = $scarabR.CurrentModule.AvailableIssueTypes)
 
 <form method="post" action="$link.setPage("admin,ManageArtifactTypes.vm")">
@@ -8,7 +6,7 @@ $page.setTitle("Manage issue types")
 
 <div class="app" id="div2-1-4-0">
 
-<h2>$page.Title</h2>
+<h2>Manage Issue Types</h2>
 
 <div class="functnbar">
 <input type="submit" value="Done"  name="eventSubmit_doDone" />&#160;
@@ -45,7 +43,7 @@ $page.setTitle("Manage issue types")
 <div class="functnbar3">
 <input type="submit" value="Save"  name="eventSubmit_doSave"/>&#160;
 <input type="submit" value="Add new"  name="eventSubmit_doGotoothertemplate"/>&#160;
-<input type="submit" value="Copy" />&#160;
+##<input type="submit" value="Copy" />&#160;
 <input type="submit" value="Delete selected" name="eventSubmit_doDeletemoduleissuetype"  />&#160;
 <input type="submit" value="Resort" name="eventSubmit_doSave" />&#160;
 <small>artifact type(s)</small>
