@@ -21,6 +21,9 @@ import org.columba.core.gui.frame.AbstractFrameController;
 import org.columba.core.util.Lock;
 
 /**
+ * A Command uses the information provided from {@link DefaultCommandReference} 
+ * to execute itself.
+ * 
  * @author Timo Stich (tstich@users.sourceforge.net)
  * 
  */

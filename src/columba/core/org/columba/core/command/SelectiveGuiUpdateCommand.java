@@ -19,6 +19,24 @@ import org.columba.core.gui.frame.AbstractFrameController;
 
 
 /**
+ * Provides a more intelligent GUI update mechanism.
+ * <p>
+ * Imagine having many commands executed in parallel not finishing
+ * in the same order they were started. The problem is that 
+ * the GUI reflects the changes of the finished commands in the order
+ * they were started.
+ * <p>
+ * SelectiveGuiUpdateCommand provides a better approach in making the
+ * gui update if the last Command is finished. This is mostly probably
+ * also the gui update the user wants to see.
+ * <p>
+ * For example: User switches between a couple of folders very quickly.
+ * He has to wait until all Commands are finished to see gui update of
+ * the last one. You think of it as ignoring other gui updates because
+ * the most recent one has higher priority.
+ * 
+ * 
+ * 
  * @author Timo Stich (tstich@users.sourceforge.net)
  * 
  */
