@@ -38,6 +38,7 @@
           #foreach ($activity in $transaction.ActivityList)
 
             <activity>
+              <id>$activity.ActivityId</id>
               <attribute>$scarabR.getAttribute($activity.AttributeId).Name</attribute>
               <old-numeric-value>$activity.OldNumericValue</old-numeric-value>
               <new-numeric-value>$activity.NewNumericValue</new-numeric-value>
@@ -118,6 +119,7 @@
   #if ($attachment && $attachment.Class.Name != "java.lang.String")
 
           <attachment>
+            <id>$attachment.AttachmentId</id>
             <name>$attachment.Name</name>
             <type>$attachment.AttachmentType.Name</type>
             #set ($filePath = $attachment.FileName)
