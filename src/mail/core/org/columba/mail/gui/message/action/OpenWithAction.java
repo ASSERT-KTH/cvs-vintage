@@ -20,6 +20,7 @@ import org.columba.core.gui.frame.FrameMediator;
 
 import org.columba.mail.gui.frame.MessageViewOwner;
 import org.columba.mail.gui.message.URLObservable;
+import org.columba.mail.gui.message.util.ColumbaURL;
 import org.columba.mail.gui.util.URLController;
 import org.columba.mail.util.MailResourceLoader;
 
@@ -37,7 +38,7 @@ import java.util.Observer;
  * @author fdietz
  */
 public class OpenWithAction extends AbstractColumbaAction implements Observer {
-    URL url = null;
+    ColumbaURL url = null;
 
     /**
          *
@@ -58,7 +59,7 @@ public class OpenWithAction extends AbstractColumbaAction implements Observer {
  * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
  */
     public void actionPerformed(ActionEvent evt) {
-        new URLController().openWith(url);
+        new URLController().openWith(url.getRealURL());
     }
 
     /* (non-Javadoc)
@@ -72,11 +73,7 @@ public class OpenWithAction extends AbstractColumbaAction implements Observer {
         if (url == null) {
             setEnabled(false);
         } else {
-            if (url.getProtocol().equalsIgnoreCase("mailto")) {
-                setEnabled(false);
-            } else {
-                setEnabled(true);
-            }
+            setEnabled(!url.isMailTo());
         }
     }
 }

@@ -32,6 +32,7 @@ import javax.swing.event.CaretListener;
 import javax.swing.event.HyperlinkEvent;
 import javax.swing.event.HyperlinkListener;
 import javax.swing.text.AttributeSet;
+import javax.swing.text.BadLocationException;
 import javax.swing.text.Element;
 import javax.swing.text.html.HTML;
 import javax.swing.text.html.HTMLDocument;
@@ -47,6 +48,7 @@ import org.columba.mail.gui.attachment.AttachmentController;
 import org.columba.mail.gui.frame.MailFrameMediator;
 import org.columba.mail.gui.message.command.ViewMessageCommand;
 import org.columba.mail.gui.message.filter.PGPMessageFilter;
+import org.columba.mail.gui.message.util.ColumbaURL;
 import org.columba.mail.gui.message.viewer.HeaderController;
 import org.columba.mail.gui.message.viewer.HeaderView;
 import org.columba.mail.gui.message.viewer.MessageBodytextViewer;
@@ -266,16 +268,45 @@ public class MessageController implements HyperlinkListener, MouseListener,
         return url;
     }
 
+    /**
+     * this method extracts any url, but if URL's protocol is mailto:
+     * then this method also extracts the corresponding recipient name
+     * whatever it may be.<br>
+     * This "kind of" superseeds the previous extractURL(MouseEvent) method.
+     * */
+    private ColumbaURL extractMailToURL(MouseEvent event)
+    {
+      
+      ColumbaURL url = new ColumbaURL(extractURL(event));
+			if (!url.getRealURL().getProtocol().equalsIgnoreCase("mailto"))
+			  return url;
+			
+      JEditorPane pane = (JEditorPane) event.getSource();
+      HTMLDocument doc = (HTMLDocument) pane.getDocument();
+
+      Element e = doc.getCharacterElement(pane.viewToModel(event.getPoint()));
+      AttributeSet a = e.getAttributes();
+      AttributeSet anchor = (AttributeSet) a.getAttribute(HTML.Tag.A);
+
+      try
+      {
+        url.setSender(doc.getText(e.getStartOffset(),
+                      						(e.getEndOffset()-e.getStartOffset())));
+      }
+      catch (BadLocationException e1)
+      {
+        url.setSender("");
+      }
+      
+      return url;        
+    }
+
     protected void processPopup(MouseEvent ev) {
-        final URL url = extractURL(ev);
+//        final URL url = extractURL(ev);
+        ColumbaURL mailto = extractMailToURL(ev);
+				urlObservable.setUrl(mailto);
+				
         final MouseEvent event = ev;
-
-        if (url == null) {
-            urlObservable.setUrl(null);
-        } else {
-            urlObservable.setUrl(url);
-        }
-
         // open context-menu
         // -> this has to happen in the awt-event dispatcher thread
         SwingUtilities.invokeLater(new Runnable() {

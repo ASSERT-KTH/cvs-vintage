@@ -20,6 +20,7 @@ import org.columba.core.gui.frame.FrameMediator;
 
 import org.columba.mail.gui.frame.MessageViewOwner;
 import org.columba.mail.gui.message.URLObservable;
+import org.columba.mail.gui.message.util.ColumbaURL;
 import org.columba.mail.util.MailResourceLoader;
 
 import java.awt.datatransfer.StringSelection;
@@ -38,7 +39,7 @@ import java.util.Observer;
  */
 public class CopyLinkLocationAction extends AbstractColumbaAction
     implements Observer {
-    URL url = null;
+    ColumbaURL url = null;
 
     /**
  *
@@ -63,7 +64,7 @@ public class CopyLinkLocationAction extends AbstractColumbaAction
                                                                        .getToolkit()
                                                                        .getSystemClipboard()
                                                                        .setContents(new StringSelection(
-                url.toString()), null);
+                url.getRealURL().toString()), null);
     }
 
     /* (non-Javadoc)

@@ -20,14 +20,18 @@ import java.net.URL;
 import java.util.Observable;
 import java.util.Observer;
 
+import javax.swing.JFrame;
+
 import org.columba.addressbook.gui.tree.util.SelectAddressbookFolderDialog;
 import org.columba.addressbook.main.AddressbookInterface;
 import org.columba.addressbook.model.Contact;
 import org.columba.core.action.AbstractColumbaAction;
 import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.gui.util.ImageLoader;
+import org.columba.core.main.MainInterface;
 import org.columba.mail.gui.frame.MessageViewOwner;
 import org.columba.mail.gui.message.URLObservable;
+import org.columba.mail.gui.message.util.ColumbaURL;
 import org.columba.mail.util.MailResourceLoader;
 
 
@@ -38,8 +42,8 @@ import org.columba.mail.util.MailResourceLoader;
  */
 public class AddToAddressbookAction extends AbstractColumbaAction
     implements Observer {
-    URL url = null;
-
+		ColumbaURL url = null;
+		
     /**
  *
  */
@@ -69,12 +73,10 @@ public class AddToAddressbookAction extends AbstractColumbaAction
             return;
         }
 
-        String address = url.getFile();
-
         try {
             Contact card = new Contact();
-            card.set("displayname", address);
-            card.set("email", "internet", address);
+            card.set("displayname", url.getSender());
+            card.set("email", "internet", url.getEmailAddress());
 
             selectedFolder.add(card);
         } catch (Exception ex) {
@@ -85,20 +87,13 @@ public class AddToAddressbookAction extends AbstractColumbaAction
     /* (non-Javadoc)
  * @see java.util.Observer#update(java.util.Observable, java.lang.Object)
  */
-    public void update(Observable arg0, Object arg1) {
-        URLObservable o = (URLObservable) arg0;
+    public void update(Observable arg0, Object arg1)
+    {
 
-        // only enable this action, if this is a mailto: URL
-        url = o.getUrl();
+      url = ((URLObservable) arg0).getUrl();
 
-        if (url == null) {
-            setEnabled(false);
-        } else {
-            if (url.getProtocol().equalsIgnoreCase("mailto")) {
-                setEnabled(true);
-            } else {
-                setEnabled(false);
-            }
-        }
+      // only enable this action, if this is a mailto: URL
+      setEnabled(url.isMailTo());
+      
     }
 }

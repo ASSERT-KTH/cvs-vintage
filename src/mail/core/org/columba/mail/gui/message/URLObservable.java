@@ -10,6 +10,8 @@ import java.net.URL;
 
 import java.util.Observable;
 
+import org.columba.mail.gui.message.util.ColumbaURL;
+
 
 /**
  * Encapsulates an URL object.
@@ -17,29 +19,28 @@ import java.util.Observable;
  * @author fdietz
  */
 public class URLObservable extends Observable {
-    URL url;
-
+		private ColumbaURL url;
+		
     /**
- *
- */
+		 *
+		 */
     public URLObservable() {
         super();
     }
 
     /**
- * @return
- */
-    public URL getUrl() {
-        return url;
-    }
-
-    /**
- * @param url
- */
-    public void setUrl(URL url) {
+		 * @param url
+		 */
+    public void setUrl(ColumbaURL url) {
         this.url = url;
 
         setChanged();
         notifyObservers();
     }
+    
+    public ColumbaURL getUrl()
+    {
+      return url;
+    }
+    
 }
