@@ -1,8 +1,7 @@
 target
-.classpath
 report.*.*.generation
 scarab-scarab-all-data.xml
-.project
 .checkclipse
 scarab-?.?-*-dev
 *.log
+junit*.properties
