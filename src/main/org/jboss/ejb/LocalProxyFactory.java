@@ -21,7 +21,7 @@ import javax.ejb.EJBLocalObject;
  * @see EJBProxyFactory
  * 
  * @author <a href="mailto:docodan@mvcsoft.com">Daniel OConnor</a>
- * @version $Revision: 1.4 $
+ * @version $Revision: 1.5 $
  */
 public interface LocalProxyFactory
    extends GenericEntityObjectFactory, ContainerPlugin
@@ -60,7 +60,16 @@ public interface LocalProxyFactory
     * @return      an implementation of the local interface for this container
     */
    EJBLocalObject getEntityEJBLocalObject(Object id);
-   
+
+   /**
+    * This method is called whenever a new EJBLocalObject should be created.
+    * Called when the instance is created.
+    *
+    * @param id    the primary key of the entity
+    * @return      an implementation of the local interface for this container
+    */
+   EJBLocalObject getEntityEJBLocalObject(Object id, boolean create);
+
    /**
     * This method is called whenever a collection of EJBLocalObjects for a
     * collection of primary keys is needed.

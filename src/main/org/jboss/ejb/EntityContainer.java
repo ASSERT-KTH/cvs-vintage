@@ -52,7 +52,7 @@ import org.jboss.util.collection.SerializableEnumeration;
  * @author <a href="mailto:bill@burkecentral.com">Bill Burke</a>
  * @author <a href="mailto:andreas.schaefer@madplanet.com">Andreas Schaefer</a>
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.123 $
+ * @version $Revision: 1.124 $
  *
  * @jmx.mbean extends="org.jboss.ejb.ContainerMBean"
  */
@@ -608,12 +608,12 @@ public class EntityContainer
       throws Exception
    {
       // The persistence manager takes care of the wiring and creating the EJBLocalObject
-      getPersistenceManager().createEntity(mi.getMethod(),mi.getArguments(),
-         (EntityEnterpriseContext) mi.getEnterpriseContext());
+      final EntityEnterpriseContext ctx = (EntityEnterpriseContext)mi.getEnterpriseContext();
+      getPersistenceManager().createEntity(mi.getMethod(), mi.getArguments(), ctx);
 
       // The context implicitely carries the EJBObject
       createCount++;
-      return ((EntityEnterpriseContext)mi.getEnterpriseContext()).getEJBLocalObject();
+      return localProxyFactory.getEntityEJBLocalObject(ctx.getId(), true);
    }
 
    /**
