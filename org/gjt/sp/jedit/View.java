@@ -79,7 +79,7 @@ import org.gjt.sp.util.Log;
  *
  * @author Slava Pestov
  * @author John Gellene (API documentation)
- * @version $Id: View.java,v 1.108 2003/12/16 03:04:32 spestov Exp $
+ * @version $Id: View.java,v 1.109 2004/03/20 06:08:49 spestov Exp $
  */
 public class View extends JFrame implements EBComponent
 {
@@ -1131,11 +1131,6 @@ public class View extends JFrame implements EBComponent
 			handleBufferUpdate((BufferUpdate)msg);
 		else if(msg instanceof EditPaneUpdate)
 			handleEditPaneUpdate((EditPaneUpdate)msg);
-		else if(msg instanceof PluginUpdate)
-		{
-			if(actionBar != null)
-				actionBar.actionListChanged();
-		}
 	} //}}}
 
 	//{{{ getMinimumSize() method

@@ -53,7 +53,7 @@ import org.gjt.sp.util.*;
  * <li>Displaying memory status
  * </ul>
  *
- * @version $Id: StatusBar.java,v 1.63 2004/03/19 19:16:36 spestov Exp $
+ * @version $Id: StatusBar.java,v 1.64 2004/03/20 06:08:49 spestov Exp $
  * @author Slava Pestov
  * @since jEdit 3.2pre2
  */
@@ -765,14 +765,14 @@ public class StatusBar extends JPanel implements WorkThreadProgressListener
 		//{{{ Clock constructor
 		public Clock()
 		{
-			FontRenderContext frc = new FontRenderContext(
+			/* FontRenderContext frc = new FontRenderContext(
 				null,false,false);
 			Rectangle2D bounds = getFont()
 				.getStringBounds(getTime(),frc);
 			Dimension dim = new Dimension((int)bounds.getWidth(),
 				(int)bounds.getHeight());
 			setPreferredSize(dim);
-			setMaximumSize(dim);
+			setMaximumSize(dim); */
 
 			setForeground(jEdit.getColorProperty("view.status.foreground"));
 			setBackground(jEdit.getColorProperty("view.status.background"));

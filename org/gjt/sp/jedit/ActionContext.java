@@ -35,7 +35,7 @@ import java.util.*;
  *
  * @since jEdit 4.2pre1
  * @author Slava Pestov
- * @version $Id: ActionContext.java,v 1.3 2003/05/01 02:21:26 spestov Exp $
+ * @version $Id: ActionContext.java,v 1.4 2004/03/20 06:08:49 spestov Exp $
  */
 public abstract class ActionContext
 {
@@ -56,6 +56,7 @@ public abstract class ActionContext
 	 */
 	public void addActionSet(ActionSet actionSet)
 	{
+		actionNames = null;
 		actionSets.addElement(actionSet);
 		actionSet.context = this;
 		String[] actions = actionSet.getActionNames();
@@ -72,6 +73,7 @@ public abstract class ActionContext
 	 */
 	public void removeActionSet(ActionSet actionSet)
 	{
+		actionNames = null;
 		actionSets.removeElement(actionSet);
 		actionSet.context = null;
 		String[] actions = actionSet.getActionNames();
@@ -126,14 +128,23 @@ public abstract class ActionContext
 	 */
 	public String[] getActionNames()
 	{
-		ArrayList vec = new ArrayList();
-		for(int i = 0; i < actionSets.size(); i++)
-			((ActionSet)actionSets.elementAt(i)).getActionNames(vec);
+		if(actionNames == null)
+		{
+			List vec = new LinkedList();
+			for(int i = 0; i < actionSets.size(); i++)
+				((ActionSet)actionSets.elementAt(i)).getActionNames(vec);
 
-		return (String[])vec.toArray(new String[vec.size()]);
+			actionNames = (String[])vec.toArray(
+				new String[vec.size()]);
+			Arrays.sort(actionNames,
+				new MiscUtilities.StringICaseCompare());
+		}
+
+		return actionNames;
 	} //}}}
 
 	//{{{ Package-private members
+	String[] actionNames;
 	Hashtable actionHash = new Hashtable();
 	//}}}
 
