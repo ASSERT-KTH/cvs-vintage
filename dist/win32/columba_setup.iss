@@ -3,7 +3,7 @@
 
 [Setup]
 AppName=Columba
-AppVerName=Columba 0.12.1
+AppVerName=Columba 0.14.0
 AppPublisherURL=http://columba.sourceforge.net/
 AppSupportURL=http://columba.sourceforge.net/
 AppUpdatesURL=http://columba.sourceforge.net/
@@ -24,7 +24,6 @@ OutputDir=.
 Name: desktopicon; Description: Create a &desktop icon; GroupDescription: Additional icons:; MinVersion: 4,4
 
 [Files]
-Source: lib\jakarta-oro-2.0.6.jar; DestDir: {app}\lib\
 Source: lib\jargs.jar; DestDir: {app}\lib\
 Source: lib\log4j.jar; DestDir: {app}\lib\
 Source: lib\lucene-1.3-rc1.jar; DestDir: {app}\lib\
@@ -37,6 +36,10 @@ Source: columba.jar; DestDir: {app}
 Source: LICENSE; DestDir: {app}
 Source: README; DestDir: {app}
 Source: run.bat; DestDir: {app}
+Source: E:\Program Files\eclipse\workspace\columba\lib\ristretto-1.0pre1.jar; DestDir: {app}\lib\
+Source: E:\Program Files\eclipse\workspace\columba\lib\jhall.jar; DestDir: {app}\lib\
+Source: E:\Program Files\eclipse\workspace\columba\lib\usermanual.jar; DestDir: {app}\lib\
+Source: E:\Program Files\eclipse\workspace\columba\lib\forms.jar; DestDir: {app}\lib\
 
 [Icons]
 Name: {group}\Columba; Filename: {app}\columba.exe; IconIndex: 0; WorkingDir: {app}
