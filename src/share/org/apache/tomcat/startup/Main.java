@@ -148,6 +148,21 @@ public class Main {
         }
     }
 
+    URL getURL( String base, String file ) {
+        try {
+	    if( ! base.endsWith( "/" ) )
+		base=base + "/";
+	    
+	    File f = new File(base + file);
+	    String path = f.getCanonicalPath();
+	    return new URL( "file", null, path );
+        } catch (Exception ex) {
+	    ex.printStackTrace();
+	    return null;
+        }
+    }
+	
+
     public String getPackageDir() {
 	String tcHome=System.getProperty("tomcat.home");
 	// XXX process args, find if -install is specified
@@ -194,7 +209,7 @@ public class Main {
 	    int jarCount=cpComp.length;
 	    URL urls[]=new URL[jarCount + 1 ];
 	    for( int i=0; i< jarCount ; i++ ) {
-		urls[i]=new URL( "file", null, getLibDir() + cpComp[i] );
+		urls[i]=getURL(  getLibDir() , cpComp[i] );
 		System.out.println( "Add to CP: " + urls[i] );
 	    }
 

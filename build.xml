@@ -104,11 +104,11 @@
          <exclude name="org/apache/tomcat/util/XMLParser.class" /> 
          <exclude name="org/apache/tomcat/util/XMLTree.class" />
     </jar>
-    <!-- minimal set of classes needed to start up tomcat 
-         XXX add manifest !!-->
+    <!-- minimal set of classes needed to start up tomcat -->
     <jar jarfile="${tomcat.build}/lib/tomcat.jar"
-         basedir="${tomcat.build}/classes" > 
-         <include name="org/apache/tomcat/startup/Tomcat.class" /> 
+         basedir="${tomcat.build}/classes" 
+         manifest="src/build/manifest" > 
+         <include name="org/apache/tomcat/startup/Main.class" /> 
          <include name="org/apache/tomcat/util/SimpleClassLoader**" /> 
     </jar>
     <jar jarfile="${tomcat.build}/lib/facade22.jar"
