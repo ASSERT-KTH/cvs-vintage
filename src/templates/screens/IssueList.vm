@@ -14,9 +14,9 @@ $page.setTitle("Query Results")
 #set ($pageNum = $data.Parameters.getInt("pageNum"))
 #set ($issueList = $scarabR.IssueList)
 
-<h3>Search results</h3>
 
 #if ($issueList.size() == 0)
+<h3>Search results</h3>
   <p class="alert">There are no matching issues.</p>
 #else
 
@@ -47,6 +47,8 @@ $page.setTitle("Query Results")
 #end
 <input type="submit" value="Cancel" name="eventSubmit_doCancel" />
 </div>
+
+<h3>Search results</h3>
 		
 ## PAGINATION
 #if( $paginated)
