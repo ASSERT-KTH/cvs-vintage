@@ -673,9 +673,12 @@ public class ContextManager {
 	if( errorServlet==null && path != null ) {
 	    try {
 		RequestDispatcher rd = ctx.getRequestDispatcher(path);
-		
-		// try a forward
+		// reset the response, keeping the status code if necessary
 		res.reset();
+                if (code >= 400) {
+                    res.setStatus(code);
+                }
+		// try a forward if possible, otherwise an include
 		if (res.isBufferCommitted()) {
 		    rd.include(req.getFacade(), res.getFacade());
                 }
