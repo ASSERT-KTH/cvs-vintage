@@ -16,7 +16,7 @@
         early tests.
     -->
 
-     <property name="revision" value="$Revision: 1.44 $" />  
+     <property name="revision" value="$Revision: 1.45 $" />  
      <property name="host" value="127.0.0.1" />
      <property name="port"     value="8080" />
      <property name="colonPort" value=":${port}" />
@@ -920,7 +920,8 @@ mod_webapp into mod_jk )
              returnCode="${http.protocol} 200"
             />
 
-      <gtest  request="GHOST /test/servlet/request.EchoServlet HTTP/1.0"
+      <!-- Don't bother to send bad request to web server -->
+      <gtest  request="GHOST /test/servlet/request.EchoServlet HTTP/1.0" unless="not.standalone"
              content="name=lightness of being"
              returnCode="${http.protocol} 50"
             />
@@ -955,7 +956,8 @@ mod_webapp into mod_jk )
              returnCode="${http.protocol} 404"
             />
 
-      <gtest description="HTTP0.9 doesn't have a POST method" 
+      <!-- This test will cause IIS to hang -->
+      <gtest description="HTTP0.9 doesn't have a POST method" unless="not.standalone"
 	     request="POST /test/"
              content=""
              returnCode="${http.protocol} 400"
@@ -994,7 +996,8 @@ mod_webapp into mod_jk )
              returnCode="${http.protocol} 200"
             />
 
-      <gtest  request="post /test/servlet/request.EchoServlet HTTP/1.0"
+      <!-- Don't bother to send bad request to web server -->
+      <gtest  request="post /test/servlet/request.EchoServlet HTTP/1.0" unless="not.standalone"
              content="name=lightness of being"
              returnCode="${http.protocol} 50"
             />
