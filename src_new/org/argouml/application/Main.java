@@ -1,4 +1,4 @@
-// $Id: Main.java,v 1.71 2003/05/20 20:12:00 thierrylach Exp $
+// $Id: Main.java,v 1.72 2003/05/24 13:59:53 bobtarling Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -129,12 +129,12 @@ public class Main {
         // the name of a project file to load.
         //--------------------------------------------
 
-        int themeMemory = 0;
+        String themeMemory = null;
         for (int i = 0; i < args.length; i++) {
             if (args[i].startsWith("-")) {
                 if ((themeMemory =
                     LookAndFeelMgr.SINGLETON.getThemeFromArg(args[i]))
-                    != 0) {
+                    != null) {
                     // Remembered!
                 } else if (
                     args[i].equalsIgnoreCase("-help")
@@ -390,7 +390,7 @@ public class Main {
         // initLogging();
     }
     
-    private static void initializeGUI(SimpleTimer st, boolean doSplash, int themeMemory) {
+    private static void initializeGUI(SimpleTimer st, boolean doSplash, String themeMemory) {
         st.mark("projectbrowser");
 
                 // Register the default notation.
@@ -401,8 +401,12 @@ public class Main {
                 // Initialize the UMLActions
                 Actions.getInstance();
                 
-                // initialize the correct theme
-                LookAndFeelMgr.SINGLETON.setCurrentTheme(themeMemory);
+                // initialize the correct look and feel
+				LookAndFeelMgr.SINGLETON.initializeLookAndFeel();
+                if (themeMemory != null)
+                {
+					LookAndFeelMgr.SINGLETON.setCurrentTheme(themeMemory);
+                }
 
                 // make the projectbrowser
                 ProjectBrowser.setSplash(doSplash);
