@@ -65,7 +65,7 @@ import org.jboss.security.SecurityAssociation;
  *      One for each role that entity has.       
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.50 $
+ * @version $Revision: 1.51 $
  */                            
 public class JDBCCMRFieldBridge implements JDBCFieldBridge, CMRFieldBridge {
    /**
@@ -212,7 +212,7 @@ public class JDBCCMRFieldBridge implements JDBCFieldBridge, CMRFieldBridge {
       // if we didn't find the related CMR field throw an exception
       // with a detailed message
       if(relatedCMRField == null) {
-         String message = "Related CMR field not found not found in " +
+         String message = "Related CMR field not found in " +
                relatedEntity.getEntityName() + " for relationship from";
 
          message += entity.getEntityName() + ".";
@@ -467,6 +467,7 @@ public class JDBCCMRFieldBridge implements JDBCFieldBridge, CMRFieldBridge {
    }
 
    public void setValue(EntityEnterpriseContext ctx, Object value) {
+
       if(isReadOnly()) {
          throw new EJBException("Field is read-only: " +
                "fieldName=" + getFieldName());
@@ -550,6 +551,7 @@ public class JDBCCMRFieldBridge implements JDBCFieldBridge, CMRFieldBridge {
          Iterator newBeans = (new ArrayList(c)).iterator();
          while(newBeans.hasNext()) {
             EJBLocalObject newBean = (EJBLocalObject)newBeans.next();
+
             createRelationLinks(myCtx, newBean.getPrimaryKey());
          }
       } catch(EJBException e) {
@@ -1017,13 +1019,7 @@ public class JDBCCMRFieldBridge implements JDBCFieldBridge, CMRFieldBridge {
          return false;
       }
 
-      for(Iterator fields = foreignKeyFields.iterator(); fields.hasNext();) {
-         JDBCCMPFieldBridge field = (JDBCCMPFieldBridge)fields.next();
-         if(field.isDirty(ctx)) {
-            return true;
-         }
-      }
-      return false;
+      return getFieldState(ctx).isDirty();
    }
 
    public void setClean(EntityEnterpriseContext ctx) {
@@ -1031,10 +1027,7 @@ public class JDBCCMRFieldBridge implements JDBCFieldBridge, CMRFieldBridge {
          return;
       }
 
-      for(Iterator fields = foreignKeyFields.iterator(); fields.hasNext();) {
-         JDBCCMPFieldBridge field = (JDBCCMPFieldBridge)fields.next();
-         field.setClean(ctx);
-      }
+      getFieldState(ctx).setClean();
    }
    
    /**
@@ -1057,7 +1050,7 @@ public class JDBCCMRFieldBridge implements JDBCFieldBridge, CMRFieldBridge {
          EntityEnterpriseContext ctx, FieldState fieldState) {
 
       JDBCContext jdbcCtx = (JDBCContext)ctx.getPersistenceContext();
-      
+
       // invalidate current field state
       FieldState currentFieldState = (FieldState)jdbcCtx.get(this);
       if(currentFieldState != null) {
@@ -1079,10 +1072,32 @@ public class JDBCCMRFieldBridge implements JDBCFieldBridge, CMRFieldBridge {
       private Set relationSet;
       private boolean isLoaded = false;
       private long lastRead = -1;
+      private boolean dirty = false;
 
       public FieldState(EntityEnterpriseContext ctx) {
          this.ctx = ctx;
          setHandle[0] = new ArrayList();
+      }
+
+      /**
+       * Returns the dirty state
+       */
+      public boolean isDirty() {
+         return dirty;
+      }
+
+      /**
+       * Marks the CMR field as dirty
+       */
+      public void setDirty() {
+         this.dirty = true;
+      }
+
+      /**
+       * Makrs the CMR field as clean
+       */
+      public void setClean() {
+         this.dirty = false;
       }
 
       /**
@@ -1113,30 +1128,39 @@ public class JDBCCMRFieldBridge implements JDBCFieldBridge, CMRFieldBridge {
        * Add this foreign to the relationship.
        */
       public void addRelation(Object fk) {
+
+         boolean modified = false;
          if(isLoaded) {
-            setHandle[0].add(fk);
+            modified = setHandle[0].add(fk);
          } else {
-            removedRelations.remove(fk);
-            addedRelations.add(fk);
+            modified = removedRelations.remove(fk)
+               || addedRelations.add(fk);
          }
+
+         if(modified) setDirty();
       }
 
       /**
        * Remove this foreign to the relationship.
        */
       public void removeRelation(Object fk) {
+
+         boolean modified = false;
          if(isLoaded) {
-            setHandle[0].remove(fk);
+            modified = setHandle[0].remove(fk);
          } else {
-            addedRelations.remove(fk);
-            removedRelations.add(fk);
+            modified = addedRelations.remove(fk)
+               || removedRelations.add(fk);
          }
+
+         if(modified) setDirty();
       }
 
       /**
        * loads the collection of related ids
        */
       public void loadRelations(Collection values) {
+
          // check if we are aleready loaded
          if(isLoaded) {
             throw new EJBException("CMR field value is already loaded");
