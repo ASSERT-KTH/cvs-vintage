@@ -66,9 +66,15 @@
             <img src="/scarab/images/icon_downarrow.gif" width="13" height="8" 
                 alt="sort" border="0" />
         </th>
-		<th>Issue ID</th>
-#foreach( $userAttribute in $user.getAttributesForIssueList($module))
-		<th>$userAttribute.Name</th>
+		<th>Issue ID:</th>
+#set ($rmuas = $user.getRModuleUserAttributes($module))
+#if ($rmuas.isEmpty())
+  #set ($rmuas = $module.DefaultRModuleUserAttributes)
+#end
+
+#foreach ($rmua in $rmuas)
+  #set( $userAttribute = $rmua.Attribute)
+		<th>$userAttribute.Name:</th>
 #end
 		</tr>
 		
@@ -77,7 +83,8 @@
         #rows ()
 		<td><input type="checkbox" name="selected_$issue.IssueId" /></td>
 		<td><a href="$issueLink">$issue.UniqueId</a></td>
-#foreach( $userAttribute in $user.getAttributesForIssueList($module))
+#foreach ($rmua in $rmuas)
+  #set( $userAttribute = $rmua.Attribute)
     <td>
        #set ($value = "" )
        #set ( $value = $issue.ModuleAttributeValuesMap.get($userAttribute.Name.toString().toUpperCase()).Value )

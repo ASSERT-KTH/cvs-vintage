@@ -5,6 +5,8 @@ $page.setTitle("Add/Remove Attributes From View")
 #set ($module = $scarabR.CurrentModule)
 #set ($moduleAttributes = $module.getRModuleAttributes(true))
 #set ($maxNum = $moduleAttributes.size())
+#set ($usedefaults = $moduleAttributes.size())
+#set ($usedefaults = $data.Parameters.getString("usedefaults"))
 
 <form action="$action" method="post">
 <input type="hidden" name="user_id" value="$user.UserId">
@@ -17,6 +19,7 @@ $page.setTitle("Add/Remove Attributes From View")
 <input type="submit" value="save" name="eventSubmit_doSelectattributes" />&nbsp;
 <input type="submit" value="cancel" name="eventSubmit_doCancel"/>&nbsp;
 <input type="submit" value="reset to default"  name="eventSubmit_doCancel" />
+<input type="submit" value="go to issue list"  name="eventSubmit_doGoissuelist"/>
 </p>
 
       <h3>Attributes</h3>
@@ -28,25 +31,34 @@ $page.setTitle("Add/Remove Attributes From View")
          <th>Columnar Sequence</th>
         </tr>
 
+
 #foreach ($moduleAttribute in $moduleAttributes)
     #set ($checked = "")
     #set ($attribute = $moduleAttribute.Attribute)
     #set ($userAttribute = $user.getModuleUserAttribute($module.ModuleId, $attribute.AttributeId))
     #set ($intakeUserAttr = $intake.RModuleUserAttribute.mapTo($userAttribute))
 
-    #foreach ($moduleUserAttribute in $user.getRModuleUserAttributes($module))
+## Get the attributes user has selected. If they have not select any, 
+## Use defaults in database.
+#set ($rmuas = $user.getRModuleUserAttributes($module))
+#if ($rmuas.isEmpty() || $usedefaults.equals("true"))
+  #set ($rmuas = $module.DefaultRModuleUserAttributes)
+#end
+
+    #set ($order = 1)
+    #foreach ($moduleUserAttribute in $rmuas)
        #if ($attribute.Name.equals($moduleUserAttribute.Attribute.Name))
           #set ($checked = "checked")
+          #set ($order = $moduleUserAttribute.Order)    
        #end
     #end
         <tr class="a">
-         ##<td><input type="checkbox" name="$intakeUserAttr.Selected.Key" $checked /></td>
          <td><input type="checkbox" name="selected_$attribute.AttributeId" $checked /></td>
 
          <td>$attribute.Name</td>
 
          <td>
-          #numericSelect ($intakeUserAttr.Order.Key 1 $maxNum $intakeUserAttr.Order.Value 1)
+          #numericSelect ($intakeUserAttr.Order.Key 1 $maxNum $order 1)
          </td>
         </tr>
     #end
@@ -55,7 +67,8 @@ $page.setTitle("Add/Remove Attributes From View")
 <p class="functnbar">
 <input type="submit" value="save" name="eventSubmit_doSelectattributes"/>&nbsp;
 <input type="submit" value="cancel" name="eventSubmit_doCancel"/>&nbsp;
-<input type="submit" value="reset to default"  name="eventSubmit_doCancel"/>
+<input type="submit" value="reset to default"  name="eventSubmit_doUsedefaults"/>
+<input type="submit" value="go to issue list"  name="eventSubmit_doGoissuelist"/>
 </p>
         
      </div>
