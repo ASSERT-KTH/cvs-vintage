@@ -326,6 +326,12 @@ public class ComposerController
 		}
 		setCharsetManager(new CharsetManager(charsetElement));
 		getCharsetManager().addCharsetListener(this);
+		// Hack to ensure charset is set correctly at start-up
+		String charset = charsetElement.getAttribute("name");
+		if (charset != null) {
+			((ComposerModel) getModel()).setCharsetName(charset);
+			editorController.getView().setCharset(charset);
+		}
 	}
 
 	/**
