@@ -75,7 +75,7 @@ import org.tigris.scarab.services.cache.ScarabCache;
  * This class deals with modifying Global Attributes.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: GlobalAttributeEdit.java,v 1.50 2003/05/16 00:14:21 jmcnally Exp $
+ * @version $Id: GlobalAttributeEdit.java,v 1.51 2003/05/27 22:11:24 elicia Exp $
  */
 public class GlobalAttributeEdit extends RequireLoginFirstAction
 {
@@ -194,7 +194,7 @@ public class GlobalAttributeEdit extends RequireLoginFirstAction
      * Used on AttributeEdit.vm to change the name of an existing
      * AttributeOption or add a new one if the name doesn't already exist.
      */
-    public synchronized void 
+    public synchronized boolean 
         doSaveoptions(RunData data, TemplateContext context)
         throws Exception
     {
@@ -235,7 +235,7 @@ public class GlobalAttributeEdit extends RequireLoginFirstAction
                     ParentChildAttributeOption pcao = 
                         (ParentChildAttributeOption)pcaoList.get(i);
                 
-                     Group pcaoGroup = intake.get("ParentChildAttributeOption", 
+                    Group pcaoGroup = intake.get("ParentChildAttributeOption", 
                                                   pcao.getQueryKey());
 
                     // there could be errors here so catch and re-display
@@ -263,15 +263,25 @@ public class GlobalAttributeEdit extends RequireLoginFirstAction
                             option.deleteIssueTypeMappings(user);
                         }
 
-                        // the UI prevents this from being true, but check
-                        // anyway just in case.
-                        if (pcao.getOptionId().equals(pcao.getParentId()))
+                        List ancestors = null;
+                        try
+                        {
+                            ancestors= pcao.getAncestors();
+                        }
+                        catch (Exception e)
+                        {
+                            scarabR.setAlertMessage(
+                               l10n.get("RecursiveParentChildRelationship"));
+                            intake.remove(pcaoGroup);
+                            return false;
+                        }
+                        if (ancestors.contains(pcao.getOptionId()))
                         {
                             scarabR.setAlertMessage(
                                 l10n.get("RecursiveParentChildRelationship"));
                             intake.remove(pcaoGroup);
-                            return;
-                         }
+                            return false;
+                        }
                     
                         // save the PCAO now..
                         pcao.save();
@@ -307,7 +317,7 @@ public class GlobalAttributeEdit extends RequireLoginFirstAction
                         intake.remove(pcaoGroup);
                         scarabR.setAlertMessage(se.getMessage());
                         log().error("", se);
-                        return;
+                        return false;
                     }
                 }
 
@@ -405,7 +415,7 @@ public class GlobalAttributeEdit extends RequireLoginFirstAction
                         intake.remove(newPCAOGroup);
                         scarabR.setAlertMessage(se.getMessage());
                         log().error("", se);
-                        return;
+                        return false;
                     }
 
                     // now remove the group to set the page stuff to null
@@ -415,6 +425,7 @@ public class GlobalAttributeEdit extends RequireLoginFirstAction
                 }
             }
         }
+        return true;
     }
 
     /*
@@ -428,7 +439,7 @@ public class GlobalAttributeEdit extends RequireLoginFirstAction
         if (getScarabRequestTool(context).getAttribute().isOptionAttribute())
         {
             log().debug("calling doSaveoptions");
-            doSaveoptions(data, context);
+            success = doSaveoptions(data, context);
         }
         if (success)
         {
