@@ -377,16 +377,27 @@
                 <include name="**/*.properties"/>
             </fileset>
         </copy>
-        <!-- hack -->
+        
+        <!-- Set the default language if the Locale isn't present -->
+        <copy tofile="${build.dest.scarab}/ScarabBundle_de.properties" 
+              filtering="no"
+              file="${src.i18n.dir}/ScarabBundle_de_DE.properties"/>
+        <copy tofile="${build.dest.scarab}/ScarabBundle_en.properties" 
+              filtering="no"
+              file="${src.i18n.dir}/ScarabBundle_en_US.properties"/>
         <copy tofile="${build.dest.scarab}/ScarabBundle_fr.properties" 
               filtering="no" 
               file="${src.i18n.dir}/ScarabBundle_fr_FR.properties"/>
-        <copy tofile="${build.dest.scarab}/ScarabBundle_ru.properties" 
+        <copy tofile="${build.dest.scarab}/ScarabBundle_ko.properties" 
               filtering="no"
-              file="${src.i18n.dir}/ScarabBundle_ru_RU.properties"/>
+              file="${src.i18n.dir}/ScarabBundle_ko_KR.properties"/>
         <copy tofile="${build.dest.scarab}/ScarabBundle_pt.properties" 
               filtering="no"
               file="${src.i18n.dir}/ScarabBundle_pt_BR.properties"/>
+        <copy tofile="${build.dest.scarab}/ScarabBundle_ru.properties" 
+              filtering="no"
+              file="${src.i18n.dir}/ScarabBundle_ru_RU.properties"/>
+        <!-- final default language is english -->
         <copy tofile="${build.dest.scarab}/ScarabBundle.properties" 
               filtering="no"
               file="${src.i18n.dir}/ScarabBundle_en_US.properties"/>
