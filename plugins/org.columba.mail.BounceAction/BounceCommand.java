@@ -20,6 +20,7 @@ import org.columba.mail.config.AccountItem;
 import org.columba.mail.folder.Folder;
 import org.columba.mail.folder.command.AddMessageCommand;
 import org.columba.mail.gui.composer.ComposerModel;
+import org.columba.mail.main.MailInterface;
 import org.columba.mail.message.ColumbaHeader;
 import org.columba.mail.message.ColumbaMessage;
 import org.columba.mail.smtp.SMTPServer;
@@ -93,7 +94,7 @@ public class BounceCommand extends FolderCommand {
 		// get user-configurable Sent-Folder
 		AccountItem item = model.getAccountItem();
 		Folder sentFolder =
-			(Folder) MainInterface.treeModel.getFolder(
+			(Folder) MailInterface.treeModel.getFolder(
 				item.getSpecialFoldersItem().getInteger("sent"));
 
 		// the following code should be better put somewhere else

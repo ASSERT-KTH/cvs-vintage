@@ -35,7 +35,7 @@
   </jar>
  </target>
  
- <!--
+ 
  <target name="release" depends="jar">
  	<echo message="zip-file is going to ../${plugin-id}.zip"/>
   	<zip zipfile="../${plugin-id}.zip" update="true">
@@ -46,6 +46,6 @@
 		</zipfileset>
  	</zip>
  </target>
- -->
+ 
 
 </project>
