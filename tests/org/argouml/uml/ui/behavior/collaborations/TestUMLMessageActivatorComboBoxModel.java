@@ -1,4 +1,4 @@
-// $Id: TestUMLMessageActivatorComboBoxModel.java,v 1.9 2004/08/26 19:51:37 mvw Exp $
+// $Id: TestUMLMessageActivatorComboBoxModel.java,v 1.10 2004/09/25 08:04:50 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -95,6 +95,9 @@ public class TestUMLMessageActivatorComboBoxModel extends TestCase {
         model = null;
     }
     
+    /**
+     * Test setup.
+     */
     public void testSetUp() {
         assertEquals(10, model.getSize());
         assertTrue(model.contains(activators[5]));
@@ -102,16 +105,25 @@ public class TestUMLMessageActivatorComboBoxModel extends TestCase {
         assertTrue(model.contains(activators[9]));
     }
     
+    /**
+     * Test setActivator().
+     */
     public void testSetActivator() {
         elem.setActivator(activators[0]);
         assertTrue(model.getSelectedItem() == activators[0]);
     }
     
+    /**
+     * Test setActivator() with null argument.
+     */
     public void testSetActivatorToNull() {
         elem.setActivator(null);
         assertNull(model.getSelectedItem());
     }
     
+    /**
+     * Test removing.
+     */
     public void testRemoveBase() {
         UmlFactory.getFactory().delete(activators[9]);
         assertEquals(9, model.getSize());

@@ -1,4 +1,4 @@
-// $Id: GUITestActionGoToDetails.java,v 1.3 2004/08/26 20:09:49 mvw Exp $
+// $Id: GUITestActionGoToDetails.java,v 1.4 2004/09/25 08:04:51 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -120,6 +120,10 @@ public class GUITestActionGoToDetails extends TestCase {
         action = new ActionGoToDetails("");
     }
 
+    /**
+     * Test the todo tab.
+     * TODO: Write this test.
+     */
     public void testToDoTab() {    
     }
 

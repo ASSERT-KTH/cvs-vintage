@@ -1,4 +1,4 @@
-// $Id: TestStateMachinesFactory.java,v 1.6 2004/09/24 20:17:26 mvw Exp $
+// $Id: TestStateMachinesFactory.java,v 1.7 2004/09/25 08:04:51 mvw Exp $
 // Copyright (c) 2002-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -55,10 +55,18 @@ public class TestStateMachinesFactory extends TestCase {
 	"Transition",
     };
 
+    /**
+     * The constructor.
+     * 
+     * @param n the name of the test
+     */
     public TestStateMachinesFactory(String n) {
 	super(n);
     }
 
+    /**
+     * Test if this class is really a singleton.
+     */
     public void testSingleton() {
 
 	Object o1 = StateMachinesFactory.getFactory();
@@ -69,6 +77,9 @@ public class TestStateMachinesFactory extends TestCase {
 
     }
 
+    /**
+     * Test creation.
+     */
     public void testCreates() {
 	// Do not test Event or StateVertex.
 	// These are abstract.
@@ -98,6 +109,9 @@ public class TestStateMachinesFactory extends TestCase {
 					     objs);
     }
 
+    /**
+     * Test deletion.
+     */
     public void testDeleteComplete() {
 	CheckUMLModelHelper.deleteComplete(
 					   this,

@@ -1,4 +1,4 @@
-// $Id: TestUseCasesFactory.java,v 1.5 2004/02/24 08:28:18 linus Exp $
+// $Id: TestUseCasesFactory.java,v 1.6 2004/09/25 08:04:52 mvw Exp $
 // Copyright (c) 2002-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -34,9 +34,13 @@ import ru.novosoft.uml.behavior.use_cases.MUseCase;
 
 
 
+/**
+ * Test the UseCasesFactory class.
+ *
+ */
 public class TestUseCasesFactory extends TestCase {
     
-    static String[] allModelElements = {
+    private static String[] allModelElements = {
         "Actor",
         "Extend",
         "ExtensionPoint",
@@ -92,6 +96,15 @@ public class TestUseCasesFactory extends TestCase {
         assertTrue("extend not added to correct extensionpoint", 
 		   (extend.getExtensionPoints().contains(point)
 		    && extend.getExtensionPoints().size() == 1));
+    }
+
+
+
+    /**
+     * @return Returns the allModelElements.
+     */
+    static String[] getAllModelElements() {
+        return allModelElements;
     }
 }
 

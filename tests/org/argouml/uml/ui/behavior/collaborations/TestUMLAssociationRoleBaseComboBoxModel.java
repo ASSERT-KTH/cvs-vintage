@@ -1,4 +1,4 @@
-// $Id: TestUMLAssociationRoleBaseComboBoxModel.java,v 1.9 2004/09/08 19:31:38 mvw Exp $
+// $Id: TestUMLAssociationRoleBaseComboBoxModel.java,v 1.10 2004/09/25 08:04:50 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -113,6 +113,9 @@ public class TestUMLAssociationRoleBaseComboBoxModel extends TestCase {
         model = null;
     }
     
+    /**
+     * Test setup.
+     */
     public void testSetUp() {
         // there is one extra element due to the empty element that
         // the user can select
@@ -122,16 +125,25 @@ public class TestUMLAssociationRoleBaseComboBoxModel extends TestCase {
         assertTrue(model.contains(bases[9]));
     }
     
+    /**
+     * Test setting the Base.
+     */
     public void testSetBase() {
         elem.setBase(bases[0]);
         assertTrue(model.getSelectedItem() == bases[0]);
     }
     
+    /**
+     * Test setting the Base to null.
+     */
     public void testSetBaseToNull() {
         elem.setBase(null);
         assertNull(model.getSelectedItem());
     }
     
+    /**
+     * Test removing the Base.
+     */
     public void testRemoveBase() {
         UmlFactory.getFactory().delete(bases[9]);
         // there is one extra element since removal of the base is allowed.

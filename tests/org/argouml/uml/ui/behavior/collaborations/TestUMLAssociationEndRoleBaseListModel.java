@@ -1,4 +1,4 @@
-// $Id: TestUMLAssociationEndRoleBaseListModel.java,v 1.7 2004/02/24 08:28:19 linus Exp $
+// $Id: TestUMLAssociationEndRoleBaseListModel.java,v 1.8 2004/09/25 08:04:50 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -92,6 +92,9 @@ public class TestUMLAssociationEndRoleBaseListModel extends TestCase {
         model = null;
     }
     
+    /**
+     * Test setting the Base.
+     */
     public void testAdd() {
         elem.setBase(baseEnd);
         assertEquals(1, model.getSize());
@@ -107,6 +110,9 @@ public class TestUMLAssociationEndRoleBaseListModel extends TestCase {
         catch (Exception ex) { };
     }
     
+    /**
+     * Test removing.
+     */
     public void testRemove() {
         elem.setBase(baseEnd);
         elem.setBase(null);

@@ -1,4 +1,4 @@
-// $Id: TestModelManagementHelper.java,v 1.6 2004/08/26 20:27:18 mvw Exp $
+// $Id: TestModelManagementHelper.java,v 1.7 2004/09/25 08:04:51 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -47,13 +47,13 @@ public class TestModelManagementHelper extends TestCase {
 	CheckUMLModelHelper.metaModelNameCorrect(
 			 this,
 			 ModelManagementFactory.getFactory(),
-			 TestModelManagementFactory.allModelElements);
+			 TestModelManagementFactory.getAllModelElements());
     }
 
     public void testIsValidStereoType() {
 	CheckUMLModelHelper.isValidStereoType(
 		      this,
 		      ModelManagementFactory.getFactory(),
-		      TestModelManagementFactory.allModelElements);
+		      TestModelManagementFactory.getAllModelElements());
     }
 }

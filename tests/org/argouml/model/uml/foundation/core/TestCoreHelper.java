@@ -1,4 +1,4 @@
-// $Id: TestCoreHelper.java,v 1.7 2004/08/26 20:27:19 mvw Exp $
+// $Id: TestCoreHelper.java,v 1.8 2004/09/25 08:04:52 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -52,14 +52,14 @@ public class TestCoreHelper extends TestCase {
 	CheckUMLModelHelper.metaModelNameCorrect(
 			 this,
 			 CoreFactory.getFactory(),
-			 TestCoreFactory.allModelElements);
+			 TestCoreFactory.getAllModelElements());
     }
 
     public void testIsValidStereoType() {
 	CheckUMLModelHelper.isValidStereoType(
 		      this,
 		      CoreFactory.getFactory(),
-		      TestCoreFactory.allModelElements);
+		      TestCoreFactory.getAllModelElements());
     }
 
     public void testGetChildren() {

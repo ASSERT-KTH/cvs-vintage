@@ -1,4 +1,4 @@
-// $Id: GUITestPropertyPanels.java,v 1.8 2004/08/26 20:09:49 mvw Exp $
+// $Id: GUITestPropertyPanels.java,v 1.9 2004/09/25 08:04:51 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -124,6 +124,10 @@ public class GUITestPropertyPanels extends TestCase {
     }
 
 
+    /**
+     * @return the test suite
+     * @throws Exception 
+     */
     public static Test suite() throws Exception {
 
         // constains instances of each modelelement
@@ -187,11 +191,17 @@ public class GUITestPropertyPanels extends TestCase {
     }
     
     
+    /**
+     * @see junit.framework.TestCase#runTest()
+     */
     protected void runTest() throws Throwable {
 	System.out.println("runTest called in " + this + ":" + this.hashCode());
         testPropertyTab();
     }
     
+    /**
+     * @throws Throwable
+     */
     public void testPropertyTab() throws Throwable {
 	System.out.println("testPropertyTab called in "
 			   + this + ":" + this.hashCode());

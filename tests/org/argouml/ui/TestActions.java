@@ -1,4 +1,4 @@
-// $Id: TestActions.java,v 1.3 2004/02/24 08:28:19 linus Exp $
+// $Id: TestActions.java,v 1.4 2004/09/25 08:04:51 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -58,14 +58,14 @@ public class TestActions extends TestCase {
         }
 
 
-        private boolean _called = false;
+        private boolean called = false;
 
         /**
          * @return true if {@link #shouldBeEnabled(java.lang.Object[])} 
 	 *              is called.
          */
         public boolean isCalled() {
-            return _called;
+            return called;
         }
 
         /**
@@ -73,7 +73,7 @@ public class TestActions extends TestCase {
          *          is called.
          */
         public void setCalled(boolean b) {
-            _called = b;
+            called = b;
         }
 
     }

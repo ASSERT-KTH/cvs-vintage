@@ -1,4 +1,4 @@
-// $Id: TestModelManagementFactory.java,v 1.8 2004/09/08 20:24:17 mvw Exp $
+// $Id: TestModelManagementFactory.java,v 1.9 2004/09/25 08:04:51 mvw Exp $
 // Copyright (c) 2002-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -28,9 +28,13 @@ import junit.framework.TestCase;
 
 import org.argouml.util.CheckUMLModelHelper;
 
+/**
+ * Test the ModelManagementFactory class.
+ *
+ */
 public class TestModelManagementFactory extends TestCase {
 
-    protected static String[] allModelElements = {
+    private static String[] allModelElements = {
 	"ElementImport", "Model", "Package", "Subsystem" 
     };
 
@@ -43,6 +47,9 @@ public class TestModelManagementFactory extends TestCase {
 	super(n);
     }
 
+    /**
+     * Test if this class is really a singleton.
+     */
     public void testSingleton() {
 
 	Object o1 = ModelManagementFactory.getFactory();
@@ -53,6 +60,9 @@ public class TestModelManagementFactory extends TestCase {
 
     }
 
+    /**
+     * Test creation.
+     */
     public void testCreates() {
 
 	String[] objs = {
@@ -67,10 +77,20 @@ public class TestModelManagementFactory extends TestCase {
 
     }
 
+    /**
+     * Test deletion.
+     */
     public void testDeleteComplete() {
 	CheckUMLModelHelper.deleteComplete(
 		   this,
 		   ModelManagementFactory.getFactory(),
 		   allModelElements);
+    }
+
+    /**
+     * @return Returns the allModelElements.
+     */
+    protected static String[] getAllModelElements() {
+        return allModelElements;
     }
 }

@@ -1,4 +1,4 @@
-// $Id: TestStateMachinesHelper.java,v 1.7 2004/09/24 20:17:26 mvw Exp $
+// $Id: TestStateMachinesHelper.java,v 1.8 2004/09/25 08:04:51 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -43,6 +43,9 @@ public class TestStateMachinesHelper extends TestCase {
 	super(arg0);
     }
 
+    /**
+     * Check if the metamodel name is correct.
+     */
     public void testGetMetaModelName() {
 	CheckUMLModelHelper.metaModelNameCorrect(
 			 this,
@@ -50,6 +53,9 @@ public class TestStateMachinesHelper extends TestCase {
 			 TestStateMachinesFactory.getAllModelElements());
     }
 
+    /**
+     * Test creating a stereotype.
+     */
     public void testIsValidStereoType() {
 	CheckUMLModelHelper.isValidStereoType(
 		      this,

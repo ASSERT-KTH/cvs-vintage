@@ -1,4 +1,4 @@
-// $Id: TestTabDiagram.java,v 1.7 2004/08/26 20:09:51 mvw Exp $
+// $Id: TestTabDiagram.java,v 1.8 2004/09/25 08:04:53 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -23,7 +23,7 @@
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
 
-// $Id: TestTabDiagram.java,v 1.7 2004/08/26 20:09:51 mvw Exp $
+// $Id: TestTabDiagram.java,v 1.8 2004/09/25 08:04:53 mvw Exp $
 
 package org.argouml.uml.diagram.ui;
 
@@ -79,6 +79,9 @@ public class TestTabDiagram extends TestCase {
 
     }
 
+    /**
+     * Test diagram tab construction.
+     */
     public void testConstruction() {
         try {
             TabDiagram tabDiagram = new TabDiagram();

@@ -1,4 +1,4 @@
-// $Id: TestUMLMessageReceiverListModel.java,v 1.8 2004/08/26 19:51:37 mvw Exp $
+// $Id: TestUMLMessageReceiverListModel.java,v 1.9 2004/09/25 08:04:50 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -78,6 +78,9 @@ public class TestUMLMessageReceiverListModel extends TestCase {
         model = null;
     }
     
+    /**
+     * Test setReceiver().
+     */
     public void testSetReceiver() {
         MClassifierRole role = 
             CollaborationsFactory.getFactory().createClassifierRole();
@@ -86,6 +89,9 @@ public class TestUMLMessageReceiverListModel extends TestCase {
         assertEquals(role, model.getElementAt(0));
     }
     
+    /**
+     * Test setReceiver() with null argument.
+     */
     public void testRemoveReceiver() {
         MClassifierRole role = 
             CollaborationsFactory.getFactory().createClassifierRole();

@@ -1,4 +1,4 @@
-// $Id: TestTabStyle.java,v 1.2 2004/05/18 10:09:49 mkl Exp $
+// $Id: TestTabStyle.java,v 1.3 2004/09/25 08:04:51 mvw Exp $
 // Copyright (c) 2003-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -52,10 +52,18 @@ import org.argouml.uml.diagram.use_case.ui.StylePanelFigUseCase;
  */
 public class TestTabStyle extends TestCase {
 
+    /**
+     * The constructor.
+     * 
+     * @param arg the name
+     */
     public TestTabStyle(String arg) {
         super(arg);
     }
 
+    /**
+     * Test findPanelFor().
+     */
     public void testFindPanelFor() {
 
         TabStyle tabStyle = new TabStyle();

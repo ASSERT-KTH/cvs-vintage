@@ -1,4 +1,4 @@
-// $Id: TestCoreFactory.java,v 1.14 2004/09/08 19:31:39 mvw Exp $
+// $Id: TestCoreFactory.java,v 1.15 2004/09/25 08:04:52 mvw Exp $
 // Copyright (c) 2002-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -37,9 +37,13 @@ import ru.novosoft.uml.foundation.core.MAssociation;
 import ru.novosoft.uml.foundation.core.MModelElement;
 import ru.novosoft.uml.model_management.MModel;
 
+/**
+ * Test the CoreFactory class.
+ *
+ */
 public class TestCoreFactory extends TestCase {
 
-    static String[] allModelElements =
+    private static String[] allModelElements =
     {
 	"Abstraction",
 	"Association",
@@ -263,5 +267,12 @@ public class TestCoreFactory extends TestCase {
 	elem.setNamespace(CoreFactory.getFactory().createNamespace());
 	con = CoreFactory.getFactory().buildConstraint(elem);
 	assertNotNull("Namespace is not set", ModelFacade.getNamespace(con));
+    }
+
+    /**
+     * @return Returns the allModelElements.
+     */
+    static String[] getAllModelElements() {
+        return allModelElements;
     }
 }

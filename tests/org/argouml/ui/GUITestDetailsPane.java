@@ -1,4 +1,4 @@
-// $Id: GUITestDetailsPane.java,v 1.3 2004/08/26 20:09:49 mvw Exp $
+// $Id: GUITestDetailsPane.java,v 1.4 2004/09/25 08:04:51 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -22,7 +22,7 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $Id: GUITestDetailsPane.java,v 1.3 2004/08/26 20:09:49 mvw Exp $
+// $Id: GUITestDetailsPane.java,v 1.4 2004/09/25 08:04:51 mvw Exp $
 package org.argouml.ui;
 
 import javax.swing.JPanel;
@@ -53,6 +53,9 @@ public class GUITestDetailsPane extends TestCase {
         super(arg0);
     }
 
+    /**
+     * Test setting a target.
+     */
     public void testTargetSet() {
         Object o = new Object();
         TargetEvent e =

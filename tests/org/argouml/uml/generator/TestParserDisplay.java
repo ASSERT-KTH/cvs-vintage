@@ -1,4 +1,4 @@
-// $Id: TestParserDisplay.java,v 1.7 2004/08/26 20:02:34 mvw Exp $
+// $Id: TestParserDisplay.java,v 1.8 2004/09/25 08:04:51 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -64,10 +64,17 @@ public class TestParserDisplay extends TestCase {
 	super(str);
     }
 
+    /**
+     * Test ClassifierRoleObjectName.
+     * TODO: Implement this test.
+     */
     public void TestClassifierRoleObjectName() {
 	/* Not implemented in ParserDisplay */
     }
 
+    /**
+     * Test the name of the ClassifierRole.
+     */
     public void TestClassifierRoleName() {
 	MClassifierRole cr;
 
@@ -79,6 +86,9 @@ public class TestParserDisplay extends TestCase {
 	checkName(cr, clro03, "roname");
     }
 
+    /**
+     * Test the Base of the ClassifierRole.
+     */
     public void TestClassifierRoleBases() {
 	MClassifierRole cr;
 	String res1[] = {
@@ -100,6 +110,9 @@ public class TestParserDisplay extends TestCase {
 	checkBases(cr, clro03, res3);
     }
 
+    /**
+     * Test if parsing a ClassifierRole throws exceptions.
+     */
     public void TestClassifierRoleThrows() {
 	MClassifierRole cr;
 

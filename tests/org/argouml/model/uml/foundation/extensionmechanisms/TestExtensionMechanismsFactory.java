@@ -1,4 +1,4 @@
-// $Id: TestExtensionMechanismsFactory.java,v 1.6 2004/08/26 20:27:19 mvw Exp $
+// $Id: TestExtensionMechanismsFactory.java,v 1.7 2004/09/25 08:04:52 mvw Exp $
 // Copyright (c) 2002-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -28,9 +28,13 @@ import junit.framework.TestCase;
 
 import org.argouml.util.CheckUMLModelHelper;
 
+/**
+ * Test the ExtensionMechanismsFactory class.
+ *
+ */
 public class TestExtensionMechanismsFactory extends TestCase {
 
-    static String[] allModelElements = {
+    private static String[] allModelElements = {
 	"Stereotype",
 	"TaggedValue",
     };
@@ -63,5 +67,12 @@ public class TestExtensionMechanismsFactory extends TestCase {
 		   this,
 		   ExtensionMechanismsFactory.getFactory(),
 		   allModelElements);
+    }
+
+    /**
+     * @return Returns the allModelElements.
+     */
+    static String[] getAllModelElements() {
+        return allModelElements;
     }
 }

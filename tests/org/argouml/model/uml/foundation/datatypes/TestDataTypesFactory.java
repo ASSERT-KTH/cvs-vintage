@@ -1,4 +1,4 @@
-// $Id: TestDataTypesFactory.java,v 1.6 2004/02/24 08:28:18 linus Exp $
+// $Id: TestDataTypesFactory.java,v 1.7 2004/09/25 08:04:51 mvw Exp $
 // Copyright (c) 2002-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -30,12 +30,24 @@ import junit.framework.TestCase;
 
 import org.argouml.util.CheckUMLModelHelper;
 
+/**
+ * Test the DataTypesFactory class.
+ *
+ */
 public class TestDataTypesFactory extends TestCase {
 
+    /**
+     * The constructor.
+     * 
+     * @param n the name
+     */
     public TestDataTypesFactory(String n) {
 	super(n);
     }
 
+    /**
+     * Test if this class is really a singleton.
+     */
     public void testSingleton() {
 
 	Object o1 = DataTypesFactory.getFactory();
@@ -46,6 +58,9 @@ public class TestDataTypesFactory extends TestCase {
 
     }
 
+    /**
+     * Test creation.
+     */
     public void testCreates() {
 
 	Object[] args = {
