@@ -83,6 +83,7 @@ public class StopTomcat {
     String secret;
     // explicit command line params ( for port, host or secret )
     boolean commandLineParams=false;
+    String secretFile=null;
     
     public StopTomcat() 
     {
@@ -90,6 +91,10 @@ public class StopTomcat {
 
     // -------------------- Parameters --------------------
 
+    public void setSecretFile( String s ) {
+	secretFile=s;
+    }
+    
     public void setH( String s ) {
 	tomcatHome=s;
 	System.getProperties().put("tomcat.home", s);
@@ -140,8 +145,10 @@ public class StopTomcat {
 	// read TOMCAT_HOME/conf/ajp12.id unless command line params
 	// specify a port/host/secret
 	try {
+	    if( secretFile==null )
+		secretFile=tchome + "/conf/ajp12.id";
 	    BufferedReader rd=new BufferedReader
-		( new FileReader( tchome + "/conf/ajp12.id"));
+		( new FileReader(secretFile));
 	    String line=rd.readLine();
 	    
 	    if( port < 0 ) {
@@ -158,7 +165,7 @@ public class StopTomcat {
 	    if( secret==null ) secret=line;
 	} catch( IOException ex ) {
 	    //ex.printStackTrace();
-	    System.out.println("Can't read " + tchome + "/conf/ajp12.id");
+	    System.out.println("Can't read " + secretFile);
 	    //	    System.out.println(ex.toString());
 	    if( ! commandLineParams )
 		return;
@@ -279,6 +286,14 @@ public class StopTomcat {
 		commandLineParams=true;
 		if (i < args.length) 
 		    secret=args[i];
+		else
+		    return false;
+	    }
+	    if (arg.equalsIgnoreCase("-ajpid") ) {
+		i++;
+		commandLineParams=true;
+		if (i < args.length) 
+		    secretFile=args[i];
 		else
 		    return false;
 	    }
