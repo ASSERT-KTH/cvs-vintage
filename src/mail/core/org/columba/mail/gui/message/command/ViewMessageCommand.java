@@ -30,6 +30,7 @@ import org.columba.mail.folder.FolderInconsistentException;
 import org.columba.mail.folder.IMailbox;
 import org.columba.mail.gui.frame.MessageViewOwner;
 import org.columba.mail.gui.frame.TableViewOwner;
+import org.columba.mail.gui.frame.ThreePaneMailFrameController;
 import org.columba.mail.gui.message.IMessageController;
 import org.columba.mail.gui.table.command.ViewHeaderListCommand;
 import org.columba.mail.util.MailResourceLoader;
@@ -132,6 +133,7 @@ public class ViewMessageCommand extends Command {
 		if (!flags.getSeen() && !srcFolder.isReadOnly()) {
 			// restart timer which marks the message as read
 			// after a user configurable time interval
+			if ( frameMediator instanceof ThreePaneMailFrameController )
 			((TableViewOwner) frameMediator).getTableController()
 					.restartMarkAsReadTimer(
 							(MailFolderCommandReference) getReference());

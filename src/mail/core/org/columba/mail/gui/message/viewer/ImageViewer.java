@@ -18,6 +18,7 @@
 package org.columba.mail.gui.message.viewer;
 
 import java.awt.BorderLayout;
+import java.awt.Container;
 import java.awt.Toolkit;
 import java.io.InputStream;
 
@@ -106,8 +107,12 @@ public class ImageViewer extends JPanel implements IMimePartViewer {
 
 		removeAll();
 
+		
 		image = new ImageIcon(Toolkit.getDefaultToolkit().createImage(data));
 		//image = new ImageIcon(data);
+		Container parent = getParent();
+		System.out.println("container-width="+parent.getWidth());
+		System.out.println("image-width="+image.getIconHeight());
 
 		JLabel label = new JLabel(image);
 		add(label, BorderLayout.CENTER);

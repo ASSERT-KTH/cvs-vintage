@@ -191,23 +191,11 @@ public class TextViewer extends JTextPane implements IMimePartViewer, Observer,
 		// register interest on configuratin changes
 		fonts.addObserver(this);
 	}
-
-	private void printAddress(Integer[] address) {
-		
-		for ( int i=0; i<address.length; i++) {
-			System.out.print(address[i].toString());
-		}
-		
-		System.out.println();
-	}
 	
 	/**
 	 * @see org.columba.mail.gui.message.viewer.IMimePartViewer#view(org.columba.mail.folder.IMailbox, java.lang.Object, java.lang.Integer[], org.columba.mail.gui.frame.MailFrameMediator)
 	 */
 	public void view(IMailbox folder, Object uid, Integer[] address, MailFrameMediator mediator) throws Exception {
-		System.out.print("text view=");
-		
-		printAddress(address);
 		
 		MimePart bodyPart = null;
 		InputStream bodyStream;

@@ -18,8 +18,8 @@
 package org.columba.mail.gui.message.viewer;
 
 import java.awt.BorderLayout;
+import java.awt.Component;
 import java.awt.Font;
-import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.InputStream;
@@ -34,9 +34,11 @@ import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JToggleButton;
 import javax.swing.UIManager;
 
 import org.columba.core.command.CommandProcessor;
+import org.columba.core.gui.util.ImageLoader;
 import org.columba.core.plugin.PluginHandlerNotFoundException;
 import org.columba.core.plugin.PluginLoadingFailedException;
 import org.columba.core.plugin.PluginManager;
@@ -47,7 +49,6 @@ import org.columba.mail.folder.IMailbox;
 import org.columba.mail.folder.temp.TempFolder;
 import org.columba.mail.gui.frame.MailFrameMediator;
 import org.columba.mail.gui.message.command.OpenAttachmentCommand;
-import org.columba.mail.gui.message.command.OpenWithAttachmentCommand;
 import org.columba.mail.gui.message.command.SaveAttachmentAsCommand;
 import org.columba.mail.gui.tree.FolderTreeModel;
 import org.columba.mail.plugin.ViewerPluginHandler;
@@ -127,9 +128,6 @@ public class InlineAttachmentsViewer extends JPanel implements ICustomViewer {
 			MailFolderCommandReference ref)
 			throws PluginLoadingFailedException, Exception {
 
-		System.out
-				.println("traverseChildren=" + parent.getAddress().toString());
-
 		List list = parent.getChilds();
 		for (int i = 0; i < list.size(); i++) {
 			MimePart mp = (MimePart) list.get(i);
@@ -145,7 +143,6 @@ public class InlineAttachmentsViewer extends JPanel implements ICustomViewer {
 			}
 		}
 	}
-	
 
 	/**
 	 * @param parent
@@ -162,7 +159,8 @@ public class InlineAttachmentsViewer extends JPanel implements ICustomViewer {
 				.equalsIgnoreCase("multipart/alternative")) {
 			traverseAlternativePart(child, ref);
 		} else {
-			JPanel panel = createPanel(new MailFolderCommandReference(ref.getSourceFolder(), ref.getUids(), ref.getAddress()));
+			JPanel panel = createPanel(new MailFolderCommandReference(ref
+					.getSourceFolder(), ref.getUids(), ref.getAddress()));
 			attachmentPanels.add(panel);
 		}
 
@@ -231,12 +229,12 @@ public class InlineAttachmentsViewer extends JPanel implements ICustomViewer {
 		JPanel panel = null;
 		if (type.equalsIgnoreCase("message")) {
 			// rfc822 message
-			ref = createNewReference(h, mp, folder, uid);
 
 			ICustomViewer viewer = new Rfc822MessageViewer(mediator);
 
 			panel = createMessagePane(viewer, ref);
 
+			ref = createNewReference(h, mp, folder, uid);
 			viewer.view((IMailbox) ref.getSourceFolder(), ref.getUids()[0],
 					mediator);
 
@@ -274,7 +272,7 @@ public class InlineAttachmentsViewer extends JPanel implements ICustomViewer {
 				viewer.view((IMailbox) ref.getSourceFolder(), ref.getUids()[0],
 						address, mediator);
 				viewers.add(viewer);
-			}else {
+			} else {
 				panel = createBasicPanel(description, ref, true);
 			}
 
@@ -350,18 +348,16 @@ public class InlineAttachmentsViewer extends JPanel implements ICustomViewer {
 	 */
 	private JPanel createMessagePane(IViewer viewer,
 			MailFolderCommandReference ref) {
-		JPanel centerPanel = new JPanel();
-		centerPanel.setBackground(UIManager.getColor("TextArea.background"));
-		centerPanel.setLayout(new BorderLayout());
-		centerPanel.add(new JLabel("     "), BorderLayout.WEST);
+
+		JPanel centerPanel = createBasicPanel("Rfc822/message", ref,
+				counter != 0);
 
 		JPanel viewerPanel = new JPanel();
 		viewerPanel.setLayout(new BorderLayout());
 		viewerPanel.add(viewer.getView(), BorderLayout.CENTER);
 		viewerPanel.setBackground(UIManager.getColor("TextArea.background"));
-		viewerPanel.setBorder(BorderFactory.createCompoundBorder(BorderFactory
-				.createEmptyBorder(5, 5, 5, 5), BorderFactory
-				.createEtchedBorder()));
+		viewerPanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+
 		centerPanel.add(viewerPanel, BorderLayout.CENTER);
 
 		return centerPanel;
@@ -384,20 +380,6 @@ public class InlineAttachmentsViewer extends JPanel implements ICustomViewer {
 
 		return new MailFolderCommandReference(tempFolder,
 				new Object[] { tempMessageUid });
-	}
-
-	/**
-	 * @param string
-	 * @param viewer
-	 * @return
-	 */
-	private JPanel createDefaultAttachmentPanel(String description,
-			IViewer viewer, MailFolderCommandReference ref) {
-		
-		JPanel centerPanel = createBasicPanel(description, ref, counter != 0);
-
-		centerPanel.add(viewer.getView(), BorderLayout.CENTER);
-		return centerPanel;
 	}
 
 	/**
@@ -439,23 +421,24 @@ public class InlineAttachmentsViewer extends JPanel implements ICustomViewer {
 	 * @param name
 	 * @return
 	 */
-	private JPanel createBasicPanel(String name, MailFolderCommandReference ref, boolean withHeader) {
-		
+	private JPanel createBasicPanel(String name,
+			MailFolderCommandReference ref, boolean withHeader) {
+
 		JPanel buttonPanel = new JPanel();
 		buttonPanel.setBackground(UIManager.getColor("TextArea.background"));
-		buttonPanel.setLayout(new GridLayout(1, 3, 5, 0));
+		//buttonPanel.setLayout(new GridLayout(1, 3, 5, 0));
 
+		JToggleButton hideButton = new JToggleButton("Hide/Show");
 		JButton openButton = new JButton("Open");
-		openButton.addActionListener(new OpenActionListener(ref));
-		JButton openWithButton = new JButton("Open With...");
-		openWithButton.addActionListener(new OpenWithActionListener(ref));
+		openButton.setIcon(ImageLoader.getImageIcon("folder-open.png"));
 		JButton saveButton = new JButton("Save As...");
-		saveButton.addActionListener(new SaveAsActionListener(ref));
+		saveButton.setIcon(ImageLoader.getImageIcon("stock_save_as-16.png"));
+		
 		JLabel label = new JLabel(name);
 		label.setFont(label.getFont().deriveFont(Font.BOLD));
 
+		buttonPanel.add(hideButton);
 		buttonPanel.add(openButton);
-		buttonPanel.add(openWithButton);
 		buttonPanel.add(saveButton);
 
 		JPanel internPanel = new JPanel();
@@ -472,12 +455,10 @@ public class InlineAttachmentsViewer extends JPanel implements ICustomViewer {
 		topPanel.setLayout(new BorderLayout());
 		topPanel.add(internPanel, BorderLayout.WEST);
 
+		JPanel centerPanel = new JPanel();
 		if (!withHeader) {
-			JPanel centerPanel = new JPanel();
 			centerPanel.setLayout(new BorderLayout());
-			return centerPanel;
 		} else {
-			JPanel centerPanel = new JPanel();
 			centerPanel.setBorder(BorderFactory.createCompoundBorder(
 					BorderFactory.createEmptyBorder(5, 5, 5, 5), BorderFactory
 							.createEtchedBorder()));
@@ -485,9 +466,14 @@ public class InlineAttachmentsViewer extends JPanel implements ICustomViewer {
 					.setBackground(UIManager.getColor("TextArea.background"));
 			centerPanel.setLayout(new BorderLayout());
 			centerPanel.add(topPanel, BorderLayout.NORTH);
-			return centerPanel;
+			
 		}
-
+		
+		hideButton.addActionListener(new HideActionListener(centerPanel, topPanel, hideButton));
+		
+		openButton.addActionListener(new OpenActionListener(ref));
+		saveButton.addActionListener(new SaveAsActionListener(ref));
+		return centerPanel;
 	}
 
 	/**
@@ -523,21 +509,40 @@ public class InlineAttachmentsViewer extends JPanel implements ICustomViewer {
 
 	}
 
-	class OpenWithActionListener implements ActionListener {
+	class HideActionListener implements ActionListener {
 
-		MailFolderCommandReference ref;
-
-		public OpenWithActionListener(MailFolderCommandReference ref) {
-			this.ref = ref;
-
+		private JPanel center;
+		private JPanel top;
+		private JToggleButton button;
+		private Component contents;
+		
+		public HideActionListener(JPanel center, JPanel top, JToggleButton button) {
+			this.center = center;
+			this.top = top;
+			this.button = button;
+			
+			if ( center.getComponentCount() == 2)
+				contents = center.getComponent(1);
 		}
 
 		/**
 		 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
 		 */
 		public void actionPerformed(ActionEvent arg0) {
-			CommandProcessor.getInstance().addOp(
-					new OpenWithAttachmentCommand(ref));
+			if ( !button.isSelected()) {
+				// show contents
+				if ( contents != null)
+					center.add(contents);
+				
+			} else
+			{
+				// hide contents
+				if ( center.getComponentCount() == 2)
+					contents = center.getComponent(1);
+				if ( contents != null)
+					center.remove(contents);
+			}
+			center.revalidate();
 		}
 
 	}
