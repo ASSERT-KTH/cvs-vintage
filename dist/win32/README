@@ -1,3 +1,8 @@
-Configuration file for INNO Setup - a windows installer
+Inno Setup Installer Script
+===========================
 
-http://www.jrsoftware.org/isinfo.php
+Install Inno Setup from:	http://www.jrsoftware.org/isinfo.php
+
+Open the context-menu with Windows Explorer and select "compile".
+
+This will automatically create "/ColumbaSetup.exe".
