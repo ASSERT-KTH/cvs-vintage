@@ -24,7 +24,7 @@
 // File: DisplayTextTree.java
 // Classes: DisplayTextTree
 // Original Author:
-// $Id: DisplayTextTree.java,v 1.3 2002/05/03 19:14:44 jeremybennett Exp $
+// $Id: DisplayTextTree.java,v 1.4 2002/07/08 20:22:45 linus Exp $
 
 // 26 Apr 2002: Jeremy Bennett (mail@jeremybennett.com). Patch to give a better
 // naming for extension points in convertValueToText.
@@ -71,6 +71,9 @@ implements MElementListener, VetoableChangeListener {
     if (value == null) return "(null)";
     if (value instanceof ToDoItem) {
       return ((ToDoItem)value).getHeadline();
+    }
+    if (value instanceof ToDoList) {
+	return "ToDoList";
     }
     if (value instanceof MTaggedValue) {
         String tagName = ((MTaggedValue)value).getTag();
