@@ -72,7 +72,6 @@
     <copy todir="${tomcat.build}/bin">
             <fileset dir="${ant.home}/bin"/>
         </copy>
-    <copy tofile="${tomcat.build}/lib/ant.jar" file="${ant.home}/lib/ant.jar"/>
     <copy tofile="${tomcat.build}/lib/jaxp.jar" 
 	  file="${ant.home}/lib/jaxp.jar"/>
     <copy tofile="${tomcat.build}/lib/parser.jar" 
@@ -100,13 +99,17 @@
   <!-- Independent ( stand alone ) utilities -->
 
   <target name="tomcat_util" depends="init">
-    <javac destdir="${tomcat.build}/classes" debug="${debug}" optimize="${optimize}" deprecation="off" srcdir="src/share">
+    <javac destdir="${tomcat.build}/classes" 
+	   debug="${debug}" 
+	   optimize="${optimize}" 
+	   deprecation="off" 
+	   srcdir="src/share">
       <!-- no dependencies -->
       <include name="org/apache/tomcat/util/**"/>    
-      <include name="org/apache/tomcat/logging/**"/>    
       <exclude name="**/util/net/SSLSocketFactory.java" unless="jsse.present"/>
     </javac>
-    <jar jarfile="${tomcat.build}/lib/tomcat_util.jar" basedir="${tomcat.build}/classes"> 
+    <jar jarfile="${tomcat.build}/lib/tomcat_util.jar" 
+	 basedir="${tomcat.build}/classes"> 
       <include name="org/apache/tomcat/util/**"/>    
       <include name="org/apache/tomcat/logging/**"/>    
     </jar>
@@ -387,7 +390,9 @@
 
   <!-- ==================== Admin & agreagate ==================== -->
    
-  <target name="tomcat" depends="prepare,tomcat-jars-new">
+  <!-- The self-test app should be removed in the release, but it's 
+       useful to have it builded by default -->
+  <target name="tomcat" depends="prepare,tomcat-jars-new,sanity-test">
   </target>
 
   <target name="clean-classes" depends="init">
