@@ -20,9 +20,15 @@ public class SimplePrincipal implements Principal, java.io.Serializable
 
   public boolean equals(Object another)
   {
+    if (name == null)
+      return (another == null);  
     if ((another == null) || !(another instanceof SimplePrincipal))
       return false;
     return name.equals( another.toString() );
+  }
+
+  public int hashCode() {
+    return (name == null ? 0 : name.hashCode());
   }
 
   public String toString()
