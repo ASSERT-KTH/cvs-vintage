@@ -76,7 +76,7 @@ import org.tigris.scarab.om.ModuleManager;
  * @author <a href="mailto:jmcnally@collab.new">John McNally</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: AttributeValue.java,v 1.71 2002/08/15 20:15:16 jon Exp $
+ * @version $Id: AttributeValue.java,v 1.72 2002/09/24 22:28:37 jon Exp $
  */
 public abstract class AttributeValue 
     extends BaseAttributeValue
@@ -93,6 +93,7 @@ public abstract class AttributeValue
     private boolean oldNumericValueIsSet;
     private AttributeValue chainedValue;
     
+    private String activityDescription = null;
     private Activity saveActivity = null;
 
     private static String className = "AttributeValue";
@@ -779,6 +780,16 @@ public abstract class AttributeValue
     }
 
     /**
+     * Allows you to override the description for
+     * the activity that is generated when this attributevalue
+     * is saved.
+     */
+    public void setActivityDescription(String string)
+    {
+        this.activityDescription = string;
+    }
+
+    /**
      * Not sure it is a good idea to save description in activity record
      * the description can be generated from the other data and it brings
      * up i18n issues.
@@ -786,6 +797,10 @@ public abstract class AttributeValue
     private String getActivityDescription()
         throws TorqueException
     {
+        if (activityDescription != null)
+        {
+            return activityDescription;
+        }
         String id = getIssue().getFederatedId();
         String name = getAttribute().getName();
         String newValue = getValue();
