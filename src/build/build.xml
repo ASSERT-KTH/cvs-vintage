@@ -6,6 +6,14 @@
 
 <project name="JBoss" default="main" basedir="../..">
   <target name="init">
+    <echo message="build.compiler = ${build.compiler}"/>
+    <echo message="java.home = ${java.home}"/>
+    <echo message="user.home = ${user.home}"/>
+    <echo message="java.class.path = ${java.class.path}"/>
+    <echo message=""/>
+
+    <available property="jdk1.3+" classname="java.lang.StrictMath" />
+  </target>
 
     <taskdef name="xmlbean" classname="com.dreambean.xmlbeans.ant.XMLBeans"/>
 
@@ -35,7 +43,6 @@
     <property name="dist.dir" value="dist"/>
     <property name="external.dir" value="${dist.dir}/external"/>
 
-    <property name="classpath" value="${lib.dir}/jmxri.jar;${build.classes.dir};${src.lib.dir}/awt.jar;${lib.dir}/xml.jar;${src.lib.dir}/ejb.jar;${src.lib.dir}/ejb2.0.jar;${src.lib.dir}/ejxeditor.jar;${src.lib.dir}/jndi.jar;${src.lib.dir}/ejxejb.jar;${src.lib.dir}/jta-spec1_0_1.jar;${src.lib.dir}/jnpserver.jar;${src.lib.dir}/dynaserver.jar;${src.lib.dir}/hsql.jar;${src.lib.dir}/webserver.jar;${src.lib.dir}/idb.jar;${src.lib.dir}/jdbc2_0-stdext.jar;${src.lib.dir}/jaas.jar;${src.lib.dir}/jpl-util-0_5b.jar;${src.lib.dir}/jms.jar;${src.lib.dir}/openjms-client-patched-0.5.1.jar;${src.lib.dir}/exolabcore-0.1.jar;${src.lib.dir}/jboss-jms.jar;${src.lib.dir}/openjms-pool.jar;${src.lib.dir}/jaxp.jar;${src.lib.dir}/mail.jar;${src.lib.dir}/minerva-1_0b3.jar;${src.lib.dir}/jboss-jaas.jar;${src.lib.dir}/jbosssx.jar"/>
     <property name="packages" value="org.jboss,org.jboss.configuration,org.jboss.dependencies,org.jboss.deployment,org.jboss.ejb,org.jboss.ejb.plugins,org.jboss.ejb.plugins.jaws,org.jboss.ejb.plugins.jaws.deployment,org.jboss.ejb.plugins.jaws.jdbc,org.jboss.ejb.plugins.jaws.metadata,org.jboss.ejb.plugins.jrmp.server,org.jboss.ejb.plugins.jrmp.interfaces,org.jboss.ejb.plugins.jrmp12.server,org.jboss.ejb.plugins.jrmp12.interfaces,org.jboss.ejb.plugins.jrmp13.server,org.jboss.ejb.plugins.jrmp13.interfaces,org.jboss.ejb.plugins.jms,org.jboss.jdbc,org.jboss.jmx.client,org.jboss.jmx.interfaces,org.jboss.jmx.server,org.jboss.logging,org.jboss.metadata,org.jboss.naming,org.jboss.naming.java,org.jboss.proxy,org.jboss.security.plugins,org.jboss.security.plugins.samples,org.jboss.tm,org.jboss.tomcat,org.jboss.util,org.jboss.util.timeout,org.jboss.verifier,org.jboss.verifier.event,org.jboss.verifier.factory,org.jboss.web,org.jboss.jms.asf,org.jboss.jms.jndi"/>
 
     <property name="build.compiler" value="classic"/>
@@ -43,11 +50,33 @@
     <property name="build.util.classes.dir"     value="${build.dir}/util/classes/"/>
     <property name="build.metadata.classes.dir" value="${build.dir}/metadata/classes"/>
     <property name="build.verifier.classes.dir" value="${build.dir}/verifier/classes"/>
-    <property name="verifier.classpath"         value="${build.verifier.classes.dir};${lib.dir}/jaxp.jar;${src.lib.dir}/ejb.jar;${src.lib.dir}/jta-spec1_0_1.jar;${src.lib.dir}/jpl-util-0_5b.jar;${src.lib.dir}/jms.jar;${src.lib.dir}/jmxri.jar;${src.lib.dir}/parser.jar;${external.dir}/metadata.jar"/>
+
+    <property name="verifier.classpath"         value="${build.verifier.classes.dir}"/>
+
     <property name="util.classpath"             value="${build.util.classes.dir};${src.lib.dir}/ejb.jar;${lib.dir}/jmxri.jar"/>
-    
-    <available property="jdk1.3+" classname="java.lang.StrictMath" />
-  </target>
+
+    <!-- to use other xml parsers - add them to this list (yuck) - these jars get put into jboss' main classpath - from whence everything else is loaded -->
+    <property name="bootstrap.jars"             value="parser.jar,jaxp.jar,jaas.jar,jdbc2_0-stdext.jar,jboss-jaas.jar,xerces*.jar"/>    
+
+  <!-- Build classpath -->
+  <path id="classpath">
+        <fileset dir="${lib.dir}">
+            <include name="**/*.jar"/>
+        </fileset>
+        <fileset dir="${src.lib.dir}">
+            <include name="**/*.jar"/>
+        </fileset>
+  </path>
+
+  <!-- verifier classpath -->
+  <path id="verifier.classpath">
+        <fileset dir="${lib.dir}">
+            <include name="**/*.jar"/>
+        </fileset>
+        <fileset dir="${src.lib.dir}">
+            <include name="**/*.jar"/>
+        </fileset>
+  </path>
 
   <!-- =================================================================== -->
   <!-- Prepares the build directory                                        -->
@@ -63,33 +92,38 @@
     <mkdir dir="${build.classes.dir}"/>
     <javac srcdir="${src.dir}"
            destdir="${build.classes.dir}"
-           classpath="${classpath}"
            debug="off"
            deprecation="off"
            optimize="on"
            includes="org/**"
            excludes="**/activation/**, **/*BeanInfo.java"
-    />
+    >
+            <classpath refid="classpath"/>
+    </javac>
 
     <rmic base="${build.classes.dir}"
           classname="org.jboss.jmx.server.JMXAdaptorImpl"
-          stubVersion="1.2"
-          classpath="${classpath}"/>
+          stubVersion="1.2">
+            <classpath refid="classpath"/>
+    </rmic>
 
     <rmic base="${build.classes.dir}"
           classname="org.jboss.jmx.server.RMIConnectorImpl"
-          stubVersion="1.2"
-          classpath="${classpath}"/>
+          stubVersion="1.2">
+            <classpath refid="classpath"/>
+    </rmic>
 
     <rmic base="${build.classes.dir}"
           classname="org.jboss.jmx.client.RMIClientConnectorImpl.Listener"
-          stubVersion="1.2"
-          classpath="${classpath}"/>
+          stubVersion="1.2">
+            <classpath refid="classpath"/>
+    </rmic>
 
     <rmic base="${build.classes.dir}"
           classname="org.jboss.ejb.plugins.jrmp.server.JRMPContainerInvoker"
-          stubVersion="1.2"
-          classpath="${classpath}"/>
+          stubVersion="1.2">
+            <classpath refid="classpath"/>
+    </rmic>
   </target>
 
   <!-- =================================================================== -->
@@ -99,13 +133,14 @@
   <target name="compileTest" depends="compile">
     <javac srcdir="${src.dir}"
            destdir="${build.classes.dir}"
-           classpath="${classpath}"
            debug="on"
            deprecation="off"
            optimize="off"
            includes="test/jboss/jmx/**"
            excludes=""
-    />
+    >
+            <classpath refid="classpath"/>
+    </javac>
   </target>
 
   <!-- =================================================================== -->
@@ -118,12 +153,13 @@
     />
     <javac srcdir="${build.classes.dir}"
            destdir="${build.classes.dir}"
-           classpath="${classpath}"
            debug="on"
            deprecation="off"
            optimize="off"
            includes="**/*BeanInfo.java"
-    />
+    >
+            <classpath refid="classpath"/>
+    </javac>
   </target>
 
   <!-- =================================================================== -->
@@ -239,12 +275,12 @@
      <chmod file="${dist.dir}/bin/run.sh" perm="+x" />
      <copy todir="${dist.dir}/lib">
         <fileset dir="${src.lib.dir}"
-                 includes="parser.jar,jaxp.jar,jaas.jar,jdbc2_0-stdext.jar,jboss-jaas.jar"
+                 includes="${bootstrap.jars}"
         />
      </copy>
      <copy todir="${dist.dir}/lib/ext">
         <fileset dir="${src.lib.dir}"
-                 excludes="parser.jar,jaxp.jar,jaas.jar,jdbc2_0-stdext.jar"
+                 excludes="${bootstrap.jars}"
         />
      </copy>
      <copy todir="${dist.dir}/bin">
@@ -272,14 +308,15 @@
     <javadoc packagenames="${packages}"
              sourcepath="${src.dir}"
              destdir="${build.javadocs.dir}"
-             classpath="${classpath}"
              author="true"
              version="true"
              windowtitle="${Name} API"
              doctitle="${Name}"
              extdirs="${src.lib.dir}"
              bottom="Copyright &#169; 2000 The JBoss Organization. All Rights Reserved."
-    />
+    >
+            <classpath refid="classpath"/>
+    </javadoc>
   </target>
 
   <!-- =================================================================== -->
@@ -290,12 +327,13 @@
 
     <javac srcdir="${src.dir}"
            destdir="${build.verifier.classes.dir}"
-           classpath="${verifier.classpath}"
            debug="on"
            deprecation="off"
            optimize="off"
            includes="org/jboss/verifier/**"
-    />
+    >
+            <classpath refid="verifier.classpath"/>
+    </javac>
 
     <copy todir="${build.verifier.classes.dir}/org/jboss/verifier">
         <fileset dir="${src.resources}/org/jboss/verifier"/>
@@ -369,13 +407,14 @@
    
     <javac srcdir="${src.dir}"
            destdir="${build.metadata.classes.dir}"
-           classpath="${verifier.classpath}"
            debug="on"
            deprecation="off"
            optimize="off"
            includes="org/jboss/metadata/**,
                      org/jboss/ejb/DeploymentException.java"
-    />
+    >
+            <classpath refid="verifier.classpath"/>
+    </javac>
   
     <copy file="${etc.dir}/conf/default/standardjboss.xml" tofile="${build.metadata.classes.dir}/standardjboss.xml"/>
     
