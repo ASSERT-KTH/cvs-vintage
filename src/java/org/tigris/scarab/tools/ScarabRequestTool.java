@@ -1036,7 +1036,7 @@ try{
         {
            String currentQuery = user.getTemp(ScarabConstants
                                               .CURRENT_QUERY).toString();
-           System.out.println(currentQuery);
+           Log.debug(currentQuery);
            intake = parseQuery(currentQuery);
         }
         
