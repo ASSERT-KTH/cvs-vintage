@@ -453,22 +453,28 @@ try{
             }
       }catch(Exception e){e.printStackTrace();}
         return rma;
- 
-   }
-
-    
+    }
 
     /**
-     * Get a specific module by key value.
+     * Get a specific module by key value. Returns null if
+     * the Module could not be found
      *
      * @param key a <code>String</code> value
      * @return a <code>Module</code> value
      */
     public ModuleEntity getModule(String key) throws Exception
     {
-        return (ModuleEntity) ScarabModulePeer.retrieveByPK(new NumberKey(key));
+        ModuleEntity me = null;
+        try
+        {
+            me = (ModuleEntity) 
+                ScarabModulePeer.retrieveByPK(new NumberKey(key));
+        }
+        catch (Exception e)
+        {
+        }
+        return me;
     }
-
 
     /**
      * A Issue object for use within the Scarab API.
