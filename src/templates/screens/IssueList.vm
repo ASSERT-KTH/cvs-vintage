@@ -78,6 +78,7 @@ $l10n.format("IssueListCount", $totalCount)</h3>
 <div class="colbar">
 <small>
 #if ($scarabR.ValidIssueListAttributes.isEmpty())
+#set ($noAttrs = true)
 <p><em>$l10n.NoCommonAttributesInList</em></p>
 #else
 $link.setPage("ConfigureIssueList.vm").setLabel($l10n.AddRemoreAttributesFromView).setPathInfo("searchType","$searchType")
@@ -139,6 +140,7 @@ $link.setPage("ConfigureIssueList.vm").setLabel($l10n.AddRemoreAttributesFromVie
 #end
 
 ## ISSUE ATTRIBUTE VALUES
+#if (!$noAttrs)
 #set ($rmuas = $scarabR.RModuleUserAttributes)
 #foreach ($rmua in $rmuas)
  #set ($userAttribute = $rmua.Attribute)
@@ -164,6 +166,7 @@ $link.setPage("ConfigureIssueList.vm").setLabel($l10n.AddRemoreAttributesFromVie
         <a href="$sortLink">$value</a>
      #end
   </th>
+#end
 #end
   </tr>
 
@@ -197,6 +200,7 @@ $link.setPage("ConfigureIssueList.vm").setLabel($l10n.AddRemoreAttributesFromVie
   <td>$result.RModuleIssueType.DisplayName</td> 
  #end
   <td><a href="$issueLink">$result.UniqueId</a></td>
+#if (!$noAttrs)
 #foreach ($value in $result.AttributeValuesAsCSV)
   <td>
   #if ($value.length() == 0)
@@ -205,6 +209,7 @@ $link.setPage("ConfigureIssueList.vm").setLabel($l10n.AddRemoreAttributesFromVie
     $value
   #end
   </td>
+#end
 #end
   </tr>
 #end

@@ -691,13 +691,13 @@ e.printStackTrace();
             MITList currentList = user.getCurrentMITList();
             if (currentList != null)
             {
-                result = currentList.getCommonAttributes();
+                result = currentList.getCommonAttributes(false);
             }
             else 
             {
                 Module module = getCurrentModule();
                 IssueType issueType = getCurrentIssueType();
-                List rmas = module.getRModuleAttributes(issueType, true);
+                List rmas = module.getRModuleAttributes(issueType, false);
                 if (rmas != null) 
                 {
                     result = new ArrayList(rmas.size());

@@ -68,7 +68,7 @@ import org.tigris.scarab.workflow.WorkflowFactory;
  * This class represents a RModuleAttribute relationship.
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: RModuleAttribute.java,v 1.40 2003/06/06 00:33:02 jmcnally Exp $
+ * @version $Id: RModuleAttribute.java,v 1.41 2003/06/16 20:14:21 elicia Exp $
  */
 public class RModuleAttribute 
     extends BaseRModuleAttribute
@@ -215,6 +215,16 @@ public class RModuleAttribute
                                             .remove(this);
                 WorkflowFactory.getInstance().deleteWorkflowsForAttribute(
                                               attr, module, getIssueType());
+
+                // delete module-user-attribute mappings
+                Criteria crit = new Criteria()
+                    .add(RModuleUserAttributePeer.ATTRIBUTE_ID, 
+                         attr.getAttributeId())
+                    .add(RModuleUserAttributePeer.MODULE_ID, 
+                         getModuleId())
+                    .add(RModuleUserAttributePeer.ISSUE_TYPE_ID, 
+                         getIssueTypeId());
+                RModuleUserAttributePeer.doDelete(crit);
 
                 // delete module-option mappings
                 if (attr.isOptionAttribute())
