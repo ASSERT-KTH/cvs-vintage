@@ -272,7 +272,7 @@ $intake.declareGroups()
   <table cellpadding="3" cellspacing="2" border="0">
              <tr>
        <th>Max items per page</td>
-       <td> <input type="radio" value=2 name="resultsPerPage" #if ($resultsPerPage.toString().equals("25")) checked="checked" #end /> 25
+       <td> <input type="radio" name="resultsPerPage" value="25" #if ($resultsPerPage.toString().equals("25")) checked="checked" #end /> 25
          <input type="radio" name="resultsPerPage" value="50" #if ($resultsPerPage.toString().equals("50")) checked="checked" #end /> 50
          <input type="radio" name="resultsPerPage" value="75" #if ($resultsPerPage.toString().equals("75")) checked="checked" #end /> 75
          <input type="radio" name="resultsPerPage" value="100" #if ($resultsPerPage.toString().equals("100")) checked="checked" #end /> 100
