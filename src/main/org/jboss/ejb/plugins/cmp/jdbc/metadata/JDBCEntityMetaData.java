@@ -29,7 +29,7 @@ import org.w3c.dom.Element;
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @author <a href="sebastien.alborini@m4x.org">Sebastien Alborini</a>
  * @author <a href="mailto:dirk@jboss.de">Dirk Zimmermann</a>
- * @version $Revision: 1.14 $
+ * @version $Revision: 1.15 $
  */
 public final class JDBCEntityMetaData {
    /**
@@ -483,13 +483,18 @@ public final class JDBCEntityMetaData {
       Element eagerLoadGroupElement = MetaData.getOptionalChild(
             element, "eager-load-group");
       if(eagerLoadGroupElement != null) {
-         eagerLoadGroup = MetaData.getElementContent(eagerLoadGroupElement);
-         if(eagerLoadGroup != null 
-               && !eagerLoadGroup.equals("*")
-               && !loadGroups.containsKey(eagerLoadGroup)) {
-            throw new DeploymentException("Eager load group not found: " +
-                  "eager-load-group=" + eagerLoadGroup);
+         String eagerLoadGroupTmp = 
+               MetaData.getElementContent(eagerLoadGroupElement);
+         if(eagerLoadGroupTmp != null && eagerLoadGroupTmp.trim().length()==0) {
+            eagerLoadGroupTmp = null;
          }
+         if(eagerLoadGroupTmp != null 
+               && !eagerLoadGroupTmp.equals("*")
+               && !loadGroups.containsKey(eagerLoadGroupTmp)) {
+            throw new DeploymentException("Eager load group not found: " +
+                  "eager-load-group=" + eagerLoadGroupTmp);
+         }
+         eagerLoadGroup = eagerLoadGroupTmp;
       } else {
          eagerLoadGroup = defaultValues.getEagerLoadGroup();
       }
@@ -614,7 +619,7 @@ public final class JDBCEntityMetaData {
       while(loadGroupNames.hasNext()) {
          String loadGroupName = MetaData.getElementContent(
                (Element)loadGroupNames.next());
-         if(!eagerLoadGroup.equals("*")
+         if(!loadGroupName.equals("*")
                && !loadGroups.containsKey(loadGroupName)) {
             throw new DeploymentException("Lazy load group not found: " +
                   "load-group-name=" + loadGroupName);
