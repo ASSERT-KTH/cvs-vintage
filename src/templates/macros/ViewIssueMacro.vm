@@ -51,9 +51,9 @@
 
 <div class="functnbar">
 #if ($data.User.hasPermission($scarabG.Permission.MODULE__EDIT, $module))
-    <input type="submit" value="Move" name="eventSubmit_doMove"  />&#160;
+    <input type="submit" value="Move" name="eventSubmit_doMove" />&#160;
 #end
-<input type="submit" value="Copy" name="eventSubmit_doCopy"  />
+<input type="submit" value="Copy" name="eventSubmit_doCopy" />
 <input type="hidden" name="$scarabG.Constant.OTHER_TEMPLATE" value="MoveIssue.vm" />
 <input type="hidden" name="tab" value="$tab" />
 </div>
@@ -311,8 +311,8 @@
  </table>
 <div class="functnbar3">
   #if ($canEdit)
-  <input type="submit" value="Save" name="eventSubmit_doSaveurl"  />&#160;
-  <input type="submit" value="Add link" name="eventSubmit_doSubmiturl"  />&#160;
+  <input type="submit" value="Save" name="eventSubmit_doSaveurl" />&#160;
+  <input type="submit" value="Add link" name="eventSubmit_doSubmiturl" />&#160;
   <input type="submit" value="Delete link"  name="eventSubmit_doDeleteurl" />
   #end
 </div>
@@ -356,7 +356,7 @@
 
 #if ($canEdit)
 <div class="functnbar3">
-  <input type="submit" value="Delete attachment" name="eventSubmit_doDeletefile"  />
+  <input type="submit" value="Delete attachment" name="eventSubmit_doDeletefile" />
 </div>
 #end
 #end
@@ -425,7 +425,7 @@
  <th> &nbsp; </th>
  <th>Issue ID #</th>
  <th>Relationship</th>
- <th>Dependency</th>
+ <th>Type</th>
 </tr>
 
 #foreach ($depend in $currentIssue.Parents)
@@ -433,8 +433,8 @@
   #set ($dependGroup = $intake.Depend.mapTo($depend))
   #indexedRows($velocityCount)
 <td>#booleanCheckbox($dependGroup.Deleted)</td>
-<td> $link.setPage("ViewIssue.vm").addPathInfo("id", $parent.UniqueId).setLabel("$parent.UniqueId")</td>
-<td> Parent </td>
+<td>$link.setPage("ViewIssue.vm").addPathInfo("id", $parent.UniqueId).setLabel("$parent.UniqueId")</td>
+<td>Parent</td>
 <td>
 #if ($canEdit)
 <select name="$dependGroup.TypeId.Key" class="select">
@@ -510,8 +510,7 @@
 </table>
 <div class="functnbar3">
   #if ($canEdit)
-   <input type="submit" value="Save"  name="eventSubmit_doUpdatedependencies" />
-&nbsp;
+   <input type="submit" value="Save"  name="eventSubmit_doUpdatedependencies" />&nbsp;
    <input type="submit" value="Add new child" name="eventSubmit_doAdddependency" />&nbsp;
    <input type="submit" value="Delete selected"  name="eventSubmit_doUpdatedependencies" />
   #end
@@ -588,9 +587,9 @@
 
 <div class="functnbar2">
 #if ($data.User.hasPermission($scarabG.Permission.MODULE__EDIT, $scarabR.CurrentModule))
-    <input type="submit" value="Move" name="eventSubmit_doMove"  />&#160;
+    <input type="submit" value="Move" name="eventSubmit_doMove" />&#160;
 #end
-<input type="submit" value="Copy" name="eventSubmit_doCopy"  />
+<input type="submit" value="Copy" name="eventSubmit_doCopy" />
 </div>
 
 #end
