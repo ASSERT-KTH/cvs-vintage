@@ -43,7 +43,7 @@ import org.jboss.logging.Logger;
 *   @see <related>
 *   @author Rickard Öberg (rickard.oberg@telkel.com)
 *   @author <a href="marc.fleury@telkel.com">Marc Fleury</a>
-*   @version $Revision: 1.17 $
+*   @version $Revision: 1.18 $
 */
 public class EntityInstanceInterceptor
 extends AbstractInterceptor
@@ -135,7 +135,7 @@ extends AbstractInterceptor
               {
                  // Possible deadlock
                  Transaction tx = ctx.getTransaction();
-                 Logger.log("LOCKING-WAITING for id "+ctx.getId()+" ctx.hash "+ctx.hashCode()+" tx:"+((tx == null) ? "null" : tx.toString()));
+                 Logger.log("LOCKING-WAITING (TRANSACTION) for id "+ctx.getId()+" ctx.hash "+ctx.hashCode()+" tx:"+((tx == null) ? "null" : tx.toString()));
                  
                  try{ctx.wait(5000);}
                    catch (InterruptedException ie) {}
@@ -161,7 +161,7 @@ extends AbstractInterceptor
                         synchronized (ctx)
                         {
                             // Possible deadlock
-                            Logger.log("LOCKING-WAITING for id "+ctx.getId()+" ctx.hash "+ctx.hashCode());
+                            Logger.log("LOCKING-WAITING (CTX) for id "+ctx.getId()+" ctx.hash "+ctx.hashCode());
                             
                             try{ctx.wait(5000);}
                                 catch (InterruptedException ie) {}
@@ -195,21 +195,21 @@ extends AbstractInterceptor
        {
          // Discard instance
          // EJB 1.1 spec 12.3.1
-         ((EntityContainer)getContainer()).getInstanceCache().remove(key);
+         cache.remove(key);
          
          throw e;
        } catch (RuntimeException e)
        {
          // Discard instance
          // EJB 1.1 spec 12.3.1
-         ((EntityContainer)getContainer()).getInstanceCache().remove(key);
+         cache.remove(key);
          
          throw e;
        } catch (Error e)
        {
          // Discard instance
          // EJB 1.1 spec 12.3.1
-         ((EntityContainer)getContainer()).getInstanceCache().remove(key);
+         cache.remove(key);
          
          throw e;
        } finally
