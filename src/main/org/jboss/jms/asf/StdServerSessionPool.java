@@ -1,17 +1,16 @@
-/*
- * JBoss, the OpenSource J2EE webOS
- *
- * Distributable under LGPL license.
- * See terms of license at gnu.org.
- */
-package org.jboss.jms.asf;
-import EDU.oswego.cs.dl.util.concurrent.Executor;
+/***************************************
+ *                                     *
+ *  JBoss: The OpenSource J2EE WebOS   *
+ *                                     *
+ *  Distributable under LGPL license.  *
+ *  See terms of license at gnu.org.   *
+ *                                     *
+ ***************************************/
 
-import EDU.oswego.cs.dl.util.concurrent.PooledExecutor;
-import EDU.oswego.cs.dl.util.concurrent.ThreadFactory;
+package org.jboss.jms.asf;
+
 import java.util.ArrayList;
 import java.util.Iterator;
-
 import java.util.List;
 
 import javax.jms.Connection;
@@ -28,85 +27,65 @@ import javax.jms.XASession;
 import javax.jms.XATopicConnection;
 import javax.jms.XATopicSession;
 
+import EDU.oswego.cs.dl.util.concurrent.Executor;
+import EDU.oswego.cs.dl.util.concurrent.PooledExecutor;
+import EDU.oswego.cs.dl.util.concurrent.ThreadFactory;
+
 import org.jboss.logging.Logger;
+
 import org.jboss.tm.XidFactoryMBean;
 
 /**
- * Implementation of ServerSessionPool. <p>
+ * Implementation of ServerSessionPool.
  *
- * Created: Thu Dec 7 17:02:03 2000
- *
- * @author    <a href="mailto:peter.antman@tim.se">Peter Antman</a> .
- * @author    <a href="mailto:hiram.chirino@jboss.org">Hiram Chirino</a> .
- * @version   $Revision: 1.19 $
+ * @version <tt>$Revision: 1.20 $</tt>
+ * @author <a href="mailto:peter.antman@tim.se">Peter Antman</a>
+ * @author <a href="mailto:hiram.chirino@jboss.org">Hiram Chirino</a>
+ * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
  */
 public class StdServerSessionPool
-       implements ServerSessionPool
+   implements ServerSessionPool
 {
-   /**
-    * The default size of the pool.
-    */
+   /** The default size of the pool. */
    private final static int DEFAULT_POOL_SIZE = 15;
 
-   /**
-    * The thread group which session workers will run.
-    */
+   /** The thread group which session workers will run. */
    private static ThreadGroup threadGroup =
-         new ThreadGroup("ASF Session Pool Threads");
+      new ThreadGroup("ASF Session Pool Threads");
 
-   /**
-    * Instance logger.
-    */
+   /** Instance logger. */
    private final Logger log = Logger.getLogger(this.getClass());
 
-   /**
-    * The size of the pool.
-    */
+   /** The size of the pool. */
    private int poolSize;
 
-   /**
-    * The message acknowledgment mode.
-    */
+   /** The message acknowledgment mode. */
    private int ack;
 
-   /**
-    * Is the bean container managed?
-    */
+   /** Is the bean container managed? */
    private boolean useLocalTX;
 
-   /**
-    * True if this is a transacted session.
-    */
+   /** True if this is a transacted session. */
    private boolean transacted;
 
-   /**
-    * The session connection.
-    */
+   /** The session connection. */
    private Connection con;
 
-   /**
-    * The message listener for the session.
-    */
+   /** The message listener for the session. */
    private MessageListener listener;
 
-   /**
-    * The list of ServerSessions.
-    */
+   /** The list of ServerSessions. */
    private List sessionPool;
 
-   /**
-    * The executor for processing messages?
-    */
+   /** The executor for processing messages? */
    private PooledExecutor executor;
 
-   /**
-    * Used to signal when the Pool is being closed down
-    */
+   /** Used to signal when the Pool is being closed down */
    private boolean closing = false;
 
    /**
-    * Used during close down to wait for all server sessions to be returned and
-    * closed.
+    * Used during close down to wait for all server sessions to be 
+    * returned and closed.
     */
    private int numServerSessions = 0;
 
@@ -140,27 +119,21 @@ public class StdServerSessionPool
       this.sessionPool = new ArrayList(maxSession);
       this.useLocalTX = useLocalTX;
       this.xidFactory = xidFactory;
+      
       // setup the worker pool
       executor = new PooledExecutor(poolSize);
       executor.setMinimumPoolSize(0);
       executor.setKeepAliveTime(1000 * 30);
       executor.waitWhenBlocked();
-      executor.setThreadFactory(
-         new ThreadFactory()
+      executor.setThreadFactory(new ThreadFactory()
          {
             private volatile int count = 0;
 
-            /**
-             * #Description of the Method
-             *
-             * @param command  Description of Parameter
-             * @return         Description of the Returned Value
-             */
             public Thread newThread(final Runnable command)
             {
                return new Thread(threadGroup,
-                     command,
-                     "Thread Pool Worker-" + count++);
+                                 command,
+                                 "Session Pool Worker-" + count++);
             }
          });
 
@@ -179,46 +152,41 @@ public class StdServerSessionPool
     */
    public ServerSession getServerSession() throws JMSException
    {
-      if( log.isTraceEnabled() )
-         log.trace("getting a server session");
+      boolean trace = log.isTraceEnabled();
+      
+      if (trace) {
+         log.trace("Getting a server session");
+      }
+      
       ServerSession session = null;
 
-      try
+      while (session == null)
       {
-         while (true)
+         synchronized (sessionPool)
          {
-            synchronized (sessionPool)
+            if (closing)
             {
-               if (closing)
+               throw new JMSException("Cannot get session after pool has been closed down.");
+            }
+            else if (sessionPool.size() > 0)
+            {
+               session = (ServerSession)sessionPool.remove(0);
+            }
+            else
+            {
+               try
                {
-                  throw new JMSException("Cannot get session after pool has been closed down.");
+                  sessionPool.wait();
                }
-               else if (sessionPool.size() > 0)
-               {
-                  session = (ServerSession)sessionPool.remove(0);
-                  break;
-               }
-               else
-               {
-                  try
-                  {
-                     sessionPool.wait();
-                  }
-                  catch (InterruptedException ignore)
-                  {
-                  }
-               }
+               catch (InterruptedException ignore) {}
             }
          }
       }
-      catch (Exception e)
-      {
-         throw new JMSException("Failed to get a server session: " + e);
-      }
 
-      // assert session != null
-      if( log.isTraceEnabled() )
-         log.trace("using server session: " + session);
+      if (trace) {
+         log.trace("Using server session: " + session);
+      }
+      
       return session;
    }
 
@@ -238,14 +206,14 @@ public class StdServerSessionPool
 
          if (log.isDebugEnabled())
          {
-            log.debug("Clearing " + sessionPool.size() +
-                  " from ServerSessionPool");
+            log.debug("Clearing session pool; size=" + sessionPool.size());
          }
 
          Iterator iter = sessionPool.iterator();
          while (iter.hasNext())
          {
             StdServerSession ses = (StdServerSession)iter.next();
+
             // Should we do anything to the server session?
             ses.close();
             numServerSessions--;
@@ -255,10 +223,10 @@ public class StdServerSessionPool
          sessionPool.notifyAll();
       }
 
-      //Must be outside synchronized block because of recycle method.
+      // Must be outside synchronized block because of recycle method.
       executor.shutdownAfterProcessingCurrentlyQueuedTasks();
 
-      //wait for all server sessions to be returned.
+      // wait for all server sessions to be returned.
       synchronized (sessionPool)
       {
          while (numServerSessions > 0)
@@ -267,9 +235,7 @@ public class StdServerSessionPool
             {
                sessionPool.wait();
             }
-            catch (InterruptedException ignore)
-            {
-            }
+            catch (InterruptedException ignore) {}
          }
       }
    }
@@ -319,8 +285,10 @@ public class StdServerSessionPool
          {
             sessionPool.add(session);
             sessionPool.notifyAll();
-            if( log.isTraceEnabled() )
-               log.trace("recycled server session: " + session);
+            
+            if (log.isTraceEnabled()) {
+               log.trace("Recycled server session: " + session);
+            }
          }
       }
    }
@@ -353,25 +321,21 @@ public class StdServerSessionPool
          else if (con instanceof TopicConnection)
          {
             ses = ((TopicConnection)con).createTopicSession(transacted, ack);
-            log.warn("Using a non-XA TopicConnection.  " +
-                  "It will not be able to participate in a Global UOW");
          }
          else if (con instanceof QueueConnection)
          {
             ses = ((QueueConnection)con).createQueueSession(transacted, ack);
-            log.warn("Using a non-XA QueueConnection.  " +
-                  "It will not be able to participate in a Global UOW");
          }
          else
          {
-            // should never happen really
-            log.error("Connection was not reconizable: " + con);
+            // Should never happen really
             throw new JMSException("Connection was not reconizable: " + con);
          }
 
          // create the server session and add it to the pool - it is up to the
          // server session to set the listener
-         StdServerSession serverSession = new StdServerSession(this, ses, xaSes, listener, useLocalTX, xidFactory);
+         StdServerSession serverSession =
+            new StdServerSession(this, ses, xaSes, listener, useLocalTX, xidFactory);
 
          sessionPool.add(serverSession);
          numServerSessions++;
@@ -380,4 +344,3 @@ public class StdServerSessionPool
       }
    }
 }
-

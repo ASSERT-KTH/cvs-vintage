@@ -36,8 +36,8 @@ import org.jboss.system.ServiceMBeanSupport;
 /**
  * Places redeliveded messages on a Dead Letter Queue.
  *
- *<p>
- *The Dead Letter Queue handler is used to not set JBoss in an endles loop
+ * <p>
+ * The Dead Letter Queue handler is used to not set JBoss in an endles loop
  * when a message is resent on and on due to transaction rollback for
  * message receipt.
  *
@@ -60,7 +60,7 @@ import org.jboss.system.ServiceMBeanSupport;
  *
  * Created: Thu Aug 23 21:17:26 2001
  *
- * @version <tt>$Revision: 1.11 $</tt>
+ * @version <tt>$Revision: 1.12 $</tt>
  * @author ???
  * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
  */
@@ -68,10 +68,10 @@ public class DLQHandler
    extends ServiceMBeanSupport
 {
    /** JMS property name holding original destination. */
-   public static final String JBOSS_ORIG_DESTINATION ="JBOSS_ORIG_DESTINATION";
+   public static final String JBOSS_ORIG_DESTINATION = "JBOSS_ORIG_DESTINATION";
    
    /** JMS property name holding original JMS message id. */
-   public static final String JBOSS_ORIG_MESSAGEID="JBOSS_ORIG_MESSAGEID";
+   public static final String JBOSS_ORIG_MESSAGEID = "JBOSS_ORIG_MESSAGEID";
    
    // Configuratable stuff
 
@@ -133,15 +133,14 @@ public class DLQHandler
       
       try {
          String factoryName = providerAdapter.getQueueFactoryRef();
-         QueueConnectionFactory factory = (QueueConnectionFactory)
-            ctx.lookup(factoryName);
+         QueueConnectionFactory factory = (QueueConnectionFactory)ctx.lookup(factoryName);
          log.debug("Using factory: " + factory);
          
          connection = factory.createQueueConnection();
          log.debug("Created connection: " + connection);
 
          dlq = (Queue)ctx.lookup(destinationJNDI);
-         log.debug("Using Queue: " + dlq);
+         log.debug("Using destination queue: " + dlq);
       }
       finally {
          ctx.close();
@@ -264,10 +263,8 @@ public class DLQHandler
          msg = makeWritable(msg); // Don't know yet if we are gona clone or not
          
          // Set the properties
-         msg.setStringProperty(JBOSS_ORIG_MESSAGEID,
-         msg.getJMSMessageID());
-         msg.setStringProperty(JBOSS_ORIG_DESTINATION,
-         msg.getJMSDestination().toString());
+         msg.setStringProperty(JBOSS_ORIG_MESSAGEID, msg.getJMSMessageID());
+         msg.setStringProperty(JBOSS_ORIG_DESTINATION, msg.getJMSDestination().toString());
          
          session = connection.createQueueSession(false, Session.AUTO_ACKNOWLEDGE);
          sender = session.createSender(dlq);
@@ -281,7 +278,6 @@ public class DLQHandler
          if (trace) {
             log.trace("Message sent.");
          }
-         
       }
       finally
       {
@@ -326,9 +322,6 @@ public class DLQHandler
       return msg;
    }
    
-   /**
-    * Takes an MDBConfig Element
-    */
    public void importXml(final Element element) throws DeploymentException
    {
       destinationJNDI = MetaData.getElementContent

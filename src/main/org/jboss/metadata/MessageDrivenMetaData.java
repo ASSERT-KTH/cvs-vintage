@@ -1,9 +1,12 @@
-/*
- * JBoss, the OpenSource J2EE webOS
- *
- * Distributable under LGPL license.
- * See terms of license at gnu.org.
- */
+/***************************************
+ *                                     *
+ *  JBoss: The OpenSource J2EE WebOS   *
+ *                                     *
+ *  Distributable under LGPL license.  *
+ *  See terms of license at gnu.org.   *
+ *                                     *
+ ***************************************/
+
 package org.jboss.metadata;
 
 import java.util.HashMap;
@@ -20,22 +23,14 @@ import org.jboss.deployment.DeploymentException;
  *
  * <p>Have to add changes ApplicationMetaData and ConfigurationMetaData.
  *
+ * @version <tt>$Revision: 1.23 $</tt>
  * @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
  * @author <a href="mailto:peter.antman@tim.se">Peter Antman</a>
  * @author <a href="mailto:andreas@jboss.org">Andreas Schaefer</a>
- *
- * <p><b>Revisions:</b></p>
- * <p><b>20011031: Andy</b>
- * <ul>
- * <li>Ensured that the <message-selector> value in the descriptor does not
- *     be compromised by leading and trailing spaces as well as line-breaks</li>
- * </ul>
- * </p>
- *
- * @version $Revision: 1.22 $
+ * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
  */
 public class MessageDrivenMetaData
-extends BeanMetaData
+   extends BeanMetaData
 {
    // Constants -----------------------------------------------------
    
@@ -55,10 +50,16 @@ extends BeanMetaData
    private String destinationType;
    private String messageSelector;
    private String destinationJndiName;
-   private String user;
-   private String passwd;
+   private String username;
+   private String password;
    private String clientId;
    private String subscriptionId;
+
+   /** True to enable the usage of XA connections. */
+   private boolean xaConnection = true;
+
+   /** True if server sessions are transacted. */
+   private boolean sessionPoolTransacted = true;
    
    // Static --------------------------------------------------------
    
@@ -108,6 +109,16 @@ extends BeanMetaData
          return acknowledgeMode;
       }
    }
+
+   public boolean getUseXAConnection()
+   {
+      return xaConnection;
+   }
+
+   public boolean getSessionPoolTransacted()
+   {
+      return sessionPoolTransacted;
+   }
    
    public String getDestinationType()
    {
@@ -124,14 +135,14 @@ extends BeanMetaData
       return destinationJndiName;
    }
    
-   public String getUser()
+   public String getUsername()
    {
-      return user;
+      return username;
    }
    
-   public String getPasswd()
+   public String getPassword()
    {
-      return passwd;
+      return password;
    }
    
    public String getClientId()
@@ -209,38 +220,14 @@ extends BeanMetaData
       super.importEjbJarXml(element);
       
       messageSelector = getOptionalChildContent(element, "message-selector");
-      if( messageSelector != null )
+      if (messageSelector != null)
       {
-         //AS Check for Carriage Returns, remove them and trim the selector
-         int i = -1;
-         // Note this only works this way because the search and replace are distinct
-         while( ( i = messageSelector.indexOf( "\r\n" ) ) >= 0 )
-         {
-            // Replace \r\n by a space
-            messageSelector = ( i == 0 ? "" : messageSelector.substring( 0, i ) ) +
-            " " +
-            ( i >= messageSelector.length() - 2 ? "" : messageSelector.substring( i + 2 ) );
-         }
-         i = -1;
-         while( ( i = messageSelector.indexOf( "\r" ) ) >= 0 )
-         {
-            // Replace \r by a space
-            messageSelector = ( i == 0 ? "" : messageSelector.substring( 0, i ) ) +
-            " " +
-            ( i >= messageSelector.length() - 1 ? "" : messageSelector.substring( i + 1 ) );
-         }
-         i = -1;
-         while( ( i = messageSelector.indexOf( "\n" ) ) >= 0 )
-         {
-            // Replace \n by a space
-            messageSelector = ( i == 0 ? "" : messageSelector.substring( 0, i ) ) +
-            " " +
-            ( i >= messageSelector.length() - 1 ? "" : messageSelector.substring( i + 1 ) );
-         }
-         // Finally trim it. This is here because only carriage returns and linefeeds are transformed
-         // to spaces
-         messageSelector = messageSelector.trim();
-         if( "".equals( messageSelector ) )
+         // Convert \n and \r to spaces
+         messageSelector = messageSelector.replace('\n', ' ');
+         messageSelector = messageSelector.replace('\r', ' ').trim();
+
+         // If the selector is an empty string then null it for easier detection
+         if ("".equals(messageSelector))
          {
             messageSelector = null;
          }
@@ -255,13 +242,13 @@ extends BeanMetaData
          {
             String subscr = getOptionalChildContent(destination, "subscription-durability");
             // Should we do sanity check??
-            if( subscr != null && subscr.equals("Durable") )
+            if (subscr != null && subscr.equals("Durable"))
             {
                subscriptionDurability = DURABLE_SUBSCRIPTION;
             }
             else
             {
-               subscriptionDurability = NON_DURABLE_SUBSCRIPTION;//Default
+               subscriptionDurability = NON_DURABLE_SUBSCRIPTION;
             }
          }
       }
@@ -272,8 +259,10 @@ extends BeanMetaData
       {
          containerManagedTx = false;
          String ack = getOptionalChildContent(element, "acknowledge-mode");
-         if( ack == null || ack.equalsIgnoreCase("Auto-acknowledge") ||
-            ack.equalsIgnoreCase("AUTO_ACKNOWLEDGE"))
+         
+         if (ack == null ||
+             ack.equalsIgnoreCase("Auto-acknowledge") ||
+             ack.equalsIgnoreCase("AUTO_ACKNOWLEDGE"))
          {
             acknowledgeMode = AUTO_ACKNOWLEDGE_MODE;
          }
@@ -284,7 +273,7 @@ extends BeanMetaData
          }
          else
          {
-            throw new DeploymentException("invalid acknowledge-mode: " + ack);
+            throw new DeploymentException("Invalid acknowledge-mode: " + ack);
          }
       }
       else if (transactionType.equals("Container"))
@@ -294,7 +283,7 @@ extends BeanMetaData
       else
       {
          throw new DeploymentException
-         ("transaction type should be 'Bean' or 'Container'");
+            ("Transaction type should be 'Bean' or 'Container'");
       }
    }
 
@@ -302,12 +291,23 @@ extends BeanMetaData
    {
       super.importJbossXml(element);
       
-      // set the jndi name, (optional)
       destinationJndiName = getUniqueChildContent(element, "destination-jndi-name");
-      user = getOptionalChildContent(element, "mdb-user");
-      passwd = getOptionalChildContent(element,"mdb-passwd");
+      username = getOptionalChildContent(element, "mdb-user");
+      password = getOptionalChildContent(element,"mdb-passwd");
       clientId = getOptionalChildContent(element,"mdb-client-id");
       subscriptionId = getOptionalChildContent(element,"mdb-subscription-id");
+
+      String temp;
+      
+      temp = getOptionalChildContent(element, "session-pool-transacted");
+      if (temp != null) {
+         sessionPoolTransacted = new Boolean(temp).booleanValue();
+      }
+      
+      temp = getOptionalChildContent(element, "xa-connection");
+      if (temp != null) {
+         xaConnection = new Boolean(temp).booleanValue();
+      }
    }
    
    public void defaultInvokerBindings()   
@@ -315,13 +315,5 @@ extends BeanMetaData
      this.invokerBindings = new HashMap();   
      this.invokerBindings.put(DEFAULT_MESSAGE_DRIVEN_BEAN_INVOKER_PROXY_BINDING, getJndiName());
    } 
-
-   // Package protected ---------------------------------------------
-   
-   // Protected -----------------------------------------------------
-   
-   // Private -------------------------------------------------------
-   
-   // Inner classes -------------------------------------------------
 }
 
