@@ -102,7 +102,7 @@ import org.tigris.scarab.services.cache.ScarabCache;
  * This class is responsible for assigning users to attributes.
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: AssignIssue.java,v 1.51 2002/06/13 23:26:36 elicia Exp $
+ * @version $Id: AssignIssue.java,v 1.52 2002/07/11 20:33:21 elicia Exp $
  */
 public class AssignIssue extends BaseModifyIssue
 {
@@ -346,6 +346,9 @@ public class AssignIssue extends BaseModifyIssue
                          + issue.getUniqueId() + " modified";
         List toUsers = issue.getUsersToEmail(AttributePeer.EMAIL_TO);
         List ccUsers = issue.getUsersToEmail(AttributePeer.CC_TO);
+        toUsers.remove(assignee);
+        ccUsers.remove(assignee);
+            
         if (!Email.sendEmail(new ContextAdapter(context), module, fromUser, 
                             toUsers, ccUsers, subject, template))
         {
