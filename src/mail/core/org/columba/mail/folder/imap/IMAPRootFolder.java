@@ -211,6 +211,7 @@ public class IMAPRootFolder extends FolderTreeNode implements ActionListener, Ro
 				subFolder = new IMAPFolder(subchild, "IMAPFolder");
 				parent.add(subFolder);
 				parent.getNode().addElement(subFolder.getNode());
+				MainInterface.treeModel.insertNodeInto(subFolder,parent, parent.getIndex(subFolder));
 
 				((IMAPFolder) subFolder).existsOnServer = true;
 				subFolder.getFolderItem().set("selectable", "false");
@@ -243,6 +244,7 @@ public class IMAPRootFolder extends FolderTreeNode implements ActionListener, Ro
 				subFolder = new IMAPFolder(name, "IMAPFolder");
 				parent.add(subFolder);
 				parent.getNode().addElement(subFolder.getNode());
+				MainInterface.treeModel.insertNodeInto(subFolder,parent,parent.getIndex(subFolder));
 
 				((IMAPFolder) subFolder).existsOnServer = true;
 			} else {
@@ -286,6 +288,7 @@ public class IMAPRootFolder extends FolderTreeNode implements ActionListener, Ro
 		if (parent instanceof IMAPFolder) {
 			if (!((IMAPFolder) parent).existsOnServer) {
 				parent.removeFolder();
+				MainInterface.treeModel.removeNodeFromParent(parent);
 			}
 		}
 	}
