@@ -517,7 +517,8 @@ public class Context {
 	    // Declare a mapping for a JSP or servlet that is not
 	    // declared as servlet.
 
-	    sw = new ServletWrapper(this);
+	    sw = new ServletWrapper();
+	    sw.setContext(this);
 
 	    sw.setServletName(servletName);
 	    if ( servletName.startsWith("/")) {

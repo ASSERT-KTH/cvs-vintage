@@ -98,6 +98,7 @@ public class AutoSetup extends BaseInterceptor {
 	    // we care only about the root context for autosetup
 	    // until we define a pattern for automatic vhost setup.
 	    definedContexts.put( ctx.getPath(), ctx );
+	    if(debug>0) log("Register explicit context " + ctx.getPath());
 	}
     }
     
@@ -106,6 +107,7 @@ public class AutoSetup extends BaseInterceptor {
      *  virtual hosts too
      */
     public void engineInit(ContextManager cm) throws TomcatException {
+	super.engineInit( cm );
 	String home=cm.getHome();
 	File webappD=new File(home + "/webapps");
 	if (! webappD.exists() || ! webappD.isDirectory()) {
@@ -165,10 +167,10 @@ public class AutoSetup extends BaseInterceptor {
 		// don't assume HOME==TOMCAT_HOME
 		File f=new File( webappD, name);
 		ctx.setDocBase( f.getAbsolutePath() );
-		if( debug > 0 ) cm.log("AutoSetup " + ctx.toString());
+		if( debug > 0 ) log("automatic add " + ctx.toString() + " " + path);
 		cm.addContext(ctx);
 	    } else {
-		//System.out.println("Already set up: " + path + " " + definedContexts.get(path));
+		if( debug>0) log("Already set up: " + path + " " + definedContexts.get(path));
 	    }
 	}
     }
@@ -177,4 +179,7 @@ public class AutoSetup extends BaseInterceptor {
 	debug=i;
     }
 
+    public void log(String s ) {
+	cm.log("AutoSetup: " + s );
+    }
 }

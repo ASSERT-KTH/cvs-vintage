@@ -70,9 +70,9 @@ import javax.servlet.http.*;
 /**
  */
 public class BaseInterceptor implements RequestInterceptor, ContextInterceptor {
-    ContextManager cm; 
+    protected ContextManager cm; 
     protected String methods[]=new String[0];
-    int debug=0;
+    protected int debug=0;
     
     public BaseInterceptor() {
     }
@@ -80,7 +80,7 @@ public class BaseInterceptor implements RequestInterceptor, ContextInterceptor {
     public void setDebug( int d ) {
 	debug=d;
     }
-    
+
     public void setContextManager( ContextManager cm ) {
 	this.cm=cm;
     }
@@ -153,6 +153,7 @@ public class BaseInterceptor implements RequestInterceptor, ContextInterceptor {
     /** Called when the ContextManger is started
      */
     public void engineInit(ContextManager cm) throws TomcatException {
+	this.cm=cm;
     }
 
     /** Called before the ContextManager is stoped.

@@ -183,8 +183,8 @@ final class RequestDispatcherImpl implements RequestDispatcher {
 
 
 	// CM should have set the wrapper - call it
-	realRequest.getWrapper().handleRequest(realRequest,
-						realResponse);
+	realRequest.getWrapper().service(realRequest,
+					 realResponse);
     }
 
     public void include(ServletRequest request, ServletResponse response)
@@ -282,7 +282,7 @@ final class RequestDispatcherImpl implements RequestDispatcher {
  	// now it's really strange: we call the wrapper on the subrequest
 	// for the realRequest ( since the real request will still have the
 	// original handler/wrapper )
-	subRequest.getWrapper().handleRequest(realRequest , realResponse);
+	subRequest.getWrapper().service(realRequest , realResponse);
 
 	// After request, we want to restore the include attributes - for
 	// chained includes.
@@ -318,7 +318,7 @@ final class RequestDispatcherImpl implements RequestDispatcher {
 	ServletWrapper wrapper = context.getServletByName( name );
 	Request realR=((HttpServletRequestFacade)request).getRealRequest();
 	
-	wrapper.handleRequest( realR, realR.getResponse());
+	wrapper.service( realR, realR.getResponse());
     }
 
     /** Named forward
@@ -329,7 +329,7 @@ final class RequestDispatcherImpl implements RequestDispatcher {
 	ServletWrapper wrapper = context.getServletByName( name );
 	Request realR=((HttpServletRequestFacade)request).getRealRequest();
 	
-	wrapper.handleRequest( realR, realR.getResponse());
+	wrapper.service( realR, realR.getResponse());
     }    
 
     /**

@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Handler.java,v 1.1 2000/06/16 17:58:56 costin Exp $
- * $Revision: 1.1 $
- * $Date: 2000/06/16 17:58:56 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Handler.java,v 1.2 2000/06/16 21:03:21 costin Exp $
+ * $Revision: 1.2 $
+ * $Date: 2000/06/16 21:03:21 $
  *
  * ====================================================================
  *
@@ -109,7 +109,7 @@ public class Handler {
     public static final int ORIGIN_ADMIN=4;
     
     // who creates the servlet definition
-    int origin;
+    protected int origin;
 
     public Handler() {
     }
@@ -159,13 +159,14 @@ public class Handler {
 	can implement this, but it can't be called from outside.
 	( the "guarded" doDestroy is public )
     */
-    protected void destroy() throws TomcatException {
+    protected void doDestroy() throws Exception {
 
     }
 
     /** Destroy a handler, and notify all the interested interceptors
      */
-    public void doDestroy() throws TomcatException {
+    public void destroy() throws Exception {
+	if ( ! initialized ) return;// already destroyed or not init.
 	initialized=false;
 
 	ContextInterceptor cI[]=context.getContextInterceptors();
@@ -180,7 +181,7 @@ public class Handler {
 	
 	// XXX post will not be called if any error happens in destroy.
 	// That's how tomcat worked before - I think it's a bug !
-	destroy();
+	doDestroy();
 	
 	for( int i=cI.length-1; i>=0; i-- ) {
 	    try {
@@ -189,22 +190,22 @@ public class Handler {
 	    } catch( TomcatException ex) {
 		context.log( "Error in postServletDestroy " + cI, ex );
 	    }
-	    
 	}
     }
 
     /** Initialize the handler. Handler can override this
 	method to initialize themself.
+	The method must set initialised=true if successfull.
      */
-    protected void init() throws TomcatException
+    protected void doInit() throws Exception
     {
 
     }
 
     /** Call the init method, and notify all interested listeners.
      */
-    public void doInit()
-	throws TomcatException
+    public void init()
+	throws Exception
     {
 	try {
 	    if( initialized ) return;
@@ -219,7 +220,7 @@ public class Handler {
 		}
 	    }
 
-	    init();
+	    doInit();
 
 	    // if an exception is thrown in init, no end interceptors will
 	    // be called. that was in the origianl code J2EE used
@@ -233,7 +234,6 @@ public class Handler {
 		}
 	    }
 
-	    initialized=true;
 	} catch( Exception ex ) {
 	    initialized=false;
 	}
@@ -242,7 +242,9 @@ public class Handler {
     /** This is the actual content generator. Can't be called
 	from outside.
      */
-    protected void doService(Request req, Response res) {
+    protected void doService(Request req, Response res)
+	throws Exception
+    {
 
     }
 
@@ -251,56 +253,61 @@ public class Handler {
     public void service(Request req, Response res) 
     {
 	if( ! initialized ) {
-	    // if multiple threads will call the same servlet at once,
-	    // we should have only one init 
-	    synchronized( this ) {
-		try {
-		    init();
-		} catch( Exception ex ) {
-		    context.log("Exception in init  " + ex.getMessage(), ex );
-		    contextM.handleError( req, res, ex );
-		    return;
-		}
+	    try {
+		init();
+	    } catch( Exception ex ) {
+		initialized=false;
+		context.log("Exception in init  " + ex.getMessage(), ex );
+		contextM.handleError( req, res, ex );
+		return;
 	    }
 	}
 	
 	// We are initialized and fine
-	try {
-	    RequestInterceptor cI[]=context.getRequestInterceptors();
-	    for( int i=0; i<cI.length; i++ ) {
-		cI[i].preService( req, res );
-		// ignore the error - like in the original code
-	    }
+	RequestInterceptor cI[]=context.getRequestInterceptors();
+	for( int i=0; i<cI.length; i++ ) {
+	    cI[i].preService( req, res );
+	    // ignore the error - like in the original code
+	}
 
+	Throwable t=null;
+	try {
 	    doService( req, res );
+	} catch( Throwable t1 ) {
+	    t=t1;
+	}
+	
+	// continue with the postService
+
+	for( int i=cI.length-1; i>=0; i-- ) {
+	    cI[i].postService( req , res );
+	    // ignore the error - like in the original code
+	}
+
+	if( t==null)
+	    return;
+	
+	if( t instanceof IOException ) {
+	    if( ((IOException)t).getMessage().equals("Broken pipe"))
+		return;
+	    System.out.println("XXX XXX " + t.getMessage());
+	}
 	    
-	    for( int i=cI.length-1; i>=0; i-- ) {
-		cI[i].postService( req , res );
-		// ignore the error - like in the original code
-	    }
-	}  catch( Throwable t ) {
-	    if( t instanceof IOException ) {
-		if( ((IOException)t).getMessage().equals("Broken pipe"))
-		    return;
-		System.out.println("XXX XXX " + t.getMessage());
-	    }
-	    
-	    if(null!=req.getAttribute("tomcat.servlet.error.defaultHandler")){
-		// we are in handleRequest for the "default" error handler
-		System.out.println("ERROR: can't find default error handler "+
-				   "or error in default error page");
-		t.printStackTrace();
-	    } else {
-		String msg=t.getMessage();
-		context.log( "Error in " + getName() +
-			     " service() : " + msg, t);
-		// XXX XXX Security - we should log the message, but nothing
-		// should show up  to the user - it gives up information
-		// about the internal system !
-		// Developers can/should use the logs !!!
-		contextM.handleError( req, res, t );
-	    }
-	} 
+	if(null!=req.getAttribute("tomcat.servlet.error.defaultHandler")){
+	    // we are in handleRequest for the "default" error handler
+	    System.out.println("ERROR: can't find default error handler "+
+			       "or error in default error page");
+	    t.printStackTrace();
+	} else {
+	    String msg=t.getMessage();
+	    context.log( "Error in " + getName() +
+			 " service() : " + msg, t);
+	    // XXX XXX Security - we should log the message, but nothing
+	    // should show up  to the user - it gives up information
+	    // about the internal system !
+	    // Developers can/should use the logs !!!
+	    contextM.handleError( req, res, t );
+	}
     }
     
     public String toString() {

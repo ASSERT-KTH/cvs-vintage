@@ -161,8 +161,6 @@ public class AccessInterceptor extends  BaseInterceptor  {
     public void addContext( ContextManager cm, Context ctx )
 	throws TomcatException
     {
-	Container ct=ctx.getContainer();
-	ct.setNote( secMapNote, new SecurityConstraints() );
     }
 
     /** Called when a context is removed from a CM - we must ask the mapper to
@@ -190,10 +188,12 @@ public class AccessInterceptor extends  BaseInterceptor  {
 	Container ctxCt=ctx.getContainer();
 	SecurityConstraints ctxSecurityC=(SecurityConstraints)ctxCt.
 	    getNote( secMapNote );
+	if( ctxSecurityC==null)
+	    ctxCt.setNote( secMapNote, new SecurityConstraints() );
 	
 	if( ct.getRoles()!=null || ct.getTransport()!=null ) {
 	    if( debug > 0 )
-		log( "ACCESS: Adding " + ctx.getHost() + " " +
+		log( "addContainer() " + ctx.getHost() + " " +
 		     ctx.getPath() + " " +
 		     ct.getPath() );
 	    ctxSecurityC.addContainer( ct );
@@ -209,7 +209,6 @@ public class AccessInterceptor extends  BaseInterceptor  {
 	Context ctx=req.getContext();
 	SecurityConstraints ctxSec=(SecurityConstraints)ctx.getContainer().
 	    getNote( secMapNote );
-	log("XXX1 " + ctxSec + " " + debug);
 	if( ctxSec.patterns==0 ) return 0; // fast exit
 	
 	String reqURI = req.getRequestURI();
@@ -222,12 +221,18 @@ public class AccessInterceptor extends  BaseInterceptor  {
 	for( int i=0; i< ctxSec.patterns ; i++ ) {
 	    Container ct=ctxSec.securityPatterns[i];
 	    if( match( ct, path, method ) ) {
-		if( debug>0) log( "ACCESS: matched " + ct.getPath() + " " +
-				  ct.getMethods() + " " +
-				  ct.getTransport() + " " + ct.getRoles());
 		String roles[]=ct.getRoles();
 		String transport=ct.getTransport();
-
+		if( debug>0) {
+		    StringBuffer sb=new StringBuffer("ACCESS: matched ");
+		    sb.append(ct.getPath()).append(" ").
+			append(ct.getMethods()).append(" ").
+			append(transport).append(" ");
+		    if( roles!=null)
+			for( int j=0; j< roles.length; j++ )
+			    sb.append( roles[j]).append(" ");
+		    log( sb.toString());
+		}
 		if( transport != null &&
 		    ! "NONE".equals( transport )) {
 		    req.setNote( reqTransportNote, transport );

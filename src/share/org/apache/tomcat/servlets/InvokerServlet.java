@@ -210,7 +210,7 @@ public class InvokerServlet extends TomcatInternalServlet {
 	    }
 	}
 
-        wrapper.handleRequest(realRequest, realResponse);
+        wrapper.service(realRequest, realResponse);
 
 	// restore servletPath and pathInfo.
 	// Usefull because we may include with the same request multiple times.

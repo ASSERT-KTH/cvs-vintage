@@ -184,8 +184,10 @@ public class SecurityTools {
 	    // are in the same domain.
 	    String username=(String)session.getAttribute("j_username");
 	    String password=(String)session.getAttribute("j_password");
-	    credentials.put( "username" , username );
-	    credentials.put( "password", password);
+	    if( username!=null && password!=null) {
+		credentials.put( "username" , username );
+		credentials.put( "password", password);
+	    }
 	}
     }
 
