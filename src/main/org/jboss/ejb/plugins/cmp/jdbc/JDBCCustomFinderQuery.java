@@ -31,7 +31,7 @@ import org.jboss.util.FinderResults;
  *
  * @see org.jboss.ejb.plugins.cmp.jdbc.JDBCFindEntitiesCommand
  * @author <a href="mailto:michel.anke@wolmail.nl">Michel de Groot</a>
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  */
 public class JDBCCustomFinderQuery implements JDBCQueryCommand {
    private Logger log;
@@ -47,7 +47,7 @@ public class JDBCCustomFinderQuery implements JDBCQueryCommand {
     * @param finderMethod the EJB finder method implementation
     */
    public JDBCCustomFinderQuery(JDBCStoreManager manager, Method finderMethod) {
-      finderMethod = finderMethod;
+      this.finderMethod = finderMethod;
       this.log = Logger.getLogger(
             this.getClass().getName() + 
             "." + 
