@@ -24,8 +24,7 @@ This page is for selecting an Artifact Type to edit which is defined in a global
 <th>Issue Type Name</th>
 <th>Description</th>
 </tr>
-#set ($allIssueTypes = $scarabG.AllIssueTypes)
-#foreach( $issueType in $allIssueTypes )
+#foreach ($issueType in $scarabG.AllIssueTypes)
 #set ($group = $intake.IssueType.mapTo($issueType))
 #indexedRows($velocityCount)
 <td>#booleanCheckbox ($group.Deleted)</td>
