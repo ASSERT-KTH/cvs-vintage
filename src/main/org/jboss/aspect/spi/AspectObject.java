@@ -71,30 +71,47 @@ final public class AspectObject implements InvocationHandler, Serializable
      * <li>puts it on a ThreadLocal object so that it can be retrieved later at any time.
      * <li>passes it down the interceptor stack.
      * </ul>
+     * 
+     * If an interceptor throws an AspectInvocation.RedoRuntimeException,
+     * the invocation will be redone. Any aspect definition changes will 
+     * picked in the new invocaion.
+     * 
+     * If an interceptor throws an AspectInvocation.WrappedRuntimeException,
+     * The original exception will be thrown.
      */
     public Object invoke(Object target, Method method, Object[] args) throws Throwable
     {
-        AspectInvocation invocation = new AspectInvocation(this, target, method, args);
-
-        Stack invocationStack = (Stack) invocationContexThreadLocal.get();
-        if (invocationStack == null)
-        {
-            invocationStack = new Stack();
-            invocationContexThreadLocal.set(invocationStack);
-        }
-        try
-        {
-            invocationStack.push(invocation);
-            return invocation.invokeNext();
-        } 
-        catch ( AspectInvocation.WrappedRuntimeException e ) 
-        {
-        	throw e.original;
-        } 
-        finally
-        {
-            invocationStack.pop();
-        }
+    	// The "return invocation.invokeNext()" gets us out of this loop. 
+    	while(true){
+	        AspectInvocation invocation = new AspectInvocation(this, target, method, args);
+	
+	        Stack invocationStack = (Stack) invocationContexThreadLocal.get();
+	        if (invocationStack == null)
+	        {
+	            invocationStack = new Stack();
+	            invocationContexThreadLocal.set(invocationStack);
+	        }
+	        try
+	        {
+	            invocationStack.push(invocation);
+	            return invocation.invokeNext();
+	        } 
+	        catch ( AspectInvocation.RedoRuntimeException e ) 
+	        {
+	        	// An interceptor is asking us to do the invocation
+	        	// again.
+	        	continue;
+	        } 
+	        catch ( AspectInvocation.WrappedRuntimeException e ) 
+	        {
+	        	throw e.original;
+	        } 
+	        
+	        finally
+	        {
+	            invocationStack.pop();
+	        }
+    	} 
     }
 
     /**
