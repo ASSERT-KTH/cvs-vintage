@@ -6,9 +6,29 @@ $page.setTitle("Global Attributes")
 This page is for selecting an Attribute to edit which is defined in a global scale.
 </p>
 
+#set ($allAttributes = $scarabG.AllAttributes)
+
+## if results exceed limit, get subset list
+#set ($resultsPerPage = $data.Parameters.getInt("resultsPerPage",0))
+#set ($pageNum = $data.Parameters.getInt("pageNum",0))
+#if ($resultsPerPage == 0)
+  #set ($resultsPerPage = 9)
+#end
+#if ($pageNum == 0)
+  #set ($pageNum = 1)
+#end
+#if ($allAttributes.size() > $resultsPerPage)
+ #set ($paginated = "true")
+ #set ($pagList = $scarabR.getPaginatedList($allAttributes, $pageNum.toString(), $resultsPerPage.toString()))
+ #if ($pagList)
+   #set ($allAttributes = $pagList)
+ #end
+#end
+
+$scarabR.CurrentTemplate
+
 <form action="$link.setPage("admin,GlobalAttributeShow.vm")" method="post">
 <input type="hidden" name="action" value="admin.GlobalAttributes" />
-<input type="hidden" name="$scarabG.Constant.NEXT_TEMPLATE" value="admin,AdminIndex.vm" />
 <input type="hidden" name="$scarabG.Constant.OTHER_TEMPLATE" value="admin,GlobalAttributeEdit.vm" />
 
 
@@ -26,6 +46,10 @@ This page is for selecting an Attribute to edit which is defined in a global sca
 <input type="submit" value="Cancel" name="eventSubmit_doCancel" />
 </div>       
 
+#if ($paginated)
+  #paginate ($resultsPerPage $pageNum)
+#end
+
 <h3>Global Attributes</h3>
 
 <table width="100%" border="1" cellspacing="2" cellpadding="3">
@@ -37,7 +61,6 @@ This page is for selecting an Attribute to edit which is defined in a global sca
 <th>Author</th>
 <th>Creation date</th>
 </tr>
-#set ($allAttributes = $scarabG.AllAttributes)
 #foreach( $attribute in $allAttributes )
   #if (!$attribute.isUserAttribute()) 
     #set ($attgroup = $intake.Attribute.mapTo($attribute))
@@ -67,6 +90,10 @@ This page is for selecting an Attribute to edit which is defined in a global sca
 <input type="submit" value="Delete selected"  name="eventSubmit_doSave" />&#160;
 <small>attribute(s)</small>&#160;
 </div>
+
+#if ($paginated)
+  #paginate ($resultsPerPage $pageNum)
+#end
 
 <div class="functnbar2">
 <input type="submit" value="Done" name="eventSubmit_doDone" />&#160;

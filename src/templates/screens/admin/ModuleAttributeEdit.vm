@@ -91,7 +91,7 @@ On this screen, one can modify a module's Attribute information.
     #set ($rmoGroup = $intake.RModuleOption.mapTo($rmo))
     #indexedRows($velocityCount)
      <td><input type="checkbox" name="delete_$rmo.OptionId"></td>
-     <td>$rmo.AttributeOption.Parent.Name</td>
+     <td>$rmo.AttributeOption.Parent $rmo.AttributeOption.Parent.Name</td>
      <td><input type="text" size="25" name="$rmoGroup.DisplayValue.Key" value="$rmoGroup.DisplayValue.Value" /></td>
      <td>
         #booleanCheckbox($rmoGroup.Active)
