@@ -98,7 +98,7 @@ import org.tigris.scarab.tools.ScarabRequestTool;
  * This class is responsible for report issue forms.
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: ReportIssue.java,v 1.110 2002/02/02 00:20:46 elicia Exp $
+ * @version $Id: ReportIssue.java,v 1.111 2002/02/05 23:30:20 jmcnally Exp $
  */
 public class ReportIssue extends RequireLoginFirstAction
 {
@@ -381,49 +381,9 @@ public class ReportIssue extends RequireLoginFirstAction
 
                 if (saveIssue) 
                 {                
-                    issue.save();
-                
-                    List files = issue.getAttachments();
-                    for (int k = 0; k < files.size(); k++)
-                    {
-                        Attachment attachment = (Attachment)files.get(k);
-                        if (attachment.getData() != null 
-                            && attachment.getData().length > 0)
-                        {
-                            FileItem file = attachment.getFile();
-                            String fileNameWithPath =file.getFileName();
-                            String fileName = fileNameWithPath
-                                .substring(fileNameWithPath.lastIndexOf(File.separator)+1);
-                            
-                            attachment.setData(null);
-                            attachment.setCreatedBy(user.getUserId());
-                            attachment.setAttachmentType(AttachmentType
-                                .getInstance(AttachmentTypePeer.ATTACHMENT_TYPE_NAME));
-                            attachment.setIssue(issue);
-                            // FIXME! this duplicates setAttachmentType from two
-                            // lines above, it should not be needed.
-                            attachment.setTypeId(new NumberKey(1));
-                            attachment.save();    
-                            
-                            String uploadFile = attachment
-                            .getRepositoryDirectory(scarabR.getIssue().getModule().getCode())
-                                + File.separator + 
-                                fileName.substring(0, fileName.lastIndexOf('.')) + "_" 
-                                + attachment.getPrimaryKey().toString() 
-                                + fileName.substring(fileName.lastIndexOf('.')); 
-                        
-                            file.write(uploadFile);
-                            String relativePath = scarabR.getIssue().getModule().getCode()
-                                + '/'+ fileName.substring(0, fileName.lastIndexOf('.')) + "_" 
-                                + attachment.getPrimaryKey().toString() 
-                                + fileName.substring(fileName.lastIndexOf('.')); 
-                            
-                            attachment.setFilePath(relativePath);
-                            
-                            attachment.save();
-                    }
+                    issue.save();                
                 }
-
+            
                 // save the comment
                 Group commentGroup = intake.get("Attachment", "_1", false);
                 Attachment comment = new Attachment();
@@ -473,7 +433,6 @@ public class ReportIssue extends RequireLoginFirstAction
                                 " added to module " +
                                 getScarabRequestTool(context)
                                 .getCurrentModule().getRealName());
-                }
             }
             else 
             {
@@ -496,46 +455,8 @@ public class ReportIssue extends RequireLoginFirstAction
         Attachment attachment = new Attachment();
         Group group = intake.get("Attachment", 
                                  attachment.getQueryKey(), false);
-        
-        if (group != null)
-        {
-            Field nameField = group.get("Name");
-            Field fileField = group.get("File");
-            nameField.setRequired(true);
-            fileField.setRequired(true);
-            Field mimeAField = group.get("MimeTypeA");
-            Field mimeBField = group.get("MimeTypeB");
-            String mimeA = mimeAField.toString();
-            String mimeB = mimeBField.toString();
-            String mimeType = null;
-            if (mimeB != null && mimeB.trim().length() > 0)
-            {
-                mimeType = mimeB;
-            }
-            else
-            {
-                mimeAField.setRequired(true);
-                mimeType = mimeA;
-            }
-            
-            if ( group.isAllValid() ) 
-            {
-                group.setProperties(attachment);
-                attachment.setMimeType(mimeType);
-                issue.addFile(attachment);
-                data.setMessage("Attachment was added");
-                // remove the group so that the form data doesn't show up again
-                intake.remove(group);
-            }
-            else
-            {
-                data.setMessage(ERROR_MESSAGE);
-            }
-        }
-        else
-        {
-            data.setMessage("Could not locate Attachment group");
-        }
+
+        ModifyIssue.addAttachment(issue, group, attachment, data, intake);
 
         // set any attribute values that were entered before adding the file.
         setAttributeValues(issue, intake, context);

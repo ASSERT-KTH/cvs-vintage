@@ -109,7 +109,7 @@ import org.tigris.scarab.util.ScarabConstants;
     This class is responsible for edit issue forms.
     ScarabIssueAttributeValue
     @author <a href="mailto:elicia@collab.net">Elicia David</a>
-    @version $Id: ModifyIssue.java,v 1.70 2002/01/28 02:52:45 elicia Exp $
+    @version $Id: ModifyIssue.java,v 1.71 2002/02/05 23:30:20 jmcnally Exp $
 */
 public class ModifyIssue extends RequireLoginFirstAction
 {
@@ -366,64 +366,10 @@ public class ModifyIssue extends RequireLoginFirstAction
                 }
                 else if (type.equals("file"))
                 {
-                    //FIXME: the following code is duplicate from ReportIssue.java The common code
-                    //could be factored into another action class for handling attachment
-                    Field mimeAField = group.get("MimeTypeA");
-                    Field mimeBField = group.get("MimeTypeB");
-            
-                    String mimeA = mimeAField.toString();
-                    String mimeB = mimeBField.toString();
-                    String mimeType = null;
-                    if (mimeA != null && mimeA.trim().length() > 0)
-                    {
-                        mimeType = mimeA;
-                    }
-                    else if (mimeB != null && mimeB.trim().length() > 0)
-                    {
-                        mimeType = mimeB;
-                    }
-                    if (mimeType == null)
-                    {
-                        mimeAField.setMessage("This field requires a value.");
-                        return;
-                    }
-
-                    if (attachment.getData() != null 
-                        && attachment.getData().length > 0)
-                    {
-                        ScarabRequestTool scarabR = getScarabRequestTool(context);
-                        FileItem file = attachment.getFile();
-                        String fileNameWithPath =file.getFileName();
-                        String fileName = fileNameWithPath
-                            .substring(fileNameWithPath.lastIndexOf(File.separator)+1);
-                        
-                        attachment.setData(null);
-                        attachment.setMimeType(mimeType);
-                        attachment.setCreatedBy(user.getUserId());
-                        attachment.setAttachmentType(AttachmentType
-                                                         .getInstance(AttachmentTypePeer.ATTACHMENT_TYPE_NAME));
-                        attachment.setIssue(issue);
-                        attachment.setTypeId(new NumberKey(1));
-                        attachment.save();    
-                        String uploadFile = attachment
-                            .getRepositoryDirectory(scarabR.getIssue().getModule().getCode())
-                            + File.separator + fileName.substring(0, fileName.lastIndexOf('.')) + "_" 
-                            + attachment.getPrimaryKey().toString() 
-                            + fileName.substring(fileName.lastIndexOf('.')); 
-                        
-                        file.write(uploadFile);
-				        String relativePath = scarabR.getIssue().getModule().getCode()
-							+ '/'+ fileName.substring(0, fileName.lastIndexOf('.')) + "_" 
-							+ attachment.getPrimaryKey().toString() 
-							+ fileName.substring(fileName.lastIndexOf('.')); 
-
-                        attachment.setFilePath(relativePath);
-                        attachment.save();
-                    }
-                    
+                    addAttachment(issue, group, attachment, data, intake);
+                    issue.save();
                 }
-                intake.remove(group);
-                issue.save();
+
                 if (!transaction.sendEmail(new ContextAdapter(context), issue))
                 {
                     data.setMessage("Your attachment was saved, but could not send notification email "
@@ -443,6 +389,54 @@ public class ModifyIssue extends RequireLoginFirstAction
                           .getString(ScarabConstants.NEXT_TEMPLATE, "ViewIssue");
         setTarget(data, template);            
    } 
+
+    static void addAttachment(Issue issue, Group group, Attachment attachment, 
+                              RunData data, IntakeTool intake)
+        throws Exception
+    {
+        if (group != null)
+        {
+            Field nameField = group.get("Name");
+            Field fileField = group.get("File");
+            nameField.setRequired(true);
+            fileField.setRequired(true);
+            Field mimeAField = group.get("MimeTypeA");
+            Field mimeBField = group.get("MimeTypeB");
+            String mimeA = mimeAField.toString();
+            String mimeB = mimeBField.toString();
+            String mimeType = null;
+            if (mimeB != null && mimeB.trim().length() > 0)
+            {
+                mimeType = mimeB;
+            }
+            else
+            {
+                mimeAField.setRequired(true);
+                mimeType = mimeA;
+            }
+            
+            if ( group.isAllValid() ) 
+            {
+                group.setProperties(attachment);
+                attachment.setMimeType(mimeType);
+                ScarabUser user = (ScarabUser)data.getUser();
+                attachment.setCreatedBy(user.getUserId());
+                issue.addFile(attachment);
+                data.setMessage("Attachment was added");
+                // remove the group so that the form data doesn't show up again
+                intake.remove(group);
+            }
+            else
+            {
+                data.setMessage(ERROR_MESSAGE);
+            }
+        }
+        else
+        {
+            data.setMessage("Could not locate Attachment group");
+        }
+    }
+
 
     /**
     *  Edits a comment.

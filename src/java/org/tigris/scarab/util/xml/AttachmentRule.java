@@ -105,29 +105,25 @@ public class AttachmentRule extends BaseRule
     protected void doInsertionAtEnd()
         throws Exception
     {
+        // FIXME! I have probably messed this up, as I did not follow 
+        // the logic. Are we taking an existing Attachment that has been
+        // stored previously and assigning it to a new issue? -jdm
         Attachment attachment = (Attachment)digester.pop();
+        String path = attachment.getFullPath();
+
         Issue issue = (Issue)digester.pop();
-        
         attachment.setIssueId(issue.getIssueId());
-        
-        if (attachment.getFilePath() != null)
+        String newPath = attachment.getFullPath();
+
+        if (path != null)
         {
-            String path = attachment.getFilePath();
-            String sourceFileName = path.substring(path.lastIndexOf(File.separator)+1);
-            attachment.setFilePath(null);
-            attachment.save();
-            String newFile = attachment.getRepositoryDirectory(issue.getModule().getCode())
-                + File.separator + sourceFileName.substring(0, sourceFileName.lastIndexOf('.')) + "_"
-                + attachment.getPrimaryKey().toString()
-                + sourceFileName.substring(sourceFileName.lastIndexOf('.'));
-            
             // copy the file into its new location
             FileReader in = null;
             FileWriter out = null;
             try
             {
                 in = new FileReader(path);
-                out = new FileWriter(newFile);
+                out = new FileWriter(newPath);
                 int c;
                 while ((c = in.read()) != -1)
                 {
@@ -144,9 +140,7 @@ public class AttachmentRule extends BaseRule
                 {
                     out.close();
                 }
-            }
-            
-            attachment.setFilePath(newFile);
+            }            
         }
         attachment.save();
         digester.push(issue);

@@ -2,7 +2,7 @@
 <!DOCTYPE database SYSTEM
           "http://jakarta.apache.org/turbine/dtd/database.dtd">
 
-<!-- $Id: scarab-schema.xml,v 1.79 2002/01/30 04:53:51 elicia Exp $ -->
+<!-- $Id: scarab-schema.xml,v 1.80 2002/02/05 23:30:23 jmcnally Exp $ -->
 
 <database name="@DATABASE_PROP_NAME@">
 <!--
@@ -132,7 +132,7 @@
         Location is relative to the central file storage location
         specified in the application properties.
     -->
-    <column name="ATTACHMENT_FILE_PATH" javaName="FilePath" required="false" type="VARCHAR" size="255"></column>
+    <column name="ATTACHMENT_FILE_PATH" javaName="FileName" required="false" type="VARCHAR" size="255"></column>
     <!--
         MIME type of the attachment.
         Describes type of information constituting an attachment.

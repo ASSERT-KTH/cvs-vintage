@@ -1,4 +1,4 @@
-package org.tigris.scarab.util.xml;
+package org.tigris.scarab.screens;
 
 /* ================================================================
  * Copyright (c) 2000-2002 CollabNet.  All rights reserved.
@@ -44,54 +44,70 @@ package org.tigris.scarab.util.xml;
  * 
  * This software consists of voluntary contributions made by many
  * individuals on behalf of Collab.Net.
- */
+ */ 
 
-import java.io.File;
 
-import org.apache.commons.digester.Digester;
+// Turbine Stuff 
+import java.io.*;
+import org.apache.turbine.RunData;
+import org.apache.turbine.TemplateContext;
+import org.apache.turbine.tool.TemplateLink;
+import org.apache.torque.om.NumberKey;
 
+// Scarab Stuff
+import org.tigris.scarab.util.ScarabLink;
 import org.tigris.scarab.om.Attachment;
+import org.tigris.scarab.om.AttachmentPeer;
 
 /**
- * Handler for the xpath "scarab/module/issue/attachment/path"
+ * Sends file contents directly to the output stream.
  *
- * @author <a href="mailto:kevin.minshull@bitonic.com">Kevin Minshull</a>
- * @author <a href="mailto:richard.han@bitonic.com">Richard Han</a>
+ * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
+ * @version $Id: ViewAttachment.java,v 1.1 2002/02/05 23:30:22 jmcnally Exp $
  */
-public class AttachmentPathRule extends BaseRule
+public class ViewAttachment extends Default
 {
-    public AttachmentPathRule(Digester digester, String state)
-    {
-        super(digester, state);
-    }
-    
     /**
-     * This method is called when the body of a matching XML element
-     * is encountered.  If the element has no body, this method is
-     * not called at all.
-     *
-     * @param text The text of the body of this element
+     * builds up the context for display of variables on the page.
      */
-    public void body(String text) throws Exception
+    public void doBuildTemplate( RunData data, TemplateContext context )
+        throws Exception 
     {
-        log().debug("(" + getState() + ") attachment path body: " + text);
-        File file = new File(text);
-        if (!file.exists() || !file.isFile())
+        super.doBuildTemplate(data, context);
+        
+        String attachId = data.getParameters().getString("attachId");
+        Attachment attachment = AttachmentPeer.retrieveByPK(new NumberKey(attachId));
+
+        data.getResponse().setContentType(attachment.getMimeType());
+        
+        FileInputStream fis = null;
+        BufferedInputStream bis = null;
+        try
         {
-            throw new Exception("File: " + text + " does not exist.");
+            fis = new FileInputStream(attachment.getFullPath());
+            bis = new BufferedInputStream(fis);
+            OutputStream os = data.getResponse().getOutputStream();
+            int onebyte = bis.read();
+            while ( onebyte != -1 ) 
+            {
+                os.write(onebyte);
+                onebyte = bis.read();
+            }
         }
-        super.doInsertionOrValidationAtBody(text);
-    }
-    
-    protected void doInsertionAtBody(String text)
-        throws Exception
-    {
-        Attachment attachment = (Attachment)digester.pop();
-        attachment.setFileName(text);
-        digester.push(attachment);
-    }
-    
-    protected void doValidationAtBody(String text)
-    {
+        finally
+        {
+            if (bis != null) 
+            {
+                bis.close();
+            }
+            else if (fis != null) 
+            {
+                fis.close();
+            }
+        }
+
+        //data.getRequest().setAttribute("stop.pipeline", Boolean.TRUE);
+        data.setTarget(null);
     }
 }
+

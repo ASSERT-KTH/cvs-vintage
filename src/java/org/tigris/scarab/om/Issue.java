@@ -65,6 +65,7 @@ import org.apache.torque.pool.DBConnection;
 import org.apache.torque.map.DatabaseMap;
 import org.apache.torque.oid.IDBroker;
 import org.apache.torque.util.BasePeer;
+import org.apache.fulcrum.upload.FileItem;
 
 // Scarab classes
 import org.tigris.scarab.services.module.ModuleEntity;
@@ -274,6 +275,7 @@ public class Issue
     public void addFile(Attachment attachment)
         throws Exception
     {
+        attachment.setIssue(this);
         attachment.setTypeId(Attachment.FILE__PK);
         addAttachment(attachment);
     }
@@ -1113,6 +1115,19 @@ public class Issue
             setIdCount(getNextIssueId(dbCon.getConnection()));
         }
         super.save(dbCon);
+
+        // Save any files added to the issue
+        List files = getAttachments();
+        for (int k = 0; k < files.size(); k++)
+        {
+            Attachment attachment = (Attachment)files.get(k);
+            FileItem file = attachment.getFile();
+            if (file != null 
+                && file.getSize() > 0)
+            {
+                attachment.save();    
+            }
+        }
     }
 
 

@@ -386,7 +386,7 @@
            <input type="checkbox" name="file_delete_$file.AttachmentId" />
          #end
        </td>
-       <td><a href="$data.Request.ContextPath/$file.FilePath" 
+       <td><a href="$link.setPage("ViewAttachment.vm").setPathInfo("attachId", $file.QueryKey)"  
          onClick="fileWindow=window.open('',
          'filewindow','resizable=yes,menubar=yes,scrollbars=yes,height=450,width=700')" 
          target="filewindow">$file.FileName</a> 
