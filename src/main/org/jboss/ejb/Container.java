@@ -82,7 +82,7 @@ import org.jboss.util.jmx.ObjectNameFactory;
 * @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>.
 * @author <a href="bill@burkecentral.com">Bill Burke</a>
 * @author <a href="mailto:d_jencks@users.sourceforge.net">David Jencks</a>
-* @version $Revision: 1.82 $
+* @version $Revision: 1.83 $
 ** <p><b>Revisions:</b>
 *
 * <p><b>2001/07/26 bill burke:</b>
@@ -921,7 +921,7 @@ public abstract class Container implements MBeanRegistration, DynamicMBean
                   // Internal link
                   if (debug)
                      log.debug("Binding "+ref.getName()+" to internal JNDI source: "+ref.getLink());
-                  Container refContainer = ejbModule.getContainer(ref.getLink());
+                  Container refContainer = ejbModule.findContainer(ref.getLink());
                   if (refContainer == null)
                      throw new DeploymentException ("Bean "+ref.getLink()+" not found within this application.");
                   Util.bind(envCtx, ref.getName(), new LinkRef(refContainer.getBeanMetaData().getJndiName()));
@@ -958,7 +958,7 @@ public abstract class Container implements MBeanRegistration, DynamicMBean
                {
                   // Internal link
                   log.debug("Binding "+refName+" to bean source: "+ref.getLink());
-                  Container refContainer = ejbModule.getContainer(ref.getLink());
+                  Container refContainer = ejbModule.findContainer(ref.getLink());
                   if (refContainer == null)
                   {
                      throw new DeploymentException ("Bean "+ref.getLink()+" not found within this application.");

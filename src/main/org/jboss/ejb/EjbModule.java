@@ -15,6 +15,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Iterator;
+import java.util.WeakHashMap;
 import javax.ejb.EJBLocalHome;
 import javax.management.MBeanServer;
 import javax.management.ObjectName;
@@ -61,11 +62,14 @@ import javax.transaction.TransactionManager;
 import org.jboss.util.jmx.ObjectNameFactory;
 
 /**
- * An Application represents a collection of beans that are deployed as a
+ * An EjbModule represents a collection of beans that are deployed as a
  * unit.
  *
- * <p>The beans may use the Application to access other beans within the same
+ * <p>The beans may use the EjbModule to access other beans within the same
  *    deployment unit.
+ *
+ * <p>The beans may use the EjbModule to access other beans within the same
+ *    deployment package (e.g. an ear) using findContainer(String).
  *      
  * @see Container
  * @see EJBDeployer
@@ -73,7 +77,8 @@ import org.jboss.util.jmx.ObjectNameFactory;
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  * @author <a href="mailto:d_jencks@users.sourceforge.net">David Jencks</a>
  * @author <a href="mailto:reverbel@ime.usp.br">Francisco Reverbel</a>
- * @version $Revision: 1.12 $
+ * @author <a href="mailto:Adrian.Brock@HappeningTimes.com">Adrian.Brock</a>
+ * @version $Revision: 1.13 $
  *
  * @jmx:mbean extends="org.jboss.system.ServiceMBean"
  */
@@ -108,14 +113,14 @@ public class EjbModule
     
    // Attributes ----------------------------------------------------
    
-   /** Stores the containers for this application unit. */
+   /** Stores the containers for this deployment unit. */
    HashMap containers = new HashMap();
    HashMap localHomes = new HashMap();
    
-   /** Class loader of this application. */
+   /** Class loader of this deployment unit. */
    ClassLoader classLoader = null;
    
-   /** Name of this application, url it was deployed from */
+   /** Name of this deployment unit, url it was deployed from */
    final String name;
    
    private final DeploymentInfo deploymentInfo;   
@@ -128,6 +133,9 @@ public class EjbModule
    //private MBeanServer server;
    
    // Static --------------------------------------------------------
+   
+   /** Stores a map of DeploymentInfos to EjbModules. */
+   private static WeakHashMap ejbModulesByDeploymentInfo = new WeakHashMap();
 
    // Public --------------------------------------------------------
 
@@ -137,9 +145,13 @@ public class EjbModule
    {
       this.deploymentInfo = di;
       this.name = deploymentInfo.url.toString();
+
+      // Keep track of which deployments are ejbModules
+      ejbModulesByDeploymentInfo.put(di, this);
    }
+
    /**
-    * Add a container to this application.
+    * Add a container to this deployment unit.
     *
     * @param   con  
     */
@@ -150,7 +162,7 @@ public class EjbModule
    }
 
    /**
-    * Remove a container from this application.
+    * Remove a container from this deployment unit.
     *
     * @param   con  
     */
@@ -175,7 +187,7 @@ public class EjbModule
    }
 
    /**
-    * Get a container from this Application that corresponds to a given name
+    * Get a container from this deployment unit that corresponds to a given name
     *
     * @param   name  ejb-name name defined in ejb-jar.xml
     *
@@ -188,10 +200,10 @@ public class EjbModule
    }
 
    /**
-    * Get all containers in this Application.
+    * Get all containers in this deployment unit.
     *
     * @return  a collection of containers for each enterprise bean in this 
-    *          application unit.
+    *          deployment unit.
     * @jmx:managed-attribute
     */
    public Collection getContainers()
@@ -200,7 +212,7 @@ public class EjbModule
    }
 
    /**
-    * Get the class loader of this Application. 
+    * Get the class loader of this deployment unit. 
     *
     * @return     
     */
@@ -210,7 +222,26 @@ public class EjbModule
    }
 
    /**
-    * Set the class loader of this Application
+    * Find a container from this deployment package, used to process ejb-link
+    *
+    * @param   name  ejb-name name defined in ejb-jar.xml in some jar in
+    *          the same deployment package
+    * @return  container for the named bean, or null if the container was
+    *          not found   
+    */
+   public Container findContainer(String name)
+   {
+      // Quick check
+      Container result = (Container)containers.get(name);
+      if (result != null)
+         return result;
+
+      // Ok, we have to walk the tree
+      return locateContainer(name);
+   }
+
+   /**
+    * Set the class loader of this deployment unit
     *
     * @param   name  
     */
@@ -220,7 +251,7 @@ public class EjbModule
    }
 
    /**
-    * Get the name of this Application. 
+    * Get the name of this deployment unit. 
     *
     * @return    The name of this application.
     * @jmx:managed-attribute
@@ -232,7 +263,7 @@ public class EjbModule
 
    
    /**
-    * Get the URL from which this Application was deployed
+    * Get the URL from which this deployment unit was deployed
     *
     * @return    The URL from which this Application was deployed.
     */
@@ -888,5 +919,61 @@ public class EjbModule
       
       return ic;
    }
-   
+
+   /**
+    * Find a container from this deployment package, used to process ejb-link
+    *
+    * @param   name  ejb-name name defined in ejb-jar.xml in some jar in
+    *          the same deployment package
+    * @return  container for the named bean, or null if the container was
+    *          not found   
+    */
+   private Container locateContainer(String name)
+   {
+      // Get the top level deployment
+      DeploymentInfo info = deploymentInfo;
+      while (info.parent != null)
+         info = info.parent;
+
+      // Start a recursive walk through the deployment tree
+      return locateContainer(info, name);
+   }
+
+   /**
+    * Find a container from this deployment package, used to process ejb-link<p>
+    * 
+    * Checks the passed deploymentinfo, then all its subdeployments
+    *
+    * @param   info  the current deploymentinfo
+    * @param   name  ejb-name name defined in ejb-jar.xml in some jar in
+    *          the same deployment package
+    * @return  container for the named bean, or null if the container was
+    *          not found   
+    */
+   private Container locateContainer(DeploymentInfo info, String name)
+   {
+      Container result = null;
+
+      // Try the current EjbModule
+      EjbModule module = (EjbModule) ejbModulesByDeploymentInfo.get(info);
+      if (module != null)
+      {
+         result = module.getContainer(name);
+
+         if (result != null)
+            return result;
+      }
+
+      // Try the subpackages
+      Iterator iterator = info.subDeployments.iterator();
+      while (iterator.hasNext())
+      {
+         result = locateContainer((DeploymentInfo) iterator.next(), name);
+         if (result != null)
+            return result;
+      }
+
+      // Nothing found
+      return null;
+   }
 }
