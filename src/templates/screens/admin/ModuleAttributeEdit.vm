@@ -115,7 +115,7 @@ $link.setPage("admin,ManageArtifactTypes.vm").setLabel("$l10n.here").</p>
         #end
      </td>
     
-     <td>#booleanCheckboxLock ($rmoGroup.Active $issueTypeLock)</td>
+     <td>#booleanCheckboxLock ($rmoGroup.Active $locked)</td>
      <td>
         #if ($locked)
           $rmo.Order
