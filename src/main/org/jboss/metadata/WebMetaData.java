@@ -22,7 +22,7 @@ import org.jboss.deployment.DeploymentException;
  * @see org.jboss.web.AbstractWebContainer
  
  * @author Scott.Stark@jboss.org
- * @version $Revision: 1.8 $
+ * @version $Revision: 1.9 $
  */
 public class WebMetaData implements XmlLoadable
 {
@@ -32,6 +32,7 @@ public class WebMetaData implements XmlLoadable
    private HashMap ejbReferences = new HashMap();
    private HashMap ejbLocalReferences = new HashMap();
    private ArrayList securityRoleReferences = new ArrayList();
+   private boolean distributable=false;
    /** The war context root as specified as the jboss-web.xml
     descriptor level. */
    private String contextRoot;
@@ -114,6 +115,15 @@ public class WebMetaData implements XmlLoadable
       return virtualHost;
    }
 
+   /**
+     The distributable flag.
+     @return true if the web-app is marked distributable
+    */
+   public boolean getDistributable()
+   {
+      return distributable;
+   }
+
    public void importXml(Element element) throws Exception
    {
       String rootTag = element.getOwnerDocument().getDocumentElement().getTagName();
@@ -179,6 +189,13 @@ public class WebMetaData implements XmlLoadable
          EjbLocalRefMetaData ejbRefMetaData = new EjbLocalRefMetaData();
          ejbRefMetaData.importEjbJarXml(ejbRef);
          ejbLocalReferences.put(ejbRefMetaData.getName(), ejbRefMetaData);
+      }
+
+      // Is the web-app marked distributable?
+      iterator = MetaData.getChildrenByTagName(webApp, "distributable");
+      if(iterator.hasNext())
+      {
+	 distributable=true;
       }
    }
 
