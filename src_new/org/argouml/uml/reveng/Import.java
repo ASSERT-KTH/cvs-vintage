@@ -1,4 +1,4 @@
-// $Id: Import.java,v 1.48 2003/12/20 15:49:41 alexb Exp $
+// $Id: Import.java,v 1.49 2003/12/26 16:35:36 alexb Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -94,7 +94,7 @@ import org.tigris.gef.base.Globals;
  *   <li> 2 = full import, feature detail (ie. operations with methods)
  * </ol>
  *
- * <p>$Id: Import.java,v 1.48 2003/12/20 15:49:41 alexb Exp $
+ * <p>$Id: Import.java,v 1.49 2003/12/26 16:35:36 alexb Exp $
  *
  * @author Andreas Rueckert <a_rueckert@gmx.net>
  */
@@ -691,6 +691,8 @@ public class Import {
                 if (i >= numberOfFiles/2) pass = "2-nd pass";
             }
 	    
+            int fileNumber = i != 1 ? ((i-1)%(numberOfFiles/2)+1) : 1;
+            
             progressLabel.setText("Parsing file " + ((i-1)%(numberOfFiles/2)+1) + " of " + numberOfFiles/2
 				  + ". "+pass);
             pack();
