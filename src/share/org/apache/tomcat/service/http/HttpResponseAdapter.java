@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/http/Attic/HttpResponseAdapter.java,v 1.1 1999/11/01 22:24:23 costin Exp $
- * $Revision: 1.1 $
- * $Date: 1999/11/01 22:24:23 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/http/Attic/HttpResponseAdapter.java,v 1.2 1999/11/22 18:36:44 costin Exp $
+ * $Revision: 1.2 $
+ * $Date: 1999/11/22 18:36:44 $
  *
  * ====================================================================
  *
@@ -87,6 +87,14 @@ public class HttpResponseAdapter implements  ResponseAdapter {
     protected StringBuffer statusSB;
     protected StringBuffer headersSB;
 
+    // XXX Temporary fix for encoding - it should be at a higher level
+    // ( i.e. connector)
+    // Also, we need to resolve few other problems in this are - header
+    // encoding != body encoding, default should _not_ be platform def., etc.
+    // Any reason this should be a soft setting?
+    final static String encoding = "ISO-8859-1";  // as called for by HTTP standard?
+    // final static String encoding = "UTF8";     // more useful?
+
     public HttpResponseAdapter() {
         super();
 	statusSB=new StringBuffer();
@@ -104,7 +112,7 @@ public class HttpResponseAdapter implements  ResponseAdapter {
 	statusSB.append("HTTP/1.0 ").append(status);
 	if(message!=null) statusSB.append(" ").append(message);
 	statusSB.append("\r\n");
-	sout.write(statusSB.toString().getBytes());
+	sout.write(statusSB.toString().getBytes(encoding));
 	statusSB.setLength(0);
     }
     
@@ -115,7 +123,7 @@ public class HttpResponseAdapter implements  ResponseAdapter {
     public void addHeader(String name, String value) throws IOException{
 	headersSB.setLength(0);
 	headersSB.append(name).append(": ").append(value).append("\r\n");
-	sout.write( headersSB.toString().getBytes() );
+	sout.write( headersSB.toString().getBytes(encoding) );
     }
     
     public void addMimeHeaders(MimeHeaders headers) throws IOException {
@@ -125,7 +133,7 @@ public class HttpResponseAdapter implements  ResponseAdapter {
             MimeHeaderField h = headers.getField(i);
             headersSB.append(h).append("\r\n");
         }
-	sout.write( headersSB.toString().getBytes() );
+	sout.write( headersSB.toString().getBytes(encoding) );
     }
 
     static final byte CRLF[]= { (byte)'\r', (byte)'\n' };
