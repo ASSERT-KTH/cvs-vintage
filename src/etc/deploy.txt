@@ -1,1 +1,0 @@
-This is the deploy directory.  Put your jar/war/ear file here and jboss will deploy it!
