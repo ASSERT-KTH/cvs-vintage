@@ -37,7 +37,7 @@ import org.gjt.sp.util.Log;
  * jEdit's registers are an extension of the clipboard metaphor.
  *
  * @author Slava Pestov
- * @version $Id: Registers.java,v 1.7 2002/06/06 05:57:18 spestov Exp $
+ * @version $Id: Registers.java,v 1.8 2002/11/01 20:11:26 spestov Exp $
  */
 public class Registers
 {
@@ -111,13 +111,16 @@ public class Registers
 
 		Register reg = getRegister(register);
 
-		String registerContents = reg.toString();
-		if(reg != null && registerContents != null)
+		if(reg != null)
 		{
-			if(registerContents.endsWith(separator))
-				selection = registerContents + selection;
-			else
-				selection = registerContents + separator + selection;
+			String registerContents = reg.toString();
+			if(registerContents != null)
+			{
+				if(registerContents.endsWith(separator))
+					selection = registerContents + selection;
+				else
+					selection = registerContents + separator + selection;
+			}
 		}
 
 		setRegister(register,selection);
