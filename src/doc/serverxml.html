@@ -4,7 +4,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
 <head>
-  <!-- $Id: serverxml.html,v 1.25 2002/05/08 02:27:54 billbarker Exp $ -->
+  <!-- $Id: serverxml.html,v 1.26 2002/09/11 17:35:26 larryi Exp $ -->
   <!-- Copyright 1999-2001 Apache Software Foundation -->
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" >
   <link rel="stylesheet" href="style.css">
@@ -2116,8 +2116,8 @@ than 5.</p>
   <tr valign="top">
     <td>path</td>
     <td>Path to the desired log file. You may embed a
-      <code>java.text.SimpleDateFormat</code> string enclosed within '{}'
-      to create a path that encorporates the current date and or time.</td>
+      <code>java.text.SimpleDateFormat</code> string enclosed within &quot;${}&quot;
+      to create a path that encorporates the current date and/or time.</td>
     <td>null, log output goes to stderr</td>
   </tr>
   <tr valign="top">
@@ -2144,6 +2144,8 @@ than 5.</p>
 
 <pre>
 &lt;LogSetter name=&quot;tc_log&quot; verbosityLevel=&quot;DEBUG&quot; /&gt;
+&lt;LogSetter name=&quot;servlet_log&quot; timestamps=&quot;true&quot;
+    verbosityLevel=&quot;INFORMATION&quot; path=&quot;logs/servlet-${yyyyMMdd}.log&quot; /&gt;
 </pre>
 
 <hr size="5">
