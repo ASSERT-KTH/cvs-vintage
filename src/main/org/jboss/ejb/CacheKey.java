@@ -29,7 +29,7 @@ import org.apache.log4j.Category;
  * 
  * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  * @author <a href="bill@burkecentral.com">Bill Burke</a>
- * @version $Revision: 1.17 $
+ * @version $Revision: 1.18 $
  */
 public class CacheKey
    implements Externalizable
@@ -78,20 +78,21 @@ public class CacheKey
       this.id = null;
         
       try {
-         
+            
+         // Equals rely on the MarshalledObject itself
+         mo =  new MarshalledObject(id);
 
-         /*
+        /*
          * FIXME MARCF: The reuse of the primary key is an "exception" and this fix makes 
           everyone pay an hefty price.  If we really want this behavior we can put it in 
           the cache.  Is there a test for this? 
-         
-         // Equals rely on the MarshalledObject itself
-         mo =  new MarshalledObject(id);
+
          // Make a copy of the id to enforce copy semantics and 
          // allow reuse of the original primary key
          this.id = mo.get();
          
          */
+         this.id = id;
          
          // Precompute the hashCode (speed)
          hashCode = mo.hashCode();
