@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<!-- $Id: ref_entbuiltin.xml,v 1.12 2003/12/06 16:24:27 mvw Exp $ -->
+<!-- $Id: ref_entbuiltin.xml,v 1.13 2004/06/27 08:25:33 mvw Exp $ -->
 <!--
 
 A description of the built in datatypes, classes, interfaces and stereotypes
@@ -574,7 +574,7 @@ use is for return type and parameter types in method signatures.
               <para>Package</para>
             </entry>
             <entry>
-              <para>no</para>
+              <para>yes</para>
             </entry>
           </row>
           <row>
@@ -728,7 +728,7 @@ use is for return type and parameter types in method signatures.
               <para>Package</para>
             </entry>
             <entry>
-              <para>no</para>
+              <para>yes</para>
             </entry>
           </row>
           <row>
@@ -761,7 +761,7 @@ use is for return type and parameter types in method signatures.
               <para>Package</para>
             </entry>
             <entry>
-              <para>no</para>
+              <para>yes</para>
             </entry>
           </row>
           <row>
