@@ -28,7 +28,15 @@ public class ComposerSpellCheck {
 	public ComposerSpellCheck(ComposerController composerController) {
 		this.composerController = composerController;
 
-		
+		/*
+		spellCheckConfig =
+			MailConfig.getComposerOptionsConfig().getSpellcheckItem();
+		ASpellInterface.setAspellExeFilename(
+			spellCheckConfig.get("executable"));
+		*/
+	}
+
+	public String checkText(String text) {
 		ExternalToolsPluginHandler handler = null;
 		try {
 			handler =
@@ -43,17 +51,7 @@ public class ComposerSpellCheck {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
-		
-		/*
-		spellCheckConfig =
-			MailConfig.getComposerOptionsConfig().getSpellcheckItem();
-		ASpellInterface.setAspellExeFilename(
-			spellCheckConfig.get("executable"));
-		*/	
-	}
 
-	public String checkText(String text) {
 		String checked = ASpellInterface.checkBuffer(text);
 
 		if (checked == null) {
