@@ -393,7 +393,7 @@ public class AccountDialog implements ActionListener, ListSelectionListener
 				int uid = accountItem.getUid();
 
 				IMAPRootFolder folder = (IMAPRootFolder) MainInterface.treeModel.getImapFolder(uid);
-				folder.setName(accountItem.getName());
+				//folder.setName(accountItem.getName());
 				
 				//folder.restartTimer();
 				
