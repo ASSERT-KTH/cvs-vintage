@@ -24,7 +24,7 @@
 // File: Init.java
 // Classes: Init
 // Original Author: jrobbins@ics.uci.edu
-// $Id: Init.java,v 1.13 2003/02/01 06:22:47 mkl Exp $
+// $Id: Init.java,v 1.14 2003/02/01 09:31:08 mkl Exp $
 
 // 8 Mar 2002: Jeremy Bennett (mail@jeremybennett.com). CrCrossNamespaceAssoc
 // registration corrected to Association, rather than AssociationClass
@@ -242,6 +242,7 @@ public class Init {
       Agency.register(crDupParamName, operCls);
       Agency.register(crDupRoleNames, assocCls);  // Jeremy Bennett fix
       Agency.register(crFinalSubclassed, classCls);
+      Agency.register(crFinalSubclassed, interfaceCls);
       Agency.register(crIllegalGeneralization, genCls);
       Agency.register(crAlreadyRealizes, classCls);
       Agency.register(crInterfaceAllPublic, interfaceCls);
@@ -299,7 +300,7 @@ public class Init {
       Agency.register(crReservedName, assocCls);
       Agency.register(crMultiInherit, classCls);
       Agency.register(crMultiRealization, interfaceCls);
-//      Agency.register(crConflictingComposites, classifierCls);
+      // Agency.register(crConflictingComposites, classifierCls);
       Agency.register(crTooManyAssoc, classCls);
       Agency.register(crTooManyAttr, classCls);
       Agency.register(crTooManyOper, classCls);
