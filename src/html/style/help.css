@@ -1,0 +1,90 @@
+/* SoucreCast v1.2 STYLE SHEET */
+@import url(help_ns4_toxins.css);
+
+
+/* SoucreCast - styles start here */
+body {
+	background: white;
+	color: black;
+	margin: 0;
+	padding: 0;
+	line-height: 140%; 
+	}
+a:link, a:visited {
+	color: blue; 
+	text-decoration: underline;
+	}
+a:active, a:hover {
+	color: red;
+	text-decoration: underline;
+	}
+body, div, p, th, td, li, dl, dd {
+	font-family: Lucida, Arial, Helvetica, sans-serif;
+	}
+h2, h3, h4 {
+	font-family: Tahoma, Verdana, Lucida, Arial, Helvetica, sans-serif;
+	}
+th, td {
+	text-align: left;
+	vertical-align: top;
+ 	}
+.right {
+	text-align:	right;
+	}
+.center {
+	text-align:	center;
+	}
+#leftcol, #bodycol	{
+	vertical-align:	top;
+	}
+.app {
+	margin-right: 12px;
+	}
+.app th {
+	background: #ccc;
+	color: black;
+	}
+.a td, .a th {
+	background: #efefef;
+	}
+.b td, .b th {
+	background: #fff;
+	}
+#footer { 
+	margin: 12px;
+	padding: 1px;
+	}
+#bodycol {
+	padding-left: 15px;
+	}
+#leftcol {
+	background: #ffffcc;
+	}
+#navcolumn {
+	color: gray;
+	line-height: 140%;
+	margin: 12px;
+	}
+#navcolumn strong, th {
+	color: black;
+	}
+#navcolumn div {
+	padding: 2px;
+	}
+#navcolumn table	{
+	margin-bottom: 1em;
+	}
+#banner h3 {
+	color: white;
+	padding: .5em;
+	margin: 0;
+	}	
+#topmodule {
+	}
+#topmodule td {
+	background: #efefef;
+	padding-left: 12px;
+	vertical-align:	middle;
+	}
+
+	

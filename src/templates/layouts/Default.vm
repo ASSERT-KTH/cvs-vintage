@@ -7,9 +7,28 @@
   <link rel="stylesheet" type="text/css" href="/scarab/style/print.css" media="print" />
   <link rel="alternate stylesheet" title="compact" type="text/css" href="/scarab/style/compact.css" />
  </head>
- <body marginwidth="0" marginheight="0">
-   <div id="globalnav">
-    <p>
+<body>
+	<div id="banner">
+		<table border="0" cellspacing="12" cellpadding="0" width="100%">
+		<tr>
+		
+		<td>
+		<div align="right" id="loginstatus">
+		    #if ($data.User.FirstName)
+			<div>
+				Logged in: <strong class="username">$data.User.FirstName $data.User.LastName</strong>
+			</div>
+            #end
+<div>
+#if ($scarabR.CurrentModule)
+   Current Module: 
+   <a href="$link.setPage("SelectModule.vm")"><strong class="username">$scarabR.CurrentModule.Name</strong></a>
+#else
+   <a href="$link.setPage("SelectModule.vm")"><strong class="username">Select Module</strong></a>
+#end
+</div>
+
+			<div>
     #if ($data.User.hasLoggedIn())
     <a href="$link.setPage("Login.vm").setAction("Logout")">Logout</a>
     #else
@@ -18,36 +37,92 @@
   | <a href="$link.setPage("Links.vm")">Links</a> 
   | <a href="$link.setPage("entry,Wizard1.vm")">Enter Issue</a>
   | <a href="http://scarab.tigris.org/nonav/ui/">UI Templates</a>
-  </p>
-   </div>
-   <table border="0" cellspacing="0" cellpadding="0" width="95%">
-    <tr>
-     <td width="100" id="leftcol">
-      <div id="projnav">
-#if ($scarabR.CurrentModule)
-   Current Module:   
-   <a href="$link.setPage("SelectModule.vm")">$scarabR.CurrentModule.Name</a>
-#else
-   <a href="$link.setPage("SelectModule.vm")">Select Module</a>
-#end
-   <hr>
-      <form action="$link.setPage("ViewIssue.vm")" method="get">
-   Issue# <input type="text" name="id" size="8" maxlength="255" />
-      <input type="submit" name="Submit" value="Find" />
+			</div>
+		</div>
+		</td>
+		</tr>
+		</table>
+	</div>
+
+	<!-- Structural Elements -->
+<table border="0" cellspacing="0" cellpadding="0" width="100%">
+<tr>
+<td id="leftcol" nowrap="nowrap" width="20%">
+<!-- Structural Elements -->
+	
+	<div id="navcolumn">
+		<div><strong>My start page</strong></div>
+		<div><strong>Projects &amp; categories</strong></div>
+		<div>Project tools</div>
+			<div>&nbsp;&raquo;&nbsp;Documents</div>
+			<div>&nbsp;&raquo;&nbsp;Issue tracking</div>
+			<div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- Enter issue</div>
+			<div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- Queries</div>
+			<div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- Reports</div>
+			<div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- Vote mgmt.</div>
+			<div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- Workflow optns.</div>
+			<div>&nbsp;&raquo;&nbsp;Mailing lists</div> 
+			<div>&nbsp;&raquo;&nbsp;Members</div>  
+			<div>&nbsp;&raquo;&nbsp;News</div>
+			<div>&nbsp;&raquo;&nbsp;Source code</div>
+		<div><strong>Admin functions</strong></div>
+	</div>
+
+	<div id="helptext">
+		<table border="0" cellspacing="0" cellpadding="3" width="100%">
+		<tr>
+			<th><strong>Help Files...</strong></th>
+		</tr>
+		<tr>
+			<td>
+			<div><strong>How do I...?</strong></div>
+			<div>Use this page</div>
+			<div>Learn about a project</div>
+			<div>Join a project</div>
+			</td>
+		</tr>
+		</table>
+	</div>
+
+</td>
+<td id="bodycol">
+
+	<!-- Scarab - App -->
+	<div id="topmodule">
+		<table border="0" cellspacing="0" cellpadding="3" width="100%">
+		<tr>
+			<td nowrap="nowrap">
+            <form action="$link.setPage("ViewIssue.vm")" method="get">
+			<select>
+			<option>saved queries</option>
+			<option>query one</option>
+			<option>query two</option>
+			</select> 
+			<input type="submit" name="query" value="Go" class="bttn" />
+			&nbsp;<img src="/scarab/images/seperator2.gif" width="2" height="15" alt="" border="0" />&nbsp;
+
+            <input type="text" name="id" size="15" maxlength="255" />
+            <input type="submit" name="Submit" value="Query" class="bttn" />
+
+			&nbsp;<img src="/scarab/images/seperator2.gif" width="2" height="15" alt="" border="0" />&nbsp;
+			Advanced&nbsp;|&nbsp;Custom
    </form>
-      </div>
-     </td>
-     <td id="bodycol">
-      <div id="featurenav">
-       <p class="crumbing"><a href="#">crumbing</a> &gt; <a href="#">item1</a> &gt; item2</p>
-       <p><a href="#">primaryfeaturenav</a> | <a href="#">item1</a> | <a href="#">item2</a></p>
-      </div>
+			</td>			
+		</tr>
+		</table>
+	</div>
+	<!-- Scarab - App -->
+
 #actionErrorMsg()
 $renderer.render("screens", $data, $template) 
 ##$screen_placeholder
-     </td>
-    </tr>
-   </table>
+
+<!-- Structural Elements -->
+</td>
+</tr>
+</table>
+<!-- Structural Elements -->
+
 $renderer.render("navigations", $data, "/ScarabBottom.vm") 
  </body>
 </html>

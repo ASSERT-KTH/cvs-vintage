@@ -1,12 +1,10 @@
 $page.setTitle("Welcome to Scarab") 
 
-<div id="login" class="app">
+<div class="app">
 
  <h3>$page.Title</h3>
 
- <ul>
-  <li>New users, <a href="$link.setPage("Register.vm")">register here</a>.</li>
- </ul>
+ <p>New users, <a href="$link.setPage("Register.vm")"><strong>register here</strong></a>.</p>
 
 #set ($paramNext = $data.Parameters.getString($scarabG.Constant.NEXT_TEMPLATE))
 
