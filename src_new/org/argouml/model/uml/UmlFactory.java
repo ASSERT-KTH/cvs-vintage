@@ -1,4 +1,4 @@
-// $Id: UmlFactory.java,v 1.48 2004/08/03 12:18:24 mvw Exp $
+// $Id: UmlFactory.java,v 1.49 2004/08/11 16:11:15 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -420,6 +420,11 @@ public class UmlFactory extends AbstractUmlModelFactory {
                     MObjectFlowState.class,
                     factory,
                     "createObjectFlowState"));
+        elements.put(Uml.CLASSIFIER_IN_STATE,
+                new ObjectCreateInfo(
+                    MClassifierInState.class,
+                    factory,
+                    "createClassifierInState"));
         elements.put(Uml.SUBACTIVITY_STATE,
                 new ObjectCreateInfo(
                     MSubactivityState.class,
