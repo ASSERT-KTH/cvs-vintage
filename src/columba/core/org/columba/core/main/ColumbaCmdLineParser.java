@@ -69,7 +69,7 @@ public class ColumbaCmdLineParser {
     body = commandLineParser.addStringOption('b', "body");
     path = commandLineParser.addStringOption('p', "path");
     mailurl = commandLineParser.addStringOption('+', "mailurl");
-    subject = commandLineParser.addStringOption('+', "subject");
+    subject = commandLineParser.addStringOption('s', "subject");
     cc = commandLineParser.addStringOption('+', "cc");
     bcc = commandLineParser.addStringOption('+', "bcc");
 
