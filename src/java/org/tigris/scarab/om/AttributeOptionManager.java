@@ -50,13 +50,12 @@ import java.util.List;
 import java.util.HashMap;
 import org.apache.torque.TorqueException;
 import org.apache.torque.om.Persistent;
-import org.apache.torque.om.ObjectKey;
 
 /** 
  * This class manages AttributeOption objects.  
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: AttributeOptionManager.java,v 1.5 2003/04/09 21:52:02 elicia Exp $
+ * @version $Id: AttributeOptionManager.java,v 1.6 2003/04/10 17:44:25 jon Exp $
  */
 public class AttributeOptionManager
     extends BaseAttributeOptionManager
