@@ -76,7 +76,7 @@ import org.w3c.dom.Element;
  * @author <a href="mailto:reverbel@ime.usp.br">Francisco Reverbel</a>
  * @author <a href="mailto:Adrian.Brock@HappeningTimes.com">Adrian.Brock</a>
  * @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>
- * @version $Revision: 1.57 $
+ * @version $Revision: 1.58 $
  *
  * @jmx:mbean extends="org.jboss.system.ServiceMBean"
  */
@@ -301,7 +301,7 @@ public class EjbModule
          log.debug("Unable to ask the EJBDeployer whether we are call by value", ignored);
       }
 
-      //Ask the ejb deployer whether we are call by value
+      //Ask the ear deployer whether we are call by value
       try
       {
          if (callByValue == false && ((Boolean) server.getAttribute(EARDeployerMBean.OBJECT_NAME, "CallByValue")).booleanValue())
