@@ -129,7 +129,7 @@ public class ServerXmlReader extends BaseInterceptor {
 	setPropertiesRules( cm, xh );
 	setTagRules( xh );
 	addDefaultTags(cm, xh);
-	addTagRules( cm, xh );
+	//addTagRules( cm, xh );
 	setBackward( xh );
 
 	// load the config file(s)
@@ -284,6 +284,7 @@ public class ServerXmlReader extends BaseInterceptor {
 		cachedM.lastModified() > f.lastModified() ) {
 		// XXX check the other modules-foo.xml
 		loadCachedModules(cachedM, modules );
+		addTagRules( cm, xh );
 		return;
 	    } else {
 		loadConfigFile( xh, f, cm );
