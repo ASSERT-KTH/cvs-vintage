@@ -1,4 +1,4 @@
-// $Id: PropPanelObjectFlowState.java,v 1.3 2004/08/11 18:33:39 mvw Exp $
+// $Id: PropPanelObjectFlowState.java,v 1.4 2004/08/11 20:59:24 mvw Exp $
 // Copyright (c) 2003-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,9 +25,11 @@
 package org.argouml.uml.ui.behavior.activity_graphs;
 
 import javax.swing.ImageIcon;
+import javax.swing.JComboBox;
 
 import org.argouml.i18n.Translator;
 import org.argouml.swingext.Orientation;
+import org.argouml.uml.ui.UMLSearchableComboBox;
 import org.argouml.uml.ui.behavior.state_machines.PropPanelState;
 import org.argouml.util.ConfigLoader;
 
@@ -38,6 +40,11 @@ import org.argouml.util.ConfigLoader;
  */
 public class PropPanelObjectFlowState extends PropPanelState {
 
+    private JComboBox classifierComboBox;
+    
+    private UMLObjectFlowStateClassifierComboBoxModel classifierComboBoxModel =
+        new UMLObjectFlowStateClassifierComboBoxModel();
+    
     /**
      * Constructor
      */
@@ -64,8 +71,10 @@ public class PropPanelObjectFlowState extends PropPanelState {
         addField(Translator.localize("UMLMenu", "label.container"),
                 containerScroll);
 
-        //TODO: Add field for Classifier
-        //TODO: Add field for ClassifierInState
+        // field for Classifier(InState)
+        addField(Translator.localize("UMLMenu", "label.type"),
+                getClassifierComboBox());
+        
         //TODO: Add field for State
         
         addSeperator();
@@ -77,4 +86,16 @@ public class PropPanelObjectFlowState extends PropPanelState {
 
     }
 
+    /**
+     * @return the combo box for the type (Classifier or ClassifierInState)
+     */
+    protected JComboBox getClassifierComboBox() {
+        if (classifierComboBox == null) {
+            classifierComboBox = new UMLSearchableComboBox(
+                    classifierComboBoxModel,
+                    ActionSetObjectFlowStateClassifier.SINGLETON, true);
+        }
+        return classifierComboBox;
+
+    }
 }
