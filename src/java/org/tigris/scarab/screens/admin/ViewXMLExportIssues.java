@@ -68,7 +68,7 @@ import org.tigris.scarab.util.ScarabConstants;
  * Sends XML Export issues contents directly to the output stream.
  *
  * @author <a href="mailto:jon@collab.net">Jon Scott Stevens</a>
- * @version $Id: ViewXMLExportIssues.java,v 1.11 2003/02/04 11:26:02 jon Exp $
+ * @version $Id: ViewXMLExportIssues.java,v 1.12 2003/02/13 21:56:56 jon Exp $
  */
 public class ViewXMLExportIssues extends Default
 {
@@ -90,21 +90,6 @@ public class ViewXMLExportIssues extends Default
             || filename.indexOf(';') > 0)
         {
             filename = "scarab-issues-export.xml";
-        }
-        String downloadType = data.getParameters().getString("downloadtype");
-        if (downloadType != null && downloadType.equals("1"))
-        {
-            data.getResponse().setContentType("text/plain");
-            data.getParameters().add("content-type", "text/plain");
-            data.getParameters().add("content-dispostion", filename);
-        }
-        else
-        {
-            data.getResponse().setContentType("application/octet-stream");
-            data.getParameters().add("content-type", "application/octet-stream");
-            data.getParameters().add("content-dispostion", filename);
-            data.getResponse().setHeader("Content-Disposition", 
-                "attachment; filename=" + filename);
         }
 
         ScarabRequestTool scarabR = getScarabRequestTool(context);
@@ -159,6 +144,23 @@ public class ViewXMLExportIssues extends Default
                     badIdList.toString()));
                 return;
             }
+
+            String downloadType = data.getParameters().getString("downloadtype");
+            if (downloadType != null && downloadType.equals("1"))
+            {
+                data.getResponse().setContentType("text/plain");
+                data.getParameters().add("content-type", "text/plain");
+                data.getParameters().add("content-dispostion", filename);
+            }
+            else
+            {
+                data.getResponse().setContentType("application/octet-stream");
+                data.getParameters().add("content-type", "application/octet-stream");
+                data.getParameters().add("content-dispostion", filename);
+                data.getResponse().setHeader("Content-Disposition", 
+                    "attachment; filename=" + filename);
+            }
+    
             context.put("issueIdList", issueIdList);
             String result = 
                 Module.handleRequest(context, "macros/XMLExportIssuesMacro.vm");
