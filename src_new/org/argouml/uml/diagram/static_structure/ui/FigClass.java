@@ -24,7 +24,7 @@
 // File: FigClass.java
 // Classes: FigClass
 // Original Author: abonner
-// $Id: FigClass.java,v 1.16 2001/12/15 22:25:06 thn Exp $
+// $Id: FigClass.java,v 1.17 2001/12/22 23:27:25 thn Exp $
 
 package org.argouml.uml.diagram.static_structure.ui;
 
@@ -63,7 +63,6 @@ public class FigClass extends FigNodeModelElement {
 
   protected FigGroup _attrVec;
   protected FigGroup _operVec;
-  protected FigRect _bigPort;
   protected FigRect _attrBigPort;
   protected FigRect _operBigPort;
   protected FigRect _stereoLineBlinder;
@@ -75,9 +74,6 @@ public class FigClass extends FigNodeModelElement {
   // constructors
 
   public FigClass() {
-    // this rectangle marks the whole class figure; everything is inside it:
-    _bigPort = new FigRect(10, 10, 60, 20+2*ROWHEIGHT, Color.cyan, Color.cyan);
-
     _name.setLineWidth(1);
     _name.setFilled(true);
 
@@ -185,11 +181,6 @@ public class FigClass extends FigNodeModelElement {
 
     popUpActions.insertElementAt(showMenu, popUpActions.size() - 1);
     return popUpActions;
-  }
-
-  public void setOwner(Object node) {
-    super.setOwner(node);
-    bindPort(node, _bigPort);
   }
 
   public FigGroup getOperationsFig() { return _operVec; }
