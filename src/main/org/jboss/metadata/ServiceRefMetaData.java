@@ -6,7 +6,7 @@
  */
 package org.jboss.metadata;
 
-// $Id: ServiceRefMetaData.java,v 1.18 2004/06/27 20:45:01 tdiesler Exp $
+// $Id: ServiceRefMetaData.java,v 1.19 2004/08/03 10:15:05 tdiesler Exp $
 
 import java.io.Serializable;
 import java.net.MalformedURLException;
@@ -32,7 +32,7 @@ import org.w3c.dom.Element;
  * application-client.xml.
  *
  * @author Thomas.Diesler@jboss.org
- * @version $Revision: 1.18 $
+ * @version $Revision: 1.19 $
  */
 public class ServiceRefMetaData implements Serializable
 {
@@ -241,20 +241,20 @@ public class ServiceRefMetaData implements Serializable
       Iterator iterator = MetaData.getChildrenByTagName(element, "port-component-ref");
       while (iterator.hasNext())
       {
-         Element portElement = (Element) iterator.next();
-         String name = MetaData.getOptionalChildContent(portElement, "service-endpoint-interface");
-         if( name != null )
+         Element pcrefElement = (Element)iterator.next();
+         String name = MetaData.getOptionalChildContent(pcrefElement, "service-endpoint-interface");
+         if (name != null)
          {
-            PortComponentRefMetaData pcrefMetaData = 
-               (PortComponentRefMetaData) portComponentRefs.get(name);
-            if( pcrefMetaData == null )
+            PortComponentRefMetaData pcrefMetaData = (PortComponentRefMetaData)portComponentRefs.get(name);
+            if (pcrefMetaData == null)
             {
-               String msg = "Failed to find port-component-ref in jboss descriptor "
-                  + "for service-endpoint-interface: "+name;
-               throw new DeploymentException(msg);
+               // Its ok to only have the <port-component-ref> in jboss.xml and not in ejb-jar.xml 
+               pcrefMetaData = new PortComponentRefMetaData(this);
+               pcrefMetaData.importStandardXml(pcrefElement);
+               portComponentRefs.put(pcrefMetaData.getServiceEndpointInterface(), pcrefMetaData);
             }
 
-            pcrefMetaData.importJBossXml(portElement);
+            pcrefMetaData.importJBossXml(pcrefElement);
          }
       }
 
