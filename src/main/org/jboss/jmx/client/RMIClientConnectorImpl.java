@@ -93,7 +93,7 @@ public class RMIClientConnectorImpl
 				", name in namespace: " + lNamingContext.getNameInNamespace()
 			);
 			// This has to be adjusted later on to reflect the given parameter
-			mRemoteConnector = (RMIConnector) new InitialContext().lookup( "jmx:rmi" );
+			mRemoteConnector = (RMIConnector) new InitialContext().lookup( "jmx:" + pServer + ":rmi" );
 			System.err.println( "RMIClientConnectorImpl.start(), got remote connector: " + mRemoteConnector );
 			mServer = pServer;
 		}
