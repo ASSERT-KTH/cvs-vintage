@@ -106,9 +106,10 @@ public class JspServlet extends HttpServlet {
 	private void load() throws JasperException, ServletException {
 	    try {  
 		Class servletClass = (Class) loadedJSPs.get(jspUri);
-			//loader.getJspServletClass(jspUri);
-		// This is for the original protocol.
+
+		// This is to maintain the original protocol.
 		destroy();
+
 		theServlet = (Servlet) servletClass.newInstance();
 	    } catch (Exception ex) {
 		throw new JasperException(ex);
@@ -138,12 +139,13 @@ public class JspServlet extends HttpServlet {
             } else 
                 accordingto = "according to the Servlet Engine";
             
-            
             Constants.message("jsp.message.cp_is", 
-                              new Object[] { accordingto, cp }, 
+                              new Object[] { 
+                                  accordingto,
+                                  cp == null ? "" : cp
+                              }, 
                               Logger.INFORMATION);
 
-	    //if (loader.loadJSP(jspUri, cp, isErrorPage, req, res) || theServlet == null) {
             if (loadJSP(jspUri, cp, isErrorPage, req, res) 
                     || theServlet == null) {
                 load();

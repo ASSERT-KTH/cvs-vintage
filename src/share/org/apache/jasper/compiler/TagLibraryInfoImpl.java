@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/TagLibraryInfoImpl.java,v 1.14 2000/03/24 01:09:32 akv Exp $
- * $Revision: 1.14 $
- * $Date: 2000/03/24 01:09:32 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/TagLibraryInfoImpl.java,v 1.15 2000/03/24 22:48:47 akv Exp $
+ * $Revision: 1.15 $
+ * $Date: 2000/03/24 22:48:47 $
  *
  * The Apache Software License, Version 1.1
  *
@@ -134,27 +134,26 @@ public class TagLibraryInfoImpl extends TagLibraryInfo {
         return sw.toString();
     }
     
-	// XXX FIXME
-	// resolveRelativeUri and/or getResourceAsStream don't seem to properly
-	// handle relative paths when dealing when home and getDocBase are set
-	// the following is a workaround until these problems are resolved.
+    // XXX FIXME
+    // resolveRelativeUri and/or getResourceAsStream don't seem to properly
+    // handle relative paths when dealing when home and getDocBase are set
+    // the following is a workaround until these problems are resolved.
     private InputStream getResourceAsStream(String uri) 
-		throws FileNotFoundException 
+        throws FileNotFoundException 
     {
-		if (uri.indexOf(":") > 0) {
-	        // may be fully qualified (Windows) or may be a URL.  Let
-			// getResourceAsStream deal with it.
-	        return ctxt.getResourceAsStream(uri);
-		} else {
-			// assume it translates to a real file, and use getRealPath
-			return new FileInputStream(ctxt.getRealPath(uri));
-		}
+        if (uri.indexOf(":") > 0) {
+            // may be fully qualified (Windows) or may be a URL.  Let
+            // getResourceAsStream deal with it.
+            return ctxt.getResourceAsStream(uri);
+        } else {
+            // assume it translates to a real file, and use getRealPath
+            return new FileInputStream(ctxt.getRealPath(uri));
+        }
     }
 
     TagLibraryInfoImpl(JspCompilationContext ctxt, String prefix, String uriIn) 
         throws IOException, JasperException
     {
-	// XXX. should super be initialized with "dummy" uri?
         super(prefix, uriIn);
 
 	this.ctxt = ctxt;
@@ -169,15 +168,12 @@ public class TagLibraryInfoImpl extends TagLibraryInfo {
 	    InputStream is = getResourceAsStream(WEBAPP_INF);
 	    
 	    if (is != null) {
-	    
                 URL dtdURL =  this.getClass().getResource(Constants.WEBAPP_DTD_RESOURCE);
                 XmlDocument webtld = JspUtil.parseXMLDoc(is, dtdURL,
                                                          Constants.WEBAPP_DTD_PUBLIC_ID);
                 NodeList nList =  webtld.getElementsByTagName("taglib");
 	    
-		// Check if a matching "taglib" exists.
-		// XXX. Some changes that akv recommended.
-		if (nList.getLength() != 0) {
+                if (nList.getLength() != 0) {
 		    for(int i = 0; i < nList.getLength(); i++) {
 			Element e = (Element) nList.item(i);
 			NodeList list = e.getChildNodes();
@@ -206,20 +202,28 @@ public class TagLibraryInfoImpl extends TagLibraryInfo {
 				}
 			    }
 			}
-			if (match == true && tagLoc != null) 
-			    this.uri = tagLoc; 
+			if (match == true && tagLoc != null) {
+                            this.uri = tagLoc;
+
+                            // If this is a relative path, then it has to be
+                            // relative to where web.xml is.
+
+                            // I'm taking the simple way out. Since web.xml 
+                            // has to be directly under WEB-INF, I'm making 
+                            // an absolute URI out of it by prepending WEB-INF
+
+                            if (!uri.startsWith("/"))
+                                uri = "/WEB-INF/"+uri;
+                        }
 		    }
 		}
 	    }
 
-	    // "uri" should point to the correct tld location.
-	    if (!uri.startsWith("/")) {
+	    // Try to resolve URI relative to the current JSP page
+            if (!uri.startsWith("/"))
 		uri = ctxt.resolveRelativeUri(uri);
-	    }
-	    //else {
-	    //relativeURL = true;
+
 	    in = getResourceAsStream(uri);
-	    //}
 	    
 	    if (in == null)
 		throw new JasperException(Constants.getString("jsp.error.tld_not_found",
