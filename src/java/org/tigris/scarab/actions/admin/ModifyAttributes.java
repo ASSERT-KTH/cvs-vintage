@@ -61,6 +61,7 @@ import org.apache.turbine.om.ObjectKey;
 import org.apache.turbine.om.NumberKey;
 import org.apache.turbine.services.intake.IntakeTool;
 import org.apache.turbine.services.intake.model.Group;
+import org.apache.turbine.services.intake.model.Field;
 import org.apache.turbine.services.intake.model.BooleanField;
 import org.apache.turbine.services.pull.ApplicationTool;
 import org.apache.turbine.services.pull.TurbinePull;
@@ -75,7 +76,7 @@ import org.tigris.scarab.tools.ScarabRequestTool;
     This class will store the form data for a project modification
         
     @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
-    @version $Id: ModifyAttributes.java,v 1.7 2001/04/12 00:21:19 jmcnally Exp $
+    @version $Id: ModifyAttributes.java,v 1.8 2001/04/12 01:37:40 jmcnally Exp $
 */
 public class ModifyAttributes extends VelocityAction
 {
@@ -84,7 +85,8 @@ public class ModifyAttributes extends VelocityAction
      * this will get the right Attribute from the database and put it into
      * the $scarabR tool.
      */
-    public void doSelectattribute( RunData data, Context context ) throws Exception
+    public void doSelectattribute( RunData data, Context context ) 
+        throws Exception
     {
         String template = data.getParameters()
             .getString(ScarabConstants.TEMPLATE, null);
@@ -94,16 +96,12 @@ public class ModifyAttributes extends VelocityAction
         IntakeTool intake = (IntakeTool)context
             .get(ScarabConstants.INTAKE_TOOL);
 
-        Group attribute = intake.get("Attribute", IntakeTool.DEFAULT_KEY);
-        if ( attribute != null && attribute.get("Id").isSet() ) 
+        Field id = intake.get("Attribute", IntakeTool.DEFAULT_KEY).get("Id");
+        id.setRequired(true);
+        if ( id.isValid() ) 
         {
             setTemplate(data, nextTemplate);                
         }
-        else 
-        {
-            data.setMessage("No attribute was selected.");
-        }
-        
     }
 
     /**

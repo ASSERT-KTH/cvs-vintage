@@ -15,7 +15,8 @@
 <input-data basePackage="org.tigris.scarab.">
 <group class="Attribute" key="att" mapToObject="om.Attribute">
         <field name="Id" key="id" type="NumberKey" mapToProperty="PrimaryKey">
-           <rule mask="[0-9]+">badIdMessage</rule>
+           <rule mask="^$|[0-9]+">Invalid Id</rule>
+           <required-message>No attribute was selected.</required-message>
         </field>
         <field name="TypeId" key="typeid" type="NumberKey">
             <rule mask="[0-9]+">badIdMessage</rule>

@@ -8,6 +8,8 @@ $page.setTitle("Attribute Editor")
 <form action="$link.setPage("admin,AttributeEditOptions.vm")" method="GET">
     <input type="hidden" name="action" value="admin.ModifyAttributes">
     <input type="hidden" name="nextTemplate" value="admin,AttributeEdit.vm">
+    <input type="hidden" name="$intake.Attribute.Default.Id.Key" 
+            value="$intake.Attribute.Default.Id">
 
   <table width="35%" border="1">
     <tr>

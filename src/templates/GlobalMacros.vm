@@ -25,12 +25,19 @@
     #end
 #end
 
-#macro ( pageErrorMsg )
+#macro ( actionErrorMsg )
     #if ($data.Message)
         <font color="red">$data.Message</font>
     #end
 #end
 
+#macro ( stdIntakeMsg )
+    #if ( !$intake.isAllValid() )
+        <font color="red">
+            Please check your form fields for errors and resubmit.
+        </font>
+    #end
+#end
 
 #macro ( numericSelect $name $first $last $selected $size )
 

@@ -72,7 +72,7 @@ In order to modify this attribute, please choose from the options below:
 </p>
 
 <p>
-  <form action="$link.setPage("admin,AttributeEdit.vm")" method="POST">
+  <form action="$link.setPage("admin,AttributeEdit.vm")" method="GET">
     <input type="hidden" name="action" value="admin.ModifyAttributes">
     <input type="hidden" name="nextTemplate" value="admin,AttributeShow.vm">
     <input type="hidden" name="$intake.Attribute.Default.Id.Key" 
