@@ -13,6 +13,7 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
+
 package org.columba.core.main;
 
 import java.awt.Event;
@@ -109,8 +110,6 @@ public class Main {
 
     ThemeSwitcher.setTheme();
 
-    doGuiInits();
-
     MainInterface.clipboardManager = new ClipboardManager();
 
     MainInterface.processor = new DefaultProcessor();
@@ -163,42 +162,4 @@ public class Main {
     new CmdLineArgumentHandler(args);
 
   } // main
-
-  private static void doGuiInits() {
-    Keymap keymap;
-    Action action;
-    KeyStroke keystroke;
-
-    /// CHANGES TO GLOBAL JTextComponent
-    keymap = JTextComponent.getKeymap(JTextComponent.DEFAULT_KEYMAP);
-
-    // add "CTRL-INS" to "clipboard copy" functionality
-    action = new AbstractAction() {
-      public void actionPerformed(ActionEvent e) {
-        ((JTextComponent) e.getSource()).copy();
-      }
-    };
-    keystroke = KeyStroke.getKeyStroke(KeyEvent.VK_INSERT, Event.CTRL_MASK);
-    keymap.addActionForKeyStroke(keystroke, action);
-
-    // add "SHIFT-DEL" to "clipboard cut" functionality
-    action = new AbstractAction() {
-      public void actionPerformed(ActionEvent e) {
-        ((JTextComponent) e.getSource()).cut();
-      }
-    };
-    keystroke = KeyStroke.getKeyStroke(KeyEvent.VK_DELETE, Event.SHIFT_MASK);
-    keymap.addActionForKeyStroke(keystroke, action);
-
-    // add "SHIFT-INS" to "clipboard paste" functionality
-    action = new AbstractAction() {
-      public void actionPerformed(ActionEvent e) {
-        ((JTextComponent) e.getSource()).paste();
-      }
-    };
-    keystroke = KeyStroke.getKeyStroke(KeyEvent.VK_INSERT, Event.SHIFT_MASK);
-    keymap.addActionForKeyStroke(keystroke, action);
-
-  } // doGuiInits
-
 }
