@@ -193,8 +193,8 @@ public class TableModelThreadedView extends TreeTableModelDecorator {
         hashtable = new HashMap(rootNode.getChildCount());
 
         // save every message-id in hashtable for later reference
-        for (Enumeration enum = rootNode.children(); enum.hasMoreElements();) {
-            MessageNode node = (MessageNode) enum.nextElement();
+        for (Enumeration enumeration = rootNode.children(); enumeration.hasMoreElements();) {
+            MessageNode node = (MessageNode) enumeration.nextElement();
             String id = getMessageID(node);
 
            

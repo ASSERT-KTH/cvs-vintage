@@ -120,10 +120,10 @@ public class HeaderController implements Viewer {
 			header = folder.getAllHeaderFields(uid);
 			
 			// transform headers if necessary
-			Enumeration enum = header.getKeys();		
+			Enumeration enumeration = header.getKeys();		
 			map = new LinkedHashMap();
-			while (enum.hasMoreElements()) {
-				String key = (String) enum.nextElement();
+			while (enumeration.hasMoreElements()) {
+				String key = (String) enumeration.nextElement();
 				Object value = transformHeaderField(header, key);
 				if (value != null)
 					map.put(key, value);

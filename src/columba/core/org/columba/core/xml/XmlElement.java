@@ -530,9 +530,9 @@ public static void printNode(XmlElement Node, String indent) {
         }
 
         // print attributes
-        for (Enumeration enum = node.getAttributes().keys();
-                enum.hasMoreElements();) {
-            String key = (String) enum.nextElement();
+        for (Enumeration enumeration = node.getAttributes().keys();
+                enumeration.hasMoreElements();) {
+            String key = (String) enumeration.nextElement();
             String value = node.getAttribute(key);
             System.out.println(indent + key + ":" + value);
         }

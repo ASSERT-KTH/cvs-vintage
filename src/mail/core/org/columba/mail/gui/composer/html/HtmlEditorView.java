@@ -224,10 +224,10 @@ public class HtmlEditorView extends JTextPane implements KeyListener, Observer,
         // (needs to be done manually, no helper methods exist on
         // StyleConstants)
         boolean isTeleTyper = false;
-        Enumeration enum = inputAttr.getAttributeNames();
+        Enumeration enumeration = inputAttr.getAttributeNames();
 
-        while (enum.hasMoreElements()) {
-            Object name = enum.nextElement();
+        while (enumeration.hasMoreElements()) {
+            Object name = enumeration.nextElement();
 
             if ((name instanceof HTML.Tag)
                     && (name.toString().equals(HTML.Tag.TT.toString()))) {

@@ -132,11 +132,11 @@ public class FormatInfo {
  */
     public boolean isTeleTyper() {
         // get current attributes
-        Enumeration enum = getCharAttr().getAttributeNames();
+        Enumeration enumeration = getCharAttr().getAttributeNames();
 
         // search for tele typer attribute
-        while (enum.hasMoreElements()) {
-            Object name = enum.nextElement();
+        while (enumeration.hasMoreElements()) {
+            Object name = enumeration.nextElement();
 
             if ((name instanceof HTML.Tag) &&
                     (name.toString().equals(HTML.Tag.TT.toString()))) {
@@ -225,10 +225,10 @@ public class FormatInfo {
  */
     private boolean checkAlignment(String align) {
         AttributeSet attr = getParagraphAttr();
-        Enumeration enum = attr.getAttributeNames();
+        Enumeration enumeration = attr.getAttributeNames();
 
-        while (enum.hasMoreElements()) {
-            Object name = enum.nextElement();
+        while (enumeration.hasMoreElements()) {
+            Object name = enumeration.nextElement();
 
             if (name.toString().equals("text-align")) {
                 // alignment found

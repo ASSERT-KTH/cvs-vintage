@@ -107,13 +107,13 @@ public class ColumnOptionsPlugin extends AbstractFolderOptionsPlugin {
         // for each column
         int c = view.getColumnCount();
 
-        Enumeration enum = view.getColumnModel().getColumns();
+        Enumeration enumeration = view.getColumnModel().getColumns();
 
         // remove all child nodes
         columns.removeAllElements();
 
-        while (enum.hasMoreElements()) {
-            TableColumn tc = (TableColumn) enum.nextElement();
+        while (enumeration.hasMoreElements()) {
+            TableColumn tc = (TableColumn) enumeration.nextElement();
             String name = (String) tc.getHeaderValue();
 
             XmlElement column = new XmlElement("column");

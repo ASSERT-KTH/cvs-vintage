@@ -203,10 +203,10 @@ public class RemoteHeaderCache extends AbstractFolderHeaderCache {
 
             Header helper = folder.getHeaderFields(uids[i],
                     (String[]) list.toArray());
-            Enumeration enum = helper.getKeys();
+            Enumeration enumeration = helper.getKeys();
 
-            while (enum.hasMoreElements()) {
-                String key = (String) enum.nextElement();
+            while (enumeration.hasMoreElements()) {
+                String key = (String) enumeration.nextElement();
                 header.set((String) key, helper.get(key));
             }
         }

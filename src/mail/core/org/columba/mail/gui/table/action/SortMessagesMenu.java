@@ -169,10 +169,10 @@ public class SortMessagesMenu extends IMenu implements ActionListener, Observer,
             return;
         }
 
-        Enumeration enum = columnGroup.getElements();
+        Enumeration enumeration = columnGroup.getElements();
 
-        while (enum.hasMoreElements()) {
-            JRadioButtonMenuItem item = (JRadioButtonMenuItem) enum.nextElement();
+        while (enumeration.hasMoreElements()) {
+            JRadioButtonMenuItem item = (JRadioButtonMenuItem) enumeration.nextElement();
 
             if (item.getActionCommand().equals(column)) {
                 item.setSelected(true);
