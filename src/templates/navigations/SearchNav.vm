@@ -10,7 +10,7 @@
  <table border="0" cellspacing="0" cellpadding="3">
   <tr>
    <td id="issueid">
-<form action="$link.setPage("IssueList.vm").setAction("Search")" method="post">
+<form action="$link.setPage("IssueList.vm").setAction("Search")" method="get">
  <input type="hidden" name="$scarabG.Constant.NEXT_TEMPLATE" value="ViewIssue.vm" />
  <input type="text" name="id" size="15" maxlength="255" tabindex="1" />
     &#160;<input type="submit" value="Issue Id" name="eventSubmit_doGonext" tabindex="2" />
