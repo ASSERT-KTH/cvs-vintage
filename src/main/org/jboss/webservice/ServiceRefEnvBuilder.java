@@ -5,10 +5,10 @@
  * See terms of license at gnu.org.
  */
 
-// $Id: ServiceRefBuilder.java,v 1.1 2004/04/27 15:55:43 tdiesler Exp $
+// $Id: ServiceRefEnvBuilder.java,v 1.1 2004/04/27 18:44:51 tdiesler Exp $
 package org.jboss.webservice;
 
-// $Id: ServiceRefBuilder.java,v 1.1 2004/04/27 15:55:43 tdiesler Exp $
+// $Id: ServiceRefEnvBuilder.java,v 1.1 2004/04/27 18:44:51 tdiesler Exp $
 
 import org.jboss.deployment.DeploymentException;
 import org.jboss.deployment.DeploymentInfo;
@@ -24,19 +24,16 @@ import javax.xml.namespace.QName;
 import java.util.Iterator;
 
 /**
- * A deployer service that manages WS4EE compliant webservice clients,
- *
- * This service receives deployment notifications from the ClientDeployer and registers
- * the services in the client's environment.
- *
+ * Binds a JAXRPC Service object in the client's ENC for every service-ref element in the
+ * deployment descriptor.
  *
  * @author Thomas.Diesler@jboss.org
  * @since 27-April-2004
  */
-public final class ServiceRefBuilder
+public final class ServiceRefEnvBuilder
 {
    // provide logging
-   private static final Logger log = Logger.getLogger(ServiceRefBuilder.class);
+   private static final Logger log = Logger.getLogger(ServiceRefEnvBuilder.class);
 
    public static void setupEnvironment(Context envCtx, Iterator serviceRefs, DeploymentInfo di) throws DeploymentException
    {

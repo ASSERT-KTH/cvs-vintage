@@ -32,7 +32,7 @@ import org.jboss.security.AuthenticationManager;
 import org.jboss.security.RealmMapping;
 import org.jboss.system.ServiceMBeanSupport;
 import org.jboss.util.NestedError;
-import org.jboss.webservice.ServiceRefBuilder;
+import org.jboss.webservice.ServiceRefEnvBuilder;
 import org.omg.CORBA.ORB;
 
 import javax.ejb.EJBException;
@@ -75,7 +75,7 @@ import java.util.Set;
  * @author <a href="bill@burkecentral.com">Bill Burke</a>
  * @author <a href="mailto:d_jencks@users.sourceforge.net">David Jencks</a>
  * @author <a href="mailto:christoph.jung@infor.de">Christoph G. Jung</a>
- * @version $Revision: 1.147 $
+ * @version $Revision: 1.148 $
  *
  * @jmx.mbean extends="org.jboss.system.ServiceMBean"
  */
@@ -1054,7 +1054,7 @@ public abstract class Container
 
       // Bind service references
       Iterator serviceRefs = metaData.getServiceReferences().values().iterator();
-      ServiceRefBuilder.setupEnvironment(envCtx, serviceRefs, di);
+      ServiceRefEnvBuilder.setupEnvironment(envCtx, serviceRefs, di);
 
       // Bind resource references
       {

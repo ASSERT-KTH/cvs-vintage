@@ -5,20 +5,16 @@
  * See terms of license at gnu.org.
  */
 
-// $Id: JaxRpcClientService.java,v 1.1 2004/04/27 15:55:43 tdiesler Exp $
+// $Id: JaxRpcClientService.java,v 1.2 2004/04/27 18:44:51 tdiesler Exp $
 package org.jboss.webservice;
 
-// $Id: JaxRpcClientService.java,v 1.1 2004/04/27 15:55:43 tdiesler Exp $
+// $Id: JaxRpcClientService.java,v 1.2 2004/04/27 18:44:51 tdiesler Exp $
 
-import org.apache.axis.EngineConfiguration;
 import org.apache.axis.client.AxisClient;
 import org.apache.axis.client.Service;
+import org.apache.axis.configuration.FileProvider;
 import org.jboss.logging.Logger;
-import org.jboss.mx.util.MBeanServerLocator;
-import org.jboss.mx.util.ObjectNameFactory;
 
-import javax.management.MBeanServer;
-import javax.management.ObjectName;
 import javax.xml.namespace.QName;
 import javax.xml.rpc.ServiceException;
 import java.io.InputStream;
@@ -35,6 +31,7 @@ public class JaxRpcClientService extends Service
 {
    // provide logging
    private static final Logger log = Logger.getLogger(JaxRpcClientService.class);
+   public static final String AXIS_CLIENT_CONFIG = "META-INF/axis-client-config.xml";
 
    /**
     * Constructs a new Service object - this assumes the caller will set
@@ -69,19 +66,14 @@ public class JaxRpcClientService extends Service
     */
    protected AxisClient getAxisClient()
    {
-      try
-      {
-         MBeanServer server = MBeanServerLocator.locateJBoss();
-         ObjectName axisService = ObjectNameFactory.create("jboss.webservice:service=AxisService");
-         EngineConfiguration config = (EngineConfiguration) server.getAttribute(axisService, "ClientConfig");
-         return new AxisClient(config);
-      }
-      catch (Exception e)
-      {
-         log.warn("Cannot access AxisService, using default client config");
-      }
+      // load axis client config from resource
+      ClassLoader cl = getClass().getClassLoader();
+      InputStream configStream = cl.getResourceAsStream(AXIS_CLIENT_CONFIG);
+      if (configStream != null)
+         return new AxisClient(new FileProvider(configStream));
 
       // fall back to Axis discovery of the client config
+      log.warn("Cannot load '" + AXIS_CLIENT_CONFIG + "', using default");
       return super.getAxisClient();
    }
 }
