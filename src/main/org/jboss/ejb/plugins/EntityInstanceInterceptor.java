@@ -42,7 +42,7 @@ import org.jboss.metadata.EntityMetaData;
 *   @see <related>
 *   @author Rickard Öberg (rickard.oberg@telkel.com)
 *   @author <a href="marc.fleury@telkel.com">Marc Fleury</a>
-*   @version $Revision: 1.9 $
+*   @version $Revision: 1.10 $
 */
 public class EntityInstanceInterceptor
 extends AbstractInterceptor
@@ -75,7 +75,7 @@ extends AbstractInterceptor
 		EnterpriseContext ctx = ((EntityContainer)getContainer()).getInstancePool().get();
 		mi.setEnterpriseContext(ctx);
 		
-		// It is a new context for sure so we can lock it (no need for sync (not in cache))
+		// It is a new context for sure so we can lock it
 		ctx.lock();
 		
 		try
@@ -84,21 +84,18 @@ extends AbstractInterceptor
 			return getNext().invokeHome(mi);
 		} finally
 		{
+			// Always unlock, no matter what
+			ctx.unlock();
+			
 			// Still free? Not free if create() was called successfully
 			if (mi.getEnterpriseContext().getId() == null)
 			{
-				// Free that context
-				ctx.unlock();
-				
 				container.getInstancePool().free(mi.getEnterpriseContext());
 			} 
 			else
 			{
 				// DEBUG           Logger.log("Entity was created; not returned to pool");
 				synchronized (ctx) {
-					
-					// Release the lock
-					ctx.unlock();
 					
 					//Let the waiters know
 					ctx.notifyAll();
@@ -113,54 +110,66 @@ extends AbstractInterceptor
 		// The id store is a CacheKey in the case of Entity 
 		CacheKey key = (CacheKey) mi.getId();
 		
-		// Get context
-		EnterpriseContext ctx = ((EntityContainer)getContainer()).getInstanceCache().get(key);
+		// Get cache
+		InstanceCache cache = ((EntityContainer)getContainer()).getInstanceCache();
 		
-		// Set it on the method invocation
-		mi.setEnterpriseContext(ctx);
+		EnterpriseContext ctx = null;
 		
 		// We synchronize the locking logic (so that the invoke is unsynchronized and can be reentrant)
-		synchronized (ctx) 
+		synchronized (cache)
 		{
-			// Do we have a running transaction with the context
-			if (ctx.getTransaction() != null &&
-				// And are we trying to enter with another transaction
-				!ctx.getTransaction().equals(mi.getTransaction())) 
+			do
 			{
-				// Let's put the thread to sleep a lock release will wake the thread
-				try{ctx.wait();}
-					catch (InterruptedException ie) {}
+				// Get context
+				ctx = cache.get(key);
 				
-				// Try your luck again
-				return invoke(mi);
-			}
-			
-			if (!ctx.isLocked()){
-				
-				//take it!
-				ctx.lock();  
-			}
-			
-			else 
-			{
-				if (!isCallAllowed(mi)) {
-					
+				// Do we have a running transaction with the context
+				if (ctx.getTransaction() != null &&
+					// And are we trying to enter with another transaction
+					!ctx.getTransaction().equals(mi.getTransaction())) 
+				{
 					// Let's put the thread to sleep a lock release will wake the thread
-					try{ctx.wait();}
-						catch (InterruptedException ie) {}
+					synchronized (ctx)
+					{
+						try{ctx.wait();}
+							catch (InterruptedException ie) {}
+					}
 					
 					// Try your luck again
-					return invoke(mi);
+					ctx = null;
+					continue;
 				}
 				
-				// The call is allowed, do increment the lock though (ctx already locked)
-				ctx.lock();
-			}
-		
-		} 
+				if (!ctx.isLocked()){
+					
+					//take it!
+					ctx.lock();  
+				}
+				
+				else 
+				{
+					if (!isCallAllowed(mi)) {
+						
+						// Let's put the thread to sleep a lock release will wake the thread
+						synchronized (ctx)
+						{
+							try{ctx.wait();}
+								catch (InterruptedException ie) {}
+						}
+						
+						// Try your luck again
+						ctx = null;
+						continue;
+					}
+				}
+			
+			} while (ctx == null);
+		}
+			
+		// Set context on the method invocation
+		mi.setEnterpriseContext(ctx);
 		
 		try {
-			
 			// Go on, you won
 			return getNext().invoke(mi);
 		
@@ -200,7 +209,7 @@ extends AbstractInterceptor
 					if (ctx.getId() == null)                             
 					{
 						// Remove from cache
-						((EntityContainer)getContainer()).getInstanceCache().remove(key.id);
+						cache.remove(key.id);
 						
 						// It has been removed -> send to free pool
 						container.getInstancePool().free(ctx);

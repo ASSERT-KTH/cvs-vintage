@@ -49,7 +49,7 @@ import org.jboss.metadata.MethodMetaData;
 *   @see <related>
 *   @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
 *   @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
-*   @version $Revision: 1.1 $
+*   @version $Revision: 1.2 $
 */
 public class TxInterceptorBMT
 extends AbstractInterceptor
@@ -109,6 +109,9 @@ extends AbstractInterceptor
 		// (mi has the sessioncontext from the previous interceptor)
 		if (((SessionMetaData)container.getBeanMetaData()).isStateful()) {
 			
+			// Save old userTx
+			Object oldUserTx = userTransaction.get();
+			
 			// retrieve the real userTransaction
 			userTransaction.set(((StatefulSessionEnterpriseContext)mi.getEnterpriseContext()).getSessionContext().getUserTransaction());
 		
@@ -131,6 +134,9 @@ extends AbstractInterceptor
 				return getNext().invokeHome(mi);
 			
 			} finally {
+				
+				// Reset user Tx
+				userTransaction.set(oldUserTx);
 				
 				if (t1 != null) {
 					
@@ -160,6 +166,9 @@ extends AbstractInterceptor
     */
     public Object invoke(MethodInvocation mi) throws Exception {
 
+		// Store old UserTX
+        Object oldUserTx = userTransaction.get();
+		
         // set the threadlocal to the userTransaction of the instance
 		// (mi has the sessioncontext from the previous interceptor)
 		if (((SessionMetaData)container.getBeanMetaData()).isStateful()) {
@@ -199,6 +208,9 @@ extends AbstractInterceptor
 			return getNext().invoke(mi);
 			
 		} finally {
+			
+			// Reset user Tx
+			userTransaction.set(oldUserTx);
 			
 			if (t1 != null) {
 				
