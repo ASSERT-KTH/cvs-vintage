@@ -26,7 +26,7 @@ import com.dreambean.ejx.Util;
  *      
  *   @see <related>
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
- *   @version $Revision: 1.7 $
+ *   @version $Revision: 1.8 $
  */
 public abstract class ContainerConfiguration
    extends BeanContextServicesSupport
@@ -45,7 +45,7 @@ public abstract class ContainerConfiguration
    String persistenceManager= "";
    String transactionManager= "";
    String authenticationModule = "";
-   String realmManager = "";
+   String roleMappingManager = "";
    
    Object containerInvokerConfiguration;
    Object instancePoolConfiguration;
@@ -162,8 +162,8 @@ public abstract class ContainerConfiguration
    public void setAuthenticationModule(String am) { authenticationModule = am; }
    public String getAuthenticationModule() { return authenticationModule; }
 
-   public void setRealmManager(String rm) { realmManager = rm; }
-   public String getRealmManager() { return realmManager; }
+   public void setRoleMappingManager(String rm) { roleMappingManager = rm; }
+   public String getRoleMappingManager() { return roleMappingManager; }
 
    public void setCallLogging(boolean cl) { callLogging = cl; }
    public boolean getCallLogging() { return callLogging; }
@@ -200,7 +200,7 @@ public abstract class ContainerConfiguration
       XMLManager.addElement(containerconfiguration,"persistence-manager",getPersistenceManager());
       XMLManager.addElement(containerconfiguration,"transaction-manager",getTransactionManager());
       XMLManager.addElement(containerconfiguration,"authentication-module",getAuthenticationModule());
-      XMLManager.addElement(containerconfiguration,"realm-manager",getRealmManager());
+      XMLManager.addElement(containerconfiguration,"role-mapping-manager",getRoleMappingManager());
 
       if (containerInvokerConfiguration != null)
 		{
@@ -276,9 +276,9 @@ public abstract class ContainerConfiguration
             } else if (name.equals("authentication-module"))
             {
                setAuthenticationModule(n.hasChildNodes() ? XMLManager.getString(n) : "");
-            } else if (name.equals("realm-manager"))
+            } else if (name.equals("role-mapping-manager"))
             {
-               setRealmManager(n.hasChildNodes() ? XMLManager.getString(n) : "");
+               setRoleMappingManager(n.hasChildNodes() ? XMLManager.getString(n) : "");
             } else if (name.equals("container-invoker-conf"))
             {
 					if (containerInvokerConfiguration instanceof XmlExternalizable)

@@ -36,8 +36,8 @@
     displayname="Authentication Module JNDI Name"/>
 
   <property 
-    name="RealmManager" class="java.lang.String" 
-    displayname="Realm Manager JNDI Name"/>
+    name="RoleMappingManager" class="java.lang.String" 
+    displayname="Role Mapping Manager JNDI Name"/>
 
   <method name="removeConfiguration" displayname="Remove"/>
 </bean>
