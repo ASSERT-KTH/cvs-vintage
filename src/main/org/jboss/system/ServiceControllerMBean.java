@@ -9,6 +9,7 @@ package org.jboss.system;
 import javax.management.ObjectName;
 
 import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
 
 /** 
  * This is the main Service Controller API.
@@ -19,11 +20,17 @@ import org.w3c.dom.Element;
  * @see Service
  *
  * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
- * @version $Revision: 1.5 $
+ * @version $Revision: 1.6 $
  *
  * <p><b>20010830 marc fleury:</b>
  * <ul>
  *   <li>Initial import
+ * </ul>
+ *
+ * <p><b>20011211 marc fleury:</b>
+ * <ul>
+ *   <li>API for mbean api install/remove
+ *   <li>API for lifecycle of a service create/start/stop/destroy
  * </ul>
  */
 public interface ServiceControllerMBean
@@ -32,34 +39,31 @@ public interface ServiceControllerMBean
    /** The default object name. */
    String OBJECT_NAME = "JBOSS-SYSTEM:spine=ServiceController";
 
-   //
-   // high level calls on the MBean deployment
-   //
+   /** Install a service, create the MBean and configure it**/
+   ObjectName install(Element mbean) throws Exception;
    
-   ObjectName deploy(Element mbean) throws Exception;
-
-   //puts a mbean that you created some other way (such as deployed rar) 
-   //into dependency system so other beans can be started/stopped on its 
-   //existence (or registration)
-   void registerAndStartService(ObjectName serviceName, String serviceFactory) throws Exception;
-   void undeploy(Element mbean) throws Exception;
-   void undeploy(ObjectName mbeanName) throws Exception;
-
-
-   void shutdown();
-   //
-   // State calls, init, start, stop, destroy
-   //
+   /** Create the service, service needs to be installed **/
+   void create(ObjectName mbean) throws Exception;
    
-   //void init(ObjectName mbean) throws Exception;
-   //Are these really useful??
+   /** Start the service **/
    void start(ObjectName mbean) throws Exception;
+   
+   /** Stop the service **/   
    void stop(ObjectName mbean) throws Exception;
-   //void destroy(ObjectName mbean) throws Exception;
+   
+   /** Destroy the service, corresponds to create **/   
+   void destroy(ObjectName mbean) throws Exception;
+ 
+   /** Remove a service, corresponds to install **/ 
+   void remove(Element mbean) throws Exception;
+   void remove(ObjectName mbeanName) throws Exception;
+
 
    /** Get a list of deployed elements, in the order they were deployed */
    ObjectName[] getDeployed();
 
    /** Get configuration will output an XML file in the array order */
    String getConfiguration(ObjectName[] objectNames) throws Exception;
+
+   void shutdown();
 }
