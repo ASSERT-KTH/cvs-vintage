@@ -573,7 +573,38 @@ public class Issue
         return closedDate;
     }
 
-    public void addVote()
+    public void addVote(ScarabUser user)
+        throws ScarabException, Exception
     {
+        // check to see if the user has voted for this issue
+        int previousVotes = 0;
+        IssueVote issueVote = null;
+        Criteria crit = new Criteria()
+            .add(IssueVotePeer.ISSUE_ID, getIssueId())
+            .add(IssueVotePeer.USER_ID, user.getUserId());
+        List votes = IssueVotePeer.doSelect(crit);
+        if ( votes != null && votes.size() != 0 ) 
+        {
+            issueVote = (IssueVote)votes.get(0);
+            previousVotes = issueVote.getVotes();
+        }
+        else 
+        {
+            issueVote = new IssueVote();
+            issueVote.setIssueId(getIssueId());
+            issueVote.setUserId(user.getUserId());
+        }
+
+        // check if the module accepts multiple votes
+        if ( !getModule().allowsMultipleVoting() && previousVotes > 0 ) 
+        {
+            throw new ScarabException("User " + user.getUserName() + 
+                " attempted to vote multiple times for issue " + getUniqueId()
+                + " which was not allowed in this project.");
+        }
+        
+        // must be ok
+        issueVote.setVotes(previousVotes+1);
+        issueVote.save();
     }
 }

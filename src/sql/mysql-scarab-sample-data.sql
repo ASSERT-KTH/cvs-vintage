@@ -81,20 +81,30 @@ INSERT INTO SCARAB_R_MODULE_ATTRIBUTE VALUES (5,11,'Summary',1,1,1,1,1);
 INSERT INTO SCARAB_R_MODULE_ATTRIBUTE VALUES (5,12,'Functional Area',1,0,1000,0,0);
 
 /*
- * Insert a relationship between user_id 1 and module_id 1
- * Insert a relationship between user_id 1 and module_id 3
- * Insert a relationship between user_id 2 and module_id 1
- * Insert a relationship between user_id 2 and module_id 3
- * Roles are not defined yet so we will give role_id=1
+ * Insert a relationship between user_id 2 and module_id 5
+ * Insert a relationship between user_id 4 and module_id 5
+ * Insert a relationship between user_id 5 and module_id 5
  */
-insert into SCARAB_R_MODULE_USER_ROLE(USER_ID, MODULE_ID, ROLE_ID) 
-    values (1, 1, 1);
-insert into SCARAB_R_MODULE_USER_ROLE(USER_ID, MODULE_ID, ROLE_ID) 
-    values (1, 3, 1);
-insert into SCARAB_R_MODULE_USER_ROLE(USER_ID, MODULE_ID, ROLE_ID) 
-    values (2, 1, 1);
-insert into SCARAB_R_MODULE_USER_ROLE(USER_ID, MODULE_ID, ROLE_ID) 
-    values (2, 3, 1);
+INSERT INTO TURBINE_USER_GROUP_ROLE ( USER_ID, GROUP_ID, ROLE_ID ) 
+SELECT TURBINE_USER.USER_ID, SCARAB_MODULE.MODULE_ID, TURBINE_ROLE.ROLE_ID 
+from TURBINE_USER, SCARAB_MODULE, TURBINE_ROLE 
+WHERE TURBINE_USER.LOGIN_NAME = 'jon@latchkey.com'
+AND SCARAB_MODULE.MODULE_ID = 5 
+AND TURBINE_ROLE.ROLE_NAME = 'Developer';
+
+INSERT INTO TURBINE_USER_GROUP_ROLE ( USER_ID, GROUP_ID, ROLE_ID ) 
+SELECT TURBINE_USER.USER_ID, SCARAB_MODULE.MODULE_ID, TURBINE_ROLE.ROLE_ID 
+from TURBINE_USER, SCARAB_MODULE, TURBINE_ROLE 
+WHERE TURBINE_USER.LOGIN_NAME = 'jmcnally@collab.net'
+AND SCARAB_MODULE.MODULE_ID = 5 
+AND TURBINE_ROLE.ROLE_NAME = 'Developer';
+
+INSERT INTO TURBINE_USER_GROUP_ROLE ( USER_ID, GROUP_ID, ROLE_ID ) 
+SELECT TURBINE_USER.USER_ID, SCARAB_MODULE.MODULE_ID, TURBINE_ROLE.ROLE_ID 
+from TURBINE_USER, SCARAB_MODULE, TURBINE_ROLE 
+WHERE TURBINE_USER.LOGIN_NAME = 'elicia@collab.net'
+AND SCARAB_MODULE.MODULE_ID = 5 
+AND TURBINE_ROLE.ROLE_NAME = 'Developer';
 
 
 /*

@@ -519,6 +519,28 @@ try{
     }
 
     /**
+     * Determines whether this module allows users to vote many times for
+     * the same issue.  This feature needs schema change to allow a 
+     * configuration screen.  Currently only one vote per issue is supported
+     *
+     * @return false
+     */
+    public boolean allowsMultipleVoting()
+    {
+        return false;
+    }
+
+    /**
+     * How many votes does the user have left to cast.  Currently always
+     * returns 1, so a user has unlimited voting rights.  Should look to 
+     * UserVote for the answer when implemented properly.
+     */
+    public int getUnusedVoteCount(ScarabUser user)
+    {
+        return 1;
+    }
+
+    /**
      * Gets users which are currently associated (relationship has not 
      * been deleted) with this module who have the given permssions. 
      *

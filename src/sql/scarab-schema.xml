@@ -2,7 +2,7 @@
 <!DOCTYPE app-data SYSTEM
           "http://jakarta.apache.org/turbine/dtd/database.dtd">
 
-<!-- $Id: scarab-schema.xml,v 1.24 2001/07/05 00:04:38 jon Exp $ -->
+<!-- $Id: scarab-schema.xml,v 1.25 2001/07/06 21:45:39 jmcnally Exp $ -->
 
 <app-data>
 <database>
@@ -869,6 +869,70 @@
     -->
     <column name="USER_ID" primaryKey="true" required="true" type="INTEGER"/>
 </table>
+
+<!--
+    A user's record of votes.  It is assumed that a module that supports
+    voting will give a new user some votes to use when the user is added, 
+    otherwise the user has no votes. 
+-->
+<table name="SCARAB_USER_VOTE" idMethod="none" javaName="UserVote">
+    <!--
+
+        Module.
+    -->
+    <column name="MODULE_ID" primaryKey="true" required="true" type="INTEGER" />
+    <!--
+        Person.
+    -->
+    <column name="USER_ID" primaryKey="true" required="true" type="INTEGER" />
+    <!--
+        The total votes a user is allowed to cast in a project.
+    -->
+    <column name="TOTAL_VOTES" required="false" type="INTEGER" 
+        default="0" size="3" />
+    <!--
+        The number of votes a user has cast in a project.
+    -->
+    <column name="USED_VOTES" required="false" type="INTEGER" 
+        default="0" size="3" />
+
+    <foreign-key foreignTable="SCARAB_MODULE">
+        <reference local="MODULE_ID" foreign="MODULE_ID"/>
+    </foreign-key>
+    <foreign-key foreignTable="SCARAB_USER">
+        <reference local="USER_ID" foreign="USER_ID"/>
+    </foreign-key>
+
+</table>
+
+<!--
+    The number of votes a user has cast for an issue.
+-->
+<table name="SCARAB_ISSUE_VOTE" idMethod="none" javaName="IssueVote">
+    <!--
+
+        Module.
+    -->
+    <column name="ISSUE_ID" primaryKey="true" required="true" type="INTEGER" />
+    <!--
+        Person.
+    -->
+    <column name="USER_ID" primaryKey="true" required="true" type="INTEGER" />
+    <!--
+        The total votes a user is allowed to cast in a project.
+    -->
+    <column name="VOTES" required="false" type="INTEGER" 
+        default="0" size="3" />
+
+    <foreign-key foreignTable="SCARAB_ISSUE">
+        <reference local="ISSUE_ID" foreign="ISSUE_ID"/>
+    </foreign-key>
+    <foreign-key foreignTable="SCARAB_USER">
+        <reference local="USER_ID" foreign="USER_ID"/>
+    </foreign-key>
+
+</table>
+
 
 </database>
 </app-data>

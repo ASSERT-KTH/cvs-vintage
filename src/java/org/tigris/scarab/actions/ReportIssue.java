@@ -83,7 +83,7 @@ import org.tigris.scarab.tools.ScarabRequestTool;
     This class is responsible for report issue forms.
     ScarabIssueAttributeValue
     @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
-    @version $Id: ReportIssue.java,v 1.22 2001/07/05 00:04:37 jon Exp $
+    @version $Id: ReportIssue.java,v 1.23 2001/07/06 21:45:38 jmcnally Exp $
 */
 public class ReportIssue extends VelocityAction
 {
@@ -329,10 +329,17 @@ public class ReportIssue extends VelocityAction
         {
             Issue issue = IssuePeer
                 .retrieveByPK((NumberKey)group.get("Id").getValue());
-            issue.addVote();
-            doCancel(data, context);
+            try
+            {
+                issue.addVote((ScarabUser)data.getUser());
+                doCancel(data, context);
+            }
+            catch (ScarabException e)
+            {
+                data.setMessage("Vote could not be added.  Reason given: "
+                                + e.getMessage() );
+            }
         }
-        doCancel(data, context);
     }
 
     public void doGotowizard3( RunData data, Context context )
