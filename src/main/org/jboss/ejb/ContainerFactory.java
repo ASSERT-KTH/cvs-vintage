@@ -13,6 +13,8 @@ import java.net.URLClassLoader;
 import java.net.MalformedURLException;
 import java.io.File;
 import java.io.InputStream;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.rmi.RemoteException;
 import java.rmi.ServerException;
@@ -66,8 +68,9 @@ import org.jboss.metadata.XmlFileLoader;
 *   @author Rickard Öberg (rickard.oberg@telkel.com)
 *   @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
 *   @author <a href="mailto:jplindfo@helsinki.fi">Juha Lindfors</a>
+*   @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
 *
-*   @version $Revision: 1.28 $
+*   @version $Revision: 1.29 $
 */
 public class ContainerFactory
 	extends org.jboss.util.ServiceMBeanSupport
@@ -230,6 +233,23 @@ public class ContainerFactory
 
 			log.log("Deploying:"+url);
             
+			
+			// copy the jar file to prevent locking - redeploy failure
+			if (url.getProtocol().startsWith("file")) {
+				File jarFile = new File(url.getFile());
+				File tmp = File.createTempFile("tmpejbjar",".jar");
+         		tmp.deleteOnExit();
+         		FileInputStream fin = new FileInputStream(jarFile);
+         		byte[] bytes = new byte[(int)jarFile.length()];
+         		fin.read(bytes);
+         		FileOutputStream fout = new FileOutputStream(tmp);
+         		fout.write(bytes);
+         		fin.close();
+         		fout.close();
+         		url = tmp.toURL();
+			}
+
+			
 			// Create the ClassLoader for this application
 			// TODO : the ClassLoader should come from the JMX manager if we want to be able to share it (tomcat)
 			ClassLoader cl = new URLClassLoader(new URL[] { url }, Thread.currentThread().getContextClassLoader());
