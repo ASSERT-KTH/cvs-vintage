@@ -1,4 +1,4 @@
-// $Id: CoreFactory.java,v 1.62 2003/11/11 22:01:16 linus Exp $
+// $Id: CoreFactory.java,v 1.63 2003/12/15 14:04:25 mkl Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -243,16 +243,7 @@ public class CoreFactory extends AbstractUmlModelFactory {
 	return modelElement;
 	}
 
-	/** Create an empty but initialized instance of a UML ComponentInstance.
-	 *
-	 *  @return an initialized UML Component instance.
-	 */
-	public MComponentInstance createComponentInstance() {
-	MComponentInstance modelElement =
-		MFactory.getDefaultFactory().createComponentInstance();
-	super.initialize(modelElement);
-	return modelElement;
-	}
+	
 
     /** Create an empty but initialized instance of a UML Constraint.
      *

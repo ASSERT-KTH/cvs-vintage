@@ -1,4 +1,4 @@
-// $Id: TestUmlFactory.java,v 1.1 2003/11/20 10:36:36 linus Exp $
+// $Id: TestUmlFactory.java,v 1.2 2003/12/15 14:04:25 mkl Exp $
 // Copyright (c) 2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -60,7 +60,6 @@ public class TestUmlFactory extends TestCase {
 	fy.delete(fy.getCore().createClassifier());
 	fy.delete(fy.getCore().createComment());
 	fy.delete(fy.getCore().createComponent());
-	fy.delete(fy.getCore().createComponentInstance());
 	fy.delete(fy.getCore().createConstraint());
 	fy.delete(fy.getCore().createDataType());
 	fy.delete(fy.getCore().createDependency());
