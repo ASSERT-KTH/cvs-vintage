@@ -1,4 +1,4 @@
-// $Id: ModelManagementHelper.java,v 1.31 2003/08/20 22:27:32 alexb Exp $
+// $Id: ModelManagementHelper.java,v 1.32 2003/08/21 20:33:36 thn Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -109,8 +109,7 @@ public class ModelManagementHelper {
      * @return Collection
      */
     public Collection getAllNamespaces() {
-        MNamespace model =
-            (MModel)ProjectManager.getManager().getCurrentProject().getModel();
+        Object model = ProjectManager.getManager().getCurrentProject().getModel();
         return getAllNamespaces(model);
     }
 
@@ -118,10 +117,10 @@ public class ModelManagementHelper {
      * Returns all namespaces found in this namespace and in its children
      * @return Collection
      */
-    public Collection getAllNamespaces(MNamespace ns) {
-        if (ns == null)
+    public Collection getAllNamespaces(Object ns) {
+        if (ns == null || !(ns instanceof MNamespace))
             return new ArrayList();
-        Iterator it = ns.getOwnedElements().iterator();
+        Iterator it = ((MNamespace)ns).getOwnedElements().iterator();
         List list = new ArrayList();
         while (it.hasNext()) {
             Object o = it.next();
@@ -174,7 +173,7 @@ public class ModelManagementHelper {
         return list;
 
     }
-    
+
     /**
      * helper method for {@link #getAllModelElementsOfKind(Object, Class)}
      *
