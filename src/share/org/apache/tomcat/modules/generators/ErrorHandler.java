@@ -163,7 +163,7 @@ public final class ErrorHandler extends BaseInterceptor {
 	// error
 	// XXX this log was intended to debug the status code generation.
 	// it can be removed for all cases.
-	if( code != 302 && code != 401 && code!=400  ) {// tuneme
+	if( code > 401 ) {// tuneme
 	    ctx.log( "Status code:" + code + " request:"  + req + " msg:" +
 		     req.getAttribute("javax.servlet.error.message"));
 	}
@@ -724,7 +724,7 @@ class RedirectHandler extends Handler {
 	    buf = new StringBuffer();
 	    req.setNote( sbNote, buf );
 	}
-	buf.append("<head><title>").
+	buf.append("<html><head><title>").
 	    append(sm.getString("defaulterrorpage.documentmoved")).
 	    append("</title></head>\r\n<body><h1>").
 	    append(sm.getString("defaulterrorpage.documentmoved")).
@@ -732,10 +732,11 @@ class RedirectHandler extends Handler {
 	    append(sm.getString("defaulterrorpage.thisdocumenthasmoved")).
 	    append(" <a href=\"").
 	    append( HttpMessages.filter( location ) ).
-	    append("\">here</a>.<p>\r\n</body>\r\n");
+	    append("\">here</a>.<p>\r\n</body>\r\n</html>");
 
 	res.setContentLength(buf.length());
 	res.getBuffer().write( buf );
+        res.getBuffer().close();
 	buf.setLength(0);
 
     }
