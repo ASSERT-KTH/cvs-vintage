@@ -74,7 +74,7 @@ import org.tigris.scarab.actions.base.RequireLoginFirstAction;
 /**
     This class is responsible for the user configuration of the issue list.
     @author <a href="mailto:elicia@collab.net">Elicia David</a>
-    @version $Id: ConfigureIssueList.java,v 1.19 2002/01/28 02:51:00 elicia Exp $
+    @version $Id: ConfigureIssueList.java,v 1.20 2002/02/12 01:28:27 elicia Exp $
 */
 public class ConfigureIssueList extends RequireLoginFirstAction
 {
@@ -124,15 +124,12 @@ public class ConfigureIssueList extends RequireLoginFirstAction
                 NumberKey attributeId =  new NumberKey(key.substring(9));
                 Attribute attribute = (Attribute)AttributePeer.
                                       retrieveByPK(attributeId);
-                String queryKey = moduleId + ":" + user.getUserId() + ":" 
-                                  + issueType.getIssueTypeId() + ":"
-                                  + attributeId.toString();
-                Group group = intake.get("RModuleUserAttribute", 
-                                         queryKey, false);
 
-                
                 mua = user.getRModuleUserAttribute(module, 
                                                    attribute, issueType);
+                Group group = intake.get("RModuleUserAttribute", 
+                                         mua.getQueryKey(), false);
+
                 Field order = group.get("Order");
                 order.setProperty(mua);
                 mua.save();
