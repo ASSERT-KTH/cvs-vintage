@@ -24,7 +24,7 @@
  <action name="ViewFolderInfoPanel" class="org.columba.mail.gui.action.ViewFolderInfoPanelAction"/>
  <action name="ThreadedView" class="org.columba.mail.gui.table.action.ThreadedViewAction"/>
  <action name="ViewMessageSource" class="org.columba.mail.gui.table.action.ViewMessageSourceAction"/>
- <action name="CharacterEncodingMenu" class="org.columba.mail.gui.util.CharacterEncodingSubMenu"/>
+ <action name="CharacterEncodingMenu" class="org.columba.mail.gui.charset.CharacterEncodingSubMenu"/>
  <action name="ColumnDialog" class="org.columba.mail.gui.action.ColumnDialogAction"/>
  
  <!-- message menu -->

@@ -1,4 +1,5 @@
-//The contents of this file are subject to the Mozilla Public License Version 1.1
+// The contents of this file are subject to the Mozilla Public License Version
+// 1.1
 //(the "License"); you may not use this file except in compliance with the
 //License. You may obtain a copy of the License at http://www.mozilla.org/MPL/
 //
@@ -9,7 +10,8 @@
 //
 //The Original Code is "The Columba Project"
 //
-//The Initial Developers of the Original Code are Frederik Dietz and Timo Stich.
+//The Initial Developers of the Original Code are Frederik Dietz and Timo
+// Stich.
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003.
 //
 //All Rights Reserved.
@@ -58,26 +60,28 @@ import org.columba.ristretto.message.io.CharSequenceSource;
 /**
  * Viewer displays message body text.
  * 
- * 
  * @author fdietz
  *  
  */
-public class MessageBodytextViewer extends JTextPane implements Viewer, Observer {
+public class MessageBodytextViewer extends JTextPane implements Viewer,
+        Observer {
 
     /** JDK 1.4+ logging framework logger, used for logging. */
-    private static final Logger LOG = Logger.getLogger("org.columba.mail.gui.message.viewer");
+    private static final Logger LOG = Logger
+            .getLogger("org.columba.mail.gui.message.viewer");
 
-
-//  parser to transform text to html
+    //  parser to transform text to html
     private DocumentParser parser;
+
     private HTMLEditorKit htmlEditorKit;
-    
+
     // stylesheet is created dynamically because
     // user configurable fonts are used
     private String css = "";
-    
-//  enable/disable smilies configuration 
+
+    //  enable/disable smilies configuration
     private XmlElement smilies;
+
     private boolean enableSmilies;
 
     // name of font
@@ -88,20 +92,22 @@ public class MessageBodytextViewer extends JTextPane implements Viewer, Observer
 
     // overwrite look and feel font settings
     private boolean overwrite;
+
     private String body;
-    
+
     public MessageBodytextViewer() {
         super();
-        
+
         setMargin(new Insets(5, 5, 5, 5));
         setEditable(false);
 
         htmlEditorKit = new HTMLEditorKit();
         setEditorKit(htmlEditorKit);
-        
+
         setContentType("text/html");
 
-        XmlElement gui = MailInterface.config.get("options").getElement("/options/gui");
+        XmlElement gui = MailInterface.config.get("options").getElement(
+                "/options/gui");
         XmlElement messageviewer = gui.getElement("messageviewer");
 
         if (messageviewer == null) {
@@ -143,7 +149,8 @@ public class MessageBodytextViewer extends JTextPane implements Viewer, Observer
         name = font.getName();
         size = new Integer(font.getSize()).toString();
 
-        XmlElement options = MainInterface.config.get("options").getElement("/options");
+        XmlElement options = MainInterface.config.get("options").getElement(
+                "/options");
         XmlElement gui1 = options.getElement("gui");
         XmlElement fonts = gui1.getElement("fonts");
 
@@ -156,12 +163,13 @@ public class MessageBodytextViewer extends JTextPane implements Viewer, Observer
 
         initStyleSheet();
     }
-    
+
     /**
      * @see org.columba.mail.gui.message.viewer.Viewer#getViewer(org.columba.mail.folder.Folder,
      *      java.lang.Object)
      */
-    public void view(MessageFolder folder, Object uid, MailFrameMediator mediator) throws Exception {
+    public void view(MessageFolder folder, Object uid,
+            MailFrameMediator mediator) throws Exception {
         StreamableMimePart bodyPart = null;
 
         MimeTree mimePartTree = folder.getMimePartTree(uid);
@@ -179,19 +187,25 @@ public class MessageBodytextViewer extends JTextPane implements Viewer, Observer
             bodyPart = new LocalMimePart(new MimeHeader());
             ((LocalMimePart) bodyPart).setBody(new CharSequenceSource(
                     "<No Message-Text>"));
-        }  else {
+        } else {
 
             bodyPart = (StreamableMimePart) folder.getMimePart(uid, bodyPart
                     .getAddress());
         }
 
-//      Which Charset shall we use ?
+        //      Which Charset shall we use ?
         Charset charset = ((CharsetOwnerInterface) mediator).getCharset();
 
         if (charset == null) {
-            String charsetName = bodyPart.getHeader().getContentParameter("charset");
+            String charsetName = bodyPart.getHeader().getContentParameter(
+                    "charset");
 
-            // There is no charset info -> the default system charset is used
+            if (charsetName == null) {
+                // There is no charset info -> the default system charset is
+                // used
+                charsetName = System.getProperty("file.encoding");
+            }
+
             if (charsetName != null) {
                 charset = Charset.forName(charsetName);
 
@@ -201,32 +215,31 @@ public class MessageBodytextViewer extends JTextPane implements Viewer, Observer
 
         // Shall we use the HTML-Viewer?
         boolean htmlViewer = bodyPart.getHeader().getMimeType().getSubtype()
-                                     .equals("html");
+                .equals("html");
 
-        InputStream bodyStream = ((StreamableMimePart) bodyPart).getInputStream();
+        InputStream bodyStream = ((StreamableMimePart) bodyPart)
+                .getInputStream();
 
         int encoding = bodyPart.getHeader().getContentTransferEncoding();
 
         switch (encoding) {
-        case MimeHeader.QUOTED_PRINTABLE: {
-            bodyStream = new QuotedPrintableDecoderInputStream(bodyStream);
+        case MimeHeader.QUOTED_PRINTABLE:
+            {
+                bodyStream = new QuotedPrintableDecoderInputStream(bodyStream);
 
-            break;
-        }
+                break;
+            }
 
-        case MimeHeader.BASE64: {
-            bodyStream = new Base64DecoderInputStream(bodyStream);
+        case MimeHeader.BASE64:
+            {
+                bodyStream = new Base64DecoderInputStream(bodyStream);
 
-            break;
-        }
-        }
-
-        if (charset == null) {
-            charset = Charset.forName(System.getProperty("file.encoding"));
+                break;
+            }
         }
 
         bodyStream = new CharsetDecoderInputStream(bodyStream, charset);
-        
+
         StringBuffer text = new StringBuffer();
         int next = bodyStream.read();
 
@@ -234,170 +247,172 @@ public class MessageBodytextViewer extends JTextPane implements Viewer, Observer
             text.append((char) next);
             next = bodyStream.read();
         }
-        
+
         setBodyText(text.toString(), htmlViewer);
-        
+
         bodyStream.close();
     }
-    
+
     /**
-    *
-    * read text-properties from configuration and
-    * create a stylesheet for the html-document
-    *
-    */
-   protected void initStyleSheet() {
-       // read configuration from options.xml file
-       // create css-stylesheet string 
-       // set font of html-element <P> 
-       css = "<style type=\"text/css\"><!-- .bodytext {font-family:\"" + name +
-           "\"; font-size:\"" + size + "pt; \"}" +
-           ".quoting {color:#949494;}; --></style>";
-   }
+     * 
+     * read text-properties from configuration and create a stylesheet for the
+     * html-document
+     *  
+     */
+    protected void initStyleSheet() {
+        // read configuration from options.xml file
+        // create css-stylesheet string
+        // set font of html-element <P>
+        css = "<style type=\"text/css\"><!-- .bodytext {font-family:\"" + name
+                + "\"; font-size:\"" + size + "pt; \"}"
+                + ".quoting {color:#949494;}; --></style>";
+    }
 
-   protected void setBodyText(String bodyText, boolean html) {
-       if (html) {
-           try {
-               body = HtmlParser.htmlToText(bodyText);
+    protected void setBodyText(String bodyText, boolean html) {
+        if (html) {
+            try {
+                // this is a HTML message
 
-               // this is a HTML message
-               // try to fix broken html-strings
-               String validated = HtmlParser.validateHTMLString(bodyText);
-               LOG.info("validated bodytext:\n" + validated);
+                body = HtmlParser.htmlToText(bodyText);
 
-               // create temporary file
-               File tempFile = TempFileStore.createTempFileWithSuffix("html");
+                // try to fix broken html-strings
 
-               // save bodytext to file
-               DiskIO.saveStringInFile(tempFile, validated);
+                String validated = HtmlParser.validateHTMLString(bodyText);
+                LOG.info("validated bodytext:\n" + validated);
 
-               URL url = tempFile.toURL();
+                // create temporary file
+                File inputFile = TempFileStore.createTempFileWithSuffix("html");
 
-               // use asynchronous loading method setPage to display
-               // URL correctly
-               setPage(url);
+                // save bodytext to file
+                DiskIO.saveStringInFile(inputFile, bodyText);
 
-               // this is the old method which doesn't work
-               // for many html-messages
-               /*
-               getDocument().remove(0,getDocument().getLength()-1);
+                URL url = inputFile.toURL();
 
-               ((HTMLDocument) getDocument()).getParser().parse(
-                       new StringReader(validated),
-                       ((HTMLDocument) getDocument()).getReader(0),
-                       true);
-               */
-               // scroll window to the beginning
-               setCaretPosition(0);
-           } catch (Exception e) {
-               e.printStackTrace();
-           }
-       } else {
-           // this is a text/plain message
-           body = bodyText;
+                // use asynchronous loading method setPage to display
+                // URL correctly
+                setPage(url);
 
-           try {
-               // substitute special characters like:
-               //  <,>,&,\t,\n		
-               String r = HtmlParser.substituteSpecialCharacters(bodyText);
+                // this is the old method which doesn't work
+                // for many html-messages
+                /*
+                 * getDocument().remove(0,getDocument().getLength()-1);
+                 * 
+                 * ((HTMLDocument) getDocument()).getParser().parse( new
+                 * StringReader(validated), ((HTMLDocument)
+                 * getDocument()).getReader(0), true);
+                 */
+                // scroll window to the beginning
+                setCaretPosition(0);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        } else {
+            // this is a text/plain message
+            body = bodyText;
 
-               // parse for urls and substite with HTML-code
-               r = HtmlParser.substituteURL(r);
+            try {
+                // substitute special characters like:
+                //  <,>,&,\t,\n
+                String r = HtmlParser.substituteSpecialCharacters(bodyText);
 
-               // parse for email addresses and substite with HTML-code
-               r = HtmlParser.substituteEmailAddress(r);
+                // parse for urls and substite with HTML-code
+                r = HtmlParser.substituteURL(r);
 
-               // parse for quotings and color the darkgray
-               r = parser.markQuotings(r);
+                // parse for email addresses and substite with HTML-code
+                r = HtmlParser.substituteEmailAddress(r);
 
-               // add smilies
-               if (enableSmilies == true) {
-                   r = parser.addSmilies(r);
-               }
+                // parse for quotings and color the darkgray
+                r = parser.markQuotings(r);
 
-               // encapsulate bodytext in html-code
-               r = transformToHTML(new StringBuffer(r));
+                // add smilies
+                if (enableSmilies == true) {
+                    r = parser.addSmilies(r);
+                }
 
-               LOG.info("validated bodytext:\n" + r);
+                // encapsulate bodytext in html-code
+                r = transformToHTML(new StringBuffer(r));
 
-               // display bodytext
-               setText(r);
+                LOG.info("validated bodytext:\n" + r);
 
-               //		setup base url in order to be able to display images
-               // in html-component
-               URL baseUrl = DiskIO.getResourceURL("org/columba/core/images/");
-               LOG.info(baseUrl.toString());
-               ((HTMLDocument) getDocument()).setBase(baseUrl);
-           } catch (Exception ex) {
-               ex.printStackTrace();
-           }
+                // display bodytext
+                setText(r);
 
-           // scroll window to the beginning
-           setCaretPosition(0);
-       }
-   }
+                //		setup base url in order to be able to display images
+                // in html-component
+                URL baseUrl = DiskIO.getResourceURL("org/columba/core/images/");
+                LOG.info(baseUrl.toString());
+                ((HTMLDocument) getDocument()).setBase(baseUrl);
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
 
-   /*
-    *
-    * encapsulate bodytext in HTML code
-    *
-    */
-   protected String transformToHTML(StringBuffer buf) {
-       // prepend
-       buf.insert(0,
-           "<HTML><HEAD>" + css + "</HEAD><BODY class=\"bodytext\"><P>");
+            // scroll window to the beginning
+            setCaretPosition(0);
+        }
+    }
 
-       // append
-       buf.append("</P></BODY></HTML>");
+    /*
+     * 
+     * encapsulate bodytext in HTML code
+     *  
+     */
+    protected String transformToHTML(StringBuffer buf) {
+        // prepend
+        buf.insert(0, "<HTML><HEAD>" + css
+                + "</HEAD><BODY class=\"bodytext\"><P>");
 
-       return buf.toString();
-   }
+        // append
+        buf.append("</P></BODY></HTML>");
 
-   /* (non-Javadoc)
-    *
-    * @see org.columba.mail.gui.config.general.MailOptionsDialog
-    *
-    * @see java.util.Observer#update(java.util.Observable, java.lang.Object)
-    */
-   public void update(Observable arg0, Object arg1) {
-       Font font = FontProperties.getTextFont();
-       name = font.getName();
-       size = new Integer(font.getSize()).toString();
+        return buf.toString();
+    }
 
-       initStyleSheet();
-   }
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.columba.mail.gui.config.general.MailOptionsDialog
+     * 
+     * @see java.util.Observer#update(java.util.Observable, java.lang.Object)
+     */
+    public void update(Observable arg0, Object arg1) {
+        Font font = FontProperties.getTextFont();
+        name = font.getName();
+        size = new Integer(font.getSize()).toString();
 
-   /**
-    * @see javax.swing.text.JTextComponent#copy()
-    */
-   public void copy() {
-       int start = this.getSelectionStart();
-       int stop = this.getSelectionEnd();
+        initStyleSheet();
+    }
 
-       StringWriter htmlSelection = new StringWriter();
+    /**
+     * @see javax.swing.text.JTextComponent#copy()
+     */
+    public void copy() {
+        int start = this.getSelectionStart();
+        int stop = this.getSelectionEnd();
 
-       try {
-           htmlEditorKit.write(htmlSelection, getDocument(), start,
-               stop - start);
+        StringWriter htmlSelection = new StringWriter();
 
-           Clipboard clipboard = getToolkit().getSystemClipboard();
+        try {
+            htmlEditorKit.write(htmlSelection, getDocument(), start, stop
+                    - start);
 
-           // Conversion of html text to plain
-           //TODO: make a DataFlavor that can handle HTML text
-           StringSelection selection = new StringSelection(HtmlParser.htmlToText(
-                       htmlSelection.toString()));
-           clipboard.setContents(selection, selection);
-       } catch (IOException e) {
-           e.printStackTrace();
-       } catch (BadLocationException e) {
-           e.printStackTrace();
-       }
-   }
+            Clipboard clipboard = getToolkit().getSystemClipboard();
+
+            // Conversion of html text to plain
+            //TODO: make a DataFlavor that can handle HTML text
+            StringSelection selection = new StringSelection(HtmlParser
+                    .htmlToText(htmlSelection.toString()));
+            clipboard.setContents(selection, selection);
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (BadLocationException e) {
+            e.printStackTrace();
+        }
+    }
 
     /**
      * @see org.columba.mail.gui.message.viewer.Viewer#getView()
      */
     public JComponent getView() {
-       return this;
+        return this;
     }
 }
