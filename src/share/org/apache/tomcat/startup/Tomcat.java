@@ -23,6 +23,9 @@ import org.apache.tomcat.service.connector.Ajp12ConnectionHandler;
  */
 public class Tomcat {
 
+    private static StringManager sm = StringManager.getManager("org.apache.tomcat.startup");
+
+
     static {
 	// XXX temp fix for wars
 	// Register our protocols XXX
@@ -49,7 +52,7 @@ public class Tomcat {
 	xh.addRule( "ContextManager/ContextInterceptor", xh.setParent("setContextManager") );
 	xh.addRule( "ContextManager/ContextInterceptor", xh.addChild( "addContextInterceptor",
 								      "org.apache.tomcat.core.ContextInterceptor" ) );
-	
+
 	xh.addRule( "ContextManager/RequestInterceptor", xh.objectCreate(null, "className"));
 	xh.addRule( "ContextManager/RequestInterceptor", xh.setProperties() );
 	xh.addRule( "ContextManager/RequestInterceptor", xh.setParent("setContextManager") );
@@ -106,7 +109,7 @@ public class Tomcat {
 	// Use the "tomcat.home" property to resolve the default filename
 	String tchome = System.getProperty("tomcat.home");
 	if (tchome == null) {
-	    System.out.println("No tomcat.home property, you need to set TOMCAT_HOME or add -Dtomcat.home");
+	    System.out.println(sm.getString("tomcat.nohome"));
 	    tchome = ".";	// Assume current working directory
 	}
 	// Home will be identical to tomcat home if default config is used.
@@ -117,13 +120,13 @@ public class Tomcat {
 
     public void execute(String args[] ) throws Exception {
 	if( ! processArgs( args ) ) {
-	    System.out.println("Wrong arguments");
+	    System.out.println(sm.getString("tomcat.wrongargs"));
 	    printUsage();
 	    return;
 	}
 
 	if( doStop ) {
-	    System.out.println("Stop tomcat");
+	    System.out.println(sm.getString("tomcat.stop"));
 	    stopTomcat(); // stop serving
 	    return;
 	}
@@ -139,7 +142,7 @@ public class Tomcat {
 	try {
 	    xh.readXml(f,cm);
 	} catch( Exception ex ) {
-	    System.out.println("FATAL: configuration error" );
+	    System.out.println(sm.getString("tomcat.fatalconfigerror") );
 	    ex.printStackTrace();
 	    System.exit(1);
 	}
@@ -149,7 +152,7 @@ public class Tomcat {
 	org.apache.tomcat.task.ApacheConfig apacheConfig=new  org.apache.tomcat.task.ApacheConfig();
 	apacheConfig.execute( cm );     
 
-	System.out.println("Starting tomcat. Check logs/tomcat.log for error messages ");
+	System.out.println(sm.getString("tomcat.start"));
 	cm.init(); // set up contexts
 	cm.start(); // start serving
     }
@@ -159,7 +162,7 @@ public class Tomcat {
 	    Tomcat tomcat=new Tomcat();
 	    tomcat.execute( args );
 	} catch(Exception ex ) {
-	    System.out.println("FATAL: " + ex );
+	    System.out.println(sm.getString("tomcat.fatal") + ex );
 	    ex.printStackTrace();
 	}
 
@@ -182,7 +185,7 @@ public class Tomcat {
 	try {
 	    xh.readXml(f,cm);
 	} catch( Exception ex ) {
-	    System.out.println("FATAL: configuration error" );
+	    System.out.println(sm.getString("tomcat.fatalconfigerror") );
 	    ex.printStackTrace();
 	    System.exit(1);
 	}
@@ -222,7 +225,7 @@ public class Tomcat {
     boolean doStop=false;
     
     public static void printUsage() {
-	System.out.println("usage: ");
+	System.out.println(sm.getString("tomcat.usage"));
     }
 
     /** Process arguments - set object properties from the list of args.
