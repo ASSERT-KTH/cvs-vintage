@@ -34,7 +34,7 @@ import org.jboss.ejb.DeploymentException;
  *   @see <related>
  *   @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
  *   @author <a href="mailto:WolfgangWerner@gmx.net">Wolfgang Werner</a>
- *   @version $Revision: 1.10 $
+ *   @version $Revision: 1.11 $
  */
 public class XmlFileLoader {
    	// Constants -----------------------------------------------------
@@ -164,12 +164,13 @@ public class XmlFileLoader {
 			return doc;
 		} catch (SAXParseException e) {
 		   System.out.println(e.getMessage()+":"+e.getColumnNumber()+":"+e.getLineNumber());
-			throw new DeploymentException(e.getMessage());
+                   e.printStackTrace();
+			throw new DeploymentException(e.getMessage(), e);
 		} catch (SAXException e) {
          System.out.println(e.getException());
-			throw new DeploymentException(e.getMessage());
+			throw new DeploymentException(e.getMessage(), e);
 		} catch (Exception e) {
-			throw new DeploymentException(e.getMessage());
+			throw new DeploymentException(e.getMessage(), e);
 		}
 	}
 
@@ -187,6 +188,7 @@ public class XmlFileLoader {
 		public LocalResolver() {
 			registerDTD("-//Sun Microsystems, Inc.//DTD Enterprise JavaBeans 1.1//EN", "ejb-jar.dtd");
 			registerDTD("-//Sun Microsystems, Inc.//DTD J2EE Application 1.2//EN", "application_1_2.dtd");
+			registerDTD("-//Sun Microsystems, Inc.//DTD Connector 1.0//EN", "connector_1_0.dtd");
    		registerDTD("-//JBoss//DTD JAWS//EN", "jaws.dtd");
 		}
 
