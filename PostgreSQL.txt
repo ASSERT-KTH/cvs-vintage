@@ -1,19 +1,23 @@
-------------------------------------------------------------------------------
-| PostgreSQL  N O T E S                                                      |
-------------------------------------------------------------------------------
-$Id: PostgreSQL.txt,v 1.2 2004/03/13 15:54:24 pledbrook Exp $
++-----------------------------------------------------------------------+
+| PostgreSQL  N O T E S                                                 |
++-----------------------------------------------------------------------+
+$Id: PostgreSQL.txt,v 1.3 2004/12/04 23:35:34 dabbous Exp $
 
-Creating and populating the database
-====================================
+,-----------------------------------------------------------------------.
+| Creating and populating the database                                  |
+'-----------------------------------------------------------------------'
 
-The ant build has a target called "create-db" that is normally used to create
-and populate the scarab database. Unfortunately, fora  variety of reasons
-this does not work with PostgreSQL. Instead there is a shell script that can
-be used to perform the same job, <install dir>/src/sql/create-db.sh. Here
-are the steps you should follow:
+The ant build has a target called "create-db" that is normally used to 
+create and populate the scarab database. Unfortunately, for a  variety 
+of reasons this does not work with PostgreSQL. Instead there is a shell
+script that can be used to perform the same job:
 
-1. If you are on Windows, download and install Cygwin. Alternatively, convert
-   the shell script to a batch file.
+    <install dir>/src/sql/create-db.sh. 
+    
+Here are the steps you should follow:
+
+1. If you are on Windows, download and install Cygwin. Alternatively, 
+   convert the shell script to a batch file.
 
 2. Ensure that 'psql', 'createdb' and 'dropdb' are in your path.
 
@@ -21,33 +25,43 @@ are the steps you should follow:
 
 3. 'cd' to <install dir>/src/sql.
 
-4. Assuming that you have set these build properties correctly:
-     ${scarab.database.name},
-     ${scarab.database.admin.username},
-     ${scarab.database.host}, and
-     ${scarab.database.port},
+4. Ensure that you have set these build properties correctly:
+
+       ${scarab.database.name}
+       ${scarab.database.admin.username}
+       ${scarab.database.host}
+       ${scarab.database.port}
    
-   run 'create-db.sh', or 'create-db.sh --password' if your admin user requires
-   a password. This will create the database using the information you supplied
+5. run one of the two commands below depending of your database admin
+   needs a password or not:
+
+       create-db.sh
+       create-db.sh --password
+    
+   This will create the database using the information you supplied
    as ant build properties.
    
-   You can also override the default connection values using the command line
-   arguments. More details about the various options can be found by running
-   'createdb.sh --help'.
+   You can also override the default connection values using the 
+   command line arguments. More details about the various options can be 
+   found by running
+   
+       createdb.sh --help
 
-Once you complete these steps, you'll be able to run Scarab against the newly
-created database.
+Once you complete these steps, you'll be able to run Scarab against 
+the newly created database.
 
 
-Database permissions
-====================
+,-----------------------------------------------------------------------.
+| Database permissions                                                  |
+'-----------------------------------------------------------------------'
 
 Things get a little tricky if you create the database with one user, and
 then Scarab connects as a different user. The problem is one of database
 permissions: Scarab requires full rights to all the tables in the Scarab
-database. Unfortunately, it seems that the permissions can only be granted
-on a per-table basis. There may be a script in the future that helps update
-the table permissions, but for now it has to be done manually.
+database. Unfortunately, it seems that the permissions can only be 
+granted on a per-table basis. There may be a script in the future that 
+helps update the table permissions, but for now it has to be done 
+manually.
 
-Of course, if Scarab connects as the user that created the database, you
-won't have this problem at all!
+Of course, if Scarab connects as the user that created the database, 
+you won't have this problem at all!

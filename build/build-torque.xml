@@ -2,24 +2,13 @@
   <!--
     Note - You should not have to edit this file.
 
-    Instead, if calling build-torque.xml directly, edit the build.properties
-    that is in the same directory. If calling build-torque.xml via another
-    build file, you can also use the build.properties in the same directory,
-    or set the property torque.contextProperties to the file
-    to use in place of build.properties (e.g. project.properties).
+    When calling build-torque.xml directly, edit the build.properties
+    that is in the $SCARAB_HOME directory to adjust the properties.
   -->
 
-  <!--
-    For us to load the default.properties from the classpath, we need to bootstrap.
-    To know the right lib.dir for the torque-classpath, we need to manually
-    figure out torque.lib.dir, but to do that, we need to manually figure
-    out torque.contextProperties and load that so that any old configurations
-    still work propertly. Then we can go on and do the rest of the mappings via
-    old.properties.
-   -->
   <property name="root.dir" value=".."/>
   <property name="antbase.dir" value="."/>
-  <property name="build.properties" value="build.properties"/>
+  <property name="build.properties" value="${root.dir}/build.properties"/>
   <property name="torque.contextProperties" value="${build.properties}"/>
   <property file="${torque.contextProperties}"/>
   <property name="repository.dir" value="${root.dir}/www/repository"/>

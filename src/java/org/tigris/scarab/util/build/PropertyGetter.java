@@ -51,7 +51,7 @@ package org.tigris.scarab.util.build;
  * This interface defines a property getter
  *
  * @author <a href="mailto:dabbous@saxess.com">Hussayn Dabbous</a>
- * @version $Id: PropertyGetter.java,v 1.1 2004/11/06 12:38:12 dabbous Exp $
+ * @version $Id: PropertyGetter.java,v 1.2 2004/12/04 23:35:37 dabbous Exp $
  */
 
 

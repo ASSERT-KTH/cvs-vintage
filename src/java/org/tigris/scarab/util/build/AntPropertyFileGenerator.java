@@ -57,7 +57,7 @@ import org.apache.tools.ant.Task;
  * of a property file by use of a template file.
  *
  * @author <a href="mailto:dabbous@saxess.com">Hussayn Dabbous</a>
- * @version $Id: AntPropertyFileGenerator.java,v 1.2 2004/11/06 15:25:34 dabbous Exp $
+ * @version $Id: AntPropertyFileGenerator.java,v 1.3 2004/12/04 23:35:37 dabbous Exp $
  */
 
 public class AntPropertyFileGenerator extends Task implements PropertyGetter
@@ -99,6 +99,24 @@ public class AntPropertyFileGenerator extends Task implements PropertyGetter
             throw new BuildException("custom file ["
                     + generator.getCustom()
                     + "] is not writable.");
+
+        }
+    }
+
+    /**
+     * Setter: set the path to the final property file.
+     * Throws an exception, if the customFile exist, 
+     * but can't be overwritten (due to permission settings).
+     * @param theCustomPath
+     */
+    public void setProperties(String thePropertyFilePathes)
+    {
+        boolean status = generator.setProperties(thePropertyFilePathes);
+        if(!status)
+        {
+            throw new BuildException("problem with the propretyFilePathlist["
+                    + thePropertyFilePathes
+                    + "] one file is not readable.");
 
         }
     }

@@ -32,12 +32,10 @@
     <property name="root.dir" value=".."/>
     <property name="antbase.dir" value="."/>
     
-    <property file="${user.home}/scarab.build.properties" />
+    <property file="${user.home}/scarab.${configuration.file}" />
     <property file="${user.home}/${configuration.file}" />
-    <property file="${antbase.dir}/${configuration.file}" />
     <property file="${root.dir}/${configuration.file}"/>
-    <property file="${antbase.dir}/default.properties" />
-    <property file="${antbase.dir}/default.${scarab.database.type}.properties" />
+    <property file="${root.dir}/project.properties" />
 
     <property name="ant.home" value=".."/>
 
@@ -264,8 +262,11 @@
             classname="org.tigris.scarab.util.build.AntPropertyFileGenerator" 
             classpath="${build.project.webinf}/classes"/>
         <defaultCustom
-            custom   = "${build.project.webinf}/conf/defaultCustom.properties"
-            template = "${custom.properties.tmpl}"/>
+            custom     = "${build.project.webinf}/conf/defaultCustom.properties"
+            template   = "${custom.properties.tmpl}"
+            properties = "${user.home}/scarab.${configuration.file}:${user.home}/${configuration.file}:${root.dir}/${configuration.file}:${root.dir}/project.properties" 
+        />
+
     </target>
 
     <!-- conditional file copy used in prepare target-->
