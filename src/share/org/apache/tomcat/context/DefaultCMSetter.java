@@ -173,7 +173,7 @@ public class DefaultCMSetter extends BaseInterceptor {
             
 	for(int i=0; i < jars.size(); ++i) {
 	    String jarfile = (String) jars.elementAt(i);
-	    loader.addRepository( new File( base + "/WEB-INF/" +jarfile ));
+	    loader.addRepository( new File( base + "/WEB-INF/lib/" +jarfile ));
 	}
     }
 
