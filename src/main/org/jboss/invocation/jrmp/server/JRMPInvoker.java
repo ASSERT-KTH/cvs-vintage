@@ -16,6 +16,7 @@ import java.rmi.server.RMIServerSocketFactory;
 import java.rmi.server.RMIClientSocketFactory;
 import java.rmi.ServerException;
 import java.rmi.MarshalledObject;
+import java.rmi.server.RemoteStub;
 import java.util.Date;
 
 import javax.naming.Name;
@@ -53,7 +54,15 @@ import org.jboss.system.Registry;
 *
 *  @author <a href="mailto:marc.fleury@jboss.org>Marc Fleury</a>
 *
-*  @version $Revision: 1.5 $
+*  @version $Revision: 1.6 $
+*
+*  <p><b>Revisions:</b><br>
+*  <p><b>2002/01/13: Sacha Labourey</b>
+*  <ol>
+*    <li>Make the exported RemoteStub available. For the clustering we need to
+*         distribute the stub to the other nodes of the cluster. Sending the 
+*         RemoteServer directly fails.</li>
+*  </ol>
 */
 
 public class JRMPInvoker
@@ -86,6 +95,8 @@ implements Invoker, JRMPInvokerMBean,  MBeanRegistration
    
    protected int state;
    protected int id = 0;
+   
+   protected RemoteStub invokerStub = null;
    
    // Static --------------------------------------------------------
    
@@ -138,6 +149,8 @@ implements Invoker, JRMPInvokerMBean,  MBeanRegistration
    public int getState() { return state; }
    
    public String getStateString() { return states[state]; }
+   
+   public RemoteStub getStub () { return this.invokerStub; }
    
    public void create()
    throws Exception
@@ -326,8 +339,8 @@ implements Invoker, JRMPInvokerMBean,  MBeanRegistration
    
    protected void exportCI() throws Exception
    {
-      UnicastRemoteObject.exportObject(this, rmiPort,
-         clientSocketFactory, serverSocketFactory);
+      this.invokerStub = (RemoteStub)UnicastRemoteObject.exportObject
+         (this, rmiPort, clientSocketFactory, serverSocketFactory);
    }
    
    protected void unexportCI() throws Exception
