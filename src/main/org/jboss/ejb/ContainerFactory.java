@@ -76,7 +76,7 @@ import org.jboss.logging.Logger;
 *   @author <a href="mailto:jplindfo@helsinki.fi">Juha Lindfors</a>
 *   @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
 *
-*   @version $Revision: 1.36 $
+*   @version $Revision: 1.37 $
 */
 public class ContainerFactory
 	extends org.jboss.util.ServiceMBeanSupport
@@ -603,8 +603,16 @@ public class ContainerFactory
 
 			// Register deployment. Use the original name in the hashtable
 			deployments.put(origUrl, app);
-		} catch (Throwable e)
+		}
+        catch (Throwable e)
 		{
+            if (e instanceof NullPointerException) {
+                // Avoids useless 'null' messages on a server trace.
+                // Let's be honest and spam them with a stack trace.
+                // NPE should be considered an internal server error anyways.
+                //Logger.exception(e);
+            }
+            
 			Logger.debug(e.getMessage());
 
 			app.stop();

@@ -22,7 +22,7 @@ import org.jboss.ejb.DeploymentException;
  *      
  *   @see <related>
  *   @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
- *   @version $Revision: 1.7 $
+ *   @version $Revision: 1.8 $
  */
 public abstract class MetaData implements XmlLoadable {
     // Constants -----------------------------------------------------
@@ -38,6 +38,8 @@ public abstract class MetaData implements XmlLoadable {
     
     // Static --------------------------------------------------------
     public static Iterator getChildrenByTagName(Element element, String tagName) {
+		if (element == null) return null;
+
 		// getElementsByTagName gives the corresponding elements in the whole descendance.
 	    // We want only children
 		
@@ -55,6 +57,7 @@ public abstract class MetaData implements XmlLoadable {
 	
 	
 	public static Element getUniqueChild(Element element, String tagName) throws DeploymentException {
+
 		Iterator goodChildren = getChildrenByTagName(element, tagName);
 		
 		if (goodChildren.hasNext()) {
@@ -70,6 +73,7 @@ public abstract class MetaData implements XmlLoadable {
 	
 	
 	public static Element getOptionalChild(Element element, String tagName) throws DeploymentException {
+
 		Iterator goodChildren = getChildrenByTagName(element, tagName);
 
 		if (goodChildren.hasNext()) {

@@ -21,7 +21,7 @@ import org.jboss.ejb.DeploymentException;
  *      
  *   @see <related>
  *   @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
- *   @version $Revision: 1.7 $
+ *   @version $Revision: 1.8 $
  */
 public abstract class BeanMetaData extends MetaData {
     // Constants -----------------------------------------------------
@@ -216,6 +216,11 @@ public abstract class BeanMetaData extends MetaData {
 			String resRefName = getElementContent(getUniqueChild(resourceRef, "res-ref-name"));
 			String resourceName = getElementContent(getUniqueChild(resourceRef, "resource-name"));
 			ResourceRefMetaData resourceRefMetaData = (ResourceRefMetaData)resourceReferences.get(resRefName);
+            
+            if (resourceRefMetaData == null) {
+                throw new DeploymentException("resource-ref " + resRefName + " found in jboss.xml but not in ejb-jar.xml");
+            }
+            
 		    resourceRefMetaData.setResourceName(resourceName);
 		}
 		
