@@ -46,7 +46,7 @@ import gnu.getopt.LongOpt;
 *
 * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
 * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
-* @version $Revision: 1.58 $
+* @version $Revision: 1.59 $
 *
 * <b>Revisions:</b>
 * <p>
@@ -203,23 +203,23 @@ public class Main
          }
          catch(RuntimeMBeanException e)
          {
-            e.getTargetException().printStackTrace();
+    //        e.getTargetException().printStackTrace();
          }
          catch (RuntimeOperationsException roe)
          {
-            roe.getTargetException().printStackTrace();
+    //        roe.getTargetException().printStackTrace();
          }
          catch (RuntimeErrorException ree)
          {
-            ree.getTargetError().printStackTrace();
+    //        ree.getTargetError().printStackTrace();
          }
          catch (MBeanException mbe)
          {
-            mbe.getTargetException().printStackTrace();
+    //        mbe.getTargetException().printStackTrace();
          }
          catch (ReflectionException re)
          {
-            re.getTargetException().printStackTrace();
+    //        re.getTargetException().printStackTrace();
          }
 
       }
@@ -234,7 +234,8 @@ public class Main
       long minutes = lapsedTime / 60000;
       long seconds = (lapsedTime - 60000 * minutes) / 1000;
       long milliseconds = (lapsedTime -60000 * minutes - 1000 * seconds);
-      System.out.println("JBossMX MICRO-KERNEL " + version +
+
+      System.out.println("JBoss (MX microkernel) " + version +
          " [" + version.getName() + "] Started in " +
          minutes  + "m:" + seconds  + "s:" +milliseconds +"ms");
    }
