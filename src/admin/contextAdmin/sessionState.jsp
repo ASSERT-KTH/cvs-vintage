@@ -7,7 +7,7 @@
 
 <body bgcolor="white">
 
-<adm:admin ctxPathParam="ctx"/>
+<adm:admin ctxPathParam="ctx" ctxHostParams="host" />
 <adm:moduleAdmin var="store" 
 		 type="org.apache.tomcat.modules.session.SimpleSessionStore" />
 

@@ -15,9 +15,11 @@
 <body bgcolor="white">
 
 <h3>Removing <%= request.getParameter("removeContextName") %> </h3>
-<%= request.getParameter("removeContextName") %>
+<!-- <%= request.getParameter("removeContextName") %> -->
 <adm:admin ctxPathParam="removeContextName"
+           ctxHostParam="removeHost"
            action="removeContext" />
 
+<a href="contextList.jsp">Return to Context List</a>
 </body>
 </html>

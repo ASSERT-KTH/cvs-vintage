@@ -28,6 +28,10 @@
       <required>false</required>
     </attribute>
     <attribute>
+      <name>ctxHostParam</name>
+      <required>false</required>
+    </attribute>
+    <attribute>
       <name>ctxPathParam</name>
       <required>false</required>
     </attribute>

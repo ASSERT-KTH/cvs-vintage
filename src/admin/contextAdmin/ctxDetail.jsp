@@ -4,12 +4,12 @@
 
 <head>
 
-    <title>Context list</title>
+    <title>Context Detail</title>
 </head>
 
 <body bgcolor="white">
 
-<adm:admin ctxPathParam="ctx" />
+<adm:admin ctxPathParam="ctx" ctxHostParam="host" />
 
 <%
   if( ctx==null ) {
@@ -17,7 +17,9 @@
   <h1>Error, no context for <%= request.getParameter( "ctx" ) %> </h1>
 <% } else { %>
 
-  <a href="sessionState.jsp?ctx=<%= request.getParameter( "ctx" ) %>">Session info</a>
+  <a href="sessionState.jsp?ctx=<%= request.getParameter( "ctx" ) %>&host=<%=
+           request.getParmeter("host") == null ? "" : 
+	     request.getParameter("host")">Session info</a>
   <table border="0" cellpad="2" >
   <tr bgcolor="#e1e1e1">
 

@@ -18,8 +18,10 @@ import org.apache.tomcat.util.log.*;
  */
 public class TomcatAdmin extends TagSupport {
     private ContextManager cm;
+    String ctxHost;
     String ctxPath;
     String docBase;
+    String ctxHostParam;
     String ctxPathParam;
     String docBaseParam;
     String action;
@@ -39,6 +41,11 @@ public class TomcatAdmin extends TagSupport {
 	    }
 	    pageContext.setAttribute("cm", cm);
 	    Context ctx=null;
+	    if( ctxHost == null && ctxHostParam != null) {
+		ctxHost=req.getParameter( ctxHostParam );
+		if( "".equals(ctxHost) )
+		    ctxHost=null;
+	    }
 	    if( ctxPath==null && ctxPathParam!=null ) {
 		ctxPath=req.getParameter( ctxPathParam );
 	    }
@@ -48,7 +55,7 @@ public class TomcatAdmin extends TagSupport {
 
 	    boolean found = false;
 	    if( ctxPath != null ) {
-		System.out.println("Finding " + ctxPath );
+		System.out.println("Finding host: "+ ctxHost + ",path=" + ctxPath );
 		if( ! ctxPath.startsWith("/") )
 		    ctxPath = "/" + ctxPath;
 		if( ctxPath.equals("/") )
@@ -58,10 +65,13 @@ public class TomcatAdmin extends TagSupport {
 		    ctx=(Context)en.nextElement();
 		    // XXX virtual host
 		    if( ctxPath.equals( ctx.getPath())) {
-			found=true;
-			pageContext.setAttribute("ctx", ctx);
-			System.out.println("Found " + ctx );
-			break;
+			if( (ctxHost == null && ctx.getHost() == null ) ||
+			    (ctxHost != null && ctxHost.equals(ctx.getHost()))){
+			    found=true;
+			    pageContext.setAttribute("ctx", ctx);
+			    System.out.println("Found " + ctx );
+			    break;
+			} 
 		    }
 		}
 	    }
@@ -70,7 +80,11 @@ public class TomcatAdmin extends TagSupport {
 	    if("setLogger".equals( action ) )
 		setLogFile(  ctx, value );
 	    if("addContext".equals( action ) )
-		addContext( cm, host, ctxPath, docBase );
+		addContext( cm, ctxHost, ctxPath, docBase );
+	    if("restartContext".equals(action) && found) {
+		removeContext(cm, ctx);
+		addContext( cm, ctxHost, ctxPath, docBase);
+	    }
 	} catch (Exception ex ) {
 	    ex.printStackTrace();
 	}
@@ -118,6 +132,9 @@ public class TomcatAdmin extends TagSupport {
 	this.host=host;
     }
 
+    public void setCtxHostParam( String hostP ) {
+	this.ctxHostParam = hostP;
+    }
     public void setAction( String action ) {
 	this.action=action;
     }
@@ -167,6 +184,7 @@ public class TomcatAdmin extends TagSupport {
 	System.out.println("Adding " + path + " " + docBase);
 	Context context = new Context();
 	context.setContextManager(cm);
+	context.setHost(host);
 	context.setPath(path);
 	context.setDocBase(docBase);
 

@@ -13,14 +13,14 @@
 <table border=0 cellspacing=5>
   <tr>
     <td><a href="/">
-        <img SRC="../../tomcat.gif" height=92 width=130 align=LEFT border=0 alt="Tomcat Home Page"></a>
-    <td valign=center><h2>Context Administration</h2>
+        <img SRC="../../tomcat.gif" height=92 width=130 align=LEFT border=0 alt="Tomcat Home Page"></a></td>
+    <td valign=center><h2>Context Administration</h2></td>
   </tr>
   <tr>
       <td valign=top align=center>
         <b><font face="Arial, Helvetica, sans-serif" size=-5>
         <a href="/admin">Admin Home Page</a>
-        </b></font>
+        </b></font></td>
   </tr>
 </table>
 
@@ -29,34 +29,36 @@
 
 <table border=0 cellspacing=5>
   <tr>
-    <td><td>
+    <td></td><td>
 	  <FORM type=POST action="contextList.jsp">
 	    <INPUT TYPE=submit name="submit" value="View All Contexts">
-	  </FORM>
+	  </FORM></td>
   </tr>
   <tr>
-    <td><td>
-    <td><td>Path:
-    <td><td>Document Base:
+    <td></td><td></td>
+    <td></td><td>Host:</td>
+    <td></td><td>Path:</td>
+    <td></td><td>Document Base:</td>
   </tr>
   <tr>
     <form type=POST action=contextAdd.jsp>
-    <td><td><INPUT TYPE=submit name="submit" value="Add Context">
-    <td><td><INPUT TYPE=text name="addContextPath" size=20>
-    <td><td><INPUT TYPE=text name="addContextDocBase" size=20>
-    <td><td>
+    <td></td><td><INPUT TYPE=submit name="submit" value="Add Context"></td>
+    <td></td><td><INPUT TYPE=text name="addContextHost" size=20></td>
+    <td></td><td><INPUT TYPE=text name="addContextPath" size=20></td>
+    <td></td><td><INPUT TYPE=text name="addContextDocBase" size=20></td>
+    <td></td><td></td>
     </form>
   </tr>
   <tr>
-    <td><td>
-    <td><td>Context Name:
-    <td><td>Virtual host:
+    <td></td><td></td>
+    <td></td><td>Context Name:</td>
+    <td></td><td>Virtual host:</td>
   </tr>
   <tr>
     <form type=POST action=contextRemove.jsp>
-    <td><td><INPUT TYPE=submit name="submit" value="Remove Context">
-    <td><td><INPUT TYPE=text name="removeContextName" size=20>
-    <td><td><INPUT TYPE=text name="virtualHost" size=20>
+    <td></td><td><INPUT TYPE=submit name="submit" value="Remove Context"></td>
+    <td></td><td><INPUT TYPE=text name="removeContextName" size=20></td>
+    <td></td><td><INPUT TYPE=text name="virtualHost" size=20></td>
     </form>
   </tr>
 </table>

@@ -9,16 +9,19 @@
 
 <head>
 
-    <title>Context remove</title>
+    <title>Context Add</title>
 </head>
 
 <body bgcolor="white">
 
-<h3>Adding <%= request.getParameter("addContextPath") %> </h3>
+<h3>Adding <%= ("".equals(request.getParameter("addContextHost")) ? 
+	"localhost" : request.getParameter("addContextHost") ) 
+	%>:<%= request.getParameter("addContextPath") %> </h3>
 
 <adm:admin ctxPathParam="addContextPath"
+	   ctxHostParam="addContextHost"
            docBaseParam="addContextDocBase"
            action="addContext" />
-
+<a href="contextList.jsp">Return to Context List</a>
 </body>
 </html>
