@@ -482,7 +482,6 @@ public final class ContextManager {
 	    }
 	}
 
-	ri.engineShutdown( this );
     }
 
     // -------------------- Server functions --------------------
@@ -577,22 +576,49 @@ public final class ContextManager {
      */
     public final void shutdown() throws TomcatException {
         if( state==STATE_START ) stop();
-	while (!contextsV.isEmpty()) {
+
+	Enumeration enum = getContexts();
+	while (enum.hasMoreElements()) {
+	    Context ctx = (Context)enum.nextElement();
 	    try {
-		removeContext((Context)contextsV.firstElement());
-	    } catch(Exception ex ) {
-		log( "shutdown.removeContext" , ex );
+		ctx.shutdown();
+	    } catch( TomcatException ex ) {
+		log( "Error shuting down context " +ctx );
 	    }
 	}
+	// No need to remove - since init() doesn't add the contexts.
+	// Modules could remove contexts ( and add them in init() ), but who
+	// adds should also remove
+	// 	while (!contextsV.isEmpty()) {
+	// 	    try {
+	// 		Context ctx=(Context)contextsV.firstElement();
+	// 		removeContext(ctx);
+	// 	    } catch(Exception ex ) {
+	// 		log( "shutdown.removeContext" , ex );
+	// 	    }
+	// 	}
+
+	// Notify all modules that the server will shutdown,
+	// let them clean up all resources
 
 	BaseInterceptor cI[]=defaultContainer.getInterceptors();
 	for( int i=0; i< cI.length; i++ ) {
 	    try {
-		removeInterceptor( cI[i] );
+		cI[i].engineShutdown( this );
 	    } catch( Exception ex ) {
-		log( "shutdown.removeInterceptor" , ex );
+		log( "shutdown.engineShutdown" , ex );
 	    }
 	}
+
+	setState( STATE_NEW );
+	// remove the modules ( XXX do we need that ? )
+	// 	for( int i=0; i< cI.length; i++ ) {
+	// 	    try {
+	// 		removeInterceptor( cI[i] );
+	// 	    } catch( Exception ex ) {
+	// 		log( "shutdown.removeInterceptor" , ex );
+	// 	    }
+	// 	}
     }
 
     // -------------------- Contexts --------------------

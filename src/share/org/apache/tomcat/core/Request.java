@@ -298,6 +298,10 @@ public class Request {
 	return uriMB;
     }
 
+    public MessageBytes query() {
+	return queryMB;
+    }
+
     public MessageBytes queryString() {
 	return queryMB;
     }
