@@ -68,7 +68,7 @@ import org.tigris.scarab.om.Module;
  * @author <a href="mailto:jon@collab.net">Jon Scott Stevens</a>
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: Email.java,v 1.12 2002/10/24 22:59:30 jon Exp $
+ * @version $Id: Email.java,v 1.13 2003/01/31 20:29:10 jon Exp $
  */
 public class Email
 {
@@ -112,7 +112,7 @@ public class Email
             {
                 ScarabUser toUser = (ScarabUser)iter.next();
                 te.addTo(toUser.getEmail(),
-                         toUser.getFirstName() + " " + toUser.getLastName());
+                         toUser.Name());
             }
             
             if (ccUsers != null)
@@ -122,7 +122,7 @@ public class Email
                 {
                     ScarabUser ccUser = (ScarabUser)iter.next();
                     te.addCc(ccUser.getEmail(),
-                             ccUser.getFirstName() + " " + ccUser.getLastName());
+                             ccUser.getName());
                 }
             }
 
