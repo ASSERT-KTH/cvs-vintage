@@ -72,7 +72,7 @@ import org.tigris.scarab.om.ScarabUser;
  * Default.java Screen except that it has a few helper methods.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: RequireLoginFirstAction.java,v 1.28 2002/02/20 23:50:41 elicia Exp $    
+ * @version $Id: RequireLoginFirstAction.java,v 1.29 2002/02/21 00:12:51 elicia Exp $    
  */
 public abstract class RequireLoginFirstAction extends TemplateSecureAction
 {
@@ -83,7 +83,7 @@ public abstract class RequireLoginFirstAction extends TemplateSecureAction
         "More information was required to submit your request. Please " +
         "scroll down to see error messages."; 
 
-    ScarabTemplateAction sta = new ScarabTemplateAction();
+    private static ScarabTemplateAction sta = new ScarabTemplateAction();
 
 
     /**
