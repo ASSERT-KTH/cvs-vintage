@@ -1,55 +1,56 @@
 <project name="Tomcat" default="main" basedir=".">
   <property name="build.compiler" value="classic"/>
+  <property name="dest" value="../build/tomcat"/>
 
   <target name="main">
-    <mkdir dir="./build"/>
-    <mkdir dir="./build/tomcat"/>
-    <mkdir dir="./build/tomcat/classes"/>
-    <mkdir dir="./build/tomcat/etc"/>
-    <mkdir dir="./build/tomcat/src"/>
-    <mkdir dir="./build/tomcat/lib"/>
-    <copydir src="src/webpages" dest="./build/tomcat/webpages"/>
-    <copydir src="src/examples" dest="./build/tomcat/examples"/>
-    <copydir src="src/share/javax" dest="./build/tomcat/src/javax"/>
+    <mkdir dir="${dest}"/>
+    <mkdir dir="${dest}"/>
+    <mkdir dir="${dest}/classes"/>
+    <mkdir dir="${dest}/etc"/>
+    <mkdir dir="${dest}/src"/>
+    <mkdir dir="${dest}/lib"/>
+    <copydir src="src/webpages" dest="${dest}/webpages"/>
+    <copydir src="src/examples" dest="${dest}/examples"/>
+    <copydir src="src/share/javax" dest="${dest}/src/javax"/>
     <copyfile src="../jakarta-tools/projectx-tr2.jar"
-     dest="./build/tomcat/lib/xml.jar"/>
+     dest="${dest}/lib/xml.jar"/>
     
     <!-- XXX move all this copyfile stuff into a seperate dir so that
          we can just copy the dir into the correct location!!! -->
     
-    <copyfile src="src/shell/startup.sh" dest="./build/tomcat/startserver"/>
+    <copyfile src="src/shell/startup.sh" dest="${dest}/startserver"/>
     <copyfile src="src/shell/startup.bat"
-     dest="./build/tomcat/startserver.bat"/>
-    <copyfile src="src/shell/shutdown.sh" dest="./build/tomcat/stopserver"/>
+     dest="${dest}/startserver.bat"/>
+    <copyfile src="src/shell/shutdown.sh" dest="${dest}/stopserver"/>
     <copyfile src="src/shell/shutdown.bat"
-     dest="./build/tomcat/stopserver.bat"/>
+     dest="${dest}/stopserver.bat"/>
     <copyfile src="src/share/org/apache/tomcat/shell/deployment/server.xml"
-     dest="./build/tomcat/server.xml"/>
+     dest="${dest}/server.xml"/>
     <copyfile src="src/share/org/apache/tomcat/shell/deployment/server.xml"
-     dest="./build/tomcat/etc/server.xml"/>
+     dest="${dest}/etc/server.xml"/>
     <copyfile src="src/share/org/apache/tomcat/shell/deployment/server.dtd"
-     dest="./build/tomcat/etc/server.dtd"/>
+     dest="${dest}/etc/server.dtd"/>
     <copyfile src="src/share/org/apache/tomcat/deployment/web.xml"
-     dest="./build/tomcat/etc/web.xml"/>
+     dest="${dest}/etc/web.xml"/>
     <copyfile src="src/share/org/apache/tomcat/deployment/web.dtd"
-     dest="./build/tomcat/etc/web.dtd"/>
-    <copyfile src="src/etc/license.txt" dest="./build/tomcat/LICENSE"/>
-    <copyfile src="src/etc/readme" dest="./build/tomcat/README"/>
-    <copyfile src="src/etc/faq" dest="./build/tomcat/FAQ"/>
+     dest="${dest}/etc/web.dtd"/>
+    <copyfile src="src/etc/license.txt" dest="${dest}/LICENSE"/>
+    <copyfile src="src/etc/readme" dest="${dest}/README"/>
+    <copyfile src="src/etc/faq" dest="${dest}/FAQ"/>
     <copyfile src="src/etc/SimpleStartup.java"
-     dest="./build/tomcat/etc/SimpleStartup.java"/>
+     dest="${dest}/etc/SimpleStartup.java"/>
 
     <!-- XXX have to put in macro / stamp task so that core.properties
          can be properly stamped -->
 
-    <javac srcdir="src/share" destdir="./build/tomcat/classes"
-     classpath="./build/tomcat/lib/xml.jar" debug="on"/>
+    <javac srcdir="src/share" destdir="${dest}/classes"
+     classpath="${dest}/lib/xml.jar" debug="on"/>
     <javac srcdir="src/webpages/WEB-INF/classes"
-     destdir="./build/tomcat/webpages/WEB-INF/classes"
-     classpath="./build/tomcat/classes"/>
+     destdir="${dest}/webpages/WEB-INF/classes"
+     classpath="${dest}/classes"/>
     <javac srcdir="src/examples/WEB-INF/classes"
-     destdir="./build/tomcat/examples/WEB-INF/classes"
-     classpath="./build/tomcat/classes"/>
+     destdir="${dest}/examples/WEB-INF/classes"
+     classpath="${dest}/classes"/>
 
 <!-- XXX
 
@@ -57,14 +58,14 @@
      previous javac
 
     <javac srcdir="src/examples/WEB-INF/classes/jsp/beans"
-        destdir="./build/tomcat/examples/WEB-INF/classes/jsp/beans"
-        classpath="./build/tomcat/classes"/>
+        destdir="${dest}/examples/WEB-INF/classes/jsp/beans"
+        classpath="${dest}/classes"/>
 
 -->
     <javac srcdir="src/examples/jsp/plugin/applet"
-     destdir="./build/tomcat/examples/jsp/plugin/applet"/>
+     destdir="${dest}/examples/jsp/plugin/applet"/>
 
-    <rmic base="./build/tomcat/classes"
+    <rmic base="${dest}/classes"
      class="org.apache.tomcat.shell.AdminImpl"/>
           
   </target>
@@ -112,19 +113,19 @@
         dest="./dist/tomcat/etc/SimpleStartup.java"/>
 
     <javac srcdir="src/webpages/WEB-INF/classes"
-        destdir="./build/tomcat/webpages/WEB-INF/classes"
-        classpath="./build/tomcat/classes"/>
+        destdir="${dest}/webpages/WEB-INF/classes"
+        classpath="${dest}/classes"/>
     <javac srcdir="src/examples/WEB-INF/classes"
         destdir="./dist/tomcat/examples/WEB-INF/classes"
-        classpath="./build/tomcat/classes"/>
+        classpath="${dest}/classes"/>
 
 <!-- XXX
 
      shouldn't this have been picked up by the
      previous javac
     <javac srcdir="src/examples/WEB-INF/classes/jsp/beans"
-        destdir="./build/tomcat/examples/WEB-INF/classes/jsp/beans"
-        classpath="./build/tomcat/classes"/>
+        destdir="${dest}/examples/WEB-INF/classes/jsp/beans"
+        classpath="${dest}/classes"/>
 
 -->
 
@@ -132,13 +133,13 @@
         destdir="./dist/tomcat/examples/jsp/plugin/applet"/>
 
     <jar jarfile="./dist/tomcat/webserver.jar"
-        basedir="./build/tomcat/classes"
+        basedir="${dest}/classes"
         items="org/apache/tomcat"/>
     <jar jarfile="./dist/tomcat/lib/servlet.jar"
-        basedir="./build/tomcat/classes"
+        basedir="${dest}/classes"
         items="javax/servlet"/>
     <jar jarfile="./dist/tomcat/lib/jasper.jar"
-        basedir="./build/tomcat/classes"
+        basedir="${dest}/classes"
         items="org/apache/jasper"/>
   </target>
 
@@ -172,19 +173,19 @@
 
   <target name="servlet">
 
-    <mkdir dir="./build/tomcat"/>
-    <mkdir dir="./build/tomcat/classes"/>
+    <mkdir dir="${dest}"/>
+    <mkdir dir="${dest}/classes"/>
 
-    <javac srcdir="src/share/javax" destdir="./build/tomcat/classes"/>
+    <javac srcdir="src/share/javax" destdir="${dest}/classes"/>
 
     <jar jarfile="../jakarta-tools/servlet-2.2.0.jar"
-        basedir="./build/tomcat/classes"
+        basedir="${dest}/classes"
         items="javax"/>
 
   </target>
 
   <target name="clean">
-    <deltree dir="./build/tomcat"/>
+    <deltree dir="${dest}"/>
     <deltree dir="./dist/tomcat"/>
     <deltree dir="./test/tomcat"/>
   </target>
