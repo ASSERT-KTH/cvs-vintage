@@ -98,28 +98,36 @@ public class SendMessageCommand extends FolderCommand {
 	{
 
 	  String invalidRecipient = null;		
-		for(int i=0;i<references.length;i++)
-		{
-		  
-			invalidRecipient = references[i].getComposerController().getModel()
-														.getInvalidRecipients();
-			
-		  if (invalidRecipient != null)
-			{
+	  
+//VALIDATION DISABLE ! Sebastian Witt 25.07.04,
+//"NAME" <email@somewhat.de> isnt true, which should :(
+//root@localhost is valid, but not with this check. :(
+//root is also valid (with local mailserver), but not with this check :(
 
-		    //it would be really nice to highlight the invalid recipient
-				showInvalidRecipientMessage(invalidRecipient);
-				//AFAIK, there's no need to set showComposer to true because
-				//composer window is already displayed
-				//	open composer view
-				//showComposer = true;
-				
-				return false;
+//TODO: get the validation working CORRECTLY !
 
-			}
-			
-		}
-		
+//		for(int i=0;i<references.length;i++)
+//		{
+//		  
+//			invalidRecipient = references[i].getComposerController().getModel()
+//														.getInvalidRecipients();
+//			
+//		  if (invalidRecipient != null)
+//			{
+//
+//		    //it would be really nice to highlight the invalid recipient
+//				showInvalidRecipientMessage(invalidRecipient);
+//				//AFAIK, there's no need to set showComposer to true because
+//				//composer window is already displayed
+//				//	open composer view
+//				//showComposer = true;
+//				
+//				return false;
+//
+//			}
+//			
+//		}
+//		
 		return true;
 		
 	}
