@@ -53,8 +53,7 @@ $page.setTitle("Select user attribute")
   <td>$attribute.Name</td>
   <td>$attribute.Description</td>
   <td>$attribute.AttributeType.Name</td>
-  #set ($createdUser = $scarabR.getUser($attribute.CreatedBy))
-  <td><a href="mailTo:$createdUser.Email">$createdUser.FirstName $createdUser.LastName</a></td>
+  <td>#attributeCreatedBy($attribute)</td>
   <td>$format.getDate($scarabR.DateFormat, $attribute.CreatedDate)</td>
  </tr>
 #end
