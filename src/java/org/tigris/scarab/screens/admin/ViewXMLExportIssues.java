@@ -67,7 +67,7 @@ import org.tigris.scarab.om.IssueManager;
  * Sends XML Export issues contents directly to the output stream.
  *
  * @author <a href="mailto:jon@collab.net">Jon Scott Stevens</a>
- * @version $Id: ViewXMLExportIssues.java,v 1.14 2003/04/09 22:55:31 jmcnally Exp $
+ * @version $Id: ViewXMLExportIssues.java,v 1.15 2003/06/06 05:33:04 dlr Exp $
  */
 public class ViewXMLExportIssues extends Default
 {
@@ -128,7 +128,8 @@ public class ViewXMLExportIssues extends Default
                 // check that the issue is in the current module, don't allow
                 // exporting of issues other than those in the current
                 // module for security reasons
-                if (issue != null && issue.getModuleId().equals(currentModuleId))
+                if (issue != null && !issue.getDeleted()
+                    && issue.getModuleId().equals(currentModuleId))
                 {
                     issueIdList.add(tmp);
                 }
