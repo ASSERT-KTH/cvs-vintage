@@ -1,16 +1,16 @@
 How to Build
 ------------
 
-First, you must have the jakarta-tools workspace checked out parallel
-to this workspace (jakarta-tomcat). Without jakarta-tools, you wont'
+First, you must have the jakarta-ant workspace checked out parallel
+to this workspace (jakarta-tomcat). Without jakarta-ant, you won't
 be able to build.  When you have completed your downloads and checkouts,
 you should have the following directory structure:
 
 	$JAKARTA_HOME/
+		jakarta-ant/    <-- Contains jakarta-ant files
 		jakarta-tomcat/	<-- Contains jakarta-tomcat files
-		jakarta-tools/	<-- Contains jakarta-tools files
 
-There are a 2 compilation scripts provided, a ksh based script for
+There are  2 compilation scripts provided, a sh based script for
 Unix and a .bat based DOS build script. Essentially these scripts are
 wrappers that put the ant.jar file on the classpath and calls:
 
@@ -18,23 +18,25 @@ wrappers that put the ant.jar file on the classpath and calls:
 
 To build, execute the following command in the jakarta-tomcat directory:
 
-	build
+	build.sh		<-- Unix
+	build			<-- Windows
 
 This will build Tomcat into ../build/tomcat.
 
 Windows Note: If you get an "Out of Environment Space" message, you
 need to up the initial environment of your command prompt window.
 
-To build a 'distribution' build (without the tests, and with all the
-classes jarred up nice) execute:
+To build a 'distribution' build (with all the classes jarred up nice) execute:
 
-	build dist
+	build.sh dist		<-- Unix
+	build dist		<-- Windows
 
 This will build a distribution build of Tomcat into ../dist/tomcat
 
 To clean out the build (removes the build dir):
 
-	build clean
+	build.sh clean		<-- Unix
+	build clean		<-- Windows
 
 
 Running the Build
@@ -48,24 +50,30 @@ converting JSP source files into Java class files.
 Two scripts are provided for starting and stopping the server. To
 start the server:
 
-	cd ../build
-	cd tomcat
-	startup
+	cd ../build/tomcat	<-- Unix
+	bin/startup.sh
+
+	cd ..\build\tomcat	<-- Windows
+	bin\startup
 
 To stop the server:
 
-	shutdown
+	bin/shutdown.sh		<-- Unix
+	bin\shutdown		<-- Windows
 
 
 Testing the Build
 -----------------
 
-We have started a set of 'quick tests' that test out various parts of
-Tomcat. In order to build and run tests, do the following:
+We have packaged a set of 'quick tests' that test out various parts of
+Tomcat as a web application.  It is build automatically by the procedures
+described above.  To execute it, do the following:
 
-	build test
-	cd test
-	runtests
+	cd ../build/tomcat	<-- Unix
+	bin/tomcat.sh ant -buildfile conf/test-tomcat.xml
+
+	cd ..\build\tomcat	<-- Windows
+	bin\tomcat ant -buildfile conf/test-tomcat.xml
 
 
 BEFORE COMMITTING CHANGES
