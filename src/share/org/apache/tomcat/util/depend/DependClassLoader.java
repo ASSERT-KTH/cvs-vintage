@@ -199,6 +199,7 @@ public class DependClassLoader extends ClassLoader {
 	try {
 	    data=readFully( is );
 	    if( data.length==0 ) data=null;
+	    is.close();
 	} catch(IOException ex ) {
 	    if( debug > 0 ) ex.printStackTrace();
 	    data=null;
