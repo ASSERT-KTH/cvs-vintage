@@ -178,10 +178,11 @@ $link.setPage("admin,ManageArtifactTypes.vm").setLabel("$l10n.Here").
 #set ($userAttrs = $module.getUserAttributes($issueType, false))
 #if ($userAttrs.isEmpty())
   <p class="alert">$l10n.NoUserAttributesForType</p>
-
+#if (!$issueTypeLock)
 <div class="functnbar3">
 <input type="submit" value="$l10n.AddNew"  name="eventSubmit_doGotoothertemplate" />&#160;
 </div>
+#end
 
 #else
 <table width="100%" border="1" cellspacing="2" cellpadding="3">
