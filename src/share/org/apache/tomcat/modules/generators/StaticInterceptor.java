@@ -307,8 +307,12 @@ final class FileHandler extends Handler  {
 	// Use "javax.servlet.include.servlet_path" for path if defined.
 	// ErrorHandler places the path here when invoking an error page.
 	String pathInfo = (String)subReq.getAttribute("javax.servlet.include.servlet_path");
-	if(pathInfo == null)
+	if(pathInfo == null) {
+	    // If the attribute isn't there, then we aren't included.
+	    // In that case, we must use the real request.
+	    subReq = req;
 	    pathInfo=subReq.servletPath().toString();
+	}
 	String absPath = (String)subReq.getNote( realFileNote );
 	if( absPath==null )
 	    absPath=FileUtil.safePath( context.getAbsolutePath(),
