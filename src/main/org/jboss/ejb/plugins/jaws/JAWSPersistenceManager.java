@@ -79,7 +79,8 @@ import org.jboss.ejb.plugins.jaws.deployment.Finder;
  *      
  *	@see <related>
  *	@author Rickard Öberg (rickard.oberg@telkel.com)
- *	@version $Revision: 1.10 $
+ *  @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
+ *	@version $Revision: 1.11 $
  */
 public class JAWSPersistenceManager
    implements EntityPersistenceManager
@@ -116,6 +117,7 @@ public class JAWSPersistenceManager
    
    String createSql;
    String insertSql;
+   String existSql;
 	//   String updateSql; Calculated dynamically (=tuned updates)
    String selectSql;
    String removeSql;
@@ -348,11 +350,16 @@ public class JAWSPersistenceManager
          log.debug("Create, id is "+id);
          
          // Check duplicate
-         // TODO
-
-         // Set id
+         if (beanExists(id)) {
+			 
+			// it exists, we need the DuplicateKey thingy
+		    throw new DuplicateKeyException("Entity with key "+id+" already exists");
+		 }
+		 
+		 // We know we are OK and can proceed with the insert
+		 // Set id
          ctx.setId(id);
-         
+ 
          // Lock instance in cache
          ((EntityContainer)container).getInstanceCache().insert(ctx);
          
@@ -388,6 +395,7 @@ public class JAWSPersistenceManager
             stmt.executeUpdate();
          } catch (SQLException e)
          {
+			 log.exception(e);
             throw new CreateException("Could not create entity:"+e);
          } finally
          {
@@ -420,13 +428,138 @@ public class JAWSPersistenceManager
          throw new CreateException("Could not create entity:"+e);
       } 
    }
+   
+   /*
+   *  beanExists
+   *
+   *  Checks in the database that the backend already holds the entity
+   *  
+   */
+   public boolean beanExists(EntityEnterpriseContext ctx) {
+	   
+	   return beanExists(ctx.getId());
+   }
+	
+	public boolean beanExists(Object id) {
+		
+		
+		Connection con = null;
+		
+		PreparedStatement stmt = null;
+		
+		ResultSet rs = null;
+		
+		boolean exists = false;
+		
+		try {
+			
+			//Get the connection  	
+			con = getConnection();
+			
+			stmt = con.prepareStatement(existSql);
+			
+			// Primary key in WHERE-clause
+			if (compoundKey) {
+				
+				// Compound key
+				for (int i = 0; i < pkClassFields.size(); i++) {
+					
+					Field field = (Field)pkClassFields.get(i);
+					
+					// Set the one fields of the key 
+					setParameter(stmt,
+						i+1,
+						((Integer)pkJdbcTypes.get(i)).intValue(), 
+						field.get(id),
+						0);
+					
+					// Be verbose for now, we got to try this
+					log.debug("Set parameter:"+field.get(id));
+				}	
+			} 
+			
+			// We have a Field key
+			else{
+				
+				// So just set that field
+				setParameter(stmt,
+					1,
+					((Integer)pkJdbcTypes.get(0)).intValue(), 
+					id,
+					0);
+			}
+			
+			rs = stmt.executeQuery();
+			
+			// Unlikely we'll fall into the next if statement, as the
+			// COUNT(*) should always return a value, unless something dubious occurs
+			
+			if ( !rs.next() ) {
+				stmt.close();
+				throw new SQLException("Unable to check for EJB in database");
+			}
+			
+			//Tracer.trace("Result is "+result);
+			if ( rs.getInt("Total") >= 1 )
+				exists = true;
+			else
+				exists = false;
+			
+			stmt.close();
+		}
+		
+		catch (Exception e ) {
+			
+			log.exception(e);
+			
+			// An exception means something erroneous has occurred, either
+			// the table doesn't exist or something else. Either way, indicate
+			// we failed to find the bean
+			
+			exists = false;
+		}
+		
+		finally {
+			
+			// Ensure our database connection is released
+			try {
+		
+				if ( con != null ) con.close();
+			} catch ( SQLException se ) {
+			
+				log.exception(se);
+			}
+			
+			return exists;
+		}
+	}
+   
+   	public Object findByPrimaryKey(EntityEnterpriseContext ctx) throws Exception {
+	   
+        //Tracer.trace("PrimaryKey is "+beanWrapper.getPrimaryKey().getDataBasePrimaryKey());
 
+        if (beanExists(ctx.getId())) {
+
+            return ctx;
+        }
+        else {
+
+            throw new FinderException ("Object with primary key "+
+			          					ctx.getId()+ 
+                                   		" not found in storage");
+        }
+    }
+
+	
+	   
+	   
+  
    public Object findEntity(Method finderMethod, Object[] args, EntityEnterpriseContext ctx)
       throws RemoteException, FinderException
    {
       if (finderMethod.getName().equals("findByPrimaryKey"))
       {
-         // TODO: determine existence
+         
          return args[0];
       }
       else
@@ -720,9 +853,6 @@ public class JAWSPersistenceManager
    public void storeEntity(EntityEnterpriseContext ctx)
       throws RemoteException
    {
-	
-		log.debug("Store entity");
-	
 		// Check for read-only
 		if (readOnly)
 			return;
@@ -983,9 +1113,17 @@ public class JAWSPersistenceManager
             selectSql += (i==0?"":",") + field.getColumnName();
          }
       }
-      
+
       selectSql += " FROM "+tableName+ " WHERE "+pkColumnWhereList;
       log.debug("Select:"+selectSql);
+	  
+	  
+      // Exist SQL query
+	  existSql = "SELECT COUNT(*) AS Total FROM " + tableName+ " WHERE "+pkColumnWhereList;
+	 
+	  log.debug("Exists:"+existSql);
+
+	  
       
 /*      // Update SQL fields
       updateSql = "UPDATE "+tableName+" SET ";
