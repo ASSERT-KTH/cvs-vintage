@@ -43,7 +43,7 @@ import org.jboss.logging.Logger;
 * @see org.jboss.system.Service
 * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
 * @author <a href="mailto:d_jencks@users.sourceforge.net">David Jencks</a>
-* @version $Revision: 1.17 $ <p>
+* @version $Revision: 1.18 $ <p>
 *
 * <b>Revisions:</b> <p>
 *
@@ -336,7 +336,7 @@ implements ServiceControllerMBean, MBeanRegistration
       // JSR 77
       ctx.state = ServiceContext.RUNNING;
       
-      installedServices.add(ctx.objectName);
+      installedServices.add(ctx);
       
       // Those that depend on me are waiting for my creation, recursively create them
       Iterator iterator2 = ctx.dependsOnMe.iterator();
