@@ -1,4 +1,4 @@
-// $Id: UMLComboBoxModel.java,v 1.29 2003/12/12 19:51:55 mkl Exp $
+// $Id: UMLComboBoxModel.java,v 1.30 2003/12/13 12:27:10 mkl Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: UMLComboBoxModel.java
 // Classes: UMLComboBoxModel
 // Original Author: 
-// $Id: UMLComboBoxModel.java,v 1.29 2003/12/12 19:51:55 mkl Exp $
+// $Id: UMLComboBoxModel.java,v 1.30 2003/12/13 12:27:10 mkl Exp $
 
 package org.argouml.uml.ui;
 
@@ -232,6 +232,8 @@ public class UMLComboBoxModel extends AbstractListModel implements
                 cat.error(e.toString() + ". " +
                                    this.getClass().toString() +
                                    ": invalid filter method " + filter, e);
+                cat.error("Need to rethrow this exception as RuntimeException.");
+		throw new RuntimeException(e.toString());
             }
         }
 
@@ -245,6 +247,8 @@ public class UMLComboBoxModel extends AbstractListModel implements
                 cat.error(e.toString() + ". " +
                                    this.getClass().toString() +
                                    ": invalid get method " + getMethod, e);
+                cat.error("Need to rethrow this exception as RuntimeException.");
+		throw new RuntimeException(e.toString());
             }
         }
 
@@ -261,7 +265,7 @@ public class UMLComboBoxModel extends AbstractListModel implements
                                    this.getClass().toString() +
                                    ": invalid set method " + setMethod, e);
 		cat.error("Need to rethrow this exception as RuntimeException.");
-		throw new RuntimeException(e);
+		throw new RuntimeException(e.toString());
             }
         }
     }
