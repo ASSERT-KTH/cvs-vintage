@@ -16,7 +16,7 @@
 #set ($selectAction = $moveIssueGroup.Action)
 #set ($moduleId = $moveIssueGroup.ModuleId)
 #set ($module = $scarabR.CurrentModule)
-#set($newModule = $scarabR.getModule("$moduleId"))
+#set ($newModule = $scarabR.getModule("$moduleId"))
 
 #set ($matchingAttributes = $issue.getMatchingAttributeValuesList("$moduleId"))
 #set ($orphanAttributes = $issue.getOrphanAttributeValuesList("$moduleId"))
@@ -76,7 +76,6 @@
  </tr>
 </table>
 
-
 <div class="axial"> <table border="1" cellspacing="2" cellpadding="3">
 <tr>
 <th width="120">Destination module / issue type</th>
@@ -87,8 +86,6 @@
 </tr>
 </table>
 </div>
-
-
 
 <h3>Attribute mapping results</h3>
 <div class="sidebyside">
