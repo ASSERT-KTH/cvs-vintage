@@ -1,12 +1,11 @@
 /*
- * JBoss, the OpenSource J2EE webOS
- *
- * Distributable under LGPL license.
- * See terms of license at gnu.org.
- */
-
+* JBoss, the OpenSource J2EE webOS
+*
+* Distributable under LGPL license.
+* See terms of license at gnu.org.
+*/
 package org.jboss.invocation;
-
+ 
 import java.io.DataOutputStream;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -19,61 +18,72 @@ import java.util.Map;
 import java.util.Iterator;
 import java.util.HashMap;
 import java.util.WeakHashMap;
-
 import javax.transaction.Transaction;
 
 import org.jboss.invocation.Invocation;
 
-import org.jboss.logging.Logger;
-
 /**
- * The MarshalledInvocation is an invocation that travels.  As such it 
- * serializes its payload because of lack of ClassLoader visibility.
- * As such it contains Marshalled data representing the byte[] of the 
- * Invocation object it extends. Besides handling the specifics of 
- * "marshalling" the payload, which could be done at the Invocation level,
- * the Marshalled Invocation can hold optimization and needed code for 
- * distribution.  For example, it can contains the 
- * TransactionPropagationContext, which is a serialization of the TX, for 
- * distribution purposes as well as the "hash" for the methods that we send, 
- * as opposed to sending Method objects. Serialization "optimizations" should 
- * be coded here in the externalization implementation of the class
- *
- * @author  <a href="mailto:marc@jboss.org">Marc Fleury</a>
- * @version $Revision: 1.11 $
- *
- * <p><b>Revisions:</b>
- *
- * <p><b>20020719 bill burke:</b>
- * <ul>
- * <li>Custom externalization for payload hashmaps, OBJECT_NAME, ARGUMENTS, METHOD
- * are all put directly on wire now instead of in payload.  3 less keys to worry about.
- * </ul>
- */
+* The MarshalledInvocation is an invocation that travels.  As such it serializes
+* its payload because of lack of ClassLoader visibility.
+* As such it contains Marshalled data representing the byte[] of the Invocation object it extends
+* Besides handling the specifics of "marshalling" the payload, which could be done at the Invocation level
+* the Marshalled Invocation can hold optimization and needed code for distribution for example the 
+* TransactionPropagationContext which is a serialization of the TX for distribution purposes as
+* well as the "hash" for the methods that we send, as opposed to sending Method objects. 
+* Serialization "optimizations" should be coded here in the externalization implementation of the class
+*
+*   @see <related>
+*   @author  <a href="mailto:marc@jboss.org">Marc Fleury</a>
+*   @version $Revision: 1.12 $
+*   Revisions:
+*
+*   <p><b>Revisions:</b>
+*
+*   <p><b>2001120 marc fleury:</b>
+*   <ul>
+*   <li> Initial check-in
+*   </ul>
+*   <p><b>20020113 Sacha Labourey:</b>
+*   <ul>
+*   <li> Make Externalizable calls (writeExternal) idempotent: until now,
+*  serialization on a MarshalledInvocation could only performed once (transaction was removed 
+*  and METHOD type was modified). If another call was re-using the same object (in 
+*  clustering for example), the call was making a ClassCastException because of 
+*  the changed METHOD type in the Map that occured in the previous call to writeExternal)
+*   </ul>
+ *   <p><b>20020911 Bill Burke:</b>
+ *   <ul>
+ *   <li> Optimize access to certain variables.  Avoid hash lookups.
+ *   </ul>
+*/
 public class MarshalledInvocation
-   extends Invocation
-   implements java.io.Externalizable
+extends Invocation
+implements java.io.Externalizable
 {
-   private static final Logger log = 
-         Logger.getLogger(MarshalledInvocation.class);
+   // Constants -----------------------------------------------------
    
    /** Serial Version Identifier. */
-   private static final long serialVersionUID = -718723094688127810L;
+   static final long serialVersionUID = -718723094688127810L;
    
-   /** The Transaction Propagation Context for distribution. */
-   private Object tpc;
+   // The Transaction Propagation Context for distribution
+   Object tpc;
    
-   /** The Map of methods used by this Invocation. */
-   private transient Map methodMap;
+   // The Map of methods used by this Invocation
+   transient Map methodMap;
+
+   // These are here to avoid unneeded hash lookup
+   protected transient long methodHash = 0;
+   protected transient MarshalledValue marshalledArgs = null;
    
-   private static Map hashMap = new WeakHashMap();
+   // Static --------------------------------------------------------
+   static Map hashMap = new WeakHashMap();
    
    /**
-    * Calculate method hashes. This algo is taken from RMI.
-    *
-    * @param   intf 
-    * @return     
-    */
+   * Calculate method hashes. This algo is taken from RMI.
+   *
+   * @param   intf  
+   * @return     
+   */
    public static Map getInterfaceHashes(Class intf)
    {
       // Create method hashes
@@ -93,11 +103,9 @@ public class MarshalledInvocation
          try
          {
             long hash = 0;
-            ByteArrayOutputStream bytearrayoutputstream = 
-                  new ByteArrayOutputStream(512);
+            ByteArrayOutputStream bytearrayoutputstream = new ByteArrayOutputStream(512);
             MessageDigest messagedigest = MessageDigest.getInstance("SHA");
-            DataOutputStream dataoutputstream = new DataOutputStream(
-                  new DigestOutputStream(bytearrayoutputstream, messagedigest));
+            DataOutputStream dataoutputstream = new DataOutputStream(new DigestOutputStream(bytearrayoutputstream, messagedigest));
             dataoutputstream.writeUTF(methodDesc);
             dataoutputstream.flush();
             byte abyte0[] = messagedigest.digest();
@@ -107,7 +115,7 @@ public class MarshalledInvocation
          }
          catch (Exception e)
          {
-            log.error("failed to generate method hash", e);
+            e.printStackTrace();
          }
       }
       
@@ -119,56 +127,46 @@ public class MarshalledInvocation
       if (cl == Byte.TYPE)
       {
          return "B";
-      }
-      else if (cl == Character.TYPE)
+      } else if (cl == Character.TYPE)
       {
          return "C";
-      }
-      else if (cl == Double.TYPE)
+      } else if (cl == Double.TYPE)
       {
          return "D";
-      }
-      else if (cl == Float.TYPE)
+      } else if (cl == Float.TYPE)
       {
          return "F";
-      }
-      else if (cl == Integer.TYPE)
+      } else if (cl == Integer.TYPE)
       {
          return "I";
-      }
-      else if (cl == Long.TYPE)
+      } else if (cl == Long.TYPE)
       {
          return "J";
-      }
-      else if (cl == Short.TYPE)
+      } else if (cl == Short.TYPE)
       {
          return "S";
-      }
-      else if (cl == Boolean.TYPE)
+      } else if (cl == Boolean.TYPE)
       {
          return "Z";
-      }
-      else if (cl == Void.TYPE)
+      } else if (cl == Void.TYPE)
       {
          return "V";
-      }
-      else if (cl.isArray())
+      } else if (cl.isArray())
       {
          return "["+getTypeString(cl.getComponentType());
-      }
-      else
+      } else
       {
          return "L"+cl.getName().replace('.','/')+";";
       }
    }
    
-   /**
-    * The use of hashCode is not enough to differenciate methods
-    * we override the hashCode
-    *
-    * The hashes are cached in a static for efficiency
-    * RO: WeakHashMap needed to support undeploy
-    */
+   /*
+   * The use of hashCode is not enough to differenciate methods
+   * we override the hashCode
+   *
+   * The hashes are cached in a static for efficiency
+   * RO: WeakHashMap needed to support undeploy
+   */
    public static long calculateHash(Method method)
    {
       Map methodHashes = (Map)hashMap.get(method.getDeclaringClass());
@@ -186,21 +184,24 @@ public class MarshalledInvocation
       
       return ((Long)methodHashes.get(method.toString())).longValue();
    }
-
-   /**
-    * Exposed for externalization.
-    */
+   
+   // Constructors --------------------------------------------------
    public MarshalledInvocation()
    {
-      super();
+      // For externalization to work
    }
    
    public MarshalledInvocation(Invocation invocation) 
    {
-      super(invocation.payload);
+      this.payload = invocation.payload;
       this.as_is_payload = invocation.as_is_payload;
+      this.method = invocation.getMethod();
+      this.objectName = invocation.getObjectName();
+      this.args = invocation.getArguments();
    }
    
+
+   /*
    public MarshalledInvocation(Map payload) 
    {   
       super(payload);
@@ -211,7 +212,7 @@ public class MarshalledInvocation
       super(payload);
       this.as_is_payload = as_is_payload;
    }
-   
+   */
    public MarshalledInvocation(
       Object id, 
       Method m, 
@@ -222,60 +223,50 @@ public class MarshalledInvocation
    {
       super(id, m, args, tx, identity, credential);
    }
+   // Public --------------------------------------------------------
+   
    
    public Method getMethod()
    {
-      Object value = getValue(InvocationKey.METHOD);
+      if (this.method != null) return this.method;
+
+      // Try the hash, the methodMap should be set
+      this.method = (Method)methodMap.get(new Long(methodHash));
       
-      if (value instanceof Method) {
-         return (Method) value;
+      // Keep it in the payload
+      if (this.method == null)
+      {
+         throw new IllegalStateException("METHOD IS NOT FOUND");
       }
-      else {
-         // Try the hash, the methodMap should be set
-         Method m = (Method)methodMap.get(value);
-         
-         // Keep it in the payload
-         if (m != null)  
-         {
-            transient_payload.put(InvocationKey.METHOD, m);
-            
-            return m;
-         }
-         // This is a bug barf
-         else 
-         {
-            throw new RuntimeException("METHOD IS NOT FOUND: " + value);
-         }
-      }
+      return this.method;
    }
+   
    
    public void setMethodMap(Map methods)
    {
       methodMap = methods;
    }
    
-   /**
-    * The transaction propagation context for the Invocation that travels
-    * (distributed tx only).
-    */
-   public void setTransactionPropagationContext(final Object tpc)
+   // The transaction propagation context for the Invocation that travels (distributed tx only)
+   public void setTransactionPropagationContext(Object tpc)
    {
       this.tpc = tpc;
    }
-   
    public Object getTransactionPropagationContext()
    {
       return tpc;
    }
    
-   /**
-    * A Marshalled invocation has serialized data in the form of
-    * MarshalledValue objects. We overwrite the "getValue" to deserialize the
-    * data, this assume that the thread context class loader has visibility
-    * on the classes.
-    */
+   // Invocation overwrite -----------------------------------------
+   
+   /** A Marshalled invocation has serialized data in the form of
+   MarshalledValue objects. We overwrite the "getValue" to deserialize the
+   data, this assume that the thread context class loader has visibility
+   on the classes.
+   */
    public Object getValue(Object key) 
    { 
+      
       Object value = super.getValue(key);
       
       // The map may contain serialized values of the fields
@@ -289,13 +280,57 @@ public class MarshalledInvocation
          // Barf and return null
          catch (Exception e)
          {
-            log.error("Failed to get value", e);
+            e.printStackTrace();
             value = null;
          }
       }
       return value;
    }
-   
+
+   /** A Marshalled invocation has serialized data in the form of
+   MarshalledValue objects. We overwrite the "getValue" to deserialize the
+   data, this assume that the thread context class loader has visibility
+   on the classes.
+   */
+   public Object getPayloadValue(Object key) 
+   { 
+      
+      Object value = payload.get(key);
+      
+      // The map may contain serialized values of the fields
+      if (value instanceof MarshalledValue)
+      {
+         try
+         {
+            MarshalledValue mv = (MarshalledValue) value;
+            value = mv.get();
+         }   
+         // Barf and return null
+         catch (Exception e)
+         {
+            e.printStackTrace();
+            value = null;
+         }
+      }
+      return value;
+   }
+
+   public Object[] getArguments() 
+   { 
+      if (this.args == null)
+      {
+         try
+         {
+            this.args = (Object[])marshalledArgs.get();
+         }
+         catch (Exception e)
+         {
+            e.printStackTrace();
+         }
+      }
+      return args; 
+   }
+
    // Externalizable implementation ---------------------------------
    public void writeExternal(java.io.ObjectOutput out)
    throws IOException
@@ -305,13 +340,11 @@ public class MarshalledInvocation
       // Write the TPC, not the local transaction
       out.writeObject(tpc);
 
-      Method method = (Method)payload.get(InvocationKey.METHOD);
-      long methodHash = calculateHash(method);
+      long methodHash = calculateHash(this.method);
       out.writeLong(methodHash);
       
-      out.writeObject(payload.get(InvocationKey.OBJECT_NAME));
-      // REVISIT: MarshalledValue is inefficient
-      out.writeObject(new MarshalledValue(payload.get(InvocationKey.ARGUMENTS)));
+      out.writeObject(this.objectName);
+      out.writeObject(new MarshalledValue(this.args));
 
 
       // Write out payload hashmap
@@ -322,7 +355,7 @@ public class MarshalledInvocation
       // server but not in the generic JMX land. they will travel in the  payload
       // as MarshalledValue objects, see the Invocation getter logic
       //
-      out.writeInt(payload.size() - 3);
+      out.writeInt(payload.size());
       
       Iterator keys = payload.keySet().iterator();
       while (keys.hasNext())
@@ -332,20 +365,8 @@ public class MarshalledInvocation
          // This code could be if (object.getClass().getName().startsWith("java")) then don't serialize. 
          // Bench the above for speed.
          
-         //Replace the current object with a Marshalled representation
-         if (currentKey == InvocationKey.METHOD
-             || currentKey == InvocationKey.ARGUMENTS
-             || currentKey == InvocationKey.OBJECT_NAME)
-         {
-            // We write the hash instead of the method
-            continue;
-         }
-         else
-         {
-            out.writeObject(currentKey);
-            // REVISIT: MarshalledValue is inefficient
-            out.writeObject(new MarshalledValue(payload.get(currentKey)));
-         }
+         out.writeObject(currentKey);
+         out.writeObject(new MarshalledValue(payload.get(currentKey)));
       }
       
       // This map is "safe" as is
@@ -369,11 +390,11 @@ public class MarshalledInvocation
 
       // Read TPC
       tpc = in.readObject();
-      long methodHash = in.readLong();
-      payload.put(InvocationKey.METHOD, new Long(methodHash));
+      this.methodHash = in.readLong();
+      
+      this.objectName = in.readObject();
 
-      payload.put(InvocationKey.OBJECT_NAME, in.readObject());
-      payload.put(InvocationKey.ARGUMENTS, in.readObject());
+      marshalledArgs = (MarshalledValue)in.readObject();
 
       int payloadSize = in.readInt();
       for (int i = 0; i < payloadSize; i++)

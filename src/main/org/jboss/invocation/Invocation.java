@@ -9,7 +9,7 @@ package org.jboss.invocation;
 
 import java.util.Map;
 import java.util.HashMap;
-
+ 
 import java.lang.reflect.Method;
 
 import java.security.Principal;
@@ -28,7 +28,11 @@ import javax.transaction.Transaction;
  *    pointers.  But really it is just  a repository of objects. 
  *
  * @author  <a href="mailto:marc@jboss.org">Marc Fleury</a>
- * @version $Revision: 1.10 $
+ * @version $Revision: 1.11 $
+ *   <p><b>20020911 Bill Burke:</b>
+ *   <ul>
+ *   <li> Optimize access to certain variables.  Avoid hash lookups
+ *   </ul>
  */
 public class Invocation
 {
@@ -52,6 +56,11 @@ public class Invocation
    /** Payload will be marshalled for type hiding at the RMI layers. */
    public Map payload = new HashMap();
    
+   protected InvocationContext invocationContext = null;
+   protected Object[] args = null;
+   protected Object objectName = null;
+   protected Method method = null;
+
    // The variables used to indicate what type of data and where to put it.
 
    //
@@ -67,15 +76,6 @@ public class Invocation
    public Invocation() 
    {
       super();
-   }
-   
-   /**
-    * Invocation creation
-    */
-   public Invocation(final Map payload) 
-   {   
-      // The generic payload
-      this.payload = payload; 
    }
    
    public Invocation(
@@ -145,20 +145,19 @@ public class Invocation
    public Object getValue(Object key) 
    { 
       // find where it is
-      if (payload.containsKey(key))
-      {
-         return payload.get(key);
-      }
-      else if (as_is_payload.containsKey(key))
-      {
-         return as_is_payload.get(key);
-      }
-      else if (transient_payload.containsKey(key))
-      {
-         return transient_payload.get(key);
-      }
-      
-      return null;
+      Object rtn = payload.get(key);
+      if (rtn != null) return rtn;
+
+      rtn = as_is_payload.get(key);
+      if (rtn != null) return rtn;
+
+      rtn = transient_payload.get(key);
+      return rtn;
+   }
+   
+   public Object getPayloadValue(Object key)
+   {
+      return payload.get(key);
    }
    
    //
@@ -183,7 +182,7 @@ public class Invocation
     */
    public Transaction getTransaction()
    {
-      return (Transaction) getValue(InvocationKey.TRANSACTION);
+      return (Transaction)as_is_payload.get(InvocationKey.TRANSACTION);
    }
    
    /**
@@ -196,7 +195,7 @@ public class Invocation
    
    public Principal getPrincipal()
    {
-      return (Principal) getValue(InvocationKey.PRINCIPAL);
+      return (Principal) as_is_payload.get(InvocationKey.PRINCIPAL);
    }
    
    /**
@@ -209,7 +208,7 @@ public class Invocation
    
    public Object getCredential()
    {
-      return getValue(InvocationKey.CREDENTIAL);
+      return getPayloadValue(InvocationKey.CREDENTIAL);
    }
    
    /**
@@ -217,12 +216,12 @@ public class Invocation
     */
    public void setObjectName(Object objectName)
    {
-      payload.put(InvocationKey.OBJECT_NAME, objectName);
+      this.objectName = objectName;
    }
    
    public Object getObjectName()
    {
-      return getValue(InvocationKey.OBJECT_NAME);
+      return objectName;
    }
    
    /**
@@ -236,7 +235,7 @@ public class Invocation
    public InvocationType getType()
    {
       InvocationType type = InvocationType.LOCAL;
-      InvocationType invType = (InvocationType) getValue(InvocationKey.TYPE);
+      InvocationType invType = (InvocationType) as_is_payload.get(InvocationKey.TYPE);
       if( invType != null )
          type = invType;
       return type;
@@ -252,7 +251,7 @@ public class Invocation
    
    public Object getId()
    {
-      return getValue(InvocationKey.CACHE_ID);
+      return getPayloadValue(InvocationKey.CACHE_ID);
    }
    
    /**
@@ -260,7 +259,7 @@ public class Invocation
     */
    public void setMethod(Method method)
    {
-      payload.put(InvocationKey.METHOD, method);
+      this.method = method;
    }
    
    /**
@@ -268,7 +267,7 @@ public class Invocation
     */
    public Method getMethod()
    {
-      return (Method) getValue(InvocationKey.METHOD);
+      return method;
    }
    
    /**
@@ -276,20 +275,25 @@ public class Invocation
     */
    public void setArguments(Object[] arguments)
    {
-      payload.put(InvocationKey.ARGUMENTS, arguments);
+      this.args = arguments;
    }
    
    public Object[] getArguments()
    {
-      return (Object[]) getValue(InvocationKey.ARGUMENTS);
+      return this.args;
    }
    
    /**
     * marcf: SCOTT WARNING! I removed the "setPrincipal" that was called here
     */
+   public InvocationContext getInvocationContext()
+   {
+      return invocationContext;
+   }
+
    public void setInvocationContext(InvocationContext ctx)
    {
-      transient_payload.put(InvocationKey.INVOCATION_CONTEXT, ctx);
+      this.invocationContext = ctx;
    }
    
    public void setEnterpriseContext(Object ctx)
@@ -302,10 +306,5 @@ public class Invocation
       return (Object) transient_payload.get(InvocationKey.ENTERPRISE_CONTEXT);
    }
 
-   public InvocationContext getInvocationContext()
-   {
-      return (InvocationContext) transient_payload.get(
-            InvocationKey.INVOCATION_CONTEXT);
-   }
 
 }
