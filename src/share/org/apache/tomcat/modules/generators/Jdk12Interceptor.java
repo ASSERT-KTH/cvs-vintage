@@ -93,11 +93,16 @@ public final class Jdk12Interceptor extends  BaseInterceptor {
 
 	// after include, reset the class loader
 	// fix for 1112
-	request=child.getParent();
-	if( request != null )
-	    fixJDKContextClassLoader(request.getContext());
+	Request chParent=child.getParent();
+	if( chParent != null )
+	    fixJDKContextClassLoader(chParent.getContext());
 	else
-	    jdk11Compat.setContextClassLoader(this.getClass().getClassLoader());
+	    fixJDKContextClassLoader(request.getContext());
+	return 0;
+    }
+
+    public int postRequest(Request request, Response response) {
+	jdk11Compat.setContextClassLoader(this.getClass().getClassLoader());
 	return 0;
     }
 
