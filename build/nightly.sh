@@ -9,6 +9,7 @@ echo "Runbox update started: "
 date
 
 TURBINE="../../jakarta-turbine"
+TORQUE="../../jakarta-turbine-torque"
 SCARAB=".."
 DIR=`pwd`
 CVSUPDATE=1
@@ -57,8 +58,24 @@ else
     echo "Turbine bin directory does not exist..."    
 fi
 
+cd ${DIR}
+if [ -d ${TORQUE}/bin ] ; then
+    echo "Removing Torque ${TORQUE}/bin directory..."
+    cd ${DIR}; cd ${TORQUE}
+    rm -r bin
+else
+    echo "Torque bin directory does not exist..."    
+fi
+
 ## Update things from CVS
 if [ ${CVSUPDATE} -gt 0 ] ; then
+    echo "Updating Torque From CVS Start..."
+    date
+    cd ${DIR}; cd ${TORQUE}
+    cvs update
+    echo "Updating Torque From CVS Finish..."
+    date
+
     echo "Updating Turbine From CVS Start..."
     date
     cd ${DIR}; cd ${TURBINE}
@@ -83,6 +100,11 @@ rm -rf ${SCARAB}/lib/turbine*.jar
 rm -rf ${SCARAB}/lib/torque*.zip
 
 ## Build things now
+echo "Building Torque Start..."
+cd ${DIR}; cd ${TORQUE}/build
+ant dist
+echo "Building Torque Finish..."
+
 echo "Building Turbine Start..."
 cd ${DIR}; cd ${TURBINE}/build
 ant jar
@@ -90,7 +112,8 @@ echo "Building Turbine Finish..."
 
 echo "Building Scarab Start..."
 cd ${DIR}; cd ${SCARAB}/build
-./build.sh
+ant upgrade-torque-turbine
+ant
 echo "Building Scarab Finish..."
 
 echo "Recreating the database..."
