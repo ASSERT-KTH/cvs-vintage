@@ -113,7 +113,7 @@ in the contrib/tomcat module.
 @see org.jboss.security.SecurityAssociation;
 
 @author  <a href="mailto:Scott_Stark@displayscape.com">Scott Stark</a>.
-@version $Revision: 1.6 $
+@version $Revision: 1.7 $
 */
 public abstract class AbstractWebContainer extends ServiceMBeanSupport implements AbstractWebContainerMBean
 {
@@ -289,6 +289,9 @@ public abstract class AbstractWebContainer extends ServiceMBeanSupport implement
             // Create a java:comp/env environment unique for the web application
             Thread.currentThread().setContextClassLoader(loader);
             envCtx = (Context) iniCtx.lookup("java:comp");
+            // Add a link to the global transaction manager
+            envCtx.bind("UserTransaction", new LinkRef("UserTransaction"));
+            // Create the web app ENC
             envCtx = envCtx.createSubcontext("env");
         }
         finally
