@@ -68,7 +68,7 @@ import org.gjt.sp.util.Log;
  *
  * @author Slava Pestov
  * @author John Gellene (API documentation)
- * @version $Id: MiscUtilities.java,v 1.74 2004/06/08 20:25:26 spestov Exp $
+ * @version $Id: MiscUtilities.java,v 1.75 2004/07/17 05:36:41 spestov Exp $
  */
 public class MiscUtilities
 {
@@ -183,9 +183,11 @@ public class MiscUtilities
 			if(path.length() == 2 && path.charAt(1) == ':')
 				return true;
 			if(path.length() > 2 && path.charAt(1) == ':'
-				&& path.charAt(2) == '\\')
+				&& (path.charAt(2) == '\\'
+				|| path.charAt(2) == '/'))
 				return true;
-			if(path.startsWith("\\\\"))
+			if(path.startsWith("\\\\")
+				|| path.startsWith("//"))
 				return true;
 		}
 		// not sure if this is correct for OpenVMS.
