@@ -10,6 +10,7 @@
   </font> </h3>
 <font color="#0000FF"></font> 
 <pre><font color="#0000FF">import</font> java.io.*;
+<font color="#0000FF">import</font> java.util.*;
 <font color="#0000FF">import</font> javax.servlet.*;
 <font color="#0000FF">import</font> javax.servlet.http.*;
 
@@ -34,20 +35,18 @@
         <font color="#CC0000">// set session info if needed</font>
 
         String dataName = request.getParameter(&quot;<font color="#009900">dataName</font>&quot;);
-        if (dataName != null &amp;&amp; dateName.length() &gt; 0) {
+        if (dataName != null &amp;&amp; dataName.length() &gt; 0) {
             String dataValue = request.getParameter(&quot;<font color="#009900">dataValue</font>&quot;);
-            session.putValue(dataName, dataValue);
+            session.setAttribute(dataName, dataValue);
         }
 
         // print session contents
 
-        String[] valueNames = session.getValueNames();
-        if (valueNames != null &amp;&amp; valueNames.length &gt; 0) {
-            for (int i = 0; i &lt; valueNames.length; i++) {
-                String name = valueNames[i];
-                String value = session.getValue(name).toString();
-                out.println(name + &quot; <font color="#009900">= </font>&quot; + value);
-            }
+        Enumeration e = session.getAttributeNames();
+        while (e.hasMoreElements()) {
+            String name = (String)e.nextElement();
+            String value = session.getAttribute(name).toString();
+            out.println(name + &quot; <font color="#009900">= </font>&quot; + value);
         }
     }
 }</pre>

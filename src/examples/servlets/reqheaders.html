@@ -10,6 +10,7 @@
   </font> </h3>
 <font color="#0000FF"></font>
 <pre><font color="#0000FF">import</font> java.io.*;
+<font color="#0000FF">import</font> java.util.*;
 <font color="#0000FF">import</font> javax.servlet.*;
 <font color="#0000FF">import</font> javax.servlet.http.*;
 
@@ -20,10 +21,10 @@
     {
         response.setContentType(&quot;<font color="#009900">text/html</font>&quot;);
         PrintWriter out = response.getWriter();
-        Enumeration e = req.getHeaderNames();
+        Enumeration e = request.getHeaderNames();
         while (e.hasMoreElements()) {
             String name = (String)e.nextElement();
-            String value = req.getHeader(name);
+            String value = request.getHeader(name);
             out.println(name + &quot;<font color="#009900"> = </font>&quot; + value);
         }
     }

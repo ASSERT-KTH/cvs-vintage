@@ -33,11 +33,11 @@
 
         <font color="#CC0000">// set a cookie</font>
 
-        String name = request.getParamter(&quot;<font color="#009900">cookieName</font>&quot;);
+        String name = request.getParameter(&quot;<font color="#009900">cookieName</font>&quot;);
         if (name != null &amp;&amp; name.length() &gt; 0) {
-            String value = req.getParameter(&quot;<font color="#009900">cookieValue</font>&quot;);
+            String value = request.getParameter(&quot;<font color="#009900">cookieValue</font>&quot;);
             Cookie c = new Cookie(name, value);
-            res.addCookie(c);
+            response.addCookie(c);
         }
     }
 }</pre>

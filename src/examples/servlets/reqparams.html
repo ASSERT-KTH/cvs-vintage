@@ -10,6 +10,7 @@
   </font> </h3>
 <font color="#0000FF"></font> 
 <pre><font color="#0000FF">import</font> java.io.*;
+<font color="#0000FF">import</font> java.util.*;
 <font color="#0000FF">import</font> javax.servlet.*;
 <font color="#0000FF">import</font> javax.servlet.http.*;
 
@@ -30,7 +31,7 @@
 	PrintWriter out = res.getWriter ();
         while (e.hasMoreElements()) {
             String name = (String)e.nextElement();
-            String value = request.getParamter(name);
+            String value = request.getParameter(name);
             out.println(name + &quot;<font color="#009900"> = </font>&quot; + value);
         }
     }
