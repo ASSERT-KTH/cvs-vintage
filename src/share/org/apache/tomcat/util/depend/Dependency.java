@@ -63,56 +63,100 @@ import java.util.*;
 import java.util.zip.*;
 import java.security.*;
 
-/**
+/** Represents a dependency between a real file and a server object.
+ *  The servler object has a timestamp, and it is compared with the
+ *  file lastModified time to detect changes.
+ * 
+ *  The DependManager will do the checkings ( with the minimal possible
+ *  overhead ). 
  */
-public class Dependency {
-
-
+public final class Dependency {
+    
+    private File origin;
+    private long lastModified;
+    private Object target;
+    private boolean localDep=false;
+    private boolean expired=false;
+    
     public Dependency() {
     }
 
-    long lastModified;
-    
     /**
-     * Get the value of lastModified.
-     * @return Value of lastModified.
+     * The time when the server-side object has been loaded/modified.
+     * 
+     * @param v  modification time 
      */
-    public long getLastModified() {return lastModified;}
-    
+    public void setLastModified(long  v) {
+	this.lastModified = v;
+    }
+
+    public long getLastModified() {
+	return lastModified;
+    }
+
     /**
-     * Set the value of lastModified.
-     * @param v  Value to assign to lastModified.
+     * If set, the dependency will be "local", i.e. will be marked as
+     * expired but the DependManager will not triger an expire at a higher
+     * level ( example: if a JSP changes, no need to reload the context )
      */
-    public void setLastModified(long  v) {this.lastModified = v;}
+    public void setLocal(boolean b) {
+	localDep=b;
+    }
 
-    
-    File origin;
-    
-    /**
-       * Get the value of origin.
-       * @return Value of origin.
-       */
-    public File getOrigin() {return origin;}
-    
-    /**
-       * Set the value of origin.
-       * @param v  Value to assign to origin.
-       */
-    public void setOrigin(File  v) {this.origin = v;}
-    
-    Object target;
+    public boolean isLocal() {
+	return localDep;
+    }
+
+    /** Mark this dependency as expired.
+     */
+    public void setExpired( boolean b ) {
+	expired=b;
+    }
+
+    public boolean isExpired() {
+	return expired;
+    }
     
     /**
-       * Get the value of target.
-       * @return Value of target.
-       */
-    public Object getTarget() {return target;}
+     * The file on which the server-side object depends or has been
+     * loaded from.
+     * 
+     * @param v  Value to assign to origin.
+     */
+    public void setOrigin(File  v) {
+	this.origin = v;
+    }
+    
+    public File getOrigin() {
+	return origin;
+    }
+    
     
     /**
-       * Set the value of target.
-       * @param v  Value to assign to target.
-       */
-    public void setTarget(Object  v) {this.target = v;}
+     * Server-side object that is checked for dependency on the file.
+     *
+     * @param v  Value to assign to target.
+     */
+    public void setTarget(Object  v) {
+	this.target = v;
+    }
+    
+    public Object getTarget() {
+	return target;
+    }
     
 
+    // -------------------- methods --------------------
+
+    /** Check if the origin changed since target's was lastModified.
+     *  This will be called periodically by DependManager or can
+     *  be called to force a check for this particular dependency.
+     */
+    public boolean checkExpiry() {
+	if( lastModified < origin.lastModified() ) {
+	    expired=true;
+	    return true;
+	}
+	return false;
+    }
 }

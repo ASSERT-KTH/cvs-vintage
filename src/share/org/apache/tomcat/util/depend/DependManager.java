@@ -141,15 +141,17 @@ public class DependManager {
 		//exact science ( and no dep can be removed)
 		for( int i=0; i<depsCount; i++ ) {
 		    Dependency d=deps[i];
-		    long lm=d.getLastModified();
-		    File f=d.getOrigin();
-		    if( lm < f.lastModified() ) {
+		    if( d.checkExpiry() ) {
 			// something got modified
-			//			if( debug>0 )
 			if( debug > 0)
-			    log("Found expired4 file " + f.getName());
-			expired=true;
-			// at least one file is expired
+			    log("Found expired file " +
+				d.getOrigin().getName());
+
+			if( ! d.isLocal() ) {
+			    // if d is local, it'll just be marked as expired,
+			    // the DependManager will not.
+			    expired=true;
+			}
 		    }
 		}
 		checkTime += lastCheck-startCheck;
