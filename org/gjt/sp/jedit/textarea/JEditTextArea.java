@@ -50,7 +50,7 @@ import org.gjt.sp.util.Log;
  * jEdit's text component.
  *
  * @author Slava Pestov
- * @version $Id: JEditTextArea.java,v 1.102 2002/03/07 10:03:25 spestov Exp $
+ * @version $Id: JEditTextArea.java,v 1.103 2002/03/08 05:04:29 spestov Exp $
  */
 public class JEditTextArea extends JComponent
 {
@@ -602,7 +602,15 @@ public class JEditTextArea extends JComponent
 			// line in question is only partially visible
 			else if(line == physLastLine)
 			{
-				
+				System.err.println("fool!");
+				int count = chunkCache.getLineInfosForPhysicalLine(physLastLine).length;
+				while(count > 0)
+				{
+					count -= chunkCache.getLineInfosForPhysicalLine(physFirstLine).length;
+					physFirstLine = foldVisibilityManager.getNextVisibleLine(physFirstLine);
+				}
+				firstLine = foldVisibilityManager.physicalToVirtual(physFirstLine);
+				System.err.println("pfl=" + physFirstLine + ":fl=" + firstLine);
 			}
 			else if(line == physLastLine + 1)
 			{

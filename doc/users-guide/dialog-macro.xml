@@ -3,7 +3,7 @@
 <!-- :indentSize=1:noTabs=yes:maxLineLen=72:tabSize=2:                  -->
 <!-- This file contains an extended discussion of a                     -->
 <!-- dialog-based macro example "Add_Prefix_and_Suffix.bsh"             -->
-<!-- $Id: dialog-macro.xml,v 1.6 2002/03/07 10:03:24 spestov Exp $
+<!-- $Id: dialog-macro.xml,v 1.7 2002/03/08 05:04:29 spestov Exp $
  -->
 
 <chapter id="dialog-macro"><title>A Dialog-Based Macro</title>
@@ -391,11 +391,12 @@ suffixField.addActionListener(this);</programlisting></informalexample>
     be implemented:
   </para>
 
-<methodsynopsis>
- <modifier>public</modifier><void/>
- <methodname>actionPerformed</methodname>
- <methodparam><type>ActionEvent</type><parameter>e</parameter></methodparam>
-</methodsynopsis>
+<funcsynopsis>
+ <funcprototype>
+  <funcdef>public void <function>actionPerformed</function></funcdef>
+  <paramdef>ActionEvent <parameter>e</parameter></paramdef>
+ </funcprototype>
+</funcsynopsis>
 
   <para>
     BeanShell does not permit a script to create derived classes.
