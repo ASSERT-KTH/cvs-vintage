@@ -44,18 +44,18 @@ public class UMLTextProperty  {
             _getMethod = elementClass.getMethod(getMethod,noClass);
         }
         catch(Exception e) {
-            System.out.println(e.toString() + " in UMLTextProperty: " + getMethod);
+            System.out.println(e.toString() + " in UMLTextProperty: " + getMethod);            // 2002-07-20            // Jaap Branderhorst            // If it is illegal we should throw an exception            throw new IllegalArgumentException("The method " +             	getMethod + " is not a legal method to get the property " + propertyName);            
         }
         Class[] stringClass = { String.class };
         try {
             _setMethod = elementClass.getMethod(setMethod,stringClass);
         }
         catch(Exception e) {
-            System.out.println(e.toString() + " in UMLTextProperty: " + setMethod);
+            System.out.println(e.toString() + " in UMLTextProperty: " + setMethod);            // 2002-07-20            // Jaap Branderhorst            // If it is illegal we should throw an exception            throw new IllegalArgumentException("The method " +             	setMethod + " is not a legal method to set the property " + propertyName);
         }
-    }
+    }        public void setProperty(UMLUserInterfaceContainer container,String newValue) throws Exception {    	setProperty(container, newValue, false);    }
 
-    public void setProperty(UMLUserInterfaceContainer container,String newValue) throws Exception {
+    public void setProperty(UMLUserInterfaceContainer container,String newValue, boolean vetoableCheck) throws Exception {
         if(_setMethod != null) {
             Object element = container.getTarget();
             if(element != null) {
@@ -68,8 +68,8 @@ public class UMLTextProperty  {
                         //  as long as they aren't both null 
                         //   (or a really rare identical string pointer)
                         if(newValue != oldValue) {
-                            Object[] args = { newValue };                            // 2002-07-18                            // Jaap Branderhorst                            // Patch for issue 738                            // if the setmethod trows a PropertyVetoException it should be handled.                            // it's handled by showing the user the message in the exception and not                            // marking the project for change if it is thrown.                            // this way the setmethod itself can check on some issues.                            try {
-                            	_setMethod.invoke(element,args);                            	// Mark the project as having been changed                             	Project p = ProjectBrowser.TheInstance.getProject(); 								if (p != null) p.setNeedsSave(true);                             }                            catch (InvocationTargetException inv) {                            	Throwable targetException = inv.getTargetException();                            	if (!(targetException instanceof PropertyVetoException)) {                            		Argo.log.error(inv);                            		Argo.log.error(targetException);                            	}                   				if (targetException instanceof Exception) {                   					throw (Exception)targetException;                   				}                   				System.exit(-1); // we have a real error                             	                            	        		                            }                            
+                            Object[] args = { newValue };                            // 2002-07-18                            // Jaap Branderhorst                            // Patch for issue 738                            // if the setmethod trows a PropertyVetoException it should be handled.                            // it's handled by showing the user the message in the exception and not                            // marking the project for change if it is thrown.                            // this way the setmethod itself can check on some issues.                            try {                            	if ((element instanceof VetoablePropertyChange &&                              		vetoableCheck &&                             		((VetoablePropertyChange)element).vetoCheck(_propertyName, args))) {                            			throw new PropertyVetoException(  											((VetoablePropertyChange)element).getVetoMessage(_propertyName)  ,  											new PropertyChangeEvent(element, _propertyName, oldValue, newValue));                            	}                            		
+                            	_setMethod.invoke(element,args);                            	// Mark the project as having been changed                             	Project p = ProjectBrowser.TheInstance.getProject(); 								if (p != null) p.setNeedsSave(true);                             }                            catch (InvocationTargetException inv) {                            	Throwable targetException = inv.getTargetException();                            	Argo.log.error(inv);                            	Argo.log.error(targetException);                   				if (targetException instanceof Exception) {                   					throw (Exception)targetException;                   				}                   				System.exit(-1); // we have a real error                             	        		                            }                            
                         }
                     }
                
