@@ -193,9 +193,9 @@ public class Main {
 		serverCl=new SimpleClassLoader(serverClassPath, commonCl);
             }
 
-            System.out.println("commonCl:"+commonCl);
-            System.out.println("sharedCl:"+sharedCl);
-            System.out.println("serverCl:"+serverCl);
+            //System.out.println("commonCl:"+commonCl);
+            //System.out.println("sharedCl:"+sharedCl);
+            //System.out.println("serverCl:"+serverCl);
 	    Class cls=serverCl.loadClass("org.apache.tomcat.startup.Tomcat");
 	    Object proxy=cls.newInstance();
 
