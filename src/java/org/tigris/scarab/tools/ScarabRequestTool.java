@@ -54,7 +54,6 @@ import org.apache.turbine.RunData;
 import org.apache.turbine.modules.Module;
 import org.apache.turbine.tool.IntakeTool;
 import org.apache.turbine.services.intake.model.Group;
-import org.apache.turbine.util.Log;
 import org.apache.fulcrum.pool.Recyclable;
 
 // Scarab
@@ -248,7 +247,7 @@ try{
         }
         catch (Exception e)
         {
-            Log.error ("SRT.getUser(id) error: ", e);
+            e.printStackTrace();
         }
         return su;
     }
