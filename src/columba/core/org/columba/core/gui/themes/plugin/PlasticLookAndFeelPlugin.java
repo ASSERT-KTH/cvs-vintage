@@ -23,13 +23,11 @@ import javax.swing.UIManager;
 import org.columba.core.config.Config;
 import org.columba.core.xml.XmlElement;
 
-import com.jgoodies.clearlook.ClearLookManager;
-import com.jgoodies.clearlook.ClearLookMode;
-import com.jgoodies.plaf.FontSizeHints;
-import com.jgoodies.plaf.LookUtils;
-import com.jgoodies.plaf.Options;
-import com.jgoodies.plaf.plastic.PlasticLookAndFeel;
-import com.jgoodies.plaf.plastic.PlasticTheme;
+import com.jgoodies.looks.FontSizeHints;
+import com.jgoodies.looks.LookUtils;
+import com.jgoodies.looks.Options;
+import com.jgoodies.looks.plastic.PlasticLookAndFeel;
+import com.jgoodies.looks.plastic.PlasticTheme;
 
 
 /**
@@ -55,10 +53,12 @@ public class PlasticLookAndFeelPlugin extends AbstractThemePlugin {
         Options.setGlobalFontSizeHints(FontSizeHints.MIXED);
         Options.setDefaultIconSize(new Dimension(16, 16));
         
+        /*
         ClearLookManager.setMode(ClearLookMode.ON);
         ClearLookManager.setPolicy(
             "com.jgoodies.clearlook.DefaultClearLookPolicy");
-
+        */
+        
         // use this when using the cross-platform version of 
         // jGoodies, which contains also a windows-xp like theme
 

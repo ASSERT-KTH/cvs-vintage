@@ -30,8 +30,8 @@ import org.columba.core.config.Config;
 import org.columba.core.gui.plugin.AbstractConfigPlugin;
 import org.columba.core.xml.XmlElement;
 
-import com.jgoodies.plaf.plastic.PlasticLookAndFeel;
-import com.jgoodies.plaf.plastic.PlasticTheme;
+import com.jgoodies.looks.plastic.PlasticLookAndFeel;
+import com.jgoodies.looks.plastic.PlasticTheme;
 
 
 /**
