@@ -1,4 +1,4 @@
-// $Id: TabResults.java,v 1.24 2005/01/09 14:58:13 linus Exp $
+// $Id: TabResults.java,v 1.25 2005/03/18 09:45:38 mkl Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -49,9 +49,9 @@ import javax.swing.event.ListSelectionListener;
 import org.apache.log4j.Logger;
 import org.argouml.i18n.Translator;
 import org.argouml.ui.targetmanager.TargetManager;
+import org.argouml.uml.ChildGenRelated;
 import org.argouml.uml.PredicateFind;
 import org.argouml.uml.TMResults;
-import org.argouml.uml.cognitive.ChildGenRelated;
 import org.tigris.gef.base.Diagram;
 import org.tigris.gef.util.ChildGenerator;
 
