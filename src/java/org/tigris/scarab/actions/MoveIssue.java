@@ -65,6 +65,7 @@ import org.apache.torque.om.NumberKey;
 // Scarab Stuff
 import org.tigris.scarab.actions.base.RequireLoginFirstAction;
 import org.tigris.scarab.tools.ScarabLocalizationTool;
+import org.tigris.scarab.tools.ScarabRequestTool;
 import org.tigris.scarab.om.Module;
 import org.tigris.scarab.om.ModuleManager;
 import org.tigris.scarab.om.Issue;
@@ -83,7 +84,7 @@ import org.tigris.scarab.services.security.ScarabSecurity;
  *
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: MoveIssue.java,v 1.39 2002/11/25 20:58:50 elicia Exp $
+ * @version $Id: MoveIssue.java,v 1.40 2002/11/25 23:38:33 elicia Exp $
  */
 public class MoveIssue extends RequireLoginFirstAction
 {
@@ -102,6 +103,7 @@ public class MoveIssue extends RequireLoginFirstAction
         }
 
         ScarabLocalizationTool l10n = getLocalizationTool(context);
+        ScarabRequestTool scarabR = getScarabRequestTool(context);
         Issue issue = getScarabRequestTool(context).getIssue();
         Module oldModule = issue.getModule();
         Group moveIssue = intake.get("MoveIssue",
@@ -125,8 +127,7 @@ public class MoveIssue extends RequireLoginFirstAction
         }
         catch (Exception e)
         {
-            getScarabRequestTool(context).setAlertMessage("Please select " +
-                      "a module and issue type.");
+            scarabR.setAlertMessage("Please select a module and issue type.");
             return;
         }
           
@@ -139,7 +140,15 @@ public class MoveIssue extends RequireLoginFirstAction
             data.setMessage(l10n.get(NO_PERMISSION_MESSAGE));
             return;
         }
-
+        if (moveIssue.get("Action").toString().equals("move")
+            && (newModuleId.equals(oldModule.getModuleId())
+                || newIssueTypeId.equals(issue.getIssueType().getIssueTypeId())))
+        {
+            scarabR.setAlert("You cannot move an issue to the same module/issue type.");
+            return;
+        }
+       
+        
         context.put("newModuleId", newModuleId.toString());
         context.put("newIssueTypeId", newIssueTypeId.toString());
 
