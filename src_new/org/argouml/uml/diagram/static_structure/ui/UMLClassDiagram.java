@@ -24,7 +24,7 @@
 // File: UMLClassDiagram.java
 // Classes: UMLClassDiagram
 // Original Author: jrobbins@ics.uci.edy
-// $Id: UMLClassDiagram.java,v 1.1 2000/09/04 12:50:22 1sturm Exp $
+// $Id: UMLClassDiagram.java,v 1.2 2001/06/11 14:02:29 toby Exp $
 
 package org.argouml.uml.diagram.static_structure.ui;
 
@@ -150,6 +150,9 @@ public class UMLClassDiagram extends UMLDiagram {
     _toolBar.add(Actions.AddAttribute);
     _toolBar.add(Actions.AddOperation);
     // needs-more-work: remove attribute and operation?
+    _toolBar.addSeparator();
+
+    _toolBar.add(Actions.AddNote);
     _toolBar.addSeparator();
 
     _toolBar.add(_actionRectangle);

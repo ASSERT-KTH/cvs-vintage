@@ -24,7 +24,7 @@
 // File: FigClass.java
 // Classes: FigClass
 // Original Author: abonner
-// $Id: FigClass.java,v 1.5 2000/11/29 14:55:56 toby Exp $
+// $Id: FigClass.java,v 1.6 2001/06/11 14:02:29 toby Exp $
 
 package org.argouml.uml.diagram.static_structure.ui;
 
@@ -142,6 +142,7 @@ public class FigClass extends FigNodeModelElement {
     JMenu addMenu = new JMenu("Add");
     addMenu.add(Actions.AddAttribute);
     addMenu.add(Actions.AddOperation);
+    addMenu.add(Actions.AddNote);
     popUpActions.insertElementAt(addMenu,
 				 popUpActions.size() - 1);
     JMenu showMenu = new JMenu("Show");
