@@ -72,7 +72,7 @@ import org.tigris.scarab.util.ScarabConstants;
  * This valve clears any stale data out of the user due to aborted wizards.  
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: FreshenUserValve.java,v 1.32 2004/11/14 21:06:59 dep4b Exp $
+ * @version $Id: FreshenUserValve.java,v 1.33 2004/12/09 22:05:38 dabbous Exp $
  */
 public class FreshenUserValve 
     extends AbstractValve
@@ -109,8 +109,20 @@ public class FreshenUserValve
         throws IOException, TurbineException
     {
         ScarabUser user = (ScarabUser)data.getUser();
+        
         try
         {
+            // Check, whether password is expired 
+            if(user.isPasswordExpired())
+            {
+                // Under no conditions an expired password will be
+                // accepted. The request is always forwarded to the
+                // password change mask until the password has been reset. [HD]
+                data.setTarget("ChangePassword.vm");
+                data.save();
+                context.invokeNext(data);
+                return;
+            }
             setCurrentModule(user, data);
             setCurrentIssueType(user, data);
         }
@@ -264,4 +276,5 @@ public class FreshenUserValve
         }
         user.setCurrentIssueType(issueType);
     }
+        
 }

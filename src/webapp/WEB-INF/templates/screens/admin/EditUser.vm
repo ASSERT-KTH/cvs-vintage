@@ -41,7 +41,7 @@
 #end
 
 <div class="axial">
-<table cellpadding="3" cellspacing="2" border="0">
+<table border="1" cellpadding="3" cellspacing="2" border="0">
 <tr>
   ## FIXME: In SCB197, John notes that SecurityService makes user name
   ## change problematic, as it assumes that a user name defines a user.

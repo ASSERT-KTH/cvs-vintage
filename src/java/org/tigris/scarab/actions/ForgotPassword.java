@@ -60,8 +60,6 @@ import org.apache.turbine.tool.IntakeTool;
 import org.apache.fulcrum.intake.model.Group;
 import org.apache.fulcrum.security.util.TurbineSecurityException;
 
-import org.apache.commons.lang.RandomStringUtils;
-
 // Scarab Stuff
 import org.tigris.scarab.om.ScarabUser;
 import org.tigris.scarab.tools.ScarabLocalizationTool;
@@ -70,6 +68,7 @@ import org.tigris.scarab.tools.localization.L10NMessage;
 import org.tigris.scarab.tools.localization.Localizable;
 import org.tigris.scarab.util.Email;
 import org.tigris.scarab.util.Log;
+import org.tigris.scarab.util.PasswordGenerator;
 import org.tigris.scarab.actions.base.ScarabTemplateAction;
 
 /**
@@ -80,11 +79,6 @@ import org.tigris.scarab.actions.base.ScarabTemplateAction;
  */
 public class ForgotPassword extends ScarabTemplateAction
 {
-    /**
-     The maximum length for the unique identifier used for the password.
-     */
-    private static final int UNIQUE_ID_MAX_LEN = 10;
-    
     /**
      * This manages clicking the Forgot Password button
      */
@@ -116,8 +110,7 @@ public class ForgotPassword extends ScarabTemplateAction
         {
             user = (ScarabUser) TurbineSecurity.getUser(username);
             
-            String tempPassword = RandomStringUtils
-                    .randomAlphanumeric(UNIQUE_ID_MAX_LEN);
+            String tempPassword = PasswordGenerator.generate();
             
             // first we need to save the user out of the session
             user.setPasswordExpire(Calendar.getInstance());

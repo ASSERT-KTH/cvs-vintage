@@ -61,7 +61,7 @@ package org.tigris.scarab.tools.localization;
  * Note: The velocity templates use much more resource keys, which are NOT
  * defined here, because they are not relevant for the java-part of this software.
  * 
- * @version $Id: L10NKeySet.java,v 1.9 2004/12/04 12:15:33 dabbous Exp $
+ * @version $Id: L10NKeySet.java,v 1.10 2004/12/09 22:05:38 dabbous Exp $
  *
  * Default implementation of a Localization Key.
  * <p>
@@ -128,6 +128,9 @@ public class L10NKeySet
     public static final LocalizationKey ExceptionIllegalAccess               = new L10NKey("ExceptionIllegalAccess");
     public static final LocalizationKey ExceptionClassNotFound               = new L10NKey("ExceptionClassNotFound");
     public static final LocalizationKey ExceptionComponentLocator            = new L10NKey("ExceptionComponentLocator");
+    public static final LocalizationKey ExceptionLookupGlobalCache           = new L10NKey("ExceptionLookupGlobalCache");
+    public static final LocalizationKey ExceptionScarabCacheService          = new L10NKey("ExceptionScarabCacheService");
+    public static final LocalizationKey ExceptionTurbineGeneric              = new L10NKey("ExceptionTurbineGeneric");
   
     
     public static final LocalizationKey ScarabBundle                         = new L10NKey("ScarabBundle");
@@ -153,8 +156,8 @@ public class L10NKeySet
     public static final LocalizationKey FileNotDeletedDesc                   = new L10NKey("FileNotDeletedDesc");
     public static final LocalizationKey DupeCheckSkippedForLackOfResources   = new L10NKey("DupeCheckSkippedForLackOfResources");
     public static final LocalizationKey DupeCheckSkippedBecauseComplexity    = new L10NKey("DupeCheckSkippedBecauseComplexity");
-    public static final LocalizationKey ExceptionLookupGlobalCache           = new L10NKey("ExceptionLookupGlobalCache");
-    public static final LocalizationKey ExceptionScarabCacheService          = new L10NKey("ExceptionScarabCacheService");
+    public static final LocalizationKey UserChangesSaved                     = new L10NKey("UserChangesSaved");
+    public static final LocalizationKey UserDeleted                          = new L10NKey("UserDeleted");
 
     // The following set is originally been generated from the java sources.
     
@@ -177,7 +180,7 @@ public class L10NKeySet
     public static final LocalizationKey ReportUpdatedDoMore = new L10NKey("ReportUpdatedDoMore");
     public static final LocalizationKey Deny = new L10NKey("Deny");
     public static final LocalizationKey AllRolesProcessed = new L10NKey("AllRolesProcessed");
-    public static final LocalizationKey userCreated = new L10NKey("userCreated");
+    public static final LocalizationKey UserCreated = new L10NKey("UserCreated");
     public static final LocalizationKey ReportNameNotUnique = new L10NKey("ReportNameNotUnique");
     public static final LocalizationKey LockedIssueType = new L10NKey("LockedIssueType");
     public static final LocalizationKey SearchIndexDoNoteLeavePage = new L10NKey("SearchIndexDoNoteLeavePage");
@@ -294,7 +297,7 @@ public class L10NKeySet
     public static final LocalizationKey NewModuleCreated = new L10NKey("NewModuleCreated");
     public static final LocalizationKey ModuleIssueTypeRequiredToEnterIssue = new L10NKey("ModuleIssueTypeRequiredToEnterIssue");
     public static final LocalizationKey ChangeOfTypeMessage = new L10NKey("ChangeOfTypeMessage");
-    public static final LocalizationKey userSelect = new L10NKey("userSelect");
+    public static final LocalizationKey UserSelect = new L10NKey("UserSelect");
     public static final LocalizationKey IssueMoved = new L10NKey("IssueMoved");
     public static final LocalizationKey SelectModuleToWorkIn = new L10NKey("SelectModuleToWorkIn");
     public static final LocalizationKey SelectAttribute = new L10NKey("SelectAttribute");
@@ -392,7 +395,7 @@ public class L10NKeySet
     public static final LocalizationKey AttributeAdded = new L10NKey("AttributeAdded");
     public static final LocalizationKey CouldNotLocateModuleGroup = new L10NKey("CouldNotLocateModuleGroup");
     public static final LocalizationKey AnyHasReplacedPreviousChoices = new L10NKey("AnyHasReplacedPreviousChoices");
-    public static final LocalizationKey userNotRetrieved = new L10NKey("userNotRetrieved");
+    public static final LocalizationKey UserNotRetrieved = new L10NKey("UserNotRetrieved");
     public static final LocalizationKey RolePreviouslyApprovedForUserInModule = new L10NKey("RolePreviouslyApprovedForUserInModule");
     public static final LocalizationKey ReasonRequired = new L10NKey("ReasonRequired");
     public static final LocalizationKey ReportSaved = new L10NKey("ReportSaved");
@@ -410,7 +413,7 @@ public class L10NKeySet
     public static final LocalizationKey SomeIssuePKsNotValid  = new L10NKey("SomeIssuePKsNotValid");
     public static final LocalizationKey ResourceLimitationsPreventedSearch  = new L10NKey("ResourceLimitationsPreventedSearch");
     public static final LocalizationKey AppConfigurationChangesSaved  = new L10NKey("AppConfigurationChangesSaved");
-    public static final LocalizationKey userCanNotDeleteSelf  = new L10NKey("userCanNotDeleteSelf");
+    public static final LocalizationKey UserCanNotDeleteSelf  = new L10NKey("UserCanNotDeleteSelf");
     public static final LocalizationKey UserIsDeleted  = new L10NKey("UserIsDeleted");
     
 }

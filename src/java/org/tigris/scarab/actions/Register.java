@@ -65,9 +65,12 @@ import org.tigris.scarab.om.ScarabUser;
 import org.tigris.scarab.tools.ScarabRequestTool;
 import org.tigris.scarab.tools.ScarabLocalizationTool;
 import org.tigris.scarab.tools.localization.L10NKeySet;
+import org.tigris.scarab.tools.localization.L10NMessage;
+import org.tigris.scarab.tools.localization.Localizable;
 import org.tigris.scarab.util.Email;
 import org.tigris.scarab.util.ScarabConstants;
 import org.tigris.scarab.util.Log;
+import org.tigris.scarab.util.ScarabRuntimeException;
 import org.tigris.scarab.actions.base.ScarabTemplateAction;
 
 // FIXME: remove the methods that reference this
@@ -83,7 +86,7 @@ import org.xbill.DNS.Type;
  * Action.
  *   
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: Register.java,v 1.47 2004/12/03 15:55:41 dep4b Exp $
+ * @version $Id: Register.java,v 1.48 2004/12/09 22:05:38 dabbous Exp $
  */
 public class Register extends ScarabTemplateAction
 {
@@ -184,7 +187,8 @@ public class Register extends ScarabTemplateAction
             catch (Exception e)
             {
                 setTarget(data, template);
-                scarabR.setAlertMessage(l10n.getMessage(e));
+                Localizable msg = new L10NMessage(L10NKeySet.ExceptionGeneric,e);
+                scarabR.setAlertMessage(msg);
                 return;
             }
 
@@ -203,7 +207,8 @@ public class Register extends ScarabTemplateAction
                 if (!checkRFC2505(email))
                 {
                     setTarget(data, template);
-                    scarabR.setAlertMessage(l10n.format("EmailHasBadDNS", email));
+                    Localizable msg = new L10NMessage(L10NKeySet.EmailHasBadDNS,email);
+                    scarabR.setAlertMessage(msg);
                     return;
                 }
             }
@@ -217,7 +222,8 @@ public class Register extends ScarabTemplateAction
                     if (email.equalsIgnoreCase(badEmails[i]))
                     {
                         setTarget(data, template);
-                        scarabR.setAlertMessage(l10n.format("InvalidEmailAddress",email));
+                        Localizable msg = new L10NMessage(L10NKeySet.InvalidEmailAddress,email);
+                        scarabR.setAlertMessage(msg);
                         return;
                     }
                 }
@@ -255,8 +261,7 @@ public class Register extends ScarabTemplateAction
                 // assign the template to the cancel template, not the 
                 // current template
                 template = getCancelTemplate(data, "Register.vm");
-                ScarabLocalizationTool l10n = getLocalizationTool(context);
-                throw new Exception(l10n.get("UserObjectNotInSession")); //EXCEPTION
+                throw new ScarabRuntimeException(L10NKeySet.UserObjectNotInSession);
             }
 
             try
@@ -266,7 +271,8 @@ public class Register extends ScarabTemplateAction
             }
             catch (org.apache.fulcrum.security.util.EntityExistsException e)
             {
-                scarabR.setAlertMessage(e.getMessage());
+                Localizable msg = new L10NMessage(L10NKeySet.ExceptionGeneric,e);
+                scarabR.setAlertMessage(msg);
                 setTarget(data, "Confirm.vm");
                 return;
             }
@@ -286,9 +292,9 @@ public class Register extends ScarabTemplateAction
         }
         catch (Exception e)
         {
-            ScarabLocalizationTool l10n = this.getLocalizationTool(context);
             setTarget(data, template);
-            scarabR.setAlertMessage(l10n.getMessage(e));
+            Localizable msg = new L10NMessage(L10NKeySet.ExceptionGeneric,e);
+            scarabR.setAlertMessage(msg);
             Log.get().error(e);
             return;
         }
@@ -479,9 +485,9 @@ public class Register extends ScarabTemplateAction
         }
         catch (Exception e)
         {
-            ScarabLocalizationTool l10n = this.getLocalizationTool(context);
             setTarget(data, template);
-            scarabR.setAlertMessage (l10n.getMessage(e));
+            Localizable msg = new L10NMessage(L10NKeySet.ExceptionGeneric,e);
+            scarabR.setAlertMessage(msg);
             Log.get().error(e);
             return;
         }
@@ -535,7 +541,7 @@ public class Register extends ScarabTemplateAction
             Turbine.getConfiguration()
                 .getString("scarab.email.register.fromAddress",
                            "register@localhost"));
-        te.setSubject(l10n.get("ConfirmationSubject"));
+        te.setSubject(L10NKeySet.ConfirmationSubject.getMessage(l10n));
         te.setTemplate(
             Turbine.getConfiguration()
                 .getString("scarab.email.register.template",
