@@ -22,6 +22,7 @@ import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
+import java.util.Comparator;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -45,8 +46,11 @@ import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.gui.util.ButtonWithMnemonic;
 import org.columba.core.gui.util.DefaultFormBuilder;
 import org.columba.mail.folder.AbstractFolder;
+import org.columba.mail.gui.frame.TreeViewOwner;
 import org.columba.mail.main.MailInterface;
 import org.columba.mail.util.MailResourceLoader;
+import org.frappucino.swing.SortedJTree;
+import org.frappucino.swing.SortedTreeModelDecorator;
 
 import com.jgoodies.forms.layout.FormLayout;
 
@@ -143,7 +147,16 @@ public class CreateFolderDialog extends JDialog implements ActionListener {
 
         typeBox = new JComboBox(new String[] { "Standard Mailbox" });
 
-        tree = new JTree(MailInterface.treeModel);
+//      get global sorting state 
+		SortedJTree t = ((TreeViewOwner)mediator).getTreeController().getView();
+		SortedTreeModelDecorator treemodel = (SortedTreeModelDecorator) t.getModel();
+		Comparator c = treemodel.getSortingComparator();
+		
+		tree = new SortedJTree(MailInterface.treeModel);
+		// apply sorting state 
+		SortedTreeModelDecorator m = (SortedTreeModelDecorator) tree.getModel();
+		m.setSortingComparator(c);
+		
         tree.setCellRenderer(new FolderTreeCellRenderer());
         tree.setRootVisible(false);
         tree.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);

@@ -23,6 +23,7 @@ import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
+import java.util.Comparator;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -43,9 +44,12 @@ import org.columba.core.main.MainInterface;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.folder.AbstractFolder;
 import org.columba.mail.folder.MessageFolder;
+import org.columba.mail.gui.frame.TreeViewOwner;
 import org.columba.mail.gui.tree.command.CreateAndSelectSubFolderCommand;
 import org.columba.mail.main.MailInterface;
 import org.columba.mail.util.MailResourceLoader;
+import org.frappucino.swing.SortedJTree;
+import org.frappucino.swing.SortedTreeModelDecorator;
 
 /**
  * Select folder dialog.
@@ -138,8 +142,16 @@ public class SelectFolderDialog extends JDialog
 	}
 
 	protected void initComponents() {
-
-		tree = new JTree(MailInterface.treeModel);
+		// get global sorting state 
+		SortedJTree t = ((TreeViewOwner)mediator).getTreeController().getView();
+		SortedTreeModelDecorator treemodel = (SortedTreeModelDecorator) t.getModel();
+		Comparator c = treemodel.getSortingComparator();
+		
+		tree = new SortedJTree(MailInterface.treeModel);
+		// apply sorting state 
+		SortedTreeModelDecorator m = (SortedTreeModelDecorator) tree.getModel();
+		m.setSortingComparator(c);
+		
 		tree.expandRow(0);
 		tree.expandRow(1);
 		tree.putClientProperty("JTree.lineStyle", "Angled");
