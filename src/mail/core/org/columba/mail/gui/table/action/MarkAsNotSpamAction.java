@@ -19,9 +19,6 @@
 package org.columba.mail.gui.table.action;
 
 import java.awt.event.ActionEvent;
-import java.awt.event.KeyEvent;
-
-import javax.swing.KeyStroke;
 
 import org.columba.core.action.FrameAction;
 import org.columba.core.gui.frame.AbstractFrameController;
@@ -60,9 +57,6 @@ public class MarkAsNotSpamAction
 
 		// action command
 		setActionCommand("MARK_AS_NOTSPAM");
-
-		setAcceleratorKey(
-			KeyStroke.getKeyStroke(KeyEvent.VK_K, ActionEvent.CTRL_MASK));
 
 		setEnabled(false);
 		(

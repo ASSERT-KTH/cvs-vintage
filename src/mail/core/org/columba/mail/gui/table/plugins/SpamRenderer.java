@@ -19,18 +19,24 @@ package org.columba.mail.gui.table.plugins;
 
 import java.awt.Component;
 
+import javax.swing.ImageIcon;
 import javax.swing.JTable;
 import javax.swing.SwingConstants;
 
+import org.columba.core.gui.util.ImageLoader;
 import org.columba.mail.gui.table.model.MessageNode;
 import org.columba.mail.message.ColumbaHeader;
+import org.columba.mail.util.MailResourceLoader;
 
 public class SpamRenderer extends DefaultLabelRenderer {
+
+	ImageIcon image;
 
 	public SpamRenderer() {
 		super();
 
 		setHorizontalAlignment(SwingConstants.RIGHT);
+		image = ImageLoader.getSmallImageIcon("spam-16.png");
 	}
 
 	public void updateUI() {
@@ -54,16 +60,19 @@ public class SpamRenderer extends DefaultLabelRenderer {
 		ColumbaHeader header =
 			(ColumbaHeader) ((MessageNode) value).getHeader();
 
+		setIcon(null);
+		setToolTipText( MailResourceLoader.getString("header","column","nospam"));
+		
 		Boolean bool = (Boolean) header.getAttributes().get("columba.spam");
-		if ( bool == null ) 
-		{
-			setText("No");
-		}else
-		{	
-			if ( bool.equals(Boolean.TRUE) )
-				setText( "Yes" );
+		if (bool != null) {
+
+			if (bool.equals(Boolean.TRUE))
+			{	
+				setIcon(image);
+				setToolTipText( MailResourceLoader.getString("header","column","spam"));
+			}
 			else
-				setText( "No" );
+				setIcon(null);
 		}
 
 		return super.getTableCellRendererComponent(
