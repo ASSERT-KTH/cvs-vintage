@@ -37,7 +37,7 @@ import org.gjt.sp.util.Log;
  * Class with several useful miscellaneous functions.
  *
  * @author Slava Pestov
- * @version $Id: MiscUtilities.java,v 1.19 2002/03/10 05:36:13 spestov Exp $
+ * @version $Id: MiscUtilities.java,v 1.20 2002/03/10 05:55:06 spestov Exp $
  */
 public class MiscUtilities
 {
@@ -105,6 +105,8 @@ public class MiscUtilities
 
 					return resolveSymlinks(path);
 				}
+				else if(path.startsWith("\\\\"))
+					return resolveSymlinks(path);
 			}
 			else if(OperatingSystem.isUnix())
 			{
