@@ -136,9 +136,10 @@ public class TomcatAdmin extends TagSupport {
 	    logger.setName( "temp.log");
 	    logger.setPath( dest );
 	    logger.open();
-	    //	Logger.putLogger( logger );
-	    ctx.setLogger( logger );
-	    ctx.setServletLogger( logger );
+	    Logger.putLogger( logger );
+	    Log log=Log.getLog( "temp.log", ctx );
+	    ctx.setLog( log );
+	    ctx.setServletLog( log );
 	} catch( Exception ex ) {
 	    ex.printStackTrace();
 	}
