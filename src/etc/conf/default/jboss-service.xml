@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- $Id: jboss-service.xml,v 1.121 2005/01/06 22:56:34 patriot1burke Exp $ -->
+<!-- $Id: jboss-service.xml,v 1.122 2005/01/12 00:06:19 patriot1burke Exp $ -->
 
 <!-- ===================================================================== -->
 <!--  JBoss Server Configuration                                           -->
@@ -245,7 +245,7 @@
    </mbean>
 
    <!-- TM Recovery
-   <mbean code="org.jboss.tm.recovery.MultiFileRecoveryLoggerService" name="jboss:service=RecoveryLogger">
+   <mbean code="org.jboss.tm.recovery.BatchRecoveryLoggerService" name="jboss:service=RecoveryLogger">
       <attribute name="DirectoryList">${jboss.server.data.dir}/recovery-log</attribute>
       <attribute name="MaxLogSize">100000</attribute>
    </mbean>
