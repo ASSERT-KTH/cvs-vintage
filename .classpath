@@ -15,6 +15,5 @@
     <classpathentry kind="lib" path="externals/xercesimpl-2.1.0.jar"/>
     <classpathentry kind="lib" path="externals/xercesxmlapi-2.1.0.jar"/>
     <classpathentry kind="lib" path="externals/velocity/velocity-dep.jar"/>
-    <classpathentry kind="lib" path="/usr/local/lib/java/jre/lib/rt.jar" sourcepath="/usr/local/lib/jdk/jdk1.4.0-src/j2se/src/share/classes/"/>
     <classpathentry kind="output" path="eclipse-bin"/>
 </classpath>
