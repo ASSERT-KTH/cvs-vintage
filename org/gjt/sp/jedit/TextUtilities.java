@@ -41,7 +41,7 @@ import org.gjt.sp.jedit.syntax.*;
  * </ul>
  *
  * @author Slava Pestov
- * @version $Id: TextUtilities.java,v 1.36 2002/10/09 23:03:55 spestov Exp $
+ * @version $Id: TextUtilities.java,v 1.37 2002/12/18 22:05:44 spestov Exp $
  */
 public class TextUtilities
 {
@@ -548,6 +548,8 @@ loop:		for(int i = pos; i < line.length(); i++)
 	 */
 	public static String format(String text, int maxLineLength)
 	{
+		// Note: StringBuffer.append(StringBuffer) is a 1.4-only method!
+
 		StringBuffer buf = new StringBuffer();
 		StringBuffer word = new StringBuffer();
 		int lineLength = 0;
@@ -566,7 +568,7 @@ loop:		for(int i = pos; i < line.length(); i++)
 						buf.append('\n');
 					else if(space && word.length() != 0)
 						buf.append(' ');
-					buf.append(word);
+					buf.append(word.toString()); //XXX
 					word.setLength(0);
 					buf.append('\n');
 					newline = true;
@@ -579,7 +581,7 @@ loop:		for(int i = pos; i < line.length(); i++)
 						buf.append('\n');
 					else if(space && word.length() != 0)
 						buf.append(' ');
-					buf.append(word);
+					buf.append(word.toString()); //XXX
 					word.setLength(0);
 					buf.append("\n\n");
 					newline = space = false;
@@ -605,7 +607,7 @@ loop:		for(int i = pos; i < line.length(); i++)
 				}
 				else
 					space = true;
-				buf.append(word);
+				buf.append(word.toString()); //XXX
 				lineLength += word.length();
 				word.setLength(0);
 				break;
@@ -623,7 +625,7 @@ loop:		for(int i = pos; i < line.length(); i++)
 			buf.append('\n');
 		else if(space && word.length() != 0)
 			buf.append(' ');
-		buf.append(word);
+		buf.append(word.toString()); //XXX
 		return buf.toString();
 	} //}}}
 

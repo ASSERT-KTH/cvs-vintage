@@ -40,7 +40,7 @@ import org.gjt.sp.jedit.*;
 /**
  * VFS browser tree view.
  * @author Slava Pestov
- * @version $Id: BrowserView.java,v 1.50 2002/12/15 00:23:53 spestov Exp $
+ * @version $Id: BrowserView.java,v 1.51 2002/12/18 22:05:44 spestov Exp $
  */
 class BrowserView extends JPanel
 {
@@ -766,7 +766,8 @@ class BrowserView extends JPanel
 					if(evt.getClickCount() % 2 == 0)
 						break;
 				}
-				else if(GUIUtilities.isPopupTrigger(evt))
+
+				if(GUIUtilities.isPopupTrigger(evt))
 				{
 					if(popup != null && popup.isVisible())
 					{
