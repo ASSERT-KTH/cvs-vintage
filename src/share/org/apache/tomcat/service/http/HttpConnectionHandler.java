@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/http/Attic/HttpConnectionHandler.java,v 1.22 2000/04/25 17:54:25 costin Exp $
- * $Revision: 1.22 $
- * $Date: 2000/04/25 17:54:25 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/http/Attic/HttpConnectionHandler.java,v 1.23 2000/05/12 02:24:41 costin Exp $
+ * $Revision: 1.23 $
+ * $Date: 2000/05/12 02:24:41 $
  *
  * ====================================================================
  *
@@ -93,6 +93,7 @@ public class HttpConnectionHandler  implements  TcpConnectionHandler {
     }
 
     public Object[] init() {
+	if(reuse) return null;
 	Object thData[]=new Object[3];
 	HttpRequestAdapter reqA=new HttpRequestAdapter();
 	HttpResponseAdapter resA=new HttpResponseAdapter();
@@ -103,12 +104,23 @@ public class HttpConnectionHandler  implements  TcpConnectionHandler {
 	return  thData;
     }
 
+    //    static Vector pool=new Vector();
+    Object pool[]=new Object[100]; // XXX 
+    int pos=0;
+    static boolean reuse=true;
+
+    public void setReuse( boolean b ) {
+	reuse=b;
+	System.out.println("Reuse = " + b );
+    }
     // XXX
     //    Nothing overriden, right now AJPRequest implment AJP and read everything.
     //    "Shortcuts" to be added here ( Vhost and context set by Apache, etc)
     // XXX handleEndpoint( Endpoint x )
     public void processConnection(TcpConnection connection, Object thData[]) {
 	Socket socket=null;
+	HttpRequestAdapter reqA=null;
+	HttpResponseAdapter resA=null;
 
 	//	System.out.println("New Connection");
 	try {
@@ -124,8 +136,6 @@ public class HttpConnectionHandler  implements  TcpConnectionHandler {
 	    //	    System.out.print("2");
 	    InputStream in=socket.getInputStream();
 	    OutputStream out=socket.getOutputStream();
-	    HttpRequestAdapter reqA=null;
-	    HttpResponseAdapter resA=null;
 	    if( thData != null ) {
 		reqA=(HttpRequestAdapter)thData[0];
 		resA=(HttpResponseAdapter)thData[1];
@@ -133,7 +143,33 @@ public class HttpConnectionHandler  implements  TcpConnectionHandler {
 		if( resA!=null ) resA.recycle();
 		//		System.out.println("Request ID " + thData[2]);
 	    }
-	    if( reqA==null || resA==null ) {
+	    // No thData - use Pool
+
+	    if( reuse && ( reqA==null || resA==null ) ) {
+		int myPos=-1;
+		synchronized( this ) {
+		    if( pos>0 ) {
+			pos--;
+			myPos=pos; // >=0
+			reqA =  (HttpRequestAdapter)pool[pos]; // (HttpRequestAdapter)pool.lastElement();
+			if( reqA==null )
+			    System.out.println("Get Obj " + pos + " " + reqA);
+			else
+			    resA= (HttpResponseAdapter)reqA.getResponse();
+		    }
+		}
+		if( reqA==null ) {
+		    //System.out.println("XXX REQUEST_IMPL new " + pool.size());
+		    reqA=new HttpRequestAdapter();
+		    resA=new HttpResponseAdapter();
+		    contextM.initRequest( reqA, resA );
+		} 
+		reqA.recycle();
+		resA.recycle();
+	    } 
+	    
+	    if( reqA==null || resA==null ) {	
+		//System.out.println("XXX NO POOL " );
 		reqA=new HttpRequestAdapter();
 		resA=new HttpResponseAdapter();
 		contextM.initRequest( reqA, resA );
@@ -183,6 +219,16 @@ public class HttpConnectionHandler  implements  TcpConnectionHandler {
 	    try { if (socket != null) socket.close (); }
 	    catch (IOException e) { /* ignore */ }
         }
+	if( reuse ) {
+	    synchronized( this ) {
+		if( pos<pool.length && reqA!= null ) {
+		    //System.out.println("Set Obj " + pos + " " + reqA);
+		    pool[pos]= reqA ;
+		    pos++;
+		}
+	    }
+	}
+
 	//	System.out.print("6");
     }
 

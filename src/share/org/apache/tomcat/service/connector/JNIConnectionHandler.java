@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/connector/Attic/JNIConnectionHandler.java,v 1.5 2000/05/05 17:25:56 costin Exp $
- * $Revision: 1.5 $
- * $Date: 2000/05/05 17:25:56 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/connector/Attic/JNIConnectionHandler.java,v 1.6 2000/05/12 02:24:39 costin Exp $
+ * $Revision: 1.6 $
+ * $Date: 2000/05/12 02:24:39 $
  *
  * ====================================================================
  *
@@ -101,10 +101,10 @@ public class JNIConnectionHandler {
     static boolean reuse=true;
     
     public void processConnection(long s, long l) {
+	JNIRequestAdapter reqA=null;
+	JNIResponseAdapter resA=null;
 
         try {
-	    JNIRequestAdapter reqA=null;
-	    JNIResponseAdapter resA=null;
 	    
 	    if( reuse ) {
 		synchronized( this ) {
@@ -112,7 +112,6 @@ public class JNIConnectionHandler {
 			reqA=new JNIRequestAdapter( contextM, this);
 			resA=new JNIResponseAdapter( this );
 			contextM.initRequest( reqA, resA );
-			pool.addElement( reqA );
 		    } else {
 			reqA = (JNIRequestAdapter)pool.lastElement();
 			resA=(JNIResponseAdapter)reqA.getResponse();
@@ -148,6 +147,11 @@ public class JNIConnectionHandler {
     	} catch(Exception ex) {
     	    ex.printStackTrace();
     	}
+	if( reuse ) {
+	    synchronized( this ) {
+		pool.addElement( reqA );
+	    }
+	}
     }
 
     native int readEnvironment(long s, long l, String []env);
