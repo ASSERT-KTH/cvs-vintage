@@ -7,6 +7,7 @@
 #set ($issueListSize = $issueList.size())
 #set ($modules = $scarabG.getModulesFromIssueList($issueList)) 
 #set ($userAttrs = $scarabR.getUserAttributes($issueList)) 
+#set ($reason = $data.Parameters.getString("reason" , ""))
 
 #if ($userAttrs.isEmpty())
  <p class="alert">$l10n.NoAssignableUserAttributes</p>
@@ -98,7 +99,7 @@
  <tr>
    <th>$l10n.Comment</th>
    <td>$l10n.EnterReason   
-         <p><textarea rows="4" cols="60" name ="reason"></textarea></p>
+         <p><textarea rows="4" cols="60" name ="reason">$!reason</textarea></p>
    </td>
  </tr>
    
