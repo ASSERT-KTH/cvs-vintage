@@ -29,7 +29,7 @@ import org.jboss.ejb.plugins.jaws.JPMFindEntitiesCommand;
  * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  * @author <a href="mailto:shevlandj@kpi.com.au">Joe Shevland</a>
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
- * @version $Revision: 1.3 $
+ * @version $Revision: 1.4 $
  */
 public class JDBCFindEntityCommand implements JPMFindEntityCommand
 {
@@ -85,8 +85,8 @@ public class JDBCFindEntityCommand implements JPMFindEntityCommand
          return id;
       } else
       {
-         throw new FinderException("Object with primary key " + id +
-                                   " not found in storage");
+         throw new ObjectNotFoundException("Object with primary key " + id +
+                                           " not found in storage");
       }
    }
 }
