@@ -1,4 +1,4 @@
-// $Id: GoNamespaceToDiagram.java,v 1.14 2005/01/30 20:47:47 linus Exp $
+// $Id: GoNamespaceToDiagram.java,v 1.15 2005/02/06 15:50:53 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -58,10 +58,9 @@ public class GoNamespaceToDiagram extends AbstractPerspectiveRule {
     /**
      * @see org.argouml.ui.explorer.rules.PerspectiveRule#getChildren(java.lang.Object)
      */
-    public Collection getChildren(Object parent) {
-        if (Model.getFacade().isANamespace(parent)) {
+    public Collection getChildren(Object namespace) {
+        if (Model.getFacade().isANamespace(namespace)) {
             List returnList = new ArrayList();
-            Object namespace = parent; //MNamespace
             Project proj = ProjectManager.getManager().getCurrentProject();
             Iterator it = proj.getDiagrams().iterator();
             while (it.hasNext()) {
