@@ -24,7 +24,7 @@
 // File: UMLCollaborationDiagram.java
 // Classes: UMLCollaborationDiagram
 // Original Author: agauthie@ics.uci.edu
-// $Id: UMLCollaborationDiagram.java,v 1.3 2000/09/29 16:02:25 boger Exp $
+// $Id: UMLCollaborationDiagram.java,v 1.4 2001/06/18 09:28:16 toby Exp $
 
 package org.argouml.uml.diagram.collaboration.ui;
 
@@ -42,6 +42,7 @@ import org.tigris.gef.presentation.*;
 import org.tigris.gef.ui.*;
 
 import org.argouml.ui.*;
+import org.argouml.uml.ui.*;
 import org.argouml.uml.diagram.ui.*;
 import org.argouml.uml.diagram.collaboration.*;
 
@@ -115,7 +116,7 @@ public class UMLCollaborationDiagram extends UMLDiagram {
     _toolBar.add(_actionClassifierRole);
     _toolBar.addSeparator();
     _toolBar.add(_actionAssoc);
-    _toolBar.add(Actions.AddMessage);
+    _toolBar.add(ActionAddMessage.SINGLETON);
     // other actions
     _toolBar.addSeparator();
 
