@@ -18,6 +18,7 @@ import org.jboss.proxy.InvocationHandler;
 import org.jboss.proxy.Proxy;
 
 import org.jboss.ejb.ContainerInvokerContainer;
+import org.jboss.util.FastKey;
 import org.jboss.ejb.plugins.jrmp12.interfaces.HomeProxy;
 import org.jboss.ejb.plugins.jrmp12.interfaces.StatelessSessionProxy;
 import org.jboss.ejb.plugins.jrmp12.interfaces.StatefulSessionProxy;
@@ -29,7 +30,7 @@ import org.jboss.ejb.plugins.jrmp12.interfaces.EntityProxy;
  *	@see <related>
  *	@author Rickard Öberg (rickard.oberg@telkel.com)
  *  @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
- *	@version $Revision: 1.6 $
+ *	@version $Revision: 1.7 $
  */
 public final class JRMPContainerInvoker
    extends org.jboss.ejb.plugins.jrmp.server.JRMPContainerInvoker
@@ -69,7 +70,7 @@ public final class JRMPContainerInvoker
                                            new StatefulSessionProxy(jndiName, this, id, optimize));
    }
 
-   public EJBObject getEntityEJBObject(Object id)
+   public EJBObject getEntityEJBObject(FastKey id)
    {
       return (EJBObject)Proxy.newProxyInstance(((ContainerInvokerContainer)container).getRemoteClass().getClassLoader(),
                                            new Class[] { ((ContainerInvokerContainer)container).getRemoteClass() },
@@ -84,7 +85,7 @@ public final class JRMPContainerInvoker
       {
          list.add(Proxy.newProxyInstance(((ContainerInvokerContainer)container).getRemoteClass().getClassLoader(),
                                            new Class[] { ((ContainerInvokerContainer)container).getRemoteClass() },
-                                           new EntityProxy(jndiName, this, idEnum.next(), optimize)));
+                                           new EntityProxy(jndiName, this, new FastKey(idEnum.next()), optimize)));
       }
       return list;
    }

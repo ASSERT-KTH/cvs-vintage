@@ -33,13 +33,14 @@ import org.jboss.ejb.EnterpriseContext;
 import org.jboss.ejb.InstanceCache;
 import org.jboss.ejb.InstancePool;
 import org.jboss.ejb.MethodInvocation;
+import org.jboss.util.FastKey;
 
 /**
  *   This container acquires the given instance. 
  *
  *   @see <related>
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
- *   @version $Revision: 1.4 $
+ *   @version $Revision: 1.5 $
  */
 public class EntityInstanceInterceptor
    extends AbstractInterceptor
@@ -47,7 +48,7 @@ public class EntityInstanceInterceptor
    // Constants -----------------------------------------------------
     
    // Attributes ----------------------------------------------------
-	protected EntityContainer container;
+    protected EntityContainer container;
    
    // Static --------------------------------------------------------
 
@@ -56,12 +57,12 @@ public class EntityInstanceInterceptor
    // Public --------------------------------------------------------
    public void setContainer(Container container) 
    { 
-   	this.container = (EntityContainer)container; 
+    this.container = (EntityContainer)container; 
    }
-	
+    
    public  Container getContainer()
    {
-   	return container;
+    return container;
    }
 
    // Interceptor implementation --------------------------------------
@@ -92,53 +93,56 @@ public class EntityInstanceInterceptor
    public Object invoke(MethodInvocation mi)
       throws Exception
    {
+       // The id store is a FastKey in the case of Entity 
+       FastKey fastKey = (FastKey) mi.getId();
+       
       // Get context
-	  // The cache will properly managed the tx-ctx locking, in case the mi transaction is different.
-      mi.setEnterpriseContext(((EntityContainer)getContainer()).getInstanceCache().get(mi.getId()));
+      // The cache will properly managed the tx-ctx locking, in case the mi transaction is different.
+      mi.setEnterpriseContext(((EntityContainer)getContainer()).getInstanceCache().get(fastKey));
       try
       {
          // Invoke through interceptors
          return getNext().invoke(mi);
       } catch (RemoteException e)
-		{
-			// Discard instance
-			// EJB 1.1 spec 12.3.1
-			((EntityContainer)getContainer()).getInstanceCache().remove(mi.getId());
-			
-			throw e;
-		} catch (RuntimeException e)
-		{
-			// Discard instance
-			// EJB 1.1 spec 12.3.1
-			((EntityContainer)getContainer()).getInstanceCache().remove(mi.getId());
-			
-			throw e;
-		} catch (Error e)
-		{
-			// Discard instance
-			// EJB 1.1 spec 12.3.1
-			((EntityContainer)getContainer()).getInstanceCache().remove(mi.getId());
-			
-			throw e;
-		} finally
+       {
+         // Discard instance
+         // EJB 1.1 spec 12.3.1
+         ((EntityContainer)getContainer()).getInstanceCache().remove(fastKey.id);
+         
+         throw e;
+       } catch (RuntimeException e)
+       {
+         // Discard instance
+         // EJB 1.1 spec 12.3.1
+         ((EntityContainer)getContainer()).getInstanceCache().remove(fastKey.id);
+         
+         throw e;
+       } catch (Error e)
+       {
+         // Discard instance
+         // EJB 1.1 spec 12.3.1
+         ((EntityContainer)getContainer()).getInstanceCache().remove(fastKey.id);
+         
+         throw e;
+       } finally
       {
 //         System.out.println("Release instance for "+id);
-			EnterpriseContext ctx = mi.getEnterpriseContext();
-			if (ctx != null)
-			{
-				if (ctx.getId() == null)
-				{
-				   // Remove from cache
-				   ((EntityContainer)getContainer()).getInstanceCache().remove(mi.getId());
-				   
-				   // It has been removed -> send to free pool
-				   container.getInstancePool().free(ctx);
-				}
-				{
-				   // Return context
-				   ((EntityContainer)getContainer()).getInstanceCache().release(ctx);
-				}
-			}
+         EnterpriseContext ctx = mi.getEnterpriseContext();
+         if (ctx != null)
+         {
+          if (ctx.getId() == null)
+          {
+             // Remove from cache
+             ((EntityContainer)getContainer()).getInstanceCache().remove(fastKey.id);
+             
+             // It has been removed -> send to free pool
+             container.getInstancePool().free(ctx);
+          }
+          {
+             // Return context
+             ((EntityContainer)getContainer()).getInstanceCache().release(ctx);
+          }
+         }
       }
    }
 }

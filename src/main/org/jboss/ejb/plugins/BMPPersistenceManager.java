@@ -17,6 +17,7 @@ import java.util.Enumeration;
 import javax.ejb.EntityBean;
 import javax.ejb.CreateException;
 
+import org.jboss.util.FastKey;
 import org.jboss.ejb.Container;
 import org.jboss.ejb.EntityContainer;
 import org.jboss.ejb.EntityPersistenceManager;
@@ -27,7 +28,8 @@ import org.jboss.ejb.EntityEnterpriseContext;
  *      
  *	@see <related>
  *	@author Rickard Öberg (rickard.oberg@telkel.com)
- *	@version $Revision: 1.3 $
+ *  @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
+ *	@version $Revision: 1.4 $
  */
 public class BMPPersistenceManager
    implements EntityPersistenceManager
@@ -109,11 +111,17 @@ public class BMPPersistenceManager
         // set the id
         ctx.setId(id);
          
+        // Create a new FastKey
+        FastKey fastKey = new FastKey(id);
+        
+        // Pass it implicitely!
+        ctx.setFastKey(fastKey);
+        
         // Lock instance in cache
         con.getInstanceCache().insert(ctx);
          
         // Create EJBObject
-        ctx.setEJBObject(con.getContainerInvoker().getEntityEJBObject(id));
+        ctx.setEJBObject(con.getContainerInvoker().getEntityEJBObject(fastKey));
 
         try {
           postCreateMethod.invoke(ctx.getInstance(), args);

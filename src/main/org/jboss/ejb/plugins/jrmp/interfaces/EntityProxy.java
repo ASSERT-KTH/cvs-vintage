@@ -13,6 +13,7 @@ import java.lang.reflect.Method;
 import javax.ejb.EJBObject;
 
 import org.jboss.ejb.plugins.jrmp.server.JRMPContainerInvoker;
+import org.jboss.util.FastKey;
 
 /**
  *      <description> 
@@ -20,7 +21,7 @@ import org.jboss.ejb.plugins.jrmp.server.JRMPContainerInvoker;
  *      @see <related>
  *      @author Rickard Öberg (rickard.oberg@telkel.com)
  *		@author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
- *      @version $Revision: 1.14 $
+ *      @version $Revision: 1.15 $
  */
 public class EntityProxy
    extends GenericProxy
@@ -28,7 +29,7 @@ public class EntityProxy
    // Constants -----------------------------------------------------
     
    // Attributes ----------------------------------------------------
-   protected Object id;
+   protected FastKey fastKey;  
    
    // Static --------------------------------------------------------
  
@@ -43,15 +44,15 @@ public class EntityProxy
    {
       try
       {
-		 // EJB methods
+        // EJB methods
          getPrimaryKey = EJBObject.class.getMethod("getPrimaryKey", new Class[0]);
          getHandle = EJBObject.class.getMethod("getHandle", new Class[0]);
          isIdentical = EJBObject.class.getMethod("isIdentical", new Class[] { EJBObject.class });
          
-		 // Object methods
-		 toStr = Object.class.getMethod("toString", new Class[0]);
+        // Object methods
+        toStr = Object.class.getMethod("toString", new Class[0]);
          eq = Object.class.getMethod("equals", new Class[] { Object.class });
-	     hash = Object.class.getMethod("hashCode", new Class[0]);
+         hash = Object.class.getMethod("hashCode", new Class[0]);
       } catch (Exception e)
       {
          e.printStackTrace();
@@ -64,14 +65,14 @@ public class EntityProxy
       // For externalization to work
    }
    
-   public EntityProxy(String name, ContainerRemote container, Object id, boolean optimize)
+   public EntityProxy(String name, ContainerRemote container, FastKey fastKey, boolean optimize)
    {
-		super(name, container, optimize);
+       super(name, container, optimize);
 
-		if (id == null)
-			throw new NullPointerException("Id may not be null");
-			
-      	this.id = id;
+       if (fastKey == null)
+         throw new NullPointerException("Id may not be null");
+         
+        this.fastKey = fastKey;
    }
    
    // Public --------------------------------------------------------
@@ -87,66 +88,67 @@ public class EntityProxy
       
       // Implement local methods
       if (m.equals(toStr))
-      {
-         return name+":"+id.toString();
+      { 
+        return name+":"+fastKey.id.toString();
+       
       }
       else if (m.equals(eq))
       {
          return invoke(proxy, isIdentical, args);
       }
       
-	  else if (m.equals(hash))
+      else if (m.equals(hash))
       {
-      	return new Integer(id.hashCode());
+         return new Integer(fastKey.id.hashCode());
       }
       
-	  // Implement local EJB calls
-	   else if (m.equals(getHandle))
+      // Implement local EJB calls
+       else if (m.equals(getHandle))
       {
-         return new EntityHandleImpl(name, id);
+         return new EntityHandleImpl(name, fastKey.id);
       }
      
-	  else if (m.equals(getPrimaryKey))
-      {
-         return id;
+      else if (m.equals(getPrimaryKey))
+      { 
+        return fastKey.id;
       }
-	  else if (m.equals(isIdentical))
+      else if (m.equals(isIdentical))
       {
-			return new Boolean(((EJBObject)args[0]).getPrimaryKey().equals(id));
+        return new Boolean(((EJBObject)args[0]).getPrimaryKey().equals(fastKey.id));
       }
       
-	  // If not taken care of, go on and call the container
-	  else
+      // If not taken care of, go on and call the container
+      else
       {
-	      // Delegate to container
-	      // Optimize if calling another bean in same EJB-application
-	      if (optimize && isLocal())
-	      {
-	         return container.invoke( // The entity id, method and arguments for the invocation
-			 						  id, m, args,
-									  // Transaction attributes
-									  tm != null ? tm.getTransaction() : null,
-									  // Security attributes
-									  getPrincipal(), getCredential());
-	      } else
-	      {
-			 // Create a new MethodInvocation for distribution
-	         RemoteMethodInvocation rmi = new RemoteMethodInvocation(id, m, args);
-	         
-			 // Set the transaction context
-			 rmi.setTransaction(tm != null? tm.getTransaction() : null);
-           	 
-			 // Set the security stuff
-			 // MF fixme this will need to use "thread local" and therefore same construct as above
-			 // rmi.setPrincipal(sm != null? sm.getPrincipal() : null);
-           	 // rmi.setCredential(sm != null? sm.getCredential() : null);
-           	 // is the credential thread local? (don't think so... but...)
-			 rmi.setPrincipal( getPrincipal() );
-           	 rmi.setCredential( getCredential() );
-			 
-			 // Invoke on the remote server, enforce marshalling
-	         return container.invoke(new MarshalledObject(rmi)).get();
-	      }
+          // Delegate to container
+          // Optimize if calling another bean in same EJB-application
+          if (optimize && isLocal())
+          {
+             return container.invoke( // The entity id, method and arguments for the invocation
+                             fastKey, m, args,
+                          // Transaction attributes
+                          tm != null ? tm.getTransaction() : null,
+                          // Security attributes
+                          getPrincipal(), getCredential());
+          } else
+          {
+          // Create a new MethodInvocation for distribution
+             RemoteMethodInvocation rmi = new RemoteMethodInvocation(fastKey, m, args);
+             
+          // Set the transaction context
+          rmi.setTransaction(tm != null? tm.getTransaction() : null);
+             
+          // Set the security stuff
+          // MF fixme this will need to use "thread local" and therefore same construct as above
+          // rmi.setPrincipal(sm != null? sm.getPrincipal() : null);
+             // rmi.setCredential(sm != null? sm.getCredential() : null);
+             // is the credential thread local? (don't think so... but...)
+          rmi.setPrincipal( getPrincipal() );
+             rmi.setCredential( getCredential() );
+          
+          // Invoke on the remote server, enforce marshalling
+             return container.invoke(new MarshalledObject(rmi)).get();
+          }
       }
    }
 
@@ -156,15 +158,15 @@ public class EntityProxy
    public void writeExternal(java.io.ObjectOutput out)
       throws IOException
    {
-		super.writeExternal(out);
-   	out.writeObject(id);
+       super.writeExternal(out);
+        out.writeObject(fastKey);
    }
    
    public void readExternal(java.io.ObjectInput in)
       throws IOException, ClassNotFoundException
    {
-   	super.readExternal(in);
-   	id = in.readObject();
+        super.readExternal(in);
+        fastKey = (FastKey) in.readObject();
    }
     
    // Private -------------------------------------------------------

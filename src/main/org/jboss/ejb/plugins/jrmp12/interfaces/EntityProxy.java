@@ -7,16 +7,17 @@
 package org.jboss.ejb.plugins.jrmp12.interfaces;
 
 import  org.jboss.ejb.plugins.jrmp.interfaces.ContainerRemote;
+import org.jboss.util.FastKey;
 
 /**
  *	<description> 
  *      
  *	@see <related>
  *	@author Rickard Öberg (rickard.oberg@telkel.com)
- *	@version $Revision: 1.4 $
+ *	@version $Revision: 1.5 $
  */
 public class EntityProxy
-	extends org.jboss.ejb.plugins.jrmp.interfaces.EntityProxy
+    extends org.jboss.ejb.plugins.jrmp.interfaces.EntityProxy
    implements org.jboss.proxy.InvocationHandler
 {
    public EntityProxy()
@@ -24,9 +25,9 @@ public class EntityProxy
       // For externalization to work
    }
 
-   public EntityProxy(String name, ContainerRemote container, Object id, boolean optimize)
+   public EntityProxy(String name, ContainerRemote container, FastKey id, boolean optimize)
    {
-		super(name, container, id, optimize);
+       super(name, container, id, optimize);
    }
 }
 
