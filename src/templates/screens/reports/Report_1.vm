@@ -57,8 +57,7 @@ $l10n.Report
 ## and the model is referenced many times within the macro,
 ## a new model will be created each time.
 #set ($reportModel = $report.getModel($data.User))
-#set ($reportIssueType = $report.IssueType)
-#reportTable($reportModel $reportIssueType)
+#reportTable($reportModel)
 </div>
 
 #if ($report.isSavable($data.User))

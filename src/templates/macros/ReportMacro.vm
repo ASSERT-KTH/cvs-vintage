@@ -72,7 +72,7 @@
   #end
 #end
 
-#macro ( reportTable $model $issueType )
+#macro ( reportTable $model )
 
 #set ($maxRow = $model.RowCount - 1)
 #set ($maxColumn = $model.ColumnCount - 1)
