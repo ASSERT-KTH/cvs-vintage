@@ -15,17 +15,15 @@
 //All Rights Reserved.
 package org.columba.mail.pgp;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
 
 import javax.swing.JOptionPane;
 
-import org.columba.core.io.StreamUtils;
 import org.columba.core.logging.ColumbaLogger;
 import org.columba.mail.config.PGPItem;
-import org.columba.mail.gui.util.PasswordDialog;
+import org.columba.mail.gui.util.PGPPassphraseDialog;
 
 public class PGPController {
 	public final static int GPG = 0;
@@ -49,9 +47,11 @@ public class PGPController {
 	private static PGPController myInstance;
 
 	private String pgpMessage;
-	
+
 	private Map passwords;
-	
+
+	private PGPPassphraseDialog dialog;
+
 	/**
 	 * here are the utils, from which you can sign, verify, encrypt and decrypt messages
 	 * at the moment there are only one tool - gpg, the gnu pgp programm which
@@ -66,7 +66,7 @@ public class PGPController {
 	 */
 	protected PGPController() {
 		exitVal = 0;
-		
+
 		passwords = new HashMap();
 	}
 	/**
@@ -112,11 +112,18 @@ public class PGPController {
 
 			throw new PGPException(error);
 		}
-		
+
+		if (save == false) {
+			item.clearPassphrase();
+		}
+
 		pgpMessage = new String(error);
-		
-		if ( exitVal == 2 ) throw new WrongPassphraseException(error);
-		
+
+		if (exitVal == 2) {
+			// wrong passprase 
+			throw new WrongPassphraseException(error);
+		}
+
 		return utils[GPG].getStreamResult();
 	}
 	/**
@@ -150,9 +157,10 @@ public class PGPController {
 		}
 
 		pgpMessage = error;
-		
-		if ( exitVal == 1 ) throw new VerificationException(error);
-		
+
+		if (exitVal == 1)
+			throw new VerificationException(error);
+
 		if (exitVal == 2)
 			throw new MissingPublicKeyException(error);
 
@@ -167,25 +175,38 @@ public class PGPController {
 	 * @return the encrypted message if all is ok, else an empty input-stream
 	 * TODO better using the exception mechanism instead of showing th user a dialog from this component.
 	 */
-	public InputStream encrypt(InputStream message, PGPItem item) {
+	public InputStream encrypt(InputStream pgpStream, PGPItem item)
+		throws PGPException {
 		int exitVal = -1;
-		
+		String error = null;
+
 		this.getPassphrase(item);
-		
+
 		try {
-			exitVal = utils[GPG].encrypt(item, message);
+			exitVal = utils[GPG].encrypt(item, pgpStream);
+
+			error = utils[GPG].parse(utils[GPG].getErrorString());
 		} catch (Exception e) {
-			JOptionPane.showMessageDialog(null, utils[GPG].getErrorString());
+
+			throw new PGPException(error);
+
 		}
-		if( exitVal != 0 ) {
-			try {
-				// An error occured
-				StreamUtils.streamCopy( utils[GPG].getErrorStream(), System.err);
-			} catch (IOException e1) {
-				e1.printStackTrace();
-			}
-		}
+
+		pgpMessage = new String(error);
 		
+		if (save == false) {
+			item.clearPassphrase();
+		}
+
+		if (exitVal == 1) {
+			// wrong passphrase
+			throw new WrongPassphraseException(error);
+		}
+
+		if (exitVal != 0) {
+			throw new PGPException(error);
+		}
+
 		return utils[GPG].getStreamResult();
 	}
 
@@ -204,21 +225,40 @@ public class PGPController {
 	 * @return The signed message as an InputStream. Null, when
 	 * an error occurse or the exit-value is not equal to 0 from the whole gpg-util is returned.
 	 */
-	public InputStream sign(InputStream pgpMessage, PGPItem item) {
+	public InputStream sign(InputStream pgpStream, PGPItem item)
+		throws PGPException {
 		exitVal = -1;
+		String error = null;
 		path = item.get("path");
 		id = item.get("id");
 
 		this.getPassphrase(item);
+
 		try {
-			exitVal = utils[GPG].sign(item, pgpMessage);
-		} catch (Exception ex) {
-			ex.printStackTrace();
-			JOptionPane.showMessageDialog(null, utils[GPG].getErrorString());
+
+			exitVal = utils[GPG].sign(item, pgpStream);
+
+			error = utils[GPG].parse(utils[GPG].getErrorString());
+
+		} catch (Exception e) {
+			throw new PGPException(error);
 		}
+
+		pgpMessage = new String(error);
+		
 		if (save == false) {
 			item.clearPassphrase();
 		}
+
+		if (exitVal == 1) {
+			// wrong passphrase
+			throw new WrongPassphraseException(error);
+		}
+
+		if (exitVal != 0) {
+			throw new PGPException(error);
+		}
+
 		return utils[GPG].getStreamResult();
 	}
 
@@ -277,18 +317,18 @@ public class PGPController {
 		boolean save = false;
 		boolean ret = false;
 
-		PasswordDialog dialog = new PasswordDialog();
+		dialog = new PGPPassphraseDialog();
 		if (passphrase.length() == 0) {
 			//PGPPassphraseDialog dialog = new PGPPassphraseDialog(id, false);
-			
-			dialog.showDialog( "PGP-"+item.get("id"), "", false);
-			
-			if (dialog.success()) {				
+
+			dialog.showDialog(item.get("id"), "", false);
+
+			if (dialog.success()) {
 				passphrase =
 					new String(
 						dialog.getPassword(),
 						0,
-						dialog.getPassword().length);									
+						dialog.getPassword().length);
 				item.setPassphrase(passphrase);
 				save = dialog.getSave();
 				ret = true;

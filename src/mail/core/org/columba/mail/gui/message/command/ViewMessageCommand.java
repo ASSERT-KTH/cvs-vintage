@@ -135,8 +135,8 @@ public class ViewMessageCommand extends FolderCommand {
 			pgpMessage = e.getMessage();
 
 			// just show the encrypted raw message
-			decryptedStream = encryptedPart;
-
+			return;
+			//decryptedStream = encryptedPart;
 		} catch (PGPException e) {
 
 			// generic pgp error
@@ -226,6 +226,16 @@ public class ViewMessageCommand extends FolderCommand {
 		PGPController controller = PGPController.getInstance();
 
 		try {
+			
+			// we use the PGPItem to store this message hash-algorithm
+			// -> this additional value has to be passed to the gnupg
+			// -> commandline-tool for verification
+			MimePart firstPartMimeType =
+						mimePartTree.getRootMimeNode();
+			MimeHeader h = firstPartMimeType.getHeader();
+			
+			//pgpItem.set("hashalgorithm", hash);
+			
 			// verify
 			controller.verifySignature(signedPart, signature, pgpItem);
 

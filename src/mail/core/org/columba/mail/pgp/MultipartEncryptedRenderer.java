@@ -5,6 +5,8 @@ import java.io.InputStream;
 import java.io.SequenceInputStream;
 import java.util.Vector;
 
+import javax.swing.JOptionPane;
+
 import org.columba.mail.config.PGPItem;
 import org.columba.mail.message.PGPMimePart;
 import org.columba.ristretto.composer.MimePartRenderer;
@@ -82,15 +84,29 @@ public class MultipartEncryptedRenderer extends MimePartRenderer {
 		// Add the encrypted MimePart
 		streams.add(new ByteArrayInputStream(startBoundary));
 		StreamableMimePart encryptedPart;
-
-		PGPController controller = PGPController.getInstance();
-		encryptedPart =
-			new InputStreamMimePart(
-				encryptedHeader,
-				controller.encrypt(
-					MimeTreeRenderer.getInstance().renderMimePart(
-						part.getChild(0)),
-					pgpItem));
+		encryptedPart = null;
+		try {
+			
+			PGPController controller = PGPController.getInstance();
+			
+			encryptedPart =
+				new InputStreamMimePart(
+					encryptedHeader,
+					controller.encrypt(
+						MimeTreeRenderer.getInstance().renderMimePart(
+							part.getChild(0)),
+						pgpItem));
+						
+		} catch (WrongPassphraseException e) {
+			JOptionPane.showMessageDialog(null, e.getMessage());
+		} catch (PGPException e) {
+			JOptionPane.showMessageDialog(null, e.getMessage());
+			
+			e.printStackTrace();
+		} catch (IOException e) {
+			JOptionPane.showMessageDialog(null, e.getMessage());
+			e.printStackTrace();
+		}
 
 		streams.add(
 			MimeTreeRenderer.getInstance().renderMimePart(encryptedPart));

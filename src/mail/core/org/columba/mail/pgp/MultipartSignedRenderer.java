@@ -5,6 +5,8 @@ import java.io.InputStream;
 import java.io.SequenceInputStream;
 import java.util.Vector;
 
+import javax.swing.JOptionPane;
+
 import org.columba.mail.config.PGPItem;
 import org.columba.mail.message.PGPMimePart;
 import org.columba.ristretto.composer.MimePartRenderer;
@@ -77,16 +79,31 @@ public class MultipartSignedRenderer extends MimePartRenderer {
 		// Add the signature
 		streams.add(new ByteArrayInputStream(startBoundary));
 		StreamableMimePart signatureMimePart;
+
 		
-		PGPController controller = PGPController.getInstance();
+		signatureMimePart = null;
 		
-		signatureMimePart =
-			new InputStreamMimePart(
-				signatureHeader,
-				controller.sign(
-					MimeTreeRenderer.getInstance().renderMimePart(
-						(StreamableMimePart) part.getChild(0)),
-					pgpItem));
+		try {
+			
+			PGPController controller = PGPController.getInstance();
+			
+			signatureMimePart =
+				new InputStreamMimePart(
+					signatureHeader,
+					controller.sign(
+						MimeTreeRenderer.getInstance().renderMimePart(
+							(StreamableMimePart) part.getChild(0)),
+						pgpItem));
+						
+		} catch (WrongPassphraseException e) {
+			JOptionPane.showMessageDialog(null, e.getMessage());
+		} catch (PGPException e) {
+			JOptionPane.showMessageDialog(null, e.getMessage());
+			e.printStackTrace();
+		} catch (IOException e) {
+			JOptionPane.showMessageDialog(null, e.getMessage());
+			e.printStackTrace();
+		}
 
 		streams.add(
 			MimeTreeRenderer.getInstance().renderMimePart(signatureMimePart));
