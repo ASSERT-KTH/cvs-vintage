@@ -401,7 +401,8 @@ public class IncomingServerPanel extends DefaultPanel implements
 		portLabel = new LabelWithMnemonic(MailResourceLoader.getString(
 				"dialog", "account", "port"));
 
-		portSpinner = new JSpinner(new SpinnerNumberModel(100, 0, 65535, 1));
+		portSpinner = new JSpinner(new SpinnerNumberModel(100, 1, 65535, 1));
+		portSpinner.setEditor(new JSpinner.NumberEditor(portSpinner,"#####"));
 		portLabel.setLabelFor(portSpinner);
 
 		storePasswordCheckBox = new CheckBoxWithMnemonic(MailResourceLoader
