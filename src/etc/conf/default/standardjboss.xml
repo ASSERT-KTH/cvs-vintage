@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <jboss>
-    <secure>false</secure>
+	<secure>false</secure>
     <container-configurations>
 
-        <container-configuration>
-             <container-name>Standard CMP EntityBean</container-name>
-             <call-logging>false</call-logging>
-            <container-invoker>org.jboss.ejb.plugins.jrmp.server.JRMPContainerInvoker</container-invoker>
+		<container-configuration>
+	 		<container-name>Standard CMP EntityBean</container-name>
+	 		<call-logging>false</call-logging>
+			<container-invoker>org.jboss.ejb.plugins.jrmp.server.JRMPContainerInvoker</container-invoker>
             <container-interceptors>
                 <interceptor>org.jboss.ejb.plugins.LogInterceptor</interceptor>
                 <interceptor>org.jboss.ejb.plugins.SecurityInterceptor</interceptor>
@@ -16,38 +16,38 @@
                 <interceptor>org.jboss.ejb.plugins.EntityInstanceInterceptor</interceptor>
                 <interceptor>org.jboss.ejb.plugins.EntitySynchronizationInterceptor</interceptor>
             </container-interceptors>
-            <instance-pool>org.jboss.ejb.plugins.EntityInstancePool</instance-pool>
-            <instance-cache>org.jboss.ejb.plugins.EntityInstanceCache</instance-cache>
-            <persistence-manager>org.jboss.ejb.plugins.jaws.JAWSPersistenceManager</persistence-manager>
-            <transaction-manager>org.jboss.tm.TxManager</transaction-manager>
-            <container-invoker-conf>
-                <Optimized>True</Optimized>
-                <RMIObjectPort>4444</RMIObjectPort>
-            </container-invoker-conf>
-            <container-cache-conf>
+			<instance-pool>org.jboss.ejb.plugins.EntityInstancePool</instance-pool>
+			<instance-cache>org.jboss.ejb.plugins.EntityInstanceCache</instance-cache>
+			<persistence-manager>org.jboss.ejb.plugins.jaws.JAWSPersistenceManager</persistence-manager>
+			<transaction-manager>org.jboss.tm.TxManager</transaction-manager>
+			<container-invoker-conf>
+				<Optimized>True</Optimized>
+				<RMIObjectPort>4444</RMIObjectPort>
+			</container-invoker-conf>
+			<container-cache-conf>
                 <cache-policy>org.jboss.ejb.plugins.LRUEnterpriseContextCachePolicy</cache-policy>      
-                <cache-policy-conf>
-                    <min-capacity>50</min-capacity>
-                    <max-capacity>1000</max-capacity>
-                    <overager-period>300</overager-period>
-                    <max-bean-age>600</max-bean-age>
-                    <resizer-period>400</resizer-period>
-                    <max-cache-miss-period>60</max-cache-miss-period>
-                    <min-cache-miss-period>1</min-cache-miss-period>
-                    <cache-load-factor>0.75</cache-load-factor>
-                </cache-policy-conf>
-            </container-cache-conf>
-            <container-pool-conf>
-                <MaximumSize>100</MaximumSize>
-                <MinimumSize>10</MinimumSize>
-            </container-pool-conf>
-            <commit-option>A</commit-option>
+				<cache-policy-conf>
+					<min-capacity>50</min-capacity>
+					<max-capacity>1000</max-capacity>
+					<overager-period>300</overager-period>
+					<max-bean-age>600</max-bean-age>
+					<resizer-period>400</resizer-period>
+					<max-cache-miss-period>60</max-cache-miss-period>
+					<min-cache-miss-period>1</min-cache-miss-period>
+					<cache-load-factor>0.75</cache-load-factor>
+				</cache-policy-conf>
+      		</container-cache-conf>
+			<container-pool-conf>
+				<MaximumSize>100</MaximumSize>
+				<MinimumSize>10</MinimumSize>
+			</container-pool-conf>
+			<commit-option>A</commit-option>
         </container-configuration>
 
-        <container-configuration>
-            <container-name>jdk1.2.2 CMP EntityBean</container-name>
-            <call-logging>false</call-logging>
-            <container-invoker>org.jboss.ejb.plugins.jrmp.server.JRMPContainerInvoker</container-invoker>
+		<container-configuration>
+	 		<container-name>jdk1.2.2 CMP EntityBean</container-name>
+	 		<call-logging>false</call-logging>
+			<container-invoker>org.jboss.ejb.plugins.jrmp.server.JRMPContainerInvoker</container-invoker>
             <container-interceptors>
                 <interceptor>org.jboss.ejb.plugins.LogInterceptor</interceptor>
                 <interceptor>org.jboss.ejb.plugins.SecurityInterceptor</interceptor>
@@ -56,38 +56,38 @@
                 <interceptor>org.jboss.ejb.plugins.EntityInstanceInterceptor</interceptor>
                 <interceptor>org.jboss.ejb.plugins.EntitySynchronizationInterceptor</interceptor>
             </container-interceptors>
-            <instance-pool>org.jboss.ejb.plugins.EntityInstancePool</instance-pool>
-            <instance-cache>org.jboss.ejb.plugins.EntityInstanceCache</instance-cache>
-            <persistence-manager>org.jboss.ejb.plugins.jaws.JAWSPersistenceManager</persistence-manager>
-            <transaction-manager>org.jboss.tm.TxManager</transaction-manager>
-            <container-invoker-conf>
-                <Optimized>True</Optimized>
-                <RMIObjectPort>4444</RMIObjectPort>
-            </container-invoker-conf>
-            <container-cache-conf>
+                        <instance-pool>org.jboss.ejb.plugins.EntityInstancePool</instance-pool>
+                        <instance-cache>org.jboss.ejb.plugins.EntityInstanceCache</instance-cache>
+                        <persistence-manager>org.jboss.ejb.plugins.jaws.JAWSPersistenceManager</persistence-manager>
+                        <transaction-manager>org.jboss.tm.TxManager</transaction-manager>
+                        <container-invoker-conf>
+                                <Optimized>True</Optimized>
+				<RMIObjectPort>4444</RMIObjectPort>
+                        </container-invoker-conf>
+                        <container-cache-conf>
                 <cache-policy>org.jboss.ejb.plugins.LRUEnterpriseContextCachePolicy</cache-policy>      
-                <cache-policy-conf>
-                    <min-capacity>50</min-capacity>
-                    <max-capacity>1000</max-capacity>
-                    <overager-period>300</overager-period>
-                    <max-bean-age>600</max-bean-age>
-                    <resizer-period>400</resizer-period>
-                    <max-cache-miss-period>60</max-cache-miss-period>
-                    <min-cache-miss-period>1</min-cache-miss-period>
-                    <cache-load-factor>0.75</cache-load-factor>
-                </cache-policy-conf>
-            </container-cache-conf>
-            <container-pool-conf>
-                <MaximumSize>100</MaximumSize>
-                <MinimumSize>10</MinimumSize>
-            </container-pool-conf>
-            <commit-option>A</commit-option>
+				<cache-policy-conf>
+					<min-capacity>50</min-capacity>
+					<max-capacity>1000</max-capacity>
+					<overager-period>300</overager-period>
+					<max-bean-age>600</max-bean-age>
+					<resizer-period>400</resizer-period>
+					<max-cache-miss-period>60</max-cache-miss-period>
+					<min-cache-miss-period>1</min-cache-miss-period>
+					<cache-load-factor>0.75</cache-load-factor>
+				</cache-policy-conf>
+                        </container-cache-conf>
+                        <container-pool-conf>
+                                <MaximumSize>100</MaximumSize>
+                                <MinimumSize>10</MinimumSize>
+                        </container-pool-conf>
+                        <commit-option>A</commit-option>
         </container-configuration>
 
-        <container-configuration>
-            <container-name>Standard Stateless SessionBean</container-name>
-            <call-logging>false</call-logging>
-            <container-invoker>org.jboss.ejb.plugins.jrmp.server.JRMPContainerInvoker</container-invoker>
+		<container-configuration>
+			<container-name>Standard Stateless SessionBean</container-name>
+			<call-logging>false</call-logging>
+			<container-invoker>org.jboss.ejb.plugins.jrmp.server.JRMPContainerInvoker</container-invoker>
             <container-interceptors>
                 <interceptor>org.jboss.ejb.plugins.LogInterceptor</interceptor>
                 <interceptor>org.jboss.ejb.plugins.SecurityInterceptor</interceptor>
@@ -100,24 +100,24 @@
                 <interceptor transaction="Bean">org.jboss.ejb.plugins.TxInterceptorBMT</interceptor>
                 <interceptor transaction="Bean" metricsEnabled="true">org.jboss.ejb.plugins.MetricsInterceptor</interceptor>
             </container-interceptors>
-            <instance-pool>org.jboss.ejb.plugins.StatelessSessionInstancePool</instance-pool>
-            <instance-cache></instance-cache>
-            <persistence-manager></persistence-manager>
-            <transaction-manager>org.jboss.tm.TxManager</transaction-manager>
-            <container-invoker-conf>
-                <RMIObjectPort>4444</RMIObjectPort>
-            <Optimized>True</Optimized>
-            </container-invoker-conf>
-            <container-pool-conf>
-            <MaximumSize>100</MaximumSize>
-            <MinimumSize>10</MinimumSize>
-            </container-pool-conf>
-        </container-configuration>
+			<instance-pool>org.jboss.ejb.plugins.StatelessSessionInstancePool</instance-pool>
+			<instance-cache></instance-cache>
+			<persistence-manager></persistence-manager>
+			<transaction-manager>org.jboss.tm.TxManager</transaction-manager>
+			<container-invoker-conf>
+				<RMIObjectPort>4444</RMIObjectPort>
+			<Optimized>True</Optimized>
+			</container-invoker-conf>
+			<container-pool-conf>
+			<MaximumSize>100</MaximumSize>
+			<MinimumSize>10</MinimumSize>
+			</container-pool-conf>
+		</container-configuration>
 
-        <container-configuration>
-            <container-name>jdk1.2.2 Stateless SessionBean</container-name>
-            <call-logging>false</call-logging>
-            <container-invoker>org.jboss.ejb.plugins.jrmp.server.JRMPContainerInvoker</container-invoker>
+		<container-configuration>
+			<container-name>jdk1.2.2 Stateless SessionBean</container-name>
+			<call-logging>false</call-logging>
+			<container-invoker>org.jboss.ejb.plugins.jrmp.server.JRMPContainerInvoker</container-invoker>
             <container-interceptors>
                 <interceptor>org.jboss.ejb.plugins.LogInterceptor</interceptor>
                 <interceptor>org.jboss.ejb.plugins.SecurityInterceptor</interceptor>
@@ -130,24 +130,24 @@
                 <interceptor transaction="Bean">org.jboss.ejb.plugins.TxInterceptorBMT</interceptor>
                 <interceptor transaction="Bean" metricsEnabled="true">org.jboss.ejb.plugins.MetricsInterceptor</interceptor>
             </container-interceptors>
-            <instance-pool>org.jboss.ejb.plugins.StatelessSessionInstancePool</instance-pool>
-            <instance-cache></instance-cache>
-            <persistence-manager></persistence-manager>
-            <transaction-manager>org.jboss.tm.TxManager</transaction-manager>
-            <container-invoker-conf>
-                <RMIObjectPort>4444</RMIObjectPort>
-            <Optimized>True</Optimized>
-            </container-invoker-conf>
-            <container-pool-conf>
-            <MaximumSize>100</MaximumSize>
-            <MinimumSize>10</MinimumSize>
-            </container-pool-conf>
-        </container-configuration>
+			<instance-pool>org.jboss.ejb.plugins.StatelessSessionInstancePool</instance-pool>
+			<instance-cache></instance-cache>
+			<persistence-manager></persistence-manager>
+			<transaction-manager>org.jboss.tm.TxManager</transaction-manager>
+			<container-invoker-conf>
+				<RMIObjectPort>4444</RMIObjectPort>
+			<Optimized>True</Optimized>
+			</container-invoker-conf>
+			<container-pool-conf>
+			<MaximumSize>100</MaximumSize>
+			<MinimumSize>10</MinimumSize>
+			</container-pool-conf>
+		</container-configuration>
 
-        <container-configuration>
-            <container-name>Standard Stateful SessionBean</container-name>
-            <call-logging>false</call-logging>
-            <container-invoker>org.jboss.ejb.plugins.jrmp.server.JRMPContainerInvoker</container-invoker>
+		<container-configuration>
+			<container-name>Standard Stateful SessionBean</container-name>
+			<call-logging>false</call-logging>
+			<container-invoker>org.jboss.ejb.plugins.jrmp.server.JRMPContainerInvoker</container-invoker>
             <container-interceptors>
                 <interceptor>org.jboss.ejb.plugins.LogInterceptor</interceptor>
                 <!-- CMT -->
@@ -160,32 +160,34 @@
                 <interceptor transaction="Bean" metricsEnabled="true">org.jboss.ejb.plugins.MetricsInterceptor</interceptor>
                 <interceptor>org.jboss.ejb.plugins.SecurityInterceptor</interceptor>
             </container-interceptors>
-            <instance-cache>org.jboss.ejb.plugins.StatefulSessionInstanceCache</instance-cache>
-            <persistence-manager>org.jboss.ejb.plugins.StatefulSessionFilePersistenceManager</persistence-manager>
-            <transaction-manager>org.jboss.tm.TxManager</transaction-manager>
-            <container-invoker-conf>
-                <RMIObjectPort>4444</RMIObjectPort>
-            <Optimized>True</Optimized>
-            </container-invoker-conf>
-            <container-cache-conf>
-                <cache-policy>org.jboss.ejb.plugins.LRUEnterpriseContextCachePolicy</cache-policy>      
-                <cache-policy-conf>
-                    <min-capacity>50</min-capacity>
-                    <max-capacity>1000</max-capacity>
-                    <overager-period>300</overager-period>
-                    <max-bean-age>600</max-bean-age>
-                    <resizer-period>400</resizer-period>
-                    <max-cache-miss-period>60</max-cache-miss-period>
-                    <min-cache-miss-period>1</min-cache-miss-period>
-                    <cache-load-factor>0.75</cache-load-factor>
-                </cache-policy-conf>
-            </container-cache-conf>
-        </container-configuration>
+			<instance-cache>org.jboss.ejb.plugins.StatefulSessionInstanceCache</instance-cache>
+			<persistence-manager>org.jboss.ejb.plugins.StatefulSessionFilePersistenceManager</persistence-manager>
+			<transaction-manager>org.jboss.tm.TxManager</transaction-manager>
+			<container-invoker-conf>
+				<RMIObjectPort>4444</RMIObjectPort>
+			<Optimized>True</Optimized>
+			</container-invoker-conf>
+			<container-cache-conf>
+				<cache-policy>org.jboss.ejb.plugins.LRUStatefulContextCachePolicy</cache-policy>      
+				<cache-policy-conf>
+					<min-capacity>50</min-capacity>
+					<max-capacity>1000</max-capacity>
+					<remover-period>1800</remover-period>
+					<max-bean-life>1800</max-bean-life>
+					<overager-period>300</overager-period>
+					<max-bean-age>600</max-bean-age>
+					<resizer-period>400</resizer-period>
+					<max-cache-miss-period>60</max-cache-miss-period>
+					<min-cache-miss-period>1</min-cache-miss-period>
+					<cache-load-factor>0.75</cache-load-factor>
+				</cache-policy-conf>
+			</container-cache-conf>
+		</container-configuration>
 
-        <container-configuration>
-            <container-name>jdk1.2.2 Stateful SessionBean</container-name>
-            <call-logging>false</call-logging>
-            <container-invoker>org.jboss.ejb.plugins.jrmp.server.JRMPContainerInvoker</container-invoker>
+		<container-configuration>
+			<container-name>jdk1.2.2 Stateful SessionBean</container-name>
+			<call-logging>false</call-logging>
+			<container-invoker>org.jboss.ejb.plugins.jrmp.server.JRMPContainerInvoker</container-invoker>
             <container-interceptors>
                 <interceptor>org.jboss.ejb.plugins.LogInterceptor</interceptor>
                 <!-- CMT -->
@@ -198,32 +200,34 @@
                 <interceptor transaction="Bean" metricsEnabled="true">org.jboss.ejb.plugins.MetricsInterceptor</interceptor>
                 <interceptor>org.jboss.ejb.plugins.SecurityInterceptor</interceptor>
             </container-interceptors>
-            <instance-cache>org.jboss.ejb.plugins.StatefulSessionInstanceCache</instance-cache>
-            <persistence-manager>org.jboss.ejb.plugins.StatefulSessionFilePersistenceManager</persistence-manager>
-            <transaction-manager>org.jboss.tm.TxManager</transaction-manager>
-            <container-invoker-conf>
-                <RMIObjectPort>4444</RMIObjectPort>
-                <Optimized>True</Optimized>
-            </container-invoker-conf>
-            <container-cache-conf>
-                <cache-policy>org.jboss.ejb.plugins.LRUEnterpriseContextCachePolicy</cache-policy>      
-                <cache-policy-conf>
-                    <min-capacity>50</min-capacity>
-                    <max-capacity>1000</max-capacity>
-                    <overager-period>300</overager-period>
-                    <max-bean-age>600</max-bean-age>
-                    <resizer-period>400</resizer-period>
-                    <max-cache-miss-period>60</max-cache-miss-period>
-                    <min-cache-miss-period>1</min-cache-miss-period>
-                    <cache-load-factor>0.75</cache-load-factor>
-                </cache-policy-conf>
-            </container-cache-conf>
-        </container-configuration>
+		        <instance-cache>org.jboss.ejb.plugins.StatefulSessionInstanceCache</instance-cache>
+                        <persistence-manager>org.jboss.ejb.plugins.StatefulSessionFilePersistenceManager</persistence-manager>
+                        <transaction-manager>org.jboss.tm.TxManager</transaction-manager>
+                        <container-invoker-conf>
+				<RMIObjectPort>4444</RMIObjectPort>
+                        <Optimized>True</Optimized>
+                        </container-invoker-conf>
+                        <container-cache-conf>
+				<cache-policy>org.jboss.ejb.plugins.LRUStatefulContextCachePolicy</cache-policy>      
+				<cache-policy-conf>
+					<min-capacity>50</min-capacity>
+					<max-capacity>1000</max-capacity>
+					<remover-period>1800</remover-period>
+					<max-bean-life>1800</max-bean-life>
+					<overager-period>300</overager-period>
+					<max-bean-age>600</max-bean-age>
+					<resizer-period>400</resizer-period>
+					<max-cache-miss-period>60</max-cache-miss-period>
+					<min-cache-miss-period>1</min-cache-miss-period>
+					<cache-load-factor>0.75</cache-load-factor>
+				</cache-policy-conf>
+                        </container-cache-conf>
+                </container-configuration>
 
-        <container-configuration>
-            <container-name>Standard BMP EntityBean</container-name>
-            <call-logging>false</call-logging>
-            <container-invoker>org.jboss.ejb.plugins.jrmp.server.JRMPContainerInvoker</container-invoker>
+       	<container-configuration>
+			<container-name>Standard BMP EntityBean</container-name>
+		 	<call-logging>false</call-logging>
+		 	<container-invoker>org.jboss.ejb.plugins.jrmp.server.JRMPContainerInvoker</container-invoker>
             <container-interceptors>
                 <interceptor>org.jboss.ejb.plugins.LogInterceptor</interceptor>
                 <interceptor>org.jboss.ejb.plugins.SecurityInterceptor</interceptor>
@@ -232,38 +236,38 @@
                 <interceptor>org.jboss.ejb.plugins.EntityInstanceInterceptor</interceptor>
                 <interceptor>org.jboss.ejb.plugins.EntitySynchronizationInterceptor</interceptor>
             </container-interceptors>
-            <instance-pool>org.jboss.ejb.plugins.EntityInstancePool</instance-pool>
-            <instance-cache>org.jboss.ejb.plugins.EntityInstanceCache</instance-cache>
-            <persistence-manager>org.jboss.ejb.plugins.BMPPersistenceManager</persistence-manager>
-            <transaction-manager>org.jboss.tm.TxManager</transaction-manager>
-            <container-invoker-conf>
-                <RMIObjectPort>4444</RMIObjectPort>
-                <Optimized>True</Optimized>
-            </container-invoker-conf>
-            <container-cache-conf>
+		 	<instance-pool>org.jboss.ejb.plugins.EntityInstancePool</instance-pool>
+		 	<instance-cache>org.jboss.ejb.plugins.EntityInstanceCache</instance-cache>
+		 	<persistence-manager>org.jboss.ejb.plugins.BMPPersistenceManager</persistence-manager>
+		 	<transaction-manager>org.jboss.tm.TxManager</transaction-manager>
+		 	<container-invoker-conf>
+				<RMIObjectPort>4444</RMIObjectPort>
+		   		<Optimized>True</Optimized>
+		 	</container-invoker-conf>
+			<container-cache-conf>
                 <cache-policy>org.jboss.ejb.plugins.LRUEnterpriseContextCachePolicy</cache-policy>      
-                <cache-policy-conf>
-                    <min-capacity>50</min-capacity>
-                    <max-capacity>1000</max-capacity>
-                    <overager-period>300</overager-period>
-                    <max-bean-age>600</max-bean-age>
-                    <resizer-period>400</resizer-period>
-                    <max-cache-miss-period>60</max-cache-miss-period>
-                    <min-cache-miss-period>1</min-cache-miss-period>
-                    <cache-load-factor>0.75</cache-load-factor>
-                </cache-policy-conf>
-            </container-cache-conf>
-            <container-pool-conf>
-               <MaximumSize>100</MaximumSize>
-               <MinimumSize>10</MinimumSize>
-             </container-pool-conf>
-             <commit-option>A</commit-option>
-        </container-configuration>
+				<cache-policy-conf>
+					<min-capacity>50</min-capacity>
+					<max-capacity>1000</max-capacity>
+					<overager-period>300</overager-period>
+					<max-bean-age>600</max-bean-age>
+					<resizer-period>400</resizer-period>
+					<max-cache-miss-period>60</max-cache-miss-period>
+					<min-cache-miss-period>1</min-cache-miss-period>
+					<cache-load-factor>0.75</cache-load-factor>
+				</cache-policy-conf>
+			</container-cache-conf>
+			<container-pool-conf>
+		   	<MaximumSize>100</MaximumSize>
+		   	<MinimumSize>10</MinimumSize>
+		 	</container-pool-conf>
+		 	<commit-option>A</commit-option>
+		</container-configuration>
 
-        <container-configuration>
-            <container-name>jdk1.2.2 BMP EntityBean</container-name>
-            <call-logging>false</call-logging>
-            <container-invoker>org.jboss.ejb.plugins.jrmp.server.JRMPContainerInvoker</container-invoker>
+       	<container-configuration>
+			<container-name>jdk1.2.2 BMP EntityBean</container-name>
+		 	<call-logging>false</call-logging>
+		 	<container-invoker>org.jboss.ejb.plugins.jrmp.server.JRMPContainerInvoker</container-invoker>
             <container-interceptors>
                 <interceptor>org.jboss.ejb.plugins.LogInterceptor</interceptor>
                 <interceptor>org.jboss.ejb.plugins.SecurityInterceptor</interceptor>
@@ -272,26 +276,26 @@
                 <interceptor>org.jboss.ejb.plugins.EntityInstanceInterceptor</interceptor>
                 <interceptor>org.jboss.ejb.plugins.EntitySynchronizationInterceptor</interceptor>
             </container-interceptors>
-            <instance-pool>org.jboss.ejb.plugins.EntityInstancePool</instance-pool>
-            <instance-cache>org.jboss.ejb.plugins.EntityInstanceCache</instance-cache>
-            <persistence-manager>org.jboss.ejb.plugins.BMPPersistenceManager</persistence-manager>
-            <transaction-manager>org.jboss.tm.TxManager</transaction-manager>
-            <container-invoker-conf>
-                <RMIObjectPort>4444</RMIObjectPort>
-                <Optimized>True</Optimized>
-            </container-invoker-conf>
-            <container-cache-conf>
+		 	<instance-pool>org.jboss.ejb.plugins.EntityInstancePool</instance-pool>
+		        <instance-cache>org.jboss.ejb.plugins.EntityInstanceCache</instance-cache>
+                        <persistence-manager>org.jboss.ejb.plugins.BMPPersistenceManager</persistence-manager>
+                        <transaction-manager>org.jboss.tm.TxManager</transaction-manager>
+                        <container-invoker-conf>
+				<RMIObjectPort>4444</RMIObjectPort>
+                                <Optimized>True</Optimized>
+                        </container-invoker-conf>
+                        <container-cache-conf>
                 <cache-policy>org.jboss.ejb.plugins.LRUEnterpriseContextCachePolicy</cache-policy>      
-                <cache-policy-conf>
-                    <min-capacity>50</min-capacity>
-                    <max-capacity>1000</max-capacity>
-                    <overager-period>300</overager-period>
-                    <max-bean-age>600</max-bean-age>
-                    <resizer-period>400</resizer-period>
-                    <max-cache-miss-period>60</max-cache-miss-period>
-                    <min-cache-miss-period>1</min-cache-miss-period>
-                    <cache-load-factor>0.75</cache-load-factor>
-                </cache-policy-conf>
+				<cache-policy-conf>
+					<min-capacity>50</min-capacity>
+					<max-capacity>1000</max-capacity>
+					<overager-period>300</overager-period>
+					<max-bean-age>600</max-bean-age>
+					<resizer-period>400</resizer-period>
+					<max-cache-miss-period>60</max-cache-miss-period>
+					<min-cache-miss-period>1</min-cache-miss-period>
+					<cache-load-factor>0.75</cache-load-factor>
+				</cache-policy-conf>
                         </container-cache-conf>
                         <container-pool-conf>
                         <MaximumSize>100</MaximumSize>
@@ -331,9 +335,9 @@
             <MaximumSize>100</MaximumSize>
             <MinimumSize>10</MinimumSize>
             </container-pool-conf>
-        </container-configuration>
+                </container-configuration>
 
-    </container-configurations>
+	</container-configurations>
     <resource-managers />
     <enterprise-beans />
 </jboss>
