@@ -24,7 +24,7 @@
 // File: UMLUseCaseDiagram.java
 // Classes: UMLUseCaseDiagram
 // Original Author: your email here
-// $Id: UMLUseCaseDiagram.java,v 1.6 2002/05/03 19:17:04 jeremybennett Exp $
+// $Id: UMLUseCaseDiagram.java,v 1.7 2002/07/22 06:20:20 kataka Exp $
 
 // 3 Apr 2002: Jeremy Bennett (mail@jeremybennett.com). Extended to support the
 // Extend and Include relationships. JavaDoc added for clarity. Default
@@ -160,8 +160,16 @@ public class UMLUseCaseDiagram extends UMLDiagram {
      */
 
     public UMLUseCaseDiagram() {
+    	String name = null;
+  		Object[] args = {name};
+  		do {
+        	name = "use case diagram " + _UseCaseDiagramSerial;
+        	_UseCaseDiagramSerial++;
+        	args[0] = name;
+    	}
+    	while (vetoCheck("name", args));
         try {
-            setName("use case diagram " + _UseCaseDiagramSerial++);
+            setName(name);
         }
         catch (PropertyVetoException pve) { }
     }

@@ -24,7 +24,7 @@
 // File: UMLClassDiagram.java
 // Classes: UMLClassDiagram
 // Original Author: jrobbins@ics.uci.edy
-// $Id: UMLClassDiagram.java,v 1.3 2001/06/18 09:28:16 toby Exp $
+// $Id: UMLClassDiagram.java,v 1.4 2002/07/22 06:19:20 kataka Exp $
 
 package org.argouml.uml.diagram.static_structure.ui;
 
@@ -98,7 +98,15 @@ public class UMLClassDiagram extends UMLDiagram {
 
 
   public UMLClassDiagram() {
-    try { setName("class diagram " + _ClassDiagramSerial++); }
+  	String name = null;
+  	Object[] args = {name};
+  	do {
+        name = "class diagram " + _ClassDiagramSerial;
+        _ClassDiagramSerial++;
+        args[0] = name;
+    }
+    while (vetoCheck("name", args));
+    try { setName(name); }
     catch (PropertyVetoException pve) { }
   }
 

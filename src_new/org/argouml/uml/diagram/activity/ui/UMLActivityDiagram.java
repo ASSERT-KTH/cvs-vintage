@@ -24,7 +24,7 @@
 // File: UMLActivityDiagram.java
 // Classes: UMLActivityDiagram
 // Original Author: your email here
-// $Id: UMLActivityDiagram.java,v 1.9 2002/06/11 13:02:44 mkl Exp $
+// $Id: UMLActivityDiagram.java,v 1.10 2002/07/22 06:19:07 kataka Exp $
 
 package org.argouml.uml.diagram.activity.ui;
 
@@ -94,8 +94,14 @@ public class UMLActivityDiagram extends UMLDiagram {
   protected static int _ActivityDiagramSerial = 1;
 
   public UMLActivityDiagram() {
-    String name = "activity diagram " + _ActivityDiagramSerial;
-    _ActivityDiagramSerial++;
+  	String name = null;
+  	Object[] args = {name};
+  	do {
+        name = "activity diagram " + _ActivityDiagramSerial;
+        _ActivityDiagramSerial++;
+        args[0] = name;
+    }
+    while (vetoCheck("name", args));
     try { setName(name); }
     catch (PropertyVetoException pve) { }
   }

@@ -24,7 +24,7 @@
 // File: UMLCollaborationDiagram.java
 // Classes: UMLCollaborationDiagram
 // Original Author: agauthie@ics.uci.edu
-// $Id: UMLCollaborationDiagram.java,v 1.7 2002/01/25 15:16:06 psager Exp $
+// $Id: UMLCollaborationDiagram.java,v 1.8 2002/07/22 06:19:32 kataka Exp $
 
 package org.argouml.uml.diagram.collaboration.ui;
 
@@ -73,7 +73,15 @@ public class UMLCollaborationDiagram extends UMLDiagram {
 
 
   public UMLCollaborationDiagram() {
-    try { setName("collaboration diagram " + _CollaborationDiagramSerial++); }
+  	String name = null;
+  	Object[] args = {name};
+  	do {
+        name = "collaboration diagram " + _CollaborationDiagramSerial;
+        _CollaborationDiagramSerial++;
+        args[0] = name;
+    }
+    while (vetoCheck("name", args));
+    try { setName(name); }
     catch (PropertyVetoException pve) { }
   }
 
