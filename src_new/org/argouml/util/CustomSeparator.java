@@ -1,4 +1,4 @@
-// $Id: CustomSeparator.java,v 1.4 2004/06/29 00:14:03 d00mst Exp $
+// $Id: CustomSeparator.java,v 1.5 2004/08/27 15:29:17 mvw Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -63,7 +63,8 @@ public class CustomSeparator {
      * then you may block all other separators.
      */
     protected CustomSeparator() {
-	match = pattern = new char[0];
+	pattern = new char[0];
+	match = pattern;
     }
 
     /**
