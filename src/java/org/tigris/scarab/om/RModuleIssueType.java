@@ -198,6 +198,7 @@ public  class RModuleIssueType
         rmit2.setIssueTypeId(getIssueTypeId());
         rmit2.setActive(getActive());
         rmit2.setDisplay(getDisplay());
+        rmit2.setDisplayDescription(getDisplayDescription());
         rmit2.setOrder(getOrder());
         rmit2.setDedupe(getDedupe());
         rmit2.setHistory(getHistory());
