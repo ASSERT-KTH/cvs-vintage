@@ -1,4 +1,4 @@
-// $Id: StateDiagramGraphModel.java,v 1.31 2003/09/04 20:11:45 thierrylach Exp $
+// $Id: StateDiagramGraphModel.java,v 1.32 2003/09/08 00:36:42 bobtarling Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: StateDiagramGraphModel.java
 // Classes: StateDiagramGraphModel
 // Original Author: your email address here
-// $Id: StateDiagramGraphModel.java,v 1.31 2003/09/04 20:11:45 thierrylach Exp $
+// $Id: StateDiagramGraphModel.java,v 1.32 2003/09/08 00:36:42 bobtarling Exp $
 package org.argouml.uml.diagram.state;
 
 import java.beans.PropertyChangeEvent;
@@ -40,7 +40,6 @@ import org.argouml.model.uml.behavioralelements.statemachines.StateMachinesHelpe
 import org.argouml.uml.diagram.UMLMutableGraphSupport;
 import ru.novosoft.uml.behavior.state_machines.MCompositeState;
 
-import ru.novosoft.uml.behavior.state_machines.MState;
 import ru.novosoft.uml.behavior.state_machines.MStateVertex;
 import ru.novosoft.uml.behavior.state_machines.MTransition;
 import ru.novosoft.uml.foundation.core.MModelElement;
@@ -351,9 +350,9 @@ public class StateDiagramGraphModel extends UMLMutableGraphSupport
     {
       
 	if (isSource)
-	    ((MTransition) edge).setSource((MState) newNode);
+	    ModelFacade.setSource(edge, newNode);
 	else
-	    ((MTransition) edge).setTarget((MState) newNode);
+	    ModelFacade.setTarget(edge, newNode);
           
     }
   

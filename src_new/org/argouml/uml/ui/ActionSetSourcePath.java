@@ -1,4 +1,4 @@
-// $Id: ActionSetSourcePath.java,v 1.12 2003/09/07 18:03:13 bobtarling Exp $
+// $Id: ActionSetSourcePath.java,v 1.13 2003/09/08 00:36:41 bobtarling Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -39,9 +39,6 @@ import org.argouml.util.osdep.OsUtil;
 
 
 
-import ru.novosoft.uml.foundation.core.MModelElement;
-
-
 /** Action to choose and set source path for model elements
  * @stereotype singleton
  */
@@ -71,7 +68,7 @@ public class ActionSetSourcePath extends UMLAction {
 	if (f != null) {
 	    Object obj = NavigatorPane.getInstance().getSelectedObject();
 	    if (ModelFacade.isAModelElement(obj)) {
-		((MModelElement) obj).setTaggedValue("src_path", f.getPath());
+		ModelFacade.setTaggedValue(obj, "src_path",f.getPath());
 	    }
 	}
     }

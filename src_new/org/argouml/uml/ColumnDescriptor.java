@@ -1,4 +1,4 @@
-// $Id: ColumnDescriptor.java,v 1.33 2003/09/05 22:35:22 bobtarling Exp $
+// $Id: ColumnDescriptor.java,v 1.34 2003/09/08 00:36:42 bobtarling Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -64,7 +64,6 @@ import ru.novosoft.uml.foundation.core.MClass;
 import ru.novosoft.uml.foundation.core.MClassifier;
 import ru.novosoft.uml.foundation.core.MComponent;
 import ru.novosoft.uml.foundation.core.MElementResidence;
-import ru.novosoft.uml.foundation.core.MFeature;
 import ru.novosoft.uml.foundation.core.MGeneralizableElement;
 import ru.novosoft.uml.foundation.core.MGeneralization;
 import ru.novosoft.uml.foundation.core.MModelElement;
@@ -232,7 +231,7 @@ class ColumnVisibility extends ColumnDescriptor {
 	if (!(ModelFacade.isAModelElement(target))
 	    || !(ModelFacade.isAVisibilityKind(value)))
 	    return;
-	((MModelElement) target).setVisibility((MVisibilityKind) value);
+	ModelFacade.setVisibility(target, value);
     }  
 } /* end class ColumnVisibility */
 
@@ -253,7 +252,7 @@ class ColumnFeatureVis extends ColumnDescriptor {
     public void setValueFor(Object target, Object value) {
 	if (!(ModelFacade.isAFeature(target))) return;
 	if (!(ModelFacade.isAVisibilityKind(value))) return;
-	((MFeature) target).setVisibility((MVisibilityKind) value);
+	ModelFacade.setVisibility(target, value);
     }  
 } /* end class ColumnFeatureVis */
 

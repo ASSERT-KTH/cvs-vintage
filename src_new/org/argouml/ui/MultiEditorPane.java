@@ -1,4 +1,4 @@
-// $Id: MultiEditorPane.java,v 1.28 2003/09/04 20:11:45 thierrylach Exp $
+// $Id: MultiEditorPane.java,v 1.29 2003/09/08 00:36:42 bobtarling Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -95,8 +95,9 @@ public class MultiEditorPane
         for (int i = 0; i < _tabPanels.size(); i++) {
             String title = "tab";
             JPanel t = (JPanel) _tabPanels.elementAt(i);
-            if (t instanceof TabSpawnable)
+            if (t instanceof TabSpawnable) {
                 title = ((TabSpawnable) t).getTitle();
+            }
             _tabs.addTab("As " + title, t);
             _tabs.setEnabledAt(i, false);
             if (t instanceof TargetListener) {
@@ -104,8 +105,6 @@ public class MultiEditorPane
 		    .addTargetListener((TargetListener) t);
             }
         } /* end for */
-
-        
 
         _tabs.addChangeListener(this);
         _tabs.addMouseListener(this);

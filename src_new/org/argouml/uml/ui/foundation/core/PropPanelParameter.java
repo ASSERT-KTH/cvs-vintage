@@ -1,4 +1,4 @@
-// $Id: PropPanelParameter.java,v 1.31 2003/09/01 00:59:51 bobtarling Exp $
+// $Id: PropPanelParameter.java,v 1.32 2003/09/08 00:36:41 bobtarling Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -127,7 +127,7 @@ public class PropPanelParameter extends PropPanelModelElement {
     public void setType(MClassifier type) {
         Object target = getTarget();
         if (org.argouml.model.ModelFacade.isAParameter(target)) {
-            ((MParameter) target).setType(type);
+            ModelFacade.setType(target, type);
         }
     }
 

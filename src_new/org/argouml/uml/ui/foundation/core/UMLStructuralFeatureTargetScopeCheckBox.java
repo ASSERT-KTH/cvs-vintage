@@ -1,4 +1,4 @@
-// $Id: UMLStructuralFeatureTargetScopeCheckBox.java,v 1.3 2003/08/31 00:17:57 bobtarling Exp $
+// $Id: UMLStructuralFeatureTargetScopeCheckBox.java,v 1.4 2003/09/08 00:36:41 bobtarling Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -22,14 +22,13 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $Id: UMLStructuralFeatureTargetScopeCheckBox.java,v 1.3 2003/08/31 00:17:57 bobtarling Exp $
+// $Id: UMLStructuralFeatureTargetScopeCheckBox.java,v 1.4 2003/09/08 00:36:41 bobtarling Exp $
 package org.argouml.uml.ui.foundation.core;
 
 import org.argouml.application.api.Argo;
 import org.argouml.model.ModelFacade;
 import org.argouml.uml.ui.UMLCheckBox2;
 
-import ru.novosoft.uml.foundation.core.MStructuralFeature;
 import ru.novosoft.uml.foundation.data_types.MScopeKind;
 
 /**
@@ -57,7 +56,7 @@ public class UMLStructuralFeatureTargetScopeCheckBox extends UMLCheckBox2 {
     public void buildModel() {
         // repair action for possible NP after load
         if (ModelFacade.getTargetScope(getTarget()) == null) {
-            ((MStructuralFeature) getTarget()).setTargetScope(MScopeKind.INSTANCE);
+            ModelFacade.setTargetScope(getTarget(), MScopeKind.INSTANCE);
         }
         setSelected(ModelFacade.getTargetScope(getTarget()).equals(MScopeKind.CLASSIFIER));
     }

@@ -1,4 +1,4 @@
-// $Id: ParserDisplay.java,v 1.74 2003/09/07 18:03:14 bobtarling Exp $
+// $Id: ParserDisplay.java,v 1.75 2003/09/08 00:36:42 bobtarling Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: ParserDisplay.java
 // Classes: ParserDisplay
 // Original Author:
-// $Id: ParserDisplay.java,v 1.74 2003/09/07 18:03:14 bobtarling Exp $
+// $Id: ParserDisplay.java,v 1.75 2003/09/08 00:36:42 bobtarling Exp $
 
 
 
@@ -323,7 +323,7 @@ public class ParserDisplay extends Parser {
 			    if (value != null && value.equalsIgnoreCase("false"))
 				isRoot = false;
 			    if (ModelFacade.isAOperation(element))
-				((MOperation) element).setRoot(isRoot);
+				ModelFacade.setRoot(element, isRoot);
 			}
 		    });
 	_operationCustomSep = new Vector();

@@ -1,4 +1,4 @@
-// $Id: PropPanelNode.java,v 1.23 2003/06/29 23:50:17 linus Exp $
+// $Id: PropPanelNode.java,v 1.24 2003/09/08 00:36:41 bobtarling Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -26,7 +26,7 @@
 // File: PropPanelNode.java
 // Classes: PropPanelNode
 // Original Author: 5eichler@informatik.uni-hamburg.de
-// $Id: PropPanelNode.java,v 1.23 2003/06/29 23:50:17 linus Exp $
+// $Id: PropPanelNode.java,v 1.24 2003/09/08 00:36:41 bobtarling Exp $
 
 // 21 Mar 2002: Jeremy Bennett (mail@jeremybennett.com). Changed to use the
 // labels "Generalizes:" and "Specializes:" for inheritance.
@@ -55,8 +55,6 @@ import org.argouml.uml.ui.UMLList;
 import org.argouml.uml.ui.UMLReflectionBooleanProperty;
 import org.argouml.uml.ui.UMLReflectionListModel;
 import org.argouml.util.ConfigLoader;
-
-import ru.novosoft.uml.foundation.core.MNode;
 
 /**
  * TODO: this property panel needs refactoring to remove dependency on
@@ -109,8 +107,7 @@ public class PropPanelNode extends PropPanelClassifier {
     public void setResidents(Collection components) {
         Object target = getTarget();
         if (ModelFacade.isANode(target)) {
-            ((MNode) target).setResidents(components);
+            ModelFacade.setResidents(target, components);
         }
     }
 } /* end class PropPanelNode */
-

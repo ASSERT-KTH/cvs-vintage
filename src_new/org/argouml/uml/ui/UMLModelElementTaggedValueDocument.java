@@ -1,4 +1,4 @@
-// $Id: UMLModelElementTaggedValueDocument.java,v 1.5 2003/09/07 18:03:13 bobtarling Exp $
+// $Id: UMLModelElementTaggedValueDocument.java,v 1.6 2003/09/08 00:36:41 bobtarling Exp $
 // Copyright (c) 2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,8 +25,6 @@
 package org.argouml.uml.ui;
 
 import org.argouml.model.ModelFacade;
-import ru.novosoft.uml.foundation.core.MModelElement;
-
 /**
  * This class provides a text field that can be used to access
  * tagged values of a MModelElement object;
@@ -56,9 +54,7 @@ public class UMLModelElementTaggedValueDocument extends UMLPlainTextDocument {
      */
     protected void setProperty(String text) {
         if (getTarget() != null)
-            ((MModelElement) getTarget()).setTaggedValue(
-							 this.getEventName(),
-							 text);
+            ModelFacade.setTaggedValue(getTarget(), this.getEventName(),text);
     }
 
     /**

@@ -1,4 +1,4 @@
-// $Id: ConfigLoader.java,v 1.13 2003/09/01 20:30:13 bobtarling Exp $
+// $Id: ConfigLoader.java,v 1.14 2003/09/08 00:36:42 bobtarling Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -152,16 +152,20 @@ public class ConfigLoader {
 		try {
 		    res = Class.forName(tabClassName);
 		}
-		catch (ClassNotFoundException cnfe) { }
+		catch (ClassNotFoundException cnfe) {}
 		catch (Exception e) {
 		    _Log.error("Unanticipated exception, skipping " + tabName);
 		    _Log.error(e);
 		}
 		if (res != null) {
-		    if (SplashScreen.getInstance() != null) {
-			SplashScreen.getInstance().getStatusBar().showStatus("Making Project Browser: " + tabName);
-			SplashScreen.getInstance().getStatusBar().incProgress(2);
-		    }
+                    // TODO This is a problem with non-gui calling GUI.
+                    // I need to reimplement this with the splash panel
+                    // as a listener to progress changes - Bob
+                    //if (SplashScreen.getDoSplash()) {
+                    //    SplashScreen splash = SplashScreen.getInstance();
+                    //    splash.getStatusBar().showStatus("Making Project Browser: " + tabName);
+                    //    splash.getStatusBar().incProgress(2);
+                    //}
 		    return res;
 		}
 	    }

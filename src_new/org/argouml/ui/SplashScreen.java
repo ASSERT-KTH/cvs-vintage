@@ -1,4 +1,4 @@
-// $Id: SplashScreen.java,v 1.11 2003/09/01 20:30:12 bobtarling Exp $
+// $Id: SplashScreen.java,v 1.12 2003/09/08 00:36:42 bobtarling Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -39,11 +39,16 @@ public class SplashScreen extends JWindow implements IStatusBar {
 
     protected StatusBar _statusBar = new StatusBar();
 
-    static private SplashScreen INSTANCE = new SplashScreen("Loading ArgoUML...", "Splash");
+    static private SplashScreen instance;// = new SplashScreen("Loading ArgoUML...", "Splash");
 
     static private boolean _doSplash;
-    static public SplashScreen getInstance() {
-        return INSTANCE;
+    static public synchronized SplashScreen getInstance() {
+        if (!_doSplash) return null;
+System.out.println("Getting the splashscreen");
+        if (instance == null) {
+            instance = new SplashScreen("Loading ArgoUML...", "Splash");
+        }
+        return instance;
     }
     
     /**
@@ -52,6 +57,7 @@ public class SplashScreen extends JWindow implements IStatusBar {
      */
     public SplashScreen(String title, String iconName) {
 	super();
+System.out.println("Creating the splashscreen");        
 
 	setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
 	getContentPane().setLayout(new BorderLayout(0, 0));

@@ -1,4 +1,4 @@
-// $Id: ActionSequenceDiagram.java,v 1.19 2003/09/01 11:51:09 bobtarling Exp $
+// $Id: ActionSequenceDiagram.java,v 1.20 2003/09/08 00:36:41 bobtarling Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -32,9 +32,7 @@ import org.argouml.uml.diagram.sequence.ui.UMLSequenceDiagram;
 import org.argouml.uml.diagram.ui.UMLDiagram;
 
 import ru.novosoft.uml.behavior.collaborations.MCollaboration;
-import ru.novosoft.uml.foundation.core.MClassifier;
 import ru.novosoft.uml.foundation.core.MNamespace;
-import ru.novosoft.uml.foundation.core.MOperation;
 import ru.novosoft.uml.model_management.MModel;
 
 
@@ -74,12 +72,12 @@ public class ActionSequenceDiagram extends ActionAddDiagram {
             collaboration =
                 UmlFactory.getFactory().getCollaborations().buildCollaboration(
                     ns);
-            ((MCollaboration)collaboration).setRepresentedOperation((MOperation) target);
+            ModelFacade.setRepresentedOperation(collaboration, target);
         } else if (ModelFacade.isAClassifier(target)) {
             collaboration =
                 UmlFactory.getFactory().getCollaborations().buildCollaboration(
                     ns);
-            ((MCollaboration)collaboration).setRepresentedClassifier((MClassifier) target);
+            ModelFacade.setRepresentedClassifier(collaboration, target);
         } else if (ModelFacade.isAModel(target)) {
             collaboration =
                 UmlFactory.getFactory().getCollaborations().buildCollaboration(

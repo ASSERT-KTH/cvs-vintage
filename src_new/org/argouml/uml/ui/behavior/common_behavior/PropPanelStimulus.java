@@ -1,4 +1,4 @@
-// $Id: PropPanelStimulus.java,v 1.31 2003/09/06 15:24:39 bobtarling Exp $
+// $Id: PropPanelStimulus.java,v 1.32 2003/09/08 00:36:42 bobtarling Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,7 +27,7 @@
 // File: PropPanelStimulus.java
 // Classes: PropPanelStimulus
 // Original Author: agauthie@ics.uci.edu
-// $Id: PropPanelStimulus.java,v 1.31 2003/09/06 15:24:39 bobtarling Exp $
+// $Id: PropPanelStimulus.java,v 1.32 2003/09/08 00:36:42 bobtarling Exp $
 
 package org.argouml.uml.ui.behavior.common_behavior;
 
@@ -125,7 +125,7 @@ public class PropPanelStimulus extends PropPanelModelElement {
     public void setSender(MInstance element) {
         Object target = getTarget();
         if (org.argouml.model.ModelFacade.isAStimulus(target)) {
-            ((MStimulus) target).setSender(element);
+            ModelFacade.setSender(target, element);
         }
     }
 
@@ -142,7 +142,7 @@ public class PropPanelStimulus extends PropPanelModelElement {
     public void setReceiver(MInstance element) {
         Object target = getTarget();
         if (org.argouml.model.ModelFacade.isAStimulus(target)) {
-            ((MStimulus) target).setReceiver(element);
+            ModelFacade.setReceiver(target, element);
         }
     }
 
