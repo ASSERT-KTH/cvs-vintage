@@ -67,7 +67,7 @@ import org.tigris.scarab.om.AttachmentManager;
  * Sends file contents directly to the output stream.
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: ViewAttachment.java,v 1.8 2002/10/24 22:59:28 jon Exp $
+ * @version $Id: ViewAttachment.java,v 1.9 2003/01/23 23:46:18 jon Exp $
  */
 public class ViewAttachment extends Default
 {
@@ -87,11 +87,11 @@ public class ViewAttachment extends Default
         File f = new File(attachment.getFullPath());
         data.getResponse().setContentLength((int)f.length());
 
-        BufferedInputStream bis =
-             new BufferedInputStream(new FileInputStream(f));
+        BufferedInputStream bis = null;
         OutputStream os = data.getResponse().getOutputStream();
         try
         {
+            bis = new BufferedInputStream(new FileInputStream(f));
             byte[] bytes = new byte[2048];
             int s = 0;
             while ( (s = bis.read(bytes)) != -1 )
