@@ -323,6 +323,28 @@
                 <include name="torque*.jar"/>
             </fileset>
         </copy>
+    </target>
+ 
+    <!-- ================================================================== -->
+    <!-- Generate SQL from Torque                                           -->
+    <!-- ================================================================== -->
+    <target name="schema-check">
+        <echo message="checking: ${build.sql.scarab}/${project}.sql"/>
+        <uptodate property="schema.uptodate"
+            targetfile="${build.sql.scarab}/${project}.sql">
+            <srcfiles dir="${src.sql.dir}" includes="turbine-schema.xml"/>
+            <srcfiles dir="${src.sql.dir}" includes="id-table-schema.xml"/>
+            <srcfiles dir="${src.sql.dir}" includes="scheduler-schema.xml"/>
+            <srcfiles dir="${src.sql.dir}" includes="${project}-schema.xml"/>
+            <srcfiles dir="${user.home}" includes="scarab.build.properties"/>
+            <srcfiles dir="${user.home}" includes="build.properties"/>
+            <srcfiles dir="${basedir}" includes="build.properties"/>
+        </uptodate>
+    </target>
+
+    <target name="sql" depends="prepare-build-dir,schema-check,torque-init" 
+            unless="schema.uptodate">
+
         <!-- removing sample schema that comes packaged with torque -->
         <delete file="${torque.dir.scarab}/schema/project-schema.xml"/>
         <filter token="DATABASE_PROP_NAME" value="${scarab.database.prop.name}"/>
@@ -350,27 +372,6 @@
         <copy file="${src.conf.dir}/torque.props" 
               tofile="${torque.dir.scarab}/build.properties"
               filtering="true" overwrite="true"/>
-    </target>
- 
-    <!-- ================================================================== -->
-    <!-- Generate SQL from Torque                                           -->
-    <!-- ================================================================== -->
-    <target name="schema-check">
-        <echo message="checking: ${build.sql.scarab}/${project}.sql"/>
-        <uptodate property="schema.uptodate"
-            targetfile="${build.sql.scarab}/${project}.sql">
-            <srcfiles dir="${src.sql.dir}" includes="turbine-schema.xml"/>
-            <srcfiles dir="${src.sql.dir}" includes="id-table-schema.xml"/>
-            <srcfiles dir="${src.sql.dir}" includes="scheduler-schema.xml"/>
-            <srcfiles dir="${src.sql.dir}" includes="scarab-schema.xml"/>
-            <srcfiles dir="${user.home}" includes="scarab.build.properties"/>
-            <srcfiles dir="${user.home}" includes="build.properties"/>
-            <srcfiles dir="${basedir}" includes="build.properties"/>
-        </uptodate>
-    </target>
-
-    <target name="sql" depends="prepare-build-dir,schema-check,torque-init" 
-            unless="schema.uptodate">
 
         <ant antfile="build-torque.xml"
                 dir="${torque.dir.scarab}" target="project-sql-no-idtable" inheritAll="false">
