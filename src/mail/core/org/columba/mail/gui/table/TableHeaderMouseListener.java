@@ -15,11 +15,6 @@
 //All Rights Reserved.
 package org.columba.mail.gui.table;
 
-import org.columba.core.gui.util.AscendingIcon;
-import org.columba.core.gui.util.DescendingIcon;
-
-import org.columba.mail.gui.table.model.TableModelSorter;
-
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
@@ -28,6 +23,12 @@ import javax.swing.JLabel;
 import javax.swing.SwingUtilities;
 import javax.swing.table.JTableHeader;
 import javax.swing.table.TableColumnModel;
+import javax.swing.tree.TreePath;
+
+import org.columba.core.gui.util.AscendingIcon;
+import org.columba.core.gui.util.DescendingIcon;
+import org.columba.mail.gui.table.model.MessageNode;
+import org.columba.mail.gui.table.model.TableModelSorter;
 
 
 /**
@@ -44,12 +45,15 @@ public class TableHeaderMouseListener extends MouseAdapter {
     private SortingStateObservable observable;
     private ImageIcon ascending = new AscendingIcon();
     private ImageIcon descending = new DescendingIcon();
-
+    
+    private TableController controller;
+    
     /**
  *
  */
-    public TableHeaderMouseListener(TableView view, TableModelSorter sorter) {
-        this.view = view;
+    public TableHeaderMouseListener(TableController controller, TableModelSorter sorter) {
+    	this.controller = controller;
+        this.view = controller.getView();
         this.sorter = sorter;
 
         this.observable = sorter.getSortingStateObservable();
@@ -87,6 +91,13 @@ public class TableHeaderMouseListener extends MouseAdapter {
                 }
             }
 
+            // remember selected node
+            MessageNode[] nodes = view.getSelectedNodes();
+            Object uid = null;
+            
+            if ( ( nodes != null) && ( nodes.length>0) )
+            	uid = nodes[0].getUid();
+            
             // repaint table header
             SwingUtilities.invokeLater(new Runnable() {
                     public void run() {
@@ -100,6 +111,11 @@ public class TableHeaderMouseListener extends MouseAdapter {
             // notify observers
             observable.setSortingState(sorter.getSortingColumn(),
                 sorter.getSortingOrder());
+            
+            // make selected row visible again
+            if ( uid != null)
+            	controller.setSelected(new Object[] {uid});
+                      
         }
     }
 }

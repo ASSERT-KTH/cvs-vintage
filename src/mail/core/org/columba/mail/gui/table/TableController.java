@@ -197,7 +197,7 @@ public class TableController implements FocusOwner, ListSelectionListener {
         getView().setDragEnabled(true);
 
         // MouseListener sorts table when clicking on a column header
-        new TableHeaderMouseListener(getView(), getTableModelSorter());
+        new TableHeaderMouseListener(this, getTableModelSorter());
 
         // register at focus manager
         MainInterface.focusManager.registerComponent(this);
