@@ -1,13 +1,39 @@
-Version CVS (upcoming 0.9.10)
+Version 0.9.10
 
  - mail-component:
     * added attachable addressbook-frame to composer
+       - easy switching between addressbooks with tabs
+       - drag'n'drop contacts/groups in composer
+       - use to/cc/bcc buttons for multiple selection
+         adding
     * added printing support
-    * imap mailfolderinfo fixes
+    * imap mailfolderinfo fixes (total count/unread/recent message
+      numbers are correct now)
     * imap synchronize fixes
-    * imap lsub fixes
-    * local folder locking fixes
-    * new composer-ui
+    * imap lsub fixes (there were some problems with retrieving the
+      folder list and the path delimiter)
+    * local folder locking fixes (local folders are now locked from
+      an outside controller - removed nearly all locking code
+      from the folder)
+    * new composer-ui:
+       - new to/cc/bcc headerfield editor is now a JTable with
+         a JComboBox to choose to/cc/bcc
+       - JTextField is the editor, which supports auto-completion
+         using the personal and the collected addresses addressbook
+       - using TAB moves focus to the subject-JTextField
+       - using BACKSPACE removes a (empty) row in the JTable
+       - attachment-viewer is now a standard JList (working
+         context menu), attachments can be removed with the DEL-
+         key
+    * threaded-view parsing fixes
+    * threaded-view "mark message"-actions fixed
+    * mailfolderinfo-toolbar looks nicer now (created a base-class
+      which the mainframe/composer use)
+    * added some icons to represent mimetypes like MS WORD-documents
+      text/html-files, etc. (gnome2 stock icons)
+    * POP3 was opening the port twice times is fixed
+    * account name in wizard is correctly changed, updating of account 
+      info works correctly now, too
     
  - addressbook-component:
     * address parser fixes
@@ -18,8 +44,16 @@ Version CVS (upcoming 0.9.10)
     
  - core:
     * new default icon set (gnome2 stock icons - artist: tigert@ximian.com)
+    * more string externalization
+    * toolbar can be:
+       - icons only
+       - text only
+       - text beside icons (default)
+       - text under icons
+    * added tooltips to every button
+    * added copy/move/delete message buttons to toolbar
     
-    
+        
 Version 0.9.9
 
  - mail-component:
