@@ -31,6 +31,9 @@ import org.columba.mail.folder.Folder;
 import org.columba.mail.folder.FolderTreeNode;
 import org.columba.mail.folder.MessageFolderInfo;
 
+/**
+ * This class is used for the mail folder tree. It it extended from JLabel and shows the folder names in a tree.
+ */
 public class FolderTreeCellRenderer
 	extends DefaultTreeCellRenderer //extends JLabel implements TreeCellRenderer
 {
@@ -51,6 +54,11 @@ public class FolderTreeCellRenderer
 
 	private Font plainFont, boldFont, italicFont;
 
+	/**
+	 * Generates a new CellRenderer. In this contructor font and images are set to local variables. The fonts are
+	 * depended on the current UIManager.
+	 * @param bool i don't know (waffel)
+	 */
 	public FolderTreeCellRenderer(boolean bool) {
 		super();
 
@@ -72,6 +80,13 @@ public class FolderTreeCellRenderer
 
 	}
 
+	/**
+	 * The tooltip text and unseen counter for the current folder component are set. If the folder has unseen Messages the
+	 * folder self is show as bold and the unseen message counter is added to the folder label. The folder becomes a tooltip
+	 * where infos (unseen, recent, total) are set. If the folder is an Imap-folder and not selectable the folder is set to
+	 * italic with a darkgrey background.  
+	 * @see javax.swing.tree.TreeCellRenderer#getTreeCellRendererComponent(javax.swing.JTree, java.lang.Object, boolean, boolean, boolean, int, boolean)
+	 */
 	public Component getTreeCellRendererComponent(
 		JTree tree,
 		Object value,
@@ -79,21 +94,13 @@ public class FolderTreeCellRenderer
 		boolean expanded,
 		boolean leaf,
 		int row,
-		boolean hasFocus) {
+		boolean hasFocusVar) {
 
-		FolderTreeNode treeNode = (FolderTreeNode) value;
+		// setting default Values
+		setFont(plainFont);
+		setToolTipText("");
 
-		/*
-		FolderTreeNode selection = treeController.getSelected();
-		if( selection != null )
-		{
-		if ( treeNode.equals(selection) )
-			isSelected = true;
-		else
-			isSelected = false;
-		}
-		*/
-
+		// TODO why we call this? the return value is never used. (waffel)
 		super.getTreeCellRendererComponent(
 			tree,
 			value,
@@ -101,73 +108,66 @@ public class FolderTreeCellRenderer
 			expanded,
 			leaf,
 			row,
-			hasFocus);
+			hasFocusVar);
 
 		Folder folder = null;
 
+		// try to cast the given value to Folder
 		try {
 			folder = (Folder) value;
+			// if there is an Exception, then set for the Label (this) the String from the FolderTreeNode. The value MUST BE HERE
+			// a tree node
+			// TODO i don't know if in any case the value is a FolderTreeNode if it is not a Folder (waffel)
 		} catch (Exception ex) {
 			setText(((FolderTreeNode) value).toString());
-
 			return this;
 		}
 
+		// if the value was an folder
 		if (folder != null) {
-
+			// getting folder info
+			MessageFolderInfo info = folder.getMessageFolderInfo();
+			// getting unseen value
+			int unseen = info.getUnseen();
 			// mark name bold if folder contains any unseen messages
-			if (((Folder) folder).getMessageFolderInfo().getUnseen() > 0) {
-
+			// the default is alrady set to plain
+			if (unseen > 0) {
 				setFont(boldFont);
-			} else {
-				setFont(plainFont);
 			}
-		} else {
-			setFont(plainFont);
-		}
 
-		FolderItem item = folder.getFolderItem();
-
-		if (item != null) {
-			String name;
-
-			name = item.get("property", "name");
-
-			MessageFolderInfo info = ((Folder) folder).getMessageFolderInfo();
-			if (folder != null) {
+			FolderItem item = folder.getFolderItem();
+			if (item != null) {
+				String name;
+				name = item.get("property", "name");
 
 				// append unseen count to folder name
-				if (info.getUnseen() > 0)
-					name = name + " (" + info.getUnseen() + ") ";
+				if (unseen > 0)
+					name = name + " (" + unseen + ") ";
 
 				// set tooltip text
 				StringBuffer buf = new StringBuffer();
 				buf.append("<html><body>&nbsp;Total: " + info.getExists());
-				buf.append("<br>&nbsp;Unseen: " + info.getUnseen());
+				buf.append("<br>&nbsp;Unseen: " + unseen);
 				buf.append("<br>&nbsp;Recent: " + info.getRecent());
 				buf.append("</body></html>");
 				setToolTipText(buf.toString());
 
-			} else {
-				setToolTipText("");
+				setText(name);
+
+				// set icons
+				if (expanded) {
+					setIcon(folder.getExpandedIcon());
+				} else {
+					setIcon(folder.getCollapsedIcon());
+				}
+
+				// important for imap
+				// is this folder is not selectable 
+				if (!item.getBoolean("selectable", true)) {
+					setFont(italicFont);
+					setForeground(Color.darkGray);
+				}
 			}
-
-			setText(name);
-
-			// set icons
-			if (expanded) {
-				setIcon(folder.getExpandedIcon());
-			} else {
-				setIcon(folder.getCollapsedIcon());
-			}
-
-			// important for imap
-			// is this folder selectable 
-			if (!item.getBoolean("selectable", true)) {
-				setFont(italicFont);
-				setForeground(Color.darkGray);
-			}
-
 		}
 		return this;
 	}
