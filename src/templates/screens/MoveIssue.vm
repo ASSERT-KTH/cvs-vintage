@@ -21,8 +21,8 @@ elseif ($copyToModules.isEmpty())
   #foreach ($issueId in $issueList)
      #set ($currentIssue = $scarabR.getIssue($issueId))
      #if ($currentIssue && $scarabR.hasPermission($scarabG.Permission.ISSUE__VIEW, $currentIssue.Module))
-     <input type="hidden" name="issue_ids" value="$issueId"/>
-     <input type="hidden" name="id" value="$issueId"/>
+     <input type="hidden" name="issue_ids" value="$issueId" />
+     <input type="hidden" name="id" value="$issueId" />
      #end
  #end
 #end
@@ -66,7 +66,7 @@ elseif ($copyToModules.isEmpty())
  #foreach ($id in $issueList)
     #set ($dummy = $prevLink.addPathInfo("issue_ids", $id))
  #end
-  <a href="$prevLink">&laquo; previous</a> |
+  <a href="$prevLink">$l10n.PaginatePrevious</a> |
  #end
  $pageNum of $scarabR.NbrPages
  #if ($scarabR.NextPage != 0)
@@ -74,7 +74,7 @@ elseif ($copyToModules.isEmpty())
  #foreach ($id in $issueList)
     #set ($dummy = $nextLink.addPathInfo("issue_ids", $id))
  #end
-  | <a href="$nextLink">&raquo; next</a>
+  | <a href="$nextLink">$l10n.PaginateNext</a>
  #end
  </p>
 #end
@@ -105,7 +105,7 @@ elseif ($copyToModules.isEmpty())
 </table>
 
 <div class="functnbar2">
-  <input type="submit" value="$l10n.MapIssueAttributes" name="eventSubmit_doValidate" />
+  <input type="submit" value="$l10n.MapIssueAttributes" name="eventSubmit_doValidate" />&nbsp;
   <input type="submit" value="$l10n.Cancel" name="eventSubmit_doCancel" />
 </div>
 
