@@ -20,7 +20,7 @@ import org.jboss.ejb.EntityEnterpriseContext;
  *	@see <related>
  *	@author Rickard Öberg (rickard.oberg@telkel.com)
  *  @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
- *	@version $Revision: 1.7 $
+ *	@version $Revision: 1.8 $
  */
 public class EntityInstancePool
    extends AbstractInstancePool
@@ -49,10 +49,6 @@ public class EntityInstancePool
        // If transaction still present don't do anything (let the instance be GC)
        if (ctx.getTransaction() != null) return ;
            
-      // Reset instance
-      ((EntityEnterpriseContext)ctx).setValid(false);
-      ((EntityEnterpriseContext)ctx).setInvoked(false);
-      
       super.free(ctx);
    }
    
