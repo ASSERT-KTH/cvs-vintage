@@ -25,7 +25,7 @@ import org.columba.core.command.Command;
 import org.columba.core.command.DefaultCommandReference;
 import org.columba.core.command.StatusObservableImpl;
 import org.columba.core.command.Worker;
-import org.columba.core.gui.frame.AbstractFrameController;
+import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.io.StreamUtils;
 import org.columba.core.logging.ColumbaLogger;
 import org.columba.core.xml.XmlElement;
@@ -86,7 +86,7 @@ public class ViewMessageCommand extends FolderCommand {
 	 * @param references
 	 */
 	public ViewMessageCommand(
-		AbstractFrameController frame,
+		FrameMediator frame,
 		DefaultCommandReference[] references) {
 		super(frame, references);
 
@@ -177,7 +177,7 @@ public class ViewMessageCommand extends FolderCommand {
 			// if we don't use this here - actions like reply would only work on the
 			// the encrypted message
 			TableSelectionHandler h1 =
-				((TableSelectionHandler) frameController
+				((TableSelectionHandler) frameMediator
 					.getSelectionManager()
 					.getHandler("mail.table"));
 
@@ -185,7 +185,7 @@ public class ViewMessageCommand extends FolderCommand {
 
 			// this is needed to be able to open attachments of the decrypted message
 			AttachmentSelectionHandler h =
-				((AttachmentSelectionHandler) frameController
+				((AttachmentSelectionHandler) frameMediator
 					.getSelectionManager()
 					.getHandler("mail.attachment"));
 			h.setLocalReference(local);
@@ -285,7 +285,7 @@ public class ViewMessageCommand extends FolderCommand {
 	public void updateGUI() throws Exception {
 
 		AttachmentSelectionHandler h =
-			((AttachmentSelectionHandler) frameController
+			((AttachmentSelectionHandler) frameMediator
 				.getSelectionManager()
 				.getHandler("mail.attachment"));
 
@@ -296,19 +296,19 @@ public class ViewMessageCommand extends FolderCommand {
 		}
 
 		MessageController messageController =
-			((AbstractMailFrameController) frameController).messageController;
+			((AbstractMailFrameController) frameMediator).messageController;
 		if (header != null && bodyPart != null) {
 			// update pgp security indicator
 			messageController.setPGPMessage(pgpMode, pgpMessage);
 			// show message in gui component
 			messageController.showMessage(header, bodyPart, mimePartTree);
 			// security check, i dont know if we need this (waffel)
-			if (frameController instanceof ThreePaneMailFrameController) {
+			if (frameMediator instanceof ThreePaneMailFrameController) {
 				// if the message it not yet seen
 				if (!((ColumbaHeader) header).getFlags().getSeen()) {
 					// restart timer which marks the message as read
 					// after a user configurable time interval
-					((ThreePaneMailFrameController) frameController)
+					((ThreePaneMailFrameController) frameMediator)
 						.getTableController()
 						.getMarkAsReadTimer()
 						.restart((FolderCommandReference) getReferences()[0]);

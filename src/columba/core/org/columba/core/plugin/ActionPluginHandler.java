@@ -21,7 +21,7 @@ import java.util.Map;
 
 import org.columba.core.action.BasicAction;
 import org.columba.core.action.IMenu;
-import org.columba.core.gui.frame.AbstractFrameController;
+import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.io.DiskIO;
 import org.columba.core.logging.ColumbaLogger;
 import org.columba.core.xml.XmlElement;
@@ -92,7 +92,7 @@ public class ActionPluginHandler extends AbstractPluginHandler {
 
 	public BasicAction getAction(
 		String name,
-		AbstractFrameController controller)
+		FrameMediator controller)
 		throws Exception {
 
 		if (isSingleton(name)) {
@@ -118,7 +118,7 @@ public class ActionPluginHandler extends AbstractPluginHandler {
 		return (BasicAction) getPlugin(name, new Object[] { controller });
 	}
 
-	public IMenu getIMenu(String name, AbstractFrameController controller)
+	public IMenu getIMenu(String name, FrameMediator controller)
 		throws Exception {
 		return (IMenu) getPlugin(name, new Object[] { controller });
 	}

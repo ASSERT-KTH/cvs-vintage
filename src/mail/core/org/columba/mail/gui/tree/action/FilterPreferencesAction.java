@@ -9,7 +9,7 @@ package org.columba.mail.gui.tree.action;
 import java.awt.event.ActionEvent;
 
 import org.columba.core.action.FrameAction;
-import org.columba.core.gui.frame.AbstractFrameController;
+import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.gui.selection.SelectionChangedEvent;
 import org.columba.core.gui.selection.SelectionListener;
 import org.columba.mail.command.FolderCommandReference;
@@ -29,7 +29,7 @@ public class FilterPreferencesAction
 	extends FrameAction
 	implements SelectionListener {
 
-	public FilterPreferencesAction(AbstractFrameController frameController) {
+	public FilterPreferencesAction(FrameMediator frameController) {
 		super(
 				frameController,
 				MailResourceLoader.getString(

@@ -6,7 +6,7 @@
  */
 package org.columba.addressbook.gui.menu;
 
-import org.columba.core.gui.frame.AbstractFrameController;
+import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.gui.menu.Menu;
 import org.columba.core.gui.menu.MenuBarGenerator;
 import org.columba.core.gui.util.NotifyDialog;
@@ -26,7 +26,7 @@ public class AddressbookMenu extends Menu {
 	 * @param xmlRoot
 	 * @param frameMediator
 	 */
-	public AddressbookMenu(String xmlRoot, AbstractFrameController frameController) {
+	public AddressbookMenu(String xmlRoot, FrameMediator frameController) {
 		super(xmlRoot, frameController);
 
 		try {
@@ -44,7 +44,7 @@ public class AddressbookMenu extends Menu {
 
 	public MenuBarGenerator createMenuBarGeneratorInstance(
 		String xmlRoot,
-		AbstractFrameController frameController) {
+		FrameMediator frameController) {
 		if (menuGenerator == null) {
 			menuGenerator =
 				new AddressbookMenuBarGenerator(frameController, xmlRoot);

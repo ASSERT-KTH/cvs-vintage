@@ -19,7 +19,7 @@ package org.columba.mail.gui.tree.action;
 import java.awt.event.ActionEvent;
 
 import org.columba.core.action.InternAction;
-import org.columba.core.gui.frame.AbstractFrameController;
+import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.main.MainInterface;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.folder.Folder;
@@ -30,7 +30,7 @@ public class ViewHeaderListAction extends InternAction {
 	/**
 	 * @param controller
 	 */
-	public ViewHeaderListAction(AbstractFrameController controller) {
+	public ViewHeaderListAction(FrameMediator controller) {
 		super(controller);
 	}
 

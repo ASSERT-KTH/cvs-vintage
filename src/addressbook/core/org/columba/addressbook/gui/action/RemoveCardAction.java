@@ -12,7 +12,7 @@ import org.columba.addressbook.folder.AddressbookFolder;
 import org.columba.addressbook.gui.frame.AddressbookFrameController;
 import org.columba.addressbook.util.AddressbookResourceLoader;
 import org.columba.core.action.FrameAction;
-import org.columba.core.gui.frame.AbstractFrameController;
+import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.gui.util.ImageLoader;
 
 /**
@@ -23,7 +23,7 @@ import org.columba.core.gui.util.ImageLoader;
  */
 public class RemoveCardAction extends FrameAction {
 
-	public RemoveCardAction(AbstractFrameController frameController) {
+	public RemoveCardAction(FrameMediator frameController) {
 		super(
 				frameController,
 				AddressbookResourceLoader.getString(

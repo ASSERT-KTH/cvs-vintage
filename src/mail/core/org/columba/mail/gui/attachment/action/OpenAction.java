@@ -9,7 +9,7 @@ package org.columba.mail.gui.attachment.action;
 import java.awt.event.ActionEvent;
 
 import org.columba.core.action.FrameAction;
-import org.columba.core.gui.frame.AbstractFrameController;
+import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.gui.selection.SelectionChangedEvent;
 import org.columba.core.gui.selection.SelectionListener;
 import org.columba.core.gui.util.ImageLoader;
@@ -26,7 +26,7 @@ import org.columba.mail.util.MailResourceLoader;
  */
 public class OpenAction extends FrameAction implements SelectionListener {
 
-	public OpenAction(AbstractFrameController frameController) {
+	public OpenAction(FrameMediator frameController) {
 		super(
 				frameController,
 				MailResourceLoader.getString(

@@ -69,7 +69,7 @@ public class FrameModel {
 			ColumbaLogger.log.debug("id=" + id);
 
 			// create frame controller for this view...
-			AbstractFrameController c =
+			FrameMediator c =
 				createFrameController(id, new ViewItem(view));
 			// ...and display it
 			c.openView();
@@ -100,7 +100,7 @@ public class FrameModel {
 	 * 
 	 * @return				frame controller
 	 */
-	public static AbstractFrameController createFrameController(
+	public static FrameMediator createFrameController(
 											String id,
 											ViewItem viewItem) {
 		// get plugin handler for handling frames
@@ -117,10 +117,10 @@ public class FrameModel {
 
 		// get frame controller using the plugin handler found above
 		Object[] args = { viewItem };
-		AbstractFrameController frame = null;
+		FrameMediator frame = null;
 		try {
 
-			frame = (AbstractFrameController) handler.getPlugin(id, args);
+			frame = (FrameMediator) handler.getPlugin(id, args);
 
 		} catch (Exception ex) {
 			ex.printStackTrace();
@@ -138,15 +138,15 @@ public class FrameModel {
 	 * 					e.g. "ThreePaneMail" or "Addressbook"
 	 * @return			Frame controller for the given view type
 	 */
-	public static AbstractFrameController openView(String id) {
+	public static FrameMediator openView(String id) {
 
 		// look for default view settings (if not found, null is returned)
 		ViewItem view = loadDefaultView(id);
 		
 		// Create a frame controller for this view
 		// view = null => defaults specified by frame controller is used
-		////AbstractFrameController controller = createFrameController(id, null);
-		AbstractFrameController controller = createFrameController(id, view);
+		////FrameMediator controller = createFrameController(id, null);
+		FrameMediator controller = createFrameController(id, view);
 		
 		// Display the view and return reference
 		controller.openView();
@@ -218,7 +218,7 @@ public class FrameModel {
 
 		// store view settings and close all open views
 		for (Iterator it = activeFrameCtrls.iterator(); it.hasNext();) {
-			AbstractFrameController c = (AbstractFrameController) it.next();
+			FrameMediator c = (FrameMediator) it.next();
 			ViewItem v = c.getViewItem();
 			// store current view settings
 			viewList.addElement(v.getRoot());
@@ -242,7 +242,7 @@ public class FrameModel {
 	 * to do actually...)
 	 * @param c		Reference to frame controller for the view which is closed
 	 */
-	public static void close(AbstractFrameController c) {
+	public static void close(FrameMediator c) {
 		/*
 		 * *20030828, karlpeder* If we are closing all windows (via saveAll()),
 		 * the code below should not be executed for two reasons:

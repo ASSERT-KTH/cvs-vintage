@@ -1,7 +1,7 @@
 import java.awt.event.ActionEvent;
 
 import org.columba.core.action.FrameAction;
-import org.columba.core.gui.frame.AbstractFrameController;
+import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.gui.selection.SelectionChangedEvent;
 import org.columba.core.gui.selection.SelectionListener;
 import org.columba.core.main.MainInterface;
@@ -46,7 +46,7 @@ public class RemoveAddressFromWhiteListAction
 	 * @param mnemonic
 	 * @param keyStroke
 	 */
-	public RemoveAddressFromWhiteListAction(AbstractFrameController frameController) {
+	public RemoveAddressFromWhiteListAction(FrameMediator frameController) {
 		super(frameController, "Remove Address from Whitelist");
 
 		// tooltip text

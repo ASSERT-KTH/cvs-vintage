@@ -20,7 +20,7 @@ import java.util.Observable;
 import java.util.Observer;
 
 import org.columba.core.action.FrameAction;
-import org.columba.core.gui.frame.AbstractFrameController;
+import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.xml.XmlElement;
 import org.columba.mail.config.MailConfig;
 import org.columba.mail.gui.composer.ComposerController;
@@ -38,7 +38,7 @@ public class InsertBreakAction extends FrameAction
 	/**
 	 * @param frameMediator
 	 */
-	public InsertBreakAction(AbstractFrameController frameController) {
+	public InsertBreakAction(FrameMediator frameController) {
 		super(
 			frameController,
 			MailResourceLoader.getString(

@@ -17,7 +17,7 @@ package org.columba.core.action;
 
 import javax.swing.JCheckBoxMenuItem;
 
-import org.columba.core.gui.frame.AbstractFrameController;
+import org.columba.core.gui.frame.FrameMediator;
 
 /**
  * Adds an Observable/Observer to {@link BasicAction}. 
@@ -34,7 +34,7 @@ public class CheckBoxAction extends FrameAction {
 	SelectionStateObservable observable;
 
 	public CheckBoxAction(
-		AbstractFrameController frameController,
+		FrameMediator frameController,
 		String name) {
 		super(frameController, name);
 

@@ -11,7 +11,7 @@ import java.awt.event.ActionEvent;
 import javax.swing.JCheckBoxMenuItem;
 
 import org.columba.core.action.CheckBoxAction;
-import org.columba.core.gui.frame.AbstractFrameController;
+import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.gui.frame.AbstractFrameView;
 import org.columba.mail.gui.composer.ComposerView;
 
@@ -23,7 +23,7 @@ import org.columba.mail.gui.composer.ComposerView;
  */
 public class ViewAccountInfoPanelAction extends CheckBoxAction {
 
-	public ViewAccountInfoPanelAction(AbstractFrameController frameController) {
+	public ViewAccountInfoPanelAction(FrameMediator frameController) {
 		super(frameController, "AccountInfoPanel");
 		setActionCommand("SHOW_ACCOUNTINFOPANEL");
 	}

@@ -9,7 +9,7 @@ package org.columba.mail.gui.messageframe;
 import java.awt.BorderLayout;
 
 import org.columba.core.config.ViewItem;
-import org.columba.core.gui.frame.AbstractFrameController;
+import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.gui.frame.AbstractFrameView;
 import org.columba.core.gui.menu.Menu;
 import org.columba.core.gui.statusbar.StatusBar;
@@ -32,15 +32,15 @@ public class MessageFrameView extends AbstractFrameView {
 	/**
 	 * @param frameMediator
 	 */
-	public MessageFrameView(AbstractFrameController frameController) {
+	public MessageFrameView(FrameMediator frameController) {
 		super(frameController);
 
 	}
 
 	/* (non-Javadoc)
-	 * @see org.columba.core.gui.frame.AbstractFrameView#createMenu(org.columba.core.gui.frame.AbstractFrameController)
+	 * @see org.columba.core.gui.frame.AbstractFrameView#createMenu(org.columba.core.gui.frame.FrameMediator)
 	 */
-	protected Menu createMenu(AbstractFrameController controller) {
+	protected Menu createMenu(FrameMediator controller) {
 		Menu menu =
 			new MailMenu("org/columba/core/action/menu.xml", "org/columba/mail/action/messageframe_menu.xml", controller);
 
@@ -48,9 +48,9 @@ public class MessageFrameView extends AbstractFrameView {
 	}
 
 	/* (non-Javadoc)
-	 * @see org.columba.core.gui.frame.AbstractFrameView#createToolbar(org.columba.core.gui.frame.AbstractFrameController)
+	 * @see org.columba.core.gui.frame.AbstractFrameView#createToolbar(org.columba.core.gui.frame.FrameMediator)
 	 */
-	protected ToolBar createToolbar(AbstractFrameController controller) {
+	protected ToolBar createToolbar(FrameMediator controller) {
 
 		return new ToolBar(
 			MailConfig.get("messageframe_toolbar").getElement("toolbar"),

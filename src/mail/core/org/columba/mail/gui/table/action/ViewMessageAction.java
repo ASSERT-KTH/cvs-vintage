@@ -19,7 +19,7 @@ package org.columba.mail.gui.table.action;
 import java.awt.event.ActionEvent;
 
 import org.columba.core.action.InternAction;
-import org.columba.core.gui.frame.AbstractFrameController;
+import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.logging.ColumbaLogger;
 import org.columba.core.main.MainInterface;
 import org.columba.mail.command.FolderCommandReference;
@@ -34,7 +34,7 @@ public class ViewMessageAction
 	/**
 	 * @param controller
 	 */
-	public ViewMessageAction(AbstractFrameController controller) {
+	public ViewMessageAction(FrameMediator controller) {
 		super(controller);
 	}
 

@@ -6,7 +6,7 @@
  */
 package org.columba.mail.gui.menu;
 
-import org.columba.core.gui.frame.AbstractFrameController;
+import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.gui.menu.CMenu;
 import org.columba.core.gui.menu.CMenuItem;
 import org.columba.core.gui.menu.Menu;
@@ -34,7 +34,7 @@ public class MailMenu extends Menu {
 	 * @param xmlRoot
 	 * @param frameMediator
 	 */
-	public MailMenu(String xmlRoot, String extension, AbstractFrameController frameController) {
+	public MailMenu(String xmlRoot, String extension, FrameMediator frameController) {
 		super(xmlRoot, frameController);
 
 		
@@ -59,7 +59,7 @@ public class MailMenu extends Menu {
 
 	public MenuBarGenerator createMenuBarGeneratorInstance(
 		String xmlRoot,
-		AbstractFrameController frameController) {
+		FrameMediator frameController) {
 		if (menuGenerator == null) {
 			menuGenerator = new MailMenuBarGenerator(frameController, xmlRoot);
 		}

@@ -12,7 +12,7 @@ import java.awt.event.KeyEvent;
 import javax.swing.KeyStroke;
 
 import org.columba.core.action.FrameAction;
-import org.columba.core.gui.frame.AbstractFrameController;
+import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.gui.selection.SelectionChangedEvent;
 import org.columba.core.gui.selection.SelectionListener;
 import org.columba.mail.command.FolderCommandReference;
@@ -33,7 +33,7 @@ public class RenameFolderAction
 	extends FrameAction
 	implements SelectionListener {
 
-	public RenameFolderAction(AbstractFrameController frameController) {
+	public RenameFolderAction(FrameMediator frameController) {
 		super(
 			frameController,
 			MailResourceLoader.getString(

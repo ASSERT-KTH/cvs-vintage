@@ -22,7 +22,7 @@ import java.awt.event.KeyEvent;
 import javax.swing.KeyStroke;
 
 import org.columba.core.action.FrameAction;
-import org.columba.core.gui.frame.AbstractFrameController;
+import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.gui.statusbar.event.WorkerListChangeListener;
 import org.columba.core.gui.statusbar.event.WorkerListChangedEvent;
 import org.columba.core.gui.util.ImageLoader;
@@ -31,7 +31,7 @@ import org.columba.core.util.GlobalResourceLoader;
 
 public class UndoAction extends FrameAction implements WorkerListChangeListener {
 
-	public UndoAction(AbstractFrameController controller) {
+	public UndoAction(FrameMediator controller) {
 		super(
 				controller,
 				GlobalResourceLoader.getString(

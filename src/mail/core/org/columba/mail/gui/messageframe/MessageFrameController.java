@@ -92,7 +92,7 @@ public class MessageFrameController extends AbstractMailFrameController {
 	}
 
 	/* (non-Javadoc)
-	 * @see org.columba.core.gui.frame.AbstractFrameController#createView()
+	 * @see org.columba.core.gui.frame.FrameMediator#createView()
 	 */
 	public AbstractFrameView createView() {
 		MessageFrameView view = new MessageFrameView(this);
@@ -125,7 +125,7 @@ public class MessageFrameController extends AbstractMailFrameController {
 	*/
 
 	/* (non-Javadoc)
-	 * @see org.columba.core.gui.frame.AbstractFrameController#initInternActions()
+	 * @see org.columba.core.gui.frame.FrameMediator#initInternActions()
 	 */
 	protected void initInternActions() {
 

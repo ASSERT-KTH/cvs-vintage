@@ -54,7 +54,7 @@ public abstract class AbstractFrameView
 	 * every view contains a reference to its creator
 	 * 
 	 */
-	protected AbstractFrameController frameController;
+	protected FrameMediator frameController;
 	
 	protected Menu menu;
 
@@ -66,7 +66,7 @@ public abstract class AbstractFrameView
 	 */
 	protected JPanel toolbarPane;
 
-	public AbstractFrameView(AbstractFrameController frameController) {
+	public AbstractFrameView(FrameMediator frameController) {
 		this.frameController = frameController;
 
 		this.setIconImage(
@@ -112,7 +112,7 @@ public abstract class AbstractFrameView
 	 */
 	public boolean isToolbarVisible() {
 
-		return frameController.isToolbarEnabled(MAIN_TOOLBAR);
+		return ((AbstractFrameController)frameController).isToolbarEnabled(MAIN_TOOLBAR);
 		
 	}
 
@@ -182,10 +182,10 @@ public abstract class AbstractFrameView
 
 		if (b) {
 			toolbarPane.remove(toolbar);
-			frameController.enableToolbar(MAIN_TOOLBAR, false);
+			((AbstractFrameController)frameController).enableToolbar(MAIN_TOOLBAR, false);
 
 		} else {
-			frameController.enableToolbar(MAIN_TOOLBAR, true);
+			((AbstractFrameController)frameController).enableToolbar(MAIN_TOOLBAR, true);
 			toolbarPane.add(toolbar);
 
 		}
@@ -252,7 +252,7 @@ public abstract class AbstractFrameView
 	 * @param controller	controller of view
 	 * @return				complete menu
 	 */
-	protected abstract Menu createMenu(AbstractFrameController controller);
+	protected abstract Menu createMenu(FrameMediator controller);
 
 	/**
 	 * Overwrite method to add custom toolbar.
@@ -263,7 +263,7 @@ public abstract class AbstractFrameView
 	 * @param controller	controller of view
 	 * @return				complete toolbar
 	 */
-	protected abstract ToolBar createToolbar(AbstractFrameController controller);
+	protected abstract ToolBar createToolbar(FrameMediator controller);
 
 
 	/**
@@ -271,7 +271,7 @@ public abstract class AbstractFrameView
 	 * 
 	 * @return FrameController
 	 */
-	public AbstractFrameController getFrameController() {
+	public FrameMediator getFrameController() {
 		return frameController;
 	}
 

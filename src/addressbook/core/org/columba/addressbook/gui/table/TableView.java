@@ -47,7 +47,7 @@ import org.columba.addressbook.gui.table.util.TableModelSorter;
 import org.columba.addressbook.gui.table.util.TypeHeaderColumn;
 import org.columba.addressbook.util.AddressbookResourceLoader;
 import org.columba.core.config.TableItem;
-import org.columba.core.gui.frame.AbstractFrameController;
+import org.columba.core.gui.frame.FrameMediator;
 
 public class TableView extends JPanel implements ListSelectionListener
 {
@@ -493,7 +493,7 @@ public class TableView extends JPanel implements ListSelectionListener
 	/**
 	 * @return FrameController
 	 */
-	public AbstractFrameController getFrameController() {
+	public FrameMediator getFrameController() {
 		return frameController;
 	}
 

@@ -16,7 +16,7 @@
 
 package org.columba.core.action;
 
-import org.columba.core.gui.frame.AbstractFrameController;
+import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.plugin.PluginInterface;
 
 /**
@@ -39,7 +39,7 @@ import org.columba.core.plugin.PluginInterface;
  */
 public class FrameAction extends BasicAction implements PluginInterface {
 
-	protected AbstractFrameController frameMediator;
+	protected FrameMediator frameMediator;
 
 	/**
 	 * 
@@ -49,7 +49,7 @@ public class FrameAction extends BasicAction implements PluginInterface {
 	 * @param name					i18n name
 	 * 
 	 */
-	public FrameAction(AbstractFrameController frameController, String name) {
+	public FrameAction(FrameMediator frameController, String name) {
 		super(name);
 		this.frameMediator = frameController;
 	}
@@ -59,7 +59,7 @@ public class FrameAction extends BasicAction implements PluginInterface {
 	 * 
 	 * @return FrameController
 	 */
-	public AbstractFrameController getFrameMediator() {
+	public FrameMediator getFrameMediator() {
 		return frameMediator;
 	}
 
@@ -68,7 +68,7 @@ public class FrameAction extends BasicAction implements PluginInterface {
 	 * 
 	 * @param frameMediator 
 	 */
-	public void setFrameMediator(AbstractFrameController frameController) {
+	public void setFrameMediator(FrameMediator frameController) {
 		this.frameMediator = frameController;
 	}
 

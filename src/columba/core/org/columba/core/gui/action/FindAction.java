@@ -22,13 +22,13 @@ import java.awt.event.KeyEvent;
 import javax.swing.KeyStroke;
 
 import org.columba.core.action.FrameAction;
-import org.columba.core.gui.frame.AbstractFrameController;
+import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.gui.util.ImageLoader;
 import org.columba.core.util.GlobalResourceLoader;
 
 public class FindAction extends FrameAction {
 
-	public FindAction(AbstractFrameController controller) {
+	public FindAction(FrameMediator controller) {
 		super(
 				controller,
 				GlobalResourceLoader.getString(

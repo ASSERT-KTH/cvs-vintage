@@ -19,7 +19,7 @@ import java.util.List;
 
 import junit.framework.TestCase;
 
-import org.columba.core.gui.frame.AbstractFrameController;
+import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.logging.ColumbaLogger;
 
 /**
@@ -162,7 +162,7 @@ public class UndoManagerTest extends TestCase {
 
 class TestUndoCommand extends Command {
 	
-	public TestUndoCommand( AbstractFrameController controller, DefaultCommandReference[] arguments ) {
+	public TestUndoCommand( FrameMediator controller, DefaultCommandReference[] arguments ) {
 		super( controller, arguments );
 		
 		commandType = Command.UNDOABLE_OPERATION;
@@ -186,7 +186,7 @@ class TestUndoCommand extends Command {
 
 class TestNoChangeCommand extends Command {
 	
-	public TestNoChangeCommand( AbstractFrameController controller, DefaultCommandReference[] arguments ) {
+	public TestNoChangeCommand( FrameMediator controller, DefaultCommandReference[] arguments ) {
 		super( controller, arguments );		
 	}
 

@@ -14,7 +14,7 @@ import javax.swing.JPopupMenu;
 
 import org.columba.core.action.BasicAction;
 import org.columba.core.action.CheckBoxAction;
-import org.columba.core.gui.frame.AbstractFrameController;
+import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.gui.util.NotifyDialog;
 import org.columba.core.logging.ColumbaLogger;
 import org.columba.core.main.MainInterface;
@@ -34,7 +34,7 @@ public class PopupMenuGenerator extends AbstractMenuGenerator {
 	 * @param path
 	 */
 	public PopupMenuGenerator(
-		AbstractFrameController frameController,
+		FrameMediator frameController,
 		String path) {
 		super(frameController, path);
 

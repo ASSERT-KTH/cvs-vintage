@@ -21,12 +21,12 @@ import java.util.Observable;
 import java.util.Observer;
 
 import org.columba.core.action.CheckBoxAction;
-import org.columba.core.gui.frame.AbstractFrameController;
+import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.util.GlobalResourceLoader;
 
 public class ViewToolbarAction extends CheckBoxAction implements Observer{
 
-	public ViewToolbarAction(AbstractFrameController controller) {
+	public ViewToolbarAction(FrameMediator controller) {
 		super(
 				controller,
 				GlobalResourceLoader.getString(

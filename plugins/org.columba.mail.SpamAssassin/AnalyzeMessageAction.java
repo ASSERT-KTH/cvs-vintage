@@ -1,7 +1,7 @@
 import java.awt.event.ActionEvent;
 
 import org.columba.core.action.FrameAction;
-import org.columba.core.gui.frame.AbstractFrameController;
+import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.gui.selection.SelectionChangedEvent;
 import org.columba.core.gui.selection.SelectionListener;
 import org.columba.core.main.MainInterface;
@@ -28,7 +28,7 @@ public class AnalyzeMessageAction
 	 * @param mnemonic
 	 * @param keyStroke
 	 */
-	public AnalyzeMessageAction(AbstractFrameController frameController) {
+	public AnalyzeMessageAction(FrameMediator frameController) {
 		super(frameController, "Analyze Messages");
 
 		// tooltip text

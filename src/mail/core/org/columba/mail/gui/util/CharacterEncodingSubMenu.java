@@ -8,7 +8,7 @@ package org.columba.mail.gui.util;
 
 import org.columba.core.action.IMenu;
 import org.columba.core.charset.CharsetOwnerInterface;
-import org.columba.core.gui.frame.AbstractFrameController;
+import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.gui.util.ImageLoader;
 import org.columba.mail.util.MailResourceLoader;
 
@@ -24,7 +24,7 @@ public class CharacterEncodingSubMenu extends IMenu {
 	 * @param controller
 	 * @param caption
 	 */
-	public CharacterEncodingSubMenu(AbstractFrameController controller) {
+	public CharacterEncodingSubMenu(FrameMediator controller) {
 		super(
 			controller,
 			MailResourceLoader.getString(

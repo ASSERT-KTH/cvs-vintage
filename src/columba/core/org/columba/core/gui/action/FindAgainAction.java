@@ -17,12 +17,12 @@
 package org.columba.core.gui.action;
 
 import org.columba.core.action.FrameAction;
-import org.columba.core.gui.frame.AbstractFrameController;
+import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.util.GlobalResourceLoader;
 
 public class FindAgainAction extends FrameAction {
 
-	public FindAgainAction(AbstractFrameController controller) {
+	public FindAgainAction(FrameMediator controller) {
 		super(
 				controller,
 				GlobalResourceLoader.getString(

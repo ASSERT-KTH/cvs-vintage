@@ -21,7 +21,7 @@ import java.util.Observable;
 import java.util.Observer;
 
 import org.columba.core.action.FrameAction;
-import org.columba.core.gui.frame.AbstractFrameController;
+import org.columba.core.gui.frame.FrameMediator;
 import org.columba.mail.gui.frame.AbstractMailFrameController;
 import org.columba.mail.gui.message.URLObservable;
 import org.columba.mail.gui.util.URLController;
@@ -37,7 +37,7 @@ public class ComposeMessageAction extends FrameAction implements Observer {
 	/**
 	 * 
 	 */
-	public ComposeMessageAction(AbstractFrameController controller) {
+	public ComposeMessageAction(FrameMediator controller) {
 		super(controller, "Compose message...");
 
 		setEnabled(false);

@@ -28,7 +28,7 @@ import javax.swing.ButtonGroup;
 import javax.swing.JRadioButtonMenuItem;
 
 import org.columba.core.action.IMenu;
-import org.columba.core.gui.frame.AbstractFrameController;
+import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.gui.util.ImageLoader;
 import org.columba.mail.gui.frame.TableViewOwner;
 import org.columba.mail.gui.table.SortingStateObservable;
@@ -46,7 +46,7 @@ public class SortMessagesMenu
 
 	private Observable observable;
 
-	public SortMessagesMenu(AbstractFrameController controller) {
+	public SortMessagesMenu(FrameMediator controller) {
 		super(
 			controller,
 			MailResourceLoader.getString(

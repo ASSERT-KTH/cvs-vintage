@@ -28,7 +28,7 @@ import javax.swing.JRadioButtonMenuItem;
 import javax.swing.text.html.HTML;
 
 import org.columba.core.action.IMenu;
-import org.columba.core.gui.frame.AbstractFrameController;
+import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.logging.ColumbaLogger;
 import org.columba.core.xml.XmlElement;
 import org.columba.mail.config.MailConfig;
@@ -91,7 +91,7 @@ public class ParagraphMenu extends IMenu
 	 * @param controller
 	 * @param caption
 	 */
-	public ParagraphMenu(AbstractFrameController controller) {
+	public ParagraphMenu(FrameMediator controller) {
 		super(
 			controller,
 			MailResourceLoader.getString(

@@ -1,7 +1,7 @@
 import java.awt.event.ActionEvent;
 
 import org.columba.core.action.FrameAction;
-import org.columba.core.gui.frame.AbstractFrameController;
+import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.gui.selection.SelectionChangedEvent;
 import org.columba.core.gui.selection.SelectionListener;
 import org.columba.core.main.MainInterface;
@@ -34,7 +34,7 @@ public class LearnHamAction extends FrameAction implements SelectionListener {
 	 * @param mnemonic
 	 * @param keyStroke
 	 */
-	public LearnHamAction(AbstractFrameController frameController) {
+	public LearnHamAction(FrameMediator frameController) {
 		super(frameController, "Learn Ham");
 
 		// tooltip text

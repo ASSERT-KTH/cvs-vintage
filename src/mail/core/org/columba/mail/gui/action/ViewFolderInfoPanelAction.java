@@ -11,7 +11,7 @@ import java.awt.event.ActionEvent;
 import javax.swing.JCheckBoxMenuItem;
 
 import org.columba.core.action.CheckBoxAction;
-import org.columba.core.gui.frame.AbstractFrameController;
+import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.gui.frame.AbstractFrameView;
 import org.columba.mail.gui.frame.MailFrameView;
 import org.columba.mail.util.MailResourceLoader;
@@ -34,7 +34,7 @@ public class ViewFolderInfoPanelAction extends CheckBoxAction {
 	 * @param mnemonic
 	 * @param keyStroke
 	 */
-	public ViewFolderInfoPanelAction(AbstractFrameController frameController) {
+	public ViewFolderInfoPanelAction(FrameMediator frameController) {
 		super(
 				frameController,
 				MailResourceLoader.getString(

@@ -22,7 +22,7 @@ import java.awt.event.KeyEvent;
 import javax.swing.KeyStroke;
 
 import org.columba.core.action.FrameAction;
-import org.columba.core.gui.frame.AbstractFrameController;
+import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.gui.statusbar.event.WorkerListChangeListener;
 import org.columba.core.gui.statusbar.event.WorkerListChangedEvent;
 import org.columba.core.gui.util.ImageLoader;
@@ -33,7 +33,7 @@ public class CancelAction
 	extends FrameAction
 	implements WorkerListChangeListener {
 
-	public CancelAction(AbstractFrameController controller) {
+	public CancelAction(FrameMediator controller) {
 		super(
 			controller,
 			GlobalResourceLoader.getString(null, null, "menu_file_cancel"));

@@ -22,13 +22,13 @@ import java.awt.event.KeyEvent;
 import javax.swing.KeyStroke;
 
 import org.columba.core.action.FrameAction;
-import org.columba.core.gui.frame.AbstractFrameController;
+import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.main.MainInterface;
 import org.columba.core.util.GlobalResourceLoader;
 
 public class SelectAllAction extends FrameAction {
 
-	public SelectAllAction(AbstractFrameController controller) {
+	public SelectAllAction(FrameMediator controller) {
 		super(
 				controller,
 				GlobalResourceLoader.getString(

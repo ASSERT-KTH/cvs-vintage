@@ -20,13 +20,13 @@ import java.awt.event.ActionEvent;
 
 import org.columba.core.action.FrameAction;
 import org.columba.core.gui.config.GeneralOptionsDialog;
-import org.columba.core.gui.frame.AbstractFrameController;
+import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.gui.util.ImageLoader;
 import org.columba.mail.util.MailResourceLoader;
 
 public class GlobalOptionsAction extends FrameAction {
 
-	public GlobalOptionsAction(AbstractFrameController controller) {
+	public GlobalOptionsAction(FrameMediator controller) {
 		super(
 			controller,
 			MailResourceLoader.getString(

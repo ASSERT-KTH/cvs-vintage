@@ -6,7 +6,7 @@
  */
 package org.columba.mail.gui.tree;
 
-import org.columba.core.gui.frame.AbstractFrameController;
+import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.xml.XmlElement;
 import org.columba.mail.gui.menu.MailContextMenu;
 
@@ -24,7 +24,7 @@ public class TreeMenu extends MailContextMenu {
 	/**
 	 * 
 	 */
-	public TreeMenu(AbstractFrameController frameController) {
+	public TreeMenu(FrameMediator frameController) {
 		super(frameController, "org/columba/mail/action/tree_contextmenu.xml");
 		
 		/*

@@ -23,7 +23,7 @@ import java.util.ListIterator;
 import javax.swing.KeyStroke;
 
 import org.columba.core.action.FrameAction;
-import org.columba.core.gui.frame.AbstractFrameController;
+import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.gui.util.ImageLoader;
 import org.columba.core.main.MainInterface;
 import org.columba.mail.command.POP3CommandReference;
@@ -34,7 +34,7 @@ import org.columba.mail.util.MailResourceLoader;
 
 public class ReceiveSendAction extends FrameAction {
 
-	public ReceiveSendAction(AbstractFrameController controller) {
+	public ReceiveSendAction(FrameMediator controller) {
 		super(
 				controller,
 				MailResourceLoader.getString(

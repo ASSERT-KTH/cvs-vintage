@@ -19,7 +19,7 @@ package org.columba.mail.gui.composer.command;
 
 import org.columba.core.command.DefaultCommandReference;
 import org.columba.core.command.Worker;
-import org.columba.core.gui.frame.AbstractFrameController;
+import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.xml.XmlElement;
 import org.columba.mail.command.FolderCommand;
 import org.columba.mail.command.FolderCommandReference;
@@ -64,7 +64,7 @@ public class ReplyWithTemplateCommand extends FolderCommand {
 	 * @param references
 	 */
 	public ReplyWithTemplateCommand(
-		AbstractFrameController frame,
+		FrameMediator frame,
 		DefaultCommandReference[] references) {
 		super(frame, references);
 

@@ -27,7 +27,7 @@ import java.util.Observer;
 import javax.swing.KeyStroke;
 
 import org.columba.core.action.CheckBoxAction;
-import org.columba.core.gui.frame.AbstractFrameController;
+import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.gui.util.ImageLoader;
 import org.columba.core.logging.ColumbaLogger;
 import org.columba.core.xml.XmlElement;
@@ -50,7 +50,7 @@ public class ItalicFormatAction
 	 * @param frameMediator
 	 * @param name
 	 */
-	public ItalicFormatAction(AbstractFrameController frameController) {
+	public ItalicFormatAction(FrameMediator frameController) {
 
 		super(
 			frameController,

@@ -19,7 +19,7 @@ import java.awt.event.ActionEvent;
 
 import org.columba.core.action.FrameAction;
 import org.columba.core.gui.externaltools.ExternalToolsDialog;
-import org.columba.core.gui.frame.AbstractFrameController;
+import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.util.GlobalResourceLoader;
 
 /**
@@ -33,7 +33,7 @@ public class OpenExternalToolsDialogAction extends FrameAction {
 	 * @param frameMediator
 	 * @param name
 	 */
-	public OpenExternalToolsDialogAction(AbstractFrameController frameController) {
+	public OpenExternalToolsDialogAction(FrameMediator frameController) {
 		super(
 				frameController, 
 				GlobalResourceLoader.getString(

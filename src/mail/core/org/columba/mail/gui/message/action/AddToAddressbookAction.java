@@ -23,7 +23,7 @@ import java.util.Observer;
 import org.columba.addressbook.folder.ContactCard;
 import org.columba.addressbook.gui.tree.util.SelectAddressbookFolderDialog;
 import org.columba.core.action.FrameAction;
-import org.columba.core.gui.frame.AbstractFrameController;
+import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.main.MainInterface;
 import org.columba.mail.gui.frame.AbstractMailFrameController;
 import org.columba.mail.gui.message.URLObservable;
@@ -40,7 +40,7 @@ public class AddToAddressbookAction extends FrameAction implements Observer {
 	/**
 	 * 
 	 */
-	public AddToAddressbookAction(AbstractFrameController controller) {
+	public AddToAddressbookAction(FrameMediator controller) {
 		super(controller, "Add to Addressbook...");
 
 		setEnabled(false);

@@ -27,7 +27,7 @@ import java.util.Observer;
 import javax.swing.KeyStroke;
 
 import org.columba.core.action.CheckBoxAction;
-import org.columba.core.gui.frame.AbstractFrameController;
+import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.logging.ColumbaLogger;
 import org.columba.core.xml.XmlElement;
 import org.columba.mail.config.MailConfig;
@@ -49,7 +49,7 @@ public class TeleTyperFormatAction
 	 * @param frameMediator
 	 * @param name
 	 */
-	public TeleTyperFormatAction(AbstractFrameController frameController) {
+	public TeleTyperFormatAction(FrameMediator frameController) {
 
 		super(
 			frameController,

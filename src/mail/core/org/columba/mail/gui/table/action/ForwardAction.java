@@ -24,7 +24,7 @@ import java.util.Observer;
 import javax.swing.KeyStroke;
 
 import org.columba.core.action.FrameAction;
-import org.columba.core.gui.frame.AbstractFrameController;
+import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.gui.selection.SelectionChangedEvent;
 import org.columba.core.gui.selection.SelectionListener;
 import org.columba.core.gui.util.ImageLoader;
@@ -52,7 +52,7 @@ public class ForwardAction
 	private XmlElement forward;
 	private String forwardStyle;
 
-	public ForwardAction(AbstractFrameController frameController) {
+	public ForwardAction(FrameMediator frameController) {
 		super(
 			frameController,
 			MailResourceLoader.getString(

@@ -18,13 +18,13 @@ package org.columba.core.gui.action;
 import java.awt.event.ActionEvent;
 
 import org.columba.core.action.FrameAction;
-import org.columba.core.gui.frame.AbstractFrameController;
+import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.gui.frame.FrameModel;
 import org.columba.core.util.GlobalResourceLoader;
 
 public class OpenNewMailWindowAction extends FrameAction {
 
-	public OpenNewMailWindowAction(AbstractFrameController controller) {
+	public OpenNewMailWindowAction(FrameMediator controller) {
 		super(
 				controller,
 				GlobalResourceLoader.getString(

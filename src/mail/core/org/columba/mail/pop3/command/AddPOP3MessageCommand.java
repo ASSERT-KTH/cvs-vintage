@@ -9,7 +9,7 @@ package org.columba.mail.pop3.command;
 import org.columba.core.command.CompoundCommand;
 import org.columba.core.command.DefaultCommandReference;
 import org.columba.core.command.Worker;
-import org.columba.core.gui.frame.AbstractFrameController;
+import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.main.MainInterface;
 import org.columba.mail.command.FolderCommand;
 import org.columba.mail.command.FolderCommandReference;
@@ -45,7 +45,7 @@ public class AddPOP3MessageCommand extends FolderCommand {
 	 * @param references
 	 */
 	public AddPOP3MessageCommand(
-		AbstractFrameController frame,
+		FrameMediator frame,
 		DefaultCommandReference[] references) {
 		super(frame, references);
 

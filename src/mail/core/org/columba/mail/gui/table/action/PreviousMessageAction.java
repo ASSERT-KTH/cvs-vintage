@@ -21,7 +21,7 @@ import java.awt.event.ActionEvent;
 import javax.swing.KeyStroke;
 
 import org.columba.core.action.FrameAction;
-import org.columba.core.gui.frame.AbstractFrameController;
+import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.gui.selection.SelectionChangedEvent;
 import org.columba.core.gui.selection.SelectionListener;
 import org.columba.core.gui.util.ImageLoader;
@@ -40,7 +40,7 @@ public class PreviousMessageAction
 	extends FrameAction
 	implements SelectionListener {
 
-	public PreviousMessageAction(AbstractFrameController frameController) {
+	public PreviousMessageAction(FrameMediator frameController) {
 		super(
 				frameController,
 				MailResourceLoader.getString(

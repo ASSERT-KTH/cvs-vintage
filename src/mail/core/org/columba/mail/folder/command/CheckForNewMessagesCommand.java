@@ -20,7 +20,7 @@ import java.awt.Toolkit;
 import org.columba.core.command.DefaultCommandReference;
 import org.columba.core.command.StatusObservableImpl;
 import org.columba.core.command.Worker;
-import org.columba.core.gui.frame.AbstractFrameController;
+import org.columba.core.gui.frame.FrameMediator;
 import org.columba.mail.command.FolderCommand;
 import org.columba.mail.command.FolderCommandAdapter;
 import org.columba.mail.command.FolderCommandReference;
@@ -56,7 +56,7 @@ public class CheckForNewMessagesCommand extends FolderCommand {
 	 * @param references
 	 */
 	public CheckForNewMessagesCommand(
-		AbstractFrameController frame,
+		FrameMediator frame,
 		DefaultCommandReference[] references) {
 		super(frame, references);
 

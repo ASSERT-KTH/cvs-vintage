@@ -332,7 +332,7 @@ public class ComposerModel {
 	}
 
 	/*
-	public AbstractFrameController createInstance(String id) {
+	public FrameMediator createInstance(String id) {
 		return new ComposerController(id, this);
 	}
 	*/

@@ -23,7 +23,7 @@ import java.awt.event.MouseListener;
 import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
 
-import org.columba.core.gui.frame.AbstractFrameController;
+import org.columba.core.gui.frame.FrameMediator;
 import org.columba.mail.gui.attachment.action.OpenAction;
 import org.columba.ristretto.message.MimeTree;
 
@@ -54,9 +54,9 @@ public class AttachmentController {
 	private AttachmentView view;
 	private AttachmentModel model;
 
-	private AbstractFrameController abstractFrameController;
+	private FrameMediator abstractFrameController;
 
-	public AttachmentController(AbstractFrameController superController) {
+	public AttachmentController(FrameMediator superController) {
 		super();
 
 		this.abstractFrameController = superController;
@@ -75,7 +75,7 @@ public class AttachmentController {
 
 	}
 
-	public AbstractFrameController getFrameController() {
+	public FrameMediator getFrameController() {
 		return abstractFrameController;
 	}
 

@@ -21,7 +21,7 @@ import java.awt.event.ActionEvent;
 import javax.swing.KeyStroke;
 
 import org.columba.core.action.FrameAction;
-import org.columba.core.gui.frame.AbstractFrameController;
+import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.gui.selection.SelectionChangedEvent;
 import org.columba.core.gui.selection.SelectionListener;
 import org.columba.mail.gui.table.selection.TableSelectionChangedEvent;
@@ -37,7 +37,7 @@ public class PreviousUnreadMessageAction
 	extends FrameAction
 	implements SelectionListener {
 
-	public PreviousUnreadMessageAction(AbstractFrameController frameController) {
+	public PreviousUnreadMessageAction(FrameMediator frameController) {
 		super(
 				frameController,
 				MailResourceLoader.getString(

@@ -21,7 +21,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 import org.columba.core.action.FrameAction;
-import org.columba.core.gui.frame.AbstractFrameController;
+import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.util.GlobalResourceLoader;
 import org.columba.mail.gui.util.URLController;
 
@@ -33,7 +33,7 @@ import org.columba.mail.gui.util.URLController;
  */
 public class ShowProjectPageAction extends FrameAction {
 
-	public ShowProjectPageAction(AbstractFrameController frameController) {
+	public ShowProjectPageAction(FrameMediator frameController) {
 		super(
 				frameController,
 				GlobalResourceLoader.getString(

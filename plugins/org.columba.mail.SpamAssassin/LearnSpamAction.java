@@ -1,7 +1,7 @@
 import java.awt.event.ActionEvent;
 
 import org.columba.core.action.FrameAction;
-import org.columba.core.gui.frame.AbstractFrameController;
+import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.gui.selection.SelectionChangedEvent;
 import org.columba.core.gui.selection.SelectionListener;
 import org.columba.core.main.MainInterface;
@@ -34,7 +34,7 @@ public class LearnSpamAction extends FrameAction implements SelectionListener {
 	 * @param mnemonic
 	 * @param keyStroke
 	 */
-	public LearnSpamAction(AbstractFrameController frameController) {
+	public LearnSpamAction(FrameMediator frameController) {
 		super(frameController, "Learn Spam");
 
 		// tooltip text

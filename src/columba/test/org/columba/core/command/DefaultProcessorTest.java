@@ -19,7 +19,7 @@ import java.util.List;
 
 import junit.framework.TestCase;
 
-import org.columba.core.gui.frame.AbstractFrameController;
+import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.logging.ColumbaLogger;
 
 /**
@@ -124,7 +124,7 @@ public class DefaultProcessorTest extends TestCase {
 
 class TestCommand extends Command {
 	
-	public TestCommand( AbstractFrameController controller, DefaultCommandReference[] arguments ) {
+	public TestCommand( FrameMediator controller, DefaultCommandReference[] arguments ) {
 		super( controller, arguments );		
 	}
 

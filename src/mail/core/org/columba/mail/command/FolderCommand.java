@@ -17,7 +17,7 @@ package org.columba.mail.command;
 
 import org.columba.core.command.Command;
 import org.columba.core.command.DefaultCommandReference;
-import org.columba.core.gui.frame.AbstractFrameController;
+import org.columba.core.gui.frame.FrameMediator;
 
 /**
  * Adds an array of folder references  
@@ -37,7 +37,7 @@ public abstract class FolderCommand extends Command {
 		super( references);
 	}
 	
-	public FolderCommand( AbstractFrameController frame, DefaultCommandReference[] references)
+	public FolderCommand( FrameMediator frame, DefaultCommandReference[] references)
 	{
 		super(frame, references);
 	}

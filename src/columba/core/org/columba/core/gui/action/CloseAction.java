@@ -22,7 +22,7 @@ import java.awt.event.KeyEvent;
 import javax.swing.KeyStroke;
 
 import org.columba.core.action.FrameAction;
-import org.columba.core.gui.frame.AbstractFrameController;
+import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.util.GlobalResourceLoader;
 
 /**
@@ -33,7 +33,7 @@ import org.columba.core.util.GlobalResourceLoader;
  */
 public class CloseAction extends FrameAction {
 
-	public CloseAction(AbstractFrameController frameController) {
+	public CloseAction(FrameMediator frameController) {
 		super(
 				frameController,
 				GlobalResourceLoader.getString(

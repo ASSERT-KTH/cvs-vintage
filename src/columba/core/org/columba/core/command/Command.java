@@ -18,7 +18,7 @@ package org.columba.core.command;
 
 import java.lang.reflect.Array;
 
-import org.columba.core.gui.frame.AbstractFrameController;
+import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.util.Lock;
 
 /**
@@ -79,7 +79,7 @@ public abstract class Command {
 	private DefaultCommandReference[] references;
 	private DefaultCommandReference[] undoReferences;
 
-	protected AbstractFrameController frameController;
+	protected FrameMediator frameMediator;
 
 	public Command(DefaultCommandReference[] references) {
 		this.references = references;
@@ -89,10 +89,10 @@ public abstract class Command {
 	}
 
 	public Command(
-		AbstractFrameController frameController,
+		FrameMediator frameController,
 		DefaultCommandReference[] references) {
 		this.references = references;
-		this.frameController = frameController;
+		this.frameMediator = frameController;
 
 		commandType = NORMAL_OPERATION;
 		priority = NORMAL_PRIORITY;
@@ -256,7 +256,7 @@ public abstract class Command {
 	 * Returns the frameMediator.
 	 * @return FrameController
 	 */
-	public AbstractFrameController getFrameController() {
-		return frameController;
+	public FrameMediator getFrameMediator() {
+		return frameMediator;
 	}
 }

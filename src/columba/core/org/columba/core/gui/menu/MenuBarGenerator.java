@@ -10,7 +10,7 @@ import java.util.ListIterator;
 
 import javax.swing.JMenuBar;
 
-import org.columba.core.gui.frame.AbstractFrameController;
+import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.xml.XmlElement;
 
 /**
@@ -26,7 +26,7 @@ public class MenuBarGenerator extends AbstractMenuGenerator {
 	/**
 	 * @param path
 	 */
-	public MenuBarGenerator(AbstractFrameController frameController, String path) {
+	public MenuBarGenerator(FrameMediator frameController, String path) {
 		super(frameController, path);
 
 	}

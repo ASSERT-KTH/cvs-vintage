@@ -25,7 +25,7 @@ import javax.swing.KeyStroke;
 import javax.swing.SwingUtilities;
 
 import org.columba.core.action.CheckBoxAction;
-import org.columba.core.gui.frame.AbstractFrameController;
+import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.gui.selection.SelectionChangedEvent;
 import org.columba.core.gui.selection.SelectionListener;
 import org.columba.core.logging.ColumbaLogger;
@@ -52,7 +52,7 @@ public class ThreadedViewAction
 	 * Constructor for ThreadedViewAction.
 	 * @param frameMediator
 	 */
-	public ThreadedViewAction(AbstractFrameController frameController) {
+	public ThreadedViewAction(FrameMediator frameController) {
 		super(
 				frameController,
 				MailResourceLoader.getString(

@@ -11,7 +11,7 @@ import java.awt.event.ActionEvent;
 import org.columba.addressbook.gui.dialog.importfilter.ImportWizardLauncher;
 import org.columba.addressbook.util.AddressbookResourceLoader;
 import org.columba.core.action.FrameAction;
-import org.columba.core.gui.frame.AbstractFrameController;
+import org.columba.core.gui.frame.FrameMediator;
 
 /**
  * @author frd
@@ -21,7 +21,7 @@ import org.columba.core.gui.frame.AbstractFrameController;
  */
 public class AddressbookImportAction extends FrameAction {
 
-	public AddressbookImportAction(AbstractFrameController frameController) {
+	public AddressbookImportAction(FrameMediator frameController) {
 		super(
 				frameController,
 				AddressbookResourceLoader.getString(

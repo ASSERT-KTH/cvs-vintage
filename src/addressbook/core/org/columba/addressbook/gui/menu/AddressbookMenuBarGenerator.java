@@ -7,7 +7,7 @@
 package org.columba.addressbook.gui.menu;
 
 import org.columba.addressbook.util.AddressbookResourceLoader;
-import org.columba.core.gui.frame.AbstractFrameController;
+import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.gui.menu.MenuBarGenerator;
 
 /**
@@ -23,7 +23,7 @@ public class AddressbookMenuBarGenerator extends MenuBarGenerator {
 	 * @param path
 	 */
 	public AddressbookMenuBarGenerator(
-		AbstractFrameController frameController,
+		FrameMediator frameController,
 		String path) {
 		super(frameController, path);
 

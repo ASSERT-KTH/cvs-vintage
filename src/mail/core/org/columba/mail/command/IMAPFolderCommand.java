@@ -7,7 +7,7 @@
 package org.columba.mail.command;
 
 import org.columba.core.command.DefaultCommandReference;
-import org.columba.core.gui.frame.AbstractFrameController;
+import org.columba.core.gui.frame.FrameMediator;
 import org.columba.mail.folder.imap.IMAPRootFolder;
 
 /**
@@ -34,7 +34,7 @@ public abstract class IMAPFolderCommand extends FolderCommand {
 	 * @param references
 	 */
 	public IMAPFolderCommand(
-		AbstractFrameController frame,
+		FrameMediator frame,
 		DefaultCommandReference[] references) {
 		super(frame, references);
 		

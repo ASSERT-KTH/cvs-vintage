@@ -28,6 +28,7 @@ import javax.swing.JViewport;
 import org.columba.core.config.ViewItem;
 import org.columba.core.gui.frame.AbstractFrameController;
 import org.columba.core.gui.frame.AbstractFrameView;
+import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.gui.menu.Menu;
 import org.columba.core.gui.statusbar.StatusBar;
 import org.columba.core.gui.toolbar.ToolBar;
@@ -64,7 +65,7 @@ public class MailFrameView extends AbstractFrameView {
 	FilterToolbar filterToolbar;
 	HeaderView header;
 
-	public MailFrameView(AbstractFrameController frameController) {
+	public MailFrameView(FrameMediator frameController) {
 		super(frameController);
 
 		//MainInterface.mainFrame = this;
@@ -151,7 +152,7 @@ public class MailFrameView extends AbstractFrameView {
 
 		// same as menu
 
-		if (frameController.isToolbarEnabled(MailFrameView.FOLDERINFOPANEL)
+		if (((AbstractFrameController)frameController).isToolbarEnabled(MailFrameView.FOLDERINFOPANEL)
 			== true)
 			toolbarPane.add(folderInfoPanel);
 
@@ -239,7 +240,7 @@ public class MailFrameView extends AbstractFrameView {
 	/* (non-Javadoc)
 	 * @see org.columba.core.gui.FrameView#createMenu(org.columba.core.gui.FrameController)
 	 */
-	protected Menu createMenu(AbstractFrameController controller) {
+	protected Menu createMenu(FrameMediator controller) {
 		Menu menu =
 			new MailMenu(
 				"org/columba/core/action/menu.xml",
@@ -252,7 +253,7 @@ public class MailFrameView extends AbstractFrameView {
 	/* (non-Javadoc)
 	 * @see org.columba.core.gui.FrameView#createToolbar(org.columba.core.gui.FrameController)
 	 */
-	protected ToolBar createToolbar(AbstractFrameController controller) {
+	protected ToolBar createToolbar(FrameMediator controller) {
 		return new ToolBar(
 			MailConfig.get("main_toolbar").getElement("toolbar"),
 			controller);

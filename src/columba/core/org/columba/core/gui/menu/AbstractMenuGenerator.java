@@ -23,7 +23,7 @@ import javax.swing.JMenu;
 import org.columba.core.action.BasicAction;
 import org.columba.core.action.CheckBoxAction;
 import org.columba.core.action.IMenu;
-import org.columba.core.gui.frame.AbstractFrameController;
+import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.gui.util.NotifyDialog;
 import org.columba.core.io.DiskIO;
 import org.columba.core.logging.ColumbaLogger;
@@ -43,13 +43,13 @@ public abstract class AbstractMenuGenerator {
 
 	protected XmlElement menuRoot;
 	protected XmlIO xmlFile;
-	protected AbstractFrameController frameController;
+	protected FrameMediator frameController;
 
 	/**
 	 *
 	 */
 	public AbstractMenuGenerator(
-		AbstractFrameController frameController,
+		FrameMediator frameController,
 		String path) {
 		this.frameController = frameController;
 

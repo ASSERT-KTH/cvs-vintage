@@ -20,7 +20,7 @@ import org.columba.core.command.DefaultCommandReference;
 import org.columba.core.command.SelectiveGuiUpdateCommand;
 import org.columba.core.command.StatusObservableImpl;
 import org.columba.core.command.Worker;
-import org.columba.core.gui.frame.AbstractFrameController;
+import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.main.MainInterface;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.config.AccountItem;
@@ -44,7 +44,7 @@ public class ViewHeaderListCommand extends SelectiveGuiUpdateCommand {
 	private Folder folder;
 
 	public ViewHeaderListCommand(
-		AbstractFrameController frame,
+		FrameMediator frame,
 		DefaultCommandReference[] references) {
 		super(frame, references);
 
@@ -60,14 +60,14 @@ public class ViewHeaderListCommand extends SelectiveGuiUpdateCommand {
 		// notify table selection handler 
 
 		(
-			(TableSelectionHandler) frameController
+			(TableSelectionHandler) frameMediator
 				.getSelectionManager()
 				.getHandler(
 				"mail.table")).setFolder(
 			folder);
 
 		// this should be called from TableController instead
-		((TableViewOwner) frameController).getTableController().showHeaderList(
+		((TableViewOwner) frameMediator).getTableController().showHeaderList(
 			folder,
 			headerList);
 

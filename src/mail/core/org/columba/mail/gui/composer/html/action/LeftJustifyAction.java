@@ -24,7 +24,7 @@ import java.util.Observer;
 import javax.swing.text.StyleConstants;
 
 import org.columba.core.action.CheckBoxAction;
-import org.columba.core.gui.frame.AbstractFrameController;
+import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.gui.util.ImageLoader;
 import org.columba.core.logging.ColumbaLogger;
 import org.columba.core.xml.XmlElement;
@@ -46,7 +46,7 @@ public class LeftJustifyAction extends CheckBoxAction
 	 * @param frameMediator
 	 * @param name
 	 */
-	public LeftJustifyAction(AbstractFrameController frameController) {
+	public LeftJustifyAction(FrameMediator frameController) {
 
 		super(
 			frameController,

@@ -23,7 +23,7 @@ import javax.swing.JOptionPane;
 import org.columba.core.command.DefaultCommandReference;
 import org.columba.core.command.StatusObservableImpl;
 import org.columba.core.command.Worker;
-import org.columba.core.gui.frame.AbstractFrameController;
+import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.main.MainInterface;
 import org.columba.mail.command.FolderCommand;
 import org.columba.mail.command.FolderCommandReference;
@@ -58,7 +58,7 @@ public class SendAllMessagesCommand extends FolderCommand {
 	 * @param references
 	 */
 	public SendAllMessagesCommand(
-		AbstractFrameController frameController,
+		FrameMediator frameController,
 		DefaultCommandReference[] references) {
 		super(frameController, references);
 	}

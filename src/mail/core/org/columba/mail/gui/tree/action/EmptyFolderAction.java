@@ -9,7 +9,7 @@ package org.columba.mail.gui.tree.action;
 import java.awt.event.ActionEvent;
 
 import org.columba.core.action.FrameAction;
-import org.columba.core.gui.frame.AbstractFrameController;
+import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.gui.selection.SelectionChangedEvent;
 import org.columba.core.gui.selection.SelectionListener;
 import org.columba.mail.gui.tree.selection.TreeSelectionChangedEvent;
@@ -25,7 +25,7 @@ public class EmptyFolderAction
 	extends FrameAction
 	implements SelectionListener {
 
-	public EmptyFolderAction(AbstractFrameController frameController) {
+	public EmptyFolderAction(FrameMediator frameController) {
 		super(
 				frameController,
 				MailResourceLoader.getString(

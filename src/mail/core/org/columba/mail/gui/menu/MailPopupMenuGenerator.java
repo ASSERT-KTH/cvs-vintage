@@ -6,7 +6,7 @@
  */
 package org.columba.mail.gui.menu;
 
-import org.columba.core.gui.frame.AbstractFrameController;
+import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.gui.menu.PopupMenuGenerator;
 import org.columba.mail.util.MailResourceLoader;
 
@@ -23,7 +23,7 @@ public class MailPopupMenuGenerator extends PopupMenuGenerator {
 	 * @param path
 	 */
 	public MailPopupMenuGenerator(
-		AbstractFrameController frameController,
+		FrameMediator frameController,
 		String path) {
 		super(frameController, path);
 

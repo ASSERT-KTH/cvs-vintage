@@ -12,7 +12,7 @@ import java.awt.event.KeyEvent;
 import javax.swing.KeyStroke;
 
 import org.columba.core.action.FrameAction;
-import org.columba.core.gui.frame.AbstractFrameController;
+import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.gui.util.ImageLoader;
 import org.columba.mail.gui.composer.ComposerController;
 import org.columba.mail.util.MailResourceLoader;
@@ -24,7 +24,7 @@ import org.columba.mail.util.MailResourceLoader;
  */
 public class SpellcheckAction extends FrameAction {
 
-	public SpellcheckAction(AbstractFrameController frameController) {
+	public SpellcheckAction(FrameMediator frameController) {
 		super(
 				frameController,
 				MailResourceLoader.getString(

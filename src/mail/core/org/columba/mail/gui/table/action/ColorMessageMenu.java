@@ -24,7 +24,7 @@ import java.awt.event.ActionListener;
 import javax.swing.JMenuItem;
 
 import org.columba.core.action.IMenu;
-import org.columba.core.gui.frame.AbstractFrameController;
+import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.gui.selection.SelectionChangedEvent;
 import org.columba.core.gui.selection.SelectionListener;
 import org.columba.core.main.MainInterface;
@@ -60,7 +60,7 @@ public class ColorMessageMenu
 	 * @param controller
 	 * @param caption
 	 */
-	public ColorMessageMenu(AbstractFrameController controller) {
+	public ColorMessageMenu(FrameMediator controller) {
 		super(controller, "Color Message");
 
 		createSubMenu();

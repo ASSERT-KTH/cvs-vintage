@@ -42,7 +42,7 @@ import org.columba.core.charset.CharsetEvent;
 import org.columba.core.charset.CharsetListener;
 import org.columba.core.charset.CharsetOwnerInterface;
 import org.columba.core.gui.focus.FocusOwner;
-import org.columba.core.gui.frame.AbstractFrameController;
+import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.main.MainInterface;
 import org.columba.mail.folder.Folder;
 import org.columba.mail.gui.attachment.AttachmentController;
@@ -306,7 +306,7 @@ public class MessageController
 	 * Returns the mailFrameController.
 	 * @return MailFrameController
 	 */
-	public AbstractFrameController getFrameController() {
+	public FrameMediator getFrameController() {
 		return abstractFrameController;
 	}
 

@@ -17,7 +17,7 @@ package org.columba.core.action;
 
 import javax.swing.JRadioButtonMenuItem;
 
-import org.columba.core.gui.frame.AbstractFrameController;
+import org.columba.core.gui.frame.FrameMediator;
 
 /**
  * Adds an Observable/Observer to {@link BasicAction}. 
@@ -35,7 +35,7 @@ public class RadioButtonAction extends FrameAction {
 	
 	
 	public RadioButtonAction(
-		AbstractFrameController frameController,
+		FrameMediator frameController,
 		String name) {
 		super(frameController, name);
 		

@@ -19,7 +19,7 @@ import org.columba.addressbook.gui.frame.AddressbookFrameController;
 import org.columba.addressbook.parser.VCardParser;
 import org.columba.addressbook.util.AddressbookResourceLoader;
 import org.columba.core.action.FrameAction;
-import org.columba.core.gui.frame.AbstractFrameController;
+import org.columba.core.gui.frame.FrameMediator;
 
 /**
  * @author frd
@@ -29,7 +29,7 @@ import org.columba.core.gui.frame.AbstractFrameController;
  */
 public class AddVCardAction extends FrameAction {
 
-	public AddVCardAction(AbstractFrameController frameController) {
+	public AddVCardAction(FrameMediator frameController) {
 		super(
 				frameController,
 				AddressbookResourceLoader.getString(

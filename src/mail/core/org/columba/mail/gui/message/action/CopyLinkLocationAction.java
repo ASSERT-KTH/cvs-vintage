@@ -22,7 +22,7 @@ import java.util.Observable;
 import java.util.Observer;
 
 import org.columba.core.action.FrameAction;
-import org.columba.core.gui.frame.AbstractFrameController;
+import org.columba.core.gui.frame.FrameMediator;
 import org.columba.mail.gui.frame.AbstractMailFrameController;
 import org.columba.mail.gui.message.URLObservable;
 
@@ -38,7 +38,7 @@ public class CopyLinkLocationAction extends FrameAction implements Observer {
 	/**
 	 * 
 	 */
-	public CopyLinkLocationAction(AbstractFrameController controller) {
+	public CopyLinkLocationAction(FrameMediator controller) {
 		super(controller, "Copy Link");
 
 		setEnabled(false);

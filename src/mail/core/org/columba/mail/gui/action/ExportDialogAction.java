@@ -19,7 +19,7 @@ package org.columba.mail.gui.action;
 import java.awt.event.ActionEvent;
 
 import org.columba.core.action.FrameAction;
-import org.columba.core.gui.frame.AbstractFrameController;
+import org.columba.core.gui.frame.FrameMediator;
 import org.columba.mail.gui.config.export.ExportDialog;
 import org.columba.mail.util.MailResourceLoader;
 
@@ -31,7 +31,7 @@ import org.columba.mail.util.MailResourceLoader;
  */
 public class ExportDialogAction extends FrameAction {
 
-	public ExportDialogAction(AbstractFrameController frameController) {
+	public ExportDialogAction(FrameMediator frameController) {
 
 		super(frameController,
 				MailResourceLoader.getString(

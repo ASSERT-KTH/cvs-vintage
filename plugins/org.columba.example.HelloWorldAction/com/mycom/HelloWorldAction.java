@@ -19,11 +19,11 @@ package com.mycom;
 import java.awt.event.ActionEvent;
 
 import org.columba.core.action.FrameAction;
-import org.columba.core.gui.frame.AbstractFrameController;
+import org.columba.core.gui.frame.FrameMediator;
 
 public class HelloWorldAction extends FrameAction {
 
-	public HelloWorldAction(AbstractFrameController controller) {
+	public HelloWorldAction(FrameMediator controller) {
 		super(controller, "Hello, World!");
 
 		setTooltipText("Show me this tooltip, please");

@@ -6,7 +6,7 @@
  */
 package org.columba.mail.gui.message;
 
-import org.columba.core.gui.frame.AbstractFrameController;
+import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.xml.XmlElement;
 import org.columba.mail.gui.menu.MailContextMenu;
 
@@ -22,7 +22,7 @@ public class MessageMenu extends MailContextMenu {
 	 * @param frameMediator
 	 * @param path
 	 */
-	public MessageMenu(AbstractFrameController frameController) {
+	public MessageMenu(FrameMediator frameController) {
 		super(
 			frameController,
 			"org/columba/mail/action/message_contextmenu.xml");

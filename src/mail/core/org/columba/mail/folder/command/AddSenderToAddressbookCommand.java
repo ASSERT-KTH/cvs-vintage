@@ -23,7 +23,7 @@ import org.columba.addressbook.parser.AddressParser;
 import org.columba.core.command.DefaultCommandReference;
 import org.columba.core.command.StatusObservableImpl;
 import org.columba.core.command.Worker;
-import org.columba.core.gui.frame.AbstractFrameController;
+import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.main.MainInterface;
 import org.columba.mail.command.FolderCommand;
 import org.columba.mail.command.FolderCommandReference;
@@ -57,7 +57,7 @@ public class AddSenderToAddressbookCommand extends FolderCommand {
 	 * @param references
 	 */
 	public AddSenderToAddressbookCommand(
-		AbstractFrameController frame,
+		FrameMediator frame,
 		DefaultCommandReference[] references) {
 		super(frame, references);
 	}

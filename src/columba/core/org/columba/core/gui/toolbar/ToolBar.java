@@ -24,7 +24,7 @@ import javax.swing.Box;
 import javax.swing.JToolBar;
 
 import org.columba.core.action.BasicAction;
-import org.columba.core.gui.frame.AbstractFrameController;
+import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.gui.statusbar.ImageSequenceTimer;
 import org.columba.core.logging.ColumbaLogger;
 import org.columba.core.main.MainInterface;
@@ -48,11 +48,11 @@ public class ToolBar extends JToolBar {
 	XmlElement rootElement;
 	//XmlIO xmlFile;
 
-	AbstractFrameController frameController;
+	FrameMediator frameController;
 
 	public ToolBar(
 		XmlElement rootElement,
-		AbstractFrameController controller) {
+		FrameMediator controller) {
 		super();
 		this.frameController = controller;
 

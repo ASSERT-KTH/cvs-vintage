@@ -6,7 +6,7 @@
  */
 package org.columba.mail.gui.attachment;
 
-import org.columba.core.gui.frame.AbstractFrameController;
+import org.columba.core.gui.frame.FrameMediator;
 import org.columba.mail.gui.menu.MailContextMenu;
 
 /**
@@ -21,7 +21,7 @@ public class AttachmentMenu extends MailContextMenu {
 	 * @param frameMediator
 	 * @param path
 	 */
-	public AttachmentMenu(AbstractFrameController frameController) {
+	public AttachmentMenu(FrameMediator frameController) {
 		super(frameController, "org/columba/mail/action/attachment_contextmenu.xml");
 		
 	}

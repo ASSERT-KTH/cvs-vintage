@@ -22,7 +22,7 @@ import java.awt.event.KeyEvent;
 import javax.swing.KeyStroke;
 
 import org.columba.core.action.FrameAction;
-import org.columba.core.gui.frame.AbstractFrameController;
+import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.gui.util.ImageLoader;
 import org.columba.core.main.MainInterface;
 import org.columba.mail.command.FolderCommandReference;
@@ -44,7 +44,7 @@ public class SendAllMessagesAction extends FrameAction {
 	/**
 	 * @param controller
 	 */
-	public SendAllMessagesAction(AbstractFrameController controller) {
+	public SendAllMessagesAction(FrameMediator controller) {
 		super(
 				controller,
 				MailResourceLoader.getString(

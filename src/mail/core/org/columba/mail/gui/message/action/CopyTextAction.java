@@ -18,7 +18,7 @@ package org.columba.mail.gui.message.action;
 import java.awt.event.ActionEvent;
 
 import org.columba.core.action.FrameAction;
-import org.columba.core.gui.frame.AbstractFrameController;
+import org.columba.core.gui.frame.FrameMediator;
 
 /**
  * Copy selected text to clipboard.
@@ -30,7 +30,7 @@ public class CopyTextAction extends FrameAction {
 	/**
 	 * 
 	 */
-	public CopyTextAction(AbstractFrameController controller) {
+	public CopyTextAction(FrameMediator controller) {
 		super(controller, "Copy Text");
 		
 		setEnabled(false);

@@ -27,7 +27,7 @@ import java.util.Observer;
 import javax.swing.KeyStroke;
 
 import org.columba.core.action.CheckBoxAction;
-import org.columba.core.gui.frame.AbstractFrameController;
+import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.gui.util.ImageLoader;
 import org.columba.core.logging.ColumbaLogger;
 import org.columba.core.xml.XmlElement;
@@ -49,7 +49,7 @@ public class BoldFormatAction
 	/**
 	 * @param frameMediator
 	 */
-	public BoldFormatAction(AbstractFrameController frameController) {
+	public BoldFormatAction(FrameMediator frameController) {
 
 		super(
 			frameController,

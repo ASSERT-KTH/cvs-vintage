@@ -19,7 +19,7 @@ package org.columba.core.gui.action;
 import javax.help.CSH;
 
 import org.columba.core.action.FrameAction;
-import org.columba.core.gui.frame.AbstractFrameController;
+import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.gui.util.ImageLoader;
 import org.columba.core.help.HelpManager;
 import org.columba.core.util.GlobalResourceLoader;
@@ -36,7 +36,7 @@ public class ShowContextSpecificHelpAction extends FrameAction {
 	 * @param frameMediator
 	 * @param name
 	 */
-	public ShowContextSpecificHelpAction(AbstractFrameController frameController) {
+	public ShowContextSpecificHelpAction(FrameMediator frameController) {
 		super(
 				frameController,
 				GlobalResourceLoader.getString(

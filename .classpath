@@ -9,6 +9,8 @@
     <classpathentry kind="src" path="src/addressbook/independent"/>
     <classpathentry kind="src" path="res"/>
     <classpathentry kind="src" path="plugins/org.columba.mail.SpamAssassin"/>
+    <classpathentry kind="src" path="plugins/org.columba.example.HelloWorldAction"/>
+    <classpathentry kind="src" path="plugins/org.columba.mail.BounceAction"/>
     <classpathentry kind="lib" path="lib/junit.jar"/>
     <classpathentry kind="lib" path="lib/log4j.jar"/>
     <classpathentry kind="lib" path="lib/jargs.jar"/>

@@ -16,14 +16,14 @@
 
 package org.columba.core.action;
 
-import org.columba.core.gui.frame.AbstractFrameController;
+import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.gui.menu.CMenu;
 
 public class IMenu extends CMenu {
 	
-	protected AbstractFrameController controller;
+	protected FrameMediator controller;
 	
-	public IMenu( AbstractFrameController controller, String caption ) {
+	public IMenu( FrameMediator controller, String caption ) {
 		super(caption);
 		this.controller = controller;
 	}
@@ -31,7 +31,7 @@ public class IMenu extends CMenu {
 	/**
 	 * @return FrameController
 	 */
-	public AbstractFrameController getController() {
+	public FrameMediator getController() {
 		return controller;
 	}
 
@@ -39,7 +39,7 @@ public class IMenu extends CMenu {
 	 * Sets the controller.
 	 * @param controller The controller to set
 	 */
-	public void setController(AbstractFrameController controller) {
+	public void setController(FrameMediator controller) {
 		this.controller = controller;
 	}
 

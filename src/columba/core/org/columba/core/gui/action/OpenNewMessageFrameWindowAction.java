@@ -19,7 +19,7 @@ package org.columba.core.gui.action;
 import java.awt.event.ActionEvent;
 
 import org.columba.core.action.FrameAction;
-import org.columba.core.gui.frame.AbstractFrameController;
+import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.util.GlobalResourceLoader;
 import org.columba.mail.gui.messageframe.MessageFrameController;
 
@@ -32,7 +32,7 @@ import org.columba.mail.gui.messageframe.MessageFrameController;
 public class OpenNewMessageFrameWindowAction extends FrameAction {
 
 	public OpenNewMessageFrameWindowAction(
-			AbstractFrameController frameController) {
+			FrameMediator frameController) {
 			
 		super(
 				frameController,

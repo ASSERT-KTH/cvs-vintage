@@ -20,7 +20,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import org.columba.core.action.FrameAction;
-import org.columba.core.gui.frame.AbstractFrameController;
+import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.gui.util.ImageLoader;
 import org.columba.mail.gui.config.mailboximport.ImportWizardLauncher;
 import org.columba.mail.util.MailResourceLoader;
@@ -33,7 +33,7 @@ import org.columba.mail.util.MailResourceLoader;
  */
 public class ImportAction extends FrameAction implements ActionListener {
 
-	public ImportAction(AbstractFrameController frameController) {
+	public ImportAction(FrameMediator frameController) {
 		super(
 				frameController,
 				MailResourceLoader.getString(
