@@ -85,20 +85,12 @@ import org.tigris.scarab.services.security.ScarabSecurity;
  * This class is responsible for assigning users to attributes.
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: AssignIssue.java,v 1.73 2002/11/07 18:18:38 elicia Exp $
+ * @version $Id: AssignIssue.java,v 1.74 2002/12/12 22:42:31 jmcnally Exp $
  */
 public class AssignIssue extends BaseModifyIssue
 {
     private static final String ADD_USER = "add_user";
-    private static final int ADD_USER_LENGTH = ADD_USER.length() + 1;
-    private static final String REMOVE_USER = "remove_user";
-    private static final int REMOVE_USER_LENGTH = REMOVE_USER.length() + 1;
-
-    //private static final String TEMP = "temp";
-    //private static final String FINAL = "final";
-
-    //private static final String TEMP_LIST_CONTEXT = "tempList";
-
+    private static final String SELECTED_USER = "select_user";
         
     /**
      * Adds users to temporary working list.
@@ -108,28 +100,21 @@ public class AssignIssue extends BaseModifyIssue
     {
         ScarabUser user = (ScarabUser)data.getUser();
         ScarabRequestTool scarabR = getScarabRequestTool(context);
+        ScarabLocalizationTool l10n = getLocalizationTool(context);
         HashMap userMap = user.getAssociatedUsersMap();
         ValueParser params = data.getParameters();
-        Object[] keys =  params.getKeys();
-        for (int i =0; i<keys.length; i++)
+        String[] userIds = params.getStrings(ADD_USER);
+        if (userIds != null && userIds.length > 0) 
         {
-            String key = keys[i].toString();
-            if (key.startsWith(ADD_USER))
+            for (int i =0; i<userIds.length; i++)
             {
-                List item = new ArrayList();
-                String userId = key.substring(ADD_USER_LENGTH);
+                List item = new ArrayList(2);
+                String userId = userIds[i];
                 String attrId = params.get("user_attr_" + userId);
-                Attribute attribute = null;
-                ScarabUser su = null;
-                try
-                {
-                    attribute = AttributeManager.getInstance(new NumberKey(attrId));
-                    su = ScarabUserManager.getInstance(new NumberKey(userId));
-                }
-                catch (Exception e)
-                {
-                    scarabR.setAlertMessage(e.getMessage());
-                }
+                Attribute attribute = AttributeManager
+                    .getInstance(new NumberKey(attrId));
+                ScarabUser su = ScarabUserManager
+                    .getInstance(new NumberKey(userId));
                 item.add(attribute);
                 item.add(su);
                 List issues = scarabR.getAssignIssuesList();
@@ -143,10 +128,15 @@ public class AssignIssue extends BaseModifyIssue
                         userList = new ArrayList();
                     }
                     userList.add(item);
-                    userMap.put(issueId, userList);
-                    user.setAssociatedUsersMap(userMap);
+                    //userMap.put(issueId, userList);
+                    //user.setAssociatedUsersMap(userMap);
                 }
-            }
+            } 
+            scarabR.setConfirmMessage(l10n.get("SelectedUsersWereAdded"));
+        }
+        else 
+        {
+            scarabR.setAlertMessage(l10n.get("NoUsersSelected"));
         }
     }
         
@@ -158,35 +148,30 @@ public class AssignIssue extends BaseModifyIssue
     {
         ScarabUser user = (ScarabUser)data.getUser();
         ScarabRequestTool scarabR = getScarabRequestTool(context);
-        HashMap userMap = user.getAssociatedUsersMap();
-        List userList = (List)userMap.get(issueId);
+        ScarabLocalizationTool l10n = getLocalizationTool(context); 
+        List userList = (List)user.getAssociatedUsersMap().get(issueId);
         ValueParser params = data.getParameters();
-        Object[] keys =  params.getKeys();
-        for (int i =0; i<keys.length; i++)
+        String[] userIds =  params.getStrings(SELECTED_USER);
+        if (userIds != null && userIds.length > 0) 
         {
-            String key = keys[i].toString();
-            if (key.startsWith(REMOVE_USER))
+            for (int i =0; i<userIds.length; i++)
             {
-                List item = new ArrayList();
-                String userId = key.substring(REMOVE_USER_LENGTH);
-                String attrId = params.get(key);
-                Attribute attribute = null;
-                ScarabUser su = null;
-                try
-                {
-                    attribute = AttributeManager.getInstance(new NumberKey(attrId));
-                    su = ScarabUserManager.getInstance(new NumberKey(userId));
-                }
-                catch (Exception e)
-                {
-                    scarabR.setAlertMessage(e.getMessage());
-                }
+                List item = new ArrayList(2);
+                String userId = userIds[i];
+                String attrId = params.getString("old_attr_" + userId);
+                Attribute attribute = AttributeManager
+                    .getInstance(new NumberKey(attrId));
+                ScarabUser su = ScarabUserManager
+                    .getInstance(new NumberKey(userId));
                 item.add(attribute);
                 item.add(su);
                 userList.remove(item);
-                userMap.put(issueId, userList);
-                user.setAssociatedUsersMap(userMap);
             }
+            scarabR.setConfirmMessage(l10n.get("SelectedUsersWereRemoved"));
+        }
+        else 
+        {
+            scarabR.setAlertMessage(l10n.get("NoUsersSelected"));
         }
     }
 
@@ -198,30 +183,22 @@ public class AssignIssue extends BaseModifyIssue
     {
         ScarabUser user = (ScarabUser)data.getUser();
         ScarabRequestTool scarabR = getScarabRequestTool(context);
-        HashMap userMap = user.getAssociatedUsersMap();
-        List userList = (List)userMap.get(issueId);
+        ScarabLocalizationTool l10n = getLocalizationTool(context);
+        List userList = (List)user.getAssociatedUsersMap().get(issueId);
         ValueParser params = data.getParameters();
-        Object[] keys =  params.getKeys();
-        for (int i =0; i<keys.length; i++)
+        String[] userIds =  params.getStrings(SELECTED_USER);
+        if (userIds != null && userIds.length > 0) 
         {
-            String key = keys[i].toString();
-            if (key.startsWith(REMOVE_USER))
+            for (int i =0; i<userIds.length; i++)
             {
-                List item = new ArrayList();
-                List newItem = new ArrayList();
-                String userId = key.substring(REMOVE_USER_LENGTH);
-                String attrId = params.get(key);
-                Attribute attribute = null;
-                ScarabUser su = null;
-                try
-                {
-                    attribute = AttributeManager.getInstance(new NumberKey(attrId));
-                    su = ScarabUserManager.getInstance(new NumberKey(userId));
-                }
-                catch (Exception e)
-                {
-                    scarabR.setAlertMessage(e.getMessage());
-                }
+                List item = new ArrayList(2);
+                List newItem = new ArrayList(2);
+                String userId = userIds[i];
+                String attrId = params.getString("old_attr_" + userId);
+                Attribute attribute = AttributeManager
+                    .getInstance(new NumberKey(attrId));
+                ScarabUser su = ScarabUserManager
+                    .getInstance(new NumberKey(userId));
                 item.add(attribute);
                 item.add(su);
                 userList.remove(item);
@@ -233,9 +210,12 @@ public class AssignIssue extends BaseModifyIssue
                 newItem.add(newAttribute);
                 newItem.add(su);
                 userList.add(newItem);
-                userMap.put(issueId, userList);
-                user.setAssociatedUsersMap(userMap);
             }
+            scarabR.setConfirmMessage(l10n.get("SelectedUsersWereModified"));
+        }
+        else 
+        {
+            scarabR.setAlertMessage(l10n.get("NoUsersSelected"));
         }
     }
 

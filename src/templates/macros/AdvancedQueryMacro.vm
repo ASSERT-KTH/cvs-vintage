@@ -68,39 +68,8 @@ from:&#160;<input type="text" size="20"
 </div>
 
 ## ATTRIBUTES
-<div class="axial">
-#if ( $search.isXMITSearch() )
- <h3>$l10n.CommonAttributes</h3>
- <table cellpadding="3" cellspacing="2" border="0">
- #set ($firstTextWidget = true)
- #foreach ( $attKey in $attrValues.sequence() )
-     #set ( $attVal = $attrValues.get($attKey) )
-     #if (!$attVal.Attribute.isUserAttribute())
-         #attributeWidget($attVal)
-     #end     
- #end
- </table>
-#else
- ## single module/issuetype search so we will show attribute groups
- #set ( $module = $search.getModule() )
- #set ( $issueType = $search.getIssueType() )
- #set ($firstTextWidget = true)
- #foreach ($group in $module.getAttributeGroups($issueType))
-  #if (!$group.Attributes.isEmpty())
-    <h3>$group.Name</h3>
-    <table cellpadding="3" cellspacing="2" border="0">
-   #foreach ($att in $group.Attributes)
-    #set ($rma = $module.getRModuleAttribute($att, $issueType))
-    #if ($rma.Active)
-        #set ($attVal = $attrValues.get($att.Name.toUpperCase()))
-        #attributeWidget($attVal)
-    #end
-   #end
-    </table>
-  #end
- #end
-#end
-</div>
+#queryAttributesSection($search false 3)
+
 
 ##PERSONNEL
 #set ($loopVar = 0)
@@ -330,6 +299,46 @@ from:&#160;<input type="text" size="20"
 </table>
 </div>
 
+#end
+
+#macro (queryAttributesSection $search $optionsOnly $headerLevel)
+
+#set ($attrValues = $search.CommonAttributeValuesMap)
+<div class="axial">
+#if ( $search.isXMITSearch() )
+ <h$headerLevel>$l10n.CommonAttributes</h$headerLevel>
+ <table cellpadding="3" cellspacing="2" border="0">
+ #set ($firstTextWidget = true)
+ #foreach ( $attKey in $attrValues.sequence() )
+     #set ( $attVal = $attrValues.get($attKey) )
+     #if (!$attVal.Attribute.isUserAttribute() && (!$optionsOnly || $attVal.Attribute.isOptionAttribute()))
+         #attributeWidget($attVal)
+     #end     
+ #end
+ </table>
+#else
+ ## single module/issuetype search so we will show attribute groups
+ #set ( $module = $search.getModule() )
+ #set ( $issueType = $search.getIssueType() )
+ #set ($firstTextWidget = true)
+ #foreach ($group in $module.getAttributeGroups($issueType))
+  #if (!$group.Attributes.isEmpty())
+    <h$headerLevel>$group.Name</h$headerLevel>
+    <table cellpadding="3" cellspacing="2" border="0">
+   #foreach ($att in $group.Attributes)
+    #set ($rma = $module.getRModuleAttribute($att, $issueType))
+    #if ($rma.Active)
+        #set ($attVal = $attrValues.get($att.Name.toUpperCase()))
+        #if (!$optionsOnly || $attVal.Attribute.isOptionAttribute())
+          #attributeWidget($attVal)
+        #end
+    #end
+   #end
+    </table>
+  #end
+ #end
+#end
+</div>
 #end
 
 #macro (attributeWidget $attVal)

@@ -61,8 +61,11 @@
   #set ($attr = $item.get(0))
   #set ($user = $item.get(1))
   #set ($userId = $user.UserId)
-    <tr class="a">
-    <td><input type="checkbox" name="remove_user_$user.UserId" value="$attr.AttributeId" />
+    #indexedRows($velocityCount)
+    <td>
+      <input type="checkbox" name="select_user" value="$userId" />
+      <input type="hidden" name="old_attr_$userId" value="$attr.AttributeId" />
+    </td>
     <td><a href="mailto:$user.Email">$user.UserName</a></td>
     <td><strong>$!user.Name</strong></td>
     <td><select name="asso_user_{$userId}_issue_{$issue.IssueId}">
@@ -109,100 +112,11 @@
  <input type="submit" value="$l10n.Done" name="eventSubmit_doDone" />
 </div>
 
-## SORTING
-#set ($sortColumn = $data.Parameters.getString("sortColumn","username"))
-#set ($sortPolarity = $data.Parameters.getString("sortPolarity","asc"))
-#set ($allAttributes = $scarabG.getAllAttributes($sortColumn, $sortPolarity))
-
-
-## USER SEARCH
-
-<a name="add"><h3>$l10n.Users</h3></a> 
-<div class="axial">
-<table border="0" cellspacing="2" cellpadding="3">
-  <tr>
-   <th>$l10n.FilterString</th>
-   <td><input type="text" name="searchString" value="$searchString" />&nbsp;
-     <select name="searchField">
-      <option value="First Name" #if($searchField.equals("First Name")) selected="selected"#end>$l10n.FirstName</option>
-      <option value="Last Name" #if($searchField.equals("Last Name")) selected="selected"#end>$l10n.LastName</option>
-      <option value="Username" #if($searchField.equals("Username")) selected="selected"#end>$l10n.Username</option>
-     </select>&nbsp;<input type="submit" name="eventSubmit_doRefresh" value="$l10n.Filter" /></td>
-  </tr>
-</table>
-</div>
-
-#if ($searchString && $searchString.length() > 0)
-   #set ($searchResults = $scarabR.UserSearchResults) 
-   #if ( $searchResults.isEmpty())
-      <p class="alert">$l10n.NoUsersMatch</p>
-      #set ($searchResults = $scarabR.Users)
-   #end
-#else
-      #set ($searchResults = $scarabR.Users)
-#end
-
-## PAGINATION
-## if results exceed limit, get subset list
-#set ($resultsPerPage = $data.Parameters.getInt("resultsPerPage", 25))
-#set ($pageNum = $data.Parameters.getInt("pageNum", 1))
-#set ($paginated = ($resultsPerPage > 0 && $searchResults.size() > $resultsPerPage))
-
-#if ($paginated)
-  #set ($searchResults = $scarabR.getPaginatedList($searchResults, $pageNum, $resultsPerPage))
-  #paginateWithSearch ($resultsPerPage $pageNum $sortColumn $sortPolarity $searchString $searchField)
-#end
-
-  <table width="100%" border="1" cellspacing="2" cellpadding="3">
-	<tr>
-	<th nowrap="nowrap">$l10n.Select</th>
-	<th>#userSort ("username" "$l10n.Username" "AssignIssue.vm")</th>
-    <th>#userSort ("name" "$l10n.FullName" "AssignIssue.vm")</th>
-	<th>$l10n.Association</th>
-	</tr>
-   #foreach ($user in $searchResults)
-    #indexedRows($velocityCount)
-    <td><input type="checkbox" name="add_user_$user.UserId" value="$user.UserId" /></td>
-    <td><a href="mailTo:$user.Email">$user.UserName</a></td>
-    <td><strong>$user.Name</strong></td>
-    <td><select name="user_attr_$user.UserId">
-     #foreach ($userAttr in $userAttrs)
-      #if ($user.hasPermission($userAttr.Permission, $modules))
-       <option value="$userAttr.AttributeId">$userAttr.Name</option>
-      #end
-     #end
-    </select></td>
-    </tr>
-   #end
-   </table>
-
-#if ($paginated)
-  #paginateWithSearch ($resultsPerPage $pageNum $sortColumn $sortPolarity $searchString $searchField)
-
-<div class="axial">
-  <table cellpadding="3" cellspacing="2" border="0">
-     <tr>
-       <th>$l10n.MaxPerPage</th>
-       <td>
-           #resultsPerPageRadioSelect($resultsPerPage)
-           &#160;<input type="submit" value="$l10n.Refresh" />
-       </td>
-     </tr>
-  </table>
-</div>
-#end
+#userList($modules $userAttrs)
 
 <div class="functnbar3">
  <input type="submit" name="eventSubmit_doAdd" value="$l10n.AddAssignee" />
 </div>
-
-
-## keep track of state of the list, resultsPerPage should come after the
-## chance to change it, because we will use the first value
-<input type="hidden" name="sortColumn" value="$sortColumn" />
-<input type="hidden" name="sortPolarity" value="$sortPolarity" />
-<input type="hidden" name="pageNum" value="$pageNum" />
-<input type="hidden" name="resultsPerPage" value="$resultsPerPage" />
 
 $intake.declareGroups()
 
