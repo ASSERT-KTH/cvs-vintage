@@ -17,7 +17,7 @@ import org.jboss.deployment.DeploymentException;
  *
  *   @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
  *   @author <a href="mailto:Scott_Stark@displayscape.com">Scott Stark</a>.
- *   @version $Revision: 1.13 $
+ *   @version $Revision: 1.14 $
  */
 public class SessionMetaData extends BeanMetaData 
 {
@@ -50,7 +50,10 @@ public class SessionMetaData extends BeanMetaData
          else
             return ConfigurationMetaData.STATEFUL_13;
       } else {
-         return ConfigurationMetaData.STATELESS_13;
+         if (this.isClustered())
+            return ConfigurationMetaData.CLUSTERED_STATELESS_13;
+         else
+            return ConfigurationMetaData.STATELESS_13;
       }
    }
 	

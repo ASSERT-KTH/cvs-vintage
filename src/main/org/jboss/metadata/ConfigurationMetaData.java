@@ -20,7 +20,7 @@ import org.w3c.dom.NodeList;
 /** The configuration information for an EJB container.
  *   @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
  *   @author <a href="mailto:scott.stark@jboss.org">Scott Stark</a>
- *   @version $Revision: 1.29 $
+ *   @version $Revision: 1.30 $
  *
  *  <p><b>Revisions:</b><br>
  *  <p><b>2001/08/02: marcf</b>
@@ -55,7 +55,12 @@ public class ConfigurationMetaData extends MetaData
    public static final String STATELESS_13 = "Standard Stateless SessionBean";
    public static final String STATEFUL_13 = "Standard Stateful SessionBean";
    public static final String MESSAGE_DRIVEN_13 = "Standard Message Driven Bean";
+   
+   public static final String CLUSTERED_CMP_2x_13 = "Clustered CMP 2.x EntityBean";
+   public static final String CLUSTERED_CMP_1x_13 = "Clustered CMP EntityBean";
+   public static final String CLUSTERED_BMP_13 = "Clustered BMP EntityBean";
    public static final String CLUSTERED_STATEFUL_13 = "Clustered Stateful SessionBean"; // we do not support JDK < 1.3
+   public static final String CLUSTERED_STATELESS_13 = "Clustered Stateless SessionBean"; // we do not support JDK < 1.3
 
    public static final byte A_COMMIT_OPTION = 0;
    public static final byte B_COMMIT_OPTION = 1;
