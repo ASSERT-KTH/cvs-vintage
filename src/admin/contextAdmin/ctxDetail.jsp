@@ -52,15 +52,12 @@
     <tr>
       <th>Index files</th>
       <td> 
-	<adm:iterate name="wfile" enumeration="<%= ctx.getWelcomeFiles() %>" 
+	<adm:iterate name="wfile" array="<%= ctx.getWelcomeFiles() %>" 
                      type="java.lang.String" >
 	  <%= wfile %>&nbsp;
         </adm:iterate>
       </td>
    </tr>
-    <tr bgcolor="#e1e1e1">
-      <th>Protection Domain</th><td><pre><%= ctx.getProtectionDomain() %></pre></td>
-    </tr>
     <tr>
       <th>Virtual Hosts</th>
       <td> <%= ( null == ctx.getHost())? "DEFAULT" : ctx.getHost() %>&nbsp; 

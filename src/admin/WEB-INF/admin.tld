@@ -23,11 +23,28 @@
       Admin
     </info>
     <attribute>
+       <name>action</name>
+       <required>false</required>
+    </attribute>
+    <attribute>
        <name>ctxPathParam</name>
        <required>false</required>
     </attribute>
     <attribute>
+       <name>docBaseParam</name>
+       <required>false</required>
+    </attribute>
+    <attribute>
+       <name>docBase</name>
+       <required>false</required>
+    </attribute>
+    <attribute>
        <name>ctxPath</name>
+       <required>false</required>
+       <rtexprvalue>true</rtexprvalue>
+    </attribute>
+    <attribute>
+       <name>ctxHost</name>
        <required>false</required>
        <rtexprvalue>true</rtexprvalue>
     </attribute>

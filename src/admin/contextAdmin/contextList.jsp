@@ -31,38 +31,22 @@
 		<%= ("".equals( context.getPath() )) ? "ROOT" :  context.getPath() %>
            </a></td>
       <td> <%= context.getDocBase() %> </td>
+      <td>
+	<a href="contextRemove.jsp?removeContextName=<%= context.getPath() %>">
+            remove
+	</a>
+      </td>
+      <td>
+	<form method="POST" action="contextRemove.jsp" >
+	     <INPUT TYPE=hidden name="removeContextName" 
+		    value="<%= context.getPath() %>">
+	     <INPUT TYPE=submit name="submit" value="Remove">
+	   </form>
+      </td>
       </tr>
   </adm:iterate>
 
   </table>
 
-  <h3>Request Interceptors</h3>
-     
-    <table>
-     <adm:iterate name="riA" array="<%= cm.getRequestInterceptors() %>" 
-               type="org.apache.tomcat.core.RequestInterceptor" >
-      <tr>
-	  <td><%= riA.getClass().getName() %>
-	  </td>
-	</tr>
-      <td>
-      </tr>
-     </adm:iterate>
-    </table>
-
-  <h3>Context Interceptors</h3>
-
-    <table>
-     <adm:iterate name="riA" array="<%= cm.getContextInterceptors() %>" 
-               type="org.apache.tomcat.core.ContextInterceptor" >
-      <tr>
-	  <td><%= riA.getClass().getName() %>
-	  </td>
-	</tr>
-      <td>
-      </tr>
-     </adm:iterate>
-    </table>
-       
 </body>
 </html>

@@ -27,27 +27,7 @@
 
       contextAdmin.init(request);
 
-      if (param.equals("View All Contexts")) {
-          Enumeration enum = contextAdmin.getContextNames();
-          while (enum.hasMoreElements()) {
-              String name = (String)enum.nextElement();
-%>
-              <ul>
-                  <li><font color="#CC0000"><h2>CONTEXT NAME: <%= name %>
-                  </h2></font>
-<%
-              String[] contextInfoArray = contextAdmin.getContextInfo(name);
-              for (int i=0; i<contextInfoArray.length; i++) {
-%>
-                  <dd><dt> <%= contextInfoArray[i] %>
-<%
-              }
-%>
-              </ul>
-<%
-          }
-      }
-      else if (param.equals("Add Context")) {
+      if (param.equals("Add Context")) {
 %>
           <%= contextAdmin.addContext() %>
 <%

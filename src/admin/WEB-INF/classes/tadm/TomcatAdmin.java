@@ -7,9 +7,7 @@ import javax.servlet.http.*;
 
 import javax.servlet.jsp.*;
 import javax.servlet.jsp.tagext.*;
-import org.apache.tomcat.core.Request;
-import org.apache.tomcat.core.Context;
-import org.apache.tomcat.core.ContextManager;
+import org.apache.tomcat.core.*;
 import org.apache.tomcat.helper.RequestUtil;
 
 /**
@@ -19,8 +17,12 @@ import org.apache.tomcat.helper.RequestUtil;
  */
 public class TomcatAdmin extends TagSupport {
     private ContextManager cm;
-    String ctxPathParam;
     String ctxPath;
+    String docBase;
+    String ctxPathParam;
+    String docBaseParam;
+    String action;
+    String host;
     PageContext pageContext;
     
     public TomcatAdmin() {}
@@ -31,19 +33,30 @@ public class TomcatAdmin extends TagSupport {
 		getRequest();
 	    init(req);
 	    pageContext.setAttribute("cm", cm);
-	    if( ctxPathParam != null ) {
+	    Context ctx=null;
+	    if( ctxPath==null && ctxPathParam!=null ) {
 		ctxPath=req.getParameter( ctxPathParam );
 	    }
+	    if( docBase==null &&  docBaseParam!=null) {
+		docBase=req.getParameter( docBaseParam );
+	    }
+	    
 	    if( ctxPath != null ) {
+		System.out.println("Finding " + ctxPath );
 		Enumeration en=cm.getContexts();
 		while( en.hasMoreElements() ) {
-		    Context ctx=(Context)en.nextElement();
+		    ctx=(Context)en.nextElement();
+		    // XXX virtual host
 		    if( ctxPath.equals( ctx.getPath())) {
 			pageContext.setAttribute("ctx", ctx);
 			break;
 		    }
 		}
 	    }
+	    if("removeContext".equals( action ) )
+		removeContext( cm , ctx);
+	    if("addContext".equals( action ) )
+		addContext( cm, host, ctxPath, docBase );
 	} catch (Exception ex ) {
 	    ex.printStackTrace();
 	}
@@ -76,12 +89,51 @@ public class TomcatAdmin extends TagSupport {
         return cm;
     }
 
-    public void setCtxPathParam( String ctx ) {
-	ctxPathParam=ctx;
-    }
-
     public void setCtxPath( String ctx ) {
 	ctxPath=ctx;
     }
 
+    public void setCtxPathParam( String ctx ) {
+	ctxPathParam=ctx;
+    }
+    
+    public void setDocBaseParam( String ctx ) {
+	docBaseParam=ctx;
+    }
+
+    public void setCtxHost( String host ) {
+	this.host=host;
+    }
+
+    public void setAction( String action ) {
+	this.action=action;
+    }
+
+    public void setDocBase( String docBase ) {
+	this.docBase=docBase;
+    }
+
+    private void removeContext( ContextManager cm, Context ctx)
+	throws TomcatException
+    {
+	System.out.println("Removing " + ctx );
+	cm.removeContext( ctx );
+    }
+
+    private void addContext( ContextManager cm, String host, String path,
+			     String docBase)
+	throws TomcatException
+    {
+	if( ! docBase.startsWith("/") ) {
+	    docBase=cm.getHome() + "/" + docBase;
+	}
+	System.out.println("Adding " + path + " " + docBase);
+	Context context = new Context();
+	context.setContextManager(cm);
+	context.setPath(path);
+	context.setDocBase(docBase);
+
+	cm.addContext(context);
+	context.init();
+    }
 }
