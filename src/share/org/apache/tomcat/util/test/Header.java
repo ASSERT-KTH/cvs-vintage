@@ -97,6 +97,10 @@ public class Header {
 	this.value = v;
     }
 
+    public String toString() {
+	return value;
+    }
+    
     // -------------------- Utils --------------------
 
     // Code from JSERV !!!

@@ -320,7 +320,8 @@ public class HttpRequest {
 		    if( v!=null) sb.append(v);
 		}
 	    }
-	    sb.append(" ").append(protocol);
+	    //	    sb.append(" ").append(protocol);
+	    sb.append(" ").append("HTTP/1.0"); // only http1.0 for now on request
 	    requestLine=sb.toString();
 	}
 
