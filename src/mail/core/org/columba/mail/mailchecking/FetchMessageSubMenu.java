@@ -13,6 +13,7 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
+
 package org.columba.mail.mailchecking;
 
 import org.columba.core.action.AbstractColumbaAction;
@@ -25,13 +26,13 @@ import org.columba.mail.util.MailResourceLoader;
 import java.util.Observable;
 import java.util.Observer;
 
-
+/**
+ * Provides a menu item for each mail account enabling users to fetch new
+ * messages.
+ */
 public class FetchMessageSubMenu extends IMenu implements Observer {
     //private POP3ServerCollection popServer;
 
-    /**
- *
- */
     public FetchMessageSubMenu(FrameMediator controller) {
         super(controller,
             MailResourceLoader.getString("menu", "mainframe",
@@ -61,8 +62,6 @@ public class FetchMessageSubMenu extends IMenu implements Observer {
  * @see java.util.Observer#update(java.util.Observable, java.lang.Object)
  */
     public void update(Observable observable, Object arg1) {
-        System.out.println("update menu...");
-
         // recreate menu
         createMenu();
     }
