@@ -253,49 +253,60 @@ public  class AttributeGroup
             }            
             else
             {
-                // Delete module-attribute mapping
-                Criteria crit  = new Criteria()
-                    .addJoin(RModuleAttributePeer.ATTRIBUTE_ID,
-                             RAttributeAttributeGroupPeer.ATTRIBUTE_ID)
-                    .add(RAttributeAttributeGroupPeer.GROUP_ID,
-                             getAttributeGroupId())
-                    .add(RModuleAttributePeer.MODULE_ID,
-                             getModuleId());
-                    Criteria.Criterion critIssueType = crit.getNewCriterion(
-                            RModuleAttributePeer.ISSUE_TYPE_ID,
-                            getIssueTypeId(), Criteria.EQUAL);
-                    critIssueType.or(crit.getNewCriterion(
-                            RModuleAttributePeer.ISSUE_TYPE_ID,
-                            issueType.getTemplateId(), Criteria.EQUAL));
-                    crit.and(critIssueType);
-                List results = RModuleAttributePeer.doSelect(crit);
-                for (int i=0; i<results.size(); i++)
-                {
-                     RModuleAttribute rma = (RModuleAttribute)results.get(i);
-                     rma.delete(user);
-                }
-
-                // Delete attribute - attribute group mapping
-                crit = new Criteria()
-                    .add(RAttributeAttributeGroupPeer.GROUP_ID, getAttributeGroupId());
-                RAttributeAttributeGroupPeer.doDelete(crit);
-
-                // Delete the attribute group
-                int order = getOrder();
-                crit = new Criteria()
-                    .add(AttributeGroupPeer.ATTRIBUTE_GROUP_ID, getAttributeGroupId());
-                AttributeGroupPeer.doDelete(crit);
-                
                 List attrGroups = null;
                 if (isGlobal())
                 {
                     attrGroups = issueType.getAttributeGroups(false);
+                    // Delete issuetype-attribute mapping
+                    Criteria crit  = new Criteria()
+                        .addJoin(RIssueTypeAttributePeer.ATTRIBUTE_ID,
+                                 RAttributeAttributeGroupPeer.ATTRIBUTE_ID)
+                        .add(RAttributeAttributeGroupPeer.GROUP_ID,
+                                 getAttributeGroupId());
+                    List results = RIssueTypeAttributePeer.doSelect(crit);
+                    for (int i=0; i<results.size(); i++)
+                    {
+                         RIssueTypeAttribute ria = (RIssueTypeAttribute)results.get(i);
+                         ria.delete(user);
+                    }
                 }
                 else
                 {
                     attrGroups = module.getAttributeGroups(getIssueType(), false);
+                    // Delete module-attribute mapping
+                    Criteria crit  = new Criteria()
+                        .addJoin(RModuleAttributePeer.ATTRIBUTE_ID,
+                                 RAttributeAttributeGroupPeer.ATTRIBUTE_ID)
+                        .add(RAttributeAttributeGroupPeer.GROUP_ID,
+                                 getAttributeGroupId())
+                        .add(RModuleAttributePeer.MODULE_ID,
+                                 getModuleId());
+                        Criteria.Criterion critIssueType = crit.getNewCriterion(
+                                RModuleAttributePeer.ISSUE_TYPE_ID,
+                                getIssueTypeId(), Criteria.EQUAL);
+                        critIssueType.or(crit.getNewCriterion(
+                                RModuleAttributePeer.ISSUE_TYPE_ID,
+                                issueType.getTemplateId(), Criteria.EQUAL));
+                        crit.and(critIssueType);
+                    List results = RModuleAttributePeer.doSelect(crit);
+                    for (int i=0; i<results.size(); i++)
+                    {
+                         RModuleAttribute rma = (RModuleAttribute)results.get(i);
+                         rma.delete(user);
+                    }
                 }
-                attrGroups.remove(this);
+
+                // Delete attribute - attribute group mapping
+                Criteria crit2 = new Criteria()
+                    .add(RAttributeAttributeGroupPeer.GROUP_ID, getAttributeGroupId());
+                RAttributeAttributeGroupPeer.doDelete(crit2);
+
+                // Delete the attribute group
+                int order = getOrder();
+                crit2 = new Criteria()
+                    .add(AttributeGroupPeer.ATTRIBUTE_GROUP_ID, getAttributeGroupId());
+                AttributeGroupPeer.doDelete(crit2);
+                
                 // Adjust the orders for the other attribute groups
                 for (int i=0; i<attrGroups.size(); i++)
                 {
@@ -308,6 +319,7 @@ public  class AttributeGroup
                     }
                 }
                     
+                attrGroups.remove(this);
                 ScarabCache.clear();
             } 
         } 
@@ -487,5 +499,17 @@ public  class AttributeGroup
         raag.setAttributeId(attribute.getAttributeId());
         raag.setOrder(getAttributes().size() +1 );
         return raag;
+    }
+
+    public AttributeGroup copyGroup()
+         throws Exception
+    {                
+        AttributeGroup newGroup = new AttributeGroup();
+        newGroup.setName(getName());
+        newGroup.setDescription(getDescription());
+        newGroup.setDedupe(getDedupe());
+        newGroup.setActive(getActive());
+        newGroup.setOrder(getOrder());
+        return newGroup;
     }
 }
