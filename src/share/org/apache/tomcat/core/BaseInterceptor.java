@@ -70,85 +70,33 @@ import java.lang.reflect.*;
 
 /** Implement "Chain of Responsiblity" pattern ( == hooks ).
  *
- *  You can extend this class and implement a number of hooks.
+ *  You can extend this class and implement a number of hooks. The
+ *  interceptor is added to a Container ( that represents a group of
+ *  URLs where the interceptor will operate ) and the methods that
+ *  are re-defined in the subclass are detected ( using introspection )
+ *  and used to select the chains where the intercepptor is interested
+ *  to participate.
  *
+ *  It is possible to define new chains by adding a new method to this
+ *  class. The caller ( "chain user" ) will determine the behavior in
+ *  case of error and "call all" or "call until [condition]" rules.
+ *
+ *  Interceptors are the main extension mechanism for tomcat. They have full
+ *  access and control all aspects in tomcat operation.
+ * 
  */
 public class BaseInterceptor
 {
     protected ContextManager cm;
     protected Container ct;
-    protected String methods[]=new String[0];
     protected int debug=0;
-    protected String name=null;
 
-    public static final int OK=0;
-    
     //  loghelper will use name of actual impl subclass
     protected Log loghelper = new Log("tc_log", this);
 
     public BaseInterceptor() {
     }
 
-    // -------------------- Helpers -------------------- 
-    public void setDebug( int d ) {
-	debug=d;
-    }
-
-    public static final String BASE_I="org.apache.tomcat.core.BaseInterceptor";
-
-    /** Test if the interceptor implements a particular
-	method
-    */
-    public boolean hasHook( String methodN ) {
-	// all interceptors will participate in all context-level
-	// hooks - no need to exagerate
-	if( "engineInit".equals( methodN ) )
-	    return true;
-	try {
-	    Method myMethods[]=this.getClass().getMethods();
-	    for( int i=0; i< myMethods.length; i++ ) {
-		if( methodN.equals ( myMethods[i].getName() )) {
-		    // check if it's overriden
-		    Class declaring=myMethods[i].getDeclaringClass();
-		    if( ! BASE_I.equals(declaring.getName() )) {
-			//log( "Found overriden method " + methodN); 
-			return true;
-		    }
-		}
-	    }
-	} catch ( Exception ex ) {
-	    ex.printStackTrace();
-	}
-	return false;
-    }
-
-    public void setContextManager( ContextManager cm ) {
-	this.cm=cm;
-	this.ct=cm.getContainer();
-	loghelper.setLogger(cm.getLogger());
-    }
-
-    public void setContext( Context ctx ) {
-	this.ct=ctx.getContainer();
-	loghelper.setLogger(ctx.getLog().getLogger());
-    }
-
-    protected void log( String s ) {
-	loghelper.log(s);
-    }
-
-    protected void log( String s, Throwable t ) {
-	loghelper.log(s, t);
-    }
-    
-    protected void log( String s, int level ) {
-	loghelper.log(s, level);
-    }
-    
-    protected void log( String s, Throwable t, int level ) {
-	loghelper.log(s, t, level);
-    }
-    
     // -------------------- Request notifications --------------------
     
     /** Handle mappings inside a context.
@@ -363,7 +311,6 @@ public class BaseInterceptor
     public void engineInit(ContextManager cm)
 	throws TomcatException
     {
-	this.cm=cm;
     }
 
     /** Called before the ContextManager is stoped.
@@ -377,8 +324,8 @@ public class BaseInterceptor
 
     /**
      *  Called when a context is added to a CM. The context is probably not
-     *  initialized yet, only path, docRoot, host, and properties set before adding
-     *  the context ( in server.xml for example ) are available.
+     *  initialized yet, only path, docRoot, host, and properties set before
+     *  adding the context ( in server.xml for example ) are available.
      * 
      *  At this stage mappers can start creating structures for the
      *  context ( the actual loading of the context may be delayed in
@@ -438,5 +385,44 @@ public class BaseInterceptor
 	throws TomcatException
     {
     }
+
+    // -------------------- Helpers --------------------
+    // Methods used in internal housekeeping
+    
+    public void setDebug( int d ) {
+	debug=d;
+    }
+
+    public void setContextManager( ContextManager cm ) {
+	this.cm=cm;
+	this.ct=cm.getContainer();
+	loghelper.setLogger(cm.getLogger());
+    }
+
+    /** Called for context-level interceptors
+     */
+    public void setContext( Context ctx ) {
+	if( ctx == null ) return;
+	this.cm=ctx.getContextManager();
+	this.ct=ctx.getContainer();
+	loghelper.setLogger(ctx.getLog().getLogger());
+    }
+
+    protected void log( String s ) {
+	loghelper.log(s);
+    }
+
+    protected void log( String s, Throwable t ) {
+	loghelper.log(s, t);
+    }
+    
+    protected void log( String s, int level ) {
+	loghelper.log(s, level);
+    }
+    
+    protected void log( String s, Throwable t, int level ) {
+	loghelper.log(s, t, level);
+    }
+    
 
 }
