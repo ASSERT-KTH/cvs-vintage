@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/ServletWrapper.java,v 1.16 2000/02/03 07:11:52 costin Exp $
- * $Revision: 1.16 $
- * $Date: 2000/02/03 07:11:52 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/ServletWrapper.java,v 1.17 2000/02/08 18:50:46 costin Exp $
+ * $Revision: 1.17 $
+ * $Date: 2000/02/08 18:50:46 $
  *
  * ====================================================================
  *
@@ -93,7 +93,10 @@ public class ServletWrapper {
     protected ServletConfigImpl config;
     protected Servlet servlet;
     protected Class servletClass;
-    
+
+    // Jsp pages
+    private String path = null;
+
     // optional informations
     protected String description = null;
 
@@ -106,9 +109,18 @@ public class ServletWrapper {
 
     int loadOnStartup=0;
     
+    public ServletWrapper() {
+        config = new ServletConfigImpl();
+    }
+
     ServletWrapper(Context context) {
+        config = new ServletConfigImpl();
+	setContext( context );
+    }
+
+    public void setContext( Context context) {
         this.context = context;
-        config = new ServletConfigImpl(context);
+	config.setContext( context );
     }
 
     protected Context getContext() {
@@ -117,6 +129,10 @@ public class ServletWrapper {
 
     public void setLoadOnStartUp( int level ) {
 	loadOnStartup=level;
+    }
+
+    public void setLoadOnStartUp( String level ) {
+	loadOnStartup=new Integer(level).intValue();
     }
 
     public int getLoadOnStartUp() {
@@ -131,15 +147,23 @@ public class ServletWrapper {
         return config.getServletName();
     }
 
-    void setServletName(String servletName) {
+    public void setServletName(String servletName) {
         config.setServletName(servletName);
+    }
+
+    public String getPath() {
+        return this.path;
+    }
+
+    public void setPath(String path) {
+        this.path = path;
     }
 
     String getServletDescription() {
         return this.description;
     }
 
-    void setServletDescription(String description) {
+    public void setServletDescription(String description) {
         this.description = description;
     }
 
@@ -152,6 +176,19 @@ public class ServletWrapper {
 	config.setServletClassName(servletClassName);
     }
 
+
+    Hashtable initArgs=null;
+    
+    public void addInitParam( String name, String value ) {
+	if( initArgs==null) {
+	    initArgs=new Hashtable();
+	    config.setInitArgs( initArgs );
+	}
+	initArgs.put( name, value );
+    }
+    
+    /** @deprecated
+     */
     void setInitArgs(Hashtable initArgs) {
         config.setInitArgs(initArgs);
     }
@@ -202,10 +239,36 @@ public class ServletWrapper {
 	}
     }
 
+    // XXX XXX need to go directly to Jsp API 
+    public void handleJspRequest(final HttpServletRequestFacade request,
+			      final HttpServletResponseFacade response)
+	throws IOException
+    {
+	// "Special" JSP
+	String requestURI = path + request.getPathInfo();
+	RequestDispatcher rd = request.getRequestDispatcher(requestURI);
+	
+	try {
+	    if (! response.getRealResponse().isStarted())
+		rd.forward(request, response);
+	    else
+		rd.include(request, response);
+		
+	} catch (ServletException se) {
+	    se.printStackTrace();
+	    response.sendError(404);
+	} catch (IOException ioe) {
+	    ioe.printStackTrace();
+	    response.sendError(404);
+	}
+	return;
+    }
+    
     public void handleRequest(final HttpServletRequestFacade request,
 			      final HttpServletResponseFacade response)
 	throws IOException
     {
+	if( path != null ) handleJspRequest( request, response );
         synchronized (this) {
 	    if (servlet == null) {
 		try {
@@ -441,7 +504,7 @@ public class ServletWrapper {
     }
 
     public String toString() {
-	String toS="Wrapper(";
+	String toS="Wrapper(" + config.getServletName() + " ";
 	if( servlet!=null ) toS=toS+ "S:" + servlet.getClass().getName();
 	else  toS= toS + servletClassName;
 	return toS + ")";

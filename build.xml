@@ -28,7 +28,7 @@
 
     <!-- include ant, it is used for testing and will be used for
          configuration and few other tasks -->
-    <copydir src="${ant.home}/bin" dest="${tomcat.build}/bin"/>
+    <copydir src="${ant.home}/src/bin" dest="${tomcat.build}/bin"/>
     <copyfile src="${ant.home}/lib/xml.jar" dest="${tomcat.build}/lib/xml.jar"/>
     <copyfile src="${ant.home}/lib/ant.jar" dest="${tomcat.build}/lib/ant.jar"/>
 

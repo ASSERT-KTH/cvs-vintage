@@ -68,6 +68,7 @@ import java.io.*;
 import java.net.*;
 import java.util.*;
 import javax.servlet.http.*;
+import javax.servlet.*;
 
 
 /**
@@ -77,10 +78,15 @@ import javax.servlet.http.*;
  */
 public class LoadOnStartupInterceptor extends BaseContextInterceptor  implements ContextInterceptor {
     private static StringManager sm =StringManager.getManager("org.apache.tomcat.context");
+    int debug=0;
     
     public LoadOnStartupInterceptor() {
     }
-	
+
+    public void setDebug( int i ) {
+	debug=i;
+    }
+    
     public int contextInit(Context ctx) {
 	init(ctx);
 	Vector orderedKeys = new Vector();
@@ -121,12 +127,15 @@ public class LoadOnStartupInterceptor extends BaseContextInterceptor  implements
 		String servletName = (String)sOnLevel.nextElement();
 		ServletWrapper  result = ctx.getServletByName(servletName);
 
-		ctx.log("Loading " + key + " "  + servletName );
+		if( debug > 0 ) ctx.log("Loading " + key + " "  + servletName );
 		if(result==null)
 		    System.out.println("Warning: we try to load an undefined servlet " + servletName);
 		else {
 		    try {
-			result.loadServlet();
+			if( result.getPath() != null )
+			    loadJsp( ctx, result );
+			else
+			    result.loadServlet();
 		    } catch (Exception ee) {
 			String msg = sm.getString("context.loadServlet.e",
 						  servletName);
@@ -138,6 +147,51 @@ public class LoadOnStartupInterceptor extends BaseContextInterceptor  implements
 	return OK;
     }
 
+    void loadJsp( Context context, ServletWrapper result ) throws Exception {
+	// A Jsp initialized in web.xml -
+
+	// Log ( since I never saw this code called, let me know if it does
+	// for you )
+	System.out.println("Initializing JSP with JspWrapper");
+	
+	// Ugly code to trick JSPServlet into loading this.
+
+	// XXX XXX XXX
+	// core shouldn't depend on a particular connector!
+	// need to find out what this code does!
+	
+	// XXX XXX find a better way !!!
+	//	RequestAdapterImpl reqA=new RequestAdapterImpl();
+	//	ResponseAdapterImpl resA=new ResponseAdapterImpl();
+	String path=result.getPath();
+	RequestImpl request = new RequestImpl();
+	ResponseImpl response = new ResponseImpl();
+	request.recycle();
+	response.recycle();
+	
+	//	request.setRequestAdapter( reqA );
+	// response.setResponseAdapter( resA );
+	
+	request.setResponse(response);
+	response.setRequest(request);
+	
+	String requestURI = path + "?jsp_precompile=true";
+	
+	request.setRequestURI(context.getPath() + path);
+	request.setQueryString( Constants.JSP.Directive.Compile.Name + "=" +
+			     Constants.JSP.Directive.Compile.Value );
+	
+	request.setContext(context);
+	request.getSession(true);
+	
+	RequestDispatcher rd = context.getRequestDispatcher(requestURI);
+	
+	try {
+	    rd.forward(request.getFacade(), response.getFacade());
+	} catch (ServletException se) {
+	} catch (IOException ioe) {
+	}
+    }
     // -------------------- 
     // Old logic from Context - probably something cleaner can replace it.
 

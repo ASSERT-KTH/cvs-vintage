@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/RequestImpl.java,v 1.14 2000/02/03 23:05:27 costin Exp $
- * $Revision: 1.14 $
- * $Date: 2000/02/03 23:05:27 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/RequestImpl.java,v 1.15 2000/02/08 18:50:45 costin Exp $
+ * $Revision: 1.15 $
+ * $Date: 2000/02/08 18:50:45 $
  *
  * ====================================================================
  *
@@ -243,8 +243,11 @@ public class RequestImpl  implements Request {
 	// the real path for this ( i.e. the URI ).
 
 	// Check the PATH_TRANSLATED specs before changing!
-	if( pathTranslated==null)
-	    pathTranslated=context.getRealPath( getPathInfo() );
+	if( pathTranslated==null) {
+	    String path=getPathInfo();
+	    if(path==null) path="";
+	    pathTranslated=context.getRealPath( path );
+	}
 	return pathTranslated;
     }
 

@@ -90,7 +90,6 @@ public class ContextManager {
     int debug=0;
     
     private Vector requestInterceptors = new Vector();
-    private Vector contextLifecycleInterceptors = new Vector();
     
     /**
      * The set of Contexts associated with this ContextManager,
@@ -138,6 +137,7 @@ public class ContextManager {
 
     public void init()  throws TomcatException {
 
+	long time=System.currentTimeMillis();
 	(new AutoSetup()).handleContextManagerInit(this);
 	// Initialize and check Context Manager 
 	(new DefaultCMSetter()).handleContextManagerInit(this);
@@ -148,6 +148,8 @@ public class ContextManager {
             Context context = getContext((String)enum.nextElement());
             context.init();
 	}
+	System.out.println("Init time " + ( System.currentTimeMillis() - time ));
+
 
 	// After all context are configured, we can generate Apache configs
 	org.apache.tomcat.task.ApacheConfig apacheConfig=new  org.apache.tomcat.task.ApacheConfig();
@@ -212,7 +214,7 @@ public class ContextManager {
      * @param ctx context to be added.
      */
     public void addContext( Context ctx ) {
-	//	System.out.println("Add context ");
+	//     System.out.println("Add context ");
 	ctx.setContextManager( this );
 	// assert "valid path" 
 

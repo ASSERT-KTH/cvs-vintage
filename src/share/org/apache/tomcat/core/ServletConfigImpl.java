@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/ServletConfigImpl.java,v 1.2 2000/01/11 20:43:02 costin Exp $
- * $Revision: 1.2 $
- * $Date: 2000/01/11 20:43:02 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/ServletConfigImpl.java,v 1.3 2000/02/08 18:50:45 costin Exp $
+ * $Revision: 1.3 $
+ * $Date: 2000/02/08 18:50:45 $
  *
  * ====================================================================
  *
@@ -84,6 +84,13 @@ implements ServletConfig {
     private Hashtable initArgs;
     private String servletName = null;
     private String servletClassName = null;
+    
+    ServletConfigImpl() {
+    }
+
+    void setContext( Context ctx ) {
+	context=ctx;
+    }
     
     ServletConfigImpl(Context context) {
         this.context = context;

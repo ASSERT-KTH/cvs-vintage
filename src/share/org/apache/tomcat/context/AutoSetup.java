@@ -126,9 +126,10 @@ public class AutoSetup { //  implements TomcatHandler
 	    // Current code supports only one level, we
 	    // need to decide an encoding scheme for multi-level
 	    String path="/" + name; // decode(name)
-	    
+	    //	    System.out.println("XXX : " + path );
 	    if( path.equals("/ROOT") )
 		path="";
+	    
 	    if( cm.getContext(path) == null ) {
 		// if no explicit set up
 		System.out.println("Automatic addContext( " + path + ", webapps/" + name + ")");
@@ -137,6 +138,8 @@ public class AutoSetup { //  implements TomcatHandler
 		ctx.setPath(path);
 		ctx.setDocBase(  "webapps/" + name);
 		cm.addContext(ctx);
+	    } else {
+		//System.out.println("Already set up: " + path + " " + cm.getContext(path));
 	    }
 
 		

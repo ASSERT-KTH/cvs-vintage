@@ -82,7 +82,7 @@ public class WebXmlInterceptor extends BaseContextInterceptor  implements Contex
     }
 	
     public int contextInit(Context ctx) {
-	System.out.println("Context(" + ctx.getPath() + "): " + ctx.getDocBase());
+	//	System.out.println("Context(" + ctx.getPath() + "): " + ctx.getDocBase());
 	    
 	// process base configuration
 	WebApplicationReader webXmlReader=new WebApplicationReader();
@@ -96,6 +96,7 @@ public class WebXmlInterceptor extends BaseContextInterceptor  implements Contex
 	} catch (Exception e) {
 	    String msg = sm.getString("context.getConfig.e",ctx.getPath() + " " + ctx.getDocBase());
 	    System.out.println(msg);
+	    e.printStackTrace();
 	}
 	return 0;
     }

@@ -215,6 +215,7 @@ public class Context {
         return isInvokerEnabled;
     }
 
+    
     public void setInvokerEnabled(boolean isInvokerEnabled) {
         this.isInvokerEnabled = isInvokerEnabled;
     }
@@ -492,6 +493,7 @@ public class Context {
 
 	// Read context's web.xml
 	new WebXmlInterceptor().contextInit( this );
+	// new WebXmlReader().contextInit( this );
 
 	// load initial servlets
 	new LoadOnStartupInterceptor().contextInit( this );
@@ -548,7 +550,13 @@ public class Context {
         return (String)initializationParameters.get(name);
     }
 
+    /** @deprecated use addInitParameter
+     */
     public void setInitParameter( String name, String value ) {
+	initializationParameters.put(name, value );
+    }
+
+    public void addInitParameter( String name, String value ) {
 	initializationParameters.put(name, value );
     }
     
@@ -604,6 +612,10 @@ public class Context {
         this.description = description;
     }
 
+    public void setIcon( String icon ) {
+
+    }
+
     public boolean isDistributable() {
         return this.isDistributable;
     }
@@ -648,14 +660,17 @@ public class Context {
     }
 
     // --------------------
+
     
     /** Add a jsp to the "pre-defined" list ( used by web.xml )
+     *  @deprecated Create a Wrapper and use add Servlet 
      */
     public void addJSP(String name, String path, String description) {
         // XXX
         // check for duplicates!
 
-        JspWrapper wrapper = new JspWrapper(this);
+	//        JspWrapper wrapper = new JspWrapper(this);
+	ServletWrapper wrapper = new ServletWrapper(this);
 
 	wrapper.setServletName(name);
 	wrapper.setServletDescription(description);
@@ -683,6 +698,7 @@ public class Context {
 	return (servlets.containsKey(name));
     }
 
+    // XXX use external iterator 
     /** Remove all servlets with a specific class name
      */
     void removeServletByClassName(String className) {
@@ -704,6 +720,8 @@ public class Context {
 	}
     }
 
+    /** @deprecated use getServletByPath or getJsp
+     */
     public boolean containsJSP(String path) {
 	Enumeration enum = servlets.keys();
 
@@ -711,8 +729,8 @@ public class Context {
 	    String key = (String)enum.nextElement();
 	    ServletWrapper sw = (ServletWrapper)servlets.get(key);
 
-	    if( (sw instanceof JspWrapper ) &&
-		path.equals( ((JspWrapper)sw).getPath()))
+	    //	    if( (sw instanceof JspWrapper ) &&
+	    if( path.equals( (sw).getPath()))
 		return true;
 	}
 	return false;
@@ -722,25 +740,29 @@ public class Context {
      *  Called only by deployment descriptor - to deal with
      *  duplicated mappings -
      *  XXX Find out if we really need that - it can be avoided!
+     * @deprecated Use removeServlet and findServletByPath or ByName
      */
     public void removeJSP(String path) {
 	Enumeration enum = servlets.keys();
 	while (enum.hasMoreElements()) {
 	    String key = (String)enum.nextElement();
 	    ServletWrapper sw = (ServletWrapper)servlets.get(key);
-	    if( (sw instanceof JspWrapper ) &&
-		path.equals( ((JspWrapper)sw).getPath()))
+	    //	    if( (sw instanceof JspWrapper ) &&
+	    if(path.equals( (sw).getPath()))
 	        removeServlet( sw );
 	}
     }
 
+    /** @deprecated use the method of servletWrapper
+     */
     public void setServletInitParams(String name, Hashtable initParams) {
 	ServletWrapper wrapper = (ServletWrapper)servlets.get(name);
 	if (wrapper != null) {
 	    wrapper.setInitArgs(initParams);
 	}
     }
-    
+
+    // XXX only one mapping, the mapper should do it's own optimizations
     /**
      * Maps a named servlet to a particular path or extension.
      * If the named servlet is unregistered, it will be added
@@ -826,11 +848,14 @@ public class Context {
 	pathMappedServlets.remove(mapping);
     }
 
+    // XXX replace with getServlet()
     public ServletWrapper getServletByName(String servletName) {
 	return (ServletWrapper)servlets.get(servletName);
     }
 
-    // className==name for servlets loaded by invoker
+    /** @deprecated Create a ServletWrapper and add it.
+	This allows you to set other Wrapper properties 
+     */
     public ServletWrapper loadServlet(String servletClassName) {
         // XXX
         // check for duplicates!
@@ -853,7 +878,7 @@ public class Context {
      * and instantiated using the given class name.
      *
      * Called to add a new servlet from web.xml
-     *
+     * @deprecated use addServlet(ServletWrapper)
      */
     public void addServlet(String name, String className,
 			   String description) {
@@ -870,6 +895,17 @@ public class Context {
 	wrapper.setServletDescription(description);
 	wrapper.setServletClass(className);
 
+	servlets.put(name, wrapper);
+    }
+
+    public void addServlet(ServletWrapper wrapper) {
+	String name=wrapper.getServletName();
+	//	System.out.println("Adding servlet " + name  + " " + wrapper);
+        // check for duplicates
+        if (servlets.get(name) != null) {
+            removeServletByClassName(name); // XXX XXX why?
+            removeServletByName(name);
+        }
 	servlets.put(name, wrapper);
     }
 
@@ -991,6 +1027,10 @@ public class Context {
     private String normPath( String path ) {
 	int i = -1;
 	// norm path
+	if( path==null) {
+	    /*DEBUG*/ try {throw new Exception(); } catch(Exception ex) {ex.printStackTrace();}
+	    return "";
+	}
         while ((i = path.indexOf('\\')) > -1) {
             String a = path.substring(0, i);
             String b = "";
