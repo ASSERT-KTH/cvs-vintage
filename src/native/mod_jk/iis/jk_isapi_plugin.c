@@ -57,7 +57,7 @@
  * Description: ISAPI plugin for IIS/PWS                                   *
  * Author:      Gal Shachor <shachor@il.ibm.com>                           *
  * Author:      Ignacio J. Ortega <nacho@apache.org>                       *
- * Version:     $Revision: 1.4 $                                           *
+ * Version:     $Revision: 1.5 $                                           *
  ***************************************************************************/
 
 #include <httpext.h>
@@ -121,6 +121,8 @@
     }           \
 }\
 
+static char ini_file_name[MAX_PATH];
+static int using_ini_file = JK_FALSE;
 static int   is_inited = JK_FALSE;
 static jk_uri_worker_map_t *uw_map = NULL; 
 static jk_logger_t *logger = NULL; 
@@ -615,6 +617,10 @@ BOOL WINAPI DllMain(HINSTANCE hInst,        // Instance Handle of the DLL
                     LPVOID lpReserved)      // Reserved parameter for future use
 {
     BOOL fReturn = TRUE;
+    char drive[_MAX_DRIVE];
+    char dir[_MAX_DIR];
+    char fname[_MAX_FNAME];
+    char file_name[_MAX_PATH];
 
     switch (ulReason) {
         case DLL_PROCESS_DETACH:
@@ -627,6 +633,12 @@ BOOL WINAPI DllMain(HINSTANCE hInst,        // Instance Handle of the DLL
         default:
         break;
     } 
+    if (GetModuleFileName( hInst, file_name, sizeof(file_name))) {
+        _splitpath( file_name, drive, dir, fname, NULL );
+        _makepath( ini_file_name, drive, dir, fname, ".properties" );
+    } else {
+        fReturn = JK_FALSE;
+    }
 
     return fReturn;
 }
@@ -637,6 +649,19 @@ static int initialize_extension(void)
 
     if(read_registry_init_data()) {
         jk_map_t *map;
+
+		/* Logging the initialization type: registry or properties file in virtual dir
+		*/
+		if (using_ini_file) {
+			 jk_log(logger, JK_LOG_DEBUG, "Using ini file %s.\n", ini_file_name);
+		} else {
+			 jk_log(logger, JK_LOG_DEBUG, "Using registry.\n");
+		}
+		jk_log(logger, JK_LOG_DEBUG, "Using log file %s.\n", log_file);
+		jk_log(logger, JK_LOG_DEBUG, "Using log level %d.\n", log_level);
+		jk_log(logger, JK_LOG_DEBUG, "Using extension uri %s.\n", extension_uri);
+		jk_log(logger, JK_LOG_DEBUG, "Using worker file %s.\n", worker_file);
+		jk_log(logger, JK_LOG_DEBUG, "Using worker mount file %s.\n", worker_mount_file);
 
         if(!jk_open_file_logger(&logger, log_file, log_level)) {
             logger = NULL;
@@ -677,62 +702,103 @@ static int read_registry_init_data(void)
     HKEY hkey;
     long rc;
     int  ok = JK_TRUE;
-    rc = RegOpenKeyEx(HKEY_LOCAL_MACHINE,
-                      REGISTRY_LOCATION,
-                      (DWORD)0,         
-                      KEY_READ,         
-                      &hkey);            
-    if(ERROR_SUCCESS != rc) {
-        return JK_FALSE;
-    } 
+    char *tmp;
+    jk_map_t *map;
 
-    if(get_registry_config_parameter(hkey,
-                                     JK_LOG_FILE_TAG, 
-                                     tmpbuf,
-                                     sizeof(log_file))) {
-        strcpy(log_file, tmpbuf);
-    } else {
-        ok = JK_FALSE;
+    if (map_alloc(&map)) {
+        if (map_read_properties(map, ini_file_name)) {
+            using_ini_file = JK_TRUE;
+		}
     }
+    if (using_ini_file) {
+        tmp = map_get_string(map, JK_LOG_FILE_TAG, NULL);
+        if (tmp) {
+            strcpy(log_file, tmp);
+        } else {
+            ok = JK_FALSE;
+        }
+        tmp = map_get_string(map, JK_LOG_LEVEL_TAG, NULL);
+        if (tmp) {
+            log_level = jk_parse_log_level(tmp);
+        } else {
+            ok = JK_FALSE;
+        }
+        tmp = map_get_string(map, EXTENSION_URI_TAG, NULL);
+        if (tmp) {
+            strcpy(extension_uri, tmp);
+        } else {
+            ok = JK_FALSE;
+        }
+        tmp = map_get_string(map, JK_WORKER_FILE_TAG, NULL);
+        if (tmp) {
+            strcpy(worker_file, tmp);
+        } else {
+            ok = JK_FALSE;
+        }
+        tmp = map_get_string(map, JK_MOUNT_FILE_TAG, NULL);
+        if (tmp) {
+            strcpy(worker_mount_file, tmp);
+        } else {
+            ok = JK_FALSE;
+        }
     
-    if(get_registry_config_parameter(hkey,
-                                     JK_LOG_LEVEL_TAG, 
-                                     tmpbuf,
-                                     sizeof(tmpbuf))) {
-        log_level = jk_parse_log_level(tmpbuf);
     } else {
-        ok = JK_FALSE;
-    }
+		rc = RegOpenKeyEx(HKEY_LOCAL_MACHINE,
+						  REGISTRY_LOCATION,
+						  (DWORD)0,         
+						  KEY_READ,         
+						  &hkey);            
+		if(ERROR_SUCCESS != rc) {
+			return JK_FALSE;
+		} 
 
-    if(get_registry_config_parameter(hkey,
-                                     EXTENSION_URI_TAG, 
-                                     tmpbuf,
-                                     sizeof(extension_uri))) {
-        strcpy(extension_uri, tmpbuf);
-    } else {
-        ok = JK_FALSE;
-    }
+		if(get_registry_config_parameter(hkey,
+										 JK_LOG_FILE_TAG, 
+										 tmpbuf,
+										 sizeof(log_file))) {
+			strcpy(log_file, tmpbuf);
+		} else {
+			ok = JK_FALSE;
+		}
+    
+		if(get_registry_config_parameter(hkey,
+										 JK_LOG_LEVEL_TAG, 
+										 tmpbuf,
+										 sizeof(tmpbuf))) {
+			log_level = jk_parse_log_level(tmpbuf);
+		} else {
+			ok = JK_FALSE;
+		}
 
-    if(get_registry_config_parameter(hkey,
-                                     JK_WORKER_FILE_TAG, 
-                                     tmpbuf,
-                                     sizeof(worker_file))) {
-        strcpy(worker_file, tmpbuf);
-    } else {
-        ok = JK_FALSE;
-    }
+		if(get_registry_config_parameter(hkey,
+										 EXTENSION_URI_TAG, 
+										 tmpbuf,
+										 sizeof(extension_uri))) {
+			strcpy(extension_uri, tmpbuf);
+		} else {
+			ok = JK_FALSE;
+		}
 
-    if(get_registry_config_parameter(hkey,
-                                     JK_MOUNT_FILE_TAG, 
-                                     tmpbuf,
-                                     sizeof(worker_mount_file))) {
-        strcpy(worker_mount_file, tmpbuf);
-    } else {
-        ok = JK_FALSE;
-    }
+		if(get_registry_config_parameter(hkey,
+										 JK_WORKER_FILE_TAG, 
+										 tmpbuf,
+										 sizeof(worker_file))) {
+			strcpy(worker_file, tmpbuf);
+		} else {
+			ok = JK_FALSE;
+		}
 
-    RegCloseKey(hkey);
+		if(get_registry_config_parameter(hkey,
+										 JK_MOUNT_FILE_TAG, 
+										 tmpbuf,
+										 sizeof(worker_mount_file))) {
+			strcpy(worker_mount_file, tmpbuf);
+		} else {
+			ok = JK_FALSE;
+		}
 
+		RegCloseKey(hkey);
+    }    
     return ok;
 }
 
