@@ -36,7 +36,7 @@
             className="org.apache.tomcat.modules.loggers.LogEvents" 
          -->
         
-        <ContextInterceptor 
+        <ContextInterceptor
             className="org.apache.tomcat.modules.config.ContextXmlReader" />
 
         <ContextInterceptor 
@@ -57,8 +57,10 @@
         <ContextInterceptor 
             className="org.apache.tomcat.modules.config.PolicyLoader" />
 
+        <!-- Classloader interceptor -->
         <ContextInterceptor 
-            className="org.apache.tomcat.modules.config.LoaderInterceptor11" />
+            className="org.apache.tomcat.modules.config.LoaderInterceptor11"
+            useApplicationLoader="true" />
 
         <ContextInterceptor 
             className="org.apache.tomcat.modules.generators.ErrorHandler" />
