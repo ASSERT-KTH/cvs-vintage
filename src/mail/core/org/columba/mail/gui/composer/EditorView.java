@@ -53,8 +53,6 @@ public class EditorView extends JTextPane  {
 		setFont(font);
 		
 		setPreferredSize(new Dimension(300, 200));
-
-		
 	}
 	
 	public void installListener( EditorController controller )
@@ -62,7 +60,9 @@ public class EditorView extends JTextPane  {
 		message.addDocumentListener(controller);
 	}
 	
-
+	public void setCharset( String charset) {
+		setContentType("text/plain; charset=\""+charset+"\"");
+	}
 	
 
 }

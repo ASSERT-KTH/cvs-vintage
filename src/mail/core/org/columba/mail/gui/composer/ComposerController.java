@@ -99,6 +99,7 @@ public class ComposerController
 
 	public void charsetChanged(CharsetEvent e) {
 		((ComposerModel) getModel()).setCharsetName(e.getValue());
+		editorController.getView().setCharset(e.getValue());
 	}
 
 	public boolean checkState() {
