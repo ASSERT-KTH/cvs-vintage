@@ -145,7 +145,16 @@ public class ScarabLocalizationTool
         {
             String prefix = getPrefix(null);
             setPrefix(DEFAULT_SCOPE + '.');
-            value = super.format(key, arg1);
+            try
+            {
+                value = super.format(key, arg1);
+            }
+            catch (MissingResourceException itsNotThere)
+            {
+                value = "ERROR! Missing resource (" + key + ")";
+                Log.get().error(
+                    "ScarabLocalizationTool: ERROR! Missing resource: " + key);
+            }
             setPrefix(prefix);
         }
         return value;
@@ -171,7 +180,16 @@ public class ScarabLocalizationTool
         {
             String prefix = getPrefix(null);
             setPrefix(DEFAULT_SCOPE + '.');
-            value = super.format(key, arg1, arg2);
+            try
+            {
+                value = super.format(key, arg1, arg2);
+            }
+            catch (MissingResourceException itsNotThere)
+            {
+                value = "ERROR! Missing resource (" + key + ")";
+                Log.get().error(
+                    "ScarabLocalizationTool: ERROR! Missing resource: " + key);
+            }
             setPrefix(prefix);
         }
         return value;
@@ -197,7 +215,16 @@ public class ScarabLocalizationTool
         {
             String prefix = getPrefix(null);
             setPrefix(DEFAULT_SCOPE + '.');
-            value = super.format(key, args);
+            try
+            {
+                value = super.format(key, args);
+            }
+            catch (MissingResourceException itsNotThere)
+            {
+                value = "ERROR! Missing resource (" + key + ")";
+                Log.get().error(
+                    "ScarabLocalizationTool: ERROR! Missing resource: " + key);
+            }
             setPrefix(prefix);
         }
         return value;
@@ -237,7 +264,16 @@ public class ScarabLocalizationTool
         {
             String prefix = getPrefix(null);
             setPrefix(DEFAULT_SCOPE + '.');
-            value = super.format(key, args);
+            try
+            {
+                value = super.format(key, args);
+            }
+            catch (MissingResourceException itsNotThere)
+            {
+                value = "ERROR! Missing resource (" + key + ")";
+                Log.get().error(
+                    "ScarabLocalizationTool: ERROR! Missing resource: " + key);
+            }
             setPrefix(prefix);
         }
         return value;
