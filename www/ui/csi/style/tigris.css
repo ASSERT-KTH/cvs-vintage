@@ -1,8 +1,11 @@
 
 
-/* $Id: tigris.css,v 1.8 2002/10/17 22:46:04 braino Exp $
+/* $Id: tigris.css,v 1.9 2003/01/09 21:44:05 braino Exp $
 
 contains rules unsuitable for Netscape 4.x; simpler rules are in ns4_only.css. see <http://style.tigris.org/> */
+
+
+
 
 /* colors, backgrounds, borders, link indication */ 
 
@@ -47,15 +50,12 @@ body #banner td a, .app h3 a, .app h4 a,  {
 table, th, td {
  border: none
  } 
-div.colbar {
- background-image: url(../images/nw_w999min.gif);
- background-repeat: no-repeat;
- background-position: .5em .5em;
+.colbar {
  border-left: 1px solid #999;
  border-bottom: 1px solid #eee;
  border-right: 1px solid #eee;
  border-top: 1px solid #999;
- background: #eee;
+ background-color: #eee;
  }
 #banner {
  border-top: 1px solid #369;
@@ -314,7 +314,7 @@ html>body #bodycol {
 .tasknav {
  margin-bottom: 1.33em
  }
-div.colbar {
+.colbar {
  padding: 3px;
  margin: 2px 2px 0;
  }
@@ -457,3 +457,26 @@ dd {
  border-bottom: 1px solid #aaa;
  }
 
+/* !!! use of icons in UI templates */ 
+
+.errormark, .warningmark, .donemark, .infomark {
+	background: url(../images/icon_error_sml.gif) no-repeat;
+}
+
+.warningmark {
+	background-image: url(../images/icon_warning_sml.gif);
+}
+
+.donemark {
+	background-image: url(../images/icon_success_sml.gif);
+}
+
+.infomark {
+	background-image: url(../images/icon_info_sml.gif);
+}
+
+.errormark, .warningmark, .donemark, .infomark {
+	padding-left: 20px;
+	min-height: 15px;
+	line-height: 15px;
+}
