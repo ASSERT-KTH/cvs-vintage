@@ -7,13 +7,9 @@ import java.util.*;
 import com.workingdogs.village.*;
 
 // Turbine classes
-import org.apache.turbine.om.peer.*;
 import org.apache.turbine.om.security.Group;
 import org.apache.turbine.util.*;
-import org.apache.turbine.util.db.*;
-import org.apache.turbine.util.db.map.*;
-import org.apache.turbine.util.db.pool.DBConnection;
-import org.apache.turbine.util.security.DataBackendException;
+import org.apache.turbine.services.db.util.security.DataBackendException;
 
 // Local classes
 import org.tigris.scarab.om.map.*;

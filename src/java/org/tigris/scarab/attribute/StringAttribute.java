@@ -49,7 +49,7 @@ package org.tigris.scarab.attribute;
 import org.apache.turbine.services.resources.TurbineResources;
 import org.apache.turbine.util.RunData;
 import org.apache.turbine.util.Log;
-import org.apache.turbine.util.db.pool.DBConnection;
+import org.apache.turbine.services.db.pool.DBConnection;
 import org.tigris.scarab.util.word.SearchIndex;
 import org.tigris.scarab.util.word.SearchFactory;
 
@@ -57,7 +57,7 @@ import org.tigris.scarab.util.word.SearchFactory;
  *  Description of the Class
  *
  * @author <a href="mailto:fedor.karpelevitch@home.com">Fedor</a>
- * @version $Revision: 1.4 $ $Date: 2001/05/05 03:57:28 $
+ * @version $Revision: 1.5 $ $Date: 2001/06/29 00:49:06 $
  */
 public class StringAttribute extends FreeFormAttribute
 {

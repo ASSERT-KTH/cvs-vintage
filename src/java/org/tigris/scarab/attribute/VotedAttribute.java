@@ -49,15 +49,15 @@ package org.tigris.scarab.attribute;
 import org.tigris.scarab.om.ScarabUser;
 import org.tigris.scarab.om.*;
 import org.apache.turbine.om.security.TurbineUser;
-import org.apache.turbine.util.db.*;
+import org.apache.turbine.services.db.util.*;
 import org.apache.turbine.util.*;
-import org.apache.turbine.om.*;
+// import org.apache.turbine.om.*;
 
 import java.util.*;
 /**
  *
  * @author <a href="mailto:fedor.karpelevitch@home.com">Fedor</a>
- * @version $Revision: 1.8 $ $Date: 2001/03/21 05:00:46 $
+ * @version $Revision: 1.9 $ $Date: 2001/06/29 00:49:06 $
  */
 public abstract class VotedAttribute extends OptionAttribute
 {

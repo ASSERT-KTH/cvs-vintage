@@ -52,12 +52,12 @@ import org.tigris.scarab.om.ScarabUser;
 import org.tigris.scarab.om.ScarabUserPeer;
 import org.tigris.scarab.om.*;
 import java.util.*;
-import org.apache.turbine.util.db.Criteria;
+import org.apache.turbine.services.db.util.Criteria;
 
 /**
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Revision: 1.3 $ $Date: 2001/05/24 02:39:20 $
+ * @version $Revision: 1.4 $ $Date: 2001/06/29 00:49:06 $
  */
 public class UserAttribute extends AttributeValue
 {

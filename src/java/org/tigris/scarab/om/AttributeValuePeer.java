@@ -3,15 +3,12 @@ package org.tigris.scarab.om;
 // JDK classes
 import java.util.*;
 
-// Village classes
-import com.workingdogs.village.*;
-
 // Turbine classes
-import org.apache.turbine.om.*;
+import org.apache.turbine.services.db.om.*;
 import org.apache.turbine.util.*;
-import org.apache.turbine.util.db.*;
-import org.apache.turbine.util.db.map.*;
-import org.apache.turbine.util.db.pool.DBConnection;
+// import org.apache.turbine.util.db.*;
+// import org.apache.turbine.util.db.map.*;
+// import org.apache.turbine.util.db.pool.DBConnection;
 import org.apache.turbine.services.cache.*;
 import org.apache.turbine.services.*;
 

@@ -50,7 +50,7 @@ package org.tigris.scarab.om;
 import java.util.Date;
 
 // Turbine
-import org.apache.turbine.om.*;
+import org.apache.turbine.services.db.om.*;
 
 import org.tigris.scarab.tools.*;
 import org.tigris.scarab.util.*;
@@ -61,7 +61,7 @@ import org.tigris.scarab.services.module.*;
     across all of the Scarab db objects.
     
     @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
-    @version $Id: BaseScarabObject.java,v 1.4 2001/05/24 02:07:17 jmcnally Exp $    
+    @version $Id: BaseScarabObject.java,v 1.5 2001/06/29 00:49:07 jmcnally Exp $    
 */
 public class BaseScarabObject extends BaseObject
 {

@@ -48,15 +48,11 @@ package org.tigris.scarab.om;
 
 import java.util.Vector;
 
-// Village classes
-import com.workingdogs.village.*;
-
 import org.apache.turbine.services.security.TurbineSecurity;
-import org.apache.turbine.om.ObjectKey;
-import org.apache.turbine.om.security.peer.TurbineUserPeer;
-import org.apache.turbine.util.db.Criteria;
+import org.apache.turbine.services.db.om.ObjectKey;
+import org.apache.turbine.services.db.om.security.peer.TurbineUserPeer;
+import org.apache.turbine.services.db.util.db.Criteria;
 import org.apache.turbine.services.db.TurbineDB;
-import org.apache.turbine.util.db.pool.DBConnection;
 
 /**
     This class is an abstraction that is currently based around
@@ -65,7 +61,7 @@ import org.apache.turbine.util.db.pool.DBConnection;
     implementation needs.
 
     @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
-    @version $Id: ScarabUserPeer.java,v 1.3 2001/05/31 01:10:42 jmcnally Exp $
+    @version $Id: ScarabUserPeer.java,v 1.4 2001/06/29 00:49:07 jmcnally Exp $
 */
 public class ScarabUserPeer extends BaseScarabUserPeer
 {
