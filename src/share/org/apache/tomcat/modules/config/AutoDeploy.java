@@ -61,6 +61,7 @@ package org.apache.tomcat.modules.config;
 
 import org.apache.tomcat.core.*;
 import org.apache.tomcat.util.io.FileUtil;
+import org.apache.tomcat.util.depend.*;
 import java.io.*;
 import java.net.*;
 import java.util.*;
@@ -81,7 +82,11 @@ public class AutoDeploy extends BaseInterceptor {
 
     String src="webapps";
     String dest="webapps";
+    boolean redeploy=false;
 
+    // map destination dir ( used in Ctx docBase ) -> File ( war source)
+    Hashtable expanded=new Hashtable();
+    
     public AutoDeploy() {
     }
 
@@ -112,10 +117,9 @@ public class AutoDeploy extends BaseInterceptor {
 
     /**
      *  Re-deploy the context if the war file is modified.
-     *  XXX Not implemented.
      */
     public void setRedeploy( boolean b ) {
-
+	redeploy=b;
     }
     
     //-------------------- Implementation --------------------
@@ -178,19 +182,53 @@ public class AutoDeploy extends BaseInterceptor {
 	String fname=name.substring(0, name.length()-4);
 
 	File appDir=new File( destD, fname);
+	File srcF=new File( srcD, name );
+	File destF=new File( destD, fname );
+	expanded.put( destF.getAbsolutePath(),  srcF );
+
 	if( ! appDir.exists() ) {
 	    // no check if war file is "newer" than directory 
 	    // To update you need to "remove" the context first!!!
 	    appDir.mkdirs();
 	    // Expand war file
 	    try {
-		FileUtil.expand(srcD.getAbsolutePath() + "/" + name,
-				destD.getAbsolutePath() + "/" + fname );
+		FileUtil.expand(srcF.getAbsolutePath(), 
+				destF.getAbsolutePath() );
+
 	    } catch( IOException ex) {
 		log("expanding webapp " + name, ex);
 		// do what ?
 	    }
 	}
+    }
+
+    public void contextInit( Context context)
+	throws TomcatException
+    {
+	if( redeploy ) {
+	    String ctxBase=context.getAbsolutePath();
+	    File warFile=(File)expanded.get( ctxBase );
+	    if( warFile == null || ! warFile.exists() )
+		return;
+	    
+	    DependManager dm=(DependManager)context.getContainer().
+		getNote("DependManager");
+	    if( dm!=null ) {
+		log( "Adding dependency " + context + " -> " +  warFile );
+		Dependency dep=new Dependency();
+		dep.setTarget("web.xml");
+		dep.setOrigin( warFile );
+		dep.setLastModified( warFile.lastModified() );
+		dm.addDependency( dep );
+		context.getContainer().setNote( "autoDeploy.war", warFile );
+	    }
+	}
+    }
+    
+    public void reload( Request req, Context context) throws TomcatException {
+	File war=(File)context.getContainer().getNote( "autoDeploy.war" );
+	if( war==null ) return;
+	log( "XXX not implemented - need to re-expand " + war ); 
     }
 }
 
