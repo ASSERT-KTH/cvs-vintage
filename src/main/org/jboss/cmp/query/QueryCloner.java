@@ -65,12 +65,18 @@ public class QueryCloner implements QueryVisitor
 
    public Object visit(RangeRelation relation, Object param)
    {
-      return new RangeRelation(relation.getAlias(), relation.getType());
+      Query newQuery = (Query) param;
+      RangeRelation newRelation = new RangeRelation(relation.getAlias(), relation.getType());
+      newQuery.addAlias(newRelation);
+      return newRelation;
    }
 
    public Object visit(CollectionRelation relation, Object param)
    {
-      return new CollectionRelation(relation.getAlias(), (Path) relation.getPath().accept(this, param));
+      Query newQuery = (Query) param;
+      CollectionRelation newRelation = new CollectionRelation(relation.getAlias(), (Path) relation.getPath().accept(this, param));
+      newQuery.addAlias(newRelation);
+      return newRelation;
    }
 
    public Object visit(CrossJoin join, Object param)
