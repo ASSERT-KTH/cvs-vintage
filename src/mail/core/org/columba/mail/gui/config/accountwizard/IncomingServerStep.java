@@ -53,7 +53,6 @@ class IncomingServerStep extends AbstractStep {
         protected JComponent createComponent() {
 		JComponent component = new JPanel();
                 component.setLayout(new BoxLayout(component, BoxLayout.Y_AXIS));
-                component.setBorder(BorderFactory.createEmptyBorder(30, 30, 20, 30));
                 component.add(new MultiLineLabel(MailResourceLoader.getString(
                                     "dialog",
                                     "accountwizard",

@@ -38,7 +38,6 @@ class FinishStep extends AbstractStep {
         
         protected JComponent createComponent() {
 		JComponent component = new JPanel();
-		component.setBorder(BorderFactory.createEmptyBorder(30, 30, 20, 30));
 		component.setLayout(new BoxLayout(component, BoxLayout.Y_AXIS));
 		MultiLineLabel label = new MultiLineLabel(MailResourceLoader.getString(
                                     "dialog",

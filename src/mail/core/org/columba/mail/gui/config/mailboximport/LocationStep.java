@@ -64,7 +64,6 @@ class LocationStep extends AbstractStep implements ActionListener {
 
         protected JComponent createComponent() {
 		JComponent component = new JPanel();
-		component.setBorder(BorderFactory.createEmptyBorder(30, 30, 20, 30));
 		component.setLayout(new BoxLayout(component, BoxLayout.Y_AXIS));
 		component.add(new MultiLineLabel(MailResourceLoader.getString(
                                     "dialog",

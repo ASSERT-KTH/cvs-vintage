@@ -19,6 +19,7 @@ package org.columba.core.gui.themes.thincolumba;
 import javax.swing.JComponent;
 import javax.swing.UIDefaults;
 import javax.swing.UIManager;
+import javax.swing.plaf.BorderUIResource;
 import javax.swing.plaf.ComponentUI;
 
 import net.javaprog.ui.wizard.plaf.metal.MetalWizardContentPaneUI;
@@ -28,6 +29,7 @@ public class ThinWizardContentPaneUI extends MetalWizardContentPaneUI {
     public ThinWizardContentPaneUI() {
         UIManager.put(getPropertyPrefix() + "stepListRenderer", null);
         UIManager.put(getPropertyPrefix() + "stepDescriptionRenderer", new UIDefaults.ProxyLazyValue(WindowsStepDescriptionRenderer.UIResource.class.getName()));
+        UIManager.put(getPropertyPrefix() + "stepBorder", new BorderUIResource.EmptyBorderUIResource(12, 40, 11, 11));
     }
     
     public static ComponentUI createUI(JComponent c) {
