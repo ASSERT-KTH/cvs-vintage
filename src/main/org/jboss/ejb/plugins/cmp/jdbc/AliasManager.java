@@ -9,15 +9,14 @@ package org.jboss.ejb.plugins.cmp.jdbc;
 import java.util.Map;
 import java.util.HashMap;
 
-import org.jboss.ejb.plugins.cmp.ejbql.BlockStringBuffer;
 
 /**
  * This class manages aliases for generated queries.
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.2 $
+ * @version $Revision: 1.3 $
  */
-public final class AliasManager
+final class AliasManager
 {
    private static final String RELATION_TABLE_SUFFIX = "_RELATION_TABLE";
 
@@ -38,7 +37,7 @@ public final class AliasManager
 
    public String getAlias(String path)
    {
-      String alias = (String)aliases.get(path);
+      String alias = (String) aliases.get(path);
       if(alias == null)
       {
          alias = createAlias(path);
@@ -47,13 +46,13 @@ public final class AliasManager
       return alias;
    }
 
-   public String createAlias(String path)
+   private String createAlias(String path)
    {
-      BlockStringBuffer alias = new BlockStringBuffer();
+      StringBuffer alias = new StringBuffer();
       alias.append(prefix).append(count++).append(suffix);
       alias.append(path.replace('.', '_'));
 
-      return alias.toStringBuffer().substring(0, Math.min(maxLength, alias.length()));
+      return alias.substring(0, Math.min(maxLength, alias.length()));
    }
 
    public void addAlias(String path, String alias)
@@ -63,7 +62,7 @@ public final class AliasManager
 
    public String getRelationTableAlias(String path)
    {
-      String relationTableAlias = (String)relationTableAliases.get(path);
+      String relationTableAlias = (String) relationTableAliases.get(path);
       if(relationTableAlias == null)
       {
          relationTableAlias = createRelationTableAlias(path);
@@ -72,16 +71,16 @@ public final class AliasManager
       return relationTableAlias;
    }
 
-   public String createRelationTableAlias(String path)
+   private String createRelationTableAlias(String path)
    {
-      BlockStringBuffer relationTableAlias = new BlockStringBuffer();
+      StringBuffer relationTableAlias = new StringBuffer();
 
       relationTableAlias.append(prefix).append(count++).append(suffix);
 
       relationTableAlias.append(path.replace('.', '_'));
       relationTableAlias.append(RELATION_TABLE_SUFFIX);
 
-      return relationTableAlias.toStringBuffer().substring(
+      return relationTableAlias.substring(
          0, Math.min(maxLength, relationTableAlias.length()));
    }
 }

@@ -9,7 +9,6 @@ package org.jboss.ejb.plugins.cmp.jdbc;
 
 import java.sql.Connection;
 import java.sql.Statement;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
@@ -25,7 +24,7 @@ import org.jboss.deployment.DeploymentException;
 import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCCMRFieldBridge;
 import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCFieldBridge;
 import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCEntityBridge;
-import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCCMP2xFieldBridge;
+import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCCMPFieldBridge;
 import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCCMPFieldMetaData;
 import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCEntityMetaData;
 import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCRelationMetaData;
@@ -44,18 +43,18 @@ import org.jboss.logging.Logger;
  * @author <a href="mailto:michel.anke@wolmail.nl">Michel de Groot</a>
  * @author <a href="loubyansky@ua.fm">Alex Loubyansky</a>
  * @author <a href="heiko.rupp@cellent.de">Heiko W.Rupp</a>
- * @version $Revision: 1.37 $
+ * @version $Revision: 1.38 $
  */
-public class JDBCStartCommand
+public final class JDBCStartCommand
 {
    private static final String IDX_POSTFIX = "_idx";
    private static final String COULDNT_SUSPEND = "Could not suspend current transaction before ";
-   private static final String COULDNT_REATTACH = "Could not reattach original transaction after ";	
+   private static final String COULDNT_REATTACH = "Could not reattach original transaction after ";
    private final static Object CREATED_TABLES_KEY = new Object();
-   private JDBCStoreManager manager;
-   private JDBCEntityBridge entity;
-   private JDBCEntityMetaData entityMetaData;
-   private Logger log;
+   private final JDBCStoreManager manager;
+   private final JDBCEntityBridge entity;
+   private final JDBCEntityMetaData entityMetaData;
+   private final Logger log;
    private static int idxCount = 0;
 
    public JDBCStartCommand(JDBCStoreManager manager)
@@ -124,10 +123,10 @@ public class JDBCStartCommand
       }
 
       // create relation tables
-      List cmrFields = entity.getCMRFields();
-      for(int i = 0; i < cmrFields.size(); ++i)
+      JDBCCMRFieldBridge[] cmrFields = entity.getCMRFields();
+      for(int i = 0; i < cmrFields.length; ++i)
       {
-         JDBCCMRFieldBridge cmrField = (JDBCCMRFieldBridge)cmrFields.get(i);
+         JDBCCMRFieldBridge cmrField = cmrFields[i];
          JDBCRelationMetaData relationMetaData = cmrField.getRelationMetaData();
 
          // if the table for the related entity has been created
@@ -195,14 +194,14 @@ public class JDBCStartCommand
 
       // suspend the current transaction
       TransactionManager tm = manager.getContainer().getTransactionManager();
-      Transaction oldTransaction = null;
+      Transaction oldTransaction;
       try
       {
          oldTransaction = tm.suspend();
       }
       catch(Exception e)
       {
-         throw new DeploymentException(COULDNT_SUSPEND +"creating table.", e);
+         throw new DeploymentException(COULDNT_SUSPEND + "creating table.", e);
       }
 
       try
@@ -244,13 +243,13 @@ public class JDBCStartCommand
          }
          catch(Exception e)
          {
-            throw new DeploymentException(COULDNT_REATTACH +  "create table");
+            throw new DeploymentException(COULDNT_REATTACH + "create table");
          }
       }
 
       // success
       log.info("Created table '" + tableName + "' successfully.");
-      Set createdTables = (Set)manager.getApplicationData(CREATED_TABLES_KEY);
+      Set createdTables = (Set) manager.getApplicationData(CREATED_TABLES_KEY);
       createdTables.add(tableName);
    }
 
@@ -269,7 +268,7 @@ public class JDBCStartCommand
       // since we use the pools, we have to do this within a transaction
       // suspend the current transaction
       TransactionManager tm = manager.getContainer().getTransactionManager();
-      Transaction oldTransaction = null;
+      Transaction oldTransaction;
       try
       {
          oldTransaction = tm.suspend();
@@ -325,14 +324,13 @@ public class JDBCStartCommand
       log.info("Created index '" + indexName + "' on '" + tableName + "' successfully.");
    }
 
-
    /**
     * Send (user-defined) SQL commands to the server.
     * The commands can be found in the &lt;sql-statement&gt; elements
     * within the &lt;post-table-create&gt; tag in jbossjdbc-cmp.xml
     * @param dataSource
     */
-   private void issuePostCreateSQL(DataSource dataSource, ArrayList sql, String table)
+   private void issuePostCreateSQL(DataSource dataSource, List sql, String table)
       throws DeploymentException
    {
       if(sql == null)
@@ -344,7 +342,7 @@ public class JDBCStartCommand
       log.info("issuePostCreateSQL::sql: " + sql.toString() + " on table " + table);
 
       TransactionManager tm = manager.getContainer().getTransactionManager();
-      Transaction oldTransaction = null;
+      Transaction oldTransaction;
 
       try
       {
@@ -369,7 +367,7 @@ public class JDBCStartCommand
             // execute sql
             for(int i = 0; i < sql.size(); i++)
             {
-               currentCmd = (String)sql.get(i);
+               currentCmd = (String) sql.get(i);
                /*
                 * Replace %%t in the sql command with the current table name
                 */
@@ -419,41 +417,17 @@ public class JDBCStartCommand
       sql.append(SQLUtil.CREATE_TABLE).append(entity.getTableName()).append('(');
 
       // add fields
-      int columnCount = 0; // just to decide whether to sql.append(", ")
-      for(int i = 0; i < entity.getFields().size(); ++i)
+      boolean comma = false;
+      JDBCFieldBridge[] fields = entity.getTableFields();
+      for(int i = 0; i < fields.length; ++i)
       {
-         JDBCFieldBridge field = (JDBCFieldBridge)entity.getFields().get(i);
+         JDBCFieldBridge field = fields[i];
          JDBCType type = field.getJDBCType();
-
-         // the side that doesn't have a foreign key has JDBCType null
-         if(type == null)
-            continue;
-
-         // add foreign key fields unless they mapped to primary key fields
-         if(field instanceof JDBCCMRFieldBridge)
-         {
-            JDBCCMRFieldBridge cmrField = (JDBCCMRFieldBridge)field;
-            List fkFieldIter = cmrField.getForeignKeyFields();
-            for (int j = 0; j < fkFieldIter.size(); ++j)
-            {
-               JDBCCMP2xFieldBridge fkField = (JDBCCMP2xFieldBridge)fkFieldIter.get(j);
-               if(fkField.isFKFieldMappedToCMPField())
-                  continue;
-
-               if(columnCount > 0)
-                  sql.append(SQLUtil.COMMA);
-
-               addField(fkField.getJDBCType(), sql);
-               ++columnCount;
-            }
-         }
+         if(comma)
+            sql.append(SQLUtil.COMMA);
          else
-         {
-            if(columnCount > 0)
-               sql.append(SQLUtil.COMMA);
-            addField(type, sql);
-            ++columnCount;
-         }
+            comma = true;
+         addField(type, sql);
       }
 
       // add a pk constraint
@@ -471,13 +445,13 @@ public class JDBCStartCommand
          name = SQLUtil.fixConstraintName(name, dataSource);
          String[] args = new String[]{
             name,
-            SQLUtil.getColumnNamesClause(entity.getPrimaryKeyFields())};
-         sql.append(SQLUtil.COMMA).append(pkConstraint.getFunctionSql(args));
+            SQLUtil.getColumnNamesClause(entity.getPrimaryKeyFields(), new StringBuffer(100)).toString()
+         };
+         sql.append(SQLUtil.COMMA);
+         pkConstraint.getFunctionSql(args, sql);
       }
 
-      sql.append(')');
-
-      return sql.toString();
+      return sql.append(')').toString();
    }
 
    /**
@@ -492,23 +466,23 @@ public class JDBCStartCommand
       StringBuffer sql;
 
       // Only create indices on CMP fields
-      List cmpFields = entity.getCMPFields();
-      for(int i = 0; i < cmpFields.size(); ++i)
+      JDBCCMPFieldBridge[] cmpFields = entity.getTableFields();
+      for(int i = 0; i < cmpFields.length; ++i)
       {
-         JDBCFieldBridge field = (JDBCFieldBridge)cmpFields.get(i);
+         JDBCFieldBridge field = cmpFields[i];
          boolean isIndexed = field.isIndexed();
 
          if(isIndexed)
          {
             log.debug("Creating index for field " + field.getFieldName());
             sql = new StringBuffer();
-            sql.append("CREATE INDEX ");
+            sql.append(SQLUtil.CREATE_INDEX);
             sql.append(entity.getTableName() + IDX_POSTFIX + idxCount);// index name
             sql.append(SQLUtil.ON);
             sql.append(entity.getTableName() + '(');
-            sql.append(SQLUtil.getColumnNamesClause(field));
-
+            SQLUtil.getColumnNamesClause(field, sql);
             sql.append(")");
+
             createIndex(dataSource,
                entity.getTableName(),
                entity.getTableName() + IDX_POSTFIX + idxCount,
@@ -546,7 +520,7 @@ public class JDBCStartCommand
 
       while(it.hasNext())
       {
-         fi = (JDBCCMPFieldMetaData)it.next();
+         fi = (JDBCCMPFieldMetaData) it.next();
          if(left.isIndexed())
          {
             createIndex(dataSource, tableName, fi.getFieldName(), createIndexSQL(fi, tableName));
@@ -558,7 +532,7 @@ public class JDBCStartCommand
       it = kfr.iterator();
       while(it.hasNext())
       {
-         fi = (JDBCCMPFieldMetaData)it.next();
+         fi = (JDBCCMPFieldMetaData) it.next();
          if(right.isIndexed())
          {
             createIndex(dataSource, tableName, fi.getFieldName(), createIndexSQL(fi, tableName));
@@ -567,10 +541,10 @@ public class JDBCStartCommand
       }
    }
 
-   private String createIndexSQL(JDBCCMPFieldMetaData fi, String tableName)
+   private static String createIndexSQL(JDBCCMPFieldMetaData fi, String tableName)
    {
       StringBuffer sql = new StringBuffer();
-      sql.append("CREATE INDEX ");
+      sql.append(SQLUtil.CREATE_INDEX);
       sql.append(fi.getColumnName() + IDX_POSTFIX + idxCount);
       sql.append(SQLUtil.ON);
       sql.append(tableName + '(');
@@ -592,7 +566,7 @@ public class JDBCStartCommand
             throw new IllegalStateException("auto-increment template not found");
          }
          String[] args = new String[]{columnClause};
-         sqlBuffer.append(autoIncrement.getFunctionSql(args));
+         autoIncrement.getFunctionSql(args, sqlBuffer);
       }
       else
       {
@@ -604,16 +578,17 @@ public class JDBCStartCommand
       JDBCCMRFieldBridge cmrField,
       DataSource dataSource) throws DeploymentException
    {
-
-      List fields = new ArrayList();
-      fields.addAll(cmrField.getTableKeyFields());
-      fields.addAll(cmrField.getRelatedCMRField().getTableKeyFields());
+      JDBCCMPFieldBridge[] leftKeys = cmrField.getTableKeyFields();
+      JDBCCMPFieldBridge[] rightKeys = cmrField.getRelatedCMRField().getTableKeyFields();
+      JDBCFieldBridge[] fieldsArr = new JDBCFieldBridge[leftKeys.length + rightKeys.length];
+      System.arraycopy(leftKeys, 0, fieldsArr, 0, leftKeys.length);
+      System.arraycopy(rightKeys, 0, fieldsArr, leftKeys.length, rightKeys.length);
 
       StringBuffer sql = new StringBuffer();
       sql.append(SQLUtil.CREATE_TABLE).append(cmrField.getTableName())
          .append('(')
          // add field declaration
-         .append(SQLUtil.getCreateTableColumnsClause(fields));
+         .append(SQLUtil.getCreateTableColumnsClause(fieldsArr));
 
       // add a pk constraint
       if(cmrField.getRelationMetaData().hasPrimaryKeyConstraint())
@@ -630,8 +605,11 @@ public class JDBCStartCommand
          name = SQLUtil.fixConstraintName(name, dataSource);
          String[] args = new String[]{
             name,
-            SQLUtil.getColumnNamesClause(fields)};
-         sql.append(SQLUtil.COMMA).append(pkConstraint.getFunctionSql(args));
+            SQLUtil.getColumnNamesClause(
+               fieldsArr, new StringBuffer(100).toString(), new StringBuffer()).toString()
+         };
+         sql.append(SQLUtil.COMMA);
+         pkConstraint.getFunctionSql(args, sql);
       }
       sql.append(')');
       return sql.toString();
@@ -675,12 +653,12 @@ public class JDBCStartCommand
       DataSource dataSource,
       String tableName,
       String cmrFieldName,
-      List fields,
+      JDBCCMPFieldBridge[] fields,
       String referencesTableName,
-      List referencesFields) throws DeploymentException
+      JDBCCMPFieldBridge[] referencesFields) throws DeploymentException
    {
       // can only alter tables we created
-      Set createdTables = (Set)manager.getApplicationData(CREATED_TABLES_KEY);
+      Set createdTables = (Set) manager.getApplicationData(CREATED_TABLES_KEY);
       if(!createdTables.contains(tableName))
       {
          return;
@@ -693,8 +671,8 @@ public class JDBCStartCommand
          throw new IllegalStateException("Foreign key constraint is not " +
             "allowed for this type of datastore");
       }
-      String a = SQLUtil.getColumnNamesClause(fields);
-      String b = SQLUtil.getColumnNamesClause(referencesFields);
+      String a = SQLUtil.getColumnNamesClause(fields, new StringBuffer(50)).toString();
+      String b = SQLUtil.getColumnNamesClause(referencesFields, new StringBuffer(50)).toString();
 
       String[] args = new String[]{
          tableName,
@@ -703,20 +681,20 @@ public class JDBCStartCommand
          a,
          referencesTableName,
          b};
-      String sql = fkConstraint.getFunctionSql(args);
+
+      String sql = fkConstraint.getFunctionSql(args, new StringBuffer(100)).toString();
 
       // since we use the pools, we have to do this within a transaction
       // suspend the current transaction
       TransactionManager tm = manager.getContainer().getTransactionManager();
-      Transaction oldTransaction = null;
+      Transaction oldTransaction;
       try
       {
          oldTransaction = tm.suspend();
       }
       catch(Exception e)
       {
-         throw new DeploymentException(COULDNT_SUSPEND + 
-         	 "alter table create foreign key.", e);
+         throw new DeploymentException(COULDNT_SUSPEND + "alter table create foreign key.", e);
       }
 
       try
@@ -773,7 +751,7 @@ public class JDBCStartCommand
     * @param table the table name
     * @return String with sql statement
     */
-   private String replaceTable(String in, String table)
+   private static String replaceTable(String in, String table)
    {
       int pos;
 
@@ -793,7 +771,7 @@ public class JDBCStartCommand
     * @param in
     * @return
     */
-   private String replaceIndexCounter(String in)
+   private static String replaceIndexCounter(String in)
    {
       int pos;
 

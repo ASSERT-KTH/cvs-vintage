@@ -17,9 +17,9 @@ import java.sql.ResultSet;
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @author <a href="mailto:alex@jboss.org">Alex Loubyansky</a>
- * @version $Revision: 1.3 $
+ * @version $Revision: 1.4 $
  */
-public class ASTLength
+public final class ASTLength
    extends SimpleNode
    implements SelectFunction
 {
@@ -27,12 +27,6 @@ public class ASTLength
    {
       super(id);
    }
-
-   public ASTLength(EJBQLParser p, int id)
-   {
-      super(p, id);
-   }
-
 
    /** Accept the visitor. **/
    public Object jjtAccept(JBossQLParserVisitor visitor, Object data)

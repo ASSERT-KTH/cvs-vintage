@@ -4,18 +4,17 @@
  * Distributable under LGPL license.
  * See terms of license at gnu.org.
  */
-
 package org.jboss.ejb.plugins.cmp.ejbql;
 
+
 /**
- * This abstract syntax node represents a string parenthetical.
  *
- * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
+ * @author <a href="mailto:alex@jboss.org">Alexey Loubyansky</a>
  * @version $Revision: 1.2 $
  */
-public final class ASTStringParenthetical extends SimpleNode
+public final class ASTWhereConditionalTerm extends SimpleNode
 {
-   public ASTStringParenthetical(int id)
+   public ASTWhereConditionalTerm(int id)
    {
       super(id);
    }

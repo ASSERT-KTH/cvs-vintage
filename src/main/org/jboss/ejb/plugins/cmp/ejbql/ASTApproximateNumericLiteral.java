@@ -4,35 +4,34 @@
  * Distributable under LGPL license.
  * See terms of license at gnu.org.
  */
- 
+
 package org.jboss.ejb.plugins.cmp.ejbql;
 
 /**
  * This abstract syntax node represents an approximate numeric literal.
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.2 $
- */                            
-public class ASTApproximateNumericLiteral extends SimpleNode {
-   private static final String UPPER_F = "UPPER_F";
-   private static final String LOWER_F = "LOWER_F";
-   private static final String LOWER_D = "LOWER_D";
-   private static final String UPPER_D = "UPPER_D";
+ * @version $Revision: 1.3 $
+ */
+public final class ASTApproximateNumericLiteral extends SimpleNode
+{
+   //private static final String UPPER_F = "UPPER_F";
+   //private static final String LOWER_F = "LOWER_F";
+   //private static final String LOWER_D = "LOWER_D";
+   //private static final String UPPER_D = "UPPER_D";
 
-   public double value;
+   //public double value;
    public String literal;
 
-   public ASTApproximateNumericLiteral(int id) {
+   public ASTApproximateNumericLiteral(int id)
+   {
       super(id);
    }
 
-   public ASTApproximateNumericLiteral(EJBQLParser p, int id) {
-      super(p, id);
-   }
-
-   public void setValue(String number) {
+   public void setValue(String number)
+   {
       literal = number;
-
+      /*
       // float suffix
       if(number.endsWith(LOWER_F) || number.endsWith(UPPER_F)) {
          // chop off the suffix
@@ -47,14 +46,17 @@ public class ASTApproximateNumericLiteral extends SimpleNode {
          // regular double
          value = Double.parseDouble(number);
       }
+      */
    }
 
-   public String toString() {
+   public String toString()
+   {
       return literal;
    }
 
    /** Accept the visitor. **/
-   public Object jjtAccept(JBossQLParserVisitor visitor, Object data) {
+   public Object jjtAccept(JBossQLParserVisitor visitor, Object data)
+   {
       return visitor.visit(this, data);
    }
 }

@@ -6,7 +6,6 @@
  */
 package org.jboss.ejb.plugins.cmp.jdbc;
 
-import java.sql.ResultSet;
 
 /**
  * This interface represents a mapping between a Java type and JDBC type.
@@ -15,7 +14,7 @@ import java.sql.ResultSet;
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @author <a href="mailto:loubyansky@ua.fm">Alex Loubyansky</a>
- * @version $Revision: 1.7 $
+ * @version $Revision: 1.8 $
  */
 public interface JDBCType
 {

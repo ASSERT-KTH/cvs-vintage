@@ -12,8 +12,6 @@ import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.sql.SQLException;
-import java.util.Iterator;
-import java.util.List;
 import javax.sql.DataSource;
 import javax.transaction.Transaction;
 import javax.transaction.TransactionManager;
@@ -32,14 +30,14 @@ import org.jboss.logging.Logger;
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
  * @author <a href="mailto:alex@jboss.org">Alexey Loubyansky</a>
- * @version $Revision: 1.19 $
+ * @version $Revision: 1.20 $
  */
-public class JDBCStopCommand
+public final class JDBCStopCommand
 {
-   private JDBCStoreManager manager;
-   private JDBCEntityBridge entity;
-   private JDBCEntityMetaData entityMetaData;
-   private Logger log;
+   private final JDBCStoreManager manager;
+   private final JDBCEntityBridge entity;
+   private final JDBCEntityMetaData entityMetaData;
+   private final Logger log;
 
    public JDBCStopCommand(JDBCStoreManager manager)
    {
@@ -57,10 +55,10 @@ public class JDBCStopCommand
    public void execute()
    {
       // drop relation tables
-      List cmrFields = entity.getCMRFields();
-      for(int i = 0; i < cmrFields.size(); ++i)
+      JDBCCMRFieldBridge[] cmrFields = entity.getCMRFields();
+      for(int i = 0; i < cmrFields.length; ++i)
       {
-         JDBCCMRFieldBridge cmrField = (JDBCCMRFieldBridge)cmrFields.get(i);
+         JDBCCMRFieldBridge cmrField = cmrFields[i];
          JDBCRelationMetaData relationMetaData = cmrField.getRelationMetaData();
          if(relationMetaData.isTableMappingStyle() && relationMetaData.getTableExists())
          {

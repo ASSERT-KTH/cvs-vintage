@@ -20,9 +20,9 @@ import java.lang.reflect.Method;
  * the Java Bean.
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.9 $
+ * @version $Revision: 1.10 $
  */
-public class JDBCTypeComplexProperty
+public final class JDBCTypeComplexProperty
 {
    private final String propertyName;
    private final String columnName;

@@ -9,7 +9,6 @@ package org.jboss.ejb.plugins.cmp.jdbc;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.util.Iterator;
-import java.util.List;
 import javax.ejb.EJBException;
 import javax.sql.DataSource;
 
@@ -21,11 +20,12 @@ import org.jboss.logging.Logger;
  * Deletes relations from a relation table.
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.11 $
+ * @author <a href="mailto:alex@jboss.org">Alex Loubyansky</a>
+ * @version $Revision: 1.12 $
  */
-public class JDBCDeleteRelationsCommand
+public final class JDBCDeleteRelationsCommand
 {
-   private Logger log;
+   private final Logger log;
 
    public JDBCDeleteRelationsCommand(JDBCStoreManager manager)
    {
@@ -83,7 +83,7 @@ public class JDBCDeleteRelationsCommand
       }
    }
 
-   private String createSQL(RelationData relationData)
+   private static String createSQL(RelationData relationData)
    {
       JDBCCMRFieldBridge left = relationData.getLeftCMRField();
       JDBCCMRFieldBridge right = relationData.getRightCMRField();
@@ -97,12 +97,12 @@ public class JDBCDeleteRelationsCommand
       if(removedRelations > 0)
       {
          StringBuffer whereClause = new StringBuffer(20);
-         whereClause.append('(')
-            // left keys
-            .append(SQLUtil.getWhereClause(left.getTableKeyFields()))
-            .append(SQLUtil.AND)
-            // right keys
-            .append(SQLUtil.getWhereClause(right.getTableKeyFields()))
+         whereClause.append('(');
+         // left keys
+         SQLUtil.getWhereClause(left.getTableKeyFields(), whereClause)
+            .append(SQLUtil.AND);
+         // right keys
+         SQLUtil.getWhereClause(right.getTableKeyFields(), whereClause)
             .append(')');
          String whereClauseStr = whereClause.toString();
          sql.append(whereClauseStr);
@@ -114,32 +114,26 @@ public class JDBCDeleteRelationsCommand
       return sql.toString();
    }
 
-   private void setParameters(PreparedStatement ps, RelationData relationData)
+   private static void setParameters(PreparedStatement ps, RelationData relationData)
       throws Exception
    {
       int index = 1;
       Iterator pairs = relationData.removedRelations.iterator();
-      List leftFields = relationData.getLeftCMRField().getTableKeyFields();
-      List rightFields = relationData.getRightCMRField().getTableKeyFields();
+      JDBCCMPFieldBridge[] leftFields = relationData.getLeftCMRField().getTableKeyFields();
+      JDBCCMPFieldBridge[] rightFields = relationData.getRightCMRField().getTableKeyFields();
       while(pairs.hasNext())
       {
-         RelationPair pair = (RelationPair)pairs.next();
+         RelationPair pair = (RelationPair) pairs.next();
 
          // left keys
          Object leftId = pair.getLeftId();
-         for(int i = 0; i < leftFields.size(); i++)
-         {
-            JDBCCMPFieldBridge field = (JDBCCMPFieldBridge)leftFields.get(i);
-            index = field.setPrimaryKeyParameters(ps, index, leftId);
-         }
+         for(int i = 0; i < leftFields.length; ++i)
+            index = leftFields[i].setPrimaryKeyParameters(ps, index, leftId);
 
          // right keys
          Object rightId = pair.getRightId();
-         for(int i = 0; i < rightFields.size(); i++)
-         {
-            JDBCCMPFieldBridge field = (JDBCCMPFieldBridge)rightFields.get(i);
-            index = field.setPrimaryKeyParameters(ps, index, rightId);
-         }
+         for(int i = 0; i < rightFields.length; ++i)
+            index = rightFields[i].setPrimaryKeyParameters(ps, index, rightId);
       }
    }
 }

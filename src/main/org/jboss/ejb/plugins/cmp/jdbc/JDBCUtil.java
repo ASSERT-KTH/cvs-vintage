@@ -15,7 +15,6 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Reader;
 import java.io.StringReader;
-import java.io.Writer;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -53,7 +52,7 @@ import org.jboss.logging.Logger;
  */
 public final class JDBCUtil
 {
-   private static Logger log = Logger.getLogger(JDBCUtil.class.getName());
+   private static final Logger log = Logger.getLogger(JDBCUtil.class.getName());
 
    public static void safeClose(Connection con)
    {
@@ -100,7 +99,7 @@ public final class JDBCUtil
       }
    }
 
-   public static void safeClose(InputStream in)
+   private static void safeClose(InputStream in)
    {
       if(in != null)
       {
@@ -115,7 +114,7 @@ public final class JDBCUtil
       }
    }
 
-   public static void safeClose(OutputStream out)
+   private static void safeClose(OutputStream out)
    {
       if(out != null)
       {
@@ -130,28 +129,13 @@ public final class JDBCUtil
       }
    }
 
-   public static void safeClose(Reader reader)
+   private static void safeClose(Reader reader)
    {
       if(reader != null)
       {
          try
          {
             reader.close();
-         }
-         catch(IOException e)
-         {
-            log.error(SQL_ERROR, e);
-         }
-      }
-   }
-
-   public static void safeClose(Writer writter)
-   {
-      if(writter != null)
-      {
-         try
-         {
-            writter.close();
          }
          catch(IOException e)
          {
@@ -174,15 +158,15 @@ public final class JDBCUtil
       {
          if(jdbcType == Types.DATE)
          {
-            return new java.sql.Date(((java.util.Date)value).getTime());
+            return new java.sql.Date(((java.util.Date) value).getTime());
          }
          else if(jdbcType == Types.TIME)
          {
-            return new java.sql.Time(((java.util.Date)value).getTime());
+            return new java.sql.Time(((java.util.Date) value).getTime());
          }
          else if(jdbcType == Types.TIMESTAMP)
          {
-            return new java.sql.Timestamp(((java.util.Date)value).getTime());
+            return new java.sql.Timestamp(((java.util.Date) value).getTime());
          }
       }
       else if(value.getClass() == Character.class && jdbcType == Types.VARCHAR)
@@ -204,7 +188,7 @@ public final class JDBCUtil
       // Do we already have a byte array?
       if(value instanceof byte[])
       {
-         return (byte[])value;
+         return (byte[]) value;
       }
 
       ByteArrayOutputStream baos = null;
@@ -214,7 +198,7 @@ public final class JDBCUtil
          // ejb-reference: store the handle
          if(value instanceof EJBObject)
          {
-            value = ((EJBObject)value).getHandle();
+            value = ((EJBObject) value).getHandle();
          }
 
          // Marshall the object using MashalledValue to handle classloaders
@@ -284,17 +268,17 @@ public final class JDBCUtil
             // de-marshall value if possible
             if(value instanceof MarshalledValue)
             {
-               value = ((MarshalledValue)value).get();
+               value = ((MarshalledValue) value).get();
             }
             else if(value instanceof MarshalledObject)
             {
-               value = ((MarshalledObject)value).get();
+               value = ((MarshalledObject) value).get();
             }
 
             // ejb-reference: get the object back from the handle
             if(value instanceof Handle)
             {
-               value = ((Handle)value).getEJBObject();
+               value = ((Handle) value).getEJBObject();
             }
 
          }
@@ -433,7 +417,7 @@ public final class JDBCUtil
             // get unmarshalled value
             if(value instanceof MarshalledObject && !destination.equals(MarshalledObject.class))
             {
-               value = ((MarshalledObject)value).get();
+               value = ((MarshalledObject) value).get();
             }
 
             //
@@ -442,7 +426,7 @@ public final class JDBCUtil
             // get the object back from the handle
             if(value instanceof Handle)
             {
-               value = ((Handle)value).getEJBObject();
+               value = ((Handle) value).getEJBObject();
             }
 
             // Did we get the desired result?
@@ -453,7 +437,7 @@ public final class JDBCUtil
 
             if(destination == java.math.BigInteger.class && value.getClass() == java.math.BigDecimal.class)
             {
-               return ((java.math.BigDecimal)value).toBigInteger();
+               return ((java.math.BigDecimal) value).toBigInteger();
             }
 
             // oops got the wrong type - nothing we can do
@@ -689,7 +673,7 @@ public final class JDBCUtil
          // handle timestamp special becauses it hoses the milisecond values
          if(value instanceof java.sql.Timestamp)
          {
-            java.sql.Timestamp ts = (java.sql.Timestamp)value;
+            java.sql.Timestamp ts = (java.sql.Timestamp) value;
             // Timestamp returns whole seconds from getTime and partial
             // seconds are retrieved from getNanos()
             // Adrian Brock: Not in 1.4 it doesn't
@@ -700,7 +684,7 @@ public final class JDBCUtil
          }
          else
          {
-            result = new java.util.Date(((java.util.Date)value).getTime());
+            result = new java.util.Date(((java.util.Date) value).getTime());
          }
          return result;
       }
@@ -716,7 +700,7 @@ public final class JDBCUtil
       protected Object coerceToJavaType(Object value, Class destination)
       {
          // make a new copy object; you never know what a driver will return
-         return new java.sql.Date(((java.sql.Date)value).getTime());
+         return new java.sql.Date(((java.sql.Date) value).getTime());
       }
    };
 
@@ -730,7 +714,7 @@ public final class JDBCUtil
       protected Object coerceToJavaType(Object value, Class destination)
       {
          // make a new copy object; you never know what a driver will return
-         return new java.sql.Time(((java.sql.Time)value).getTime());
+         return new java.sql.Time(((java.sql.Time) value).getTime());
       }
    };
 
@@ -744,7 +728,7 @@ public final class JDBCUtil
       protected Object coerceToJavaType(Object value, Class destination)
       {
          // make a new copy object; you never know what a driver will return
-         java.sql.Timestamp orignal = (java.sql.Timestamp)value;
+         java.sql.Timestamp orignal = (java.sql.Timestamp) value;
          java.sql.Timestamp copy = new java.sql.Timestamp(orignal.getTime());
          copy.setNanos(orignal.getNanos());
          return copy;
@@ -866,7 +850,7 @@ public final class JDBCUtil
          // just grab first character
          if(value instanceof String && (destination == Character.class || destination == Character.TYPE))
          {
-            return new Character(((String)value).charAt(0));
+            return new Character(((String) value).charAt(0));
          }
          else
          {
@@ -1032,7 +1016,7 @@ public final class JDBCUtil
    // and could be refactored/optimized.
    //
 
-   private static Map jdbcTypeNames;
+   private static final Map jdbcTypeNames;
    private final static Map csTypes;
 
    /**
@@ -1045,7 +1029,7 @@ public final class JDBCUtil
     */
    private static String getJDBCTypeName(int jdbcType)
    {
-      return (String)jdbcTypeNames.get(new Integer(jdbcType));
+      return (String) jdbcTypeNames.get(new Integer(jdbcType));
    }
 
    private static final String SQL_ERROR = "SQL error";
@@ -1270,7 +1254,7 @@ public final class JDBCUtil
          case Types.NUMERIC:
             if(value instanceof BigDecimal)
             {
-               ps.setBigDecimal(index, (BigDecimal)value);
+               ps.setBigDecimal(index, (BigDecimal) value);
             }
             else
             {
@@ -1369,7 +1353,7 @@ public final class JDBCUtil
             // Non-binary types
             //
          default:
-            Method method = (Method)csTypes.get(destination.getName());
+            Method method = (Method) csTypes.get(destination.getName());
             if(method != null)
             {
                try
@@ -1430,7 +1414,7 @@ public final class JDBCUtil
          // get unmarshalled value
          if(value instanceof MarshalledObject && !destination.equals(MarshalledObject.class))
          {
-            value = ((MarshalledObject)value).get();
+            value = ((MarshalledObject) value).get();
          }
 
          //
@@ -1439,7 +1423,7 @@ public final class JDBCUtil
          // get the object back from the handle
          if(value instanceof Handle)
          {
-            value = ((Handle)value).getEJBObject();
+            value = ((Handle) value).getEJBObject();
          }
 
          //
@@ -1474,7 +1458,7 @@ public final class JDBCUtil
             // handle timestamp special becauses it hoses the milisecond values
             if(value instanceof java.sql.Timestamp)
             {
-               java.sql.Timestamp ts = (java.sql.Timestamp)value;
+               java.sql.Timestamp ts = (java.sql.Timestamp) value;
 
                // Timestamp returns whole seconds from getTime and partial
                // seconds are retrieved from getNanos()
@@ -1486,7 +1470,7 @@ public final class JDBCUtil
             }
             else
             {
-               return new java.util.Date(((java.util.Date)value).getTime());
+               return new java.util.Date(((java.util.Date) value).getTime());
             }
          }
 
@@ -1496,7 +1480,7 @@ public final class JDBCUtil
          // make a new copy object; you never know what a driver will return
          if(destination == java.sql.Time.class && value instanceof java.sql.Time)
          {
-            return new java.sql.Time(((java.sql.Time)value).getTime());
+            return new java.sql.Time(((java.sql.Time) value).getTime());
          }
 
          //
@@ -1505,7 +1489,7 @@ public final class JDBCUtil
          // make a new copy object; you never know what a driver will return
          if(destination == java.sql.Date.class && value instanceof java.sql.Date)
          {
-            return new java.sql.Date(((java.sql.Date)value).getTime());
+            return new java.sql.Date(((java.sql.Date) value).getTime());
          }
 
          //
@@ -1516,7 +1500,7 @@ public final class JDBCUtil
          {
             // make a new Timestamp object; you never know
             // what a driver will return
-            java.sql.Timestamp orignal = (java.sql.Timestamp)value;
+            java.sql.Timestamp orignal = (java.sql.Timestamp) value;
             java.sql.Timestamp copy = new java.sql.Timestamp(orignal.getTime());
             copy.setNanos(orignal.getNanos());
             return copy;
@@ -1528,7 +1512,7 @@ public final class JDBCUtil
          // just grab first character
          if(value instanceof String && (destination == Character.class || destination == Character.TYPE))
          {
-            return new Character(((String)value).charAt(0));
+            return new Character(((String) value).charAt(0));
          }
 
          // Did we get the desired result?
@@ -1539,7 +1523,7 @@ public final class JDBCUtil
 
          if(destination == java.math.BigInteger.class && value.getClass() == java.math.BigDecimal.class)
          {
-            return ((java.math.BigDecimal)value).toBigInteger();
+            return ((java.math.BigDecimal) value).toBigInteger();
          }
 
          // oops got the wrong type - nothing we can do

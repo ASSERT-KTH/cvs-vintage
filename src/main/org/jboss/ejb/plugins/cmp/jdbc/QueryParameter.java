@@ -9,7 +9,6 @@ package org.jboss.ejb.plugins.cmp.jdbc;
 import java.lang.reflect.Method;
 import java.sql.PreparedStatement;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.StringTokenizer;
 import java.util.Collections;
@@ -20,12 +19,12 @@ import org.jboss.ejb.plugins.cmp.ejbql.Catalog;
 import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCCMPFieldBridge;
 import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCEntityBridge;
 
+import org.jboss.logging.Logger;
+
 /**
  * @author <a href="mailto:alex@jboss.org">Alex Loubyansky and others</a>
  */
-import org.jboss.logging.Logger;
-
-public class QueryParameter
+public final class QueryParameter
 {
    public static List createParameters(int argNum, JDBCCMPFieldBridge field)
    {
@@ -33,7 +32,7 @@ public class QueryParameter
       JDBCType type = field.getJDBCType();
       if(type instanceof JDBCTypeComplex)
       {
-         JDBCTypeComplexProperty[] props = ((JDBCTypeComplex)type).getProperties();
+         JDBCTypeComplexProperty[] props = ((JDBCTypeComplex) type).getProperties();
          parameters = new ArrayList(props.length);
          for(int i = 0; i < props.length; i++)
          {
@@ -62,16 +61,16 @@ public class QueryParameter
    public static List createParameters(int argNum, JDBCEntityBridge entity)
    {
       List parameters = new ArrayList();
-      List pkFields = entity.getPrimaryKeyFields();
-      for(int i = 0; i < pkFields.size(); ++i)
+      JDBCCMPFieldBridge[] pkFields = entity.getPrimaryKeyFields();
+      for(int i = 0; i < pkFields.length; ++i)
       {
-         JDBCCMPFieldBridge pkField = (JDBCCMPFieldBridge)pkFields.get(i);
+         JDBCCMPFieldBridge pkField = pkFields[i];
 
          JDBCType type = pkField.getJDBCType();
          if(type instanceof JDBCTypeComplex)
          {
             JDBCTypeComplexProperty[] props =
-               ((JDBCTypeComplex)type).getProperties();
+               ((JDBCTypeComplex) type).getProperties();
             for(int j = 0; j < props.length; j++)
             {
                QueryParameter param = new QueryParameter(
@@ -100,15 +99,15 @@ public class QueryParameter
    public static List createPrimaryKeyParameters(int argNum, JDBCEntityBridge entity)
    {
       List parameters = new ArrayList();
-      List pkFields = entity.getPrimaryKeyFields();
-      for(int i = 0; i < pkFields.size(); ++i)
+      JDBCCMPFieldBridge[] pkFields = entity.getPrimaryKeyFields();
+      for(int i = 0; i < pkFields.length; ++i)
       {
-         JDBCCMPFieldBridge pkField = (JDBCCMPFieldBridge)pkFields.get(i);
+         JDBCCMPFieldBridge pkField = pkFields[i];
 
          JDBCType type = pkField.getJDBCType();
          if(type instanceof JDBCTypeComplex)
          {
-            JDBCTypeComplexProperty[] props = ((JDBCTypeComplex)type).getProperties();
+            JDBCTypeComplexProperty[] props = ((JDBCTypeComplex) type).getProperties();
             for(int j = 0; j < props.length; j++)
             {
                QueryParameter param = new QueryParameter(
@@ -135,10 +134,10 @@ public class QueryParameter
    }
 
    private int argNum;
-   private boolean isPrimaryKeyParameter;
+   private final boolean isPrimaryKeyParameter;
    private JDBCCMPFieldBridge field;
    private JDBCTypeComplexProperty property;
-   private String parameterString;
+   private final String parameterString;
 
    private int jdbcType;
 
@@ -235,7 +234,7 @@ public class QueryParameter
          {
             propertyName.append('.').append(tok.nextToken());
          }
-         property = ((JDBCTypeComplex)type).getProperty(propertyName.toString());
+         property = ((JDBCTypeComplex) type).getProperty(propertyName.toString());
          jdbcType = property.getJDBCType();
       }
    }
@@ -267,14 +266,6 @@ public class QueryParameter
       parameterString = parameterBuf.toString();
    }
 
-   /**
-    * Gets the dotted parameter string for this parameter.
-    */
-   public String getParameterString()
-   {
-      return parameterString;
-   }
-
    public void set(Logger log, PreparedStatement ps, int index, Object[] args)
       throws Exception
    {
@@ -285,11 +276,11 @@ public class QueryParameter
          {
             if(arg instanceof EJBObject)
             {
-               arg = ((EJBObject)arg).getPrimaryKey();
+               arg = ((EJBObject) arg).getPrimaryKey();
             }
             else if(arg instanceof EJBLocalObject)
             {
-               arg = ((EJBLocalObject)arg).getPrimaryKey();
+               arg = ((EJBLocalObject) arg).getPrimaryKey();
             }
             else
             {
@@ -307,13 +298,13 @@ public class QueryParameter
       JDBCUtil.setParameter(log, ps, index, jdbcType, arg);
    }
 
-   private JDBCCMPFieldBridge getCMPField(
+   private static JDBCCMPFieldBridge getCMPField(
       JDBCStoreManager manager,
       Class intf,
       String fieldName)
    {
       Catalog catalog = manager.getCatalog();
-      JDBCEntityBridge entityBridge = (JDBCEntityBridge)catalog.getEntityByInterface(intf);
+      JDBCEntityBridge entityBridge = (JDBCEntityBridge) catalog.getEntityByInterface(intf);
       if(entityBridge == null)
       {
          throw new IllegalArgumentException("Entity not found in application " +

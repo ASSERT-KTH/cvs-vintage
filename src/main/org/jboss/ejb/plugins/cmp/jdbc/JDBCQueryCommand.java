@@ -10,17 +10,19 @@ package org.jboss.ejb.plugins.cmp.jdbc;
 import java.lang.reflect.Method;
 import java.util.Collection;
 import javax.ejb.FinderException;
+
 import org.jboss.ejb.EntityEnterpriseContext;
 
 /**
  * Common interface for all query commands.
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.5 $
+ * @version $Revision: 1.6 $
  */
-public interface JDBCQueryCommand {
+public interface JDBCQueryCommand
+{
    public Collection execute(
-         Method finderMethod,
-         Object[] args,
-         EntityEnterpriseContext ctx) throws FinderException;
+      Method finderMethod,
+      Object[] args,
+      EntityEnterpriseContext ctx) throws FinderException;
 }

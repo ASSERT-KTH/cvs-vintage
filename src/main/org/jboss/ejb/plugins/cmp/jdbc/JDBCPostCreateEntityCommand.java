@@ -10,12 +10,13 @@ package org.jboss.ejb.plugins.cmp.jdbc;
 import java.lang.reflect.Method;
 import java.util.List;
 import java.util.ArrayList;
-import javax.ejb.CreateException;
+
 import javax.ejb.EJBLocalObject;
 
 import org.jboss.ejb.EntityEnterpriseContext;
 import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCCMRFieldBridge;
 import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCEntityBridge;
+import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCFieldBridge;
 
 /**
  * This command establishes relationships for CMR fields that have
@@ -23,23 +24,23 @@ import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCEntityBridge;
  *
  * @author <a href="mailto:aloubyansky@hotmail.com">Alex Loubyansky</a>
  *
- * @version $Revision: 1.6 $
+ * @version $Revision: 1.7 $
  */
-public class JDBCPostCreateEntityCommand
+public final class JDBCPostCreateEntityCommand
 {
    // Attributes ------------------------------------
-   private JDBCEntityBridge entity;
+   private final JDBCEntityBridge entity;
    private final JDBCCMRFieldBridge[] cmrWithFKMappedToCMP;
 
    // Constructors ----------------------------------
    public JDBCPostCreateEntityCommand(JDBCStoreManager manager)
    {
       entity = manager.getEntityBridge();
-      List cmrFields = entity.getCMRFields();
+      JDBCFieldBridge[] cmrFields = entity.getCMRFields();
       List fkToCMPList = new ArrayList(4);
-      for(int i = 0; i < cmrFields.size(); ++i)
+      for(int i = 0; i < cmrFields.length; ++i)
       {
-         JDBCCMRFieldBridge cmrField = (JDBCCMRFieldBridge)cmrFields.get(i);
+         JDBCCMRFieldBridge cmrField = (JDBCCMRFieldBridge) cmrFields[i];
          if(cmrField.hasFKFieldsMappedToCMPFields()
             || cmrField.getRelatedCMRField().hasFKFieldsMappedToCMPFields())
          {
@@ -49,13 +50,12 @@ public class JDBCPostCreateEntityCommand
       if(fkToCMPList.isEmpty())
          cmrWithFKMappedToCMP = null;
       else
-         cmrWithFKMappedToCMP = (JDBCCMRFieldBridge[])cmrFields
+         cmrWithFKMappedToCMP = (JDBCCMRFieldBridge[]) fkToCMPList
             .toArray(new JDBCCMRFieldBridge[fkToCMPList.size()]);
    }
 
    // Public ----------------------------------------
    public Object execute(Method m, Object[] args, EntityEnterpriseContext ctx)
-      throws CreateException
    {
       if(cmrWithFKMappedToCMP == null)
          return null;
@@ -65,12 +65,12 @@ public class JDBCPostCreateEntityCommand
          JDBCCMRFieldBridge cmrField = cmrWithFKMappedToCMP[i];
          if(cmrField.hasFKFieldsMappedToCMPFields())
          {
-            Object relatedId = cmrField.getRelatedIdFromContextCMP(ctx);
+            Object relatedId = cmrField.getRelatedIdFromContext(ctx);
             if(relatedId != null)
             {
                try
                {
-                  EJBLocalObject relatedEntity = cmrField.getRelatedEntityByFK(relatedId, ctx);
+                  EJBLocalObject relatedEntity = cmrField.getRelatedEntityByFK(relatedId);
                   if(relatedEntity != null)
                   {
                      cmrField.createRelationLinks(ctx, relatedId);

@@ -12,17 +12,17 @@ package org.jboss.ejb.plugins.cmp.jdbc;
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @author <a href="mailto:alex@jboss.org">Alexey Loubyansky</a>
- * @version $Revision: 1.7 $
+ * @version $Revision: 1.8 $
  */
-public class JDBCTypeSimple implements JDBCType
+public final class JDBCTypeSimple implements JDBCType
 {
-   private String[] columnNames;
-   private Class[] javaTypes;
-   private int[] jdbcTypes;
-   private String[] sqlTypes;
-   private boolean[] notNull;
-   private boolean[] autoIncrement;
-   private JDBCUtil.ResultSetReader[] resultSetReader;
+   private final String[] columnNames;
+   private final Class[] javaTypes;
+   private final int[] jdbcTypes;
+   private final String[] sqlTypes;
+   private final boolean[] notNull;
+   private final boolean[] autoIncrement;
+   private final JDBCUtil.ResultSetReader[] resultSetReader;
 
    private final Mapper mapper;
 
@@ -46,37 +46,37 @@ public class JDBCTypeSimple implements JDBCType
       resultSetReader = new JDBCUtil.ResultSetReader[]{JDBCUtil.getResultSetReader(jdbcType, javaType)};
    }
 
-   public String[] getColumnNames()
+   public final String[] getColumnNames()
    {
       return columnNames;
    }
 
-   public Class[] getJavaTypes()
+   public final Class[] getJavaTypes()
    {
       return javaTypes;
    }
 
-   public int[] getJDBCTypes()
+   public final int[] getJDBCTypes()
    {
       return jdbcTypes;
    }
 
-   public String[] getSQLTypes()
+   public final String[] getSQLTypes()
    {
       return sqlTypes;
    }
 
-   public boolean[] getNotNull()
+   public final boolean[] getNotNull()
    {
       return notNull;
    }
 
-   public boolean[] getAutoIncrement()
+   public final boolean[] getAutoIncrement()
    {
       return autoIncrement;
    }
 
-   public Object getColumnValue(int index, Object value)
+   public final Object getColumnValue(int index, Object value)
    {
       if(index != 0)
       {
@@ -85,7 +85,7 @@ public class JDBCTypeSimple implements JDBCType
       return mapper == null ? value : mapper.toColumnValue(value);
    }
 
-   public Object setColumnValue(int index, Object value, Object columnValue)
+   public final Object setColumnValue(int index, Object value, Object columnValue)
    {
       if(index != 0)
       {
@@ -94,7 +94,7 @@ public class JDBCTypeSimple implements JDBCType
       return mapper == null ? columnValue : mapper.toFieldValue(columnValue);
    }
 
-   public JDBCUtil.ResultSetReader[] getResultSetReaders()
+   public final JDBCUtil.ResultSetReader[] getResultSetReaders()
    {
       return resultSetReader;
    }

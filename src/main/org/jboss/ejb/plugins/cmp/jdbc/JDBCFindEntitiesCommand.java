@@ -21,18 +21,21 @@ import org.jboss.ejb.EntityEnterpriseContext;
  * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  * @author <a href="mailto:shevlandj@kpi.com.au">Joe Shevland</a>
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
- * @version $Revision: 1.18 $
+ * @version $Revision: 1.19 $
  */
-public class JDBCFindEntitiesCommand {
+public final class JDBCFindEntitiesCommand
+{
    private final JDBCStoreManager manager;
-   
-   public JDBCFindEntitiesCommand(JDBCStoreManager manager) {
+
+   public JDBCFindEntitiesCommand(JDBCStoreManager manager)
+   {
       this.manager = manager;
    }
-   
+
    public Collection execute(Method finderMethod,
-         Object[] args,
-         EntityEnterpriseContext ctx) throws FinderException {   
+                             Object[] args,
+                             EntityEnterpriseContext ctx) throws FinderException
+   {
 
       JDBCQueryCommand query = manager.getQueryManager().getQueryCommand(finderMethod);
       return query.execute(finderMethod, args, ctx);

@@ -24,13 +24,13 @@ import org.jboss.ejb.EntityEnterpriseContext;
  * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  * @author <a href="mailto:shevlandj@kpi.com.au">Joe Shevland</a>
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
- * @version $Revision: 1.10 $
+ * @version $Revision: 1.11 $
  */
-public class JDBCFindEntityCommand
+public final class JDBCFindEntityCommand
 {
    private static final String NO_SUCH_ENTITY = "No such entity!";
 
-   private JDBCStoreManager manager;
+   private final JDBCStoreManager manager;
 
    public JDBCFindEntityCommand(JDBCStoreManager manager)
    {

@@ -47,7 +47,7 @@ import org.jboss.ejb.plugins.cmp.bridge.FieldBridge;
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @author <a href="mailto:alex@jboss.org">Alex Loubyansky</a>
- * @version $Revision: 1.10 $
+ * @version $Revision: 1.11 $
  */
 public class JBossQLParser {
    private Catalog catalog;
@@ -164,8 +164,8 @@ void OrderByPathExpression() #OrderByPath :
 void LimitClause() #LimitOffset :
 {}
 {
-     <OFFSET> NumericValuedParameter() { jjtThis.hasOffset = true; } [<LIMIT> NumericValuedParameter() { jjtThis.hasLimit = true; }]
-   | <LIMIT> NumericValuedParameter() { jjtThis.hasLimit = true; }
+     <OFFSET> ArithmeticValue() { jjtThis.hasOffset = true; } [<LIMIT> ArithmeticValue() { jjtThis.hasLimit = true; }]
+   | <LIMIT> ArithmeticValue() { jjtThis.hasLimit = true; }
 }
 
 ////////////////////////////////////////////////////////////////////////////
@@ -235,8 +235,30 @@ ASTSelect SelectClause() #Select :
 ASTWhere WhereClause() #Where :
 {}
 {
-   <WHERE> ConditionalExpression()
+   <WHERE> WhereExpression()
    { return jjtThis; }
+}
+
+//
+// ASTWhereExpression and ASTWhereConditionalTerm mimic
+// ConditionalExpression and ConditionalTerm.
+// They are added to support joins per WhereConditionalTerm.
+//
+void WhereExpression() #void :
+{}
+{
+   (
+      WhereConditionalTerm() ( <OR> WhereConditionalTerm() )*
+   ) #Or(>1)
+}
+
+ASTWhereConditionalTerm WhereConditionalTerm() #WhereConditionalTerm :
+{}
+{
+   (
+      ConditionalFactor() ( <AND> ConditionalFactor() )*
+   ) #And(>1)
+   {return jjtThis;}
 }
 
 void ConditionalExpression() #void :
@@ -649,6 +671,22 @@ void FunctionsReturningNumerics() #void :
    (
       <COUNT> <LPAREN> SingleValuedPath() <RPAREN>
    ) #Count
+|
+   (
+      <MAX> <LPAREN> SingleValuedPath() <RPAREN>
+   ) #Max
+|
+   (
+      <MIN> <LPAREN> SingleValuedPath() <RPAREN>
+   ) #Min
+|
+   (
+      <AVG> <LPAREN> SingleValuedPath() <RPAREN>
+   ) #Avg
+|
+   (
+      <SUM> <LPAREN> SingleValuedPath() <RPAREN>
+   ) #Sum
 
 ////////////////////////////////////////////////////////////////////////////
 }
@@ -906,6 +944,10 @@ TOKEN_MGR_DECLS :
 |  < BETWEEN: "BETWEEN" >
 |  < CONCAT: "CONCAT" >
 |  < COUNT: "COUNT" >
+|  < MAX: "MAX" >
+|  < MIN: "MIN" >
+|  < AVG: "AVG" >
+|  < SUM: "SUM" >
 |  < DISTINCT: "DISTINCT" >
 |  < EMPTY: "EMPTY" >
 |  < ESCAPE: "ESCAPE" >

@@ -8,7 +8,6 @@
 package org.jboss.ejb.plugins.cmp.jdbc;
 
 import org.jboss.deployment.DeploymentException;
-import org.jboss.ejb.plugins.cmp.ejbql.Catalog;
 import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCEntityBridge;
 import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCJBossQLQueryMetaData;
 import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCQueryMetaData;
@@ -19,40 +18,48 @@ import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCReadAheadMetaData;
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @author <a href="mailto:alex@jboss.org">Alex Loubyansky</a>
- * @version $Revision: 1.5 $
+ * @version $Revision: 1.6 $
  */
-public class JDBCJBossQLQuery extends JDBCAbstractQueryCommand {
-
-   public JDBCJBossQLQuery(
-         JDBCStoreManager manager,
-         JDBCQueryMetaData q) throws DeploymentException {
-
+public final class JDBCJBossQLQuery extends JDBCAbstractQueryCommand
+{
+   public JDBCJBossQLQuery(JDBCStoreManager manager,
+                           JDBCQueryMetaData q)
+      throws DeploymentException
+   {
       super(manager, q);
 
-      JDBCJBossQLQueryMetaData metadata = (JDBCJBossQLQueryMetaData)q;
-      if(getLog().isDebugEnabled()) {
+      JDBCJBossQLQueryMetaData metadata = (JDBCJBossQLQueryMetaData) q;
+      if(getLog().isDebugEnabled())
+      {
          getLog().debug("JBossQL: " + metadata.getJBossQL());
       }
 
       JDBCEJBQLCompiler compiler = new JDBCEJBQLCompiler(manager.getCatalog());
 
-      try {
+      try
+      {
          compiler.compileJBossQL(
-               metadata.getJBossQL(),
-               metadata.getMethod().getReturnType(),
-               metadata.getMethod().getParameterTypes(),
-               metadata.getReadAhead());
-      } catch(Throwable t) {
+            metadata.getJBossQL(),
+            metadata.getMethod().getReturnType(),
+            metadata.getMethod().getParameterTypes(),
+            metadata.getReadAhead());
+      }
+      catch(Throwable t)
+      {
+         t.printStackTrace();
          throw new DeploymentException("Error compiling JBossQL " +
             "statement '" + metadata.getJBossQL() + "'", t);
       }
 
       setSQL(compiler.getSQL());
-      setOffsetParam(compiler.getOffset());
-      setLimitParam(compiler.getLimit());
+      setOffsetParam(compiler.getOffsetParam());
+      setOffsetValue(compiler.getOffsetValue());
+      setLimitParam(compiler.getLimitParam());
+      setLimitValue(compiler.getLimitValue());
 
       // set select object
-      if(compiler.isSelectEntity()) {
+      if(compiler.isSelectEntity())
+      {
          JDBCEntityBridge selectEntity = compiler.getSelectEntity();
 
          // set the select entity
@@ -60,9 +67,15 @@ public class JDBCJBossQLQuery extends JDBCAbstractQueryCommand {
 
          // set the preload fields
          JDBCReadAheadMetaData readahead = metadata.getReadAhead();
-         if(readahead.isOnFind()) {
-            String eagerLoadGroup = readahead.getEagerLoadGroup();
-            setPreloadFields(selectEntity.getLoadGroup(eagerLoadGroup));
+         if(readahead.isOnFind())
+         {
+            setEagerLoadGroup(readahead.getEagerLoadGroup());
+            preloadableCmrs = getPreloadableCmrs(getEagerLoadMask(), selectEntity.getManager());
+            deepCmrs = null;
+            if(preloadableCmrs != null && preloadableCmrs.length > 0)
+            {
+               deepCmrs = JDBCAbstractQueryCommand.deepPreloadableCmrs(preloadableCmrs);
+            }
          }
       }
       else if(compiler.isSelectField())

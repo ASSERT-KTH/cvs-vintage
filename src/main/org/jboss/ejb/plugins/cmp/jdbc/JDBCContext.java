@@ -6,29 +6,36 @@
  */
 package org.jboss.ejb.plugins.cmp.jdbc;
 
-import java.util.HashMap;
-import java.util.Map;
+import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCEntityBridge;
+
 
 /**
  *
- * @author <a href="alex@jboss.org">Alex Loubyansky and others</a>
+ * @author <a href="alex@jboss.org">Alex Loubyansky</a>
  */
-public class JDBCContext
+public final class JDBCContext
 {
-   private Map data = new HashMap();
+   private final Object[] fieldStates;
+   private JDBCEntityBridge.EntityState entityState;
 
-   public Object get(Object key)
+   public JDBCContext(int jdbcContextSize, JDBCEntityBridge.EntityState entityState)
    {
-      return data.get(key);
+      fieldStates = new Object[jdbcContextSize];
+      this.entityState = entityState;
    }
 
-   public void put(Object key, Object value)
+   public Object getFieldState(int index)
    {
-      data.put(key, value);
+      return fieldStates[index];
    }
 
-   public void remove(Object key)
+   public void setFieldState(int index, Object value)
    {
-      data.remove(key);
+      fieldStates[index] = value;
+   }
+
+   public JDBCEntityBridge.EntityState getEntityState()
+   {
+      return entityState;
    }
 }

@@ -26,7 +26,7 @@ import org.jboss.ejb.EntityEnterpriseContext;
  * Base class for create commands where the PK value is generated as side
  * effect of performing the insert operation. This is typically associated
  * with database platforms that use identity columns
- * 
+ *
  * @author <a href="mailto:jeremy@boynes.com">Jeremy Boynes</a>
  */
 public abstract class JDBCIdentityColumnCreateCommand extends JDBCAbstractCreateCommand
@@ -57,20 +57,28 @@ public abstract class JDBCIdentityColumnCreateCommand extends JDBCAbstractCreate
       Connection c = null;
       Statement s = null;
       ResultSet rs = null;
-      try {
+      try
+      {
          c = ps.getConnection();
          s = c.createStatement();
          rs = s.executeQuery(pkSQL);
-         if (!rs.next()) {
+         if(!rs.next())
+         {
             throw new EJBException("ResultSet was empty");
          }
          pkField.loadInstanceResults(rs, 1, ctx);
-      } catch (RuntimeException e) {
+      }
+      catch(RuntimeException e)
+      {
          throw e;
-      } catch (Exception e) {
+      }
+      catch(Exception e)
+      {
          // throw EJBException to force a rollback as the row has been inserted
          throw new EJBException("Error extracting generated key", e);
-      } finally {
+      }
+      finally
+      {
          JDBCUtil.safeClose(rs);
          JDBCUtil.safeClose(s);
       }
@@ -82,17 +90,22 @@ public abstract class JDBCIdentityColumnCreateCommand extends JDBCAbstractCreate
     * @param t an Exception raised by a reflected call
     * @return SQLException extracted from the Throwable
     */
-   protected SQLException processException(Throwable t)  {
-      if (t instanceof InvocationTargetException) {
+   protected SQLException processException(Throwable t)
+   {
+      if(t instanceof InvocationTargetException)
+      {
          t = ((InvocationTargetException) t).getTargetException();
       }
-      if (t instanceof SQLException) {
+      if(t instanceof SQLException)
+      {
          return (SQLException) t;
       }
-      if (t instanceof RuntimeException) {
+      if(t instanceof RuntimeException)
+      {
          throw (RuntimeException) t;
       }
-      if (t instanceof Error) {
+      if(t instanceof Error)
+      {
          throw (Error) t;
       }
       log.error(t);

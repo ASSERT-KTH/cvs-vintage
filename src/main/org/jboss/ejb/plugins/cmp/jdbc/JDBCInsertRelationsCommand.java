@@ -9,47 +9,45 @@ package org.jboss.ejb.plugins.cmp.jdbc;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.util.Iterator;
-import java.util.List;
 import javax.ejb.EJBException;
 import javax.sql.DataSource;
 
 import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCCMPFieldBridge;
 import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCCMRFieldBridge;
-import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCEntityBridge;
 import org.jboss.logging.Logger;
 
 /**
  * Inserts relations into a relation table.
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.13 $
+ * @author <a href="mailto:alex@jboss.org">Alexey Loubyansky</a>
+ * @version $Revision: 1.14 $
  */
-public class JDBCInsertRelationsCommand {
-   protected JDBCStoreManager manager;
-   protected Logger log;
-    
-   protected JDBCEntityBridge entity;
-   
-   public JDBCInsertRelationsCommand(JDBCStoreManager manager) {
-      this.manager = manager;
-      this.entity = manager.getEntityBridge();
+public final class JDBCInsertRelationsCommand
+{
+   private final Logger log;
 
+   public JDBCInsertRelationsCommand(JDBCStoreManager manager)
+   {
       this.log = Logger.getLogger(
-            this.getClass().getName() + 
-            "." + 
-            manager.getMetaData().getName());
+         this.getClass().getName() +
+         "." +
+         manager.getMetaData().getName());
    }
-   
-   public void execute(RelationData relationData) {
-      if(relationData.addedRelations.size() == 0) {
+
+   public void execute(RelationData relationData)
+   {
+      if(relationData.addedRelations.size() == 0)
+      {
          return;
       }
-      
+
       Connection con = null;
       PreparedStatement ps = null;
-      
+
       JDBCCMRFieldBridge cmrField = relationData.getLeftCMRField();
-      try {
+      try
+      {
          // get the sql
          String sql = getSQL(relationData);
          boolean debug = log.isDebugEnabled();
@@ -59,74 +57,74 @@ public class JDBCInsertRelationsCommand {
          // get the connection
          DataSource dataSource = cmrField.getDataSource();
          con = dataSource.getConnection();
-         
+
          // get a prepared statement
          ps = con.prepareStatement(sql);
-         
+
          Iterator pairs = relationData.addedRelations.iterator();
-         while(pairs.hasNext()) {
-            RelationPair pair = (RelationPair)pairs.next();
-            
+         while(pairs.hasNext())
+         {
+            RelationPair pair = (RelationPair) pairs.next();
+
             // set the parameters
             setParameters(ps, relationData, pair);
-         
+
             int rowsAffected = ps.executeUpdate();
-         
+
             if(debug)
                log.debug("Rows affected = " + rowsAffected);
          }
-      } catch(Exception e) {
+      }
+      catch(Exception e)
+      {
          throw new EJBException("Could insert relations into " +
-               cmrField.getTableName(), e);
-      } finally {
+            cmrField.getTableName(), e);
+      }
+      finally
+      {
          JDBCUtil.safeClose(ps);
          JDBCUtil.safeClose(con);
       }
    }
-   
-   protected String getSQL(RelationData relationData) throws Exception {
+
+   protected static String getSQL(RelationData relationData)
+   {
       JDBCCMRFieldBridge left = relationData.getLeftCMRField();
       JDBCCMRFieldBridge right = relationData.getRightCMRField();
-      
+
       StringBuffer sql = new StringBuffer(200);
       sql.append(SQLUtil.INSERT_INTO).append(left.getTableName());
 
       sql.append('(');
-            sql.append(SQLUtil.getColumnNamesClause(left.getTableKeyFields()));
-            sql.append(", ");
-            sql.append(SQLUtil.getColumnNamesClause(right.getTableKeyFields()));
+      SQLUtil.getColumnNamesClause(left.getTableKeyFields(), sql);
+      sql.append(SQLUtil.COMMA);
+      SQLUtil.getColumnNamesClause(right.getTableKeyFields(), sql);
       sql.append(')');
 
       sql.append(SQLUtil.VALUES).append('(');
-            sql.append(SQLUtil.getValuesClause(left.getTableKeyFields()));
-            sql.append(SQLUtil.COMMA);
-            sql.append(SQLUtil.getValuesClause(right.getTableKeyFields()));
+      SQLUtil.getValuesClause(left.getTableKeyFields(), sql);
+      sql.append(SQLUtil.COMMA);
+      SQLUtil.getValuesClause(right.getTableKeyFields(), sql);
       sql.append(')');
       return sql.toString();
    }
-      
-   protected void setParameters(
-         PreparedStatement ps,
-         RelationData relationData,
-         RelationPair pair) throws Exception {
 
+   protected static void setParameters(PreparedStatement ps,
+                                       RelationData relationData,
+                                       RelationPair pair)
+   {
       int index = 1;
 
       // left keys
       Object leftId = pair.getLeftId();
-      List leftFields = relationData.getLeftCMRField().getTableKeyFields();
-      for(int i = 0; i < leftFields.size(); ++i)
-      {
-         JDBCCMPFieldBridge field = (JDBCCMPFieldBridge)leftFields.get(i);
-         index = field.setPrimaryKeyParameters(ps, index, leftId);
-      }
-            
+      JDBCCMPFieldBridge[] leftFields = relationData.getLeftCMRField().getTableKeyFields();
+      for(int i = 0; i < leftFields.length; ++i)
+         index = leftFields[i].setPrimaryKeyParameters(ps, index, leftId);
+
       // right keys
       Object rightId = pair.getRightId();
-      List rightFields = relationData.getRightCMRField().getTableKeyFields();
-      for(int i = 0; i < rightFields.size(); ++i) {
-         JDBCCMPFieldBridge field = (JDBCCMPFieldBridge)rightFields.get(i);
-         index = field.setPrimaryKeyParameters(ps, index, rightId);
-      }
+      JDBCCMPFieldBridge[] rightFields = relationData.getRightCMRField().getTableKeyFields();
+      for(int i = 0; i < rightFields.length; ++i)
+         index = rightFields[i].setPrimaryKeyParameters(ps, index, rightId);
    }
 }

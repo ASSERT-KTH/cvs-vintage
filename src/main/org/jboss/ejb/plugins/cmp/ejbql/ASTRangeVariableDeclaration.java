@@ -4,27 +4,25 @@
  * Distributable under LGPL license.
  * See terms of license at gnu.org.
  */
- 
+
 package org.jboss.ejb.plugins.cmp.ejbql;
 
 /**
  * This abstract syntax node represents a range variable declaration.
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.1 $
- */                            
-public class ASTRangeVariableDeclaration extends SimpleNode {
-   public ASTRangeVariableDeclaration(int id) {
+ * @version $Revision: 1.2 $
+ */
+public final class ASTRangeVariableDeclaration extends SimpleNode
+{
+   public ASTRangeVariableDeclaration(int id)
+   {
       super(id);
    }
 
-   public ASTRangeVariableDeclaration(EJBQLParser p, int id) {
-      super(p, id);
-   }
-
-
    /** Accept the visitor. **/
-   public Object jjtAccept(JBossQLParserVisitor visitor, Object data) {
+   public Object jjtAccept(JBossQLParserVisitor visitor, Object data)
+   {
       return visitor.visit(this, data);
    }
 }
