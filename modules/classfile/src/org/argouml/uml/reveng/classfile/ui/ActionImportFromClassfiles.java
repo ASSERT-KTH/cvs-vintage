@@ -1,4 +1,4 @@
-// $Id: ActionImportFromClassfiles.java,v 1.1 2002/12/31 09:23:40 mkl Exp $
+// $Id: ActionImportFromClassfiles.java,v 1.2 2003/04/01 07:54:59 lepekhine Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -28,6 +28,7 @@ import org.argouml.kernel.*;
 import org.argouml.ui.*;
 import org.argouml.uml.ui.*;
 import org.argouml.util.*;
+import org.argouml.uml.reveng.*;
 import org.argouml.uml.reveng.classfile.*;
 import org.argouml.uml.diagram.static_structure.ui.*;
 import org.argouml.application.api.*;
@@ -38,7 +39,7 @@ import java.io.*;
 import java.util.*;
 import javax.swing.*;
 
-public class ActionImportFromClassfiles extends UMLAction implements PluggableMenu {
+public class ActionImportFromClassfiles extends UMLAction  { //implements PluggableMenu {
 
     /////////////////////////////////////////////////////////
     // Constants
@@ -60,7 +61,6 @@ public class ActionImportFromClassfiles extends UMLAction implements PluggableMe
      */
     private static JMenuItem _menuItem = null;
 
- 
     ////////////////////////////////////////////////////////////////
     // constructors
 
