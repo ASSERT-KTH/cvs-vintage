@@ -992,6 +992,14 @@
             <replacetoken><![CDATA[scarab.template.cache=false]]></replacetoken>
             <replacevalue><![CDATA[scarab.template.cache=true]]></replacevalue>
         </replace>
+
+        <!-- In the distribution, turn on template copying so that 
+             paths are relative -->
+        <replace file="${final.dir}/build/default.properties">
+            <replacetoken><![CDATA[#scarab.copy.templates=true]]></replacetoken>
+            <replacevalue><![CDATA[scarab.copy.templates=true]]></replacevalue>
+        </replace>
+
     </target>
 
     <!-- ================================================================== -->
