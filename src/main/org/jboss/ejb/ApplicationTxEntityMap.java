@@ -24,7 +24,7 @@ import javax.transaction.Synchronization;
  * Entities are stored in an ArrayList to ensure specific ordering. 
  *
  * @author <a href="bill@burkecentral.com">Bill Burke</a>
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  */
 public class ApplicationTxEntityMap
 {
@@ -34,7 +34,8 @@ public class ApplicationTxEntityMap
     * associate entity with transaction
     */
    public synchronized void associate(Transaction tx,
-                                      EntityEnterpriseContext entity) throws RollbackException, SystemException
+                                      EntityEnterpriseContext entity)
+      throws RollbackException, SystemException
    {
       ArrayList entityList = (ArrayList)m_map.get(tx);
       if (entityList == null)
@@ -56,7 +57,8 @@ public class ApplicationTxEntityMap
       {
          return new EntityEnterpriseContext[0];
       }
-      return (EntityEnterpriseContext[])entityList.toArray(new EntityEnterpriseContext[0]);
+      return (EntityEnterpriseContext[])
+         entityList.toArray(new EntityEnterpriseContext[entityList.size()]);
    }
 
    private class ApplicationTxEntityMapCleanup implements Synchronization
@@ -75,7 +77,7 @@ public class ApplicationTxEntityMap
   
       public void beforeCompletion()
       {
-         /* complete */
+         // complete
       }
   
       public void afterCompletion(int status)
@@ -90,6 +92,5 @@ public class ApplicationTxEntityMap
          }
       }
    }
-
    
 }
