@@ -27,6 +27,9 @@
 //
 //
 // $Log: XmlIO.java,v $
+// Revision 1.4  2003/01/07 11:21:16  javaprog
+// [bug] reassured compatibility with Java 1.3
+//
 // Revision 1.3  2003/01/07 11:02:25  javaprog
 // [intern] reduced code size
 //
@@ -268,12 +271,21 @@ public class XmlIO extends DefaultHandler {
 		PW.flush();
 	}
 
-    private String _escapeText(String txt){
-      txt = txt.replaceAll("<","&lt;");
-      txt = txt.replaceAll(">","&gt;");
-      txt = txt.replaceAll("&","&amp;");
-      return(txt);
-    }
+	private String _escapeText(String txt){
+		StringBuffer buffer = new StringBuffer(txt);
+		_stringReplaceAll(buffer, '<', "&lt;");
+		_stringReplaceAll(buffer, '>', "&tg;");
+		_stringReplaceAll(buffer, '&', "&amp;");
+		return buffer.toString();
+	}
+	
+	private StringBuffer _stringReplaceAll(StringBuffer orig, char token, String replacement){
+		for(int i=0;i<orig.length();i++){
+			if(orig.charAt(i) == token)
+				orig = orig.replace(i, ++i, replacement);
+		}
+		return orig;
+	}
 
 	private void _writeSubNode(PrintWriter out, XmlElement Element, int indent)
 		throws IOException {
