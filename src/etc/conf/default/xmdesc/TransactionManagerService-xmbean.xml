@@ -3,11 +3,11 @@
    "-//JBoss//DTD JBOSS XMBEAN 1.1//EN"
    "http://www.jboss.org/j2ee/dtd/jboss_xmbean_1_1.dtd">
 
-<!-- $Id: TransactionManagerService-xmbean.xml,v 1.2 2003/11/15 17:02:49 pilhuhn Exp $ -->
+<!-- $Id: TransactionManagerService-xmbean.xml,v 1.3 2003/12/20 21:12:07 pilhuhn Exp $ -->
 <mbean>
 	 <description>TransactionManager Service.</description>
 	 <class>org.jboss.tm.TransactionManagerService</class>
-	 &defattr;
+	 &defaultAttributes;
 	 <attribute access="read-write" getMethod="getTransactionTimeout" setMethod="setTransactionTimeout">
 	 	<description>The transaction timeout in seconds</description>
 	 	<name>TransactionTimeout</name>
@@ -65,5 +65,5 @@
 		 <return-type>void</return-type>
 	 </operation>
 
-	 &defops;   			
+	 &defaultOperations;   			
  </mbean>

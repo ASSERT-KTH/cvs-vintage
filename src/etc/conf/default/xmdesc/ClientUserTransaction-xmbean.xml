@@ -2,11 +2,11 @@
 <!DOCTYPE mbean PUBLIC
    "-//JBoss//DTD JBOSS XMBEAN 1.1//EN"
    "http://www.jboss.org/j2ee/dtd/jboss_xmbean_1_1.dtd">
-<!-- $Id: ClientUserTransaction-xmbean.xml,v 1.1 2003/11/12 22:37:44 pilhuhn Exp $ -->
+<!-- $Id: ClientUserTransaction-xmbean.xml,v 1.2 2003/12/20 21:12:07 pilhuhn Exp $ -->
 <mbean>
 	 <description>ClientUserTransaction Service.</description>
 	 <class>org.jboss.tm.usertx.server.ClientUserTransactionService</class>
-	 &defattr;
+	 &defaultAttributes;
 	 <attribute access="write-only" setMethod="setTxProxyName">
 	 	<description>Set the name of the proxy factory service used for the UserTransactionSession</description>
 	 	<name>TxProxyName</name>
@@ -24,5 +24,5 @@
 		 <return-type>java.lang.Object</return-type>
 	 </operation>
 
-	 &defops;   			
+	 &defaultOperations;   			
  </mbean>
