@@ -43,7 +43,7 @@ import org.jboss.logging.Logger;
 *   @see <related>
 *   @author Rickard Öberg (rickard.oberg@telkel.com)
 *   @author <a href="marc.fleury@telkel.com">Marc Fleury</a>
-*   @version $Revision: 1.18 $
+*   @version $Revision: 1.19 $
 */
 public class EntityInstanceInterceptor
 extends AbstractInterceptor
@@ -215,29 +215,32 @@ extends AbstractInterceptor
        } finally
        {
          //         Logger.debug("Release instance for "+id);
-         if (ctx != null)
-         {
-          
-          synchronized (mutex) {
-              
-              // unlock the context
-              ctx.unlock();
-              
-              if (ctx.getId() == null)                             
-              {
-                 // Remove from cache
-                 cache.remove(key);
-                 
-                 // It has been removed -> send to free pool
-                 container.getInstancePool().free(ctx);
-              }
-              
-              // notify the thread waiting on ctx
-			  synchronized (ctx) {
-				ctx.notifyAll();
-			  }
-          }
-         }
+			if (ctx != null)
+			{
+				
+				synchronized (mutex) {
+					
+					// unlock the context
+					ctx.unlock();
+					
+					if (ctx.getId() == null)                             
+					{
+						
+						// Work only if no transaction was encapsulating this remove()
+						if (ctx.getTransaction() == null) {
+							
+							// Remove from cache
+							cache.remove(key);
+							
+							// It has been removed -> send to the pool
+							container.getInstancePool().free(ctx);
+						}
+					}
+					
+					// notify the thread waiting on ctx
+					synchronized (ctx) { ctx.notifyAll();}
+				}
+			}
        }
     }
     
