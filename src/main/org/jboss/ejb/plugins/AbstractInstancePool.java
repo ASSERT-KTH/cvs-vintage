@@ -24,7 +24,7 @@ import org.jboss.metadata.MetaData;
 import org.jboss.metadata.XmlLoadable;
 import org.jboss.logging.Logger;
 
-import org.jboss.management.JBossCountStatistic;
+import org.jboss.management.j2ee.CountStatistic;
 
 
 /**
@@ -38,7 +38,7 @@ import org.jboss.management.JBossCountStatistic;
 *	@author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
 *  @author <a href="mailto:andreas.schaefer@madplanet.com">Andreas Schaefer</a>
 *	
-*  @version $Revision: 1.14 $
+*  @version $Revision: 1.15 $
 *
 *  <p><b>Revisions:</b>
 *  <p><b>20010704 marcf:</b>
@@ -62,11 +62,11 @@ implements InstancePool, XmlLoadable
 	int maxSize = 30;
 	
    /** Counter of all the Bean instantiated within the Pool **/
-   protected JBossCountStatistic mInstantiate = new JBossCountStatistic( "Instantiation", "", "Beans instantiated in Pool" );
+   protected CountStatistic mInstantiate = new CountStatistic( "Instantiation", "", "Beans instantiated in Pool" );
    /** Counter of all the Bean destroyed within the Pool **/
-   protected JBossCountStatistic mDestroy = new JBossCountStatistic( "Destroy", "", "Beans destroyed in Pool" );
+   protected CountStatistic mDestroy = new CountStatistic( "Destroy", "", "Beans destroyed in Pool" );
    /** Counter of all the ready Beans within the Pool (which are not used now) **/
-   protected JBossCountStatistic mReadyBean = new JBossCountStatistic( "ReadyBean", "", "Numbers of ready Bean Pool" );
+   protected CountStatistic mReadyBean = new CountStatistic( "ReadyBean", "", "Numbers of ready Bean Pool" );
 
 	// Static --------------------------------------------------------
 	

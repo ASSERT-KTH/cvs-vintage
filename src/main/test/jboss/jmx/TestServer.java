@@ -52,13 +52,31 @@ public class TestServer {
 		try {
 			System.out.println( "Start local MBeanServer" );
 			MBeanServer lServer = MBeanServerFactory.createMBeanServer();
+
+			System.out.println( "Load and register the Logger Service" );
+			ObjectName lLoggerName = new ObjectName( lServer.getDefaultDomain(), "service", "Log" );
+			lLoggerName = lServer.createMBean(
+				"org.jboss.logging.Logger",
+				lLoggerName
+			).getObjectName();
+
+			System.out.println( "Load and register the Log4J Service" );
+			ObjectName lLog4JName = new ObjectName( lServer.getDefaultDomain(), "service", "Log4J" );
+			lLog4JName = lServer.createMBean(
+				"org.jboss.logging.Log4jService",
+				lLog4JName
+			).getObjectName();
+			System.out.println( "Init and Start the Log4J Service" );
+//			lServer.invoke( lLog4JName, "init", new Object[] {}, new String[] {} );
+			lServer.invoke( lLog4JName, "start", new Object[] {}, new String[] {} );
+
 			System.out.println( "Load and register the Naming Service" );
 			ObjectName lNamingName = new ObjectName( lServer.getDefaultDomain(), "service", "naming" );
 			lServer.createMBean(
 				"org.jboss.naming.NamingService",
 				lNamingName
 			);
-			System.out.println( "Start the Naming Server" );
+			System.out.println( "Start the Naming Service" );
 			try {
 			lServer.invoke( lNamingName, "init", new Object[] {}, new String[] {} );
 			}

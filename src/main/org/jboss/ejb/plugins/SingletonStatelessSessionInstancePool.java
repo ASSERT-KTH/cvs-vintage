@@ -22,7 +22,7 @@ import org.jboss.metadata.XmlLoadable;
 import org.jboss.metadata.MetaData;
 import org.w3c.dom.Element;
 import org.jboss.logging.Logger;
-import org.jboss.management.JBossCountStatistic;
+import org.jboss.management.j2ee.CountStatistic;
 
 
 /**
@@ -31,7 +31,7 @@ import org.jboss.management.JBossCountStatistic;
  *      
  *	@see <related>
  *	@author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
- *	@version $Revision: 1.10 $
+ *	@version $Revision: 1.11 $
  *      
  * <p><b>Revisions:</b>
  * <p><b>20010718 andreas schaefer:</b>
@@ -52,11 +52,11 @@ public class SingletonStatelessSessionInstancePool
    boolean isSynchronized = true;
    
    /** Counter of all the Bean instantiated within the Pool **/
-   protected JBossCountStatistic mInstantiate = new JBossCountStatistic( "Instantiation", "", "Beans instantiated in Pool" );
+   protected CountStatistic mInstantiate = new CountStatistic( "Instantiation", "", "Beans instantiated in Pool" );
    /** Counter of all the Bean destroyed within the Pool **/
-   protected JBossCountStatistic mDestroy = new JBossCountStatistic( "Destroy", "", "Beans destroyed in Pool" );
+   protected CountStatistic mDestroy = new CountStatistic( "Destroy", "", "Beans destroyed in Pool" );
    /** Counter of all the ready Beans within the Pool (which are not used now) **/
-   protected JBossCountStatistic mReadyBean = new JBossCountStatistic( "ReadyBean", "", "Numbers of ready Bean Pool" );
+   protected CountStatistic mReadyBean = new CountStatistic( "ReadyBean", "", "Numbers of ready Bean Pool" );
 
    // Static --------------------------------------------------------
    

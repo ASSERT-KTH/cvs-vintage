@@ -138,9 +138,11 @@
   <!-- ==================================================================== -->
   <!-- JBoss Server Management                                              -->
   <!-- ==================================================================== -->
+  <!-- AS Temporary not available
   <mbean code="org.jboss.management.ServerDataCollector" name="Management:service=Collector">
     <attribute name="RefreshSleep">5000</attribute>
   </mbean>
+  -->
 
   <!-- ==================================================================== -->
   <!-- J2EE deployment                                                      -->

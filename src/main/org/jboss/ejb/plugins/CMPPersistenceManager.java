@@ -38,8 +38,8 @@ import org.jboss.metadata.EntityMetaData;
 import org.jboss.util.FinderResults;
 import org.jboss.util.Sync;
 
-import org.jboss.management.JBossCountStatistic;
-import org.jboss.management.JBossTimeStatistic;
+import org.jboss.management.j2ee.CountStatistic;
+import org.jboss.management.j2ee.TimeStatistic;
 
 /**
 *   The CMP Persistence Manager implements the semantics of the CMP
@@ -53,7 +53,7 @@ import org.jboss.management.JBossTimeStatistic;
 *   @author <a href="mailto:danch@nvisia.com">Dan Christopherson</a>
 *   @author <a href="mailto:bill@burkecentral.com">Bill Burke</a>
 *   @author <a href="mailto:andreas.schaefer@madplanet.com">Andreas Schaefer</a>
-*   @version $Revision: 1.30 $
+*   @version $Revision: 1.31 $
 *
 *   Revisions:
 *   20010621 Bill Burke: removed loadEntities call because CMP read-ahead is now
@@ -80,13 +80,13 @@ public class CMPPersistenceManager
    HashMap createMethods = new HashMap();
    HashMap postCreateMethods = new HashMap();
 
-   private JBossCountStatistic mCreate = new JBossCountStatistic( "Create", "", "EJBs created" );
-   private JBossCountStatistic mRemove = new JBossCountStatistic( "Remove", "", "EJBs removed" );
-   private JBossCountStatistic mActiveBean = new JBossCountStatistic( "ActiveBean", "", "Numbers of active EJBs" );
-   private JBossTimeStatistic mActivation = new JBossTimeStatistic( "Activation", "ms", "Activation Time" );
-   private JBossTimeStatistic mPassivation = new JBossTimeStatistic( "Passivation", "ms", "Passivation Time" );
-   private JBossTimeStatistic mLoad = new JBossTimeStatistic( "Load", "ms", "Load Time" );
-   private JBossTimeStatistic mStore = new JBossTimeStatistic( "Store", "ms", "Load Time" );
+   private CountStatistic mCreate = new CountStatistic( "Create", "", "EJBs created" );
+   private CountStatistic mRemove = new CountStatistic( "Remove", "", "EJBs removed" );
+   private CountStatistic mActiveBean = new CountStatistic( "ActiveBean", "", "Numbers of active EJBs" );
+   private TimeStatistic mActivation = new TimeStatistic( "Activation", "ms", "Activation Time" );
+   private TimeStatistic mPassivation = new TimeStatistic( "Passivation", "ms", "Passivation Time" );
+   private TimeStatistic mLoad = new TimeStatistic( "Load", "ms", "Load Time" );
+   private TimeStatistic mStore = new TimeStatistic( "Store", "ms", "Load Time" );
    
    // Static --------------------------------------------------------
 

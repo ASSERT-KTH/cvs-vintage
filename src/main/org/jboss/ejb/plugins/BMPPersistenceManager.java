@@ -30,8 +30,8 @@ import org.jboss.ejb.EntityPersistenceManager;
 import org.jboss.ejb.EntityEnterpriseContext;
 import org.jboss.logging.Logger;
 
-import org.jboss.management.JBossCountStatistic;
-import org.jboss.management.JBossTimeStatistic;
+import org.jboss.management.j2ee.CountStatistic;
+import org.jboss.management.j2ee.TimeStatistic;
 
 /**
 *   <description>
@@ -40,7 +40,7 @@ import org.jboss.management.JBossTimeStatistic;
 *  @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
 *  @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
 *  @author <a href="mailto:andreas.schaefer@madplanet.com">Andreas Schaefer</a>
-*  @version $Revision: 1.28 $
+*  @version $Revision: 1.29 $
 *
 *  <p><b>Revisions:</b>
 *  <p><b>20010709 andreas schaefer:</b>
@@ -70,13 +70,13 @@ implements EntityPersistenceManager
    HashMap postCreateMethods = new HashMap();
    HashMap finderMethods = new HashMap();
 
-   private JBossCountStatistic mCreate = new JBossCountStatistic( "Create", "", "EJBs created" );
-   private JBossCountStatistic mRemove = new JBossCountStatistic( "Remove", "", "EJBs removed" );
-   private JBossCountStatistic mActiveBean = new JBossCountStatistic( "ActiveBean", "", "Numbers of active EJBs" );
-   private JBossTimeStatistic mActivate = new JBossTimeStatistic( "Activation", "ms", "Activation Time" );
-   private JBossTimeStatistic mPassivate = new JBossTimeStatistic( "Passivation", "ms", "Passivation Time" );
-   private JBossTimeStatistic mLoad = new JBossTimeStatistic( "Load", "ms", "Load Time" );
-   private JBossTimeStatistic mStore = new JBossTimeStatistic( "Store", "ms", "Load Time" );
+   private CountStatistic mCreate = new CountStatistic( "Create", "", "EJBs created" );
+   private CountStatistic mRemove = new CountStatistic( "Remove", "", "EJBs removed" );
+   private CountStatistic mActiveBean = new CountStatistic( "ActiveBean", "", "Numbers of active EJBs" );
+   private TimeStatistic mActivate = new TimeStatistic( "Activation", "ms", "Activation Time" );
+   private TimeStatistic mPassivate = new TimeStatistic( "Passivation", "ms", "Passivation Time" );
+   private TimeStatistic mLoad = new TimeStatistic( "Load", "ms", "Load Time" );
+   private TimeStatistic mStore = new TimeStatistic( "Store", "ms", "Load Time" );
 
    // Static --------------------------------------------------------
 

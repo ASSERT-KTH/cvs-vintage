@@ -469,7 +469,7 @@
     <jar jarfile="${build.dir}/client/rmiconnector.jar"
          basedir="${build.classes.dir}"
          manifest="${etc.dir}/rmiconnector.mf"
-         includes="org/jboss/jmx/interfaces/JMXConnector**,org/jboss/jmx/interfaces/RMI**,org/jboss/jmx/server/RMIConnector**,org/jboss/jmx/server/ObjectHandler.class,org/jboss/util/Service**,org/jboss/logging/Log.class,org/jboss/logging/Log$$**,test/jboss/jmx/TestServer**,org/jboss/naming/**"
+         includes="org/jboss/jmx/interfaces/JMXConnector**,org/jboss/jmx/interfaces/RMI**,org/jboss/jmx/server/RMIConnector**,org/jboss/jmx/server/ObjectHandler.class,org/jboss/util/Service**,org/jboss/logging/**,test/jboss/jmx/TestServer**,org/jboss/naming/**"
     />
     <mkdir dir="${dist.dir}/external"/>
     <copy file="${build.dir}/client/rmiconnector.jar" tofile="${dist.dir}/external/rmiconnector.jar"/>
