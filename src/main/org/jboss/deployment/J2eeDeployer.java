@@ -66,7 +66,7 @@ import org.w3c.dom.Element;
 *   @author <a href="mailto:daniel.schulze@telkel.com">Daniel Schulze</a>
 *   @author <a href="mailto:toby.allsopp@peace.com">Toby Allsopp</a>
 *   @author <a href="mailto:Scott_Stark@displayscape.com">Scott Stark</a>.
-*   @version $Revision: 1.36 $
+*   @version $Revision: 1.37 $
 */
 public class J2eeDeployer 
 extends ServiceMBeanSupport
@@ -76,8 +76,8 @@ implements J2eeDeployerMBean
    public File DEPLOYMENT_DIR = null;//"/home/deployment"; // default? MUST BE ABSOLUTE PATH!!!
    public static String CONFIG = "deployment.cfg";   
    
-	public static final int EASY = 0;
-	public static final int RESTRICTIVE = 1;
+   public static final int EASY = 0;
+   public static final int RESTRICTIVE = 1;
 
    // Attributes ----------------------------------------------------
    // my server to lookup for the special deployers
@@ -95,10 +95,10 @@ implements J2eeDeployerMBean
    String jarDeployerName;
    String warDeployerName;
    
-	int classpathPolicy = EASY;
+   int classpathPolicy = EASY;
 
-        // <comment author="cgjung"> better be protected for subclassing </comment>
-        protected InstallerFactory installer;
+   // <comment author="cgjung"> better be protected for subclassing </comment>
+   protected InstallerFactory installer;
    
    // Static --------------------------------------------------------
    /** only for testing...*/
@@ -122,9 +122,11 @@ implements J2eeDeployerMBean
    
    public void setDeployerName(String name)
    {
+      this.log = Log.createLog(this.getClass().getName() + "#" + name);
+
+      // what is this for?
       name = name.equals("") ? "" : " "+name;
       this.name = name;
-      this.log = Log.createLog(this.getClass().getName() + "#" + getName());
    }
    
    public String getDeployerName()
