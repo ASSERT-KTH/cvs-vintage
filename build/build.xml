@@ -597,6 +597,7 @@
             userid="${scarab.database.admin.username}"
             password="${scarab.database.admin.password}">
             <classpath refid="classpath"/>
+            <transaction src="${file.prefix}standard-${scarab.database.type}-init.sql"/>
 
             <transaction src="${file.prefix}turbine.sql"/>
             <transaction src="${file.prefix}${project}.sql"/>
@@ -623,6 +624,7 @@
         <!-- in "build.properties" by setting "seed.data.sql"               -->
         <!-- to an alternate file.                                          -->
         <!-- ============================================================== -->
+        <property name="file.prefix" value="${build.sql.scarab}/"/>
         <property name="seed.data.sql"
             value="${file.prefix}${project}-sample-data.sql"/>
         <sql
@@ -631,6 +633,7 @@
             userid="${scarab.database.admin.username}"
             password="${scarab.database.admin.password}">
             <classpath refid="classpath"/>
+            <transaction src="${file.prefix}standard-${scarab.database.type}-init.sql"/>
             <transaction src="${seed.data.sql}"/>
         </sql>
     </target>
