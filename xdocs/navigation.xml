@@ -18,7 +18,11 @@
     <menu name="Documentation">
       <item name="Admin Guide"            href="/scarab-admin.html"/>
       <item name="Admin Guide (FR)"       href="/scarab-admin-fr.html"/>
-      <item name="Admin User (FR)"        href="/scarab-user-fr.html"/>      
+      <item name="Admin User (FR)"        href="/scarab-user-fr.html"/> 
+      
+      <!-- Note, name of properties is scarab_properties_final.html due to encoding issues forcing
+      some name changes -->    
+      <item name="Properties Guide"       href="/scarab_properties_final.html"/> 
       <item name="FAQ"                    href="/faq.html"/>
       <item name="How-To's"               href="/howto/index.html" collapse="true">
        <item name="Howto Build"           href="/howto/build-howto.html"/>
@@ -48,8 +52,8 @@
       <item name="JavaDocs"               href="/apidocs/index.html"/>     
     </menu>
     <menu name="Maven Goals">
-      <item name="Goals"                  href="/goals.html" />
-      <item name="Properties"             href="/properties.html" />
+      <item name="Goals"                  href="/maven_goals.html" />
+      <item name="Properties"             href="/maven_properties.html" />
     </menu> 
 
     <menu name="Project Tools"  collapse="true">

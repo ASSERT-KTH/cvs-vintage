@@ -1,0 +1,360 @@
+<?xml version="1.0" ?>
+
+<properties>
+  <property>
+    <name>scarab.site.name</name>
+    <type>Runtime</type>
+    <file></file>
+    <comment></comment>
+  </property>
+  
+  <property>
+    <name>Name</name>
+    <type>Build</type>
+    <file></file>
+    <comment>
+      Name of the project ("Scarab" for the standard distribution).
+    </comment>
+  </property>
+  
+  <property>
+    <name>version</name>
+    <type>Build</type>
+    <file></file>
+    <comment>Project version.</comment>
+  </property>
+  
+  <property>
+    <name>project</name>
+    <type>Build</type>
+    <file></file>
+    <comment>
+      Name of the project, used for???.
+    </comment>
+  </property>
+  
+  <property>
+    <name>year</name>
+    <type>Build</type>
+    <file></file>
+    <comment>Year, possibly used for copyright message.</comment>
+  </property>
+  
+  <property>
+    <name>scarab.database.type</name>
+    <type>Build</type>
+    <file></file>
+    <comment></comment>
+  </property>
+  
+  <property>
+    <name>scarab.database.name</name>
+    <type>Build/Runtime</type>
+    <file></file>
+    <comment>
+      I don't know whether Torque needs building with the database
+      name or not. If not, this can just be a runtime property.
+    </comment>
+  </property>
+  
+  <property>
+    <name>scarab.database.host</name>
+    <type>Build</type>
+    <file></file>
+    <comment></comment>
+  </property>
+  
+  <property>
+    <name>scarab.database.port</name>
+    <type>Build/Runtime</type>
+    <file></file>
+    <comment>The port that the database is running on.</comment>
+  </property>
+  
+  <property>
+    <name>scarab.database.jdbc.driver</name>
+    <type>Build/Runtime</type>
+    <file></file>
+    <comment>
+      The JDBC driver to use for the database connection. We supply standard
+      ones for several databases, but users should have the option to supply
+      their own.
+    </comment>
+  </property>
+  
+  <property>
+    <name>scarab.database.url</name>
+    <type>?</type>
+    <file></file>
+    <comment>
+      This property is specific to a database driver and is built up from
+      other user-specified properties. I guess this goes hand-in-hand with
+      'scarab.database.jdbc.driver'.
+    </comment>
+  </property>
+  
+  <property>
+    <name>scarab.database.admin.url</name>
+    <type>Build</type>
+    <file></file>
+    <comment>
+      JDBC URL to use when creating and seeding the database.
+    </comment>
+  </property>
+  
+  <property>
+    <name>scarab.database.username</name>
+    <type>Build</type>
+    <file></file>
+    <comment></comment>
+  </property>
+  
+  <property>
+    <name>scarab.database.password</name>
+    <type>Build</type>
+    <file></file>
+    <comment></comment>
+  </property>
+  
+  <property>
+    <name>scarab.database.admin.username</name>
+    <type>Build</type>
+    <file></file>
+    <comment>
+      Database user to use when creating and seeding the database.
+    </comment>
+  </property>
+  
+  <property>
+    <name>scarab.database.admin.password</name>
+    <type>Build</type>
+    <file></file>
+    <comment>
+      Password to use when creating and seeding the database.
+    </comment>
+  </property>
+  
+  <property>
+    <name>scarab.test.database.name</name>
+    <type>Build</type>
+    <file></file>
+    <comment>
+      I think this is the name of the test database used for running unit
+      tests against, so it should be a build property. Not sure though.
+    </comment>
+  </property>
+  
+  <property>
+    <name>scarab.test.database.url</name>
+    <type>Build</type>
+    <file></file>
+    <comment>
+      JDBC URL used to connect to the test database.
+    </comment>
+  </property>
+  
+  <property>
+    <name>scarab.test.database.username</name>
+    <type>Build</type>
+    <file></file>
+    <comment></comment>
+  </property>
+  
+  <property>
+    <name>scarab.test.database.password</name>
+    <type>Build</type>
+    <file></file>
+    <comment></comment>
+  </property>
+  
+  <property>
+    <name>scarab.database.validationQuery</name>
+    <type>Build</type>
+    <file></file>
+    <comment>
+      Not sure this property should be available at all. I would hard-code it
+      per database type.
+    </comment>
+  </property>
+  
+  <property>
+    <name>scarab.jdbc.driver.jar</name>
+    <type>Build</type>
+    <file></file>
+    <comment>
+      I guess this works in a similar fashion to 'scarab.database.jdbc.driver'. If
+      one is set by the user, so should the other. Normally these should be provided
+      as defaults on a per database type basis.
+    </comment>
+  </property>
+  
+  <property>
+    <name>scarab.database.loadorder</name>
+    <type>Build</type>
+    <file></file>
+    <comment>Drop this? Don't know whether it's still useful.</comment>
+  </property>
+  
+  <property>
+    <name>scarab.context</name>
+    <type>Build</type>
+    <file></file>
+    <comment>
+      What shall we do with this? Normally the context comes from
+      the name of the deployed WAR file, unless a different context
+      name is configured in server.xml. Maybe just allow the user
+      to configure the context name via server.xml directly?
+    </comment>
+  </property>
+  
+  <property>
+    <name>scarab.http.domain</name>
+    <type>Runtime</type>
+    <file></file>
+    <comment>
+      This also appears in the database, and I'm really not sure
+      what to do about it. It causes a lot of problems with the
+      generated e-mail links.
+    </comment>
+  </property>
+  
+  <property>
+    <name>scarab.http.port</name>
+    <type>Runtime</type>
+    <file></file>
+    <comment>See 'scarab.http.domain'.</comment>
+  </property>
+  
+  <property>
+    <name>scarab.http.scheme</name>
+    <type>Runtime</type>
+    <file></file>
+    <comment>
+      Drop this? I guess that this is used for generating e-mail
+      links.
+    </comment>
+  </property>
+  
+  <property>
+    <name>scarab.http.scriptname</name>
+    <type>Build</type>
+    <file></file>
+    <comment>
+      Drop this? Most people seem to have problems when this is
+      set to something other than /scarab/issues anyway.
+    </comment>
+  </property>
+  
+  <property>
+    <name>scarab.html.redirect</name>
+    <type>Runtime</type>
+    <file></file>
+    <comment>
+      I think this is configured in server.xml as a filter. Maybe
+      the user should just change it there directly.
+    </comment>
+  </property>
+  
+  <property>
+    <name>scarab.user.username</name>
+    <type>Runtime</type>
+    <file></file>
+    <comment>
+      Username of the initial (only?) Scarab administrator. Maybe this,
+      along with the other adminstrator user properties, should be build
+      properties which modify the seed data. Otherwise use hard-coded
+      values.
+    </comment>
+  </property>
+  
+  <property>
+    <name>scarab.user.password</name>
+    <type>Runtime</type>
+    <file></file>
+    <comment>Password for initial Scarab administrator.</comment>
+  </property>
+  
+  <property>
+    <name>scarab.user.firstname</name>
+    <type>Runtime</type>
+    <file></file>
+    <comment></comment>
+  </property>
+  
+  <property>
+    <name>scarab.user.lastname</name>
+    <type>Runtime</type>
+    <file></file>
+    <comment></comment>
+  </property>
+  
+  <property>
+    <name>scarab.user.email</name>
+    <type>Runtime</type>
+    <file></file>
+    <comment></comment>
+  </property>
+  
+  <property>
+    <name>scarab.lucene.index.path</name>
+    <type>Runtime</type>
+    <file></file>
+    <comment>Where the Lucene index files are stored on disk.</comment>
+  </property>
+  
+  <property>
+    <name>scarab.attachments.path</name>
+    <type>Runtime</type>
+    <file></file>
+    <comment>Where issue attachments are stored on disk.</comment>
+  </property>
+  
+  <property>
+    <name>scarab.intake.serialize.file</name>
+    <type>Runtime</type>
+    <file></file>
+    <comment>
+      Scratch/hard-code this one? Seems too obscure to have lying
+      around.
+    </comment>
+  </property>
+  
+  <property>
+    <name>scarab.file.upload.path</name>
+    <type>Runtime</type>
+    <file></file>
+    <comment>
+      Temporary location on disk for uploaded files.
+    </comment>
+  </property>
+  
+  <property>
+    <name>scarab.system.mail.host</name>
+    <type>Runtime</type>
+    <file></file>
+    <comment>Mail server that Scarab should use to send e-mails.</comment>
+  </property>
+  
+  <property>
+    <name>scarab.email.default.fromName</name>
+    <type>Runtime</type>
+    <file></file>
+    <comment>
+      E-mail name that e-mails from Scarab have in their 'from' address.
+    </comment>
+  </property>
+  
+  <property>
+    <name>scarab.email.default.fromAddress</name>
+    <type>Runtime</type>
+    <file></file>
+    <comment>
+      The 'from' address for e-mails that are sent by Scarab. I think this
+      generally needs to be a valid e-mail address, or at least a valid
+      domain. I vaguely remember someone having problems because they were
+      using the default from address which had an invalid domain. Something
+      didn't like it.
+    </comment>
+  </property>
+</properties>
+
