@@ -41,7 +41,7 @@ import org.gjt.sp.util.Log;
 /**
  * Tool bar editor.
  * @author Slava Pestov
- * @version $Id: ToolBarOptionPane.java,v 1.9 2002/09/08 21:03:11 spestov Exp $
+ * @version $Id: ToolBarOptionPane.java,v 1.10 2002/12/15 00:23:53 spestov Exp $
  */
 public class ToolBarOptionPane extends AbstractOptionPane
 {
@@ -389,7 +389,7 @@ class ToolBarEditDialog extends EnhancedDialog
 		DefaultComboBoxModel iconListModel,
 		ToolBarOptionPane.Button current)
 	{
-		super(JOptionPane.getFrameForComponent(comp),
+		super(GUIUtilities.getParentDialog(comp),
 			jEdit.getProperty("options.toolbar.edit.title"),
 			true);
 
@@ -544,7 +544,7 @@ class ToolBarEditDialog extends EnhancedDialog
 		updateEnabled();
 
 		pack();
-		setLocationRelativeTo(JOptionPane.getFrameForComponent(comp));
+		setLocationRelativeTo(GUIUtilities.getParentDialog(comp));
 		show();
 	} //}}}
 

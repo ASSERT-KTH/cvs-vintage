@@ -38,7 +38,7 @@ import org.gjt.sp.jedit.*;
 /**
  * Abbrev editor.
  * @author Slava Pestov
- * @version $Id: AbbrevsOptionPane.java,v 1.8 2002/10/16 20:59:58 spestov Exp $
+ * @version $Id: AbbrevsOptionPane.java,v 1.9 2002/12/15 00:23:53 spestov Exp $
  */
 public class AbbrevsOptionPane extends AbstractOptionPane
 {
@@ -179,9 +179,9 @@ public class AbbrevsOptionPane extends AbstractOptionPane
 
 		String abbrev = (String)abbrevsModel.getValueAt(row,0);
 		String expansion = (String)abbrevsModel.getValueAt(row,1);
-	
+
 		EditAbbrevDialog dialog = new EditAbbrevDialog(
-			AbbrevsOptionPane.this,
+			GUIUtilities.getParentDialog(AbbrevsOptionPane.this),
 			abbrev,expansion);
 		abbrev = dialog.getAbbrev();
 		expansion = dialog.getExpansion();
@@ -255,7 +255,7 @@ public class AbbrevsOptionPane extends AbstractOptionPane
 			else if(source == add)
 			{
 				EditAbbrevDialog dialog = new EditAbbrevDialog(
-					AbbrevsOptionPane.this,
+					GUIUtilities.getParentDialog(AbbrevsOptionPane.this),
 					null,null);
 				String abbrev = dialog.getAbbrev();
 				String expansion = dialog.getExpansion();

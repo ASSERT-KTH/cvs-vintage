@@ -55,7 +55,7 @@ import org.gjt.sp.util.Log;
  * </ul>
  *
  * @author Slava Pestov
- * @version $Id: GUIUtilities.java,v 1.41 2002/10/07 21:13:19 spestov Exp $
+ * @version $Id: GUIUtilities.java,v 1.42 2002/12/15 00:23:53 spestov Exp $
  */
 public class GUIUtilities
 {
@@ -1199,6 +1199,21 @@ public class GUIUtilities
 		}
 
 		return false;
+	} //}}}
+
+	//{{{ getParentDialog() method
+	/**
+	 * Traverses the given component's parent tree looking for an
+	 * instance of JDialog, and return it. If not found, return null.
+	 * @param c The component
+	 */
+	public static JDialog getParentDialog(Component c)
+	{
+		Component p = c.getParent();
+		while (p != null && !(p instanceof JDialog))
+			p = p.getParent();
+
+		return (p instanceof JDialog) ? (JDialog) p : null;
 	} //}}}
 
 	//{{{ getView() method

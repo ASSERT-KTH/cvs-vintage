@@ -40,7 +40,7 @@ import org.gjt.sp.jedit.*;
 /**
  * VFS browser tree view.
  * @author Slava Pestov
- * @version $Id: BrowserView.java,v 1.49 2002/08/16 18:02:18 spestov Exp $
+ * @version $Id: BrowserView.java,v 1.50 2002/12/15 00:23:53 spestov Exp $
  */
 class BrowserView extends JPanel
 {
@@ -557,8 +557,8 @@ class BrowserView extends JPanel
 
 		public void mouseReleased(MouseEvent evt)
 		{
-			// ignore double clicks
-			if(evt.getClickCount() % 2 == 0)
+			if(evt.getClickCount() % 2 != 0 &&
+				(evt.getModifiers() & InputEvent.BUTTON2_MASK) == 0)
 				return;
 
 			int row = parentDirectories.locationToIndex(evt.getPoint());

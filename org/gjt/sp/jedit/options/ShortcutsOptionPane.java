@@ -31,7 +31,7 @@ import org.gjt.sp.jedit.*;
 /**
  * Key binding editor.
  * @author Slava Pestov
- * @version $Id: ShortcutsOptionPane.java,v 1.5 2001/10/07 10:42:45 spestov Exp $
+ * @version $Id: ShortcutsOptionPane.java,v 1.6 2002/12/15 00:23:53 spestov Exp $
  */
 public class ShortcutsOptionPane extends AbstractOptionPane
 {
@@ -180,9 +180,10 @@ public class ShortcutsOptionPane extends AbstractOptionPane
 			if(col != 0 && row != -1)
 			{
 				 GrabKeyDialog gkd = new GrabKeyDialog(
-					ShortcutsOptionPane.this,
+					GUIUtilities.getParentDialog(
+					ShortcutsOptionPane.this),
 					currentModel.getBindingAt(row,col-1),
-					allBindings);
+					allBindings,null);
 				if(gkd.isOK())
 					currentModel.setValueAt(
 						gkd.getShortcut(),row,col);

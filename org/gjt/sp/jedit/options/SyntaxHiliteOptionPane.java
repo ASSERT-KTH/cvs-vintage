@@ -41,7 +41,7 @@ import org.gjt.sp.jedit.*;
 /**
  * Style option pane.
  * @author Slava Pestov
- * @version $Id: SyntaxHiliteOptionPane.java,v 1.2 2002/09/20 19:53:23 spestov Exp $
+ * @version $Id: SyntaxHiliteOptionPane.java,v 1.3 2002/12/15 00:23:53 spestov Exp $
  */
 public class SyntaxHiliteOptionPane extends AbstractOptionPane
 {
@@ -291,7 +291,7 @@ class StyleEditor extends EnhancedDialog implements ActionListener
 	//{{{ StyleEditor constructor
 	StyleEditor(Component comp, SyntaxStyle style)
 	{
-		super(JOptionPane.getFrameForComponent(comp),
+		super(GUIUtilities.getParentDialog(comp),
 			jEdit.getProperty("style-editor.title"),true);
 
 		JPanel content = new JPanel(new BorderLayout(12,12));
@@ -368,7 +368,7 @@ class StyleEditor extends EnhancedDialog implements ActionListener
 
 		Dimension screen = getToolkit().getScreenSize();
 		pack();
-		setLocationRelativeTo(JOptionPane.getFrameForComponent(comp));
+		setLocationRelativeTo(GUIUtilities.getParentDialog(comp));
 
 		setResizable(false);
 		show();

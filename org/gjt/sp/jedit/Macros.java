@@ -42,7 +42,7 @@ import org.gjt.sp.util.Log;
  * This class records and runs macros.
  *
  * @author Slava Pestov
- * @version $Id: Macros.java,v 1.24 2002/10/22 18:26:46 spestov Exp $
+ * @version $Id: Macros.java,v 1.25 2002/12/15 00:23:53 spestov Exp $
  */
 public class Macros
 {
@@ -629,8 +629,6 @@ file_loop:			for(int i = 0; i < paths.length; i++)
 		if(macroFiles == null || macroFiles.length == 0)
 			return;
 
-		MiscUtilities.quicksort(macroFiles,new MiscUtilities.StringICaseCompare());
-
 		for(int i = 0; i < macroFiles.length; i++)
 		{
 			File file = macroFiles[i];
@@ -642,11 +640,30 @@ file_loop:			for(int i = 0; i < paths.length; i++)
 			}
 			else if(file.isDirectory())
 			{
-				Vector submenu = new Vector();
-				submenu.addElement(fileName.replace('_',' '));
-				loadMacros(submenu,path + fileName + '/',file);
-				if(submenu.size() != 1)
+				String submenuName = fileName.replace('_',' ');
+				Vector submenu = null;
+				//{{{ try to merge with an existing menu first
+				for(int j = 0; j < vector.size(); j++)
+				{
+					Object obj = vector.get(j);
+					if(obj instanceof Vector)
+					{
+						Vector vec = (Vector)obj;
+						if(((String)vec.get(0)).equals(submenuName))
+						{
+							submenu = vec;
+							break;
+						}
+					}
+				} //}}}
+				if(submenu == null)
+				{
+					submenu = new Vector();
+					submenu.addElement(submenuName);
 					vector.addElement(submenu);
+				}
+
+				loadMacros(submenu,path + fileName + '/',file);
 			}
 			else
 			{
