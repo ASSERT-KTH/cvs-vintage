@@ -72,6 +72,8 @@
            deprecation="off" >
            <exclude name="**/Jdk12Interceptor.java" 
                     unless="jdk12.present"/>
+           <exclude name="**/LoaderInterceptor1.java" 
+                    unless="jdk12.present"/>
            <exclude name="**/SetSecurityManager.java" 
                     unless="jdk12.present"/>
            <exclude name="**/EmbededTomcat.java" 
