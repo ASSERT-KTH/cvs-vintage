@@ -16,7 +16,7 @@
         early tests.
     -->
 
-     <property name="revision" value="$Revision: 1.14 $" />  
+     <property name="revision" value="$Revision: 1.15 $" />  
      <property name="host" value="127.0.0.1" />
      <property name="port"     value="8080" />
      <property name="outputType"     value="text" />
@@ -27,11 +27,16 @@
      <property name="gdir" value="../Golden" />
 
      <!-- ==================== Tasks ==================== -->     
-     <taskdef name="gtest" classname="org.apache.tomcat.util.test.GTest" />
      <taskdef name="httpClient" 
 	      classname="org.apache.tomcat.util.test.HttpClient" />
+     <taskdef name="httpRequest" 
+	      classname="org.apache.tomcat.util.test.HttpRequest" />
      <taskdef name="header" 
 	      classname="org.apache.tomcat.util.test.Header" />
+     <taskdef name="param" 
+	      classname="org.apache.tomcat.util.test.Parameter" />
+     <taskdef name="cookie" 
+	      classname="org.apache.tomcat.util.test.Cookie" />
      <taskdef name="body" 
 	      classname="org.apache.tomcat.util.test.Body" />
      <taskdef name="defaultMatcher" 
@@ -42,6 +47,10 @@
      <taskdef name="gtestDefaults" 
 	      classname="org.apache.tomcat.util.test.TestDefaults" />
 
+     <!-- Backward compatibility -->
+     <taskdef name="gtest" classname="org.apache.tomcat.util.test.GTest" />
+
+
   <!-- ==================== Defaults ==================== -->
   <target name="init" >
     <echo message="Running test-tomcat ${port} ${host} ${http.protocol}"/>
@@ -51,19 +60,6 @@
 		   protocol="${http.protocol}"
 		   outputType="${outputType}" />
   </target>
-  <!-- ==================== File tests ==================== -->
-  <target name="new-style" depends="init">
-      <gtest>
-          <httpClient path="/test/index.html" debug="0">
-             <header name="foo" value="bar"/>
-             <body>RequestBody</body>
-          </httpClient>
-          <defaultMatcher returnCode="200">
-             <header name="Content-Type" value="text/html"/>
-          </defaultMatcher>
-      </gtest>
-   </target>
-
 
   <!-- ==================== File tests ==================== -->
   <!-- File, directory and welcome tests -->
@@ -93,55 +89,77 @@
   <!-- ==================== Parameters tests ==================== -->
 
   <target name="params" depends="init">
-      <gtest>
+      <httpClient>
           <comment>Simple GET with parmeters</comment>
-          <httpClient path="/test/servlet/params.Params?a=k&amp;c=l&amp;a=m" />
+          <httpRequest path="/test/servlet/params.Params">
+             <param name="a" value="k" />
+             <param name="c" value="l" />
+             <param name="a" value="m" />
+          </httpRequest>
           <defaultMatcher returnCode="200" />
           <defaultMatcher responseMatch="a = [ k , m ]" />
           <defaultMatcher responseMatch="c = [ l ]"/>
-      </gtest>
+      </httpClient>
 
-      <gtest>
+      <httpClient>
           <comment>Simple POST parmeters</comment>
-          <httpClient path="/test/servlet/params.Params" 
+          <httpRequest path="/test/servlet/params.Params" 
 		      method="POST">
-             <header name="Content-Type" 
-		     value="application/x-www-form-urlencoded" />
-             <body>a=b&amp;c=d</body>
-          </httpClient>
+             <param name="a" value="b" />
+             <param name="c" value="d" />
+          </httpRequest>
           <defaultMatcher returnCode="200" />
           <defaultMatcher  responseMatch="a = [ b ]"/>
           <defaultMatcher responseMatch="c = [ d ]"/>
-      </gtest>
+      </httpClient>
 
-      <gtest>
+      <httpClient>
           <comment>POST and GET parameters</comment>
-          <httpClient path="/test/servlet/params.Params?a=x&amp;m=n" 
-		      method="POST">
-             <header name="Content-Type" 
-		     value="application/x-www-form-urlencoded" />
-             <body>a=b&amp;c=d</body>
-          </httpClient>
+          <httpRequest 
+              path="/test/servlet/params.Params" 
+              method="POST">
+             <param name="a" value="x" type="GET" />
+             <param name="m" value="n" type="GET" />
+             <param name="a" value="b" type="POST" />
+             <param name="c" value="d" type="POST" />
+          </httpRequest>
           <defaultMatcher returnCode="200" />
           <defaultMatcher  responseMatch="a = [ x , b ]"/>
           <defaultMatcher responseMatch="m = [ n ]"/>
           <defaultMatcher responseMatch="c = [ d ]"/>
-      </gtest>
+      </httpClient>
     
-      <gtest>
+      <httpClient>
           <comment>The POST data can't be read before getParameter</comment>
-          <httpClient 
-              path="/test/servlet/params.InputStreamParams?a=x&amp;m=n" 
+          <httpRequest 
+              path="/test/servlet/params.InputStreamParams" 
               method="POST">
-             <header name="Content-Type" 
-		     value="application/x-www-form-urlencoded" />
-             <body>a=b&amp;c=d</body>
-          </httpClient>
+             <param name="a" value="x" type="GET" />
+             <param name="m" value="n" type="GET"/>
+             <param name="a" value="b" type="POST" />
+             <param name="c" value="d" type="POST" />
+          </httpRequest>
           <defaultMatcher returnCode="200" />
           <defaultMatcher  responseMatch="a = [ x ]" />
           <defaultMatcher responseMatch="m = [ n ]"/>
           <defaultMatcher responseMatch="c = [ d ]"/>
-      </gtest>
+      </httpClient>
+    
+      <httpClient>
+          <comment>The POST data can't be read before getParameter</comment>
+          <httpRequest 
+              path="/test/servlet/params.ParamsInputStream" 
+              method="POST">
+             <param name="a" value="x" type="GET" />
+             <param name="m" value="n" type="GET"/>
+             <param name="a" value="b" type="POST" />
+             <param name="c" value="d" type="POST" />
+          </httpRequest>
+          <defaultMatcher returnCode="200" />
+          <defaultMatcher  responseMatch="a = [ x ]" />
+          <defaultMatcher responseMatch="m = [ n ]"/>
+          <defaultMatcher responseMatch="c = [ dxx ]"/>
+      </httpClient>
     
 
   </target>
@@ -663,14 +681,13 @@
             />
 
       <gtest request="GET /test/foo/bar/index.bop HTTP/1.0"
-             responseMatch="Servlet: Servlet1" >
-      <comment>
+             responseMatch="Servlet: Servlet1" />
+      <!-- 
 Test if web.xml mappings are respected - /foo/bar is mapped to servlet1.
 Apache will probably fail ( special configuration is required to 
 do all mapping - this is a known problem, to be resolved by integrating
 mod_webapp into mod_jk )
-      </comment>
-      </gtest>
+      -->
 
       <gtest  description="/baz : 1.0 : 200"
              request="GET /test/baz HTTP/1.0"
@@ -945,7 +962,7 @@ mod_webapp into mod_jk )
    </target>
 
    <!-- ==================== All targets ====================  -->
-   <target name="client" depends="file,dispatch,get,requestMap,post,wrong_request,restricted,jsp,unavailable">
+   <target name="client" depends="file,params,dispatch,get,requestMap,post,wrong_request,restricted,jsp,unavailable">
    </target>
 
    <!-- ==================== Aux targets ==================== -->
