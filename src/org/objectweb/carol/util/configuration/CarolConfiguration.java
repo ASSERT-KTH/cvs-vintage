@@ -1,7 +1,5 @@
-/*
- * @(#) CarolConfiguration.java	1.0 02/07/15
- *
- * Copyright (C) 2002 - INRIA (www.inria.fr)
+/**
+ * Copyright (C) 2002,2004 - INRIA (www.inria.fr)
  *
  * CAROL: Common Architecture for RMI ObjectWeb Layer
  *
@@ -12,22 +10,24 @@
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  * USA
- * 
  *
+ * --------------------------------------------------------------------------
+ * $Id: CarolConfiguration.java,v 1.16 2004/09/01 11:02:41 benoitf Exp $
+ * --------------------------------------------------------------------------
  */
 package org.objectweb.carol.util.configuration;
 
-//java import 
+//java import
 import java.io.InputStream;
 import java.util.Enumeration;
 import java.util.Hashtable;
@@ -40,12 +40,13 @@ import java.util.TreeMap;
 
 import org.objectweb.carol.jndi.ns.NameServiceException;
 import org.objectweb.carol.jndi.ns.NameServiceManager;
+
 import org.objectweb.util.monolog.api.LoggerFactory;
 
-/*
- * Interface <code>CarolConfiguration</code> for Carol environment
- * You must have a communication.xml and communication.dtd in your 
- * classpath for the definition of this context
+/**
+ * Interface <code> CarolConfiguration </code> for Carol environment You must
+ * have a communication.xml and communication.dtd in your classpath for the
+ * definition of this context
  */
 
 public class CarolConfiguration {
@@ -59,10 +60,12 @@ public class CarolConfiguration {
      * boolean to start name server need to launch
      */
     private static boolean startNS;
+
     /**
      * boolean to start carol rmi
      */
     private static boolean startRMI;
+
     /**
      * boolean to start carol jndi
      */
@@ -93,9 +96,9 @@ public class CarolConfiguration {
      */
     private static boolean multiRMI;
 
-    /** 
-     * Protocol environement hashtable, all rmi Configuration 
-     * are classified by there architecture name (jrmp, iiop, ...)
+    /**
+     * Protocol environement hashtable, all rmi Configuration are classified by
+     * there architecture name (jrmp, iiop, ...)
      */
     private static Hashtable rmiConfigurationTable = new Hashtable();
 
@@ -110,12 +113,12 @@ public class CarolConfiguration {
     private static String jndiRMIName = null;
 
     /**
-     * carol defaults properties file name 
+     * carol defaults properties file name
      */
     public static final String DEFAULTS_FILE_NAME = "carol-defaults.properties";
 
     /**
-     * rmi properties file name 
+     * rmi properties file name
      */
     public static final String CAROL_FILE_NAME = "carol.properties";
 
@@ -124,29 +127,26 @@ public class CarolConfiguration {
      */
     public static final String JNDI_FILE_NAME = "jndi.properties";
 
-	/**
-	  * init the Carol configuration,
-	  * A server can call this static method
-	  * for instantiate the carol communication layer
-	  */
-	 public static void init() throws RMIConfigurationException {
-		 new CarolConfiguration();
-	 }
-	 
-	/**
-	  * init the Carol configuration,
-	  * A server can call this static method
-	  * for instantiate the carol communication layer
-	  */
-	 public static void init(LoggerFactory lf) throws RMIConfigurationException {
-		 // init Trace 
-		 TraceCarol.configure(lf);
-		 new CarolConfiguration();
-	 }
+    /**
+     * init the Carol configuration, A server can call this static method for
+     * instantiate the carol communication layer
+     */
+    public static void init() throws RMIConfigurationException {
+        new CarolConfiguration();
+    }
 
     /**
-     * Constructor 
-     * Read the communication context
+     * init the Carol configuration, A server can call this static method for
+     * instantiate the carol communication layer
+     */
+    public static void init(LoggerFactory lf) throws RMIConfigurationException {
+        // init Trace
+        TraceCarol.configure(lf);
+        new CarolConfiguration();
+    }
+
+    /**
+     * Constructor Read the communication context
      */
     public CarolConfiguration() throws RMIConfigurationException {
         if (!configurationLoaded) {
@@ -155,7 +155,7 @@ public class CarolConfiguration {
     }
 
     /**
-     * Get a RMI environment with his architecture name 
+     * Get a RMI environment with his architecture name
      * @return RMIConfiguration the environment, null if not existe
      */
     public static RMIConfiguration getRMIConfiguration(String name) throws RMIConfigurationException {
@@ -169,7 +169,7 @@ public class CarolConfiguration {
 
     /**
      * Get all RMI environment
-     * @return Hashtable the rmi configuration hashtable 
+     * @return Hashtable the rmi configuration hashtable
      */
     public static Hashtable getAllRMIConfiguration() throws RMIConfigurationException {
         if (configurationLoaded) {
@@ -179,9 +179,10 @@ public class CarolConfiguration {
             return rmiConfigurationTable;
         }
     }
+
     /**
      * Get the default rmi
-     * @return RMIConfiguration default RMI  Configuration
+     * @return RMIConfiguration default RMI Configuration
      */
     public static RMIConfiguration getDefaultProtocol() throws RMIConfigurationException {
         if (configurationLoaded) {
@@ -193,12 +194,13 @@ public class CarolConfiguration {
     }
 
     /**
-     * This method read all the the orbX.properties, jndiX.properties file
-     * for protocols configurations
-     * @throws RMIConfigurationException if a problem occurs in the configuration loading
+     * This method read all the the orbX.properties, jndiX.properties file for
+     * protocols configurations
+     * @throws RMIConfigurationException if a problem occurs in the
+     *         configuration loading
      */
     public static void loadCarolConfiguration() throws RMIConfigurationException {
-        // load the configuration files	
+        // load the configuration files
         try {
 
             defaultsProps = getDefaultsProperties();
@@ -211,9 +213,8 @@ public class CarolConfiguration {
         }
 
         boolean cc = checkCarolConfiguration();
-        // Check this properties and load the properties file 
-        if (!cc)
-            throw new RMIConfigurationException("Can't start Carol, configuration check fail");
+        // Check this properties and load the properties file
+        if (!cc) throw new RMIConfigurationException("Can't start Carol, configuration check fail");
 
         // translate existing jndi properties
         if (jndiProps != null) jndiProps = jndi2Carol(jndiProps);
@@ -221,9 +222,10 @@ public class CarolConfiguration {
         // build a general properties object
         Properties allProps = new Properties();
 
-        // default properties can not be null (if null, checkCarolConfiguration should stop)
+        // default properties can not be null (if null, checkCarolConfiguration
+        // should stop)
         allProps.putAll(defaultsProps);
-        // first the jndi (extented) file 
+        // first the jndi (extented) file
         if (jndiProps != null) allProps.putAll(jndiProps);
         // second the carol file
         if (carolProps != null) allProps.putAll(carolProps);
@@ -233,8 +235,9 @@ public class CarolConfiguration {
     }
 
     /**
-     * This method read a carol configuration from a Properties object 
-     * @throws RMIConfigurationException if a there is a problem with those environment (field missing for example)
+     * This method read a carol configuration from a Properties object
+     * @throws RMIConfigurationException if a there is a problem with those
+     *         environment (field missing for example)
      */
     public static synchronized void loadCarolConfiguration(Properties allProps) throws RMIConfigurationException {
 
@@ -243,7 +246,8 @@ public class CarolConfiguration {
         String jndiPref = CarolDefaultValues.CAROL_PREFIX + "." + CarolDefaultValues.JNDI_PREFIX;
 
         // get the general properties
-        // activated property : if existe use it, else use the jndi url property, else use the default property
+        // activated property : if existe use it, else use the jndi url
+        // property, else use the default property
         String act = allProps.getProperty(CarolDefaultValues.PROTOCOLS_KEY);
         if (act != null) {
             protocols = act.trim();
@@ -252,7 +256,7 @@ public class CarolConfiguration {
                 TraceCarol.debugCarol("Carol use carol file to activate RMI: " + protocols);
             }
         } else {
-            //try the jndi rmi name 
+            //try the jndi rmi name
             if (jndiRMIName != null) {
                 protocols = jndiRMIName;
                 if (TraceCarol.isDebugCarol()) {
@@ -287,8 +291,8 @@ public class CarolConfiguration {
             for (Enumeration e = allProps.propertyNames(); e.hasMoreElements();) {
                 String pkey = ((String) e.nextElement()).trim();
                 if (pkey.startsWith(CarolDefaultValues.MULTI_RMI_PREFIX)) {
-                    allProps.setProperty(pkey.substring(CarolDefaultValues.MULTI_RMI_PREFIX.length() + 1),
-					 (allProps.getProperty(pkey)).trim());
+                    allProps.setProperty(pkey.substring(CarolDefaultValues.MULTI_RMI_PREFIX.length() + 1), (allProps
+                            .getProperty(pkey)).trim());
                     // set all multi rmi function
                     allProps.remove(pkey);
                 }
@@ -310,12 +314,12 @@ public class CarolConfiguration {
         if (TraceCarol.isDebugCarol()) {
             TraceCarol.debugCarol("--- Carol RMI configuration ---");
         }
-        // load all RMI 
+        // load all RMI
         defaultRMI = pTok.nextToken().trim();
         RMIConfiguration rmiConfDefault = new RMIConfiguration(defaultRMI, allProps);
         rmiConfigurationTable.put(defaultRMI, rmiConfDefault);
 
-        // Trace Carol Default  configuration
+        // Trace Carol Default configuration
         if (TraceCarol.isDebugCarol()) {
             TraceCarol.debugCarol("Carol RMI " + defaultRMI + " configuration:");
             TraceCarol.debugCarol(defaultRMI + " is default");
@@ -336,7 +340,7 @@ public class CarolConfiguration {
             rmiName = pTok.nextToken().trim();
             RMIConfiguration rmiConf = new RMIConfiguration(rmiName, allProps);
             rmiConfigurationTable.put(rmiName, rmiConf);
-            // Trace Carol Default  configuration
+            // Trace Carol Default configuration
             if (TraceCarol.isDebugCarol()) {
                 TraceCarol.debugCarol("Carol RMI " + rmiName + " configuration:");
                 // SortedMap of default rmi
@@ -382,30 +386,32 @@ public class CarolConfiguration {
             }
         }
 
-   //     if( multiRMI ) {
-            // Set the system properties
-            if (startRMI) {
-                jvmProps.setProperty("javax.rmi.CORBA.PortableRemoteObjectClass", CarolDefaultValues.MULTI_PROD);
-            }
+        //     if( multiRMI ) {
+        // Set the system properties
+        if (startRMI) {
+            jvmProps.setProperty("javax.rmi.CORBA.PortableRemoteObjectClass", CarolDefaultValues.MULTI_PROD);
+        }
 
-            if (startJNDI) {
-				jvmProps.setProperty("java.naming.factory.initial", CarolDefaultValues.MULTI_JNDI);
-            }
-//        } else {
-//            // Set the system properties for only one protocol
-//            if (startRMI) {
-//                jvmProps.setProperty(
-//                    "javax.rmi.CORBA.PortableRemoteObjectClass",
-//                    ((RMIConfiguration) rmiConfigurationTable.get(defaultRMI)).getPro());
-//            }
-//            // Set the system properties for only one protocol
-//            if (startJNDI) {
-//                //jvmProps.putAll(((RMIConfiguration) rmiConfigurationTable.get(defaultRMI)).getJndiProperties());
-//				jvmProps.setProperty("java.naming.factory.initial", CarolDefaultValues.MULTI_JNDI);
-//            }
-//    }
+        if (startJNDI) {
+            jvmProps.setProperty("java.naming.factory.initial", CarolDefaultValues.MULTI_JNDI);
+        }
+        //        } else {
+        //            // Set the system properties for only one protocol
+        //            if (startRMI) {
+        //                jvmProps.setProperty(
+        //                    "javax.rmi.CORBA.PortableRemoteObjectClass",
+        //                    ((RMIConfiguration) rmiConfigurationTable.get(defaultRMI)).getPro());
+        //            }
+        //            // Set the system properties for only one protocol
+        //            if (startJNDI) {
+        //                //jvmProps.putAll(((RMIConfiguration)
+        // rmiConfigurationTable.get(defaultRMI)).getJndiProperties());
+        //				jvmProps.setProperty("java.naming.factory.initial",
+        // CarolDefaultValues.MULTI_JNDI);
+        //            }
+        //    }
 
-        // add the jvm properties in the jvm 
+        // add the jvm properties in the jvm
         System.setProperties(jvmProps);
         configurationLoaded = true;
         // start naming service
@@ -432,7 +438,7 @@ public class CarolConfiguration {
     private static Properties jndi2Carol(Properties p) {
         TraceCarol.debugCarol("map properties found in jndi.properties to CAROL ones");
         Properties result = new Properties();
-        // get the rmi name 
+        // get the rmi name
         jndiRMIName = CarolDefaultValues.getRMIProtocol(p.getProperty(CarolDefaultValues.JNDI_URL_PREFIX));
         TraceCarol.debugCarol("rmi used=" + jndiRMIName);
         TraceCarol.debugCarol("initial properties = " + p);
@@ -443,18 +449,16 @@ public class CarolConfiguration {
                 String current = ((String) e.nextElement()).trim();
                 if (current.trim().equals(CarolDefaultValues.JNDI_URL_PREFIX)) {
                     // URL prefix for my context
-                    result.setProperty(CarolDefaultValues.CAROL_PREFIX + "." + 
-				       jndiRMIName + "." + 
-				       CarolDefaultValues.URL_PREFIX, p.getProperty(current));
+                    result.setProperty(CarolDefaultValues.CAROL_PREFIX + "." + jndiRMIName + "."
+                            + CarolDefaultValues.URL_PREFIX, p.getProperty(current));
                 } else if (current.trim().equals(CarolDefaultValues.JNDI_FACTORY_PREFIX)) {
-                    // CONTEXT FACTORY prefix for my 
-                    result.setProperty(CarolDefaultValues.CAROL_PREFIX + "." + 
-				       jndiRMIName + "." + 
-				       CarolDefaultValues.FACTORY_PREFIX, p.getProperty(current));
-		} else {
-		    // Other jndi properties
-                    result.setProperty(CarolDefaultValues.CAROL_PREFIX + "." + CarolDefaultValues.JNDI_PREFIX 
-				       + "." + current, p.getProperty(current));
+                    // CONTEXT FACTORY prefix for my
+                    result.setProperty(CarolDefaultValues.CAROL_PREFIX + "." + jndiRMIName + "."
+                            + CarolDefaultValues.FACTORY_PREFIX, p.getProperty(current));
+                } else {
+                    // Other jndi properties
+                    result.setProperty(CarolDefaultValues.CAROL_PREFIX + "." + CarolDefaultValues.JNDI_PREFIX + "."
+                            + current, p.getProperty(current));
                 }
             }
         }
@@ -490,10 +494,7 @@ public class CarolConfiguration {
             result = new Properties();
             result.load(fInputStream);
             if (TraceCarol.isDebugCarol()) {
-                TraceCarol.debugCarol(
-                    "Carol file used is "
-                        + fName
-                        + ".properties in "
+                TraceCarol.debugCarol("Carol file used is " + fName + ".properties in "
                         + cl.getResource(fName + ".properties").getPath());
             }
         }
@@ -509,32 +510,32 @@ public class CarolConfiguration {
      * find a properties file from a classloader
      * @param String properties file name (without '.properties')
      * @param Classloader
-     * @return String the location of this properties 
+     * @return String the location of this properties
      */
-    private static String findPropertiesFile(String fName, ClassLoader cl) throws Exception {
-        String result = "";
-        // load the defaults configuration file
-        InputStream fInputStream = cl.getResourceAsStream(fName + ".properties");
-        if (fInputStream == null) {
-            // resource not found direcly, search through URLClassLoader
-            ResourceBundle rb = ResourceBundle.getBundle(fName, Locale.getDefault(), cl);
-            if (rb.getKeys().hasMoreElements()) {
-                result = "Carol file used is " + fName + ".properties through URLClassLoader";
-            }
-        } else {
-            result =
-                "Carol file used is "
-                    + fName
-                    + ".properties in "
-                    + cl.getResource(fName + ".properties").getPath();
-        }
-        if (result == null) {
-            if (TraceCarol.isDebugCarol()) {
-                TraceCarol.debugCarol("No " + fName + ".properties file found");
-            }
-        }
-        return result;
-    }
+    //    private static String findPropertiesFile(String fName, ClassLoader cl)
+    // throws Exception {
+    //        String result = "";
+    //        // load the defaults configuration file
+    //        InputStream fInputStream = cl.getResourceAsStream(fName + ".properties");
+    //        if (fInputStream == null) {
+    //            // resource not found direcly, search through URLClassLoader
+    //            ResourceBundle rb = ResourceBundle.getBundle(fName, Locale.getDefault(),
+    // cl);
+    //            if (rb.getKeys().hasMoreElements()) {
+    //                result = "Carol file used is " + fName + ".properties through
+    // URLClassLoader";
+    //            }
+    //        } else {
+    //            result = "Carol file used is " + fName + ".properties in "
+    //                    + cl.getResource(fName + ".properties").getPath();
+    //        }
+    //        if (result == null) {
+    //            if (TraceCarol.isDebugCarol()) {
+    //                TraceCarol.debugCarol("No " + fName + ".properties file found");
+    //            }
+    //        }
+    //        return result;
+    //    }
 
     /**
      * get defaults properties from file
@@ -547,7 +548,7 @@ public class CarolConfiguration {
     /**
      * get carol properties from file
      * @return Properties carol properties
-    */
+     */
     private static Properties getCarolProperties() throws Exception {
         Properties props = null;
         try {
@@ -561,7 +562,7 @@ public class CarolConfiguration {
     /**
      * get jndi properties from file
      * @return Properties default properties
-    */
+     */
     private static Properties getJndiProperties() {
         Properties props = null;
         try {
@@ -578,13 +579,13 @@ public class CarolConfiguration {
      * @return boolean true if the configuration seam to be ok
      */
     public static boolean checkCarolConfiguration() {
-        boolean result = true;
+        // Comment it out as result is never read
+        //boolean result = true;
 
-        //check if there is a default properties 
-        if (defaultsProps == null)
-            result = false;
+        //check if there is a default properties
+        //if (defaultsProps == null) result = false;
 
-        //this is a carol check with 
+        //this is a carol check with
         return true;
     }
 
@@ -594,9 +595,6 @@ public class CarolConfiguration {
      */
     public static String getCarolConfiguration() {
         String result = "";
-        Properties dProps = null;
-        Properties cProps = null;
-        Properties jProps = null;
 
         try {
             result = loadPropertiesFile("carol-defaults", Thread.currentThread().getContextClassLoader()) + "\n";
@@ -606,21 +604,18 @@ public class CarolConfiguration {
             result += "There is a problem with the configuration loading:" + e;
         }
 
-        //check if there is a default properties 
-        if (defaultsProps == null)
-            result += "Default carol configuration file missing\n";
+        //check if there is a default properties
+        if (defaultsProps == null) result += "Default carol configuration file missing\n";
         // build a general properties object
         Properties allProps = new Properties();
 
-        // default properties can not be null (if null, checkCarolConfiguration should stop)
-        if (defaultsProps != null)
-            allProps.putAll(defaultsProps);
-        // first the jndi (extented) file 
-        if (jndiProps != null)
-            allProps.putAll(jndiProps);
+        // default properties can not be null (if null, checkCarolConfiguration
+        // should stop)
+        if (defaultsProps != null) allProps.putAll(defaultsProps);
+        // first the jndi (extented) file
+        if (jndiProps != null) allProps.putAll(jndiProps);
         // second the carol file
-        if (carolProps != null)
-            allProps.putAll(carolProps);
+        if (carolProps != null) allProps.putAll(carolProps);
         result += "Global Carol configuration is:";
         // get all carol configuration
         // SortedMap of allPorps
@@ -638,26 +633,27 @@ public class CarolConfiguration {
      * @return String activated protocols
      */
     public static String getProtocols() {
-	return protocols;
+        return protocols;
     }
 
     /**
      * Add interceptors facility for protocols
      * @param String protocol name
-     * @param String Interceptor Intializer class name  
+     * @param String Interceptor Intializer class name
      */
-    public static void addInterceptors(String protocolName, String interceptorInitializer) throws RMIConfigurationException {
-	RMIConfiguration rc = getRMIConfiguration(protocolName);
-	if (rc!=null) {
-	    String pref=rc.getInterceptorPrefix();
-	    if (pref!=null) {
-		System.setProperty(pref+"."+interceptorInitializer,"");
-		if (TraceCarol.isDebugCarol()) {
-		    TraceCarol.debugCarol("Add Initializer for " +  protocolName + ": " +pref+"."+interceptorInitializer);
-		}
-	    }
-	}
+    public static void addInterceptors(String protocolName, String interceptorInitializer)
+            throws RMIConfigurationException {
+        RMIConfiguration rc = getRMIConfiguration(protocolName);
+        if (rc != null) {
+            String pref = rc.getInterceptorPrefix();
+            if (pref != null) {
+                System.setProperty(pref + "." + interceptorInitializer, "");
+                if (TraceCarol.isDebugCarol()) {
+                    TraceCarol.debugCarol("Add Initializer for " + protocolName + ": " + pref + "."
+                            + interceptorInitializer);
+                }
+            }
+        }
     }
-     
 
 }

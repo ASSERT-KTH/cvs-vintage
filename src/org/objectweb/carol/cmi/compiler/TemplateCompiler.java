@@ -5,12 +5,12 @@
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
@@ -24,6 +24,7 @@ import java.io.FileWriter;
 import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.VelocityEngine;
+import org.apache.velocity.runtime.RuntimeConstants;
 import org.apache.velocity.runtime.RuntimeServices;
 import org.apache.velocity.runtime.log.LogSystem;
 
@@ -40,9 +41,9 @@ public class TemplateCompiler implements LogSystem {
         this.c = c;
         this.ccc = ccc;
         ve = new VelocityEngine();
-        ve.setProperty( VelocityEngine.RUNTIME_LOG_LOGSYSTEM, this);
-        ve.setProperty(VelocityEngine.VM_LIBRARY, "");
-        ve.setProperty(VelocityEngine.RESOURCE_LOADER, "class");
+        ve.setProperty( RuntimeConstants.RUNTIME_LOG_LOGSYSTEM, this);
+        ve.setProperty(RuntimeConstants.VM_LIBRARY, "");
+        ve.setProperty(RuntimeConstants.RESOURCE_LOADER, "class");
         ve.setProperty("class.resource.loader.class", "org.apache.velocity.runtime.resource.loader.ClasspathResourceLoader");
         try {
             ve.init();

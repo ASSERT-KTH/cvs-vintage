@@ -1,7 +1,5 @@
-/*
- * @(#) JeremieCarolHandler.java	1.0 02/07/15
- *
- * Copyright (C) 2002 - INRIA (www.inria.fr)
+/**
+ * Copyright (C) 2002,2004 - INRIA (www.inria.fr)
  *
  * CAROL: Common Architecture for RMI ObjectWeb Layer
  *
@@ -12,81 +10,82 @@
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  * USA
- * 
  *
+ * --------------------------------------------------------------------------
+ * $Id: JeremieCarolHandler.java,v 1.7 2004/09/01 11:02:41 benoitf Exp $
+ * --------------------------------------------------------------------------
  */
 package org.objectweb.carol.rmi.jonathan.jeremie;
 
-import org.objectweb.carol.util.configuration.CarolCurrentConfiguration;
+import org.omg.IOP.ServiceContext;
+
 import org.objectweb.jeremie.services.handler.api.Service;
 import org.objectweb.jonathan.apis.kernel.Context;
 import org.objectweb.jonathan.apis.kernel.JonathanException;
-import org.omg.IOP.ServiceContext;
 
+import org.objectweb.carol.util.configuration.CarolCurrentConfiguration;
 
 /**
- * Class <code>CarolHandler</code> is the CAROL Handler for 
- * Jonathan server interception
- * 
- * @author  Guillaume Riviere (Guillaume.Riviere@inrialpes.fr) 
+ * Class <code>CarolHandler</code> is the CAROL Handler for Jonathan server
+ * interception
+ * @author Guillaume Riviere (Guillaume.Riviere@inrialpes.fr)
  * @version 1.0, 15/07/2002
  */
 public class JeremieCarolHandler implements Service {
 
     private String name = null;
 
-   /** 
-    * Builds a new Jonathan jeremie carol service handler instance.
-    * @exception JonathanException if something goes wrong.
-    */
-   public JeremieCarolHandler() throws JonathanException {
-       // do nothing
-       this.name="jeremie";
-   }
-   
-    /** 
+    /**
+     * Builds a new Jonathan jeremie carol service handler instance.
+     * @exception JonathanException if something goes wrong.
+     */
+    public JeremieCarolHandler() throws JonathanException {
+        // do nothing
+        this.name = "jeremie";
+    }
+
+    /**
      * Returns a request context.
      * @return always null
      */
     public ServiceContext getRequestContext(int id, boolean r, byte[] key, Context k) {
-	    return null;
+        return null;
     }
-	 
-    
-    /** 
+
+    /**
      * Returns a reply context.
      * @return always null
      */
     public ServiceContext getReplyContext(int id, Context k) {
-	    return null;
+        return null;
     }
-    
-    /** 
-     * This method is called by the services handler to let the operations 
+
+    /**
+     * This method is called by the services handler to let the operations
      * related to the target service be performed on request arrival.
-     * @param context   the service context of the request;
+     * @param context the service context of the request;
      */
     public void handleRequestContext(ServiceContext context, int id, boolean r, byte[] key, Context k) {
-	CarolCurrentConfiguration.getCurrent().setRMI(name);
-	
+        CarolCurrentConfiguration.getCurrent().setRMI(name);
+
     }
-    
-    /** 
-     * This method is called by the services handler to let the operations 
+
+    /**
+     * This method is called by the services handler to let the operations
      * related to the target service be performed on reply arrival.
-     * @param context     the service context of the reply;
+     * @param context the service context of the reply;
      */
     public void handleReplyContext(ServiceContext context, int id, Context k) {
-	// do nothing on reply
-    }   
+        // do nothing on reply
+    }
 }

@@ -1,7 +1,5 @@
-/*
- * @(#) RmiConfiguration.java	1.0 02/07/15
- *
- * Copyright (C) 2002 - INRIA (www.inria.fr)
+/**
+ * Copyright (C) 2002,2004 - INRIA (www.inria.fr)
  *
  * CAROL: Common Architecture for RMI ObjectWeb Layer
  *
@@ -12,18 +10,20 @@
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  * USA
- * 
  *
+ * --------------------------------------------------------------------------
+ * $Id: RMIConfiguration.java,v 1.13 2004/09/01 11:02:41 benoitf Exp $
+ * --------------------------------------------------------------------------
  */
 package org.objectweb.carol.util.configuration;
 
@@ -32,22 +32,19 @@ import java.util.Enumeration;
 import java.util.Properties;
 import java.util.StringTokenizer;
 
-
-/*
- * Class <code>RmiConfiguration</code> implement the Properties way 
+/**
+ * Class <code> RmiConfiguration </code> implement the Properties way
  * representing the rmi configuration
- *
- * @author  Guillaume Riviere (Guillaume.Riviere@inrialpes.fr)
- * @version 1.0, 15/07/2002  
+ * @author Guillaume Riviere (Guillaume.Riviere@inrialpes.fr)
+ * @version 1.0, 15/07/2002
  */
 public class RMIConfiguration {
-
 
     /**
      * RMI Architecture name
      */
     public String rmiName = null;
-        
+
     /**
      * Portable Remote Delegate class for this protocol
      */
@@ -56,12 +53,12 @@ public class RMIConfiguration {
     /**
      * Intitail JNDI factory class for this protocol
      */
-    private String factory = null;
+    //private String factory = null;
 
     /**
      * name service for this protocol
      */
-    private String nameServiceName = null; 
+    private String nameServiceName = null;
 
     /**
      * port number for this protocol name servce
@@ -79,122 +76,116 @@ public class RMIConfiguration {
     private Properties jndiProperties = null;
 
     /**
-     * Constructor,
-     * This constructor make a validation 
-     * of the properties
+     * Constructor, This constructor make a validation of the properties
      * @param name the RMI architecture name
      * @param rmiProperties The rmi properties, can not be null
-     * @param jndiProperties The jndi properties, should be null 
-     *                       if the jndi properties informations 
-     *                       are set in the rmiProperties
-     * @throws RMIConfigurationException if one of the properties below missing:
-     * - 
-     * - to be set (see the carol specifications)
-     * -
+     * @param jndiProperties The jndi properties, should be null if the jndi
+     *        properties informations are set in the rmiProperties
+     * @throws RMIConfigurationException if one of the properties below missing: - -
+     *         to be set (see the carol specifications) -
      */
     public RMIConfiguration(String name, Properties carolProperties) throws RMIConfigurationException {
 
-	String rmiPref     = CarolDefaultValues.CAROL_PREFIX + "." + name;
-	String urlPref     = CarolDefaultValues.CAROL_PREFIX + "." + name +"."+CarolDefaultValues.URL_PREFIX;
-	String factoryPref = CarolDefaultValues.CAROL_PREFIX + "." + name +"."+CarolDefaultValues.FACTORY_PREFIX;
+        String rmiPref = CarolDefaultValues.CAROL_PREFIX + "." + name;
+        String urlPref = CarolDefaultValues.CAROL_PREFIX + "." + name + "." + CarolDefaultValues.URL_PREFIX;
+        String factoryPref = CarolDefaultValues.CAROL_PREFIX + "." + name + "." + CarolDefaultValues.FACTORY_PREFIX;
 
-    if (name.equals("cmi")) {
-        org.objectweb.carol.cmi.Config.setProperties(carolProperties);
+        if (name.equals("cmi")) {
+            org.objectweb.carol.cmi.Config.setProperties(carolProperties);
+        }
+
+        // RMI Properties
+        rmiName = name;
+
+        // PortableRemoteObjectClass flag
+        pro = carolProperties.getProperty(rmiPref + "." + CarolDefaultValues.PRO_PREFIX).trim();
+
+        // NameServiceClass flag (not mandatory)
+        if (carolProperties.getProperty(rmiPref + "." + CarolDefaultValues.NS_PREFIX) != null) {
+            nameServiceName = carolProperties.getProperty(rmiPref + "." + CarolDefaultValues.NS_PREFIX).trim();
+        }
+
+        //interceptors simplifications
+        interPref = carolProperties.getProperty(CarolDefaultValues.CAROL_PREFIX + "." + name + "."
+                + CarolDefaultValues.INTERCEPTOR_PKGS_PREFIX);
+        String interValues = carolProperties.getProperty(CarolDefaultValues.CAROL_PREFIX + "." + name + "."
+                + CarolDefaultValues.INTERCEPTOR_VALUES_PREFIX);
+
+        //set the jvm interceptors flag
+        if ((interPref != null) && (interValues != null)) {
+            //Parse jvm the properties
+            Properties jvmProps = new Properties();
+            jvmProps.putAll(System.getProperties());
+            String current;
+            StringTokenizer st = new StringTokenizer(interValues, ",");
+            while (st.hasMoreTokens()) {
+                current = st.nextToken().trim();
+                jvmProps.setProperty(interPref + "." + current, "");
+            }
+            System.setProperties(jvmProps);
+        }
+
+        this.jndiProperties = new Properties();
+        for (Enumeration e = carolProperties.propertyNames(); e.hasMoreElements();) {
+            String current = ((String) e.nextElement()).trim();
+            // jndi configuration
+            if (current.startsWith(urlPref)) {
+                jndiProperties.setProperty(CarolDefaultValues.JNDI_URL_PREFIX, carolProperties.getProperty(current));
+            } else if (current.startsWith(factoryPref)) {
+                jndiProperties
+                        .setProperty(CarolDefaultValues.JNDI_FACTORY_PREFIX, carolProperties.getProperty(current));
+            }
+        }
+
+        port = getPortOfUrl(this.jndiProperties.getProperty(CarolDefaultValues.JNDI_URL_PREFIX));
     }
 
-	// RMI Properties
-	rmiName=name;
-
-	// PortableRemoteObjectClass flag	
-	pro = carolProperties.getProperty( rmiPref + "." + CarolDefaultValues.PRO_PREFIX ).trim();	
-	
-	// NameServiceClass flag (not mandatory)	
-	if (carolProperties.getProperty( rmiPref + "." + CarolDefaultValues.NS_PREFIX ) != null) {
-	    nameServiceName = carolProperties.getProperty( rmiPref + "." + CarolDefaultValues.NS_PREFIX ).trim();
-	}	
-	
-	//interceptors simplifications	
-	interPref  = carolProperties.getProperty(CarolDefaultValues.CAROL_PREFIX + "." + name +"."+
-						      CarolDefaultValues.INTERCEPTOR_PKGS_PREFIX);
-	String interValues = carolProperties.getProperty(CarolDefaultValues.CAROL_PREFIX + "." + name +"."+
-						      CarolDefaultValues.INTERCEPTOR_VALUES_PREFIX);
-
-	//set the jvm interceptors flag
-	if((interPref!=null)&&(interValues!=null)) {
-	    //Parse jvm the properties
-	    Properties jvmProps = new Properties();
-	    jvmProps.putAll(System.getProperties());
-	    String current;
-	    StringTokenizer st = new StringTokenizer(interValues,",");
-	    while (st.hasMoreTokens()) {
-		current = st.nextToken().trim();
-		jvmProps.setProperty(interPref+"."+current,"");
-	    }
-	    System.setProperties(jvmProps);
-	}
-	
-	this.jndiProperties= new Properties();
-	for (Enumeration e = carolProperties.propertyNames() ; e.hasMoreElements() ;) {
-	    String current = ((String)e.nextElement()).trim();	    
-	    // jndi configuration
-	    if (current.startsWith(urlPref)) {
-		jndiProperties.setProperty(CarolDefaultValues.JNDI_URL_PREFIX, carolProperties.getProperty(current));
-	    } else if (current.startsWith(factoryPref)) {
-		jndiProperties.setProperty(CarolDefaultValues.JNDI_FACTORY_PREFIX, carolProperties.getProperty(current));
-	    }
-	}
-
-	
-	
-	port = getPortOfUrl(this.jndiProperties.getProperty(CarolDefaultValues.JNDI_URL_PREFIX));
-    }
-  
     /**
-     * @return name 
+     * @return name
      */
     public String getName() {
-	return rmiName;
+        return rmiName;
     }
- 
+
     /**
      * @return Portable Remote Delegate for this protocol
      */
     public String getPro() {
-	return pro;
+        return pro;
     }
 
     /**
      * @return the jndi properties for this protocol
      */
     public Properties getJndiProperties() {
-	return jndiProperties;
+        return jndiProperties;
     }
 
     /**
-     * @return the jndi properties port for this protocol name service
-     * -1 if the port is not configured
+     * @return the jndi properties port for this protocol name service -1 if the
+     *         port is not configured
      */
     public int getPort() {
-	return port;
+        return port;
     }
 
     /**
      * @return the name service class name
      */
     public String getNameService() {
-	return nameServiceName;
+        return nameServiceName;
     }
 
     /**
      * @return the interceptor prefix, "" if there is no prefix
      */
     public String getInterceptorPrefix() {
-	return interPref;
+        return interPref;
     }
-       
+
     /**
-     * Parses the given url, and returns the port number.
-     * 0 is given in error case)
+     * Parses the given url, and returns the port number. 0 is given in error
+     * case)
      */
     static int getPortOfUrl(String url) {
         int portNumber = 0;
@@ -203,8 +194,7 @@ public class RMIConfiguration {
             st.nextToken();
             st.nextToken();
             if (st.hasMoreTokens()) {
-                StringTokenizer lastst =
-                    new StringTokenizer(st.nextToken(), "/");
+                StringTokenizer lastst = new StringTokenizer(st.nextToken(), "/");
                 String pts = lastst.nextToken().trim();
                 int i = pts.indexOf(',');
                 if (i > 0) {

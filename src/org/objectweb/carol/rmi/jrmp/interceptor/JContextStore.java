@@ -1,7 +1,5 @@
-/*
- * @(#) JContextStore.java	1.0 02/07/15
- *
- * Copyright (C) 2002 - INRIA (www.inria.fr)
+/**
+ * Copyright (C) 2002,2004 - INRIA (www.inria.fr)
  *
  * CAROL: Common Architecture for RMI ObjectWeb Layer
  *
@@ -12,18 +10,20 @@
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  * USA
- * 
  *
+ * --------------------------------------------------------------------------
+ * $Id: JContextStore.java,v 1.3 2004/09/01 11:02:41 benoitf Exp $
+ * --------------------------------------------------------------------------
  */
 package org.objectweb.carol.rmi.jrmp.interceptor;
 
@@ -31,14 +31,12 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 /**
- * Class <code>JContextObjectStore</code> is the CAROL JRMP Client Interceptor Contexts
- * Storage System
- * 
- * @author  Guillaume Riviere (Guillaume.Riviere@inrialpes.fr)
+ * Class <code>JContextObjectStore</code> is the CAROL JRMP Client Interceptor
+ * Contexts Storage System
+ * @author Guillaume Riviere (Guillaume.Riviere@inrialpes.fr)
  * @version 1.0, 10/03/2003
  */
 public class JContextStore {
-
 
     private static int counter = 0;
 
@@ -46,6 +44,7 @@ public class JContextStore {
 
     // The number of arraylists MAX must be less that MASK
     private static final int MAX = 100;
+
     // MASK is used to divide the key into the two indexes.
     private static final int MASK = 256;
 
@@ -59,7 +58,7 @@ public class JContextStore {
     }
 
     /**
-     * Stote an object context  
+     * Stote an object context
      */
     public static int storeObject(Object ob) {
         // The context is often null so return a key that can be decoded
@@ -93,15 +92,13 @@ public class JContextStore {
         return i;
     }
 
-
     /**
-     * Get an object from the store and remove it from the arrayList. Mark
-     * empty slots in the arrayList with Boolean.FALSE.
-     *
+     * Get an object from the store and remove it from the arrayList. Mark empty
+     * slots in the arrayList with Boolean.FALSE.
      */
 
     public static Object getObject(int key) {
-        if (key==-1) {
+        if (key == -1) {
             return null;
         }
         Object ob;
@@ -124,20 +121,19 @@ public class JContextStore {
         return ob;
     }
 
-	public String toString() {
-			String result ="";
-			int x=0;
-			for (Iterator i=lists.iterator(); i.hasNext();) {
-				int y=0;
-				ArrayList ara = (ArrayList)i.next();
-				for (Iterator j=ara.iterator(); j.hasNext();) {
-					result+="object at x="+x+", y="+y+" object:"+j.next();
-					y++;
-				}
-				x++;
-			}
-			return result;
-	}
+    public String toString() {
+        String result = "";
+        int x = 0;
+        for (Iterator i = lists.iterator(); i.hasNext();) {
+            int y = 0;
+            ArrayList ara = (ArrayList) i.next();
+            for (Iterator j = ara.iterator(); j.hasNext();) {
+                result += "object at x=" + x + ", y=" + y + " object:" + j.next();
+                y++;
+            }
+            x++;
+        }
+        return result;
+    }
 }
-
 

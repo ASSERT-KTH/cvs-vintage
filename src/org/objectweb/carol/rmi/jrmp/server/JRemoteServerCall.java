@@ -1,7 +1,5 @@
-/*
- * @(#) JRemoteServerCall.java	1.0 02/07/15
- *
- * Copyright (C) 2002 - INRIA (www.inria.fr)
+/**
+ * Copyright (C) 2002,2004 - INRIA (www.inria.fr)
  *
  * CAROL: Common Architecture for RMI ObjectWeb Layer
  *
@@ -12,18 +10,20 @@
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  * USA
- * 
  *
+ * --------------------------------------------------------------------------
+ * $Id: JRemoteServerCall.java,v 1.7 2004/09/01 11:02:41 benoitf Exp $
+ * --------------------------------------------------------------------------
  */
 package org.objectweb.carol.rmi.jrmp.server;
 
@@ -38,13 +38,13 @@ import org.objectweb.carol.rmi.jrmp.interceptor.JServerInterceptorHelper;
 import org.objectweb.carol.rmi.jrmp.interceptor.JServerRequestInterceptor;
 
 /**
- * Class <code>JRemoteServerCall</code> is the CAROL JRMP Remote Server call with context propagation
- * 
- * @author  Guillaume Riviere (Guillaume.Riviere@inrialpes.fr)
+ * Class <code>JRemoteServerCall</code> is the CAROL JRMP Remote Server call
+ * with context propagation
+ * @author Guillaume Riviere (Guillaume.Riviere@inrialpes.fr)
  * @version 1.0, 15/07/2002
  */
 public class JRemoteServerCall implements RemoteCall {
-    
+
     /**
      * The Remote Call Impl
      * @deprecated
@@ -54,88 +54,83 @@ public class JRemoteServerCall implements RemoteCall {
     /**
      * Array of Interceptor for this Server Ref
      */
-    protected JServerRequestInterceptor [] sis = null;
-    
+    protected JServerRequestInterceptor[] sis = null;
+
     /**
      * Constructor for server side call
-     * @param impl the Remote call 
+     * @param impl the Remote call
      * @param sis the server interceptor
      */
-    public JRemoteServerCall(RemoteCall impl, JServerRequestInterceptor [] sis) {
+    public JRemoteServerCall(RemoteCall impl, JServerRequestInterceptor[] sis) {
         // we use delegation but need to extend StreamRemoteCall for 1.1 Stub
         this.impl = impl;
-	this.sis = sis;
+        this.sis = sis;
     }
-
-
 
     /**
-     * override getResultStream to dissociate and pass contexts
-     * back to the client. This method might be called several times.
+     * override getResultStream to dissociate and pass contexts back to the
+     * client. This method might be called several times.
      * @param success if success
-     * 
      * @deprecated
      */
-    public ObjectOutput getResultStream(boolean success) throws IOException,
-            StreamCorruptedException {
+    public ObjectOutput getResultStream(boolean success) throws IOException, StreamCorruptedException {
         ObjectOutput out = impl.getResultStream(success);
-        // we must send a dummy exception due to StreamRemoteCall.executeCall flow of control
+        // we must send a dummy exception due to StreamRemoteCall.executeCall
+        // flow of control
         if (!success) {
             out.writeObject(new Exception("dummy"));
-	    JServerInterceptorHelper.send_exception(out, sis);
-	    return out;
+            JServerInterceptorHelper.send_exception(out, sis);
+            return out;
         } else { // succes !
-	    JServerInterceptorHelper.send_reply(out, sis);
-	    return out;
-	}
+            JServerInterceptorHelper.send_reply(out, sis);
+            return out;
+        }
     }
 
- 
     // standard server remote call methods
- 	/**
- 	 * @deprecated
- 	 */   
-     public ObjectOutput getOutputStream() throws IOException {
+    /**
+     * @deprecated
+     */
+    public ObjectOutput getOutputStream() throws IOException {
         return impl.getOutputStream();
     }
 
-	/**
-	 * @see java.rmi.server.RemoteCall#releaseOutputStream()
-	 * @deprecated 
-	 */
+    /**
+     * @see java.rmi.server.RemoteCall#releaseOutputStream()
+     * @deprecated
+     */
     public void releaseOutputStream() throws IOException {
         impl.releaseOutputStream();
     }
 
-	/**
-	 * @see java.rmi.server.RemoteCall#getInputStream()
-	 * @deprecated 
-	 */
+    /**
+     * @see java.rmi.server.RemoteCall#getInputStream()
+     * @deprecated
+     */
     public ObjectInput getInputStream() throws IOException {
         return impl.getInputStream();
     }
 
-	/**
-	 * 
-	 * @see java.rmi.server.RemoteCall#releaseInputStream()
-	 * @deprecated 
-	 */
+    /**
+     * @see java.rmi.server.RemoteCall#releaseInputStream()
+     * @deprecated
+     */
     public void releaseInputStream() throws IOException {
         impl.releaseInputStream();
     }
 
-	/**
-	 * @see java.rmi.server.RemoteCall#executeCall()
-	 * @deprecated 
-	 */
+    /**
+     * @see java.rmi.server.RemoteCall#executeCall()
+     * @deprecated
+     */
     public void executeCall() throws Exception {
         throw new Error("should never be called by server");
     }
 
-	/**	 
-	 * @see java.rmi.server.RemoteCall#done()
-	 * @deprecated 
-	 */
+    /**
+     * @see java.rmi.server.RemoteCall#done()
+     * @deprecated
+     */
     public void done() throws IOException {
         impl.done();
     }

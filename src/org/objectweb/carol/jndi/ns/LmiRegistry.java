@@ -1,7 +1,5 @@
-/*
- * @(#) LmiRegistry.java	1.0 02/07/15
- *
- * Copyright (C) 2002 - INRIA (www.inria.fr)
+/**
+ * Copyright (C) 2002,2004 - INRIA (www.inria.fr)
  *
  * CAROL: Common Architecture for RMI ObjectWeb Layer
  *
@@ -12,27 +10,28 @@
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  * USA
  *
+ * --------------------------------------------------------------------------
+ * $Id: LmiRegistry.java,v 1.4 2004/09/01 11:02:41 benoitf Exp $
+ * --------------------------------------------------------------------------
  */
 package org.objectweb.carol.jndi.ns;
 
 import org.objectweb.carol.util.configuration.TraceCarol;
 
-
-/*
- * Class <code>LMIRegistry</code> is a fake registry service
- *
- * @author  Guillaume Riviere (Guillaume.Riviere@inrialpes.fr)
+/**
+ * Class <code> LMIRegistry </code> is a fake registry service
+ * @author Guillaume Riviere (Guillaume.Riviere@inrialpes.fr)
  * @version 1.0, 15/01/2003
  */
 public class LmiRegistry implements NameService {
@@ -40,37 +39,39 @@ public class LmiRegistry implements NameService {
     /**
      * port number (0 for default)
      */
-    public int port=0;
+    public int port = 0;
 
     /**
-     * start Method, Start a new NameService or do nothing if the name service is all ready start
+     * start Method, Start a new NameService or do nothing if the name service
+     * is all ready start
      * @param int port is port number
-     * @throws NameServiceException if a problem occure 
+     * @throws NameServiceException if a problem occure
      */
-    public void start() throws NameServiceException {	
-	if (TraceCarol.isDebugJndiCarol()) {
+    public void start() throws NameServiceException {
+        if (TraceCarol.isDebugJndiCarol()) {
             TraceCarol.debugJndiCarol("LMIRegistry.start() on port:" + port);
         }
-	// do nothing
+        // do nothing
     }
 
     /**
-     * stop Method, Stop a NameService or do nothing if the name service is all ready stop
-     * @throws NameServiceException if a problem occure 
+     * stop Method, Stop a NameService or do nothing if the name service is all
+     * ready stop
+     * @throws NameServiceException if a problem occure
      */
     public void stop() throws NameServiceException {
-	if (TraceCarol.isDebugJndiCarol()) {
+        if (TraceCarol.isDebugJndiCarol()) {
             TraceCarol.debugJndiCarol("LMIRegistry.stop()");
         }
-	// do nothing
+        // do nothing
     }
 
     /**
      * isStarted Method, check if a name service is started
-     * @return alway return true 
+     * @return alway return true
      */
     public boolean isStarted() {
-	return true;
+        return true;
     }
 
     /**
@@ -79,12 +80,12 @@ public class LmiRegistry implements NameService {
      */
     public void setPort(int p) {
     }
-    
-	/* (non-Javadoc)
-	 * @see org.objectweb.carol.jndi.ns.NameService#getPort()
-	 */
-	public int getPort()
-	{
-		return 0;
-	}
+
+    /*
+     * (non-Javadoc)
+     * @see org.objectweb.carol.jndi.ns.NameService#getPort()
+     */
+    public int getPort() {
+        return 0;
+    }
 }

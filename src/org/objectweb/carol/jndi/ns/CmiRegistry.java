@@ -1,7 +1,6 @@
-/*
- * CmiRegistry.java
- *
- * Copyright (C) 2003 - Simon Nieuviarts
+/**
+ * IIOPCosNaming.java 1.0 02/07/15 Copyright (C) 2002 - INRIA
+ * * Copyright (C) 2003 - Simon Nieuviarts
  *
  * CAROL: Common Architecture for RMI ObjectWeb Layer
  *
@@ -12,12 +11,12 @@
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
@@ -34,8 +33,7 @@ import org.objectweb.carol.util.configuration.TraceCarol;
 
 /**
  * Class <code>CmiRegistry</code>
- *
- * @author  Simon Nieuviarts (Simon.Nieuviarts@inrialpes.fr)
+ * @author Simon Nieuviarts (Simon.Nieuviarts@inrialpes.fr)
  */
 public class CmiRegistry implements NameService {
 
@@ -45,10 +43,9 @@ public class CmiRegistry implements NameService {
     private int port = ClusterRegistry.DEFAULT_PORT;
 
     /**
-     * registry 
+     * registry
      */
     //    public Registry registry = null;
-
     /**
      * Cluster equivalence system
      */
@@ -62,7 +59,7 @@ public class CmiRegistry implements NameService {
     /**
      * start Method, Start a new NameService or do nothing if the name service
      * is all ready start
-     * @throws NameServiceException if a problem occure 
+     * @throws NameServiceException if a problem occure
      */
     public void start() throws NameServiceException {
         if (TraceCarol.isDebugJndiCarol()) {
@@ -75,41 +72,36 @@ public class CmiRegistry implements NameService {
                     cregk = ClusterRegistryImpl.start(port);
                     // add a shudown hook for this process
                     Runtime.getRuntime().addShutdownHook(new Thread() {
+
                         public void run() {
                             try {
                                 CmiRegistry.this.stop();
                             } catch (Exception e) {
-                                TraceCarol.error(
-                                    "CmiRegistry ShutdownHook problem",
-                                    e);
+                                TraceCarol.error("CmiRegistry ShutdownHook problem", e);
                             }
                         }
                     });
                 } else {
                     if (TraceCarol.isDebugJndiCarol()) {
-                        TraceCarol.debugJndiCarol(
-                            "Can't start CmiRegistry, port="
-                                + port
-                                + " is < 0");
+                        TraceCarol.debugJndiCarol("Can't start CmiRegistry, port=" + port + " is < 0");
                     }
                 }
             } else {
                 if (TraceCarol.isDebugJndiCarol()) {
-                    TraceCarol.debugJndiCarol(
-                        "CmiRegistry is already start on port:" + port);
+                    TraceCarol.debugJndiCarol("CmiRegistry is already start on port:" + port);
                 }
             }
         } catch (Exception e) {
-            String msg = "can not start cluster registry: " + e; 
+            String msg = "can not start cluster registry: " + e;
             TraceCarol.error(msg);
             throw new NameServiceException(msg);
         }
     }
 
     /**
-     * stop Method, Stop a NameService or do nothing if the name service
-     * is already stop
-     * @throws NameServiceException if a problem occure 
+     * stop Method, Stop a NameService or do nothing if the name service is
+     * already stop
+     * @throws NameServiceException if a problem occure
      */
     public void stop() throws NameServiceException {
         if (TraceCarol.isDebugJndiCarol()) {
@@ -122,8 +114,7 @@ public class CmiRegistry implements NameService {
                 cregk = null;
             }
         } catch (Exception e) {
-            throw new NameServiceException(
-                "can not stop cluster registry: " + e);
+            throw new NameServiceException("can not stop cluster registry: " + e);
         }
     }
 
@@ -135,14 +126,10 @@ public class CmiRegistry implements NameService {
         if (cregk != null) {
             return true;
         }
-/*
-        try {
-            LocateRegistry.getRegistry(port).list();
-        } catch (RemoteException re) {
-            return false;
-        }
-        return true;
-*/
+        /*
+         * try { LocateRegistry.getRegistry(port).list(); } catch
+         * (RemoteException re) { return false; } return true;
+         */
         return false;
     }
 
@@ -159,11 +146,11 @@ public class CmiRegistry implements NameService {
         }
     }
 
-	/* (non-Javadoc)
-	 * @see org.objectweb.carol.jndi.ns.NameService#getPort()
-	 */
-	public int getPort()
-	{
-		return port;
-	}
+    /*
+     * (non-Javadoc)
+     * @see org.objectweb.carol.jndi.ns.NameService#getPort()
+     */
+    public int getPort() {
+        return port;
+    }
 }

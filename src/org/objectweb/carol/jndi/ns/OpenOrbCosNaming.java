@@ -1,7 +1,5 @@
-/*
- * @(#) OpenOrbCosNaming.java	1.0 02/07/15
- *
- * Copyright (C) 2002 - INRIA (www.inria.fr)
+/**
+ * Copyright (C) 2002,2004 - INRIA (www.inria.fr)
  *
  * CAROL: Common Architecture for RMI ObjectWeb Layer
  *
@@ -12,17 +10,20 @@
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  * USA
  *
+ * --------------------------------------------------------------------------
+ * $Id: OpenOrbCosNaming.java,v 1.2 2004/09/01 11:02:41 benoitf Exp $
+ * --------------------------------------------------------------------------
  */
 package org.objectweb.carol.jndi.ns;
 
@@ -32,11 +33,11 @@ import java.util.Properties;
 import javax.naming.InitialContext;
 
 import org.objectweb.carol.util.configuration.TraceCarol;
-/*
- * Class <code>OpenOrbCosNaming</code> Start in a separated process
- * (see the openorb documentation)
- *
- * @author  Guillaume Riviere (Guillaume.Riviere@inrialpes.fr)
+
+/**
+ * Class <code> OpenOrbCosNaming </code> Start in a separated process (see the
+ * openorb documentation)
+ * @author Guillaume Riviere (Guillaume.Riviere@inrialpes.fr)
  * @version 1.0, 15/01/2003
  */
 public class OpenOrbCosNaming implements NameService {
@@ -44,7 +45,7 @@ public class OpenOrbCosNaming implements NameService {
     /**
      * port number ( 12350 for default)
      */
-    public int port=12350;
+    public int port = 12350;
 
     /**
      * process of the cosnaming
@@ -52,90 +53,93 @@ public class OpenOrbCosNaming implements NameService {
     public Process cosNamingProcess = null;
 
     /**
-     * start Method, Start a new NameService or do nothing if the name service is all ready start
+     * start Method, Start a new NameService or do nothing if the name service
+     * is all ready start
      * @param int port is port number
      * @throws NameServiceException if a problem occurs
      */
-    public void start() throws NameServiceException {	
-	if (TraceCarol.isDebugJndiCarol()) {
+    public void start() throws NameServiceException {
+        if (TraceCarol.isDebugJndiCarol()) {
             TraceCarol.debugJndiCarol("OpenOrbCosNaming.start() on port:" + port);
         }
-	try {
-	    if (!isStarted()) {
-		// start a new orbd procees
-		if (port >= 0) {
-			// maybe we miss openorb configuration (wit -D parametter and with classpath
-		    cosNamingProcess = Runtime.getRuntime().exec(System.getProperty("java.home") +
-								 System.getProperty("file.separator") +
-								 "bin" + System.getProperty("file.separator") +
-								 "java " +
-			"-Dorg.omg.CORBA.ORBClass=org.openorb.CORBA.ORB " +
-			"-Dorg.omg.CORBA.ORBSingletonClass=org.openorb.CORBA.ORBSingleton " +
-								 "org.openorb.util.MapNamingContext -default -ORBPort=" + port);
-		    // wait for starting
-		    Thread.sleep(2000);
+        try {
+            if (!isStarted()) {
+                // start a new orbd procees
+                if (port >= 0) {
+                    // maybe we miss openorb configuration (wit -D parametter
+                    // and with classpath
+                    cosNamingProcess = Runtime.getRuntime().exec(
+                            System.getProperty("java.home") + System.getProperty("file.separator") + "bin"
+                                    + System.getProperty("file.separator") + "java "
+                                    + "-Dorg.omg.CORBA.ORBClass=org.openorb.CORBA.ORB "
+                                    + "-Dorg.omg.CORBA.ORBSingletonClass=org.openorb.CORBA.ORBSingleton "
+                                    + "org.openorb.util.MapNamingContext -default -ORBPort=" + port);
+                    // wait for starting
+                    Thread.sleep(2000);
 
-		    // trace the start execution
-		    InputStream cosError = cosNamingProcess.getErrorStream();
-		    if (cosError.available() != 0) {
-			byte [] b = new byte[cosError.available()];
-			cosError.read(b);
-			cosError.close();
-			throw new NameServiceException("can not start cosnaming daemon:" + new String(b));
-		    } 
+                    // trace the start execution
+                    InputStream cosError = cosNamingProcess.getErrorStream();
+                    if (cosError.available() != 0) {
+                        byte[] b = new byte[cosError.available()];
+                        cosError.read(b);
+                        cosError.close();
+                        throw new NameServiceException("can not start cosnaming daemon:" + new String(b));
+                    }
 
-		    InputStream cosOut = cosNamingProcess.getInputStream();
-		    if (cosOut.available() != 0) {
-			byte [] b = new byte[cosOut.available()];
-			cosOut.read(b);
-			cosOut.close();
-			if (TraceCarol.isDebugJndiCarol()) {
-			    TraceCarol.debugJndiCarol("OpenORBCosNaming:");			    
-			    TraceCarol.debugJndiCarol(new String(b));
-			}
-		    } 
-		    
-		    // add a shudown hook for this process
-		    Runtime.getRuntime().addShutdownHook(new Thread() {
-			    public void run() {
-				try {
-				    OpenOrbCosNaming.this.stop();
-				} catch (Exception e) {
-				    TraceCarol.error("OpenORBCosNaming ShutdownHook problem" ,e);
-				}
-			    }
-			});
-		} else {		  		
-		    if (TraceCarol.isDebugJndiCarol()) {
-			TraceCarol.debugJndiCarol("Can't start OpenORBCosNaming, port="+port+" is < 0");
-		    }
-		}
-	    } else {		
-		if (TraceCarol.isDebugJndiCarol()) {
-		    TraceCarol.debugJndiCarol("OpenORBCosNaming is already start on port:" + port);
-		}
-	    }
-	} catch (Exception e) {	    		
-	    TraceCarol.error("Can not start OpenORBCosNaming for an unknow Reason",e);
-	    throw new NameServiceException("can not start cosnaming daemon: " +e);
-	}
+                    InputStream cosOut = cosNamingProcess.getInputStream();
+                    if (cosOut.available() != 0) {
+                        byte[] b = new byte[cosOut.available()];
+                        cosOut.read(b);
+                        cosOut.close();
+                        if (TraceCarol.isDebugJndiCarol()) {
+                            TraceCarol.debugJndiCarol("OpenORBCosNaming:");
+                            TraceCarol.debugJndiCarol(new String(b));
+                        }
+                    }
+
+                    // add a shudown hook for this process
+                    Runtime.getRuntime().addShutdownHook(new Thread() {
+
+                        public void run() {
+                            try {
+                                OpenOrbCosNaming.this.stop();
+                            } catch (Exception e) {
+                                TraceCarol.error("OpenORBCosNaming ShutdownHook problem", e);
+                            }
+                        }
+                    });
+                } else {
+                    if (TraceCarol.isDebugJndiCarol()) {
+                        TraceCarol.debugJndiCarol("Can't start OpenORBCosNaming, port=" + port + " is < 0");
+                    }
+                }
+            } else {
+                if (TraceCarol.isDebugJndiCarol()) {
+                    TraceCarol.debugJndiCarol("OpenORBCosNaming is already start on port:" + port);
+                }
+            }
+        } catch (Exception e) {
+            TraceCarol.error("Can not start OpenORBCosNaming for an unknow Reason", e);
+            throw new NameServiceException("can not start cosnaming daemon: " + e);
+        }
     }
 
     /**
-     * stop Method, Stop a NameService or do nothing if the name service is all ready stop
-     * @throws NameServiceException if a problem occure 
+     * stop Method, Stop a NameService or do nothing if the name service is all
+     * ready stop
+     * @throws NameServiceException if a problem occure
      */
     public void stop() throws NameServiceException {
-	if (TraceCarol.isDebugJndiCarol()) {
+        if (TraceCarol.isDebugJndiCarol()) {
             TraceCarol.debugJndiCarol("OpenORBCosNaming.stop()");
         }
-	try {
-	    // stop orbd procees
-	    if (cosNamingProcess!=null) cosNamingProcess.destroy();
-	    cosNamingProcess = null;
-	} catch (Exception e) {	    
-	    throw new NameServiceException("can not stop cosnaming daemon: " +e);
-	}
+        try {
+            // stop orbd procees
+            if (cosNamingProcess != null) cosNamingProcess.destroy();
+            cosNamingProcess = null;
+        } catch (Exception e) {
+            throw new NameServiceException("can not stop cosnaming daemon: " + e);
+        }
     }
 
     /**
@@ -143,18 +147,18 @@ public class OpenOrbCosNaming implements NameService {
      * @return boolean true if the name service is started
      */
     public boolean isStarted() {
-	if (cosNamingProcess != null) return true;
-	Properties prop = new Properties();
-	prop.put("java.naming.factory.initial","org.openorb.rmi.jndi.CtxFactory");
-	prop.put("java.naming.provider.url","corbaloc::localhost:"+port);
-	try {
-	    InitialContext ic = new InitialContext(prop); 
-	} catch (javax.naming.CommunicationException jcm) {
-	    return false;
-	} catch (Exception e) {
-	    return true;
-	}
-	return true;
+        if (cosNamingProcess != null) return true;
+        Properties prop = new Properties();
+        prop.put("java.naming.factory.initial", "org.openorb.rmi.jndi.CtxFactory");
+        prop.put("java.naming.provider.url", "corbaloc::localhost:" + port);
+        try {
+            new InitialContext(prop);
+        } catch (javax.naming.CommunicationException jcm) {
+            return false;
+        } catch (Exception e) {
+            return true;
+        }
+        return true;
     }
 
     /**
@@ -162,19 +166,19 @@ public class OpenOrbCosNaming implements NameService {
      * @param int port number
      */
     public void setPort(int p) {
-	if (TraceCarol.isDebugJndiCarol()) {
-            TraceCarol.debugJndiCarol("IIOPCosNaming.setPort("+p+")");
+        if (TraceCarol.isDebugJndiCarol()) {
+            TraceCarol.debugJndiCarol("IIOPCosNaming.setPort(" + p + ")");
         }
-	if (p!= 0) {
-	    port = p;
-	}
-    }	
-    
-    /* (non-Javadoc)
-	* @see org.objectweb.carol.jndi.ns.NameService#getPort()
-	*/
-   public int getPort()
-   {
-	   return port;
-   }
+        if (p != 0) {
+            port = p;
+        }
+    }
+
+    /*
+     * (non-Javadoc)
+     * @see org.objectweb.carol.jndi.ns.NameService#getPort()
+     */
+    public int getPort() {
+        return port;
+    }
 }
