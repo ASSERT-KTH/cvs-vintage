@@ -27,6 +27,9 @@
 #set ($currentIssueId = $currentIssue.UniqueId)
 #set ($attrValues = $currentIssue.ModuleAttributeValuesMap)
 
+<input type="hidden" name="action" value="ModifyIssue" />
+<input type="hidden" name="mod_ts" value="$scarabG.Now.Time" />
+<input type="hidden" name="id" value="$currentIssue.UniqueId" />
 
 <div class="functnbar">
 #if ($data.User.hasPermission($scarabG.Permission.MODULE__EDIT, $module))

@@ -21,16 +21,12 @@ You are viewing an issue in a different Module than is currently selected.
 
  #set ($attrValues = $currentIssue.ModuleAttributeValuesMap)
  <form method="post" enctype="multipart/form-data" action="$link.setPage("ViewIssue.vm")">
-   <input type="hidden" name="action" value="ModifyIssue" />
    <input type="hidden" name="$scarabG.Constant.NEXT_TEMPLATE" value="ViewIssue.vm" />
    <input type="hidden" name="$scarabG.Constant.CANCEL_TEMPLATE" value="ViewIssue.vm" />
-   <input type="hidden" name="mod_ts" value="$scarabG.Now.Time" />
 
  #if ($fullHistory)
    <input type="hidden" name="fullHistory" value="$fullHistory" />
  #end
- <input type="hidden" name="id" value="$currentIssue.UniqueId" />
-
 
 #if ($data.User.getTemp($scarabG.Constant.TAB_KEY))
     #set ($tab = $data.User.getTemp($scarabG.Constant.TAB_KEY))
