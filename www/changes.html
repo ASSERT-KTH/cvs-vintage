@@ -1,4 +1,4 @@
-<!-- $Id: changes.html,v 1.270 2002/10/25 17:47:44 jon Exp $ -->
+<!-- $Id: changes.html,v 1.271 2002/10/25 18:19:57 jon Exp $ -->
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
 <html>
 
@@ -21,6 +21,16 @@
         <td width="100%" height="100" bgcolor="#F0F0F0"> 
             <h3>Changes since 1.0b13</h3>
             <ul>
+                <li><strong>Changed the way that proxyName/proxyPort is defined
+                    in your build.properties file. If you have defined
+                    this, then you need to fix your settings!</strong> Before:
+                    scarab.tomcat.proxy.name=your.server.name and
+                    scarab.tomcat.proxy.port=80 After:
+                    scarab.tomcat.proxy.name=proxyName="your.server.name
+                    " and scarab.tomcat.proxy.port=proxyPort="80". This
+                    was done to work around a bug in Tomcat which
+                    manifested itself as users reporting that the emails
+                    were missing the domain name. (JSS)</li>
                 <li>Remove "Add new" button from URL section on ViewIssue.
                 For more information see #<a href="http://issues.whichever.com/issues/id/SCB277">SCB277</a>. (EWD)</li>
                 <li>Added an All option to the Results Per Page chooser. (JDM)</li>
