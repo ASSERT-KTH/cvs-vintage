@@ -34,7 +34,7 @@ import org.jboss.logging.Logger;
  *	@see EntityEnterpriseContext
  *	@author Rickard Öberg (rickard.oberg@telkel.com)
  *  @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
- *	@version $Revision: 1.3 $
+ *	@version $Revision: 1.4 $
  */
 public abstract class EnterpriseContext
 {
@@ -50,7 +50,7 @@ public abstract class EnterpriseContext
 	// Set to the synchronization currently associated with this context. May be null
    Synchronization synch;
    
-   // The transaction associated with the call
+   // The transaction associated with the instance
    Transaction transaction;
    
    // The principal associated with the call
@@ -232,7 +232,7 @@ public abstract class EnterpriseContext
       {
          return con.getTransactionManager().getStatus();
       }
-      
+	  
       public void setTransactionTimeout(int seconds)
          throws SystemException
       {
