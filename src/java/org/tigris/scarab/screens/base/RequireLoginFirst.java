@@ -64,6 +64,7 @@ import org.apache.ecs.filter.*;
 // Velocity Stuff
 import org.apache.turbine.services.velocity.*;
 import org.apache.velocity.*;
+import org.apache.velocity.context.*; 
 
 // Scarab Stuff
 import org.tigris.scarab.util.ScarabConstants;
@@ -75,7 +76,7 @@ import org.tigris.scarab.util.ScarabConstants;
     logged in. That part isn't a priority yet though.
 
     @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
-    @version $Id: RequireLoginFirst.java,v 1.1 2000/12/18 05:03:34 jon Exp $    
+    @version $Id: RequireLoginFirst.java,v 1.2 2001/01/04 03:02:12 jon Exp $    
 */
 public abstract class RequireLoginFirst extends VelocitySecureScreen
 {

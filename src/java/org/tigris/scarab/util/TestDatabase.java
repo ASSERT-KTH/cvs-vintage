@@ -15,18 +15,18 @@ public class TestDatabase
 {
     public static void main(String[] args)
     {
-        try
-        {
+//        try
+//        {
 //            TurbineResourceService
 //            .setPropertiesFileName(
 //            "e:\\projects\\scarab\\sandbox\\webapps\\scarab\\WEB-INF\\conf\\TurbineResources.properties");
             
 //            String out = ModuleManager.getProjectsAsHtml().toString();
 //            System.out.println (out);
-        }
-        catch (Exception e)
-        {
-            e.printStackTrace();
-        }
+//        }
+//        catch (Exception e)
+//        {
+//            e.printStackTrace();
+//        }
     }
 }

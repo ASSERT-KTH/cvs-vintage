@@ -48,6 +48,7 @@ package org.tigris.scarab.screens.base;
 
 // Velocity Stuff 
 import org.apache.velocity.*; 
+import org.apache.velocity.context.*; 
 // Turbine Stuff 
 import org.apache.turbine.om.security.*;
 import org.apache.turbine.modules.*; 
@@ -65,7 +66,7 @@ import org.tigris.scarab.util.*;
     for Scarab system.
 
     @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
-    @version $Id: ScarabContextLoginFirst.java,v 1.1 2000/12/18 05:03:34 jon Exp $
+    @version $Id: ScarabContextLoginFirst.java,v 1.2 2001/01/04 03:02:12 jon Exp $
 */
 public abstract class ScarabContextLoginFirst extends RequireLoginFirst
 {

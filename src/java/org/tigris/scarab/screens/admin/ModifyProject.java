@@ -48,6 +48,7 @@ package org.tigris.scarab.screens.admin;
 
 // Velocity Stuff 
 import org.apache.velocity.*; 
+import org.apache.velocity.context.*; 
 // Turbine Stuff 
 import org.apache.turbine.om.security.*;
 import org.apache.turbine.modules.*; 
@@ -64,7 +65,7 @@ import org.tigris.scarab.screens.base.*;
     for the admin,ModifyProject Screen.
 
     @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
-    @version $Id: ModifyProject.java,v 1.1 2000/12/18 05:03:34 jon Exp $
+    @version $Id: ModifyProject.java,v 1.2 2001/01/04 03:02:12 jon Exp $
 */
 public class ModifyProject extends ScarabContextLoginFirst
 {

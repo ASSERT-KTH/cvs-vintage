@@ -48,6 +48,7 @@ package org.tigris.scarab.screens;
 
 // Velocity Stuff 
 import org.apache.velocity.*; 
+import org.apache.velocity.context.*; 
 // Turbine Stuff 
 import org.apache.turbine.modules.*; 
 import org.apache.turbine.modules.screens.*; 
@@ -65,7 +66,7 @@ import org.tigris.scarab.util.*;
     for the Confirm.vm Screen.
     
     @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
-    @version $Id: Confirm.java,v 1.1 2000/12/18 05:03:33 jon Exp $
+    @version $Id: Confirm.java,v 1.2 2001/01/04 03:02:11 jon Exp $
 */
 public class Confirm extends VelocityScreen
 {

@@ -49,6 +49,7 @@ package org.tigris.scarab.actions.admin;
 // Velocity Stuff 
 import org.apache.turbine.services.velocity.*; 
 import org.apache.velocity.*; 
+import org.apache.velocity.context.*; 
 // Turbine Stuff 
 import org.apache.turbine.util.*;
 import org.apache.turbine.util.db.*;
@@ -67,7 +68,7 @@ import org.tigris.scarab.om.*;
     right now though. :-(
         
     @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
-    @version $Id: DeleteComponent.java,v 1.1 2000/12/18 05:03:29 jon Exp $
+    @version $Id: DeleteComponent.java,v 1.2 2001/01/04 03:02:10 jon Exp $
 */
 public class DeleteComponent extends RequireLoginFirstAction
 {

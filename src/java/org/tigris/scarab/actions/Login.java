@@ -49,6 +49,7 @@ package org.tigris.scarab.actions;
 // Velocity Stuff 
 import org.apache.turbine.services.velocity.*; 
 import org.apache.velocity.*; 
+import org.apache.velocity.context.*; 
 // Turbine Stuff 
 import org.apache.turbine.modules.*;
 import org.apache.turbine.modules.actions.*;
@@ -67,7 +68,7 @@ import org.tigris.scarab.util.ScarabConstants;
     Action.
     
     @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
-    @version $Id: Login.java,v 1.1 2000/12/18 05:03:29 jon Exp $
+    @version $Id: Login.java,v 1.2 2001/01/04 03:02:10 jon Exp $
 */
 public class Login extends VelocityAction
 {

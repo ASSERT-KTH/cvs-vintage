@@ -49,6 +49,7 @@ package org.tigris.scarab.actions;
 // Velocity Stuff 
 import org.apache.turbine.services.velocity.*; 
 import org.apache.velocity.*; 
+import org.apache.velocity.context.*; 
 // Turbine Stuff 
 import org.apache.turbine.modules.*;
 import org.apache.turbine.modules.actions.*;
@@ -64,7 +65,7 @@ import org.apache.turbine.util.security.*;
     This class is responsible for Logging a user out of the system.
     
     @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
-    @version $Id: Logout.java,v 1.1 2000/12/18 05:03:29 jon Exp $
+    @version $Id: Logout.java,v 1.2 2001/01/04 03:02:10 jon Exp $
 */
 public class Logout extends VelocityAction
 {
