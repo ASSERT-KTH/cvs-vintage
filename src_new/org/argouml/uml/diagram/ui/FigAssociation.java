@@ -1,4 +1,4 @@
-// $Id: FigAssociation.java,v 1.58 2003/11/24 08:33:59 bobtarling Exp $
+// $Id: FigAssociation.java,v 1.59 2003/12/07 21:31:34 mkl Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,6 +27,7 @@ package org.argouml.uml.diagram.ui;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Point;
+import java.awt.Rectangle;
 import java.awt.event.MouseEvent;
 import java.beans.PropertyVetoException;
 import java.util.Collection;
@@ -251,6 +252,11 @@ public class FigAssociation extends FigEdgeModelElement {
 	super.modelChanged(e);
 	Object associationEnd = getOwner();//MAssociation
 	if (associationEnd == null || getLayer() == null) return;
+        
+        if (e == null || e.getName().equals("isAbstract")) {
+            updateAbstract();
+            damage();
+        }
     
 	Object ae0 =
 	    ((ModelFacade.getConnections(associationEnd)).toArray())[0];//MAssociationEnd
@@ -408,6 +414,22 @@ public class FigAssociation extends FigEdgeModelElement {
 	return "{" + ModelFacade.getName(orderingKind) + "}";
     }
 
+    /**
+     * Updates the name if modelchanged receives an "isAbstract" event
+     */
+    protected void updateAbstract() {
+        Rectangle rect = getBounds();
+        if (getOwner() == null)
+            return;
+        Object assoc =  getOwner();
+        if (ModelFacade.isAbstract(assoc))
+            _name.setFont(ITALIC_LABEL_FONT);
+        else
+            _name.setFont(LABEL_FONT);
+        super.updateNameText();
+        setBounds(rect.x, rect.y, rect.width, rect.height);
+    }
+    
     static final long serialVersionUID = 9100125695919853919L;
   
     public void paint(Graphics g) {
