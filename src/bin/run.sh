@@ -41,5 +41,9 @@ if [ "${JBOSS_HOME}X" != "X" ] ; then
     CLASSPATH="$CLASSPATH:$JBOSS_HOME/conf"
 fi
 
+# Add all login modules for JAAS-based security
+# and all libraries that are used by them here
+CLASSPATH="$CLASSPATH:../lib/jdbc2_0-stdext.jar:../lib/jboss-jaas.jar"
+
 echo $CLASSPATH
 java -server -classpath $CLASSPATH -Dtomcat.home=$TOMCAT_HOME org.jboss.Main
