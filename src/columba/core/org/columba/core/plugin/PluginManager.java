@@ -35,6 +35,7 @@ import org.columba.core.io.DiskIO;
 import org.columba.core.main.MainInterface;
 import org.columba.core.xml.XmlElement;
 import org.columba.core.xml.XmlIO;
+import org.xml.sax.SAXParseException;
 
 /**
  * 
@@ -82,8 +83,7 @@ public class PluginManager {
     /**
      * 
      * Save all plugin handlers in this <interface>Map </interface>. Use plugin
-     * handler id as key, <interface>PluginHandler </interface> as
-     * value
+     * handler id as key, <interface>PluginHandler </interface> as value
      *  
      */
     Hashtable pluginHandlers;
@@ -117,7 +117,9 @@ public class PluginManager {
         } catch (MalformedURLException mue) {
         }
 
+       
         config.load();
+       
 
         // determine plugin ID
         XmlElement element = config.getRoot().getElement("/plugin");
