@@ -253,8 +253,12 @@ public class JspReader {
     }
 
     public boolean hasMoreInput() {
-	if (current.cursor >= stream.length)
-	    return popFile();
+	if (current.cursor >= stream.length) {
+	    while (popFile()) {
+		if (current.cursor < stream.length) return true;
+	    }
+	    return false;
+	}
 	return true;
     }
     
@@ -300,14 +304,14 @@ public class JspReader {
 
     public boolean matchesIgnoreCase(String string) {
 	Mark mark = mark();
-	int ch = nextChar();
+	int ch = 0;
 	int i = 0;
 	do {
+	    ch = nextChar();
 	    if (Character.toLowerCase((char) ch) != string.charAt(i++)) {
 		reset(mark);
 		return false;
 	    }
-	    ch = nextChar();
 	} while (i < string.length());
 	reset(mark);
 	return true;
