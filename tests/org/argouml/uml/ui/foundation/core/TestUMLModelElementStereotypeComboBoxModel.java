@@ -1,4 +1,4 @@
-// $Id: TestUMLModelElementStereotypeComboBoxModel.java,v 1.13 2004/11/01 19:55:11 mvw Exp $
+// $Id: TestUMLModelElementStereotypeComboBoxModel.java,v 1.14 2004/12/27 15:51:44 bobtarling Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -23,6 +23,8 @@
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
 package org.argouml.uml.ui.foundation.core;
+
+import java.util.Collection;
 
 import junit.framework.TestCase;
 
@@ -71,9 +73,11 @@ public class TestUMLModelElementStereotypeComboBoxModel extends TestCase {
         p.setRoot(m);
         elem.setNamespace(m);       
         stereotypes = new MStereotype[10];
+        Object theModel = ProjectManager.getManager().getCurrentProject().getModel();
+        Collection models = ProjectManager.getManager().getCurrentProject().getModels();
         for (int i = 0; i < 10; i++) {
             stereotypes[i] = ExtensionMechanismsFactory.getFactory()
-                .buildStereotype(elem, "test" + i);
+                .buildStereotype(elem, "test" + i, theModel, models);
         }
         oldEventPolicy = MFactoryImpl.getEventPolicy();
         MFactoryImpl.setEventPolicy(MFactoryImpl.EVENT_POLICY_IMMEDIATE);   

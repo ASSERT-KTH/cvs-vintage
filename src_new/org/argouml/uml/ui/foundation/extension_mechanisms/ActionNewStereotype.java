@@ -1,4 +1,4 @@
-// $Id: ActionNewStereotype.java,v 1.2 2004/12/20 23:15:11 mvw Exp $
+// $Id: ActionNewStereotype.java,v 1.3 2004/12/27 15:51:45 bobtarling Exp $
 // Copyright (c) 2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,15 +25,19 @@
 package org.argouml.uml.ui.foundation.extension_mechanisms;
 
 import java.awt.event.ActionEvent;
+import java.util.Collection;
 
 import javax.swing.Action;
 
 import org.argouml.i18n.Translator;
+import org.argouml.kernel.ProjectManager;
 import org.argouml.model.ModelFacade;
 import org.argouml.model.uml.ExtensionMechanismsFactory;
 import org.argouml.ui.targetmanager.TargetManager;
 import org.argouml.uml.ui.AbstractActionNewModelElement;
 import org.tigris.gef.presentation.Fig;
+
+import ru.novosoft.uml.model_management.MModel;
 
 
 /**
@@ -57,9 +61,15 @@ public class ActionNewStereotype extends AbstractActionNewModelElement {
     public void actionPerformed(ActionEvent e) {
         Object t = TargetManager.getInstance().getTarget();
         if (t instanceof Fig) t = ((Fig) t).getOwner();
+        Object model = ProjectManager.getManager().getCurrentProject().getModel();
+        Collection models = ProjectManager.getManager().getCurrentProject().getModels();
         Object newStereo = ExtensionMechanismsFactory.getFactory()
-            .buildStereotype(ModelFacade.isAModelElement(t) ? t : null,
-                    (String) null);
+            .buildStereotype(
+                    ModelFacade.isAModelElement(t) ? t : null,
+                    (String) null,
+                    model,
+                    models
+                    );
         if (ModelFacade.isAModelElement(t)) { 
             Object ns = ModelFacade.getNamespace(t);
             if (ModelFacade.isANamespace(ns)) 

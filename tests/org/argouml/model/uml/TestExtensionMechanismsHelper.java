@@ -1,4 +1,4 @@
-// $Id: TestExtensionMechanismsHelper.java,v 1.3 2004/12/27 14:38:47 bobtarling Exp $
+// $Id: TestExtensionMechanismsHelper.java,v 1.4 2004/12/27 15:51:44 bobtarling Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -56,14 +56,20 @@ public class TestExtensionMechanismsHelper extends TestCase {
     public void testGetAllPossibleStereotypes1() {
         MNamespace ns = CoreFactory.getFactory().createNamespace();
         Object clazz = CoreFactory.getFactory().buildClass(ns);
+        Object model = ProjectManager.getManager().getCurrentProject().getModel();
+        Collection models = ProjectManager.getManager().getCurrentProject().getModels();
         MStereotype stereo1 =
-	    ExtensionMechanismsFactory.getFactory().buildStereotype(clazz,
-								    "test1");
+	        ExtensionMechanismsFactory.getFactory().buildStereotype(
+                clazz,
+                "test1",
+                model,
+                models);
         MStereotype stereo2 =
-	    ExtensionMechanismsFactory.getFactory().buildStereotype(clazz,
-								    "test2");
-        Collection models =
-            ProjectManager.getManager().getCurrentProject().getModels();
+	        ExtensionMechanismsFactory.getFactory().buildStereotype(
+                clazz,
+		        "test2",
+                model,
+                models);
         Collection col =
 	    ExtensionMechanismsHelper.getHelper()
 	        .getAllPossibleStereotypes(models, clazz);
