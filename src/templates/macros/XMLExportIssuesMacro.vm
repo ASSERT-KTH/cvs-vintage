@@ -83,13 +83,7 @@
 
           </activities>
           #set ($activitySetAttachment = $activitySet.Attachment)
-          A: $activitySetAttachment.AttachmentId.toString()
-          B: $activityAttachment.AttachmentId.toString()
-
-          #if (!$activitySetAttachment.AttachmentId.equals($activityAttachment.AttachmentId))
-
           #attachment ($activitySetAttachment)
-          #end
 
         </activity-set>
       #end
