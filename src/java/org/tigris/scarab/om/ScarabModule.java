@@ -74,10 +74,14 @@ import org.apache.fulcrum.security.impl.db.entity.TurbineUserGroupRole;
 // Scarab classes
 import org.tigris.scarab.services.module.ModuleEntity;
 import org.tigris.scarab.services.user.UserManager;
+import org.tigris.scarab.util.ScarabConstants;
 import org.tigris.scarab.util.ScarabException;
 import org.tigris.scarab.services.security.ScarabSecurity;
 
 import org.apache.turbine.Log;
+// FIXME! do not like referencing servlet inside of business objects
+// though I have forgotten how I might avoid it
+import org.apache.turbine.Turbine;
 import org.apache.fulcrum.security.impl.db.entity
     .TurbinePermissionPeer;
 import org.apache.fulcrum.security.impl.db.entity
@@ -98,7 +102,7 @@ import org.apache.fulcrum.security.impl.db.entity
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: ScarabModule.java,v 1.88 2002/02/07 18:20:05 jon Exp $
+ * @version $Id: ScarabModule.java,v 1.89 2002/02/08 00:12:31 jmcnally Exp $
  */
 public class ScarabModule
     extends BaseScarabModule
@@ -432,6 +436,18 @@ public class ScarabModule
         String name2 = this.getName();
 
         return name2.compareTo(name1);
+    }
+
+
+    /**
+     * All emails related to this module will have a copy sent to
+     * this address.  The email address can be specified in 
+     * Scarab.properties with the key: scarab.email.archive.toAddress
+     */
+    public String getArchiveEmail()
+    {
+	return Turbine.getConfiguration()
+	    .getString(ScarabConstants.ARCHIVE_EMAIL_ADDRESS);
     }
 
     public String toString()

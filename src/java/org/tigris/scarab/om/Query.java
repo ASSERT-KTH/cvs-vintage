@@ -47,6 +47,7 @@ package org.tigris.scarab.om;
  */ 
 
 import java.util.List;
+import java.util.Arrays;
 
 import org.apache.fulcrum.template.TemplateContext;
 import org.apache.turbine.Turbine;
@@ -169,10 +170,8 @@ public class Query
                               "email/RequireApproval.vm");
 
                 ScarabUser[] toUsers = module.getUsers(ScarabSecurity.MODULE__EDIT);
-                for (int i = 0; i<toUsers.length; i++)
-                {
-                    Email.sendEmail(context, null, toUsers[i], subject, template);
-                }
+		Email.sendEmail(context, module, null, Arrays.asList(toUsers), 
+				null, subject, template);
             }
         }
         save();

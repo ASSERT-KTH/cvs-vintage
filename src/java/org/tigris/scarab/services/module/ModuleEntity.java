@@ -68,7 +68,7 @@ import org.apache.torque.util.Criteria;
  * This class describes a Module within the Scarab system
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ModuleEntity.java,v 1.55 2002/02/05 02:48:45 jon Exp $
+ * @version $Id: ModuleEntity.java,v 1.56 2002/02/08 00:12:32 jmcnally Exp $
  */
 public interface ModuleEntity
 {
@@ -382,6 +382,12 @@ public interface ModuleEntity
     public List getOptionTree(Attribute attribute, IssueType issueType,
                               boolean activeOnly)
         throws Exception;
+
+    /**
+     * All emails related to this module will have a copy sent to
+     * this address.
+     */
+    public String getArchiveEmail();
 
     public String toString();
 }

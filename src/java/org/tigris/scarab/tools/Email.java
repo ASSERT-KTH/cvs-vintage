@@ -47,8 +47,9 @@ package org.tigris.scarab.tools;
  */
 
 import java.util.List;
-import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.Iterator;
+import javax.mail.SendFailedException;
 
 import org.apache.fulcrum.template.TemplateContext;
 import org.apache.fulcrum.template.DefaultTemplateContext;
@@ -56,39 +57,47 @@ import org.apache.fulcrum.template.TemplateEmail;
 
 import org.apache.turbine.Turbine;
 import org.tigris.scarab.om.ScarabUser;
+import org.tigris.scarab.services.module.ModuleEntity;
 
 /**
  * Sends a notification email.
  */
 public class Email
 {
-
-    public static void sendEmail( TemplateContext context, ScarabUser fromUser,
-                           List toUsers, String subject, String template )
+    public static boolean sendEmail( TemplateContext context, 
+				     ModuleEntity module, Object fromUser,
+				     List toUsers, List ccUsers,
+				     String subject, String template )
          throws Exception
     {
+        boolean success = true;
         TemplateEmail te = new TemplateEmail();
         if ( context == null ) 
         {
             context = new DefaultTemplateContext();
-        }
-        
+        }        
         te.setContext(context);
 
-        if (fromUser == null)
+        if (fromUser instanceof ScarabUser)
         {
-            te.setFrom(
-                Turbine.getConfiguration().getString
-                    ("scarab.email.default.fromName", "Scarab System"), 
-                Turbine.getConfiguration().getString
-                    ("scarab.email.default.fromAddress",
-                     "help@scarab.tigris.org"));
-        } 
-        else
-        {
-            te.setFrom(fromUser.getFirstName() + fromUser.getLastName(),
-                       fromUser.getEmail());
+	    ScarabUser u = (ScarabUser)fromUser;
+            te.setFrom(u.getFirstName() + u.getLastName(), u.getEmail());
         }
+	else
+	{
+	    // assume string
+	    String key = (String)fromUser;	    
+	    if (fromUser == null)
+	    {
+		key = "scarab.email.default";
+	    } 
+	    
+	    te.setFrom(Turbine.getConfiguration().getString
+		       (key + ".fromName", "Scarab System"), 
+		       Turbine.getConfiguration().getString
+		       (key + ".fromAddress",
+			"help@scarab.tigris.org"));
+	}
 
         if (subject == null)
         {
@@ -114,22 +123,49 @@ public class Email
         while ( iter.hasNext() ) 
         {
             ScarabUser toUser = (ScarabUser)iter.next();
-            te.setTo(toUser.getFirstName() + " " + toUser.getLastName(), 
-                     toUser.getEmail());
-            te.send();
+            te.addTo(toUser.getEmail(),
+                     toUser.getFirstName() + " " + toUser.getLastName());
         }
+
+	if (ccUsers != null)
+	{
+	    iter = ccUsers.iterator();
+	    while ( iter.hasNext() ) 
+	    {
+		ScarabUser ccUser = (ScarabUser)iter.next();
+		te.addCc(ccUser.getEmail(),
+			 ccUser.getFirstName() + " " + ccUser.getLastName());
+	    }
+	}
+
+	String archiveEmail = module.getArchiveEmail();
+	if (archiveEmail != null && archiveEmail.trim().length() > 0)
+	{
+            te.addCc(archiveEmail, null);
+	}
+
+        try
+        {
+            te.sendMultiple();
+        }
+        catch (SendFailedException e)
+        {
+            success = false;
+        }
+        return success;
     }
 
     /**
      * Single user recipient.
     */ 
-    public static void sendEmail( TemplateContext context, ScarabUser fromUser,
-                           ScarabUser toUser, String subject, String template )
+    public static void sendEmail( TemplateContext context, ModuleEntity module,
+				  ScarabUser fromUser, ScarabUser toUser, 
+				  String subject, String template )
          throws Exception
     {
-        List toUsers = new ArrayList();
+        List toUsers = new LinkedList();
         toUsers.add(toUser);
-        sendEmail( context, fromUser, toUsers, subject, template);
+        sendEmail( context, module, fromUser, toUsers, null, subject, template);
     }
 
 
