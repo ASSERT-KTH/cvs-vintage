@@ -12,7 +12,7 @@
 <!--                                                                        -->
 <!-- ====================================================================== -->
 
-<!-- $Id: build.xml,v 1.72 2002/02/27 00:47:04 dsundstrom Exp $ -->
+<!-- $Id: build.xml,v 1.73 2002/02/27 05:41:20 starksm Exp $ -->
 
 <project default="main" name="JBoss/Server">
 
@@ -566,6 +566,9 @@
         <include name="org/jboss/invocation/Invoker.class"/>
         <include name="org/jboss/invocation/Invocation.class"/>
         <include name="org/jboss/invocation/MarshalledInvocation.class"/>
+        <include name="org/jboss/invocation/MarshalledValue.class"/>
+        <include name="org/jboss/invocation/MarshalledValueInputStream.class"/>
+        <include name="org/jboss/invocation/MarshalledValueOutputStream.class"/>
         <include name="org/jboss/invocation/jrmp/interfaces/JRMPInvokerProxy.class"/>
         <include name="org/jboss/invocation/jrmp/server/*Stub.class"/>
         <include name="org/jboss/ejb/CacheKey.class"/>
