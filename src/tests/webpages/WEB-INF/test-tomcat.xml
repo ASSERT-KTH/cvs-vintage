@@ -228,6 +228,10 @@
 
   <!-- ==================== Jsp tests ==================== -->
   <target name="jsp" depends="init">
+    <gtest request="GET /test/jsp/special-name.foo.jsp HTTP/1.0"
+	   returnCode="200"
+    />
+
     <gtest  request="GET /test/jsp/HelloWorld.jsp HTTP/1.0"
            goldenFile="${gdir}/HelloWorld.txt"
     />
