@@ -1,5 +1,6 @@
 package org.jboss.ejb.plugins.cmp.jdbc.ejbql;
 
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
@@ -7,6 +8,9 @@ import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import javax.ejb.EJBLocalObject;
+import javax.ejb.EJBObject;
 import javax.ejb.EntityBean;
 import org.jboss.ejb.Application;
 import org.jboss.ejb.EntityContainer;
@@ -15,14 +19,21 @@ import org.jboss.ejb.plugins.cmp.ejbql.DeepCloneable;
 import org.jboss.ejb.plugins.cmp.ejbql.InputParameterToken;
 import org.jboss.ejb.plugins.cmp.jdbc.JDBCStoreManager;
 import org.jboss.ejb.plugins.cmp.jdbc.JDBCType;
+import org.jboss.ejb.plugins.cmp.jdbc.JDBCTypeComplex;
+import org.jboss.ejb.plugins.cmp.jdbc.JDBCTypeComplexProperty;
+import org.jboss.ejb.plugins.cmp.jdbc.JDBCTypeFactory;
 import org.jboss.ejb.plugins.cmp.jdbc.SQLUtil;
+import org.jboss.ejb.plugins.cmp.jdbc.QueryParameter;
 import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCCMPFieldBridge;
 import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCCMRFieldBridge;
 import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCEntityBridge;
+import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCEntityMetaData;
 import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCFunctionMappingMetaData;
 import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCTypeMappingMetaData;
 
 public class SQLTarget implements DeepCloneable {
+   private final Method method;
+   private final JDBCTypeFactory typeFactory;
    private final IdentifierManager idManager;
    private final Application application;
    private final Map managerByAbstractSchemaName = new Hashtable();
@@ -40,8 +51,17 @@ public class SQLTarget implements DeepCloneable {
     * Constructs an a sql target for an EJB-QL query over the specified application.
     * @param application the application over which this query is defined
     */
-   public SQLTarget(Application application) {
+   public SQLTarget(Method method, 
+         JDBCTypeFactory typeFactory,
+         Application application) {
+
+      this.method = method;
+      this.typeFactory = typeFactory;
       this.application = application;
+
+      if(method.getReturnType().equals(Set.class)) {
+         isSelectDistinct = true;
+      }
       
       for(Iterator i = application.getContainers().iterator(); i.hasNext(); ) {
          Object o = i.next();
@@ -67,8 +87,10 @@ public class SQLTarget implements DeepCloneable {
     * @param target the SQLTarget to be coppied
     */
    public SQLTarget(SQLTarget target) {
-      idManager = new IdentifierManager(target.idManager);
+      method = target.method;
+      typeFactory = target.typeFactory;
       application = target.application;
+      idManager = new IdentifierManager(target.idManager);
       managerByAbstractSchemaName.putAll(target.managerByAbstractSchemaName);
       inputParameters.addAll(target.inputParameters);
 
@@ -81,12 +103,11 @@ public class SQLTarget implements DeepCloneable {
    }
 
    /**
-    * Set this target to generate a sql statement that returns distinct result set.
-    * This means that the sql will begin with SELECT DISTINCT.
-    * @param isSelectDisctinct should this target generate a SELECT DISTINCT query
+    * Set this target to generate a sql statement that returns distinct
+    * result set. This means that the sql will begin with SELECT DISTINCT.
     */
-   public void setSelectDistinct(boolean isSelectDistinct) {
-      this.isSelectDistinct = isSelectDistinct;
+   public void setSelectDistinct() {
+      this.isSelectDistinct = true;
    }
 
    /**
@@ -178,7 +199,13 @@ public class SQLTarget implements DeepCloneable {
    }
 
    public void registerParameter(InputParameterToken parameter) {
-      inputParameters.add(new Integer(parameter.getNumber()));
+      Class type = getParameterType(parameter.getNumber());
+      QueryParameter param = new QueryParameter(
+               parameter.getNumber() - 1,
+               null, // field
+               null, // parameter
+               typeFactory.getJDBCTypeForJavaType(type));
+      inputParameters.add(param);
    }
 
    public AbstractSchema createAbstractSchema(String abstractSchemaName) {
@@ -272,52 +299,112 @@ public class SQLTarget implements DeepCloneable {
    }
    
    public boolean isStringTypePath(String path) {
-      Class pathType = getPathType(path);
-      
-      return (pathType.equals(String.class));
+      return isStringType(getPathType(path));
    }
    
+   public boolean isStringTypeParameter(int index) {
+      return isStringType(getParameterType(index));
+   }
+   
+   public boolean isStringType(Class type) {
+      if(type == null) {
+         return false;
+      }
+      return (type.equals(String.class));
+   }
+
    public boolean isBooleanTypePath(String path) {
-      Class pathType = getPathType(path);
-      
-      return (pathType.equals(Boolean.class)) || (pathType.equals(Boolean.TYPE));
+      return isBooleanType(getPathType(path));
+   }
+   
+   public boolean isBooleanTypeParameter(int index) {
+      return isBooleanType(getParameterType(index));
+   }
+   
+   public boolean isBooleanType(Class type) {
+      if(type == null) {
+         return false;
+      }
+      return (type.equals(Boolean.class)) || (type.equals(Boolean.TYPE));
    }
    
    public boolean isArithmeticTypePath(String path) {
-      Class pathType = getPathType(path);
+      return isArithmeticType(getPathType(path));
+   }
 
-      return (pathType.equals(Character.class)) || (pathType.equals(Character.TYPE)) ||
-            (pathType.equals(Byte.class)) || (pathType.equals(Byte.TYPE)) ||
-            (pathType.equals(Short.class)) || (pathType.equals(Short.TYPE)) ||
-            (pathType.equals(Integer.class)) || (pathType.equals(Integer.TYPE)) ||
-            (pathType.equals(Long.class)) || (pathType.equals(Long.TYPE)) ||
-            (pathType.equals(Float.class)) || (pathType.equals(Float.TYPE)) ||
-            (pathType.equals(Double.class)) || (pathType.equals(Double.TYPE));
+   public boolean isArithmeticTypeParameter(int index) {
+      return isArithmeticType(getParameterType(index));
+   }
+   
+   public boolean isArithmeticType(Class type) {
+      if(type == null) {
+         return false;
+      }
+      return (type.equals(Character.class)) || (type.equals(Character.TYPE)) ||
+            (type.equals(Byte.class)) || (type.equals(Byte.TYPE)) ||
+            (type.equals(Short.class)) || (type.equals(Short.TYPE)) ||
+            (type.equals(Integer.class)) || (type.equals(Integer.TYPE)) ||
+            (type.equals(Long.class)) || (type.equals(Long.TYPE)) ||
+            (type.equals(Float.class)) || (type.equals(Float.TYPE)) ||
+            (type.equals(Double.class)) || (type.equals(Double.TYPE));
    }
    
    public boolean isDatetimeTypePath(String path) {
-      Class pathType = getPathType(path);
-
-      return Date.class.isAssignableFrom(pathType);
+      return isDatetimeType(getPathType(path));
+   }
+   
+   public boolean isDatetimeTypeParameter(int index) {
+      return isDatetimeType(getParameterType(index));
+   }
+   
+   public boolean isDatetimeType(Class type) {
+      if(type == null) {
+         return false;
+      }
+      return Date.class.isAssignableFrom(type);
    }
    
    public boolean isEntityBeanTypePath(String path) {
       Class pathType = getPathType(path);
-
-      return EntityBean.class.isAssignableFrom(pathType);
-   }
-
-   public boolean isValueObjectTypePath(String path) {
-      Class pathType = getPathType(path);
       if(pathType == null) {
          return false;
       }
+      return EntityBean.class.isAssignableFrom(pathType);
+   }
+
+   public boolean isEntityBeanTypeParameter(int index) {
+      Class type = getParameterType(index);
+      if(type == null) {
+         return false;
+      }
+      return EJBObject.class.isAssignableFrom(type) ||
+           EJBLocalObject.class.isAssignableFrom(type);
+   }
+   
+   public boolean isValueObjectTypePath(String path) {
+      Class type = getPathType(path);
+      if(type == null) {
+         return false;
+      }
       
-      return !isStringTypePath(path) &&
-         !isBooleanTypePath(path) &&
-         !isArithmeticTypePath(path) &&
-         !isDatetimeTypePath(path) &&
+      return !isStringType(type) &&
+         !isBooleanType(type) &&
+         !isArithmeticType(type) &&
+         !isDatetimeType(type) &&
          !isEntityBeanTypePath(path);
+   }
+   
+   public boolean isValueObjectTypeParameter(int index) {
+      Class type = getParameterType(index);
+      if(type == null) {
+         return false;
+      }
+      
+      return !isStringType(type) &&
+         !isBooleanType(type) &&
+         !isArithmeticType(type) &&
+         !isDatetimeType(type) &&
+         !isEntityBeanTypeParameter(index);
    }
    
    private Class getPathType(String fullPath) {
@@ -329,6 +416,14 @@ public class SQLTarget implements DeepCloneable {
       return pathElement.getFieldType();
    }
    
+   private Class getParameterType(int index) {
+      int zeroBasedIndex = index - 1;
+      Class[] params = method.getParameterTypes();
+      if(zeroBasedIndex < params.length) {
+         return params[zeroBasedIndex];
+      }
+      return null;
+   }
 
    public String getCMPFieldColumnNamesClause(String path) {
       CMPField cmpField = idManager.getExistingCMPField(path);
@@ -336,18 +431,60 @@ public class SQLTarget implements DeepCloneable {
       return SQLUtil.getColumnNamesClause(cmpField.getCMPFieldBridge(), identifier);
    }   
 
-   public String getEntityWherePathToParameter(String compareFromPath, String compareSymbol) {
-      EntityPathElement entityPathElement = idManager.getExistingEntityPathElement(compareFromPath);
+   public String getEntityWherePathToParameter(
+         String compareFromPath, 
+         String compareSymbol,
+         InputParameterToken compareToParameter) {
+
+      EntityPathElement entityPathElement = 
+            idManager.getExistingEntityPathElement(compareFromPath);
       String identifier = idManager.getTableAlias(entityPathElement);
       JDBCEntityBridge entity = entityPathElement.getEntityBridge();
       
+      // verify that parameter is the same type as the entity
+      JDBCEntityMetaData metadata = entity.getMetaData();
+      Class parameterType = getParameterType(compareToParameter.getNumber());
+      if(parameterType == null) {
+         return null;
+      }
+      if(!parameterType.equals(metadata.getRemoteClass()) &&
+            !parameterType.equals(metadata.getLocalClass())) {
+         return null;
+      }
+      
+      // create the parameter objects
+      JDBCCMPFieldBridge[] pkFields = entity.getJDBCPrimaryKeyFields();
+      for(int i=0; i<pkFields.length; i++) {
+         JDBCType type = pkFields[i].getJDBCType();
+         if(type instanceof JDBCTypeComplex) {
+            JDBCTypeComplexProperty[] props = 
+                  ((JDBCTypeComplex)type).getProperties();
+            for(int j=0; j<props.length; j++) {
+               QueryParameter param = new QueryParameter(
+                        compareToParameter.getNumber() - 1,
+                        pkFields[i],
+                        props[j],
+                        props[j].getJDBCType());
+               inputParameters.add(param);
+            }
+         } else {
+            QueryParameter param = new QueryParameter(
+                     compareToParameter.getNumber() - 1,
+                     pkFields[i],
+                     null,
+                     type.getJDBCTypes()[0]);
+            inputParameters.add(param);
+         }
+      }
+      
+      // generate the sql
       StringBuffer buf = new StringBuffer();
       buf.append("(");
       if(compareSymbol.equals("<>")) {
          buf.append("NOT(");
       }
       
-      buf.append(SQLUtil.getWhereClause(entity.getJDBCPrimaryKeyFields(), identifier));   
+      buf.append(SQLUtil.getWhereClause(pkFields, identifier));   
 
       if(compareSymbol.equals("<>")) {
          buf.append(")");
@@ -388,18 +525,54 @@ public class SQLTarget implements DeepCloneable {
       return buf.toString();
    }
    
-   public String getValueObjectWherePathToParameter(String compareFromPath, String compareSymbol) {
+   public String getValueObjectWherePathToParameter(
+         String compareFromPath,
+         String compareSymbol,
+         InputParameterToken compareToParameter) {
+
       CMPField cmpField = idManager.getExistingCMPField(compareFromPath);
       String parentIdentifier = idManager.getTableAlias(cmpField.getParent());
       JDBCCMPFieldBridge cmpFieldBridge = cmpField.getCMPFieldBridge();
 
+      // verify that parameter is the same type as the entity
+      Class parameterType = getParameterType(compareToParameter.getNumber());
+      if(parameterType == null) {
+         return null;
+      }
+      if(!parameterType.equals(cmpFieldBridge.getFieldType())) {
+         return null;
+      }
+      
+      // create the parameter objects
+      JDBCType type = cmpFieldBridge.getJDBCType();
+      if(type instanceof JDBCTypeComplex) {
+         JDBCTypeComplexProperty[] props = 
+               ((JDBCTypeComplex)type).getProperties();
+         for(int i=0; i<props.length; i++) {
+            QueryParameter param = new QueryParameter(
+                     compareToParameter.getNumber() - 1,
+                     null,
+                     props[i],
+                     props[i].getJDBCType());
+            inputParameters.add(param);
+         }
+      } else {
+         QueryParameter param = new QueryParameter(
+                  compareToParameter.getNumber() - 1,
+                  null,
+                  null,
+                  type.getJDBCTypes()[0]);
+         inputParameters.add(param);
+      }
+      
+      // generate the sql
       StringBuffer buf = new StringBuffer();
       buf.append("(");
       if(compareSymbol.equals("<>")) {
          buf.append("NOT(");
       }   
       
-      buf.append(SQLUtil.getWhereClause(cmpFieldBridge.getJDBCType(), parentIdentifier));   
+      buf.append(SQLUtil.getWhereClause(cmpFieldBridge, parentIdentifier));   
 
       if(compareSymbol.equals("<>")) {
          buf.append(")");

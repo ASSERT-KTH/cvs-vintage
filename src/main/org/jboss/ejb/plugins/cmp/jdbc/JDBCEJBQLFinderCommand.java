@@ -8,8 +8,10 @@
 package org.jboss.ejb.plugins.cmp.jdbc;
 
 import java.sql.PreparedStatement;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
+import java.util.StringTokenizer;
 import org.jboss.ejb.DeploymentException;
 import org.jboss.ejb.plugins.cmp.ejbql.Assembly;
 import org.jboss.ejb.plugins.cmp.ejbql.Parser;
@@ -27,17 +29,14 @@ import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCQueryMetaData;
  * clause. This code has been cleaned up to improve readability.
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.5 $
+ * @version $Revision: 1.6 $
  */
-public class JDBCEJBQLFinderCommand extends JDBCFinderCommand
-{
-   // Attributes ----------------------------------------------------
-   
-   private int[] parameterArray;
+public class JDBCEJBQLFinderCommand extends JDBCFinderCommand {
 
-   // Constructors --------------------------------------------------
+   public JDBCEJBQLFinderCommand(
+         JDBCStoreManager manager, 
+         JDBCQueryMetaData q) throws DeploymentException {
 
-   public JDBCEJBQLFinderCommand(JDBCStoreManager manager, JDBCQueryMetaData q) throws DeploymentException {
       super(manager, q);
 
       JDBCQlQueryMetaData metadata = (JDBCQlQueryMetaData)q;
@@ -48,7 +47,10 @@ public class JDBCEJBQLFinderCommand extends JDBCFinderCommand
       
       // initialize the assembly
       Assembly a = new Assembly(metadata.getEjbQl());
-      a.setTarget(new SQLTarget(manager.getContainer().getApplication()));
+      a.setTarget(new SQLTarget(
+               q.getMethod(),
+               manager.getJDBCTypeFactory(),
+               manager.getContainer().getApplication()));
       
       // match the query
       a = ejbql.soleMatch(a);
@@ -56,11 +58,6 @@ public class JDBCEJBQLFinderCommand extends JDBCFinderCommand
       
       // get the final target
       SQLTarget target = (SQLTarget)a.getTarget();
-      
-      // set the target to use select distinct if the return type is set
-      if(metadata.getMethod().getReturnType().equals(Set.class)) {
-         target.setSelectDistinct(true);
-      }
       
       // set the sql
       setSQL(target.toSQL());
@@ -74,28 +71,11 @@ public class JDBCEJBQLFinderCommand extends JDBCFinderCommand
          selectCMPField = (JDBCCMPFieldBridge)selectBridgeObject;
          selectEntity = null;
       } else {
-         throw new IllegalStateException("Select bridge object is instance of unknown type: " +
-               "selectBridgeObject=" + selectBridgeObject);
+         throw new IllegalStateException("Select bridge object is instance " +
+               "of unknown type: selectBridgeObject=" + selectBridgeObject);
       }
       
       // get the parameter order
-      List l  = target.getInputParameters();
-      parameterArray = new int[l.size()];
-      for(int i=0; i<l.size(); i++) {
-         // convert to 0 based parameter index
-         parameterArray[i] = ((Integer)l.get(i)).intValue()-1;
-      }
-   }
- 
-   // JDBCFinderCommand overrides ------------------------------------
-
-   protected void setParameters(PreparedStatement ps, Object argOrArgs) throws Exception {
-      Object[] args = (Object[])argOrArgs;
-   
-      for(int i = 0; i < parameterArray.length; i++) {
-         Object arg = args[parameterArray[i]];
-         int jdbcType = manager.getJDBCTypeFactory().getJDBCTypeForJavaType(arg.getClass());
-         JDBCUtil.setParameter(log, ps, i+1, jdbcType, arg);
-      }
+      setParameters(target.getInputParameters());
    }
 }

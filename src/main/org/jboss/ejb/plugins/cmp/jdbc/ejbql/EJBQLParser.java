@@ -222,7 +222,7 @@ public class EJBQLParser {
                      a.push(path);
                      return;
                   } else if(element.equalsIgnoreCase("DISTINCT")) {
-                     target.setSelectDistinct(true);
+                     target.setSelectDistinct();
                   } else if(element.equalsIgnoreCase("OBJECT")) {
                      // ignore the object keyword, it is just sugar to make parsing easy.
                   } else {
@@ -508,7 +508,7 @@ public class EJBQLParser {
          Alternation varOrParam = new Alternation();
          varOrParam.add(singleValuedNavigation());
          varOrParam.add(identificationVariable());
-         //varOrParam.add(inputParameter());
+         varOrParam.add(entityBeanValuedParameter());
 
          colMemExp.add(varOrParam);
          colMemExp.add(new Optional(new Literal("NOT")));
@@ -520,20 +520,22 @@ public class EJBQLParser {
                SQLTarget target = (SQLTarget)a.getTarget();
                String compareTo = a.pop().toString();
                String compareSymbol = "=";
-               String compareFromPath = a.pop().toString();
-               if(compareFromPath.equalsIgnoreCase("NOT")) {
+               Object compareFrom = a.pop();
+               if(compareFrom.toString().equalsIgnoreCase("NOT")) {
                   compareSymbol = "<>";
-                  compareFromPath = a.pop().toString();
+                  compareFrom = a.pop();
                }
                
                String comparison;
-               if("?".equals(compareFromPath)) {
+               if(compareFrom instanceof InputParameterToken) {
+                  // backwards, but won't make a differance
                   comparison = target.getEntityWherePathToParameter(
-                     compareFromPath,
-                     compareSymbol);
+                     compareTo,
+                     compareSymbol,
+                     (InputParameterToken)compareFrom);
                } else {
                   comparison = target.getEntityWherePathToPath(
-                     compareFromPath,
+                     compareFrom.toString(),
                      compareSymbol,
                      compareTo);
                }
@@ -701,7 +703,7 @@ public class EJBQLParser {
          parenExp.add(new Symbol(")"));
          arithPrim.add(parenExp);
          
-         arithPrim.add(inputParameter());
+         arithPrim.add(arithmeticValuedParameter());
          arithPrim.add(functionsReturningNumerics());
       }
       return arithPrim;
@@ -724,8 +726,7 @@ public class EJBQLParser {
       if(strExp == null) {
          strExp = new Alternation();
          strExp.add(stringPrimary());
-         // Note: changed due from obvious typo in pfd2
-         strExp.add(inputParameter());
+         strExp.add(stringValuedParameter());
       }
       return strExp;
    }
@@ -760,7 +761,7 @@ public class EJBQLParser {
       if(dateExp == null) {
          dateExp = new Alternation();
          dateExp.add(datetimeValue());
-         dateExp.add(inputParameter());
+         dateExp.add(datetimeValuedParameter());
       }
       return dateExp;
    }
@@ -778,7 +779,7 @@ public class EJBQLParser {
          boolExp.add(booleanValuedPathExpression());
          boolExp.add(new Literal("TRUE"));
          boolExp.add(new Literal("FALSE"));
-         boolExp.add(inputParameter());
+         boolExp.add(booleanValuedParameter());
       }
       return boolExp;
    }
@@ -801,7 +802,7 @@ public class EJBQLParser {
       if(entBeanExp == null) {
          entBeanExp = new Alternation();
          entBeanExp.add(entityBeanValue());
-         entBeanExp.add(inputParameter());
+         entBeanExp.add(entityBeanValuedParameter());
       }
       return entBeanExp;
    }
@@ -817,7 +818,7 @@ public class EJBQLParser {
       if(valueObjectExp == null) {
          valueObjectExp = new Alternation();
          valueObjectExp.add(valueObjectValue());
-         valueObjectExp.add(inputParameter());
+         valueObjectExp.add(valueObjectValuedParameter());
       }
       return valueObjectExp;
    }
@@ -977,6 +978,7 @@ public class EJBQLParser {
       return new Word();
    }
 
+/*
    protected Parser inputParameter() {
       Parser inputParam = new InputParameter();
       inputParam.setAssembler(new Assembler() {
@@ -990,6 +992,7 @@ public class EJBQLParser {
       });
       return inputParam;
    }
+*/
 
    protected Parser cmpField() {
       Word cmpFieldParser = new Word();
@@ -1086,6 +1089,27 @@ public class EJBQLParser {
       return stringPathExp;
    }
    
+   private Parser stringParam;
+   protected Parser stringValuedParameter() {
+      if(stringParam == null) {
+         stringParam = new InputParameter();
+         stringParam.setAssembler(new Assembler() {
+            public void workOn(Assembly a) {
+               SQLTarget target = (SQLTarget)a.getTarget();
+               InputParameterToken token = (InputParameterToken)a.pop();
+            
+               if(!target.isStringTypeParameter(token.getNumber())) {
+                  a.setInvalid();
+               } else {
+                  target.registerParameter(token);
+                  a.push("?");
+               }
+            }
+         });
+      }
+      return stringParam;
+   }
+   
    private Sequence booleanPathExp;
    protected Parser booleanValuedPathExpression () {
       if(booleanPathExp == null) {
@@ -1107,6 +1131,27 @@ public class EJBQLParser {
       return booleanPathExp;
    }
    
+   private Parser booleanParam;
+   protected Parser booleanValuedParameter() {
+      if(booleanParam == null) {
+         booleanParam = new InputParameter();
+         booleanParam.setAssembler(new Assembler() {
+            public void workOn(Assembly a) {
+               SQLTarget target = (SQLTarget)a.getTarget();
+               InputParameterToken token = (InputParameterToken)a.pop();
+            
+               if(!target.isBooleanTypeParameter(token.getNumber())) {
+                  a.setInvalid();
+               } else {
+                  target.registerParameter(token);
+                  a.push("?");
+               }
+            }
+         });
+      }
+      return booleanParam;
+   }
+ 
    private Sequence datetimePathExp;
    protected Parser datetimeValuedPathExpression () {
       if(datetimePathExp == null) {
@@ -1127,7 +1172,28 @@ public class EJBQLParser {
       }
       return datetimePathExp;
    }
-   
+
+   private Parser datetimeParam;
+   protected Parser datetimeValuedParameter() {
+      if(datetimeParam == null) {
+         datetimeParam = new InputParameter();
+         datetimeParam.setAssembler(new Assembler() {
+            public void workOn(Assembly a) {
+               SQLTarget target = (SQLTarget)a.getTarget();
+               InputParameterToken token = (InputParameterToken)a.pop();
+            
+               if(!target.isDatetimeTypeParameter(token.getNumber())) {
+                  a.setInvalid();
+               } else {
+                  target.registerParameter(token);
+                  a.push("?");
+               }
+            }
+         });
+      }
+      return datetimeParam;
+   }
+    
    private Sequence entityBeanPathExp;
    protected Parser entityBeanValuedPathExpression () {
       if(entityBeanPathExp == null) {
@@ -1149,6 +1215,26 @@ public class EJBQLParser {
       return entityBeanPathExp;
    }
    
+   private Parser entityBeanParam;
+   protected Parser entityBeanValuedParameter() {
+      if(entityBeanParam == null) {
+         entityBeanParam = new InputParameter();
+         entityBeanParam.setAssembler(new Assembler() {
+            public void workOn(Assembly a) {
+               SQLTarget target = (SQLTarget)a.getTarget();
+               InputParameterToken token = (InputParameterToken)a.pop();
+            
+               if(!target.isEntityBeanTypeParameter(token.getNumber())) {
+                  a.setInvalid();
+               } else {
+                  a.push(token);
+               }
+            }
+         });
+      }
+      return entityBeanParam;
+   }
+    
    private Sequence arithmeticPathExp;
    protected Parser arithmeticValuedPathExpression () {
       if(arithmeticPathExp == null) {
@@ -1168,6 +1254,27 @@ public class EJBQLParser {
          });
       }
       return arithmeticPathExp;
+   }
+
+   private Parser arithmeticParam;
+   protected Parser arithmeticValuedParameter() {
+      if(arithmeticParam == null) {
+         arithmeticParam = new InputParameter();
+         arithmeticParam.setAssembler(new Assembler() {
+            public void workOn(Assembly a) {
+               SQLTarget target = (SQLTarget)a.getTarget();
+               InputParameterToken token = (InputParameterToken)a.pop();
+            
+               if(!target.isArithmeticTypeParameter(token.getNumber())) {
+                  a.setInvalid();
+               } else {
+                  target.registerParameter(token);
+                  a.push("?");
+               }
+            }
+         });
+      }
+      return arithmeticParam;
    }
    
    private Sequence valueObjectPathExp;
@@ -1191,25 +1298,54 @@ public class EJBQLParser {
       return valueObjectPathExp;
    }
 
+   private Parser valueObjectParam;
+   protected Parser valueObjectValuedParameter() {
+      if(valueObjectParam == null) {
+         valueObjectParam = new InputParameter();
+         valueObjectParam.setAssembler(new Assembler() {
+            public void workOn(Assembly a) {
+               SQLTarget target = (SQLTarget)a.getTarget();
+               InputParameterToken token = (InputParameterToken)a.pop();
+            
+               if(!target.isValueObjectTypeParameter(token.getNumber())) {
+                  a.setInvalid();
+               } else {
+                  a.push(token);
+               }
+            }
+         });
+      }
+      return valueObjectParam;
+   }
+    
+
+
    private Assembler entityBeanComparisonAssembler() {
       return new Assembler() {
          public void workOn(Assembly a) {
             SQLTarget target = (SQLTarget)a.getTarget();
-            String compareTo = (String)a.pop();
+            Object compareTo = a.pop();
             String compareSymbol = a.pop().toString();
             String compareFromPath = (String)a.pop();
-            if(compareTo.equals("?")) {
+
+            String comparison;
+            if(compareTo instanceof InputParameterToken) {
                // path = ?1
-               // target.registerParameter(compareTo);
-               a.push(target.getEntityWherePathToParameter(compareFromPath, compareSymbol));               
+               comparison = target.getEntityWherePathToParameter(
+                     compareFromPath, 
+                     compareSymbol,
+                     (InputParameterToken)compareTo);               
             } else {
                // path = path
-               String comparison = target.getEntityWherePathToPath(compareFromPath, compareSymbol, compareTo);
-               if(comparison == null) {
-                  a.setInvalid();
-               } else {
-                  a.push(comparison);
-               }
+               comparison = target.getEntityWherePathToPath(
+                     compareFromPath, 
+                     compareSymbol, 
+                     compareTo.toString());
+            }
+            if(comparison == null) {
+               a.setInvalid();
+            } else {
+               a.push(comparison);
             }
          }
       };
@@ -1219,21 +1355,28 @@ public class EJBQLParser {
       return new Assembler() {
          public void workOn(Assembly a) {
             SQLTarget target = (SQLTarget)a.getTarget();
-            String compareTo = (String)a.pop();
+            Object compareTo = a.pop();
             String compareSymbol = a.pop().toString();
             String compareFromPath = (String)a.pop(); // always a path
-            if(compareTo.equals("?")) {
+
+            String comparison;
+            if(compareTo instanceof InputParameterToken) {
                // path = ?1
-               // target.registerParameter(compareTo);
-               a.push(target.getValueObjectWherePathToParameter(compareFromPath, compareSymbol));               
+               comparison = target.getValueObjectWherePathToParameter(
+                     compareFromPath,
+                     compareSymbol,
+                     (InputParameterToken)compareTo);
             } else {
                // path = path
-               String comparison = target.getValueObjectWherePathToPath(compareFromPath, compareSymbol, compareTo);
-               if(comparison == null) {
-                  a.setInvalid();
-               } else {
-                  a.push(comparison);
-               }
+               comparison = target.getValueObjectWherePathToPath(
+                     compareFromPath,
+                     compareSymbol, 
+                     compareTo.toString());
+            }
+            if(comparison == null) {
+               a.setInvalid();
+            } else {
+               a.push(comparison);
             }
          }
       };

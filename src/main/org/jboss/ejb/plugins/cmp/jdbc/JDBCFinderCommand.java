@@ -11,15 +11,20 @@ import java.lang.reflect.Method;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Iterator;
+import java.util.List;
+import java.util.StringTokenizer;
 
 import java.rmi.RemoteException;
 import java.rmi.ServerException;
 
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
 import javax.ejb.FinderException;
 
+import org.jboss.ejb.DeploymentException;
 import org.jboss.ejb.EntityContainer;
 import org.jboss.ejb.EntityEnterpriseContext;
 import org.jboss.ejb.plugins.cmp.FindEntitiesCommand;
@@ -37,12 +42,13 @@ import org.jboss.util.FinderResults;
  * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  * @author <a href="mailto:shevlandj@kpi.com.au">Joe Shevland</a>
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
- * @version $Revision: 1.7 $
+ * @version $Revision: 1.8 $
  */
 public abstract class JDBCFinderCommand
    extends JDBCQueryCommand
    implements FindEntitiesCommand
 {
+   private List parameters = new ArrayList();
    protected JDBCQueryMetaData queryMetaData;
    protected JDBCEntityBridge selectEntity;
    protected JDBCCMPFieldBridge selectCMPField;
@@ -90,6 +96,32 @@ public abstract class JDBCFinderCommand
    }
 
    // JDBCQueryCommand overrides ------------------------------------
+   protected List getParameters() {
+      return Collections.unmodifiableList(parameters);
+   }
+
+   protected void setParameters(List p) {
+      for(int i=0; i<p.size(); i++) {
+         if( !(p.get(i) instanceof QueryParameter)) {
+            throw new IllegalArgumentException("Element " + i + " of list " +
+                  "is not an instance of QueryParameter, but " + 
+                  p.get(i).getClass().getName());
+         }
+      }
+      parameters = new ArrayList(p);
+   }
+ 
+   protected void setParameters(PreparedStatement ps, Object argOrArgs) 
+         throws Exception {
+
+      Object[] args = (Object[])argOrArgs;
+
+      for(int i=0; i<parameters.size(); i++) {
+         QueryParameter parameter = (QueryParameter)parameters.get(i);
+         parameter.set(log, ps, i+1, args);
+      }
+   }
+   
    protected Object handleResult(ResultSet rs, Object argOrArgs)
          throws Exception {
       
@@ -132,14 +164,59 @@ public abstract class JDBCFinderCommand
       return result;
    }
    
-   /** @todo: remove this next bit and add 'getWhereClause' to FinderCommands */
-   protected String getWhereClause(Object[] executeArgs) throws Exception {      
-      //look for 'where' and ditch everything before it      
-      String sql = getSQL(executeArgs);
-      int pos = sql.toUpperCase().indexOf("WHERE");
-      if(pos >= 0) {
-         return sql.substring(pos);
+   /**
+    * Replaces the parameters in the specifiec sql with question marks, and 
+    * initializes the parameter setting code. Parameters are encoded in curly
+    * brackets use a zero based index.
+    * @param sql the sql statement that is parsed for parameters
+    * @return the original sql statement with the parameters replaced with a 
+    *    question mark
+    * @throws DeploymentException if a error occures while parsing the sql
+    */
+   protected String parseParameters(String sql) throws DeploymentException {
+      StringBuffer sqlBuf = new StringBuffer();
+      ArrayList params = new ArrayList();      
+      
+      // Replace placeholders {0} with ?
+      if(sql != null) {
+         sql = sql.trim();
+
+         StringTokenizer tokens = new StringTokenizer(sql,"{}", true);
+         while(tokens.hasMoreTokens()) {
+            String token = tokens.nextToken();
+            if(token.equals("{")) {
+               
+               token = tokens.nextToken();
+               if(Character.isDigit(token.charAt(0))) {
+                  QueryParameter parameter = new QueryParameter(
+                        manager,
+                        queryMetaData.getMethod(),
+                        token);
+                  
+                  // of if we are here we can assume that we have 
+                  // a parameter and not a function
+                  sqlBuf.append("?");
+                  params.add(parameter);
+                     
+                  
+                  if(!tokens.nextToken().equals("}")) {
+                     throw new DeploymentException("Invalid parameter - " +
+                           "missing closing '}' : " + sql);
+                  }
+               } else {
+                  // ok we don't have a parameter, we have a function
+                  // push the tokens on the buffer and continue
+                  sqlBuf.append("{").append(token);                  
+               }   
+            } else {
+               // not parameter... just append it
+               sqlBuf.append(token);
+            }
+         }
       }
-      return "";
+
+      parameters = params;
+      
+      return sqlBuf.toString().trim();
    }
 }
