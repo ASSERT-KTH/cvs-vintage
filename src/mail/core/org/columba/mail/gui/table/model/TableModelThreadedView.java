@@ -324,6 +324,8 @@ public class TableModelThreadedView implements ModelVisitor {
 	 * @see org.columba.mail.gui.table.model.ModelVisitor#visit(org.columba.mail.gui.table.model.TreeTableModelInterface)
 	 */
 	public void visit(HeaderTableModel realModel) {
+		if ( enabled == false ) return;
+		
 		thread(realModel.getRootNode());
 
 		//		 go through whole tree and sort the siblings after date

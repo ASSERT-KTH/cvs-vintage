@@ -447,6 +447,9 @@ public class TableController implements FocusOwner, ListSelectionListener,
 		 * TableModelChangedEvent.SET, folder, headerList); tableChanged(ev);
 		 */
 		getHeaderTableModel().set(headerList);
+		
+		((ThreePaneMailFrameController) getFrameController())
+		.getFolderInfoPanel().setFolder((IMailFolder) folder);
 
 		// load options of newly selected folder
 		((MailFrameMediator) getFrameController()).getFolderOptionsController()
