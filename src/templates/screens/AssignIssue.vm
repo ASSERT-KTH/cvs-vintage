@@ -2,7 +2,11 @@
     #set ( $actionLink = $link.setPage("AssignIssue.vm").setAction("AssignIssue").addPathInfo("nextTemplate", "Index.vm") )
 #end
 #set ($module = $scarabR.CurrentModule)
-#set ($issue = $scarabR.Issue)
+#if ( $scarabR.Issues )
+    #set ($issue = $scarabR.Issues.get(0))
+#else
+    #set ($issue = $scarabR.Issue)
+#end
 #set ($attrValues = $issue.ModuleAttributeValuesMap)
 #if ( $data.Parameters.getString("action") && $data.Parameters.getString("action") == "AssignIssue" )
    #set ( $reentry = true )
