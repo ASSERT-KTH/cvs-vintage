@@ -1342,31 +1342,31 @@ try{
     {
         ScarabLocalizationTool l10n = getLocalizationTool();
         Issue issue = null;
-        if (id == null)
+        if (id == null || id.length() == 0)
         {
             setInfoMessage(l10n.get("EnterId"));
         }
         else
         {
-	    try
+            try
             {
-	        issue = Issue.getIssueById(id);
-	        if (issue == null)
-	        {
-	           String code = getCurrentModule().getCode();
-                   id = code + id;
-	           issue = Issue.getIssueById(id);
-	        }
-            if (issue.getDeleted())
+                char firstChar = id.charAt(0);
+                if ('0' <= firstChar && firstChar <= '9') 
+                {
+                    id = getCurrentModule().getCode() + id;
+                }
+                issue = Issue.getIssueById(id);
+
+                if (issue.getDeleted())
+                {
+                    setAlertMessage(l10n.get("InvalidId"));
+                    issue = null;
+                }
+            }        
+            catch (Exception e)
             {
                 setAlertMessage(l10n.get("InvalidId"));
-                issue = null;
-             }
-	    }        
-	    catch (Exception e)
-	    {
-	        setAlertMessage(l10n.get("InvalidId"));
-	    }
+            }
         }
         return issue;
     }
