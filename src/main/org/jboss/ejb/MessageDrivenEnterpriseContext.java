@@ -23,6 +23,7 @@ import javax.ejb.EJBException;
 
 import org.jboss.logging.Logger;
 
+import org.jboss.metadata.MetaData;
 import org.jboss.metadata.MessageDrivenMetaData;
 
 /**
@@ -32,7 +33,7 @@ import org.jboss.metadata.MessageDrivenMetaData;
  * @author <a href="mailto:peter.antman@tim.se">Peter Antman</a>.
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  * @author <a href="sebastien.alborini@m4x.org">Sebastien Alborini</a>
- * @version $Revision: 1.8 $
+ * @version $Revision: 1.9 $
  */
 public class MessageDrivenEnterpriseContext
    extends EnterpriseContext
@@ -150,7 +151,7 @@ public class MessageDrivenEnterpriseContext
 
       public boolean getRollbackOnly() 
       { 
-         if (((MessageDrivenMetaData)con.getBeanMetaData()).getAcknowledgeMode() != MessageDrivenMetaData.CLIENT_ACKNOWLEDGE_MODE) {
+         if (((MessageDrivenMetaData)con.getBeanMetaData()).getMethodTransactionType() != MetaData.TX_REQUIRED) {
             // NO transaction
             Logger.log("MessageDriven bean is not allowed to call getRollbackOnly with this transaction settings");
             throw new IllegalStateException("MessageDriven bean is not allowed to call getRollbackOnly with this transaction settings");
@@ -161,7 +162,7 @@ public class MessageDrivenEnterpriseContext
        
       public void setRollbackOnly() 
       { 
-         if (((MessageDrivenMetaData)con.getBeanMetaData()).getAcknowledgeMode() != MessageDrivenMetaData.CLIENT_ACKNOWLEDGE_MODE) {
+         if (((MessageDrivenMetaData)con.getBeanMetaData()).getMethodTransactionType() != MetaData.TX_REQUIRED) {
             // NO transaction
             Logger.log("MessageDriven bean is not allowed to call setRollbackOnly with this transaction settings");
             throw new IllegalStateException("MessageDriven bean is not allowed to call setRollbackOnly with this transaction settings");
