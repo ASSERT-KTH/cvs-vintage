@@ -46,25 +46,10 @@ package org.tigris.scarab.actions.admin;
  * individuals on behalf of Collab.Net.
  */ 
 
-import java.util.List;
-import java.util.Iterator;
-import java.util.Locale;
-import java.sql.SQLException;
 
 // Turbine Stuff 
-import org.apache.fulcrum.template.DefaultTemplateContext;
-import org.apache.torque.om.NumberKey; 
-import org.apache.turbine.TemplateAction;
 import org.apache.turbine.TemplateContext;
-import org.apache.turbine.modules.ContextAdapter;
 import org.apache.turbine.RunData;
-import org.apache.turbine.Turbine;
-import org.apache.turbine.ParameterParser;
-import org.apache.fulcrum.security.TurbineSecurity;
-import org.apache.fulcrum.security.util.AccessControlList;
-import org.apache.fulcrum.security.util.DataBackendException;
-import org.apache.fulcrum.localization.Localization;
-
 
 // Scarab Stuff
 import org.tigris.scarab.om.ScarabUser;
@@ -72,7 +57,6 @@ import org.tigris.scarab.util.ScarabConstants;
 import org.tigris.scarab.tools.ScarabRequestTool;
 import org.tigris.scarab.tools.ScarabLocalizationTool;
 import org.tigris.scarab.actions.base.RequireLoginFirstAction;
-import org.tigris.scarab.services.security.ScarabSecurity;
 import org.tigris.scarab.util.word.SearchFactory;
 import org.tigris.scarab.util.word.SearchIndex;
 
@@ -80,7 +64,7 @@ import org.tigris.scarab.util.word.SearchIndex;
  * This class allows an admin to update the search index.
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: UpdateSearchIndex.java,v 1.1 2002/10/17 00:16:13 jmcnally Exp $
+ * @version $Id: UpdateSearchIndex.java,v 1.2 2002/10/23 21:44:33 jon Exp $
  */
 public class UpdateSearchIndex extends RequireLoginFirstAction
 {

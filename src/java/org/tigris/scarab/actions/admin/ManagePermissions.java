@@ -48,44 +48,28 @@ package org.tigris.scarab.actions.admin;
 
 
 // JDK classes
-import java.util.Calendar;
-import java.util.List;
-import java.util.ArrayList;
 
 // Turbine Stuff
 import org.apache.turbine.TemplateContext;
 import org.apache.turbine.RunData;
-import org.apache.turbine.Turbine;
 import org.apache.turbine.tool.IntakeTool;
 import org.apache.fulcrum.intake.model.Group;
 import org.apache.fulcrum.security.TurbineSecurity;
-//import org.apache.fulcrum.security.entity.Group;
-import org.apache.fulcrum.security.entity.Role;
 import org.apache.fulcrum.security.entity.Permission;
-import org.apache.fulcrum.security.entity.User;
-import org.apache.fulcrum.security.util.AccessControlList;
 import org.apache.fulcrum.security.util.EntityExistsException;
-import org.apache.fulcrum.security.util.PermissionSet;
-import org.apache.torque.util.Criteria;
-import org.apache.turbine.ParameterParser;
 
 
 // Scarab Stuff
 import org.tigris.scarab.om.ScarabUser;
-import org.tigris.scarab.om.ScarabUserImpl;
-import org.tigris.scarab.om.ScarabUserImplPeer;
 import org.tigris.scarab.util.ScarabConstants;
 import org.tigris.scarab.actions.base.RequireLoginFirstAction;
-import org.tigris.scarab.tools.ScarabRequestTool;
-import org.tigris.scarab.tools.ScarabLocalizationTool;
-
 
 /**
  * This class is responsible for dealing with the permission management
  * Action(s).
  *
  * @author <a href="mailto:dr@bitonic.com">Douglas B. Robertson</a>
- * @version $Id: ManagePermissions.java,v 1.5 2002/09/15 15:37:18 jmcnally Exp $
+ * @version $Id: ManagePermissions.java,v 1.6 2002/10/23 21:41:45 jon Exp $
  */
 public class ManagePermissions extends RequireLoginFirstAction
 {

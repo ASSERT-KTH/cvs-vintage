@@ -47,9 +47,6 @@ package org.tigris.scarab.actions.base;
  */
  
 // Java Stuff
-import java.util.Stack;
-import java.util.HashMap;
-import java.util.Iterator;
 
  // Turbine Stuff
 import org.apache.log4j.Category;
@@ -57,20 +54,18 @@ import org.apache.turbine.RunData;
 import org.apache.turbine.TemplateAction;
 import org.apache.turbine.TemplateContext;
 import org.apache.turbine.tool.IntakeTool;
-import org.apache.turbine.ParameterParser;
 
 // Scarab Stuff
 import org.tigris.scarab.util.ScarabConstants;
 import org.tigris.scarab.tools.ScarabRequestTool;
 import org.tigris.scarab.tools.ScarabLocalizationTool;
-import org.tigris.scarab.om.ScarabUser;
 
 /**
  *  This is a helper class that extends TemplateAction to add
  *  a couple methods useful for Scarab.
  *   
  *  @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- *  @version $Id: ScarabTemplateAction.java,v 1.27 2002/09/20 20:28:45 elicia Exp $
+ *  @version $Id: ScarabTemplateAction.java,v 1.28 2002/10/23 21:46:09 jon Exp $
  */
 public abstract class ScarabTemplateAction extends TemplateAction
 {
