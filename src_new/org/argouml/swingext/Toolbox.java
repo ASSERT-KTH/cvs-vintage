@@ -1,4 +1,4 @@
-// $Id: Toolbox.java,v 1.9 2003/06/30 18:00:23 linus Exp $
+// $Id: Toolbox.java,v 1.10 2004/08/19 20:54:56 mvw Exp $
 // Copyright (c) 2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -38,17 +38,17 @@ import java.awt.GridLayout;
  */
 public class Toolbox extends Toolbar {
 
-    private int _rows;
-    private int _cols;
+    private int rows;
+    private int cols;
 
     /** Creates a new instance of ToolBox
-     * @param rows the number of rows to display in the toolbox
-     * @param cols the number of columns to display in the toolbox
+     * @param r the number of rows to display in the toolbox
+     * @param c the number of columns to display in the toolbox
      */
-    public Toolbox(int rows, int cols) {
+    public Toolbox(int r, int c) {
         super();
-        _rows = rows;
-        _cols = cols;
-        setLayout(new GridLayout(_rows, _cols));
+        rows = r;
+        cols = c;
+        setLayout(new GridLayout(rows, cols));
     }
 }

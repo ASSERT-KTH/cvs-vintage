@@ -1,4 +1,4 @@
-// $Id: Vertical.java,v 1.6 2004/02/29 12:35:41 linus Exp $
+// $Id: Vertical.java,v 1.7 2004/08/19 20:54:56 mvw Exp $
 // Copyright (c) 2003-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -68,8 +68,11 @@ import javax.swing.border.Border;
  */
 public class Vertical extends Orientation {
 
-    private static final Vertical vertical = new Vertical();
+    private static final Vertical VERTICAL = new Vertical();
 
+    /**
+     * The constructor.
+     */
     protected Vertical() {
     }
 
@@ -79,7 +82,7 @@ public class Vertical extends Orientation {
      * @return An instance of <code>Orientation</code>.
      */
     public static Orientation getInstance() {
-        return vertical;
+        return VERTICAL;
     }
 
     /**
