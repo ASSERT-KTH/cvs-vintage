@@ -19,7 +19,7 @@ import org.jboss.metadata.SessionMetaData;
  * {@link javax.management.j2ee.EJB EJB}.
  *
  * @author  <a href="mailto:andreas@jboss.org">Andreas Schaefer</a>.
- * @version $Revision: 1.5 $
+ * @version $Revision: 1.6 $
  *   
  * <p><b>Revisions:</b>
  *
@@ -45,7 +45,7 @@ public abstract class EJB
                                              "MessageDrivenBean"
                                           };
    
-   public static ObjectName create( MBeanServer pServer, String pEjbModule, BeanMetaData pBeanMeta ) {
+   public static ObjectName create( MBeanServer pServer, String pEJBModule, BeanMetaData pBeanMeta ) {
       Logger lLog = Logger.getLogger( EJB.class );
       try {
          int lType =
@@ -58,7 +58,7 @@ public abstract class EJB
             null,
             new Object[] {
                pBeanMeta.getJndiName(),
-               new ObjectName( pEjbModule )
+               new ObjectName( pEJBModule )
             },
             new String[] {
                String.class.getName(),
