@@ -223,7 +223,7 @@
            tomcatAuthentication="false"
            password="changeme"
            debug="10"			    
-           port="8010" />
+           port="8011" />
 
       <!-- 
            Context definitions can be placed here ( not recommended ) or 
