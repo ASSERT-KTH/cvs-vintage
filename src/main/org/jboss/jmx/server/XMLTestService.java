@@ -24,7 +24,7 @@ import org.w3c.dom.Document;
 *
 * @author Andreas Schaefer (andreas.schaefer@madplanet.com)
 * @created June 22, 2001
-* @version $Revision: 1.1 $
+* @version $Revision: 1.2 $
 */
 public class XMLTestService
   extends ServiceMBeanSupport
@@ -75,8 +75,8 @@ public class XMLTestService
       // Create Test XML Document
       Document lTest = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(
         new StringBufferInputStream(
-          "<invoke operation=\"stop\"><object-name name=\":service=Scheduler\"/>" +
-          "</invoke>"
+          "<jmx><invoke operation=\"stop\"><object-name name=\":service=Scheduler\"/>" +
+          "</invoke></jmx>"
         )
       );
       System.out.println( "Call invokeXML with: " + lTest );
