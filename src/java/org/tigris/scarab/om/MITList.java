@@ -63,7 +63,7 @@ import org.tigris.scarab.services.security.ScarabSecurity;
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: MITList.java,v 1.15 2003/02/04 11:26:01 jon Exp $
+ * @version $Id: MITList.java,v 1.16 2003/02/07 02:26:23 jon Exp $
  */
 public  class MITList 
     extends org.tigris.scarab.om.BaseMITList
@@ -566,6 +566,7 @@ public  class MITList
         if (moreAttributes > 0) 
         {
             Iterator attributes = getCommonAttributes().iterator();
+            int k=1;
             while (attributes.hasNext() && moreAttributes > 0) 
             {
                 Attribute attribute = (Attribute)attributes.next();
@@ -584,6 +585,8 @@ public  class MITList
                 {
                     RModuleUserAttribute rmua = 
                         getNewRModuleUserAttribute(attribute);
+                    rmua.setOrder(k++);
+                    rmua.save();
                     matchingRMUAs.add(rmua);
                     moreAttributes--;
                 }
@@ -613,7 +616,7 @@ public  class MITList
             if (isSingleIssueType()) 
             {
                 result.setIssueTypeId(getIssueType().getIssueTypeId());
-            }            
+            }
         }
         return result;
     }
