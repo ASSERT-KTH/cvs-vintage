@@ -1,4 +1,4 @@
-/* $Id: ApacheConfig.java,v 1.19 2001/07/20 18:46:04 costin Exp $
+/* $Id: ApacheConfig.java,v 1.20 2001/08/02 10:33:02 larryi Exp $
  * ====================================================================
  *
  * The Apache Software License, Version 1.1
@@ -110,7 +110,7 @@ import org.apache.tomcat.modules.server.Ajp13Interceptor;
                             If not set, this defaults to TOMCAT_HOME. Ignored
                             whenever any of the following paths is absolute.
                              </li>
-     <li><b>jkConfig</b> - path to write apacke mod_jk conf file to. If
+     <li><b>jkConfig</b> - path to use for writing Apache mod_jk conf file. If
                             not set, defaults to
                             "conf/jk/mod_jk.conf".</li>
      <li><b>workersConfig</b> - path to workers.properties file used by 
@@ -121,23 +121,36 @@ import org.apache.tomcat.modules.server.Ajp13Interceptor;
                         "modules/mod_jk.nlm" on netware, and
                         "libexec/mod_jk.so" everywhere else.</li>
      <li><b>jkLog</b> - path to log file to be used by mod_jk.</li>
-     <li><b>forwardAll</b> - If true, forward all requests to Tomcat.  IF
-                             false, let Apache serve static resources.
-                             Warning: When false, some configuration in
-                             the web.xml may not be duplicated in Apache.
-                             Review the mod_jk.conf file to see what
-                             configuration is actually being set in Apache.</li>
      <li><b>jkDebug</b> - JK Loglevel setting.  May be debug, info, error, or emerg.
                           If not set, defaults to no log.</li>
+     <li><b>jkProtocol</b> The desired protocal, "ajp12" or "ajp13". If not
+                           specified, defaults to "ajp13" if an Ajp13Interceptor
+                           is in use, otherwise it defaults to "ajp12".</li>
+     <li><b>forwardAll</b> - If true, forward all requests to Tomcat. This helps
+                             insure that all the behavior configured in the web.xml
+                             file functions correctly.  If false, let Apache serve
+                             static resources. The default is true.
+                             Warning: When false, some configuration in
+                             the web.xml may not be duplicated in Apache.
+                             Review the mod_jk conf file to see what
+                             configuration is actually being set in Apache.</li>
      <li><b>noRoot</b> - If true, the root context is not mapped to
-                         Tomcat.  If false, Tomcat services all requests
-                         to the root context.  The default is true.
-                         This setting only applies if forwardAll is true.</li>
+                         Tomcat.  If false and forwardAll is true, all requests
+                         to the root context are mapped to Tomcat. If false and
+                         forwardAll is false, only JSP and servlets requests to
+                         the root context are mapped to Tomcat. When false,
+                         to correctly serve Tomcat's root context you must also
+                         modify the DocumentRoot setting in Apache's httpd.conf
+                         file to point to Tomcat's root context directory.
+                         Otherwise some content, such as Apache's index.html,
+                         will be served by Apache before mod_jk gets a chance
+                         to claim the request and pass it to Tomcat.
+                         The default is true.</li>
     </ul>
     <p>
     @author Costin Manolache
     @author Mel Martinez
-	@version $Revision: 1.19 $ $Date: 2001/07/20 18:46:04 $
+	@version $Revision: 1.20 $ $Date: 2001/08/02 10:33:02 $
  */
 public class ApacheConfig  extends BaseInterceptor { 
     
@@ -551,6 +564,10 @@ public class ApacheConfig  extends BaseInterceptor {
 	String vhost = context.getHost();
 	String nPath=("".equals(ctxPath)) ? "/" : ctxPath;
 	
+        if( noRoot &&  "".equals(ctxPath) ) {
+            log("Ignoring root context in forward-all mode  ");
+            return true;
+        } 
 	if( vhost != null ) {
 	    generateNameVirtualHost(mod_jk );
 	    mod_jk.println("<VirtualHost *>");
@@ -565,14 +582,14 @@ public class ApacheConfig  extends BaseInterceptor {
 	    }
 	    indent="    ";
 	}
-	if( noRoot &&  "".equals(ctxPath) ) {
-	    log("Ignoring root context in mount-all mode  ");
-	    return true;
-	} 
 	mod_jk.println(indent + "JkMount " +  nPath + " " + jkProto );
-	if( "".equals(ctxPath) )
+	if( "".equals(ctxPath) ) {
 	    mod_jk.println(indent + "JkMount " +  nPath + "* " + jkProto );
-	else
+            mod_jk.println(indent +
+                    "# Note: To correctly serve the Tomcat's root context, DocumentRoot must");
+            mod_jk.println(indent +
+                    "# must be set to: \"" + getApacheDocBase(context) + "\"");
+	} else
 	    mod_jk.println(indent + "JkMount " +  nPath + "/* " + jkProto );
 	if( vhost != null ) {
 	    mod_jk.println("</VirtualHost>");
@@ -594,11 +611,16 @@ public class ApacheConfig  extends BaseInterceptor {
 	String ctxPath  = context.getPath();
 	String vhost = context.getHost();
 
+        if( noRoot &&  "".equals(ctxPath) ) {
+            log("Ignoring root context in non-forward-all mode  ");
+            return;
+        } 
 	mod_jk.println();
 	mod_jk.println("#################### " +
 		       ((vhost!=null ) ? vhost + ":" : "" ) +
 		       (("".equals(ctxPath)) ? "/" : ctxPath ) +
 		       " ####################" );
+        mod_jk.println();
 	if( vhost != null ) {
 	    mod_jk.println("<VirtualHost *>");
 	    mod_jk.println("    ServerName " + vhost );
@@ -676,7 +698,8 @@ public class ApacheConfig  extends BaseInterceptor {
     
     
     private boolean addMapping( String fullPath, PrintWriter mod_jk ) {
-	log( "Adding map for " + fullPath );
+        if( debug > 0 )
+            log( "Adding map for " + fullPath );
 	mod_jk.println(indent + "JkMount " + fullPath + "  " + jkProto );
 	return true;
     }
@@ -700,21 +723,21 @@ public class ApacheConfig  extends BaseInterceptor {
 	String ctxPath  = context.getPath();
 
 	// Calculate the absolute path of the document base
-	String docBase = context.getDocBase();
-	if (!FileUtil.isAbsolute(docBase)){
-	    docBase = tomcatHome + "/" + docBase;
-	}
-	docBase = FileUtil.patch(docBase);
-	if (File.separatorChar == '\\') {
-	    // use separator preferred by Apache
-	    docBase = docBase.replace('\\','/');
-	}
+	String docBase = getApacheDocBase(context);
 
-	String npath=("".equals(ctxPath)) ? "/" : ctxPath;
-	// Static files will be served by Apache
-	mod_jk.println(indent + "# Static files ");		    
-	mod_jk.println(indent + "Alias " + npath + " \"" + docBase + "\"");
-	mod_jk.println();
+        if( !"".equals(ctxPath) ) {
+            // Static files will be served by Apache
+            mod_jk.println(indent + "# Static files ");		    
+            mod_jk.println(indent + "Alias " + ctxPath + " \"" + docBase + "\"");
+            mod_jk.println();
+        } else {
+            // For root context, ask user to update DocumentRoot setting.
+            // Using "Alias / " interferes with the Alias for other contexts.
+            mod_jk.println(indent +
+                    "# To correctly serve the Tomcat's root context, DocumentRoot must");
+            mod_jk.println(indent +
+                    "# must be set to: \"" + docBase + "\"");
+        }
 	mod_jk.println(indent + "<Directory \"" + docBase + "\">");
 	mod_jk.println(indent + "    Options Indexes FollowSymLinks");
 
@@ -785,4 +808,18 @@ public class ApacheConfig  extends BaseInterceptor {
 	return base;
     }
 
+    private String getApacheDocBase(Context context)
+    {
+	// Calculate the absolute path of the document base
+	String docBase = context.getDocBase();
+	if (!FileUtil.isAbsolute(docBase)){
+	    docBase = tomcatHome + "/" + docBase;
+	}
+	docBase = FileUtil.patch(docBase);
+	if (File.separatorChar == '\\') {
+	    // use separator preferred by Apache
+	    docBase = docBase.replace('\\','/');
+	}
+        return docBase;
+    }
 }
