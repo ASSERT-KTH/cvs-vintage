@@ -40,7 +40,7 @@ import org.jboss.ejb.EntityPersistenceStore;
 *      
 *   @see <related>
 *   @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
-*   @version $Revision: 1.12 $
+*   @version $Revision: 1.13 $
 */
 public class CMPPersistenceManager
 implements EntityPersistenceManager {
@@ -100,22 +100,7 @@ implements EntityPersistenceManager {
 			}
 	    }
 	   
-        // Initialize the store
-        // if the store performes database operations (ie: table creations) it
-        // will need a transaction to do so
-        con.getTransactionManager ().begin ();
-        try
-        {
-           store.init();
-           con.getTransactionManager ().commit ();
-        } 
-        catch (Exception _e)
-        {
-           con.getTransactionManager ().rollback ();
-           store.destroy ();
-           throw _e;
-        }
-        
+       store.init();
     }
     
     public void start() 
@@ -129,22 +114,7 @@ implements EntityPersistenceManager {
     }
     
     public void destroy() {
-
-      // same as inistalize...
-      // maybe the store needs to drop tables and he
-      // will need a transaction therefor
-      try
-      {
-         con.getTransactionManager ().begin ();
-         store.destroy();
-         if (con.getTransactionManager().getStatus() == Status.STATUS_ACTIVE)
-             con.getTransactionManager ().commit ();
-         else
-            con.getTransactionManager ().rollback ();
-      }
-      catch (Exception _e)
-      {
-      }
+        store.destroy();
     }
     
     public void createEntity(Method m, Object[] args, EntityEnterpriseContext ctx)

@@ -28,7 +28,7 @@ import org.jboss.ejb.plugins.jaws.metadata.CMPFieldMetaData;
  * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  * @author <a href="mailto:shevlandj@kpi.com.au">Joe Shevland</a>
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
- * @version $Revision: 1.7 $
+ * @version $Revision: 1.8 $
  */
 public class JDBCInitCommand
    extends JDBCUpdateCommand
@@ -100,11 +100,22 @@ public class JDBCInitCommand
          } else {
              try
              {
+                 // since we use the pools, we have to do this within a transaction
+                factory.getContainer().getTransactionManager().begin ();
                 jdbcExecute(null);
+                factory.getContainer().getTransactionManager().commit ();
              } catch (Exception e)
              {
                 log.debug("Could not create table " +
                           jawsEntity.getTableName() + ": " + e.getMessage());
+                try
+                {
+                   factory.getContainer().getTransactionManager().rollback ();
+                }
+                catch (Exception _e)
+                {
+                   log.error("Could not roll back transaction: "+ _e.getMessage());
+                }
              }
          }
       }

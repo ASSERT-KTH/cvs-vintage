@@ -20,7 +20,7 @@ import org.jboss.ejb.plugins.jaws.JPMDestroyCommand;
  * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  * @author <a href="mailto:shevlandj@kpi.com.au">Joe Shevland</a>
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
- * @version $Revision: 1.4 $
+ * @version $Revision: 1.5 $
  */
 public class JDBCDestroyCommand
    extends JDBCUpdateCommand
@@ -46,11 +46,23 @@ public class JDBCDestroyCommand
          // Remove it!
          try
          {
+            // since we use the pools, we have to do this within a transaction
+            factory.getContainer().getTransactionManager().begin ();
             jdbcExecute(null);
+            factory.getContainer().getTransactionManager().commit ();
          } catch (Exception e)
          {
             log.debug("Could not drop table " +
                       jawsEntity.getTableName() + ": " + e.getMessage());
+
+            try
+            {
+               factory.getContainer().getTransactionManager().rollback ();
+            }
+            catch (Exception _e)
+            {
+               log.error("Could not roll back transaction: "+ _e.getMessage());
+            }
          }
       }
    }
