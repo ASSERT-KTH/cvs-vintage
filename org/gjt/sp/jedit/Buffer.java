@@ -55,7 +55,7 @@ import org.gjt.sp.util.*;
  * <li>
  *
  * @author Slava Pestov
- * @version $Id: Buffer.java,v 1.86 2002/05/29 09:53:13 spestov Exp $
+ * @version $Id: Buffer.java,v 1.87 2002/05/31 06:23:42 spestov Exp $
  */
 public class Buffer implements EBComponent
 {
@@ -2607,12 +2607,13 @@ loop:		for(int i = 0; i < seg.count; i++)
 
 			if(offsetMgr.isFoldLevelValid(line))
 			{
-				//System.err.println("level valid: " + line + ":"
-				//	+ offsetMgr.getFoldLevel(line));
 				return offsetMgr.getFoldLevel(line);
 			}
 			else
 			{
+				System.err.println("level invalid: " + line + ":"
+					+ offsetMgr.getFoldLevel(line));
+
 				int start = 0;
 				for(int i = line - 1; i >= 0; i--)
 				{
