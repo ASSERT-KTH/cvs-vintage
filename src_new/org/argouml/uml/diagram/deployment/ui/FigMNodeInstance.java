@@ -1,4 +1,4 @@
-// $Id: FigMNodeInstance.java,v 1.19 2004/02/28 12:29:42 linus Exp $
+// $Id: FigMNodeInstance.java,v 1.20 2004/07/22 11:15:58 mkl Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -29,6 +29,7 @@ import java.awt.Dimension;
 import java.awt.Rectangle;
 import java.awt.event.MouseEvent;
 import java.beans.PropertyVetoException;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.Vector;
@@ -182,13 +183,19 @@ public class FigMNodeInstance extends FigNodeModelElement {
         if (getLayer() != null) {
             // elementOrdering(figures);
             Collection contents = getLayer().getContents(null);
+            Collection bringToFrontList = new ArrayList();
             Iterator it = contents.iterator();
             while (it.hasNext()) {
                 Object o = it.next();
                 if (o instanceof FigEdgeModelElement) {
-                    FigEdgeModelElement figedge = (FigEdgeModelElement) o;
-                    figedge.getLayer().bringToFront(figedge);
+                    bringToFrontList.add(o);
+                    
                 }
+            }
+            Iterator bringToFrontIter = bringToFrontList.iterator();
+            while (bringToFrontIter.hasNext()) {
+                FigEdgeModelElement figEdge = (FigEdgeModelElement) bringToFrontIter.next();
+                figEdge.getLayer().bringToFront(figEdge);
             }
         }
     }
