@@ -6,18 +6,23 @@
  */
 package org.jboss.ejb.plugins.local;
 
+import java.awt.Component;
+import java.beans.beancontext.BeanContextChildComponentProxy;
+import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Method;
+import java.lang.reflect.Constructor;
 import java.security.Principal;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.HashMap;
+import java.util.Properties;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Proxy;
 
-import org.jboss.ejb.LocalHomeObjectFactory;
+import javax.ejb.EJBMetaData;
 import javax.ejb.EJBLocalHome;
 import javax.ejb.EJBLocalObject;
 import javax.ejb.AccessLocalException;
@@ -40,16 +45,26 @@ import javax.naming.StringRefAddr;
 import javax.transaction.Transaction;
 import javax.transaction.TransactionManager;
 
-import org.jboss.deployment.DeploymentException;
-import org.jboss.logging.Logger;
-import org.jboss.ejb.MethodInvocation;
-import org.jboss.ejb.plugins.jrmp.interfaces.RemoteMethodInvocation;
+import org.jboss.invocation.Invocation;
+import org.jboss.invocation.MarshalledInvocation;
 import org.jboss.ejb.Container;
 import org.jboss.ejb.ContainerInvokerContainer;
+import org.jboss.ejb.Interceptor;
 import org.jboss.ejb.LocalContainerInvoker;
+import org.jboss.proxy.ejb.EJBMetaDataImpl;
 import org.jboss.ejb.CacheKey;
-import org.jboss.security.SecurityAssociation;
+import org.jboss.ejb.LocalHomeObjectFactory;
+
 import org.jboss.tm.TransactionPropagationContextFactory;
+
+import org.jboss.security.SecurityAssociation;
+
+import org.jboss.logging.Logger;
+
+import org.jboss.deployment.DeploymentException;
+import org.jboss.metadata.MetaData;
+import org.jboss.metadata.EntityMetaData;
+import org.jboss.metadata.SessionMetaData;
 
 
 /**
@@ -91,8 +106,8 @@ public class BaseLocalContainerInvoker implements LocalContainerInvoker
    {
       this.container = con;
    }
-   
-   public void init()
+   /*   
+   public void create()
    throws Exception
    {
       if (((ContainerInvokerContainer)container).getLocalClass() == null)
@@ -110,17 +125,40 @@ public class BaseLocalContainerInvoker implements LocalContainerInvoker
       Method[] methods = ((ContainerInvokerContainer)container).getLocalClass().getMethods();
       beanMethodInvokerMap = new HashMap();
       for (int i = 0; i < methods.length; i++)
-         beanMethodInvokerMap.put(new Long(RemoteMethodInvocation.calculateHash(methods[i])), methods[i]);
+         beanMethodInvokerMap.put(new Long(MarshalledInvocation.calculateHash(methods[i])), methods[i]);
       
       methods = ((ContainerInvokerContainer)container).getLocalHomeClass().getMethods();
       homeMethodInvokerMap = new HashMap();
       for (int i = 0; i < methods.length; i++)
-         homeMethodInvokerMap.put(new Long(RemoteMethodInvocation.calculateHash(methods[i])), methods[i]);
+         homeMethodInvokerMap.put(new Long(MarshalledInvocation.calculateHash(methods[i])), methods[i]);
    }
-   
+*/   
+   public void create() throws Exception {}
+   public void destroy(){}
    public void start()
    throws Exception
    {
+      if (((ContainerInvokerContainer)container).getLocalClass() == null)
+         return;
+      
+      Context ctx = new InitialContext();
+      
+      jndiName = container.getBeanMetaData().getJndiName();
+      
+      // Set the transaction manager and transaction propagation
+      // context factory of the GenericProxy class
+      transactionManager = ((TransactionManager)ctx.lookup("java:/TransactionManager"));
+      
+      // Create method mappings for container invoker
+      Method[] methods = ((ContainerInvokerContainer)container).getLocalClass().getMethods();
+      beanMethodInvokerMap = new HashMap();
+      for (int i = 0; i < methods.length; i++)
+         beanMethodInvokerMap.put(new Long(MarshalledInvocation.calculateHash(methods[i])), methods[i]);
+      
+      methods = ((ContainerInvokerContainer)container).getLocalHomeClass().getMethods();
+      homeMethodInvokerMap = new HashMap();
+      for (int i = 0; i < methods.length; i++)
+         homeMethodInvokerMap.put(new Long(MarshalledInvocation.calculateHash(methods[i])), methods[i]);
       Class localHome = ((ContainerInvokerContainer)container).getLocalHomeClass();
       if(localHome == null)
       {
@@ -170,11 +208,11 @@ public class BaseLocalContainerInvoker implements LocalContainerInvoker
          // ignore.
       }
    }
-   
+   /*   
    public void destroy()
    {
    }
-   
+   */
    
    // ContainerInvoker implementation -------------------------------
    public EJBLocalHome getEJBLocalHome()
@@ -236,7 +274,7 @@ public class BaseLocalContainerInvoker implements LocalContainerInvoker
       
       try
       {
-         return container.invokeHome(new MethodInvocation(null, m, args,
+         return container.invokeHome(new Invocation(null, m, args,
          getTransaction(), getPrincipal(), getCredential()));
       }
       catch (AccessException ae)
@@ -301,7 +339,7 @@ public class BaseLocalContainerInvoker implements LocalContainerInvoker
       
       try
       {
-         return container.invoke(new MethodInvocation(id, m, args, getTransaction(),
+         return container.invoke(new Invocation(id, m, args, getTransaction(),
          getPrincipal(), getCredential()));
       }
       catch (AccessException ae)
