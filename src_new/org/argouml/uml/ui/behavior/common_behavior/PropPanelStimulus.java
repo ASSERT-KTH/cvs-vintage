@@ -1,4 +1,4 @@
-// $Id: PropPanelStimulus.java,v 1.44 2004/10/13 05:52:10 linus Exp $
+// $Id: PropPanelStimulus.java,v 1.45 2004/12/18 14:36:53 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -86,10 +86,8 @@ public class PropPanelStimulus extends PropPanelModelElement {
         addField(Translator.localize("label.namespace"), 
                 getNamespaceComboBox());
 
-        addButton(new PropPanelButton2(this, 
-                new ActionNavigateNamespace()));    
-        addButton(new PropPanelButton2(this, 
-                new ActionRemoveFromModel()));
+        addButton(new PropPanelButton2(new ActionNavigateNamespace()));    
+        addButton(new PropPanelButton2(new ActionRemoveFromModel()));
     }
 
 

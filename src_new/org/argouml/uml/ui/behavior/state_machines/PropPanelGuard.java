@@ -1,4 +1,4 @@
-// $Id: PropPanelGuard.java,v 1.32 2004/12/03 18:55:08 mvw Exp $
+// $Id: PropPanelGuard.java,v 1.33 2004/12/18 14:36:58 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,11 +27,10 @@ package org.argouml.uml.ui.behavior.state_machines;
 import javax.swing.JList;
 import javax.swing.JScrollPane;
 
-import org.argouml.application.helpers.ResourceLoaderWrapper;
 import org.argouml.i18n.Translator;
 import org.argouml.uml.ui.ActionNavigateTransition;
 import org.argouml.uml.ui.ActionRemoveFromModel;
-import org.argouml.uml.ui.PropPanelButton;
+import org.argouml.uml.ui.PropPanelButton2;
 import org.argouml.uml.ui.UMLExpressionBodyField;
 import org.argouml.uml.ui.UMLExpressionExpressionModel;
 import org.argouml.uml.ui.UMLExpressionLanguageField;
@@ -71,10 +70,6 @@ public class PropPanelGuard extends PropPanelModelElement {
 
         addSeperator();
 
-//        UMLExpressionModel expressionModel = new UMLExpressionModel(this, 
-//                (Class) ModelFacade.GUARD, "expression",
-//		(Class) ModelFacade.BOOLEAN_EXPRESSION, "getExpression", 
-//                "setExpression");
         UMLExpressionModel2 expressionModel = 
             new UMLExpressionExpressionModel(this, "expression");
         addField(Translator.localize("label.expression"), 
@@ -84,13 +79,11 @@ public class PropPanelGuard extends PropPanelModelElement {
         addField(Translator.localize("label.language"), 
                 new UMLExpressionLanguageField(expressionModel, true));
 
-	new PropPanelButton(this,
-            ResourceLoaderWrapper.lookupIconResource("NavigateUp"), 
-            Translator.localize("button.go-up"), 
-            new ActionNavigateTransition());
-    
-        new PropPanelButton(this, lookupIcon("Delete"), Translator.localize(
-            "action.delete-from-model"), new ActionRemoveFromModel());
+	
+	addButton(new PropPanelButton2(new ActionNavigateTransition(), 
+                lookupIcon("NavigateUp")));
+	addButton(new PropPanelButton2(new ActionRemoveFromModel(), 
+                lookupIcon("Delete")));
     }
 
 } /* end class PropPanelState */

@@ -1,4 +1,4 @@
-// $Id: PropPanelClass.java,v 1.67 2004/12/02 19:30:02 mvw Exp $
+// $Id: PropPanelClass.java,v 1.68 2004/12/18 14:36:59 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -32,7 +32,6 @@ import org.argouml.uml.diagram.ui.ActionAddAttribute;
 import org.argouml.uml.diagram.ui.ActionAddOperation;
 import org.argouml.uml.ui.ActionNavigateNamespace;
 import org.argouml.uml.ui.ActionRemoveFromModel;
-import org.argouml.uml.ui.PropPanelButton;
 import org.argouml.uml.ui.PropPanelButton2;
 import org.argouml.uml.ui.UMLLinkedList;
 import org.argouml.util.ConfigLoader;
@@ -95,20 +94,16 @@ public class PropPanelClass extends PropPanelClassifier {
         addField(Translator.localize("label.owned-elements"),
                 getOwnedElementsScroll());
 
-        addButton(new PropPanelButton2(this,
-                new ActionNavigateNamespace()));
-        addButton(new PropPanelButton2(this, 
-                        new ActionAddAttribute()));
-        addButton(new PropPanelButton2(this, 
-                        new ActionAddOperation()));
-        addButton(new PropPanelButton2(this, getActionNewReception()));
-        new PropPanelButton(this, lookupIcon("InnerClass"), 
-                Translator.localize("button.new-inner-class"), 
-                new ActionNewInnerClass());
-        new PropPanelButton(this, lookupIcon("Class"), Translator.localize(
-                "button.new-class"), new ActionNewClass());
-        new PropPanelButton(this, lookupIcon("Delete"), Translator.localize(
-                "action.delete-from-model"), new ActionRemoveFromModel());
+        addButton(new PropPanelButton2(new ActionNavigateNamespace()));
+        addButton(new PropPanelButton2(new ActionAddAttribute()));
+        addButton(new PropPanelButton2(new ActionAddOperation()));
+        addButton(new PropPanelButton2(getActionNewReception()));
+        addButton(new PropPanelButton2(new ActionNewInnerClass(), 
+                lookupIcon("InnerClass")));
+        addButton(new PropPanelButton2(new ActionNewClass(), 
+                lookupIcon("Class")));
+        addButton(new PropPanelButton2(new ActionRemoveFromModel(), 
+                lookupIcon("Delete")));
     }
 
     /**

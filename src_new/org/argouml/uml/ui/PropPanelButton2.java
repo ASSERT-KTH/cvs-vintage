@@ -1,4 +1,4 @@
-// $Id: PropPanelButton2.java,v 1.12 2004/10/23 11:05:44 mvw Exp $
+// $Id: PropPanelButton2.java,v 1.13 2004/12/18 14:36:59 mvw Exp $
 // Copyright (c) 2002-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,6 +25,7 @@
 package org.argouml.uml.ui;
 
 import javax.swing.Action;
+import javax.swing.Icon;
 import javax.swing.JButton;
 
 import ru.novosoft.uml.MElementEvent;
@@ -36,19 +37,25 @@ import ru.novosoft.uml.MElementEvent;
 public class PropPanelButton2 extends JButton 
         implements UMLUserInterfaceComponent {
 
-    private UMLUserInterfaceContainer container = null;
-    
     /**
      * Constructor for PropPanelButton2.
      * @param a the action
-     * @param c the UI container for this panel
      */
-    public PropPanelButton2(UMLUserInterfaceContainer c, Action a) {
+    public PropPanelButton2(Action a) {
         super(a);
         setText(""); // just the icon and possibly a tooltip
-        setContainer(c);
     }
 
+    /**
+     * The constructor.
+     * 
+     * @param a the action for this button
+     * @param i the icon to be shown
+     */
+    public PropPanelButton2(Action a, Icon i) {
+        this(a);
+        a.putValue(Action.SMALL_ICON, i);
+    }
  
     /**
      * @see org.argouml.uml.ui.UMLUserInterfaceComponent#targetChanged()
@@ -100,19 +107,4 @@ public class PropPanelButton2 extends JButton
     public void roleRemoved(MElementEvent e) {
     }
 
-    /**
-     * Returns the container.
-     * @return UMLUserInterfaceContainer
-     */
-    public UMLUserInterfaceContainer getContainer() {
-        return container;
-    }
-
-    /**
-     * Sets the container.
-     * @param c the container to set
-     */
-    public void setContainer(UMLUserInterfaceContainer c) {
-        container = c;
-    }
 }

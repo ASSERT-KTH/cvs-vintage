@@ -1,4 +1,4 @@
-// $Id: PropPanelDiagram.java,v 1.24 2004/11/29 19:57:56 linus Exp $
+// $Id: PropPanelDiagram.java,v 1.25 2004/12/18 14:36:59 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -28,7 +28,6 @@ import java.awt.event.ActionEvent;
 
 import javax.swing.JTextField;
 
-import org.argouml.application.helpers.ResourceLoaderWrapper;
 import org.argouml.i18n.Translator;
 import org.argouml.kernel.Project;
 import org.argouml.kernel.ProjectManager;
@@ -37,7 +36,7 @@ import org.argouml.ui.targetmanager.TargetManager;
 import org.argouml.uml.ui.AbstractActionNavigate;
 import org.argouml.uml.ui.ActionRemoveFromModel;
 import org.argouml.uml.ui.PropPanel;
-import org.argouml.uml.ui.PropPanelButton;
+import org.argouml.uml.ui.PropPanelButton2;
 import org.argouml.util.ConfigLoader;
 
 /**
@@ -61,14 +60,10 @@ public class PropPanelDiagram extends PropPanel {
         addField(Translator.localize("label.name"), field);
 
 
-        new PropPanelButton(this,
-                ResourceLoaderWrapper.lookupIconResource("NavigateUp"),
-                Translator.localize("button.go-up"),
-                new ActionNavigateUpFromDiagram());
-        new PropPanelButton(this,
-                ResourceLoaderWrapper.lookupIconResource("Delete"),
-                Translator.localize("button.delete"),
-                new ActionRemoveFromModel());
+        addButton(new PropPanelButton2(new ActionNavigateUpFromDiagram(), 
+                lookupIcon("NavigateUp")));
+        addButton(new PropPanelButton2(new ActionRemoveFromModel(), 
+                lookupIcon("Delete")));
     }
 
     /**
@@ -105,6 +100,13 @@ public class PropPanelDiagram extends PropPanel {
 } /* end class PropPanelDiagram */
 
 class ActionNavigateUpFromDiagram extends AbstractActionNavigate {
+
+    /**
+     * The constructor.
+     */
+    public ActionNavigateUpFromDiagram() {
+        super("button.go-up", true);
+    }
 
     /**
      * @see org.argouml.uml.ui.AbstractActionNavigate#navigateTo(java.lang.Object)

@@ -1,4 +1,4 @@
-// $Id: ActionNewInterface.java,v 1.1 2004/11/24 20:41:09 mvw Exp $
+// $Id: ActionNewInterface.java,v 1.2 2004/12/18 14:36:58 mvw Exp $
 // Copyright (c) 2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -38,7 +38,7 @@ import org.argouml.uml.ui.AbstractActionNewModelElement;
 /**
  * This action will create a new interface "next to" an existing interface.
  * 
- * @author Michiel
+ * @author mvw@tigris.org
  *
  */
 class ActionNewInterface extends AbstractActionNewModelElement {

@@ -1,4 +1,4 @@
-// $Id: PropPanelSubsystem.java,v 1.19 2004/11/25 21:09:14 mvw Exp $
+// $Id: PropPanelSubsystem.java,v 1.20 2004/12/18 14:36:59 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -35,7 +35,7 @@ import org.argouml.model.ModelFacade;
 import org.argouml.model.uml.UmlFactory;
 import org.argouml.ui.targetmanager.TargetManager;
 import org.argouml.uml.ui.AbstractActionNewModelElement;
-import org.argouml.uml.ui.PropPanelButton;
+import org.argouml.uml.ui.PropPanelButton2;
 import org.argouml.uml.ui.UMLLinkedList;
 import org.argouml.uml.ui.foundation.core.UMLClassifierFeatureListModel;
 import org.argouml.util.ConfigLoader;
@@ -61,15 +61,14 @@ public class PropPanelSubsystem extends PropPanelPackage {
         addField(Translator.localize("label.available-features"),
                 getFeatureScroll());
 
-        new PropPanelButton(this, lookupIcon("NewOperation"), 
-                Translator.localize("button.new-operation"), 
-                new ActionNewOperation());
+        addButton(new PropPanelButton2(new ActionNewOperation(), 
+                lookupIcon("NewOperation")));
     }
 
     /**
      * Add a new operation to this classifier.
      * 
-     * @author Michiel
+     * @author mvw@tigris.org
      */
     private class ActionNewOperation extends AbstractActionNewModelElement {
 

@@ -1,4 +1,4 @@
-// $Id: PropPanelModelElement.java,v 1.87 2004/11/04 17:23:18 bobtarling Exp $
+// $Id: PropPanelModelElement.java,v 1.88 2004/12/18 14:36:58 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -40,7 +40,6 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 
 import org.apache.log4j.Logger;
-import org.argouml.application.helpers.ResourceLoaderWrapper;
 import org.argouml.i18n.Translator;
 import org.argouml.model.uml.ExtensionMechanismsFactory;
 import org.argouml.model.uml.UmlHelper;
@@ -433,15 +432,4 @@ public abstract class PropPanelModelElement extends PropPanel {
         return nameDocument;
     }
 
-    /**
-     * Look up an icon.
-     * 
-     * @param name
-     *            the resource name.
-     * @return an ImageIcon corresponding to the given resource name.
-     */
-    protected static ImageIcon lookupIcon(String name) {
-        return ResourceLoaderWrapper
-                .lookupIconResource(name);
-    }
 }

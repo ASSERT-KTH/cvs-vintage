@@ -1,4 +1,4 @@
-// $Id: PropPanelParameter.java,v 1.52 2004/12/17 13:41:16 mvw Exp $
+// $Id: PropPanelParameter.java,v 1.53 2004/12/18 14:36:58 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -30,7 +30,6 @@ import javax.swing.JScrollPane;
 import org.argouml.i18n.Translator;
 import org.argouml.uml.ui.ActionNavigateContainerElement;
 import org.argouml.uml.ui.ActionRemoveFromModel;
-import org.argouml.uml.ui.PropPanelButton;
 import org.argouml.uml.ui.PropPanelButton2;
 import org.argouml.uml.ui.UMLComboBox2;
 import org.argouml.uml.ui.UMLInitialValueComboBox;
@@ -84,13 +83,11 @@ public class PropPanelParameter extends PropPanelModelElement {
         add(new UMLParameterDirectionKindRadioButtonPanel(
                 Translator.localize("label.parameter.kind"), true));
 
-        addButton(new PropPanelButton2(this, 
-                new ActionNavigateContainerElement()));
-        new PropPanelButton(this, lookupIcon("Parameter"), 
-                Translator.localize("button.new-parameter"), 
-                new ActionAddParameter());
-        new PropPanelButton(this, lookupIcon("Delete"), Translator.localize(
-            "action.delete-from-model"), new ActionRemoveFromModel());
+        addButton(new PropPanelButton2(new ActionNavigateContainerElement()));
+        addButton(new PropPanelButton2(new ActionAddParameter(), 
+                lookupIcon("Parameter")));
+        addButton(new PropPanelButton2(new ActionRemoveFromModel(), 
+                lookupIcon("Delete")));
     }
     
     /**

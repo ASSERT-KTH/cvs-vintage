@@ -1,4 +1,4 @@
-// $Id: PropPanelPackage.java,v 1.57 2004/12/02 19:30:03 mvw Exp $
+// $Id: PropPanelPackage.java,v 1.58 2004/12/18 14:36:59 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -36,7 +36,6 @@ import org.argouml.model.uml.UmlFactory;
 import org.argouml.ui.targetmanager.TargetManager;
 import org.argouml.uml.ui.ActionNavigateNamespace;
 import org.argouml.uml.ui.ActionRemoveFromModel;
-import org.argouml.uml.ui.PropPanelButton;
 import org.argouml.uml.ui.PropPanelButton2;
 import org.argouml.uml.ui.UMLLinkedList;
 import org.argouml.uml.ui.foundation.core.PropPanelNamespace;
@@ -126,13 +125,11 @@ public class PropPanelPackage extends PropPanelNamespace  {
         addField(Translator.localize("label.owned-elements"), 
                 getOwnedElementsScroll());
 
-        addButton(new PropPanelButton2(this, 
-                new ActionNavigateNamespace()));
-        new PropPanelButton(this, lookupIcon("Package"), 
-                Translator.localize("button.new-package"), 
-                new ActionAddPackage());
-        new PropPanelButton(this, lookupIcon("Delete"), Translator.localize(
-            "action.delete-from-model"), new ActionRemoveFromModel());
+        addButton(new PropPanelButton2(new ActionNavigateNamespace()));
+        addButton(new PropPanelButton2(new ActionAddPackage(), 
+                lookupIcon("Package")));
+        addButton(new PropPanelButton2(new ActionRemoveFromModel(), 
+                lookupIcon("Delete")));
     }
 
     /** add a package to the current package. */

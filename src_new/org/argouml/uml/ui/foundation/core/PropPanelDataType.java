@@ -1,4 +1,4 @@
-// $Id: PropPanelDataType.java,v 1.53 2004/12/02 19:30:02 mvw Exp $
+// $Id: PropPanelDataType.java,v 1.54 2004/12/18 14:36:59 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -40,7 +40,6 @@ import org.argouml.ui.targetmanager.TargetManager;
 import org.argouml.uml.ui.AbstractActionNewModelElement;
 import org.argouml.uml.ui.ActionNavigateContainerElement;
 import org.argouml.uml.ui.ActionRemoveFromModel;
-import org.argouml.uml.ui.PropPanelButton;
 import org.argouml.uml.ui.PropPanelButton2;
 import org.argouml.uml.ui.UMLLinkedList;
 import org.argouml.util.ConfigLoader;
@@ -97,20 +96,15 @@ public class PropPanelDataType extends PropPanelClassifier {
         addField(Translator.localize("label.literals"),
                 getAttributeScroll());
 
-        addButton(new PropPanelButton2(this,
-                new ActionNavigateContainerElement()));
-        new PropPanelButton(this, lookupIcon("DataType"), 
-                Translator.localize("button.new-datatype"), 
-                new ActionAddDataTypeToDataType());
-        new PropPanelButton(this, lookupIcon("NewAttribute"), 
-            Translator.localize("button.new-enumeration-literal"),
-            new ActionAddAttributeToDataType());
-
-        new PropPanelButton(this, lookupIcon("NewOperation"), 
-                Translator.localize("button.new-operation"), 
-                new ActionAddQueryOperation());
-        new PropPanelButton(this, lookupIcon("Delete"), Translator.localize(
-            "action.delete-from-model"), new ActionRemoveFromModel());
+        addButton(new PropPanelButton2(new ActionNavigateContainerElement()));
+        addButton(new PropPanelButton2(new ActionAddDataTypeToDataType(), 
+                lookupIcon("DataType")));
+        addButton(new PropPanelButton2(new ActionAddAttributeToDataType(), 
+                lookupIcon("NewAttribute")));
+        addButton(new PropPanelButton2(new ActionAddQueryOperation(), 
+                lookupIcon("NewOperation")));
+        addButton(new PropPanelButton2(new ActionRemoveFromModel(), 
+                lookupIcon("Delete")));
     }
 
     private class ActionAddQueryOperation 

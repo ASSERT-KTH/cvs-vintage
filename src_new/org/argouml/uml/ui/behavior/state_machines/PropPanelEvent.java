@@ -1,4 +1,4 @@
-// $Id: PropPanelEvent.java,v 1.32 2004/11/24 21:57:05 mvw Exp $
+// $Id: PropPanelEvent.java,v 1.33 2004/12/18 14:36:58 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -69,8 +69,7 @@ public abstract class PropPanelEvent extends PropPanelModelElement {
 
         paramScroll = getParameterScroll();
         
-        addButton(new PropPanelButton2(this,
-                new ActionNavigateContainerElement()));
+        addButton(new PropPanelButton2(new ActionNavigateContainerElement()));
 
         addField(Translator.localize("label.name"),
                 getNameTextField());

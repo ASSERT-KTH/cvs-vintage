@@ -1,4 +1,4 @@
-// $Id: PropPanelInstance.java,v 1.35 2004/11/04 17:23:17 bobtarling Exp $
+// $Id: PropPanelInstance.java,v 1.36 2004/12/18 14:36:53 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: PropPanelInstance.java
 // Classes: PropPanelInstance
 // Original Author: jrobbins@ics.uci.edu
-// $Id: PropPanelInstance.java,v 1.35 2004/11/04 17:23:17 bobtarling Exp $
+// $Id: PropPanelInstance.java,v 1.36 2004/12/18 14:36:53 mvw Exp $
 
 package org.argouml.uml.ui.behavior.common_behavior;
 
@@ -75,8 +75,7 @@ public class PropPanelInstance extends PropPanelModelElement {
         addField(Translator.localize("label.namespace"),
                 getNamespaceComboBox());
 
-        addButton(new PropPanelButton2(this,
-                new ActionNavigateNamespace()));
+        addButton(new PropPanelButton2(new ActionNavigateNamespace()));
     }
 
     /**

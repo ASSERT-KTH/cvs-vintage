@@ -1,4 +1,4 @@
-// $Id: PropPanelNodeInstance.java,v 1.37 2004/12/11 20:12:04 mvw Exp $
+// $Id: PropPanelNodeInstance.java,v 1.38 2004/12/18 14:36:53 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -32,7 +32,6 @@ import org.argouml.model.ModelFacade;
 import org.argouml.uml.ui.AbstractActionAddModelElement;
 import org.argouml.uml.ui.ActionNavigateContainerElement;
 import org.argouml.uml.ui.ActionRemoveFromModel;
-import org.argouml.uml.ui.PropPanelButton;
 import org.argouml.uml.ui.PropPanelButton2;
 import org.argouml.uml.ui.UMLLinkedList;
 import org.argouml.uml.ui.UMLMutableLinkedList;
@@ -84,9 +83,8 @@ public class PropPanelNodeInstance extends PropPanelInstance {
                     classifierScroll);
 
 
-        addButton(new PropPanelButton2(this,
-                new ActionNavigateContainerElement()));
-        new PropPanelButton(this, lookupIcon("Delete"), Translator.localize(
-            "action.delete-from-model"), new ActionRemoveFromModel());
+        addButton(new PropPanelButton2(new ActionNavigateContainerElement()));
+        addButton(new PropPanelButton2(new ActionRemoveFromModel(), 
+                lookupIcon("Delete")));;
     }
 }

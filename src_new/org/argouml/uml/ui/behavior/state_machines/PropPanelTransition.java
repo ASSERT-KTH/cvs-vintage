@@ -1,4 +1,4 @@
-// $Id: PropPanelTransition.java,v 1.32 2004/12/02 19:30:02 mvw Exp $
+// $Id: PropPanelTransition.java,v 1.33 2004/12/18 14:36:58 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -30,7 +30,6 @@ import javax.swing.JScrollPane;
 import org.argouml.i18n.Translator;
 import org.argouml.uml.ui.ActionNavigateContainerElement;
 import org.argouml.uml.ui.ActionRemoveFromModel;
-import org.argouml.uml.ui.PropPanelButton;
 import org.argouml.uml.ui.PropPanelButton2;
 import org.argouml.uml.ui.UMLLinkedList;
 import org.argouml.uml.ui.UMLMutableLinkedList;
@@ -94,10 +93,9 @@ public class PropPanelTransition extends PropPanelModelElement {
         addField(Translator.localize("label.effect"),
                 new JScrollPane(effectList));
 
-        addButton(new PropPanelButton2(this,
-                new ActionNavigateContainerElement()));
-        new PropPanelButton(this, lookupIcon("Delete"), Translator.localize(
-            "action.delete-from-model"), new ActionRemoveFromModel());
+        addButton(new PropPanelButton2(new ActionNavigateContainerElement()));
+        addButton(new PropPanelButton2(new ActionRemoveFromModel(), 
+                lookupIcon("Delete")));;
     }
 
 } /* end class PropPanelTransition */

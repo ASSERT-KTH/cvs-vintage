@@ -1,4 +1,4 @@
-// $Id: PropPanelOperation.java,v 1.70 2004/12/17 13:41:16 mvw Exp $
+// $Id: PropPanelOperation.java,v 1.71 2004/12/18 14:36:58 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -39,7 +39,6 @@ import org.argouml.uml.diagram.ui.ActionAddOperation;
 import org.argouml.uml.ui.AbstractActionNewModelElement;
 import org.argouml.uml.ui.ActionNavigateOwner;
 import org.argouml.uml.ui.ActionRemoveFromModel;
-import org.argouml.uml.ui.PropPanelButton;
 import org.argouml.uml.ui.PropPanelButton2;
 import org.argouml.uml.ui.UMLLinkedList;
 import org.argouml.util.ConfigLoader;
@@ -105,15 +104,13 @@ public class PropPanelOperation extends PropPanelFeature {
                new JScrollPane(new UMLLinkedList(
                new UMLOperationRaisedSignalsListModel())));
         
-        addButton(new PropPanelButton2(this, new ActionNavigateOwner()));
-        addButton(new PropPanelButton2(this, 
-                        new ActionAddOperation()));
-        addButton(new PropPanelButton2(this, new ActionNewParameter()));
-        new PropPanelButton(this, lookupIcon("SignalSending"),
-                Translator.localize("button.new-raised-signal"), 
-                new ActionNewRaisedSignal());
-        new PropPanelButton(this, lookupIcon("Delete"), Translator.localize(
-            "action.delete-from-model"), new ActionRemoveFromModel());
+        addButton(new PropPanelButton2(new ActionNavigateOwner()));
+        addButton(new PropPanelButton2(new ActionAddOperation()));
+        addButton(new PropPanelButton2(new ActionNewParameter()));
+        addButton(new PropPanelButton2(new ActionNewRaisedSignal(), 
+                lookupIcon("SignalSending")));
+        addButton(new PropPanelButton2(new ActionRemoveFromModel(), 
+                lookupIcon("Delete")));
     }
 
     /**

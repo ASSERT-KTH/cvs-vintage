@@ -1,4 +1,4 @@
-// $Id: PropPanel.java,v 1.96 2004/11/14 08:14:38 linus Exp $
+// $Id: PropPanel.java,v 1.97 2004/12/18 14:36:59 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -48,9 +48,6 @@ import org.argouml.application.helpers.ResourceLoaderWrapper;
 import org.argouml.kernel.ProjectManager;
 import org.argouml.model.ModelFacade;
 import org.argouml.model.uml.UmlModelEventPump;
-import org.tigris.swidgets.LabelledLayout;
-import org.tigris.swidgets.Orientation;
-import org.tigris.swidgets.Vertical;
 import org.argouml.ui.LookAndFeelMgr;
 import org.argouml.ui.TabSpawnable;
 import org.argouml.ui.targetmanager.TargetEvent;
@@ -60,6 +57,9 @@ import org.argouml.ui.targetmanager.TargettableModelView;
 import org.argouml.uml.Profile;
 import org.argouml.uml.ProfileJava;
 import org.tigris.gef.presentation.Fig;
+import org.tigris.swidgets.LabelledLayout;
+import org.tigris.swidgets.Orientation;
+import org.tigris.swidgets.Vertical;
 import org.tigris.toolbar.ToolBar;
 
 import ru.novosoft.uml.MElementEvent;
@@ -723,4 +723,15 @@ public abstract class PropPanel
     protected JToolBar getButtonPanel() {
         return buttonPanel;
     }
+    
+    /**
+     * Look up an icon.
+     * 
+     * @param name the resource name.
+     * @return an ImageIcon corresponding to the given resource name
+     */
+    protected static ImageIcon lookupIcon(String name) {
+        return ResourceLoaderWrapper.lookupIconResource(name);
+    }
+    
 } /* end class PropPanel */

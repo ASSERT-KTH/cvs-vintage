@@ -1,4 +1,4 @@
-// $Id: PropPanelAssociationEnd.java,v 1.53 2004/12/02 19:30:02 mvw Exp $
+// $Id: PropPanelAssociationEnd.java,v 1.54 2004/12/18 14:36:58 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -33,13 +33,10 @@ import javax.swing.border.TitledBorder;
 
 import org.argouml.i18n.Translator;
 import org.argouml.model.ModelFacade;
-import org.tigris.swidgets.GridLayout2;
-import org.tigris.swidgets.Orientation;
 import org.argouml.ui.targetmanager.TargetManager;
 import org.argouml.uml.ui.ActionNavigateAssociation;
 import org.argouml.uml.ui.ActionNavigateOppositeAssocEnd;
 import org.argouml.uml.ui.ActionRemoveFromModel;
-import org.argouml.uml.ui.PropPanelButton;
 import org.argouml.uml.ui.PropPanelButton2;
 import org.argouml.uml.ui.UMLComboBox2;
 import org.argouml.uml.ui.UMLLinkedList;
@@ -47,6 +44,8 @@ import org.argouml.uml.ui.UMLMultiplicityComboBox2;
 import org.argouml.uml.ui.UMLMultiplicityComboBoxModel;
 import org.argouml.uml.ui.UMLMutableLinkedList;
 import org.argouml.util.ConfigLoader;
+import org.tigris.swidgets.GridLayout2;
+import org.tigris.swidgets.Orientation;
 
 /**
  * TODO: this property panel needs refactoring to remove dependency on old gui
@@ -215,13 +214,11 @@ public class PropPanelAssociationEnd extends PropPanelModelElement {
         add(changeabilityRadioButtonpanel);
         add(visibilityRadioButtonPanel);
 
-        addButton(new PropPanelButton2(this,
-                new ActionNavigateAssociation()));
-        addButton(new PropPanelButton2(this,
-                new ActionNavigateOppositeAssocEnd()
-                        .setIcon(lookupIcon("AssociationEnd"))));
-        new PropPanelButton(this, lookupIcon("Delete"), Translator.localize(
-            "action.delete-from-model"), new ActionRemoveFromModel());
+        addButton(new PropPanelButton2(new ActionNavigateAssociation()));
+        addButton(new PropPanelButton2(new ActionNavigateOppositeAssocEnd()
+                .setIcon(lookupIcon("AssociationEnd"))));
+        addButton(new PropPanelButton2(new ActionRemoveFromModel(), 
+                lookupIcon("Delete")));;
 
     }
 

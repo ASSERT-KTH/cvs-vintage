@@ -1,4 +1,4 @@
-// $Id: PropPanelClassifierRole.java,v 1.47 2004/12/12 21:04:52 mvw Exp $
+// $Id: PropPanelClassifierRole.java,v 1.48 2004/12/18 14:36:54 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -30,7 +30,6 @@ import javax.swing.JScrollPane;
 import org.argouml.i18n.Translator;
 import org.argouml.uml.ui.ActionNavigateContainerElement;
 import org.argouml.uml.ui.ActionRemoveFromModel;
-import org.argouml.uml.ui.PropPanelButton;
 import org.argouml.uml.ui.PropPanelButton2;
 import org.argouml.uml.ui.UMLComboBox2;
 import org.argouml.uml.ui.UMLLinkedList;
@@ -105,13 +104,11 @@ public class PropPanelClassifierRole extends PropPanelClassifier {
 	addField(Translator.localize("label.available-features"),
 		 new JScrollPane(availableFeaturesList));
 
-	addButton(new PropPanelButton2(this,
-                new ActionNavigateContainerElement()));
-	new PropPanelButton(this, lookupIcon("Reception"), 
-            Translator.localize("button.new-reception"), 
-            getActionNewReception());
-        new PropPanelButton(this, lookupIcon("Delete"), Translator.localize(
-            "action.delete-from-model"), new ActionRemoveFromModel());
+	addButton(new PropPanelButton2(new ActionNavigateContainerElement()));
+	addButton(new PropPanelButton2(getActionNewReception(), 
+                lookupIcon("Reception")));
+	addButton(new PropPanelButton2(new ActionRemoveFromModel(), 
+                lookupIcon("Delete")));
     }
 
     /**

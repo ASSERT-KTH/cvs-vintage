@@ -1,4 +1,4 @@
-// $Id: PropPanelSignal.java,v 1.47 2004/12/17 22:56:20 mvw Exp $
+// $Id: PropPanelSignal.java,v 1.48 2004/12/18 14:36:53 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -37,7 +37,6 @@ import org.argouml.uml.ui.AbstractActionAddModelElement;
 import org.argouml.uml.ui.AbstractActionNewModelElement;
 import org.argouml.uml.ui.ActionNavigateNamespace;
 import org.argouml.uml.ui.ActionRemoveFromModel;
-import org.argouml.uml.ui.PropPanelButton;
 import org.argouml.uml.ui.PropPanelButton2;
 import org.argouml.uml.ui.UMLMutableLinkedList;
 import org.argouml.uml.ui.foundation.core.PropPanelModelElement;
@@ -75,14 +74,10 @@ public class PropPanelSignal extends PropPanelModelElement {
         addField(Translator.localize("label.contexts"), 
                 operationScroll);
 
-        addButton(new PropPanelButton2(this, 
-                new ActionNavigateNamespace()));
-        new PropPanelButton(this, 
-                lookupIcon("SignalSending"), 
-                Translator.localize("button.new-signal"), 
-                new ActionNewSignal());
-        addButton(new PropPanelButton2(this, 
-                new ActionRemoveFromModel()));   
+        addButton(new PropPanelButton2(new ActionNavigateNamespace()));
+        addButton(new PropPanelButton2(new ActionNewSignal(), 
+                lookupIcon("SignalSending")));
+        addButton(new PropPanelButton2(new ActionRemoveFromModel()));   
     }
 
     /**

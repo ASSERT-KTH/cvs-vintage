@@ -1,4 +1,4 @@
-// $Id: PropPanelCallEvent.java,v 1.25 2004/12/02 19:47:44 mvw Exp $
+// $Id: PropPanelCallEvent.java,v 1.26 2004/12/18 14:36:58 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -29,7 +29,7 @@ import javax.swing.JScrollPane;
 
 import org.argouml.i18n.Translator;
 import org.argouml.uml.ui.ActionRemoveFromModel;
-import org.argouml.uml.ui.PropPanelButton;
+import org.argouml.uml.ui.PropPanelButton2;
 import org.argouml.uml.ui.UMLLinkedList;
 import org.argouml.uml.ui.foundation.core.ActionNewParameter;
 import org.argouml.util.ConfigLoader;
@@ -53,19 +53,16 @@ public class PropPanelCallEvent extends PropPanelEvent {
      */
     public void initialize() {
         super.initialize();
-       
-        new PropPanelButton(this, lookupIcon("Parameter"), 
-                Translator.localize("button.new-parameter"),
-                new ActionNewParameter());
-        new PropPanelButton(this, lookupIcon("Delete"), Translator.localize(
-            "action.delete-from-model"), new ActionRemoveFromModel());
-
         
         // TODO: make the next list into a scrollbox (issue 2288)
         JList operationList =
 	    new UMLLinkedList(new UMLCallEventOperationListModel());
         addField(Translator.localize("label.operations"),
 		 new JScrollPane(operationList));
+        addButton(new PropPanelButton2(new ActionNewParameter(), 
+                lookupIcon("Parameter")));
+        addButton(new PropPanelButton2(new ActionRemoveFromModel(), 
+                lookupIcon("Delete")));
     }
 
 } /* end class PropPanelCallEvent */
