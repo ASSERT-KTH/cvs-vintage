@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/connector/Attic/JNIConnectionHandler.java,v 1.16 2000/08/28 06:08:17 costin Exp $
- * $Revision: 1.16 $
- * $Date: 2000/08/28 06:08:17 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/connector/Attic/JNIConnectionHandler.java,v 1.17 2000/08/29 03:44:29 costin Exp $
+ * $Revision: 1.17 $
+ * $Date: 2000/08/29 03:44:29 $
  *
  * ====================================================================
  *
@@ -300,7 +300,7 @@ class JNIRequestAdapter extends Request {
             String []values = new String[nheaders];
             if(h.readHeaders(s, l, names, values) > 0) {
                 for(i = 0 ; i < nheaders ; i++) {
-                    headers.addHeader(names[i].toLowerCase(), values[i]);
+                    headers.addValue(names[i]).setString(values[i]);
                 }
             } else {
                 throw new IOException("Error: JNI implementation error");
@@ -313,18 +313,7 @@ class JNIRequestAdapter extends Request {
     	    requestURI = requestURI.substring(0, idQ);
         }
 
-	    contentLength = headers.getIntHeader("content-length");
-	    contentType = headers.getHeader("content-type");
     }
-
-//     public ServletInputStream getInputStream() throws IOException {
-//         if(contentLength <= 0) {
-//             throw new IOException("Empty input stream");
-//         }
-
-//         in = new BufferedServletInputStream(this);
-//     	return in;
-//     }
 }
 
 

@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/facade23/org/apache/tomcat/facade23/Attic/HttpServletResponseFacade.java,v 1.2 2000/08/28 06:08:15 costin Exp $
- * $Revision: 1.2 $
- * $Date: 2000/08/28 06:08:15 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/facade23/org/apache/tomcat/facade23/Attic/HttpServletResponseFacade.java,v 1.3 2000/08/29 03:44:20 costin Exp $
+ * $Revision: 1.3 $
+ * $Date: 2000/08/29 03:44:20 $
  *
  * ====================================================================
  *
@@ -247,12 +247,12 @@ final class HttpServletResponseFacade  implements HttpServletResponse
 
     public void setDateHeader(String name, long date) {
 	MimeHeaders headers=response.getMimeHeaders();
-	headers.setDateHeader( name, date);
+	headers.setValue( name ).setTime( date);
     }
 
     public void addDateHeader(String name, long value) {
 	MimeHeaders headers=response.getMimeHeaders();
-	headers.addDateHeader( name, value );
+	headers.addValue( name ).setTime( value );
     }
 
     public void setHeader(String name, String value) {

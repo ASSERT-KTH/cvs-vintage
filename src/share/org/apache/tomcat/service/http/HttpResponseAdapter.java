@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/http/Attic/HttpResponseAdapter.java,v 1.18 2000/08/28 06:08:18 costin Exp $
- * $Revision: 1.18 $
- * $Date: 2000/08/28 06:08:18 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/http/Attic/HttpResponseAdapter.java,v 1.19 2000/08/29 03:44:30 costin Exp $
+ * $Revision: 1.19 $
+ * $Date: 2000/08/29 03:44:30 $
  *
  * ====================================================================
  *
@@ -154,7 +154,7 @@ public class HttpResponseAdapter extends  Response {
 	// This avoids redundant setting of date ( very expensive ).
 	// XXX XXX Check if IIS, NES do generate the date
 	if( false ) {
-	    headers.setDateHeader(  "Date", System.currentTimeMillis());
+	    headers.setValue(  "Date" ).setTime( System.currentTimeMillis());
 	}
 	
 	// Servlet Engine header will be set per/adapter - smarter adapters will

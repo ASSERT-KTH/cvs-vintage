@@ -299,10 +299,9 @@ public class Request {
     public int getContentLength() {
         if( contentLength > -1 ) return contentLength;
 
-	String value=getHeader( "content-length" );
-	if( value==null) return -1;
+	MessageBytes clB=headers.getValue("content-length");
+        contentLength = (clB==null) ? -1 : clB.getInt();
 
-	contentLength = Integer.parseInt(value);
 	return contentLength;
     }
 
@@ -670,9 +669,7 @@ public class Request {
 
     // -------------------- Facade for MimeHeaders
     public Enumeration getHeaders(String name) {
-	//	Vector v = reqA.getMimeHeaders().getHeadersVector(name);
-	Vector v = getMimeHeaders().getHeadersVector(name);
-	return v.elements();
+	return getMimeHeaders().values(name);
     }
 
     // -------------------- Utils - facade for RequestUtil

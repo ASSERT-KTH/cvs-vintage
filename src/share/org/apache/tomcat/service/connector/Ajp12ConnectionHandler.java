@@ -365,7 +365,7 @@ class AJP12RequestAdapter extends Request {
 		case 3: // Header
 		    token1 = readString(ajpin, null);
 		    token2 = readString(ajpin, "");
-		    headers.addHeader(token1.toLowerCase(), token2);
+		    headers.addValue(token1).setString(token2);
 		    break;
 
 		case 254: // Signal
@@ -447,8 +447,6 @@ class AJP12RequestAdapter extends Request {
 
 	//processCookies();
 
-	contentLength = headers.getIntHeader("content-length");
-	contentType = headers.getHeader("content-type");
 
 	// XXX
 	// detect for real whether or not we have more requests

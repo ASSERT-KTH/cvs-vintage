@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/connector/Attic/Ajp13ConnectorRequest.java,v 1.10 2000/08/28 06:08:17 costin Exp $
- * $Revision: 1.10 $
- * $Date: 2000/08/28 06:08:17 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/connector/Attic/Ajp13ConnectorRequest.java,v 1.11 2000/08/29 03:44:29 costin Exp $
+ * $Revision: 1.11 $
+ * $Date: 2000/08/29 03:44:29 $
  *
  * ====================================================================
  *
@@ -166,7 +166,7 @@ public class Ajp13ConnectorRequest extends Request
             }
 
             String hValue = msg.getString();
-            headers.addHeader( hName , hValue );
+            headers.addValue( hName ).setString( hValue );
             //log( "Head: " + hName + "=" + hValue);
         }
 
@@ -230,9 +230,8 @@ public class Ajp13ConnectorRequest extends Request
             setScheme("https");
         }
 
-        contentLength = headers.getIntHeader("content-length");
-        contentType = headers.getHeader("content-type");
-	//    	((BufferedServletInputStream)this.in).setLimit(contentLength);
+	MessageBytes clB=headers.getValue("content-length");
+        contentLength = (clB==null) ? -1 : clB.getInt();
     	if(contentLength > 0) {
     		/* Read present data */
     		int err = con.receive(msg);

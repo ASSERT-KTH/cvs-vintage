@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/http/Attic/HttpRequestAdapter.java,v 1.27 2000/08/28 06:08:17 costin Exp $
- * $Revision: 1.27 $
- * $Date: 2000/08/28 06:08:17 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/http/Attic/HttpRequestAdapter.java,v 1.28 2000/08/29 03:44:29 costin Exp $
+ * $Revision: 1.28 $
+ * $Date: 2000/08/29 03:44:29 $
  *
  * ====================================================================
  *
@@ -243,7 +243,8 @@ public class HttpRequestAdapter extends Request {
 
 	while ((c = b[off++]) != ':' && c != ' ') {
 	    if (c == '\n') {
-		loghelper.log("Parse error, empty line: " + new String( b, off, len ), Logger.ERROR);
+		loghelper.log("Parse error, empty line: " +
+			      new String( b, off, len ), Logger.ERROR);
 		return false;
 	    }
 	}
@@ -265,8 +266,8 @@ public class HttpRequestAdapter extends Request {
 
 	while ((c = b[off++]) == ' ');
 
-	headers.addBytesHeader( b, nS, nE,
-				off-1, len - (off - start - 1));
+	headers.addValue( b, nS, nE).
+	    setBytes(b, off-1, len - (off - start - 1));
 	return true;
     }
 

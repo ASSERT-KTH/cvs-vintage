@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Response.java,v 1.32 2000/08/28 06:08:15 costin Exp $
- * $Revision: 1.32 $
- * $Date: 2000/08/28 06:08:15 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Response.java,v 1.33 2000/08/29 03:44:21 costin Exp $
+ * $Revision: 1.33 $
+ * $Date: 2000/08/29 03:44:21 $
  *
  * ====================================================================
  *
@@ -209,7 +209,7 @@ public class Response {
     }
 
     public boolean containsHeader(String name) {
-	return headers.containsHeader(name);
+	return headers.getHeader(name) != null;
     }
 
     public boolean isUsingStream() {
@@ -245,7 +245,7 @@ public class Response {
 	    if( checkSpecialHeader(name, value) )
 		return;
 	}
-	headers.setHeader(name, value);
+	headers.setValue(name).setString( value);
     }
 
     public void addHeader(String name, String value) {
@@ -255,7 +255,7 @@ public class Response {
 	    if( checkSpecialHeader(name, value) )
 		return;
 	}
-	headers.addHeader(name, value);
+	headers.addValue(name).setString( value );
     }
 
     
@@ -426,11 +426,12 @@ public class Response {
 
         // Set the contentType for header output
         // Use the setContentType() method so encoding is set properly
-        String newType = RequestUtil.constructLocalizedContentType(contentType, locale);
+        String newType = RequestUtil.constructLocalizedContentType(contentType,
+								   locale);
         setContentType(newType);
 
 	// only one header !
-	headers.setHeader("Content-Language", contentLanguage);
+	headers.setValue("Content-Language").setString( contentLanguage);
     }
 
     public String getCharacterEncoding() {
@@ -444,7 +445,7 @@ public class Response {
         if (encoding != null) {
 	    characterEncoding = encoding;
         }
-	headers.setHeader("Content-Type", contentType);
+	headers.setValue("Content-Type").setString( contentType);
     }
 
     public String getContentType() {
@@ -454,7 +455,7 @@ public class Response {
     public void setContentLength(int contentLength) {
         if( included ) return;
 	this.contentLength = contentLength;
-	headers.setIntHeader("Content-Length", contentLength);
+	headers.setValue("Content-Length").setInt(contentLength);
     }
 
     public int getContentLength() {
