@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2002,2004 - INRIA (www.inria.fr)
+ * Copyright (C) 2002-2005 - INRIA (www.inria.fr)
  *
  * CAROL: Common Architecture for RMI ObjectWeb Layer
  *
@@ -22,7 +22,7 @@
  * USA
  *
  * --------------------------------------------------------------------------
- * $Id: MultiContext.java,v 1.5 2005/02/01 21:49:15 el-vadimo Exp $
+ * $Id: MultiContext.java,v 1.6 2005/02/11 10:12:59 benoitf Exp $
  * --------------------------------------------------------------------------
  */
 package org.objectweb.carol.jndi.spi;
@@ -50,7 +50,6 @@ import org.objectweb.carol.util.configuration.TraceCarol;
  * @see javax.naming.Context
  * @see javax.naming.InitialContext
  * @see org.objectweb.util.multi.ProtocolCurrent
- * @version 1.0, 15/07/2002
  */
 public class MultiContext implements Context {
 

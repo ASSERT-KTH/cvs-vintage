@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2002,2004 - INRIA (www.inria.fr)
+ * Copyright (C) 2002-2005 - INRIA (www.inria.fr)
  *
  * CAROL: Common Architecture for RMI ObjectWeb Layer
  *
@@ -22,7 +22,7 @@
  * USA
  *
  * --------------------------------------------------------------------------
- * $Id: MultiOrbInitialContextFactory.java,v 1.5 2004/09/01 11:02:41 benoitf Exp $
+ * $Id: MultiOrbInitialContextFactory.java,v 1.6 2005/02/11 10:12:59 benoitf Exp $
  * --------------------------------------------------------------------------
  */
 package org.objectweb.carol.jndi.spi;
@@ -44,7 +44,6 @@ import org.objectweb.carol.util.configuration.TraceCarol;
  * @author Guillaume Riviere (Guillaume.Riviere@inrialpes.fr)
  * @see javax.naming.spi.ObjectFactory
  * @see javax.naming.spi.InitialContextFactory
- * @version 1.0, 15/07/2002
  */
 public class MultiOrbInitialContextFactory implements ObjectFactory, InitialContextFactory {
 
