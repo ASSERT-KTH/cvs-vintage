@@ -55,6 +55,18 @@
   <noscript><input type="submit" value="$l10n.Go" name="eventSubmit_doSelectquery" tabindex="4" /></noscript>
 </form>
   </td>
+  
+
+<td>
+ <form action="$link.setPage("IssueList.vm").setAction("Search")" method="get">
+  <input type="hidden" name="$scarabG.Constant.NEXT_TEMPLATE" value="Index.vm" />
+  <input type="hidden" name="go" value="quickSearch"/>
+  <input type="text"   name="searchString"/>
+  <input type="submit" value="$l10n.TextSearch" name="eventSubmit_doSelectquery" />
+  <noscript><input type="submit" value="$l10n.Go" name="eventSubmit_doSelectquery" tabindex="4" /></noscript>
+ </form>
+</td>
+  
 #end
   </tr>
  </table>
