@@ -1,4 +1,4 @@
-<!-- $Id: changes.html,v 1.90 2002/03/21 18:13:39 jmcnally Exp $ -->
+<!-- $Id: changes.html,v 1.91 2002/03/22 01:59:30 maartenc Exp $ -->
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
 <html>
 
@@ -23,11 +23,13 @@
                     changed example path element from absolute to relative. (NRR)</li>
                 <li>Used GET instead of POST for the form which wraps the
                     query navigation select, also added js to avoid having
-                    to press the Go button.  This better simulates a set of
+                    to press the Go button. This better simulates a set of
                     links. (JDM)</li>
                 <li>Altered use of lucene, so that any text search allowed
                     by lucene is available.  This includes things like
                     wildcards, prefix, AND, and OR. (JDM)</li>
+                <li>Always show links to "Login" and "Register" when the
+                    user hasn't logged in yet. (MC)</li>
             </ul>
         </td>
     </tr>
@@ -39,6 +41,9 @@
                     For more information, see Bug Report
                     #<a href="http://scarab.tigris.org/issues/show_bug.cgi?id=92">92</a>
                     (JSS)</li>
+                <li>Made the navigation bar at the left 100% sentence case. (MC)</li>
+                <li>Fixed a bug in the create-mysql-database.bat file.
+                    This .bat file referenced a non-existing .sql file. (MC)</li>
             </ul>
         </td>
     </tr>
