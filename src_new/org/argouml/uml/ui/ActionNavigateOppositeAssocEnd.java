@@ -1,4 +1,4 @@
-// $Id: ActionNavigateOppositeAssocEnd.java,v 1.1 2004/07/26 22:33:41 mkl Exp $
+// $Id: ActionNavigateOppositeAssocEnd.java,v 1.2 2004/12/18 19:21:46 mvw Exp $
 // Copyright (c) 2003-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -33,6 +33,13 @@ import org.argouml.model.ModelFacade;
  *  
  */
 public class ActionNavigateOppositeAssocEnd extends AbstractActionNavigate {
+
+    /**
+     * The constructor.
+     */
+    public ActionNavigateOppositeAssocEnd() {
+        super("button.go-opposite", true);
+    }
 
     /**
      * @see org.argouml.uml.ui.AbstractActionNavigate#navigateTo(java.lang.Object)
