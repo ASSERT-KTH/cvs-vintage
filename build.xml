@@ -22,7 +22,7 @@
   <property name="test" 	  value="${basedir}/test"/>
   <property name="externals" 	  value="${basedir}/externals"/>
   <property name="ext" 	          value="${basedir}/ext"/>
-
+  <property name="build"	value="${basedir}/output"/>
   <!--======================================================
   load the following user properties from a file:
   - build.compiler: Wich compiler do you want use ? (optional)
@@ -38,6 +38,7 @@
   <property name="dist.config"     value="${dist}/config"/>
   <property name="dist.doc"  	   value="${dist}/doc"/> 
   <property name="tmp"  	   value="${dist}/tmp"/> 
+
 
   <!-- joanthan jar properties -->
   <property name="jonathan.jar"   value="${externals}/jonathan.jar"/> 
@@ -104,7 +105,7 @@
 
   <target name="compile.iiop"> 
     
-     <!-- for sun iiop -->     
+     <!-- for sun iiop  
     <rmic base="${build}/classes" iiop="true" compiler="sun"
       classname="org.objectweb.carol.jndi.iiop.IIOPResourceWrapper">
       <classpath refid="carol.classpath"/>
@@ -112,9 +113,9 @@
     <rmic base="${build}/classes" iiop="true" compiler="sun"
       classname="org.objectweb.carol.jndi.iiop.IIOPReferenceWrapper">
       <classpath refid="carol.classpath"/>
-    </rmic>
+    </rmic>-->
      
-     <!-- for open orb   
+     <!-- for open orb-->   
     <java classname="org.openorb.rmi.compiler.JavaToIdl" fork="true" failonerror="true">
       <arg value="-tie"/>
       <arg value="-stub"/>
@@ -134,7 +135,7 @@
       optimize="${compile.optimize}">
       <classpath refid="carol.classpath"/>
       <include name="**/org/objectweb/carol/jndi/iiop/_*.java"/>
-    </javac> --> 
+    </javac> 
     
   </target>
 
@@ -166,7 +167,7 @@
   <!-- **************************************-->
   <target name="dist" description="Make a carol distribution in ${dist} directory (default)">
     <antcall target="jar"/>
-    <antcall target="jdoc"/>
+    <!--<antcall target="jdoc"/>-->
     <antcall target="doc"/>
     <antcall target="config"/>
   </target>
