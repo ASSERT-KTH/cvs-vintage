@@ -26,9 +26,9 @@ import org.columba.core.plugin.AbstractPluginHandler;
  */
 public class TableRendererPluginHandler extends AbstractPluginHandler {
     /**
-     * @param id
-     * @param config
-     */
+ * @param id
+ * @param config
+ */
     public TableRendererPluginHandler() {
         super("org.columba.mail.tablerenderer",
             "org/columba/mail/plugin/table_renderer.xml");

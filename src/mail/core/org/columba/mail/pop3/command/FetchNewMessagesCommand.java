@@ -15,13 +15,6 @@
 //All Rights Reserved.
 package org.columba.mail.pop3.command;
 
-import java.io.IOException;
-import java.text.MessageFormat;
-import java.util.Iterator;
-import java.util.List;
-
-import javax.swing.JOptionPane;
-
 import org.columba.core.command.Command;
 import org.columba.core.command.CommandCancelledException;
 import org.columba.core.command.DefaultCommandReference;
@@ -30,12 +23,22 @@ import org.columba.core.command.Worker;
 import org.columba.core.command.WorkerStatusController;
 import org.columba.core.logging.ColumbaLogger;
 import org.columba.core.main.MainInterface;
+
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.command.POP3CommandReference;
 import org.columba.mail.folder.Folder;
 import org.columba.mail.message.ColumbaMessage;
 import org.columba.mail.pop3.POP3Server;
 import org.columba.mail.util.MailResourceLoader;
+
+import java.io.IOException;
+
+import java.text.MessageFormat;
+
+import java.util.Iterator;
+import java.util.List;
+
+import javax.swing.JOptionPane;
 
 
 /**
@@ -52,10 +55,10 @@ public class FetchNewMessagesCommand extends Command {
     int newMessageCount;
 
     /**
-     * Constructor for FetchNewMessages.
-     * @param frameMediator
-     * @param references
-     */
+ * Constructor for FetchNewMessages.
+ * @param frameMediator
+ * @param references
+ */
     public FetchNewMessagesCommand(DefaultCommandReference[] references) {
         super(references);
 
@@ -65,9 +68,10 @@ public class FetchNewMessagesCommand extends Command {
     }
 
     /**
-     * @see org.columba.core.command.Command#execute(Worker)
-     */
-    public void execute(WorkerStatusController worker) throws Exception {
+ * @see org.columba.core.command.Command#execute(Worker)
+ */
+    public void execute(WorkerStatusController worker)
+        throws Exception {
         POP3CommandReference[] r = (POP3CommandReference[]) getReferences(FIRST_EXECUTION);
 
         server = r[0].getServer();
@@ -85,10 +89,10 @@ public class FetchNewMessagesCommand extends Command {
             // synchronize local UID list with server UID list
             List newMessagesUidList = synchronize();
 
-            if( MainInterface.DEBUG) {
-                ColumbaLogger.log.fine( newMessagesUidList.toString());
+            if (MainInterface.DEBUG) {
+                ColumbaLogger.log.fine(newMessagesUidList.toString());
             }
-            
+
             // only download new messages
             downloadNewMessages(newMessagesUidList, worker);
 
@@ -117,10 +121,10 @@ public class FetchNewMessagesCommand extends Command {
             // clear statusbar message
             server.getObservable().clearMessage();
         } finally {
-        	/*
-            // always enable the menuitem again 
-            r[0].getPOP3ServerController().enableActions(true);
-            */
+            /*
+// always enable the menuitem again 
+r[0].getPOP3ServerController().enableActions(true);
+*/
         }
     }
 
@@ -169,8 +173,8 @@ public class FetchNewMessagesCommand extends Command {
         return totalSize / 1024;
     }
 
-    public void downloadNewMessages(List newMessagesUIDList, WorkerStatusController worker)
-        throws Exception {
+    public void downloadNewMessages(List newMessagesUIDList,
+        WorkerStatusController worker) throws Exception {
         ColumbaLogger.log.fine("need to fetch " + newMessagesUIDList.size() +
             " messages.");
 
@@ -215,9 +219,9 @@ public class FetchNewMessagesCommand extends Command {
                 // delete message from server
 
                 /*
-                // remove UID from server list
-                boolean remove = newUIDList.remove(serverUID);
-                */
+// remove UID from server list
+boolean remove = newUIDList.remove(serverUID);
+*/
 
                 // server message numbers start with 1
                 // whereas List numbers start with 0

@@ -289,7 +289,7 @@ public class POP3Store {
             capas = protocol.capa();
         } catch (POP3Exception e) {
             // CAPA not supported
-            capas = new String[] {};
+            capas = new String[] {  };
         }
     }
 
@@ -336,8 +336,8 @@ public class POP3Store {
 
         // shall we switch to SSL?
         if (popItem.getBoolean("enable_ssl")) {
-        	// if CAPA was not support just give it a try...
-            if (isSupported("STLS") || capas.length == 0) {
+            // if CAPA was not support just give it a try...
+            if (isSupported("STLS") || (capas.length == 0)) {
                 try {
                     protocol.switchToSSL();
 
@@ -345,8 +345,10 @@ public class POP3Store {
                     ColumbaLogger.log.info("Switched to SSL");
                 } catch (IOException e) {
                     Object[] options = new String[] {
-                            MailResourceLoader.getString("", "global", "ok").replaceAll("&",""),
-                            MailResourceLoader.getString("", "global", "cancel").replaceAll("&","")
+                            MailResourceLoader.getString("", "global", "ok")
+                                              .replaceAll("&", ""),
+                            MailResourceLoader.getString("", "global", "cancel")
+                                              .replaceAll("&", "")
                         };
 
                     int result = JOptionPane.showOptionDialog(null,
@@ -368,36 +370,41 @@ public class POP3Store {
 
                     // reopen the port
                     protocol.openPort();
-                } catch (POP3Exception e ) {
-					Object[] options = new String[] {
-							MailResourceLoader.getString("", "global", "ok").replaceAll("&",""),
-							MailResourceLoader.getString("", "global", "cancel").replaceAll("&","")
-						};
-					int result = JOptionPane.showOptionDialog(null,
-							MailResourceLoader.getString("dialog", "error",
-								"ssl_not_supported") + "\n" +
-								MailResourceLoader.getString("dialog", "error",
-									"ssl_turn_off"), "Warning",
-							JOptionPane.DEFAULT_OPTION,
-							JOptionPane.WARNING_MESSAGE, null, options, options[0]);
+                } catch (POP3Exception e) {
+                    Object[] options = new String[] {
+                            MailResourceLoader.getString("", "global", "ok")
+                                              .replaceAll("&", ""),
+                            MailResourceLoader.getString("", "global", "cancel")
+                                              .replaceAll("&", "")
+                        };
+                    int result = JOptionPane.showOptionDialog(null,
+                            MailResourceLoader.getString("dialog", "error",
+                                "ssl_not_supported") + "\n" +
+                            MailResourceLoader.getString("dialog", "error",
+                                "ssl_turn_off"), "Warning",
+                            JOptionPane.DEFAULT_OPTION,
+                            JOptionPane.WARNING_MESSAGE, null, options,
+                            options[0]);
 
-					if (result == 1) {
-						throw new CommandCancelledException();
-					}
+                    if (result == 1) {
+                        throw new CommandCancelledException();
+                    }
 
-					// turn off SSL for the future
-					popItem.set("enable_ssl", false);                	
+                    // turn off SSL for the future
+                    popItem.set("enable_ssl", false);
                 }
             } else {
-				Object[] options = new String[] {
-						MailResourceLoader.getString("", "global", "ok").replaceAll("&",""),
-						MailResourceLoader.getString("", "global", "cancel").replaceAll("&","")
-					};
+                Object[] options = new String[] {
+                        MailResourceLoader.getString("", "global", "ok")
+                                          .replaceAll("&", ""),
+                        MailResourceLoader.getString("", "global", "cancel")
+                                          .replaceAll("&", "")
+                    };
                 int result = JOptionPane.showOptionDialog(null,
                         MailResourceLoader.getString("dialog", "error",
                             "ssl_not_supported") + "\n" +
-                            MailResourceLoader.getString("dialog", "error",
-                                "ssl_turn_off"), "Warning",
+                        MailResourceLoader.getString("dialog", "error",
+                            "ssl_turn_off"), "Warning",
                         JOptionPane.DEFAULT_OPTION,
                         JOptionPane.WARNING_MESSAGE, null, options, options[0]);
 
@@ -486,11 +493,10 @@ public class POP3Store {
         }
 
         // else find the most secure method
-		// NOTE if SSL is possible we just need the plain login
-		// since SSL does the encryption for us.        
+        // NOTE if SSL is possible we just need the plain login
+        // since SSL does the encryption for us.        
         if (!usingSSL) {
-        	//TODO add AUTH support
-        	
+            //TODO add AUTH support
             if (isSupported("APOP")) {
                 return APOP;
             }

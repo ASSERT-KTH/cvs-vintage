@@ -30,9 +30,9 @@ import java.util.Vector;
  */
 public class FolderOptionsPluginHandler extends AbstractPluginHandler {
     /**
-     * @param id
-     * @param config
-     */
+ * @param id
+ * @param config
+ */
     public FolderOptionsPluginHandler() {
         super("org.columba.mail.folderoptions",
             "org/columba/mail/plugin/folderoptions.xml");
@@ -41,12 +41,12 @@ public class FolderOptionsPluginHandler extends AbstractPluginHandler {
     }
 
     /**
-     * Adds a state check to <code>getPluginIdList()</code>.
-     *
-     * @param state      0, if state is "before". Otherwise, is "after"
-     *
-     * @return           array of plugin ids
-     */
+ * Adds a state check to <code>getPluginIdList()</code>.
+ *
+ * @param state      0, if state is "before". Otherwise, is "after"
+ *
+ * @return           array of plugin ids
+ */
     public String[] getPluginIdList(int state) {
         int count = parentNode.count();
 

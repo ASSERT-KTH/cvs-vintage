@@ -29,10 +29,10 @@ import org.columba.core.xml.XmlElement;
  */
 public class FolderPluginHandler extends AbstractPluginHandler {
     /**
-     * Constructor for FolderPluginHandler.
-     * @param id
-     * @param config
-     */
+ * Constructor for FolderPluginHandler.
+ * @param id
+ * @param config
+ */
     public FolderPluginHandler() {
         super("org.columba.mail.folder", "org/columba/mail/plugin/folder.xml");
 
@@ -40,8 +40,8 @@ public class FolderPluginHandler extends AbstractPluginHandler {
     }
 
     /* (non-Javadoc)
-     * @see org.columba.core.plugin.AbstractPluginHandler#addExtension(java.lang.String, org.columba.core.xml.XmlElement)
-     */
+ * @see org.columba.core.plugin.AbstractPluginHandler#addExtension(java.lang.String, org.columba.core.xml.XmlElement)
+ */
     public void addExtension(String id, XmlElement extension) {
     }
 }

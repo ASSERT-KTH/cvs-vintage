@@ -43,9 +43,10 @@ public class CheckForNewMessagesCommand extends Command {
     }
 
     /**
-     * @see org.columba.core.command.Command#execute(Worker)
-     */
-    public void execute(WorkerStatusController worker) throws Exception {
+ * @see org.columba.core.command.Command#execute(Worker)
+ */
+    public void execute(WorkerStatusController worker)
+        throws Exception {
         FetchNewMessagesCommand command = new FetchNewMessagesCommand(getReferences());
 
         POP3CommandReference[] r = (POP3CommandReference[]) getReferences(FIRST_EXECUTION);
@@ -82,10 +83,10 @@ public class CheckForNewMessagesCommand extends Command {
             JOptionPane.showMessageDialog(null, e.getLocalizedMessage(),
                 name.substring(name.lastIndexOf(".")), JOptionPane.ERROR_MESSAGE);
         } finally {
-        	/*
-            // always enable the menuitem again 
-            r[0].getPOP3ServerController().enableActions(true);
-            */
+            /*
+// always enable the menuitem again 
+r[0].getPOP3ServerController().enableActions(true);
+*/
         }
     }
 
@@ -101,21 +102,21 @@ public class CheckForNewMessagesCommand extends Command {
         kit.beep(); //system beep
 
         /*
-        AccountItem item = server.getAccountItem();
-        PopItem popItem = item.getPopItem();
-        String file = popItem.get("sound_file");
+AccountItem item = server.getAccountItem();
+PopItem popItem = item.getPopItem();
+String file = popItem.get("sound_file");
 
-        ColumbaLogger.log.fine("playing sound file=" + file);
+ColumbaLogger.log.fine("playing sound file=" + file);
 
-        if (file.equalsIgnoreCase("default")) {
-                PlaySound.play("newmail.wav");
-        } else {
-                try {
-                        PlaySound.play(new URL("file:+" + file));
-                } catch (Exception ex) {
-                        ex.printStackTrace();
-                }
+if (file.equalsIgnoreCase("default")) {
+        PlaySound.play("newmail.wav");
+} else {
+        try {
+                PlaySound.play(new URL("file:+" + file));
+        } catch (Exception ex) {
+                ex.printStackTrace();
         }
-        */
+}
+*/
     }
 }

@@ -15,18 +15,12 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003.
 //
 //All Rights Reserved.
-
 package org.columba.mail.pop3;
-
-import java.io.File;
-import java.util.Enumeration;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
 
 import org.columba.core.command.StatusObservable;
 import org.columba.core.util.ListTools;
 import org.columba.core.util.Lock;
+
 import org.columba.mail.config.AccountItem;
 import org.columba.mail.config.PopItem;
 import org.columba.mail.config.SpecialFoldersItem;
@@ -35,7 +29,15 @@ import org.columba.mail.main.MailInterface;
 import org.columba.mail.message.ColumbaHeader;
 import org.columba.mail.message.ColumbaMessage;
 import org.columba.mail.message.HeaderList;
+
 import org.columba.ristretto.pop3.protocol.POP3Protocol;
+
+import java.io.File;
+
+import java.util.Enumeration;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
 
 
 public class POP3Server {
@@ -45,7 +47,6 @@ public class POP3Server {
     private boolean alreadyLoaded;
     private POP3Store store;
     protected POP3HeaderCache headerCache;
-    
     private Lock lock;
 
     public POP3Server(AccountItem accountItem) {
@@ -53,14 +54,15 @@ public class POP3Server {
 
         int uid = accountItem.getUid();
 
-        file = new File(MailInterface.config.getPOP3Directory(), (new Integer(uid)).toString());
+        file = new File(MailInterface.config.getPOP3Directory(),
+                (new Integer(uid)).toString());
 
         PopItem item = accountItem.getPopItem();
 
         store = new POP3Store(item);
 
         headerCache = new POP3HeaderCache(this);
-        
+
         lock = new Lock();
     }
 
@@ -179,11 +181,10 @@ public class POP3Server {
         // set the attachment flag
         String contentType = (String) header.get("Content-Type");
 
-
-        
         header.set("columba.attachment", header.hasAttachments());
-		header.getAttributes().put("columba.fetchstate", Boolean.TRUE);
-		header.getAttributes().put("columba.accountuid", new Integer( accountItem.getInteger("uid")));
+        header.getAttributes().put("columba.fetchstate", Boolean.TRUE);
+        header.getAttributes().put("columba.accountuid",
+            new Integer(accountItem.getInteger("uid")));
 
         headerCache.getHeaderList().add(header, uid);
 
@@ -199,10 +200,10 @@ public class POP3Server {
     }
 
     /**
-     * Returns the store.
-     *
-     * @return POP3Store
-     */
+ * Returns the store.
+ *
+ * @return POP3Store
+ */
     public POP3Store getStore() {
         return store;
     }
@@ -210,11 +211,11 @@ public class POP3Server {
     public StatusObservable getObservable() {
         return store.getObservable();
     }
-    
+
     public boolean tryToGetLock(Object locker) {
         return lock.tryToGetLock(locker);
     }
-    
+
     public void releaseLock(Object locker) {
         lock.release(locker);
     }

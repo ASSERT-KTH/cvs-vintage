@@ -26,10 +26,10 @@ package org.columba.mail.plugin;
  */
 public class FilterPluginHandler extends AbstractFilterPluginHandler {
     /**
-     * Constructor for LocalFilterPluginHandler.
-     * @param id
-     * @param config
-     */
+ * Constructor for LocalFilterPluginHandler.
+ * @param id
+ * @param config
+ */
     public FilterPluginHandler() {
         super("org.columba.mail.filter", "org/columba/mail/plugin/filter.xml",
             "filterlist");

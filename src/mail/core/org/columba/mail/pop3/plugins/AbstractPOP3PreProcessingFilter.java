@@ -26,8 +26,8 @@ public abstract class AbstractPOP3PreProcessingFilter extends DefaultPlugin {
     public abstract String modify(String rawString);
 
     /**
-     * @return
-     */
+ * @return
+ */
     public XmlElement getRootElement() {
         return rootElement;
     }

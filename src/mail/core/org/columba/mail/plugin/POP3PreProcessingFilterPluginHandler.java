@@ -17,9 +17,9 @@ import org.columba.core.plugin.AbstractPluginHandler;
  */
 public class POP3PreProcessingFilterPluginHandler extends AbstractPluginHandler {
     /**
-     * @param id
-     * @param config
-     */
+ * @param id
+ * @param config
+ */
     public POP3PreProcessingFilterPluginHandler() {
         super("org.columba.mail.pop3preprocessingfilter",
             "org/columba/mail/plugin/pop3preprocessingfilter.xml");

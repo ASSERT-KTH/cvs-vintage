@@ -26,9 +26,9 @@ package org.columba.mail.plugin;
  */
 public class FilterActionPluginHandler extends AbstractFilterPluginHandler {
     /**
-     * Constructor for FilterActionPluginHandler.
-     * @param config
-     */
+ * Constructor for FilterActionPluginHandler.
+ * @param config
+ */
     public FilterActionPluginHandler() {
         super("org.columba.mail.filteraction",
             "org/columba/mail/plugin/filter_actions.xml", "actionlist");

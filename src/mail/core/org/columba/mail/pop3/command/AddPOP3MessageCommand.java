@@ -8,10 +8,10 @@ package org.columba.mail.pop3.command;
 
 import org.columba.core.command.CompoundCommand;
 import org.columba.core.command.DefaultCommandReference;
-import org.columba.core.command.Worker;
 import org.columba.core.command.WorkerStatusController;
 import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.main.MainInterface;
+
 import org.columba.mail.command.FolderCommand;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.filter.Filter;
@@ -21,6 +21,7 @@ import org.columba.mail.gui.frame.TableUpdater;
 import org.columba.mail.gui.table.model.TableModelChangedEvent;
 import org.columba.mail.main.MailInterface;
 import org.columba.mail.message.ColumbaMessage;
+
 import org.columba.ristretto.message.Flags;
 import org.columba.ristretto.message.io.SourceInputStream;
 
@@ -35,27 +36,28 @@ public class AddPOP3MessageCommand extends FolderCommand {
     Folder inboxFolder;
 
     /**
-     * @param references
-     */
+ * @param references
+ */
     public AddPOP3MessageCommand(DefaultCommandReference[] references) {
         super(references);
     }
 
     /**
-     * @param frame
-     * @param references
-     */
+ * @param frame
+ * @param references
+ */
     public AddPOP3MessageCommand(FrameMediator frame,
         DefaultCommandReference[] references) {
         super(frame, references);
     }
 
     /*
-     * (non-Javadoc)
-     *
-     * @see org.columba.core.command.Command#execute(org.columba.core.command.Worker)
-     */
-    public void execute(WorkerStatusController worker) throws Exception {
+ * (non-Javadoc)
+ *
+ * @see org.columba.core.command.Command#execute(org.columba.core.command.Worker)
+ */
+    public void execute(WorkerStatusController worker)
+        throws Exception {
         FolderCommandReference[] r = (FolderCommandReference[]) getReferences();
 
         inboxFolder = (Folder) r[0].getFolder();
@@ -63,10 +65,11 @@ public class AddPOP3MessageCommand extends FolderCommand {
         ColumbaMessage message = (ColumbaMessage) r[0].getMessage();
 
         // add message to folder
-        Object uid = inboxFolder.addMessage(new SourceInputStream(message.getSource()), message.getHeader().getAttributes());
+        Object uid = inboxFolder.addMessage(new SourceInputStream(
+                    message.getSource()), message.getHeader().getAttributes());
         inboxFolder.getFlags(uid).set(Flags.RECENT);
 
-		inboxFolder.getMessageFolderInfo().incRecent();
+        inboxFolder.getMessageFolderInfo().incRecent();
 
         // apply filter on message
         FilterList list = inboxFolder.getFilterList();
@@ -74,7 +77,8 @@ public class AddPOP3MessageCommand extends FolderCommand {
         for (int j = 0; j < list.count(); j++) {
             Filter filter = list.get(j);
 
-            Object[] result = inboxFolder.searchMessages(filter, new Object[] { uid });
+            Object[] result = inboxFolder.searchMessages(filter,
+                    new Object[] { uid });
 
             if (result.length != 0) {
                 CompoundCommand command = filter.getCommand(inboxFolder, result);
@@ -85,10 +89,10 @@ public class AddPOP3MessageCommand extends FolderCommand {
     }
 
     /*
-     * (non-Javadoc)
-     *
-     * @see org.columba.core.command.Command#updateGUI()
-     */
+ * (non-Javadoc)
+ *
+ * @see org.columba.core.command.Command#updateGUI()
+ */
     public void updateGUI() throws Exception {
         // update table viewer
         TableModelChangedEvent ev = new TableModelChangedEvent(TableModelChangedEvent.UPDATE,

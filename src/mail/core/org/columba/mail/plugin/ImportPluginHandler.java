@@ -26,9 +26,9 @@ import org.columba.core.plugin.AbstractPluginHandler;
  */
 public class ImportPluginHandler extends AbstractPluginHandler {
     /**
-     * @param id
-     * @param config
-     */
+ * @param id
+ * @param config
+ */
     public ImportPluginHandler() {
         super("org.columba.mail.import", "org/columba/mail/plugin/import.xml");
 
