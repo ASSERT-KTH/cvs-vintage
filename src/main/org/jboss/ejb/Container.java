@@ -67,7 +67,7 @@ import org.jnp.server.NamingServer;
  *   @see ContainerFactory
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
  *   @author <a href="marc.fleury@telkel.com">Marc Fleury</a>
- *   @version $Revision: 1.31 $
+ *   @version $Revision: 1.32 $
  */
 public abstract class Container
 {
@@ -75,15 +75,15 @@ public abstract class Container
 
    // Attributes ----------------------------------------------------
 
-    // This is the application that this container is a part of
+   // This is the application that this container is a part of
    protected Application application;
 
-    // This is the classloader of this container. All classes and resources that
-    // the bean uses will be loaded from here. By doing this we make the bean re-deployable
+   // This is the classloader of this container. All classes and resources that
+   // the bean uses will be loaded from here. By doing this we make the bean re-deployable
    protected ClassLoader classLoader;
 
-    // This is the new metadata. it includes information from both ejb-jar and jboss.xml
-	// the metadata for the application can be accessed trough metaData.getApplicationMetaData()
+   // This is the new metadata. it includes information from both ejb-jar and jboss.xml
+   // the metadata for the application can be accessed trough metaData.getApplicationMetaData()
    protected BeanMetaData metaData;
 
    // This is the EnterpriseBean class
@@ -104,215 +104,216 @@ public abstract class Container
    // Public --------------------------------------------------------
 
    /**
-    * Sets a transaction manager for this container.
-    *
-    * @see javax.transaction.TransactionManager
-    *
-    * @param    tm
-    */
-    public void setTransactionManager(TransactionManager tm)
-    {
-        this.tm = tm;
-    }
+   * Sets a transaction manager for this container.
+   *
+   * @see javax.transaction.TransactionManager
+   *
+   * @param    tm
+   */
+   public void setTransactionManager(TransactionManager tm)
+   {
+      this.tm = tm;
+   }
 
-    /**
-     * Returns this container's transaction manager.
-     *
-     * @return  a concrete instance of javax.transaction.TransactionManager
-     */
-    public TransactionManager getTransactionManager()
-    {
-        return tm;
-    }
+   /**
+   * Returns this container's transaction manager.
+   *
+   * @return  a concrete instance of javax.transaction.TransactionManager
+   */
+   public TransactionManager getTransactionManager()
+   {
+      return tm;
+   }
 
-    public void setSecurityManager(EJBSecurityManager sm)
-    {
-   	    this.sm = sm;
-    }
+   public void setSecurityManager(EJBSecurityManager sm)
+   {
+      this.sm = sm;
+   }
 
-    public EJBSecurityManager getSecurityManager()
-    {
-        return sm;
-    }
+   public EJBSecurityManager getSecurityManager()
+   {
+      return sm;
+   }
 
-    public void setRealmMapping(RealmMapping rm)
-    {
-   	    this.rm = rm;
-    }
+   public void setRealmMapping(RealmMapping rm)
+   {
+      this.rm = rm;
+   }
 
-    public RealmMapping getRealmMapping()
-    {
-        return rm;
-    }
+   public RealmMapping getRealmMapping()
+   {
+      return rm;
+   }
 
 
-    /**
-     * Sets the application deployment unit for this container. All the bean
-     * containers within the same application unit share the same instance.
-     *
-     * @param   app     application for this container
-     */
-    public void setApplication(Application app)
-    {
-        if (app == null)
-            throw new IllegalArgumentException("Null application");
+   /**
+   * Sets the application deployment unit for this container. All the bean
+   * containers within the same application unit share the same instance.
+   *
+   * @param   app     application for this container
+   */
+   public void setApplication(Application app)
+   {
+      if (app == null)
+         throw new IllegalArgumentException("Null application");
 
-        application = app;
-    }
+      application = app;
+   }
 
-    /**
-     * Returns the application for this container.
-     *
-     * @return
-     */
-    public Application getApplication()
-    {
-        return application;
-    }
+   /**
+   * Returns the application for this container.
+   *
+   * @return
+   */
+   public Application getApplication()
+   {
+      return application;
+   }
 
-    /**
-     * Sets the class loader for this container. All the classes and resources
-     * used by the bean in this container will use this classloader.
-     *
-     * @param   cl
-     */
-    public void setClassLoader(ClassLoader cl)
-    {
-       this.classLoader = cl;
-    }
+   /**
+   * Sets the class loader for this container. All the classes and resources
+   * used by the bean in this container will use this classloader.
+   *
+   * @param   cl
+   */
+   public void setClassLoader(ClassLoader cl)
+   {
+      this.classLoader = cl;
+   }
 
-    /**
-     * Returns the classloader for this container.
-     *
-     * @return
-     */
-    public ClassLoader getClassLoader()
-    {
-        return classLoader;
-    }
+   /**
+   * Returns the classloader for this container.
+   *
+   * @return
+   */
+   public ClassLoader getClassLoader()
+   {
+      return classLoader;
+   }
 
-    /**
-     * Sets the meta data for this container. The meta data consists of the
-     * properties found in the XML descriptors.
-     *
-     * @param   metaData
-     */
-    public void setBeanMetaData(BeanMetaData metaData)
-    {
-        this.metaData = metaData;
-    }
+   /**
+   * Sets the meta data for this container. The meta data consists of the
+   * properties found in the XML descriptors.
+   *
+   * @param   metaData
+   */
+   public void setBeanMetaData(BeanMetaData metaData)
+   {
+      this.metaData = metaData;
+   }
 
-    /**
-     * Returns the metadata of this container.
-     *
-     * @return metaData;
-     */
-    public BeanMetaData getBeanMetaData()
-    {
-        return metaData;
-    }
+   /**
+   * Returns the metadata of this container.
+   *
+   * @return metaData;
+   */
+   public BeanMetaData getBeanMetaData()
+   {
+      return metaData;
+   }
 
-    /**
-     * Returns the permissions for a method. (a set of roles)
-     *
-     * @return assemblyDescriptor;
-     */
-    public Set getMethodPermissions( Method m, boolean home )
-    {
+   /**
+   * Returns the permissions for a method. (a set of roles)
+   *
+   * @return assemblyDescriptor;
+   */
+   public Set getMethodPermissions( Method m, boolean home )
+   {
       Set permissions = (Set) methodPermissionsCache.get( m );
-      if (permissions == null) {
-	  		permissions = getBeanMetaData().getMethodPermissions(m.getName(), m.getParameterTypes(), !home);
-	  		methodPermissionsCache.put(m, permissions);
-	  }
-	  return permissions;
-	  
-    }
+      if (permissions == null)
+      {
+         permissions = getBeanMetaData().getMethodPermissions(m.getName(), m.getParameterTypes(), !home);
+         methodPermissionsCache.put(m, permissions);
+      }
+      return permissions;
 
-    /**
-     * Returns the bean class instance of this container.
-     *
-     * @return  instance of the Enterprise bean class
-     */
-    public Class getBeanClass()
-    {
-       return beanClass;
-    }
+   }
 
-    /**
-     * The ContainerFactory calls this method.  The ContainerFactory has set all the
-     * plugins and interceptors that this bean requires and now proceeds to initialize
-     * the chain.  The method looks for the standard classes in the URL, sets up
-     * the naming environment of the bean. The concrete container classes should
-     * override this method to introduce implementation specific initialization behaviour.
-     *
-     * @exception   Exception   if loading the bean class failed (ClassNotFoundException)
-     *                          or setting up "java:" naming environment failed (DeploymentException)
-     */
+   /**
+   * Returns the bean class instance of this container.
+   *
+   * @return  instance of the Enterprise bean class
+   */
+   public Class getBeanClass()
+   {
+      return beanClass;
+   }
+
+   /**
+   * The ContainerFactory calls this method.  The ContainerFactory has set all the
+   * plugins and interceptors that this bean requires and now proceeds to initialize
+   * the chain.  The method looks for the standard classes in the URL, sets up
+   * the naming environment of the bean. The concrete container classes should
+   * override this method to introduce implementation specific initialization behaviour.
+   *
+   * @exception   Exception   if loading the bean class failed (ClassNotFoundException)
+   *                          or setting up "java:" naming environment failed (DeploymentException)
+   */
    public void init()
-      throws Exception
+   throws Exception
    {
-        // Acquire classes from CL
-        beanClass = classLoader.loadClass(metaData.getEjbClass());
+      // Acquire classes from CL
+      beanClass = classLoader.loadClass(metaData.getEjbClass());
 
-        // Setup "java:" namespace
-        setupEnvironment();
+      // Setup "java:" namespace
+      setupEnvironment();
    }
 
    /**
-    * A default implementation of starting the container service (no-op). The concrete
-    * container classes should override this method to introduce implementation specific
-    * start behaviour.
-    *
-    * @exception    Exception   an exception that occured during start
-    */
+   * A default implementation of starting the container service (no-op). The concrete
+   * container classes should override this method to introduce implementation specific
+   * start behaviour.
+   *
+   * @exception    Exception   an exception that occured during start
+   */
    public void start()
-      throws Exception
+   throws Exception
    {
    }
 
    /**
-    * A default implementation of stopping the container service (no-op). The concrete
-    * container classes should override this method to introduce implementation specific
-    * stop behaviour.
-    */
+   * A default implementation of stopping the container service (no-op). The concrete
+   * container classes should override this method to introduce implementation specific
+   * stop behaviour.
+   */
    public void stop()
    {
    }
 
    /**
-    * A default implementation of destroying the container service (no-op). The concrete
-    * container classes should override this method to introduce implementation specific
-    * destroy behaviour.
-    */
+   * A default implementation of destroying the container service (no-op). The concrete
+   * container classes should override this method to introduce implementation specific
+   * destroy behaviour.
+   */
    public void destroy()
    {
    }
 
-    /**
-     *  This method is called by the ContainerInvoker when a method call comes in on the Home object.
-     *
-     *  The Container forwards this call to the interceptor chain for further processing.
-     *
-     * @param       mi  the object holding all info about this invocation
-     * @return      the result of the home invocation
-     * @exception   Exception
-     */
+   /**
+   *  This method is called by the ContainerInvoker when a method call comes in on the Home object.
+   *
+   *  The Container forwards this call to the interceptor chain for further processing.
+   *
+   * @param       mi  the object holding all info about this invocation
+   * @return      the result of the home invocation
+   * @exception   Exception
+   */
    public abstract Object invokeHome(MethodInvocation mi)
-      throws Exception;
+   throws Exception;
 
-    /**
-     *  This method is called by the ContainerInvoker when a method call comes in on an EJBObject.
-     *
-     *  The Container forwards this call to the interceptor chain for further processing.
-     *
-     * @param       id      the id of the object being invoked. May be null if stateless
-     * @param       method  the method being invoked
-     * @param       args    the parameters
-     * @return      the     result of the invocation
-     * @exception   Exception
-     */
+   /**
+   *  This method is called by the ContainerInvoker when a method call comes in on an EJBObject.
+   *
+   *  The Container forwards this call to the interceptor chain for further processing.
+   *
+   * @param       id      the id of the object being invoked. May be null if stateless
+   * @param       method  the method being invoked
+   * @param       args    the parameters
+   * @return      the     result of the invocation
+   * @exception   Exception
+   */
    public abstract Object invoke(MethodInvocation mi)
-      throws Exception;
+   throws Exception;
 
    // Protected -----------------------------------------------------
 
@@ -329,176 +330,177 @@ public abstract class Container
    *
    */
    private void setupEnvironment()
-      throws DeploymentException
+   throws DeploymentException
    {
-        try
-        {
-          // Since the BCL is already associated with this thread we can start using the java: namespace directly
-          Context ctx = (Context) new InitialContext().lookup("java:comp");
-          ctx = ctx.createSubcontext("env");
+      try
+      {
+         // Since the BCL is already associated with this thread we can start using the java: namespace directly
+         Context ctx = (Context) new InitialContext().lookup("java:comp");
+         ctx = ctx.createSubcontext("env");
 
-          // Bind environment properties
-          {
-             Iterator enum = getBeanMetaData().getEnvironmentEntries();
-             while(enum.hasNext())
-             {
-                EnvEntryMetaData entry = (EnvEntryMetaData)enum.next();
-                if (entry.getType().equals("java.lang.Integer"))
-                {
-                   bind(ctx, entry.getName(), new Integer(entry.getValue()));
-                } else if (entry.getType().equals("java.lang.Long"))
-                {
-                   bind(ctx, entry.getName(), new Long(entry.getValue()));
-                } else if (entry.getType().equals("java.lang.Double"))
-                {
-                   bind(ctx, entry.getName(), new Double(entry.getValue()));
-                } else if (entry.getType().equals("java.lang.Float"))
-                {
-                   bind(ctx, entry.getName(), new Float(entry.getValue()));
-                } else if (entry.getType().equals("java.lang.Byte"))
-                {
-                   bind(ctx, entry.getName(), new Byte(entry.getValue()));
-                } else if (entry.getType().equals("java.lang.Short"))
-                {
-                   bind(ctx, entry.getName(), new Short(entry.getValue()));
-                } else if (entry.getType().equals("java.lang.Boolean"))
-                {
-                   bind(ctx, entry.getName(), new Boolean(entry.getValue()));
-                } else
-                {
-                   // Unknown type
-                   // Default is string
-                   bind(ctx, entry.getName(), entry.getValue());
-                }
-             }
-          }
+         // Bind environment properties
+         {
+            Iterator enum = getBeanMetaData().getEnvironmentEntries();
+            while(enum.hasNext())
+            {
+               EnvEntryMetaData entry = (EnvEntryMetaData)enum.next();
+               if (entry.getType().equals("java.lang.Integer"))
+               {
+                  bind(ctx, entry.getName(), new Integer(entry.getValue()));
+               }
+               else if (entry.getType().equals("java.lang.Long"))
+               {
+                  bind(ctx, entry.getName(), new Long(entry.getValue()));
+               }
+               else if (entry.getType().equals("java.lang.Double"))
+               {
+                  bind(ctx, entry.getName(), new Double(entry.getValue()));
+               }
+               else if (entry.getType().equals("java.lang.Float"))
+               {
+                  bind(ctx, entry.getName(), new Float(entry.getValue()));
+               }
+               else if (entry.getType().equals("java.lang.Byte"))
+               {
+                  bind(ctx, entry.getName(), new Byte(entry.getValue()));
+               }
+               else if (entry.getType().equals("java.lang.Short"))
+               {
+                  bind(ctx, entry.getName(), new Short(entry.getValue()));
+               }
+               else if (entry.getType().equals("java.lang.Boolean"))
+               {
+                  bind(ctx, entry.getName(), new Boolean(entry.getValue()));
+               }
+               else
+               {
+                  // Unknown type
+                  // Default is string
+                  bind(ctx, entry.getName(), entry.getValue());
+               }
+            }
+         }
 
-          // Bind EJB references
-          {
-             Iterator enum = getBeanMetaData().getEjbReferences();
-             while(enum.hasNext())
-             {
+         // Bind EJB references
+         {
+            Iterator enum = getBeanMetaData().getEjbReferences();
+            while(enum.hasNext())
+            {
 
-                EjbRefMetaData ref = (EjbRefMetaData)enum.next();
-                Logger.debug("Binding an EJBReference "+ref.getName());
+               EjbRefMetaData ref = (EjbRefMetaData)enum.next();
+               Logger.debug("Binding an EJBReference "+ref.getName());
 
-                if (ref.getLink() != null)
-                {
-                   // Internal link
-                   Logger.debug("Binding "+ref.getName()+" to internal JNDI source: "+ref.getLink());
-                   if (getApplication().getContainer(ref.getLink()) == null)
-                      throw new DeploymentException ("Bean "+ref.getLink()+" not found within this application.");
-                   bind(ctx, ref.getName(), new LinkRef(getApplication().getContainer(ref.getLink()).getBeanMetaData().getJndiName()));
-                       
-//                   bind(ctx, ref.getName(), new Reference(ref.getHome(), new StringRefAddr("Container",ref.getLink()), getClass().getName()+".EjbReferenceFactory", null));
-//                bind(ctx, ref.getName(), new LinkRef(ref.getLink()));
-                }
-                else
-                {
-                   // External link
-				   if (ref.getJndiName() == null) {
-					   throw new DeploymentException("ejb-ref "+ref.getName()+", expected either ejb-link in ejb-jar.xml or jndi-name in jboss.xml");
-				   }
-				   Logger.debug("Binding "+ref.getName()+" to external JNDI source: "+ref.getJndiName());
-                   bind(ctx, ref.getName(), new LinkRef(ref.getJndiName()));
-                }
-             }
-          }
+               if (ref.getLink() != null)
+               {
+                  // Internal link
+                  Logger.debug("Binding "+ref.getName()+" to internal JNDI source: "+ref.getLink());
+                  if (getApplication().getContainer(ref.getLink()) == null)
+                     throw new DeploymentException ("Bean "+ref.getLink()+" not found within this application.");
+                  bind(ctx, ref.getName(), new LinkRef(getApplication().getContainer(ref.getLink()).getBeanMetaData().getJndiName()));
 
-          // Bind resource references
-          {
-             Iterator enum = getBeanMetaData().getResourceReferences();
-             
-             // let's play guess the cast game ;)  New metadata should fix this.
-			 ApplicationMetaData application = getBeanMetaData().getApplicationMetaData();
-			 
-             while(enum.hasNext())
-             {
-                ResourceRefMetaData ref = (ResourceRefMetaData)enum.next();
+                  //                   bind(ctx, ref.getName(), new Reference(ref.getHome(), new StringRefAddr("Container",ref.getLink()), getClass().getName()+".EjbReferenceFactory", null));
+                  //                bind(ctx, ref.getName(), new LinkRef(ref.getLink()));
+               }
+               else
+               {
+                  // External link
+                  if (ref.getJndiName() == null)
+                  {
+                     throw new DeploymentException("ejb-ref "+ref.getName()+", expected either ejb-link in ejb-jar.xml or jndi-name in jboss.xml");
+                  }
+                  Logger.debug("Binding "+ref.getName()+" to external JNDI source: "+ref.getJndiName());
+                  bind(ctx, ref.getName(), new LinkRef(ref.getJndiName()));
+               }
+            }
+         }
 
-                String resourceName = ref.getResourceName();
-				String finalName = application.getResourceByName(resourceName);
-				
-				if (finalName == null) {
-					// the application assembler did not provide a resource manager
-					// if the type is javax.sql.Datasoure we try to find default
-					
-					if (ref.getType().equals("javax.sql.DataSource")) {
-                            // Go through JNDI and look for DataSource - use the first one
-                            Context dsCtx = new InitialContext();
-                            NamingEnumeration list = dsCtx.list("");
-                            while (list.hasMore())
-                            {
-                                NameClassPair pair = (NameClassPair)list.next();
-                                try
-                                {
-                                    Class cl = getClass().getClassLoader().loadClass(pair.getClassName());
-                                    if (DataSource.class.isAssignableFrom(cl))
-                                    {
-                                        // Found it!!
-                                        Logger.debug("Using default DataSource:"+pair.getName());
-                                        finalName = pair.getName();
-                                        list.close();
-                                        break;
-                                    }
-                                } catch (Exception e)
-                                {
-                                    Logger.debug(e);
-                                }
-                            }
+         // Bind resource references
+         {
+            Iterator enum = getBeanMetaData().getResourceReferences();
 
-                        }
+            // let's play guess the cast game ;)  New metadata should fix this.
+            ApplicationMetaData application = getBeanMetaData().getApplicationMetaData();
 
-                        // Default failed? Warn user and move on
-                        // POTENTIALLY DANGEROUS: should this be a critical error?
-                        if (finalName == null)
-                        {
-                            Logger.warning("No resource manager found for "+ref.getResourceName());
-                            continue;
-                        }
-                    }
+            while(enum.hasNext())
+            {
+               ResourceRefMetaData ref = (ResourceRefMetaData)enum.next();
 
-                if (ref.getType().equals("javax.sql.DataSource"))
-                {
-                   // Datasource bindings
-                   bind(ctx, ref.getRefName(), new LinkRef(finalName));
-                } else if (ref.getType().equals("java.net.URL"))
-                {
-                   // URL bindings
-                   try
-                   {
-                      bind(ctx, ref.getRefName(), new URL(finalName));
-                   } catch (MalformedURLException e)
-                   {
-                      throw new NamingException("Malformed URL:"+e.getMessage());
-                   }
-                } else {
-                   // Resource Manager bindings
-                   Logger.debug("Binding resource manager "+finalName+ " with JDNI ENC " +ref.getRefName());
-                   bind(ctx, ref.getRefName(), new LinkRef(finalName));
-                }
-             }
-          }
-        } catch (NamingException e)
-        {
-            Logger.exception(e);
-            e.getRootCause().printStackTrace();
-            throw new DeploymentException("Could not set up environment", e);
-        }
+               String resourceName = ref.getResourceName();
+               String finalName = application.getResourceByName(resourceName);
+
+               if (finalName == null)
+               {
+                  // the application assembler did not provide a resource manager
+                  // if the type is javax.sql.Datasoure use the default one
+
+                  if (ref.getType().equals("javax.sql.DataSource"))
+                  {
+                     // Go through JNDI and look for DataSource - use the first one
+                     Context dsCtx = new InitialContext();
+                     try
+                     {
+                        // Check if it is available in JNDI
+                        dsCtx.lookup("java:/DefaultDS");
+                        finalName = "java:/DefaultDS";
+                     } catch (Exception e)
+                     {
+                        Logger.debug(e);
+                     }
+                  }
+
+                  // Default failed? Warn user and move on
+                  // POTENTIALLY DANGEROUS: should this be a critical error?
+                  if (finalName == null)
+                  {
+                     Logger.warning("No resource manager found for "+ref.getResourceName());
+                     continue;
+                  }
+               }
+
+               if (ref.getType().equals("javax.sql.DataSource"))
+               {
+                  // Datasource bindings
+                  bind(ctx, ref.getRefName(), new LinkRef(finalName));
+               }
+               else if (ref.getType().equals("java.net.URL"))
+               {
+                  // URL bindings
+                  try
+                  {
+                     bind(ctx, ref.getRefName(), new URL(finalName));
+                  } catch (MalformedURLException e)
+                  {
+                     throw new NamingException("Malformed URL:"+e.getMessage());
+                  }
+               }
+               else
+               {
+                  // Resource Manager bindings
+                  Logger.debug("Binding resource manager "+finalName+ " with JDNI ENC " +ref.getRefName());
+                  bind(ctx, ref.getRefName(), new LinkRef(finalName));
+               }
+            }
+         }
+      } catch (NamingException e)
+      {
+         Logger.exception(e);
+         e.getRootCause().printStackTrace();
+         throw new DeploymentException("Could not set up environment", e);
+      }
    }
 
 
 
-    /**
-     *  Bind a value to a name in a JNDI-context, and create any missing subcontexts
-     *
-     * @param   ctx
-     * @param   name
-     * @param   val
-     * @exception   NamingException
-     */
+   /**
+   *  Bind a value to a name in a JNDI-context, and create any missing subcontexts
+   *
+   * @param   ctx
+   * @param   name
+   * @param   val
+   * @exception   NamingException
+   */
    private void bind(Context ctx, String name, Object val)
-      throws NamingException
+   throws NamingException
    {
       // Bind val to name in ctx, and make sure that all intermediate contexts exist
       Name n = ctx.getNameParser("").parse(name);
@@ -518,3 +520,4 @@ public abstract class Container
       ctx.bind(n.get(0), val);
    }
 }
+
