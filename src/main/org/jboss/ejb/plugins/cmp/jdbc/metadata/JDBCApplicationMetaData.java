@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
 import javax.naming.InitialContext;
@@ -27,19 +28,21 @@ import org.jboss.metadata.XmlLoadable;
 import org.w3c.dom.Element;
 
 /**
- *  This immutable class contains information about the application
+ * This immutable class contains information about the application
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @author <a href="sebastien.alborini@m4x.org">Sebastien Alborini</a>
- * @version $Revision: 1.11 $
+ * @version $Revision: 1.12 $
  */
 public final class JDBCApplicationMetaData
 {
-   public final static String JDBC_PM = "org.jboss.ejb.plugins.cmp.jdbc.JDBCStoreManager";
+   public final static String JDBC_PM = 
+         "org.jboss.ejb.plugins.cmp.jdbc.JDBCStoreManager";
    static Logger log = Logger.create(JDBCApplicationMetaData.class);
+
    /**
-    * The class loader for this application.  The class loader is used to load all classes
-    * used by this application.
+    * The class loader for this application.  The class loader is used to 
+    * load all classes used by this application.
     */
    private final ClassLoader classLoader;
 
@@ -59,13 +62,12 @@ public final class JDBCApplicationMetaData
    private final Map entities = new HashMap();
 
    /**
-    * Map of relations in this application by name.
-    * Items are instance of JDBCRelationMetaData.
+    * Collection of relations in this application.
     */
-   private final Map relationships = new HashMap();
+   private final Collection relationships = new HashSet();
 
    /**
-    * Map of the relationship roles for an entity by entity object.
+    * Map of the collection relationship roles for each entity by entity object.
     */
    private final Map entityRoles = new HashMap();
 
@@ -80,14 +82,21 @@ public final class JDBCApplicationMetaData
    private final Map entitiesByAbstractSchemaName = new HashMap();
 
    /**
-    * Constructs jdbc application meta data with the data from the applicationMetaData.
+    * Constructs jdbc application meta data with the data from the 
+    * applicationMetaData.
     *
-    * @param applicationMetaData the application data loaded from the ejb-jar.xml file
-    * @param classLoader the ClassLoader used to load the classes of the application
-    * @throws DeploymentException if an problem occures while loading the classes or if
-    *      data in the ejb-jar.xml is inconsistent with data from jbosscmp-jdbc.xml file
+    * @param applicationMetaData the application data loaded from 
+    *    the ejb-jar.xml file
+    * @param classLoader the ClassLoader used to load the classes 
+    *    of the application
+    * @throws DeploymentException if an problem occures while loading 
+    *    the classes or if data in the ejb-jar.xml is inconsistent 
+    *    with data from jbosscmp-jdbc.xml file
     */
-   public JDBCApplicationMetaData(ApplicationMetaData applicationMetaData, ClassLoader classLoader) throws DeploymentException {
+   public JDBCApplicationMetaData(
+         ApplicationMetaData applicationMetaData, 
+         ClassLoader classLoader) throws DeploymentException {
+
       // the classloader is the same for all the beans in the application
       this.classLoader = classLoader;
       this.applicationMetaData = applicationMetaData;
@@ -104,10 +113,16 @@ public final class JDBCApplicationMetaData
 
             // only take jbosscmp-jdbc-managed CMP entities
             if(entity.isCMP() && entity.getContainerConfiguration().getPersistenceManager().equals(JDBC_PM)) {
-               JDBCEntityMetaData jdbcEntity = new JDBCEntityMetaData(this, entity);
+
+               JDBCEntityMetaData jdbcEntity = 
+                     new JDBCEntityMetaData(this, entity);
+
                entities.put(entity.getEjbName(), jdbcEntity);
-               entitiesByAbstractSchemaName.put(jdbcEntity.getAbstractSchemaName(), jdbcEntity);
-               entityRoles.put(entity.getEjbName(), new HashMap());
+               entitiesByAbstractSchemaName.put(
+                     jdbcEntity.getAbstractSchemaName(), jdbcEntity);
+
+               // initialized the entity roles collection 
+               entityRoles.put(entity.getEjbName(), new HashSet());
             }
          }
       }
@@ -116,30 +131,45 @@ public final class JDBCApplicationMetaData
       Iterator iterator = applicationMetaData.getRelationships();
       while(iterator.hasNext()) {
          RelationMetaData relation = (RelationMetaData) iterator.next();
-         JDBCRelationMetaData jdbcRelation = new JDBCRelationMetaData(this, relation);
-         relationships.put(jdbcRelation.getRelationName(), jdbcRelation);
+         
+         // Relationship metadata
+         JDBCRelationMetaData jdbcRelation = 
+               new JDBCRelationMetaData(this, relation);
+         relationships.add(jdbcRelation);
 
-         JDBCRelationshipRoleMetaData left = jdbcRelation.getLeftRelationshipRole();
-         Map leftEntityRoles = (Map)entityRoles.get(left.getEntity().getName());
-         leftEntityRoles.put(left.getRelationshipRoleName(), left);
+         // Left relationship-role metadata
+         JDBCRelationshipRoleMetaData left = 
+               jdbcRelation.getLeftRelationshipRole();
+         Collection leftEntityRoles = 
+               (Collection)entityRoles.get(left.getEntity().getName());
+         leftEntityRoles.add(left);
 
-         JDBCRelationshipRoleMetaData right = jdbcRelation.getRightRelationshipRole();
-         Map rightEntityRoles = (Map)entityRoles.get(right.getEntity().getName());
-         rightEntityRoles.put(right.getRelationshipRoleName(), right);
+         // Right relationship-role metadata
+         JDBCRelationshipRoleMetaData right = 
+               jdbcRelation.getRightRelationshipRole();
+         Collection rightEntityRoles = 
+               (Collection)entityRoles.get(right.getEntity().getName());
+         rightEntityRoles.add(right);
       }
    }
 
    /**
-    * Constructs application meta data with the data contained in the jboss-cmp xml
-    * element from a jbosscmp-jdbc xml file. Optional values of the xml element that
-    * are not present are loaded from the defalutValues parameter.
+    * Constructs application meta data with the data contained in the 
+    * jboss-cmp xml element from a jbosscmp-jdbc xml file. Optional values 
+    * of the xml element that are not present are loaded from the 
+    * defalutValues parameter.
     *
-    * @param element the xml Element which contains the metadata about this application
-    * @param defaultValues the JDBCApplicationMetaData which contains the values
+    * @param element the xml Element which contains the metadata about 
+    *    this application
+    * @param defaultValues the JDBCApplicationMetaData which contains 
+    *    the values
     *      for optional elements of the element
     * @throws DeploymentException if the xml element is not semantically correct
     */
-   public JDBCApplicationMetaData(Element element, JDBCApplicationMetaData defaultValues) throws DeploymentException {
+   public JDBCApplicationMetaData(
+         Element element, 
+         JDBCApplicationMetaData defaultValues) throws DeploymentException {
+
       // importXml will be called at least once: with standardjbosscmp-jdbc.xml
       // it may be called a second time with user-provided jbosscmp-jdbc.xml
       // we must ensure to set all defaults values in the first call
@@ -147,106 +177,196 @@ public final class JDBCApplicationMetaData
       classLoader = defaultValues.classLoader;
       applicationMetaData = defaultValues.applicationMetaData;
 
-      // first get the type mappings. (optional, but always set in standardjbosscmp-jdbc.xml)
+      // type-mappings: (optional, always set in standardjbosscmp-jdbc.xml)
       typeMappings.putAll(defaultValues.typeMappings);
       Element typeMaps = MetaData.getOptionalChild(element, "type-mappings");
       if(typeMaps != null) {
-         for(Iterator i = MetaData.getChildrenByTagName(typeMaps, "type-mapping"); i.hasNext(); ) {
+         for(Iterator i = 
+               MetaData.getChildrenByTagName(typeMaps, "type-mapping");
+               i.hasNext(); ) {
+
             Element typeMappingElement = (Element)i.next();
-            JDBCTypeMappingMetaData typeMapping = new JDBCTypeMappingMetaData(typeMappingElement);
+            JDBCTypeMappingMetaData typeMapping = 
+                  new JDBCTypeMappingMetaData(typeMappingElement);
             typeMappings.put(typeMapping.getName(), typeMapping);
          }
       }
 
-      // get default settings for the beans (optional, but always set in standardjbosscmp-jdbc.xml)
+      // defaults: apply defaults for entities (optional, always
+      // set in standardjbosscmp-jdbc.xml)
       entities.putAll(defaultValues.entities);
-      entitiesByAbstractSchemaName.putAll(defaultValues.entitiesByAbstractSchemaName);
+      entitiesByAbstractSchemaName.putAll(
+            defaultValues.entitiesByAbstractSchemaName);
       Element defaults = MetaData.getOptionalChild(element, "defaults");
       if(defaults != null) {
          ArrayList values = new ArrayList(entities.values());
          for(Iterator i = values.iterator(); i.hasNext(); ) {
             JDBCEntityMetaData entityMetaData = (JDBCEntityMetaData)i.next();
-            entityMetaData = new JDBCEntityMetaData(this, defaults, entityMetaData);
+
+            // create the new metadata with the defaults applied
+            entityMetaData = 
+                  new JDBCEntityMetaData(this, defaults, entityMetaData);
+
             // replace the old meta data with the new
             entities.put(entityMetaData.getName(), entityMetaData);
-            entitiesByAbstractSchemaName.put(entityMetaData.getAbstractSchemaName(), entityMetaData);
+
+            String schemaName = entityMetaData.getAbstractSchemaName();
+            if(schemaName != null) {
+               entitiesByAbstractSchemaName.put(schemaName, entityMetaData);
+            }
          }
       }
 
-      // get the beans data (only in jbosscmp-jdbc.xml)
-      Element enterpriseBeans = MetaData.getOptionalChild(element, "enterprise-beans");
+      // enterprise-beans: apply entity specific configuration 
+      // (only in jbosscmp-jdbc.xml)
+      Element enterpriseBeans = 
+            MetaData.getOptionalChild(element, "enterprise-beans");
       if(enterpriseBeans != null) {
-         for(Iterator i = MetaData.getChildrenByTagName(enterpriseBeans, "entity"); i.hasNext(); ) {
+         for(Iterator i = 
+                   MetaData.getChildrenByTagName(enterpriseBeans, "entity"); 
+               i.hasNext(); ) {
+
             Element beanElement = (Element)i.next();
 
-            // get the bean's data, gaurenteed to work because we create
-            // a metadata object for each bean in the constructor.
-            String ejbName = MetaData.getUniqueChildContent(beanElement, "ejb-name");
-            JDBCEntityMetaData entityMetaData = (JDBCEntityMetaData)entities.get(ejbName);
-            if(entityMetaData != null) {
-               entityMetaData = new JDBCEntityMetaData(this, beanElement, entityMetaData);
-               entities.put(entityMetaData.getName(), entityMetaData);
-               entitiesByAbstractSchemaName.put(entityMetaData.getAbstractSchemaName(), entityMetaData);
-            } else {
-               log.warn("Warning: data found in jbosscmp-jdbc.xml for entity " + ejbName + " but bean is not a jbosscmp-jdbc-managed cmp entity in ejb-jar.xml");
+            // get entity by name, if not found, it is a config error
+            String ejbName = 
+                  MetaData.getUniqueChildContent(beanElement, "ejb-name");
+            JDBCEntityMetaData entityMetaData = getBeanByEjbName(ejbName);
+
+            if(entityMetaData == null) {
+               throw new DeploymentException("Configuration found in " +
+                     "jbosscmp-jdbc.xml for entity " + ejbName + " but bean " +
+                     "is not a jbosscmp-jdbc-managed cmp entity in " +
+                     "ejb-jar.xml");
+            }
+            entityMetaData = 
+                  new JDBCEntityMetaData(this, beanElement, entityMetaData);
+            entities.put(entityMetaData.getName(), entityMetaData);
+
+            String schemaName = entityMetaData.getAbstractSchemaName();
+            if(schemaName != null) {
+               entitiesByAbstractSchemaName.put(schemaName, entityMetaData);
             }
          }
       }
 
-      // get default settings for the relationships (optional, but always set in standardjbosscmp-jdbc.xml)
-      relationships.putAll(defaultValues.relationships);
-      entityRoles.putAll(defaultValues.entityRoles);
-      if(defaults != null) {
-         for(Iterator i = relationships.values().iterator(); i.hasNext(); ) {
-            JDBCRelationMetaData relationMetaData = (JDBCRelationMetaData)i.next();
-            relationMetaData = new JDBCRelationMetaData(this, defaults, relationMetaData);
-            relationships.put(relationMetaData.getRelationName(), relationMetaData);
+      // defaults: apply defaults for relationships (optional, always
+      // set in standardjbosscmp-jdbc.xml)
+      if(defaults == null) {
+         // no defaults just copy over the existing relationships and roles
+         relationships.addAll(defaultValues.relationships);
+         entityRoles.putAll(defaultValues.entityRoles);
+      } else {
+         
+         // create a new empty role collection for each entity
+         for(Iterator i = entities.values().iterator(); i.hasNext();) {
+            JDBCEntityMetaData entity = (JDBCEntityMetaData)i.next();
+            entityRoles.put(entity.getName(), new HashSet());
+         }
 
-            JDBCRelationshipRoleMetaData left = relationMetaData.getLeftRelationshipRole();
-            Map leftEntityRoles = (Map)entityRoles.get(left.getEntity().getName());
-            leftEntityRoles.put(left.getRelationshipRoleName(), left);
+         // for each relationship, apply defaults and store
+         for(Iterator i = defaultValues.relationships.iterator(); 
+               i.hasNext(); ) {
 
-            JDBCRelationshipRoleMetaData right = relationMetaData.getRightRelationshipRole();
-            Map rightEntityRoles = (Map)entityRoles.get(right.getEntity().getName());
-            rightEntityRoles.put(right.getRelationshipRoleName(), right);
+            JDBCRelationMetaData relationMetaData = 
+                  (JDBCRelationMetaData)i.next();
+
+            // create the new metadata with the defaults applied
+            relationMetaData = 
+                  new JDBCRelationMetaData(this, defaults, relationMetaData);
+
+            // replace the old metadata with the new
+            relationships.add(relationMetaData);
+
+            // store new left role
+            JDBCRelationshipRoleMetaData left = 
+                  relationMetaData.getLeftRelationshipRole();
+            Collection leftEntityRoles = 
+                  (Collection)entityRoles.get(left.getEntity().getName());
+            leftEntityRoles.add(left);
+
+            // store new right role
+            JDBCRelationshipRoleMetaData right = 
+                  relationMetaData.getRightRelationshipRole();
+            Collection rightEntityRoles = 
+                  (Collection)entityRoles.get(right.getEntity().getName());
+            rightEntityRoles.add(right);
          }
       }
 
-      // relationships
-      // get the beans data (only in jbosscmp-jdbc.xml)
-      Element relationshipsElement = MetaData.getOptionalChild(element, "relationships");
+      // relationships: apply entity specific configuration 
+      // (only in jbosscmp-jdbc.xml)
+      Element relationshipsElement = 
+            MetaData.getOptionalChild(element, "relationships");
       if(relationshipsElement != null) {
-         for(Iterator i = MetaData.getChildrenByTagName(relationshipsElement, "ejb-relation"); i.hasNext(); ) {
+         
+         // create a map of the relations by name (if it has a name)
+         Map relationByName = new HashMap();
+         for(Iterator i = relationships.iterator(); i.hasNext(); ) {
+            JDBCRelationMetaData relation = (JDBCRelationMetaData)i.next();
+            if(relation.getRelationName() != null) {
+               relationByName.put(relation.getRelationName(), relation);
+            }
+         }
+
+         
+         for(Iterator i = MetaData.getChildrenByTagName(
+                     relationshipsElement, "ejb-relation"); 
+                  i.hasNext(); ) {
+
             Element relationElement = (Element)i.next();
 
-            // get the bean's data, gaurenteed to work because we create
-            // a metadata object for each bean in the constructor.
-            String relationName = MetaData.getUniqueChildContent(relationElement, "ejb-relation-name");
-            JDBCRelationMetaData jdbcRelation = (JDBCRelationMetaData)relationships.get(relationName);
-            if(jdbcRelation != null) {
-               jdbcRelation = new JDBCRelationMetaData(this, relationElement, jdbcRelation);
-               relationships.put(jdbcRelation.getRelationName(), jdbcRelation);
+            // get relation by name, if not found, it is a config error
+            String relationName = MetaData.getUniqueChildContent(
+                  relationElement, "ejb-relation-name");
 
-               JDBCRelationshipRoleMetaData left = jdbcRelation.getLeftRelationshipRole();
-               Map leftEntityRoles = (Map)entityRoles.get(left.getEntity().getName());
-               leftEntityRoles.put(left.getRelationshipRoleName(), left);
+            JDBCRelationMetaData oldRelation = 
+                  (JDBCRelationMetaData)relationByName.get(relationName);
 
-               JDBCRelationshipRoleMetaData right = jdbcRelation.getRightRelationshipRole();
-               Map rightEntityRoles = (Map)entityRoles.get(right.getEntity().getName());
-               rightEntityRoles.put(right.getRelationshipRoleName(), right);
-            } else {
-               log.warn("Warning: data found in jbosscmp-jdbc.xml for relation " + relationName + " but relation is not a jbosscmp-jdbc-managed relation in ejb-jar.xml");
+            if(oldRelation == null) {
+               throw new DeploymentException("Configuration found in " +
+                     "jbosscmp-jdbc.xml for relation " + relationName + 
+                     " but relation is not a jbosscmp-jdbc-managed relation " +
+                     "in ejb-jar.xml");
             }
+            // create new metadata with relation specific config applied
+            JDBCRelationMetaData newRelation = 
+                  new JDBCRelationMetaData(this, relationElement, oldRelation);
+
+            // replace the old metadata with the new
+            relationships.remove(oldRelation);
+            relationships.add(newRelation);
+
+            // replace the old left role with the new
+            JDBCRelationshipRoleMetaData newLeft = 
+                  newRelation.getLeftRelationshipRole();
+            Collection leftEntityRoles = 
+                  (Collection)entityRoles.get(newLeft.getEntity().getName());
+            leftEntityRoles.remove(oldRelation.getLeftRelationshipRole());
+            leftEntityRoles.add(newLeft);
+
+            // replace the old right role with the new
+            JDBCRelationshipRoleMetaData newRight = 
+                  newRelation.getRightRelationshipRole();
+            Collection rightEntityRoles = 
+                  (Collection)entityRoles.get(newRight.getEntity().getName());
+            rightEntityRoles.remove(oldRelation.getRightRelationshipRole());
+            rightEntityRoles.add(newRight);
          }
       }
 
       // dependent-value-objects
       valueClasses.putAll(defaultValues.valueClasses);
-      Element valueClassesElement = MetaData.getOptionalChild(element, "dependent-value-classes");
+      Element valueClassesElement = 
+            MetaData.getOptionalChild(element, "dependent-value-classes");
       if(valueClassesElement != null) {
-         for(Iterator i = MetaData.getChildrenByTagName(valueClassesElement, "dependent-value-class"); i.hasNext(); ) {
+         for(Iterator i = MetaData.getChildrenByTagName(
+                     valueClassesElement, "dependent-value-class");
+               i.hasNext(); ) {
+
             Element valueClassElement = (Element)i.next();
-            JDBCValueClassMetaData valueClass = new JDBCValueClassMetaData(valueClassElement, classLoader);
+            JDBCValueClassMetaData valueClass = 
+                  new JDBCValueClassMetaData(valueClassElement, classLoader);
             valueClasses.put(valueClass.getJavaType(), valueClass);
          }
       }
@@ -267,17 +387,18 @@ public final class JDBCApplicationMetaData
     * @retun an unmodifiable collection of JDBCRelationMetaData objects
     */
    public Collection getRelationships() {
-      return Collections.unmodifiableCollection(relationships.values());
+      return Collections.unmodifiableCollection(relationships);
    }
 
    /**
     * Gets the relationship roles for the entity with the specified name.
     * @param entityName the name of the entity whos roles are returned
-    * @return an unmodifiable collection of JDBCRelationshipRoles of the specified entity
+    * @return an unmodifiable collection of JDBCRelationshipRoles 
+    *    of the specified entity
     */
    public Collection getRolesForEntity(String entityName) {
-      Map rolesMap = (Map)entityRoles.get(entityName);
-      return Collections.unmodifiableCollection(rolesMap.values());
+      Collection roles = (Collection)entityRoles.get(entityName);
+      return Collections.unmodifiableCollection(roles);
    }
 
    /**
@@ -289,7 +410,8 @@ public final class JDBCApplicationMetaData
    }
 
    /**
-    * Gets the classloader for this application which is used to load all classes.
+    * Gets the classloader for this application which is used to load 
+    * all classes.
     * @return the ClassLoader for the application
     */
    public ClassLoader getClassLoader() {
