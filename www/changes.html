@@ -1,4 +1,4 @@
-<!-- $Id: changes.html,v 1.116 2002/04/10 04:05:53 jmcnally Exp $ -->
+<!-- $Id: changes.html,v 1.117 2002/04/13 03:05:42 jmcnally Exp $ -->
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
 <html>
 
@@ -21,6 +21,20 @@
         <td width="100%" height="100" bgcolor="#F0F0F0"> 
             <h3>Changes since 1.0b6</h3>
             <ul>
+                <li>IX_ISSUE_MODULE_PREFERRED_ORDER index name shortened to be
+                    compatible with Oracle 
+                    For more information, see Bug Report
+                    #<a href="http://scarab.tigris.org/issues/show_bug.cgi?id=259">
+                    259</a>. (JDM)</li>
+                <li>Error messages are now distingishable from status messages
+                    by color. 
+                    For more information, see Bug Report
+                    #<a href="http://scarab.tigris.org/issues/show_bug.cgi?id=133">
+                    133</a>. (JDM)</li>
+                <li>Can no longer add issues to the global module.
+                    For more information, see Bug Report
+                    #<a href="http://scarab.tigris.org/issues/show_bug.cgi?id=31">
+                    31</a>. (JDM)</li>
                 <li>changed default log level for stratum to INFO. (JDM)</li>
                 <li>Upgraded to village 1.5.3. Fixes some issues with
                     Oracle. (JSS)</li>
@@ -36,6 +50,26 @@
         <td width="100%" height="100" bgcolor="#F0F0F0"> 
             <h3>Fixes since 1.0b6</h3>
             <ul>
+                <li>Emails are now sent to users with Item Approve permission
+                    when a query needing approval are created. 
+                    For more information, see Bug Report
+                    #<a href="http://scarab.tigris.org/issues/show_bug.cgi?id=239">
+                    239</a>. (JDM)</li>
+                <li>Report wizard now checks to make sure categories and
+                    at least one option in each category are chosen before
+                    moving to the next screen. 
+                    For more information, see Bug Report
+                    #<a href="http://scarab.tigris.org/issues/show_bug.cgi?id=141">
+                    141</a>. (JDM)</li>
+                <li>Added a null check to avoid an NPE in MoveIssue action. 
+                    For more information, see Bug Report
+                    #<a href="http://scarab.tigris.org/issues/show_bug.cgi?id=220">
+                    250</a>. (JDM)</li>
+                <li>Queries including user attributes now work from the query
+                    pulldown. 
+                    For more information, see Bug Report
+                    #<a href="http://scarab.tigris.org/issues/show_bug.cgi?id=249">
+                    249</a>. (JDM)</li>
                 <li>removing special characters before using text to dedupe.
                     For more information, see Bug Report
                     #<a href="http://scarab.tigris.org/issues/show_bug.cgi?id=253">
