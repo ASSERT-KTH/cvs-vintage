@@ -92,12 +92,13 @@ import org.tigris.scarab.util.ScarabConstants;
 import org.tigris.scarab.util.ScarabException;
 import org.tigris.scarab.util.word.IssueSearch;
 import org.tigris.scarab.tools.ScarabRequestTool;
+import org.tigris.scarab.services.security.ScarabSecurity;
 
 /**
  * This class is responsible for report issue forms.
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: ReportIssue.java,v 1.132 2002/07/11 21:35:51 elicia Exp $
+ * @version $Id: ReportIssue.java,v 1.133 2002/07/15 18:36:39 jmcnally Exp $
  */
 public class ReportIssue extends RequireLoginFirstAction
 {
@@ -420,7 +421,7 @@ public class ReportIssue extends RequireLoginFirstAction
                     {
                         user.setEnterIssueRedirect(templateCode);
                     }
-                    doRedirect(data, templateCode, issue);
+                    doRedirect(data, context, templateCode, issue);
                 
                     // send email
                     if ( summary.length() == 0 ) 
@@ -649,26 +650,61 @@ public class ReportIssue extends RequireLoginFirstAction
     /**
      * User selects page to redirect to after entering issue.
      */
-    private void doRedirect(RunData data, int templateCode, Issue issue)
+    private void doRedirect(RunData data, TemplateContext context, 
+                            int templateCode, Issue issue)
         throws Exception
     {
+        ScarabUser user = (ScarabUser)data.getUser();
+        ScarabRequestTool scarabR = getScarabRequestTool(context);
         String template = null;
         switch (templateCode)
         {
             case 1: 
-               template = "entry,Wizard3.vm";
+                if (user.hasPermission(ScarabSecurity.ISSUE__ENTER, 
+                                       user.getCurrentModule()))
+                {
+                    template = scarabR.getNextEntryTemplate();
+                }
+                else 
+                {
+                    template = user.getHomePage();
+                    scarabR.setAlertMessage(
+                        "Insufficient permissions to enter issues.");
+                }
                break;
             case 2: 
-               template = "AssignIssue.vm";
-               data.getParameters().add("issue_ids", 
-                                         issue.getUniqueId());
-               data.getParameters().add(ScarabConstants.CANCEL_TEMPLATE, 
-                                         "ViewIssue.vm");
-               data.getParameters().add("id", issue.getUniqueId().toString());
+                if (user.hasPermission(ScarabSecurity.ISSUE__ASSIGN, 
+                                       user.getCurrentModule()))
+                {
+                    template = "AssignIssue.vm";
+                    data.getParameters().add("issue_ids", 
+                                             issue.getUniqueId());
+                    data.getParameters().add(ScarabConstants.CANCEL_TEMPLATE, 
+                                             "ViewIssue.vm");
+                    data.getParameters()
+                        .add("id", issue.getUniqueId().toString());
+                }
+                else 
+                {
+                    template = user.getHomePage();
+                    scarabR.setAlertMessage(
+                        "Insufficient permissions to assign users.");
+                }
                break;
             case 3: 
-               template = "ViewIssue.vm";
-               data.getParameters().add("id",issue.getUniqueId().toString());
+                if (user.hasPermission(ScarabSecurity.ISSUE__VIEW, 
+                                       user.getCurrentModule()))
+                {
+                    template = "ViewIssue.vm";
+                    data.getParameters()
+                        .add("id",issue.getUniqueId().toString());
+                }
+                else 
+                {
+                    template = user.getHomePage();
+                    scarabR.setAlertMessage(
+                        "Insufficient permissions to view issues.");
+                }
                break;
             case 4: 
                template = "Index.vm";

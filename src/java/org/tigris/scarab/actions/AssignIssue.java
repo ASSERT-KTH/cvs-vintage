@@ -97,12 +97,13 @@ import org.tigris.scarab.tools.ScarabRequestTool;
 import org.tigris.scarab.util.ScarabLink;
 import org.tigris.scarab.util.Email;
 import org.tigris.scarab.services.cache.ScarabCache;
+import org.tigris.scarab.services.security.ScarabSecurity;
 
 /**
  * This class is responsible for assigning users to attributes.
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: AssignIssue.java,v 1.53 2002/07/11 21:35:51 elicia Exp $
+ * @version $Id: AssignIssue.java,v 1.54 2002/07/15 18:36:39 jmcnally Exp $
  */
 public class AssignIssue extends BaseModifyIssue
 {
@@ -113,6 +114,11 @@ public class AssignIssue extends BaseModifyIssue
     public void doAdd(RunData data, TemplateContext context) 
         throws Exception
     {
+        ScarabUser user = (ScarabUser)data.getUser();
+        ScarabRequestTool scarabR = getScarabRequestTool(context);
+        if (user.hasPermission(ScarabSecurity.ISSUE__ASSIGN, 
+                               user.getCurrentModule()))
+        {
         List tempList = getTempList(data, context);
         ValueParser params = data.getParameters();
         Object[] keys =  params.getKeys();
@@ -130,6 +136,13 @@ public class AssignIssue extends BaseModifyIssue
             }
         }
         context.put("tempList", tempList);
+        }
+        else 
+        {
+            data.setTarget(user.getHomePage());
+            scarabR.setAlertMessage(
+                "Insufficient permissions to assign users.");
+        }
     }
         
     /**
@@ -138,8 +151,12 @@ public class AssignIssue extends BaseModifyIssue
     public void doRemove(RunData data, TemplateContext context) 
         throws Exception
     {
+        ScarabUser user = (ScarabUser)data.getUser();
+        ScarabRequestTool scarabR = getScarabRequestTool(context);
+        if (user.hasPermission(ScarabSecurity.ISSUE__ASSIGN, 
+                               user.getCurrentModule()))
+        {
         List tempList = getTempList(data, context);
-
         ValueParser params = data.getParameters();
         Object[] keys =  params.getKeys();
         for (int i =0; i<keys.length; i++)
@@ -156,6 +173,13 @@ public class AssignIssue extends BaseModifyIssue
             }
         }
         context.put("tempList", tempList);
+        }
+        else 
+        {
+            data.setTarget(user.getHomePage());
+            scarabR.setAlertMessage(
+                "Insufficient permissions to assign users.");
+        }
     }
 
     /**
@@ -164,7 +188,11 @@ public class AssignIssue extends BaseModifyIssue
     public void doDone(RunData data, TemplateContext context) 
         throws Exception
     {
+        ScarabUser user = (ScarabUser)data.getUser();
         ScarabRequestTool scarabR = getScarabRequestTool(context);
+        if (user.hasPermission(ScarabSecurity.ISSUE__ASSIGN, 
+                               user.getCurrentModule()))
+        {
         List issues = scarabR.getIssues();
         List tempList = getTempList(data, context);
         String othersAction = null;
@@ -283,6 +311,13 @@ public class AssignIssue extends BaseModifyIssue
             data.getParameters().add("id", issue.getUniqueId());
         }
         doCancel(data, context);
+        }
+        else 
+        {
+            data.setTarget(user.getHomePage());
+            scarabR.setAlertMessage(
+                "Insufficient permissions to assign users.");
+        }
     }
 
 

@@ -92,7 +92,7 @@ import org.tigris.scarab.util.word.IssueSearch;
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: Search.java,v 1.82 2002/07/12 23:45:59 jmcnally Exp $
+ * @version $Id: Search.java,v 1.83 2002/07/15 18:36:39 jmcnally Exp $
  */
 public class Search extends RequireLoginFirstAction
 {
@@ -326,14 +326,38 @@ public class Search extends RequireLoginFirstAction
     public void doReassignselected(RunData data, TemplateContext context)
          throws Exception
     {
-        List selectedIds = getSelected(data, context);
-        if (selectedIds.size() > 0)
+        ScarabUser user = (ScarabUser)data.getUser();
+        ScarabRequestTool scarabR = getScarabRequestTool(context);
+        Module module = null;
+        if (user.getCurrentMITList() != null && 
+            user.getCurrentMITList().isSingleModule())
         {
-            setTarget(data, "AssignIssue.vm");            
+            module = user.getCurrentMITList().getModule();
         }
-        else
+        else 
         {
-            getScarabRequestTool(context).setAlertMessage("Please select issues to view.");
+            module = scarabR.getCurrentModule();
+        }
+
+        if ((user.getCurrentMITList() == null || 
+             user.getCurrentMITList().isSingleModule()) && 
+             scarabR.hasPermission(ScarabSecurity.ISSUE__ASSIGN, module))
+        { 
+            List selectedIds = getSelected(data, context);
+            if (selectedIds.size() > 0)
+            {
+                setTarget(data, "AssignIssue.vm");            
+            }
+            else
+            {
+                getScarabRequestTool(context).setAlertMessage(
+                    "Please select issues to view.");
+            }
+        }
+        else 
+        {
+            scarabR.setAlertMessage(
+                "Insufficient permissions to assign users.");
         }
     }
 
@@ -343,8 +367,31 @@ public class Search extends RequireLoginFirstAction
     public void doReassignall(RunData data, TemplateContext context)
          throws Exception
     {        
-        getAllIssueIds(data, context);
-        data.setTarget("AssignIssue.vm");
+        ScarabUser user = (ScarabUser)data.getUser();
+        ScarabRequestTool scarabR = getScarabRequestTool(context);
+        Module module = null;
+        if (user.getCurrentMITList() != null && 
+            user.getCurrentMITList().isSingleModule())
+        {
+            module = user.getCurrentMITList().getModule();
+        }
+        else 
+        {
+            module = scarabR.getCurrentModule();
+        }
+
+        if ((user.getCurrentMITList() == null || 
+             user.getCurrentMITList().isSingleModule()) && 
+             scarabR.hasPermission(ScarabSecurity.ISSUE__ASSIGN, module))
+        { 
+            getAllIssueIds(data, context);
+            data.setTarget("AssignIssue.vm");
+        }
+        else 
+        {
+            scarabR.setAlertMessage(
+                "Insufficient permissions to assign users.");
+        }
     }
 
 
