@@ -842,6 +842,13 @@ public final class ContextManager {
 
 	int status=0;
         BaseInterceptor ri[];
+	ri=defaultContainer.getInterceptors(Container.H_postReadRequest);
+	
+	for( int i=0; i< ri.length; i++ ) {
+	    status=ri[i].postReadRequest( req );
+	    if( status!=0 ) return status;
+	}
+
 	ri=defaultContainer.getInterceptors(Container.H_contextMap);
 	
 	for( int i=0; i< ri.length; i++ ) {
