@@ -1,6 +1,6 @@
 
 /*
- * $Id: Post.java,v 1.4 1999/10/25 22:49:08 costin Exp $
+ * $Id: Post.java,v 1.5 1999/11/04 01:39:54 costin Exp $
  */
 
 /**
@@ -56,8 +56,8 @@ public class Post extends TestableBase {
                      status = false;
                      String description = props.getProperty("test." + testId +
                         ".description");
-                     msg.append("\tcan't run test " + testId + " : " +
-                         description + "\n");
+                     msg.append("\tTest " + testId + " : " +
+                         description);
                 }
             }
         }

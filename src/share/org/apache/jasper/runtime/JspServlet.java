@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/runtime/Attic/JspServlet.java,v 1.7 1999/11/03 23:43:51 costin Exp $
- * $Revision: 1.7 $
- * $Date: 1999/11/03 23:43:51 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/runtime/Attic/JspServlet.java,v 1.8 1999/11/04 01:39:39 costin Exp $
+ * $Revision: 1.8 $
+ * $Date: 1999/11/04 01:39:39 $
  *
  * ====================================================================
  * 
@@ -158,7 +158,6 @@ public class JspServlet extends HttpServlet {
 
                 theServlet.service(request, response);
             } catch (FileNotFoundException ex) {
-		ex.printStackTrace(); 
                 response.sendError(HttpServletResponse.SC_NOT_FOUND, 
                                    Constants.getString("jsp.error.file.not.found", 
                                                        new Object[] {

@@ -1,4 +1,4 @@
-# $Id: testlist.txt,v 1.1 1999/10/09 00:20:56 duncan Exp $
+# $Id: testlist.txt,v 1.2 1999/11/04 01:39:41 costin Exp $
 
 tests.file.FileLengthTest
 tests.file.ContentTypeTest
@@ -18,4 +18,5 @@ tests.y2k.HttpDateTest
 tests.request.Get
 tests.request.Post
 tests.request.RequestMap
+tests.jsp.Jsp
 #tests.perf.CounterClient

@@ -1,6 +1,6 @@
 
 /*
- * $Id: RequestMap.java,v 1.2 1999/10/14 23:49:02 akv Exp $
+ * $Id: RequestMap.java,v 1.3 1999/11/04 01:39:54 costin Exp $
  */
 
 /**
@@ -111,7 +111,7 @@ public class RequestMap extends TestableBase {
                 if (! localStatus || ! test(request, response,
                     Boolean.valueOf(magnitude).booleanValue())) {
                     status = false;
-                    msg.append("can't run test " + testId + " : " +
+                    msg.append("Test " + testId + " : " +
                         description);
 	        }
 	    }

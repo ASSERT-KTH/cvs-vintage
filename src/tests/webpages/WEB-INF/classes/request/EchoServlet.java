@@ -1,4 +1,4 @@
-/* $Id: EchoServlet.java,v 1.1 1999/10/09 00:20:58 duncan Exp $
+/* $Id: EchoServlet.java,v 1.2 1999/11/04 01:39:57 costin Exp $
  *
  */
 
@@ -32,7 +32,6 @@ public class EchoServlet extends HttpServlet {
                       HttpServletResponse response)
         throws IOException, ServletException
     {
-System.out.println("EchoServletr: inside doPost()");
         doGet(request, response);
     }
     

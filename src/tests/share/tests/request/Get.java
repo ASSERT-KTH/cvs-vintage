@@ -1,6 +1,6 @@
 
 /*
- * $Id: Get.java,v 1.4 1999/10/25 22:49:07 costin Exp $
+ * $Id: Get.java,v 1.5 1999/11/04 01:39:54 costin Exp $
  */
 
 /**
@@ -105,8 +105,8 @@ public class Get extends TestableBase {
 
             if (! localStatus || ! test(request, response,
                 Boolean.valueOf(magnitude).booleanValue())) {
-                msg.append("\tcan't run test " + testId + " : " +
-                    description + "\n");
+                msg.append("\tTest " + testId + " : " +
+                    description);
                 status = false;
 	        }
 	    }
