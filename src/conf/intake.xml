@@ -108,6 +108,7 @@
         <field name="Deleted" key="del" type="boolean"/>
         <field name="Dedupe" key="dup" type="boolean"/>
         <field name="Locked" key="loc" type="boolean"/>
+        <field name="Isdefault" key="def" type="boolean"/>
 </group>
 
 <group name="AttributeType" key="attt" mapToObject="om.AttributeType">
