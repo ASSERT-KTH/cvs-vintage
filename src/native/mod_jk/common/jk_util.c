@@ -56,7 +56,7 @@
 /***************************************************************************
  * Description: Utility functions (mainly configuration)                   *
  * Author:      Gal Shachor <shachor@il.ibm.com>                           *
- * Version:     $Revision: 1.3 $                                               *
+ * Version:     $Revision: 1.4 $                                               *
  ***************************************************************************/
 
 
@@ -194,7 +194,13 @@ int jk_log(jk_logger_t *l,
     }
 
     if(l->level <= level) {
+#ifdef NETWARE
+/* On NetWare, this can get called on a thread that has a limited stack so */
+/* we will allocate and free the temporary buffer in this function         */
+        char *buf;
+#else
         char buf[HUGE_BUFFER_SIZE];
+#endif
         char *f = (char *)(file + strlen(file) - 1);
         va_list args;
         int used = 0;
@@ -209,6 +215,10 @@ int jk_log(jk_logger_t *l,
 #ifdef WIN32
         used = _snprintf(buf, HUGE_BUFFER_SIZE, "[%s (%d)]: ", f, line);        
 #elif defined(NETWARE) // until we get a snprintf function
+        buf = (char *) malloc(HUGE_BUFFER_SIZE);
+        if (NULL == buf)
+           return -1;
+
         used = sprintf(buf, "[%s (%d)]: ", f, line);
 #else 
         used = snprintf(buf, HUGE_BUFFER_SIZE, "[%s (%d)]: ", f, line);        
@@ -227,6 +237,9 @@ int jk_log(jk_logger_t *l,
 #endif
         va_end(args);
         l->log(l, level, buf);
+#ifdef NETWARE
+        free(buf);
+#endif
     }
     
     return rc;
