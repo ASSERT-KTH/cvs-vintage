@@ -1,4 +1,5 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version='1.0' encoding='UTF-8' ?>
+
 <!--
 This is the XML DTD for the JBoss 3.0 EJB deployment descriptor.
 The DOCTYPE is:
@@ -6,8 +7,8 @@ The DOCTYPE is:
       "-//JBoss//DTD JBOSS 3.0//EN"
       "http://www.jboss.org/j2ee/dtd/jboss_3_0.dtd">
 
-$Id: jboss_3_0.dtd,v 1.6 2002/05/29 16:56:47 starksm Exp $
-$Revision: 1.6 $
+$Id: jboss_3_0.dtd,v 1.7 2002/07/13 18:40:50 starksm Exp $
+$Revision: 1.7 $
 
 Overview of the architecture of jboss.xml
 
@@ -92,6 +93,7 @@ Overview of the architecture of jboss.xml
       <container-name />
       <container-invoker />
       <container-interceptors />
+      <client-interceptors />
       <instance-pool />
       <instance-cache />
       <persistence-manager />
@@ -122,7 +124,7 @@ Overview of the architecture of jboss.xml
   3- the deployer can specify runtime jndi names for resource managers.
 
 -->
-<!ELEMENT jboss (enforce-ejb-restrictions?, security-domain?, unauthenticated-principal?, enterprise-beans?, resource-managers?, container-configurations?)>
+<!ELEMENT jboss (enforce-ejb-restrictions? , security-domain? , unauthenticated-principal? , enterprise-beans? , resource-managers? , container-configurations?)>
 
 <!--
   The enforce-ejb-restrictions element tells the container to enforce ejb1.1 restrictions
@@ -178,7 +180,7 @@ Overview of the architecture of jboss.xml
 
   Used in: enterprise-beans
 -->
-<!ELEMENT entity (ejb-name, jndi-name?, local-jndi-name?, read-only?, home-invoker?, bean-invoker?, configuration-name?, security-proxy?, ejb-ref*, resource-ref*, resource-env-ref*, clustered?, cluster-config?)>
+<!ELEMENT entity (ejb-name , jndi-name? , local-jndi-name? , read-only? , home-invoker? , bean-invoker? , configuration-name? , security-proxy? , ejb-ref* , resource-ref* , resource-env-ref* , clustered? , cluster-config?)>
 
 <!--
   The session element holds information specific to jboss and not declared
@@ -189,7 +191,7 @@ Overview of the architecture of jboss.xml
 
   Used in: enterprise-beans
 -->
-<!ELEMENT session (ejb-name, jndi-name?, local-jndi-name?, home-invoker?, bean-invoker?, configuration-name?, security-proxy?, ejb-ref*, resource-ref*, resource-env-ref*, clustered?, cluster-config?)>
+<!ELEMENT session (ejb-name , jndi-name? , local-jndi-name? , home-invoker? , bean-invoker? , configuration-name? , security-proxy? , ejb-ref* , resource-ref* , resource-env-ref* , clustered? , cluster-config?)>
 
 <!--
   The message-driven element holds information specific to jboss and not declared
@@ -200,7 +202,7 @@ Overview of the architecture of jboss.xml
   
   Used in: enterprise-beans
 -->
-<!ELEMENT message-driven (ejb-name, destination-jndi-name, mdb-user?, mdb-passwd?, mdb-client-id?, mdb-subscription-id?, configuration-name?, security-proxy?, ejb-ref*, resource-ref*, resource-env-ref*)>
+<!ELEMENT message-driven (ejb-name , destination-jndi-name , mdb-user? , mdb-passwd? , mdb-client-id? , mdb-subscription-id? , configuration-name? , security-proxy? , ejb-ref* , resource-ref* , resource-env-ref*)>
 
 <!--
   The ejb-name element gives the name of the bean, it must correspond to
@@ -293,7 +295,7 @@ Overview of the architecture of jboss.xml
   
   Used in: entity, session, and message-driven
 -->
-<!ELEMENT ejb-ref (ejb-ref-name, jndi-name)>
+<!ELEMENT ejb-ref (ejb-ref-name , jndi-name)>
 
 <!--
   The ejb-ref-name element is the name of the ejb reference as given in
@@ -310,7 +312,7 @@ Overview of the architecture of jboss.xml
   
   Used in: session, entity, message-driven
 -->
-<!ELEMENT resource-env-ref (resource-env-ref-name, jndi-name)>
+<!ELEMENT resource-env-ref (resource-env-ref-name , jndi-name)>
 
 <!--
   The resource-env-ref-name element gives the "code name" of a resource. It is
@@ -335,7 +337,7 @@ Overview of the architecture of jboss.xml
   
   Used in: session, entity
 -->
-<!ELEMENT cluster-config (partition-name?, home-load-balance-policy?, bean-load-balance-policy?, session-state-manager-jndi-name?)>
+<!ELEMENT cluster-config (partition-name? , home-load-balance-policy? , bean-load-balance-policy? , session-state-manager-jndi-name?)>
 
 <!--
   The partition-name element indicates the name of the HAPartition to be used
@@ -388,7 +390,7 @@ Overview of the architecture of jboss.xml
   
   Used in: entity, session, and message-driven
 -->
-<!ELEMENT resource-ref (res-ref-name, (resource-name | jndi-name | res-url))>
+<!ELEMENT resource-ref (res-ref-name , (resource-name | jndi-name | res-url))>
 
 <!--
   The res-ref-name element gives the "code name" of a resource. It is
@@ -446,7 +448,7 @@ Overview of the architecture of jboss.xml
   
   Used in: resource-managers
 -->
-<!ELEMENT resource-manager (res-name, (res-jndi-name | res-url))>
+<!ELEMENT resource-manager (res-name , (res-jndi-name | res-url))>
 
 <!--
   The res-name element gives the "xml name" of a resource, it is provided
@@ -516,7 +518,7 @@ Overview of the architecture of jboss.xml
   
   Used in: container-configurations
 -->
-<!ELEMENT container-configuration (container-name, call-logging?, container-invoker?, container-interceptors?, instance-pool?, instance-cache?, persistence-manager?, transaction-manager?, web-class-loader?, locking-policy?, container-invoker-conf?, container-cache-conf?, container-pool-conf?, commit-option?, optiond-refresh-rate?, (security-domain | (role-mapping-manager, authentication-module))?)>
+<!ELEMENT container-configuration (container-name , call-logging? , container-invoker? , container-interceptors? , client-interceptors? , instance-pool? , instance-cache? , persistence-manager? , transaction-manager? , web-class-loader? , locking-policy? , container-invoker-conf? , container-cache-conf? , container-pool-conf? , commit-option? , optiond-refresh-rate? , (security-domain | (role-mapping-manager , authentication-module))?)>
 
 <!--
   The container-name element gives the name of the configuration being
@@ -557,6 +559,33 @@ Overview of the architecture of jboss.xml
 <!ELEMENT container-interceptors (interceptor+)>
 
 <!-- 
+The client-interceptors defines the home and bean client side interceptor chain
+
+  Used in: container-configuration
+-->
+<!ELEMENT client-interceptors (home , bean)>
+
+<!--
+The home element gives the chain of interceptors
+(instances of org.jboss.proxy.Interceptor) that are associated with the home
+proxy and operate in the client VM. The declared order of the interceptor
+elements corresponds to the order of the interceptor chain.
+
+  Used in: client-interceptors
+-->
+<!ELEMENT home (interceptor+)>
+
+<!--
+The bean element gives the chain of interceptors
+(instances of org.jboss.proxy.Interceptor) that are associated with the remote
+proxy and operate in the client VM. The declared order of the interceptor
+elements corresponds to the order of the interceptor chain.
+
+  Used in: client-interceptors
+-->
+<!ELEMENT bean (interceptor+)>
+
+<!-- 
   The interceptor element specifies an instance of org.jboss.ejb.Interceptor
   that is to be added to the container interceptor stack.
   
@@ -575,7 +604,7 @@ Overview of the architecture of jboss.xml
   containers. This is the default value if the transaction attribute is not
   explictlygiven.
 -->
-<!ATTLIST interceptor transaction (Bean | Container | Both) "Both">
+<!ATTLIST interceptor transaction     (Bean | Container | Both )  "Both">
 
 <!-- 
   The metricsEnabled attributes is used to indicate if the interceptor
@@ -583,7 +612,7 @@ Overview of the architecture of jboss.xml
   flag is set to true. The allowed values are true and false with false being the
   default if metricsEnabled is not explicitly given.
 -->
-<!ATTLIST interceptor metricsEnabled (true | false) "false">
+<!ATTLIST interceptor metricsEnabled  (true | false )  "false">
 
 <!--
   The instance-pool element gives the class name of the instance pool
@@ -668,7 +697,7 @@ Overview of the architecture of jboss.xml
   
   Used in: container-configuration
 -->
-<!ELEMENT container-invoker-conf (JMSProviderAdapterJNDI?, ServerSessionPoolFactoryJNDI?, MaximumSize?, MaxMessages?, MDBConfig?, RMIObjectPort?, Optimized, RMIClientSocketFactory?, RMIServerSocketFactory?, RMIServerSocketAddr?)>
+<!ELEMENT container-invoker-conf (JMSProviderAdapterJNDI? , ServerSessionPoolFactoryJNDI? , MaximumSize? , MaxMessages? , MDBConfig? , RMIObjectPort? , Optimized , RMIClientSocketFactory? , RMIServerSocketFactory? , RMIServerSocketAddr?)>
 
 <!--
   This element is only valid if the container invoker is
@@ -763,7 +792,7 @@ Overview of the architecture of jboss.xml
 <!--
   Used in: container-invoker-conf for JMSContainerInvoker
 -->
-<!ELEMENT MDBConfig (ReconnectIntervalSec, DLQConfig?)>
+<!ELEMENT MDBConfig (ReconnectIntervalSec , DLQConfig?)>
 
 <!--
   Used in: MDBConfig
@@ -773,7 +802,7 @@ Overview of the architecture of jboss.xml
 <!--
   Used in: MDBConfig
 -->
-<!ELEMENT DLQConfig (DestinationQueue, MaxTimesRedelivered, TimeToLive)>
+<!ELEMENT DLQConfig (DestinationQueue , MaxTimesRedelivered , TimeToLive)>
 
 <!--
   Used in: DLQConfig
@@ -799,7 +828,7 @@ Overview of the architecture of jboss.xml
   
   Used in: container-configuration
 -->
-<!ELEMENT container-cache-conf (cache-policy?, cache-policy-conf?)>
+<!ELEMENT container-cache-conf (cache-policy? , cache-policy-conf?)>
 
 <!--
   The implementation class for the cache policy, which controls
@@ -819,7 +848,7 @@ Overview of the architecture of jboss.xml
 
   Used in: container-cache-conf (when cache-policy is the LRU cache)
 -->
-<!ELEMENT cache-policy-conf (min-capacity, max-capacity, remover-period?, max-bean-life?, overager-period, max-bean-age, resizer-period, max-cache-miss-period, min-cache-miss-period, cache-load-factor)>
+<!ELEMENT cache-policy-conf (min-capacity , max-capacity , remover-period? , max-bean-life? , overager-period , max-bean-age , resizer-period , max-cache-miss-period , min-cache-miss-period , cache-load-factor)>
 
 <!--
   The minimum capacity of this cache
@@ -888,7 +917,7 @@ Overview of the architecture of jboss.xml
   
   Used in: container-configuration
 -->
-<!ELEMENT container-pool-conf (MaximumSize, feeder-policy, feeder-policy-conf)>
+<!ELEMENT container-pool-conf (MaximumSize , feeder-policy , feeder-policy-conf)>
 
 <!--
   The capacity of the Pool.  The pool feeder will feed the pool with new
@@ -924,7 +953,7 @@ Overview of the architecture of jboss.xml
   
   Used in: container-pool-conf for InstancePoolFeeder implementations
 -->
-<!ELEMENT feeder-policy-conf (increment, period)>
+<!ELEMENT feeder-policy-conf (increment , period)>
 
 <!--
   The pool feeder will feed the pool with this number of new instances at
@@ -989,3 +1018,4 @@ Overview of the architecture of jboss.xml
   Used in: container-configuration
 -->
 <!ELEMENT authentication-module (#PCDATA)>
+
