@@ -13,6 +13,7 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
+
 package org.columba.core.gui.util;
 
 import java.awt.FontMetrics;
@@ -25,21 +26,17 @@ public class MultiLineLabel extends JTextArea {
 	private final static int DEFAULT_WIDTH = 300;
 
 	public MultiLineLabel(String s) {
-
-		this.setOpaque(false);
-		setText(s);
+		this(s, DEFAULT_WIDTH);
 	}
 
 	public MultiLineLabel(String s, int pixelWidth) {
-
-		this.setOpaque(false);
+		setOpaque(false);
 		setText(s, pixelWidth);
 	}
 
 	public MultiLineLabel(String s, int pixelWidth, int rows, int cols) {
 		super(rows, cols);
-
-		this.setOpaque(false);
+		setOpaque(false);
 		setText(s, pixelWidth);
 	}
 
@@ -48,7 +45,7 @@ public class MultiLineLabel extends JTextArea {
 	}
 
 	public void setText(String s) {
-		super.setText(createSizedString(s, DEFAULT_WIDTH));
+		setText(s, DEFAULT_WIDTH);
 	}
 
 	private String createSizedString(final String message, final int pixels) {
@@ -68,9 +65,9 @@ public class MultiLineLabel extends JTextArea {
 			cursb.append(" ");
 		}
 		sb.append(cursb.toString());
-
 		return sb.toString();
 	}
+	
 	/*
 	public MultiLineLabel( String s )
 	{
@@ -120,4 +117,7 @@ public class MultiLineLabel extends JTextArea {
 			"Label.font");
 	}
 
+	public boolean isFocusTraversable() {
+		return false;
+	}
 }
