@@ -1,4 +1,4 @@
-// $Id: WizNavigable.java,v 1.12 2004/09/27 18:31:27 mvw Exp $
+// $Id: WizNavigable.java,v 1.13 2004/10/21 08:29:46 mkl Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,23 +27,22 @@
 // File: WizNavigable.java
 // Classes: WizNavigable
 // Original Author: jrobbins@ics.uci.edu
-// $Id: WizNavigable.java,v 1.12 2004/09/27 18:31:27 mvw Exp $
+// $Id: WizNavigable.java,v 1.13 2004/10/21 08:29:46 mkl Exp $
 
 package org.argouml.uml.cognitive.critics;
 
 import java.util.ArrayList;
 import java.util.Vector;
-import javax.swing.JPanel;
-import org.apache.log4j.Logger;
 
+import javax.swing.JPanel;
+
+import org.apache.log4j.Logger;
 import org.argouml.cognitive.ui.WizStepChoice;
-import org.argouml.kernel.Wizard;
 import org.argouml.model.ModelFacade;
-import org.tigris.gef.util.VectorSet;
 /** A non-modal wizard to help the user change navigability
  *  of an association. */
 
-public class WizNavigable extends Wizard {
+public class WizNavigable extends UMLWizard {
     private static final Logger LOG = Logger.getLogger(WizNavigable.class);
 					      
     private String instructions =
@@ -60,25 +59,7 @@ public class WizNavigable extends Wizard {
      */
     public WizNavigable() { }
 								      
-    /**
-     * @see org.argouml.kernel.Wizard#getNumSteps()
-     */
-    public int getNumSteps() { return 1; }
-									  
-    /**
-     * @return the offending modelelement
-     */
-    public Object getModelElement() {
-	if (getToDoItem() != null) {
-	    VectorSet offs = getToDoItem().getOffenders();
-	    if (offs.size() >= 1) {
-		Object me = /*(MModelElement)*/ offs.elementAt(0);
-		return me;
-	    }
-	}
-	return null;
-    }
-									      
+									  									      
     /**
      * @return the options
      */

@@ -1,4 +1,4 @@
-// $Id: CrNameConfusion.java,v 1.13 2004/09/21 19:03:26 mvw Exp $
+// $Id: CrNameConfusion.java,v 1.14 2004/10/21 08:29:46 mkl Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,7 +27,7 @@
 // File: CrNameConfusion.java
 // Classes: CrNameConfusion
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrNameConfusion.java,v 1.13 2004/09/21 19:03:26 mvw Exp $
+// $Id: CrNameConfusion.java,v 1.14 2004/10/21 08:29:46 mkl Exp $
 
 package org.argouml.uml.cognitive.critics;
 
@@ -181,7 +181,7 @@ public class CrNameConfusion extends CrUML {
      */
     public void initWizard(Wizard w) {
 	if (w instanceof WizManyNames) {
-	    ToDoItem item = w.getToDoItem();
+	    ToDoItem item = (ToDoItem) w.getToDoItem();
 	    String ins =
 		"Change each name to be significantly different from "
 		+ "the others.  "

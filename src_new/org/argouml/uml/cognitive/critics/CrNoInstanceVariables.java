@@ -1,4 +1,4 @@
-// $Id: CrNoInstanceVariables.java,v 1.20 2004/09/21 19:03:27 mvw Exp $
+// $Id: CrNoInstanceVariables.java,v 1.21 2004/10/21 08:29:46 mkl Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -145,7 +145,7 @@ public class CrNoInstanceVariables extends CrUML {
      */
     public void initWizard(Wizard w) {
 	if (w instanceof WizAddInstanceVariable) {
-	    ToDoItem item = w.getToDoItem();
+	    ToDoItem item = (ToDoItem) w.getToDoItem();
 	    Object me = /*(MModelElement)*/ item.getOffenders().elementAt(0);
 	    String ins = "Set the name of the new variable.";
 	    String sug = "newAttr";

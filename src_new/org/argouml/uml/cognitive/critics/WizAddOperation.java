@@ -1,4 +1,4 @@
-// $Id: WizAddOperation.java,v 1.6 2004/10/13 05:52:25 linus Exp $
+// $Id: WizAddOperation.java,v 1.7 2004/10/21 08:29:46 mkl Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -24,14 +24,12 @@
 
 package org.argouml.uml.cognitive.critics;
 
-import org.tigris.gef.util.VectorSet;
 import javax.swing.JPanel;
 
 import org.argouml.cognitive.ui.WizStepTextField;
 import org.argouml.i18n.Translator;
 import org.argouml.model.ModelFacade;
 import org.argouml.model.uml.UmlFactory;
-import org.argouml.kernel.Wizard;
 
 /**
  * A wizard to add operations to a classifier.
@@ -39,13 +37,12 @@ import org.argouml.kernel.Wizard;
  * @author  mkl
  * @since Created on December 4, 2003, 1:55 PM
  */
-public class WizAddOperation extends Wizard {
+public class WizAddOperation extends UMLWizard {
     
     private WizStepTextField step1 = null;
     private String label = Translator.localize("label.name");
     private String instructions =
 	"Please change the name of the offending model element.";
-    private String suggestion = "suggestion";
 
     /** Creates a new instance of WizAddOperation */
     public WizAddOperation() {
@@ -67,47 +64,7 @@ public class WizAddOperation extends Wizard {
         }
     }
     
-    /**
-     * @see org.argouml.kernel.Wizard#getNumSteps()
-     */
-    public int getNumSteps() {
-        return 1;
-    }
-    
-    /**
-     * @return the offending modelelement
-     */
-    public Object getModelElement() {
-        if (getToDoItem() != null) {
-            VectorSet offs = getToDoItem().getOffenders();
-            if (offs.size() >= 1) {
-                Object me = /*(MModelElement)*/ offs.elementAt(0);
-                return me;
-            }
-        }
-        return null;
-    }
-    
-    /**
-     * @return the suggestion string
-     */
-    public String getSuggestion() {
-        if (suggestion != null) return suggestion;
-        Object me = getModelElement();
-        if (me != null) {
-            String n = ModelFacade.getName(me);
-            return n;
-        }
-        return "";
-    }
-    
-    /**
-     * @param s the new suggestion string
-     */
-    public void setSuggestion(String s) {
-	suggestion = s;
-    }
-    
+     
     /**
      * @param s the new instructions
      */

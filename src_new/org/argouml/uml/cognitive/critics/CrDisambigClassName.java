@@ -1,4 +1,4 @@
-// $Id: CrDisambigClassName.java,v 1.16 2004/09/21 19:03:27 mvw Exp $
+// $Id: CrDisambigClassName.java,v 1.17 2004/10/21 08:29:46 mkl Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,7 +27,7 @@
 // File: CrDisambigClassName.java
 // Classes: CrDisambigClassName
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrDisambigClassName.java,v 1.16 2004/09/21 19:03:27 mvw Exp $
+// $Id: CrDisambigClassName.java,v 1.17 2004/10/21 08:29:46 mkl Exp $
 
 package org.argouml.uml.cognitive.critics;
 
@@ -103,7 +103,7 @@ public class CrDisambigClassName extends CrUML {
      */
     public void initWizard(Wizard w) {
 	if (w instanceof WizMEName) {
-	    ToDoItem item = w.getToDoItem();
+	    ToDoItem item = (ToDoItem)w.getToDoItem();
 	    Object me = /*(MModelElement)*/ item.getOffenders().elementAt(0);
 	    String sug = ModelFacade.getName(me);
 	    String ins = "Change the name to something different.";

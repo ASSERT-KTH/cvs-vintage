@@ -1,4 +1,4 @@
-// $Id: CrMissingAttrName.java,v 1.12 2004/09/21 19:03:26 mvw Exp $
+// $Id: CrMissingAttrName.java,v 1.13 2004/10/21 08:29:46 mkl Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,7 +27,7 @@
 // File:CrMissingAttrName.java
 // Classes:CrMissingAttrName
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrMissingAttrName.java,v 1.12 2004/09/21 19:03:26 mvw Exp $
+// $Id: CrMissingAttrName.java,v 1.13 2004/10/21 08:29:46 mkl Exp $
 
 package org.argouml.uml.cognitive.critics;
 
@@ -81,7 +81,7 @@ public class CrMissingAttrName extends CrUML {
      */
     public void initWizard(Wizard w) {
 	if (w instanceof WizMEName) {
-	    ToDoItem item = w.getToDoItem();
+	    ToDoItem item = (ToDoItem)w.getToDoItem();
 	    Object me = /*(MModelElement)*/ item.getOffenders().elementAt(0);
 	    String ins = "Set the name of this attribute.";
 	    String sug = "AttributeName";

@@ -1,4 +1,4 @@
-// $Id: WizAssocComposite.java,v 1.16 2004/09/27 18:31:27 mvw Exp $
+// $Id: WizAssocComposite.java,v 1.17 2004/10/21 08:29:46 mkl Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -26,13 +26,13 @@ package org.argouml.uml.cognitive.critics;
 
 import java.util.Iterator;
 import java.util.Vector;
-import javax.swing.JPanel;
-import org.apache.log4j.Logger;
 
+import javax.swing.JPanel;
+
+import org.apache.log4j.Logger;
 import org.argouml.cognitive.ui.WizStepChoice;
 import org.argouml.kernel.Wizard;
 import org.argouml.model.ModelFacade;
-import org.tigris.gef.util.VectorSet;
 
 /**
  * A non-modal wizard to assist the user in changing aggregation of an
@@ -50,7 +50,7 @@ import org.tigris.gef.util.VectorSet;
  * </a>
  * @author jrobbins@ics.uci.edu
  */
-public class WizAssocComposite extends Wizard {
+public class WizAssocComposite extends UMLWizard {
     /**
      * Logger.
      */
@@ -87,17 +87,6 @@ public class WizAssocComposite extends Wizard {
 
 
     /**
-     * Returns the number of steps in this wizard.<p>
-     *
-     * @return  The number of steps (excluding the initial explanation) in this
-     *          wizard (1).
-     *
-     * @see Wizard
-     */
-    public int getNumSteps() { return 1; }
-
-
-    /**
      * Tries to identify the {@link
      * ru.novosoft.uml.foundation.core.MAssociation MAssociation} that
      * triggered the critic.<p>
@@ -120,11 +109,7 @@ public class WizAssocComposite extends Wizard {
         // its default value of null
 
         if ((triggerAssociation == null) && (getToDoItem() != null)) {
-            VectorSet offs = getToDoItem().getOffenders();
-
-            if (offs.size() >= 1) {
-                triggerAssociation = offs.elementAt(0);
-            }
+            triggerAssociation = getModelElement();
         }
 
         return triggerAssociation;

@@ -1,4 +1,4 @@
-// $Id: CrReservedName.java,v 1.19 2004/09/21 19:03:26 mvw Exp $
+// $Id: CrReservedName.java,v 1.20 2004/10/21 08:29:46 mkl Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -244,7 +244,7 @@ public class CrReservedName extends CrUML {
      */
     public void initWizard(Wizard w) {
 	if (w instanceof WizMEName) {
-	    ToDoItem item = w.getToDoItem();
+	    ToDoItem item = (ToDoItem) w.getToDoItem();
 	    String sug = ModelFacade.getName(item.getOffenders().elementAt(0));
 	    String ins = "Change the name to something different.";
 	    ((WizMEName) w).setInstructions(ins);

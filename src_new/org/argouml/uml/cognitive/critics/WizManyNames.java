@@ -1,4 +1,4 @@
-// $Id: WizManyNames.java,v 1.12 2004/10/13 05:52:25 linus Exp $
+// $Id: WizManyNames.java,v 1.13 2004/10/21 08:29:46 mkl Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,11 +25,11 @@
 package org.argouml.uml.cognitive.critics;
 
 import java.util.Vector;
-import javax.swing.JPanel;
-import org.apache.log4j.Logger;
 
+import javax.swing.JPanel;
+
+import org.apache.log4j.Logger;
 import org.argouml.cognitive.ui.WizStepManyTextFields;
-import org.argouml.kernel.Wizard;
 import org.argouml.model.ModelFacade;
 
 /**
@@ -39,7 +39,7 @@ import org.argouml.model.ModelFacade;
  * @author jrobbins
  */
 
-public class WizManyNames extends Wizard {
+public class WizManyNames extends UMLWizard {
     private static final Logger LOG = Logger.getLogger(WizManyNames.class);
 					      
     private String instructions =
@@ -54,10 +54,6 @@ public class WizManyNames extends Wizard {
      */
     public WizManyNames() { }
 								  
-    /**
-     * @see org.argouml.kernel.Wizard#getNumSteps()
-     */
-    public int getNumSteps() { return 1; }
 								      
     /**
      * @param m the offenders

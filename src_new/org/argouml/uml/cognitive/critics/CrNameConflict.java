@@ -1,4 +1,4 @@
-// $Id: CrNameConflict.java,v 1.11 2004/09/21 19:03:27 mvw Exp $
+// $Id: CrNameConflict.java,v 1.12 2004/10/21 08:29:46 mkl Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,7 +27,7 @@
 // File: CrNameConflict.java
 // Classes: CrNameConflict
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrNameConflict.java,v 1.11 2004/09/21 19:03:27 mvw Exp $
+// $Id: CrNameConflict.java,v 1.12 2004/10/21 08:29:46 mkl Exp $
 
 package org.argouml.uml.cognitive.critics;
 
@@ -128,7 +128,7 @@ public class CrNameConflict extends CrUML {
      */
     public void initWizard(Wizard w) {
         if (w instanceof WizMEName) {
-            ToDoItem item = w.getToDoItem();
+            ToDoItem item = (ToDoItem) w.getToDoItem();
             Object me = item.getOffenders().firstElement();
             String sug = ModelFacade.getName(me);
             String ins = "Change the name to something different.";
