@@ -97,7 +97,7 @@ import org.gjt.sp.util.Log;
  * @see org.gjt.sp.jedit.ServiceManager
  *
  * @author Slava Pestov
- * @version $Id: PluginJAR.java,v 1.19 2003/05/06 05:16:55 spestov Exp $
+ * @version $Id: PluginJAR.java,v 1.20 2003/05/06 05:44:19 spestov Exp $
  * @since jEdit 4.2pre1
  */
 public class PluginJAR
@@ -435,9 +435,23 @@ public class PluginJAR
 
 			activated = false;
 
-			plugin.stop();
-			plugin = new EditPlugin.Deferred(plugin.getClassName());
-			plugin.jar = (EditPlugin.JAR)this;
+			if(plugin != null)
+			{
+				try
+				{
+					plugin.stop();
+				}
+				catch(Throwable t)
+				{
+					Log.log(Log.ERROR,this,"Error while "
+						+ "stopping plugin:");
+					Log.log(Log.ERROR,this,t);
+				}
+
+				plugin = new EditPlugin.Deferred(
+					plugin.getClassName());
+				plugin.jar = (EditPlugin.JAR)this;
+			}
 		}
 	} //}}}
 
@@ -614,19 +628,7 @@ public class PluginJAR
 	//{{{ uninit() method
 	void uninit(boolean exit)
 	{
-		if(plugin != null)
-		{
-			try
-			{
-				plugin.stop();
-			}
-			catch(Throwable t)
-			{
-				Log.log(Log.ERROR,this,"Error while "
-					+ "stopping plugin:");
-				Log.log(Log.ERROR,this,t);
-			}
-		}
+		deactivatePlugin();
 
 		if(!exit)
 		{
@@ -950,7 +952,7 @@ public class PluginJAR
 		if(plugin instanceof EBPlugin)
 		{
 			if(jEdit.getProperty("plugin."
-				+ className + ".activate")
+				+ plugin.getClassName() + ".activate")
 				== null)
 			{
 				// old plugins expected jEdit 4.1-style

@@ -45,7 +45,7 @@ import org.gjt.sp.util.Log;
 /**
  * The main class of the jEdit text editor.
  * @author Slava Pestov
- * @version $Id: jEdit.java,v 1.156 2003/05/03 20:34:25 spestov Exp $
+ * @version $Id: jEdit.java,v 1.157 2003/05/06 05:44:19 spestov Exp $
  */
 public class jEdit
 {
@@ -3228,6 +3228,9 @@ public class jEdit
 	//{{{ showPluginErrorDialog() method
 	private static void showPluginErrorDialog()
 	{
+		if(pluginErrors == null)
+			return;
+
 		String caption = jEdit.getProperty(
 			"plugin-error.caption" + (pluginErrors.size() == 1
 			? "-1" : ""));
@@ -3236,7 +3239,7 @@ public class jEdit
 			jEdit.getFirstView(),
 			jEdit.getProperty("plugin-error.title"),
 			caption,pluginErrors,true);
-		pluginErrors.removeAllElements();
+		pluginErrors = null;
 	} //}}}
 
 	//{{{ getNotLoadedPluginJARs() method

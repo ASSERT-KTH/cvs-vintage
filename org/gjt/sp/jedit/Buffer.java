@@ -66,7 +66,7 @@ import org.gjt.sp.util.*;
  * </ul>
  *
  * @author Slava Pestov
- * @version $Id: Buffer.java,v 1.163 2003/04/30 05:28:54 spestov Exp $
+ * @version $Id: Buffer.java,v 1.164 2003/05/06 05:44:19 spestov Exp $
  */
 public class Buffer
 {
@@ -2101,7 +2101,7 @@ public class Buffer
 				}
 
 				TokenMarker.LineContext prevContext = (
-					i == 0 ? null
+					(i == 0 || textMode) ? null
 					: offsetMgr.getLineContext(i - 1)
 				);
 
@@ -2885,9 +2885,11 @@ loop:		for(int i = 0; i < seg.count; i++)
 			if(line < 0 || line >= offsetMgr.getLineCount())
 				throw new ArrayIndexOutOfBoundsException(line);
 
+			if(foldHandler instanceof DummyFoldHandler)
+				return 0;
+
 			int firstInvalidFoldLevel = offsetMgr.getFirstInvalidFoldLevel();
-			if(firstInvalidFoldLevel == -1 || line < firstInvalidFoldLevel
-				|| foldHandler instanceof DummyFoldHandler)
+			if(firstInvalidFoldLevel == -1 || line < firstInvalidFoldLevel)
 			{
 				return offsetMgr.getFoldLevel(line);
 			}
