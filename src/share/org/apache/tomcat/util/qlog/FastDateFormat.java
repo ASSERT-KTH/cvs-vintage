@@ -123,8 +123,12 @@ public class FastDateFormat extends DateFormat {
 		    sb.setCharAt(--pos, Character.forDigit(ms % 10, 10));
 	    }
         }
-	toAppendTo.append(sb); // StringBuffer will call toString internally,
+	toAppendTo.append(sb.toString());
+	// StringBuffer will call toString internally,
 	// except for 1.4 where append(SB) is defined - one more object saved
+	// Bad if you compile with 1.4 - it'll no longer work on 1.2, so
+	// toString will be used ( this can be optimized using the buffers
+	// directly )
 	return toAppendTo;
     }
 
