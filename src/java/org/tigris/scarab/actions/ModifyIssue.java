@@ -109,7 +109,7 @@ import org.tigris.scarab.util.ScarabConstants;
     This class is responsible for edit issue forms.
     ScarabIssueAttributeValue
     @author <a href="mailto:elicia@collab.net">Elicia David</a>
-    @version $Id: ModifyIssue.java,v 1.114 2002/08/02 01:48:51 jon Exp $
+    @version $Id: ModifyIssue.java,v 1.115 2002/08/09 00:23:06 elicia Exp $
 */
 public class ModifyIssue extends BaseModifyIssue
 {
@@ -870,6 +870,7 @@ public class ModifyIssue extends BaseModifyIssue
                 {
                     depend = prevDepend;
                     depend.setDeleted(false);
+                    depend.save();
                 }
                 else
                 {
