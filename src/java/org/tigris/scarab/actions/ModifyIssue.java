@@ -92,7 +92,7 @@ import org.tigris.scarab.util.ScarabConstants;
     This class is responsible for edit issue forms.
     ScarabIssueAttributeValue
     @author <a href="mailto:elicia@collab.net">Elicia David</a>
-    @version $Id: ModifyIssue.java,v 1.23 2001/08/20 20:46:49 elicia Exp $
+    @version $Id: ModifyIssue.java,v 1.24 2001/08/21 00:25:39 jmcnally Exp $
 */
 public class ModifyIssue extends TemplateAction
 {
@@ -214,8 +214,8 @@ public class ModifyIssue extends TemplateAction
 
                     if (!newValue.equals("") && !oldValue.equals(newValue))
                     {
-                        group.setProperties(aval);
                         aval.startTransaction(transaction, attachment);
+                        group.setProperties(aval);
                         aval.save();
                     }
                 } 

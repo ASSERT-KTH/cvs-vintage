@@ -85,6 +85,7 @@
         <field name="Id" key="id" type="NumberKey" mapToProperty="PrimaryKey">
            <rule name="mask" value="([0-9]|:)+">badIdMessage</rule>
         </field>
+        <field name="AttributeId" key="attid" type="NumberKey"/>
         <field name="OptionId" key="optionid" type="NumberKey">
            <rule name="mask" value="[0-9]+">Please select a valid choice</rule>
            <required-message>This module requires that you select an option for this attribute.</required-message>
@@ -129,6 +130,13 @@
         <field name="MaxId" key="hid" type="String"/>
         <field name="MinDate" key="ld" type="String"/>
         <field name="MaxDate" key="hd" type="String"/>
+        <field name="StateChangeAttributeId" key="scai" type="NumberKey"/>
+        <field name="StateChangeFromOptionId" key="scfoi" type="NumberKey"/>
+        <field name="StateChangeToOptionId" key="sctoi" type="NumberKey"/>
+        <field name="StateChangeFromDate" key="scfd" type="String"/>
+        <field name="StateChangeToDate" key="sctd" type="String"/>
+        <field name="InitialSortAttributeId" key="isai" type="NumberKey"/>
+        <field name="InitialSortPolarity" key="isp" type="String"/>
         <field name="ResultsPerPage" key="rpp" type="int"/>
 </group>
 
@@ -198,6 +206,7 @@
         <rule name="mask" value="[0-9]+">badIdMessage</rule>
     </field>
 </group>
+
 
 <group name="Query" key="query" mapToObject="om.Query">
     <field name="Id" key="o" type="NumberKey" mapToProperty="PrimaryKey">

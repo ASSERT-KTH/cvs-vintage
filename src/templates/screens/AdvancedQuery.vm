@@ -112,8 +112,25 @@
          <td>
              <select name="$query.StateChangeAttributeId.Key">
 
+#foreach ( $attKey in $attrValues.sequence() )
+    #set ( $attVal = $attrValues.get($attKey) )
+    #if ($attVal.Attribute.AttributeType.Name == "combo-box" )
+        #set ( $attrInput = $intake.AttributeValue.mapTo($attVal) ) 
+        #set ( $selected = "" )
+        #if ( $query.StateChangeAttributeId.Value == $attVal.AttributeId )
+		    #set ( $selected = ' selected="selected"' )
+            #set ( $selectedAttribute = $attVal.Attribute )
+	    #end
+				<option$selected value="$attVal.AttributeId">
+				    $attVal.Attribute.Name
+                </option>
+    #end
+#end
 
              </select>
+
+             <input name="eventSubmit_doUpdateStateChangeAttribute"
+                value="Update Options" type="submit" />
          </td>
         </tr>
 
@@ -125,9 +142,15 @@
 
           <select name="$query.StateChangeFromOptionId.Key">
 
-#foreach ($option in $module.getLeafRModuleOptions($attr))
     #set ( $selected = "" )
-    #if ( $attrInput.get($optionFieldName).Value && $option.OptionId == $attrInput.get($optionFieldName).Value )
+    #if ( !$attrInput.get("OptionId").Value )
+		#set ( $selected = ' selected="selected"' )
+	#end
+				<option$selected value="">Old Value...</option>
+
+#foreach ($option in $module.getLeafRModuleOptions($selectedAttribute))
+    #set ( $selected = "" )
+    #if ( $attrInput.get("OptionId").Value && $option.OptionId == $attrInput.get("OptionId").Value )
 		#set ( $selected = ' selected="selected"' )
 	#end
 				<option$selected value="$option.OptionId">
@@ -139,9 +162,15 @@
 
              <select name="$query.StateChangeToOptionId.Key">
 
-#foreach ($option in $module.getLeafRModuleOptions($attr))
     #set ( $selected = "" )
-    #if ( $attrInput.get($optionFieldName).Value && $option.OptionId == $attrInput.get($optionFieldName).Value )
+    #if ( !$attrInput.get("OptionId").Value )
+		#set ( $selected = ' selected="selected"' )
+	#end
+				<option$selected value="">Current Value...</option>
+
+#foreach ($option in $module.getLeafRModuleOptions($selectedAttribute))
+    #set ( $selected = "" )
+    #if ( $attrInput.get("OptionId").Value && $option.OptionId == $attrInput.get("OptionId").Value )
 		#set ( $selected = ' selected="selected"' )
 	#end
 				<option$selected value="$option.OptionId">
@@ -155,7 +184,7 @@
         </tr>  
         
         <tr>
-           <th width="120">date range:<br />MM/DD/YYYY hh:mm</th>
+           <th width="120">date range:<br />(e.g. MM/DD/YYYY hh:mm)</th>
 
            <td>          
            

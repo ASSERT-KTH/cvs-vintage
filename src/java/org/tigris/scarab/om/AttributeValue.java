@@ -94,6 +94,8 @@ public abstract class AttributeValue
      */
     protected AttributeValue()
     {
+        oldOptionIdIsSet = false;
+        oldValueIsSet = false;
     }
 
     /**
@@ -131,6 +133,10 @@ public abstract class AttributeValue
             throw new ScarabException("A new transaction was set and " +
                 "a transaction was already in progress.");
         }
+        oldOptionIdIsSet = false;
+        oldValueIsSet = false;
+        oldOptionId = null;
+        oldValue = null;
     }
 
     private void endTransaction()
@@ -217,10 +223,9 @@ public abstract class AttributeValue
                 }
             }
         }
-
         // if the value is set multiple times before saving only
         // save the last saved value
-        if ( !oldOptionIdIsSet ) 
+        if ( !isNew() && !oldOptionIdIsSet ) 
         {
             oldOptionId = getOptionId();
             oldOptionIdIsSet = true;
@@ -233,7 +238,7 @@ public abstract class AttributeValue
     {
         // if the value is set multiple times before saving only
         // save the last saved value
-        if ( oldValueIsSet ) 
+        if ( !isNew() && !oldValueIsSet ) 
         {
             oldValue = getValue();
             oldValueIsSet = true;
