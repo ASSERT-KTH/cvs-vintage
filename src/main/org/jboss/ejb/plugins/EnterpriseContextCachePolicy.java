@@ -17,9 +17,9 @@ import org.jboss.util.CachePolicy;
  * Implementation classes can implement a LRU policy, a random one, 
  * a MRU one, or any other suitable policy.
  * 
- * @see EnterpriseInstanceCache
+ * @see AbstractInstanceCache
  * @author Simone Bordet (simone.bordet@compaq.com)
- * @version $Revision: 1.3 $
+ * @version $Revision: 1.4 $
  */
 public interface EnterpriseContextCachePolicy extends CachePolicy
 {
