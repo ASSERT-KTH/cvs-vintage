@@ -2,7 +2,6 @@ package org.columba.core.gui;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
-import java.awt.Toolkit;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 
@@ -12,6 +11,7 @@ import javax.swing.JPanel;
 import org.columba.core.config.ViewItem;
 import org.columba.core.config.WindowItem;
 import org.columba.core.gui.util.ImageLoader;
+import org.columba.core.util.WindowMaximizer;
 
 /**
  * @author freddy
@@ -40,8 +40,13 @@ public class FrameView extends JFrame implements WindowListener{
 	}
 	
 	public void maximize() {
+		WindowMaximizer.maximize(this);
+		
+		/*
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 		setSize(screenSize);
+		*/
+		
 		// FIXME: this works only with JDK1.4
 		// has to be added with org.columba.core.util.Compatibility-class
 		//setExtendedState(MAXIMIZED_BOTH);

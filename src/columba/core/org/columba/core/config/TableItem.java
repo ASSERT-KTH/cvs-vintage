@@ -83,17 +83,17 @@ public class TableItem extends DefaultItem {
 	
 	public HeaderItem getHeaderItem( int index )
 	{
-		XmlElement list = getElement("columnlist");
+		//XmlElement list = getElement("columnlist");
 		
-		return new HeaderItem(list.getElement(index));
+		return new HeaderItem(getRoot().getElement(index));
 	}
 	
 	public int count()
 	{
-		XmlElement list = getElement("columnlist");
+		//XmlElement list = getElement("columnlist");
 		
 		
-		return getElement("columnlist").count()-2;
+		return getRoot().count();
 	}
 	
 	

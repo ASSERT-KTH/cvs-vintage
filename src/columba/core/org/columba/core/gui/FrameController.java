@@ -17,8 +17,9 @@ package org.columba.core.gui;
 import java.awt.event.MouseAdapter;
 
 import org.columba.core.gui.statusbar.StatusBar;
-import org.columba.mail.gui.frame.TooltipMouseHandler;
+import org.columba.core.logging.ColumbaLogger;
 import org.columba.core.main.MainInterface;
+import org.columba.mail.gui.frame.TooltipMouseHandler;
 
 /**
  * @author Timo Stich (tstich@users.sourceforge.net)
@@ -54,6 +55,8 @@ public abstract class FrameController {
 	
 	public void close()
 	{
+		ColumbaLogger.log.info("closing FrameController");
+		
 		MainInterface.frameModel.unregister(id);
 
 		//getView().setVisible(false);	
