@@ -19,7 +19,7 @@ import org.apache.log4j.Category;
  * A helper for creating connections from jms connection factories.
  *      
  * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  */
 public class ConnectionFactoryHelper
 {
@@ -50,19 +50,16 @@ public class ConnectionFactoryHelper
       if (factory == null)
          throw new IllegalArgumentException("factory is null");
 
+      if (log.isDebugEnabled()) {
+         log.debug("using connection factory: " + factory);
+         log.debug("using username/password: " +
+                   String.valueOf(username) + "/" +
+                   String.valueOf(password));
+      }
+
       Connection connection;
       
-      if (factory instanceof QueueConnectionFactory) {
-         QueueConnectionFactory qFactory = (QueueConnectionFactory)factory;
-         if (username != null) {
-            connection = qFactory.createQueueConnection(username, password);
-         }
-         else {
-            connection = qFactory.createQueueConnection();
-         }
-         log.debug("created QueueConnection: " + connection);
-      }
-      else if (factory instanceof XAQueueConnectionFactory) {
+      if (factory instanceof XAQueueConnectionFactory) {
          XAQueueConnectionFactory qFactory = (XAQueueConnectionFactory)factory;
          if (username != null) {
             connection = qFactory.createXAQueueConnection(username, password);
@@ -72,15 +69,15 @@ public class ConnectionFactoryHelper
          }
          log.debug("created XAQueueConnection: " + connection);
       }
-      else if (factory instanceof TopicConnectionFactory) {
-         TopicConnectionFactory tFactory = (TopicConnectionFactory)factory;
+      else if (factory instanceof QueueConnectionFactory) {
+         QueueConnectionFactory qFactory = (QueueConnectionFactory)factory;
          if (username != null) {
-            connection = tFactory.createTopicConnection(username, password);
+            connection = qFactory.createQueueConnection(username, password);
          }
          else {
-            connection = tFactory.createTopicConnection();
+            connection = qFactory.createQueueConnection();
          }
-         log.debug("created TopicConnection: " + connection);
+         log.debug("created QueueConnection: " + connection);
       }
       else if (factory instanceof XATopicConnectionFactory) {
          XATopicConnectionFactory tFactory = (XATopicConnectionFactory)factory;
@@ -91,6 +88,16 @@ public class ConnectionFactoryHelper
             connection = tFactory.createXATopicConnection();
          }
          log.debug("created XATopicConnection: " + connection);
+      }
+      else if (factory instanceof TopicConnectionFactory) {
+         TopicConnectionFactory tFactory = (TopicConnectionFactory)factory;
+         if (username != null) {
+            connection = tFactory.createTopicConnection(username, password);
+         }
+         else {
+            connection = tFactory.createTopicConnection();
+         }
+         log.debug("created TopicConnection: " + connection);
       }
       else {
          throw new IllegalArgumentException("factory is invalid");
