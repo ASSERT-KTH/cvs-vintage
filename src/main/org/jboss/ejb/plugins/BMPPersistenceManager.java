@@ -33,7 +33,7 @@ import org.jboss.logging.Logger;
 *   @see <related>
 *   @author Rickard Öberg (rickard.oberg@telkel.com)
 *  @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
-*   @version $Revision: 1.10 $
+*   @version $Revision: 1.11 $
 */
 public class BMPPersistenceManager
 implements EntityPersistenceManager
@@ -120,9 +120,6 @@ implements EntityPersistenceManager
          
          // Give it to the context
          ctx.setCacheKey(cacheKey);
-         
-         // We are going in cache so lock the instance (no need to synch we are alone on it)
-         ctx.lock();
          
          // Insert in cache, it is now safe
          ((EntityInstanceCache) con.getInstanceCache()).insert(ctx);
