@@ -6,7 +6,6 @@
  */
 package org.jboss.ejb;
 
-import java.security.Principal;
 
 import org.jboss.monitor.StatisticsProvider;
 
@@ -14,7 +13,7 @@ import org.jboss.monitor.StatisticsProvider;
  * Defines the model for a EnterpriseContext instance pool.
  *
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
- * @version $Revision: 1.11 $
+ * @version $Revision: 1.12 $
  *
  * <p><b>Revisions:</b>
  * <p><b>20010718 andreas schaefer:</b>
@@ -31,33 +30,25 @@ public interface InstancePool
    extends ContainerPlugin, StatisticsProvider
 {
    /**
-    * Add an instance in the Pool.
-    * Is used by the TimedInstancePoolFeeder thread to create instances ready for use by
-    * the interceptor.
-    * Since this can result in an ejbCreate invocation on a bean instance,
-    * the caller principal must be associated with the EnterpriseContext
-    * before calling ejbCreate in order for ctx.getCallerPrincipal() to
-    * work.
+    *  Add an instance in the Pool.
+    *  Is used by the TimedInstancePoolFeeder thread to create instances ready for use by
+    *  the interceptor.
     *
     * @exception Exception when an Instance can not be instantiated
     */
-   public void add(Principal callerPrincipal)
+   public void add()
          throws Exception;
 
    /**
     * Get an instance without identity.
     *
     * <p>Can be used by finders and create-methods, or stateless beans
-    * Since this can result in an ejbCreate invocation on a bean instance,
-    * the caller principal must be associated with the EnterpriseContext
-    * before calling ejbCreate in order for ctx.getCallerPrincipal() to
-    * work.
     *
     * @return    Context/w instance
     *
     * @throws Exception    RemoteException
     */
-   EnterpriseContext get(Principal callerPrincipal) throws Exception;
+   EnterpriseContext get() throws Exception;
 
    /**
     * Return an anonymous instance after invocation.
@@ -90,3 +81,4 @@ public interface InstancePool
    public int getMaxSize();
 
 }
+

@@ -47,7 +47,7 @@ import org.jboss.security.SimplePrincipal;
  * @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
  * @author <a href="mailto:juha@jboss.org">Juha Lindfors</a>
  * @author <a href="mailto:osh@sparre.dk">Ole Husgaard</a>
- * @version $Revision: 1.44 $
+ * @version $Revision: 1.45 $
  *
  * Revisions:
  * 2001/06/29: marcf
@@ -99,16 +99,10 @@ public abstract class EnterpriseContext
    
    public EnterpriseContext(Object instance, Container con)
    {
-      this(instance, con, null);
-   }
-   public EnterpriseContext(Object instance, Container con,
-      Principal callerPrincipal)
-   {
       this.instance = instance;
       this.con = con;
-      this.principal = callerPrincipal;
    }
-
+   
    // Public --------------------------------------------------------
 
    public Object getInstance() 

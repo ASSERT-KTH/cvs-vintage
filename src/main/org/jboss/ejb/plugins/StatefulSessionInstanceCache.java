@@ -30,7 +30,7 @@ import org.jboss.ejb.StatefulSessionPersistenceManager;
  *
  * @author <a href="mailto:simone.bordet@compaq.com">Simone Bordet</a>
  * @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
- * @version $Revision: 1.16 $
+ * @version $Revision: 1.17 $
  */
 public class StatefulSessionInstanceCache
     extends AbstractInstanceCache
@@ -72,7 +72,7 @@ public class StatefulSessionInstanceCache
     }
     protected EnterpriseContext acquireContext() throws Exception
     {
-        return m_container.getInstancePool().get(null);
+        return m_container.getInstancePool().get();
     }
     protected void freeContext(EnterpriseContext ctx)
     {

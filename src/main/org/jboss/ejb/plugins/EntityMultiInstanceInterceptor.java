@@ -17,13 +17,15 @@ import org.jboss.ejb.InstancePool;
 import org.jboss.invocation.Invocation;
 import org.jboss.ejb.CacheKey;
 
+import org.jboss.security.SecurityAssociation;
+
 /**
  * The instance interceptors role is to acquire a context representing
  * the target object from the cache.
  *
  *    
  * @author <a href="mailto:bill@burkecentral.com">Bill Burke</a>
- * @version $Revision: 1.6 $
+ * @version $Revision: 1.7 $
  *
  * <p><b>Revisions:</b><br>
  * <p><b>2001/08/08: billb</b>
@@ -62,8 +64,7 @@ public class EntityMultiInstanceInterceptor
       throws Exception
    {
       // Get context
-      InstancePool pool = container.getInstancePool();
-      EntityEnterpriseContext ctx = (EntityEnterpriseContext) pool.get(mi.getPrincipal());
+      EntityEnterpriseContext ctx = (EntityEnterpriseContext)((EntityContainer)getContainer()).getInstancePool().get();
 
 		// Pass it to the method invocation
       mi.setEnterpriseContext(ctx);
@@ -72,7 +73,7 @@ public class EntityMultiInstanceInterceptor
       ctx.setTransaction(mi.getTransaction());
 
       // Set the current security information
-      ctx.setPrincipal(mi.getPrincipal());
+      ctx.setPrincipal(SecurityAssociation.getPrincipal());
 
       // Invoke through interceptors
       return getNext().invokeHome(mi);
@@ -92,8 +93,7 @@ public class EntityMultiInstanceInterceptor
       }
       if (ctx == null)
       {
-         InstancePool pool = container.getInstancePool();
-         ctx = (EntityEnterpriseContext) pool.get(mi.getPrincipal());
+         ctx = (EntityEnterpriseContext)container.getInstancePool().get();
          ctx.setCacheKey(key);
          ctx.setId(key.getId());
          container.getPersistenceManager().activateEntity(ctx);
@@ -107,7 +107,7 @@ public class EntityMultiInstanceInterceptor
       ctx.setTransaction(mi.getTransaction());
 
       // Set the current security information
-      ctx.setPrincipal(mi.getPrincipal());
+      ctx.setPrincipal(SecurityAssociation.getPrincipal());
 
       // Set context on the method invocation
       mi.setEnterpriseContext(ctx);
@@ -116,3 +116,6 @@ public class EntityMultiInstanceInterceptor
    }
 
 }
+
+
+

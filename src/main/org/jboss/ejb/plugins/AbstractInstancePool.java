@@ -8,7 +8,6 @@ package org.jboss.ejb.plugins;
 
 import java.rmi.RemoteException;
 import java.rmi.ServerException;
-import java.security.Principal;
 import java.util.LinkedList;
 import java.util.Iterator;
 import java.util.Map;
@@ -41,7 +40,7 @@ import org.w3c.dom.Element;
  *  @author <a href="mailto:andreas.schaefer@madplanet.com">Andreas Schaefer</a>
  *  @author <a href="mailto:sacha.labourey@cogito-info.ch">Sacha Labourey</a>
  *
- *  @version $Revision: 1.24 $
+ *  @version $Revision: 1.25 $
  *
  *  <p><b>Revisions:</b>
  *  <p><b>20010704 marcf:</b>
@@ -63,7 +62,7 @@ import org.w3c.dom.Element;
  *  </ul>
  */
 public abstract class AbstractInstancePool
-   implements InstancePool, XmlLoadable
+implements InstancePool, XmlLoadable
 {
    // Constants -----------------------------------------------------
 
@@ -155,10 +154,10 @@ public abstract class AbstractInstancePool
    /**
     * Add a instance in the pool
     */
-   public void add(Principal callerPrincipal)
-      throws Exception
+   public void add()
+   throws Exception
    {
-      EnterpriseContext ctx = create(container.createBeanClassInstance(), callerPrincipal);
+      EnterpriseContext ctx = create(container.createBeanClassInstance());
       if( log.isTraceEnabled() )
          log.trace("Add instance "+this+"#"+ctx);
       synchronized (pool)
@@ -174,8 +173,8 @@ public abstract class AbstractInstancePool
     * @return     Context /w instance
     * @exception   RemoteException
     */
-   public EnterpriseContext get(Principal callerPrincipal)
-      throws Exception
+   public EnterpriseContext get()
+   throws Exception
    {
       if( log.isTraceEnabled() )
          log.trace("Get instance "+this+"#"+pool.isEmpty()+"#"+getContainer().getBeanClass());
@@ -207,7 +206,7 @@ public abstract class AbstractInstancePool
                   poolFeeder.start();
                }
             }
-            return create(container.createBeanClassInstance(), callerPrincipal);
+            return create(container.createBeanClassInstance());
          } catch (InstantiationException e)
          {
             throw new ServerException("Could not instantiate bean", e);
@@ -240,8 +239,7 @@ public abstract class AbstractInstancePool
       ctx.clear();
 
       // If (!reclaim), we do not reuse but create a brand new instance simplifies the design
-      try
-      {
+      try {
          mReadyBean.add();
          if (this.reclaim)
          {
@@ -347,8 +345,8 @@ public abstract class AbstractInstancePool
    // Package protected ---------------------------------------------
 
    // Protected -----------------------------------------------------
-   protected abstract EnterpriseContext create(Object instance, Principal callerPrincipal)
-      throws Exception;
+   protected abstract EnterpriseContext create(Object instance)
+   throws Exception;
 
    // Private -------------------------------------------------------
 
@@ -370,3 +368,4 @@ public abstract class AbstractInstancePool
    // Inner classes -------------------------------------------------
 
 }
+

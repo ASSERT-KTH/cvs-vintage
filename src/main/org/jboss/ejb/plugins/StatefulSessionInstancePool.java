@@ -6,7 +6,6 @@
 */
 package org.jboss.ejb.plugins;
 
-import java.security.Principal;
 
 import org.jboss.ejb.EnterpriseContext;
 import org.jboss.ejb.StatefulSessionEnterpriseContext;
@@ -17,7 +16,7 @@ import org.jboss.ejb.StatefulSessionEnterpriseContext;
 *	@see <related>
 *   @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
 *   @author <a href="mailto:andreas.schaefer@madplanet.com">Andreas Schaefer</a>
-*	@version $Revision: 1.8 $
+*	@version $Revision: 1.9 $
 *      
 * <p><b>Revisions:</b>
 * <p><b>20010718 andreas schaefer:</b>
@@ -44,8 +43,8 @@ extends AbstractInstancePool
 	}
 	
 	// Protected -----------------------------------------------------
-	protected EnterpriseContext create(Object instance, Principal ignored)
-   	throws Exception
+	protected EnterpriseContext create(Object instance)
+	throws Exception
 	{
       mInstantiate.add();
 		// The instance is created by the caller and is a newInstance();
@@ -57,3 +56,4 @@ extends AbstractInstancePool
 	// Inner classes -------------------------------------------------
 
 }
+
