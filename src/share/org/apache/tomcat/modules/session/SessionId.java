@@ -95,6 +95,7 @@ public class SessionId extends  BaseInterceptor
     static final char SESSIONID_ROUTE_SEP = '.';
     boolean noCookies=false;
     boolean cookiesFirst=true;
+    boolean checkSSLSessionId=false;
     
     public SessionId() {
     }
@@ -105,6 +106,10 @@ public class SessionId extends  BaseInterceptor
 
     public void setNoCookies(boolean noCookies) {
         this.noCookies = noCookies;
+    }
+
+    public void setCheckSSLSessionId(boolean checkSSLSessionId) {
+        this.checkSSLSessionId = checkSSLSessionId;
     }
 
     
@@ -240,7 +245,8 @@ public class SessionId extends  BaseInterceptor
            somebody is trying to steal Tomcat sessions over SSL.
            We can't verify that if SSL is not used. */
 
-        if(sess != null && request.isSecure() ){ // Request is over SSL
+        // Do this only if request is over SSL
+        if(checkSSLSessionId && sess != null && request.isSecure() ){
           // SSL session ID from session and request - they have to be equal!
           String ids=(String)sess.getAttribute("javax.servlet.request.ssl_session"),
                  idr=(String)request.getAttribute("javax.servlet.request.ssl_session");
