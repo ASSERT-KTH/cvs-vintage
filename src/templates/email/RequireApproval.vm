@@ -1,7 +1,6 @@
-The user '$user.UserName' has just submitted a project-wide query to your 
-project '$module.Name'.
+$l10n.format("UserSubmittedQuery", $user.UserName, $module.Name)
 
-To approve or reject it, please go to:
+$l10n.ToApprove
 
 <$link.setPage("admin,Approval.vm").setAbsolute(true).setEncodeURLOff()>
 

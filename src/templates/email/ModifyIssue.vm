@@ -1,12 +1,12 @@
 #set ($user = $data.User)
 
-Issue '$issue.UniqueId' has just been modified by user '$user.UserName'
+$l10n.format("IssueModified", $issue.UniqueId, $user.UserName)
 
-You can view the issue detail at the following URL:
+$l10n.YouCanViewIssue
      <$link.getIssueIdAbsoluteLink($issue)>
 #if (!$activityList.isEmpty())
 
-The following modifications were made to this issue:
+$l10n.ModificationsMade
 
 #foreach( $activity in $activityList)
 #if ($activity.Attachment.DataAsString)
@@ -15,7 +15,7 @@ $activity.Attachment.DataAsString
 $activity.Description
 
 #if ($attachment.DataAsString)
-Comment:  $attachment.DataAsString
+$l10n.Comment  $attachment.DataAsString
 #end  
 #end
 #end

@@ -1,15 +1,15 @@
 #set ($user = $issue.ModifiedBy)
 #set ($module = $issue.Module)
 #set ($issueType = $issue.IssueType)
-You can view the issue at the following URL:
+$l10n.YouCanViewIssue
 <$link.getIssueIdAbsoluteLink($issue)>
 
-Type:        $issue.RModuleIssueType.DisplayName
-Issue Id:    $issue.UniqueId
-Reported by: $user.FirstName $user.LastName
+$l10n.Type $l10n.Colon        $issue.RModuleIssueType.DisplayName
+$l10n.IssueId $l10n.Colon    $issue.UniqueId
+$l10n.ReportedBy $user.FirstName $user.LastName
              $user.UserName - ($user.Email)
 
-Details:
+$l10n.Details
 
 #set ($attrValues = $issue.AttributeValuesMap)
 #foreach ($group in $module.getAttributeGroups($issueType))
