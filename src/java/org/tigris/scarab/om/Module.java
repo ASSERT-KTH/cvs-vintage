@@ -13,6 +13,7 @@ import org.apache.turbine.util.RunData;
 import org.apache.turbine.util.ParameterParser;
 import org.apache.turbine.util.Log;
 import org.apache.turbine.util.db.pool.DBConnection;
+import org.apache.turbine.util.db.IDBroker;
 
 import org.tigris.scarab.util.ScarabException;
 
@@ -30,6 +31,8 @@ public class Module
     extends BaseModule
     implements Persistent
 {
+    private static final NumberKey ROOT_ID = new NumberKey("0");
+
     public Issue getNewIssue(ScarabUser user)
         throws Exception
     {
@@ -86,6 +89,28 @@ public class Module
             relation.setUserId(getOwnerId());
             relation.setDeleted(false);
             addRModuleUsers(relation);
+
+            // make sure the code has a value;
+            String code = getCode();
+            if ( code == null || code.length() == 0 ) 
+            {
+                if ( getParentId().equals(ROOT_ID) ) 
+                {
+                    throw new ScarabException("A top level module addition was"
+                        + " attempted without assigning a Code");
+                }
+            
+                setCode(getModuleRelatedByParentId().getCode());
+
+                // insert a row into the id_table.
+                Criteria criteria = new Criteria(
+                    ModulePeer.getTableMap().getDatabaseMap().getName(), 5)
+                    .add(IDBroker.TABLE_NAME, getCode())
+                    .add(IDBroker.NEXT_ID, 1)
+                    .add(IDBroker.QUANTITY, 1);
+                BasePeer.doInsert(criteria);
+            }
+            
         }
 
         super.save();        
