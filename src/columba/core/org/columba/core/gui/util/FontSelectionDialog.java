@@ -181,7 +181,8 @@ public class FontSelectionDialog implements ActionListener, ListSelectionListene
 
           // 6. Line with Buttons
 
-        JButton okButton = new JButton(GlobalResourceLoader.getString("global", "global", "ok"));
+        ButtonWithMnemonic okButton = new ButtonWithMnemonic(
+        		GlobalResourceLoader.getString("global", "global", "ok"));
         okButton.setActionCommand(CMD_OK);
         okButton.addActionListener( this );
 
@@ -195,8 +196,8 @@ public class FontSelectionDialog implements ActionListener, ListSelectionListene
         gridbag.setConstraints( okButton, c );
         dialog.getContentPane().add( okButton );
 
-
-        JButton cancelButton = new JButton(GlobalResourceLoader.getString("global", "global", "cancel"));
+        ButtonWithMnemonic cancelButton = new ButtonWithMnemonic(
+        		GlobalResourceLoader.getString("global", "global", "cancel"));
         cancelButton.setActionCommand(CMD_CANCEL);
         cancelButton.addActionListener( this );
 

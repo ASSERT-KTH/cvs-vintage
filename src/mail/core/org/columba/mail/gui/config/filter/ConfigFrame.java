@@ -299,8 +299,8 @@ public class ConfigFrame
 		closeButton.setActionCommand("CLOSE"); //$NON-NLS-1$
 		closeButton.addActionListener(this);
 		buttonPanel.add(closeButton);
-		JButton helpButton =
-			new JButton(MailResourceLoader.getString("global", "help"));
+		ButtonWithMnemonic helpButton = new ButtonWithMnemonic(
+				MailResourceLoader.getString("global", "help"));
 		// associate with JavaHelp
 		HelpManager.enableHelpOnButton(
 			helpButton,

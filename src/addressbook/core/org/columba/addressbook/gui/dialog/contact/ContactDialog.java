@@ -32,6 +32,8 @@ import javax.swing.JTabbedPane;
 import javax.swing.KeyStroke;
 
 import org.columba.addressbook.folder.ContactCard;
+import org.columba.addressbook.util.AddressbookResourceLoader;
+import org.columba.core.gui.util.ButtonWithMnemonic;
 
 public class ContactDialog extends JDialog implements ActionListener
 {
@@ -84,9 +86,8 @@ public class ContactDialog extends JDialog implements ActionListener
 		bottomPanel.setBorder(BorderFactory.createEmptyBorder(17,0,11,11));
 		JPanel buttonPanel = new JPanel(new GridLayout(1,2,5,0));
 
-		//LOCALIZE
-		okButton = new JButton("Ok");
-		//mnemonic
+		okButton = new ButtonWithMnemonic(
+				AddressbookResourceLoader.getString("global", "ok"));
 		okButton.setActionCommand("OK");
 		okButton.addActionListener(this);
 		buttonPanel.add(okButton);
@@ -94,9 +95,8 @@ public class ContactDialog extends JDialog implements ActionListener
 		contentPane.add(bottomPanel,BorderLayout.SOUTH);
 		setContentPane(contentPane);
 		getRootPane().setDefaultButton(okButton);
-		//LOCALIZE
-		JButton cancelButton = new JButton("Cancel");
-		//mnemonic
+		ButtonWithMnemonic cancelButton = new ButtonWithMnemonic(
+				AddressbookResourceLoader.getString("global", "cancel"));
 		cancelButton.setActionCommand("CANCEL");
 		cancelButton.addActionListener(this);
 		buttonPanel.add(cancelButton);

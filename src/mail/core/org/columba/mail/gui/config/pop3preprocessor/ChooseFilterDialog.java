@@ -28,6 +28,7 @@ import javax.swing.KeyStroke;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
+import org.columba.core.gui.util.ButtonWithMnemonic;
 import org.columba.core.gui.util.NotifyDialog;
 import org.columba.core.main.MainInterface;
 import org.columba.core.plugin.PluginHandlerNotFoundException;
@@ -96,13 +97,14 @@ public class ChooseFilterDialog
 		JPanel bottomPanel = new JPanel(new BorderLayout());
 		bottomPanel.setBorder(BorderFactory.createEmptyBorder(17, 12, 11, 11));
 		JPanel buttonPanel = new JPanel(new GridLayout(1, 2, 5, 0));
-		JButton okButton =
-			new JButton(MailResourceLoader.getString("global", "ok"));
+		ButtonWithMnemonic okButton = new ButtonWithMnemonic(
+				MailResourceLoader.getString("global", "ok"));
 		okButton.setActionCommand("OK"); //$NON-NLS-1$
 		okButton.addActionListener(this);
 		buttonPanel.add(okButton);
-		JButton helpButton =
-			new JButton(MailResourceLoader.getString("global", "help"));
+		ButtonWithMnemonic helpButton =
+			new ButtonWithMnemonic(
+				MailResourceLoader.getString("global", "help"));
 		helpButton.setActionCommand("HELP");
 		helpButton.addActionListener(this);
 		buttonPanel.add(helpButton);

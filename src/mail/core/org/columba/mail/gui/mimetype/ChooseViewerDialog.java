@@ -37,6 +37,7 @@ import javax.swing.KeyStroke;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
+import org.columba.core.gui.util.ButtonWithMnemonic;
 import org.columba.core.gui.util.CheckBoxWithMnemonic;
 import org.columba.core.gui.util.DialogStore;
 import org.columba.core.gui.util.LabelWithMnemonic;
@@ -118,12 +119,14 @@ public class ChooseViewerDialog implements ActionListener {
 		contentPane.add(saveCButton, BorderLayout.CENTER);
 		JPanel bottomPanel = new JPanel(new BorderLayout(0, 0));
 		JPanel buttonPanel = new JPanel(new GridLayout(1, 2, 5, 0));
-		okButton = new JButton(MailResourceLoader.getString("global", "ok"));
+		okButton = new ButtonWithMnemonic(
+				MailResourceLoader.getString("global", "ok"));
 		okButton.setActionCommand(CMD_OK);
 		okButton.addActionListener(this);
                 okButton.setEnabled(false);
 		buttonPanel.add(okButton);
-		JButton cancelButton = new JButton(MailResourceLoader.getString("global", "cancel"));
+		ButtonWithMnemonic cancelButton = new ButtonWithMnemonic(
+				MailResourceLoader.getString("global", "cancel"));
 		cancelButton.setActionCommand(CMD_CANCEL);
 		cancelButton.addActionListener(this);
 		buttonPanel.add(cancelButton);

@@ -29,7 +29,9 @@ import javax.swing.JTextField;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
+import org.columba.core.gui.util.ButtonWithMnemonic;
 import org.columba.core.gui.util.DialogStore;
+import org.columba.mail.util.MailResourceLoader;
 
 /**
  * @version 	1.0
@@ -53,7 +55,8 @@ public class SubjectDialog implements ActionListener {
 		JLabel questionLabel = new JLabel("Please enter subject!");
 		JLabel subjectLabel = new JLabel("Subject:");
 
-		buttons[0] = new JButton("Ok");
+		buttons[0] = new ButtonWithMnemonic(
+				MailResourceLoader.getString("global", "ok"));
 		buttons[0].addActionListener(this);
 		buttons[0].setActionCommand("OK");
 		buttons[0].setDefaultCapable(true);

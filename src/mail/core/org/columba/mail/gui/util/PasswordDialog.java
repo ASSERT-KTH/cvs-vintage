@@ -36,6 +36,7 @@ import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.KeyStroke;
 
+import org.columba.core.gui.util.ButtonWithMnemonic;
 import org.columba.core.gui.util.ImageLoader;
 import org.columba.mail.util.MailResourceLoader;
 
@@ -72,19 +73,22 @@ public class PasswordDialog implements ActionListener {
 
 		//bottom.add( Box.createHorizontalStrut());
 
-		cancelButton = new JButton(MailResourceLoader.getString("global", "cancel"));
+		cancelButton = new ButtonWithMnemonic(
+				MailResourceLoader.getString("global", "cancel"));
 		//$NON-NLS-1$ //$NON-NLS-2$
 		cancelButton.addActionListener(this);
 		cancelButton.setActionCommand("CANCEL"); //$NON-NLS-1$
 
-		okButton = new JButton(MailResourceLoader.getString("global", "ok"));
+		okButton = new ButtonWithMnemonic(
+				MailResourceLoader.getString("global", "ok"));
 		//$NON-NLS-1$ //$NON-NLS-2$
 		okButton.addActionListener(this);
 		okButton.setActionCommand("OK"); //$NON-NLS-1$
 		okButton.setDefaultCapable(true);
 		dialog.getRootPane().setDefaultButton(okButton);
 
-		helpButton = new JButton(MailResourceLoader.getString("global", "help"));
+		helpButton = new ButtonWithMnemonic(
+				MailResourceLoader.getString("global", "help"));
 		//$NON-NLS-1$ //$NON-NLS-2$
 
 		JPanel buttonPanel = new JPanel();

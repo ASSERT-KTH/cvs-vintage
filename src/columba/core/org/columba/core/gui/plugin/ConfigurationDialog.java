@@ -32,6 +32,7 @@ import javax.swing.SwingConstants;
 
 import net.javaprog.ui.wizard.plaf.basic.SingleSideEtchedBorder;
 
+import org.columba.core.gui.util.ButtonWithMnemonic;
 import org.columba.core.gui.util.NotifyDialog;
 import org.columba.core.main.MainInterface;
 import org.columba.core.plugin.ConfigPluginHandler;
@@ -119,14 +120,13 @@ public class ConfigurationDialog extends JDialog implements ActionListener {
 		bottomPanel.setBorder(new SingleSideEtchedBorder(SwingConstants.TOP));
 		JPanel buttonPanel = new JPanel(new GridLayout(1, 2, 5, 0));
 		buttonPanel.setBorder(BorderFactory.createEmptyBorder(17, 12, 11, 11));
-		okButton = new JButton(MailResourceLoader.getString("global", "ok"));
-		//mnemonic
+		okButton = new ButtonWithMnemonic(
+				MailResourceLoader.getString("global", "ok"));
 		okButton.setActionCommand("OK");
 		okButton.addActionListener(this);
 		buttonPanel.add(okButton);
-		JButton cancelButton =
-			new JButton(MailResourceLoader.getString("global", "cancel"));
-		//mnemonic
+		ButtonWithMnemonic cancelButton = new ButtonWithMnemonic(
+				MailResourceLoader.getString("global", "cancel"));
 		cancelButton.setActionCommand("CANCEL");
 		cancelButton.addActionListener(this);
 		buttonPanel.add(cancelButton);

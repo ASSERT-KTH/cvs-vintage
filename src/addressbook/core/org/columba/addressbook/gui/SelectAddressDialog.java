@@ -49,6 +49,7 @@ import org.columba.addressbook.gui.tree.util.SelectAddressbookFolderDialog;
 import org.columba.addressbook.gui.util.AddressbookDNDListView;
 import org.columba.addressbook.gui.util.AddressbookListModel;
 import org.columba.addressbook.util.AddressbookResourceLoader;
+import org.columba.core.gui.util.ButtonWithMnemonic;
 import org.columba.core.main.MainInterface;
 
 public class SelectAddressDialog extends JDialog implements ActionListener
@@ -266,12 +267,14 @@ public class SelectAddressDialog extends JDialog implements ActionListener
 		JPanel bottomPanel = new JPanel(new BorderLayout());
 		bottomPanel.setBorder(new SingleSideEtchedBorder(SwingConstants.TOP));
 		JPanel buttonPanel = new JPanel(new GridLayout(1, 2, 5, 0));
-                buttonPanel.setBorder(BorderFactory.createEmptyBorder(17, 12, 11, 11));
-		JButton okButton = new JButton(AddressbookResourceLoader.getString("global", "ok"));
+        buttonPanel.setBorder(BorderFactory.createEmptyBorder(17, 12, 11, 11));
+		ButtonWithMnemonic okButton = new ButtonWithMnemonic(
+				AddressbookResourceLoader.getString("global", "ok"));
 		okButton.setActionCommand("OK");
 		okButton.addActionListener(this);
 		buttonPanel.add(okButton);
-		JButton cancelButton = new JButton(AddressbookResourceLoader.getString("global", "cancel"));
+		ButtonWithMnemonic cancelButton = new ButtonWithMnemonic(
+				AddressbookResourceLoader.getString("global", "cancel"));
 		cancelButton.setActionCommand("CANCEL");
 		cancelButton.addActionListener(this);
 		buttonPanel.add(cancelButton);

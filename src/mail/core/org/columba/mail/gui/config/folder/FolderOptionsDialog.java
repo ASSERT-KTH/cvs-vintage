@@ -38,6 +38,7 @@ import javax.swing.UIManager;
 
 import net.javaprog.ui.wizard.plaf.basic.SingleSideEtchedBorder;
 
+import org.columba.core.gui.util.ButtonWithMnemonic;
 import org.columba.core.gui.util.MultiLineLabel;
 import org.columba.core.help.HelpManager;
 import org.columba.core.main.MainInterface;
@@ -280,22 +281,22 @@ public class FolderOptionsDialog extends JDialog implements ActionListener {
 
 		//bottom.add( Box.createHorizontalStrut());
 
-		JButton cancelButton =
-			new JButton(MailResourceLoader.getString("global", "cancel"));
+		ButtonWithMnemonic cancelButton = new ButtonWithMnemonic(
+				MailResourceLoader.getString("global", "cancel"));
 		//$NON-NLS-1$ //$NON-NLS-2$
 		cancelButton.addActionListener(this);
 		cancelButton.setActionCommand("CANCEL"); //$NON-NLS-1$
 
-		JButton okButton =
-			new JButton(MailResourceLoader.getString("global", "ok"));
+		ButtonWithMnemonic okButton = new ButtonWithMnemonic(
+				MailResourceLoader.getString("global", "ok"));
 		//$NON-NLS-1$ //$NON-NLS-2$
 		okButton.addActionListener(this);
 		okButton.setActionCommand("OK"); //$NON-NLS-1$
 		okButton.setDefaultCapable(true);
 		getRootPane().setDefaultButton(okButton);
 
-		JButton helpButton =
-			new JButton(MailResourceLoader.getString("global", "help"));
+		ButtonWithMnemonic helpButton = new ButtonWithMnemonic(
+				MailResourceLoader.getString("global", "help"));
 		// associate with JavaHelp
 		HelpManager.enableHelpOnButton(helpButton, "folder_options");
 

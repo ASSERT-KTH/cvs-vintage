@@ -97,7 +97,7 @@ public class SelectFolderDialog
 		JPanel bottomPanel = new JPanel(new BorderLayout());
 		bottomPanel.setBorder(BorderFactory.createEmptyBorder(17, 0, 0, 0));
 		JPanel buttonPanel = new JPanel(new GridLayout(1, 3, 5, 0));
-		okButton = new JButton(MailResourceLoader.getString("", "ok"));
+		okButton = new ButtonWithMnemonic(MailResourceLoader.getString("", "ok"));
 		okButton.setEnabled(true);
 		okButton.setActionCommand("OK");
 		okButton.addActionListener(this);
@@ -109,7 +109,8 @@ public class SelectFolderDialog
 		newButton.setActionCommand("NEW");
 		newButton.addActionListener(this);
 		buttonPanel.add(newButton);
-		JButton cancelButton = new JButton(MailResourceLoader.getString("", "cancel"));
+		ButtonWithMnemonic cancelButton = new ButtonWithMnemonic(
+				MailResourceLoader.getString("", "cancel"));
 		cancelButton.setActionCommand("CANCEL");
 		cancelButton.addActionListener(this);
 		buttonPanel.add(cancelButton);

@@ -45,6 +45,7 @@ import net.javaprog.ui.wizard.plaf.basic.SingleSideEtchedBorder;
 import org.columba.core.config.Config;
 import org.columba.core.config.GuiItem;
 import org.columba.core.gui.themes.ThemeSwitcher;
+import org.columba.core.gui.util.ButtonWithMnemonic;
 import org.columba.core.gui.util.DefaultFormBuilder;
 import org.columba.core.gui.util.FontProperties;
 import org.columba.core.gui.util.FontSelectionDialog;
@@ -452,17 +453,18 @@ public class GeneralOptionsDialog extends JDialog implements ActionListener {
 
 		// button panel
 
-		okButton = new JButton(MailResourceLoader.getString("global", "ok"));
-		//mnemonic
+		okButton = new ButtonWithMnemonic(
+				MailResourceLoader.getString("global", "ok"));
 		okButton.setActionCommand("OK");
 		okButton.addActionListener(this);
-		cancelButton =
-			new JButton(MailResourceLoader.getString("global", "cancel"));
-		//mnemonic
+
+		cancelButton = new ButtonWithMnemonic(
+				MailResourceLoader.getString("global", "cancel"));
 		cancelButton.setActionCommand("CANCEL");
 		cancelButton.addActionListener(this);
-		helpButton =
-			new JButton(MailResourceLoader.getString("global", "help"));
+
+		helpButton = new ButtonWithMnemonic(
+				MailResourceLoader.getString("global", "help"));
 		helpButton.setActionCommand("HELP");
 		helpButton.addActionListener(this);
 

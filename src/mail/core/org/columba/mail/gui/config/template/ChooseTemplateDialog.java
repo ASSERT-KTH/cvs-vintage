@@ -39,6 +39,7 @@ import javax.swing.event.ListSelectionListener;
 
 import net.javaprog.ui.wizard.plaf.basic.SingleSideEtchedBorder;
 
+import org.columba.core.gui.util.ButtonWithMnemonic;
 import org.columba.core.help.HelpManager;
 import org.columba.mail.message.HeaderList;
 import org.columba.mail.util.MailResourceLoader;
@@ -87,13 +88,14 @@ public class ChooseTemplateDialog
 
 		//bottom.add( Box.createHorizontalStrut());
 
-		JButton cancelButton =
-			new JButton(MailResourceLoader.getString("global", "cancel"));
+		ButtonWithMnemonic cancelButton = new ButtonWithMnemonic(
+				MailResourceLoader.getString("global", "cancel"));
 		//$NON-NLS-1$ //$NON-NLS-2$
 		cancelButton.addActionListener(this);
 		cancelButton.setActionCommand("CANCEL"); //$NON-NLS-1$
 
-		okButton = new JButton(MailResourceLoader.getString("global", "ok"));
+		okButton = new ButtonWithMnemonic(
+				MailResourceLoader.getString("global", "ok"));
 		//$NON-NLS-1$ //$NON-NLS-2$
 		okButton.addActionListener(this);
 		okButton.setActionCommand("OK"); //$NON-NLS-1$
@@ -101,8 +103,9 @@ public class ChooseTemplateDialog
 		okButton.setEnabled(false);
 		getRootPane().setDefaultButton(okButton);
 
-		JButton helpButton =
-			new JButton(MailResourceLoader.getString("global", "help"));
+		ButtonWithMnemonic helpButton =
+			new ButtonWithMnemonic(
+				MailResourceLoader.getString("global", "help"));
 		// associate with JavaHelp
 		HelpManager.enableHelpOnButton(helpButton, "template_dialog");
 

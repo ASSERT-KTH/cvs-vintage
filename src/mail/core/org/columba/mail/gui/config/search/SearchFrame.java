@@ -122,8 +122,8 @@ public class SearchFrame extends JDialog implements ActionListener {
 		closeButton.addActionListener(this);
 		closeButton.setActionCommand("CLOSE");
 		buttonPanel.add(closeButton);
-		JButton helpButton =
-			new JButton(MailResourceLoader.getString("global", "help"));
+		ButtonWithMnemonic helpButton = new ButtonWithMnemonic(
+				MailResourceLoader.getString("global", "help"));
 		helpButton.addActionListener(this);
 		helpButton.setActionCommand("HELP");
 		helpButton.setEnabled(false);

@@ -46,6 +46,7 @@ import javax.swing.event.ListSelectionListener;
 import net.javaprog.ui.wizard.plaf.basic.SingleSideEtchedBorder;
 
 import org.columba.core.externaltools.AbstractExternalToolsPlugin;
+import org.columba.core.gui.util.ButtonWithMnemonic;
 import org.columba.core.gui.util.InfoViewerDialog;
 import org.columba.core.main.MainInterface;
 import org.columba.core.plugin.ExternalToolsPluginHandler;
@@ -197,8 +198,8 @@ public class ExternalToolsDialog
 		closeButton.setActionCommand("CLOSE"); //$NON-NLS-1$
 		closeButton.addActionListener(this);
 		buttonPanel.add(closeButton);
-		JButton helpButton =
-			new JButton(MailResourceLoader.getString("global", "help"));
+		ButtonWithMnemonic helpButton = new ButtonWithMnemonic(
+				MailResourceLoader.getString("global", "help"));
 		helpButton.setActionCommand("HELP");
 		helpButton.addActionListener(this);
 		buttonPanel.add(helpButton);

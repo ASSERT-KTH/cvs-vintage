@@ -199,7 +199,8 @@ public class FilterDialog implements ActionListener {
 		closeButton.setActionCommand("CLOSE"); //$NON-NLS-1$
 		closeButton.addActionListener(this);
 		buttonPanel.add(closeButton);
-		JButton helpButton = new JButton(MailResourceLoader.getString("global", "help"));
+		ButtonWithMnemonic helpButton = new ButtonWithMnemonic(
+				MailResourceLoader.getString("global", "help"));
 		// associate with JavaHelp
 		HelpManager.enableHelpOnButton(helpButton, "organizing_and_managing_your_email");	
 		buttonPanel.add(helpButton);

@@ -30,6 +30,9 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
 
+import org.columba.addressbook.util.AddressbookResourceLoader;
+import org.columba.core.gui.util.ButtonWithMnemonic;
+
 
 public class EditAddressbookFolderDialog
 {
@@ -58,9 +61,13 @@ public class EditAddressbookFolderDialog
     {
         JButton[] buttons = new JButton[2];
         JLabel label2 = new JLabel("Choose Name");
-        buttons[0] = new JButton("Cancel");
-	buttons[0].setDefaultCapable(true);
-        buttons[1] = new JButton("Ok");
+        buttons[0] = new ButtonWithMnemonic(
+        		AddressbookResourceLoader.getString("global", "cancel"));
+        buttons[0].setActionCommand("Cancel");
+		buttons[0].setDefaultCapable(true);
+        buttons[1] = new ButtonWithMnemonic(
+				AddressbookResourceLoader.getString("global", "ok"));
+		buttons[1].setActionCommand("Ok");
         textField = new JTextField( name,15);
 
 

@@ -33,7 +33,9 @@ import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 import javax.swing.KeyStroke;
 
+import org.columba.core.gui.util.ButtonWithMnemonic;
 import org.columba.core.gui.util.DialogStore;
+import org.columba.mail.util.MailResourceLoader;
 
 public class PGPPassphraseDialog implements ActionListener
 {
@@ -71,11 +73,12 @@ public class PGPPassphraseDialog implements ActionListener
 	//LOCALIZE
         JLabel passwordLabel = new JLabel("Password:");
 
-        buttons[0] = new JButton("Cancel");
+        buttons[0] = new ButtonWithMnemonic(
+        		MailResourceLoader.getString("global", "cancel"));
         buttons[0].addActionListener( this );
         buttons[0].setActionCommand( "CANCEL" );
-
-        buttons[1] = new JButton("Ok");
+        buttons[1] = new ButtonWithMnemonic(
+				MailResourceLoader.getString("global", "ok"));
         buttons[1].addActionListener( this );
         buttons[1].setActionCommand( "OK" );
        	buttons[1].setDefaultCapable(true);

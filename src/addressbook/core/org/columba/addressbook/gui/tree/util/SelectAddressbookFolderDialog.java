@@ -38,6 +38,7 @@ import org.columba.addressbook.folder.AddressbookFolder;
 import org.columba.addressbook.folder.Folder;
 import org.columba.addressbook.gui.tree.AddressbookTreeNode;
 import org.columba.addressbook.util.AddressbookResourceLoader;
+import org.columba.core.gui.util.ButtonWithMnemonic;
 import org.columba.core.gui.util.DialogStore;
 
 public class SelectAddressbookFolderDialog
@@ -91,10 +92,12 @@ public class SelectAddressbookFolderDialog
 					"folderdialog",
 					"select_folder"));
 
-		buttons[0] = new JButton("Cancel");
+		buttons[0] = new ButtonWithMnemonic(
+				AddressbookResourceLoader.getString("global", "cancel"));
 		buttons[0].setActionCommand("CANCEL");
 		buttons[0].setDefaultCapable(true);
-		buttons[1] = new JButton("Ok");
+		buttons[1] = new ButtonWithMnemonic(
+				AddressbookResourceLoader.getString("global", "ok"));
 		buttons[1].setEnabled(true);
 		buttons[1].setActionCommand("OK");
 		buttons[2] =
