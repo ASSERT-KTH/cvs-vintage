@@ -61,7 +61,8 @@ import org.w3c.dom.Element;
  * @todo eliminate this class, at least in its present form.
  *
  *  @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
- *  @version $Revision: 1.12 $
+ *  @author <a href="mailto:scott.stark@jboss.org">Scott Stark/a>
+ *  @version $Revision: 1.13 $
  *
  *  <p><b>Revisions:</b><br>
  *  <p><b>2001/12/30: billb</b>
@@ -81,7 +82,7 @@ public class ProxyFactory
    protected static final String LIST_ENTITY_INTERCEPTOR = "list-entity";
 
    // Metadata for the proxies
-   public EJBMetaData ejbMetaData ;
+   public EJBMetaData ejbMetaData;
    
    protected static Logger log = Logger.getLogger(ProxyFactory.class);
    protected EJBHome home;
@@ -137,8 +138,7 @@ public class ProxyFactory
          boolean session,
          boolean statelessSession,
          HomeHandle homeHandle)
-      */      
-
+      */
       boolean isSession = !(container.getBeanMetaData() instanceof EntityMetaData);
       Class pkClass = null;
       if (!isSession)
@@ -173,10 +173,21 @@ public class ProxyFactory
          log.debug("Proxy Factory for "+jndiName+" initialized");
 
       initInterceptorClasses();
+   }
+
+   /** Become fully available. At this point our invokers should be started
+    and we can bind the homes into JNDI.
+    */
+   public void start() throws Exception
+   {
       setupInvokers();
       bindProxy();
    }
-   
+
+   /** Lookup the invokers in the object registry. This typically cannot
+    be done until our start method as the invokers may need to be started
+    themselves.
+    */
    protected void setupInvokers() throws Exception
    {
       ObjectName oname;
@@ -191,9 +202,9 @@ public class ProxyFactory
       if (beanInvoker == null)
          throw new RuntimeException("beanInvoker is null: " + oname);
    }
-   public void start() {}   
 
-
+   /** Load the client interceptor classes
+    */
    protected void initInterceptorClasses()
    {
       ConfigurationMetaData configMetaData = container.getBeanMetaData().getContainerConfiguration();
@@ -209,8 +220,8 @@ public class ProxyFactory
    }
 
    /**
-    * The <code>loadInterceptorClasses</code> load an interceptor classes from configuration
-    *
+    * The <code>loadInterceptorClasses</code> load an interceptor classes from
+    * configuration
     * @exception Exception if an error occurs
     */
    protected void loadInterceptorClasses(ArrayList classes, Element interceptors)
@@ -234,8 +245,8 @@ public class ProxyFactory
          log.error("failed to load client interceptor chain", ex);
       }
    }
-   /**
-    * The <code>loadInterceptorChain</code> create instances of interceptor chain
+   /** The <code>loadInterceptorChain</code> create instances of interceptor
+    * classes previously loaded in loadInterceptorClasses
     *
     * @exception Exception if an error occurs
     */
@@ -265,16 +276,17 @@ public class ProxyFactory
          log.error("failed to load client interceptor chain", ex);
       }
    }
-   /**
-    * The <code>bindProxy</code> method creates the home proxy and the bean proxy,
-    * and binds them into jndi.
+
+   /** The <code>bindProxy</code> method creates the home proxy and binds
+    * the home into jndi. It also creates the InvocationContext and client
+    * container and interceptor chain.
     *
     * @exception Exception if an error occurs
     */
-   public void bindProxy() throws Exception
+   protected void bindProxy() throws Exception
    {
-      try {
-         
+      try
+      {   
          // Create a stack from the description (in the future) for now we hardcode it
          InvocationContext context = new InvocationContext();
       
@@ -289,15 +301,14 @@ public class ProxyFactory
          loadInterceptorChain(homeInterceptorClasses, client);
          
          // Create the EJBHome
-         this.home = 
-            (EJBHome)Proxy.newProxyInstance(
+         this.home = (EJBHome) Proxy.newProxyInstance(
                // Class loader pointing to the right classes from deployment
                ((ContainerInvokerContainer)container).getHomeClass().getClassLoader(),
                // The classes we want to implement home and handle
                new Class[] { ((ContainerInvokerContainer)container).getHomeClass(), Class.forName("javax.ejb.Handle")},
                // The home proxy as invocation handler
                client);
-            
+
          // Create stateless session object
          // Same instance is used for all objects
          if (!(container.getBeanMetaData() instanceof EntityMetaData) &&
@@ -334,22 +345,21 @@ public class ProxyFactory
             container.getBeanMetaData().getJndiName(),
             // The Home
             getEJBHome());
-         
-         
-         
+  
          if (log.isDebugEnabled())
             log.debug("Bound "+container.getBeanMetaData().getEjbName() + " to " + container.getBeanMetaData().getJndiName());
       
-      } catch (Exception e)
+      }
+      catch (Exception e)
       {
          throw new ServerException("Could not bind home", e);
       }
    }
-   
+
    public void stop()
    {
    }
-   
+
    public void destroy()
    {
       try
@@ -363,7 +373,7 @@ public class ProxyFactory
          // ignore.
       }
    }
-   
+
    // Container invoker implementation -------------------------------------
    
    public EJBMetaData getEJBMetaData()
@@ -376,12 +386,16 @@ public class ProxyFactory
       return home;
    }
    
+   /** Return the EJBObject proxy for stateless sessions.
+    */
    public Object getStatelessSessionEJBObject()
    {
       
       return statelessObject;
    }
    
+   /** Create an EJBObject proxy for a stateful session given its session id.
+    */
    public Object getStatefulSessionEJBObject(Object id)
    {
       // Create a stack from the description (in the future) for now we hardcode it
@@ -405,10 +419,11 @@ public class ProxyFactory
          client);
          
    }
-   
+
+   /** Create an EJBObject proxy for an entity given its primary key.
+    */
    public Object getEntityEJBObject(Object id)
    {
-
       // Create a stack from the description (in the future) for now we hardcode it
       InvocationContext context = new InvocationContext();
       
@@ -428,29 +443,21 @@ public class ProxyFactory
          new Class[] { ((ContainerInvokerContainer)container).getRemoteClass() },
          // Proxy as invocation handler
          client);
-      /*
-      // marcf fixme: for the jrmp stuff include this creation on the client side
-      return (EJBObject)Proxy.newProxyInstance(
-      // Classloaders
-      ((ContainerInvokerContainer)container).getRemoteClass().getClassLoader(),
-      // Interfaces
-      new Class[] { ((ContainerInvokerContainer)container).getRemoteClass() },
-      // Proxy as invocation handler
-      new EntityProxy(objectName, jndiName, id,beanInvoker));
-      */
    }
    
+   /** Create a Collection EJBObject proxies for an entity given its primary keys.
+    */
    public Collection getEntityCollection(Collection ids)
    {
       ArrayList list = new ArrayList(ids.size());
       Iterator idEnum = ids.iterator();
       
-      if ((ids instanceof FinderResults) && ((FinderResults) ids).isReadAheadOnLoadUsed()) {
+      if ((ids instanceof FinderResults) && ((FinderResults) ids).isReadAheadOnLoadUsed())
+      {
          long listId = ((FinderResults) ids).getListId();
          
          for (int i = 0; idEnum.hasNext(); i++)
-         {
-            
+         {      
             // Create a stack from the description (in the future) for now we hardcode it
             InvocationContext context = new InvocationContext();
       
@@ -470,12 +477,10 @@ public class ProxyFactory
                                             client));
          }
       }
-      
-      
-      else {
+      else
+      {
          while(idEnum.hasNext())
          {
-      
             // Create a stack from the description (in the future) for now we hardcode it
             InvocationContext context = new InvocationContext();
       
