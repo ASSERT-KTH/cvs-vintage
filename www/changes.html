@@ -1,4 +1,4 @@
-<!-- $Id: changes.html,v 1.273 2002/10/25 19:51:35 jon Exp $ -->
+<!-- $Id: changes.html,v 1.274 2002/10/26 21:02:34 jon Exp $ -->
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
 <html>
 
@@ -21,9 +21,14 @@
         <td width="100%" height="100" bgcolor="#F0F0F0"> 
             <h3>Changes since 1.0b13</h3>
             <ul>
+                <li>A minimal distribution of Tomcat 4.1.12 is now the default 
+                    servlet engine bundled and used with Scarab. We should see a bit of a 
+                    performance increase over 4.0.6. Note: this version has been
+                    stripped of all extra .jar files which are not necessary
+                    for Scarab to run. So, this isn't a complete distribution
+                    of Tomcat by any means. (JSS)</li>
                 <li>Replaced viewIssue macro with modular, rendered,
-                and more maintainable velocity macro scripts. (TL)</li>
-
+                    and more maintainable velocity macro scripts. (TL)</li>
                 <li><strong>Changed the way that proxyName/proxyPort is defined
                     in your build.properties file. If you have defined
                     this, then you need to fix your settings!</strong> Before:
