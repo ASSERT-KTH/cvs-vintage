@@ -43,7 +43,7 @@ import javax.naming.Reference;
  *
  * @see Monitorable
  * @author <a href="mailto:bill@jboss.org">Bill Burke</a>
- * @version $Revision: 1.4 $
+ * @version $Revision: 1.5 $
  */
 public class EntityLockMonitor
    extends ServiceMBeanSupport
@@ -84,6 +84,8 @@ public class EntityLockMonitor
    protected long contentions = 0;
    protected long total_time = 0;
    protected long sumContenders = 0;
+   
+   
    public synchronized void incrementContenders()
    {
       contentions++;
@@ -91,16 +93,19 @@ public class EntityLockMonitor
       if (contenders > maxContenders) maxContenders = contenders;
       sumContenders += contenders;
    }
+   
    public synchronized void decrementContenders(long time)
    {
       times.add(new Long(time));
       contenders--;
    }
+   
    public synchronized long getAverageContenders()
    {
       if (contentions == 0) return 0;
       return sumContenders / contentions;
    }
+   
    public synchronized long getMaxContenders()
    {
       return maxContenders;
@@ -202,8 +207,9 @@ public class EntityLockMonitor
    protected void startService()
       throws Exception
    {
-      System.out.println("******started EntityLockMonitor********");
       bind();
+
+      log.info("EntityLockMonitor started");
    }
 
    protected void stopService() {
@@ -212,6 +218,8 @@ public class EntityLockMonitor
          unbind();
       }
       catch (Exception ignored) {}
+      
+	log.info("EntityLockMonitor stopped");
    }
 
    private void bind() throws NamingException
@@ -226,7 +234,6 @@ public class EntityLockMonitor
       StringRefAddr addr = new StringRefAddr("nns", JNDI_NAME);
       Reference ref = new Reference(EntityLockMonitor.class.getName(), addr, NonSerializableFactory.class.getName(), null);
       ctx.bind(JNDI_NAME, ref);
-      System.out.println("^^^^^^^^ bounded EntityLockMonitor");
    }
    
    private void unbind() throws NamingException
