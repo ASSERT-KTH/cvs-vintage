@@ -127,7 +127,7 @@ import org.tigris.scarab.services.cache.ScarabCache;
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: AbstractScarabModule.java,v 1.48 2002/08/17 00:15:26 elicia Exp $
+ * @version $Id: AbstractScarabModule.java,v 1.49 2002/08/22 21:52:25 elicia Exp $
  */
 public abstract class AbstractScarabModule
     extends BaseObject
@@ -1023,7 +1023,8 @@ public abstract class AbstractScarabModule
     public List getAvailableIssueTypes()
         throws Exception
     {
-        List allIssueTypes = IssueTypePeer.doSelect(new Criteria());
+        Criteria crit = new Criteria().add(IssueTypePeer.DELETED, 0);
+        List allIssueTypes = IssueTypePeer.doSelect(crit);
         List currentIssueTypes = getIssueTypes(false);
         List availIssueTypes = new ArrayList();
 
