@@ -49,6 +49,9 @@ package org.tigris.scarab.util.word;
 // JDK classes
 import java.io.File;
 import java.util.List;
+import java.util.Map;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.ArrayList;
 
 // Turbine classes
@@ -79,7 +82,7 @@ import org.apache.lucene.search.Hits;
  * Support for searching/indexing text
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: LuceneAdapter.java,v 1.3 2002/01/23 10:44:44 dlr Exp $
+ * @version $Id: LuceneAdapter.java,v 1.4 2002/01/29 00:36:39 jmcnally Exp $
  */
 public class LuceneAdapter 
     implements SearchIndex
@@ -144,15 +147,16 @@ public class LuceneAdapter
     public NumberKey[] getRelatedIssues() 
         throws Exception
     {
-        NumberKey[] issueIds = null; 
+        NumberKey[] result;
+        List issueIds = null; 
         // if there are no words to search for return no results 
         if ( queryText.size() != 0)
         {        
-            // compute approximate size of buffer needed. !FIXME!
-            StringBuffer fullQuery = new StringBuffer(100);
-
             for ( int j=attributeIds.size()-1; j>=0; j-- ) 
             {
+                // compute approximate size of buffer needed. !FIXME!
+                StringBuffer fullQuery = new StringBuffer(100);
+
                 NumberKey[] ids = (NumberKey[])attributeIds.get(j);
                 String query = (String)queryText.get(j);
 
@@ -180,55 +184,62 @@ public class LuceneAdapter
                         .append(query)
                         .append(')');
                 }
+
+                Log.debug("Querybefore=" + fullQuery);
+                Query q = QueryParser.parse(fullQuery.toString(), TEXT, 
+                                            new StandardAnalyzer());
+                Log.debug("Queryafter=" + q.toString("text"));
+                
+                IndexSearcher is = new IndexSearcher(path); 
+                Hits hits = is.search(q);
+                // remove duplicates
+                Map deduper = new HashMap((int)(1.25*hits.length()+1));
+                for ( int i=0; i<hits.length(); i++) 
+                {
+                    deduper.put( hits.doc(i).get(ISSUE_ID), null );
+                    Log.debug("Possible issueId from search: " + 
+                                  hits.doc(i).get(ISSUE_ID));
+                }
+                is.close();
+                
+                if ( issueIds == null ) 
+                {
+                    issueIds = new ArrayList(deduper.size());
+                    Iterator iter = deduper.keySet().iterator();
+                    while (iter.hasNext()) 
+                    {
+                        issueIds.add( new NumberKey((String)iter.next()) );
+                        Log.debug("Adding issueId from search: " + 
+                                  issueIds.get(issueIds.size()-1));
+                    }
+                }
+                else 
+                {
+                    // remove any id's not in the current set
+                    for ( int i=issueIds.size()-1; i>=0; i-- ) 
+                    {
+                        Object obj = issueIds.get(i);
+                        if ( !deduper.containsKey(obj.toString()) ) 
+                        {
+                        Log.debug("removing issueId from search: " + obj);
+
+                            issueIds.remove(i);
+                        }
+                    }
+                }
             }
-            Log.debug("Querybefore=" + fullQuery);
-            Query q = QueryParser.parse(fullQuery.toString(), TEXT, 
-                                        new StandardAnalyzer());
-            Log.debug("Queryafter=" + q.toString("text"));
-            
-        /*
-        System.out.println("Query: " + q.toString(TEXT));
-        IndexReader ir = IndexReader.open(path);
-        IndexSearcher is = new IndexSearcher(ir);
-        is.search(q, new HitCollector() {   
-               public void collect(int doc, float score) {
-                   try{
-              System.out.println("Document#" + doc + ", score=" + score);
-        IndexReader irtmp = IndexReader.open(path);
-            Enumeration e = irtmp.document(doc).fields();
-            while ( e.hasMoreElements() ) 
+            result = new NumberKey[issueIds.size()];
+            for ( int i=0; i<issueIds.size(); i++ ) 
             {
-                System.out.print("DocField|" + e.nextElement() + "| ");
+                result[i] = (NumberKey)issueIds.get(i);
             }
-                System.out.println("");
-                   }catch(Exception e){}
-            }
-          });
-        */      
-        
-            IndexSearcher is = new IndexSearcher(path); 
-            Hits hits = is.search(q);
-            // remove duplicates
-            StringStack deduper = new StringStack();
-            for ( int i=0; i<hits.length(); i++) 
-            {
-                deduper.add( hits.doc(i).get(ISSUE_ID) );
-            }
-            
-            issueIds = new NumberKey[deduper.size()];
-            for ( int i=0; i<issueIds.length; i++) 
-            {
-                issueIds[i] = new NumberKey(deduper.get(i));
-            }
-            
-            is.close();
         }
         else
         {
-            issueIds = EMPTY_LIST; 
+            result = EMPTY_LIST; 
         }
         
-        return issueIds;
+        return result;
     }
 
     /**
