@@ -19,7 +19,7 @@ package org.jboss.ejb;
 *
 *   @see org.jboss.ejb.plugins.NoPassivationInstanceCache.java
 *   @author <a href="marc.fleury@telkel.com">Marc Fleury</a>
-*   @version $Revision: 1.3 $
+*   @version $Revision: 1.4 $
 */
 public class CacheKey
     implements java.io.Externalizable
@@ -47,7 +47,8 @@ public class CacheKey
        this.id = id;
         
 		try {
-        	hashCode = new java.rmi.MarshalledObject(id).hashCode();
+        	hashCode = (new java.rmi.MarshalledObject(id)).hashCode();
+			System.out.println("CacheKeyHash:" +hashCode);
     	}
 		catch (Exception e) {e.printStackTrace();}
 	}
@@ -64,14 +65,17 @@ public class CacheKey
       throws java.io.IOException
    {
         out.writeObject(id);
-       	out.write(hashCode);
+       	out.writeInt(hashCode);
+		System.out.println(" Cachekye on writing "+hashCode);
+   
    }
    
    public void readExternal(java.io.ObjectInput in)
       throws java.io.IOException, ClassNotFoundException
    {
         id = in.readObject();
-       hashCode = in.read();
+       hashCode = in.readInt();
+	   System.out.println(" Cachekye on reading "+hashCode);
    }
 
     // HashCode and Equals over write --------------------------------
