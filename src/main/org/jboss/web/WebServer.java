@@ -4,6 +4,7 @@
  * Distributable under LGPL license.
  * See terms of license at gnu.org.
  */
+
 package org.jboss.web;
 
 import java.io.BufferedReader;
@@ -38,7 +39,7 @@ import org.jboss.logging.Logger;
  *
  *   @author <a href="mailto:marc@jboss.org">Marc Fleury</a>
  *   @author <a href="mailto:Scott.Stark@org.jboss">Scott Stark</a>.
- *   @version $Revision: 1.19 $
+ *   @version $Revision: 1.20 $
  *
  *   Revisions:
  *   
@@ -214,7 +215,7 @@ public class WebServer
             }
             catch(MalformedURLException e)
             {
-                e.printStackTrace();
+               log.error("invalid url", e);
             }
         }
         log.trace("Added ClassLoader: "+cl+" URL: "+loaderURL);
