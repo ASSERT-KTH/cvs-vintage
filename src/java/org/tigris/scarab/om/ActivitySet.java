@@ -68,7 +68,7 @@ import org.tigris.scarab.services.cache.ScarabCache;
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: ActivitySet.java,v 1.11 2003/03/15 21:56:58 jon Exp $
+ * @version $Id: ActivitySet.java,v 1.12 2003/04/30 01:10:15 jon Exp $
  */
 public class ActivitySet 
     extends BaseActivitySet
@@ -125,10 +125,22 @@ public class ActivitySet
         return getScarabUser();
     }
 
+    public boolean sendEmail(Issue issue)
+         throws Exception
+    {
+        return sendEmail(null, issue, null, null, null);
+    }
+
     public boolean sendEmail(EmailContext context, Issue issue)
          throws Exception
     {
         return sendEmail(context, issue, null, null, null);
+    }
+
+    public boolean sendEmail(Issue issue, String template)
+         throws Exception
+    {
+        return sendEmail(null, issue, null, null, template);
     }
 
     public boolean sendEmail(EmailContext context, Issue issue, 
