@@ -1,4 +1,4 @@
-// $Id: Generator.java,v 1.30 2003/09/18 23:35:14 bobtarling Exp $
+// $Id: Generator.java,v 1.31 2003/11/26 21:52:29 mkl Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -264,12 +264,14 @@ public abstract class Generator
     /**
      * Gets the path of the code base for a model element, otherwise null.
      * @param me The model element
-     * @return String
+     * @return String representation of "src_path" tagged value or null if empty or not existing
      */
     public static String getCodePath(Object me) {
-        String s =
-            ModelFacade.getValueOfTag(
-                ModelFacade.getTaggedValue(me, "src_path"));
+        if (me == null) return null;
+        Object taggedValue = ModelFacade.getTaggedValue(me,"src_path");
+        String s;
+        if (taggedValue == null) return null;
+        s =  ModelFacade.getValueOfTag(taggedValue);
         if (s != null)
             return s.trim();
         return null;
