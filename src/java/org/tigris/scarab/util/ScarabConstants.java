@@ -51,7 +51,7 @@ package org.tigris.scarab.util;
     A place to put public final static strings.
     
     @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
-    @version $Id: ScarabConstants.java,v 1.14 2001/08/17 00:42:27 jon Exp $
+    @version $Id: ScarabConstants.java,v 1.15 2001/08/24 23:21:58 jon Exp $
 */
 
 public interface ScarabConstants
@@ -97,9 +97,10 @@ public interface ScarabConstants
     public static final String SECURITY_TOOL = "security";
 
     /**
-     * Not really used. May be removed in the future.
+     * Key passed around in the query string which tracks the
+     * current module.
      */
-    public static final String CURRENT_PROJECT = "cur_project_id";
+    public static final String CURRENT_MODULE = "curmodule";
     public static final String USER_SELECTED_MODULE = "scarab.user.selected.module";
     public static final String PROJECT_CHANGE_BOX = "project_change_box";
 
