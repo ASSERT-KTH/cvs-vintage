@@ -88,7 +88,7 @@ import org.tigris.scarab.security.SecurityFactory;
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: ScarabModule.java,v 1.55 2001/10/23 19:12:27 elicia Exp $
+ * @version $Id: ScarabModule.java,v 1.56 2001/10/24 23:41:57 jon Exp $
  */
 public class ScarabModule
     extends BaseScarabModule
@@ -254,7 +254,7 @@ public class ScarabModule
 
     /**
      * Wrapper method to perform the proper cast to the BaseModule method
-     * of the same name.
+     * of the same name. FIXME: find a better way
      */
     public void setModuleRelatedByParentId(ModuleEntity v) throws Exception
     {
@@ -488,6 +488,8 @@ public class ScarabModule
     /**
      * Overridden method.  Calls the super method and if no results are
      * returned the call is passed on to the parent module.
+     * FIXME: what the heck is this thing doing? Also, we should expose
+     * things as a List instead of as a Vector...ugly ugly ugly...
      */
     public Vector getRModuleAttributes(Criteria crit)
         throws Exception
@@ -984,6 +986,10 @@ try{
                 Criteria crit = new Criteria();
                 crit.add(ScarabModulePeer.MODULE_NAME, getRealName());
                 crit.add(ScarabModulePeer.PARENT_ID, getParentId());
+                // FIXME: this should be done with a method in ModuleEntity
+                // that takes the two criteria values as a argument so that other 
+                // implementations can benefit from being able to get the 
+                // list of modules.
                 List result = (List) ScarabModulePeer.doSelect(crit);
                 if (result.size() > 0)
                 {

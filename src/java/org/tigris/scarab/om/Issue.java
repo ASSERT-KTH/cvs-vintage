@@ -727,7 +727,7 @@ public class Issue
         int limit=0;
         try
         {
-            limit = ((ScarabModule)getModule()).getRModuleIssueType(getIssueType())
+            limit = getModule().getRModuleIssueType(getIssueType())
                     .getComments();
         }
         catch (Exception e)
@@ -779,7 +779,7 @@ public class Issue
         int limit=0;
         try
         {
-            limit = ((ScarabModule)getModule()).getRModuleIssueType(getIssueType())
+            limit = getModule().getRModuleIssueType(getIssueType())
                     .getHistory();
         }
         catch (Exception e)
