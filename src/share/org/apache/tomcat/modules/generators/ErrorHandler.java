@@ -77,8 +77,13 @@ import org.apache.tomcat.util.log.*;
  */
 public final class ErrorHandler extends BaseInterceptor {
     private Context rootContext=null;
+    boolean showDebugInfo=true;
     
     public ErrorHandler() {
+    }
+
+    public void setShowDebugInfo( boolean b ) {
+	showDebugInfo=b;
     }
 
     public void engineInit( ContextManager cm )
@@ -98,7 +103,7 @@ public final class ErrorHandler extends BaseInterceptor {
     {
 	if( ctx.getHost() == null && ctx.getPath().equals(""))
 	    rootContext = ctx;
-	boolean showDebugInfo=true;
+
 	ContextManager cm=ctx.getContextManager();
 	String dI=cm.getProperty( "showDebugInfo" );
 	if( dI!=null && ( dI.equalsIgnoreCase("no") ||
@@ -185,7 +190,12 @@ public final class ErrorHandler extends BaseInterceptor {
 	    return;
 	}
 
-	if (!isDefaultHandler && !res.isBufferCommitted())
+	// XXX The original code didn't reset the buffer if
+	// isDefaultHandler :	if (!isDefaultHandler && ...
+	// Is there any reason for that ?
+	// I also think we should reset the buffer anyway, to get
+	// in a stable state - even if the buffer is commited
+	if ( !res.isBufferCommitted())
 	    res.resetBuffer();
 
 	req.setAttribute("javax.servlet.error.status_code",new Integer( code));
@@ -194,6 +204,8 @@ public final class ErrorHandler extends BaseInterceptor {
 	if( debug>0 )
 	    ctx.log( "Handler " + errorServlet + " " + errorPath);
 
+	// reset error exception
+	res.setErrorException( null );
 	errorServlet.service( req, res );
 	Exception ex=res.getErrorException();
 	if( ex!=null && ! (ex instanceof IOException) ) {
@@ -282,7 +294,13 @@ public final class ErrorHandler extends BaseInterceptor {
 	    return;
 	}
 
-	if (!isDefaultHandler && !res.isBufferCommitted())
+
+	// XXX The original code didn't reset the buffer if
+	// isDefaultHandler :	if (!isDefaultHandler && ...
+	// Is there any reason for that ?
+	// I also think we should reset the buffer anyway, to get
+	// in a stable state - even if the buffer is commited
+	if ( !res.isBufferCommitted())
 	    res.resetBuffer();
 
 	req.setAttribute("javax.servlet.error.exception_type", t.getClass());
@@ -294,14 +312,16 @@ public final class ErrorHandler extends BaseInterceptor {
 	if( debug>0 )
 	    ctx.log( "Handler " + errorServlet + " " + errorPath);
 
+	// reset error exception
+	res.setErrorException( null );
 	errorServlet.service( req, res );
 	Exception ex=res.getErrorException();
-	if( ! (ex instanceof IOException) ) {
+	if( ex!=null && ! (ex instanceof IOException) ) {
 	    // we can ignore IOException - probably the user
 	    // has clicked "STOP"
 	    // we need to log any other error - something may be
 	    // broken if the error servlet has errors.
-	    ctx.log( "Error in errorServlet", ex);
+	    ctx.log( "Error in errorServlet: ", ex);
 	} 
     }
 
@@ -379,9 +399,9 @@ class NotFoundHandler extends Handler {
 	    req.setNote( sbNote, buf );
 	}
 	
-	boolean bufReset = (res.getBuffer().getBytesWritten() == 0);
+	boolean needsHead = res.getBuffer().isNew();
 	// only include <head>...<body> if reset was successful
-	if (bufReset) {
+	if (needsHead) {
 	    buf.append("<head><title>")
 		.append(sm.getString("defaulterrorpage.notfound404"))
 		.append("</title></head>\r\n<body>");
@@ -402,7 +422,7 @@ class NotFoundHandler extends Handler {
 	}
 
 	// only add </body> if reset was successful
-	if ( bufReset )
+	if ( needsHead )
 	    buf.append("</body>");
 	buf.append("\r\n");
 
@@ -435,16 +455,16 @@ class ExceptionHandler extends Handler {
 	Throwable e= (Throwable)req.
 	    getAttribute("tomcat.servlet.error.throwable");
 	if( e==null ) {
-	    log("Exception handler called without an exception", new Throwable("trace"));
+	    log("Exception handler called without an exception",
+		new Throwable("trace"));
 	    return;
 	}
 
-	res.setContentType("text/html");
-	res.setStatus( 500 );
 	
 	if( sbNote==0 ) {
-	    sbNote=req.getContextManager().getNoteId(ContextManager.REQUEST_NOTE,
-						     "ExceptionHandler.buff");
+	    sbNote=req.getContextManager().
+		getNoteId(ContextManager.REQUEST_NOTE,
+			  "ExceptionHandler.buff");
 	}
 
 	// we can recycle it because
@@ -455,9 +475,13 @@ class ExceptionHandler extends Handler {
 	    req.setNote( sbNote, buf );
 	}
 
-	boolean bufReset = (res.getBuffer().getBytesWritten() == 0);
+	boolean needsHead = res.getBuffer().isNew();
+
 	// only include <head>...<body> if reset was successful
-	if (bufReset) {
+	if ( needsHead ) {
+	    res.setContentType("text/html");
+	    res.setStatus( 500 );
+	
 	    buf.append("<head><title>");
 	    if( null != errorURI && showDebugInfo ) {
 		buf.append(sm.getString("defaulterrorpage.includedservlet") )
@@ -509,7 +533,7 @@ class ExceptionHandler extends Handler {
 	}
 
 	// only add </body> if reset was successful
-	if ( bufReset )
+	if (  needsHead )
 	    buf.append("</body>");
 	buf.append("\r\n");
 	
@@ -557,9 +581,9 @@ class StatusHandler extends Handler {
 	    req.setNote( sbNote, buf );
 	}
 
-	boolean bufReset = (res.getBuffer().getBytesWritten() == 0);
+	boolean needsHead = res.getBuffer().isNew();
 	// only include <head>...<body> if reset was successful
-	if (bufReset) {
+	if (needsHead) {
 	    buf.append("<head><title>");
 	    if( null != errorURI && showDebugInfo ) {
 		buf.append(sm.getString("defaulterrorpage.includedservlet") )
@@ -615,7 +639,7 @@ class StatusHandler extends Handler {
 	}
 
 	// only add </body> if reset was successful
-	if ( bufReset )
+	if ( needsHead )
 	    buf.append("</body>");
 	buf.append("\r\n");
 
