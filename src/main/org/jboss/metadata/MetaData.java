@@ -22,7 +22,7 @@ import org.jboss.ejb.DeploymentException;
  *      
  *   @see <related>
  *   @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
- *   @version $Revision: 1.10 $
+ *   @version $Revision: 1.11 $
  */
 public abstract class MetaData implements XmlLoadable {
     // Constants -----------------------------------------------------
@@ -72,10 +72,33 @@ public abstract class MetaData implements XmlLoadable {
 	}
 	
 	
+	/**
+	 * Gets the child of the specified element having the
+	 * specified name. If the child with this name doesn't exist
+	 * then null is returned instead.
+	 *
+	 * @param element the parent element
+	 * @param tagName the name of the desired child
+	 * @return either the named child or null
+	 */
 	public static Element getOptionalChild(Element element, String tagName) throws DeploymentException {
+		return getOptionalChild(element, tagName, null);
+	}
 
+	/**
+	 * Gets the child of the specified element having the
+	 * specified name. If the child with this name doesn't exist
+	 * then the supplied default element is returned instead.
+	 *
+	 * @param element the parent element
+	 * @param tagName the name of the desired child
+	 * @param defaultElement the element to return if the child
+	 *                       doesn't exist
+	 * @return either the named child or the supplied default
+	 */
+	public static Element getOptionalChild(Element element, String tagName, Element defaultElement) throws DeploymentException {
 		Iterator goodChildren = getChildrenByTagName(element, tagName);
-
+		
 		if (goodChildren != null && goodChildren.hasNext()) {
 			Element child = (Element)goodChildren.next();
 			if (goodChildren.hasNext()) {
@@ -83,7 +106,7 @@ public abstract class MetaData implements XmlLoadable {
 			}
 			return child;
 		} else {
-			return null;
+			return defaultElement;
 		}
 	}
 	

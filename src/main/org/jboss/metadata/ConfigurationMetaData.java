@@ -15,7 +15,7 @@ import org.jboss.ejb.DeploymentException;
  *      
  *   @see <related>
  *   @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
- *   @version $Revision: 1.6 $
+ *   @version $Revision: 1.7 $
  */
 public class ConfigurationMetaData extends MetaData {
     
@@ -125,13 +125,13 @@ public class ConfigurationMetaData extends MetaData {
 		// We save the Elements for them to use later
 		
 		// configuration for container invoker
-	    containerInvokerConf = getOptionalChild(element, "container-invoker-conf");
+	    containerInvokerConf = getOptionalChild(element, "container-invoker-conf", containerInvokerConf);
 		
 		// configuration for instance pool
-		containerPoolConf = getOptionalChild(element, "container-pool-conf");
+		containerPoolConf = getOptionalChild(element, "container-pool-conf", containerPoolConf);
 		
 		// configuration for instance cache
-		containerCacheConf = getOptionalChild(element, "container-cache-conf");
+		containerCacheConf = getOptionalChild(element, "container-cache-conf", containerCacheConf);
 		
 	}		
     
