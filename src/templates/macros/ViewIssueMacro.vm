@@ -549,7 +549,7 @@ $l10n.NoDependencies
 #if ($canEdit)
 <div class="functnbar3">
 #if (!$issueParents.isEmpty() || !$issueChildren.isEmpty())
-   <input type="submit" value="Save"  name="eventSubmit_doUpdatedependencies" />&nbsp;
+   <input type="submit" value="Save changes"  name="eventSubmit_doUpdatedependencies" />&nbsp;
 #end
    <input type="submit" value="Add new child" name="eventSubmit_doAdddependency" />&nbsp;
 #if (!$issueParents.isEmpty() || !$issueChildren.isEmpty())
