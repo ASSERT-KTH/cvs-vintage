@@ -2,7 +2,7 @@
 <!DOCTYPE app-data SYSTEM
           "http://jakarta.apache.org/turbine/dtd/database.dtd">
 
-<!-- $Id: scarab-schema.xml,v 1.21 2001/06/11 01:29:52 jon Exp $ -->
+<!-- $Id: scarab-schema.xml,v 1.22 2001/06/15 23:14:40 elicia Exp $ -->
 
 <app-data>
 <database>
@@ -23,6 +23,10 @@
     -->
     <column name="TRANSACTION_ID" primaryKey="true" required="true" type="INTEGER"></column>
     <!--
+        Comment added to modification.
+    -->
+    <column name="ATTACHMENT_ID" primaryKey="true" required="true" type="INTEGER"></column>
+    <!--
         Value of attribute before modification.
     -->
     <column name="OLD_VALUE" required="false" type="VARCHAR" size="255"></column>
@@ -38,6 +42,9 @@
     </foreign-key>
     <foreign-key foreignTable="SCARAB_TRANSACTION">
         <reference local="TRANSACTION_ID" foreign="TRANSACTION_ID"/>
+    </foreign-key>
+    <foreign-key foreignTable="SCARAB_ATTACHMENT">
+        <reference local="ATTACHMENT_ID" foreign="ATTACHMENT_ID"/>
     </foreign-key>
 </table>
 
@@ -103,6 +110,12 @@
     </foreign-key>
     <foreign-key foreignTable="SCARAB_ATTACHMENT_TYPE">
         <reference local="ATTACHMENT_TYPE_ID" foreign="ATTACHMENT_TYPE_ID"/>
+    </foreign-key>
+    <foreign-key foreignTable="SCARAB_USER">
+        <reference local="CREATED_BY" foreign="USER_ID"/>
+    </foreign-key>
+    <foreign-key foreignTable="SCARAB_USER">
+        <reference local="MODIFIED_BY" foreign="USER_ID"/>
     </foreign-key>
 </table>
 
