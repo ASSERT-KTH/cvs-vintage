@@ -22,6 +22,7 @@
 			<instance-cache>org.jboss.ejb.plugins.EntityInstanceCache</instance-cache>
 			<persistence-manager>org.jboss.ejb.plugins.cmp.jdbc.JDBCStoreManager</persistence-manager>
 			<transaction-manager>org.jboss.tm.TxManager</transaction-manager>
+			<locking-policy>org.jboss.ejb.plugins.lock.SimplePessimisticEJBLock</locking-policy>
 			<container-invoker-conf>
 				<Optimized>True</Optimized>
 				<RMIObjectPort>4444</RMIObjectPort>
@@ -63,6 +64,7 @@
 			<instance-cache>org.jboss.ejb.plugins.EntityInstanceCache</instance-cache>
 			<persistence-manager>org.jboss.ejb.plugins.jaws.JAWSPersistenceManager</persistence-manager>
 			<transaction-manager>org.jboss.tm.TxManager</transaction-manager>
+			<locking-policy>org.jboss.ejb.plugins.lock.SimplePessimisticEJBLock</locking-policy>
 			<container-invoker-conf>
 				<RMIObjectPort>4444</RMIObjectPort>
 				<Optimized>True</Optimized>
@@ -104,6 +106,7 @@
             <instance-cache>org.jboss.ejb.plugins.EntityInstanceCache</instance-cache>
             <persistence-manager>org.jboss.ejb.plugins.jaws.JAWSPersistenceManager</persistence-manager>
             <transaction-manager>org.jboss.tm.TxManager</transaction-manager>
+				<locking-policy>org.jboss.ejb.plugins.lock.SimplePessimisticEJBLock</locking-policy>
             <container-invoker-conf>
 			    <RMIObjectPort>4444</RMIObjectPort>
                 <Optimized>True</Optimized>
@@ -207,6 +210,7 @@
 			<instance-cache>org.jboss.ejb.plugins.StatefulSessionInstanceCache</instance-cache>
 			<persistence-manager>org.jboss.ejb.plugins.StatefulSessionFilePersistenceManager</persistence-manager>
 			<transaction-manager>org.jboss.tm.TxManager</transaction-manager>
+			<locking-policy>org.jboss.ejb.plugins.lock.SimplePessimisticEJBLock</locking-policy>
 			<container-invoker-conf>
 				<RMIObjectPort>4444</RMIObjectPort>
 			<Optimized>True</Optimized>
@@ -285,6 +289,7 @@
 		 	<instance-cache>org.jboss.ejb.plugins.EntityInstanceCache</instance-cache>
 		 	<persistence-manager>org.jboss.ejb.plugins.BMPPersistenceManager</persistence-manager>
 		 	<transaction-manager>org.jboss.tm.TxManager</transaction-manager>
+			<locking-policy>org.jboss.ejb.plugins.lock.SimplePessimisticEJBLock</locking-policy>
 		 	<container-invoker-conf>
 				<RMIObjectPort>4444</RMIObjectPort>
 		   		<Optimized>True</Optimized>
@@ -323,10 +328,11 @@
                 <interceptor>org.jboss.ejb.plugins.EntitySynchronizationInterceptor</interceptor>
             </container-interceptors>
 		 	<instance-pool>org.jboss.ejb.plugins.EntityInstancePool</instance-pool>
-		        <instance-cache>org.jboss.ejb.plugins.EntityInstanceCache</instance-cache>
-                        <persistence-manager>org.jboss.ejb.plugins.BMPPersistenceManager</persistence-manager>
-                        <transaction-manager>org.jboss.tm.TxManager</transaction-manager>
-                        <container-invoker-conf>
+		   <instance-cache>org.jboss.ejb.plugins.EntityInstanceCache</instance-cache>
+         <persistence-manager>org.jboss.ejb.plugins.BMPPersistenceManager</persistence-manager>
+         <transaction-manager>org.jboss.tm.TxManager</transaction-manager>
+         <locking-policy>org.jboss.ejb.plugins.lock.SimplePessimisticEJBLock</locking-policy>
+			<container-invoker-conf>
 				<RMIObjectPort>4444</RMIObjectPort>
                                 <Optimized>True</Optimized>
                         </container-invoker-conf>
