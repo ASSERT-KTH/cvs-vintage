@@ -1,4 +1,4 @@
-// $Id: SelectionRerouteEdge.java,v 1.5 2003/06/30 21:59:33 linus Exp $
+// $Id: SelectionRerouteEdge.java,v 1.6 2004/08/07 15:39:54 mvw Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -84,7 +84,10 @@ public class SelectionRerouteEdge extends SelectionEdgeClarifiers {
      */
     private int pointIndex;
     
-    /** Creates a new instance of SelectionRerouteEdge */
+    /** Creates a new instance of SelectionRerouteEdge 
+     * 
+     * @param feme the given Fig
+     */
     public SelectionRerouteEdge(FigEdgeModelElement feme) {
         
         super(feme);
@@ -96,6 +99,8 @@ public class SelectionRerouteEdge extends SelectionEdgeClarifiers {
     
     /**
      * set up for re-routing.
+     *
+     * @see java.awt.event.MouseListener#mousePressed(java.awt.event.MouseEvent)
      */
     public void mousePressed(MouseEvent me) {
         
@@ -127,6 +132,8 @@ public class SelectionRerouteEdge extends SelectionEdgeClarifiers {
      * <p>don't arm if the edtior's current mode is a figedge create mode,
      * because once a new edge has been created it is not deselected,
      * therefore on the next create an unwanted reroute is performed.
+     *
+     * @see java.awt.event.MouseMotionListener#mouseDragged(java.awt.event.MouseEvent)
      */
     public void mouseDragged(MouseEvent me) {
         
@@ -149,10 +156,12 @@ public class SelectionRerouteEdge extends SelectionEdgeClarifiers {
      *
      * <p>TODO: improve the fig finding algorithm to find the top most fig
      * in the layer. will be useful for nested states in a statechart.
+     *
+     * @see java.awt.event.MouseListener#mouseReleased(java.awt.event.MouseEvent)
      */
     public void mouseReleased(MouseEvent me) {
         // check pre-conds
-        if (me.isConsumed() || armed == false || pointIndex == -1) {
+        if (me.isConsumed() || !armed || pointIndex == -1) {
             armed = false;
             super.mouseReleased(me);
             return;

@@ -1,4 +1,4 @@
-// $Id: SelectionClassifierRole.java,v 1.7 2004/05/22 13:46:56 linus Exp $
+// $Id: SelectionClassifierRole.java,v 1.8 2004/08/07 15:39:54 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -102,14 +102,14 @@ public class SelectionClassifierRole extends SelectionWButtons {
 	super.hitHandle(r, h);
 	if (h.index != -1)
 	    return;
-	if (!_paintButtons)
+	if (!isPaintButtons())
 	    return;
 	Editor ce = Globals.curEditor();
 	SelectionManager sm = ce.getSelectionManager();
 	if (sm.size() != 1)
 	    return;
 	ModeManager mm = ce.getModeManager();
-	if (mm.includes(ModeModify.class) && _pressedButton == -1)
+	if (mm.includes(ModeModify.class) && getPressedButton() == -1)
 	    return;
 	int cx = _content.getX();
 	int cy = _content.getY();
@@ -150,7 +150,7 @@ public class SelectionClassifierRole extends SelectionWButtons {
 
     public void dragHandle(int mX, int mY, int anX, int anY, Handle hand) {
 	if (hand.index < 10) {
-	    _paintButtons = false;
+	    setPaintButtons(false);
 	    super.dragHandle(mX, mY, anX, anY, hand);
 	    return;
 	}
