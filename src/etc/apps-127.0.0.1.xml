@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<Server>
+    <!-- Virtual host example - to show that it works we'll
+         map the /examples as / and the ROOT as /examples :-) 
+         (use  "http://127.0.0.1/examples" to try )
+         This is commented out by default.
+     -->
+    <!--
+    <Host name="127.0.0.1" >
+        <Context path="" 
+                 docBase="webapps/examples" />
+        <Context path="/examples" 
+                 docBase="webapps/ROOT" />
+    </Host>
+    -->
+
+</Server>

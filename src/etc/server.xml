@@ -14,130 +14,78 @@
       -->
     <ContextManager debug="0" workDir="work" >
 
-      <!-- ==================== Interceptors ==================== -->
+      <!-- ==================== Global modules ==================== -->
 
-        <!-- no path - console output -->
-        <ContextInterceptor  name="tc_log" 
-            className="org.apache.tomcat.modules.config.LogSetter"
-            verbosityLevel = "INFORMATION"  />
+        <LogSetter name="tc_log" timestamps="true"
+		   verbosityLevel="INFORMATION"  />
 
-        <ContextInterceptor  name="servlet_log" 
-            className="org.apache.tomcat.modules.config.LogSetter"
-            path="logs/servlet-${yyyyMMdd}.log"
-            verbosityLevel = "INFORMATION"  />
-
-        <ContextInterceptor  name="JASPER_LOG" 
-            className="org.apache.tomcat.modules.config.LogSetter"
-            path="logs/jasper-${yyyyMMdd}.log"
-            verbosityLevel = "INFORMATION"  />
-
-        <!-- 
-         ContextInterceptor 
-            className="org.apache.tomcat.modules.loggers.LogEvents" 
-         -->
+        <LogEvents enabled="false" />
         
-        <ContextInterceptor
-            className="org.apache.tomcat.modules.config.ContextXmlReader" />
+        <!-- Backward compat: read the Context declarations from server.xml-->
+        <ContextXmlReader config="conf/server.xml" />
 
-        <ContextInterceptor 
-            className="org.apache.tomcat.modules.config.AutoDeploy" />
+        <!-- Separated Context -->
+        <ContextXmlReader config="conf/apps.xml" />
 
-        <ContextInterceptor 
-            className="org.apache.tomcat.modules.config.AutoWebApp" />
+        <AutoDeploy source="webapps" target="webapps" />
 
-        <!-- Generate includeable Apache configuration files for mod_jserv
-             and mod_jk.
-        <ContextInterceptor
-            className="org.apache.tomcat.modules.config.ApacheConfig" />
+        <AutoWebApp dir="webapps" host="DEFAULT" />
+
+        <PolicyLoader securityManagerClass="java.lang.SecurityManager"
+		      policyFile="conf/tomcat.policy" />
+
+        <SessionId cookiesFirst="true" noCookies="false" /> 
+
+        <SimpleMapper1 debug="0" />
+
+
+        <!-- ========== context processing modules ========== -->
+        <!-- This will be the "default" profile 
+             ( all except the "global" modules can be set per context )
           -->
+        <LogSetter name="servlet_log" 
+		   timestamps="true"
+		   verbosityLevel = "INFORMATION"
+		   path="logs/servlet-${yyyyMMdd}.log" 
+		   />
 
-        <ContextInterceptor 
-            className="org.apache.tomcat.facade.WebXmlReader" />
+        <LogSetter  name="JASPER_LOG"
+		   timestamps="true" 
+		   path="logs/jasper-${yyyyMMdd}.log" 
+		   verbosityLevel = "INFORMATION"  />
 
-        <ContextInterceptor 
-            className="org.apache.tomcat.modules.config.PolicyLoader" />
+        <LoaderInterceptor11  useApplicationLoader="true" />
 
-        <!-- Classloader interceptor -->
-        <ContextInterceptor 
-            className="org.apache.tomcat.modules.config.LoaderInterceptor11"
-            useApplicationLoader="true" />
+        <WebXmlReader validate="true" />
 
-        <ContextInterceptor 
-            className="org.apache.tomcat.modules.generators.ErrorHandler" />
+        <ErrorHandler showDebugInfo="true" />
 
-        <ContextInterceptor 
-            className="org.apache.tomcat.modules.config.WorkDirSetup" />
+        <WorkDirSetup cleanWorkDir="false" />
 
-        <!-- Request processing -->
-        <!-- Session interceptor will extract the session id from cookies and 
-             deal with URL rewriting ( by fixing the URL )
-          -->
-        <RequestInterceptor 
-            className="org.apache.tomcat.modules.session.SessionId" />
+        <Jdk12Interceptor /> 
 
-        <!-- Find the container ( context and prefix/extension map ) 
-             for a request.
-          -->
-        <RequestInterceptor 
-            className="org.apache.tomcat.modules.mappers.SimpleMapper1" 
-            debug="0" />
+        <!-- Non-standard invoker, for backward compat. ( /servlet/* ) -->
+        <InvokerInterceptor /> 
 
-        <!-- fix the context class loader, other JDK1.2 specific code -->
-        <RequestInterceptor 
-            className="org.apache.tomcat.modules.generators.Jdk12Interceptor" 
-            debug="0" />
-          <!-- -->
-
-        <!-- Non-standard invoker, for backward compat. ( /servlet/* )
-          -->
-        <RequestInterceptor 
-           className="org.apache.tomcat.modules.generators.InvokerInterceptor" 
-           debug="0" />
-
-        <!-- "jsp" handler 
-          -->
-        <RequestInterceptor 
-            className="org.apache.tomcat.facade.JspInterceptor" 
-            debug="0"  />
+        <!-- you can add javaCompiler="jikes" -->
+        <JspInterceptor keepGenerated="true"
+			largeFile="false"
+			sendErrToClient="true"
+			useJspServlet="false"
+			/>
         
-        <!-- "default" handler - static files and dirs
-          -->
-        <RequestInterceptor 
-            className="org.apache.tomcat.modules.generators.StaticInterceptor" 
-            debug="0" listings="true" />
+        <StaticInterceptor  debug="0" listings="true" />
         
-	<!-- Handle reloads - will be moved to per/context
-          -->
-        <RequestInterceptor 
-            className="org.apache.tomcat.modules.mappers.ReloadInterceptor" 
-            debug="0" />
+        <ReloadInterceptor fullReload="true" />
 
-        <!-- Plug a session manager. You can plug in more advanced session
-             modules.
-          -->
-        <RequestInterceptor 
-	    className="org.apache.tomcat.modules.session.SimpleSessionStore" />
+        <SimpleSessionStore checkInterval="60" 
+			    maxActiveSessions="-1" />
 
-        <!-- Check if the request requires an authenticated role.
-          -->
-        <RequestInterceptor 
-            className="org.apache.tomcat.modules.aaa.AccessInterceptor" 
-            debug="0" />
+        <AccessInterceptor />
 
-        <!-- Implements BASIC and FORM autorization
-          -->
-        <RequestInterceptor 
-            className="org.apache.tomcat.modules.aaa.CredentialsInterceptor" 
-            debug="0" />
+        <CredentialsInterceptor />
 
-        <!-- Check permissions using the simple xml file. You can 
-             plug more advanced authentication modules.
-             uncomment below to have a global tomcat Realm.
-          -->
-        <RequestInterceptor 
-            className="org.apache.tomcat.modules.aaa.SimpleRealm" 
-            filename="conf/users/global-users.xml"
-            debug="0" />
+        <SimpleRealm  filename="conf/users/global-users.xml" />
 
        <!-- UnComment the following and comment out the
             above to get a JDBC realm.
@@ -155,8 +103,7 @@
             "connectionName" and "connectionPassword" are optional.
         -->
         <!--
-        <RequestInterceptor 
-            className="org.apache.tomcat.modules.aaa.JDBCRealm" 
+        <JDBCRealm
             debug="99" 
 	    driverName="sun.jdbc.odbc.JdbcOdbcDriver" 
 	    connectionURL="jdbc:odbc:TOMCAT" 
@@ -167,24 +114,21 @@
             roleNameCol="role_name" />
         -->
 
-        <!-- Loaded last since JSP's that load-on-startup use request handling -->
-        <ContextInterceptor 
-            className="org.apache.tomcat.facade.LoadOnStartupInterceptor" />
+        <LoadOnStartupInterceptor />
 
-        <!-- Loaded last since JSP's that load-on-startup use request handling -->
-        <RequestInterceptor 
-            className="org.apache.tomcat.facade.Servlet22Interceptor" />
+        <Servlet22Interceptor />
 
       <!-- ==================== Connectors ==================== -->
 
-        <!-- new http adapter. Attributes:
-                secure - use SSL ( https )
-                keystore, keypass - certs for SSL
-                port -->
-        <!-- Normal HTTP -->
-        <RequestInterceptor 
-         className="org.apache.tomcat.modules.server.Http10Interceptor"
-         port="8080" />
+       <!-- new http adapter. Attributes:
+               secure - use SSL ( https )
+               keystore, keypass - certs for SSL
+               port -->
+        <Http10Interceptor port="8080" 
+			   secure="false"
+			   maxThreads="100"
+			   maxSpareThreads="50"
+			   minSpareThreads="10" />
 
         <!--
             Uncomment this for SSL support. 
@@ -230,68 +174,15 @@
          className="org.apache.tomcat.modules.server.Ajp13Interceptor"
          port="8009" />
 
-        <!-- ==================== Special webapps ==================== -->
-        <!-- You don't need this if you place your app in webapps/
-             and use defaults. 
-             For security you'll also need to edit tomcat.policy
-
-             Defaults are: debug=0, reloadable=true, trusted=false
-             (trusted allows you to access tomcat internal objects 
-              with FacadeManager )
+      <!-- 
+           Context definitions can be placed here ( not recommended ) or 
+           in separate files. The ContextXmlReader will read all context
+           definitions ( you can customize the "base" filename ). 
  
-             If security manager is enabled, you'll have read perms.
-             in the webapps dir and read/write in the workdir.
-         -->
-
-         <Context path="/examples" 
-            docBase="webapps/examples" 
-            debug="0" 
-	    reloadable="true" > 
-              <Interceptor 
-                  className="org.apache.tomcat.modules.aaa.SimpleRealm" 
-                  filename="conf/users/example-users.xml"
-                  debug="0" />
-              <Interceptor  name="example_tc_log" 
-                  className="org.apache.tomcat.modules.config.LogSetter"
-                  verbosityLevel = "INFORMATION"
-                  path="logs/examples.log" />
-              <Interceptor  name="example_servlet_log" 
-                 className="org.apache.tomcat.modules.config.LogSetter"
-                 verbosityLevel = "INFORMATION"
-                 path="logs/servlet_examples.log" servletLogger="true"/>
-        </Context>
-
-        <!-- Admin context will use tomcat.core to add/remove/get info about
-             the webapplications and tomcat internals. 
-             By default it is not trusted - i.e. it is not allowed access to 
-             tomcat internals, only informations that are available to all 
-             servlets are visible.
-
-             If you change this to true, make sure you set a password.
-          -->
-        <Context path="/admin" 
-                 docBase="webapps/admin" 
-                 debug="0" 
-                 reloadable="true" 
-                 trusted="false" > 
-        <Interceptor 
-            className="org.apache.tomcat.modules.aaa.SimpleRealm" 
-            filename="conf/users/admin-users.xml"
-            debug="0" />
-        </Context>
-
-        <!-- Virtual host example - 
-             In "127.0.0.1" virtual host we'll reverse "/" and 
-             "/examples"
-             (XXX need a better example )
-             (use  "http://127.0.0.1/examples" )
-        <Host name="127.0.0.1" >
-           <Context path="" 
-                    docBase="webapps/examples" />
-           <Context path="/examples" 
-                    docBase="webapps/ROOT" />
-        </Host>
-         -->
+           The default is conf/apps-[name].xml.
+ 
+           See conf/apps-examples.xml and conf/apps-admin.xml  
+       -->
 
     </ContextManager>
 </Server>

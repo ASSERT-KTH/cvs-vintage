@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<webapps>
+    <!-- Special rules for the admin webapplication -->
+
+    <!-- Change "trusted" to true in order to run the admin -->
+    <Context path="/admin" 
+             docBase="webapps/admin" 
+             reloadable="true" 
+             trusted="false" > 
+            <SimpleRealm filename="conf/users/admin-users.xml" />
+    </Context>
+</webapps>
