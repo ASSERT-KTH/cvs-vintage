@@ -30,7 +30,7 @@ is enforced. This is where the caller identity propagation is controlled as well
 
 @author <a href="on@ibis.odessa.ua">Oleg Nitz</a>
 @author <a href="mailto:Scott_Stark@displayscape.com">Scott Stark</a>.
-@version $Revision: 1.23 $
+@version $Revision: 1.24 $
 */
 public class SecurityInterceptor extends AbstractInterceptor
 {
@@ -213,8 +213,9 @@ public class SecurityInterceptor extends AbstractInterceptor
         else if( realmMapping.doesUserHaveRole(principal, methodRoles) == false )
         {
             String method = mi.getMethod().getName();
+            Set userRoles = realmMapping.getUserRoles(principal);
             String msg = "Insufficient method permissions, principal="+principal
-                + ", method="+method+", requiredRoles="+methodRoles;
+                + ", method="+method+", requiredRoles="+methodRoles+", principalRoles="+userRoles;
             log.error(msg);
             SecurityException e = new SecurityException(msg);
             throw new RemoteException("checkSecurityAssociation", e);
