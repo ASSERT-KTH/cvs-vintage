@@ -54,7 +54,7 @@ import org.gjt.sp.jedit.textarea.*;
  * @see View#getEditPanes()
  *
  * @author Slava Pestov
- * @version $Id: EditPane.java,v 1.44 2003/06/05 00:44:53 spestov Exp $
+ * @version $Id: EditPane.java,v 1.45 2003/06/11 01:15:31 spestov Exp $
  */
 public class EditPane extends JPanel implements EBComponent
 {
@@ -386,7 +386,7 @@ public class EditPane extends JPanel implements EBComponent
 	{
 		TextAreaPainter painter = textArea.getPainter();
 
-		painter.setFont(UIManager.getFont("TextArea.font"));
+		painter.setFont(jEdit.getFontProperty("view.font"));
 		painter.setBracketHighlightEnabled(jEdit.getBooleanProperty(
 			"view.bracketHighlight"));
 		painter.setBracketHighlightColor(

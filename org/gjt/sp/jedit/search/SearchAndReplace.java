@@ -60,7 +60,7 @@ import org.gjt.sp.util.Log;
  *
  * @author Slava Pestov
  * @author John Gellene (API documentation)
- * @version $Id: SearchAndReplace.java,v 1.49 2003/06/04 01:44:17 spestov Exp $
+ * @version $Id: SearchAndReplace.java,v 1.50 2003/06/11 01:15:32 spestov Exp $
  */
 public class SearchAndReplace
 {
@@ -644,6 +644,8 @@ loop:			for(;;)
 				textArea.setSelection(new Selection.Range(
 					start - match[1],
 					start - match[0]));
+				// make sure end of match is visible
+				textArea.scrollTo(start - match[0],false);
 				textArea.moveCaretPosition(start - match[1]);
 			}
 			else
@@ -652,6 +654,8 @@ loop:			for(;;)
 					start + match[0],
 					start + match[1]));
 				textArea.moveCaretPosition(start + match[1]);
+				// make sure start of match is visible
+				textArea.scrollTo(start + match[0],false);
 			}
 
 			return true;
