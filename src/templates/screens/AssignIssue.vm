@@ -127,7 +127,9 @@
 				#if ($attrId.equals($selectUserAttr.AttributeId.toString())) 
                     #set ($selected = true)
                 #end
-				<option value="$selectUserAttr.AttributeId" #selected($selected) >$selectUserAttr.Name</option>
+                #if ($assignedUser.hasPermission($selectUserAttr.Permission, $module))
+				  <option value="$selectUserAttr.AttributeId" #selected($selected) >$selectUserAttr.Name</option>
+                #end
 			 #end
 			   </select></td>
 			</tr>
