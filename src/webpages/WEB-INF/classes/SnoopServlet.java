@@ -1,4 +1,4 @@
-/* $Id: SnoopServlet.java,v 1.2 1999/10/15 21:31:48 duncan Exp $
+/* $Id: SnoopServlet.java,v 1.3 1999/10/15 21:31:49 duncan Exp $
  *
  */
 

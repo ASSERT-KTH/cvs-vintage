@@ -51,6 +51,9 @@
     <javac srcdir="src/examples/WEB-INF/classes"
      destdir="${tomcat.build}/examples/WEB-INF/classes"
      classpath="${tomcat.build}/classes"/>
+    <javac srcdir="src/webpages/WEB-INF/classes"
+     destdir="${tomcat.build}/webpages/WEB-INF/classes"
+     classpath="${tomcat.build}/classes"/>
 
     <javac srcdir="src/examples/jsp/plugin/applet"
      destdir="${tomcat.build}/examples/jsp/plugin/applet"/>
