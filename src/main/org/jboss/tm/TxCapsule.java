@@ -48,7 +48,7 @@ import org.jboss.util.timeout.TimeoutFactory;
  *  @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  *  @author <a href="mailto:osh@sparre.dk">Ole Husgaard</a>
  *
- *  @version $Revision: 1.24 $
+ *  @version $Revision: 1.25 $
  */
 class TxCapsule implements TimeoutTarget
 {
@@ -380,6 +380,10 @@ class TxCapsule implements TimeoutTarget
 
       } finally {
         unlock();
+
+        // This instance is now ready for reuse (when we release the lock).
+        if (done)
+           releaseInstance(this);
       }
    }
 
@@ -425,6 +429,10 @@ class TxCapsule implements TimeoutTarget
          }
       } finally {
          unlock();
+
+        // This instance is now ready for reuse (when we release the lock).
+        if (done)
+           releaseInstance(this);
       }
    }
 
@@ -1383,9 +1391,6 @@ else {
       // If using a special class, second constructor argument is now useless.
       if (xidConstructor != null)
         xidConstructorArgs[1] = null; // This now needs initializing
-
-      // This instance is now ready for reuse (when we release the lock).
-      releaseInstance(this);
    }
 
    /**
