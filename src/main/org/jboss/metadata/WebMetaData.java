@@ -6,17 +6,21 @@
  */
 package org.jboss.metadata;
 
-import org.jboss.deployment.DeploymentException;
-import org.jboss.logging.Logger;
-import org.jboss.mx.util.ObjectNameFactory;
-import org.w3c.dom.Element;
-
 import java.net.URLClassLoader;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
+import javax.management.MalformedObjectNameException;
+
+import org.jboss.deployment.DeploymentException;
+import org.jboss.logging.Logger;
+import org.jboss.mx.loading.LoaderRepositoryFactory;
+import org.jboss.mx.loading.LoaderRepositoryFactory.LoaderRepositoryConfig;
+import org.jboss.mx.util.ObjectNameFactory;
+import org.w3c.dom.Element;
 
 /** A representation of the web.xml and jboss-web.xml deployment
  * descriptors as used by the AbstractWebContainer web container integration
@@ -26,7 +30,7 @@ import java.util.Set;
  * @see org.jboss.web.AbstractWebContainer
  
  * @author Scott.Stark@jboss.org
- * @version $Revision: 1.29 $
+ * @version $Revision: 1.30 $
  */
 public class WebMetaData extends MetaData
 {
@@ -56,6 +60,8 @@ public class WebMetaData extends MetaData
    private boolean distributable = false;
    /** The jboss-web.xml class-loading.java2ClassLoadingCompliance flag */
    private boolean java2ClassLoadingCompliance = false;
+   /** The jboss-web.xml class-loading/loader-repository */
+   private LoaderRepositoryConfig loaderConfig;
    /** The war context root as specified at the jboss-web.xml descriptor level. */
    private String contextRoot;
    /** The JACC context id for the container */
@@ -249,9 +255,9 @@ public class WebMetaData extends MetaData
    /** Access the web application depends
     * @return Iterator of JMX ObjectNames the web app depends on.
     */ 
-   public Iterator getDepends()
+   public Collection getDepends()
    {
-      return depends.iterator();
+      return depends;
    }
 
    /** A flag indicating if the normal Java2 parent first class loading model
@@ -265,6 +271,15 @@ public class WebMetaData extends MetaData
    public void setJava2ClassLoadingCompliance(boolean flag)
    {
       java2ClassLoadingCompliance = flag;
+   }
+
+   public LoaderRepositoryConfig getLoaderConfig()
+   {
+      return loaderConfig;
+   }
+   public void setLoaderConfig(LoaderRepositoryConfig loaderConfig)
+   {
+      this.loaderConfig = loaderConfig;
    }
 
    public ClassLoader getENCLoader()
@@ -650,9 +665,28 @@ public class WebMetaData extends MetaData
 
       }
 
-      /* The jboss-web/class-loading.java2ClassLoadingCompliance attribute is
-      parsed by the AbstractWebContainer since it can be overriden at that
-      level and the loader-repository config is needed early
-      */
+      // Check for a war level class loading config
+      Element classLoading = MetaData.getOptionalChild(jbossWeb, "class-loading");
+      if( classLoading != null )
+      {
+         String flagString = classLoading.getAttribute("java2ClassLoadingCompliance");
+         if( flagString.length() == 0 )
+            flagString = "true";
+         boolean flag = Boolean.valueOf(flagString).booleanValue();
+         setJava2ClassLoadingCompliance(flag);
+         // Check for a loader-repository for scoping
+         Element loader = MetaData.getOptionalChild(classLoading, "loader-repository");
+         if( loader != null )
+         {
+            try
+            {
+               loaderConfig = LoaderRepositoryFactory.parseRepositoryConfig(loader);
+            }
+            catch (MalformedObjectNameException e)
+            {
+               throw new DeploymentException(e);
+            }
+         }
+      }
    }
 }
