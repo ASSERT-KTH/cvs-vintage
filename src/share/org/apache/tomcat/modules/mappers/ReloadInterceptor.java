@@ -160,7 +160,6 @@ public class ReloadInterceptor extends  BaseInterceptor
 	context.setAttribute( "org.apache.tomcat.classloader", loader);
     }
 
-    
     public int contextMap( Request request ) {
 	Context ctx=request.getContext();
 	if( ctx==null) return 0;
@@ -184,59 +183,68 @@ public class ReloadInterceptor extends  BaseInterceptor
 	    ContextManager cm=ctx.getContextManager();
 	    
 	    if( fullReload ) {
-		Vector sI=new Vector();  // saved local interceptors
-		BaseInterceptor[] eI;    // all exisiting interceptors
+		synchronized(ctx) {
+		    if(ctx.getState() == Context.STATE_NEW)
+			return 0; // Already reloaded.
+		    Vector sI=new Vector();  // saved local interceptors
+		    BaseInterceptor[] eI;    // all exisiting interceptors
 
-		// save the ones with the same context, they are local
-		eI=ctx.getContainer().getInterceptors();
-		for(int i=0; i < eI.length ; i++)
-		    if(ctx == eI[i].getContext()) sI.addElement(eI[i]);
-                
-		Enumeration e;
-		// Need to find all the "config" that
-		// was read from server.xml.
-		// So far we work as if the admin interface was
-		// used to remove/add the context.
-		// Or like the deploytool in J2EE.
-		Context ctx1=cm.createContext();
-		ctx1.setContextManager( cm );
-		ctx1.setPath(ctx.getPath());
-		ctx1.setDocBase(ctx.getDocBase());
-		ctx1.setReloadable( ctx.getReloadable());
-		ctx1.setDebug( ctx.getDebug());
-		ctx1.setHost( ctx.getHost());
-		ctx1.setTrusted( ctx.isTrusted());
-		e=ctx.getHostAliases();
-		while( e.hasMoreElements())
-		    ctx1.addHostAlias( (String)e.nextElement());
+		    // save the ones with the same context, they are local
+		    eI=ctx.getContainer().getInterceptors();
+		    for(int i=0; i < eI.length ; i++)
+			if(ctx == eI[i].getContext()) sI.addElement(eI[i]);
+		    
+		    Enumeration e;
+		    // Need to find all the "config" that
+		    // was read from server.xml.
+		    // So far we work as if the admin interface was
+		    // used to remove/add the context.
+		    // Or like the deploytool in J2EE.
+		    Context ctx1=cm.createContext();
+		    ctx1.setContextManager( cm );
+		    ctx1.setPath(ctx.getPath());
+		    ctx1.setDocBase(ctx.getDocBase());
+		    ctx1.setReloadable( ctx.getReloadable());
+		    ctx1.setDebug( ctx.getDebug());
+		    ctx1.setHost( ctx.getHost());
+		    ctx1.setTrusted( ctx.isTrusted());
+		    e=ctx.getHostAliases();
+		    while( e.hasMoreElements())
+			ctx1.addHostAlias( (String)e.nextElement());
 
-		cm.removeContext( ctx );
+		    BaseInterceptor ri[] = 
+			cm.getContainer().getInterceptors(Container.H_copyContext);
+		    int i;
+		    for( i=0; i < ri.length; i++) {
+			ri[i].copyContext(request, ctx, ctx1);
+		    }
+		    cm.removeContext( ctx );
+		    
+		    cm.addContext( ctx1 );
 
-		cm.addContext( ctx1 );
+		    // put back saved local interceptors
+		    e=sI.elements();
+		    while(e.hasMoreElements()){
+			BaseInterceptor savedI=(BaseInterceptor)e.nextElement();
+			
+			ctx1.addInterceptor(savedI);
+			savedI.setContext(ctx1);
+			savedI.reload(request,ctx1);
+		    }
 
-		// put back saved local interceptors
-		e=sI.elements();
-		while(e.hasMoreElements()){
-		    BaseInterceptor savedI=(BaseInterceptor)e.nextElement();
+		    ctx1.init();
 
-		    ctx1.addInterceptor(savedI);
-		    savedI.setContext(ctx1);
-		    savedI.reload(request,ctx1);
+		    // remap the request
+		    request.setAttribute("tomcat.ReloadInterceptor", this);
+		    ri = cm.getContainer().getInterceptors(Container.H_contextMap);
+		    
+		    for( i=0; i< ri.length; i++ ) {
+			if( ri[i]==this ) break;
+			int status=ri[i].contextMap( request );
+			if( status!=0 ) return status;
+		    }
 		}
-
-		ctx1.init();
-
-		// remap the request
-		request.setAttribute("tomcat.ReloadInterceptor", this);
-		BaseInterceptor ri[]=
-		    cm.getContainer().getInterceptors(Container.H_contextMap);
-		
-		for( int i=0; i< ri.length; i++ ) {
-		    if( ri[i]==this ) break;
-		    int status=ri[i].contextMap( request );
-		    if( status!=0 ) return status;
-		}
-
+		    
 	    } else {
 		// This is the old ( buggy) behavior
 		// ctx.reload() has some fixes - it removes most of the
