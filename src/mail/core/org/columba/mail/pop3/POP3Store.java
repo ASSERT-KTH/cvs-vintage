@@ -71,7 +71,6 @@ public class POP3Store {
     
     private POP3Protocol protocol;
     private PopItem popItem;
-    private POP3PreProcessingFilterPluginHandler handler;
     private Map filterCache = new Hashtable();
     private StatusObservableImpl observable;
     
@@ -93,14 +92,6 @@ public class POP3Store {
         
         // add status information observable
         observable = new StatusObservableImpl();
-        
-        try {
-            handler = (POP3PreProcessingFilterPluginHandler)
-PluginManager.getInstance().getHandler(
-                    "org.columba.mail.pop3preprocessingfilter");
-        } catch (PluginHandlerNotFoundException ex) {
-            LOG.severe("POP3 preprocessing filter plugin handler not found");
-        }
     }
     
     public List getUIDList() throws Exception {
@@ -168,72 +159,6 @@ PluginManager.getInstance().getHandler(
     public boolean deleteMessage(Object uid) throws CommandCancelledException, IOException, POP3Exception {
         ensureTransaction();
         return protocol.dele(getIndex(uid));
-    }
-    
-    /**
-     * load the preprocessing filter pipe on message source
-     *
-     * @param rawString
-     *            messagesource
-     * @return modified messagesource
-     */
-    protected String modifyMessage(String rawString) {
-        // pre-processing filter-pipe
-        // configuration example (/accountlist/<my-example-account>/popserver):
-        //
-        //	<pop3preprocessingfilterlist>
-        //	  <pop3preprocessingfilter name="myFilter"
-        // class="myPackage.MyFilter"/>
-        //    <pop3preprocessingfilter name="mySecondFilter"
-        // class="myPackage.MySecondFilter"/>
-        //	</pop3preprocessingfilterlist>
-        //
-        XmlElement listElement = popItem.getElement("pop3preprocessingfilterlist");
-        
-        if (listElement == null) {
-            return rawString;
-        }
-        
-        // go through all filters and apply them to the
-        // rawString variable
-        for (int i = 0; i < listElement.count(); i++) {
-            XmlElement rootElement = listElement.getElement(i);
-            String type = rootElement.getAttribute("name");
-            
-            Object[] args = {rootElement};
-            
-            AbstractPOP3PreProcessingFilter filter = null;
-            
-            try {
-                //		try to re-use already instanciated class
-                if (filterCache.containsKey(type)) {
-                    LOG.info("re-using cached instanciation =" + type);
-                    filter = (AbstractPOP3PreProcessingFilter) filterCache
-                    .get(type);
-                } else {
-                    if (handler != null) {
-                        filter = (AbstractPOP3PreProcessingFilter)
-                            handler.getPlugin(type, args);
-                    }
-                }
-            } catch (PluginLoadingFailedException plfe) {}
-            
-            if (filter != null) {
-                // Filter was loaded correctly
-                //  -> apply filter --> modify messagesource
-                LOG.info("applying pop3 filter..");
-                
-                if (filter != null) {
-                    filterCache.put(type, filter);
-                }
-                
-                rawString = filter.modify(rawString);
-                
-                LOG.info("rawString=" + rawString);
-            }
-        }
-        
-        return rawString;
     }
     
     protected int getIndex(Object uid) throws IOException, POP3Exception,
