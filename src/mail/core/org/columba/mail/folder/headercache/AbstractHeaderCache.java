@@ -217,7 +217,7 @@ public abstract class AbstractHeaderCache {
 
 		h.set("columba.size", new Integer(p.readInt()));
 
-		h.set("columba.from", p.readUTF());
+		h.set("columba.from", p.readObject());
 
 		h.set("columba.priority", new Integer(p.readInt()));
 
@@ -281,8 +281,8 @@ public abstract class AbstractHeaderCache {
 		p.writeLong(((Date) h.get("columba.date")).getTime());
 
 		p.writeInt(((Integer) h.get("columba.size")).intValue());
-
-		p.writeUTF((String) h.get("columba.from"));
+		
+		p.writeObject( h.get("columba.from") );
 
 		p.writeInt(((Integer) h.get("columba.priority")).intValue());
 
