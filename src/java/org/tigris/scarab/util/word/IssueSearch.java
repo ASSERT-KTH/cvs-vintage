@@ -699,8 +699,7 @@ public class IssueSearch
             if ( minId == null || minId.length() == 0 ) 
             {
                 maxFid = new Issue.FederatedId(maxId);
-                //minFid = new Issue.FederatedId(maxFid.getDomainId(),
-                //                               maxFid.getPrefix(), 1);
+                setDefaults(null, maxFid);
                 crit.add(IssuePeer.ID_DOMAIN, maxFid.getDomain());
                 crit.add(IssuePeer.ID_PREFIX, maxFid.getPrefix());
                 crit.add(IssuePeer.ID_COUNT, maxFid.getCount(), 
@@ -709,6 +708,7 @@ public class IssueSearch
             else if ( maxId == null || maxId.length() == 0 ) 
             {
                 minFid = new Issue.FederatedId(minId);
+                setDefaults(minFid, null);
                 crit.add(IssuePeer.ID_DOMAIN, minFid.getDomain());
                 crit.add(IssuePeer.ID_PREFIX, minFid.getPrefix());
                 crit.add(IssuePeer.ID_COUNT, minFid.getCount(), 
@@ -719,15 +719,7 @@ public class IssueSearch
             {
                 minFid = new Issue.FederatedId(minId);
                 maxFid = new Issue.FederatedId(maxId);
-                // give reasonable defaults if module code was not specified
-                if ( minFid.getPrefix() == null ) 
-                {
-                    minFid.setPrefix(getModule().getCode());
-                }
-                if ( maxFid.getPrefix() == null ) 
-                {
-                    maxFid.setPrefix(minFid.getPrefix());
-                }
+                setDefaults(minFid, maxFid);
                 
                 // make sure min id is less than max id and that the character
                 // parts are equal otherwise skip the query, there are no 
@@ -756,6 +748,22 @@ public class IssueSearch
         }
     }
 
+    /**
+     * give reasonable defaults if module code was not specified
+     */
+    private void setDefaults(FederatedId minFid, 
+                             FederatedId maxFid)
+        throws Exception
+    {
+        if ( minFid != null && minFid.getPrefix() == null ) 
+        {
+            minFid.setPrefix(getModule().getCode());
+        }
+        if ( maxFid != null && maxFid.getPrefix() == null ) 
+        {
+            maxFid.setPrefix(minFid.getPrefix());
+        }
+    }
 
     private void addCreatedDateRange(Criteria crit)
         throws ScarabException
