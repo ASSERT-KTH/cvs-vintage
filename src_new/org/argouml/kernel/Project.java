@@ -1,4 +1,4 @@
-// $Id: Project.java,v 1.67 2003/05/30 14:53:03 kataka Exp $
+// $Id: Project.java,v 1.68 2003/06/01 09:01:55 linus Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -879,6 +879,27 @@ public class Project implements java.io.Serializable, TargetListener {
     public Vector getDiagrams() {
         return _diagrams;
     }
+
+    /**
+     * Finds a diagram with a specific name or UID.
+     *
+     * @returns the diagram object (if found). Otherwize null.
+     * @param name is the name to search for.
+     */
+    public ArgoDiagram getDiagram(String name) {
+	Iterator it = _diagrams.iterator();
+	while (it.hasNext()) {
+	    ArgoDiagram ad = (ArgoDiagram)it.next();
+	    if (ad.getName() != null
+		&& ad.getName().equals(name))
+		return ad;
+	    if (ad.getItemUID() != null
+		&& ad.getItemUID().toString().equals(name))
+		return ad;
+	}
+	return null;
+    } 
+
     public void addDiagram(ArgoDiagram d) {
         // send indeterminate new value instead of making copy of vector
         _diagrams.addElement(d);
