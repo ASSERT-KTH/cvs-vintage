@@ -237,8 +237,17 @@
   <!-- ************************************-->
   <!-- *********     TEST ALL    **********-->
   <!-- ************************************-->
-  <target name="test.all" description="Lauch all the test">   
+  <target name="test.all" description="Lauch all the test" depends="dist">   
     <multipleAnt dir="${test.conform}" />
+  </target> 
+
+  <!-- ************************************-->
+  <!-- *********     JVM test   **********-->
+  <!-- ************************************-->
+  <target name="rjvm.shell" description="Lauch the jvm bootstraper and test on the local machine" depends="dist">   
+    <java classname="org.objectweb.carol.util.bootstrap.RJVMShell">
+      <classpath refid="test.classpath"/>
+    </java>
   </target> 
 
   <!-- **********************************-->

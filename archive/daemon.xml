@@ -1,0 +1,7 @@
+<project name="carol.daemon.archive" default="dist.jar">
+  <target name="dist.jar">
+    <!-- CAROL JAR -->
+    <jar jarfile="${dist.lib}/daemon.jar"
+      manifest="${archive}/daemon.mf"/>
+  </target>
+</project>

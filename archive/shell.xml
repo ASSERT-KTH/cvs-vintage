@@ -1,0 +1,7 @@
+<project name="carol.shell.archive" default="dist.jar">
+  <target name="dist.jar">
+    <!-- CAROL JAR -->
+    <jar jarfile="${dist.lib}/shell.jar"
+      manifest="${archive}/shell.mf"/>
+  </target>
+</project>

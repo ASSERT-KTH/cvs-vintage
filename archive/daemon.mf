@@ -1,0 +1,9 @@
+Manifest-Version: 1.0
+Specification-Title: "carol daemon"
+Specification-Version: "1.0.2"
+Specification-Vendor: "ObjectWeb"
+Implementation-Title: "org.objectweb.carol.util.bootstrap"
+Implementation-Version: "1.0.2"
+Implementation-Vendor: "INRIA"
+Main-Class: org.objectweb.carol.util.bootstrap.RJVMServerDaemon
+Class-Path: carol.jar commons-cli.jar
