@@ -46,6 +46,8 @@ package org.tigris.scarab.services.security;
  * individuals on behalf of Collab.Net.
  */ 
 
+import java.util.List;
+import java.util.ArrayList;
 
 import org.apache.commons.collections.ExtendedProperties;
 import org.apache.fulcrum.Service;
@@ -53,13 +55,12 @@ import org.apache.fulcrum.BaseService;
 import org.apache.fulcrum.TurbineServices;
 import org.apache.torque.om.ObjectKey;
 import org.tigris.scarab.om.ScarabUser;
-import java.util.List;
 
 /**
  * This class provides access to security properties
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: ScarabSecurity.java,v 1.2 2001/11/01 18:13:34 jmcnally Exp $
+ * @version $Id: ScarabSecurity.java,v 1.3 2001/11/19 03:25:29 jmcnally Exp $
  */
 public class ScarabSecurity 
     extends BaseService
@@ -135,7 +136,9 @@ public class ScarabSecurity
     public static final String MODULE__ADD = 
         getService().getPermissionImpl("Module__Add");
 
+
     private ExtendedProperties props;
+    private List allPermissions;
 
     public ScarabSecurity()
     {
@@ -145,6 +148,27 @@ public class ScarabSecurity
     {
         props = getConfiguration();
         setInit(true);
+    }
+
+    protected List getAllPermissionsImpl()
+    {
+        if ( allPermissions == null ) 
+        {
+            List tmpPerms = new ArrayList();
+            tmpPerms.add(ISSUE__EDIT);
+            tmpPerms.add(ISSUE__ENTER);
+            tmpPerms.add(ISSUE__VIEW);
+            tmpPerms.add(ISSUE__SEARCH);
+            tmpPerms.add(ITEM__APPROVE);
+            tmpPerms.add(ITEM__DELETE);
+            tmpPerms.add(USER__EDIT_PREFERENCES);
+            tmpPerms.add(DOMAIN__EDIT);
+            tmpPerms.add(MODULE__EDIT);
+            tmpPerms.add(MODULE__ADD);
+            allPermissions = tmpPerms;
+        }
+        
+        return allPermissions;
     }
 
     protected String getScreenPermissionImpl(String screen)
@@ -161,6 +185,11 @@ public class ScarabSecurity
     // *******************************************************************
     // static accessors
     // *******************************************************************
+
+    public static List getAllPermissions()
+    {
+        return getService().getAllPermissionsImpl();
+    }
 
     public static String getScreenPermission(String screen)
     {
