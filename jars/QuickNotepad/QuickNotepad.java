@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
- * $Id: QuickNotepad.java,v 1.1 2001/09/02 05:39:26 spestov Exp $
+ * $Id: QuickNotepad.java,v 1.2 2001/11/09 20:26:17 jgellene Exp $
  */
 
 // from Java:
@@ -35,7 +35,7 @@ import javax.swing.event.*;
 import org.gjt.sp.jedit.*;
 import org.gjt.sp.jedit.gui.*;
 import org.gjt.sp.jedit.io.*;
-import org.gjt.sp.jedit.msg.CreateDockableWindow;
+//import org.gjt.sp.jedit.msg.CreateDockableWindow;
 import org.gjt.sp.jedit.msg.PropertiesChanged;
 import org.gjt.sp.jedit.msg.ViewUpdate;
 import org.gjt.sp.util.Log;

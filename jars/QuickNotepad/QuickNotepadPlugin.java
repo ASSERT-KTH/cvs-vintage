@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
- * $Id: QuickNotepadPlugin.java,v 1.1 2001/09/02 05:39:27 spestov Exp $
+ * $Id: QuickNotepadPlugin.java,v 1.2 2001/11/09 20:26:17 jgellene Exp $
  */
 
 import java.util.Vector;
@@ -27,7 +27,7 @@ import java.awt.event.*;
 import org.gjt.sp.jedit.*;
 import org.gjt.sp.util.Log;
 import org.gjt.sp.jedit.gui.*;
-import org.gjt.sp.jedit.msg.CreateDockableWindow;
+//import org.gjt.sp.jedit.msg.CreateDockableWindow;
 
 
 /**
@@ -44,7 +44,7 @@ public class QuickNotepadPlugin extends EBPlugin
 
     public void start()
 	{
-        EditBus.addToNamedList(DockableWindow.DOCKABLE_WINDOW_LIST, NAME);
+//      EditBus.addToNamedList(DockableWindow.DOCKABLE_WINDOW_LIST, NAME);
     }
 
 
@@ -64,7 +64,7 @@ public class QuickNotepadPlugin extends EBPlugin
         od.addOptionPane(new QuickNotepadOptionPane());
     }
 
-
+/*
     public void handleMessage(EBMessage message)
 	{
         if(message instanceof CreateDockableWindow)
@@ -81,6 +81,6 @@ public class QuickNotepadPlugin extends EBPlugin
             }
         }
     }
-
+*/
 }
 
