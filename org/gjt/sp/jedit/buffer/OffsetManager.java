@@ -39,7 +39,7 @@ import org.gjt.sp.util.Log;
  * called through, implements such protection.
  *
  * @author Slava Pestov
- * @version $Id: OffsetManager.java,v 1.60 2003/04/22 19:27:58 spestov Exp $
+ * @version $Id: OffsetManager.java,v 1.61 2003/04/23 01:59:44 spestov Exp $
  * @since jEdit 4.0pre1
  */
 public class OffsetManager
@@ -415,7 +415,7 @@ public class OffsetManager
 		this.endOffsets = endOffsets.getArray();
 		lineInfo = new int[lineCount];
 		for(int i = 0; i < lineInfo.length; i++)
-			lineInfo[i] = VISIBLE_MASK;
+			lineInfo[i] = ((1 << SCREEN_LINES_SHIFT) | VISIBLE_MASK);
 
 		lineContext = new TokenMarker.LineContext[lineCount];
 
