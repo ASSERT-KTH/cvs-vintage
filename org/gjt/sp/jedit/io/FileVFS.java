@@ -34,7 +34,7 @@ import org.gjt.sp.util.Log;
 /**
  * Local filesystem VFS.
  * @author Slava Pestov
- * @version $Id: FileVFS.java,v 1.16 2002/01/02 04:49:58 spestov Exp $
+ * @version $Id: FileVFS.java,v 1.17 2002/01/05 03:26:28 spestov Exp $
  */
 public class FileVFS extends VFS
 {
@@ -392,11 +392,8 @@ public class FileVFS extends VFS
 	//{{{ _saveComplete() method
 	public void _saveComplete(Object session, Buffer buffer, Component comp)
 	{
-		if(jEdit.getBooleanProperty("twoStageSave"))
-		{
-			int permissions = buffer.getIntegerProperty(PERMISSIONS_PROPERTY,0);
-			setPermissions(buffer.getPath(),permissions);
-		}
+		int permissions = buffer.getIntegerProperty(PERMISSIONS_PROPERTY,0);
+		setPermissions(buffer.getPath(),permissions);
 	} //}}}
 
 	//{{{ Permission preservation code

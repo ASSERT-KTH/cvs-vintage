@@ -3,7 +3,7 @@
  * :tabSize=8:indentSize=8:noTabs=false:
  * :folding=explicit:collapseFolds=1:
  *
- * Copyright (C) 2001 Slava Pestov
+ * Copyright (C) 2001, 2002 Slava Pestov
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -24,6 +24,7 @@ package org.gjt.sp.jedit;
 
 //{{{ Imports
 import javax.swing.*;
+import java.awt.datatransfer.*;
 import java.awt.event.*;
 import java.awt.*;
 import org.gjt.sp.jedit.msg.ViewUpdate;
@@ -37,7 +38,7 @@ import org.gjt.sp.util.Log;
  * this file out.
  * @since jEdit 4.0pre4
  * @author Slava Pestov
- * @version $Id: Java14.java,v 1.3 2001/12/29 09:35:24 spestov Exp $
+ * @version $Id: Java14.java,v 1.4 2002/01/05 03:26:28 spestov Exp $
  */
 public class Java14
 {
@@ -68,7 +69,13 @@ public class Java14
 			}
 		});
 
-		Log.log(Log.DEBUG,BeanShell.class,"Java 2 version 1.4 initialization complete");
+		Clipboard selection = Toolkit.getDefaultToolkit().getSystemSelection();
+		if(selection != null)
+		{
+			Log.log(Log.DEBUG,Java14.class,"Setting % register"
+				+ " to system selection");
+			Registers.setRegister('%',new Registers.ClipboardRegister(selection));
+		}
 	} //}}}
 
 	//{{{ MyFocusManager class
