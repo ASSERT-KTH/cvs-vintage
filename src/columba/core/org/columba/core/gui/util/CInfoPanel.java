@@ -24,51 +24,48 @@ import javax.swing.BorderFactory;
 import javax.swing.JPanel;
 import javax.swing.UIManager;
 
-public class CInfoPanel extends JPanel
-{
+public class CInfoPanel extends JPanel {
 	protected JPanel panel;
 	protected GridBagLayout gridbagLayout;
 	protected GridBagConstraints gridbagConstraints;
-	
+
 	protected Font font;
-	
-	public CInfoPanel()
-	{
+
+	public CInfoPanel() {
 		super();
-		
-		
+
 		font = UIManager.getFont("Label.font");
-	
-        font = font.deriveFont( Font.BOLD );
-        int size = font.getSize();
-        font = font.deriveFont( Font.BOLD, size+2 );
-	
-	
-		setBorder( BorderFactory.createEmptyBorder(1,1,1,1) );
+
+		/*
+		font = font.deriveFont(Font.BOLD);
+
 		
-		setLayout( new BorderLayout() );
-		      
+		int size = font.getSize();
+		font = font.deriveFont( Font.BOLD, size+2 );
+		*/
+
+		setBorder(BorderFactory.createEmptyBorder(1, 1, 1, 1));
+
+		setLayout(new BorderLayout());
+
 		panel = new JPanel();
-		
-		add( panel, BorderLayout.CENTER );
-		
-		 initComponents();
+
+		add(panel, BorderLayout.CENTER);
+
+		initComponents();
 	}
-	
-	
-	public void initComponents()
-    {
-        panel.removeAll();
 
+	public void initComponents() {
+		panel.removeAll();
+
+		gridbagLayout = new GridBagLayout();
+		panel.setLayout(gridbagLayout);
+
+		gridbagConstraints = new GridBagConstraints();
 		
-		
-        gridbagLayout = new GridBagLayout();
-        panel.setLayout( gridbagLayout );
-        
-        gridbagConstraints = new GridBagConstraints();;
 
-        panel.setLayout( gridbagLayout );
+		panel.setLayout(gridbagLayout);
 
-        panel.setBackground( UIManager.getColor("controlShadow") );
-    }
+		panel.setBackground(UIManager.getColor("controlShadow"));
+	}
 }

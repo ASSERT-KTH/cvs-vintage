@@ -156,6 +156,8 @@ public class TableController
 		
 	}
 	
+	
+	
 	public void addTableChangedListener( TableChangeListener l )
 	{
 		tableChangedListenerList.add(l);
@@ -547,6 +549,8 @@ public class TableController
 				}
 		}
 
+		getMailFrameController().folderInfoPanel.setFolder(srcFolder);
+		
 		fireTableChangedEvent(event);
 	}
 

@@ -6,8 +6,6 @@
  */
 package org.columba.mail.gui.util;
 
-import java.awt.event.MouseListener;
-
 import org.columba.core.action.IMenu;
 import org.columba.core.gui.frame.AbstractFrameController;
 import org.columba.core.gui.util.ImageLoader;

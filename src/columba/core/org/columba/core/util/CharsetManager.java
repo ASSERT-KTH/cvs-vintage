@@ -26,7 +26,6 @@ import javax.swing.JMenu;
 
 import org.columba.core.gui.util.CMenu;
 import org.columba.core.gui.util.CMenuItem;
-import org.columba.core.gui.util.ImageLoader;
 import org.columba.mail.util.MailResourceLoader;
 
 /**
@@ -109,7 +108,7 @@ public class CharsetManager implements ActionListener{
 
 	public CharsetManager() {
 		listeners = new Vector();
-		selectedId = 0;	// Todo: Make the menu remember its last setting
+		selectedId = 0;	// TODO: Make the menu remember its last setting
 	}
 
 	public void createMenu(JMenu subMenu, MouseListener handler) {

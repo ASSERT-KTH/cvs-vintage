@@ -15,9 +15,9 @@ import org.columba.core.gui.menu.Menu;
 import org.columba.core.gui.statusbar.StatusBar;
 import org.columba.core.gui.toolbar.ToolBar;
 import org.columba.mail.config.MailConfig;
+import org.columba.mail.gui.infopanel.FolderInfoPanel;
 import org.columba.mail.gui.menu.MailMenu;
 import org.columba.mail.gui.message.MessageView;
-import org.columba.mail.gui.tree.util.FolderInfoPanel;
 
 /**
  * @author frd

@@ -14,7 +14,7 @@
 //
 //All Rights Reserved.
 
-package org.columba.mail.gui.tree.util;		    
+package org.columba.mail.gui.infopanel;		    
 
 import java.awt.Component;
 import java.awt.Graphics;

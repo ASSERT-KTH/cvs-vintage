@@ -22,7 +22,6 @@ import org.columba.core.logging.ColumbaLogger;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.folder.Folder;
 import org.columba.mail.folder.FolderTreeNode;
-import org.columba.mail.gui.table.MessageSelectionListener;
 import org.columba.mail.gui.tree.selection.TreeSelectionListener;
 import org.columba.mail.gui.tree.selection.TreeSelectionManager;
 

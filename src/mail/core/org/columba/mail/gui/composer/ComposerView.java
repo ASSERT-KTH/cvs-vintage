@@ -100,6 +100,7 @@ public class ComposerView extends AbstractFrameView {
 		contentPane.add(toolbarPanel, BorderLayout.NORTH);
 		*/
 		
+		toolbarPane.add(controller.getIdentityInfoPanel());
 		
 		rightSplitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
 		rightSplitPane.setBorder(null);

@@ -37,6 +37,7 @@ import org.columba.mail.gui.action.GlobalActionCollection;
 import org.columba.mail.gui.attachment.AttachmentController;
 import org.columba.mail.gui.composer.HeaderController;
 import org.columba.mail.gui.frame.action.FrameActionListener;
+import org.columba.mail.gui.infopanel.FolderInfoPanel;
 import org.columba.mail.gui.message.MessageController;
 import org.columba.mail.gui.table.FilterToolbar;
 import org.columba.mail.gui.table.TableChangedEvent;
@@ -46,7 +47,6 @@ import org.columba.mail.gui.table.action.ViewMessageAction;
 import org.columba.mail.gui.tree.TreeController;
 import org.columba.mail.gui.tree.TreeView;
 import org.columba.mail.gui.tree.action.ViewHeaderListAction;
-import org.columba.mail.gui.tree.util.FolderInfoPanel;
 
 /**
  * @author freddy
@@ -218,6 +218,8 @@ public class MailFrameController extends AbstractFrameController {
 		messageController = new MessageController(this);
 
 		folderInfoPanel = new FolderInfoPanel();
+		//treeController.getTreeSelectionManager().addFolderSelectionListener(folderInfoPanel);
+		
 		filterToolbar = new FilterToolbar(tableController);
 
 		new DialogStore((MailFrameView) view);

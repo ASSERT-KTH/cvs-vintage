@@ -54,6 +54,10 @@ public class AccountController implements ItemListener {
 			}
 		}
 
+		AccountItem item = controller.getModel().getAccountItem();
+		
+		controller.getIdentityInfoPanel().set(item);
+					
 		view.addItemListener(this);
 	}
 
@@ -78,8 +82,15 @@ public class AccountController implements ItemListener {
 */
 
 	public void itemStateChanged(ItemEvent e) {
+		
+		
 		if (e.getStateChange() == ItemEvent.SELECTED) {
 			updateComponents(false);
+			
+			AccountItem item = (AccountItem) view.getSelectedItem();
+			controller.getIdentityInfoPanel().set(item);
+			
+			
 			/*
 			AccountItem item = (AccountItem) view.getSelectedItem();
 			composerInterface.identityInfoPanel.set(item);
@@ -95,6 +106,8 @@ public class AccountController implements ItemListener {
 	}
 
 	public void updateComponents(boolean b) {
+		
+					
 		if (b == true) {
 			view.setSelectedItem(((ComposerModel)controller.getModel()).getAccountItem());
 			

@@ -95,8 +95,8 @@ public class IdentityInfoPanel extends CInfoPanel {
 
 		label.setText(accountName + ":    " + name + " <" + address + ">");
 		
-		
-
+		revalidate();
+		repaint();
 	}
 
 }

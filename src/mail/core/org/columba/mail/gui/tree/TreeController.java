@@ -29,12 +29,12 @@ import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.folder.Folder;
 import org.columba.mail.folder.FolderTreeNode;
 import org.columba.mail.gui.frame.MailFrameController;
+import org.columba.mail.gui.infopanel.FolderInfoPanel;
 import org.columba.mail.gui.table.command.ViewHeaderListCommand;
 import org.columba.mail.gui.tree.action.FolderTreeActionListener;
 import org.columba.mail.gui.tree.command.FetchSubFolderListCommand;
 import org.columba.mail.gui.tree.selection.TreeSelectionHandler;
 import org.columba.mail.gui.tree.selection.TreeSelectionManager;
-import org.columba.mail.gui.tree.util.FolderInfoPanel;
 import org.columba.mail.gui.tree.util.FolderTreeCellRenderer;
 
 /**

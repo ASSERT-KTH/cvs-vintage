@@ -46,7 +46,7 @@ import org.columba.mail.gui.message.action.MessageActionListener;
 import org.columba.mail.gui.message.action.MessageFocusListener;
 import org.columba.mail.gui.message.action.MessagePopupListener;
 import org.columba.mail.gui.message.menu.MessageMenu;
-import org.columba.mail.gui.table.MessageSelectionListener;
+import org.columba.mail.gui.table.selection.MessageSelectionListener;
 import org.columba.mail.gui.util.URLController;
 import org.columba.mail.message.HeaderInterface;
 import org.columba.mail.message.MimePart;
