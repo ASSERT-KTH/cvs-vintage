@@ -294,15 +294,13 @@ public class Handler {
     // --------------- Error Handling ----------------
 
     /** If an error happens during init or service it will be saved in
-     *  request and response.
+     *  the response.
      */
     // XXX error handling in Handler shouldn't be exposed to childs, need
     // simplifications
     protected final void saveError( Request req, Response res, Exception ex ) {
-	// save current exception on the request
-	req.setErrorException( ex );
-	// if the first exception, save info on the response
-	if ( ! res.isExceptionPresent() ) {
+	// if a new exception
+	if ( res.getErrorException() != ex ) {
 	    res.setErrorException( ex );
 	    res.setErrorURI( (String)req.
 			  getAttribute("javax.servlet.include.request_uri"));

@@ -820,26 +820,6 @@ public class Request {
 	//return ((int)b[0]) & 0x000000FF;
     }
 
-    // ----------------- Error State -----------------
-
-    /** Set most recent exception that occurred while handling
-	this request.
-     */
-    public void setErrorException( Exception ex ) {
-	errorException = ex;
-    }
-
-    /** Get most recent exception that occurred while handling
-	this request.
-     */
-    public Exception getErrorException() {
-	return errorException;
-    }
-
-    public boolean isExceptionPresent() {
-	return ( errorException != null );
-    }
-
     // -------------------- debug --------------------
     
     public String toString() {

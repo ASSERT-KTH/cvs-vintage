@@ -447,7 +447,7 @@ public final class ServletHandler extends Handler {
 
 	// if unavailable
 	if( ! checkAvailable( req, res ) ) {
-	    handleServiceError( req, res, req.getErrorException());
+	    handleServiceError( req, res, res.getErrorException());
 	    return; // we can't handle it
 	}
 
@@ -479,26 +479,34 @@ public final class ServletHandler extends Handler {
 	    } else {
 		servlet.service(reqF, resF);
 	    }
+	// catch just UnavailableException, so we can set a timer if needed
+	// other exceptions will be thrown
 	} catch ( UnavailableException ex ) {
-	    if ( ex.isPermanent() ) {
-		setState( STATE_DISABLED );
-		// XXX spec says we must destroy the servlet
-	    }
-	    if ( null == getErrorException() ) {
-		synchronized(this) {
-		    if ( null == getErrorException() ) {
-			if ( state == STATE_DISABLED )
-			    // servlet exception state
-			    setErrorException( ex );
-			else
-			    // set expiration
-			    setServletUnavailable((UnavailableException)ex );
+	    // if new exception, save and set timer if necessary
+	    if ( res.getErrorException() != ex ) {
+		saveError( req, res, ex );
+		if ( ex.isPermanent() ) {
+		    setState( STATE_DISABLED );
+		    // XXX spec says we must destroy the servlet
+		}
+		if ( null == getErrorException() ) {
+		    synchronized(this) {
+			if ( null == getErrorException() ) {
+			    if ( state == STATE_DISABLED )
+				// set the permanet exception for future use
+				setErrorException( ex );
+			    else
+				// set expiration
+				setServletUnavailable((UnavailableException)ex );
+			}
 		    }
 		}
 	    }
-	    throw ex;
+	    handleServiceError( req, res, ex );
+	    return;
 	}
-	// other exceptions will be thrown
+	// clear any error exceptions, since none were thrown
+	saveError( req, res, null);
     }
 
     protected void handleInitError( Request req, Response res, Throwable t )
