@@ -6,10 +6,14 @@
   </properties>
 
   <body>
-    <release version="b19" date="in cvs">  
+    <release version="b19" date="in cvs">
       <action dev="epugh" type="add">
         Integrated Peter's scarab properties xml file to generate as part of the site docs.
-      </action>      
+      </action>
+      <action dev="hdabbous" type="fix">
+        Localised most (if not all) of the remaining unlocalised messages,
+        excluding exceptions.
+      </action>
       <action dev="epugh" type="fix">
         Updated Scarab to use the latest Turbine 3.  Turbine 3 (and T2.3) use a log4j.properties file for
         configuring logging.  Fixes the logs not showing up problem.
