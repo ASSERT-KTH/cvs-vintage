@@ -16,7 +16,7 @@
         early tests.
     -->
 
-     <property name="revision" value="$Revision: 1.33 $" />  
+     <property name="revision" value="$Revision: 1.34 $" />  
      <property name="host" value="127.0.0.1" />
      <property name="port"     value="8080" />
      <property name="outputType"     value="text" />
@@ -25,38 +25,62 @@
      <property name="http.protocol" value="HTTP/1.0" />
 
      <property name="gdir" value="../Golden" />
+     <property name="g.jar"
+	       value="${tomcat.home}/lib/container/tomcat_util.jar" />
+  
+     <path id="cp.g" >
+       <pathelement location="${g.jar}"/>
+     </path>
 
      <!-- ==================== Tasks ==================== -->     
      <taskdef name="httpClient" 
+	      classpathRef="cp.g"
 	      classname="org.apache.tomcat.util.test.HttpClient" />
      <taskdef name="httpRequest" 
+	      classpathRef="cp.g"
 	      classname="org.apache.tomcat.util.test.HttpRequest" />
      <taskdef name="header" 
+	      classpathRef="cp.g"
 	      classname="org.apache.tomcat.util.test.Header" />
      <taskdef name="param" 
+	      classpathRef="cp.g"
 	      classname="org.apache.tomcat.util.test.Parameter" />
      <taskdef name="cookie" 
+	      classpathRef="cp.g"
 	      classname="org.apache.tomcat.util.test.Cookie" />
      <taskdef name="body" 
+	      classpathRef="cp.g"
 	      classname="org.apache.tomcat.util.test.Body" />
      <taskdef name="goldenMatch" 
+	      classpathRef="cp.g"
 	      classname="org.apache.tomcat.util.test.matchers.GoldenMatch" />
      <taskdef name="headerMatch" 
+	      classpathRef="cp.g"
 	      classname="org.apache.tomcat.util.test.matchers.HeaderMatch" />
      <taskdef name="httpStatusMatch" 
-	   classname="org.apache.tomcat.util.test.matchers.HttpStatusMatch" />
+	      classpathRef="cp.g"
+	      classname="org.apache.tomcat.util.test.matchers.HttpStatusMatch" />
      <taskdef name="responseMatch" 
+	      classpathRef="cp.g"
 	      classname="org.apache.tomcat.util.test.matchers.ResponseMatch" />
      <taskdef name="responseMatchFile" 
-        classname="org.apache.tomcat.util.test.matchers.ResponseMatchFile" />
+	      classpathRef="cp.g"
+	      classname="org.apache.tomcat.util.test.matchers.ResponseMatchFile" />
+     <taskdef name="sessionMatch" 
+	      classpathRef="cp.g"
+	      classname="org.apache.tomcat.util.test.matchers.SessionMatch" />
      <taskdef name="comment" 
+	      classpathRef="cp.g"
 	      classname="org.apache.tomcat.util.test.Body" />
 
      <taskdef name="gtestDefaults"
+	      classpathRef="cp.g"
 	      classname="org.apache.tomcat.util.test.TestDefaults" />
 
      <!-- Backward compatibility -->
-     <taskdef name="gtest" classname="org.apache.tomcat.util.test.GTest" />
+     <taskdef name="gtest" 
+	      classpathRef="cp.g"
+	      classname="org.apache.tomcat.util.test.GTest" />
 
 
   <!-- ==================== Defaults ==================== -->
@@ -106,6 +130,16 @@
       </httpClient>
   </target>
   
+  <target name="enc" depends="init">
+      <httpClient>
+          <comment>Few romanian chars in UNICED</comment>
+          <httpRequest path="/test/servlet/params.Params">
+             <param name="a" value="Inscrie%C5%A3i-v%C4%83" />
+          </httpRequest>
+          <httpStatusMatch match="200" />
+      </httpClient>
+  </target>
+
   <target name="params" depends="init">
       <httpClient>
           <comment>Simple GET with parameters</comment>
@@ -451,6 +485,18 @@
       <httpClient>
           <comment>Get a session and then include a JSP.</comment>
           <httpRequest path="/test/servlet/dispatch.IncludeJspWithSession HTTP/1.0" />
+          <httpStatusMatch match="200" />
+          <responseMatch match="This is an inner file"/>
+          <headerMatch name="Set-Cookie" value="JSESSIONID=" />
+      </httpClient>
+
+    </target>
+
+  <target name="session" depends="init">
+      <httpClient>
+          <comment>Get a session and then include a JSP.</comment>
+          <httpRequest 
+	    path="/test/servlet/dispatch.IncludeJspWithSession HTTP/1.0" />
           <httpStatusMatch match="200" />
           <responseMatch match="This is an inner file"/>
           <headerMatch name="Set-Cookie" value="JSESSIONID=" />
@@ -1113,7 +1159,55 @@ mod_webapp into mod_jk )
 
    </target>
 
-   <target name="security_chk" depends="init">
+   <target name="security_chk_url" depends="init">
+      <httpClient >
+          <httpRequest path="/test/aaa/protected/a/../index.jsp" 
+		      method="GET" />
+          <httpStatusMatch match="200" magnitude="false"/>
+      </httpClient>
+      <httpClient >
+          <httpRequest path="/test/aaa/a/../protected/index.jsp" 
+		      method="GET" />
+          <httpStatusMatch match="200" magnitude="false"/>
+      </httpClient>
+      <httpClient >
+          <httpRequest path="/test/aaa//protected/index.jsp" 
+		      method="GET" />
+          <httpStatusMatch match="200" magnitude="false"/>
+      </httpClient>
+      <httpClient >
+          <httpRequest path="/test/../test/aaa/protected/a/../index.jsp" 
+		      method="GET" />
+          <httpStatusMatch match="200" magnitude="false"/>
+      </httpClient>
+      <httpClient >
+          <httpRequest path="/test/aaa/./protected/index.jsp" 
+		      method="GET" />
+          <httpStatusMatch match="200" magnitude="false"/>
+      </httpClient>
+      <httpClient >
+          <httpRequest path="/test/aaa/protected/../../snoop.jsp" 
+		      method="GET" />
+          <httpStatusMatch match="200"/>
+      </httpClient>
+      <httpClient >
+          <httpRequest path="/test/snoop.jsp/." 
+		      method="GET" />
+          <httpStatusMatch match="200"/>
+      </httpClient>
+      <httpClient >
+          <httpRequest path="/test/snoop.jsp/./" 
+		      method="GET" />
+          <httpStatusMatch match="200"/>
+      </httpClient>
+      <httpClient >
+          <httpRequest path="/test/snoop.jsp/foo/.." 
+		      method="GET" />
+          <httpStatusMatch match="200"/>
+      </httpClient>
+   </target>
+
+   <target name="security_chk" depends="init,security_chk_url">
       <gtest description="This URL should return 404 Not Found"
            request="GET /test/jsp/HelloWorld.jsp. HTTP/1.0"
            returnCode="${http.protocol} 404" 
