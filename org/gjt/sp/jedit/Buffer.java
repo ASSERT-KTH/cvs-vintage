@@ -68,7 +68,7 @@ import org.gjt.sp.util.*;
  * </ul>
  *
  * @author Slava Pestov
- * @version $Id: Buffer.java,v 1.227 2005/02/14 02:54:29 spestov Exp $
+ * @version $Id: Buffer.java,v 1.228 2005/02/15 00:49:28 spestov Exp $
  */
 public class Buffer
 {
@@ -1561,6 +1561,22 @@ public class Buffer
 				indentRules.add(rule);
 		}
 
+		String[] props = {
+			"indentOpenBrackets",
+			"indentCloseBrackets",
+			"electricKeys"
+		};
+
+		StringBuffer buf = new StringBuffer();
+		for(int i = 0; i < props.length; i++)
+		{
+			String prop = getStringProperty(props[i]);
+			if(prop != null)
+				buf.append(props[i]);
+		}
+
+		electricKeys = buf.toString();
+
 		EditBus.send(new BufferUpdate(this,null,BufferUpdate.PROPERTIES_CHANGED));
 	} //}}}
 
@@ -2603,6 +2619,17 @@ loop:		for(int i = 0; i < seg.count; i++)
 		}
 	} //}}}
 
+	//{{{ isElectricKey() method
+	/**
+	 * Should inserting this character trigger a re-indent of
+	 * the current line?
+	 * @since jEdit 4.3pre2
+	 */
+	public boolean isElectricKey(char ch)
+	{
+		return electricKeys.indexOf(ch) != -1;
+	} //}}}
+	
 	//}}}
 
 	//{{{ Deprecated methods
@@ -3346,6 +3373,7 @@ loop:		for(int i = 0; i < seg.count; i++)
 
 	// Auto indent
 	private List indentRules;
+	private String electricKeys;
 
 	private Socket waitSocket;
 	//}}}
