@@ -1,4 +1,4 @@
-// $Id: Modeller.java,v 1.100 2004/12/10 18:51:32 mvw Exp $
+// $Id: Modeller.java,v 1.101 2004/12/27 14:38:47 bobtarling Exp $
 // Copyright (c) 2003-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -35,6 +35,7 @@ import java.util.Vector;
 import java.util.Hashtable;
 
 import org.apache.log4j.Logger;
+import org.argouml.kernel.ProjectManager;
 import org.argouml.model.ModelFacade;
 import org.argouml.model.uml.CoreFactory;
 import org.argouml.model.uml.UmlFactory;
@@ -1253,9 +1254,11 @@ public class Modeller
      * created.
      */
     private Object getStereotype(Object me, String name, String baseClass) {
+        Collection models =
+            ProjectManager.getManager().getCurrentProject().getModels();
         Collection stereos =
             UmlHelper.getHelper().getExtensionMechanisms()
-	        .getAllPossibleStereotypes(me);
+	        .getAllPossibleStereotypes(models, me);
         if (stereos != null && stereos.size() > 0) {
             Iterator iter = stereos.iterator();
             while (iter.hasNext()) {

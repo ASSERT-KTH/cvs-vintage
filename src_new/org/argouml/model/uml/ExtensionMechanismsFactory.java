@@ -1,4 +1,4 @@
-// $Id: ExtensionMechanismsFactory.java,v 1.1 2004/11/01 19:55:06 mvw Exp $
+// $Id: ExtensionMechanismsFactory.java,v 1.2 2004/12/27 14:38:47 bobtarling Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -23,6 +23,8 @@
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
 package org.argouml.model.uml;
+
+import java.util.Collection;
 
 import org.argouml.kernel.ProjectManager;
 
@@ -159,8 +161,10 @@ public class ExtensionMechanismsFactory extends AbstractUmlModelFactory {
         stereo.setName(theName);
         stereo.setBaseClass(ExtensionMechanismsHelper.getHelper()
 			    .getMetaModelName(me));
+        Collection models =
+            ProjectManager.getManager().getCurrentProject().getModels();
         MStereotype stereo2 =
-	    ExtensionMechanismsHelper.getHelper().getStereotype(stereo);
+	    ExtensionMechanismsHelper.getHelper().getStereotype(models, stereo);
         if (stereo2 != null) {
             stereo2.addExtendedElement(me);
             UmlFactory.getFactory().delete(stereo);

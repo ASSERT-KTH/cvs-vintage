@@ -1,4 +1,4 @@
-// $Id: TestExtensionMechanismsHelper.java,v 1.2 2004/11/21 14:28:10 linus Exp $
+// $Id: TestExtensionMechanismsHelper.java,v 1.3 2004/12/27 14:38:47 bobtarling Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -28,6 +28,7 @@ import java.util.Collection;
 
 import junit.framework.TestCase;
 
+import org.argouml.kernel.ProjectManager;
 import org.argouml.util.CheckUMLModelHelper;
 
 import ru.novosoft.uml.foundation.core.MNamespace;
@@ -61,9 +62,11 @@ public class TestExtensionMechanismsHelper extends TestCase {
         MStereotype stereo2 =
 	    ExtensionMechanismsFactory.getFactory().buildStereotype(clazz,
 								    "test2");
+        Collection models =
+            ProjectManager.getManager().getCurrentProject().getModels();
         Collection col =
 	    ExtensionMechanismsHelper.getHelper()
-	        .getAllPossibleStereotypes(clazz);
+	        .getAllPossibleStereotypes(models, clazz);
         assertTrue("stereotype not in list of possible stereotypes",
 		   col.contains(stereo1));
         assertTrue("stereotype not in list of possible stereotypes",
