@@ -1,4 +1,4 @@
-// $Id: AddToDoItemDialog.java,v 1.18 2003/11/25 10:58:16 jhraigniac Exp $
+// $Id: AddToDoItemDialog.java,v 1.19 2003/12/01 18:22:15 jhraigniac Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -46,9 +46,9 @@ public class AddToDoItemDialog extends ArgoDialog {
     ////////////////////////////////////////////////////////////////
     // constants    
     private static final String PRIORITIES[] = {
-        localize("level.high"),
-        localize("level.medium"),
-        localize("level.low")
+        Translator.localize("misc.level.high"),
+        Translator.localize("misc.level.medium"),
+        Translator.localize("misc.level.low")
     };
     private static final int TEXT_ROWS = 8;
     private static final int TEXT_COLUMNS = 30;

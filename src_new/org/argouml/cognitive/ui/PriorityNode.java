@@ -1,4 +1,4 @@
-// $Id: PriorityNode.java,v 1.7 2003/11/25 10:58:16 jhraigniac Exp $
+// $Id: PriorityNode.java,v 1.8 2003/12/01 18:22:15 jhraigniac Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -30,11 +30,9 @@ import org.argouml.i18n.Translator;
 
 public class PriorityNode {
     // Private members.
-    private static final String BUNDLE = "Cognitive";
-
-    static final String high = Translator.localize(BUNDLE, "level.high");
-    static final String medium = Translator.localize(BUNDLE, "level.medium");
-    static final String low = Translator.localize(BUNDLE, "level.low");
+    static final String high = Translator.localize("misc.level.high");
+    static final String medium = Translator.localize("misc.level.medium");
+    static final String low = Translator.localize("misc.level.low");
 
     ////////////////////////////////////////////////////////////////
     // static variables and methods
