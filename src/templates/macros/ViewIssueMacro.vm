@@ -467,7 +467,9 @@
        #if ($act.Transaction.Attachment.DataAsString)
          $act.Transaction.Attachment.DataAsString
        #else Not provided. #end
-     #else Not provided. #end
+     #elseif ($act.Transaction.TransactionType.Name.equals("Create Issue"))
+           Initial Entry
+     #end
      </td>
      <td>
      #set ($user = $scarabR.getUser($act.Transaction.CreatedBy))
