@@ -1,7 +1,7 @@
 package org.tigris.scarab.word;
 
 /* ================================================================
- * Copyright (c) 2000 Collab.Net.  All rights reserved.
+ * Copyright (c) 2001 Collab.Net.  All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are
@@ -52,6 +52,7 @@ import java.util.*;
 // Turbine classes
 import org.apache.turbine.util.db.Criteria;
 
+// Scarab classes
 import org.tigris.scarab.om.*;
 
 /**
@@ -60,43 +61,10 @@ import org.tigris.scarab.om.*;
   */
 public class Vocabulary
 {
-    /**
-     *  this class represents a vocabulary entry
-     *
-     */
-
-    class Entry
-    {
-        private String word;
-        private int count;
-        private int firstPos;
-        private int rating=0;
-        private boolean isNew=true;
-
-        public Entry(String word, int firstPos)
-        {
-            this.word = word;
-            this.firstPos = firstPos;
-            this.count = 1;
-        }
-
-        public void inc()
-        {
-            this.count++;
-        }
-
-        public void setRating(int rating)
-        {
-            this.rating = rating;
-        }
-
-        public void setNew(boolean isNew)
-        {
-            this.isNew = isNew;
-        }
-    }
-
     private static HashSet ignoredWords;
+    private Hashtable words;
+    private int pos = 1;
+
     static
     {
         Criteria crit = new Criteria().add(WordPeer.IGNORE, 1);
@@ -112,9 +80,6 @@ public class Vocabulary
             //anything better than just swallowing the exception?
         }
     }
-
-    private Hashtable words;
-    private int pos = 1;
 
     public Vocabulary() throws Exception
     {
@@ -133,11 +98,11 @@ public class Vocabulary
      *  or in other cases when apropriate
      *
      */
-
     protected boolean ignore(String word)
     {
         /* for now only ignore words in the ignore list.
-            should _probably_ also ignore non-alpha words i.e. "3.1415" "&*%$#^" etc... */
+            should _probably_ also ignore non-alpha words i.e. 
+            "3.1415" "&*%$#^" etc... */
         return ignoredWords.contains(word);
     }
 
@@ -145,7 +110,6 @@ public class Vocabulary
      *  indexes more text. this is incremental.
      *
      */
-
     public void add(String text) throws Exception
     {
         StringTokenizer st = new StringTokenizer(text);
@@ -180,6 +144,41 @@ public class Vocabulary
                 entry.setRating(word.getRating());
                 entry.setNew(false);
             }
+        }
+    }
+
+    /**
+     *  this class represents a vocabulary entry
+     *
+     */
+    class Entry
+    {
+        private String word;
+        private int count;
+        private int firstPos;
+        private int rating=0;
+        private boolean isNew=true;
+
+        public Entry(String word, int firstPos)
+        {
+            this.word = word;
+            this.firstPos = firstPos;
+            this.count = 1;
+        }
+
+        public void inc()
+        {
+            this.count++;
+        }
+
+        public void setRating(int rating)
+        {
+            this.rating = rating;
+        }
+
+        public void setNew(boolean isNew)
+        {
+            this.isNew = isNew;
         }
     }
 }
