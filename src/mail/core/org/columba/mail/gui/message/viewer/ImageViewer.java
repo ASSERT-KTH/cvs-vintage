@@ -97,11 +97,7 @@ public class ImageViewer extends JPanel implements IMimePartViewer {
 		}
 		}
 
-		StringBuffer buf = StreamUtils.readInString(bodyStream);
-		System.out.println("buf=" + buf);
-
-		data = buf.toString().getBytes();
-
+		data = StreamUtils.readInByteArray(bodyStream);
 		System.out.println("---> retrieving image data");
 	}
 

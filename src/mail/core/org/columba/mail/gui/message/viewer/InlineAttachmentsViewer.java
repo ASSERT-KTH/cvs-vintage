@@ -174,7 +174,7 @@ public class InlineAttachmentsViewer extends JPanel implements ICustomViewer {
 				.equalsIgnoreCase("multipart/alternative")) {
 			traverseAlternativePart(child, ref);
 		} else {
-			JPanel panel = createPanel(ref);
+			JPanel panel = createPanel(new MailFolderCommandReference(ref.getSourceFolder(), ref.getUids(), ref.getAddress()));
 			attachmentPanels.add(panel);
 		}
 

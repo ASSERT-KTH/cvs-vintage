@@ -94,6 +94,14 @@ public class StreamUtils {
 
         return result;
     }
+    
+    public static byte[] readInByteArray(InputStream in) throws IOException {
+    	byte[] result = new byte[in.available()];
+    	
+    	in.read(result);
+    	
+    	return result;
+    }
 
     /**
      * Copies all bytes from the given InputStream into an internal
