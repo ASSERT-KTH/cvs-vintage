@@ -47,8 +47,8 @@ package org.tigris.scarab.services.module;
  */ 
 import java.util.Vector;
 
-import org.tigris.scarab.om.Module;
-import org.tigris.scarab.om.ModulePeer;
+import org.tigris.scarab.om.ScarabModule;
+import org.tigris.scarab.om.ScarabModulePeer;
 
 import org.apache.turbine.services.db.om.ObjectKey;
 import org.apache.turbine.services.security.entity.User;
@@ -62,7 +62,7 @@ import org.apache.turbine.services.db.util.Criteria;
  * This class has static methods for working with a Module object
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ModuleManager.java,v 1.7 2001/07/17 01:55:50 jmcnally Exp $
+ * @version $Id: ModuleManager.java,v 1.8 2001/07/19 21:30:07 jon Exp $
  */
 public abstract class ModuleManager
 {
@@ -105,9 +105,9 @@ public abstract class ModuleManager
         try
         {
             Criteria criteria = new Criteria();
-            criteria.add(ModulePeer.MODULE_ID, project_id);
+            criteria.add(ScarabModulePeer.MODULE_ID, project_id);
             // get the Project object
-            Vector projectVec = ModulePeer.doSelect(criteria);
+            Vector projectVec = ScarabModulePeer.doSelect(criteria);
             if (projectVec.size() == 1)
                 project = (ModuleEntity)projectVec.elementAt(0);
         }
@@ -124,8 +124,8 @@ public abstract class ModuleManager
         throws Exception
     {
         Criteria crit = new Criteria();
-        crit.add (ModulePeer.PARENT_ID, parent_project_id);
-        return ModulePeer.doSelect(crit);
+        crit.add (ScarabModulePeer.PARENT_ID, parent_project_id);
+        return ScarabModulePeer.doSelect(crit);
     }
     
     /**
@@ -181,9 +181,9 @@ public abstract class ModuleManager
         throws Exception
     {
         Criteria crit = new Criteria();
-        crit.add (ModulePeer.MODULE_NAME, module.getName());
+        crit.add (ScarabModulePeer.MODULE_NAME, module.getName());
         crit.setSingleRecord(true);
-        Vector result = ModulePeer.doSelect(crit);
+        Vector result = ScarabModulePeer.doSelect(crit);
         if (result.size() > 0)
             throw new Exception ("Project: " + module.getName() + 
             " already exists. Please choose another name!" );        

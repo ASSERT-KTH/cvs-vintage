@@ -2,7 +2,7 @@
 <!DOCTYPE app-data SYSTEM
           "http://jakarta.apache.org/turbine/dtd/database.dtd">
 
-<!-- $Id: scarab-schema.xml,v 1.28 2001/07/18 23:10:19 elicia Exp $ -->
+<!-- $Id: scarab-schema.xml,v 1.29 2001/07/19 21:30:07 jon Exp $ -->
 
 <app-data>
 <database>
@@ -527,7 +527,7 @@
     Usually corresponds to the software project.
     Example: Scarab
 -->
-<table name="SCARAB_MODULE" idMethod="idbroker" javaName="Module" abstract="true">
+<table name="SCARAB_MODULE" idMethod="idbroker" javaName="ScarabModule" abstract="true">
     <!--
         Unique identifier.
     -->

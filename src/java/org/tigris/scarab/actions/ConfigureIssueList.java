@@ -53,7 +53,6 @@ import java.util.HashMap;
 import java.math.BigDecimal;
 
 // Turbine Stuff 
-import org.tigris.scarab.actions.base.RequireLoginFirstAction;
 import org.apache.turbine.TemplateContext;
 import org.apache.turbine.RunData;
 
@@ -67,15 +66,21 @@ import org.apache.turbine.util.SequencedHashtable;
 import org.apache.turbine.util.ParameterParser;
 
 // Scarab Stuff
-import org.tigris.scarab.om.*;
-import org.tigris.scarab.attribute.*;
-import org.tigris.scarab.util.*;
+import org.tigris.scarab.om.Attribute;
+import org.tigris.scarab.om.RModuleUserAttribute;
+import org.tigris.scarab.om.RModuleUserAttributePeer;
+import org.tigris.scarab.om.ScarabUser;
+import org.tigris.scarab.om.ScarabUserImplPeer;
+import org.tigris.scarab.om.ScarabModulePeer;
+import org.tigris.scarab.util.ScarabConstants;
 import org.tigris.scarab.util.word.IssueSearch;
+import org.tigris.scarab.services.module.ModuleEntity;
+import org.tigris.scarab.actions.base.RequireLoginFirstAction;
 
 /**
     This class is responsible for the user configuration of the issue list.
     @author <a href="mailto:elicia@collab.net">Elicia David</a>
-    @version $Id: ConfigureIssueList.java,v 1.1 2001/07/18 23:04:31 elicia Exp $
+    @version $Id: ConfigureIssueList.java,v 1.2 2001/07/19 21:30:06 jon Exp $
 */
 public class ConfigureIssueList extends RequireLoginFirstAction
 {
@@ -87,9 +92,9 @@ public class ConfigureIssueList extends RequireLoginFirstAction
             .get(ScarabConstants.INTAKE_TOOL);
         String userId = data.getParameters().getString("user_id");
         String moduleId = data.getParameters().getString("module_id");
-        Module module = (Module) ModulePeer
+        ModuleEntity module = (ModuleEntity) ScarabModulePeer
                         .retrieveByPK(new NumberKey(moduleId));
-        ScarabUser user = (ScarabUserImpl) ScarabUserImplPeer
+        ScarabUser user = (ScarabUser) ScarabUserImplPeer
                           .retrieveByPK(new NumberKey(userId));
         RModuleUserAttribute mua = null;
 
@@ -121,7 +126,10 @@ public class ConfigureIssueList extends RequireLoginFirstAction
                           new NumberKey(userId), new NumberKey(attributeId));
                     mua.delete();
                 }
-                catch (Exception e) {}
+                catch (Exception e)
+                {
+                    // ignored
+                }
              }
         }
 
@@ -137,6 +145,7 @@ public class ConfigureIssueList extends RequireLoginFirstAction
     {
         data.setMessage("Changes were not saved!");
     }
+
     /**
         does nothing.
     */

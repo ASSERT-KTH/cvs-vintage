@@ -65,7 +65,7 @@ import org.apache.turbine.services.security.entity.Group;
 import org.apache.turbine.services.db.om.Persistent;
 
 import org.tigris.scarab.util.*;
-import org.tigris.scarab.om.ModulePeer;
+import org.tigris.scarab.om.ScarabModulePeer;
 import org.tigris.scarab.services.module.ModuleEntity;
 
 
@@ -74,7 +74,7 @@ import org.tigris.scarab.services.module.ModuleEntity;
  * being the Group implementation.
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: ScarabDBSecurityService.java,v 1.5 2001/07/17 21:40:31 jon Exp $
+ * @version $Id: ScarabDBSecurityService.java,v 1.6 2001/07/19 21:30:06 jon Exp $
  */
 public class ScarabDBSecurityService extends DBSecurityService
 {
@@ -105,7 +105,7 @@ public class ScarabDBSecurityService extends DBSecurityService
         Vector groups = new Vector(0);
         try
         {
-            groups = ModulePeer.doSelect(criteria);
+            groups = ScarabModulePeer.doSelect(criteria);
         }
         catch(Exception e)
         {
@@ -288,6 +288,6 @@ public class ScarabDBSecurityService extends DBSecurityService
     protected boolean checkExists(Group group)
         throws DataBackendException, Exception
     {
-        return ModulePeer.checkExists(group);
+        return ScarabModulePeer.checkExists(group);
     }
 }

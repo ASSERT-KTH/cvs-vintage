@@ -137,7 +137,7 @@ public abstract class AttributeValue
     {
         if ( optionId != null && optionId.getValue() != null ) 
         {
-            List options = getIssue().getModule()
+            List options = getIssue().getScarabModule()
                 .getRModuleOptions(getAttribute());
             for ( int i=options.size()-1; i>=0; i-- ) 
             {
@@ -156,7 +156,7 @@ public abstract class AttributeValue
     public boolean isRequired()
        throws Exception
     {
-        RModuleAttribute rma = getIssue().getModule()
+        RModuleAttribute rma = getIssue().getScarabModule()
             .getRModuleAttribute(getAttribute());
         return rma.getRequired();
     }
@@ -208,7 +208,7 @@ public abstract class AttributeValue
         throws Exception
     {
         boolean result = false;
-        Attribute[] dedupeAttributes = getIssue().getModule()
+        Attribute[] dedupeAttributes = getIssue().getScarabModule()
             .getDedupeAttributes();
         for ( int i=dedupeAttributes.length-1; i>=0; i--) 
         {
@@ -233,7 +233,7 @@ public abstract class AttributeValue
         throws Exception
     {
         boolean result = false;
-        Attribute[] qsAttributes = getIssue().getModule()
+        Attribute[] qsAttributes = getIssue().getScarabModule()
             .getQuickSearchAttributes();
         for ( int i=qsAttributes.length-1; i>=0; i--) 
         {

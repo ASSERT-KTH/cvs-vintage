@@ -57,7 +57,7 @@ import org.tigris.scarab.services.module.ModuleEntity;
 /**
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Revision: 1.8 $ $Date: 2001/07/17 21:40:27 $
+ * @version $Revision: 1.9 $ $Date: 2001/07/19 21:30:06 $
  */
 public class UserAttribute extends AttributeValue
 {
@@ -109,7 +109,7 @@ public class UserAttribute extends AttributeValue
         if ( !isSet ) 
         {
             // see if value contains a valid username
-            List matches = getIssue().getModule()
+            List matches = getIssue().getScarabModule()
                 .getUsers(getUserName(), getPermissions());
         }
         

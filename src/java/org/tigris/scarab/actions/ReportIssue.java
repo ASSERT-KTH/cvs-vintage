@@ -84,7 +84,7 @@ import org.tigris.scarab.tools.ScarabRequestTool;
     This class is responsible for report issue forms.
     ScarabIssueAttributeValue
     @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
-    @version $Id: ReportIssue.java,v 1.29 2001/07/17 21:40:27 jon Exp $
+    @version $Id: ReportIssue.java,v 1.30 2001/07/19 21:30:06 jon Exp $
 */
 public class ReportIssue extends TemplateAction
 {
@@ -112,7 +112,7 @@ public class ReportIssue extends TemplateAction
 
         // set any other required flags
         Attribute[] requiredAttributes = 
-            issue.getModule().getRequiredAttributes();
+            issue.getScarabModule().getRequiredAttributes();
         SequencedHashtable avMap = issue.getModuleAttributeValuesMap(); 
         Iterator iter = avMap.iterator();
         AttributeValue aval = null;
@@ -244,7 +244,7 @@ public class ReportIssue extends TemplateAction
         Criteria crit = new Criteria(3)
             .add(RModuleAttributePeer.ACTIVE, true)        
             .add(RModuleAttributePeer.REQUIRED, true);        
-        Attribute[] requiredAttributes = issue.getModule().getAttributes(crit);
+        Attribute[] requiredAttributes = issue.getScarabModule().getAttributes(crit);
         SequencedHashtable avMap = issue.getModuleAttributeValuesMap(); 
         Iterator iter = avMap.iterator();
         while ( iter.hasNext() ) 

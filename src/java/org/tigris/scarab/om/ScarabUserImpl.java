@@ -71,7 +71,7 @@ import org.tigris.scarab.om.Issue;
     implementation needs.
 
     @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
-    @version $Id: ScarabUserImpl.java,v 1.8 2001/07/18 23:03:56 elicia Exp $
+    @version $Id: ScarabUserImpl.java,v 1.9 2001/07/19 21:30:06 jon Exp $
 */
 public class ScarabUserImpl extends BaseScarabUserImpl implements ScarabUser
 {    
@@ -256,7 +256,7 @@ public class ScarabUserImpl extends BaseScarabUserImpl implements ScarabUser
     {
         Criteria crit = new Criteria(3)
             .add(RModuleUserRolePeer.DELETED, false);
-        List moduleRoles = getRModuleUserRolesJoinModule(crit);
+        List moduleRoles = getRModuleUserRolesJoinScarabModule(crit);
 
         // this list will contain multiple entries for a module, if
         // the user has multiple roles
@@ -265,7 +265,7 @@ public class ScarabUserImpl extends BaseScarabUserImpl implements ScarabUser
         while (i.hasNext()) 
         {
             ModuleEntity module = 
-                (ModuleEntity) ((RModuleUserRole)i.next()).getModule();
+                (ModuleEntity) ((RModuleUserRole)i.next()).getScarabModule();
             if ( !modules.contains(module) ) 
             {
                 modules.add(module);
@@ -317,7 +317,7 @@ public class ScarabUserImpl extends BaseScarabUserImpl implements ScarabUser
      * User and Module -- the attributes the use has selected
      * To appear on the IssueList for this module.
      */
-    public List getRModuleUserAttributes(Module module)
+    public List getRModuleUserAttributes(ModuleEntity module)
         throws Exception
     {
         List rmuas = new ArrayList();
@@ -379,7 +379,7 @@ public class ScarabUserImpl extends BaseScarabUserImpl implements ScarabUser
             .add(RModuleUserRolePeer.DELETED, false)
             .add(RModuleUserRolePeer.ROLE_ID, 
                  ((BaseObject)role).getPrimaryKey());        
-        List moduleRoles = getRModuleUserRolesJoinModule(crit);
+        List moduleRoles = getRModuleUserRolesJoinScarabModule(crit);
 
         // rearrange so list contains Modules
         List modules = new ArrayList(moduleRoles.size());
@@ -387,7 +387,7 @@ public class ScarabUserImpl extends BaseScarabUserImpl implements ScarabUser
         while (i.hasNext()) 
         {
             ModuleEntity module = 
-                (ModuleEntity) ((RModuleUserRole)i.next()).getModule();
+                (ModuleEntity) ((RModuleUserRole)i.next()).getScarabModule();
             modules.add(module);
         }
 

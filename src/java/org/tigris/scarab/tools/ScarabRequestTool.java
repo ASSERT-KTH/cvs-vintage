@@ -63,7 +63,7 @@ import org.tigris.scarab.om.Issue;
 import org.tigris.scarab.om.IssuePeer;
 import org.tigris.scarab.om.Depend;
 import org.tigris.scarab.om.DependPeer;
-import org.tigris.scarab.om.ModulePeer;
+import org.tigris.scarab.om.ScarabModulePeer;
 import org.tigris.scarab.om.Attribute;
 import org.tigris.scarab.om.Attachment;
 import org.tigris.scarab.om.AttachmentPeer;
@@ -384,7 +384,7 @@ try{
      */
     public ModuleEntity getModule(String key) throws Exception
     {
-        return (ModuleEntity) ModulePeer.retrieveByPK(new NumberKey(key));
+        return (ModuleEntity) ScarabModulePeer.retrieveByPK(new NumberKey(key));
     }
 
 

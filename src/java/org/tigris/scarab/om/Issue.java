@@ -177,7 +177,7 @@ public class Issue
     public void setModuleCast(ModuleEntity me)
         throws Exception
     {
-        super.setModule((Module)me);
+        super.setScarabModule((ScarabModule)me);
     }
 
     public static Issue getIssueById(String id)
@@ -221,7 +221,7 @@ public class Issue
         Attribute[] attributes = null;
         HashMap siaValuesMap = null;
 
-        attributes = getModule().getActiveAttributes();
+        attributes = getScarabModule().getActiveAttributes();
         siaValuesMap = getAttributeValuesMap();
 
         map = new SequencedHashtable( (int)(1.25*attributes.length + 1) );
@@ -284,7 +284,7 @@ public class Issue
     public AttributeValue[] getOrderedAttributeValues() throws Exception
     {        
         Map values = getAttributeValuesMap();
-        Attribute[] attributes = getModule().getActiveAttributes();
+        Attribute[] attributes = getScarabModule().getActiveAttributes();
 
         return orderAttributeValues(values, attributes);
     }
@@ -367,7 +367,7 @@ public class Issue
     public boolean containsMinimumAttributeValues()
         throws Exception
     {
-        Attribute[] attributes = getModule().getRequiredAttributes();
+        Attribute[] attributes = getScarabModule().getRequiredAttributes();
 
         boolean result = true;
         SequencedHashtable avMap = getModuleAttributeValuesMap(); 
@@ -593,7 +593,7 @@ public class Issue
         // set the issue id
         if ( isNew() ) 
         {
-            String prefix = getModule().getCode();
+            String prefix = getScarabModule().getCode();
 
             /* thinking of keeping this in separate column
             String instanceCode = TurbineResources
@@ -696,7 +696,7 @@ public class Issue
         }
 
         // check if the module accepts multiple votes
-        if ( !getModule().allowsMultipleVoting() && previousVotes > 0 ) 
+        if ( !getScarabModule().allowsMultipleVoting() && previousVotes > 0 )
         {
             throw new ScarabException("User " + user.getUserName() + 
                 " attempted to vote multiple times for issue " + getUniqueId()

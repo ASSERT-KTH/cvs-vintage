@@ -52,7 +52,7 @@ import org.apache.turbine.RunData;
 import org.apache.turbine.services.db.util.Criteria;
 
 // Scarab Stuff
-import org.tigris.scarab.om.ModulePeer;
+import org.tigris.scarab.om.ScarabModulePeer;
 import org.tigris.scarab.actions.base.RequireLoginFirstAction;
 
 /**
@@ -62,7 +62,7 @@ import org.tigris.scarab.actions.base.RequireLoginFirstAction;
     right now though. :-(
         
     @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
-    @version $Id: DeleteComponent.java,v 1.6 2001/07/17 21:40:27 jon Exp $
+    @version $Id: DeleteComponent.java,v 1.7 2001/07/19 21:30:06 jon Exp $
 */
 public class DeleteComponent extends RequireLoginFirstAction
 {
@@ -83,9 +83,9 @@ public class DeleteComponent extends RequireLoginFirstAction
             }
             // build the criteria
             Criteria crit = new Criteria();
-            crit.add(ModulePeer.MODULE_ID, component_id);
+            crit.add(ScarabModulePeer.MODULE_ID, component_id);
             // do the delete
-            ModulePeer.doDelete(crit);
+            ScarabModulePeer.doDelete(crit);
             data.setMessage("Component Deletion Successful!");
         }
         catch (Exception e)

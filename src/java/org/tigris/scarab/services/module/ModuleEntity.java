@@ -64,7 +64,7 @@ import org.apache.turbine.services.db.util.Criteria;
  * This class describes a Module
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ModuleEntity.java,v 1.9 2001/07/17 01:55:50 jmcnally Exp $
+ * @version $Id: ModuleEntity.java,v 1.10 2001/07/19 21:30:06 jon Exp $
  */
 public interface ModuleEntity
 {
@@ -127,6 +127,8 @@ public interface ModuleEntity
     public List getUsers(String partialUserName, String permission)
         throws Exception;
 
+    public Attribute[] getActiveAttributes()
+        throws Exception;
 /*    
     
     public String getAbbreviation();

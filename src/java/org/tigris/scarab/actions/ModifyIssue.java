@@ -76,7 +76,7 @@ import org.tigris.scarab.util.word.IssueSearch;
     This class is responsible for edit issue forms.
     ScarabIssueAttributeValue
     @author <a href="mailto:elicia@collab.net">Elicia David</a>
-    @version $Id: ModifyIssue.java,v 1.12 2001/07/17 21:40:27 jon Exp $
+    @version $Id: ModifyIssue.java,v 1.13 2001/07/19 21:30:06 jon Exp $
 */
 public class ModifyIssue extends TemplateAction
 {
@@ -108,7 +108,7 @@ public class ModifyIssue extends TemplateAction
         Criteria crit = new Criteria()
             .add(RModuleAttributePeer.ACTIVE, true)        
             .add(RModuleAttributePeer.REQUIRED, true);        
-        Attribute[] requiredAttributes = issue.getModule().getAttributes(crit);
+        Attribute[] requiredAttributes = issue.getScarabModule().getAttributes(crit);
         AttributeValue aval = null;
         Group group = null;
 
