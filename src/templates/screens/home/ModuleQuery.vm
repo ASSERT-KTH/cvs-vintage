@@ -38,7 +38,7 @@
   </div>
   <div><input type="radio" name="querytype" value="my"
        #if ($queryType == "my")checked="checked"#end />&nbsp;
-    <strong>$l10n.MyIssues</strong>
+    <strong>$l10n.MyIssues</strong> $l10n.MyIssuesDesc
   </div>
 </div>
 
