@@ -72,7 +72,7 @@ import org.jboss.jmx.connector.notification.SearchClientNotificationListener;
 * and the EJB-Adaptor (meaning the EJB-Container).
 *
 * @author Andreas Schaefer (andreas.schaefer@madplanet.com)
-* @version $Revision: 1.7 $
+* @version $Revision: 1.8 $
 **/
 public class EJBConnector
    implements RemoteMBeanServer, EJBConnectorMBean
@@ -88,7 +88,6 @@ public class EJBConnector
 
    private Adaptor mAdaptor;
 
-   private Hashtable         mHandbackPool = new Hashtable();
    private Vector            mListeners = new Vector();
    private String            mJNDIServer;
    private String            mJNDIName;
@@ -99,6 +98,23 @@ public class EJBConnector
    // Constructor
    // -------------------------------------------------------------------------
     
+   /**
+   * AS For evaluation purposes
+   * Creates a Connector based on an already found Adaptor
+   *
+   * @param pAdaptor RMI-Adaptor used to connect to the remote JMX Agent
+   **/
+   public EJBConnector(
+      AdaptorHome pAdaptorHome
+   ) {
+      try {
+         mAdaptor = pAdaptorHome.create();
+      }
+      catch( Exception e ) {
+         throw new IllegalArgumentException( "Adaptor could not be created: " + e.getMessage() );
+      }
+   }
+
    /**
    * Creates an Client Connector using the EJB-Adaptor to
    * access the remote JMX Server.

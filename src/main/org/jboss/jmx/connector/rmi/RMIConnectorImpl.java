@@ -91,6 +91,20 @@ public class RMIConnectorImpl
    // Static --------------------------------------------------------
    
    // Constructors --------------------------------------------------
+   
+   /**
+   * AS For evaluation purposes
+   * Creates a Connector based on an already found Adaptor
+   *
+   * @param pAdaptor RMI-Adaptor used to connect to the remote JMX Agent
+   **/
+   public RMIConnectorImpl(
+      RMIAdaptor pAdaptor
+   ) {
+      mRemoteAdaptor = pAdaptor;
+      mServer = "Dummy";
+   }
+   
    public RMIConnectorImpl(
       int pNotificationType,
       String[] pOptions,
