@@ -116,10 +116,8 @@ public class CopyMessageCommand extends FolderCommand {
             } else {
                 for (int j = 0; (j < uids.length) && !worker.cancelled();
                         j++) {
-                    // if message exists in sourcefolder
-                    // FIXME: Check whether the email already
-                    // already exists in the destination folder
-                    if (srcFolder.exists(uids[j])) {
+
+                    if (!srcFolder.exists(uids[j])) {
                         continue;
                     }
 

@@ -160,6 +160,8 @@ public class ViewMessageCommand extends FolderCommand {
 				new ColumbaMessage(
 					MessageParser.parse(
 						new CharSequenceSource(decryptedBodyPart)));
+			message.setSource(new CharSequenceSource(StreamUtils.readInString(srcFolder.getMessageSourceStream(uid))));
+			
 			mimePartTree = message.getMimePartTree();
 
 			//	map selection to this temporary message
@@ -353,11 +355,9 @@ public class ViewMessageCommand extends FolderCommand {
 
 		if (firstPartMimeType.getSubtype().equals("encrypted")) {
 			decryptEncryptedPart(mimePartTree.getRootMimeNode());
-		} /*	
-									if (((contentType.equals("multipart/encrypted"))
-										|| (contentType.equals("multipart/signature"))))
-										handlePGPMessage(header, wsc);
-								*/
+		} 
+		
+		
 		if (mimePartTree != null) { // user prefers html/text messages
 			XmlElement html =
 				MailConfig.getMainFrameOptionsConfig().getRoot().getElement(

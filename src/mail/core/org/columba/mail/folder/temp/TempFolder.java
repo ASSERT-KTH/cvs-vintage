@@ -89,6 +89,10 @@ public class TempFolder extends Folder {
         messageList.clear();
     }
 
+    public Object[] getUids() throws Exception {
+        return messageList.keySet().toArray();
+    }
+    
     public void expungeFolder() throws Exception {
         Object[] uids = getUids();
 
@@ -366,7 +370,7 @@ public class TempFolder extends Folder {
      */
     public InputStream getMessageSourceStream(Object uid)
         throws Exception {
-        return new SourceInputStream(((Message) messageList.get(uid)).getSource());
+        return new SourceInputStream(((ColumbaMessage) messageList.get(uid)).getSource());
     }
 
     /*

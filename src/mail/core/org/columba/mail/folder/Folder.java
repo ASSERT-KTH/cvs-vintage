@@ -185,6 +185,9 @@ public abstract class Folder
     public FolderTreeNode getRootFolder() {
         FolderTreeNode parent = (FolderTreeNode) getParent();
 
+        // There is no parent
+        if( parent == null ) return this;
+        
         if (parent instanceof RootFolder) {
             return parent;
         } else {
