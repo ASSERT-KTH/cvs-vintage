@@ -100,7 +100,6 @@ import org.tigris.scarab.om.MITList;
 import org.tigris.scarab.om.MITListItem;
 import org.tigris.scarab.om.RModuleUserAttribute;
 import org.tigris.scarab.om.ScarabUser;
-import org.tigris.scarab.om.ScarabUserManager;
 
 import org.tigris.scarab.util.ScarabException;
 import org.tigris.scarab.attribute.OptionAttribute;
@@ -114,7 +113,7 @@ import org.tigris.scarab.services.security.ScarabSecurity;
  * not a more specific type of Issue.
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: IssueSearch.java,v 1.108 2003/08/26 22:51:38 elicia Exp $
+ * @version $Id: IssueSearch.java,v 1.109 2003/08/26 22:56:52 elicia Exp $
  */
 public class IssueSearch 
     extends Issue
@@ -136,8 +135,7 @@ public class IssueSearch
         AttributeValuePeer.USER_ID.substring(
         AttributeValuePeer.USER_ID.indexOf('.')+1);
 
-    private static final String CREATEDACTIVITYSETALIAS = "srchcreatedactset";
-    private static final String MODIFIEDACTIVITYSETALIAS = "srchmodifiedactset";
+    private static final String ACTIVITYSETALIAS = "srchcobyactset";
     private static final String USERAVALIAS = "srchuav";
     private static final String ACTIVITYALIAS = "srchcobyact";
 
@@ -165,13 +163,9 @@ public class IssueSearch
     private static final String ACTIVITYALIAS_TRANSACTION_ID =
         ACTIVITYALIAS + '.' + ACT_TRAN_ID;
     private static final String 
-        ISSUEPEER_CREATEDTRAN_ID__EQUALS__CREATEDACTIVITYSETALIAS_TRAN_ID =
+        ISSUEPEER_TRAN_ID__EQUALS__ACTIVITYSETALIAS_TRAN_ID =
         IssuePeer.CREATED_TRANS_ID + '=' + 
-        CREATEDACTIVITYSETALIAS + '.' + ACTSET_TRAN_ID;
-    private static final String 
-        ISSUEPEER_MODIFIEDTRAN_ID__EQUALS__MODIFIEDACTIVITYSETALIAS_TRAN_ID =
-        IssuePeer.MODIFIED_TRANS_ID + '=' + 
-        MODIFIEDACTIVITYSETALIAS + '.' + ACTSET_TRAN_ID;
+        ACTIVITYSETALIAS + '.' + ACTSET_TRAN_ID;
 
     private static final String ACT_ISSUE_ID = 
         ActivityPeer.ISSUE_ID.substring(ActivityPeer.ISSUE_ID.indexOf('.')+1);
@@ -264,7 +258,7 @@ public class IssueSearch
     private String stateChangeFromDate;
     private String stateChangeToDate;
 
-    private String sortAttributeId;
+    private Integer sortAttributeId;
     private String sortPolarity;
     private MITList mitList;
 
@@ -274,7 +268,6 @@ public class IssueSearch
     private boolean modified;
 
     private int lastTotalIssueCount = -1;
-    private int userIdValue = -1;
     private List lastMatchingIssueIds = null;
     private List lastQueryResults = null;
 
@@ -287,7 +280,6 @@ public class IssueSearch
     private LRUMap rmitMap = new LRUMap(20);
 
     private boolean isSearchAllowed = true;
-    private boolean addedCreatedTrans = false;
 
     IssueSearch(Issue issue, ScarabUser searcher)
         throws Exception
@@ -391,7 +383,6 @@ public class IssueSearch
     private SequencedHashMap getMITAttributeValuesMap() 
         throws Exception
     {
-System.out.println("IN XMOD");
         SequencedHashMap result = null;
 
         List attributes = mitList.getCommonAttributes(false);
@@ -731,6 +722,7 @@ System.out.println("IN XMOD");
         }
     }    
 
+
     /**
      * Get the value of stateChangeAttributeId.
      * @return value of stateChangeAttributeId.
@@ -860,7 +852,7 @@ System.out.println("IN XMOD");
      * Get the value of sortAttributeId.
      * @return value of SortAttributeId.
      */
-    public String getSortAttributeId() 
+    public Integer getSortAttributeId() 
     {
         return sortAttributeId;
     }
@@ -869,7 +861,7 @@ System.out.println("IN XMOD");
      * Set the value of sortAttributeId.
      * @param v  Value to assign to sortAttributeId.
      */
-    public void setSortAttributeId(String v) 
+    public void setSortAttributeId(Integer v) 
     {
         if (!ObjectUtils.equals(v, this.sortAttributeId)) 
         {
@@ -1508,7 +1500,7 @@ System.out.println("IN XMOD");
             StringBuffer sbdate = new StringBuffer();
             Date minUtilDate = parseDate(getMinDate(), false);
             Date maxUtilDate = parseDate(getMaxDate(), true);
-            addDateRange(CREATEDACTIVITYSETALIAS + '.' + CREATED_DATE, 
+            addDateRange(ACTIVITYSETALIAS + '.' + CREATED_DATE, 
                          minUtilDate, maxUtilDate, sbdate);
             dateRangeSql = sbdate.toString(); 
         }                
@@ -1519,11 +1511,10 @@ System.out.println("IN XMOD");
             {
                 // just dates
                 from.append(INNER_JOIN).append(ActivitySetPeer.TABLE_NAME) 
-                    .append(' ').append(CREATEDACTIVITYSETALIAS).append(ON).append(
-                    ISSUEPEER_CREATEDTRAN_ID__EQUALS__CREATEDACTIVITYSETALIAS_TRAN_ID)
+                    .append(' ').append(ACTIVITYSETALIAS).append(ON).append(
+                    ISSUEPEER_TRAN_ID__EQUALS__ACTIVITYSETALIAS_TRAN_ID)
                     .append(AND).append(dateRangeSql)
                     .append(')');
-addedCreatedTrans = true;
             }
         }
         else
@@ -1627,9 +1618,8 @@ addedCreatedTrans = true;
 
                 fromClause.append(')').append(INNER_JOIN)
                     .append(ActivitySetPeer.TABLE_NAME) 
-                    .append(' ').append(CREATEDACTIVITYSETALIAS).append(ON).append(
-                    ISSUEPEER_CREATEDTRAN_ID__EQUALS__CREATEDACTIVITYSETALIAS_TRAN_ID);
-                addedCreatedTrans = true;
+                    .append(' ').append(ACTIVITYSETALIAS).append(ON).append(
+                    ISSUEPEER_TRAN_ID__EQUALS__ACTIVITYSETALIAS_TRAN_ID);
 
                 if (anyUsers != null || creatorUsers != null)
                 {
@@ -1646,7 +1636,7 @@ addedCreatedTrans = true;
                     // we can add this to the join condition, if created-only
                     // query otherwise it needs to go in the where clause
                     String createdBySqlFragment =  
-                        CREATEDACTIVITYSETALIAS + '.' + CREATED_BY;
+                        ACTIVITYSETALIAS + '.' + CREATED_BY;
                     if (anyAndCreators.size() == 1) 
                     {
                         createdBySqlFragment += 
@@ -2042,7 +2032,7 @@ addedCreatedTrans = true;
                              StringBuffer where, Set tableAliases)
         throws Exception
     {
-        String sortAttrId = getSortAttributeId();
+        Integer sortAttrId = getSortAttributeId();
 
         // add the attribute value columns that will be shown in the list.
         // these are joined using a left outer join, so the additional
@@ -2073,97 +2063,49 @@ addedCreatedTrans = true;
                 // locate the sort attribute position so we can move any 
                 // unset results to the end of the list.
                 Integer attrPK = rmua.getAttributeId();
-                if (attrPK == null)
+                if (attrPK.equals(sortAttrId)) 
                 {
-                    String alias = "";
-                    if (rmua.getShowCreatedBy() != null)
-                    {
-                        alias = CREATEDACTIVITYSETALIAS;
-                        selectColumns.append(',').append(alias).append(".CREATED_BY");
-                        if (sortAttrId != null && sortAttrId.equals("createdBy"))
-                        {
-                            sortColumn = alias + ".CREATED_BY";
-                        }
-                        userIdValue = count;
-System.out.println("setting it " + count);
-                    }
-                    else if (rmua.getShowCreatedDate() != null)
-                    {
-                        alias = CREATEDACTIVITYSETALIAS;
-                        selectColumns.append(',').append(alias).append(".CREATED_DATE");
-                        if (sortAttrId != null && sortAttrId.equals("createdDate"))
-                        {
-                            sortColumn = alias + ".CREATED_DATE";
-                        }
-                    }
-                    else if (rmua.getShowModifiedDate() != null)
-                    {
-                        alias = MODIFIEDACTIVITYSETALIAS;
-                        selectColumns.append(',').append(alias).append(".CREATED_DATE");
-                        if (sortAttrId != null && sortAttrId.equals("modifiedDate"))
-                        {
-                            sortColumn = alias + ".CREATED_DATE";
-                        }
-                    }
-                    if (alias.equals(CREATEDACTIVITYSETALIAS) && !tableAliases.contains(alias) && !addedCreatedTrans)
-                    {
-                        outerJoin.append(INNER_JOIN)
-                            .append(ActivitySetPeer.TABLE_NAME) 
-                            .append(' ').append(CREATEDACTIVITYSETALIAS).append(ON).append(
-                            ISSUEPEER_CREATEDTRAN_ID__EQUALS__CREATEDACTIVITYSETALIAS_TRAN_ID).append(')');
-                            tableAliases.add(alias);
-                    }
-                    else if (alias.equals(MODIFIEDACTIVITYSETALIAS) && !tableAliases.contains(alias))
-                    {
-                        outerJoin.append(INNER_JOIN)
-                            .append(ActivitySetPeer.TABLE_NAME) 
-                            .append(' ').append(MODIFIEDACTIVITYSETALIAS).append(ON).append(
-                            ISSUEPEER_MODIFIEDTRAN_ID__EQUALS__MODIFIEDACTIVITYSETALIAS_TRAN_ID).append(')');
-                            tableAliases.add(alias);
-                    }
+                    sortAttrPos = count;
                 }
-                else
+                String id = attrPK.toString();
+                String alias = "av" + id;
+                // add column to SELECT column clause
+                selectColumns.append(',').append(alias).append(".VALUE");
+                // if no criteria was specified for a displayed attribute
+                // add it as an outer join
+                if (!tableAliases.contains(alias))
                 {
-                    String id = attrPK.toString();
-                    String alias = "av" + id;
-                    // add column to SELECT column clause
-                    selectColumns.append(',').append(alias).append(".VALUE");
-                    // if no criteria was specified for a displayed attribute
-                    // add it as an outer join
-                    if (!tableAliases.contains(alias))
-                    {
-                        outerJoin.append(LEFT_OUTER_JOIN)
-                            .append(AttributeValuePeer.TABLE_NAME).append(' ')
-                            .append(alias).append(ON)
-                            .append(IssuePeer.ISSUE_ID).append('=')
-                            .append(alias).append(".ISSUE_ID AND ").append(alias)
-                            .append(".DELETED=0 AND ").append(alias)
-                            .append(".ATTRIBUTE_ID=").append(id).append(')');
-                    }
-
-                    // we need add more sql for attribute/option sorting
-                    if (sortAttrId != null && id.equals(sortAttrId)) 
-                    {
-                        sortAttrPos = count;
-                        String sortId = sortAttrId.toString();
-                        Attribute att = AttributeManager.getInstance(attrPK);
-                        if (att.isOptionAttribute())
-                        {
-                            // add the sort column
-                            sortColumn = "sortRMO.PREFERRED_ORDER";
-                            //selectColumns.append(',').append(sortColumn);
-                            // join the RMO table to the AttributeValue alias we are sorting
-                            outerJoin.append(BASE_OPTION_SORT_LEFT_JOIN).append("av")
-                            .append(sortId).append(".OPTION_ID)");
-                        }
-                        else 
-                        {
-                            sortColumn = "av" + sortId + ".VALUE";
-                        }
-                    }
+                    outerJoin.append(LEFT_OUTER_JOIN)
+                        .append(AttributeValuePeer.TABLE_NAME).append(' ')
+                        .append(alias).append(ON)
+                        .append(IssuePeer.ISSUE_ID).append('=')
+                        .append(alias).append(".ISSUE_ID AND ").append(alias)
+                        .append(".DELETED=0 AND ").append(alias)
+                        .append(".ATTRIBUTE_ID=").append(id).append(')');
+                    tableAliases.add(alias);
                 }
-                // add attribute columns for the table
             }
+
+            // we need add more sql for attribute/option sorting
+            if (sortAttrId != null) 
+            {
+                String sortId = sortAttrId.toString();
+                Attribute att = AttributeManager.getInstance(sortAttrId);
+                if (att.isOptionAttribute())
+                {
+                    // add the sort column
+                    sortColumn = "sortRMO.PREFERRED_ORDER";
+                    selectColumns.append(',').append(sortColumn);
+                    // join the RMO table to the AttributeValue alias we are sorting
+                    outerJoin.append(BASE_OPTION_SORT_LEFT_JOIN).append("av")
+                        .append(sortId).append(".OPTION_ID)");
+                }
+                else 
+                {
+                    sortColumn = "av" + sortId + ".VALUE";
+                }
+            }
+            // add attribute columns for the table
             sb.append(selectColumns);
         }
 
@@ -2198,7 +2140,6 @@ System.out.println("setting it " + count);
             sb.append(',').append(IssuePeer.ISSUE_ID).append(" ASC");
         }
         String searchSql = sb.toString();
-System.out.println(searchSql);
                 
         // return a List of QueryResult objects
         List result = null;
@@ -2475,7 +2416,7 @@ System.out.println(searchSql);
         /**
          * A no-op if <code>qr</code> is <code>null</code>.
          */
-        private void cacheRecentlyCreated(int index, QueryResult qr) 
+        private void cacheRecentlyCreated(int index, QueryResult qr)
         {
             if (qr != null)
             {
@@ -2489,7 +2430,7 @@ System.out.println(searchSql);
             }
         }
 
-        public QueryResult queryResultStarted(ResultSet rs) 
+        public QueryResult queryResultStarted(ResultSet rs)
             throws SQLException
         {
             QueryResult qr = new QueryResult(search);
@@ -2498,7 +2439,6 @@ System.out.println(searchSql);
             qr.setIssueTypeId(new Integer(rs.getInt(3)));
             qr.setIdPrefix(rs.getString(4));
             qr.setIdCount(rs.getString(5));
-                        System.out.println("useridval=" + search.userIdValue);
             if (valueListSize > 0) 
             {
                 // Some attributes can be multivalued.
@@ -2506,25 +2446,7 @@ System.out.println(searchSql);
                 for (int j = 0; j < valueListSize; j++) 
                 {
                     ArrayList multiVal = new ArrayList(2);
-                    Object obj = rs.getObject(j+6);
-                    String value = rs.getString(j+6);
-                    if (obj != null && obj.getClass().toString().equals("class java.sql.Timestamp"))
-                    {
-                        SimpleDateFormat formatter = new SimpleDateFormat ("yyyyMMddHHmmss");
-                        SimpleDateFormat newFormat = new SimpleDateFormat ("yyyy-MM-dd hh:mm");
-                        value = newFormat.format((Date)obj);
-                    }
-                    else if (search.userIdValue == j)
-                    {
-                        try
-                        {
-                            value = ScarabUserManager.getInstance((Integer)obj).getUserName();
-                        }
-                        catch (TorqueException e)
-                        {
-                        }
-                    }
-                    multiVal.add(value);
+                    multiVal.add(rs.getString(j + 6));
                     values.add(multiVal);
                 }
                 qr.setAttributeValues(values);
