@@ -35,7 +35,7 @@
 #end
 #if ($allTemplates.size() > $resultsPerPage)
  #set ($paginated = "true")
- #set ($pagList = $scarabR.getPaginatedList($allTemplates, $pageNum.toString(),       $resultsPerPage.toString()))
+ #set ($pagList = $scarabR.getPaginatedList($allTemplates, $pageNum.toString(), $resultsPerPage.toString()))
  #if ($pagList)
    #set ($allTemplates = $pagList)
  #end
@@ -63,21 +63,19 @@
   <th>#sort ("user" "Author")</th>
   </tr>
 
+#set ($permItemDelete = $scarabR.hasPermission($scarabG.Permission.ITEM__DELETE, $module))
 #foreach ($template in $allTemplates)
 #indexedRows($velocityCount)
 #set ($isCreatedBy = $template.isCreatingUser($user))
-#if ( ($scarabR.hasPermission($scarabG.Permission.ITEM__DELETE, $module))
-   ||   ($isCreatedBy))
-  #set ($hasDelete = "true")
+#if ($permItemDelete || $isCreatedBy)
   <td><input type="checkbox" name="delete_$template.IssueId" /></td>
 #else
   <td>&#160;</td>
 #end
   <td>
-    #if (($scarabR.hasPermission($scarabG.Permission.ITEM__DELETE, $module))
-         || ($isCreatedBy))
-      #set ($editLink = $link.setPathInfo("templateId", $template.IssueId.toString()).setPage("SaveTemplate.vm").toString())
-      <a href="$editLink">$template.TemplateInfo.Name</a>
+    #if ($permItemDelete || $isCreatedBy)
+      <a href="$link.setPathInfo("templateId", $template.IssueId.toString()).setPage("SaveTemplate.vm")">
+      $template.TemplateInfo.Name</a>
     #else
       $template.TemplateInfo.Name
     #end
@@ -111,7 +109,7 @@
 
 <div class="functnbar3">
   <input type="submit" value="Create new" name="eventSubmit_doGotoothertemplate" />
-  #if ($hasDelete)
+  #if ($permItemDelete)
     &#160;<input type="submit" value="Delete selected" name="eventSubmit_doDeletetemplates" />
   #end
 </div>
