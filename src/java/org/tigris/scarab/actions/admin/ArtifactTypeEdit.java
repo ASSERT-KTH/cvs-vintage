@@ -77,7 +77,7 @@ import org.tigris.scarab.services.cache.ScarabCache;
  * action methods on RModuleAttribute table
  *      
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: ArtifactTypeEdit.java,v 1.39 2002/10/24 23:10:01 elicia Exp $
+ * @version $Id: ArtifactTypeEdit.java,v 1.40 2002/10/25 20:11:17 elicia Exp $
  */
 public class ArtifactTypeEdit extends RequireLoginFirstAction
 {
@@ -200,16 +200,14 @@ public class ArtifactTypeEdit extends RequireLoginFirstAction
                 // Mark it as a dedupe group
                 if (attGroup.getOrder() < dupeOrder)
                 {
-                    if (!attGroup.getAttributes().isEmpty())
-                    {
-                         areThereDedupeAttrs = true;
-                         attGroup.setDedupe(true);
-                         List dedupeGroups = module.getDedupeGroupsWithAttributes(issueType);
-                         if (!dedupeGroups.contains(attGroup))
-                         {
-                             dedupeGroups.add(attGroup);
-                         }
-                    }
+                     areThereDedupeAttrs = true;
+                     attGroup.setDedupe(true);
+                     List dedupeGroups = module.
+                         getDedupeGroupsWithAttributes(issueType);
+                     if (!dedupeGroups.contains(attGroup))
+                     {
+                         dedupeGroups.add(attGroup);
+                     }
                 }
                 else
                 {
