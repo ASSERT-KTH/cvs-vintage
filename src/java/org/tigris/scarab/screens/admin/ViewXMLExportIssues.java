@@ -51,12 +51,12 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.ArrayList;
 
-// Turbine Stuff 
+import org.apache.velocity.VelocityContext;
+import org.apache.fulcrum.velocity.TurbineVelocity;
 import org.apache.turbine.RunData;
 import org.apache.turbine.TemplateContext;
 import org.apache.turbine.modules.Module;
 
-// Scarab Stuff
 import org.tigris.scarab.tools.ScarabRequestTool;
 import org.tigris.scarab.tools.ScarabLocalizationTool;
 import org.tigris.scarab.screens.Default;
@@ -67,7 +67,7 @@ import org.tigris.scarab.om.IssueManager;
  * Sends XML Export issues contents directly to the output stream.
  *
  * @author <a href="mailto:jon@collab.net">Jon Scott Stevens</a>
- * @version $Id: ViewXMLExportIssues.java,v 1.15 2003/06/06 05:33:04 dlr Exp $
+ * @version $Id: ViewXMLExportIssues.java,v 1.16 2003/07/16 01:24:52 dlr Exp $
  */
 public class ViewXMLExportIssues extends Default
 {
@@ -153,27 +153,42 @@ public class ViewXMLExportIssues extends Default
                 return;
             }
 
-            String downloadType = data.getParameters().getString("downloadtype");
-            if (downloadType != null && downloadType.equals("1"))
+            String contentType;
+            String contentDisposition;
+            if ("1".equals(data.getParameters().getString("downloadtype")))
             {
-                data.getResponse().setContentType("text/plain");
-                data.getParameters().add("content-type", "text/plain");
-                data.getParameters().add("content-dispostion", filename);
+                // To browser window.
+                contentType = "text/xml";
+                contentDisposition = "inline";
             }
             else
             {
-                data.getResponse().setContentType("application/octet-stream");
-                data.getParameters().add("content-type", "application/octet-stream");
-                data.getParameters().add("content-dispostion", filename);
-                data.getResponse().setHeader("Content-Disposition", 
-                    "attachment; filename=" + filename);
+                // Save to file.  Unforunately, not all browsers are
+                // created equal, and some fail to fully heed the
+                // Content-disposition header.  We hack around this by
+                // using a Content-type header which indicates binary
+                // data.
+                //contentType = "text/xml";
+                contentType = "application/octet-stream";
+                contentDisposition = "attachment";
             }
+            data.getResponse().setContentType(contentType);
+            data.getParameters().add("content-type", contentType);
+            contentDisposition += "; filename=" + filename;
+            data.getParameters().add("content-dispostion", contentDisposition);
+            data.getResponse().setHeader("Content-Disposition",
+                                         contentDisposition);
     
             context.put("issueIdList", issueIdList);
-            String result = 
-                Module.handleRequest(context, "macros/XMLExportIssuesMacro.vm");
-            data.getResponse().setContentLength(result.length());
-            data.getResponse().getOutputStream().print(result);
+            VelocityContext vc = new VelocityContext();
+            for (Iterator keys = context.keySet().iterator(); keys.hasNext(); )
+            {
+                String key = (String) keys.next();
+                vc.put(key, context.get(key));
+            }
+            TurbineVelocity.handleRequest
+                (vc, "macros/XMLExportIssuesMacro.vm",
+                 data.getResponse().getOutputStream());
     
             // we already sent the response, there is no target to render
             data.setTarget(null);
