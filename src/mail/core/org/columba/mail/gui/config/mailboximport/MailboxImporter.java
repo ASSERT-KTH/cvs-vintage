@@ -60,4 +60,5 @@ class MailboxImporter implements WizardModelListener {
     
     public void stepShown(WizardModelEvent e) {}
     public void wizardCanceled(WizardModelEvent e) {}
+    public void wizardModelChanged(WizardModelEvent e) {}
 }
