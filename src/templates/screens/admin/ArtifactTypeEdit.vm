@@ -115,7 +115,7 @@ $page.setTitle("Attribute Editor")
 
         #rows()
         <td><input type="checkbox" name="delete_group_$group.AttributeGroupId"/></td>
-        <td><a href="$link.setPage("admin,attributegroup.vm").addpathinfo("groupid", $group.attributegroupid)">$group.Name</a>
+        <td><a href="$link.setPage("admin,attributegroup.vm").addpathinfo("groupid", $group.attributegroupid)">$group.Name</a></td>
         <td>#booleanCheckbox ($agGroup.Active)</td>
         <td>
             #numericSelect( $agGroup.Order.Key 1 $maxNum $agGroup.Order.Value 1 )</td> </tr> 
