@@ -40,7 +40,7 @@ import org.gjt.sp.util.Log;
 
 /**
  * @author Slava Pestov
- * @version $Id: VFSDirectoryEntryTable.java,v 1.20 2003/09/08 01:24:11 spestov Exp $
+ * @version $Id: VFSDirectoryEntryTable.java,v 1.21 2004/02/14 19:02:48 spestov Exp $
  * @since jEdit 4.2pre1
  */
 public class VFSDirectoryEntryTable extends JTable
@@ -226,7 +226,14 @@ public class VFSDirectoryEntryTable extends JTable
 			if(!e.expanded || e.dirEntry.type == VFS.DirectoryEntry.FILE)
 				continue;
 
-			if(VFSBrowser.pathsEqual(path,e.dirEntry.symlinkPath))
+			VFS.DirectoryEntry dirEntry = e.dirEntry;
+			// work around for broken FTP plugin!
+			String otherPath;
+			if(dirEntry.symlinkPath == null)
+				otherPath = dirEntry.path;
+			else
+				otherPath = dirEntry.symlinkPath;
+			if(VFSBrowser.pathsEqual(path,otherPath))
 			{
 				browserView.saveExpansionState();
 				browserView.loadDirectory(e,path);

@@ -52,7 +52,7 @@ import org.gjt.sp.util.*;
  * <li>Displaying memory status
  * </ul>
  *
- * @version $Id: StatusBar.java,v 1.61 2004/02/04 00:07:22 spestov Exp $
+ * @version $Id: StatusBar.java,v 1.62 2004/02/14 19:02:48 spestov Exp $
  * @author Slava Pestov
  * @since jEdit 3.2pre2
  */
@@ -608,7 +608,9 @@ public class StatusBar extends JPanel implements WorkThreadProgressListener
 		//{{{ MemoryStatus constructor
 		public MemoryStatus()
 		{
-			Font font = UIManager.getFont("Label.font");
+			// fucking GTK look and feel
+			Font font = new JLabel().getFont();
+			//Font font = UIManager.getFont("Label.font");
 			MemoryStatus.this.setFont(font);
 
 			FontRenderContext frc = new FontRenderContext(
