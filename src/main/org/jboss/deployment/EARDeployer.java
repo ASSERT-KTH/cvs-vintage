@@ -31,13 +31,14 @@ import javax.management.ObjectName;
 import javax.management.MBeanServer;
 import javax.management.MalformedObjectNameException;
 
+import org.jboss.logging.Logger;
+import org.jboss.management.j2ee.J2EEApplication;
 import org.jboss.metadata.XmlFileLoader;
 import org.jboss.system.ServiceMBeanSupport;
-import org.jboss.logging.Logger;
+import org.jboss.util.file.JarUtils;
 
 import org.w3c.dom.Element;
 
-import org.jboss.management.j2ee.J2EEApplication;
 
 /**
  * Enterprise Archive Deployer.
@@ -46,7 +47,7 @@ import org.jboss.management.j2ee.J2EEApplication;
  *            extends="org.jboss.deployment.SubDeployerMBean"
  *
  * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
- * @version $Revision: 1.15 $
+ * @version $Revision: 1.16 $
  */
 public class EARDeployer
    extends SubDeployerSupport
@@ -109,7 +110,8 @@ public class EARDeployer
          } 
          else
          {
-            urlPrefix = "njar:" + di.localUrl + "^/";
+            // Build a jar url to then ear archive entry
+            urlPrefix = "jar:" + di.localUrl + "!/";
          }
          for (Iterator iter = metaData.getModules(); iter.hasNext(); )
          {
@@ -117,17 +119,25 @@ public class EARDeployer
             String fileName = mod.getFileName();
             if (fileName != null && (fileName = fileName.trim()).length() > 0)
             {
+               DeploymentInfo sub = null;
                if (di.isDirectory)
                {
                   File f = new File(parentDir, fileName);
-                  DeploymentInfo sub = new DeploymentInfo(f.toURL(), di);
-                  log.debug("Deployment Info: " + sub + ", isDirectory: " + sub.isDirectory);
+                  sub = new DeploymentInfo(f.toURL(), di);
                }
                else
                {
-                  DeploymentInfo sub = new DeploymentInfo(new URL(urlPrefix + fileName), di);
-                  log.debug("Deployment Info: " + sub + ", isDirectory: " + sub.isDirectory);
+                  String entryURL = urlPrefix + fileName;
+                  URL jarURL = new URL(entryURL);
+                  // Extract the nested jar from its ear
+                  URL nestedURL = JarUtils.extractNestedJar(jarURL, super.tempDeployDir);
+                  sub = new DeploymentInfo(nestedURL, di);
+
                }
+               // Set the context-root on web modules
+               if( mod.isWeb() )
+                  sub.webContext = mod.getWebContext();
+               log.debug("Deployment Info: " + sub + ", isDirectory: " + sub.isDirectory);
             }
          }
       }
