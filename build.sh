@@ -8,7 +8,7 @@
 ##  @author Jason Dillon <jason@planet57.com>
 ##
 
-# $Id: build.sh,v 1.16 2002/10/05 12:29:11 user57 Exp $
+# $Id: build.sh,v 1.17 2002/10/07 23:04:12 user57 Exp $
 
 PROGNAME=`basename $0`
 DIRNAME=`dirname $0`
@@ -22,14 +22,16 @@ main() {
     MODULE_ROOT=`cd $DIRNAME; pwd`
     export TOOLS_ROOT MODULE_ROOT DEBUG TRACE
 
-    # Where is the target file?
+    # Where is the target script?
     target="$TOOLS_ROOT/bin/$PROGNAME"
     if [ ! -f "$target" ]; then
-	echo "${PROGNAME}: <ERROR> The target executable does not exist: $target"
-	echo
+	echo "${PROGNAME}: *ERROR* The target executable does not exist:"
+        echo "${PROGNAME}:"
+        echo "${PROGNAME}:    $target"
+        echo "${PROGNAME}:"
 	echo "${PROGNAME}: Please make sure you have checked out the 'tools' module"
 	echo "${PROGNAME}: and make sure it is up to date."
-        exit 1
+        exit 2
     fi
 
     # Get busy yo!
@@ -37,9 +39,9 @@ main() {
 	echo "${PROGNAME}: Executing: /bin/sh $target $@"
     fi
     if [ "x$TRACE" = "x" ]; then
-	exec /bin/sh $target $@
+	exec /bin/sh $target "$@"
     else
-	exec /bin/sh -x $target $@
+	exec /bin/sh -x $target "$@"
     fi
 }
 
