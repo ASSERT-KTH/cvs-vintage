@@ -61,7 +61,7 @@ import org.jboss.util.WorkerQueue;
  * @author <a href="bill@burkecentral.com">Bill Burke</a>
  * @author <a href="marc.fleury@jboss.org">Marc Fleury</a>
  *
- * @version $Revision: 1.24 $
+ * @version $Revision: 1.25 $
  *
  *   <p><b>Revisions:</b>
  *
@@ -83,6 +83,10 @@ import org.jboss.util.WorkerQueue;
  * <p><b>2001/08/07: billb</b>
  * <ol>
  *   <li>releaseLockRef should be enclosed in peek in remove()
+ * </ol>
+ * <p><b>2001/12/03: billb</b>
+ * <ol>
+ *   <li>Make sure ctx.getID() is non-null when received from unschedulePassivation.
  * </ol>
  */
 public abstract class AbstractInstanceCache
@@ -198,6 +202,13 @@ public abstract class AbstractInstanceCache
             // Here I block if the bean is passivating now
             ctx = unschedulePassivation(id);
 
+            // A little defensive coding here.
+            // ctx.getId() == null means that the ctx was ejbRemoved
+            if (ctx != null && ctx.getId() == null)
+            {
+               log.warn("unschedulePassivation returned a passivated object with a null getId(), this ctx will NOT be reused");
+               ctx = null;
+            }
             // Already passivated ?
             if (ctx == null)
             {
