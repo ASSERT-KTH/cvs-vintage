@@ -55,7 +55,7 @@ import org.gjt.sp.util.Log;
  * </ul>
  *
  * @author Slava Pestov
- * @version $Id: GUIUtilities.java,v 1.31 2002/05/27 09:02:38 spestov Exp $
+ * @version $Id: GUIUtilities.java,v 1.32 2002/06/02 07:40:19 spestov Exp $
  */
 public class GUIUtilities
 {
@@ -288,7 +288,6 @@ public class GUIUtilities
 	{
 		JToolBar toolBar = new JToolBar();
 		toolBar.setFloatable(false);
-		toolBar.putClientProperty("JToolBar.isRollover",Boolean.TRUE);
 
 		String buttons = jEdit.getProperty(name);
 		if(buttons != null)
