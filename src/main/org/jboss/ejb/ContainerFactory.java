@@ -76,7 +76,7 @@ import org.jboss.logging.Logger;
 *   @author <a href="mailto:jplindfo@helsinki.fi">Juha Lindfors</a>
 *   @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
 *
-*   @version $Revision: 1.45 $
+*   @version $Revision: 1.46 $
 */
 public class ContainerFactory
     extends org.jboss.util.ServiceMBeanSupport
@@ -334,13 +334,13 @@ public class ContainerFactory
                               if (files[i].endsWith(".jar") || files[i].endsWith(".zip"))
                               {
                                  urlList.add(new URL(dir.toURL(), files[i]));
-                                 log.log("Added " + dir + File.separator + files[i]);
+                                 log.debug("Added " + dir + File.separator + files[i]);
                               }
                            }
                         } else
                         {
                            urlList.add(new URL(url, classPathEntry));
-                           log.log("Added "+ classPathEntry);
+                           log.debug("Added "+ classPathEntry);
                         }
                      } catch (MalformedURLException e)
                      {
