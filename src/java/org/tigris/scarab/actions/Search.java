@@ -80,7 +80,7 @@ import org.tigris.scarab.util.word.IssueSearch;
     This class is responsible for report issue forms.
     ScarabIssueAttributeValue
     @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
-    @version $Id: Search.java,v 1.12 2001/07/26 23:02:52 elicia Exp $
+    @version $Id: Search.java,v 1.13 2001/07/27 01:32:42 elicia Exp $
 */
 public class Search extends TemplateAction
 {
@@ -127,7 +127,7 @@ public class Search extends TemplateAction
             List matchingIssues = search.getMatchingIssues(issueLimit);
             if ( matchingIssues.size() > 0 )
             {
-                context.put("issueList", matchingIssues);
+                user.setTemp("issueList", matchingIssues);
                 
                 String template = data.getParameters()
                     .getString(ScarabConstants.NEXT_TEMPLATE, 
