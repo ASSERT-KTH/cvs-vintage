@@ -1,4 +1,4 @@
-// $Id: ModelTableModel.java,v 1.2 2003/06/29 23:16:08 linus Exp $
+// $Id: ModelTableModel.java,v 1.3 2003/09/04 17:39:17 thierrylach Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -68,22 +68,26 @@ public class ModelTableModel extends DefaultTableModel implements Runnable {
     public void run() {
 	// The following lines should be substituted by the following 2 commented lines.
 	// (This is because getting the project still does not seem to work...)
-	org.argouml.ui.ProjectBrowser pb = org.argouml.ui.ProjectBrowser.TheInstance;
-	org.argouml.ui.ArgoDiagram activeDiagram = pb.getActiveDiagram();
+	org.argouml.ui.ProjectBrowser pb = org.argouml.ui.ProjectBrowser.getInstance();
+	org.argouml.ui.ArgoDiagram activeDiagram = ProjectManager.getManager().getCurrentProject().getActiveDiagram();
 	if (!(activeDiagram instanceof org.argouml.uml.diagram.ui.UMLDiagram)) return;
-	ru.novosoft.uml.foundation.core.MNamespace ns = ((org.argouml.uml.diagram.ui.UMLDiagram) activeDiagram).getNamespace();
-	if (ns == null) return;
-	while (ns.getNamespace() != null) ns = ns.getNamespace();
-	Collection elems = ModelManagementHelper.getHelper().getAllModelElementsOfKind(ns, MClassifier.class);
-	//Project p = ProjectManager.getManager().getCurrentProject();
-	//Collection elems = ModelManagementHelper.getHelper().getAllModelElementsOfKind(MClassifier.class);
-	Iterator iter = elems.iterator();
-	while (iter.hasNext()) {
-	    Object c = iter.next();
-	    Object[] rowdata = getCodeRelevantClassifierData((MClassifier) c);
-	    if (rowdata != null) {
-		addRow(rowdata);
-	    }
+	// There was a compile error here - hopefully this corrects it properly
+	Object diagramNs = ((org.argouml.uml.diagram.ui.UMLDiagram) activeDiagram).getNamespace();
+	if (diagramNs == null) return;
+	if (diagramNs instanceof MNamespace) {
+		MNamespace ns = (MNamespace)diagramNs;
+		while (ns.getNamespace() != null) ns = ns.getNamespace();
+		Collection elems = ModelManagementHelper.getHelper().getAllModelElementsOfKind(ns, MClassifier.class);
+		//Project p = ProjectManager.getManager().getCurrentProject();
+		//Collection elems = ModelManagementHelper.getHelper().getAllModelElementsOfKind(MClassifier.class);
+		Iterator iter = elems.iterator();
+		while (iter.hasNext()) {
+			Object c = iter.next();
+			Object[] rowdata = getCodeRelevantClassifierData((MClassifier) c);
+			if (rowdata != null) {
+			addRow(rowdata);
+			}
+		}
 	}
     }
 
