@@ -26,7 +26,7 @@ package org.gjt.sp.jedit.syntax;
  * A dummy token handler that discards tokens.
  *
  * @author Slava Pestov
- * @version $Id: DummyTokenHandler.java,v 1.1 2002/05/19 04:32:33 spestov Exp $
+ * @version $Id: DummyTokenHandler.java,v 1.2 2002/05/26 04:50:14 spestov Exp $
  * @since jEdit 4.1pre1
  */
 public class DummyTokenHandler implements TokenHandler
@@ -43,10 +43,10 @@ public class DummyTokenHandler implements TokenHandler
 	 * @param length The number of characters in the token
 	 * @param id The token type (one of the constants in the
 	 * <code>Token</code> class).
-	 * @param rules The parser rule set that generated this token
+	 * @param context The line context
 	 * @since jEdit 4.1pre1
 	 */
-	public void handleToken(int length, byte id, ParserRuleSet rules)
+	public void handleToken(int length, byte id, TokenMarker.LineContext context)
 	{
 	}
 }

@@ -41,7 +41,7 @@ import org.gjt.sp.util.Log;
  * text area for painting text.
  *
  * @author Slava Pestov
- * @version $Id: ChunkCache.java,v 1.40 2002/05/19 07:00:26 spestov Exp $
+ * @version $Id: ChunkCache.java,v 1.41 2002/05/26 04:50:14 spestov Exp $
  */
 class ChunkCache
 {
@@ -246,7 +246,7 @@ class ChunkCache
 				painter.getFontRenderContext(),
 				painter);
 		buffer.markTokens(physicalLine,noWrap);
-		return noWrap.getFirstChunk();
+		return noWrap.getChunks();
 	} //}}}
 
 	//{{{ updateChunksUpTo() method

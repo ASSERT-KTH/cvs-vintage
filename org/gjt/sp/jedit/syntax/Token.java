@@ -25,7 +25,7 @@ package org.gjt.sp.jedit.syntax;
  * A linked list of syntax tokens.
  *
  * @author Slava Pestov
- * @version $Id: Token.java,v 1.7 2002/05/19 07:00:26 spestov Exp $
+ * @version $Id: Token.java,v 1.8 2002/05/26 04:50:14 spestov Exp $
  */
 public class Token
 {
@@ -89,7 +89,9 @@ public class Token
 
 	public static final byte ID_COUNT = 14;
 
-	public static final byte WHITESPACE = 126;
+	// Special:
+	public static final byte WHITESPACE = 125;
+	public static final byte TAB = 126;
 	public static final byte END = 127;
 
 	//{{{ Instance variables

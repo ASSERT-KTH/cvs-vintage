@@ -34,7 +34,7 @@ import org.gjt.sp.util.*;
 /**
  * A buffer I/O request.
  * @author Slava Pestov
- * @version $Id: BufferIORequest.java,v 1.24 2002/05/13 07:34:49 spestov Exp $
+ * @version $Id: BufferIORequest.java,v 1.25 2002/05/26 04:50:14 spestov Exp $
  */
 public class BufferIORequest extends WorkRequest
 {
@@ -538,7 +538,7 @@ public class BufferIORequest extends WorkRequest
 				buffer.readLock();
 
 				// Only backup once per session
-				if(buffer.getProperty(Buffer.BACKED_UP) == null 
+				if(buffer.getProperty(Buffer.BACKED_UP) == null
 					|| jEdit.getBooleanProperty("backupEverySave"))
 				{
 					vfs._backup(session,path,view);
