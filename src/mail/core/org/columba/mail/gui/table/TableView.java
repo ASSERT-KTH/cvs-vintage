@@ -347,6 +347,17 @@ public class TableView extends TreeTable implements OptionsSerializer {
         // select all rows
         super.selectAll();
     }
+    
+    /**
+     * Scroll table to row and request focus.
+     * 
+     * @param row		selected row
+     */
+    public void makeRowVisible(int row) {
+    	scrollRectToVisible(
+				getCellRect(row, 0, false));
+		requestFocus();
+    }
 
     /**
      * Change the selection to the specified row
@@ -375,9 +386,11 @@ public class TableView extends TreeTable implements OptionsSerializer {
             // and getting the uid for this node
             Object uid = selectedNode.getUid();
 
+            /*
             // scrolling to the first row
             scrollRectToVisible(getCellRect(row, 0, false));
             requestFocus();
+            */
         }
     }
 

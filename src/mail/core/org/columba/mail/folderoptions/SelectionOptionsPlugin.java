@@ -17,6 +17,8 @@
 //All Rights Reserved.
 package org.columba.mail.folderoptions;
 
+import javax.swing.event.ListSelectionEvent;
+
 import org.columba.core.config.DefaultItem;
 import org.columba.core.xml.XmlElement;
 import org.columba.mail.folder.MessageFolder;
@@ -37,119 +39,129 @@ import org.columba.mail.gui.table.model.MessageNode;
  */
 public class SelectionOptionsPlugin extends AbstractFolderOptionsPlugin {
 
-    /**
-     * Constructor
-     * 
-     * @param mediator
-     *            mail frame mediator
-     */
-    public SelectionOptionsPlugin(MailFrameMediator mediator) {
-        super("selection", "SelectionOptions", mediator);
-    }
+	/**
+	 * Constructor
+	 * 
+	 * @param mediator
+	 *            mail frame mediator
+	 */
+	public SelectionOptionsPlugin(MailFrameMediator mediator) {
+		super("selection", "SelectionOptions", mediator);
+	}
 
-    /**
-     * 
-     * Save currently selected message.
-     * 
-     * @see org.columba.mail.folderoptions.AbstractFolderOptionsPlugin#saveOptionsToXml(org.columba.mail.folder.Folder)
-     */
-    public void saveOptionsToXml(MessageFolder folder) {
-        XmlElement parent = getConfigNode(folder);
-        DefaultItem item = new DefaultItem(parent);
+	/**
+	 * 
+	 * Save currently selected message.
+	 * 
+	 * @see org.columba.mail.folderoptions.AbstractFolderOptionsPlugin#saveOptionsToXml(org.columba.mail.folder.Folder)
+	 */
+	public void saveOptionsToXml(MessageFolder folder) {
+		XmlElement parent = getConfigNode(folder);
+		DefaultItem item = new DefaultItem(parent);
 
-        TableController tableController = ((TableViewOwner) getMediator())
-                .getTableController();
+		TableController tableController = ((TableViewOwner) getMediator())
+				.getTableController();
 
-        if ( tableController.getView().getSelectedNodes() == null ) return;
-        
-        if ( tableController.getView().getSelectedNodes().length == 0 ) return;
-        
-        MessageNode node = tableController.getView().getSelectedNodes()[0];
-        if ( (node != null) && (folder != null) ) folder.setLastSelection(node.getUid());
-    }
+		if (tableController.getView().getSelectedNodes() == null)
+			return;
 
-    /**
-     * Restore selection.
-     * 
-     * @see org.columba.mail.folderoptions.AbstractFolderOptionsPlugin#loadOptionsFromXml(org.columba.mail.folder.Folder)
-     */
-    public void loadOptionsFromXml(MessageFolder folder) {
-        XmlElement parent = getConfigNode(folder);
-        DefaultItem item = new DefaultItem(parent);
+		if (tableController.getView().getSelectedNodes().length == 0)
+			return;
 
-        TableController tableController = ((TableViewOwner) getMediator())
-                .getTableController();
+		MessageNode node = tableController.getView().getSelectedNodes()[0];
+		if ((node != null) && (folder != null))
+			folder.setLastSelection(node.getUid());
+	}
 
-        TableView view = tableController.getView();
+	/**
+	 * Restore selection.
+	 * 
+	 * @see org.columba.mail.folderoptions.AbstractFolderOptionsPlugin#loadOptionsFromXml(org.columba.mail.folder.Folder)
+	 */
+	public void loadOptionsFromXml(MessageFolder folder) {
+		XmlElement parent = getConfigNode(folder);
+		DefaultItem item = new DefaultItem(parent);
 
-        // should we re-use the last remembered selection?
-        boolean remember = item.getBoolean("remember_last_selection", true);
+		TableController tableController = ((TableViewOwner) getMediator())
+				.getTableController();
 
-        // sorting order
-        boolean ascending = tableController.getTableModelSorter()
-                .getSortingOrder();
+		TableView view = tableController.getView();
 
-        // row count
-        int row = view.getTree().getRowCount();
+		// should we re-use the last remembered selection?
+		boolean remember = item.getBoolean("remember_last_selection", true);
 
-        // row count == 0 --> empty table
-        if (row == 0) {      	
-        	return; 
-        }
+		// sorting order
+		boolean ascending = tableController.getTableModelSorter()
+				.getSortingOrder();
 
-        // if the last selection for the current folder is null, then we show
-        // the
-        // first/last message in the table and scroll to it.
-        if ((!remember) || (folder.getLastSelection() == null)) {
-            // changing the selection to the first/last row based on ascending
-            // state
-            Object uid = null;
+		// row count
+		int row = view.getTree().getRowCount();
 
-            if (ascending) {
-                uid = view.selectLastRow();
-            } else {
-                uid = view.selectFirstRow();
-            }
+		// row count == 0 --> empty table
+		if (row == 0) {
+			//  clear message viewer
+			///tableController.valueChanged(new ListSelectionEvent(this,-1,-1,false));
+			tableController.getView().getSelectionModel().clearSelection();
+			return;
+		}
 
-            // no messages in this folder
-            if (uid == null) { return; }
+		// if the last selection for the current folder is null, then we show
+		// the
+		// first/last message in the table and scroll to it.
+		if ((!remember) || (folder.getLastSelection() == null)) {
+			// changing the selection to the first/last row based on ascending
+			// state
+			Object uid = null;
 
-        } else {
+			if (ascending) {
+				uid = view.selectLastRow();
+			} else {
+				uid = view.selectFirstRow();
+			}
 
-            // if a lastSelection for this folder is set
-            // getting the last selected uid
-            Object[] lastSelUids = { folder.getLastSelection()};
+			// no messages in this folder
+			if (uid == null) {
+				return;
+			}
 
-            // no messages in this folder
-            if (lastSelUids[0] == null) { return; }
+		} else {
 
-            Object uid = lastSelUids[0];
+			// if a lastSelection for this folder is set
+			// getting the last selected uid
+			Object[] lastSelUids = { folder.getLastSelection() };
 
-            // this message doesn't exit in this folder anymore
-            if (tableController.getHeaderTableModel().getMessageNode(uid) == null) {
+			// no messages in this folder
+			if (lastSelUids[0] == null) {
+				return;
+			}
 
-                if (ascending) {
-                    uid = view.selectLastRow();
-                } else {
-                    uid = view.selectFirstRow();
-                }
+			Object uid = lastSelUids[0];
 
-            } else {
+			// this message doesn't exit in this folder anymore
+			if (tableController.getHeaderTableModel().getMessageNode(uid) == null) {
 
-                // selecting the message
-                tableController.setSelected(new Object[] { uid});
-            }
+				if (ascending) {
+					uid = view.selectLastRow();
+				} else {
+					uid = view.selectFirstRow();
+				}
 
-        }
-    }
+			} else {
 
-    /**
-     * @see org.columba.mail.folderoptions.AbstractFolderOptionsPlugin#createDefaultElement()
-     */
-    public XmlElement createDefaultElement(boolean global) {
-        XmlElement parent = super.createDefaultElement(global);
-        parent.addAttribute("remember_last_selection", "true");
+				// selecting the message
+				tableController.setSelected(new Object[] { uid });
+			}
 
-        return parent;
-    }
+		}
+	}
+
+	/**
+	 * @see org.columba.mail.folderoptions.AbstractFolderOptionsPlugin#createDefaultElement()
+	 */
+	public XmlElement createDefaultElement(boolean global) {
+		XmlElement parent = super.createDefaultElement(global);
+		parent.addAttribute("remember_last_selection", "true");
+
+		return parent;
+	}
 }

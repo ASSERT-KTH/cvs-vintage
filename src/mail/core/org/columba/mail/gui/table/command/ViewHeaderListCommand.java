@@ -55,16 +55,19 @@ public class ViewHeaderListCommand extends Command {
 	 */
 	public void updateGUI() throws Exception {
 		// notify table selection handler
+		/*
 		((TableSelectionHandler) frameMediator.getSelectionManager()
 				.getHandler("mail.table")).setFolder(folder);
+				*/
+		
+		((TableSelectionHandler) frameMediator.getSelectionManager()
+				.getHandler("mail.table")).setSelection(getReference());
+		
 
 		// this should be called from TableController instead
 		((TableViewOwner) frameMediator).getTableController().showHeaderList(
 				folder, headerList);
 
-		/*
-		 * // update tree model MailInterface.treeModel.nodeChanged(folder);
-		 */
 	}
 
 	/**

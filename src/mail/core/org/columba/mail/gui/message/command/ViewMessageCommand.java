@@ -76,6 +76,8 @@ public class ViewMessageCommand extends FolderCommand {
 		// display changes
 		messageController.updateGUI();
 
+		if ( flags == null) return;
+		
 		// if the message it not yet seen
 		if (!(flags.getSeen())) {
 			// restart timer which marks the message as read

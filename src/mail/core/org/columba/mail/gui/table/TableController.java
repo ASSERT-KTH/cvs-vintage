@@ -275,7 +275,7 @@ public class TableController implements FocusOwner, ListSelectionListener,
 	 *            array of message UIDs
 	 */
 	public void setSelected(Object[] uids) {
-		
+
 		// select nodes
 		MessageNode[] nodes = new MessageNode[uids.length];
 
@@ -406,12 +406,17 @@ public class TableController implements FocusOwner, ListSelectionListener,
 					&& (previouslySelectedNodes.length > 0)) {
 				int row = getHeaderTableModel().getRow(
 						previouslySelectedNodes[0]);
-				if (row != -1)
-					// message still exists
-					view.selectRow(row);
-				else
-					// message was removed from JTable
-					view.selectRow(previouslySelectedRows[0]);
+
+				// if message was removed from JTable
+				if (row == -1)
+					row = previouslySelectedRows[0];
+
+				// select row
+				view.selectRow(row);
+
+				// scrolling to the selected row
+				getView().makeRowVisible(row);
+
 			}
 		}
 
@@ -694,9 +699,7 @@ public class TableController implements FocusOwner, ListSelectionListener,
 
 	/** ************************* ListSelectionListener interface ************* */
 
-	/*
-	 * (non-Javadoc)
-	 * 
+	/**
 	 * @see javax.swing.event.ListSelectionListener#valueChanged(javax.swing.event.ListSelectionEvent)
 	 */
 	public void valueChanged(ListSelectionEvent arg0) {
@@ -709,6 +712,7 @@ public class TableController implements FocusOwner, ListSelectionListener,
 		if (arg0.getValueIsAdjusting())
 			return;
 
+		
 		// @author fdietz
 		// bug #983931, message jumps while downloading new messages
 		if (getView().getSelectedNodes().length == 0) {
@@ -719,6 +723,7 @@ public class TableController implements FocusOwner, ListSelectionListener,
 				// -> skip to fix above bug
 				return;
 		}
+		
 
 		// rememember selected nodes
 		previouslySelectedNodes = getView().getSelectedNodes();
