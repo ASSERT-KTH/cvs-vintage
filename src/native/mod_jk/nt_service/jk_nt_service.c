@@ -56,7 +56,7 @@
 /***************************************************************************
  * Description: NT System service for Jakarta/Tomcat                       *
  * Author:      Gal Shachor <shachor@il.ibm.com>                           *
- * Version:     $Revision: 1.2 $                                           *
+ * Version:     $Revision: 1.3 $                                           *
  ***************************************************************************/
 
 #include "jk_global.h"
@@ -248,6 +248,7 @@ void WINAPI service_ctrl(DWORD dwCtrlCode)
         /*
          * Stop the service.
          */
+        case SERVICE_CONTROL_SHUTDOWN:
         case SERVICE_CONTROL_STOP:
             ssStatus.dwCurrentState = SERVICE_STOP_PENDING;
             stop_jk_service();
@@ -281,7 +282,7 @@ BOOL ReportStatusToSCMgr(DWORD dwCurrentState,
     if(dwCurrentState == SERVICE_START_PENDING) {
         ssStatus.dwControlsAccepted = 0;
     } else {
-        ssStatus.dwControlsAccepted = SERVICE_ACCEPT_STOP;
+        ssStatus.dwControlsAccepted = SERVICE_ACCEPT_STOP | SERVICE_ACCEPT_SHUTDOWN;
     }
 
     ssStatus.dwCurrentState = dwCurrentState;
