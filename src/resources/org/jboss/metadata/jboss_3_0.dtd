@@ -9,8 +9,8 @@ The DOCTYPE is:
       "-//JBoss//DTD JBOSS 3.0//EN"
       "http://www.jboss.org/j2ee/dtd/jboss_3_0.dtd">
 
-$Id: jboss_3_0.dtd,v 1.8 2002/07/14 18:36:04 starksm Exp $
-$Revision: 1.8 $
+$Id: jboss_3_0.dtd,v 1.9 2003/03/02 03:00:25 starksm Exp $
+$Revision: 1.9 $
 
 Overview of the architecture of jboss.xml
 
@@ -126,7 +126,9 @@ Overview of the architecture of jboss.xml
   3- the deployer can specify runtime jndi names for resource managers.
 
 -->
-<!ELEMENT jboss (enforce-ejb-restrictions? , security-domain? , unauthenticated-principal? , enterprise-beans? , resource-managers? , container-configurations?)>
+<!ELEMENT jboss (enforce-ejb-restrictions? , security-domain? ,
+ unauthenticated-principal? , enterprise-beans? , resource-managers? ,
+ container-configurations?)>
 
 <!--
   The enforce-ejb-restrictions element tells the container to enforce ejb1.1 restrictions
@@ -182,7 +184,9 @@ Overview of the architecture of jboss.xml
 
   Used in: enterprise-beans
 -->
-<!ELEMENT entity (ejb-name , jndi-name? , local-jndi-name? , read-only? , home-invoker? , bean-invoker? , configuration-name? , security-proxy? , ejb-ref* , resource-ref* , resource-env-ref* , clustered? , cluster-config?)>
+<!ELEMENT entity (ejb-name , jndi-name? , local-jndi-name? , read-only? , home-invoker? , bean-invoker? ,
+configuration-name? , security-proxy? , ejb-ref* , resource-ref* , resource-env-ref* ,
+clustered? , cluster-config?, method-attributes?)>
 
 <!--
   The session element holds information specific to jboss and not declared
@@ -193,7 +197,9 @@ Overview of the architecture of jboss.xml
 
   Used in: enterprise-beans
 -->
-<!ELEMENT session (ejb-name , jndi-name? , local-jndi-name? , home-invoker? , bean-invoker? , configuration-name? , security-proxy? , ejb-ref* , resource-ref* , resource-env-ref* , clustered? , cluster-config?)>
+<!ELEMENT session (ejb-name , jndi-name? , local-jndi-name? , home-invoker? , bean-invoker? ,
+configuration-name? , security-proxy? , ejb-ref* , resource-ref* , resource-env-ref* ,
+clustered? , cluster-config?, method-attributes?)>
 
 <!--
   The message-driven element holds information specific to jboss and not declared
@@ -204,7 +210,9 @@ Overview of the architecture of jboss.xml
   
   Used in: enterprise-beans
 -->
-<!ELEMENT message-driven (ejb-name , destination-jndi-name , mdb-user? , mdb-passwd? , mdb-client-id? , mdb-subscription-id? , configuration-name? , security-proxy? , ejb-ref* , resource-ref* , resource-env-ref*)>
+<!ELEMENT message-driven (ejb-name , destination-jndi-name , mdb-user? , mdb-passwd? , mdb-client-id?,
+mdb-subscription-id? , configuration-name? , security-proxy? , ejb-ref* , resource-ref* ,
+resource-env-ref*)>
 
 <!--
   The ejb-name element gives the name of the bean, it must correspond to
@@ -235,22 +243,23 @@ Overview of the architecture of jboss.xml
 -->
 <!ELEMENT local-jndi-name (#PCDATA)>
 
-<!--
-  The read-only element flags an entity bean as read only.
-  The bean will never be ejbStored. Defaults to false.
+<!-- The read-only element flags an entity bean or a method as read only.
+  Such a bean or method will never trigger a store. Defaults to false.
   It must be one of the following :
     <read-only>true</read-only>
     <read-only>false</read-only>
 
-  Used in: entity
+  Used in: entity, method-attributes
 -->
 <!ELEMENT read-only (#PCDATA)>
 
 <!--
   The home-invoker and bean-invoker elements define the Invoker MBean to use
-  for Home Proxies and Bean Proxies.
+  for Home Proxies and Bean Proxies. When specified at the container configuration
+  level this specifies the default invoker for all beans using the container
+  configuration.
 
-  Used in: entity and session
+  Used in: container-configuration, entity and session
 -->
 <!ELEMENT home-invoker (#PCDATA)>
 
@@ -339,7 +348,8 @@ Overview of the architecture of jboss.xml
   
   Used in: session, entity
 -->
-<!ELEMENT cluster-config (partition-name? , home-load-balance-policy? , bean-load-balance-policy? , session-state-manager-jndi-name?)>
+<!ELEMENT cluster-config (partition-name? , home-load-balance-policy? , bean-load-balance-policy? ,
+session-state-manager-jndi-name?)>
 
 <!--
   The partition-name element indicates the name of the HAPartition to be used
@@ -380,6 +390,19 @@ Overview of the architecture of jboss.xml
   Used in: session (in clustered-config element)
 -->
 <!ELEMENT session-state-manager-jndi-name (#PCDATA)>
+
+<!-- The method-attributes element allows for the specification of non-standard
+attributes for the named method(s).
+
+Used in: session and entity
+-->
+<!ELEMENT method-attributes (method-name, read-only?)>
+
+<!-- Specifies a method name or method name pattern
+
+Used in: session and entity
+-->
+<!ELEMENT method-name (#PCDATA)>
 
 <!--
   The resource-ref element gives a mapping between the "code name"
@@ -520,7 +543,11 @@ Overview of the architecture of jboss.xml
   
   Used in: container-configurations
 -->
-<!ELEMENT container-configuration (container-name , call-logging? , container-invoker? , container-interceptors? , client-interceptors? , instance-pool? , instance-cache? , persistence-manager? , transaction-manager? , web-class-loader? , locking-policy? , container-invoker-conf? , container-cache-conf? , container-pool-conf? , commit-option? , optiond-refresh-rate? , security-domain?)>
+<!ELEMENT container-configuration (container-name , call-logging? , container-invoker?,
+home-invoker?, bean-invoker?, container-interceptors? , client-interceptors? , instance-pool? ,
+instance-cache? , persistence-manager? , transaction-manager? , web-class-loader? , locking-policy? ,
+container-invoker-conf? , container-cache-conf? , container-pool-conf? , commit-option? ,
+optiond-refresh-rate? , security-domain?, cluster-config?)>
 
 <!-- The extends attribute gives the container-name value of the configuration the container-configuration
 is extending. This allows one to specify an extension configuration without having to reiterate all of
@@ -787,7 +814,9 @@ elements corresponds to the order of the interceptor chain.
 
   Used in: container-cache-conf (when cache-policy is the LRU cache)
 -->
-<!ELEMENT cache-policy-conf (min-capacity , max-capacity , remover-period? , max-bean-life? , overager-period , max-bean-age , resizer-period , max-cache-miss-period , min-cache-miss-period , cache-load-factor)>
+<!ELEMENT cache-policy-conf (min-capacity , max-capacity , remover-period?,
+ max-bean-life? , overager-period , max-bean-age , resizer-period ,
+ max-cache-miss-period , min-cache-miss-period , cache-load-factor)>
 
 <!--
   The minimum capacity of this cache
