@@ -175,6 +175,7 @@ $page.setTitle("Enter issue")
 <th width="120">After submit </th>
 <td><select name="$scarabG.Constant.NEXT_TEMPLATE">
 <option value="$data.Parameters.getString($scarabG.Constant.HISTORY_SCREEN, "entry,Wizard3.vm")">Enter new issue </option>
+<option value="AssignIssue.vm"> Assign issue </option>         
 <option value="ViewIssue.vm"> View this issue </option>         
 <option value="Index.vm"> Go to Start page </option>            
 </select></td>
