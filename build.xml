@@ -19,14 +19,14 @@
 
 	<!-- the task that realy checks the style -->
 	<target name="verify">
-		<checkstyle lcurlyType="nlow" 
+		<checkstyle lcurlyType="nlow"
 								lcurlyMethod="nlow"
 								lcurlyOther="nlow"
 								maxLineLen="160"
 								allowTabs="true"
 								ignoreWhitespace="true"
 								ignoreCastWhitespace="true"
-								failOnViolation="false"> 
+								failOnViolation="false">
 		<fileset dir="${src}" includes="**/*.java"/>
 		</checkstyle>
 	</target>
@@ -36,7 +36,7 @@
 	</target>
 
 	<target name="init">
-		<echo message="you run java with version ${ant.java.version}"/>
+		<echo message="you are runnning java version ${ant.java.version}"/>
 		<mkdir dir="${dest}"/>
 	</target>
 	
@@ -58,7 +58,7 @@
 	<!-- copy required files for later tasks into the dest directory -->
 	<target name="copy-required">
 		<copy todir="${dest}">
-			<fileset dir="${src}"> 
+			<fileset dir="${src}">
 				<include name="**/*.xml"/>
 				<include name="**/*.dtd"/>
 				<include name="**/*.gif"/>
@@ -98,25 +98,25 @@
 
 	<target name="copy-resources" depends="validate-xml-resources">
 		<copy todir="${dest}">
-			<fileset dir="${src}/res/"> 
+			<fileset dir="${src}/res/">
 			 <include name="**"/>
 			</fileset>
 			<!--
- 			<fileset dir="${src}/src/core/core/"> 
+ 			<fileset dir="${src}/src/core/core/">
 			 <include name="**"/>
 			</fileset>
-			<fileset dir="${src}/src/mail/core/"> 
+			<fileset dir="${src}/src/mail/core/">
 			 <include name="**"/>
 			</fileset>
-			<fileset dir="${src}/src/mail/independent/"> 
+			<fileset dir="${src}/src/mail/independent/">
 			 <include name="**"/>
 			</fileset>
-			<fileset dir="${src}/src/addressbook/core/"> 
+			<fileset dir="${src}/src/addressbook/core/">
 			 <include name="**"/>
 			</fileset>
 			-->
-			<!-- need to uncomment this when adding resource files 
-			<fileset dir="${dest}/src/addressbook/independent/"> 
+			<!-- need to uncomment this when adding resource files
+			<fileset dir="${dest}/src/addressbook/independent/">
 			 <include name="**"/>
 			</fileset>
 			-->
@@ -125,14 +125,14 @@
 
 	<!-- compile the classes -->
 	<target name="compile" depends="init,copy-required">
-		<echo message="the classes are going to ${dest} "/> 
+		<echo message="the classes are going to ${dest} "/>
 		<javac srcdir="${src}/src/" destdir="${dest}" classpath="${ownclasspath}" encoding="ISO-8859-1" debug="yes"/>
 	</target>
 
 	<!-- pack the files into one jar file with automatic manifest file -->
 	<target name="jar" depends="compile, copy-resources">
 		<delete file="${dest}/columba.jar"/>
-		<echo message="the jar file is going to ${dest}/columba.jar "/> 
+		<echo message="the jar file is going to ${dest}/columba.jar "/>
 		<jar basedir="${dest}" jarfile="${dest}/columba.jar">
 			<include name="**"/>
 			<exclude name="columba.jar"/>
@@ -165,7 +165,7 @@
 		<!-- echo file="${dest}/run.sh" >#!/bin/sh
 echo "starting columba ..."
 echo "from path: `pwd`"
-if test -f "`pwd`/columba.jar" ; then java -jar `pwd`/columba.jar ; 
+if test -f "`pwd`/columba.jar" ; then java -jar `pwd`/columba.jar ;
 else echo "cannot find columba.jar in `pwd`"; fi
 		</echo -->
 		<echo message="at the moment there are no dynamic runscripts required"/>
@@ -186,11 +186,11 @@ else echo "cannot find columba.jar in `pwd`"; fi
        includes="README, AUTHORS, LICENSE, CHANGES, RUN, run.sh, run_source.sh, run_source_jdk13.sh"
   	/>
   	</target>
-  
+
 	<!-- create an release zip file for linux and unix flavors, contains the jar file and README, LICENSE, CHANGES, AUTHORS -->
 	<!-- this task is for an binary release -->
 	<target name="zip-bin-unix" depends="jar,run-script, linefeeds-unix">
-		<echo message="the zipfile is going to ${dest}/columba-unix-${version}-bin.zip "/> 
+		<echo message="the zipfile is going to ${dest}/columba-unix-${version}-bin.zip "/>
 		<zip zipfile="${dest}/columba-unix-${version}-bin.zip" update="true">
 			<zipfileset dir="${dest}" prefix="columba-unix-${version}-bin">
 				<include name="README"/>
@@ -212,7 +212,7 @@ else echo "cannot find columba.jar in `pwd`"; fi
 	<!-- create an release zip file for windows flavors, contains the jar file and README, LICENSE, CHANGES, AUTHORS -->
 	<!-- this task is for an binary release -->
 	<target name="zip-bin-win32" depends="jar,run-script, linefeeds-win32">
-		<echo message="the zipfile are going to ${dest}/columba-win32-${version}-bin.zip "/> 
+		<echo message="the zipfile are going to ${dest}/columba-win32-${version}-bin.zip "/>
 		<zip zipfile="${dest}/columba-win32-${version}-bin.zip" update="true">
 			<zipfileset dir="${dest}" prefix="columba-win32-${version}-bin">
 				<include name="README"/>
@@ -236,7 +236,7 @@ else echo "cannot find columba.jar in `pwd`"; fi
 	<!-- create an source zip file for linux and unix flavors, contain all sources and README, LICENSE, CHANGES, AUTHORS -->
 	<!-- this task is for an source release -->
 	<target name="zip-source-unix" depends="init,run-script,linefeeds-unix">
-		<echo message="the zipfile is going to ${dest}/columba-${version}-src.zip "/> 
+		<echo message="the zipfile is going to ${dest}/columba-${version}-src.zip "/>
 		<zip zipfile="${dest}/columba-unix-${version}-src.zip" update="true">
 			<zipfileset dir="${src}" prefix="columba-unix-${version}-src">
 				<include name="**/*.java"/>
@@ -266,7 +266,7 @@ else echo "cannot find columba.jar in `pwd`"; fi
 	<!-- create an source zip file for windows flavors, contain all sources and README, LICENSE, CHANGES, AUTHORS -->
 	<!-- this task is for an source release -->
 	<target name="zip-source-win32" depends="init,run-script,linefeeds-win32">
-		<echo message="the zipfile are going to ${dest}/columba-${version}-src.zip "/> 
+		<echo message="the zipfile are going to ${dest}/columba-${version}-src.zip "/>
 		<zip zipfile="${dest}/columba-win32-${version}-src.zip" update="true">
 			<zipfileset dir="${src}" prefix="columba-win32-${version}-src">
 				<include name="**/*.java"/>
@@ -282,8 +282,8 @@ else echo "cannot find columba.jar in `pwd`"; fi
 				<include name="LICENSE"/>
 				<include name="CHANGES"/>
 				<include name="AUTHORS"/>
-				<include name="run_source.bat"/>			
-				<include name="run_source_jdk13.bat"/>				
+				<include name="run_source.bat"/>
+				<include name="run_source_jdk13.bat"/>
 				<include name="plugins/**/*.py"/>
 				<include name="plugins/**/*.java"/>
 				<include name="plugins/**/*.xml"/>
@@ -318,7 +318,7 @@ else echo "cannot find columba.jar in `pwd`"; fi
 
 	<!-- only for build the class-files -->
 	<target name="build" depends="compile"/>
-	
+
 	<target name="doc" depends="document"/>
 
 	<!-- to run the application via ant, this is good for testing and coding in xemacs -->
