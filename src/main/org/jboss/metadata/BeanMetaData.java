@@ -6,89 +6,218 @@
  */
 package org.jboss.metadata;
 
+import java.util.Iterator;
+import java.util.ArrayList;
 import java.util.Set;
 
+import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
+
+import org.jboss.ejb.DeploymentException;
+
 /**
- * The metadata for a specific EJB.  The bean may iself have properties, and
- * it has several collections of other metadata instances that may have
- * additional properties.
+ *   <description> 
+ *      
+ *   @see <related>
+ *   @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
+ *   @version $Revision: 1.4 $
  */
-public interface BeanMetaData extends MetaData {
-    /**
-     * Gets the metadata for a method of this bean.  The method is identified
-     * by its name and argument class names.
-     * @throws java.lang.IllegalArgumentException
-     *      Occurs when no method with the specified name and arguments can be
-     *      found.
-     */
-    public MethodMetaData getMethod(String name, String[] args);
+public abstract class BeanMetaData extends MetaData {
+    // Constants -----------------------------------------------------
+	
+	// Attributes ----------------------------------------------------
+	private ApplicationMetaData application;
+    
+	// from ejb-jar.xml
+	private String ejbName;
+	private String homeClass;
+	private String remoteClass;
+    private String ejbClass;
+    protected boolean session;
+	
+	private ArrayList ejbReferences = new ArrayList();
+	private ArrayList environmentEntries = new ArrayList();
+    private ArrayList securityRoleReferences = new ArrayList();
+	private ArrayList resourceReferences = new ArrayList();
+	
+	private ArrayList permissionMethods = new ArrayList();
+	private ArrayList transactionMethods = new ArrayList();
+	
+	// from jboss.xml
+	private String jndiName;
+	protected String configurationName;
+	private ConfigurationMetaData configuration;
 
-    /**
-     * Gets the metadata for a method of this bean.  The method is identified
-     * by its name and argument classes.
-     * @throws java.lang.IllegalArgumentException
-     *      Occurs when no method with the specified name and arguments can be
-     *      found.
-     */
-    public MethodMetaData getMethod(String name, Class[] args);
+	
+	// Static --------------------------------------------------------
+    
+    // Constructors --------------------------------------------------
+    public BeanMetaData(ApplicationMetaData app) {
+		application = app;
+	}
+	
+    // Public --------------------------------------------------------
+    public boolean isSession() { return session; }
 
-    /**
-     * Gets the metadata for a method of this bean's home interface.  The
-     * method is identified by its name and argument class names.
-     * @throws java.lang.IllegalArgumentException
-     *      Occurs when no method with the specified name and arguments can be
-     *      found.
-     */
-    public MethodMetaData getHomeMethod(String name, String[] args);
+	public boolean isEntity() { return !session; }
+                                            	
+	public String getHome() { return homeClass; }
+	
+	public String getRemote() { return remoteClass; }
+	
+	public String getEjbClass() { return ejbClass; }
+	
+	public String getEjbName() { return ejbName; }
+	
+	public Iterator getEjbReferences() { return ejbReferences.iterator(); }
+	
+	public Iterator getEnvironmentEntries() { return environmentEntries.iterator(); }
+	
+	public Iterator getSecurityRoleReferences() { return securityRoleReferences.iterator(); }
+	
+	public Iterator getResourceReferences() { return resourceReferences.iterator(); }
+	
+	public String getJndiName() { 
+		// jndiName may be set in jboss.xml
+		if (jndiName == null) {
+			jndiName = ejbName;
+		}
+		return jndiName;
+	}
+	
+	public String getConfigurationName() {
+		if (configurationName == null) {
+			configurationName = getDefaultConfigurationName();
+		}
+		return configurationName;
+	}
+			
+	
+	public ConfigurationMetaData getContainerConfiguration() {
+		if (configuration == null) {
+			configuration = application.getConfigurationMetaDataByName(getConfigurationName());
+		}
+		return configuration;
+	}
+	
+	public ApplicationMetaData getApplicationMetaData() { return application; }
+	
+	public abstract String getDefaultConfigurationName();
+	
+	public Iterator getTransactionMethods() { return transactionMethods.iterator(); }
+	
+	public Iterator getPermissionMethods() { return permissionMethods.iterator(); }
+	
+	
+	public void addTransactionMethod(MethodMetaData method) { 
+		transactionMethods.add(method);
+	}
+	
+	public void addPermissionMethod(MethodMetaData method) { 
+		permissionMethods.add(method);
+	}
+	
+	public byte getMethodTransactionType(String methodName, Class[] params, boolean remote) {
+		Iterator iterator = getTransactionMethods();
+		while (iterator.hasNext()) {
+			MethodMetaData m = (MethodMetaData)iterator.next();
+			if (m.patternMatches(methodName, params, remote)) return m.getTransactionType();
+		}
+		// not found
+		return TX_UNKNOWN;
+	}
 
-    /**
-     * Gets the metadata for a method of this bean's home interface.  The
-     * method is identified by its name and argument classes.
-     * @throws java.lang.IllegalArgumentException
-     *      Occurs when no method with the specified name and arguments can be
-     *      found.
-     */
-    public MethodMetaData getHomeMethod(String name, Class[] args);
+	public Set getMethodPermissions(String methodName, Class[] params, boolean remote) {
+		Iterator iterator = getPermissionMethods();
+		while (iterator.hasNext()) {
+			MethodMetaData m = (MethodMetaData)iterator.next();
+			if (m.patternMatches(methodName, params, remote)) return m.getRoles();
+		}
+		// not found
+		return null;
+	}
 
-    /**
-     * Gets the metadata for a field of this bean.  This is generally used for
-     * persistence but may have properties for other things as well.
-     * @throws java.lang.IllegalArgumentException
-     *      Occurs when no field with the specified name can be found.
-     */
-    public FieldMetaData getField(String name);
+	public void importEjbJarXml(Element element) throws DeploymentException {
+    
+	    // set the ejb-name
+		ejbName = getElementContent(getUniqueChild(element, "ejb-name"));
 
-    /**
-     * Gets the metadata for this bean's container.  One set of container
-     * metadata may be shared across several beans, or they may all have
-     * individual instances.
-     */
-    public ContainerMetaData getContainer();
+		// set the classes
+		homeClass = getElementContent(getUniqueChild(element, "home"));
+		remoteClass = getElementContent(getUniqueChild(element, "remote"));
+		ejbClass = getElementContent(getUniqueChild(element, "ejb-class"));
+		
+		// set the environment entries
+		Iterator iterator = getChildrenByTagName(element, "env-entry");
+		
+		while (iterator.hasNext()) {
+			Element envEntry = (Element)iterator.next();
+ 			
+			EnvEntryMetaData envEntryMetaData = new EnvEntryMetaData();
+			envEntryMetaData.importEjbJarXml(envEntry);
+			
+			environmentEntries.add(envEntryMetaData);
+		}
+		
+		// set the ejb references
+		iterator = getChildrenByTagName(element, "ejb-ref");
+		
+		while (iterator.hasNext()) {
+			Element ejbRef = (Element) iterator.next();
+		    
+			EjbRefMetaData ejbRefMetaData = new EjbRefMetaData();
+			ejbRefMetaData.importEjbJarXml(ejbRef);
+			
+			ejbReferences.add(ejbRefMetaData);
+		}
+		
+		// set the security roles references
+		iterator = getChildrenByTagName(element, "security-role-ref");
+		
+		while (iterator.hasNext()) {
+			Element secRoleRef = (Element) iterator.next();
+			
+			SecurityRoleRefMetaData securityRoleRefMetaData = new SecurityRoleRefMetaData();
+			securityRoleRefMetaData.importEjbJarXml(secRoleRef);
+			
+			securityRoleReferences.add(securityRoleRefMetaData);
+		}
+			
+		// set the resource references
+        iterator = getChildrenByTagName(element, "resource-ref");
+		
+		while (iterator.hasNext()) {
+			Element resourceRef = (Element) iterator.next();
+			
+			ResourceRefMetaData resourceRefMetaData = new ResourceRefMetaData();
+			resourceRefMetaData.importEjbJarXml(resourceRef);
+			
+			resourceReferences.add(resourceRefMetaData);
+		}
+	}
 
-    /**
-     * Gets the metadata for all the methods of this bean.  Each element in the
-     * Set is of type MethodMetaData.
-     * @see org.jboss.metadata.MethodMetaData
-     */
-    public Set getMethods();
+	public void importJbossXml(Element element) throws DeploymentException {
+		// we must not set defaults here, this might never be called
+		
+		// set the jndi name, (optional)		
+		jndiName = getElementContent(getOptionalChild(element, "jndi-name"));
+		
+		// set the configuration (optional)
+		configurationName = getElementContent(getOptionalChild(element, "configuration-name"));
+		
+		// TODO set the resource references (optional)
+		Iterator iterator = getChildrenByTagName(element, "resource-ref");
+		
+	
+	}
+	
+	
+	
+    // Package protected ---------------------------------------------
+    
+    // Protected -----------------------------------------------------
+    
+    // Private -------------------------------------------------------
 
-    /**
-     * Gets the metadata for all the methods of this bean's home interface.
-     * Each element in the Set is of type MethodMetaData.
-     * @see org.jboss.metadata.MethodMetaData
-     */
-    public Set getHomeMethods();
-
-    /**
-     * Gets the metadata for all the fields of this bean.  Each element in the
-     * Set is of type FieldMetaData.
-     * @see org.jboss.metadata.FieldMetaData
-     */
-    public Set getFields();
-
-    /**
-     * Gets the EJB name of this bean.  This is the unique identifier for each
-     * bean (it must be globally unique).
-     */
-    public String getName();
+    // Inner classes -------------------------------------------------
 }

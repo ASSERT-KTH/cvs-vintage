@@ -6,52 +6,120 @@
  */
 package org.jboss.metadata;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.Collection;
+
+import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
+import org.w3c.dom.Node;
+
+import org.jboss.ejb.DeploymentException;
+
 
 /**
- * The base class for all the metadata classes.  All the metadata type support
- * named properties, which you can get or set.  In addition, individual metadata
- * implementation may be part of a set, represented by the metadata manager.
- * Each set generally holds all the metadata from a specific configuration file
- * or source.
+ *   <description> 
+ *      
+ *   @see <related>
+ *   @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
+ *   @version $Revision: 1.3 $
  */
-public interface MetaData extends Map {
-    /**
-     * Tells whether this specific metadata has a property by the specified name.
-     */
-    public boolean hasProperty(String name);
+public abstract class MetaData implements XmlLoadable {
+    // Constants -----------------------------------------------------
+	public static final byte TX_NOT_SUPPORTED  = 0;
+    public static final byte TX_REQUIRED       = 1;
+    public static final byte TX_SUPPORTS       = 2;
+    public static final byte TX_REQUIRES_NEW   = 3;
+    public static final byte TX_MANDATORY      = 4;
+    public static final byte TX_NEVER          = 5;
+    public static final byte TX_UNKNOWN        = 6;
+    
+    // Attributes ----------------------------------------------------
+    
+    // Static --------------------------------------------------------
+    public static Iterator getChildrenByTagName(Element element, String tagName) {
+		// getElementsByTagName gives the corresponding elements in the whole descendance.
+	    // We want only children
+		
+		NodeList children = element.getChildNodes();
+		ArrayList goodChildren = new ArrayList();
+		for (int i=0; i<children.getLength(); i++) {
+			Node currentChild = children.item(i);
+			if (currentChild.getNodeType() == Node.ELEMENT_NODE && 
+				((Element)currentChild).getTagName().equals(tagName)) {
+				goodChildren.add((Element)currentChild);
+			}
+		}
+		return goodChildren.iterator();
+	}
+	
+	
+	public static Element getUniqueChild(Element element, String tagName) throws DeploymentException {
+		Iterator goodChildren = getChildrenByTagName(element, tagName);
+		
+		if (goodChildren.hasNext()) {
+			Element child = (Element)goodChildren.next();
+			if (goodChildren.hasNext()) {
+				throw new DeploymentException("expected only one " + tagName + " tag");
+			}
+			return child;
+		} else {
+			throw new DeploymentException("expected one " + tagName + " tag");
+		}
+	}
+	
+	
+	public static Element getOptionalChild(Element element, String tagName) throws DeploymentException {
+		Iterator goodChildren = getChildrenByTagName(element, tagName);
 
-    /**
-     * Gets a property by name.
-     * @param name The name of the property you want
-     * @return The value of the specified property, or null if the property
-     *      exists but has not been set or has been set to null
-     * @throws java.lang.IllegalArgumentException
-     *      Occurs when the specified property does not exist
-     */
-    public Object getProperty(String name);
-
-    /**
-     * Sets the value of a property.
-     * @param name The name of the property you're setting
-     * @param value The value you want to set for the specified property (may be
-     *      null)
-     * @throws java.lang.IllegalArgumentException
-     *      Occurs when the specified property does not exist
-     */
-    public void setProperty(String name, Object value);
-
-    /**
-     * Gets the names of all the properties present in this metadata.  These
-     * properties may have a value of null, but they definitely exist.
-     */
-    public String[] getPropertyNames();
-
-
-    /**
-     * Gets the manager for the plugin that this metadata is a part of (i.e.
-     * jBoss, JAWS, etc.).  This will be null if the metadata is not part of
-     * a specific plugin (for example, if it is the aggregate of all plugins).
-     */
-    public MetaDataPlugin getManager();
+		if (goodChildren.hasNext()) {
+			Element child = (Element)goodChildren.next();
+			if (goodChildren.hasNext()) {
+				throw new DeploymentException("expected only one " + tagName + " tag");
+			}
+			return child;
+		} else {
+			return null;
+		}
+	}
+	
+	public static String getElementContent(Element element) throws DeploymentException {
+		if (element == null) return null;
+		
+		NodeList children = element.getChildNodes();
+		if ((children.getLength() == 1) && (children.item(0).getNodeType() == Node.TEXT_NODE)) {
+		    return children.item(0).getNodeValue();
+		} else {
+			return null;
+		}
+	}
+		
+    
+    // Constructors --------------------------------------------------
+    
+    // Public --------------------------------------------------------
+    public void importXml (Element element) throws DeploymentException {
+		String rootTag = element.getOwnerDocument().getDocumentElement().getTagName();
+		
+		if (rootTag.equals("jboss")) {
+			// import jboss.xml
+			importJbossXml(element);
+		} else if (rootTag.equals("ejb-jar")) {
+		    // import ejb-jar.xml
+			importEjbJarXml(element);
+		} else {
+			throw new DeploymentException("Unrecognized root tag : "+ rootTag);
+		}
+	}
+	
+	public void importEjbJarXml (Element element) throws DeploymentException {}
+	public void importJbossXml (Element element) throws DeploymentException {}
+	
+    // Package protected ---------------------------------------------
+    
+    // Protected -----------------------------------------------------
+	
+	// Private -------------------------------------------------------
+    
+    // Inner classes -------------------------------------------------
 }
