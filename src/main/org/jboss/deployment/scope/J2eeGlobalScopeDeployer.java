@@ -267,8 +267,8 @@ public class J2eeGlobalScopeDeployer extends org.jboss.deployment.J2eeDeployer {
      */
     protected void startApplication(Deployment dep, Scope scope, ObjectName lCollector)  throws J2eeDeploymentException {
         // here we collect all the started deployments (not only dep)
-        // indexed by the sourceUrl
-        Collection deployments=new java.util.ArrayList();
+        // in the order they should be deployed
+        List deployments=new java.util.ArrayList();
 
         // recursively start all sub-deployments
         startApplication(dep, deployments,scope,lCollector);
@@ -306,13 +306,13 @@ public class J2eeGlobalScopeDeployer extends org.jboss.deployment.J2eeDeployer {
     /** Starts the successful downloaded deployment. <br>
      * Means the modules are deployed by the responsible container deployer
      * <comment author="cgjung">better be protected for subclassing </comment>
-     * @param alreadyMarked the deployments that have already been installed and
+     * @param alreadyMarked the deployments (in order) that have already been installed and
      * that  must be properly deployed afterwards.
      * @param _d the deployment to start
      * @throws J2eeDeploymentException if an error occures for one of these
      *          modules
      */
-    protected void startApplication(Deployment _d, Collection alreadyMarked, Scope scope, ObjectName lCollector) throws J2eeDeploymentException {
+    protected void startApplication(Deployment _d, List alreadyMarked, Scope scope, ObjectName lCollector) throws J2eeDeploymentException {
         
         ClassLoader parent=Thread.currentThread().getContextClassLoader();
         
@@ -323,7 +323,7 @@ public class J2eeGlobalScopeDeployer extends org.jboss.deployment.J2eeDeployer {
         ScopedURLClassLoader appCl = (ScopedURLClassLoader)
         Thread.currentThread().getContextClassLoader();
         
-        alreadyMarked.add(_d);
+        alreadyMarked.add(0,_d);
         
         String[] dependentStuff=appCl.getDependingApplications();
         
