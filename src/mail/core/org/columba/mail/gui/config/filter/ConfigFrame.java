@@ -15,19 +15,6 @@
 //All Rights Reserved.
 package org.columba.mail.gui.config.filter;
 
-import net.javaprog.ui.wizard.plaf.basic.SingleSideEtchedBorder;
-
-import org.columba.core.facade.DialogFacade;
-import org.columba.core.gui.util.ButtonWithMnemonic;
-import org.columba.core.help.HelpManager;
-import org.columba.core.xml.XmlElement;
-import org.columba.core.xml.XmlIO;
-
-import org.columba.mail.filter.Filter;
-import org.columba.mail.filter.FilterList;
-import org.columba.mail.folder.MessageFolder;
-import org.columba.mail.util.MailResourceLoader;
-
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
@@ -40,12 +27,10 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-
 import java.net.MalformedURLException;
 
 import javax.swing.BorderFactory;
@@ -56,6 +41,7 @@ import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JDialog;
 import javax.swing.JFileChooser;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -67,6 +53,18 @@ import javax.swing.SwingConstants;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.filechooser.FileFilter;
+
+import net.javaprog.ui.wizard.plaf.basic.SingleSideEtchedBorder;
+
+import org.columba.core.facade.DialogFacade;
+import org.columba.core.gui.util.ButtonWithMnemonic;
+import org.columba.core.help.HelpManager;
+import org.columba.core.xml.XmlElement;
+import org.columba.core.xml.XmlIO;
+import org.columba.mail.filter.Filter;
+import org.columba.mail.filter.FilterList;
+import org.columba.mail.folder.MessageFolder;
+import org.columba.mail.util.MailResourceLoader;
 
 
 /**
@@ -112,8 +110,8 @@ public class ConfigFrame extends JDialog implements ListSelectionListener,
      * Constructs a ConfigFrame for the specified folder.
      * @param messageFolder folder to set filter actions for.
      */
-    public ConfigFrame(MessageFolder messageFolder) {
-        super();
+    public ConfigFrame(JFrame parent, MessageFolder messageFolder) {
+        super(parent, true);
         folder = messageFolder;
 
         setTitle(MailResourceLoader.getString("dialog", "filter", "dialog_title"));
@@ -398,7 +396,7 @@ public class ConfigFrame extends JDialog implements ListSelectionListener,
         boolean saveFilter = false;
 
         if (filter != null) {
-            FilterDialog dialog = new FilterDialog(filter);
+            FilterDialog dialog = new FilterDialog((JFrame) getParent(), filter);
             saveFilter = !dialog.wasCancelled();
         }
 

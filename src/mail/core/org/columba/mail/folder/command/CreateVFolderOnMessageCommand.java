@@ -90,7 +90,7 @@ public class CreateVFolderOnMessageCommand extends FolderCommand {
 
         if (vfolder != null) {
             //vfolder.showFilterDialog((AbstractMailFrameController) getFrameMediator());
-            new ConfigFrame(vfolder);
+            new ConfigFrame(getFrameMediator().getView().getFrame(), vfolder);
         }
     }
 

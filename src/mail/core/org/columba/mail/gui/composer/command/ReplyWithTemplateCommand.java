@@ -113,7 +113,7 @@ public class ReplyWithTemplateCommand extends ReplyCommand {
         HeaderList list = templateFolder.getHeaderList();
 
         // choose template
-        ChooseTemplateDialog d = new ChooseTemplateDialog(list);
+        ChooseTemplateDialog d = new ChooseTemplateDialog(getFrameMediator().getView().getFrame(), list);
 
         Object uid = null;
 

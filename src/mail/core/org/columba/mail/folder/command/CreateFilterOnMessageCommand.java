@@ -84,7 +84,7 @@ public class CreateFilterOnMessageCommand extends FolderCommand {
      */
     public void updateGUI() throws Exception {
         if ((filter != null) && (srcFolder != null)) {
-            FilterDialog dialog = new FilterDialog(filter);
+            FilterDialog dialog = new FilterDialog(getFrameMediator().getView().getFrame(), filter);
 
             if (!dialog.wasCancelled()) {
                 srcFolder.getFilterList().add(filter);

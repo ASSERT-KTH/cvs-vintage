@@ -87,7 +87,7 @@ public class SearchFrame extends JDialog implements ActionListener {
 
     public SearchFrame(FrameMediator frameController,
         MessageFolder folder) {
-        super();
+        super(frameController.getView().getFrame(), true);
         this.frameController = frameController;
         setTitle(MailResourceLoader.getString("dialog", "filter",
                 "searchdialog_title"));

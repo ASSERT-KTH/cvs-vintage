@@ -38,6 +38,6 @@ public class ExportDialogAction extends AbstractColumbaAction {
     }
 
     public void actionPerformed(ActionEvent evt) {
-        new ExportDialog();
+        new ExportDialog(getFrameMediator().getView().getFrame());
     }
 }

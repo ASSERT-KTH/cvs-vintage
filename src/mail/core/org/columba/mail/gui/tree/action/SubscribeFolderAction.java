@@ -72,7 +72,7 @@ public class SubscribeFolderAction extends AbstractColumbaAction
  * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
  */
     public void actionPerformed(ActionEvent evt) {
-        new SubscribeDialog(rootFolder);
+        new SubscribeDialog( getFrameMediator().getView().getFrame(), rootFolder);
     }
 
     /* (non-Javadoc)

@@ -75,7 +75,7 @@ public class FilterPreferencesAction extends AbstractColumbaAction implements
             new SearchFrame((AbstractMailFrameController) frameMediator,
                     (VirtualFolder) folder);
         } else {
-            new ConfigFrame(folder);
+            new ConfigFrame(frameMediator.getView().getFrame(), folder);
         }
         //folder.showFilterDialog(((AbstractMailFrameController)
         // getFrameMediator()));

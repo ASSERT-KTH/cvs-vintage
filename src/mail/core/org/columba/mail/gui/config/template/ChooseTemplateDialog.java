@@ -60,8 +60,8 @@ public class ChooseTemplateDialog extends JDialog implements ActionListener,
     HeaderList headerList;
     JButton okButton;
 
-    public ChooseTemplateDialog(HeaderList list) {
-        super(new JFrame(), true);
+    public ChooseTemplateDialog(JFrame parent, HeaderList list) {
+        super(parent, true);
 
         this.headerList = list;
 

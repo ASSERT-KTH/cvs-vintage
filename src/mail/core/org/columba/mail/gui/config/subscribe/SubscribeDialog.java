@@ -17,21 +17,6 @@
 //All Rights Reserved.
 package org.columba.mail.gui.config.subscribe;
 
-import net.javaprog.ui.wizard.plaf.basic.SingleSideEtchedBorder;
-
-import org.columba.core.command.Command;
-import org.columba.core.gui.util.ButtonWithMnemonic;
-import org.columba.core.help.HelpManager;
-import org.columba.core.main.MainInterface;
-
-import org.columba.mail.command.FolderCommandReference;
-import org.columba.mail.folder.imap.IMAPRootFolder;
-import org.columba.mail.gui.config.filter.FilterTransferHandler;
-import org.columba.mail.gui.tree.command.FetchSubFolderListCommand;
-import org.columba.mail.util.MailResourceLoader;
-
-import org.frappucino.checkabletree.CheckableTree;
-
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
@@ -49,6 +34,7 @@ import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JDialog;
+import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTree;
@@ -57,6 +43,19 @@ import javax.swing.SwingConstants;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.DefaultTreeModel;
+
+import net.javaprog.ui.wizard.plaf.basic.SingleSideEtchedBorder;
+
+import org.columba.core.command.Command;
+import org.columba.core.gui.util.ButtonWithMnemonic;
+import org.columba.core.help.HelpManager;
+import org.columba.core.main.MainInterface;
+import org.columba.mail.command.FolderCommandReference;
+import org.columba.mail.folder.imap.IMAPRootFolder;
+import org.columba.mail.gui.config.filter.FilterTransferHandler;
+import org.columba.mail.gui.tree.command.FetchSubFolderListCommand;
+import org.columba.mail.util.MailResourceLoader;
+import org.frappucino.checkabletree.CheckableTree;
 
 
 /**
@@ -74,8 +73,9 @@ public class SubscribeDialog extends JDialog implements ActionListener,
     private IMAPRootFolder root;
     private DefaultTreeModel treeModel;
 
-    public SubscribeDialog(IMAPRootFolder rootFolder) {
-        setModal(true);
+    public SubscribeDialog(JFrame parent, IMAPRootFolder rootFolder) {
+        super(parent, true);
+        
         setTitle(MailResourceLoader.getString("dialog", "subscribe",
                 "dialog_title"));
         root = rootFolder;

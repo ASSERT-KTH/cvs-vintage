@@ -15,23 +15,6 @@
 //All Rights Reserved.
 package org.columba.mail.gui.config.columns;
 
-import net.javaprog.ui.wizard.plaf.basic.SingleSideEtchedBorder;
-
-import org.columba.core.gui.util.ButtonWithMnemonic;
-import org.columba.core.gui.util.DialogStore;
-import org.columba.core.help.HelpManager;
-import org.columba.core.xml.XmlElement;
-
-import org.columba.mail.command.FolderCommandReference;
-import org.columba.mail.folder.MessageFolder;
-import org.columba.mail.folderoptions.ColumnOptionsPlugin;
-import org.columba.mail.gui.frame.MailFrameMediator;
-import org.columba.mail.util.MailResourceLoader;
-
-import org.frapuccino.checkablelist.CheckableItemImpl;
-import org.frapuccino.checkablelist.CheckableItemListTableModel;
-import org.frapuccino.checkablelist.CheckableList;
-
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
@@ -50,12 +33,27 @@ import javax.swing.DefaultListSelectionModel;
 import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JDialog;
+import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.KeyStroke;
 import javax.swing.SwingConstants;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
+
+import net.javaprog.ui.wizard.plaf.basic.SingleSideEtchedBorder;
+
+import org.columba.core.gui.util.ButtonWithMnemonic;
+import org.columba.core.help.HelpManager;
+import org.columba.core.xml.XmlElement;
+import org.columba.mail.command.FolderCommandReference;
+import org.columba.mail.folder.MessageFolder;
+import org.columba.mail.folderoptions.ColumnOptionsPlugin;
+import org.columba.mail.gui.frame.MailFrameMediator;
+import org.columba.mail.util.MailResourceLoader;
+import org.frapuccino.checkablelist.CheckableItemImpl;
+import org.frapuccino.checkablelist.CheckableItemListTableModel;
+import org.frapuccino.checkablelist.CheckableList;
 
 
 /**
@@ -65,9 +63,9 @@ import javax.swing.event.ListSelectionListener;
  * 
  * @author fdietz
  */
-public class ColumnConfigDialog implements ActionListener,
+public class ColumnConfigDialog extends JDialog implements ActionListener,
     ListSelectionListener {
-    private JDialog dialog;
+   
     private JButton showButton;
     private JButton hideButton;
     private CheckableList list;
@@ -77,8 +75,8 @@ public class ColumnConfigDialog implements ActionListener,
     private MailFrameMediator mediator;
 
     public ColumnConfigDialog(MailFrameMediator mediator, XmlElement columns) {
-        dialog = DialogStore.getDialog();
-        dialog.setTitle("Configure Columns");
+        super((JFrame) mediator.getView(), true);
+        setTitle("Configure Columns");
 
         this.mediator = mediator;
         this.columns = columns;
@@ -91,12 +89,12 @@ public class ColumnConfigDialog implements ActionListener,
 
         updateComponents(true);
 
-        dialog.getRootPane().registerKeyboardAction(this, "CLOSE",
+        getRootPane().registerKeyboardAction(this, "CLOSE",
             KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0),
             JComponent.WHEN_IN_FOCUSED_WINDOW);
-        dialog.pack();
-        dialog.setLocationRelativeTo(null);
-        dialog.setVisible(true);
+        pack();
+        setLocationRelativeTo(null);
+        setVisible(true);
     }
 
     protected JPanel createButtonPanel() {
@@ -119,7 +117,7 @@ public class ColumnConfigDialog implements ActionListener,
         okButton.addActionListener(this);
         okButton.setActionCommand("OK"); //$NON-NLS-1$
         okButton.setDefaultCapable(true);
-        dialog.getRootPane().setDefaultButton(okButton);
+        getRootPane().setDefaultButton(okButton);
 
         ButtonWithMnemonic helpButton = new ButtonWithMnemonic(MailResourceLoader.getString(
                     "global", "help"));
@@ -127,7 +125,7 @@ public class ColumnConfigDialog implements ActionListener,
         // associate with JavaHelp
         HelpManager.getHelpManager().enableHelpOnButton(helpButton,
             "configuring_columba");
-        HelpManager.getHelpManager().enableHelpKey(dialog.getRootPane(),
+        HelpManager.getHelpManager().enableHelpKey(getRootPane(),
             "configuring_columba");
 
         JPanel buttonPanel = new JPanel();
@@ -142,7 +140,7 @@ public class ColumnConfigDialog implements ActionListener,
     }
 
     public void initComponents() {
-        dialog.getContentPane().setLayout(new BorderLayout());
+        getContentPane().setLayout(new BorderLayout());
 
         JPanel mainPanel = new JPanel();
         mainPanel.setLayout(new BorderLayout(5, 0));
@@ -211,7 +209,7 @@ public class ColumnConfigDialog implements ActionListener,
         scrollPane.setPreferredSize(new Dimension(200, 200));
         scrollPane.getViewport().setBackground(Color.white);
         mainPanel.add(scrollPane, BorderLayout.CENTER);
-        dialog.getContentPane().add(mainPanel);
+        getContentPane().add(mainPanel);
 
         JPanel bottomPanel = new JPanel(new BorderLayout());
         bottomPanel.setBorder(new SingleSideEtchedBorder(SwingConstants.TOP));
@@ -219,7 +217,7 @@ public class ColumnConfigDialog implements ActionListener,
         JPanel buttonPanel = createButtonPanel();
 
         bottomPanel.add(buttonPanel, BorderLayout.EAST);
-        dialog.getContentPane().add(bottomPanel, BorderLayout.SOUTH);
+        getContentPane().add(bottomPanel, BorderLayout.SOUTH);
     }
 
     private XmlElement findColumn(XmlElement parent, String name) {
@@ -313,7 +311,7 @@ public class ColumnConfigDialog implements ActionListener,
         if (action.equals("OK")) {
             updateComponents(false);
 
-            dialog.setVisible(false);
+            setVisible(false);
 
             ColumnOptionsPlugin plugin = (ColumnOptionsPlugin) mediator.getFolderOptionsController()
                                                                        .getPlugin("ColumnOptions");
@@ -322,7 +320,7 @@ public class ColumnConfigDialog implements ActionListener,
             FolderCommandReference[] r = mediator.getTreeSelection();
             plugin.loadOptionsFromXml((MessageFolder) r[0].getFolder());
         } else if (action.equals("CANCEL")) {
-            dialog.setVisible(false);
+            setVisible(false);
         } else if (action.equals("SHOW")) {
             if (selection != null) {
                 selection.setSelected(!selection.isSelected());

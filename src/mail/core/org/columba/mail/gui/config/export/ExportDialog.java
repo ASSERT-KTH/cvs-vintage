@@ -68,8 +68,8 @@ public class ExportDialog extends JDialog implements ActionListener {
     private ButtonWithMnemonic exportButton;
     private JTree tree;
 
-    public ExportDialog() {
-        super((JFrame) null,
+    public ExportDialog(JFrame parent) {
+        super(parent,
             MailResourceLoader.getString("dialog", "export", "dialog_title"),
             false);
 
