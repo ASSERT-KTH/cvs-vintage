@@ -71,7 +71,7 @@ import org.tigris.scarab.om.Module;
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: AttributeValue.java,v 1.102 2003/10/14 04:59:23 jmcnally Exp $
+ * @version $Id: AttributeValue.java,v 1.103 2003/11/18 12:45:03 dep4b Exp $
  */
 public abstract class AttributeValue 
     extends BaseAttributeValue
@@ -276,10 +276,11 @@ Leaving here so that John can remove or fix.
             chainedValue.startActivitySet(activitySet);
         }
     }
-
+    
     private void endActivitySet()
     {
         this.activitySet = null;
+        this.saveActivity = null;
         oldOptionId = null;
         oldValue = null;
         oldOptionIdIsSet = false;
