@@ -1,0 +1,77 @@
+<html>
+<head>
+<title>Scarab - MSSQL</title>
+</head>
+
+<body bgcolor="#ffffff">
+
+<h2>Scarab - MSSQL</h2>
+<h4>$Id: mssql.html,v 1.1 2003/05/27 16:12:48 jmcnally Exp $</h4>
+
+<p>
+Scarab has been developed with database independence in mind, however
+our primary goal is to make Scarab work with MySQL. Therefore, our
+support for other RDBM's is largely untested. We are relying on the user
+community in order to help us test and develop further support for other
+databases. This document outlines the steps that we think are required
+to get Scarab working with MSSQL. <a
+href="mailto:dev@scarab.tigris.org">Community feedback</a> on this
+document will help improve things for others.
+</p>
+
+<p>The following instructions were supplied by Slobodan Mumovic who says
+the only problem was the default jdbc connection pool configuration does 
+not work with MSSQL.</p>
+
+<pre>
+1. Override the default build properties by creating and editing the
+scarab.build.properties file in the home directory. I used the following
+settings:
+scarab.database.type=mssql
+scarab.database.host=yourMSSQLServer
+scarab.database.port=1433
+scarab.database.name=scarab
+scarab.database.url=jdbc:microsoft:sqlserver://${scarab.database.host}:${sca
+rab.database.port};databasename=${scarab.database.name};SelectMethod=Cursor
+scarab.database.admin.url=jdbc:microsoft:sqlserver://${scarab.database.host}
+:${scarab.database.port};databasename=${scarab.database.name};SelectMethod=C
+ursor
+scarab.database.jdbc.driver=com.microsoft.jdbc.sqlserver.SQLServerDriver
+scarab.database.username=yourUserName
+scarab.database.password=yourPassWord
+scarab.database.admin.username=${scarab.database.username}
+scarab.database.admin.password=${scarab.database.password}
+scarab.database.manual.creation=true
+
+2. Edit the <scarab>/src/etc/TurbineResources.properties file:
+        2.1. comment out the following lines (this is important):
+        #torque.dsfactory.scarab.factory=\
+        #  org.apache.torque.dsfactory.Jdbc2PoolDataSourceFactory
+        #torque.dsfactory.scarab.pool.defaultMaxActive=30
+        #torque.dsfactory.scarab.pool.testOnBorrow=true
+
+
+        2.2 add the following lines:
+        
+torque.dsfactory.scarab.factory=org.apache.torque.dsfactory.TorqueData
+SourceFactory
+        torque.dsfactory.scarab.pool.defaultMaxConnections=10
+        torque.dsfactory.scarab.pool.maxExpiryTime=3600
+        torque.dsfactory.scarab.pool.connectionWaitTimeout=10
+
+3. Build the project using ant
+
+4. Manually create the database in MSSQL Server with the user specified in
+step 1. as the DBO
+
+5. Execute the table creation scripts in:
+<scarab>/target/webapps/scarab/WEB-INF/sql
+according to the order in the LoadOrder.lst (or LoadOrder-Empty.lst) file
+
+6. Start scarab.
+</pre>
+
+
+
+</body>
+</html>
