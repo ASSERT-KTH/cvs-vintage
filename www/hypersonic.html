@@ -1,0 +1,109 @@
+<html>
+<head>
+<title>Scarab - Hypersonic</title>
+</head>
+
+<body bgcolor="#ffffff">
+
+<h2>Scarab - Hypersonic</h2>
+<h4>$Id: hypersonic.html,v 1.1 2003/01/31 18:10:01 jon Exp $</h4>
+
+<p>
+Contributed by: "Gillam, Jason Jason.Gillam NO SPAM vignette.com"
+</p>
+
+<p>
+For the moment I'm going to abandon this effort - However I did make quite a
+bit of progress and someone else might want to pick up where I left off.  So
+here's what I know:
+</p>
+
+<p>
+1 - set property: scarab.database.type=hypersonic (note - this will generate
+the scripts but the current ant script won't automatically install the
+database schema for a hypersonic db.  You'll have to manually load them.)
+</p>
+
+<p>
+2 - set property: scarab.database.validationQuery=SELECT ATTRIBUTE_ID FROM SCARAB_ATTRIBUTE WHERE ATTRIBUTE_ID='0'
+ (note - the validation query must be one that returns at
+least one row, and the default query will fail on HSQL DB.)
+</p>
+
+<p>
+3 - set other DB properties to point to your hypersonic DB.  I tried both
+the standalone (file) and server modes and got the same results.
+</p>
+
+<p>
+4 - Torque has a bug when generating hypersonic scripts.  The only script in
+scarab which exposes the problem is the scarab.sql file.  You will have to
+manually go in there and look for an extra comma at the end of each table
+column definition in the CREATE statements.  Some of them have the extra
+comma (which needs to be deleted), and others are okay.
+</p>
+
+<p>
+5 - Add the hsqldb.jar file to the scarab lib directory before building
+scarab.
+</p>
+
+<p>
+6 - Use one of the hypersonic tools (DatabaseManager works well) to open and
+execute each of the .sql scripts in the same order that they appear in the
+create-mysql-database.bat/.sh file.
+</p>
+
+<p>
+---
+Outstanding Issues:
+</p>
+
+<p>
+Just this one.  The scarab web application appears to be working, including
+the e-mail registration part.  I'm stuck at a spot where I don't seem to be
+authorized to do anything (not even the admin account is).  So I can't add
+modules or even see any issues in the sample application.  Whether this is a
+problem with Scarab or a problem with hypersonic has yet to be determined.
+Nothing showed up in the application server logs.
+</p>
+
+<p>
+If anyone figures this out, please post a response.  Hypersonic makes an
+excellent platform for small deployments because it's opensource and you
+don't have to run a full database in a separate process (i.e. standalone
+"file" mode).
+</p>
+
+J
+</p>
+
+<p>
+<h4>Basic instructions</h4>
+In order to get Torque to generate the right Scarab .sql files for
+Hypersonic, try the following:
+</p>
+
+<ul>
+    <li>Copy the Hypersonic jdbc driver .jar file into the scarab/lib/
+        directory *before* building Scarab.</li>
+    <li>Create a scarab/build/build.properties file.</li>
+    <li>In it, fill out the following properties with the right information...</li>
+</ul>
+
+<p>
+scarab.database.host=localhost<br />
+scarab.database.port=<br />
+scarab.database.url=<br />
+scarab.database.admin.url=<br />
+scarab.database.type=hypersonic<br />
+scarab.database.jdbc.driver=????????????<br />
+scarab.database.username=<br />
+scarab.database.password=<br />
+scarab.database.admin.username=<br />
+scarab.database.admin.password=<br />
+scarab.database.validationQuery=SELECT ATTRIBUTE_ID FROM SCARAB_ATTRIBUTE WHERE ATTRIBUTE_ID='0'
+</p>
+
+</body>
+</html>
