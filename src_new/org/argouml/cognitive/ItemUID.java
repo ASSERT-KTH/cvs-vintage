@@ -1,6 +1,4 @@
-
-
-// $Id: ItemUID.java,v 1.7 2003/08/27 12:26:57 bobtarling Exp $
+// $Id: ItemUID.java,v 1.8 2003/08/27 13:05:42 bobtarling Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -30,8 +28,6 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
 import org.apache.log4j.Category;
-
-import ru.novosoft.uml.MBase;
 
 /**
  * Instances of this class is supposed to be attached to other instances

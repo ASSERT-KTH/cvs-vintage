@@ -1,5 +1,4 @@
-
-// $Id: UMLClassifierParameterListModel.java,v 1.3 2003/08/27 12:26:56 bobtarling Exp $
+// $Id: UMLClassifierParameterListModel.java,v 1.4 2003/08/27 13:05:42 bobtarling Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -23,14 +22,12 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $Id: UMLClassifierParameterListModel.java,v 1.3 2003/08/27 12:26:56 bobtarling Exp $
+// $Id: UMLClassifierParameterListModel.java,v 1.4 2003/08/27 13:05:42 bobtarling Exp $
 package org.argouml.uml.ui.foundation.core;
 
 import org.argouml.uml.ui.UMLModelElementListModel2;
 
 import ru.novosoft.uml.MBase;
-import ru.novosoft.uml.foundation.core.MClassifier;
-
 /**
  * 
  * @author jaap.branderhorst@xs4all.nl	

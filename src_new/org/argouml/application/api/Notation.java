@@ -1,9 +1,4 @@
-
-
-
-
-
-// $Id: Notation.java,v 1.30 2003/08/27 12:26:56 bobtarling Exp $
+// $Id: Notation.java,v 1.31 2003/08/27 13:05:42 bobtarling Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -30,7 +25,7 @@
 // File: Notation.java
 // Classes: Notation
 // Original Author: Thierry Lach
-// $Id: Notation.java,v 1.30 2003/08/27 12:26:56 bobtarling Exp $
+// $Id: Notation.java,v 1.31 2003/08/27 13:05:42 bobtarling Exp $
 
 // 8 Apr 2002: Jeremy Bennett (mail@jeremybennett.com). Extended to support
 // extension points.
@@ -62,7 +57,6 @@ import ru.novosoft.uml.foundation.core.MAssociation;
 import ru.novosoft.uml.foundation.core.MAssociationEnd;
 import ru.novosoft.uml.foundation.core.MAttribute;
 import ru.novosoft.uml.foundation.core.MClassifier;
-import ru.novosoft.uml.foundation.core.MModelElement;
 import ru.novosoft.uml.foundation.core.MOperation;
 import ru.novosoft.uml.foundation.core.MParameter;
 import ru.novosoft.uml.foundation.data_types.MExpression;

@@ -1,6 +1,4 @@
-
-
-// $Id: FigSubsystem.java,v 1.6 2003/08/27 12:26:57 bobtarling Exp $
+// $Id: FigSubsystem.java,v 1.7 2003/08/27 13:05:42 bobtarling Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +23,7 @@
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
 
-// $Id: FigSubsystem.java,v 1.6 2003/08/27 12:26:57 bobtarling Exp $
+// $Id: FigSubsystem.java,v 1.7 2003/08/27 13:05:42 bobtarling Exp $
 
 package org.argouml.uml.diagram.static_structure.ui;
 
@@ -36,9 +34,6 @@ import java.awt.Polygon;
 import org.apache.log4j.Category;
 import org.tigris.gef.graph.GraphModel;
 import org.tigris.gef.presentation.FigPoly;
-
-import ru.novosoft.uml.foundation.core.MModelElement;
-import ru.novosoft.uml.model_management.MSubsystem;
 
 /** Class to display graphics for a UML subsystem in a class diagram. */
 

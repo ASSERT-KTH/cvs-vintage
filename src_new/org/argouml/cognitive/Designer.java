@@ -1,5 +1,4 @@
-
-// $Id: Designer.java,v 1.16 2003/08/27 12:26:57 bobtarling Exp $
+// $Id: Designer.java,v 1.17 2003/08/27 13:05:42 bobtarling Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -26,7 +25,7 @@
 // File: Designer.java
 // Classes: Designer
 // Original Author: jrobbins@ics.uci.edu
-// $Id: Designer.java,v 1.16 2003/08/27 12:26:57 bobtarling Exp $
+// $Id: Designer.java,v 1.17 2003/08/27 13:05:42 bobtarling Exp $
 
 package org.argouml.cognitive;
 
@@ -41,8 +40,6 @@ import javax.swing.*;
 
 import ru.novosoft.uml.MElementListener;
 import ru.novosoft.uml.MElementEvent;
-import ru.novosoft.uml.foundation.core.MModelElement;
-
 import org.apache.log4j.Category;
 
 /** This class models the designer who is building a complex design in

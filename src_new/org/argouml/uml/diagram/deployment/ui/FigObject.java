@@ -1,5 +1,4 @@
-
-// $Id: FigObject.java,v 1.12 2003/08/27 12:26:58 bobtarling Exp $
+// $Id: FigObject.java,v 1.13 2003/08/27 13:05:42 bobtarling Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -26,7 +25,7 @@
 // File: FigObject.java
 // Classes: FigObject
 // Original Author: 5eichler@informatik.uni-hamburg.de
-// $Id: FigObject.java,v 1.12 2003/08/27 12:26:58 bobtarling Exp $
+// $Id: FigObject.java,v 1.13 2003/08/27 13:05:42 bobtarling Exp $
 
 package org.argouml.uml.diagram.deployment.ui;
 
@@ -48,7 +47,6 @@ import org.tigris.gef.presentation.FigText;
 
 import ru.novosoft.uml.behavior.common_behavior.MComponentInstance;
 import ru.novosoft.uml.behavior.common_behavior.MObject;
-import ru.novosoft.uml.foundation.core.MClassifier;
 import ru.novosoft.uml.foundation.core.MComponent;
 import ru.novosoft.uml.foundation.core.MElementResidence;
 

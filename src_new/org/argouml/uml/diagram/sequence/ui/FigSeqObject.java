@@ -1,5 +1,4 @@
-
-// $Id: FigSeqObject.java,v 1.16 2003/08/27 12:26:57 bobtarling Exp $
+// $Id: FigSeqObject.java,v 1.17 2003/08/27 13:05:42 bobtarling Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +24,7 @@
 
 // File: FigSeqObject.java
 // Original Author: agauthie@ics.uci.edu
-// $Id: FigSeqObject.java,v 1.16 2003/08/27 12:26:57 bobtarling Exp $
+// $Id: FigSeqObject.java,v 1.17 2003/08/27 13:05:42 bobtarling Exp $
 
 package org.argouml.uml.diagram.sequence.ui;
 
@@ -62,8 +61,6 @@ import org.tigris.gef.presentation.FigText;
 import ru.novosoft.uml.MElementEvent;
 import ru.novosoft.uml.MElementListener;
 import ru.novosoft.uml.behavior.common_behavior.MObject;
-import ru.novosoft.uml.foundation.core.MClassifier;
-
 /** Class to display graphics for a UML sequence in a diagram. */
 
 public class FigSeqObject extends FigNodeModelElement

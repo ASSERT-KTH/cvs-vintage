@@ -1,5 +1,4 @@
-
-// $Id: FigClassifierRole.java,v 1.20 2003/08/27 12:26:59 bobtarling Exp $
+// $Id: FigClassifierRole.java,v 1.21 2003/08/27 13:05:43 bobtarling Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -26,7 +25,7 @@
 // File: FigClassifierRole.java
 // Classes: FigClassifierRole
 // Original Author: agauthie@ics.uci.edu
-// $Id: FigClassifierRole.java,v 1.20 2003/08/27 12:26:59 bobtarling Exp $
+// $Id: FigClassifierRole.java,v 1.21 2003/08/27 13:05:43 bobtarling Exp $
 
 // 10 Apr 2002: Jeremy Bennett (mail@jeremybennett.com). Fixed to stop
 // collaboration roles all stretching to the top left on reload. Problem was
@@ -56,7 +55,6 @@ import org.tigris.gef.base.Selection;
 
 import ru.novosoft.uml.MElementEvent;
 import ru.novosoft.uml.behavior.collaborations.MClassifierRole;
-import ru.novosoft.uml.foundation.core.MClassifier;
 import ru.novosoft.uml.foundation.core.MModelElement;
 import ru.novosoft.uml.foundation.extension_mechanisms.MStereotype;
 

@@ -1,5 +1,4 @@
-
-// $Id: UMLAssociationEndTypeComboBoxModel.java,v 1.7 2003/08/27 12:26:56 bobtarling Exp $
+// $Id: UMLAssociationEndTypeComboBoxModel.java,v 1.8 2003/08/27 13:05:42 bobtarling Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,8 +24,6 @@
 
 // $header$
 package org.argouml.uml.ui.foundation.core;
-
-import ru.novosoft.uml.foundation.core.MAssociationEnd;
 
 /**
  * @since Nov 2, 2002
