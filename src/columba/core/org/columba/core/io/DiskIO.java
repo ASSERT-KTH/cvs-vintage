@@ -281,7 +281,7 @@ public class DiskIO {
     }
 
     /** Copies the contents of any disk file to the specified output file.
-     *  The output file will be overwritten if it exist.
+     *  The output file will be overridden if it exist.
      *  Function reports errors.
      *  @param inputFile a File object
      *  @param outputFile a File object
@@ -314,7 +314,7 @@ public class DiskIO {
      // copyFile
 
     /** Copies a system resource to the specified output file. The output file will
-     *  be overwritten if it exist, so the calling routine has to take care about
+     *  be overridden if it exist, so the calling routine has to take care about
      *  unwanted deletions of content.  Function reports errors.
      *  @param resource a full resource path. If
      *  the value begins with "#", it is resolved against the program's

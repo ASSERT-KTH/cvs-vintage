@@ -247,10 +247,10 @@ public class FolderOptionsController {
 	}
 
 	/**
-	 * Returns true, if any option is overwritten by folder.
+	 * Returns true, if any option is overridden by folder.
 	 * 
 	 * @param folder		selected folder
-	 * @return				true, if any option is overwritten. False, otherwise.
+	 * @return				true, if any option is overridden. False, otherwise.
 	 */
 	private boolean isOverwritingDefaults(Folder folder) {
 		FolderItem item= folder.getFolderItem();

@@ -105,7 +105,7 @@ public abstract class DefaultAddressbookImporter implements PluginInterface {
     }
 
     /**
-     * this method calls your overwritten importMailbox(File)-method and
+     * this method calls your overridden importMailbox(File)-method and
      * handles exceptions
      */
     public void run() {

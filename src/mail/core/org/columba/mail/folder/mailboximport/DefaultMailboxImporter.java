@@ -105,7 +105,7 @@ public abstract class DefaultMailboxImporter {
     }
 
     /**
-     *  this method calls your overwritten importMailbox(File)-method
+     *  this method calls your overridden importMailbox(File)-method
      *  and handles exceptions
      */
     public void run(WorkerStatusController worker) {
