@@ -26,7 +26,7 @@ import java.util.ArrayList;
  * @see AbstractInstanceCache
  * @author <a href="mailto:simone.bordet@compaq.com">Simone Bordet</a>
  * @author <a href="mailto:bill@jboss.org">Bill Burke</a>
- * @version $Revision: 1.22 $
+ * @version $Revision: 1.23 $
  */
 public class LRUEnterpriseContextCachePolicy
         extends LRUCachePolicy
@@ -438,15 +438,17 @@ public class LRUEnterpriseContextCachePolicy
                      // Kick out of the cache this entry
                      if (removedEntries == null) removedEntries = new ArrayList();
                      removedEntries.add(entry.m_object);
-                     m_cache.remove(entry.m_object);
+                     m_cache.remove(entry.m_key);
 
                      int finalSize = list.m_count;
 
                      if (initialSize == finalSize)
                      {
                         // Here is a bug.
-                        throw new IllegalStateException
-                                ("Cache synchronization bug");
+                        log.error("Cache synchronization bug, initialSize="
+                           + initialSize +", finalSize=" + finalSize
+                           + ", entry="+entry);
+                        break;
                      }
                   }
                   else
