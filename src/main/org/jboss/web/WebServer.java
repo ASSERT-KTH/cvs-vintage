@@ -32,9 +32,13 @@ import java.util.Properties;
  *
  *   @see WebClassLoader
  *
- *   @author $Author: mnf999 $
- *   @author <a href="mailto:Scott_Stark@displayscape.com">Scott Stark</a>.
- *   @version $Revision: 1.6 $
+ *   @author <a href="mailto:marc@jboss.org">Marc Fleury</a>
+ *   @author <a href="mailto:Scott.Stark@org.jboss">Scott Stark</a>.
+ *   @version $Revision: 1.7 $
+ *
+ *   Revisions:
+ *   
+ *   20010618 scott.stark: Fixed extraction of mime-type from file extension in getMimeType
  */
 public class WebServer
 	implements Runnable
@@ -49,7 +53,7 @@ public class WebServer
     /** The web server http listening socket */
     private ServerSocket server = null;
 
-    /** The class wide mapping of type suffixes(.class, .txt) to their mime
+    /** The class wide mapping of type suffixes(class, txt) to their mime
      type string used as the Content-Type header for the vended classes/resources */
     private static Properties mimeTypes = new Properties();
     /** The thread pool used to manage listening threads */
@@ -71,7 +75,8 @@ public class WebServer
     }
 
     /** Augment the type suffix to mime type mappings
-     @param extension, the type extension(.class, .txt)
+     @param extension, the type extension without a
+        period(class, txt)
      @param type, the mime type string
      */
     public void addMimeType(String extension, String type) 
@@ -355,10 +360,15 @@ public class WebServer
     protected String getMimeType(String path)
     {
         int dot = path.lastIndexOf(".");
-        String suffix = path.substring(dot);
-        String type = mimeTypes.getProperty(suffix);
-        if (type == null)
-            type = "text/html";
+        String type = "text/html";
+        if( dot >= 0 )
+        {
+            // The suffix is the type extension without the '.'
+            String suffix = path.substring(dot+1);
+            String mimeType = mimeTypes.getProperty(suffix);
+            if( mimeType != null )
+                type = mimeType;
+        }
         return type;
     }
 
