@@ -23,7 +23,6 @@ import java.nio.charset.Charset;
 import java.nio.charset.UnsupportedCharsetException;
 import java.util.logging.Logger;
 
-import javax.swing.event.EventListenerList;
 import javax.swing.tree.TreeNode;
 
 import org.columba.core.command.StatusObservable;
@@ -121,8 +120,6 @@ public abstract class MessageFolder extends AbstractFolder implements MailboxInt
 
     protected HeaderListStorage headerListStorage;
 
-    protected EventListenerList listenerList = new EventListenerList();
-
     /**
      * Standard constructor.
      * 
@@ -159,20 +156,6 @@ public abstract class MessageFolder extends AbstractFolder implements MailboxInt
         }
 
         loadMessageFolderInfo();
-    }
-
-    /**
-     * Adds a listener.
-     */
-    public void addFolderListener(FolderListener l) {
-        listenerList.add(FolderListener.class, l);
-    }
-
-    /**
-     * Removes a previously registered listener.
-     */
-    public void removeFolderListener(FolderListener l) {
-        listenerList.remove(FolderListener.class, l);
     }
 
     /**
@@ -231,63 +214,6 @@ public abstract class MessageFolder extends AbstractFolder implements MailboxInt
         for (int i = listeners.length - 2; i >= 0; i -= 2) {
             if (listeners[i] == FolderListener.class) {
                 ((FolderListener) listeners[i + 1]).messageRemoved(e);
-            }
-        }
-    }
-
-    /**
-     * Propagates an event to all registered listeners notifying them that this
-     * folder has been renamed.
-     */
-    protected void fireFolderRenamed(String name) {
-        FolderEvent e = new FolderEvent(this, name);
-        // Guaranteed to return a non-null array
-        Object[] listeners = listenerList.getListenerList();
-
-        // Process the listeners last to first, notifying
-        // those that are interested in this event
-        for (int i = listeners.length - 2; i >= 0; i -= 2) {
-            if (listeners[i] == FolderListener.class) {
-                ((FolderListener) listeners[i + 1]).folderRenamed(e);
-            }
-        }
-    }
-
-    /**
-     * Propagates an event to all registered listeners notifying them that a
-     * subfolder has been added to this folder.
-     */
-    protected void fireFolderAdded(MessageFolder folder) {
-        FolderEvent e = new FolderEvent(this, folder);
-        // Guaranteed to return a non-null array
-        Object[] listeners = listenerList.getListenerList();
-
-        // Process the listeners last to first, notifying
-        // those that are interested in this event
-        for (int i = listeners.length - 2; i >= 0; i -= 2) {
-            if (listeners[i] == FolderListener.class) {
-                ((FolderListener) listeners[i + 1]).folderAdded(e);
-            }
-        }
-    }
-
-    /**
-     * Propagates an event to all registered listeners notifying them that this
-     * folder has been removed from its parent folder. This method removes all
-     * registered listeners.
-     */
-    protected void fireFolderRemoved(MessageFolder folder) {
-        FolderEvent e = new FolderEvent(this, folder);
-        // Guaranteed to return a non-null array
-        Object[] listeners = listenerList.getListenerList();
-
-        // Process the listeners last to first, notifying
-        // those that are interested in this event
-        for (int i = listeners.length - 2; i >= 0; i -= 2) {
-            if (listeners[i] == FolderListener.class) {
-                ((FolderListener) listeners[i + 1]).folderRemoved(e);
-                listenerList.remove(FolderListener.class, 
-                        (FolderListener)listeners[i + 1]);
             }
         }
     }
@@ -427,7 +353,6 @@ public abstract class MessageFolder extends AbstractFolder implements MailboxInt
      */
     public boolean renameFolder(String name) throws Exception {
         setName(name);
-        fireFolderRenamed(name);
         return true;
     }
 

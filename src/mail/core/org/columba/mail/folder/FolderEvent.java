@@ -27,7 +27,7 @@ public class FolderEvent extends EventObject {
     /**
      * Creates a new event for the given folder.
      */
-    public FolderEvent(MessageFolder source, Object changes) {
+    public FolderEvent(AbstractFolder source, Object changes) {
         super(source);
         this.changes = changes;
     }

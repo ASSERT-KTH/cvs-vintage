@@ -24,6 +24,7 @@ import org.columba.core.xml.XmlElement;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.config.FolderItem;
 
+import javax.swing.event.EventListenerList;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreePath;
 
@@ -51,6 +52,8 @@ public abstract class AbstractFolder extends DefaultMutableTreeNode {
     // locking mechanism
     protected Lock myLock;
 
+    protected EventListenerList listenerList = new EventListenerList();
+    
     public AbstractFolder(String name, String type) {
         super();
 
@@ -79,6 +82,77 @@ public abstract class AbstractFolder extends DefaultMutableTreeNode {
         }
 
         myLock = new Lock();
+    }
+
+    /**
+     * Adds a listener.
+     */
+    public void addFolderListener(FolderListener l) {
+        listenerList.add(FolderListener.class, l);
+    }
+
+    /**
+     * Removes a previously registered listener.
+     */
+    public void removeFolderListener(FolderListener l) {
+        listenerList.remove(FolderListener.class, l);
+    }
+
+    /**
+     * Propagates an event to all registered listeners notifying them that this
+     * folder has been renamed.
+     */
+    protected void fireFolderRenamed(String name) {
+        FolderEvent e = new FolderEvent(this, name);
+        // Guaranteed to return a non-null array
+        Object[] listeners = listenerList.getListenerList();
+
+        // Process the listeners last to first, notifying
+        // those that are interested in this event
+        for (int i = listeners.length - 2; i >= 0; i -= 2) {
+            if (listeners[i] == FolderListener.class) {
+                ((FolderListener) listeners[i + 1]).folderRenamed(e);
+            }
+        }
+    }
+
+    /**
+     * Propagates an event to all registered listeners notifying them that a
+     * subfolder has been added to this folder.
+     */
+    protected void fireFolderAdded(AbstractFolder folder) {
+        FolderEvent e = new FolderEvent(this, folder);
+        // Guaranteed to return a non-null array
+        Object[] listeners = listenerList.getListenerList();
+
+        // Process the listeners last to first, notifying
+        // those that are interested in this event
+        for (int i = listeners.length - 2; i >= 0; i -= 2) {
+            if (listeners[i] == FolderListener.class) {
+                ((FolderListener) listeners[i + 1]).folderAdded(e);
+            }
+        }
+    }
+
+    /**
+     * Propagates an event to all registered listeners notifying them that this
+     * folder has been removed from its parent folder. This method removes all
+     * registered listeners.
+     */
+    protected void fireFolderRemoved() {
+        FolderEvent e = new FolderEvent(this, this);
+        // Guaranteed to return a non-null array
+        Object[] listeners = listenerList.getListenerList();
+
+        // Process the listeners last to first, notifying
+        // those that are interested in this event
+        for (int i = listeners.length - 2; i >= 0; i -= 2) {
+            if (listeners[i] == FolderListener.class) {
+                ((FolderListener) listeners[i + 1]).folderRemoved(e);
+                listenerList.remove(FolderListener.class, 
+                        (FolderListener)listeners[i + 1]);
+            }
+        }
     }
 
     /**
@@ -119,6 +193,7 @@ public abstract class AbstractFolder extends DefaultMutableTreeNode {
     public void setName(String newName) {
         FolderItem item = getFolderItem();
         item.set("property", "name", newName);
+        fireFolderRenamed(newName);
     }
 
     /**
@@ -187,11 +262,13 @@ public abstract class AbstractFolder extends DefaultMutableTreeNode {
 
         // remove DefaultMutableTreeNode
         removeFromParent();
+        fireFolderRemoved();
     }
 
     public void addSubfolder(AbstractFolder child) throws Exception {
         add(child);
         getNode().addElement(child.getNode());
+        fireFolderAdded(child);
     }
 
     public AbstractFolder findChildWithName(String str, boolean recurse) {
@@ -271,6 +348,7 @@ public abstract class AbstractFolder extends DefaultMutableTreeNode {
 
         // do the same for the XmlElement of child
         getFolderItem().getRoot().addElement(child.getFolderItem().getRoot());
+        fireFolderAdded(child);
     }
 
     /********************* capabilities **************************************/
