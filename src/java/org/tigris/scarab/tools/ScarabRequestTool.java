@@ -129,6 +129,13 @@ public class ScarabRequestTool implements ScarabRequestScope,
      * A AttributeOption object for use within the Scarab API.
      */
     private AttributeOption attributeOption = null;
+
+    /**
+     * A AttributeOption object for use within the Scarab API.
+     */
+    private int nbrPages = 0;
+    private int prevPage = 0;
+    private int nextPage = 0;
     
     public void init(Object data)
     {
@@ -615,6 +622,72 @@ try{
         return issue;
     }
 
+    /**
+     * Return a subset of the passed-in list.
+     */
+    public List getPaginatedList( List fullList, int pgNbr, 
+                                  int nbrItemsPerPage)
+    {
+        this.nbrPages =  (int)Math.ceil((float)fullList.size() 
+                                               / nbrItemsPerPage);
+        this.nextPage = pgNbr + 1;
+        this.prevPage = pgNbr - 1;
+        return fullList.subList
+           ((pgNbr - 1) * nbrItemsPerPage,
+            Math.min(pgNbr * nbrItemsPerPage, fullList.size()));
+    }
+
+    /**
+     * Get the cached list of issue id's resulting from a search
+     * And return the list of issues.
+     */
+    public List getIssueList() throws Exception
+    {
+        List issueList = new ArrayList();
+        ScarabUser user = (ScarabUser)data.getUser();
+        List issueIdList = (List)(user.getTemp("issueIdList"));
+        for (int i = 0;i<issueIdList.size();i++)
+        {
+           Issue issue = (Issue)IssuePeer
+              .retrieveByPK((NumberKey)issueIdList.get(i));
+           issueList.add(issue);
+        }
+        return issueList;
+    }
+
+    /**
+     * Return the number of paginated pages.
+     *
+    */
+    public int getNbrPages()
+    {
+        return nbrPages;
+    }
+
+    /**
+     * Return the next page in the paginated list.
+     *
+    */
+    public int getNextPage()
+    {
+        if (nextPage <= nbrPages)
+        {
+            return nextPage;
+        }
+        else
+        {
+            return 0;
+        }       
+    }
+
+    /**
+     * Return the previous page in the paginated list.
+     *
+    */
+    public int getPrevPage()
+    {
+        return prevPage;
+    }
 
 
     // ****************** Recyclable implementation ************************
