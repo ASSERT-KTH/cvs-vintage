@@ -31,7 +31,7 @@ import org.jboss.logging.Logger;
  *      
  *   @see <related>
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
- *   @version $Revision: 1.4 $
+ *   @version $Revision: 1.5 $
  */
 public class StatefulSessionContainer
    extends Container
@@ -102,6 +102,12 @@ public class StatefulSessionContainer
       
    	  // Call default init
       super.init();
+	  
+	  // Map the bean methods
+	  setupBeanMapping();
+	  
+	  // Map the home methods
+      setupHomeMapping();
       
       // Init container invoker
       containerInvoker.init();
@@ -140,9 +146,7 @@ public class StatefulSessionContainer
       
 		// Reset classloader
       Thread.currentThread().setContextClassLoader(oldCl);
-     // super.start();
-     // setupBeanMapping();
-     // setupHomeMapping();
+      
    }
    
 	public void stop() {
@@ -237,6 +241,7 @@ public class StatefulSessionContainer
    public EJBHome getEJBHome(Method m, Object[] args, StatefulSessionEnterpriseContext ctx)
       throws java.rmi.RemoteException
    {
+	   
       return containerInvoker.getEJBHome();
    }
    
@@ -302,13 +307,15 @@ public class StatefulSessionContainer
          {
             // Implemented by bean
             map.put(m[i], beanClass.getMethod(m[i].getName(), m[i].getParameterTypes()));
-         }
+            System.out.println("Bean Method mapped "+m[i].getName());
+		 }
          else
          {
             try
             {
                // Implemented by container
                map.put(m[i], getClass().getMethod(m[i].getName(), new Class[] { Method.class, Object[].class , StatefulSessionEnterpriseContext.class}));
+               System.out.println("Container method mapped "+m[i].getName()); 
             } catch (NoSuchMethodException e)
             {
                System.out.println(m[i].getName() + " in bean has not been mapped");
@@ -318,6 +325,8 @@ public class StatefulSessionContainer
       
       beanMapping = map;
    }
+   
+   
    
    protected Interceptor createContainerInterceptor()
    {
