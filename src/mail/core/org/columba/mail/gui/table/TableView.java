@@ -17,21 +17,14 @@
 //All Rights Reserved.
 package org.columba.mail.gui.table;
 
-import java.awt.Dimension;
-import java.util.Enumeration;
-
 import javax.swing.JOptionPane;
-import javax.swing.table.DefaultTableColumnModel;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 import javax.swing.tree.TreePath;
 
-import org.columba.core.config.DefaultItem;
-import org.columba.core.config.OptionsSerializer;
 import org.columba.core.gui.util.ImageLoader;
 import org.columba.core.main.MainInterface;
 import org.columba.core.plugin.PluginHandlerNotFoundException;
-import org.columba.core.xml.XmlElement;
 import org.columba.mail.gui.table.model.HeaderTableModel;
 import org.columba.mail.gui.table.model.MessageNode;
 import org.columba.mail.gui.table.model.TableModelSorter;
@@ -50,7 +43,7 @@ import org.frappucino.treetable.TreeTable;
  * @version 0.9.1
  * @author fdietz
  */
-public class TableView extends TreeTable implements OptionsSerializer {
+public class TableView extends TreeTable {
 
     private HeaderTableModel headerTableModel;
 
@@ -393,87 +386,6 @@ public class TableView extends TreeTable implements OptionsSerializer {
             requestFocus();
             */
         }
-    }
-
-    /** ************************* OptionsSerializer *************************** */
-    /**
-     * @see org.columba.core.config.OptionsSerializer#loadOptionsFromXml(org.columba.core.xml.XmlElement)
-     */
-    public void loadOptionsFromXml(XmlElement element) {
-        XmlElement columns = element;
-
-        // remove all columns
-        setColumnModel(new DefaultTableColumnModel());
-
-        // add columns
-        for (int i = 0; i < columns.count(); i++) {
-            XmlElement column = columns.getElement(i);
-            DefaultItem columnItem = new DefaultItem(column);
-
-            String name = columnItem.get("name");
-            int size = columnItem.getInteger("width");
-
-            //int position = columnItem.getInteger("position");
-            // add column to table model
-            headerTableModel.addColumn(name);
-
-            // add column to JTable column model
-            addColumn(createTableColumn(name, size));
-        }
-
-        // resize columns
-        // -> this has to happen, after all columns are added
-        // -> in the JTable, otherwise it doesn't have any effect
-        for (int i = 0; i < columns.count(); i++) {
-            XmlElement column = columns.getElement(i);
-            DefaultItem columnItem = new DefaultItem(column);
-
-            String name = columnItem.get("name");
-            int size = columnItem.getInteger("width");
-            TableColumn tc = getColumn(name);
-            tc.setPreferredWidth(size);
-        }
-
-        // for some weird reason the table loses its inter-cell spacing
-        // property, when changing the underlying column model
-        // -> setting this to (0,0) again
-        setIntercellSpacing(new Dimension(0, 0));
-    }
-
-    /**
-     * @see org.columba.core.config.OptionsSerializer#saveOptionsToXml()
-     */
-    public XmlElement saveOptionsToXml() {
-        XmlElement columns = new XmlElement("columns");
-
-        // for each column
-        int c = getColumnCount();
-
-        Enumeration enum = getColumnModel().getColumns();
-
-        while (enum.hasMoreElements()) {
-            XmlElement column = new XmlElement("column");
-
-            TableColumn tc = (TableColumn) enum.nextElement();
-            String name = (String) tc.getHeaderValue();
-
-            // save name
-            column.addAttribute("name", name);
-
-            int size = tc.getWidth();
-
-            // save width
-            column.addAttribute("width", Integer.toString(size));
-
-            /*
-             * int position = tc.getModelIndex(); // save position
-             * column.addAttribute("position", Integer.toString(position));
-             */
-            // add to columns list
-            columns.addElement(column);
-        }
-
-        return columns;
     }
 
     /**
