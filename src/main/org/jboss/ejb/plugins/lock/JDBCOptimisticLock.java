@@ -63,7 +63,7 @@ import java.util.Iterator;
  * new CMP design.
  *
  * @author <a href="mailto:aloubyansky@hotmail.com">Alex Loubyansky</a>
- * @version $Revision: 1.3 $
+ * @version $Revision: 1.4 $
  */
 public class JDBCOptimisticLock
    extends BeanLockSupport
@@ -304,16 +304,19 @@ public class JDBCOptimisticLock
    public void schedule(Invocation mi)
       throws Exception
    {
-      Object key = mi.getId();
-      if(key == null)
+      Object id = mi.getId();
+      if(id == null)
          return;
 
-      EntityEnterpriseContext ctx = container.getTxEntityMap().getCtx(mi.getTransaction(), key);
+      EntityEnterpriseContext ctx = EntityContainer.getEntityInvocationRegistry().getContext(
+                  container,
+                  id,
+                  mi.getTransaction());
       if(ctx == null)
       {
          ctx = (EntityEnterpriseContext)container.getInstancePool().get();
-         ctx.setCacheKey(key);
-         ctx.setId(key);
+         ctx.setCacheKey(id);
+         ctx.setId(id);
          container.activateEntity(ctx);
       }
 
