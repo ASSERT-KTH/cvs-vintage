@@ -84,7 +84,7 @@ import org.tigris.scarab.services.security.ScarabSecurity;
  *
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: MoveIssue.java,v 1.43 2003/01/04 01:00:15 elicia Exp $
+ * @version $Id: MoveIssue.java,v 1.44 2003/01/04 01:55:56 jon Exp $
  */
 public class MoveIssue extends RequireLoginFirstAction
 {
@@ -104,22 +104,27 @@ public class MoveIssue extends RequireLoginFirstAction
 
         ScarabLocalizationTool l10n = getLocalizationTool(context);
         ScarabRequestTool scarabR = getScarabRequestTool(context);
-        Issue issue = getScarabRequestTool(context).getIssue();
+        Issue issue = scarabR.getIssue();
         Module oldModule = issue.getModule();
         Group moveIssue = intake.get("MoveIssue",
                           IntakeTool.DEFAULT_KEY, false);
         String modIssueType = data.getParameters().getString("mod_issuetype");
+        if (modIssueType == null)
+        {
+            scarabR.setAlertMessage(l10n.get("SelectModuleAndIssueType"));
+            return;
+        }
+
         NumberKey newModuleId = null;
         NumberKey newIssueTypeId = null;
         Module newModule = null;
-        IssueType newIssueType = null; 
-
+        IssueType newIssueType = null;
         try
         {
             newModuleId = new NumberKey(modIssueType.
-                      substring(0, modIssueType.indexOf("_")));
+                      substring(0, modIssueType.indexOf('_')));
             newIssueTypeId = new NumberKey(modIssueType.
-                      substring(modIssueType.indexOf("_")+1, modIssueType.length()));
+                      substring(modIssueType.indexOf('_')+1, modIssueType.length()));
             newModule = ModuleManager
                                .getInstance(new NumberKey(newModuleId));
             newIssueType = IssueTypeManager
@@ -134,7 +139,8 @@ public class MoveIssue extends RequireLoginFirstAction
         String selectAction = moveIssue.get("Action").toString();
         ScarabUser user = (ScarabUser)data.getUser();
         boolean changeModule = !newModuleId.equals(oldModule.getModuleId());
-        boolean changeIssueType = !newIssueTypeId.equals(issue.getIssueType().getIssueTypeId());
+        boolean changeIssueType = !newIssueTypeId
+            .equals(issue.getIssueType().getIssueTypeId());
 
         // Check permissions
         // Must have ISSUE_ENTER in new module
@@ -147,7 +153,10 @@ public class MoveIssue extends RequireLoginFirstAction
         }
         if ("move".equals(selectAction))
         {
-            if (changeModule && !user.hasPermission(ScarabSecurity.ISSUE__MOVE, oldModule) || (changeIssueType && !user.hasPermission(ScarabSecurity.ISSUE__EDIT, oldModule)))
+            if (changeModule && 
+                !user.hasPermission(ScarabSecurity.ISSUE__MOVE, oldModule) || 
+                (changeIssueType && 
+                !user.hasPermission(ScarabSecurity.ISSUE__EDIT, oldModule)))
             {
                 data.setMessage(l10n.get(NO_PERMISSION_MESSAGE));
                 return;
@@ -184,7 +193,7 @@ public class MoveIssue extends RequireLoginFirstAction
         }
 
         ScarabLocalizationTool l10n = getLocalizationTool(context);
-        Issue issue = getScarabRequestTool(context).getIssue();
+        Issue issue = scarabR.getIssue();
         Module oldModule = issue.getModule();
         Group moveIssue = intake.get("MoveIssue",
                           IntakeTool.DEFAULT_KEY, false);
@@ -199,7 +208,8 @@ public class MoveIssue extends RequireLoginFirstAction
         String selectAction = moveIssue.get("Action").toString();
         ScarabUser user = (ScarabUser)data.getUser();
         boolean changeModule = !newModuleId.equals(oldModule.getModuleId());
-        boolean changeIssueType = !newIssueTypeId.equals(issue.getIssueType().getIssueTypeId());
+        boolean changeIssueType = !newIssueTypeId
+            .equals(issue.getIssueType().getIssueTypeId());
 
         // Get selected non-matching attributes to save in comment
         ArrayList commentAttrs = new ArrayList();
@@ -210,7 +220,9 @@ public class MoveIssue extends RequireLoginFirstAction
             String key = (String) keys[i];
             if (key.startsWith("comment_attr_ids_"))
             {
-                commentAttrs.add((Attribute)getScarabRequestTool(context).getAttribute(new NumberKey(key.substring(17))));
+                commentAttrs.add(
+                    (Attribute)scarabR
+                    .getAttribute(new NumberKey(key.substring(17))));
             }
         }
         String reason = data.getParameters().getString("reason");
@@ -272,8 +284,7 @@ public class MoveIssue extends RequireLoginFirstAction
                              issue.getUsersToEmail(AttributePeer.CC_TO),
                              subject, template))
         {
-             getScarabRequestTool(context).setAlertMessage(
-                 l10n.get(EMAIL_ERROR));
+             scarabR.setAlertMessage(l10n.get(EMAIL_ERROR));
         }
 
         // Redirect to moved or copied issue
