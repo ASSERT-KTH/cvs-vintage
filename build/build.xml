@@ -901,12 +901,10 @@
     <!-- Build our version of Turbine easily                                -->
     <!-- ================================================================== -->
     <target name="build-turbine">
-        <exec executable="ant" dir="${turbine.dir}">
-            <arg line="-f build-legacy.xml maven:clean"/>
+        <exec executable="maven" dir="${turbine.dir}">
+            <arg line="clean"/>
         </exec>
-        <exec executable="ant" dir="${turbine.dir}">
-            <arg line="-f build-legacy.xml maven:install-jar"/>
-        </exec>
+        <exec executable="maven" dir="${turbine.dir}" />
     </target>
 
     <!-- ================================================================== -->
