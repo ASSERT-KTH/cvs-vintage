@@ -54,7 +54,7 @@ echo ""
 
 # deal with the dtd files specially because of bugs in Unix JDK 1.3 JVM's
 rm -rf ./org
-. cpdtd.sh
+. ./cpdtd.sh
 
 BUILDFILE=build.xml
 
