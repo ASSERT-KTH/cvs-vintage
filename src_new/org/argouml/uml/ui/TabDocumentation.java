@@ -1,4 +1,4 @@
-// $Id: TabDocumentation.java,v 1.26 2003/12/08 11:46:00 jhraigniac Exp $
+// $Id: TabDocumentation.java,v 1.27 2004/01/11 18:51:45 mvw Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -75,8 +75,10 @@ public class TabDocumentation extends PropPanel {
         //uses the new LabelledLayout;
         //TODO: the title of the prop panel is localized using the localisation of documentation
         //- should this change? (Raphael)
+        // MVW: I changed label.documentation into tab.documentation 
+        // to get rid of  ":" in the tab. 
         super(
-	      Translator.localize("label.documentation"),
+	      Translator.localize("tab.documentation"),
 	      (Configuration.getString(
                     Configuration.makeKey("layout", "tabdocumentation"))
                     .equals("West") ||
