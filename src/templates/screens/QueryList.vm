@@ -1,14 +1,15 @@
 #set ($action = $link.setPage("QueryList.vm").setAction("QueryList").addPathInfo("nextTemplate", "QueryList.vm"))
 
 #set ($module = $scarabR.CurrentModule)
-
+#set ($user = $data.User)
 
 <form method="post" action="$action" >
   <h2>Saved query list</h2>
 
-#if ( !$module.Queries.isEmpty() )
+#if ( (!$module.getPrivateQueries($user).isEmpty())
+   || (!$module.GlobalQueries.isEmpty())) 
 
-       <p>&#171; previous | 1 of 1 | next &#187; </p>
+ ##      <p>&#171; previous | 1 of 1 | next &#187; </p>
 
        <p>Click on location to execute</p>
 
@@ -31,7 +32,8 @@
 
         </tr>
 
-#foreach ( $query in $module.Queries )
+#if ($user.UserId)
+#foreach ( $query in $module.getPrivateQueries($user) )
 
          #if( $velocityCount % 2 > 0 )
             <tr class="a">
@@ -44,7 +46,46 @@
 
          <td>#if($query.Description)  $query.Description #else &nbsp; #end</td>
 
-         <td>$query.QueryType.Name</td>
+         <td>$query.QueryType.Name 
+           #if (!$query.Approved)
+             (until approved)
+           #end
+         </td>
+
+         <td><a href="$query.getExecuteLink($link.toString())">project '$scarabR.getModule($query.ModuleId.toString()).Name'</a></td>
+
+        #set ($createdUser = $scarabR.getUser($query.UserId.toString()) )
+         <td><a href="mailTo:$createdUser.Email">$createdUser.UserName</a></td>
+        </tr>
+#end
+#else
+    If you wish to see your personal queries, <a href="$link.setPage("Login.vm")">log in.</a>
+#end
+
+#foreach ( $query in $module.GlobalQueries )
+
+         #if( $velocityCount % 2 > 0 )
+            <tr class="a">
+         #else 
+            <tr class="b">
+         #end
+         <td>
+      #if ($security.hasPermission("Item | Delete"))
+            <input type="checkbox" name="delete_$query.QueryId"/>
+      #else
+            &nbsp;
+      #end
+         </td>
+
+         <td><a href="$query.getEditLink($link.toString())">$query.Name</a></td>
+
+         <td>#if($query.Description)  $query.Description #else &nbsp; #end</td>
+
+         <td>$query.QueryType.Name 
+           #if (!$query.Approved)
+             (until approved)
+           #end
+         </td>
 
          <td><a href="$query.getExecuteLink($link.toString())">project '$scarabR.getModule($query.ModuleId.toString()).Name'</a></td>
 
@@ -55,10 +96,12 @@
 
       </table>
 
-       <p>&#171; previous | 1 of 1 | next &#187; </p>
+##       <p>&#171; previous | 1 of 1 | next &#187; </p>
 
 <p class="functnbar">
+      #if ($security.hasPermission("Item | Delete") || !$module.getPrivateQueries($user).isEmpty())
 <input type="submit" value="delete selected" name="eventSubmit_doDeletequeries" />&#160;
+      #end
 <input type="submit" value="cancel" name="eventSubmit_doCancel" />
 </p>
 
