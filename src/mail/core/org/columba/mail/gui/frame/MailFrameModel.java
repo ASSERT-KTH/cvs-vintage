@@ -17,10 +17,9 @@ package org.columba.mail.gui.frame;
 
 import java.util.Enumeration;
 
-import org.columba.core.gui.FrameController;
-import org.columba.core.gui.MultiViewFrameModel;
+import org.columba.core.gui.frame.FrameController;
+import org.columba.core.gui.frame.MultiViewFrameModel;
 import org.columba.core.xml.XmlElement;
-import org.columba.mail.gui.composer.ComposerModel;
 import org.columba.mail.gui.table.TableChangedEvent;
 
 /**

@@ -297,7 +297,7 @@ public class FrameActionListener implements ActionListener {
 
 		} else if (action.equals("ADDRESSBOOK")) {
 			//AddressbookFrame frame = new AddressbookFrame( );
-			MainInterface.addressbookInterface.frame.setVisible(true);
+			//MainInterface.addressbookInterface.frame.setVisible(true);
 
 		} else if (action.equals("MAIN_PREFERENCES")) {
 

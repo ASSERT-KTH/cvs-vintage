@@ -17,21 +17,21 @@
 package org.columba.addressbook.main;
 
 import org.columba.addressbook.gui.action.AddressbookActionListener;
-import org.columba.addressbook.gui.frame.AddressbookView;
+import org.columba.addressbook.gui.frame.AddressbookFrameView;
 import org.columba.addressbook.gui.menu.AddressbookMenu;
-import org.columba.addressbook.gui.table.AddressbookTable;
-import org.columba.addressbook.gui.tree.AddressbookTree;
+import org.columba.addressbook.gui.table.TableView;
+import org.columba.addressbook.gui.tree.TreeView;
 import org.columba.addressbook.gui.tree.AddressbookTreeModel;
 import org.columba.core.command.TaskManager;
 import org.columba.core.gui.statusbar.StatusBar;
 
 public class AddressbookInterface
 {
-    public AddressbookView frame;
+    public AddressbookFrameView frame;
     public AddressbookMenu menu;
     
-    public AddressbookTable table;
-    public AddressbookTree tree;
+    public TableView table;
+    public TreeView tree;
     
     public AddressbookTreeModel treeModel;
     //public AddressbookConfig config;

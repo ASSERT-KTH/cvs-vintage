@@ -8,7 +8,7 @@ package org.columba.mail.gui.tree;
 
 import javax.swing.JPopupMenu;
 
-import org.columba.core.gui.FrameController;
+import org.columba.core.gui.frame.FrameController;
 import org.columba.core.gui.menu.PopupMenuGenerator;
 import org.columba.core.xml.XmlElement;
 

@@ -6,8 +6,8 @@
  */
 package org.columba.addressbook.gui.frame;
 
-import org.columba.core.gui.FrameController;
-import org.columba.core.gui.MultiViewFrameModel;
+import org.columba.core.gui.frame.FrameController;
+import org.columba.core.gui.frame.MultiViewFrameModel;
 import org.columba.core.xml.XmlElement;
 
 /**
@@ -30,7 +30,7 @@ public class AddressbookFrameModel extends MultiViewFrameModel {
 	 * @see org.columba.core.gui.DefaultFrameModel#createInstance(java.lang.String)
 	 */
 	public FrameController createInstance(String id) {
-		return new AddressbookController(id, this);
+		return new AddressbookFrameController(id, this);
 	}
 
 }

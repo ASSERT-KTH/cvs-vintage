@@ -16,7 +16,7 @@
 
 package org.columba.core.action;
 
-import org.columba.core.gui.FrameController;
+import org.columba.core.gui.frame.FrameController;
 import org.columba.core.gui.util.CMenu;
 
 public class IMenu extends CMenu {

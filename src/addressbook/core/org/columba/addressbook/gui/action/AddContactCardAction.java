@@ -8,9 +8,13 @@ package org.columba.addressbook.gui.action;
 
 import java.awt.event.ActionEvent;
 
+import org.columba.addressbook.folder.ContactCard;
+import org.columba.addressbook.folder.Folder;
+import org.columba.addressbook.gui.dialog.contact.ContactDialog;
+import org.columba.addressbook.gui.frame.AddressbookFrameController;
 import org.columba.addressbook.util.AddressbookResourceLoader;
 import org.columba.core.action.FrameAction;
-import org.columba.core.gui.FrameController;
+import org.columba.core.gui.frame.FrameController;
 import org.columba.core.gui.util.ImageLoader;
 
 /**
@@ -54,8 +58,27 @@ public class AddContactCardAction extends FrameAction {
 	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
 	 */
 	public void actionPerformed(ActionEvent evt) {
-		// TODO Auto-generated method stub
-		super.actionPerformed(evt);
+		AddressbookFrameController addressbookFrameController = (AddressbookFrameController) frameController;
+		
+		ContactDialog dialog =
+				new ContactDialog(addressbookFrameController.getView());
+
+			dialog.setVisible(true);
+			if (dialog.getResult()) {
+				System.out.println("saving contact");
+
+				// Ok
+
+				ContactCard card = new ContactCard();
+
+				dialog.updateComponents(card, false);
+
+				Folder folder = addressbookFrameController.getTree().getView().getSelectedFolder();
+
+				folder.add(card);
+
+				addressbookFrameController.getTable().getView().setFolder(folder);
+			}
 	}
 
 }

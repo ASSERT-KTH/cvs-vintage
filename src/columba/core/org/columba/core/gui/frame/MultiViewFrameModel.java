@@ -13,11 +13,11 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
-package org.columba.core.gui;
+package org.columba.core.gui.frame;
 import java.util.Enumeration;
-import java.util.Hashtable;
 
 import org.columba.core.config.ViewItem;
+import org.columba.core.gui.action.DefaultOpenNewWindowAction;
 import org.columba.core.main.MainInterface;
 import org.columba.core.xml.XmlElement;
 /**
@@ -135,6 +135,12 @@ public abstract class MultiViewFrameModel extends DefaultFrameModel {
 		} else {
 			controllers.remove(id);
 		}
+	}
+	
+	public DefaultOpenNewWindowAction getOpenWindowAction()
+	{
+		
+		return null;
 	}
 
 

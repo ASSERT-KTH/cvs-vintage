@@ -21,7 +21,7 @@ import java.awt.event.KeyEvent;
 import javax.swing.KeyStroke;
 
 import org.columba.core.action.CheckBoxAction;
-import org.columba.core.gui.FrameController;
+import org.columba.core.gui.frame.FrameController;
 import org.columba.core.gui.util.SelectionChangedEvent;
 import org.columba.core.gui.util.SelectionListener;
 import org.columba.core.logging.ColumbaLogger;

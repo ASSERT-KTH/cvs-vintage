@@ -12,7 +12,7 @@ import java.awt.event.KeyEvent;
 import javax.swing.KeyStroke;
 
 import org.columba.core.action.FrameAction;
-import org.columba.core.gui.FrameController;
+import org.columba.core.gui.frame.FrameController;
 import org.columba.core.main.MainInterface;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.folder.command.ExpungeFolderCommand;

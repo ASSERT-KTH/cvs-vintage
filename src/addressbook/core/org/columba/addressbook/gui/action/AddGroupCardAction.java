@@ -8,9 +8,13 @@ package org.columba.addressbook.gui.action;
 
 import java.awt.event.ActionEvent;
 
+import org.columba.addressbook.folder.Folder;
+import org.columba.addressbook.folder.GroupListCard;
+import org.columba.addressbook.gui.EditGroupDialog;
+import org.columba.addressbook.gui.frame.AddressbookFrameController;
 import org.columba.addressbook.util.AddressbookResourceLoader;
 import org.columba.core.action.FrameAction;
-import org.columba.core.gui.FrameController;
+import org.columba.core.gui.frame.FrameController;
 import org.columba.core.gui.util.ImageLoader;
 
 /**
@@ -54,8 +58,32 @@ public class AddGroupCardAction extends FrameAction {
 	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
 	 */
 	public void actionPerformed(ActionEvent evt) {
-		// TODO Auto-generated method stub
-		super.actionPerformed(evt);
+		
+		AddressbookFrameController addressbookFrameController = (AddressbookFrameController) frameController;
+		
+		Folder folder =
+				(Folder) addressbookFrameController.getTree().getView().getSelectedFolder();
+			if (folder == null) return;
+
+			EditGroupDialog dialog =
+				new EditGroupDialog(
+		addressbookFrameController.getView(),
+					addressbookFrameController,
+					null);
+
+			dialog.setHeaderList(folder.getHeaderItemList());
+
+			dialog.setVisible(true);
+
+			if (dialog.getResult()) {
+				// Ok
+				GroupListCard card = new GroupListCard();
+
+				dialog.updateComponents(card, null, false);
+
+				folder.add(card);
+				addressbookFrameController.getTable().getView().setFolder(folder);
+			}
 	}
 
 }

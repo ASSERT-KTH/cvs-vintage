@@ -17,7 +17,7 @@ package org.columba.mail.command;
 
 import org.columba.core.command.Command;
 import org.columba.core.command.DefaultCommandReference;
-import org.columba.core.gui.FrameController;
+import org.columba.core.gui.frame.FrameController;
 import org.columba.mail.folder.Folder;
 
 /**

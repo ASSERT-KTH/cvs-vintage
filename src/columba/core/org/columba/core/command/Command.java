@@ -17,7 +17,7 @@ package org.columba.core.command;
 
 import java.lang.reflect.Array;
 
-import org.columba.core.gui.FrameController;
+import org.columba.core.gui.frame.FrameController;
 import org.columba.core.util.Lock;
 
 /**

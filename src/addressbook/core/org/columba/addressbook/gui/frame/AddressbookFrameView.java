@@ -21,22 +21,21 @@ import java.awt.Container;
 
 import javax.swing.JSplitPane;
 
+import org.columba.addressbook.config.AddressbookConfig;
 import org.columba.addressbook.gui.menu.AddressbookMenu;
-import org.columba.addressbook.gui.table.AddressbookTable;
-import org.columba.addressbook.gui.tree.AddressbookTree;
-import org.columba.addressbook.main.AddressbookInterface;
-import org.columba.core.gui.FrameController;
-import org.columba.core.gui.FrameView;
+import org.columba.addressbook.gui.table.TableView;
+import org.columba.addressbook.gui.tree.TreeView;
 import org.columba.core.gui.ToolBar;
+import org.columba.core.gui.frame.FrameController;
+import org.columba.core.gui.frame.FrameView;
 import org.columba.core.gui.menu.Menu;
-import org.columba.core.main.MainInterface;
 
-public class AddressbookView extends FrameView {
-	private AddressbookInterface addressbookInterface;
-	private AddressbookTree tree;
-	private AddressbookTable table;
+public class AddressbookFrameView extends FrameView {
+	//private AddressbookInterface addressbookInterface;
+	//private TreeView tree;
+	//private TableView table;
 
-	public AddressbookView(FrameController frameController) {
+	public AddressbookFrameView(FrameController frameController) {
 		super(frameController);
 
 		//super("Columba v" + MainInterface.version + " - Addressbook");
@@ -44,8 +43,10 @@ public class AddressbookView extends FrameView {
 		this.setIconImage(
 			ImageLoader.getImageIcon("ColumbaIcon.png").getImage());
 		*/
+		/*
 		addressbookInterface = MainInterface.addressbookInterface;
 		addressbookInterface.frame = this;
+		*/
 		// FIXME
 
 		/*
@@ -53,7 +54,7 @@ public class AddressbookView extends FrameView {
 			new AddressbookActionListener(addressbookInterface);
 		addressbookInterface.menu = new AddressbookMenu(addressbookInterface);
 		*/
-		init();
+		//init();
 	}
 
 	/* (non-Javadoc)
@@ -71,11 +72,11 @@ public class AddressbookView extends FrameView {
 	 */
 	protected ToolBar createToolbar(FrameController controller) {
 		return new ToolBar(
-			"org/columba/addressbook/action/main_toolbar.xml",
+			AddressbookConfig.get("main_toolbar").getElement("toolbar"),
 			controller);
 	}
 
-	public void init() {
+	public void init( TreeView tree, TableView table) {
 		super.init();
 		
 		Container c = getContentPane();
@@ -89,12 +90,9 @@ public class AddressbookView extends FrameView {
 		c.add(toolbar, BorderLayout.NORTH);
 		*/
 
-		tree = createTree(addressbookInterface);
-
-		addressbookInterface.tree = tree;
-		table = new AddressbookTable(addressbookInterface);
+		
 		table.setupRenderer();
-		addressbookInterface.table = table;
+		//addressbookInterface.table = table;
 
 		JSplitPane splitPane =
 			new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, tree.scrollPane, table);
@@ -121,8 +119,10 @@ public class AddressbookView extends FrameView {
 		//setVisible(true);
 	}
 
+	/*
 	protected AddressbookTree createTree(AddressbookInterface addressbookInterface) {
 		AddressbookTree tree = new AddressbookTree(addressbookInterface);
 		return tree;
 	}
+	*/
 }

@@ -6,7 +6,7 @@
  */
 package org.columba.mail.gui.menu;
 
-import org.columba.core.gui.FrameController;
+import org.columba.core.gui.frame.FrameController;
 import org.columba.core.gui.menu.MenuBarGenerator;
 import org.columba.mail.util.MailResourceLoader;
 

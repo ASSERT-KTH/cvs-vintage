@@ -8,6 +8,7 @@ package org.columba.core.gui;
 
 import javax.swing.JPopupMenu;
 
+import org.columba.core.gui.frame.*;
 import org.columba.core.gui.menu.*;
 import org.columba.core.xml.XmlElement;
 

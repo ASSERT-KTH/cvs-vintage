@@ -24,23 +24,28 @@ import javax.swing.event.TreeSelectionListener;
 
 import org.columba.addressbook.config.AdapterNode;
 import org.columba.addressbook.folder.Folder;
+import org.columba.addressbook.gui.frame.AddressbookFrameController;
 import org.columba.addressbook.gui.tree.util.AddressbookTreeCellRenderer;
 import org.columba.addressbook.gui.tree.util.EditAddressbookFolderDialog;
 import org.columba.addressbook.gui.tree.util.SelectAddressbookFolderDialog;
-import org.columba.addressbook.main.AddressbookInterface;
+import org.columba.core.main.MainInterface;
 
-public class AddressbookTree implements TreeSelectionListener
+public class TreeView implements TreeSelectionListener
 {
 	private AddressbookTreeNode root;
 	private JTree tree;
-	private AddressbookInterface addressbookInterface;
+	//private AddressbookInterface addressbookInterface;
 	private AddressbookTreeModel model;
 
 	public JScrollPane scrollPane;
 
-	public AddressbookTree(AddressbookInterface i)
+	protected AddressbookFrameController frameController;
+	
+	public TreeView(AddressbookFrameController frameController)
 	{
-		this.addressbookInterface = i;
+		//this.addressbookInterface = i;
+		this.frameController = frameController;
+		
 
 		//root = new AddressbookTreeNode("Root");
 
@@ -50,7 +55,8 @@ public class AddressbookTree implements TreeSelectionListener
 		
 		//model = new AddressbookTreeModel( AddressbookConfig.get("tree").getElement("/tree") );
 		
-		model = addressbookInterface.treeModel;
+		model = MainInterface.addressbookTreeModel;
+		
 		tree = new JTree( model );
 		//tree.setPreferredSize( new Dimension( 200,300 ) );
 		tree.setShowsRootHandles(true);
@@ -74,7 +80,7 @@ public class AddressbookTree implements TreeSelectionListener
 	public EditAddressbookFolderDialog getEditAddressbookFolderDialog(String name)
 	{
 		EditAddressbookFolderDialog dialog =
-			new EditAddressbookFolderDialog(addressbookInterface.frame, name);
+			new EditAddressbookFolderDialog(frameController.getView(), name);
 
 		return dialog;
 	}
@@ -82,7 +88,7 @@ public class AddressbookTree implements TreeSelectionListener
 	public SelectAddressbookFolderDialog getSelectAddressbookFolderDialog()
 	{
 		SelectAddressbookFolderDialog dialog =
-			new SelectAddressbookFolderDialog(addressbookInterface.frame, model);
+			new SelectAddressbookFolderDialog(frameController.getView(), model);
 
 		return dialog;
 	}
@@ -224,7 +230,7 @@ public class AddressbookTree implements TreeSelectionListener
 		if (folder == null)
 			return;
 
-		addressbookInterface.table.setFolder(folder);
+		getFrameController().getTable().getView().setFolder(folder);
 		/*
 		FolderItem item = folder.getFolderItem();
 		String type = item.getType();
@@ -246,6 +252,13 @@ public class AddressbookTree implements TreeSelectionListener
 		}
 		*/
 		
+	}
+
+	/**
+	 * @return FrameController
+	 */
+	public AddressbookFrameController getFrameController() {
+		return frameController;
 	}
 
 }

@@ -15,32 +15,39 @@
 //All Rights Reserved.
 package org.columba.addressbook.gui.frame;
 
-import org.columba.core.gui.FrameController;
-import org.columba.core.gui.FrameView;
-import org.columba.core.gui.MultiViewFrameModel;
+import org.columba.addressbook.gui.table.TableController;
+import org.columba.addressbook.gui.tree.TreeController;
+import org.columba.core.gui.frame.FrameController;
+import org.columba.core.gui.frame.FrameView;
+import org.columba.core.gui.frame.MultiViewFrameModel;
 
 /**
  * @author Timo Stich (tstich@users.sourceforge.net)
  * 
  */
-public class AddressbookController extends FrameController {
+public class AddressbookFrameController extends FrameController {
+	
+	protected TreeController tree;
+	protected TableController table;
 
 	/**
 	 * Constructor for AddressbookController.
 	 */
-	public AddressbookController( String id, MultiViewFrameModel model ) {
+	public AddressbookFrameController( String id, MultiViewFrameModel model ) {
 		super( id, model );
+		
+		
+		
 	}
 	
-	public void close() {}
-	
-	
-
 	/* (non-Javadoc)
 	 * @see org.columba.core.gui.FrameController#createView()
 	 */
 	protected FrameView createView() {
-		AddressbookView view = new AddressbookView(this);
+		AddressbookFrameView view = new AddressbookFrameView(this);
+		view.init(tree.getView(),table.getView());
+		
+		view.pack();
 		
 		return view;
 	}
@@ -49,7 +56,8 @@ public class AddressbookController extends FrameController {
 	 * @see org.columba.core.gui.FrameController#init()
 	 */
 	protected void init() {
-		// TODO Auto-generated method stub
+		tree = new TreeController( this );
+		table = new TableController(this);
 
 	}
 
@@ -59,6 +67,22 @@ public class AddressbookController extends FrameController {
 	protected void initInternActions() {
 		// TODO Auto-generated method stub
 
+	}
+
+	
+
+	/**
+	 * @return AddressbookTableController
+	 */
+	public TableController getTable() {
+		return table;
+	}
+
+	/**
+	 * @return AddressbookTreeController
+	 */
+	public TreeController getTree() {
+		return tree;
 	}
 
 }

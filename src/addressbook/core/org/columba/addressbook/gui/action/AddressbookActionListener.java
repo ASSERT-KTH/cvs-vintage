@@ -18,29 +18,9 @@ package org.columba.addressbook.gui.action;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
 
-import javax.swing.JFileChooser;
-import javax.swing.JOptionPane;
-import javax.swing.KeyStroke;
-
-import org.columba.addressbook.folder.AddressbookFolder;
-import org.columba.addressbook.folder.ContactCard;
-import org.columba.addressbook.folder.Folder;
-import org.columba.addressbook.folder.GroupListCard;
-import org.columba.addressbook.folder.HeaderItem;
-import org.columba.addressbook.folder.HeaderItemList;
-import org.columba.addressbook.gui.EditGroupDialog;
-import org.columba.addressbook.gui.dialog.contact.ContactDialog;
-import org.columba.addressbook.gui.dialog.importfilter.ImportWizard;
 import org.columba.addressbook.main.AddressbookInterface;
-import org.columba.addressbook.parser.VCardParser;
-import org.columba.addressbook.util.AddressbookResourceLoader;
 import org.columba.core.action.BasicAction;
-import org.columba.core.gui.util.ImageLoader;
 
 public class AddressbookActionListener implements ActionListener {
 	public BasicAction cutAction;
@@ -339,6 +319,7 @@ public class AddressbookActionListener implements ActionListener {
 	}
 
 	public void actionPerformed(ActionEvent e) {
+		/*
 		String command = e.getActionCommand();
 
 		if (command.equals(closeAction.getActionCommand())) {
@@ -416,10 +397,7 @@ public class AddressbookActionListener implements ActionListener {
 			Object uid = addressbookInterface.table.getSelectedUid();
 			if (uid == null) return;
 			HeaderItem item = addressbookInterface.table.getSelectedItem();
-			/*
-			AddressbookXmlConfig config =
-				AddressbookConfig.getAddressbookConfig();
-			*/
+			
 			AddressbookFolder folder =
 				(AddressbookFolder) addressbookInterface
 					.tree
@@ -476,9 +454,10 @@ public class AddressbookActionListener implements ActionListener {
 			addvcard();
 
 		}
-
+		*/
 	}
 
+	/*
 	protected void addvcard() {
 		Folder destinationFolder =
 			(Folder) addressbookInterface.tree.getSelectedFolder();
@@ -518,5 +497,5 @@ public class AddressbookActionListener implements ActionListener {
 		addressbookInterface.table.setFolder(destinationFolder);
 
 	}
-
+	*/
 }

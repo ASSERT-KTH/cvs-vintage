@@ -13,7 +13,7 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
-package org.columba.core.gui;
+package org.columba.core.gui.frame;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
@@ -26,6 +26,7 @@ import javax.swing.JPanel;
 
 import org.columba.core.config.ViewItem;
 import org.columba.core.config.WindowItem;
+import org.columba.core.gui.ToolBar;
 import org.columba.core.gui.menu.Menu;
 import org.columba.core.gui.util.ImageLoader;
 import org.columba.core.util.WindowMaximizer;
@@ -194,4 +195,11 @@ public abstract class FrameView extends JFrame implements WindowListener {
 	protected abstract Menu createMenu(FrameController controller);	
 	
 	protected abstract ToolBar createToolbar(FrameController controller);
+	/**
+	 * @return FrameController
+	 */
+	public FrameController getFrameController() {
+		return frameController;
+	}
+
 }

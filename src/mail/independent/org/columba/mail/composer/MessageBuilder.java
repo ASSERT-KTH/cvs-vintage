@@ -597,6 +597,8 @@ public class MessageBuilder {
 
 		if (sender != null) {
 			if (sender.length() > 0) {
+				// FIXME
+				/*
 				org.columba.addressbook.folder.Folder selectedFolder =
 					(org.columba.addressbook.folder.Folder) MainInterface.addressbookInterface.treeModel.getFolder(102);
 
@@ -615,6 +617,7 @@ public class MessageBuilder {
 
 					selectedFolder.add(card);
 				}
+				*/
 			}
 		}
 

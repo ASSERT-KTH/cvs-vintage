@@ -10,7 +10,7 @@ import java.util.ListIterator;
 
 import javax.swing.JMenuBar;
 
-import org.columba.core.gui.FrameController;
+import org.columba.core.gui.frame.FrameController;
 import org.columba.core.xml.XmlElement;
 
 /**

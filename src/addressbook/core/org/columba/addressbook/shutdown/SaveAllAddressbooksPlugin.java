@@ -14,6 +14,9 @@
 //
 //All Rights Reserved.
 //$Log: SaveAllAddressbooksPlugin.java,v $
+//Revision 1.5  2003/03/28 13:08:33  fdietz
+//[intern]more mail/addressbook splitting, code cleanups
+//
 //Revision 1.4  2003/03/09 13:08:34  fdietz
 //[intern]import cleanups
 //
@@ -48,11 +51,14 @@ public class SaveAllAddressbooksPlugin implements ShutdownPluginInterface {
 	 * @see org.columba.core.shutdown.ShutdownPluginInterface#run()
 	 */
 	public void shutdown() {
+		// TODO
+		/*
 		saveFolders(
 			(AddressbookTreeNode) MainInterface
 				.addressbookInterface
 				.treeModel
 				.getRoot());
+		*/
 	}
 
 	public void saveFolders(AddressbookTreeNode folder) {

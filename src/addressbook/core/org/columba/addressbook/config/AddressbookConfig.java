@@ -47,9 +47,8 @@ public class AddressbookConfig extends DefaultConfig {
 			addressbookFile.getName(),
 			new DefaultXmlConfig(addressbookFile));
 		*/
-		
-		addressbookOptionsFile =
-			new File(configDirectory, "options.xml");
+
+		addressbookOptionsFile = new File(configDirectory, "options.xml");
 		registerPlugin(
 			addressbookOptionsFile.getName(),
 			new DefaultXmlConfig(addressbookOptionsFile));
@@ -57,12 +56,17 @@ public class AddressbookConfig extends DefaultConfig {
 		folderFile = new File(configDirectory, "tree.xml");
 		registerPlugin(folderFile.getName(), new DefaultXmlConfig(folderFile));
 
+		File mainToolBarFile = new File(configDirectory, "main_toolbar.xml");
+		registerPlugin(
+			mainToolBarFile.getName(),
+			new DefaultXmlConfig(mainToolBarFile));
+
 	}
-	
+
 	public static XmlElement get(String name) {
-			DefaultXmlConfig xml = getPlugin(name + ".xml");
-			return xml.getRoot();
-		}
+		DefaultXmlConfig xml = getPlugin(name + ".xml");
+		return xml.getRoot();
+	}
 
 	/**
 	 * Method registerPlugin.
@@ -82,38 +86,6 @@ public class AddressbookConfig extends DefaultConfig {
 		return DefaultConfig.getPlugin(MODULE_NAME, id);
 	}
 
-	/**
-	 * Method getAddressbookConfig.
-	 * @return AddressbookXmlConfig
-	 */
-	/*
-	public static AddressbookXmlConfig getAddressbookConfig() {
-		//return addressbookConfig;
-		return (AddressbookXmlConfig) getPlugin(addressbookFile.getName());
-	}
-	*/
-
-	/**
-	 * Method getAddressbookOptionsConfig.
-	 * @return AddressbookOptionsXmlConfig
-	 */
-	/*
-	public static AddressbookOptionsXmlConfig getAddressbookOptionsConfig() {
-		//return addressbookOptionsConfig;
-		return (AddressbookOptionsXmlConfig) getPlugin(
-			addressbookOptionsFile.getName());
-	}
-	*/
-	/**
-	 * Method getTreeConfig.
-	 * @return TreeXmlConfig
-	 */
-
-	/*
-	public static TreeXmlConfig getTreeConfig() {
-		//return treeConfig;
-		return (TreeXmlConfig) getPlugin(folderFile.getName());
-	}
-	*/
+	
 
 }

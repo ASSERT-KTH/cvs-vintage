@@ -18,6 +18,7 @@ package org.columba.core.main;
 import javax.swing.plaf.metal.MetalLookAndFeel;
 
 import org.columba.addressbook.gui.frame.AddressbookFrameModel;
+import org.columba.addressbook.gui.tree.AddressbookTreeModel;
 import org.columba.addressbook.main.AddressbookInterface;
 import org.columba.core.command.DefaultProcessor;
 import org.columba.core.config.Config;
@@ -40,6 +41,9 @@ public class MainInterface {
 	public static POP3ServerCollection popServerCollection;
 	
 	public static TreeModel treeModel;
+	
+	public static AddressbookTreeModel addressbookTreeModel;
+	
 	public static MailFrameModel frameModel;
 	
 	public static AddressbookFrameModel addressbookModel;
@@ -51,7 +55,7 @@ public class MainInterface {
 	public static PGPController pgpController;
 
 
-	public static AddressbookInterface addressbookInterface;
+	//public static AddressbookInterface addressbookInterface;
 
 	public static CharsetManager charsetManager;
 	

@@ -19,8 +19,8 @@ import java.util.Vector;
 
 import org.columba.addressbook.folder.HeaderItem;
 import org.columba.addressbook.parser.ListParser;
-import org.columba.core.gui.DefaultFrameModel;
-import org.columba.core.gui.FrameController;
+import org.columba.core.gui.frame.DefaultFrameModel;
+import org.columba.core.gui.frame.FrameController;
 import org.columba.mail.config.AccountItem;
 import org.columba.mail.config.MailConfig;
 import org.columba.mail.message.Message;

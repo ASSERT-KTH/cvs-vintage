@@ -28,11 +28,7 @@ import javax.swing.KeyStroke;
 import javax.swing.text.JTextComponent;
 import javax.swing.text.Keymap;
 
-import org.columba.addressbook.config.AddressbookConfig;
-import org.columba.addressbook.gui.frame.AddressbookFrameModel;
-import org.columba.addressbook.main.AddressbookInterface;
 import org.columba.addressbook.main.AddressbookMain;
-import org.columba.addressbook.shutdown.SaveAllAddressbooksPlugin;
 import org.columba.core.action.ActionPluginHandler;
 import org.columba.core.command.DefaultProcessor;
 import org.columba.core.config.Config;
@@ -43,30 +39,13 @@ import org.columba.core.gui.util.StartUpFrame;
 import org.columba.core.gui.util.ThemeSwitcher;
 import org.columba.core.logging.ColumbaLogger;
 import org.columba.core.plugin.InterpreterHandler;
-import org.columba.core.plugin.PluginHandlerNotFoundException;
 import org.columba.core.plugin.PluginManager;
 import org.columba.core.shutdown.SaveConfigPlugin;
 import org.columba.core.shutdown.ShutdownManager;
 import org.columba.core.util.CharsetManager;
 import org.columba.core.util.CmdLineArgumentParser;
 import org.columba.core.util.TempFileStore;
-import org.columba.mail.coder.Base64Decoder;
-import org.columba.mail.coder.Base64Encoder;
-import org.columba.mail.coder.CoderRouter;
-import org.columba.mail.coder.QuotedPrintableDecoder;
-import org.columba.mail.coder.QuotedPrintableEncoder;
-import org.columba.mail.config.MailConfig;
-import org.columba.mail.gui.config.accountwizard.AccountWizard;
-import org.columba.mail.gui.frame.MailFrameModel;
-import org.columba.mail.gui.tree.TreeModel;
-import org.columba.mail.plugin.FilterActionPluginHandler;
-import org.columba.mail.plugin.FilterPluginHandler;
-import org.columba.mail.plugin.FolderPluginHandler;
-import org.columba.mail.plugin.ImportPluginHandler;
-import org.columba.mail.pop3.POP3ServerCollection;
-import org.columba.mail.shutdown.SaveAllFoldersPlugin;
-import org.columba.mail.shutdown.SavePOP3CachePlugin;
-import org.columba.mail.util.MailResourceLoader;
+import org.columba.mail.main.MailMain;
 
 public class Main {
 	private static ColumbaLoader columbaLoader;
@@ -104,22 +83,6 @@ public class Main {
 
 	public static void main(String[] arg) {
 		final String[] args = arg;
-
-		/*
-		try {
-			
-			
-			Object[] list = new Object[3];
-			list[0] = "hallo";
-			list[1] = new DateFilter();
-			list[2] = new Integer(3);
-			Python.runScript("./plugins/HelloWorldFilterAction/HelloWorld.py", list);
-			
-			
-		} catch (Exception ex) {
-			ex.printStackTrace();
-		}
-		*/
 
 		ColumbaCmdLineArgumentParser cmdLineParser =
 			new ColumbaCmdLineArgumentParser();
@@ -171,16 +134,18 @@ public class Main {
 
 			public Object construct() {
 
-				MainInterface.addressbookInterface = new AddressbookInterface();
+				//MainInterface.addressbookInterface = new AddressbookInterface();
 
 				// enable logging 
 				new ColumbaLogger();
 
 				new Config();
 
-				new MailConfig();
+				AddressbookMain addressbook = new AddressbookMain();
+				addressbook.initConfiguration();
 
-				new AddressbookConfig();
+				MailMain mail = new MailMain();
+				mail.initConfiguration();
 
 				Config.init();
 
@@ -192,16 +157,6 @@ public class Main {
 
 				new ImageLoader();
 
-				new MailResourceLoader();
-
-				MainInterface.popServerCollection = new POP3ServerCollection();
-
-				new CoderRouter();
-				new QuotedPrintableDecoder();
-				new QuotedPrintableEncoder();
-				new Base64Decoder();
-				new Base64Encoder();
-
 				MainInterface.charsetManager = new CharsetManager();
 
 				MainInterface.processor = new DefaultProcessor();
@@ -212,86 +167,34 @@ public class Main {
 					new InterpreterHandler());
 
 				MainInterface.pluginManager.registerHandler(
-					new FilterActionPluginHandler());
-				MainInterface.pluginManager.registerHandler(
-					new FilterPluginHandler());
-				MainInterface.pluginManager.registerHandler(
-					new FolderPluginHandler());
-				MainInterface.pluginManager.registerHandler(
 					new ActionPluginHandler());
 
 				MainInterface.pluginManager.registerHandler(
 					new MenuPluginHandler("org.columba.core.menu"));
 
-				MainInterface.pluginManager.registerHandler(
-					new MenuPluginHandler("org.columba.mail.menu"));
-				MainInterface.pluginManager.registerHandler(
-					new MenuPluginHandler("org.columba.addressbook.menu"));
-
-				MainInterface.pluginManager.registerHandler(
-					new ImportPluginHandler());
-
 				MainInterface.pluginManager.initPlugins();
-
-				try {
-
-					(
-						(
-							ActionPluginHandler) MainInterface
-								.pluginManager
-								.getHandler(
-							"org.columba.core.action")).addActionList(
-						"org/columba/mail/action/action.xml");
-
-					(
-						(
-							ActionPluginHandler) MainInterface
-								.pluginManager
-								.getHandler(
-							"org.columba.core.action")).addActionList(
-						"org/columba/addressbook/action/action.xml");
-				} catch (PluginHandlerNotFoundException ex) {
-
-				}
-
-				frame.advance();
-
-				AddressbookMain.main(null);
-
-				doGuiInits();
-
-				MainInterface.treeModel =
-					new TreeModel(MailConfig.getFolderConfig());
-
-				MainInterface.frameModel =
-					new MailFrameModel(
-						MailConfig.get("options").getElement(
-							"/options/gui/viewlist"));
-
-				MainInterface.addressbookModel =
-					new AddressbookFrameModel(
-						AddressbookConfig.get("options").getElement(
-							"/options/gui/viewlist"));
 
 				frame.advance();
 
 				MainInterface.shutdownManager = new ShutdownManager();
-				MainInterface.shutdownManager.register(
-					new SaveAllFoldersPlugin());
+
 				MainInterface.shutdownManager.register(new SaveConfigPlugin());
-				MainInterface.shutdownManager.register(
-					new SavePOP3CachePlugin());
-				MainInterface.shutdownManager.register(
-					new SaveAllAddressbooksPlugin());
+
+				addressbook.initPlugins();
+				mail.initPlugins();
+
+				doGuiInits();
+
+				addressbook.initGui();
+				mail.initGui();
+
+				frame.advance();
 
 				return null;
 			}
 
 			public void finished() {
 				frame.setVisible(false);
-
-				if (MailConfig.getAccountList().count() == 0)
-					new AccountWizard(false);
 
 				new CmdLineArgumentHandler(args);
 			}

@@ -19,7 +19,7 @@ package org.columba.core.action;
 import javax.swing.ImageIcon;
 import javax.swing.KeyStroke;
 
-import org.columba.core.gui.FrameController;
+import org.columba.core.gui.frame.FrameController;
 
 public class FrameAction extends BasicAction {
 

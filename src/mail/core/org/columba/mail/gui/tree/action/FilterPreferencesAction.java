@@ -9,7 +9,7 @@ package org.columba.mail.gui.tree.action;
 import java.awt.event.ActionEvent;
 
 import org.columba.core.action.FrameAction;
-import org.columba.core.gui.FrameController;
+import org.columba.core.gui.frame.FrameController;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.config.FolderItem;
 import org.columba.mail.folder.Folder;

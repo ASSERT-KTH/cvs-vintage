@@ -18,14 +18,13 @@ package org.columba.core.gui.action;
 import java.awt.event.ActionEvent;
 
 import org.columba.core.action.FrameAction;
-import org.columba.core.gui.FrameController;
+import org.columba.core.gui.frame.FrameController;
 import org.columba.core.gui.util.ImageLoader;
-import org.columba.core.main.MainInterface;
 import org.columba.mail.util.MailResourceLoader;
 
-public class OpenNewWindowAction extends FrameAction {
+public class DefaultOpenNewWindowAction extends FrameAction {
 
-	public OpenNewWindowAction(FrameController controller) {
+	public DefaultOpenNewWindowAction(FrameController controller) {
 		super(
 			controller,
 			MailResourceLoader.getString(
@@ -47,7 +46,8 @@ public class OpenNewWindowAction extends FrameAction {
 	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
 	 */
 	public void actionPerformed(ActionEvent evt) {
-		MainInterface.frameModel.openView();
+		//MainInterface.frameModel.openView();
+		getFrameController().getModel().openView();
 	}
 
 }

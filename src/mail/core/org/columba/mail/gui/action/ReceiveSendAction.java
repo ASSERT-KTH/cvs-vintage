@@ -23,7 +23,7 @@ import java.util.ListIterator;
 import javax.swing.KeyStroke;
 
 import org.columba.core.action.FrameAction;
-import org.columba.core.gui.FrameController;
+import org.columba.core.gui.frame.FrameController;
 import org.columba.core.gui.util.ImageLoader;
 import org.columba.core.main.MainInterface;
 import org.columba.mail.command.POP3CommandReference;

@@ -14,7 +14,7 @@
 //
 //All Rights Reserved.
 
-package org.columba.core.gui;
+package org.columba.core.gui.frame;
 
 import java.util.Hashtable;
 

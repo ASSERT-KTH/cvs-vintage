@@ -19,7 +19,7 @@ package com.mycom;
 import java.awt.event.ActionEvent;
 
 import org.columba.core.action.FrameAction;
-import org.columba.core.gui.FrameController;
+import org.columba.core.gui.frame.FrameController;
 
 public class HelloWorldAction extends FrameAction {
 	

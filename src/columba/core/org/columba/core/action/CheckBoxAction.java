@@ -19,7 +19,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JCheckBoxMenuItem;
 import javax.swing.KeyStroke;
 
-import org.columba.core.gui.FrameController;
+import org.columba.core.gui.frame.FrameController;
 
 /**
  * @author frd

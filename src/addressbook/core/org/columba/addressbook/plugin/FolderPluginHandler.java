@@ -36,7 +36,7 @@ public class FolderPluginHandler extends AbstractPluginHandler {
 	 * @param config
 	 */
 	public FolderPluginHandler() {
-		super("addressbook_folder", "org/columba/addressbook/folder/folder.xml");
+		super("org.columba.addressbook.folder", "org/columba/addressbook/folder/folder.xml");
 
 		parentNode = getConfig().getRoot().getElement("folderlist");
 	}

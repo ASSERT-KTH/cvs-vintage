@@ -24,7 +24,7 @@ import javax.swing.JRadioButtonMenuItem;
 
 import org.columba.core.action.IMenu;
 import org.columba.core.config.TableItem;
-import org.columba.core.gui.FrameController;
+import org.columba.core.gui.frame.FrameController;
 import org.columba.mail.gui.frame.MailFrameController;
 import org.columba.mail.util.MailResourceLoader;
 

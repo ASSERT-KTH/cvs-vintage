@@ -24,9 +24,9 @@ import java.util.Vector;
 
 import org.columba.addressbook.parser.AddressParser;
 import org.columba.addressbook.parser.ListParser;
-import org.columba.core.gui.DefaultFrameModel;
-import org.columba.core.gui.FrameController;
-import org.columba.core.gui.FrameView;
+import org.columba.core.gui.frame.DefaultFrameModel;
+import org.columba.core.gui.frame.FrameController;
+import org.columba.core.gui.frame.FrameView;
 import org.columba.core.util.CharsetEvent;
 import org.columba.core.util.CharsetListener;
 import org.columba.core.util.CharsetManager;

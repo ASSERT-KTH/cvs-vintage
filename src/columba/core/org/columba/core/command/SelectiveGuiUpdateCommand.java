@@ -15,7 +15,7 @@
 //All Rights Reserved.
 package org.columba.core.command;
 
-import org.columba.core.gui.FrameController;
+import org.columba.core.gui.frame.FrameController;
 
 
 /**

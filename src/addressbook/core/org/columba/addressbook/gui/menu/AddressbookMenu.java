@@ -6,7 +6,7 @@
  */
 package org.columba.addressbook.gui.menu;
 
-import org.columba.core.gui.FrameController;
+import org.columba.core.gui.frame.FrameController;
 import org.columba.core.gui.menu.Menu;
 import org.columba.core.gui.menu.MenuBarGenerator;
 import org.columba.core.gui.menu.MenuPluginHandler;

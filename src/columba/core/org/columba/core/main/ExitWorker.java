@@ -55,10 +55,13 @@ public class ExitWorker extends SwingWorker {
 		*/
 		saveAllFolders();
 
+		// TODO
+		/*
 		AddressbookExitWorker w =
 			new AddressbookExitWorker(MainInterface.addressbookInterface);
 		w.saveAllAddressbooks();
-
+		*/
+		
 		System.exit(0);
 
 		//unregister();

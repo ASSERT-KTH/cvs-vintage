@@ -165,11 +165,15 @@ public class AddressbookPanel
 
 		panel.add(topPanel, BorderLayout.NORTH);
 
+		// TODO
+		/*
 		Folder folder =
 			(Folder) MainInterface.addressbookInterface.treeModel.getFolder(uid);
-
+		
+		
 		setHeaderList(folder.getHeaderItemList());
-
+		*/
+		
 		return panel;
 	}
 

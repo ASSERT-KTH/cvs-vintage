@@ -2,7 +2,7 @@
 <!-- <!DOCTYPE folderlist SYSTEM "folder.dtd"> -->
 
 <actionlist>
- <action name="OpenNewWindow" class="org.columba.core.gui.action.OpenNewWindowAction"/>
+ <!--<action name="OpenNewWindow" class="org.columba.core.gui.menu.OpenNewWindowSubmenu"/>-->
  <action name="ReceiveMenu" class="org.columba.mail.pop3.FetchMessageSubMenu"/>
  <action name="ManageServerMenu" class="org.columba.mail.pop3.ManageServerSubMenu"/>
  <action name="Cut" class="org.columba.core.gui.action.CutAction"/>

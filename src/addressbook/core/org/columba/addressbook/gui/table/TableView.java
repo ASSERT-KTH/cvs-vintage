@@ -38,19 +38,20 @@ import org.columba.addressbook.config.FolderItem;
 import org.columba.addressbook.folder.Folder;
 import org.columba.addressbook.folder.HeaderItem;
 import org.columba.addressbook.folder.HeaderItemList;
+import org.columba.addressbook.gui.frame.AddressbookFrameController;
 import org.columba.addressbook.gui.table.util.AddressbookCommonHeaderRenderer;
 import org.columba.addressbook.gui.table.util.HeaderColumn;
 import org.columba.addressbook.gui.table.util.HeaderColumnInterface;
 import org.columba.addressbook.gui.table.util.TableModelFilteredView;
 import org.columba.addressbook.gui.table.util.TableModelSorter;
 import org.columba.addressbook.gui.table.util.TypeHeaderColumn;
-import org.columba.addressbook.main.AddressbookInterface;
 import org.columba.addressbook.util.AddressbookResourceLoader;
 import org.columba.core.config.TableItem;
+import org.columba.core.gui.frame.FrameController;
 
-public class AddressbookTable extends JPanel implements ListSelectionListener
+public class TableView extends JPanel implements ListSelectionListener
 {
-	private AddressbookInterface addressbookInterface;
+	//private AddressbookInterface addressbookInterface;
 	//private AddressbookXmlConfig config;
 
 	private JTable table;
@@ -65,9 +66,13 @@ public class AddressbookTable extends JPanel implements ListSelectionListener
 	
 	private FilterToolbar toolbar;
 
-	public AddressbookTable(AddressbookInterface i)
+	AddressbookFrameController frameController;
+	
+	public TableView(AddressbookFrameController frameController)
 	{
-		this.addressbookInterface = i;
+		this.frameController = frameController;
+		
+		//this.addressbookInterface = i;
 
 	//	config = AddressbookConfig.getAddressbookConfig();
 
@@ -481,5 +486,12 @@ public class AddressbookTable extends JPanel implements ListSelectionListener
 	    return child;
 	}
 	*/
+
+	/**
+	 * @return FrameController
+	 */
+	public FrameController getFrameController() {
+		return frameController;
+	}
 
 }

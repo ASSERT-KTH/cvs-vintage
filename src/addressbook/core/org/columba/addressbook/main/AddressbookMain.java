@@ -15,12 +15,16 @@
 package org.columba.addressbook.main;
 
 import org.columba.addressbook.config.AddressbookConfig;
-import org.columba.addressbook.gui.frame.AddressbookView;
+import org.columba.addressbook.gui.frame.AddressbookFrameModel;
 import org.columba.addressbook.gui.tree.AddressbookTreeModel;
 import org.columba.addressbook.plugin.FolderPluginHandler;
+import org.columba.addressbook.shutdown.SaveAllAddressbooksPlugin;
 import org.columba.addressbook.util.AddressbookResourceLoader;
-import org.columba.core.command.TaskManager;
+import org.columba.core.action.ActionPluginHandler;
+import org.columba.core.gui.menu.MenuPluginHandler;
+import org.columba.core.main.DefaultMain;
 import org.columba.core.main.MainInterface;
+import org.columba.core.plugin.PluginHandlerNotFoundException;
 
 /**
  * @author frd
@@ -30,18 +34,62 @@ import org.columba.core.main.MainInterface;
  * To enable and disable the creation of type comments go to
  * Window>Preferences>Java>Code Generation.
  */
-public class AddressbookMain {
+public class AddressbookMain extends DefaultMain {
 
-	public static void main(String[] args) {
-		new AddressbookResourceLoader();
-		MainInterface.pluginManager.registerHandler(new FolderPluginHandler());
-		
-		MainInterface.addressbookInterface.taskManager = new TaskManager();
-		MainInterface.addressbookInterface.treeModel = new AddressbookTreeModel( AddressbookConfig.get("tree").getElement("/tree") );
-		/*
-		MainInterface.addressbookInterface.frame =
-					new AddressbookView();
-		*/
-		//new AddressbookFrame();
+	/* (non-Javadoc)
+	 * @see org.columba.core.main.DefaultMain#handleCommandLineParameters(java.lang.String[])
+	 */
+	public void handleCommandLineParameters(String[] args) {
+		// TODO Auto-generated method stub
+
 	}
+
+	/* (non-Javadoc)
+	 * @see org.columba.core.main.DefaultMain#initConfiguration()
+	 */
+	public void initConfiguration() {
+		new AddressbookConfig();
+
+	}
+
+	/* (non-Javadoc)
+	 * @see org.columba.core.main.DefaultMain#initGui()
+	 */
+	public void initGui() {
+		new AddressbookResourceLoader();
+
+		MainInterface.addressbookTreeModel =
+			new AddressbookTreeModel(
+				AddressbookConfig.get("tree").getElement("/tree"));
+
+		MainInterface.addressbookModel =
+			new AddressbookFrameModel(
+				AddressbookConfig.get("options").getElement(
+					"/options/gui/viewlist"));
+
+	}
+
+	/* (non-Javadoc)
+	 * @see org.columba.core.main.DefaultMain#initPlugins()
+	 */
+	public void initPlugins() {
+		MainInterface.pluginManager.registerHandler(new FolderPluginHandler());
+
+		MainInterface.pluginManager.registerHandler(
+			new MenuPluginHandler("org.columba.addressbook.menu"));
+
+		try {
+
+			(
+				(ActionPluginHandler) MainInterface.pluginManager.getHandler(
+					"org.columba.core.action")).addActionList(
+				"org/columba/addressbook/action/action.xml");
+		} catch (PluginHandlerNotFoundException ex) {
+
+		}
+
+		MainInterface.shutdownManager.register(new SaveAllAddressbooksPlugin());
+
+	}
+
 }

@@ -13,11 +13,12 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
-package org.columba.core.gui;
+package org.columba.core.gui.frame;
 
 import java.awt.event.MouseAdapter;
 
 import org.columba.core.config.ViewItem;
+import org.columba.core.gui.SelectionManager;
 import org.columba.core.gui.menu.Menu;
 import org.columba.core.gui.statusbar.StatusBar;
 import org.columba.core.logging.ColumbaLogger;

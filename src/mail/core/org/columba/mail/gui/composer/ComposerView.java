@@ -27,10 +27,11 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 
-import org.columba.core.gui.FrameController;
-import org.columba.core.gui.FrameView;
 import org.columba.core.gui.ToolBar;
+import org.columba.core.gui.frame.FrameController;
+import org.columba.core.gui.frame.FrameView;
 import org.columba.core.gui.menu.Menu;
+import org.columba.mail.config.MailConfig;
 import org.columba.mail.util.MailResourceLoader;
 
 /**
@@ -214,7 +215,7 @@ public class ComposerView extends FrameView {
 	 * @see org.columba.core.gui.FrameView#createToolbar(org.columba.core.gui.FrameController)
 	 */
 	protected ToolBar createToolbar(FrameController controller) {
-		return new ToolBar("org/columba/mail/action/composer_toolbar.xml", controller);
+		return new ToolBar( MailConfig.get("composer_toolbar").getElement("toolbar"), controller);
 	}
 
 }

@@ -66,6 +66,8 @@ public class AddressbookAction extends FrameAction {
 	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
 	 */
 	public void actionPerformed(ActionEvent evt) {
+		// TODO
+		/*
 		ComposerController composerController = ((ComposerController)getFrameController());
 		
 		composerController.getHeaderController().cleanupHeaderItemList();
@@ -87,6 +89,7 @@ public class AddressbookAction extends FrameAction {
 
 		composerController.getHeaderController().setHeaderItemLists(
 			dialog.getHeaderItemLists());
+		*/
 	}
 
 }

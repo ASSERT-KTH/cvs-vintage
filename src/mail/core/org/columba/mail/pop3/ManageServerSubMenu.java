@@ -21,7 +21,7 @@ import java.util.ListIterator;
 import org.columba.core.action.IMenu;
 import org.columba.core.event.ModelChangeListener;
 import org.columba.core.event.ModelChangedEvent;
-import org.columba.core.gui.FrameController;
+import org.columba.core.gui.frame.FrameController;
 import org.columba.core.main.MainInterface;
 import org.columba.mail.util.MailResourceLoader;
 

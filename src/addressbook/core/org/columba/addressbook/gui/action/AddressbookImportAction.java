@@ -10,7 +10,7 @@ import java.awt.event.ActionEvent;
 
 import org.columba.addressbook.util.AddressbookResourceLoader;
 import org.columba.core.action.FrameAction;
-import org.columba.core.gui.FrameController;
+import org.columba.core.gui.frame.FrameController;
 
 /**
  * @author frd

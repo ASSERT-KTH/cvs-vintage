@@ -7,7 +7,7 @@
 package org.columba.core.gui.action;
 
 import org.columba.core.action.FrameAction;
-import org.columba.core.gui.FrameController;
+import org.columba.core.gui.frame.FrameController;
 import org.columba.core.gui.util.ImageLoader;
 import org.columba.mail.util.MailResourceLoader;
 

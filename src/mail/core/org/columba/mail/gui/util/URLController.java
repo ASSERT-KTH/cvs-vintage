@@ -94,6 +94,8 @@ public class URLController implements ActionListener {
 	}
 
 	public void contact(String address) {
+		// TODO
+		/*
 		SelectAddressbookFolderDialog dialog =
 			MainInterface
 				.addressbookInterface
@@ -117,6 +119,7 @@ public class URLController implements ActionListener {
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
+		*/
 	}
 
 	public JPopupMenu createMenu(URL url) {

@@ -8,9 +8,11 @@ package org.columba.addressbook.gui.action;
 
 import java.awt.event.ActionEvent;
 
+import org.columba.addressbook.folder.AddressbookFolder;
+import org.columba.addressbook.gui.frame.AddressbookFrameController;
 import org.columba.addressbook.util.AddressbookResourceLoader;
 import org.columba.core.action.FrameAction;
-import org.columba.core.gui.FrameController;
+import org.columba.core.gui.frame.FrameController;
 import org.columba.core.gui.util.ImageLoader;
 
 /**
@@ -54,8 +56,21 @@ public class RemoveCardAction extends FrameAction {
 	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
 	 */
 	public void actionPerformed(ActionEvent evt) {
-		// TODO Auto-generated method stub
-		super.actionPerformed(evt);
+		AddressbookFrameController addressbookFrameController =
+			(AddressbookFrameController) frameController;
+
+		Object[] uids =
+			addressbookFrameController.getTable().getView().getSelectedUids();
+		AddressbookFolder folder =
+			(AddressbookFolder) addressbookFrameController
+				.getTree()
+				.getView()
+				.getSelectedFolder();
+
+		for (int i = 0; i < uids.length; i++) {
+			folder.remove(uids[i]);
+		}
+		addressbookFrameController.getTable().getView().setFolder(folder);
 	}
 
 }

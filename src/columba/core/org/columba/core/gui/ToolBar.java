@@ -25,11 +25,10 @@ import javax.swing.JToolBar;
 
 import org.columba.core.action.ActionPluginHandler;
 import org.columba.core.action.BasicAction;
+import org.columba.core.gui.frame.*;
 import org.columba.core.gui.util.ToolbarButton;
-import org.columba.core.io.DiskIO;
 import org.columba.core.main.MainInterface;
 import org.columba.core.xml.XmlElement;
-import org.columba.core.xml.XmlIO;
 
 public class ToolBar extends JToolBar {
 
@@ -38,20 +37,23 @@ public class ToolBar extends JToolBar {
 	GridBagLayout gridbagLayout;
 	int i;
 	XmlElement rootElement;
-	XmlIO xmlFile;
+	//XmlIO xmlFile;
 
 	FrameController frameController;
 
-	public ToolBar( String config, FrameController controller) {
+	public ToolBar(XmlElement rootElement, FrameController controller) {
 		super();
 		this.frameController = controller;
 
-
+		this.rootElement = rootElement;
+		/*
 		xmlFile = new XmlIO(DiskIO.getResourceURL(config));
 		xmlFile.load();
-
+		*/
+		
 		//rootElement = frameController.getItem().getElement("toolbar");
-		rootElement = xmlFile.getRoot().getElement("toolbar");
+		//rootElement = xmlFile.getRoot().getElement("toolbar");
+		
 		//addCButtons();
 
 		createButtons();

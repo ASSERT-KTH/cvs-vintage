@@ -12,7 +12,7 @@ import javax.swing.ImageIcon;
 import javax.swing.KeyStroke;
 
 import org.columba.core.action.FrameAction;
-import org.columba.core.gui.FrameController;
+import org.columba.core.gui.frame.FrameController;
 import org.columba.mail.util.MailResourceLoader;
 
 /**

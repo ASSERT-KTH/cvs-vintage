@@ -19,7 +19,7 @@ import java.util.Vector;
 
 import junit.framework.TestCase;
 
-import org.columba.core.gui.FrameController;
+import org.columba.core.gui.frame.FrameController;
 import org.columba.core.logging.ColumbaLogger;
 
 /**

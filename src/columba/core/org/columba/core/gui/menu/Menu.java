@@ -21,7 +21,7 @@ import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 
 import org.columba.core.action.BasicAction;
-import org.columba.core.gui.FrameController;
+import org.columba.core.gui.frame.FrameController;
 import org.columba.core.gui.util.CMenu;
 import org.columba.core.gui.util.CMenuItem;
 import org.columba.core.gui.util.NotifyDialog;

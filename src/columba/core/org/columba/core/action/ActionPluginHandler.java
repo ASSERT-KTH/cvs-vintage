@@ -18,7 +18,7 @@ package org.columba.core.action;
 
 import java.util.ListIterator;
 
-import org.columba.core.gui.FrameController;
+import org.columba.core.gui.frame.FrameController;
 import org.columba.core.io.DiskIO;
 import org.columba.core.plugin.AbstractPluginHandler;
 import org.columba.core.xml.XmlElement;

@@ -139,7 +139,7 @@ public class AddressbookTreeModel extends DefaultTreeModel {
 		try {
 			handler =
 				(FolderPluginHandler) MainInterface.pluginManager.getHandler(
-					"addressbook_folder");
+					"org.columba.addressbook.folder");
 		} catch (PluginHandlerNotFoundException ex) {
 			NotifyDialog d = new NotifyDialog();
 			d.showDialog(ex);

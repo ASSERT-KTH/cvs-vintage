@@ -35,11 +35,11 @@ public class FilterToolbar extends JToolBar implements ActionListener
 	private JComboBox comboBox;
 	private JTextField textField;
 
-	private AddressbookTable table;
+	private TableView table;
 
 	private ResourceBundle toolbarLabels;
 
-	public FilterToolbar(AddressbookTable table)
+	public FilterToolbar(TableView table)
 	{
 		super();
 

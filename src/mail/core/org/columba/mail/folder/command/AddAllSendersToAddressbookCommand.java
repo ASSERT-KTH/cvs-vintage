@@ -20,7 +20,7 @@ import org.columba.addressbook.gui.tree.util.SelectAddressbookFolderDialog;
 import org.columba.addressbook.parser.AddressParser;
 import org.columba.core.command.DefaultCommandReference;
 import org.columba.core.command.Worker;
-import org.columba.core.gui.FrameController;
+import org.columba.core.gui.frame.FrameController;
 import org.columba.core.main.MainInterface;
 import org.columba.mail.command.FolderCommand;
 import org.columba.mail.command.FolderCommandReference;
@@ -66,6 +66,8 @@ public class AddAllSendersToAddressbookCommand extends FolderCommand {
 		Object[] uids = r[0].getUids();
 		Folder folder = (Folder) r[0].getFolder();
 
+		// TODO
+		/*
 		SelectAddressbookFolderDialog dialog =
 			MainInterface
 				.addressbookInterface
@@ -92,6 +94,7 @@ public class AddAllSendersToAddressbookCommand extends FolderCommand {
 
 			addSender(sender);
 		}
+		*/
 	}
 
 	public void addSender(String sender) {

@@ -15,7 +15,7 @@ import javax.swing.JMenu;
 import org.columba.core.action.ActionPluginHandler;
 import org.columba.core.action.BasicAction;
 import org.columba.core.action.CheckBoxAction;
-import org.columba.core.gui.FrameController;
+import org.columba.core.gui.frame.FrameController;
 import org.columba.core.gui.util.CMenu;
 import org.columba.core.io.DiskIO;
 import org.columba.core.logging.ColumbaLogger;

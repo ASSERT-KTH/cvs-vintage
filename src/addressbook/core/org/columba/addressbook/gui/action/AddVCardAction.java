@@ -7,11 +7,19 @@
 package org.columba.addressbook.gui.action;
 
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
 
+import javax.swing.JFileChooser;
+
+import org.columba.addressbook.folder.ContactCard;
+import org.columba.addressbook.folder.Folder;
+import org.columba.addressbook.gui.frame.AddressbookFrameController;
+import org.columba.addressbook.parser.VCardParser;
 import org.columba.addressbook.util.AddressbookResourceLoader;
 import org.columba.core.action.FrameAction;
-import org.columba.core.gui.FrameController;
+import org.columba.core.gui.frame.FrameController;
 
 /**
  * @author frd
@@ -53,8 +61,51 @@ public class AddVCardAction extends FrameAction {
 	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
 	 */
 	public void actionPerformed(ActionEvent evt) {
-		// TODO Auto-generated method stub
-		super.actionPerformed(evt);
+
+		AddressbookFrameController addressbookFrameController =
+			(AddressbookFrameController) frameController;
+
+		Folder destinationFolder =
+			(Folder) addressbookFrameController
+				.getTree()
+				.getView()
+				.getSelectedFolder();
+
+		JFileChooser fc = new JFileChooser();
+		fc.setFileSelectionMode(JFileChooser.FILES_ONLY);
+		fc.setMultiSelectionEnabled(true);
+		int returnVal = fc.showOpenDialog(addressbookFrameController.getView());
+
+		if (returnVal == JFileChooser.APPROVE_OPTION) {
+			File[] files = fc.getSelectedFiles();
+
+			for (int i = 0; i < files.length; i++) {
+				try {
+					StringBuffer strbuf = new StringBuffer();
+
+					BufferedReader in =
+						new BufferedReader(new FileReader(files[i]));
+					String str;
+
+					while ((str = in.readLine()) != null) {
+						strbuf.append(str + "\n");
+					}
+
+					in.close();
+
+					ContactCard card = VCardParser.parse(strbuf.toString());
+
+					destinationFolder.add(card);
+				} catch (Exception ex) {
+					ex.printStackTrace();
+				}
+			}
+
+		}
+
+		addressbookFrameController.getTable().getView().setFolder(
+			destinationFolder);
+
 	}
-	
+
 }
