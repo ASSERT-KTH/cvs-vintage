@@ -24,7 +24,7 @@ import org.apache.turbine.util.db.pool.DBConnection;
 
   */
 public class Transaction 
-    extends ZZBaseTransaction
+    extends BaseTransaction
     implements Persistent
 {
 }

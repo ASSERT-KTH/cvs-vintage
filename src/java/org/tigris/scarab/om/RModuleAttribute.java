@@ -24,7 +24,7 @@ import org.apache.turbine.util.db.pool.DBConnection;
 
   */
 public class RModuleAttribute 
-    extends ZZBaseRModuleAttribute
+    extends BaseRModuleAttribute
     implements Persistent
 {
     // need a local reference

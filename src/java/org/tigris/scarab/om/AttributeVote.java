@@ -24,7 +24,7 @@ import org.apache.turbine.util.db.pool.DBConnection;
 
   */
 public class AttributeVote 
-    extends ZZBaseAttributeVote
+    extends BaseAttributeVote
     implements Persistent
 {
 }

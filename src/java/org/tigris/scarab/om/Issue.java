@@ -25,7 +25,7 @@ import org.apache.turbine.util.db.pool.DBConnection;
 
   */
 public class Issue 
-    extends ZZBaseIssue
+    extends BaseIssue
     implements Persistent
 {
 

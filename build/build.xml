@@ -286,7 +286,7 @@
                 value="${torque.dir.scarab}/templates"/>
             <property name="xmlFile" value="${src.sql.dir}/scarab-schema.xml"/>
             <property name="targetPackage" value="org.tigris.scarab"/>
-            <property name="basePrefix" value="ZZBase"/>
+            <property name="basePrefix" value="Base"/>
             <property name="addSaveMethod" value="true"/>
             <property name="addGetByNameMethod" value="true"/>
             <property name="objectModelType" value="complex"/>
@@ -294,7 +294,7 @@
 
         <copy todir="${build.src.scarab}/org" filtering="yes">
             <fileset dir="${src.java.dir.scarab}/org">
-                <include name="**/ZZBase*.java"/>
+                <include name="**/Base*.java"/>
                 <include name="**/map/*MapBuilder.java"/>
             </fileset>
         </copy>
@@ -304,7 +304,7 @@
 
         <delete>
             <fileset dir="${src.java.dir.scarab}">
-                <include name="**/ZZBase*.java"/>
+                <include name="**/Base*.java"/>
                 <include name="**/map/*MapBuilder.java"/>
                 <include name="report.scarab.om.generation"/>
             </fileset>

@@ -27,7 +27,7 @@ import org.tigris.scarab.util.ScarabException;
 
   */
 public class Module 
-    extends ZZBaseModule
+    extends BaseModule
     implements Persistent
 {
     public Issue getNewIssue(ScarabUser user)

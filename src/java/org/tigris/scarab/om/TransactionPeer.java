@@ -26,7 +26,7 @@ import org.tigris.scarab.om.map.*;
   *  long as it does not already exist in the output directory.
   */
 public class TransactionPeer 
-    extends org.tigris.scarab.om.ZZBaseTransactionPeer
+    extends org.tigris.scarab.om.BaseTransactionPeer
 {
 }
 

@@ -24,7 +24,7 @@ import org.apache.turbine.util.db.pool.DBConnection;
 
   */
 public class Activity 
-    extends ZZBaseActivity
+    extends BaseActivity
     implements Persistent
 {
     // need a local reference

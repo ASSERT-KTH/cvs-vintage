@@ -24,7 +24,7 @@ import org.apache.turbine.util.db.pool.DBConnection;
 
   */
 public class TurbineUser 
-    extends ZZBaseTurbineUser
+    extends BaseTurbineUser
     implements Persistent
 {
 }

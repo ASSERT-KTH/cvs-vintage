@@ -26,7 +26,7 @@ import org.tigris.scarab.om.map.*;
   *  long as it does not already exist in the output directory.
   */
 public class AttributeTypePeer 
-    extends org.tigris.scarab.om.ZZBaseAttributeTypePeer
+    extends org.tigris.scarab.om.BaseAttributeTypePeer
 {
 }
 

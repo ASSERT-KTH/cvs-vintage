@@ -24,7 +24,7 @@ import org.apache.turbine.util.db.pool.DBConnection;
 
   */
 public class AttributeType 
-    extends ZZBaseAttributeType
+    extends BaseAttributeType
     implements Persistent
 {
 }

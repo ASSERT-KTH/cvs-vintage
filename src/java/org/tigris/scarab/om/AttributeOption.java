@@ -24,7 +24,7 @@ import org.apache.turbine.util.db.pool.DBConnection;
 
   */
 public class AttributeOption 
-    extends ZZBaseAttributeOption
+    extends BaseAttributeOption
     implements Persistent
 {
     // need a local reference

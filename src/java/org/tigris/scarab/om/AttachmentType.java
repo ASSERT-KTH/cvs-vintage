@@ -24,7 +24,7 @@ import org.apache.turbine.util.db.pool.DBConnection;
 
   */
 public class AttachmentType 
-    extends ZZBaseAttachmentType
+    extends BaseAttachmentType
     implements Persistent
 {
 }

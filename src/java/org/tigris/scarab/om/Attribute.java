@@ -28,7 +28,7 @@ import org.tigris.scarab.util.*;
 
   */
 public class Attribute 
-    extends ZZBaseAttribute
+    extends BaseAttribute
     implements Persistent
 {
     private static String className = "Attribute";

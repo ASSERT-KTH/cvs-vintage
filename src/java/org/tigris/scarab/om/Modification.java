@@ -24,7 +24,7 @@ import org.apache.turbine.util.db.pool.DBConnection;
 
   */
 public class Modification 
-    extends ZZBaseModification
+    extends BaseModification
     implements Persistent
 {
 }

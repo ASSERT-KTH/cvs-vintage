@@ -24,7 +24,7 @@ import org.apache.turbine.util.db.pool.DBConnection;
 
   */
 public class RModuleUserRole 
-    extends ZZBaseRModuleUserRole
+    extends BaseRModuleUserRole
     implements Persistent
 {
 }

@@ -24,7 +24,7 @@ import org.apache.turbine.util.db.pool.DBConnection;
 
   */
 public class DependType 
-    extends ZZBaseDependType
+    extends BaseDependType
     implements Persistent
 {
 }

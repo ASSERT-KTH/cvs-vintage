@@ -26,7 +26,7 @@ import org.apache.turbine.services.*;
 
   */
 public abstract class AttributeValue 
-    extends ZZBaseAttributeValue
+    extends BaseAttributeValue
     implements Persistent
 {
     

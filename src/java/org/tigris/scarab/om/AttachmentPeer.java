@@ -26,7 +26,7 @@ import org.tigris.scarab.om.map.*;
   *  long as it does not already exist in the output directory.
   */
 public class AttachmentPeer 
-    extends org.tigris.scarab.om.ZZBaseAttachmentPeer
+    extends org.tigris.scarab.om.BaseAttachmentPeer
 {
 }
 

@@ -28,7 +28,7 @@ import org.tigris.scarab.om.map.*;
   *  long as it does not already exist in the output directory.
   */
 public class AttributeValuePeer 
-    extends ZZBaseAttributeValuePeer
+    extends BaseAttributeValuePeer
 {
     private static final String keyPrefix = "AttributeValueSubClass"; 
     private static String getClassCacheKey(String key)
