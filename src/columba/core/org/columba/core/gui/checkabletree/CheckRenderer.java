@@ -6,8 +6,6 @@
  */
 package org.columba.core.gui.checkabletree;
 
-import org.columba.mail.folder.FolderTreeNode;
-
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
@@ -50,14 +48,7 @@ public class CheckRenderer extends JPanel implements TreeCellRenderer {
     public Component getTreeCellRendererComponent(JTree tree, Object value,
         boolean isSelected, boolean expanded, boolean leaf, int row,
         boolean hasFocus) {
-        /*    
-        String stringValue = tree.convertValueToText(value, isSelected,
-                expanded, leaf, row, hasFocus);
-        */
-        
-        System.out.println("value="+value);
-        //System.out.println("stringvalue="+stringValue);
-        
+
         CheckableItem item = (CheckableItem) value;
        
         check.setSelected(item.isSelected());

@@ -1,27 +1,21 @@
-//The contents of this file are subject to the Mozilla Public License Version 1.1
-//(the "License"); you may not use this file except in compliance with the 
+// The contents of this file are subject to the Mozilla Public License Version
+// 1.1
+//(the "License"); you may not use this file except in compliance with the
 //License. You may obtain a copy of the License at http://www.mozilla.org/MPL/
 //
 //Software distributed under the License is distributed on an "AS IS" basis,
-//WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License 
+//WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
 //for the specific language governing rights and
 //limitations under the License.
 //
 //The Original Code is "The Columba Project"
 //
-//The Initial Developers of the Original Code are Frederik Dietz and Timo Stich.
-//Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
+//The Initial Developers of the Original Code are Frederik Dietz and Timo
+// Stich.
+//Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003.
 //
 //All Rights Reserved.
 package org.columba.mail.gui.config.subscribe;
-
-import net.javaprog.ui.wizard.plaf.basic.SingleSideEtchedBorder;
-
-import org.columba.core.gui.util.ButtonWithMnemonic;
-import org.columba.core.help.HelpManager;
-
-import org.columba.mail.gui.config.filter.FilterTransferHandler;
-import org.columba.mail.util.MailResourceLoader;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -49,8 +43,21 @@ import javax.swing.event.TreeExpansionEvent;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
 import javax.swing.event.TreeWillExpandListener;
+import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.ExpandVetoException;
 
+import net.javaprog.ui.wizard.plaf.basic.SingleSideEtchedBorder;
+
+import org.columba.core.command.Command;
+import org.columba.core.gui.checkabletree.CheckableTree;
+import org.columba.core.gui.util.ButtonWithMnemonic;
+import org.columba.core.help.HelpManager;
+import org.columba.core.main.MainInterface;
+import org.columba.mail.command.FolderCommandReference;
+import org.columba.mail.folder.imap.IMAPRootFolder;
+import org.columba.mail.gui.config.filter.FilterTransferHandler;
+import org.columba.mail.gui.tree.command.FetchSubFolderListCommand;
+import org.columba.mail.util.MailResourceLoader;
 
 /**
  * 
@@ -58,46 +65,98 @@ import javax.swing.tree.ExpandVetoException;
  * 
  * @author fdietz
  */
-public class SubscribeDialog extends JDialog implements ActionListener,
-    TreeSelectionListener, TreeWillExpandListener {
+public class SubscribeDialog
+    extends JDialog
+    implements ActionListener, TreeSelectionListener, TreeWillExpandListener {
     private JButton subscribeButton;
     private JButton syncButton;
     private JButton unsubscribeButton;
     private JTree tree;
-    private Object selection;
-
-    public SubscribeDialog() {
-        setTitle(MailResourceLoader.getString("dialog", "subscribe",
+    private ListInfoTreeNode selection;
+    private IMAPRootFolder root;
+    private DefaultTreeModel treeModel;
+    
+    public SubscribeDialog(IMAPRootFolder rootFolder) {
+        setModal(true);
+        setTitle(
+            MailResourceLoader.getString(
+                "dialog",
+                "subscribe",
                 "dialog_title"));
+        root = rootFolder;
+        
         initComponents();
         pack();
         setLocationRelativeTo(null);
+
+        syncFolderList();
+
         setVisible(true);
     }
 
-    /**
-        * Inits the GUI components.
-        */
+    private void syncFolderList() {
+        setEnabled(false);
+        Command c =
+            new SynchronizeFolderListCommand(
+                new SubscribeCommandReference(root, this));
+        MainInterface.processor.addOp(c);
+    }
+
+    private void subscribe() {
+        setEnabled(false);
+
+        Command c =
+            new SubscribeFolderCommand(
+                new SubscribeCommandReference(
+                    root,
+                    this,
+                    selection.getMailbox()));
+        MainInterface.processor.addOp(c);
+    }
+
+       private void unsubscribe() {
+        setEnabled(false);
+
+        Command c =
+            new UnsubscribeFolderCommand(
+                new SubscribeCommandReference(
+                    root,
+                    this,
+                    selection.getMailbox()));
+        MainInterface.processor.addOp(c);
+    }
+/**
+	 * Inits the GUI components.
+	 */
     private void initComponents() {
         JPanel mainPanel = new JPanel();
         mainPanel.setLayout(new BorderLayout());
         mainPanel.setBorder(BorderFactory.createEmptyBorder(12, 12, 12, 12));
         getContentPane().add(mainPanel);
 
-        subscribeButton = new ButtonWithMnemonic(MailResourceLoader.getString(
-                    "dialog", "subscribe", "subscribe"));
+        subscribeButton =
+            new ButtonWithMnemonic(
+                MailResourceLoader.getString(
+                    "dialog",
+                    "subscribe",
+                    "subscribe"));
         subscribeButton.setActionCommand("SUBSCRIBE");
         subscribeButton.addActionListener(this);
         subscribeButton.setEnabled(false);
 
-        syncButton = new ButtonWithMnemonic(MailResourceLoader.getString(
-                    "dialog", "subscribe", "sync"));
+        syncButton =
+            new ButtonWithMnemonic(
+                MailResourceLoader.getString("dialog", "subscribe", "sync"));
         syncButton.setActionCommand("SYNC");
         syncButton.setEnabled(false);
         syncButton.addActionListener(this);
 
-        unsubscribeButton = new ButtonWithMnemonic(MailResourceLoader.getString(
-                    "dialog", "subscribe", "unsubscribe"));
+        unsubscribeButton =
+            new ButtonWithMnemonic(
+                MailResourceLoader.getString(
+                    "dialog",
+                    "subscribe",
+                    "unsubscribe"));
         unsubscribeButton.setActionCommand("UNSUBSCRIBE");
         unsubscribeButton.setEnabled(false);
         unsubscribeButton.addActionListener(this);
@@ -155,9 +214,10 @@ public class SubscribeDialog extends JDialog implements ActionListener,
         // centerpanel
         JPanel centerPanel = new JPanel(new BorderLayout());
         centerPanel.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 6));
-        tree = new JTree();
+        tree = new CheckableTree();
         tree.addTreeSelectionListener(this);
         tree.addTreeWillExpandListener(this);
+        tree.setRootVisible(false);
 
         JScrollPane scrollPane = new JScrollPane(tree);
         scrollPane.setPreferredSize(new Dimension(300, 250));
@@ -173,69 +233,143 @@ public class SubscribeDialog extends JDialog implements ActionListener,
         JPanel buttonPanel = new JPanel(new GridLayout(1, 2, 6, 0));
         buttonPanel.setBorder(BorderFactory.createEmptyBorder(12, 12, 12, 12));
 
-        ButtonWithMnemonic closeButton = new ButtonWithMnemonic(MailResourceLoader.getString(
-                    "global", "close"));
+        ButtonWithMnemonic closeButton =
+            new ButtonWithMnemonic(
+                MailResourceLoader.getString("global", "close"));
         closeButton.setActionCommand("CLOSE"); //$NON-NLS-1$
         closeButton.addActionListener(this);
         buttonPanel.add(closeButton);
 
-        ButtonWithMnemonic helpButton = new ButtonWithMnemonic(MailResourceLoader.getString(
-                    "global", "help"));
+        ButtonWithMnemonic helpButton =
+            new ButtonWithMnemonic(
+                MailResourceLoader.getString("global", "help"));
 
         // associate with JavaHelp
-        HelpManager.enableHelpOnButton(helpButton,
+        HelpManager.enableHelpOnButton(
+            helpButton,
             "organising_and_managing_your_email_3");
         buttonPanel.add(helpButton);
         bottomPanel.add(buttonPanel, BorderLayout.EAST);
         getContentPane().add(bottomPanel, BorderLayout.SOUTH);
         getRootPane().setDefaultButton(closeButton);
-        getRootPane().registerKeyboardAction(this, "CLOSE",
+        getRootPane().registerKeyboardAction(
+            this,
+            "CLOSE",
             KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0),
             JComponent.WHEN_IN_FOCUSED_WINDOW);
 
         /*
-        getRootPane().registerKeyboardAction(
-        this,
-        "HELP",
-        KeyStroke.getKeyStroke(KeyEvent.VK_F1, 0),
-        JComponent.WHEN_IN_FOCUSED_WINDOW);
-        */
+		 * getRootPane().registerKeyboardAction( this, "HELP",
+		 * KeyStroke.getKeyStroke(KeyEvent.VK_F1, 0),
+		 * JComponent.WHEN_IN_FOCUSED_WINDOW);
+		 */
     }
 
     public void actionPerformed(ActionEvent e) {
         String action = e.getActionCommand();
 
         if (action.equals("CLOSE")) {
-            setVisible(false);
+            syncAndExit();
         } else if (action.equals("SUBSCRIBE")) {
-            // TODO: implement this
+            subscribe();
         } else if (action.equals("UNSUBSCRIBE")) {
-            // TODO: implement this
+            unsubscribe();
         } else if (action.equals("SYNC")) {
-            // TODO: implement this
+            syncFolderList();
         }
     }
 
-    /************************ TreeSelectionListener *********************/
-    /**
-     * @see javax.swing.event.TreeSelectionListener#valueChanged(javax.swing.event.TreeSelectionEvent)
-     */
-    public void valueChanged(TreeSelectionEvent arg0) {
-        selection = arg0.getPath().getLastPathComponent();
+    private void syncAndExit() {
+        
+        setEnabled(false);
+        Command c =
+        new FetchSubFolderListCommand(
+                new FolderCommandReference[] { new FolderCommandReference(root) });
+        MainInterface.processor.addOp(c);
+        
+        setVisible(false);
     }
 
-    /************************** TreeWillExpandListener ********************/
+    /** ********************** TreeSelectionListener ******************** */
     /**
-     * @see javax.swing.event.TreeWillExpandListener#treeWillCollapse(javax.swing.event.TreeExpansionEvent)
-     */
+	 * @see javax.swing.event.TreeSelectionListener#valueChanged(javax.swing.event.TreeSelectionEvent)
+	 */
+    public void valueChanged(TreeSelectionEvent arg0) {
+        selection = (ListInfoTreeNode) arg0.getPath().getLastPathComponent();
+
+        updateButtons();
+    }
+
+    /**
+	 *  
+	 */
+    private void updateButtons() {
+        if (selection != null) {
+            subscribeButton.setEnabled(!selection.isSubscribed());
+            unsubscribeButton.setEnabled(selection.isSubscribed());
+        } else {
+            subscribeButton.setEnabled(false);
+            unsubscribeButton.setEnabled(false);
+        }
+        
+        syncButton.setEnabled(true);
+        tree.setEnabled(true);
+    }
+
+    /** ************************ TreeWillExpandListener ******************* */
+    /**
+	 * @see javax.swing.event.TreeWillExpandListener#treeWillCollapse(javax.swing.event.TreeExpansionEvent)
+	 */
     public void treeWillCollapse(TreeExpansionEvent arg0)
         throws ExpandVetoException {
     }
 
     /**
-     * @see javax.swing.event.TreeWillExpandListener#treeWillExpand(javax.swing.event.TreeExpansionEvent)
-     */
+	 * @see javax.swing.event.TreeWillExpandListener#treeWillExpand(javax.swing.event.TreeExpansionEvent)
+	 */
     public void treeWillExpand(TreeExpansionEvent arg0)
         throws ExpandVetoException {
     }
+
+    /**
+	 * @param model
+	 */
+    public void syncFolderListDone(DefaultTreeModel model) {
+        tree.setModel(model);
+        tree.expandRow(0);
+        tree.expandRow(1);
+        
+        treeModel = model;
+        
+        updateButtons();
+    }
+
+    public void setEnabled(boolean value) {
+        subscribeButton.setEnabled(value);
+        unsubscribeButton.setEnabled(value);
+        syncButton.setEnabled(value);
+
+        tree.setEnabled(value);
+    }
+
+    /**
+	 *  
+	 */
+    public void subscribeDone() {
+        selection.setSubscribed(true);
+        treeModel.nodeChanged(selection);
+               
+        updateButtons();
+    }
+
+    /**
+     *  
+     */
+    public void unsubscribeDone() {
+        selection.setSubscribed(false);
+        treeModel.nodeChanged(selection);
+        
+        updateButtons();
+    }
+    
 }

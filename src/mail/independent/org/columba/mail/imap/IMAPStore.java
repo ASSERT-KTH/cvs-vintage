@@ -536,6 +536,55 @@ public class IMAPStore {
         return null;
     }
 
+
+    /**
+     * List available Mailboxes.
+     *
+     * @param reference
+     * @param pattern
+     * @return @throws
+     *         Exception
+     */
+    public ListInfo[] list(String reference, String pattern)
+    throws Exception {
+        ensureLoginState();
+
+        try {
+            printStatusMessage(MailResourceLoader.getString("statusbar",
+                    "message", "fetch_folder_list"));
+
+            IMAPResponse[] responses = getProtocol().list(reference, pattern);
+
+            List v = new Vector();
+            ListInfo[] list = null;
+
+            for (int i = 0; i < (responses.length - 1); i++) {
+                if (responses[i] == null) {
+                    continue;
+                }
+
+                if (responses[i].getResponseSubType().equals("LIST")) {
+                    ListInfo listInfo = ListInfoParser.parse(responses[i]);
+                    v.add(listInfo);
+                }
+            }
+
+            if (v.size() > 0) {
+                list = new ListInfo[v.size()];
+                ((Vector) v).copyInto(list);
+
+                return list;
+            }
+        } catch (BadCommandException ex) {
+        } catch (CommandFailedException ex) {
+        } catch (DisconnectedException ex) {
+            state = STATE_NONAUTHENTICATE;
+            list(reference, pattern);
+        }
+
+        return null;
+    }
+
     /**
      * Append message to mailbox.
      *

@@ -35,6 +35,14 @@ public class CheckableItemImpl
     }
 
     /**
+     *
+     */
+    public CheckableItemImpl(String name) {
+        super();
+        setName(name);
+    }
+
+    /**
      * @return
      */
     public boolean isSelected() {

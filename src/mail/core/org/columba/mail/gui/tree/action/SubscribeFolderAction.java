@@ -25,6 +25,9 @@ import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.gui.selection.SelectionChangedEvent;
 import org.columba.core.gui.selection.SelectionListener;
 import org.columba.core.gui.util.ImageLoader;
+import org.columba.mail.folder.FolderTreeNode;
+import org.columba.mail.folder.imap.IMAPFolder;
+import org.columba.mail.folder.imap.IMAPRootFolder;
 import org.columba.mail.gui.config.subscribe.SubscribeDialog;
 import org.columba.mail.gui.frame.MailFrameMediator;
 import org.columba.mail.gui.tree.selection.TreeSelectionChangedEvent;
@@ -39,6 +42,9 @@ import org.columba.mail.util.MailResourceLoader;
 public class SubscribeFolderAction
     extends AbstractColumbaAction
     implements SelectionListener {
+    
+    private IMAPRootFolder rootFolder;
+    
     public SubscribeFolderAction(FrameMediator frameMediator) {
         super(
             frameMediator,
@@ -74,7 +80,7 @@ public class SubscribeFolderAction
      * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
      */
     public void actionPerformed(ActionEvent evt) {
-        new SubscribeDialog();
+        new SubscribeDialog(rootFolder);
     }
 
     /* (non-Javadoc)
@@ -82,7 +88,16 @@ public class SubscribeFolderAction
      */
     public void selectionChanged(SelectionChangedEvent e) {
         if (((TreeSelectionChangedEvent) e).getSelected().length > 0) {
-            setEnabled(true);
+            FolderTreeNode selected = ((TreeSelectionChangedEvent) e).getSelected()[0];
+            if( selected instanceof IMAPFolder ) {
+                rootFolder = (IMAPRootFolder) ((IMAPFolder) selected).getRootFolder();
+                setEnabled(true);                
+            } else if ( selected instanceof IMAPRootFolder ) {
+                rootFolder = (IMAPRootFolder) selected;
+                setEnabled(true);                
+            } else {
+                setEnabled(false);
+            }            
         } else {
             setEnabled(false);
         }

@@ -23,7 +23,7 @@ import javax.swing.JTree;
  */
 public class CheckableTree extends JTree {
     public CheckableTree() {
-        super();
+        super(new CheckableItemImpl("root"));
 
         setCellRenderer(new CheckRenderer());
     }
