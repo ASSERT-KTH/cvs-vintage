@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/HttpServletRequestFacade.java,v 1.8 2000/04/17 21:02:27 costin Exp $
- * $Revision: 1.8 $
- * $Date: 2000/04/17 21:02:27 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/HttpServletRequestFacade.java,v 1.9 2000/04/18 23:04:29 costin Exp $
+ * $Revision: 1.9 $
+ * $Date: 2000/04/18 23:04:29 $
  *
  * ====================================================================
  *
@@ -91,6 +91,12 @@ public class HttpServletRequestFacade implements HttpServletRequest {
     public Request getRealRequest() {
 	// XXX In JDK1.2, call a security class to see if the code has
 	// the right permission !!!
+	Context ctx=request.getContext();
+	if( ctx==null || ! ctx.isTrusted() ) {
+	    // you are not allowed to access internal tomcat objects.
+	    // finer control with a security manager...
+	    //	    throw new SecurityException("Attempt to access internal objects");
+	}
 	return request;
     }
 

@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/RequestImpl.java,v 1.27 2000/04/17 21:02:27 costin Exp $
- * $Revision: 1.27 $
- * $Date: 2000/04/17 21:02:27 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/RequestImpl.java,v 1.28 2000/04/18 23:04:30 costin Exp $
+ * $Revision: 1.28 $
+ * $Date: 2000/04/18 23:04:30 $
  *
  * ====================================================================
  *
@@ -618,7 +618,7 @@ public class RequestImpl  implements Request {
 	// about security
 	remoteAddr="127.0.0.1";
 	remoteHost="localhost";
-
+	for( int i=0; i<ACCOUNTS; i++ ) accTable[i]=0;
     }
 
     public MimeHeaders getMimeHeaders() {

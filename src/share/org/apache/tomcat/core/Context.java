@@ -142,7 +142,9 @@ public class Context {
     String formErrorPage;
 
     int debug=0;
-
+    // are servlets allowed to access internal objects? 
+    boolean trusted=false;
+    
     public Context() {
 	//	System.out.println("New Context ");
 	// XXX  customize it per context
@@ -1003,5 +1005,12 @@ public class Context {
         this.documentBase=s;
     }
 
+    public void setTrusted( boolean t ) {
+	trusted=t;
+    }
+
+    public boolean isTrusted() {
+	return trusted;
+    }
 
 }

@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/ServletWrapper.java,v 1.39 2000/04/17 21:02:27 costin Exp $
- * $Revision: 1.39 $
- * $Date: 2000/04/17 21:02:27 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/ServletWrapper.java,v 1.40 2000/04/18 23:04:31 costin Exp $
+ * $Revision: 1.40 $
+ * $Date: 2000/04/18 23:04:31 $
  *
  * ====================================================================
  *
@@ -281,10 +281,6 @@ public class ServletWrapper {
 	throws ClassNotFoundException, InstantiationException,
 	IllegalAccessException, ServletException
     {
-	ClassLoader originalCL=null;
-	originalCL = fixJDKContextClassLoader(context.getServletLoader().getClassLoader());
-
-	try {
 	    // XXX Move this to an interceptor, so it will be configurable.
 	    // ( and easier to read )
 	    if (servletClass == null) {
@@ -339,10 +335,6 @@ public class ServletWrapper {
 	    } catch( Exception ex ) {
 		unavailable=ex;
 	    }
-	} finally {
-	    fixJDKContextClassLoader(originalCL );
-	}
-
     }
 
     // XXX Move it to interceptor - so it can be customized
@@ -358,6 +350,8 @@ public class ServletWrapper {
 	    if( loader!=null) {
 		// XXX no need to check after we remove the old loader
 		if( loader.shouldReload() ) {
+		    // workaround for destroy 
+		    destroy();
 		    initialized=false;
 		    loader.reload();
 		    servlet=null;
@@ -383,8 +377,6 @@ public class ServletWrapper {
     
     public void handleRequest(Request req, Response res)
     {
-	ClassLoader originalCL=null;
-
 	// Jsp case - JspServlet will be called.
 	// XXXX Very, very bad code !!!
 	try {
@@ -478,9 +470,6 @@ public class ServletWrapper {
 	}
 	
 	try {
-	    originalCL = fixJDKContextClassLoader(context.getServletLoader().getClassLoader());
-
-
 	    // XXX to expensive  per/request, un-load is not so frequent and
 	    // the API doesn't require a special state for destroy
 	    // synchronized(this) {
@@ -525,66 +514,9 @@ public class ServletWrapper {
 		// Developers can/should use the logs !!!
 		contextM.handleError( req, res, t, 0 );
 	    }
-	} finally {
-	    fixJDKContextClassLoader(originalCL );
-	}
+	} 
     }
 
-    static boolean haveContextClassLoader=true;
-    static Class noParams[]=new Class[0];
-    static Class clParam[]=new Class[1];
-    static Object noObjs[]=new Object[0];
-    static { clParam[0]=ClassLoader.class; }
-
-
-    // Before we do init() or service(), we need to do some tricks
-    // with the class loader - see bug #116.
-    // some JDK1.2 code will not work without this fix
-    // we save the originalCL because we might be in include
-    // and we need to revert to it when we finish
-    // that will set a new (JDK)context class loader, and return the old one
-    // if we are in JDK1.2
-    // XXX move it to interceptor !!!
-    /** Reflection trick to set the context class loader for JDK1.2, without
-	braking JDK1.1.
-
-	This code can be commented out for 3.1 if it creates any problems -
-	it should work.
-
-	XXX We need to find a better way to do that - maybe make it part of
-	the ServletLoader interface.
-     */
-    ClassLoader fixJDKContextClassLoader( ClassLoader cl ) {
-	if( cl==null ) return null;
-	if( ! haveContextClassLoader ) return null;
-	
-	Thread t=Thread.currentThread();
-	try {
-	    java.lang.reflect.Method getCCL=t.getClass().getMethod("getContextClassLoader", noParams);
-	    java.lang.reflect.Method setCCL=t.getClass().getMethod("setContextClassLoader", clParam) ;
-	    if( (getCCL==null) || (setCCL==null) ) {
-		haveContextClassLoader=false;
-		return null;
-	    }
-	    ClassLoader old=( ClassLoader)getCCL.invoke( t, noObjs );
-	    Object params[]=new Object[1];
-	    params[0]=cl;
-	    setCCL.invoke( t, params );
-	    // 	    if( context.getDebug() > 5 ) context.log("Setting system loader " + old + " " + cl );
-	    // 	    context.log("Setting system loader " + old + " " + cl );
-	    
-	    return old;
-	} catch (NoSuchMethodException ex ) {
-	    // we don't have the methods, don't try again
-	    haveContextClassLoader=false;
-	} catch( Exception ex ) {
-	    haveContextClassLoader = false;
-	    context.log( "Error setting jdk context class loader", ex );
-	}
-	return null;
-    }
-
-    
     /** @deprecated
      */
     public void handleRequest(final HttpServletRequestFacade request,
