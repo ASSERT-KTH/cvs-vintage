@@ -76,18 +76,19 @@ import org.tigris.scarab.util.ScarabConstants;
     logged in. That part isn't a priority yet though.
 
     @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
-    @version $Id: RequireLoginFirstAction.java,v 1.2 2001/01/04 03:02:11 jon Exp $    
+    @version $Id: RequireLoginFirstAction.java,v 1.3 2001/01/24 01:19:48 jon Exp $    
 */
 public abstract class RequireLoginFirstAction extends VelocitySecureAction
 {
     /**
-        sets the template to ScarabLogin.vm if the user hasn't logged in yet
+        sets the template to Login.vm if the user hasn't logged in yet
     */
     protected boolean isAuthorized( RunData data ) throws Exception
     {
         if (!data.getUser().hasLoggedIn())
         {
-            getContext(data).put(ScarabConstants.NEXT_TEMPLATE, data.getTemplateInfo().getScreenTemplate());
+            data.getParameters().add (ScarabConstants.NEXT_TEMPLATE,
+                data.getTemplateInfo().getScreenTemplate());
             setTemplate(data, "Login.vm");
             return false;
         }
