@@ -348,7 +348,9 @@ centerPanel.add(scrollPane);
             }
 
             // if plugin has config extension point
-            if (configHandler.exists(selectedNode.getId())) {
+            String id = selectedNode.getId();
+            id = id.substring(id.lastIndexOf(".") + 1, id.length());
+            if (configHandler.exists(id)) {
                 optionsButton.setEnabled(true);
             } else {
                 optionsButton.setEnabled(false);
