@@ -146,7 +146,7 @@ $link.setPage("ConfigureIssueList.vm").setLabel("Add/remove attributes from view
  #set ($issue = $scarabR.getIssue($issueId))
  #set ($issueLink = $link.setPage("ViewIssue.vm").setPathInfo("id", $issue.UniqueId.toString()).setPathInfo("issueList", "true"))
  #indexedRows($velocityCount)
-  <td><input type="checkbox" name="selected_$issue.UniqueId" /></td>
+  <td><input type="checkbox" name="issue_ids" value="$issue.UniqueId" /></td>
  #if ($mitlist && !$mitlist.isSingleModule())
   <td>$issue.Module.RealName</td> 
  #end

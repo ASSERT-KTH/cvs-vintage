@@ -94,7 +94,7 @@ import org.tigris.scarab.util.word.IssueSearch;
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: Search.java,v 1.90 2002/09/15 15:37:18 jmcnally Exp $
+ * @version $Id: Search.java,v 1.91 2002/10/07 22:46:48 jmcnally Exp $
  */
 public class Search extends RequireLoginFirstAction
 {
@@ -489,19 +489,14 @@ public class Search extends RequireLoginFirstAction
         List newIssueIdList = new ArrayList();
         String key;
         ParameterParser pp = data.getParameters();
-        Object[] keys =  data.getParameters().getKeys();
-        for (int i =0; i<keys.length; i++)
+        String[] selectedIds = pp.getStrings("issue_ids");
+        if (selectedIds != null) 
         {
-            key = keys[i].toString();
-            if (key.startsWith("selected_"))
+            for (int i=0; i<selectedIds.length; i++) 
             {
-                String id = key.substring(9).toString();
-                newIssueIdList.add(id);
-                pp.add("issue_ids", id);
+                newIssueIdList.add(selectedIds[i]);
             }
-        }
+        }        
         return newIssueIdList;
     }
-    
-
 }
