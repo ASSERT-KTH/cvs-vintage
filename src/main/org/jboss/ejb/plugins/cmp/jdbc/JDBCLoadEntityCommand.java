@@ -40,7 +40,7 @@ import org.jboss.util.FinderResults;
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
  * @author <a href="mailto:dirk@jboss.de">Dirk Zimmermann</a>
  * @author <a href="mailto:danch@nvisia.com">danch (Dan Christopherson)</a>
- * @version $Revision: 1.14 $
+ * @version $Revision: 1.15 $
  */
 public class JDBCLoadEntityCommand {
    private final JDBCStoreManager manager;
@@ -237,22 +237,37 @@ public class JDBCLoadEntityCommand {
          JDBCCMPFieldBridge requiredField,
          EntityEnterpriseContext ctx) {
 
-      ArrayList fields = new ArrayList(entity.getEagerLoadFields());
-      if(requiredField != null && !fields.contains(requiredField)) {
-         fields.add(requiredField);
+      // get the load fields
+      ArrayList loadFields = new ArrayList(entity.getFields().size());
+      if(requiredField == null) {
+         log.debug("Default eager-load for entity");
+         loadFields.addAll(entity.getEagerLoadFields());
+      } else {
+         loadFields.add(requiredField);
+         for(Iterator groups = entity.getLazyLoadGroups(); groups.hasNext();) {
+            List group = (List)groups.next();
+            if(group.contains(requiredField)) {
+               for(Iterator fields = group.iterator(); fields.hasNext();) {
+                  JDBCFieldBridge field = (JDBCFieldBridge)fields.next();
+                  if(!loadFields.contains(field)) {
+                     loadFields.add(field);
+                  }
+               }
+            }
+         }
       }
 
       // remove any field that is a member of the primary key
       // or has not timed out or is already loaded
-      for(Iterator iter=fields.iterator(); iter.hasNext();) {
-         JDBCFieldBridge field = (JDBCFieldBridge)iter.next();
+      for(Iterator fields = loadFields.iterator(); fields.hasNext();) {
+         JDBCFieldBridge field = (JDBCFieldBridge)fields.next();
          if(field.isPrimaryKeyMember() ||
                !field.isReadTimedOut(ctx) ||
                field.isLoaded(ctx)) {
-            iter.remove();
+            fields.remove();
          }
       }
       
-      return fields;
+      return loadFields;
    }
 }
