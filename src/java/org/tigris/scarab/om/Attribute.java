@@ -87,8 +87,8 @@ public class Attribute
     private static Criteria moduleOptionsCriteria;
 
     private HashMap optionsMap;
-    private AttributeOption[] optionsArray;
-    private AttributeOption[] currentOptions;
+    private List optionsArray;
+    private List currentOptions;
     private static HashMap optionAttributeMap = new HashMap();
 
     static
@@ -224,27 +224,26 @@ public class Attribute
         // further investigation !FIXME!
         List options = getAllAttributeOptions();
         HashMap optionsMap = new HashMap((int)(1.25*options.size()+1));
-        AttributeOption[] optionsArray = new AttributeOption[options.size()];
+        List optionsArray = new ArrayList(options.size());
 
         for ( int i=options.size()-1; i>=0; i-- ) 
         {
             AttributeOption option = (AttributeOption)options.get(i);
-            optionsArray[i] = option;
+            optionsArray.add(option);
             optionsMap.put(option.getOptionId(), option);
             optionAttributeMap.put(option.getOptionId(), this);
         }
 
-        List optionsList = new ArrayList(optionsArray.length);
-        for ( int i=0; i<optionsArray.length; i++ ) 
+        List optionsList = new ArrayList(optionsArray.size());
+        for ( int i=0; i<optionsArray.size(); i++ ) 
         {
-            if ( !optionsArray[i].getDeleted() ) 
+            if ( !((AttributeOption)optionsArray.get(i)).getDeleted() ) 
             {
-                optionsList.add(optionsArray[i]);
+                optionsList.add(optionsArray.get(i));
             }
         }
-        AttributeOption[] currentOptions = 
-            new AttributeOption[optionsList.size()];
-        optionsList.toArray(currentOptions);
+        List currentOptions = new ArrayList(optionsList.size());
+        currentOptions = optionsList;
         
         this.optionsArray = optionsArray;
         this.currentOptions = currentOptions;
@@ -275,15 +274,23 @@ public class Attribute
         return getAttributeOption(new NumberKey(optionID));
     }
 
-    public AttributeOption[] getAttributeOptions(boolean includeDeleted)
+    public List getAttributeOptions(boolean includeDeleted)
         throws Exception
     {
         if ( includeDeleted ) 
         {
+            if (optionsArray == null)
+            {
+                buildOptionsMap();
+            }
             return optionsArray;
         }
         else 
         {
+            if (currentOptions == null)
+            {
+                buildOptionsMap();
+            }
             return currentOptions; 
         }
     }
@@ -321,4 +328,3 @@ public class Attribute
         return AttributeTypePeer.doSelect(new Criteria());
     }
 }
-

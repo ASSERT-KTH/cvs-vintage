@@ -392,7 +392,7 @@ public class ScarabModule
     private List getAllRModuleOptions(Attribute attribute)
         throws Exception
     {
-        AttributeOption[] options = attribute.getAttributeOptions(false);
+        List options = attribute.getAttributeOptions(false);
         NumberKey[] optIds = null;
         if (options == null)
         {
@@ -400,11 +400,11 @@ public class ScarabModule
         }
         else
         {
-            optIds = new NumberKey[options.length];
+            optIds = new NumberKey[options.size()];
         }
         for ( int i=optIds.length-1; i>=0; i-- )
         {
-            optIds[i] = options[i].getOptionId();
+            optIds[i] = ((AttributeOption)options.get(i)).getOptionId();
         }
 
         Criteria crit = new Criteria(2);
