@@ -22,7 +22,7 @@ goto setmem
 
 :startcatalina
     if not "-%CLASSPATH%-"=="--" echo Classpath: %CLASSPATH%
-    .\bin\catalina.bat run
+    call .\bin\catalina.bat run
 
 :done
     set CATALINA_HOME=%SAVED_CATALINA_HOME%
