@@ -24,7 +24,7 @@
 // File: FigClassifierRole.java
 // Classes: FigClassifierRole
 // Original Author: agauthie@ics.uci.edu
-// $Id: FigClassifierRole.java,v 1.14 2003/01/21 13:11:04 mkl Exp $
+// $Id: FigClassifierRole.java,v 1.15 2003/01/25 19:52:13 kataka Exp $
 
 // 10 Apr 2002: Jeremy Bennett (mail@jeremybennett.com). Fixed to stop
 // collaboration roles all stretching to the top left on reload. Problem was
@@ -488,10 +488,9 @@ public class FigClassifierRole extends FigNodeModelElement {
             else
                 _name.setText("/" + nameStr.trim() + " : " + baseString);
         }
-        
         Rectangle rect = getBounds();
         setBounds(rect.x, rect.y, rect.width, rect.height);
-        
+        damage();
     }
 
     /**
