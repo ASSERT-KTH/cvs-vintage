@@ -1,7 +1,7 @@
 /*
- * jBoss, the OpenSource EJB server
+ * JBoss, the OpenSource EJB server
  *
- * Distributable under GPL license.
+ * Distributable under LGPL license.
  * See terms of license at gnu.org.
  */
  
@@ -65,18 +65,18 @@ public class SimpleRealmMappingService
    protected void initService()
       throws Exception
    {
- 	   // Create a new SM
-	   srm = new SimpleRealmMapping();
+      // Create a new SM
+      srm = new SimpleRealmMapping();
+   }
+   
+   protected void startService()
+      throws Exception
+   {
 	   // Bind reference to JNDI
 	   Reference ref = new Reference(SimpleRealmMapping.class.toString(), getClass().getName(), null);
 	   new InitialContext().bind(JNDI_NAME, ref);
    }
 
-   protected void startService()
-      throws Exception
-   {
-   }
-   
    protected void stopService()
    {
 		try

@@ -1,7 +1,7 @@
 /*
- * jBoss, the OpenSource EJB server
+ * JBoss, the OpenSource EJB server
  *
- * Distributable under GPL license.
+ * Distributable under LGPL license.
  * See terms of license at gnu.org.
  */
 package org.jboss.ejb.plugins;
@@ -45,7 +45,7 @@ import com.dreambean.ejx.ejb.AssemblyDescriptor;
  *   @see <related>
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
  *   @author <a href="mailto:docodan@nycap.rr.com">Daniel O'Connor</a>.
- *   @version $Revision: 1.6 $
+ *   @version $Revision: 1.7 $
  */
 public class SecurityInterceptor
    extends AbstractInterceptor

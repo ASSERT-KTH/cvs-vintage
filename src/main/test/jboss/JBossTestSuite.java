@@ -1,7 +1,7 @@
 /*
- * jBoss, the OpenSource EJB server
+ * JBoss, the OpenSource EJB server
  *
- * Distributable under GPL license.
+ * Distributable under LGPL license.
  * See terms of license at gnu.org.
  */
 package test.jboss;
@@ -12,10 +12,10 @@ import test.jboss.minerva.pools.*;
 import test.jboss.minerva.factories.*;
 
 /**
- * Master test Suite for jBoss.  Create new addXXXTests methods for different
+ * Master test Suite for JBoss.  Create new addXXXTests methods for different
  * modules, and then use them to add all the tests you want to run for that
  * module.  Pass this class to the JUnit UI to run all the tests.
- * @version $Revision: 1.3 $
+ * @version $Revision: 1.4 $
  */
 public class JBossTestSuite extends TestSuite {
     public JBossTestSuite() {

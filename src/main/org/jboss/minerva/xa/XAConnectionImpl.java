@@ -1,7 +1,7 @@
 /*
- * jBoss, the OpenSource EJB server
+ * JBoss, the OpenSource EJB server
  *
- * Distributable under GPL license.
+ * Distributable under LGPL license.
  * See terms of license at gnu.org.
  */
 package org.jboss.minerva.xa;
@@ -43,7 +43,7 @@ import org.jboss.minerva.pools.PoolEventListener;
  * also register a TransactionListener that will be notified when the
  * Transaction is finished, and release the XAConnection at that time.</P>
  * @see org.jboss.minerva.xa.TransactionListener
- * @version $Revision: 1.9 $
+ * @version $Revision: 1.10 $
  * @author Aaron Mulder (ammulder@alumni.princeton.edu)
  */
 public class XAConnectionImpl implements XAConnection, PooledObject {

@@ -1,6 +1,6 @@
 /*
-* jBoss, the OpenSource EJB server
-* Distributable under GPL license.
+* JBoss, the OpenSource EJB server
+* Distributable under LGPL license.
 * See terms of license at gnu.org.
 */
 package test.jboss.jmx;
@@ -179,7 +179,7 @@ public class TestClient {
 				"7. Try to add a listener to all available MBeans.\n" +
 				"Please note that this will keep this test client up and running waiting\n" +
 				"for an event from the server. If there is no event comming then try\n" +
-				"to shutdown the jBoss server.\n" +
+				"to shutdown the JBoss server.\n" +
 				"To end this test client just hit <CTRL>-C\n"+
 				"=> hit any key to proceed"
 			);

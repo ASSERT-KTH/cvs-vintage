@@ -1,7 +1,7 @@
 /*
- * jBoss, the OpenSource EJB server
+ * JBoss, the OpenSource EJB server
  *
- * Distributable under GPL license.
+ * Distributable under LGPL license.
  * See terms of license at gnu.org.
  */
 package org.jboss.ejb.plugins;
@@ -56,14 +56,14 @@ import org.jboss.logging.Logger;
 /**
  *  StatefulSessionFilePersistenceManager
  *
- *  This class is one of the passivating plugins for jBoss.  
- *  It is fairly simple and can work from the file system from wich jBoss is operating
+ *  This class is one of the passivating plugins for JBoss.  
+ *  It is fairly simple and can work from the file system from wich JBoss is operating
  *      
  *  @see <related>
  *  @author Rickard Öberg (rickard.oberg@telkel.com)
  *  @author <a href="marc.fleury@telkel.com">Marc Fleury</a>
  *  @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
- *  @version $Revision: 1.14 $
+ *  @version $Revision: 1.15 $
  */
 public class StatefulSessionFilePersistenceManager
    implements StatefulSessionPersistenceManager

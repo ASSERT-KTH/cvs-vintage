@@ -1,7 +1,7 @@
 /*
- * jBoss, the OpenSource EJB server
+ * JBoss, the OpenSource EJB server
  *
- * Distributable under GPL license.
+ * Distributable under LGPL license.
  * See terms of license at gnu.org.
  */
 package org.jboss.minerva.pools;
@@ -13,7 +13,7 @@ import java.util.EventObject;
  * object was used, closed, or had an error occur.  The typical response is
  * to update the last used time in the pool for used events, and return the
  * object to the pool for closed or error events.
- * @version $Revision: 1.2 $
+ * @version $Revision: 1.3 $
  * @author Aaron Mulder (ammulder@alumni.princeton.edu)
  */
 public class PoolEvent extends EventObject {

@@ -7,7 +7,7 @@
 		<container-configuration>
 	 		<container-name>Standard CMP EntityBean</container-name>
 	 		<call-logging>false</call-logging>
-			<container-invoker>org.jboss.ejb.plugins.jrmp13.server.JRMPContainerInvoker</container-invoker>
+			<container-invoker>org.jboss.ejb.plugins.jrmp.server.JRMPContainerInvoker</container-invoker>
 			<instance-pool>org.jboss.ejb.plugins.EntityInstancePool</instance-pool>
 			<instance-cache>org.jboss.ejb.plugins.EntityInstanceCache</instance-cache>
 			<persistence-manager>org.jboss.ejb.plugins.jaws.JAWSPersistenceManager</persistence-manager>
@@ -71,7 +71,7 @@
 		<container-configuration>
 			<container-name>Standard Stateless SessionBean</container-name>
 			<call-logging>false</call-logging>
-			<container-invoker>org.jboss.ejb.plugins.jrmp13.server.JRMPContainerInvoker</container-invoker>
+			<container-invoker>org.jboss.ejb.plugins.jrmp.server.JRMPContainerInvoker</container-invoker>
 			<instance-pool>org.jboss.ejb.plugins.StatelessSessionInstancePool</instance-pool>
 			<instance-cache></instance-cache>
 			<persistence-manager></persistence-manager>
@@ -107,7 +107,7 @@
 		<container-configuration>
 			<container-name>Standard Stateful SessionBean</container-name>
 			<call-logging>false</call-logging>
-			<container-invoker>org.jboss.ejb.plugins.jrmp13.server.JRMPContainerInvoker</container-invoker>
+			<container-invoker>org.jboss.ejb.plugins.jrmp.server.JRMPContainerInvoker</container-invoker>
 			<instance-cache>org.jboss.ejb.plugins.StatefulSessionInstanceCache</instance-cache>
 			<persistence-manager>org.jboss.ejb.plugins.StatefulSessionFilePersistenceManager</persistence-manager>
 			<transaction-manager>org.jboss.tm.TxManager</transaction-manager>
@@ -159,7 +159,7 @@
        	<container-configuration>
 			<container-name>Standard BMP EntityBean</container-name>
 		 	<call-logging>false</call-logging>
-		 	<container-invoker>org.jboss.ejb.plugins.jrmp13.server.JRMPContainerInvoker</container-invoker>
+		 	<container-invoker>org.jboss.ejb.plugins.jrmp.server.JRMPContainerInvoker</container-invoker>
 		 	<instance-pool>org.jboss.ejb.plugins.EntityInstancePool</instance-pool>
 		 	<instance-cache>org.jboss.ejb.plugins.EntityInstanceCache</instance-cache>
 		 	<persistence-manager>org.jboss.ejb.plugins.BMPPersistenceManager</persistence-manager>

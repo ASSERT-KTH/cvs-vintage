@@ -1,7 +1,7 @@
 /*
- * jBoss, the OpenSource EJB server
+ * JBoss, the OpenSource EJB server
  *
- * Distributable under GPL license.
+ * Distributable under LGPL license.
  * See terms of license at gnu.org.
  */
 package org.jboss.minerva.xa;
@@ -18,7 +18,7 @@ import javax.sql.*;
  * XAResource are responsible for closing the connection when appropriate.
  * Note that the underlying driver may perform pooling, but need not.  This
  * class does not add any pooling capabilities.
- * @version $Revision: 1.4 $
+ * @version $Revision: 1.5 $
  * @author Aaron Mulder (ammulder@alumni.princeton.edu)
  */
 public class XADataSourceImpl implements XADataSource {

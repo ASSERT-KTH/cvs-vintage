@@ -1,7 +1,7 @@
 /*
- * jBoss, the OpenSource EJB server
+ * JBoss, the OpenSource EJB server
  *
- * Distributable under GPL license.
+ * Distributable under LGPL license.
  * See terms of license at gnu.org.
  */
 
@@ -12,7 +12,7 @@ package org.jboss.configuration;
  *      
  *   @see <related>
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
- *   @version $Revision: 1.3 $
+ *   @version $Revision: 1.4 $
  */
 public interface ConfigurationServiceMBean
 {
@@ -20,7 +20,7 @@ public interface ConfigurationServiceMBean
    public static final String OBJECT_NAME = ":service=Configuration";
     
    // Public --------------------------------------------------------
-	public void load(String cfg)
+	public void load(org.w3c.dom.Document conf)
 		throws Exception;
 		
 	public String save()

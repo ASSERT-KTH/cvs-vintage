@@ -1,7 +1,7 @@
 /*
- * jBoss, the OpenSource EJB server
+ * JBoss, the OpenSource EJB server
  *
- * Distributable under GPL license.
+ * Distributable under LGPL license.
  * See terms of license at gnu.org.
  */
 package org.jboss.logging;
@@ -22,11 +22,10 @@ import org.jboss.util.ServiceMBeanSupport;
  *
  *   @see <related>
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
- *   @version $Revision: 1.10 $
+ *   @version $Revision: 1.11 $
  */
 public class FileLogging
-   extends ServiceMBeanSupport
-   implements FileLoggingMBean, NotificationListener
+   implements FileLoggingMBean, NotificationListener, MBeanRegistration
 {
    // Constants -----------------------------------------------------
 
@@ -42,9 +41,6 @@ public class FileLogging
    String sources;
    boolean append;
    
-   ObjectName name;
-   MBeanServer server;
-
    // Static --------------------------------------------------------
 
    // Constructors --------------------------------------------------
@@ -119,30 +115,29 @@ public class FileLogging
       }
    }
 
-   // ServiceMBeanSupport implementation ----------------------------
-   public ObjectName getObjectName(MBeanServer server, ObjectName name)
-      throws javax.management.MalformedObjectNameException
-   {
-      this.server = server;
-      this.name = name == null ? new ObjectName(OBJECT_NAME + (sources == null ? "" : ",sources=" + sources))
-                               : name;
-      return this.name;
-   }
-   
-   public String getName()
-   {
-      return "File logging";
-   }
-   
-   public void initService()
+   // MBeanRegistration implementation ------------------------------
+   public ObjectName preRegister(MBeanServer server, ObjectName name)
       throws java.lang.Exception
    {
-      String objectName;
-
       openLogFile();
       server.addNotificationListener(new ObjectName(server.getDefaultDomain(),"service","Log"),this,null,null);
+      return name == null ? new ObjectName(OBJECT_NAME + (sources == null ? "" : ",sources=" + sources))
+                               : name;
    }
-
+   
+   public void postRegister(java.lang.Boolean registrationDone) 
+   {
+   }
+   
+   public void preDeregister()
+      throws java.lang.Exception 
+   {
+   }
+   
+   public void postDeregister() 
+   {
+   }
+   
    // Private -------------------------------------------------------
    private void openLogFile() 
       throws FileNotFoundException 

@@ -25,7 +25,7 @@ import com.dreambean.ejx.Util;
  *      
  *   @see <related>
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
- *   @version $Revision: 1.3 $
+ *   @version $Revision: 1.4 $
  */
 public class JDBCResource
 	extends BeanContextChildSupport
@@ -53,9 +53,14 @@ public class JDBCResource
    
    public String getType() { return "javax.sql.DataSource"; }
    
+   public ResourceManagers getResourceManagers()
+   {
+      return (ResourceManagers)getBeanContext();
+   }
+   
    public void removeResource()
    {
-   	getBeanContext().remove(this);
+   	getResourceManagers().remove(this);
    }
 	
    // BeanContextChildComponentProxy implementation -----------------

@@ -1,7 +1,7 @@
 /*
- * jBoss, the OpenSource EJB server
+ * JBoss, the OpenSource EJB server
  *
- * Distributable under GPL license.
+ * Distributable under LGPL license.
  * See terms of license at gnu.org.
  */
 package org.jboss.ejb.deployment;
@@ -17,7 +17,7 @@ import com.dreambean.ejx.FileManagerFactory;
  *      
  *   @see <related>
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
- *   @version $Revision: 1.2 $
+ *   @version $Revision: 1.3 $
  */
 public class jBossFileManagerFactory
     extends FileFilter
@@ -51,6 +51,6 @@ public class jBossFileManagerFactory
     
     public String toString()
     {
-        return "EJB 1.1 XML with jBoss XML";
+        return "EJB 1.1 XML with JBoss XML";
     }
 }

@@ -1,7 +1,7 @@
 /*
- * jBoss, the OpenSource EJB server
+ * JBoss, the OpenSource EJB server
  *
- * Distributable under GPL license.
+ * Distributable under LGPL license.
  * See terms of license at gnu.org.
  */
 package org.jboss.jdbc;
@@ -11,6 +11,7 @@ import java.lang.reflect.Method;
 import java.sql.SQLException;
 import java.util.Iterator;
 import java.util.Properties;
+import java.util.StringTokenizer;
 import javax.management.ObjectName;
 import javax.management.MBeanServer;
 import javax.naming.Context;
@@ -22,321 +23,369 @@ import javax.sql.XADataSource;
 import org.jboss.logging.LogWriter;
 import org.jboss.minerva.datasource.XAPoolDataSource;
 import org.jboss.util.ServiceMBeanSupport;
-import org.jboss.logging.Logger;
+import org.jboss.logging.Log;
 
 /**
  * Service that loads a JDBC 2 std. extension-compliant connection pool.  This
  * pool generates connections that are registered with the current Transaction
  * and support two-phase commit.  The constructors are called by the JMX engine
  * based on your MLET tags.
- * @version $Revision: 1.12 $
+ * @version $Revision: 1.13 $
  * @author Aaron Mulder (ammulder@alumni.princeton.edu)
  */
-public class XADataSourceLoader extends ServiceMBeanSupport
-        implements XADataSourceLoaderMBean {
-    private XAPoolDataSource source;
-    private String url;
+public class XADataSourceLoader 
+   extends ServiceMBeanSupport
+   implements XADataSourceLoaderMBean 
+{
+   // Settings
+   String name;
+   String dataSourceClass;
+   String url;
+   String userName;
+   String password;
+   String properties;
+   boolean loggingEnabled;
+   int minSize;
+   int maxSize;
+   boolean blocking;
+   boolean gcEnabled;
+   long gcInterval;
+   long gcMinIdleTime;
+   boolean idleTimeoutEnabled;
+   long idleTimeout;
+   float maxIdleTimeoutPercent;
+   boolean invalidateOnError;
+   boolean timestampUsed;
+   
+   XAPoolDataSource source;
+   
+   public XADataSourceLoader()
+   {
+   }
 
-/*
-// RO: This seems like a dangerous constructor, since the instance would be inconsistently init.-ed    
-    public XADataSourceLoader() {}
-*/
+   public XADataSourceLoader(String poolName, String xaDataSourceClass)
+   {
+      setPoolName(poolName);
+      setDataSourceClass(xaDataSourceClass);
+   }
+   public void setPoolName(String name)
+   {
+      this.name = name;
+      log = new Log(name);
+   }
+   
+   public String getPoolName()
+   {
+      return name;
+   }
+   
+   public void setDataSourceClass(String clazz)
+   {
+      dataSourceClass = clazz;
+   }
+   
+   public String getDataSourceClass()
+   {
+      return dataSourceClass;
+   }
+   
+   public void setURL(String url)
+   {
+      this.url = url;
+   }
+   
+   public String getURL()
+   {
+      return url;
+   }
+   
+   public void setJDBCUser(String userName)
+   {
+      this.userName = userName;
+   }
+   
+   public String getJDBCUser()
+   {
+      return userName;
+   }
+   
+   public void setPassword(String password)
+   {
+      this.password = password;
+   }
+   
+   public String getPassword()
+   {
+      return password;
+   }
+   
+   public void setProperties(String properties)
+   {
+      this.properties = properties;
+   }
+   
+   public String getProperties()
+   {
+      return properties;
+   }
+   
+   public void setLoggingEnabled(boolean enabled)
+   {
+      this.loggingEnabled = enabled;
+   }
+   
+   public boolean getLoggingEnabled()
+   {
+      return loggingEnabled;
+   }
+   
+   public void setMinSize(int minSize)
+   {
+      this.minSize = minSize;
+   }
+   
+   public int getMinSize()
+   {
+      return minSize;
+   }
+   
+   public void setMaxSize(int maxSize)
+   {
+      this.maxSize = maxSize;
+   }
+   
+   public int getMaxSize()
+   {
+      return maxSize;
+   }
+   
+   public void setBlocking(boolean blocking)
+   {
+      this.blocking = blocking;
+   }
+   
+   public boolean getBlocking()
+   {
+      return blocking;
+   }
+   
+   public void setGCEnabled(boolean gcEnabled)
+   {
+      this.gcEnabled = gcEnabled;
+   }
+   
+   public boolean getGCEnabled()
+   {
+      return gcEnabled;
+   }
+   
+   public void setGCInterval(long interval)
+   {
+      this.gcInterval = interval;
+   }
+   
+   public long getGCInterval()
+   {
+      return gcInterval;
+   }
+   
+   public void setGCMinIdleTime(long idleMillis)
+   {
+      this.gcMinIdleTime = idleMillis;
+   }
+   
+   public long getGCMinIdleTime()
+   {
+      return gcMinIdleTime;
+   }
+   
+   public void setIdleTimeoutEnabled(boolean enabled)
+   {
+      this.idleTimeoutEnabled = enabled;
+   }
+   
+   public boolean getIdleTimeoutEnabled()
+   {
+      return idleTimeoutEnabled;
+   }
+   
+   public void setIdleTimeout(long idleMillis)
+   {
+      this.idleTimeout = idleMillis;
+   }
+   
+   public long getIdleTimeout()
+   {
+      return idleTimeout;
+   }
+   
+   public void setMaxIdleTimeoutPercent(float percent)
+   {
+      this.maxIdleTimeoutPercent = percent;
+   }
+   
+   public float getMaxIdleTimeoutPercent()
+   {
+      return maxIdleTimeoutPercent;
+   }
+   
+   public void setInvalidateOnError(boolean invalidate)
+   {
+      this.invalidateOnError = invalidate;
+   }
+   
+   public boolean getInvalidateOnError()
+   {
+      return invalidateOnError;
+   }
+   
+   public void setTimestampUsed(boolean timestamp)
+   {
+      this.timestampUsed = timestamp;
+   }
+   
+   public boolean getTimestampUsed()
+   {
+      return timestampUsed;
+   }
 
-    public XADataSourceLoader(String poolName, String xaDataSourceClass) {
-        source = new XAPoolDataSource();
-        source.setPoolName(poolName);
-        XADataSource vendorSource = null;
-        try {
-            Class cls = Class.forName(xaDataSourceClass);
-            vendorSource = (XADataSource)cls.newInstance();
-        } catch(Exception e) {
-            Logger.exception(e);
-            throw new RuntimeException("Unable to initialize XA database pool '"+poolName+"': "+e);
-        }
-        source.setDataSource(vendorSource);
-    }
+   // ServiceMBeanSupport implementation ----------------------------
+   public ObjectName getObjectName(MBeanServer server, ObjectName objectName) 
+      throws javax.management.MalformedObjectNameException
+   {
+      return (objectName == null) ? new ObjectName(OBJECT_NAME+",name="+getSource().getPoolName()) : objectName;
+   }
 
-    public void setURL(String url) {
-        this.url = url == null ? "" : url;  // Save URL, so it doesn't disappear from the JCML file
-        XADataSource vendorSource = (XADataSource)source.getDataSource();
-        try {
-            Class cls = vendorSource.getClass();
-            if(url != null && url.length() > 0) {
-                Method setURL = cls.getMethod("setURL", new Class[]{String.class});
-                setURL.invoke(vendorSource, new Object[]{url});
-            }
-        } catch(Exception e) {
-            throw new IllegalArgumentException("Unable to set url to '"+url+"' for pool "+source.getPoolName()+": "+e);
-        }
-    }
+   public String getName()
+   {
+      return name;
+   }
 
-    public String getURL() {
-        String result = "";
-        XADataSource vendorSource = (XADataSource)source.getDataSource();
-        try {
-            Class cls = vendorSource.getClass();
-            Method getURL = cls.getMethod("getURL", new Class[0]);
-            result =  (String) getURL.invoke(vendorSource, new Object[0]);
-        } catch(Exception e) {
-            log.error("There seems to be a problem with the JDBC URL: "+e);
-        }
-        if(result == null || result.length() == 0)
-            result = url;
-        return result;
-    }
+   public void startService() throws Exception
+   {
+      // Transfer settings
+      getSource().setPoolName(name);
+      
+      XADataSource vendorSource = null;
+      Class cls = Class.forName(dataSourceClass);
+      vendorSource = (XADataSource)cls.newInstance();
+      getSource().setDataSource(vendorSource);
+   
+      cls = vendorSource.getClass();
+      if(url != null && url.length() > 0)
+      {
+         Method setURL = cls.getMethod("setURL", new Class[] { String.class });
+         setURL.invoke(vendorSource, new Object[] { url });
+      }
+   
+      cls = vendorSource.getClass();
+      if(properties != null && properties.length() > 0)
+      {
+         Properties props = parseProperties(properties);
+         Method setProperties = cls.getMethod("setProperties", new Class[] { Properties.class });
+         setProperties.invoke(vendorSource, new Object[] { props });
+      }
+   
+      if(userName != null && userName.length() > 0)
+         getSource().setJDBCUser(userName);
+   
+      if(password != null && password.length() > 0)
+         getSource().setJDBCPassword(password);
+   
+      PrintWriter writer = loggingEnabled ? new LogWriter(log) : null;
+      getSource().setLogWriter(writer);
+      getSource().getDataSource().setLogWriter(writer);
+      getSource().setMinSize(minSize);
+      getSource().setMaxSize(maxSize);
+      getSource().setBlocking(blocking);
+      getSource().setGCEnabled(gcEnabled);
+      getSource().setGCInterval(gcInterval);
+      getSource().setGCMinIdleTime(gcMinIdleTime);
+      getSource().setIdleTimeoutEnabled(idleTimeoutEnabled);
+      getSource().setIdleTimeout(idleTimeout);
+      getSource().setMaxIdleTimeoutPercent(maxIdleTimeoutPercent);
+      getSource().setInvalidateOnError(invalidateOnError);
+      getSource().setTimestampUsed(timestampUsed);
+      
+      // Initialize pool
+      Context ctx = null;
+      Object mgr = null;
+      getSource().setTransactionManagerJNDIName("java:/TransactionManager");
+      try
+      {
+         ctx = new InitialContext();
+         mgr = ctx.lookup("java:/TransactionManager");
+      } catch(NamingException e)
+      {
+         throw new IllegalStateException("Cannot start XA Connection Pool; there is no TransactionManager in JNDI!");
+      }
+      getSource().initialize();
 
-    public void setProperties(String properties) {
-        XADataSource vendorSource = (XADataSource)source.getDataSource();
-        try {
-            Class cls = vendorSource.getClass();
-            if(properties != null && properties.length() > 0) {
-                Properties props = parseProperties(properties);
-                Method setProperties = cls.getMethod("setProperties", new Class[]{Properties.class});
-                setProperties.invoke(vendorSource, new Object[]{props});
-            }
-        } catch(Exception e) {
-            throw new IllegalArgumentException("Unable to set proprties to '"+properties+"' for pool "+source.getPoolName()+": "+e);
-        }
-    }
+      // Bind in JNDI
+      bind(new InitialContext(), "java:/"+getSource().getPoolName(), source);
 
-    public String getProperties() {
-        XADataSource vendorSource = (XADataSource)source.getDataSource();
-        try {
-            Class cls = vendorSource.getClass();
-            Method getProperties = cls.getMethod("getProperties", new Class[0]);
-            Properties result = (Properties) getProperties.invoke(vendorSource, new Object[0]);
-            if(result == null)
-                return "";
-            else
-                return buildProperties(result);
-        } catch(Exception e) {
-            return "";
-        }
-    }
+      log.log("XA Connection pool "+getSource().getPoolName()+" bound to java:/"+getSource().getPoolName());
 
-    public void setJDBCUser(String userName) {
-        if(userName != null && userName.length() > 0)
-            source.setJDBCUser(userName);
-    }
+      // Test database
+      getSource().getConnection().close();
+   }
 
-    public String getJDBCUser() {
-        String user = source.getJDBCUser();
-        return user;
-    }
+   public void stopService()
+   {
+      // Unbind from JNDI
+      try {
+         String name = getSource().getPoolName();
+         new InitialContext().unbind("java:/"+name);
+         log.log("XA Connection pool "+name+" removed from JNDI");
+         getSource().close();
+         log.log("XA Connection pool "+name+" shut down");
+      } catch (NamingException e)
+      {
+         // Ignore
+      }
+   }
 
-    public void setPassword(String password) {
-        if(password != null && password.length() > 0)
-            source.setJDBCPassword(password);
-    }
+   // Private -------------------------------------------------------
+   private XAPoolDataSource getSource()
+   {
+      if (source == null)
+         source = new XAPoolDataSource();
+      return source;
+   }
 
-    public String getPassword() {
-        return source.getJDBCPassword();
-    }
+   private void bind(Context ctx, String name, Object val) throws NamingException
+   {
+      // Bind val to name in ctx, and make sure that all intermediate contexts exist
+      Name n = ctx.getNameParser("").parse(name);
+      while (n.size() > 1)
+      {
+         String ctxName = n.get(0);
+         try
+         {
+            ctx = (Context)ctx.lookup(ctxName);
+         } catch (NameNotFoundException e)
+         {
+            ctx = ctx.createSubcontext(ctxName);
+         }
+         n = n.getSuffix(1);
+      }
 
-    public void setLoggingEnabled(boolean enabled) {
-        PrintWriter writer = enabled ? new LogWriter(log) : null;
-        try {
-            source.setLogWriter(writer);
-            source.getDataSource().setLogWriter(writer);
-        } catch(Exception e) {
-            System.out.println("Unable to set logger for Minerva XA Pool!");
-        }
-    }
+      ctx.bind(n.get(0), val);
+   }
 
-    public boolean isLoggingEnabled() {
-        try {
-            return source.getLogWriter() != null;
-        } catch(Exception e) {
-            return false;
-        }
-    }
-
-    public void setMinSize(int minSize) {
-        source.setMinSize(minSize);
-    }
-
-    public int getMinSize() {
-        return source.getMinSize();
-    }
-
-    public void setMaxSize(int maxSize) {
-        source.setMaxSize(maxSize);
-    }
-
-    public int getMaxSize() {
-        return source.getMaxSize();
-    }
-
-    public void setBlocking(boolean blocking) {
-        source.setBlocking(blocking);
-    }
-
-    public boolean isBlocking() {
-        return source.isBlocking();
-    }
-
-    public void setGCEnabled(boolean gcEnabled) {
-        source.setGCEnabled(gcEnabled);
-    }
-
-    public boolean isGCEnabled() {
-        return source.isGCEnabled();
-    }
-
-    public void setGCInterval(long interval) {
-        source.setGCInterval(interval);
-    }
-
-    public long getGCInterval() {
-        return source.getGCInterval();
-    }
-
-    public void setGCMinIdleTime(long idleMillis) {
-        source.setGCMinIdleTime(idleMillis);
-    }
-
-    public long getGCMinIdleTime() {
-        return source.getGCMinIdleTime();
-    }
-
-    public void setIdleTimeoutEnabled(boolean enabled) {
-        source.setIdleTimeoutEnabled(enabled);
-    }
-
-    public boolean isIdleTimeoutEnabled() {
-        return source.isIdleTimeoutEnabled();
-    }
-
-    public void setIdleTimeout(long idleMillis) {
-        source.setIdleTimeout(idleMillis);
-    }
-
-    public long getIdleTimeout() {
-        return source.getIdleTimeout();
-    }
-
-    public void setMaxIdleTimeoutPercent(float percent) {
-        source.setMaxIdleTimeoutPercent(percent);
-    }
-
-    public float getMaxIdleTimeoutPercent() {
-        return source.getMaxIdleTimeoutPercent();
-    }
-
-    public void setInvalidateOnError(boolean invalidate) {
-        source.setInvalidateOnError(invalidate);
-    }
-
-    public boolean isInvalidateOnError() {
-        return source.isInvalidateOnError();
-    }
-
-    public void setTimestampUsed(boolean timestamp) {
-        source.setTimestampUsed(timestamp);
-    }
-
-    public boolean isTimestampUsed() {
-        return source.isTimestampUsed();
-    }
-
-    public ObjectName getObjectName(MBeanServer parm1, ObjectName parm2) throws javax.management.MalformedObjectNameException {
-        return (parm2 == null) ? new ObjectName(OBJECT_NAME+",name="+source.getPoolName()) : parm2;
-    }
-
-    public String getName() {
-        return source.getPoolName();
-    }
-
-    public void startService() throws Exception {
-    
-        initializePool();
-    }
-
-    public void stopService() {
-        // Unbind from JNDI
-        try {
-            String name = source.getPoolName();
-            new InitialContext().unbind("java:/"+name);
-            log.log("XA Connection pool "+name+" removed from JNDI");
-            source.close();
-            log.log("XA Connection pool "+name+" shut down");
-        } catch (NamingException e) {
-            // Ignore
-        }
-    }
-
-	// Private -------------------------------------------------------
-
-    private void initializePool() throws NamingException, SQLException {
-        Context ctx = null;
-        Object mgr = null;
-        source.setTransactionManagerJNDIName("java:/TransactionManager");
-        try {
-            ctx = new InitialContext();
-            mgr = ctx.lookup("java:/TransactionManager");
-        } catch(NamingException e) {
-            throw new IllegalStateException("Cannot start XA Connection Pool; there is no TransactionManager in JNDI!");
-        }
-        source.initialize();
-
-        // Bind in JNDI
-        bind(new InitialContext(), "java:/"+source.getPoolName(), source);
-
-        log.log("XA Connection pool "+source.getPoolName()+" bound to java:/"+source.getPoolName());
-
-        // Test database
-        source.getConnection().close();
-    }
-
-    private void bind(Context ctx, String name, Object val) throws NamingException {
-        // Bind val to name in ctx, and make sure that all intermediate contexts exist
-        Name n = ctx.getNameParser("").parse(name);
-        while (n.size() > 1) {
-            String ctxName = n.get(0);
-            try {
-                ctx = (Context)ctx.lookup(ctxName);
-            } catch (NameNotFoundException e) {
-                ctx = ctx.createSubcontext(ctxName);
-            }
-            n = n.getSuffix(1);
-        }
-
-        ctx.bind(n.get(0), val);
-    }
-
-    private static Properties parseProperties(String string) {
-        Properties props = new Properties();
-        if(string == null || string.length() == 0) return props;
-        int lastPos = -1;
-        int pos = string.indexOf(";");
-        while(pos > -1) {
-            addProperty(props, string.substring(lastPos+1, pos));
-            lastPos = pos;
-            pos = string.indexOf(";", lastPos+1);
-        }
-        addProperty(props, string.substring(lastPos+1));
-        return props;
-    }
-
-    private static void addProperty(Properties props, String property) {
-        int pos = property.indexOf("=");
-        if(pos < 0) {
-            System.err.println("Unable to parse property '"+property+"' - please use 'name=value'");
-            return;
-        }
-        props.setProperty(property.substring(0, pos), property.substring(pos+1));
-    }
-
-    private static String buildProperties(Properties props) {
-        StringBuffer buf = new StringBuffer();
-        Iterator it = props.keySet().iterator();
-        Object key;
-        while(it.hasNext()) {
-            key = it.next();
-            if(buf.length() > 0)
-                buf.append(';');
-            buf.append(key).append('=').append(props.get(key));
-        }
-        return buf.toString();
-    }
+   private static Properties parseProperties(String string)
+   {
+      Properties props = new Properties();
+      
+      StringTokenizer tokens = new StringTokenizer(string, ";=");
+      
+      while (tokens.hasMoreTokens())
+      {
+         String key = tokens.nextToken();
+         String value = tokens.nextToken();
+         props.put(key, value);
+      }
+      return props;
+   }
 }
+

@@ -1,7 +1,7 @@
 /*
- * jBoss, the OpenSource EJB server
+ * JBoss, the OpenSource EJB server
  *
- * Distributable under GPL license.
+ * Distributable under LGPL license.
  * See terms of license at gnu.org.
  */
  
@@ -70,7 +70,7 @@ public class JaasSecurityManagerService
       return new ObjectName(OBJECT_NAME);
    }
 
-   protected void initService() throws Exception
+   protected void startService() throws Exception
    {
       srv = new NamingServer();
    
@@ -82,11 +82,6 @@ public class JaasSecurityManagerService
       Reference jsmsRef = new Reference("javax.naming.Context", refAddr,getClass().getName(), null);
       Context ctx = (Context)new InitialContext();
       ctx.rebind("java:/jaas", jsmsRef);
-   }
-
-   protected void startService()
-   throws Exception
-   {
    }
 
    protected void stopService()

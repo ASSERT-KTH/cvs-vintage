@@ -1,7 +1,7 @@
 /*
- * jBoss, the OpenSource EJB server
+ * JBoss, the OpenSource EJB server
  *
- * Distributable under GPL license.
+ * Distributable under LGPL license.
  * See terms of license at gnu.org.
  */
 package org.jboss.minerva.factories;
@@ -40,7 +40,7 @@ import org.jboss.logging.Logger;
  * connection, the same previous connection will be returned.  Otherwise,
  * you won't be able to share changes across connections like you can with
  * the native JDBC 2 Standard Extension implementations.</P>
- * @version $Revision: 1.12 $
+ * @version $Revision: 1.13 $
  * @author Aaron Mulder (ammulder@alumni.princeton.edu)
  */
 public class XAConnectionFactory extends PoolObjectFactory {

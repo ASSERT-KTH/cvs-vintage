@@ -1,7 +1,7 @@
 /*
- * jBoss, the OpenSource EJB server
+ * JBoss, the OpenSource EJB server
  *
- * Distributable under GPL license.
+ * Distributable under LGPL license.
  * See terms of license at gnu.org.
  */
  
@@ -16,7 +16,7 @@ import javax.ejb.CreateException;
  * Interface for JAWSPersistenceManager CreateEntity Command.
  *      
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  */
 public interface JPMCreateEntityCommand
 {

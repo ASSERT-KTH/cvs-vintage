@@ -1,7 +1,7 @@
 /*
- * jBoss, the OpenSource EJB server
+ * JBoss, the OpenSource EJB server
  *
- * Distributable under GPL license.
+ * Distributable under LGPL license.
  * See terms of license at gnu.org.
  */
 package test.jboss.minerva.pools;
@@ -16,7 +16,7 @@ import org.jboss.minerva.pools.*;
  * JUnit tests for ObjectPool class.  Doesn't test some of the subtleties or
  * data not accessible via the public interface, but tests every
  * public method at least once (except toString).
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  * @author Aaron Mulder (ammulder@alumni.princeton.edu)
  */
 public class ObjectPoolTest extends TestCase {

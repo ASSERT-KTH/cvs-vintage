@@ -1,7 +1,7 @@
 /*
- * jBoss, the OpenSource EJB server
+ * JBoss, the OpenSource EJB server
  *
- * Distributable under GPL license.
+ * Distributable under LGPL license.
  * See terms of license at gnu.org.
  */
 package org.jboss.ejb.plugins;
@@ -34,7 +34,7 @@ import org.jboss.ejb.MethodInvocation;
  * MetricsInterceptor is used for gathering data from the container for admin
  * interface.
  *
- * @since   jBoss 2.0
+ * @since   JBoss 2.0
  *
  * @author  <a href="mailto:jplindfo@helsinki.fi">Juha Lindfors</a>
  */

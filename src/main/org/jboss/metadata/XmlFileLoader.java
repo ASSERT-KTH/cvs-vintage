@@ -1,7 +1,7 @@
 /*
- * jBoss, the OpenSource EJB server
+ * JBoss, the OpenSource EJB server
  *
- * Distributable under GPL license.
+ * Distributable under LGPL license.
  * See terms of license at gnu.org.
  */
 package org.jboss.metadata;
@@ -19,7 +19,11 @@ import org.w3c.dom.Element;
 import org.xml.sax.Parser;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
+import org.xml.sax.SAXParseException;
 import org.xml.sax.EntityResolver;
+
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.DocumentBuilder;
 
 import org.jboss.ejb.DeploymentException;
 //import org.jboss.logging.Logger;
@@ -30,7 +34,7 @@ import org.jboss.ejb.DeploymentException;
  *   @see <related>
  *   @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
  *   @author <a href="mailto:WolfgangWerner@gmx.net">Wolfgang Werner</a>
- *   @version $Revision: 1.9 $
+ *   @version $Revision: 1.10 $
  */
 public class XmlFileLoader {
    	// Constants -----------------------------------------------------
@@ -131,12 +135,17 @@ public class XmlFileLoader {
       }
 	}
 
-	public static Document getDocument(InputStream _in) throws DeploymentException {
-		try {
+	public static Document getDocument(InputStream _in) throws DeploymentException 
+   {
+		try 
+      {
 			Reader in = new InputStreamReader(_in);
+
+/*         
+
 			com.sun.xml.tree.XmlDocumentBuilder xdb = new com.sun.xml.tree.XmlDocumentBuilder();
 
-			Parser parser = new com.sun.xml.parser.Parser();
+			Parser parser = new com.sun.xml.parser.ValidatingParser();
 
 			// Use a local entity resolver to get rid of the DTD loading via internet
 			EntityResolver er = new LocalResolver();
@@ -144,7 +153,21 @@ public class XmlFileLoader {
 			xdb.setParser(parser);
 
 			parser.parse(new InputSource(in));
-			return xdb.getDocument();
+         com.sun.xml.tree.XmlDocument doc = xdb.getDocument();
+         doc.write(System.out);
+*/
+         DocumentBuilderFactory docBuilderFactory = DocumentBuilderFactory.newInstance();
+         DocumentBuilder docBuilder = docBuilderFactory.newDocumentBuilder();
+         EntityResolver er = new LocalResolver();
+         docBuilder.setEntityResolver(er);
+         Document doc = docBuilder.parse(_in);                
+			return doc;
+		} catch (SAXParseException e) {
+		   System.out.println(e.getMessage()+":"+e.getColumnNumber()+":"+e.getLineNumber());
+			throw new DeploymentException(e.getMessage());
+		} catch (SAXException e) {
+         System.out.println(e.getException());
+			throw new DeploymentException(e.getMessage());
 		} catch (Exception e) {
 			throw new DeploymentException(e.getMessage());
 		}
@@ -164,6 +187,7 @@ public class XmlFileLoader {
 		public LocalResolver() {
 			registerDTD("-//Sun Microsystems, Inc.//DTD Enterprise JavaBeans 1.1//EN", "ejb-jar.dtd");
 			registerDTD("-//Sun Microsystems, Inc.//DTD J2EE Application 1.2//EN", "application_1_2.dtd");
+   		registerDTD("-//JBoss//DTD JAWS//EN", "jaws.dtd");
 		}
 
 		public void registerDTD(String publicId, String dtdFileName) {

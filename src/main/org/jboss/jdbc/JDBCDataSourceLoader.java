@@ -1,7 +1,7 @@
 /*
- * jBoss, the OpenSource EJB server
+ * JBoss, the OpenSource EJB server
  *
- * Distributable under GPL license.
+ * Distributable under LGPL license.
  * See terms of license at gnu.org.
  */
 package org.jboss.jdbc;
@@ -25,7 +25,7 @@ import org.jboss.logging.Logger;
 /**
  * Service that loads a JDBC 1 connection pool.  The constructors are called by
  * the JMX engine based on your MLET tags.
- * @version $Revision: 1.6 $
+ * @version $Revision: 1.7 $
  * @author Aaron Mulder (ammulder@alumni.princeton.edu)
  */
 public class JDBCDataSourceLoader extends ServiceMBeanSupport implements JDBCDataSourceLoaderMBean {

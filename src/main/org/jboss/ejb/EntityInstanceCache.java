@@ -1,9 +1,9 @@
 package org.jboss.ejb;
 
 /*
- * jBoss, the OpenSource EJB server
+ * JBoss, the OpenSource EJB server
  *
- * Distributable under GPL license.
+ * Distributable under LGPL license.
  * See terms of license at gnu.org.
  */
 
@@ -18,7 +18,7 @@ import javax.ejb.NoSuchEntityException;
  * 
  *	@see NoPassivationEntityInstanceCache.java    
  *	@author <a href="marc.fleury@telkel.com">Marc Fleury</a>
- *	@version $Revision: 1.2 $
+ *	@version $Revision: 1.3 $
  */
 public interface EntityInstanceCache
    extends InstanceCache

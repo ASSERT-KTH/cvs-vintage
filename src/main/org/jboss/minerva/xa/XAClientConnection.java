@@ -1,7 +1,7 @@
 /*
- * jBoss, the OpenSource EJB server
+ * JBoss, the OpenSource EJB server
  *
- * Distributable under GPL license.
+ * Distributable under LGPL license.
  * See terms of license at gnu.org.
  */
 package org.jboss.minerva.xa;
@@ -32,7 +32,7 @@ import org.jboss.minerva.pools.PoolEvent;
  * returned to the pool) until the transactional details are taken care of.
  * This instance only lives as long as one client is using it - though we
  * probably want to consider reusing it to save object allocations.
- * @version $Revision: 1.6 $
+ * @version $Revision: 1.7 $
  * @author Aaron Mulder (ammulder@alumni.princeton.edu)
  */
 public class XAClientConnection implements ConnectionWrapper {

@@ -1,7 +1,7 @@
 /*
- * jBoss, the OpenSource EJB server
+ * JBoss, the OpenSource EJB server
  *
- * Distributable under GPL license.
+ * Distributable under LGPL license.
  * See terms of license at gnu.org.
  */
 package org.jboss.minerva.jdbc;
@@ -17,7 +17,7 @@ import java.sql.SQLWarning;
  * Wraps a Statement to track errors and the last used time for the owning
  * connection. That time is updated every time a SQL action is performed
  * (executeQuery, executeUpdate, etc.).
- * @version $Revision: 1.2 $
+ * @version $Revision: 1.3 $
  * @author Aaron Mulder (ammulder@alumni.princeton.edu)
  */
 public class StatementInPool implements Statement {

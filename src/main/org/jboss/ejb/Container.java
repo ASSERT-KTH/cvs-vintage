@@ -1,7 +1,7 @@
 /*
- * jBoss, the OpenSource EJB server
+ * JBoss, the OpenSource EJB server
  *
- * Distributable under GPL license.
+ * Distributable under LGPL license.
  * See terms of license at gnu.org.
  */
 package org.jboss.ejb;
@@ -54,7 +54,7 @@ import org.jnp.interfaces.java.javaURLContextFactory;
 import org.jnp.server.NamingServer;
 
 /**
- *    This is the base class for all EJB-containers in jBoss. A Container
+ *    This is the base class for all EJB-containers in JBoss. A Container
  *    functions as the central hub of all metadata and plugins. Through this
  *    the container plugins can get hold of the other plugins and any metadata they need.
  *
@@ -67,7 +67,7 @@ import org.jnp.server.NamingServer;
  *   @see ContainerFactory
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
  *   @author <a href="marc.fleury@telkel.com">Marc Fleury</a>
- *   @version $Revision: 1.32 $
+ *   @version $Revision: 1.33 $
  */
 public abstract class Container
 {

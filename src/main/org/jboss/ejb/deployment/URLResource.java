@@ -1,7 +1,7 @@
 /*
- * jBoss, the OpenSource EJB server
+ * JBoss, the OpenSource EJB server
  *
- * Distributable under GPL license.
+ * Distributable under LGPL license.
  * See terms of license at gnu.org.
  */
 package org.jboss.ejb.deployment;
@@ -27,7 +27,7 @@ import com.dreambean.ejx.Util;
  *      
  *   @see <related>
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
- *   @version $Revision: 1.3 $
+ *   @version $Revision: 1.4 $
  */
 public class URLResource
    extends BeanContextChildSupport
@@ -55,9 +55,14 @@ public class URLResource
    
    public String getType() { return "java.net.URL"; }
    
+   public ResourceManagers getResourceManagers()
+   {
+      return (ResourceManagers)getBeanContext();
+   }
+   
    public void removeResource()
    {
-   	getBeanContext().remove(this);
+   	getResourceManagers().remove(this);
    }
 	
    // BeanContextChildComponentProxy implementation -----------------

@@ -1,7 +1,7 @@
 /*
-* jBoss, the OpenSource EJB server
+* JBoss, the OpenSource EJB server
 *
-* Distributable under GPL license.
+* Distributable under LGPL license.
 * See terms of license at gnu.org.
 */
 package org.jboss.ejb;
@@ -29,7 +29,7 @@ import org.jboss.logging.Logger;
 *   @see <related>
 *   @author Rickard Öberg (rickard.oberg@telkel.com)
 *   @author <a href="marc.fleury@telkel.com">Marc Fleury</a>
-*   @version $Revision: 1.14 $
+*   @version $Revision: 1.15 $
 */
 public class StatelessSessionContainer
     extends Container

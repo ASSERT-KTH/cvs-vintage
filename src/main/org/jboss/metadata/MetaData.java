@@ -1,7 +1,7 @@
 /*
- * jBoss, the OpenSource EJB server
+ * JBoss, the OpenSource EJB server
  *
- * Distributable under GPL license.
+ * Distributable under LGPL license.
  * See terms of license at gnu.org.
  */
 package org.jboss.metadata;
@@ -22,7 +22,7 @@ import org.jboss.ejb.DeploymentException;
  *      
  *   @see <related>
  *   @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
- *   @version $Revision: 1.11 $
+ *   @version $Revision: 1.12 $
  */
 public abstract class MetaData implements XmlLoadable {
     // Constants -----------------------------------------------------
@@ -119,12 +119,22 @@ public abstract class MetaData implements XmlLoadable {
 		if (element == null) return defaultStr;
 		
 		NodeList children = element.getChildNodes();
-		if ((children.getLength() == 1) && (children.item(0).getNodeType() == Node.TEXT_NODE)) {
-			String result = children.item(0).getNodeValue();
-			return result == null ? null : result.trim();
-		} else {
-			return null;
-		}
+      
+      if (children.getLength() > 0)
+      {
+         String result = "";
+         for (int i = 0; i < children.getLength(); i++)
+         {
+            if (children.item(i).getNodeType() == Node.TEXT_NODE)
+               result += children.item(i).getNodeValue();
+            else
+               result += children.item(i).getFirstChild();   
+         }
+         return result;
+      } else
+      {
+         return defaultStr;
+      }
 	}
 	
     

@@ -1,7 +1,7 @@
 /*
- * jBoss, the OpenSource EJB server
+ * JBoss, the OpenSource EJB server
  *
- * Distributable under GPL license.
+ * Distributable under LGPL license.
  * See terms of license at gnu.org.
  */
 package org.jboss.ejb.deployment;
@@ -16,7 +16,7 @@ import org.w3c.dom.Element;
  *      
  *   @see ContainerConfiguration
  *   @author <a href="marc.fleury@telkel.com">Marc Fleury</a>
- *   @version $Revision: 1.2 $
+ *   @version $Revision: 1.3 $
  */
 public class StatefulSessionContainerConfiguration
    extends ContainerConfiguration

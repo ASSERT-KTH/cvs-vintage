@@ -1,7 +1,7 @@
 /*
- * jBoss, the OpenSource EJB server
+ * JBoss, the OpenSource EJB server
  *
- * Distributable under GPL license.
+ * Distributable under LGPL license.
  * See terms of license at gnu.org.
  */
 package org.jboss.web;
@@ -22,8 +22,8 @@ import org.jboss.logging.Logger;
  *   or by adding a file dynaserver.properties in the same location as the dynaserver.jar file (recommended).
  *   It can also be configured by calling any methods programmatically prior to startup.
  *
- *   @author $Author: fleury $
- *   @version $Revision: 1.2 $
+ *   @author $Author: oberg $
+ *   @version $Revision: 1.3 $
  */
 public class WebServer
 	implements Runnable

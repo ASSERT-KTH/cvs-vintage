@@ -1,7 +1,7 @@
 /*
-* jBoss, the OpenSource EJB server
+* JBoss, the OpenSource EJB server
 *
-* Distributable under GPL license.
+* Distributable under LGPL license.
 * See terms of license at gnu.org.
 */
 package org.jboss.util;
@@ -18,7 +18,7 @@ import org.jboss.ejb.CacheKey;
 *   
 *   @see org.jboss.ejb.plugins.NoPassivationInstanceCache.java
 *   @author <a href="marc.fleury@telkel.com">Marc Fleury</a>
-*   @version $Revision: 1.7 $
+*   @version $Revision: 1.8 $
 */
 public class FastKey
 	extends CacheKey

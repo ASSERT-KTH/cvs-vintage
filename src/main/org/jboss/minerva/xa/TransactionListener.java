@@ -1,7 +1,7 @@
 /*
- * jBoss, the OpenSource EJB server
+ * JBoss, the OpenSource EJB server
  *
- * Distributable under GPL license.
+ * Distributable under LGPL license.
  * See terms of license at gnu.org.
  */
 package org.jboss.minerva.xa;
@@ -10,7 +10,7 @@ import javax.transaction.Transaction;
 
 /**
  * Callback for notification when a transaction is finished.
- * @version $Revision: 1.3 $
+ * @version $Revision: 1.4 $
  * @author Aaron Mulder (ammulder@alumni.princeton.edu)
  */
 public interface TransactionListener {

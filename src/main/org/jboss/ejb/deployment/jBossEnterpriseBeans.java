@@ -1,7 +1,7 @@
 /*
- * jBoss, the OpenSource EJB server
+ * JBoss, the OpenSource EJB server
  *
- * Distributable under GPL license.
+ * Distributable under LGPL license.
  * See terms of license at gnu.org.
  */
 package org.jboss.ejb.deployment;
@@ -35,7 +35,7 @@ import org.jboss.logging.Logger;
  *      
  *   @see <related>
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
- *   @version $Revision: 1.4 $
+ *   @version $Revision: 1.5 $
  */
 public class jBossEnterpriseBeans
    extends com.dreambean.ejx.ejb.EnterpriseBeans
@@ -63,7 +63,7 @@ public class jBossEnterpriseBeans
    public com.dreambean.ejx.ejb.Session addSession()
       throws IOException, ClassNotFoundException
    {
-      return (com.dreambean.ejx.ejb.Session)instantiateChild("org.jboss.ejb.deployment.jBossSession");
+      return (com.dreambean.ejx.ejb.Session)instantiateChild("org.jboss.ejb.deployment.JBossSession");
    }
    
 	public void addJndiPrefix(String prefix)

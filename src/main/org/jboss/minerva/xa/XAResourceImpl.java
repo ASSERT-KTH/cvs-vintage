@@ -1,7 +1,7 @@
 /*
- * jBoss, the OpenSource EJB server
+ * JBoss, the OpenSource EJB server
  *
- * Distributable under GPL license.
+ * Distributable under LGPL license.
  * See terms of license at gnu.org.
  */
 package org.jboss.minerva.xa;
@@ -22,7 +22,7 @@ import java.sql.*;
  * <P><FONT COLOR="RED"><B>Warning:</B></FONT></P> This implementation assumes
  * that forget will be called after a failed commit or rollback.  Otherwise,
  * the database connection will never be closed.</P>
- * @version $Revision: 1.7 $
+ * @version $Revision: 1.8 $
  * @author Aaron Mulder (ammulder@alumni.princeton.edu)
  */
 public class XAResourceImpl implements XAResource {

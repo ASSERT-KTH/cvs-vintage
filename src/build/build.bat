@@ -4,8 +4,10 @@
 
 REM convenience bat file to build with
 
-set CP=..\..\lib\ant.jar
-set CP=%CP%;..\..\lib\xml.jar
+set CP=f:\java\jakarta-ant\lib\ant.jar
+rem ..\..\lib\ant.jar
+set CP=%CP%;..\..\lib\jaxp.jar
+set CP=%CP%;..\..\lib\parser.jar
 set CP=%CP%;..\..\lib\xmlbeans.jar
 set CP=%CP%;..\..\build\classes
 set CP=%CP%;..\..\lib\javac.jar

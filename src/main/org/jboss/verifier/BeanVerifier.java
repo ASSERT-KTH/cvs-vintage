@@ -19,7 +19,7 @@ package org.jboss.verifier;
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  *
  * This package and its source code is available at www.jboss.org
- * $Id: BeanVerifier.java,v 1.7 2000/12/06 13:03:36 pra Exp $
+ * $Id: BeanVerifier.java,v 1.8 2000/12/07 15:45:24 oberg Exp $
  */
 
  
@@ -52,7 +52,7 @@ import org.jboss.logging.Logger;
 
 /**
  * Attempts to verify the spec compliance of the beans in a given
- * EJB-JAR file. Works against EJB spec 1.1. Built for use in jBoss
+ * EJB-JAR file. Works against EJB spec 1.1. Built for use in JBoss
  * project.
  *
  * For more detailed documentation, refer to the
@@ -62,7 +62,7 @@ import org.jboss.logging.Logger;
  * @see     org.jboss.verifier.factory.VerificationEventFactory
  *
  * @author  Juha Lindfors (jplindfo@helsinki.fi)
- * @version $Revision: 1.7 $
+ * @version $Revision: 1.8 $
  * @since   JDK 1.3
  */
 public class BeanVerifier implements VerificationContext {

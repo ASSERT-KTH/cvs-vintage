@@ -1,7 +1,7 @@
 /*
- * jBoss, the OpenSource EJB server
+ * JBoss, the OpenSource EJB server
  *
- * Distributable under GPL license.
+ * Distributable under LGPL license.
  * See terms of license at gnu.org.
  */
 package org.jboss.util;
@@ -12,7 +12,7 @@ import java.net.*;
 import javax.management.*;
 import javax.management.loading.MLet;
 
-import org.jboss.logging.Logger;
+import org.jboss.logging.Log;
 import org.jboss.util.ServiceMBeanSupport;
 
 /**
@@ -20,11 +20,10 @@ import org.jboss.util.ServiceMBeanSupport;
  *      
  *   @see <related>
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
- *   @version $Revision: 1.7 $
+ *   @version $Revision: 1.8 $
  */
 public class ClassPathExtension
-   extends ServiceMBeanSupport
-   implements ClassPathExtensionMBean
+   implements ClassPathExtensionMBean, MBeanRegistration
 {
    // Constants -----------------------------------------------------
    public static final String OBJECT_NAME = ":service=ClassPathExtension";
@@ -32,6 +31,8 @@ public class ClassPathExtension
    // Attributes ----------------------------------------------------
    String url;
    String name;
+   
+   Log log = new Log("Classpath extension");
    
    // Static --------------------------------------------------------
 
@@ -47,20 +48,15 @@ public class ClassPathExtension
       this.url = url;
    }
    
-   // Public --------------------------------------------------------
-   public ObjectName getObjectName(MBeanServer server, ObjectName ojbName)
-      throws javax.management.MalformedObjectNameException
+   // MBeanRegistration implementation ------------------------------
+   public ObjectName preRegister(MBeanServer server,
+                              ObjectName objName)
+                       throws java.lang.Exception
    {
-      return ojbName == null ? new ObjectName(OBJECT_NAME+",name="+this.name) : ojbName;
+      return objName == null ? new ObjectName(OBJECT_NAME+",name="+this.name) : objName;
    }
    
-   public String getName()
-   {
-      return "Classpath extension";
-   }
-   
-   public void initService()
-      throws java.lang.Exception
+   public void postRegister(java.lang.Boolean registrationDone)
    {
       String separator = System.getProperty("path.separator");
       String classPath = System.getProperty("java.class.path");
@@ -79,7 +75,7 @@ public class ClassPathExtension
          {
             dir = new File(getClass().getProtectionDomain().getCodeSource().getLocation().getFile(), url);
          }
-         
+      
          try
          {
             String[] files = dir.list();
@@ -89,16 +85,16 @@ public class ClassPathExtension
                if (files[i].endsWith(".jar") || files[i].endsWith(".zip"))
                {
                   URL file = new File(dir, files[i]).getCanonicalFile().toURL();
-                  Logger.debug("Added library:"+file);
+                  log.debug("Added library:"+file);
                   mlet.addURL(file);
-                  
+               
                   // Add to java.class.path
                   classPath += separator + file.getFile();
-                  
+               
                   found++;
                }
             }
-            
+         
             if (found == 0)
             {
                // Add dir
@@ -106,20 +102,20 @@ public class ClassPathExtension
                {
                   URL u = new URL(getClass().getProtectionDomain().getCodeSource().getLocation(),url);
                   mlet.addURL(u);
-                  
+               
                   // Add to java.class.path
                   classPath += separator + u.getFile();
-                  
-                  Logger.debug("Added directory:"+u);
+               
+                  log.debug("Added directory:"+u);
                } catch (MalformedURLException e)
                {
                   URL u = new File(url).toURL();
                   mlet.addURL(u);
-                  
+               
                   // Add to java.class.path
                   classPath += separator + u.getFile();
-                  
-                  Logger.debug("Added directory:"+url);
+               
+                  log.debug("Added directory:"+url);
                }
             }
          } catch (Throwable ex)
@@ -132,26 +128,41 @@ public class ClassPathExtension
          {
             URL u = new URL(getClass().getProtectionDomain().getCodeSource().getLocation(),url);
             mlet.addURL(u);
-            
+         
             // Add to java.class.path
             classPath += separator + u.getFile();
-            
-            Logger.debug("Added library:"+u);
+         
+            log.debug("Added library:"+u);
          } catch (MalformedURLException e)
          {
-            URL u = new File(url).toURL();
-            mlet.addURL(u);
-            
-            // Add to java.class.path
-            classPath += separator + u.getFile();
-            
-            Logger.debug("Added library:"+url);
+            try
+            {
+               URL u = new File(url).toURL();
+               mlet.addURL(u);
+         
+               // Add to java.class.path
+               classPath += separator + u.getFile();
+         
+               log.debug("Added library:"+url);
+            } catch (MalformedURLException ex)
+            {
+               log.exception(ex);
+            }
          }
       }
-      
+   
       // Set java.class.path
       System.setProperty("java.class.path", classPath);
    }
-   // Protected -----------------------------------------------------
+   
+   public void preDeregister()
+      throws java.lang.Exception
+   {
+      
+   }
+   
+   public void postDeregister()
+   {
+      
+   }
 }
-

@@ -1,7 +1,7 @@
 /*
- * jBoss, the OpenSource EJB server
+ * JBoss, the OpenSource EJB server
  *
- * Distributable under GPL license.
+ * Distributable under LGPL license.
  * See terms of license at gnu.org.
  */
 package org.jboss.minerva.jdbc;
@@ -29,7 +29,7 @@ import org.jboss.minerva.pools.PoolEventListener;
  * outstanding statements are closed, and the connection is rolled back.  This
  * class is also used by statements, etc. to update the last used time for the
  * connection.
- * @version $Revision: 1.7 $
+ * @version $Revision: 1.8 $
  * @author Aaron Mulder (ammulder@alumni.princeton.edu)
  */
 public class ConnectionInPool implements PooledObject, ConnectionWrapper {

@@ -24,7 +24,7 @@ import com.dreambean.ejx.Util;
  *   Castor JDO support
  *
  *   @author Oleg Nitz (on@ibis.odessa.ua)
- *   @version $Revision: 1.1 $
+ *   @version $Revision: 1.2 $
  */
 public class CastorJDOResource
         extends BeanContextChildSupport
@@ -44,9 +44,14 @@ public class CastorJDOResource
    
     public String getType() { return "org.exolab.castor.jdo.DataObjects"; }
    
+    public ResourceManagers getResourceManagers()
+    {
+       return (ResourceManagers)getBeanContext();
+    }
+    
     public void removeResource()
     {
-        getBeanContext().remove(this);
+    	getResourceManagers().remove(this);
     }
     
     // BeanContextChildComponentProxy implementation -----------------

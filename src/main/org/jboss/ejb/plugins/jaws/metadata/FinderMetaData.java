@@ -1,7 +1,7 @@
 /*
- * jBoss, the OpenSource EJB server
+ * JBoss, the OpenSource EJB server
  *
- * Distributable under GPL license.
+ * Distributable under LGPL license.
  * See terms of license at gnu.org.
  */
 package org.jboss.ejb.plugins.jaws.metadata;
@@ -19,7 +19,7 @@ import org.jboss.metadata.XmlLoadable;
  *      
  *	@see <related>
  *	@author <a href="sebastien.alborini@m4x.org">Sebastien Alborini</a>
- *	@version $Revision: 1.1 $
+ *	@version $Revision: 1.2 $
  */
 public class FinderMetaData extends MetaData implements XmlLoadable {
 	// Constants -----------------------------------------------------
@@ -44,8 +44,8 @@ public class FinderMetaData extends MetaData implements XmlLoadable {
 	// XmlLoadable implementation ------------------------------------
     public void importXml(Element element) throws DeploymentException {
 		name = getElementContent(getUniqueChild(element, "name"));
-		order = getElementContent(getUniqueChild(element, "order"));
 		query = getElementContent(getUniqueChild(element, "query"));
+   	order = getElementContent(getUniqueChild(element, "order"));
 	}	
 	
 	// Package protected ---------------------------------------------

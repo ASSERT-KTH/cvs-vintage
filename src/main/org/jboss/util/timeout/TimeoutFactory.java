@@ -1,7 +1,7 @@
 /*
-* jBoss, the OpenSource EJB server
+* JBoss, the OpenSource EJB server
 *
-* Distributable under GPL license.
+* Distributable under LGPL license.
 * See terms of license at gnu.org.
 */
 package org.jboss.util.timeout;
@@ -22,7 +22,7 @@ import org.jboss.logging.Logger;
  *  allocating anything on the heap.
  *   
  *  @author <a href="osh@sparre.dk">Ole Husgaard</a>
- *  @version $Revision: 1.4 $
+ *  @version $Revision: 1.5 $
  */
 public class TimeoutFactory {
 

@@ -1,7 +1,7 @@
 /*
- * jBoss, the OpenSource EJB server
+ * JBoss, the OpenSource EJB server
  *
- * Distributable under GPL license.
+ * Distributable under LGPL license.
  * See terms of license at gnu.org.
  */
 package org.jboss.ejb.deployment;
@@ -22,7 +22,7 @@ import com.dreambean.ejx.xml.*;
  *      
  *   @see <related>
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
- *   @version $Revision: 1.2 $
+ *   @version $Revision: 1.3 $
  */
 public class jBossSession
    extends com.dreambean.ejx.ejb.Session
@@ -54,7 +54,7 @@ public class jBossSession
    public com.dreambean.ejx.ejb.ResourceReference addResourceReference()
       throws Exception
    {
-      return (com.dreambean.ejx.ejb.ResourceReference)instantiateChild("org.jboss.ejb.deployment.jBossResourceReference");
+      return (com.dreambean.ejx.ejb.ResourceReference)instantiateChild("org.jboss.ejb.deployment.JBossResourceReference");
    }
    
    public com.dreambean.ejx.ejb.EjbReference addEjbReference()

@@ -1,7 +1,7 @@
 /*
- * jBoss, the OpenSource EJB server
+ * JBoss, the OpenSource EJB server
  *
- * Distributable under GPL license.
+ * Distributable under LGPL license.
  * See terms of license at gnu.org.
  */
 package org.jboss.ejb.deployment;
@@ -18,6 +18,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 import com.dreambean.awt.GenericCustomizer;
+import com.dreambean.ejx.ejb.EnterpriseBeans;
 import com.dreambean.ejx.xml.XMLManager;
 import com.dreambean.ejx.xml.XmlExternalizable;
 import com.dreambean.ejx.Util;
@@ -27,7 +28,7 @@ import com.dreambean.ejx.Util;
  *      
  *   @see <related>
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
- *   @version $Revision: 1.3 $
+ *   @version $Revision: 1.4 $
  */
 public class jBossEntity
    extends com.dreambean.ejx.ejb.Entity
@@ -50,16 +51,21 @@ public class jBossEntity
    public void setConfigurationName(String n) { configurationName = n; }
    public String getConfigurationName() { return configurationName; }
    
+   public EnterpriseBeans getEnterpriseBeans()
+   {
+      return (EnterpriseBeans)getBeanContext();
+   }
+   
    public ContainerConfiguration getContainerConfiguration() 
    { 
-      jBossEjbJar jar = (jBossEjbJar)getBeanContext().getBeanContext();
+      jBossEjbJar jar = (jBossEjbJar)getEnterpriseBeans().getBeanContext();
       return jar.getContainerConfigurations().getContainerConfiguration(configurationName);
    }
    
    public com.dreambean.ejx.ejb.ResourceReference addResourceReference()
       throws Exception
    {
-      return (com.dreambean.ejx.ejb.ResourceReference)instantiateChild("org.jboss.ejb.deployment.jBossResourceReference");
+      return (com.dreambean.ejx.ejb.ResourceReference)instantiateChild("org.jboss.ejb.deployment.JBossResourceReference");
    }
    
    public com.dreambean.ejx.ejb.EjbReference addEjbReference()

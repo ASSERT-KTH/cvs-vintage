@@ -1,7 +1,7 @@
 /*
- * jBoss, the OpenSource EJB server
+ * JBoss, the OpenSource EJB server
  *
- * Distributable under GPL license.
+ * Distributable under LGPL license.
  * See terms of license at gnu.org.
  */
 package org.jboss.ejb.plugins.jaws.deployment;
@@ -32,7 +32,7 @@ import org.jboss.logging.Logger;
  *      
  *   @see <related>
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
- *   @version $Revision: 1.6 $
+ *   @version $Revision: 1.7 $
  */
 public class JawsFileManager
    extends BeanContextServicesSupport
@@ -133,7 +133,7 @@ public class JawsFileManager
          
          ejbJar.importXml(doc.getDocumentElement());
 
-         // Load jBoss XML
+         // Load JBoss XML
          InputStream jbossXml = getClassLoader().getResourceAsStream("META-INF/jaws.xml");
          if (jbossXml == null)
          {
@@ -171,7 +171,7 @@ public class JawsFileManager
          if (jbossXml == null)
          { 
             // We want to use this file, but it doesn't contain the XML file yet (i.e. it's a JAR without the jboss.xml file)
-            // Load default jBoss XML
+            // Load default JBoss XML
             jbossXml = getClass().getResourceAsStream("defaultjaws.xml");
             if (jbossXml == null)
             {

@@ -1,7 +1,7 @@
 /*
-* jBoss, the OpenSource EJB server
+* JBoss, the OpenSource EJB server
 *
-* Distributable under GPL license.
+* Distributable under LGPL license.
 * See terms of license at gnu.org.
 */
 package org.jboss.deployment;
@@ -60,10 +60,10 @@ import org.w3c.dom.Element;
 *  or only the relevant packages (EAR) becoming downloaded. <br>
 *  <i> replacing alternative DDs and validation is not yet implementet! </i>
 *  The uploaded files are getting passed through to the responsible deployer
-*  (ContainerFactory for jBoss and EmbededTomcatService for Tomcat).
+*  (ContainerFactory for JBoss and EmbededTomcatService for Tomcat).
 *
 *   @author <a href="mailto:daniel.schulze@telkel.com">Daniel Schulze</a>
-*   @version $Revision: 1.12 $
+*   @version $Revision: 1.13 $
 */
 public class J2eeDeployer 
 extends ServiceMBeanSupport
@@ -92,35 +92,58 @@ implements J2eeDeployerMBean
 	int classpathPolicy = EASY;
 
 	InstallerFactory installer;
-	String tmpDir;
    
    // Static --------------------------------------------------------
    /** only for testing...*/
    public static void main (String[] _args) throws Exception
    {
-      new J2eeDeployer ("", "EJB:service=ContainerFactory", ":service=EmbeddedTomcat").deploy (_args[0]);
+      new J2eeDeployer().deploy (_args[0]);
    }
    
    // Constructors --------------------------------------------------
-   /** */
-   public J2eeDeployer (String _deployDir, String jarDeployerName, String warDeployerName)
+   public J2eeDeployer()
    {
-	   this ("", _deployDir, jarDeployerName, warDeployerName);
-   }
-
-   /** */
-   public J2eeDeployer (String _name, String _deployDir, String jarDeployerName, String warDeployerName)
-   {
-	  name = _name.equals("") ? "" : " "+_name;
-      tmpDir = _deployDir;
-      
-      this.jarDeployerName = jarDeployerName;
-      this.warDeployerName = warDeployerName;
-
-	  this.log = new Log(getName());
-
+      this("Default", "EJB:service=ContainerFactory", ":service=EmbeddedTomcat");
    }
    
+   public J2eeDeployer (String _name, String jarDeployerName, String warDeployerName)
+   {
+      setDeployerName(_name);
+      setJarDeployerName(jarDeployerName);
+      setWarDeployerName(warDeployerName);
+   }
+   
+   public void setDeployerName(String name)
+   {
+      name = name.equals("") ? "" : " "+name;
+      this.name = name;
+      this.log = new Log(getName());
+   }
+   
+   public String getDeployerName()
+   {
+      return name.trim();
+   }
+   
+   public void setJarDeployerName(String jarDeployerName)
+   {
+      this.jarDeployerName = jarDeployerName;
+   }
+   
+   public String getJarDeployerName()
+   {
+      return jarDeployerName;
+   }
+   
+   public void setWarDeployerName(String warDeployerName)
+   {
+      this.warDeployerName = warDeployerName;
+   }
+
+   public String getWarDeployerName()
+   {
+      return warDeployerName;
+   }
    
    // Public --------------------------------------------------------
    /** Deploys the given URL independent if it is a EJB.jar, Web.war
@@ -249,16 +272,16 @@ implements J2eeDeployerMBean
    throws javax.management.MalformedObjectNameException
    {
       this.server = server;
-      return new ObjectName(OBJECT_NAME+this.name);
+      return name == null ? new ObjectName(OBJECT_NAME+this.name) : name;
    }
    
    /** */
    protected void initService()
    throws Exception
    {
-      
+      URL tmpDirUrl = getClass().getResource("/tmp.properties");
       //check if the deployment dir was set meaningful
-	   File dir = new File(tmpDir);
+	   File dir = new File(new File(tmpDirUrl.getFile()).getParentFile(), "deploy/"+getDeployerName());
       if (!dir.exists () &&
           !dir.mkdirs ())
          throw new IOException ("Temporary directory \""+dir.getCanonicalPath ()+"\" does not exist!");
@@ -279,7 +302,7 @@ implements J2eeDeployerMBean
          
       // clean up the deployment directory since on some Windowz the file removement
       // during runtime doesnt work...
-      log.log("Cleaning up deployment directory "+tmpDir);
+      log.log("Cleaning up deployment directory");
 	  installer.unclutter();
    }
    
@@ -389,7 +412,7 @@ implements J2eeDeployerMBean
 		 // since tomcat changes the context classloader...
          Thread.currentThread().setContextClassLoader (oldCl);
 
-         // jBoss
+         // JBoss
          it = _d.ejbModules.iterator ();
          while (it.hasNext ())
          {
@@ -404,7 +427,7 @@ implements J2eeDeployerMBean
 	  }
       catch (MBeanException _mbe) {
          log.error ("Starting "+m.name+" failed!");
-         throw new J2eeDeploymentException ("Error while starting "+m.name+": " + _mbe.getTargetException ().getMessage ());
+         throw new J2eeDeploymentException ("Error while starting "+m.name+": " + _mbe.getTargetException ().getMessage (), _mbe.getTargetException ());
       } catch (JMException _jme){
          log.error ("Starting failed!");
          throw new J2eeDeploymentException ("Fatal error while interacting with deployer MBeans... " + _jme.getMessage ());

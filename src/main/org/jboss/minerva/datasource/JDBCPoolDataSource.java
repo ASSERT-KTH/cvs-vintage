@@ -1,7 +1,7 @@
 /*
- * jBoss, the OpenSource EJB server
+ * JBoss, the OpenSource EJB server
  *
- * Distributable under GPL license.
+ * Distributable under LGPL license.
  * See terms of license at gnu.org.
  */
 package org.jboss.minerva.datasource;
@@ -25,7 +25,7 @@ import org.jboss.logging.Logger;
  * and JDBCConnectionFactory.
  * @see org.jboss.minerva.pools.ObjectPool
  * @see org.jboss.minerva.factories.JDBCConnectionFactory
- * @version $Revision: 1.5 $
+ * @version $Revision: 1.6 $
  * @author Aaron Mulder (ammulder@alumni.princeton.edu)
  */
 public class JDBCPoolDataSource implements DataSource, Referenceable, ObjectFactory {

@@ -1,7 +1,7 @@
 /*
- * jBoss, the OpenSource EJB server
+ * JBoss, the OpenSource EJB server
  *
- * Distributable under GPL license.
+ * Distributable under LGPL license.
  * See terms of license at gnu.org.
  */
 package org.jboss.dependencies;
@@ -17,6 +17,7 @@ import java.util.Vector;
 import javax.management.MBeanServer;
 import javax.management.ObjectName;
 import javax.management.ReflectionException;
+import javax.management.RuntimeErrorException;
 import org.xml.sax.AttributeList;
 import org.xml.sax.HandlerBase;
 import org.xml.sax.InputSource;
@@ -28,7 +29,7 @@ import com.sun.xml.parser.Parser;
  * and then starts a list of MBeans according to the dependencies in the
  * file.
  * @author Aaron Mulder <ammulder@alumni.princeton.edu>
- * @version $Revision: 1.3 $
+ * @version $Revision: 1.4 $
  */
 public class DependencyManager {
     // Static --------------------------------------------------------
@@ -82,6 +83,23 @@ public class DependencyManager {
         }
     }
 
+    /**
+     * Initializes all the MBeans in a server in an order consistant with the
+     * dependencies.
+     */
+    public void initMBeans(MBeanServer server) {
+        this.server = server;
+
+        // Init all the MBeans
+        Iterator it = server.queryNames(null, null).iterator();
+        while(it.hasNext()) {
+            ObjectName name = (ObjectName)it.next();
+            if(!initMBean(name)) {
+                System.out.println("Unable to init MBean '"+name.getCanonicalName()+"'");
+            }
+        }
+    }
+    
     /**
      * Starts all the MBeans in a server in an order consistant with the
      * dependencies.
@@ -273,6 +291,41 @@ public class DependencyManager {
         return loaded;
     }
 
+    /**
+     * Calls the "init" method on an MBean.  If no such method is available,
+     * that's OK, but if the call fails for another reason, returns false.
+     */
+    private boolean initMBean(ObjectName name) {
+        boolean loaded = false;
+        if(DEBUG) System.out.println("Initializing instance '"+name.getCanonicalName()+"'");
+        try {
+            server.invoke(name, "init", new Object[0], new String[0]);
+            loaded = true;
+        } catch(ReflectionException e) {
+            if(e.getTargetException() instanceof NoSuchMethodException) {
+                loaded = true;  // This bean doesn't have a start!
+            } else {
+                e.getTargetException().printStackTrace(System.err);
+                System.out.println("BAR");
+                if (e.getTargetException() instanceof RuntimeErrorException)
+                {
+                  System.out.println("FOO");
+                   ((RuntimeErrorException)e.getTargetException()).getTargetError().printStackTrace(System.err);
+                }
+                
+                System.out.println("Error initializing service '"+name.getCanonicalName()+"': "+e.getTargetException());
+            }
+        } catch(Throwable t) {
+            if (t instanceof RuntimeErrorException)
+            {
+              System.out.println("LGPL");
+               ((RuntimeErrorException)t).getTargetError().printStackTrace(System.err);
+            }
+            System.out.println("Error initializing service '"+name.getCanonicalName()+"': "+t);
+        }
+        return loaded;
+    }
+    
     /**
      * Calls the "start" method on an MBean.  If no such method is available,
      * that's OK, but if the call fails for another reason, returns false.

@@ -104,9 +104,9 @@
 </scmstatus>
 </file>
 <file>
-<dirty>"0"</dirty>
+<dirty>"1"</dirty>
 <relativepath>"..\bin\run.bat"</relativepath>
-<editor open="0">
+<editor open="1">
 <selection start="0" end="0">
 </selection>
 <window x="110960080" y="110961520" width="0" height="0">
@@ -118,9 +118,9 @@
 </scmstatus>
 </file>
 <file>
-<dirty>"0"</dirty>
+<dirty>"1"</dirty>
 <relativepath>"..\bin\run.sh"</relativepath>
-<editor open="0">
+<editor open="1">
 <selection start="0" end="0">
 </selection>
 <window x="110940896" y="110942096" width="0" height="0">
@@ -135,9 +135,9 @@
 <virtualfolder>
 <name>"build"</name>
 <file>
-<dirty>"0"</dirty>
+<dirty>"1"</dirty>
 <relativepath>"..\build\build.bat"</relativepath>
-<editor open="0">
+<editor open="1">
 <selection start="0" end="0">
 </selection>
 <window x="0" y="0" width="0" height="0">
@@ -163,9 +163,9 @@
 </scmstatus>
 </file>
 <file>
-<dirty>"0"</dirty>
+<dirty>"1"</dirty>
 <relativepath>"..\build\build.xml"</relativepath>
-<editor open="0">
+<editor open="1">
 <selection start="0" end="0">
 </selection>
 <window x="0" y="0" width="0" height="0">
@@ -1275,7 +1275,7 @@
 <file>
 <dirty>"0"</dirty>
 <relativepath>"conf\default\auth.conf"</relativepath>
-<editor open="0">
+<editor open="1">
 <selection start="0" end="0">
 </selection>
 <window x="101269688" y="107840592" width="0" height="0">
@@ -1334,7 +1334,7 @@
 <file>
 <dirty>"0"</dirty>
 <relativepath>"conf\default\instantdb.properties"</relativepath>
-<editor open="0">
+<editor open="1">
 <selection start="0" end="0">
 </selection>
 <window x="0" y="0" width="0" height="0">
@@ -1346,15 +1346,15 @@
 </scmstatus>
 </file>
 <file>
-<dirty>"0"</dirty>
+<dirty>"1"</dirty>
 <relativepath>"conf\default\jboss.conf"</relativepath>
-<editor open="0">
+<editor open="1">
 <selection start="0" end="0">
 </selection>
-<window x="107840288" y="0" width="0" height="0">
+<window x="5105928" y="101272344" width="0" height="0">
 </window>
 </editor>
-<scmstatus id="0">
+<scmstatus id="2">
 <userstring>""</userstring>
 <userinteger>"0"</userinteger>
 </scmstatus>
@@ -1362,7 +1362,7 @@
 <file>
 <dirty>"0"</dirty>
 <relativepath>"conf\default\jboss.dependencies"</relativepath>
-<editor open="0">
+<editor open="1">
 <selection start="0" end="0">
 </selection>
 <window x="107886128" y="107868480" width="0" height="0">
@@ -1374,9 +1374,9 @@
 </scmstatus>
 </file>
 <file>
-<dirty>"0"</dirty>
+<dirty>"1"</dirty>
 <relativepath>"conf\default\jboss.jcml"</relativepath>
-<editor open="0">
+<editor open="1">
 <selection start="0" end="0">
 </selection>
 <window x="0" y="0" width="0" height="0">
@@ -1390,7 +1390,7 @@
 <file>
 <dirty>"0"</dirty>
 <relativepath>"conf\default\jboss.properties"</relativepath>
-<editor open="0">
+<editor open="1">
 <selection start="0" end="0">
 </selection>
 <window x="108096512" y="1816181360" width="0" height="0">
@@ -1403,8 +1403,22 @@
 </file>
 <file>
 <dirty>"0"</dirty>
-<relativepath>"conf\default\jndi.properties"</relativepath>
+<relativepath>"conf\default\jetty.xml"</relativepath>
 <editor open="0">
+<selection start="0" end="0">
+</selection>
+<window x="7274601" y="6029422" width="0" height="0">
+</window>
+</editor>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"0"</dirty>
+<relativepath>"conf\default\jndi.properties"</relativepath>
+<editor open="1">
 <selection start="0" end="0">
 </selection>
 <window x="102735752" y="102735752" width="0" height="0">
@@ -1418,7 +1432,7 @@
 <file>
 <dirty>"0"</dirty>
 <relativepath>"conf\default\jnp.properties"</relativepath>
-<editor open="0">
+<editor open="1">
 <selection start="0" end="0">
 </selection>
 <window x="107852420" y="107855716" width="0" height="0">
@@ -1459,8 +1473,22 @@
 </file>
 <file>
 <dirty>"0"</dirty>
-<relativepath>"conf\default\standardjaws.xml"</relativepath>
+<relativepath>"conf\default\spyderMQ.properties"</relativepath>
 <editor open="0">
+<selection start="0" end="0">
+</selection>
+<window x="111925256" y="111925016" width="0" height="0">
+</window>
+</editor>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"1"</dirty>
+<relativepath>"conf\default\standardjaws.xml"</relativepath>
+<editor open="1">
 <selection start="0" end="0">
 </selection>
 <window x="110538232" y="107739472" width="0" height="0">
@@ -1472,9 +1500,9 @@
 </scmstatus>
 </file>
 <file>
-<dirty>"0"</dirty>
+<dirty>"1"</dirty>
 <relativepath>"conf\default\standardjboss.xml"</relativepath>
-<editor open="0">
+<editor open="1">
 <selection start="0" end="0">
 </selection>
 <window x="0" y="0" width="0" height="0">
@@ -1673,9 +1701,9 @@
 </scmstatus>
 </file>
 <file>
-<dirty>"0"</dirty>
+<dirty>"1"</dirty>
 <relativepath>"run.mf"</relativepath>
-<editor open="0">
+<editor open="1">
 <selection start="0" end="0">
 </selection>
 <window x="107836876" y="107822428" width="0" height="0">
@@ -1703,7 +1731,7 @@
 <file>
 <dirty>"0"</dirty>
 <relativepath>"tmp.properties"</relativepath>
-<editor open="0">
+<editor open="1">
 <selection start="0" end="0">
 </selection>
 <window x="0" y="0" width="0" height="0">
@@ -2018,97 +2046,7 @@
 <virtualfolder>
 <name>"main"</name>
 <virtualfolder>
-<name>"CVS"</name>
-<file>
-<dirty>"0"</dirty>
-<relativepath>"..\main\CVS\Entries"</relativepath>
-<editor open="0">
-<selection start="0" end="0">
-</selection>
-<window x="2649132" y="0" width="0" height="0">
-</window>
-</editor>
-<scmstatus id="0">
-<userstring>""</userstring>
-<userinteger>"0"</userinteger>
-</scmstatus>
-</file>
-<file>
-<dirty>"0"</dirty>
-<relativepath>"..\main\CVS\Repository"</relativepath>
-<editor open="0">
-<selection start="0" end="0">
-</selection>
-<window x="102735728" y="107871532" width="0" height="0">
-</window>
-</editor>
-<scmstatus id="0">
-<userstring>""</userstring>
-<userinteger>"0"</userinteger>
-</scmstatus>
-</file>
-<file>
-<dirty>"0"</dirty>
-<relativepath>"..\main\CVS\Root"</relativepath>
-<editor open="0">
-<selection start="0" end="0">
-</selection>
-<window x="107871812" y="0" width="0" height="0">
-</window>
-</editor>
-<scmstatus id="0">
-<userstring>""</userstring>
-<userinteger>"0"</userinteger>
-</scmstatus>
-</file>
-</virtualfolder>
-<virtualfolder>
 <name>"org"</name>
-<virtualfolder>
-<name>"CVS"</name>
-<file>
-<dirty>"0"</dirty>
-<relativepath>"..\main\org\CVS\Entries"</relativepath>
-<editor open="0">
-<selection start="0" end="0">
-</selection>
-<window x="5105928" y="0" width="0" height="0">
-</window>
-</editor>
-<scmstatus id="0">
-<userstring>""</userstring>
-<userinteger>"0"</userinteger>
-</scmstatus>
-</file>
-<file>
-<dirty>"0"</dirty>
-<relativepath>"..\main\org\CVS\Repository"</relativepath>
-<editor open="0">
-<selection start="0" end="0">
-</selection>
-<window x="107845716" y="107845704" width="0" height="0">
-</window>
-</editor>
-<scmstatus id="0">
-<userstring>""</userstring>
-<userinteger>"0"</userinteger>
-</scmstatus>
-</file>
-<file>
-<dirty>"0"</dirty>
-<relativepath>"..\main\org\CVS\Root"</relativepath>
-<editor open="0">
-<selection start="0" end="0">
-</selection>
-<window x="110328320" y="473" width="0" height="0">
-</window>
-</editor>
-<scmstatus id="0">
-<userstring>""</userstring>
-<userinteger>"0"</userinteger>
-</scmstatus>
-</file>
-</virtualfolder>
 <virtualfolder>
 <name>"jboss"</name>
 <virtualfolder>
@@ -2119,7 +2057,7 @@
 <editor open="1">
 <selection start="0" end="0">
 </selection>
-<window x="102736220" y="107886428" width="0" height="0">
+<window x="108102764" y="108180608" width="0" height="0">
 </window>
 </editor>
 <scmstatus id="0">
@@ -2130,100 +2068,10 @@
 <file>
 <dirty>"1"</dirty>
 <relativepath>"..\main\org\jboss\configuration\ConfigurationServiceMBean.java"</relativepath>
-<editor open="0">
-<selection start="0" end="0">
-</selection>
-<window x="0" y="1816403032" width="0" height="0">
-</window>
-</editor>
-<scmstatus id="0">
-<userstring>""</userstring>
-<userinteger>"0"</userinteger>
-</scmstatus>
-</file>
-<virtualfolder>
-<name>"CVS"</name>
-<file>
-<dirty>"0"</dirty>
-<relativepath>"..\main\org\jboss\configuration\CVS\Entries"</relativepath>
-<editor open="0">
-<selection start="0" end="0">
-</selection>
-<window x="1816403032" y="1816403032" width="0" height="0">
-</window>
-</editor>
-<scmstatus id="0">
-<userstring>""</userstring>
-<userinteger>"0"</userinteger>
-</scmstatus>
-</file>
-<file>
-<dirty>"0"</dirty>
-<relativepath>"..\main\org\jboss\configuration\CVS\Repository"</relativepath>
-<editor open="0">
-<selection start="0" end="0">
-</selection>
-<window x="1816403032" y="1816403032" width="0" height="0">
-</window>
-</editor>
-<scmstatus id="0">
-<userstring>""</userstring>
-<userinteger>"0"</userinteger>
-</scmstatus>
-</file>
-<file>
-<dirty>"0"</dirty>
-<relativepath>"..\main\org\jboss\configuration\CVS\Root"</relativepath>
-<editor open="0">
+<editor open="1">
 <selection start="0" end="0">
 </selection>
 <window x="0" y="0" width="0" height="0">
-</window>
-</editor>
-<scmstatus id="0">
-<userstring>""</userstring>
-<userinteger>"0"</userinteger>
-</scmstatus>
-</file>
-</virtualfolder>
-</virtualfolder>
-<virtualfolder>
-<name>"CVS"</name>
-<file>
-<dirty>"0"</dirty>
-<relativepath>"..\main\org\jboss\CVS\Entries"</relativepath>
-<editor open="0">
-<selection start="0" end="0">
-</selection>
-<window x="107896880" y="107893408" width="0" height="0">
-</window>
-</editor>
-<scmstatus id="0">
-<userstring>""</userstring>
-<userinteger>"0"</userinteger>
-</scmstatus>
-</file>
-<file>
-<dirty>"0"</dirty>
-<relativepath>"..\main\org\jboss\CVS\Repository"</relativepath>
-<editor open="0">
-<selection start="0" end="0">
-</selection>
-<window x="107739472" y="1" width="0" height="0">
-</window>
-</editor>
-<scmstatus id="0">
-<userstring>""</userstring>
-<userinteger>"0"</userinteger>
-</scmstatus>
-</file>
-<file>
-<dirty>"0"</dirty>
-<relativepath>"..\main\org\jboss\CVS\Root"</relativepath>
-<editor open="0">
-<selection start="0" end="0">
-</selection>
-<window x="110856864" y="107738576" width="0" height="0">
 </window>
 </editor>
 <scmstatus id="0">
@@ -2234,58 +2082,13 @@
 </virtualfolder>
 <virtualfolder>
 <name>"dependencies"</name>
-<virtualfolder>
-<name>"CVS"</name>
-<file>
-<dirty>"0"</dirty>
-<relativepath>"..\main\org\jboss\dependencies\CVS\Entries"</relativepath>
-<editor open="0">
-<selection start="0" end="0">
-</selection>
-<window x="107916016" y="0" width="0" height="0">
-</window>
-</editor>
-<scmstatus id="0">
-<userstring>""</userstring>
-<userinteger>"0"</userinteger>
-</scmstatus>
-</file>
-<file>
-<dirty>"0"</dirty>
-<relativepath>"..\main\org\jboss\dependencies\CVS\Repository"</relativepath>
-<editor open="0">
-<selection start="0" end="0">
-</selection>
-<window x="0" y="0" width="0" height="0">
-</window>
-</editor>
-<scmstatus id="0">
-<userstring>""</userstring>
-<userinteger>"0"</userinteger>
-</scmstatus>
-</file>
-<file>
-<dirty>"0"</dirty>
-<relativepath>"..\main\org\jboss\dependencies\CVS\Root"</relativepath>
-<editor open="0">
-<selection start="0" end="0">
-</selection>
-<window x="0" y="0" width="0" height="0">
-</window>
-</editor>
-<scmstatus id="0">
-<userstring>""</userstring>
-<userinteger>"0"</userinteger>
-</scmstatus>
-</file>
-</virtualfolder>
 <file>
 <dirty>"1"</dirty>
 <relativepath>"..\main\org\jboss\dependencies\DependencyManager.java"</relativepath>
-<editor open="0">
+<editor open="1">
 <selection start="0" end="0">
 </selection>
-<window x="1816403032" y="1816403032" width="0" height="0">
+<window x="0" y="0" width="0" height="0">
 </window>
 </editor>
 <scmstatus id="0">
@@ -2296,58 +2099,13 @@
 </virtualfolder>
 <virtualfolder>
 <name>"deployment"</name>
-<virtualfolder>
-<name>"CVS"</name>
-<file>
-<dirty>"0"</dirty>
-<relativepath>"..\main\org\jboss\deployment\CVS\Entries"</relativepath>
-<editor open="0">
-<selection start="0" end="0">
-</selection>
-<window x="1816403032" y="1816403032" width="0" height="0">
-</window>
-</editor>
-<scmstatus id="0">
-<userstring>""</userstring>
-<userinteger>"0"</userinteger>
-</scmstatus>
-</file>
-<file>
-<dirty>"0"</dirty>
-<relativepath>"..\main\org\jboss\deployment\CVS\Repository"</relativepath>
-<editor open="0">
-<selection start="0" end="0">
-</selection>
-<window x="1816403032" y="1816403032" width="0" height="0">
-</window>
-</editor>
-<scmstatus id="0">
-<userstring>""</userstring>
-<userinteger>"0"</userinteger>
-</scmstatus>
-</file>
-<file>
-<dirty>"0"</dirty>
-<relativepath>"..\main\org\jboss\deployment\CVS\Root"</relativepath>
-<editor open="0">
-<selection start="0" end="0">
-</selection>
-<window x="0" y="1816181360" width="0" height="0">
-</window>
-</editor>
-<scmstatus id="0">
-<userstring>""</userstring>
-<userinteger>"0"</userinteger>
-</scmstatus>
-</file>
-</virtualfolder>
 <file>
 <dirty>"1"</dirty>
 <relativepath>"..\main\org\jboss\deployment\Deployment.java"</relativepath>
 <editor open="0">
 <selection start="0" end="0">
 </selection>
-<window x="102737120" y="102737120" width="0" height="0">
+<window x="0" y="0" width="0" height="0">
 </window>
 </editor>
 <scmstatus id="0">
@@ -2361,7 +2119,7 @@
 <editor open="0">
 <selection start="0" end="0">
 </selection>
-<window x="107921104" y="1816181360" width="0" height="0">
+<window x="108009696" y="0" width="0" height="0">
 </window>
 </editor>
 <scmstatus id="0">
@@ -2372,10 +2130,10 @@
 <file>
 <dirty>"1"</dirty>
 <relativepath>"..\main\org\jboss\deployment\J2eeDeployer.java"</relativepath>
-<editor open="0">
+<editor open="1">
 <selection start="0" end="0">
 </selection>
-<window x="0" y="107954288" width="0" height="0">
+<window x="0" y="0" width="0" height="0">
 </window>
 </editor>
 <scmstatus id="0">
@@ -2386,10 +2144,10 @@
 <file>
 <dirty>"1"</dirty>
 <relativepath>"..\main\org\jboss\deployment\J2eeDeployerMBean.java"</relativepath>
-<editor open="0">
+<editor open="1">
 <selection start="0" end="0">
 </selection>
-<window x="0" y="102871656" width="0" height="0">
+<window x="0" y="0" width="0" height="0">
 </window>
 </editor>
 <scmstatus id="0">
@@ -2400,10 +2158,10 @@
 <file>
 <dirty>"1"</dirty>
 <relativepath>"..\main\org\jboss\deployment\J2eeDeploymentException.java"</relativepath>
-<editor open="0">
+<editor open="1">
 <selection start="0" end="0">
 </selection>
-<window x="113312992" y="113290240" width="0" height="0">
+<window x="0" y="107888256" width="0" height="0">
 </window>
 </editor>
 <scmstatus id="0">
@@ -2417,21 +2175,7 @@
 <editor open="0">
 <selection start="0" end="0">
 </selection>
-<window x="107983504" y="107989520" width="0" height="0">
-</window>
-</editor>
-<scmstatus id="0">
-<userstring>""</userstring>
-<userinteger>"0"</userinteger>
-</scmstatus>
-</file>
-<file>
-<dirty>"0"</dirty>
-<relativepath>"..\main\org\jboss\deployment\README.html"</relativepath>
-<editor open="0">
-<selection start="0" end="0">
-</selection>
-<window x="102737800" y="102737800" width="0" height="0">
+<window x="0" y="0" width="0" height="0">
 </window>
 </editor>
 <scmstatus id="0">
@@ -2442,10 +2186,10 @@
 <file>
 <dirty>"1"</dirty>
 <relativepath>"..\main\org\jboss\deployment\URLWizzard.java"</relativepath>
-<editor open="0">
+<editor open="1">
 <selection start="0" end="0">
 </selection>
-<window x="102737984" y="107977948" width="0" height="0">
+<window x="7143538" y="6029424" width="0" height="0">
 </window>
 </editor>
 <scmstatus id="0">
@@ -2462,7 +2206,7 @@
 <editor open="0">
 <selection start="0" end="0">
 </selection>
-<window x="1816403032" y="1816403032" width="0" height="0">
+<window x="107981504" y="107979296" width="0" height="0">
 </window>
 </editor>
 <scmstatus id="0">
@@ -2473,10 +2217,10 @@
 <file>
 <dirty>"1"</dirty>
 <relativepath>"..\main\org\jboss\ejb\AutoDeployer.java"</relativepath>
-<editor open="0">
+<editor open="1">
 <selection start="0" end="0">
 </selection>
-<window x="108017456" y="108013056" width="0" height="0">
+<window x="0" y="0" width="0" height="0">
 </window>
 </editor>
 <scmstatus id="0">
@@ -2487,10 +2231,10 @@
 <file>
 <dirty>"1"</dirty>
 <relativepath>"..\main\org\jboss\ejb\AutoDeployerMBean.java"</relativepath>
-<editor open="0">
+<editor open="1">
 <selection start="0" end="0">
 </selection>
-<window x="0" y="0" width="0" height="0">
+<window x="1816403032" y="1816403032" width="0" height="0">
 </window>
 </editor>
 <scmstatus id="0">
@@ -2504,7 +2248,7 @@
 <editor open="0">
 <selection start="0" end="0">
 </selection>
-<window x="0" y="132" width="0" height="0">
+<window x="0" y="1816403032" width="0" height="0">
 </window>
 </editor>
 <scmstatus id="0">
@@ -2515,10 +2259,10 @@
 <file>
 <dirty>"1"</dirty>
 <relativepath>"..\main\org\jboss\ejb\Container.java"</relativepath>
-<editor open="0">
+<editor open="1">
 <selection start="0" end="0">
 </selection>
-<window x="110907664" y="111543864" width="0" height="0">
+<window x="0" y="0" width="0" height="0">
 </window>
 </editor>
 <scmstatus id="0">
@@ -2529,10 +2273,10 @@
 <file>
 <dirty>"1"</dirty>
 <relativepath>"..\main\org\jboss\ejb\ContainerFactory.java"</relativepath>
-<editor open="0">
+<editor open="1">
 <selection start="0" end="0">
 </selection>
-<window x="1816403032" y="1816403032" width="0" height="0">
+<window x="0" y="0" width="0" height="0">
 </window>
 </editor>
 <scmstatus id="0">
@@ -2543,10 +2287,10 @@
 <file>
 <dirty>"1"</dirty>
 <relativepath>"..\main\org\jboss\ejb\ContainerFactoryMBean.java"</relativepath>
-<editor open="0">
+<editor open="1">
 <selection start="0" end="0">
 </selection>
-<window x="0" y="108039860" width="0" height="0">
+<window x="0" y="0" width="0" height="0">
 </window>
 </editor>
 <scmstatus id="0">
@@ -2557,10 +2301,10 @@
 <file>
 <dirty>"1"</dirty>
 <relativepath>"..\main\org\jboss\ejb\ContainerInvoker.java"</relativepath>
-<editor open="0">
+<editor open="1">
 <selection start="0" end="0">
 </selection>
-<window x="0" y="0" width="0" height="0">
+<window x="110205480" y="110203304" width="0" height="0">
 </window>
 </editor>
 <scmstatus id="0">
@@ -2585,7 +2329,7 @@
 <file>
 <dirty>"1"</dirty>
 <relativepath>"..\main\org\jboss\ejb\ContainerPlugin.java"</relativepath>
-<editor open="0">
+<editor open="1">
 <selection start="0" end="0">
 </selection>
 <window x="0" y="0" width="0" height="0">
@@ -2596,51 +2340,6 @@
 <userinteger>"0"</userinteger>
 </scmstatus>
 </file>
-<virtualfolder>
-<name>"CVS"</name>
-<file>
-<dirty>"0"</dirty>
-<relativepath>"..\main\org\jboss\ejb\CVS\Entries"</relativepath>
-<editor open="0">
-<selection start="0" end="0">
-</selection>
-<window x="0" y="0" width="0" height="0">
-</window>
-</editor>
-<scmstatus id="0">
-<userstring>""</userstring>
-<userinteger>"0"</userinteger>
-</scmstatus>
-</file>
-<file>
-<dirty>"0"</dirty>
-<relativepath>"..\main\org\jboss\ejb\CVS\Repository"</relativepath>
-<editor open="0">
-<selection start="0" end="0">
-</selection>
-<window x="0" y="0" width="0" height="0">
-</window>
-</editor>
-<scmstatus id="0">
-<userstring>""</userstring>
-<userinteger>"0"</userinteger>
-</scmstatus>
-</file>
-<file>
-<dirty>"0"</dirty>
-<relativepath>"..\main\org\jboss\ejb\CVS\Root"</relativepath>
-<editor open="0">
-<selection start="0" end="0">
-</selection>
-<window x="0" y="0" width="0" height="0">
-</window>
-</editor>
-<scmstatus id="0">
-<userstring>""</userstring>
-<userinteger>"0"</userinteger>
-</scmstatus>
-</file>
-</virtualfolder>
 <virtualfolder>
 <name>"deployment"</name>
 <file>
@@ -2660,10 +2359,10 @@
 <file>
 <dirty>"1"</dirty>
 <relativepath>"..\main\org\jboss\ejb\deployment\CastorJDOResource.java"</relativepath>
-<editor open="0">
+<editor open="1">
 <selection start="0" end="0">
 </selection>
-<window x="0" y="0" width="0" height="0">
+<window x="110129976" y="0" width="0" height="0">
 </window>
 </editor>
 <scmstatus id="0">
@@ -2674,7 +2373,7 @@
 <file>
 <dirty>"1"</dirty>
 <relativepath>"..\main\org\jboss\ejb\deployment\ContainerConfiguration.java"</relativepath>
-<editor open="0">
+<editor open="1">
 <selection start="0" end="0">
 </selection>
 <window x="0" y="0" width="0" height="0">
@@ -2691,7 +2390,7 @@
 <editor open="0">
 <selection start="0" end="0">
 </selection>
-<window x="111495480" y="0" width="0" height="0">
+<window x="110092328" y="0" width="0" height="0">
 </window>
 </editor>
 <scmstatus id="0">
@@ -2699,51 +2398,6 @@
 <userinteger>"0"</userinteger>
 </scmstatus>
 </file>
-<virtualfolder>
-<name>"CVS"</name>
-<file>
-<dirty>"0"</dirty>
-<relativepath>"..\main\org\jboss\ejb\deployment\CVS\Entries"</relativepath>
-<editor open="0">
-<selection start="0" end="0">
-</selection>
-<window x="0" y="0" width="0" height="0">
-</window>
-</editor>
-<scmstatus id="0">
-<userstring>""</userstring>
-<userinteger>"0"</userinteger>
-</scmstatus>
-</file>
-<file>
-<dirty>"0"</dirty>
-<relativepath>"..\main\org\jboss\ejb\deployment\CVS\Repository"</relativepath>
-<editor open="0">
-<selection start="0" end="0">
-</selection>
-<window x="1816403032" y="1816403032" width="0" height="0">
-</window>
-</editor>
-<scmstatus id="0">
-<userstring>""</userstring>
-<userinteger>"0"</userinteger>
-</scmstatus>
-</file>
-<file>
-<dirty>"0"</dirty>
-<relativepath>"..\main\org\jboss\ejb\deployment\CVS\Root"</relativepath>
-<editor open="0">
-<selection start="0" end="0">
-</selection>
-<window x="1816403032" y="1816403032" width="0" height="0">
-</window>
-</editor>
-<scmstatus id="0">
-<userstring>""</userstring>
-<userinteger>"0"</userinteger>
-</scmstatus>
-</file>
-</virtualfolder>
 <virtualfolder>
 <name>"editors"</name>
 <file>
@@ -2752,7 +2406,7 @@
 <editor open="0">
 <selection start="0" end="0">
 </selection>
-<window x="0" y="0" width="0" height="0">
+<window x="1816403032" y="1816403032" width="0" height="0">
 </window>
 </editor>
 <scmstatus id="0">
@@ -2766,7 +2420,7 @@
 <editor open="0">
 <selection start="0" end="0">
 </selection>
-<window x="537529659" y="226304032" width="0" height="0">
+<window x="1816403032" y="1816403032" width="0" height="0">
 </window>
 </editor>
 <scmstatus id="0">
@@ -2794,22 +2448,6 @@
 <editor open="0">
 <selection start="0" end="0">
 </selection>
-<window x="0" y="0" width="0" height="0">
-</window>
-</editor>
-<scmstatus id="0">
-<userstring>""</userstring>
-<userinteger>"0"</userinteger>
-</scmstatus>
-</file>
-<virtualfolder>
-<name>"CVS"</name>
-<file>
-<dirty>"0"</dirty>
-<relativepath>"..\main\org\jboss\ejb\deployment\editors\CVS\Entries"</relativepath>
-<editor open="0">
-<selection start="0" end="0">
-</selection>
 <window x="1816403032" y="1816403032" width="0" height="0">
 </window>
 </editor>
@@ -2818,35 +2456,6 @@
 <userinteger>"0"</userinteger>
 </scmstatus>
 </file>
-<file>
-<dirty>"0"</dirty>
-<relativepath>"..\main\org\jboss\ejb\deployment\editors\CVS\Repository"</relativepath>
-<editor open="0">
-<selection start="0" end="0">
-</selection>
-<window x="1816403032" y="1816403032" width="0" height="0">
-</window>
-</editor>
-<scmstatus id="0">
-<userstring>""</userstring>
-<userinteger>"0"</userinteger>
-</scmstatus>
-</file>
-<file>
-<dirty>"0"</dirty>
-<relativepath>"..\main\org\jboss\ejb\deployment\editors\CVS\Root"</relativepath>
-<editor open="0">
-<selection start="0" end="0">
-</selection>
-<window x="1816403032" y="1816403032" width="0" height="0">
-</window>
-</editor>
-<scmstatus id="0">
-<userstring>""</userstring>
-<userinteger>"0"</userinteger>
-</scmstatus>
-</file>
-</virtualfolder>
 <file>
 <dirty>"1"</dirty>
 <relativepath>"..\main\org\jboss\ejb\deployment\editors\EntityInstanceCacheTypeEditor.java"</relativepath>
@@ -2881,7 +2490,7 @@
 <editor open="0">
 <selection start="0" end="0">
 </selection>
-<window x="111428984" y="0" width="0" height="0">
+<window x="109996176" y="0" width="0" height="0">
 </window>
 </editor>
 <scmstatus id="0">
@@ -2895,7 +2504,7 @@
 <editor open="0">
 <selection start="0" end="0">
 </selection>
-<window x="111436560" y="690123621" width="0" height="0">
+<window x="110728580" y="110728580" width="0" height="0">
 </window>
 </editor>
 <scmstatus id="0">
@@ -2909,7 +2518,7 @@
 <editor open="0">
 <selection start="0" end="0">
 </selection>
-<window x="125079564" y="111308536" width="0" height="0">
+<window x="110728580" y="110728580" width="0" height="0">
 </window>
 </editor>
 <scmstatus id="0">
@@ -2923,7 +2532,7 @@
 <editor open="0">
 <selection start="0" end="0">
 </selection>
-<window x="0" y="0" width="0" height="0">
+<window x="1816403032" y="1816403032" width="0" height="0">
 </window>
 </editor>
 <scmstatus id="0">
@@ -2937,7 +2546,7 @@
 <editor open="0">
 <selection start="0" end="0">
 </selection>
-<window x="1816403032" y="1816403032" width="0" height="0">
+<window x="0" y="0" width="0" height="0">
 </window>
 </editor>
 <scmstatus id="0">
@@ -2952,7 +2561,7 @@
 <editor open="0">
 <selection start="0" end="0">
 </selection>
-<window x="111474216" y="111474296" width="0" height="0">
+<window x="0" y="0" width="0" height="0">
 </window>
 </editor>
 <scmstatus id="0">
@@ -3008,7 +2617,7 @@
 <editor open="0">
 <selection start="0" end="0">
 </selection>
-<window x="1816403032" y="1816403032" width="0" height="0">
+<window x="0" y="0" width="0" height="0">
 </window>
 </editor>
 <scmstatus id="0">
@@ -3019,13 +2628,13 @@
 <file>
 <dirty>"1"</dirty>
 <relativepath>"..\main\org\jboss\ejb\deployment\jBossEjbJar.java"</relativepath>
-<editor open="0">
+<editor open="1">
 <selection start="0" end="0">
 </selection>
-<window x="111535192" y="0" width="0" height="0">
+<window x="0" y="1852795251" width="0" height="0">
 </window>
 </editor>
-<scmstatus id="0">
+<scmstatus id="2">
 <userstring>""</userstring>
 <userinteger>"0"</userinteger>
 </scmstatus>
@@ -3036,7 +2645,7 @@
 <editor open="0">
 <selection start="0" end="0">
 </selection>
-<window x="0" y="0" width="0" height="0">
+<window x="110048832" y="110048912" width="0" height="0">
 </window>
 </editor>
 <scmstatus id="0">
@@ -3050,7 +2659,7 @@
 <editor open="0">
 <selection start="0" end="0">
 </selection>
-<window x="0" y="0" width="0" height="0">
+<window x="1816403032" y="1816403032" width="0" height="0">
 </window>
 </editor>
 <scmstatus id="0">
@@ -3075,7 +2684,7 @@
 <file>
 <dirty>"1"</dirty>
 <relativepath>"..\main\org\jboss\ejb\deployment\jBossEnterpriseBeans.java"</relativepath>
-<editor open="0">
+<editor open="1">
 <selection start="0" end="0">
 </selection>
 <window x="0" y="0" width="0" height="0">
@@ -3092,7 +2701,7 @@
 <editor open="0">
 <selection start="0" end="0">
 </selection>
-<window x="0" y="0" width="0" height="0">
+<window x="110020000" y="0" width="0" height="0">
 </window>
 </editor>
 <scmstatus id="0">
@@ -3134,7 +2743,7 @@
 <editor open="0">
 <selection start="0" end="0">
 </selection>
-<window x="111442336" y="0" width="0" height="0">
+<window x="110009488" y="0" width="0" height="0">
 </window>
 </editor>
 <scmstatus id="0">
@@ -3148,7 +2757,7 @@
 <editor open="0">
 <selection start="0" end="0">
 </selection>
-<window x="111435000" y="111440416" width="0" height="0">
+<window x="0" y="0" width="0" height="0">
 </window>
 </editor>
 <scmstatus id="0">
@@ -3159,10 +2768,10 @@
 <file>
 <dirty>"1"</dirty>
 <relativepath>"..\main\org\jboss\ejb\deployment\JDBCResource.java"</relativepath>
-<editor open="0">
+<editor open="1">
 <selection start="0" end="0">
 </selection>
-<window x="111490904" y="0" width="0" height="0">
+<window x="110076840" y="0" width="0" height="0">
 </window>
 </editor>
 <scmstatus id="0">
@@ -3190,20 +2799,6 @@
 <editor open="0">
 <selection start="0" end="0">
 </selection>
-<window x="1816403032" y="1816403032" width="0" height="0">
-</window>
-</editor>
-<scmstatus id="0">
-<userstring>""</userstring>
-<userinteger>"0"</userinteger>
-</scmstatus>
-</file>
-<file>
-<dirty>"1"</dirty>
-<relativepath>"..\main\org\jboss\ejb\deployment\ResourceManager.java"</relativepath>
-<editor open="0">
-<selection start="0" end="0">
-</selection>
 <window x="0" y="0" width="0" height="0">
 </window>
 </editor>
@@ -3214,11 +2809,25 @@
 </file>
 <file>
 <dirty>"1"</dirty>
-<relativepath>"..\main\org\jboss\ejb\deployment\ResourceManagers.java"</relativepath>
-<editor open="0">
+<relativepath>"..\main\org\jboss\ejb\deployment\ResourceManager.java"</relativepath>
+<editor open="1">
 <selection start="0" end="0">
 </selection>
-<window x="111526536" y="1701869908" width="0" height="0">
+<window x="0" y="1816403032" width="0" height="0">
+</window>
+</editor>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"1"</dirty>
+<relativepath>"..\main\org\jboss\ejb\deployment\ResourceManagers.java"</relativepath>
+<editor open="1">
+<selection start="0" end="0">
+</selection>
+<window x="110065120" y="1816403032" width="0" height="0">
 </window>
 </editor>
 <scmstatus id="0">
@@ -3232,7 +2841,7 @@
 <editor open="0">
 <selection start="0" end="0">
 </selection>
-<window x="111534072" y="0" width="0" height="0">
+<window x="0" y="0" width="0" height="0">
 </window>
 </editor>
 <scmstatus id="0">
@@ -3246,7 +2855,7 @@
 <editor open="0">
 <selection start="0" end="0">
 </selection>
-<window x="1816403032" y="1816403032" width="0" height="0">
+<window x="0" y="0" width="0" height="0">
 </window>
 </editor>
 <scmstatus id="0">
@@ -3299,7 +2908,7 @@
 <file>
 <dirty>"1"</dirty>
 <relativepath>"..\main\org\jboss\ejb\deployment\URLResource.java"</relativepath>
-<editor open="0">
+<editor open="1">
 <selection start="0" end="0">
 </selection>
 <window x="0" y="0" width="0" height="0">
@@ -3317,7 +2926,7 @@
 <editor open="0">
 <selection start="0" end="0">
 </selection>
-<window x="102740040" y="102740040" width="0" height="0">
+<window x="0" y="108111984" width="0" height="0">
 </window>
 </editor>
 <scmstatus id="0">
@@ -3331,7 +2940,7 @@
 <editor open="0">
 <selection start="0" end="0">
 </selection>
-<window x="0" y="1" width="0" height="0">
+<window x="0" y="0" width="0" height="0">
 </window>
 </editor>
 <scmstatus id="0">
@@ -3345,7 +2954,7 @@
 <editor open="0">
 <selection start="0" end="0">
 </selection>
-<window x="0" y="111314700" width="0" height="0">
+<window x="0" y="0" width="0" height="0">
 </window>
 </editor>
 <scmstatus id="0">
@@ -3356,13 +2965,13 @@
 <file>
 <dirty>"1"</dirty>
 <relativepath>"..\main\org\jboss\ejb\EntityContainer.java"</relativepath>
-<editor open="0">
+<editor open="1">
 <selection start="0" end="0">
 </selection>
-<window x="0" y="125472112" width="0" height="0">
+<window x="0" y="0" width="0" height="0">
 </window>
 </editor>
-<scmstatus id="0">
+<scmstatus id="2">
 <userstring>""</userstring>
 <userinteger>"0"</userinteger>
 </scmstatus>
@@ -3373,7 +2982,7 @@
 <editor open="0">
 <selection start="0" end="0">
 </selection>
-<window x="111684056" y="111683096" width="0" height="0">
+<window x="0" y="0" width="0" height="0">
 </window>
 </editor>
 <scmstatus id="0">
@@ -3384,7 +2993,7 @@
 <file>
 <dirty>"1"</dirty>
 <relativepath>"..\main\org\jboss\ejb\EntityInstanceCache.java"</relativepath>
-<editor open="0">
+<editor open="1">
 <selection start="0" end="0">
 </selection>
 <window x="0" y="0" width="0" height="0">
@@ -3426,7 +3035,7 @@
 <file>
 <dirty>"1"</dirty>
 <relativepath>"..\main\org\jboss\ejb\InstanceCache.java"</relativepath>
-<editor open="0">
+<editor open="1">
 <selection start="0" end="0">
 </selection>
 <window x="0" y="0" width="0" height="0">
@@ -3443,7 +3052,7 @@
 <editor open="0">
 <selection start="0" end="0">
 </selection>
-<window x="0" y="1816403032" width="0" height="0">
+<window x="0" y="0" width="0" height="0">
 </window>
 </editor>
 <scmstatus id="0">
@@ -3501,7 +3110,7 @@
 <editor open="0">
 <selection start="0" end="0">
 </selection>
-<window x="537529645" y="1970282528" width="0" height="0">
+<window x="0" y="0" width="0" height="0">
 </window>
 </editor>
 <scmstatus id="0">
@@ -3526,13 +3135,13 @@
 <file>
 <dirty>"1"</dirty>
 <relativepath>"..\main\org\jboss\ejb\plugins\BMPPersistenceManager.java"</relativepath>
-<editor open="0">
+<editor open="1">
 <selection start="0" end="0">
 </selection>
-<window x="111410960" y="111411040" width="0" height="0">
+<window x="110031160" y="0" width="0" height="0">
 </window>
 </editor>
-<scmstatus id="0">
+<scmstatus id="2">
 <userstring>""</userstring>
 <userinteger>"0"</userinteger>
 </scmstatus>
@@ -3554,7 +3163,7 @@
 <file>
 <dirty>"1"</dirty>
 <relativepath>"..\main\org\jboss\ejb\plugins\CMPPersistenceManager.java"</relativepath>
-<editor open="0">
+<editor open="1">
 <selection start="0" end="0">
 </selection>
 <window x="0" y="0" width="0" height="0">
@@ -3565,51 +3174,6 @@
 <userinteger>"0"</userinteger>
 </scmstatus>
 </file>
-<virtualfolder>
-<name>"CVS"</name>
-<file>
-<dirty>"0"</dirty>
-<relativepath>"..\main\org\jboss\ejb\plugins\CVS\Entries"</relativepath>
-<editor open="0">
-<selection start="0" end="0">
-</selection>
-<window x="0" y="0" width="0" height="0">
-</window>
-</editor>
-<scmstatus id="0">
-<userstring>""</userstring>
-<userinteger>"0"</userinteger>
-</scmstatus>
-</file>
-<file>
-<dirty>"0"</dirty>
-<relativepath>"..\main\org\jboss\ejb\plugins\CVS\Repository"</relativepath>
-<editor open="0">
-<selection start="0" end="0">
-</selection>
-<window x="0" y="0" width="0" height="0">
-</window>
-</editor>
-<scmstatus id="0">
-<userstring>""</userstring>
-<userinteger>"0"</userinteger>
-</scmstatus>
-</file>
-<file>
-<dirty>"0"</dirty>
-<relativepath>"..\main\org\jboss\ejb\plugins\CVS\Root"</relativepath>
-<editor open="0">
-<selection start="0" end="0">
-</selection>
-<window x="0" y="0" width="0" height="0">
-</window>
-</editor>
-<scmstatus id="0">
-<userstring>""</userstring>
-<userinteger>"0"</userinteger>
-</scmstatus>
-</file>
-</virtualfolder>
 <file>
 <dirty>"1"</dirty>
 <relativepath>"..\main\org\jboss\ejb\plugins\EnterpriseContextCachePolicy.java"</relativepath>
@@ -3627,13 +3191,13 @@
 <file>
 <dirty>"1"</dirty>
 <relativepath>"..\main\org\jboss\ejb\plugins\EnterpriseInstanceCache.java"</relativepath>
-<editor open="0">
+<editor open="1">
 <selection start="0" end="0">
 </selection>
-<window x="111374880" y="111375040" width="0" height="0">
+<window x="109938368" y="109938528" width="0" height="0">
 </window>
 </editor>
-<scmstatus id="0">
+<scmstatus id="2">
 <userstring>""</userstring>
 <userinteger>"0"</userinteger>
 </scmstatus>
@@ -3641,7 +3205,7 @@
 <file>
 <dirty>"1"</dirty>
 <relativepath>"..\main\org\jboss\ejb\plugins\EntityInstanceCache.java"</relativepath>
-<editor open="0">
+<editor open="1">
 <selection start="0" end="0">
 </selection>
 <window x="0" y="0" width="0" height="0">
@@ -3672,7 +3236,7 @@
 <editor open="0">
 <selection start="0" end="0">
 </selection>
-<window x="111282896" y="111327576" width="0" height="0">
+<window x="0" y="0" width="0" height="0">
 </window>
 </editor>
 <scmstatus id="0">
@@ -3683,7 +3247,7 @@
 <file>
 <dirty>"1"</dirty>
 <relativepath>"..\main\org\jboss\ejb\plugins\EntitySynchronizationInterceptor.java"</relativepath>
-<editor open="0">
+<editor open="1">
 <selection start="0" end="0">
 </selection>
 <window x="0" y="0" width="0" height="0">
@@ -3697,151 +3261,16 @@
 <virtualfolder>
 <name>"jaws"</name>
 <virtualfolder>
-<name>"CVS"</name>
-<file>
-<dirty>"0"</dirty>
-<relativepath>"..\main\org\jboss\ejb\plugins\jaws\CVS\Entries"</relativepath>
-<editor open="0">
-<selection start="0" end="0">
-</selection>
-<window x="0" y="0" width="0" height="0">
-</window>
-</editor>
-<scmstatus id="0">
-<userstring>""</userstring>
-<userinteger>"0"</userinteger>
-</scmstatus>
-</file>
-<file>
-<dirty>"0"</dirty>
-<relativepath>"..\main\org\jboss\ejb\plugins\jaws\CVS\Repository"</relativepath>
-<editor open="0">
-<selection start="0" end="0">
-</selection>
-<window x="0" y="0" width="0" height="0">
-</window>
-</editor>
-<scmstatus id="0">
-<userstring>""</userstring>
-<userinteger>"0"</userinteger>
-</scmstatus>
-</file>
-<file>
-<dirty>"0"</dirty>
-<relativepath>"..\main\org\jboss\ejb\plugins\jaws\CVS\Root"</relativepath>
-<editor open="0">
-<selection start="0" end="0">
-</selection>
-<window x="1816403032" y="1816403032" width="0" height="0">
-</window>
-</editor>
-<scmstatus id="0">
-<userstring>""</userstring>
-<userinteger>"0"</userinteger>
-</scmstatus>
-</file>
-</virtualfolder>
-<virtualfolder>
 <name>"deployment"</name>
 <virtualfolder>
-<name>"CVS"</name>
-<file>
-<dirty>"0"</dirty>
-<relativepath>"..\main\org\jboss\ejb\plugins\jaws\deployment\CVS\Entries"</relativepath>
-<editor open="0">
-<selection start="0" end="0">
-</selection>
-<window x="111203904" y="111202528" width="0" height="0">
-</window>
-</editor>
-<scmstatus id="0">
-<userstring>""</userstring>
-<userinteger>"0"</userinteger>
-</scmstatus>
-</file>
-<file>
-<dirty>"0"</dirty>
-<relativepath>"..\main\org\jboss\ejb\plugins\jaws\deployment\CVS\Repository"</relativepath>
-<editor open="0">
-<selection start="0" end="0">
-</selection>
-<window x="1816403032" y="1816403032" width="0" height="0">
-</window>
-</editor>
-<scmstatus id="0">
-<userstring>""</userstring>
-<userinteger>"0"</userinteger>
-</scmstatus>
-</file>
-<file>
-<dirty>"0"</dirty>
-<relativepath>"..\main\org\jboss\ejb\plugins\jaws\deployment\CVS\Root"</relativepath>
-<editor open="0">
-<selection start="0" end="0">
-</selection>
-<window x="1816403032" y="1816403032" width="0" height="0">
-</window>
-</editor>
-<scmstatus id="0">
-<userstring>""</userstring>
-<userinteger>"0"</userinteger>
-</scmstatus>
-</file>
-</virtualfolder>
-<virtualfolder>
 <name>"editors"</name>
-<virtualfolder>
-<name>"CVS"</name>
-<file>
-<dirty>"0"</dirty>
-<relativepath>"..\main\org\jboss\ejb\plugins\jaws\deployment\editors\CVS\Entries"</relativepath>
-<editor open="0">
-<selection start="0" end="0">
-</selection>
-<window x="111197472" y="111197552" width="0" height="0">
-</window>
-</editor>
-<scmstatus id="0">
-<userstring>""</userstring>
-<userinteger>"0"</userinteger>
-</scmstatus>
-</file>
-<file>
-<dirty>"0"</dirty>
-<relativepath>"..\main\org\jboss\ejb\plugins\jaws\deployment\editors\CVS\Repository"</relativepath>
-<editor open="0">
-<selection start="0" end="0">
-</selection>
-<window x="111197392" y="111197312" width="0" height="0">
-</window>
-</editor>
-<scmstatus id="0">
-<userstring>""</userstring>
-<userinteger>"0"</userinteger>
-</scmstatus>
-</file>
-<file>
-<dirty>"0"</dirty>
-<relativepath>"..\main\org\jboss\ejb\plugins\jaws\deployment\editors\CVS\Root"</relativepath>
-<editor open="0">
-<selection start="0" end="0">
-</selection>
-<window x="0" y="0" width="0" height="0">
-</window>
-</editor>
-<scmstatus id="0">
-<userstring>""</userstring>
-<userinteger>"0"</userinteger>
-</scmstatus>
-</file>
-</virtualfolder>
 <file>
 <dirty>"1"</dirty>
 <relativepath>"..\main\org\jboss\ejb\plugins\jaws\deployment\editors\JavaTypeEditor.java"</relativepath>
 <editor open="0">
 <selection start="0" end="0">
 </selection>
-<window x="1816403032" y="1816403032" width="0" height="0">
+<window x="0" y="123220848" width="0" height="0">
 </window>
 </editor>
 <scmstatus id="0">
@@ -3855,7 +3284,7 @@
 <editor open="0">
 <selection start="0" end="0">
 </selection>
-<window x="0" y="0" width="0" height="0">
+<window x="109702744" y="109702664" width="0" height="0">
 </window>
 </editor>
 <scmstatus id="0">
@@ -3869,7 +3298,7 @@
 <editor open="0">
 <selection start="0" end="0">
 </selection>
-<window x="0" y="0" width="0" height="0">
+<window x="1816403032" y="1816403032" width="0" height="0">
 </window>
 </editor>
 <scmstatus id="0">
@@ -3884,7 +3313,7 @@
 <editor open="0">
 <selection start="0" end="0">
 </selection>
-<window x="1866866798" y="1919247474" width="0" height="0">
+<window x="1651863562" y="543385964" width="0" height="0">
 </window>
 </editor>
 <scmstatus id="0">
@@ -3898,7 +3327,7 @@
 <editor open="0">
 <selection start="0" end="0">
 </selection>
-<window x="111152320" y="111154896" width="0" height="0">
+<window x="0" y="0" width="0" height="0">
 </window>
 </editor>
 <scmstatus id="0">
@@ -3909,7 +3338,7 @@
 <file>
 <dirty>"1"</dirty>
 <relativepath>"..\main\org\jboss\ejb\plugins\jaws\deployment\JawsEjbJar.java"</relativepath>
-<editor open="0">
+<editor open="1">
 <selection start="0" end="0">
 </selection>
 <window x="0" y="0" width="0" height="0">
@@ -3926,7 +3355,7 @@
 <editor open="0">
 <selection start="0" end="0">
 </selection>
-<window x="111131032" y="0" width="0" height="0">
+<window x="109930816" y="0" width="0" height="0">
 </window>
 </editor>
 <scmstatus id="0">
@@ -3937,10 +3366,10 @@
 <file>
 <dirty>"1"</dirty>
 <relativepath>"..\main\org\jboss\ejb\plugins\jaws\deployment\JawsEjbReference.java"</relativepath>
-<editor open="0">
+<editor open="1">
 <selection start="0" end="0">
 </selection>
-<window x="111131032" y="111144464" width="0" height="0">
+<window x="123142156" y="110735804" width="0" height="0">
 </window>
 </editor>
 <scmstatus id="0">
@@ -3954,7 +3383,7 @@
 <editor open="0">
 <selection start="0" end="0">
 </selection>
-<window x="111145024" y="111149920" width="0" height="0">
+<window x="123142156" y="110735804" width="0" height="0">
 </window>
 </editor>
 <scmstatus id="0">
@@ -3982,7 +3411,7 @@
 <editor open="0">
 <selection start="0" end="0">
 </selection>
-<window x="111138528" y="0" width="0" height="0">
+<window x="0" y="0" width="0" height="0">
 </window>
 </editor>
 <scmstatus id="0">
@@ -3996,7 +3425,7 @@
 <editor open="0">
 <selection start="0" end="0">
 </selection>
-<window x="111223232" y="111222752" width="0" height="0">
+<window x="109823624" y="0" width="0" height="0">
 </window>
 </editor>
 <scmstatus id="0">
@@ -4024,7 +3453,7 @@
 <editor open="0">
 <selection start="0" end="0">
 </selection>
-<window x="1816403032" y="1816403032" width="0" height="0">
+<window x="0" y="0" width="0" height="0">
 </window>
 </editor>
 <scmstatus id="0">
@@ -4038,7 +3467,7 @@
 <editor open="0">
 <selection start="0" end="0">
 </selection>
-<window x="111209440" y="0" width="0" height="0">
+<window x="0" y="0" width="0" height="0">
 </window>
 </editor>
 <scmstatus id="0">
@@ -4052,7 +3481,7 @@
 <editor open="0">
 <selection start="0" end="0">
 </selection>
-<window x="111317308" y="111317308" width="0" height="0">
+<window x="123207692" y="110736836" width="0" height="0">
 </window>
 </editor>
 <scmstatus id="0">
@@ -4067,7 +3496,7 @@
 <editor open="0">
 <selection start="0" end="0">
 </selection>
-<window x="1816403032" y="1816403032" width="0" height="0">
+<window x="110734256" y="110734256" width="0" height="0">
 </window>
 </editor>
 <scmstatus id="0">
@@ -4077,51 +3506,6 @@
 </file>
 <virtualfolder>
 <name>"jdbc"</name>
-<virtualfolder>
-<name>"CVS"</name>
-<file>
-<dirty>"0"</dirty>
-<relativepath>"..\main\org\jboss\ejb\plugins\jaws\jdbc\CVS\Entries"</relativepath>
-<editor open="0">
-<selection start="0" end="0">
-</selection>
-<window x="1816403032" y="1816403032" width="0" height="0">
-</window>
-</editor>
-<scmstatus id="0">
-<userstring>""</userstring>
-<userinteger>"0"</userinteger>
-</scmstatus>
-</file>
-<file>
-<dirty>"0"</dirty>
-<relativepath>"..\main\org\jboss\ejb\plugins\jaws\jdbc\CVS\Repository"</relativepath>
-<editor open="0">
-<selection start="0" end="0">
-</selection>
-<window x="1816403032" y="1816403032" width="0" height="0">
-</window>
-</editor>
-<scmstatus id="0">
-<userstring>""</userstring>
-<userinteger>"0"</userinteger>
-</scmstatus>
-</file>
-<file>
-<dirty>"0"</dirty>
-<relativepath>"..\main\org\jboss\ejb\plugins\jaws\jdbc\CVS\Root"</relativepath>
-<editor open="0">
-<selection start="0" end="0">
-</selection>
-<window x="0" y="0" width="0" height="0">
-</window>
-</editor>
-<scmstatus id="0">
-<userstring>""</userstring>
-<userinteger>"0"</userinteger>
-</scmstatus>
-</file>
-</virtualfolder>
 <file>
 <dirty>"1"</dirty>
 <relativepath>"..\main\org\jboss\ejb\plugins\jaws\jdbc\JDBCActivateEntityCommand.java"</relativepath>
@@ -4142,7 +3526,7 @@
 <editor open="0">
 <selection start="0" end="0">
 </selection>
-<window x="0" y="0" width="0" height="0">
+<window x="109674664" y="0" width="0" height="0">
 </window>
 </editor>
 <scmstatus id="0">
@@ -4170,7 +3554,7 @@
 <editor open="0">
 <selection start="0" end="0">
 </selection>
-<window x="111184080" y="111184160" width="0" height="0">
+<window x="109662872" y="109662952" width="0" height="0">
 </window>
 </editor>
 <scmstatus id="0">
@@ -4195,10 +3579,10 @@
 <file>
 <dirty>"1"</dirty>
 <relativepath>"..\main\org\jboss\ejb\plugins\jaws\jdbc\JDBCDefinedFinderCommand.java"</relativepath>
-<editor open="0">
+<editor open="1">
 <selection start="0" end="0">
 </selection>
-<window x="102741380" y="102741380" width="0" height="0">
+<window x="109648064" y="0" width="0" height="0">
 </window>
 </editor>
 <scmstatus id="0">
@@ -4212,7 +3596,7 @@
 <editor open="0">
 <selection start="0" end="0">
 </selection>
-<window x="111167872" y="111167952" width="0" height="0">
+<window x="109647104" y="109647184" width="0" height="0">
 </window>
 </editor>
 <scmstatus id="0">
@@ -4226,7 +3610,7 @@
 <editor open="0">
 <selection start="0" end="0">
 </selection>
-<window x="1816403032" y="1816403032" width="0" height="0">
+<window x="109647184" y="109647104" width="0" height="0">
 </window>
 </editor>
 <scmstatus id="0">
@@ -4240,7 +3624,7 @@
 <editor open="0">
 <selection start="0" end="0">
 </selection>
-<window x="1816403032" y="1816403032" width="0" height="0">
+<window x="538970637" y="168656160" width="0" height="0">
 </window>
 </editor>
 <scmstatus id="0">
@@ -4282,7 +3666,7 @@
 <editor open="0">
 <selection start="0" end="0">
 </selection>
-<window x="111127256" y="0" width="0" height="0">
+<window x="0" y="0" width="0" height="0">
 </window>
 </editor>
 <scmstatus id="0">
@@ -4296,7 +3680,7 @@
 <editor open="0">
 <selection start="0" end="0">
 </selection>
-<window x="0" y="0" width="0" height="0">
+<window x="103216272" y="0" width="0" height="0">
 </window>
 </editor>
 <scmstatus id="0">
@@ -4310,7 +3694,7 @@
 <editor open="0">
 <selection start="0" end="0">
 </selection>
-<window x="0" y="0" width="0" height="0">
+<window x="123342860" y="110738900" width="0" height="0">
 </window>
 </editor>
 <scmstatus id="0">
@@ -4324,7 +3708,7 @@
 <editor open="0">
 <selection start="0" end="0">
 </selection>
-<window x="0" y="0" width="0" height="0">
+<window x="103211856" y="103212416" width="0" height="0">
 </window>
 </editor>
 <scmstatus id="0">
@@ -4380,7 +3764,7 @@
 <editor open="0">
 <selection start="0" end="0">
 </selection>
-<window x="111119720" y="111120360" width="0" height="0">
+<window x="109771672" y="0" width="0" height="0">
 </window>
 </editor>
 <scmstatus id="0">
@@ -4391,13 +3775,13 @@
 <file>
 <dirty>"1"</dirty>
 <relativepath>"..\main\org\jboss\ejb\plugins\jaws\jdbc\JDBCStoreEntityCommand.java"</relativepath>
-<editor open="0">
+<editor open="1">
 <selection start="0" end="0">
 </selection>
-<window x="111080768" y="111080688" width="0" height="0">
+<window x="110739416" y="110739416" width="0" height="0">
 </window>
 </editor>
-<scmstatus id="0">
+<scmstatus id="2">
 <userstring>""</userstring>
 <userinteger>"0"</userinteger>
 </scmstatus>
@@ -4423,7 +3807,7 @@
 <editor open="0">
 <selection start="0" end="0">
 </selection>
-<window x="111225408" y="0" width="0" height="0">
+<window x="109782744" y="109782824" width="0" height="0">
 </window>
 </editor>
 <scmstatus id="0">
@@ -4437,7 +3821,7 @@
 <editor open="0">
 <selection start="0" end="0">
 </selection>
-<window x="111315244" y="111315244" width="0" height="0">
+<window x="109781784" y="0" width="0" height="0">
 </window>
 </editor>
 <scmstatus id="0">
@@ -4451,7 +3835,7 @@
 <editor open="0">
 <selection start="0" end="0">
 </selection>
-<window x="110852368" y="111158752" width="0" height="0">
+<window x="110734772" y="110734772" width="0" height="0">
 </window>
 </editor>
 <scmstatus id="0">
@@ -4465,7 +3849,7 @@
 <editor open="0">
 <selection start="0" end="0">
 </selection>
-<window x="111162512" y="111162432" width="0" height="0">
+<window x="109981888" y="109981808" width="0" height="0">
 </window>
 </editor>
 <scmstatus id="0">
@@ -4479,7 +3863,7 @@
 <editor open="0">
 <selection start="0" end="0">
 </selection>
-<window x="677737589" y="168639273" width="0" height="0">
+<window x="0" y="0" width="0" height="0">
 </window>
 </editor>
 <scmstatus id="0">
@@ -4493,7 +3877,7 @@
 <editor open="0">
 <selection start="0" end="0">
 </selection>
-<window x="1816403032" y="1816403032" width="0" height="0">
+<window x="109980208" y="109980128" width="0" height="0">
 </window>
 </editor>
 <scmstatus id="0">
@@ -4507,7 +3891,7 @@
 <editor open="0">
 <selection start="0" end="0">
 </selection>
-<window x="1816403032" y="1816403032" width="0" height="0">
+<window x="0" y="0" width="0" height="0">
 </window>
 </editor>
 <scmstatus id="0">
@@ -4521,7 +3905,7 @@
 <editor open="0">
 <selection start="0" end="0">
 </selection>
-<window x="0" y="0" width="0" height="0">
+<window x="1816403032" y="1816403032" width="0" height="0">
 </window>
 </editor>
 <scmstatus id="0">
@@ -4577,7 +3961,7 @@
 <editor open="0">
 <selection start="0" end="0">
 </selection>
-<window x="111154096" y="0" width="0" height="0">
+<window x="0" y="0" width="0" height="0">
 </window>
 </editor>
 <scmstatus id="0">
@@ -4591,7 +3975,7 @@
 <editor open="0">
 <selection start="0" end="0">
 </selection>
-<window x="111155296" y="544106868" width="0" height="0">
+<window x="168639347" y="1835600397" width="0" height="0">
 </window>
 </editor>
 <scmstatus id="0">
@@ -4615,58 +3999,13 @@
 <userinteger>"0"</userinteger>
 </scmstatus>
 </file>
-<virtualfolder>
-<name>"CVS"</name>
-<file>
-<dirty>"0"</dirty>
-<relativepath>"..\main\org\jboss\ejb\plugins\jaws\metadata\CVS\Entries"</relativepath>
-<editor open="0">
-<selection start="0" end="0">
-</selection>
-<window x="1816403032" y="1816403032" width="0" height="0">
-</window>
-</editor>
-<scmstatus id="0">
-<userstring>""</userstring>
-<userinteger>"0"</userinteger>
-</scmstatus>
-</file>
-<file>
-<dirty>"0"</dirty>
-<relativepath>"..\main\org\jboss\ejb\plugins\jaws\metadata\CVS\Repository"</relativepath>
-<editor open="0">
-<selection start="0" end="0">
-</selection>
-<window x="0" y="0" width="0" height="0">
-</window>
-</editor>
-<scmstatus id="0">
-<userstring>""</userstring>
-<userinteger>"0"</userinteger>
-</scmstatus>
-</file>
-<file>
-<dirty>"0"</dirty>
-<relativepath>"..\main\org\jboss\ejb\plugins\jaws\metadata\CVS\Root"</relativepath>
-<editor open="0">
-<selection start="0" end="0">
-</selection>
-<window x="0" y="0" width="0" height="0">
-</window>
-</editor>
-<scmstatus id="0">
-<userstring>""</userstring>
-<userinteger>"0"</userinteger>
-</scmstatus>
-</file>
-</virtualfolder>
 <file>
 <dirty>"1"</dirty>
 <relativepath>"..\main\org\jboss\ejb\plugins\jaws\metadata\FinderMetaData.java"</relativepath>
-<editor open="0">
+<editor open="1">
 <selection start="0" end="0">
 </selection>
-<window x="111099336" y="0" width="0" height="0">
+<window x="0" y="0" width="0" height="0">
 </window>
 </editor>
 <scmstatus id="0">
@@ -4677,13 +4016,13 @@
 <file>
 <dirty>"1"</dirty>
 <relativepath>"..\main\org\jboss\ejb\plugins\jaws\metadata\JawsApplicationMetaData.java"</relativepath>
-<editor open="0">
+<editor open="1">
 <selection start="0" end="0">
 </selection>
-<window x="108298268" y="102742928" width="0" height="0">
+<window x="109698968" y="0" width="0" height="0">
 </window>
 </editor>
-<scmstatus id="0">
+<scmstatus id="2">
 <userstring>""</userstring>
 <userinteger>"0"</userinteger>
 </scmstatus>
@@ -4694,7 +4033,7 @@
 <editor open="0">
 <selection start="0" end="0">
 </selection>
-<window x="0" y="0" width="0" height="0">
+<window x="103206400" y="103206480" width="0" height="0">
 </window>
 </editor>
 <scmstatus id="0">
@@ -4708,7 +4047,7 @@
 <editor open="0">
 <selection start="0" end="0">
 </selection>
-<window x="111073952" y="0" width="0" height="0">
+<window x="0" y="0" width="0" height="0">
 </window>
 </editor>
 <scmstatus id="0">
@@ -4722,7 +4061,7 @@
 <editor open="0">
 <selection start="0" end="0">
 </selection>
-<window x="102743444" y="102743444" width="0" height="0">
+<window x="1816403032" y="1816403032" width="0" height="0">
 </window>
 </editor>
 <scmstatus id="0">
@@ -4736,7 +4075,7 @@
 <editor open="0">
 <selection start="0" end="0">
 </selection>
-<window x="0" y="0" width="0" height="0">
+<window x="103191672" y="103189352" width="0" height="0">
 </window>
 </editor>
 <scmstatus id="0">
@@ -4763,51 +4102,6 @@
 <virtualfolder>
 <name>"jrmp"</name>
 <virtualfolder>
-<name>"CVS"</name>
-<file>
-<dirty>"0"</dirty>
-<relativepath>"..\main\org\jboss\ejb\plugins\jrmp\CVS\Entries"</relativepath>
-<editor open="0">
-<selection start="0" end="0">
-</selection>
-<window x="0" y="0" width="0" height="0">
-</window>
-</editor>
-<scmstatus id="0">
-<userstring>""</userstring>
-<userinteger>"0"</userinteger>
-</scmstatus>
-</file>
-<file>
-<dirty>"0"</dirty>
-<relativepath>"..\main\org\jboss\ejb\plugins\jrmp\CVS\Repository"</relativepath>
-<editor open="0">
-<selection start="0" end="0">
-</selection>
-<window x="0" y="0" width="0" height="0">
-</window>
-</editor>
-<scmstatus id="0">
-<userstring>""</userstring>
-<userinteger>"0"</userinteger>
-</scmstatus>
-</file>
-<file>
-<dirty>"0"</dirty>
-<relativepath>"..\main\org\jboss\ejb\plugins\jrmp\CVS\Root"</relativepath>
-<editor open="0">
-<selection start="0" end="0">
-</selection>
-<window x="1816403032" y="1816403032" width="0" height="0">
-</window>
-</editor>
-<scmstatus id="0">
-<userstring>""</userstring>
-<userinteger>"0"</userinteger>
-</scmstatus>
-</file>
-</virtualfolder>
-<virtualfolder>
 <name>"interfaces"</name>
 <file>
 <dirty>"1"</dirty>
@@ -4823,58 +4117,13 @@
 <userinteger>"0"</userinteger>
 </scmstatus>
 </file>
-<virtualfolder>
-<name>"CVS"</name>
-<file>
-<dirty>"0"</dirty>
-<relativepath>"..\main\org\jboss\ejb\plugins\jrmp\interfaces\CVS\Entries"</relativepath>
-<editor open="0">
-<selection start="0" end="0">
-</selection>
-<window x="0" y="0" width="0" height="0">
-</window>
-</editor>
-<scmstatus id="0">
-<userstring>""</userstring>
-<userinteger>"0"</userinteger>
-</scmstatus>
-</file>
-<file>
-<dirty>"0"</dirty>
-<relativepath>"..\main\org\jboss\ejb\plugins\jrmp\interfaces\CVS\Repository"</relativepath>
-<editor open="0">
-<selection start="0" end="0">
-</selection>
-<window x="0" y="0" width="0" height="0">
-</window>
-</editor>
-<scmstatus id="0">
-<userstring>""</userstring>
-<userinteger>"0"</userinteger>
-</scmstatus>
-</file>
-<file>
-<dirty>"0"</dirty>
-<relativepath>"..\main\org\jboss\ejb\plugins\jrmp\interfaces\CVS\Root"</relativepath>
-<editor open="0">
-<selection start="0" end="0">
-</selection>
-<window x="1816403032" y="1816403032" width="0" height="0">
-</window>
-</editor>
-<scmstatus id="0">
-<userstring>""</userstring>
-<userinteger>"0"</userinteger>
-</scmstatus>
-</file>
-</virtualfolder>
 <file>
 <dirty>"1"</dirty>
 <relativepath>"..\main\org\jboss\ejb\plugins\jrmp\interfaces\EJBMetaDataImpl.java"</relativepath>
 <editor open="0">
 <selection start="0" end="0">
 </selection>
-<window x="111026688" y="0" width="0" height="0">
+<window x="0" y="0" width="0" height="0">
 </window>
 </editor>
 <scmstatus id="0">
@@ -4888,7 +4137,7 @@
 <editor open="0">
 <selection start="0" end="0">
 </selection>
-<window x="102743960" y="102743960" width="0" height="0">
+<window x="103171968" y="0" width="0" height="0">
 </window>
 </editor>
 <scmstatus id="0">
@@ -4899,10 +4148,10 @@
 <file>
 <dirty>"1"</dirty>
 <relativepath>"..\main\org\jboss\ejb\plugins\jrmp\interfaces\EntityProxy.java"</relativepath>
-<editor open="0">
+<editor open="1">
 <selection start="0" end="0">
 </selection>
-<window x="111038448" y="111039088" width="0" height="0">
+<window x="103166672" y="103167792" width="0" height="0">
 </window>
 </editor>
 <scmstatus id="0">
@@ -4913,10 +4162,10 @@
 <file>
 <dirty>"1"</dirty>
 <relativepath>"..\main\org\jboss\ejb\plugins\jrmp\interfaces\GenericProxy.java"</relativepath>
-<editor open="0">
+<editor open="1">
 <selection start="0" end="0">
 </selection>
-<window x="0" y="0" width="0" height="0">
+<window x="103125112" y="103125192" width="0" height="0">
 </window>
 </editor>
 <scmstatus id="0">
@@ -4930,7 +4179,7 @@
 <editor open="0">
 <selection start="0" end="0">
 </selection>
-<window x="1816403032" y="1816403032" width="0" height="0">
+<window x="0" y="0" width="0" height="0">
 </window>
 </editor>
 <scmstatus id="0">
@@ -4941,10 +4190,10 @@
 <file>
 <dirty>"1"</dirty>
 <relativepath>"..\main\org\jboss\ejb\plugins\jrmp\interfaces\HomeProxy.java"</relativepath>
-<editor open="0">
+<editor open="1">
 <selection start="0" end="0">
 </selection>
-<window x="111003056" y="0" width="0" height="0">
+<window x="1816403032" y="1816403032" width="0" height="0">
 </window>
 </editor>
 <scmstatus id="0">
@@ -4958,7 +4207,7 @@
 <editor open="0">
 <selection start="0" end="0">
 </selection>
-<window x="0" y="0" width="0" height="0">
+<window x="110741480" y="110741480" width="0" height="0">
 </window>
 </editor>
 <scmstatus id="0">
@@ -4972,7 +4221,7 @@
 <editor open="0">
 <selection start="0" end="0">
 </selection>
-<window x="1816403032" y="1816403032" width="0" height="0">
+<window x="110741480" y="110741480" width="0" height="0">
 </window>
 </editor>
 <scmstatus id="0">
@@ -4986,7 +4235,7 @@
 <editor open="0">
 <selection start="0" end="0">
 </selection>
-<window x="1816403032" y="1816403032" width="0" height="0">
+<window x="0" y="0" width="0" height="0">
 </window>
 </editor>
 <scmstatus id="0">
@@ -5000,7 +4249,7 @@
 <editor open="0">
 <selection start="0" end="0">
 </selection>
-<window x="0" y="0" width="0" height="0">
+<window x="110741996" y="110741996" width="0" height="0">
 </window>
 </editor>
 <scmstatus id="0">
@@ -5042,7 +4291,7 @@
 <editor open="0">
 <selection start="0" end="0">
 </selection>
-<window x="102745508" y="102745508" width="0" height="0">
+<window x="0" y="1816403032" width="0" height="0">
 </window>
 </editor>
 <scmstatus id="0">
@@ -5053,10 +4302,10 @@
 <file>
 <dirty>"1"</dirty>
 <relativepath>"..\main\org\jboss\ejb\plugins\jrmp\interfaces\StatelessSessionProxy.java"</relativepath>
-<editor open="0">
+<editor open="1">
 <selection start="0" end="0">
 </selection>
-<window x="110498320" y="110502800" width="0" height="0">
+<window x="103085320" y="0" width="0" height="0">
 </window>
 </editor>
 <scmstatus id="0">
@@ -5067,55 +4316,10 @@
 </virtualfolder>
 <virtualfolder>
 <name>"server"</name>
-<virtualfolder>
-<name>"CVS"</name>
-<file>
-<dirty>"0"</dirty>
-<relativepath>"..\main\org\jboss\ejb\plugins\jrmp\server\CVS\Entries"</relativepath>
-<editor open="0">
-<selection start="0" end="0">
-</selection>
-<window x="110332800" y="0" width="0" height="0">
-</window>
-</editor>
-<scmstatus id="0">
-<userstring>""</userstring>
-<userinteger>"0"</userinteger>
-</scmstatus>
-</file>
-<file>
-<dirty>"0"</dirty>
-<relativepath>"..\main\org\jboss\ejb\plugins\jrmp\server\CVS\Repository"</relativepath>
-<editor open="0">
-<selection start="0" end="0">
-</selection>
-<window x="110334720" y="0" width="0" height="0">
-</window>
-</editor>
-<scmstatus id="0">
-<userstring>""</userstring>
-<userinteger>"0"</userinteger>
-</scmstatus>
-</file>
-<file>
-<dirty>"0"</dirty>
-<relativepath>"..\main\org\jboss\ejb\plugins\jrmp\server\CVS\Root"</relativepath>
-<editor open="0">
-<selection start="0" end="0">
-</selection>
-<window x="0" y="0" width="0" height="0">
-</window>
-</editor>
-<scmstatus id="0">
-<userstring>""</userstring>
-<userinteger>"0"</userinteger>
-</scmstatus>
-</file>
-</virtualfolder>
 <file>
 <dirty>"1"</dirty>
 <relativepath>"..\main\org\jboss\ejb\plugins\jrmp\server\JRMPContainerInvoker.java"</relativepath>
-<editor open="0">
+<editor open="1">
 <selection start="0" end="0">
 </selection>
 <window x="0" y="0" width="0" height="0">
@@ -5131,104 +4335,14 @@
 <virtualfolder>
 <name>"jrmp12"</name>
 <virtualfolder>
-<name>"CVS"</name>
-<file>
-<dirty>"0"</dirty>
-<relativepath>"..\main\org\jboss\ejb\plugins\jrmp12\CVS\Entries"</relativepath>
-<editor open="0">
-<selection start="0" end="0">
-</selection>
-<window x="0" y="0" width="0" height="0">
-</window>
-</editor>
-<scmstatus id="0">
-<userstring>""</userstring>
-<userinteger>"0"</userinteger>
-</scmstatus>
-</file>
-<file>
-<dirty>"0"</dirty>
-<relativepath>"..\main\org\jboss\ejb\plugins\jrmp12\CVS\Repository"</relativepath>
-<editor open="0">
-<selection start="0" end="0">
-</selection>
-<window x="0" y="0" width="0" height="0">
-</window>
-</editor>
-<scmstatus id="0">
-<userstring>""</userstring>
-<userinteger>"0"</userinteger>
-</scmstatus>
-</file>
-<file>
-<dirty>"0"</dirty>
-<relativepath>"..\main\org\jboss\ejb\plugins\jrmp12\CVS\Root"</relativepath>
-<editor open="0">
-<selection start="0" end="0">
-</selection>
-<window x="0" y="0" width="0" height="0">
-</window>
-</editor>
-<scmstatus id="0">
-<userstring>""</userstring>
-<userinteger>"0"</userinteger>
-</scmstatus>
-</file>
-</virtualfolder>
-<virtualfolder>
 <name>"interfaces"</name>
-<virtualfolder>
-<name>"CVS"</name>
-<file>
-<dirty>"0"</dirty>
-<relativepath>"..\main\org\jboss\ejb\plugins\jrmp12\interfaces\CVS\Entries"</relativepath>
-<editor open="0">
-<selection start="0" end="0">
-</selection>
-<window x="0" y="0" width="0" height="0">
-</window>
-</editor>
-<scmstatus id="0">
-<userstring>""</userstring>
-<userinteger>"0"</userinteger>
-</scmstatus>
-</file>
-<file>
-<dirty>"0"</dirty>
-<relativepath>"..\main\org\jboss\ejb\plugins\jrmp12\interfaces\CVS\Repository"</relativepath>
-<editor open="0">
-<selection start="0" end="0">
-</selection>
-<window x="0" y="0" width="0" height="0">
-</window>
-</editor>
-<scmstatus id="0">
-<userstring>""</userstring>
-<userinteger>"0"</userinteger>
-</scmstatus>
-</file>
-<file>
-<dirty>"0"</dirty>
-<relativepath>"..\main\org\jboss\ejb\plugins\jrmp12\interfaces\CVS\Root"</relativepath>
-<editor open="0">
-<selection start="0" end="0">
-</selection>
-<window x="0" y="0" width="0" height="0">
-</window>
-</editor>
-<scmstatus id="0">
-<userstring>""</userstring>
-<userinteger>"0"</userinteger>
-</scmstatus>
-</file>
-</virtualfolder>
 <file>
 <dirty>"1"</dirty>
 <relativepath>"..\main\org\jboss\ejb\plugins\jrmp12\interfaces\EntityProxy.java"</relativepath>
 <editor open="0">
 <selection start="0" end="0">
 </selection>
-<window x="0" y="0" width="0" height="0">
+<window x="110743028" y="110743028" width="0" height="0">
 </window>
 </editor>
 <scmstatus id="0">
@@ -5242,21 +4356,7 @@
 <editor open="0">
 <selection start="0" end="0">
 </selection>
-<window x="0" y="0" width="0" height="0">
-</window>
-</editor>
-<scmstatus id="0">
-<userstring>""</userstring>
-<userinteger>"0"</userinteger>
-</scmstatus>
-</file>
-<file>
-<dirty>"0"</dirty>
-<relativepath>"..\main\org\jboss\ejb\plugins\jrmp12\interfaces\interfaces.dfPackage"</relativepath>
-<editor open="0">
-<selection start="0" end="0">
-</selection>
-<window x="0" y="0" width="0" height="0">
+<window x="103101184" y="0" width="0" height="0">
 </window>
 </editor>
 <scmstatus id="0">
@@ -5270,7 +4370,7 @@
 <editor open="0">
 <selection start="0" end="0">
 </selection>
-<window x="0" y="0" width="0" height="0">
+<window x="123610124" y="110743028" width="0" height="0">
 </window>
 </editor>
 <scmstatus id="0">
@@ -5293,88 +4393,15 @@
 </scmstatus>
 </file>
 </virtualfolder>
-<file>
-<dirty>"0"</dirty>
-<relativepath>"..\main\org\jboss\ejb\plugins\jrmp12\jrmp.dfPackage"</relativepath>
-<editor open="0">
-<selection start="0" end="0">
-</selection>
-<window x="0" y="0" width="0" height="0">
-</window>
-</editor>
-<scmstatus id="0">
-<userstring>""</userstring>
-<userinteger>"0"</userinteger>
-</scmstatus>
-</file>
 <virtualfolder>
 <name>"server"</name>
-<virtualfolder>
-<name>"CVS"</name>
-<file>
-<dirty>"0"</dirty>
-<relativepath>"..\main\org\jboss\ejb\plugins\jrmp12\server\CVS\Entries"</relativepath>
-<editor open="0">
-<selection start="0" end="0">
-</selection>
-<window x="102746540" y="102746540" width="0" height="0">
-</window>
-</editor>
-<scmstatus id="0">
-<userstring>""</userstring>
-<userinteger>"0"</userinteger>
-</scmstatus>
-</file>
-<file>
-<dirty>"0"</dirty>
-<relativepath>"..\main\org\jboss\ejb\plugins\jrmp12\server\CVS\Repository"</relativepath>
-<editor open="0">
-<selection start="0" end="0">
-</selection>
-<window x="102746540" y="102746540" width="0" height="0">
-</window>
-</editor>
-<scmstatus id="0">
-<userstring>""</userstring>
-<userinteger>"0"</userinteger>
-</scmstatus>
-</file>
-<file>
-<dirty>"0"</dirty>
-<relativepath>"..\main\org\jboss\ejb\plugins\jrmp12\server\CVS\Root"</relativepath>
-<editor open="0">
-<selection start="0" end="0">
-</selection>
-<window x="102746540" y="102746540" width="0" height="0">
-</window>
-</editor>
-<scmstatus id="0">
-<userstring>""</userstring>
-<userinteger>"0"</userinteger>
-</scmstatus>
-</file>
-</virtualfolder>
 <file>
 <dirty>"1"</dirty>
 <relativepath>"..\main\org\jboss\ejb\plugins\jrmp12\server\JRMPContainerInvoker.java"</relativepath>
-<editor open="0">
+<editor open="1">
 <selection start="0" end="0">
 </selection>
-<window x="0" y="0" width="0" height="0">
-</window>
-</editor>
-<scmstatus id="0">
-<userstring>""</userstring>
-<userinteger>"0"</userinteger>
-</scmstatus>
-</file>
-<file>
-<dirty>"0"</dirty>
-<relativepath>"..\main\org\jboss\ejb\plugins\jrmp12\server\server.dfPackage"</relativepath>
-<editor open="0">
-<selection start="0" end="0">
-</selection>
-<window x="109952880" y="0" width="0" height="0">
+<window x="110509840" y="110509696" width="0" height="0">
 </window>
 </editor>
 <scmstatus id="0">
@@ -5387,104 +4414,14 @@
 <virtualfolder>
 <name>"jrmp13"</name>
 <virtualfolder>
-<name>"CVS"</name>
-<file>
-<dirty>"0"</dirty>
-<relativepath>"..\main\org\jboss\ejb\plugins\jrmp13\CVS\Entries"</relativepath>
-<editor open="0">
-<selection start="0" end="0">
-</selection>
-<window x="0" y="0" width="0" height="0">
-</window>
-</editor>
-<scmstatus id="0">
-<userstring>""</userstring>
-<userinteger>"0"</userinteger>
-</scmstatus>
-</file>
-<file>
-<dirty>"0"</dirty>
-<relativepath>"..\main\org\jboss\ejb\plugins\jrmp13\CVS\Repository"</relativepath>
-<editor open="0">
-<selection start="0" end="0">
-</selection>
-<window x="0" y="0" width="0" height="0">
-</window>
-</editor>
-<scmstatus id="0">
-<userstring>""</userstring>
-<userinteger>"0"</userinteger>
-</scmstatus>
-</file>
-<file>
-<dirty>"0"</dirty>
-<relativepath>"..\main\org\jboss\ejb\plugins\jrmp13\CVS\Root"</relativepath>
-<editor open="0">
-<selection start="0" end="0">
-</selection>
-<window x="0" y="0" width="0" height="0">
-</window>
-</editor>
-<scmstatus id="0">
-<userstring>""</userstring>
-<userinteger>"0"</userinteger>
-</scmstatus>
-</file>
-</virtualfolder>
-<virtualfolder>
 <name>"interfaces"</name>
-<virtualfolder>
-<name>"CVS"</name>
-<file>
-<dirty>"0"</dirty>
-<relativepath>"..\main\org\jboss\ejb\plugins\jrmp13\interfaces\CVS\Entries"</relativepath>
-<editor open="0">
-<selection start="0" end="0">
-</selection>
-<window x="0" y="0" width="0" height="0">
-</window>
-</editor>
-<scmstatus id="0">
-<userstring>""</userstring>
-<userinteger>"0"</userinteger>
-</scmstatus>
-</file>
-<file>
-<dirty>"0"</dirty>
-<relativepath>"..\main\org\jboss\ejb\plugins\jrmp13\interfaces\CVS\Repository"</relativepath>
-<editor open="0">
-<selection start="0" end="0">
-</selection>
-<window x="0" y="0" width="0" height="0">
-</window>
-</editor>
-<scmstatus id="0">
-<userstring>""</userstring>
-<userinteger>"0"</userinteger>
-</scmstatus>
-</file>
-<file>
-<dirty>"0"</dirty>
-<relativepath>"..\main\org\jboss\ejb\plugins\jrmp13\interfaces\CVS\Root"</relativepath>
-<editor open="0">
-<selection start="0" end="0">
-</selection>
-<window x="0" y="0" width="0" height="0">
-</window>
-</editor>
-<scmstatus id="0">
-<userstring>""</userstring>
-<userinteger>"0"</userinteger>
-</scmstatus>
-</file>
-</virtualfolder>
 <file>
 <dirty>"1"</dirty>
 <relativepath>"..\main\org\jboss\ejb\plugins\jrmp13\interfaces\EntityProxy.java"</relativepath>
-<editor open="0">
+<editor open="1">
 <selection start="0" end="0">
 </selection>
-<window x="0" y="0" width="0" height="0">
+<window x="1816403032" y="1816403032" width="0" height="0">
 </window>
 </editor>
 <scmstatus id="0">
@@ -5498,7 +4435,7 @@
 <editor open="0">
 <selection start="0" end="0">
 </selection>
-<window x="0" y="0" width="0" height="0">
+<window x="103079064" y="0" width="0" height="0">
 </window>
 </editor>
 <scmstatus id="0">
@@ -5537,58 +4474,13 @@
 </virtualfolder>
 <virtualfolder>
 <name>"server"</name>
-<virtualfolder>
-<name>"CVS"</name>
-<file>
-<dirty>"0"</dirty>
-<relativepath>"..\main\org\jboss\ejb\plugins\jrmp13\server\CVS\Entries"</relativepath>
-<editor open="0">
-<selection start="0" end="0">
-</selection>
-<window x="0" y="0" width="0" height="0">
-</window>
-</editor>
-<scmstatus id="0">
-<userstring>""</userstring>
-<userinteger>"0"</userinteger>
-</scmstatus>
-</file>
-<file>
-<dirty>"0"</dirty>
-<relativepath>"..\main\org\jboss\ejb\plugins\jrmp13\server\CVS\Repository"</relativepath>
-<editor open="0">
-<selection start="0" end="0">
-</selection>
-<window x="0" y="0" width="0" height="0">
-</window>
-</editor>
-<scmstatus id="0">
-<userstring>""</userstring>
-<userinteger>"0"</userinteger>
-</scmstatus>
-</file>
-<file>
-<dirty>"0"</dirty>
-<relativepath>"..\main\org\jboss\ejb\plugins\jrmp13\server\CVS\Root"</relativepath>
-<editor open="0">
-<selection start="0" end="0">
-</selection>
-<window x="0" y="0" width="0" height="0">
-</window>
-</editor>
-<scmstatus id="0">
-<userstring>""</userstring>
-<userinteger>"0"</userinteger>
-</scmstatus>
-</file>
-</virtualfolder>
 <file>
 <dirty>"1"</dirty>
 <relativepath>"..\main\org\jboss\ejb\plugins\jrmp13\server\JRMPContainerInvoker.java"</relativepath>
-<editor open="0">
+<editor open="1">
 <selection start="0" end="0">
 </selection>
-<window x="2053729641" y="221981029" width="0" height="0">
+<window x="0" y="108171344" width="0" height="0">
 </window>
 </editor>
 <scmstatus id="0">
@@ -5628,6 +4520,20 @@
 </file>
 <file>
 <dirty>"1"</dirty>
+<relativepath>"..\main\org\jboss\ejb\plugins\MetricsInterceptor.java"</relativepath>
+<editor open="0">
+<selection start="0" end="0">
+</selection>
+<window x="29027352" y="110910744" width="0" height="0">
+</window>
+</editor>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"1"</dirty>
 <relativepath>"..\main\org\jboss\ejb\plugins\NoPassivationCachePolicy.java"</relativepath>
 <editor open="0">
 <selection start="0" end="0">
@@ -5646,7 +4552,7 @@
 <editor open="0">
 <selection start="0" end="0">
 </selection>
-<window x="111356752" y="111278976" width="0" height="0">
+<window x="109863192" y="0" width="0" height="0">
 </window>
 </editor>
 <scmstatus id="0">
@@ -5660,7 +4566,7 @@
 <editor open="0">
 <selection start="0" end="0">
 </selection>
-<window x="1816403032" y="1816403032" width="0" height="0">
+<window x="0" y="0" width="0" height="0">
 </window>
 </editor>
 <scmstatus id="0">
@@ -5688,7 +4594,21 @@
 <editor open="0">
 <selection start="0" end="0">
 </selection>
-<window x="0" y="0" width="0" height="0">
+<window x="110038080" y="0" width="0" height="0">
+</window>
+</editor>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"1"</dirty>
+<relativepath>"..\main\org\jboss\ejb\plugins\StatefulSessionBeanField.java"</relativepath>
+<editor open="0">
+<selection start="0" end="0">
+</selection>
+<window x="0" y="108179052" width="0" height="0">
 </window>
 </editor>
 <scmstatus id="0">
@@ -5716,7 +4636,7 @@
 <editor open="0">
 <selection start="0" end="0">
 </selection>
-<window x="111301416" y="111300856" width="0" height="0">
+<window x="109961640" y="109961720" width="0" height="0">
 </window>
 </editor>
 <scmstatus id="0">
@@ -5744,7 +4664,7 @@
 <editor open="0">
 <selection start="0" end="0">
 </selection>
-<window x="0" y="0" width="0" height="0">
+<window x="109850640" y="0" width="0" height="0">
 </window>
 </editor>
 <scmstatus id="0">
@@ -5758,7 +4678,7 @@
 <editor open="0">
 <selection start="0" end="0">
 </selection>
-<window x="0" y="0" width="0" height="0">
+<window x="109850560" y="0" width="0" height="0">
 </window>
 </editor>
 <scmstatus id="0">
@@ -5772,7 +4692,7 @@
 <editor open="0">
 <selection start="0" end="0">
 </selection>
-<window x="111258752" y="111267088" width="0" height="0">
+<window x="0" y="0" width="0" height="0">
 </window>
 </editor>
 <scmstatus id="0">
@@ -5783,7 +4703,7 @@
 <file>
 <dirty>"1"</dirty>
 <relativepath>"..\main\org\jboss\ejb\plugins\TxInterceptorBMT.java"</relativepath>
-<editor open="0">
+<editor open="1">
 <selection start="0" end="0">
 </selection>
 <window x="0" y="0" width="0" height="0">
@@ -5797,7 +4717,7 @@
 <file>
 <dirty>"1"</dirty>
 <relativepath>"..\main\org\jboss\ejb\plugins\TxInterceptorCMT.java"</relativepath>
-<editor open="0">
+<editor open="1">
 <selection start="0" end="0">
 </selection>
 <window x="0" y="0" width="0" height="0">
@@ -5829,7 +4749,7 @@
 <editor open="0">
 <selection start="0" end="0">
 </selection>
-<window x="111563824" y="111563904" width="0" height="0">
+<window x="0" y="0" width="0" height="0">
 </window>
 </editor>
 <scmstatus id="0">
@@ -5843,7 +4763,7 @@
 <editor open="0">
 <selection start="0" end="0">
 </selection>
-<window x="1816403032" y="1816403032" width="0" height="0">
+<window x="0" y="0" width="0" height="0">
 </window>
 </editor>
 <scmstatus id="0">
@@ -5857,7 +4777,7 @@
 <editor open="0">
 <selection start="0" end="0">
 </selection>
-<window x="111570312" y="111569832" width="0" height="0">
+<window x="0" y="0" width="0" height="0">
 </window>
 </editor>
 <scmstatus id="0">
@@ -5888,22 +4808,6 @@
 <editor open="0">
 <selection start="0" end="0">
 </selection>
-<window x="1816403032" y="1816403032" width="0" height="0">
-</window>
-</editor>
-<scmstatus id="0">
-<userstring>""</userstring>
-<userinteger>"0"</userinteger>
-</scmstatus>
-</file>
-<virtualfolder>
-<name>"CVS"</name>
-<file>
-<dirty>"0"</dirty>
-<relativepath>"..\main\org\jboss\jdbc\CVS\Entries"</relativepath>
-<editor open="0">
-<selection start="0" end="0">
-</selection>
 <window x="0" y="0" width="0" height="0">
 </window>
 </editor>
@@ -5912,39 +4816,10 @@
 <userinteger>"0"</userinteger>
 </scmstatus>
 </file>
-<file>
-<dirty>"0"</dirty>
-<relativepath>"..\main\org\jboss\jdbc\CVS\Repository"</relativepath>
-<editor open="0">
-<selection start="0" end="0">
-</selection>
-<window x="0" y="0" width="0" height="0">
-</window>
-</editor>
-<scmstatus id="0">
-<userstring>""</userstring>
-<userinteger>"0"</userinteger>
-</scmstatus>
-</file>
-<file>
-<dirty>"0"</dirty>
-<relativepath>"..\main\org\jboss\jdbc\CVS\Root"</relativepath>
-<editor open="0">
-<selection start="0" end="0">
-</selection>
-<window x="0" y="0" width="0" height="0">
-</window>
-</editor>
-<scmstatus id="0">
-<userstring>""</userstring>
-<userinteger>"0"</userinteger>
-</scmstatus>
-</file>
-</virtualfolder>
 <file>
 <dirty>"1"</dirty>
 <relativepath>"..\main\org\jboss\jdbc\HypersonicDatabase.java"</relativepath>
-<editor open="0">
+<editor open="1">
 <selection start="0" end="0">
 </selection>
 <window x="0" y="0" width="0" height="0">
@@ -5958,7 +4833,7 @@
 <file>
 <dirty>"1"</dirty>
 <relativepath>"..\main\org\jboss\jdbc\HypersonicDatabaseMBean.java"</relativepath>
-<editor open="0">
+<editor open="1">
 <selection start="0" end="0">
 </selection>
 <window x="0" y="0" width="0" height="0">
@@ -5975,7 +4850,7 @@
 <editor open="0">
 <selection start="0" end="0">
 </selection>
-<window x="1816403032" y="1816403032" width="0" height="0">
+<window x="0" y="0" width="0" height="0">
 </window>
 </editor>
 <scmstatus id="0">
@@ -5989,7 +4864,7 @@
 <editor open="0">
 <selection start="0" end="0">
 </selection>
-<window x="0" y="0" width="0" height="0">
+<window x="103121416" y="103120536" width="0" height="0">
 </window>
 </editor>
 <scmstatus id="0">
@@ -6000,10 +4875,10 @@
 <file>
 <dirty>"1"</dirty>
 <relativepath>"..\main\org\jboss\jdbc\JDBCDataSourceLoader.java"</relativepath>
-<editor open="0">
+<editor open="1">
 <selection start="0" end="0">
 </selection>
-<window x="0" y="0" width="0" height="0">
+<window x="757935405" y="757935405" width="0" height="0">
 </window>
 </editor>
 <scmstatus id="0">
@@ -6017,7 +4892,7 @@
 <editor open="0">
 <selection start="0" end="0">
 </selection>
-<window x="0" y="0" width="0" height="0">
+<window x="0" y="1816403032" width="0" height="0">
 </window>
 </editor>
 <scmstatus id="0">
@@ -6028,7 +4903,7 @@
 <file>
 <dirty>"1"</dirty>
 <relativepath>"..\main\org\jboss\jdbc\JdbcProvider.java"</relativepath>
-<editor open="0">
+<editor open="1">
 <selection start="0" end="0">
 </selection>
 <window x="0" y="0" width="0" height="0">
@@ -6042,7 +4917,7 @@
 <file>
 <dirty>"1"</dirty>
 <relativepath>"..\main\org\jboss\jdbc\JdbcProviderMBean.java"</relativepath>
-<editor open="0">
+<editor open="1">
 <selection start="0" end="0">
 </selection>
 <window x="0" y="0" width="0" height="0">
@@ -6056,13 +4931,13 @@
 <file>
 <dirty>"1"</dirty>
 <relativepath>"..\main\org\jboss\jdbc\XADataSourceLoader.java"</relativepath>
-<editor open="0">
+<editor open="1">
 <selection start="0" end="0">
 </selection>
-<window x="757935405" y="757935405" width="0" height="0">
+<window x="0" y="0" width="0" height="0">
 </window>
 </editor>
-<scmstatus id="0">
+<scmstatus id="2">
 <userstring>""</userstring>
 <userinteger>"0"</userinteger>
 </scmstatus>
@@ -6070,10 +4945,10 @@
 <file>
 <dirty>"1"</dirty>
 <relativepath>"..\main\org\jboss\jdbc\XADataSourceLoaderMBean.java"</relativepath>
-<editor open="0">
+<editor open="1">
 <selection start="0" end="0">
 </selection>
-<window x="0" y="0" width="0" height="0">
+<window x="1816403032" y="1816403032" width="0" height="0">
 </window>
 </editor>
 <scmstatus id="0">
@@ -6089,10 +4964,10 @@
 <file>
 <dirty>"1"</dirty>
 <relativepath>"..\main\org\jboss\jmx\client\ConnectorFactoryImpl.java"</relativepath>
-<editor open="0">
+<editor open="1">
 <selection start="0" end="0">
 </selection>
-<window x="0" y="0" width="0" height="0">
+<window x="1816403032" y="1816403032" width="0" height="0">
 </window>
 </editor>
 <scmstatus id="0">
@@ -6103,10 +4978,10 @@
 <file>
 <dirty>"1"</dirty>
 <relativepath>"..\main\org\jboss\jmx\client\ConnectorFactoryService.java"</relativepath>
-<editor open="0">
+<editor open="1">
 <selection start="0" end="0">
 </selection>
-<window x="1816403032" y="1816403032" width="0" height="0">
+<window x="0" y="0" width="0" height="0">
 </window>
 </editor>
 <scmstatus id="0">
@@ -6120,7 +4995,7 @@
 <editor open="0">
 <selection start="0" end="0">
 </selection>
-<window x="110701712" y="0" width="0" height="0">
+<window x="0" y="0" width="0" height="0">
 </window>
 </editor>
 <scmstatus id="0">
@@ -6128,55 +5003,10 @@
 <userinteger>"0"</userinteger>
 </scmstatus>
 </file>
-<virtualfolder>
-<name>"CVS"</name>
-<file>
-<dirty>"0"</dirty>
-<relativepath>"..\main\org\jboss\jmx\client\CVS\Entries"</relativepath>
-<editor open="0">
-<selection start="0" end="0">
-</selection>
-<window x="1816403032" y="1816403032" width="0" height="0">
-</window>
-</editor>
-<scmstatus id="0">
-<userstring>""</userstring>
-<userinteger>"0"</userinteger>
-</scmstatus>
-</file>
-<file>
-<dirty>"0"</dirty>
-<relativepath>"..\main\org\jboss\jmx\client\CVS\Repository"</relativepath>
-<editor open="0">
-<selection start="0" end="0">
-</selection>
-<window x="1816403032" y="1816403032" width="0" height="0">
-</window>
-</editor>
-<scmstatus id="0">
-<userstring>""</userstring>
-<userinteger>"0"</userinteger>
-</scmstatus>
-</file>
-<file>
-<dirty>"0"</dirty>
-<relativepath>"..\main\org\jboss\jmx\client\CVS\Root"</relativepath>
-<editor open="0">
-<selection start="0" end="0">
-</selection>
-<window x="1816403032" y="1816403032" width="0" height="0">
-</window>
-</editor>
-<scmstatus id="0">
-<userstring>""</userstring>
-<userinteger>"0"</userinteger>
-</scmstatus>
-</file>
-</virtualfolder>
 <file>
 <dirty>"1"</dirty>
 <relativepath>"..\main\org\jboss\jmx\client\Deployer.java"</relativepath>
-<editor open="0">
+<editor open="1">
 <selection start="0" end="0">
 </selection>
 <window x="0" y="0" width="0" height="0">
@@ -6190,7 +5020,7 @@
 <file>
 <dirty>"1"</dirty>
 <relativepath>"..\main\org\jboss\jmx\client\RMIClientConnectorImpl.java"</relativepath>
-<editor open="0">
+<editor open="1">
 <selection start="0" end="0">
 </selection>
 <window x="0" y="0" width="0" height="0">
@@ -6204,10 +5034,10 @@
 <file>
 <dirty>"1"</dirty>
 <relativepath>"..\main\org\jboss\jmx\client\RMIClientConnectorImplMBean.java"</relativepath>
-<editor open="0">
+<editor open="1">
 <selection start="0" end="0">
 </selection>
-<window x="110917856" y="0" width="0" height="0">
+<window x="0" y="0" width="0" height="0">
 </window>
 </editor>
 <scmstatus id="0">
@@ -6218,51 +5048,6 @@
 <file>
 <dirty>"1"</dirty>
 <relativepath>"..\main\org\jboss\jmx\client\Stop.java"</relativepath>
-<editor open="0">
-<selection start="0" end="0">
-</selection>
-<window x="110738880" y="102831528" width="0" height="0">
-</window>
-</editor>
-<scmstatus id="0">
-<userstring>""</userstring>
-<userinteger>"0"</userinteger>
-</scmstatus>
-</file>
-</virtualfolder>
-<virtualfolder>
-<name>"CVS"</name>
-<file>
-<dirty>"0"</dirty>
-<relativepath>"..\main\org\jboss\jmx\CVS\Entries"</relativepath>
-<editor open="0">
-<selection start="0" end="0">
-</selection>
-<window x="0" y="0" width="0" height="0">
-</window>
-</editor>
-<scmstatus id="0">
-<userstring>""</userstring>
-<userinteger>"0"</userinteger>
-</scmstatus>
-</file>
-<file>
-<dirty>"0"</dirty>
-<relativepath>"..\main\org\jboss\jmx\CVS\Repository"</relativepath>
-<editor open="0">
-<selection start="0" end="0">
-</selection>
-<window x="0" y="0" width="0" height="0">
-</window>
-</editor>
-<scmstatus id="0">
-<userstring>""</userstring>
-<userinteger>"0"</userinteger>
-</scmstatus>
-</file>
-<file>
-<dirty>"0"</dirty>
-<relativepath>"..\main\org\jboss\jmx\CVS\Root"</relativepath>
 <editor open="0">
 <selection start="0" end="0">
 </selection>
@@ -6277,55 +5062,10 @@
 </virtualfolder>
 <virtualfolder>
 <name>"interfaces"</name>
-<virtualfolder>
-<name>"CVS"</name>
-<file>
-<dirty>"0"</dirty>
-<relativepath>"..\main\org\jboss\jmx\interfaces\CVS\Entries"</relativepath>
-<editor open="0">
-<selection start="0" end="0">
-</selection>
-<window x="102882728" y="102882888" width="0" height="0">
-</window>
-</editor>
-<scmstatus id="0">
-<userstring>""</userstring>
-<userinteger>"0"</userinteger>
-</scmstatus>
-</file>
-<file>
-<dirty>"0"</dirty>
-<relativepath>"..\main\org\jboss\jmx\interfaces\CVS\Repository"</relativepath>
-<editor open="0">
-<selection start="0" end="0">
-</selection>
-<window x="102882248" y="102882968" width="0" height="0">
-</window>
-</editor>
-<scmstatus id="0">
-<userstring>""</userstring>
-<userinteger>"0"</userinteger>
-</scmstatus>
-</file>
-<file>
-<dirty>"0"</dirty>
-<relativepath>"..\main\org\jboss\jmx\interfaces\CVS\Root"</relativepath>
-<editor open="0">
-<selection start="0" end="0">
-</selection>
-<window x="1816403032" y="1816403032" width="0" height="0">
-</window>
-</editor>
-<scmstatus id="0">
-<userstring>""</userstring>
-<userinteger>"0"</userinteger>
-</scmstatus>
-</file>
-</virtualfolder>
 <file>
 <dirty>"1"</dirty>
 <relativepath>"..\main\org\jboss\jmx\interfaces\JMXAdaptor.java"</relativepath>
-<editor open="0">
+<editor open="1">
 <selection start="0" end="0">
 </selection>
 <window x="0" y="0" width="0" height="0">
@@ -6339,10 +5079,10 @@
 <file>
 <dirty>"1"</dirty>
 <relativepath>"..\main\org\jboss\jmx\interfaces\JMXConnector.java"</relativepath>
-<editor open="0">
+<editor open="1">
 <selection start="0" end="0">
 </selection>
-<window x="0" y="0" width="0" height="0">
+<window x="102962088" y="102962248" width="0" height="0">
 </window>
 </editor>
 <scmstatus id="0">
@@ -6353,7 +5093,7 @@
 <file>
 <dirty>"1"</dirty>
 <relativepath>"..\main\org\jboss\jmx\interfaces\JMXConnectorMBean.java"</relativepath>
-<editor open="0">
+<editor open="1">
 <selection start="0" end="0">
 </selection>
 <window x="0" y="0" width="0" height="0">
@@ -6367,10 +5107,10 @@
 <file>
 <dirty>"1"</dirty>
 <relativepath>"..\main\org\jboss\jmx\interfaces\RMIConnector.java"</relativepath>
-<editor open="0">
+<editor open="1">
 <selection start="0" end="0">
 </selection>
-<window x="0" y="0" width="0" height="0">
+<window x="102896280" y="0" width="0" height="0">
 </window>
 </editor>
 <scmstatus id="0">
@@ -6384,7 +5124,7 @@
 <editor open="0">
 <selection start="0" end="0">
 </selection>
-<window x="102863064" y="102863224" width="0" height="0">
+<window x="102896360" y="102911528" width="0" height="0">
 </window>
 </editor>
 <scmstatus id="0">
@@ -6395,58 +5135,13 @@
 </virtualfolder>
 <virtualfolder>
 <name>"server"</name>
-<virtualfolder>
-<name>"CVS"</name>
-<file>
-<dirty>"0"</dirty>
-<relativepath>"..\main\org\jboss\jmx\server\CVS\Entries"</relativepath>
-<editor open="0">
-<selection start="0" end="0">
-</selection>
-<window x="102884648" y="1816403032" width="0" height="0">
-</window>
-</editor>
-<scmstatus id="0">
-<userstring>""</userstring>
-<userinteger>"0"</userinteger>
-</scmstatus>
-</file>
-<file>
-<dirty>"0"</dirty>
-<relativepath>"..\main\org\jboss\jmx\server\CVS\Repository"</relativepath>
-<editor open="0">
-<selection start="0" end="0">
-</selection>
-<window x="1816403032" y="1816403032" width="0" height="0">
-</window>
-</editor>
-<scmstatus id="0">
-<userstring>""</userstring>
-<userinteger>"0"</userinteger>
-</scmstatus>
-</file>
-<file>
-<dirty>"0"</dirty>
-<relativepath>"..\main\org\jboss\jmx\server\CVS\Root"</relativepath>
-<editor open="0">
-<selection start="0" end="0">
-</selection>
-<window x="1816403032" y="1816403032" width="0" height="0">
-</window>
-</editor>
-<scmstatus id="0">
-<userstring>""</userstring>
-<userinteger>"0"</userinteger>
-</scmstatus>
-</file>
-</virtualfolder>
 <file>
 <dirty>"1"</dirty>
 <relativepath>"..\main\org\jboss\jmx\server\JMXAdaptorImpl.java"</relativepath>
-<editor open="0">
+<editor open="1">
 <selection start="0" end="0">
 </selection>
-<window x="1816403032" y="1816403032" width="0" height="0">
+<window x="0" y="0" width="0" height="0">
 </window>
 </editor>
 <scmstatus id="0">
@@ -6457,10 +5152,10 @@
 <file>
 <dirty>"1"</dirty>
 <relativepath>"..\main\org\jboss\jmx\server\JMXAdaptorService.java"</relativepath>
-<editor open="0">
+<editor open="1">
 <selection start="0" end="0">
 </selection>
-<window x="1816403032" y="1816403032" width="0" height="0">
+<window x="0" y="0" width="0" height="0">
 </window>
 </editor>
 <scmstatus id="0">
@@ -6471,10 +5166,10 @@
 <file>
 <dirty>"1"</dirty>
 <relativepath>"..\main\org\jboss\jmx\server\JMXAdaptorServiceMBean.java"</relativepath>
-<editor open="0">
+<editor open="1">
 <selection start="0" end="0">
 </selection>
-<window x="102891224" y="0" width="0" height="0">
+<window x="1816403032" y="1816403032" width="0" height="0">
 </window>
 </editor>
 <scmstatus id="0">
@@ -6488,7 +5183,7 @@
 <editor open="0">
 <selection start="0" end="0">
 </selection>
-<window x="757935405" y="757935405" width="0" height="0">
+<window x="1816403032" y="1816403032" width="0" height="0">
 </window>
 </editor>
 <scmstatus id="0">
@@ -6499,10 +5194,10 @@
 <file>
 <dirty>"1"</dirty>
 <relativepath>"..\main\org\jboss\jmx\server\RMIConnectorImpl.java"</relativepath>
-<editor open="0">
+<editor open="1">
 <selection start="0" end="0">
 </selection>
-<window x="102878712" y="102879272" width="0" height="0">
+<window x="0" y="0" width="0" height="0">
 </window>
 </editor>
 <scmstatus id="0">
@@ -6513,10 +5208,10 @@
 <file>
 <dirty>"1"</dirty>
 <relativepath>"..\main\org\jboss\jmx\server\RMIConnectorService.java"</relativepath>
-<editor open="0">
+<editor open="1">
 <selection start="0" end="0">
 </selection>
-<window x="0" y="0" width="0" height="0">
+<window x="102858168" y="0" width="0" height="0">
 </window>
 </editor>
 <scmstatus id="0">
@@ -6530,7 +5225,7 @@
 <editor open="0">
 <selection start="0" end="0">
 </selection>
-<window x="1816403032" y="1816403032" width="0" height="0">
+<window x="102841480" y="102841560" width="0" height="0">
 </window>
 </editor>
 <scmstatus id="0">
@@ -6545,7 +5240,7 @@
 <file>
 <dirty>"1"</dirty>
 <relativepath>"..\main\org\jboss\logging\ConsoleLogging.java"</relativepath>
-<editor open="0">
+<editor open="1">
 <selection start="0" end="0">
 </selection>
 <window x="1816403032" y="1816403032" width="0" height="0">
@@ -6559,7 +5254,7 @@
 <file>
 <dirty>"1"</dirty>
 <relativepath>"..\main\org\jboss\logging\ConsoleLoggingMBean.java"</relativepath>
-<editor open="0">
+<editor open="1">
 <selection start="0" end="0">
 </selection>
 <window x="0" y="0" width="0" height="0">
@@ -6570,58 +5265,13 @@
 <userinteger>"0"</userinteger>
 </scmstatus>
 </file>
-<virtualfolder>
-<name>"CVS"</name>
-<file>
-<dirty>"0"</dirty>
-<relativepath>"..\main\org\jboss\logging\CVS\Entries"</relativepath>
-<editor open="0">
-<selection start="0" end="0">
-</selection>
-<window x="1768693862" y="1936614755" width="0" height="0">
-</window>
-</editor>
-<scmstatus id="0">
-<userstring>""</userstring>
-<userinteger>"0"</userinteger>
-</scmstatus>
-</file>
-<file>
-<dirty>"0"</dirty>
-<relativepath>"..\main\org\jboss\logging\CVS\Repository"</relativepath>
-<editor open="0">
-<selection start="0" end="0">
-</selection>
-<window x="-702520206" y="1735550306" width="0" height="0">
-</window>
-</editor>
-<scmstatus id="0">
-<userstring>""</userstring>
-<userinteger>"0"</userinteger>
-</scmstatus>
-</file>
-<file>
-<dirty>"0"</dirty>
-<relativepath>"..\main\org\jboss\logging\CVS\Root"</relativepath>
-<editor open="0">
-<selection start="0" end="0">
-</selection>
-<window x="757935405" y="757935405" width="0" height="0">
-</window>
-</editor>
-<scmstatus id="0">
-<userstring>""</userstring>
-<userinteger>"0"</userinteger>
-</scmstatus>
-</file>
-</virtualfolder>
 <file>
 <dirty>"1"</dirty>
 <relativepath>"..\main\org\jboss\logging\FileLogging.java"</relativepath>
-<editor open="0">
+<editor open="1">
 <selection start="0" end="0">
 </selection>
-<window x="1816403032" y="1816403032" width="0" height="0">
+<window x="0" y="0" width="0" height="0">
 </window>
 </editor>
 <scmstatus id="0">
@@ -6632,7 +5282,7 @@
 <file>
 <dirty>"1"</dirty>
 <relativepath>"..\main\org\jboss\logging\FileLoggingMBean.java"</relativepath>
-<editor open="0">
+<editor open="1">
 <selection start="0" end="0">
 </selection>
 <window x="0" y="0" width="0" height="0">
@@ -6646,10 +5296,10 @@
 <file>
 <dirty>"1"</dirty>
 <relativepath>"..\main\org\jboss\logging\Log.java"</relativepath>
-<editor open="0">
+<editor open="1">
 <selection start="0" end="0">
 </selection>
-<window x="1632528239" y="690513261" width="0" height="0">
+<window x="102825992" y="102825912" width="0" height="0">
 </window>
 </editor>
 <scmstatus id="0">
@@ -6660,7 +5310,7 @@
 <file>
 <dirty>"1"</dirty>
 <relativepath>"..\main\org\jboss\logging\Logger.java"</relativepath>
-<editor open="0">
+<editor open="1">
 <selection start="0" end="0">
 </selection>
 <window x="0" y="0" width="0" height="0">
@@ -6674,10 +5324,10 @@
 <file>
 <dirty>"1"</dirty>
 <relativepath>"..\main\org\jboss\logging\LoggerMBean.java"</relativepath>
-<editor open="0">
+<editor open="1">
 <selection start="0" end="0">
 </selection>
-<window x="1816403032" y="1816403032" width="0" height="0">
+<window x="0" y="0" width="0" height="0">
 </window>
 </editor>
 <scmstatus id="0">
@@ -6691,7 +5341,7 @@
 <editor open="0">
 <selection start="0" end="0">
 </selection>
-<window x="102950328" y="102921080" width="0" height="0">
+<window x="0" y="0" width="0" height="0">
 </window>
 </editor>
 <scmstatus id="0">
@@ -6716,7 +5366,7 @@
 <file>
 <dirty>"1"</dirty>
 <relativepath>"..\main\org\jboss\logging\ViewerLogging.java"</relativepath>
-<editor open="0">
+<editor open="1">
 <selection start="0" end="0">
 </selection>
 <window x="1816403032" y="1816403032" width="0" height="0">
@@ -6745,10 +5395,10 @@
 <file>
 <dirty>"1"</dirty>
 <relativepath>"..\main\org\jboss\Main.java"</relativepath>
-<editor open="0">
+<editor open="1">
 <selection start="0" end="0">
 </selection>
-<window x="5105928" y="0" width="0" height="0">
+<window x="110633200" y="110900072" width="0" height="0">
 </window>
 </editor>
 <scmstatus id="0">
@@ -6761,10 +5411,10 @@
 <file>
 <dirty>"1"</dirty>
 <relativepath>"..\main\org\jboss\metadata\ApplicationMetaData.java"</relativepath>
-<editor open="0">
+<editor open="1">
 <selection start="0" end="0">
 </selection>
-<window x="1852795252" y="2097810747" width="0" height="0">
+<window x="0" y="0" width="0" height="0">
 </window>
 </editor>
 <scmstatus id="0">
@@ -6775,7 +5425,7 @@
 <file>
 <dirty>"1"</dirty>
 <relativepath>"..\main\org\jboss\metadata\BeanMetaData.java"</relativepath>
-<editor open="0">
+<editor open="1">
 <selection start="0" end="0">
 </selection>
 <window x="1816403032" y="1816403032" width="0" height="0">
@@ -6789,7 +5439,7 @@
 <file>
 <dirty>"1"</dirty>
 <relativepath>"..\main\org\jboss\metadata\ConfigurationMetaData.java"</relativepath>
-<editor open="0">
+<editor open="1">
 <selection start="0" end="0">
 </selection>
 <window x="0" y="0" width="0" height="0">
@@ -6800,58 +5450,13 @@
 <userinteger>"0"</userinteger>
 </scmstatus>
 </file>
-<virtualfolder>
-<name>"CVS"</name>
-<file>
-<dirty>"0"</dirty>
-<relativepath>"..\main\org\jboss\metadata\CVS\Entries"</relativepath>
-<editor open="0">
-<selection start="0" end="0">
-</selection>
-<window x="1816403032" y="1816403032" width="0" height="0">
-</window>
-</editor>
-<scmstatus id="0">
-<userstring>""</userstring>
-<userinteger>"0"</userinteger>
-</scmstatus>
-</file>
-<file>
-<dirty>"0"</dirty>
-<relativepath>"..\main\org\jboss\metadata\CVS\Repository"</relativepath>
-<editor open="0">
-<selection start="0" end="0">
-</selection>
-<window x="1816403032" y="1816403032" width="0" height="0">
-</window>
-</editor>
-<scmstatus id="0">
-<userstring>""</userstring>
-<userinteger>"0"</userinteger>
-</scmstatus>
-</file>
-<file>
-<dirty>"0"</dirty>
-<relativepath>"..\main\org\jboss\metadata\CVS\Root"</relativepath>
-<editor open="0">
-<selection start="0" end="0">
-</selection>
-<window x="0" y="0" width="0" height="0">
-</window>
-</editor>
-<scmstatus id="0">
-<userstring>""</userstring>
-<userinteger>"0"</userinteger>
-</scmstatus>
-</file>
-</virtualfolder>
 <file>
 <dirty>"1"</dirty>
 <relativepath>"..\main\org\jboss\metadata\EjbRefMetaData.java"</relativepath>
 <editor open="0">
 <selection start="0" end="0">
 </selection>
-<window x="0" y="0" width="0" height="0">
+<window x="110578088" y="110562984" width="0" height="0">
 </window>
 </editor>
 <scmstatus id="0">
@@ -6865,7 +5470,7 @@
 <editor open="0">
 <selection start="0" end="0">
 </selection>
-<window x="0" y="0" width="0" height="0">
+<window x="110522216" y="110522056" width="0" height="0">
 </window>
 </editor>
 <scmstatus id="0">
@@ -6890,7 +5495,7 @@
 <file>
 <dirty>"1"</dirty>
 <relativepath>"..\main\org\jboss\metadata\MetaData.java"</relativepath>
-<editor open="0">
+<editor open="1">
 <selection start="0" end="0">
 </selection>
 <window x="0" y="0" width="0" height="0">
@@ -6904,7 +5509,7 @@
 <file>
 <dirty>"1"</dirty>
 <relativepath>"..\main\org\jboss\metadata\MethodMetaData.java"</relativepath>
-<editor open="0">
+<editor open="1">
 <selection start="0" end="0">
 </selection>
 <window x="0" y="0" width="0" height="0">
@@ -6918,7 +5523,7 @@
 <file>
 <dirty>"1"</dirty>
 <relativepath>"..\main\org\jboss\metadata\ResourceRefMetaData.java"</relativepath>
-<editor open="0">
+<editor open="1">
 <selection start="0" end="0">
 </selection>
 <window x="0" y="0" width="0" height="0">
@@ -6935,7 +5540,7 @@
 <editor open="0">
 <selection start="0" end="0">
 </selection>
-<window x="1816403032" y="1816403032" width="0" height="0">
+<window x="0" y="0" width="0" height="0">
 </window>
 </editor>
 <scmstatus id="0">
@@ -6960,7 +5565,7 @@
 <file>
 <dirty>"1"</dirty>
 <relativepath>"..\main\org\jboss\metadata\XmlFileLoader.java"</relativepath>
-<editor open="0">
+<editor open="1">
 <selection start="0" end="0">
 </selection>
 <window x="0" y="0" width="0" height="0">
@@ -6974,7 +5579,7 @@
 <file>
 <dirty>"1"</dirty>
 <relativepath>"..\main\org\jboss\metadata\XmlLoadable.java"</relativepath>
-<editor open="0">
+<editor open="1">
 <selection start="0" end="0">
 </selection>
 <window x="0" y="0" width="0" height="0">
@@ -6989,97 +5594,7 @@
 <virtualfolder>
 <name>"minerva"</name>
 <virtualfolder>
-<name>"CVS"</name>
-<file>
-<dirty>"0"</dirty>
-<relativepath>"..\main\org\jboss\minerva\CVS\Entries"</relativepath>
-<editor open="0">
-<selection start="0" end="0">
-</selection>
-<window x="0" y="0" width="0" height="0">
-</window>
-</editor>
-<scmstatus id="0">
-<userstring>""</userstring>
-<userinteger>"0"</userinteger>
-</scmstatus>
-</file>
-<file>
-<dirty>"0"</dirty>
-<relativepath>"..\main\org\jboss\minerva\CVS\Repository"</relativepath>
-<editor open="0">
-<selection start="0" end="0">
-</selection>
-<window x="0" y="0" width="0" height="0">
-</window>
-</editor>
-<scmstatus id="0">
-<userstring>""</userstring>
-<userinteger>"0"</userinteger>
-</scmstatus>
-</file>
-<file>
-<dirty>"0"</dirty>
-<relativepath>"..\main\org\jboss\minerva\CVS\Root"</relativepath>
-<editor open="0">
-<selection start="0" end="0">
-</selection>
-<window x="0" y="0" width="0" height="0">
-</window>
-</editor>
-<scmstatus id="0">
-<userstring>""</userstring>
-<userinteger>"0"</userinteger>
-</scmstatus>
-</file>
-</virtualfolder>
-<virtualfolder>
 <name>"datasource"</name>
-<virtualfolder>
-<name>"CVS"</name>
-<file>
-<dirty>"0"</dirty>
-<relativepath>"..\main\org\jboss\minerva\datasource\CVS\Entries"</relativepath>
-<editor open="0">
-<selection start="0" end="0">
-</selection>
-<window x="0" y="0" width="0" height="0">
-</window>
-</editor>
-<scmstatus id="0">
-<userstring>""</userstring>
-<userinteger>"0"</userinteger>
-</scmstatus>
-</file>
-<file>
-<dirty>"0"</dirty>
-<relativepath>"..\main\org\jboss\minerva\datasource\CVS\Repository"</relativepath>
-<editor open="0">
-<selection start="0" end="0">
-</selection>
-<window x="0" y="0" width="0" height="0">
-</window>
-</editor>
-<scmstatus id="0">
-<userstring>""</userstring>
-<userinteger>"0"</userinteger>
-</scmstatus>
-</file>
-<file>
-<dirty>"0"</dirty>
-<relativepath>"..\main\org\jboss\minerva\datasource\CVS\Root"</relativepath>
-<editor open="0">
-<selection start="0" end="0">
-</selection>
-<window x="0" y="0" width="0" height="0">
-</window>
-</editor>
-<scmstatus id="0">
-<userstring>""</userstring>
-<userinteger>"0"</userinteger>
-</scmstatus>
-</file>
-</virtualfolder>
 <file>
 <dirty>"1"</dirty>
 <relativepath>"..\main\org\jboss\minerva\datasource\JDBCPoolDataSource.java"</relativepath>
@@ -7095,23 +5610,9 @@
 </scmstatus>
 </file>
 <file>
-<dirty>"0"</dirty>
-<relativepath>"..\main\org\jboss\minerva\datasource\package.html"</relativepath>
-<editor open="0">
-<selection start="0" end="0">
-</selection>
-<window x="0" y="0" width="0" height="0">
-</window>
-</editor>
-<scmstatus id="0">
-<userstring>""</userstring>
-<userinteger>"0"</userinteger>
-</scmstatus>
-</file>
-<file>
 <dirty>"1"</dirty>
 <relativepath>"..\main\org\jboss\minerva\datasource\PoolDriver.java"</relativepath>
-<editor open="0">
+<editor open="1">
 <selection start="0" end="0">
 </selection>
 <window x="0" y="0" width="0" height="0">
@@ -7125,10 +5626,10 @@
 <file>
 <dirty>"1"</dirty>
 <relativepath>"..\main\org\jboss\minerva\datasource\XAPoolDataSource.java"</relativepath>
-<editor open="0">
+<editor open="1">
 <selection start="0" end="0">
 </selection>
-<window x="0" y="103065136" width="0" height="0">
+<window x="0" y="0" width="0" height="0">
 </window>
 </editor>
 <scmstatus id="0">
@@ -7139,69 +5640,10 @@
 </virtualfolder>
 <virtualfolder>
 <name>"factories"</name>
-<virtualfolder>
-<name>"CVS"</name>
-<file>
-<dirty>"0"</dirty>
-<relativepath>"..\main\org\jboss\minerva\factories\CVS\Entries"</relativepath>
-<editor open="0">
-<selection start="0" end="0">
-</selection>
-<window x="0" y="0" width="0" height="0">
-</window>
-</editor>
-<scmstatus id="0">
-<userstring>""</userstring>
-<userinteger>"0"</userinteger>
-</scmstatus>
-</file>
-<file>
-<dirty>"0"</dirty>
-<relativepath>"..\main\org\jboss\minerva\factories\CVS\Repository"</relativepath>
-<editor open="0">
-<selection start="0" end="0">
-</selection>
-<window x="0" y="0" width="0" height="0">
-</window>
-</editor>
-<scmstatus id="0">
-<userstring>""</userstring>
-<userinteger>"0"</userinteger>
-</scmstatus>
-</file>
-<file>
-<dirty>"0"</dirty>
-<relativepath>"..\main\org\jboss\minerva\factories\CVS\Root"</relativepath>
-<editor open="0">
-<selection start="0" end="0">
-</selection>
-<window x="0" y="0" width="0" height="0">
-</window>
-</editor>
-<scmstatus id="0">
-<userstring>""</userstring>
-<userinteger>"0"</userinteger>
-</scmstatus>
-</file>
-</virtualfolder>
 <file>
 <dirty>"1"</dirty>
 <relativepath>"..\main\org\jboss\minerva\factories\JDBCConnectionFactory.java"</relativepath>
-<editor open="0">
-<selection start="0" end="0">
-</selection>
-<window x="0" y="0" width="0" height="0">
-</window>
-</editor>
-<scmstatus id="0">
-<userstring>""</userstring>
-<userinteger>"0"</userinteger>
-</scmstatus>
-</file>
-<file>
-<dirty>"0"</dirty>
-<relativepath>"..\main\org\jboss\minerva\factories\package.html"</relativepath>
-<editor open="0">
+<editor open="1">
 <selection start="0" end="0">
 </selection>
 <window x="0" y="0" width="0" height="0">
@@ -7249,66 +5691,7 @@
 <editor open="0">
 <selection start="0" end="0">
 </selection>
-<window x="103087016" y="0" width="0" height="0">
-</window>
-</editor>
-<scmstatus id="0">
-<userstring>""</userstring>
-<userinteger>"0"</userinteger>
-</scmstatus>
-</file>
-<virtualfolder>
-<name>"CVS"</name>
-<file>
-<dirty>"0"</dirty>
-<relativepath>"..\main\org\jboss\minerva\jdbc\CVS\Entries"</relativepath>
-<editor open="0">
-<selection start="0" end="0">
-</selection>
-<window x="109831952" y="109641808" width="0" height="0">
-</window>
-</editor>
-<scmstatus id="0">
-<userstring>""</userstring>
-<userinteger>"0"</userinteger>
-</scmstatus>
-</file>
-<file>
-<dirty>"0"</dirty>
-<relativepath>"..\main\org\jboss\minerva\jdbc\CVS\Repository"</relativepath>
-<editor open="0">
-<selection start="0" end="0">
-</selection>
-<window x="103215152" y="103128392" width="0" height="0">
-</window>
-</editor>
-<scmstatus id="0">
-<userstring>""</userstring>
-<userinteger>"0"</userinteger>
-</scmstatus>
-</file>
-<file>
-<dirty>"0"</dirty>
-<relativepath>"..\main\org\jboss\minerva\jdbc\CVS\Root"</relativepath>
-<editor open="0">
-<selection start="0" end="0">
-</selection>
-<window x="0" y="0" width="0" height="0">
-</window>
-</editor>
-<scmstatus id="0">
-<userstring>""</userstring>
-<userinteger>"0"</userinteger>
-</scmstatus>
-</file>
-</virtualfolder>
-<file>
-<dirty>"0"</dirty>
-<relativepath>"..\main\org\jboss\minerva\jdbc\package.html"</relativepath>
-<editor open="0">
-<selection start="0" end="0">
-</selection>
-<window x="103215312" y="0" width="0" height="0">
+<window x="110987704" y="0" width="0" height="0">
 </window>
 </editor>
 <scmstatus id="0">
@@ -7364,7 +5747,7 @@
 <editor open="0">
 <selection start="0" end="0">
 </selection>
-<window x="103191032" y="103191112" width="0" height="0">
+<window x="110974552" y="0" width="0" height="0">
 </window>
 </editor>
 <scmstatus id="0">
@@ -7373,67 +5756,8 @@
 </scmstatus>
 </file>
 </virtualfolder>
-<file>
-<dirty>"0"</dirty>
-<relativepath>"..\main\org\jboss\minerva\minerva.html"</relativepath>
-<editor open="0">
-<selection start="0" end="0">
-</selection>
-<window x="103025144" y="103031480" width="0" height="0">
-</window>
-</editor>
-<scmstatus id="0">
-<userstring>""</userstring>
-<userinteger>"0"</userinteger>
-</scmstatus>
-</file>
 <virtualfolder>
 <name>"pools"</name>
-<virtualfolder>
-<name>"CVS"</name>
-<file>
-<dirty>"0"</dirty>
-<relativepath>"..\main\org\jboss\minerva\pools\CVS\Entries"</relativepath>
-<editor open="0">
-<selection start="0" end="0">
-</selection>
-<window x="0" y="0" width="0" height="0">
-</window>
-</editor>
-<scmstatus id="0">
-<userstring>""</userstring>
-<userinteger>"0"</userinteger>
-</scmstatus>
-</file>
-<file>
-<dirty>"0"</dirty>
-<relativepath>"..\main\org\jboss\minerva\pools\CVS\Repository"</relativepath>
-<editor open="0">
-<selection start="0" end="0">
-</selection>
-<window x="0" y="0" width="0" height="0">
-</window>
-</editor>
-<scmstatus id="0">
-<userstring>""</userstring>
-<userinteger>"0"</userinteger>
-</scmstatus>
-</file>
-<file>
-<dirty>"0"</dirty>
-<relativepath>"..\main\org\jboss\minerva\pools\CVS\Root"</relativepath>
-<editor open="0">
-<selection start="0" end="0">
-</selection>
-<window x="0" y="0" width="0" height="0">
-</window>
-</editor>
-<scmstatus id="0">
-<userstring>""</userstring>
-<userinteger>"0"</userinteger>
-</scmstatus>
-</file>
-</virtualfolder>
 <file>
 <dirty>"1"</dirty>
 <relativepath>"..\main\org\jboss\minerva\pools\ObjectPool.java"</relativepath>
@@ -7451,20 +5775,6 @@
 <file>
 <dirty>"1"</dirty>
 <relativepath>"..\main\org\jboss\minerva\pools\ObjectRecord.java"</relativepath>
-<editor open="0">
-<selection start="0" end="0">
-</selection>
-<window x="0" y="0" width="0" height="0">
-</window>
-</editor>
-<scmstatus id="0">
-<userstring>""</userstring>
-<userinteger>"0"</userinteger>
-</scmstatus>
-</file>
-<file>
-<dirty>"0"</dirty>
-<relativepath>"..\main\org\jboss\minerva\pools\package.html"</relativepath>
 <editor open="0">
 <selection start="0" end="0">
 </selection>
@@ -7496,7 +5806,7 @@
 <editor open="0">
 <selection start="0" end="0">
 </selection>
-<window x="0" y="0" width="0" height="0">
+<window x="111097592" y="0" width="0" height="0">
 </window>
 </editor>
 <scmstatus id="0">
@@ -7524,7 +5834,7 @@
 <editor open="0">
 <selection start="0" end="0">
 </selection>
-<window x="0" y="1816403032" width="0" height="0">
+<window x="0" y="0" width="0" height="0">
 </window>
 </editor>
 <scmstatus id="0">
@@ -7549,65 +5859,6 @@
 </virtualfolder>
 <virtualfolder>
 <name>"xa"</name>
-<virtualfolder>
-<name>"CVS"</name>
-<file>
-<dirty>"0"</dirty>
-<relativepath>"..\main\org\jboss\minerva\xa\CVS\Entries"</relativepath>
-<editor open="0">
-<selection start="0" end="0">
-</selection>
-<window x="109755024" y="109823304" width="0" height="0">
-</window>
-</editor>
-<scmstatus id="0">
-<userstring>""</userstring>
-<userinteger>"0"</userinteger>
-</scmstatus>
-</file>
-<file>
-<dirty>"0"</dirty>
-<relativepath>"..\main\org\jboss\minerva\xa\CVS\Repository"</relativepath>
-<editor open="0">
-<selection start="0" end="0">
-</selection>
-<window x="1816403032" y="1816403032" width="0" height="0">
-</window>
-</editor>
-<scmstatus id="0">
-<userstring>""</userstring>
-<userinteger>"0"</userinteger>
-</scmstatus>
-</file>
-<file>
-<dirty>"0"</dirty>
-<relativepath>"..\main\org\jboss\minerva\xa\CVS\Root"</relativepath>
-<editor open="0">
-<selection start="0" end="0">
-</selection>
-<window x="1816403032" y="1816403032" width="0" height="0">
-</window>
-</editor>
-<scmstatus id="0">
-<userstring>""</userstring>
-<userinteger>"0"</userinteger>
-</scmstatus>
-</file>
-</virtualfolder>
-<file>
-<dirty>"0"</dirty>
-<relativepath>"..\main\org\jboss\minerva\xa\package.html"</relativepath>
-<editor open="0">
-<selection start="0" end="0">
-</selection>
-<window x="0" y="0" width="0" height="0">
-</window>
-</editor>
-<scmstatus id="0">
-<userstring>""</userstring>
-<userinteger>"0"</userinteger>
-</scmstatus>
-</file>
 <file>
 <dirty>"1"</dirty>
 <relativepath>"..\main\org\jboss\minerva\xa\TransactionListener.java"</relativepath>
@@ -7625,10 +5876,10 @@
 <file>
 <dirty>"1"</dirty>
 <relativepath>"..\main\org\jboss\minerva\xa\XAClientConnection.java"</relativepath>
-<editor open="0">
+<editor open="1">
 <selection start="0" end="0">
 </selection>
-<window x="1816403032" y="1816403032" width="0" height="0">
+<window x="111150248" y="111150168" width="0" height="0">
 </window>
 </editor>
 <scmstatus id="0">
@@ -7639,10 +5890,10 @@
 <file>
 <dirty>"1"</dirty>
 <relativepath>"..\main\org\jboss\minerva\xa\XAConnectionImpl.java"</relativepath>
-<editor open="0">
+<editor open="1">
 <selection start="0" end="0">
 </selection>
-<window x="109861816" y="0" width="0" height="0">
+<window x="111191640" y="111191560" width="0" height="0">
 </window>
 </editor>
 <scmstatus id="0">
@@ -7653,10 +5904,10 @@
 <file>
 <dirty>"1"</dirty>
 <relativepath>"..\main\org\jboss\minerva\xa\XADataSourceImpl.java"</relativepath>
-<editor open="0">
+<editor open="1">
 <selection start="0" end="0">
 </selection>
-<window x="0" y="0" width="0" height="0">
+<window x="111170984" y="0" width="0" height="0">
 </window>
 </editor>
 <scmstatus id="0">
@@ -7670,7 +5921,7 @@
 <editor open="0">
 <selection start="0" end="0">
 </selection>
-<window x="109704904" y="0" width="0" height="0">
+<window x="0" y="0" width="0" height="0">
 </window>
 </editor>
 <scmstatus id="0">
@@ -7682,58 +5933,13 @@
 </virtualfolder>
 <virtualfolder>
 <name>"naming"</name>
-<virtualfolder>
-<name>"CVS"</name>
-<file>
-<dirty>"0"</dirty>
-<relativepath>"..\main\org\jboss\naming\CVS\Entries"</relativepath>
-<editor open="0">
-<selection start="0" end="0">
-</selection>
-<window x="757935405" y="757935405" width="0" height="0">
-</window>
-</editor>
-<scmstatus id="0">
-<userstring>""</userstring>
-<userinteger>"0"</userinteger>
-</scmstatus>
-</file>
-<file>
-<dirty>"0"</dirty>
-<relativepath>"..\main\org\jboss\naming\CVS\Repository"</relativepath>
-<editor open="0">
-<selection start="0" end="0">
-</selection>
-<window x="1816403032" y="1816403032" width="0" height="0">
-</window>
-</editor>
-<scmstatus id="0">
-<userstring>""</userstring>
-<userinteger>"0"</userinteger>
-</scmstatus>
-</file>
-<file>
-<dirty>"0"</dirty>
-<relativepath>"..\main\org\jboss\naming\CVS\Root"</relativepath>
-<editor open="0">
-<selection start="0" end="0">
-</selection>
-<window x="0" y="0" width="0" height="0">
-</window>
-</editor>
-<scmstatus id="0">
-<userstring>""</userstring>
-<userinteger>"0"</userinteger>
-</scmstatus>
-</file>
-</virtualfolder>
 <file>
 <dirty>"1"</dirty>
 <relativepath>"..\main\org\jboss\naming\ENCFactory.java"</relativepath>
-<editor open="1">
+<editor open="0">
 <selection start="0" end="0">
 </selection>
-<window x="1816403032" y="1816403032" width="0" height="0">
+<window x="111179560" y="111179160" width="0" height="0">
 </window>
 </editor>
 <scmstatus id="0">
@@ -7743,58 +5949,13 @@
 </file>
 <virtualfolder>
 <name>"java"</name>
-<virtualfolder>
-<name>"CVS"</name>
-<file>
-<dirty>"0"</dirty>
-<relativepath>"..\main\org\jboss\naming\java\CVS\Entries"</relativepath>
-<editor open="0">
-<selection start="0" end="0">
-</selection>
-<window x="0" y="0" width="0" height="0">
-</window>
-</editor>
-<scmstatus id="0">
-<userstring>""</userstring>
-<userinteger>"0"</userinteger>
-</scmstatus>
-</file>
-<file>
-<dirty>"0"</dirty>
-<relativepath>"..\main\org\jboss\naming\java\CVS\Repository"</relativepath>
-<editor open="0">
-<selection start="0" end="0">
-</selection>
-<window x="0" y="0" width="0" height="0">
-</window>
-</editor>
-<scmstatus id="0">
-<userstring>""</userstring>
-<userinteger>"0"</userinteger>
-</scmstatus>
-</file>
-<file>
-<dirty>"0"</dirty>
-<relativepath>"..\main\org\jboss\naming\java\CVS\Root"</relativepath>
-<editor open="0">
-<selection start="0" end="0">
-</selection>
-<window x="1816403032" y="1816403032" width="0" height="0">
-</window>
-</editor>
-<scmstatus id="0">
-<userstring>""</userstring>
-<userinteger>"0"</userinteger>
-</scmstatus>
-</file>
-</virtualfolder>
 <file>
 <dirty>"1"</dirty>
 <relativepath>"..\main\org\jboss\naming\java\javaURLContextFactory.java"</relativepath>
 <editor open="1">
 <selection start="0" end="0">
 </selection>
-<window x="1701013878" y="1634026061" width="0" height="0">
+<window x="1816403032" y="1816403032" width="0" height="0">
 </window>
 </editor>
 <scmstatus id="0">
@@ -7806,10 +5967,10 @@
 <file>
 <dirty>"1"</dirty>
 <relativepath>"..\main\org\jboss\naming\NamingService.java"</relativepath>
-<editor open="0">
+<editor open="1">
 <selection start="0" end="0">
 </selection>
-<window x="1816403032" y="1816403032" width="0" height="0">
+<window x="0" y="0" width="0" height="0">
 </window>
 </editor>
 <scmstatus id="0">
@@ -7820,7 +5981,7 @@
 <file>
 <dirty>"1"</dirty>
 <relativepath>"..\main\org\jboss\naming\NamingServiceMBean.java"</relativepath>
-<editor open="0">
+<editor open="1">
 <selection start="0" end="0">
 </selection>
 <window x="0" y="0" width="0" height="0">
@@ -7834,58 +5995,13 @@
 </virtualfolder>
 <virtualfolder>
 <name>"proxy"</name>
-<virtualfolder>
-<name>"CVS"</name>
-<file>
-<dirty>"0"</dirty>
-<relativepath>"..\main\org\jboss\proxy\CVS\Entries"</relativepath>
-<editor open="0">
-<selection start="0" end="0">
-</selection>
-<window x="1816403032" y="1816403032" width="0" height="0">
-</window>
-</editor>
-<scmstatus id="0">
-<userstring>""</userstring>
-<userinteger>"0"</userinteger>
-</scmstatus>
-</file>
-<file>
-<dirty>"0"</dirty>
-<relativepath>"..\main\org\jboss\proxy\CVS\Repository"</relativepath>
-<editor open="0">
-<selection start="0" end="0">
-</selection>
-<window x="1816403032" y="1816403032" width="0" height="0">
-</window>
-</editor>
-<scmstatus id="0">
-<userstring>""</userstring>
-<userinteger>"0"</userinteger>
-</scmstatus>
-</file>
-<file>
-<dirty>"0"</dirty>
-<relativepath>"..\main\org\jboss\proxy\CVS\Root"</relativepath>
-<editor open="0">
-<selection start="0" end="0">
-</selection>
-<window x="1816403032" y="1816403032" width="0" height="0">
-</window>
-</editor>
-<scmstatus id="0">
-<userstring>""</userstring>
-<userinteger>"0"</userinteger>
-</scmstatus>
-</file>
-</virtualfolder>
 <file>
 <dirty>"1"</dirty>
 <relativepath>"..\main\org\jboss\proxy\InvocationHandler.java"</relativepath>
 <editor open="0">
 <selection start="0" end="0">
 </selection>
-<window x="0" y="0" width="0" height="0">
+<window x="1816403032" y="1816403032" width="0" height="0">
 </window>
 </editor>
 <scmstatus id="0">
@@ -7899,7 +6015,7 @@
 <editor open="0">
 <selection start="0" end="0">
 </selection>
-<window x="0" y="0" width="0" height="0">
+<window x="1816403032" y="1816403032" width="0" height="0">
 </window>
 </editor>
 <scmstatus id="0">
@@ -7927,7 +6043,7 @@
 <editor open="0">
 <selection start="0" end="0">
 </selection>
-<window x="109757104" y="109928016" width="0" height="0">
+<window x="168626701" y="218762621" width="0" height="0">
 </window>
 </editor>
 <scmstatus id="0">
@@ -7969,7 +6085,7 @@
 <editor open="0">
 <selection start="0" end="0">
 </selection>
-<window x="0" y="0" width="0" height="0">
+<window x="111265976" y="111274552" width="0" height="0">
 </window>
 </editor>
 <scmstatus id="0">
@@ -8028,7 +6144,7 @@
 <editor open="0">
 <selection start="0" end="0">
 </selection>
-<window x="0" y="0" width="0" height="0">
+<window x="111309464" y="111309384" width="0" height="0">
 </window>
 </editor>
 <scmstatus id="0">
@@ -8036,51 +6152,6 @@
 <userinteger>"0"</userinteger>
 </scmstatus>
 </file>
-<virtualfolder>
-<name>"CVS"</name>
-<file>
-<dirty>"0"</dirty>
-<relativepath>"..\main\org\jboss\security\CVS\Entries"</relativepath>
-<editor open="0">
-<selection start="0" end="0">
-</selection>
-<window x="0" y="0" width="0" height="0">
-</window>
-</editor>
-<scmstatus id="0">
-<userstring>""</userstring>
-<userinteger>"0"</userinteger>
-</scmstatus>
-</file>
-<file>
-<dirty>"0"</dirty>
-<relativepath>"..\main\org\jboss\security\CVS\Repository"</relativepath>
-<editor open="0">
-<selection start="0" end="0">
-</selection>
-<window x="0" y="0" width="0" height="0">
-</window>
-</editor>
-<scmstatus id="0">
-<userstring>""</userstring>
-<userinteger>"0"</userinteger>
-</scmstatus>
-</file>
-<file>
-<dirty>"0"</dirty>
-<relativepath>"..\main\org\jboss\security\CVS\Root"</relativepath>
-<editor open="0">
-<selection start="0" end="0">
-</selection>
-<window x="0" y="0" width="0" height="0">
-</window>
-</editor>
-<scmstatus id="0">
-<userstring>""</userstring>
-<userinteger>"0"</userinteger>
-</scmstatus>
-</file>
-</virtualfolder>
 <file>
 <dirty>"1"</dirty>
 <relativepath>"..\main\org\jboss\security\DatabaseRealmMapping.java"</relativepath>
@@ -8129,7 +6200,7 @@
 <editor open="0">
 <selection start="0" end="0">
 </selection>
-<window x="1816403032" y="1816403032" width="0" height="0">
+<window x="757935405" y="757935405" width="0" height="0">
 </window>
 </editor>
 <scmstatus id="0">
@@ -8154,10 +6225,10 @@
 <file>
 <dirty>"1"</dirty>
 <relativepath>"..\main\org\jboss\security\DatabaseServerLoginModule.java"</relativepath>
-<editor open="0">
+<editor open="1">
 <selection start="0" end="0">
 </selection>
-<window x="1816403032" y="1816403032" width="0" height="0">
+<window x="0" y="0" width="0" height="0">
 </window>
 </editor>
 <scmstatus id="0">
@@ -8185,7 +6256,7 @@
 <editor open="0">
 <selection start="0" end="0">
 </selection>
-<window x="1816403032" y="1816403032" width="0" height="0">
+<window x="0" y="0" width="0" height="0">
 </window>
 </editor>
 <scmstatus id="0">
@@ -8196,10 +6267,10 @@
 <file>
 <dirty>"1"</dirty>
 <relativepath>"..\main\org\jboss\security\EJBSecurityManagerService.java"</relativepath>
-<editor open="0">
+<editor open="1">
 <selection start="0" end="0">
 </selection>
-<window x="1816403032" y="1816403032" width="0" height="0">
+<window x="0" y="0" width="0" height="0">
 </window>
 </editor>
 <scmstatus id="0">
@@ -8213,7 +6284,7 @@
 <editor open="0">
 <selection start="0" end="0">
 </selection>
-<window x="0" y="0" width="0" height="0">
+<window x="111334424" y="111334344" width="0" height="0">
 </window>
 </editor>
 <scmstatus id="0">
@@ -8238,10 +6309,10 @@
 <file>
 <dirty>"1"</dirty>
 <relativepath>"..\main\org\jboss\security\JaasSecurityManagerService.java"</relativepath>
-<editor open="0">
+<editor open="1">
 <selection start="0" end="0">
 </selection>
-<window x="1816403032" y="1816403032" width="0" height="0">
+<window x="111272072" y="111301752" width="0" height="0">
 </window>
 </editor>
 <scmstatus id="0">
@@ -8255,7 +6326,7 @@
 <editor open="0">
 <selection start="0" end="0">
 </selection>
-<window x="757935405" y="2097810733" width="0" height="0">
+<window x="111332808" y="111332168" width="0" height="0">
 </window>
 </editor>
 <scmstatus id="0">
@@ -8280,7 +6351,7 @@
 <file>
 <dirty>"1"</dirty>
 <relativepath>"..\main\org\jboss\security\SimpleRealmMappingService.java"</relativepath>
-<editor open="0">
+<editor open="1">
 <selection start="0" end="0">
 </selection>
 <window x="0" y="0" width="0" height="0">
@@ -8322,51 +6393,6 @@
 </virtualfolder>
 <virtualfolder>
 <name>"spydermq"</name>
-<virtualfolder>
-<name>"CVS"</name>
-<file>
-<dirty>"0"</dirty>
-<relativepath>"..\main\org\jboss\spydermq\CVS\Entries"</relativepath>
-<editor open="0">
-<selection start="0" end="0">
-</selection>
-<window x="1816403032" y="1816403032" width="0" height="0">
-</window>
-</editor>
-<scmstatus id="0">
-<userstring>""</userstring>
-<userinteger>"0"</userinteger>
-</scmstatus>
-</file>
-<file>
-<dirty>"0"</dirty>
-<relativepath>"..\main\org\jboss\spydermq\CVS\Repository"</relativepath>
-<editor open="0">
-<selection start="0" end="0">
-</selection>
-<window x="0" y="0" width="0" height="0">
-</window>
-</editor>
-<scmstatus id="0">
-<userstring>""</userstring>
-<userinteger>"0"</userinteger>
-</scmstatus>
-</file>
-<file>
-<dirty>"0"</dirty>
-<relativepath>"..\main\org\jboss\spydermq\CVS\Root"</relativepath>
-<editor open="0">
-<selection start="0" end="0">
-</selection>
-<window x="0" y="0" width="0" height="0">
-</window>
-</editor>
-<scmstatus id="0">
-<userstring>""</userstring>
-<userinteger>"0"</userinteger>
-</scmstatus>
-</file>
-</virtualfolder>
 <file>
 <dirty>"1"</dirty>
 <relativepath>"..\main\org\jboss\spydermq\SpyderMQService.java"</relativepath>
@@ -8398,58 +6424,13 @@
 </virtualfolder>
 <virtualfolder>
 <name>"system"</name>
-<virtualfolder>
-<name>"CVS"</name>
-<file>
-<dirty>"0"</dirty>
-<relativepath>"..\main\org\jboss\system\CVS\Entries"</relativepath>
-<editor open="0">
-<selection start="0" end="0">
-</selection>
-<window x="1816403032" y="1816403032" width="0" height="0">
-</window>
-</editor>
-<scmstatus id="0">
-<userstring>""</userstring>
-<userinteger>"0"</userinteger>
-</scmstatus>
-</file>
-<file>
-<dirty>"0"</dirty>
-<relativepath>"..\main\org\jboss\system\CVS\Repository"</relativepath>
-<editor open="0">
-<selection start="0" end="0">
-</selection>
-<window x="1816403032" y="1816403032" width="0" height="0">
-</window>
-</editor>
-<scmstatus id="0">
-<userstring>""</userstring>
-<userinteger>"0"</userinteger>
-</scmstatus>
-</file>
-<file>
-<dirty>"0"</dirty>
-<relativepath>"..\main\org\jboss\system\CVS\Root"</relativepath>
-<editor open="0">
-<selection start="0" end="0">
-</selection>
-<window x="1816403032" y="1816403032" width="0" height="0">
-</window>
-</editor>
-<scmstatus id="0">
-<userstring>""</userstring>
-<userinteger>"0"</userinteger>
-</scmstatus>
-</file>
-</virtualfolder>
 <file>
 <dirty>"1"</dirty>
 <relativepath>"..\main\org\jboss\system\EJBSecurityManager.java"</relativepath>
 <editor open="0">
 <selection start="0" end="0">
 </selection>
-<window x="1816403032" y="1816403032" width="0" height="0">
+<window x="0" y="0" width="0" height="0">
 </window>
 </editor>
 <scmstatus id="0">
@@ -8463,7 +6444,7 @@
 <editor open="0">
 <selection start="0" end="0">
 </selection>
-<window x="0" y="0" width="0" height="0">
+<window x="1816403032" y="1816403032" width="0" height="0">
 </window>
 </editor>
 <scmstatus id="0">
@@ -8502,58 +6483,13 @@
 </virtualfolder>
 <virtualfolder>
 <name>"tm"</name>
-<virtualfolder>
-<name>"CVS"</name>
-<file>
-<dirty>"0"</dirty>
-<relativepath>"..\main\org\jboss\tm\CVS\Entries"</relativepath>
-<editor open="0">
-<selection start="0" end="0">
-</selection>
-<window x="0" y="0" width="0" height="0">
-</window>
-</editor>
-<scmstatus id="0">
-<userstring>""</userstring>
-<userinteger>"0"</userinteger>
-</scmstatus>
-</file>
-<file>
-<dirty>"0"</dirty>
-<relativepath>"..\main\org\jboss\tm\CVS\Repository"</relativepath>
-<editor open="0">
-<selection start="0" end="0">
-</selection>
-<window x="1816403032" y="1816403032" width="0" height="0">
-</window>
-</editor>
-<scmstatus id="0">
-<userstring>""</userstring>
-<userinteger>"0"</userinteger>
-</scmstatus>
-</file>
-<file>
-<dirty>"0"</dirty>
-<relativepath>"..\main\org\jboss\tm\CVS\Root"</relativepath>
-<editor open="0">
-<selection start="0" end="0">
-</selection>
-<window x="0" y="0" width="0" height="0">
-</window>
-</editor>
-<scmstatus id="0">
-<userstring>""</userstring>
-<userinteger>"0"</userinteger>
-</scmstatus>
-</file>
-</virtualfolder>
 <file>
 <dirty>"1"</dirty>
 <relativepath>"..\main\org\jboss\tm\TransactionImpl.java"</relativepath>
 <editor open="0">
 <selection start="0" end="0">
 </selection>
-<window x="1816403032" y="1816403032" width="0" height="0">
+<window x="0" y="0" width="0" height="0">
 </window>
 </editor>
 <scmstatus id="0">
@@ -8564,10 +6500,10 @@
 <file>
 <dirty>"1"</dirty>
 <relativepath>"..\main\org\jboss\tm\TransactionManagerService.java"</relativepath>
-<editor open="0">
+<editor open="1">
 <selection start="0" end="0">
 </selection>
-<window x="109938768" y="109936352" width="0" height="0">
+<window x="111369056" y="111366976" width="0" height="0">
 </window>
 </editor>
 <scmstatus id="0">
@@ -8578,10 +6514,10 @@
 <file>
 <dirty>"1"</dirty>
 <relativepath>"..\main\org\jboss\tm\TransactionManagerServiceMBean.java"</relativepath>
-<editor open="0">
+<editor open="1">
 <selection start="0" end="0">
 </selection>
-<window x="1816403032" y="1816403032" width="0" height="0">
+<window x="0" y="0" width="0" height="0">
 </window>
 </editor>
 <scmstatus id="0">
@@ -8634,61 +6570,16 @@
 </virtualfolder>
 <virtualfolder>
 <name>"tomcat"</name>
-<virtualfolder>
-<name>"CVS"</name>
 <file>
-<dirty>"0"</dirty>
-<relativepath>"..\main\org\jboss\tomcat\CVS\Entries"</relativepath>
-<editor open="0">
-<selection start="0" end="0">
-</selection>
-<window x="1816403032" y="1816403032" width="0" height="0">
-</window>
-</editor>
-<scmstatus id="0">
-<userstring>""</userstring>
-<userinteger>"0"</userinteger>
-</scmstatus>
-</file>
-<file>
-<dirty>"0"</dirty>
-<relativepath>"..\main\org\jboss\tomcat\CVS\Repository"</relativepath>
-<editor open="0">
-<selection start="0" end="0">
-</selection>
-<window x="1816403032" y="1816403032" width="0" height="0">
-</window>
-</editor>
-<scmstatus id="0">
-<userstring>""</userstring>
-<userinteger>"0"</userinteger>
-</scmstatus>
-</file>
-<file>
-<dirty>"0"</dirty>
-<relativepath>"..\main\org\jboss\tomcat\CVS\Root"</relativepath>
-<editor open="0">
+<dirty>"1"</dirty>
+<relativepath>"..\main\org\jboss\tomcat\TomcatService.java"</relativepath>
+<editor open="1">
 <selection start="0" end="0">
 </selection>
 <window x="0" y="0" width="0" height="0">
 </window>
 </editor>
-<scmstatus id="0">
-<userstring>""</userstring>
-<userinteger>"0"</userinteger>
-</scmstatus>
-</file>
-</virtualfolder>
-<file>
-<dirty>"1"</dirty>
-<relativepath>"..\main\org\jboss\tomcat\TomcatService.java"</relativepath>
-<editor open="0">
-<selection start="0" end="0">
-</selection>
-<window x="1816403032" y="1816403032" width="0" height="0">
-</window>
-</editor>
-<scmstatus id="0">
+<scmstatus id="2">
 <userstring>""</userstring>
 <userinteger>"0"</userinteger>
 </scmstatus>
@@ -8696,7 +6587,7 @@
 <file>
 <dirty>"1"</dirty>
 <relativepath>"..\main\org\jboss\tomcat\TomcatServiceMBean.java"</relativepath>
-<editor open="0">
+<editor open="1">
 <selection start="0" end="0">
 </selection>
 <window x="0" y="0" width="0" height="0">
@@ -8713,10 +6604,10 @@
 <file>
 <dirty>"1"</dirty>
 <relativepath>"..\main\org\jboss\util\CachePolicy.java"</relativepath>
-<editor open="0">
+<editor open="1">
 <selection start="0" end="0">
 </selection>
-<window x="544433262" y="778531439" width="0" height="0">
+<window x="0" y="0" width="0" height="0">
 </window>
 </editor>
 <scmstatus id="0">
@@ -8727,13 +6618,13 @@
 <file>
 <dirty>"1"</dirty>
 <relativepath>"..\main\org\jboss\util\ClassPathExtension.java"</relativepath>
-<editor open="0">
+<editor open="1">
 <selection start="0" end="0">
 </selection>
 <window x="0" y="0" width="0" height="0">
 </window>
 </editor>
-<scmstatus id="0">
+<scmstatus id="2">
 <userstring>""</userstring>
 <userinteger>"0"</userinteger>
 </scmstatus>
@@ -8741,7 +6632,7 @@
 <file>
 <dirty>"1"</dirty>
 <relativepath>"..\main\org\jboss\util\ClassPathExtensionMBean.java"</relativepath>
-<editor open="0">
+<editor open="1">
 <selection start="0" end="0">
 </selection>
 <window x="0" y="0" width="0" height="0">
@@ -8752,58 +6643,13 @@
 <userinteger>"0"</userinteger>
 </scmstatus>
 </file>
-<virtualfolder>
-<name>"CVS"</name>
-<file>
-<dirty>"0"</dirty>
-<relativepath>"..\main\org\jboss\util\CVS\Entries"</relativepath>
-<editor open="0">
-<selection start="0" end="0">
-</selection>
-<window x="1816403032" y="1816403032" width="0" height="0">
-</window>
-</editor>
-<scmstatus id="0">
-<userstring>""</userstring>
-<userinteger>"0"</userinteger>
-</scmstatus>
-</file>
-<file>
-<dirty>"0"</dirty>
-<relativepath>"..\main\org\jboss\util\CVS\Repository"</relativepath>
-<editor open="0">
-<selection start="0" end="0">
-</selection>
-<window x="1816403032" y="1816403032" width="0" height="0">
-</window>
-</editor>
-<scmstatus id="0">
-<userstring>""</userstring>
-<userinteger>"0"</userinteger>
-</scmstatus>
-</file>
-<file>
-<dirty>"0"</dirty>
-<relativepath>"..\main\org\jboss\util\CVS\Root"</relativepath>
-<editor open="0">
-<selection start="0" end="0">
-</selection>
-<window x="0" y="0" width="0" height="0">
-</window>
-</editor>
-<scmstatus id="0">
-<userstring>""</userstring>
-<userinteger>"0"</userinteger>
-</scmstatus>
-</file>
-</virtualfolder>
 <file>
 <dirty>"1"</dirty>
 <relativepath>"..\main\org\jboss\util\Executable.java"</relativepath>
 <editor open="0">
 <selection start="0" end="0">
 </selection>
-<window x="110075624" y="110075944" width="0" height="0">
+<window x="1816403032" y="1816403032" width="0" height="0">
 </window>
 </editor>
 <scmstatus id="0">
@@ -8870,7 +6716,7 @@
 <file>
 <dirty>"1"</dirty>
 <relativepath>"..\main\org\jboss\util\Info.java"</relativepath>
-<editor open="0">
+<editor open="1">
 <selection start="0" end="0">
 </selection>
 <window x="0" y="0" width="0" height="0">
@@ -8884,7 +6730,7 @@
 <file>
 <dirty>"1"</dirty>
 <relativepath>"..\main\org\jboss\util\InfoMBean.java"</relativepath>
-<editor open="0">
+<editor open="1">
 <selection start="0" end="0">
 </selection>
 <window x="0" y="0" width="0" height="0">
@@ -8901,7 +6747,7 @@
 <editor open="0">
 <selection start="0" end="0">
 </selection>
-<window x="110053888" y="110051472" width="0" height="0">
+<window x="0" y="0" width="0" height="0">
 </window>
 </editor>
 <scmstatus id="0">
@@ -8915,7 +6761,7 @@
 <editor open="0">
 <selection start="0" end="0">
 </selection>
-<window x="110017680" y="110017600" width="0" height="0">
+<window x="111425968" y="111425888" width="0" height="0">
 </window>
 </editor>
 <scmstatus id="0">
@@ -8940,7 +6786,35 @@
 <file>
 <dirty>"1"</dirty>
 <relativepath>"..\main\org\jboss\util\Service.java"</relativepath>
-<editor open="0">
+<editor open="1">
+<selection start="0" end="0">
+</selection>
+<window x="0" y="0" width="0" height="0">
+</window>
+</editor>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"1"</dirty>
+<relativepath>"..\main\org\jboss\util\ServiceControl.java"</relativepath>
+<editor open="1">
+<selection start="0" end="0">
+</selection>
+<window x="589832" y="720906" width="0" height="0">
+</window>
+</editor>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"1"</dirty>
+<relativepath>"..\main\org\jboss\util\ServiceControlMBean.java"</relativepath>
+<editor open="1">
 <selection start="0" end="0">
 </selection>
 <window x="0" y="0" width="0" height="0">
@@ -8954,7 +6828,7 @@
 <file>
 <dirty>"1"</dirty>
 <relativepath>"..\main\org\jboss\util\ServiceMBean.java"</relativepath>
-<editor open="0">
+<editor open="1">
 <selection start="0" end="0">
 </selection>
 <window x="1816403032" y="1816403032" width="0" height="0">
@@ -8968,10 +6842,38 @@
 <file>
 <dirty>"1"</dirty>
 <relativepath>"..\main\org\jboss\util\ServiceMBeanSupport.java"</relativepath>
-<editor open="0">
+<editor open="1">
 <selection start="0" end="0">
 </selection>
-<window x="757097321" y="757935405" width="0" height="0">
+<window x="1952543827" y="1920226149" width="0" height="0">
+</window>
+</editor>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"1"</dirty>
+<relativepath>"..\main\org\jboss\util\Shutdown.java"</relativepath>
+<editor open="1">
+<selection start="0" end="0">
+</selection>
+<window x="0" y="0" width="0" height="0">
+</window>
+</editor>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"1"</dirty>
+<relativepath>"..\main\org\jboss\util\ShutdownMBean.java"</relativepath>
+<editor open="1">
+<selection start="0" end="0">
+</selection>
+<window x="0" y="110202720" width="0" height="0">
 </window>
 </editor>
 <scmstatus id="0">
@@ -8999,7 +6901,7 @@
 <editor open="0">
 <selection start="0" end="0">
 </selection>
-<window x="0" y="0" width="0" height="0">
+<window x="111448048" y="111447648" width="0" height="0">
 </window>
 </editor>
 <scmstatus id="0">
@@ -9009,58 +6911,13 @@
 </file>
 <virtualfolder>
 <name>"timeout"</name>
-<virtualfolder>
-<name>"CVS"</name>
-<file>
-<dirty>"0"</dirty>
-<relativepath>"..\main\org\jboss\util\timeout\CVS\Entries"</relativepath>
-<editor open="0">
-<selection start="0" end="0">
-</selection>
-<window x="168634927" y="1114251306" width="0" height="0">
-</window>
-</editor>
-<scmstatus id="0">
-<userstring>""</userstring>
-<userinteger>"0"</userinteger>
-</scmstatus>
-</file>
-<file>
-<dirty>"0"</dirty>
-<relativepath>"..\main\org\jboss\util\timeout\CVS\Repository"</relativepath>
-<editor open="0">
-<selection start="0" end="0">
-</selection>
-<window x="705301806" y="1879706927" width="0" height="0">
-</window>
-</editor>
-<scmstatus id="0">
-<userstring>""</userstring>
-<userinteger>"0"</userinteger>
-</scmstatus>
-</file>
-<file>
-<dirty>"0"</dirty>
-<relativepath>"..\main\org\jboss\util\timeout\CVS\Root"</relativepath>
-<editor open="0">
-<selection start="0" end="0">
-</selection>
-<window x="1868918121" y="1663071349" width="0" height="0">
-</window>
-</editor>
-<scmstatus id="0">
-<userstring>""</userstring>
-<userinteger>"0"</userinteger>
-</scmstatus>
-</file>
-</virtualfolder>
 <file>
 <dirty>"1"</dirty>
 <relativepath>"..\main\org\jboss\util\timeout\Timeout.java"</relativepath>
 <editor open="0">
 <selection start="0" end="0">
 </selection>
-<window x="1816403032" y="1816403032" width="0" height="0">
+<window x="0" y="0" width="0" height="0">
 </window>
 </editor>
 <scmstatus id="0">
@@ -9103,7 +6960,7 @@
 <editor open="0">
 <selection start="0" end="0">
 </selection>
-<window x="757935405" y="757935405" width="0" height="0">
+<window x="1816403032" y="1816403032" width="0" height="0">
 </window>
 </editor>
 <scmstatus id="0">
@@ -9145,10 +7002,10 @@
 <file>
 <dirty>"1"</dirty>
 <relativepath>"..\main\org\jboss\verifier\BeanVerifier.java"</relativepath>
-<editor open="0">
+<editor open="1">
 <selection start="0" end="0">
 </selection>
-<window x="1816403032" y="1816403032" width="0" height="0">
+<window x="1868918121" y="1948284021" width="0" height="0">
 </window>
 </editor>
 <scmstatus id="0">
@@ -9156,105 +7013,15 @@
 <userinteger>"0"</userinteger>
 </scmstatus>
 </file>
-<virtualfolder>
-<name>"CVS"</name>
-<file>
-<dirty>"0"</dirty>
-<relativepath>"..\main\org\jboss\verifier\CVS\Entries"</relativepath>
-<editor open="0">
-<selection start="0" end="0">
-</selection>
-<window x="1816403032" y="1816403032" width="0" height="0">
-</window>
-</editor>
-<scmstatus id="0">
-<userstring>""</userstring>
-<userinteger>"0"</userinteger>
-</scmstatus>
-</file>
-<file>
-<dirty>"0"</dirty>
-<relativepath>"..\main\org\jboss\verifier\CVS\Repository"</relativepath>
-<editor open="0">
-<selection start="0" end="0">
-</selection>
-<window x="1816403032" y="1816403032" width="0" height="0">
-</window>
-</editor>
-<scmstatus id="0">
-<userstring>""</userstring>
-<userinteger>"0"</userinteger>
-</scmstatus>
-</file>
-<file>
-<dirty>"0"</dirty>
-<relativepath>"..\main\org\jboss\verifier\CVS\Root"</relativepath>
-<editor open="0">
-<selection start="0" end="0">
-</selection>
-<window x="1816403032" y="1816403032" width="0" height="0">
-</window>
-</editor>
-<scmstatus id="0">
-<userstring>""</userstring>
-<userinteger>"0"</userinteger>
-</scmstatus>
-</file>
-</virtualfolder>
 <virtualfolder>
 <name>"event"</name>
-<virtualfolder>
-<name>"CVS"</name>
-<file>
-<dirty>"0"</dirty>
-<relativepath>"..\main\org\jboss\verifier\event\CVS\Entries"</relativepath>
-<editor open="0">
-<selection start="0" end="0">
-</selection>
-<window x="110133176" y="110134392" width="0" height="0">
-</window>
-</editor>
-<scmstatus id="0">
-<userstring>""</userstring>
-<userinteger>"0"</userinteger>
-</scmstatus>
-</file>
-<file>
-<dirty>"0"</dirty>
-<relativepath>"..\main\org\jboss\verifier\event\CVS\Repository"</relativepath>
-<editor open="0">
-<selection start="0" end="0">
-</selection>
-<window x="110132856" y="110132296" width="0" height="0">
-</window>
-</editor>
-<scmstatus id="0">
-<userstring>""</userstring>
-<userinteger>"0"</userinteger>
-</scmstatus>
-</file>
-<file>
-<dirty>"0"</dirty>
-<relativepath>"..\main\org\jboss\verifier\event\CVS\Root"</relativepath>
-<editor open="0">
-<selection start="0" end="0">
-</selection>
-<window x="139984908" y="111778204" width="0" height="0">
-</window>
-</editor>
-<scmstatus id="0">
-<userstring>""</userstring>
-<userinteger>"0"</userinteger>
-</scmstatus>
-</file>
-</virtualfolder>
 <file>
 <dirty>"1"</dirty>
 <relativepath>"..\main\org\jboss\verifier\event\VerificationEvent.java"</relativepath>
 <editor open="0">
 <selection start="0" end="0">
 </selection>
-<window x="0" y="0" width="0" height="0">
+<window x="1816403032" y="1816403032" width="0" height="0">
 </window>
 </editor>
 <scmstatus id="0">
@@ -9296,7 +7063,7 @@
 <editor open="0">
 <selection start="0" end="0">
 </selection>
-<window x="110130696" y="0" width="0" height="0">
+<window x="111550480" y="0" width="0" height="0">
 </window>
 </editor>
 <scmstatus id="0">
@@ -9307,51 +7074,6 @@
 </virtualfolder>
 <virtualfolder>
 <name>"factory"</name>
-<virtualfolder>
-<name>"CVS"</name>
-<file>
-<dirty>"0"</dirty>
-<relativepath>"..\main\org\jboss\verifier\factory\CVS\Entries"</relativepath>
-<editor open="0">
-<selection start="0" end="0">
-</selection>
-<window x="1816403032" y="1816403032" width="0" height="0">
-</window>
-</editor>
-<scmstatus id="0">
-<userstring>""</userstring>
-<userinteger>"0"</userinteger>
-</scmstatus>
-</file>
-<file>
-<dirty>"0"</dirty>
-<relativepath>"..\main\org\jboss\verifier\factory\CVS\Repository"</relativepath>
-<editor open="0">
-<selection start="0" end="0">
-</selection>
-<window x="1816403032" y="1816403032" width="0" height="0">
-</window>
-</editor>
-<scmstatus id="0">
-<userstring>""</userstring>
-<userinteger>"0"</userinteger>
-</scmstatus>
-</file>
-<file>
-<dirty>"0"</dirty>
-<relativepath>"..\main\org\jboss\verifier\factory\CVS\Root"</relativepath>
-<editor open="0">
-<selection start="0" end="0">
-</selection>
-<window x="0" y="0" width="0" height="0">
-</window>
-</editor>
-<scmstatus id="0">
-<userstring>""</userstring>
-<userinteger>"0"</userinteger>
-</scmstatus>
-</file>
-</virtualfolder>
 <file>
 <dirty>"1"</dirty>
 <relativepath>"..\main\org\jboss\verifier\factory\DefaultEventFactory.java"</relativepath>
@@ -9417,36 +7139,6 @@
 <editor open="0">
 <selection start="0" end="0">
 </selection>
-<window x="1816403032" y="1816403032" width="0" height="0">
-</window>
-</editor>
-<scmstatus id="0">
-<userstring>""</userstring>
-<userinteger>"0"</userinteger>
-</scmstatus>
-</file>
-<virtualfolder>
-<name>"CVS"</name>
-<file>
-<dirty>"0"</dirty>
-<relativepath>"..\main\org\jboss\verifier\strategy\CVS\Entries"</relativepath>
-<editor open="0">
-<selection start="0" end="0">
-</selection>
-<window x="111779752" y="111779752" width="0" height="0">
-</window>
-</editor>
-<scmstatus id="0">
-<userstring>""</userstring>
-<userinteger>"0"</userinteger>
-</scmstatus>
-</file>
-<file>
-<dirty>"0"</dirty>
-<relativepath>"..\main\org\jboss\verifier\strategy\CVS\Repository"</relativepath>
-<editor open="0">
-<selection start="0" end="0">
-</selection>
 <window x="0" y="0" width="0" height="0">
 </window>
 </editor>
@@ -9455,21 +7147,6 @@
 <userinteger>"0"</userinteger>
 </scmstatus>
 </file>
-<file>
-<dirty>"0"</dirty>
-<relativepath>"..\main\org\jboss\verifier\strategy\CVS\Root"</relativepath>
-<editor open="0">
-<selection start="0" end="0">
-</selection>
-<window x="111779752" y="111779752" width="0" height="0">
-</window>
-</editor>
-<scmstatus id="0">
-<userstring>""</userstring>
-<userinteger>"0"</userinteger>
-</scmstatus>
-</file>
-</virtualfolder>
 <file>
 <dirty>"1"</dirty>
 <relativepath>"..\main\org\jboss\verifier\strategy\EJBVerifier11.java"</relativepath>
@@ -9530,51 +7207,6 @@
 </virtualfolder>
 <virtualfolder>
 <name>"web"</name>
-<virtualfolder>
-<name>"CVS"</name>
-<file>
-<dirty>"0"</dirty>
-<relativepath>"..\main\org\jboss\web\CVS\Entries"</relativepath>
-<editor open="0">
-<selection start="0" end="0">
-</selection>
-<window x="1936617283" y="1953390964" width="0" height="0">
-</window>
-</editor>
-<scmstatus id="0">
-<userstring>""</userstring>
-<userinteger>"0"</userinteger>
-</scmstatus>
-</file>
-<file>
-<dirty>"0"</dirty>
-<relativepath>"..\main\org\jboss\web\CVS\Repository"</relativepath>
-<editor open="0">
-<selection start="0" end="0">
-</selection>
-<window x="1769370213" y="1463641443" width="0" height="0">
-</window>
-</editor>
-<scmstatus id="0">
-<userstring>""</userstring>
-<userinteger>"0"</userinteger>
-</scmstatus>
-</file>
-<file>
-<dirty>"0"</dirty>
-<relativepath>"..\main\org\jboss\web\CVS\Root"</relativepath>
-<editor open="0">
-<selection start="0" end="0">
-</selection>
-<window x="1953656656" y="221980968" width="0" height="0">
-</window>
-</editor>
-<scmstatus id="0">
-<userstring>""</userstring>
-<userinteger>"0"</userinteger>
-</scmstatus>
-</file>
-</virtualfolder>
 <file>
 <dirty>"1"</dirty>
 <relativepath>"..\main\org\jboss\web\ThreadPool.java"</relativepath>
@@ -9637,97 +7269,7 @@
 <virtualfolder>
 <name>"test"</name>
 <virtualfolder>
-<name>"CVS"</name>
-<file>
-<dirty>"0"</dirty>
-<relativepath>"..\main\test\CVS\Entries"</relativepath>
-<editor open="0">
-<selection start="0" end="0">
-</selection>
-<window x="1816403032" y="1816403032" width="0" height="0">
-</window>
-</editor>
-<scmstatus id="0">
-<userstring>""</userstring>
-<userinteger>"0"</userinteger>
-</scmstatus>
-</file>
-<file>
-<dirty>"0"</dirty>
-<relativepath>"..\main\test\CVS\Repository"</relativepath>
-<editor open="0">
-<selection start="0" end="0">
-</selection>
-<window x="1816403032" y="1816403032" width="0" height="0">
-</window>
-</editor>
-<scmstatus id="0">
-<userstring>""</userstring>
-<userinteger>"0"</userinteger>
-</scmstatus>
-</file>
-<file>
-<dirty>"0"</dirty>
-<relativepath>"..\main\test\CVS\Root"</relativepath>
-<editor open="0">
-<selection start="0" end="0">
-</selection>
-<window x="1919251232" y="225600886" width="0" height="0">
-</window>
-</editor>
-<scmstatus id="0">
-<userstring>""</userstring>
-<userinteger>"0"</userinteger>
-</scmstatus>
-</file>
-</virtualfolder>
-<virtualfolder>
 <name>"jboss"</name>
-<virtualfolder>
-<name>"CVS"</name>
-<file>
-<dirty>"0"</dirty>
-<relativepath>"..\main\test\jboss\CVS\Entries"</relativepath>
-<editor open="0">
-<selection start="0" end="0">
-</selection>
-<window x="0" y="0" width="0" height="0">
-</window>
-</editor>
-<scmstatus id="0">
-<userstring>""</userstring>
-<userinteger>"0"</userinteger>
-</scmstatus>
-</file>
-<file>
-<dirty>"0"</dirty>
-<relativepath>"..\main\test\jboss\CVS\Repository"</relativepath>
-<editor open="0">
-<selection start="0" end="0">
-</selection>
-<window x="0" y="0" width="0" height="0">
-</window>
-</editor>
-<scmstatus id="0">
-<userstring>""</userstring>
-<userinteger>"0"</userinteger>
-</scmstatus>
-</file>
-<file>
-<dirty>"0"</dirty>
-<relativepath>"..\main\test\jboss\CVS\Root"</relativepath>
-<editor open="0">
-<selection start="0" end="0">
-</selection>
-<window x="0" y="0" width="0" height="0">
-</window>
-</editor>
-<scmstatus id="0">
-<userstring>""</userstring>
-<userinteger>"0"</userinteger>
-</scmstatus>
-</file>
-</virtualfolder>
 <file>
 <dirty>"1"</dirty>
 <relativepath>"..\main\test\jboss\JBossTestSuite.java"</relativepath>
@@ -9744,58 +7286,13 @@
 </file>
 <virtualfolder>
 <name>"jmx"</name>
-<virtualfolder>
-<name>"CVS"</name>
-<file>
-<dirty>"0"</dirty>
-<relativepath>"..\main\test\jboss\jmx\CVS\Entries"</relativepath>
-<editor open="0">
-<selection start="0" end="0">
-</selection>
-<window x="0" y="0" width="0" height="0">
-</window>
-</editor>
-<scmstatus id="0">
-<userstring>""</userstring>
-<userinteger>"0"</userinteger>
-</scmstatus>
-</file>
-<file>
-<dirty>"0"</dirty>
-<relativepath>"..\main\test\jboss\jmx\CVS\Repository"</relativepath>
-<editor open="0">
-<selection start="0" end="0">
-</selection>
-<window x="1816403032" y="1816403032" width="0" height="0">
-</window>
-</editor>
-<scmstatus id="0">
-<userstring>""</userstring>
-<userinteger>"0"</userinteger>
-</scmstatus>
-</file>
-<file>
-<dirty>"0"</dirty>
-<relativepath>"..\main\test\jboss\jmx\CVS\Root"</relativepath>
-<editor open="0">
-<selection start="0" end="0">
-</selection>
-<window x="0" y="1816403032" width="0" height="0">
-</window>
-</editor>
-<scmstatus id="0">
-<userstring>""</userstring>
-<userinteger>"0"</userinteger>
-</scmstatus>
-</file>
-</virtualfolder>
 <file>
 <dirty>"1"</dirty>
 <relativepath>"..\main\test\jboss\jmx\TestClient.java"</relativepath>
 <editor open="0">
 <selection start="0" end="0">
 </selection>
-<window x="0" y="0" width="0" height="0">
+<window x="1816403032" y="1816403032" width="0" height="0">
 </window>
 </editor>
 <scmstatus id="0">
@@ -9807,97 +7304,7 @@
 <virtualfolder>
 <name>"minerva"</name>
 <virtualfolder>
-<name>"CVS"</name>
-<file>
-<dirty>"0"</dirty>
-<relativepath>"..\main\test\jboss\minerva\CVS\Entries"</relativepath>
-<editor open="0">
-<selection start="0" end="0">
-</selection>
-<window x="110177936" y="1816403032" width="0" height="0">
-</window>
-</editor>
-<scmstatus id="0">
-<userstring>""</userstring>
-<userinteger>"0"</userinteger>
-</scmstatus>
-</file>
-<file>
-<dirty>"0"</dirty>
-<relativepath>"..\main\test\jboss\minerva\CVS\Repository"</relativepath>
-<editor open="0">
-<selection start="0" end="0">
-</selection>
-<window x="1816403032" y="1816403032" width="0" height="0">
-</window>
-</editor>
-<scmstatus id="0">
-<userstring>""</userstring>
-<userinteger>"0"</userinteger>
-</scmstatus>
-</file>
-<file>
-<dirty>"0"</dirty>
-<relativepath>"..\main\test\jboss\minerva\CVS\Root"</relativepath>
-<editor open="0">
-<selection start="0" end="0">
-</selection>
-<window x="1816403032" y="1816403032" width="0" height="0">
-</window>
-</editor>
-<scmstatus id="0">
-<userstring>""</userstring>
-<userinteger>"0"</userinteger>
-</scmstatus>
-</file>
-</virtualfolder>
-<virtualfolder>
 <name>"factories"</name>
-<virtualfolder>
-<name>"CVS"</name>
-<file>
-<dirty>"0"</dirty>
-<relativepath>"..\main\test\jboss\minerva\factories\CVS\Entries"</relativepath>
-<editor open="0">
-<selection start="0" end="0">
-</selection>
-<window x="110460672" y="110462672" width="0" height="0">
-</window>
-</editor>
-<scmstatus id="0">
-<userstring>""</userstring>
-<userinteger>"0"</userinteger>
-</scmstatus>
-</file>
-<file>
-<dirty>"0"</dirty>
-<relativepath>"..\main\test\jboss\minerva\factories\CVS\Repository"</relativepath>
-<editor open="0">
-<selection start="0" end="0">
-</selection>
-<window x="110177616" y="110460112" width="0" height="0">
-</window>
-</editor>
-<scmstatus id="0">
-<userstring>""</userstring>
-<userinteger>"0"</userinteger>
-</scmstatus>
-</file>
-<file>
-<dirty>"0"</dirty>
-<relativepath>"..\main\test\jboss\minerva\factories\CVS\Root"</relativepath>
-<editor open="0">
-<selection start="0" end="0">
-</selection>
-<window x="1816403032" y="1816403032" width="0" height="0">
-</window>
-</editor>
-<scmstatus id="0">
-<userstring>""</userstring>
-<userinteger>"0"</userinteger>
-</scmstatus>
-</file>
-</virtualfolder>
 <file>
 <dirty>"1"</dirty>
 <relativepath>"..\main\test\jboss\minerva\factories\JDBCFactoryTest.java"</relativepath>
@@ -9915,58 +7322,13 @@
 </virtualfolder>
 <virtualfolder>
 <name>"pools"</name>
-<virtualfolder>
-<name>"CVS"</name>
-<file>
-<dirty>"0"</dirty>
-<relativepath>"..\main\test\jboss\minerva\pools\CVS\Entries"</relativepath>
-<editor open="0">
-<selection start="0" end="0">
-</selection>
-<window x="0" y="0" width="0" height="0">
-</window>
-</editor>
-<scmstatus id="0">
-<userstring>""</userstring>
-<userinteger>"0"</userinteger>
-</scmstatus>
-</file>
-<file>
-<dirty>"0"</dirty>
-<relativepath>"..\main\test\jboss\minerva\pools\CVS\Repository"</relativepath>
-<editor open="0">
-<selection start="0" end="0">
-</selection>
-<window x="1816403032" y="1816403032" width="0" height="0">
-</window>
-</editor>
-<scmstatus id="0">
-<userstring>""</userstring>
-<userinteger>"0"</userinteger>
-</scmstatus>
-</file>
-<file>
-<dirty>"0"</dirty>
-<relativepath>"..\main\test\jboss\minerva\pools\CVS\Root"</relativepath>
-<editor open="0">
-<selection start="0" end="0">
-</selection>
-<window x="0" y="0" width="0" height="0">
-</window>
-</editor>
-<scmstatus id="0">
-<userstring>""</userstring>
-<userinteger>"0"</userinteger>
-</scmstatus>
-</file>
-</virtualfolder>
 <file>
 <dirty>"1"</dirty>
 <relativepath>"..\main\test\jboss\minerva\pools\ObjectPoolTest.java"</relativepath>
 <editor open="0">
 <selection start="0" end="0">
 </selection>
-<window x="1816403032" y="1816403032" width="0" height="0">
+<window x="125410700" y="0" width="0" height="0">
 </window>
 </editor>
 <scmstatus id="0">
@@ -9978,51 +7340,6 @@
 </virtualfolder>
 <virtualfolder>
 <name>"testdb"</name>
-<virtualfolder>
-<name>"CVS"</name>
-<file>
-<dirty>"0"</dirty>
-<relativepath>"..\main\test\jboss\testdb\CVS\Entries"</relativepath>
-<editor open="0">
-<selection start="0" end="0">
-</selection>
-<window x="110205480" y="110203304" width="0" height="0">
-</window>
-</editor>
-<scmstatus id="0">
-<userstring>""</userstring>
-<userinteger>"0"</userinteger>
-</scmstatus>
-</file>
-<file>
-<dirty>"0"</dirty>
-<relativepath>"..\main\test\jboss\testdb\CVS\Repository"</relativepath>
-<editor open="0">
-<selection start="0" end="0">
-</selection>
-<window x="1816403032" y="1816403032" width="0" height="0">
-</window>
-</editor>
-<scmstatus id="0">
-<userstring>""</userstring>
-<userinteger>"0"</userinteger>
-</scmstatus>
-</file>
-<file>
-<dirty>"0"</dirty>
-<relativepath>"..\main\test\jboss\testdb\CVS\Root"</relativepath>
-<editor open="0">
-<selection start="0" end="0">
-</selection>
-<window x="1816403032" y="1816403032" width="0" height="0">
-</window>
-</editor>
-<scmstatus id="0">
-<userstring>""</userstring>
-<userinteger>"0"</userinteger>
-</scmstatus>
-</file>
-</virtualfolder>
 <file>
 <dirty>"1"</dirty>
 <relativepath>"..\main\test\jboss\testdb\TestConnection.java"</relativepath>
@@ -10043,7 +7360,7 @@
 <editor open="0">
 <selection start="0" end="0">
 </selection>
-<window x="110460112" y="110238192" width="0" height="0">
+<window x="0" y="0" width="0" height="0">
 </window>
 </editor>
 <scmstatus id="0">
@@ -10792,10 +8109,24 @@
 <file>
 <dirty>"0"</dirty>
 <relativepath>"..\resources\org\jboss\metadata\ejb-jar.dtd"</relativepath>
-<editor open="0">
+<editor open="1">
 <selection start="0" end="0">
 </selection>
 <window x="0" y="0" width="0" height="0">
+</window>
+</editor>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"1"</dirty>
+<relativepath>"..\resources\org\jboss\metadata\jaws.dtd"</relativepath>
+<editor open="1">
+<selection start="0" end="0">
+</selection>
+<window x="12124344" y="12255418" width="0" height="0">
 </window>
 </editor>
 <scmstatus id="0">

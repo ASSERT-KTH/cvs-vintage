@@ -1,7 +1,7 @@
 /*
- * jBoss, the OpenSource EJB server
+ * JBoss, the OpenSource EJB server
  *
- * Distributable under GPL license.
+ * Distributable under LGPL license.
  * See terms of license at gnu.org.
  */
 package org.jboss.ejb.plugins.jaws.deployment;
@@ -28,7 +28,7 @@ import com.dreambean.ejx.Util;
  *   @see <related>
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
  *   @author <a href="marc.fleury@telkel.com">Marc Fleury</a>
- *   @version $Revision: 1.4 $
+ *   @version $Revision: 1.5 $
  */
 public class JawsEnterpriseBeans
    extends com.dreambean.ejx.ejb.EnterpriseBeans

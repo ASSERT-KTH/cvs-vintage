@@ -1,7 +1,7 @@
 /*
- * jBoss, the OpenSource EJB server
+ * JBoss, the OpenSource EJB server
  *
- * Distributable under GPL license.
+ * Distributable under LGPL license.
  * See terms of license at gnu.org.
  */
 package org.jboss.ejb.plugins.jaws.deployment.editors;
@@ -15,7 +15,7 @@ import com.dreambean.awt.editors.TagsEditor;
  *      
  *   @see DDEditor
  *   @author $Author: oberg $
- *   @version $Revision: 1.2 $
+ *   @version $Revision: 1.3 $
  */
 public class JdbcTypeEditor
    extends TagsEditor

@@ -1,7 +1,7 @@
 /*
- * jBoss, the OpenSource EJB server
+ * JBoss, the OpenSource EJB server
  *
- * Distributable under GPL license.
+ * Distributable under LGPL license.
  * See terms of license at gnu.org.
  */
 package org.jboss.logging;
@@ -21,11 +21,10 @@ import org.jboss.util.ServiceMBeanSupport;
  *      
  *   @see <related>
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
- *   @version $Revision: 1.5 $
+ *   @version $Revision: 1.6 $
  */
 public class ConsoleLogging
-   extends ServiceMBeanSupport
-   implements ConsoleLoggingMBean, NotificationListener
+   implements ConsoleLoggingMBean, NotificationListener, MBeanRegistration
 {
    // Constants -----------------------------------------------------
     
@@ -41,7 +40,6 @@ public class ConsoleLogging
    String filter = "Information,Debug,Warning,Error";
    
    ObjectName name;
-   MBeanServer server;
    
    // Static --------------------------------------------------------
 
@@ -75,36 +73,38 @@ public class ConsoleLogging
          out.println(msgFmt.format(args));
    }
    
-   // Service implementation ------------------------------
-   public ObjectName getObjectName(MBeanServer server, ObjectName name)
-      throws javax.management.MalformedObjectNameException
+   // MBeanRegistration implementation ------------------------------
+   public ObjectName preRegister(MBeanServer server, ObjectName name)
+      throws java.lang.Exception
    {
-      this.server = server;
-      return name == null ? new ObjectName(OBJECT_NAME) : name;
-   }
-   
-   public String getName()
-   {
-      return "Console logging";
-   }
-   
-   public void initService()
-      throws Exception
-   {
-      out = System.out;
-      err = System.err;
-      
       NotificationFilterSupport f = new NotificationFilterSupport();
       StringTokenizer types = new StringTokenizer(filter, ",");
       while (types.hasMoreTokens())
          f.enableType(types.nextToken());
-      
+   
       server.addNotificationListener(new ObjectName(server.getDefaultDomain(),"service","Log"),this,f,null);
-      
+   
+      return name == null ? new ObjectName(OBJECT_NAME) : name;
+   }
+   
+   public void postRegister(java.lang.Boolean registrationDone) 
+   {
+      out = System.out;
+      err = System.err;
+   
       LogStream outLog = new LogStream("Information");
       LogStream errLog = new LogStream("Error");
       System.setOut(outLog);
       System.setErr(errLog);
+   }
+   
+   public void preDeregister()
+      throws java.lang.Exception 
+   {
+   }
+   
+   public void postDeregister() 
+   {
    }
 }
 

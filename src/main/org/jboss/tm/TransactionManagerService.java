@@ -1,7 +1,7 @@
 /*
- * jBoss, the OpenSource EJB server
+ * JBoss, the OpenSource EJB server
  *
- * Distributable under GPL license.
+ * Distributable under LGPL license.
  * See terms of license at gnu.org.
  */
  
@@ -36,7 +36,7 @@ import org.jboss.util.ServiceMBeanSupport;
  *      
  *   @see TxManager
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
- *   @version $Revision: 1.4 $
+ *   @version $Revision: 1.5 $
  */
 public class TransactionManagerService
    extends ServiceMBeanSupport
@@ -47,6 +47,8 @@ public class TransactionManagerService
     
    // Attributes ----------------------------------------------------
     MBeanServer server;
+    
+    int timeout;
    
    // Static --------------------------------------------------------
    static TxManager tm;
@@ -64,11 +66,14 @@ public class TransactionManagerService
       return new ObjectName(OBJECT_NAME);
    }
     
-   protected void initService()
+   protected void startService()
       throws Exception
    {
        // Create a new TM
        tm = new TxManager();
+       
+       // Set timeout
+       tm.setTransactionTimeout(timeout);
         
        // Bind reference to TM in JNDI
         // TODO: Move this to start when relationships are in place
@@ -76,11 +81,6 @@ public class TransactionManagerService
        new InitialContext().bind(JNDI_NAME, ref);
    }
     
-   protected void startService()
-      throws Exception
-   {
-   }
-   
    protected void stopService()
    {
         try
@@ -94,14 +94,11 @@ public class TransactionManagerService
    }
     
    public int getTransactionTimeout() {
-      return tm.getTransactionTimeout();
+      return timeout;
    }
 
    public void setTransactionTimeout(int timeout) {
-      try {
-         tm.setTransactionTimeout(timeout);
-      } catch (Exception ex) {
-      }
+      this.timeout = timeout;
    }
 
     // ObjectFactory implementation ----------------------------------

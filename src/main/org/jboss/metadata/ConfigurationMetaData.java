@@ -1,7 +1,7 @@
 /*
- * jBoss, the OpenSource EJB server
+ * JBoss, the OpenSource EJB server
  *
- * Distributable under GPL license.
+ * Distributable under LGPL license.
  * See terms of license at gnu.org.
  */
 package org.jboss.metadata;
@@ -15,7 +15,7 @@ import org.jboss.ejb.DeploymentException;
  *      
  *   @see <related>
  *   @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
- *   @version $Revision: 1.8 $
+ *   @version $Revision: 1.9 $
  */
 public class ConfigurationMetaData extends MetaData {
     
@@ -43,11 +43,12 @@ public class ConfigurationMetaData extends MetaData {
 	private String instanceCache;
 	private String persistenceManager;
 	private String transactionManager;
-    private byte commitOption;
+   private byte commitOption;
 	private boolean callLogging;
+	private boolean readOnlyGetMethods;
 	
-  private String authenticationModule;
-  private String roleMappingManager;
+   private String authenticationModule;
+   private String roleMappingManager;
 
 	private Element containerInvokerConf;
 	private Element containerPoolConf;
@@ -86,7 +87,8 @@ public class ConfigurationMetaData extends MetaData {
 	public boolean getCallLogging() { return callLogging; }
 	
 	public byte getCommitOption() { return commitOption; }
-	
+
+	public boolean getReadOnlyGetMethods() { return readOnlyGetMethods; }
 	
 	public void importJbossXml(Element element) throws DeploymentException {
 
@@ -96,6 +98,9 @@ public class ConfigurationMetaData extends MetaData {
 		// set call logging
 		callLogging = Boolean.valueOf(getElementContent(getOptionalChild(element, "call-logging"), String.valueOf(callLogging))).booleanValue();
 		
+		// set read-only get methods
+		readOnlyGetMethods = Boolean.valueOf(getElementContent(getOptionalChild(element, "read-only-get-methods"))).booleanValue();
+      
 		// set the container invoker
 		containerInvoker = getElementContent(getOptionalChild(element, "container-invoker"), containerInvoker);
 		

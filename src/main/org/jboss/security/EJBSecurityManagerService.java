@@ -1,7 +1,7 @@
 /*
- * jBoss, the OpenSource EJB server
+ * JBoss, the OpenSource EJB server
  *
- * Distributable under GPL license.
+ * Distributable under LGPL license.
  * See terms of license at gnu.org.
  */
  
@@ -73,15 +73,14 @@ public class EJBSecurityManagerService
    {
        // Create a new SM
        sm = new EJBSecurityManagerDefaultImpl();
-       
-       // Bind reference to SM in JNDI
-       Reference ref = new Reference(sm.getClass().toString(), getClass().getName(), null);
-       new InitialContext().bind(JNDI_NAME, ref);
    }
     
    protected void startService()
       throws Exception
    {
+      // Bind reference to SM in JNDI
+      Reference ref = new Reference(sm.getClass().toString(), getClass().getName(), null);
+      new InitialContext().bind(JNDI_NAME, ref);
    }
    
    protected void stopService()

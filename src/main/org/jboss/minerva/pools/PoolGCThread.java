@@ -1,7 +1,7 @@
 /*
- * jBoss, the OpenSource EJB server
+ * JBoss, the OpenSource EJB server
  *
- * Distributable under GPL license.
+ * Distributable under LGPL license.
  * See terms of license at gnu.org.
  */
 package org.jboss.minerva.pools;
@@ -13,7 +13,7 @@ import java.util.*;
  * created, no matter how many pools there are - it just tries to calculate
  * the next time it should run based on the figues for all the pools.  It will
  * run on any pools which are "pretty close" to their requested time.
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  * @author Aaron Mulder (ammulder@alumni.princeton.edu)
  */
 class PoolGCThread extends Thread {

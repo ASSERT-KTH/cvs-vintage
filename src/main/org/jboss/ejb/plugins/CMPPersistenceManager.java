@@ -1,7 +1,7 @@
 /*
-* jBoss, the OpenSource EJB server
+* JBoss, the OpenSource EJB server
 *
-* Distributable under GPL license.
+* Distributable under LGPL license.
 * See terms of license at gnu.org.
 */                           
 package org.jboss.ejb.plugins;
@@ -40,7 +40,7 @@ import org.jboss.ejb.EntityPersistenceStore;
 *      
 *   @see <related>
 *   @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
-*   @version $Revision: 1.13 $
+*   @version $Revision: 1.14 $
 */
 public class CMPPersistenceManager
 implements EntityPersistenceManager {

@@ -1,7 +1,7 @@
 /*
- * jBoss, the OpenSource EJB server
+ * JBoss, the OpenSource EJB server
  *
- * Distributable under GPL license.
+ * Distributable under LGPL license.
  * See terms of license at gnu.org.
  */
 package org.jboss.util;
@@ -12,7 +12,7 @@ package org.jboss.util;
  *
  * @see Executable
  * @author Simone Bordet (simone.bordet@compaq.com)
- * @version $Revision: 1.4 $
+ * @version $Revision: 1.5 $
  */
 public class WorkerQueue
 {

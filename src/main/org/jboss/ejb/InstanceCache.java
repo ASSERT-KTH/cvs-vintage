@@ -1,7 +1,7 @@
 /*
- * jBoss, the OpenSource EJB server
+ * JBoss, the OpenSource EJB server
  *
- * Distributable under GPL license.
+ * Distributable under LGPL license.
  * See terms of license at gnu.org.
  */
 package org.jboss.ejb;
@@ -14,7 +14,7 @@ import java.rmi.NoSuchObjectException;
  *      
  *	@author Rickard Öberg (rickard.oberg@telkel.com)
  *  @author Simone Bordet (simone.bordet@compaq.com)
- *	@version $Revision: 1.5 $
+ *	@version $Revision: 1.6 $
  */
 public interface InstanceCache
    extends ContainerPlugin

@@ -1,7 +1,7 @@
 /*
- * jBoss, the OpenSource EJB server
+ * JBoss, the OpenSource EJB server
  *
- * Distributable under GPL license.
+ * Distributable under LGPL license.
  * See terms of license at gnu.org.
  */
  
@@ -20,39 +20,50 @@ import org.jboss.logging.Log;
  *      
  *   @see <related>
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
- *   @version $Revision: 1.1 $
+ *   @version $Revision: 1.2 $
  */
 public class JdbcProvider
-   implements JdbcProviderMBean, MBeanRegistration
+   extends org.jboss.util.ServiceMBeanSupport
+   implements JdbcProviderMBean
 {
    // Constants -----------------------------------------------------
    public static final String OBJECT_NAME = ":service=JdbcProvider";
     
    // Attributes ----------------------------------------------------
-   
-   Log log = new Log("JDBC");
+   String driverList = System.getProperty("jdbc.drivers");
    
    // Static --------------------------------------------------------
 
    // Constructors --------------------------------------------------
    
    // Public --------------------------------------------------------
-   public void start()
+   public void setDrivers(String driverList)
+   {
+      this.driverList = driverList;
+      System.setProperty("jdbc.drivers", driverList);
+   }
+   
+   public String getDrivers()
+   {
+      return driverList;
+   }
+   
+   // ServiceMBeanSupport overrides ---------------------------------
+   public String getName()
+   {
+      return "Transaction manager";
+    }
+   
+   protected ObjectName getObjectName(MBeanServer server, ObjectName name)
+      throws javax.management.MalformedObjectNameException
+   {
+      return name == null ? new ObjectName(OBJECT_NAME) : name;
+   }
+    
+   protected void initService()
       throws Exception
    {
-   }
-   
-   public void stop()
-   {
-   }
-
-   
-   public ObjectName preRegister(MBeanServer server, ObjectName name)
-      throws java.lang.Exception
-   {
-      Log.setLog(log);
-      
-      StringTokenizer drivers = new StringTokenizer(System.getProperty("jdbc.drivers"), ",");
+      StringTokenizer drivers = new StringTokenizer(driverList, ",");
       while (drivers.hasMoreTokens())
       {
          String driver = drivers.nextToken();
@@ -65,31 +76,5 @@ public class JdbcProvider
             log.error("Could not load driver:"+driver);
          }
       }
-         
-      Log.unsetLog();
-      
-      return new ObjectName(OBJECT_NAME);
    }
-   
-   public void postRegister(java.lang.Boolean registrationDone)
-   {
-   }
-   
-   public void preDeregister()
-      throws java.lang.Exception
-   {
-      Log.setLog(log);
-      try
-      {
-         stop();
-      } finally
-      {
-         Log.unsetLog();
-      }
-   }
-   
-   public void postDeregister()
-   {
-   }
-   // Protected -----------------------------------------------------
 }

@@ -1,7 +1,7 @@
 /*
- * jBoss, the OpenSource EJB server
+ * JBoss, the OpenSource EJB server
  *
- * Distributable under GPL license.
+ * Distributable under LGPL license.
  * See terms of license at gnu.org.
  */
 
@@ -29,7 +29,7 @@ import org.jboss.util.ServiceMBeanSupport;
  *
  *   @see <related>
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
- *   @version $Revision: 1.10 $
+ *   @version $Revision: 1.11 $
  */
 public class ConfigurationService
    extends ServiceMBeanSupport
@@ -69,45 +69,36 @@ public class ConfigurationService
        return "Configuration";
     }
 
-    public void load(String configuration)
+    public void load(Document configuration)
         throws Exception
     {
         try
         {
-            // Parse XML
-            Document doc;
-            XmlDocumentBuilder xdb = new XmlDocumentBuilder();
-            Parser parser = new com.sun.xml.parser.Parser();
-            xdb.setParser(parser);
-
-            try
-            {
-                parser.parse(new InputSource(new StringReader(configuration)));
-                doc = xdb.getDocument();
-            }
-            catch (SAXException se)
-            {
-                 throw new IOException(se.getMessage());
-            }
-
             // Set configuration to MBeans from XML
-            NodeList nl = doc.getElementsByTagName("mbean");
+            NodeList nl = configuration.getElementsByTagName("mbean");
             for (int i = 0; i < nl.getLength(); i++)
             {
                 Element mbeanElement = (Element)nl.item(i);
 
                 String name = mbeanElement.getAttribute("name");
+                
+                if (name == null)
+                  continue; // MBean ObjectName must be given
+                
                 ObjectName objectName = new ObjectName(name);
 
                 MBeanInfo info;
-                try {
+                try 
+                {
                     info = server.getMBeanInfo(objectName);
-                } catch (InstanceNotFoundException e) {
-                    // the service is no longer available (removed from jboss.conf?)
-                    // it's ok, skip to next one
-                    continue;
+                } catch (InstanceNotFoundException e) 
+                {
+                  // The MBean is no longer available
+                  // It's ok, skip to next one
+                  continue;
                 }
 
+                // Set attributes
                 NodeList attrs = mbeanElement.getElementsByTagName("attribute");
                 for (int j = 0; j < attrs.getLength(); j++)
                 {
@@ -147,6 +138,11 @@ public class ConfigurationService
             }
         } catch (Throwable e)
         {
+            if (e instanceof RuntimeMBeanException)
+            {
+               e = ((RuntimeMBeanException)e).getTargetException();
+            }
+        
             Log.getLog().exception(e);
             throw (Exception)e;
         }
@@ -162,16 +158,18 @@ public class ConfigurationService
 
         Element serverElement = doc.createElement("server");
 
-        Iterator mbeans = server.queryNames(null, null).iterator();
+        // Store attributes as XML
+        Iterator mbeans = server.queryMBeans(null, null).iterator();
         while (mbeans.hasNext())
         {
-            ObjectName name = (ObjectName)mbeans.next();
+            ObjectInstance instance = (ObjectInstance)mbeans.next();
+            ObjectName name = (ObjectName)instance.getObjectName();
             Element mbeanElement = doc.createElement("mbean");
             mbeanElement.setAttribute("name",name.toString());
-
+            
             MBeanInfo info = server.getMBeanInfo(name);
             MBeanAttributeInfo[] attributes = info.getAttributes();
-            boolean hasAttributes = false;
+            boolean hasAttributes = true;
             for (int i = 0; i < attributes.length; i++)
             {
                 if (attributes[i].isReadable() && isAttributeWriteable(server.getObjectInstance(name).getClassName(), attributes[i].getName(), attributes[i].getType()))
@@ -199,7 +197,7 @@ public class ConfigurationService
         doc.appendChild(serverElement);
 
         // Write configuration
-        doc.writeXml(new XmlWriteContext(out,3));
+        doc.write(out, "UTF-8");
         out.close();
 
         // Return configuration
@@ -213,29 +211,151 @@ public class ConfigurationService
       String xml = save();
       
       // Get JCML file
-      URL confFile = Thread.currentThread().getContextClassLoader().getResource("jboss.jcml");
+      URL confFile = Thread.currentThread().getContextClassLoader().getResource("jboss-auto.jcml");
       
-      // Store to JCML file
-      PrintWriter out = new PrintWriter(new FileOutputStream(confFile.getFile()));
-      out.print(xml);
-      out.close();
+      if (confFile != null)
+      {
+         // Store to auto-saved JCML file
+         PrintWriter out = new PrintWriter(new FileOutputStream(confFile.getFile()));
+         out.print(xml);
+         out.close();
+      }
    }
 
     public void loadConfiguration()
        throws Exception
     {
-       // Load from XML
+      // This is a 3-step process
+      // 1) Load user conf. and create MBeans from that
+      // 2) Load auto-saved conf and apply to created MBeans
+      // 3) Apply user conf to created MBeans, overwriting any auto-saved conf.
+    
+       // Load user config from XML, and create the MBeans
        InputStream conf = Thread.currentThread().getContextClassLoader().getResourceAsStream("jboss.jcml");
        byte[] arr = new byte[conf.available()];
        conf.read(arr);
        conf.close();
        String cfg = new String(arr);
        
-       // Load settings
-       load(cfg);
+       // Parse XML
+       Document userConf;
+       XmlDocumentBuilder xdb = new XmlDocumentBuilder();
+       Parser parser = new com.sun.xml.parser.Parser();
+       xdb.setParser(parser);
+
+       try
+       {
+           parser.parse(new InputSource(new StringReader(cfg)));
+           userConf = xdb.getDocument();
+       }
+       catch (SAXException se)
+       {
+            throw new IOException(se.getMessage());
+       }
+       
+       create(userConf);
+       
+       // Load auto-saved configuration from XML, and apply it
+       conf = Thread.currentThread().getContextClassLoader().getResourceAsStream("jboss-auto.jcml");
+       if (conf != null) // The auto file is optional
+       {
+          arr = new byte[conf.available()];
+          conf.read(arr);
+          conf.close();
+          cfg = new String(arr);
+          
+          // Parse XML
+          Document autoConf;
+          xdb = new XmlDocumentBuilder();
+          parser = new com.sun.xml.parser.Parser();
+          xdb.setParser(parser);
+   
+          try
+          {
+              parser.parse(new InputSource(new StringReader(cfg)));
+              autoConf = xdb.getDocument();
+          }
+          catch (SAXException se)
+          {
+               throw new IOException(se.getMessage());
+          }
+          
+          load(autoConf);
+       }
+       
+       // Apply user conf
+       conf = Thread.currentThread().getContextClassLoader().getResourceAsStream("jboss.jcml");
+       arr = new byte[conf.available()];
+       conf.read(arr);
+       conf.close();
+       cfg = new String(arr);
+       
+       load(userConf);
     }
     
     // Protected -----------------------------------------------------
+    protected void create(Document configuration)
+        throws Exception
+    {
+        try
+        {
+            // Set configuration to MBeans from XML
+            NodeList nl = configuration.getElementsByTagName("mbean");
+            for (int i = 0; i < nl.getLength(); i++)
+            {
+                Element mbeanElement = (Element)nl.item(i);
+
+                String name = mbeanElement.getAttribute("name");
+                
+                if (name == null)
+                  continue; // MBean ObjectName must be given
+                
+                ObjectName objectName = new ObjectName(name);
+
+                MBeanInfo info;
+                try {
+                    info = server.getMBeanInfo(objectName);
+                } catch (InstanceNotFoundException e) 
+                {
+                  // The MBean is no longer available
+                  // If class is given, instantiate it
+                  String code = mbeanElement.getAttribute("code");
+                  if (code != null)
+                  {
+                     try
+                     {
+                        // Create MBean
+                        ObjectInstance instance = server.createMBean(code, objectName, new ObjectName(server.getDefaultDomain(), "service", "MLet"));
+                        info = server.getMBeanInfo(instance.getObjectName());
+                     } catch (Exception ex)
+                     {
+                        log.error("Could not create MBean "+name+"("+code+")");
+                        if (ex instanceof RuntimeMBeanException)
+                           ex = ((RuntimeMBeanException)ex).getTargetException();
+                        log.exception(ex);
+                        // Ah what the heck.. skip it
+                        continue;
+                     }
+                  } else
+                  {
+                     // No code attribute given - can't instantiate
+                     // it's ok, skip to next one
+                     continue;
+                  }
+                }
+            }
+        } catch (Throwable e)
+        {
+            if (e instanceof RuntimeMBeanException)
+            {
+               e = ((RuntimeMBeanException)e).getTargetException();
+            }
+        
+            Log.getLog().exception(e);
+            throw (Exception)e;
+        }
+    }
+    
     private boolean isAttributeWriteable(String className, String attribute, String type) {
         Class arg = null;
         Class cls = null;

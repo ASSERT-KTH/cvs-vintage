@@ -1,7 +1,7 @@
 /*
- * jBoss, the OpenSource EJB server
+ * JBoss, the OpenSource EJB server
  *
- * Distributable under GPL license.
+ * Distributable under LGPL license.
  * See terms of license at gnu.org.
  */
 package org.jboss.ejb;
@@ -40,7 +40,7 @@ import org.jboss.deployment.J2eeDeployerMBean;
  *
  *   @see ContainerFactory
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
- *   @version $Revision: 1.10 $
+ *   @version $Revision: 1.11 $
  */
 public class AutoDeployer
 	extends ServiceMBeanSupport
@@ -54,7 +54,7 @@ public class AutoDeployer
    MBeanServer server;
 
 	// in case more then one J2eeDeployers are available
-	String namedDeployer;
+	String namedDeployer = "";
 
 	// JMX name of the ContainerFactory
    ObjectName factoryName;
@@ -70,95 +70,48 @@ public class AutoDeployer
 
 	// These URL's are being watched
    ArrayList watchedURLs = new ArrayList();
+   
+   // URL list
+   String urlList = "";
 
    // Static --------------------------------------------------------
 
    // Constructors --------------------------------------------------
+   public AutoDeployer()
+   {
+      this("");
+   }
+   
    public AutoDeployer(String urlList)
    {
-	   this ("", urlList);
+	   this ("Default", urlList);
    }
 	
 
    public AutoDeployer(String _namedDeployer, String urlList)
    {
-	   namedDeployer = _namedDeployer.equals("") ? "" : " "+_namedDeployer;
-	   log = new Log (getName());
-	   addURLs(urlList);
+	   setDeployer(_namedDeployer);
+	   setURLs(urlList);
    }
 
-	public void addURLs(String urlList)
+	public void setURLs(String urlList)
 	{
-      StringTokenizer urls = new StringTokenizer(urlList, ",");
-
-		// Add URLs to list
-      while (urls.hasMoreTokens())
-      {
-         String url = urls.nextToken();
-
-         // Check if directory
-         File urlFile = new File(url.startsWith ("file:") ? url.substring (5) : url);
-         if (urlFile.exists() && urlFile.isDirectory())
-         {
-            File metaFile = new File(urlFile, "META-INF"+File.separator+"ejb-jar.xml");
-            if (metaFile.exists()) // It's unpackaged
-            {
-               try
-               {
-                  watchedURLs.add(new Deployment(urlFile.getCanonicalFile().toURL()));
-                  log.log("Auto-deploying "+urlFile.getCanonicalFile());
-               } catch (Exception e)
-               {
-                  log.warning("Cannot auto-deploy "+urlFile);
-               }
-            } else
-            {
-					// This is a directory whose contents shall be checked for deployments
-               try
-               {
-                  watchedDirectories.add(urlFile.getCanonicalFile());
-                  log.log("Watching "+urlFile.getCanonicalFile());
-               } catch (IOException e)
-               {
-                  log.warning(e.toString());
-               }
-            }
-         } else if (urlFile.exists()) // It's a file
-         {
-               // Check if it's a JAR or zip
-               if (!(url.endsWith(".jar") ||
-                     url.endsWith(".ear") ||
-                     url.endsWith(".war") ||
-                     url.endsWith(".zip")))
-                  continue; // Was not a JAR or zip - skip it...
-
-               try
-               {
-                  watchedURLs.add(new Deployment(urlFile.getCanonicalFile().toURL()));
-                  log.log("Auto-deploying "+urlFile.getCanonicalFile());
-               } catch (Exception e)
-               {
-                  log.warning("Cannot auto-deploy "+urlFile);
-               }
-         } else // It's a real URL (probably http:)
-         {
-            // Check if it's a JAR or zip
-            if (!(url.endsWith(".jar") ||
-                  url.endsWith(".ear") ||
-                  url.endsWith(".war") ||
-                  url.endsWith(".zip")))
-               continue; // Was not a JAR or zip - skip it...
-
-            try
-            {
-               watchedURLs.add(new Deployment(new URL(url)));
-            } catch (MalformedURLException e)
-            {
-               // Didn't work
-               log.warning("Cannot auto-deploy "+url);
-            }
-         }
-      }
+      this.urlList = urlList;
+   }
+   
+   public String getURLs()
+   {
+      return urlList;
+   }
+   
+   public void setDeployer(String deployer)
+   {
+      this.namedDeployer = deployer;
+   }
+   
+   public String getDeployer()
+   {
+      return namedDeployer;
    }
 
    // Public --------------------------------------------------------
@@ -288,7 +241,7 @@ public class AutoDeployer
    // ServiceMBeanSupport overrides ---------------------------------
    public String getName()
    {
-      return "Auto deploy"+namedDeployer;
+      return "Auto deploy";
    }
 
    protected ObjectName getObjectName(MBeanServer server, ObjectName name)
@@ -298,16 +251,84 @@ public class AutoDeployer
       return new ObjectName(OBJECT_NAME+namedDeployer);
    }
 
-   protected void initService()
-      throws Exception
-   {
-      // Save JMX name of ContainerFactory
-      factoryName = new ObjectName(J2eeDeployerMBean.OBJECT_NAME + namedDeployer);
-   }
-
    protected void startService()
       throws Exception
    {
+      // Save JMX name of EJB ContainerFactory
+      factoryName = new ObjectName(namedDeployer);
+      
+      StringTokenizer urls = new StringTokenizer(urlList, ",");
+
+      // Add URLs to list
+      while (urls.hasMoreTokens())
+      {
+         String url = urls.nextToken();
+
+         // Check if directory
+         File urlFile = new File(url.startsWith ("file:") ? url.substring (5) : url);
+         if (urlFile.exists() && urlFile.isDirectory())
+         {
+            File metaFile = new File(urlFile, "META-INF"+File.separator+"ejb-jar.xml");
+            if (metaFile.exists()) // It's unpackaged
+            {
+               try
+               {
+                  watchedURLs.add(new Deployment(urlFile.getCanonicalFile().toURL()));
+                  log.log("Auto-deploying "+urlFile.getCanonicalFile());
+               } catch (Exception e)
+               {
+                  log.warning("Cannot auto-deploy "+urlFile);
+               }
+            } else
+            {
+   			   // This is a directory whose contents shall be checked for deployments
+               try
+               {
+                  watchedDirectories.add(urlFile.getCanonicalFile());
+                  log.log("Watching "+urlFile.getCanonicalFile());
+               } catch (IOException e)
+               {
+                  log.warning(e.toString());
+               }
+            }
+         } else if (urlFile.exists()) // It's a file
+         {
+               // Check if it's a JAR or zip
+               if (!(url.endsWith(".jar") ||
+                     url.endsWith(".ear") ||
+                     url.endsWith(".war") ||
+                     url.endsWith(".zip")))
+                  continue; // Was not a JAR or zip - skip it...
+
+               try
+               {
+                  watchedURLs.add(new Deployment(urlFile.getCanonicalFile().toURL()));
+                  log.log("Auto-deploying "+urlFile.getCanonicalFile());
+               } catch (Exception e)
+               {
+                  log.warning("Cannot auto-deploy "+urlFile);
+               }
+         } else // It's a real URL (probably http:)
+         {
+            // Check if it's a JAR or zip
+            if (!(url.endsWith(".jar") ||
+                  url.endsWith(".ear") ||
+                  url.endsWith(".war") ||
+                  url.endsWith(".zip")))
+               continue; // Was not a JAR or zip - skip it...
+
+            try
+            {
+               watchedURLs.add(new Deployment(new URL(url)));
+            } catch (MalformedURLException e)
+            {
+               // Didn't work
+               log.warning("Cannot auto-deploy "+url);
+            }
+         }
+      }
+
+
       run(); // Pre-deploy. This is done so that deployments available
       		 // on start of container is deployed ASAP
 
@@ -320,6 +341,11 @@ public class AutoDeployer
    {
    	// Stop auto deploy thread
       running = false;
+      
+      // Clear lists
+      watchedDirectories.clear();
+      watchedURLs.clear();
+      deployedURLs.clear();
    }
 
    // Protected -----------------------------------------------------

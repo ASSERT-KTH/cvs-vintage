@@ -1,7 +1,7 @@
 /*
- * jBoss, the OpenSource EJB server
+ * JBoss, the OpenSource EJB server
  *
- * Distributable under GPL license.
+ * Distributable under LGPL license.
  * See terms of license at gnu.org.
  */
 package org.jboss.logging;
@@ -17,7 +17,7 @@ import javax.management.*;
  *      
  *   @see <related>
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
- *   @version $Revision: 1.6 $
+ *   @version $Revision: 1.7 $
  */
 public class Logger
    extends NotificationBroadcasterSupport
@@ -111,7 +111,7 @@ public class Logger
    public ObjectName preRegister(MBeanServer server, ObjectName name)
       throws java.lang.Exception
    {
-      return new ObjectName("DefaultDomain:service=Log");
+      return name == null ? new ObjectName("DefaultDomain:service=Log") : name;
    }
    
    public void postRegister(java.lang.Boolean registrationDone) 

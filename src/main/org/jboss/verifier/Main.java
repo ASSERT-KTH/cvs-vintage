@@ -19,7 +19,7 @@ package org.jboss.verifier;
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  *
  * This package and its source code is available at www.jboss.org
- * $Id: Main.java,v 1.2 2000/11/29 14:00:41 juha Exp $
+ * $Id: Main.java,v 1.3 2000/12/07 15:45:24 oberg Exp $
  *
  * You can reach the author by sending email to jplindfo@helsinki.fi.
  */
@@ -41,12 +41,12 @@ import org.jboss.metadata.XmlFileLoader;
  * Main class for bean verifier.
  *
  * For more detailed documentation, refer to the
- * <a href="http://www.ejboss.org">jBoss project</a>
+ * <a href="http://www.ejboss.org">JBoss project</a>
  *
  * @see     << OTHER RELATED CLASSES >>
  *
  * @author 	Juha Lindfors
- * @version $Revision: 1.2 $
+ * @version $Revision: 1.3 $
  * @since  	JDK 1.3
  */
 public class Main {

@@ -1,7 +1,7 @@
 /*
- * jBoss, the OpenSource EJB server
+ * JBoss, the OpenSource EJB server
  *
- * Distributable under GPL license.
+ * Distributable under LGPL license.
  * See terms of license at gnu.org.
  */
 package org.jboss.ejb.deployment;
@@ -32,7 +32,7 @@ import org.jboss.logging.Logger;
  *   @see <related>
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
  *   @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
- *   @version $Revision: 1.11 $
+ *   @version $Revision: 1.12 $
  */
 public class jBossFileManager
    extends BeanContextServicesSupport
@@ -103,7 +103,7 @@ public class jBossFileManager
          in.close();
          ejbJar.importXml(doc.getDocumentElement());
 
-         // Load jBoss XML
+         // Load JBoss XML
          try
          {
             in = new BufferedReader(new InputStreamReader(new URL(file, "jboss.xml").openStream()));
@@ -114,7 +114,7 @@ public class jBossFileManager
          } catch (IOException e)
          {
             // Couldn't find jboss.xml.. that's ok!
-			// Load default jBoss XML
+			// Load default JBoss XML
             InputStream jbossXml = getClass().getResourceAsStream("defaultjboss.xml");
             if (jbossXml == null)
             {
@@ -147,12 +147,12 @@ public class jBossFileManager
 
 
 
-         // Load jBoss XML
+         // Load JBoss XML
          InputStream jbossXml = getClassLoader().getResourceAsStream("META-INF/jboss.xml");
          if (jbossXml == null)
          {
             // We want to use this file, but it doesn't contain the XML file yet (i.e. it's a JAR without the jboss.xml file)
-            // Load default jBoss XML
+            // Load default JBoss XML
             jbossXml = getClass().getResourceAsStream("defaultjboss.xml");
             if (jbossXml == null)
             {
@@ -180,12 +180,12 @@ public class jBossFileManager
          ejbXml.close();
          ejbJar.importXml(doc.getDocumentElement());
 
-         // Load jBoss XML
+         // Load JBoss XML
          InputStream jbossXml = getClassLoader().getResourceAsStream("META-INF/jboss.xml");
          if (jbossXml == null)
          {
             // We want to use this file, but it doesn't contain the XML file yet (i.e. it's a JAR without the jboss.xml file)
-            // Load default jBoss XML
+            // Load default JBoss XML
             jbossXml = getClass().getResourceAsStream("defaultjboss.xml");
             if (jbossXml == null)
             {
@@ -220,7 +220,7 @@ public class jBossFileManager
    {
       ejbJar = new jBossEjbJar();
 
-      // Load default jBoss XML
+      // Load default JBoss XML
       InputStream jbossXml = getClass().getResourceAsStream("defaultjboss.xml");
       if (jbossXml == null)
       {

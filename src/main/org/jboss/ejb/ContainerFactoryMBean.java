@@ -1,7 +1,7 @@
 /*
- * jBoss, the OpenSource EJB server
+ * JBoss, the OpenSource EJB server
  *
- * Distributable under GPL license.
+ * Distributable under LGPL license.
  * See terms of license at gnu.org.
  */
 package org.jboss.ejb;
@@ -15,13 +15,13 @@ import java.net.MalformedURLException;
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
  *   @author Juha Lindfors (jplindfo@helsinki.fi)
  *
- *   @version $Revision: 1.7 $
+ *   @version $Revision: 1.8 $
  */
 public interface ContainerFactoryMBean
 	extends org.jboss.util.ServiceMBean
 {
    // Constants -----------------------------------------------------
-   public static String OBJECT_NAME = "EJB:service=ContainerFactory";
+   public static String OBJECT_NAME = ":service=ContainerFactory";
     
    // Public --------------------------------------------------------
 

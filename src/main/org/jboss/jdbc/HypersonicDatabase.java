@@ -1,7 +1,7 @@
 /*
- * jBoss, the OpenSource EJB server
+ * JBoss, the OpenSource EJB server
  *
- * Distributable under GPL license.
+ * Distributable under LGPL license.
  * See terms of license at gnu.org.
  */
  
@@ -27,7 +27,7 @@ import org.jboss.util.ServiceMBeanSupport;
  *      
  *   @see HypersonicDatabaseMBean
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
- *   @version $Revision: 1.4 $
+ *   @version $Revision: 1.5 $
  */
 public class HypersonicDatabase
    extends ServiceMBeanSupport

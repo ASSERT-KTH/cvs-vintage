@@ -1,7 +1,7 @@
 /*
- * jBoss, the OpenSource EJB server
+ * JBoss, the OpenSource EJB server
  *
- * Distributable under GPL license.
+ * Distributable under LGPL license.
  * See terms of license at gnu.org.
  */
  
@@ -37,7 +37,7 @@ import org.jboss.logging.Logger;
  * </ul>
  *
  * @author Simone Bordet (simone.bordet@compaq.com)
- * @version $Revision: 1.8 $
+ * @version $Revision: 1.9 $
  */
 public abstract class EnterpriseInstanceCache 
 	implements InstanceCache, XmlLoadable

@@ -1,7 +1,7 @@
 /*
- * jBoss, the OpenSource EJB server
+ * JBoss, the OpenSource EJB server
  *
- * Distributable under GPL license.
+ * Distributable under LGPL license.
  * See terms of license at gnu.org.
  */
 package org.jboss.minerva.pools;
@@ -12,7 +12,7 @@ package org.jboss.minerva.pools;
  * when an object is checked out, and deregister when the object is returned.
  * Then if the object sends a close or error event, the pool will return the
  * object to the pool without the client having to do so explicitly.
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  * @author Aaron Mulder (ammulder@alumni.princeton.edu)
  */
 public interface PooledObject {

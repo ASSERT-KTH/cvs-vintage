@@ -1,7 +1,7 @@
 /*
- * jBoss, the OpenSource EJB server
+ * JBoss, the OpenSource EJB server
  *
- * Distributable under GPL license.
+ * Distributable under LGPL license.
  * See terms of license at gnu.org.
  */
 package org.jboss.minerva.jdbc;
@@ -23,7 +23,7 @@ import java.sql.Timestamp;
  * Wraps a result set to track the last used time for the owning connection.
  * That time is updated every time a navigation action is performed on the
  * result set (next, previous, etc.).
- * @version $Revision: 1.3 $
+ * @version $Revision: 1.4 $
  * @author Aaron Mulder (ammulder@alumni.princeton.edu)
  */
 public class ResultSetInPool implements ResultSet {

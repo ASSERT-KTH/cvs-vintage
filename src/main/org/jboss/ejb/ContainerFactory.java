@@ -1,7 +1,7 @@
 /*
-* jBoss, the OpenSource EJB server
+* JBoss, the OpenSource EJB server
 *
-* Distributable under GPL license.
+* Distributable under LGPL license.
 * See terms of license at gnu.org.
 */
 package org.jboss.ejb;
@@ -79,7 +79,7 @@ import org.jboss.logging.Logger;
 *   @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
 *   @author Peter Antman (peter.antman@tim.se)
 *
-*   @version $Revision: 1.58 $
+*   @version $Revision: 1.59 $
 */
 public class ContainerFactory
     extends org.jboss.util.ServiceMBeanSupport
@@ -108,7 +108,7 @@ public class ContainerFactory
 
    // Enable metrics interceptor
    boolean metricsEnabled    = false;
-   
+
    // Public --------------------------------------------------------
 
    /**
@@ -136,40 +136,6 @@ public class ContainerFactory
    public String getName()
    {
       return "Container factory";
-   }
-
-   /**
-   * Implements the template method in superclass. This method inits the factory
-   */
-   public void initService()
-   {
-/*
-      URL tmpFile = getClass().getResource("/tmp.properties");
-      if (tmpFile != null)
-      {
-         tmpDir = new File(new File(tmpFile.getFile()).getParent(),"deploy/");
-         tmpDir.mkdirs();
-
-         log.debug("Temporary directory set to:"+tmpDir);
-
-         // Clear tmp directory of previously deployed files
-         // This is to clear up if jBoss previously crashed, hence not removing files properly
-         File[] files = tmpDir.listFiles();
-         for (int i = 0; i < files.length; i++)
-         {
-            files[i].delete();
-         }
-
-         if (files.length > 0)
-         {
-            log.debug("Previous deployments removed");
-         }
-      }
-      else
-      {
-         log.debug("Using the systems temporary directory");
-      }
-*/
    }
 
    /**
@@ -247,19 +213,21 @@ public class ContainerFactory
    *
    * @param enable  true to enable; false to disable
    */
-   public void setMetricsEnabled(boolean enable) {
-       metricsEnabled = enable;
+   public void setMetricsEnabled(boolean enable)
+   {
+      metricsEnabled = enable;
    }
-   
+
    /**
-    * Checks if this container factory initializes the metrics interceptor.
-    *
-    * @return   true if metrics are enabled; false otherwise
-    */
-   public boolean isMetricsEnabled() {
-       return metricsEnabled;
+   * Checks if this container factory initializes the metrics interceptor.
+   *
+   * @return   true if metrics are enabled; false otherwise
+   */
+   public boolean isMetricsEnabled()
+   {
+      return metricsEnabled;
    }
-   
+
    /**
    *   Deploy the file at this URL. This method is typically called from remote administration
    *   tools that cannot handle java.net.URL's as parameters to methods
@@ -351,8 +319,8 @@ public class ContainerFactory
 
          // wrapping this into a try - catch block to prevent errors in
          // verifier from stopping the deployment
-         try {
-
+         try 
+         {
             if (verifyDeployments)
             {
                BeanVerifier verifier = new BeanVerifier();
@@ -397,112 +365,113 @@ public class ContainerFactory
             BeanMetaData bean = (BeanMetaData)beans.next();
 
             log.log("Deploying "+bean.getEjbName());
-	    // Added message driven deployment
-	    if (bean.isMessageDriven()) {
-		// Stolen from Stateless deploy
-		// Create container
-                  MessageDrivenContainer container = new MessageDrivenContainer();
+            // Added message driven deployment
+            if (bean.isMessageDriven())
+            {
+               // Stolen from Stateless deploy
+               // Create container
+               MessageDrivenContainer container = new MessageDrivenContainer();
 
-                  // Create classloader for this container
-                  // Only used to identify bean. Not really used for class loading!
-                  container.setClassLoader(new URLClassLoader(new URL[0], cl));
+               // Create classloader for this container
+               // Only used to identify bean. Not really used for class loading!
+               container.setClassLoader(new URLClassLoader(new URL[0], cl));
 
-                  // Set metadata
-                  container.setBeanMetaData(bean);
+               // Set metadata
+               container.setBeanMetaData(bean);
 
-                  // get the container configuration for this bean
-                  // a default configuration is now always provided
-                  ConfigurationMetaData conf = bean.getContainerConfiguration();
+               // get the container configuration for this bean
+               // a default configuration is now always provided
+               ConfigurationMetaData conf = bean.getContainerConfiguration();
 
-                  // Set transaction manager
-                  container.setTransactionManager((TransactionManager)new InitialContext().lookup("java:/TransactionManager"));
+               // Set transaction manager
+               container.setTransactionManager((TransactionManager)new InitialContext().lookup("java:/TransactionManager"));
 
-                  // Set security manager & role mapping manager
-                  String securityManagerJNDIName = conf.getAuthenticationModule();
-                  String roleMappingManagerJNDIName = conf.getRoleMappingManager();
+               // Set security manager & role mapping manager
+               String securityManagerJNDIName = conf.getAuthenticationModule();
+               String roleMappingManagerJNDIName = conf.getRoleMappingManager();
 
-                  if ((securityManagerJNDIName != null) && (roleMappingManagerJNDIName != null))
+               if ((securityManagerJNDIName != null) && (roleMappingManagerJNDIName != null))
+               {
+                  try
                   {
-                     try
-                     {
-                        EJBSecurityManager ejbS = (EJBSecurityManager)new InitialContext().lookup(securityManagerJNDIName);
-                        container.setSecurityManager( ejbS );
-                     }
-                     catch (NamingException ne)
-                     {
-                        throw new DeploymentException( "Could not find the Security Manager specified for this container", ne );
-                     }
-
-                     try
-                     {
-                        RealmMapping rM = (RealmMapping)new InitialContext().lookup(roleMappingManagerJNDIName);
-                        container.setRealmMapping( rM );
-                     }
-                     catch (NamingException ne)
-                     {
-                        throw new DeploymentException( "Could not find the Role Mapping Manager specified for this container", ne );
-                     }
+                     EJBSecurityManager ejbS = (EJBSecurityManager)new InitialContext().lookup(securityManagerJNDIName);
+                     container.setSecurityManager( ejbS );
+                  }
+                  catch (NamingException ne)
+                  {
+                     throw new DeploymentException( "Could not find the Security Manager specified for this container", ne );
                   }
 
-                  // Set container invoker
-                  ContainerInvoker ci = null;
+                  try
+                  {
+                     RealmMapping rM = (RealmMapping)new InitialContext().lookup(roleMappingManagerJNDIName);
+                     container.setRealmMapping( rM );
+                  }
+                  catch (NamingException ne)
+                  {
+                     throw new DeploymentException( "Could not find the Role Mapping Manager specified for this container", ne );
+                  }
+               }
+
+               // Set container invoker
+               ContainerInvoker ci = null;
                  try {
 
                     ci = (ContainerInvoker)cl.loadClass(conf.getContainerInvoker()).newInstance();
-                     } catch(Exception e) {
+                  } catch(Exception e) {
                     throw new DeploymentException("Missing or invalid Container Invoker (in jboss.xml or standardjboss.xml): " + conf.getContainerInvoker() +" - " + e);
-                     }
+                  }
                  if (ci instanceof XmlLoadable) {
                    // the container invoker can load its configuration from the jboss.xml element
                    ((XmlLoadable)ci).importXml(conf.getContainerInvokerConf());
-                     }
+                  }
                  container.setContainerInvoker(ci);
 
-                  // Set instance pool
-                  InstancePool ip = null;
+               // Set instance pool
+               InstancePool ip = null;
                  try {
                     ip = (InstancePool)cl.loadClass(conf.getInstancePool()).newInstance();
-                     } catch(Exception e) {
+                  } catch(Exception e) {
                     throw new DeploymentException("Missing or invalid Instance Pool (in jboss.xml or standardjboss.xml)");
-                     }
+                  }
                   if (ip instanceof XmlLoadable) {
                    ((XmlLoadable)ip).importXml(conf.getContainerPoolConf());
-                     }
+                  }
                  container.setInstancePool(ip);
 
-                  // Create interceptors
+               // Create interceptors
 
-                  container.addInterceptor(new LogInterceptor());
-                  container.addInterceptor(new SecurityInterceptor());
+               container.addInterceptor(new LogInterceptor());
+               container.addInterceptor(new SecurityInterceptor());
 
-                  if (((MessageDrivenMetaData)bean).isContainerManagedTx())
-                  {
-                     // CMT
-                     container.addInterceptor(new TxInterceptorCMT());
-                     
-                     if (metricsEnabled)
-                         container.addInterceptor(new MetricsInterceptor());
-                     
-                     container.addInterceptor(new MessageDrivenInstanceInterceptor());
-                  }
-                  else
-                  {
-                     // BMT
-                     container.addInterceptor(new MessageDrivenInstanceInterceptor());
-		     // FIXME. should we have a special BMT tx interceptor
-		     // to place ACK there???
-                     container.addInterceptor(new MessageDrivenTxInterceptorBMT());
-                     
-                     if (metricsEnabled)
-                         container.addInterceptor(new MetricsInterceptor());
-                  }
+               if (((MessageDrivenMetaData)bean).isContainerManagedTx())
+               {
+                  // CMT
+                  container.addInterceptor(new TxInterceptorCMT());
 
-                  // Finally we add the last interceptor from the container
-                  container.addInterceptor(container.createContainerInterceptor());
+                  if (metricsEnabled)
+                     container.addInterceptor(new MetricsInterceptor());
 
-                  // Add container to application
-                  app.addContainer(container);
-	    }
+                  container.addInterceptor(new MessageDrivenInstanceInterceptor());
+               }
+               else
+               {
+                  // BMT
+                  container.addInterceptor(new MessageDrivenInstanceInterceptor());
+                  // FIXME. should we have a special BMT tx interceptor
+                  // to place ACK there???
+                  container.addInterceptor(new MessageDrivenTxInterceptorBMT());
+
+                  if (metricsEnabled)
+                     container.addInterceptor(new MetricsInterceptor());
+               }
+
+               // Finally we add the last interceptor from the container
+               container.addInterceptor(container.createContainerInterceptor());
+
+               // Add container to application
+               app.addContainer(container);
+            }
             else if (bean.isSession()) // Is session?
             {
                if (((SessionMetaData)bean).isStateless()) // Is stateless?
@@ -585,10 +554,10 @@ public class ContainerFactory
                   {
                      // CMT
                      container.addInterceptor(new TxInterceptorCMT());
-                     
+
                      if (metricsEnabled)
-                         container.addInterceptor(new MetricsInterceptor());
-                     
+                        container.addInterceptor(new MetricsInterceptor());
+
                      container.addInterceptor(new StatelessSessionInstanceInterceptor());
                   }
                   else
@@ -596,9 +565,9 @@ public class ContainerFactory
                      // BMT
                      container.addInterceptor(new StatelessSessionInstanceInterceptor());
                      container.addInterceptor(new TxInterceptorBMT());
-                     
+
                      if (metricsEnabled)
-                         container.addInterceptor(new MetricsInterceptor());
+                        container.addInterceptor(new MetricsInterceptor());
                   }
 
                   // Finally we add the last interceptor from the container
@@ -690,10 +659,10 @@ public class ContainerFactory
                   {
                      // CMT
                      container.addInterceptor(new TxInterceptorCMT());
-                     
+
                      if (metricsEnabled)
                         container.addInterceptor(new MetricsInterceptor());
-                     
+
                      container.addInterceptor(new StatefulSessionInstanceInterceptor());
 
                   }
@@ -702,9 +671,9 @@ public class ContainerFactory
                      // BMT : the tx interceptor needs the context from the instance interceptor
                      container.addInterceptor(new StatefulSessionInstanceInterceptor());
                      container.addInterceptor(new TxInterceptorBMT());
-                     
+
                      if (metricsEnabled)
-                         container.addInterceptor(new MetricsInterceptor());
+                        container.addInterceptor(new MetricsInterceptor());
                   }
 
                   container.addInterceptor(new SecurityInterceptor());
@@ -820,12 +789,12 @@ public class ContainerFactory
                // Create interceptors
                container.addInterceptor(new LogInterceptor());
                container.addInterceptor(new SecurityInterceptor());
-               
+
                // entity beans are always CMT
                container.addInterceptor(new TxInterceptorCMT());
-               
+
                if (metricsEnabled)
-                   container.addInterceptor(new MetricsInterceptor());
+                  container.addInterceptor(new MetricsInterceptor());
 
                container.addInterceptor(new EntityInstanceInterceptor());
                container.addInterceptor(new EntitySynchronizationInterceptor());
@@ -933,4 +902,5 @@ public class ContainerFactory
       return (deployments.get(url) != null);
    }
 }
+
 

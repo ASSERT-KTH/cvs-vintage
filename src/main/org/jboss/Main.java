@@ -1,7 +1,7 @@
 /*
- * jBoss, the OpenSource EJB server
+ * JBoss, the OpenSource EJB server
  *
- * Distributable under GPL license.
+ * Distributable under LGPL license.
  * See terms of license at gnu.org.
  */
 
@@ -22,6 +22,8 @@ import java.util.*;
 import javax.management.*;
 import javax.management.loading.*;
 
+import javax.xml.parsers.DocumentBuilderFactory;
+
 import org.jboss.dependencies.DependencyManager;
 import org.jboss.system.SecurityAssociation;
 
@@ -30,7 +32,7 @@ import org.jboss.system.SecurityAssociation;
  *   @see <related>
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
  *   @author <a href="mailto:docodan@nycap.rr.com">Daniel O'Connor</a>.
- *   @version $Revision: 1.22 $
+ *   @version $Revision: 1.23 $
  */
 public class Main
 {
@@ -135,6 +137,8 @@ public class Main
                ((Throwable)obj).printStackTrace(err);
          }
 
+         DocumentBuilderFactory.newInstance();
+         
          // Load configuration
          server.invoke(new ObjectName(":service=Configuration"), "loadConfiguration", new Object[0], new String[0]);
 
@@ -142,96 +146,10 @@ public class Main
          // This way, the config will always contain a complete mirror of what's in the server
          server.invoke(new ObjectName(":service=Configuration"), "saveConfiguration", new Object[0] , new String[0]);
 
-         // Start MBeans
-         InputStream depFile = mlet.getResourceAsStream("jboss.dependencies");
-         byte[] depBytes = new byte[depFile.available()];
-         depFile.read(depBytes);
-         String depXML = new String(depBytes);
-         final DependencyManager manager = new DependencyManager();
-         manager.loadXML(depXML);
-         manager.startMBeans(server);
+         // Init and Start MBeans
+         server.invoke(new ObjectName(":service=ServiceControl"), "init", new Object[0] , new String[0]);
+         server.invoke(new ObjectName(":service=ServiceControl"), "start", new Object[0] , new String[0]);
 
-         // Add shutdown hook
-         try
-         {
-            Runtime.getRuntime().addShutdownHook(new Thread()
-               {
-               public void run()
-               {
-                  manager.stopMBeans(server);
-                  /*
-                  err.println("Shutdown");
-                  Set mBeans = server.queryNames(null, null);
-                  Iterator names = mBeans.iterator();
-                  err.println("Shutting down "+mBeans.size() +" MBeans");
-                  while (names.hasNext())
-                  {
-                  ObjectName name = (ObjectName)names.next();
-                  try
-                  {
-                  server.invoke(name, "destroy", new Object[0], new String[0]);
-                  } catch (Throwable e)
-                  {
-                  //	                        err.println(e);
-                  }
-                  }
-                  err.println("Shutting done");
-                  */
-               }
-            });
-            System.out.println ("Shutdown hook added");
-         } catch (Throwable e)
-         {
-            System.out.println("Could not add shutdown hook");
-            // JDK 1.2.. ignore!
-         }
-
-         /*
-         // Command tool
-         // Should be replaced with a MBean?
-
-         BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
-         String line;
-         while (true)
-         {
-         // Get command
-         line = reader.readLine();
-
-         if (line.equals("shutdown"))
-         {
-         Set mBeans = server.queryNames(null, null);
-         Iterator names = mBeans.iterator();
-         while (names.hasNext())
-         {
-         ObjectName name = (ObjectName)names.next();
-         try
-         {
-         server.invoke(name, "stop", new Object[0], new String[0]);
-         } catch (Throwable e)
-         {
-         // Ignore
-         }
-         }
-
-         System.exit(0);
-         } else
-         {
-         Set mBeans = server.queryNames(null, null);
-         Iterator names = mBeans.iterator();
-         while (names.hasNext())
-         {
-         ObjectName name = (ObjectName)names.next();
-         try
-         {
-         server.invoke(name, line, new Object[0], new String[0]);
-         } catch (Throwable e)
-         {
-         // Ignore
-         }
-         }
-         }
-         }
-         */
       } catch (RuntimeOperationsException e)
       {
          System.out.println("Runtime error");
@@ -248,7 +166,7 @@ public class Main
       }
 
       // Done
-      System.out.println("jBoss "+versionIdentifier+" Started");
+      System.out.println("JBoss "+versionIdentifier+" Started");
    }
 }
 

@@ -1,7 +1,7 @@
 /*
- * jBoss, the OpenSource EJB server
+ * JBoss, the OpenSource EJB server
  *
- * Distributable under GPL license.
+ * Distributable under LGPL license.
  * See terms of license at gnu.org.
  */
 package org.jboss.minerva.factories;
@@ -21,7 +21,7 @@ import org.jboss.logging.Logger;
  * you're interested in creating transactional-aware connections, see
  * XAConnectionFactory, which complies with the JDBC 2.0 standard extension.
  * @see org.jboss.minerva.factories.XAConnectionFactory
- * @version $Revision: 1.5 $
+ * @version $Revision: 1.6 $
  * @author Aaron Mulder (ammulder@alumni.princeton.edu)
  */
 public class JDBCConnectionFactory extends PoolObjectFactory {

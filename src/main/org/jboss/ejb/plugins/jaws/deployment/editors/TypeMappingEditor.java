@@ -1,7 +1,7 @@
 /*
- * jBoss, the OpenSource EJB server
+ * JBoss, the OpenSource EJB server
  *
- * Distributable under GPL license.
+ * Distributable under LGPL license.
  * See terms of license at gnu.org.
  */
 package org.jboss.ejb.plugins.jaws.deployment.editors;
@@ -20,8 +20,8 @@ import org.jboss.logging.Logger;
  *   Editor for selecting resource manager type
  *      
  *   @see DDEditor
- *   @author $Author: fleury $
- *   @version $Revision: 1.4 $
+ *   @author $Author: oberg $
+ *   @version $Revision: 1.5 $
  */
 public class TypeMappingEditor
    extends TagsEditor

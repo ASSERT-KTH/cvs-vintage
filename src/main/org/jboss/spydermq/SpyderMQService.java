@@ -1,7 +1,7 @@
 /*
- * jBoss, the OpenSource EJB server
+ * JBoss, the OpenSource EJB server
  *
- * Distributable under GPL license.
+ * Distributable under LGPL license.
  * See terms of license at gnu.org.
  */
  
@@ -28,7 +28,7 @@ import org.jboss.util.ServiceMBeanSupport;
  *   @author Vincent Sheffer (vsheffer@telkel.com)
  *   @author <a href="mailto:jplindfo@helsinki.fi">Juha Lindfors</a>
  *
- *   @version $Revision: 1.4 $
+ *   @version $Revision: 1.5 $
  */
 public class SpyderMQService
    extends ServiceMBeanSupport
