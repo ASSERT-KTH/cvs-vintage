@@ -1,7 +1,7 @@
 #!/bin/sh
 
 #
-# $Id: create-db.sh,v 1.6 2002/03/14 00:51:23 dlr Exp $
+# $Id: create-db.sh,v 1.7 2002/03/18 23:53:15 jon Exp $
 #
 
 CMDNAME=`basename "$0"`
@@ -72,9 +72,28 @@ if [ ! -d "${POPULATION_SCRIPT_DIR}" ] ; then
     echo "Ant build system as described in the scarab/README.txt file."
     usage=t
 fi
+
+if [ -e "${POPULATION_SCRIPT_DIR}/mysql" -a "${dbtype}" = 'postgresql' ] ; then
+    foundtype="mysql"
+    foundurl="http://scarab.tigris.org/postgresql.html"
+elif [ -e "${POPULATION_SCRIPT_DIR}/postgresql" -a "${dbtype}" = 'mysql' ] ; then
+    foundtype="postgresql"
+    foundurl="http://scarab.tigris.org/source/browse/~checkout~/scarab/README.txt"
+fi
 ####### Sanity checks
 
-if [ "$usage" ] ; then
+if [ "${foundtype}" ] ; then
+    echo ""
+    echo "Database type is '${dbtype}' yet the .sql files have been"
+    echo "generated for '${foundtype}'."
+    echo "Please re-build Scarab with the correct settings for ${dbtype}."
+    echo "More information is available at:"
+    echo "${foundurl}"
+    echo
+    exit 1
+fi
+
+if [ "${usage}" ] ; then
     echo
     echo "$CMDNAME creates a database and populates it with data."
     echo "             Currently only works with MySQL and Postgresql."
