@@ -1,4 +1,4 @@
-// $Id: ControlMech.java,v 1.6 2005/01/09 14:58:05 linus Exp $
+// $Id: ControlMech.java,v 1.7 2005/03/09 14:34:34 mkl Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -24,7 +24,6 @@
 
 package org.argouml.cognitive.critics;
 
-import java.io.Serializable;
 import org.argouml.cognitive.Designer;
 
 /**
@@ -38,23 +37,16 @@ import org.argouml.cognitive.Designer;
  */
 // TODO: Do all these classes need to be in their own files? public?
 
-public abstract class ControlMech implements Serializable {
+public interface ControlMech  {
 
-    /**
-     * The constructor.
-     *
-     */
-    public ControlMech() { }
 
     /**
      * @param c the critic
      * @param d the designer
      * @return true f the critic is relevant for the given designer
      */
-    public boolean isRelevant(Critic c, Designer d) {
-	return true;
-    }
-} // end class ControlMech
+    boolean isRelevant(Critic c, Designer d) ;
+} // end interface ControlMech
 
 
 
