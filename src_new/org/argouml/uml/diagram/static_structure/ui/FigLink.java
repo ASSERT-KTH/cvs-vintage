@@ -24,7 +24,8 @@
 // File: FigLink.java
 // Classes: FigLink
 // Original Author: your email address here
-// $Id: FigLink.java,v 1.2 2002/10/20 21:11:17 linus Exp $
+
+// $Id: FigLink.java,v 1.3 2002/11/03 19:39:12 kataka Exp $
 
 package org.argouml.uml.diagram.static_structure.ui;
 

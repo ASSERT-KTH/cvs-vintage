@@ -26,7 +26,8 @@
 // File: GoalModel.java
 // Classes: GoalModel
 // Original Author: jrobbins@ics.uci.edu
-// $Id: GoalModel.java,v 1.2 2002/10/20 21:11:13 linus Exp $
+// $Id: GoalModel.java,v 1.3 2002/11/03 19:39:13 kataka Exp $
+
 
 package org.argouml.cognitive;
 

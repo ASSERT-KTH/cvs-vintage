@@ -1,4 +1,4 @@
-// $Id: Modeller.java,v 1.36 2002/10/08 20:04:33 kataka Exp $
+// $Id: Modeller.java,v 1.37 2002/11/03 19:39:13 kataka Exp $
 
 /*
   JavaRE - Code generation and reverse engineering for UML and Java
@@ -28,6 +28,7 @@ import java.util.*;
 import org.argouml.ui.*;
 import org.apache.log4j.Category;
 import org.argouml.model.uml.UmlFactory;
+import org.argouml.model.uml.UmlModelEventPump;
 import org.argouml.model.uml.foundation.core.CoreFactory;
 import org.argouml.model.uml.foundation.core.CoreHelper;
 import org.argouml.ocl.OCLUtil;
@@ -745,8 +746,10 @@ public class Modeller
             Iterator it2 = ProjectBrowser.TheInstance.getProject().findFigsForMember(parseState.getClassifier()).iterator();
             while (it2.hasNext()) {
                 MElementListener listener = (MElementListener)it2.next();
-                mOperation.addMElementListener(listener);
-                mOperation.getParameter(0).addMElementListener(listener);
+                UmlModelEventPump.getPump().removeModelEventListener(listener, mOperation);
+                UmlModelEventPump.getPump().addModelEventListener(listener, mOperation); 
+                UmlModelEventPump.getPump().removeModelEventListener(listener, mOperation.getParameter(0));
+                UmlModelEventPump.getPump().addModelEventListener(listener, mOperation.getParameter(0)); 
             }
 	}
 	return mOperation;

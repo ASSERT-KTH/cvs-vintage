@@ -24,7 +24,7 @@
 // File: PropPanelClassifierRole.java
 // Classes: PropPanelClassifierRole
 // Original Author: agauthie@ics.uci.edu
-// $Id: PropPanelClassifierRole.java,v 1.16 2002/10/11 20:51:18 kataka Exp $
+// $Id: PropPanelClassifierRole.java,v 1.17 2002/11/03 19:39:09 kataka Exp $
 
 package org.argouml.uml.ui.behavior.collaborations;
 
@@ -54,10 +54,7 @@ public class PropPanelClassifierRole extends PropPanelClassifier {
     super("ClassifierRole",_classifierRoleIcon, ConfigLoader.getTabPropsOrientation());
 
     Class mclass = MClassifierRole.class;
-    
-     Class[] namesToWatch = { MStereotype.class,MNamespace.class,MClassifier.class};
-    setNameEventListening(namesToWatch);
-    
+   
     addField(Argo.localize("UMLMenu", "label.name"), nameField);
     addField(Argo.localize("UMLMenu", "label.stereotype"), new UMLComboBoxNavigator(this, Argo.localize("UMLMenu", "tooltip.nav-stereo"),stereotypeBox));
     addField(Argo.localize("UMLMenu", "label.namespace"),namespaceScroll);

@@ -25,7 +25,7 @@
 // File: UMLModelElementComboBoxModel.java
 // Classes: UMLModelElementComboBoxModel
 // Original Author: mail@jeremybennett.com
-// $Id: UMLModelElementComboBoxModel.java,v 1.2 2002/10/08 20:04:36 kataka Exp $
+// $Id: UMLModelElementComboBoxModel.java,v 1.3 2002/11/03 19:39:11 kataka Exp $
 
 // 25 Apr 2002: Jeremy Bennett (mail@jeremybennett.com). Created as a base for
 // wider use of combo boxes with model elements.
@@ -33,6 +33,7 @@
 
 package org.argouml.uml.ui;
 
+import org.argouml.model.uml.UmlModelEventPump;
 import org.argouml.uml.*;
 import org.apache.log4j.Category;
 import org.argouml.application.api.*;
@@ -229,8 +230,7 @@ public class UMLModelElementComboBoxModel
         // Other containers will have to do this for themselves.
 
         if (container instanceof PropPanel) {
-            Object[] eventsToWatch = {elementType, null};
-            ((PropPanel) container).addThirdPartyEventListening(eventsToWatch);
+            UmlModelEventPump.getPump().addClassModelEventListener(this, elementType);
         }
     }
 

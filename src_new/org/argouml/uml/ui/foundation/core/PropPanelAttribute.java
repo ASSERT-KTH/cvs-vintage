@@ -26,7 +26,7 @@
 // File: PropPanelAttribute.java
 // Classes: PropPanelAttribute
 // Original Author: jrobbins@ics.uci.edu
-// $Id: PropPanelAttribute.java,v 1.18 2002/10/09 20:03:58 kataka Exp $
+// $Id: PropPanelAttribute.java,v 1.19 2002/11/03 19:39:09 kataka Exp $
 
 package org.argouml.uml.ui.foundation.core;
 
@@ -78,7 +78,7 @@ public class PropPanelAttribute extends PropPanelModelElement {
 
 	addCaption(Argo.localize("UMLMenu", "label.type"),0,1,0);
         addField(new UMLComboBoxNavigator(this, Argo.localize("UMLMenu", "tooltip.nav-class"),
-            new UMLTypeComboBox(this)),0,1,0);
+            new UMLComboBox2(this, new UMLAttributeTypeComboBoxModel(this), ActionSetAttributeType.SINGLETON)),0,1,0);
 
         addCaption("Initial Value:",1,1,0);
         addField(new UMLInitialValueComboBox(this),1,1,0);
