@@ -6,6 +6,8 @@
 */
 package org.jboss.ejb.plugins.inflow;
 
+import java.lang.reflect.Method;
+
 import javax.resource.ResourceException;
 import javax.transaction.Status;
 import javax.transaction.Transaction;
@@ -23,7 +25,7 @@ import EDU.oswego.cs.dl.util.concurrent.SynchronizedBoolean;
  * Implements the application server message endpoint requirements.
  * 
  * @author <a href="mailto:adrian@jboss.com">Adrian Brock</a>
- * @version $Revision: 1.4 $
+ * @version $Revision: 1.5 $
  */
 public class MessageEndpointInterceptor extends Interceptor
 {
@@ -60,6 +62,12 @@ public class MessageEndpointInterceptor extends Interceptor
    
    /** Any transaction we started */
    protected Transaction transaction = null;
+   
+   /** Any suspended transaction */
+   protected Transaction suspended = null;
+
+   /** The message endpoint factory */
+   private JBossMessageEndpointFactory endpointFactory;
    
    // Static --------------------------------------------------------
    
@@ -157,8 +165,7 @@ public class MessageEndpointInterceptor extends Interceptor
          log.trace("MessageEndpoint " + getProxyString(mi) + " released");
 
       // Set the classloader
-      JBossMessageEndpointFactory mef = (JBossMessageEndpointFactory) mi.getInvocationContext().getValue(MESSAGE_ENDPOINT_FACTORY);
-      MessageDrivenContainer container = mef.getContainer();
+      MessageDrivenContainer container = getContainer(mi);
       oldClassLoader = GetTCLAction.getContextClassLoader(inUseThread);
       SetTCLAction.setContextClassLoader(inUseThread, container.getClassLoader());
       if (trace)
@@ -218,9 +225,9 @@ public class MessageEndpointInterceptor extends Interceptor
       // Mark delivery if beforeDelivery was invoked
       if (oldClassLoader != null)
          delivered = true;
-      
-      JBossMessageEndpointFactory mef = (JBossMessageEndpointFactory) mi.getInvocationContext().getValue(MESSAGE_ENDPOINT_FACTORY);
-      MessageDrivenContainer container = mef.getContainer();
+
+     
+      MessageDrivenContainer container = getContainer(mi);
       boolean commit = true;
       try
       {
@@ -294,40 +301,65 @@ public class MessageEndpointInterceptor extends Interceptor
     */
    protected void startTransaction(String context, Invocation mi, MessageDrivenContainer container) throws Throwable
    {
-      // Not transacted by request
+      // Get any passed resource
       XAResource resource = (XAResource) mi.getInvocationContext().getValue(MESSAGE_ENDPOINT_XARESOURCE);
-      if (trace)
-         log.trace("MessageEndpoint " + getProxyString(mi) + " " + context + " xaResource=" + resource);
-      if (resource == null)
-         return;
 
-      // Check the transaction status
-      TransactionManager tm = container.getTransactionManager();
-      int status = tm.getStatus();
-      if (status != Status.STATUS_ACTIVE && status != Status.STATUS_NO_TRANSACTION && status != Status.STATUS_UNKNOWN)
-         throw new IllegalStateException("Invalid transaction status? " + tm.getTransaction());
-      
-      // Get the current transaction starting one if necessary
-      Transaction tx = null;
-      if (status != Status.STATUS_ACTIVE)
-      {
-         tm.begin();
-         transaction = tm.getTransaction();
-         tx = transaction;
-         if (trace)
-            log.trace("MessageEndpoint " + getProxyString(mi) + " started transaction=" + transaction);
-      }
+      Method method = null;
+
+      // Normal delivery      
+      if ("delivery".equals(context))
+         method = mi.getMethod();
+      // Before delivery
       else
-      {
-         tx = tm.getTransaction();
-         if (trace)
-            log.trace("MessageEndpoint " + getProxyString(mi) + " existing transaction=" + transaction);
-      }
-      
-      // Enlist the XAResource in the transaction
-      tx.enlistResource(resource);
+         method = (Method) mi.getArguments()[0];
+
+      // Is the delivery transacted?
+      boolean isTransacted = getMessageEndpointFactory(mi).isDeliveryTransacted(method);
+
       if (trace)
-         log.trace("MessageEndpoint " + getProxyString(mi) + " enlisted=" + resource);
+         log.trace("MessageEndpoint " + getProxyString(mi) + " " + context + " method=" + method + " xaResource=" + resource + " transacted=" + isTransacted);
+
+      // Get the transaction status
+      TransactionManager tm = container.getTransactionManager();
+      suspended = tm.suspend();
+
+      if (trace)
+         log.trace("MessageEndpoint " + getProxyString(mi) + " " + context + " currentTx=" + suspended);
+
+      // Delivery is transacted
+      if (isTransacted)
+      {
+         // No transaction means we start a new transaction and enlist the resource
+         if (suspended == null)
+         {
+            tm.begin();
+            transaction = tm.getTransaction();
+            if (trace)
+               log.trace("MessageEndpoint " + getProxyString(mi) + " started transaction=" + transaction);
+      
+            // Enlist the XAResource in the transaction
+            if (resource != null)
+            {
+               transaction.enlistResource(resource);
+               if (trace)
+                  log.trace("MessageEndpoint " + getProxyString(mi) + " enlisted=" + resource);
+            }
+         }
+         else
+         {
+            // If there is already a transaction we ignore the XAResource (by spec 12.5.9)
+            try
+            {
+               tm.resume(suspended);
+            }
+            finally
+            {
+               suspended = null;
+               if (trace)
+                  log.trace("MessageEndpoint " + getProxyString(mi) + " transaction=" + suspended + " already active, IGNORED=" + resource);
+            }
+         }
+      }
    }
    
    /**
@@ -343,11 +375,10 @@ public class MessageEndpointInterceptor extends Interceptor
       Transaction currentTx = null;
       try
       {
+         // If we started the transaction, commit it
          if (transaction != null)
          {
-            JBossMessageEndpointFactory mef = (JBossMessageEndpointFactory) mi.getInvocationContext().getValue(MESSAGE_ENDPOINT_FACTORY);
-            MessageDrivenContainer container = mef.getContainer();
-            tm = container.getTransactionManager();
+            tm = getContainer(mi).getTransactionManager();
             currentTx = tm.getTransaction();
             
             // Suspend any bad transaction - there is bug somewhere, but we will try to tidy things up
@@ -376,7 +407,21 @@ public class MessageEndpointInterceptor extends Interceptor
                   log.trace("MessageEndpoint " + getProxyString(mi) + " commit");
                tm.commit();
             }
-         }      
+         }
+
+         // If we suspended the incoming transaction, resume it
+         if (suspended != null)
+         {
+            try
+            {
+               tm = getContainer(mi).getTransactionManager();
+               tm.resume(suspended);
+            }
+            finally
+            {
+               suspended = null;
+            }
+         }
       }
       finally
       {
@@ -433,7 +478,29 @@ public class MessageEndpointInterceptor extends Interceptor
          cachedProxyString = mi.getInvocationContext().getCacheId().toString();
       return cachedProxyString;
    }
+
+   /**
+    * Get the message endpoint factory
+    *
+    * @return the message endpoint factory
+    */
+   protected JBossMessageEndpointFactory getMessageEndpointFactory(Invocation mi)
+   {
+      if (endpointFactory == null)
+         endpointFactory = (JBossMessageEndpointFactory) mi.getInvocationContext().getValue(MESSAGE_ENDPOINT_FACTORY);
+      return endpointFactory;
+   }
    
+   /**
+    * Get the container
+    *
+    * @return the container
+    */
+   protected MessageDrivenContainer getContainer(Invocation mi)
+   {
+      return getMessageEndpointFactory(mi).getContainer();
+   }
+
    // Private -------------------------------------------------------
    
    // Inner classes -------------------------------------------------
