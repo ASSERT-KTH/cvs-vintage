@@ -78,7 +78,7 @@ import org.jboss.ejb.plugins.local.BaseLocalContainerInvoker;
 * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
 * @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>.
 * @author <a href="bill@burkecentral.com">Bill Burke</a>
-* @version $Revision: 1.69 $
+* @version $Revision: 1.70 $
 *
 * <p><b>Revisions:</b>
 *
@@ -546,7 +546,6 @@ public abstract class Container implements DynamicMBean
    throws MBeanException, ReflectionException
    {
 
-
       if( params != null && params.length == 1 && (params[0] instanceof Invocation) == false )
          throw new MBeanException(new IllegalArgumentException("Expected zero or single Invocation argument"));
 
@@ -604,7 +603,7 @@ public abstract class Container implements DynamicMBean
                // FIXME FIXME FIXME FIXME REMOVE WHEN CL ARE INTEGRATED
                return new MarshalledObject(invoke(mi));
             }
-
+      
             value = invoke(mi);
          }
 

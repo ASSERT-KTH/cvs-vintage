@@ -31,7 +31,7 @@ import org.jboss.security.SecurityAssociation;
  * @author  <a href="mailto:jason@planet57.com">Jason Dillon</a>
  * @author  <a href="mailto:jason@planet57.com">Jason Dillon</a>
  * @author <a href="bill@burkecentral.com">Bill Burke</a>
- * @version $Revision: 1.3 $
+ * @version $Revision: 1.4 $
  *
  * <p><b>Revisions:</b><br>
  * <p><b>2002/01/09: billb</b>
@@ -60,6 +60,7 @@ public class StatefulHandleImpl
    }
    
    /** The identity of the bean. */
+   public int objectName;
    public String jndiName;
    public Invoker invoker;
    public Object id;
@@ -73,8 +74,9 @@ public class StatefulHandleImpl
     * @param name      JNDI name.
     * @param id        Identity of the bean.
     */
-   public StatefulHandleImpl(String jndiName, Invoker invoker, Object id)
+   public StatefulHandleImpl(int objectName, String jndiName, Invoker invoker, Object id)
    {
+      this.objectName = objectName;
       this.jndiName= jndiName;
       this.invoker = invoker;
       this.id = id;
@@ -108,7 +110,7 @@ public class StatefulHandleImpl
             SecurityAssociation.getPrincipal(),
             SecurityAssociation.getCredential());
          
-         invocation.setContainer("jboss.j2ee:service=EJB,jndiName="+jndiName);
+         invocation.setContainer(new Integer(objectName));
          
          // It is a home invocation
          invocation.setType("home");

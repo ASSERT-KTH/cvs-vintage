@@ -40,7 +40,7 @@ import org.jboss.security.SecurityAssociation;
  *      
  * 
  * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
- * @version $Revision: 1.2 $
+ * @version $Revision: 1.3 $
  *
  * <p><b>2001/11/19: marcf</b>
  * <ol>
@@ -59,7 +59,7 @@ public abstract class GenericProxy
     * container in the future we should give just an abstract key into a metadata 
     * container repository in the server.
     */
-   protected transient String objectName;
+   protected int objectName;
    
    protected String jndiName;
    
@@ -125,10 +125,10 @@ public abstract class GenericProxy
     *  @param container
     *  @param invoker
     */
-   protected GenericProxy(final String jndiName, final Invoker invoker)
+   protected GenericProxy(int objectName, final String jndiName, final Invoker invoker)
    {
       this.jndiName = jndiName;
-      this.objectName = "jboss.j2ee:service=EJB,jndiName="+jndiName;
+      this.objectName = objectName;
       this.invoker = invoker;
    }
    
@@ -192,6 +192,7 @@ public abstract class GenericProxy
    public void writeExternal(final ObjectOutput out) throws IOException
    {
       out.writeUTF(jndiName);
+      out.writeInt(objectName);
       out.writeObject(invoker);
    }
    
@@ -206,7 +207,7 @@ public abstract class GenericProxy
       throws IOException, ClassNotFoundException
    {
       jndiName = in.readUTF();
-      objectName = "jboss.j2ee:service=EJB,jndiName="+jndiName;
+      objectName = in.readInt();
       invoker = (Invoker) in.readObject();
    }
 }

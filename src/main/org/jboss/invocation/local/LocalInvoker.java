@@ -28,7 +28,7 @@ import org.jboss.logging.Logger;
 *  
 *  @author <a href="mailto:marc.fleury@jboss.org>Marc Fleury</a>
 *
-*  @version $Revision: 1.1 $
+*  @version $Revision: 1.2 $
 *
 */
 
@@ -107,9 +107,10 @@ implements Invoker, LocalInvokerMBean
       
       try
       {         
-         // Extract the ObjectName
-         ObjectName mbean = new ObjectName((String) invocation.getContainer());
          
+         
+         ObjectName mbean = (ObjectName) Registry.lookup((Integer) invocation.getContainer());
+        
          return server.invoke(mbean, invocation.getType(),  new Object[] {invocation}, new String[] {"java.lang.Object"}); 
       }
       

@@ -31,7 +31,7 @@ import org.jboss.tm.TransactionPropagationContextFactory;
 * JRMPInvokerProxy, local to the proxy and is capable of delegating to local and JRMP implementations
 * 
 * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
-* @version $Revision: 1.3 $
+* @version $Revision: 1.4 $
 *
 * <p><b>2001/11/19: marcf</b>
 * <ol>
@@ -73,7 +73,7 @@ implements Invoker, Externalizable
    //Local invoker reference, useful for optimization
    public static Invoker getLocal() { return localInvoker;}
    public static void setLocal(Invoker invoker) { localInvoker = invoker ;}
-
+   
    // TPC factory
    public static void setTPCFactory(TransactionPropagationContextFactory tpcf) { tpcFactory = tpcf; }
    
@@ -127,11 +127,11 @@ implements Invoker, Externalizable
    public Object invoke(Invocation invocation)
    throws Exception
    {
-
+      
       // Pass the current security information
       invocation.setPrincipal(SecurityAssociation.getPrincipal());
       invocation.setCredential(SecurityAssociation.getCredential());
-
+      
       // optimize if calling another bean in same EJB-application
       if (isLocal()) {
          
@@ -145,18 +145,20 @@ implements Invoker, Externalizable
          // FIXME FIXME FIXME FIXME FIXME REMOVE WHEN CL ARE INTEGRATED
          try {
             
+            
             // FIXME FIXME FIXME FIXME FIXME REMOVE WHEN CL ARE INTEGRATED
             value = localInvoker.invoke(invocation);
             
             // FIXME FIXME FIXME FIXME FIXME REMOVE WHEN CL ARE INTEGRATED
-            if (value instanceof MarshalledObject) return ((MarshalledObject) value).get();
-               
+            if (value instanceof MarshalledObject) 
+            {
+               return ((MarshalledObject) value).get();
+            }     
             // FIXME FIXME FIXME FIXME FIXME REMOVE WHEN CL ARE INTEGRATED
             else return value;
          }
          // FIXME FIXME FIXME FIXME FIXME REMOVE WHEN CL ARE INTEGRATED
          catch (Exception e) {throw (Exception) new MarshalledObject(e).get();}
-      
       
       }
       else {
@@ -195,7 +197,7 @@ implements Invoker, Externalizable
       out.writeLong(containerStartup);
       out.writeObject(remoteInvoker);
    }
-
+   
    /**
    *  Un-externalize this instance.
    *
@@ -207,8 +209,8 @@ implements Invoker, Externalizable
       containerStartup = in.readLong();
       remoteInvoker = (Invoker) in.readObject();
    }
-
+   
    // Private -------------------------------------------------------
-
+   
    // Inner classes -------------------------------------------------
 }

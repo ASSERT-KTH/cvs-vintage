@@ -54,7 +54,7 @@ import org.jboss.system.Registry;
 *
 *  @author <a href="mailto:marc.fleury@jboss.org>Marc Fleury</a>
 *
-*  @version $Revision: 1.6 $
+*  @version $Revision: 1.7 $
 *
 *  <p><b>Revisions:</b><br>
 *  <p><b>2002/01/13: Sacha Labourey</b>
@@ -314,7 +314,9 @@ implements Invoker, JRMPInvokerMBean,  MBeanRegistration
          invocation.setTransaction(importTPC(((MarshalledInvocation) invocation).getTransactionPropagationContext()));
                
          // Extract the ObjectName, the rest is still marshalled
-         ObjectName mbean = new ObjectName((String) invocation.getContainer());
+         // ObjectName mbean = new ObjectName((String) invocation.getContainer());
+         
+         ObjectName mbean = (ObjectName) Registry.lookup((Long) invocation.getContainer());
          
          // The cl on the thread should be set in another interceptor
          return new MarshalledObject(server.invoke(mbean, invocation.getType(),  new Object[] {invocation}, new String[] {"java.lang.Object"})); 

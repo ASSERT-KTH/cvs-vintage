@@ -30,7 +30,7 @@ import org.jboss.util.FinderResults;
 * An EJB stateful session bean proxy class.
 *   
 * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
-* @version $Revision: 1.3 $
+* @version $Revision: 1.4 $
 *
 * <p><b>2001/11/23: marcf</b>
 * <ol>
@@ -69,11 +69,13 @@ extends GenericProxy
    * @param optimize      True if the proxy will attempt to optimize
    *                      VM-local calls.
    */
-   public StatefulSessionProxy(String name,
+   public StatefulSessionProxy(
+      int objectName,
+      String name,
       Object cacheID,
       Invoker invoker)
    {
-      super(name,invoker);
+      super(objectName,name,invoker);
       id = cacheID;
    }
    
@@ -110,7 +112,7 @@ extends GenericProxy
 
       // Implement local EJB calls
       else if (m.equals(GET_HANDLE)) {
-         return new StatefulHandleImpl(jndiName,invoker, id);
+         return new StatefulHandleImpl(objectName,jndiName,invoker, id);
       }
       else if (m.equals(GET_EJB_HOME)) {
 
@@ -136,7 +138,7 @@ extends GenericProxy
      throws Exception
    {
       Invocation invocation = new Invocation(new HashMap());
-      invocation.setContainer(objectName);
+      invocation.setContainer(new Integer(objectName));
       invocation.setType("remote");
       invocation.setId(id);
       invocation.setMethod(m);

@@ -29,7 +29,7 @@ import org.jboss.util.FinderResults;
 /**
 * An EJB entity bean proxy class.
 * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
-* @version $Revision: 1.2 $
+* @version $Revision: 1.3 $
 *
 * <p><b>2001/11/19: marcf</b>
 * <ol>
@@ -67,9 +67,9 @@ extends GenericProxy
    *
    * @throws NullPointerException     Id may not be null.
    */
-   public EntityProxy(String jndiName, Object id, Invoker invoker)
+   public EntityProxy(int objectName, String jndiName, Object id, Invoker invoker)
    {
-      super(jndiName, invoker);
+      super(objectName, jndiName, invoker);
       
       if (id == null)
          throw new NullPointerException("Id may not be null");
@@ -139,7 +139,7 @@ extends GenericProxy
    {
       Invocation invocation = new Invocation(new HashMap());
 
-      invocation.setContainer(objectName);
+      invocation.setContainer(new Integer(objectName));
       invocation.setType("remote");
       invocation.setId(id);
       invocation.setMethod(m);
