@@ -52,7 +52,7 @@ import org.jboss.logging.Logger;
  * utility methods that database commands may need to call.
  *
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
- * @version $Revision: 1.8 $
+ * @version $Revision: 1.9 $
  */
 public abstract class JDBCCommand
 {
@@ -434,12 +434,13 @@ public abstract class JDBCCommand
             return null;
         if(destination.isAssignableFrom(result.getClass()))
             return result;
+// DEBUG        else System.out.println("Got a "+result.getClass().getName()+": '"+result+"' while looking for a "+destination.getName());
 
         // Also we should detect the EJB references here
 
         // Get the underlying byte[]
 
-        byte[] bytes = rs.getBytes(idx);
+        byte[] bytes = result instanceof byte[] ? (byte[])result : rs.getBytes(idx);
 
         if( bytes == null ) {
             result = null;
@@ -451,18 +452,18 @@ public abstract class JDBCCommand
            // Use the class loader to deserialize
 
             try {
-                ObjectInputStream ois = new ObjectInputStream(bais);
+                WorkaroundInputStream ois = new WorkaroundInputStream(bais);
                 result = ois.readObject();
                 if(!destination.isAssignableFrom(result.getClass())) {
+                    System.out.println("Unable to load a ResultSet column into a variable of type '"+destination.getName()+"' (got a "+result.getClass().getName()+")");
                     result = null;
-                    System.out.println("Unable to load a ResultSet column into a variable of type '"+destination.getName()+"'");
                 }
 
                 ois.close();
             } catch (IOException e) {
-                throw new SQLException("Unable to load a ResultSet column into a variable of type '"+destination.getName()+"'");
+                throw new SQLException("Unable to load a ResultSet column into a variable of type '"+destination.getName()+"': "+e);
             } catch (ClassNotFoundException e) {
-                throw new SQLException("Unable to load a ResultSet column into a variable of type '"+destination.getName()+"'");
+                throw new SQLException("Unable to load a ResultSet column into a variable of type '"+destination.getName()+"': "+e);
             }
         }
 
@@ -639,4 +640,16 @@ public abstract class JDBCCommand
          }
       }
    }
+
+    class WorkaroundInputStream extends ObjectInputStream {
+        public WorkaroundInputStream(java.io.InputStream source) throws IOException, java.io.StreamCorruptedException{
+            super(source);
+        }
+        protected Class resolveClass(java.io.ObjectStreamClass v) throws IOException, ClassNotFoundException {
+            try {
+                return Class.forName(v.getName(), false, Thread.currentThread().getContextClassLoader());
+            } catch(Exception e) {}
+            return super.resolveClass(v);
+        }
+    }
 }
