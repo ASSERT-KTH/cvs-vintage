@@ -40,7 +40,22 @@
   #set ($newValues = $attrInput.get($optionFieldName).Value)
 
   #set ( $count = "#AllowedTransitionsForOption ( $attrValue $optionFieldName $size )")
-  #if  ($count.trim() == "1" && $required)
+  #if  ($count.trim() == "1")
+   <script type="text/javascript">
+    function toggleCheckbox(item,checked,val1,val2)
+    {
+      if (checked)
+      {
+       item.value=val1 
+      }
+      else
+      {
+       item.value=val2
+      }
+      alert("val1=["+val1+"] val2=["+val2+"] item=["+item.value+"]");
+    }
+    </script>
+  
     #foreach ($option in $module.getOptionTree($attr, $issueType, false))
      #set ($selected = false)
      #set ($canMakeTransition = true)
@@ -71,12 +86,18 @@
      #end
 
      #if ($canMakeTransition)
-	    <input type=hidden name="$attrInput.get($optionFieldName).Key" value="$option.OptionId"/>
-		#if ($option.Active) 
-        		$option.DisplayValue
-		#else
-        		[I] $option.DisplayValue
-		#end
+      <input type=hidden name="$attrInput.get($optionFieldName).Key" value="$option.OptionId"/>
+      #if (!$required)
+        #set ($oc = "javascript:toggleCheckbox(document.form.${attrInput.get($optionFieldName).Key},this.checked,$option.OptionId,'')")
+	    <input type="checkbox" 
+               name="${attrInput.get($optionFieldName).Key}_tmp" 
+               onclick="$oc" />
+	  #end
+	  #if ($option.Active) 
+        $option.DisplayValue
+	  #else
+        [I] $option.DisplayValue
+      #end
      #end
    #end
   #else
