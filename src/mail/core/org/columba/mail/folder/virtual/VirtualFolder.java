@@ -304,8 +304,8 @@ public class VirtualFolder extends Folder {
 		if (resultUids != null) {
 
 			for (int i = 0; i < resultUids.length; i++) {
-				HeaderInterface header =
-					(HeaderInterface) folder.getMessageHeader(resultUids[i]);
+				ColumbaHeader header =
+					(ColumbaHeader) folder.getMessageHeader(resultUids[i]);
 				try {
 					if (header != null)
 						add((ColumbaHeader) header, folder, resultUids[i]);
