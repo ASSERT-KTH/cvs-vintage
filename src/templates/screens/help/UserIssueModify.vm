@@ -7,7 +7,9 @@
           <li>Managing Issues 
             <ul>
               <li><a href="$link.setPage("help,UserIssues.vm")">$l10n.Overview</a> 
+ #if ($scarabG.templateExists("help/UserIssueImportExport.vm"))
               <li><a href="$link.setPage("help,UserIssueImportExport.vm")">$l10n.XMLImportExport</a></li>
+ #end
               <li><a href="$link.setPage("help,UserIssueEntry.vm")">$l10n.EnteringIssues </a> </li>
               <li><a href="$link.setPage("help,UserIssueTemplates.vm")">$l10n.UsingTemplates</a></li>
               <li><strong>$l10n.ModifyingIssues</strong> 

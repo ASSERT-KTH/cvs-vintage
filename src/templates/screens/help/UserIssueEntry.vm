@@ -8,7 +8,8 @@
                 <ul>
                   <li><a href="$link.setPage("help,UserIssueOverview.vm")">$l10n.Overview</a> 
                   </li>
-                  <li><a href="$link.setPage("help,UserIssueImportExport.vm")">$l10n.XMLImportExport</a></li>
+ #if ($scarabG.templateExists("help/UserIssueImportExport.vm"))                  <li><a href="$link.setPage("help,UserIssueImportExport.vm")">$l10n.XMLImportExport</a></li>
+ #end
                   <li><strong>$l10n.EnteringIssues </strong> 
                     <ul>
                       <li><a href="#top">$l10n.Composing</a></li>
