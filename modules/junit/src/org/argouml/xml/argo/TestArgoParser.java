@@ -1,4 +1,4 @@
-// $Id: TestArgoParser.java,v 1.16 2004/12/30 08:38:06 linus Exp $
+// $Id: TestArgoParser.java,v 1.17 2004/12/30 09:12:59 linus Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -64,42 +64,42 @@ public class TestArgoParser extends TestCase {
         return suite;
     }
 
-    /**
-     * Tests that a project is loadable.
-     *
-     * @param filename of the project file to load
-     * @throws OpenException if something goes wrong.
-     */
-    private void loadProject(String filename) throws OpenException {
-        URL url;
-        try {
-            url = new URL(filename);
-        } catch (MalformedURLException e) {
-            fail("Cannot convert filename " + filename + " to URL.");
-            return;
-        }
-        ZargoFilePersister persister = new ZargoFilePersister();
-        persister.doLoad(url);
-        assertTrue("Load Status for " + filename + ".",
-               LastLoadInfo.getInstance().getLastLoadStatus());
-    }
-
-    /**
-     * Test loading a zargo.
-     *
-     * @throws Exception when e.g. the filke is not found
-     */
-    public void testLoadProject1() throws Exception {
-        loadProject("file:testmodels/Empty.zargo");
-    }
-    /**
-     * Test loading a zargo.
-     *
-     * @throws Exception when e.g. the filke is not found
-     */
-    public void testLoadProject2() throws Exception {
-        loadProject("file:testmodels/Alittlebitofeverything.zargo");
-    }
+//    /**
+//     * Tests that a project is loadable.
+//     *
+//     * @param filename of the project file to load
+//     * @throws OpenException if something goes wrong.
+//     */
+//    private void loadProject(String filename) throws OpenException {
+//        URL url;
+//        try {
+//            url = new URL(filename);
+//        } catch (MalformedURLException e) {
+//            fail("Cannot convert filename " + filename + " to URL.");
+//            return;
+//        }
+//        ZargoFilePersister persister = new ZargoFilePersister();
+//        persister.doLoad(url);
+//        assertTrue("Load Status for " + filename + ".",
+//               LastLoadInfo.getInstance().getLastLoadStatus());
+//    }
+//
+//    /**
+//     * Test loading a zargo.
+//     *
+//     * @throws Exception when e.g. the filke is not found
+//     */
+//    public void testLoadProject1() throws Exception {
+//        loadProject("file:testmodels/Empty.zargo");
+//    }
+//    /**
+//     * Test loading a zargo.
+//     *
+//     * @throws Exception when e.g. the filke is not found
+//     */
+//    public void testLoadProject2() throws Exception {
+//        loadProject("file:testmodels/Alittlebitofeverything.zargo");
+//    }
 
     /**
      * Test loading some garbage in a zargo.
