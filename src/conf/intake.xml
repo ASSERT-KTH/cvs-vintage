@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="ISO-8859-1" standalone="no" ?>
-<!DOCTYPE input-data SYSTEM
-          "http://jakarta.apache.org/turbine/dtd/intake.dtd">
+<!-- <!DOCTYPE input-data SYSTEM
+          "http://jakarta.apache.org/turbine/dtd/intake.dtd"> -->
 
 <!-- PUBLIC "-//Apache//Apache-Turbine-Intake Application Data//EN" --> 
 
@@ -13,7 +13,7 @@
 <!-- ==================================================================== -->
 
 <input-data basePackage="org.tigris.scarab.">
-<group class="Attribute" key="att" mapToObject="om.Attribute">
+<group name="Attribute" key="att" mapToObject="om.Attribute">
         <field name="Id" key="id" type="NumberKey" mapToProperty="PrimaryKey">
            <rule mask="^$|[0-9]+">Invalid Id</rule>
            <required-message>No attribute was selected.</required-message>
@@ -24,7 +24,7 @@
         <field name="Name" key="name" type="String"/> 
         <field name="Deleted" key="del" type="boolean" />
 </group>
-<group class="AttributeOption" key="atto" mapToObject="om.AttributeOption">
+<group name="AttributeOption" key="atto" mapToObject="om.AttributeOption">
         <field name="AttributeId" key="attid" type="NumberKey">
            <rule mask="[0-9]+">Please select a valid choice</rule>
         </field>
@@ -41,7 +41,7 @@
         </field>
         <field name="Deleted" key="del" type="boolean"/>
 </group>
-<group class="AttributeType" key="attt" mapToObject="om.AttributeType">
+<group name="AttributeType" key="attt" mapToObject="om.AttributeType">
         <field name="AttributeTypeId" key="atttid" type="NumberKey">
            <rule mask="^$|[0-9]+">Please select a valid choice</rule>
         </field>
@@ -49,7 +49,7 @@
             <rule maxLength="255"/>
         </field>
 </group>
-<group class="AttributeValue" key="attv" 
+<group name="AttributeValue" key="attv" 
             mapToObject="om.AttributeValue">
         <field name="Id" key="id" type="ComboKey" mapToProperty="PrimaryKey">
            <rule mask="([0-9]|:)+">badIdMessage</rule>
@@ -73,7 +73,7 @@
         <field name="Deleted" key="del" type="boolean" />
 </group>
 
-<group class="Issue" key="issue" mapToObject="om.Issue">
+<group name="Issue" key="issue" mapToObject="om.Issue">
         <field name="Id" key="id" type="NumberKey" mapToProperty="PrimaryKey">
            <rule mask="[0-9]+">badIdMessage</rule>
         </field>
@@ -83,7 +83,7 @@
         <field name="FederatedId" key="fid" type="String"/> 
         <field name="Deleted" key="del" type="boolean" />
 </group>
-<group class="Module" key="mod" mapToObject="om.Module">
+<group name="Module" key="mod" mapToObject="om.Module">
         <field name="Id" key="o" type="NumberKey" mapToProperty="PrimaryKey">
            <rule mask="[0-9]+">badIdMessage</rule>
         </field>
@@ -105,7 +105,7 @@
         <field name="Deleted" key="del" type="boolean" />
 </group>
 
-<group class="Login" key="login" mapToObject="om.ScarabUser">
+<group name="Login" key="login" mapToObject="om.ScarabUser">
     <field name="Username" key="u" type="String" mapToProperty="Username">
         <rule minLength="1">Please enter an email address</rule>
         <rule mask=".+@.+\..+">Please enter a valid email address</rule>
