@@ -1,4 +1,4 @@
-// $Id: UseCasesFactory.java,v 1.18 2003/09/14 18:10:43 bobtarling Exp $
+// $Id: UseCasesFactory.java,v 1.19 2003/11/05 21:56:58 linus Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -305,7 +305,6 @@ public class UseCasesFactory extends AbstractUmlModelFactory {
      	actor.setNamespace(ns);
      	actor.setLeaf(false);
      	actor.setRoot(false);
-     	actor.setName("newActor");
      	return actor;
     }
      
