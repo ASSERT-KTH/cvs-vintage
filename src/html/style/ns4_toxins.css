@@ -10,13 +10,13 @@ html body, body th, body td, textarea, .app h3, .app h4, #rightcol h3, .app pre,
 html>body, html>body th, html>body td, html>body input, html>body select, html>body textarea, html>body .app h3, html>body .app h4, html>body #rightcol h3, html>body .app pre, html>body .app code {
 	font-size:	small
 	}
-small, div#footer td, div#login, div#helptext th, div#helptext td, div.tabs th, div.tabs td, input, select, .paginate, .functnbar, .functnbar2, .functnbar3 {
+small, div#footer td, div#login, div#helptext th, div#helptext td, div.tabs th, div.tabs td, input, select, .paginate, .functnbar, .functnbar2, .functnbar3, #breadcrumbs td, .courtesylinks {
 	font-size:	xx-small !important;
 	voice-family:	"\"}\"";
 	voice-family:	inherit;
 	font-size:	x-small !important
 	}
-html>body small, html>body div#footer td, html>body div#login, html>body div#helptext td, html>body div#helptext th, html>body div.tabs th, html>body div.tabs td, html>body input, html>body select, html>body .paginate, html>body .functnbar, html>body .functnbar2, html>body .functnbar3  {
+html>body small, html>body div#footer td, html>body div#login, html>body div#helptext td, html>body div#helptext th, html>body div.tabs th, html>body div.tabs td, html>body input, html>body select, html>body .paginate, html>body .functnbar, html>body .functnbar2, html>body .functnbar3, html>body #breadcrumbs td, html>body .courtesylinks   {
 	font-size:	x-small !important
 	}
 p, ul, ol, dl	{
@@ -24,35 +24,49 @@ p, ul, ol, dl	{
 	margin-bottom: .67em;
 	}
 #bodycol	{
+	line-height: 1.3;
+	padding-left: 12px;
+	padding-right: 12px;
+	width: 100%;
+	voice-family:	"\"}\"";
+	voice-family:	inherit;
+	width: auto;
+	}
+html>body #bodycol	{
+	width: auto;
+	}
+.docs	{
 	line-height: 1.4;
 	}
 table, th, td	{
 	border: none
 	}
-#leftcol div div {
- margin-top: .4em
- }
 .app h3 {
 	background: #036 url(/@SCARAB_CONTEXT@/images/nw_min.gif) no-repeat;
  }
-.app h3, .app h4, .functnbar	 {
+.app h3, .app h4	 {
 	padding: 5px;
 	margin-right: 2px;
 	margin-left: 2px;
 	color: #fff;
  }
-.app h3 a {
- color: white;
- text-decoration: none
- }
 .app h4 {	
  background: #ccc url(/@SCARAB_CONTEXT@/images/nw_min.gif) no-repeat;
 	color: #000;
 	}
-#apphead h2 {
- margin-top: 0;
+.app h3 a {
+ color: white;
+ }
+h2 {
+ margin-top: .3em;
  margin-bottom: .2em
  }
+h3, h4	{
+	margin-bottom: 0;
+	}
+h4 	{
+	font-size: 1em;
+	}
 form {
 	margin-top:	0;
 	margin-bottom: 0;
@@ -60,53 +74,16 @@ form {
 dt	{
 	font-weight:	bold
 	}
-h3, h4	{
-	margin-bottom: 0;
-	}
 .mtb {
  border-top: solid 1px #ccc;
  }
 .colbar {
 	background: #ccc;
-	}
-.colbar {
 	padding: 5px;
 	margin-top: 2px;
 	margin-right: 2px;
 	margin-left: 2px;
 	}
-.courtesylinks {
- margin: 1.5em 0
- }
-.docs .toc {
- border: 1px solid #666; 
- padding: .5em; 
- background: #efefef;
- }
-.docs .toc h3 {
- border: none; 
- margin-top: 0
- }
-.docs p+p {
-	text-indent: 5%;
-	margin-top: -.67em
-	}
-.docs .courtesylinks p {
- text-indent: 0
- }
-.docs ul, .docs ol, .docs dd	{
- margin-left: 0;
- padding-left: 5%
- }
-.docs h3, .docs h4 {
-	margin-bottom: .1em;
- }
-.docs h3 {
-	border-top: solid 1px #666; 
- }
-.docs h4 {
-	border-top: solid 1px #ccc; 
- }
 #banner {
 	border-top: 1px solid #369;
 	border-bottom: 1px solid #003;
@@ -142,24 +119,111 @@ ul.tasks li {
 	border-bottom: 1px solid #ccc;
 	border-right: 1px solid #666;
 	}
+#leftcol {
+	background: #efefef;
+	border-right: 1px solid #999;
+	border-bottom: 1px solid #999;
+	padding-bottom: .5em;
+	}
 #navcolumn div div {
 	background-image: url(/@SCARAB_CONTEXT@/images/strich.gif);
 	background-repeat: no-repeat;
 	background-position:  .5em .5em;
  }
-#navcolumn div div div, #navcolumn div.selected {
-	background-image: none;
-	background-color: white;
-	padding-bottom: .1em;
+#breadcrumbs {
+	border-bottom: 1px solid #999;
+ background-color: #ccc
+	}
+#breadcrumbs td {
+ vertical-align: bottom;
+ padding: 2px 8px
+ }	
+#leftcol, #breadcrumbs {
+ border-top: 1px solid #fff;
  }
-
-
-
+#rightcol div.www {
+ border: 1px solid #ccc;
+ padding: 0 .5em
+ }
+#navcolumn div {
+ padding-left: 5px
+ }
+#navcolumn div div {
+ margin-top: .2em;
+ }
+div#navcolumn div.focus { 
+ margin-top: -.1em;
+ padding: .2em 4px; 	
+ border-top: 1px solid #999;
+	border-left: 1px solid #999;
+	background-color: #fff;
+ } 
+body.docs #toc { 
+	position: absolute;
+	top: 15px;
+	left: 0px;
+	width: 120px;
+	padding: 0 20px 0 0
+	}
+body.docs #toc ul, #toc ol {
+	margin-left: 0;
+	padding-left: 0;
+	}
+body.docs #toc li {
+	margin-top: 7px;
+	padding-left: 10px;
+	list-style-type: none;
+	}
+body.docs #toc li li {
+	background-image: url(/@SCARAB_CONTEXT@/images/strich.gif);
+	background-repeat: no-repeat;
+	background-position:  .5em .5em;
+	}
+body.docs div#toc {
+	font-size:	xx-small !important;
+	voice-family:	"\"}\"";
+	voice-family:	inherit;
+	font-size:	x-small !important
+	}
+html>body.docs #toc {
+	font-size:	x-small !important
+	}
+body.docs div.docs { 
+	margin: 61px 0 0 150px;
+	padding: 1em 2em 1em 1em !important;
+	background: #fff;
+	border-left: 1px solid #ccc;
+	border-top: 1px solid #ccc;
+	}
+body.docs { 
+	background: #efefef url(/@SCARAB_CONTEXT@/images/help_logo.gif) top right no-repeat !important;
+	margin: 0 !important;
+	}
+#toc h3 {
+	border-top: none;
+	}
+.courtesylinks {
+ margin: 1em 0
+ }
+.docs p+p {
+	text-indent: 5%;
+	margin-top: -.67em
+	}
+.docs .courtesylinks p {
+ text-indent: 0
+ }
+.docs h3, .docs h4 {
+	border-top: solid 1px #000;
+	margin-bottom: .1em;
+	padding-top: .3em
+ }
+#alerterrormessage { 
+	background: url(/@SCARAB_CONTEXT@/images/icon_alert.gif) top left no-repeat !important;
+	padding-left: 85px;
+	}
 /* Scarab/App - styles start here */
 .modbar {
 	background: #ccc;
-	}
-.modbar {
 	padding: 5px;
 	border-bottom: 1px solid #999; 
 	}
@@ -172,30 +236,29 @@ ul.tasks li {
 .functnbar3 {
 	background: #ccc url(/@SCARAB_CONTEXT@/images/sw_min.gif) no-repeat bottom left;
 	}
-.functnbar, .functnbar2, {
+.functnbar, .functnbar2, .functnbar3 {
  padding: 5px;
-	margin-left: 2px;
-	margin-right: 2px;
-	margin-bottom: .67em;
-	}
-.functnbar3 {
- padding: 5px;
-	margin-left: 2px;
-	margin-right: 2px;
-	margin-bottom: .67em;
-	}
-.functnbar, .functnbar2 {
+	margin: .67em 2px;
 	color: #000;
 	}
-.functnbar a, .functnbar2 a {
+.functnbar a, .functnbar2 a, .functnbar3 a {
 	color: #000;
 	text-decoration: underline;
 	}
 #topmodule {
+	background: #efefef;
 	border-top: 1px solid white;
 	border-bottom: 1px solid #999; 
 	border-right: 1px solid #999; 
-	margin-top: -8px;
 	}
-
+#topmodule td {
+	vertical-align:	middle;
+	padding: 2px 8px
+	}	
+#topmodule #issueid {
+	border-right: 1px solid #999;
+ }
+#bodycol {
+ margin-top: -8px;
+ }
 /* Scarab/App - styles end here */

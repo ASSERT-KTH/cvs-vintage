@@ -53,7 +53,7 @@
 <div class="modbar"></div>
 #end
 
-<table border="0" cellspacing="0" cellpadding="8" width="98%" id="main">
+<table border="0" cellspacing="0" cellpadding="8" width="100%" id="main">
  <tr valign="top">
   <td id="leftcol" width="20%">
   <div id="navcolumn">
@@ -78,10 +78,11 @@ $renderer.render("navigations", $template, "Default.vm")
 *#
 
  </td>
- <td width="100%" id="bodycol">
+ <td><div id="bodycol">
  <!-- Scarab - App -->
 $renderer.render("layouts", "MainContent.vm")
 <!-- Structural Elements -->
+</div>
  </td>
 #if ($template.equals("SelectModule.vm"))
   $renderer.render("layouts", "/ModuleHelp.vm")

@@ -7,11 +7,11 @@
 
 #if ($link.isAllowed("admin,GlobalArtifactTypeShow.vm") || $link.isAllowed("admin,GlobalAttributeShow.vm"))
   #if ($adminMenu.equals("3"))
-    <div><small><strong>Global Data</strong></small>
+    <div><small><strong>Global data</strong></small>
     $renderer.render("navigations", "GlobalAdmin.vm")
     </div>
   #else
-    <div><small>$link.setPage("admin,GlobalArtifactTypeShow.vm").setPathInfo($scarabG.Constant.CURRENT_ADMIN_MENU, "3").setLabel("Global Data")</small></div>
+    <div><small>$link.setPage("admin,GlobalArtifactTypeShow.vm").setPathInfo($scarabG.Constant.CURRENT_ADMIN_MENU, "3").setLabel("Global data")</small></div>
   #end
 #end
 
@@ -28,8 +28,8 @@
 #if ($link.isAllowed("admin,ManageRoles.vm") || $link.isAllowed("admin,AddRole.vm"))
   #if ($adminMenu.equals("2"))
     <div><small><strong>Roles</strong></small>
-    <div><small>$link.setPage("admin,ManageRoles.vm").setLabel("Role List")</small></div>
-    <div><small>$link.setPage("admin,AddRole.vm").setLabel("Add New Role")</small></div>
+    <div><small>$link.setPage("admin,ManageRoles.vm").setLabel("Role list")</small></div>
+    <div><small>$link.setPage("admin,AddRole.vm").setLabel("Add new role")</small></div>
     </diV>
   #else
     <div><small>$link.setPage("admin,ManageRoles.vm").setPathInfo($scarabG.Constant.CURRENT_ADMIN_MENU, "2").setLabel("Roles")</small></div>
@@ -39,8 +39,8 @@
 #if ($link.isAllowed("admin,ManageUserSearch.vm") || $link.isAllowed("admin,AddUser.vm"))
   #if ($adminMenu.equals("1"))
     <div><small><strong>Users</strong></small>
-    <div><small>$link.setPage("admin,ManageUserSearch.vm").setLabel("User Management")</small></div>
-    <div><small>$link.setPage("admin,AddUser.vm").addQueryData("state","showadduser").setLabel("Add New User")</small></div>
+    <div><small>$link.setPage("admin,ManageUserSearch.vm").setLabel("User management")</small></div>
+    <div><small>$link.setPage("admin,AddUser.vm").addQueryData("state","showadduser").setLabel("Add new user")</small></div>
     </div>
   #else
     <div><small>$link.setPage("admin,ManageUserSearch.vm").setPathInfo($scarabG.Constant.CURRENT_ADMIN_MENU, "1").setLabel("Users")</small></div>
