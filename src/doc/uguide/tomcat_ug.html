@@ -1,7 +1,7 @@
 
 <html>
   <head>
-    <!-- $Id: tomcat_ug.html,v 1.4 2000/03/27 09:04:32 shachor Exp $ -->
+    <!-- $Id: tomcat_ug.html,v 1.5 2000/03/30 11:45:52 shachor Exp $ -->
     <!-- Copyright 1999, Apache Software Foundation -->
     <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
     <link rel="stylesheet" href=style.css>
@@ -582,25 +582,29 @@
     <h3> Making it on Apache </h3>
     <p> This section shows you how to configure Apache to work with Tomcat;
         it tries to provide explainations as well as insight for the
-	configuration directives that you should be used. You can find 
-	additional information the 
+	configuration directives that you should use. You can find
+	additional information the
 	<a href="in http://java.apache.org/jserv/install/index.html">
         jserv install page </a>.
     </p>
 
-    <p> When Tomcat starts up it will automatically generate a configuration 
-      file for Apache in <tt>TOMCAT_HOME/conf/tomcat-apache.conf</tt>. Most 
-      of the time you don't need to do anything but include this file 
-      (appending "Include TOMCAT_HOME/conf/tomcat-apache.conf") in your 
-      httpd.conf.  If you have special needs, you can use this file as a 
-      base for  your customized configuration, but then you'll need to 
-      change it every time you add a new context.
+    <p> When Tomcat starts up it will automatically generate a configuration
+      file for Apache in <tt>TOMCAT_HOME/conf/tomcat-apache.conf</tt>. Most
+      of the time you don't need to do anything but include this file
+      (appending "Include TOMCAT_HOME/conf/tomcat-apache.conf") in your
+      httpd.conf.  If you have special needs, for example an AJP port other
+      the 8007, you can use this file as a base for  your customized
+      configuration and save the results in another file.  If you manage
+      the Apache configuration yourself you'll need to update it whenever
+      you add a new context.
     </p>
     <p>
       <b>Tomcat 3.1:</b> you must to restart tomcat and apache after adding
-      a new context, Apache doesn't support configuration changes without a
-      restart. Also the Apache config file is generated when tomcat starts, 
-      so you'll need to start Tomcat before Apache.
+      a new context; Apache doesn't support configuration changes without a
+      restart. Also the Apache config file is generated when tomcat starts,
+      so you'll need to start Tomcat before Apache. Tomcat will overwrite
+      <tt>TOMCAT_HOME/conf/tomcat-apache.conf</tt> each startup so
+      customized configuration should be kept elsewhere.
     </p>
 
     <p> The Apache-Tomcat configuration uses Apache core configuration directives
