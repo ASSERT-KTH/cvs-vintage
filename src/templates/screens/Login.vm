@@ -48,10 +48,10 @@ $page.setTitle("Welcome to Scarab")
 
     #set ( $login = $intake.Login.Default )
     <input type="hidden" name="$login.CID" value="$login.OID">
+
     #if ( !$login.Username.isValid() )
         $login.Username.Message<br>
     #end
-
    <input name= "$login.Username.Key"
         value="$!login.Username.Value" size="25" type="text">
 
@@ -68,13 +68,23 @@ $page.setTitle("Welcome to Scarab")
         </TR>
         <TR>
                 <TD class="InputHeader">Password:</TD>
-                <TD class="PlainText"><INPUT value="" name="Password" TYPE="password" SIZE="25" onChange="document.login.submit();"> Enter your password.</TD>
+                <TD class="PlainText">
+
+    #if ( !$login.Password.isValid() )
+        $login.Password.Message
+    #end
+   <br>
+   <input name= "$login.Password.Key"
+        value="" size="25" type="text" onChange="document.login.submit();">
+
+Enter your password.</TD>
         </TR>
         <TR>
-                <TD HEIGHT="4" COLSPAN="2"><SPACER TYPE="block" HEIGHT="4"></TD>
+               <TD HEIGHT="4" COLSPAN="2"><SPACER TYPE="block" HEIGHT="4"></TD>
         </TR>
         <TR>
-                <TD HEIGHT="1" COLSPAN="2" BGCOLOR="#cccccc"><SPACER TYPE="block" HEIGHT="1"></TD>
+                <TD HEIGHT="1" COLSPAN="2" BGCOLOR="#cccccc">
+                    <SPACER TYPE="block" HEIGHT="1"></TD>
         </TR>
         <TR>
                 <TD HEIGHT="4" COLSPAN="2"><SPACER TYPE="block" HEIGHT="4"></TD>

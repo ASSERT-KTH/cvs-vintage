@@ -51,15 +51,14 @@ import org.apache.turbine.services.velocity.*;
 import org.apache.velocity.*; 
 import org.apache.velocity.context.*; 
 // Turbine Stuff 
-import org.apache.turbine.modules.*;
-import org.apache.turbine.modules.actions.*;
-import org.apache.turbine.om.security.*;
-import org.apache.turbine.om.security.peer.*;
+import org.apache.turbine.modules.actions.VelocityAction;
+import org.apache.turbine.om.security.User;
 import org.apache.turbine.services.pull.ApplicationTool;
 import org.apache.turbine.services.pull.TurbinePull;
-import org.apache.turbine.services.resources.*;
 import org.apache.turbine.services.resources.TurbineResources;
 import org.apache.turbine.services.security.TurbineSecurity;
+import org.apache.turbine.services.intake.IntakeTool;
+import org.apache.turbine.services.intake.model.Group;
 import org.apache.turbine.util.*;
 import org.apache.turbine.util.security.*;
 // Scarab Stuff
@@ -71,7 +70,7 @@ import org.tigris.scarab.util.ScarabConstants;
     Action.
     
     @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
-    @version $Id: Login.java,v 1.5 2001/04/02 03:29:17 jon Exp $
+    @version $Id: Login.java,v 1.6 2001/04/02 20:32:01 jmcnally Exp $
 */
 public class Login extends VelocityAction
 {
@@ -80,13 +79,21 @@ public class Login extends VelocityAction
     */
     public void doLogin( RunData data, Context context ) throws Exception
     {
-        if (! checkUser(data, context))
-            return;
-        // if a next template is defined, then execute that instead of going to the 
-        // Start.vm screen.    
-        String nextTemplate = data.getParameters().getString(ScarabConstants.NEXT_TEMPLATE, null);
-        if (nextTemplate != null)
-            setTemplate(data, nextTemplate);
+        IntakeTool intake = (IntakeTool)context
+            .get(ScarabConstants.INTAKE_TOOL);
+        
+        if ( intake.isAllValid() && checkUser(data, context) ) 
+        {
+            String template = data.getParameters()
+                .getString(ScarabConstants.NEXT_TEMPLATE, 
+                TurbineResources.getString("template.homepage", "Start.vm") );
+            setTemplate(data, template);
+        }
+        else 
+        {
+            failAction(data);
+        }
+        
     }
 
     /**
@@ -95,20 +102,24 @@ public class Login extends VelocityAction
     public boolean checkUser(RunData data, Context context)
         throws Exception
     {
-        String username = data.getParameters().getString ( "Email", "" );
-        String password = data.getParameters().getString ( "Password", "" );
         User user = null;
+        IntakeTool intake = (IntakeTool)context
+            .get(ScarabConstants.INTAKE_TOOL);
+
         try
         {
-            // quickly validate some data
-            // intake will take care of the erorr messages
-            if (username.length() == 0)
+            String username = null;
+            String password = null;
+            try
             {
-                return failAction(data);
+                Group login = intake.get("Login", IntakeTool.DEFAULT_KEY);
+                username = login.get("Username").toString();
+                password = login.get("Password").toString();
             }
-            if (password.length() == 0)
+            catch ( Exception e )
             {
-                return failAction(data);
+                throw new TurbineSecurityException(
+                    "Login information was not supplied.");
             }
 
             // Authenticate the user and get the object.
