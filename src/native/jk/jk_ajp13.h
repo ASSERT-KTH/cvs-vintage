@@ -54,45 +54,73 @@
  */
 
 /***************************************************************************
- * Description: Socket connections header file                             *
+ * Description: Experimental bi-directionl protocol handler.               *
  * Author:      Gal Shachor <shachor@il.ibm.com>                           *
- * Version:     $Revision: 1.2 $                                               *
+ * Version:     $Revision: 1.1 $                                           *
  ***************************************************************************/
+#ifndef JK_AJP13_H
+#define JK_AJP13_H
 
-#ifndef JK_CONNECT_H
-#define JK_CONNECT_H
 
-#include "jk_logger.h"
-#include "jk_global.h"
-
-#ifndef WIN32
-	#define closesocket			close
-#endif
+#include "jk_service.h"
+#include "jk_msg_buff.h"
 
 #ifdef __cplusplus
 extern "C" {
 #endif /* __cplusplus */
 
-int jk_resolve(char *host,
-               short port,
-               struct sockaddr_in *rc);
+/*
+ * Message does not have a response (for example, JK_AJP13_END_RESPONSE)
+ */
+#define JK_AJP13_ERROR              -1
+/*
+ * Message does not have a response (for example, JK_AJP13_END_RESPONSE)
+ */
+#define JK_AJP13_NO_RESPONSE        0
+/*
+ * Message have a response.
+ */
+#define JK_AJP13_HAS_RESPONSE       1
 
-int jk_open_socket(struct sockaddr_in *addr, 
-                   int ndelay,
-                   jk_logger_t *l);
+/*
+ * Forward a request from the web server to the servlet container.
+ */
+#define JK_AJP13_FORWARD_REQUEST    (unsigned char)2
 
-int jk_close_socket(int s);
+/*
+ * Write a body chunk from the servlet container to the web server
+ */
+#define JK_AJP13_SEND_BODY_CHUNK    (unsigned char)3
 
-int jk_tcp_socket_sendfull(int sd, 
-                           const unsigned char *b,
-                           int len);
+/*
+ * Send response headers from the servlet container to the web server.
+ */
+#define JK_AJP13_SEND_HEADERS       (unsigned char)4
 
-int jk_tcp_socket_recvfull(int sd, 
-                           unsigned char *b, 
-                           int len);
+/*
+ * Marks the end of response.
+ */
+#define JK_AJP13_END_RESPONSE       (unsigned char)5
 
+struct jk_res_data {
+    int         status;
+    const char *msg;
+    unsigned    num_headers;
+    char      **header_names;
+    char      **header_values;
+};
+typedef struct jk_res_data jk_res_data_t;
+
+int ajp13_marshal_into_msgb(jk_msg_buf_t *msg,
+                            jk_ws_service_t *s,
+                            jk_logger_t *l);
+
+int ajp13_unmarshal_response(jk_msg_buf_t *msg,
+                             jk_res_data_t *d,
+                             jk_pool_t *p,
+                             jk_logger_t *l);
 #ifdef __cplusplus
 }
 #endif /* __cplusplus */
 
-#endif /* JK_CONNECT_H */
+#endif /* JK_AJP13_H */

@@ -65,7 +65,7 @@
  * servlet container.                                                      *
  *                                                                         *
  * Author:      Gal Shachor <shachor@il.ibm.com>                           *
- * Version:     $Revision: 1.1 $                                               *
+ * Version:     $Revision: 1.2 $                                               *
  ***************************************************************************/
 
 #include "jk_pool.h"
@@ -124,16 +124,21 @@ static int check_security_fraud(jk_uri_worker_map_t *uw_map,
             char *suffix_start;
             for(suffix_start = strstr(uri, uw_map->maps[i].suffix) ;
                 suffix_start ;
-                suffix_start = strstr(uri, uw_map->maps[i].suffix)) {
-
-                char *after_suffix = suffix_start + strlen(uw_map->maps[i].suffix);
-                if((('.' == *after_suffix) || ('/' == *after_suffix)) && 
-                   (0 == strncmp(uw_map->maps[i].context, uri, uw_map->maps[i].ctxt_len))) {
-                    /* 
-                     * Security violation !!!
-                     * this is a fraud.
-                     */
-                    return i;
+                suffix_start = strstr(suffix_start + 1, uw_map->maps[i].suffix)) {
+                
+                if('.' != *(suffix_start - 1)) {
+                    continue;
+                } else {
+                    char *after_suffix = suffix_start + strlen(uw_map->maps[i].suffix) + 1;
+                
+                    if((('.' == *after_suffix) || ('/' == *after_suffix)) && 
+                       (0 == strncmp(uw_map->maps[i].context, uri, uw_map->maps[i].ctxt_len))) {
+                        /* 
+                         * Security violation !!!
+                         * this is a fraud.
+                         */
+                        return i;
+                    }
                 }
             }
         }

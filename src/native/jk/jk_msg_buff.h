@@ -53,15 +53,24 @@
  *
  */
 
-/** 
-    Simple marshaling code.
-*/
+/***************************************************************************
+ * Description: Data marshaling. XDR like                                  *
+ * Author:      Costin <costin@costin.dnt.ro>                              *
+ * Author:      Gal Shachor <shachor@il.ibm.com>                           *
+ * Version:     $Revision: 1.2 $                                           *
+ ***************************************************************************/
 
-#include "jk_pool.h"
-#include "jk_util.h"
+#ifndef JK_MSG_BUF_H
+#define JK_MSG_BUF_H
 
 
-/* // XXX replace all return values with error codes */
+#ifdef __cplusplus
+extern "C" {
+#endif /* __cplusplus */
+
+#define DEF_BUFFER_SZ 4 * 1024
+
+/* XXX replace all return values with error codes */
 #define ERR_BAD_PACKET -5
 
 /*
@@ -76,83 +85,107 @@ RPC details:
 
  */
 
-/* Data marshaling. Like XDR *
- */
-struct MsgBuffer_Simple {
-    jk_pool_t *pool;
-
-    unsigned char *buf;
-    int pos; /* XXX MT */
-    int len;
-    int maxlen;
-};
-
-
-typedef struct MsgBuffer_Simple MsgBuffer;
+struct jk_msg_buf;
+typedef struct jk_msg_buf jk_msg_buf_t;
 
 /* -------------------- Setup routines -------------------- */
 
 /** Allocate a buffer.
  */
-MsgBuffer *jk_b_new(jk_pool_t *p); 
+jk_msg_buf_t *jk_b_new(jk_pool_t *p); 
 
 /** Set up a buffer with an existing buffer
  */
-int jk_b_set_buffer( MsgBuffer *msg, char *data, int buffSize );
+int jk_b_set_buffer(jk_msg_buf_t *msg, 
+                    char *data, 
+                    int buffSize );
 
-/** Set up a buffer with a new buffer of buffSize
+/*
+ * Set up a buffer with a new buffer of buffSize
  */
-int jk_b_set_buffer_size( MsgBuffer *msg, int buffSize );
+int jk_b_set_buffer_size(jk_msg_buf_t *msg, 
+                         int buffSize);
 
-/** Finalize the buffer before sending - set length fields, etc
+/*
+ * Finalize the buffer before sending - set length fields, etc
  */
-void jk_b_end(MsgBuffer *msg);
+void jk_b_end(jk_msg_buf_t *msg);
 
-/** Recycle the buffer - prepare for a new invocation 
+/*
+ * Recycle the buffer - z for a new invocation 
  */
-void jk_b_reset( MsgBuffer *msg );
+void jk_b_reset(jk_msg_buf_t *msg );
 
-/** Return the buffer body 
+/*
+ * Return the buffer body 
  */ 
-unsigned char *jk_b_get_buff( MsgBuffer *msg );
+unsigned char *jk_b_get_buff(jk_msg_buf_t *msg);
 
-/** Return the current reading position
+/* 
+ * Return the current reading position
  */
-unsigned int jk_b_get_pos( MsgBuffer *msg );
+unsigned int jk_b_get_pos(jk_msg_buf_t *msg);
 
-/** Buffer size 
-*/
-int jk_b_get_size( MsgBuffer *msg );
+/*
+ * Buffer size 
+ */
+int jk_b_get_size(jk_msg_buf_t *msg);
 
-void jk_b_set_len( MsgBuffer *msg, int len );
+void jk_b_set_len(jk_msg_buf_t *msg, 
+                  int len);
 
-/** Get the  message length for incomming buffers
-    or the current length for outgoing
-*/
-unsigned int jk_b_get_len( MsgBuffer *msg );
+void jk_b_set_pos(jk_msg_buf_t *msg, 
+                  int pos);
 
-/** Dump the buffer header
-    @param err Message text
-*/
-void jk_b_dump( MsgBuffer *msg, char *err ); 
+/*
+ * Get the  message length for incomming buffers
+ *   or the current length for outgoing
+ */
+unsigned int jk_b_get_len(jk_msg_buf_t *msg);
+
+/*
+ * Dump the buffer header
+ *   @param err Message text
+ */
+void jk_b_dump(jk_msg_buf_t *msg, 
+               char *err); 
 
 /* -------------------- Real encoding -------------------- */
 
+void jk_b_set_int(jk_msg_buf_t *msg, 
+                  int pos, 
+                  unsigned short val);
 
-void jk_b_set_int( MsgBuffer *msg, int pos, unsigned int val );
+int jk_b_append_byte(jk_msg_buf_t *msg, 
+                     unsigned char val);
 
-int jk_b_append_int( MsgBuffer *msg, unsigned int val );
+int jk_b_append_int(jk_msg_buf_t *msg, 
+                    unsigned short val);
 
-int jk_b_append_string( MsgBuffer *msg, char *param );
+int jk_b_append_string(jk_msg_buf_t *msg, 
+                       const char *param);
 
 
 /* -------------------- Decoding -------------------- */
 
-unsigned char *jk_b_get_string( MsgBuffer *msg);
+unsigned char *jk_b_get_string(jk_msg_buf_t *msg);
+
+/** Get an int from the current position 
+ */
+unsigned short jk_b_get_int(jk_msg_buf_t *msg);
+
+unsigned char jk_b_get_byte(jk_msg_buf_t *msg);
 
 /** Get an int from an arbitrary position 
  */
-int jk_b_pget_int( MsgBuffer *msg, int pos);
+unsigned short jk_b_pget_int(jk_msg_buf_t *msg, 
+                             int pos);
 
-int jk_b_get_int( MsgBuffer *msg);
+unsigned char jk_b_pget_byte(jk_msg_buf_t *msg, 
+                             int pos);
 
+#ifdef __cplusplus
+}
+#endif /* __cplusplus */
+
+#endif /* JK_MSG_BUF_H */

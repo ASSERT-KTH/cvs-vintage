@@ -53,9 +53,12 @@
  *
  */
 
-/** 
-    Simple marshaling code.
-*/
+/***************************************************************************
+ * Description: Data marshaling. XDR like                                  *
+ * Author:      Costin <costin@costin.dnt.ro>                              *
+ * Author:      Gal Shachor <shachor@il.ibm.com>                           *
+ * Version:     $Revision: 1.2 $                                           *
+ ***************************************************************************/
 
 #include "jk_pool.h"
 #include "jk_connect.h"
@@ -63,21 +66,37 @@
 #include "jk_sockbuf.h"
 #include "jk_msg_buff.h"
 
+struct jk_msg_buf {
+    jk_pool_t *pool;
 
+    unsigned char *buf;
+    int pos; 
+    int len;
+    int maxlen;
+};
+
+
+/*
+ * Simple marshaling code.
+ */
 
 /* XXX what's above this line can go to .h XXX */
-void jk_b_dump( MsgBuffer *msg, char *err ) {
-        int i=0;
+void jk_b_dump(jk_msg_buf_t *msg, 
+               char *err) 
+{
+    int i=0;
 	printf("%s %d/%d/%d %x %x %x %x - %x %x %x %x - %x %x %x %x - %x %x %x %x\n", err, msg->pos, msg->len, msg->maxlen,  
 	       msg->buf[i++],msg->buf[i++],msg->buf[i++],msg->buf[i++],
 	       msg->buf[i++],msg->buf[i++],msg->buf[i++],msg->buf[i++],
 	       msg->buf[i++],msg->buf[i++],msg->buf[i++],msg->buf[i++],
 	       msg->buf[i++],msg->buf[i++],msg->buf[i++],msg->buf[i++]);
 
-	i=msg->pos - 4;
-	if( i<0 ) i=0;
+	i = msg->pos - 4;
+    if(i < 0) {
+        i=0;
+    }
 	
-        printf("        %x %x %x %x - %x %x %x %x --- %x %x %x %x - %x %x %x %x\n", 
+    printf("        %x %x %x %x - %x %x %x %x --- %x %x %x %x - %x %x %x %x\n", 
 	       msg->buf[i++],msg->buf[i++],msg->buf[i++],msg->buf[i++],
 	       msg->buf[i++],msg->buf[i++],msg->buf[i++],msg->buf[i++],
 	       msg->buf[i++],msg->buf[i++],msg->buf[i++],msg->buf[i++],
@@ -85,166 +104,229 @@ void jk_b_dump( MsgBuffer *msg, char *err ) {
 
 }
 
-void jk_b_reset( MsgBuffer *msg ) {
-    msg->len =4;
-    msg->pos =4;
+void jk_b_reset(jk_msg_buf_t *msg) 
+{
+    msg->len = 4;
+    msg->pos = 4;
 }
 
-void jk_b_set_int( MsgBuffer *msg, int pos, unsigned int val ) {
-    /* XXX optimize - swap if needed or just copyb */
-    /* #if SWAP */
-    /*     swap_16( (unsigned char *)&val, msg->buf ) */
-    /* #else */
-    /*     ???	 */
-    /* #endif  */
-    msg->buf[pos++]=(unsigned char) ( (val >> 8) & 0xff );
-    msg->buf[pos]= (unsigned char) ( val & 0xff );
+void jk_b_set_int(jk_msg_buf_t *msg, 
+                  int pos, 
+                  unsigned short val) 
+{
+    msg->buf[pos]       = (unsigned char)((val >> 8) & 0xff);
+    msg->buf[pos + 1]   = (unsigned char)(val & 0xff);
 }
 
-int jk_b_append_int( MsgBuffer *msg, unsigned int val ) {
-    if( msg->len + 2 > msg->maxlen ) 
-	return -1;
 
-    jk_b_set_int( msg, msg->len, val );
-    msg->len +=2;
+int jk_b_append_int(jk_msg_buf_t *msg, 
+                    unsigned short val) 
+{
+    if(msg->len + 2 > msg->maxlen) {
+	    return -1;
+    }
+
+    jk_b_set_int(msg, msg->len, val);
+
+    msg->len += 2;
+
     return 0;
 }
 
 
-void jk_b_end(MsgBuffer *msg) {
-    /* Ugly way to set the size in the right position */
-    jk_b_set_int( msg, 2, msg->len - 4 ); /* see protocol */
-    jk_b_set_int( msg, 0, 0x1234 );
+void jk_b_set_byte(jk_msg_buf_t *msg, 
+                   int pos, 
+                   unsigned char val) 
+{
+    msg->buf[pos]= val;
+}
+
+int jk_b_append_byte(jk_msg_buf_t *msg, 
+                     unsigned char val)
+{
+    if(msg->len + 1 > msg->maxlen) {
+	    return -1;
+    }
+
+    jk_b_set_byte(msg, msg->len, val);
+
+    msg->len += 1;
+
+    return 0;
 }
 
 
-/* XXX optimize it ( less function calls, macros )
-   Ugly pointer arithmetic code
- */
-/* XXX io_vec ? XXX just send/map the pool !!! */
-
-MsgBuffer *jk_b_new(jk_pool_t *p) {
-    MsgBuffer *msg=(MsgBuffer *)jk_pool_alloc( p, sizeof ( MsgBuffer ));
-    msg->pool=p;
-    if(msg==NULL) return NULL;
+void jk_b_end(jk_msg_buf_t *msg) 
+{
+    /* 
+     * Ugly way to set the size in the right position 
+     */
+    jk_b_set_int(msg, 2, (unsigned short )(msg->len - 4)); /* see protocol */
+    jk_b_set_int(msg, 0, 0x1234);
 }
 
-int jk_b_set_buffer( MsgBuffer *msg, char *data, int buffSize ) {
-    if(msg==NULL) return -1;
 
-    msg->len=0;
-    msg->buf=data;
-    msg->maxlen=buffSize;
-    /* XXX error checking !!! */
+jk_msg_buf_t *jk_b_new(jk_pool_t *p) 
+{
+    jk_msg_buf_t *msg = 
+            (jk_msg_buf_t *)jk_pool_alloc(p, sizeof(jk_msg_buf_t));
+
+    if(!msg) {
+        return NULL;
+    }
+
+    msg->pool = p;
+    
+    return msg;
+}
+
+int jk_b_set_buffer(jk_msg_buf_t *msg, 
+                    char *data, 
+                    int buffSize) 
+{
+    if(!msg) {
+        return -1;
+    }
+
+    msg->len = 0;
+    msg->buf = data;
+    msg->maxlen = buffSize;
     
     return 0;
 }
 
 
-int jk_b_set_buffer_size( MsgBuffer *msg, int buffSize ) {
-
-    unsigned char *data=(unsigned char *)jk_pool_alloc( msg->pool, buffSize );
-    if( data==NULL ) {
-	/* Free - sub-pools */
-	return -1;
+int jk_b_set_buffer_size(jk_msg_buf_t *msg, 
+                         int buffSize) 
+{
+    unsigned char *data = (unsigned char *)jk_pool_alloc(msg->pool, buffSize);
+    
+    if(!data) {
+	    return -1;
     }
 
-    jk_b_set_buffer( msg, data, buffSize );
-}
-
-unsigned char *jk_b_get_buff( MsgBuffer *msg ) {
-    return msg->buf;
-}
-
-unsigned int jk_b_get_pos( MsgBuffer *msg ) {
-    return msg->pos;
-}
-
-unsigned int jk_b_get_len( MsgBuffer *msg ) {
-    return msg->len;
-}
-
-void jk_b_set_len( MsgBuffer *msg, int len ) {
-    msg->len=len;
-}
-
-int jk_b_get_size( MsgBuffer *msg ) {
-    return msg->maxlen;
-}
-
-/** Shame-less copy from somewhere.
-    assert (src != dst)
- */
-static void swap_16( unsigned char *src, unsigned char *dst) {
-    *dst++ = *(src + 1 );
-    *dst= *src;
-}
-
-int jk_b_append_string( MsgBuffer *msg, char *param ) {
-    int len;
-
-    if( param==NULL ) {
-	jk_b_append_int( msg, 0xFFFF );
-	return 0; 
-    }
-
-    len=strlen(param);
-    if( msg->len + len + 2  > msg->maxlen )
-	return -1;
-
-    // ignore error - we checked once
-    jk_b_append_int( msg, len );
-
-    // We checked for space !! 
-    strncpy( msg->buf + msg->len , param, len+1 ); // including \0
-    msg->len += len + 1;
+    jk_b_set_buffer(msg, data, buffSize);
     return 0;
 }
 
-int jk_b_get_int( MsgBuffer *msg) {
-    int i;
-    if( msg->pos + 1 > msg->len ) {
-	printf( "Read after end \n");
-	return 0;
+unsigned char *jk_b_get_buff(jk_msg_buf_t *msg) 
+{
+    return msg->buf;
+}
+
+unsigned int jk_b_get_pos(jk_msg_buf_t *msg) 
+{
+    return msg->pos;
+}
+
+void jk_b_set_pos(jk_msg_buf_t *msg,
+                          int pos) 
+{
+    msg->pos = pos;
+}
+
+unsigned int jk_b_get_len(jk_msg_buf_t *msg) 
+{
+    return msg->len;
+}
+
+void jk_b_set_len(jk_msg_buf_t *msg, 
+                  int len) 
+{
+    msg->len=len;
+}
+
+int jk_b_get_size(jk_msg_buf_t *msg) 
+{
+    return msg->maxlen;
+}
+
+int jk_b_append_string(jk_msg_buf_t *msg, 
+                       const char *param) 
+{
+    int len;
+
+    if(!param) {
+	    jk_b_append_int( msg, 0xFFFF );
+	    return 0; 
     }
-    i= ((msg->buf[msg->pos++]&0xff)<<8);
-    i+= (msg->buf[(msg->pos++)] & 0xFF);
+
+    len = strlen(param);
+    if(msg->len + len + 2  > msg->maxlen) {
+	    return -1;
+    }
+
+    /* ignore error - we checked once */
+    jk_b_append_int(msg, (unsigned short )len);
+
+    /* We checked for space !!  */
+    strncpy(msg->buf + msg->len , param, len+1); /* including \0 */
+    msg->len += len + 1;
+
+    return 0;
+}
+
+unsigned short jk_b_get_int(jk_msg_buf_t *msg) 
+{
+    int i;
+    if(msg->pos + 1 > msg->len) {
+	    printf( "Read after end \n");
+	    return -1;
+    }
+    i  = ((msg->buf[msg->pos++]&0xff)<<8);
+    i += (msg->buf[(msg->pos++)] & 0xFF);
     return i;
 }
 
-int jk_b_pget_int( MsgBuffer *msg, int pos) {
+unsigned short jk_b_pget_int(jk_msg_buf_t *msg, 
+                             int pos) 
+{
     int i= ((msg->buf[pos++]&0xff)<<8);
     i+= (msg->buf[pos] & 0xFF);
     return i;
 }
 
-
-/* int jk_b_getCode( MsgBuffer *msg ) { */
-/*     return jk_b_pget_int( msg, 0 ); */
-/* } */
-
-unsigned char *jk_b_get_string( MsgBuffer *msg) {
-    int size, start;
-    char *str;
-
-    /*     jk_b_dump(msg, "Before GS: "); */
-    
-    size=jk_b_get_int(msg);
-    start=msg->pos;
-    if(( size < 0 ) || ( size + start > msg->maxlen ) ) { 
-	jk_b_dump(msg, "After get int"); 
-	printf("ERROR\n" );
-	return "ERROR"; /* XXX */
+unsigned char jk_b_get_byte(jk_msg_buf_t *msg) 
+{
+    unsigned char rc;
+    if(msg->pos > msg->len) {
+	    printf("Read after end \n");
+	    return -1;
     }
+    rc = msg->buf[msg->pos++];
+    
+    return rc;
+}
 
-    msg->pos += size;
-    msg->pos++; // end 0
-    str= msg->buf + start;
-    /*     printf( "Get_string %lx %lx %x\n", msg->buf,  str, size ); */
-    /*     printf( "Get_string %s \n", str ); */
-    return (unsigned char *)(msg->buf + start); 
+unsigned char jk_b_pget_byte(jk_msg_buf_t *msg, 
+                             int pos) 
+{
+    return msg->buf[pos];
 }
 
 
+unsigned char *jk_b_get_string(jk_msg_buf_t *msg) 
+{
+    int size = jk_b_get_int(msg);
+    int start = msg->pos;
 
+    if((size < 0 ) || (size + start > msg->maxlen)) { 
+	    jk_b_dump(msg, "After get int"); 
+	    printf("ERROR\n" );
+	    return "ERROR"; /* XXX */
+    }
 
+    msg->pos += size;
+    msg->pos++;  /* terminating NULL */
+    
+    return (unsigned char *)(msg->buf + start); 
+}
+
+/** Shame-less copy from somewhere.
+    assert (src != dst)
+ */
+static void swap_16(unsigned char *src, unsigned char *dst) 
+{
+    *dst++ = *(src + 1 );
+    *dst= *src;
+}

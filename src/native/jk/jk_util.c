@@ -56,7 +56,7 @@
 /***************************************************************************
  * Description: Utility functions (mainly configuration)                   *
  * Author:      Gal Shachor <shachor@il.ibm.com>                           *
- * Version:     $Revision: 1.2 $                                               *
+ * Version:     $Revision: 1.3 $                                               *
  ***************************************************************************/
 
 
@@ -77,6 +77,7 @@
 #define HOST_OF_WORKER              ("host")
 #define PORT_OF_WORKER              ("port")
 #define TYPE_OF_WORKER              ("type")
+#define CACHE_OF_WORKER             ("cachesize")
 #define LOAD_FACTOR_OF_WORKER       ("lbfactor")
 #define BALANCED_WORKERS            ("balanced_workers")
 #define WORKER_AJP12                ("ajp12")
@@ -249,6 +250,22 @@ int jk_get_worker_port(jk_map_t *m,
 
     return map_get_int(m, buf, def);
 }
+
+int jk_get_worker_cache_size(jk_map_t *m, 
+                             const char *wname,
+                             int def)
+{
+    char buf[1024];
+
+    if(!m || !wname) {
+        return -1;
+    }
+
+    sprintf(buf, "%s.%s.%s", PREFIX_OF_WORKER, wname, CACHE_OF_WORKER);
+
+    return map_get_int(m, buf, def);
+}
+
 
 int jk_get_worker_list(jk_map_t *m,
                        char ***list,

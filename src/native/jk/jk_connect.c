@@ -57,7 +57,7 @@
  * Description: Socket/Naming manipulation functions                       *
  * Author:      Gal Shachor <shachor@il.ibm.com>                           *
  * Based on:    Various Jserv files                                        *
- * Version:     $Revision: 1.1 $                                               *
+ * Version:     $Revision: 1.2 $                                               *
  ***************************************************************************/
 
 
@@ -97,6 +97,7 @@ int jk_resolve(char *host,
 
     return JK_TRUE;
 }
+
 
 int jk_open_socket(struct sockaddr_in *addr, 
                    int ndelay,
@@ -164,4 +165,60 @@ int jk_close_socket(int s)
 #endif
 
     return -1;
+}
+
+int jk_tcp_socket_sendfull(int sd, 
+                           const unsigned char *b,
+                           int len)
+{
+    int sent = 0;
+
+    while(sent < len) {
+        int this_time = send(sd, 
+                             b + sent , 
+                             len - sent, 
+                             0);
+	    
+	    if(0 == this_time) {
+	        return -2;
+	    }
+	    if(this_time < 0) {
+	        return -3;
+	    }
+	    sent += this_time;
+    }
+
+    return sent;
+}
+
+int jk_tcp_socket_recvfull(int sd, 
+                           unsigned char *b, 
+                           int len) 
+{
+    int rdlen = 0;
+
+    while(rdlen < len) {
+	    int this_time = recv(sd, 
+                             b + rdlen, 
+                             len - rdlen, 
+                             0);	
+	    if(-1 == this_time) {
+#ifdef WIN32
+            if(SOCKET_ERROR == this_time) { 
+                errno = WSAGetLastError() - WSABASEERR;
+            }
+#endif /* WIN32 */
+
+    	    if(EAGAIN == errno) {
+                continue;
+	        } 
+		    return -1;
+	    }
+        if(0 == this_time) {
+            return -1; 
+        }
+	    rdlen += this_time;
+    }
+
+    return rdlen;
 }

@@ -54,45 +54,29 @@
  */
 
 /***************************************************************************
- * Description: Socket connections header file                             *
+ * Description: ajpv1.3 worker header file                                 *
  * Author:      Gal Shachor <shachor@il.ibm.com>                           *
- * Version:     $Revision: 1.2 $                                               *
+ * Version:     $Revision: 1.1 $                                           *
  ***************************************************************************/
 
-#ifndef JK_CONNECT_H
-#define JK_CONNECT_H
+#ifndef JK_AJP13_WORKER_H
+#define JK_AJP13_WORKER_H
 
 #include "jk_logger.h"
-#include "jk_global.h"
-
-#ifndef WIN32
-	#define closesocket			close
-#endif
+#include "jk_service.h"
 
 #ifdef __cplusplus
 extern "C" {
 #endif /* __cplusplus */
 
-int jk_resolve(char *host,
-               short port,
-               struct sockaddr_in *rc);
+#define JK_AJP13_WORKER_NAME ("ajp13")
 
-int jk_open_socket(struct sockaddr_in *addr, 
-                   int ndelay,
-                   jk_logger_t *l);
-
-int jk_close_socket(int s);
-
-int jk_tcp_socket_sendfull(int sd, 
-                           const unsigned char *b,
-                           int len);
-
-int jk_tcp_socket_recvfull(int sd, 
-                           unsigned char *b, 
-                           int len);
+int JK_METHOD ajp13_worker_factory(jk_worker_t **w,
+                                   const char *name,
+                                   jk_logger_t *l);
 
 #ifdef __cplusplus
 }
 #endif /* __cplusplus */
 
-#endif /* JK_CONNECT_H */
+#endif /* JK_AJP13_WORKER_H */

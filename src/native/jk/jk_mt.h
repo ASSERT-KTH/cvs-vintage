@@ -54,45 +54,66 @@
  */
 
 /***************************************************************************
- * Description: Socket connections header file                             *
+ * Description: Multi thread portability code for JK                       *
  * Author:      Gal Shachor <shachor@il.ibm.com>                           *
- * Version:     $Revision: 1.2 $                                               *
+ * Version:     $Revision: 1.1 $                                            *
  ***************************************************************************/
 
-#ifndef JK_CONNECT_H
-#define JK_CONNECT_H
+#ifndef _JK_MT_H
+#define _JK_MT_H
 
-#include "jk_logger.h"
 #include "jk_global.h"
 
-#ifndef WIN32
-	#define closesocket			close
-#endif
+/*
+ * All WIN32 code is MT, UNIX code that uses pthreads is marked by the POSIX 
+ * _REENTRANT define.
+ */
+#if defined (WIN32) || defined(_REENTRANT)
 
-#ifdef __cplusplus
-extern "C" {
-#endif /* __cplusplus */
+    /*
+     * Marks execution under MT compilation
+     */
+    #define _MT_CODE
 
-int jk_resolve(char *host,
-               short port,
-               struct sockaddr_in *rc);
+    #ifdef WIN32
 
-int jk_open_socket(struct sockaddr_in *addr, 
-                   int ndelay,
-                   jk_logger_t *l);
+        #include <windows.h>
 
-int jk_close_socket(int s);
+        typedef CRITICAL_SECTION JK_CRIT_SEC;
 
-int jk_tcp_socket_sendfull(int sd, 
-                           const unsigned char *b,
-                           int len);
+        #define JK_INIT_CS(x, rc) InitializeCriticalSection(x); rc = JK_TRUE;
+        #define JK_DELETE_CS(x, rc) DeleteCriticalSection(x); rc = JK_TRUE;
+        #define JK_ENTER_CS(x, rc) EnterCriticalSection(x); rc = JK_TRUE;
+        #define JK_LEAVE_CS(x, rc) LeaveCriticalSection(x); rc = JK_TRUE;
 
-int jk_tcp_socket_recvfull(int sd, 
-                           unsigned char *b, 
-                           int len);
+    #else /* Unix pthreads */
 
-#ifdef __cplusplus
-}
-#endif /* __cplusplus */
+        #include <pthread.h>
 
-#endif /* JK_CONNECT_H */
+        typedef pthread_mutex_t	JK_CRIT_SEC;
+
+        #define JK_INIT_CS(x, rc)\
+            if(pthread_mutex_init(x, NULL)) rc = JK_FALSE; else rc = JK_TRUE; 
+
+        #define JK_DELETE_CS(x, rc)\
+            if(pthread_mutex_lock(x)) rc = JK_FALSE; else rc = JK_TRUE; 
+
+        #define JK_ENTER_CS(x, rc)\
+            if(pthread_mutex_unlock(x)) rc = JK_FALSE; else rc = JK_TRUE; 
+
+        #define JK_LEAVE_CS(x, rc)\
+            if(pthread_mutex_destroy(x)) rc = JK_FALSE; else rc = JK_TRUE; 
+    #endif /* Unix pthreads */
+
+#else /* Not an MT code */
+
+    typedef void *JK_CRIT_SEC;
+
+    #define JK_INIT_CS(x, rc) rc = JK_TRUE;
+    #define JK_DELETE_CS(x, rc) rc = JK_TRUE;
+    #define JK_ENTER_CS(x, rc) rc = JK_TRUE;
+    #define JK_LEAVE_CS(x, rc) rc = JK_TRUE;
+
+#endif /* Not an MT code */
+
+#endif /* _JK_MT_H */
