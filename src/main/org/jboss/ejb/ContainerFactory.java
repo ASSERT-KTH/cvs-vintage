@@ -76,7 +76,7 @@ import org.jboss.logging.Logger;
 *   @author <a href="mailto:jplindfo@helsinki.fi">Juha Lindfors</a>
 *   @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
 *
-*   @version $Revision: 1.41 $
+*   @version $Revision: 1.42 $
 */
 public class ContainerFactory
     extends org.jboss.util.ServiceMBeanSupport
@@ -213,8 +213,8 @@ public class ContainerFactory
     }
 
     /**
-    *	Deploy the file at this URL. This method is typically called from remote administration
-    *	tools that cannot handle java.net.URL's as parameters to methods
+    *   Deploy the file at this URL. This method is typically called from remote administration
+    *   tools that cannot handle java.net.URL's as parameters to methods
     *
     * @param   url
     * @exception   MalformedURLException
@@ -229,8 +229,8 @@ public class ContainerFactory
 
 
     /**
-    *	Undeploy the file at this URL. This method is typically called from remote administration
-    *	tools that cannot handle java.net.URL's as parameters to methods
+    *   Undeploy the file at this URL. This method is typically called from remote administration
+    *   tools that cannot handle java.net.URL's as parameters to methods
     *
     * @param   url
     * @exception   MalformedURLException
@@ -319,8 +319,29 @@ public class ContainerFactory
                      String classPathEntry = classPathTokens.nextToken();
                      try
                      {
-                        urlList.add(new URL(url, classPathEntry));
-                        log.log("Added "+ classPathEntry);
+                        URL u;
+                        File dir;
+
+                        // Extension to "Class-Path:" format: dir/*
+                        // add jar files in the dir to the classpath
+                        if (classPathEntry.endsWith("/*"))
+                        {
+                           classPathEntry = classPathEntry.substring(0, classPathEntry.length() - 1);
+                           dir = new File((new URL(url, classPathEntry)).getFile());
+                           String[] files = dir.list();
+                           for (int i = 0; i < files.length; i++)
+                           {
+                              if (files[i].endsWith(".jar") || files[i].endsWith(".zip"))
+                              {
+                                 urlList.add(new URL(dir.toURL(), files[i]));
+                                 log.log("Added " + dir + File.separator + files[i]);
+                              }
+                           }
+                        } else
+                        {
+                           urlList.add(new URL(url, classPathEntry));
+                           log.log("Added "+ classPathEntry);
+                        }
                      } catch (MalformedURLException e)
                      {
                         log.error("Could not add " + classPathEntry);
@@ -390,7 +411,7 @@ public class ContainerFactory
             }
             
             // unset verifier log
-            Log.unsetLog();			
+            Log.unsetLog();         
 
          // Get list of beans for which we will create containers
          Iterator beans = metaData.getEnterpriseBeans();
