@@ -14,23 +14,23 @@ fi
 echo "Creating Database..."        
 /usr/bin/mysqladmin create scarab
 
-echo "Importing MySQL_users_roles_permissions.sql..."
-mysql scarab < MySQL_users_roles_permissions.sql
+echo "Importing mysql-turbine.sql..."
+mysql scarab < mysql-turbine.sql
 
-echo "Importing MySQL_id_table.sql..."
-mysql scarab < MySQL_id_table.sql
+echo "Importing mysql-id-table-schema.sql..."
+mysql scarab < mysql-id-table-schema.sql
 
-echo "Importing id_broker_init.sql..."
-mysql scarab < id_broker_init.sql
+echo "Importing mysql-turbine-id-table-init.sql..."
+mysql scarab < mysql-turbine-id-table-init.sql
 
-echo "Importing scarab-mysql.sql..."
-mysql scarab < scarab-mysql.sql
+echo "Importing mysql-turbine-security.sql..."
+mysql scarab < mysql-turbine-security.sql
 
-echo "Importing default_roles_permissions.sql..."
-mysql scarab < default_roles_permissions.sql
+echo "Importing mysql-scarab.sql..."
+mysql scarab < mysql-scarab.sql
 
-echo "Importing MySQL_default_data.sql..."
-mysql scarab < MySQL_default_data.sql
+echo "Importing mysql-scarab-default-data.sql..."
+mysql scarab < mysql-scarab-default-data.sql
 
-echo "Importing MySQL_sample_data.sql..."
-mysql scarab < MySQL_sample_data.sql
+echo "Importing mysql-scarab-sample-data.sql..."
+mysql scarab < mysql-scarab-sample-data.sql
