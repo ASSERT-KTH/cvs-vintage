@@ -55,7 +55,7 @@ import org.gjt.sp.util.*;
  * <li>
  *
  * @author Slava Pestov
- * @version $Id: Buffer.java,v 1.92 2002/06/05 02:13:55 spestov Exp $
+ * @version $Id: Buffer.java,v 1.93 2002/06/05 02:59:49 spestov Exp $
  */
 public class Buffer implements EBComponent
 {
@@ -2421,7 +2421,7 @@ loop:		for(int i = 0; i < seg.count; i++)
 	 * virtual width will be stored in its first location if this method
 	 * returns -1.
 	 *
-	 * @return A negative number if the column is out of bounds
+	 * @return -1 if the column is out of bounds
 	 *
 	 * @since jEdit 4.1pre1
 	 */
