@@ -289,7 +289,7 @@ public class DecodeInterceptor extends  BaseInterceptor  {
 	    buff[end-1]=='.' &&
 	    buff[end-2]=='.' &&
 	    buff[end-3]=='/' ) {
-	    end-=4;
+	    end-=3;
 	    if(end < start) {
 		end = start;
 	    }
