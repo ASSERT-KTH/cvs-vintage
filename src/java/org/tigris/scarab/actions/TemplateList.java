@@ -71,7 +71,7 @@ import org.tigris.scarab.om.IssueTemplatePeer;
     This class is responsible for report managing enter issue templates.
     ScarabIssueAttributeValue
     @author <a href="mailto:elicia@collab.net">Elicia David</a>
-    @version $Id: TemplateList.java,v 1.3 2001/09/21 19:00:00 elicia Exp $
+    @version $Id: TemplateList.java,v 1.4 2001/09/25 07:24:37 elicia Exp $
 */
 public class TemplateList extends TemplateAction
 {
@@ -98,8 +98,6 @@ public class TemplateList extends TemplateAction
 
         Field name = templateGroup.get("Name");
         name.setRequired(true);
-        Field value = templateGroup.get("Value");
-        //context.put("templateString", value);
 
         if ( intake.isAllValid() ) 
         {
