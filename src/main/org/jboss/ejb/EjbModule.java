@@ -67,7 +67,7 @@ import org.w3c.dom.Element;
  * @author <a href="mailto:reverbel@ime.usp.br">Francisco Reverbel</a>
  * @author <a href="mailto:Adrian.Brock@HappeningTimes.com">Adrian.Brock</a>
  * @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>
- * @version $Revision: 1.47 $
+ * @version $Revision: 1.48 $
  *
  * @jmx:mbean extends="org.jboss.system.ServiceMBean"
  */
@@ -343,7 +343,11 @@ public class EjbModule
          Container con = (Container) iter.previous();
          try
          {
-            log.debug("stopService, stopping container: " + con.getBeanMetaData().getEjbName());
+            // The container may already be destroyed so validate metaData
+            BeanMetaData metaData = con.getBeanMetaData();
+            String ejbName = metaData != null ? metaData.getEjbName() : "Unknown";
+            log.debug("stopService, stopping container: " + ejbName);
+
             serviceController.stop(con.getJmxName());
          }
          catch (Exception e)
