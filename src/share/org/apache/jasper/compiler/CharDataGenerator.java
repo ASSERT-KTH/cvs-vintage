@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/CharDataGenerator.java,v 1.1 1999/10/09 00:20:34 duncan Exp $
- * $Revision: 1.1 $
- * $Date: 1999/10/09 00:20:34 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/CharDataGenerator.java,v 1.2 2000/04/05 02:55:12 craigmcc Exp $
+ * $Revision: 1.2 $
+ * $Date: 2000/04/05 02:55:12 $
  *
  * ====================================================================
  * 
@@ -73,6 +73,9 @@ public class CharDataGenerator
     implements ServiceMethodPhase
 {
     char[] chars;
+
+    // process in 32k chunks
+    private static final int MAXSIZE = 32 * 1024;
     
     public CharDataGenerator(char[] chars) {
 	this.chars = chars;
@@ -80,11 +83,21 @@ public class CharDataGenerator
 
     public void generate(ServletWriter writer, Class phase) {
 	writer.indent();
+	int current	= 0;
+	int limit       = chars.length;
+	while (current < limit) {
+	    int from = current;
+	    int to = Math.min(current + MAXSIZE, limit);
+	    generateChunk(writer, from, to);
+	    current = to;
+	}
+    }
+
+    private void generateChunk(ServletWriter writer, int from, int to) {
 	writer.print("out.write(\"");
 	// Generate the char data:
-	int limit       = chars.length;
 	StringBuffer sb = new StringBuffer();
-	for (int i = 0 ; i < limit ; i++) {
+	for (int i = from ; i < to ; i++) {
 	    int ch = chars[i];
 	    switch(ch) {
 	    case '"':
@@ -114,4 +127,7 @@ public class CharDataGenerator
 	writer.print(sb.toString());
 	writer.print("\");\n");
     }
+
+
+
 }
