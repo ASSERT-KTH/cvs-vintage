@@ -481,26 +481,93 @@
   <target name="javadoc" depends="main,webapps,tomcat-jars-new">
     <!-- Add Tomcat internal javadoc -->
     <mkdir dir="${tomcat.build}/webapps/ROOT/javadoc"/>
+    <javadoc packagenames="org.apache.*" 
+             sourcepath="src/share;src/facade22" 
+             destdir="${tomcat.build}/webapps/ROOT/javadoc" 
+             author="true" 
+             version="true" 
+             use="true" 
+             windowtitle="Tomcat and Jasper Internal API" 
+             doctitle="Tomcat and Jasper Internal API" 
+             bottom="Copyright © 2000 Apache Software Foundation. All Rights Reserved."
+             />
+  </target>
+  <target name="javadoc.tomcat" depends="main,webapps,tomcat-jars-new">
+    <javadoc packagenames="org.apache.tomcat.*" 
+	     sourcepath="src/share;src/facade22" 
+	     destdir="${tomcat.build}/webapps/ROOT/javadoc" 
+	     author="true" 
+	     version="true" 
+	     use="true" 
+	     windowtitle="Tomcat API" 
+	     doctitle="Tomcat API" 
+	     bottom="Copyright © 2000 Apache Software Foundation. All Rights Reserved."/>
+  </target>
+  <target name="javadoc.tomcat.core" depends="main,webapps,tomcat-jars-new">
     <javadoc packagenames="org.apache.tomcat.core" 
 	     sourcepath="src/share;src/facade22" 
 	     destdir="${tomcat.build}/webapps/ROOT/javadoc" 
 	     author="true" 
 	     version="true" 
 	     use="true" 
-	     windowtitle="Tomcat internal API" 
-	     doctitle="Tomcat internal" 
+	     windowtitle="Tomcat Core API" 
+	     doctitle="Tomcat Core API" 
 	     bottom="Copyright © 2000 Apache Software Foundation. All Rights Reserved."/>
-
+  </target>
+  <target name="javadoc.tomcat.facade" depends="main,webapps,tomcat-jars-new">
+    <javadoc packagenames="org.apache.tomcat.facade" 
+	     sourcepath="src/share;src/facade22" 
+	     destdir="${tomcat.build}/webapps/ROOT/javadoc" 
+	     author="true" 
+	     version="true" 
+	     use="true" 
+	     windowtitle="Tomcat Facade API" 
+	     doctitle="Tomcat Facade API" 
+	     bottom="Copyright © 2000 Apache Software Foundation. All Rights Reserved."/>
+  </target>
+  <target name="javadoc.tomcat.modules" depends="main,webapps,tomcat-jars-new">
     <javadoc packagenames="org.apache.tomcat.modules.*" 
 	     sourcepath="src/share;src/facade22" 
 	     destdir="${tomcat.build}/webapps/ROOT/javadoc" 
 	     author="true" 
 	     version="true" 
 	     use="true" 
-	     windowtitle="Tomcat modules" 
-	     doctitle="Tomcat modules" 
+	     windowtitle="Tomcat Modules API" 
+	     doctitle="Tomcat Modules API" 
 	     bottom="Copyright © 2000 Apache Software Foundation. All Rights Reserved."/>
-  
+  </target>
+  <target name="javadoc.tomcat.startup" depends="main,webapps,tomcat-jars-new">
+    <javadoc packagenames="org.apache.tomcat.startup" 
+	     sourcepath="src/share;src/facade22" 
+	     destdir="${tomcat.build}/webapps/ROOT/javadoc" 
+	     author="true" 
+	     version="true" 
+	     use="true" 
+	     windowtitle="Tomcat Startup API" 
+	     doctitle="Tomcat Startup API" 
+	     bottom="Copyright © 2000 Apache Software Foundation. All Rights Reserved."/>
+  </target>
+  <target name="javadoc.tomcat.util" depends="main,webapps,tomcat-jars-new">
+    <javadoc packagenames="org.apache.tomcat.util.*" 
+	     sourcepath="src/share;src/facade22" 
+	     destdir="${tomcat.build}/webapps/ROOT/javadoc" 
+	     author="true" 
+	     version="true" 
+	     use="true" 
+	     windowtitle="Tomcat Utilities API" 
+	     doctitle="Tomcat Utilities API" 
+	     bottom="Copyright © 2000 Apache Software Foundation. All Rights Reserved."/>
+  </target>
+  <target name="javadoc.jasper" depends="main,webapps,tomcat-jars-new">
+    <javadoc packagenames="org.apache.jasper.*" 
+	     sourcepath="src/share;src/facade22" 
+	     destdir="${tomcat.build}/webapps/ROOT/javadoc" 
+	     author="true" 
+	     version="true" 
+	     use="true" 
+	     windowtitle="Jasper API" 
+	     doctitle="Jasper API" 
+	     bottom="Copyright © 2000 Apache Software Foundation. All Rights Reserved."/>
   </target>
 
   <target name="dist.war" depends="dist.prepare" >
@@ -520,6 +587,9 @@
     <jar jarfile="${tomcat.dist}/webapps/ROOT.war" 
 	 basedir="${tomcat.build}/webapps/ROOT" 
 	 includes="**"/>
+  </target>
+
+  <target name="dist.nojavadoc" depends="dist.war">
   </target>
 
   <!-- =================================================================== -->
