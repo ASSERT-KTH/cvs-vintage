@@ -1,4 +1,4 @@
-// $Id: XmiFilePersister.java,v 1.12 2005/01/15 16:17:15 bobtarling Exp $
+// $Id: XmiFilePersister.java,v 1.13 2005/01/15 16:41:03 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -32,6 +32,7 @@ import java.io.OutputStreamWriter;
 import java.net.URL;
 
 import javax.swing.JProgressBar;
+import javax.swing.text.JTextComponent;
 
 import org.apache.log4j.Logger;
 import org.argouml.kernel.Project;
@@ -177,9 +178,10 @@ public class XmiFilePersister extends AbstractFilePersister {
      * @return The newly loaded project.
      * @throws OpenException if the file can not be opened
      *
-     * @see org.argouml.persistence.ProjectFilePersister#doLoad(java.net.URL, javax.swing.JProgressBar)
+     * @see org.argouml.persistence.ProjectFilePersister#doLoad(java.net.URL,
+     *  javax.swing.JProgressBar, javax.swing.text.JTextComponent)
      */
-    public Project doLoad(URL url, JProgressBar progressBar) throws OpenException {
+    public Project doLoad(URL url, JProgressBar progressBar, JTextComponent prorgessText) throws OpenException {
         try {
             Project p = new Project();
             XMIParser.getSingleton().readModels(p, url);

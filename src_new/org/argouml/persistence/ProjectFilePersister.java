@@ -1,4 +1,4 @@
-// $Id: ProjectFilePersister.java,v 1.4 2005/01/15 16:17:15 bobtarling Exp $
+// $Id: ProjectFilePersister.java,v 1.5 2005/01/15 16:41:03 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,6 +27,7 @@ import java.io.File;
 import java.net.URL;
 
 import javax.swing.JProgressBar;
+import javax.swing.text.JTextComponent;
 
 import org.argouml.kernel.Project;
 
@@ -46,19 +47,23 @@ public interface ProjectFilePersister {
 
     /**
      * @param file the file of the project to load
-     * @param progressBar the progress bar givin by the GUI to indicate progress.
+     * @param progressBar the progress bar given by the GUI to indicate progress.
+     * @param progressText the progress bar given by the GUI to indicate progress.
      * @return the Project
      * 
      * @throws OpenException when we fail to open from this url
      */
-    public Project doLoad(File file, JProgressBar progressBar) throws OpenException;
+    public Project doLoad(File file, JProgressBar progressBar, JTextComponent progressText) throws OpenException;
 
     /**
      * @param url the url of the project to load
-     * @param progressBar the progress bar givin by the GUI to indicate progress.
+     * @param progressBar the progress bar given by the GUI to indicate
+     * progress.
+     * @param progressText the JTextComponent given by the GUI where the
+     * persistance mechanism can describe prorgess.
      * @return the Project
      * @throws OpenException when we fail to open from this url
      */
-    public Project doLoad(URL url, JProgressBar progressBar) throws OpenException;
+    public Project doLoad(URL url, JProgressBar progressBar, JTextComponent progressText) throws OpenException;
 
 }

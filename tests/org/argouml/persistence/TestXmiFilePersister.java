@@ -1,4 +1,4 @@
-// $Id: TestXmiFilePersister.java,v 1.8 2005/01/15 16:17:15 bobtarling Exp $
+// $Id: TestXmiFilePersister.java,v 1.9 2005/01/15 16:41:03 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -96,7 +96,7 @@ public class TestXmiFilePersister extends TestCase {
 
             ProjectManager.getManager().makeEmptyProject();
 
-            persister.doLoad(file, null);
+            persister.doLoad(file, null, null);
         } catch (OpenException e) {
             fail("Load resulted in an exception");
         }

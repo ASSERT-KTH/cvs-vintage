@@ -1,4 +1,4 @@
-// $Id: TestZargoFilePersister.java,v 1.4 2005/01/15 16:17:15 bobtarling Exp $
+// $Id: TestZargoFilePersister.java,v 1.5 2005/01/15 16:41:03 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -26,8 +26,6 @@ package org.argouml.persistence;
 
 import java.io.File;
 import java.net.URL;
-
-import javax.swing.JProgressBar;
 
 import junit.framework.Test;
 import junit.framework.TestCase;
@@ -74,7 +72,7 @@ public class TestZargoFilePersister extends TestCase {
             throws OpenException {
         URL url = TestZargoFilePersister.class.getResource(filename);
         ZargoFilePersister persister = new ZargoFilePersister();
-        Project p = persister.doLoad(url, null);
+        Project p = persister.doLoad(url, null, null);
         assertTrue("Load Status for " + filename + ".",
                LastLoadInfo.getInstance().getLastLoadStatus());
         return p;
@@ -118,7 +116,7 @@ public class TestZargoFilePersister extends TestCase {
         try {
             file = new File("/testmodels/Garbage.zargo");
             ZargoFilePersister persister = new ZargoFilePersister();
-            persister.doLoad(file, null);
+            persister.doLoad(file, null, null);
             assertTrue("Load Status",
                     !LastLoadInfo.getInstance().getLastLoadStatus());
         } catch (OpenException io) {
