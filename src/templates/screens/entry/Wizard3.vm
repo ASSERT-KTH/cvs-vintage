@@ -25,6 +25,7 @@ $page.setTitle("Enter issue")
   </tr>
   </table>
 </div>
+<P>
 
 ## Only show templates if user has not come through the wizard.
 #if (!$data.Parameters.getString("oldscreen"))
@@ -81,7 +82,6 @@ $page.setTitle("Enter issue")
         #else
           #set ($field = "Value")
         #end
-          #if ($attVal.isDedupeAttribute())
           <tr>
             <th> #if ($attVal.isRequired())*#end 
                  $attVal.RModuleAttribute.DisplayValue: 
@@ -105,7 +105,6 @@ $page.setTitle("Enter issue")
               #attrValueErrorMsg ($attVal $field)
             </td>
           </tr>
-        #end
       #end
     #end
 </table>
