@@ -7,7 +7,7 @@
  *
  * Copyright (C) 2004 Ollie Rutherfurd <oliver@jedit.org>
  *
- * $Id: Greedy_Delete.bsh,v 1.2 2004/05/19 22:10:35 orutherfurd Exp $
+ * $Id: Greedy_Delete.bsh,v 1.3 2004/05/20 12:47:33 orutherfurd Exp $
  */
 
 /**
@@ -78,7 +78,7 @@ void greedyDelete(View view, boolean onlyFullTabs)
 }
 
 if(buffer.isReadOnly())
-	getToolkit().beep();
+	Toolkit.getDefaultToolkit().beep();
 else
 	greedyDelete(view,true);
 

@@ -7,7 +7,7 @@
  *
  * Copyright (C) 2004 Ollie Rutherfurd <oliver@jedit.org>
  *
- * $Id: Greedy_Left.bsh,v 1.2 2004/05/19 22:10:35 orutherfurd Exp $
+ * $Id: Greedy_Left.bsh,v 1.3 2004/05/20 12:47:33 orutherfurd Exp $
  */
 
 /**
@@ -76,8 +76,5 @@ void greedyLeft(View view, boolean onlyFullTabs)
 		textArea.setCaretPosition(caret-1);
 }
 
-if(buffer.isReadOnly())
-	getToolkit().beep();
-else
-	greedyLeft(view,true);
+greedyLeft(view,true);
 

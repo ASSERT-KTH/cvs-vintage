@@ -7,7 +7,7 @@
  *
  * Copyright (C) 2002-2004 Ollie Rutherfurd <oliver@jedit.org>
  *
- * $Id: Greedy_Backspace.bsh,v 1.2 2004/05/06 19:53:37 orutherfurd Exp $
+ * $Id: Greedy_Backspace.bsh,v 1.3 2004/05/20 12:47:33 orutherfurd Exp $
  */
 
 /**
@@ -74,7 +74,7 @@ void greedyBackspace(View view, boolean onlyFullTabs)
 }
 
 if(buffer.isReadOnly())
-	getToolkit().beep();
+	Toolkit.getDefaultToolkit().beep();
 else
 	greedyBackspace(view,true);
 
