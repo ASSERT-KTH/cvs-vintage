@@ -58,6 +58,7 @@ Overview of the architecture of jboss.xml
       <container-cache-conf />
       <container-pool-conf />
       <commit-option />
+      <optiond-refresh-rate />
       <role-mapping-manager/>
       <authentication-module/>
     </container-configuration>
@@ -330,7 +331,7 @@ level using the authentication-module and role-mapping-manager elements.
 <!ELEMENT container-configuration (container-name, call-logging, container-invoker,
 container-interceptors?, instance-pool?, instance-cache? , persistence-manager? ,
 transaction-manager? , container-invoker-conf? , container-cache-conf? , container-pool-conf?,
-commit-option? , (role-mapping-manager, authentication-module?)?)>
+commit-option? , optiond-refresh-rate?, (role-mapping-manager, authentication-module?)?)>
 
 <!--
     The configuration-class attribute is used to indicate the
@@ -648,7 +649,7 @@ default if metricsEnabled is not explicitly given.
       This option is only used for entity container configurations.
 
       The commit-option element tells the container which option to use for transactions.
-      Its value must be A, B or C. 
+      Its value must be A, B C, or D. 
 
       - option A: the entiry instance has exclusive access to the database. The instance 
       stays ready after a transaction.
@@ -656,12 +657,21 @@ default if metricsEnabled is not explicitly given.
       The state is loaded before the next transaction.
       - option C: same as B, except the container does not keep the instance after commit: 
       a passivate is immediately performed after the commit.
+
+      - option D: a lazy update. default is every 30 secs.
+                   can be updated with <optiond-refresh-rate>
       
       See ejb1.1 specification for details (p118).
 
       Used in: container-configuration
       -->
 <!ELEMENT commit-option (#PCDATA)>
+
+<!--
+    This element is used to specify the refresh rate of commit option d
+  -->
+<!ELEMENT optiond-refresh-rate (#PCDATA)>
+
 
 <!--
       The role-mapping-manager element specifies the JNDI name of the
