@@ -19,7 +19,7 @@
  * USA
  *
  * --------------------------------------------------------------------------
- * $Id: javaURLContextFactory.java,v 1.3 2004/09/01 11:02:41 benoitf Exp $
+ * $Id: javaURLContextFactory.java,v 1.4 2005/03/10 16:50:22 benoitf Exp $
  * --------------------------------------------------------------------------
  */
 
@@ -41,13 +41,16 @@ import org.objectweb.carol.util.configuration.TraceCarol;
 public class javaURLContextFactory implements ObjectFactory {
 
     /**
-     * Returns an instance of javaURLContext for a java URL. If url is null, the
-     * result is a context for resolving java URLs. If url is a URL, the result
-     * is a context named by the URL.
+     * @return an instance of javaURLContext for a java URL. If url is null, the
+     *         result is a context for resolving java URLs. If url is a URL, the
+     *         result is a context named by the URL.
      * @param url String with a "java:" prefix or null.
      * @param name Name of context, relative to ctx, or null.
      * @param ctx Context relative to which 'name' is named.
-     * @param env Environment to use when creating the context
+     * @param env Environment to use when creating the context *
+     * @throws Exception if this object factory encountered an exception while
+     *         attempting to create an object, and no other object factories are
+     *         to be tried.
      */
     public Object getObjectInstance(Object url, Name name, Context ctx, Hashtable env) throws Exception {
 
@@ -57,7 +60,7 @@ public class javaURLContextFactory implements ObjectFactory {
             // All naming operations with "java:..." comes here
             // Users are encouraged to used intermediate contexts:
             // ctx = ic.lookup("java:comp/env") called only once (perfs)
-            return new javaURLContext(env);
+            return new JavaURLContext(env);
         }
         if (url instanceof String) {
             // Don't know what to do here
