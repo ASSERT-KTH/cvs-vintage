@@ -43,7 +43,20 @@ $page.setTitle("Welcome to Scarab")
         </TR>
         <TR>
                 <TD class="InputHeader">Email Address:</TD>
-                <TD class="PlainText"><INPUT name="Email" value="$!data.Parameters.Email" TYPE="text" SIZE="25"> Enter your email address.</TD>
+
+                <TD class="PlainText">
+#*
+    #set ( $attrInput = $intake.Login.mapTo($scarabR.User) )
+    <input type="hidden" name="$attrInput.CID" value="$attrInput.OID">
+    #if ( !$attrInput.Username.isValid() )
+        $attrInput.Username.Message
+    #end
+*#
+<!--   <input name= "$attrInput.Username.Key"
+        value="$!attrInput.Username.Value" size="25" type="text">
+        -->
+                <INPUT name="Email" value="$!data.Parameters.Email" TYPE="text" SIZE="25">
+                 Enter your email address.</TD>
         </TR>
         <TR>
                 <TD HEIGHT="4" COLSPAN="2"><SPACER TYPE="block" HEIGHT="4"></TD>
