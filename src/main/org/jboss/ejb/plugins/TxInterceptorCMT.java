@@ -40,7 +40,7 @@ import org.jboss.metadata.MethodMetaData;
 *   @author Rickard Öberg (rickard.oberg@telkel.com)
 *   @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
 *   @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
-*   @version $Revision: 1.6 $
+*   @version $Revision: 1.7 $
 */
 public class TxInterceptorCMT
 extends AbstractInterceptor
@@ -266,8 +266,8 @@ extends AbstractInterceptor
                         
                         if (newTransaction != null) {
                             
-                            //We started it, 
-                            newTransaction.rollback();
+                            //We started it, it will be rolled back in the finally 
+                            newTransaction.setRollbackOnly();
                         }
                         
                         throw e;
@@ -276,8 +276,8 @@ extends AbstractInterceptor
                         
                         if (newTransaction != null) {
                             
-                            // We started it
-                            newTransaction.rollback();
+                            // We started it, it will be rolled back in the finally
+                            newTransaction.setRollbackOnly();
                         }
                         
                         throw new ServerException("Exception occurred", e);
@@ -286,8 +286,8 @@ extends AbstractInterceptor
                         
                         if (newTransaction != null) {
                             
-                            // we started it
-                            newTransaction.rollback();
+                            // we started it, it will be rolled back in the finally
+                            newTransaction.setRollbackOnly();
                         }
                         throw new ServerException("Exception occurred:"+e.getMessage());
                     } 
@@ -380,21 +380,24 @@ extends AbstractInterceptor
                     catch (RemoteException e) {
                         
                         // We started it for sure
-                        newTransaction.rollback();
+                        // will be rolled back in the finally
+                        newTransaction.setRollbackOnly();
                         
                         throw e;
                     } 
                     catch (RuntimeException e) {
                         
                         // We started it for sure
-                        newTransaction.rollback();
+                        // will be rolled back in the finally
+                        newTransaction.setRollbackOnly();
                         
                         throw new ServerException("Exception occurred", e);
                     } 
                     catch (Error e) {
                         
                         // We started it for sure
-                        newTransaction.rollback();
+                        // will be rolled back in the finally
+                        newTransaction.setRollbackOnly();
                         
                         throw new ServerException("Exception occurred:"+e.getMessage());
                     } 
