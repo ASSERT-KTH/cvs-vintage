@@ -20,12 +20,12 @@ import javax.transaction.Synchronization;
  * Used in EntitySynchronizationInterceptor.
  * 
  * @author <a href="bill@burkecentral.com">Bill Burke</a>
- * @version $Revision: 1.5 $
+ * @version $Revision: 1.6 $
  *
  * Revisions:
  *
  * <p><b>Revisions:</b><br>
- * <p><b>2001/08/06: marcf</b>
+ * <p><b>2001/08/06: billb</b>
  * <ol>
  *   <li>Got rid of disassociate and added a javax.transaction.Synchronization.  The sync will clean up the map now.
  *   <li>This class now interacts with GlobalTxEntityMap available.
