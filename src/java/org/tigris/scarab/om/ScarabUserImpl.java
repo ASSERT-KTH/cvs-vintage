@@ -49,6 +49,7 @@ package org.tigris.scarab.om;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Calendar;
 
 import org.apache.fulcrum.security.entity.User;
 import org.apache.fulcrum.security.entity.Role;
@@ -56,6 +57,7 @@ import org.apache.fulcrum.security.entity.Group;
 import org.apache.fulcrum.security.util.GroupSet;
 import org.apache.fulcrum.security.TurbineSecurity;
 import org.apache.fulcrum.security.impl.db.entity.TurbineUserGroupRolePeer;
+import org.apache.torque.Torque;
 import org.apache.torque.util.Criteria;
 import org.apache.torque.om.BaseObject;
 import org.apache.torque.om.ObjectKey;
@@ -68,15 +70,17 @@ import org.tigris.scarab.util.ScarabException;
 import org.tigris.scarab.security.ScarabSecurity;
 import org.tigris.scarab.security.SecurityFactory;
 
-/**
-    This class is an abstraction that is currently based around
-    Turbine's code. We can change this later. It is here so
-    that it is easier to change later to work under different
-    implementation needs.
+import org.apache.turbine.Turbine;
 
-    @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
-    @version $Id: ScarabUserImpl.java,v 1.26 2001/10/24 00:01:45 jmcnally Exp $
-*/
+/**
+ * This class is an abstraction that is currently based around
+ * Turbine's code. We can change this later. It is here so
+ * that it is easier to change later to work under different
+ * implementation needs.
+ *
+ * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
+ * @version $Id: ScarabUserImpl.java,v 1.27 2001/10/24 06:08:56 jon Exp $
+ */
 public class ScarabUserImpl 
     extends BaseScarabUserImpl 
     implements ScarabUser
@@ -84,28 +88,30 @@ public class ScarabUserImpl
     //private static final String CURRENT_MODULE = "CURRENT_MODULE";
     private static final String REPORTING_ISSUE = "REPORTING_ISSUE";
 
+    public static final String PASSWORD_EXPIRE = "PASSWORD_EXPIRE";
+
     private int issueCount = 0;
 
     /**
-        The maximum length for the unique identifier used at user
-        creation time.
-    */
+     * The maximum length for the unique identifier used at user
+     * creation time.
+     */
     private static final int UNIQUE_ID_MAX_LEN = 10;
 
     /**
-        Call the superclass constructor to initialize this object.
-    */
+     * Call the superclass constructor to initialize this object.
+     */
     public ScarabUserImpl()
     {
         super();
     }
-
+    
     /**
-        Utility method that takes a username and a confirmation code
-        and will return true if there is a match and false if no match.
-        <p>
-        If there is an Exception, it will also return false.
-    */
+     *   Utility method that takes a username and a confirmation code
+     *   and will return true if there is a match and false if no match.
+     *   <p>
+     *   If there is an Exception, it will also return false.
+     */
     public static boolean checkConfirmationCode (String username, 
                                                  String confirm)
     {
@@ -212,6 +218,7 @@ public class ScarabUserImpl
         // add it to the perm table
         setConfirmed(uniqueId);
         TurbineSecurity.addUser (this, getPassword());
+        setPasswordExpire();
     }
 
     /**
@@ -306,8 +313,6 @@ public class ScarabUserImpl
         return mua;
     }
 
-
-
     /**
      * @see org.tigris.scarab.om.ScarabUser#getModules(Role)
      */
@@ -332,12 +337,11 @@ public class ScarabUserImpl
         }
 
         return modules;
-*/
+    */
         if (true)
             throw new Exception ("FIXME: This method doesn't belong here!");
         return null;
     }
-
 
     /**
      * @see org.tigris.scarab.om.ScarabUser#getReportingIssue(String)
@@ -348,7 +352,6 @@ public class ScarabUserImpl
         return (Issue) getTemp(REPORTING_ISSUE+key);
     }
 
-
     /**
      * @see org.tigris.scarab.om.ScarabUser#setReportingIssue(Issue)
      */
@@ -356,7 +359,7 @@ public class ScarabUserImpl
         throws ScarabException
     {
         String key = null;
-        if ( issue == null ) 
+        if (issue == null) 
         {
             throw new ScarabException("Null Issue is not allowed.");
         }
@@ -368,13 +371,12 @@ public class ScarabUserImpl
         return key;
     }
 
-
     /**
      * @see org.tigris.scarab.om.ScarabUser#setReportingIssue(String, Issue)
      */
     public void setReportingIssue(String key, Issue issue)
     {
-        if ( issue == null ) 
+        if (issue == null) 
         {
             removeTemp(REPORTING_ISSUE+key);
         }
@@ -382,5 +384,88 @@ public class ScarabUserImpl
         {
             setTemp(REPORTING_ISSUE+key, issue);
         }
+    }
+
+    /**
+     * Sets the password to expire with information from the scarab.properties
+     * scarab.login.password.expire value.
+     *
+     * @exception Exception if problem setting the password.
+     */
+    public void setPasswordExpire()
+        throws Exception
+    {
+        String expireDays = Turbine.getConfiguration()
+            .getString("scarab.login.password.expire", null);
+        if (expireDays == null)
+        {
+            setPasswordExpire(null);
+        }
+        else
+        {
+            Calendar expireDate = Calendar.getInstance();
+            expireDate.add(Calendar.DATE, 
+                new Integer(expireDays).intValue());
+            setPasswordExpire(expireDate);
+        }
+    }
+
+    /**
+     * Sets the password to expire on the specified date.
+     *
+     * @param expire a <code>Calendar</code> value specifying the expire date.  If
+     * this value is null, the password will be set to expire 10 years from the
+     * current year. Since Logging in resets this value, it should be ok to 
+     * have someone's password expire after 10 years.
+     *
+     * @exception Exception if problem updating the password.
+     */
+    public void setPasswordExpire(Calendar expire)
+        throws Exception
+    {
+        NumberKey userid = getUserId();
+        if (userid == null)
+        {
+            throw new Exception("Userid cannot be null");
+        }
+        UserPreference up = UserPreference.getInstance(userid);
+        if (up == null)
+        {
+            up = UserPreference.getInstance();
+            up.setUserId(userid);
+        }
+        if (expire == null)
+        {
+            Calendar cal = Calendar.getInstance();
+            cal.set(Calendar.YEAR, cal.get(Calendar.YEAR) + 10);
+            up.setPasswordExpire(cal.getTime());
+        }
+        else
+        {
+            up.setPasswordExpire(expire.getTime());
+        }
+        up.save();
+    }
+
+    /**
+     * Checks if the users password has expired.
+     *
+     * @exception Exception if problem querying for the password.
+     */
+    public boolean isPasswordExpired()
+        throws Exception
+    {
+        NumberKey userid = getUserId();
+        if (userid == null)
+        {
+            throw new Exception ("Userid cannot be null");
+        }
+        Criteria crit = new Criteria();
+        crit.add(UserPreferencePeer.USER_ID, userid);
+        Calendar cal = Calendar.getInstance();
+        crit.add(UserPreferencePeer.PASSWORD_EXPIRE, 
+            cal.getTime() , Criteria.LESS_THAN);
+        List result = UserPreferencePeer.doSelect(crit);
+        return result.size() == 1 ? true : false;
     }
 }
