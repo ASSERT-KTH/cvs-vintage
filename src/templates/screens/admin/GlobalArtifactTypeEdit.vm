@@ -21,7 +21,8 @@
 <form method="post" action="$link.setPage("admin,GlobalArtifactTypeEdit.vm")">
 <input type="hidden" name="action" value="admin.GlobalArtifactTypeCreate" />
 <input type="hidden" name="$scarabG.Constant.OTHER_TEMPLATE" value="admin,GlobalUserAttributeSelect.vm" />
-<input type="hidden" name="$scarabG.Constant.CANCEL_TEMPLATE" value="admin,GlobalArtifactTypeShow.vm" />
+#set ($cancelTemplate = $data.Parameters.getString("$scarabG.Constant.CANCEL_TEMPLATE", "admin,GlobalAttributeShow.vm"))
+<input type="hidden" name="$scarabG.Constant.CANCEL_TEMPLATE" value="$cancelTemplate" />
 #if (!$createNew)
   <input type="hidden" name="issueTypeId" value="$issueType.IssueTypeId" />
 #end
@@ -50,6 +51,13 @@
     <td>
        #fieldErrorMsg($itGroup.Locked "")  
        #booleanCheckbox ($itGroup.Locked)
+    </td>
+    </tr>
+    <tr>
+    <th>$l10n.Default</th>
+    <td>
+       #fieldErrorMsg($itGroup.Isdefault "")  
+       #booleanCheckbox ($itGroup.Isdefault)
     </td>
     </tr>
   </table>
