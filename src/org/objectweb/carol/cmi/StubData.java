@@ -120,4 +120,19 @@ public class StubData {
             return str + "serialized]";
         }
     }
+
+    public int hashCode() {
+        if (id != null) {
+            return id.hashCode();
+        }
+        return System.identityHashCode(this);
+    }
+
+    public boolean equals(Object obj) {
+        if (obj == this) return true;
+        if (id == null) return false;
+        if (!(obj instanceof StubData)) return false; 
+        StubData sd = (StubData)obj;
+        return id.equals(sd.id);
+    }
 }
