@@ -92,7 +92,7 @@ import org.tigris.scarab.util.Log;
  * This class is responsible for edit issue forms.
  * ScarabIssueAttributeValue
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: ModifyIssue.java,v 1.135 2002/12/10 05:59:25 jon Exp $
+ * @version $Id: ModifyIssue.java,v 1.136 2002/12/10 23:25:58 elicia Exp $
  */
 public class ModifyIssue extends BaseModifyIssue
 {
@@ -256,9 +256,6 @@ public class ModifyIssue extends BaseModifyIssue
     /**
      *  Modifies attachments of type "url".
      */
-    /**
-     *  Modifies attachments of type "url".
-     */
     public void doSaveurl (RunData data, TemplateContext context) 
         throws Exception
     {
@@ -334,46 +331,35 @@ public class ModifyIssue extends BaseModifyIssue
 
         // if there is a new URL, add it
         Group newGroup = intake.get("Attachment", "urlKey", false);
-        if (newGroup != null) 
+        if (newGroup != null)
         {
-            // grab the data from the group
             Field nameField = newGroup.get("Name"); 
             Field dataField = newGroup.get("Data");
             String nameFieldString = nameField.toString();
             String dataFieldString = dataField.toString();
-            // FIXME: couldn't figure out how to get intake to do what i want here.
-            if ((nameFieldString != null && dataFieldString != null) && 
-                nameFieldString.trim().length() > 0 && dataFieldString.trim().length() > 0)
+            if (nameFieldString != null && nameFieldString.trim().length() > 0)
             {
-                // create the new attachment
-                Attachment attachment = AttachmentManager.getInstance();
-                // set the form data to the attachment object
-                newGroup.setProperties(attachment);
-
-                activitySet = issue.addUrl(attachment, user);
-
-                // remove the group
-                intake.remove(newGroup);
-
-                sendEmail(activitySet, issue, l10n.get("UrlSaved"), context);
-                scarabR.setConfirmMessage(l10n.get("UrlSaved"));
-            }
-            else
-            {
-                if (nameFieldString.length() == 0)
+                if (dataFieldString != null && dataFieldString.trim().length() > 0)
                 {
-                    nameField.setRequired(true);
+                    // create the new attachment
+                    Attachment attachment = AttachmentManager.getInstance();
+                    // set the form data to the attachment object
+                    newGroup.setProperties(attachment);
+
+                    activitySet = issue.addUrl(attachment, user);
+
+                    // remove the group
+                    intake.remove(newGroup);
+
+                    sendEmail(activitySet, issue, l10n.get("UrlSaved"), context);
+                    scarabR.setConfirmMessage(l10n.get("UrlSaved"));
                 }
-                if (dataFieldString.length() == 0)
+                else
                 {
                     dataField.setRequired(true);                    
+                    scarabR.setAlertMessage(l10n.get(ERROR_MESSAGE));
                 }
-                scarabR.setAlertMessage(l10n.get(ERROR_MESSAGE));
             }
-        }
-        else
-        {
-            scarabR.setAlertMessage(l10n.get(ERROR_MESSAGE));
         }
     }
 
