@@ -8,9 +8,9 @@ package org.columba.mail.gui.table.action;
 
 import java.awt.event.ActionEvent;
 
+import javax.swing.tree.DefaultMutableTreeNode;
+
 import org.columba.core.action.JAbstractAction;
-import org.columba.core.gui.selection.SelectionChangedEvent;
-import org.columba.core.gui.selection.SelectionListener;
 import org.columba.core.logging.ColumbaLogger;
 import org.columba.core.main.MainInterface;
 import org.columba.mail.command.FolderCommandReference;
@@ -18,6 +18,7 @@ import org.columba.mail.gui.frame.AbstractMailFrameController;
 import org.columba.mail.gui.frame.TableOwnerInterface;
 import org.columba.mail.gui.message.command.ViewMessageCommand;
 import org.columba.mail.gui.table.TableController;
+import org.columba.mail.gui.table.util.MessageNode;
 
 /**
  * @author waffel
@@ -26,7 +27,7 @@ import org.columba.mail.gui.table.TableController;
  * If you do so, the nextMessage down your key is selected and shown in the
  * message-view. If no more message down your key, then nothing changed.
  */
-public class DownAction extends JAbstractAction implements SelectionListener {
+public class DownAction extends JAbstractAction {
 	TableController tableController;
 	AbstractMailFrameController frameController;
 
@@ -35,11 +36,7 @@ public class DownAction extends JAbstractAction implements SelectionListener {
 		this.tableController =
 			((TableOwnerInterface) frameController).getTableController();
 		this.frameController = frameController;
-		(
-			(
-				AbstractMailFrameController) frameController)
-					.registerTableSelectionListener(
-			this);
+
 	}
 
 	/* (non-Javadoc)
@@ -47,17 +44,6 @@ public class DownAction extends JAbstractAction implements SelectionListener {
 	 */
 	public void actionPerformed(ActionEvent arg0) {
 		ColumbaLogger.log.debug("action down performed");
-
-		int selectedRowCount = tableController.getView().getSelectedRowCount();
-		int row = tableController.getView().getSelectedRow();
-
-		row = row + 1;
-
-		tableController.getView().setRowSelectionInterval(row, row);
-		tableController.getView().scrollRectToVisible(
-			tableController.getView().getCellRect(row, 0, false));
-
-		/*
 		// getting last selection
 		FolderCommandReference[] r = frameController.getTableSelection();
 		FolderCommandReference ref = r[0];
@@ -82,7 +68,7 @@ public class DownAction extends JAbstractAction implements SelectionListener {
 		ColumbaLogger.log.debug("prevUids: " + nextUids);
 		// and set this to the actual ref
 		ref.setUids(nextUids);
-		
+
 		// check if the node is not null
 		MessageNode[] nodes = new MessageNode[nextUids.length];
 		for (int i = 0; i < nextUids.length; i++) {
@@ -103,24 +89,12 @@ public class DownAction extends JAbstractAction implements SelectionListener {
 			int row = tableController.getView().getSelectedRow();
 			tableController.getView().scrollRectToVisible(tableController.getView().getCellRect(row,0,false));
 			
-		
+
 			FolderCommandReference[] refNew = new FolderCommandReference[1];
 			refNew[0] = new FolderCommandReference(ref.getFolder(), nextUids);
 			// view the message under the new node
 			MainInterface.processor.addOp(
 			new ViewMessageCommand(frameController, refNew));
 		}
-		*/
 	}
-	/* (non-Javadoc)
-	 * @see org.columba.core.gui.selection.SelectionListener#selectionChanged(org.columba.core.gui.selection.SelectionChangedEvent)
-	 */
-	public void selectionChanged(SelectionChangedEvent e) {
-		FolderCommandReference[] r = frameController.getTableSelection();
-
-		MainInterface.processor.addOp(
-			new ViewMessageCommand(frameController, r));
-
-	}
-
 }

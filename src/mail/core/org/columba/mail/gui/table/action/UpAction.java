@@ -17,19 +17,21 @@ package org.columba.mail.gui.table.action;
 
 import java.awt.event.ActionEvent;
 
+import javax.swing.JTree;
 import javax.swing.tree.DefaultMutableTreeNode;
 
 import org.columba.core.action.JAbstractAction;
-import org.columba.core.gui.selection.SelectionChangedEvent;
-import org.columba.core.gui.selection.SelectionListener;
 import org.columba.core.logging.ColumbaLogger;
-import org.columba.core.main.MainInterface;
-import org.columba.mail.command.FolderCommandReference;
+import org.columba.core.action.JAbstractAction;
 import org.columba.mail.gui.frame.AbstractMailFrameController;
 import org.columba.mail.gui.frame.TableOwnerInterface;
-import org.columba.mail.gui.message.command.ViewMessageCommand;
 import org.columba.mail.gui.table.TableController;
+import org.columba.mail.command.FolderCommandReference;
+import org.columba.core.main.MainInterface;
+import org.columba.mail.gui.table.selection.TableSelectionChangedEvent;
 import org.columba.mail.gui.table.util.MessageNode;
+import org.columba.mail.gui.tree.action.ViewHeaderListAction;
+import org.columba.mail.gui.message.command.ViewMessageCommand;
 
 /**
  * @author waffel
@@ -39,68 +41,49 @@ import org.columba.mail.gui.table.util.MessageNode;
  * message-view. If no more message up your key, then nothing changed.
  */
 
-public class UpAction extends JAbstractAction implements SelectionListener {
-
+public class UpAction extends JAbstractAction {
+	
 	TableController tableController;
 	AbstractMailFrameController frameController;
 
 	public UpAction(AbstractMailFrameController frameController) {
 		super();
-		this.tableController =
-			((TableOwnerInterface) frameController).getTableController();
+		this.tableController = ( (TableOwnerInterface) frameController).getTableController();
 		this.frameController = frameController;
-		(
-			(
-				AbstractMailFrameController) frameController)
-					.registerTableSelectionListener(
-			this);
+		
 	}
-
+	
 	/* (non-Javadoc)
 	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
 	 */
 	public void actionPerformed(ActionEvent arg0) {
 		ColumbaLogger.log.debug("action up performed");
-
-		int selectedRowCount = tableController.getView().getSelectedRowCount();
-		int row = tableController.getView().getSelectedRow();
-
-		row = row - 1;
-
-		tableController.getView().setRowSelectionInterval(row, row);
-		tableController.getView().scrollRectToVisible(
-			tableController.getView().getCellRect(row, 0, false));
-
-		/*			
 		// getting last selection
 		FolderCommandReference[] r = frameController.getTableSelection();
 		FolderCommandReference ref = r[0];
-		ColumbaLogger.log.debug("folderCommandRef: " + ref);
+		ColumbaLogger.log.debug("folderCommandRef: "+ref);
 		// getting current uid
 		Object[] uids = ref.getUids();
-		ColumbaLogger.log.debug("curr uids: " + uids);
+		ColumbaLogger.log.debug("curr uids: "+uids);
 		// getting current node (under the selection)
-		DefaultMutableTreeNode currNode =
-			tableController.getView().getMessagNode(uids[0]);
-		ColumbaLogger.log.debug("currNode: " + currNode);
+		DefaultMutableTreeNode currNode = tableController.getView().getMessagNode(uids[0]);
+		ColumbaLogger.log.debug("currNode: "+currNode);
 		// getting prev node
 		DefaultMutableTreeNode prevNode = currNode.getPreviousNode();
-		ColumbaLogger.log.debug("prevNode: " + prevNode);
+		ColumbaLogger.log.debug("prevNode: "+prevNode);
 		Object[] prevUids = new Object[1];
-		prevUids[0] = ((MessageNode) prevNode).getUid();
-		ColumbaLogger.log.debug("prevUids: " + prevUids);
+		prevUids[0] = ((MessageNode)prevNode).getUid();
+		ColumbaLogger.log.debug("prevUids: "+prevUids);
 		ref.setUids(prevUids);
 		
 		// check if the node is not null
 		MessageNode[] nodes = new MessageNode[prevUids.length];
 		for (int i = 0; i < prevUids.length; i++) {
-			nodes[i] =
-				tableController.getHeaderTableModel().getMessageNode(
-					prevUids[i]);
+			nodes[i] = tableController.getHeaderTableModel().getMessageNode(prevUids[i]);
 		}
 		boolean node_ok = true;
 		for (int i = 0; i < nodes.length; i++) {
-			if (nodes[i] == null) {
+			if (nodes[i]== null) {
 				node_ok = false;
 				break;
 			}
@@ -109,25 +92,16 @@ public class UpAction extends JAbstractAction implements SelectionListener {
 		if (node_ok) {
 			// select it
 			tableController.setSelected(prevUids);
-		
+			
 			int row = tableController.getView().getSelectedRow();
-			tableController.getView().scrollRectToVisible(
-				tableController.getView().getCellRect(row, 0, false));
-		
-			FolderCommandReference[] refNew = new FolderCommandReference[1];
-			refNew[0] = new FolderCommandReference(ref.getFolder(), prevUids);
+			tableController.getView().scrollRectToVisible(tableController.getView().getCellRect(row,0,false));
+					
+			FolderCommandReference[] refNew = new FolderCommandReference[1]; 
+			refNew[0] = new FolderCommandReference( ref.getFolder(), prevUids); 
 			// view the message under the new node
-			MainInterface.processor.addOp(
-				new ViewMessageCommand(frameController, refNew));
+			MainInterface.processor.addOp(new ViewMessageCommand(frameController, refNew));
 		}
-		*/
+		
 	}
 
-	public void selectionChanged(SelectionChangedEvent e) {
-		FolderCommandReference[] r = frameController.getTableSelection();
-
-		MainInterface.processor.addOp(
-			new ViewMessageCommand(frameController, r));
-
-	}
 }
