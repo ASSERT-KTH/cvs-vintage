@@ -62,6 +62,7 @@ package org.apache.tomcat.modules.generators;
 import org.apache.tomcat.core.*;
 import org.apache.tomcat.util.res.StringManager;
 import org.apache.tomcat.util.qlog.Logger;
+import org.apache.tomcat.util.http.HttpMessages;
 import java.io.*;
 import java.net.*;
 import java.util.*;
@@ -420,14 +421,14 @@ class NotFoundHandler extends Handler {
 	    .append("</h1>\r\n");
 	buf.append(sm.getString("defaulterrorpage.originalrequest"))
 	    .append(" ")
-	    .append( requestURI )
+	    .append( HttpMessages.filter( requestURI ) )
 	    .append("\r\n");
 
 	if ( null != requestURI && showDebugInfo ) {
 	    buf.append("<br><br>\r\n<b>")
 		.append(sm.getString("defaulterrorpage.notfoundrequest"))
 		.append("</b> ")
-		.append( requestURI )
+		.append( HttpMessages.filter( requestURI ) )
 		.append("\r\n");
 	}
 
@@ -517,14 +518,14 @@ class ExceptionHandler extends Handler {
 	buf.append("<h2>")
 	    .append(sm.getString("defaulterrorpage.location"))
 	    .append(" ")
-	    .append(req.requestURI().toString())
+	    .append( HttpMessages.filter( req.requestURI().toString() ) )
 	    .append("</h2>");
 
 	if ( null != errorURI && showDebugInfo ) {
 	    buf.append("\r\n<h2>")
 		.append(sm.getString("defaulterrorpage.errorlocation"))
 		.append(" ")
-		.append(errorURI)
+		.append( HttpMessages.filter( errorURI ) )
 		.append("</h2>");
 	}
 
@@ -622,14 +623,14 @@ class StatusHandler extends Handler {
 	buf.append("<h2>")
 	    .append(sm.getString("defaulterrorpage.location"))
 	    .append(" ")
-	    .append(req.requestURI().toString())
+	    .append( HttpMessages.filter( req.requestURI().toString() ) )
 	    .append("</h2>");
 
 	if ( sc >= 400 && errorURI != null && showDebugInfo) {
 	    buf.append("\r\n<h2>")
 		.append(sm.getString("defaulterrorpage.errorlocation"))
 		.append(" ")
-		.append(errorURI)
+		.append( HttpMessages.filter( errorURI ) )
 		.append("</h2>");
 	}
 
@@ -714,7 +715,7 @@ class RedirectHandler extends Handler {
 	    append("</h1>\r\n").
 	    append(sm.getString("defaulterrorpage.thisdocumenthasmoved")).
 	    append(" <a href=\"").
-	    append(location).
+	    append( HttpMessages.filter( location ) ).
 	    append("\">here</a>.<p>\r\n</body>\r\n");
 
 	res.setContentLength(buf.length());
