@@ -31,10 +31,10 @@ This page is for selecting an Attribute to edit which is defined in a global sca
 
 <table width="100%" border="1" cellspacing="2" cellpadding="3">
 <tr>
-<th>Deleted</th>
-<th>Input type</th>
+<th>&nbsp;</th>
 <th>Attribute name</th>
 <th>Description</th>
+<th>Input type</th>
 <th>Author</th>
 <th>Creation date</th>
 </tr>
@@ -44,24 +44,28 @@ This page is for selecting an Attribute to edit which is defined in a global sca
     #set ($attgroup = $intake.Attribute.mapTo($attribute))
     #indexedRows($velocityCount)
   <td>#booleanCheckbox ($attgroup.Deleted)</td>
+  <td>$link.setPage("admin,GlobalAttributeEdit.vm").addPathInfo("att_0id", "$attgroup.Id").setLabel("$attribute.Name")</td>
+  <td>#if ($attribute.Description) $attribute.Description #else &nbsp; #end</td>
   <td>
+    ## Input type
     #set ($attType = $attribute.AttributeType)
     #foreach ( $atype in $attribute.AllAttributeTypes )
-      #if($attType.AttributeTypeId == $atype.AttributeTypeId)
+      #if ($attType.AttributeTypeId == $atype.AttributeTypeId)
         $atype.Name
       #end
     #end
   </td>
-  <td>$link.setPage("admin,GlobalAttributeEdit.vm").addPathInfo("att_0id", "$attgroup.Id").setLabel("$attribute.Name")</td>
-  <td>#if ($attribute.Description) $attribute.Description #else &nbsp; #end</td>
-<td>
+  <td>
 #if ($attribute.CreatedBy.toString() == "0")
     Default
 #else
-  #set ($createdUser = $scarabR.getUser($attribute.CreatedBy) )
-<a href="mailTo:$createdUser.Email">$createdUser.FirstName $createdUser.LastName</a>
+  ## FIXME: getUser() takes an Object param, not an int (the return
+  ## type of getCreatedBy(), which returns 1 for most default data)
+  #set ($creator = $scarabR.getUser("$attribute.CreatedBy") )
+  creator = $creator
+<a href="mailTo:$creator.Email">$creator.FirstName $creator.LastName</a>
 #end
-</td>
+  </td>
   <td>$format.getDate($scarabR.DateFormat, $attribute.CreatedDate)</td>
   </tr>
   #end
