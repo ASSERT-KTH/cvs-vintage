@@ -58,7 +58,6 @@ public class IssueTypePeer
                        String sortColumn, String sortPolarity)
         throws Exception
     {
-System.out.println(includeDeleted);
         List result = null;
         Boolean b = includeDeleted ? Boolean.TRUE : Boolean.FALSE;
         Object obj = ScarabCache.get(ISSUE_TYPE_PEER, GET_ALL_ISSUE_TYPES, b); 
