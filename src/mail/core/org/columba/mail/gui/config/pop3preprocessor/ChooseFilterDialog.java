@@ -6,36 +6,24 @@
  */
 package org.columba.mail.gui.config.pop3preprocessor;
 
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Component;
-import java.awt.Container;
-import java.awt.Dimension;
-import java.awt.GridLayout;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+
 import java.net.MalformedURLException;
 import java.net.URL;
 
-import javax.swing.BorderFactory;
-import javax.swing.JButton;
-import javax.swing.JComponent;
-import javax.swing.JDialog;
-import javax.swing.JList;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.KeyStroke;
+import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
 import org.columba.core.gui.util.NotifyDialog;
-import org.columba.core.gui.util.wizard.WizardTopBorder;
 import org.columba.core.main.MainInterface;
 import org.columba.core.plugin.PluginHandlerNotFoundException;
-import org.columba.core.util.Compatibility;
+
 import org.columba.mail.gui.util.URLController;
 import org.columba.mail.plugin.POP3PreProcessingFilterPluginHandler;
 import org.columba.mail.util.MailResourceLoader;
@@ -72,23 +60,10 @@ public class ChooseFilterDialog
 			d.showDialog(ex);
 		}
 
-		addWindowListener(new WindowAdapter() {
-			public void windowClosing(WindowEvent e) {
-				setVisible(false);
-			}
-		});
-
 		initComponents();
 
 		dialog.pack();
-
-		//		for jdk1.3 compatibility, this is called dynamically
-		Compatibility.simpleSetterInvoke(
-			dialog,
-			"setLocationRelativeTo",
-			Component.class,
-			null);
-
+                dialog.setLocationRelativeTo(null);
 		dialog.setVisible(true);
 	}
 
@@ -112,10 +87,7 @@ public class ChooseFilterDialog
 		mainPanel.add(listPanel, BorderLayout.CENTER);
 
 		JPanel bottomPanel = new JPanel(new BorderLayout());
-		bottomPanel.setBorder(
-			BorderFactory.createCompoundBorder(
-				new WizardTopBorder(),
-				BorderFactory.createEmptyBorder(17, 12, 11, 11)));
+		bottomPanel.setBorder(BorderFactory.createEmptyBorder(17, 12, 11, 11));
 		JPanel buttonPanel = new JPanel(new GridLayout(1, 2, 5, 0));
 		JButton okButton =
 			new JButton(MailResourceLoader.getString("global", "ok"));
@@ -133,7 +105,7 @@ public class ChooseFilterDialog
 		getRootPane().setDefaultButton(okButton);
 		getRootPane().registerKeyboardAction(
 			this,
-			"OK",
+			"CANCEL",
 			KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0),
 			JComponent.WHEN_IN_FOCUSED_WINDOW);
 
@@ -168,7 +140,5 @@ public class ChooseFilterDialog
 			} catch (MalformedURLException mue) {
 			}
 		}
-
 	}
-
 }
