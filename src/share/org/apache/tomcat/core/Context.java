@@ -380,21 +380,19 @@ public class Context {
 
 	// Read context's web.xml
 	new WebXmlInterceptor().handleContextInit( this );
-	
+
 	if (! this.isInvokerEnabled) {
 	    // Put in a special "no invoker" that handles
 	    // /servlet requests and explains why no servlet
 	    // is being invoked
 	    this.addServlet(Constants.Servlet.NoInvoker.Name,
-	        Constants.Servlet.NoInvoker.Class);
+			    Constants.Servlet.NoInvoker.Class, null);
 	    this.addMapping(Constants.Servlet.NoInvoker.Name,
-	        Constants.Servlet.NoInvoker.Map);
+			    Constants.Servlet.NoInvoker.Map);
 	}
 
-	// load-on-startup
-        if (! loadableServlets.isEmpty()) {
-	    loadServlets();
-        }
+	// load initial servlets
+	new LoadOnStartupInterceptor().handleContextInit( this );
     }
 
     public SessionManager getSessionManager() {
@@ -546,7 +544,7 @@ public class Context {
     }
 
 
-    public Enumeration getInitLevles() {
+    public Enumeration getInitLevels() {
 	return loadableServlets.keys();
     }
 
@@ -569,64 +567,6 @@ public class Context {
 	loadableServlets.put(level, v);
     }
     
-    private void loadServlets() {
-	Vector orderedKeys = new Vector();
-	Enumeration e = loadableServlets.keys();
-	
-	// order keys
-
-	while (e.hasMoreElements()) {
-	    Integer key = (Integer)e.nextElement();
-	    int slot = -1;
-
-	    for (int i = 0; i < orderedKeys.size(); i++) {
-	        if (key.intValue() <
-		    ((Integer)(orderedKeys.elementAt(i))).intValue()) {
-		    slot = i;
-
-		    break;
-		}
-	    }
-
-	    if (slot > -1) {
-	        orderedKeys.insertElementAt(key, slot);
-	    } else {
-	        orderedKeys.addElement(key);
-	    }
-	}
-
-	// loaded ordered servlets
-
-	// Priorities IMO, should start with 0.
-	// Only System Servlets should be at 0 and rest of the
-	// servlets should be +ve integers.
-	// WARNING: Please do not change this without talking to:
-	// harishp@eng.sun.com (J2EE impact)
-
-	for (int i = 0; i < orderedKeys.size(); i ++) {
-	    Integer key = (Integer)orderedKeys.elementAt(i);
-	    e = ((Vector)(loadableServlets.get(key))).elements();
-
-	    while (e.hasMoreElements()) {
-		String servletName = (String)e.nextElement();
-		ServletWrapper  result = getServletByName(servletName);
-		
-		if(result==null)
-		    System.out.println("Warning: we try to load an undefined servlet " + servletName);
-		
-		try {
-		    if(result!=null)
-			result.loadServlet();
-		} catch (Exception ee) {
-		    String msg = sm.getString("context.loadServlet.e",
-		        servletName);
-
-		    System.out.println(msg);
-		} 
-	    }
-	}
-    }
-
 
     // -------------------- From Container
 
@@ -638,30 +578,8 @@ public class Context {
         this.servletBase = servletBase;
     }
 
-    /**
-     * Add a servlet with the given name to the container. The
-     * servlet will be loaded by the container's class loader
-     * and instantiated using the given class name.
-     */
-    
-    public void addServlet(String name, String className) {
-        addServlet(name, null, className, null);
-    }
- 
-    public void addServlet(String name, String className,
-        String description) {
-        addServlet(name, description, className, null);
-    }
 
-    public void addServlet(String name, Class clazz) {
-        addServlet(name, null, null, clazz);
-    }
-
-    public void addServlet(String name, Class clazz,
-	String description) {
-        addServlet(name, description, null, clazz);
-    }
-
+    // -------------------- 
     public void addJSP(String name, String path) {
         addJSP(name, null, path);
     }
@@ -682,10 +600,14 @@ public class Context {
     /** True if we have a servlet with className.
      */
     public boolean containsServlet(String className) {
-        ServletWrapper[] sw = getServlets(className);
-
-        return (sw != null &&
-	    sw.length > 0);
+	Enumeration enum = servlets.keys();
+	while (enum.hasMoreElements()) {
+	    String key = (String)enum.nextElement();
+	    ServletWrapper sw = (ServletWrapper)servlets.get(key);
+            if (className.equals(sw.getServletClass()))
+	        return true;
+	}
+	return false;
     }
 
     /** Check if we have a servlet with the specified name
@@ -696,8 +618,14 @@ public class Context {
 
     /** Remove all servlets with a specific class name
      */
-    void removeServlet(String className) {
-        removeServlets(getServlets(className));
+    void removeServletByClassName(String className) {
+	Enumeration enum = servlets.keys();
+	while (enum.hasMoreElements()) {
+	    String key = (String)enum.nextElement();
+	    ServletWrapper sw = (ServletWrapper)servlets.get(key);
+            if (className.equals(sw.getServletClass()))
+		removeServlet( sw );
+	}
     }
 
     /** Remove the servlet with a specific name
@@ -718,21 +646,16 @@ public class Context {
 
     public void removeJSP(String path) {
 	Enumeration enum = servlets.keys();
-
 	while (enum.hasMoreElements()) {
 	    String key = (String)enum.nextElement();
 	    ServletWrapper sw = (ServletWrapper)servlets.get(key);
-
-	    if (sw.getPath() != null &&
-	        sw.getPath().equals(path)) {
+	    if (path.equals(sw.getPath()))
 	        removeServlet( sw );
-	    }
 	}
     }
 
     public void setServletInitParams(String name, Hashtable initParams) {
 	ServletWrapper wrapper = (ServletWrapper)servlets.get(name);
-
 	if (wrapper != null) {
 	    wrapper.setInitArgs(initParams);
 	}
@@ -751,7 +674,6 @@ public class Context {
      *    default servlet
      *
      */
-
     public void addMapping(String servletName, String path) {
         ServletWrapper sw = (ServletWrapper)servlets.get(servletName);
 
@@ -760,7 +682,7 @@ public class Context {
 	    // this might be a bit aggressive
 
 	    if (! servletName.startsWith("/")) {
-	        addServlet(servletName, null, servletName, null);
+	        addServlet(servletName, null, servletName);
 	    } else {
 	        addJSP(servletName, servletName);
 	    }
@@ -863,28 +785,28 @@ public class Context {
         return wrapper;
     }
 
-    private void addServlet(String name, String description,
-        String className, Class clazz) {
-        // XXX
-        // check for duplicates!
+    /**
+     * Add a servlet with the given name to the container. The
+     * servlet will be loaded by the container's class loader
+     * and instantiated using the given class name.
+     *
+     * Called to add a new servlet from web.xml
+     *
+     */
+    public void addServlet(String name, String className,
+			   String description) {
+	// assert className!=null
 
+        // check for duplicates
         if (servlets.get(name) != null) {
-            removeServlet(name);
+            removeServletByClassName(name); // XXX XXX why?
             removeServletByName(name);
         }
 
         ServletWrapper wrapper = new ServletWrapper(this);
-
 	wrapper.setServletName(name);
 	wrapper.setServletDescription(description);
-
-	if (className != null) {
-	    wrapper.setServletClass(className);
-	}
-
-	if (clazz != null) {
-	    wrapper.setServletClass(clazz);
-	}
+	wrapper.setServletClass(className);
 
 	servlets.put(name, wrapper);
     }
@@ -939,7 +861,7 @@ public class Context {
 
     /** Return servlets with a specified class name
      */
-    private ServletWrapper[] getServlets(String name) {
+    private ServletWrapper[] getServletsByClassName(String name) {
         Vector servletWrappers = new Vector();
 	Enumeration enum = servlets.keys();
 
@@ -1024,6 +946,10 @@ public class Context {
         this.libPaths.addElement(path);
     }
 
+    // XXX XXX XXX ugly, need rewrite ( servletLoader will call getClassPaths and getLibPaths
+    // and will concatenate the "file" part of them ).
+    /** Returns the classpath as a string
+     */
     public String getClassPath() {
         String cp = this.classPath.trim();
         String servletLoaderClassPath =
@@ -1036,13 +962,5 @@ public class Context {
         }
 
         return cp;
-    }
-    
-    public void setClassPath(String classPath) {
-        if (this.classPath.trim().length() > 0) {
-	    this.classPath += File.pathSeparator;
-	}
-
-        this.classPath += classPath;
     }
 }

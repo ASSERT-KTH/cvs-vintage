@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/ServletWrapper.java,v 1.7 2000/01/08 15:09:26 costin Exp $
- * $Revision: 1.7 $
- * $Date: 2000/01/08 15:09:26 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/ServletWrapper.java,v 1.8 2000/01/09 02:57:40 costin Exp $
+ * $Revision: 1.8 $
+ * $Date: 2000/01/09 02:57:40 $
  *
  * ====================================================================
  *
@@ -198,7 +198,7 @@ public class ServletWrapper {
 	}
     }
     
-    void loadServlet()
+    public void loadServlet()
     throws ClassNotFoundException, InstantiationException,
         IllegalAccessException, ServletException {
         // Check if this is a JSP, they get special treatment
