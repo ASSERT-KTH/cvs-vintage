@@ -445,6 +445,12 @@ public class SimpleMapper extends  BaseInterceptor  {
         int i = path.lastIndexOf(".");
 	int j = path.lastIndexOf("/");
 
+	if ((i > 0) && (i > j))
+	    return path.substring(i);
+	else
+	    return null;
+
+	/*
 	if (i > -1) {
 	    String extension = path.substring(i);
 	    int k = extension.indexOf("/");
@@ -453,6 +459,7 @@ public class SimpleMapper extends  BaseInterceptor  {
 	    return extension;
 	}
 	return null;
+	*/
     }
     
     private String removeLast( String s) {

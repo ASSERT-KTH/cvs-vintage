@@ -124,7 +124,11 @@ public class DefaultServlet extends HttpServlet {
 	}
 
 	// Clean up pathInfo
-	File file = new File(docBase + pathInfo);
+	File file = null;
+	if ((pathInfo == null) || (pathInfo.length() < 1))
+	    file = new File(docBase);
+	else		// Avoid double slashes because docBase ends with one
+	    file = new File(docBase + pathInfo.substring(1));
 	String absPath = file.getAbsolutePath();
 
 	if( debug > 0 ) contextF.log( "DefaultServlet: "  + absPath);
@@ -237,7 +241,15 @@ public class DefaultServlet extends HttpServlet {
     throws IOException {
 
 	String absPath = file.getAbsolutePath();
-	String canPath = file.getCanonicalPath();
+	String canPath = null;
+	try {
+	    canPath = file.getCanonicalPath();
+	} catch (IOException e) {
+	    // Normally caused by arbitrary path info contents
+	    response.sendError(response.SC_NOT_FOUND,
+                "File Not Found<br>" + request.getRequestURI());
+	    return;
+	}
 
         // take care of File.getAbsolutePath() troubles on
         // jdk1.1.x/win
