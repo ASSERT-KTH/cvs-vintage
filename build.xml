@@ -201,9 +201,12 @@ else echo "cannot find columba.jar in `pwd`"; fi
 				<include name="run.sh"/>
 				<include name="columba.jar"/>
 				<include name="**/*.jar"/>
+				<!--
 				<include name="plugins/**/*.py"/>
 				<include name="plugins/**/*.jar"/>
 				<include name="plugins/**/plugin.xml"/>
+				-->
+				<exclude name="plugins/**" />
 				<exclude name="classes/**"/>
 			</zipfileset>
 		</zip>
@@ -223,9 +226,12 @@ else echo "cannot find columba.jar in `pwd`"; fi
 				<include name="run.bat"/>
 				<include name="columba.jar"/>
 				<include name="**/*.jar"/>
+				<!--
 				<include name="plugins/**/*.py"/>
 				<include name="plugins/**/*.jar"/>
 				<include name="plugins/**/plugin.xml"/>	
+				-->
+				<exclude name="plugins/**" />
 				<exclude name="classes/**"/>			
 			</zipfileset>
 			<zipfileset dir="${dest}" includes="native/win32/windows_maximize/bin/WindowMaximizer.dll" fullpath="columba-win32-${version}-bin/WindowMaximizer.dll"/>
@@ -331,5 +337,14 @@ else echo "cannot find columba.jar in `pwd`"; fi
 	<!-- to clean up the dest-directory -->
 	<target name="clean">
 		<delete dir="${dest}"/>
+	</target>
+
+	<!-- create default package for translators -->
+	<target name="i18n">
+ 	<zip zipfile="default_i18n.zip" basedir="res" update="true">
+		
+			<include name="**/*.properties"/>
+		
+	</zip>
 	</target>
 </project>
