@@ -1,18 +1,17 @@
 #!/bin/sh
 
-# build-solaris.sh for mod_jk.so
+# build-hpux.sh for mod_jk.so
 #
-# Usage: # sh build-solaris.sh
-# for Solaris 8 using GNU gcc
-# Note: See README-solaris for details.
+# Usage: # sh build-hpux.sh
+# for hpux 11 using gcc
+# Note: See README-hpux for details.  This builds mod_jk without JNI support.
 #
 # Mike Braden
-# March 05, 2001
 
 # Update the following according to your installation
 
 APACHE_HOME=/usr/local/apache
-JAVA_HOME=/usr/java
+JAVA_HOME=/opt/java1.3
 
 #### End of configuration - do not change below
 
@@ -23,20 +22,23 @@ else
    echo Verify that APACHE_HOME is set correctly in this script.
    exit 1
 fi
-if [ ! -d $JAVA_HOME/include/solaris ] ; then
+if [ ! -d $JAVA_HOME/include/hp-ux ] ; then
    echo Error: Unable to locate Java libraries.
    echo Verify that JAVA_HOME is set correctly in this script.
    exit 1
 fi
 
-JAVA_INCLUDE="-I${JAVA_HOME}/include -I${JAVA_HOME}/include/solaris"
+JAVA_INCLUDE="-I${JAVA_HOME}/include -I${JAVA_HOME}/include/hp-ux"
 
 INCLUDE="-I../common $JAVA_INCLUDE"
+
+#SRC="../common/jk_ajp12_worker.c ../common/jk_ajp13.c ../common/jk_ajp13_worker.c ../common/jk_connect.c ../common/jk_lb_worker.c ../common/jk_map.c ../common/jk_msg_buff.c ../common/jk_nwmain.c ../common/jk_pool.c ../common/jk_sockbuf.c ../common/jk_uri_worker_map.c ../common/jk_util.c ../common/jk_worker.c mod_jk.c"
+
 SRC="../common/*.c mod_jk.c"
 
 # Run APXS to compile the mod_jk module and its components
 echo Building mod_jk
-$APXS -S CFLAGS="-DSOLARIS -DUSE_EXPAT -I../lib/expat-lite" -o mod_jk.so $INCLUDE -lposix4 -c $SRC
+$APXS -o mod_jk.so $INCLUDE -c $SRC
 
 # Check to see if the last command completed
 if [ $? -ne 0 ] ; then
@@ -76,7 +78,7 @@ Build and configuration of mod_jk is complete.
 
 To finish the installation, edit your apache/conf/httpd.conf file and
 add the following line to the end of the file:
-(Note: Change TOMCAT_HOME to the value of \$TOMCAT_HOME)
+(Note: Change TOMCAT_HOME to the value of $TOMCAT_HOME)
 
 Include TOMCAT_HOME/conf/jk/mod_jk.conf-auto
 

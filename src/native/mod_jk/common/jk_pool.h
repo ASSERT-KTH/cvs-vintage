@@ -56,7 +56,7 @@
 /***************************************************************************
  * Description: Memory Pool object header file                             *
  * Author:      Gal Shachor <shachor@il.ibm.com>                           *
- * Version:     $Revision: 1.2 $                                               *
+ * Version:     $Revision: 1.3 $                                               *
  ***************************************************************************/
 #ifndef _JK_POOL_H
 #define _JK_POOL_H
@@ -90,6 +90,12 @@ extern "C" {
 #elif defined(OS2)
     typedef long long   jk_pool_atom_t;
 #elif defined(NETWARE)
+    typedef long long   jk_pool_atom_t;
+#elif defined(HPUX11)
+    typedef long long   jk_pool_atom_t;
+#elif defined(IRIX)
+    typedef long long   jk_pool_atom_t;
+#else
     typedef long long   jk_pool_atom_t;
 #endif
 

@@ -56,7 +56,7 @@
 /***************************************************************************
  * Description: Worker list                                                *
  * Author:      Gal Shachor <shachor@il.ibm.com>                           *
- * Version:     $Revision: 1.1 $                                           *
+ * Version:     $Revision: 1.2 $                                           *
  ***************************************************************************/
 
 /*
@@ -80,7 +80,9 @@
         #include "jk_ajp12_worker.h"
         #include "jk_ajp13_worker.h"
         /* #include "jk_ajp23_worker.h" */
-        #include "jk_jni_worker.h"
+        #ifndef HPUX11GCC
+            #include "jk_jni_worker.h"
+        #endif
         #include "jk_lb_worker.h"
 
         struct worker_factory_record {
@@ -110,7 +112,9 @@
              * In process JNI based worker. Requires the server to be 
              * multithreaded and to use native threads.
              */
-            { JK_JNI_WORKER_NAME, jni_worker_factory},
+            #ifndef HPUX11GCC
+                { JK_JNI_WORKER_NAME, jni_worker_factory},
+            #endif
             /*
              * Load balancing worker. Performs round robin with sticky 
              * session load balancing.

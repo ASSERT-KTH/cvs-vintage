@@ -57,7 +57,7 @@
  * Description: Global definitions and include files that should exist     *
  *              anywhere                                                   *
  * Author:      Gal Shachor <shachor@il.ibm.com>                           *
- * Version:     $Revision: 1.2 $                                               *
+ * Version:     $Revision: 1.3 $                                               *
  ***************************************************************************/
 
 #ifndef JK_GLOBAL_H
@@ -88,7 +88,9 @@
         #include <arpa/inet.h>
         #include <sys/un.h>
         #include <sys/socketvar.h>
-        #include <sys/select.h>
+        #ifndef HPUX11
+            #include <sys/select.h>
+        #endif
     #endif
         
     #include <sys/time.h>
