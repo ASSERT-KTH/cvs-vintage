@@ -38,7 +38,7 @@ import org.jboss.logging.Logger;
  *  @author Rickard Öberg (rickard.oberg@telkel.com)
  *  @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  *  @author <a href="mailto:osh@sparre.dk">Ole Husgaard</a>
- *  @version $Revision: 1.19 $
+ *  @version $Revision: 1.20 $
  */
 public class TxManager
 implements TransactionManager
@@ -201,7 +201,7 @@ implements TransactionManager
    public void setTransactionTimeout(int seconds)
       throws SystemException
    {
-      timeOut = seconds;
+      timeOut = 1000 * seconds;
    }
     
    /*
