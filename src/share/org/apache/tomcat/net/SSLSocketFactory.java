@@ -1,8 +1,4 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/net/Attic/SSLSocketFactory.java,v 1.3 2000/07/11 03:48:49 alex Exp $
- * $Revision: 1.3 $
- * $Date: 2000/07/11 03:48:49 $
- *
  * ====================================================================
  *
  * The Apache Software License, Version 1.1
@@ -93,6 +89,13 @@ import javax.net.ssl.HandshakeCompletedEvent;
 public class SSLSocketFactory
     extends org.apache.tomcat.net.ServerSocketFactory
 {
+    private String keystoreType;
+
+    static String defaultKeystoreType = "JKS";
+    static String defaultProtocol = "TLS";
+    static String defaultAlgorithm = "SunX509";
+    static boolean defaultClientAuth = false;
+
     private boolean clientAuth = false;
     private SSLServerSocketFactory sslProxy = null;
     
@@ -148,11 +151,28 @@ public class SSLSocketFactory
 	    Security.addProvider (new sun.security.provider.Sun());
 	    Security.addProvider (new com.sun.net.ssl.internal.ssl.Provider());
 
+	    // Please don't change the name of the attribute - other
+	    // software may depend on it ( j2ee for sure )
 	    String keystoreFile=(String)attributes.get("keystore");
 	    if( keystoreFile==null) keystoreFile=defaultKeystoreFile;
 
+	    String keystoreType=(String)attributes.get("keystoreType");
+	    if( keystoreType==null) keystoreType=defaultKeystoreType;
+
+	    //determine whether we want client authentication
+	    // the presence of the attribute enables client auth
+	    clientAuth = null != (String)attributes.get("clientauth");
+
 	    String keyPass=(String)attributes.get("keypass");
 	    if( keyPass==null) keyPass=defaultKeyPass;
+
+	    //protocol for the SSL ie - TLS, SSL v3 etc.
+	    String protocol = (String)attributes.get("protocol");
+	    if(protocol == null) protocol = defaultProtocol;
+	    
+	    //Algorithm used to encode the certificate ie - SunX509
+	    String algorithm = (String)attributes.get("algorithm");
+	    if(algorithm == null) algorithm = defaultAlgorithm;
 	    
 	    // You can't use ssl without a server certificate.
 	    // Create a KeyStore ( to get server certs )
@@ -161,11 +181,11 @@ public class SSLSocketFactory
 	    // Create a SSLContext ( to create the ssl factory )
 	    // This is the only way to use server sockets with JSSE 1.0.1
 	    com.sun.net.ssl.SSLContext context = 
-		com.sun.net.ssl.SSLContext.getInstance("TLS"); //SSL
+		com.sun.net.ssl.SSLContext.getInstance(protocol); //SSL
 
 	    // Key manager will extract the server key
 	    com.sun.net.ssl.KeyManagerFactory kmf = 
-		com.sun.net.ssl.KeyManagerFactory.getInstance("SunX509");
+		com.sun.net.ssl.KeyManagerFactory.getInstance(algorithm);
 	    kmf.init( kstore, keyPass.toCharArray());
 
 	    // XXX I don't know if this is needed
@@ -174,14 +194,14 @@ public class SSLSocketFactory
 // 		tmf.init(kstore);
 
 	    // init context with the key managers
-	    context.init(kmf.getKeyManagers(), null, null);
+	    context.init(kmf.getKeyManagers(), null,
+			 new java.security.SecureRandom());
 
 	    // create proxy
 	    sslProxy = context.getServerSocketFactory();
 
 	    return;
 	} catch(Exception e) {
-	    //	    e.printStackTrace();
 	    if( e instanceof IOException )
 		throw (IOException)e;
 	    throw new IOException(e.getMessage());
@@ -200,7 +220,7 @@ public class SSLSocketFactory
 
 	// we don't know if client auth is needed -
 	// after parsing the request we may re-handshake
-	socket.setNeedClientAuth(false);
+	socket.setNeedClientAuth(clientAuth);
     }
 
     private KeyStore initKeyStore( String keystoreFile,
@@ -209,7 +229,7 @@ public class SSLSocketFactory
     {
 	InputStream istream = null;
 	try {
-	    KeyStore kstore=KeyStore.getInstance( "JKS" );
+	    KeyStore kstore=KeyStore.getInstance( keystoreType );
 	    istream = new FileInputStream(keystoreFile);
 	    kstore.load(istream, keyPass.toCharArray());
 	    return kstore;
@@ -221,7 +241,10 @@ public class SSLSocketFactory
 	    throw ioe;	    
 	}
 	catch(Exception ex) {
-	    throw new IOException( "Exception trying to load keystore " + keystoreFile + ": " + ex.getMessage() );
+	    throw new IOException( "Exception trying to load keystore " +
+				   keystoreFile + ": " + ex.getMessage() );
 	}
     }
+
+    
 }
