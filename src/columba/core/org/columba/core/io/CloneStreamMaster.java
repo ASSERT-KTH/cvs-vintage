@@ -57,6 +57,8 @@ public class CloneStreamMaster {
 		streamList = new ArrayList(2);
 		
 		tempFile = File.createTempFile("columba-stream-clone" + (uid++), ".tmp");
+		// make sure file is deleted automatically when closing VM
+		tempFile.deleteOnExit();
 		tempOut = new FileOutputStream( tempFile );
 		
 		copyBuffer = new byte[8000];

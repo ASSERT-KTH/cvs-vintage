@@ -241,6 +241,8 @@ public abstract class DefaultUtil {
 		throws Exception {
 		int exitVal = -1;
 		File tempFile = File.createTempFile("columbaSig", null);
+//		make sure file is deleted automatically when closing VM
+			 tempFile.deleteOnExit();
 		FileOutputStream fout = new FileOutputStream(tempFile);
 		StreamUtils.streamCopy(signature, fout);
 		fout.flush();

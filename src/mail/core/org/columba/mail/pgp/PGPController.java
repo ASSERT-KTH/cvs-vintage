@@ -417,6 +417,8 @@ public class PGPController {
 	protected void createTempFileFromStream(InputStream in)
 		throws IOException {
 		tempFile = File.createTempFile("columba-pgp", ".tmp");
+//		make sure file is deleted automatically when closing VM
+			 tempFile.deleteOnExit();
 		FileOutputStream out = new FileOutputStream(tempFile);
 		StreamUtils.streamCopy(in, out);
 		in.close();

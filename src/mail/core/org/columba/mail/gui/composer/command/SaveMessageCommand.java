@@ -22,7 +22,6 @@ import java.io.FileOutputStream;
 
 import org.columba.core.command.DefaultCommandReference;
 import org.columba.core.command.Worker;
-import org.columba.core.main.MainInterface;
 import org.columba.mail.command.ComposerCommandReference;
 import org.columba.mail.command.FolderCommand;
 import org.columba.mail.composer.MessageComposer;
@@ -99,13 +98,15 @@ public class SaveMessageCommand extends FolderCommand {
 			// -> this is necessary because SendableMessage contains
 			// -> additional information (like recipients list) which
 			// -> would get lost otherwise
-			File tempFile = File.createTempFile("columba-outbox","tmp");
+			File tempFile = File.createTempFile("columba-outbox", "tmp");
+			//	make sure file is deleted automatically when closing VM
+			tempFile.deleteOnExit();
 			FileOutputStream out = new FileOutputStream(tempFile);
-			StreamUtils.streamCopy( message.getSourceStream(), out);
+			StreamUtils.streamCopy(message.getSourceStream(), out);
 			out.close();
-			
+
 			message.setSource(new FileSource(tempFile));
-			
+
 			Object uid = folder.addMessage(message);
 
 		} else {
