@@ -29,22 +29,18 @@ p, ul, ol, dl	{
 table, th, td	{
 	border: none
 	}
-.alert { 
-	border: solid 1px red;
-	padding: .3em;
-	}
 #leftcol div div {
  margin-top: .4em
- }
+ 	}
 .app h3 {
 	background: #036 url(../images/nw_min.gif) no-repeat;
- }
+ 	}
 .app h3, .app h4, .functnbar	 {
 	padding: 5px;
 	margin-right: 2px;
 	margin-left: 2px;
 	color: #fff;
- }
+ 	}
 .app h3 a {
  color: white;
  text-decoration: none
