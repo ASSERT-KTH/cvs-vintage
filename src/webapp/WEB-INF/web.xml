@@ -12,15 +12,13 @@
         <servlet-class>
             org.apache.turbine.Turbine
         </servlet-class>
-
         <init-param>
-            <param-name>properties</param-name>
+            <param-name>configuration</param-name>
             <!-- This is relative to our Context's docBase -->
             <param-value>
-                /WEB-INF/conf/TurbineResources.properties
-            </param-value>
-        </init-param>
-	
+                    /WEB-INF/conf/TurbineConfiguration.xml
+            </param-value>            
+        </init-param> 	
         <!-- Load this servlet at server startup time -->
         <load-on-startup/>
 
