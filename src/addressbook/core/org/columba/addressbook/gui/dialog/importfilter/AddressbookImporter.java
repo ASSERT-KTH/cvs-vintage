@@ -20,18 +20,37 @@ import net.javaprog.ui.wizard.DataModel;
 import net.javaprog.ui.wizard.WizardModelEvent;
 import net.javaprog.ui.wizard.WizardModelListener;
 
+import org.columba.addressbook.folder.importfilter.DefaultAddressbookImporter;
+import org.columba.addressbook.plugin.ImportPluginHandler;
+
 class AddressbookImporter implements WizardModelListener {
-    protected DataModel data;
-    
-    public AddressbookImporter(DataModel data) {
-        this.data = data;
-    }
-    
-    public void wizardFinished(WizardModelEvent e) {
-        //import the addressbook here using the
-        //values set in the data model
-    }
-    
-    public void stepShown(WizardModelEvent e) {}
-    public void wizardCanceled(WizardModelEvent e) {}
+	protected DataModel data;
+
+	public AddressbookImporter(DataModel data) {
+		this.data = data;
+	}
+
+	public void wizardFinished(WizardModelEvent e) {
+		ImportPluginHandler pluginHandler =
+			(ImportPluginHandler) data.getData("Plugin.handler");
+		DefaultAddressbookImporter importer = null;
+		Object[] args =
+			new Object[] {
+				data.getData("Location.destination"),
+				data.getData("Location.source")};
+		try {
+			importer =
+				(DefaultAddressbookImporter) pluginHandler.getPlugin(
+					(String) data.getData("Plugin.ID"),
+					args);
+		} catch (Exception ex) {
+			ex.printStackTrace();
+			return;
+		}
+	}
+
+	public void stepShown(WizardModelEvent e) {
+	}
+	public void wizardCanceled(WizardModelEvent e) {
+	}
 }

@@ -17,18 +17,19 @@
 package org.columba.addressbook.folder.importfilter;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 
 import org.columba.addressbook.folder.ContactCard;
 import org.columba.addressbook.folder.Folder;
 import org.columba.addressbook.main.AddressbookInterface;
-import org.columba.core.util.SwingWorker;
+import org.columba.core.gui.util.ExceptionDialog;
+import org.columba.core.gui.util.NotifyDialog;
 
 /**
  * @version 	1.0
  * @author
  */
-public abstract class DefaultAddressbookImporter extends SwingWorker
-{
+public abstract class DefaultAddressbookImporter {
 	public static int TYPE_FILE = 0;
 	public static int TYPE_DIRECTORY = 1;
 
@@ -42,15 +43,11 @@ public abstract class DefaultAddressbookImporter extends SwingWorker
 
 	protected int counter;
 
-
-	public void init()
-	{
+	public void init() {
 		counter = 0;
 
 		//tempFolder = new AddressbookFolder(null,addressbookInterface);
 	}
-
-
 
 	/*********** overwrite the following messages **************************/
 
@@ -58,45 +55,36 @@ public abstract class DefaultAddressbookImporter extends SwingWorker
 	 * overwrite this method to specify type
 	 * the wizard dialog will open the correct file/directory dialog automatically
 	 */
-	public int getType()
-	{
+	public int getType() {
 		return TYPE_FILE;
 	}
-
-
 
 	/**
 	 * this method does all the import work
 	 */
 	public abstract void importAddressbook(File file) throws Exception;
 
-
 	/*********** intern methods (no need to overwrite these) ****************/
 
-	public void setAddressbookInterface( AddressbookInterface i )
-	{
+	public void setAddressbookInterface(AddressbookInterface i) {
 		this.addressbookInterface = i;
 	}
 
-	public void setSourceFile(File file)
-
-	{
+	public void setSourceFile(File file) {
 		this.sourceFile = file;
 	}
 
 	/**
 	 * set destination folder
 	 */
-	public void setDestinationFolder(Folder folder)
-	{
+	public void setDestinationFolder(Folder folder) {
 		destinationFolder = folder;
 	}
 
 	/**
 	 *  counter for successfully imported messages
 	 */
-	public int getCount()
-	{
+	public int getCount() {
 		return counter;
 	}
 
@@ -104,26 +92,15 @@ public abstract class DefaultAddressbookImporter extends SwingWorker
 	 *  this method calls your overwritten importMailbox(File)-method
 	 *  and handles exceptions
 	 */
-	public Object construct()
-	{
-		/*
-		setText("Importing contacts...");
+	public void run() {
 
-		startTimer();
-
-		try
-		{
+		try {
 			importAddressbook(sourceFile);
-		}
-		catch (Exception ex)
-		{
-			if (ex instanceof FileNotFoundException)
-			{
+		} catch (Exception ex) {
+			if (ex instanceof FileNotFoundException) {
 				NotifyDialog dialog = new NotifyDialog();
 				dialog.showDialog("Source File not found!");
-			}
-			else
-			{
+			} else {
 				ExceptionDialog dialog = new ExceptionDialog();
 				dialog.showDialog(ex);
 			}
@@ -132,82 +109,37 @@ public abstract class DefaultAddressbookImporter extends SwingWorker
 			dialog.showDialog(
 				"Addressbook import failed! No contacts were added to your folder.");
 
-			stopTimer();
-
-			unregister();
-			
-			return null;
+			return;
 		}
-		*/
-		/*
-		if (getCancel() == true)
-		{
-			NotifyDialog dialog = new NotifyDialog();
-			dialog.showDialog(
-				"You cancelled the import operation! No contacts were added to your folder.");
 
-			stopTimer();
-
-			unregister();
-
-			return null;
-		}
-		
-		
-		if (getCount() == 0)
-		{
+		if (getCount() == 0) {
 			NotifyDialog dialog = new NotifyDialog();
 			dialog.showDialog(
 				"Addressbook import failed! No contacts were added to your folder.\nThis means that the parser didn't throw any exception even if it didn't recognize the mailbox format or simple the messagebox didn't contain any messages.");
 
-			stopTimer();
-
-			unregister();
-
-			return null;
+			return;
 		}
 
-		if (getCount() > 0)
-		{
+		if (getCount() > 0) {
 			NotifyDialog dialog = new NotifyDialog();
 			dialog.showDialog("Addressbook import was successful!");
 
-			finish();
-
-			addressbookInterface.table.setFolder( destinationFolder );
+			addressbookInterface.table.setFolder(destinationFolder);
 		}
 
-		stopTimer();
-
-		unregister();
-		*/
-		return null;
+		return;
 
 	}
 
 	/**
 	 * use this method to save a message to the specified destination folder
 	 */
-	protected void saveContact(ContactCard card) throws Exception
-	{
-		/*
-		destinationFolder.add( card );
+	protected void saveContact(ContactCard card) throws Exception {
+
+		destinationFolder.add(card);
 
 		counter++;
 
-		setText("Importing messages: " + getCount());
-		*/
-	}
-
-	protected void finish()
-	{
-		/*
-		Object[] uids = tempFolder.getUids();
-
-		FolderOperation op =
-			new FolderOperation(Operation.MOVE, 0, uids, tempFolder, destinationFolder);
-		mainInterface.crossbar.operate(op);
-		*/
 	}
 
 }

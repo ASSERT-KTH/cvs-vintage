@@ -17,6 +17,7 @@ package org.columba.addressbook.main;
 import org.columba.addressbook.config.AddressbookConfig;
 import org.columba.addressbook.gui.tree.AddressbookTreeModel;
 import org.columba.addressbook.plugin.FolderPluginHandler;
+import org.columba.addressbook.plugin.ImportPluginHandler;
 import org.columba.addressbook.shutdown.SaveAllAddressbooksPlugin;
 import org.columba.addressbook.util.AddressbookResourceLoader;
 import org.columba.core.gui.menu.MenuPluginHandler;
@@ -75,6 +76,8 @@ public class AddressbookMain extends DefaultMain {
 	public void initPlugins() {
 		MainInterface.pluginManager.registerHandler(new FolderPluginHandler());
 
+		MainInterface.pluginManager.registerHandler(new ImportPluginHandler());
+		
 		MainInterface.pluginManager.registerHandler(
 			new MenuPluginHandler("org.columba.addressbook.menu"));
 

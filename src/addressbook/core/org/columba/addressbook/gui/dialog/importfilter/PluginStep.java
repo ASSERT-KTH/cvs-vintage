@@ -20,10 +20,12 @@ import java.awt.BorderLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
-
 import java.lang.reflect.Method;
 
-import javax.swing.*;
+import javax.swing.JComponent;
+import javax.swing.JList;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
@@ -31,45 +33,56 @@ import net.javaprog.ui.wizard.AbstractStep;
 import net.javaprog.ui.wizard.DataModel;
 import net.javaprog.ui.wizard.DefaultDataLookup;
 
+import org.columba.addressbook.plugin.ImportPluginHandler;
 import org.columba.addressbook.util.AddressbookResourceLoader;
 import org.columba.core.gui.util.MultiLineLabel;
+import org.columba.mail.gui.config.mailboximport.PluginListCellRenderer;
 
 class PluginStep extends AbstractStep implements ListSelectionListener {
-        protected DataModel data;
+	protected DataModel data;
 	private MultiLineLabel descriptionLabel;
 
-	public PluginStep(DataModel data)
-	{
-		super(AddressbookResourceLoader.getString(
-                                    "dialog",
-                                    "addressbookimport",
-                                    "plugin"),
-                      AddressbookResourceLoader.getString(
-                                    "dialog",
-                                    "addressbookimport",
-                                    "plugin_description"));
-                this.data = data;
+	public PluginStep(DataModel data) {
+		super(
+			AddressbookResourceLoader.getString(
+				"dialog",
+				"addressbookimport",
+				"plugin"),
+			AddressbookResourceLoader.getString(
+				"dialog",
+				"addressbookimport",
+				"plugin_description"));
+		this.data = data;
 	}
 
 	protected JComponent createComponent() {
-                JComponent component = new JPanel(new BorderLayout());
+		JComponent component = new JPanel(new BorderLayout());
 		component.setLayout(new BorderLayout(0, 30));
-		component.add(new MultiLineLabel(AddressbookResourceLoader.getString(
-                                    "dialog",
-                                    "addressbookimport",
-                                    "plugin_text")), BorderLayout.NORTH);
+		component.add(
+			new MultiLineLabel(
+				AddressbookResourceLoader.getString(
+					"dialog",
+					"addressbookimport",
+					"plugin_text")),
+			BorderLayout.NORTH);
 		JPanel middlePanel = new JPanel();
 		middlePanel.setAlignmentX(1);
 		GridBagLayout layout = new GridBagLayout();
 		middlePanel.setLayout(layout);
-                JList list = new JList( /* ((ImportPluginHandler)data.getData("Plugin.handler")).getPluginIdList() */ );
-                //list.setCellRenderer(new PluginListCellRenderer());
-                Method method = null;
-                try {
-                        method = list.getClass().getMethod("getSelectedValue", null);
-                } catch (NoSuchMethodException nsme) {}
-                data.registerDataLookup("Plugin.ID", new DefaultDataLookup(list, method, null));
-                list.addListSelectionListener(this);
+		JList list =
+			new JList(
+				((ImportPluginHandler) data.getData("Plugin.handler"))
+					.getPluginIdList());
+		list.setCellRenderer(new PluginListCellRenderer());
+		Method method = null;
+		try {
+			method = list.getClass().getMethod("getSelectedValue", null);
+		} catch (NoSuchMethodException nsme) {
+		}
+		data.registerDataLookup(
+			"Plugin.ID",
+			new DefaultDataLookup(list, method, null));
+		list.addListSelectionListener(this);
 		list.setSelectedIndex(0);
 		JScrollPane scrollPane = new JScrollPane(list);
 		//scrollPane.setPreferredSize( new Dimension(200,200) );
@@ -95,12 +108,13 @@ class PluginStep extends AbstractStep implements ListSelectionListener {
 		layout.setConstraints(scrollPane2, c);
 		middlePanel.add(scrollPane2);
 		component.add(middlePanel);
-                return component;
+		return component;
 	}
 
 	public void valueChanged(ListSelectionEvent event) {
-                //adjust description field
+		//adjust description field
 	}
-        
-        public void prepareRendering() {}
+
+	public void prepareRendering() {
+	}
 }

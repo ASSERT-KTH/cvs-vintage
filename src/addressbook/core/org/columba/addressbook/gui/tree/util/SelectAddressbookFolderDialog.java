@@ -33,8 +33,8 @@ import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.TreeModel;
 
-import org.columba.addressbook.config.FolderItem;
 import org.columba.addressbook.folder.Folder;
+import org.columba.addressbook.gui.tree.AddressbookTreeNode;
 import org.columba.addressbook.util.AddressbookResourceLoader;
 import org.columba.core.gui.util.DialogStore;
 
@@ -246,7 +246,7 @@ public class SelectAddressbookFolderDialog
 
 		selectedFolder = node;
 
-		FolderItem item = node.getFolderItem();
+		//FolderItem item = node.getFolderItem();
 
 		/*
 		if ( item.getType().equals("root") )

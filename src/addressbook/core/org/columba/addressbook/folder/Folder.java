@@ -27,7 +27,6 @@ import org.columba.addressbook.main.AddressbookInterface;
 import org.columba.core.command.WorkerStatusController;
 import org.columba.core.config.ConfigPath;
 import org.columba.core.io.DiskIO;
-import org.columba.mail.folder.FolderTreeNode;
 import java.util.List;
 
 public abstract class Folder extends AddressbookTreeNode {
@@ -245,7 +244,7 @@ public abstract class Folder extends AddressbookTreeNode {
 		StringBuffer path = new StringBuffer();
 
 		for (int i = 1; i < treeNode.length; i++) {
-			FolderTreeNode folder = (FolderTreeNode) treeNode[i];
+			AddressbookTreeNode folder = (AddressbookTreeNode) treeNode[i];
 			path.append("/" + folder.getName());
 		}
 

@@ -8,6 +8,7 @@ package org.columba.addressbook.gui.action;
 
 import java.awt.event.ActionEvent;
 
+import org.columba.addressbook.gui.dialog.importfilter.ImportWizardLauncher;
 import org.columba.addressbook.util.AddressbookResourceLoader;
 import org.columba.core.action.FrameAction;
 import org.columba.core.gui.frame.AbstractFrameController;
@@ -53,8 +54,7 @@ public class AddressbookImportAction extends FrameAction {
 	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
 	 */
 	public void actionPerformed(ActionEvent evt) {
-		// TODO implement action
-		super.actionPerformed(evt);
+		new ImportWizardLauncher().launchWizard();
 	}
 
 }

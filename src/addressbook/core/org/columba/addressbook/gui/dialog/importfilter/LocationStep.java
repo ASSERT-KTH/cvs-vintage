@@ -84,6 +84,7 @@ class LocationStep extends AbstractStep implements ActionListener {
 		sourceButton.addActionListener(this);
 		sourceLabel.setLabelFor(sourceButton);
 		middlePanel.addTextField(sourceButton);
+		middlePanel.addExample(new JLabel());
 		JLabel destinationLabel = new JLabel(AddressbookResourceLoader.getString(
                                     "dialog",
                                     "addressbookimport",
