@@ -64,7 +64,7 @@ import java.io.*;
  * interface.
  *
  * @author <a href="mailto:mjenning@islandnet.com">Mike Jennings</a>
- * @version $Revision: 1.2 $
+ * @version $Revision: 1.3 $
  */
 public class SimpleFileFilter implements FilenameFilter {
      private String[] extensions;
@@ -110,7 +110,7 @@ public class SimpleFileFilter implements FilenameFilter {
               return files;
           } else {
               files=new String[1];
-              files[0]=fname;
+              files[0]=f.getPath();// was:fname;
               return files;
           }
       }
