@@ -90,6 +90,7 @@ public abstract class AbstractFolderTest extends TestCase {
             // delete folder
             f.delete();
         }
+        new File(FolderTestHelper.homeDirectory + "/folders/").delete();
     }
 
     /**
