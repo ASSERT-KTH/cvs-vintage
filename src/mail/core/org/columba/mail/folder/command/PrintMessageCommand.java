@@ -265,8 +265,16 @@ public class PrintMessageCommand extends FolderCommand {
 	private cPrintObject getPlainBodyPrintObject(MimePart bodyPart) {
 
 		// First determine which charset to use
-		// TODO: How to determine present charset? For now I pretend it's allways "auto"		
-		String charset = bodyPart.getHeader().getContentParameter("charset");
+		String charsetToUse;	
+		if (charset.equals("auto"))
+		{
+			// get charset from message
+			charsetToUse = bodyPart.getHeader().getContentParameter("charset");
+		}
+		else
+		{
+			charsetToUse = charset;
+		}
 		
 		// Decode message according to charset
 		Decoder decoder = CoderRouter.getDecoder(
@@ -274,10 +282,10 @@ public class PrintMessageCommand extends FolderCommand {
 		String decodedBody = null;
 		try {
 			// decode using specified charset
-			decodedBody = decoder.decode(bodyPart.getBody(), charset);
+			decodedBody = decoder.decode(bodyPart.getBody(), charsetToUse);
 		}
 		catch (UnsupportedEncodingException ex) {
-			ColumbaLogger.log.info("charset " + charset + " isn't supported, falling back to default...");
+			ColumbaLogger.log.info("charset " + charsetToUse + " isn't supported, falling back to default...");
 			try {
 				// decode using default charset
 				decodedBody = decoder.decode(bodyPart.getBody(), null);
