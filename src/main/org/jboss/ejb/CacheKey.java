@@ -10,7 +10,7 @@ import java.io.Externalizable;
 import java.io.ObjectOutput;
 import java.io.ObjectInput;
 import java.io.IOException;
-
+import java.lang.reflect.Method;
 import java.rmi.MarshalledObject;
 
 import org.jboss.logging.Logger;
@@ -29,12 +29,14 @@ import org.jboss.logging.Logger;
  * 
  * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  * @author <a href="bill@burkecentral.com">Bill Burke</a>
- * @version $Revision: 1.19 $
+ * @author <a href="Scott.Stark@jboss.org">Scott Stark</a>
+ * @version $Revision: 1.20 $
  */
 public class CacheKey
    implements Externalizable
 {
    // Constants -----------------------------------------------------
+   static final long serialVersionUID = -7108821554259950778L;
     
    // Attributes ----------------------------------------------------
 
@@ -67,46 +69,47 @@ public class CacheKey
     
    // Public --------------------------------------------------------
     
-   public CacheKey() {
+   public CacheKey()
+   {
       // For externalization only
    }
 
-   public CacheKey(Object id) {
+   public CacheKey(Object id)
+   {
       // why does this throw an error and not an IllegalArgumentException ?
       if (id == null) throw new Error("id may not be null");
          
-      this.id = null;
-        
-      try {
-            
-         // Equals rely on the MarshalledObject itself
-         mo =  new MarshalledObject(id);
-
-        /*
-         * FIXME MARCF: The reuse of the primary key is an "exception" and this fix makes 
-          everyone pay an hefty price.  If we really want this behavior we can put it in 
-          the cache.  Is there a test for this? 
-
-         // Make a copy of the id to enforce copy semantics and 
-         // allow reuse of the original primary key
-         this.id = mo.get();
-         
+      this.id = id;
+      try
+      {
+         /* See if the key directly implements equals and hashCode. The
+          *getDeclaredMethod method only returns method declared in the argument
+          *class, not its superclasses.
          */
-         this.id = id;
-         
-         // Precompute the hashCode (speed)
-         hashCode = mo.hashCode();
+         try
+         {
+            Class[] equalsArgs = {Object.class};
+            Method equals = id.getClass().getDeclaredMethod("equals", equalsArgs);
+            Class[] hashCodeArgs = {};
+            Method hash = id.getClass().getDeclaredMethod("hashCode", hashCodeArgs);
+            // Both equals and hashCode are defined, use the id methods
+            hashCode = id.hashCode();
+         }
+         catch(NoSuchMethodException ex)
+         {
+            // Rely on the MarshalledObject for equals and hashCode
+            mo =  new MarshalledObject(id);
+            // Precompute the hashCode (speed)
+            hashCode = mo.hashCode();
+         }
       }
-      catch (Exception e) {
-         //
-         // should probably throw a nested exception here, but
-         // for now instead of printStackTrace, lets log it
-         //
-         Logger log = Logger.getLogger(this.getClass());
-         log.error("failed to initialize", e);
+      catch (Exception e)
+      {
+         Logger log = Logger.getLogger(getClass());
+         log.error("failed to initialize, id="+id, e);
       }
    }
-    
+
    // Z implementation ----------------------------------------------
     
    // Package protected ---------------------------------------------
@@ -137,29 +140,34 @@ public class CacheKey
     * these should be overwritten by extending Cache key
     * since they define what the cache does in the first place
     */
-   public int hashCode() {
+   public int hashCode()
+   {
       // we default to the pK id
       return hashCode;
    }
     
-   /**
-    * equals()
-    *
-    * We base the equals on the equality of the underlying key
-    * in this fashion we make sure that we cannot have duplicate 
-    * hashes in the maps. 
-    * The fast way (and right way) to do this implementation 
-    * is with a incremented cachekey.  It is more complex but worth
-    * the effort this is a FIXME (MF)
-    * The following implementation is fool-proof
+   /** This method uses the id implementation of equals if the mo is
+    *null since this indicates that the id class did implement equals.
+    *If mo is not null, then the MarshalledObject equals is used to
+    *compare keys based on their serialized form. Relying on the
+    *serialized form does not always work.
     */
-   public boolean equals(Object object) {
-      if (object instanceof CacheKey) {
-         return (mo.equals(((CacheKey) object).mo));
+   public boolean equals(Object object)
+   {
+      boolean equals = false;
+      if (object instanceof CacheKey)
+      {
+         CacheKey ckey = (CacheKey) object;
+         Object key = ckey.id;
+         // If mo is null, the id class implements equals
+         if( mo == null )
+            equals = id.equals(key);
+         else
+            equals = mo.equals(ckey.mo);
       }
-      return false;
+      return equals;
    }
-	
+
    public String toString()
    {
       return id.toString();
