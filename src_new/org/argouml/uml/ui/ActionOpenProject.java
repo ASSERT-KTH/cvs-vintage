@@ -1,4 +1,4 @@
-// $Id: ActionOpenProject.java,v 1.30 2004/01/07 21:05:41 jjones Exp $
+// $Id: ActionOpenProject.java,v 1.31 2004/01/15 23:31:49 bobtarling Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -30,6 +30,7 @@ import org.argouml.kernel.Project;
 import org.argouml.kernel.*;
 import org.argouml.cognitive.Designer;
 import org.argouml.ui.*;
+import org.argouml.ui.menubar.GenericArgoMenuBar;
 import org.argouml.xml.argo.*;
 import org.argouml.util.*;
 import org.argouml.util.osdep.*;
@@ -149,15 +150,18 @@ public class ActionOpenProject extends UMLAction {
             if (retval == 0) {
                 File theFile = chooser.getSelectedFile();
                 if (theFile != null) {
-
                     String path = theFile.getParent();
+                    // TODO Use something other than Globals to
+                    // store last directory. We should rely on GEF
+                    // only for Diagrams. Bob Tarling 15 Jan 2004.
                     Globals.setLastDirectory(path);
                     URL url = theFile.toURL();
                     if (url != null) {
-                        
 			loadProject(url);
+			// notification of menu bar
+			GenericArgoMenuBar menuBar = (GenericArgoMenuBar) pb.getJMenuBar();
+			menuBar.addFileSaved( theFile.getCanonicalPath());					
                     }
-
                 }
             }
         } catch (IOException ignore) {
