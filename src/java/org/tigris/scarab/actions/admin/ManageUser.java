@@ -51,27 +51,23 @@ package org.tigris.scarab.actions.admin;
 import java.util.Calendar;
 import java.util.List;
 
-// Turbine Stuff
-import org.apache.turbine.TemplateContext;
-import org.apache.turbine.RunData;
-import org.apache.turbine.tool.IntakeTool;
-import org.apache.commons.lang.StringUtils;
 import org.apache.fulcrum.intake.model.Group;
 import org.apache.fulcrum.security.TurbineSecurity;
 import org.apache.fulcrum.security.entity.Role;
 import org.apache.fulcrum.security.entity.User;
 import org.apache.fulcrum.security.util.AccessControlList;
-
-// Scarab Stuff
+import org.apache.turbine.RunData;
+import org.apache.turbine.TemplateContext;
+import org.apache.turbine.tool.IntakeTool;
+import org.tigris.scarab.actions.base.RequireLoginFirstAction;
 import org.tigris.scarab.om.ScarabUser;
 import org.tigris.scarab.om.ScarabUserImpl;
 import org.tigris.scarab.om.ScarabUserImplPeer;
-import org.tigris.scarab.util.ScarabConstants;
-import org.tigris.scarab.util.Log;
-import org.tigris.scarab.actions.base.RequireLoginFirstAction;
-import org.tigris.scarab.tools.ScarabRequestTool;
 import org.tigris.scarab.tools.ScarabGlobalTool;
 import org.tigris.scarab.tools.ScarabLocalizationTool;
+import org.tigris.scarab.tools.ScarabRequestTool;
+import org.tigris.scarab.util.Log;
+import org.tigris.scarab.util.ScarabConstants;
 
 /**
  * This class is responsible for dealing with the user management
@@ -79,7 +75,7 @@ import org.tigris.scarab.tools.ScarabLocalizationTool;
  *
  * @author <a href="mailto:dr@bitonic.com">Douglas B. Robertson</a>
  * @author <a href="mailto:mpoeschl@martmot.at">Martin Poeschl</a>
- * @version $Id: ManageUser.java,v 1.24 2004/03/13 21:12:32 pledbrook Exp $
+ * @version $Id: ManageUser.java,v 1.25 2004/03/28 18:45:12 dep4b Exp $
  */
 public class ManageUser extends RequireLoginFirstAction
 {
