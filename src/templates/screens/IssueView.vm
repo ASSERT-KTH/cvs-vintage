@@ -48,7 +48,7 @@
         #set ( $field = "Value" )  
   #end
 
-  #if ($attVal.Value && !$attVal.Attribute.Name.equals("Assigned To") )
+  #if ($attVal.Value )
          <tr>
           <td width="120" class="a">
              <strong>$attVal.Attribute.Name:</strong>
@@ -77,19 +77,6 @@
   #end
 #end
 
-#*
-         <tr>
-          <td width="120" class="a"><strong>assignee(s):</strong></td>
-          <td>
-           #foreach( $user in $currentIssue.AssignedTo)
-            #set ( $comma = "" )
-            <td class="b">
-            ${comma}${user}
-            #set ( $comma = "," )
-           #end
-           </td>
-         </tr>
-*#
          <tr>
            <td>
            <input type="submit" value="edit attributes" name="eventSubmit_doSubmitattributes" class="button" /></td>
@@ -99,6 +86,8 @@
        </div>
       </div>
 
+#set ( $atch = $scarabR.Attachment )
+#set( $intakeAttachment = $intake.Attachment.mapTo($atch) )
 
 ## URLS
       <div class="grouper">
@@ -126,18 +115,28 @@
          #else 
             <tr class="b">
          #end
-          <td><input type="checkbox" /></td>
+          <td><input type="checkbox" name="url_delete_$url.AttachmentId"/></td>
 
           <td><input type="text" size="25" class="text" value="$url.DataAsString" /></td>
 
           <td><input type="text" size="25" class="text" value="$url.Name" /></td>
          </tr>
     #end
+         <tr>
+          <td><strong>add url:</strong></td>
+
+#set( $urlGroup = $intake.Attachment.setKey("urlkey") )
+          <td><input type="text" size="25" class="text" name="$urlGroup.Name.Key" /></td>
+
+          <td><input type="text" size="25" class="text" name="$urlGroup.DataAsString.Key" /></td>
+
+         </tr>
 
         </table>
        </div>
 
-       <p><input type="submit" value="add url" class="button" />&#160;<input type="submit" value="delete url" class="button" /></p>
+           <input type = "hidden" name="attachment_type_id" value="3">
+           <p><input type="submit" value="add url" name="eventSubmit_doSubmitattachment"  class="button" />&#160;<input type="submit" value="delete url"  name="eventSubmit_doDeleteurl" class="button" /></p>
       </div>
 
 ## PARENT ISSUES
@@ -217,7 +216,6 @@
        <div class="datatable">
         <table width="100%" border="1" cellspacing="2" cellpadding="3">
          <tr>
-          <th><a href="#"><img src="./images/icon_uparrow.gif" width="13" height="8" alt="sort" border="0" /></a><a href="#"><img src="./images/icon_downarrow.gif" width="13" height="8" alt="sort" border="0" /></a></th>
 
           <th><a href="#">issue id#:</a></th>
 
@@ -232,7 +230,6 @@
          #else 
             <tr class="b">
          #end
-          <td><input type="checkbox" /></td>
 
           <td><a href="IssueView.vm?id=$child.IssueId">$child.IssueId</a></td>
 
@@ -243,15 +240,17 @@
            $attVal.Value</a></td>
 
           <td>
-        <select name="child_depend_type_id" class="select">
+
+        <select name="child_depend_type_$child.IssueId" class="select">
             #foreach ($dependType in $currentIssue.getAllDependencyTypes())
               #set ( $selected = "" )
-              #if ( $currentIssue.getDependencyType($child).equals($dependType.DependTypeId.toString()))
+              #if ( $currentIssue.getDependency($child).TypeId.toString().equals($dependType.DependTypeId.toString()) )
                 #set ( $selected = " selected" )
               #end
               <option$selected value="$dependType.DependTypeId">
-                  $dependType.Name</option>
+                  $dependType.Name </option>
             #end
+              <option value="none">remove dependency </option>
         </select>
           </td>
          </tr>
@@ -259,20 +258,11 @@
 
         </table>
 
-       <p><input type="submit" value="edit child issue" class="button" />&#160;<input type="submit" value="add child issue" class="button" /></p>
+       <p><input type="submit" value="update child issue"  name="eventSubmit_doUpdatechild" class="button" />&#160;<input type="submit" value="add child issue" class="button" /></p>
        </div>
       </div>
 #end
 
-#set ( $atch = $scarabR.Attachment )
-$atch
-#set( $intakeAttachment = $intake.Attachment.mapTo($atch) )
-$intakeAttachment
-$intakeAttachment.Name.Key
-$intakeAttachment.Name
-
-#set ($atchgroup = $intake.Attachment)
-$atchgroup.Name.Key
 
 ## COMMENTS
       <div class="grouper">
@@ -300,12 +290,10 @@ $atchgroup.Name.Key
 
          <tr>
           <td width="120" class="a"><strong>add comment:</strong></td>
-
           <td class="b">
-           <textarea rows="2" cols="35" class="text">
-           </textarea>
-
-           <p><input type="submit" value="submit comment" name="eventSubmit_doSubmitcomment" class="button" /></p>
+           <textarea rows="2" cols="35" class="text" name ="$intakeAttachment.DataAsString.Key_comment">$!Attachment.DataAsString</textarea>
+           <input type = "hidden" name="attachment_type_id" value="2">
+           <p><input type="submit" value="add comment" name="eventSubmit_doSubmitattachment"  class="button" /></p>
           </td>
          </tr>
         </table>
