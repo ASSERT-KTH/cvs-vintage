@@ -24,7 +24,7 @@
 // File: FigMNodeInstance.java
 // Classes: FigMNodeInstance
 // Original Author: 5eichler@informatik.uni-hamburg.de
-// $Id: FigMNodeInstance.java,v 1.4 2002/03/29 11:03:55 mkl Exp $
+// $Id: FigMNodeInstance.java,v 1.5 2002/06/04 05:25:27 mkl Exp $
 
 package org.argouml.uml.diagram.deployment.ui;
 
@@ -80,8 +80,6 @@ public class FigMNodeInstance extends FigNodeModelElement {
     addFig(_name);
     addFig(_test);
 
-    Rectangle r = getBounds();
-    setBounds(r.x, r.y, r.width, r.height);
   }
 
   public FigMNodeInstance(GraphModel gm, Object node) {
@@ -159,12 +157,6 @@ public class FigMNodeInstance extends FigNodeModelElement {
     else {
         _stereo.setText(Notation.generateStereotype(this, stereo));
     }
-    
-    Rectangle oldBounds = getBounds();
-    _stereo.calcBounds();
-    calcBounds();
-    firePropChange("bounds", oldBounds, getBounds());
-
   }
 
   ////////////////////////////////////////////////////////////////

@@ -24,7 +24,7 @@
 // File: FigComponent.java
 // Classes: FigComponent
 // Original Author: 5eichler@informatik.uni-hamburg.de
-// $Id: FigComponent.java,v 1.7 2001/12/25 20:46:18 thn Exp $
+// $Id: FigComponent.java,v 1.8 2002/06/04 05:25:27 mkl Exp $
 
 package org.argouml.uml.diagram.deployment.ui;
 
@@ -80,10 +80,6 @@ public class FigComponent extends FigNodeModelElement {
     addFig(_name);
     addFig(_upperRect);
     addFig(_lowerRect);
-
-    Rectangle r = getBounds();
-    setBounds(r.x, r.y, r.width, r.height);
-
   }
 
   // Why not just super( gm, node ) instead?? (ChL)
@@ -279,12 +275,6 @@ public class FigComponent extends FigNodeModelElement {
     else {
         _stereo.setText(Notation.generateStereotype(this, stereo));
     }
-
-    Rectangle oldBounds = getBounds();
-    _stereo.calcBounds();
-    calcBounds();
-    firePropChange("bounds", oldBounds, getBounds());
-
   }
 
 
