@@ -24,7 +24,7 @@
 // File: ParserDisplay.java
 // Classes: ParserDisplay
 // Original Author:
-// $Id: ParserDisplay.java,v 1.38 2002/09/12 13:19:47 kataka Exp $
+// $Id: ParserDisplay.java,v 1.39 2002/09/30 16:53:32 d00mst Exp $
 
 // 12 Apr 2002: Jeremy Bennett (mail@jeremybennett.com). Extended to support
 // extension points.
@@ -2019,7 +2019,7 @@ nextProp:
     } catch (NoSuchElementException nsee) {
 	throw new ParseException("Unexpected end of attribute", s.length());
     } catch (ParseException pre) {
-	System.out.println(pre);
+	// System.out.println(pre);
 	throw pre;
     }
 
