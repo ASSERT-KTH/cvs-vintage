@@ -39,7 +39,7 @@ import org.jboss.ejb.MethodInvocation;
  *
  *   @see <related>
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
- *   @version $Revision: 1.3 $
+ *   @version $Revision: 1.4 $
  */
 public class EntityInstanceInterceptor
    extends AbstractInterceptor
@@ -93,6 +93,7 @@ public class EntityInstanceInterceptor
       throws Exception
    {
       // Get context
+	  // The cache will properly managed the tx-ctx locking, in case the mi transaction is different.
       mi.setEnterpriseContext(((EntityContainer)getContainer()).getInstanceCache().get(mi.getId()));
       try
       {
