@@ -166,10 +166,15 @@ public class Attachment
         
         if (!repoDir.exists())
         {
-            try {
+            try
+            {
                 repoDir.mkdir();
-            } catch (SecurityException e) {
-                String errorMessage = "Unable to create directory for repository: " + repoModuleDir;
+            }
+            catch (SecurityException e)
+            {
+                String errorMessage = 
+                    "Unable to create directory for repository: " + 
+                    repoModuleDir;
                 Log.error(errorMessage + ", " + e.getMessage());
                 throw new Exception(errorMessage);
             }
