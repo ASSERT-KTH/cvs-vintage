@@ -1,4 +1,4 @@
-// $Id: ExplorerPerspective.java,v 1.9 2004/10/22 21:07:40 mvw Exp $
+// $Id: ExplorerPerspective.java,v 1.10 2004/10/24 10:59:50 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -51,7 +51,7 @@ public class ExplorerPerspective {
     /** 
      * Creates a new instance of ExplorerPerspective.
      * 
-     * @param newName the name for the perspective
+     * @param newName the to be localized name for the perspective
      */
     public ExplorerPerspective(String newName) {
         name = Translator.localize(newName);
@@ -95,5 +95,11 @@ public class ExplorerPerspective {
         ExplorerPerspective ep = new ExplorerPerspective(newName);
         ep.rules.addAll(rules);
         return ep;
+    }
+    /**
+     * @param theNewName the new name for the ExplorerPerspective
+     */
+    protected void setName(String theNewName) {
+        this.name = theNewName;
     }
 }
