@@ -172,7 +172,12 @@ public class DependClassLoader extends ClassLoader {
 
 	if( f==null ) return;
 	Dependency dep=new Dependency();
-	dep.setLastModified( System.currentTimeMillis() );
+	long lm = f.lastModified();
+	long ct = System.currentTimeMillis();
+	// if we just loaded a newly created class file, os dependent rounding
+	// of lastModified() may cause it to exceed currentTimeMillis()
+	if ( ct < lm ) ct = lm;
+	dep.setLastModified( ct );
 	dep.setTarget( c );
 	dep.setOrigin( f );
 	
