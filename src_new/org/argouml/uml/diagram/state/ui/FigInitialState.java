@@ -24,7 +24,7 @@
 // File: FigInitialState.java
 // Classes: FigInitialState
 // Original Author: abonner@ics.uci.edu
-// $Id: FigInitialState.java,v 1.6 2002/12/05 21:47:19 kataka Exp $
+// $Id: FigInitialState.java,v 1.7 2003/06/17 12:55:05 mkl Exp $
 
 package org.argouml.uml.diagram.state.ui;
 
@@ -95,28 +95,30 @@ public class FigInitialState extends FigStateVertex {
   ////////////////////////////////////////////////////////////////
   // Fig accessors
 
-  public Selection makeSelection() {
-      MPseudostate pstate = null;
-      Selection sel = null;
-      if (getOwner() != null) {
-	  pstate = (MPseudostate)getOwner();
-          if (pstate.getContainer().getStateMachine()==null) return sel;
-
-	  if (pstate.getContainer().getStateMachine() instanceof MActivityGraph) {
-	      sel = new SelectionActionState(this);
-	      ((SelectionActionState)sel).setIncomingButtonEnabled(false);
-	      Collection outs = ((MStateVertex)getOwner()).getOutgoings();
-	      ((SelectionActionState)sel).setOutgoingButtonEnabled(outs == null || outs.size() == 0);
-	  }
-	  else {
-	      sel = new SelectionState(this);
-	      ((SelectionState)sel).setIncomingButtonEnabled(false);
-	      Collection outs = ((MStateVertex)getOwner()).getOutgoings();
-	      ((SelectionState)sel).setOutgoingButtonEnabled(outs == null || outs.size() == 0);
-	  }
-      }
-      return sel;
-  }
+    public Selection makeSelection() {
+        MPseudostate pstate = null;
+        Selection sel = null;
+        if (getOwner() != null) {
+            pstate = (MPseudostate)getOwner();
+            if (pstate == null) return sel;
+            if (pstate.getContainer().getStateMachine() 
+                instanceof MActivityGraph) {
+                sel = new SelectionActionState(this);
+                ((SelectionActionState)sel).setIncomingButtonEnabled(false);
+                Collection outs = ((MStateVertex)getOwner()).getOutgoings();
+                ((SelectionActionState)sel).
+                    setOutgoingButtonEnabled(outs == null || outs.size() == 0);
+            }
+            else {
+                sel = new SelectionState(this);
+                ((SelectionState)sel).setIncomingButtonEnabled(false);
+                Collection outs = ((MStateVertex)getOwner()).getOutgoings();
+                ((SelectionState)sel).
+                    setOutgoingButtonEnabled(outs == null || outs.size() == 0);
+            }
+        }
+        return sel;
+    }
 
   public void setOwner(Object node) {
     super.setOwner(node);
