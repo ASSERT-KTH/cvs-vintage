@@ -222,6 +222,7 @@
         <ant antfile="build.xml"
                 dir="${torque.dir.scarab}" target="project-sql">
             <property name="torque.home" value="${torque.dir.scarab}"/>
+            <property name="lib.dir" value="${lib.dir}"/>
         </ant>
 
         <move file="${src.sql.dir.scarab}/${project}-schema.sql"
@@ -249,6 +250,7 @@
                 dir="${torque.dir.scarab}" target="project-datadtd">
             <property name="torque.home" value="${torque.dir.scarab}"/>
             <property name="databaseName" value="default"/>
+            <property name="lib.dir" value="${lib.dir}"/>
         </ant>
 
         <move file="${src.java.dir.scarab}/${project}-data.dtd"
@@ -270,6 +272,7 @@
         <ant antfile="build.xml" dir="${torque.dir.scarab}"
             target="project-datasql">
             <property name="torque.home" value="${torque.dir.scarab}"/>
+            <property name="lib.dir" value="${lib.dir}"/>
         </ant>
         <move file="${src.java.dir.scarab}/${project}-data.sql"
             tofile="${src.sql.dir}/${project}-data.sql"/>
@@ -302,6 +305,7 @@
         <ant antfile="build.xml" dir="${torque.dir.scarab}" 
                 target="project-om">
             <property name="torque.home" value="${torque.dir.scarab}"/>
+            <property name="lib.dir" value="${lib.dir}"/>
         </ant>
 
         <copy todir="${build.src.scarab}/org" filtering="yes">
@@ -384,15 +388,21 @@
     <!-- Build our version of Turbine easily                                -->
     <!-- ================================================================== -->
     <target name="build-turbine">
+        <exec executable="ant" dir="${turbine.dir}">
+            <arg line="clean"/>
+        </exec>
         <exec executable="ant" dir="${turbine.dir}"/>
     </target>
 
     <!-- ================================================================== -->
-    <!-- Build our version of Torque easily                                -->
+    <!-- Build our version of Torque easily                                 -->
     <!-- ================================================================== -->
     <target name="build-torque">
         <exec executable="ant" dir="${torque.dir}">
-            <arg line="dist"/>
+            <arg line="clean"/>
+        </exec>
+        <exec executable="ant" dir="${torque.dir}">
+            <arg line="dist-lite"/>
         </exec>
     </target>
 
@@ -400,6 +410,9 @@
     <!-- Build our version of Fulcrum easily                                -->
     <!-- ================================================================== -->
     <target name="build-fulcrum">
+        <exec executable="ant" dir="${fulcrum.dir}">
+            <arg line="clean"/>
+        </exec>
         <exec executable="ant" dir="${fulcrum.dir}"/>
     </target>
 
@@ -407,7 +420,12 @@
     <!-- Build our version of Flux easily                                   -->
     <!-- ================================================================== -->
     <target name="build-flux">
-        <exec executable="ant" dir="${flux.dir}"/>
+        <exec executable="ant" dir="${flux.dir}">
+            <arg line="clean"/>
+        </exec>
+        <exec executable="ant" dir="${flux.dir}">
+            <arg line="jar"/>
+        </exec>
     </target>
 
     <!-- ================================================================== -->
@@ -415,7 +433,20 @@
     <!-- There is a dependency on stuff in here in fulcrum                  -->
     <!-- ================================================================== -->
     <target name="build-commons-sandbox-util">
+        <exec executable="ant" dir="${commons-sandbox-util.dir}">
+            <arg line="clean"/>
+        </exec>
         <exec executable="ant" dir="${commons-sandbox-util.dir}"/>
+    </target>
+
+    <!-- ================================================================== -->
+    <!-- Build our version of Commons-Sandbox-Email easily                  -->
+    <!-- ================================================================== -->
+    <target name="build-commons-sandbox-email">
+        <exec executable="ant" dir="${commons-sandbox-email.dir}">
+            <arg line="clean"/>
+        </exec>
+        <exec executable="ant" dir="${commons-sandbox-email.dir}"/>
     </target>
 
     <!-- ================================================================== -->
@@ -499,12 +530,41 @@
     </target>
 
     <!-- ================================================================== -->
-    <!-- Upgrade our version of Fulcrum, Torque and Turbine easily          -->
+    <!-- Upgrade our version of Commons-Sandbox-Email easily                -->
+    <!-- ================================================================== -->
+    <target name="upgrade-commons-sandbox-email" depends="build-commons-sandbox-email">
+        <delete>
+            <fileset dir="${lib.dir}">
+                <include name="**/commons-email*.jar"/>
+            </fileset>
+        </delete>
+        <copy todir="${lib.dir}" filtering="no">
+            <fileset dir="${commons-sandbox-email.dir}">
+                <include name="**/commons-email*.jar"/>
+            </fileset>
+        </copy>
+    </target>
+
+    <!-- ================================================================== -->
+    <!-- Upgrade our dependencies easily                                    -->
     <!-- ================================================================== -->
     <target name="upgrade-jakarta" 
             depends="upgrade-fulcrum,upgrade-torque,upgrade-turbine,
                      upgrade-flux,
-                     upgrade-commons-sandbox-util">
+                     upgrade-commons-sandbox-util,
+                     upgrade-commons-sandbox-email">
+    </target>
+
+    <!-- ================================================================== -->
+    <!-- Upgrade our cvs dependencies easily                                -->
+    <!-- ================================================================== -->
+    <target name="upgrade-jakarta-cvs">
+        <cvs dest="${fulcrum.dir}" command="update"/>
+        <cvs dest="${torque.dir}" command="update"/>
+        <cvs dest="${turbine.dir}" command="update"/>
+        <cvs dest="${flux.dir}" command="update"/>
+        <cvs dest="${commons-sandbox-util.dir}" command="update"/>
+        <cvs dest="${commons-sandbox-email.dir}" command="update"/>
     </target>
 
     <!-- ================================================================== -->

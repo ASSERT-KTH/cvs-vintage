@@ -47,12 +47,15 @@ package org.tigris.scarab.actions;
  */ 
 
 // Turbine Stuff 
+import org.apache.turbine.RunData;
 import org.apache.turbine.TemplateAction;
 import org.apache.turbine.TemplateContext;
-import org.apache.turbine.RunData;
-
-import org.apache.turbine.util.Log;
+import org.apache.turbine.modules.ContextAdapter;
+import org.apache.turbine.Turbine;
 import org.apache.turbine.services.pull.ApplicationTool;
+import org.apache.turbine.util.Log;
+
+import org.apache.fulcrum.template.TemplateEmail;
 
 // Scarab Stuff
 import org.tigris.scarab.om.ScarabUser;
@@ -66,7 +69,7 @@ import org.tigris.scarab.util.ScarabConstants;
         page.
         
     @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
-    @version $Id: RegisterConfirm.java,v 1.19 2001/08/09 07:59:52 jon Exp $
+    @version $Id: RegisterConfirm.java,v 1.20 2001/08/12 23:32:20 jon Exp $
 */
 public class RegisterConfirm extends TemplateAction
 {
@@ -102,23 +105,22 @@ public class RegisterConfirm extends TemplateAction
             }
             
             // send an email that is for confirming the registration
-/* FIXME!!!!!!!!!!!
-            VelocityEmail ve = new VelocityEmail();
-            ve.setContext(context);
-            ve.setTo(su.getFirstName() + " " + su.getLastName(), su.getEmail());
-            ve.setFrom(
-                TurbineResources.getString("scarab.email.register.fromName",
+            TemplateEmail te = new TemplateEmail();
+            te.setContext(new ContextAdapter(context));
+            te.setTo(su.getFirstName() + " " + su.getLastName(), su.getEmail());
+            te.setFrom(
+                Turbine.getConfiguration().getString("scarab.email.register.fromName",
                     "Scarab System"), 
-                TurbineResources.getString("scarab.email.register.fromAddress",
+                Turbine.getConfiguration().getString("scarab.email.register.fromAddress",
                     "register@scarab.tigris.org"));
-            ve.setSubject(
-                TurbineResources.getString("scarab.email.register.subject",
+            te.setSubject(
+                Turbine.getConfiguration().getString("scarab.email.register.subject",
                     "Account Confirmation"));
-            ve.setTemplate(
-                TurbineResources.getString("scarab.email.register.template",
+            te.setTemplate(
+                Turbine.getConfiguration().getString("scarab.email.register.template",
                     "email/Confirmation.vm"));
-            ve.send();
-*/
+            te.send();
+
             // set the next template on success
             setTarget(data, nextTemplate);
         }
