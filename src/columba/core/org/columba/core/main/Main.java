@@ -103,9 +103,11 @@ public class Main {
 
 		// enable debugging of repaint manager to track down swing gui
 		// access from outside the awt-event dispatcher thread
+		/*
 		if (Main.DEBUG)
 			RepaintManager.setCurrentManager(new DebugRepaintManager());
-
+			*/
+		
 		// show splash screen
 		StartUpFrame frame = null;
 		if (showSplashScreen) {
@@ -114,9 +116,9 @@ public class Main {
 		}
 
 		// register protocol handler
-		System.setProperty("java.protocol.handler.pkgs", System.getProperty(
+		System.setProperty("java.protocol.handler.pkgs", "org.columba.core.url|"+System.getProperty(
 				"java.protocol.handler.pkgs", "")
-				+ "|org.columba.core.url");
+				);
 
 		// load user-customized language pack
 		GlobalResourceLoader.loadLanguage();
