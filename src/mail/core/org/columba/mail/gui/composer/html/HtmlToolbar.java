@@ -143,7 +143,7 @@ implements ActionListener, Observer, ContainerListener {
         boolean enableHtml = Boolean.valueOf(s).booleanValue();
         paragraphComboBox.setEnabled(enableHtml);
 
-        // TODO: sizeComboBox can be enabled as paragraphComboBox when implemented
+        // TODO (@author javaprog):sizeComboBox can be enabled as paragraphComboBox when implemented
         sizeComboBox.setEnabled(false);
 
         ToggleToolbarButton boldFormatButton = new ToggleToolbarButton(
@@ -232,7 +232,7 @@ implements ActionListener, Observer, ContainerListener {
             }
 
             // Font size combo box
-            // TODO: Add handling for font size combo box
+            // TODO (@author fdietz): Add handling for font size combo box
         } else if (arg0 instanceof XmlElement) {
             // possibly change btw. html and text
             XmlElement e = (XmlElement) arg0;
@@ -242,7 +242,7 @@ implements ActionListener, Observer, ContainerListener {
                 paragraphComboBox.setEnabled(Boolean.valueOf(e.getAttribute(
                             "enable", "false")).booleanValue());
 
-                //TODO: Add handling for font size combo box
+                //TODO (@author fdietz): Add handling for font size combo box
             }
         }
     }
@@ -287,7 +287,7 @@ implements ActionListener, Observer, ContainerListener {
         } else if (action.equals("SIZE")) {
             int selectedIndex = sizeComboBox.getSelectedIndex();
 
-            // TODO: implement action for font size combo box!
+            // TODO (@author fdietz):: implement action for font size combo box!
         }
     }
 

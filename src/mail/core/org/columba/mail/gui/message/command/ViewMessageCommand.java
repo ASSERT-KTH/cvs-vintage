@@ -147,7 +147,7 @@ public class ViewMessageCommand extends FolderCommand {
 
 		// this is a hack to notify the attachment selection handler which
 		// folder/uid is selected
-		// TODO: use listener pattern instead
+		// TODO (@author fdietz): use listener pattern instead
 		h.setMessage(srcFolder, uid);
 
 		

@@ -118,7 +118,7 @@ public class InfoViewerDialog extends JDialog implements ActionListener {
         ButtonWithMnemonic helpButton = new ButtonWithMnemonic(
             MailResourceLoader.getString("global", "help"));
 
-        //TODO: associate help with button and root pane
+        //TODO (@author fdietz): associate help with button and root pane
         buttonPanel.add(helpButton);
         bottomPanel.add(buttonPanel, BorderLayout.EAST);
         getContentPane().add(bottomPanel, BorderLayout.SOUTH);

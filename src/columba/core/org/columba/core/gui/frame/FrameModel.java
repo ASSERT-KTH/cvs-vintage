@@ -306,7 +306,7 @@ public class FrameModel {
 				// -> get frame controller using the plugin handler found above
 				frame = (FrameMediator) handler.getPlugin(id, args);
 			} catch (PluginLoadingFailedException e) {
-				// TODO Auto-generated catch block
+				
 				e.printStackTrace();
 			}
 			

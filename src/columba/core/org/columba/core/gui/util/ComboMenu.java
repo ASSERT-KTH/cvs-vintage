@@ -36,7 +36,7 @@ import javax.swing.SwingConstants;
  * <p>
  * Use ItemListener to get notified of selection changes.
  * <p>
- * TODO: use JComboBox button layout/ui 
+ * TODO (@author fdietz): use JComboBox button layout/ui 
  * 
  * @author fdietz
  */

@@ -199,7 +199,7 @@ public class TempFolder extends MessageFolder {
         return (String) getUserObject();
     }
 
-    // TODO: Do we need this implementation in a TempFolder?
+    // FIXME (@author fdietz): Do we need this implementation in a TempFolder?
     // If not, just put an empty method here, just like in VirtualFolder.
     public void innerCopy(MailboxInterface destFolder, Object[] uids)
         throws Exception {

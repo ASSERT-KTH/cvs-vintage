@@ -475,7 +475,7 @@ public class SelectAddressDialog extends JDialog implements ActionListener {
 					addressbook.setHeaderItemList(itemList);
 					chooseButton.setText(selectedFolder.getName());
 				} catch (Exception e1) {
-					// TODO Auto-generated catch block
+					
 					e1.printStackTrace();
 				}
 			}

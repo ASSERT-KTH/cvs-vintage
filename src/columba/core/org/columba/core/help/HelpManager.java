@@ -87,7 +87,7 @@ public class HelpManager {
         // since we don't want a Frame to be created.
         hb = hs.createHelpBroker();
 
-        // TODO: fix the font settings for the content viewer
+        // TODO (@author fdietz): fix the font settings for the content viewer
         // setting the fonts like this doesn't seem to work
         Font font = (Font) UIManager.get("Label.font");
         hb.setFont(font);

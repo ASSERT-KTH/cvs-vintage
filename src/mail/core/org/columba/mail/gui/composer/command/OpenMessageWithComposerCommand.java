@@ -95,7 +95,7 @@ public class OpenMessageWithComposerCommand extends FolderCommand {
 		// we only need the first message
 		uid = uids[0];
 
-		//TODO keep track of progress here
+		//TODO (@author fdietz): keep track of progress here
 
 		InputStream messageSourceStream = folder.getMessageSourceStream(uid);
 		Source tempSource = TempSourceFactory.createTempSource(

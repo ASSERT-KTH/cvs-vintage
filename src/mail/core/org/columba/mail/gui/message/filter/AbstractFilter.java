@@ -43,7 +43,7 @@ public abstract class AbstractFilter implements Filter {
         this.mediator = mediator;
     }
     /**
-     * @return TODO
+     * @return 
      * @see org.columba.mail.gui.message.filter.Filter#filter(org.columba.mail.folder.Folder, java.lang.Object)
      */
     public FolderCommandReference filter(MessageFolder folder, Object uid, ColumbaMessage message) throws Exception {

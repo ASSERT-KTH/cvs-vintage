@@ -31,7 +31,7 @@ public class ModifyContactTest extends AbstractFolderTestCase {
 	 */
 	public ModifyContactTest(String arg0) {
 		super(arg0);
-		// TODO Auto-generated constructor stub
+		
 	}
 	
 

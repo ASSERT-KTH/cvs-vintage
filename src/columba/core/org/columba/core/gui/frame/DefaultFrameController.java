@@ -132,8 +132,6 @@ public class DefaultFrameController implements FrameMediator {
 	 */
 	public void setContainer(Container c) {
 		container = c;
-		// FIXME
-		//container.setFrameMediator(this);
 	}
 
 	/**

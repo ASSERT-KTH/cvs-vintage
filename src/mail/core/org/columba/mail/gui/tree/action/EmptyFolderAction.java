@@ -26,10 +26,10 @@ import org.columba.mail.util.MailResourceLoader;
 
 
 /**
- * @author frd
- *
- * To change this generated comment go to
- * Window>Preferences>Java>Code Generation>Code and Comments
+ * Delete all messages in this folder.
+ * TODO (@author fdietz): implement action
+ * 
+ * @author fdietz
  */
 public class EmptyFolderAction extends AbstractColumbaAction
     implements SelectionListener {
@@ -45,7 +45,6 @@ public class EmptyFolderAction extends AbstractColumbaAction
 
         setEnabled(false);
 
-        // FIXME
         //  -> uncomment to enable/disable action
 
         /*
@@ -58,7 +57,7 @@ public class EmptyFolderAction extends AbstractColumbaAction
      * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
      */
     public void actionPerformed(ActionEvent evt) {
-        //TODO: implementation
+        // implement this
     }
 
     /* (non-Javadoc)

@@ -67,7 +67,7 @@ public interface FrameMediator {
 	public Container getContainer();
 
 	/**
-	 * TODO adapter only --> will be removed!
+	 * TODO (@author fdietz): adapter only --> will be removed!
 	 * 
 	 * @deprecated
 	 * 

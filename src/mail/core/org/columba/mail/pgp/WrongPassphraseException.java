@@ -32,7 +32,7 @@ public class WrongPassphraseException extends JSCFException {
      */
     public WrongPassphraseException(String arg0) {
         super(arg0);
-        // TODO Auto-generated constructor stub
+        
     }
 
 }

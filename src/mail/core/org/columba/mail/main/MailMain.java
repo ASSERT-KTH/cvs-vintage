@@ -74,7 +74,7 @@ public class MailMain extends DefaultMain {
 
         MailInterface.treeModel = new TreeModel(MailInterface.config.getFolderConfig());
 
-        //TODO: move this to TreeModel constructor
+        //TODO (@author karlpeder): move this to TreeModel constructor
         ShutdownManager.getShutdownManager().register(new Runnable() {
                 public void run() {
                     saveFolder((AbstractFolder) MailInterface.treeModel.getRoot());

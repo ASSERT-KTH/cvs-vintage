@@ -54,7 +54,7 @@ public class AddressCollector implements ItemProvider {
 					.getFolder(uid);
 			list = folder.getHeaderItemList();
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
+			
 			e.printStackTrace();
 		}
 

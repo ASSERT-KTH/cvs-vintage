@@ -31,7 +31,7 @@ public class GetContactTest extends AbstractFolderTestCase {
 	 */
 	public GetContactTest(String arg0) {
 		super(arg0);
-		// TODO Auto-generated constructor stub
+		
 	}
 
 	public void testGet() throws Exception {

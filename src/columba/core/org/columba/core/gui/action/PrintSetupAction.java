@@ -41,6 +41,6 @@ public class PrintSetupAction extends AbstractColumbaAction {
      * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
      */
     public void actionPerformed(ActionEvent evt) {
-        //TODO: implement
+        //TODO (@author fdietz): implement
     }
 }

@@ -95,7 +95,7 @@ public class ExternalToolsWizardLauncher {
         listener = new ExternalToolsWizardModelListener(data);
         model.addWizardModelListener(listener);
 
-        // TODO: i18n
+        // TODO (@author fdietz): i18n
         Wizard wizard = new Wizard(model, "External Tools Configuration",
                 ImageLoader.getSmallImageIcon("stock_preferences.png"));
 

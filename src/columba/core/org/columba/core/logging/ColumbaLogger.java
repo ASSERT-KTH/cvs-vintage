@@ -80,7 +80,7 @@ public final class ColumbaLogger {
             LOG.setUseParentHandlers(false);
             LOG.setLevel(Level.ALL);
 
-            //TODO only add console handler if command line option is given
+            //TODO (@author fdietz): only add console handler if command line option is given
             // init console handler
             Handler consoleHandler = new ConsoleHandler();
 

@@ -59,7 +59,7 @@ import org.frapuccino.checkablelist.CheckableList;
 /**
  * Configurabe visible columns of the table.
  * <p>
- * TODO: adding of columns is not working currently
+ * TODO (@author fdietz): adding of columns is not working currently
  * 
  * @author fdietz
  */

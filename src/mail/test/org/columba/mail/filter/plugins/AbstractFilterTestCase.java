@@ -42,7 +42,7 @@ public class AbstractFilterTestCase extends TestCase {
     /**
      * Constructor for AbstractFilterTest.
      * @param arg0
-     * @param factory TODO
+     * @param factory 
      */
     public AbstractFilterTestCase(MailboxTstFactory factory, String arg0 ) {
         super(arg0);

@@ -65,7 +65,6 @@ public class DefaultClassLoader {
 
         Constructor constructor = null;
 
-        // FIXME
         //
         // we can't just load the first constructor 
         //  -> go find the correct constructor based

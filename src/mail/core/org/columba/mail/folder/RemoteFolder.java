@@ -39,7 +39,7 @@ public abstract class RemoteFolder extends MessageFolder {
     public RemoteFolder(FolderItem item, String path) {
         super(item, path);
 
-        // TODO: move this to MessageFolder constructor
+        // TODO (@author fdietz): move this to MessageFolder constructor
         XmlElement filterListElement = node.getElement(FilterList.XML_NAME);
 
         if (filterListElement == null) {

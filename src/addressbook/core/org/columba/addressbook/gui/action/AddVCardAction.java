@@ -95,7 +95,6 @@ public class AddVCardAction extends DefaultTreeAction {
 		}
 
 		// update table
-		// TODO: fire event of table model instead
 		mediator.getTable().getAddressbookModel().update();
 	}
 }

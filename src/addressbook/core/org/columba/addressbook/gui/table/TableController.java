@@ -81,10 +81,6 @@ public class TableController implements TreeSelectionListener, FolderListener,
 
 		view.addMouseListener(new TableMouseListener(this));
 
-		//view.setModel(addressbookModel);
-		// TODO: move outside TableController
-		//toolbar = new FilterToolbar(this);
-
 		// register as focus owner
 		MainInterface.focusManager.registerComponent(this);
 	}

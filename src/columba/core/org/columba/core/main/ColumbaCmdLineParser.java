@@ -64,7 +64,7 @@ public class ColumbaCmdLineParser
     // setting any options
     // the short option '+' is an hack until jargs supports also "only long
     // commands"
-    // TODO make options i18n compatible
+    // TODO (@author waffel): make options i18n compatible
     help = parser.addBooleanOption('+', "help");
     version = parser.addBooleanOption('+', "version");
     debug = parser.addBooleanOption('d', "debug");
@@ -331,8 +331,9 @@ public class ColumbaCmdLineParser
   }
 
   /**
-   * prints the usage of the program with commandline arguments. TODO: all
-   * options should be printed
+   * prints the usage of the program with commandline arguments. 
+   * 
+   * TODO (@author waffel): all options should be printed
    */
   public static void printUsage ()
   {

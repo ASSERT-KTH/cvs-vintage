@@ -59,7 +59,7 @@ class AccountCreator implements WizardModelListener {
             imap.set("host", (String) data.getData("IncomingServer.host"));
             imap.set("user", (String) data.getData("IncomingServer.login"));
 
-            // TODO: All this code for creating a new IMAPRootFolder should
+            // TODO (@author fdietz): All this code for creating a new IMAPRootFolder should
             //       be moved to a FolderFactory
             //       -> this way "path" would be handled in the factory, too
             // parent directory for mail folders

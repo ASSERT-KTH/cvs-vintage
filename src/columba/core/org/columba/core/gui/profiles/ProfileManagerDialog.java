@@ -346,7 +346,7 @@ implements ActionListener, ListSelectionListener {
                 }
             }
         } else if (action.equals("IMPORT")) {
-            // TODO: add import feature
+            // TODO (@author fdietz): add import feature
             /*
              * JFileChooser chooser = new JFileChooser();
              * chooser.addChoosableFileFilter(new FileFilter() { public boolean
@@ -362,7 +362,7 @@ implements ActionListener, ListSelectionListener {
              * chooser.getSelectedFile(); }
              */
         } else if (action.equals("EXPORT")) {
-            // TODO: add export feature
+            // TODO (@author fdietz): add export feature
         }
     }
     

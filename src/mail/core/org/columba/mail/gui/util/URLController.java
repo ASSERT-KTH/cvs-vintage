@@ -39,7 +39,7 @@ public class URLController implements ActionListener {
     private String address;
     private URL link;
 
-    //TODO: i18n
+    //TODO (@author fdietz): i18n
     public JPopupMenu createContactMenu(String contact) {
         JPopupMenu popup = new JPopupMenu();
         JMenuItem menuItem = new JMenuItem("Add Contact to Addressbook");
@@ -54,7 +54,7 @@ public class URLController implements ActionListener {
         return popup;
     }
 
-    //TODO: i18n
+    //TODO (@author fdietz): i18n
     public JPopupMenu createLinkMenu() {
         JPopupMenu popup = new JPopupMenu();
         JMenuItem menuItem = new JMenuItem("Open");
@@ -114,7 +114,7 @@ public class URLController implements ActionListener {
     }
 
     public void contact(String address) {
-        //FIXME: remove dependency to addressbook here
+        //TODO (@author fdietz): remove dependency to addressbook here
         SelectAddressbookFolderDialog dialog = 
             AddressbookInterface.addressbookTreeModel.getSelectAddressbookFolderDialog();
 

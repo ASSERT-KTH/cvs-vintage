@@ -63,7 +63,7 @@ public class LearnMessageAsHamCommand extends FolderCommand {
 
 		//	update status message
 		if (uids.length > 1) {
-			//TODO: i18n
+			//TODO (@author fdietz): i18n
 			worker.setDisplayText("Training messages...");
 			worker.setProgressBarMaximum(uids.length);
 		}

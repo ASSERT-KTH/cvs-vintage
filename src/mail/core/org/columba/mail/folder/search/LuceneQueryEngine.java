@@ -221,7 +221,7 @@ public class LuceneQueryEngine implements QueryEngine {
             criteria = filterRule.get(i);
             mode = criteria.getCriteria();
 
-            // FIXME
+            // FIXME (@author fdietz): is it necessary to make this lower case?
             //field = criteria.getHeaderItemString().toLowerCase();
             field = criteria.getHeaderItemString();
 

@@ -100,7 +100,7 @@ prot + "://  protocol and ://
             "<a( |\\n)*?href=(\\\")?" + URL_STR + "(.|\\n)*?</a>",
             Pattern.CASE_INSENSITIVE);
 
-    // TODO: Add more special entities - e.g. accenture chars such as ?
+    // TODO (@author fdietz): Add more special entities - e.g. accenture chars such as ?
 
     /** Special entities recognized by restore special entities */
     private static final String[] SPECIAL_ENTITIES = {
@@ -325,7 +325,7 @@ prot + "://  protocol and ://
      * html header.
      * <br>
      *
-     * TODO: Add support for smilies and coloring of quoted text
+     * TODO (@author fdietz): Add support for smilies and coloring of quoted text
      *
      * @param        text        Text to convert to html
      * @param        title        Title to include in header, not used if null
@@ -488,7 +488,7 @@ case '\'':
         BufferedReader br = new BufferedReader(sr);
         String ss = null;
 
-        // TODO: Extend handling of special entities as in restoreSpecialCharacters
+        // TODO (@author karlpeder): Extend handling of special entities as in restoreSpecialCharacters
 
         /*
  * *20030623, karlpeder* " and space handled also
@@ -636,7 +636,7 @@ case '\'':
      * This extended functionality is necessary when parsing a text which
      * is already (partly) html.
      * <br>
-     * TODO: Can this be done smarter, i.e. directly with reg. expr. without manual parsing??
+     * FIXME: Can this be done smarter, i.e. directly with reg. expr. without manual parsing??
      *
      * @param         s                                input text
      * @param        ignoreLinks                if true link tags are ignored. This gives a
@@ -741,7 +741,7 @@ case '\'':
      * This extended functionality is necessary when parsing a text which
      * is already (partly) html.
      * <br>
-     * TODO: Can this be done smarter, i.e. directly with reg. expr. without manual parsing??
+     * FIXME: Can this be done smarter, i.e. directly with reg. expr. without manual parsing??
      *
      * @param         s                                input text
      * @param        ignoreLinks                if true link tags are ignored. This gives a

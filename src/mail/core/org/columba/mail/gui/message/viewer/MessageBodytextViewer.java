@@ -149,7 +149,7 @@ public class MessageBodytextViewer extends JTextPane implements Viewer,
 		// register as configuration change listener
 		quote.addObserver(this);
 
-		// TODO use value in initStyleSheet()
+		// TODO (@author fdietz): use value in initStyleSheet()
 		String enabled = quote.getAttribute("enabled", "true");
 		String color = quote.getAttribute("color", "0");
 
@@ -423,7 +423,7 @@ public class MessageBodytextViewer extends JTextPane implements Viewer,
 			Clipboard clipboard = getToolkit().getSystemClipboard();
 
 			// Conversion of html text to plain
-			//TODO: make a DataFlavor that can handle HTML text
+			//TODO (@author karlpeder): make a DataFlavor that can handle HTML text
 			StringSelection selection = new StringSelection(HtmlParser
 					.htmlToText(htmlSelection.toString()));
 			clipboard.setContents(selection, selection);

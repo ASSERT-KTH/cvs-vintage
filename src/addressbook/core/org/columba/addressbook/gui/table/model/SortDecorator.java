@@ -29,8 +29,6 @@ import org.columba.addressbook.model.ContactItemMap;
  * Using bubble-sort. Note, that we use an index array, which maps to the
  * real-model decorated by this class. So, we don't change the order of the real
  * model data.
- * <p>
- * TODO:add sorting order (ascending/descending)
  * 
  * @author fdietz
  */

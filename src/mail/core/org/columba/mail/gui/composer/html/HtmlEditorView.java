@@ -427,7 +427,7 @@ public class HtmlEditorView extends JTextPane implements KeyListener, Observer,
      * @author (originally) Ekit authors
      */
     public void keyTyped(KeyEvent ke) {
-        // TODO: Add implementation if lists is to be supported
+        // TODO (@author fdietz): Add implementation if lists is to be supported
         //		Element elem;
         //		String selectedText;
         //		int pos = this.getCaretPosition();
@@ -584,7 +584,7 @@ public class HtmlEditorView extends JTextPane implements KeyListener, Observer,
      * @author (originally) Ekit authors
      */
     protected void manageListElement(Element element) {
-        // TODO: Add implementation if lists is to be supported
+        // TODO (@author fdietz): Add implementation if lists is to be supported
         //		Element h = htmlUtil.getListItemParent();
         //		Element listElement = h.getParentElement();
         //		if(h != null)
@@ -600,7 +600,7 @@ public class HtmlEditorView extends JTextPane implements KeyListener, Observer,
      */
     protected void insertListStyle(Element element)
         throws BadLocationException, IOException {
-        // TODO: Add implementation if lists is to be supported
+        // TODO (@author fdietz): Add implementation if lists is to be supported
         //		if(element.getParentElement().getName() == "ol") {
         //			actionListOrdered.actionPerformed(new ActionEvent(new Object(), 0,
         // "newListPoint"));

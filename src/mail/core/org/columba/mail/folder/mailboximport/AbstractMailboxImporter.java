@@ -97,13 +97,13 @@ public abstract class AbstractMailboxImporter {
      * and handles exceptions.
      */
     public void run(WorkerStatusController worker) {
-        //TODO: i18n
+        //TODO (@author fdietz): i18n
         worker.setDisplayText("Importing messages...");
 
         importMailbox(worker);
 
         if (getCount() == 0) {
-            //TODO: i18n
+            //TODO (@author fdietz): i18n
             JOptionPane.showMessageDialog(null,
                 "Message import failed! No messages were added to the folder.\n" +
                 "This means that the parser didn't throw any exception even if " +
@@ -113,7 +113,7 @@ public abstract class AbstractMailboxImporter {
 
             return;
         } else {
-            //TODO: i18n
+            //TODO (@author fdietz): i18n
             JOptionPane.showMessageDialog(null,
                 "Message import was successful!", "Information",
                 JOptionPane.INFORMATION_MESSAGE,
@@ -139,7 +139,7 @@ public abstract class AbstractMailboxImporter {
             try {
                 importMailboxFile(listing[i], worker, getDestinationFolder());
             } catch (Exception ex) {
-                //TODO: i18n
+                //TODO (@author fdietz): i18n
                 int result = JOptionPane.showConfirmDialog(
                     MainInterface.frameModel.getActiveFrame(),
                     "An error occured while importing a message. Try again?",
@@ -171,7 +171,7 @@ public abstract class AbstractMailboxImporter {
 
         counter++;
 
-        //TODO: i18n
+        //TODO (@author fdietz): i18n
         worker.setDisplayText("Importing messages: " + getCount());
     }
 

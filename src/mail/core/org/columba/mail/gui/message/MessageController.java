@@ -490,7 +490,7 @@ public class MessageController implements HyperlinkListener, MouseListener,
      * @see org.columba.core.gui.focus.FocusOwner#undo()
      */
     public void undo() {
-        // TODO Auto-generated method stub
+       
     }
 
     /** ************************ CaretUpdateListener interface **************** */

@@ -199,26 +199,17 @@ implements ActionListener, ListSelectionListener, MouseListener {
     }
     
     protected void initComponents() {
-        // TODO: i18n
         addButton = new ButtonWithMnemonic(GlobalResourceLoader.getString(
             RESOURCE_PATH, "profiles", "add"));
         addButton.setActionCommand("ADD");
         addButton.addActionListener(this);
         addButton.setEnabled(false);
         
-        // TODO: i18n
         editButton = new ButtonWithMnemonic(GlobalResourceLoader.getString(
             RESOURCE_PATH, "profiles", "edit"));
         editButton.setActionCommand("EDIT");
         editButton.addActionListener(this);
         editButton.setEnabled(false);
-        
-        /*
-         * // TODO: i18n defaultButton = new ButtonWithMnemonic("Set
-         * &Default..."); defaultButton.setActionCommand("DEFAULT");
-         * defaultButton.addActionListener(this);
-         * defaultButton.setEnabled(false);
-         */
         
         nameLabel = new JLabel(GlobalResourceLoader.getString(RESOURCE_PATH,
             "profiles", "label"));

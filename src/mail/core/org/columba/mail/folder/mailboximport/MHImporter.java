@@ -92,7 +92,7 @@ public class MHImporter extends AbstractMailboxImporter {
     }
     
     public String getDescription() {
-        //TODO: Add proper description here
+        //TODO (@author fdietz): Add proper description here
         return "";
     }
 }

@@ -17,7 +17,6 @@
 //All Rights Reserved.
 package org.columba.mail.gui.table;
 
-import java.util.Enumeration;
 import java.util.logging.Logger;
 
 import javax.swing.JComponent;
@@ -39,7 +38,6 @@ import org.columba.mail.folder.event.FolderEventDelegator;
 import org.columba.mail.folderoptions.FolderOptionsController;
 import org.columba.mail.gui.frame.MailFrameMediator;
 import org.columba.mail.gui.frame.ThreePaneMailFrameController;
-import org.columba.mail.gui.frame.TreeViewOwner;
 import org.columba.mail.gui.table.action.CopyAction;
 import org.columba.mail.gui.table.action.CutAction;
 import org.columba.mail.gui.table.action.DeleteAction;
@@ -92,11 +90,6 @@ public class TableController implements FocusOwner, ListSelectionListener,
 	 * Drag'n'drop handling of messages
 	 */
 	private HeaderTableDnd headerTableDnd;
-
-	/**
-	 * filter action which should be accessible from the menu only
-	 */
-	private FilterActionListener filterActionListener;
 
 	/**
 	 * table view
@@ -193,9 +186,6 @@ public class TableController implements FocusOwner, ListSelectionListener,
 		// init mouse listener for the column header
 		headerTableMouseListener = new HeaderTableMouseListener(this);
 		view.addMouseListener(headerTableMouseListener);
-
-		// not used currently
-		filterActionListener = new FilterActionListener(this);
 
 		// create a new markAsReadTimer
 		markAsReadTimer = new MarkAsReadTimer(this);

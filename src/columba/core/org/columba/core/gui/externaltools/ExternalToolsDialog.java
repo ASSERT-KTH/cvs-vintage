@@ -83,7 +83,7 @@ public class ExternalToolsDialog extends JDialog implements ActionListener,
     public ExternalToolsDialog() throws HeadlessException {
         super(new JFrame(), true);
 
-        // TODO: i18n
+        // TODO (@author fdietz): i18n
         setTitle("External Tools");
 
         try {
@@ -104,13 +104,13 @@ public class ExternalToolsDialog extends JDialog implements ActionListener,
         JPanel mainPanel = new JPanel(new BorderLayout());
         mainPanel.setBorder(BorderFactory.createEmptyBorder(12, 12, 12, 12));
 
-        // TODO: i18n
+        // TODO (@author fdietz): i18n
         configButton = new ButtonWithMnemonic("Con&figure...");
         configButton.setActionCommand("CONFIG");
         configButton.addActionListener(this);
         configButton.setEnabled(false);
 
-        // TODO: i18n
+        // TODO (@author fdietz): i18n
         infoButton = new ButtonWithMnemonic("&Details...");
         infoButton.setActionCommand("INFO");
         infoButton.addActionListener(this);

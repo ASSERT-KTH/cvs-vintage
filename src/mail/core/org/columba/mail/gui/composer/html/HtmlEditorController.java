@@ -241,7 +241,7 @@ public class HtmlEditorController extends AbstractEditorController
      * @see org.columba.core.gui.focus.FocusOwner#isRedoActionEnabled()
      */
     public boolean isRedoActionEnabled() {
-        // TODO: Implementation of undo/redo missing
+        // TODO (@author karlpeder): Implementation of undo/redo missing
         return false;
     }
 
@@ -249,7 +249,7 @@ public class HtmlEditorController extends AbstractEditorController
      * @see org.columba.core.gui.focus.FocusOwner#isUndoActionEnabled()
      */
     public boolean isUndoActionEnabled() {
-        // TODO: Implementation of undo/redo missing
+        // TODO (@author karlpeder): Implementation of undo/redo missing
         return false;
     }
 
@@ -285,14 +285,14 @@ public class HtmlEditorController extends AbstractEditorController
      * @see org.columba.core.gui.focus.FocusOwner#redo()
      */
     public void redo() {
-        // TODO: Implementation of undo/redo missing
+        // TODO (@author karlpeder): Implementation of undo/redo missing
     }
 
     /* (non-Javadoc)
      * @see org.columba.core.gui.focus.FocusOwner#undo()
      */
     public void undo() {
-        // TODO: Implementation of undo/redo missing
+        // TODO (@author karlpeder): Implementation of undo/redo missing
     }
 
     /* (non-Javadoc)

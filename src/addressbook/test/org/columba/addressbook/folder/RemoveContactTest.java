@@ -31,7 +31,7 @@ public class RemoveContactTest extends AbstractFolderTestCase {
 	 */
 	public RemoveContactTest(String test) {
 		super(test);
-		// TODO Auto-generated constructor stub
+		
 	}
 
 	/*

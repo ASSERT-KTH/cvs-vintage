@@ -117,7 +117,7 @@ public class PGPMessageFilter extends AbstractFilter {
 		//		@TODO dont use deprecated method
 		header = folder.getMessageHeader(uid);
 
-		// TODO encrypt AND sign dosN#t work. The message is always only
+		// TODO (@author waffel): encrypt AND sign dosN#t work. The message is always only
 		// encrypted. We need a function that knows, here
 		// is an encrypted AND signed Message. Thus first encyrpt and then
 		// verifySign the message
@@ -209,7 +209,7 @@ public class PGPMessageFilter extends AbstractFilter {
 				LOG.fine("after pass check, check is " + check);
 				if (!check) {
 					pgpMode = SecurityInformationController.DECRYPTION_FAILURE;
-					// TODO make i18n!
+					// TODO (@author fdietz): make i18n!
 					pgpMessage = "wrong passphrase";
 					return null;
 				}
@@ -243,7 +243,7 @@ public class PGPMessageFilter extends AbstractFilter {
 			CharSequence decryptedBodyPart = "";
 			// if the pgp mode is active we should get the decrypted part
 			if (pgpActive) {
-				// TODO should be removed if we only use Streams!
+				// TODO (@author fdietz): should be removed if we only use Streams!
 				decryptedBodyPart = StreamUtils.readInString(decryptedStream);
 				// check if the returned String is has a length != 0
 				if (decryptedBodyPart.length() == 0) {

@@ -78,7 +78,7 @@ public class TableModelThreadedView extends TreeTableModelDecorator {
     /**
      * Parse References: header value and save every found Message-Id: in array.
      * <p>
-     * TODO: cleanup tokenizer, this could be much faster using regexp
+     * TODO (@author tistch): cleanup tokenizer, this could be much faster using regexp
      * 
      * @param references
      *            References: header value

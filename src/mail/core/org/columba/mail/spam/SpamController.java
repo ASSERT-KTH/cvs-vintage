@@ -250,7 +250,7 @@ public class SpamController {
 		 * try { // only load if necessary if (!alreadyLoaded && file.exists()) {
 		 * FrequencyIO.load(db, file); }
 		 * 
-		 * alreadyLoaded = true; } catch (IOException e) { //TODO: i18n
+		 * alreadyLoaded = true; } catch (IOException e) { 
 		 * JOptionPane.showMessageDialog(
 		 * MainInterface.frameModel.getActiveFrame(), "An error occured while
 		 * loading the spam database.\n" + "I will use an empty one.", "Error
@@ -280,7 +280,7 @@ public class SpamController {
 			if (MainInterface.DEBUG) {
 				e.printStackTrace();
 			}
-			//TODO: i18n
+			//TODO (@author fdietz): i18n
 			int value = JOptionPane.showConfirmDialog(MainInterface.frameModel
 					.getActiveFrame(),
 					"An error occured while saving the spam database.\n"

@@ -42,7 +42,7 @@ import org.columba.mail.util.MailResourceLoader;
 
 public class ColorMessageMenu extends IMenu implements ActionListener,
 		SelectionListener {
-	// TODO: add central place, which keeps a list of all possible
+	// TODO (@author fdietz): add central place, which keeps a list of all possible
 	//       colors, and provides a custom color configuration possibility
 	public static String[] items = {
 			MailResourceLoader.getString("dialog", "color", "blue"),
@@ -69,7 +69,7 @@ public class ColorMessageMenu extends IMenu implements ActionListener,
 	}
 
 	protected void createSubMenu() {
-		// TODO: implement custom menuitem renderer
+		// TODO (@author fdietz): implement custom menuitem renderer
 		JMenuItem item = new JMenuItem(MailResourceLoader.getString("dialog",
 				"color", "none"));
 		item.setActionCommand("NONE");

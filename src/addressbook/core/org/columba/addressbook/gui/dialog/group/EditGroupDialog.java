@@ -253,7 +253,7 @@ public class EditGroupDialog extends JDialog implements ActionListener,
 				    members.addElement(item);
 				}
 			} catch (Exception e) {
-				// TODO Auto-generated catch block
+				
 				e.printStackTrace();
 			}
 

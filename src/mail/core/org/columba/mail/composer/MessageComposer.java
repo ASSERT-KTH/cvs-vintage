@@ -276,7 +276,7 @@ public class MessageComposer {
 
 		// insert document type decl.
 		if (lcase.indexOf("<!doctype") == -1) {
-			// TODO: Is 3.2 the proper version of html to refer to?
+			// FIXME (@author karlpeder): Is 3.2 the proper version of html to refer to?
 			buf.append("<!DOCTYPE HTML PUBLIC "
 					+ "\"-//W3C//DTD HTML 3.2//EN\">\r\n");
 		}
@@ -302,7 +302,7 @@ public class MessageComposer {
 			buf.append(body.substring(0, pos));
 			buf.append(meta);
 
-			// TODO: If existing meta tags are to be kept, code changes are
+			// TODO (@author karlpeder): If existing meta tags are to be kept, code changes are
 			// necessary
 			bodyStart = lcase.indexOf("</head");
 		}

@@ -132,7 +132,7 @@ public class cHTMLPart extends cPrintObject {
                             .sub(getLocation().getY()).getPoints();
 
         /*
-         * TODO: Guess that right thing to do is to get height as getDrawingSize().getHeight(),
+         * TODO (@author karlpeder): Guess that right thing to do is to get height as getDrawingSize().getHeight(),
          * since this should take top- and bottom margin of this print
          * object into account. But the height seems not to be set
          * correctly in computePositionAndSize() (*20030604, karlpeder*)

@@ -211,7 +211,7 @@ public class ComposerController extends DefaultFrameController implements
 
 		//getContainer().setContentPane(this);
 
-		// TODO re-add identityinfo panel
+		
 		/*
 		 * if (isAccountInfoPanelVisible()) {
 		 * addToolBar(getIdentityInfoPanel()); }
@@ -423,7 +423,7 @@ public class ComposerController extends DefaultFrameController implements
 	}
 
 	public boolean isAccountInfoPanelVisible() {
-		// TODO fix account info panel check
+		// TODO (@author fdietz): fix account info panel check
 
 		/*
 		 * return isToolbarEnabled(ACCOUNTINFOPANEL);
@@ -743,7 +743,7 @@ public class ComposerController extends DefaultFrameController implements
 	 */
 	public void showToolbar() {
 
-		// TODO: show toolbar
+		
 		/*
 		 * boolean b = isToolbarVisible();
 		 * 
@@ -762,7 +762,7 @@ public class ComposerController extends DefaultFrameController implements
 	}
 
 	public void showAccountInfoPanel() {
-		// TODO show accountinfo panel
+		
 		/*
 		 * boolean b = isAccountInfoPanelVisible();
 		 * 
@@ -781,7 +781,7 @@ public class ComposerController extends DefaultFrameController implements
 	 * Window listener prompts the user to save his work when closing the
 	 * dialog.
 	 * <p>
-	 * TODO: For some reason the window is closed before this dialog is opened
+	 * TODO (@author fdietz):: For some reason the window is closed before this dialog is opened
 	 * (Linux). Currently, the composer is just made visible again.
 	 * 
 	 * @author fdietz

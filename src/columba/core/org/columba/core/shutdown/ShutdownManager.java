@@ -152,7 +152,7 @@ public class ShutdownManager {
                     } catch (Exception e) {
                         LOG.severe(e.getMessage());
 
-                        //TODO: better exception handling
+                        //TODO (@author javaprog): better exception handling
                     }
                 }
 

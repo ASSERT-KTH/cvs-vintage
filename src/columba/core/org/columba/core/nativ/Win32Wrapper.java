@@ -40,7 +40,7 @@ import com.jniwrapper.win32.ui.Wnd;
 /**
  * Wrapper for jniwrapper library.
  * <p>
- * TODO: add all ballon message types, including warning/error/info
+ * TODO (@author fdietz): add all ballon message types, including warning/error/info
  * 
  * @author fdietz
  */
@@ -69,7 +69,7 @@ public class Win32Wrapper implements NativeWrapper, TrayIconListener {
 		Icon icon = new Icon();
 		try {
 			/**
-			 * NOTE: This is a hack!!
+			 * NOTE (@author fdietz): This is a hack!!
 			 * <p>
 			 * jniwrapper-2.4 doesn't support loading images from inputstream, this
 			 * is about to change in jniwrapper-2.5. After the official 2.5 release 

@@ -225,6 +225,6 @@ public class ColumnOptionsPlugin extends AbstractFolderOptionsPlugin {
  * @see org.columba.mail.folderoptions.AbstractFolderOptionsPlugin#restoreUISettings()
  */
     public void restoreUISettings() {
-        // TODO Auto-generated method stub
+       
     }
 }

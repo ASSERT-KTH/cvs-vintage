@@ -174,7 +174,7 @@ public class FocusAddressComboBox extends AddressComboBox implements
 	 * @see org.columba.core.gui.focus.FocusOwner#redo()
 	 */
 	public void redo() {
-		// TODO add redo
+		// TODO (@author fdietz): add redo
 	}
 
 	/**
@@ -189,7 +189,7 @@ public class FocusAddressComboBox extends AddressComboBox implements
 	 * @see org.columba.core.gui.focus.FocusOwner#undo()
 	 */
 	public void undo() {
-		// TODO add undo
+		// TODO (@author fdietz): add undo
 
 	}
 

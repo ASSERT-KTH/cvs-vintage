@@ -80,7 +80,7 @@ public class PassiveHeaderParserInputStream extends FilterInputStream {
 				// do the parsing
 				header = HeaderParser.parse(new CharSequenceSource(buffer));
 			} catch (ParserException e) {
-				//TODO do something
+				//TODO (@author tstich): do something
 			}
 			barrier.open();
 			buffer = null;

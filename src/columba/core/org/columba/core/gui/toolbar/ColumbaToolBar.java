@@ -131,7 +131,7 @@ public class ColumbaToolBar extends JToolBar {
 			"Cancel",
 			frameController));
 		} catch (PluginHandlerNotFoundException e) {
-			// TODO Auto-generated catch block
+			
 			e.printStackTrace();
 		}
 

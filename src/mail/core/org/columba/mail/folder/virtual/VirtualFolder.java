@@ -65,7 +65,7 @@ public class VirtualFolder extends MessageFolder {
 
 	protected HeaderList headerList;
 
-	// FIXME: Reduce redundancy in both constructors, eventually create
+	//TODO (@author fdietz): Reduce redundancy in both constructors, eventually create
 	// private method that cares for the missing XmlElement.
 	public VirtualFolder(FolderItem item, String path) {
 		super(item, path);

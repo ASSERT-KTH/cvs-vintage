@@ -105,7 +105,7 @@ public class ScoreMessageCommand extends FolderCommand {
 		((StatusObservableImpl) srcFolder.getObservable()).setWorker(worker);
 
 		// update status message
-		//TODO: i18n
+		//TODO (@author fdietz): i18n
 		worker.setDisplayText("Scoring messages ...");
 		worker.setProgressBarMaximum(uids.length);
 

@@ -446,7 +446,9 @@ public class IMAPServer {
 	/**
 	 * Login to IMAP server.
 	 * <p>
-	 * Ask user for password. TODO: cleanup if all these ugly if, else cases
+	 * Ask user for password. 
+	 * 
+	 * TODO (@author tstich): cleanup if all these ugly if, else cases
 	 * 
 	 * @throws Exception
 	 */

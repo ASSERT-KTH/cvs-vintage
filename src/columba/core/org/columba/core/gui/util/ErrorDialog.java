@@ -51,7 +51,7 @@ import com.jgoodies.forms.layout.FormLayout;
 /**
  * Dialog showing an error message and the exception's stack trace on request.
  * <p>
- * TODO: I've currently replaced MultiLineLabel with JLabel, because it totally 
+ * TODO (@author fdietz): I've currently replaced MultiLineLabel with JLabel, because it totally 
  * destroys the layout. Somehow the MultiLineLabel doesn't respect the JDialog
  * size.
  * 
@@ -98,7 +98,7 @@ public class ErrorDialog extends JDialog implements ActionListener {
 		this.message = message;
 		this.ex = ex;
 
-		// TODO: i18n
+		// TODO (@author fdietz): i18n
 		setTitle("An error occured");
 
 		initComponents();
@@ -153,7 +153,7 @@ public class ErrorDialog extends JDialog implements ActionListener {
 		stacktraceTextArea.append(stringWriter.toString());
 		stacktraceTextArea.setEditable(false);
 
-		//TODO: i18n
+		//TODO (@author fdietz): i18n
 		detailsButton = new JToggleButton("Details >>");
 		detailsButton.setSelected(false);
 		detailsButton.setActionCommand("DETAILS");

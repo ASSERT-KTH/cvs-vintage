@@ -87,7 +87,7 @@ public class FolderOptionsController {
             handler = (FolderOptionsPluginHandler) MainInterface.pluginManager.getHandler(
                     "org.columba.mail.folderoptions");
         } catch (PluginHandlerNotFoundException e) {
-            // TODO: show error dialoghere
+            // TODO (@author fdietz): show error dialoghere
             e.printStackTrace();
         }
     }
@@ -110,7 +110,7 @@ public class FolderOptionsController {
                 plugin = (AbstractFolderOptionsPlugin) handler.getPlugin(name,
                         new Object[] { mediator });
             } catch (Exception e) {
-                // TODO: add error dialog
+                // TODO (@author fdietz): add error dialog
                 e.printStackTrace();
             }
 

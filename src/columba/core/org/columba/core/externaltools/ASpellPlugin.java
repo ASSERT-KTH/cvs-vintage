@@ -52,7 +52,7 @@ public class ASpellPlugin extends AbstractExternalToolsPlugin {
     }
 
     public String getDescription() {
-        // TODO: i18n
+        // TODO (@author fdietz): i18n
         return "<html><body><p>GNU Aspell is a Free and Open Source spell checker designed to eventually replace Ispell.</p><p>It can either be used as a library or as an independent spell checker. Its main feature is that it does a much better job of coming up with possible suggestions than just about any other spell checker out there for the English language, including Ispell and Microsoft Word.</p></p>It also has many other technical enhancements over Ispell such as using shared memory for dictionaries and intelligently handling personal dictionaries when more than one Aspell process is open at once.</p></body></html>";
     }
 

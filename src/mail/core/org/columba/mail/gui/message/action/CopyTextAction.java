@@ -40,6 +40,6 @@ public class CopyTextAction extends AbstractColumbaAction {
      * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
      */
     public void actionPerformed(ActionEvent evt) {
-        // TODO Auto-generated method stub
+       
     }
 }

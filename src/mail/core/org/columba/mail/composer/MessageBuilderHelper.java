@@ -100,7 +100,7 @@ public class MessageBuilderHelper {
 	 *            A <code>ColumbaHeader</code> which contains the headerfields
 	 *            of the message we want reply/forward.
 	 * 
-	 * FIXME: we need to i18n this!
+	 * FIXME (@author fdietz): we need to i18n this!
 	 */
 	public static String createReplySubject(String subject) {
 		// if subject doesn't start already with "Re:" prepend it
@@ -120,7 +120,7 @@ public class MessageBuilderHelper {
 	 *            A <code>ColumbaHeader</code> which contains the headerfields
 	 *            of the message we want reply/forward.
 	 * 
-	 * FIXME: we need to i18n this!
+	 * FIXME (@author fdietz): we need to i18n this!
 	 *  
 	 */
 	public static String createForwardSubject(String subject) {
@@ -243,7 +243,7 @@ public class MessageBuilderHelper {
 	 *            The <code>ComposerModel</code> we want to pass the
 	 *            information to.
 	 * 
-	 * FIXME: if the References headerfield contains to many characters, we have
+	 * TODO (@author fdietz): if the References headerfield contains to many characters, we have
 	 * to remove some of the first References, before appending another one.
 	 * (RFC822 headerfields are not allowed to become that long)
 	 *  
@@ -357,7 +357,7 @@ public class MessageBuilderHelper {
 	 * @param html
 	 *            True for html messages (a different quoting is necessary)
 	 * 
-	 * FIXME: we should make this configureable
+	 * TODO (@author fdietz): we should make this configureable
 	 *  
 	 */
 	public static String createQuotedBodyText(CharSequence bodyText,
@@ -368,7 +368,7 @@ public class MessageBuilderHelper {
 		if (html) {
 			// html - quoting is done by inserting a div around the
 			// message formattet with a blue line at left edge
-			// TODO: Implement quoting (font color, stylesheet, blockquote???)
+			// TODO (@author fdietz): Implement quoting (font color, stylesheet, blockquote???)
 
 			/*
 			 * String lcase = bodyText.toLowerCase(); StringBuffer buf = new

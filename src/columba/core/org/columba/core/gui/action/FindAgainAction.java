@@ -36,6 +36,6 @@ public class FindAgainAction extends AbstractColumbaAction {
     }
 
     public void actionPerformed(ActionEvent e) {
-        //TODO: implement
+        //TODO (@author fdietz): implement
     }
 }

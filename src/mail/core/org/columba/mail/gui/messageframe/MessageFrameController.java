@@ -149,7 +149,7 @@ public class MessageFrameController extends AbstractMailFrameController
 				MailInterface.config.get("messageframe_toolbar").getElement(
 						"toolbar"));
 
-		// TODO re-add folderinfopanel
+		
 		/*
 		 * if (viewItem.getBoolean("toolbars", "show_folderinfo") == true) {
 		 * addToolBar(folderInfoPanel); }

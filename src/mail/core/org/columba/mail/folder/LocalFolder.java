@@ -96,7 +96,7 @@ public abstract class LocalFolder extends MessageFolder {
 	public LocalFolder(FolderItem item, String path) {
 		super(item, path);
 
-		// TODO: move this to MessageFolder constructor
+		// TODO (@author fdietz): move this to MessageFolder constructor
 		// create filterlist datastructure
 		XmlElement filterListElement = node.getElement(FilterList.XML_NAME);
 

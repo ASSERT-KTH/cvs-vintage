@@ -460,7 +460,7 @@ public class GeneralOptionsDialog extends JDialog implements ActionListener {
 
             updateComponents(false);
 
-            // TODO until we can get all the settings update immediately
+            // TODO (@author fdietz): until we can get all the settings update immediately
             // we just open a message box, telling the user to restart
             // switch to new theme
             ThemeSwitcher.setTheme();

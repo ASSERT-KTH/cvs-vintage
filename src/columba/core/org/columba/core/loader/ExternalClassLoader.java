@@ -82,21 +82,10 @@ public class ExternalClassLoader extends URLClassLoader {
 
     public Object instanciate(String className, Object[] args)
         throws Exception {
-        /*
-        //ColumbaLogger.log.info("class="+className);
-
-        Class actClass = findClass(className);
-
-        Constructor[] constructors = actClass.getConstructors();
-        Constructor constructor = constructors[0];
-
-        return constructor.newInstance(args);
-        */
+       
         Class actClass = findClass(className);
 
         Constructor constructor = null;
-
-        // FIXME
         //
         // we can't just load the first constructor 
         //  -> go find the correct constructor based

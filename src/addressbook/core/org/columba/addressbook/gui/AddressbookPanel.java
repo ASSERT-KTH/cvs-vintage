@@ -158,7 +158,7 @@ list = composerInterface.composerHeader.getListModels();
 
         panel.add(topPanel, BorderLayout.NORTH);
 
-        // TODO : addressbookInterface doesn't exist anymore (use AddressbookController instead)
+        // TODO (@author fdietz): addressbookInterface doesn't exist anymore (use AddressbookController instead)
 
         /*
 Folder folder =

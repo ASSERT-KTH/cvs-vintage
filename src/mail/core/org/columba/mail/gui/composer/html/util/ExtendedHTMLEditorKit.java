@@ -85,7 +85,7 @@ public class ExtendedHTMLEditorKit extends HTMLEditorKit {
         public View create(Element elem) {
             Object obj = elem.getAttributes().getAttribute(StyleConstants.NameAttribute);
 
-            // TODO: Implement somehow if images are to be supported
+            // TODO (@author javaprog): Implement somehow if images are to be supported
             //			if(obj instanceof HTML.Tag)
             //			{
             //				HTML.Tag tagType = (HTML.Tag)obj;

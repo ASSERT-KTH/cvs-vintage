@@ -30,7 +30,7 @@ import org.columba.mail.util.MailResourceLoader;
 /**
  * Move selected folder down for one row.
  * <p>
- * TODO:fix re-selection of moved folder
+ * TODO (@author redsolo):fix re-selection of moved folder
  *
  * @author fdietz
  * @author redsolo

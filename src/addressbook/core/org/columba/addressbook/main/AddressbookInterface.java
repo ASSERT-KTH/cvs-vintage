@@ -22,7 +22,7 @@ import org.columba.addressbook.gui.tree.AddressbookTreeModel;
 public class AddressbookInterface {
     /** Addressbook treemodel */
 
-    // TODO: move this to the addressbook component
+    
     public static AddressbookTreeModel addressbookTreeModel;
 
     /** Addressbook configuration */

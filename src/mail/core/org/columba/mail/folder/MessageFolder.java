@@ -844,7 +844,7 @@ public abstract class MessageFolder extends AbstractFolder implements
 	}
 
 	/**
-	 * TODO: move this out-of-folder!
+	 * TODO (@author fdietz): move this out-of-folder!
 	 * 
 	 * @param header
 	 * @param bodyStream

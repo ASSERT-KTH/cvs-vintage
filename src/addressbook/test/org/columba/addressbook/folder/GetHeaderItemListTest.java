@@ -33,7 +33,7 @@ public class GetHeaderItemListTest extends AbstractFolderTestCase {
 	 */
 	public GetHeaderItemListTest(String arg0) {
 		super(arg0);
-		// TODO Auto-generated constructor stub
+	
 	}
 
 	/*
