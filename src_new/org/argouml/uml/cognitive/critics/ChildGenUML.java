@@ -1,4 +1,4 @@
-// $Id: ChildGenUML.java,v 1.11 2003/08/30 23:23:49 alexb Exp $
+// $Id: ChildGenUML.java,v 1.12 2003/12/04 08:53:02 mkl Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: ChildGenUML.java
 // Classes: ChildGenUML
 // Original Author: jrobbins
-// $Id: ChildGenUML.java,v 1.11 2003/08/30 23:23:49 alexb Exp $
+// $Id: ChildGenUML.java,v 1.12 2003/12/04 08:53:02 mkl Exp $
 
 package org.argouml.uml.cognitive.critics;
 
@@ -54,6 +54,7 @@ public class ChildGenUML implements ChildGenerator {
 
     /** Reply a java.util.Enumeration of the children of the given Object */
     public Enumeration gen(Object o) {
+        
 	if (o instanceof Project) {
 	    Project p = (Project) o;
 	    return new EnumerationComposite(p.getUserDefinedModels().elements(),
@@ -76,11 +77,7 @@ public class ChildGenUML implements ChildGenerator {
 	    return new EnumerationSingle(me);  //wasteful!
 	}
 
-	if (ModelFacade.isAModelElement(o)) {
-	    Vector behavior = new Vector(ModelFacade.getBehaviors(o));
-	    if (behavior != null) return behavior.elements();
-	}
-
+	
 	// TODO: associationclasses fit both of the next 2 cases
 
 	if (ModelFacade.isAClassifier(o)) {
@@ -114,6 +111,11 @@ public class ChildGenUML implements ChildGenerator {
 	if (ModelFacade.isACompositeState(o)) {
 	    Vector substates = new Vector(ModelFacade.getSubvertices(o));
 	    if (substates != null) return substates.elements();
+	}
+
+        if (ModelFacade.isAModelElement(o)) {
+	    Vector behavior = new Vector(ModelFacade.getBehaviors(o));
+	    if (behavior != null) return behavior.elements();
 	}
 
 	// tons more cases
