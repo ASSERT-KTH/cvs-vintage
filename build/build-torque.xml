@@ -21,7 +21,7 @@
   <property name="torque.contextProperties" value="${build.properties}"/>
   <property file="${torque.contextProperties}"/>
   <property name="repository.dir" value="${basedir}/../www/repository"/>
-  <property name="lib.dir" value="lib"/>
+  <property name="lib.dir" value="${basedir}/../lib"/>
 
   <property name="databaseSchema" value="default"/>
   <property name="databaseUser" value="${scarab.database.user}"/>
@@ -167,6 +167,13 @@
     <echo message="|                                          |"/>
     <echo message="| Generating SQL for YOUR Torque project!  |"/>
     <echo message="|                                          |"/>
+    <echo message="| torque.contextProperties = ${torque.contextProperties}"/>
+    <echo message="| torque.template.sql      = ${torque.template.sql}"/>
+    <echo message="| torque.idTableXMLFile    = ${torque.idTableXMLFile}"/>
+    <echo message="| torque.sql.dir           = ${torque.sql.dir}"/>
+    <echo message="| torque.project           = ${torque.project}"/>
+    <echo message="| torque.database          = ${torque.database}"/>
+    <echo message="| torque.schema.dir        = ${torque.schema.dir}"/>
     <echo message="+------------------------------------------+"/>
 
     <antcall target="sql-classpath"/>
@@ -481,13 +488,20 @@
     unless="torque.internal.om.uptodate"
     description="==> generates the Peer-based object model for your project">
 
-    <echo message="+------------------------------------------+"/>
-    <echo message="|                                          |"/>
-    <echo message="| Generating Peer-based Object Model for   |"/>
-    <echo message="| YOUR Torque project!                     |"/>
-    <echo message="|                                          |"/>
-    <echo message="+------------------------------------------+"/>
 
+    <echo>
++------------------------------------------
+|                                          
+| Generating Peer-based Object Model for
+|
+| db type    : '${torque.database}'
+| password   : '${torque.database.password}'
+| lib    dir : ${lib.dir}      
+| target dir : ${basedir}/../src/java
++------------------------------------------
+    </echo>
+    
+    
     <antcall target="om-classpath"/>
     <antcall target="om-template"/>
     <!-- antcall target="zip-base-om"/ -->

@@ -1,0 +1,372 @@
+<?xml version="1.0"?>
+
+<!-- ===================================================================== -->
+<!--                                                                       -->
+<!-- Build file for Scarab                                                 -->
+<!-- =====================                                                 -->
+<!--                                                                       -->
+<!-- Quickstep docu:                                                       -->
+<!-- ant deploy        generate om, compile, create a functional webapp in -->
+<!--                   scarab/target/scarab                                -->
+<!--                                                                       -->
+<!-- subordinate tasks (usefull for developers only)                       -->
+<!-- ant compile       generate om and compile. Place results into         -->
+<!--                   scarab/target/scarab/WEB-INF/classes                -->
+<!-- ant generate-om   generate the object model (om), merge results into  -->
+<!--                   scarab/src/java/org/tigris/scarab/om/...            -->
+<!-- ===================================================================== -->
+
+<!-- ===================================================================== -->
+<!-- [HD] experimental version                                             -->
+<!--      If you use this build script, be prepared for errors             -->
+<!-- ===================================================================== -->
+
+<project name="Scarab" default="create-db" basedir=".">
+
+    <!-- Allow the user to have multiple configuration files and
+         specify them using -Dconfiguration.file=filename 
+       By default we load build.properties.     
+    -->
+    
+    <property name="webapp.conf.dir"         value="${webapp.dir}/WEB-INF/conf"/>
+    <property name="webapp.lib.dir"          value="${webapp.dir}/WEB-INF/lib"/>
+    <property name="database.src.dir"        value="${webapp.dir}/database/src"/>
+    <property name="database.src.sql.dir"    value="${database.src.dir}/sql"/>
+    <property name="database.src.schema.dir" value="${database.src.dir}/schema"/>
+    
+    <property name="database.instance.dir"        value="${webapp.dir}/database/instance"/>
+    <property name="database.instance.sql.dir"    value="${database.instance.dir}/sql"/>
+    <property name="database.instance.schema.dir" value="${database.instance.dir}/schema"/>
+
+    <property name="configuration.file" value="${webapp.conf.dir}/custom.properties"/>
+    <property file="${configuration.file}" />
+    
+    <property name="database.src.schema.dir" value="${build.dir}/torque"/>
+    
+    <property name="torquedoc.destdir"    value="${build.dir}/torquedoc"/>
+    <property name="scarab.war.file.dir"  value="${build.dir}"/>
+    <property name="scarab.war.file.name" value="scarab.war"/>
+    <property name="scarab.war.file"      value="${scarab.war.file.dir}/${scarab.war.file.name}"/>
+
+    <property name="extensions.lib.dir"   value="${extensions.dir}/usermods/lib"/>
+    <property name="extensions.templates.dir" value="${extensions.dir}/usermods/templates"/>
+    <property name="extensions.conf.dir"  value="${extensions.dir}/usermods/conf"/>
+
+    <property name="migration.dest.dir"   value="${build.dir}/migration/classes"/>
+    <property name="tomcat.dir"           value="../tomcat"/>
+
+    <!-- Build classpath -->
+    <path id="classpath">
+        <fileset dir="${webapp.lib.dir}">
+            <include name="**/*.jar"/>
+            <exclude name="**/xalan*.jar"/>
+        </fileset>
+    </path>
+
+
+    
+    <!-- ================================================================== -->
+    <!-- Scarab Welcome header                                              -->
+    <!-- ================================================================== -->
+    <target name="scarab-welcome">
+      <tstamp/>
+      <echo>
+  _________R U N T I M E  B U I L D ___.    
+ /   _____/ ____ _____ ____________ \_ |__  
+ \_____  \_/ ___\\__  \\_  __ \__  \ | __ \ 
+ /        \  \___ / __ \|  | \// __ \| \_\ \
+/_______  /\___  >____  /__|  (____  /___  /
+        \/     \/     \/           \/    \/ 
+
+        [${version}-${DSTAMP}${TSTAMP}]
+      </echo>
+    </target>
+
+
+    <!-- ================================================================== -->
+    <!-- Copy all of the xml schema files into the torque directory         -->
+    <!-- ================================================================== -->
+    <target name="torque-copy-scarab-schema">
+
+        <!-- copy the schema's to the torque directory -->
+        <copy file="${database.src.schema.dir}/${project}-schema.xml" 
+              todir="${database.instance.schema.dir}"
+              filtering="true" overwrite="true">
+          <filterset>
+            <filter token="SCARAB_MODULE_CODE_LENGTH" value="${scarab.module.code.length}"/>
+          </filterset>
+        </copy>
+        
+        <copy file="${database.src.schema.dir}/id-table-schema.xml" 
+              todir="${database.instance.schema.dir}"
+              filtering="true" overwrite="true"/>
+
+        <copy file="${database.src.schema.dir}/turbine-schema.xml" 
+              todir="${database.instance.schema.dir}"
+              filtering="true" overwrite="true"/>
+
+        <!-- copy the scarab specific build.properties over -->
+        <filter token="DATABASE_TYPE" value="${scarab.database.type}"/>
+        <copy file="${database.src.dir}/torque.static.props" 
+              tofile="${database.instance.schema.dir}/build.static.properties"
+              filtering="true" overwrite="true"/>
+
+
+
+    </target>
+
+    <!-- ================================================================== -->
+    <!-- Check to see if SQL related stuff is up to date                    -->
+    <!-- ================================================================== -->
+    <target name="schema-check">
+        <echo message="checking: ${database.instance.sql.dir}/${scarab.database.type}/${project}.sql"/>
+        <uptodate property="schema.uptodate"
+                  targetfile="${database.instance.sql.dir}/${scarab.database.type}/${project}.sql">
+            <srcfiles dir="${database.src.schema.dir}" includes="turbine-schema.xml"/>
+            <srcfiles dir="${database.src.schema.dir}" includes="id-table-schema.xml"/>
+            <srcfiles dir="${database.src.schema.dir}" includes="${project}-schema.xml"/>
+            <srcfiles dir="${user.home}" includes="scarab.build.properties"/>
+            <srcfiles dir="${user.home}" includes="build.properties"/>
+            <srcfiles dir="${basedir}" includes="${configuration.file}"/>
+        </uptodate>
+    </target>
+
+
+    
+    <!-- ================================================================== -->
+    <!-- Generate SQL from Torque for a specified database type. Set the    -->
+    <!-- generatesql.database.type property when calling this target to     -->
+    <!-- specify the required database type.                                -->
+    <!-- ================================================================== -->
+    <target name="sql-specific-db">
+
+        <antcall target="torque-copy-scarab-schema" />
+
+        <filter token="DB_NAME"           value="${scarab.database.name}"/>
+        <filter token="DATABASE_TYPE"     value="${generatesql.database.type}"/>
+        <filter token="DATABASE_DRIVER"   value="${scarab.database.jdbc.driver}"/>
+        <filter token="DATABASE_URL"      value="${scarab.database.url}"/>
+        <filter token="DATABASE_HOST"     value="${scarab.database.host}"/>
+        <filter token="DATABASE_PORT"     value="${scarab.database.port}"/>
+        <filter token="DATABASE_USERNAME" value="${scarab.database.username}"/>
+        <filter token="DATABASE_PASSWORD" value="${scarab.database.password}"/> 
+        
+
+        <!-- move the generated .sql files into the target directory -->
+        <ant antfile="build-torque.xml" target="sql" inheritAll="false">
+        
+            <!-- See the Torque tasks' build.properties for options -->
+            <property name="torque.home"       value="${database.instance.dir}"/>
+            <property name="lib.dir"           value="${webapp.lib.dir}"/>
+            <property name="torque.output.dir" value="${database.src.dir}"/>
+            <property name="build.properties"
+                      value="${database.instance.schema.dir}/build.static.properties"/>
+            <property name="idTableXMLFile"    value=""/>
+        </ant>
+
+        <mkdir dir="${database.instance.sql.dir}/${generatesql.database.type}/"/>
+
+        <move file="${database.src.sql.dir}/${project}-schema.sql"
+            tofile="${database.instance.sql.dir}/${generatesql.database.type}/${project}.sql"/>
+        <move file="${database.src.sql.dir}/turbine-schema.sql"
+            tofile="${database.instance.sql.dir}/${generatesql.database.type}/turbine.sql"/>
+        <move file="${database.src.sql.dir}/id-table-schema.sql"
+            tofile="${database.instance.sql.dir}/${generatesql.database.type}/id-table.sql"/>
+    </target>
+    
+    
+    <!-- ================================================================== -->
+    <!-- Generate SQL from Torque for the database type set in the build    -->
+    <!-- property "scarab.database.type".                                   -->
+    <!-- ================================================================== -->
+    <target name="sql-current-db">
+        <!-- Generate the Torque files for the specified database type -->
+        <antcall target="sql-specific-db">
+            <param name="generatesql.database.type"
+                   value="${scarab.database.type}"/>
+        </antcall>
+    </target>
+
+
+    <!-- ================================================================== -->
+    <!-- Generate SQL db-initialization scripts from Torque                 -->
+    <!-- Main target: generate-dbscripts                                    -->
+    <!-- ================================================================== -->
+    <target name="om-peer-sql-generator" unless="gen.uptodate">
+
+        <!-- Create the Torque-generated files for the specified database type -->
+        <antcall target="sql-specific-db">
+            <param name="generatesql.database.type"
+                   value="${scarab.database.type}"/>
+        </antcall>
+    
+    </target>
+
+    <target name="generate-dbscripts" depends="om-peer-sql-generator"
+            unless="gen.uptodate">
+    </target>
+    <!-- ================================================================== -->
+
+
+
+    <!-- ================================================================== -->
+    <!-- Check for databases that could require alternate or more complex   -->
+    <!-- methods for schema creation                                        -->
+    <!-- ================================================================== -->
+    <target name="db-type-check">
+        <condition property="auto.create.db">
+        <not>
+            <or>
+                <equals arg1="${scarab.database.type}" arg2="oracle"/>
+                <equals arg1="${scarab.database.type}" arg2="db2"/>
+                <equals arg1="${scarab.database.type}" arg2="mssql"/>
+                <equals arg1="${scarab.database.type}" arg2="hypersonic"/>
+                <equals arg1="${scarab.database.type}" arg2="postgresql"/>
+            </or>
+        </not>
+        </condition>
+    </target>
+
+    <!-- ================================================================== -->
+    <!-- Test to make sure the database connection works                    -->
+    <!-- ================================================================== -->
+    <target name="test-db-connection" depends="sql-current-db">
+        <echo message="Connecting to ${scarab.database.type} at ${scarab.database.url}"/>
+        <sql
+            driver="${scarab.database.jdbc.driver}"
+            url="${scarab.database.url}"
+            userid="${scarab.database.username}"
+            password="${scarab.database.password}">
+            <classpath refid="classpath"/>
+        CREATE TABLE scarab_test (
+          scarab_test integer
+        );
+        drop table scarab_test;
+        </sql>
+    </target>
+
+    <!-- ================================================================== -->
+    <!-- Create database if not bypassed in "db-type-check"                 -->
+    <!-- ================================================================== -->
+    <target name="create-db-schema" depends="scarab-welcome,db-type-check, sql-current-db" 
+            if="auto.create.db">
+
+        <!-- Generate the Torque files for the specified database type -->
+        <filter token="DB_NAME"           value="${scarab.database.name}"/>
+        <filter token="DATABASE_TYPE"     value="${generatesql.database.type}"/>
+        <filter token="DATABASE_DRIVER"   value="${scarab.database.jdbc.driver}"/>
+        <filter token="DATABASE_URL"      value="${scarab.database.url}"/>
+        <filter token="DATABASE_HOST"     value="${scarab.database.host}"/>
+        <filter token="DATABASE_PORT"     value="${scarab.database.port}"/>
+        <filter token="DATABASE_USERNAME" value="${scarab.database.username}"/>
+        <filter token="DATABASE_PASSWORD" value="${scarab.database.password}"/> 
+        <filter token="ADMIN_USERNAME"    value="${scarab.user.username}"/>
+
+        <!-- the SQL data population scripts directory -->
+        <copy todir="${database.instance.sql.dir}" filtering="yes">
+            <fileset dir="${database.src.sql.dir}">
+                <include name="${scarab.database.type}/*.sql"/>
+                <include name="${scarab.database.type}/*.sh"/>
+                <include name="${scarab.database.type}/*.lst"/>
+                <include name="${scarab.database.type}/dbsettings.props"/>
+                <include name="*.sql"/>
+                <include name="*.sh"/>
+                <include name="*.lst"/>
+            </fileset>
+        </copy>
+
+        <echo message="Connecting to ${scarab.database.type} at ${scarab.database.admin.url}"/>
+        <sql
+            driver="${scarab.database.jdbc.driver}"
+            url="${scarab.database.admin.url}"
+            userid="${scarab.database.admin.username}"
+            password="${scarab.database.admin.password}">
+            <classpath refid="classpath"/>
+            <transaction 
+                src="${database.instance.sql.dir}/${scarab.database.type}/create-${scarab.database.type}-db.sql"/>
+        </sql>
+
+    </target>
+
+    <!-- ================================================================== -->
+    <!-- Load default data                                                  -->
+    <!-- ================================================================== -->
+    <target name="load-default-data" depends="create-db-schema">
+
+        <!-- Oracle does not have any type of conditional execution    -->
+        <!-- of "drop table".  So when running the table creation,     -->
+        <!-- it fails when dropping a table.  Rather than setting the  -->
+        <!-- onerror of the actual creation class to "continue", this  -->
+        <!-- pre-creates dummy tables (ignoring any errors if the      -->
+        <!-- tables already exist) so that they can be dropped.        -->
+        <!--
+        <sql
+            rdbms="oracle"
+            onerror="continue"
+            driver="${scarab.database.jdbc.driver}"
+            url="${scarab.database.url}"
+            userid="${scarab.database.admin.username}"
+            password="${scarab.database.admin.password}">
+            <classpath refid="classpath"/>
+            <transaction 
+                src="${database.instance.sql.dir}/${scarab.database.type}/prepare-oracle-dummy-tables.sql"/>
+        </sql>
+-->
+
+        <echo message=
+            "Connecting to ${scarab.database.type} at ${scarab.database.url}"/>
+        <sql
+            driver="${scarab.database.jdbc.driver}"
+            url="${scarab.database.url}"
+            userid="${scarab.database.admin.username}"
+            password="${scarab.database.admin.password}">
+            <classpath refid="classpath"/>
+            <transaction src="${database.instance.sql.dir}/${scarab.database.type}/standard-${scarab.database.type}-init.sql"/>
+            <transaction src="${database.instance.sql.dir}/${scarab.database.type}/turbine.sql"/>
+            <transaction src="${database.instance.sql.dir}/${scarab.database.type}/${project}.sql"/>
+            <transaction src="${database.instance.sql.dir}/${scarab.database.type}/id-table.sql"/>
+            <transaction src="${database.instance.sql.dir}/turbine-id-table-init.sql"/>
+            <transaction src="${database.instance.sql.dir}/${project}-id-table-init.sql"/>
+            <transaction src="${database.instance.sql.dir}/${project}-required-data.sql"/>
+            <transaction src="${database.instance.sql.dir}/${project}-default-data.sql"/>
+            <transaction src="${database.instance.sql.dir}/${project}-security.sql"/>
+        </sql>
+    </target>
+
+    <!-- ================================================================== -->
+    <!-- Load seed data unless bypassed by setting "skip.seed.data"         -->
+    <!-- to any value in "build.properties"                                 -->
+    <!-- ================================================================== -->
+    <target name="load-seed-data" depends="load-default-data"
+            unless="skip.seed.data">
+        <!-- ============================================================== -->
+        <!-- Alternate initial data file may be specified                   -->
+        <!-- in "build.properties" by setting "seed.data.sql"               -->
+        <!-- to an alternate file.                                          -->
+        <!-- ============================================================== -->
+        <property name="seed.data.sql"
+            value="${database.instance.sql.dir}/${project}-sample-data.sql"/>
+        <sql
+            driver="${scarab.database.jdbc.driver}"
+            url="${scarab.database.url}"
+            userid="${scarab.database.admin.username}"
+            password="${scarab.database.admin.password}">
+            <classpath refid="classpath"/>
+            <transaction src="${database.instance.sql.dir}/${scarab.database.type}/standard-${scarab.database.type}-init.sql"/>
+            <transaction src="${seed.data.sql}"/>
+        </sql>
+    </target>
+
+    <!-- ================================================================== -->
+    <!-- remove database file created by previous generation calls          -->
+    <!-- ================================================================== -->
+    <target name="clean">
+        <delete dir="${database.instance.dir}" quiet="true"/>
+    </target>
+
+    <!-- ================================================================== -->
+    <!-- Create DB from Torque                                              -->
+    <!-- ================================================================== -->
+    <target name="create-db" depends="clean,load-seed-data"/>
+
+</project>

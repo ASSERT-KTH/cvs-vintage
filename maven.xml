@@ -420,11 +420,10 @@
     <postGoal name="xdoc:init"> 
   
     	<j:set var="genDocs" value="${maven.gen.docs}"/> 
-    	  <!--  Seems to be preventing reports from running
         ${systemScope.setProperty('javax.xml.transform.TransformerFactory','org.apache.xalan.processor.TransformerFactoryImpl')} 
         <ant:style basedir="xdocs/" destdir="${genDocs}" extension=".xml" 
         style="xdocs/properties.xsl" includes="**/scarab_properties.xml" /> 
-        -->
+        
         <!-- This little shuffling of files seems to be required to get the 
 	     text to actually be in the correct encoding so that the xdoc
 	     goal will process it!  

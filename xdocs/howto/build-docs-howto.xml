@@ -62,7 +62,7 @@
 	If not, update the scarab.docs.home property in project.properties.
 	</p>
 	<p>
-	Iff you are updating the HEAD version of the documentation, run then run Maven:
+	If you are updating the HEAD version of the documentation, run then run Maven:
 	<source>
 		maven scarab:deploy_docs_head
 	</source>	
