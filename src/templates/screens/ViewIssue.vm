@@ -1,13 +1,10 @@
 #set ( $action = $link.setPage("ViewIssue.vm").setAction("ModifyIssue").addPathInfo("nextTemplate", "ViewIssue.vm") )
 #set ( $currentIssueId = $data.Parameters.getString("id") )
 #set ( $currentIssue = $scarabR.getIssue($currentIssueId) )
+
 #if ($currentIssue)
     #set ($attrValues = $currentIssue.ModuleAttributeValuesMap)
 #set ($user = $scarabR.User)
-
-#if ($data.Message)
-    <font color="red">$data.Message</font>
-#end
 
 
 <form name="IssueForm" method="post" action="$action" >
@@ -16,24 +13,20 @@
 #set($attVal =  $attrValues.get("DESCRIPTION"))
 #set ( $attrInput = $intake.AttributeValue.mapTo($attVal) ) 
  
-      <div class="functnbar">
-       <table width="100%" cellpadding="3" cellspacing="2" border="1">
-        <tr>
-         <td><input type="submit" value="previous" class="buttonfunc" />&#160;<input type="submit" value="next" class="buttonfunc" />&#160;issues | 3 of 5</td>
-        </tr>
-       </table>
-      </div>
+      <p>&#171; previous | 1 of 3 | <a href="#">next</a> <a href="#">&#187;</a></p>
+
+	  <p class="functnbar"><input type="submit" value="save" />&#160;<input type="submit" value="cancel" /></p>
 
       <div class="grouper">
        #datatitle ("Issue ID #$currentIssue.UniqueId")
 
-       <div class="listtable">
-        <table width="100%" cellpadding="3" cellspacing="2" border="1">
-         <tr>
-          <td width="120" class="a"><strong>issue id #:</strong></td>
+      <div class="axial">
+       <table width="100%" cellpadding="3" cellspacing="2" border="1">
+        <tr>
+         <th width="120">issue id #:</th>
+         <td>#$currentIssue.UniqueId</td>
+        </tr>
 
-          <td class="b">#$currentIssue.UniqueId</td>
-         </tr>
 #foreach ( $attKey in $attrValues.sequence() )
   #set ( $attVal = $attrValues.get($attKey))
   #set ( $attrInput = $intake.AttributeValue.mapTo($attVal) ) 
@@ -48,10 +41,8 @@
   #end
 
          <tr>
-          <td width="120" class="a">
-             <strong>$attVal.Attribute.Name:</strong>
-          </td> 
-          <td class="b">
+          <th width="120">$attVal.Attribute.Name:</th>
+          <td>
 
     #if ($attVal.Attribute.AttributeType.AttributeClass.Name == "user")
           #attrValueErrorMsg ( $attVal $field )
@@ -91,6 +82,35 @@
        </div>
       </div>
 
+### ASSIGNEES
+
+      <h3>personnel</h3>
+
+      <div class="axial">
+       <table width="100%" cellpadding="3" cellspacing="2" border="1">
+        <tr>
+         <th width="120">committed by:</th>
+        #set ($createdUser = $scarabR.getUser($currentIssue.CreatedBy.toString()) )
+         <td><a href="mailTo:$createdUser.Email">$createdUser.UserName</a></td>
+        </tr>
+
+        <tr>
+         <th width="120">assignee(s):</th>
+         <td> 
+        #foreach ($ass in $currentIssue.AssigneeAttributeValues)
+          #if( $velocityCount == $currentIssue.AssigneeAttributeValues.size() )
+              #set( $comma = "")
+          #else 
+              #set( $comma = ",")
+          #end
+          #set ($assignedUser = $scarabR.getUser($ass.UserId.toString()) )
+          <a href="mailto:$assignedUser.Email">$assignedUser.UserName</a>$comma
+        #end
+          <p><input type="submit" value="edit assignees" name="eventSubmit_doEditassignees" /></p>
+         </td>
+        </tr>
+       </table>
+      </div>
 
 ## URLS
       <div class="grouper">
@@ -150,14 +170,20 @@
 
 <div class="datatable">
 <table width="100%" border="1" cellspacing="2" cellpadding="3">
+ #if (!$dependGroup.ObservedId.Message.equals(""))
+ <tr>
+   <td colspan="2" class="alert">$dependGroup.ObservedId.Message</td>
+ </tr>
+ #end
+ #if (!$dependGroup.TypeId.Message.equals(""))
+ <tr>
+   <td colspan="2" class="alert">$dependGroup.TypeId.Message</td>
+ </tr>
+ #end
  <tr>
   <td>Add dependency on issue #</td>
-  <td>
-     <font color="red">$dependGroup.ObservedId.Message</font><BR>
-     <input type="text" size="3" class="text" name="$dependGroup.ObservedId.Key" value = "$!dependGroup.ObservedId"></td>
-  <td>
-     <font color="red">$dependGroup.TypeId.Message</font><BR>
-  <select name="$dependGroup.TypeId.Key" class="select">
+  <td valign="top"><input type="text" size="3" class="text" name="$dependGroup.ObservedId.Key" value = "$!dependGroup.ObservedId"></td>
+  <td valign="top"><select name="$dependGroup.TypeId.Key" class="select">
     <option value="0">Choose dependency type</option>
     #foreach ($dependType in $currentIssue.getAllDependencyTypes())
       <option value="$dependType.DependTypeId">
