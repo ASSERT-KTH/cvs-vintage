@@ -91,7 +91,7 @@ public class WindowsViewer extends AbstractViewer {
 				System.out.println(
 					"Executing " + cmd[0] + " " + cmd[1] + " " + cmd[2]);
 				proc = rt.exec(cmd);
-			} else if (OSInfo.isWin95() || OSInfo.isWin98()) {
+			} else if (OSInfo.isWin95() || OSInfo.isWin98() || OSInfo.isWinME()) {
 				String[] cmd = new String[] { "start", filename };
 				Runtime rt = Runtime.getRuntime();
 				System.out.println("Executing " + cmd[0] + " " + cmd[1]);
@@ -108,7 +108,12 @@ public class WindowsViewer extends AbstractViewer {
 				System.out.println(
 					"Executing " + cmd[0] + " " + cmd[1] + " " + cmd[2]);
 				proc = rt.exec(cmd);
-			} 
+			}
+                        
+                        if (proc == null) {
+                                //unhandled windows version
+                                return;
+                        }
 
 			// any error message?
 			StreamGobbler errorGobbler =
