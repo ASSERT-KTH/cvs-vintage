@@ -1,4 +1,4 @@
-// $Id: Project.java,v 1.102 2004/07/19 21:10:21 kataka Exp $
+// $Id: Project.java,v 1.103 2004/07/20 22:07:42 kataka Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -1270,9 +1270,9 @@ public class Project implements java.io.Serializable, TargetListener {
         if (ModelFacade.isABase(obj)) { // an object that can be represented
             ProjectBrowser.getInstance().getEditorPane()
 		.removePresentationFor(obj, getDiagrams());
-            UmlModelEventPump.getPump().stopPumpingEvents();
+            // UmlModelEventPump.getPump().stopPumpingEvents();
             UmlFactory.getFactory().delete(obj);
-            UmlModelEventPump.getPump().startPumpingEvents();
+            // UmlModelEventPump.getPump().startPumpingEvents();
             if (_members.contains(obj)) {
                 _members.remove(obj);
             }

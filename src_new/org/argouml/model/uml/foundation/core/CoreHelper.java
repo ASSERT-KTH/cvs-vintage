@@ -1,4 +1,4 @@
-// $Id: CoreHelper.java,v 1.79 2004/07/18 18:56:02 kataka Exp $
+// $Id: CoreHelper.java,v 1.80 2004/07/20 22:07:43 kataka Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -1081,7 +1081,7 @@ public class CoreHelper {
         if (!(relationship instanceof MRelationship)
 	    && !(ModelFacade.isALink(relationship)) && !(relationship instanceof CommentEdge)) {
 
-            throw new IllegalArgumentException("Argument is not "
+            throw new IllegalArgumentException("Argument " + relationship.toString() + " is not "
 					       + "a relationship");
 
 	}

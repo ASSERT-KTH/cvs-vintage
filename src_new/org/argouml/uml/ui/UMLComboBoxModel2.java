@@ -1,4 +1,4 @@
-// $Id: UMLComboBoxModel2.java,v 1.38 2004/07/18 20:33:46 kataka Exp $
+// $Id: UMLComboBoxModel2.java,v 1.39 2004/07/20 22:07:44 kataka Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,6 +25,7 @@
 package org.argouml.uml.ui;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
@@ -34,6 +35,8 @@ import javax.swing.AbstractListModel;
 import javax.swing.ComboBoxModel;
 
 import org.apache.log4j.Logger;
+import org.argouml.kernel.ProjectManager;
+import org.argouml.model.ModelEventPump;
 import org.argouml.model.ModelFacade;
 import org.argouml.model.uml.UmlModelEventPump;
 import org.argouml.ui.targetmanager.TargetEvent;
@@ -523,8 +526,19 @@ public abstract class UMLComboBoxModel2
      * @see TargetListener#targetRemoved(TargetEvent)
      */
     public void targetRemoved(TargetEvent e) {
-        setTarget(e.getNewTarget());
-
+        Object currentTarget = _target;
+        Object oldTarget = e.getOldTargets().length > 0 ? e.getOldTargets()[0] : null;
+        if (oldTarget instanceof Fig) {
+            oldTarget = ((Fig)oldTarget).getOwner();
+        }
+        if (oldTarget == currentTarget) {
+            if (ModelFacade.isABase(currentTarget)) {
+                UmlModelEventPump.getPump().removeModelEventListener(this,
+                        currentTarget, _propertySetName);
+            }
+            _target = e.getNewTarget();
+        }                
+        // setTarget(e.getNewTarget());
     }
 
     /**

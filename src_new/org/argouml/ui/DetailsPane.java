@@ -1,4 +1,4 @@
-// $Id: DetailsPane.java,v 1.37 2004/02/29 12:35:41 linus Exp $
+// $Id: DetailsPane.java,v 1.38 2004/07/20 22:07:43 kataka Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -71,7 +71,7 @@ import org.argouml.util.ConfigLoader;
  * There are requests to have the cursor automatically
  * be set to the primary field.
  *
- * $Id: DetailsPane.java,v 1.37 2004/02/29 12:35:41 linus Exp $
+ * $Id: DetailsPane.java,v 1.38 2004/07/20 22:07:43 kataka Exp $
  */
 public class DetailsPane
     extends JPanel
@@ -580,10 +580,7 @@ public class DetailsPane
     /**
      * @see TargetListener#targetRemoved(TargetEvent)
      */
-    public void targetRemoved(TargetEvent e) {
-        // how to handle empty target lists?
-        // probably the detailspane should only show an empty pane in that case
-        setTarget(e.getNewTarget());
+    public void targetRemoved(TargetEvent e) {        
         fireTargetRemoved(e);
     }
 

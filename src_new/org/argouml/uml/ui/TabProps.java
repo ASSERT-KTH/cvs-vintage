@@ -1,4 +1,4 @@
-// $Id: TabProps.java,v 1.47 2004/07/20 01:49:55 d00mst Exp $
+// $Id: TabProps.java,v 1.48 2004/07/20 22:07:44 kataka Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -401,10 +401,10 @@ public class TabProps
      * @see org.argouml.ui.targetmanager.TargetListener#targetRemoved(org.argouml.ui.targetmanager.TargetEvent)
      */
     public void targetRemoved(TargetEvent e) {
-        setTarget(e.getNewTarget());
+        //setTarget(e.getNewTarget());
         fireTargetRemoved(e);
-        validate();
-        repaint(); 
+        //validate();
+        //repaint(); 
     }
 
     /**

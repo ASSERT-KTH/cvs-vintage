@@ -1,4 +1,4 @@
-// $Id: TargetManager.java,v 1.28 2004/07/18 18:56:02 kataka Exp $
+// $Id: TargetManager.java,v 1.29 2004/07/20 22:07:43 kataka Exp $
 // Copyright (c) 2002-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -354,6 +354,7 @@ public final class TargetManager {
 
 	Object oldTargets[] = _targets.toArray();
 	_targets.clear();
+	internalOnSetTarget(TargetEvent.TARGET_REMOVED, oldTargets);
 	if (o != null)
 	    _targets.add(o);
 	internalOnSetTarget(TargetEvent.TARGET_SET, oldTargets);
@@ -448,6 +449,7 @@ public final class TargetManager {
 	startTargetTransaction();
 
 	_targets.clear();
+	internalOnSetTarget(TargetEvent.TARGET_REMOVED, oldTargets);
 	ntarg = targetsList.iterator();
 	while (ntarg.hasNext()) {
 	    Object targ = ntarg.next();

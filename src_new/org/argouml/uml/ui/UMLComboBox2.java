@@ -1,4 +1,4 @@
-// $Id: UMLComboBox2.java,v 1.16 2004/02/29 12:35:46 linus Exp $
+// $Id: UMLComboBox2.java,v 1.17 2004/07/20 22:07:44 kataka Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -28,6 +28,7 @@ import java.awt.event.ActionEvent;
 
 import javax.swing.JComboBox;
 
+import org.argouml.ui.targetmanager.TargetEvent;
 import org.argouml.ui.targetmanager.TargetListener;
 import org.argouml.ui.targetmanager.TargettableModelView;
 
@@ -38,7 +39,7 @@ import org.argouml.ui.targetmanager.TargettableModelView;
  * replaced with this implementation to improve performance.
  */
 public class UMLComboBox2
-    extends JComboBox implements TargettableModelView {       
+    extends JComboBox implements TargettableModelView, TargetListener {    
     
     /**
      * Constructor for UMLMessageActivatorComboBox.
@@ -103,4 +104,24 @@ public class UMLComboBox2
         return (TargetListener) getModel();
     }
 
+    /**
+     * @see org.argouml.ui.targetmanager.TargetListener#targetAdded(org.argouml.ui.targetmanager.TargetEvent)
+     */
+    public void targetAdded(TargetEvent e) {
+        // we stay on the first target, so no need to do anything
+    }
+    
+    /**
+     * @see org.argouml.ui.targetmanager.TargetListener#targetRemoved(org.argouml.ui.targetmanager.TargetEvent)
+     */
+    public void targetRemoved(TargetEvent e) {
+        removeActionListener(this);  
+    }
+    
+    /**
+     * @see org.argouml.ui.targetmanager.TargetListener#targetSet(org.argouml.ui.targetmanager.TargetEvent)
+     */
+    public void targetSet(TargetEvent e) {
+        addActionListener(this);
+    }
 }

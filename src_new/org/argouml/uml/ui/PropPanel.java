@@ -1,4 +1,4 @@
-// $Id: PropPanel.java,v 1.82 2004/07/20 15:26:24 d00mst Exp $
+// $Id: PropPanel.java,v 1.83 2004/07/20 22:07:44 kataka Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -642,8 +642,9 @@ public abstract class PropPanel
     public void targetRemoved(TargetEvent e) {
         // how to handle empty target lists?
         // probably the TabProps should only show an empty pane in that case
-        setTarget(e.getNewTarget());
         fireTargetRemoved(e);
+        // setTarget(e.getNewTarget());
+        
 
     }
 

@@ -1,4 +1,4 @@
-// $Id: UseCasesFactory.java,v 1.22 2004/07/19 21:46:20 d00mst Exp $
+// $Id: UseCasesFactory.java,v 1.23 2004/07/20 22:07:43 kataka Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -23,6 +23,8 @@
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
 package org.argouml.model.uml.behavioralelements.usecases;
+
+import java.util.Iterator;
 
 import org.argouml.kernel.ProjectManager;
 import org.argouml.model.uml.AbstractUmlModelFactory;
@@ -334,7 +336,9 @@ public class UseCasesFactory extends AbstractUmlModelFactory {
 	UmlHelper.getHelper().deleteCollection(elem.getExtensionPoints());
     }
      
-    public void deleteExtensionPoint(MExtensionPoint elem) { }
+    public void deleteExtensionPoint(MExtensionPoint elem) {
+        
+    }
      
     public void deleteInclude(MInclude elem) { }
      
