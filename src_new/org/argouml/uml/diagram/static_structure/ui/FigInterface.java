@@ -1,4 +1,4 @@
-// $Id: FigInterface.java,v 1.85 2005/01/11 15:12:35 bobtarling Exp $
+// $Id: FigInterface.java,v 1.86 2005/01/12 15:37:00 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -639,6 +639,16 @@ public class FigInterface extends FigNodeModelElement
         } while (ft2 == null);
 
         return ft2;
+    }
+    
+    /**
+     * USED BY PGML.tee
+     * @return the class name and bounds together with compartment
+     * visibility.
+     */
+    public String classNameAndBounds() {
+        return super.classNameAndBounds()
+            + "operationsVisible=" + isOperationsVisible();
     }
 
     /**

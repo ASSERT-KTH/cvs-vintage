@@ -1,4 +1,4 @@
-// $Id: FigClass.java,v 1.127 2005/01/11 15:12:35 bobtarling Exp $
+// $Id: FigClass.java,v 1.128 2005/01/12 15:37:00 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -445,6 +445,17 @@ public class FigClass extends FigNodeModelElement
                 damage();
             }
         }
+    }
+
+    /**
+     * USED BY PGML.tee
+     * @return the class name and bounds together with compartment
+     * visibility.
+     */
+    public String classNameAndBounds() {
+        return super.classNameAndBounds()
+            + "operationsVisible=" + isOperationsVisible() + ";"
+            + "attributesVisible=" + isAttributesVisible();
     }
 
     /**
@@ -1002,16 +1013,16 @@ public class FigClass extends FigNodeModelElement
 
         currentY += height - 1; // -1 for 1 pixel overlap
 
-        int na = (isAttributesVisible())
+        int attributeCount = (isAttributesVisible())
     	    ? Math.max(1, getAttributesFig().getFigs().size() - 1)
     	    : 0;
-        int no = (isOperationsVisible())
+        int operationCount = (isOperationsVisible())
     	    ? Math.max(1, getOperationsFig().getFigs().size() - 1)
     	    : 0;
         if (isCheckSize()) {
-            height = ROWHEIGHT * na + 2 + extraEach;
-        } else if (newH > currentY - y && na + no > 0) {
-            height = (newH + y - currentY) * na / (na + no) + 1;
+            height = ROWHEIGHT * attributeCount + 2 + extraEach;
+        } else if (newH > currentY - y && attributeCount + operationCount > 0) {
+            height = (newH + y - currentY) * attributeCount / (attributeCount + operationCount) + 1;
         } else {
             height = 1;
         }
