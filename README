@@ -1,11 +1,3 @@
-$Id: README,v 1.1 1999/10/09 00:19:57 duncan Exp $
- 
-PROJECT TOMCAT SOURCE TREE (AKA JSDK + JSP)
-===========================================
-
-This is the source code tree for Tomcat, the next generation Java(tm)
-Servlet and JavaServer Pages Reference Implementation.
-
 How to Build
 ------------
 
@@ -15,11 +7,9 @@ wrappers that put the ant.jar file on the classpath and calls:
 
 	java com.sun.ant.Main
 
-To build, execute the either of the following commands in this
-directory:
+To build, execute the following command in this directory:
 
-	(unix)% compile
-	(dos)> doscompile
+	build
 
 This will build Tomcat into a build directory located in this directory.
 
@@ -27,15 +17,14 @@ Windows Note: If you get an "Out of Environment Space" message, you
 need to up the initial environment of your command prompt window.
 
 To build a 'distribution' build (without the tests, and with all the
-classes jarrd up nice) execute:
+classes jarred up nice) execute:
 
-	(unix)% compile dist
-	(dos)> doscompile dist
+	build dist
 
 To clean out the build (removes the build dir):
 
-	(unix)% compile clean
-	(dos)> doscompile clean
+	build clean
+
 
 Running the Build
 -----------------
@@ -43,18 +32,14 @@ Running the Build
 Two scripts are provided for starting and stopping the server. To
 start the server:
 
-	(unix)% compile
-	(unix)% cd build
-	(unix)% startserver
-
-	(dos)> compile
-	(dos)> cd build
-	(dos)> startsvr
+	cd build
+	cd tomcat
+	startserver
 
 To stop the server:
 
-	(unix)% stopserver
-	(dos)> stopsvr
+	stopserver
+
 
 Testing the Build
 -----------------
@@ -62,27 +47,16 @@ Testing the Build
 We have started a set of 'quick tests' that test out various parts of
 Tomcat. In order to build and run tests, do the following:
 
-	(dos)> compile test
-	(dos)> cd test
-	(dos)> runtests
-
-	(unix)% compile test
-	(unix)% cd test
-	(unix)% runtests
+	build test
+	cd test
+	runtests
 
 
 BEFORE COMMITTING CHANGES
 -------------------------
 
-You must, MUST do a `compile clean;compile` to make sure a clean
+You must, MUST do a `build clean;build` to make sure a clean
 workspace builds. Also, you must, MUST run the tests. All tests must
 pass before checking in code. Yes, we just started adding tests, but
 as time goes on, this will be our sanity check.
-
-James Duncan Davidson
-duncan@eng.sun.com
-
-
-
-
 
