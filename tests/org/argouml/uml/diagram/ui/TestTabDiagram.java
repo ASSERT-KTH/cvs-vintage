@@ -21,7 +21,7 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $Id: TestTabDiagram.java,v 1.2 2003/04/19 20:49:32 kataka Exp $
+// $Id: TestTabDiagram.java,v 1.3 2003/04/28 17:08:44 alexb Exp $
 package org.argouml.uml.diagram.ui;
 
 import java.util.Date;
@@ -45,7 +45,7 @@ import ru.novosoft.uml.MFactoryImpl;
  */
 public class TestTabDiagram extends TestCase {
     
-    private final static int NUMBER_OF_DIAGRAMS = 1000;
+    private final static int NUMBER_OF_DIAGRAMS = 10;
 
     private UMLDiagram _diagram;
     
@@ -100,7 +100,7 @@ public class TestTabDiagram extends TestCase {
     }
     
     /**
-     * Test the performance of adding an operation to 1 class that's represented on 100 different
+     * Test the performance of adding an operation to 1 class that's represented on 10 different
      * diagrams. The last created diagram is the one selected.
      *
      */
