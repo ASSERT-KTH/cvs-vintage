@@ -1197,17 +1197,15 @@ public class IssueSearch
     public List getMatchingIssues(int limitResults)
         throws Exception
     {
-        // List matchingIssues = null;
         Criteria crit = new Criteria();
         crit.add(IssuePeer.MODULE_ID, getModule().getModuleId());
         crit.add(IssuePeer.TYPE_ID, getIssueType().getIssueTypeId());
-        //crit.addJoin(IssuePeer.ISSUE_ID, AttributeValuePeer.ISSUE_ID);
 
         // add option values
         Criteria tempCrit = new Criteria(2)
             .add(AttributeValuePeer.DELETED, false);        
         List attValues = getAttributeValues(tempCrit);
-            // remove unset AttributeValues before searching
+        // remove unset AttributeValues before searching
         removeUnsetValues(attValues);        
         addSelectedAttributes(crit, attValues);
 
@@ -1256,7 +1254,6 @@ public class IssueSearch
         {
             matchingIssues = new ArrayList(0);
         }
-
         return matchingIssues;
     }
 
