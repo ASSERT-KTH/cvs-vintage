@@ -650,9 +650,13 @@ selected the radio button.
 <p><small>"<strong>*</strong>" $l10n.RequiredFields</small></p>
 #end
 
-#macro (userList $mitList $includeAny $includeCommittedBy $parameters)
-#set ($userAttrs = $mitList.getCommonUserAttributes())
+#macro (userList $mitList $includeAny $includeCommittedBy $parameters $activeOnly)
+#set ($userAttrs = $mitList.getCommonUserAttributes($activeOnly))
 #set ($modules = $mitList.Modules)
+
+#if ($userAttrs.isEmpty())
+blah
+#end
 
 ## SORTING
 #set ($sortColumn = $data.Parameters.getString("sortColumn","username"))
@@ -729,7 +733,7 @@ selected the radio button.
      #end
     </select></td>
     </tr>
-   #end
+  #end
    </table>
 
 #if ($paginated)
@@ -746,6 +750,7 @@ selected the radio button.
      </tr>
   </table>
 </div>
+#end
 
 ## keep track of state of the list, resultsPerPage should come after the
 ## chance to change it, because we will use the first value
@@ -754,7 +759,7 @@ selected the radio button.
 <input type="hidden" name="pageNum" value="$pageNum" />
 <input type="hidden" name="resultsPerPage" value="$resultsPerPage" />
 
-#end ## ends the if (!$searchResultsList || $searchResultsList.isEmpty()) statement
+##end ## ends the if (!$searchResultsList || $searchResultsList.isEmpty()) statement
 #end ## ends the if (!$userAttrs || $userAttrs.isEmpty()) statement
 #end
 
@@ -846,7 +851,7 @@ Prints out a date entry form.
 #if ($showTemplates)
 #set ($allTemplates = $scarabR.IssueTemplates)
 #if ($allTemplates.size() > 0)
-<h3>$l10n.format("ApplyTemplate", $scarabR.CurrentRModuleIssueType.DisplayName.toLowerCase())</h3>
+<h3>$l10n.format("ApplyTemplate", $module.getRModuleIssueType($issueType).DisplayName.toLowerCase())</h3>
 <div class="axial">
  <table cellpadding="3" cellspacing="2" border="0">
  <tr>
@@ -864,7 +869,7 @@ Prints out a date entry form.
 <input type="submit" value="$l10n.Select" name="eventSubmit_doUsetemplates" />
 </noscript>
 &#160;
-$link.setPage("TemplateList.vm").setLabel($l10n.format("ViewAllTemplates", $scarabR.CurrentIssueType.Name.toLowerCase()))
+$link.setPage("TemplateList.vm").setLabel($l10n.format("ViewAllTemplates", $module.getRModuleIssueType($issueType).DisplayName.toLowerCase()))
  </td>
  </tr>
  </table>

@@ -96,7 +96,7 @@ elseif ($copyToModules.isEmpty())
  <select name="mod_issuetype">
   <option value="">$l10n.Choose</option>
     #foreach ($issueType in $module.IssueTypes)
-       <option value="${module.ModuleId}_${issueType.IssueTypeId}">$issueType.Name</option>
+       <option value="${module.ModuleId}_${issueType.IssueTypeId}">$module.getRModuleIssueType($issueType).DisplayName</option>
     #end
  </select>
  </td>

@@ -67,7 +67,7 @@
 <table border="1" cellspacing="2" cellpadding="3">
 <tr>
 <th>$l10n.DestinationModule</th>
-<td> $newModule.Name / $newIssueType.Name </td>
+<td> $newModule.Name / $newModule.getRModuleIssueType($newIssueType).DisplayName </td>
 </tr>
 </table>
 </div>

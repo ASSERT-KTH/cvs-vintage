@@ -19,9 +19,11 @@
   </tr>
  #foreach ($item in $mitList.MITListItems)
   #indexedRows($velocityCount)
-    <td>$item.Module.RealName</td>
-    <td>$item.IssueType.Name</td>
-    <td>$item.IssueType.Description</td>
+    #set ($itemModule = $item.Module)
+    #set ($itemIT = $item.IssueType)
+    <td>$itemModule.RealName</td>
+    <td>$itemModule.getRModuleIssueType($itemIT).DisplayName ($itemIT.Name)</td>
+    <td>$itemIT.Description</td>
   </tr>        
  #end
 </table>
