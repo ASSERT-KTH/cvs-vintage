@@ -12,7 +12,7 @@
 <!--                                                                        -->
 <!-- ====================================================================== -->
 
-<!-- $Id: build.xml,v 1.83 2002/04/14 04:31:57 d_jencks Exp $ -->
+<!-- $Id: build.xml,v 1.84 2002/05/08 06:33:04 schaefera Exp $ -->
 
 <project default="main" name="JBoss/Server">
 
@@ -440,6 +440,7 @@
   <!-- Compile RMI stubs -->
   <target name="compile-rmi" depends="compile-classes">
     <rmic base="${build.classes}"
+     sourcebase="${build.classes}"
 	  verify="${rmic.verify}"
 	  iiop="${rmic.iiop}"
 	  iiopopts="${rmic.iiopops}"
