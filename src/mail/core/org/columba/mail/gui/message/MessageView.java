@@ -23,6 +23,7 @@ import javax.swing.JPanel;
 import javax.swing.event.HyperlinkListener;
 
 import org.columba.core.gui.util.CScrollPane;
+import org.columba.mail.gui.attachment.AttachmentView;
 import org.columba.mail.message.HeaderInterface;
 
 public class MessageView extends CScrollPane {
@@ -45,7 +46,7 @@ public class MessageView extends CScrollPane {
 
 	protected MessageController messageController;
 
-	public MessageView(MessageController controller) {
+	public MessageView(MessageController controller, AttachmentView attachmentView) {
 		super();
 		this.messageController = controller;
 
@@ -64,7 +65,7 @@ public class MessageView extends CScrollPane {
 		bodyTextViewer = new BodyTextViewer();	
 		panel.add(bodyTextViewer, BorderLayout.CENTER);
 	
-		panel.add( controller.getMailFrameController().attachmentController.getView(), BorderLayout.SOUTH);		
+		panel.add( attachmentView, BorderLayout.SOUTH);		
 	}
 
 	public void addHyperlinkListener(HyperlinkListener l) {

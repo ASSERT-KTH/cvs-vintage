@@ -33,15 +33,18 @@ import javax.swing.text.Element;
 import javax.swing.text.html.HTML;
 import javax.swing.text.html.HTMLDocument;
 
+import org.columba.core.charset.CharsetEvent;
+import org.columba.core.charset.CharsetListener;
+import org.columba.core.charset.CharsetOwnerInterface;
 import org.columba.core.config.Config;
+import org.columba.core.gui.frame.AbstractFrameController;
 import org.columba.core.logging.ColumbaLogger;
 import org.columba.core.main.MainInterface;
-import org.columba.core.util.CharsetEvent;
-import org.columba.core.util.CharsetListener;
 import org.columba.mail.coder.CoderRouter;
 import org.columba.mail.coder.Decoder;
 import org.columba.mail.folder.Folder;
-import org.columba.mail.gui.frame.MailFrameController;
+import org.columba.mail.gui.attachment.AttachmentController;
+import org.columba.mail.gui.frame.AbstractMailFrameController;
 import org.columba.mail.gui.message.action.MessageActionListener;
 import org.columba.mail.gui.message.action.MessageFocusListener;
 import org.columba.mail.gui.message.action.MessagePopupListener;
@@ -80,17 +83,19 @@ public class MessageController
 	private MessageView view;
 	private MessageActionListener actionListener;
 
-	protected MailFrameController mailFrameController;
-
+	protected AbstractFrameController abstractFrameController;
+	protected AttachmentController attachmentController;
 	//private MessageSelectionManager messageSelectionManager;
 
-	public MessageController(MailFrameController mailFrameController) {
+	public MessageController(
+		AbstractFrameController abstractFrameController,
+		AttachmentController attachmentController) {
 
-		this.mailFrameController = mailFrameController;
-
+		this.abstractFrameController = abstractFrameController;
+		this.attachmentController = attachmentController;
 		activeCharset = "auto";
 
-		view = new MessageView(this);
+		view = new MessageView(this, attachmentController.getView());
 		view.addHyperlinkListener(this);
 		view.addMouseListener(this);
 
@@ -106,7 +111,9 @@ public class MessageController
 		keys[3] = new String("To");
 		*/
 
-		mailFrameController.getCharsetManager().addCharsetListener(this);
+		
+		((CharsetOwnerInterface) getFrameController()).getCharsetManager().addCharsetListener(this);
+		
 
 		Font mainFont = Config.getOptionsConfig().getGuiItem().getMainFont();
 
@@ -193,7 +200,11 @@ public class MessageController
 
 		if (activeCharset.equals("auto")) {
 			charset = bodyPart.getHeader().getContentParameter("charset");
-			getMailFrameController().getCharsetManager().displayCharset(charset);
+
+			((CharsetOwnerInterface) getFrameController())
+				.getCharsetManager()
+				.displayCharset(charset);
+
 		} else {
 			charset = activeCharset;
 		}
@@ -207,23 +218,23 @@ public class MessageController
 		boolean htmlViewer =
 			bodyPart.getHeader().contentSubtype.equalsIgnoreCase("html");
 
-	
-
 		String decodedBody = null;
 
-		
 		// Decode the Text using the specified Charset
 		try {
-		decodedBody = decoder.decode(bodyPart.getBody(), charset);
+			decodedBody = decoder.decode(bodyPart.getBody(), charset);
 		} catch (UnsupportedEncodingException ex) {
-		// If Charset not supported fall back to standard Charset
-		ColumbaLogger.log.info("charset "+charset+" isn't supported, falling back to default...");
-		
-		try {
-		  decodedBody = decoder.decode(bodyPart.getBody(), null);
-		} catch (UnsupportedEncodingException never) {
-			never.printStackTrace();
-		}
+			// If Charset not supported fall back to standard Charset
+			ColumbaLogger.log.info(
+				"charset "
+					+ charset
+					+ " isn't supported, falling back to default...");
+
+			try {
+				decodedBody = decoder.decode(bodyPart.getBody(), null);
+			} catch (UnsupportedEncodingException never) {
+				never.printStackTrace();
+			}
 		}
 
 		boolean hasAttachments = false;
@@ -232,14 +243,12 @@ public class MessageController
 			|| (!mimePartTree.get(0).getHeader().contentType.equals("text")))
 			hasAttachments = true;
 
-		getMailFrameController().attachmentController.setMimePartTree(
-			mimePartTree);
-		
+		attachmentController.setMimePartTree(mimePartTree);
+
 		getView().setDoc(header, decodedBody, htmlViewer, hasAttachments);
 
 		getView().getVerticalScrollBar().setValue(0);
-		
-		
+
 	}
 
 	public void showMessageSource(String rawText) throws Exception {
@@ -412,8 +421,9 @@ public class MessageController
 
 	protected void processPopup(MouseEvent event) {
 		URL url = extractURL(event);
-		if ( url == null ) return;
-		
+		if (url == null)
+			return;
+
 		URLController c = new URLController();
 		JPopupMenu menu = c.createMenu(url);
 		menu.show(getView(), event.getX(), event.getY());
@@ -425,8 +435,8 @@ public class MessageController
 	 * Returns the mailFrameController.
 	 * @return MailFrameController
 	 */
-	public MailFrameController getMailFrameController() {
-		return mailFrameController;
+	public AbstractFrameController getFrameController() {
+		return abstractFrameController;
 	}
 
 	/* (non-Javadoc)
@@ -437,9 +447,9 @@ public class MessageController
 
 		MainInterface.processor.addOp(
 			new ViewMessageCommand(
-				getMailFrameController(),
-				getMailFrameController().getSelectionManager().getSelection(
-					"mail.table")));		
+				getFrameController(),
+				((AbstractMailFrameController) getFrameController())
+					.getTableSelection()));
 	}
 
 }

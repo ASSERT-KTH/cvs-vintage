@@ -27,7 +27,7 @@ import org.columba.core.gui.util.ImageLoader;
 import org.columba.core.main.MainInterface;
 import org.columba.mail.folder.Folder;
 import org.columba.mail.gui.config.search.SearchFrame;
-import org.columba.mail.gui.frame.MailFrameController;
+import org.columba.mail.gui.frame.AbstractMailFrameController;
 import org.columba.mail.util.MailResourceLoader;
 
 public class SearchMessageAction extends FrameAction {
@@ -59,7 +59,7 @@ public class SearchMessageAction extends FrameAction {
 			
 		SearchFrame frame =
 			new SearchFrame(
-				(MailFrameController) getFrameController(),
+				(AbstractMailFrameController) getFrameController(),
 				searchFolder);				
 	}
 

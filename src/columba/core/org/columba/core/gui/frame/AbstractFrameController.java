@@ -18,13 +18,13 @@ package org.columba.core.gui.frame;
 
 import java.awt.event.MouseAdapter;
 
+import org.columba.core.charset.CharsetManager;
 import org.columba.core.config.ViewItem;
 import org.columba.core.gui.menu.Menu;
 import org.columba.core.gui.selection.SelectionManager;
 import org.columba.core.gui.statusbar.StatusBar;
 import org.columba.core.logging.ColumbaLogger;
 import org.columba.core.main.MainInterface;
-import org.columba.core.util.CharsetManager;
 import org.columba.core.xml.XmlElement;
 import org.columba.mail.gui.frame.TooltipMouseHandler;
 
@@ -41,7 +41,7 @@ public abstract class AbstractFrameController {
 
 	protected AbstractFrameView view;
 	protected SelectionManager selectionManager;
-	protected CharsetManager charsetManager;
+	
 
 	protected String id;
 
@@ -211,18 +211,6 @@ public abstract class AbstractFrameController {
 	public void executeCutAction() {}
 	public void executeCopyAction() {}
 	public void executePasteAction() {}
-	/**
-	 * @return
-	 */
-	public CharsetManager getCharsetManager() {
-		return charsetManager;
-	}
-
-	/**
-	 * @param manager
-	 */
-	public void setCharsetManager(CharsetManager manager) {
-		charsetManager = manager;
-	}
+	
 
 }

@@ -13,9 +13,9 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
-package org.columba.core.util;
+package org.columba.core.charset;
 
-import java.util.EventObject;
+import java.util.EventListener;
 
 /**
  * @author -
@@ -25,46 +25,10 @@ import java.util.EventObject;
  * To enable and disable the creation of type comments go to
  * Window>Preferences>Java>Code Generation.
  */
-public class CharsetEvent extends EventObject {
+public abstract interface CharsetListener extends EventListener
+{
 	
-	private int id;
-	private String value;
-
-	public CharsetEvent( Object source, int id, String name ) {
-		super(source);
-		this.id = id;
-		value = name;	
-	}
-
-	/**
-	 * Returns the id.
-	 * @return int
-	 */
-	public int getId() {
-		return id;
-	}
-
-	/**
-	 * Returns the value.
-	 * @return String
-	 */
-	public String getValue() {
-		return value;
-	}
-
-	/**
-	 * Sets the id.
-	 * @param id The id to set
-	 */
-	public void setId(int id) {
-		this.id = id;
-	}
-
-	/**
-	 * Sets the value.
-	 * @param value The value to set
-	 */
-	public void setValue(String value) {
-		this.value = value;
-	}
+	public abstract void charsetChanged( CharsetEvent e );
+	
+	
 }

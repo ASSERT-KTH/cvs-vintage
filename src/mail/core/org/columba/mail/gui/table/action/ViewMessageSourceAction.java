@@ -27,7 +27,7 @@ import org.columba.core.gui.selection.SelectionChangedEvent;
 import org.columba.core.gui.selection.SelectionListener;
 import org.columba.core.main.MainInterface;
 import org.columba.mail.command.FolderCommandReference;
-import org.columba.mail.gui.frame.MailFrameController;
+import org.columba.mail.gui.frame.AbstractMailFrameController;
 import org.columba.mail.gui.message.command.ViewMessageSourceCommand;
 import org.columba.mail.gui.table.selection.TableSelectionChangedEvent;
 import org.columba.mail.util.MailResourceLoader;
@@ -54,7 +54,7 @@ public class ViewMessageSourceAction
 			'0',
 			KeyStroke.getKeyStroke(KeyEvent.VK_U, ActionEvent.CTRL_MASK));
 		setEnabled(false);
-		((MailFrameController) frameController).registerTableSelectionListener(
+		((AbstractMailFrameController) frameController).registerTableSelectionListener(
 			this);
 	}
 
@@ -63,7 +63,7 @@ public class ViewMessageSourceAction
 	 */
 	public void actionPerformed(ActionEvent evt) {
 		FolderCommandReference[] r =
-			((MailFrameController) getFrameController()).getTableSelection();
+			((AbstractMailFrameController) getFrameController()).getTableSelection();
 
 		ViewMessageSourceCommand c =
 			new ViewMessageSourceCommand(getFrameController(), r);

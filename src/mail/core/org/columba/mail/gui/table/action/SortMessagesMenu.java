@@ -25,7 +25,7 @@ import javax.swing.JRadioButtonMenuItem;
 import org.columba.core.action.IMenu;
 import org.columba.core.config.TableItem;
 import org.columba.core.gui.frame.AbstractFrameController;
-import org.columba.mail.gui.frame.MailFrameController;
+import org.columba.mail.gui.frame.AbstractMailFrameController;
 import org.columba.mail.util.MailResourceLoader;
 
 public class SortMessagesMenu extends IMenu implements ActionListener {
@@ -42,7 +42,9 @@ public class SortMessagesMenu extends IMenu implements ActionListener {
 	}
 
 	protected void createSubMenu() {
-		TableItem item = ((MailFrameController)getController()).tableController.getHeaderTableItem();
+		// TODO: create sorting sub-menu
+		/*
+		TableItem item = ((AbstractMailFrameController)getController()).tableController.getHeaderTableItem();
 		int headerCount= item.getChildCount();
 		menuButtons = new ButtonGroup();
 		JRadioButtonMenuItem headerMenuItem;
@@ -54,6 +56,7 @@ public class SortMessagesMenu extends IMenu implements ActionListener {
 			menuButtons.add(headerMenuItem);
 			add(headerMenuItem);
 		}
+		*/
 	}
 
 	/* (non-Javadoc)

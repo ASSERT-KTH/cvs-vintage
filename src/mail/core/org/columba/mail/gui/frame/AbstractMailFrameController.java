@@ -15,36 +15,19 @@
 //All Rights Reserved.
 package org.columba.mail.gui.frame;
 
-import java.util.Enumeration;
-import java.util.Vector;
-
+import org.columba.core.charset.CharsetManager;
+import org.columba.core.charset.CharsetOwnerInterface;
 import org.columba.core.config.ViewItem;
-import org.columba.core.gui.ClipboardManager;
 import org.columba.core.gui.frame.AbstractFrameController;
 import org.columba.core.gui.frame.AbstractFrameView;
 import org.columba.core.gui.selection.SelectionListener;
 import org.columba.core.gui.toolbar.ToolBar;
-import org.columba.core.gui.util.DialogStore;
-import org.columba.core.logging.ColumbaLogger;
-import org.columba.core.main.MainInterface;
-import org.columba.core.util.CharsetManager;
 import org.columba.core.xml.XmlElement;
-import org.columba.mail.command.FolderCommand;
 import org.columba.mail.command.FolderCommandReference;
-import org.columba.mail.folder.command.CopyMessageCommand;
-import org.columba.mail.folder.command.MoveMessageCommand;
 import org.columba.mail.gui.action.GlobalActionCollection;
 import org.columba.mail.gui.attachment.AttachmentController;
-import org.columba.mail.gui.composer.HeaderController;
 import org.columba.mail.gui.frame.action.FrameActionListener;
-import org.columba.mail.gui.infopanel.FolderInfoPanel;
 import org.columba.mail.gui.message.MessageController;
-import org.columba.mail.gui.table.FilterToolbar;
-import org.columba.mail.gui.table.TableChangedEvent;
-import org.columba.mail.gui.table.TableController;
-import org.columba.mail.gui.table.TableView;
-import org.columba.mail.gui.tree.TreeController;
-import org.columba.mail.gui.tree.TreeView;
 
 /**
  * @author freddy
@@ -54,42 +37,23 @@ import org.columba.mail.gui.tree.TreeView;
  * To enable and disable the creation of type comments go to
  * Window>Preferences>Java>Code Generation.
  */
-public class MailFrameController extends AbstractFrameController {
+public abstract class AbstractMailFrameController
+	extends AbstractFrameController
+	implements CharsetOwnerInterface {
 
 	//public SelectionManager selectionManager;
-
-	public TreeController treeController;
-	public TableController tableController;
-	public MessageController messageController;
-	public AttachmentController attachmentController;
-	public HeaderController headerController;
-	public FilterToolbar filterToolbar;
-
-	public FolderInfoPanel folderInfoPanel;
 
 	private FrameActionListener actionListener;
 	private ToolBar toolBar;
 	public GlobalActionCollection globalActionCollection;
 
-	protected static Vector list = new Vector();
+	public MessageController messageController;
+	public AttachmentController attachmentController;
 
-	public MailFrameController(ViewItem viewItem) {
-		this("Mail", viewItem);
-	}
+	protected CharsetManager charsetManager;
 
-	public MailFrameController(String id, ViewItem viewItem) {
+	public AbstractMailFrameController(String id, ViewItem viewItem) {
 		super(id, viewItem);
-
-		list.add(this);
-	}
-
-	public static void tableChanged(TableChangedEvent ev) throws Exception {
-		for (Enumeration e = list.elements(); e.hasMoreElements();) {
-
-			MailFrameController frame = (MailFrameController) e.nextElement();
-
-			frame.tableController.tableChanged(ev);
-		}
 
 	}
 
@@ -125,24 +89,6 @@ public class MailFrameController extends AbstractFrameController {
 		getSelectionManager().registerSelectionListener("mail.tree", l);
 	}
 
-	public AbstractFrameView createView() {
-
-		MailFrameView view = new MailFrameView(this);
-
-		view.setFolderInfoPanel(folderInfoPanel);
-
-		view.init(
-			treeController.getView(),
-			tableController.getView(),
-			filterToolbar,
-			messageController.getView(),
-			statusBar);
-
-		//view.pack();
-
-		return view;
-	}
-
 	public AbstractFrameView getView() {
 		return view;
 	}
@@ -154,39 +100,32 @@ public class MailFrameController extends AbstractFrameController {
 	/*
 	protected void changeToolbars() {
 		ViewItem item = MailConfig.getMainFrameOptionsConfig().getViewItem();
-
+	
 		boolean folderInfo = item.getBoolean("toolbars", "show_folderinfo");
 		boolean toolbar = item.getBoolean("toolbars", "show_main");
-
+	
 		if (toolbar == true) {
-
+	
 			((MailFrameView) getView()).hideToolbar(folderInfo);
 			item.set("toolbars", "show_main", false);
 		} else {
-
+	
 			((MailFrameView) getView()).showToolbar(folderInfo);
 			item.set("toolbars", "show_main", true);
 		}
-
+	
 		if (folderInfo == true) {
-
+	
 			((MailFrameView) getView()).hideFolderInfo(toolbar);
 			item.set("toolbars", "show_folderinfo", false);
 		} else {
-
+	
 			((MailFrameView) getView()).showFolderInfo(toolbar);
 			item.set("toolbars", "show_folderinfo", true);
 		}
-
+	
 	}
 	*/
-	public void close() {
-
-		tableController.saveColumnConfig();
-
-		super.close();
-
-	}
 
 	/* (non-Javadoc)
 	 * @see org.columba.core.gui.FrameController#registerSelectionHandlers()
@@ -205,25 +144,6 @@ public class MailFrameController extends AbstractFrameController {
 	/* (non-Javadoc)
 	 * @see org.columba.core.gui.FrameController#init()
 	 */
-	protected void init() {
-		
-		setCharsetManager( new CharsetManager(null) );
-		
-		treeController = new TreeController(this, MainInterface.treeModel);
-
-		tableController = new TableController(this);
-
-		attachmentController = new AttachmentController(this);
-
-		messageController = new MessageController(this);
-
-		folderInfoPanel = new FolderInfoPanel();
-		//treeController.getTreeSelectionManager().addFolderSelectionListener(folderInfoPanel);
-		
-		filterToolbar = new FilterToolbar(tableController);
-
-		new DialogStore((MailFrameView) view);
-	}
 
 	/* (non-Javadoc)
 	 * @see org.columba.core.gui.frame.AbstractFrameController#createDefaultConfiguration(java.lang.String)
@@ -244,86 +164,30 @@ public class MailFrameController extends AbstractFrameController {
 	}
 
 	/* (non-Javadoc)
-	 * @see org.columba.core.gui.frame.AbstractFrameController#saveAndClose()
+	 * @see org.columba.core.gui.frame.AbstractFrameController#init()
 	 */
-	public void saveAndClose() {
+	protected void init() {
 
-		tableController.saveColumnConfig();
-		super.saveAndClose();
-	}
+		setCharsetManager(new CharsetManager(null));
 
-	/* (non-Javadoc)
-	 * @see org.columba.core.gui.frame.AbstractFrameController#executeCopyAction()
-	 */
-	public void executeCopyAction() {
-		ColumbaLogger.log.debug("copy action");
+		attachmentController = new AttachmentController(this);
 
-		TableView table = tableController.getView();
-
-		// add current selection to clipboard
-
-		// copy action
-		MainInterface.clipboardManager.setOperation(
-			ClipboardManager.COPY_ACTION);
-
-		MainInterface.clipboardManager.setMessageSelection(getTableSelection());
+		messageController = new MessageController(this, attachmentController);
 
 	}
 
-	/* (non-Javadoc)
-	 * @see org.columba.core.gui.frame.AbstractFrameController#executeCutAction()
-	 */
-	public void executeCutAction() {
-		ColumbaLogger.log.debug("cut action");
-
-		TableView table = tableController.getView();
-
-		// add current selection to clipboard
-
-		// cut action
-		MainInterface.clipboardManager.setOperation(
-			ClipboardManager.CUT_ACTION);
-
-		MainInterface.clipboardManager.setMessageSelection(getTableSelection());
-
+	/**
+		 * @return
+		 */
+	public CharsetManager getCharsetManager() {
+		return charsetManager;
 	}
 
-	/* (non-Javadoc)
-	 * @see org.columba.core.gui.frame.AbstractFrameController#executePasteAction()
+	/**
+	 * @param manager
 	 */
-	public void executePasteAction() {
-		ColumbaLogger.log.debug("paste action");
-
-		TableView table = tableController.getView();
-		TreeView tree = treeController.getView();
-
-		//if ( (table.hasFocus()) || (tree.hasFocus()) ) {
-
-		FolderCommandReference[] ref = new FolderCommandReference[2];
-
-		FolderCommandReference[] source =
-			MainInterface.clipboardManager.getMessageSelection();
-		if (source == null)
-			return;
-
-		ref[0] = source[0];
-		
-		FolderCommandReference[] dest = getTableSelection();
-		ref[1] = dest[0];
-
-		FolderCommand c = null;
-
-		if (MainInterface.clipboardManager.isCutAction())
-			c = new MoveMessageCommand(ref);
-		else
-			c = new CopyMessageCommand(ref);
-
-		MainInterface.clipboardManager.clearMessageSelection();
-
-		MainInterface.processor.addOp(c);
-
-		//}
-
+	public void setCharsetManager(CharsetManager manager) {
+		charsetManager = manager;
 	}
 
 }

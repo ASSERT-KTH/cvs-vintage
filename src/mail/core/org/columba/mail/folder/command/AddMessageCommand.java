@@ -21,7 +21,7 @@ import org.columba.core.command.Worker;
 import org.columba.core.main.MainInterface;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.folder.Folder;
-import org.columba.mail.gui.frame.MailFrameController;
+import org.columba.mail.gui.frame.TableUpdater;
 import org.columba.mail.gui.table.TableChangedEvent;
 import org.columba.mail.message.AbstractMessage;
 import org.columba.mail.message.HeaderInterface;
@@ -58,7 +58,7 @@ public class AddMessageCommand extends Command {
 		
 		MainInterface.treeModel.nodeChanged(folder);
 		
-		MailFrameController.tableChanged(ev);
+		TableUpdater.tableChanged(ev);
 	}
 
 	/**

@@ -22,6 +22,7 @@ import java.awt.event.KeyEvent;
 import javax.swing.KeyStroke;
 
 import org.columba.core.action.FrameAction;
+import org.columba.core.charset.CharsetOwnerInterface;
 import org.columba.core.gui.frame.AbstractFrameController;
 import org.columba.core.gui.util.ImageLoader;
 import org.columba.core.main.MainInterface;
@@ -48,8 +49,9 @@ public class PrintAction extends FrameAction {
 			ImageLoader.getImageIcon("stock_print.png"),
 			'0',
 			KeyStroke.getKeyStroke(KeyEvent.VK_P, ActionEvent.CTRL_MASK));
-			
-		setEnabled(true);	// *20030531, karlpeder* Print functionality reactivated
+
+		setEnabled(true);
+		// *20030531, karlpeder* Print functionality reactivated
 	}
 
 	/* (non-Javadoc)
@@ -62,7 +64,10 @@ public class PrintAction extends FrameAction {
 				.getSelection("mail.table");
 
 		// GetCharset() added
-		String charset = getFrameController().getCharsetManager().getSelectedCharset();
+		String charset =
+			((CharsetOwnerInterface) getFrameController())
+				.getCharsetManager()
+				.getSelectedCharset();
 
 		PrintMessageCommand c = new PrintMessageCommand(r, charset);
 

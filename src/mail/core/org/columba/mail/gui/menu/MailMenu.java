@@ -33,12 +33,12 @@ public class MailMenu extends Menu {
 	 * @param xmlRoot
 	 * @param frameController
 	 */
-	public MailMenu(String xmlRoot, AbstractFrameController frameController) {
+	public MailMenu(String xmlRoot, String extension, AbstractFrameController frameController) {
 		super(xmlRoot, frameController);
 
 		
 		
-		extendMenuFromFile("org/columba/mail/action/menu.xml");
+		extendMenuFromFile(extension);
 		
 		
 		try {

@@ -33,7 +33,7 @@ import org.columba.mail.filter.FilterCriteria;
 import org.columba.mail.folder.Folder;
 import org.columba.mail.folder.search.DefaultSearchEngine;
 import org.columba.mail.gui.config.search.SearchFrame;
-import org.columba.mail.gui.frame.MailFrameController;
+import org.columba.mail.gui.frame.AbstractMailFrameController;
 import org.columba.mail.message.AbstractMessage;
 import org.columba.mail.message.ColumbaHeader;
 import org.columba.mail.message.HeaderInterface;
@@ -99,7 +99,7 @@ public class VirtualFolder extends Folder {
 		nextUid = next;
 	}
 
-	public JDialog showFilterDialog(MailFrameController frameController) {
+	public JDialog showFilterDialog(AbstractMailFrameController frameController) {
 		return new SearchFrame(frameController, this);
 	}
 

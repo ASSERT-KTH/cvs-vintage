@@ -46,7 +46,16 @@ public class UndoManager implements ActionListener, WorkerListChangeListener {
 		this.processor = processor;
 		runningTasks = 0;
 
+		
+		try
+		{
+		
 		initActions();
+		}
+		catch ( Exception ex)
+		{
+			ex.printStackTrace();
+		}
 
 		processor.getTaskManager().addWorkerListChangeListener(this);
 	}

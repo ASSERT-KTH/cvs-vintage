@@ -32,7 +32,7 @@ import org.columba.mail.config.FolderItem;
 import org.columba.mail.filter.Filter;
 import org.columba.mail.filter.FilterList;
 import org.columba.mail.gui.config.filter.ConfigFrame;
-import org.columba.mail.gui.frame.MailFrameController;
+import org.columba.mail.gui.frame.AbstractMailFrameController;
 import org.columba.mail.message.AbstractMessage;
 import org.columba.mail.message.ColumbaHeader;
 import org.columba.mail.message.HeaderList;
@@ -114,7 +114,7 @@ public abstract class Folder extends FolderTreeNode {
 	 * @param frameController
 	 * @return JDialog
 	 */
-	public JDialog showFilterDialog(MailFrameController frameController) {
+	public JDialog showFilterDialog(AbstractMailFrameController frameController) {
 		return new ConfigFrame(this);
 	}
 

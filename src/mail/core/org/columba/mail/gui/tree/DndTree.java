@@ -57,7 +57,7 @@ import javax.swing.tree.TreePath;
 
 import org.columba.core.main.MainInterface;
 import org.columba.mail.folder.FolderTreeNode;
-import org.columba.mail.gui.frame.MailFrameController;
+import org.columba.mail.gui.frame.AbstractMailFrameController;
 import org.columba.mail.gui.tree.util.CArrowImage;
 import org.columba.mail.gui.tree.util.CTransferableTreePath;
 
@@ -79,7 +79,7 @@ public class DndTree
 	private Point _ptOffset = new Point();
 	// Where, in the drag image, the mouse was clicked
 
-	MailFrameController frameController;
+	AbstractMailFrameController frameController;
 
 	// Constructors...
 	public DndTree() // Use the default JTree constructor so that we get a sample TreeModel built for us
@@ -100,7 +100,7 @@ public class DndTree
 
 	}
 
-	public DndTree(MailFrameController frameController, TreeModel model) {
+	public DndTree(AbstractMailFrameController frameController, TreeModel model) {
 		super(model);
 		this.frameController = frameController;
 

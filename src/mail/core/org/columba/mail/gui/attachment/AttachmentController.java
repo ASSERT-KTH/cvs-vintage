@@ -24,9 +24,10 @@ import java.io.File;
 import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
 
+import org.columba.core.gui.frame.AbstractFrameController;
 import org.columba.mail.gui.attachment.action.OpenAction;
 import org.columba.mail.gui.attachment.util.IconPanel;
-import org.columba.mail.gui.frame.MailFrameController;
+import org.columba.mail.gui.frame.AbstractMailFrameController;
 import org.columba.mail.message.MimePart;
 import org.columba.mail.message.MimePartTree;
 
@@ -57,27 +58,31 @@ public class AttachmentController {
 	private AttachmentView view;
 	private AttachmentModel model;
 
+	private AbstractFrameController abstractFrameController;
 
-	private MailFrameController mailFrameController;
-
-	public AttachmentController(MailFrameController superController) {
+	public AttachmentController(AbstractFrameController superController) {
 		super();
 
-		this.mailFrameController = superController;
+		this.abstractFrameController = superController;
 
 		model = new AttachmentModel();
 
 		view = new AttachmentView(model);
 
 		//attachmentSelectionManager = new AttachmentSelectionManager();
-		mailFrameController.getSelectionManager().addSelectionHandler( new AttachmentSelectionHandler(view));
-
+		// FIXME
+		/*
+			abstractFrameController.getSelectionManager().addSelectionHandler(
+				new AttachmentSelectionHandler(view));
+		*/
 		//actionListener = new AttachmentActionListener(this);
 
-		menu = new AttachmentMenu(superController);
-
+		
+		// TODO: re-enable double-click open-action
+		/*
 		getView().setDoubleClickAction(new OpenAction(superController));
-
+		*/
+		
 		MouseListener popupListener = new PopupListener();
 		getView().addMouseListener(popupListener);
 
@@ -95,8 +100,8 @@ public class AttachmentController {
 			 */
 	}
 
-	public MailFrameController getFrameController()	{
-		return mailFrameController;
+	public AbstractFrameController getFrameController() {
+		return abstractFrameController;
 	}
 
 	public AttachmentView getView() {
@@ -114,17 +119,17 @@ public class AttachmentController {
 	/*
 	public void openWith(MimePart part, File tempFile) {
 		MimeHeader header = part.getHeader();
-
+	
 		MimeTypeViewer viewer = new MimeTypeViewer();
 		viewer.openWith(header, tempFile);
-
+	
 	}
 	*/
-	
+
 	/*
 	public void open(MimePart part, File tempFile) {
 		MimeHeader header = part.getHeader();
-
+	
 		if (header.getContentType().toLowerCase().indexOf("message") != -1) {
 			inline = true;
 			openInlineMessage(part, tempFile);
@@ -133,10 +138,10 @@ public class AttachmentController {
 			MimeTypeViewer viewer = new MimeTypeViewer();
 			viewer.open(header, tempFile);
 		}
-
+	
 	}
 	*/
-	
+
 	protected void openInlineMessage(MimePart part, File tempFile) {
 
 		/*
@@ -165,6 +170,7 @@ public class AttachmentController {
 	}
 
 	private JPopupMenu getPopupMenu() {
+		if ( menu == null ) menu = new AttachmentMenu(getFrameController());
 		return menu;
 	}
 
@@ -182,17 +188,10 @@ public class AttachmentController {
 				if (getView().countSelected() <= 1) {
 					getView().select(e.getPoint(), 0);
 				}
-				if ( getView().countSelected() >= 1 )
+				if (getView().countSelected() >= 1)
 					getPopupMenu().show(e.getComponent(), e.getX(), e.getY());
 			}
 		}
 	}
 
-	/**
-	 * Returns the mailFrameController.
-	 * @return MailFrameController
-	 */
-	public MailFrameController getMailFrameController() {
-		return mailFrameController;
-	}
 }

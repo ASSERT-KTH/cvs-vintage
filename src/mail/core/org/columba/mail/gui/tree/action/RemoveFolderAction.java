@@ -21,7 +21,7 @@ import org.columba.core.main.MainInterface;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.folder.Folder;
 import org.columba.mail.folder.command.RemoveFolderCommand;
-import org.columba.mail.gui.frame.MailFrameController;
+import org.columba.mail.gui.frame.AbstractMailFrameController;
 import org.columba.mail.gui.tree.selection.TreeSelectionChangedEvent;
 import org.columba.mail.util.MailResourceLoader;
 
@@ -67,7 +67,7 @@ public class RemoveFolderAction
 			'D',
 			KeyStroke.getKeyStroke(KeyEvent.VK_D, ActionEvent.ALT_MASK));
 		setEnabled(false);
-		((MailFrameController) frameController).registerTreeSelectionListener(
+		((AbstractMailFrameController) frameController).registerTreeSelectionListener(
 			this);
 	}
 

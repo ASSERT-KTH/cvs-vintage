@@ -15,7 +15,7 @@ import org.columba.core.gui.selection.SelectionListener;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.config.FolderItem;
 import org.columba.mail.folder.Folder;
-import org.columba.mail.gui.frame.MailFrameController;
+import org.columba.mail.gui.frame.AbstractMailFrameController;
 import org.columba.mail.gui.tree.selection.TreeSelectionChangedEvent;
 import org.columba.mail.util.MailResourceLoader;
 
@@ -61,7 +61,7 @@ public class FilterPreferencesAction
 			'U',
 			null);
 		setEnabled(false);
-		((MailFrameController) frameController).registerTreeSelectionListener(
+		((AbstractMailFrameController) frameController).registerTreeSelectionListener(
 			this);
 	}
 
@@ -83,7 +83,7 @@ public class FilterPreferencesAction
 		if (item == null)
 			return;
 
-		folder.showFilterDialog(((MailFrameController) getFrameController()));
+		folder.showFilterDialog(((AbstractMailFrameController) getFrameController()));
 	}
 	/* (non-Javadoc)
 					 * @see org.columba.core.gui.util.SelectionListener#selectionChanged(org.columba.core.gui.util.SelectionChangedEvent)

@@ -15,7 +15,7 @@ import org.columba.mail.parser.MailUrlParser;
  * argument --composer is given, on startup the composer window is viewed. All other arguments like
  * subject ect. also given to the composer, so any values to write a mail can given here as 
  * arguments and then a composer window with all values are opened.
- * TODO: test, why any commandline options are not seen in the composer window (eg. subject).
+ * 
  * @author waffel
  */
 public class CmdLineArgumentHandler {

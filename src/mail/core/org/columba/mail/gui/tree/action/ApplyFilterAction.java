@@ -19,7 +19,7 @@ import org.columba.core.gui.util.ImageLoader;
 import org.columba.core.main.MainInterface;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.folder.command.ApplyFilterCommand;
-import org.columba.mail.gui.frame.MailFrameController;
+import org.columba.mail.gui.frame.AbstractMailFrameController;
 import org.columba.mail.gui.tree.selection.TreeSelectionChangedEvent;
 import org.columba.mail.util.MailResourceLoader;
 
@@ -65,7 +65,7 @@ public class ApplyFilterAction
 			'F',
 			KeyStroke.getKeyStroke(KeyEvent.VK_A, ActionEvent.ALT_MASK));
 		setEnabled(false);
-		((MailFrameController) frameController).registerTreeSelectionListener(
+		((AbstractMailFrameController) frameController).registerTreeSelectionListener(
 			this);
 	}
 
@@ -74,7 +74,7 @@ public class ApplyFilterAction
 	 */
 	public void actionPerformed(ActionEvent evt) {
 		FolderCommandReference[] r =
-			((MailFrameController) getFrameController()).getTreeSelection();
+			((AbstractMailFrameController) getFrameController()).getTreeSelection();
 
 		//Folder folder = (Folder) r[0].getFolder();
 		MainInterface.processor.addOp(new ApplyFilterCommand(r));

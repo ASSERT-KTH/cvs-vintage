@@ -28,7 +28,7 @@ import org.columba.core.main.MainInterface;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.folder.Folder;
 import org.columba.mail.folder.FolderTreeNode;
-import org.columba.mail.gui.frame.MailFrameController;
+import org.columba.mail.gui.frame.AbstractMailFrameController;
 import org.columba.mail.gui.infopanel.FolderInfoPanel;
 import org.columba.mail.gui.table.command.ViewHeaderListCommand;
 import org.columba.mail.gui.tree.action.FolderTreeActionListener;
@@ -69,12 +69,12 @@ TreeWillExpandListener //, TreeNodeChangeListener
 
 	private TreeView view;
 
-	private MailFrameController mailFrameController;
+	private AbstractMailFrameController mailFrameController;
 
 	protected TreeMenu menu;
 
 	public TreeController(
-		MailFrameController mailFrameController,
+		AbstractMailFrameController mailFrameController,
 		TreeModel model) {
 
 		this.model = model;
@@ -85,8 +85,8 @@ TreeWillExpandListener //, TreeNodeChangeListener
 		actionListener = new FolderTreeActionListener(this);
 
 		treeSelectionManager = new TreeSelectionManager();
-		
-		mailFrameController.getSelectionManager().addSelectionHandler(new TreeSelectionHandler(view));
+		// FIXME
+		//mailFrameController.getSelectionManager().addSelectionHandler(new TreeSelectionHandler(view));
 		//view.addTreeSelectionListener(this);
 
 		//folderTreeActionListener = new FolderTreeActionListener(this);
@@ -103,7 +103,7 @@ TreeWillExpandListener //, TreeNodeChangeListener
 		//scrollPane = new JScrollPane(getFolderTree().getTree());
 
 		//menu = new FolderTreeMenu(this);
-		menu = new TreeMenu(mailFrameController);
+		
 
 		FolderTreeCellRenderer renderer = new FolderTreeCellRenderer(true);
 		view.setCellRenderer(renderer);
@@ -191,6 +191,8 @@ TreeWillExpandListener //, TreeNodeChangeListener
 	}
 	*/
 	public JPopupMenu getPopupMenu() {
+		if ( menu == null ) menu = new TreeMenu(mailFrameController);
+		
 		return menu;
 	}
 
@@ -225,7 +227,7 @@ TreeWillExpandListener //, TreeNodeChangeListener
 	 * Returns the mailFrameController.
 	 * @return MailFrameController
 	 */
-	public MailFrameController getMailFrameController() {
+	public AbstractMailFrameController getMailFrameController() {
 		return mailFrameController;
 	}
 

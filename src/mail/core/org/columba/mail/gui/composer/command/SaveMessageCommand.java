@@ -26,7 +26,7 @@ import org.columba.mail.config.AccountItem;
 import org.columba.mail.folder.Folder;
 import org.columba.mail.gui.composer.ComposerController;
 import org.columba.mail.gui.composer.ComposerModel;
-import org.columba.mail.gui.frame.MailFrameController;
+import org.columba.mail.gui.frame.TableUpdater;
 import org.columba.mail.gui.table.TableChangedEvent;
 import org.columba.mail.message.HeaderInterface;
 
@@ -57,7 +57,7 @@ public class SaveMessageCommand extends FolderCommand {
 		TableChangedEvent ev =
 			new TableChangedEvent(TableChangedEvent.ADD, folder, headerList);
 
-		MailFrameController.tableChanged(ev);
+		TableUpdater.tableChanged(ev);
 
 		MainInterface.treeModel.nodeChanged(folder);
 	}

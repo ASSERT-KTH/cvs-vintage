@@ -25,7 +25,7 @@ import org.columba.core.util.TempFileStore;
 import org.columba.mail.command.FolderCommand;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.folder.Folder;
-import org.columba.mail.gui.frame.MailFrameController;
+import org.columba.mail.gui.frame.AbstractMailFrameController;
 import org.columba.mail.gui.mimetype.MimeTypeViewer;
 import org.columba.mail.message.MimeHeader;
 
@@ -67,8 +67,8 @@ public class ViewMessageSourceCommand extends FolderCommand {
 	 * @see org.columba.core.command.Command#execute(Worker)
 	 */
 	public void execute(Worker worker) throws Exception {
-		MailFrameController mailFrameController =
-			(MailFrameController) frameController;
+		AbstractMailFrameController mailFrameController =
+			(AbstractMailFrameController) frameController;
 
 		FolderCommandReference[] r = (FolderCommandReference[]) getReferences();
 

@@ -123,7 +123,7 @@ public class FrameModel {
 		*/
 
 		AbstractFrameController c = createFrameController(id, null);
-
+		
 		c.openView();
 
 		return c;

@@ -15,7 +15,7 @@ import org.columba.core.gui.selection.SelectionListener;
 import org.columba.core.main.MainInterface;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.gui.composer.command.ReplyAsAttachmentCommand;
-import org.columba.mail.gui.frame.MailFrameController;
+import org.columba.mail.gui.frame.AbstractMailFrameController;
 import org.columba.mail.gui.table.selection.TableSelectionChangedEvent;
 import org.columba.mail.util.MailResourceLoader;
 
@@ -56,7 +56,7 @@ public class ReplyAsAttachmentAction
 			'0',
 			null);
 		setEnabled(false);
-		((MailFrameController) frameController).registerTableSelectionListener(
+		((AbstractMailFrameController) frameController).registerTableSelectionListener(
 			this);
 	}
 
@@ -67,7 +67,7 @@ public class ReplyAsAttachmentAction
 	 */
 	public void actionPerformed(ActionEvent evt) {
 		FolderCommandReference[] r =
-			((MailFrameController) getFrameController()).getTableSelection();
+			((AbstractMailFrameController) getFrameController()).getTableSelection();
 		MainInterface.processor.addOp(new ReplyAsAttachmentCommand(r));
 	}
 	/* (non-Javadoc)

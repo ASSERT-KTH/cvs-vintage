@@ -32,7 +32,9 @@ public class SelectionManager {
 	}
 
 	public void registerSelectionListener(String id, SelectionListener l) {
-		((SelectionHandler)selectionHandler.get(id)).addSelectionListener(l);
+		SelectionHandler h = ((SelectionHandler)selectionHandler.get(id)); 
+		
+		h.addSelectionListener(l);
 	}
 	
 	public void setSelection(String id, DefaultCommandReference[] selection) {

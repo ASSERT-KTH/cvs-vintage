@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <framelist>
- <frame name="Mail" class="org.columba.mail.gui.frame.MailFrameController" />
+ <frame name="ThreePaneMail" class="org.columba.mail.gui.frame.ThreePaneMailFrameController" />
  <frame name="Addressbook" class="org.columba.addressbook.gui.frame.AddressbookFrameController" />
  <frame name="Composer" class="org.columba.mail.gui.composer.ComposerController" />
  <frame name="MessageFrame" class="org.columba.mail.gui.messageframe.MessageFrameController" />

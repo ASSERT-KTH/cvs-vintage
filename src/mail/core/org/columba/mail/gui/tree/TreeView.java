@@ -20,7 +20,7 @@ import javax.swing.JTextField;
 import javax.swing.ToolTipManager;
 
 import org.columba.mail.folder.Folder;
-import org.columba.mail.gui.frame.MailFrameController;
+import org.columba.mail.gui.frame.AbstractMailFrameController;
 
 /**
  * this class does all the dirty work for the TreeController
@@ -43,7 +43,7 @@ public class TreeView extends DndTree
 
 	//private TreeModel model;
 
-	public TreeView(MailFrameController frameController, TreeModel model) {
+	public TreeView(AbstractMailFrameController frameController, TreeModel model) {
 		super(frameController, model);
 		//this.model = model;            
 

@@ -28,12 +28,12 @@ import org.columba.core.gui.selection.SelectionChangedEvent;
 import org.columba.core.gui.selection.SelectionListener;
 import org.columba.core.logging.ColumbaLogger;
 import org.columba.core.main.MainInterface;
-
+import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.folder.Folder;
-import org.columba.mail.gui.frame.MailFrameController;
+import org.columba.mail.gui.frame.AbstractMailFrameController;
+import org.columba.mail.gui.frame.TableOwnerInterface;
 import org.columba.mail.gui.table.TableChangeListener;
 import org.columba.mail.gui.table.TableChangedEvent;
-import org.columba.mail.gui.tree.selection.TreeSelectionChangedEvent;
 import org.columba.mail.util.MailResourceLoader;
 
 /**
@@ -78,9 +78,8 @@ public class ThreadedViewAction
 
 		(
 			(
-				MailFrameController) frameController)
-					.tableController
-					.addTableChangedListener(
+				AbstractMailFrameController) frameController)
+					.registerTableSelectionListener(
 			this);
 
 		setEnabled(true);
@@ -92,11 +91,12 @@ public class ThreadedViewAction
 		}
 
 		if (e.getEventType() == TableChangedEvent.UPDATE) {
-			Folder folder =
-				(Folder) ((MailFrameController) frameController)
-					.treeController
-					.getTreeSelectionManager()
-					.getFolder();
+			FolderCommandReference[] r =
+				(FolderCommandReference[])
+					((AbstractMailFrameController) frameController)
+					.getTreeSelection();
+
+			Folder folder = (Folder) r[0].getFolder();
 			boolean enableThreadedView =
 				folder.getFolderItem().getBoolean(
 					"property",
@@ -108,17 +108,22 @@ public class ThreadedViewAction
 			getCheckBoxMenuItem().setSelected(enableThreadedView);
 
 		}
+
 	}
 
 	public void actionPerformed(ActionEvent e) {
 
+		if ((frameController instanceof TableOwnerInterface) == false)
+			return;
+
 		JCheckBoxMenuItem item = (JCheckBoxMenuItem) e.getSource();
 
-		Folder folder =
-			(Folder) ((MailFrameController) frameController)
-				.treeController
-				.getTreeSelectionManager()
-				.getFolder();
+		FolderCommandReference[] r =
+			(FolderCommandReference[])
+				((AbstractMailFrameController) frameController)
+				.getTreeSelection();
+
+		Folder folder = (Folder) r[0].getFolder();
 
 		boolean enableThreadedView = item.isSelected();
 		folder.getFolderItem().set(
@@ -128,21 +133,25 @@ public class ThreadedViewAction
 
 		updateTable(getState());
 
-		((MailFrameController) frameController)
-			.tableController
+		((TableOwnerInterface) frameController)
+			.getTableController()
 			.getHeaderTableModel()
 			.update();
 
 	}
 
 	protected void updateTable(boolean enableThreadedView) {
-		((MailFrameController) frameController)
-			.tableController
+
+		if ((frameController instanceof TableOwnerInterface) == false)
+			return;
+
+		((TableOwnerInterface) frameController)
+			.getTableController()
 			.getView()
 			.enableThreadedView(enableThreadedView);
 
-		((MailFrameController) frameController)
-			.tableController
+		((TableOwnerInterface) frameController)
+			.getTableController()
 			.getHeaderTableModel()
 			.getTableModelThreadedView()
 			.toggleView(enableThreadedView);
@@ -153,10 +162,12 @@ public class ThreadedViewAction
 	 * @see org.columba.core.gui.util.SelectionListener#selectionChanged(org.columba.core.gui.util.SelectionChangedEvent)
 	 */
 	public void selectionChanged(SelectionChangedEvent e) {
+		/*
 		Folder[] selection = ((TreeSelectionChangedEvent) e).getSelected();
 		if (selection.length == 1)
 			setEnabled(true);
 		else
 			setEnabled(false);
+		*/
 	}
 }

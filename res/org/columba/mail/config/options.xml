@@ -20,6 +20,13 @@
    	<column name="References" position="13" size="100" enabled="false" />
    	<column name="Content-Type" position="14" size="100" enabled="false" />  
   </table>
+  <messageframe>
+   <view id="MessageFrame" >
+    <window x="0" y="0" width="900" height="700" maximized="true"/> 
+    <toolbars main="true"/>  
+    <splitpanes main="200" header="200" attachment="100" />
+   </view>
+  </messageframe>
  </gui>
  <html prefer="true" />
  <markasread delay="2" />

@@ -17,7 +17,7 @@ import org.columba.core.gui.selection.SelectionListener;
 import org.columba.core.gui.util.ImageLoader;
 import org.columba.core.main.MainInterface;
 import org.columba.mail.command.FolderCommandReference;
-import org.columba.mail.gui.frame.MailFrameController;
+import org.columba.mail.gui.frame.AbstractMailFrameController;
 import org.columba.mail.gui.message.command.ViewMessageCommand;
 import org.columba.mail.gui.table.TableController;
 import org.columba.mail.gui.table.selection.TableSelectionChangedEvent;
@@ -66,7 +66,7 @@ public class PreviousMessageAction
 			KeyStroke.getKeyStroke("B"),
 			false);
 		setEnabled(false);
-		((MailFrameController) frameController).registerTableSelectionListener(
+		((AbstractMailFrameController) frameController).registerTableSelectionListener(
 			this);
 	}
 
@@ -77,12 +77,14 @@ public class PreviousMessageAction
 	 */
 	public void actionPerformed(ActionEvent evt) {
 		FolderCommandReference[] r =
-					((MailFrameController) getFrameController()).getTableSelection();
-			
+					((AbstractMailFrameController) getFrameController()).getTableSelection();
+		
+//		TODO: fix previous-message action
+		/*
 		if ( r.length>0 )
 		{
 			FolderCommandReference ref = r[0];
-			TableController table = ((MailFrameController) getFrameController()).tableController;
+			TableController table = ((AbstractMailFrameController) getFrameController()).tableController;
 			MessageNode node = table.getView().getSelectedNode();
 			MessageNode previousNode = (MessageNode) node.getPreviousNode();
 			Object nextUid = previousNode.getUid();
@@ -91,11 +93,12 @@ public class PreviousMessageAction
 			uids[0] = nextUid;
 			ref.setUids(uids);
 			
-			((MailFrameController) getFrameController()).setTableSelection(r);
+			((AbstractMailFrameController) getFrameController()).setTableSelection(r);
 			table.setSelected(uids);
 			
 			MainInterface.processor.addOp(new ViewMessageCommand(getFrameController(), r));
 		}
+		*/
 	}
 	/* (non-Javadoc)
 			 * @see org.columba.core.gui.util.SelectionListener#selectionChanged(org.columba.core.gui.util.SelectionChangedEvent)

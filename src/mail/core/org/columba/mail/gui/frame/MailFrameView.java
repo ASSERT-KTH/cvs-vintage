@@ -217,7 +217,7 @@ public class MailFrameView extends AbstractFrameView {
 	 */
 	protected Menu createMenu(AbstractFrameController controller) {
 		Menu menu =
-			new MailMenu("org/columba/core/action/menu.xml", controller);
+			new MailMenu("org/columba/core/action/menu.xml", "org/columba/mail/action/menu.xml", controller);
 
 		return menu;
 	}

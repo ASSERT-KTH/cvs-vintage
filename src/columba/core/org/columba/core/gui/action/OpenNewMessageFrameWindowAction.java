@@ -51,8 +51,9 @@ public class OpenNewMessageFrameWindowAction extends FrameAction {
 	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
 	 */
 	public void actionPerformed(ActionEvent evt) {
-		MessageFrameController c = (MessageFrameController) FrameModel.openView("MessageFrame");
-		new NextMessageAction(c).actionPerformed(null);
+		MessageFrameController c = new MessageFrameController();
+		c.selectInbox();
+		//new NextMessageAction(c).actionPerformed(null);
 	}
 
 }

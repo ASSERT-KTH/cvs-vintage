@@ -15,8 +15,6 @@
 //All Rights Reserved.
 package org.columba.mail.gui.table.command;
 
-import java.awt.Rectangle;
-
 import org.columba.core.command.Command;
 import org.columba.core.command.CompoundCommand;
 import org.columba.core.command.DefaultCommandReference;
@@ -29,8 +27,7 @@ import org.columba.mail.config.FolderItem;
 import org.columba.mail.filter.Filter;
 import org.columba.mail.filter.FilterList;
 import org.columba.mail.folder.Folder;
-import org.columba.mail.gui.frame.MailFrameController;
-import org.columba.mail.gui.table.TableChangedEvent;
+import org.columba.mail.gui.frame.TableOwnerInterface;
 import org.columba.mail.gui.table.selection.TableSelectionHandler;
 import org.columba.mail.message.HeaderList;
 
@@ -64,46 +61,7 @@ public class ViewHeaderListCommand extends SelectiveGuiUpdateCommand {
 				"mail.table")).setFolder(
 			folder);
 
-		((MailFrameController) frameController)
-			.tableController
-			.getHeaderTableModel()
-			.setHeaderList(headerList);
-
-		boolean enableThreadedView =
-			folder.getFolderItem().getBoolean(
-				"property",
-				"enable_threaded_view",
-				false);
-
-		((MailFrameController) frameController)
-			.tableController
-			.getView()
-			.enableThreadedView(enableThreadedView);
-
-		((MailFrameController) frameController)
-			.tableController
-			.getView()
-			.getTableModelThreadedView()
-			.toggleView(enableThreadedView);
-
-		TableChangedEvent ev =
-			new TableChangedEvent(TableChangedEvent.UPDATE, folder);
-
-		MailFrameController.tableChanged(ev);
-
-		boolean ascending =
-			((MailFrameController) frameController)
-				.tableController
-				.isAscending();
-
-		((MailFrameController) frameController)
-			.tableController
-			.getView()
-			.clearSelection();
-		((MailFrameController) frameController)
-			.tableController
-			.getView()
-			.scrollRectToVisible(new Rectangle(0, 0, 0, 0));
+		((TableOwnerInterface) frameController).showHeaderList(folder, headerList);
 
 		MainInterface.treeModel.nodeChanged(folder);
 

@@ -31,7 +31,9 @@ public class CMenu extends JMenu{
 	{
 		super(str);
 
-		setIcon( new EmptyIcon() );		
+		// TODO CMenu - EmptyIcon hack
+		// don't use this hack here, we need to change this in the theme
+		//setIcon( new EmptyIcon() );		
 	}
 	
 	

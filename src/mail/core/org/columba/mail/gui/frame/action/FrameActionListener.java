@@ -19,11 +19,11 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import org.columba.core.action.BasicAction;
-import org.columba.mail.gui.frame.MailFrameController;
+import org.columba.mail.gui.frame.AbstractMailFrameController;
 
 public class FrameActionListener implements ActionListener {
 
-	MailFrameController frameController;
+	AbstractMailFrameController frameController;
 
 	public BasicAction exitAction;
 	public BasicAction generalOptionsAction;
@@ -31,7 +31,7 @@ public class FrameActionListener implements ActionListener {
 	public BasicAction findAction;
 	public BasicAction findAgainAction;
 
-	public FrameActionListener(MailFrameController c) {
+	public FrameActionListener(AbstractMailFrameController c) {
 		this.frameController = c;
 
 		initActions();

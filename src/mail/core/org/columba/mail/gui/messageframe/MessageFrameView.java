@@ -42,7 +42,7 @@ public class MessageFrameView extends AbstractFrameView {
 	 */
 	protected Menu createMenu(AbstractFrameController controller) {
 		Menu menu =
-			new MailMenu("org/columba/core/action/menu.xml", controller);
+			new MailMenu("org/columba/core/action/menu.xml", "org/columba/mail/action/messageframe_menu.xml", controller);
 
 		return menu;
 	}
@@ -59,7 +59,7 @@ public class MessageFrameView extends AbstractFrameView {
 
 	public void init(MessageView message, StatusBar statusBar) {
 
-		//super.init();
+		
 
 		getContentPane().add(message, BorderLayout.CENTER);
 

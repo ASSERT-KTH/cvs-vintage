@@ -17,7 +17,7 @@
 package org.columba.mail.gui.action;
 
 import org.columba.core.action.BasicAction;
-import org.columba.mail.gui.frame.MailFrameController;
+import org.columba.mail.gui.frame.AbstractMailFrameController;
 import org.columba.mail.gui.frame.action.FrameActionListener;
 
 
@@ -38,9 +38,9 @@ public class GlobalActionCollection
     public BasicAction receiveSendAction;
     //public BasicAction useAdvancedViewerAction;
 
-	protected MailFrameController frameController;
+	protected AbstractMailFrameController frameController;
 
-    public GlobalActionCollection ( MailFrameController frameController )
+    public GlobalActionCollection ( AbstractMailFrameController frameController )
     {
 		this.frameController = frameController;
 		
@@ -206,6 +206,8 @@ public class GlobalActionCollection
     public void addActionListeners()
     {
     	
+    	// TODO fix cut/copy/paste/delete/select all
+    	/*
         cutAction.addActionListener( frameController.tableController.getActionListener() );
 
         copyAction.addActionListener( frameController.tableController.getActionListener() );
@@ -216,6 +218,7 @@ public class GlobalActionCollection
         deleteAction.addActionListener( frameController.tableController.getActionListener() );
 
         selectAllAction.addActionListener( frameController.tableController.getActionListener() );
+        */
         //selectAllAction.addActionListener( MainInterface.messageViewer.getActionListener() );
 
         searchMessageAction.addActionListener( new FrameActionListener(frameController) );

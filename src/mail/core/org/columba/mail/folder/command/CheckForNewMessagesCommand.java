@@ -20,7 +20,7 @@ import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.config.ImapItem;
 import org.columba.mail.folder.imap.IMAPFolder;
 import org.columba.mail.folder.imap.IMAPRootFolder;
-import org.columba.mail.gui.frame.MailFrameController;
+import org.columba.mail.gui.frame.TableUpdater;
 import org.columba.mail.gui.table.TableChangedEvent;
 
 /**
@@ -118,7 +118,7 @@ public class CheckForNewMessagesCommand extends FolderCommand {
 			new TableChangedEvent(TableChangedEvent.UPDATE, inboxFolder);
         if(needGUIUpdate){
           // Update summary table
-          MailFrameController.tableChanged(ev);
+		  TableUpdater.tableChanged(ev);
           // Update folder tree
           MainInterface.treeModel.nodeChanged(inboxFolder);
         }

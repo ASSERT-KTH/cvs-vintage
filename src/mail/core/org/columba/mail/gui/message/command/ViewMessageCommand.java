@@ -30,7 +30,7 @@ import org.columba.mail.config.MailConfig;
 import org.columba.mail.config.PGPItem;
 import org.columba.mail.folder.Folder;
 import org.columba.mail.gui.attachment.AttachmentSelectionHandler;
-import org.columba.mail.gui.frame.MailFrameController;
+import org.columba.mail.gui.frame.AbstractMailFrameController;
 import org.columba.mail.message.AbstractMessage;
 import org.columba.mail.message.HeaderInterface;
 import org.columba.mail.message.MimePart;
@@ -227,21 +227,25 @@ public class ViewMessageCommand extends FolderCommand {
 			(
 			// show message in gui component
 			(
-				MailFrameController) frameController)
+				AbstractMailFrameController) frameController)
 					.messageController
 					.showMessage(
 				header,
 				bodyPart,
 				mimePartTree);
-
+				
+				// TODO: cleanup markAsRead-Timer
+				/*
 			if (header.getFlags().getSeen() == false) {
 				// restart timer which marks the message as read
 				// after a user configurable time interval
-				((MailFrameController) frameController)
+				((AbstractMailFrameController) frameController)
 					.tableController
 					.getMarkAsReadTimer()
 					.restart((FolderCommandReference) getReferences()[0]);
+					
 			}
+			*/
 		}
 	}
 

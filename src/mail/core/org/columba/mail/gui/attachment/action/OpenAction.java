@@ -45,7 +45,8 @@ public class OpenAction extends FrameAction implements SelectionListener {
 		ImageLoader.getImageIcon("stock_open.png"), //$NON-NLS-1$
 		0, null);
 		
-		frameController.getSelectionManager().registerSelectionListener("mail.attachment", this);
+		if ( frameController.getSelectionManager() != null )
+			frameController.getSelectionManager().registerSelectionListener("mail.attachment", this);
 	}
 
 	/* (non-Javadoc)

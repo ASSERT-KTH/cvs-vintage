@@ -15,7 +15,7 @@ import org.columba.core.gui.selection.SelectionListener;
 import org.columba.core.main.MainInterface;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.folder.command.MarkMessageCommand;
-import org.columba.mail.gui.frame.MailFrameController;
+import org.columba.mail.gui.frame.AbstractMailFrameController;
 import org.columba.mail.gui.table.selection.TableSelectionChangedEvent;
 
 /**
@@ -48,7 +48,7 @@ public class MarkAsUnexpungedAction
 			'0',
 			null);
 		setEnabled(false);
-		((MailFrameController) frameController).registerTableSelectionListener(
+		((AbstractMailFrameController) frameController).registerTableSelectionListener(
 			this);
 	}
 
@@ -57,7 +57,7 @@ public class MarkAsUnexpungedAction
 	 */
 	public void actionPerformed(ActionEvent evt) {
 		FolderCommandReference[] r =
-			((MailFrameController) getFrameController()).getTableSelection();
+			((AbstractMailFrameController) getFrameController()).getTableSelection();
 		r[0].setMarkVariant(MarkMessageCommand.MARK_AS_UNEXPUNGED);
 
 		MarkMessageCommand c = new MarkMessageCommand(r);

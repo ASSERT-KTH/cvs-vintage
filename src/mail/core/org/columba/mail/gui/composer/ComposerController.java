@@ -24,14 +24,15 @@ import java.awt.event.WindowListener;
 import org.columba.addressbook.folder.Folder;
 import org.columba.addressbook.folder.HeaderItem;
 import org.columba.addressbook.folder.HeaderItemList;
+import org.columba.core.charset.CharsetEvent;
+import org.columba.core.charset.CharsetListener;
+import org.columba.core.charset.CharsetManager;
+import org.columba.core.charset.CharsetOwnerInterface;
 import org.columba.core.config.ViewItem;
 import org.columba.core.gui.frame.AbstractFrameController;
 import org.columba.core.gui.frame.AbstractFrameView;
 import org.columba.core.logging.ColumbaLogger;
 import org.columba.core.main.MainInterface;
-import org.columba.core.util.CharsetEvent;
-import org.columba.core.util.CharsetListener;
-import org.columba.core.util.CharsetManager;
 import org.columba.core.xml.XmlElement;
 import org.columba.mail.config.MailConfig;
 import org.columba.mail.gui.composer.util.IdentityInfoPanel;
@@ -44,7 +45,7 @@ import org.columba.mail.util.AddressCollector;
  */
 public class ComposerController
 	extends AbstractFrameController
-	implements CharsetListener, ComponentListener, WindowListener {
+	implements CharsetListener, CharsetOwnerInterface, ComponentListener, WindowListener {
 
 	private IdentityInfoPanel identityInfoPanel;
 	private AttachmentController attachmentController;
@@ -58,6 +59,8 @@ public class ComposerController
 	private ComposerSpellCheck composerSpellCheck;
 
 	private ComposerModel composerModel;
+
+	protected CharsetManager charsetManager;
 
 	/*
 	Message message;
@@ -91,12 +94,10 @@ public class ComposerController
 		getView().setVisible(true);
 
 		initAddressCompletion();
-		
-		headerController.editLastRow();
-		
-	}
 
-	
+		headerController.editLastRow();
+
+	}
 
 	public void charsetChanged(CharsetEvent e) {
 		((ComposerModel) getModel()).setCharsetName(e.getValue());
@@ -331,15 +332,16 @@ public class ComposerController
 
 		composerSpellCheck = new ComposerSpellCheck(this);
 
-		XmlElement optionsElement = MailConfig.get("composer_options").getElement("/options");
+		XmlElement optionsElement =
+			MailConfig.get("composer_options").getElement("/options");
 		XmlElement charsetElement = optionsElement.getElement("charset");
-		if( charsetElement == null ) {
+		if (charsetElement == null) {
 			charsetElement = new XmlElement("charset");
-			charsetElement.addAttribute("name","auto");
-			
+			charsetElement.addAttribute("name", "auto");
+
 			optionsElement.addElement(charsetElement);
 		}
-		
+
 		setCharsetManager(new CharsetManager(charsetElement));
 		getCharsetManager().addCharsetListener(this);
 	}
@@ -374,6 +376,20 @@ public class ComposerController
 
 		view.setVisible(false);
 
+	}
+
+	/**
+			 * @return
+			 */
+	public CharsetManager getCharsetManager() {
+		return charsetManager;
+	}
+
+	/**
+	 * @param manager
+	 */
+	public void setCharsetManager(CharsetManager manager) {
+		charsetManager = manager;
 	}
 
 }

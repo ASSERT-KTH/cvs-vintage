@@ -79,6 +79,8 @@ public class MailConfig extends DefaultConfig {
 		File messageframeToolBarFile = new File( configDirectory, "messageframe_toolbar.xml");
 				registerPlugin( messageframeToolBarFile.getName(), new DefaultXmlConfig(messageframeToolBarFile) );
 
+		
+
 		/*
 		popManageOptionsFile =
 			new File(configDirectory, "popmanageoptions.xml");

@@ -22,7 +22,7 @@ import org.columba.mail.command.FolderCommand;
 import org.columba.mail.command.FolderCommandAdapter;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.folder.Folder;
-import org.columba.mail.gui.frame.MailFrameController;
+import org.columba.mail.gui.frame.TableUpdater;
 import org.columba.mail.gui.table.TableChangedEvent;
 
 /**
@@ -64,7 +64,7 @@ public class ExpungeFolderCommand extends FolderCommand {
 					r[i].getUids());
 			*/
 			
-			MailFrameController.tableChanged(ev);
+			TableUpdater.tableChanged(ev);
 
 			MainInterface.treeModel.nodeChanged(r[i].getFolder());
 		}
@@ -79,7 +79,7 @@ public class ExpungeFolderCommand extends FolderCommand {
 					u.getFolder(),
 					u.getUids());
 			*/
-			MailFrameController.tableChanged(ev);
+			TableUpdater.tableChanged(ev);
 
 			MainInterface.treeModel.nodeChanged(u.getFolder());
 		}

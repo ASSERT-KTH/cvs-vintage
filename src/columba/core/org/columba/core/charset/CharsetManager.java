@@ -14,7 +14,7 @@
 //
 //All Rights Reserved.ion, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 
-package org.columba.core.util;
+package org.columba.core.charset;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;

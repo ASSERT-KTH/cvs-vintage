@@ -16,7 +16,6 @@
 package org.columba.mail.pop3.command;
 
 import java.util.List;
-import java.util.List;
 
 import org.columba.core.command.Command;
 import org.columba.core.command.CommandCancelledException;
@@ -30,7 +29,7 @@ import org.columba.mail.command.POP3CommandReference;
 import org.columba.mail.filter.Filter;
 import org.columba.mail.filter.FilterList;
 import org.columba.mail.folder.Folder;
-import org.columba.mail.gui.frame.MailFrameController;
+import org.columba.mail.gui.frame.TableUpdater;
 import org.columba.mail.gui.table.TableChangedEvent;
 import org.columba.mail.message.HeaderInterface;
 import org.columba.mail.message.Message;
@@ -134,7 +133,7 @@ public class FetchNewMessagesCommand extends Command {
 				inboxFolder,
 				headerList);
 
-		MailFrameController.tableChanged(ev);
+		TableUpdater.tableChanged(ev);
 
 		FilterList list = inboxFolder.getFilterList();
 		for (int j = 0; j < list.count(); j++) {

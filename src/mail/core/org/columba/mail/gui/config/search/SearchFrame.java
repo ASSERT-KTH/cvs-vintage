@@ -16,25 +16,44 @@
 
 package org.columba.mail.gui.config.search;
 
-import java.awt.*;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.GridLayout;
+import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 
-import javax.swing.*;
+import javax.swing.BorderFactory;
+import javax.swing.Box;
+import javax.swing.BoxLayout;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JCheckBox;
+import javax.swing.JComboBox;
+import javax.swing.JComponent;
+import javax.swing.JDialog;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
+import javax.swing.KeyStroke;
+import javax.swing.UIManager;
 import javax.swing.border.Border;
 import javax.swing.border.CompoundBorder;
 
 import org.columba.core.gui.util.ImageLoader;
 import org.columba.core.gui.util.wizard.WizardBottomBorder;
-import org.columba.core.gui.util.wizard.WizardTopBorder;
 import org.columba.core.main.MainInterface;
-
+import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.filter.FilterRule;
 import org.columba.mail.folder.Folder;
 import org.columba.mail.folder.virtual.VirtualFolder;
 import org.columba.mail.gui.config.filter.CriteriaList;
-import org.columba.mail.gui.frame.MailFrameController;
+import org.columba.mail.gui.frame.AbstractMailFrameController;
 import org.columba.mail.gui.tree.util.SelectFolderDialog;
 import org.columba.mail.gui.tree.util.TreeNodeList;
 import org.columba.mail.util.MailResourceLoader;
@@ -61,9 +80,11 @@ public class SearchFrame extends JDialog implements ActionListener {
 
 	private JComboBox condList;
 
-	MailFrameController frameController;
+	AbstractMailFrameController frameController;
 
-	public SearchFrame(MailFrameController frameController, Folder folder) {
+	public SearchFrame(
+		AbstractMailFrameController frameController,
+		Folder folder) {
 		super();
 		this.frameController = frameController;
 		setTitle(
@@ -84,16 +105,20 @@ public class SearchFrame extends JDialog implements ActionListener {
 		JPanel bottom = new JPanel(new BorderLayout());
 		bottom.setBorder(BorderFactory.createEmptyBorder(17, 0, 0, 0));
 		JPanel buttonPanel = new JPanel(new GridLayout(1, 3, 5, 0));
-		searchButton = new JButton(MailResourceLoader.getString("dialog", "filter", "search"));
+		searchButton =
+			new JButton(
+				MailResourceLoader.getString("dialog", "filter", "search"));
 		searchButton.setIcon(ImageLoader.getImageIcon("stock_search-16.png"));
 		searchButton.addActionListener(this);
 		searchButton.setActionCommand("SEARCH");
 		buttonPanel.add(searchButton);
-		closeButton = new JButton(MailResourceLoader.getString("global", "close"));
+		closeButton =
+			new JButton(MailResourceLoader.getString("global", "close"));
 		closeButton.addActionListener(this);
 		closeButton.setActionCommand("CLOSE");
 		buttonPanel.add(closeButton);
-		helpButton = new JButton(MailResourceLoader.getString("global", "help"));
+		helpButton =
+			new JButton(MailResourceLoader.getString("global", "help"));
 		helpButton.addActionListener(this);
 		helpButton.setActionCommand("HELP");
 		helpButton.setEnabled(false);
@@ -140,7 +165,8 @@ public class SearchFrame extends JDialog implements ActionListener {
 		selectButton.addActionListener(this);
 		folderPanel.add(selectButton);
 		folderPanel.add(Box.createHorizontalGlue());
-		includeSubfolderButton = new JCheckBox(
+		includeSubfolderButton =
+			new JCheckBox(
 				MailResourceLoader.getString(
 					"dialog",
 					"filter",
@@ -155,19 +181,18 @@ public class SearchFrame extends JDialog implements ActionListener {
 
 		JPanel middleIfPanel = new JPanel();
 		middleIfPanel.setLayout(new BorderLayout());
-		middleIfPanel.setBorder(BorderFactory.createCompoundBorder(
+		middleIfPanel.setBorder(
+			BorderFactory.createCompoundBorder(
 				BorderFactory.createTitledBorder(
-                                        MailResourceLoader.getString(
-                                                "dialog",
-                                                "filter",
-                                                "if")),
+					MailResourceLoader.getString("dialog", "filter", "if")),
 				BorderFactory.createEmptyBorder(5, 5, 5, 5)));
 
 		JPanel ifPanel = new JPanel();
 		ifPanel.setBorder(BorderFactory.createEmptyBorder(0, 0, 5, 0));
 		ifPanel.setLayout(new BoxLayout(ifPanel, BoxLayout.X_AXIS));
 
-		addButton = new JButton(
+		addButton =
+			new JButton(
 				MailResourceLoader.getString(
 					"dialog",
 					"filter",
@@ -186,7 +211,8 @@ public class SearchFrame extends JDialog implements ActionListener {
 
 		ifPanel.add(Box.createHorizontalGlue());
 
-		nameLabel = new JLabel(
+		nameLabel =
+			new JLabel(
 				MailResourceLoader.getString(
 					"dialog",
 					"filter",
@@ -200,7 +226,8 @@ public class SearchFrame extends JDialog implements ActionListener {
 
 		ifPanel.add(Box.createRigidArea(new java.awt.Dimension(5, 0)));
 
-		String[] cond =	{
+		String[] cond =
+			{
 				MailResourceLoader.getString(
 					"dialog",
 					"filter",
@@ -286,19 +313,19 @@ public class SearchFrame extends JDialog implements ActionListener {
 					.get("property", "include_subfolders")))
 					.booleanValue();
 
-                        includeSubfolderButton.setSelected(isInclude);
+			includeSubfolderButton.setSelected(isInclude);
 
 			int uid =
 				destFolder.getFolderItem().getInteger("property", "source_uid");
-			
+
 			Folder f = (Folder) MainInterface.treeModel.getFolder(uid);
 			// If f==null because of deleted Folder fallback to Inbox
-			if( f == null) {
+			if (f == null) {
 				uid = 101;
-				destFolder.getFolderItem().set("property","source_uid",uid);
-				f= (Folder) MainInterface.treeModel.getFolder(uid);
-			} 
-			
+				destFolder.getFolderItem().set("property", "source_uid", uid);
+				f = (Folder) MainInterface.treeModel.getFolder(uid);
+			}
+
 			String treePath = f.getTreePath();
 
 			selectButton.setText(treePath);
@@ -368,20 +395,23 @@ public class SearchFrame extends JDialog implements ActionListener {
 			}
 
 		} else if (action.equals("SEARCH")) {
+
 			updateComponents(false);
 
 			setVisible(false);
-			
-			try
-			{			
-				((VirtualFolder)destFolder).addSearchToHistory();
-			}
-			catch ( Exception ex)
-			{
+
+			try {
+				((VirtualFolder) destFolder).addSearchToHistory();
+			} catch (Exception ex) {
 				ex.printStackTrace();
 			}
 
-			frameController.treeController.setSelected(destFolder);
+			FolderCommandReference[] r = new FolderCommandReference[1];
+			r[0] = new FolderCommandReference(destFolder);
+
+			((AbstractMailFrameController) frameController).setTreeSelection(r);
+			//frameController.treeController.setSelected(destFolder);
+
 		}
 	}
 }

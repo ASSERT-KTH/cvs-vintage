@@ -11,7 +11,7 @@
   </theme> 
   <toolbar enable_icon="true" enable_text="true" text_position="false"/>
   <viewlist>
-   <view id="Mail" >
+   <view id="ThreePaneMail" >
     <window x="0" y="0" width="900" height="700" maximized="true"/> 
     <toolbars main="true"/>  
     <splitpanes main="200" header="200" attachment="100" />

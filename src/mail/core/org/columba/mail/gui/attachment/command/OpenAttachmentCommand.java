@@ -32,7 +32,6 @@ import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.folder.Folder;
 import org.columba.mail.folder.temp.TempFolder;
 import org.columba.mail.gui.message.command.ViewMessageCommand;
-import org.columba.mail.gui.messageframe.MessageFrameController;
 import org.columba.mail.gui.mimetype.MimeTypeViewer;
 import org.columba.mail.message.AbstractMessage;
 import org.columba.mail.message.MimeHeader;
@@ -75,7 +74,9 @@ public class OpenAttachmentCommand extends FolderCommand {
 
 		if (header.getContentType().toLowerCase().indexOf("message") != -1) {
 			
-			MessageFrameController c = (MessageFrameController) FrameModel.openView("MessageFrame");
+			// TODO: fix openAttachmentCommand (message)
+			/*
+			MailFrameInterface c = (MailFrameInterface) FrameModel.openView("MessageFrame");
 			
 			FolderCommandReference[] r = new FolderCommandReference[1];
 			Object[] uidList = new Object[1];
@@ -87,7 +88,7 @@ public class OpenAttachmentCommand extends FolderCommand {
 			MainInterface.processor.addOp(
 						new ViewMessageCommand(c,
 						r));
-						
+			*/			
 			
 			
 			

@@ -31,14 +31,13 @@ import org.columba.core.gui.util.CScrollPane;
 import org.columba.core.logging.ColumbaLogger;
 import org.columba.core.main.MainInterface;
 import org.columba.core.util.SwingWorker;
-
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.config.MailConfig;
 import org.columba.mail.folder.Folder;
 import org.columba.mail.folder.FolderTreeNode;
-import org.columba.mail.gui.frame.MailFrameController;
+import org.columba.mail.gui.frame.AbstractMailFrameController;
+import org.columba.mail.gui.frame.ThreePaneMailFrameController;
 import org.columba.mail.gui.table.action.HeaderTableActionListener;
-import org.columba.mail.gui.table.selection.TableSelectionHandler;
 import org.columba.mail.gui.table.selection.TableSelectionManager;
 import org.columba.mail.gui.table.util.MarkAsReadTimer;
 import org.columba.mail.gui.table.util.MessageNode;
@@ -52,8 +51,7 @@ import org.columba.mail.message.HeaderList;
  * @author Frederik
  */
 
-public class TableController
-	implements TreeSelectionListener {
+public class TableController implements TreeSelectionListener {
 
 	//private HeaderTableMenu menu;
 
@@ -94,27 +92,25 @@ public class TableController
 
 	protected TableSelectionManager tableSelectionManager;
 
-	protected MailFrameController mailFrameController;
+	protected AbstractMailFrameController mailFrameController;
 
 	protected Object[] newUidList;
 
 	protected MarkAsReadTimer markAsReadTimer;
-	
+
 	protected Vector tableChangedListenerList;
 
 	protected TableMenu menu;
-	public TableController(MailFrameController mailFrameController) {
+	public TableController(AbstractMailFrameController mailFrameController) {
 
 		this.mailFrameController = mailFrameController;
 
 		//setLayout(new BorderLayout());
 
 		headerTableItem =
-			(TableItem) MailConfig
-				.getMainFrameOptionsConfig()
-				.getTableItem();
-				
-				//.clone();
+			(TableItem) MailConfig.getMainFrameOptionsConfig().getTableItem();
+
+		//.clone();
 		//headerTableItem.removeEnabledItem();
 
 		headerTableModel = new HeaderTableModel(headerTableItem);
@@ -122,18 +118,18 @@ public class TableController
 		view = new TableView(headerTableModel);
 
 		tableSelectionManager = new TableSelectionManager();
-		
-		mailFrameController.getSelectionManager().addSelectionHandler( new TableSelectionHandler(view));
+
+		// FIXME
+		//mailFrameController.getSelectionManager().addSelectionHandler( new TableSelectionHandler(view));
+
 		//tableSelectionManager.addFolderSelectionListener(this);
 
 		tableChangedListenerList = new Vector();
-		
+
 		actionListener = new HeaderTableActionListener(this);
 
 		//menu = new HeaderTableMenu(this);
 
-		menu = new TableMenu( mailFrameController );
-		
 		headerTableDnd = new HeaderTableDnd(view);
 
 		headerTableMouseListener = new HeaderTableMouseListener(this);
@@ -151,35 +147,29 @@ public class TableController
 		markAsReadTimer = new MarkAsReadTimer(this);
 
 		//view.addTreeSelectionListener(this);
-		
-		getHeaderTableModel().getTableModelSorter().setSortingColumn( headerTableItem.get("selected") );
-		getHeaderTableModel().getTableModelSorter().setSortingOrder( headerTableItem.getBoolean("ascending"));
-		
-		
-		
+
+		getHeaderTableModel().getTableModelSorter().setSortingColumn(
+			headerTableItem.get("selected"));
+		getHeaderTableModel().getTableModelSorter().setSortingOrder(
+			headerTableItem.getBoolean("ascending"));
+
 	}
-	
-	public boolean isAscending()
-	{
+
+	public boolean isAscending() {
 		return getHeaderTableModel().getTableModelSorter().getSortingOrder();
 	}
-	
-	
-	
-	public void addTableChangedListener( TableChangeListener l )
-	{
+
+	public void addTableChangedListener(TableChangeListener l) {
 		tableChangedListenerList.add(l);
 	}
-	
-	public void fireTableChangedEvent(TableChangedEvent e)
-	{
-		for ( int i=0; i<tableChangedListenerList.size(); i++ )
-		{
-			TableChangeListener l = (TableChangeListener) tableChangedListenerList.get(i);
+
+	public void fireTableChangedEvent(TableChangedEvent e) {
+		for (int i = 0; i < tableChangedListenerList.size(); i++) {
+			TableChangeListener l =
+				(TableChangeListener) tableChangedListenerList.get(i);
 			l.tableChanged(e);
 		}
 	}
-	
 
 	public TableView getView() {
 
@@ -286,37 +276,38 @@ public class TableController
 
 	public void saveColumnConfig() {
 		TableItem tableItem =
-			(TableItem) MailConfig
-				.getMainFrameOptionsConfig()
-				.getTableItem();
-		
-		boolean ascending = getHeaderTableModel().getTableModelSorter().getSortingOrder();
-		String sortingColumn = getHeaderTableModel().getTableModelSorter().getSortingColumn();
-		
+			(TableItem) MailConfig.getMainFrameOptionsConfig().getTableItem();
+
+		boolean ascending =
+			getHeaderTableModel().getTableModelSorter().getSortingOrder();
+		String sortingColumn =
+			getHeaderTableModel().getTableModelSorter().getSortingColumn();
+
 		tableItem.set("ascending", ascending);
 		tableItem.set("selected", sortingColumn);
 
 		if (MainInterface.DEBUG) {
-                        ColumbaLogger.log.info("save table column config");
-                }
-						
-				//.clone();
+			ColumbaLogger.log.info("save table column config");
+		}
+
+		//.clone();
 		//v.removeEnabledItem();
 
 		for (int i = 0; i < tableItem.getChildCount(); i++) {
 			HeaderItem v = tableItem.getHeaderItem(i);
 			boolean enabled = v.getBoolean("enabled");
-			if ( enabled == false ) continue;
-			
+			if (enabled == false)
+				continue;
+
 			String c = v.get("name");
-			ColumbaLogger.log.debug("name="+c);
-			
+			ColumbaLogger.log.debug("name=" + c);
+
 			TableColumn tc = getView().getColumn(c);
 
 			v.set("size", tc.getWidth());
 			if (MainInterface.DEBUG) {
-                                ColumbaLogger.log.debug("size"+tc.getWidth());
-                        }
+				ColumbaLogger.log.debug("size" + tc.getWidth());
+			}
 			try {
 				int index = getView().getColumnModel().getColumnIndex(c);
 				v.set("position", index);
@@ -402,25 +393,22 @@ public class TableController
 		return filterActionListener;
 	}
 
-	public void setSelected( Object[] uids )
-	{
+	public void setSelected(Object[] uids) {
 		MessageNode[] nodes = new MessageNode[uids.length];
-		
-		for ( int i=0; i<uids.length; i++)
-		{
-			nodes[i] = getHeaderTableModel().getMessageNode(uids[i]);			
+
+		for (int i = 0; i < uids.length; i++) {
+			nodes[i] = getHeaderTableModel().getMessageNode(uids[i]);
 		}
-		
+
 		TreePath[] paths = new TreePath[nodes.length];
-		
-		for ( int i=0; i<nodes.length; i++ )
-		{
+
+		for (int i = 0; i < nodes.length; i++) {
 			paths[i] = new TreePath(nodes[i].getPath());
-			
+
 		}
-		
+
 		view.getTree().setSelectionPaths(paths);
-		
+
 		getTableSelectionManager().fireMessageSelectionEvent(null, uids);
 	}
 
@@ -444,7 +432,6 @@ public class TableController
 			return;
 
 		newUidList = MessageNode.toUidArray(nodes);
-		
 
 		getTableSelectionManager().fireMessageSelectionEvent(null, newUidList);
 
@@ -456,20 +443,20 @@ public class TableController
 
 	public void showMessage() {
 		/*
-
+		
 		FolderCommandReference[] reference =
 			(FolderCommandReference[]) 
 				getTableSelectionManager()
 				.getSelection();
-
+		
 		FolderTreeNode treeNode = reference[0].getFolder();
 		Object[] uids = reference[0].getUids();
-
+		
 		// this is no message-viewing action,
 		// but a selection of multiple messages
 		if (uids.length > 1)
 			return;
-
+		
 		
 		
 			getMailFrameController()
@@ -492,6 +479,8 @@ public class TableController
 	 * return the PopupMenu for the table
 	 */
 	public JPopupMenu getPopupMenu() {
+		if (menu == null)
+			menu = new TableMenu(mailFrameController);
 		return menu;
 	}
 
@@ -510,9 +499,9 @@ public class TableController
 
 	public void tableChanged(TableChangedEvent event) throws Exception {
 		if (MainInterface.DEBUG) {
-                        ColumbaLogger.log.info("event="+event);
-                }
-		
+			ColumbaLogger.log.info("event=" + event);
+		}
+
 		FolderTreeNode folder = event.getSrcFolder();
 
 		if (folder == null) {
@@ -524,7 +513,9 @@ public class TableController
 		}
 
 		FolderCommandReference[] r =
-			(FolderCommandReference[]) mailFrameController.getSelectionManager().getSelection("mail.table");				
+			(FolderCommandReference[]) mailFrameController
+				.getSelectionManager()
+				.getSelection("mail.table");
 		Folder srcFolder = (Folder) r[0].getFolder();
 
 		if (!folder.equals(srcFolder))
@@ -535,13 +526,13 @@ public class TableController
 			case TableChangedEvent.UPDATE :
 				{
 					getHeaderTableModel().update();
-					
+
 					/*
 					HeaderInterface[] headerList = event.getHeaderList();
 					
 					getHeaderTableModel()
 								.setHeaderList(headerList);
-					*/			
+					*/
 					break;
 				}
 			case TableChangedEvent.ADD :
@@ -557,17 +548,22 @@ public class TableController
 				}
 			case TableChangedEvent.MARK :
 				{
-					
+
 					getHeaderTableModel().markHeader(
 						event.getUids(),
 						event.getMarkVariant());
-						
+
 					break;
 				}
 		}
 
-		getMailFrameController().folderInfoPanel.setFolder(srcFolder);
-		
+		// TODO: fix folderInfoPanel
+
+		if (getMailFrameController() instanceof ThreePaneMailFrameController)
+			((ThreePaneMailFrameController) getMailFrameController())
+				.folderInfoPanel
+				.setFolder(srcFolder);
+
 		fireTableChangedEvent(event);
 	}
 
@@ -583,7 +579,7 @@ public class TableController
 	 * Returns the mailFrameController.
 	 * @return MailFrameController
 	 */
-	public MailFrameController getMailFrameController() {
+	public AbstractMailFrameController getMailFrameController() {
 		return mailFrameController;
 	}
 
