@@ -91,7 +91,7 @@
            deprecation="${javac.deprecation}"
            optimize="${javac.optimize}">
       <include name="${javac.includes}"/>
-      <!-- <exclude name="${needs.batik.src}" unless="batik.available"/> -->
+      <exclude name="${needs.batik.src}" unless="batik.available"/>
       <exclude name="${needs.jdo.src}" unless="jdo.available"/>
       <exclude name="${needs.junit.src}"/>
       <classpath>
