@@ -23,7 +23,7 @@ import java.util.Arrays;
  * not support class annotations and dynamic class loading.
  *
  * @author Scott.Stark@jboss.org
- * @version $Revision: 1.3 $
+ * @version $Revision: 1.4 $
  */
 public class MarshalledValue
    implements java.io.Externalizable
@@ -72,6 +72,17 @@ public class MarshalledValue
       ByteArrayInputStream bais = new ByteArrayInputStream(serializedForm);
       MarshalledValueInputStream mvis = new MarshalledValueInputStream(bais);
       return mvis.readObject();
+   }
+
+   public byte[] toByteArray()
+   {
+      return serializedForm;
+   }
+
+   public int size()
+   {
+      int size = serializedForm != null ? serializedForm.length : 0;
+      return size;
    }
 
    /**
