@@ -1,4 +1,4 @@
-// $Id: SelectionActor.java,v 1.17 2004/08/07 15:39:54 mvw Exp $
+// $Id: SelectionActor.java,v 1.18 2004/08/18 18:56:51 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -61,7 +61,7 @@ public class SelectionActor extends SelectionWButtons {
     ////////////////////////////////////////////////////////////////
     // constants
     public static Icon assoc =
-	ResourceLoaderWrapper.getResourceLoaderWrapper()
+	ResourceLoaderWrapper
 	    .lookupIconResource("Association");
 
 

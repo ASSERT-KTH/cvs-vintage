@@ -1,4 +1,4 @@
-// $Id: SplashPanel.java,v 1.7 2004/06/24 06:25:40 linus Exp $
+// $Id: SplashPanel.java,v 1.8 2004/08/18 18:57:54 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -45,7 +45,7 @@ class SplashPanel extends JPanel {
     public SplashPanel(String iconName) {
 	super();
 	splashImage =
-	    ResourceLoaderWrapper.getResourceLoaderWrapper()
+	    ResourceLoaderWrapper
 	        .lookupIconResource(iconName);
 
 	JPanel topNorth = new JPanel(new BorderLayout());

@@ -1,4 +1,4 @@
-// $Id: PropPanel.java,v 1.87 2004/08/16 19:30:58 mvw Exp $
+// $Id: PropPanel.java,v 1.88 2004/08/18 18:56:18 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -369,7 +369,7 @@ public abstract class PropPanel
         // update the titleLabel
         if (getTitleLabel() != null) {
             Icon icon =
-		ResourceLoaderWrapper.getResourceLoaderWrapper().lookupIcon(t);
+		ResourceLoaderWrapper.getInstance().lookupIcon(t);
             if (icon != null)
                 getTitleLabel().setIcon(icon);
         }

@@ -1,4 +1,4 @@
-// $Id: ZoomSliderButton.java,v 1.8 2004/07/20 01:49:55 d00mst Exp $
+// $Id: ZoomSliderButton.java,v 1.9 2004/08/18 18:57:54 mvw Exp $
 // Copyright (c) 2003-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -106,7 +106,7 @@ public class ZoomSliderButton extends PopupButton {
     public ZoomSliderButton() {
         super();
 
-        Icon icon = ResourceLoaderWrapper.getResourceLoaderWrapper().
+        Icon icon = ResourceLoaderWrapper.
             lookupIconResource(Translator.getImageBinding(RESOURCE_NAME),
 			       Translator.localize(RESOURCE_NAME));
                 

@@ -1,4 +1,4 @@
-// $Id: SelectionClassifierRole.java,v 1.8 2004/08/07 15:39:54 mvw Exp $
+// $Id: SelectionClassifierRole.java,v 1.9 2004/08/18 18:56:52 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -63,11 +63,11 @@ public class SelectionClassifierRole extends SelectionWButtons {
     ////////////////////////////////////////////////////////////////
     // constants
     public static Icon assocrole =
-	ResourceLoaderWrapper.getResourceLoaderWrapper()
+	ResourceLoaderWrapper
 	    .lookupIconResource("AssociationRole");
 
     public static Icon selfassoc =
-        ResourceLoaderWrapper.getResourceLoaderWrapper()
+        ResourceLoaderWrapper
 	    .lookupIconResource("SelfAssociation");
 
     ////////////////////////////////////////////////////////////////
