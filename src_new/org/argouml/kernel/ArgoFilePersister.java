@@ -1,4 +1,4 @@
-// $Id: ArgoFilePersister.java,v 1.12 2004/09/20 20:44:16 bobtarling Exp $
+// $Id: ArgoFilePersister.java,v 1.13 2004/09/20 22:15:05 bobtarling Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,7 +27,6 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.io.Writer;
@@ -171,30 +170,21 @@ public class ArgoFilePersister extends AbstractFilePersister {
      */
     public Project loadProject(URL url) throws OpenException {
         try {
-            Project p = null;
             // read the argo 
-            try {
-                InputStream is = url.openStream();
-
-                // the "true" means that members should be added.
-                ArgoParser.SINGLETON.readProject(url, true);
-                p = ArgoParser.SINGLETON.getProject();
-                ArgoParser.SINGLETON.setProject(null); // clear up project refs
-
-                is.close();
-            } catch (IOException e) {
-                // exception can occur both due to argouml code as to J2SE
-                // code, so lets log it
-                LOG.error(e);
-                throw e;
-            }
+            // the "true" means that members should be added.
+            ArgoParser.SINGLETON.readProject(url, true);
+            Project p = ArgoParser.SINGLETON.getProject();
+            ArgoParser.SINGLETON.setProject(null); // clear up project refs
             p.postLoad();
             return p;
         } catch (IOException e) {
+            LOG.error("IOException", e);
             throw new OpenException(e);
         } catch (SAXException e) {
+            LOG.error("SAXException", e);
             throw new OpenException(e);
         } catch (ParserConfigurationException e) {
+            LOG.error("ParserConfigurationException", e);
             throw new OpenException(e);
         }
     }
