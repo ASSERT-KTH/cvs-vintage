@@ -151,10 +151,16 @@ public class ReplyToMailingListCommand extends FolderCommand {
 		MessageBuilderHelper.createMailingListHeaderItems(header, model);
 
 		// try to good guess the correct account
-		Integer accountUid = (Integer) folder.getAttribute(uids[0], "columba.accountuid");
-		String host = (String) folder.getAttribute(uids[0], "columba.host");
+		Integer accountUid = null;
+		if (folder.getAttribute(uids[0], "columba.accountuid") != null)
+			accountUid =
+				(Integer) folder.getAttribute(uids[0], "columba.accountuid");
+		String host = null;
+		if ( folder.getAttribute(uids[0], "columba.host") != null)
+			host = (String) folder.getAttribute(uids[0], "columba.host");
 		String address = header.get("To");
-		AccountItem accountItem = MessageBuilderHelper.getAccountItem(accountUid, host, address);
+		AccountItem accountItem =
+			MessageBuilderHelper.getAccountItem(accountUid, host, address);
 		model.setAccountItem(accountItem);
 		
 		
