@@ -675,7 +675,6 @@ public class Context implements LogAware {
     public final ClassLoader getClassLoader() {
 	if( servletL!=null) // backward compat
 	    return servletL.getClassLoader();
-	log( "getClassLoader(): " + classLoader);
 	return classLoader;
     }
 
@@ -701,8 +700,18 @@ public class Context implements LogAware {
 	    servletL.reload();
 	Enumeration sE=servlets.elements();
 	while( sE.hasMoreElements() ) {
-	    ServletWrapper sw=(ServletWrapper)sE.nextElement();
-	    sw.reload();
+	    try {
+		ServletWrapper sw=(ServletWrapper)sE.nextElement();
+		if( sw.getServletClassName() != null ) {
+		    // this is dynamicaly added, probably a JSP.
+		    // in any case, we can't save it
+		    sw.reload();
+		}
+		// 		log( "Removing " + sw.getName());
+		// 		removeServletByName( sw.getName());
+	    } catch( Exception ex ) {
+		log( "Reload exception: " + ex);
+	    }
 	}
 	// XXX todo
     }

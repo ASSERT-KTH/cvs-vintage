@@ -62,6 +62,7 @@ package org.apache.tomcat.request;
 
 import org.apache.tomcat.core.*;
 import org.apache.tomcat.util.*;
+import org.apache.tomcat.depend.*;
 import java.io.*;
 import java.net.*;
 import java.util.*;
@@ -71,12 +72,50 @@ import java.util.*;
  *  This should be "AT_END" - just after the context is mapped, it
  *  will determine if the context needs reload.
  *
+ *  This interceptor supports multiple forms of reloading.
  */
 public class ReloadInterceptor extends  BaseInterceptor
 {
+    // Stop and start the context.
+    boolean fullReload=true;
+    
     public ReloadInterceptor() {
     }
 
+    /** A full reload will stop and start the context, without
+     *  saving any state. It's the cleanest form of reload, equivalent
+     *  with (partial) server restart.
+     */
+    public void setFullReload( boolean full ) {
+	fullReload=full;
+    }
+    
+    /** Example of adding web.xml to the dependencies.
+     *  JspInterceptor can add all taglib descriptors.
+     */
+    public void contextInit( Context context)
+	throws TomcatException
+    {
+        ContextManager cm = context.getContextManager();
+	DependManager dm=context.getDependManager();
+	if( dm==null ) {
+	    dm=new DependManager();
+	    context.setDependManager( dm );
+	}
+
+	File inf_xml = cm.getAbsolute( new File(context.getDocBase() +
+						"/WEB-INF/web.xml"));
+	if( inf_xml.exists() ) {
+	    Dependency dep=new Dependency();
+	    dep.setTarget("web.xml");
+	    dep.setOrigin( inf_xml );
+	    // if change after now, we'll reload the context
+	    dep.setLastModified( System.currentTimeMillis() );
+	    dm.addDependency( dep );
+	}
+    }
+
+    
     public int contextMap( Request request ) {
 	Context ctx=request.getContext();
 	if( ctx==null) return 0;
@@ -89,18 +128,47 @@ public class ReloadInterceptor extends  BaseInterceptor
 	try {
 	    // Reload context.	
 	    ContextManager cm=ctx.getContextManager();
-	    ctx.reload();
 	    
-	    cm.doReload( request, ctx );
-	    
+	    if( fullReload ) {
+		Enumeration e;
+		// Need to find all the "config" that
+		// was read from server.xml.
+		// So far we work as if the admin interface was
+		// used to remove/add the context.
+		// Or like the deploytool in J2EE.
+		Context ctx1=new Context();
+		ctx1.setContextManager( cm );
+		ctx1.setPath(ctx.getPath());
+		ctx1.setDocBase(ctx.getDocBase());
+		ctx1.setReloadable( ctx.getReloadable());
+		ctx1.setDebug( ctx.getDebug());
+		ctx1.setHost( ctx.getHost());
+		e=ctx.getHostAliases();
+		while( e.hasMoreElements())
+		    ctx1.addHostAlias( (String)e.nextElement());
 
-	    // XXX XXX XXX
-	    // The right policy is ( IMHO ) to stop and start
-	    // the context. This way the requests that are executing
-	    // will finish, and all new requests will see a fresh new context.
+		cm.removeContext( ctx );
+		
+		cm.addContext( ctx1 );
 
-	    //	cm.removeContext( ctx );
+		cm.initContext( ctx1 );
 
+		// XXX Make sure ctx is destroyed - we may have
+		// undetected leaks 
+
+	    } else {
+		// This is the old ( buggy) behavior
+		// ctx.reload() has some fixes - it removes most of the
+		// user servlets, but still need work XXX.
+
+		// we also need to save context attributes.
+		ctx.reload();
+
+		// send notification to all interceptors
+		// They may try to save up the state or take
+		// the right actions
+		cm.doReload( request, ctx );
+	    }
 	} catch( TomcatException ex) {
 	    log( "Error reloading " + ex );
 	}

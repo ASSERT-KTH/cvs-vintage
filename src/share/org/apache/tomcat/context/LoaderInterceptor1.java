@@ -95,6 +95,7 @@ public class LoaderInterceptor1 extends BaseInterceptor {
     public void addContext( ContextManager cm, Context context)
 	throws TomcatException
     {
+	if( debug>0) log( "Add context " + context.getPath());
         String base = context.getDocBase();
 
 	// Add "WEB-INF/classes"
@@ -134,6 +135,7 @@ public class LoaderInterceptor1 extends BaseInterceptor {
     public void contextInit( Context context)
 	throws TomcatException
     {
+	if( debug>0 ) log( "Init context " + context.getPath());
         ContextManager cm = context.getContextManager();
 	URL urls[]=context.getClassPath();
 

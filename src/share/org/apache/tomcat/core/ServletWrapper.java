@@ -167,6 +167,10 @@ public class ServletWrapper extends Handler {
         return this.servletClassName;
     }
 
+    public String getServletClassName() {
+        return this.servletClassName;
+    }
+
     public void setServletClass(String servletClassName) {
 	if( name==null ) name=servletClassName;
 	this.servletClassName = servletClassName;
