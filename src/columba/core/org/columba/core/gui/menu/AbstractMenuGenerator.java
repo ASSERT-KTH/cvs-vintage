@@ -24,6 +24,7 @@ import org.columba.core.action.BasicAction;
 import org.columba.core.action.CheckBoxAction;
 import org.columba.core.action.IMenu;
 import org.columba.core.gui.frame.AbstractFrameController;
+import org.columba.core.gui.util.NotifyDialog;
 import org.columba.core.io.DiskIO;
 import org.columba.core.logging.ColumbaLogger;
 import org.columba.core.main.MainInterface;
@@ -208,9 +209,15 @@ public abstract class AbstractMenuGenerator {
 							lastWasSeparator = false;
 						}
 
-					} catch (Exception e) {						
-						ColumbaLogger.log.error(e + ": "+ next.getAttribute("action"));
-						e.printStackTrace();
+					} catch (Exception e) {
+						NotifyDialog dialog = new NotifyDialog();
+						dialog.showDialog("Error while loading plugin "+next.getAttribute("action")+". This probably means that the class wasn't found. Compile the plugin to create it.");
+						
+						if ( MainInterface.DEBUG )
+						{	
+							ColumbaLogger.log.error(e + ": "+ next.getAttribute("action"));
+							e.printStackTrace();
+						}
 					}
 				} else if (next.getAttribute("checkboxaction") != null) {
 					try {

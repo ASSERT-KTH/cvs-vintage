@@ -1,8 +1,8 @@
 /*
  * Created on 12.03.2003
- *
- * To change this generated comment go to
- * Window>Preferences>Java>Code Generation>Code and Comments
+ * 
+ * To change this generated comment go to Window>Preferences>Java>Code
+ * Generation>Code and Comments
  */
 package org.columba.core.gui.menu;
 
@@ -15,6 +15,7 @@ import javax.swing.JPopupMenu;
 import org.columba.core.action.BasicAction;
 import org.columba.core.action.CheckBoxAction;
 import org.columba.core.gui.frame.AbstractFrameController;
+import org.columba.core.gui.util.NotifyDialog;
 import org.columba.core.logging.ColumbaLogger;
 import org.columba.core.main.MainInterface;
 import org.columba.core.plugin.ActionPluginHandler;
@@ -22,9 +23,9 @@ import org.columba.core.xml.XmlElement;
 
 /**
  * @author frd
- *
- * To change this generated comment go to
- * Window>Preferences>Java>Code Generation>Code and Comments
+ * 
+ * To change this generated comment go to Window>Preferences>Java>Code
+ * Generation>Code and Comments
  */
 public class PopupMenuGenerator extends AbstractMenuGenerator {
 
@@ -45,7 +46,9 @@ public class PopupMenuGenerator extends AbstractMenuGenerator {
 
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see org.columba.core.gui.AbstractMenuGenerator#getMenuRoot()
 	 */
 	public XmlElement getMenuRoot() {
@@ -53,7 +56,9 @@ public class PopupMenuGenerator extends AbstractMenuGenerator {
 		return xmlFile.getRoot().getElement("menu");
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see org.columba.core.gui.AbstractMenuGenerator#getRootElementName()
 	 */
 	public String getRootElementName() {
@@ -94,9 +99,17 @@ public class PopupMenuGenerator extends AbstractMenuGenerator {
 							menu.add(tmp);
 						}
 					} catch (Exception e) {
-						e.printStackTrace();
-						ColumbaLogger.log.error(
-							e + ": " + next.getAttribute("action"));
+						NotifyDialog dialog = new NotifyDialog();
+						dialog.showDialog(
+							"Error while loading plugin "
+								+ next.getAttribute("action")
+								+ ". This probably means that the class wasn't found. Compile the plugin to create it.");
+
+						if (MainInterface.DEBUG) {
+							ColumbaLogger.log.error(
+								e + ": " + next.getAttribute("action"));
+							e.printStackTrace();
+						}
 					}
 				} else if (next.getAttribute("checkboxaction") != null) {
 					try {
