@@ -36,12 +36,6 @@ set CLASSPATH=%CLASSPATH%;%SPYDERMQ_HOME%\lib\jms.jar
 set CLASSPATH=%CLASSPATH%;%SPYDERMQ_HOME%\lib\jnpserver.jar
 
 :startJBoss
-
-REM Add the conf directory so that Classloader.getResource() will
-REM find the configuration and properties files.
-
-set CLASSPATH=%CLASSPATH%;..\conf
-
 REM Add all login modules for JAAS-based security
 REM and all libraries that are used by them here
 set CLASSPATH=%CLASSPATH%;..\lib\jdbc2_0-stdext.jar;..\lib\jboss-jaas.jar
