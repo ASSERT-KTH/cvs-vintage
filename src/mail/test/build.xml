@@ -6,6 +6,9 @@
 	
 	<target name="compile">
 		<echo message="compile mail test"/>
-		<javac srcdir="${currsrc}" destdir="${dest}" classpath="${ownclasspath}" encoding="ISO-8859-1" debug="yes"/>
+		<javac srcdir="${currsrc}" destdir="${dest}" classpath="${ownclasspath}" encoding="ISO-8859-1" debug="yes">
+			<exclude name="**/*.html"/>
+			<exclude name="**/*.xml"/>
+		</javac>
 	</target>
 </project>
