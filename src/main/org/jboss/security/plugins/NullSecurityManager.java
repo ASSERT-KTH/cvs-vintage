@@ -7,10 +7,12 @@
 package org.jboss.security.plugins;
 
 import java.io.Serializable;
+import java.util.HashSet;
 import java.util.Set;
 import java.security.Principal;
 import javax.security.auth.Subject;
 
+import org.jboss.security.AnybodyPrincipal;
 import org.jboss.security.RealmMapping;
 import org.jboss.security.SubjectSecurityManager;
 
@@ -24,7 +26,7 @@ as a pass-through security manager when you want noop security.
 @see #doesUserHaveRole(Principal, Set)
 
 @author <a href="mailto:Scott_Stark@displayscape.com">Scott Stark</a>.
-@version $Revision: 1.3 $
+@version $Revision: 1.4 $
 */
 public class NullSecurityManager
     implements SubjectSecurityManager, RealmMapping, Serializable
@@ -81,6 +83,16 @@ public class NullSecurityManager
     {
         boolean hasRole = true;
         return hasRole;
+    }
+
+    /** Return the set of domain roles the principal has been assigned.
+    @return The Set<Principal> with the AnybodyPrincipal as the sole role.
+     */
+    public Set getUserRoles(Principal principal)
+    {
+        HashSet roles = new HashSet();
+        roles.add(AnybodyPrincipal.ANYBODY_PRINCIPAL);
+        return roles;
     }
 
     /** Authenticate principal against credential
