@@ -7,21 +7,23 @@
 package org.jboss.ejb.plugins.jrmp13.interfaces;
 
 import  org.jboss.ejb.plugins.jrmp.interfaces.ContainerRemote;
+import javax.ejb.EJBMetaData;
 
 /**
  *	<description> 
  *      
  *	@see <related>
  *	@author Rickard Öberg (rickard.oberg@telkel.com)
- *	@version $Revision: 1.2 $
+ *  @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
+ *	@version $Revision: 1.3 $
  */
 public final class HomeProxy
    extends org.jboss.ejb.plugins.jrmp.interfaces.HomeProxy
    implements java.lang.reflect.InvocationHandler
 {
-   public HomeProxy(String name, ContainerRemote container, boolean optimize)
+   public HomeProxy(String name, EJBMetaData ejbMetaData, ContainerRemote container, boolean optimize)
    {
-   	super(name, container, optimize);
+   	super(name, ejbMetaData, container, optimize);
    }
 }
 

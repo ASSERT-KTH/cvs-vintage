@@ -14,6 +14,7 @@ import javax.ejb.EJBHome;
 import javax.ejb.EJBObject;
 import javax.ejb.Handle;
 import javax.ejb.HomeHandle;
+import javax.ejb.EJBMetaData;
 
 import org.jboss.ejb.plugins.jrmp.server.JRMPContainerInvoker;
 
@@ -23,7 +24,7 @@ import org.jboss.ejb.plugins.jrmp.server.JRMPContainerInvoker;
  *      @see <related>
  *      @author Rickard Öberg (rickard.oberg@telkel.com)
  *		@author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
- *      @version $Revision: 1.11 $
+ *      @version $Revision: 1.12 $
  */
 public class HomeProxy
    extends GenericProxy
@@ -32,6 +33,7 @@ public class HomeProxy
     
    // Attributes ----------------------------------------------------
    
+   EJBMetaData ejbMetaData;
    // Static --------------------------------------------------------
    static Method getEJBMetaData;
    static Method getHomeHandle;
@@ -66,9 +68,11 @@ public class HomeProxy
 
 
    // Constructors --------------------------------------------------
-   public HomeProxy(String name, ContainerRemote container, boolean optimize)
+   public HomeProxy(String name, EJBMetaData ejbMetaData, ContainerRemote container, boolean optimize)
    {
 		super(name, container, optimize);
+		
+   		this.ejbMetaData = ejbMetaData;
    }
    
    // Public --------------------------------------------------------
@@ -106,14 +110,12 @@ public class HomeProxy
          return new HomeHandleImpl(name);
       }
      
-	 /* MF FIXME
-	   We could implement the EJBMetaData on the client
 	 
 	  else if (m.equals(getEJBMetaData))
       {
-         return id;
+         return ejbMetaData;
       }
-	  */
+	  
 	  
 	  else if (m.equals(removeByHandle))
       {

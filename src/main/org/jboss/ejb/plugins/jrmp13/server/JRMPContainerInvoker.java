@@ -27,7 +27,8 @@ import org.jboss.ejb.plugins.jrmp13.interfaces.EntityProxy;
  *      
  *	@see <related>
  *	@author Rickard Öberg (rickard.oberg@telkel.com)
- *	@version $Revision: 1.2 $
+ *  @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
+ *	@version $Revision: 1.3 $
  */
 public final class JRMPContainerInvoker
    extends org.jboss.ejb.plugins.jrmp.server.JRMPContainerInvoker
@@ -38,7 +39,7 @@ public final class JRMPContainerInvoker
       {
          this.home = (EJBHome)Proxy.newProxyInstance(((ContainerInvokerContainer)container).getHomeClass().getClassLoader(),
                                               new Class[] { ((ContainerInvokerContainer)container).getHomeClass() },
-                                              new HomeProxy(jndiName, this, optimize));
+                                              new HomeProxy(jndiName,ejbMetaData, this, optimize));
       }
       return home;
    }
