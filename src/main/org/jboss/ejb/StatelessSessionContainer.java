@@ -30,11 +30,10 @@ import java.util.Map;
  * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  * @author <a href="mailto:docodan@mvcsoft.com">Daniel OConnor</a>
  * @author <a href="mailto:Christoph.Jung@infor.de">Christoph G. Jung</a>
- * @version $Revision: 1.56 $
+ * @version $Revision: 1.57 $
  */
-public class StatelessSessionContainer
-   extends SessionContainer
-   implements EJBProxyFactoryContainer, InstancePoolContainer
+public class StatelessSessionContainer extends SessionContainer
+        implements EJBProxyFactoryContainer, InstancePoolContainer
 {
    // EJBObject implementation --------------------------------------
 
@@ -42,7 +41,7 @@ public class StatelessSessionContainer
     * No-op.
     */
    public void remove(Invocation mi)
-      throws RemoteException, RemoveException
+           throws RemoteException, RemoveException
    {
       //TODO
    }
@@ -50,14 +49,14 @@ public class StatelessSessionContainer
    // EJBLocalHome implementation
 
    public EJBLocalObject createLocalHome()
-      throws CreateException
+           throws CreateException
    {
       if (localProxyFactory == null)
       {
          String msg = "No ProxyFactory, check for ProxyFactoryFinderInterceptor";
          throw new IllegalStateException(msg);
       }
-      createCount ++;
+      createCount++;
       return localProxyFactory.getStatelessSessionEJBLocalObject();
    }
 
@@ -72,26 +71,26 @@ public class StatelessSessionContainer
    // EJBHome implementation ----------------------------------------
 
    public EJBObject createHome()
-      throws RemoteException, CreateException
+           throws RemoteException, CreateException
    {
-       EJBProxyFactory ci = getProxyFactory();
+      EJBProxyFactory ci = getProxyFactory();
       if (ci == null)
       {
          String msg = "No ProxyFactory, check for ProxyFactoryFinderInterceptor";
          throw new IllegalStateException(msg);
       }
-      createCount ++;
+      createCount++;
       Object obj = ci.getStatelessSessionEJBObject();
-      return (EJBObject)obj;
+      return (EJBObject) obj;
    }
 
    /**
     * No-op.
     */
    public void removeHome(Handle handle)
-      throws RemoteException, RemoveException
+           throws RemoteException, RemoveException
    {
-      removeCount ++;
+      removeCount++;
       // TODO
    }
 
@@ -99,9 +98,9 @@ public class StatelessSessionContainer
     * No-op.
     */
    public void removeHome(Object primaryKey)
-      throws RemoteException, RemoveException
+           throws RemoteException, RemoveException
    {
-      removeCount ++;
+      removeCount++;
       // TODO
    }
 
@@ -109,7 +108,7 @@ public class StatelessSessionContainer
     * @return    Always null.
     */
    public EJBMetaData getEJBMetaDataHome()
-      throws RemoteException
+           throws RemoteException
    {
       // TODO
       return null;
@@ -119,7 +118,7 @@ public class StatelessSessionContainer
     * @return    Always null.
     */
    public HomeHandle getHomeHandleHome()
-      throws RemoteException
+           throws RemoteException
    {
       // TODO
       return null;
@@ -128,7 +127,7 @@ public class StatelessSessionContainer
    // Protected  ----------------------------------------------------
 
    protected void setupHomeMapping()
-      throws NoSuchMethodException
+           throws NoSuchMethodException
    {
       boolean debug = log.isDebugEnabled();
 
@@ -141,8 +140,8 @@ public class StatelessSessionContainer
          {
             // Implemented by container
             if (debug)
-               log.debug("Mapping "+m[i].getName());
-            map.put(m[i], getClass().getMethod(m[i].getName()+"Home", m[i].getParameterTypes()));
+               log.debug("Mapping " + m[i].getName());
+            map.put(m[i], getClass().getMethod(m[i].getName() + "Home", m[i].getParameterTypes()));
          }
       }
       if (localHomeInterface != null)
@@ -152,8 +151,8 @@ public class StatelessSessionContainer
          {
             // Implemented by container
             if (debug)
-               log.debug("Mapping "+m[i].getName());
-            map.put(m[i], getClass().getMethod(m[i].getName()+"LocalHome", m[i].getParameterTypes()));
+               log.debug("Mapping " + m[i].getName());
+            map.put(m[i], getClass().getMethod(m[i].getName() + "LocalHome", m[i].getParameterTypes()));
          }
       }
 
@@ -169,16 +168,15 @@ public class StatelessSessionContainer
     * This is the last step before invocation - all interceptors are done
     */
    class ContainerInterceptor
-      extends AbstractContainerInterceptor
+           extends AbstractContainerInterceptor
    {
       public Object invokeHome(Invocation mi) throws Exception
       {
          Method miMethod = mi.getMethod();
          Method m = (Method) getHomeMapping().get(miMethod);
-         if( m == null )
+         if (m == null)
          {
-            String msg = "Invalid invocation, check your deployment packaging"
-               +", method="+miMethod;
+            String msg = "Invalid invocation, check your deployment packaging, method=" + miMethod;
             throw new EJBException(msg);
          }
 
@@ -204,11 +202,12 @@ public class StatelessSessionContainer
 
          // Get method and instance to invoke upon
          Method miMethod = mi.getMethod();
-         Method m = (Method) getBeanMapping().get(miMethod);
-         if( m == null )
+
+         Map map = getBeanMapping();
+         Method m = (Method) map.get(miMethod);
+         if (m == null)
          {
-            String msg = "Invalid invocation, check your deployment packaging"
-               +", method="+miMethod;
+            String msg = "Invalid invocation, check your deployment packaging, method=" + miMethod;
             throw new EJBException(msg);
          }
 

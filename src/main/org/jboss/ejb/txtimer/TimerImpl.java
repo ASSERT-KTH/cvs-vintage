@@ -6,7 +6,7 @@
  */
 package org.jboss.ejb.txtimer;
 
-// $Id: TimerImpl.java,v 1.7 2004/04/15 14:28:41 tdiesler Exp $
+// $Id: TimerImpl.java,v 1.8 2004/04/22 17:44:22 tdiesler Exp $
 
 import org.jboss.logging.Logger;
 import org.jboss.ejb.AllowedOperationsAssociation;
@@ -376,6 +376,7 @@ public class TimerImpl implements javax.ejb.Timer, Synchronization
       AllowedOperationsAssociation.assertAllowedIn(timerMethod,
               AllowedOperationsAssociation.IN_BUSINESS_METHOD |
               AllowedOperationsAssociation.IN_EJB_TIMEOUT |
+              AllowedOperationsAssociation.IN_SERVICE_ENDPOINT_METHOD |
               AllowedOperationsAssociation.IN_AFTER_BEGIN |
               AllowedOperationsAssociation.IN_BEFORE_COMPLETION |
               AllowedOperationsAssociation.IN_EJB_POST_CREATE |

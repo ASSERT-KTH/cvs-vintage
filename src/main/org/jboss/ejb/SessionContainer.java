@@ -4,26 +4,26 @@
  * Distributable under LGPL license.
  * See terms of license at gnu.org.
  */
-
 package org.jboss.ejb;
 
+// $Id: SessionContainer.java,v 1.6 2004/04/22 17:44:20 tdiesler Exp $
+
+import org.jboss.invocation.Invocation;
+import org.jboss.invocation.MarshalledInvocation;
+import org.jboss.metadata.SessionMetaData;
+
+import javax.ejb.EJBHome;
+import javax.ejb.EJBLocalHome;
+import javax.ejb.Handle;
+import javax.ejb.TimedObject;
+import javax.ejb.Timer;
+import javax.management.ObjectName;
 import java.lang.reflect.Method;
 import java.rmi.RemoteException;
 import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.Map;
-
-import javax.ejb.EJBHome;
-import javax.ejb.EJBLocalHome;
-import javax.ejb.Handle;
-import javax.ejb.Timer;
-import javax.ejb.TimedObject;
-import javax.management.ObjectName;
-
-import org.jboss.invocation.Invocation;
-import org.jboss.invocation.MarshalledInvocation;
-import org.jboss.metadata.SessionMetaData;
 
 /**
  * <p>
@@ -33,11 +33,11 @@ import org.jboss.metadata.SessionMetaData;
  * web services.
  * </p>
  * @author <a href="mailto:Christoph.Jung@infor.de">Christoph G. Jung</a>
- * @version $Revision: 1.5 $
+ * @version $Revision: 1.6 $
  * @since 30.10.2003
  */
-
-public abstract class SessionContainer extends Container {
+public abstract class SessionContainer extends Container
+{
    /**
     * These are the mappings between the home interface methods and the
     * container methods.
@@ -63,7 +63,8 @@ public abstract class SessionContainer extends Container {
    protected InstancePool instancePool;
 
    /** set the instance pool */
-   public void setInstancePool(InstancePool ip) {
+   public void setInstancePool(InstancePool ip)
+   {
       if (ip == null)
          throw new IllegalArgumentException("Null pool");
 
@@ -72,22 +73,29 @@ public abstract class SessionContainer extends Container {
    }
 
    /** return instance pool */
-   public InstancePool getInstancePool() {
+   public InstancePool getInstancePool()
+   {
       return instancePool;
    }
 
    /** return local proxy factory */
-   public LocalProxyFactory getLocalProxyFactory() {
+   public LocalProxyFactory getLocalProxyFactory()
+   {
       return localProxyFactory;
    }
 
    /** add an additional interceptor to the chain */
-   public void addInterceptor(Interceptor in) {
-      if (interceptor == null) {
+   public void addInterceptor(Interceptor in)
+   {
+      if (interceptor == null)
+      {
          interceptor = in;
-      } else {
+      }
+      else
+      {
          Interceptor current = interceptor;
-         while (current.getNext() != null) {
+         while (current.getNext() != null)
+         {
             current = current.getNext();
          }
 
@@ -96,45 +104,36 @@ public abstract class SessionContainer extends Container {
    }
 
    /** return first interceptor */
-   public Interceptor getInterceptor() {
+   public Interceptor getInterceptor()
+   {
       return interceptor;
    }
 
    /** return service endpoint */
-   public Class getServiceEndpoint() {
+   public Class getServiceEndpoint()
+   {
       return serviceEndpoint;
    }
 
-   /** 
-    * explicitely sets the service endpoint interface
-    * this is for the lazy guys that do not want to 
-    * extend their ejb-jar.xml and nevertheless expose
-    * ejb-based webservices
-    */
-   public void setServiceEndpoint(Class sei) throws NoSuchMethodException {
-      if(serviceEndpoint!=sei) {
-         serviceEndpoint=sei;
-         setupServiceEndpointBeanMapping();
-      }
-   }
-   
    // Container stuff
 
-   protected void createService() throws Exception {
+   protected void createService() throws Exception
+   {
       // Associate thread with classloader
       ClassLoader oldCl = Thread.currentThread().getContextClassLoader();
       Thread.currentThread().setContextClassLoader(getClassLoader());
 
-      try {
+      try
+      {
          // Acquire classes from CL
          if (metaData.getHome() != null)
             homeInterface = classLoader.loadClass(metaData.getHome());
          if (metaData.getRemote() != null)
             remoteInterface = classLoader.loadClass(metaData.getRemote());
-         if (((SessionMetaData) metaData).getServiceEndpoint() != null) {
+         if (((SessionMetaData) metaData).getServiceEndpoint() != null)
+         {
             serviceEndpoint =
-               classLoader.loadClass(
-                  ((SessionMetaData) metaData).getServiceEndpoint());
+                    classLoader.loadClass(((SessionMetaData) metaData).getServiceEndpoint());
          }
 
          // Call default init
@@ -161,7 +160,9 @@ public abstract class SessionContainer extends Container {
          createPersistenceManager();
 
          createInterceptors();
-      } finally {
+      }
+      finally
+      {
          // Reset classloader
          Thread.currentThread().setContextClassLoader(oldCl);
       }
@@ -173,191 +174,184 @@ public abstract class SessionContainer extends Container {
    protected abstract void setupHomeMapping() throws Exception;
 
    /** loop through methods and setup mapping */
-   protected void setUpBeanMappingImpl(
-      Map map,
-      Method[] m,
-      String declaringClass)
-      throws NoSuchMethodException {
-      boolean debug = log.isDebugEnabled();
-
-      for (int i = 0; i < m.length; i++) {
-         if (!m[i].getDeclaringClass().getName().equals(declaringClass)) {
+   protected void setUpBeanMappingImpl(Map map, Method[] methods, String declaringClass)
+           throws NoSuchMethodException
+   {
+      for (int i = 0; i < methods.length; i++)
+      {
+         Method m = methods[i];
+         if (m.getDeclaringClass().getName().equals(declaringClass) == false)
+         {
             // Implemented by bean
-            try {
-               map.put(
-                  m[i],
-                  beanClass.getMethod(
-                     m[i].getName(),
-                     m[i].getParameterTypes()));
-            } catch (NoSuchMethodException ex) {
-               throw new org.jboss.util.NoSuchMethodException(
-                  "Not found in bean class: ",
-                  m[i]);
+            try
+            {
+               Method beanMethod = beanClass.getMethod(m.getName(), m.getParameterTypes());
+               map.put(m, beanMethod);
+            }
+            catch (NoSuchMethodException ex)
+            {
+               throw new NoSuchMethodException("Not found in bean class: " + m);
             }
 
-            if (debug)
-               log.debug(
-                  "Mapped "
-                     + m[i].getName()
-                     + " HASH "
-                     + m[i].hashCode()
-                     + "to "
-                     + map.get(m[i]));
-         } else {
-            try {
-               // Implemented by container
-               if (debug)
-                  log.debug(
-                     "Mapped Container method "
-                        + m[i].getName()
-                        + " HASH "
-                        + m[i].hashCode());
-               map.put(
-                  m[i],
-                  getClass().getMethod(
-                     m[i].getName(),
-                     new Class[] { Invocation.class }));
-            } catch (NoSuchMethodException e) {
-               log.error(m[i].getName() + " in bean has not been mapped", e);
+            if (log.isDebugEnabled())
+               log.debug("Mapped " + m.getName() + " HASH " + m.hashCode() + "to " + map.get(m));
+         }
+         else
+         {
+            // Implemented by container
+            try
+            {
+               Method containerMethod = getClass().getMethod(m.getName(), new Class[]{Invocation.class});
+               map.put(m, containerMethod);
             }
+            catch (NoSuchMethodException e)
+            {
+               throw new NoSuchMethodException("Not found in container class: " + m);
+            }
+
+            if (log.isDebugEnabled())
+               log.debug("Mapped Container method " + m.getName() + " HASH " + m.hashCode());
          }
       }
    }
 
    /** build bean mappings for application logic */
-   protected void setupBeanMapping() throws NoSuchMethodException {
+   protected void setupBeanMapping() throws NoSuchMethodException
+   {
       Map map = new HashMap();
 
-      if (remoteInterface != null) {
+      if (remoteInterface != null)
+      {
          Method[] m = remoteInterface.getMethods();
          setUpBeanMappingImpl(map, m, "javax.ejb.EJBObject");
       }
-      if (localInterface != null) {
+
+      if (localInterface != null)
+      {
          Method[] m = localInterface.getMethods();
          setUpBeanMappingImpl(map, m, "javax.ejb.EJBLocalObject");
       }
-      if( TimedObject.class.isAssignableFrom( beanClass ) ) {
-          // Map ejbTimeout
-          map.put(
-             TimedObject.class.getMethod( "ejbTimeout", new Class[] { Timer.class } ),
-             beanClass.getMethod( "ejbTimeout", new Class[] { Timer.class } )
-          );
+
+      if (TimedObject.class.isAssignableFrom(beanClass))
+      {
+         Method[] m = new Method[]{TimedObject.class.getMethod("ejbTimeout", new Class[]{Timer.class})};
+         setUpBeanMappingImpl(map, m, "javax.ejb.Timer");
       }
+
+      if (serviceEndpoint != null)
+      {
+         Method[] m = serviceEndpoint.getMethods();
+         setUpBeanMappingImpl(map, m, "java.rmi.Remote");
+      }
+
       beanMapping = map;
-      // the sei->bean mapping is factored out, because the sei could be set
-      // individually (such that ejb-jar.xml must not know about webservices)
-      setupServiceEndpointBeanMapping();
    }
 
-   /** 
-    * sets the service endpoint mappings either at container creation time or
-    * later, when the webservice module shows up
-    */
-   protected void setupServiceEndpointBeanMapping() throws NoSuchMethodException {
-      if (serviceEndpoint != null) {
-         Method[] m = serviceEndpoint.getMethods();
-         setUpBeanMappingImpl(beanMapping, m, "java.rmi.Remote");
-      }
-   }
-   
    /**
     * sets up marshalled invocation mappings
     * @throws Exception
     */
-   
-   protected void setupMarshalledInvocationMapping() throws Exception {
+
+   protected void setupMarshalledInvocationMapping() throws Exception
+   {
       // Create method mappings for container invoker
-      if (homeInterface != null) {
+      if (homeInterface != null)
+      {
          Method[] m = homeInterface.getMethods();
-         for (int i = 0; i < m.length; i++) {
-            marshalledInvocationMapping.put(
-               new Long(MarshalledInvocation.calculateHash(m[i])),
-               m[i]);
+         for (int i = 0; i < m.length; i++)
+         {
+            marshalledInvocationMapping.put(new Long(MarshalledInvocation.calculateHash(m[i])), m[i]);
          }
       }
 
-      if (remoteInterface != null) {
+      if (remoteInterface != null)
+      {
          Method[] m = remoteInterface.getMethods();
-         for (int j = 0; j < m.length; j++) {
-            marshalledInvocationMapping.put(
-               new Long(MarshalledInvocation.calculateHash(m[j])),
-               m[j]);
+         for (int j = 0; j < m.length; j++)
+         {
+            marshalledInvocationMapping.put(new Long(MarshalledInvocation.calculateHash(m[j])), m[j]);
          }
       }
-      // Get the getEJBObjectMethod
+// Get the getEJBObjectMethod
       Method getEJBObjectMethod =
-         Class.forName("javax.ejb.Handle").getMethod(
-            "getEJBObject",
-            new Class[0]);
+              Class.forName("javax.ejb.Handle").getMethod("getEJBObject",
+                      new Class[0]);
 
-      // Hash it
-      marshalledInvocationMapping.put(
-         new Long(MarshalledInvocation.calculateHash(getEJBObjectMethod)),
-         getEJBObjectMethod);
+// Hash it
+      marshalledInvocationMapping.put(new Long(MarshalledInvocation.calculateHash(getEJBObjectMethod)), getEJBObjectMethod);
    }
 
-   protected void checkCoherency() throws Exception {
+   protected void checkCoherency() throws Exception
+   {
       // Check clustering cohrency wrt metadata
       //
-      if (metaData.isClustered()) {
+      if (metaData.isClustered())
+      {
          boolean clusteredProxyFactoryFound = false;
-         for (Iterator it = proxyFactories.keySet().iterator();
-            it.hasNext();
-            ) {
+         Iterator it = proxyFactories.keySet().iterator();
+         while (it.hasNext())
+         {
             String invokerBinding = (String) it.next();
-            EJBProxyFactory ci =
-               (EJBProxyFactory) proxyFactories.get(invokerBinding);
+            EJBProxyFactory ci = (EJBProxyFactory) proxyFactories.get(invokerBinding);
             if (ci instanceof org.jboss.proxy.ejb.ClusterProxyFactory)
                clusteredProxyFactoryFound = true;
          }
 
-         if (!clusteredProxyFactoryFound) {
-            log.warn(
-               "*** EJB '"
-                  + this.metaData.getEjbName()
-                  + "' deployed as CLUSTERED but not a single clustered-invoker is bound to container ***");
+         if (!clusteredProxyFactoryFound)
+         {
+            log.warn("*** EJB '"
+                    + this.metaData.getEjbName()
+                    + "' deployed as CLUSTERED but not a single clustered-invoker is bound to container ***");
          }
       }
    }
 
    /** creates a new instance pool */
-   protected void createInstancePool() throws Exception {
+   protected void createInstancePool() throws Exception
+   {
 
       // Try to register the instance pool as an MBean
-      try {
+      try
+      {
          ObjectName containerName = super.getJmxName();
          Hashtable props = containerName.getKeyPropertyList();
          props.put("plugin", "pool");
          ObjectName poolName = new ObjectName(containerName.getDomain(), props);
          server.registerMBean(instancePool, poolName);
-      } catch (Throwable t) {
+      }
+      catch (Throwable t)
+      {
          log.debug("Failed to register pool as mbean", t);
       }
-      // Initialize pool
+// Initialize pool
       instancePool.create();
    }
 
    /**
     * no instance cache per default
     */
-   protected void createInstanceCache() throws Exception {
+   protected void createInstanceCache() throws Exception
+   {
    }
 
    /** creates the invokers */
-   protected void createInvokers() throws Exception {
+   protected void createInvokers() throws Exception
+   {
       // Init container invoker
-      for (Iterator it = proxyFactories.keySet().iterator(); it.hasNext();) {
+      for (Iterator it = proxyFactories.keySet().iterator(); it.hasNext();)
+      {
          String invokerBinding = (String) it.next();
-         EJBProxyFactory ci =
-            (EJBProxyFactory) proxyFactories.get(invokerBinding);
+         EJBProxyFactory ci = (EJBProxyFactory) proxyFactories.get(invokerBinding);
          ci.create();
       }
    }
 
    /** Initialize the interceptors by calling the chain */
-   protected void createInterceptors() throws Exception {
+   protected void createInterceptors() throws Exception
+   {
       Interceptor in = interceptor;
-      while (in != null) {
+      while (in != null)
+      {
          in.setContainer(this);
          in.create();
          in = in.getNext();
@@ -367,16 +361,19 @@ public abstract class SessionContainer extends Container {
    /**
     * no persistence manager per default
     */
-   protected void createPersistenceManager() throws Exception {
+   protected void createPersistenceManager() throws Exception
+   {
    }
 
-   protected void startService() throws Exception {
+   protected void startService() throws Exception
+   {
       // Associate thread with classloader
       ClassLoader oldCl = Thread.currentThread().getContextClassLoader();
       Thread.currentThread().setContextClassLoader(getClassLoader());
 
-      try {
-         // Call default start
+      try
+      {
+// Call default start
          super.startService();
 
          startInvokers();
@@ -388,8 +385,10 @@ public abstract class SessionContainer extends Container {
          startPersistenceManager();
 
          startInterceptors();
-      } finally {
-         // Reset classloader
+      }
+      finally
+      {
+// Reset classloader
          Thread.currentThread().setContextClassLoader(oldCl);
       }
    }
@@ -397,46 +396,54 @@ public abstract class SessionContainer extends Container {
    /**
     * no persistence manager per default
     */
-   protected void startPersistenceManager() throws Exception {
+   protected void startPersistenceManager() throws Exception
+   {
    }
 
    /**
     * no instance cache per default
     */
-   protected void startInstanceCache() throws Exception {
+   protected void startInstanceCache() throws Exception
+   {
    }
 
    /** Start container invokers */
-   protected void startInvokers() throws Exception {
-      for (Iterator it = proxyFactories.keySet().iterator(); it.hasNext();) {
+   protected void startInvokers() throws Exception
+   {
+      for (Iterator it = proxyFactories.keySet().iterator(); it.hasNext();)
+      {
          String invokerBinding = (String) it.next();
-         EJBProxyFactory ci =
-            (EJBProxyFactory) proxyFactories.get(invokerBinding);
+         EJBProxyFactory ci = (EJBProxyFactory) proxyFactories.get(invokerBinding);
          ci.start();
       }
    }
 
    /** Start pool */
-   protected void startInstancePool() throws Exception {
+   protected void startInstancePool() throws Exception
+   {
       instancePool.start();
    }
 
    /** Start all interceptors in the chain **/
-   protected void startInterceptors() throws Exception {
+   protected void startInterceptors() throws Exception
+   {
       Interceptor in = interceptor;
-      while (in != null) {
+      while (in != null)
+      {
          in.start();
          in = in.getNext();
       }
    }
 
-   protected void stopService() throws Exception {
+   protected void stopService() throws Exception
+   {
       // Associate thread with classloader
       ClassLoader oldCl = Thread.currentThread().getContextClassLoader();
       Thread.currentThread().setContextClassLoader(getClassLoader());
 
-      try {
-         // Call default stop
+      try
+      {
+// Call default stop
          super.stopService();
 
          stopInvokers();
@@ -448,50 +455,60 @@ public abstract class SessionContainer extends Container {
          stopPersistenceManager();
 
          stopInterceptors();
-      } finally {
-         // Reset classloader
+      }
+      finally
+      {
+// Reset classloader
          Thread.currentThread().setContextClassLoader(oldCl);
       }
    }
 
    /** Stop all interceptors in the chain */
-   protected void stopInterceptors() {
+   protected void stopInterceptors()
+   {
       Interceptor in = interceptor;
-      while (in != null) {
+      while (in != null)
+      {
          in.stop();
          in = in.getNext();
       }
    }
 
    /** no persistence */
-   protected void stopPersistenceManager() {
+   protected void stopPersistenceManager()
+   {
    }
 
    /** Stop pool */
-   protected void stopInstancePool() {
+   protected void stopInstancePool()
+   {
       instancePool.stop();
    }
 
    /** no instance cache */
-   protected void stopInstanceCache() {
+   protected void stopInstanceCache()
+   {
    }
 
    /** Stop container invoker */
-   protected void stopInvokers() {
-      for (Iterator it = proxyFactories.keySet().iterator(); it.hasNext();) {
+   protected void stopInvokers()
+   {
+      for (Iterator it = proxyFactories.keySet().iterator(); it.hasNext();)
+      {
          String invokerBinding = (String) it.next();
-         EJBProxyFactory ci =
-            (EJBProxyFactory) proxyFactories.get(invokerBinding);
+         EJBProxyFactory ci = (EJBProxyFactory) proxyFactories.get(invokerBinding);
          ci.stop();
       }
    }
 
-   protected void destroyService() throws Exception {
+   protected void destroyService() throws Exception
+   {
       // Associate thread with classloader
       ClassLoader oldCl = Thread.currentThread().getContextClassLoader();
       Thread.currentThread().setContextClassLoader(getClassLoader());
 
-      try {
+      try
+      {
          destroyInvokers();
 
          destroyInstanceCache();
@@ -504,75 +521,89 @@ public abstract class SessionContainer extends Container {
 
          destroyMarshalledInvocationMapping();
 
-         // Call default destroy
+// Call default destroy
          super.destroyService();
-      } finally {
-         // Reset classloader
+      }
+      finally
+      {
+// Reset classloader
          Thread.currentThread().setContextClassLoader(oldCl);
       }
    }
 
-   protected void destroyMarshalledInvocationMapping() {
+   protected void destroyMarshalledInvocationMapping()
+   {
       MarshalledInvocation.removeHashes(homeInterface);
       MarshalledInvocation.removeHashes(remoteInterface);
    }
 
-   protected void destroyInterceptors() {
+   protected void destroyInterceptors()
+   {
       // Destroy all the interceptors in the chain
       Interceptor in = interceptor;
-      while (in != null) {
+      while (in != null)
+      {
          in.destroy();
          in.setContainer(null);
          in = in.getNext();
       }
    }
 
-   protected void destroyPersistenceManager() {
+   protected void destroyPersistenceManager()
+   {
    }
 
-   protected void destroyInstancePool() {
+   protected void destroyInstancePool()
+   {
       // Destroy pool
       instancePool.destroy();
       instancePool.setContainer(null);
-      try {
+      try
+      {
          ObjectName containerName = super.getJmxName();
          Hashtable props = containerName.getKeyPropertyList();
          props.put("plugin", "pool");
          ObjectName poolName = new ObjectName(containerName.getDomain(), props);
          server.unregisterMBean(poolName);
-      } catch (Throwable ignore) {
+      }
+      catch (Throwable ignore)
+      {
       }
    }
 
-   protected void destroyInstanceCache() {
+   protected void destroyInstanceCache()
+   {
    }
 
-   protected void destroyInvokers() {
+   protected void destroyInvokers()
+   {
       // Destroy container invoker
-      for (Iterator it = proxyFactories.keySet().iterator(); it.hasNext();) {
+      for (Iterator it = proxyFactories.keySet().iterator(); it.hasNext();)
+      {
          String invokerBinding = (String) it.next();
-         EJBProxyFactory ci =
-            (EJBProxyFactory) proxyFactories.get(invokerBinding);
+         EJBProxyFactory ci = (EJBProxyFactory) proxyFactories.get(invokerBinding);
          ci.destroy();
          ci.setContainer(null);
       }
    }
 
-   public Object internalInvokeHome(Invocation mi) throws Exception {
+   public Object internalInvokeHome(Invocation mi) throws Exception
+   {
       return getInterceptor().invokeHome(mi);
    }
 
    /**
-   * This method does invocation interpositioning of tx and security,
-   * retrieves the instance from an object table, and invokes the method
-   * on the particular instance
-   */
-   public Object internalInvoke(Invocation mi) throws Exception {
+    * This method does invocation interpositioning of tx and security,
+    * retrieves the instance from an object table, and invokes the method
+    * on the particular instance
+    */
+   public Object internalInvoke(Invocation mi) throws Exception
+   {
       // Invoke through interceptors
       return getInterceptor().invoke(mi);
    }
 
-   // EJBObject implementation --------------------------------------
+// EJBObject implementation --------------------------------------
 
    /**
     * While the following methods are implemented in the client in the case
@@ -581,7 +612,8 @@ public abstract class SessionContainer extends Container {
     *
     * @return  Always null
     */
-   public Handle getHandle(Invocation mi) throws RemoteException {
+   public Handle getHandle(Invocation mi) throws RemoteException
+   {
       // TODO
       return null;
    }
@@ -589,16 +621,18 @@ public abstract class SessionContainer extends Container {
    /**
     * @return  Always null
     */
-   public Object getPrimaryKey(Invocation mi) throws RemoteException {
+   public Object getPrimaryKey(Invocation mi) throws RemoteException
+   {
       // TODO
       return null;
    }
 
-   public EJBHome getEJBHome(Invocation mi) throws RemoteException {
+   public EJBHome getEJBHome(Invocation mi) throws RemoteException
+   {
       EJBProxyFactory ci = getProxyFactory();
-      if (ci == null) {
-         String msg =
-            "No ProxyFactory, check for ProxyFactoryFinderInterceptor";
+      if (ci == null)
+      {
+         String msg = "No ProxyFactory, check for ProxyFactoryFinderInterceptor";
          throw new IllegalStateException(msg);
       }
 
@@ -608,31 +642,35 @@ public abstract class SessionContainer extends Container {
    /**
     * @return   Always false
     */
-   public boolean isIdentical(Invocation mi) throws RemoteException {
+   public boolean isIdentical(Invocation mi) throws RemoteException
+   {
       return false; // TODO
    }
 
-   // Home interface implementation ---------------------------------
+// Home interface implementation ---------------------------------
 
-   // local object interface implementation
+// local object interface implementation
 
-   public EJBLocalHome getEJBLocalHome(Invocation mi) {
+   public EJBLocalHome getEJBLocalHome(Invocation mi)
+   {
       return localProxyFactory.getEJBLocalHome();
    }
 
    /**
-    * needed for sub-inner-class access (old jdk compiler bug) 
+    * needed for sub-inner-class access (old jdk compiler bug)
     * @return
     */
-   protected Map getHomeMapping() {
+   protected Map getHomeMapping()
+   {
       return homeMapping;
    }
 
    /**
-    * needed for sub-inner-class access (old jdk compiler bug) 
+    * needed for sub-inner-class access (old jdk compiler bug)
     * @return
     */
-   protected Map getBeanMapping() {
+   protected Map getBeanMapping()
+   {
       return beanMapping;
    }
 

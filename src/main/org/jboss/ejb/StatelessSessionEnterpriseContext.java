@@ -6,6 +6,9 @@
  */
 package org.jboss.ejb;
 
+import javax.ejb.*;
+import javax.transaction.UserTransaction;
+import javax.xml.rpc.handler.MessageContext;
 import java.io.Serializable;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -13,18 +16,13 @@ import java.rmi.RemoteException;
 import java.security.Principal;
 import java.util.Collection;
 import java.util.Date;
-import java.util.ArrayList;
-import java.util.Iterator;
-import javax.ejb.*;
-import javax.transaction.UserTransaction;
-import javax.xml.rpc.handler.MessageContext;
 
 /**
  * The enterprise context for stateless session beans.
  *      
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  * @author <a href="sebastien.alborini@m4x.org">Sebastien Alborini</a>
- * @version $Revision: 1.26 $
+ * @version $Revision: 1.27 $
  */
 public class StatelessSessionEnterpriseContext
    extends EnterpriseContext
@@ -35,6 +33,7 @@ public class StatelessSessionEnterpriseContext
    
    EJBObject ejbObject;
    EJBLocalObject ejbLocalObject;
+   MessageContext soapMessageContext;
    SessionContext ctx;
    
    // Static --------------------------------------------------------
@@ -102,6 +101,11 @@ public class StatelessSessionEnterpriseContext
       return ctx;
    }
 
+   public void setMessageContext(MessageContext msgContext)
+   {
+      this.soapMessageContext = msgContext;
+   }
+
    // EnterpriseContext overrides -----------------------------------
    
    public void discard() throws RemoteException
@@ -129,7 +133,8 @@ public class StatelessSessionEnterpriseContext
       public EJBHome getEJBHome()
       {
          AllowedOperationsAssociation.assertAllowedIn("getEJBHome",
-                 IN_SET_SESSION_CONTEXT | IN_EJB_CREATE | IN_EJB_REMOVE | IN_BUSINESS_METHOD | IN_EJB_TIMEOUT);
+                 IN_SET_SESSION_CONTEXT | IN_EJB_CREATE | IN_EJB_REMOVE |
+                 IN_BUSINESS_METHOD | IN_EJB_TIMEOUT | IN_SERVICE_ENDPOINT_METHOD);
 
          return super.getEJBHome();
       }
@@ -137,7 +142,8 @@ public class StatelessSessionEnterpriseContext
       public EJBLocalHome getEJBLocalHome()
       {
          AllowedOperationsAssociation.assertAllowedIn("getEJBLocalHome",
-                 IN_SET_SESSION_CONTEXT | IN_EJB_CREATE | IN_EJB_REMOVE | IN_BUSINESS_METHOD | IN_EJB_TIMEOUT);
+                 IN_SET_SESSION_CONTEXT | IN_EJB_CREATE | IN_EJB_REMOVE |
+                 IN_BUSINESS_METHOD | IN_EJB_TIMEOUT | IN_SERVICE_ENDPOINT_METHOD);
 
          return super.getEJBLocalHome();
       }
@@ -145,7 +151,7 @@ public class StatelessSessionEnterpriseContext
       public EJBObject getEJBObject()
       {
          AllowedOperationsAssociation.assertAllowedIn("getEJBObject",
-                 IN_EJB_CREATE | IN_EJB_REMOVE | IN_BUSINESS_METHOD | IN_EJB_TIMEOUT);
+                 IN_EJB_CREATE | IN_EJB_REMOVE | IN_BUSINESS_METHOD | IN_EJB_TIMEOUT | IN_SERVICE_ENDPOINT_METHOD);
 
          if (((StatelessSessionContainer)con).getProxyFactory()==null)
             throw new IllegalStateException( "No remote interface defined." );
@@ -168,7 +174,7 @@ public class StatelessSessionEnterpriseContext
       public EJBLocalObject getEJBLocalObject()
       {
          AllowedOperationsAssociation.assertAllowedIn("getEJBLocalObject",
-                 IN_EJB_CREATE | IN_EJB_REMOVE | IN_BUSINESS_METHOD | IN_EJB_TIMEOUT);
+                 IN_EJB_CREATE | IN_EJB_REMOVE | IN_BUSINESS_METHOD | IN_EJB_TIMEOUT | IN_SERVICE_ENDPOINT_METHOD);
 
          if (con.getLocalHomeClass()==null)
             throw new IllegalStateException( "No local interface for bean." );
@@ -181,42 +187,42 @@ public class StatelessSessionEnterpriseContext
       public TimerService getTimerService() throws IllegalStateException
       {
          AllowedOperationsAssociation.assertAllowedIn("getTimerService",
-                 IN_EJB_CREATE | IN_EJB_REMOVE | IN_BUSINESS_METHOD | IN_EJB_TIMEOUT);
+                 IN_EJB_CREATE | IN_EJB_REMOVE | IN_BUSINESS_METHOD | IN_EJB_TIMEOUT | IN_SERVICE_ENDPOINT_METHOD);
          return new TimerServiceWrapper(this, super.getTimerService());
       }
 
       public Principal getCallerPrincipal()
       {
          AllowedOperationsAssociation.assertAllowedIn("getCallerPrincipal",
-                 IN_BUSINESS_METHOD | IN_EJB_TIMEOUT);
+                 IN_BUSINESS_METHOD | IN_EJB_TIMEOUT | IN_SERVICE_ENDPOINT_METHOD);
          return super.getCallerPrincipal();
       }
 
       public boolean getRollbackOnly()
       {
          AllowedOperationsAssociation.assertAllowedIn("getRollbackOnly",
-                 IN_BUSINESS_METHOD | IN_EJB_TIMEOUT);
+                 IN_BUSINESS_METHOD | IN_EJB_TIMEOUT | IN_SERVICE_ENDPOINT_METHOD);
          return super.getRollbackOnly();
       }
 
       public void setRollbackOnly()
       {
          AllowedOperationsAssociation.assertAllowedIn("setRollbackOnly",
-                 IN_BUSINESS_METHOD | IN_EJB_TIMEOUT);
+                 IN_BUSINESS_METHOD | IN_EJB_TIMEOUT | IN_SERVICE_ENDPOINT_METHOD);
          super.setRollbackOnly();
       }
 
       public boolean isCallerInRole(String id)
       {
          AllowedOperationsAssociation.assertAllowedIn("isCallerInRole",
-                 IN_BUSINESS_METHOD | IN_EJB_TIMEOUT);
+                 IN_BUSINESS_METHOD | IN_EJB_TIMEOUT | IN_SERVICE_ENDPOINT_METHOD);
          return super.isCallerInRole(id);
       }
 
       public UserTransaction getUserTransaction()
       {
          AllowedOperationsAssociation.assertAllowedIn("getUserTransaction",
-                 IN_EJB_CREATE | IN_EJB_REMOVE | IN_BUSINESS_METHOD | IN_EJB_TIMEOUT);
+                 IN_EJB_CREATE | IN_EJB_REMOVE | IN_BUSINESS_METHOD | IN_EJB_TIMEOUT | IN_SERVICE_ENDPOINT_METHOD);
          return super.getUserTransaction();
       }
 
@@ -224,7 +230,7 @@ public class StatelessSessionEnterpriseContext
       {
          AllowedOperationsAssociation.assertAllowedIn("getMessageContext",
                  IN_SERVICE_ENDPOINT_METHOD);
-         return null;
+         return soapMessageContext;
       }
    }
 
@@ -276,7 +282,7 @@ public class StatelessSessionEnterpriseContext
       private void assertAllowedIn(String timerMethod)
       {
          AllowedOperationsAssociation.assertAllowedIn(timerMethod,
-                 IN_BUSINESS_METHOD | IN_EJB_TIMEOUT);
+                 IN_BUSINESS_METHOD | IN_EJB_TIMEOUT | IN_SERVICE_ENDPOINT_METHOD);
       }
    }
 }

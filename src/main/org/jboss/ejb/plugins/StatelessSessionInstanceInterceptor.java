@@ -11,13 +11,16 @@ import java.lang.reflect.Method;
 
 import org.jboss.ejb.Container;
 import org.jboss.invocation.Invocation;
+import org.jboss.invocation.InvocationKey;
 import org.jboss.ejb.EnterpriseContext;
 import org.jboss.ejb.StatelessSessionContainer;
 import org.jboss.ejb.InstancePool;
 import org.jboss.ejb.AllowedOperationsAssociation;
+import org.jboss.ejb.StatelessSessionEnterpriseContext;
 
 import javax.ejb.TimedObject;
 import javax.ejb.Timer;
+import javax.xml.rpc.handler.MessageContext;
 
 /**
  * This container acquires the given instance. This must be used after
@@ -25,7 +28,7 @@ import javax.ejb.Timer;
  * JNDI environment to be set
  *
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
- * @version $Revision: 1.22 $
+ * @version $Revision: 1.23 $
  */
 public class StatelessSessionInstanceInterceptor
    extends AbstractInterceptor
@@ -74,7 +77,7 @@ public class StatelessSessionInstanceInterceptor
    {
       // Get context
       InstancePool pool = container.getInstancePool();
-      EnterpriseContext ctx = pool.get();
+      StatelessSessionEnterpriseContext ctx = (StatelessSessionEnterpriseContext)pool.get();
 
       // Set the current security information
       ctx.setPrincipal(mi.getPrincipal());
@@ -82,10 +85,24 @@ public class StatelessSessionInstanceInterceptor
       // Use this context
       mi.setEnterpriseContext(ctx);
 
+      // Timer invocation
       if (ejbTimeout.equals(mi.getMethod()))
+      {
          AllowedOperationsAssociation.pushInMethodFlag(IN_EJB_TIMEOUT);
+      }
+
+      // Service Endpoint invocation
+      else if (mi.getValue(InvocationKey.SOAP_MESSAGE_CONTEXT) != null)
+      {
+         ctx.setMessageContext((MessageContext)mi.getValue(InvocationKey.SOAP_MESSAGE_CONTEXT));
+         AllowedOperationsAssociation.pushInMethodFlag(IN_SERVICE_ENDPOINT_METHOD);
+      }
+
+      // Business Method Invocation
       else
+      {
          AllowedOperationsAssociation.pushInMethodFlag(IN_BUSINESS_METHOD);
+      }
 
       // There is no need for synchronization since the instance is always fresh also there should
       // never be a tx associated with the instance.
