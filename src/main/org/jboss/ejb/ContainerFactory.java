@@ -40,6 +40,7 @@ import org.jboss.ejb.deployment.jBossEnterpriseBeans;
 import org.jboss.ejb.deployment.jBossSession;
 import org.jboss.ejb.deployment.jBossEntity;
 import org.jboss.ejb.deployment.ContainerConfiguration;
+import org.jboss.ejb.deployment.ContainerConfigurations;
 
 import org.jboss.logging.Log;
 import org.jboss.logging.ConsoleLogging;
@@ -59,7 +60,8 @@ import org.jboss.ejb.plugins.*;
  *      
  *   @see <related>
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
- *   @version $Revision: 1.5 $
+ *   @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
+ *   @version $Revision: 1.6 $
  */
 public class ContainerFactory
    implements ContainerFactoryMBean, MBeanRegistration
@@ -157,32 +159,28 @@ public class ContainerFactory
                   
                   con.setClassLoader(new BeanClassLoader(cl));
                   con.setMetaData(bean);
-                  
+				  
                   ContainerConfiguration conf = jar.getContainerConfigurations().getContainerConfiguration(bean.getConfigurationName());
                   
-                  // MF FIXME: We need to move this in the "conf" eventually that it comes with defaults
-                  try {
-                    
-                       con.setContainerInvoker((ContainerInvoker)cl.loadClass(conf.getContainerInvoker()).newInstance());
-                       con.setInstancePool((InstancePool)cl.loadClass(conf.getInstancePool()).newInstance());
-                  }
-                  catch (Exception e) {
-                    
-                       // Something went wrong probably a configuration problem
-                       log.log("Warning, Configuration Exception encountered, going to default configuration!"); 
-                       
-                       // Set the defaults for the stateless beans
-                       con.setContainerInvoker(
-                           (ContainerInvoker) cl.loadClass("JRMPContainerInvoker").newInstance());
-                       con.setInstancePool(
-                           (InstancePool) cl.loadClass("StatelessSessionInstancePool").newInstance());    
-                  }
+				  // Provide a default
+				  if (conf == null) {
+				  
+				       // Something went wrong probably a configuration problem
+                       log.log("No configuration. Using default configuration"); 
+                  
+				       conf = ContainerConfigurations.getDefaultStatelessBeanContainerConfiguration();
+			      }
+                 
+                  con.setContainerInvoker((ContainerInvoker)cl.loadClass(conf.getContainerInvoker()).newInstance());
+                  con.setInstancePool((InstancePool)cl.loadClass(conf.getInstancePool()).newInstance());
+                  
 //                con.setTransactionManager((TransactionManager)cl.loadClass(conf.getTransactionManager()).newInstance());
                   con.setTransactionManager(new org.jboss.tm.TxManager());
                   
                   containers.add(con);
                } else // Stateful
                {
+				   throw new Error("Stateful beans not yet implemented");
                }
             } else // Entity
             {
@@ -196,40 +194,33 @@ public class ContainerFactory
                  
                   con.addInterceptor(con.createContainerInterceptor());
                   
-                  ContainerConfiguration conf = jar.getContainerConfigurations().getContainerConfiguration(bean.getConfigurationName());
-                  
-                  con.setClassLoader(new BeanClassLoader(cl));
+				  con.setClassLoader(new BeanClassLoader(cl));
                   con.setMetaData(bean);
                   
-                  // MF FIXME: We need to move this in the "conf" eventually that it comes with defaults
-                  try {
+                  ContainerConfiguration conf = jar.getContainerConfigurations().getContainerConfiguration(bean.getConfigurationName());
                   
-                      con.setContainerInvoker((ContainerInvoker)cl.loadClass(conf.getContainerInvoker()).newInstance());
-                      ((EntityContainer)con).setInstanceCache((InstanceCache)cl.loadClass(conf.getInstanceCache()).newInstance());
-                      con.setInstancePool((InstancePool)cl.loadClass(conf.getInstancePool()).newInstance());
-                      ((EntityContainer)con).setPersistenceManager((EntityPersistenceManager)cl.loadClass(conf.getPersistenceManager()).newInstance());
-                  }
-                  catch (Exception e) {
+				  // Provide a default
+                  if (conf == null) {
+			        
+					   // Something went wrong probably a configuration problem
+                       log.log("No configuration. Using default configuration"); 
+                  
+					  // BMP and CMP are different Default
+					  if (((jBossEntity) bean).getPersistenceType().equals("Bean")) {
+					      
+						  conf = ContainerConfigurations.getDefaultEntityBeanContainerConfiguration("BMP");
+					  }
+					  else {
+						
+						  conf = ContainerConfigurations.getDefaultEntityBeanContainerConfiguration("CMP");
+					  }
+				  }
+                  
+                  con.setContainerInvoker((ContainerInvoker)cl.loadClass(conf.getContainerInvoker()).newInstance());
+                  ((EntityContainer)con).setInstanceCache((InstanceCache)cl.loadClass(conf.getInstanceCache()).newInstance());
+                  con.setInstancePool((InstancePool)cl.loadClass(conf.getInstancePool()).newInstance());
+                  ((EntityContainer)con).setPersistenceManager((EntityPersistenceManager)cl.loadClass(conf.getPersistenceManager()).newInstance());
                        
-                       // Something went wrong probably a configuration problem
-                       log.log("Warning, Configuration Exception encountered, going to default configuration!"); 
-                       
-                       // Set the defaults for the entity beans
-                       con.setContainerInvoker(
-                           (ContainerInvoker) cl.loadClass("JRMPContainerInvoker").newInstance());
-                       ((EntityContainer)con).setInstanceCache(
-                           (InstanceCache) cl.loadClass("RandomEntityInstanceCache").newInstance());
-                       con.setInstancePool(
-                           (InstancePool) cl.loadClass("EntityInstancePool").newInstance());
-                       if (((jBossEntity) bean).getPersistenceType().equals("Bean")) {
-                           ((EntityContainer)con).setPersistenceManager(
-                               (EntityPersistenceManager) cl.loadClass("BMPPersistenceManager").newInstance());
-                       }
-                       else { // The bean is CMP
-                           ((EntityContainer)con).setPersistenceManager(
-                               (EntityPersistenceManager) cl.loadClass("CMPFilePersistenceManager").newInstance());
-                       }
-                  }
 //                con.setTransactionManager((TransactionManager)cl.loadClass(conf.getTransactionManager()).newInstance());
 				  con.setTransactionManager(new org.jboss.tm.TxManager());
                   
