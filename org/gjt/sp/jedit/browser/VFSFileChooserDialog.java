@@ -38,7 +38,7 @@ import org.gjt.sp.util.*;
 /**
  * Wraps the VFS browser in a modal dialog.
  * @author Slava Pestov
- * @version $Id: VFSFileChooserDialog.java,v 1.18 2002/08/12 20:53:21 spestov Exp $
+ * @version $Id: VFSFileChooserDialog.java,v 1.19 2002/08/12 21:21:03 spestov Exp $
  */
 public class VFSFileChooserDialog extends EnhancedDialog
 {
@@ -410,8 +410,7 @@ public class VFSFileChooserDialog extends EnhancedDialog
 			{
 			case KeyEvent.VK_UP:
 			case KeyEvent.VK_DOWN:
-				BrowserView view = browser.getBrowserView();
-				view.getTree().processKeyEvent(evt);
+				browser.getBrowserView().getTree().processKeyEvent(evt);
 				/* VFS.DirectoryEntry[] files = view.getSelectedFiles();
 				if(files.length == 0)
 					filenameField.setText(null);
@@ -424,12 +423,28 @@ public class VFSFileChooserDialog extends EnhancedDialog
 		//{{{ keyTyped() method
 		public void keyTyped(KeyEvent evt)
 		{
+			char ch = evt.getKeyChar();
+			if(ch < 0x20 || ch == 0x7f || ch == 0xff)
+				return;
+
 			SwingUtilities.invokeLater(new Runnable()
 			{
 				public void run()
 				{
-					browser.getBrowserView().getTree().doTypeSelect(
+					BrowserView view = browser.getBrowserView();
+					view.getTree().doTypeSelect(
 						filenameField.getText());
+					VFS.DirectoryEntry[] files =
+						view.getSelectedFiles();
+					if(files.length != 0)
+					{
+						int caret = filenameField
+							.getCaretPosition();
+						filenameField.setText(files[0].name);
+						filenameField.setCaretPosition(
+							files[0].name.length());
+						filenameField.moveCaretPosition(caret);
+					}
 				}
 			});
 		} //}}}

@@ -40,7 +40,7 @@ import org.gjt.sp.jedit.*;
 /**
  * VFS browser tree view.
  * @author Slava Pestov
- * @version $Id: BrowserView.java,v 1.44 2002/08/12 20:53:21 spestov Exp $
+ * @version $Id: BrowserView.java,v 1.45 2002/08/12 21:21:03 spestov Exp $
  */
 class BrowserView extends JPanel
 {
@@ -558,7 +558,8 @@ class BrowserView extends JPanel
 				case KeyEvent.VK_UP:
 				case KeyEvent.VK_DOWN:
 					super.processKeyEvent(evt);
-					browser.filesSelected();
+					if(browser.getMode() != VFSBrowser.BROWSER)
+						browser.filesSelected();
 					break;
 				case KeyEvent.VK_ENTER:
 					browser.filesActivated((evt.isShiftDown()
