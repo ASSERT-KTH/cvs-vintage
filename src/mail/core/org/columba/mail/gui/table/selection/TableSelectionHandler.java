@@ -34,10 +34,22 @@ import org.columba.mail.gui.table.model.MessageNode;
 /**
  * TableSelectionHandler adds another abstraction layer to the 
  * swing JTable selection model.
- * 
+ * <p>
  * It is responsible for providing a mapping between swing
  * table rows or tree nodes into message UIDs and back. 
- *
+ * <p>
+ * Additionally it is able to encapsulate a message object transparently
+ * for every action in Columba. This means actions don't need to care
+ * about if this message is actually from a folder-/table-selection, as
+ * it usually is (example: user selects a message in the table and does
+ * a move operation on it), or if it is just a temporary message (
+ * example: pgp-decrypted message ).
+ * <p>
+ * For this reason it uses a temporary folder to save such a message and
+ * provide actions with the correctly mapped FolderCommandReference[] object.
+ * 
+ * 
+ * 
  * @author fdietz
  */
 public class TableSelectionHandler
@@ -49,6 +61,12 @@ public class TableSelectionHandler
 	private Folder folder;
 
 	private final static MessageNode[] messageNodeArray = { null };
+	
+	// if this is set to true, we use the local selection, instead
+	// of using the table selection
+	private boolean useLocalSelection;
+	
+	private FolderCommandReference[] local;
 
 	/**
 	 * @param id
@@ -60,12 +78,20 @@ public class TableSelectionHandler
 		view.getSelectionModel().addListSelectionListener(this);
 
 		messages = new LinkedList();
+		
+		useLocalSelection = false;
 	}
 
 	/* (non-Javadoc)
 	 * @see org.columba.core.gui.util.SelectionHandler#getSelection()
 	 */
 	public DefaultCommandReference[] getSelection() {
+		
+		if ( useLocalSelection )
+			{
+				return local;
+			}
+			
 		FolderCommandReference[] references = new FolderCommandReference[1];
 
 		references[0] = new FolderCommandReference(folder, getUidArray());
@@ -127,7 +153,19 @@ public class TableSelectionHandler
 
 		fireSelectionChanged(
 			new TableSelectionChangedEvent(folder, getUidArray()));
+			
+		useLocalSelection = false;
 
+	}
+	
+	
+	public void setLocalReference(FolderCommandReference[] r )
+	{
+		this.local = r;
+		
+		setFolder( (Folder) r[0].getFolder() );
+		
+		useLocalSelection = true;
 	}
 
 }

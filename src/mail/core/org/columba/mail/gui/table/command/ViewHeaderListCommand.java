@@ -56,13 +56,15 @@ public class ViewHeaderListCommand extends SelectiveGuiUpdateCommand {
 	public void updateGUI() throws Exception {
 
 		// notify table selection handler 
+		
 		(
 			(TableSelectionHandler) frameController
 				.getSelectionManager()
 				.getHandler(
 				"mail.table")).setFolder(
 			folder);
-
+		
+		
 		// this should be called from TableController instead
 		((TableOwner) frameController).getTableController().showHeaderList(folder, headerList);
 

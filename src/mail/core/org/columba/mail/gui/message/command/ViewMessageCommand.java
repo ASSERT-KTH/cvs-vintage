@@ -28,17 +28,20 @@ import org.columba.core.command.Worker;
 import org.columba.core.gui.frame.AbstractFrameController;
 import org.columba.core.io.StreamUtils;
 import org.columba.core.logging.ColumbaLogger;
+import org.columba.core.main.MainInterface;
 import org.columba.core.xml.XmlElement;
 import org.columba.mail.command.FolderCommand;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.config.MailConfig;
 import org.columba.mail.config.PGPItem;
 import org.columba.mail.folder.Folder;
+import org.columba.mail.folder.temp.TempFolder;
 import org.columba.mail.gui.attachment.AttachmentSelectionHandler;
 import org.columba.mail.gui.frame.AbstractMailFrameController;
 import org.columba.mail.gui.frame.ThreePaneMailFrameController;
 import org.columba.mail.gui.message.MessageController;
 import org.columba.mail.gui.message.SecurityIndicator;
+import org.columba.mail.gui.table.selection.TableSelectionHandler;
 import org.columba.mail.message.ColumbaHeader;
 import org.columba.mail.message.ColumbaMessage;
 import org.columba.mail.pgp.MissingPublicKeyException;
@@ -74,6 +77,7 @@ public class ViewMessageCommand extends FolderCommand {
 
 	// true if we view an encrypted message
 	boolean encryptedMessage = false;
+	InputStream decryptedStream;
 
 	/**
 	 * Constructor for ViewMessageCommand.
@@ -117,7 +121,7 @@ public class ViewMessageCommand extends FolderCommand {
 
 		try {
 			decryptedStream = controller.decrypt(encryptedPart, pgpItem);
-			
+
 			pgpMode = SecurityIndicator.DECRYPTION_SUCCESS;
 
 			pgpMessage = controller.getPgpMessage();
@@ -129,7 +133,7 @@ public class ViewMessageCommand extends FolderCommand {
 			pgpMode = SecurityIndicator.DECRYPTION_FAILURE;
 
 			pgpMessage = e.getMessage();
-			
+
 			// just show the encrypted raw message
 			decryptedStream = encryptedPart;
 
@@ -141,7 +145,7 @@ public class ViewMessageCommand extends FolderCommand {
 
 			pgpMode = SecurityIndicator.DECRYPTION_FAILURE;
 			pgpMessage = e.getMessage();
-			
+
 			// just show the encrypted raw message
 			decryptedStream = encryptedPart;
 		}
@@ -160,6 +164,33 @@ public class ViewMessageCommand extends FolderCommand {
 					MessageParser.parse(
 						new CharSequenceSource(decryptedBodyPart)));
 			mimePartTree = message.getMimePartTree();
+
+			//	map selection to this temporary message
+			TempFolder tempFolder = MainInterface.treeModel.getTempFolder();
+
+			// add message to temporary folder
+			Object uid = tempFolder.addMessage(message);
+
+			// create reference to this message
+			FolderCommandReference[] local = new FolderCommandReference[1];
+			local[0] =
+				new FolderCommandReference(tempFolder, new Object[] { uid });
+
+			// if we don't use this here - actions like reply would only work on the
+			// the encrypted message
+			TableSelectionHandler h1 =
+				((TableSelectionHandler) frameController
+					.getSelectionManager()
+					.getHandler("mail.table"));
+
+			h1.setLocalReference(local);
+
+			// this is needed to be able to open attachments of the decrypted message
+			AttachmentSelectionHandler h =
+				((AttachmentSelectionHandler) frameController
+					.getSelectionManager()
+					.getHandler("mail.attachment"));
+			h.setLocalReference(local);
 			
 			//header = (ColumbaHeader) message.getHeaderInterface();
 		} catch (ParserException e) {
@@ -241,9 +272,12 @@ public class ViewMessageCommand extends FolderCommand {
 				.getSelectionManager()
 				.getHandler("mail.attachment"));
 
+		// what does this method? Is it needed in any way? (fdietz)
+		/*
 		// show headerfields
-		if (h != null)
+		if ( (h != null) 
 			h.setMessage(srcFolder, uid);
+		*/
 
 		MessageController messageController =
 			((AbstractMailFrameController) frameController).messageController;

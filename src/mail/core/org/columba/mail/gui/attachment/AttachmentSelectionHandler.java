@@ -23,24 +23,35 @@ import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.folder.Folder;
 import org.columba.mail.gui.attachment.util.IconPanelSelectionListener;
 
-public class AttachmentSelectionHandler extends SelectionHandler implements IconPanelSelectionListener {
+public class AttachmentSelectionHandler
+	extends SelectionHandler
+	implements IconPanelSelectionListener {
 
 	private Folder folder;
 	private Object messageUid;
 	private AttachmentView view;
 	private Integer[] address;
+	
+	private boolean useLocalSelection;
 
 	public AttachmentSelectionHandler(AttachmentView view) {
 		super("mail.attachment");
 		this.view = view;
 		view.addIconPanelSelectionListener(this);
+		
+		useLocalSelection = false;
 	}
 
 	/* (non-Javadoc)
 	 * @see org.columba.core.gui.selection.SelectionHandler#getSelection()
 	 */
 	public DefaultCommandReference[] getSelection() {
-		return new FolderCommandReference[] { new FolderCommandReference( folder, new Object[] { messageUid }, address) };
+		return new FolderCommandReference[] {
+			 new FolderCommandReference(
+				folder,
+				new Object[] { messageUid },
+				address)
+		};
 	}
 
 	/* (non-Javadoc)
@@ -50,23 +61,31 @@ public class AttachmentSelectionHandler extends SelectionHandler implements Icon
 		ColumbaLogger.log.error("Not yet implemented!");
 	}
 
-
-	public void setMessage( Folder folder, Object messageUid) {
+	public void setMessage(Folder folder, Object messageUid) {
 		this.folder = folder;
 		this.messageUid = messageUid;
-		
+
 	}
 	/* (non-Javadoc)
 	 * @see org.columba.mail.gui.attachment.util.IconPanelSelectionListener#selectionChanged(int[])
 	 */
 	public void selectionChanged(int[] newselection) {
-		if( newselection.length > 0 ) {
+		if (newselection.length > 0) {
 			address = view.getSelectedMimePart().getAddress();
 		} else {
 			address = null;
 		}
-		
-		fireSelectionChanged(new AttachmentSelectionChangedEvent(folder, messageUid, address));
+
+		fireSelectionChanged(
+			new AttachmentSelectionChangedEvent(folder, messageUid, address));
+	}
+
+	
+	public void setLocalReference(FolderCommandReference[] r )
+	{
+		// set selection
+		setMessage( (Folder) r[0].getFolder(), r[0].getUids() [0]);
+		useLocalSelection = true;
 	}
 
 }

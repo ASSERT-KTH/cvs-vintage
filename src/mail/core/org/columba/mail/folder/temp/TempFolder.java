@@ -135,13 +135,13 @@ public class TempFolder extends Folder {
 	public Object addMessage(
 		ColumbaMessage message)
 		throws Exception {
-		/*
+		
 		Object newUid = generateNextUid();
 
 		ColumbaLogger.log.debug("new UID=" + newUid);
 
 		ColumbaHeader h =
-			(ColumbaHeader) ((ColumbaHeader) message.getHeaderInterface()).clone();
+			(ColumbaHeader) ((ColumbaHeader) message.getHeaderInterface());
 
 		h.set("columba.uid", newUid);
 
@@ -149,8 +149,8 @@ public class TempFolder extends Folder {
 
 		messageList.put(newUid, message);
 
-		return newUid;*/
-		return null;
+		return newUid;
+		
 	}
 
 	/**
@@ -200,7 +200,7 @@ public class TempFolder extends Folder {
 		Object uid,
 		Integer[] address)
 		throws Exception {
-		Message message = (Message) messageList.get(uid);
+		ColumbaMessage message = (ColumbaMessage) messageList.get(uid);
 
 		MimePart mimePart = message.getMimePartTree().getFromAddress(address);
 
@@ -234,7 +234,7 @@ public class TempFolder extends Folder {
 	public MimeTree getMimePartTree(
 		Object uid)
 		throws Exception {
-		return ((Message)messageList.get(uid)).getMimePartTree();
+		return ((ColumbaMessage)messageList.get(uid)).getMimePartTree();
 	}
 
 	/**
