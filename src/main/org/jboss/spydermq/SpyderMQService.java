@@ -21,12 +21,14 @@ import org.jboss.logging.Log;
 import org.jboss.util.ServiceMBeanSupport;
 
 /**
- *   <description> 
  * JMX MBean implementation for SpyderMQ.
  *      
- *   @see <related>
+ *   @see    SpyderMQ subproject
+ *
  *   @author Vincent Sheffer (vsheffer@telkel.com)
- *   @version $Revision: 1.3 $
+ *   @author <a href="mailto:jplindfo@helsinki.fi">Juha Lindfors</a>
+ *
+ *   @version $Revision: 1.4 $
  */
 public class SpyderMQService
    extends ServiceMBeanSupport
@@ -57,32 +59,29 @@ public class SpyderMQService
         throws Exception {
         if (spyderMQServer == null) {
             final Log log = this.log;
-            try {
-                Class [] spyderMQArgsClasses = null;
-                Method startMethod = null;
-                Object [] spyderMQArgs = null;
-                
+            
+	    try {
                 log.log("Testing if SpyderMQ is present....");
                 try {
-                    spyderMQServer = Class.forName("org.spydermq.server.StartServer").newInstance(); 
+                    spyderMQServer = Thread.currentThread().getContextClassLoader().loadClass("org.spydermq.server.StartServer").newInstance(); 
                     log.log("OK");
                 }catch(Exception e) {
                     log.log("failed");
-                    log.log("SpyderMQ wasn't found. Be sure to have your CLASSPATH correctly set");
+                    log.log("SpyderMQ wasn't found:");
+                    log.debug(e.getMessage());
                     return;
                 } 
                 
-                spyderMQArgsClasses = new Class[1];
-                spyderMQArgsClasses[0] = mBeanServer.getClass();
-                startMethod = spyderMQServer.getClass().getMethod("start", 
-                                                                  spyderMQArgsClasses);
+                Class[]  spyderMQArgsClasses = { MBeanServer.class };
+                Object[] spyderMQArgs        = { mBeanServer };
                 
-                spyderMQArgs = new Object[1];
-                spyderMQArgs[0] = mBeanServer;
+                Method startMethod = spyderMQServer.getClass().getMethod("start", 
+                                                                  spyderMQArgsClasses);
                 
                 Logger.log("Starting SpyderMQ...");
                 startMethod.invoke(spyderMQServer, spyderMQArgs); 
-            } catch (Exception e) {
+            }
+	        catch (Exception e) {
                 log.error("SpyderMQ failed");
                 log.exception(e);
             }
@@ -100,7 +99,12 @@ public class SpyderMQService
                 stopMethod = this.spyderMQServer.getClass().getMethod("stop", 
                                                                       spyderMQArgsClasses);
                 spyderMQArgs = new Object[0];
-                stopMethod.invoke(spyderMQServer, spyderMQArgs);
+                
+                // [FIXME] jpl
+                //      This causes some error messages on the console so
+                //      disabled for now
+                
+                //stopMethod.invoke(spyderMQServer, spyderMQArgs);
                 this.spyderMQServer = null;
             } catch (Exception e) {
                 log.error("SpyderMQ failed");
