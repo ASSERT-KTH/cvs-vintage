@@ -69,7 +69,9 @@ public class ReplyToAllCommand extends ReplyCommand {
         toList.addAll(Arrays.asList(rfcHeader.getReplyTo()));
         toList.add(rfcHeader.getFrom());
         toList.addAll(Arrays.asList(rfcHeader.getTo()));
-        toList.addAll(Arrays.asList(rfcHeader.getCc()));
+        
+        // bug #997560 (fdietz): CC: should be in Cc:, instead of To:
+        //toList.addAll(Arrays.asList(rfcHeader.getCc()));
 
         // remove duplicates
         Collections.sort(toList);
@@ -92,6 +94,9 @@ public class ReplyToAllCommand extends ReplyCommand {
         // Add addresses to the addressbook
         MessageBuilderHelper.addAddressesToAddressbook(to);
         model.setTo(to);
+        
+        // bug #997560 (fdietz): CC: should be in Cc:, instead of To:
+        model.setCc(rfcHeader.getCc());
 
         // create In-Reply-To:, References: headerfields
         MessageBuilderHelper.createMailingListHeaderItems(header, model);

@@ -170,11 +170,42 @@ public class ComposerModel {
 		return ref;
 	}
 
+	/**
+	 * Set To: header
+	 * 
+	 * @param a		address array
+	 */
 	public void setTo(Address[] a) {
 		getToList().clear();
 
 		for (int i = 0; i < a.length; i++) {
 			getToList().add(a[i].toString());
+		}
+	}
+	
+	/**
+	 * Set Cc: header
+	 * 
+	 * @param a		address array
+	 */
+	public void setCc(Address[] a) {
+		getCcList().clear();
+
+		for (int i = 0; i < a.length; i++) {
+			getCcList().add(a[i].toString());
+		}
+	}
+	
+	/**
+	 * Set Bcc: header
+	 * 
+	 * @param a		address array
+	 */
+	public void setBcc(Address[] a) {
+		getBccList().clear();
+
+		for (int i = 0; i < a.length; i++) {
+			getBccList().add(a[i].toString());
 		}
 	}
 

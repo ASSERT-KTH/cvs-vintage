@@ -179,6 +179,9 @@ public class OpenMessageWithComposerCommand extends FolderCommand {
 		model.setSubject(rfcHeader.getSubject());
 
 		model.setTo(rfcHeader.getTo());
+		
+		model.setCc(rfcHeader.getCc());
+		model.setBcc(rfcHeader.getBcc());
 
 		// copy every headerfield the original message contains
 		model.setHeader(header);
