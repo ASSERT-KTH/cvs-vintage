@@ -64,7 +64,7 @@ import org.gjt.sp.util.*;
  * </ul>
  *
  * @author Slava Pestov
- * @version $Id: Buffer.java,v 1.121 2003/02/14 23:09:51 spestov Exp $
+ * @version $Id: Buffer.java,v 1.122 2003/02/15 19:52:05 spestov Exp $
  */
 public class Buffer implements EBComponent
 {
@@ -2830,6 +2830,16 @@ loop:		for(int i = 0; i < seg.count; i++)
 	{
 		return (line != getLineCount() - 1
 			&& getFoldLevel(line) < getFoldLevel(line + 1));
+	} //}}}
+
+	//{{{ invalidateCachedFoldLevels() method
+	/**
+	 * Invalidates all cached fold level information.
+	 * @since jEdit 4.1pre11
+	 */
+	public void invalidateCachedFoldLevels()
+	{
+		offsetMgr.lineInfoChangedFrom(0);
 	} //}}}
 
 	//{{{ getFoldLevel() method
