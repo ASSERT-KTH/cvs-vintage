@@ -127,7 +127,7 @@ import org.tigris.scarab.services.cache.ScarabCache;
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: AbstractScarabModule.java,v 1.38 2002/06/06 20:55:57 jon Exp $
+ * @version $Id: AbstractScarabModule.java,v 1.39 2002/06/27 04:24:40 jmcnally Exp $
  */
 public abstract class AbstractScarabModule
     extends BaseObject
@@ -1922,6 +1922,15 @@ try{
         throws Exception
     {
         return isInitializing || getIssueTypes(false).size() == 0;
+    }
+
+
+    /**
+     * @see org.tigris.scarab.om.Module#isGlobalModule()
+     */
+    public boolean isGlobalModule()
+    {
+        return Module.ROOT_ID.equals(getModuleId());
     }
 
     /**

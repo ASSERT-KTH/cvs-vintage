@@ -99,7 +99,7 @@ import org.tigris.scarab.services.cache.ScarabCache;
  * methodology</a> to be implemented.
  *
  * @author <a href="mailto:dr@bitonic.com">Douglas B. Robertson</a>
- * @version $Id: SecurityAdminTool.java,v 1.7 2002/06/23 15:38:05 jmcnally Exp $
+ * @version $Id: SecurityAdminTool.java,v 1.8 2002/06/27 04:24:40 jmcnally Exp $
  */
 public class SecurityAdminTool 
     implements SecurityAdminScope, Serializable
@@ -187,8 +187,7 @@ public class SecurityAdminTool
         for (int i=0; i<groups.length; i++) 
         {
             Module module = (Module)groups[i];
-            if (!module.getModuleId().equals(Module.ROOT_ID) 
-                && !module.getDeleted()) 
+            if (!module.isGlobalModule() && !module.getDeleted()) 
             {
                 RoleSet roleSet = acl.getRoles(groups[i]);
                 if (roleSet == null || roleSet.size() == 0) 

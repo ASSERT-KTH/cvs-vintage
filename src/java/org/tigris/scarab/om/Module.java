@@ -69,7 +69,7 @@ import org.apache.torque.util.Criteria;
  * This class describes a Module within the Scarab system
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: Module.java,v 1.46 2002/05/18 15:24:09 jmcnally Exp $
+ * @version $Id: Module.java,v 1.47 2002/06/27 04:24:40 jmcnally Exp $
  */
 public interface Module
     extends Serializable
@@ -445,6 +445,13 @@ public interface Module
      */
     public boolean isInitializing()
         throws Exception;
+
+    /**
+     * Returns true if this module is the the top level parent module.
+     *
+     * @return a <code>boolean</code> value
+     */
+    public boolean isGlobalModule();
 
     public String toString();
 }
