@@ -159,7 +159,7 @@ public class ComposerController
 	protected void registerWindowListener() {
 		view.addWindowListener(new WindowAdapter() {
 			public void windowClosing(WindowEvent e) {
-				saveWindowPosition();
+				
 				hideComposerWindow();
 			}
 		});
@@ -235,6 +235,8 @@ public class ComposerController
 
 	public void hideComposerWindow() {
 
+		saveWindowPosition();
+		
 		if (composerInterface.viewItem.getBoolean("addressbook","enabled") == true)
 			hideAddressbookWindow();
 
