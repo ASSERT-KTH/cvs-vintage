@@ -8,7 +8,7 @@ package org.jboss.ejb.plugins;
 
 import java.util.Map;
 
-import org.jboss.ejb.MethodInvocation;
+import org.jboss.invocation.Invocation;
 
 import org.jboss.metadata.SessionMetaData;
 
@@ -20,7 +20,7 @@ import org.jboss.metadata.SessionMetaData;
  *   @author <a href="mailto:peter.antman@tim.se">Peter Antman</a>.
  *   @author <a href="mailto:akkerman@cs.nyu.edu">Anatoly Akkerman</a>
  *   @author <a href="mailto:osh@sparre.dk">Ole Husgaard</a>
- *   @version $Revision: 1.20 $
+ *   @version $Revision: 1.21 $
  */
 public class TxInterceptorBMT
    extends AbstractTxInterceptorBMT
@@ -36,17 +36,17 @@ public class TxInterceptorBMT
 
    // Interceptor implementation --------------------------------------
 
-   public void init()
+   public void create()
       throws Exception
    {
       // Do initialization in superclass.
-      super.init();
+      super.create();
  
       // Set the atateless attribute
       stateless = ((SessionMetaData)container.getBeanMetaData()).isStateless();
    }
 
-   public Object invokeHome(MethodInvocation mi)
+   public Object invokeHome(Invocation mi)
       throws Exception
    {
       if (stateless)
@@ -56,7 +56,7 @@ public class TxInterceptorBMT
          return invokeNext(false, mi);
    }
 
-   public Object invoke(MethodInvocation mi)
+   public Object invoke(Invocation mi)
       throws Exception
    {
       return invokeNext(true, mi);
