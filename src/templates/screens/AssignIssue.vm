@@ -195,14 +195,8 @@
 
 ## PAGINATION
 ## if results exceed limit, get subset list
-#set ($resultsPerPage = $data.Parameters.getInt("resultsPerPage",0))
-#set ($pageNum = $data.Parameters.getInt("pageNum",0))
-#if ($resultsPerPage == 0)
-  #set ($resultsPerPage = 25)
-#end
-#if ($pageNum == 0)
-  #set ($pageNum = 1)
-#end
+#set ($resultsPerPage = $data.Parameters.getInt("resultsPerPage", 2))
+#set ($pageNum = $data.Parameters.getInt("pageNum", 1))
 
 #macro (paginate $resultsPerPage $pageNum $sortColumn $sortPolarity)
  <p class="paginate">
@@ -213,7 +207,7 @@
       #foreach ($issueId in $issueIdList)
           #set ($prevLink = $prevLink.addPathInfo("issue_ids", $issueId))
       #end
-  <a href="$prevLink">&laquo;</a> previous |
+  <a href="$prevLink">&laquo; previous</a> |
  #end
   #set ($pagLink = $link.setPathInfo("resultsperpage", "$resultsPerPage.toString()").setPathInfo("sortColumn", "$sortColumn").setPathInfo("sortPolarity", "$sortPolarity").setPage($scarabR.getCurrentTemplate()))
  $pageNum of $scarabR.NbrPages
@@ -222,7 +216,7 @@
       #foreach ($issueId in $issueIdList)
           #set ($nextLink = $nextLink.addPathInfo("issue_ids", $issueId))
       #end
-  | <a href="$nextLink">&raquo;</a> next
+  | <a href="$nextLink">next &raquo;</a>
  #end
  </p> 
 #end
@@ -235,11 +229,11 @@
 <table border="0" cellspacing="2" cellpadding="3">
   <tr>
    <th>$l10n.FilterString</th>
-   <td><input type="text" name="searchString" />&nbsp;
+   <td><input type="text" name="searchString" value="$searchString" />&nbsp;
      <select name="searchField" >
-      <option value="First Name">$l10n.FirstName</option>
-      <option value="Last Name">$l10n.LastName</option>
-      <option value="Username">$l10n.Username</option>
+      <option value="First Name" #if($searchField.equals("First Name")) selected="selected"#end>$l10n.FirstName</option>
+      <option value="Last Name" #if($searchField.equals("Last Name")) selected="selected"#end>$l10n.LastName</option>
+      <option value="Username" #if($searchField.equals("Username")) selected="selected"#end>$l10n.Username</option>
      </select>&nbsp;<input type="submit" name="eventSubmit_doRefresh" value="$l10n.Filter" /></td>
   </tr>
 </table>
@@ -317,6 +311,13 @@
 <div class="functnbar2">
 <input type="submit" value="$l10n.Done" name="eventSubmit_doDone" />
 </div>
+
+## keep track of state of the list, resultsPerPage should come after the
+## chance to change it, because we will use the first value
+<input type="hidden" name="sortColumn" value="$sortColumn" />
+<input type="hidden" name="sortPolarity" value="$sortPolarity" />
+<input type="hidden" name="pageNum" value="$pageNum" />
+<input type="hidden" name="resultsPerPage" value="$resultsPerPage" />
 
 $intake.declareGroups()
 
