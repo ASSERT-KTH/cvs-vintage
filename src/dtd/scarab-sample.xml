@@ -109,7 +109,7 @@ ID_CODE, not the primary key column.
                 <type>combo-box</type>
             </issue-attribute>
             <dependency>
-                <type>blocking</type>
+                <type>non-blocking</type>
                 <parent>TBNS101</parent>
             </dependency>
         </issue>
