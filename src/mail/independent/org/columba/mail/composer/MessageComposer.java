@@ -16,21 +16,29 @@
 
 package org.columba.mail.composer;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.Iterator;
+import java.util.List;
+
+import org.columba.addressbook.folder.HeaderItem;
 import org.columba.addressbook.parser.ListParser;
-
 import org.columba.core.command.WorkerStatusController;
-import org.columba.core.logging.ColumbaLogger;
 import org.columba.core.xml.XmlElement;
-
 import org.columba.mail.config.AccountItem;
 import org.columba.mail.config.IdentityItem;
-import org.columba.mail.main.MailInterface;
 import org.columba.mail.config.PGPItem;
 import org.columba.mail.gui.composer.ComposerModel;
+import org.columba.mail.main.MailInterface;
 import org.columba.mail.message.PGPMimePart;
 import org.columba.mail.message.SendableHeader;
 import org.columba.mail.parser.text.HtmlParser;
-
 import org.columba.ristretto.coder.EncodedWord;
 import org.columba.ristretto.composer.MimeTreeRenderer;
 import org.columba.ristretto.message.Address;
@@ -41,21 +49,6 @@ import org.columba.ristretto.message.MimePart;
 import org.columba.ristretto.message.RFC822Date;
 import org.columba.ristretto.message.StreamableMimePart;
 import org.columba.ristretto.message.io.CharSequenceSource;
-
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.UnsupportedEncodingException;
-
-import java.nio.charset.Charset;
-import java.nio.charset.IllegalCharsetNameException;
-
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.Iterator;
-import java.util.List;
 
 public class MessageComposer {
     private ComposerModel model;
@@ -531,7 +524,19 @@ public class MessageComposer {
         }
 
         header.setRecipients(model.getRCPTVector());
+        
+        List headerItemList;
+        
+        headerItemList =  model.getToList();
+        if( headerItemList.size() > 0 ) {
+            header.set("columba.to", new Address((String) ((HeaderItem)headerItemList.get(0)).get("displayname") ));
+        }
 
+        headerItemList =  model.getCcList();
+        if( headerItemList.size() > 0 ) {
+            header.set("columba.cc", new Address((String) ((HeaderItem)headerItemList.get(0)).get("displayname") ));
+        }
+        
         String composedBody;
 
         header.set("columba.attachment", Boolean.TRUE);

@@ -98,6 +98,9 @@ public class CachedHeaderfields {
         // to
         "columba.to",
         
+        // Cc
+        "columba.cc",
+
         // from
         "columba.from"
     };
