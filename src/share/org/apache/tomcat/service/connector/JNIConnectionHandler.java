@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/connector/Attic/JNIConnectionHandler.java,v 1.8 2000/05/31 20:58:39 costin Exp $
- * $Revision: 1.8 $
- * $Date: 2000/05/31 20:58:39 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/connector/Attic/JNIConnectionHandler.java,v 1.9 2000/06/12 09:45:22 shachor Exp $
+ * $Revision: 1.9 $
+ * $Date: 2000/06/12 09:45:22 $
  *
  * ====================================================================
  *
@@ -66,9 +66,9 @@ package org.apache.tomcat.service.connector;
 import java.io.IOException;
 import org.apache.tomcat.core.*;
 import org.apache.tomcat.util.*;
-import javax.servlet.*;
-import javax.servlet.http.*;
-import java.util.*;
+import javax.servlet.ServletInputStream;
+import java.util.Vector;
+import java.io.File;
 
 public class JNIConnectionHandler {
 
@@ -90,11 +90,32 @@ public class JNIConnectionHandler {
             return;
         } catch(UnsatisfiedLinkError usl) {
             //usl.printStackTrace();
+            System.err.println("Failed to loadLibrary() " + lib);
         }
+        
         // Loading from the library path failed
         // Try to load assuming lib is a complete pathname.
+        try {
         System.load(lib);
         System.out.println("Library " + lib + " loaded");
+            return;
+        } catch(UnsatisfiedLinkError usl) {
+            System.err.println("Failed to load() " + lib);
+            //usl.printStackTrace();
+        }
+        
+        // OK, try to load from the default libexec 
+        // directory. 
+        // libexec directory = tomcat.home + / + libexec
+        File f = new File(System.getProperties().getProperty("tomcat.home"), "libexec");
+        if(System.getProperty( "os.name" ).toLowerCase().indexOf("windows") >= 0) {
+            f = new File(f, "jni_connect.dll");
+        } else {
+            f = new File(f, "jni_connect.so");
+        }
+        
+        System.load(f.toString());
+        System.out.println("Library " + f.toString() + " loaded");
     }
 
     static Vector pool=new Vector();
@@ -223,7 +244,7 @@ class JNIRequestAdapter extends RequestImpl {
     }
 
     protected void readNextRequest(long s, long l) throws IOException {
-        String []env = new String[12];
+        String []env = new String[15];
         int i = 0;
 
     	this.s = s;
@@ -249,6 +270,25 @@ class JNIRequestAdapter extends RequestImpl {
             scheme      = env[9];
             protocol    = env[10];
             // response.setServerHeader(env[11]);
+            
+            if(scheme.equalsIgnoreCase("https")) {
+                if(null != env[12]) {
+		            attributes.put("javax.servlet.request.X509Certificate",
+	                               env[12]);
+	            }
+	            
+                if(null != env[13]) {
+		            attributes.put("javax.servlet.request.cipher_suite",
+	                               env[13]);
+	            }
+	            
+                if(null != env[14]) {
+		            attributes.put("javax.servlet.request.ssl_session",
+	                               env[14]);
+	            }
+            }
+            
+            
         } else {
             throw new IOException("Error: JNI implementation error");
         }

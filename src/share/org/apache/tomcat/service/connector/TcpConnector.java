@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/connector/Attic/TcpConnector.java,v 1.1 2000/05/19 07:14:17 shachor Exp $
- * $Revision: 1.1 $
- * $Date: 2000/05/19 07:14:17 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/connector/Attic/TcpConnector.java,v 1.2 2000/06/12 09:45:22 shachor Exp $
+ * $Revision: 1.2 $
+ * $Date: 2000/06/12 09:45:22 $
  *
  * ====================================================================
  *
@@ -135,5 +135,14 @@ class TcpConnector implements MsgConnector
 	int len=msg.getLen();
 	//	msg.dump("SEND");
 	out.write( b, 0, len );
+    }
+    
+    public void close() throws IOException {
+    if(null != out) {        
+    out.close();
+    }
+    if(null !=in) {
+    in.close();
+    }
     }
 }

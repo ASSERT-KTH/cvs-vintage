@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/connector/Attic/MsgConnector.java,v 1.4 2000/05/23 16:56:56 costin Exp $
- * $Revision: 1.4 $
- * $Date: 2000/05/23 16:56:56 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/connector/Attic/MsgConnector.java,v 1.5 2000/06/12 09:45:22 shachor Exp $
+ * $Revision: 1.5 $
+ * $Date: 2000/06/12 09:45:22 $
  *
  * ====================================================================
  *
@@ -79,9 +79,9 @@ public interface MsgConnector {
 
     public MsgBuffer getMsgBuffer();
 
-    public void send( MsgBuffer msg ) throws IOException;
+    public void send(MsgBuffer msg) throws IOException;
 
-    public int receive( MsgBuffer msg ) throws IOException;
+    public int receive(MsgBuffer msg) throws IOException;
 
-    
+    public void close() throws IOException;
 }

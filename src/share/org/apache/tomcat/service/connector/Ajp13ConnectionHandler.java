@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/connector/Attic/Ajp13ConnectionHandler.java,v 1.2 2000/05/26 17:32:15 costin Exp $
- * $Revision: 1.2 $
- * $Date: 2000/05/26 17:32:15 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/connector/Attic/Ajp13ConnectionHandler.java,v 1.3 2000/06/12 09:45:22 shachor Exp $
+ * $Revision: 1.3 $
+ * $Date: 2000/06/12 09:45:22 $
  *
  * ====================================================================
  *
@@ -78,6 +78,9 @@ public class Ajp13ConnectionHandler implements  TcpConnectionHandler
 {
     ContextManager contextM;
 
+    public static final byte JK_AJP13_FORWARD_REQUEST   = 2;
+    public static final byte JK_AJP13_SHUTDOWN          = 7;
+
     public Ajp13ConnectionHandler()
     {
         super();
@@ -150,18 +153,27 @@ public class Ajp13ConnectionHandler implements  TcpConnectionHandler
                 // XXX right now the only incoming packet is "new request"
                 // We need to deal with arbitrary calls
                 int type = (int)msg.getByte();
-                // msg.dump("Received: ");
+                switch(type) {
+                    
+                    case JK_AJP13_FORWARD_REQUEST:
+                        err = req.decodeRequest(msg);                
+                        contextM.service(req, res);
 
-                err = req.decodeRequest(msg);
-
-                contextM.service(req, res);
-
-                req.recycle();
-                res.recycle();
+                        req.recycle();
+                        res.recycle();                    
+                        //System.out.println("Closing connection");
+                        socket.close();                        
+                    break;
+                    
+                    case JK_AJP13_SHUTDOWN:
+                        if(!doShutdown(con, 
+                                       socket.getLocalAddress(),
+			                           socket.getInetAddress())) {
+                            moreRequests = false;
+                        }                        
+                    break;
+                }                
             }
-
-            //System.out.println("Closing connection");
-            socket.close();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -177,4 +189,64 @@ public class Ajp13ConnectionHandler implements  TcpConnectionHandler
     {
         this.contextM=(ContextManager)contextM;
     }
+    
+    protected boolean doShutdown(TcpConnector con,
+                                 InetAddress serverAddr,
+                                 InetAddress clientAddr)
+    {
+        try {
+		    // close the socket connection before handling any signal
+			// but get the addresses first so they are not corrupted			
+			con.close();
+            if(isSameAddress(serverAddr, clientAddr)) {
+				// Shutdown - probably apache was stoped with apachectl stop
+				contextM.stop();
+				
+				// same behavior as in past, because it seems that
+				// stopping everything doesn't work - need to figure
+				// out what happens with the threads ( XXX )
+				System.exit(0);
+	        }
+		} catch(Exception ignored) {
+		    System.err.println(ignored);
+	    }
+	    System.err.println("Shutdown command ignored");
+	    return false;
+    }
+    
+    /**
+     * Return <code>true</code> if the specified client and server addresses
+     * are the same.  This method works around a bug in the IBM 1.1.8 JVM on
+     * Linux, where the address bytes are returned reversed in some
+     * circumstances.
+     * <br>
+     * Was copied from <code>Ajp12ConnectionHandler</code>
+     * 
+     * @param server The server's InetAddress
+     * @param client The client's InetAddress
+     */
+    private boolean isSameAddress(InetAddress server, InetAddress client) {
+
+	    // Compare the byte array versions of the two addresses
+	    byte serverAddr[] = server.getAddress();
+	    byte clientAddr[] = client.getAddress();
+	    if (serverAddr.length != clientAddr.length)
+	        return (false);
+	    boolean match = true;
+	    for (int i = 0; i < serverAddr.length; i++) {
+	        if (serverAddr[i] != clientAddr[i]) {
+		        match = false;
+		        break;
+	        }
+	    }
+	    if(match)
+	        return (true);
+
+	    // Compare the reversed form of the two addresses
+	    for (int i = 0; i < serverAddr.length; i++) {
+	        if (serverAddr[i] != clientAddr[(serverAddr.length-1)-i])
+		    return (false);
+	    }
+	    return (true);
+    }    
 }
