@@ -64,7 +64,7 @@ import org.tigris.scarab.util.SkipFiltering;
 /**
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: EmailLink.java,v 1.8 2003/12/19 22:26:02 dep4b Exp $
+ * @version $Id: EmailLink.java,v 1.9 2003/12/21 21:00:28 pledbrook Exp $
  */
 public class EmailLink
     implements InitableRecyclable, SkipFiltering
@@ -389,9 +389,9 @@ public class EmailLink
      * supplied StringBuffer as encoded path info.
      *
      * @param pairs A Vector of key/value arrays.
-     * @return a StringBuffer to which encoded path info is written
+     * @return a String to which encoded path info is written
      */
-    protected StringBuffer renderPathInfo(List pairs)
+    protected String renderPathInfo(List pairs)
     {
         return renderPairs( pairs, '/', '/' );
     }
@@ -401,14 +401,14 @@ public class EmailLink
      * into a URL encoded key/value pair format with the appropriate
      * separator.
      *
-     * @return a StringBuffer to write the pairs to.
+     * @return a String to which the pairs are written to.
      * @param pairs A List of key/value arrays.
      * @param pairSep the character to use as a separator between pairs.
      * For example for a query-like rendering it would be '&'.
      * @param keyValSep the character to use as a separator between
      * key and value. For example for a query-like rendering, it would be '='.
      */
-    protected StringBuffer renderPairs(List pairs, char pairSep, char keyValSep)
+    protected String renderPairs(List pairs, char pairSep, char keyValSep)
     {
         boolean first = true;
         StringBuffer out = new StringBuffer();
@@ -430,7 +430,7 @@ public class EmailLink
             out.append(keyValSep);
             out.append(ScarabUtil.urlEncode((String) pair[1]));
         }
-        return out;
+        return out.toString();
     }
 
     /**
