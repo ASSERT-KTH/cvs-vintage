@@ -18,7 +18,8 @@ import org.jboss.security.SimplePrincipal;
  * An interceptor that enforces the run-as identity declared by a bean.
  *
  * @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>.
- * @version $Revision: 1.3 $
+ * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>.
+ * @version $Revision: 1.4 $
  */
 public final class RunAsSecurityInterceptor extends AbstractInterceptor
 {
@@ -30,7 +31,7 @@ public final class RunAsSecurityInterceptor extends AbstractInterceptor
    /** 
     * We obtain the security manager and runAs identity to use here.
     */
-   public void create(Container container)
+   public void start()
    {
       SecurityIdentityMetaData securityMetaData = 
             getContainer().getBeanMetaData().getSecurityIdentityMetaData();
@@ -41,7 +42,7 @@ public final class RunAsSecurityInterceptor extends AbstractInterceptor
       }
    }
 
-   public void destory()
+   public void stop()
    {
       runAsRole = null;
    }
