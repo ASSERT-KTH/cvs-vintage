@@ -146,7 +146,10 @@ public class AttachmentController implements KeyListener, FocusOwner, ListSelect
      * Removes the current selected attachments.
      */
     public void removeSelected() {       
-          view.removeSelected();        
+          view.removeSelected();  
+          
+          // hide/show attachment panel
+          ((ComposerView)composerController.getView()).showAttachmentPanel();
     }
 
     /**
@@ -168,6 +171,9 @@ public class AttachmentController implements KeyListener, FocusOwner, ListSelect
                 addFileAttachment(files[i]);
             }
         }
+        
+        // show attachment panel
+        ((ComposerView)composerController.getView()).showAttachmentPanel();
     }
 
     /**
