@@ -17,7 +17,7 @@
 <!--                                                                        -->
 <!-- ====================================================================== -->
 
-<!-- $Id: build.xml,v 1.118 2002/09/17 10:24:10 dsundstrom Exp $ -->
+<!-- $Id: build.xml,v 1.119 2002/09/19 16:41:18 loubyansky Exp $ -->
 
 <project default="main" name="JBoss/Server">
 
@@ -330,6 +330,8 @@
 
        <exclude name="org/jboss/invocation/trunk/client/nbio/*.java" unless="HAVE_JDK_1.4"/>
        <exclude name="org/jboss/invocation/trunk/server/nbio/*.java" unless="HAVE_JDK_1.4"/>
+
+       <exclude name="org/jboss/ejb/plugins/cmp/jdbc/jdbc3/*.java" unless="HAVE_JDK_1.4"/>
     </javac>
   </target>
 
