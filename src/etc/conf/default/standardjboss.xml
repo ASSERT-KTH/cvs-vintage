@@ -7,7 +7,7 @@
 <!-- ===================================================================== -->
 <!--  Standard JBoss EJB Configurations                                    -->
 <!-- ===================================================================== -->
-<!-- $Id: standardjboss.xml,v 1.83 2004/07/30 17:40:28 tdiesler Exp $ -->
+<!-- $Id: standardjboss.xml,v 1.84 2004/08/08 11:26:02 loubyansky Exp $ -->
 
 <jboss>
   <enforce-ejb-restrictions>false</enforce-ejb-restrictions>
@@ -290,6 +290,47 @@
         <MaximumSize>100</MaximumSize>
       </container-pool-conf>
       <commit-option>B</commit-option>
+    </container-configuration>
+
+    <container-configuration>
+      <!--
+         | This is like standard IPT but with global (cross-transactional) row cache behind,
+         | i.e. no locking in EJB layer + global persistence data cache
+      -->
+      <container-name>cmp2.x jdbc2 pm</container-name>
+      <call-logging>false</call-logging>
+      <invoker-proxy-binding-name>entity-rmi-invoker</invoker-proxy-binding-name>
+      <sync-on-commit-only>false</sync-on-commit-only>
+      <insert-after-ejb-post-create>true</insert-after-ejb-post-create>
+      <call-ejb-store-on-clean>true</call-ejb-store-on-clean>
+      <container-interceptors>
+         <interceptor>org.jboss.ejb.plugins.ProxyFactoryFinderInterceptor</interceptor>
+         <interceptor>org.jboss.ejb.plugins.LogInterceptor</interceptor>
+         <interceptor>org.jboss.ejb.plugins.SecurityInterceptor</interceptor>
+         <interceptor>org.jboss.ejb.plugins.TxInterceptorCMT</interceptor>
+         <interceptor>org.jboss.ejb.plugins.EntityCreationInterceptor</interceptor>
+         <interceptor>org.jboss.ejb.plugins.EntityInstanceInterceptor</interceptor>
+         <interceptor>org.jboss.ejb.plugins.EntityReentranceInterceptor</interceptor>
+         <interceptor>org.jboss.resource.connectionmanager.CachedConnectionInterceptor</interceptor>
+         <interceptor>org.jboss.ejb.plugins.EntitySynchronizationInterceptor</interceptor>
+         <interceptor>org.jboss.ejb.plugins.cmp.jdbc2.RelationInterceptor</interceptor>
+      </container-interceptors>
+      <instance-pool>org.jboss.ejb.plugins.EntityInstancePool</instance-pool>
+      <instance-cache>org.jboss.ejb.plugins.PerTxEntityInstanceCache</instance-cache> 
+      <persistence-manager>org.jboss.ejb.plugins.cmp.jdbc2.JDBCStoreManager2</persistence-manager>
+      <locking-policy>org.jboss.ejb.plugins.lock.NoLock</locking-policy> 
+      <container-cache-conf>
+         <min-capacity>500</min-capacity>
+         <max-capacity>10000</max-capacity>
+         <partitions>10</partitions>
+         <!-- uncomment to use JDBC java.sql.Statement.executeBatch()
+         <batch-commit-strategy/>
+         -->
+      </container-cache-conf>
+      <container-pool-conf>
+         <MaximumSize>100</MaximumSize>
+      </container-pool-conf>
+      <commit-option>C</commit-option> <!-- don't change, irrelevant, use container-cache-conf -->
     </container-configuration>
 
     <container-configuration>
