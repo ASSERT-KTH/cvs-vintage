@@ -1,6 +1,6 @@
-$Id: TODO,v 1.4 1999/12/09 03:14:59 craigmcc Exp $
+$Id: TODO,v 1.5 2000/01/06 21:04:27 akv Exp $
 
-This is the living To-Do list for Tomcat
+This is the living To-Do list for Tomcat 3.1
 
   * Tomcat core
 
@@ -22,7 +22,7 @@ This is the living To-Do list for Tomcat
       HTML. Need to fix it. 
      
     * Implement command line compilation of JSP to servlets. Make this
-      an Ant task. 
+      an Ant task, if possible. 
 
     * Plug in support for other Java compilers in the JSP engine. 
 
@@ -36,6 +36,8 @@ This is the living To-Do list for Tomcat
       for all the resource (errors, warnings) names and clean things
       up in the code too. (The earlier the better... its already too
       late :) 
+  
+    * Implement logging (steal code from JServ, where possible).
 
   * Integration with Apache
 
@@ -59,8 +61,10 @@ This is the living To-Do list for Tomcat
 
     * Add stress tests
 
-    * Add some JSP product tests -- there are none right now
-
     * Add performance tests -- maybe work with JMeter on this
 
+  * Release builds
 
+    * Fix Solaris PKG, Linux RPMs.
+
+    * Add HOW-TO-RELEASE document. 
