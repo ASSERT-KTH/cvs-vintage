@@ -65,7 +65,7 @@ import org.gjt.sp.util.Log;
  *
  * @author Slava Pestov
  * @author John Gellene (API documentation)
- * @version $Id: JEditTextArea.java,v 1.343 2005/02/21 07:52:16 spestov Exp $
+ * @version $Id: JEditTextArea.java,v 1.344 2005/02/21 21:06:18 spestov Exp $
  */
 public class JEditTextArea extends JComponent
 {
@@ -332,6 +332,7 @@ public class JEditTextArea extends JComponent
 			this.buffer = buffer;
 
 			chunkCache.setBuffer(buffer);
+			painter.repaintMgr.setFastScroll(false);
 			propertiesChanged();
 
 			if(displayManager != null)
