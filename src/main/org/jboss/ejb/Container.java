@@ -69,7 +69,7 @@ import org.jboss.ejb.plugins.local.BaseLocalContainerInvoker;
  *   @see ContainerFactory
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
  *   @author <a href="marc.fleury@telkel.com">Marc Fleury</a>
- *   @version $Revision: 1.40 $
+ *   @version $Revision: 1.41 $
  */
 public abstract class Container
 {
@@ -315,14 +315,15 @@ public abstract class Container
       // Acquire classes from CL
       beanClass = classLoader.loadClass(metaData.getEjbClass());
 
-      if (metaData.getHome() != null)
+      if (metaData.getLocalHome() != null)
          localHomeInterface = classLoader.loadClass(metaData.getLocalHome());
-      if (metaData.getRemote() != null)
+      if (metaData.getLocal() != null)
          localInterface = classLoader.loadClass(metaData.getLocal());
       
       localContainerInvoker.setContainer( this );
       localContainerInvoker.init();
-      application.addLocalHome(this, localContainerInvoker.getEJBLocalHome() );
+      if (localHomeInterface != null)
+         application.addLocalHome(this, localContainerInvoker.getEJBLocalHome() );
       // Setup "java:" namespace
       setupEnvironment();
    }
@@ -486,7 +487,7 @@ public abstract class Container
                }
             }
          }
-
+        
          // Bind resource references
          {
             Iterator enum = getBeanMetaData().getResourceReferences();

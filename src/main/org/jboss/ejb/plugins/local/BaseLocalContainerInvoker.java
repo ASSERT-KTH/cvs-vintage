@@ -97,6 +97,9 @@ public class BaseLocalContainerInvoker implements LocalContainerInvoker
    public void init()
    throws Exception
    {
+      if (((ContainerInvokerContainer)container).getLocalClass() == null)
+         return;
+      
       Context ctx = new InitialContext();
 
       jndiName = container.getBeanMetaData().getJndiName();
