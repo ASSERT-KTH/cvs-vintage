@@ -188,6 +188,15 @@ public class IssueSearch
         ACTIVITYALIAS_NEW_USER_ID__EQUALS__USERAVALIAS_USER_ID =
         ACTIVITYALIAS_NEW_USER_ID + "=" + USERAVALIAS + "." + AV_USER_ID;
 
+    private static String WHERE = " WHERE ";
+    private static String FROM = " FROM ";
+    private static String ORDER_BY = " ORDER BY ";
+    private static String BASE_OPTION_SORT_LEFT_JOIN = 
+        " LEFT OUTER JOIN SCARAB_R_MODULE_OPTION sortRMO ON " + 
+        "(SCARAB_ISSUE.MODULE_ID=sortRMO.MODULE_ID AND SCARAB_ISSUE.TYPE_ID=" +
+        "sortRMO.ISSUE_TYPE_ID AND sortRMO.OPTION_ID=";
+
+    private static int NO_ATTRIBUTE_SORT = -1;
 
     private SimpleDateFormat formatter;
 
@@ -1836,11 +1845,6 @@ public class IssueSearch
         return matchingIssues;
     }
 
-    private static String WHERE = " WHERE ";
-    private static String FROM = " FROM ";
-    private static String ORDER_BY = " ORDER BY ";
-    private static String BASE_OPTION_SORT_LEFT_JOIN = " LEFT OUTER JOIN SCARAB_R_MODULE_OPTION sortRMO ON (SCARAB_ISSUE.MODULE_ID=sortRMO.MODULE_ID AND SCARAB_ISSUE.TYPE_ID=sortRMO.ISSUE_TYPE_ID AND sortRMO.OPTION_ID=";
-
     private List sortByAttribute(Criteria crit) throws Exception
     {
         NumberKey sortAttrId = getSortAttributeId();
@@ -1852,6 +1856,12 @@ public class IssueSearch
         crit.addSelectColumn(IssuePeer.ID_PREFIX);
         crit.addSelectColumn(IssuePeer.ID_COUNT);
 
+        // add the attribute value columns that will be shown in the list.
+        // these are joined using a left outer join, so the additional
+        // columns do not affect the results of the search (no additional
+        // criteria are added to the where clause.)  Criteria object does
+        // not provide support for outer joins, so we will need to manipulate
+        // the query manually
         String baseSql = BasePeer.createQueryString(crit);
         StringBuffer sb = new StringBuffer(baseSql.length() + 500);
         sb.append(baseSql);
@@ -1875,7 +1885,10 @@ public class IssueSearch
             }
             String id = attrPK.toString();
             String alias = "av" + id;
-            selectColumns.append(",av").append(id).append(".VALUE");
+            // add column to SELECT column clause
+            selectColumns.append(',').append(alias).append(".VALUE");
+            // if no criteria was specified for a displayed attribute
+            // add it as an outer join
             if (crit.getTableForAlias(alias) == null) 
             {
                 outerJoin.append(
@@ -1896,7 +1909,7 @@ public class IssueSearch
             // add the sort column
             sortColumn = "sortRMO.PREFERRED_ORDER";
             selectColumns.append(',').append(sortColumn);
-            //addSortOrderByColumn(crit, sortColumn);
+            // join the RMO table to the AttributeValue alias we are sorting
             outerJoin.append(BASE_OPTION_SORT_LEFT_JOIN).append("av")
                 .append(sortId).append(".OPTION_ID)");
         }
@@ -1922,6 +1935,7 @@ public class IssueSearch
         // add pk sort so that rows can be combined easily
         sb.append(',').append(IssuePeer.ISSUE_ID).append(" ASC");
         
+        // return a List of QueryResult objects
         return buildQueryResults(BasePeer.executeQuery(sb.toString()), 
                                  sortAttrPos, valueListSize);
     }
@@ -1949,6 +1963,12 @@ public class IssueSearch
         // add pk sort so that rows can be combined easily
         crit.addAscendingOrderByColumn(IssuePeer.ISSUE_ID);
         
+        // add the attribute value columns that will be shown in the list.
+        // these are joined using a left outer join, so the additional
+        // columns do not affect the results of the search (no additional
+        // criteria are added to the where clause.)  Criteria object does
+        // not provide support for outer joins, so we will need to manipulate
+        // the query manually
         String sql = BasePeer.createQueryString(crit);
         int valueListSize = -1;
         List rmuas = getIssueListAttributeColumns();
@@ -1965,7 +1985,10 @@ public class IssueSearch
                 RModuleUserAttribute rmua = (RModuleUserAttribute)i.next();
                 String id = rmua.getAttributeId().toString();
                 String alias = "av" + id;
+                // add column to SELECT column clause
                 selectColumns.append(',').append(alias).append(".VALUE");
+                // if no criteria was specified for a displayed attribute
+                // add it as an outer join
                 if (crit.getTableForAlias(alias) == null) 
                 {
                     outerJoin.append(
@@ -1984,14 +2007,30 @@ public class IssueSearch
             sql = sb.toString();
         }
 
-        return buildQueryResults(BasePeer.executeQuery(sql), -1, valueListSize);
+        // return a List of QueryResult objects
+        return buildQueryResults(BasePeer.executeQuery(sql), 
+                                 NO_ATTRIBUTE_SORT, valueListSize);
     }
     
-    public List buildQueryResults(List records, int sortAttrPos, 
-                                  int valueListSize)
+    /**
+     * provides common code for use by the sortByUniqueId and sortByAttribute
+     * methods.  Assembles a list of Record objects into a list of QueryResults.
+     *
+     * @param records a <code>List</code> value
+     * @param sortAttrPos an <code>int</code> value
+     * @param valueListSize an <code>int</code> value
+     * @return a <code>List</code> value
+     * @exception Exception if an error occurs
+     */
+    private List buildQueryResults(List records, int sortAttrPos, 
+                                   int valueListSize)
         throws Exception
     {
         List queryResults = new ArrayList(records.size());
+        // if we are sorting on an attribute column and some records have
+        // null (non-existent) values for that attribute we separate them
+        // for presentation at the end of the list.  Otherwise for certain
+        // polarity they will be shown first.
         List heldRows = null;
         if (sortAttrPos >= 0) 
         {
@@ -2004,6 +2043,11 @@ public class IssueSearch
         {
             Record rec = (Record)i.next();
             String pk = rec.getValue(1).asString();
+            // each attribute can result in a different Record object.  We have
+            // sorted on the pk column in addition to any other sort, so that
+            // all attributes for a given issue will be grouped.  The following
+            // code maps these multiple Records into a single QueryResult per
+            // issue
             if (pk.equals(prevPk)) 
             {
                 if (valueListSize > 0) 
@@ -2012,6 +2056,12 @@ public class IssueSearch
                     for (int j=0; j < valueListSize; j++) 
                     {
                         String s = rec.getValue(j+6).asString();
+                        // it's possible that multiple Records could have the
+                        // same value for a given attribute, but we do not want
+                        // to add the same value many times, so we check for
+                        // this possibility below.  See the code in the else
+                        // block about 10 lines down to see how the values lists
+                        // are arranged to allow for multiple values.
                         List prevValues = (List)values.get(j);
                         boolean newValue = true;
                         for (int k=0; k<prevValues.size(); k++) 
@@ -2031,6 +2081,7 @@ public class IssueSearch
             }
             else 
             {
+                // the current Record is a new issue
                 qr = new QueryResult(this);
                 qr.setIssueId(pk);
                 qr.setModuleId(rec.getValue(2).asIntegerObj());
@@ -2044,11 +2095,15 @@ public class IssueSearch
                     for (int j = 0; j < valueListSize; j++) 
                     {
                         String s = rec.getValue(j+6).asString();
+                        // check if we are sorting on this value and hold the
+                        // result to the end of the list, if the value is null.
                         if (j == sortAttrPos && s == null) 
                         {
                             holdRow = true;
                         }
-                        
+
+                        // some attributes can be multivalued, so store a list
+                        // for each attribute containing the values
                         ArrayList multiVal = new ArrayList(2);
                         multiVal.add(s);
                         values.add(multiVal);
