@@ -15,6 +15,7 @@
 //All Rights Reserved.
 package org.columba.mail.folder.headercache;
 
+import java.io.File;
 import java.util.Arrays;
 import java.util.Enumeration;
 import java.util.LinkedList;
@@ -23,6 +24,7 @@ import java.util.logging.Logger;
 
 import javax.swing.JOptionPane;
 
+import org.columba.core.command.StatusObservable;
 import org.columba.core.main.Main;
 import org.columba.core.util.ListTools;
 import org.columba.mail.folder.AbstractMessageFolder;
@@ -31,197 +33,210 @@ import org.columba.mail.message.HeaderList;
 import org.columba.mail.util.MailResourceLoader;
 import org.columba.ristretto.message.Header;
 
-
 /**
  * IMAP-specific implementation of a header cache.
- *
+ * 
  * @author fdietz
  */
-public class RemoteHeaderCache extends AbstractFolderHeaderCache {
+public class RemoteHeaderCache extends AbstractHeaderCache {
 
-    /** JDK 1.4+ logging framework logger, used for logging. */
-    private static final Logger LOG = Logger.getLogger("org.columba.mail.folder.headercache");
+	protected AbstractMessageFolder folder;
 
-    private boolean configurationChanged;
+	/** JDK 1.4+ logging framework logger, used for logging. */
+	private static final Logger LOG = Logger
+			.getLogger("org.columba.mail.folder.headercache");
 
-    /**
-     * Constructor for RemoteHeaderCache.
-     *
-     * @param folder
-     */
-    public RemoteHeaderCache(AbstractMessageFolder folder) {
-        super(folder);
+	private boolean configurationChanged;
 
-        configurationChanged = false;
-    }
+	/**
+	 * Constructor for RemoteHeaderCache.
+	 * 
+	 * @param folder
+	 */
+	public RemoteHeaderCache(AbstractMessageFolder folder) {
+		super(new File(folder.getDirectoryFile(), ".header"));
 
-    public void load() throws Exception {
-        LOG.fine("loading header-cache=" + headerFile);
-        headerList = new HeaderList();
+		this.folder = folder;
 
-        try {
-            reader = new ObjectReader(headerFile);
-        } catch (Exception e) {
-            if (Main.DEBUG) {
-                e.printStackTrace();
-            }
-        }
+		configurationChanged = false;
+	}
 
-        int capacity = ((Integer) reader.readObject()).intValue();
+	public StatusObservable getObservable() {
+		return folder.getObservable();
+	}
 
-        LOG.fine("capacity=" + capacity);
+	public void load() throws Exception {
+		LOG.fine("loading header-cache=" + headerFile);
+		headerList = new HeaderList();
 
-        int additionalHeaderfieldsCount = ((Integer) reader.readObject()).intValue();
+		try {
+			reader = new ObjectReader(headerFile);
+		} catch (Exception e) {
+			if (Main.DEBUG) {
+				e.printStackTrace();
+			}
+		}
 
-        if (additionalHeaderfieldsCount != 0) {
-            // user-defined headerfields found
-            // -> read all keys from file
-            for (int i = 0; i < additionalHeaderfieldsCount; i++) {
-                additionalHeaderfields.add((String) reader.readObject());
-            }
-        }
+		int capacity = ((Integer) reader.readObject()).intValue();
 
-        if (CachedHeaderfields.getUserDefinedHeaderfields().length >= additionalHeaderfieldsCount) {
-            configurationChanged = true;
-        }
+		LOG.fine("capacity=" + capacity);
 
-        if (getObservable() != null) {
-            getObservable().setMessage(MailResourceLoader.getString(
-                    "statusbar", "message", "load_headers"));
-            getObservable().setMax(capacity);
-            getObservable().resetCurrent();
-        }
+		int additionalHeaderfieldsCount = ((Integer) reader.readObject())
+				.intValue();
 
-        for (int i = 1; i <= capacity; i++) {
-            if (getObservable() != null) {
-                getObservable().setCurrent(i);
-            }
+		if (additionalHeaderfieldsCount != 0) {
+			// user-defined headerfields found
+			// -> read all keys from file
+			for (int i = 0; i < additionalHeaderfieldsCount; i++) {
+				additionalHeaderfields.add((String) reader.readObject());
+			}
+		}
 
-            ColumbaHeader h = new ColumbaHeader();
+		if (CachedHeaderfields.getUserDefinedHeaderfields().length >= additionalHeaderfieldsCount) {
+			configurationChanged = true;
+		}
 
-            loadHeader(h);
+		if (getObservable() != null) {
+			getObservable().setMessage(
+					MailResourceLoader.getString("statusbar", "message",
+							"load_headers"));
+			getObservable().setMax(capacity);
+			getObservable().resetCurrent();
+		}
 
-            headerList.add(h, (Integer) h.get("columba.uid"));
-        }
+		for (int i = 1; i <= capacity; i++) {
+			if (getObservable() != null) {
+				getObservable().setCurrent(i);
+			}
 
-        // close stream
-        reader.close();
+			ColumbaHeader h = new ColumbaHeader();
 
-        if (configurationChanged) {
-            // headerfield cache configuration changed
-            // -> try to properly fill the cache again
-            //reorganizeCache();
-        }
+			loadHeader(h);
 
-        // we are done
-        if (getObservable() != null) {
-            getObservable().clearMessageWithDelay();
-            getObservable().resetCurrent();
-        }
-    }
+			headerList.add(h, (Integer) h.get("columba.uid"));
+		}
 
-    public void save() throws Exception {
-        // we didn't load any header to save
-        if (!isHeaderCacheLoaded()) {
-            return;
-        }
+		// close stream
+		reader.close();
 
-        LOG.fine("saving header-cache=" + headerFile);
+		if (configurationChanged) {
+			// headerfield cache configuration changed
+			// -> try to properly fill the cache again
+			//reorganizeCache();
+		}
 
-        try {
-            writer = new ObjectWriter(headerFile);
-        } catch (Exception e) {
-            if (Main.DEBUG) {
-                e.printStackTrace();
-            }
-        }
+		// we are done
+		if (getObservable() != null) {
+			getObservable().clearMessageWithDelay();
+			getObservable().resetCurrent();
+		}
+	}
 
-        int count = headerList.count();
+	public void save() throws Exception {
+		// we didn't load any header to save
+		if (!isHeaderCacheLoaded()) {
+			return;
+		}
 
-        if (count == 0) {
-            return;
-        }
+		LOG.fine("saving header-cache=" + headerFile);
 
-        writer.writeObject(new Integer(count));
+		try {
+			writer = new ObjectWriter(headerFile);
+		} catch (Exception e) {
+			if (Main.DEBUG) {
+				e.printStackTrace();
+			}
+		}
 
-        //write keys of user specified headerfields in file
-        // -> this allows a much more failsafe handling, when
-        // -> users add/remove headerfields from the cache
-        String[] userDefinedHeaderFields = CachedHeaderfields.getUserDefinedHeaderfields();
+		int count = headerList.count();
 
-        if (userDefinedHeaderFields != null) {
-            // write number of additional headerfields to file
-            writer.writeObject(new Integer(userDefinedHeaderFields.length));
+		if (count == 0) {
+			return;
+		}
 
-            // write keys to file
-            for (int i = 0; i < userDefinedHeaderFields.length; i++) {
-                writer.writeObject(userDefinedHeaderFields[i]);
-            }
-        } else {
-            // no additionally headerfields
-            writer.writeObject(new Integer(0));
-        }
+		writer.writeObject(new Integer(count));
 
-        ColumbaHeader h;
+		//write keys of user specified headerfields in file
+		// -> this allows a much more failsafe handling, when
+		// -> users add/remove headerfields from the cache
+		String[] userDefinedHeaderFields = CachedHeaderfields
+				.getUserDefinedHeaderfields();
 
-        for (Enumeration e = headerList.keys(); e.hasMoreElements();) {
-            Object uid = (Integer) e.nextElement();
+		if (userDefinedHeaderFields != null) {
+			// write number of additional headerfields to file
+			writer.writeObject(new Integer(userDefinedHeaderFields.length));
 
-            h = (ColumbaHeader) headerList.get(uid);
+			// write keys to file
+			for (int i = 0; i < userDefinedHeaderFields.length; i++) {
+				writer.writeObject(userDefinedHeaderFields[i]);
+			}
+		} else {
+			// no additionally headerfields
+			writer.writeObject(new Integer(0));
+		}
 
-            saveHeader(h);
-        }
+		ColumbaHeader h;
 
-        writer.close();
-    }
+		for (Enumeration e = headerList.keys(); e.hasMoreElements();) {
+			Object uid = (Integer) e.nextElement();
 
-    /**
-     * Method tries to fill the headercache with proper values.
-     * <p>
-     * This is needed after the user changed the headerfield caching setup.
-     *
-     */
-    protected void reorganizeCache() throws Exception {
-        List list = new LinkedList(Arrays.asList(
-                    CachedHeaderfields.getUserDefinedHeaderfields()));
-        ListTools.substract(list, additionalHeaderfields);
+			h = (ColumbaHeader) headerList.get(uid);
 
-        if (list.size() == 0) {
-            return;
-        }
+			saveHeader(h);
+		}
 
-        JOptionPane.showMessageDialog(null,
-            "<html></body><p>Columba recognized that you just changed the headerfield caching setup. "
-                + " This makes it necessary to reorganize the cache and will take a bit longer than generally.</p></body></html>");
+		writer.close();
+	}
 
-        Object[] uids = folder.getUids();
+	/**
+	 * Method tries to fill the headercache with proper values.
+	 * <p>
+	 * This is needed after the user changed the headerfield caching setup.
+	 *  
+	 */
+	protected void reorganizeCache() throws Exception {
+		List list = new LinkedList(Arrays.asList(CachedHeaderfields
+				.getUserDefinedHeaderfields()));
+		ListTools.substract(list, additionalHeaderfields);
 
-        ColumbaHeader header;
+		if (list.size() == 0) {
+			return;
+		}
 
-        for (int i = 0; i < uids.length; i++) {
-            header = (ColumbaHeader) headerList.get(uids[i]);
+		JOptionPane
+				.showMessageDialog(
+						null,
+						"<html></body><p>Columba recognized that you just changed the headerfield caching setup. "
+								+ " This makes it necessary to reorganize the cache and will take a bit longer than generally.</p></body></html>");
 
-            Header helper = folder.getHeaderFields(uids[i],
-                    (String[]) list.toArray());
-            Enumeration enumeration = helper.getKeys();
+		Object[] uids = folder.getUids();
 
-            while (enumeration.hasMoreElements()) {
-                String key = (String) enumeration.nextElement();
-                header.set((String) key, helper.get(key));
-            }
-        }
-    }
+		ColumbaHeader header;
 
-    protected void loadHeader(ColumbaHeader h) throws Exception {
-        h.set("columba.uid", reader.readObject());
+		for (int i = 0; i < uids.length; i++) {
+			header = (ColumbaHeader) headerList.get(uids[i]);
 
-        super.loadHeader(h);
-    }
+			Header helper = folder.getHeaderFields(uids[i], (String[]) list
+					.toArray());
+			Enumeration enumeration = helper.getKeys();
 
-    protected void saveHeader(ColumbaHeader h) throws Exception {
-        writer.writeObject(h.get("columba.uid"));
+			while (enumeration.hasMoreElements()) {
+				String key = (String) enumeration.nextElement();
+				header.set((String) key, helper.get(key));
+			}
+		}
+	}
 
-        super.saveHeader(h);
-    }
+	protected void loadHeader(ColumbaHeader h) throws Exception {
+		h.set("columba.uid", reader.readObject());
+
+		super.loadHeader(h);
+	}
+
+	protected void saveHeader(ColumbaHeader h) throws Exception {
+		writer.writeObject(h.get("columba.uid"));
+
+		super.saveHeader(h);
+	}
 
 }

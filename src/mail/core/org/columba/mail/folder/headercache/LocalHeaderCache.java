@@ -15,6 +15,7 @@
 //All Rights Reserved.
 package org.columba.mail.folder.headercache;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -27,10 +28,12 @@ import java.util.logging.Logger;
 
 import javax.swing.JOptionPane;
 
+import org.columba.core.command.StatusObservable;
 import org.columba.core.main.Main;
 import org.columba.core.util.ListTools;
+import org.columba.mail.folder.AbstractMessageFolder;
 import org.columba.mail.folder.IDataStorage;
-import org.columba.mail.folder.LocalFolder;
+import org.columba.mail.folder.AbstractLocalFolder;
 import org.columba.mail.message.ColumbaHeader;
 import org.columba.mail.message.HeaderList;
 import org.columba.mail.message.IColumbaHeader;
@@ -47,7 +50,9 @@ import org.columba.ristretto.parser.HeaderParser;
  * 
  * @author fdietz
  */
-public class LocalHeaderCache extends AbstractFolderHeaderCache {
+public class LocalHeaderCache extends AbstractHeaderCache {
+
+	protected AbstractMessageFolder folder;
 
 	/** JDK 1.4+ logging framework logger, used for logging. */
 	private static final Logger LOG = Logger
@@ -57,10 +62,16 @@ public class LocalHeaderCache extends AbstractFolderHeaderCache {
 
 	private boolean configurationChanged;
 
-	public LocalHeaderCache(LocalFolder folder) {
-		super(folder);
+	public LocalHeaderCache(AbstractLocalFolder folder) {
+		super(new File(folder.getDirectoryFile(), ".header"));
+
+		this.folder = folder;
 
 		configurationChanged = false;
+	}
+
+	public StatusObservable getObservable() {
+		return folder.getObservable();
 	}
 
 	public HeaderList getHeaderList() throws IOException {
@@ -95,7 +106,7 @@ public class LocalHeaderCache extends AbstractFolderHeaderCache {
 	 * @see org.columba.mail.folder.headercache.AbstractHeaderCache#needToSync(int)
 	 */
 	public boolean needToSync(int capacity) {
-		int mcount = ((LocalFolder) folder).getDataStorageInstance()
+		int mcount = ((AbstractLocalFolder) folder).getDataStorageInstance()
 				.getMessageCount();
 
 		if (capacity != mcount) {
@@ -197,7 +208,7 @@ public class LocalHeaderCache extends AbstractFolderHeaderCache {
 			 */
 			nextUid++;
 			LOG.info("next UID for new messages =" + nextUid);
-			((LocalFolder) folder).setNextMessageUid(nextUid);
+			((AbstractLocalFolder) folder).setNextMessageUid(nextUid);
 
 		} catch (Exception e) {
 			if (Main.DEBUG) {
@@ -285,14 +296,13 @@ public class LocalHeaderCache extends AbstractFolderHeaderCache {
 	 * @param worker
 	 * @throws Exception
 	 */
-	public void sync() throws IOException {
+	private void sync() throws IOException {
 		if (getObservable() != null) {
 			getObservable().setMessage(
 					folder.getName() + ": Syncing headercache...");
 		}
 
-		IDataStorage ds = ((LocalFolder) folder)
-				.getDataStorageInstance();
+		IDataStorage ds = ((AbstractLocalFolder) folder).getDataStorageInstance();
 
 		Object[] uids = ds.getMessageUids();
 
@@ -381,7 +391,7 @@ public class LocalHeaderCache extends AbstractFolderHeaderCache {
 
 			messageFolderInfo.incExists();
 
-			((LocalFolder) folder)
+			((AbstractLocalFolder) folder)
 					.setNextMessageUid(((Integer) uids[uids.length - 1])
 							.intValue() + 1);
 
@@ -408,7 +418,7 @@ public class LocalHeaderCache extends AbstractFolderHeaderCache {
 		super.saveHeader(h);
 	}
 
-	public boolean isOlderThanOneWeek(Date arg0, Date arg1) {
+	private boolean isOlderThanOneWeek(Date arg0, Date arg1) {
 		return (arg0.getTime() - WEEK) > arg1.getTime();
 	}
 
@@ -433,8 +443,7 @@ public class LocalHeaderCache extends AbstractFolderHeaderCache {
 						"<html></body><p>Columba recognized that you just changed the headerfield caching setup."
 								+ " This makes it necessary to reorganize the cache and will take a bit longer than generally.</p></body></html>");
 
-		IDataStorage ds = ((LocalFolder) folder)
-				.getDataStorageInstance();
+		IDataStorage ds = ((AbstractLocalFolder) folder).getDataStorageInstance();
 
 		Object[] uids = ds.getMessageUids();
 		Header helper;

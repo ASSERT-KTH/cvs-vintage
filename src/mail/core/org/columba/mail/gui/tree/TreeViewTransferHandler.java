@@ -36,12 +36,12 @@ import org.columba.mail.gui.table.MessageReferencesTransfer;
 /**
  * A Transferhandler for the TreeView. This handler will only work with a
  * treeview component. The only type of folders that can be moved in the
- * treeview are <code>VirtualFolder</code> and <code>LocalFolder</code>
+ * treeview are <code>VirtualFolder</code> and <code>AbstractLocalFolder</code>
  * <p>
  * The handler supports
  * <ul>
  * <li>Moving a folder into other folders. If the folder is a
- * <code>VirtualFolder</code> or a <code>LocalFolder</code>.
+ * <code>VirtualFolder</code> or a <code>AbstractLocalFolder</code>.
  * <li>Copying messages into one folder.
  * </ul>
  * 

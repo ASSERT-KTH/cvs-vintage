@@ -52,7 +52,7 @@ import org.columba.core.xml.XmlElement;
 import org.columba.mail.command.MailFolderCommandReference;
 import org.columba.mail.config.IFolderItem;
 import org.columba.mail.folder.AbstractMessageFolder;
-import org.columba.mail.folder.LocalFolder;
+import org.columba.mail.folder.AbstractLocalFolder;
 import org.columba.mail.folder.command.ExportFolderCommand;
 import org.columba.mail.folder.command.RenameFolderCommand;
 import org.columba.mail.folder.command.SyncSearchEngineCommand;
@@ -462,7 +462,7 @@ public class FolderOptionsDialog extends JDialog implements ActionListener,
 			 */
 
 			// only local folders have an full-text indexing capability
-			if (folder instanceof LocalFolder) {
+			if (folder instanceof AbstractLocalFolder) {
 				item = folder.getConfiguration();
 
 				boolean bool = item.getBoolean("property", "enable_lucene"); //$NON-NLS-1$ //$NON-NLS-2$
@@ -499,14 +499,14 @@ public class FolderOptionsDialog extends JDialog implements ActionListener,
 			}
 
 			//	only local folders have an full-text indexing capability
-			if (folder instanceof LocalFolder) {
+			if (folder instanceof AbstractLocalFolder) {
 				item = folder.getConfiguration();
 
 				boolean bool = enableTextIndexingCheckBox.isSelected();
 				item.set("property", "enable_lucene", bool); //$NON-NLS-1$ //$NON-NLS-2$
 
 				// cast to Local AbstractMessageFolder is safe here
-				LocalFolder localFolder = (LocalFolder) folder;
+				AbstractLocalFolder localFolder = (AbstractLocalFolder) folder;
 
 				DefaultSearchEngine engine = null;
 

@@ -28,7 +28,7 @@ import java.util.logging.Logger;
 
 import org.columba.core.io.StreamUtils;
 import org.columba.mail.folder.IDataStorage;
-import org.columba.mail.folder.LocalFolder;
+import org.columba.mail.folder.AbstractLocalFolder;
 import org.columba.ristretto.io.FileSource;
 import org.columba.ristretto.io.Source;
 
@@ -54,9 +54,9 @@ public class MHDataStorage implements IDataStorage {
     /** JDK 1.4+ logging framework logger, used for logging. */
     private static final Logger LOG = Logger.getLogger("org.columba.mail.folder.mh");
 
-    protected LocalFolder folder;
+    protected AbstractLocalFolder folder;
 
-    public MHDataStorage(LocalFolder folder) {
+    public MHDataStorage(AbstractLocalFolder folder) {
         this.folder = folder;
     }
 

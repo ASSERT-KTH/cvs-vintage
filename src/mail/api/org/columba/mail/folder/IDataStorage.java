@@ -26,13 +26,13 @@ import org.columba.ristretto.io.Source;
  * <p>
  * This makes it very easy to add new mailbox formats.
  * <p>
- * {@link LocalFolder} uses this interface and the singleton pattern
+ * {@link AbstractLocalFolder} uses this interface and the singleton pattern
  * to make this work in a plug'n'play manner.
  * <p>
  * If you want to add another custom local mailbox format, like mbox,
  * or maildir, etc. this is the interface you have to implement.
  * <p>
- * @see org.columba.mail.folder.LocalFolder
+ * @see org.columba.mail.folder.AbstractLocalFolder
  *
  * @author fdietz
  */

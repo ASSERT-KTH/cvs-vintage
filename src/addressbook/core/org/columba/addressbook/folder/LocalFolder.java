@@ -23,7 +23,7 @@ import org.columba.addressbook.model.IContact;
 
 /**
  *
- * LocalFolder-class gives as an additional abstraction-layer:
+ * AbstractLocalFolder-class gives as an additional abstraction-layer:
  *  --> IDataStorage
  *
  * this makes it very easy to add other folder-formats

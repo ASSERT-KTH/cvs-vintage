@@ -29,14 +29,14 @@ import org.columba.mail.config.FolderItem;
  *
  *  @author fdietz
  */
-public abstract class RemoteFolder extends AbstractMessageFolder {
+public abstract class AbstractRemoteFolder extends AbstractMessageFolder {
     //protected RemoteSearchEngine searchEngine;
 
     /**
- * Constructs a RemoteFolder.
+ * Constructs a AbstractRemoteFolder.
  * @param item information about the folder.
  */
-    public RemoteFolder(FolderItem item, String path) {
+    public AbstractRemoteFolder(FolderItem item, String path) {
         super(item, path);
 
         // TODO (@author fdietz): move this to AbstractMessageFolder constructor
@@ -55,7 +55,7 @@ public abstract class RemoteFolder extends AbstractMessageFolder {
  * @param name the name of the folder.
  * @param type the type of a folder.
  */
-    public RemoteFolder(String name, String type, String path) {
+    public AbstractRemoteFolder(String name, String type, String path) {
         super(name, type, path);
     }
 }

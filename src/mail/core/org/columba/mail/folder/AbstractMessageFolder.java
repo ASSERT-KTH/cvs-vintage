@@ -60,7 +60,7 @@ import org.columba.ristretto.message.MimeHeader;
  * <p>
  * Please note, that you only need to implement {@link DataStorageInstance}
  * which should be trivial in most cases. Then create a class extending
- * {@link LocalFolder}and plug your datastorage in this folder in overwriting
+ * {@link AbstractLocalFolder}and plug your datastorage in this folder in overwriting
  * getDataStorageInstance() method.
  * <p>
  * Last, don't forget to register your folder plugin:

@@ -51,7 +51,7 @@ import org.columba.core.util.ListTools;
 import org.columba.core.util.Mutex;
 import org.columba.mail.filter.MailFilterCriteria;
 import org.columba.mail.folder.IDataStorage;
-import org.columba.mail.folder.LocalFolder;
+import org.columba.mail.folder.AbstractLocalFolder;
 import org.columba.mail.folder.event.IFolderEvent;
 import org.columba.mail.message.ColumbaHeader;
 import org.columba.mail.message.ColumbaMessage;
@@ -86,12 +86,12 @@ public class LuceneQueryEngine implements QueryEngine {
     private int operationCounter;
     private Analyzer analyzer;
     private Mutex indexMutex;
-    private LocalFolder folder;
+    private AbstractLocalFolder folder;
 
     /**
      * Constructor for LuceneQueryEngine.
      */
-    public LuceneQueryEngine(LocalFolder folder) {
+    public LuceneQueryEngine(AbstractLocalFolder folder) {
         this.folder = folder;
 
         analyzer = new StandardAnalyzer();
@@ -509,8 +509,8 @@ public class LuceneQueryEngine implements QueryEngine {
     /** {@inheritDoc} */
     public void sync() throws Exception {
         //ColumbaLogger.log.severe("Lucene Index inconsistent - recreation forced");
-        IDataStorage ds = ((LocalFolder) folder).getDataStorageInstance();
-        IHeaderList hl = ((LocalFolder) folder).getHeaderList();
+        IDataStorage ds = ((AbstractLocalFolder) folder).getDataStorageInstance();
+        IHeaderList hl = ((AbstractLocalFolder) folder).getHeaderList();
 
         if (getObservable() != null) {
             getObservable().setMessage(MailResourceLoader.getString(

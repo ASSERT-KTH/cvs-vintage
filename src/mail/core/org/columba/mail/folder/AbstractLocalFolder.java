@@ -47,14 +47,14 @@ import org.columba.ristretto.parser.MessageParser;
 import org.columba.ristretto.parser.ParserException;
 
 /**
- * LocalFolder is a near-to working folder, which only needs a specific
+ * AbstractLocalFolder is a near-to working folder, which only needs a specific
  * {@link IDataStorage},{@link DefaultSearchEngine}and
  * {@link IHeaderListStorage}"plugged in" to make it work.
  * <p>
  * This class is abstract becaused, instead use {@link MHCachedFolder}a
  * complete implementation.
  * <p>
- * LocalFolder uses an internal {@link ColumbaMessage}object as cache. This
+ * AbstractLocalFolder uses an internal {@link ColumbaMessage}object as cache. This
  * allows parsing of a message only once, while accessing the data of the
  * message multiple times.
  * <p>
@@ -67,7 +67,7 @@ import org.columba.ristretto.parser.ParserException;
  * 
  * @author fdietz
  */
-public abstract class LocalFolder extends AbstractMessageFolder {
+public abstract class AbstractLocalFolder extends AbstractMessageFolder {
 
 	/** JDK 1.4+ logging framework logger, used for logging. */
 	private static final Logger LOG = Logger
@@ -95,7 +95,7 @@ public abstract class LocalFolder extends AbstractMessageFolder {
 	 *            <class>FolderItem </class> contains xml configuration of this
 	 *            folder
 	 */
-	public LocalFolder(FolderItem item, String path) {
+	public AbstractLocalFolder(FolderItem item, String path) {
 		super(item, path);
 
 		// TODO (@author fdietz): move this to AbstractMessageFolder constructor
@@ -118,7 +118,7 @@ public abstract class LocalFolder extends AbstractMessageFolder {
 	 * @param type
 	 *            type of folder.
 	 */
-	public LocalFolder(String name, String type, String path) {
+	public AbstractLocalFolder(String name, String type, String path) {
 		super(name, type, path);
 
 		// create filterlist datastructure
@@ -265,7 +265,7 @@ public abstract class LocalFolder extends AbstractMessageFolder {
 			messageSourceStream.close();
 
 			/*
-			 * ((LocalFolder) destFolder).setFlags(destuid, (Flags) getFlags(
+			 * ((AbstractLocalFolder) destFolder).setFlags(destuid, (Flags) getFlags(
 			 * uids[i]).clone());
 			 */
 			//destFolder.fireMessageAdded(uids[i]);
@@ -331,7 +331,7 @@ public abstract class LocalFolder extends AbstractMessageFolder {
 
 	/** {@inheritDoc} */
 	public boolean supportsAddFolder(IMailFolder newFolder) {
-		return ((newFolder instanceof LocalFolder) || (newFolder instanceof VirtualFolder));
+		return ((newFolder instanceof AbstractLocalFolder) || (newFolder instanceof VirtualFolder));
 	}
 
 	/**
