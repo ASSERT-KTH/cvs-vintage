@@ -1,0 +1,262 @@
+Using CATALINA_BASE:   ..
+Using CATALINA_HOME:   ..
+Using CATALINA_TMPDIR: ..\temp
+Using JAVA_HOME:       c:\java\j2sdk1.4.2_03
+Jan 28, 2004 6:54:38 PM org.apache.coyote.http11.Http11Protocol init
+INFO: Initializing Coyote HTTP/1.1 on port 8080
+Starting service Tomcat-Standalone
+Apache Tomcat/4.1.29-LE-jdk14
+[ERROR] AbstractDataSourceFactory - -Property: defaultMaxActive value: 30 is not supported by DataSource: org.apache.commons.dbcp.datasources.SharedPoolDataSource
+[ERROR] AbstractDataSourceFactory - -Property: defaultMaxWait value: 30000 is not supported by DataSource: org.apache.commons.dbcp.datasources.SharedPoolDataSource
+[INFO] TorqueInstance - -Added Manager for Class: org.tigris.scarab.om.Module -> org.tigris.scarab.om.ModuleManager
+[INFO] CompositeCacheConfigurator - -setting defaults to 
+[INFO] CompositeCacheConfigurator - -setting defaultCompositeCacheAttributes to [ useLateral = true, useRemote = true, useDisk = true, maxObjs = 1000 ]
+[WARN] OptionConverter - -Could not find value for key jcs.default.elementattributes
+[WARN] CompositeCacheConfigurator - -Could not instantiate eAttr named 'jcs.default.elementattributes', using defaults.
+[INFO] CompositeCacheConfigurator - -setting defaultElementAttributes to [ IS_LATERAL = false, IS_SPOOL = false, IS_REMOTE = false, IS_ETERNAL = true, MaxLifeSeconds = -1, IdleTime = -1, CreateTime = 1075312481809, LastAccessTime = 1075312481809, getTimeToLiveSeconds() = -1000, createTime = 1075312481809 ]
+[WARN] OptionConverter - -Could not find value for key jcs.system.groupIdCache.elementattributes
+[WARN] CompositeCacheConfigurator - -Could not instantiate eAttr named 'jcs.system.groupIdCache.elementattributes', using defaults.
+[INFO] LRUMemoryCache - -initialized LRUMemoryCache for groupIdCache
+[INFO] CompositeCache - -Constructed cache with name: groupIdCache
+[WARN] OptionConverter - -Could not find value for key jcs.region.org_tigris_scarab_om_Module.elementattributes
+[WARN] CompositeCacheConfigurator - -Could not instantiate eAttr named 'jcs.region.org_tigris_scarab_om_Module.elementattributes', using defaults.
+[INFO] LRUMemoryCache - -initialized LRUMemoryCache for org_tigris_scarab_om_Module
+[INFO] CompositeCache - -Constructed cache with name: org_tigris_scarab_om_Module
+[WARN] OptionConverter - -Could not find value for key jcs.region.org_tigris_scarab_om_AttributeClass.elementattributes
+[WARN] CompositeCacheConfigurator - -Could not instantiate eAttr named 'jcs.region.org_tigris_scarab_om_AttributeClass.elementattributes', using defaults.
+[INFO] LRUMemoryCache - -initialized LRUMemoryCache for org_tigris_scarab_om_AttributeClass
+[INFO] CompositeCache - -Constructed cache with name: org_tigris_scarab_om_AttributeClass
+[WARN] OptionConverter - -Could not find value for key jcs.region.org_tigris_scarab_om_AttributeOption.elementattributes
+[WARN] CompositeCacheConfigurator - -Could not instantiate eAttr named 'jcs.region.org_tigris_scarab_om_AttributeOption.elementattributes', using defaults.
+[INFO] LRUMemoryCache - -initialized LRUMemoryCache for org_tigris_scarab_om_AttributeOption
+[INFO] CompositeCache - -Constructed cache with name: org_tigris_scarab_om_AttributeOption
+[WARN] OptionConverter - -Could not find value for key jcs.region.org_tigris_scarab_om_AttributeGroup.elementattributes
+[WARN] CompositeCacheConfigurator - -Could not instantiate eAttr named 'jcs.region.org_tigris_scarab_om_AttributeGroup.elementattributes', using defaults.
+[INFO] LRUMemoryCache - -initialized LRUMemoryCache for org_tigris_scarab_om_AttributeGroup
+[INFO] CompositeCache - -Constructed cache with name: org_tigris_scarab_om_AttributeGroup
+[WARN] OptionConverter - -Could not find value for key jcs.region.org_tigris_scarab_om_Issue.elementattributes
+[WARN] CompositeCacheConfigurator - -Could not instantiate eAttr named 'jcs.region.org_tigris_scarab_om_Issue.elementattributes', using defaults.
+[INFO] LRUMemoryCache - -initialized LRUMemoryCache for org_tigris_scarab_om_Issue
+[INFO] CompositeCache - -Constructed cache with name: org_tigris_scarab_om_Issue
+[WARN] OptionConverter - -Could not find value for key jcs.region.org_tigris_scarab_om_Query.elementattributes
+[WARN] CompositeCacheConfigurator - -Could not instantiate eAttr named 'jcs.region.org_tigris_scarab_om_Query.elementattributes', using defaults.
+[INFO] LRUMemoryCache - -initialized LRUMemoryCache for org_tigris_scarab_om_Query
+[INFO] CompositeCache - -Constructed cache with name: org_tigris_scarab_om_Query
+[WARN] OptionConverter - -Could not find value for key jcs.region.org_tigris_scarab_om_UserPreference.elementattributes
+[WARN] CompositeCacheConfigurator - -Could not instantiate eAttr named 'jcs.region.org_tigris_scarab_om_UserPreference.elementattributes', using defaults.
+[INFO] LRUMemoryCache - -initialized LRUMemoryCache for org_tigris_scarab_om_UserPreference
+[INFO] CompositeCache - -Constructed cache with name: org_tigris_scarab_om_UserPreference
+[WARN] OptionConverter - -Could not find value for key jcs.region.org_tigris_scarab_om_ScarabUser.elementattributes
+[WARN] CompositeCacheConfigurator - -Could not instantiate eAttr named 'jcs.region.org_tigris_scarab_om_ScarabUser.elementattributes', using defaults.
+[INFO] LRUMemoryCache - -initialized LRUMemoryCache for org_tigris_scarab_om_ScarabUser
+[INFO] CompositeCache - -Constructed cache with name: org_tigris_scarab_om_ScarabUser
+[WARN] OptionConverter - -Could not find value for key jcs.region.org_tigris_scarab_om_RModuleIssueType.elementattributes
+[WARN] CompositeCacheConfigurator - -Could not instantiate eAttr named 'jcs.region.org_tigris_scarab_om_RModuleIssueType.elementattributes', using defaults.
+[INFO] LRUMemoryCache - -initialized LRUMemoryCache for org_tigris_scarab_om_RModuleIssueType
+[INFO] CompositeCache - -Constructed cache with name: org_tigris_scarab_om_RModuleIssueType
+[WARN] OptionConverter - -Could not find value for key jcs.region.org_tigris_scarab_om_AttributeType.elementattributes
+[WARN] CompositeCacheConfigurator - -Could not instantiate eAttr named 'jcs.region.org_tigris_scarab_om_AttributeType.elementattributes', using defaults.
+[INFO] LRUMemoryCache - -initialized LRUMemoryCache for org_tigris_scarab_om_AttributeType
+[INFO] CompositeCache - -Constructed cache with name: org_tigris_scarab_om_AttributeType
+[WARN] OptionConverter - -Could not find value for key jcs.region.org_tigris_scarab_om_AttributeValue.elementattributes
+[WARN] CompositeCacheConfigurator - -Could not instantiate eAttr named 'jcs.region.org_tigris_scarab_om_AttributeValue.elementattributes', using defaults.
+[INFO] LRUMemoryCache - -initialized LRUMemoryCache for org_tigris_scarab_om_AttributeValue
+[INFO] CompositeCache - -Constructed cache with name: org_tigris_scarab_om_AttributeValue
+[WARN] OptionConverter - -Could not find value for key jcs.region.org_tigris_scarab_om_Attribute.elementattributes
+[WARN] CompositeCacheConfigurator - -Could not instantiate eAttr named 'jcs.region.org_tigris_scarab_om_Attribute.elementattributes', using defaults.
+[INFO] LRUMemoryCache - -initialized LRUMemoryCache for org_tigris_scarab_om_Attribute
+[INFO] CompositeCache - -Constructed cache with name: org_tigris_scarab_om_Attribute
+[WARN] OptionConverter - -Could not find value for key jcs.region.org_tigris_scarab_om_IssueType.elementattributes
+[WARN] CompositeCacheConfigurator - -Could not instantiate eAttr named 'jcs.region.org_tigris_scarab_om_IssueType.elementattributes', using defaults.
+[INFO] LRUMemoryCache - -initialized LRUMemoryCache for org_tigris_scarab_om_IssueType
+[INFO] CompositeCache - -Constructed cache with name: org_tigris_scarab_om_IssueType
+[INFO] TorqueInstance - -Added Manager for Class: org.tigris.scarab.om.ScarabUser -> org.tigris.scarab.om.ScarabUserManager
+[WARN] OptionConverter - -Could not find value for key jcs.region.org_tigris_scarab_om_DependType.elementattributes
+[WARN] CompositeCacheConfigurator - -Could not instantiate eAttr named 'jcs.region.org_tigris_scarab_om_DependType.elementattributes', using defaults.
+[INFO] LRUMemoryCache - -initialized LRUMemoryCache for org_tigris_scarab_om_DependType
+[INFO] CompositeCache - -Constructed cache with name: org_tigris_scarab_om_DependType
+[WARN] OptionConverter - -Could not find value for key jcs.region.org_tigris_scarab_om_GlobalParameter.elementattributes
+[WARN] CompositeCacheConfigurator - -Could not instantiate eAttr named 'jcs.region.org_tigris_scarab_om_GlobalParameter.elementattributes', using defaults.
+[INFO] LRUMemoryCache - -initialized LRUMemoryCache for org_tigris_scarab_om_GlobalParameter
+[INFO] CompositeCache - -Constructed cache with name: org_tigris_scarab_om_GlobalParameter
+[WARN] AbstractBaseManager - -GlobalParameter scarab.http.domain does not exist!
+[WARN] AbstractBaseManager - -GlobalParameter scarab.http.scheme does not exist!
+[WARN] AbstractBaseManager - -GlobalParameter scarab.http.port does not exist!
+java.lang.NullPointerException
+	at org.apache.commons.xo.Mapper.treeWalk(Mapper.java:504)
+	at org.apache.commons.xo.Mapper.treeWalk(Mapper.java:428)
+	at org.apache.commons.xo.Mapper.map(Mapper.java:393)
+	at org.apache.commons.xo.Mapper.map(Mapper.java:346)
+	at org.apache.commons.xo.Mapper.map(Mapper.java:270)
+	at org.apache.turbine.Turbine.configure(Turbine.java:705)
+	at org.apache.turbine.Turbine.init(Turbine.java:189)
+	at org.apache.catalina.core.StandardWrapper.loadServlet(StandardWrapper.java:935)
+	at org.apache.catalina.core.StandardWrapper.load(StandardWrapper.java:823)
+	at org.apache.catalina.core.StandardContext.loadOnStartup(StandardContext.java:3422)
+	at org.apache.catalina.core.StandardContext.start(StandardContext.java:3623)
+	at org.apache.catalina.core.ContainerBase.addChildInternal(ContainerBase.java:821)
+	at org.apache.catalina.core.ContainerBase.addChild(ContainerBase.java:807)
+	at org.apache.catalina.core.StandardHost.addChild(StandardHost.java:595)
+	at org.apache.catalina.core.StandardHostDeployer.addChild(StandardHostDeployer.java:700)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:39)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:25)
+	at java.lang.reflect.Method.invoke(Method.java:324)
+	at org.apache.commons.beanutils.MethodUtils.invokeMethod(MethodUtils.java:252)
+	at org.apache.commons.digester.SetNextRule.end(SetNextRule.java:256)
+	at org.apache.commons.digester.Rule.end(Rule.java:276)
+	at org.apache.commons.digester.Digester.endElement(Digester.java:1058)
+	at org.apache.xerces.parsers.AbstractSAXParser.endElement(Unknown Source)
+	at org.apache.xerces.impl.XMLDocumentFragmentScannerImpl.scanEndElement(Unknown Source)
+	at org.apache.xerces.impl.XMLDocumentFragmentScannerImpl$FragmentContentDispatcher.dispatch(Unknown Source)
+	at org.apache.xerces.impl.XMLDocumentFragmentScannerImpl.scanDocument(Unknown Source)
+	at org.apache.xerces.parsers.DTDConfiguration.parse(Unknown Source)
+	at org.apache.xerces.parsers.DTDConfiguration.parse(Unknown Source)
+	at org.apache.xerces.parsers.XMLParser.parse(Unknown Source)
+	at org.apache.xerces.parsers.AbstractSAXParser.parse(Unknown Source)
+	at org.apache.commons.digester.Digester.parse(Digester.java:1567)
+	at org.apache.catalina.core.StandardHostDeployer.install(StandardHostDeployer.java:385)
+	at org.apache.catalina.core.StandardHost.install(StandardHost.java:819)
+	at org.apache.catalina.startup.HostConfig.deployDescriptors(HostConfig.java:442)
+	at org.apache.catalina.startup.HostConfig.deployApps(HostConfig.java:399)
+	at org.apache.catalina.startup.HostConfig.start(HostConfig.java:718)
+	at org.apache.catalina.startup.HostConfig.lifecycleEvent(HostConfig.java:358)
+	at org.apache.catalina.util.LifecycleSupport.fireLifecycleEvent(LifecycleSupport.java:166)
+	at org.apache.catalina.core.ContainerBase.start(ContainerBase.java:1196)
+	at org.apache.catalina.core.StandardHost.start(StandardHost.java:754)
+	at org.apache.catalina.core.ContainerBase.start(ContainerBase.java:1188)
+	at org.apache.catalina.core.StandardEngine.start(StandardEngine.java:363)
+	at org.apache.catalina.core.StandardService.start(StandardService.java:497)
+	at org.apache.catalina.core.StandardServer.start(StandardServer.java:2190)
+	at org.apache.catalina.startup.Catalina.start(Catalina.java:512)
+	at org.apache.catalina.startup.Catalina.execute(Catalina.java:400)
+	at org.apache.catalina.startup.Catalina.process(Catalina.java:180)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:39)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:25)
+	at java.lang.reflect.Method.invoke(Method.java:324)
+	at org.apache.catalina.startup.Bootstrap.main(Bootstrap.java:203)
+[ERROR] Turbine - -java.lang.NullPointerException
+org.apache.turbine.TurbineException: java.lang.NullPointerException
+	at org.apache.turbine.Turbine.configure(Turbine.java:728)
+	at org.apache.turbine.Turbine.init(Turbine.java:189)
+	at org.apache.catalina.core.StandardWrapper.loadServlet(StandardWrapper.java:935)
+	at org.apache.catalina.core.StandardWrapper.load(StandardWrapper.java:823)
+	at org.apache.catalina.core.StandardContext.loadOnStartup(StandardContext.java:3422)
+	at org.apache.catalina.core.StandardContext.start(StandardContext.java:3623)
+	at org.apache.catalina.core.ContainerBase.addChildInternal(ContainerBase.java:821)
+	at org.apache.catalina.core.ContainerBase.addChild(ContainerBase.java:807)
+	at org.apache.catalina.core.StandardHost.addChild(StandardHost.java:595)
+	at org.apache.catalina.core.StandardHostDeployer.addChild(StandardHostDeployer.java:700)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:39)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:25)
+	at java.lang.reflect.Method.invoke(Method.java:324)
+	at org.apache.commons.beanutils.MethodUtils.invokeMethod(MethodUtils.java:252)
+	at org.apache.commons.digester.SetNextRule.end(SetNextRule.java:256)
+	at org.apache.commons.digester.Rule.end(Rule.java:276)
+	at org.apache.commons.digester.Digester.endElement(Digester.java:1058)
+	at org.apache.xerces.parsers.AbstractSAXParser.endElement(Unknown Source)
+	at org.apache.xerces.impl.XMLDocumentFragmentScannerImpl.scanEndElement(Unknown Source)
+	at org.apache.xerces.impl.XMLDocumentFragmentScannerImpl$FragmentContentDispatcher.dispatch(Unknown Source)
+	at org.apache.xerces.impl.XMLDocumentFragmentScannerImpl.scanDocument(Unknown Source)
+	at org.apache.xerces.parsers.DTDConfiguration.parse(Unknown Source)
+	at org.apache.xerces.parsers.DTDConfiguration.parse(Unknown Source)
+	at org.apache.xerces.parsers.XMLParser.parse(Unknown Source)
+	at org.apache.xerces.parsers.AbstractSAXParser.parse(Unknown Source)
+	at org.apache.commons.digester.Digester.parse(Digester.java:1567)
+	at org.apache.catalina.core.StandardHostDeployer.install(StandardHostDeployer.java:385)
+	at org.apache.catalina.core.StandardHost.install(StandardHost.java:819)
+	at org.apache.catalina.startup.HostConfig.deployDescriptors(HostConfig.java:442)
+	at org.apache.catalina.startup.HostConfig.deployApps(HostConfig.java:399)
+	at org.apache.catalina.startup.HostConfig.start(HostConfig.java:718)
+	at org.apache.catalina.startup.HostConfig.lifecycleEvent(HostConfig.java:358)
+	at org.apache.catalina.util.LifecycleSupport.fireLifecycleEvent(LifecycleSupport.java:166)
+	at org.apache.catalina.core.ContainerBase.start(ContainerBase.java:1196)
+	at org.apache.catalina.core.StandardHost.start(StandardHost.java:754)
+	at org.apache.catalina.core.ContainerBase.start(ContainerBase.java:1188)
+	at org.apache.catalina.core.StandardEngine.start(StandardEngine.java:363)
+	at org.apache.catalina.core.StandardService.start(StandardService.java:497)
+	at org.apache.catalina.core.StandardServer.start(StandardServer.java:2190)
+	at org.apache.catalina.startup.Catalina.start(Catalina.java:512)
+	at org.apache.catalina.startup.Catalina.execute(Catalina.java:400)
+	at org.apache.catalina.startup.Catalina.process(Catalina.java:180)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:39)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:25)
+	at java.lang.reflect.Method.invoke(Method.java:324)
+	at org.apache.catalina.startup.Bootstrap.main(Bootstrap.java:203)
+Caused by: java.lang.NullPointerException
+	at org.apache.commons.xo.Mapper.treeWalk(Mapper.java:504)
+	at org.apache.commons.xo.Mapper.treeWalk(Mapper.java:428)
+	at org.apache.commons.xo.Mapper.map(Mapper.java:393)
+	at org.apache.commons.xo.Mapper.map(Mapper.java:346)
+	at org.apache.commons.xo.Mapper.map(Mapper.java:270)
+	at org.apache.turbine.Turbine.configure(Turbine.java:705)
+	... 47 more
+
+[INFO] Turbine - -init failed: org.apache.turbine.TurbineException: java.lang.NullPointerException
+	at org.apache.turbine.Turbine.configure(Turbine.java:728)
+	at org.apache.turbine.Turbine.init(Turbine.java:189)
+	at org.apache.catalina.core.StandardWrapper.loadServlet(StandardWrapper.java:935)
+	at org.apache.catalina.core.StandardWrapper.load(StandardWrapper.java:823)
+	at org.apache.catalina.core.StandardContext.loadOnStartup(StandardContext.java:3422)
+	at org.apache.catalina.core.StandardContext.start(StandardContext.java:3623)
+	at org.apache.catalina.core.ContainerBase.addChildInternal(ContainerBase.java:821)
+	at org.apache.catalina.core.ContainerBase.addChild(ContainerBase.java:807)
+	at org.apache.catalina.core.StandardHost.addChild(StandardHost.java:595)
+	at org.apache.catalina.core.StandardHostDeployer.addChild(StandardHostDeployer.java:700)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:39)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:25)
+	at java.lang.reflect.Method.invoke(Method.java:324)
+	at org.apache.commons.beanutils.MethodUtils.invokeMethod(MethodUtils.java:252)
+	at org.apache.commons.digester.SetNextRule.end(SetNextRule.java:256)
+	at org.apache.commons.digester.Rule.end(Rule.java:276)
+	at org.apache.commons.digester.Digester.endElement(Digester.java:1058)
+	at org.apache.xerces.parsers.AbstractSAXParser.endElement(Unknown Source)
+	at org.apache.xerces.impl.XMLDocumentFragmentScannerImpl.scanEndElement(Unknown Source)
+	at org.apache.xerces.impl.XMLDocumentFragmentScannerImpl$FragmentContentDispatcher.dispatch(Unknown Source)
+	at org.apache.xerces.impl.XMLDocumentFragmentScannerImpl.scanDocument(Unknown Source)
+	at org.apache.xerces.parsers.DTDConfiguration.parse(Unknown Source)
+	at org.apache.xerces.parsers.DTDConfiguration.parse(Unknown Source)
+	at org.apache.xerces.parsers.XMLParser.parse(Unknown Source)
+	at org.apache.xerces.parsers.AbstractSAXParser.parse(Unknown Source)
+	at org.apache.commons.digester.Digester.parse(Digester.java:1567)
+	at org.apache.catalina.core.StandardHostDeployer.install(StandardHostDeployer.java:385)
+	at org.apache.catalina.core.StandardHost.install(StandardHost.java:819)
+	at org.apache.catalina.startup.HostConfig.deployDescriptors(HostConfig.java:442)
+	at org.apache.catalina.startup.HostConfig.deployApps(HostConfig.java:399)
+	at org.apache.catalina.startup.HostConfig.start(HostConfig.java:718)
+	at org.apache.catalina.startup.HostConfig.lifecycleEvent(HostConfig.java:358)
+	at org.apache.catalina.util.LifecycleSupport.fireLifecycleEvent(LifecycleSupport.java:166)
+	at org.apache.catalina.core.ContainerBase.start(ContainerBase.java:1196)
+	at org.apache.catalina.core.StandardHost.start(StandardHost.java:754)
+	at org.apache.catalina.core.ContainerBase.start(ContainerBase.java:1188)
+	at org.apache.catalina.core.StandardEngine.start(StandardEngine.java:363)
+	at org.apache.catalina.core.StandardService.start(StandardService.java:497)
+	at org.apache.catalina.core.StandardServer.start(StandardServer.java:2190)
+	at org.apache.catalina.startup.Catalina.start(Catalina.java:512)
+	at org.apache.catalina.startup.Catalina.execute(Catalina.java:400)
+	at org.apache.catalina.startup.Catalina.process(Catalina.java:180)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:39)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:25)
+	at java.lang.reflect.Method.invoke(Method.java:324)
+	at org.apache.catalina.startup.Bootstrap.main(Bootstrap.java:203)
+Caused by: java.lang.NullPointerException
+	at org.apache.commons.xo.Mapper.treeWalk(Mapper.java:504)
+	at org.apache.commons.xo.Mapper.treeWalk(Mapper.java:428)
+	at org.apache.commons.xo.Mapper.map(Mapper.java:393)
+	at org.apache.commons.xo.Mapper.map(Mapper.java:346)
+	at org.apache.commons.xo.Mapper.map(Mapper.java:270)
+	at org.apache.turbine.Turbine.configure(Turbine.java:705)
+	... 47 more
+
+Jan 28, 2004 6:54:43 PM org.apache.coyote.http11.Http11Protocol start
+INFO: Starting Coyote HTTP/1.1 on port 8080
+Stopping service Tomcat-Standalone
+Jan 28, 2004 6:54:54 PM org.apache.coyote.http11.Http11Protocol destroy
+INFO: Stoping http11 protocol on 8080 null
+[INFO] Turbine - -Done shutting down!
+Terminate batch job (Y/N)? 
