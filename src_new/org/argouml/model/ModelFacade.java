@@ -1,4 +1,4 @@
-// $Id: ModelFacade.java,v 1.26 2003/02/09 01:00:31 d00mst Exp $
+// $Id: ModelFacade.java,v 1.27 2003/02/12 10:38:04 mkl Exp $
 // Copyright (c) 2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -940,11 +940,14 @@ public class ModelFacade {
      * @returns the type
      */
     public static Object getType(Object handle) {
-        if (handle instanceof MAttribute) {
+        if (handle instanceof MStructuralFeature) {
             return ((MAttribute)handle).getType();
         }
         if (handle instanceof MAssociationEnd) {
             return ((MAssociationEnd)handle).getType();
+        }
+        if (handle instanceof MParameter) {
+            return ((MParameter)handle).getType();
         }
 
         // ...
