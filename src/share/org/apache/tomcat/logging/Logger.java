@@ -236,12 +236,12 @@ public abstract class Logger {
     public static final int INFORMATION = 3;
     public static final int DEBUG = 4;
     
-    
+
     /**
      * Set the verbosity level for this logger. This controls how the
      * logs will be filtered. 
      *
-     * @param	level		one of the verbosity level codes. 
+     * @param	level		one of the verbosity level strings. 
      */
     public void setVerbosityLevel(String level) {
 	if ("warning".equalsIgnoreCase(level))
@@ -254,6 +254,16 @@ public abstract class Logger {
 	    this.level = INFORMATION;
 	else if ("debug".equalsIgnoreCase(level))
 	    this.level = DEBUG;
+    }
+
+    /**
+     * Set the verbosity level for this logger. This controls how the
+     * logs will be filtered. 
+     *
+     * @param	level		one of the verbosity level codes. 
+     */
+    public void setVerbosityLevel(int level) {
+	this.level = level;
     }
     
     /**
