@@ -1,5 +1,14 @@
+$l10n.Details:
+---------------------------------------------------------------------
+
 $l10n.format("UserSubmittedQuery", $user.UserName, $module.Name)
 
-$l10n.ToApprove
+$l10n.ToApprove:
 
-<$link.overrideSecurity().setPage("admin,Approval.vm").setAbsolute(true).setEncodeURLOff()>
+    $link.overrideSecurity().setPage("admin,Approval.vm").setAbsolute(true).setEncodeURLOff()
+
+---------------------------------------------------------------------
+$l10n.EmailFooterA
+$l10n.EmailFooterB
+$l10n.EmailFooterC
+$l10n.EmailFooterD

@@ -8,14 +8,25 @@
 #set ($msgArgs = [$oldModule, $newModule, $newIssueType, $user.UserName])
 $l10n.format("IssueMoved", $issue.UniqueId, $actionWord) $l10n.format("IssueMoved2", $msgArgs) 
 
-$l10n.YouCanViewIssue
+$l10n.YouCanViewIssue:
 
-    <$link.getIssueIdAbsoluteLink($issue)>
+    $link.getIssueIdAbsoluteLink($issue)
 
-#if ($reason.length >0)
-The reason: $reason
+$l10n.Details:
+---------------------------------------------------------------------
+
+#if ($reason && $reason.length() > 0)
+$l10n.Reason:
+$reason
 #end
 
-#if ($attachment.Data)
-$l10n.Comment  $attachment.Data
+#set ($attachmentData = $attachment.Data)
+#if ($attachmentData && $attachmentData.length() > 0)
+$l10n.Comment:
+$attachmentData
 #end
+---------------------------------------------------------------------
+$l10n.EmailFooterA
+$l10n.EmailFooterB
+$l10n.EmailFooterC
+$l10n.EmailFooterD

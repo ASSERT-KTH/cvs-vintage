@@ -1,3 +1,5 @@
+$l10n.Details:
+---------------------------------------------------------------------
 
 $l10n.format("Welcome", $!scarabR.User.FirstName, $!scarabR.User.LastName)
 
@@ -7,9 +9,13 @@ $l10n.format("YourConfirmation", $scarabR.User.Confirmed)
 
 $l10n.ToConfirmYourAccount
 
-<$link.setPage("Confirm.vm").addPathInfo("Confirm", $scarabR.User.Confirmed).addPathInfo("Email",$scarabR.User.Email).setAbsolute(true).setEncodeURLOff()>
+    $link.setPage("Confirm.vm").addPathInfo("Confirm", $scarabR.User.Confirmed).addPathInfo("Email",$scarabR.User.Email).setAbsolute(true).setEncodeURLOff()
 
 
 $l10n.Thanks
 
-      $l10n.Scarab
+---------------------------------------------------------------------
+$l10n.EmailFooterA
+$l10n.EmailFooterB
+$l10n.EmailFooterC
+$l10n.EmailFooterD

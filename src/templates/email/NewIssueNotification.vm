@@ -1,15 +1,17 @@
 #set ($user = $issue.ModifiedBy)
 #set ($module = $issue.Module)
 #set ($issueType = $issue.IssueType)
-$l10n.YouCanViewIssue
-<$link.getIssueIdAbsoluteLink($issue)>
+$l10n.YouCanViewIssue:
 
-$l10n.Type $l10n.Colon        $issue.RModuleIssueType.DisplayName
-$l10n.IssueId $l10n.Colon    $issue.UniqueId
-$l10n.ReportedBy $user.Name
-             $user.UserName - ($user.Email)
+    $link.getIssueIdAbsoluteLink($issue)
 
-$l10n.Details
+$l10n.Type:        $issue.RModuleIssueType.DisplayName
+$l10n.IssueId:    $issue.UniqueId
+$l10n.ReportedBy: $user.Name
+             $user.UserName ($user.Email)
+
+$l10n.Details:
+---------------------------------------------------------------------
 
 #set ($attrValues = $issue.AttributeValuesMap)
 #foreach ($group in $module.getAttributeGroups($issueType))
@@ -24,3 +26,9 @@ $rma.DisplayValue: $attVal.Value
 #end
 #end
 #end
+
+---------------------------------------------------------------------
+$l10n.EmailFooterA
+$l10n.EmailFooterB
+$l10n.EmailFooterC
+$l10n.EmailFooterD

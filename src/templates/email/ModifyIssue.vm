@@ -1,12 +1,15 @@
 #set ($user = $data.User)
-$l10n.format("IssueModified", $issue.UniqueId, $issue.DefaultText)
-$l10n.format("IssueModifiedBy", $user.UserName)
+$l10n.Issue:       $issue.UniqueId ($issue.DefaultText)
+$l10n.ModifiedBy: $user.Name
+             $user.UserName ($user.Email)
 
-$l10n.YouCanViewIssue
-     <$link.getIssueIdAbsoluteLink($issue)>
+$l10n.YouCanViewIssue:
+
+     $link.getIssueIdAbsoluteLink($issue)
+
 #if (!$activityList.isEmpty())
-
-$l10n.ModificationsMade
+$l10n.ModificationsMade:
+---------------------------------------------------------------------
 #set ($actAttData = $activity.Attachment.Data)
 #set ($firstTime = true)
 #foreach ($activity in $activityList)
@@ -32,14 +35,20 @@ $activity.Description
 $activity.Description
 
 #if ($attachment.Data && ! $attachment.Data.toString().equals($activity.Description.toString()))
-$l10n.Comment
+$l10n.Comment:
 $attachment.Data
 #end
 #end
 #end
 #if ($actSetAttach && $actSetAttach.toString().length() > 0)
 
-$l10n.Comment
+$l10n.Comment:
 $actSetAttach
 #end
 #end
+
+---------------------------------------------------------------------
+$l10n.EmailFooterA
+$l10n.EmailFooterB
+$l10n.EmailFooterC
+$l10n.EmailFooterD

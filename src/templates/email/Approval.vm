@@ -1,8 +1,21 @@
+$l10n.Details:
+---------------------------------------------------------------------
+
 $body
 
+#if($comment)
 
+$l10n.Comment:
+$comment
+#end
+#if($globalComment)
 
-#if($comment)$l10n.Comment $comment #end
+$l10n.GeneralComment:
+$globalComment
+#end
 
-
-#if($globalComment)$l10n.GeneralComment $globalComment #end
+---------------------------------------------------------------------
+$l10n.EmailFooterA
+$l10n.EmailFooterB
+$l10n.EmailFooterC
+$l10n.EmailFooterD
