@@ -40,7 +40,7 @@ import org.gjt.sp.jedit.*;
 /**
  * VFS browser tree view.
  * @author Slava Pestov
- * @version $Id: BrowserView.java,v 1.18 2001/12/21 07:02:14 spestov Exp $
+ * @version $Id: BrowserView.java,v 1.19 2001/12/23 05:37:00 spestov Exp $
  */
 public class BrowserView extends JPanel
 {
@@ -77,9 +77,6 @@ public class BrowserView extends JPanel
 		treeScroller.setMinimumSize(new Dimension(0,0));
 		splitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT,
 			parentScroller,treeScroller);
-		// not null, because then it would be reset to the
-		// default by updateUI()
-		splitPane.setBorder(new EmptyBorder(0,0,0,0));
 
 		tmpExpanded = new Hashtable();
 
@@ -556,6 +553,8 @@ public class BrowserView extends JPanel
 					timer.start();
 					break;
 				}
+
+				return;
 			}
 
 			if(!evt.isConsumed())
@@ -730,7 +729,6 @@ public class BrowserView extends JPanel
 					VFS.DirectoryEntry file = (VFS.DirectoryEntry)obj;
 					if(file.name.regionMatches(true,0,str,0,str.length()))
 					{
-						clearSelection();
 						setSelectionRow(i);
 						scrollRowToVisible(i);
 						return true;

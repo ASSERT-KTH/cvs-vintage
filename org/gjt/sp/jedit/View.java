@@ -38,7 +38,7 @@ import org.gjt.sp.util.Log;
  * class.
  *
  * @author Slava Pestov
- * @version $Id: View.java,v 1.8 2001/12/21 07:02:14 spestov Exp $
+ * @version $Id: View.java,v 1.9 2001/12/23 05:37:00 spestov Exp $
  */
 public class View extends JFrame implements EBComponent
 {
@@ -86,6 +86,7 @@ public class View extends JFrame implements EBComponent
 		searchBar.setHyperSearch(false);
 		searchBar.getField().setText(text);
 		searchBar.getField().requestFocus();
+		searchBar.getField().selectAll();
 	}
 
 	/**
@@ -122,6 +123,7 @@ public class View extends JFrame implements EBComponent
 		{
 			searchBar.getField().setText(null);
 			searchBar.getField().requestFocus();
+			searchBar.getField().selectAll();
 		}
 	}
 
@@ -237,9 +239,6 @@ public class View extends JFrame implements EBComponent
 			Component left = oldSplitPane.getLeftComponent();
 			final JSplitPane newSplitPane = new JSplitPane(orientation,
 				oldEditPane,editPane);
-			// not null, because then it would be reset to the
-			// default by updateUI()
-			newSplitPane.setBorder(new EmptyBorder(0,0,0,0));
 
 			if(left == oldEditPane)
 				oldSplitPane.setLeftComponent(newSplitPane);

@@ -1,5 +1,5 @@
 # Properties file for QuickNotepad plugin
-# $Id: QuickNotepad.props,v 1.7 2001/11/14 09:35:20 spestov Exp $
+# $Id: QuickNotepad.props,v 1.8 2001/12/23 05:37:00 spestov Exp $
 
 # general plugin information
 plugin.QuickNotepadPlugin.name=QuickNotepad
@@ -19,7 +19,7 @@ quicknotepad.copy-to-buffer.label=Copy notepad to buffer
 
 # application menu items
 quicknotepad.menu.label=QuickNotepad
-quicknotepad.menu=quicknotepad-toggle - quicknotepad.choose-file \
+quicknotepad.menu=quicknotepad - quicknotepad.choose-file \
 	quicknotepad.save-file quicknotepad.copy-to-buffer
 
 # window title

@@ -34,7 +34,7 @@ import org.gjt.sp.util.Log;
 /**
  * An abstract tabbed options dialog box.
  * @author Slava Pestov
- * @version $Id: OptionsDialog.java,v 1.4 2001/12/22 08:39:54 spestov Exp $
+ * @version $Id: OptionsDialog.java,v 1.5 2001/12/23 05:37:00 spestov Exp $
  */
 public class OptionsDialog extends EnhancedDialog
 	implements ActionListener, TreeSelectionListener
@@ -100,18 +100,14 @@ public class OptionsDialog extends EnhancedDialog
 
 		content.add(buttons, BorderLayout.SOUTH);
 
-		// compute the jEdit branch
-		TreePath jEditPath = new TreePath(new Object[]{ paneTree
-			.getModel().getRoot(), jEditGroup });
-
 		// register the Options dialog as a TreeSelectionListener.
 		// this is done before the initial selection to ensure that the
 		// first selected OptionPane is displayed on startup.
 		paneTree.getSelectionModel().addTreeSelectionListener(this);
 
-		// select the first member of the jEdit group
-		paneTree.setSelectionPath(jEditPath.pathByAddingChild(
-			jEditGroup.getMember(0)));
+		paneTree.expandPath(new TreePath(
+			new Object[] { paneTree.getModel().getRoot(), jEditGroup }));
+		paneTree.setSelectionRow(0);
 
 		view.hideWaitCursor();
 
