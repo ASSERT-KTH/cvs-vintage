@@ -34,20 +34,20 @@ import javax.management.ReflectionException;
  * is nearly the same as the MBeanServer Interface but
  * has an additional RemoteException.
  *
- * @version <tt>$Revision: 1.4 $</tt>
+ * @version <tt>$Revision: 1.5 $</tt>
  * @author  <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  * @author  <A href="mailto:andreas@jboss.org">Andreas &quot;Mad&quot; Schaefer</A>
  * @author  <a href="mailto:jason@planet57.com">Jason Dillon</a>
  */
-public interface RMIAdaptor 
+public interface RMIAdaptor
    extends Remote
 {
    Object instantiate(String className)
       throws ReflectionException, MBeanException, RemoteException;
-   
-   Object instantiate(String className, ObjectName loaderName) 
+
+   Object instantiate(String className, ObjectName loaderName)
       throws ReflectionException, MBeanException, InstanceNotFoundException, RemoteException;
-   
+
    Object instantiate(String className, Object[] params, String[] signature)
       throws ReflectionException, MBeanException, RemoteException;
 
@@ -56,7 +56,7 @@ public interface RMIAdaptor
                              Object[] params,
                              String[] signature)
       throws ReflectionException, MBeanException, InstanceNotFoundException, RemoteException;
-   
+
    ObjectInstance createMBean(String pClassName, ObjectName pName)
       throws ReflectionException,
              InstanceAlreadyExistsException,
@@ -64,7 +64,7 @@ public interface RMIAdaptor
              MBeanException,
              NotCompliantMBeanException,
              RemoteException;
-   
+
    ObjectInstance createMBean(String pClassName,
                               ObjectName pName,
                               ObjectName pLoaderName)
@@ -100,7 +100,7 @@ public interface RMIAdaptor
              InstanceNotFoundException,
              RemoteException;
 
-   ObjectInstance registerMBean(Object object, ObjectName name) 
+   ObjectInstance registerMBean(Object object, ObjectName name)
       throws InstanceAlreadyExistsException,
              MBeanRegistrationException,
              NotCompliantMBeanException,
@@ -166,6 +166,8 @@ public interface RMIAdaptor
              RemoteException;
 
    String getDefaultDomain() throws RemoteException;
+
+   String[] getDomains() throws RemoteException;
 
    MBeanInfo getMBeanInfo(ObjectName pName)
       throws InstanceNotFoundException,
