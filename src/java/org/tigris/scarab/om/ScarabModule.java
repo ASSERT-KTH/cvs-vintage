@@ -100,7 +100,7 @@ import org.apache.fulcrum.security.impl.db.entity
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: ScarabModule.java,v 1.129 2003/04/16 01:03:53 jon Exp $
+ * @version $Id: ScarabModule.java,v 1.130 2003/04/16 19:16:31 elicia Exp $
  */
 public class ScarabModule
     extends BaseScarabModule
@@ -287,6 +287,7 @@ public class ScarabModule
             }
 
             result = ScarabUserImplPeer.doSelect(crit);
+            int totalResultSize = result.size();
 
             // if there are results, sort the result set
             if (result == null || result.size() == 0)
@@ -305,7 +306,7 @@ public class ScarabModule
                 }
                 result = limitedResult;
             }
-            paginated = new ScarabPaginatedList(result, result.size(), offset/resultSize, resultSize);
+            paginated = new ScarabPaginatedList(result, totalResultSize, offset/resultSize, resultSize);
         }        
         
         return paginated;
