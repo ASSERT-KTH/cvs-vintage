@@ -19,7 +19,7 @@ import org.jboss.system.ServiceMBeanSupport;
  * The log analysis service.
  *
  * @author <a href="mailto:Adrian.Brock@HappeningTimes.com">Adrian Brock</a>
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  *
  */
 public class LogAnalysis
@@ -48,16 +48,9 @@ public class LogAnalysis
 
   // LogAnalysisMBean implementation -------------------------------
 
-  public synchronized String analyse()
+  public synchronized String analyse(boolean showAll)
   {
     StringBuffer buffer = new StringBuffer();
-try
-{
-
-    // Add the count
-    buffer.append("<h1>Total Categories: ");
-    buffer.append(analysis.size());
-    buffer.append("</h1>");
 
     if (analysis.size() > 0)
     {
@@ -81,53 +74,71 @@ try
       while(i.hasNext())
       {
         Map.Entry e = (Map.Entry) i.next();
+        Category category = (Category) e.getKey();
+        Analysis anal = (Analysis) e.getValue();
+
+        // Skip correct loggings unless showing everything
+        if (!showAll && getColor(category, TracePriority.TRACE, anal.debug).equals("black")
+            && getColor(category, Priority.DEBUG, anal.debug).equals("black")
+            && getColor(category, Priority.INFO, anal.info).equals("black")
+            && getColor(category, Priority.WARN, anal.warn).equals("black")
+            && getColor(category, Priority.ERROR, anal.error).equals("black")
+            && getColor(category, Priority.FATAL, anal.fatal).equals("black"))
+          continue;
+
         buffer.append("<tr>");
         buffer.append("<td>");
-        buffer.append(((Category)e.getKey()).getName());
+        buffer.append(category.getName());
         buffer.append("</td>");
 
-        Analysis anal = (Analysis) e.getValue();
         buffer.append("<td align='center'>");
         buffer.append(anal.trace + anal.debug + anal.info + anal.warn + anal.error + anal.fatal + anal.other);
         buffer.append("</td>");
 
-        buffer.append("<td align='center'>");
+        buffer.append("<td align='center'><font color='");
+        buffer.append(getColor(category, TracePriority.TRACE, anal.trace));
+        buffer.append("'>");
         buffer.append(anal.trace);
-        buffer.append("</td>");
+        buffer.append("</font></td>");
 
-        buffer.append("<td align='center'>");
+        buffer.append("<td align='center'><font color='");
+        buffer.append(getColor(category, Priority.DEBUG, anal.debug));
+        buffer.append("'>");
         buffer.append(anal.debug);
-        buffer.append("</td>");
+        buffer.append("</font></td>");
 
-        buffer.append("<td align='center'>");
+        buffer.append("<td align='center'><font color='");
+        buffer.append(getColor(category, Priority.INFO, anal.info));
+        buffer.append("'>");
         buffer.append(anal.info);
-        buffer.append("</td>");
+        buffer.append("</font></td>");
 
-        buffer.append("<td align='center'>");
+        buffer.append("<td align='center'><font color='");
+        buffer.append(getColor(category, Priority.WARN, anal.warn));
+        buffer.append("'>");
         buffer.append(anal.warn);
-        buffer.append("</td>");
+        buffer.append("</font></td>");
 
-        buffer.append("<td align='center'>");
+        buffer.append("<td align='center'><font color='");
+        buffer.append(getColor(category, Priority.ERROR, anal.error));
+        buffer.append("'>");
         buffer.append(anal.error);
-        buffer.append("</td>");
+        buffer.append("</font></td>");
 
-        buffer.append("<td align='center'>");
+        buffer.append("<td align='center'><font color='");
+        buffer.append(getColor(category, Priority.FATAL, anal.fatal));
+        buffer.append("'>");
         buffer.append(anal.fatal);
-        buffer.append("</td>");
+        buffer.append("</font></td>");
 
-        buffer.append("<td align='center'>");
+        buffer.append("<td align='center'><font color='black'>");
         buffer.append(anal.other);
-        buffer.append("</td>");
+        buffer.append("</font></td>");
 
         buffer.append("</tr>");
       }
       buffer.append("</table>");
     }
- }
-catch (Exception e)
-{
-  buffer.append(e);
-}
     return buffer.toString();
   }
 
@@ -175,13 +186,32 @@ catch (Exception e)
        anal.error++;
      else if (type == Priority.FATAL)
        anal.fatal++;
-     else 
+     else
        anal.other++;
   }
 
   // Protected -----------------------------------------------------
 
   // Private -------------------------------------------------------
+
+  /**
+   * Gets the color to display.
+   *
+   * @param Category the logging category
+   * @param Priority the logging priority
+   * @param count the number of logs
+   * @return red for incorrect logs, black otherwise
+   */
+  private String getColor(Category category, Priority priority, long count)
+  {
+    if (count == 0)
+      return "black";
+    if (!category.isEnabledFor(priority))
+      return "red";
+    if (priority.isGreaterOrEqual(category.getChainedPriority()))
+      return "black";
+    return "red";
+  }
 
   // Inner classes -------------------------------------------------
 
