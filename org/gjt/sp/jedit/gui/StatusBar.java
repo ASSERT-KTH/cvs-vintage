@@ -46,7 +46,7 @@ import org.gjt.sp.util.*;
  * <li>And so on
  * </ul>
  *
- * @version $Id: StatusBar.java,v 1.9 2001/10/29 05:11:27 spestov Exp $
+ * @version $Id: StatusBar.java,v 1.10 2001/11/07 06:31:50 spestov Exp $
  * @author Slava Pestov
  * @since jEdit 3.2pre2
  */
@@ -147,7 +147,6 @@ public class StatusBar extends JPanel implements WorkThreadProgressListener
 		box.add(Box.createHorizontalStrut(3));
 		memory = new MemoryStatus();
 		memory.setBorder(border);
-		memory.setToolTipText(jEdit.getProperty("view.status.memory-tooltip"));
 		memory.addMouseListener(mouseHandler);
 		box.add(memory);
 
@@ -486,6 +485,8 @@ public class StatusBar extends JPanel implements WorkThreadProgressListener
 
 			return virtualPosition;
 		} //}}}
+
+		//}}}
 	} //}}}
 
 	//{{{ MemoryStatus class
@@ -506,12 +507,26 @@ public class StatusBar extends JPanel implements WorkThreadProgressListener
 			super.addNotify();
 			timer = new Timer(2000,this);
 			timer.start();
+			ToolTipManager.sharedInstance().registerComponent(this);
 		} //}}}
 
 		//{{{ removeNotify() method
 		public void removeNotify()
 		{
 			timer.stop();
+			ToolTipManager.sharedInstance().unregisterComponent(this);
+		} //}}}
+
+		//{{{ getToolTipText() method
+		public String getToolTipText()
+		{
+			Runtime runtime = Runtime.getRuntime();
+			int freeMemory = (int)(runtime.freeMemory() / 1024);
+			int totalMemory = (int)(runtime.totalMemory() / 1024);
+			int usedMemory = (totalMemory - freeMemory);
+			Integer[] args = { new Integer(usedMemory),
+				new Integer(totalMemory) };
+			return jEdit.getProperty("view.status.memory-tooltip",args);
 		} //}}}
 
 		//{{{ actionPerformed() method

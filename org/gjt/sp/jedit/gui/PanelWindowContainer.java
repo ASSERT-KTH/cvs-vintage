@@ -1,8 +1,9 @@
 /*
  * PanelWindowContainer.java - holds dockable windows
- * Copyright (C) 2000, 2001 Slava Pestov
  * :tabSize=8:indentSize=8:noTabs=false:
  * :folding=explicit:collapseFolds=1:
+ *
+ * Copyright (C) 2000, 2001 Slava Pestov
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -38,7 +39,7 @@ import org.gjt.sp.jedit.*;
  * A container for dockable windows. This class should never be used
  * directly.
  * @author Slava Pestov
- * @version $Id: PanelWindowContainer.java,v 1.15 2001/10/31 09:20:20 spestov Exp $
+ * @version $Id: PanelWindowContainer.java,v 1.16 2001/11/07 06:31:50 spestov Exp $
  * @since jEdit 4.0pre1
  */
 public class PanelWindowContainer implements DockableWindowContainer
@@ -191,6 +192,8 @@ public class PanelWindowContainer implements DockableWindowContainer
 			buttonGroup.setSelected(null,true);
 			// removing last component, so remove border
 			dockablePanel.setBorder(null);
+
+			wm.getView().getTextArea().requestFocus();
 		}
 
 		wm.revalidate();
@@ -253,7 +256,6 @@ public class PanelWindowContainer implements DockableWindowContainer
 	private Vector dockables;
 	private DockablePanel dockablePanel;
 	private DockableWindowManager.Entry current;
-
 	//}}}
 
 	//{{{ Inner classes

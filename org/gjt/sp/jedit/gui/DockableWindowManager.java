@@ -40,7 +40,7 @@ import java.util.*;
 /**
  * Manages dockable windows.
  * @author Slava Pestov
- * @version $Id: DockableWindowManager.java,v 1.12 2001/10/10 10:07:04 spestov Exp $
+ * @version $Id: DockableWindowManager.java,v 1.13 2001/11/07 06:31:50 spestov Exp $
  * @since jEdit 2.6pre3
  */
 public class DockableWindowManager extends JPanel
@@ -481,6 +481,16 @@ public class DockableWindowManager extends JPanel
 		String lastRight = jEdit.getProperty("view.dock.right.last");
 		if(lastRight != null)
 			showDockableWindow(lastRight);
+	} //}}}
+
+	//{{{ getView() method
+	/**
+	 * Returns this dockable window manager's view.
+	 * @since jEdit 4.0pre2
+	 */
+	public View getView()
+	{
+		return view;
 	} //}}}
 
 	//{{{ showDockableWindow() method

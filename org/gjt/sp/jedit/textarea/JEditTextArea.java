@@ -46,7 +46,7 @@ import org.gjt.sp.util.Log;
  * jEdit's text component.
  *
  * @author Slava Pestov
- * @version $Id: JEditTextArea.java,v 1.22 2001/11/05 07:56:45 spestov Exp $
+ * @version $Id: JEditTextArea.java,v 1.23 2001/11/07 06:31:50 spestov Exp $
  */
 public class JEditTextArea extends JComponent
 {
@@ -5164,8 +5164,6 @@ loop:			for(int i = lineNo + 1; i < getLineCount(); i++)
 			// so that Home <mouse click> Home is not the same
 			// as pressing Home twice in a row
 			view.getInputHandler().resetLastActionCount();
-
-			buffer.endCompoundEdit();
 
 			grabFocus();
 
