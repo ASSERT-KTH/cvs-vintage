@@ -78,7 +78,6 @@ public abstract class HttpJspBase
     extends HttpServlet 
     implements HttpJspPage 
 {
-    private ServletConfig config;
     private ClassLoader cl;
 
     protected PageContext pageContext;
@@ -89,12 +88,8 @@ public abstract class HttpJspBase
     public final void init(ServletConfig config) 
 	throws ServletException 
     {
-        this.config = config;
+        super.init(config);
 	jspInit();
-    }
-    
-    public final ServletConfig getServletConfig() {
-	return config;
     }
     
     public String getServletInfo() {
