@@ -10,16 +10,18 @@ import java.util.HashMap;
 
 import org.jboss.ejb.EnterpriseContext;
 import org.jboss.util.CachePolicy;
+import org.jboss.monitor.Monitorable;
+import org.jboss.monitor.client.BeanCacheSnapshot;
 
 /**
  * Implementation of a no passivation cache policy.
  *
  * @see AbstractInstanceCache
  * @author <a href="mailto:simone.bordet@compaq.com">Simone Bordet</a>
- * @version $Revision: 1.10 $
+ * @version $Revision: 1.11 $
  */
 public class NoPassivationCachePolicy
-      implements CachePolicy
+   implements CachePolicy, Monitorable
 {
    // Constants -----------------------------------------------------
 
@@ -39,6 +41,24 @@ public class NoPassivationCachePolicy
    }
 
    // Public --------------------------------------------------------
+
+   // Monitorable implementation
+
+   public void sample(Object s)
+   {
+      if(m_map == null)
+         return;
+
+      synchronized(m_map)
+      {
+         BeanCacheSnapshot snapshot = (BeanCacheSnapshot)s;
+         snapshot.m_passivatingBeans = 0;
+         snapshot.m_cacheMinCapacity = 0;
+         snapshot.m_cacheMaxCapacity = Integer.MAX_VALUE;
+         snapshot.m_cacheCapacity = Integer.MAX_VALUE;
+         snapshot.m_cacheSize = m_map.size();
+      }
+   }
 
    // Z implementation ----------------------------------------------
    public void create() throws Exception
