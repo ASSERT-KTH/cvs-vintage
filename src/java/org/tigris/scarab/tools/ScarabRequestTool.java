@@ -501,6 +501,20 @@ try{
    }
 
     /**
+     * A Attribute object for use within the Scarab API.
+     */
+    public AttributeOption getAttributeOption(NumberKey pk)
+     throws Exception
+    {
+        try
+        {
+           attributeOption = AttributeOption.getInstance(pk);
+        }
+        catch(Exception e){e.printStackTrace();}
+        return attributeOption;
+   }
+
+    /**
      * A Query object for use within the Scarab API.
      */
     public Query getQuery()
