@@ -224,10 +224,7 @@ try{
     }
 
     /**
-     * A <code>User</code> object for use within the Scarab API,
-     * generally <i>not</i> the user who is logged in.
-     *
-     * @param user A user used during this request.
+     * @see org.tigris.scarab.tools.ScarabRequestScope#setUser(ScarabUser)
      */
     public void setUser (ScarabUser user)
     {
@@ -235,16 +232,7 @@ try{
     }
 
     /**
-     * A <code>User</code> object for use within the Scarab API. This
-     * is the result of whatever was set with <code>setUser()</code>
-     * (generally <i>not</i> the user who is logged in).  It can
-     * return <code>null</code> if <code>setUser()</code> has not been
-     * previously called.  If you would like to get the currently
-     * logged in <code>User</code>, retrieve that from the
-     * data.getUser() method.
-     *
-     * @return A user used during this request.
-     * @see org.tigris.scarab.tools.ScarabRequestTool#setUser(User)
+     * @see org.tigris.scarab.tools.ScarabRequestScope#getUser()
      */
     public ScarabUser getUser()
     {
