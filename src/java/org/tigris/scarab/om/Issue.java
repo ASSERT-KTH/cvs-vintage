@@ -380,20 +380,32 @@ public class Issue
         return aval;
     }
 
-    /*
-    public AttributeValue[] getAttributeValues(Attribute attribute)
+    public List getAttributeValues(Attribute attribute)
        throws Exception
     {
         Criteria crit = new Criteria(2)
             .add(AttributeValuePeer.DELETED, false)        
             .add(AttributeValuePeer.ATTRIBUTE_ID, attribute.getAttributeId());
 
-        List avals = getAttributeValues(crit);
+        return getAttributeValues(crit);
+/*
         AttributeValue[] avalsArray = new AttributeValue[avals.size()];
         
         return (AttributeValue[]) avals.toArray(avalsArray);
+*/
     }
-    */
+
+    public boolean isAttributeValue(AttributeValue attVal)
+       throws Exception
+    {
+        boolean isValue = false;
+        List attValues = getAttributeValues(attVal.getAttribute());
+        if (attValues.contains(attVal))
+        {
+            isValue = true;
+        }
+        return isValue;
+    }
 
     /**
      * AttributeValues that are set for this Issue in the order
@@ -1297,8 +1309,8 @@ public class Issue
      * @param assigner a <code>ScarabUser</code> value
      * @exception Exception if an error occurs
      */
-    public void assignUsers(
-        List newAssignees, String attachmentText, ScarabUser assigner)
+    public void assignUsers(List newAssignees, String attachmentText, 
+                            ScarabUser assigner, Attribute attribute)
         throws Exception
     {                
         Attachment attachment = new Attachment();
@@ -1321,7 +1333,7 @@ public class Issue
             newAssigneesCopy = new ArrayList(newAssignees);
         }
         // take care of users who were removed or already assigned
-        List assignees = getAssigneeAttributeValues();
+        List assignees = getAttributeValues(attribute);
         Iterator iter = assignees.iterator();
         while ( iter.hasNext() ) 
         {
@@ -1354,7 +1366,7 @@ public class Issue
             {
                 ScarabUser user = (ScarabUser)newAssigneesCopy.get(i);
                 AttributeValue av = AttributeValue
-                    .getNewInstance(AttributePeer.ASSIGNED_TO__PK, this);
+                    .getNewInstance(attribute.getAttributeId(), this);
                 av.startTransaction(transaction);
                 av.setUserId(user.getUserId());
                 av.setValue(user.getUserName());
