@@ -71,7 +71,7 @@ import org.tigris.scarab.om.ScarabUser;
  * Default.java Screen except that it has a few helper methods.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: RequireLoginFirstAction.java,v 1.25 2002/02/19 21:14:07 elicia Exp $    
+ * @version $Id: RequireLoginFirstAction.java,v 1.26 2002/02/19 22:18:39 elicia Exp $    
  */
 public abstract class RequireLoginFirstAction extends TemplateSecureAction
 {
@@ -143,6 +143,15 @@ public abstract class RequireLoginFirstAction extends TemplateSecureAction
     {
         return data.getParameters()
                    .getString(ScarabConstants.NEXT_TEMPLATE, defaultValue);
+    }
+
+    /**
+     * Returns the last template to be cancelled back to.
+     */
+    public String getLastTemplate(RunData data)
+    {
+        return data.getParameters()
+                   .getString(ScarabConstants.LAST_TEMPLATE, null);
     }
 
     /**

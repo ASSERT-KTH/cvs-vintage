@@ -68,7 +68,7 @@ import org.tigris.scarab.om.ScarabUser;
  *  a couple methods useful for Scarab.
  *   
  *  @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- *  @version $Id: ScarabTemplateAction.java,v 1.14 2002/01/28 20:20:06 elicia Exp $
+ *  @version $Id: ScarabTemplateAction.java,v 1.15 2002/02/19 22:18:39 elicia Exp $
  */
 public abstract class ScarabTemplateAction extends TemplateAction
 {
@@ -126,6 +126,15 @@ public abstract class ScarabTemplateAction extends TemplateAction
     {
         return data.getParameters()
                             .getString(ScarabConstants.NEXT_TEMPLATE, defaultValue);
+    }
+
+    /**
+     * Returns the last template to be cancelled back to.
+     */
+    public String getLastTemplate(RunData data)
+    {
+        return data.getParameters()
+                   .getString(ScarabConstants.LAST_TEMPLATE, null);
     }
 
     /**
