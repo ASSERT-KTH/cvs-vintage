@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/runtime/JspWriterImpl.java,v 1.7 2001/03/02 06:56:19 costin Exp $
- * $Revision: 1.7 $
- * $Date: 2001/03/02 06:56:19 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/runtime/JspWriterImpl.java,v 1.8 2001/04/28 20:52:16 costin Exp $
+ * $Revision: 1.8 $
+ * $Date: 2001/04/28 20:52:16 $
  *
  * ====================================================================
  * 
@@ -385,7 +385,7 @@ public class JspWriterImpl extends JspWriter {
     static {
 	try {
 	    lineSeparator =  System.getProperty("line.separator");
-	} catch( Exception ex ) {
+	} catch( RuntimeException ex ) {
 	    lineSeparator="\r\n";
 	}
     }
