@@ -99,7 +99,6 @@ public abstract class AbstractMenuGenerator {
 			
 			if (menu.getAttribute("name").equals(menuName)) {
 
-				XmlElement.printNode(menuExtension, "  ");
 				
 				createExtension(
 					menu,
