@@ -28,7 +28,7 @@
 // File: CrNoInstanceVariables.java
 // Classes: CrNoInstanceVariables
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrNoInstanceVariables.java,v 1.1 2000/09/04 12:50:25 1sturm Exp $
+// $Id: CrNoInstanceVariables.java,v 1.2 2000/09/21 18:03:30 carnold Exp $
 
 package org.argouml.uml.cognitive.critics;
 
@@ -70,7 +70,7 @@ public class CrNoInstanceVariables extends CrUML {
     MClass cls = (MClass) dm;
     if ((cls.getStereotype()!=null) && "utility".equals(cls.getStereotype().getName()) )
       return NO_PROBLEM;
-    Collection str = getInheritedStructuralFeatures(cls);
+    Collection str = getInheritedStructuralFeatures(cls,0);
     if (str == null) return PROBLEM_FOUND;
     Iterator enum = str.iterator();
     while (enum.hasNext()) {
@@ -88,7 +88,7 @@ public class CrNoInstanceVariables extends CrUML {
     return ClAttributeCompartment.TheInstance;
   }
 
-  private Collection getInheritedStructuralFeatures(MClassifier cls)
+  private Collection getInheritedStructuralFeatures(MClassifier cls,int depth)
   {
      Collection res = new Vector();
 	 res.addAll(MMUtil.SINGLETON.getAttributes(cls));
@@ -96,8 +96,9 @@ public class CrNoInstanceVariables extends CrUML {
      Collection inh = cls.getGeneralizations();
      for (Iterator iter = inh.iterator(); iter.hasNext();) {
        MGeneralization gen = (MGeneralization)iter.next();
-       if (gen.getParent() instanceof MClassifier) {
-         Collection superstructs = getInheritedStructuralFeatures((MClassifier)gen.getParent());
+       MGeneralizableElement parent = gen.getParent();
+       if (parent != cls && parent instanceof MClassifier && depth < 50) {
+         Collection superstructs = getInheritedStructuralFeatures((MClassifier) parent,depth+1);
          res.addAll(superstructs);
        };
      };
