@@ -78,8 +78,6 @@ public class FetchNewMessagesCommand extends Command {
 
 			logout(worker);
 
-			if (newMessageCount == 0)
-				log("No new messages on server", worker);
 		} catch (CommandCancelledException e) {
 			server.forceLogout();
 		}
@@ -262,5 +260,8 @@ public class FetchNewMessagesCommand extends Command {
 		ColumbaLogger.log.info("logout");
 
 		log("Logout...", worker);
+
+		if (newMessageCount == 0)
+			log("No new messages on server", worker);
 	}
 }

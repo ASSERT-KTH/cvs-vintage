@@ -155,8 +155,7 @@ public class CachedMHFolder extends MHFolder {
 			if (expunged.equals(Boolean.TRUE)) {
 				// move message to trash
 
-				ColumbaLogger.log.info(
-					"moving message with UID " + uid + " to trash");
+				//ColumbaLogger.log.info("moving message with UID " + uid + " to trash");
 
 				// remove message
 				removeMessage(uid, worker);

@@ -22,9 +22,8 @@ import java.io.PrintWriter;
 import java.net.Socket;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.util.Vector;
 
-import org.columba.core.command.Worker;
+import org.columba.core.command.CommandCancelledException;
 import org.columba.core.command.WorkerStatusController;
 import org.columba.main.MainInterface;
 
@@ -115,14 +114,18 @@ public class POP3Protocol {
 
 	public boolean openPort(String host, int port) throws IOException {
 		socket = new Socket(host, port);
-		
+
 		// All Readers shall use ISO8859_1 Encoding in order to ensure
 		// 1) ASCII Chars represented right to ensure working parsers
 		// 2) No mangling of the received bytes to be able to convert
 		//    the received bytes to another charset
-		
-		in = new BufferedReader(new InputStreamReader(socket.getInputStream(),"ISO8859_1"));
-		out = new PrintWriter(new OutputStreamWriter(socket.getOutputStream(),"ISO8859_1"));
+
+		in =
+			new BufferedReader(
+				new InputStreamReader(socket.getInputStream(), "ISO8859_1"));
+		out =
+			new PrintWriter(
+				new OutputStreamWriter(socket.getOutputStream(), "ISO8859_1"));
 
 		//connected = true;
 		security = null;
@@ -254,17 +257,17 @@ public class POP3Protocol {
 		if (getAnswer()) {
 			try {
 				dummy = answer.substring(answer.indexOf(' ') + 1);
-				
+
 				int totalMessages =
 					Integer.parseInt(dummy.substring(0, dummy.indexOf(' ')));
-				
+
 				dummy = dummy.substring(dummy.indexOf(' ') + 1);
-				
+
 				//totalSize = Integer.parseInt(dummy);
 
 				statuschecked = true;
 				return totalMessages;
-				
+
 			} catch (NumberFormatException e) {
 			}
 		}
@@ -283,7 +286,7 @@ public class POP3Protocol {
 			getNextLine();
 			int i = 0;
 			while (!answer.equals(".")) {
-				buf.append(answer+"\n");
+				buf.append(answer + "\n");
 				/*
 				try {
 					size =
@@ -332,24 +335,28 @@ public class POP3Protocol {
 	}
 	*/
 
-	public String fetchUIDList(int totalMessageCount, WorkerStatusController worker)
-		throws IOException {
+	public String fetchUIDList(
+		int totalMessageCount,
+		WorkerStatusController worker)
+		throws Exception {
 		StringBuffer buffer = new StringBuffer();
 		Integer parser = new Integer(0);
 		int progress = 0;
 
 		sendString("UIDL");
 		if (getAnswer()) {
-			
+
 			worker.setProgressBarMaximum(totalMessageCount);
 			worker.setProgressBarValue(0);
 			getNextLine();
 			while (!answer.equals(".")) {
 				//System.out.println("SERVER: "+ answer );
+				if (worker.cancelled() == true)
+					throw new CommandCancelledException();
 				buffer.append(answer + "\n");
 				progress++;
-				
-					worker.setProgressBarValue(progress);
+
+				worker.setProgressBarValue(progress);
 				getNextLine();
 			}
 		}
@@ -357,8 +364,10 @@ public class POP3Protocol {
 		return buffer.toString();
 	}
 
-	public String fetchMessage(String messageNumber, WorkerStatusController worker)
-		throws IOException {
+	public String fetchMessage(
+		String messageNumber,
+		WorkerStatusController worker)
+		throws Exception {
 		StringBuffer messageBuffer = new StringBuffer();
 		Integer parser = new Integer(0);
 		int progress = 0;
@@ -366,8 +375,6 @@ public class POP3Protocol {
 		int test;
 		boolean progressBar = true;
 
-		
-		
 		sendString("RETR " + messageNumber);
 		if (getAnswer()) {
 			/*
@@ -385,23 +392,18 @@ public class POP3Protocol {
 			    //progressBar = false;
 			}
 			*/
-			
+
 			getNextLine();
 			while (!answer.equals(".")) {
-				
-				/*
+
 				if (worker.cancelled() == true)
-					break;
-				*/
+					throw new CommandCancelledException();
 
 				messageBuffer.append(answer + "\n");
 
 				progress = answer.length() + 2;
 
-				
 				worker.incProgressBarValue(progress);
-				
-				
 
 				getNextLine();
 			}

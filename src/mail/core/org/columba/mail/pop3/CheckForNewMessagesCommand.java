@@ -4,6 +4,7 @@ import java.net.URL;
 import java.util.Vector;
 
 import org.columba.core.command.Command;
+import org.columba.core.command.CommandCancelledException;
 import org.columba.core.command.DefaultCommandReference;
 import org.columba.core.command.Worker;
 import org.columba.core.gui.FrameController;
@@ -44,27 +45,34 @@ public class CheckForNewMessagesCommand extends Command {
 
 		server = r[0].getServer();
 
-		int totalMessageCount= server.getMessageCount();
-		
-		Vector newUIDList = command.fetchUIDList(totalMessageCount, worker);
+		command.log("Authenticating...", worker);
 
-		Vector messageSizeList = command.fetchMessageSizes(worker);
+		int totalMessageCount = server.getMessageCount();
 
-		Vector newMessagesUIDList = command.synchronize(newUIDList);
+		try {
+			Vector newUIDList = command.fetchUIDList(totalMessageCount, worker);
 
-		int newMessagesCount = newMessagesUIDList.size();
-		if ((newMessagesCount > 0)
-			&& (server.getAccountItem().getPopItem().isPlaysound()))
-			playSound();
+			Vector messageSizeList = command.fetchMessageSizes(worker);
 
-		if (server.getAccountItem().getPopItem().isAutoDownload())
-			command.downloadNewMessages(
-				newUIDList,
-				messageSizeList,
-				newMessagesUIDList,
-				worker);
+			Vector newMessagesUIDList = command.synchronize(newUIDList);
 
-		command.logout(worker);
+			int newMessagesCount = newMessagesUIDList.size();
+			if ((newMessagesCount > 0)
+				&& (server.getAccountItem().getPopItem().isPlaysound()))
+				playSound();
+
+			if (server.getAccountItem().getPopItem().isAutoDownload())
+				command.downloadNewMessages(
+					newUIDList,
+					messageSizeList,
+					newMessagesUIDList,
+					worker);
+
+			command.logout(worker);
+
+		} catch (CommandCancelledException e) {
+			server.forceLogout();
+		}
 	}
 
 	protected void playSound() {
