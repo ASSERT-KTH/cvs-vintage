@@ -124,7 +124,7 @@ public class Jspc {
 	}
     }
 
-    private static int dL=10;
+    private static int dL=0;
     private void debug( String s ) {
 	System.out.println("Jspc: " + s );
     }
