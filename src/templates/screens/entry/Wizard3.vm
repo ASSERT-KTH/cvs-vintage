@@ -49,7 +49,6 @@
 <div class="functnbar">
 <input type="submit" value="Submit issue"  name="eventSubmit_doEnterissue" />&#160;
 <input type="reset" value="Reset" name="eventSubmit_doRefresh" />&#160;
-<input type="submit" value="Cancel" name="eventSubmit_doCancel" />
 </div>
  
 <p>
@@ -229,15 +228,24 @@
    </td>
  </tr>
 
+#set ($userPref = $user.EnterIssueRedirect)
+#if (!$userPref)
+  #set ($userPref = 2)
+#end
+
 <tr>
 <th width="120">After submit</th>
-<td><select name="$scarabG.Constant.NEXT_TEMPLATE">
-<option value="$data.Parameters.getString($scarabG.Constant.HISTORY_SCREEN, "entry,Wizard3.vm")">Enter new issue </option>
+<td><select name="template_code">
+<option value=1
+  #if ($userPref == 1) selected="selected" #end>Enter new issue </option>
 #if ($scarabR.hasPermission($scarabG.Permission.ISSUE__ASSIGN, $module))
-  <option value="AssignIssue.vm">Assign issue</option>
+  <option value=2
+  #if ($userPref == 0 || $userPref == 2) selected="selected" #end>Assign issue</option>
 #end
-<option value="ViewIssue.vm">View this issue</option>
-<option value="Index.vm">Return to issue types index</option>
+<option value=3
+  #if ($userPref == 3) selected="selected" #end>View this issue</option>
+<option value=4
+  #if ($userPref == 4) selected="selected" #end>Return to issue types index</option>
 </select></td>
 </tr>
 </table>
@@ -247,7 +255,6 @@
 <div class="functnbar2">
 <input type="submit" value="Submit issue"  name="eventSubmit_doEnterissue" />&#160;
 <input type="reset" value="Reset" name="eventSubmit_doRefresh" />&#160;
-<input type="submit" value="Cancel" name="eventSubmit_doCancel" />
 </div>
 
 $intake.declareGroups()
