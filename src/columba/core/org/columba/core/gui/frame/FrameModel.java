@@ -88,7 +88,8 @@ public class FrameModel {
 
 			viewList.addElement(v.getRoot());
 
-			c.saveAndClose();
+			c.close();
+			//c.saveAndClose();
 		}
 	}
 

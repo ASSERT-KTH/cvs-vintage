@@ -21,6 +21,6 @@ package org.columba.core.backgroundtask;
  * To change the template for this generated type comment go to
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
-public interface TaskInterface {
+public interface TaskInterface extends Runnable{
 	public abstract void run();
 }
