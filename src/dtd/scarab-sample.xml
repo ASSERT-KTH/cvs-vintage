@@ -30,6 +30,7 @@ ID_CODE, not the primary key column.
         <code>TBNS</code>
         <issue id="101">
             <artifact-type>Defect</artifact-type>
+            <committed-by>jon@latchkey.com</committed-by>
             <issue-attribute>
                 <name>Status</name>
                 <value>New</value>
@@ -85,6 +86,7 @@ ID_CODE, not the primary key column.
         </issue>
         <issue id="203">
             <artifact-type>Defect</artifact-type>
+            <committed-by>jon@latchkey.com</committed-by>
             <issue-attribute>
                 <name>Status</name>
                 <value>Closed</value>
