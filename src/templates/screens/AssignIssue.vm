@@ -33,8 +33,8 @@ $page.setTitle("Assign users")
 <div id="projectlist" class="app">
 <input type="hidden" name="action" value="AssignIssue" />
 #foreach ($id in $issueList)
-  <input type="hidden" name="$issue_ids" value="$id" />
-  <input type="hidden" name="$id" value="$id" />
+  <input type="hidden" name="issue_ids" value="$id" />
+  <input type="hidden" name="id" value="$id" />
 #end
   
 <div class="functnbar">
@@ -90,8 +90,8 @@ $page.setTitle("Assign users")
 			<td><select name="$attrInput.AttributeId.Key">
 			 #foreach ($selectUserAttr in $userAttrs)
 				<option value="$selectUserAttr.AttributeId"
-				#if ($attrInput.AttributeId.toString().equals($selectUserAttr.AttributeId.toString())) "selected='selected'" #end
-				 >$selectUserAttr.Name</option>
+				#if ($attrInput.AttributeId.toString().equals($selectUserAttr.AttributeId.toString())) selected='selected' #end
+				 />$selectUserAttr.Name</option>
 			 #end
 			   </select></td>
 			</tr>
