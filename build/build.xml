@@ -252,6 +252,7 @@
         <filter token="DATABASE_USERNAME" value="${scarab.database.username}"/>
         <filter token="DATABASE_PASSWORD" value="${scarab.database.password}"/>
         <filter token="DATABASE_LOADORDER" value="${scarab.database.loadorder}"/>
+        <filter token="DATABASE_VALIDATION_QUERY" value="${scarab.database.validationQuery}"/>
         <filter token="SYSTEM_MAIL_HOST" value="${scarab.system.mail.host}"/>
         <filter token="TURBINE_MODE" value="${scarab.mode}"/>
         <filter token="SESSION_VALIDATOR" value="${scarab.sessionvalidator}"/>
