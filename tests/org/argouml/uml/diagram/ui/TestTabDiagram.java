@@ -1,4 +1,4 @@
-// $Id: TestTabDiagram.java,v 1.14 2005/01/09 14:59:17 linus Exp $
+// $Id: TestTabDiagram.java,v 1.15 2005/01/28 21:41:38 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -36,8 +36,6 @@ import org.argouml.ui.ProjectBrowser;
 import org.argouml.uml.diagram.static_structure.ui.FigClass;
 import org.argouml.uml.diagram.static_structure.ui.UMLClassDiagram;
 import org.tigris.gef.graph.presentation.JGraph;
-
-import ru.novosoft.uml.MFactoryImpl;
 
 /**
  * @author jaap.branderhorst@xs4all.nl
@@ -141,8 +139,7 @@ public class TestTabDiagram extends TestCase {
                         new FigClass(diagrams[i].getGraphModel(), clazz));
                     ProjectBrowser.getInstance().setTarget(diagrams[i]);
                 }
-                MFactoryImpl.setEventPolicy(
-                    MFactoryImpl.EVENT_POLICY_IMMEDIATE);
+
                 // real test
                 long currentTime = (new Date()).getTime();
                 Collection propertyChangeListeners =

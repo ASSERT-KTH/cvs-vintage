@@ -1,4 +1,4 @@
-// $Id: WizAssocComposite.java,v 1.23 2005/01/27 21:42:25 linus Exp $
+// $Id: WizAssocComposite.java,v 1.24 2005/01/28 21:41:37 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -44,11 +44,7 @@ import org.argouml.model.ModelFacade;
  * <em>Note</em>. This only applies to binary associations. A separate
  * wizard is needed for 3-way (or more) associations.<p>
  *
- * @see <a href=
- * "http://argouml.tigris.org/documentation/printablehtml/manual/argouml.html/
- * #s2.ref.critics_multiple_agg">
- * ArgoUML User Manual: Two Aggregate ends (roles) in binary Association
- * </a>
+ * @see "ArgoUML User Manual: Two Aggregate ends (roles) in binary Association"
  * @author jrobbins@ics.uci.edu
  */
 public class WizAssocComposite extends UMLWizard {
@@ -74,8 +70,7 @@ public class WizAssocComposite extends UMLWizard {
 
 
     /**
-     * The {@link ru.novosoft.uml.foundation.core.MAssociation
-     * MAssociation} {@link WizStepChoice} that triggered the
+     * The Association {@link WizStepChoice} that triggered the
      * critic. Null until set when it is first needed.<p>
      */
     private Object triggerAssociation = null;
@@ -88,9 +83,7 @@ public class WizAssocComposite extends UMLWizard {
 
 
     /**
-     * Tries to identify the {@link
-     * ru.novosoft.uml.foundation.core.MAssociation MAssociation} that
-     * triggered the critic.<p>
+     * Tries to identify the Association that triggered the critic.<p>
      *
      * The first time it is called, it will initialise the trigger
      * from the ToDoItem. If there, it is assumed to be the first
@@ -100,8 +93,7 @@ public class WizAssocComposite extends UMLWizard {
      * On all subsequent calls, if a non-null value is found in {@link
      * #triggerAssociation} that is returned.<p>
      *
-     * @return  the {@link ru.novosoft.uml.foundation.core.MAssociation
-     *          MAssociation} that triggered the critic, or <code>null</code>
+     * @return  the Association that triggered the critic, or <code>null</code>
      *          if there was none.
      */
     private Object getTriggerAssociation() {

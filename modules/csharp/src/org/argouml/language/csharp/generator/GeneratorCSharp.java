@@ -1,4 +1,4 @@
-// $Id: GeneratorCSharp.java,v 1.27 2005/01/27 21:42:34 linus Exp $
+// $Id: GeneratorCSharp.java,v 1.28 2005/01/28 21:41:37 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -294,7 +294,9 @@ public class GeneratorCSharp extends Generator2
      */
     public String generateObjectFlowState(Object m) {
         Object c = ModelFacade.getType(m);
-        if (c == null) return "";
+        if (c == null) {
+            return "";
+        }
         return ModelFacade.getName(c);
     }
 
@@ -1207,11 +1209,6 @@ public class GeneratorCSharp extends Generator2
     }
 
     /**
-     * TODO: Once the {@link
-     * org.argouml.model.uml.CoreHelperImpl#getRealizedInterfaces(
-     * ru.novosoft.uml.foundation.core.MClassifier)} can be called without
-     * using NSUML interfaces, this class can be NSUML-free.
-     *
      * @param cls The classifier that we generate the specification for.
      * @return The specification, as a String.
      */
@@ -1731,14 +1728,16 @@ public class GeneratorCSharp extends Generator2
     public String getPackageName(Object namespace) {
         if (namespace == null
 	    || !ModelFacade.isANamespace(namespace)
-	    || ModelFacade.getNamespace(namespace) == null)
+	    || ModelFacade.getNamespace(namespace) == null) {
             return "";
+        }
         String packagePath = ModelFacade.getName(namespace);
         while ((namespace = ModelFacade.getNamespace(namespace)) != null) {
             // ommit root package name; it's the model's root
-            if (ModelFacade.getNamespace(namespace) != null)
+            if (ModelFacade.getNamespace(namespace) != null) {
                 packagePath =
 		    ModelFacade.getName(namespace) + '.' + packagePath;
+            }
         }
         return packagePath;
     }

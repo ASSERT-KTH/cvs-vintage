@@ -1,4 +1,4 @@
-// $Id: UMLStateDiagram.java,v 1.68 2005/01/27 21:42:27 linus Exp $
+// $Id: UMLStateDiagram.java,v 1.69 2005/01/28 21:41:37 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -88,15 +88,18 @@ public class UMLStateDiagram extends UMLDiagram {
         } catch (PropertyVetoException pve) { }
     }
 
-    /** constructor
+    /**
+     * Constructor.
+     *
      * @param namespace the NameSpace for the new diagram
      * @param sm the StateMachine
      */
     public UMLStateDiagram(Object namespace, Object sm) {
         this();
 
-        if (!ModelFacade.isAStateMachine(sm))
+        if (!ModelFacade.isAStateMachine(sm)) {
             throw new IllegalArgumentException();
+        }
 
         if (sm != null && namespace == null) {
             Object context = ModelFacade.getContext(sm);
@@ -106,7 +109,8 @@ public class UMLStateDiagram extends UMLDiagram {
                 namespace = ModelFacade.getOwner(context);
             }
         }
-        if (namespace != null && ModelFacade.getName(namespace) != null)
+
+        if (namespace != null && ModelFacade.getName(namespace) != null) {
             if (ModelFacade.getName(namespace).trim() != "") {
                 String name = null;
                 String diagramName = ModelFacade.getName(namespace);
@@ -120,6 +124,7 @@ public class UMLStateDiagram extends UMLDiagram {
                     setName(name);
                 } catch (PropertyVetoException pve) { }
             }
+        }
         if (namespace != null) {
             setup(namespace, sm);
         }
@@ -273,19 +278,6 @@ public class UMLStateDiagram extends UMLDiagram {
     public String getLabelName() {
         return Translator.localize("label.state-chart-diagram");
     }
-
-    /**
-     * This diagram listens to NSUML events from its Statemachine;
-     * When the Statemachine is removed, we also want to delete this diagram.
-     * @see ru.novosoft.uml.MElementListener#removed(ru.novosoft.uml.MElementEvent)
-     */
-    /*public void removed(MElementEvent e) {
-
-        UmlModelEventPump.getPump().removeModelEventListener(
-            this,
-            theStateMachine);
-        super.removed(e);
-    }*/
 
     /**
      * @return Returns the actionBranchPseudoState.
