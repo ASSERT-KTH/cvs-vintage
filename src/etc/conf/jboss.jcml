@@ -9,6 +9,7 @@
      </mbean>
      <mbean name="EJB:service=ContainerFactory">
        <attribute name="VerifyDeployments">true</attribute>
+       <attribute name="VerifierVerbose">true</attribute>
      </mbean>
      <mbean name="DefaultDomain:service=Webserver">
        <attribute name="Port">8083</attribute>

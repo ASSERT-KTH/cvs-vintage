@@ -19,27 +19,23 @@ package org.jboss.verifier;
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  *
  * This package and its source code is available at www.jboss.org
- * $Id: Section.java,v 1.2 2000/07/19 21:27:44 juha Exp $
+ * $Id: Section.java,v 1.3 2000/10/15 20:52:27 juha Exp $
  */
 
 // standard imports
 import java.util.StringTokenizer;
 import java.util.Enumeration;
+import java.util.Collections;
+import java.util.Arrays;
+import java.util.Iterator;
 import java.text.ParseException;
-
-// non-standard class dependencies
 
 
 /**
  * Represents a section in the EJB spec.
  *
- * For more detailed documentation, refer to the
- * <a href="" << INSERT DOC LINK HERE >> </a>
- *
- * @see     << OTHER RELATED CLASSES >>
- *
  * @author 	Juha Lindfors
- * @version $Revision: 1.2 $
+ * @version $Revision: 1.3 $
  * @since  	JDK 1.3
  */
 public class Section {
@@ -80,6 +76,10 @@ public class Section {
         return section[index];
     }
  
+    public Iterator getSectionTokens() {
+        return Collections.unmodifiableList(Arrays.asList(section)).iterator();
+    }
+    
     /*
      * Returns the section string
      */
@@ -127,7 +127,6 @@ public class Section {
         for (int i = 0; tokenizer.hasMoreTokens(); ++i) {
             String str = tokenizer.nextToken();
             
-
             token[i] = str;
         }
         

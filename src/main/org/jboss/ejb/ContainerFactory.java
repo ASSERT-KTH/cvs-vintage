@@ -76,7 +76,7 @@ import org.jboss.logging.Logger;
 *   @author <a href="mailto:jplindfo@helsinki.fi">Juha Lindfors</a>
 *   @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
 *
-*   @version $Revision: 1.49 $
+*   @version $Revision: 1.50 $
 */
 public class ContainerFactory
     extends org.jboss.util.ServiceMBeanSupport
@@ -101,7 +101,8 @@ public class ContainerFactory
 
     // Verify EJB-jar contents on deployments
     boolean verifyDeployments = false;
-
+    boolean verifierVerbose   = false;
+    
     // Public --------------------------------------------------------
     
     /**
@@ -205,13 +206,33 @@ public class ContainerFactory
     /**
      * Returns the state of bean verifier (on/off)
      *
-     * @param   true if enabled; false otherwise
+     * @return   true if enabled; false otherwise
      */
     public boolean getVerifyDeployments()
     {
        return verifyDeployments;
     }
 
+    /**
+     * Enables/disables the verbose mode on the verifier.
+     *
+     * @param   verbose  true to enable; false to disable
+     */
+    public void setVerifierVerbose(boolean verbose)
+    {
+        verifierVerbose = verbose;
+    }
+    
+    /**
+     * Returns the state of the bean verifier (verbose/non-verbose mode)
+     *
+     * @return true if enabled; false otherwise
+     */
+    public boolean getVerifierVerbose()
+    {
+        return verifierVerbose;
+    }
+    
     /**
     *   Deploy the file at this URL. This method is typically called from remote administration
     *   tools that cannot handle java.net.URL's as parameters to methods
@@ -391,12 +412,15 @@ public class ContainerFactory
                     {
                        public void beanChecked(VerificationEvent event)
                        {
-                           Logger.debug(event.getName() + ": " + event.getMessage());
+                           Logger.debug(event.getMessage());
                        }
                        
                        public void specViolation(VerificationEvent event)
                        {
-                           Logger.log(event.getName() + ": " + event.getMessage());
+                           if (verifierVerbose)
+                               Logger.log(event.getVerbose());
+                           else
+                               Logger.log(event.getMessage());
                        }
                     });
     

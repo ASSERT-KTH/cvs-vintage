@@ -13,7 +13,9 @@ import java.net.MalformedURLException;
  *      
  *   @see ContainerFactory
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
- *   @version $Revision: 1.5 $
+ *   @author Juha Lindfors (jplindfo@helsinki.fi)
+ *
+ *   @version $Revision: 1.6 $
  */
 public interface ContainerFactoryMBean
 	extends org.jboss.util.ServiceMBean
@@ -58,6 +60,20 @@ public interface ContainerFactoryMBean
     */
    public boolean getVerifyDeployments();
 
+   /**
+    * Enable/disable bean verifier verbose mode.
+    *
+    * @param    verbose true to enable verbose mode; false to disable
+    */
+   public void setVerifierVerbose(boolean verbose);
+   
+   /**
+    * Returns the state of the verifier (verbose/non-verbose mode).
+    *
+    * @return  true if the verbose mode is enabled; false otherwise
+    */
+   public boolean getVerifierVerbose();
+   
 	/**
 	 *	is the aplication with this url deployed
 	 *

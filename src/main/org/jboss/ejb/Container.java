@@ -67,7 +67,7 @@ import org.jnp.server.NamingServer;
  *   @see ContainerFactory
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
  *   @author <a href="marc.fleury@telkel.com">Marc Fleury</a>
- *   @version $Revision: 1.28 $
+ *   @version $Revision: 1.29 $
  */
 public abstract class Container
 {
@@ -497,7 +497,7 @@ public abstract class Container
           }
         } catch (NamingException e)
         {
-            Logger.exception(e);;
+            Logger.exception(e);
             e.getRootCause().printStackTrace();
             throw new DeploymentException("Could not set up environment", e);
         }
