@@ -59,7 +59,7 @@ import org.tigris.scarab.util.ScarabException;
  * This is an interface which describes what a ScarabUser is...
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ScarabUser.java,v 1.38 2001/10/08 05:06:03 jmcnally Exp $
+ * @version $Id: ScarabUser.java,v 1.39 2001/10/09 03:51:56 elicia Exp $
  */
 public interface ScarabUser extends User
 {
@@ -104,7 +104,6 @@ public interface ScarabUser extends User
     public void setReportingIssue(String key, Issue issue);
 
     public NumberKey getUserId();
-    public List getAttributesForIssueList(ModuleEntity module) throws Exception;
     public List getRModuleUserAttributes(ModuleEntity module) throws Exception;
     public RModuleUserAttribute getModuleUserAttribute(NumberKey moduleId, 
                                                        NumberKey attributeId)

@@ -74,7 +74,7 @@ import org.tigris.scarab.util.ScarabException;
     implementation needs.
 
     @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
-    @version $Id: ScarabUserImpl.java,v 1.21 2001/10/08 05:06:03 jmcnally Exp $
+    @version $Id: ScarabUserImpl.java,v 1.22 2001/10/09 03:51:56 elicia Exp $
 */
 public class ScarabUserImpl 
     extends BaseScarabUserImpl 
@@ -244,45 +244,10 @@ public class ScarabUserImpl
         return modules;
     }
 
-    /**
-     * Gets all attributes which this user has selected to appear on the 
-     * IssueList screen. If they have not selected attributes, 
-     * Or it is an anonymous user, use the default attributes
-     * In the database for user 0.
-     */
-    public List getAttributesForIssueList(ModuleEntity module) throws Exception
-    {
-        Criteria crit = new Criteria(4)
-            .add(RModuleUserAttributePeer.MODULE_ID, module.getModuleId())
-            .add(RModuleUserAttributePeer.USER_ID, getUserId())
-            .addAscendingOrderByColumn(RModuleUserAttributePeer.PREFERRED_ORDER);
-        Vector userAttributes = RModuleUserAttributePeer.doSelect(crit);
-        if (userAttributes.isEmpty())
-        {
-            crit = new Criteria(2)
-               .add(RModuleUserAttributePeer.USER_ID, 0)
-               .addAscendingOrderByColumn(RModuleUserAttributePeer.PREFERRED_ORDER);
-            userAttributes = RModuleUserAttributePeer.doSelect(crit);
-        }
-
-        List attributes = new ArrayList(userAttributes.size());
-        Iterator i = userAttributes.iterator();
-        while (i.hasNext()) 
-        {
-            Attribute attribute = 
-                (Attribute) ((RModuleUserAttribute)i.next()).getAttribute();
-
-            if ( !attributes.contains(attributes) ) 
-            {
-                attributes.add(attribute);
-            }
-        }
-        return attributes;
-    }
 
     /**
      * Returns list of RModuleUserAttribute objects for this
-     * User and Module -- the attributes the use has selected
+     * User and Module -- the attributes the user has selected
      * To appear on the IssueList for this module.
      */
     public List getRModuleUserAttributes(ModuleEntity module)
@@ -293,17 +258,10 @@ public class ScarabUserImpl
            .add(RModuleUserAttributePeer.USER_ID, getUserId())
            .add(RModuleUserAttributePeer.MODULE_ID, module.getModuleId());
 
-        Vector results = getRModuleUserAttributes(crit);
-        Iterator i = results.iterator();
-        while ( i.hasNext() ) 
-        {
-            RModuleUserAttribute rmua = (RModuleUserAttribute)i.next();
-            rmuas.add(rmua);
-        }
-        
-        return rmuas;
+        return getRModuleUserAttributes(crit);
     }
 
+            
     /**
      * Returns an RModuleUserAttribute object.
      */

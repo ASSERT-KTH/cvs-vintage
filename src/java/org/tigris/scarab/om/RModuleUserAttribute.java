@@ -65,12 +65,10 @@ public  class RModuleUserAttribute
 
     /**
      * Delete the record.
-     * @acl AccessControlList for deleting user.
      * TODO: permission
      */
     public void delete() throws Exception 
     { 
-        //hasPermission(acl);
         Criteria c = new Criteria()
             .add(RModuleUserAttributePeer.MODULE_ID, getModuleId())
             .add(RModuleUserAttributePeer.USER_ID, getUserId())
