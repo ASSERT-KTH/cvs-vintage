@@ -1,4 +1,4 @@
-// $Id: Project.java,v 1.142 2005/01/11 21:03:32 mvw Exp $
+// $Id: Project.java,v 1.143 2005/01/16 09:15:56 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -97,7 +97,6 @@ public class Project implements java.io.Serializable, TargetListener {
      * TODO: should just be the directory to write.
      */
     private URL url;
-//    private ChangeRegistry saveRegistry;
 
     private String authorname;
     private String description;

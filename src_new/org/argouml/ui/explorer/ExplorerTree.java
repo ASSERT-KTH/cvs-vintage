@@ -1,4 +1,4 @@
-// $Id: ExplorerTree.java,v 1.27 2005/01/09 14:58:13 linus Exp $
+// $Id: ExplorerTree.java,v 1.28 2005/01/16 09:15:56 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -197,10 +197,11 @@ public class ExplorerTree
 		    || ModelFacade.isAExtensionPoint(value)) {
                 name = GeneratorDisplay.getInstance().generate(value);
             }
-            // changing the label in case of comments
-            // this is necessary since the name of the comment is the same as
-            // the content of the comment causing the total comment to be
-            // displayed in the perspective
+            /* Changing the label in case of comments.
+             * This is necessary in UML 1.3 since the name of the comment 
+             * is the same as the content of the comment (called "body" 
+             * in UML 1.4), causing the total comment to be
+             * displayed in the perspective */
             else if (ModelFacade.isAComment(value)) {
                 name = ModelFacade.getName(value);
 
@@ -520,6 +521,7 @@ public class ExplorerTree
 
         /**
          * Listens to events coming from the project manager,
+         * i.e. when the current project changes,
          * in order to expand the root node by default.
          */
         public void propertyChange(java.beans.PropertyChangeEvent pce) {
