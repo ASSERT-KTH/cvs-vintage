@@ -1,4 +1,4 @@
-// $Id: ProjectMemberModel.java,v 1.27 2004/11/14 08:14:37 linus Exp $
+// $Id: ProjectMemberModel.java,v 1.28 2004/12/11 20:50:30 bobtarling Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -29,21 +29,17 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.Writer;
-import java.util.Iterator;
 
 import org.apache.log4j.Logger;
 import org.argouml.kernel.Project;
 import org.argouml.kernel.ProjectMember;
 import org.argouml.kernel.SaveException;
 import org.argouml.model.ModelFacade;
-
-import ru.novosoft.uml.model_management.MModel;
-import ru.novosoft.uml.xmi.IncompleteXMIException;
-import ru.novosoft.uml.xmi.XMIWriter;
+import org.argouml.model.uml.XmiWriter;
+import org.xml.sax.SAXException;
 
 /**
  * @author Piotr Kaminski
- * This file updated by Jim Holt 1/17/00 for nsuml support 
  */
 public class ProjectMemberModel extends ProjectMember {
 
@@ -146,36 +142,15 @@ public class ProjectMemberModel extends ProjectMember {
         } else {
             writer = w;
         }
-        XMIWriter xmiwriter = null;
 
         try {
-            xmiwriter = new XMIWriter((MModel) model, writer);
-            xmiwriter.gen();
-        } catch (Exception ex) {
-            logNotContainedElements(xmiwriter);
-            if (ex instanceof SaveException) {
-                throw (SaveException) ex;
-            }
+            XmiWriter xmiWriter = new XmiWriter(model, writer);
+            xmiWriter.write();
+        } catch (SAXException ex) {
             throw new SaveException(ex);
-        } finally {
-            if (xmiwriter != null) {
-                if (!xmiwriter.getNotContainedElements().isEmpty()) {
-                    logNotContainedElements(xmiwriter);
-                    throw new SaveException(new IncompleteXMIException());
-                }
-            }
         }
         if (indent != null) {
             addXmlFileToWriter((PrintWriter) w, tempFile, indent.intValue());
         }
     }
-
-    private void logNotContainedElements(XMIWriter xmiwriter) {
-        if (xmiwriter != null) {
-            Iterator it = xmiwriter.getNotContainedElements().iterator();
-            while (it.hasNext())
-                LOG.error("Not contained in XMI: " + it.next());
-        }
-    }
-
 } /* end class ProjectMemberModel */
