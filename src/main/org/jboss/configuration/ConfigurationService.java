@@ -29,7 +29,7 @@ import org.jboss.util.ServiceMBeanSupport;
  *
  *   @see <related>
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
- *   @version $Revision: 1.9 $
+ *   @version $Revision: 1.10 $
  */
 public class ConfigurationService
    extends ServiceMBeanSupport
@@ -210,7 +210,7 @@ public class ConfigurationService
       throws Exception
    {
       // Get XML
-      String xml = save;
+      String xml = save();
       
       // Get JCML file
       URL confFile = Thread.currentThread().getContextClassLoader().getResource("jboss.jcml");
@@ -225,7 +225,7 @@ public class ConfigurationService
        throws Exception
     {
        // Load from XML
-       InputStream conf = mlet.getResourceAsStream("jboss.jcml");
+       InputStream conf = Thread.currentThread().getContextClassLoader().getResourceAsStream("jboss.jcml");
        byte[] arr = new byte[conf.available()];
        conf.read(arr);
        conf.close();
