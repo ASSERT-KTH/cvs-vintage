@@ -130,6 +130,8 @@ public class TextEditorController extends AbstractEditorController
         if (b) {
             if (this.getController().getModel().getBodyText() != null) {
                 view.setText(controller.getModel().getBodyText());
+            } else {
+            	view.setText("");
             }
         } else {
             if (view.getText() != null) {

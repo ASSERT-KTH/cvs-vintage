@@ -28,37 +28,44 @@ import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.gui.util.ImageLoader;
 import org.columba.core.main.MainInterface;
 import org.columba.core.plugin.PluginLoadingFailedException;
+import org.columba.mail.gui.composer.ComposerController;
+import org.columba.mail.gui.composer.ComposerModel;
 import org.columba.mail.util.MailResourceLoader;
 
 /**
  * Opens the composer window for creating a new message.
  */
 public class NewMessageAction extends AbstractColumbaAction {
-	
+
 	public NewMessageAction() {
 		super(null, "New Message Action");
 	}
-	
-    public NewMessageAction(FrameMediator controller) {
-        super(controller,
-            MailResourceLoader.getString("menu", "mainframe", "menu_message_new"));
-        putValue(TOOLBAR_NAME,
-            MailResourceLoader.getString("menu", "mainframe",
-                "menu_message_new_toolbar"));
-        putValue(SHORT_DESCRIPTION,
-            MailResourceLoader.getString("menu", "mainframe",
-                "menu_message_new_tooltip").replaceAll("&", ""));
-        putValue(SMALL_ICON, ImageLoader.getSmallImageIcon("stock_edit-16.png"));
-        putValue(LARGE_ICON, ImageLoader.getImageIcon("stock_edit.png"));
-        putValue(ACCELERATOR_KEY,
-            KeyStroke.getKeyStroke(KeyEvent.VK_M, ActionEvent.CTRL_MASK));
-    }
 
-    public void actionPerformed(ActionEvent evt) {
-    	try {
-			MainInterface.frameModel.openView("Composer");
+	public NewMessageAction(FrameMediator controller) {
+		super(controller, MailResourceLoader.getString("menu", "mainframe",
+				"menu_message_new"));
+		putValue(TOOLBAR_NAME, MailResourceLoader.getString("menu",
+				"mainframe", "menu_message_new_toolbar"));
+		putValue(SHORT_DESCRIPTION, MailResourceLoader.getString("menu",
+				"mainframe", "menu_message_new_tooltip").replaceAll("&", ""));
+		putValue(SMALL_ICON, ImageLoader.getSmallImageIcon("stock_edit-16.png"));
+		putValue(LARGE_ICON, ImageLoader.getImageIcon("stock_edit.png"));
+		putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_M,
+				ActionEvent.CTRL_MASK));
+	}
+
+	public void actionPerformed(ActionEvent evt) {
+		try {
+			//    		 open composer frame
+			ComposerController controller = (ComposerController) MainInterface.frameModel
+					.openView("Composer");
+			// start with empty model
+			controller.setComposerModel(new ComposerModel());
+			
+			// model -> view
+			controller.updateComponents(true);
 		} catch (PluginLoadingFailedException e) {
 			e.printStackTrace();
 		}
-    }
+	}
 }

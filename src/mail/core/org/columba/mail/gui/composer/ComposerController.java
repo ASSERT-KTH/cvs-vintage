@@ -211,12 +211,10 @@ public class ComposerController extends DefaultFrameController implements
 
 		//getContainer().setContentPane(this);
 
-		
 		/*
 		 * if (isAccountInfoPanelVisible()) {
 		 * addToolBar(getIdentityInfoPanel()); }
 		 */
-		
 
 		//		 *20030917, karlpeder* If ContainerListeners are waiting to be
 		// added, add them now.
@@ -233,13 +231,9 @@ public class ComposerController extends DefaultFrameController implements
 			containerListenerBuffer = null; // done, the buffer has been emptied
 		}
 
-		getContainer().getFrame().setFocusTraversalPolicy(
-				new ComposerFocusTraversalPolicy());
+		
 
-		//getContainer().setContentPane(this);
-
-		//		 To: editor should request focus
-		headerController.getView().getToComboBox().requestFocusInWindow();
+		
 	}
 
 	public IdentityInfoPanel getAccountInfoPanel() {
@@ -743,7 +737,6 @@ public class ComposerController extends DefaultFrameController implements
 	 */
 	public void showToolbar() {
 
-		
 		/*
 		 * boolean b = isToolbarVisible();
 		 * 
@@ -762,7 +755,7 @@ public class ComposerController extends DefaultFrameController implements
 	}
 
 	public void showAccountInfoPanel() {
-		
+
 		/*
 		 * boolean b = isAccountInfoPanelVisible();
 		 * 
@@ -781,8 +774,9 @@ public class ComposerController extends DefaultFrameController implements
 	 * Window listener prompts the user to save his work when closing the
 	 * dialog.
 	 * <p>
-	 * TODO (@author fdietz):: For some reason the window is closed before this dialog is opened
-	 * (Linux). Currently, the composer is just made visible again.
+	 * TODO (@author fdietz):: For some reason the window is closed before this
+	 * dialog is opened (Linux). Currently, the composer is just made visible
+	 * again.
 	 * 
 	 * @author fdietz
 	 */
@@ -902,6 +896,13 @@ public class ComposerController extends DefaultFrameController implements
 
 		getContainer().setInfoPanel(getIdentityInfoPanel());
 		
+		getContainer().getFrame().setFocusTraversalPolicy(
+				new ComposerFocusTraversalPolicy());
+
+		//getContainer().setContentPane(this);
+		
+		getContainer().getFrame().addWindowListener(new ComposerWindowAdapter());
+		
 		return panel;
 	}
 
@@ -912,7 +913,7 @@ public class ComposerController extends DefaultFrameController implements
 	public String getString(String sPath, String sName, String sID) {
 		return MailResourceLoader.getString(sPath, sName, sID);
 	}
-	
+
 	/**
 	 * @see org.columba.core.gui.frame.FrameMediator#getContentPane()
 	 */
