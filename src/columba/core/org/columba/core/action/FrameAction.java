@@ -20,8 +20,9 @@ import javax.swing.ImageIcon;
 import javax.swing.KeyStroke;
 
 import org.columba.core.gui.frame.AbstractFrameController;
+import org.columba.core.plugin.PluginInterface;
 
-public class FrameAction extends BasicAction {
+public class FrameAction extends BasicAction implements PluginInterface {
 
 	protected AbstractFrameController frameController;
 
@@ -53,7 +54,7 @@ public class FrameAction extends BasicAction {
 			big_icon,
 			mnemonic,
 			keyStroke);
-			
+
 		this.frameController = frameController;
 	}
 
@@ -86,35 +87,34 @@ public class FrameAction extends BasicAction {
 			big_icon,
 			mnemonic,
 			keyStroke);
-			
+
 		this.frameController = frameController;
 	}
-	
-	public FrameAction(
-			AbstractFrameController frameController,
-			String name,
-			String longDescription,
-			String tooltip,
-			String actionCommand,
-			ImageIcon small_icon,
-			ImageIcon big_icon,
-			int mnemonic,
-			KeyStroke keyStroke,
-			boolean showToolbarText) {
-			super(
-				name,
-				longDescription,
-				tooltip,
-				actionCommand,
-				small_icon,
-				big_icon,
-				mnemonic,
-				keyStroke,
-				showToolbarText);
-			
-			this.frameController = frameController;
-		}
 
+	public FrameAction(
+		AbstractFrameController frameController,
+		String name,
+		String longDescription,
+		String tooltip,
+		String actionCommand,
+		ImageIcon small_icon,
+		ImageIcon big_icon,
+		int mnemonic,
+		KeyStroke keyStroke,
+		boolean showToolbarText) {
+		super(
+			name,
+			longDescription,
+			tooltip,
+			actionCommand,
+			small_icon,
+			big_icon,
+			mnemonic,
+			keyStroke,
+			showToolbarText);
+
+		this.frameController = frameController;
+	}
 
 	/**
 	 * @return FrameController
