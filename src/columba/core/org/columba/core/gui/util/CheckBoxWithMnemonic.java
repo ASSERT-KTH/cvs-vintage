@@ -41,29 +41,9 @@ public class CheckBoxWithMnemonic extends JCheckBox {
 	public CheckBoxWithMnemonic(String textWithMnemonic) {
 		super();
 		
-		int index = textWithMnemonic.indexOf("&");
-		if (index != -1) {
-			// mnemonic found
+		// set display text - possible with a mnemonic defined using &
+		MnemonicSetter.setTextWithMnemonic(this, textWithMnemonic);
 
-			StringBuffer buf = new StringBuffer();
-
-			// if mnemonic is first character of this string
-			if (index == 0)
-				buf.append(textWithMnemonic.substring(1));
-			else {
-				buf.append(textWithMnemonic.substring(0, index));
-				buf.append(textWithMnemonic.substring(index + 1));
-			}
-
-			setText(buf.toString());
-
-			setDisplayedMnemonicIndex(index);
-
-		} else {
-			// no mnemonic found 
-			// -> just display the label
-			setText(textWithMnemonic);
-		}
 	}
 
 }

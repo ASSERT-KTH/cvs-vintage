@@ -14,6 +14,7 @@ import javax.swing.JCheckBoxMenuItem;
 
 import org.columba.core.action.CheckBoxAction;
 import org.columba.core.action.SelectionStateObservable;
+import org.columba.core.gui.util.MnemonicSetter;
 
 /**
  * Adds an Observer to JCheckBoxMenuItem in order to make it possible
@@ -53,7 +54,7 @@ public class CCheckBoxMenuItem extends JCheckBoxMenuItem implements Observer{
 		cbAction.getObservable().addObserver(this);
 		
 		// Set text, possibly with a mnemonic if defined using &
-		setTextInclMnemonic(cbAction.getName());
+		MnemonicSetter.setTextWithMnemonic(this, cbAction.getName());
 		
 	}
 	
@@ -66,47 +67,6 @@ public class CCheckBoxMenuItem extends JCheckBoxMenuItem implements Observer{
 		
 		boolean selectionState = o.isSelected();
 		setSelected(selectionState);
-	}
-
-	/**
-	 * Private helper to set text of menu item incl. taking care of 
-	 * setting the rigth mnemonic if specified using an & character in
-	 * the menu text
-	 * 
-	 * @param	text	Text of menu item, possibly incl. & for mnemonic spec.
-	 */
-	private void setTextInclMnemonic(String text) {
-
-		// search for mnemonic
-		int index = text.indexOf("&");
-		if ((index != -1) && ((index + 1) < text.length())) {
-			// mnemonic found
-			// ...and not at the end of the string (which doesn't make sence) 
-
-			char mnemonic = text.charAt(index + 1);
-
-			StringBuffer buf = new StringBuffer();
-
-			// if mnemonic is first character of this string
-			if (index == 0)
-				buf.append(text.substring(1));
-			else {
-				buf.append(text.substring(0, index));
-				buf.append(text.substring(index + 1));
-			}
-
-			// set display text
-			this.setText(buf.toString());
-
-			// set mnemonic
-			this.setMnemonic(mnemonic);
-			this.setDisplayedMnemonicIndex(index);
-
-		} else {
-			// no mnemonic found - just set the text on the menu item
-			this.setText(text);
-		}
-		
 	}
 
 }
