@@ -128,7 +128,7 @@
 	   srcdir="src/share">
       <!-- no dependencies -->
       <include name="org/apache/tomcat/startup/Main.java"/>    
-      <include name="org/apache/tomcat/util/SimpleClassLoader.java"/>    
+      <include name="org/apache/tomcat/util/compat/**"/>    
       <include name="org/apache/tomcat/util/IntrospectionUtils.java"/>    
     </javac>
     <jar jarfile="${tomcat.build}/lib/tomcat.jar" 
@@ -136,7 +136,7 @@
 	 manifest="src/build/manifest"> 
       <include name="org/apache/tomcat/startup/Main.class"/> 
       <include name="org/apache/tomcat/startup/Main$*.class"/> 
-      <include name="org/apache/tomcat/util/SimpleClassLoader**"/> 
+      <include name="org/apache/tomcat/util/compat/**"/> 
       <include name="org/apache/tomcat/util/IntrospectionUtils**"/> 
     </jar>
   </target>
@@ -372,8 +372,9 @@
 
     <!-- Add Tomcat internal javadoc -->
     <mkdir dir="${tomcat.dist}/webapps/ROOT/javadoc"/>
-<!--    <javadoc packagenames="org.apache.tomcat.*"-->
     <javadoc packagenames="org.apache.tomcat.core" sourcepath="src/share;src/facade22" destdir="${tomcat.dist}/webapps/ROOT/javadoc" author="true" version="true" use="true" windowtitle="Tomcat internal API" doctitle="Tomcat internal" bottom="Copyright © 2000 Apache Software Foundation. All Rights Reserved."/>
+
+    <javadoc packagenames="org.apache.tomcat.modules" sourcepath="src/share;src/facade22" destdir="${tomcat.dist}/webapps/ROOT/javadoc" author="true" version="true" use="true" windowtitle="Tomcat modules" doctitle="Tomcat modules" bottom="Copyright © 2000 Apache Software Foundation. All Rights Reserved."/>
 
     <delete dir="${tomcat.dist}/classes"/>
 
@@ -395,6 +396,30 @@
     <chmod perm="+x" file="${tomcat.dist}/bin/startup.sh"/>
     <chmod perm="+x" file="${tomcat.dist}/bin/shutdown.sh"/>
   </target>
+
+  <target name="modulesDoc.xml" >
+    <!-- using alexandria'x XMLDoclet -->
+    <javac srcdir="src/build" 
+	   destdir="${tomcat.build}/classes" 
+	   debug="${debug}" 
+	   optimize="${optimize}" 
+	   deprecation="off" >
+      <classpath>
+	<pathelement location="${java.home}/../lib/tools.jar"/>
+      </classpath>
+    </javac>
+    <javadoc packagenames="org.apache.tomcat.modules.*,org.apache.tomcat.facade.*" 
+	     sourcepath="src/share;src/facade22" 
+	     destdir="${tomcat.dist}/webapps/ROOT/javadoc" 
+	     author="true" 
+	     version="true" >
+        <doclet name="XMLDoclet" path="${tomcat.build}/classes" >
+          <param name="-file" value="${tomcat.build}/conf/modulesDoc.xml" />
+        </doclet>
+    </javadoc>
+  </target>
+
+
 
   <!-- =================================================================== -->
   <!-- Packages the distribution with ZIP                                  -->
