@@ -24,7 +24,10 @@
   <div>$scarabR.CurrentModule.Name $scarabR.CurrentRModuleIssueType.DisplayName</div>
 #end
 </div>
-#if ($user.CurrentMITList.isModifiable())
+## we only show the edit link, if we are editing a saved query.
+## It is easier to have the user use the back button if they are just creating
+## a new query, otherwise we need to keep track of a lot of info. 
+#if ($user.CurrentMITList.isModifiable() && $queryId)
     <div class="functnbar3">
     <input type="submit" value="Edit list" 
         name="eventSubmit_doRedirecttocrossmodulequery" />

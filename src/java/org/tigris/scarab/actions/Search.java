@@ -93,7 +93,7 @@ import org.tigris.scarab.util.word.IssueSearch;
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: Search.java,v 1.86 2002/07/23 00:37:39 jmcnally Exp $
+ * @version $Id: Search.java,v 1.87 2002/08/06 03:09:29 jmcnally Exp $
  */
 public class Search extends RequireLoginFirstAction
 {
@@ -137,7 +137,7 @@ public class Search extends RequireLoginFirstAction
     public void doRedirecttocrossmodulequery(RunData data, TemplateContext context)
          throws Exception
     {
-        context.put("queryString", getQueryString(data));
+        data.getParameters().setString("queryString", getQueryString(data));
         setTarget(data, "home,XModuleList.vm");
     }
 

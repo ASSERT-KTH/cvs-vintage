@@ -1,5 +1,7 @@
 #set ($user = $data.User)
 #set ($mitList = $user.CurrentMITList)
+#set ($isEdit = $data.Parameters.getString("queryId", "").length() > 0)
+
 <div class="app" id="xmodulelist">
 
 <div class="tabs">
@@ -18,7 +20,10 @@
 
 <form method="post" action="$link.setPage("home,XModuleList.vm")">
 <input type="hidden" name="action" value="DefineXModuleList" />
-<input type="hidden" name="queryString" value="$!queryString" />
+ <input type="hidden" name="queryString" 
+     value="$!data.Parameters.getString("queryString")" />
+ <input type="hidden" name="queryId" 
+     value="$!data.Parameters.getString("queryId")" />
 
 #if (!$mitList || $mitList.isEmpty())
  <p>Please choose a predefined list or build a custom list</p>
@@ -44,12 +49,14 @@
 		
 <h3>Build list of issue types for this query</h3>
 
-#if ($mitList && !$mitList.isEmpty())
+#if (!$isEdit && $mitList && !$mitList.isEmpty())
 <div class="functnbar">
  <input type="submit" name="eventSubmit_doGotoquery" value="Go to define query" />
 </div>
 #end
 
+
+#if (!$isEdit)
 <div class="colbar">
   <select name="list_id">
     <option value="">Select a saved cross module query...</option>
@@ -59,6 +66,8 @@
   </select>&nbsp;
   <input type="submit" name="eventSubmit_doChooselist" value="Select list" />
 </div>
+#end
+
 #if (!$mitList || $mitList.isEmpty())
 <p class="alert">
 No issue types have been selected.  Please select from the list below.
@@ -88,16 +97,20 @@ No issue types have been selected.  Please select from the list below.
 
 #if ($mitList && !$mitList.isEmpty())
  <div class="functnbar3">
+ #if (!$isEdit)
   <input type="submit" name="eventSubmit_doStartover" 
-     value="Start over / reset" />&nbsp;
+     value="Remove all items" />&nbsp;
+ #end
   <input type="submit" name="eventSubmit_doRemoveitemsfromlist" 
-     value="Remove from list" />&nbsp;
-  <input type="submit" name="eventSubmit_doGotosavelist" value="Save this list" />
+     value="Remove selected items" />&nbsp;
+  <input type="submit" name="eventSubmit_doGotosavelist" value="Save" />
  </div>
 
+ #if (!$isEdit)
  <div class="functnbar2">
   <input type="submit" name="eventSubmit_doGotoquery" value="Go to define query" />
  </div>
+ #end
 #end
 
 <a name="add"></a>
