@@ -55,13 +55,15 @@ import org.apache.turbine.util.*;
 import org.apache.turbine.util.velocity.VelocityEmail;
 import org.apache.turbine.om.security.*;
 import org.apache.turbine.om.security.peer.*;
+import org.apache.turbine.services.pull.ApplicationTool;
+import org.apache.turbine.services.pull.TurbinePull;
 import org.apache.turbine.services.resources.*;
 import org.apache.turbine.services.security.*;
 import org.apache.turbine.modules.*;
 import org.apache.turbine.modules.actions.*;
 // Scarab Stuff
 import org.tigris.scarab.om.ScarabUser;
-import org.tigris.scarab.system.*;
+import org.tigris.scarab.tools.ScarabRequestTool;
 import org.tigris.scarab.util.*;
 
 /**
@@ -71,7 +73,7 @@ import org.tigris.scarab.util.*;
         page.
         
     @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
-    @version $Id: RegisterConfirm.java,v 1.9 2001/02/23 03:11:31 jmcnally Exp $
+    @version $Id: RegisterConfirm.java,v 1.10 2001/03/22 09:23:18 jon Exp $
 */
 public class RegisterConfirm extends VelocityAction
 {
@@ -87,7 +89,8 @@ public class RegisterConfirm extends VelocityAction
         try
         {
             // pull the user object from the session
-            ScarabUser su = (ScarabUser) data.getUser().getTemp(ScarabConstants.SESSION_REGISTER);
+            ScarabUser su = (ScarabUser) data.getUser()
+                .getTemp(ScarabConstants.SESSION_REGISTER);
             if (su == null)
             {
                 // assign the template to the cancel template, not the current template
@@ -98,10 +101,11 @@ public class RegisterConfirm extends VelocityAction
             su.createNewUser();
             // grab the ScarabSystem object so that we can populate the internal User object
             // for redisplay of the form data on the screen
-            ScarabSystem ss = (ScarabSystem) context.get (ScarabConstants.SCARAB_SYSTEM);
-            if (ss != null)
+            ApplicationTool srt = TurbinePull.getTool(context, 
+                ScarabConstants.SCARAB_REQUEST_TOOL);
+            if (srt != null)
             {
-                ss.setUser(su);
+                ((ScarabRequestTool)srt).setUser(su);
             }
             
             // send an email that is for confirming the registration
@@ -138,12 +142,14 @@ public class RegisterConfirm extends VelocityAction
     */
     public void doBack( RunData data, Context context ) throws Exception
     {
-        // grab the ScarabSystem object so that we can populate the internal User object
-        // for redisplay of the form data on the screen
-        ScarabSystem ss = (ScarabSystem) context.get (ScarabConstants.SCARAB_SYSTEM);
-        if (ss != null)
+        // grab the ScarabRequestTool object so that we can populate the 
+        // internal User object for redisplay of the form data on the screen
+        ApplicationTool srt = TurbinePull.getTool(context, 
+            ScarabConstants.SCARAB_REQUEST_TOOL);
+        if (srt != null)
         {
-            ss.setUser((User)data.getUser().getTemp(ScarabConstants.SESSION_REGISTER));
+            ((ScarabRequestTool)srt).setUser((User)data.getUser()
+                .getTemp(ScarabConstants.SESSION_REGISTER));
         }
         // set the template to the template that we should be going back to
         setTemplate(data, data.getParameters().getString(

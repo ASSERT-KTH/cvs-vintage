@@ -55,7 +55,6 @@ import org.apache.turbine.modules.*;
 import org.apache.turbine.modules.pages.*; 
 import org.apache.turbine.util.*; 
 // Scarab Stuff
-import org.tigris.scarab.system.*;
 import org.tigris.scarab.util.ScarabConstants;
 
 /**
@@ -63,7 +62,7 @@ import org.tigris.scarab.util.ScarabConstants;
     for the Default Page.
 
     @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
-    @version $Id: ScarabPage.java,v 1.1 2001/01/15 07:49:12 jon Exp $
+    @version $Id: ScarabPage.java,v 1.2 2001/03/22 09:23:18 jon Exp $
 */
 public class ScarabPage extends VelocityPage
 {
@@ -73,7 +72,5 @@ public class ScarabPage extends VelocityPage
     protected void doBuildBeforeAction( RunData data ) throws Exception 
     {
         super.doBuildBeforeAction(data);
-        Context context = TurbineVelocity.getContext(data);
-        context.put (ScarabConstants.SCARAB_SYSTEM, new ScarabSystem());
     }
 }

@@ -1,4 +1,4 @@
-package org.tigris.scarab.util;
+package org.tigris.scarab.tools;
 
 /* ================================================================
  * Copyright (c) 2000 Collab.Net.  All rights reserved.
@@ -46,43 +46,92 @@ package org.tigris.scarab.util;
  * individuals on behalf of Collab.Net.
  */ 
 
+// Turbine
+import org.apache.turbine.om.security.User;
+import org.apache.turbine.om.*;
+// Scarab
+import org.tigris.scarab.om.*;
+// import org.tigris.scarab.intake.IntakeSystem;
+
 /**
-    A place to put public final static strings.
-    
-    @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
-    @version $Id: ScarabConstants.java,v 1.4 2001/03/22 09:23:19 jon Exp $
-*/
-
-public interface ScarabConstants
+ * This class is used by the Scarab API
+ */
+public class ScarabRequestTool implements ScarabRequestScope
 {
-    /** 
-     * the registration code uses this in order to store an object
-     * into the data.getUser().getTemp() hashtable. this is the key 
-     * value and is used across several classes.
-     */
-    public static final String SESSION_REGISTER = "scarab.newUser";
-
     /**
-     * This is the key value that stores the name of the template to 
-     * execute next.
+     * A User object for use within the Scarab API.
      */
-    public static final String NEXT_TEMPLATE = "nextTemplate";
-
-    /**
-     * This is the key value that stores the name of the template to 
-     * cancel to.
-     */
-    public static final String CANCEL_TEMPLATE = "cancelTemplate";
-
-    /**
-     * This is the key value that stores the name of the template
-     * that is currently being executed.
-     */
-    public static final String TEMPLATE = "template";
+    private User user = null;
     
+    public void init(Object data)
+    {
+    }
+
+    public void refresh()
+    {
+    }
+
     /**
-     * Primary System Object
+     * provides access to the intake field objects
      */
-    public static final String SCARAB_REQUEST_TOOL = "scarabR";
-    
-}    
+    //    private IntakeSystem intake;
+
+    /**
+     * Constructor does initialization stuff
+     */    
+    public ScarabRequestTool()
+    {
+        //intake = new IntakeSystem();
+    }
+
+    /**
+     * A User object for use within the Scarab API.
+     */
+    public void setUser (User user)
+    {
+        this.user = user;
+    }
+    /**
+     * A User object for use within the Scarab API.
+     */
+    public User getUser()
+    {
+        if (user == null)
+            this.user = new ScarabUser();
+        return this.user;
+    }
+
+    /**
+     * Get a specific module by key value.
+     *
+     * @param key a <code>String</code> value
+     * @return a <code>Module</code> value
+     */
+    public Module getModule(String key) throws Exception
+    {
+        return ModulePeer.retrieveByPK(new NumberKey(key));
+    }
+
+    /**
+     * Get a specific issue by key value.
+     *
+     * @param key a <code>String</code> value
+     * @return a <code>Issue</code> value
+     */
+    public Issue getIssue(String key) throws Exception
+    {
+        return IssuePeer.retrieveByPK(new NumberKey(key));
+    }
+
+    /**
+     * provides access to the intake field objects
+     * /
+    public IntakeSystem getIntake()
+    {
+        return intake; 
+    }
+    */
+}
+
+
+

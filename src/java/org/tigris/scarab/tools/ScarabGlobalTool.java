@@ -1,4 +1,4 @@
-package org.tigris.scarab.util;
+package org.tigris.scarab.tools;
 
 /* ================================================================
  * Copyright (c) 2000 Collab.Net.  All rights reserved.
@@ -46,43 +46,56 @@ package org.tigris.scarab.util;
  * individuals on behalf of Collab.Net.
  */ 
 
+// Turbine
+import org.apache.turbine.services.pull.ApplicationTool;
+
+// Velocity
+import org.apache.velocity.app.FieldMethodizer;
+
 /**
-    A place to put public final static strings.
-    
-    @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
-    @version $Id: ScarabConstants.java,v 1.4 2001/03/22 09:23:19 jon Exp $
-*/
-
-public interface ScarabConstants
+ * This scope is an object that is made available as a global
+ * object within the system.
+ * This object must be thread safe as multiple
+ * requests may access it at the same time. The object is made
+ * available in the context as: $scarabG
+ * <p>
+ * The design goals of the Scarab*API is to enable a <a
+ * href="http://jakarta.apache.org/turbine/pullmodel.html">pull based
+ * methodology</a> to be implemented.
+ *
+ * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
+ * @version $Id: ScarabGlobalTool.java,v 1.1 2001/03/22 09:23:19 jon Exp $
+ */
+public class ScarabGlobalTool implements ScarabGlobalScope
 {
-    /** 
-     * the registration code uses this in order to store an object
-     * into the data.getUser().getTemp() hashtable. this is the key 
-     * value and is used across several classes.
+    /**
+     * holds the Scarab constants
      */
-    public static final String SESSION_REGISTER = "scarab.newUser";
+    private FieldMethodizer constant = null;
+
+    public void init(Object data)
+    {
+    }
+
+    public void refresh()
+    {
+    }
 
     /**
-     * This is the key value that stores the name of the template to 
-     * execute next.
-     */
-    public static final String NEXT_TEMPLATE = "nextTemplate";
+     * Constructor does initialization stuff
+     */    
+    public ScarabGlobalTool()
+    {
+        constant = new FieldMethodizer(
+            "org.tigris.scarab.util.ScarabConstants");
+    }
 
     /**
-     * This is the key value that stores the name of the template to 
-     * cancel to.
+     * holds the Scarab constants. it will be available to the template system
+     * as $scarabG.Constant.CONSTANT_NAME.
      */
-    public static final String CANCEL_TEMPLATE = "cancelTemplate";
-
-    /**
-     * This is the key value that stores the name of the template
-     * that is currently being executed.
-     */
-    public static final String TEMPLATE = "template";
-    
-    /**
-     * Primary System Object
-     */
-    public static final String SCARAB_REQUEST_TOOL = "scarabR";
-    
-}    
+    public FieldMethodizer getConstant()
+    {
+        return constant;
+    }
+}

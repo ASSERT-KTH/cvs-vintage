@@ -54,6 +54,8 @@ import org.apache.velocity.context.*;
 import org.apache.turbine.util.*;
 import org.apache.turbine.om.security.*;
 import org.apache.turbine.om.security.peer.*;
+import org.apache.turbine.services.pull.ApplicationTool;
+import org.apache.turbine.services.pull.TurbinePull;
 import org.apache.turbine.services.resources.*;
 import org.apache.turbine.modules.*;
 import org.apache.turbine.modules.actions.*;
@@ -61,7 +63,7 @@ import org.apache.turbine.modules.actions.*;
 // Scarab Stuff
 import org.tigris.scarab.om.ScarabUser;
 import org.tigris.scarab.om.ScarabUserPeer;
-import org.tigris.scarab.system.*;
+import org.tigris.scarab.tools.*;
 import org.tigris.scarab.util.*;
 
 /**
@@ -69,7 +71,7 @@ import org.tigris.scarab.util.*;
     Action.
     
     @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
-    @version $Id: Confirm.java,v 1.4 2001/03/03 00:07:06 jmcnally Exp $
+    @version $Id: Confirm.java,v 1.5 2001/03/22 09:23:18 jon Exp $
 */
 public class Confirm extends VelocityAction
 {
@@ -104,12 +106,14 @@ public class Confirm extends VelocityAction
         }
         else // we don't have confirmation! :-(
         {
-            // grab the ScarabSystem object so that we can populate the internal User object
+            // grab the ScarabRequestTool object so that we can populate the internal User object
             // for redisplay of the form data on the screen
-            ScarabSystem ss = (ScarabSystem) context.get (ScarabConstants.SCARAB_SYSTEM);
-            if (ss != null)
+            ApplicationTool srt = TurbinePull.getTool(context, 
+                ScarabConstants.SCARAB_REQUEST_TOOL);
+            if (srt != null)
             {
-                ss.setUser((User)data.getUser().getTemp(ScarabConstants.SESSION_REGISTER));
+                ((ScarabRequestTool)srt).setUser((User)data.getUser().getTemp( 
+                    ScarabConstants.SESSION_REGISTER));
             }
         
             data.setMessage("Sorry, that email address and/or confirmation code is invalid.");

@@ -55,13 +55,15 @@ import org.apache.turbine.modules.*;
 import org.apache.turbine.modules.actions.*;
 import org.apache.turbine.om.security.*;
 import org.apache.turbine.om.security.peer.*;
+import org.apache.turbine.services.pull.ApplicationTool;
+import org.apache.turbine.services.pull.TurbinePull;
 import org.apache.turbine.services.resources.*;
 import org.apache.turbine.services.resources.TurbineResources;
 import org.apache.turbine.services.security.TurbineSecurity;
 import org.apache.turbine.util.*;
 import org.apache.turbine.util.security.*;
 // Scarab Stuff
-import org.tigris.scarab.system.ScarabSystem;
+import org.tigris.scarab.tools.ScarabRequestTool;
 import org.tigris.scarab.util.ScarabConstants;
 
 /**
@@ -69,7 +71,7 @@ import org.tigris.scarab.util.ScarabConstants;
     Action.
     
     @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
-    @version $Id: Login.java,v 1.3 2001/01/24 01:20:08 jon Exp $
+    @version $Id: Login.java,v 1.4 2001/03/22 09:23:18 jon Exp $
 */
 public class Login extends VelocityAction
 {
@@ -110,14 +112,15 @@ public class Login extends VelocityAction
             // check the CONFIRM_VALUE
             if (!user.isConfirmed())
             {
-                ScarabSystem ss = (ScarabSystem) context.get (ScarabConstants.SCARAB_SYSTEM);
-                if (ss != null)
+                ApplicationTool srt = TurbinePull.getTool(context, 
+                    ScarabConstants.SCARAB_REQUEST_TOOL);
+                if (srt != null)
                 {
                     user = TurbineSecurity.getUserInstance();
                     user.setEmail (username);
-                    ss.setUser(user);
+                    ((ScarabRequestTool)srt).setUser(user);
                 }
-            
+
                 setTemplate(data, "Confirm.vm");
                 throw new TurbineSecurityException("User is not confirmed!");
             }

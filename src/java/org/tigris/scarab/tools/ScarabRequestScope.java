@@ -1,4 +1,4 @@
-package org.tigris.scarab.util;
+package org.tigris.scarab.tools;
 
 /* ================================================================
  * Copyright (c) 2000 Collab.Net.  All rights reserved.
@@ -46,43 +46,53 @@ package org.tigris.scarab.util;
  * individuals on behalf of Collab.Net.
  */ 
 
+// Turbine
+import org.apache.turbine.om.security.User;
+import org.apache.turbine.om.*;
+import org.apache.turbine.services.pull.ApplicationTool;
+
+// Scarab
+import org.tigris.scarab.om.*;
+
 /**
-    A place to put public final static strings.
-    
-    @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
-    @version $Id: ScarabConstants.java,v 1.4 2001/03/22 09:23:19 jon Exp $
-*/
-
-public interface ScarabConstants
+ * The is an object that is made available on a per request
+ * basis. In other words, the lifecycle of the object is simply that it
+ * is available as a new object for each and every request to the
+ * system. This object need not be thread safe as it is tied to the
+ * currently executing request. This object is made available in the
+ * Context as $scarabR.
+ * <p>
+ * The design goals of the Scarab*API is to enable a <a
+ * href="http://jakarta.apache.org/turbine/pullmodel.html">pull based
+ * methodology</a> to be implemented.
+ *
+ * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
+ * @version $Id: ScarabRequestScope.java,v 1.1 2001/03/22 09:23:19 jon Exp $
+ */
+public interface ScarabRequestScope extends ApplicationTool
 {
-    /** 
-     * the registration code uses this in order to store an object
-     * into the data.getUser().getTemp() hashtable. this is the key 
-     * value and is used across several classes.
+    /**
+     * A User object for use within the Scarab API.
      */
-    public static final String SESSION_REGISTER = "scarab.newUser";
+    public void setUser (User user);
+    /**
+     * A User object for use within the Scarab API.
+     */
+    public User getUser();
 
     /**
-     * This is the key value that stores the name of the template to 
-     * execute next.
+     * Get a specific module by key value.
+     *
+     * @param key a <code>String</code> value
+     * @return a <code>Module</code> value
      */
-    public static final String NEXT_TEMPLATE = "nextTemplate";
+    public Module getModule(String key) throws Exception;
 
     /**
-     * This is the key value that stores the name of the template to 
-     * cancel to.
+     * Get a specific issue by key value.
+     *
+     * @param key a <code>String</code> value
+     * @return a <code>Issue</code> value
      */
-    public static final String CANCEL_TEMPLATE = "cancelTemplate";
-
-    /**
-     * This is the key value that stores the name of the template
-     * that is currently being executed.
-     */
-    public static final String TEMPLATE = "template";
-    
-    /**
-     * Primary System Object
-     */
-    public static final String SCARAB_REQUEST_TOOL = "scarabR";
-    
-}    
+    public Issue getIssue(String key) throws Exception;
+}
