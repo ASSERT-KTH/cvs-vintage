@@ -41,7 +41,7 @@ import org.jboss.util.FinderResults;
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
  * @author <a href="mailto:dirk@jboss.de">Dirk Zimmermann</a>
  * @author <a href="mailto:danch@nvisia.com">danch (Dan Christopherson)</a>
- * @version $Revision: 1.3 $
+ * @version $Revision: 1.4 $
  */
 public class JDBCLoadEntitiesCommand
    extends JDBCLoadEntityCommand
@@ -134,7 +134,12 @@ public class JDBCLoadEntitiesCommand
    {
       FinderResults keys = (FinderResults)((Object[])argOrArgs)[0];
       JDBCFinderCommand finder = (JDBCFinderCommand)keys.getFinder();
-      return selectClause + " " + finder.getFromClause() + " " + finder.getWhereClause() + " " + finder.getOrderByClause();
+      String sql = selectClause + " " + finder.getFromClause() + " " + finder.getWhereClause() + " " + finder.getOrderByClause();
+      if (jawsEntity.hasSelectForUpdate())
+      {
+	  sql += " FOR UPDATE";
+      }
+      return sql;
    }
    
    // protected -----------------------------------------------------
