@@ -1,4 +1,4 @@
-// $Id: UMLStateDiagram.java,v 1.53 2004/07/18 18:56:03 kataka Exp $
+// $Id: UMLStateDiagram.java,v 1.54 2004/08/05 19:27:07 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -26,7 +26,7 @@
 // Classes: UMLStateDiagram
 // Original Author: your email here
 
-// $Id: UMLStateDiagram.java,v 1.53 2004/07/18 18:56:03 kataka Exp $
+// $Id: UMLStateDiagram.java,v 1.54 2004/08/05 19:27:07 mvw Exp $
 
 package org.argouml.uml.diagram.state.ui;
 
@@ -43,7 +43,6 @@ import org.argouml.ui.CmdCreateNode;
 import org.argouml.ui.CmdSetMode;
 import org.argouml.uml.diagram.state.StateDiagramGraphModel;
 import org.argouml.uml.diagram.ui.UMLDiagram;
-import org.argouml.uml.diagram.ui.ActionAddNote;
 
 import org.tigris.gef.base.LayerPerspective;
 import org.tigris.gef.base.LayerPerspectiveMutable;
@@ -62,7 +61,7 @@ public class UMLStateDiagram extends UMLDiagram {
     /**
      * this diagram needs to be deleted when its statemachine is deleted.
      */
-    Object theStateMachine;
+    private Object theStateMachine;
 
     ////////////////
     // actions for toolbar
@@ -114,7 +113,7 @@ public class UMLStateDiagram extends UMLDiagram {
             ModelFacade.JUNCTION_PSEUDOSTATEKIND,
             "Junction"); 
 
-    protected static int stateDiagramSerial = 1;
+    private static int stateDiagramSerial = 1;
     
     ////////////////////////////////////////////////////////////////
     // contructors
