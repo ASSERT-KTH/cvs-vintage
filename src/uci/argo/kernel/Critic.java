@@ -24,7 +24,7 @@
 // File: Critic.java
 // Classes: Critic
 // Original Author: jrobbins@ics.uci.edu
-// $Id: Critic.java,v 1.13 1999/02/19 22:17:02 jrobbins Exp $
+// $Id: Critic.java,v 1.14 1999/03/02 02:49:12 jrobbins Exp $
 
 package uci.argo.kernel;
 
@@ -381,6 +381,35 @@ public class Critic implements Poster, java.io.Serializable {
     return true;
   }
 
+  ////////////////////////////////////////////////////////////////
+  // corrective automations, wizards
+
+  /** Create a new Wizard to help the user fix the identified problem.
+   *  This version assumes subclasses override getWizClass to return
+   *  the appropriate Class of wizard.  Critic subclasses that need to
+   *  initialize their wizard might override this to call
+   *  super.makeWizard() and then work with the result. */
+  public Wizard makeWizard(ToDoItem item) {
+    Class wizClass = getWizardClass(item);
+    // if wizClass is not a subclass of Wizard, print a warning
+    if (wizClass != null) {
+      try {
+	Wizard w = (Wizard) wizClass.newInstance();
+	w.setToDoItem(item);
+	return w;
+      }
+      catch (Exception ex) {
+	System.out.println("Could not make wizard: " + item);
+      }
+    }
+    return null;
+  }
+
+  /** Return the Class of wizard that can fix the problem identifed by
+   *  this critic.  Return null if no wizard is defined.  This method
+   *  returns null, subclasses with wizards should override it. */
+  public Class getWizardClass(ToDoItem item) { return null; }
+  
   ////////////////////////////////////////////////////////////////
   // accessors
 

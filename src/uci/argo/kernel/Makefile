@@ -23,7 +23,7 @@
 
 # File: Makefile in uci/argo/kernel
 # Oringinal Author: jrobbins@ics.uci.edu
-# $Id: Makefile,v 1.4 1999/02/19 22:17:18 jrobbins Exp $
+# $Id: Makefile,v 1.5 1999/03/02 02:49:14 jrobbins Exp $
 
 include ../../Makefile.config
 
@@ -57,7 +57,8 @@ CLASSES = \
 	ToDoItem.class \
 	ToDoList.class \
 	ToDoListEvent.class \
-	ToDoListListener.class 
+	ToDoListListener.class \
+	Wizard.class
 
 
 all: $(GEN) $(CLASSES)
