@@ -444,7 +444,7 @@ $scarabR.IssuePosInList of $scarabR.CurrentSearchResultsSize
 #macro (processQueryResults $action)
 <select name="next"
         onchange="javascript:submitFormTo(this.form, '$action');">
-<option value="" selected="selected">Process results:</option>
+<option value="" selected="selected">$l10n.ProcessResults:</option>
 #set ($module = $scarabR.CurrentModule)
 #if ($user.hasPermission($scarabG.Permission.ISSUE__VIEW, $module))
     <option value="viewAll">$l10n.ViewAll</option>
