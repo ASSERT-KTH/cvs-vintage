@@ -14,6 +14,7 @@ import org.jboss.tm.TransactionPropagationContextImporter;
 
 import java.io.InputStream;
 import java.io.IOException;
+import java.util.Map;
 
 /**
  * This is a hollow implementation in that it only over rides the DATATYPE
@@ -25,9 +26,9 @@ public class InvocationUnMarshaller extends SerializableUnMarshaller
 {
    public final static String DATATYPE = "invoker";
 
-   public Object read(InputStream inputStream) throws IOException, ClassNotFoundException
+   public Object read(InputStream inputStream, Map metadata) throws IOException, ClassNotFoundException
    {
-      Object ret = super.read(inputStream);
+      Object ret = super.read(inputStream, metadata);
 
       if(ret instanceof InvocationRequest)
       {
