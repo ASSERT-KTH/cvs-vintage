@@ -52,6 +52,7 @@ import org.apache.torque.om.NumberKey;
 import org.apache.torque.util.Criteria;
 import org.apache.torque.om.Persistent;
 
+import org.tigris.scarab.services.cache.ScarabCache;
 import org.tigris.scarab.services.module.ModuleEntity;
 import org.tigris.scarab.util.ScarabException;
 
@@ -62,12 +63,19 @@ import org.tigris.scarab.util.ScarabException;
  *
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: IssueType.java,v 1.13 2002/02/13 20:06:06 elicia Exp $
+ * @version $Id: IssueType.java,v 1.14 2002/02/18 23:29:25 jmcnally Exp $
  */
 public  class IssueType 
     extends org.tigris.scarab.om.BaseIssueType
     implements Persistent
 {
+    private static final String ISSUE_TYPE = 
+        "IssueType";
+    private static final String GET_TEMPLATE_ID = 
+        "getTemplateId";
+    private static final String GET_INSTANCE = 
+        "getInstance";
+
 
     public static final NumberKey ISSUE__PK = new NumberKey("1");
     public static final NumberKey USER_TEMPLATE__PK = new NumberKey("2");
@@ -98,41 +106,63 @@ public  class IssueType
          }
     }
 
+
     /**
      * Gets the id of the template that corresponds to the issue type.
      */
     public NumberKey getTemplateId()
         throws Exception
     {
-        NumberKey templateId = null;
-        Criteria crit = new Criteria();
-        crit.add(IssueTypePeer.PARENT_ID, getIssueTypeId());
-        List results = (List)IssueTypePeer.doSelect(crit);
-        if (results.isEmpty() || results.size()>1 )
-        {
-            throw new ScarabException("There has been an error.");
+        NumberKey result = null;
+        Object obj = ScarabCache.get(this, GET_TEMPLATE_ID); 
+        if ( obj == null ) 
+        {        
+            Criteria crit = new Criteria();
+            crit.add(IssueTypePeer.PARENT_ID, getIssueTypeId());
+            List results = (List)IssueTypePeer.doSelect(crit);
+            if (results.isEmpty() || results.size()>1 )
+            {
+                throw new ScarabException("There has been an error.");
+            }
+            else
+            {
+                result = ((IssueType)results.get(0)).getIssueTypeId();
+            }
+            ScarabCache.put(result, this, GET_TEMPLATE_ID);
         }
-        else
+        else 
         {
-            templateId = ((IssueType)results.get(0)).getIssueTypeId();
+            result = (NumberKey)obj;
         }
-        return templateId;
+        return result;
     }        
     
+
     /**
      * Get the IssueType using a issue type name
      */
     public static IssueType getInstance(String issueTypeName)
         throws Exception
     {
-        Criteria crit = new Criteria();
-        crit.add(IssueTypePeer.NAME, issueTypeName);
-        List issueTypes = (List)IssueTypePeer.doSelect(crit);
-        if(issueTypes == null || issueTypes.size() == 0 )
-        {
-            throw new ScarabException("Invalid issue artifact type: " +
-                                      issueTypeName);
+        IssueType result = null;
+        Object obj = ScarabCache.get(ISSUE_TYPE, GET_INSTANCE, issueTypeName); 
+        if ( obj == null ) 
+        {        
+            Criteria crit = new Criteria();
+            crit.add(IssueTypePeer.NAME, issueTypeName);
+            List issueTypes = (List)IssueTypePeer.doSelect(crit);
+            if(issueTypes == null || issueTypes.size() == 0 )
+            {
+                throw new ScarabException("Invalid issue artifact type: " +
+                                          issueTypeName);
+            }
+            result = (IssueType)issueTypes.get(0);
+            ScarabCache.put(result, ISSUE_TYPE, GET_INSTANCE, issueTypeName);
         }
-        return (IssueType)issueTypes.get(0);
+        else 
+        {
+            result = (IssueType)obj;
+        }
+        return result;
     }
 }

@@ -9,6 +9,7 @@ import org.apache.torque.om.ObjectKey;
 
 // Local classes
 import org.tigris.scarab.om.map.*;
+import org.tigris.scarab.services.cache.ScarabCache;
 
 /** 
  *  You should add additional methods to this class to meet the
@@ -18,6 +19,10 @@ import org.tigris.scarab.om.map.*;
 public class IssueTypePeer 
     extends org.tigris.scarab.om.BaseIssueTypePeer
 {
+    private static final String ISSUE_TYPE_PEER = 
+        "IssueTypePeer";
+    private static final String GET_ALL_ISSUE_TYPES = 
+        "getAllIssueTypes";
 
     /**
      *  Gets a List of all of the Issue types in the database,
@@ -26,13 +31,25 @@ public class IssueTypePeer
     public static List getAllIssueTypes(boolean includeDeleted)
         throws Exception
     {
-        Criteria c = new Criteria();
-        c.add(IssueTypePeer.PARENT_ID, 0);
-        if (!includeDeleted)
-        {
-            c.add(IssueTypePeer.DELETED, 0);
+        List result = null;
+        Boolean b = includeDeleted ? Boolean.TRUE : Boolean.FALSE;
+        Object obj = ScarabCache.get(ISSUE_TYPE_PEER, GET_ALL_ISSUE_TYPES, b); 
+        if ( obj == null ) 
+        {        
+            Criteria c = new Criteria();
+            c.add(IssueTypePeer.PARENT_ID, 0);
+            if (!includeDeleted)
+            {
+                c.add(IssueTypePeer.DELETED, 0);
+            }
+            result = doSelect(c);
+            ScarabCache.put(result, ISSUE_TYPE_PEER, GET_ALL_ISSUE_TYPES, b);
         }
-        return doSelect(c);
+        else 
+        {
+            result = (List)obj;
+        }
+        return result;
     }
 
     /**

@@ -58,6 +58,7 @@ import org.apache.torque.om.Persistent;
 import org.apache.torque.om.NumberKey;
 
 import org.tigris.scarab.services.security.ScarabSecurity;
+import org.tigris.scarab.services.cache.ScarabCache;
 import org.tigris.scarab.services.module.ModuleEntity;
 import org.tigris.scarab.services.module.ModuleManager;
 import org.tigris.scarab.services.user.UserManager;
@@ -74,6 +75,9 @@ public class Query
     extends org.tigris.scarab.om.BaseQuery
     implements Persistent
 {
+    private static final String GET_R_QUERY_USER = 
+        "getRQueryUser";
+
     /**
      * Throws UnsupportedOperationException.  Use
      * <code>getModule()</code> instead.
@@ -239,26 +243,36 @@ public class Query
     }
      */
 
+
     /**
      * Gets RQueryUser object for this query and user.
      */
     public RQueryUser getRQueryUser(ScarabUser user)
         throws Exception
     {
-        RQueryUser rqu = new RQueryUser();
-        Criteria crit = new Criteria();
-        crit.add(RQueryUserPeer.QUERY_ID, getQueryId());
-        crit.add(RQueryUserPeer.USER_ID, user.getUserId());
-        if (RQueryUserPeer.doSelect(crit).size() > 0)
-        {
-            rqu = (RQueryUser)getRQueryUsers().get(0);
+        RQueryUser result = new RQueryUser();
+        Object obj = ScarabCache.get(this, GET_R_QUERY_USER, user); 
+        if ( obj == null ) 
+        {        
+            Criteria crit = new Criteria();
+            crit.add(RQueryUserPeer.QUERY_ID, getQueryId());
+            crit.add(RQueryUserPeer.USER_ID, user.getUserId());
+            if (RQueryUserPeer.doSelect(crit).size() > 0)
+            {
+                result = (RQueryUser)getRQueryUsers().get(0);
+            }
+            else
+            {
+                result.setQuery(this);
+                result.setUserId(user.getUserId());
+            }
+            ScarabCache.put(result, this, GET_R_QUERY_USER, user);
         }
-        else
+        else 
         {
-            rqu.setQuery(this);
-            rqu.setUserId(user.getUserId());
+            result = (RQueryUser)obj;
         }
-        return rqu;
+        return result;
     }
 
     /**

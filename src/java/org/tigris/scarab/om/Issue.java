@@ -98,6 +98,10 @@ public class Issue
         "Issue";
     private static final String GET_ISSUE_BY_ID = 
         "getIssueById";
+    private static final String GET_ATTRIBUTE_VALUES_MAP = 
+        "getAttributeValuesMap";
+    private static final String GET_ASSOCIATED_USERS = 
+        "getAssociatedUsers";
     private static final String GET_MODULE_ATTRVALUES_MAP = 
         "getModuleAttributeValuesMap";
     private static final String GET_ATTRVALUE = 
@@ -638,18 +642,28 @@ public class Issue
      */
     public HashMap getAttributeValuesMap() throws Exception
     {
-        Criteria crit = new Criteria(2)
-            .add(AttributeValuePeer.DELETED, false);        
-        List siaValues = getAttributeValues(crit);
-        HashMap map = new HashMap( (int)(1.25*siaValues.size() + 1) );
-        for ( int i=0; i<siaValues.size(); i++ ) 
-        {
-            AttributeValue att = (AttributeValue) siaValues.get(i);
-            String name = att.getAttribute().getName();
-            map.put(name.toUpperCase(), att);
-        }
+        HashMap result = null;
+        Object obj = ScarabCache.get(this, GET_ATTRIBUTE_VALUES_MAP); 
+        if ( obj == null ) 
+        {        
+            Criteria crit = new Criteria(2)
+                .add(AttributeValuePeer.DELETED, false);        
+            List siaValues = getAttributeValues(crit);
+            result = new HashMap( (int)(1.25*siaValues.size() + 1) );
+            for ( int i=0; i<siaValues.size(); i++ ) 
+            {
+                AttributeValue att = (AttributeValue) siaValues.get(i);
+                String name = att.getAttribute().getName();
+                result.put(name.toUpperCase(), att);
+            }
 
-        return map;
+            ScarabCache.put(result, this, GET_ATTRIBUTE_VALUES_MAP);
+        }
+        else 
+        {
+            result = (HashMap)obj;
+        }
+        return result;
     }
 
 
@@ -805,48 +819,59 @@ public class Issue
         return result;
     }
 
+
     /**
      * Returns users assigned to all user attributes.
      */
     public List getAssociatedUsers() throws Exception
     {
-        ArrayList assignees = new ArrayList();
-        List attributeList = getModule().getUserAttributes(getIssueType(), true);
-        List attributeIdList = new ArrayList();
-
-        for ( int i=0; i<attributeList.size(); i++ ) 
-        {
-            Attribute att = (Attribute) attributeList.get(i);
-            RModuleAttribute modAttr = getModule().
-                getRModuleAttribute(att, getIssueType());
-            if (modAttr.getActive())
+        List result = null;
+        Object obj = ScarabCache.get(this, GET_ASSOCIATED_USERS); 
+        if ( obj == null ) 
+        {        
+            List attributeList = getModule()
+                .getUserAttributes(getIssueType(), true);
+            List attributeIdList = new ArrayList();
+            
+            for ( int i=0; i<attributeList.size(); i++ ) 
             {
-                attributeIdList.add(att.getAttributeId());
+                Attribute att = (Attribute) attributeList.get(i);
+                RModuleAttribute modAttr = getModule().
+                    getRModuleAttribute(att, getIssueType());
+                if (modAttr.getActive())
+                {
+                    attributeIdList.add(att.getAttributeId());
+                }
             }
-        }
-
-        if (!attributeIdList.isEmpty())
-        {
-            Criteria crit = new Criteria()
-                .addIn(AttributeValuePeer.ATTRIBUTE_ID, attributeIdList)
-                .add(AttributeValuePeer.DELETED, false);
-            crit.setDistinct();
-
-            List attValues = getAttributeValues(crit);
-            for ( int i=0; i<attValues.size(); i++ ) 
+            
+            if (!attributeIdList.isEmpty())
             {
-                AttributeValue attVal = (AttributeValue) attValues.get(i);
-                ScarabUser su = UserManager.getInstance(attVal.getUserId());
-                assignees.add(su);
+                Criteria crit = new Criteria()
+                    .addIn(AttributeValuePeer.ATTRIBUTE_ID, attributeIdList)
+                    .add(AttributeValuePeer.DELETED, false);
+                crit.setDistinct();
+                
+                List attValues = getAttributeValues(crit);
+                for ( int i=0; i<attValues.size(); i++ ) 
+                {
+                    AttributeValue attVal = (AttributeValue) attValues.get(i);
+                    ScarabUser su = UserManager.getInstance(attVal.getUserId());
+                    result.add(su);
+                }
             }
+            
+            ScarabUser createdBy = getCreatedBy();
+            if (!result.contains(createdBy))
+            { 
+                result.add(createdBy);
+            }
+            ScarabCache.put(result, this, GET_ASSOCIATED_USERS);
         }
-
-        ScarabUser createdBy = getCreatedBy();
-        if (!assignees.contains(createdBy))
-        { 
-            assignees.add(createdBy);
+        else 
+        {
+            result = (List)obj;
         }
-        return assignees;
+        return result;
     }
 
 

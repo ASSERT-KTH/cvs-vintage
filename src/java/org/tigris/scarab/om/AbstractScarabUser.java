@@ -70,6 +70,7 @@ import org.tigris.scarab.services.module.ModuleEntity;
 import org.tigris.scarab.om.Issue;
 import org.tigris.scarab.util.ScarabException;
 import org.tigris.scarab.services.security.ScarabSecurity;
+import org.tigris.scarab.services.cache.ScarabCache;
 
 /**
  * This class contains common code for the use in ScarabUser implementations.
@@ -81,7 +82,7 @@ import org.tigris.scarab.services.security.ScarabSecurity;
  * go here.
  * 
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: AbstractScarabUser.java,v 1.13 2002/02/13 05:16:25 jmcnally Exp $
+ * @version $Id: AbstractScarabUser.java,v 1.14 2002/02/18 23:29:25 jmcnally Exp $
  */
 public abstract class AbstractScarabUser 
     extends BaseObject 
@@ -164,6 +165,10 @@ public abstract class AbstractScarabUser
         return editModules;
      }
 
+    private static final String GET_R_MODULE_USERATTRIBUTES = 
+        "getRModuleUserAttributes";
+
+
     /**
      * @see org.tigris.scarab.om.ScarabUser#getRModuleUserAttributes(ModuleEntity, IssueType)
      */
@@ -171,19 +176,37 @@ public abstract class AbstractScarabUser
                                          IssueType issueType)
         throws Exception
     {
-        Criteria crit = new Criteria()
-           .add(RModuleUserAttributePeer.USER_ID, getUserId())
-           .add(RModuleUserAttributePeer.MODULE_ID, module.getModuleId())
-           .add(RModuleUserAttributePeer.ISSUE_TYPE_ID, 
-                issueType.getIssueTypeId())
-           .addDescendingOrderByColumn(RModuleUserAttributePeer.PREFERRED_ORDER);
-
-        return getRModuleUserAttributes(crit);
+        List result = null;
+        Object obj = ScarabCache.get(this, GET_R_MODULE_USERATTRIBUTES, 
+                                     module, issueType); 
+        if ( obj == null ) 
+        {        
+            Criteria crit = new Criteria()
+                .add(RModuleUserAttributePeer.USER_ID, getUserId())
+                .add(RModuleUserAttributePeer.MODULE_ID, module.getModuleId())
+                .add(RModuleUserAttributePeer.ISSUE_TYPE_ID, 
+                     issueType.getIssueTypeId())
+                .addDescendingOrderByColumn(
+                    RModuleUserAttributePeer.PREFERRED_ORDER);
+            
+            result = getRModuleUserAttributes(crit);
+            ScarabCache.put(result, this, GET_R_MODULE_USERATTRIBUTES,  
+                            module, issueType);
+        }
+        else 
+        {
+            result = (List)obj;
+        }
+        return result;
     }
 
     protected abstract Vector getRModuleUserAttributes(Criteria crit)
         throws Exception;
             
+    private static final String GET_R_MODULE_USERATTRIBUTE = 
+        "getRModuleUserAttribute";
+
+
     /**
      * @see org.tigris.scarab.om.ScarabUser#getRModuleUserAttribute(ModuleEntity, Attribute, IssueType)
      */
@@ -192,34 +215,44 @@ public abstract class AbstractScarabUser
                                                        IssueType issueType)
         throws Exception
     {
-        RModuleUserAttribute mua = null;
-        Criteria crit = new Criteria(4)
-           .add(RModuleUserAttributePeer.MODULE_ID, module.getModuleId())
-           .add(RModuleUserAttributePeer.USER_ID, getUserId())
-           .add(RModuleUserAttributePeer.ATTRIBUTE_ID, 
-                attribute.getAttributeId())
-           .add(RModuleUserAttributePeer.ISSUE_TYPE_ID, 
-                issueType.getIssueTypeId());
-        List muas = RModuleUserAttributePeer.doSelect(crit);
-        if ( muas.size() == 1 ) 
-        {
-            mua = (RModuleUserAttribute)muas.get(0);
+        RModuleUserAttribute result = null;
+        Object obj = ScarabCache.get(this, GET_R_MODULE_USERATTRIBUTE, 
+                                     module, attribute, issueType); 
+        if ( obj == null ) 
+        {        
+            Criteria crit = new Criteria(4)
+                .add(RModuleUserAttributePeer.MODULE_ID, module.getModuleId())
+                .add(RModuleUserAttributePeer.USER_ID, getUserId())
+                .add(RModuleUserAttributePeer.ATTRIBUTE_ID, 
+                     attribute.getAttributeId())
+                .add(RModuleUserAttributePeer.ISSUE_TYPE_ID, 
+                     issueType.getIssueTypeId());
+            List muas = RModuleUserAttributePeer.doSelect(crit);
+            if ( muas.size() == 1 ) 
+            {
+                result = (RModuleUserAttribute)muas.get(0);
+            }
+            else if ( muas.size() == 0 )
+            {
+                result = new RModuleUserAttribute();
+                result.setModuleId(module.getModuleId());
+                result.setUserId(getUserId());
+                result.setIssueTypeId(issueType.getIssueTypeId());
+                result.setAttributeId(attribute.getAttributeId());
+            }
+            else 
+            {
+                throw new ScarabException(
+                "Not sure, but this should probably only return one - jdm");
         }
-        else if ( muas.size() == 0 )
-        {
-            mua = new RModuleUserAttribute();
-            mua.setModuleId(module.getModuleId());
-            mua.setUserId(getUserId());
-            mua.setIssueTypeId(issueType.getIssueTypeId());
-            mua.setAttributeId(attribute.getAttributeId());
+            ScarabCache.put(result, this, GET_R_MODULE_USERATTRIBUTE, 
+                            module, attribute, issueType);
         }
         else 
         {
-            throw new ScarabException(
-            "Not sure but this should probably only return one element - jdm");
+            result = (RModuleUserAttribute)obj;
         }
-        
-        return mua;
+        return result;
     }
 
 
@@ -281,6 +314,10 @@ public abstract class AbstractScarabUser
         }
     }
 
+    private static final String GET_DEFAULT_QUERY_USER = 
+        "getDefaultQueryUser";
+
+
     /**
      * Clears default query-user map for this module/issuetype.
      */
@@ -288,16 +325,29 @@ public abstract class AbstractScarabUser
         throws Exception
     {
         RQueryUser rqu = null;
-        Criteria crit = new Criteria();
-        crit.add(RQueryUserPeer.USER_ID, getUserId());
-        crit.add(RQueryUserPeer.ISDEFAULT, 1);
-        crit.addJoin(RQueryUserPeer.QUERY_ID,
+        List result = null;
+        Object obj = ScarabCache.get(this, GET_DEFAULT_QUERY_USER, 
+                                     me, issueType); 
+        if ( obj == null ) 
+        {        
+            Criteria crit = new Criteria();
+            crit.add(RQueryUserPeer.USER_ID, getUserId());
+            crit.add(RQueryUserPeer.ISDEFAULT, 1);
+            crit.addJoin(RQueryUserPeer.QUERY_ID,
                      QueryPeer.QUERY_ID);
-        crit.add(QueryPeer.MODULE_ID, me.getModuleId());
-        crit.add(QueryPeer.ISSUE_TYPE_ID, issueType.getIssueTypeId());
-        if (RQueryUserPeer.doSelect(crit).size() > 0)
+            crit.add(QueryPeer.MODULE_ID, me.getModuleId());
+            crit.add(QueryPeer.ISSUE_TYPE_ID, issueType.getIssueTypeId());
+            result = RQueryUserPeer.doSelect(crit);
+            ScarabCache.put(result, this, GET_DEFAULT_QUERY_USER,  
+                            me, issueType);
+        }
+        else 
         {
-            rqu = (RQueryUser)RQueryUserPeer.doSelect(crit).get(0);
+            result = (List)obj;
+        }
+        if (result.size() > 0)
+        {
+            rqu = (RQueryUser)result.get(0);
         }
         return rqu;
     }
