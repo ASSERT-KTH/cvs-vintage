@@ -3,18 +3,30 @@
 <!-- Bugzilla -> Scarab Transform -->
 <project name="main" default="transform" basedir=".">
 
+  <!-- Give user a chance to override without editing this file
+      (and without typing -D each time it compiles it -->
+  <property file="${user.home}/scarab.build.properties" /> 
+  <property file="${user.home}/build.properties" />
+  <property file="${basedir}/build.properties" />
+  <property file="${basedir}/default.properties" />
+
+  <property name="scarab.transform.input" value="bugzilla-sample-bug.xml" />
+  <property name="scarab.transform.output" value="transform.xml" />
+  <property name="scarab.transform.xsl" value="bugzilla-scarab.xsl" />
+  <property name="scarab.transform.lib.dir" value="../../lib" />
+
   <!-- Build classpath -->
   <path id="classpath">
-    <fileset dir="../../lib">
+    <fileset dir="${scarab.transform.lib.dir}">
       <include name="*.jar"/>
     </fileset>
   </path>
 
   <target name="transform">
     <style basedir="." destdir="." 
-           in="bugzilla-sample-bug.xml"
-           out="transform.xml"
-           style="bugzilla-scarab.xsl"
+           in="${scarab.transform.input}"
+           out="${scarab.transform.output}"
+           style="${scarab.transform.xsl}"
            >
       <classpath refid="classpath"/>
     </style>
