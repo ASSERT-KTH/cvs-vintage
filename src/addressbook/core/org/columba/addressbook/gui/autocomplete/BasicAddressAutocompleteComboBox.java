@@ -13,7 +13,7 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
-package org.columba.addressbook.gui.util;
+package org.columba.addressbook.gui.autocomplete;
 
 import java.util.List;
 import java.util.Vector;

@@ -77,7 +77,7 @@ public class AddressbookTableModel
 	public Object getValueAt(int row, int column) {
 		HeaderItem item = rows.get(row);
 
-		return item;
+		return item.get(columns[column]);
 	}
 
 }

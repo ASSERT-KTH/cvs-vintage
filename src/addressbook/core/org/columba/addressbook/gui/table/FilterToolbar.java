@@ -124,7 +124,7 @@ public class FilterToolbar extends JToolBar implements ActionListener {
 
     public void actionPerformed(ActionEvent e) {
         String action = e.getActionCommand();
-
+        /*
         try {
             //TableModelFilteredView model = mainInterface.headerTableViewer.getHeaderTable().getTableModelFilteredView();
             TableModelFilteredView model = table.getFilteredView();
@@ -156,5 +156,7 @@ public class FilterToolbar extends JToolBar implements ActionListener {
         } catch (Exception ex) {
             ex.printStackTrace();
         }
+        */
     }
+    
 }

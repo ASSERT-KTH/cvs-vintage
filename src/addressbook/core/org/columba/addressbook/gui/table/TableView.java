@@ -25,11 +25,8 @@ import javax.swing.table.TableColumn;
 import javax.swing.table.TableModel;
 
 import org.columba.addressbook.config.AdapterNode;
-import org.columba.addressbook.gui.table.renderer.AddressRenderer;
 import org.columba.addressbook.gui.table.renderer.DefaultHeaderRenderer;
-import org.columba.addressbook.gui.table.renderer.DisplaynameRenderer;
 import org.columba.addressbook.gui.table.renderer.TypeRenderer;
-import org.columba.addressbook.gui.table.renderer.UrlRenderer;
 import org.columba.addressbook.util.AddressbookResourceLoader;
 
 /**
@@ -64,13 +61,13 @@ public class TableView extends JTable {
 
 		tc = getColumnModel().getColumn(1);
 		tc.setHeaderRenderer(createHeader("displayname"));
-		tc.setCellRenderer(new DisplaynameRenderer());
+
 		tc = getColumnModel().getColumn(2);
 		tc.setHeaderRenderer(createHeader("email;internet"));
-		tc.setCellRenderer(new AddressRenderer());
+
 		tc = getColumnModel().getColumn(3);
 		tc.setHeaderRenderer(createHeader("url"));
-		tc.setCellRenderer(new UrlRenderer());
+
 	}
 
 	/**

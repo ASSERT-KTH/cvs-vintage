@@ -30,7 +30,7 @@ import javax.swing.event.TableModelListener;
 
 import org.columba.addressbook.folder.HeaderItem;
 import org.columba.addressbook.folder.HeaderItemList;
-import org.columba.addressbook.gui.util.HeaderItemDNDManager;
+import org.columba.addressbook.gui.list.HeaderItemDNDManager;
 import org.columba.addressbook.parser.AddressParser;
 import org.columba.core.gui.focus.FocusOwner;
 import org.columba.core.gui.util.NotifyDialog;

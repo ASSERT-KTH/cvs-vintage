@@ -28,6 +28,8 @@ import org.columba.addressbook.folder.HeaderItemList;
  * Using bubble-sort. Note, that we use an index array, which maps to the
  * real-model decorated by this class. So, we don't change the order of the
  * real model data.
+ * <p>
+ * TODO:add sorting order (ascending/descending)
  * 
  * @author fdietz
  */
@@ -84,6 +86,8 @@ public class SortDecorator extends TableModelDecorator {
 		Object io = realModel.getValueAt(i, column);
 		Object jo = realModel.getValueAt(j, column);
 
+		if ((io ==null ) || (jo ==null )) return 0;
+		
 		int c = jo.toString().compareTo(io.toString());
 		return (c < 0) ? -1 : ((c > 0) ? 1 : 0);
 	}

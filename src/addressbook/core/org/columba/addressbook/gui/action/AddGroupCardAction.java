@@ -21,7 +21,7 @@ import java.awt.event.ActionEvent;
 
 import org.columba.addressbook.folder.AddressbookFolder;
 import org.columba.addressbook.folder.GroupListCard;
-import org.columba.addressbook.gui.EditGroupDialog;
+import org.columba.addressbook.gui.dialog.group.EditGroupDialog;
 import org.columba.addressbook.gui.frame.AddressbookFrameMediator;
 import org.columba.addressbook.util.AddressbookResourceLoader;
 import org.columba.core.gui.frame.FrameMediator;

@@ -15,7 +15,7 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003.
 //
 //All Rights Reserved.
-package org.columba.addressbook.gui;
+package org.columba.addressbook.gui.dialog.group;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
@@ -45,10 +45,10 @@ import org.columba.addressbook.config.AdapterNode;
 import org.columba.addressbook.folder.GroupListCard;
 import org.columba.addressbook.folder.HeaderItem;
 import org.columba.addressbook.folder.HeaderItemList;
-import org.columba.addressbook.gui.util.AddressbookDNDListView;
-import org.columba.addressbook.gui.util.AddressbookListModel;
-import org.columba.addressbook.gui.util.AddressbookListRenderer;
-import org.columba.addressbook.gui.util.DefaultAddressComboBox;
+import org.columba.addressbook.gui.autocomplete.DefaultAddressComboBox;
+import org.columba.addressbook.gui.list.AddressbookDNDListView;
+import org.columba.addressbook.gui.list.AddressbookListModel;
+import org.columba.addressbook.gui.list.AddressbookListRenderer;
 import org.columba.addressbook.util.AddressbookResourceLoader;
 import org.columba.core.gui.util.ButtonWithMnemonic;
 import org.columba.core.gui.util.DefaultFormBuilder;

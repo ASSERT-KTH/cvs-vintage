@@ -22,7 +22,6 @@ import java.awt.Component;
 import javax.swing.ImageIcon;
 import javax.swing.JTable;
 
-import org.columba.addressbook.folder.HeaderItem;
 import org.columba.core.gui.util.ImageLoader;
 
 /**
@@ -54,9 +53,7 @@ public class TypeRenderer extends DefaultLabelRenderer {
 		int row,
 		int column) {
 
-		HeaderItem item =(HeaderItem)value;
-		
-		String str = (String) item.get("type");
+		String str =(String) value;
 
 		if (str.equalsIgnoreCase("contact")) {
 			setIcon(image1);

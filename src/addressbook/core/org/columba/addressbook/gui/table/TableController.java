@@ -31,7 +31,6 @@ import org.columba.addressbook.folder.HeaderItem;
 import org.columba.addressbook.gui.frame.AddressbookFrameMediator;
 import org.columba.addressbook.gui.table.model.AddressbookTableModel;
 import org.columba.addressbook.gui.table.model.SortDecorator;
-import org.columba.mail.gui.table.model.TableModelSorter;
 
 /**
  * @author fdietz
@@ -41,8 +40,6 @@ public class TableController implements TreeSelectionListener {
 	private AddressbookFrameMediator mediator;
 
 	private AddressbookTableModel addressbookModel;
-	private TableModelFilteredView filteredView;
-	private TableModelSorter sorter;
 
 	private FilterToolbar toolbar;
 
@@ -100,9 +97,9 @@ public class TableController implements TreeSelectionListener {
 
 					sortDecorator.sort(column);
 					/*
-					sortDecorator.tableChanged(
-						new TableModelEvent(addressbookModel));
-						*/
+					 * sortDecorator.tableChanged( new
+					 * TableModelEvent(addressbookModel));
+					 */
 					//addressbookModel.update();
 
 					//mainInterface.mainFrame.getMenu().updateSortMenu();
@@ -172,20 +169,6 @@ public class TableController implements TreeSelectionListener {
 	 */
 	public AddressbookTableModel getAddressbookModel() {
 		return addressbookModel;
-	}
-
-	/**
-	 * @return Returns the filteredView.
-	 */
-	public TableModelFilteredView getFilteredView() {
-		return filteredView;
-	}
-
-	/**
-	 * @return Returns the sorter.
-	 */
-	public TableModelSorter getSorter() {
-		return sorter;
 	}
 
 	public HeaderItem getSelectedItem() {
