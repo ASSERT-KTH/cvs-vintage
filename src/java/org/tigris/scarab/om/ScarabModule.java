@@ -106,7 +106,7 @@ import org.apache.fulcrum.security.impl.db.entity
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: ScarabModule.java,v 1.104 2002/04/23 15:27:55 jmcnally Exp $
+ * @version $Id: ScarabModule.java,v 1.105 2002/04/24 01:01:25 jon Exp $
  */
 public class ScarabModule
     extends BaseScarabModule
@@ -402,11 +402,12 @@ public class ScarabModule
                 throw new TorqueException( new ScarabException(
                     "Can't save a project without first assigning an owner."));
             }
+            // grant the ower of the module the Project Owner role
             try
             {
-                grant (ScarabUserManager.getInstance(getOwnerId()), 
-                       TurbineSecurity.getRole("Project Owner"));
-        
+                User user = (User) ScarabUserManager.getInstance(getOwnerId());
+                Role role = TurbineSecurity.getRole("Project Owner");
+                grant (user, role);
                 setInitialAttributesAndIssueTypes();
             }
             catch (Exception e)
