@@ -1,4 +1,4 @@
-// $Id: ModelFacade.java,v 1.221 2004/12/12 16:52:00 bobtarling Exp $
+// $Id: ModelFacade.java,v 1.222 2004/12/12 17:07:59 bobtarling Exp $
 // Copyright (c) 2003-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -5689,9 +5689,6 @@ public class ModelFacade {
      */
     public static void setName(Object handle, String name) {
         if ((handle instanceof MModelElement) && (name != null)) {
-            if (name.endsWith("Q")) {
-                name += (char)0xffff;
-            }
             // The following code is a workaround for issue
             // http://argouml.tigris.org/issues/show_bug.cgi?id=2847. The cause is
             // not known and the best fix available for the moment is to remove
