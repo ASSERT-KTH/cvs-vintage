@@ -48,7 +48,10 @@
 </ul>
 <div class="docs" id="userissuemodify"> 
   <h3><b><a name="info"></a>Managing issue information</b></h3>
-  <p>All attributes are copied and the full history is added.</p>
+  <p>Almost all attributes of an issue are editable from the view issue screen. 
+    You can alter most attribues, if you have the proper permission level, view 
+    user associations, add url links, create dependencies, add attachments, and 
+    view the issue history.</p>
   <p><b>Dependencies</b></p>
   <p>You can alter or add dependencies as necessary. As when creating an issue, 
     you must define the dependency type. Dependencies can be blocking, non-blocking 
@@ -56,24 +59,35 @@
   <h3><a name="users"></a>Associate users</h3>
   <div class="courtesylinks"> 
     <div class="docs" id="userissueassign">
-      <p>can assign from:</p>
+      <p>The administrator may have defined several types of user attributes that 
+        allow users to easily track the issues they are responsible for or in 
+        which they have an interest. You can also use user attributes to search 
+        for specfic issues.</p>
+      <p> All user association tasks are performed on the <b>Assign</b> screen. 
+        To access this screen either use the <b>edit list</b> button on the view 
+        issue page or search for a group of issues and use the <b>assign</b> button. 
+        On the Assign screen you will see a list of users currently associated 
+        with the issue, their email adress and the type of association and a User 
+        section which allows you to add users to the issue. You can filter the 
+        list of users using the filter form. You can search for users by First 
+        name, Last name or email address. </p>
+      <p><b>associating a user</b>: Once you have narrowed the list of users to 
+        select from you can select an association type for the drop down box next 
+        to the users name. Use the check box to add multiple users at the same 
+        time. Once you have selected your users and set their association type 
+        use the <b>add selected to assignee list </b>button.</p>
+      <p><b>removing an associated user</b>: select the user or users you would 
+        like to remove from the issue and click the <b>remove selected from assignee 
+        list </b>button.</p>
+      <p><b>altering the association type</b>: If you need to change the type 
+        of association use the association type drop down box next to the name 
+        of the user. Each association type available for that user will be listed 
+        in that box. </p>
+      <p>User attributes can also be used in a search criteria.If you do not see 
+        a specific user on the user list contact your administrator and make sure 
+        that they have been added to the user attribute. </p>
     </div>
-    <ul>
-      <li> 
-        <div class="docs" id="userissueassign">query results</div>
-      </li>
-      <li>view issue</li>
-      <li></li>
-    </ul>
-    <div class="docs" id="userissueassign"> 
-      <p>Access issues. can use query to find and then identify multiple issues 
-        to assign if you'd like. you can also assign from issue view screen.</p>
-      <p>In order to assign users, users need to be added to the assign attribute. 
-        Contact your administrator to make sure that all users have been added 
-        to this attributeselect users to associate with issues</p>
-      <p>users</p>
-      <p>list of users; filter to limit search criteria</p>
-    </div>
+    <div class="docs" id="userissueassign"></div>
     <h3><a name="move"></a>Moving issues</h3>
     <p>You may need to track a similar issue in multiple areas. Rather than entering 
       the same issue twice, in different areas, you can copy an issue to another 
