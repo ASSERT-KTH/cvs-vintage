@@ -47,7 +47,7 @@ import org.jboss.metadata.MetaData;
 import org.jboss.metadata.XmlLoadable;
 
 import org.w3c.dom.Element;
-
+import org.w3c.dom.Node;
 /**
  * ContainerInvoker for JMS MessageDrivenBeans, based on JRMPContainerInvoker.
  *
@@ -57,7 +57,7 @@ import org.w3c.dom.Element;
  *      </a>
  * @author    <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  * @author    <a href="mailto:jason@planet57.com">Jason Dillon</a>
- * @version   $Revision: 1.33 $
+ * @version   $Revision: 1.34 $
  */
 public class JMSContainerInvoker
        implements ContainerInvoker, XmlLoadable
@@ -87,27 +87,37 @@ public class JMSContainerInvoker
    protected boolean optimize;
    // = false;
    /**
-    * Description of the Field
+    * Maximu number provider is allowed to stuff into a session.
     */
    protected int maxMessagesNr = 1;
    /**
-    * Description of the Field
+    * Maximun pool size of server sessions.
     */
    protected int maxPoolSize = 15;
    /**
-    * Description of the Field
+    * Time to wait before retrying to reconnect a lost connection.
+    */
+   protected long reconnectInterval = 10000;
+   /**
+    * If Dead letter queue should be used or not.
+    */
+   protected boolean useDLQ = false;
+   /**
+    * JNDI name of the provider adapter.
+    * @see org.jboss.jms.jndi.JMSProviderAdapter
     */
    protected String providerAdapterJNDI;
    /**
-    * Description of the Field
+    * JNDI name of the server session factory.
+    * @see org.jboss.jms.asf.ServerSessionPoolFactory
     */
    protected String serverSessionPoolFactoryJNDI;
    /**
-    * Description of the Field
+    * JMS acknowledge mode, used when session is not XA.
     */
    protected int acknowledgeMode;
    /**
-    * Description of the Field
+    * escription of the Field
     */
    protected boolean isContainerManagedTx;
    /**
@@ -115,15 +125,15 @@ public class JMSContainerInvoker
     */
    protected boolean isNotSupportedTx;
    /**
-    * Description of the Field
+    * The container.
     */
    protected Container container;
    /**
-    * Description of the Field
+    * The JMS connection.
     */
    protected Connection connection;
    /**
-    * Description of the Field
+    * TH JMS connection consumer.
     */
    protected ConnectionConsumer connectionConsumer;
    /**
@@ -143,13 +153,13 @@ public class JMSContainerInvoker
     */
    protected String beanName;
    /**
-    * Description of the Field
+    * Dead letter queue handler.
     */
    protected DLQHandler dlqHandler;
    /**
-    * Description of the Field
+    * DLQConfig element from MDBConfig element from jboss.xml.
     */
-   protected Element mdbConfig;
+   protected Element dlqConfig;
 
    /**
     * Instance logger.
@@ -272,7 +282,9 @@ public class JMSContainerInvoker
       log.debug("Destroying JMSContainerInvoker for bean " + beanName);
 
       // Take down DLQ
-      dlqHandler.destroy();
+      if ( dlqHandler != null) {
+	 dlqHandler.destroy();
+      }
 
       // close the connection consumer
       try
@@ -316,7 +328,10 @@ public class JMSContainerInvoker
    }
 
    /**
-    * XmlLoadable implementation
+    * XmlLoadable implementation.
+    *
+    * FIXME - we ought to move all config into MDBConfig, but I do not
+    * do that now due to backward compatibility.
     *
     * @param element                  Description of Parameter
     * @exception DeploymentException  Description of Exception
@@ -332,6 +347,22 @@ public class JMSContainerInvoker
          String maxSize = MetaData.getElementContent
                (MetaData.getUniqueChild(element, "MaximumSize"));
          maxPoolSize = Integer.parseInt(maxSize);
+
+	 Element mdbConfig = MetaData.getUniqueChild(element, "MDBConfig");
+
+	 String reconnect = MetaData.getElementContent
+               (MetaData.getUniqueChild(mdbConfig, "ReconnectIntervalSec"));
+	 reconnectInterval = Long.parseLong(reconnect)*1000;
+	 
+	 // Get Dead letter queue config - and save it for later use
+	 Element dlqEl = MetaData.getOptionalChild(mdbConfig, "DLQConfig");
+	 if (dlqEl != null) {
+	    dlqConfig = (Element)((Node)dlqEl).cloneNode(true);
+	    useDLQ = true;
+	 } else {
+	    useDLQ = false;
+	 }
+
       }
       catch (NumberFormatException e)
       {
@@ -360,8 +391,8 @@ public class JMSContainerInvoker
          serverSessionPoolFactoryJNDI = "java:/" + serverSessionPoolFactoryJNDI;
       }
 
-      // Get MDBConfig
-      mdbConfig = (Element)MetaData.getUniqueChild(element, "MDBConfig").cloneNode(true);
+
+      
    }
 
    /**
@@ -375,9 +406,11 @@ public class JMSContainerInvoker
       log.debug("initializing");
 
       // Set up Dead Letter Queue handler
-      dlqHandler = new DLQHandler();
-      dlqHandler.importXml(mdbConfig);
-      dlqHandler.init();
+      if (useDLQ) {
+	 dlqHandler = new DLQHandler();
+	 dlqHandler.importXml(dlqConfig);
+	 dlqHandler.init();
+      }
 
       // Store TM reference locally - should we test for CMT Required
       tm = container.getTransactionManager();
@@ -525,7 +558,7 @@ public class JMSContainerInvoker
          log.debug("connection consumer: " + connectionConsumer);
       }
 
-      log.debug("initialized");
+      log.debug("initialized with config " + toString());
    }
 
    /**
@@ -895,7 +928,9 @@ public class JMSContainerInvoker
          try
          {
             // DLQHandling
-            if (message.getJMSRedelivered() && dlqHandler.handleRedeliveredMessage(message))
+            if (useDLQ && // Is Dead Letter Queue used at all
+		message.getJMSRedelivered() && // Was message resent
+		dlqHandler.handleRedeliveredMessage(message)) //Did the DLQ handler take care of the message
             {
                // Message will be placed on Dead Letter Queue,
                // if redelivered to many times
@@ -957,7 +992,7 @@ public class JMSContainerInvoker
             {
                try
                {
-                  Thread.sleep(10000);
+                  Thread.sleep(reconnectInterval);
                }
                catch (InterruptedException ie)
                {
@@ -992,6 +1027,28 @@ public class JMSContainerInvoker
             log.debug("current thread interrupted");
          }
       }
+   }
+
+   /**
+    * Return a string representation of the current config state.
+    */
+   public String toString() {
+      StringBuffer buff = new StringBuffer();
+      buff.append("JMSContainerInvoker: {");
+      buff.append("beanName=").append(beanName);
+      buff.append(";maxMessagesNr=").append(maxMessagesNr);
+      buff.append(";maxPoolSize=").append(maxPoolSize);
+      buff.append(";reconnectInterval=").append(reconnectInterval);
+      buff.append(";providerAdapterJNDI=").append(providerAdapterJNDI);
+      buff.append(";serverSessionPoolFactoryJNDI=").append(serverSessionPoolFactoryJNDI);
+      buff.append(";acknowledgeMode=").append(acknowledgeMode);
+      buff.append(";isContainerManagedTx=").append(isContainerManagedTx);
+      buff.append(";isNotSupportedTx=").append(isNotSupportedTx);
+      buff.append(";useDLQ=").append(useDLQ);
+      if (dlqHandler != null)
+	  buff.append(";dlqHandler=").append(dlqHandler.toString());
+      buff.append("}");
+      return buff.toString();
    }
 
    /**

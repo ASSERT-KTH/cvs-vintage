@@ -55,7 +55,7 @@ import org.jboss.metadata.MetaData;
  * Created: Thu Aug 23 21:17:26 2001
  *
  * @author 
- * @version $Revision: 1.2 $ $Date: 2001/11/26 03:12:28 $
+ * @version $Revision: 1.3 $ $Date: 2001/12/11 09:45:55 $
  */
 
 public class DLQHandler
@@ -290,6 +290,16 @@ public class DLQHandler
 	 //Noop will take default value
       }
 
+   }
+
+   public String toString() {
+      StringBuffer buff = new StringBuffer();
+      buff.append("DLQHandler: {");
+      buff.append("destinationJNDI=").append(destinationJNDI);
+      buff.append(";maxResent=").append(maxResent);
+      buff.append(";timeToLive=").append(timeToLive);
+      buff.append("}");
+      return buff.toString();
    }
 
    private class BufferEntry {
