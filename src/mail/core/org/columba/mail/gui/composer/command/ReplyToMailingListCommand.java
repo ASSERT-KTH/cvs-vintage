@@ -1,16 +1,18 @@
-//The contents of this file are subject to the Mozilla Public License Version 1.1
-//(the "License"); you may not use this file except in compliance with the 
+// The contents of this file are subject to the Mozilla Public License Version
+// 1.1
+//(the "License"); you may not use this file except in compliance with the
 //License. You may obtain a copy of the License at http://www.mozilla.org/MPL/
 //
 //Software distributed under the License is distributed on an "AS IS" basis,
-//WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License 
+//WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
 //for the specific language governing rights and
 //limitations under the License.
 //
 //The Original Code is "The Columba Project"
 //
-//The Initial Developers of the Original Code are Frederik Dietz and Timo Stich.
-//Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
+//The Initial Developers of the Original Code are Frederik Dietz and Timo
+// Stich.
+//Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003.
 //
 //All Rights Reserved.
 package org.columba.mail.gui.composer.command;
@@ -20,13 +22,15 @@ import org.columba.core.command.Worker;
 import org.columba.core.xml.XmlElement;
 import org.columba.mail.command.FolderCommand;
 import org.columba.mail.command.FolderCommandReference;
-import org.columba.mail.composer.MessageBuilder;
+import org.columba.mail.composer.MessageBuilderHelper;
+import org.columba.mail.config.AccountItem;
 import org.columba.mail.config.MailConfig;
 import org.columba.mail.folder.Folder;
 import org.columba.mail.gui.composer.ComposerController;
 import org.columba.mail.gui.composer.ComposerModel;
 import org.columba.mail.message.ColumbaMessage;
-import org.columba.mail.message.ColumbaHeader;
+import org.columba.ristretto.coder.EncodedWord;
+import org.columba.ristretto.message.Header;
 import org.columba.ristretto.message.LocalMimePart;
 import org.columba.ristretto.message.MimeHeader;
 import org.columba.ristretto.message.MimePart;
@@ -34,21 +38,20 @@ import org.columba.ristretto.message.MimeTree;
 import org.columba.ristretto.message.io.CharSequenceSource;
 
 /**
- * @author freddy
- *
- * To change this generated comment edit the template variable "typecomment":
- * Window>Preferences>Java>Templates.
- * To enable and disable the creation of type comments go to
- * Window>Preferences>Java>Code Generation.
+ * Reply to mailinglist.
+ * <p>
+ * Uses the X-Beenthere: headerfield to determine the To: address
+ * 
+ * @author fdizet
  */
 public class ReplyToMailingListCommand extends FolderCommand {
 
-	private static final String[] neededHeaders = { "Subject", "From", "To", "In-Reply-To", "Message-ID", "References", "X-Beenthere" };
-	
-	ComposerController controller;
+	protected ComposerController controller;
+	protected ComposerModel model;
 
 	/**
 	 * Constructor for ReplyToMailingListCommand.
+	 * 
 	 * @param frameController
 	 * @param references
 	 */
@@ -56,36 +59,47 @@ public class ReplyToMailingListCommand extends FolderCommand {
 		super(references);
 	}
 
-	/**
-	 * @see org.columba.core.command.Command#updateGUI()
-	 */
 	public void updateGUI() throws Exception {
+		// open composer frame
+		controller = new ComposerController();
+
+		// apply model
+		controller.setComposerModel(model);
+		// model->view update
 		controller.updateComponents(true);
 	}
 
-	/**
-	 * @see org.columba.core.command.Command#execute(Worker)
-	 */
 	public void execute(Worker worker) throws Exception {
+		// get selected folder
 		Folder folder =
 			(Folder) ((FolderCommandReference) getReferences()[0]).getFolder();
+		// get first selected message
 		Object[] uids = ((FolderCommandReference) getReferences()[0]).getUids();
 
+		// create new message object
 		ColumbaMessage message = new ColumbaMessage();
-
-		ColumbaHeader header =
-//			(ColumbaHeader) folder.getMessageHeader(uids[0]);
-		new ColumbaHeader( folder.getHeaderFields(uids[0], neededHeaders));
-		
-		
-		
+		//		get headerfields
+		Header header =
+			folder.getHeaderFields(
+				uids[0],
+				new String[] {
+					"Subject",
+					"From",
+					"To",
+					"Reply-To",
+					"Message-ID",
+					"In-Reply-To",
+					"References" });
 		message.setHeader(header);
+
+		// get mimeparts
 		MimeTree mimePartTree = folder.getMimePartTree(uids[0]);
 		message.setMimePartTree(mimePartTree);
 
 		XmlElement html =
 			MailConfig.getMainFrameOptionsConfig().getRoot().getElement(
 				"/options/html");
+
 		// Which Bodypart shall be shown? (html/plain)
 		MimePart bodyPart = null;
 
@@ -95,36 +109,78 @@ public class ReplyToMailingListCommand extends FolderCommand {
 			bodyPart = mimePartTree.getFirstTextPart("plain");
 
 		if (bodyPart == null) {
-			bodyPart = new LocalMimePart(new MimeHeader("text","plain"));
-			((LocalMimePart)bodyPart).setBody(new CharSequenceSource("<No Message-Text>"));
+			bodyPart = new LocalMimePart(new MimeHeader(header));
+			((LocalMimePart) bodyPart).setBody(
+				new CharSequenceSource("<No Message-Text>"));
 		} else
-			bodyPart =
-				folder.getMimePart(uids[0], bodyPart.getAddress());
+			bodyPart = folder.getMimePart(uids[0], bodyPart.getAddress());
 
 		message.setBodyPart(bodyPart);
 
-		ComposerModel model = new ComposerModel();
+		// create composer model
+		model = new ComposerModel();
+
+		// set character set
+		bodyPart = message.getBodyPart();
+		if (bodyPart != null) {
+			String charset =
+				bodyPart.getHeader().getContentParameter("charset");
+			if (charset != null) {
+				model.setCharsetName(charset);
+			}
+		}
+
+		// set subject
+		model.setSubject(
+			MessageBuilderHelper.createReplySubject(header.get("Subject")));
+
+		// decode To: headerfield
+		String to = MessageBuilderHelper.createToMailinglist(header);
+
+		if (to != null) {
+			to = EncodedWord.decode(to).toString();
+			model.setTo(to);
+
+			// TODO: automatically add sender to addressbook
+			// -> split to-headerfield, there can be more than only one
+			// recipients!
+			MessageBuilderHelper.addSenderToAddressbook(to);
+		}
+
+		// create In-Reply-To:, References: headerfields
+		MessageBuilderHelper.createMailingListHeaderItems(header, model);
+
+		// try to good guess the correct account
+		Integer accountUid = (Integer) folder.getAttribute(uids[0], "columba.accountuid");
+		String host = (String) folder.getAttribute(uids[0], "columba.host");
+		String address = header.get("To");
+		AccountItem accountItem = MessageBuilderHelper.getAccountItem(accountUid, host, address);
+		model.setAccountItem(accountItem);
 		
-		controller = new ComposerController();
+		
+		/*
+		 * original message is sent "inline" - model is setup according to the
+		 * type of the original message. NB: If the original message was plain
+		 * text, the message type seen here is always text. If the original
+		 * message contained html, the message type seen here will depend on
+		 * the "prefer html" option.
+		 */
+		MimeHeader bodyHeader = message.getBodyPart().getHeader();
+		if (bodyHeader.getMimeType().getSubtype().equals("html")) {
+			model.setHtml(true);
+		} else {
+			model.setHtml(false);
+		}
 
-		MessageBuilder.getInstance().createMessage(
-			message,
-			model,
-			MessageBuilder.REPLY_MAILINGLIST);
-
-		controller.setComposerModel(model);
-	}
-
-	/**
-	 * @see org.columba.core.command.Command#undo(Worker)
-	 */
-	public void undo(Worker worker) throws Exception {
-	}
-
-	/**
-	 * @see org.columba.core.command.Command#redo(Worker)
-	 */
-	public void redo(Worker worker) throws Exception {
+		// prepend "> " to every line of the bodytext
+		String bodyText =
+			MessageBuilderHelper.createQuotedBodyText(
+				message.getBodyPart(),
+				model.isHtml());
+		if (bodyText == null) {
+			bodyText = "[Error parsing bodytext]";
+		}
+		model.setBodyText(bodyText);
 	}
 
 }

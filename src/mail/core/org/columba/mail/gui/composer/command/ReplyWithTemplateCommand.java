@@ -1,4 +1,5 @@
-//The contents of this file are subject to the Mozilla Public License Version 1.1
+// The contents of this file are subject to the Mozilla Public License Version
+// 1.1
 //(the "License"); you may not use this file except in compliance with the
 //License. You may obtain a copy of the License at http://www.mozilla.org/MPL/
 //
@@ -9,7 +10,8 @@
 //
 //The Original Code is "The Columba Project"
 //
-//The Initial Developers of the Original Code are Frederik Dietz and Timo Stich.
+//The Initial Developers of the Original Code are Frederik Dietz and Timo
+// Stich.
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003.
 //
 //All Rights Reserved.
@@ -18,11 +20,11 @@ package org.columba.mail.gui.composer.command;
 import org.columba.core.command.DefaultCommandReference;
 import org.columba.core.command.Worker;
 import org.columba.core.gui.frame.AbstractFrameController;
-import org.columba.core.main.MainInterface;
 import org.columba.core.xml.XmlElement;
 import org.columba.mail.command.FolderCommand;
 import org.columba.mail.command.FolderCommandReference;
-import org.columba.mail.composer.MessageBuilder;
+import org.columba.mail.composer.MessageBuilderHelper;
+import org.columba.mail.config.AccountItem;
 import org.columba.mail.config.MailConfig;
 import org.columba.mail.folder.Folder;
 import org.columba.mail.gui.composer.ComposerController;
@@ -32,6 +34,8 @@ import org.columba.mail.main.MailInterface;
 import org.columba.mail.message.ColumbaHeader;
 import org.columba.mail.message.ColumbaMessage;
 import org.columba.mail.message.HeaderList;
+import org.columba.mail.parser.text.HtmlParser;
+import org.columba.ristretto.coder.EncodedWord;
 import org.columba.ristretto.message.LocalMimePart;
 import org.columba.ristretto.message.MimeHeader;
 import org.columba.ristretto.message.MimePart;
@@ -40,10 +44,13 @@ import org.columba.ristretto.message.io.CharSequenceSource;
 
 /**
  * Opens a dialog to ask the user which template to use
- *
+ * 
  * @author fdietz
  */
 public class ReplyWithTemplateCommand extends FolderCommand {
+
+	protected ComposerController controller;
+	protected ComposerModel model;
 
 	/**
 	 * @param references
@@ -63,9 +70,16 @@ public class ReplyWithTemplateCommand extends FolderCommand {
 
 	}
 
-	/* (non-Javadoc)
-	 * @see org.columba.core.command.Command#execute(org.columba.core.command.Worker)
-	 */
+	public void updateGUI() throws Exception {
+		// open composer frame
+		controller = new ComposerController();
+
+		// apply model
+		controller.setComposerModel(model);
+		// model->view update
+		controller.updateComponents(true);
+	}
+
 	public void execute(Worker worker) throws Exception {
 		Folder folder =
 			(Folder) ((FolderCommandReference) getReferences()[0]).getFolder();
@@ -92,7 +106,8 @@ public class ReplyWithTemplateCommand extends FolderCommand {
 		ColumbaMessage message = new ColumbaMessage();
 
 		ColumbaHeader header = (ColumbaHeader) folder.getMessageHeader(uids[0]);
-		// TODO: Get only the part of the header that is needed. See ReplyToMailinglist.
+		// TODO: Get only the part of the header that is needed. See
+		// ReplyToMailinglist.
 
 		message.setHeader(header);
 		MimeTree mimePartTree = folder.getMimePartTree(uids[0]);
@@ -105,8 +120,9 @@ public class ReplyWithTemplateCommand extends FolderCommand {
 		// Which Bodypart shall be shown? (html/plain)
 		MimePart bodyPart = null;
 
-		boolean viewhtml = Boolean.valueOf(html.getAttribute("prefer")).booleanValue();
-                if (viewhtml)
+		boolean viewhtml =
+			Boolean.valueOf(html.getAttribute("prefer")).booleanValue();
+		if (viewhtml)
 			bodyPart = mimePartTree.getFirstTextPart("html");
 		else
 			bodyPart = mimePartTree.getFirstTextPart("plain");
@@ -139,20 +155,87 @@ public class ReplyWithTemplateCommand extends FolderCommand {
 			htmlTemplate = false;
 		}
 
-		String charset = bodyPart.getHeader().getContentParameter("charset");
-
-		//String templateBodytext = mimePart.getBody().toString();
-
 		// open new message in composer
-		ComposerModel model = new ComposerModel();
-		ComposerController controller = new ComposerController();
-		MessageBuilder.getInstance().createMessageFromTemplate(
-			message,
-			model,
-			mimePart,
-			htmlTemplate);
-		controller.setComposerModel(model);
+		model = new ComposerModel();
 
+		ColumbaHeader columbaHeader = (ColumbaHeader) message.getHeader();
+
+		MimePart bp = message.getBodyPart();
+		String templateBody = MessageBuilderHelper.createBodyText(bp);
+
+		if (bp != null) {
+			String charset =
+				bodyPart.getHeader().getContentParameter("charset");
+			if (charset != null) {
+				model.setCharsetName(charset);
+			}
+		}
+
+		model.setSubject(
+			MessageBuilderHelper.createReplySubject((String) header.get("Subject")));
+
+		String to = MessageBuilderHelper.createTo(header.getHeader());
+
+		if (to != null) {
+			to = EncodedWord.decode(to).toString();
+			model.setTo(to);
+			MessageBuilderHelper.addSenderToAddressbook(to);
+		}
+
+		MessageBuilderHelper.createMailingListHeaderItems(header.getHeader(), model);
+
+		// try to good guess the correct account
+		Integer accountUid =
+			(Integer) folder.getAttribute(uids[0], "columba.accountuid");
+		String host = (String) folder.getAttribute(uids[0], "columba.host");
+		String address = (String) header.get("To");
+		AccountItem accountItem =
+			MessageBuilderHelper.getAccountItem(accountUid, host, address);
+		model.setAccountItem(accountItem);
+
+		// Initialisation of model to html or text
+		MimeHeader bodyHeader = message.getBodyPart().getHeader();
+		if (bodyHeader.getMimeType().getSubtype().equals("html")) {
+			model.setHtml(true);
+		} else {
+			model.setHtml(false);
+		}
+
+		// prepend "> " to every line of the bodytext
+		String bodyText =
+			MessageBuilderHelper.createQuotedBodyText(
+				message.getBodyPart(),
+				model.isHtml());
+		if (bodyText == null) {
+			bodyText = "[Error parsing bodytext]";
+		}
+
+		if (!htmlTemplate && model.isHtml()) {
+			// conversion to html necessary
+			templateBody = HtmlParser.textToHtml(templateBody, null, null);
+		} else if (htmlTemplate && !model.isHtml()) {
+			// conversion to text necessary
+			templateBody = HtmlParser.htmlToText(templateBody);
+		}
+
+		StringBuffer buf;
+		if (model.isHtml()) {
+			// insert template just before ending body tag
+			String lcase = bodyText.toLowerCase();
+			int pos = lcase.indexOf("</body>");
+			if (pos < 0) {
+				pos = bodyText.length();
+			}
+			buf = new StringBuffer(bodyText.substring(0, pos));
+			buf.append(HtmlParser.getHtmlBody(templateBody));
+			buf.append("</body></html>");
+		} else {
+			// just insert template at end (text mode)
+			buf = new StringBuffer(bodyText);
+			buf.append(templateBody);
+		}
+
+		model.setBodyText(buf.toString());
 	}
 
 }
