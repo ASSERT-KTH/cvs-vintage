@@ -52,17 +52,26 @@
                   </td>
                  </tr>
             #elseif ($attVal.isSet())
+               #set ($display = "true")
+               #set ($isOptionAttr = $attVal.Attribute.isOptionAttribute())
+               #if ($isOptionAttr)
+                 #if ($attVal.AttributeOption.Deleted.toString().equals("true"))
+                     #set ($display = "false")
+                 #end
+               #end
+               #if ($display.equals("true"))
                  <tr>
                    <th>$attVal.RModuleAttribute.DisplayValue</th>
                    <td>
                    #set ($attrInput = $intake.AttributeValue.mapTo($attVal))
-                   #if ($attVal.Attribute.isOptionAttribute())
-                     $!attVal.AttributeOption.Name
+                   #if ($isOptionAttr)
+                      $!attVal.AttributeOption.Name
                    #else
-                 $!attrInput.Value
-               #end
-              </td>
-             </tr>
+                   $!attrInput.Value
+                   #end
+                   </td>
+                 </tr>
+              #end
             #end
         #end
       #end
