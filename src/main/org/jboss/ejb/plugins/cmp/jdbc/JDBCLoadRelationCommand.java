@@ -33,7 +33,7 @@ import org.jboss.deployment.DeploymentException;
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @author <a href="mailto:alex@jboss.org">Alexey Loubyansky</a>
- * @version $Revision: 1.32 $
+ * @version $Revision: 1.33 $
  */
 public final class JDBCLoadRelationCommand
 {
@@ -129,6 +129,10 @@ public final class JDBCLoadRelationCommand
                for(int i = 0; i < myKeyFields.length; ++i)
                {
                   index = myKeyFields[i].loadPrimaryKeyResults(rs, index, ref);
+                  if(ref[0] == null)
+                  {
+                     break;
+                  }
                }
                loadedPk = ref[0];
             }
@@ -138,6 +142,10 @@ public final class JDBCLoadRelationCommand
             for(int i = 0; i < relatedKeyFields.length; ++i)
             {
                index = relatedKeyFields[i].loadPrimaryKeyResults(rs, index, ref);
+               if(ref[0] == null)
+               {
+                  break;
+               }
             }
             Object loadedFk = ref[0];
 
