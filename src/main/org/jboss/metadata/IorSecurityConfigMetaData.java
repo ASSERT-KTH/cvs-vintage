@@ -6,20 +6,17 @@
  */
 package org.jboss.metadata;
 
-import java.io.Serializable;
-
-import org.w3c.dom.Element;
 import org.jboss.deployment.DeploymentException;
+import org.w3c.dom.Element;
 
 /**
  * Describes the security configuration information for the IOR.
  *
  * @author <a href="mailto:alex@jboss.org">Alexey Loubyansky</a>
  * @author <a href="mailto:dimitris@jboss.org">Dimitris Andreadis</a>
- * @version <tt>$Revision: 1.8 $</tt>
+ * @version <tt>$Revision: 1.9 $</tt>
  */
 public class IorSecurityConfigMetaData
-   implements Serializable
 {
    /**
     * The root element for security between the end points.

@@ -6,20 +6,19 @@
  */
 package org.jboss.metadata;
 
-// $Id: EjbPortComponentMetaData.java,v 1.2 2004/11/26 07:02:33 tdiesler Exp $
+// $Id: EjbPortComponentMetaData.java,v 1.3 2005/03/18 21:40:24 andd Exp $
+
+import java.util.StringTokenizer;
 
 import org.jboss.deployment.DeploymentException;
 import org.w3c.dom.Element;
 
-import java.io.Serializable;
-import java.util.StringTokenizer;
-
 /** The metdata data for session/port-component element from jboss.xml
  *
  * @author Scott.Stark@jboss.org
- * @version $Revision: 1.2 $
+ * @version $Revision: 1.3 $
  */
-public class EjbPortComponentMetaData implements Serializable
+public class EjbPortComponentMetaData
 {
    private SessionMetaData sessionMetaData;
 
