@@ -1,4 +1,4 @@
-// $Id: SelectionComponent.java,v 1.11 2003/02/06 06:01:58 mkl Exp $
+// $Id: SelectionComponent.java,v 1.12 2003/02/15 05:01:10 mkl Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: SelectionComponent.java
 // Classes: SelectionComponent
 // Original Author: 5eichler@informatik.uni-hamburg.de
-// $Id: SelectionComponent.java,v 1.11 2003/02/06 06:01:58 mkl Exp $
+// $Id: SelectionComponent.java,v 1.12 2003/02/15 05:01:10 mkl Exp $
 
 package org.argouml.uml.diagram.deployment.ui;
 
@@ -139,23 +139,25 @@ public class SelectionComponent extends SelectionWButtons {
     switch (hand.index) {
     case 10: //add dep
       edgeClass = MDependency.class;
-      reverse = true;
+      reverse = false;
       by = cy;
       bx = cx + cw/2;
       break;
     case 11: //add dep
       edgeClass = MDependency.class;
+      reverse = true;
       by = cy + ch;
       bx = cx + cw/2;
       break;
     case 12: //add dep
       edgeClass = MDependency.class;
-      reverse = true;
+      reverse = false;
       by = cy + ch/2;
       bx = cx + cw;
       break;
     case 13: // add dep
       edgeClass = MDependency.class;
+      reverse = true;
       by = cy + ch/2;
       bx = cx;
       break;
@@ -166,7 +168,7 @@ public class SelectionComponent extends SelectionWButtons {
     if (edgeClass != null && nodeClass != null) {
       Editor ce = Globals.curEditor();
       ModeCreateEdgeAndNode m = new
-	ModeCreateEdgeAndNode(ce, edgeClass, nodeClass, false);
+          ModeCreateEdgeAndNode(ce, edgeClass, nodeClass, false);
       m.setup((FigNode)_content, _content.getOwner(), bx, by, reverse);
       ce.mode(m);
     }
