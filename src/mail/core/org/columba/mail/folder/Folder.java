@@ -77,7 +77,7 @@ public abstract class Folder extends FolderTreeNode implements MailboxInterface 
     /**
      * total/unread/recent count of messages in this folder
      */
-    protected MessageFolderInfo messageFolderInfo;
+    protected MessageFolderInfo messageFolderInfo = new MessageFolderInfo();
 
     /**
      * list of filters
@@ -112,13 +112,6 @@ public abstract class Folder extends FolderTreeNode implements MailboxInterface 
      */
     protected StatusObservable observable;
 
-    /**
-     * parent directory for mail folders
-     * 
-     * for example: "/home/donald/.columba/mail/"
-     */
-    private String parentPath;
-
     // implement your own search-engine here
     protected DefaultSearchEngine searchEngine;
 
@@ -134,17 +127,6 @@ public abstract class Folder extends FolderTreeNode implements MailboxInterface 
     public Folder(FolderItem item, String path) {
         super(item);
 
-        // FIXME: why is this needed?
-        // children is already initialised by DefaultMutableTreeNode
-        //children = new Vector();
-        messageFolderInfo = new MessageFolderInfo();
-
-        changed = false;
-
-        // remember parent path
-        // (this is necessary for IMAPRootFolder sync operations)
-        parentPath = path;
-
         String dir = path + getUid();
 
         if (DiskIO.ensureDirectory(dir)) {
@@ -159,10 +141,6 @@ public abstract class Folder extends FolderTreeNode implements MailboxInterface 
     protected Folder() {
         super();
 
-        messageFolderInfo = new MessageFolderInfo();
-
-        changed = false;
-
         observable = new StatusObservableImpl();
     }
 
@@ -171,14 +149,6 @@ public abstract class Folder extends FolderTreeNode implements MailboxInterface 
      */
     public Folder(String name, String type, String path) {
         super(name, type);
-
-        messageFolderInfo = new MessageFolderInfo();
-
-        changed = false;
-
-        // remember parent path
-        // (this is necessary for IMAPFolder sync operations)
-        parentPath = path;
 
         String dir = path + getUid();
 
@@ -446,7 +416,7 @@ public abstract class Folder extends FolderTreeNode implements MailboxInterface 
      * @return Returns the parentPath.
      */
     public String getParentPath() {
-        return parentPath;
+        return directoryFile.getParent();
     }
 
     /** ********************* update of MessageFolderInfo ******************** */
@@ -480,7 +450,6 @@ public abstract class Folder extends FolderTreeNode implements MailboxInterface 
         // -> if not, the header cache wouldn't notice that something
         // -> has changed. And wouldn't save the changes.
         setChanged(true);
-
     }
 
     /**
@@ -490,10 +459,11 @@ public abstract class Folder extends FolderTreeNode implements MailboxInterface 
      * @throws Exception
      */
     protected void markMessage(Object uid, int variant) throws Exception {
-
         Flags flags = getFlags(uid);
 
-        if (flags == null) { return; }
+        if (flags == null) {
+            return; 
+        }
 
         switch (variant) {
         case MarkMessageCommand.MARK_AS_READ:
@@ -578,7 +548,6 @@ public abstract class Folder extends FolderTreeNode implements MailboxInterface 
                 break;
             }
         }
-
     }
 
     /**
@@ -801,5 +770,4 @@ public abstract class Folder extends FolderTreeNode implements MailboxInterface 
 
         return bodyStream;
     }
-
 }
