@@ -69,10 +69,94 @@ public class FilterListTest extends TestCase {
 		filterList.add(filterOne);
 		filterList.add(filterTwo);
 		filterList.add(filterThree);
-		assertEquals("The get(int) method returned the wrong filter.", filterOne.getName(), filterList.get(0).getName());
-		assertEquals("The get(int) method returned the wrong filter.", filterTwo.getName(), filterList.get(1).getName());
-		assertEquals("The get(int) method returned the wrong filter.", filterThree.getName(), filterList.get(2).getName());
+		assertEquals("The get(int) method returned the wrong filter.", filterOne, filterList.get(0));
+		assertEquals("The get(int) method returned the wrong filter.", filterTwo, filterList.get(1));
+		assertEquals("The get(int) method returned the wrong filter.", filterThree, filterList.get(2));
 	}
+	
+	/**
+	 * Test for insert(Filter, int) method.
+	 */
+	public void testInsert() {
+		FilterList filterList = new FilterList( new XmlElement() );
+		Filter filterOne = createNamedFilter("ONE");
+		Filter filterTwo = createNamedFilter("TWO");
+		Filter filterThree = createNamedFilter("THREE");
+		filterList.add(filterOne);
+		filterList.add(filterTwo);
+		filterList.add(filterThree);
+		assertEquals("The get(int) method returned the wrong filter.", filterOne, filterList.get(0));
+		assertEquals("The get(int) method returned the wrong filter.", filterTwo, filterList.get(1));
+		Filter filterFour = createNamedFilter("FOUR");
+		filterList.insert( filterFour, 1 );
+		assertEquals("The get(int) method returned the wrong filter.", filterOne, filterList.get(0));
+		assertEquals("The get(int) method returned the wrong filter.", filterFour, filterList.get(1));
+		assertEquals("The get(int) method returned the wrong filter.", filterTwo, filterList.get(2));
+	}
+	
+	/**
+	 * Test to move up a filter in the list.
+	 */
+	public void testMoveUp() {
+		FilterList filterList = new FilterList( new XmlElement() );
+		Filter filterOne = createNamedFilter("ONE");
+		Filter filterTwo = createNamedFilter("TWO");
+		Filter filterThree = createNamedFilter("THREE");
+		filterList.add(filterOne);
+		filterList.add(filterTwo);
+		filterList.add(filterThree);
+		assertEquals("The get(int) method returned the wrong filter.", filterOne, filterList.get(0));
+		assertEquals("The get(int) method returned the wrong filter.", filterThree, filterList.get(2));
+		filterList.moveUp(filterThree);
+		assertEquals("The get(int) method returned the wrong filter.", filterThree, filterList.get(1));
+		filterList.moveUp(filterThree);
+		assertEquals("The get(int) method returned the wrong filter.", filterThree, filterList.get(0));
+		assertEquals("The get(int) method returned the wrong filter.", filterOne, filterList.get(1));
+		filterList.moveUp(filterThree);
+		assertEquals("The get(int) method returned the wrong filter.", filterThree, filterList.get(0));
+	}
+	
+	/**
+	 * Test to move down a filter in the list.
+	 */
+	public void testMoveDown() {
+		FilterList filterList = new FilterList( new XmlElement() );
+		Filter filterOne = createNamedFilter("ONE");
+		Filter filterTwo = createNamedFilter("TWO");
+		Filter filterThree = createNamedFilter("THREE");
+		filterList.add(filterOne);
+		filterList.add(filterTwo);
+		filterList.add(filterThree);
+		assertEquals("The get(int) method returned the wrong filter.", filterOne, filterList.get(0));
+		assertEquals("The get(int) method returned the wrong filter.", filterThree, filterList.get(2));
+		filterList.moveDown(filterOne);
+		assertEquals("The get(int) method returned the wrong filter.", filterOne, filterList.get(1));
+		filterList.moveDown(filterOne);
+		assertEquals("The get(int) method returned the wrong filter.", filterOne, filterList.get(2));
+		assertEquals("The get(int) method returned the wrong filter.", filterThree, filterList.get(1));
+		filterList.moveDown(filterOne);
+		assertEquals("The get(int) method returned the wrong filter.", filterOne, filterList.get(2));
+	}
+	
+	/**
+	 * Test for indexOf() method.
+	 */
+	public void testIndexOf() {
+		FilterList filterList = new FilterList( new XmlElement() );
+		Filter filterOne = createNamedFilter("ONE");
+		Filter filterTwo = createNamedFilter("TWO");
+		Filter filterThree = createNamedFilter("THREE");
+		filterList.add(filterOne);
+		filterList.add(filterTwo);
+		filterList.add(filterThree);
+
+		assertEquals( "The indexof() method did not return the right index", -1, filterList.indexOf(null));
+		assertEquals( "The indexof() method did not return the right index", 0, filterList.indexOf(filterOne));
+		assertEquals( "The indexof() method did not return the right index", 1, filterList.indexOf(filterTwo));
+		assertEquals( "The indexof() method did not return the right index", 2, filterList.indexOf(filterThree));
+		assertEquals( "The indexof() method did not return the right index", -1, filterList.indexOf(createNamedFilter("NONE")));
+	}
+	 
 
 	/**
 	 * Returns an empty filter with a specified name.
@@ -83,5 +167,15 @@ public class FilterListTest extends TestCase {
 		Filter filter = FilterList.createEmptyFilter();
 		filter.setName(name);
 		return filter;
+	}
+	
+	/**
+	 * Asserts that the filters are the same.
+	 * @param msg the message to output if the assertion fails.
+	 * @param expected the expected filter.
+	 * @param actual the actual filter.
+	 */
+	private void assertEquals(String msg, Filter expected, Filter actual) {
+		assertEquals(msg, expected.getName(), actual.getName());
 	}
 }
