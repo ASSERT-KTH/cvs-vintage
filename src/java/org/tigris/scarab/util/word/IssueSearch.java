@@ -2071,7 +2071,6 @@ public class IssueSearch
     {
         QueryResult qr = null;
         Logger scarabLog = Log.get("org.tigris.scarab");
-        boolean delayResultDisplay = false;
 
         boolean buildingResult = true;
         if (resultSet.isBeforeFirst())
@@ -2137,18 +2136,10 @@ public class IssueSearch
                     List values = new ArrayList(valueListSize);
                     for (int j = 0; j < valueListSize; j++) 
                     {
-                        String s = resultSet.getString(j + 6);
-                        // check if we are sorting on this value and hold the
-                        // result to the end of the list, if the value is null.
-                        if (j == sortAttrPos && s == null) 
-                        {
-                            delayResultDisplay = true;
-                        }
-
                         // some attributes can be multivalued, so store a list
                         // for each attribute containing the values
                         ArrayList multiVal = new ArrayList(2);
-                        multiVal.add(s);
+                        multiVal.add(resultSet.getString(j + 6));
                         values.add(multiVal);
                     }
                     qr.setAttributeValues(values);
@@ -2162,15 +2153,6 @@ public class IssueSearch
             }
 
             buildingResult = resultSet.next();
-        }
-            
-        // FIXME: If this result should actually show up elsewhere
-        // (such as at the end of the list of query results), queue it
-        // up here.
-        if (delayResultDisplay)
-        {
-            //delayedDisplayList.add(qr);
-            //qr = null;
         }
 
         return qr;
