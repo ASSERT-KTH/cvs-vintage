@@ -5,10 +5,10 @@
  * See terms of license at gnu.org.
  */
 
-// $Id: ServiceRefEnvBuilder.java,v 1.3 2004/04/30 16:24:46 tdiesler Exp $
+// $Id: ServiceRefEnvBuilder.java,v 1.4 2004/05/04 08:48:43 tdiesler Exp $
 package org.jboss.webservice;
 
-// $Id: ServiceRefEnvBuilder.java,v 1.3 2004/04/30 16:24:46 tdiesler Exp $
+// $Id: ServiceRefEnvBuilder.java,v 1.4 2004/05/04 08:48:43 tdiesler Exp $
 
 import org.jboss.deployment.DeploymentException;
 import org.jboss.deployment.DeploymentInfo;
@@ -50,27 +50,36 @@ public final class ServiceRefEnvBuilder
          while (serviceRefs.hasNext())
          {
             ServiceRefMetaData serviceRef = (ServiceRefMetaData) serviceRefs.next();
-
-            Definition wsdl = serviceRef.getWsdlDefinition();
-            if (wsdl.getServices().size() < 1)
-               throw new NamingException("Cannot find service entry in WSDL");
-            if (wsdl.getServices().size() > 1)
-               throw new NamingException("Found more than one service entry in WSDL");
-
-            // get the service name from the WSDL definition
-            QName serviceName = (QName) wsdl.getServices().keySet().iterator().next();
+            String serviceRefName = serviceRef.getServiceRefName();
+            String serviceInterface = serviceRef.getServiceInterface();
 
             Referenceable serviceReferenceable = null;
-            String serviceRefName = serviceRef.getServiceRefName();
-            if (serviceRef.getWsdlOverride() != null)
+            if (serviceRef.getWsdlFile() != null)
             {
-               log.debug("Using wsdl override: " + serviceRef.getWsdlOverride());
-               serviceReferenceable = new ServiceReferenceable(serviceName, serviceRef.getWsdlOverride());
+               Definition wsdl = serviceRef.getWsdlDefinition();
+               if (wsdl.getServices().size() < 1)
+                  throw new NamingException("Cannot find service entry in WSDL");
+               if (wsdl.getServices().size() > 1)
+                  throw new NamingException("Found more than one service entry in WSDL");
+
+               // get the service name from the WSDL definition
+               QName serviceName = (QName) wsdl.getServices().keySet().iterator().next();
+
+               if (serviceRef.getWsdlOverride() != null)
+               {
+                  log.debug("Using wsdl override: " + serviceRef.getWsdlOverride());
+                  serviceReferenceable = new ServiceReferenceable(serviceInterface, serviceName, serviceRef.getWsdlOverride());
+               }
+               else
+               {
+                  log.debug("Using wsdl file: " + serviceRef.getWsdlFile());
+                  serviceReferenceable = new ServiceReferenceable(serviceInterface, serviceName, di.url, serviceRef.getWsdlFile());
+               }
             }
             else
             {
-               log.debug("Using wsdl file: " + serviceRef.getWsdlFile());
-               serviceReferenceable = new ServiceReferenceable(serviceName, di.url, serviceRef.getWsdlFile());
+               log.debug("Using no wsdl file");
+               serviceReferenceable = new ServiceReferenceable(serviceInterface);
             }
 
             Util.bind(envCtx, serviceRefName, serviceReferenceable);

@@ -5,10 +5,10 @@
  * See terms of license at gnu.org.
  */
 
-// $Id: JaxRpcClientService.java,v 1.4 2004/04/30 16:24:46 tdiesler Exp $
+// $Id: JaxRpcClientService.java,v 1.5 2004/05/04 08:48:43 tdiesler Exp $
 package org.jboss.webservice;
 
-// $Id: JaxRpcClientService.java,v 1.4 2004/04/30 16:24:46 tdiesler Exp $
+// $Id: JaxRpcClientService.java,v 1.5 2004/05/04 08:48:43 tdiesler Exp $
 
 import org.apache.axis.EngineConfiguration;
 import org.apache.axis.client.AxisClient;
@@ -23,10 +23,11 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.Method;
 
 /**
- * Lookup EngineConfiguration from JMX and
- * configure the the jaxrpc service with it.
+ * Lookup EngineConfiguration configure the the jaxrpc service with it.
  *
  * @author Thomas.Diesler@jboss.org
  * @since 27-April-2004
@@ -41,10 +42,8 @@ public class JaxRpcClientService extends Service
     * the appropriate fields by hand rather than getting them from the
     * WSDL.
     */
-   public JaxRpcClientService(URL wsdlDoc, QName serviceName)
-           throws ServiceException
+   public JaxRpcClientService()
    {
-      super(wsdlDoc, serviceName);
    }
 
    /**

@@ -5,16 +5,17 @@
  * See terms of license at gnu.org.
  */
 
-// $Id: ServiceObjectFactory.java,v 1.2 2004/04/30 07:40:51 tdiesler Exp $
+// $Id: ServiceObjectFactory.java,v 1.3 2004/05/04 08:48:43 tdiesler Exp $
 package org.jboss.webservice;
 
-// $Id: ServiceObjectFactory.java,v 1.2 2004/04/30 07:40:51 tdiesler Exp $
+// $Id: ServiceObjectFactory.java,v 1.3 2004/05/04 08:48:43 tdiesler Exp $
 
 import org.jboss.logging.Logger;
 
 import javax.naming.Context;
 import javax.naming.Name;
 import javax.naming.Reference;
+import javax.naming.RefAddr;
 import javax.naming.spi.NamingManager;
 import javax.naming.spi.ObjectFactory;
 import javax.xml.namespace.QName;
@@ -25,6 +26,8 @@ import java.io.IOException;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.Hashtable;
+import java.lang.reflect.Proxy;
+import java.lang.reflect.InvocationHandler;
 
 /**
  * This ServiceObjectFactory reconstructs a javax.xml.rpc.Service
@@ -64,14 +67,22 @@ public class ServiceObjectFactory implements ObjectFactory
    public Object getObjectInstance(Object obj, Name name, Context nameCtx, Hashtable environment)
            throws Exception
    {
-      Service jaxrpcService = null;
-      if (obj instanceof Reference)
-      {
-         Reference ref = (Reference) obj;
+      Reference ref = (Reference) obj;
 
-         // get the service QName
-         String namespace = (String) ref.get(ServiceReferenceable.SERVICE_NAMESPACE).getContent();
-         String localpart = (String) ref.get(ServiceReferenceable.SERVICE_LOCALPART).getContent();
+      // get the service QName
+      RefAddr namespaceRefAddr = ref.get(ServiceReferenceable.SERVICE_NAMESPACE);
+      RefAddr localpartRefAddr = ref.get(ServiceReferenceable.SERVICE_LOCALPART);
+
+      Service jaxrpcService = null;
+      if (localpartRefAddr == null)
+      {
+         log.debug("javax.rpc.xml.Service with no wsdl");
+         jaxrpcService = new JaxRpcClientService();
+      }
+      else
+      {
+         String namespace = (String) namespaceRefAddr.getContent();
+         String localpart = (String) localpartRefAddr.getContent();
          QName serviceName = new QName(namespace, localpart);
 
          // construct the service from a URL to a WSDL document
@@ -95,15 +106,23 @@ public class ServiceObjectFactory implements ObjectFactory
          log.debug("javax.rpc.xml.Service [serviceName=" + serviceName + ",url=" + wsdlUrl + "]");
          InputStream wsdlInputStream = wsdlUrl.openStream();
          if (wsdlInputStream == null)
-            throw new IOException("Cannot access WSDL at: " + wsdlUrl);
+            throw new IOException("Cannot access wsdl document at: " + wsdlUrl);
 
          jaxrpcService = new JaxRpcClientService(wsdlInputStream, serviceName);
       }
 
-      if (jaxrpcService == null)
-         throw new ServiceException("Cannot obtain service from JNDI: " + name);
+      // The client wants a proxy
+      String serviceInterface = (String) ref.get(ServiceReferenceable.SERVICE_ENDPOINT_INTERFACE).getContent();
+      if (serviceInterface.equals("javax.xml.rpc.Service") == false)
+      {
+         ClassLoader contextCL = Thread.currentThread().getContextClassLoader();
+         Class seiClass = contextCL.loadClass(serviceInterface);
+         InvocationHandler handler = new JaxRpcClientProxy(jaxrpcService, seiClass);
+         Class[] interfaces = new Class[]{seiClass, Service.class};
+         Service proxyService = (Service)Proxy.newProxyInstance(contextCL, interfaces, handler);
+         return proxyService;
+      }
 
       return jaxrpcService;
    }
-
 }
