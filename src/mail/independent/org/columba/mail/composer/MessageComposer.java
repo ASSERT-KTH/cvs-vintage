@@ -40,6 +40,7 @@ import org.columba.mail.message.PGPMimePart;
 import org.columba.mail.message.SendableHeader;
 import org.columba.mail.parser.text.HtmlParser;
 import org.columba.ristretto.composer.MimeTreeRenderer;
+import org.columba.ristretto.message.Address;
 import org.columba.ristretto.message.LocalMimePart;
 import org.columba.ristretto.message.MessageIDGenerator;
 import org.columba.ristretto.message.MimeHeader;
@@ -117,6 +118,7 @@ public class MessageComposer {
 			"Columba v" + org.columba.core.main.MainInterface.version);
 
 		// shortFrom
+		/*
 		String shortFrom = model.getHeaderField("From");
 		if (shortFrom != null) {
 			if (shortFrom.indexOf("<") != -1) {
@@ -129,13 +131,15 @@ public class MessageComposer {
 						shortFrom =
 							shortFrom.substring(0, shortFrom.length() - 1);
 				}
-
+		
 			}
-
+		
 			header.set("columba.from", shortFrom);
 		} else {
 			header.set("columba.from", new String(""));
 		}
+		*/
+		header.set("columba.from", new Address(identity.get("address")));
 
 		// date
 		Date date = new Date();
@@ -224,7 +228,7 @@ public class MessageComposer {
 	
 		}
 	*/
-	
+
 	/**
 	 * Composes a multipart/alternative mime part for the body of a message
 	 * containing a text part and a html part.
@@ -242,18 +246,18 @@ public class MessageComposer {
 
 		// compose text part
 		StreamableMimePart textPart = composeTextMimePart();
-				 
+
 		// compose html part
 		StreamableMimePart htmlPart = composeHtmlMimePart();
-		
+
 		// merge mimeparts and return
-		LocalMimePart bodyPart = 
+		LocalMimePart bodyPart =
 			new LocalMimePart(new MimeHeader("multipart", "alternative"));
 		bodyPart.addChild(textPart);
 		bodyPart.addChild(htmlPart);
-		
-		return bodyPart;		
-		
+
+		return bodyPart;
+
 	}
 
 	/**
@@ -279,28 +283,31 @@ public class MessageComposer {
 		bodyPart.getHeader().putContentParameter("charset", charsetName);
 
 		StringBuffer buf = new StringBuffer();
-		String body  = model.getBodyText();
-		
+		String body = model.getBodyText();
+
 		// insert link tags for urls and email addresses
 		body = HtmlParser.substituteURL(body, false);
 		body = HtmlParser.substituteEmailAddress(body, false);
-		
-		String lcase = body.toLowerCase();	// for text comparisons
-		
+
+		String lcase = body.toLowerCase(); // for text comparisons
+
 		// insert document type decl.
 		if (lcase.indexOf("<!doctype") == -1) {
-			
+
 			// TODO: Is 3.2 the proper version of html to refer to? 
-			
-			buf.append("<!DOCTYPE HTML PUBLIC " + 
-					"\"-//W3C//DTD HTML 3.2//EN\">\r\n");
-			
+
+			buf.append(
+				"<!DOCTYPE HTML PUBLIC " + "\"-//W3C//DTD HTML 3.2//EN\">\r\n");
+
 		}
-		
+
 		// insert head section with charset def.
-		String meta = "<meta " + 
-				"http-equiv=\"Content-Type\" " + 
-				"content=\"text/html; charset=" + charsetName + "\">";
+		String meta =
+			"<meta "
+				+ "http-equiv=\"Content-Type\" "
+				+ "content=\"text/html; charset="
+				+ charsetName
+				+ "\">";
 		int pos = lcase.indexOf("<head");
 		int bodyStart;
 		if (pos == -1) {
@@ -310,9 +317,9 @@ public class MessageComposer {
 			buf.append("<head>");
 			buf.append(meta);
 			buf.append("</head>");
-			
+
 			bodyStart = pos;
-			
+
 		} else {
 			// replace <head> section
 			pos = lcase.indexOf('>', pos) + 1;
@@ -322,13 +329,13 @@ public class MessageComposer {
 			// TODO: If existing meta tags are to be kept, code changes are necessary
 
 			bodyStart = lcase.indexOf("</head");
-			
+
 		}
-		
+
 		// add rest of body until start of </body>
 		int bodyEnd = lcase.indexOf("</body");
 		buf.append(body.substring(bodyStart, bodyEnd));
-		
+
 		// add signature if defined
 		AccountItem item = model.getAccountItem();
 		IdentityItem identity = item.getIdentityItem();
@@ -339,13 +346,13 @@ public class MessageComposer {
 
 			if (signature != null) {
 				buf.append("\r\n\r\n");
-				
+
 				// TODO: Should we take some action to ensure signature is valid html?
-				
+
 				buf.append(signature);
 			}
 		}
-		
+
 		// add the rest of the original body - and transfer back to body var.
 		buf.append(body.substring(bodyEnd));
 		body = buf.toString();
@@ -386,7 +393,7 @@ public class MessageComposer {
 		bodyPart.getHeader().putContentParameter("charset", charsetName);
 
 		String body = model.getBodyText();
-		
+
 		/*
 		 * *20030918, karlpeder* Tags are stripped if the model
 		 * contains a html message (since we are composing
@@ -441,7 +448,7 @@ public class MessageComposer {
 		 * when called a second time for saving the message after sending!
 		 */
 		//List mimeParts = model.getAttachments();
-		
+
 		List attachments = model.getAttachments();
 		List mimeParts = new ArrayList();
 		Iterator ite = attachments.iterator();
@@ -453,7 +460,7 @@ public class MessageComposer {
 		StreamableMimePart body;
 		if (model.isHtml()) {
 			// compose message body as multipart/alternative
-			
+
 			XmlElement composerOptions =
 				MailConfig.getComposerOptionsConfig().getRoot().getElement(
 					"/options");
@@ -461,22 +468,21 @@ public class MessageComposer {
 			if (html == null) {
 				html = composerOptions.addSubElement("html");
 			}
-			String multipart = html.getAttribute(
-					"send_as_multipart", "true");
+			String multipart = html.getAttribute("send_as_multipart", "true");
 
 			if (multipart.equals("true")) {
 				// send as multipart/alternative
 				body = composeMultipartAlternativeMimePart();
 			} else {
 				// send as text/html
-				body = composeHtmlMimePart(); 
+				body = composeHtmlMimePart();
 			}
-				
+
 		} else {
 			// compose message body as text/plain
 			body = composeTextMimePart();
 		}
- 
+
 		if (body != null)
 			mimeParts.add(0, body);
 
@@ -494,27 +500,25 @@ public class MessageComposer {
 		if (model.isSignMessage()) {
 			PGPItem item = model.getAccountItem().getPGPItem();
 			// Set id on from address
-			item.set("id",model.getAccountItem().getIdentityItem().get("address"));
+			item.set(
+				"id",
+				model.getAccountItem().getIdentityItem().get("address"));
 			PGPMimePart signPart =
-				new PGPMimePart(
-					new MimeHeader("multipart", "signed"), item
-					);
+				new PGPMimePart(new MimeHeader("multipart", "signed"), item);
 
 			signPart.addChild(root);
 			root = signPart;
 		}
-		
-		if( model.isEncryptMessage()) {
-			PGPItem item = model.getAccountItem().getPGPItem(); 
+
+		if (model.isEncryptMessage()) {
+			PGPItem item = model.getAccountItem().getPGPItem();
 			// Set id on recipient
-			item.set("id",model.getRCPTVector().get(0).toString());
+			item.set("id", model.getRCPTVector().get(0).toString());
 			PGPMimePart signPart =
-				new PGPMimePart(
-					new MimeHeader("multipart", "encrypted"),
-					item);
+				new PGPMimePart(new MimeHeader("multipart", "encrypted"), item);
 
 			signPart.addChild(root);
-			root = signPart;			
+			root = signPart;
 		}
 
 		header.setRecipients(model.getRCPTVector());
@@ -533,8 +537,7 @@ public class MessageComposer {
 		}
 		message.setStringSource(composedMessage.toString());
 
-		ColumbaLogger.log.debug("Message:\n" + 
-				composedMessage.toString());
+		ColumbaLogger.log.debug("Message:\n" + composedMessage.toString());
 
 		// size
 		int size = composedMessage.length() / 1024;

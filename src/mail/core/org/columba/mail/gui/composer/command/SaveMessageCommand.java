@@ -73,28 +73,31 @@ public class SaveMessageCommand extends FolderCommand {
 
 		ComposerController composerController = r[0].getComposerController();
 
-		AccountItem item = ((ComposerModel)composerController.getModel()).getAccountItem();
+		AccountItem item =
+			((ComposerModel) composerController.getModel()).getAccountItem();
 
 		SendableMessage message =
-			new MessageComposer(((ComposerModel)composerController.getModel())).compose(worker);
+			new MessageComposer(
+				((ComposerModel) composerController.getModel())).compose(
+				worker);
 
 		folder = (Folder) r[0].getFolder();
 
-		// we can't use this addMessage-method here
-		// -> IMAP only supports sending sources
-		
-		//Object uid = folder.addMessage(message, worker);
-		
-		Object uid = folder.addMessage(message.getStringSource());
-		
+		if (folder.getUid() == 103) {
+			// Outbox folder hack!
+			// -> this is necessary because SendableMessage contains
+			// -> additional information (like recipients list) which
+			// -> would get lost otherwise
+			
+			Object uid = folder.addMessage(message);
+			
+		} else {
+			// we can't use this addMessage(message) here
+			// -> IMAP only supports adding sources
 
-		// IMAP can't give you this information
-		/*
-		// we need this to reflect changes in table-widget
-		// -> this is cached in folder anyway, so actually
-		// -> we just get the HeaderInterface from a Hashtable
-		headerList[0] = folder.getMessageHeader(uid, worker);
-		*/
+			Object uid = folder.addMessage(message.getStringSource());
+		}
+
 	}
 
 }

@@ -55,7 +55,7 @@ public class SendLaterAction extends FrameAction {
 		final ComposerController composerController =
 			(ComposerController) getFrameController();
 
-		if (!composerController.checkState())
+		if (composerController.checkState())
 			return;
 
 		AccountItem item =

@@ -23,6 +23,7 @@ import java.util.Vector;
 import org.columba.core.logging.ColumbaLogger;
 import org.columba.mail.composer.SendableMessage;
 import org.columba.mail.config.FolderItem;
+import org.columba.mail.folder.headercache.AbstractHeaderCache;
 import org.columba.mail.folder.headercache.CachedFolder;
 import org.columba.mail.folder.headercache.LocalHeaderCache;
 import org.columba.mail.folder.mh.CachedMHFolder;
@@ -49,13 +50,22 @@ public class OutboxFolder extends CachedMHFolder {
 
 		isSending = false;
 
-		cache = new OutboxHeaderCache(this);
-
 	}
 
-	public ColumbaMessage getMessage(
-		Object uid)
-		throws Exception {
+	public AbstractHeaderCache getHeaderCacheInstance() {
+		if (headerCache == null) {
+			headerCache = new OutboxHeaderCache(this);
+		}
+		return headerCache;
+	}
+
+	/*
+	public Object addMessage(SendableMessage message) throws Exception {
+		return super.addMessage(message);
+	}
+	*/
+
+	public ColumbaMessage getMessage(Object uid) throws Exception {
 		if (aktMessage != null) {
 			if (aktMessage.getUID().equals(uid)) {
 				// this message is already cached
@@ -67,7 +77,9 @@ public class OutboxFolder extends CachedMHFolder {
 
 		String source = getMessageSource(uid);
 
-		ColumbaMessage message = new ColumbaMessage( MessageParser.parse( new CharSequenceSource(source)));			
+		ColumbaMessage message =
+			new ColumbaMessage(
+				MessageParser.parse(new CharSequenceSource(source)));
 		message.setUID(uid);
 
 		SendableHeader header = (SendableHeader) getHeaderList().get(uid);
@@ -79,10 +91,6 @@ public class OutboxFolder extends CachedMHFolder {
 		aktMessage = sendableMessage;
 
 		return sendableMessage;
-	}
-
-	public String getDefaultChild() {
-		return "MHFolder";
 	}
 
 	private void swapListManagers() throws Exception {
