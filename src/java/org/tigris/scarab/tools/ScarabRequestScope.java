@@ -67,10 +67,20 @@ import org.tigris.scarab.om.*;
  * methodology</a> to be implemented.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ScarabRequestScope.java,v 1.2 2001/04/02 22:13:31 jon Exp $
+ * @version $Id: ScarabRequestScope.java,v 1.3 2001/04/04 18:09:48 jon Exp $
  */
 public interface ScarabRequestScope extends ApplicationTool
 {
+    /**
+     * A Attribute object for use within the Scarab API.
+     */
+    public void setAttribute (Attribute attribute);
+
+    /**
+     * A Attribute object for use within the Scarab API.
+     */
+    public Attribute getAttribute();
+
     /**
      * A User object for use within the Scarab API.
      */

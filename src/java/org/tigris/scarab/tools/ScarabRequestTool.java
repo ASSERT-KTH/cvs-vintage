@@ -66,6 +66,11 @@ public class ScarabRequestTool implements ScarabRequestScope
      * A Issue object for use within the Scarab API.
      */
     private Issue issue = null;
+
+    /**
+     * A Attribute object for use within the Scarab API.
+     */
+    private Attribute attribute = null;
     
     public void init(Object data)
     {
@@ -86,6 +91,24 @@ public class ScarabRequestTool implements ScarabRequestScope
     public ScarabRequestTool()
     {
         //intake = new IntakeSystem();
+    }
+
+    /**
+     * A Attribute object for use within the Scarab API.
+     */
+    public void setAttribute (Attribute attribute)
+    {
+        this.attribute = attribute;
+    }
+
+    /**
+     * A Attribute object for use within the Scarab API.
+     */
+    public Attribute getAttribute()
+    {
+        if (attribute == null)
+            this.attribute = new Attribute();
+        return this.attribute;
     }
 
     /**
