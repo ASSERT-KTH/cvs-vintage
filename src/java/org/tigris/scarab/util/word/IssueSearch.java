@@ -1725,39 +1725,35 @@ public class IssueSearch
     {
         NumberKey oldOptionId = getStateChangeFromOptionId();
         NumberKey newOptionId = getStateChangeToOptionId();
-        if (oldOptionId != null || newOptionId != null)
+        Date minUtilDate = parseDate(getStateChangeFromDate(), false);
+        Date maxUtilDate = parseDate(getStateChangeToDate(), true);
+        if (oldOptionId != null || newOptionId != null 
+            || minUtilDate != null || maxUtilDate != null)
         {
             from.append(INNER_JOIN + ActivityPeer.TABLE_NAME + ON +
                         ActivityPeer.ISSUE_ID + '=' + IssuePeer.ISSUE_ID);
 
-            if (oldOptionId == null) 
+            if (oldOptionId == null && newOptionId == null)
             {
-                from.append(AND).append(ActivityPeer.NEW_OPTION_ID).append('=')
-                    .append(newOptionId);
+                from.append(AND).append(ActivityPeer.ATTRIBUTE_ID)
+                    .append('=').append(getStateChangeAttributeId());
             }
-            else if (newOptionId == null) 
+            else
             {
-                from.append(AND).append(ActivityPeer.OLD_OPTION_ID).append('=')
-                    .append(oldOptionId);
-            }
-            // make sure the old and new options are different, otherwise
-            // do not add to criteria.
-            else if (!oldOptionId.equals(newOptionId))
-            {
-                from.append(AND).append(ActivityPeer.NEW_OPTION_ID)
-                    .append('=').append(newOptionId);
-                from.append(AND).append(ActivityPeer.OLD_OPTION_ID)
-                    .append('=').append(oldOptionId);
-            }
-            else 
-            {
-                // might want to log user error here
+                if (newOptionId != null) 
+                {
+                    from.append(AND).append(ActivityPeer.NEW_OPTION_ID)
+                        .append('=').append(newOptionId);
+                }
+                if (oldOptionId != null) 
+                {
+                    from.append(AND).append(ActivityPeer.OLD_OPTION_ID)
+                        .append('=').append(oldOptionId);
+                }
             }
             from.append(')');
 
             // add dates, if given
-            Date minUtilDate = parseDate(getStateChangeFromDate(), false);
-            Date maxUtilDate = parseDate(getStateChangeToDate(), true);
             if (minUtilDate != null || maxUtilDate != null) 
             {
                 from.append(INNER_JOIN + ActivitySetPeer.TABLE_NAME + ON +

@@ -1658,9 +1658,21 @@ try{
             if (!searchSuccess)
             {
                 setAlertMessage(l10n.get("DateFormatPrompt"));
-             }
+            }
             searchGroup.setProperties(search);
-
+        }
+        if (searchSuccess) 
+        {        
+            NumberKey oldOptionId = search.getStateChangeFromOptionId();
+            if (oldOptionId != null && oldOptionId
+                .equals(search.getStateChangeToOptionId())) 
+            {
+                searchSuccess = false;
+                setAlertMessage(l10n.get("StateChangeOldEqualNew"));
+            }
+        }
+        if (searchSuccess) 
+        {        
             // Set attribute values to search on
             SequencedHashMap avMap = search.getCommonAttributeValuesMap();
             Iterator i = avMap.iterator();
@@ -1689,6 +1701,11 @@ try{
                 search.setSortPolarity(sortPolarity);
             }
         }
+        else 
+        {
+            search = null;
+        }
+        
         return search;
     }
 
@@ -1782,11 +1799,20 @@ try{
         // Do search
         try
         {
-            queryResults = search.getQueryResults();
-            if (queryResults == null || queryResults.size() <= 0)
+            if (search == null) 
             {
-                setInfoMessage(l10n.get("NoMatchingIssues"));
-            }            
+                // an alert message should have been set while attempting
+                // to populate the search.
+                queryResults = Collections.EMPTY_LIST;
+            }
+            else 
+            {
+                queryResults = search.getQueryResults();
+                if (queryResults == null || queryResults.size() <= 0)
+                {
+                    setInfoMessage(l10n.get("NoMatchingIssues"));
+                }
+            }
         }
         catch (ScarabException e)
         {
