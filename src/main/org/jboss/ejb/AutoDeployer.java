@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import javax.management.MBeanServer;
 import javax.management.MBeanException;
 import javax.management.RuntimeErrorException;
+import javax.management.RuntimeMBeanException;
 import javax.management.ObjectName;
 
 import org.jboss.logging.Log;
@@ -28,43 +29,43 @@ import org.jboss.util.ServiceMBeanSupport;
  *   The AutoDeployer is used to automatically deploy EJB-jars.
  *	  It can be used on either .jar or .xml files. The AutoDeployer can
  *	  be configured to "watch" one or more files. If they are updated they will
- *	  be redeployed. 
+ *	  be redeployed.
  *
  *	  If it is set to watch a directory instead of a single file, all files within that
  *	  directory will be watched separately.
  *
  *	  When a jar is to be deployed, the AutoDeployer will use a ContainerFactory to deploy it.
- *      
+ *
  *   @see ContainerFactory
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
- *   @version $Revision: 1.5 $
+ *   @version $Revision: 1.6 $
  */
 public class AutoDeployer
 	extends ServiceMBeanSupport
    implements AutoDeployerMBean, Runnable
 {
    // Constants -----------------------------------------------------
-    
+
    // Attributes ----------------------------------------------------
-	
+
 	// Callback to the JMX agent
    MBeanServer server;
-	
+
 	// JMX name of the ContainerFactory
    ObjectName factoryName;
-   
+
 	// The watch thread
    boolean running = false;
-   
+
 	// Watch these directories for new files
    ArrayList watchedDirectories = new ArrayList();
-	
+
 	// These URL's have been deployed. Check for new timestamp
    HashMap deployedURLs = new HashMap();
-	
+
 	// These URL's are being watched
    ArrayList watchedURLs = new ArrayList();
-   
+
 	// The logger for this service
    Log log = new Log("Auto deploy");
 
@@ -75,16 +76,16 @@ public class AutoDeployer
    {
 		addURLs(urlList);
 	}
-	
+
 	public void addURLs(String urlList)
 	{
       StringTokenizer urls = new StringTokenizer(urlList, ",");
-      
+
 		// Add URLs to list
       while (urls.hasMoreTokens())
       {
          String url = urls.nextToken();
-         
+
          // Check if directory
          File urlFile = new File(url);
          if (urlFile.exists() && urlFile.isDirectory())
@@ -135,18 +136,18 @@ public class AutoDeployer
          }
       }
    }
-   
+
    // Public --------------------------------------------------------
    public void run()
    {
-      do 
+      do
       {
          // Sleep
          if (running)
          {
             try { Thread.sleep(3000); } catch (InterruptedException e) {}
          }
-         
+
          try
          {
             // Check directories - add new entries to list of files
@@ -166,18 +167,18 @@ public class AutoDeployer
                   }
                }
             }
-			
-			
+
+
 			// undeploy removed jars
 			Iterator iterator = watchedURLs.iterator();
-			
+
 			while (iterator.hasNext()) {
 				URL url = ((Deployment)iterator.next()).url;
-				
+
 				// if the url is a file that doesn't exist
 				// TODO: real urls
 				if (url.getProtocol().startsWith("file") && ! new File(url.getFile()).exists()) {
-					
+
 					// the file does not exist anymore. undeploy
 					log.log("Auto undeploy of "+url);
 					try {
@@ -187,18 +188,18 @@ public class AutoDeployer
 						log.exception(e);
 					}
 					deployedURLs.remove(url);
-					
+
 					// this should be the safe way to call watchedURLS.remove
 					iterator.remove();
-				}   			
+				}
 			}
-				   
-				   
+
+
             // Check watched URLs
             for (int i = 0; i < watchedURLs.size(); i++)
             {
                Deployment deployment = (Deployment)watchedURLs.get(i);
-			   
+
                // Get last modified timestamp
                long lm;
                if (deployment.watch.getProtocol().startsWith("file"))
@@ -210,7 +211,7 @@ public class AutoDeployer
 						// Use URL connection to get timestamp
                   lm = deployment.watch.openConnection().getLastModified();
                }
-               
+
                // Check old timestamp -- always deploy if first check
                if ((deployment.lastModified == 0) || (deployment.lastModified < lm))
                {
@@ -223,7 +224,7 @@ public class AutoDeployer
                   {
                      log.error("Deployment failed:"+deployment.url);
                      log.exception(e);
-							
+
 							// Deployment failed - won't retry until updated
                   }
                }
@@ -231,26 +232,26 @@ public class AutoDeployer
          } catch (Exception e)
          {
             e.printStackTrace(System.err);
-				
+
 				// Stop auto deployer
             running = false;
          }
       } while(running);
    }
-	
+
    // ServiceMBeanSupport overrides ---------------------------------
    public String getName()
    {
       return "Auto deployer";
    }
-   
+
    protected ObjectName getObjectName(MBeanServer server, ObjectName name)
       throws javax.management.MalformedObjectNameException
    {
    	this.server = server;
       return new ObjectName(OBJECT_NAME);
    }
-	
+
    protected void initService()
       throws Exception
    {
@@ -263,27 +264,32 @@ public class AutoDeployer
    {
       run(); // Pre-deploy. This is done so that deployments available
       		 // on start of container is deployed ASAP
-   			 
+
       // Start auto deploy thread
       running = true;
       new Thread(this, "Auto deploy").start();
    }
-   
+
    protected void stopService()
    {
    	// Stop auto deploy thread
       running = false;
    }
-	
+
    // Protected -----------------------------------------------------
    protected void deploy(String url)
       throws Exception
    {
       try
-      {   
+      {
    		// Call the ContainerFactory that is loaded in the JMX server
          server.invoke(factoryName, "deploy",
                          new Object[] { url }, new String[] { "java.lang.String" });
+      } catch (RuntimeMBeanException e)
+      {
+//          System.out.println("Caught a runtime MBean exception: "+e.getTargetException());
+//          e.getTargetException().printStackTrace();
+          throw e.getTargetException();
       } catch (MBeanException e)
       {
          throw e.getTargetException();
@@ -292,12 +298,12 @@ public class AutoDeployer
          throw e.getTargetError();
       }
    }
-   
+
    protected void undeploy(String url)
       throws Exception
    {
       try
-      {   
+      {
    		// Call the ContainerFactory that is loaded in the JMX server
          server.invoke(factoryName, "undeploy",
                          new Object[] { url }, new String[] { "java.lang.String" });
@@ -309,16 +315,16 @@ public class AutoDeployer
          throw e.getTargetError();
       }
    }
-   
+
    // Inner classes -------------------------------------------------
-	
+
 	// This class holds info about a deployement, such as the URL and the last timestamp
    static class Deployment
    {
       long lastModified;
       URL url;
       URL watch;
-      
+
       Deployment(URL url)
          throws MalformedURLException
       {
