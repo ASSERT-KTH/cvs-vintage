@@ -27,7 +27,7 @@ package org.gjt.sp.jedit;
  * development.
  * @since jEdit 4.2pre1
  * @author Slava Pestov
- * @version $Id: Debug.java,v 1.15 2003/06/25 04:01:10 spestov Exp $
+ * @version $Id: Debug.java,v 1.16 2003/06/27 02:24:05 spestov Exp $
  */
 public class Debug
 {
@@ -127,6 +127,11 @@ public class Debug
 	 * Position tree debugging.
 	 */
 	public static boolean POSITION_DEBUG = false;
+
+	/**
+	 * Disable red-black tree.
+	 */
+	public static boolean DISABLE_POSITION_BALANCE = false;
 
 	/**
 	 * Dump key events received by text area?
