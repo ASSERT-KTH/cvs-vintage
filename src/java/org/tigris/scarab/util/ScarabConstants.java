@@ -54,7 +54,7 @@ import org.apache.turbine.Turbine;
  * A place to put public final static strings and other constants.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ScarabConstants.java,v 1.60 2003/09/04 00:51:16 jmcnally Exp $
+ * @version $Id: ScarabConstants.java,v 1.61 2003/09/05 22:08:10 dlr Exp $
  */
 public interface ScarabConstants
 {
@@ -247,6 +247,9 @@ public interface ScarabConstants
     String DEFAULT_EMAIL_ENCODING_KEY = "scarab.email.encoding";   
 
     Integer INTEGER_0 = new Integer(0);
+
+    int QUERY_MAX_JOIN = 
+        Turbine.getConfiguration().getInt("scarab.query.max.join", 31);
 
     /**
      * The maximum number of issues for batch view of detail.

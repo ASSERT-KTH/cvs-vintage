@@ -101,10 +101,11 @@ import org.tigris.scarab.om.MITListItem;
 import org.tigris.scarab.om.RModuleUserAttribute;
 import org.tigris.scarab.om.ScarabUser;
 
-import org.tigris.scarab.util.ScarabException;
 import org.tigris.scarab.attribute.OptionAttribute;
 import org.tigris.scarab.attribute.StringAttribute;
 import org.tigris.scarab.util.Log;
+import org.tigris.scarab.util.ScarabConstants;
+import org.tigris.scarab.util.ScarabException;
 import org.tigris.scarab.services.security.ScarabSecurity;
 
 /** 
@@ -113,11 +114,14 @@ import org.tigris.scarab.services.security.ScarabSecurity;
  * not a more specific type of Issue.
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: IssueSearch.java,v 1.109 2003/08/26 22:56:52 elicia Exp $
+ * @version $Id: IssueSearch.java,v 1.110 2003/09/05 22:08:10 dlr Exp $
  */
 public class IssueSearch 
     extends Issue
 {
+    private static final int MAX_JOIN = 
+        ScarabConstants.QUERY_MAX_JOIN;
+
     public static final String ASC = "asc";
     public static final String DESC = "desc";
 
@@ -280,6 +284,9 @@ public class IssueSearch
     private LRUMap rmitMap = new LRUMap(20);
 
     private boolean isSearchAllowed = true;
+
+    /** A counter of inner joins used in a query */
+    private int joinCounter;
 
     IssueSearch(Issue issue, ScarabUser searcher)
         throws Exception
@@ -2050,12 +2057,15 @@ public class IssueSearch
         StringBuffer outerJoin = null;
         int valueListSize = -1;
         List rmuas = getIssueListAttributeColumns();
+        int outerJoinCounter = 0;
         if (rmuas != null) 
         {
             valueListSize = rmuas.size();
             outerJoin = new StringBuffer(10 * valueListSize + 20);
             StringBuffer selectColumns = new StringBuffer(20 * valueListSize);
 
+            boolean sortAttributeAdded = false;
+            int outerJoinLimit = MAX_JOIN - joinCounter;
             int count = 0;
             for (Iterator i = rmuas.iterator(); i.hasNext(); count++) 
             {
@@ -2063,12 +2073,16 @@ public class IssueSearch
                 // locate the sort attribute position so we can move any 
                 // unset results to the end of the list.
                 Integer attrPK = rmua.getAttributeId();
+                String id = attrPK.toString();
+                String alias = "av" + id;
+                if (outerJoinCounter < outerJoinLimit || 
+                    tableAliases.contains(alias)) 
+                {
                 if (attrPK.equals(sortAttrId)) 
                 {
                     sortAttrPos = count;
+                        sortAttributeAdded = true;
                 }
-                String id = attrPK.toString();
-                String alias = "av" + id;
                 // add column to SELECT column clause
                 selectColumns.append(',').append(alias).append(".VALUE");
                 // if no criteria was specified for a displayed attribute
@@ -2079,15 +2093,22 @@ public class IssueSearch
                         .append(AttributeValuePeer.TABLE_NAME).append(' ')
                         .append(alias).append(ON)
                         .append(IssuePeer.ISSUE_ID).append('=')
-                        .append(alias).append(".ISSUE_ID AND ").append(alias)
+                            .append(alias).append(".ISSUE_ID AND ")
+                            .append(alias)
                         .append(".DELETED=0 AND ").append(alias)
                         .append(".ATTRIBUTE_ID=").append(id).append(')');
                     tableAliases.add(alias);
                 }
             }
+                else 
+                {
+                    i.remove();
+                    valueListSize--;
+                }                
+            }
 
             // we need add more sql for attribute/option sorting
-            if (sortAttrId != null) 
+            if (sortAttributeAdded) 
             {
                 String sortId = sortAttrId.toString();
                 Attribute att = AttributeManager.getInstance(sortAttrId);
