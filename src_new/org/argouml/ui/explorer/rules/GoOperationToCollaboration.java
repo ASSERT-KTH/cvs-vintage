@@ -1,4 +1,4 @@
-// $Id: GoOperationToCollaboration.java,v 1.8 2004/09/04 06:59:49 mvw Exp $
+// $Id: GoOperationToCollaboration.java,v 1.9 2004/11/12 09:49:21 mkl Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -47,9 +47,6 @@ public class GoOperationToCollaboration extends AbstractPerspectiveRule {
         return Translator.localize ("misc.operation.collaboration");
     }
 
-    /**
-     * @see org.argouml.ui.AbstractGoRule#getChildren(java.lang.Object)
-     */
     public Collection getChildren(Object parent) {
         if (ModelFacade.isAOperation(parent)) {
             return ModelFacade.getCollaborations(parent);

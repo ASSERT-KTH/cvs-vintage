@@ -1,4 +1,4 @@
-// $Id: GoInteractionMessage.java,v 1.7 2004/09/04 06:59:49 mvw Exp $
+// $Id: GoInteractionMessage.java,v 1.8 2004/11/12 09:49:21 mkl Exp $
 // Copyright (c) 2003-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -49,9 +49,6 @@ public class GoInteractionMessage extends AbstractPerspectiveRule {
 	return Translator.localize ("misc.interaction.messages");
     }
 
-    /**
-     * @see org.argouml.ui.AbstractGoRule#getChildren(Object)
-     */
     public Collection getChildren(Object parent) {
 	if (ModelFacade.isAInteraction(parent))
 	    return ModelFacade.getMessages(parent);

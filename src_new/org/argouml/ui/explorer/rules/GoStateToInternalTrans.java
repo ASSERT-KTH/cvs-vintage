@@ -1,4 +1,4 @@
-// $Id: GoStateToInternalTrans.java,v 1.8 2004/09/04 06:59:49 mvw Exp $
+// $Id: GoStateToInternalTrans.java,v 1.9 2004/11/12 09:49:24 mkl Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -44,9 +44,6 @@ public class GoStateToInternalTrans extends AbstractPerspectiveRule {
         return Translator.localize ("misc.state.internal-transitions");
     }
 	
-    /**
-     * @see org.argouml.ui.AbstractGoRule#getChildren(Object)
-     */
     public Collection getChildren(Object parent) {
 	if (ModelFacade.isAState(parent)) {
 	    return ModelFacade.getInternalTransitions(parent);

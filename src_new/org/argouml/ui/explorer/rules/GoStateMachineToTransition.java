@@ -1,4 +1,4 @@
-// $Id: GoStateMachineToTransition.java,v 1.9 2004/09/04 06:59:49 mvw Exp $
+// $Id: GoStateMachineToTransition.java,v 1.10 2004/11/12 09:49:24 mkl Exp $
 // Copyright (c) 2003-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -46,9 +46,6 @@ public class GoStateMachineToTransition extends AbstractPerspectiveRule {
         return Translator.localize ("misc.state-machine.transition");
     }
 
-    /**
-     * @see org.argouml.ui.AbstractGoRule#getChildren(Object)
-     */
     public Collection getChildren(Object parent) {
 	if (ModelFacade.isAStateMachine(parent)) {
 	    return ModelFacade.getTransitions(parent);

@@ -1,4 +1,4 @@
-// $Id: GoMachineToState.java,v 1.9 2004/09/04 06:59:49 mvw Exp $
+// $Id: GoMachineToState.java,v 1.10 2004/11/12 09:49:21 mkl Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -48,9 +48,6 @@ public class GoMachineToState extends AbstractPerspectiveRule {
         return Translator.localize ("misc.state-machine.state");
     }
 
-    /**
-     * @see org.argouml.ui.AbstractGoRule#getChildren(Object)
-     */
     public Collection getChildren(Object parent) {
         
         if (ModelFacade.isAStateMachine(parent)) {
