@@ -226,7 +226,7 @@ public class RequestDispatcherImpl implements RequestDispatcher {
 				 subRequest.getPathInfo());
 
 	Object old_query_string=realRequest.getAttribute("javax.servlet.include.query_string");
-	realRequest.setAttribute("javax.servlet.include.request_uri", queryString);
+	realRequest.setAttribute("javax.servlet.include.query_string", queryString);
 
 	// Not explicitely stated, but we need to save the old parameters before
 	// adding the new ones
@@ -262,7 +262,7 @@ public class RequestDispatcherImpl implements RequestDispatcher {
 				 old_servlet_path);
 	replaceAttribute( realRequest, "javax.servlet.include.path_info",
 				 old_path_info);
-	replaceAttribute( realRequest, "javax.servlet.include.request_uri",
+	replaceAttribute( realRequest, "javax.servlet.include.query_string",
 				 old_query_string);
     }
 
