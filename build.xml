@@ -84,7 +84,7 @@
     <mkdir dir="${tomcat.home}/webpages" />
 
     <copydir src="src/share/javax" dest="${tomcat.home}/src/javax"/>
-    <copyfile src="../jakarta-tools/ant.jar" dest="${tomcat.home}/lib/ant.jar"/>
+    <copyfile src="../jakarta-ant/lib/ant.jar" dest="${tomcat.home}/lib/ant.jar"/>
     <copyfile src="../jakarta-ant/lib/xml.jar" dest="${tomcat.home}/lib/xml.jar"/>
 
     <copydir src="src/shell" dest="${tomcat.home}" />
@@ -141,7 +141,7 @@
         dest="${tomcat.build}/test/testlist.txt"/>
     <copyfile src="../jakarta-tools/moo.jar"
         dest="${tomcat.build}/test/lib/moo.jar"/>
-    <copyfile src="../jakarta-tools/ant.jar"
+    <copyfile src="../jakarta-ant/lib/ant.jar"
         dest="${tomcat.build}/test/lib/ant.jar"/>
     <copyfile src="../jakarta-tools/moo.jar"
         dest="${tomcat.build}/test/webpages/WEB-INF/lib/moo.jar"/>
