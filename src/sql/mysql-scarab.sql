@@ -1,7 +1,4 @@
 
-
-        
-            
 --------------------------------------------------------------------------
 -- SCARAB_ACTIVITY
 --------------------------------------------------------------------------
@@ -15,12 +12,13 @@ CREATE TABLE SCARAB_ACTIVITY
     OLD_VALUE VARCHAR (255),
     NEW_VALUE VARCHAR (255),
     PRIMARY KEY(ISSUE_ID,ATTRIBUTE_ID,TRANSACTION_ID),
+    INDEX(ATTRIBUTE_ID,TRANSACTION_ID),
+    INDEX(TRANSACTION_ID),
     FOREIGN KEY (ISSUE_ID) REFERENCES SCARAB_ISSUE (ISSUE_ID),
     FOREIGN KEY (ATTRIBUTE_ID) REFERENCES SCARAB_ATTRIBUTE (ATTRIBUTE_ID),
     FOREIGN KEY (TRANSACTION_ID) REFERENCES SCARAB_TRANSACTION (TRANSACTION_ID)
 );
 
-            
 --------------------------------------------------------------------------
 -- SCARAB_ATTACHMENT
 --------------------------------------------------------------------------
@@ -45,7 +43,6 @@ CREATE TABLE SCARAB_ATTACHMENT
     FOREIGN KEY (ATTACHMENT_TYPE_ID) REFERENCES SCARAB_ATTACHMENT_TYPE (ATTACHMENT_TYPE_ID)
 );
 
-            
 --------------------------------------------------------------------------
 -- SCARAB_ATTACHMENT_TYPE
 --------------------------------------------------------------------------
@@ -58,7 +55,6 @@ CREATE TABLE SCARAB_ATTACHMENT_TYPE
     PRIMARY KEY(ATTACHMENT_TYPE_ID)
 );
 
-            
 --------------------------------------------------------------------------
 -- SCARAB_ATTRIBUTE
 --------------------------------------------------------------------------
@@ -74,7 +70,6 @@ CREATE TABLE SCARAB_ATTRIBUTE
     FOREIGN KEY (ATTRIBUTE_TYPE_ID) REFERENCES SCARAB_ATTRIBUTE_TYPE (ATTRIBUTE_TYPE_ID)
 );
 
-            
 --------------------------------------------------------------------------
 -- SCARAB_ATTRIBUTE_CLASS
 --------------------------------------------------------------------------
@@ -89,7 +84,6 @@ CREATE TABLE SCARAB_ATTRIBUTE_CLASS
     PRIMARY KEY(ATTRIBUTE_CLASS_ID)
 );
 
-            
 --------------------------------------------------------------------------
 -- SCARAB_ATTRIBUTE_OPTION
 --------------------------------------------------------------------------
@@ -105,7 +99,6 @@ CREATE TABLE SCARAB_ATTRIBUTE_OPTION
     FOREIGN KEY (ATTRIBUTE_ID) REFERENCES SCARAB_ATTRIBUTE (ATTRIBUTE_ID)
 );
 
-            
 --------------------------------------------------------------------------
 -- SCARAB_ATTRIBUTE_TYPE
 --------------------------------------------------------------------------
@@ -121,7 +114,6 @@ CREATE TABLE SCARAB_ATTRIBUTE_TYPE
     FOREIGN KEY (ATTRIBUTE_CLASS_ID) REFERENCES SCARAB_ATTRIBUTE_CLASS (ATTRIBUTE_CLASS_ID)
 );
 
-            
 --------------------------------------------------------------------------
 -- SCARAB_DEPEND
 --------------------------------------------------------------------------
@@ -134,12 +126,12 @@ CREATE TABLE SCARAB_DEPEND
     DEPEND_TYPE_ID INTEGER NOT NULL,
     DELETED INTEGER (1),
     PRIMARY KEY(OBSERVED_ID,OBSERVER_ID),
+    INDEX(OBSERVER_ID),
     FOREIGN KEY (OBSERVED_ID) REFERENCES SCARAB_ISSUE (ISSUE_ID),
     FOREIGN KEY (OBSERVER_ID) REFERENCES SCARAB_ISSUE (ISSUE_ID),
     FOREIGN KEY (DEPEND_TYPE_ID) REFERENCES SCARAB_DEPEND_TYPE (DEPEND_TYPE_ID)
 );
 
-            
 --------------------------------------------------------------------------
 -- SCARAB_DEPEND_TYPE
 --------------------------------------------------------------------------
@@ -152,7 +144,6 @@ CREATE TABLE SCARAB_DEPEND_TYPE
     PRIMARY KEY(DEPEND_TYPE_ID)
 );
 
-            
 --------------------------------------------------------------------------
 -- SCARAB_ISSUE
 --------------------------------------------------------------------------
@@ -168,10 +159,11 @@ CREATE TABLE SCARAB_ISSUE
     CREATED_DATE TIMESTAMP,
     DELETED INTEGER (1),
     PRIMARY KEY(ISSUE_ID),
-    FOREIGN KEY (MODULE_ID) REFERENCES SCARAB_MODULE (MODULE_ID)
+    FOREIGN KEY (MODULE_ID) REFERENCES SCARAB_MODULE (MODULE_ID),
+    FOREIGN KEY (CREATED_BY) REFERENCES TURBINE_USER (USER_ID),
+    FOREIGN KEY (MODIFIED_BY) REFERENCES TURBINE_USER (USER_ID)
 );
 
-            
 --------------------------------------------------------------------------
 -- SCARAB_ISSUE_ATTRIBUTE_VALUE
 --------------------------------------------------------------------------
@@ -186,13 +178,13 @@ CREATE TABLE SCARAB_ISSUE_ATTRIBUTE_VALUE
     VALUE VARCHAR (255),
     DELETED INTEGER (1),
     PRIMARY KEY(ISSUE_ID,ATTRIBUTE_ID),
+    INDEX(ATTRIBUTE_ID),
     FOREIGN KEY (ISSUE_ID) REFERENCES SCARAB_ISSUE (ISSUE_ID),
     FOREIGN KEY (ATTRIBUTE_ID) REFERENCES SCARAB_ATTRIBUTE (ATTRIBUTE_ID),
     FOREIGN KEY (OPTION_ID) REFERENCES SCARAB_ATTRIBUTE_OPTION (OPTION_ID),
     FOREIGN KEY (USER_ID) REFERENCES TURBINE_USER (USER_ID)
 );
 
-            
 --------------------------------------------------------------------------
 -- SCARAB_MODIFICATION
 --------------------------------------------------------------------------
@@ -206,10 +198,10 @@ CREATE TABLE SCARAB_MODIFICATION
     CREATED_BY INTEGER,
     MODIFIED_DATE TIMESTAMP,
     CREATED_DATE TIMESTAMP,
-    PRIMARY KEY(TABLE_ID,COLUMN_ID)
+    PRIMARY KEY(TABLE_ID,COLUMN_ID),
+    INDEX(COLUMN_ID)
 );
 
-            
 --------------------------------------------------------------------------
 -- SCARAB_MODULE
 --------------------------------------------------------------------------
@@ -226,10 +218,11 @@ CREATE TABLE SCARAB_MODULE
     QA_CONTACT_ID INTEGER NOT NULL,
     DELETED INTEGER (1),
     PRIMARY KEY(MODULE_ID),
-    FOREIGN KEY (PARENT_ID) REFERENCES SCARAB_MODULE (MODULE_ID)
+    FOREIGN KEY (PARENT_ID) REFERENCES SCARAB_MODULE (MODULE_ID),
+    FOREIGN KEY (OWNER_ID) REFERENCES TURBINE_USER (USER_ID),
+    FOREIGN KEY (QA_CONTACT_ID) REFERENCES TURBINE_USER (USER_ID)
 );
 
-            
 --------------------------------------------------------------------------
 -- SCARAB_R_MODULE_ATTRIBUTE
 --------------------------------------------------------------------------
@@ -241,11 +234,11 @@ CREATE TABLE SCARAB_R_MODULE_ATTRIBUTE
     MODULE_ID INTEGER NOT NULL,
     DELETED INTEGER (1),
     PRIMARY KEY(ATTRIBUTE_ID,MODULE_ID),
+    INDEX(MODULE_ID),
     FOREIGN KEY (ATTRIBUTE_ID) REFERENCES SCARAB_ATTRIBUTE (ATTRIBUTE_ID),
     FOREIGN KEY (MODULE_ID) REFERENCES SCARAB_MODULE (MODULE_ID)
 );
 
-            
 --------------------------------------------------------------------------
 -- SCARAB_R_MODULE_USER
 --------------------------------------------------------------------------
@@ -257,11 +250,11 @@ CREATE TABLE SCARAB_R_MODULE_USER
     USER_ID INTEGER NOT NULL,
     DELETED INTEGER (1),
     PRIMARY KEY(MODULE_ID,USER_ID),
+    INDEX(USER_ID),
     FOREIGN KEY (MODULE_ID) REFERENCES SCARAB_MODULE (MODULE_ID),
     FOREIGN KEY (USER_ID) REFERENCES TURBINE_USER (USER_ID)
 );
 
-            
 --------------------------------------------------------------------------
 -- SCARAB_R_MODULE_USER_ROLE
 --------------------------------------------------------------------------
@@ -274,10 +267,11 @@ CREATE TABLE SCARAB_R_MODULE_USER_ROLE
     ROLE_ID INTEGER NOT NULL,
     DELETED INTEGER (1),
     PRIMARY KEY(MODULE_ID,USER_ID,ROLE_ID),
+    INDEX(USER_ID,ROLE_ID),
+    INDEX(ROLE_ID),
     FOREIGN KEY (MODULE_ID, USER_ID) REFERENCES SCARAB_R_MODULE_USER (MODULE_ID, USER_ID)
 );
 
-            
 --------------------------------------------------------------------------
 -- SCARAB_TRANSACTION
 --------------------------------------------------------------------------
@@ -291,7 +285,6 @@ CREATE TABLE SCARAB_TRANSACTION
     PRIMARY KEY(TRANSACTION_ID)
 );
 
-            
 --------------------------------------------------------------------------
 -- SCARAB_ISSUE_ATTRIBUTE_VOTE
 --------------------------------------------------------------------------
@@ -304,8 +297,20 @@ CREATE TABLE SCARAB_ISSUE_ATTRIBUTE_VOTE
     USER_ID INTEGER NOT NULL,
     OPTION_ID INTEGER,
     PRIMARY KEY(ISSUE_ID,ATTRIBUTE_ID,USER_ID),
+    INDEX(ATTRIBUTE_ID,USER_ID),
+    INDEX(USER_ID),
     FOREIGN KEY (OPTION_ID) REFERENCES SCARAB_ATTRIBUTE_OPTION (OPTION_ID),
     FOREIGN KEY (ISSUE_ID, ATTRIBUTE_ID) REFERENCES SCARAB_ISSUE_ATTRIBUTE_VALUE (ISSUE_ID, ATTRIBUTE_ID),
     FOREIGN KEY (USER_ID) REFERENCES TURBINE_USER (USER_ID)
 );
 
+--------------------------------------------------------------------------
+-- TURBINE_USER
+--------------------------------------------------------------------------
+drop table if exists TURBINE_USER;
+
+CREATE TABLE TURBINE_USER
+(
+    USER_ID INTEGER NOT NULL,
+    PRIMARY KEY(USER_ID)
+);
