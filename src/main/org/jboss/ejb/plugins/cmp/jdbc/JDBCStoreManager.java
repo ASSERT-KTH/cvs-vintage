@@ -60,7 +60,7 @@ import org.jboss.util.LRUCachePolicy;
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @see org.jboss.ejb.EntityPersistenceStore
- * @version $Revision: 1.36 $
+ * @version $Revision: 1.37 $
  */
 public class JDBCStoreManager implements EntityPersistenceStore
 {
@@ -306,9 +306,10 @@ public class JDBCStoreManager implements EntityPersistenceStore
       }
    }
    
-   //
-   // Store Manager Life Cycle Commands
-   //
+   /** Store Manager Life Cycle Commands. Only a minimal
+     amount of work can be done in create since services such
+     as JDBC data sources may not have been started.
+   */
    public void create() throws Exception
    {
       log.debug("Initializing CMP plugin for " +
@@ -319,6 +320,12 @@ public class JDBCStoreManager implements EntityPersistenceStore
       
       // load the metadata for this entity
       metaData = loadJDBCEntityMetaData();
+   }
+
+   /** Bring the store to a fully initialized state
+   */
+   public void start() throws Exception
+   {
       
       // get the transaction manager
       tm = container.getTransactionManager();
@@ -376,10 +383,7 @@ public class JDBCStoreManager implements EntityPersistenceStore
       
       // Execute the init Command
       initCommand.execute();
-   }
-   
-   public void start() throws Exception
-   {
+
       startCommand.execute();
       
       // Start the query manager. At this point is creates all of the
