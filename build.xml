@@ -12,7 +12,7 @@
 <!--                                                                        -->
 <!-- ====================================================================== -->
 
-<!-- $Id: build.xml,v 1.109 2002/08/30 20:02:20 loubyansky Exp $ -->
+<!-- $Id: build.xml,v 1.110 2002/09/01 23:32:19 d_jencks Exp $ -->
 
 <project default="main" name="JBoss/Server">
 
@@ -401,12 +401,10 @@
 
   <!-- Compile mbeans with XDoclet -->
   <target name="compile-mbean-sources" depends="init">
-    <taskdef name="xdoclet" classname="xdoclet.jmx.JMXDocletTask" classpathref="xdoclet.task.classpath"/>
+    <taskdef name="jmxdoclet" classname="xdoclet.modules.jmx.JMXDocletTask" classpathref="xdoclet.task.classpath"/>
 
     <mkdir dir="${build.gen-src}"/>
-    <xdoclet sourcepath="${source.java}"
-	     destdir="${build.gen-src}"
-	     classpath="${xdoclet.task.classpath}"
+    <jmxdoclet destdir="${build.gen-src}"
 	     excludedtags="@version,@author">
       <fileset dir="${source.java}">
         <include name="org/jboss/deployment/EARDeployer.java"/>
@@ -421,17 +419,15 @@
         <include name="org/jboss/web/**/*.java"/>
       </fileset>
       <mbeaninterface mergedir="${project.tools}/etc/xdoclet/templates"/>
-    </xdoclet>
+    </jmxdoclet>
   </target>
 
   <!-- Compile EJB beans with XDoclet -->
   <target name="compile-bean-sources" depends="init">
-    <taskdef name="xdoclet" classname="xdoclet.ejb.EjbDocletTask" classpathref="xdoclet.task.classpath"/>
+    <taskdef name="ejbdoclet" classname="xdoclet.modules.ejb.EjbDocletTask" classpathref="xdoclet.task.classpath"/>
 
     <mkdir dir="${build.beans}/ejbadaptor"/>
-    <xdoclet sourcepath="${source.java}"
-	     destdir="${build.beans}/ejbadaptor"
-	     classpath="${xdoclet.task.classpath}"
+    <ejbdoclet destdir="${build.beans}/ejbadaptor"
 	     ejbspec="1.1"
 	     excludedtags="@version,@author">
       <fileset dir="${source.java}">
@@ -444,7 +440,7 @@
       <session/>
       <deploymentdescriptor xmlencoding="UTF-8" destdir="${build.beans}/ejbadaptor/META-INF"/>
       <jboss xmlencoding="UTF-8" version="3.0" destdir="${build.beans}/ejbadaptor/META-INF"/>
-    </xdoclet>
+    </ejbdoclet>
 
   </target>
 
