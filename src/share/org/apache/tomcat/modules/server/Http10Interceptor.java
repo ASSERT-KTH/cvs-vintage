@@ -209,6 +209,10 @@ class HttpRequest extends Request {
     
     public HttpRequest() {
         super();
+
+        // recycle these to remove the defaults
+        remoteAddrMB.recycle();
+        remoteHostMB.recycle();
     }
     public Object getAttribute(String name) {
         if (name.equals("javax.servlet.request.X509Certificate")) {
