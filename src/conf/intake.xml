@@ -306,8 +306,12 @@
         <field name="SearchWords" key="sw" type="String"/>
         <field name="TextScope" key="ts" type="NumberKey" multiValued="true"/>
         <field name="CommentQuery" key="cq" type="String"/>
-        <field name="MinId" key="lid" type="String"/>
-        <field name="MaxId" key="hid" type="String"/>
+        <field name="MinId" key="lid" type="String">
+           <rule name="mask" value="^[0-9]{1,9}$|^[A-Za-z]{0,4}[0-9]{1,9}$">intake_InvalidIssueId</rule>
+        </field>
+        <field name="MaxId" key="hid" type="String">
+           <rule name="mask" value="^[0-9]{1,9}$|^[A-Za-z]{0,4}[0-9]{1,9}$">intake_InvalidIssueId</rule>
+        </field>
         <field name="MinDate" key="ld" type="String">
         </field>
         <field name="MaxDate" key="hd" type="String">

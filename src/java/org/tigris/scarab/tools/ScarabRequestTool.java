@@ -1342,7 +1342,7 @@ try{
         throws Exception
     {
         List issues = null;
-        String invalidIds = null; 
+        StringBuffer invalidIds = null; 
         if (issueIds == null || issueIds.isEmpty()) 
         {
             issues = Collections.EMPTY_LIST;
@@ -1361,11 +1361,11 @@ try{
                     {
                         if (invalidIds == null) 
                         {
-                            invalidIds = id;
+                            invalidIds = new StringBuffer(id);
                         }
                         else 
                         {
-                            invalidIds += " " + id;
+                            invalidIds.append(' ').append(id);
                         }                        
                     }
                     else
@@ -1376,7 +1376,7 @@ try{
                 if (invalidIds != null) 
                 {                
                     setAlertMessage( getLocalizationTool()
-                        .format("SomeIssueIdsNotValid", invalidIds));
+                        .format("SomeIssueIdsNotValid", invalidIds.toString()));
                 }
             }
             else if (issueIds.get(0) instanceof NumberKey)
@@ -1552,7 +1552,28 @@ try{
      * Performs search on current query (which is stored in user session).
     */
     public List getCurrentSearchResults()
-        throws Exception, ScarabException
+    {
+        List matchingIssueIds = null;
+        try 
+        {
+            matchingIssueIds = getUnprotectedCurrentSearchResults();
+        }
+        catch (Exception e)
+        {
+            matchingIssueIds = Collections.EMPTY_LIST;
+            setAlertMessage(getLocalizationTool()
+                .format("ErrorProcessingQuery", e.getMessage()));
+            Log.get().info("Error processing a query", e);
+        }
+        
+        return matchingIssueIds;
+    }
+
+    /**
+     * Performs search on current query (which is stored in user session).
+    */
+    private List getUnprotectedCurrentSearchResults()
+        throws Exception
     {
         ScarabLocalizationTool l10n = getLocalizationTool();
         ScarabUser user = (ScarabUser)data.getUser();
@@ -1570,7 +1591,11 @@ try{
         else
         {
            intake = parseQuery(currentQueryString);
+           searchSuccess = intake.isAllValid();
+        }
 
+        if (searchSuccess)
+        {
             // If they have entered users to search on, add them to the search
             StringValueParser parser = new StringValueParser();
             parser.parse(currentQueryString, '&', '=', true);
@@ -1584,10 +1609,7 @@ try{
                     search.addUserCriteria(userId, attrId);
                 }
             }
-        }
 
-        if (searchSuccess)
-        {
             // Set intake properties
             Group searchGroup = intake.get("SearchIssue", 
                                            getSearch().getQueryKey() );
@@ -1676,6 +1698,7 @@ try{
         }
         return matchingIssueIds;
     }
+
 
     /**
      * Returns index of issue's position in current issue list.

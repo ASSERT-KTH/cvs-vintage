@@ -983,7 +983,14 @@ public class IssueSearch
         }
         if ( maxFid != null && maxFid.getPrefix() == null ) 
         {
-            maxFid.setPrefix(minFid.getPrefix());
+            if (minFid == null) 
+            {
+                maxFid.setPrefix(module.getCode());                
+            }
+            else 
+            {
+                maxFid.setPrefix(minFid.getPrefix());        
+            }
         }
     }
 
