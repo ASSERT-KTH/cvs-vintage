@@ -8,7 +8,6 @@ package org.jboss.ejb.plugins.cmp.jdbc.bridge;
 
 import java.lang.ref.WeakReference;
 import java.lang.reflect.Method;
-import java.lang.reflect.Array;
 import javax.sql.DataSource;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -73,12 +72,10 @@ import org.jboss.security.SecurityAssociation;
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @author <a href="mailto:alex@jboss.org">Alex Loubyansky</a>
- * @version $Revision: 1.84 $
+ * @version $Revision: 1.85 $
  */
 public final class JDBCCMRFieldBridge extends JDBCAbstractCMRFieldBridge
 {
-   private static final EJBLocalObject[] EMPTY_LOCAL_ARR = new EJBLocalObject[0];
-
    /**
     * The entity bridge to which this cmr field belongs.
     */
@@ -827,71 +824,44 @@ public final class JDBCCMRFieldBridge extends JDBCAbstractCMRFieldBridge
    public void setInstanceValue(EntityEnterpriseContext myCtx, Object newValue)
    {
       // validate new value first
-      EJBLocalObject[] valueCopy;
+      List newPks;
       if(newValue instanceof Collection)
       {
          Collection col = (Collection) newValue;
-         valueCopy = (EJBLocalObject[]) Array.newInstance(relatedEntity.getLocalInterface(), col.size());
-
-         if(valueCopy.length > 0)
+         if(!col.isEmpty())
          {
-            try
+            newPks = new ArrayList(col.size());
+            for(Iterator iter = col.iterator(); iter.hasNext();)
             {
-               col.toArray(valueCopy);
-            }
-            catch(ArrayStoreException e)
-            {
-               throw new IllegalArgumentException("The elements in the collection must be of type " +
-                  relatedEntity.getLocalInterface().getName());
-            }
+               Object localObject = iter.next();
+               if(localObject != null)
+               {
+                  Object relatedId = getRelatedPrimaryKey(localObject);
 
-            for(int i = 0; i < valueCopy.length; ++i)
-            {
-               EJBLocalObject localObject = valueCopy[i];
-               try
-               {
-                  Object relatedId = localObject.getPrimaryKey();
-                  if(relatedManager.wasCascadeDeleted(relatedId))
+                  // check whether new value modifies the primary key if there are FK fields mapped to PK fields
+                  if(relatedPKFieldsByMyPKFields.size() > 0)
                   {
-                     throw new IllegalArgumentException("The instance was cascade-deleted: pk=" + relatedId);
+                     checkSetForeignKey(myCtx, relatedId);
                   }
-               }
-               catch(NoSuchObjectLocalException e)
-               {
-                  throw new IllegalArgumentException(e.getMessage());
+
+                  newPks.add(relatedId);
                }
             }
+         }
+         else
+         {
+            newPks = Collections.EMPTY_LIST;
          }
       }
       else
       {
          if(newValue != null)
          {
-            valueCopy = (EJBLocalObject[]) Array.newInstance(relatedEntity.getLocalInterface(), 1);
-            try
-            {
-               EJBLocalObject localObject = (EJBLocalObject) newValue;
-               Object relatedId = localObject.getPrimaryKey();
-               if(relatedManager.wasCascadeDeleted(relatedId))
-               {
-                  throw new IllegalArgumentException("The instance was cascade-deleted: pk=" + relatedId);
-               }
-
-               valueCopy[0] = localObject;
-            }
-            catch(NoSuchObjectLocalException e)
-            {
-               throw new IllegalArgumentException(e.getMessage());
-            }
-            catch(ArrayStoreException e)
-            {
-               throw new IllegalArgumentException("The value must be of type " +
-                  relatedEntity.getLocalInterface().getName());
-            }
+            newPks = Collections.singletonList(getRelatedPrimaryKey(newValue));
          }
          else
          {
-            valueCopy = EMPTY_LOCAL_ARR;
+            newPks = Collections.EMPTY_LIST;
          }
       }
 
@@ -905,59 +875,23 @@ public final class JDBCCMRFieldBridge extends JDBCAbstractCMRFieldBridge
          return;
       }
 
-      // list of new pk values. just not to fetch them twice
-      // if there are FK fields mapped to PK fields
-      List newPkValues = null;
-
-      // check whether new value modifies the primary key if there are FK fields
-      // mapped to PK fields
-      if(relatedPKFieldsByMyPKFields.size() > 0)
-      {
-         newPkValues = new ArrayList();
-         for(int i = 0; i < valueCopy.length; ++i)
-         {
-            EJBLocalObject ejbObject = valueCopy[i];
-            if(ejbObject != null)
-            {
-               Object pkObject = ejbObject.getPrimaryKey();
-               checkSetForeignKey(myCtx, pkObject);
-               newPkValues.add(pkObject);
-            }
-         }
-      }
-
       try
       {
          // Remove old value(s)
          List value = fieldState.getValue();
          if(!value.isEmpty())
          {
-            List valuesCopy = new ArrayList(value);
-            for(int i = 0; i < valuesCopy.size(); ++i)
+            Object[] curPks = value.toArray(new Object[value.size()]);
+            for(int i = 0; i < curPks.length; ++i)
             {
-               destroyRelationLinks(myCtx, valuesCopy.get(i));
+               destroyRelationLinks(myCtx, curPks[i]);
             }
          }
 
          // Add new value(s)
-         if(newPkValues != null)
+         for(int i = 0; i < newPks.size(); ++i)
          {
-            for(int i = 0; i < newPkValues.size(); ++i)
-            {
-               createRelationLinks(myCtx, newPkValues.get(i));
-            }
-         }
-         else
-         {
-            for(int i = 0; i < valueCopy.length; ++i)
-            {
-               EJBLocalObject newBean = valueCopy[i];
-               if(newBean != null)
-               {
-                  Object relatedId = newBean.getPrimaryKey();
-                  createRelationLinks(myCtx, relatedId);
-               }
-            }
+            createRelationLinks(myCtx, newPks.get(i));
          }
       }
       catch(RuntimeException e)
@@ -1375,7 +1309,7 @@ public final class JDBCCMRFieldBridge extends JDBCAbstractCMRFieldBridge
          throw new EJBException("Field is read-only: " + getFieldName());
       }
 
-      if(!entity.isEjbCreateDone(myCtx))
+      if(!JDBCEntityBridge.isEjbCreateDone(myCtx))
       {
          throw new IllegalStateException("A CMR field cannot be set or added " +
             "to a relationship in ejbCreate; this should be done in the " +
@@ -1895,6 +1829,34 @@ public final class JDBCCMRFieldBridge extends JDBCAbstractCMRFieldBridge
          }
       }
       return relationManager;
+   }
+
+   private Object getRelatedPrimaryKey(Object localObject)
+   {
+      Object relatedId;
+      if(relatedEntity.getLocalInterface().isAssignableFrom(localObject.getClass()))
+      {
+         EJBLocalObject local = (EJBLocalObject) localObject;
+         try
+         {
+            relatedId = local.getPrimaryKey();
+         }
+         catch(NoSuchObjectLocalException e)
+         {
+            throw new IllegalArgumentException(e.getMessage());
+         }
+
+         if(relatedManager.wasCascadeDeleted(relatedId))
+         {
+            throw new IllegalArgumentException("The instance was cascade-deleted: pk=" + relatedId);
+         }
+      }
+      else
+      {
+         throw new IllegalArgumentException("The values of this field must be of type " +
+            relatedEntity.getLocalInterface().getName());
+      }
+      return relatedId;
    }
 
    public String toString()
