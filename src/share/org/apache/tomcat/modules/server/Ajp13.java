@@ -64,8 +64,6 @@ import java.net.*;
 import java.util.*;
 import org.apache.tomcat.core.*;
 import org.apache.tomcat.util.*;
-import javax.servlet.*;
-import javax.servlet.http.*;
 
 public class Ajp13
 {

@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/http/Attic/HttpRequestAdapter.java,v 1.29 2000/09/22 20:31:42 nacho Exp $
- * $Revision: 1.29 $
- * $Date: 2000/09/22 20:31:42 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/http/Attic/HttpRequestAdapter.java,v 1.30 2000/09/24 18:10:11 costin Exp $
+ * $Revision: 1.30 $
+ * $Date: 2000/09/24 18:10:11 $
  *
  * ====================================================================
  *
@@ -67,6 +67,7 @@ package org.apache.tomcat.service.http;
 import org.apache.tomcat.core.*;
 import org.apache.tomcat.helper.*;
 import org.apache.tomcat.util.*;
+import org.apache.tomcat.util.net.*;
 import org.apache.tomcat.logging.*;
 import java.io.*;
 import java.net.*;
@@ -157,7 +158,7 @@ public class HttpRequestAdapter extends Request {
 
 	// for 0.9, we don't have headers!
 	if (protocol!=null) { // all HTTP versions with protocol also have headers ( 0.9 has no HTTP/0.9 !)
-	    readHeaders( headers, in  );
+	    readHeaders( headers, sin  );
 	}
 
 	// XXX
@@ -174,7 +175,9 @@ public class HttpRequestAdapter extends Request {
      * @exception IllegalArgumentException if the header format was invalid 
      * @exception IOException if an I/O error has occurred
      */
-    public void readHeaders( MimeHeaders headers, ServletInputStream in )  throws IOException {
+    public void readHeaders( MimeHeaders headers, InputStream sin )
+	throws IOException
+    {
 	// use pre-allocated buffer if possible
 	off = count; // where the request line ended
 	
@@ -185,7 +188,7 @@ public class HttpRequestAdapter extends Request {
 		int len = buf.length - off;
 
 		if (len > 0) {
-		    len = readLine(sin,buf, off, len);
+		    len= TcpConnection.readLine(sin,buf, off, len);
 
 		    if (len == -1) {
                         String msg =

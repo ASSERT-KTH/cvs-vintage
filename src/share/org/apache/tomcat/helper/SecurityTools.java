@@ -172,7 +172,7 @@ public class SecurityTools {
 	String authMethod=ctx.getAuthMethod();
 
 	if( "FORM".equals( authMethod ) ) {
-	    HttpSession session=req.getSession( false );
+	    HttpSession session=(HttpSession)req.getSession( false );
 
 	    if( session == null )
 		return; // not authenticated

@@ -164,7 +164,7 @@ public class EmbededTomcat { // extends WebService
 	    ctx.setDocBase( docRoot.getFile());
 	    contextM.addContext( ctx );
 	    if( facadeM == null ) facadeM=ctx.getFacadeManager();
-	    return ctx.getFacade();
+	    return (ServletContext)ctx.getFacade();
 	} catch( Exception ex ) {
 	    log("exception adding context " + ctxPath + "/" + docRoot, ex);
 	}
@@ -224,7 +224,7 @@ public class EmbededTomcat { // extends WebService
 	// ( it's not difficult, but can be done later )
 	Context ctx=contextM.getContext( cpath );
 	if( ctx==null ) return null;
-	return ctx.getFacade();
+	return (ServletContext)ctx.getFacade();
     }
 
     /** This will make the context available.

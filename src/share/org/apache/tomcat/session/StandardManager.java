@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/session/Attic/StandardManager.java,v 1.15 2000/09/24 17:42:27 costin Exp $
- * $Revision: 1.15 $
- * $Date: 2000/09/24 17:42:27 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/session/Attic/StandardManager.java,v 1.16 2000/09/24 18:10:13 costin Exp $
+ * $Revision: 1.16 $
+ * $Date: 2000/09/24 18:10:13 $
  *
  * ====================================================================
  *
@@ -103,7 +103,7 @@ import org.apache.tomcat.core.Request;
  * @author Craig R. McClanahan
  * @author costin@eng.sun.com
  * @author <a href="mailto:jon@latchkey.com">Jon S. Stevens</a>
- * @version $Revision: 1.15 $ $Date: 2000/09/24 17:42:27 $
+ * @version $Revision: 1.16 $ $Date: 2000/09/24 18:10:13 $
  */
 public final class StandardManager implements Runnable  {
     // ----------------------------------------------------- Instance Variables
@@ -382,12 +382,12 @@ public final class StandardManager implements Runnable  {
     }
 
     public void handleReload(Request req, ClassLoader newLoader) {
-	Hashtable sessions = sessionM.getSessions();
+	Hashtable sessions = getSessions();
 
 	sessions = SessionSerializer.doSerialization( newLoader, sessions);
 
 	// put the new sessions into the manager
-	sessionM.setSessions(sessions);
+	setSessions(sessions);
     }
 
     /**

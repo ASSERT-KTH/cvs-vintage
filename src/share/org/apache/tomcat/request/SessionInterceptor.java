@@ -138,10 +138,10 @@ public class SessionInterceptor extends  BaseInterceptor
 	// Give priority to cookies. I don't know if that's part
 	// of the spec - XXX
 	for( int i=0; i<count; i++ ) {
-	    Cookie cookie = request.getCookie(i);
+	    ServerCookie cookie = request.getCookie(i);
 	    
 	    if (cookie.getName().equals("JSESSIONID")) {
-		sessionId = cookie.getValue();
+		sessionId = cookie.getValue().toString();
 		sessionId = fixSessionId( request, sessionId );
 
 		// XXX what if we have multiple session cookies ?
@@ -174,7 +174,7 @@ public class SessionInterceptor extends  BaseInterceptor
     }
 
     public int beforeBody( Request rrequest, Response response ) {
-    	String reqSessionId = response.getSessionId();
+    	String reqSessionId = rrequest.getSessionId();
 	if( debug>0 ) cm.log("Before Body " + reqSessionId );
 	if( reqSessionId==null)
 	    return 0;
@@ -196,17 +196,24 @@ public class SessionInterceptor extends  BaseInterceptor
             }
         }
 
-	Cookie cookie = new Cookie("JSESSIONID",
-				   reqSessionId);
-    	cookie.setMaxAge(-1);
-        cookie.setPath(sessionPath);
-    	cookie.setVersion(1);
+	// we know reqSessionId doesn't need quoting ( we generate it )
+	StringBuffer buf = new StringBuffer();
+	buf.append( "JSESSIONID=" ).append( reqSessionId );
+	buf.append( ";Version=1" );
+	buf.append( ";Path=" );
+	CookieTools.maybeQuote( 1 , buf, sessionPath ); // XXX ugly 
+	buf.append( ";Discard" );
+	// discard results from:    	cookie.setMaxAge(-1);
+	
+	
+	response.addHeader( "Set-Cookie2",
+			    buf.toString() ); // XXX XXX garbage generator
 
-	response.addHeader( CookieTools.getCookieHeaderName(cookie),
-			    CookieTools.getCookieHeaderValue(cookie));
-    	cookie.setVersion(0);
-	response.addHeader( CookieTools.getCookieHeaderName(cookie),
-			    CookieTools.getCookieHeaderValue(cookie));
+	buf = new StringBuffer();
+	buf.append( "JSESSIONID=" ).append( reqSessionId );
+	buf.append( ";Path=" ).append(  sessionPath  );
+	response.addHeader( "Set-Cookie",
+			    buf.toString());
 	
     	return 0;
     }

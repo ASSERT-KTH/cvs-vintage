@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/helper/Attic/CookieTools.java,v 1.1 2000/08/22 06:56:43 costin Exp $
- * $Revision: 1.1 $
- * $Date: 2000/08/22 06:56:43 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/helper/Attic/CookieTools.java,v 1.2 2000/09/24 18:09:48 costin Exp $
+ * $Revision: 1.2 $
+ * $Date: 2000/09/24 18:09:48 $
  *
  * ====================================================================
  *
@@ -156,7 +156,7 @@ public class CookieTools {
 	}
     }
 
-    static void maybeQuote (int version, StringBuffer buf,
+    public static void maybeQuote (int version, StringBuffer buf,
                                     String value)
     {
 	if (version == 0 || isToken (value))

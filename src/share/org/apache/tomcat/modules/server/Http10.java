@@ -67,8 +67,6 @@ import org.apache.tomcat.logging.*;
 import java.io.*;
 import java.net.*;
 import java.util.*;
-import javax.servlet.*;
-import javax.servlet.http.*;
 
 public class Http10 {
     private Socket socket;
@@ -142,7 +140,7 @@ public class Http10 {
 		    len = readLine(sin,buf, off, len);
 
 		    if (len == -1) {
-			return HttpServletResponse.SC_BAD_REQUEST;
+			return 400;
 		    }
 		}
 
@@ -234,7 +232,7 @@ public class Http10 {
 	count = readLine(sin,buf, 0, buf.length);
 
 	if (count < 0 ) {
-	    return HttpServletResponse.SC_BAD_REQUEST;
+	    return 400;
 	}
 	
 	off=0;
@@ -242,7 +240,7 @@ public class Http10 {
 	// if end of line is reached before we scan all 3 components -
 	// we're fine, off=count and remain unchanged
 	if( buf[count-1]!= '\r' && buf[count-1]!= '\n' ) {
-	    return HttpServletResponse.SC_REQUEST_URI_TOO_LONG;
+	    return 414; //HttpServletResponse.SC_REQUEST_URI_TOO_LONG;
 	}	    
 	
 	int startMethod=skipSpaces();
@@ -257,7 +255,7 @@ public class Http10 {
 	if( startReq < 0   ) {
 	    // we don't have 2 "words", probably only method
 	    // startReq>0 => method is fine, request has at least one char
-	    return HttpServletResponse.SC_BAD_REQUEST;
+	    return 400;
 	}
 
 	methodMB.setBytes( buf, startMethod, endMethod - startMethod );
@@ -307,7 +305,7 @@ public class Http10 {
 		requestURI = RequestUtil.URLDecode(requestURI);
 		uriMB.setString( requestURI );
 	    } catch (Exception e) {
-		return HttpServletResponse.SC_BAD_REQUEST;
+		return 400;
 	    }
 	}
 

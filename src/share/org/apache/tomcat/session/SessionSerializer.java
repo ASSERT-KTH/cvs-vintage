@@ -81,7 +81,7 @@ public final class SessionSerializer
     /**
        This is the method that does the serialization.
     */
-    public static final void doSerialization(ClassLoader cl,
+    public static final Hashtable doSerialization(ClassLoader cl,
 					     Hashtable sessions)
     {
 	// get the hashtable of sessions
@@ -111,6 +111,7 @@ public final class SessionSerializer
 	    // than adding dependencies to context.
 	    System.out.println( "SessionSerializer: " + e );
 	}
+	return sessions;
     }
 	
     /**

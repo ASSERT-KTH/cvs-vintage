@@ -69,9 +69,6 @@ import org.apache.tomcat.util.*;
 import org.apache.tomcat.util.net.*;
 import org.apache.tomcat.util.net.ServerSocketFactory;
 import org.apache.tomcat.logging.*;
-import javax.servlet.*;
-import javax.servlet.http.*;
-
 
 /** Standalone http.
  *
@@ -114,8 +111,6 @@ public class Http10Interceptor extends PoolTcpConnector
     
     public Object[] init() {
 	Object thData[]=new Object[3];
-	// 	HttpRequestAdapter reqA=new HttpRequestAdapter();
-	// 	HttpResponseAdapter resA=new HttpResponseAdapter();
 	HttpRequest reqA=new HttpRequest();
 	HttpResponse resA=new HttpResponse();
 	cm.initRequest( reqA, resA );
@@ -131,34 +126,13 @@ public class Http10Interceptor extends PoolTcpConnector
 	HttpResponse resA=null;
 
 	try {
-	    // XXX - Add workarounds for the fact that the underlying
-	    // serverSocket.accept() call can now time out.  This whole
-	    // architecture needs some serious review.
-	    if (connection == null)
-		return;
+	    reqA=(HttpRequest)thData[0];
+	    resA=(HttpResponse)thData[1];
 
-	    if( thData != null ) {
-		reqA=(HttpRequest)thData[0];
-		resA=(HttpResponse)thData[1];
-		if( reqA!=null ) reqA.recycle();
-		if( resA!=null ) resA.recycle();
-	    }
-
-	    if( reqA==null || resA==null ) {	
-		log("No thread data ??");
-		reqA=new HttpRequest();
-		resA=new HttpResponse();
-		cm.initRequest( reqA, resA );
-	    }
-	    
 	    socket=connection.getSocket();
-	    if (socket == null)
-		return;
 
-	    // InputStream in=socket.getInputStream();
-	    // OutputStream out=socket.getOutputStream();
 	    reqA.setSocket( socket );
-	    // resA.setOutputStream( out );
+	    resA.setSocket( socket );
 
 	    reqA.readNextRequest(resA);
 	    if( secure ) {
@@ -167,22 +141,7 @@ public class Http10Interceptor extends PoolTcpConnector
 	    
 	    cm.service( reqA, resA );
 
-	    try {
-               InputStream is = socket.getInputStream();
-               int available = is.available ();
-	       
-               // XXX on JDK 1.3 just socket.shutdownInput () which
-               // was added just to deal with such issues.
-
-               // skip any unread (bogus) bytes
-               if (available > 1) {
-                   is.skip (available);
-               }
-	    }catch(NullPointerException npe) {
-		// do nothing - we are just cleaning up, this is
-		// a workaround for Netscape \n\r in POST - it is supposed
-		// to be ignored
-	    }
+	    TcpConnection.shutdownInput( socket );
 	}
 	catch(java.net.SocketException e) {
 	    // SocketExceptions are normal
@@ -224,7 +183,7 @@ class HttpRequest extends Request {
 
     public void recycle() {
 	super.recycle();
-	http.recycle();
+	if( http!=null) http.recycle();
     }
 
     public void setSocket(Socket socket) throws IOException {
@@ -301,6 +260,9 @@ class HttpResponse extends  Response {
     
     public HttpResponse() {
         super();
+    }
+
+    public void setSocket( Socket s ) {
 	http=((HttpRequest)request).http;
     }
 

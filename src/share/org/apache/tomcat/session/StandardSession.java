@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/session/Attic/StandardSession.java,v 1.17 2000/09/24 17:42:27 costin Exp $
- * $Revision: 1.17 $
- * $Date: 2000/09/24 17:42:27 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/session/Attic/StandardSession.java,v 1.18 2000/09/24 18:10:14 costin Exp $
+ * $Revision: 1.18 $
+ * $Date: 2000/09/24 18:10:14 $
  *
  * ====================================================================
  *
@@ -97,7 +97,7 @@ import org.apache.tomcat.util.StringManager;
  *
  * @author Craig R. McClanahan
  * @author <a href="mailto:jon@latchkey.com">Jon S. Stevens</a>
- * @version $Revision: 1.17 $ $Date: 2000/09/24 17:42:27 $
+ * @version $Revision: 1.18 $ $Date: 2000/09/24 18:10:14 $
  */
 
 final class StandardSession
@@ -469,11 +469,8 @@ final class StandardSession
      *  Java Servlet API.
      */
     public HttpSessionContext getSessionContext() {
-
-	if (sessionContext == null)
-	    sessionContext = new SessionContextImpl();
-	return (sessionContext);
-
+	return null; // XXX XXX XXX temp - will go away as we refactor
+	// the session manager for recycling and modularization
     }
 
 

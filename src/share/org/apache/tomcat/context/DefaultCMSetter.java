@@ -70,8 +70,6 @@ import java.util.*;
 import java.security.*;
 
 import org.apache.tomcat.logging.*;
-import javax.servlet.*;
-import javax.servlet.http.*;
 
 /**
  * Check ContextManager and set defaults for non-set properties

@@ -390,7 +390,7 @@ class FormAuthHandler extends Handler {
     {
 	Context ctx=req.getContext();
 
-	HttpSession session=req.getSession( false );
+	HttpSession session=(HttpSession)req.getSession( false );
 	if( session == null ) {
 	}
 	
@@ -399,7 +399,7 @@ class FormAuthHandler extends Handler {
 	// assert errorPage!=null ( AccessInterceptor will check
 	// that and enable form login only if everything is ok
 
-	session=req.getSession( true );
+	session=(HttpSession)req.getSession( true );
 	String username=(String)session.getAttribute( "j_username" );
 
 	if( debug>0) log( "Username = " + username);
@@ -463,7 +463,7 @@ class FormSecurityCheckHandler extends Handler {
 	if( debug > 0 )
 	    log( " user/pass= " + username + " " + password );
 	    
-	HttpSession session=req.getSession( false );
+	HttpSession session=(HttpSession)req.getSession( false );
 	if( session == null ) {
 	    ctx.log("From login without a session ");
 	    req.setAttribute("javax.servlet.error.message",

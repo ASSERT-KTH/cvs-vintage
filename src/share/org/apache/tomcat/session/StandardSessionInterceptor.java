@@ -150,6 +150,7 @@ public final class StandardSessionInterceptor  extends BaseInterceptor {
 	sM.handleReload(req, newLoader);
 	if (req.getSession(false) != null) {
 	    // replace the current session in the current request
+	    Hashtable sessions=sM.getSessions();
 	    HttpSession newSession = 
 		(HttpSession)sessions.get(req.getRequestedSessionId());
 	    req.setSession(newSession);

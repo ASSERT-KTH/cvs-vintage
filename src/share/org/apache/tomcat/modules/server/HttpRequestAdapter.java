@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/modules/server/Attic/HttpRequestAdapter.java,v 1.2 2000/09/24 03:34:31 nacho Exp $
- * $Revision: 1.2 $
- * $Date: 2000/09/24 03:34:31 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/modules/server/Attic/HttpRequestAdapter.java,v 1.3 2000/09/24 18:09:57 costin Exp $
+ * $Revision: 1.3 $
+ * $Date: 2000/09/24 18:09:57 $
  *
  * ====================================================================
  *
@@ -67,12 +67,11 @@ package org.apache.tomcat.modules.server;
 import org.apache.tomcat.core.*;
 import org.apache.tomcat.helper.*;
 import org.apache.tomcat.util.*;
+import org.apache.tomcat.util.net.*;
 import org.apache.tomcat.logging.*;
 import java.io.*;
 import java.net.*;
 import java.util.*;
-import javax.servlet.*;
-import javax.servlet.http.*;
 
 public class HttpRequestAdapter extends Request {
     static StringManager sm = StringManager.getManager("org.apache.tomcat.resources");
@@ -149,7 +148,7 @@ public class HttpRequestAdapter extends Request {
 	count = readLine(sin,buf, 0, buf.length);
 
 	if (count < 0 ) {
-	    response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+	    response.setStatus(400);
 	    return;
 	}
 	
@@ -157,7 +156,7 @@ public class HttpRequestAdapter extends Request {
 
 	// for 0.9, we don't have headers!
 	if (protocol!=null) { // all HTTP versions with protocol also have headers ( 0.9 has no HTTP/0.9 !)
-	    readHeaders( headers, in  );
+	    readHeaders( headers, sin  );
 	}
 
 	// XXX
@@ -174,7 +173,9 @@ public class HttpRequestAdapter extends Request {
      * @exception IllegalArgumentException if the header format was invalid 
      * @exception IOException if an I/O error has occurred
      */
-    public void readHeaders( MimeHeaders headers, ServletInputStream in )  throws IOException {
+    public void readHeaders( MimeHeaders headers, InputStream in )
+	throws IOException
+    {
 	// use pre-allocated buffer if possible
 	off = count; // where the request line ended
 	
@@ -185,7 +186,7 @@ public class HttpRequestAdapter extends Request {
 		int len = buf.length - off;
 
 		if (len > 0) {
-		    len = readLine(sin,buf, off, len);
+		    len = TcpConnection.readLine(in,buf, off, len);
 
 		    if (len == -1) {
                         String msg =
@@ -361,7 +362,7 @@ public class HttpRequestAdapter extends Request {
 	// we're fine, off=count and remain unchanged
 	
 	if( buf[count-1]!= '\r' && buf[count-1]!= '\n' ) {
-	    response.setStatus(HttpServletResponse.SC_REQUEST_URI_TOO_LONG);
+	    response.setStatus(414);
 	    return;
 	}	    
 	
@@ -377,7 +378,7 @@ public class HttpRequestAdapter extends Request {
 	if( startReq < 0   ) {
 	    // we don't have 2 "words", probably only method
 	    // startReq>0 => method is fine, request has at least one char
-	    response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+	    response.setStatus(400);
 	    return;
 	}
 

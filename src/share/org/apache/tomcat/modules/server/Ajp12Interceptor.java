@@ -72,8 +72,6 @@ import org.apache.tomcat.helper.*;
 import org.apache.tomcat.util.net.*;
 import org.apache.tomcat.util.*;
 import org.apache.tomcat.logging.*;
-import javax.servlet.*;
-import javax.servlet.http.*;
 
 /* 
  */

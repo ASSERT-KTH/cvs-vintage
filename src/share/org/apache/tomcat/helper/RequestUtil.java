@@ -65,10 +65,6 @@ import org.apache.tomcat.core.Constants;
 import java.io.*;
 import java.net.*;
 import java.util.*;
-import javax.servlet.ServletInputStream;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpUtils;
-import javax.servlet.http.Cookie;
 import java.text.*;
 
 /**
@@ -85,32 +81,10 @@ public class RequestUtil {
     protected static StringManager sm =
         StringManager.getManager("org.apache.tomcat.resources");
     
-    public static Hashtable readFormData( Request request ) {
 
-        String contentType=request.getContentType();
-	if (contentType != null) {
-            if (contentType.indexOf(";")>0)
-                contentType=contentType.substring(0,contentType.indexOf(";"));
-            contentType = contentType.toLowerCase().trim();
-        }
-
-	int contentLength=request.getContentLength();
-
-	if (contentType != null &&
-            contentType.startsWith("application/x-www-form-urlencoded")) {
-	    try {
-		ServletInputStream is=request.getFacade().getInputStream();
-                Hashtable postParameters =  HttpUtils.parsePostData(contentLength, is);
-		return postParameters;
-	    }
-	    catch (IOException e) {
-		// nothing
-		// XXX at least warn ?
-	    }
-        }
-	return null;
-    }
-
+    /** Combine 2 hashtables into a new one.
+     *  XXX Will move to the MimeHeaders equivalent for params.
+     */
     public static Hashtable mergeParameters(Hashtable one, Hashtable two) {
 	// Try some shortcuts
 	if (one.size() == 0) {
@@ -149,107 +123,7 @@ public class RequestUtil {
 
 	return combined;
     }
-
-    public static void processCookies( Request request, Vector cookies ) {
-	// XXX bug in original RequestImpl - might not work if multiple
-	// cookie headers.
-	//
-	// XXX need to use the cookies hint in RequestAdapter
-    	String cookieString = request.getHeader("cookie");
-	
-	if (cookieString != null) {
-            StringTokenizer tok = new StringTokenizer(cookieString,
-                                                      ";", false);
-            while (tok.hasMoreTokens()) {
-                String token = tok.nextToken();
-                int i = token.indexOf("=");
-                if (i > -1) {
-
-                    // XXX
-                    // the trims here are a *hack* -- this should
-                    // be more properly fixed to be spec compliant
-                    
-                    String name = token.substring(0, i).trim();
-                    String value = token.substring(i+1, token.length()).trim();
-		    // RFC 2109 and bug 
-		    value=stripQuote( value );
-                    Cookie cookie = new Cookie(name, value);
-                    cookies.addElement(cookie);
-                } else {
-                    // we have a bad cookie.... just let it go
-                }
-            }
-        }
-    }
-
     
-    /**
-     *
-     * Strips quotes from the start and end of the cookie string
-     * This conforms to RFC 2109
-     * 
-     * @param value            a <code>String</code> specifying the cookie 
-     *                         value (possibly quoted).
-     *
-     * @see #setValue
-     *
-     */
-    private static String stripQuote( String value )
-    {
-	//	log("Strip quote from " + value );
-	if (((value.startsWith("\"")) && (value.endsWith("\""))) ||
-	    ((value.startsWith("'") && (value.endsWith("'"))))) {
-	    try {
-		return value.substring(1,value.length()-1);
-	    } catch (Exception ex) { 
-	    }
-	}
-	return value;
-    }  
-    
-    public static void processFormData(String data, Hashtable parameters) {
-        // XXX
-        // there's got to be a faster way of doing this.
-	if( data==null ) return; // no parameters
-        StringTokenizer tok = new StringTokenizer(data, "&", false);
-        while (tok.hasMoreTokens()) {
-            String pair = tok.nextToken();
-	    int pos = pair.indexOf('=');
-	    if (pos != -1) {
-		String key = unUrlDecode(pair.substring(0, pos));
-		String value = unUrlDecode(pair.substring(pos+1,
-							  pair.length()));
-		String values[];
-		if (parameters.containsKey(key)) {
-		    String oldValues[] = (String[])parameters.get(key);
-		    values = new String[oldValues.length + 1];
-		    for (int i = 0; i < oldValues.length; i++) {
-			values[i] = oldValues[i];
-		    }
-		    values[oldValues.length] = value;
-		} else {
-		    values = new String[1];
-		    values[0] = value;
-		}
-		parameters.put(key, values);
-	    } else {
-		// we don't have a valid chunk of form data, ignore
-	    }
-        }
-    }
-
-    public static int readData(InputStream in, byte buf[], int length) {
-        int read = 0;
-        try {
-            do {
-                read += in.read(buf, read, length - read);
-            } while (read < length && read != -1);
-        } catch (IOException e) {
-            
-        }
-	return read;
-    }
-
     /**
      * This method decodes the given urlencoded string.
      *
@@ -299,18 +173,11 @@ public class RequestUtil {
                 strPos++;
                 continue;
             } else if (metaChar == '%') {
-		// We throw the original exception - the super will deal with it
+		// We throw the original exception - the super will deal with
+		// it
 		//                try {
-		dec.append((char) Integer.parseInt(
-						   str.substring(strPos + 1, strPos + 3), 16));
-		//                } catch (NumberFormatException e) {
-		//                    throw new IllegalArgumentException("invalid hexadecimal "
-		//                    + str.substring(strPos + 1, strPos + 3)
-		//                    + " in URLencoded string (illegal unescaped '%'?)" );
-		//                } catch (StringIndexOutOfBoundsException e) {
-		//                    throw new IllegalArgumentException("illegal unescaped '%' "
-		//                    + " in URLencoded string" );
-		//                }
+		dec.append((char)Integer.
+			   parseInt(str.substring(strPos + 1, strPos + 3),16));
                 strPos += 3;
             }
         }
@@ -318,6 +185,8 @@ public class RequestUtil {
         return dec.toString();
     }
 
+    /** Decode a URL-encoded string. Inefficient.
+     */
     public static String unUrlDecode(String data) {
 	StringBuffer buf = new StringBuffer();
 	for (int i = 0; i < data.length(); i++) {
@@ -414,8 +283,8 @@ public class RequestUtil {
         return (Locale)l.elementAt(0);
     }
 
-    public static Enumeration getLocales(HttpServletRequest req) {
-	    String acceptLanguage = req.getHeader("Accept-Language");
+    public static Enumeration getLocales(Request req) {
+	String acceptLanguage = req.getHeader("Accept-Language");
     	// Short circuit with an empty enumeration if null header
         if (acceptLanguage == null) {
             Vector v = new Vector();
@@ -604,5 +473,170 @@ public class RequestUtil {
 	// calendar.getTime().getTime();
 	return date.getTime();
     }
+
+    // -------------------- Parameter processing --------------------
     
+    public static void processFormData(String data, Hashtable parameters) {
+        // XXX
+        // there's got to be a faster way of doing this.
+	if( data==null ) return; // no parameters
+        StringTokenizer tok = new StringTokenizer(data, "&", false);
+        while (tok.hasMoreTokens()) {
+            String pair = tok.nextToken();
+	    int pos = pair.indexOf('=');
+	    if (pos != -1) {
+		String key = unUrlDecode(pair.substring(0, pos));
+		String value = unUrlDecode(pair.substring(pos+1,
+							  pair.length()));
+		String values[];
+		if (parameters.containsKey(key)) {
+		    String oldValues[] = (String[])parameters.get(key);
+		    values = new String[oldValues.length + 1];
+		    for (int i = 0; i < oldValues.length; i++) {
+			values[i] = oldValues[i];
+		    }
+		    values[oldValues.length] = value;
+		} else {
+		    values = new String[1];
+		    values[0] = value;
+		}
+		parameters.put(key, values);
+	    } else {
+		// we don't have a valid chunk of form data, ignore
+	    }
+        }
+    }
+
+    /** Process the POST data from a request.
+     */
+    public static Hashtable readFormData( Request request ) {
+
+        String contentType=request.getContentType();
+	if (contentType != null) {
+            if (contentType.indexOf(";")>0)
+                contentType=contentType.substring(0,contentType.indexOf(";"));
+            contentType = contentType.toLowerCase().trim();
+        }
+
+	int contentLength=request.getContentLength();
+
+	if (contentType != null &&
+            contentType.startsWith("application/x-www-form-urlencoded")) {
+	    try {
+                Hashtable postParameters =  new Hashtable();
+
+		if( contentLength <=0 ) return postParameters;
+
+		// based on HttpUtils, very ,very slow and bad
+		byte[] formData = new byte [contentLength];
+		int readLen=readBody( request, formData, contentLength );
+		// XXX if readLen != len
+		String postedBody = new String(formData, 0, readLen,
+					       "8859_1");
+
+		processFormData( postedBody, postParameters);
+		return postParameters;
+	    }
+	    catch (IOException e) {
+		// nothing
+		// XXX at least warn ?
+	    }
+        }
+	return null;
+    }
+
+
+    public static int readBody(Request req, byte body[], int len)
+	throws IOException
+    {
+	int offset = 0;
+	
+	do {
+	    int inputLen = req.doRead(body, offset, len - offset);
+	    if (inputLen <= 0) {
+		return offset;
+	    }
+	    offset += inputLen;
+	} while ((len - offset) > 0);
+	return len;
+    }
+    
+    public static int readData(InputStream in, byte buf[], int length) {
+        int read = 0;
+        try {
+            do {
+                read += in.read(buf, read, length - read);
+            } while (read < length && read != -1);
+        } catch (IOException e) {
+            
+        }
+	return read;
+    }
+
+
+    // -------------------- Cookie parsing tools
+    /** Process all Cookie headers of a request, setting them
+     *  in a cookie vector
+     */
+    public static void processCookies( Request request ) {
+	// XXX bug in original RequestImpl - might not work if multiple
+	// cookie headers.
+	//
+	// XXX need to use the cookies hint in RequestAdapter
+    	String cookieString = request.getHeader("cookie");
+	
+	if (cookieString != null) {
+            StringTokenizer tok = new StringTokenizer(cookieString,
+                                                      ";", false);
+            while (tok.hasMoreTokens()) {
+                String token = tok.nextToken();
+                int i = token.indexOf("=");
+                if (i > -1) {
+
+                    // XXX
+                    // the trims here are a *hack* -- this should
+                    // be more properly fixed to be spec compliant
+                    
+                    String name = token.substring(0, i).trim();
+                    String value = token.substring(i+1, token.length()).trim();
+		    // RFC 2109 and bug 
+		    value=stripQuote( value );
+                    ServerCookie cookie = new ServerCookie();
+		    cookie.getName().setString(name);
+		    cookie.getValue().setString(value);
+                    request.addCookie( cookie );
+                } else {
+                    // we have a bad cookie.... just let it go
+                }
+            }
+        }
+    }
+
+    /**
+     *
+     * Strips quotes from the start and end of the cookie string
+     * This conforms to RFC 2109
+     * 
+     * @param value            a <code>String</code> specifying the cookie 
+     *                         value (possibly quoted).
+     *
+     * @see #setValue
+     *
+     */
+    private static String stripQuote( String value )
+    {
+	//	log("Strip quote from " + value );
+	if (((value.startsWith("\"")) && (value.endsWith("\""))) ||
+	    ((value.startsWith("'") && (value.endsWith("'"))))) {
+	    try {
+		return value.substring(1,value.length()-1);
+	    } catch (Exception ex) { 
+	    }
+	}
+	return value;
+    }  
+    
+
+
+
 }

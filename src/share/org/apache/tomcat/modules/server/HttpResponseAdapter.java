@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/modules/server/Attic/HttpResponseAdapter.java,v 1.1 2000/09/17 06:37:53 costin Exp $
- * $Revision: 1.1 $
- * $Date: 2000/09/17 06:37:53 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/modules/server/Attic/HttpResponseAdapter.java,v 1.2 2000/09/24 18:09:58 costin Exp $
+ * $Revision: 1.2 $
+ * $Date: 2000/09/24 18:09:58 $
  *
  * ====================================================================
  *
@@ -70,8 +70,6 @@ import org.apache.tomcat.logging.*;
 import java.io.*;
 import java.net.*;
 import java.util.*;
-import javax.servlet.*;
-import javax.servlet.http.*;
 
 // no "buffering" - we send the status and headers as soon as
 // the method is called.
