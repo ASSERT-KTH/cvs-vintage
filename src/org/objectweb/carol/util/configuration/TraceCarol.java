@@ -55,7 +55,9 @@ public class TraceCarol {
     protected static Logger carolLogger = null;  
     protected static Logger jndiCarolLogger = null;
     protected static Logger rmiCarolLogger = null;
-    protected static Logger cmiCarolLogger = null;
+    protected static Logger cmiDesLogger = null;
+    protected static Logger cmiJndiLogger = null;
+    protected static Logger cmiRegistryLogger = null;
 
     /**
     * Configure the log for CAROL.
@@ -98,7 +100,9 @@ public class TraceCarol {
         carolLogger = lf.getLogger(prefix);
         jndiCarolLogger = lf.getLogger(prefix + ".jndi");
         rmiCarolLogger = lf.getLogger(prefix + ".rmi");
-        cmiCarolLogger = lf.getLogger(prefix + ".cmi");
+        cmiDesLogger = lf.getLogger(prefix + ".cmi.des");
+        cmiJndiLogger = lf.getLogger(prefix + ".cmi.jndi");
+        cmiRegistryLogger = lf.getLogger(prefix + ".cmi.registry");
     }
 
 
@@ -185,7 +189,7 @@ public class TraceCarol {
 		}
 	}
 	
-   /**
+    /**
      * Test if Jndi debug messages are logged.
      * 
      * @return boolean  <code>true</code> if Jndi debug messages are logged,
@@ -228,23 +232,89 @@ public class TraceCarol {
     }
 
     /**
+     * Test if Cmi DES debug messages are logged.
+     *
+     * @return boolean  <code>true</code> if Cmi DES debug messages are logged,
+     * <code>false</code> otherwise
+     */
+    static public boolean isDebugCmiDes() {
+        return (cmiDesLogger != null) && cmiDesLogger.isLoggable(BasicLevel.DEBUG);
+    }
+
+    /**
+     * Log a Cmi DES debug message.
+     *
+     * @param <code>msg</code> Cmi DES debug message
+     */
+    public static void debugCmiDes(String msg) {
+        if (cmiDesLogger != null) {
+            cmiDesLogger.log(BasicLevel.DEBUG, msg);
+        }
+    }
+
+    /**
+     * Test if Cmi JNDI debug messages are logged.
+     *
+     * @return boolean  <code>true</code> if Cmi JNDI debug messages are logged,
+     * <code>false</code> otherwise
+     */
+    static public boolean isDebugCmiJndi() {
+        return (cmiJndiLogger != null) && cmiJndiLogger.isLoggable(BasicLevel.DEBUG);
+    }
+
+    /**
+     * Log a Cmi JNDI debug message.
+     *
+     * @param <code>msg</code> Cmi JNDI debug message
+     */
+    public static void debugCmiJndi(String msg) {
+        if (cmiJndiLogger != null) {
+            cmiJndiLogger.log(BasicLevel.DEBUG, msg);
+        }
+    }
+
+    /**
+     * Test if Cmi registry debug messages are logged.
+     *
+     * @return boolean  <code>true</code> if Cmi registry debug messages are logged,
+     * <code>false</code> otherwise
+     */
+    static public boolean isDebugCmiRegistry() {
+        return (cmiRegistryLogger != null) && cmiRegistryLogger.isLoggable(BasicLevel.DEBUG);
+    }
+
+    /**
+     * Log a Cmi registry debug message.
+     *
+     * @param <code>msg</code> Cmi registry debug message
+     */
+    public static void debugCmiRegistry(String msg) {
+        if (cmiRegistryLogger != null) {
+            cmiRegistryLogger.log(BasicLevel.DEBUG, msg);
+        }
+    }
+
+    /**
      * Test if Cmi info messages are logged.
      *
      * @return boolean  <code>true</code> if Cmi info messages are logged,
      * <code>false</code> otherwise
      */
+/*
     static public boolean isInfoCmiCarol() {
         return (cmiCarolLogger != null) && cmiCarolLogger.isLoggable(BasicLevel.INFO);
     }
-
+*/
     /**
      * Log a Cmi info message.
      *
      * @param <code>msg</code> Cmi info message
      */
+/*
     public static void infoCmiCarol(String msg) {
         if (cmiCarolLogger != null) {
             cmiCarolLogger.log(BasicLevel.INFO, msg);
         }
     }
+*/
 }

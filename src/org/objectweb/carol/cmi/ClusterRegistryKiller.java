@@ -20,6 +20,8 @@ package org.objectweb.carol.cmi;
 
 import java.rmi.NoSuchObjectException;
 
+import org.objectweb.carol.util.configuration.TraceCarol;
+
 /**
  * Handle returned when starting a registry. Use to kill it.
  * @author Simon Nieuviarts
@@ -51,8 +53,8 @@ public final class ClusterRegistryKiller {
      * @throws NoSuchObjectException if the registry has not been exported.
      */
     public synchronized void stop() throws NoSuchObjectException {
-        if (Trace.CREG) {
-            Trace.out("CREG: killer: stopping registry on port " + port);
+        if (TraceCarol.isDebugCmiRegistry()) {
+            TraceCarol.debugCmiRegistry("killer is stopping registry on port " + port);
         }
         LowerOrb.unexportObject(impl);
         impl = null;

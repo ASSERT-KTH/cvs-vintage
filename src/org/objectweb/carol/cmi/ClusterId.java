@@ -38,7 +38,7 @@ public class ClusterId implements Serializable {
 
     private ClusterId(byte id[]) {
         if (id.length > Short.MAX_VALUE) {
-            throw new IllegalArgumentException("Too long array");
+            throw new IllegalArgumentException("Too long array for a cluster ID");
         }
         this.id = id;
         redoHash();

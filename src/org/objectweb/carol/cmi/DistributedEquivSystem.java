@@ -32,9 +32,11 @@ import java.rmi.RemoteException;
 import java.util.Arrays;
 import java.util.Enumeration;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Map;
+import java.util.Set;
 import java.util.Vector;
 
 import org.javagroups.Address;
@@ -51,7 +53,11 @@ class ExportMsg implements Serializable {
     public transient Remote stub;
     public transient int factor;
 
-    public ExportMsg(ClusterId serverId, Serializable key, Remote stub, int factor) {
+    public ExportMsg(
+        ClusterId serverId,
+        Serializable key,
+        Remote stub,
+        int factor) {
         this.id = serverId;
         this.key = key;
         this.stub = stub;
@@ -148,16 +154,17 @@ class GlobalExports {
     public synchronized void put(
         ClusterId serverId,
         Serializable key,
-        Remote stub, int factor)
+        Remote stub,
+        int factor)
         throws RemoteException {
         ClusterStubData csd = (ClusterStubData) table.get(key);
         if (csd == null) {
             csd = new ClusterStubData(serverId, stub, factor);
             table.put(key, csd);
         } else if (!csd.setStub(serverId, stub, factor))
-            if (Trace.DES)
-                Trace.out(
-                    "DES: Warning: Object registered in the cluster as two distinct types");
+            if (TraceCarol.isDebugCmiDes())
+                TraceCarol.debugCmiDes(
+                    "Warning: Object registered in the cluster as two distinct types");
     }
 
     public synchronized void remove(ClusterId serverId, Serializable key) {
@@ -190,23 +197,22 @@ class GlobalExports {
         }
     }
 
-    //TODO May return null. Check if OK.
-    public ClusterStub getClusterStub(Serializable key) {
+    public ClusterStub getClusterStub(Serializable key) throws RemoteException {
         synchronized (this) {
             ClusterStubData csd = (ClusterStubData) table.get(key);
-            if (csd == null) return null;
+            if (csd == null)
+                return null;
             return csd.getClusterStub();
         }
     }
 
-    public synchronized Serializable[] list() {
-        int n = table.size();
-        Serializable[] lst = new Serializable[n];
+    public synchronized Set keySet() {
+        HashSet s = new HashSet();
         Iterator it = table.keySet().iterator();
-        for (int i = 0; i < n; i++) {
-            lst[i] = (Serializable) it.next();
+        while (it.hasNext()) {
+            s.add(it.next());
         }
-        return lst;
+        return s;
     }
 }
 
@@ -288,6 +294,10 @@ class BindAddressChooser extends Thread {
     }
 }
 
+/**
+ * Manage equivalences between objects in the cluster. Two objects are equivalent if
+ * their keys have the same value (key1.equals(key2)).
+ */
 class DistributedEquivSystem {
     private String chan_props;
     private String groupname;
@@ -307,13 +317,15 @@ class DistributedEquivSystem {
      */
     private class MessageDequeuer extends Thread {
         public void run() {
-            if (Trace.DES)
-                Trace.out("DES: Message dequeuer started");
+            if (TraceCarol.isDebugCmiDes())
+                TraceCarol.debugCmiDes("Message dequeuer started");
             Object msg;
             try {
                 do {
-                    if (isInterrupted())
-                        break; // XXX Awful. why not checked by Receive() ?
+                    // Awful. why not checked by Receive() ?
+                    if (isInterrupted()) {
+                        break; 
+                    }
                     msg = chan.receive(0);
                     if (msg == null)
                         continue;
@@ -322,16 +334,15 @@ class DistributedEquivSystem {
                     else if (msg instanceof View)
                         viewAccepted((View) msg);
                     else if (msg instanceof SuspectEvent);
-                    else if (TraceCarol.isInfoCmiCarol())
-                        TraceCarol.infoCmiCarol(
-                            "DES: Received but not supported : "
-                                + msg.getClass());
+                    else if (TraceCarol.isDebugCmiDes())
+                        TraceCarol.debugCmiDes(
+                            "Received but not supported : " + msg.getClass());
                 } while (true);
             } catch (Exception e) {
                 e.printStackTrace();
             }
-            if (Trace.DES)
-                Trace.out("DES: Message dequeuer finished.");
+            if (TraceCarol.isDebugCmiDes())
+                TraceCarol.debugCmiDes("Message dequeuer finished.");
         }
     }
 
@@ -463,8 +474,6 @@ class DistributedEquivSystem {
         my_addr = chan.getLocalAddress();
 
         my_id = ClusterIdFactory.getLocalId();
-        if (Trace.DES)
-            Trace.out("DES: Cluster ID: " + my_id);
         idmap.put(my_addr, my_id);
 
         Vector v = new Vector();
@@ -475,11 +484,11 @@ class DistributedEquivSystem {
         mdq.setContextClassLoader(
             Thread.currentThread().getContextClassLoader());
         mdq.start();
-        if (Trace.DES)
-            Trace.out("DES: sending RequestExportsMsg");
+        if (TraceCarol.isDebugCmiDes())
+            TraceCarol.debugCmiDes("sending RequestExportsMsg");
         broadcast(new RequestExportsMsg());
-        if (TraceCarol.isInfoCmiCarol())
-            TraceCarol.infoCmiCarol(
+        if (TraceCarol.isDebugCmiDes())
+            TraceCarol.debugCmiDes(
                 "DistributedEquivSystem started on "
                     + Config.getMulticastAddress()
                     + ":"
@@ -497,32 +506,19 @@ class DistributedEquivSystem {
             out.writeObject(msg);
             Message m = new Message(null, my_addr, outs.toByteArray());
             chan.send(m);
-            if (Trace.DES)
-                Trace.out("DES: broadcast sent");
+            if (TraceCarol.isDebugCmiDes()) {
+                TraceCarol.debugCmiDes("broadcast sent");
+            }
         } catch (Exception e) {
-            //TODO
-            e.printStackTrace();
+            if (TraceCarol.isDebugCmiDes()) {
+                TraceCarol.debugCmiDes("when broadcasting " + e.toString());
+            }
         }
-    }
-
-    //TODO remove
-    public static String idToString(byte id[]) {
-        String s = "";
-        int i;
-        for (i = 0; i < id.length; i++) {
-            int n = id[i];
-            if (n < 0)
-                n += 256;
-            if (i > 0)
-                s += "-";
-            s += n;
-        }
-        return s;
     }
 
     private void viewAccepted(View v2) {
-        if (Trace.DES)
-            Trace.out("DES: New view accepted : " + v2);
+        if (TraceCarol.isDebugCmiDes())
+            TraceCarol.debugCmiDes("New view accepted : " + v2);
         LinkedList newMembers = new LinkedList();
         LinkedList oldMembers = new LinkedList();
 
@@ -569,23 +565,19 @@ class DistributedEquivSystem {
             if (id != null)
                 globalExports.zapExports(id);
             idmap.remove(a);
-            if (Trace.DES) {
+            if (TraceCarol.isDebugCmiDes()) {
                 if (id == null)
-                    Trace.out("DES: Member " + a + " removed");
+                    TraceCarol.debugCmiDes("Member " + a + " removed");
                 else
-                    Trace.out(
-                        "DES: Member "
-                            + a
-                            + " removed (server id : "
-                            + id
-                            + ")");
+                    TraceCarol.debugCmiDes(
+                        "Member " + a + " removed (server id : " + id + ")");
             }
         }
 
         if (newMembers.size() > 0) {
             // Now done when receiving RequestExportsMsg
             /*
-                	    if (Trace.DES) Trace.out("sending local exports");
+                	    if (TraceCarol.isDebugCmiDes()) TraceCarol.debugCmiDes("sending local exports");
             	    try {
             	    	Thread.sleep(3000);
             	    } catch (Exception e) {
@@ -595,10 +587,10 @@ class DistributedEquivSystem {
             */
         }
 
-        if (Trace.DES) {
+        if (TraceCarol.isDebugCmiDes()) {
             while (newMembers.size() > 0) {
                 Address a = (Address) newMembers.removeFirst();
-                Trace.out("DES: New member " + a);
+                TraceCarol.debugCmiDes("New member " + a);
             }
         }
     }
@@ -613,8 +605,8 @@ class DistributedEquivSystem {
         } else if (i.equals(id)) {
             return id;
         }
-        if (Trace.DES)
-            Trace.out("DES: Message ignored (server rejected)");
+        if (TraceCarol.isDebugCmiDes())
+            TraceCarol.debugCmiDes("Message ignored (server rejected)");
         return null;
     }
 
@@ -626,9 +618,8 @@ class DistributedEquivSystem {
         Object o;
         byte[] buf = m.getBuffer();
         if (buf == null) {
-            //TODO message
-            if (Trace.DES)
-                Trace.out("buf == null");
+            if (TraceCarol.isDebugCmiDes())
+                TraceCarol.debugCmiDes("buf == null");
             o = null;
         } else {
             try {
@@ -636,9 +627,8 @@ class DistributedEquivSystem {
                 MulticastInputStream in = new MulticastInputStream(in_stream);
                 o = in.readObject();
             } catch (Exception e) {
-                //TODO message
-                if (Trace.DES)
-                    Trace.out(e.toString());
+                if (TraceCarol.isDebugCmiDes())
+                    TraceCarol.debugCmiDes(e.toString());
                 o = null;
             }
         }
@@ -649,13 +639,13 @@ class DistributedEquivSystem {
         //            ClusterId id = checkServer(rm.i, from);
         //            if (id == null)
         //                return;
-        //            if (Trace.DES)
-        //                Trace.out(
-        //                    "DES: Received exports from server " + from + " " + m);
+        //            if (TraceCarol.isDebugCmiDes())
+        //                TraceCarol.debugCmiDes(
+        //                    "Received exports from server " + from + " " + m);
         //            if (!self(id)) {
         //                globalExports.addExports(id, rm.getMap());
-        //                if (Trace.DES)
-        //                    Trace.out("DES: Exports added (" + from + ")");
+        //                if (TraceCarol.isDebugCmiDes())
+        //                    TraceCarol.debugCmiDes("Exports added (" + from + ")");
         //            }
         //        } else
         if (o instanceof ExportMsg) {
@@ -663,9 +653,9 @@ class DistributedEquivSystem {
             ClusterId id = checkServer(pm.id, from);
             if (id == null)
                 return;
-            if (Trace.DES)
-                Trace.out(
-                    "DES: Put message received from server "
+            if (TraceCarol.isDebugCmiDes())
+                TraceCarol.debugCmiDes(
+                    "Put message received from server "
                         + from
                         + ", ID : "
                         + pm.key);
@@ -682,17 +672,17 @@ class DistributedEquivSystem {
             ClusterId id = checkServer(rm.i, from);
             if (id == null)
                 return;
-            if (Trace.DES)
-                Trace.out(
-                    "DES: Remove message received from server "
+            if (TraceCarol.isDebugCmiDes())
+                TraceCarol.debugCmiDes(
+                    "Remove message received from server "
                         + from
                         + ", ID : "
                         + rm.k);
             if (!self(id))
                 globalExports.remove(id, rm.k);
         } else if (o instanceof RequestExportsMsg) {
-            if (Trace.DES)
-                Trace.out("sending local exports");
+            if (TraceCarol.isDebugCmiDes())
+                TraceCarol.debugCmiDes("sending local exports");
 
             HashMap h = localExports.getmap();
             Iterator i = h.entrySet().iterator();
@@ -707,9 +697,9 @@ class DistributedEquivSystem {
             }
 
             //	    broadcast(new ExportsMsg(my_id, localExports));
-        } else if (Trace.DES) {
-            Trace.out(
-                "DES: Message of unknown type received from server " + from);
+        } else if (TraceCarol.isDebugCmiDes()) {
+            TraceCarol.debugCmiDes(
+                "Message of unknown type received from server " + from);
         }
     }
 
@@ -721,13 +711,9 @@ class DistributedEquivSystem {
      * DistributedExports interface
      */
     boolean exportObject(Serializable key, Remote obj) throws RemoteException {
-        if (Trace.DES)
-            Trace.out(
-                "DES: exportObject("
-                    + key
-                    + ", "
-                    + obj.getClass().getName()
-                    + ")");
+        if (TraceCarol.isDebugCmiDes())
+            TraceCarol.debugCmiDes(
+                "exportObject(" + key + ", " + obj.getClass().getName() + ")");
         int factor;
         synchronized (localExports) {
             Object cur = localExports.get(key);
@@ -742,8 +728,8 @@ class DistributedEquivSystem {
     }
 
     boolean unexportObject(Serializable key) {
-        if (Trace.DES)
-            Trace.out("DES: unexportObject(" + key + ")");
+        if (TraceCarol.isDebugCmiDes())
+            TraceCarol.debugCmiDes("unexportObject(" + key + ")");
         synchronized (localExports) {
             Object cur = localExports.get(key);
             if (cur == null)
@@ -760,12 +746,11 @@ class DistributedEquivSystem {
      * @return <code>null<code> if not exported.
      */
     ClusterStub getGlobal(Serializable key) throws RemoteException {
-        if (Trace.DES)
-            Trace.out("DES: getGlobal(" + key + ")");
+        if (TraceCarol.isDebugCmiDes())
+            TraceCarol.debugCmiDes("getGlobal(" + key + ")");
 
         ClusterStub cs;
         cs = globalExports.getClusterStub(key);
-        //XXX should apply the stub filter for objects returned to clients
         return cs;
     }
 
@@ -774,8 +759,12 @@ class DistributedEquivSystem {
      * @return <code>null<code> if not exported.
      */
     Remote getLocal(Serializable key) {
-        if (Trace.DES)
-            Trace.out("DES: getLocal(" + key + ")");
+        if (TraceCarol.isDebugCmiDes())
+            TraceCarol.debugCmiDes("getLocal(" + key + ")");
         return (Remote) localExports.get(key);
+    }
+
+    Set keySet() {
+        return globalExports.keySet();
     }
 }

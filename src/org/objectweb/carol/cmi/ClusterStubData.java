@@ -46,14 +46,17 @@ public class ClusterStubData {
      */
     private long randomSeed;
 
+    private boolean stubDebug = false;
+
+    private Class clusterStubClass;
+
     // Updates on these variables have to be done with the lock on this
     private HashMap idMap;
     private HashMap stubMap;
+    private volatile ClusterStub clusterStub;
 
-    private ClusterStub cs;
-
-    //private Map lbList = Collections.synchronizedMap(new WeakHashMap());
     private WeakList lbList = new WeakList();
+
 
     /**
      * for read(ObjectInput)
@@ -75,7 +78,12 @@ public class ClusterStubData {
         stubMap = new HashMap();
         stubMap.put(stub, sd);
         randomSeed = SecureRandom.getLong();
-        buildClusterStub(stub.getClass());
+        stubDebug = Config.isStubDebug();
+        try {
+            clusterStubClass = ClusterObject.getClusterStubClass(stub.getClass());
+        } catch (ClassNotFoundException e) {
+            throw new RemoteException("No valid cluster stub class for " + stub.getClass().getName());
+        }
     }
 
     /**
@@ -84,42 +92,42 @@ public class ClusterStubData {
      * @param stub a stub to the registry.
      */
     public ClusterStubData(Remote stub) throws RemoteException {
-        //first = stub;
-        StubData sd = new StubData(null, stub, Config.DEFAULT_LOAD_FACTOR);
+        StubData sd = new StubData(null, stub, Config.DEFAULT_RR_FACTOR);
         stubMap = new HashMap();
         stubMap.put(stub, sd);
         randomSeed = SecureRandom.getLong();
-        buildClusterStub(stub.getClass());
+        stubDebug = Config.isStubDebug();
+        try {
+            clusterStubClass = ClusterObject.getClusterStubClass(stub.getClass());
+        } catch (ClassNotFoundException e) {
+            throw new RemoteException("No valid cluster stub class for " + stub.getClass().getName());
+        }
     }
 
     private static Class[] cnstr_params = new Class[] { ClusterStubData.class };
 
-    private void buildClusterStub(Class cl) throws RemoteException {
-        Class clusterStubClass;
-        try {
-            clusterStubClass = ClusterObject.getClusterStubClass(cl);
-        } catch (ClassNotFoundException e1) {
-            throw new RemoteException("No valid cluster stub class", e1);
-        }
-
+    private ClusterStub generateClusterStub(Class cl) throws RemoteException {
         Constructor cnstr;
         try {
             cnstr = clusterStubClass.getConstructor(cnstr_params);
-            cs = (ClusterStub) cnstr.newInstance(new Object[] { this });
+            return (ClusterStub) cnstr.newInstance(new Object[] { this });
         } catch (Exception e) {
-            throw new RemoteException("Can not instanciate cluster stub", e);
+            throw new RemoteException("Can not instanciate cluster stub" + e.toString());
         }
     }
 
-    public ClusterStub getClusterStub() {
+    public ClusterStub getClusterStub() throws RemoteException {
+        ClusterStub cs = clusterStub;
+        if (cs == null) {
+            cs = generateClusterStub(clusterStubClass);
+            clusterStub = cs;
+        }
         return cs;
     }
 
     public boolean isValidRemote(Remote r) {
-        if (cs == null)
-            return false;
         try {
-            return cs.getClass().getName().equals(
+            return clusterStubClass.getName().equals(
                 ClusterObject.getClusterStubClass(r.getClass()).getName());
         } catch (ClassNotFoundException e) {
             return false;
@@ -170,7 +178,7 @@ public class ClusterStubData {
         }
         StubData sd;
         try {
-            sd = new StubData(null, stub, Config.DEFAULT_LOAD_FACTOR);
+            sd = new StubData(null, stub, Config.DEFAULT_RR_FACTOR);
         } catch (RemoteException e) {
             return false;
         }
@@ -210,6 +218,7 @@ public class ClusterStubData {
             }
         }
         out.writeLong(randomSeed);
+        out.writeBoolean(stubDebug);
     }
 
     /**
@@ -252,10 +261,12 @@ public class ClusterStubData {
             csd.stubMap = stubm;
             SecureRandom.setSeed(
                 csd.randomSeed = in.readLong() ^ System.currentTimeMillis());
+            csd.stubDebug = in.readBoolean();
         } catch (ClassCastException ce) {
             throw new IOException("invalid serialized stub" + ce.toString());
         }
-        csd.cs = cs;
+        csd.clusterStub = cs;
+        csd.clusterStubClass = cs.getClass();
         return csd;
     }
 
@@ -349,5 +360,13 @@ public class ClusterStubData {
         }
         lbList.put(lb);
         return lb;
+    }
+
+    public boolean isStubDebug() {
+        return stubDebug;
+    }
+
+    public void debug(String mesg) {
+        System.out.println("ClusterStub: " + mesg);
     }
 }

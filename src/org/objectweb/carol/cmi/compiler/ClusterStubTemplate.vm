@@ -36,7 +36,6 @@ import org.objectweb.carol.cmi.Random;
 import org.objectweb.carol.cmi.RoundRobin;
 import org.objectweb.carol.cmi.StubLB;
 import org.objectweb.carol.cmi.StubLBFilter;
-import org.objectweb.carol.cmi.Trace;
 
 public class ${className}_Cluster implements ClusterStub, Externalizable, $classConf.getRemoteItfString() {
 	private transient ClusterStubData csd;
@@ -86,8 +85,8 @@ public class ${className}_Cluster implements ClusterStub, Externalizable, $class
 		StubLBFilter filter = null;
 		do {
 			try {
-				if (Trace.CSTUB) {
-					Trace.out("cluster invocation of " + "$mc.getMthName()()");
+				if (csd.isStubDebug()) {
+					csd.debug("cluster invocation of " + "$mc.getMthName()()");
 				}
 #if ($mc.returnsVoid())
 				stub.$mc.getMthName()($mc.getParamNamesString());
@@ -101,8 +100,8 @@ public class ${className}_Cluster implements ClusterStub, Externalizable, $class
 					&& !(e instanceof ConnectIOException)) {
 					throw e;
 				}
-				if (Trace.CSTUB) {
-					Trace.out("CSTUB: Connection refused, retry");
+				if (csd.isStubDebug()) {
+					csd.debug("Connection refused, retry");
 				}
 				if (filter == null) {
 					filter = new StubLBFilter();

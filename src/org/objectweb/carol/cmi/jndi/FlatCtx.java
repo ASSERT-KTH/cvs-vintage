@@ -50,6 +50,8 @@
  */
 package org.objectweb.carol.cmi.jndi;
 
+import java.rmi.AccessException;
+import java.rmi.RemoteException;
 import java.util.Hashtable;
 
 import javax.naming.CompositeName;
@@ -57,6 +59,7 @@ import javax.naming.Context;
 import javax.naming.InvalidNameException;
 import javax.naming.Name;
 import javax.naming.NameAlreadyBoundException;
+import javax.naming.NameClassPair;
 import javax.naming.NameNotFoundException;
 import javax.naming.NameParser;
 import javax.naming.NamingEnumeration;
@@ -66,7 +69,8 @@ import javax.naming.Reference;
 import javax.naming.Referenceable;
 import javax.naming.spi.NamingManager;
 
-import org.objectweb.carol.cmi.Trace;
+import org.objectweb.carol.cmi.ClusterRegistry;
+import org.objectweb.carol.util.configuration.TraceCarol;
 
 /**
  * A sample service provider that implements a flat namespace in memory.
@@ -76,10 +80,9 @@ class FlatCtx implements Context {
     private Hashtable myEnv = null;
     private String provider = null;
     private static NameParser myParser = new FlatNameParser();
-    private org.objectweb.carol.cmi.ClusterRegistry reg;
-    //XXX Verify protection against null pointer as in org.objectweb.carol.cmi.Naming ?
+    private ClusterRegistry reg;
 
-    FlatCtx(Hashtable environment) throws javax.naming.NamingException {
+    FlatCtx(Hashtable environment) throws NamingException {
         if (environment != null) {
             myEnv = (Hashtable) (environment.clone());
             provider = (String) myEnv.get("java.naming.provider.url");
@@ -91,7 +94,7 @@ class FlatCtx implements Context {
         try {
             nc = new org.objectweb.carol.cmi.NamingContext(provider);
         } catch (java.net.MalformedURLException e) {
-            throw new NamingException(e.getMessage());
+            throw new NamingException(e.toString());
         }
         try {
             reg = org.objectweb.carol.cmi.Naming.getRegistry(nc.hp);
@@ -101,8 +104,8 @@ class FlatCtx implements Context {
     }
 
     public Object lookup(String name) throws NamingException {
-        if (Trace.JNDI)
-            Trace.out("JNDI: lookup(" + name + ")");
+        if (TraceCarol.isDebugJndiCarol())
+            TraceCarol.debugJndiCarol("lookup(" + name + ")");
         if (name.equals("")) {
             // Asking to look up this context itself.  Create and return
             // a new instance with its own independent environment.
@@ -117,11 +120,15 @@ class FlatCtx implements Context {
                     this,
                     this.myEnv);
             }
+            if (TraceCarol.isDebugJndiCarol())
+                TraceCarol.debugJndiCarol("lookup(" + name + ") returned");
             return obj;
         } catch (java.rmi.NotBoundException e) {
-            throw new NameNotFoundException(e.getMessage());
+            Thread.dumpStack();
+            System.out.println(e);
+            throw new NameNotFoundException(e.toString());
         } catch (Exception e) {
-            throw new NamingException(e.getMessage());
+            throw new NamingException(e.toString());
         }
     }
 
@@ -131,8 +138,8 @@ class FlatCtx implements Context {
     }
 
     public void bind(String name, Object obj) throws NamingException {
-        if (Trace.JNDI)
-            Trace.out("JNDI: bind(" + name + ")");
+        if (TraceCarol.isDebugJndiCarol())
+            TraceCarol.debugJndiCarol("bind(" + name + ")");
         if (name.equals("")) {
             throw new InvalidNameException("Cannot bind empty name");
         }
@@ -151,9 +158,9 @@ class FlatCtx implements Context {
                     "object to bind must be Remote : "
                         + obj.getClass().getName());
         } catch (java.rmi.RemoteException e) {
-            throw new NamingException(e.getMessage());
+            throw new NamingException(e.toString());
         } catch (java.rmi.AlreadyBoundException e) {
-            throw new NameAlreadyBoundException(e.getMessage());
+            throw new NameAlreadyBoundException(e.toString());
         }
     }
 
@@ -163,8 +170,8 @@ class FlatCtx implements Context {
     }
 
     public void rebind(String name, Object obj) throws NamingException {
-        if (Trace.JNDI)
-            Trace.out("JNDI: rebind(" + name + ")");
+        if (TraceCarol.isDebugJndiCarol())
+            TraceCarol.debugJndiCarol("rebind(" + name + ")");
         if (name.equals("")) {
             throw new InvalidNameException("Cannot bind empty name");
         }
@@ -183,7 +190,7 @@ class FlatCtx implements Context {
                     "object to bind must be Remote : "
                         + obj.getClass().getName());
         } catch (java.rmi.RemoteException e) {
-            throw new NamingException(e.getMessage());
+            throw new NamingException(e.toString());
         }
     }
 
@@ -193,17 +200,17 @@ class FlatCtx implements Context {
     }
 
     public void unbind(String name) throws NamingException {
-        if (Trace.JNDI)
-            Trace.out("JNDI: unbind(" + name + ")");
+        if (TraceCarol.isDebugJndiCarol())
+            TraceCarol.debugJndiCarol("unbind(" + name + ")");
         if (name.equals("")) {
             throw new InvalidNameException("Cannot unbind empty name");
         }
         try {
             reg.unbind(name);
         } catch (java.rmi.RemoteException e) {
-            throw new NamingException(e.getMessage());
+            throw new NamingException(e.toString());
         } catch (java.rmi.NotBoundException e) {
-            throw new NameNotFoundException(e.getMessage());
+            throw new NameNotFoundException(e.toString());
         }
     }
 
@@ -222,7 +229,13 @@ class FlatCtx implements Context {
     }
 
     public NamingEnumeration list(String name) throws NamingException {
-        throw new NamingException("not supported");
+        try {
+            return new CmiNames(reg.list());
+        } catch (AccessException e) {
+            throw new NamingException(e.toString());
+        } catch (RemoteException e) {
+            throw new NamingException(e.toString());
+        }
     }
 
     public NamingEnumeration list(Name name) throws NamingException {
@@ -321,5 +334,37 @@ class FlatCtx implements Context {
     public void close() throws NamingException {
         myEnv = null;
         reg = null;
+    }
+
+    // Class for enumerating name/class pairs
+    class CmiNames implements NamingEnumeration {
+        String[] names;
+        int index = 0;
+
+        CmiNames (String[] names) {
+            this.names = names;
+        }
+
+        public boolean hasMoreElements() {
+            return index < names.length;
+        }
+
+        public boolean hasMore() throws NamingException {
+            return hasMoreElements();
+        }
+
+        public Object nextElement() {
+            String name = names[index++];
+            String className = "java.lang.Object";
+            return new NameClassPair(name, className);
+        }
+
+        public Object next() throws NamingException {
+            return nextElement();
+        }
+
+        public void close() throws NamingException {
+        names=null;
+        }
     }
 }

@@ -18,6 +18,7 @@
  */
 package org.objectweb.carol.cmi;
 
+import java.lang.reflect.InvocationTargetException;
 import java.rmi.Remote;
 
 /**
@@ -67,7 +68,7 @@ public final class ClusterObject {
             ClassNotFoundException,
             NoSuchMethodException,
             IllegalAccessException,
-            java.lang.reflect.InvocationTargetException {
+            InvocationTargetException {
         Class config_class = getClusterConfigClass(obj);
         java.lang.reflect.Method mth =
             config_class.getMethod("getClusterConfig", null);

@@ -23,23 +23,27 @@ import java.rmi.NotBoundException;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Set;
+import java.util.TreeSet;
+
+import org.objectweb.carol.util.configuration.TraceCarol;
 
 public final class ClusterRegistryImpl implements ClusterRegistry {
     /**
-     * The registry. Maps names to regular stubs or to <code>clusterobj</code>
-     * when the object is in the cluster registry.
+     * The non-clustered objects registry. Maps names to regular stubs for non
+     * clustered objects.
      */
     private HashMap lreg = new HashMap();
-
-    private static Object clusterobj = new Object();
+    public static final String REG_PREFIX = "REG_";
 
     private ClusterRegistryImpl() {
     }
 
     public static ClusterRegistryKiller start(int port)
         throws RemoteException {
-        if (Trace.CREG)
-            Trace.out("CREG: starting on port " + port);
+        if (TraceCarol.isDebugCmiRegistry())
+            TraceCarol.debugCmiRegistry("registry starting on port " + port);
         ClusterRegistryImpl creg = new ClusterRegistryImpl();
         ClusterRegistry stub =
             (ClusterRegistry) LowerOrb.exportRegistry(creg, port);
@@ -52,28 +56,22 @@ public final class ClusterRegistryImpl implements ClusterRegistry {
         synchronized (lreg) {
             obj = lreg.get(n);
         }
-        if ((obj != null) && (obj != clusterobj)) {
-            if (Trace.CREG)
-                Trace.out("CREG: local lookup of " + n);
+        if (obj != null) {
+            if (TraceCarol.isDebugCmiRegistry())
+                TraceCarol.debugCmiRegistry("local lookup of " + n);
             return (Remote) obj;
         }
         try {
-            Remote cs = null;
-            if (Trace.CREG)
-                Trace.out("CREG: global lookup of " + n);
-            //XXX
-            try {
-                cs = (Remote) DistributedEquiv.getGlobal(n);
-            } catch (RuntimeException e) {
-                e.printStackTrace();
-            } catch (ConfigException e) {
-                throw e;
-            }
+            if (TraceCarol.isDebugCmiRegistry())
+                TraceCarol.debugCmiRegistry("global lookup of " + n);
+            Remote cs = (Remote) DistributedEquiv.getGlobal(REG_PREFIX + n);
             if (cs != null) {
+                if (TraceCarol.isDebugCmiRegistry())
+                    TraceCarol.debugCmiRegistry("returned a cluster stub");
                 return cs;
             }
         } catch (ConfigException e) {
-            throw new RemoteException(e.getMessage());
+            throw new RemoteException(e.toString());
         }
         throw new NotBoundException(n);
     }
@@ -81,30 +79,33 @@ public final class ClusterRegistryImpl implements ClusterRegistry {
     public void bind(String n, Remote obj)
         throws AlreadyBoundException, RemoteException {
         Object cur;
+        ClusterConfig cc = null;
+        try {
+            cc = ClusterObject.getClusterConfig(obj);
+            if (TraceCarol.isDebugCmiRegistry())
+                TraceCarol.debugCmiRegistry("Global bind of " + n);
+        } catch (Exception e) {
+            if (TraceCarol.isDebugCmiRegistry())
+                TraceCarol.debugCmiRegistry("Local bind of " + n);
+        }
+
         synchronized (lreg) {
-            cur = lreg.get(n);
-            if (cur != null)
-                throw new AlreadyBoundException(n);
-            ClusterConfig cc;
-            try {
-                cc = ClusterObject.getClusterConfig(obj);
-            } catch (Exception e) {
-                if (Trace.CREG)
-                    Trace.out("CREG: Local bind of " + n);
+            if (cc == null) {
+                cur = lreg.get(n);
+                if (cur != null)
+                    throw new AlreadyBoundException(n);
                 lreg.put(n, obj);
-                return;
-            }
-            if (cc.isGlobalAtBind()) {
-                if (Trace.CREG)
-                    Trace.out("CREG: Global bind of " + n);
-                lreg.put(n, clusterobj);
-                try {
-                    DistributedEquiv.exportObject(n, obj);
-                } catch (ConfigException e) {
-                    throw new RemoteException(e.getMessage());
-                }
             } else {
-                throw new RemoteException("not implemented");
+                if (!cc.isGlobalAtBind()) {
+                    throw new RemoteException("not implemented");
+                }
+                try {
+                    if (!DistributedEquiv.exportObject(REG_PREFIX + n, obj)) {
+                        throw new AlreadyBoundException(n);
+                    }
+                } catch (ConfigException e) {
+                    throw new RemoteException(e.toString());
+                }
             }
         }
     }
@@ -112,84 +113,86 @@ public final class ClusterRegistryImpl implements ClusterRegistry {
     public void unbind(String n) throws NotBoundException, RemoteException {
         Object obj;
         synchronized (lreg) {
-            obj = lreg.get(n);
-            if (obj == null)
-                throw new NotBoundException(n);
-            lreg.remove(n);
-            if (obj == clusterobj) {
-                if (Trace.CREG)
-                    Trace.out("CREG: Global unbind of " + n);
-                try {
-                    DistributedEquiv.unexportObject(n);
-                } catch (ConfigException e) {
-                    throw new RemoteException(e.getMessage());
+            obj = lreg.remove(n);
+            if (obj != null) {
+                if (TraceCarol.isDebugCmiRegistry()) {
+                    TraceCarol.debugCmiRegistry("Local unbind of " + n);
                 }
-            } else {
-                if (Trace.CREG) {
-                    Trace.out("CREG: Local unbind of " + n);
+                return;
+            }
+            if (TraceCarol.isDebugCmiRegistry())
+                TraceCarol.debugCmiRegistry("Global unbind of " + n);
+            try {
+                if (!DistributedEquiv.unexportObject(REG_PREFIX + n)) {
+                    throw new NotBoundException(n);
                 }
+            } catch (ConfigException e) {
+                throw new RemoteException(e.toString());
             }
         }
     }
 
     public void rebind(String n, Remote obj) throws RemoteException {
         Object cur;
+        ClusterConfig cc = null;
+        try {
+            cc = ClusterObject.getClusterConfig(obj);
+            if (TraceCarol.isDebugCmiRegistry())
+                TraceCarol.debugCmiRegistry("Global rebind of " + n);
+        } catch (Exception e) {
+            if (TraceCarol.isDebugCmiRegistry())
+                TraceCarol.debugCmiRegistry("Local rebind of " + n);
+        }
+
         synchronized (lreg) {
-            cur = lreg.get(n);
-            if (cur == clusterobj) {
-                if (Trace.CREG)
-                    Trace.out("CREG: Rebind: global unbind of " + n);
-                try {
-                    DistributedEquiv.unexportObject(n);
-                } catch (ConfigException e) {
-                    throw new RemoteException(e.getMessage());
-                }
-            }
-            ClusterConfig cc;
-            try {
-                cc = ClusterObject.getClusterConfig(obj);
-            } catch (Exception e) {
-                if (Trace.CREG)
-                    Trace.out("CREG: Local rebind of " + n);
+            if (cc == null) {
                 lreg.put(n, obj);
-                return;
-            }
-            if (cc.isGlobalAtBind()) {
-                if (Trace.CREG)
-                    Trace.out("CREG: Global rebind of " + n);
-                lreg.put(n, clusterobj);
-                try {
-                    DistributedEquiv.exportObject(n, obj);
-                } catch (ConfigException e) {
-                    throw new RemoteException(e.getMessage());
-                }
             } else {
-                throw new RemoteException("not implemented");
+                if (!cc.isGlobalAtBind()) {
+                    throw new RemoteException("not implemented");
+                }
+                try {
+                    String name = REG_PREFIX + n;
+                    DistributedEquiv.unexportObject(name);
+                    DistributedEquiv.exportObject(name, obj);
+                } catch (ConfigException e) {
+                    throw new RemoteException(e.toString());
+                }
             }
         }
     }
 
     public String[] list() throws RemoteException {
-        /*
-                DistributedRegistryImpl reg = dreg;
-                if (reg == null) reg = waitStartEnd();
-                String[] lst1 = reg.list();
-                synchronized (lreg) {
-                    int n1 = lst1.length;
-                    int n2 = lreg.size();
-                    String[] lst2 = new String[n1 + n2];
-                    for (int i=0; i<n1; i++) lst2[i] = lst1[i];
-                    Iterator it = lreg.entrySet().iterator();
-                    for (int i=0; i<n2; i++) {
-                        Map.Entry e = (Map.Entry)it.next();
-                        if (e.getValue() != clusterobj) lst2[n1++] = (String)e.getKey();
+        Set s = new TreeSet();
+        try {
+            Set global = DistributedEquiv.keySet();
+            Iterator it = global.iterator();
+            while (it.hasNext()) {
+                Object o = it.next();
+                if (o instanceof String) {
+                    String str = (String)o;
+                    if (str.startsWith(REG_PREFIX)) {
+                        s.add(str.substring(4));
                     }
-                    String[] lst = new String[n1];
-                    for (int i=0; i<n1; i++) lst[i] = lst2[i];
-                    return lst;
                 }
-        */
-        throw new RemoteException("not supported");
+            }
+        } catch (ConfigException e) {
+            throw new RemoteException(e.toString());
+        }
+        synchronized (lreg) {
+            Set local = lreg.keySet();
+            Iterator it = local.iterator();
+            while (it.hasNext()) {
+                s.add(it.next());
+            }
+        }
+        int n = s.size();
+        Iterator it = s.iterator();
+        String[] tab = new String[n];
+        for (int i=0; i<n; i++) {
+            tab[i] = (String)it.next();
+        }
+        return tab;
     }
 
     public void test() throws RemoteException {

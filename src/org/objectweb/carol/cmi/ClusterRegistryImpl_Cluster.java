@@ -37,7 +37,15 @@ public class ClusterRegistryImpl_Cluster
         lb = csd.getRandom();
     }
 
+    //TODO remove
+    private void setLB() {
+        if (lb == null) {
+            lb = csd.getRandom();
+        }
+    }
+
     public java.lang.String[] list() throws java.rmi.RemoteException {
+        setLB();
         ClusterRegistry stub = (ClusterRegistry) lb.get();
         StubLBFilter filter = null;
         do {
@@ -49,8 +57,8 @@ public class ClusterRegistryImpl_Cluster
                     && !(e instanceof ConnectIOException)) {
                     throw e;
                 }
-                if (Trace.CSTUB) {
-                    Trace.out("CSTUB: Connection to registry refused, retry");
+                if (csd.isStubDebug()) {
+                    csd.debug("Connection to registry refused, retry");
                 }
                 if (filter == null) {
                     filter = new StubLBFilter();
@@ -64,6 +72,7 @@ public class ClusterRegistryImpl_Cluster
     /* Used only to test if a registry is started.
      */
     public void test() throws java.rmi.RemoteException {
+        setLB();
         ClusterRegistry stub = (ClusterRegistry) lb.get();
         StubLBFilter filter = null;
         do {
@@ -74,8 +83,8 @@ public class ClusterRegistryImpl_Cluster
                     && !(e instanceof ConnectIOException)) {
                     throw e;
                 }
-                if (Trace.CSTUB) {
-                    Trace.out("CSTUB: Connection to registry refused, retry");
+                if (csd.isStubDebug()) {
+                    csd.debug("Connection to registry refused, retry");
                 }
                 if (filter == null) {
                     filter = new StubLBFilter();
@@ -88,6 +97,7 @@ public class ClusterRegistryImpl_Cluster
 
     public java.rmi.Remote lookup(java.lang.String name)
         throws java.rmi.NotBoundException, java.rmi.RemoteException {
+        setLB();
         ClusterRegistry stub = (ClusterRegistry) lb.get();
         StubLBFilter filter = null;
         do {
@@ -99,8 +109,8 @@ public class ClusterRegistryImpl_Cluster
                     && !(e instanceof ConnectIOException)) {
                     throw e;
                 }
-                if (Trace.CSTUB) {
-                    Trace.out("CSTUB: Connection to registry refused, retry");
+                if (csd.isStubDebug()) {
+                    csd.debug("Connection to registry refused, retry");
                 }
                 if (filter == null) {
                     filter = new StubLBFilter();

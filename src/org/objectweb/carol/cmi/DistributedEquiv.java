@@ -20,8 +20,15 @@ package org.objectweb.carol.cmi;
 
 import java.rmi.Remote;
 import java.rmi.RemoteException;
+import java.util.Set;
 import java.io.Serializable;
 
+/**
+ * Manage equivalences between objects in the cluster. Two objects are equivalent if
+ * their keys have the same value (key1.equals(key2)).
+ * The keys prefixed with "REG_" are reserved by the ClusterRegistryImpl. No other
+ * module should generate such keys. 
+ */
 public final class DistributedEquiv {
     private static Object lock = new Object();
     private static DistributedEquivSystem des = null;
@@ -53,14 +60,20 @@ public final class DistributedEquiv {
         }
     }
 
-    static void exportObject(Serializable key, Remote obj)
+    /**
+     * @return true if succesfully exported
+     */
+    static boolean exportObject(Serializable key, Remote obj)
         throws ConfigException, RemoteException {
         DistributedEquivSystem d = des;
         if (d == null)
             throw new ConfigException("DistributedEquiv not started");
-        d.exportObject(key, obj);
+        return d.exportObject(key, obj);
     }
 
+    /**
+     * @return true if succesfully unexported
+     */
     static boolean unexportObject(Serializable key) throws ConfigException {
         DistributedEquivSystem d = des;
         if (d == null)
@@ -87,5 +100,12 @@ public final class DistributedEquiv {
         if (d == null)
             throw new ConfigException("DistributedEquiv not started");
         return d.getLocal(key);
+    }
+
+    static Set keySet() throws ConfigException {
+        DistributedEquivSystem d = des;
+        if (d == null)
+            throw new ConfigException("DistributedEquiv not started");
+        return d.keySet();
     }
 }

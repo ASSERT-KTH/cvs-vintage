@@ -85,7 +85,8 @@ public class Random extends StubLB {
         if (len <= 0) {
             throw new NoMoreStubException();
         }
-        return sd[SecureRandom.getInt(len)].getStub();
+        int choice = SecureRandom.getInt(len);
+        return sd[choice].getStub();
     }
 
     public synchronized Remote get(StubLBFilter f) throws NoMoreStubException {

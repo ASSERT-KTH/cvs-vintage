@@ -19,6 +19,7 @@
 package org.objectweb.carol.cmi;
 
 import java.net.InetAddress;
+import java.net.UnknownHostException;
 
 /**
  * The aim of this class is to generate unique IDs to identify an instance of a
@@ -50,14 +51,9 @@ public class ClusterIdFactory {
         try {
             InetAddress a = InetAddress.getLocalHost();
             byte aa[] = a.getAddress();
-            if ((aa.length != 4) && (aa[0] == 127)) {
-                throw new ClusterException("InetAddress.getLocalHost() returned " + a.toString());
-            }
             startTypeIp(a);
-        } catch (ClusterException e) {
-            throw e;
-        } catch (Exception e) {
-            throw new ClusterException(e.toString());
+        } catch (UnknownHostException e) {
+            throw new ClusterException("Error in getLocalHost() : " + e.toString());
         }
     }
 
@@ -69,11 +65,11 @@ public class ClusterIdFactory {
         byte aa[] = a.getAddress();
         if (aa.length != 4) {
             throw new ClusterException(
-                "Address size is " + aa.length + " instead of 4");
+                "IP Address of size " + aa.length + " not supported by ClusterIdFactory");
         }
         if (aa[0] == 127) {
             throw new ClusterException(
-                "Loopback IP address not allowed for unique number generator");
+                "Loopback IP address not allowed in ClusterIdFactory");
         }
         try {
             ss = new java.net.ServerSocket(0, 1, a);
@@ -83,11 +79,11 @@ public class ClusterIdFactory {
         int p = ss.getLocalPort();
         if ((p & 0xffff) != p) {
             throw new ClusterException(
-                "Invalid port number (more than 16 bits)");
+                "Invalid port number (more than 16 bits) in ClusterIdFactory");
         }
         date = System.currentTimeMillis() / 1000;
         if (date >= 128L << 24) {
-            throw new ClusterException("Invalid date (too high)");
+            throw new ClusterException("Invalid date (too high) in ClusterIdFactory");
         }
         localIdArray = new byte[10];
         localIdArray[0] = (byte) (p & 0xff);

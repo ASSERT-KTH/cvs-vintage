@@ -33,8 +33,9 @@ public class Config {
     private static String multicastGroupName = null;
     //private static Vector membersIp = null;
     private static String localHost = null;
-    public final static int DEFAULT_LOAD_FACTOR = 100;
-    private static int loadFactor = DEFAULT_LOAD_FACTOR;
+    public final static int DEFAULT_RR_FACTOR = 100;
+    private static int loadFactor = DEFAULT_RR_FACTOR;
+    private static boolean stubDebug = false;
 
     public static final String MULTICAST_ADDRESS_PROPERTY =
         "carol.cmi.multicast.address";
@@ -42,7 +43,8 @@ public class Config {
         "carol.cmi.multicast.itf";
     public static final String MULTICAST_GROUPNAME_PROPERTY =
         "carol.cmi.multicast.groupname";
-    public static final String LOAD_FACTOR_PROPERTY = "carol.cmi.loadfactor";
+    public static final String RR_FACTOR_PROPERTY = "carol.cmi.rr.factor";
+    public static final String STUB_DEBUG_PROPERTY = "carol.cmi.stub.debug";
 
     /**
      * Set properties
@@ -78,8 +80,10 @@ public class Config {
                 multicastGroupName = s.trim();
             } else if (k.equals(MULTICAST_ITF_PROPERTY)) {
                 multicastItf = s.trim();
-            } else if (k.equals(LOAD_FACTOR_PROPERTY)) {
+            } else if (k.equals(RR_FACTOR_PROPERTY)) {
                 loadFactor = new Integer(s.trim()).intValue();
+            } else if (k.equals(STUB_DEBUG_PROPERTY)) {
+                stubDebug = new Boolean(s.trim()).booleanValue();
             }
         }
         configured = true;
@@ -109,5 +113,9 @@ public class Config {
 
     public static int getLoadFactor() {
         return loadFactor;
+    }
+
+    public static boolean isStubDebug() {
+        return stubDebug;
     }
 }
