@@ -1,4 +1,4 @@
-// $Id: TestUmlActor.java,v 1.7 2005/01/02 16:43:41 linus Exp $
+// $Id: TestUmlActor.java,v 1.8 2005/01/17 22:31:02 linus Exp $
 // Copyright (c) 2003-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -31,53 +31,37 @@ import org.argouml.model.ModelFacade;
 /**
  * @author Thierry Lach
  */
-public class TestUmlActor extends GenericUmlObjectTestFixture
-{
+public class TestUmlActor extends GenericUmlObjectTestFixture {
     /**
      * Constructor for FakeUmlModelFacadeTest.
      * @param arg0 test name
      */
-    public TestUmlActor(String arg0)
-    {
-	super(arg0, Uml.ACTOR);
+    public TestUmlActor(String arg0) {
+	super(arg0, ModelFacade.ACTOR);
 	validateTestClassIsGeneric(this);
-    }
-
-    /**
-     * The legacy test for an actor.
-     */
-    public void testActorLegacy() {
-	Model.getUmlFactory().setJmiProxyCreated(false);
-	Object o = ModelFacade.create(Uml.ACTOR);
-	assertNotNull("Didn't create object", o);
-	assertTrue("Should be a base", ModelFacade.isABase(o));
-	assertTrue("Should be a actor", ModelFacade.isAActor(o));
-	runTruthTests(o);
     }
 
     /**
      * Test the creation of an actor.
      */
     public void testActor() {
-	Model.getUmlFactory().setJmiProxyCreated(true);
-	Object o = ModelFacade.create(Uml.ACTOR);
+	Object o = Model.getUmlFactory().buildNode(ModelFacade.ACTOR);
 	assertNotNull("Didn't create object", o);
 	assertTrue("Should be a base", ModelFacade.isABase(o));
 	assertTrue("Should be a actor", ModelFacade.isAActor(o));
-	runTestRefBaseObject(o);
 	runTruthTests(o);
     }
 
     /**
-     * @see org.argouml.model.uml.GenericUmlObjectTestFixture#initializeTruth()
+     * @see junit.framework.TestCase#setUp()
      */
-    protected void initializeTruth() {
-	setTruth(Uml.ELEMENT, true);
-	setTruth(Uml.MODEL_ELEMENT, true);
-	setTruth(Uml.GENERALIZABLE_ELEMENT, true);
-	setTruth(Uml.CLASSIFIER, true);
-	setTruth(Uml.NAMESPACE, true);
-	setTruth(Uml.ACTOR, true);
+    protected void setUp() throws Exception {
+        super.setUp();
+        setTruth(ModelFacade.MODELELEMENT, true);
+        setTruth(ModelFacade.GENERALIZABLE_ELEMENT, true);
+        setTruth(ModelFacade.CLASSIFIER, true);
+        setTruth(ModelFacade.NAMESPACE, true);
+        setTruth(ModelFacade.ACTOR, true);
     }
 
 }

@@ -1,4 +1,4 @@
-// $Id: Init.java,v 1.35 2005/01/09 14:58:36 linus Exp $
+// $Id: Init.java,v 1.36 2005/01/17 22:31:06 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -42,13 +42,15 @@ import org.argouml.uml.diagram.ui.UMLDiagram;
 // import org.argouml.uml.diagram.use_case.ui.UMLUseCaseDiagram;
 import org.argouml.model.ModelFacade;
 
-/** Registers critics for use in ArgoUML.  This class is called at
- *  system startup time. If you add a new critic, you need to add a
- *  line here.
+/**
+ * Registers critics for use in ArgoUML.  This class is called at
+ * system startup time. If you add a new critic, you need to add a
+ * line here.
  *
  *
  * @author jrobbins
- * @see org.argouml.cognitive.critics.Agency */
+ * @see org.argouml.cognitive.critics.Agency
+ */
 public class Init {
 
     // UML specific
@@ -269,7 +271,7 @@ public class Init {
 	java.lang.Class assocClassCls = (Class) ModelFacade.ASSOCIATION_CLASS;
 	java.lang.Class namespaceCls = (Class) ModelFacade.NAMESPACE;
 	java.lang.Class genElementCls =
-	    (Class) ModelFacade.GENERALAIZABLE_ELEMENT;
+	    (Class) ModelFacade.GENERALIZABLE_ELEMENT;
 	java.lang.Class genCls = (Class) ModelFacade.GENERALIZATION;
 	java.lang.Class datatypeCls = (Class) ModelFacade.DATATYPE;
 	java.lang.Class useCaseCls = (Class) ModelFacade.USE_CASE;
