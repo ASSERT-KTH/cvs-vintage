@@ -21,7 +21,7 @@ import a.b.*;  // BAD
 *   @see <related>
 *   @author  <a href="mailto:{email}">{full name}</a>.
 *   @author  <a href="mailto:marc@jboss.org">Marc Fleury</a>
-*   @version $Revision: 1.4 $
+*   @version $Revision: 1.5 $
 *   Revisions:
 *
 *   <p><b>Revisions:</b>
@@ -35,6 +35,11 @@ import a.b.*;  // BAD
 *   <ul>
 *   <li> Ask all developers to clearly document the Revision, changed the header.  
 *   </ul>
+*   <p><b>20010719 andreas schaefer:</b>
+*   <ul>
+*   <li> Changed indentation to 3 spaces to go along with the guidelines and removed second comment
+*        about this to avoid confusion.
+*   </ul>
 */
 
 
@@ -43,13 +48,12 @@ import a.b.*;  // BAD
 public interface X
 extends Y
 {
-  // Constants -----------------------------------------------------
-  
-  // Static --------------------------------------------------------
-  
-  // Public --------------------------------------------------------
-  public ReturnClass doSomething()
-  throws ExceptionA, ExceptionB;
-  
-  // DO NOT USE "TAB" USE 2 SPACES FOR PORTABILITY AMONG EDITORS
+   // Constants -----------------------------------------------------
+   
+   // Static --------------------------------------------------------
+   
+   // Public --------------------------------------------------------
+   public ReturnClass doSomething()
+   throws ExceptionA, ExceptionB;
+   
 }

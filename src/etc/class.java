@@ -20,7 +20,7 @@ import a.b.*;  // BAD
 *   @see <related>
 *   @author  <a href="mailto:{email}">{full name}</a>.
 *   @author  <a href="mailto:marc@jboss.org">Marc Fleury</a>
-*   @version $Revision: 1.6 $
+*   @version $Revision: 1.7 $
 *   
 *   <p><b>Revisions:</b>
 *
@@ -33,6 +33,11 @@ import a.b.*;  // BAD
 *   <ul>
 *   <li> Ask all developers to clearly document the Revision, changed the header.  
 *   </ul>
+*   <p><b>20010719 andreas schaefer:</b>
+*   <ul>
+*   <li> Changed indentation to 3 spaces to go along with the guidelines and removed second comment
+*        about this to avoid confusion.
+*   </ul>
 */
 
 
@@ -42,79 +47,79 @@ public class X
 extends Y
 implements Z
 {
-  // Constants -----------------------------------------------------
-  
-  // Attributes ----------------------------------------------------
-  
-  // Static --------------------------------------------------------
-  
-  // Constructors --------------------------------------------------
-  
-  // Public --------------------------------------------------------
-  
-  public void startService() throws Exception
-  { // Use the newline for the opening bracket so we can match top and bottom bracket visually
-    
-    Class cls = Class.forName(dataSourceClass);
-    vendorSource = (XADataSource)cls.newInstance();
-    
-    // JUMP A LINE BETWEEN LOGICALLY DISCTINT **STEPS** AND ADD A LINE OF COMMENT TO IT
-    cls = vendorSource.getClass();
-    
-    if(properties != null && properties.length() > 0)
-    {
+   // Constants -----------------------------------------------------
+   
+   // Attributes ----------------------------------------------------
+   
+   // Static --------------------------------------------------------
+   
+   // Constructors --------------------------------------------------
+   
+   // Public --------------------------------------------------------
+   
+   public void startService() throws Exception
+   { // Use the newline for the opening bracket so we can match top and bottom bracket visually
       
-      try
+      Class cls = Class.forName(dataSourceClass);
+      vendorSource = (XADataSource)cls.newInstance();
+      
+      // JUMP A LINE BETWEEN LOGICALLY DISCTINT **STEPS** AND ADD A LINE OF COMMENT TO IT
+      cls = vendorSource.getClass();
+      
+      if(properties != null && properties.length() > 0)
       {
+      
+         try
+         {
+         }
+         catch (IOException ioe)
+         {
+         }
+         for (Iterator i = props.entrySet().iterator(); i.hasNext();)
+         {
+            
+            // Get the name and value for the attributes
+            Map.Entry entry = (Map.Entry) i.next();
+            String attributeName = (String) entry.getKey();
+            String attributeValue = (String) entry.getValue();
+            
+            // Print the debug message
+            log.debug("Setting attribute '" + attributeName + "' to '" +
+               attributeValue + "'");
+            
+            // get the attribute 
+            Method setAttribute =
+            cls.getMethod("set" + attributeName,
+               new Class[] { String.class });
+            
+            // And set the value  
+            setAttribute.invoke(vendorSource,
+               new Object[] { attributeValue });
+         }
       }
-      catch (IOException ioe)
-      {
-      }
-      for (Iterator i = props.entrySet().iterator(); i.hasNext();)
-      {
-        
-        // Get the name and value for the attributes
-        Map.Entry entry = (Map.Entry) i.next();
-        String attributeName = (String) entry.getKey();
-        String attributeValue = (String) entry.getValue();
-        
-        // Print the debug message
-        log.debug("Setting attribute '" + attributeName + "' to '" +
-          attributeValue + "'");
-        
-        // get the attribute 
-        Method setAttribute =
-        cls.getMethod("set" + attributeName,
-          new Class[] { String.class });
-        
-        // And set the value  
-        setAttribute.invoke(vendorSource,
-          new Object[] { attributeValue });
-      }
-    }
-    
-    
-    // Test database
-    vendorSource.getXAConnection().close();
-    
-    // Bind in JNDI
-    bind(new InitialContext(), "java:/"+getPoolName(),
-      new Reference(vendorSource.getClass().getName(),
-        getClass().getName(), null));
-    
-    // We are done
-    log.log("XA Data source "+getPoolName()+" bound to java:/"+getPoolName());
-  }
-  // Z implementation ----------------------------------------------
-  
-  // Y overrides ---------------------------------------------------
-  
-  // Package protected ---------------------------------------------
-  
-  // Protected -----------------------------------------------------
-  
-  // Private -------------------------------------------------------
-  
-  // Inner classes -------------------------------------------------
+      
+      
+      // Test database
+      vendorSource.getXAConnection().close();
+      
+      // Bind in JNDI
+      bind(new InitialContext(), "java:/"+getPoolName(),
+         new Reference(vendorSource.getClass().getName(),
+            getClass().getName(), null));
+      
+      // We are done
+      log.log("XA Data source "+getPoolName()+" bound to java:/"+getPoolName());
+   }
+   // Z implementation ----------------------------------------------
+   
+   // Y overrides ---------------------------------------------------
+   
+   // Package protected ---------------------------------------------
+   
+   // Protected -----------------------------------------------------
+   
+   // Private -------------------------------------------------------
+   
+   // Inner classes -------------------------------------------------
 }
 
