@@ -106,7 +106,7 @@ $l10n.NoTemplates
 
 #end
 
-<div class="functnbar3">
+<div class="functnbar2">
   <input type="submit" value="$l10n.CreateNew" name="eventSubmit_doGotoothertemplate" />
   #if ($canDeleteAtLeastOne)
     &#160;<input type="submit" value="$l10n.DeleteSelected" name="eventSubmit_doDeletetemplates" />
