@@ -9,6 +9,14 @@
   <pop3preprocessingfilter name="SpamAssassin" class="SpamAssassinPOP3PreProcessingFilterPlugin"/>
  </extension>
  
+<!-- external tools -->
+ 
+  <extension name="org.columba.core.externaltools">
+   <tool name="spamc" class="SpamcExternalToolPlugin" />
+   <tool name="spamassassin" class="SpamAssassinExternalToolPlugin" />
+   <tool name="sa-learn" class="SALearnExternalToolPlugin" />
+  </extension>
+ 
 <!-- actions -->
  <extension name="org.columba.core.action">
   <action name="LearnSpam" class="LearnSpamAction" />
