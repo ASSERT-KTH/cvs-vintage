@@ -60,6 +60,9 @@
       </action>             
     </release>
     <release version="b18-1" date="27-Jan-2004">
+      <action dev="pledbrook" type="fix">
+        Fixed the line-endings on all *.sh and *.bat files.
+      </action>
       <action dev="vprus" type="fix">
         Refactoring of Email.java.
       </action>             
