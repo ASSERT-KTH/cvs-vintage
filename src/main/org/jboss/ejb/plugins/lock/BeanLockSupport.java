@@ -26,18 +26,12 @@ import org.w3c.dom.Element;
  *
  * @author <a href="bill@burkecentral.com">Bill Burke</a>
  * @author <a href="marc.fleury@jboss.org">Marc Fleury</a>
- * @version $Revision: 1.20 $
+ * @version $Revision: 1.21 $
  */
 public abstract class BeanLockSupport
    implements BeanLock
 {
    protected Container container = null;
-   
-   /**
-    * Number of threads that retrieved this lock from the manager
-    * (0 means removing)
-    */ 
-   protected int refs = 0;
    
    /** The Cachekey corresponding to this Bean */
    protected Object id = null;
@@ -97,10 +91,6 @@ public abstract class BeanLockSupport
    public abstract void wontSynchronize(Transaction tx);
 	
    public abstract void endInvocation(Invocation mi);
-   
-   public void addRef() { refs++;}
-   public void removeRef() { refs--;}
-   public int getRefs() { return refs;}
    
    // This following is for deadlock detection
    protected static HashMap waiting = new HashMap();

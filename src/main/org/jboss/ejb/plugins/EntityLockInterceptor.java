@@ -30,7 +30,7 @@ import org.jboss.invocation.Invocation;
 *    
 * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
 * @author <a href="mailto:bill@burkecentral.com">Bill Burke</a>
-* @version $Revision: 1.10 $
+* @version $Revision: 1.11 $
 *
 * <p><b>Revisions:</b><br>
 * <p><b>2001/07/30: marcf</b>
@@ -96,34 +96,23 @@ public class EntityLockInterceptor
       if( trace ) log.trace("Begin invoke, key="+key);
    
   
-      try 
-      {
-         lock = (BeanLock)container.getLockManager().getLock(key);
-   
-         lock.schedule(mi);
-   
-         try {
-    
-            return getNext().invoke(mi); 
-         }
-   
-         finally 
-         {
-    
-            // we are done with the method, decrease the count, if it reaches 0 it will wake up 
-            // the next thread 
-            lock.sync();
-            lock.endInvocation(mi);
-            lock.releaseSync(); 
-         }
+      lock = (BeanLock)container.getLockManager().getLock(key);
+      
+      lock.schedule(mi);
+      
+      try {
+         
+         return getNext().invoke(mi); 
       }
-      finally
+      
+      finally 
       {
-   
-         // We are done with the lock in general
-         container.getLockManager().removeLockRef(key);
-   
-         if( trace ) log.trace("End invoke, key="+key);
+         
+         // we are done with the method, decrease the count, if it reaches 0 it will wake up 
+         // the next thread 
+         lock.sync();
+         lock.endInvocation(mi);
+         lock.releaseSync(); 
       }
    }
 }

@@ -45,7 +45,7 @@ import org.jboss.monitor.LockMonitor;
  * @author <a href="bill@burkecentral.com">Bill Burke</a>
  * @author <a href="pete@subx.com">Peter Murray</a>
  *
- * @version $Revision: 1.17 $
+ * @version $Revision: 1.18 $
  */
 public class QueuedPessimisticEJBLock extends BeanLockSupport
 {
@@ -395,19 +395,5 @@ public class QueuedPessimisticEJBLock extends BeanLockSupport
          }
       }
    }
-   
-   public void removeRef() 
-   { 
-      refs--;
-      if (refs == 0 && txWaitQueue.size() > 0) 
-      {
-         throw new IllegalStateException("removing bean lock and it has tx's in QUEUE!");
-      }
-      else if (refs == 0 && getTransaction() != null) 
-      {
-         throw new IllegalStateException("removing bean lock and it has tx set!" + container.getBeanMetaData().getEjbName() + " " + this.id.toString());
-      }
-   }
-
 }
 

@@ -27,7 +27,7 @@ import org.jboss.ejb.StatefulSessionPersistenceManager;
  *
  * @author <a href="mailto:simone.bordet@compaq.com">Simone Bordet</a>
  * @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
- * @version $Revision: 1.19 $
+ * @version $Revision: 1.20 $
  */
 public class StatefulSessionInstanceCache
     extends AbstractInstanceCache
@@ -140,7 +140,6 @@ public class StatefulSessionInstanceCache
                 // Must use the iterator to remove, otherwise
                 // ConcurrentModificationException is thrown
                 entries.remove();
-//              removeLock(key);
             }
         }
     }

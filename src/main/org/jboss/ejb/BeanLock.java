@@ -19,7 +19,7 @@ import org.w3c.dom.Element;
  * @author <a href="bill@burkecentral.com">Bill Burke</a>
  * @author <a href="marc.fleury@jboss.org">Marc Fleury</a>
  *
- * @version $Revision: 1.16 $
+ * @version $Revision: 1.17 $
  *
  * <p><b>Revisions:</b><br>
 *  <p><b>2001/07/29: marcf</b>
@@ -123,20 +123,4 @@ public interface BeanLock
     */
    public void endInvocation(Invocation mi);
  
-   /**
-    *  Increment the reference count of this lock.
-    */
-   public void addRef();
-
-   /**
-    *  Decrement the reference count of this lock.
-    */
-   public void removeRef();
-
-   /**
-    *  Get the current reference count of this lock.
-    *
-    *  @return The current reference count.
-    */
-   public int getRefs();
 }

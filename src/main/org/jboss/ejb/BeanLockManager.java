@@ -13,6 +13,7 @@ import org.jboss.ejb.Container;
 import org.w3c.dom.Element;
 import org.jboss.monitor.LockMonitor;
 import org.jboss.monitor.EntityLockMonitor;
+import org.jboss.util.WeakValueHashMap;
 import javax.naming.InitialContext;
 /**
  * Manages BeanLocks.  All BeanLocks have a reference count.
@@ -22,7 +23,7 @@ import javax.naming.InitialContext;
  * @author <a href="bill@burkecentral.com">Bill Burke</a>
  * @author <a href="marc.fleury@jboss.org">Marc Fleury</a>
  *
- * @version $Revision: 1.11 $
+ * @version $Revision: 1.12 $
  * <p><b>Revisions:</b><br>
  * <p><b>20010802: marcf</b>
  * <ol>
@@ -32,7 +33,7 @@ import javax.naming.InitialContext;
  */
 public class BeanLockManager
 {
-   private HashMap map = new HashMap();
+   private WeakValueHashMap map = new WeakValueHashMap();
 
    /** The container this manager reports to */
    private Container container;
@@ -94,24 +95,8 @@ public class BeanLockManager
          
          map.put(id, lock);
       }
-      lock.addRef();
 	
       return lock;
-   }
-
-   public synchronized void removeLockRef(Object id)
-   {
-      if (id == null)
-         throw new IllegalArgumentException("Attempt to remove a lock for a null object");
-      BeanLock lock = (BeanLock)map.get(id);
-      if (lock != null)
-      {
-         lock.removeRef();
-         if (lock.getRefs() <= 0)
-         {
-            map.remove(lock.getId());
-         }
-      }
    }
 
    public synchronized boolean canPassivate(Object id)
@@ -122,8 +107,7 @@ public class BeanLockManager
       if (lock == null)
          throw new IllegalStateException("Called from passivator with no lock");
 
-      // The passivate gets a lock before calling this method
-      return (lock.getRefs() > 1);
+      return true;
    }
 	
    public void setLockCLass(Class lockClass) {this.lockClass=lockClass;}

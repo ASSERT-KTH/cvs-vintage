@@ -34,7 +34,7 @@ import org.jboss.metadata.ConfigurationMetaData;
  *    before changing.
  *
  * @author <a href="mailto:bill@burkecentral.com">Bill Burke</a>
- * @version $Revision: 1.6 $
+ * @version $Revision: 1.7 $
  *
  * <p><b>Revisions:</b><br>
  * <p><b>2001/08/08: billb</b>
@@ -131,7 +131,6 @@ public class EntityMultiInstanceSynchronizationInterceptor
             finally
             {
                lock.releaseSync();
-               container.getLockManager().removeLockRef(lock.getId());
                Thread.currentThread().setContextClassLoader(oldCl);               
             }
          } 

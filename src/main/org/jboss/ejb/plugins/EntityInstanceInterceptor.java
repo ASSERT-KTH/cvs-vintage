@@ -41,7 +41,7 @@ import org.jboss.invocation.Invocation;
 * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
 * @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>
 * @author <a href="mailto:bill@burkecentral.com">Bill Burke</a>
-* @version $Revision: 1.53 $
+* @version $Revision: 1.54 $
 */
 public class EntityInstanceInterceptor
    extends AbstractInterceptor
@@ -104,7 +104,6 @@ public class EntityInstanceInterceptor
          finally
          {
             lock.releaseSync();
-            container.getLockManager().removeLockRef(ctx.getCacheKey());
          }
       }
       //Do not send back to pools in any case, let the instance be GC'ed

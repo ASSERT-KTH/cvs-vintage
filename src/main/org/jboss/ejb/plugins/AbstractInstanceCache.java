@@ -49,7 +49,7 @@ import org.jboss.util.WorkerQueue;
  * @author <a href="bill@burkecentral.com">Bill Burke</a>
  * @author <a href="marc.fleury@jboss.org">Marc Fleury</a>
  *
- * @version $Revision: 1.33 $
+ * @version $Revision: 1.34 $
  *
  *   <p><b>Revisions:</b>
  *
@@ -626,7 +626,6 @@ public abstract class AbstractInstanceCache
                      {
                         Thread.currentThread().setContextClassLoader(cl);
                         lock.releaseSync();
-                        container.getLockManager().removeLockRef(id);
                      }
                   }//execute
                };// Passivation job definition

@@ -37,7 +37,7 @@ import org.jboss.security.SecurityAssociation;
  * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
  * @author <a href="mailto:bill@burkecentral.com">Bill Burke</a>
  * @author <a href="mailto:scott.stark@jboss.org">Scott Stark</a>
- * @version $Revision: 1.33 $
+ * @version $Revision: 1.34 $
  *
  * <p><b>Revisions:</b>
  * <p><b>20010704 marcf</b>
@@ -78,7 +78,7 @@ public class StatefulSessionInstanceInterceptor
          getHandle = EJBObject.class.getMethod("getHandle", noArg);
          getPrimaryKey = EJBObject.class.getMethod("getPrimaryKey", noArg);
          isIdentical = EJBObject.class.getMethod("isIdentical", new Class[]
-         {EJBObject.class});
+            {EJBObject.class});
          remove = EJBObject.class.getMethod("remove", noArg);
       }
       catch (Exception e)
@@ -159,18 +159,7 @@ public class StatefulSessionInstanceInterceptor
          }
          
          // We want to be notified when the transaction commits
-         try
-         {
-            tx.registerSynchronization(synch);
-         }
-         catch (Exception ex)
-         {
-            // synch adds a reference to the lock, so we must release the ref
-            // because afterCompletion will never get called.
-            getContainer().getLockManager().removeLockRef(lock.getId());
-            throw ex;
-         }
-         
+         tx.registerSynchronization(synch);
          // EJB 1.1, 6.5.3
          synch.afterBegin();
          
@@ -186,7 +175,7 @@ public class StatefulSessionInstanceInterceptor
    }
    
    public Object invoke(Invocation mi)
-   throws Exception
+      throws Exception
    {
       InstanceCache cache = container.getInstanceCache();
       InstancePool pool = container.getInstancePool();
@@ -194,128 +183,121 @@ public class StatefulSessionInstanceInterceptor
       EnterpriseContext ctx = null;
       
       BeanLock lock = (BeanLock)container.getLockManager().getLock(methodID);
-      try
+      lock.sync(); // synchronized(ctx)
+      try // lock.sync
       {
-         lock.sync(); // synchronized(ctx)
-         try // lock.sync
-         {
-            /* The security context must be established before the cache
+         /* The security context must be established before the cache
             lookup because the SecurityInterceptor is after the instance
             interceptor and handles of passivated sessions expect that they are
             restored with the correct security context since the handles
             not serialize the principal and credential information.
-             */
-            SecurityAssociation.setPrincipal(mi.getPrincipal());
-            SecurityAssociation.setCredential(mi.getCredential());
+         */
+         SecurityAssociation.setPrincipal(mi.getPrincipal());
+         SecurityAssociation.setCredential(mi.getCredential());
             
-            // Get context
-            ctx = cache.get(methodID);
-            // Associate it with the method invocation
-            mi.setEnterpriseContext(ctx);
+         // Get context
+         ctx = cache.get(methodID);
+         // Associate it with the method invocation
+         mi.setEnterpriseContext(ctx);
             
-            // BMT beans will lock and replace tx no matter what, CMT do work on transaction
-            if (!((SessionMetaData)container.getBeanMetaData()).isBeanManagedTx())
+         // BMT beans will lock and replace tx no matter what, CMT do work on transaction
+         if (!((SessionMetaData)container.getBeanMetaData()).isBeanManagedTx())
+         {
+               
+            // Do we have a running transaction with the context
+            if (ctx.getTransaction() != null &&
+                // And are we trying to enter with another transaction
+                !ctx.getTransaction().equals(mi.getTransaction()))
             {
-               
-               // Do we have a running transaction with the context
-               if (ctx.getTransaction() != null &&
-               // And are we trying to enter with another transaction
-               !ctx.getTransaction().equals(mi.getTransaction()))
-               {
-                  // Calls must be in the same transaction
-                  throw new EJBException("Application Error: tried to enter " +
-                        "Stateful bean with different transaction context");
-               }
-               
-               //If the instance will participate in a new transaction we register a sync for it
-               if (ctx.getTransaction() == null && mi.getTransaction() != null)
-               {
-                  register(ctx, mi.getTransaction(), lock);
-               }
+               // Calls must be in the same transaction
+               throw new EJBException("Application Error: tried to enter " +
+                                      "Stateful bean with different transaction context");
             }
-            
-            if (!ctx.isLocked())
-            {
                
-               //take it!
-               ctx.lock();
+            //If the instance will participate in a new transaction we register a sync for it
+            if (ctx.getTransaction() == null && mi.getTransaction() != null)
+            {
+               register(ctx, mi.getTransaction(), lock);
+            }
+         }
+            
+         if (!ctx.isLocked())
+         {
+               
+            //take it!
+            ctx.lock();
+         }
+         else
+         {
+            if (!isCallAllowed(mi))
+            {
+               // Concurent calls are not allowed
+               throw new EJBException("Application Error: no concurrent " +
+                                      "calls on stateful beans");
             }
             else
             {
-               if (!isCallAllowed(mi))
-               {
-                  // Concurent calls are not allowed
-                  throw new EJBException("Application Error: no concurrent " +
-                        "calls on stateful beans");
-               }
-               else
-               {
-                  ctx.lock();
-               }
-            }
-         }
-         finally
-         {
-            lock.releaseSync();
-         }
-         
-         // Set the current security information
-         ctx.setPrincipal(mi.getPrincipal());
-         
-         try
-         {
-            // Invoke through interceptors
-            return getNext().invoke(mi);
-         } catch (RemoteException e)
-         {
-            // Discard instance
-            cache.remove(methodID);
-            ctx = null;
-            
-            throw e;
-         } catch (RuntimeException e)
-         {
-            // Discard instance
-            cache.remove(methodID);
-            ctx = null;
-            
-            throw e;
-         } catch (Error e)
-         {
-            // Discard instance
-            cache.remove(methodID);
-            ctx = null;
-            
-            throw e;
-         } finally
-         {
-            if (ctx != null)
-            {
-               // Still a valid instance
-               lock.sync(); // synchronized(ctx)
-               try
-               {
-                  
-                  // release it
-                  ctx.unlock();
-                  
-                  // if removed, remove from cache
-                  if (ctx.getId() == null)
-                  {
-                     // Remove from cache
-                     cache.remove(methodID);
-                  }
-               }
-               finally
-               {
-                  lock.releaseSync();
-               }
+               ctx.lock();
             }
          }
       }
       finally
       {
-         container.getLockManager().removeLockRef(lock.getId());
+         lock.releaseSync();
+      }
+         
+      // Set the current security information
+      ctx.setPrincipal(mi.getPrincipal());
+         
+      try
+      {
+         // Invoke through interceptors
+         return getNext().invoke(mi);
+      } catch (RemoteException e)
+      {
+         // Discard instance
+         cache.remove(methodID);
+         ctx = null;
+            
+         throw e;
+      } catch (RuntimeException e)
+      {
+         // Discard instance
+         cache.remove(methodID);
+         ctx = null;
+            
+         throw e;
+      } catch (Error e)
+      {
+         // Discard instance
+         cache.remove(methodID);
+         ctx = null;
+            
+         throw e;
+      } finally
+      {
+         if (ctx != null)
+         {
+            // Still a valid instance
+            lock.sync(); // synchronized(ctx)
+            try
+            {
+                  
+               // release it
+               ctx.unlock();
+                  
+               // if removed, remove from cache
+               if (ctx.getId() == null)
+               {
+                  // Remove from cache
+                  cache.remove(methodID);
+               }
+            }
+            finally
+            {
+               lock.releaseSync();
+            }
+         }
       }
    }
    
@@ -323,10 +305,10 @@ public class StatefulSessionInstanceInterceptor
    {
       Method m = mi.getMethod();
       if (m.equals(getEJBHome) ||
-      m.equals(getHandle) ||
-      m.equals(getPrimaryKey) ||
-      m.equals(isIdentical) ||
-      m.equals(remove))
+          m.equals(getHandle) ||
+          m.equals(getPrimaryKey) ||
+          m.equals(isIdentical) ||
+          m.equals(remove))
       {
          return true;
       }
@@ -336,7 +318,7 @@ public class StatefulSessionInstanceInterceptor
    // Inner classes -------------------------------------------------
    
    private class InstanceSynchronization
-   implements Synchronization
+      implements Synchronization
    {
       /**
        *  The transaction we follow.
@@ -365,7 +347,6 @@ public class StatefulSessionInstanceInterceptor
          this.tx = tx;
          this.ctx = ctx;
          this.lock = lock;
-         this.lock.addRef();
          
          // Let's compute it now, to speed things up we could
          notifySession = (ctx.getInstance() instanceof javax.ejb.SessionSynchronization);
@@ -381,7 +362,7 @@ public class StatefulSessionInstanceInterceptor
                afterBegin = sync.getMethod("afterBegin", new Class[0]);
                beforeCompletion = sync.getMethod("beforeCompletion", new Class[0]);
                afterCompletion =  sync.getMethod("afterCompletion", new Class[]
-               {boolean.class});
+                  {boolean.class});
             }
             catch (Exception e)
             {
@@ -459,14 +440,14 @@ public class StatefulSessionInstanceInterceptor
                   if (status == Status.STATUS_COMMITTED)
                   {
                      afterCompletion.invoke(ctx.getInstance(),
-                     new Object[]
-                     { Boolean.TRUE });
+                                            new Object[]
+                        { Boolean.TRUE });
                   }
                   else
                   {
                      afterCompletion.invoke(ctx.getInstance(),
-                     new Object[]
-                     { Boolean.FALSE });
+                                            new Object[]
+                        { Boolean.FALSE });
                   }
                }
                catch (Exception e)
@@ -478,7 +459,6 @@ public class StatefulSessionInstanceInterceptor
          finally
          {
             lock.releaseSync();
-            container.getLockManager().removeLockRef(lock.getId());
          }
       }
    }

@@ -45,7 +45,7 @@ import org.jboss.metadata.ConfigurationMetaData;
  * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
  * @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>
  * @author <a href="mailto:bill@burkecentral.com">Bill Burke</a>
- * @version $Revision: 1.70 $
+ * @version $Revision: 1.71 $
  */
 public class EntitySynchronizationInterceptor
    extends AbstractInterceptor
@@ -221,16 +221,9 @@ public class EntitySynchronizationInterceptor
          if (tx!= null)
          {
             BeanLock lock = container.getLockManager().getLock(ctx.getCacheKey());
-            try
-            {
-               lock.schedule(mi);
-               register(ctx, tx); // Set tx
-               lock.endInvocation(mi);
-            }
-            finally
-            {
-               container.getLockManager().removeLockRef(lock.getId());
-            }
+            lock.schedule(mi);
+            register(ctx, tx); // Set tx
+            lock.endInvocation(mi);
          }
       }
       return rtn;
@@ -466,7 +459,6 @@ public class EntitySynchronizationInterceptor
             finally
             {
                lock.releaseSync();
-               container.getLockManager().removeLockRef(lock.getId());
                Thread.currentThread().setContextClassLoader(oldCl);               
             }
          }
@@ -496,8 +488,6 @@ public class EntitySynchronizationInterceptor
       finally
       {
          lock.releaseSync();
-   
-         container.getLockManager().removeLockRef(lock.getId());
       }
    }
  
