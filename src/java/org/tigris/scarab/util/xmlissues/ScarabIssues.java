@@ -65,7 +65,7 @@ import org.apache.commons.logging.LogFactory;
  * This class manages the validation and importing of issues.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ScarabIssues.java,v 1.16 2003/01/30 20:45:40 jon Exp $
+ * @version $Id: ScarabIssues.java,v 1.17 2003/01/31 02:15:08 jon Exp $
  */
 public class ScarabIssues implements java.io.Serializable
 {
@@ -954,19 +954,31 @@ public class ScarabIssues implements java.io.Serializable
         attachmentOM.setFileName(attachment.getFilename());
         attachmentOM.setData(attachment.getData());
         attachmentOM.setCreatedDate(attachment.getCreatedDate().getDate());
-        attachmentOM.setModifiedDate(attachment.getModifiedDate().getDate());
+        ModifiedDate modifiedDate = attachment.getModifiedDate();
+        if (modifiedDate != null)
+        {
+            attachmentOM.setModifiedDate(modifiedDate.getDate());
+        }
         @OM@.ScarabUser creUser = @OM@.ScarabUserManager
             .getInstance(attachment.getCreatedBy(), issueOM.getModule().getDomain());
         if (creUser != null)
         {
             attachmentOM.setCreatedBy(creUser.getUserId());
         }
-        @OM@.ScarabUser modUserOM = @OM@.ScarabUserManager
-            .getInstance(attachment.getModifiedBy(), issueOM.getModule().getDomain());
-        if (modUserOM != null)
+
+        @OM@.ScarabUser modUserOM = null;
+        String modifiedBy = attachment.getModifiedBy();
+        if (modifiedBy != null)
         {
-            attachmentOM.setModifiedBy(modUserOM.getUserId());
+            modUserOM = @OM@.ScarabUserManager
+                .getInstance(attachment.getModifiedBy(), 
+                    issueOM.getModule().getDomain());
+            if (modUserOM != null)
+            {
+                attachmentOM.setModifiedBy(modUserOM.getUserId());
+            }
         }
+
         attachmentOM.setDeleted(attachment.getDeleted());
         return attachmentOM;
     }
