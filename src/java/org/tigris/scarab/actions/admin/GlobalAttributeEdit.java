@@ -75,7 +75,7 @@ import org.tigris.scarab.services.cache.ScarabCache;
  * This class deals with modifying Global Attributes.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: GlobalAttributeEdit.java,v 1.43 2003/04/21 18:07:06 elicia Exp $
+ * @version $Id: GlobalAttributeEdit.java,v 1.44 2003/04/25 03:58:27 elicia Exp $
  */
 public class GlobalAttributeEdit extends RequireLoginFirstAction
 {
@@ -90,6 +90,7 @@ public class GlobalAttributeEdit extends RequireLoginFirstAction
         ScarabRequestTool scarabR = getScarabRequestTool(context);
         ScarabLocalizationTool l10n = getLocalizationTool(context);
         boolean success = true;
+        boolean confirmDelete = false;
 
         if (intake.isAllValid())
         {
@@ -135,17 +136,29 @@ public class GlobalAttributeEdit extends RequireLoginFirstAction
             }
             else
             {
-                // if deleting attribute, delete from modules and issue types
+                // if deleting attribute, and attribute is associated
+                // With modules or issue types, give confirmation.
                 if (!attr.getDeleted() && 
-                    attrGroup.get("Deleted").toString().equals("true"))
+                    attrGroup.get("Deleted").toString().equals("true") &&
+                    (attr.hasModuleMappings() || attr.hasIssueTypeMappings()))
                 {
-                    ScarabUser user = (ScarabUser)data.getUser();
-                    attr.deleteModuleMappings(user); 
-                    attr.deleteIssueTypeMappings(user); 
+                    context.put("deleting", "deleting");
+                    confirmDelete=true;
+                    success = false;
                 }
-                attrGroup.setProperties(attr);
+                for (int i = 0; i < attrGroup.getFieldNames().length; i++)
+                {
+                    String fieldName = attrGroup.getFieldNames()[i];
+                    if (!fieldName.equals("Deleted") || !confirmDelete)
+                    {
+                        attrGroup.get(fieldName).setProperty(attr);
+                    }
+                }
                 attr.save();
-                scarabR.setConfirmMessage(l10n.get(DEFAULT_MSG));  
+                if (success)
+                {
+                    scarabR.setConfirmMessage(l10n.get(DEFAULT_MSG));  
+                }
             }
         }
         else
@@ -154,6 +167,26 @@ public class GlobalAttributeEdit extends RequireLoginFirstAction
           scarabR.setAlertMessage(l10n.get(ERROR_MESSAGE));
         }
         return success;
+    }
+
+    /**
+     * Deletes attribute and its mappings after confirmation.
+     */
+    public void doDeleteattribute(RunData data, TemplateContext context)
+        throws Exception
+    {
+        ScarabRequestTool scarabR = getScarabRequestTool(context);
+        Attribute attr = scarabR.getAttribute();
+        if (attr.getAttributeId() != null)
+        {
+            ScarabUser user = (ScarabUser)data.getUser();
+            attr.deleteModuleMappings(user); 
+            attr.deleteIssueTypeMappings(user); 
+            attr.setDeleted(true);
+            attr.save();
+            scarabR.setConfirmMessage(getLocalizationTool(context).get(DEFAULT_MSG));  
+            setTarget(data, "admin,GlobalAttributeShow.vm");
+        }
     }
 
     /**
