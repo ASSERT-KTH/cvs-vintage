@@ -65,7 +65,7 @@ import org.tigris.scarab.om.GlobalParameter;
 /**
  * 
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: DatabaseInitializer.java,v 1.3 2002/10/24 22:59:30 jon Exp $
+ * @version $Id: DatabaseInitializer.java,v 1.4 2003/01/07 21:15:40 elicia Exp $
  */
 public class DatabaseInitializer
     extends BaseService
@@ -118,6 +118,7 @@ public class DatabaseInitializer
             {"InitDbScarabBundle", "IssueType", "Name", "Description"},
             {"InitDbScarabBundle", "AttributeGroup", "Name", "Description"},
             {"InitDbScarabBundle", "RModuleAttribute", "DisplayValue"}
+            {"InitDbScarabBundle", "Scope", "Name"}
         };
         return methodNames;
     }
