@@ -66,7 +66,7 @@ import org.jboss.web.WebServiceMBean;
  * @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
  * @author <a href="mailto:peter.antman@tim.se">Peter Antman</a>.
  * @author <a href="mailto:scott.stark@jboss.org">Scott Stark</a>
- * @version $Revision: 1.82 $
+ * @version $Revision: 1.83 $
  */
 public class ContainerFactory
    extends ServiceMBeanSupport
@@ -695,40 +695,38 @@ public class ContainerFactory
       return container;
    }
 
-   // **************
-   // Helper Methods
-   // **************
+  // **************
+  // Helper Methods
+  // **************
 
-   /**
-    * Either creates the Management MBean wrapper for a container and start
-    * it or it destroy it.
-    **/
-   private void handleContainerManagement( Container container,
-                                           boolean doStart )
-   {
-      try {
-         // Create and register the ContainerMBean
-         ObjectName name = new ObjectName( "Management", "jnidName", container.getBeanMetaData().getJndiName() );
-         if( doStart ) {
-            getServer().createMBean(
-                                    "org.jboss.management.ContainerManagement",
-                                    name,
-                                    new Object[] { container },
-                                    new String[] { "org.jboss.ejb.Container" }
-                                    );
-            getServer().invoke( name, "init", new Object[] {}, new String[] {} );
-            getServer().invoke( name, "start", new Object[] {}, new String[] {} );
-         }
-         else {
-            // If not startup then assume that the MBean is there
-            getServer().invoke( name, "stop", new Object[] {}, new String[] {} );
-            getServer().invoke( name, "destroy", new Object[] {}, new String[] {} );
-            // Unregister the MBean to avoid future name conflicts
-            getServer().unregisterMBean( name );
-         }
-      }
-      catch( Exception e )
-      {
+  /**
+   * Either creates the Management MBean wrapper for a container and start
+   * it or it destroy it.
+   **/
+  private void handleContainerManagement( Container container, boolean doStart ) {
+     try {
+        // Create and register the ContainerMBean
+        ObjectName name = new ObjectName( "Management", "jndiName", container.getBeanMetaData().getJndiName() );
+        if( doStart ) {
+           getServer().createMBean(
+              "org.jboss.management.ContainerManagement",
+              name,
+              new Object[] { container },
+              new String[] { "org.jboss.ejb.Container" }
+           );
+           getServer().invoke( name, "init", new Object[] {}, new String[] {} );
+           getServer().invoke( name, "start", new Object[] {}, new String[] {} );
+        }
+        else {
+           // If not startup then assume that the MBean is there
+           getServer().invoke( name, "stop", new Object[] {}, new String[] {} );
+           getServer().invoke( name, "destroy", new Object[] {}, new String[] {} );
+           // Unregister the MBean to avoid future name conflicts
+           getServer().unregisterMBean( name );
+        }
+     }
+     catch( Exception e )
+     {
          if( e instanceof RuntimeMBeanException )
          {
             RuntimeMBeanException rme = (RuntimeMBeanException) e;

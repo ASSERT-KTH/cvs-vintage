@@ -17,7 +17,14 @@ import org.jboss.ejb.StatelessSessionEnterpriseContext;
  *      
  *	@see <related>
  *	@author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
- *	@version $Revision: 1.5 $
+ * @author <a href="mailto:andreas.schaefer@madplanet.com">Andreas Schaefer</a>
+ *	@version $Revision: 1.6 $
+ *      
+ * <p><b>Revisions:</b>
+ * <p><b>20010718 andreas schaefer:</b>
+ * <ul>
+ * <li>- Added Statistics Gathering
+ * </ul>
  */
 public class StatelessSessionInstancePool
    extends AbstractInstancePool
@@ -44,6 +51,7 @@ public class StatelessSessionInstancePool
    protected EnterpriseContext create(Object instance)
       throws Exception
    {
+      mInstantiate.add();
       return new StatelessSessionEnterpriseContext(instance, getContainer());
    }
     

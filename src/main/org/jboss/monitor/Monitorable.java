@@ -6,10 +6,12 @@
  */
 package org.jboss.monitor;
 
+import java.util.Map;
+
 /**
  *   
  * @author <a href="mailto:simone.bordet@compaq.com">Simone Bordet</a>
- * @version $Revision: 1.2 $
+ * @version $Revision: 1.3 $
  */
 public interface Monitorable
 {
@@ -23,6 +25,6 @@ public interface Monitorable
 	 * into the snapshot argument.
 	 */
 	public void sample(Object snapshot);
-
+  
 	// Inner classes -------------------------------------------------
 }

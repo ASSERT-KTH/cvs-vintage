@@ -8,14 +8,22 @@ package org.jboss.ejb;
 
 import java.rmi.RemoteException;
 
+import org.jboss.monitor.StatisticsProvider;
+
 /**
  * Defines the model for a EnterpriseContext instance pool.
  *      
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
- * @version $Revision: 1.5 $
+ * @version $Revision: 1.6 $
+ *      
+ * <p><b>Revisions:</b>
+ * <p><b>20010718 andreas schaefer:</b>
+ * <ul>
+ * <li>- Marked the InstancePool as Statistics Provider
+ * </ul>
  */
 public interface InstancePool
-   extends ContainerPlugin
+   extends ContainerPlugin, StatisticsProvider
 {
    /**
     * Get an instance without identity.

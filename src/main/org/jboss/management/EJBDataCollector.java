@@ -10,12 +10,15 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Hashtable;
 import java.util.Iterator;
+import java.util.Map;
 
 import javax.management.MBeanServer;
 import javax.management.ObjectName;
 
 import org.jboss.ejb.Container;
+import org.jboss.ejb.EntityContainer;
 import org.jboss.ejb.StatefulSessionContainer;
+import org.jboss.monitor.StatisticsProvider;
 
 import org.jboss.management.JBossEjbModule;
 import org.jboss.management.JBossEntityBean;
@@ -24,18 +27,31 @@ import org.jboss.management.JBossMessageDrivenBean;
 import org.jboss.management.JBossStatefulSessionBean;
 import org.jboss.management.JBossStatelessSessionBean;
 
+import management.CountStatistic;
 import management.EjbModule;
 import management.EJB;
+import management.EntityBean;
+import management.EntityBeanStats;
 import management.J2EEApplication;
 import management.J2EEModule;
+import management.Statistic;
+import management.Stats;
+import management.TimeStatistic;
 
 /**
- * JDBC Data Collector
- *
- * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
- * @author <a href="mailto:andreas.schaefer@madplanet.com">Andreas Schaefer</a>
- * @version $Revision: 1.2 $
- **/
+* EJB Data Collector collects the management data about EJBs.
+*
+* @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
+* @author <a href="mailto:andreas.schaefer@madplanet.com">Andreas Schaefer</a>
+* @version $Revision: 1.3 $
+*
+*  <p><b>Revisions:</b>
+*  <p><b>20010718 andreas schaefer:</b>
+*  <ul>
+*  <li>- Create the data collector
+*  <li>- Added Statistics Gathering
+*  </ul>
+**/
 public class EJBDataCollector
    implements DataCollector
 {
@@ -63,6 +79,7 @@ public class EJBDataCollector
    // -------------------------------------------------------------------------  
 
    public Collection refresh( MBeanServer pServer ) {
+      System.err.println( "EJBDataCollector.refresh(), start <<<<================" );
       Collection lReturn = new ArrayList();
       try {
          // Look up all the registered Containers for the EJB Module and loop through
@@ -70,7 +87,8 @@ public class EJBDataCollector
          Iterator i = pServer.queryNames( new ObjectName( "Management:*" ), null ).iterator();
          while( i.hasNext() ) {
             ObjectName lName = (ObjectName) i.next();
-            if( lName.getKeyProperty( "container" ) == null ) {
+            System.err.println( "===>>> Got Object Name: " + lName );
+            if( lName.getKeyProperty( "jndiName" ) == null ) {
                continue;
             }
             Container lContainer = (Container) pServer.getAttribute( lName, "Container" );
@@ -99,6 +117,14 @@ public class EJBDataCollector
             if( lContainer.getBeanMetaData().isMessageDriven() ) {
                lBeans.add( new JBossMessageDrivenBean( lContainer.getBeanMetaData().getEjbName() ) );
             }
+            System.out.println( "==>> Tries to get statistics" );
+            // Only to test the Statistics Gathering
+            if( lContainer instanceof EntityContainer ) {
+               Map lStatistics = ( (EntityContainer) lContainer ).retrieveStatistic();
+               if( lStatistics != null ) {
+                  System.out.println( "==>> Statistics: " + lStatistics );
+               }
+            }
          }
          i = lApplications.keySet().iterator();
          while( i.hasNext() ) {
@@ -122,4 +148,49 @@ public class EJBDataCollector
       }
       return lReturn;
    }
+
+  public Stats getStatistics( management.StatisticsProvider pProvider, MBeanServer pServer )
+  {
+    try {
+      if( pProvider instanceof EJB )
+      {
+        if( pProvider instanceof EntityBean ) {
+          EntityBean lBean = (EntityBean) pProvider;
+          Iterator i = pServer.queryNames( new ObjectName( "Management:container" + lBean.getName() ), null ).iterator();
+          if( i.hasNext() )
+          {
+            ObjectName lName = (ObjectName) i.next();
+            StatisticsProvider lContainer = (StatisticsProvider) pServer.getAttribute(
+              lName,
+              "Container"
+            );
+            Map lStatistics = lContainer.retrieveStatistic();
+            return new EntityBeanStats(
+              (CountStatistic) lStatistics.get( "ReadyBeanCount" ),
+              (CountStatistic) lStatistics.get( "BeanPoolSize" ),
+              (CountStatistic) lStatistics.get( "InstatiationCount" ),
+              (CountStatistic) lStatistics.get( "DestroyCount" ),
+              (CountStatistic) lStatistics.get( "CreateCount" ),
+              (CountStatistic) lStatistics.get( "RemoveCount" ),
+              (TimeStatistic[]) lStatistics.get( "MethodStatistics" ),
+              (TimeStatistic) lStatistics.get( "LoadTime" ),
+              (TimeStatistic) lStatistics.get( "StoreTime" ),
+              (CountStatistic) lStatistics.get( "ActiveBeanCount" ),
+              (TimeStatistic) lStatistics.get( "ActivationTime" ),
+              (TimeStatistic) lStatistics.get( "PassivationTime" )
+            );
+          }
+        }
+      }
+    }
+    catch( Exception e )
+    {
+      e.printStackTrace();
+    }
+    return null;
+  }
+  
+  public void resetStatistics( management.StatisticsProvider pProvider, MBeanServer pServer )
+  {
+  }
 }

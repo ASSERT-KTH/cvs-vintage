@@ -32,7 +32,7 @@ import org.jboss.logging.Logger;
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  * @author <a href="mailto:docodan@mvcsoft.com">Daniel OConnor</a>
- * @version $Revision: 1.22 $
+ * @version $Revision: 1.23 $
  */
 public class StatelessSessionContainer
    extends Container
@@ -53,27 +53,21 @@ public class StatelessSessionContainer
     * container methods.
     */
    protected Map homeMapping;
-    
    /**
     * These are the mappings between the remote interface methods and the
     * bean methods.
     */
    protected Map beanMapping;
-    
    /** This is the container invoker for this container */
    protected ContainerInvoker containerInvoker;
-    
    /** This is the instancepool that is to be used */
    protected InstancePool instancePool;
-    
    /**
     * This is the first interceptor in the chain. The last interceptor must
     * be provided by the container itself
     */
    protected Interceptor interceptor;
-    
    // Static --------------------------------------------------------
-    
    // Constructors --------------------------------------------------
     
    // Public --------------------------------------------------------
@@ -166,7 +160,7 @@ public class StatelessSessionContainer
         
       // Map the home methods
       setupHomeMapping();
-        
+
       // Initialize pool 
       instancePool.init();
         
@@ -593,6 +587,14 @@ public class StatelessSessionContainer
                   throw (Error)ex;
             }
          }
+      }
+      // StatisiticsProvider implementation ------------------------------------
+      public Map retrieveStatistic()
+      {
+        return null;
+      }
+      public void resetStatistic()
+      {
       }
    }
 }

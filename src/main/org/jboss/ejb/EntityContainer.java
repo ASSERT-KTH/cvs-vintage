@@ -29,7 +29,10 @@ import javax.ejb.FinderException;
 import javax.ejb.RemoveException;
 
 import org.jboss.logging.Logger;
+import org.jboss.monitor.StatisticsProvider;
 import org.jboss.util.SerializableEnumeration;
+
+import management.CountStatistic;
 
 /**
  * This is a Container for EntityBeans (both BMP and CMP).
@@ -42,7 +45,8 @@ import org.jboss.util.SerializableEnumeration;
  * @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
  * @author <a href="mailto:docodan@mvcsoft.com">Daniel OConnor</a>
  * @author <a href="bill@burkecentral.com">Bill Burke</a>
- * @version $Revision: 1.45 $
+ * @author <a href="mailto:andreas.schaefer@madplanet.com">Andreas Schaefer</a>
+ * @version $Revision: 1.46 $
  *
  * <p><b>Revisions:</b>
  *
@@ -50,10 +54,14 @@ import org.jboss.util.SerializableEnumeration;
  * <ul>
  * <li>Transaction to context wiring was moved to the instance interceptor
  * </ul>
+ * <p><b>20010718 andreas schaefer:</b>
+ * <ul>
+ * <li>- Added statistics gathering
+ * </ul>
  */
 public class EntityContainer
-   extends Container
-   implements ContainerInvokerContainer, InstancePoolContainer
+  extends Container
+  implements ContainerInvokerContainer, InstancePoolContainer, StatisticsProvider
 {
    // Constants -----------------------------------------------------
 
@@ -101,6 +109,10 @@ public class EntityContainer
     * be provided by the container itself.
     */
    protected Interceptor interceptor;
+
+   // These members contains statistics variable
+   protected long createCount = 0;
+   protected long removeCount = 0;
 
    // Public --------------------------------------------------------
    
@@ -393,6 +405,7 @@ public class EntityContainer
       // gone through the InstanceInterceptor so the instance is locked and we only have one thread 
       // the case of reentrant threads is unclear (would you want to delete an instance in reentrancy)
       mi.getEnterpriseContext().setId(null);
+      removeCount++;
    }
 
    /**
@@ -462,6 +475,7 @@ public class EntityContainer
                                            (EntityEnterpriseContext) mi.getEnterpriseContext());
 
       // The context implicitely carries the EJBObject
+      createCount++;
       return ((EntityEnterpriseContext)mi.getEnterpriseContext()).getEJBLocalObject();
    }
    
@@ -564,6 +578,7 @@ public class EntityContainer
                                            (EntityEnterpriseContext) mi.getEnterpriseContext());
 
       // The context implicitely carries the EJBObject
+      createCount++;
       return ((EntityEnterpriseContext)mi.getEnterpriseContext()).getEJBObject();
    }
 
@@ -603,6 +618,21 @@ public class EntityContainer
       // TODO
       throw new Error("Not yet implemented");
    }
+
+	// StatisticsProvider implementation ------------------------------------
+  public Map retrieveStatistic()
+  {
+    // Loop through all Interceptors and add statistics
+    Map lStatistics = new HashMap();
+    StatisticsProvider lProvider = (StatisticsProvider) getPersistenceManager();
+    lStatistics.putAll( lProvider.retrieveStatistic() );
+    lProvider = (StatisticsProvider) getInstancePool();
+    lStatistics.putAll( lProvider.retrieveStatistic() );
+    return lStatistics;
+  }
+  public void resetStatistic()
+  {
+  }
 
    // Private -------------------------------------------------------
    

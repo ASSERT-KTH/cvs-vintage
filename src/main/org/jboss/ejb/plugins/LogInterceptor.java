@@ -36,7 +36,7 @@ import org.jboss.logging.Logger;
  *      
  *   @see <related>
  *   @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
- *   @version $Revision: 1.15 $
+ *   @version $Revision: 1.16 $
  */
 public class LogInterceptor
    extends AbstractInterceptor
@@ -245,6 +245,18 @@ public class LogInterceptor
       }
    }
    
+  // Monitorable implementation ------------------------------------
+  public void sample(Object s)
+  {
+    // Just here to because Monitorable request it but will be removed soon
+  }
+  public Map retrieveStatistic()
+  {
+    return null;
+  }
+  public void resetStatistic()
+  {
+  }
    // Private -------------------------------------------------------
 }
 

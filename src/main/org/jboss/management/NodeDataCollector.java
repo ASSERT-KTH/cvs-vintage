@@ -24,13 +24,15 @@ import management.IpAddress;
 import management.JVM;
 import management.Node;
 import management.Port;
+import management.StatisticsProvider;
+import management.Stats;
 
 /**
  * Node Data Collector
  *
  * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
  * @author <a href="mailto:andreas.schaefer@madplanet.com">Andreas Schaefer</a>
- * @version $Revision: 1.2 $
+ * @version $Revision: 1.3 $
  **/
 public class NodeDataCollector
    implements DataCollector
@@ -111,4 +113,12 @@ public class NodeDataCollector
       return lReturn;
    }
 
+  public Stats getStatistics( StatisticsProvider pProvider, MBeanServer pServer )
+  {
+    return null;
+  }
+  
+  public void resetStatistics( StatisticsProvider pProvider, MBeanServer pServer )
+  {
+  }
 }

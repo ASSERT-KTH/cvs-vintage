@@ -11,6 +11,8 @@ import java.util.Collection;
 import javax.management.MBeanServer;
 
 import management.J2EEManagedObject;
+import management.StatisticsProvider;
+import management.Stats;
 
 /**
  * Collector Interface which must be implemented by
@@ -18,7 +20,7 @@ import management.J2EEManagedObject;
  *
  * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
  * @author <a href="mailto:andreas.schaefer@madplanet.com">Andreas Schaefer</a>
- * @version $Revision: 1.2 $
+ * @version $Revision: 1.3 $
  **/
 public interface DataCollector {
 
@@ -27,12 +29,29 @@ public interface DataCollector {
    // -------------------------------------------------------------------------  
 
    /**
-    * Is called when the data must be refreshed
-    *
-    * @param pServer MBean Server is used to get the information about the server
-    *
-    * @return Collection of elements found (must be of type J2EEManagedObject)
-    **/
+   * Is called when the data must be refreshed
+   *
+   * @param pServer MBean Server is used to get the information about the server
+   *
+   * @return Collection of elements found (must be of type J2EEManagedObject)
+   **/
    public Collection refresh( MBeanServer pServer );
+
+  /**
+  * Returns the statistics for the given Statistics Provider
+  *
+  * @param pProvider Provider of the statistics
+  * @param pServer MBean Server is used to get the information about the server
+  * @return Information about the JVM this application server is running on
+  */
+  public Stats getStatistics( StatisticsProvider pProvider, MBeanServer pServer );
+  
+  /**
+  * Resets the statiscs provider
+  *
+  * @param pProvider Statistics Provider to be reset
+  * @param pServer MBean Server is used to get the information about the server
+  **/
+  public void resetStatistics( StatisticsProvider pProvider, MBeanServer pServer );
 
 }

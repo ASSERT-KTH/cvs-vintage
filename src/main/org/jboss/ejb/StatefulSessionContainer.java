@@ -36,7 +36,7 @@ import org.jboss.logging.Logger;
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  * @author <a href="mailto:docodan@mvcsoft.com">Daniel OConnor</a>
  * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
- * @version $Revision: 1.30 $
+ * @version $Revision: 1.31 $
  *
  * <p><b>Revisions</b>
  * <p><b>20010704</b>
@@ -710,6 +710,18 @@ public class StatefulSessionContainer
                   throw (Error)ex;
             } 
          }
+      }
+      // Monitorable implementation ------------------------------------
+      public void sample(Object s)
+      {
+        // Just here to because Monitorable request it but will be removed soon
+      }
+      public Map retrieveStatistic()
+      {
+        return null;
+      }
+      public void resetStatistic()
+      {
       }
    }
 }

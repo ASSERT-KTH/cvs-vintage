@@ -8,7 +8,8 @@ package org.jboss.ejb.plugins;
 
 import java.rmi.RemoteException;
 import java.rmi.ServerException;
-
+import java.util.Map;
+import java.util.HashMap;
 import javax.ejb.EJBHome;
 
 import org.jboss.ejb.Container;
@@ -21,6 +22,7 @@ import org.jboss.metadata.XmlLoadable;
 import org.jboss.metadata.MetaData;
 import org.w3c.dom.Element;
 import org.jboss.logging.Logger;
+import org.jboss.management.JBossCountStatistic;
 
 
 /**
@@ -29,7 +31,13 @@ import org.jboss.logging.Logger;
  *      
  *	@see <related>
  *	@author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
- *	@version $Revision: 1.8 $
+ *	@version $Revision: 1.9 $
+ *      
+ * <p><b>Revisions:</b>
+ * <p><b>20010718 andreas schaefer:</b>
+ * <ul>
+ * <li>- Added Statistics Gathering
+ * </ul>
  */
 public class SingletonStatelessSessionInstancePool
    implements InstancePool, XmlLoadable
@@ -43,6 +51,13 @@ public class SingletonStatelessSessionInstancePool
    boolean inUse = false;
    boolean isSynchronized = true;
    
+   /** Counter of all the Bean instantiated within the Pool **/
+   protected JBossCountStatistic mInstantiate = new JBossCountStatistic( "Instantiation", "", "Beans instantiated in Pool" );
+   /** Counter of all the Bean destroyed within the Pool **/
+   protected JBossCountStatistic mDestroy = new JBossCountStatistic( "Destroy", "", "Beans destroyed in Pool" );
+   /** Counter of all the ready Beans within the Pool (which are not used now) **/
+   protected JBossCountStatistic mReadyBean = new JBossCountStatistic( "ReadyBean", "", "Numbers of ready Bean Pool" );
+
    // Static --------------------------------------------------------
    
    // Constructors --------------------------------------------------
@@ -98,6 +113,7 @@ public class SingletonStatelessSessionInstancePool
       {
          try
          {
+            mInstantiate.add();
             ctx = create(con.createBeanClassInstance(), con);
          } catch (InstantiationException e)
          {
@@ -106,6 +122,10 @@ public class SingletonStatelessSessionInstancePool
          {
             throw new ServerException("Could not instantiate bean", e);
          }
+      }
+      else
+      {
+         mReadyBean.remove();
       }
       
       // Lock and return instance
@@ -127,6 +147,7 @@ public class SingletonStatelessSessionInstancePool
       // Notify waiters
       inUse = false;
       this.notifyAll();
+      mReadyBean.add();
    }
    
    public void discard(EnterpriseContext ctx)
@@ -134,6 +155,8 @@ public class SingletonStatelessSessionInstancePool
       // Throw away
       try
       {
+         mDestroy.add();
+         mReadyBean.remove();
          ctx.discard();
       } catch (RemoteException e)
       {
@@ -143,6 +166,21 @@ public class SingletonStatelessSessionInstancePool
       // Notify waiters
       inUse = false;
       this.notifyAll();
+   }
+   
+   public Map retrieveStatistic()
+   {
+      Map lStatistics = new HashMap();
+      lStatistics.put( "InstantiationCount", mInstantiate );
+      lStatistics.put( "DestroyCount", mDestroy );
+      lStatistics.put( "ReadyBeanCount", mReadyBean );
+      return lStatistics;
+   }
+   public void resetStatistic()
+   {
+      mInstantiate.reset();
+      mDestroy.reset();
+      mReadyBean.reset();
    }
    
    // Z implementation ----------------------------------------------

@@ -10,6 +10,7 @@ import java.lang.reflect.Method;
 import java.rmi.RemoteException;
 import java.security.Principal;
 import java.util.Iterator;
+import java.util.Map;
 import java.util.Set;
 import javax.naming.InitialContext;
 
@@ -28,7 +29,7 @@ is enforced. This is where the caller identity propagation is controlled as well
 
 @author <a href="on@ibis.odessa.ua">Oleg Nitz</a>
 @author <a href="mailto:Scott_Stark@displayscape.com">Scott Stark</a>.
-@version $Revision: 1.18 $
+@version $Revision: 1.19 $
 */
 public class SecurityInterceptor extends AbstractInterceptor
 {
@@ -215,4 +216,16 @@ public class SecurityInterceptor extends AbstractInterceptor
         }
    }
 
+  // Monitorable implementation ------------------------------------
+  public void sample(Object s)
+  {
+    // Just here to because Monitorable request it but will be removed soon
+  }
+  public Map retrieveStatistic()
+  {
+    return null;
+  }
+  public void resetStatistic()
+  {
+  }
 }

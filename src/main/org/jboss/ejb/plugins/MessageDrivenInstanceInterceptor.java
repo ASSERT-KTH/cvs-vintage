@@ -7,6 +7,7 @@
 package org.jboss.ejb.plugins;
 
 import java.rmi.RemoteException;
+import java.util.Map;
 
 import org.jboss.ejb.Container;
 import org.jboss.ejb.MessageDrivenContainer;
@@ -20,7 +21,7 @@ import org.jboss.ejb.MethodInvocation;
  * @author <a href="mailto:peter.antman@tim.se">Peter Antman</a>.
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
- * @version $Revision: 1.6 $
+ * @version $Revision: 1.7 $
  */
 public class MessageDrivenInstanceInterceptor
    extends AbstractInterceptor
@@ -95,5 +96,17 @@ public class MessageDrivenInstanceInterceptor
             container.getInstancePool().free(mi.getEnterpriseContext());
       }
    }
+  // Monitorable implementation ------------------------------------
+  public void sample(Object s)
+  {
+    // Just here to because Monitorable request it but will be removed soon
+  }
+  public Map retrieveStatistic()
+  {
+    return null;
+  }
+  public void resetStatistic()
+  {
+  }
 }
 

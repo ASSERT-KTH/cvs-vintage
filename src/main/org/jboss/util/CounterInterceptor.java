@@ -1,5 +1,7 @@
 package org.jboss.util;
 
+import java.util.Map;
+
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import org.jboss.ejb.MethodInvocation;
@@ -101,4 +103,16 @@ public class CounterInterceptor extends AbstractInterceptor {
       }
       return counter;
    }
+  // Monitorable implementation ------------------------------------
+  public void sample(Object s)
+  {
+    // Just here to because Monitorable request it but will be removed soon
+  }
+  public Map retrieveStatistic()
+  {
+    return null;
+  }
+  public void resetStatistic()
+  {
+  }
 }

@@ -6,13 +6,18 @@
  */
 package org.jboss.management;
 
+import java.beans.PropertyEditor;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.Map;
 
+import javax.management.Attribute;
+import javax.management.AttributeList;
 import javax.management.MalformedObjectNameException;
+import javax.management.MBeanAttributeInfo;
+import javax.management.MBeanInfo;
 import javax.management.MBeanServer;
 import javax.management.ObjectName;
 import javax.naming.Context;
@@ -27,14 +32,17 @@ import org.jboss.logging.Log;
 import org.jboss.naming.NonSerializableFactory;
 import org.jboss.util.ServiceMBeanSupport;
 
+import management.EJB;
 import management.J2EEApplication;
+import management.StatisticsProvider;
+import management.Stats;
 
 /**
  * JBoss Management MBean Wrapper
  *
  * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
  * @author <a href="mailto:andreas.schaefer@madplanet.com">Andreas Schaefer</a>
- * @version $Revision: 1.2 $
+ * @version $Revision: 1.3 $
  **/
 public class ServerDataCollector
    extends ServiceMBeanSupport
@@ -58,6 +66,8 @@ public class ServerDataCollector
    private RefreshWorker mWorker;
    private int mRefreshSleep = 2000;
 
+   private Map mCollectors = new Hashtable();
+
    private Map mApplications = new Hashtable();
    private Collection mResources = new ArrayList();
    private Collection mNodes = new ArrayList();
@@ -73,7 +83,7 @@ public class ServerDataCollector
     **/
    public ServerDataCollector()
    {
-      mName = null;
+     this( null );
    }
 
    /**
@@ -84,6 +94,12 @@ public class ServerDataCollector
    public ServerDataCollector( String pName )
    {
       mName = pName;
+      //AS Later on load this dynamically
+      mCollectors.put( "EJB", new EJBDataCollector() );
+      mCollectors.put( "JDBC", new JDBCDataCollector() );
+      mCollectors.put( "JNDI", new JNDIDataCollector() );
+      mCollectors.put( "Mail", new MailDataCollector() );
+      mCollectors.put( "Node", new NodeDataCollector() );
    }
 
    // -------------------------------------------------------------------------
@@ -196,6 +212,16 @@ public class ServerDataCollector
       }
    }
 */
+  public Stats getStatistics( StatisticsProvider pProvider ) {
+    if( pProvider instanceof EJB ) {
+      return ( (DataCollector) mCollectors.get( "EJB" ) ).getStatistics( pProvider, getServer() );
+    }
+    return null;
+  }
+  
+  public void resetStatistics( StatisticsProvider pProvider ) {
+    ( (DataCollector) mCollectors.get( "EJB" ) ).resetStatistics( pProvider, getServer() );
+  }
 
    // -------------------------------------------------------------------------
    // ServiceMBean - Methods
@@ -306,7 +332,7 @@ public class ServerDataCollector
       private void doRefresh() {
          try {
             mApplications = new Hashtable();
-            Collection lApplications = new EJBDataCollector().refresh( mServer );
+            Collection lApplications = ( (DataCollector) mCollectors.get( "EJB" ) ).refresh( mServer );
             Iterator i = lApplications.iterator();
             while( i.hasNext() ) {
                J2EEApplication lApplication = (J2EEApplication) i.next();
@@ -322,28 +348,28 @@ public class ServerDataCollector
          mResources = new ArrayList();
          try {
             // Get the info about JDBCs
-            mResources.addAll( new JDBCDataCollector().refresh( mServer ) );
+            mResources.addAll( ( (DataCollector) mCollectors.get( "JDBC" ) ).refresh( mServer ) );
          }
          catch( Exception e ) {
             e.printStackTrace();
          }
          try {
             // Get the info about Mail
-            mResources.addAll( new MailDataCollector().refresh( mServer ) );
+            mResources.addAll( ( (DataCollector) mCollectors.get( "Mail" ) ).refresh( mServer ) );
          }
          catch( Exception e ) {
             e.printStackTrace();
          }
          try {
             // Get the info about JNDI
-            mResources.addAll( new JNDIDataCollector().refresh( mServer ) );
+            mResources.addAll( ( (DataCollector) mCollectors.get( "JNDI" ) ).refresh( mServer ) );
          }
          catch( Exception e ) {
             e.printStackTrace();
          }
          try {
             // Get the info about current nodes
-            mNodes = new NodeDataCollector().refresh( mServer );
+            mNodes = ( (DataCollector) mCollectors.get( "Node" ) ).refresh( mServer );
          }
          catch( Exception e ) {
             e.printStackTrace();

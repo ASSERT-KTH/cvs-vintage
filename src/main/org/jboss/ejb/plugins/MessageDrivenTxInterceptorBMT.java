@@ -6,6 +6,7 @@
 */
 package org.jboss.ejb.plugins;
 
+import java.util.Map;
 import java.rmi.ServerException;
 
 import org.jboss.ejb.MethodInvocation;
@@ -19,7 +20,7 @@ import org.jboss.logging.Logger;
  *   @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
  *   @author <a href="mailto:peter.antman@tim.se">Peter Antman</a>.
  *   @author <a href="mailto:osh@sparre.dk">Ole Husgaard</a>
- *   @version $Revision: 1.6 $
+ *   @version $Revision: 1.7 $
  */
 public class MessageDrivenTxInterceptorBMT
    extends AbstractTxInterceptorBMT
@@ -35,4 +36,16 @@ public class MessageDrivenTxInterceptorBMT
    {
       return invokeNext(true, mi);
    }
+  // Monitorable implementation ------------------------------------
+  public void sample(Object s)
+  {
+    // Just here to because Monitorable request it but will be removed soon
+  }
+  public Map retrieveStatistic()
+  {
+    return null;
+  }
+  public void resetStatistic()
+  {
+  }
 }

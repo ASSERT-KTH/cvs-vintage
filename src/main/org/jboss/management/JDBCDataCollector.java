@@ -21,13 +21,15 @@ import org.jboss.management.JBossJDBCDriver;
 import management.JDBC;
 import management.JDBCConnectionPool;
 import management.JDBCDriver;
+import management.StatisticsProvider;
+import management.Stats;
 
 /**
  * JDBC Data Collector
  *
  * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
  * @author <a href="mailto:andreas.schaefer@madplanet.com">Andreas Schaefer</a>
- * @version $Revision: 1.2 $
+ * @version $Revision: 1.3 $
  **/
 public class JDBCDataCollector
    implements DataCollector
@@ -90,4 +92,12 @@ public class JDBCDataCollector
       return lReturn;
    }
 
+  public Stats getStatistics( StatisticsProvider pProvider, MBeanServer pServer )
+  {
+    return null;
+  }
+  
+  public void resetStatistics( StatisticsProvider pProvider, MBeanServer pServer )
+  {
+  }
 }

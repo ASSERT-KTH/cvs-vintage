@@ -24,21 +24,30 @@ import org.jboss.metadata.MetaData;
 import org.jboss.metadata.XmlLoadable;
 import org.jboss.logging.Logger;
 
+import org.jboss.management.JBossCountStatistic;
 
 
 /**
-*	<description>
+*  <review>
+*	Abstract Instance Pool class containing the basic logic to create
+*  an EJB Instance Pool.
+*  </review>
 *
 *	@see <related>
 *	@author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
 *	@author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
+*  @author <a href="mailto:andreas.schaefer@madplanet.com">Andreas Schaefer</a>
 *	
-*  @version $Revision: 1.12 $
+*  @version $Revision: 1.13 $
 *
 *  <p><b>Revisions:</b>
 *  <p><b>20010704 marcf:</b>
 *  <ul>
 *  <li>- Pools if used, do not reuse but restock the pile with fresh instances
+*  </ul>
+*  <p><b>20010709 andreas schaefer:</b>
+*  <ul>
+*  <li>- Added statistics gathering
 *  </ul>
 */
 public abstract class AbstractInstancePool
@@ -52,6 +61,13 @@ implements InstancePool, XmlLoadable
 	Stack pool = new Stack();
 	int maxSize = 30;
 	
+   /** Counter of all the Bean instantiated within the Pool **/
+   protected JBossCountStatistic mInstantiate = new JBossCountStatistic( "Instantiation", "", "Beans instantiated in Pool" );
+   /** Counter of all the Bean destroyed within the Pool **/
+   protected JBossCountStatistic mDestroy = new JBossCountStatistic( "Destroy", "", "Beans destroyed in Pool" );
+   /** Counter of all the ready Beans within the Pool (which are not used now) **/
+   protected JBossCountStatistic mReadyBean = new JBossCountStatistic( "ReadyBean", "", "Numbers of ready Bean Pool" );
+
 	// Static --------------------------------------------------------
 	
 	// Constructors --------------------------------------------------
@@ -69,6 +85,11 @@ implements InstancePool, XmlLoadable
 		this.container = c;
 	}
 	
+   /**
+   * <review>
+   * @return Callback to the container which can be null if not set proviously
+   * </review>
+   **/
 	public Container getContainer()
 	{
 		return container;
@@ -106,6 +127,7 @@ implements InstancePool, XmlLoadable
 		
 		if (!pool.empty())
 		{
+         mReadyBean.remove();
 			return (EnterpriseContext)pool.pop();
 		} else
 		{
@@ -142,7 +164,7 @@ implements InstancePool, XmlLoadable
 			
 			// We do not reuse but create a brand new instance simplifies the design
 			try {
-				
+				mReadyBean.add();
 				pool.push(create(container.createBeanClassInstance()));
 			} catch (Exception ignored) {}			
 			//pool.push(ctx);
@@ -157,6 +179,7 @@ implements InstancePool, XmlLoadable
 		// Throw away
 		try
 		{
+         mDestroy.add();
 			ctx.discard();
 		} catch (RemoteException e)
 		{
@@ -176,6 +199,21 @@ implements InstancePool, XmlLoadable
 		}
 	}
 	
+   public Map retrieveStatistic()
+   {
+      Map lStatistics = new HashMap();
+      lStatistics.put( "InstantiationCount", mInstantiate );
+      lStatistics.put( "DestroyCount", mDestroy );
+      lStatistics.put( "ReadyBeanCount", mReadyBean );
+      return lStatistics;
+   }
+   public void resetStatistic()
+   {
+      mInstantiate.reset();
+      mDestroy.reset();
+      mReadyBean.reset();
+   }
+   
 	// Package protected ---------------------------------------------
 	
 	// Protected -----------------------------------------------------

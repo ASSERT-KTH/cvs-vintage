@@ -9,6 +9,7 @@ package org.jboss.ejb.plugins;
 import java.lang.reflect.Method;
 import java.rmi.RemoteException;
 import java.util.HashMap;
+import java.util.Map;
 
 import javax.transaction.Status;
 import javax.transaction.Transaction;
@@ -28,7 +29,7 @@ import org.jboss.metadata.BeanMetaData;
  *  @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
  *  @author <a href="mailto:akkerman@cs.nyu.edu">Anatoly Akkerman</a>
  *  @author <a href="mailto:osh@sparre.dk">Ole Husgaard</a>
- *  @version $Revision: 1.13 $
+ *  @version $Revision: 1.14 $
  */
 public class TxInterceptorCMT
     extends AbstractTxInterceptor
@@ -269,4 +270,16 @@ public class TxInterceptorCMT
 
     // Inner classes -------------------------------------------------
 
+  // Monitorable implementation ------------------------------------
+  public void sample(Object s)
+  {
+    // Just here to because Monitorable request it but will be removed soon
+  }
+  public Map retrieveStatistic()
+  {
+    return null;
+  }
+  public void resetStatistic()
+  {
+  }
 }

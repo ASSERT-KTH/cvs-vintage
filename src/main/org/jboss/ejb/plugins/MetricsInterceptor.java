@@ -9,6 +9,7 @@ package org.jboss.ejb.plugins;
 // standard imports
 import java.lang.reflect.Method;
 import java.security.Principal;
+import java.util.Map;
 import java.util.Properties;
 import java.util.List;
 import java.util.ArrayList;
@@ -196,6 +197,18 @@ public class MetricsInterceptor extends AbstractInterceptor
         }
     }
 
+  // Monitorable implementation ------------------------------------
+  public void sample(Object s)
+  {
+    // Just here to because Monitorable request it but will be removed soon
+  }
+  public Map retrieveStatistic()
+  {
+    return null;
+  }
+  public void resetStatistic()
+  {
+  }
 
     /**
      * JMS Publisher thread implementation.

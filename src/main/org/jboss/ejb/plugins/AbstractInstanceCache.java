@@ -61,7 +61,7 @@ import org.jboss.monitor.MetricsConstants;
 * @author <a href="bill@burkecentral.com">Bill Burke</a>
 * @author <a href="marc.fleury@jboss.org">Marc Fleury</a>
 *
-* @version $Revision: 1.14 $
+* @version $Revision: 1.15 $
 *
 *   <p><b>Revisions:</b>
 *
@@ -117,6 +117,13 @@ implements InstanceCache, XmlLoadable, Monitorable, MetricsConstants
 			}
 		}
 	}
+  public Map retrieveStatistic()
+  {
+    return null;
+  }
+  public void resetStatistic()
+  {
+  }
 	
 	// Public --------------------------------------------------------
 	public void setJMSMonitoringEnabled(boolean enable) {m_jmsMonitoring = enable;}

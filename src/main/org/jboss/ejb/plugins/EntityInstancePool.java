@@ -20,7 +20,14 @@ import org.jboss.ejb.EntityEnterpriseContext;
  *	@see <related>
  *	@author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  *  @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
- *	@version $Revision: 1.11 $
+ *  @author <a href="mailto:andreas.schaefer@madplanet.com">Andreas Schaefer</a>
+ *	@version $Revision: 1.12 $
+ *      
+ * <p><b>Revisions:</b>
+ * <p><b>20010718 andreas schaefer:</b>
+ * <ul>
+ * <li>- Added statistics gathering
+ * </ul>
  */
 public class EntityInstancePool
    extends AbstractInstancePool
@@ -65,6 +72,7 @@ public class EntityInstancePool
    protected EnterpriseContext create(Object instance)
       throws Exception
    {
+      mInstantiate.add();
       return new EntityEnterpriseContext(instance, getContainer());
    }
     

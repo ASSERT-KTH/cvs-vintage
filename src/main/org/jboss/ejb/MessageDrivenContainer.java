@@ -34,7 +34,7 @@ import org.jboss.logging.Logger;
  * @author <a href="mailto:docodan@mvcsoft.com">Daniel OConnor</a>
  * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
  * @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>
- * @version $Revision: 1.9 $
+ * @version $Revision: 1.10 $
  */
 public class MessageDrivenContainer
     extends Container
@@ -435,5 +435,17 @@ public class MessageDrivenContainer
                 }
             }
         }
+      // Monitorable implementation ------------------------------------
+      public void sample(Object s)
+      {
+        // Just here to because Monitorable request it but will be removed soon
+      }
+      public Map retrieveStatistic()
+      {
+        return null;
+      }
+      public void resetStatistic()
+      {
+      }
     }
 }

@@ -12,9 +12,12 @@ import java.util.Collection;
 
 import javax.ejb.RemoveException;
 
+// import org.jboss.util.FinderResults;
+
+import org.jboss.monitor.StatisticsProvider;
+
 /**
- * This interface is implemented by any EntityBean persistence managers
- * plugins.
+ *	This interface is implemented by any EntityBean persistence managers plugins.
  *
  * <p>Implementations of this interface are called by other plugins in the
  *    container.  If the persistence manager wants to, it may attach any
@@ -24,10 +27,10 @@ import javax.ejb.RemoveException;
  * @see EntityContainer
  * 
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
- * @version $Revision: 1.8 $
+ * @version $Revision: 1.9 $
  */
 public interface EntityPersistenceManager
-   extends ContainerPlugin
+   extends ContainerPlugin, StatisticsProvider
 {
    /**
     * Returns a new instance of the bean class or a subclass of the bean class.

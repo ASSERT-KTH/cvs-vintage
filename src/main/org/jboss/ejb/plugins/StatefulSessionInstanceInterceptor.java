@@ -8,6 +8,7 @@ package org.jboss.ejb.plugins;
 
 import java.lang.reflect.Method;
 import java.rmi.RemoteException;
+import java.util.Map;
 
 import javax.transaction.Transaction;
 import javax.transaction.RollbackException;
@@ -34,7 +35,7 @@ import org.jboss.util.Sync;
  *
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
- * @version $Revision: 1.18 $
+ * @version $Revision: 1.19 $
  *
  * <p><b>Revisions:</b>
  * <p><b>20010704 marcf</b>

@@ -7,6 +7,7 @@
 package org.jboss.ejb.plugins;
 
 import java.util.HashMap;
+import java.util.Map;
 import javax.jms.Message;
 import javax.jms.JMSException;
 
@@ -26,7 +27,7 @@ import org.jboss.monitor.client.BeanCacheSnapshot;
  *
  * @see AbstractInstanceCache
  * @author <a href="mailto:simone.bordet@compaq.com">Simone Bordet</a>
- * @version $Revision: 1.10 $
+ * @version $Revision: 1.11 $
  */
 public class LRUEnterpriseContextCachePolicy
    extends LRUCachePolicy

@@ -6,6 +6,7 @@
 */
 package org.jboss.ejb.plugins;
 
+import java.util.Map;
 
 import org.jboss.ejb.MethodInvocation;
 
@@ -19,7 +20,7 @@ import org.jboss.metadata.SessionMetaData;
  *   @author <a href="mailto:peter.antman@tim.se">Peter Antman</a>.
  *   @author <a href="mailto:akkerman@cs.nyu.edu">Anatoly Akkerman</a>
  *   @author <a href="mailto:osh@sparre.dk">Ole Husgaard</a>
- *   @version $Revision: 1.18 $
+ *   @version $Revision: 1.19 $
  */
 public class TxInterceptorBMT
    extends AbstractTxInterceptorBMT
@@ -60,6 +61,19 @@ public class TxInterceptorBMT
    {
       return invokeNext(true, mi);
    }
+
+  // Monitorable implementation ------------------------------------
+  public void sample(Object s)
+  {
+    // Just here to because Monitorable request it but will be removed soon
+  }
+  public Map retrieveStatistic()
+  {
+    return null;
+  }
+  public void resetStatistic()
+  {
+  }
 
    // Protected  ----------------------------------------------------
 

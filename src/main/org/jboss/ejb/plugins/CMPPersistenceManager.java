@@ -38,6 +38,9 @@ import org.jboss.metadata.EntityMetaData;
 import org.jboss.util.FinderResults;
 import org.jboss.util.Sync;
 
+import org.jboss.management.JBossCountStatistic;
+import org.jboss.management.JBossTimeStatistic;
+
 /**
 *   The CMP Persistence Manager implements the semantics of the CMP
 *  EJB 1.1 call back specification.
@@ -49,11 +52,13 @@ import org.jboss.util.Sync;
 *   @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
 *   @author <a href="mailto:danch@nvisia.com">Dan Christopherson</a>
 *   @author <a href="mailto:bill@burkecentral.com">Bill Burke</a>
-*   @version $Revision: 1.26 $
+*   @author <a href="mailto:andreas.schaefer@madplanet.com">Andreas Schaefer</a>
+*   @version $Revision: 1.27 $
 *
 *   Revisions:
 *   20010621 Bill Burke: removed loadEntities call because CMP read-ahead is now
 *   done directly by the finder.
+*   20010709 Andreas Schaefer: added statistics gathering
 *   
 */
 public class CMPPersistenceManager
@@ -75,6 +80,14 @@ public class CMPPersistenceManager
    HashMap createMethods = new HashMap();
    HashMap postCreateMethods = new HashMap();
 
+   private JBossCountStatistic mCreate = new JBossCountStatistic( "Create", "", "EJBs created" );
+   private JBossCountStatistic mRemove = new JBossCountStatistic( "Remove", "", "EJBs removed" );
+   private JBossCountStatistic mActiveBean = new JBossCountStatistic( "ActiveBean", "", "Numbers of active EJBs" );
+   private JBossTimeStatistic mActivation = new JBossTimeStatistic( "Activation", "ms", "Activation Time" );
+   private JBossTimeStatistic mPassivation = new JBossTimeStatistic( "Passivation", "ms", "Passivation Time" );
+   private JBossTimeStatistic mLoad = new JBossTimeStatistic( "Load", "ms", "Load Time" );
+   private JBossTimeStatistic mStore = new JBossTimeStatistic( "Store", "ms", "Load Time" );
+   
    // Static --------------------------------------------------------
 
     // Constructors --------------------------------------------------
@@ -323,16 +336,20 @@ public class CMPPersistenceManager
          }
       }
 
+      long lStart = System.currentTimeMillis();
       // The implementation of the call can be left absolutely empty, the propagation of the call
 		// is just a notification for stores that would need to know that an instance is being activated
       store.activateEntity(ctx);
+      mActivation.add( System.currentTimeMillis() - lStart );
    }
 
    public void loadEntity(EntityEnterpriseContext ctx)
       throws RemoteException {
 
+      long lStart = System.currentTimeMillis();
       // Have the store load the fields of the instance
       store.loadEntity(ctx);
+      mLoad.add( System.currentTimeMillis() - lStart );
 
       invokeLoad(ctx);
    }
@@ -366,8 +383,10 @@ public class CMPPersistenceManager
          }
       }
 
+      long lStart = System.currentTimeMillis();
       // Have the store deal with storing the fields of the instance
       store.storeEntity(ctx);
+      mStore.add( System.currentTimeMillis() - lStart );
 
    }
 
@@ -400,7 +419,9 @@ public class CMPPersistenceManager
          }
       }
 
+      long lStart = System.currentTimeMillis();
       store.passivateEntity(ctx);
+      mPassivation.add( System.currentTimeMillis() - lStart );
    }
 
    public void removeEntity(EntityEnterpriseContext ctx)
@@ -432,7 +453,9 @@ public class CMPPersistenceManager
          }
       }
 
+      long lStart = System.currentTimeMillis();
       store.removeEntity(ctx);
+      mRemove.add();
    }
     
    protected void invokeLoad(EntityEnterpriseContext ctx) throws RemoteException {        
@@ -521,6 +544,30 @@ public class CMPPersistenceManager
 		}
 	}			
 
+   public Map retrieveStatistic()
+   {
+      // Loop through all Interceptors and add Statistic
+      Map lStatistics = new HashMap();
+      lStatistics.put( "CreateCount", mCreate );
+      lStatistics.put( "RemoveCount", mRemove );
+      lStatistics.put( "ActiveBeanCount", mActiveBean );
+      lStatistics.put( "ActivationTime", mActivation );
+      lStatistics.put( "PassivationTime", mPassivation );
+      lStatistics.put( "LoadTime", mLoad );
+      lStatistics.put( "StoreTime", mStore );
+      return lStatistics;
+   }
+   public void resetStatistic()
+   {
+      mCreate.reset();
+      mRemove.reset();
+      mActiveBean.reset();
+      mActivation.reset();
+      mPassivation.reset();
+      mLoad.reset();
+      mStore.reset();
+   }
+   
    // Z implementation ----------------------------------------------
 
    // Package protected ---------------------------------------------
