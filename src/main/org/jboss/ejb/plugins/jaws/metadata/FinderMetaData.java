@@ -20,22 +20,27 @@ import org.jboss.metadata.XmlLoadable;
  *	@see <related>
  *	@author <a href="sebastien.alborini@m4x.org">Sebastien Alborini</a>
  *	@author <a href="danch@nvisia.com">danch</a>
- *	@version $Revision: 1.3 $
+ *	@author <a href="bill@burkecentral.com">Bill Burke</a>
+ *	@version $Revision: 1.4 $
+ *
+ *      Revisions:
+ *      20010621 Bill Burke: setReadAhead added.
+ *
  */
 public class FinderMetaData extends MetaData implements XmlLoadable {
-	// Constants -----------------------------------------------------
+   // Constants -----------------------------------------------------
     
-	// Attributes ----------------------------------------------------
+   // Attributes ----------------------------------------------------
    private String name;
-	private String order;
-	private String query;
+   private String order;
+   private String query;
    
    /** do we perform 'read-ahead' of column values? (avoid making n+1 database hits)  */
    private boolean readAhead = false;
 	
-	// Static --------------------------------------------------------
+   // Static --------------------------------------------------------
    
-	// Constructors --------------------------------------------------
+   // Constructors --------------------------------------------------
    /** default constructor */
    public FinderMetaData() {
    }
@@ -46,31 +51,36 @@ public class FinderMetaData extends MetaData implements XmlLoadable {
       this.name = name;
    }
    
-	// Public --------------------------------------------------------
+   // Public --------------------------------------------------------
    public String getName() { return name; }
 	
-	public String getOrder() { return order; }
+   public String getOrder() { return order; }
 	
-	public String getQuery() { return query; }
+   public String getQuery() { return query; }
 	
    public boolean hasReadAhead() { return readAhead; }
-   
-	// XmlLoadable implementation ------------------------------------
-    public void importXml(Element element) throws DeploymentException {
-		name = getElementContent(getUniqueChild(element, "name"));
-		query = getElementContent(getUniqueChild(element, "query"));
-   	order = getElementContent(getUniqueChild(element, "order"));
-    	
-		// read ahead?  If not provided, keep default.
-		String readAheadStr = getElementContent(getOptionalChild(element, "read-ahead"));
-		if (readAheadStr != null) readAhead = Boolean.valueOf(readAheadStr).booleanValue();
-	}	
-	
-	// Package protected ---------------------------------------------
-    
-	// Protected -----------------------------------------------------
-    
-	// Private -------------------------------------------------------
 
-	// Inner classes -------------------------------------------------
+   public void setReadAhead(boolean newval)
+   {
+      readAhead = newval;
+   }
+   
+   // XmlLoadable implementation ------------------------------------
+   public void importXml(Element element) throws DeploymentException {
+      name = getElementContent(getUniqueChild(element, "name"));
+      query = getElementContent(getUniqueChild(element, "query"));
+      order = getElementContent(getUniqueChild(element, "order"));
+    	
+      // read ahead?  If not provided, keep default.
+      String readAheadStr = getElementContent(getOptionalChild(element, "read-ahead"));
+      if (readAheadStr != null) readAhead = Boolean.valueOf(readAheadStr).booleanValue();
+   }	
+	
+   // Package protected ---------------------------------------------
+    
+   // Protected -----------------------------------------------------
+    
+   // Private -------------------------------------------------------
+
+   // Inner classes -------------------------------------------------
 }
