@@ -29,7 +29,7 @@ rem         its "classpath" internally.  To add your classes to those of
 rem         Tomcat, refer to the Tomcat Users Guide (tomcat_ug.html found
 rem         in the "doc" directory.
 rem
-rem $Id: tomcat.bat,v 1.40 2001/08/30 15:15:15 larryi Exp $
+rem $Id: tomcat.bat,v 1.41 2001/08/31 03:54:50 larryi Exp $
 rem -------------------------------------------------------------------------
 
 
@@ -107,7 +107,7 @@ if "%1" == "enableAdmin" goto enableAdmin
 if "%1" == "estart" goto estart
 
 :doUsage
-echo Usage:  tomcat (  env ^| jspc ^| run ^| start ^| stop )
+echo "Usage:  tomcat (  enableAdmin | env | estart | jspc | run | start | stop )"
 echo Commands:
 echo   enableAdmin - Trust the admin web application,
 echo                 i.e. rewrites conf/apps-admin.xml with trusted="true"
@@ -122,13 +122,15 @@ goto cleanup
 
 :startServer
 echo Starting Tomcat in new window
-if "%2" == "-security" goto startSecure
-%_STARTJAVA% %TOMCAT_OPTS% -Dtomcat.home=%TOMCAT_HOME% %_MAIN% start %2 %3 %4 %5 %6 %7 %8 %9
+if "%2" == "sandbox" goto startSecure
+if "%2" == "-sandbox" goto startSecure
+rem Note: Specify tomcat.policy in case -sandbox isn't the second argument
+%_STARTJAVA% %TOMCAT_OPTS% -Djava.security.policy=="%TOMCAT_HOME%/conf/tomcat.policy" -Dtomcat.home=%TOMCAT_HOME% %_MAIN% start %2 %3 %4 %5 %6 %7 %8 %9
 goto cleanup
 
 :startSecure
 echo Starting Tomcat with a SecurityManager
-%_SECSTARTJAVA% %TOMCAT_OPTS% -Djava.security.policy=="%TOMCAT_HOME%/conf/tomcat.policy" -Dtomcat.home=%TOMCAT_HOME% %_MAIN% start -sandbox %3 %4 %5 %6 %7 %8 %9
+%_SECSTARTJAVA% %TOMCAT_OPTS% -Djava.security.policy=="%TOMCAT_HOME%/conf/tomcat.policy" -Dtomcat.home=%TOMCAT_HOME% %_MAIN% start %2 %3 %4 %5 %6 %7 %8 %9
 goto cleanup
 
 :runServer
@@ -136,13 +138,7 @@ rem Backwards compatibility for enableAdmin
 if "%2" == "enableAdmin" goto oldEnbAdmin
 if "%2" == "-enableAdmin" goto oldEnbAdmin
 rem Running Tomcat in this window
-if "%2" == "-security" goto runSecure
-%_RUNJAVA% %TOMCAT_OPTS% -Dtomcat.home=%TOMCAT_HOME% %_MAIN% start %2 %3 %4 %5 %6 %7 %8 %9
-goto cleanup
-
-:runSecure
-rem Running Tomcat with a SecurityManager
-%_RUNJAVA% %TOMCAT_OPTS% -Djava.security.policy=="%TOMCAT_HOME%/conf/tomcat.policy" -Dtomcat.home=%TOMCAT_HOME% %_MAIN% start -sandbox %3 %4 %5 %6 %7 %8 %9
+%_RUNJAVA% %TOMCAT_OPTS% -Djava.security.policy=="%TOMCAT_HOME%/conf/tomcat.policy" -Dtomcat.home=%TOMCAT_HOME% %_MAIN% start %2 %3 %4 %5 %6 %7 %8 %9
 goto cleanup
 
 :enableAdmin
