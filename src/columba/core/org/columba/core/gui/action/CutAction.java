@@ -38,7 +38,7 @@ public class CutAction extends FrameAction {
 		// tooltip text
 		setTooltipText(
 				GlobalResourceLoader.getString(
-					null, null, "menu_edit_cut"));
+					null, null, "menu_edit_cut_tooltip"));
 					
 		// action command
 		setActionCommand("CUT");

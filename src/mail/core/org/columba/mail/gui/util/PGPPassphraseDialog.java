@@ -190,6 +190,7 @@ public class PGPPassphraseDialog implements ActionListener {
 		dialog.pack();
 		dialog.setLocationRelativeTo(null);
 		dialog.show();
+		dialog.requestFocus();
 		passwordField.requestFocus();
 	}
 

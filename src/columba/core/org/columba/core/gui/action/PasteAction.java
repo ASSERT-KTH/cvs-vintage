@@ -38,7 +38,7 @@ public class PasteAction extends FrameAction {
 		// tooltip text
 		setTooltipText(
 				GlobalResourceLoader.getString(
-					null, null,	"menu_edit_paste"));
+					null, null,	"menu_edit_paste_tooltip"));
 		
 		// action command
 		setActionCommand("PASTE");

@@ -13,6 +13,8 @@
 	<button action="MoveMessage"/>
 	<button action="DeleteMessage"/>
 	<separator/>
+	<button action="OpenNewAddressbookWindow"/>
+	<separator/>
 	<button action="ShowContextSpecificHelp"/>
 	<separator/>
 	<button action="Cancel"/>

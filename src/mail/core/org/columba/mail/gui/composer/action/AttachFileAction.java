@@ -7,6 +7,9 @@
 package org.columba.mail.gui.composer.action;
 
 import java.awt.event.ActionEvent;
+import java.awt.event.KeyEvent;
+
+import javax.swing.KeyStroke;
 
 import org.columba.core.action.FrameAction;
 import org.columba.core.gui.util.ImageLoader;
@@ -14,10 +17,9 @@ import org.columba.mail.gui.composer.ComposerController;
 import org.columba.mail.util.MailResourceLoader;
 
 /**
- * @author frd
+ * Add attachment to message.
  *
- * To change this generated comment go to 
- * Window>Preferences>Java>Code Generation>Code and Comments
+ * @author fdietz
  */
 public class AttachFileAction extends FrameAction {
 
@@ -46,6 +48,9 @@ public class AttachFileAction extends FrameAction {
 		
 		// small icon for menu
 		setSmallIcon(ImageLoader.getImageIcon("stock_attach-16.png"));
+		
+//		shortcut key
+		setAcceleratorKey(KeyStroke.getKeyStroke(KeyEvent.VK_A, ActionEvent.CTRL_MASK | ActionEvent.ALT_MASK));
 
 	}
 

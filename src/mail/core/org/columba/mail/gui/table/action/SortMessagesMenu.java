@@ -1,16 +1,18 @@
-//The contents of this file are subject to the Mozilla Public License Version 1.1
-//(the "License"); you may not use this file except in compliance with the 
+// The contents of this file are subject to the Mozilla Public License Version
+// 1.1
+//(the "License"); you may not use this file except in compliance with the
 //License. You may obtain a copy of the License at http://www.mozilla.org/MPL/
 //
 //Software distributed under the License is distributed on an "AS IS" basis,
-//WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License 
+//WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
 //for the specific language governing rights and
 //limitations under the License.
 //
 //The Original Code is "The Columba Project"
 //
-//The Initial Developers of the Original Code are Frederik Dietz and Timo Stich.
-//Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
+//The Initial Developers of the Original Code are Frederik Dietz and Timo
+// Stich.
+//Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003.
 //
 //All Rights Reserved.
 
@@ -27,33 +29,42 @@ import javax.swing.JRadioButtonMenuItem;
 
 import org.columba.core.action.IMenu;
 import org.columba.core.gui.frame.AbstractFrameController;
+import org.columba.core.gui.util.ImageLoader;
 import org.columba.mail.gui.frame.TableOwner;
 import org.columba.mail.gui.table.SortingStateObservable;
 import org.columba.mail.util.MailResourceLoader;
 
-public class SortMessagesMenu extends IMenu implements ActionListener, Observer {
+public class SortMessagesMenu
+	extends IMenu
+	implements ActionListener, Observer {
 
 	private ButtonGroup columnGroup;
 	private ButtonGroup orderGroup;
-	
+
 	private JRadioButtonMenuItem ascendingMenuItem;
 	private JRadioButtonMenuItem descendingMenuItem;
-	
+
 	private Observable observable;
-	
+
 	public SortMessagesMenu(AbstractFrameController controller) {
 		super(
 			controller,
 			MailResourceLoader.getString(
 				"menu",
 				"mainframe",
-				"menu_view_sort"));		
-		
+				"menu_view_sort"));
+
+		setIcon(ImageLoader.getSmallImageIcon("stock_sort-ascending-16.png"));
+
 		// register as Observer
 		TableOwner table = (TableOwner) getController();
-		observable = table.getTableController().getTableModelSorter().getSortingStateObservable();
+		observable =
+			table
+				.getTableController()
+				.getTableModelSorter()
+				.getSortingStateObservable();
 		observable.addObserver(this);
-		
+
 		createSubMenu();
 	}
 
@@ -69,10 +80,11 @@ public class SortMessagesMenu extends IMenu implements ActionListener, Observer 
 
 		for (int i = 0; i < items.length; i++) {
 			String item = (String) items[i];
-			
+
 			// all headerfields are lowercase in property file
-			String i18n = MailResourceLoader.getString("header", item.toLowerCase());
-			
+			String i18n =
+				MailResourceLoader.getString("header", item.toLowerCase());
+
 			headerMenuItem = new JRadioButtonMenuItem(i18n);
 			headerMenuItem.setActionCommand(item);
 			headerMenuItem.addActionListener(this);
@@ -83,8 +95,7 @@ public class SortMessagesMenu extends IMenu implements ActionListener, Observer 
 		addSeparator();
 
 		orderGroup = new ButtonGroup();
-		ascendingMenuItem =
-			new JRadioButtonMenuItem("Ascending");
+		ascendingMenuItem = new JRadioButtonMenuItem("Ascending");
 		ascendingMenuItem.setActionCommand("Ascending");
 		ascendingMenuItem.addActionListener(this);
 		orderGroup.add(ascendingMenuItem);
@@ -94,13 +105,14 @@ public class SortMessagesMenu extends IMenu implements ActionListener, Observer 
 		descendingMenuItem.addActionListener(this);
 		orderGroup.add(descendingMenuItem);
 		add(descendingMenuItem);
-		
-		
+
 		update(observable, null);
 
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
 	 */
 	public void actionPerformed(ActionEvent e) {
@@ -124,31 +136,29 @@ public class SortMessagesMenu extends IMenu implements ActionListener, Observer 
 		}
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see java.util.Observer#update(java.util.Observable, java.lang.Object)
 	 */
 	public void update(Observable observable, Object object) {
 		String column = ((SortingStateObservable) observable).getColumn();
 		boolean ascending = ((SortingStateObservable) observable).isOrder();
-		
+
 		Enumeration enum = columnGroup.getElements();
-		while ( enum.hasMoreElements() )
-		{
-			JRadioButtonMenuItem item = (JRadioButtonMenuItem) enum.nextElement();
-			if ( item.getActionCommand().equals(column))
-			{
+		while (enum.hasMoreElements()) {
+			JRadioButtonMenuItem item =
+				(JRadioButtonMenuItem) enum.nextElement();
+			if (item.getActionCommand().equals(column)) {
 				item.setSelected(true);
 				break;
 			}
-			
+
 		}
-		
-		if ( ascending )
-		{
+
+		if (ascending) {
 			ascendingMenuItem.setSelected(true);
-		}
-		else
-		{
+		} else {
 			descendingMenuItem.setSelected(true);
 		}
 

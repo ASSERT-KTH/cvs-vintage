@@ -40,7 +40,7 @@ public class RedoAction extends FrameAction implements WorkerListChangeListener 
 		// tooltip text
 		setTooltipText(
 				GlobalResourceLoader.getString(
-					null, null, "menu_edit_redo"));
+					null, null, "menu_edit_redo_tooltip"));
 		
 		// action command
 		setActionCommand("REDO");

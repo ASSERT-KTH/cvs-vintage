@@ -20,6 +20,7 @@ import java.awt.event.ActionEvent;
 
 import org.columba.core.action.FrameAction;
 import org.columba.core.gui.frame.AbstractFrameController;
+import org.columba.core.gui.util.ImageLoader;
 import org.columba.core.main.MainInterface;
 import org.columba.mail.command.ComposerCommandReference;
 import org.columba.mail.config.AccountItem;
@@ -48,6 +49,8 @@ public class SaveAsTemplateAction extends FrameAction {
 		setTooltipText(
 				MailResourceLoader.getString(
 					"menu", "composer", "menu_file_savetemplate"));
+		
+		setSmallIcon(ImageLoader.getSmallImageIcon("stock_news.png"));
 		
 		// action command
 		setActionCommand("SAVETEMPLATE");

@@ -42,7 +42,7 @@ public class AddressbookAction extends FrameAction {
 		// tooltip text
 		setTooltipText(
 				MailResourceLoader.getString(
-					"menu", "composer", "menu_message_addressbook"));
+					"menu", "composer", "menu_message_addressbook_tooltip"));
 		
 		// action command
 		setActionCommand("ADDRESSBOOK");

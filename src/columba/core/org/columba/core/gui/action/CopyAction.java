@@ -38,7 +38,7 @@ public class CopyAction extends FrameAction {
 		// tooltip text
 		setTooltipText(
 				GlobalResourceLoader.getString(
-					null, null, "menu_edit_copy"));
+					null, null, "menu_edit_copy_tooltip"));
 		
 		// action command
 		setActionCommand("COPY");

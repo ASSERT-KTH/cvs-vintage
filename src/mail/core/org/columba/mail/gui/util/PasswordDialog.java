@@ -210,6 +210,7 @@ public class PasswordDialog implements ActionListener {
 		dialog.pack();
 		dialog.setLocationRelativeTo(null);
 		dialog.show();
+		dialog.requestFocus();
 		passwordField.requestFocus();
 	}
 

@@ -8,7 +8,9 @@
 	 <menuitem action="RemoveFolder"/>
 	 <separator/>
 	 <menuitem action="ExpungeFolder"/>
+	 <!--
 	 <menuitem action="EmptyFolder"/>
+	 -->
 	 <separator/>
 	 <menuitem action="ApplyFilter"/>
 	 <menuitem action="FilterPreferences"/>

@@ -25,6 +25,7 @@ import org.columba.core.action.FrameAction;
 import org.columba.core.gui.frame.AbstractFrameController;
 import org.columba.core.gui.selection.SelectionChangedEvent;
 import org.columba.core.gui.selection.SelectionListener;
+import org.columba.core.gui.util.ImageLoader;
 import org.columba.core.main.MainInterface;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.gui.frame.AbstractMailFrameController;
@@ -50,6 +51,9 @@ public class ViewMessageSourceAction
 		// action command
 		setActionCommand("VIEW_SOURCE");
 
+		// small icon for menu
+		setSmallIcon(ImageLoader.getSmallImageIcon("viewsource.png"));
+			 
 		// short cut key
 		setAcceleratorKey(
 				KeyStroke.getKeyStroke(

@@ -40,7 +40,7 @@ public class UndoAction extends FrameAction implements WorkerListChangeListener 
 		// tooltip text
 		setTooltipText(
 				GlobalResourceLoader.getString(
-					null, null, "menu_edit_undo"));
+					null, null, "menu_edit_undo_tooltip"));
 		
 		// action command
 		setActionCommand("UNDO");

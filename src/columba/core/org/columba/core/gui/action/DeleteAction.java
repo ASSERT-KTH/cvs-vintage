@@ -38,7 +38,7 @@ public class DeleteAction extends FrameAction {
 		// tooltip text
 		setTooltipText(
 				GlobalResourceLoader.getString(
-					null, null, "menu_edit_delete"));
+					null, null, "menu_edit_delete_tooltip"));
 					
 		// action command
 		setActionCommand("DELETE");

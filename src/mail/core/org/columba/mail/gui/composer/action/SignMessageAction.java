@@ -9,6 +9,7 @@ package org.columba.mail.gui.composer.action;
 import java.awt.event.ActionEvent;
 
 import org.columba.core.action.CheckBoxAction;
+import org.columba.core.gui.util.ImageLoader;
 import org.columba.core.logging.ColumbaLogger;
 import org.columba.mail.gui.composer.ComposerController;
 import org.columba.mail.gui.composer.ComposerModel;
@@ -36,6 +37,9 @@ public class SignMessageAction extends CheckBoxAction {
 		// action command
 		setActionCommand("SIGN");
 		
+		// small icon for menu
+		setSmallIcon(ImageLoader.getSmallImageIcon("16_sign.png"));
+			 
 		//setEnabled(false);
 	}
 

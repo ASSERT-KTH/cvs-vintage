@@ -30,13 +30,16 @@ import java.util.regex.Pattern;
 public class DocumentParser {
 
 	private final static String[] smilyImage =
-		{ "smile.gif", "sad.gif", "normal.gif", "wink.gif" };
+		{ "face1.png", "face4.png", "face8.png", "face3.png", "face11.png", "face2.png", "face15.png" };
 		
 	private final static Pattern[] smilyPattern = {
 		Pattern.compile(":-\\)"),
 		Pattern.compile(":-\\("),
 		Pattern.compile(":-\\|"),
 		Pattern.compile(";-\\)"),
+		Pattern.compile(":cry:"),
+		Pattern.compile(":o"),
+		Pattern.compile("8\\)"),
 	};
 		
 	private static final Pattern markQuotingsPattern = Pattern.compile("(^(&nbsp;)*&gt;[^\\n]*)|\\n((&nbsp;)*&gt;[^\\n]*)", Pattern.CASE_INSENSITIVE);

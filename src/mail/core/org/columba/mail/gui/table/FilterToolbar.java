@@ -18,8 +18,6 @@
 
 package org.columba.mail.gui.table;
 
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -43,6 +41,10 @@ import org.columba.mail.folder.Folder;
 import org.columba.mail.gui.table.model.TableModelFilter;
 import org.columba.mail.util.MailResourceLoader;
 
+import com.jgoodies.forms.builder.PanelBuilder;
+import com.jgoodies.forms.layout.CellConstraints;
+import com.jgoodies.forms.layout.FormLayout;
+
 public class FilterToolbar extends JPanel implements ActionListener {
 	public JToggleButton newButton;
 	public JToggleButton oldButton;
@@ -56,7 +58,7 @@ public class FilterToolbar extends JPanel implements ActionListener {
 	public JButton clearButton;
 	public JButton advancedButton;
 
-	//private JComboBox comboBox;
+	private JLabel label;
 	private JTextField textField;
 
 	private TableController tableController;
@@ -65,20 +67,13 @@ public class FilterToolbar extends JPanel implements ActionListener {
 		super();
 		this.tableController = headerTableViewer;
 
-		//setMargin(new Insets(0, 0, 0, 0));
-
-		addCButtons();
-
-		//setBorderPainted(false);
-		//setFloatable(false);
+		initComponents();
+		layoutComponents();
 	}
 
-	public void addCButtons() {
-		GridBagLayout layout = new GridBagLayout();
-		setLayout(layout);
-		GridBagConstraints c = new GridBagConstraints();
+	public void initComponents() {
 
-		setBorder(BorderFactory.createEmptyBorder(2, 5, 2, 5));
+		
 
 		//addSeparator();
 		newButton =
@@ -93,26 +88,6 @@ public class FilterToolbar extends JPanel implements ActionListener {
 		newButton.setActionCommand("NEW");
 		newButton.setSelected(false);
 		newButton.setMargin(new Insets(0, 0, 0, 0));
-		c.weightx = 0.0;
-
-		c.anchor = GridBagConstraints.WEST;
-		//c.insets = new Insets(0, 10, 0, 0);
-		//c.gridx = GridBagConstraints.RELATIVE;
-		c.gridwidth = 1;
-		layout.setConstraints(newButton, c);
-		add(newButton);
-
-		/*
-		 * oldButton = new
-		 * ToolbarToggleButton(ImageLoader.getSmallImageIcon("mail-read.png"));
-		 * oldButton.setToolTipText(
-		 * GlobalResourceLoader.getString("menu","mainframe","filtertoolbar_read") );
-		 * oldButton.addActionListener(this);
-		 * oldButton.setActionCommand("OLD"); //newButton.setSelected(true);
-		 * oldButton.setMargin(new Insets(0, 0, 0, 0));
-		 * layout.setConstraints(oldButton, c); add(oldButton);
-		 */
-		//addSeparator();
 
 		answeredButton =
 			new ToolbarToggleButton(
@@ -127,9 +102,6 @@ public class FilterToolbar extends JPanel implements ActionListener {
 		answeredButton.setMargin(new Insets(0, 0, 0, 0));
 		answeredButton.setSelected(false);
 
-		layout.setConstraints(answeredButton, c);
-		add(answeredButton);
-
 		flaggedButton =
 			new ToolbarToggleButton(
 				ImageLoader.getSmallImageIcon("mark-as-important-16.png"));
@@ -142,9 +114,6 @@ public class FilterToolbar extends JPanel implements ActionListener {
 		flaggedButton.addActionListener(this);
 		flaggedButton.setActionCommand("FLAGGED");
 		flaggedButton.setSelected(false);
-		c.insets = new Insets(0, 0, 0, 0);
-		layout.setConstraints(flaggedButton, c);
-		add(flaggedButton);
 
 		expungedButton =
 			new ToolbarToggleButton(
@@ -158,8 +127,6 @@ public class FilterToolbar extends JPanel implements ActionListener {
 		expungedButton.addActionListener(this);
 		expungedButton.setActionCommand("EXPUNGED");
 		expungedButton.setSelected(false);
-		layout.setConstraints(expungedButton, c);
-		add(expungedButton);
 
 		attachmentButton =
 			new ToolbarToggleButton(
@@ -173,20 +140,13 @@ public class FilterToolbar extends JPanel implements ActionListener {
 		attachmentButton.addActionListener(this);
 		attachmentButton.setActionCommand("ATTACHMENT");
 		attachmentButton.setSelected(false);
-		layout.setConstraints(attachmentButton, c);
-		add(attachmentButton);
 
-		JLabel label =
+		label =
 			new LabelWithMnemonic(
 				MailResourceLoader.getString(
 					"menu",
 					"mainframe",
 					"filtertoolbar_header"));
-		c.insets = new Insets(0, 10, 0, 0);
-		layout.setConstraints(label, c);
-		add(label);
-
-		//addSeparator();
 
 		textField = new CTextField();
 		label.setLabelFor(textField);
@@ -206,14 +166,6 @@ public class FilterToolbar extends JPanel implements ActionListener {
 				}
 			}
 		});
-		//textField.setMaximumSize( new java.awt.Dimension( 600, 25 ) );
-		c.weightx = 1.0;
-		c.insets = new Insets(0, 5, 0, 0);
-		c.fill = GridBagConstraints.BOTH;
-		layout.setConstraints(textField, c);
-		add(textField);
-
-		//addSeparator();
 
 		clearButton =
 			new ButtonWithMnemonic(
@@ -226,16 +178,10 @@ public class FilterToolbar extends JPanel implements ActionListener {
 				"menu",
 				"mainframe",
 				"filtertoolbar_clear_tooltip"));
-		//clearButton.setMaximumSize(new java.awt.Dimension(150, 25));
+
 		attachmentButton.setSelected(false);
 		clearButton.setActionCommand("CLEAR");
 		clearButton.addActionListener(this);
-		c.weightx = 0.0;
-		c.insets = new Insets(0, 10, 0, 0);
-		c.fill = GridBagConstraints.NONE;
-		c.gridwidth = GridBagConstraints.RELATIVE;
-		layout.setConstraints(clearButton, c);
-		add(clearButton);
 
 		advancedButton =
 			new ButtonWithMnemonic(
@@ -248,36 +194,36 @@ public class FilterToolbar extends JPanel implements ActionListener {
 				"menu",
 				"mainframe",
 				"filtertoolbar_advanced_tooltip"));
-		//advancedButton.setMaximumSize(new java.awt.Dimension(150, 25));
+
 		attachmentButton.setSelected(false);
 		advancedButton.setActionCommand("ADVANCED");
 		advancedButton.addActionListener(this);
-		c.weightx = 0.0;
-		c.fill = GridBagConstraints.NONE;
-		c.gridwidth = GridBagConstraints.REMAINDER;
-		layout.setConstraints(advancedButton, c);
-		add(advancedButton);
 
-		//add( Box.createHorizontalGlue() );
+	}
 
-		//addSeparator();
+	public void layoutComponents() {
+		setBorder(BorderFactory.createEmptyBorder(2,2,2,2));
+		
+		FormLayout l =
+			new FormLayout(
+				"default, default, default, default, default, 3dlu, default, 3dlu, fill:default:grow, 3dlu, default, 3dlu, default",
+				"fill:default:grow");
+		PanelBuilder b = new PanelBuilder(this, l);
 
-		/*
-		 * addSeparator();
-		 * 
-		 * threadButton = new
-		 * ToolbarToggleButton(ImageLoader.getImageIcon("org/columba/core/images/Export16.gif") );
-		 * threadButton.setEnabled( false ); threadButton.setMargin( new
-		 * Insets(0,0,0,0) ); add(threadButton);
-		 */
+		CellConstraints c = new CellConstraints();
 
-		/*
-		 * secureCButton = new
-		 * JButton(ImageLoader.getImageIcon("org/columba/core/images/secure.jpg") );
-		 * add(secureCButton);
-		 */
+		b.add(newButton, c.xy(1, 1 ));
+		b.add(answeredButton, c.xy(2, 1 ));
+		b.add(flaggedButton, c.xy(3, 1 ));
+		b.add(expungedButton, c.xy(4, 1 ));
+		b.add(attachmentButton, c.xy(5, 1 ));
 
-		//addSeparator();
+		b.add(label, c.xy(7, 1 ));
+		b.add(textField, c.xy(9, 1 ));
+
+		b.add(clearButton, c.xy(11, 1 ));
+		b.add(advancedButton, c.xy(13, 1 ));
+
 	}
 
 	public void update() throws Exception {

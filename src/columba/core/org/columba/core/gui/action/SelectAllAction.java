@@ -37,7 +37,7 @@ public class SelectAllAction extends FrameAction {
 		// tooltip text
 		setTooltipText(
 				GlobalResourceLoader.getString(
-					null, null, "menu_edit_selectall"));
+					null, null, "menu_edit_selectall_tooltip"));
 		
 		// action command
 		setActionCommand("SELECTALL");
