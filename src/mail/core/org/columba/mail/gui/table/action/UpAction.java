@@ -49,76 +49,75 @@ public class UpAction extends AbstractColumbaAction {
         this.frameController = frameController;
     }
 
-    /* (non-Javadoc)
+    /**
      * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
      */
     public void actionPerformed(ActionEvent arg0) {
         ColumbaLogger.log.info("action up performed");
 
         // getting last selection
-        FolderCommandReference[] r = frameController.getTableSelection();
+        FolderCommandReference[] r = this.frameController.getTableSelection();
         FolderCommandReference ref = r[0];
         ColumbaLogger.log.info("folderCommandRef: " + ref);
 
         // getting current uid
         Object[] uids = ref.getUids();
         ColumbaLogger.log.info("curr uids: " + uids);
-        try {
-            // getting current node (under the selection)
-            DefaultMutableTreeNode currNode = tableController.getView()
-                                                             .getMessagNode(uids[0]);
-            ColumbaLogger.log.info("currNode: " + currNode);
-        
-            // getting prev node
-            DefaultMutableTreeNode prevNode = currNode.getPreviousNode();
-            ColumbaLogger.log.info("prevNode: " + prevNode);
-        
-            Object[] prevUids = new Object[1];
-            prevUids[0] = ((MessageNode) prevNode).getUid();
-            ColumbaLogger.log.info("prevUids: " + prevUids);
-            ref.setUids(prevUids);
-        
-            // check if the node is not null
-            MessageNode[] nodes = new MessageNode[prevUids.length];
-        
-            for (int i = 0; i < prevUids.length; i++) {
-                nodes[i] = tableController.getHeaderTableModel().getMessageNode(prevUids[i]);
+        // at any time i get here uids of length 0. If this is so we should return and do nothing
+        if (uids.length == 0) {
+            return;
+        }
+ 
+        // getting current node (under the selection)
+        DefaultMutableTreeNode currNode = this.tableController.getView()
+                                                         .getMessagNode(uids[0]);
+        ColumbaLogger.log.info("currNode: " + currNode);
+    
+        // getting prev node
+        DefaultMutableTreeNode prevNode = currNode.getPreviousNode();
+        ColumbaLogger.log.info("prevNode: " + prevNode);
+    
+        Object[] prevUids = new Object[1];
+        prevUids[0] = ((MessageNode) prevNode).getUid();
+        ColumbaLogger.log.info("prevUids: " + prevUids);
+        ref.setUids(prevUids);
+    
+        // check if the node is not null
+        MessageNode[] nodes = new MessageNode[prevUids.length];
+    
+        for (int i = 0; i < prevUids.length; i++) {
+            nodes[i] = this.tableController.getHeaderTableModel().getMessageNode(prevUids[i]);
+        }
+    
+        boolean node_ok = true;
+    
+        for (int i = 0; i < nodes.length; i++) {
+            if (nodes[i] == null) {
+                node_ok = false;
+    
+                break;
             }
-        
-            boolean node_ok = true;
-        
-            for (int i = 0; i < nodes.length; i++) {
-                if (nodes[i] == null) {
-                    node_ok = false;
-        
-                    break;
-                }
-            }
-        
-            // if the node is not null
-            if (node_ok) {
-                // select it
-                tableController.setSelected(prevUids);
-        
-                // saving the last selection for the current folder
-                ((Folder) ref.getFolder()).setLastSelection(prevUids[0]);
-        
-                int row = tableController.getView().getSelectedRow();
-                tableController.getView().scrollRectToVisible(tableController.getView()
-                                                                             .getCellRect(row,
-                        0, false));
-        
-                FolderCommandReference[] refNew = new FolderCommandReference[1];
-                refNew[0] = new FolderCommandReference(ref.getFolder(), prevUids);
-        
-                // view the message under the new node
-                MainInterface.processor.addOp(new ViewMessageCommand(
-                        frameController, refNew));
-            }
-        } catch (ArrayIndexOutOfBoundsException e) {
-            System.out.println("the uid.length should always be greater then 0: " + uids.length);
-            e.printStackTrace();
-            throw new ArrayIndexOutOfBoundsException(e.getMessage());
+        }
+    
+        // if the node is not null
+        if (node_ok) {
+            // select it
+            this.tableController.setSelected(prevUids);
+    
+            // saving the last selection for the current folder
+            ((Folder) ref.getFolder()).setLastSelection(prevUids[0]);
+    
+            int row = this.tableController.getView().getSelectedRow();
+            this.tableController.getView().scrollRectToVisible(this.tableController.getView()
+                                                                         .getCellRect(row,
+                    0, false));
+    
+            FolderCommandReference[] refNew = new FolderCommandReference[1];
+            refNew[0] = new FolderCommandReference(ref.getFolder(), prevUids);
+    
+            // view the message under the new node
+            MainInterface.processor.addOp(new ViewMessageCommand(
+                    this.frameController, refNew));
         }
     }
 }
