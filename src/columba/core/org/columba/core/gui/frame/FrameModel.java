@@ -267,7 +267,7 @@ public class FrameModel {
 			frame = (FrameMediator) frameMediatorCache.remove(id);
 		} else {
 			LOG.fine("create new instance " + id);
-			Object[] args = { c, viewItem };
+			Object[] args = { viewItem };
 			// create new instance
 			// -> get frame controller using the plugin handler found above
 			frame = (FrameMediator) handler.getPlugin(id, args);
@@ -286,7 +286,7 @@ public class FrameModel {
 		// create new default container
 		boolean newContainer = false;
 
-		Container c = new DefaultContainer(viewItem);
+		
 
 		FrameMediator frame = null;
 		if (frameMediatorCache.containsKey(id)) {
@@ -300,7 +300,7 @@ public class FrameModel {
 			
 		} else {
 			LOG.fine("create new instance " + id);
-			Object[] args = { c, viewItem };
+			Object[] args = { viewItem };
 			try {
 				// create new instance
 				// -> get frame controller using the plugin handler found above
@@ -312,7 +312,9 @@ public class FrameModel {
 			
 		}
 		
-		c.setFrameMediator(frame);
+		Container c = new DefaultContainer(frame);
+		
+		//c.setFrameMediator(frame);
 
 		activeFrameCtrls.add(c);
 

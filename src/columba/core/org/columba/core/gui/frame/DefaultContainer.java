@@ -83,6 +83,21 @@ public class DefaultContainer extends JFrame implements Container,
 
 	protected boolean switchedFrameMediator = false;
 
+	
+	public DefaultContainer(FrameMediator mediator) {
+		super();
+		
+		this.viewItem = mediator.getViewItem();
+		this.mediator = mediator;
+		
+		mediator.setContainer(this);
+		
+		initComponents();
+		
+		setFrameMediator(mediator);
+		
+	}
+	
 	/**
 	 *  
 	 */
@@ -91,8 +106,19 @@ public class DefaultContainer extends JFrame implements Container,
 
 		this.viewItem = viewItem;
 
-		mediator = new DefaultFrameController(this, viewItem);
+		
+		
+		// create new default frame controller
+		mediator = new DefaultFrameController(viewItem);
+		mediator.setContainer(this);
 
+		initComponents();
+	}
+
+	/**
+	 * 
+	 */
+	protected void initComponents() {
 		this.setIconImage(ImageLoader.getImageIcon("icon16.png").getImage());
 
 		if (MainInterface.DEBUG) {
@@ -141,9 +167,7 @@ public class DefaultContainer extends JFrame implements Container,
 
 		// add window listener
 		addWindowListener(this);
-
 	}
-
 	/**
 	 * 
 	 * Create default view configuration
@@ -210,15 +234,17 @@ public class DefaultContainer extends JFrame implements Container,
 
 		switchedFrameMediator = false;
 
+//		 update content-pane
+		setContentPane(m.getContentPane());
+		/*
 //		 awt-event-thread
 		javax.swing.SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
-//				 update content-pane
-				setContentPane(m.getContentPane());
+
 
 			}
 		});
-		
+		*/
 
 	}
 

@@ -55,7 +55,7 @@ public class DefaultFrameController implements FrameMediator {
 	/**
 	 *  
 	 */
-	public DefaultFrameController(Container c, ViewItem viewItem) {
+	public DefaultFrameController(ViewItem viewItem) {
 
 		super();
 
@@ -63,9 +63,8 @@ public class DefaultFrameController implements FrameMediator {
 
 		this.id = viewItem.get("id");
 
-		//container = new DefaultContainer(viewItem);
-
-		this.container = c;
+		// FIXME
+		//this.container = c;
 
 		// init selection handler
 		selectionManager = new SelectionManager();

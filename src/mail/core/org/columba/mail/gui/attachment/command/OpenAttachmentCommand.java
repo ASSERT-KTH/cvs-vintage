@@ -25,13 +25,13 @@ import org.columba.core.command.Command;
 import org.columba.core.command.DefaultCommandReference;
 import org.columba.core.command.Worker;
 import org.columba.core.command.WorkerStatusController;
+import org.columba.core.gui.frame.DefaultContainer;
 import org.columba.core.io.StreamUtils;
 import org.columba.core.io.TempFileStore;
 import org.columba.core.main.MainInterface;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.folder.MessageFolder;
 import org.columba.mail.folder.temp.TempFolder;
-import org.columba.mail.gui.frame.ThreePaneMailFrameController;
 import org.columba.mail.gui.message.command.ViewMessageCommand;
 import org.columba.mail.gui.messageframe.MessageFrameController;
 import org.columba.mail.gui.mimetype.MimeTypeViewer;
@@ -78,7 +78,8 @@ public class OpenAttachmentCommand extends SaveAttachmentCommand {
 
 		if (header.getMimeType().getType().toLowerCase().indexOf("message") != -1) {
 			MessageFrameController c = new MessageFrameController();
-
+			new DefaultContainer(c);
+			
 			Object[] uidList = new Object[1];
 			uidList[0] = tempMessageUid;
 

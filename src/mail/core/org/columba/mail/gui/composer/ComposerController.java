@@ -120,13 +120,14 @@ public class ComposerController extends DefaultFrameController implements
 
 	private HtmlToolbar htmlToolbar;
 
-	public ComposerController(org.columba.core.gui.frame.Container container,
+	public ComposerController() {
+		this(new ViewItem(MailInterface.config
+				.get("composer_options").getElement("/options/gui/view")));
+	}
+	
+	public ComposerController(
 			ViewItem viewItem) {
-		super(container, viewItem);
-
-		getContainer().getFrame().setTitle(
-				MailResourceLoader.getString("dialog", "composer",
-						"composerview_title")); //$NON-NLS-1$
+		super( viewItem);
 
 		// init model (defaults to empty plain text message)
 		composerModel = new ComposerModel();
@@ -286,8 +287,9 @@ public class ComposerController extends DefaultFrameController implements
 			centerPanel.add(editorPanel, BorderLayout.CENTER);
 		}
 
-		// re-paint composer-view
-		getContainer().getFrame().validate();
+		//re-paint composer-view
+		// FIXME showAttachmentPanel validate
+		//getContainer().getFrame().validate();
 
 	}
 

@@ -35,6 +35,10 @@ import org.columba.core.plugin.PluginLoadingFailedException;
  */
 public class SwitchPerspectiveSubmenu extends IMenu implements ActionListener {
 
+	private static final String MAIL_PERSPECTIVE = "ThreePaneMail";
+	private static final String ADDRESSBOOK_PERSPECTIVE = "Addressbook";
+	private static final String CHAT_PERSPECTIVE = "AlturaFrame";
+	
 	private JRadioButtonMenuItem mailMenu;
 
 	private JRadioButtonMenuItem addressbookMenu;
@@ -50,6 +54,16 @@ public class SwitchPerspectiveSubmenu extends IMenu implements ActionListener {
 
 		String id = getFrameMediator().getViewItem().get("id");
 
+		// check if this is a management frame instance
+		// -> if so create submenu to switch perspectives
+		// -> otherwise, don't create submenu
+		boolean isManagedFrame = false;
+		if ( id.equals(MAIL_PERSPECTIVE)) isManagedFrame = true;
+		if ( id.equals(ADDRESSBOOK_PERSPECTIVE)) isManagedFrame = true;
+		if ( id.equals(CHAT_PERSPECTIVE)) isManagedFrame = true;
+		
+		if ( !isManagedFrame ) return;
+		
 		ButtonGroup group = new ButtonGroup();
 		JRadioButtonMenuItem mailMenu = new JRadioButtonMenuItem("Mail");
 		group.add(mailMenu);
@@ -73,9 +87,9 @@ public class SwitchPerspectiveSubmenu extends IMenu implements ActionListener {
 		add(chatMenu);
 
 		
-		if (id.equals("ThreePaneMail"))
+		if (id.equals(MAIL_PERSPECTIVE))
 			mailMenu.setSelected(true);
-		else if ( id.equals("Addressbook"))
+		else if ( id.equals(ADDRESSBOOK_PERSPECTIVE))
 			addressbookMenu.setSelected(true);
 		else
 			chatMenu.setSelected(true);
@@ -93,19 +107,19 @@ public class SwitchPerspectiveSubmenu extends IMenu implements ActionListener {
 
 		if (action.equals("MAIL")) {
 			try {
-				MainInterface.frameModel.switchView(container, "ThreePaneMail");
+				MainInterface.frameModel.switchView(container, MAIL_PERSPECTIVE);
 			} catch (PluginLoadingFailedException e) {
 				e.printStackTrace();
 			}
 		} else if (action.equals("ADDRESSBOOK")) {
 			try {
-				MainInterface.frameModel.switchView(container, "Addressbook");
+				MainInterface.frameModel.switchView(container, ADDRESSBOOK_PERSPECTIVE);
 			} catch (PluginLoadingFailedException e) {
 				e.printStackTrace();
 			}
 		} else if (action.equals("CHAT")) {
 			try {
-				MainInterface.frameModel.switchView(container, "AlturaFrame");
+				MainInterface.frameModel.switchView(container, CHAT_PERSPECTIVE);
 			} catch (PluginLoadingFailedException e) {
 				e.printStackTrace();
 			}

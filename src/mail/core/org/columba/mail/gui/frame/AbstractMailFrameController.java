@@ -57,8 +57,8 @@ public class AbstractMailFrameController extends DefaultFrameController
 	 * @param id
 	 * @param viewItem
 	 */
-	public AbstractMailFrameController(Container c, ViewItem viewItem) {
-		super(c, viewItem);
+	public AbstractMailFrameController(ViewItem viewItem) {
+		super(viewItem);
 
 		attachmentController = new AttachmentController(this);
 

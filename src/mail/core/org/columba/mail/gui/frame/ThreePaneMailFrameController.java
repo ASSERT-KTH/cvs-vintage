@@ -78,8 +78,8 @@ public class ThreePaneMailFrameController extends AbstractMailFrameController
 	/**
 	 * @param container
 	 */
-	public ThreePaneMailFrameController(Container container, ViewItem viewItem) {
-		super(container, viewItem);
+	public ThreePaneMailFrameController(ViewItem viewItem) {
+		super(viewItem);
 
 		TableUpdater.add(this);
 

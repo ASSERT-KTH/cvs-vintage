@@ -34,7 +34,6 @@ import org.columba.addressbook.gui.tree.TreeController;
 import org.columba.addressbook.main.AddressbookInterface;
 import org.columba.addressbook.util.AddressbookResourceLoader;
 import org.columba.core.config.ViewItem;
-import org.columba.core.gui.frame.Container;
 import org.columba.core.gui.frame.ContainerInfoPanel;
 import org.columba.core.gui.frame.ContentPane;
 import org.columba.core.gui.frame.DefaultFrameController;
@@ -60,8 +59,8 @@ public class AddressbookFrameController extends DefaultFrameController
 	/**
 	 * Constructor for AddressbookController.
 	 */
-	public AddressbookFrameController(Container container, ViewItem viewItem) {
-		super(container, viewItem);
+	public AddressbookFrameController(ViewItem viewItem) {
+		super(viewItem);
 
 		tree = new TreeController(this);
 		table = new TableController(this);

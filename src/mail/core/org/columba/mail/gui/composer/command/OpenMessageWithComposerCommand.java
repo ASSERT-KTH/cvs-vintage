@@ -23,8 +23,8 @@ import java.util.List;
 
 import org.columba.core.command.DefaultCommandReference;
 import org.columba.core.command.WorkerStatusController;
+import org.columba.core.gui.frame.DefaultContainer;
 import org.columba.core.io.StreamUtils;
-import org.columba.core.main.MainInterface;
 import org.columba.core.xml.XmlElement;
 import org.columba.mail.command.FolderCommand;
 import org.columba.mail.command.FolderCommandReference;
@@ -72,8 +72,8 @@ public class OpenMessageWithComposerCommand extends FolderCommand {
 
 	public void updateGUI() throws Exception {
 		// open composer frame
-		controller = (ComposerController) MainInterface.frameModel
-				.openView("Composer");
+		controller = new ComposerController();
+		new DefaultContainer(controller);
 
 		// apply model
 		controller.setComposerModel(model);

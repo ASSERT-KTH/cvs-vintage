@@ -25,7 +25,6 @@ import javax.swing.JPanel;
 
 import org.columba.core.config.ViewItem;
 import org.columba.core.gui.frame.ContentPane;
-import org.columba.core.gui.frame.DefaultContainer;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.gui.attachment.selection.AttachmentSelectionHandler;
 import org.columba.mail.gui.frame.AbstractMailFrameController;
@@ -62,20 +61,19 @@ public class MessageFrameController extends AbstractMailFrameController
 	 * @param viewItem
 	 */
 	public MessageFrameController() {
-		super(new DefaultContainer(new ViewItem(MailInterface.config.get(
-				"options").getElement("/options/gui/messageframe/view"))),
-				new ViewItem(MailInterface.config.get("options").getElement(
-						"/options/gui/messageframe/view")));
+		super(new ViewItem(MailInterface.config.get("options").getElement(
+				"/options/gui/messageframe/view")));
 
 		tableSelectionHandler = new FixedTableSelectionHandler(tableReference);
 		getSelectionManager().addSelectionHandler(tableSelectionHandler);
 
-		AttachmentSelectionHandler attachmentHandler = new AttachmentSelectionHandler(attachmentController);		
+		AttachmentSelectionHandler attachmentHandler = new AttachmentSelectionHandler(
+				attachmentController);
 		getSelectionManager().addSelectionHandler(attachmentHandler);
 		// attachment viewer registers interest in table selection events
 		tableSelectionHandler.addSelectionListener(attachmentHandler);
 
-		getContainer().setContentPane(this);
+		//getContainer().setContentPane(this);
 	}
 
 	/**
@@ -150,9 +148,9 @@ public class MessageFrameController extends AbstractMailFrameController
 				this,
 				MailInterface.config.get("messageframe_toolbar").getElement(
 						"toolbar"));
-		
+
 		attachmentController.createPopupMenu();
-		
+
 		/*
 		 * if (viewItem.getBoolean("toolbars", "show_folderinfo") == true) {
 		 * addToolBar(folderInfoPanel); }
@@ -168,7 +166,7 @@ public class MessageFrameController extends AbstractMailFrameController
 	public String getString(String sPath, String sName, String sID) {
 		return MailResourceLoader.getString(sPath, sName, sID);
 	}
-	
+
 	/**
 	 * @see org.columba.core.gui.frame.FrameMediator#getContentPane()
 	 */
