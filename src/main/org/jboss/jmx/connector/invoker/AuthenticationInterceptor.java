@@ -10,7 +10,6 @@ import java.security.Principal;
 import javax.naming.InitialContext;
 
 import org.jboss.mx.server.Invocation;
-import org.jboss.mx.server.InvocationException;
 import org.jboss.mx.interceptor.AbstractInterceptor;
 import org.jboss.mx.interceptor.Interceptor;
 import org.jboss.security.SubjectSecurityManager;
@@ -24,7 +23,7 @@ import org.jboss.security.SubjectSecurityManager;
  *
  * @author <a href="mailto:juha@jboss.org">Juha Lindfors</a>.
  * @author Scott.Stark@jboss.org
- * @version $Revision: 1.2 $
+ * @version $Revision: 1.3 $
  *   
  */
 public final class AuthenticationInterceptor
@@ -52,7 +51,7 @@ public final class AuthenticationInterceptor
     * @return
     * @throws InvocationException
     */ 
-   public Object invoke(Invocation invocation) throws InvocationException
+   public Object invoke(Invocation invocation) throws Throwable
    {
       String type = invocation.getType();
       if( type == Invocation.OP_INVOKE && securityMgr != null )
@@ -70,9 +69,7 @@ public final class AuthenticationInterceptor
             {
                String msg = "Failed to authenticate principal="+caller
                   +", securityDomain="+securityMgr.getSecurityDomain();
-               SecurityException ex = new SecurityException(msg);
-               InvocationException ie = new InvocationException(ex);
-               throw ie;
+               throw new SecurityException(msg);
             }
          }
       }
