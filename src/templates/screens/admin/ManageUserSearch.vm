@@ -1,12 +1,12 @@
 #**
 @author <a href="mailto:dr@bitonic.com">Douglas B. Robertson</a>
 @author <a href="mailto:jon@collab.net">Jon Stevens</a>
-@version $Id: ManageUserSearch.vm,v 1.16 2002/03/04 21:17:51 maartenc Exp $
+@version $Id: ManageUserSearch.vm,v 1.17 2002/03/04 21:47:32 jon Exp $
 *#
 
 $page.setTitle("User search")
 
-#set ($newSearch = $data.Parameters.getString("newSearch"))
+#set ($newSearch = $data.Parameters.getString("newSearch",""))
 #set ($searchCriteria = "")
 
 #if ($newSearch.equals("true"))
@@ -54,7 +54,7 @@ $scarabR.setGlobalUserSearchParam("pageNum",$pageNum.toString())
 <input type="text" name="searchCriteria" value="$searchCriteria" />
 </td>
 <td>
-Order by: <select name="orderbyField">
+Order by: <select name="orderByField">
  <option value="FIRST_NAME" #if ($orderByField.equals("FIRST_NAME")) selected="selected" #end>First name</option>
  <option value="LAST_NAME" #if ($orderByField.equals("LAST_NAME")) selected="selected" #end>Last name</option>
  <option value="EMAIL" #if ($orderByField.equals("EMAIL")) selected="selected" #end>E-mail address</option>
@@ -70,9 +70,11 @@ Order by: <select name="orderbyField">
 
 <p>
 Results per page: 
-<input type="radio" name="resultsPerPage" value="25" #if ($resultsPerPage.equals("25")) checked="checked" #end /> 25 &nbsp;
-<input type="radio" name="resultsPerPage" value="50" #if ($resultsPerPage.equals("50")) checked="checked" #end /> 50 &nbsp;
-<input type="radio" name="resultsPerPage" value="75" #if ($resultsPerPage.equals("75")) checked="checked" #end /> 75 &nbsp;
+<input type="radio" name="resultsPerPage" value="5" #if ($resultsPerPage.equals("5")) checked="checked" #end /> 5 &#160;
+<input type="radio" name="resultsPerPage" value="10" #if ($resultsPerPage.equals("10")) checked="checked" #end /> 10 &#160;
+<input type="radio" name="resultsPerPage" value="25" #if ($resultsPerPage.equals("25")) checked="checked" #end /> 25 &#160;
+<input type="radio" name="resultsPerPage" value="50" #if ($resultsPerPage.equals("50")) checked="checked" #end /> 50 &#160;
+<input type="radio" name="resultsPerPage" value="75" #if ($resultsPerPage.equals("75")) checked="checked" #end /> 75 &#160;
 <input type="radio" name="resultsPerPage" value="100" #if ($resultsPerPage.equals("100")) checked="checked" #end /> 100
 </p>
 
