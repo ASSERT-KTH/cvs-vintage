@@ -33,7 +33,7 @@ public class MainInterface {
 
 	public static String version = "04-23-2003 cvs";
 
-	public static Boolean DEBUG = Boolean.FALSE;
+	public static boolean DEBUG = false;
 
 	public static Config config;
 
@@ -64,7 +64,4 @@ public class MainInterface {
 	public MainInterface() {
 	}
 
-	public static boolean isDebug() {
-		return DEBUG.booleanValue();
-	}
 }

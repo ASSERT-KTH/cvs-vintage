@@ -38,7 +38,7 @@ public class DebugInputStream extends FilterInputStream {
 	public int read() throws IOException {
 
 		int result = in.read();
-		if ( (result != -1) && (MainInterface.DEBUG.equals(Boolean.TRUE)) )
+		if ( (result != -1) && (MainInterface.DEBUG == true) )
 			out.write(result);
 
 		
@@ -51,7 +51,7 @@ public class DebugInputStream extends FilterInputStream {
 	public int read(byte[] b, int offset, int length) throws IOException {
 
 		int result = in.read(b, offset, length);
-		if ( (result != -1) && (MainInterface.DEBUG.equals(Boolean.TRUE)) )
+		if ( (result != -1) && (MainInterface.DEBUG == true) )
 			out.write(b, offset, result);
 
 		
@@ -66,7 +66,7 @@ public class DebugInputStream extends FilterInputStream {
 
 		int result = in.read(b);
 
-		if ( (result != -1) && (MainInterface.DEBUG.equals(Boolean.TRUE)) )
+		if ( (result != -1) && (MainInterface.DEBUG == true) )
 			out.write(b);
 
 

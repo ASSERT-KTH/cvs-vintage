@@ -139,7 +139,7 @@ public class CmdLineArgumentHandler {
 					controller.getModel().setBodyText(messageString);
 				}
 				
-				controller.showComposerWindow();
+				controller.openView();
 			}
 		}
 

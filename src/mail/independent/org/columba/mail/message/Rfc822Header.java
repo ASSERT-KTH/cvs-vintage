@@ -19,8 +19,6 @@ package org.columba.mail.message;
 import java.util.Enumeration;
 import java.util.Hashtable;
 
-import org.columba.core.logging.ColumbaLogger;
-
 /**
  * represents a Rfc822-compliant header
  * every headeritem is saved in a hashtable-structure

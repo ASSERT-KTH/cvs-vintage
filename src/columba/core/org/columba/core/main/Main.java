@@ -118,7 +118,7 @@ public class Main {
 			cmdLineParser.getOptionValue(ColumbaCmdLineArgumentParser.DEBUG);
 
 		if (d != null)
-			MainInterface.DEBUG = Boolean.TRUE;
+			MainInterface.DEBUG = true;
 
 		if (path != null) {
 			new ConfigPath((String) path);

@@ -36,7 +36,7 @@ public class DebugOutputStream extends FilterOutputStream {
 	 */
 	public void write(byte[] arg0, int arg1, int arg2) throws IOException {
 		
-		if (MainInterface.DEBUG.equals(Boolean.TRUE))
+		if (MainInterface.DEBUG = true)
 			debug.write(arg0, arg1, arg2);
 		
 		out.write(arg0, arg1, arg2);
@@ -47,7 +47,7 @@ public class DebugOutputStream extends FilterOutputStream {
 	 */
 	public void write(byte[] arg0) throws IOException {
 		
-		if (MainInterface.DEBUG.equals(Boolean.TRUE))
+		if (MainInterface.DEBUG == true)
 			debug.write(arg0);
 		
 		out.write(arg0);
@@ -58,7 +58,7 @@ public class DebugOutputStream extends FilterOutputStream {
 	 */
 	public void write(int arg0) throws IOException {
 		
-		if (MainInterface.DEBUG.equals(Boolean.TRUE))
+		if (MainInterface.DEBUG == true)
 			debug.write(arg0);
 		
 		out.write(arg0);
