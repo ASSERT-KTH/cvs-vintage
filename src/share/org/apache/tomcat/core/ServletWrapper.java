@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/ServletWrapper.java,v 1.43 2000/05/09 17:56:17 costin Exp $
- * $Revision: 1.43 $
- * $Date: 2000/05/09 17:56:17 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/ServletWrapper.java,v 1.44 2000/05/12 19:36:49 costin Exp $
+ * $Revision: 1.44 $
+ * $Date: 2000/05/12 19:36:49 $
  *
  * ====================================================================
  *
@@ -394,36 +394,31 @@ public class ServletWrapper {
 	    }
 	}
     }
+
+    void handleJsp(Request req, Response res) {
+	// XXX call JspServlet directly, did anyone tested it ??
+	
+	// This is the attribute needed by JspServlet, and everything different
+	// that a forward will provide
+	req.setAttribute( "javax.servlet.include.request_uri", path );
+	
+	if( servlet==null ) {
+	    // this will return JspServlet 99% of the time 
+	    // run the new request through the context manager
+	    // not that this is a very particular case of forwarding
+	    Request subRequest=context.getContextManager().createRequest( context, path );
+	    context.getContextManager().processRequest(subRequest);
+	    servlet = subRequest.getWrapper().getServlet();
+	}
+    }
     
     public void handleRequest(Request req, Response res)
     {
-	// Jsp case - JspServlet will be called.
-	// XXXX Very, very bad code !!!
-	try {
-	    if( path != null ) {
-		// XXX call JspServlet directly, did anyone tested it ??
-		String requestURI = path + req.getPathInfo();
-		RequestDispatcher rd = req.getContext().getRequestDispatcher(requestURI);
-		
-		if (! res.isStarted())
-		    rd.forward(req.getFacade(), res.getFacade());
-		else
-		    rd.include(req.getFacade(), res.getFacade());
-		
-		return;
-	    }
-	} catch( Throwable ex ) {
-	    if( null!=req.getAttribute("tomcat.servlet.error.defaultHandler") ) {
-		// we are in handleRequest for the "default
-		context.log("ERROR: can't find default error handler or error in default error page", ex);
-		ex.printStackTrace();
-	    } else {
-		contextM.handleError( req, res, ex );
-	    }
-	    return;
+	// Jsp case - maybe another Jsp engine is used
+	if( servlet==null && path != null ) {
+	    handleJsp( req, res );
 	}
-
-	// normal servlet
+	
 	handleReload();
 	
 	if( ! initialized ) {
@@ -490,13 +485,6 @@ public class ServletWrapper {
 	}
 	
 	try {
-	    // XXX to expensive  per/request, un-load is not so frequent and
-	    // the API doesn't require a special state for destroy
-	    // synchronized(this) {
-	    // 		// logic for un-loading
-	    // 		serviceCount++;
-	    //
-	    
 	    RequestInterceptor cI[]=context.getRequestInterceptors();
 	    for( int i=0; i<cI.length; i++ ) {
 		cI[i].preService( req, res ); // ignore the error - like in the original code
@@ -507,23 +495,15 @@ public class ServletWrapper {
 		    servlet.service(req.getFacade(), res.getFacade());
 		}
 	    } else {
-		//System.out.print("X");
 		servlet.service(req.getFacade(), res.getFacade());
-		//System.out.print("Y");
 	    }
 	    
 	    for( int i=cI.length-1; i>=0; i-- ) {
 		cI[i].postService( req , res ); // ignore the error - like in the original code
 	    }
-	    // 	} finally {
-	    // 	    synchronized(this) {
-	    // 		serviceCount--;
-	    // 		notifyAll();
-	    // 	    }
-	    // 	}
 	} catch( Throwable t ) {
 	    if( null!=req.getAttribute("tomcat.servlet.error.defaultHandler") ) {
-		// we are in handleRequest for the "default
+		// we are in handleRequest for the "default" error handler
 		System.out.println("ERROR: can't find default error handler or error in default error page");
 		t.printStackTrace();
 	    } else {

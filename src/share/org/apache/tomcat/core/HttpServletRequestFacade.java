@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/HttpServletRequestFacade.java,v 1.11 2000/05/12 15:55:25 costin Exp $
- * $Revision: 1.11 $
- * $Date: 2000/05/12 15:55:25 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/HttpServletRequestFacade.java,v 1.12 2000/05/12 19:36:47 costin Exp $
+ * $Revision: 1.12 $
+ * $Date: 2000/05/12 19:36:47 $
  *
  * ====================================================================
  *
@@ -80,7 +80,7 @@ import javax.servlet.http.*;
  * @author James Todd [gonzo@eng.sun.com]
  * @author Harish Prabandham
  */
-public class HttpServletRequestFacade implements HttpServletRequest {
+public final class HttpServletRequestFacade implements HttpServletRequest {
 
     private StringManager sm = StringManager.getManager(Constants.Package);
     private Request request;
@@ -135,10 +135,6 @@ public class HttpServletRequestFacade implements HttpServletRequest {
 
     public void removeAttribute(String name) {
 	request.removeAttribute(name);
-    }
-    
-    public String getAuthType() {
-	return request.getAuthType();
     }
     
     public String getCharacterEncoding() {
@@ -253,22 +249,6 @@ public class HttpServletRequestFacade implements HttpServletRequest {
         return request.getServerPort();
     }
 
-    public HttpSession getSession() {
-        return request.getSession(true);
-    }
-    
-    public HttpSession getSession(boolean create) {
-	HttpSession realSession = request.getSession( create );
-	// No real session, return null
-	if( realSession == null ) {
-	    sessionFacade.recycle();
-	    return null;
-	}
-
-	sessionFacade.setRealSession( realSession );
-        return sessionFacade;
-    }
-
     public BufferedReader getReader() throws IOException {
 	if (usingStream) {
 	    String msg = sm.getString("reqfac.getreader.ise");
@@ -287,10 +267,6 @@ public class HttpServletRequestFacade implements HttpServletRequest {
         return request.getRemoteHost();
     }
 
-    public String getRequestedSessionId() {
-        return request.getRequestedSessionId();
-    }
-    
     public String getRequestURI() {
         return request.getRequestURI();
     }
@@ -314,10 +290,6 @@ public class HttpServletRequestFacade implements HttpServletRequest {
 	return request.getContext().getRequestDispatcher(path);
     }
 
-    public boolean isSecure() {
-	return request.isSecure();
-    }
-
     public Locale getLocale() {
 	return (Locale)getLocales().nextElement();
     }
@@ -330,14 +302,6 @@ public class HttpServletRequestFacade implements HttpServletRequest {
         return request.getContext().getPath();
     }
 
-    public boolean isUserInRole(String role) {
-	return request.isUserInRole(role);
-    }
-
-    public Principal getUserPrincipal() {
-	return request.getUserPrincipal();
-    }
-
     public String getServletPath() {
         return request.getServletPath();
     }
@@ -348,13 +312,53 @@ public class HttpServletRequestFacade implements HttpServletRequest {
     public String getRealPath(String name) {
         return request.getContext().getRealPath(name);
     }
+    // -------------------- Security --------------------
+    public String getAuthType() {
+	return request.getAuthType();
+    }
+    
+    public boolean isSecure() {
+	return request.isSecure();
+    }
 
+    public boolean isUserInRole(String role) {
+	return request.isUserInRole(role);
+    }
+
+    public Principal getUserPrincipal() {
+	return request.getUserPrincipal();
+    }
+    
+    // -------------------- Session --------------------
+    public HttpSession getSession() {
+        return request.getSession(true);
+    }
+    
+    public HttpSession getSession(boolean create) {
+	HttpSession realSession = request.getSession( create );
+	// No real session, return null
+	if( realSession == null ) {
+	    sessionFacade.recycle();
+	    return null;
+	}
+
+	sessionFacade.setRealSession( realSession );
+        return sessionFacade;
+    }
+
+    public String getRequestedSessionId() {
+        return request.getRequestedSessionId();
+    }
+    
     public boolean isRequestedSessionIdValid() {
-	return request.isRequestedSessionIdValid();
+	// so here we just assume that if we have a session it's,
+	// all good, else not.
+	HttpSession session = (HttpSession)request.getSession(false);
+	return (session != null);
     }
 
     public boolean isRequestedSessionIdFromCookie() {
-	return request.isRequestedSessionIdFromCookie();
+	return Request.SESSIONID_FROM_COOKIE.equals( request.getSessionIdSource() );
     }
 
     /**
@@ -365,7 +369,7 @@ public class HttpServletRequestFacade implements HttpServletRequest {
     }
 
     public boolean isRequestedSessionIdFromURL() {
-	return request.isRequestedSessionIdFromURL();
+	return Request.SESSIONID_FROM_URL.equals( request.getSessionIdSource() );
     }
 
 }

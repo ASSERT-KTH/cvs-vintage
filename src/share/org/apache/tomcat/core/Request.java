@@ -182,19 +182,18 @@ public interface Request  {
 
     public String[] getUserRoles( );
     
-    // XXX It may be usefull to add few more fields - right now
-    // tomcat use notes, after everything is stable we can
-    // use typed methods
-    
-    /** This request has an auth constraint and requires one of
-     *  the roles.
+    /**
      */
-    // public String []getRequiredRoles();
-    // public void setRequiredRoles(String []);
+     Principal getUserPrincipal() ;
 
+    void setUserPrincipal(Principal p) ;
+
+    /**
+     */
+    boolean isUserInRole(String role) ;
 
     // -------------------- Session --------------------
-    // -------------------- Multiple JVM support --------------------
+    // Multiple JVM support
     // GS, used by the load balancing layer
     public String getJvmRoute();
 
@@ -203,21 +202,18 @@ public interface Request  {
 
     public void setRequestedSessionId(String reqSessionId) ;
 
-    // XXX It's better to use set/getSessionIdSource, with URL, Cookie, SSL, etc as
-    // source. Next 4 methods will probably be deprecated.
-    boolean isRequestedSessionIdFromCookie() ;
+    public static final String SESSIONID_FROM_COOKIE="cookie";
+    public static final String SESSIONID_FROM_URL="url";
 
-    void setRequestedSessionIdFromCookie(boolean newState);
-
-    boolean isRequestedSessionIdFromURL() ;
-
-    void setRequestedSessionIdFromURL(boolean newState) ;
+    /** Get the source of the session Id.
+     */
+    public String getSessionIdSource() ;
+    
+    public void setSessionIdSource(String s) ;
 
     public void setSession(HttpSession serverSession) ;
 
     public HttpSession getSession(boolean create) ;
-
-    boolean isRequestedSessionIdValid() ;
 
     // -------------------- Parameters --------------------
     /** Set query string - will be called by forward
@@ -273,14 +269,6 @@ public interface Request  {
     public void setParameters( Hashtable h ) ;
     /** @deprecated internal use only */
     public Hashtable getParameters() ;
-
-    /** @deprecated  */
-     Principal getUserPrincipal() ;
-
-    void setUserPrincipal(Principal p) ;
-
-    /** @deprecated  */
-    boolean isUserInRole(String role) ;
 
 
     /** Wrapper - the servlet that will execute the request

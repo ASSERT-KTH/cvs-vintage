@@ -77,7 +77,7 @@ import javax.servlet.*;
  * @author James Todd [gonzo@eng.sun.com]
  * @author Harish Prabandham
  */
-public class ServletContextFacade implements ServletContext {
+public final class ServletContextFacade implements ServletContext {
     private StringManager sm = StringManager.getManager("org.apache.tomcat.core");
     private ContextManager contextM;
     private Context context;

@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/HttpServletResponseFacade.java,v 1.14 2000/05/09 17:56:13 costin Exp $
- * $Revision: 1.14 $
- * $Date: 2000/05/09 17:56:13 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/HttpServletResponseFacade.java,v 1.15 2000/05/12 19:36:48 costin Exp $
+ * $Revision: 1.15 $
+ * $Date: 2000/05/12 19:36:48 $
  *
  * ====================================================================
  *
@@ -79,7 +79,7 @@ import javax.servlet.http.*;
  * @author James Todd [gonzo@eng.sun.com]
  */
 
-public class HttpServletResponseFacade
+public final class HttpServletResponseFacade
     implements HttpServletResponse
 {
     private static StringManager sm =
@@ -279,9 +279,9 @@ public class HttpServletResponseFacade
 
 	// Are we in a valid session that is not using cookies?
 	Request request = response.getRequest();
-	if (!request.isRequestedSessionIdValid())
+	if (!request.getFacade().isRequestedSessionIdValid() )
 	    return (false);
-	if (request.isRequestedSessionIdFromCookie())
+	if ( request.getFacade().isRequestedSessionIdFromCookie() )
 	    return (false);
 
 	// Is this a valid absolute URL?

@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/RequestImpl.java,v 1.35 2000/05/12 15:26:39 costin Exp $
- * $Revision: 1.35 $
- * $Date: 2000/05/12 15:26:39 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/RequestImpl.java,v 1.36 2000/05/12 19:36:49 costin Exp $
+ * $Revision: 1.36 $
+ * $Date: 2000/05/12 19:36:49 $
  *
  * ====================================================================
  *
@@ -131,8 +131,7 @@ public class RequestImpl  implements Request {
     // Session
     // set by interceptors - the session id
     protected String reqSessionId;
-    protected boolean sessionIdFromCookie=false;
-    protected boolean sessionIdFromURL=false;
+    protected String sessionIdSource;
     // cache- avoid calling SessionManager for each getSession()
     protected HttpSession serverSession;
 
@@ -165,9 +164,16 @@ public class RequestImpl  implements Request {
  	recycle(); // XXX need better placement-super()
     }
 
-    // GS - return the jvm load balance route
-    public String getJvmRoute() {
-	    return jvmRoute;
+    public void setContext(Context context) {
+	this.context = context;
+    }
+
+    public void setContextManager( ContextManager cm ) {
+	contextM=cm;
+    }
+
+    public ContextManager getContextManager() {
+	return contextM;
     }
 
     public String getScheme() {
@@ -330,15 +336,6 @@ public class RequestImpl  implements Request {
 	return false;
     }
 
-
-    public String getRequestedSessionId() {
-        return reqSessionId;
-    }
-
-    public void setRequestedSessionId(String reqSessionId) {
-	this.reqSessionId = reqSessionId;
-    }
-
     public String getServletPath() {
         return servletPath;
     }
@@ -366,34 +363,50 @@ public class RequestImpl  implements Request {
 	return response;
     }
 
-    public boolean isRequestedSessionIdFromCookie() {
-	return sessionIdFromCookie;
+    // -------------------- Session --------------------
+    // GS - return the jvm load balance route
+    public String getJvmRoute() {
+	    return jvmRoute;
     }
 
-    public boolean isRequestedSessionIdFromURL() {
-	return sessionIdFromURL;
+    public String getRequestedSessionId() {
+        return reqSessionId;
     }
 
-    public void setRequestedSessionIdFromCookie(boolean newState){
-	sessionIdFromCookie=true;
-    }
- 
-    public void setRequestedSessionIdFromURL(boolean newState) {
-	sessionIdFromURL=newState;
+    public void setRequestedSessionId(String reqSessionId) {
+	this.reqSessionId = reqSessionId;
     }
 
-    public void setContext(Context context) {
-	this.context = context;
+    public String getSessionIdSource() {
+	return sessionIdSource;
     }
 
-    public void setContextManager( ContextManager cm ) {
-	contextM=cm;
+    public void setSessionIdSource(String s) {
+	sessionIdSource=s;
     }
 
-    public ContextManager getContextManager() {
-	return contextM;
+    public void setSession(HttpSession serverSession) {
+	this.serverSession = serverSession;
     }
 
+    public HttpSession getSession(boolean create) {
+	if( serverSession!=null ) {
+	    // if not null, it is validated by the session module
+	    return serverSession;
+	}
+	
+	if( ! create ) return null;
+	
+	SessionManager sM=context.getSessionManager();
+	// no session exists, create flag
+	serverSession =sM.getNewSession( );
+	reqSessionId = serverSession.getId();
+	response.setSessionId( reqSessionId );
+
+	return serverSession;
+    }
+
+    // --------------------
     public Cookie[] getCookies() {
 	// XXX need to use Cookie[], Vector is not needed
 	if( ! didCookies ) {
@@ -412,60 +425,6 @@ public class RequestImpl  implements Request {
 	return cookieArray;
 	//        return cookies;
     }
-
-    public HttpSession getSession(boolean create) {
-
-	// use the cached value, unless it is invalid
-	if( serverSession!=null ) {
-	    // Detect "invalidity" by trying to access a property
-	    try {
-		serverSession.getCreationTime();
-		return (serverSession);
-	    } catch (IllegalStateException e) {
-		// It's invalid, so pretend we never saw it
-		serverSession = null;
-		reqSessionId = null;
-	    }
-	}
-	
-	SessionManager sM=context.getSessionManager();
-
-	// if the interceptors found a request id, use it
-	if( reqSessionId != null ) {
-	    // we have a session !
-	    serverSession=sM.findSession( reqSessionId );
-	    if( serverSession!=null) return serverSession;
-	}
-
-	if( ! create )
-	    return null;
-
-	// no session exists, create flag
-	serverSession =sM.getNewSession( );
-	reqSessionId = serverSession.getId();
-
-	// XXX XXX will be changed - post-request Interceptors
-	// ( to be defined) will set the session id in response,
-	// SessionManager is just a repository and doesn't deal with
-	// request internals.
-	// hardcoded - will change!
-	response.setSessionId( reqSessionId );
-
-	return serverSession;
-    }
-
-    public boolean isRequestedSessionIdValid() {
-	// so here we just assume that if we have a session it's,
-	// all good, else not.
-	HttpSession session = (HttpSession)getSession(false);
-
-	if (session != null) {
-	    return true;
-	} else {
-	    return false;
-	}
-    }
-
     // -------------------- LookupResult
     public ServletWrapper getWrapper() {
 	return handler;
@@ -535,10 +494,6 @@ public class RequestImpl  implements Request {
 	// the query will be processed when getParameter() will be called.
 	// Or - if you alredy have it parsed, call setParameters()
 	this.queryString = queryString;
-    }
-
-    public void setSession(HttpSession serverSession) {
-	this.serverSession = serverSession;
     }
 
     public void setServletPath(String servletPath) {

@@ -117,13 +117,14 @@ public class SessionInterceptor extends  BaseInterceptor implements RequestInter
 	
 	if ((foundAt=uri.indexOf(sig))!=-1){
 	    sessionId=uri.substring(foundAt+sig.length()); // I hope the optimizer does it's job:-)
-
+	    sessionId = fixSessionId( request, sessionId );
+	    
 	    // rewrite URL, do I need to do anything more?
 	    request.setRequestURI(uri.substring(0, foundAt));
 
 	    // No validate now - we just note that this is what the user
 	    // requested. 
-	    request.setRequestedSessionIdFromURL(true);
+	    request.setSessionIdSource( Request.SESSIONID_FROM_URL);
 	    request.setRequestedSessionId( sessionId );
 	}
 	return 0;
@@ -136,7 +137,6 @@ public class SessionInterceptor extends  BaseInterceptor implements RequestInter
 	String sessionId = null;
 
 	Cookie cookies[]=request.getCookies(); // assert !=null
-	boolean fromCookie=false;
 	
 	// Give priority to cookies. I don't know if that's part
 	// of the spec - XXX
@@ -145,37 +145,28 @@ public class SessionInterceptor extends  BaseInterceptor implements RequestInter
 	    
 	    if (cookie.getName().equals("JSESSIONID")) {
 		sessionId = cookie.getValue();
-		sessionId=validateSessionId(request, sessionId);
-		if (sessionId!=null){
-		    request.setRequestedSessionIdFromCookie(true);
-		    fromCookie=true;
-		}
+		sessionId = fixSessionId( request, sessionId );
+
+		// XXX what if we have multiple session cookies ?
+		// right now only the first is used
+		request.setRequestedSessionId( sessionId );
+		request.setSessionIdSource( Request.SESSIONID_FROM_COOKIE);
+		break;
 	    }
 	}
 
-	if( ! fromCookie ) {
-	    // we don't have the session id from cookie, maybe URL rewriting
-	    // was used ?
-	    sessionId=request.getRequestedSessionId();
-	    sessionId=validateSessionId(request, sessionId);
-	    if (sessionId!=null){
-		// it's already done in contextMap
-		// request.setRequestedSessionIdFromURL(true);
-		// set it with load balancing removed
-		request.setRequestedSessionId( sessionId );
-	    }
-	}
+	// "access" it and set HttpSession if valid
+	sessionId=request.getRequestedSessionId();
+	validateSessionId(request, sessionId);
+
 	return 0;
     }
 
-    // XXX what is the correct behavior if the session is invalid ?
-    // We may still set it and just return session invalid.
-    
-    /** Validate and fix the session id. If the session is not valid return null.
+    /** Fix the session id. If the session is not valid return null.
      *  It will also clean up the session from load-balancing strings.
      * @return sessionId, or null if not valid
      */
-    private String validateSessionId(Request request, String sessionId){
+    private String fixSessionId(Request request, String sessionId){
 	// GS, We piggyback the JVM id on top of the session cookie
 	// Separate them ...
 
@@ -186,7 +177,15 @@ public class SessionInterceptor extends  BaseInterceptor implements RequestInter
 		sessionId = sessionId.substring(0, idex);
 	    }
 	}
-      
+	return sessionId;
+    }
+
+    /** Validate and fix the session id. If the session is not valid return null.
+     *  It will also clean up the session from load-balancing strings.
+     * @return sessionId, or null if not valid
+     */
+    private void validateSessionId(Request request, String sessionId){
+
 	if (sessionId != null && sessionId.length()!=0) {
 	    // GS, We are in a problem here, we may actually get
 	    // multiple Session cookies (one for the root
@@ -197,13 +196,9 @@ public class SessionInterceptor extends  BaseInterceptor implements RequestInter
 	    HttpSession sess= sM.findSession( sessionId );
 	    if(null != sess) {
 		sM.access( sess );
-		request.setRequestedSessionId(sessionId);
 		request.setSession( sess );
-		if( debug>0 ) cm.log(" Final session id " + sessionId );
-		return sessionId;
 	    }
 	}
-	return null;
     }
 
     public int postService(  Request rrequest, Response response ) {
