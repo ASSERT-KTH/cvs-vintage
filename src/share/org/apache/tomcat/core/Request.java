@@ -65,7 +65,6 @@ import org.apache.tomcat.util.http.Parameters;
 import org.apache.tomcat.util.http.ContentType;
 import org.apache.tomcat.util.http.Cookies;
 
-import org.apache.tomcat.util.SimplePrincipal;
 import org.apache.tomcat.util.buf.MessageBytes;
 
 
@@ -443,9 +442,6 @@ public class Request {
      */
     public Principal getUserPrincipal() {
 	if( getRemoteUser() == null ) return null;
-	if( principal == null ) {
-	    principal=new SimplePrincipal( getRemoteUser() );
-	}
 	return principal;
     }
 

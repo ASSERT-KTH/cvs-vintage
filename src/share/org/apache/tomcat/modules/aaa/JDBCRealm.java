@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/modules/aaa/JDBCRealm.java,v 1.4 2001/02/20 03:16:51 costin Exp $
- * $Revision: 1.4 $
- * $Date: 2001/02/20 03:16:51 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/modules/aaa/JDBCRealm.java,v 1.5 2001/02/27 19:10:16 costin Exp $
+ * $Revision: 1.5 $
+ * $Date: 2001/02/27 19:10:16 $
  *
  * The Apache Software License, Version 1.1
  *
@@ -64,11 +64,9 @@ package org.apache.tomcat.modules.aaa;
 import org.apache.tomcat.core.*;
 import org.apache.tomcat.util.res.StringManager;
 import org.apache.tomcat.util.buf.HexUtils;
+import org.apache.tomcat.util.aaa.*;
 import java.security.*;
-//import java.security.Principal;
-//import java.io.File;
-//import java.util.Enumeration;
-//import java.util.Hashtable;
+import java.security.Principal;
 import java.util.Vector;
 import java.io.*;
 import java.net.*;
@@ -447,6 +445,7 @@ public final class JDBCRealm extends BaseInterceptor {
                 req.setAuthType(ctx.getAuthMethod());
             if (user != null) {
                 req.setRemoteUser(user);
+		req.setUserPrincipal( new JdbcPrincipal( user ));
                 String userRoles[] = getUserRoles(user);
                 req.setUserRoles(userRoles);
                 return OK;
@@ -524,4 +523,13 @@ public final class JDBCRealm extends BaseInterceptor {
         shutdown();
     }
 
+    // Nothing - except cary on the class name information 
+    public static class JdbcPrincipal extends SimplePrincipal {
+	private String name;
+
+	JdbcPrincipal(String name) {
+	    super(name);
+	}
+    }
 }
+

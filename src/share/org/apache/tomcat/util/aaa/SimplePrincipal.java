@@ -56,7 +56,7 @@
  * [Additional notices, if required by prior licensing conditions]
  *
  */ 
-package org.apache.tomcat.util;
+package org.apache.tomcat.util.aaa;
 
 import java.security.Principal;
 

@@ -64,9 +64,11 @@ import org.apache.tomcat.core.*;
 import org.apache.tomcat.util.*;
 import org.apache.tomcat.util.log.*;
 import org.apache.tomcat.util.xml.*;
+import org.apache.tomcat.util.aaa.*;
 import java.io.*;
 import java.net.*;
 import java.util.*;
+import java.security.Principal;
 import org.xml.sax.*;
 
 /**
@@ -143,13 +145,18 @@ public class SimpleRealm extends  BaseInterceptor {
 	if( user==null) return DECLINED; // we don't know about this 
 	
 	if( debug > 0 ) log( "Verify user=" + user + " pass=" + password );
-	if( memoryRealm.checkPassword( user, password ) ) {
+	SimpleRealmPrincipal srp=memoryRealm.getPrincipal( user );
+	if( srp == null ) return DECLINED;
+	
+	if( srp.checkPassword( password ) ) {
 	    if( debug > 0 ) log( "Auth ok, user=" + user );
             Context ctx = req.getContext();
 	    req.setAuthType(ctx.getAuthMethod());
 	    req.setRemoteUser( user );
+	    req.setUserPrincipal( srp );
+	    
 	    if( user!=null ) {
-		String userRoles[] = memoryRealm.getUserRoles( user );
+		String userRoles[] = srp.getUserRoles( user );
 		req.setUserRoles( userRoles );
 	    }
 	    return OK; // the user is ok, - no need for more work
@@ -163,12 +170,14 @@ public class SimpleRealm extends  BaseInterceptor {
 
     class MemoryRealm {
         // String user -> password
-        Hashtable passwords=new Hashtable();
+	//        Hashtable passwords=new Hashtable();
         // String role -> Vector users
-        Hashtable roles=new Hashtable();
+	//        Hashtable roles=new Hashtable();
         // user -> roles
-        Hashtable userRoles= new Hashtable();
-        String filename;
+        // Hashtable userRoles= new Hashtable();
+
+	Hashtable principals=new Hashtable();
+	String filename;
         String home;
 
         MemoryRealm(String fn,String home) {
@@ -176,64 +185,22 @@ public class SimpleRealm extends  BaseInterceptor {
             filename=fn;
         }
 
-        public Hashtable getRoles() {
-            return roles;
-        }
+	public SimpleRealmPrincipal getPrincipal( String user ) {
+	    return (SimpleRealmPrincipal)principals.get(user);
+	}
 
+	public void addPrincipal( String name, Principal p ) {
+	    principals.put( name, p );
+	}
+	
         public void addUser(String name, String pass, String groups ) {
             if( getDebug() > 0 )  log( "Add user " + name + " " +
 				       pass + " " + groups );
-            passwords.put( name, pass );
-            groups += ",";
-            while (true) {
-                int comma = groups.indexOf(",");
-                if (comma < 0)
-                    break;
-                addRole( groups.substring(0, comma).trim(), name);
-                groups = groups.substring(comma + 1);
-            }
+	    SimpleRealmPrincipal sp=new SimpleRealmPrincipal( name, pass );
+	    sp.addRoles( groups );
+	    principals.put( name, sp );
         }
 
-        public void addRole( String role, String user ) {
-            Vector users=(Vector)roles.get(role);
-            if(users==null) {
-                users=new Vector();
-                roles.put(role, users );
-            }
-            users.addElement( user );
-
-            Vector thisUserRoles=(Vector)userRoles.get( user );
-            if( thisUserRoles == null ) {
-                thisUserRoles = new Vector();
-                userRoles.put( user, thisUserRoles );
-            }
-            thisUserRoles.addElement( role );
-        }
-
-        public boolean checkPassword( String user, String pass ) {
-            if( user==null ) return false;
-            if( getDebug() > 0 ) log( "check " + user+ " " +
-				      pass + " " + passwords.get( user ));
-            return pass.equals( (String)passwords.get( user ) );
-        }
-
-        public String[] getUserRoles( String user ) {
-            Vector v=(Vector)userRoles.get( user );
-            if( v==null) return null;
-            String roles[]=new String[v.size()];
-            for( int i=0; i<roles.length; i++ ) {
-                roles[i]=(String)v.elementAt( i );
-            }
-            return roles;
-        }
-
-        public boolean userInRole( String user, String role ) {
-            Vector users=(Vector)roles.get(role);
-            if( getDebug() > 0 ) log( "check role " + user+ " " +
-				      role + " "  );
-            if(users==null) return false;
-            return users.indexOf( user ) >=0 ;
-        }
         void readMemoryRealm() throws Exception {
             File f;
             if (filename != null)
@@ -258,6 +225,7 @@ public class SimpleRealm extends  BaseInterceptor {
                                    String user=attributes.getValue("name");
                                    String pass=attributes.getValue("password");
                                    String group=attributes.getValue("roles");
+				   
                                    mr.addUser( user, pass, group );
                                }
                            }
@@ -266,5 +234,53 @@ public class SimpleRealm extends  BaseInterceptor {
             xh.readXml( f, this );
         }
     }
+
+    public static class SimpleRealmPrincipal extends SimplePrincipal {
+	private String pass;
+	private Vector roles=new Vector();
+
+	SimpleRealmPrincipal(String name, String pass) {
+	    super( name );
+	    this.pass=pass;
+	}
+
+	// local methods
+
+	private void addRole(String role ) {
+	    roles.addElement( role );
+	}
+	
+	boolean checkPassword( String s ) {
+	    if( s == pass ) return true; // interned or nulls?
+	    if( s==null ) return false; // if pass == null already true
+	    return s.equals( pass );
+	}
+
+	// backward compat - bad XML format !!!
+	void addRoles( String groups ) {
+	    groups += ",";
+            while (true) {
+                int comma = groups.indexOf(",");
+                if (comma < 0)
+                    break;
+                addRole( groups.substring(0, comma).trim() );
+                groups = groups.substring(comma + 1);
+            }
+	}
+
+	String[] getUserRoles( String user ) {
+            String rolesA[]=new String[roles.size()];
+            for( int i=0; i<roles.size(); i++ ) {
+                rolesA[i]=(String)roles.elementAt( i );
+            }
+            return rolesA;
+        }
+
+	// 	public boolean userInRole( String role ) {
+	//             return roles.indexOf( role ) >=0 ;
+	//         }
+
+    }
+
 
 }
