@@ -3,7 +3,7 @@
                                  Release Notes
                                  =============
 
-$Id: RELEASE-NOTES-3.3.1.txt,v 1.36 2002/02/18 04:17:56 billbarker Exp $
+$Id: RELEASE-NOTES-3.3.1.txt,v 1.37 2002/02/21 03:06:51 billbarker Exp $
 
 
 This document describes the changes that have been made since the
@@ -276,6 +276,9 @@ Connectors:
          A bug was fixed in isapi_redirect.dll where it would mistake an
          encoded '?' in the URI path as the query string delimitor.
 
+
+6579	 Make certain that we don't dump more out put than is available when 
+	 debugging Ajp13.
 
 Documentation:
 
