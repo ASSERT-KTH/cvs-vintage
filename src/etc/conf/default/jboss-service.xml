@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE server>
-<!-- $Id: jboss-service.xml,v 1.42 2002/04/12 05:01:38 d_jencks Exp $ -->
+<!-- $Id: jboss-service.xml,v 1.43 2002/04/14 18:59:49 starksm Exp $ -->
 
 <!-- ===================================================================== -->
 <!--                                                                       -->
@@ -54,11 +54,11 @@
 
   <mbean code="org.jboss.security.plugins.SecurityConfig"
 	 name="jboss.security:name=SecurityConfig">
-    <attribute name="LoginConfig">jboss.security:name=DefaultLoginConfig</attribute>
+    <attribute name="LoginConfig">jboss.security:name=XMLLoginConfig</attribute>
   </mbean>
-  <mbean code="org.jboss.security.plugins.DefaultLoginConfig"
-	 name="jboss.security:name=DefaultLoginConfig">
-    <attribute name="AuthConfig">auth.conf</attribute>
+  <mbean code="org.jboss.security.auth.login.XMLLoginConfig"
+	 name="jboss.security:name=XMLLoginConfig">
+    <attribute name="ConfigResource">login-config.xml</attribute>
   </mbean>
 
   <!-- JAAS security manager and realm mapping -->
