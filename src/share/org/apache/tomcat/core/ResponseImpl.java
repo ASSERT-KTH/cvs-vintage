@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/ResponseImpl.java,v 1.33 2000/06/30 20:21:25 costin Exp $
- * $Revision: 1.33 $
- * $Date: 2000/06/30 20:21:25 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/ResponseImpl.java,v 1.34 2000/07/11 02:44:40 alex Exp $
+ * $Revision: 1.34 $
+ * $Date: 2000/07/11 02:44:40 $
  *
  * ====================================================================
  *
@@ -71,6 +71,8 @@ import javax.servlet.*;
 import javax.servlet.http.*;
 import org.apache.tomcat.util.*;
 import org.apache.tomcat.facade.*;
+import org.apache.tomcat.logging.*;
+
 /**
  *
  * @author James Duncan Davidson [duncan@eng.sun.com]
@@ -247,8 +249,7 @@ public class ResponseImpl implements Response {
 	    try {
 		return  new OutputStreamWriter(outs, encoding);
 	    } catch (java.io.UnsupportedEncodingException ex) {
-		// XXX log it
-		System.out.println("Unsuported encoding: " + encoding );
+		log("Unsuported encoding: " + encoding, Logger.ERROR );
 
 		return new OutputStreamWriter(outs);
 	    }
@@ -316,7 +317,8 @@ public class ResponseImpl implements Response {
 		setContentLength( cL );
 		return true;
 	    } catch( NumberFormatException ex ) {
-		// We shouldn't set the header 
+		// We shouldn't set the header
+		log("Bogus Content-Length: " + value, Logger.WARNING);
 	    }
 	}
 	if( name.equalsIgnoreCase( "Content-Language" ) ) {
@@ -358,9 +360,6 @@ public class ResponseImpl implements Response {
 
     public void setBufferCommitted( boolean v ) {
 	this.commited=v;
-	// 	System.out.println("Buffer commited " );
-	// 	/*DEBUG*/ try {throw new Exception(); }
-	//catch(Exception ex) {ex.printStackTrace();}
     }
     
     public void reset() throws IllegalStateException {
@@ -419,7 +418,7 @@ public class ResponseImpl implements Response {
      *  interceptors to fix headers.
      */
     public void notifyEndHeaders() throws IOException {
-	//	System.out.println("End headers " + request.getProtocol());
+	//	log("End headers " + request.getProtocol());
 	if(request.getProtocol()==null) // HTTP/0.9 
 	    return;
 
@@ -561,4 +560,18 @@ public class ResponseImpl implements Response {
 	return sm.getString("sc."+ status);
     }
 
+    // write log messages to correct log
+    
+    Logger.Helper loghelper = new Logger.Helper("tc_log", this);
+    
+    protected void log(String s) {
+	log(s, Logger.INFORMATION);
+    }
+    protected void log(String s, int level) {
+	if (request != null && request.getContext() != null) {
+	    loghelper.setLogger(request.getContext().getLoggerHelper().getLogger());
+	}
+	loghelper.log(s, level);
+    }		       
+    
 }
