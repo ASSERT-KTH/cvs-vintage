@@ -7,13 +7,13 @@
 
 <td>
 <p>
-$l10n.ToAccessFunctions1 <a
-href="$link.setPage("Login.vm")">$l10n.Login</a>. $l10n.ToAccessFunctions2
+$l10n.ToAccessFunctions1 
+<a href="$link.setPage("Login.vm")">$l10n.Login</a>. $l10n.ToAccessFunctions2
 </p>
 
 <p>
-$l10n.IfYouAreNotRegistered <a
-href="$link.setPage("Register.vm")">$l10n.CreateAnAccount</a>.
+$l10n.IfYouAreNotRegistered 
+<a href="$link.setPage("Register.vm")">$l10n.CreateAnAccount</a>.
 </p>
 </td>
 
