@@ -59,6 +59,7 @@ import org.tigris.scarab.tools.ScarabRequestTool;
 import org.tigris.scarab.util.ScarabConstants;
 import org.tigris.scarab.services.module.ModuleEntity;
 import org.tigris.scarab.om.ScarabUser;
+import org.tigris.scarab.om.Issue;
 import org.tigris.scarab.om.IssueType;
 
 /**
@@ -69,7 +70,7 @@ import org.tigris.scarab.om.IssueType;
  * duplication of code.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: Default.java,v 1.32 2001/11/29 16:37:30 jmcnally Exp $
+ * @version $Id: Default.java,v 1.33 2001/12/05 23:26:09 elicia Exp $
  */
 public class Default extends TemplateSecureScreen
 {
@@ -99,9 +100,8 @@ public class Default extends TemplateSecureScreen
         throws Exception
     {
         String template = data.getTarget();
-        if (template != null)
         {
-            template = template.replace('/','.');
+            template = template.replace(',','.');
 
             String perm = ScarabSecurity.getScreenPermission(template);
 
@@ -111,6 +111,7 @@ public class Default extends TemplateSecureScreen
 
             ModuleEntity currentModule = scarabR.getCurrentModule();
             IssueType currentIssueType = scarabR.getCurrentIssueType();
+            String issueId = data.getParameters().getString("id");
             ScarabUser user = (ScarabUser)data.getUser();
             if (perm != null)
             {
@@ -131,8 +132,9 @@ public class Default extends TemplateSecureScreen
                     setTargetSelectModule(data);
                     return false;
                 }
-                else if (currentIssueType == null)
+                else if (currentIssueType == null && issueId == null)
                 {
+System.out.println("huh");
                     data.setMessage("Please select the Artifact Type " +
                                     "that you would like to work " +
                                     "in.");
@@ -176,7 +178,8 @@ public class Default extends TemplateSecureScreen
                           .getString(ScarabConstants.NEXT_TEMPLATE) );
 
         setTarget(data, Turbine.getConfiguration()
-                .getString("scarab.CurrentArtifactTypeTemplate", "SelectModule.vm"));        
+                .getString("scarab.CurrentArtifactTypeTemplate", 
+                           "SelectModule.vm"));        
     }
 
     private static void setTargetLogin(RunData data)
