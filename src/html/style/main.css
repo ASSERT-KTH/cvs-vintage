@@ -15,6 +15,10 @@ h2, h3, h4 {
 h2 {
  font-size: 1.5em
  }
+th, td {
+ text-align: left;
+ vertical-align: top 
+ }
 td.right, th.right {
 	text-align:	right;
 	}
@@ -29,6 +33,7 @@ td.center, th.center {
 	}
 th {
 	background: #999;
+	color: #fff
 	}
 .a td, .a th { 
 	background: #efefef;
@@ -38,10 +43,17 @@ th {
 	}
 .datatablechild th {
 	background: #c3c3c3;
+	color: #000;
+	font-weight: normal
 	}
+	.datatablechild tr.a td {
+	background: #cf9;
+	}
+
 .axial th {
 	background: #efefef;
 	text-align: right;
+	color: black
 	}
 .alert {
 	background: #ff0;

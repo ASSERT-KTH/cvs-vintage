@@ -52,7 +52,7 @@ a:active, a:hover {
 table, th, td	{
 	border: none
 	}
-.axial th {
+/* .axial th {
 	border-top: 1px solid #999;
 	border-left: 1px solid #999;
 	}
@@ -62,7 +62,7 @@ table, th, td	{
 	}
 .axial td, .datatablechild td {
 	border: none;
-	}
+	} */
 h3, .functnbar	{
 	padding: 5px;
 	color: white;
@@ -73,8 +73,11 @@ h3, .functnbar	{
 .functnbar {
 	padding: 3px;
 	font-weight: bold;
-	background: black;
-	}	
+	background: #000	}
+	
+h3 {	background: #369 url(/scarab/images/nw_min.gif) no-repeat;
+}
+
 code, pre {
 	font-family:	'Andale Mono', monospace;
 	}
