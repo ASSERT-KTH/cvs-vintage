@@ -24,29 +24,6 @@
      value="$!data.Parameters.getString("queryString")" />
  <input type="hidden" name="queryId" 
      value="$!data.Parameters.getString("queryId")" />
-#*
-#if (!$mitList || $mitList.isEmpty())
- <p>$l10n.ChoosePredefinedList</p>
- <h3>$l10n.PredefinedLists</h3>
-
- #set($manager = $scarabG.MITListManager)
- #set($key = "pd_list_id")
- #set($list2 = $manager.AllModulesCurrentIssueTypeList)
- #set($checked2 = $list.QueryKey == $data.Parameters.getString($key, ""))
- #set($list = $manager.AllModulesAllIssueTypesList)
- #set($checked = !$checked2 || $list.QueryKey == $data.Parameters.getString($key, ""))
- <div class="colbar">
-   <p><input type="radio" name="$key" value="$list.QueryKey"
-     #if($checked) checked="checked"#end />$list.Name</p>
-   <p><input type="radio" name="$key" value="$list2.QueryKey"
-     #if($checked2) checked="checked"#end />$list2.Name</p>
- </div>
-
- <div class="functnbar2">
-  <input type="submit" name="eventSubmit_doGotoquerywithinternallist" value="$l10n.DefineQuery" />
- </div>
-#end
-*#
 
 <h3>$l10n.BuildListOfIssueTypes</h3>
 
@@ -269,6 +246,30 @@ $l10n.NoMoreIssueTypes
 <input type="hidden" name="sortPolarity" value="$sortPolarity" />
 <input type="hidden" name="pageNum" value="$pageNum" />
 <input type="hidden" name="resultsPerPage" value="$resultsPerPage" />
+
+
+#if (!$mitList || $mitList.isEmpty())
+ <hr />
+ <p>$l10n.ChoosePredefinedList</p>
+ <h3>$l10n.PredefinedLists</h3>
+
+ #set($manager = $scarabG.MITListManager)
+ #set($key = "pd_list_id")
+ #set($list2 = $manager.AllModulesCurrentIssueTypeList)
+ #set($checked2 = $list.QueryKey == $data.Parameters.getString($key, ""))
+ #set($list = $manager.AllModulesAllIssueTypesList)
+ #set($checked = !$checked2 || $list.QueryKey == $data.Parameters.getString($key, ""))
+ <div class="colbar">
+   <p><input type="radio" name="$key" value="$list.QueryKey"
+     #if($checked) checked="checked"#end />$list.Name</p>
+   <p><input type="radio" name="$key" value="$list2.QueryKey"
+     #if($checked2) checked="checked"#end />$list2.Name</p>
+ </div>
+
+ <div class="functnbar2">
+  <input type="submit" name="eventSubmit_doGotoquerywithinternallist" value="$l10n.DefineQuery" />
+ </div>
+#end
 
 $intake.declareGroups()
 </form>
