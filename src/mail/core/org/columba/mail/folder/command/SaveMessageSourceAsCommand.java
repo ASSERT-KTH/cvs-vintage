@@ -1,6 +1,3 @@
-/*
- * Created 15.06.2003
- */
 //The contents of this file are subject to the Mozilla Public License Version 1.1
 //(the "License"); you may not use this file except in compliance with the 
 //License. You may obtain a copy of the License at http://www.mozilla.org/MPL/
@@ -16,6 +13,7 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
+
 package org.columba.mail.folder.command;
 
 import java.io.File;
@@ -32,6 +30,8 @@ import org.columba.mail.command.FolderCommand;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.folder.Folder;
 import org.columba.mail.util.MailResourceLoader;
+import org.columba.ristretto.message.Address;
+
 
 /**
  * Defines command for saving message source to file
@@ -86,24 +86,24 @@ public class SaveMessageSourceAsCommand extends FolderCommand {
 						.getMessageHeader(uid)
 						.get("Subject");
  			String defaultName = getValidFilename(subject, false);
-			if (defaultName.length() > 0) {
-				fileChooser.setSelectedFile(new File(defaultName));
+			if (defaultName.length() == 0) {
+                                //TODO: use org.columba.ristretto.message.Address
+                                // to parse "From" headerfield and use getDisplayName()
+                                // as defaultName
 			}
+                        fileChooser.setSelectedFile(new File(defaultName));
  			fileChooser.setDialogTitle(
  					MailResourceLoader.getString(
  						"dialog", "saveas",
  						"save_msg_source"));
 
 			// show dialog
-			int res = fileChooser.showSaveDialog(null);
-
-			if (res == JFileChooser.APPROVE_OPTION)
+			if (fileChooser.showSaveDialog(null) == JFileChooser.APPROVE_OPTION)
 			{
 				File f = fileChooser.getSelectedFile();
-				int confirm;
 				if (f.exists()) {
 					// file exists, user needs to confirm overwrite
-					confirm = JOptionPane.showConfirmDialog(
+					int confirm = JOptionPane.showConfirmDialog(
 								null,
 								MailResourceLoader.getString(
 									"dialog", "saveas",
@@ -113,21 +113,21 @@ public class SaveMessageSourceAsCommand extends FolderCommand {
 									"file_exists"),
 								JOptionPane.YES_NO_OPTION,
 								JOptionPane.QUESTION_MESSAGE);
-				} else {
-					confirm = JOptionPane.YES_OPTION;
+                                        if (confirm == JOptionPane.NO_OPTION) {
+                                                j--;
+                                                continue;
+                                        }
 				}
 
-				if (confirm == JOptionPane.YES_OPTION) {
-					// save message source under selected filename
-					String source = srcFolder.getMessageSource(uid);
-					try {
-						DiskIO.saveStringInFile(f, source);
-					} catch (Exception ex) {
-						ColumbaLogger.log.error(
-								"Error saving msg source to file...",
-								ex);
-					}
-				}
+                                // save message source under selected filename
+                                String source = srcFolder.getMessageSource(uid);
+                                try {
+                                        DiskIO.saveStringInFile(f, source);
+                                } catch (Exception ex) {
+                                        ColumbaLogger.log.error(
+                                                        "Error saving msg source to file...",
+                                                        ex);
+                                }
 			}
 		} // end of loop over selected messages
 	}
@@ -151,7 +151,8 @@ public class SaveMessageSourceAsCommand extends FolderCommand {
 			if ((c == '\\') ||
 					(c == '/') || (c == ':')  ||
 					(c == ',') || (c == '\n') ||
-					(c == '\t')) {
+					(c == '\t') || (c == '[') ||
+                                        (c == ']')) {
 				// dismiss char
 			} else if ((c == ' ') && (replSpaces)){
 				buf.append('_');
@@ -161,6 +162,4 @@ public class SaveMessageSourceAsCommand extends FolderCommand {
 		}
 		return buf.toString();
 	}
-
-
 }
