@@ -19,7 +19,7 @@
  * USA
  *
  * --------------------------------------------------------------------------
- * $Id: JacORBCosNaming.java,v 1.6 2005/03/03 16:10:15 benoitf Exp $
+ * $Id: JacORBCosNaming.java,v 1.7 2005/03/03 16:23:46 benoitf Exp $
  * --------------------------------------------------------------------------
  */
 package org.objectweb.carol.jndi.ns;
@@ -310,7 +310,7 @@ public class JacORBCosNaming implements NameService {
                 + "/StandardNS/NameServer-POA/_root");
 
         if (orb == null) {
-            orb = ORB.init(new String[0], null);
+            initORB();
         }
 
         prop.put("java.naming.corba.orb", orb);
@@ -331,6 +331,9 @@ public class JacORBCosNaming implements NameService {
      * @return the orb.
      */
     public static ORB getOrb() {
+        if (orb == null) {
+            initORB();
+        }
         return orb;
     }
 
@@ -340,5 +343,13 @@ public class JacORBCosNaming implements NameService {
      */
     public void setConfigProperties(Properties p) {
         this.configurationProperties = p;
+    }
+
+    /**
+     * Initialize the ORB
+     * @return
+     */
+    private static void initORB() {
+        orb = ORB.init(new String[0], null);
     }
 }

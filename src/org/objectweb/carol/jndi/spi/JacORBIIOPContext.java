@@ -19,7 +19,7 @@
  * USA
  *
  * --------------------------------------------------------------------------
- * $Id: JacORBIIOPContext.java,v 1.4 2005/02/18 08:50:14 benoitf Exp $
+ * $Id: JacORBIIOPContext.java,v 1.5 2005/03/03 16:23:46 benoitf Exp $
  * --------------------------------------------------------------------------
  */
 
@@ -137,36 +137,26 @@ public class JacORBIIOPContext implements Context {
             envSasComponent = (SasComponent) env.get(SAS_COMPONENT);
         }
 
-        if (JacORBCosNaming.getOrb() != null) {
-            orb = JacORBCosNaming.getOrb();
-            if (rootPOA == null) {
-                try {
-                    rootPOA = org.omg.PortableServer.POAHelper.narrow(JacORBCosNaming.getOrb()
-                            .resolve_initial_references("RootPOA"));
-                    rootPOA.the_POAManager().activate();
-                } catch (Exception e) {
-                    throw new NamingException("Cannot get a single instance" + e.getMessage());
-                }
-            }
-            if (!orbStarted) {
-                // Start it
-                new Thread(new Runnable() {
-
-                    public void run() {
-                        JacORBCosNaming.getOrb().run();
-                    }
-                }).start();
-                orbStarted = true;
-
-            }
-
-        } else if (orb == null) {
-            orb = ORB.init(new String[0], null);
+        orb = JacORBCosNaming.getOrb();
+        if (rootPOA == null) {
             try {
-                rootPOA = org.omg.PortableServer.POAHelper.narrow(orb.resolve_initial_references("RootPOA"));
+                rootPOA = org.omg.PortableServer.POAHelper.narrow(JacORBCosNaming.getOrb()
+                        .resolve_initial_references("RootPOA"));
+                rootPOA.the_POAManager().activate();
             } catch (Exception e) {
                 throw new NamingException("Cannot get a single instance" + e.getMessage());
             }
+        }
+        if (!orbStarted) {
+            // Start it
+            new Thread(new Runnable() {
+
+                public void run() {
+                    JacORBCosNaming.getOrb().run();
+                }
+            }).start();
+            orbStarted = true;
+
         }
 
         // Look in cache only if there are no specific policies
