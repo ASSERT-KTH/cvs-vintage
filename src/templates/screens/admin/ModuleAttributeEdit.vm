@@ -62,7 +62,7 @@ On this screen, one can modify a module's Attribute information.
 </div>
 
 #if ($attType.AttributeClass.Name.equals("select-one"))
-#set ($rmos = $scarabR.CurrentModule.getRModuleOptions($attribute,$scarabR.CurrentIssueType))
+#set ($rmos = $scarabR.CurrentModule.getRModuleOptions($attribute,$scarabR.CurrentIssueType, false))
 #set ($maxNum = $rmos.size())
 #datatitle ("Attribute Options")
 <table width="70%" border="1" cellspacing="2" cellpadding="2">
