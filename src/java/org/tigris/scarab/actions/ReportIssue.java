@@ -87,7 +87,7 @@ import org.tigris.scarab.tools.ScarabRequestTool;
  * This class is responsible for report issue forms.
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: ReportIssue.java,v 1.52 2001/10/05 21:11:50 jmcnally Exp $
+ * @version $Id: ReportIssue.java,v 1.53 2001/10/05 21:48:07 jmcnally Exp $
  */
 public class ReportIssue extends RequireLoginFirstAction
 {
@@ -100,49 +100,18 @@ public class ReportIssue extends RequireLoginFirstAction
         Issue issue = user.getReportingIssue(scarabR.getCurrentModule());
 
         // set any required flags
-        Attribute[] requiredAttributes = 
-            issue.getScarabModule().getRequiredAttributes();
-        SequencedHashtable avMap = issue.getModuleAttributeValuesMap(); 
-        Iterator iter = avMap.iterator();
-        AttributeValue aval = null;
-        Group group = null;
-        while ( iter.hasNext() ) 
-        {
-            aval = (AttributeValue)avMap.get(iter.next());
-
-            group = intake.get("AttributeValue", aval.getQueryKey(), false);
-            if ( group != null ) 
-            {            
-                Field field = null;
-                if ( aval instanceof OptionAttribute ) 
-                {
-                    field = group.get("OptionId");
-                }
-                else 
-                {
-                    field = group.get("Value");
-                }
-                
-                for ( int j=requiredAttributes.length-1; j>=0; j-- ) 
-                {
-                    if ( aval.getAttribute().getPrimaryKey().equals(
-                         requiredAttributes[j].getPrimaryKey() )) 
-                    {
-                        field.setRequired(true);
-                        break;
-                    }                    
-                }
-            }
-        }
+        setRequiredFlags(issue, intake);
         
         if ( intake.isAllValid() ) 
         {
             // set the values entered so far
-            iter = avMap.iterator();
+            SequencedHashtable avMap = issue.getModuleAttributeValuesMap(); 
+            Iterator iter = avMap.iterator();
             while (iter.hasNext()) 
             {
-                aval = (AttributeValue)avMap.get(iter.next());
-                group = intake.get("AttributeValue", aval.getQueryKey(),false);
+                AttributeValue aval = (AttributeValue)avMap.get(iter.next());
+                Group group = intake.get("AttributeValue", 
+                                         aval.getQueryKey(),false);
                 if ( group != null ) 
                 {
                     group.setProperties(aval);
@@ -179,9 +148,6 @@ public class ReportIssue extends RequireLoginFirstAction
         {
             context.put("issueList", matchingIssues);
             template = "entry,Wizard2.vm";
-            // clean out the eventSubmit because we will reuse parameters
-            data.getParameters().remove(event);
-            data.getParameters().remove("nextTemplate");
             beatThreshold = true;
         }
         else
@@ -193,29 +159,16 @@ public class ReportIssue extends RequireLoginFirstAction
         return beatThreshold;
     }
 
-    /**
-     * handles entering an issue
-     */
-    public void doEnterissue( RunData data, TemplateContext context )
+    private void setRequiredFlags(Issue issue, IntakeTool intake)
         throws Exception
     {
-        IntakeTool intake = getIntakeTool(context);
-        ScarabRequestTool scarabR = getScarabRequestTool(context);
-        ScarabUser user = (ScarabUser)data.getUser();
-
-        Issue issue = user.getReportingIssue(scarabR.getCurrentModule());
-        AttributeValue aval = null;
-
-        // set any other required flags
-        Criteria crit = new Criteria(3)
-            .add(RModuleAttributePeer.ACTIVE, true)        
-            .add(RModuleAttributePeer.REQUIRED, true);        
-        Attribute[] requiredAttributes = issue.getScarabModule().getAttributes(crit);
+        Attribute[] requiredAttributes = issue.getScarabModule()
+            .getRequiredAttributes();
         SequencedHashtable avMap = issue.getModuleAttributeValuesMap(); 
         Iterator iter = avMap.iterator();
         while ( iter.hasNext() ) 
         {
-            aval = (AttributeValue)avMap.get(iter.next());
+            AttributeValue aval = (AttributeValue)avMap.get(iter.next());
             
             Group group = intake.get("AttributeValue", aval.getQueryKey(), false);
             if ( group != null ) 
@@ -247,6 +200,24 @@ public class ReportIssue extends RequireLoginFirstAction
                 }
             }
         }
+    }
+
+    /**
+     * handles entering an issue
+     */
+    public void doEnterissue( RunData data, TemplateContext context )
+        throws Exception
+    {
+        IntakeTool intake = getIntakeTool(context);
+        ScarabRequestTool scarabR = getScarabRequestTool(context);
+        ScarabUser user = (ScarabUser)data.getUser();
+
+        Issue issue = user.getReportingIssue(scarabR.getCurrentModule());
+        SequencedHashtable avMap = issue.getModuleAttributeValuesMap(); 
+        AttributeValue aval = null;
+
+        // set any required flags
+        setRequiredFlags(issue, intake);
 
         if (intake.isAllValid())
         {
