@@ -1,4 +1,4 @@
-$Id: README.txt,v 1.53 2002/12/29 00:11:29 jon Exp $
+$Id: README.txt,v 1.54 2003/01/03 18:51:45 jon Exp $
 
 Welcome to Scarab!
 
@@ -9,7 +9,7 @@ the instructions for building and running an installation as well as
 requirements for setting up the database.
 
 If you are doing development work with Scarab, please make sure to read 
-the DEVELOPMENT.txt file for more hints on working with the CVS tree.
+this link: http://scarab.tigris.org/development.html
 
 We appreciate your deciding to try Scarab out and appreciate constructive 
 feedback on your success (or failure...we hope not!) in getting the 
@@ -33,8 +33,12 @@ MySQL 3.23.x/4.x         --> <http://www.mysql.org/>
                            OR
 Postgresql 7.3.x         --> <http://www.postgresql.org/>
 
-NOTE: Scarab requires Jikes 1.18 or higher to compile. Please do not try
-      with Jikes 1.17 as it is buggy.
+NOTE: More detailed instructions for setting up the database on
+      different database vendors is available on our website.
+
+      **You should read it BEFORE building Scarab.**
+
+      <http://scarab.tigris.org/project_docs.html>
 
 NOTE: If you want to use the faster/newer JDBC driver with MySQL, you can
       download it from the MySQL website and use them instead. We do not
@@ -42,7 +46,10 @@ NOTE: If you want to use the faster/newer JDBC driver with MySQL, you can
       file into your scarab/lib directory and put this in your
       build.properties file: scarab.jdbc.driver.jar=mysql-connector*.jar
       
-      http://www.mysql.com/downloads/api-jdbc-dev.html
+      <http://www.mysql.com/downloads/api-jdbc-dev.html>
+
+NOTE: Scarab requires Jikes 1.18 or higher to compile. Please do not try
+      with Jikes 1.17 as it is buggy.
 
 NOTE: If you are using an existing Tomcat 4.1.x installation, you MUST
       *move* the common/endorsed/xercesImpl.jar to the server/lib
@@ -329,9 +336,9 @@ NOTE: If you would like to only load the required database data and not
 
 NOTE: More detailed instructions for setting up the database on
       different database vendors is available on our website.
-      
+
       <http://scarab.tigris.org/project_docs.html>
-      
+
 NOTE: The create scripts will attempt to first drop a database called
       "scarab" and then re-create it. If you execute this create-*
       script, all of your previous data in that specific database will
