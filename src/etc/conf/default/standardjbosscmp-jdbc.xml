@@ -7,7 +7,7 @@
 <!--                                                                       -->
 <!-- ===================================================================== -->
 
-<!-- $Id: standardjbosscmp-jdbc.xml,v 1.47 2002/09/21 18:12:20 dsundstrom Exp $ -->
+<!-- $Id: standardjbosscmp-jdbc.xml,v 1.48 2002/09/24 15:23:56 loubyansky Exp $ -->
 
 <jbosscmp-jdbc>
    
@@ -2071,7 +2071,7 @@
 
       <!-- this command requires auto-increment element for unknown-pk -->
       <entity-command name="mysql-get-generated-keys"
-                      class="org.jboss.ejb.plugins.cmp.jdbc.mysql.MySQLCreateEntityCommand"/>
+                      class="org.jboss.ejb.plugins.cmp.jdbc.mysql.JDBCMySQLCreateCommand"/>
 
       <!-- uses key generator to fetch the next key value -->
       <entity-command name="key-generator"

@@ -29,16 +29,16 @@ import org.jboss.ejb.plugins.cmp.jdbc.JDBCUtil;
 import org.jboss.logging.Logger;
 
 /**
- * MySQLCreateEntityCommand executes an INSERT INTO query.
+ * JDBCMySQLCreateCommand executes an INSERT INTO query.
  * The command uses getGeneratedKeys method from MySQL native
  * Statement interface implementation to fetch the generated key.
  * It works under JDK versions 1.3 and 1.4.
  *
  * @author <a href="mailto:loubyansky@hotmail.com">Alex Loubyansky</a>
  *
- * @version $Revision: 1.4 $
+ * @version $Revision: 1.1 $
  */
-public class MySQLCreateEntityCommand
+public class JDBCMySQLCreateCommand
    extends JDBCCreateEntityCommand
 {
 
