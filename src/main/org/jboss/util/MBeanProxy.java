@@ -4,9 +4,12 @@
  * Distributable under LGPL license.
  * See terms of license at gnu.org.
  */
+
 package org.jboss.util;
 
 import java.lang.reflect.Method;
+import java.lang.reflect.Proxy;
+import java.lang.reflect.InvocationHandler;
 
 import javax.management.MBeanServer;
 import javax.management.ObjectName;
@@ -17,15 +20,12 @@ import javax.management.RuntimeOperationsException;
 import javax.management.RuntimeMBeanException;
 import javax.management.RuntimeErrorException;
 
-import org.jboss.proxy.compiler.Proxy;
-import org.jboss.proxy.compiler.InvocationHandler;
-
 /**
  * A factory for producing MBean proxies.
  *      
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>.
  * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
- * @version $Revision: 1.9 $
+ * @version $Revision: 1.10 $
  */
 public class MBeanProxy
    implements InvocationHandler
