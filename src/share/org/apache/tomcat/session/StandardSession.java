@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/session/Attic/StandardSession.java,v 1.8 2000/05/12 02:31:59 costin Exp $
- * $Revision: 1.8 $
- * $Date: 2000/05/12 02:31:59 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/session/Attic/StandardSession.java,v 1.9 2000/05/15 18:17:06 jon Exp $
+ * $Revision: 1.9 $
+ * $Date: 2000/05/15 18:17:06 $
  *
  * ====================================================================
  *
@@ -92,7 +92,7 @@ import org.apache.tomcat.util.StringManager;
  * HttpSession view of this instance back to a Session view.
  *
  * @author Craig R. McClanahan
- * @version $Revision: 1.8 $ $Date: 2000/05/12 02:31:59 $
+ * @version $Revision: 1.9 $ $Date: 2000/05/15 18:17:06 $
  */
 
 final class StandardSession
@@ -773,7 +773,13 @@ final class StandardSession
      * <b>IMPLEMENTATION NOTE</b>:  Any attribute that is not Serializable
      * will be silently ignored.  If you do not want any such attributes,
      * be sure the <code>distributable</code> property of our associated
-     * Manager is set to <code>true</code>.
+     * Manager is set to <code>true</code>. 
+	 * <p>
+     * <b>IMPLEMENTATION NOTE</b>: If we can't serialize the object stored in 
+     * the session, then check to see if it implements 
+     * HttpSessionBindingListener and then call its 
+     * valueUnbound method, allowing it to save its state
+     * correctly instead of just being lost into the etherworld
      *
      * @param stream The output stream to write to
      *
@@ -781,37 +787,41 @@ final class StandardSession
      */
     private void writeObject(ObjectOutputStream stream) throws IOException {
 
-	// Write the scalar instance variables (except Manager)
-	stream.writeObject(new Long(creationTime));
-	stream.writeObject(id);
-	stream.writeObject(new Long(lastAccessedTime));
-	stream.writeObject(new Integer(maxInactiveInterval));
-	stream.writeObject(new Boolean(isNew));
-	stream.writeObject(new Boolean(isValid));
+		// Write the scalar instance variables (except Manager)
+		stream.writeObject(new Long(creationTime));
+		stream.writeObject(id);
+		stream.writeObject(new Long(lastAccessedTime));
+		stream.writeObject(new Integer(maxInactiveInterval));
+		stream.writeObject(new Boolean(isNew));
+		stream.writeObject(new Boolean(isValid));
 
-	// Accumulate the names of serializable attributes
-	Vector results = new Vector();
-	Enumeration attrs = getAttributeNames();
-	while (attrs.hasMoreElements()) {
-	    String attr = (String) attrs.nextElement();
-	    Object value = attributes.get(attr);
-	    if (value instanceof Serializable)
-		results.addElement(attr);
-	}
+		// Accumulate the names of serializable attributes
+		Vector results = new Vector();
+		Enumeration attrs = getAttributeNames();
+		while (attrs.hasMoreElements()) {
+			String attr = (String) attrs.nextElement();
+			Object value = attributes.get(attr);
+			if (value instanceof Serializable) {
+				results.addElement(attr);
+			} else if (value instanceof HttpSessionBindingListener ) {
+				try {
+				    ((HttpSessionBindingListener)value)
+						.valueUnbound(new HttpSessionBindingEvent(this, attr));
+				} catch (Exception e) {
+					// ignored
+				}
+			}
+		}
 
-	// Serialize the attribute count and the  attribute values
-	stream.writeObject(new Integer(results.size()));
-	Enumeration names = results.elements();
-	while (names.hasMoreElements()) {
-	    String name = (String) names.nextElement();
-	    stream.writeObject(name);
-	    stream.writeObject(attributes.get(name));
-	}
-
-
+		// Serialize the attribute count and the  attribute values
+		stream.writeObject(new Integer(results.size()));
+		Enumeration names = results.elements();
+		while (names.hasMoreElements()) {
+			String name = (String) names.nextElement();
+			stream.writeObject(name);
+			stream.writeObject(attributes.get(name));
+		}
     }
-
-
 }
 
 /**
