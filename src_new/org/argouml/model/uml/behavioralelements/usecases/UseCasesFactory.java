@@ -1,4 +1,4 @@
-// $Id: UseCasesFactory.java,v 1.21 2004/03/17 21:36:12 d00mst Exp $
+// $Id: UseCasesFactory.java,v 1.22 2004/07/19 21:46:20 d00mst Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -340,7 +340,9 @@ public class UseCasesFactory extends AbstractUmlModelFactory {
      
     public void deleteUseCase(MUseCase elem) {
 	UmlHelper.getHelper().deleteCollection(elem.getExtends());
+	UmlHelper.getHelper().deleteCollection(elem.getExtends2());
 	UmlHelper.getHelper().deleteCollection(elem.getIncludes());       
+	UmlHelper.getHelper().deleteCollection(elem.getIncludes2());
     }
      
     public void deleteUseCaseInstance(MUseCaseInstance elem) { }
