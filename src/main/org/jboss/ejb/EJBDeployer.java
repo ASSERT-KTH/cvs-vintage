@@ -49,15 +49,18 @@ import org.jboss.metadata.XmlLoadable;
 
 import org.w3c.dom.Element;
 
-//import org.jboss.management.j2ee.EjbModule;
-
 /**
  * A EJBDeployer is used to deploy EJB applications. It can be given a
  * URL to an EJB-jar or EJB-JAR XML file, which will be used to instantiate
  * containers and make them available for invocation.
  *
+ * @jmx:mbean
+ *      name="jboss.ejb:service=EJBDeployer"
+ *      extends="org.jboss.deployment.SubDeployerMBean"
+ *
  * @see Container
  *
+ * @version <tt>$Revision: 1.24 $</tt>
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  * @author <a href="mailto:jplindfo@helsinki.fi">Juha Lindfors</a>
@@ -66,7 +69,6 @@ import org.w3c.dom.Element;
  * @author <a href="mailto:scott.stark@jboss.org">Scott Stark</a>
  * @author <a href="mailto:sacha.labourey@cogito-info.ch">Sacha Labourey</a>
  * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
- * @version <tt>$Revision: 1.23 $</tt>
  */
 public class EJBDeployer
    extends SubDeployerSupport
@@ -91,13 +93,15 @@ public class EJBDeployer
    
    /**
     * Returns the deployed applications.
+    *
+    * @jmx:managed-operation
     */
    public Iterator getDeployedApplications()
    {
       return deployments.values().iterator();
    }
    
-   public ObjectName getObjectName(MBeanServer server, ObjectName name)
+   protected ObjectName getObjectName(MBeanServer server, ObjectName name)
       throws MalformedObjectNameException
    {
       return name == null ? OBJECT_NAME : name;
@@ -106,7 +110,7 @@ public class EJBDeployer
    /**
     * Get a reference to the ServiceController
     */
-   public void startService() throws Exception
+   protected void startService() throws Exception
    {
       serviceController = (ServiceControllerMBean)
 	 MBeanProxy.create(ServiceControllerMBean.class,
@@ -121,7 +125,7 @@ public class EJBDeployer
     * Implements the template method in superclass. This method stops all the
     * applications in this server.
     */
-   public void stopService() throws Exception
+   protected void stopService() throws Exception
    {
       for (Iterator modules = deployments.values().iterator(); modules.hasNext(); )
       {
@@ -144,6 +148,8 @@ public class EJBDeployer
    /**
     * Enables/disables the application bean verification upon deployment.
     *
+    * @jmx:managed-attribute
+    *
     * @param   verify  true to enable; false to disable
     */
    public void setVerifyDeployments(boolean verify)
@@ -154,6 +160,8 @@ public class EJBDeployer
    /**
     * Returns the state of bean verifier (on/off)
     *
+    * @jmx:managed-attribute
+    * 
     * @return   true if enabled; false otherwise
     */
    public boolean getVerifyDeployments()
@@ -163,6 +171,8 @@ public class EJBDeployer
    
    /**
     * Enables/disables the verbose mode on the verifier.
+    *
+    * @jmx:managed-attribute
     *
     * @param   verbose  true to enable; false to disable
     */
@@ -174,6 +184,8 @@ public class EJBDeployer
    /**
     * Returns the state of the bean verifier (verbose/non-verbose mode)
     *
+    * @jmx:managed-attribute
+    * 
     * @return true if enabled; false otherwise
     */
    public boolean getVerifierVerbose()
@@ -184,6 +196,8 @@ public class EJBDeployer
    /**
     * Enables/disables the metrics interceptor for containers.
     *
+    * @jmx:managed-attribute
+    *
     * @param enable  true to enable; false to disable
     */
    public void setMetricsEnabled(boolean enable)
@@ -193,6 +207,8 @@ public class EJBDeployer
    
    /**
     * Checks if this container factory initializes the metrics interceptor.
+    *
+    * @jmx:managed-attribute
     *
     * @return   true if metrics are enabled; false otherwise
     */
@@ -205,6 +221,8 @@ public class EJBDeployer
     * Get the flag indicating that ejb-jar.dtd, jboss.dtd &
     * jboss-web.dtd conforming documents should be validated
     * against the DTD.
+    *
+    * @jmx:managed-attribute
     */
    public boolean getValidateDTDs()
    {
@@ -215,6 +233,8 @@ public class EJBDeployer
     * Set the flag indicating that ejb-jar.dtd, jboss.dtd &
     * jboss-web.dtd conforming documents should be validated
     * against the DTD.
+    *
+    * @jmx:managed-attribute
     */
    public void setValidateDTDs(boolean validate)
    {
@@ -448,11 +468,11 @@ public class EJBDeployer
    }
    
    /**
-   * Check if the application with this url is deployed.
-   *
-   * @param url
-   * @return       true if deployed
-   */
+    * Check if the application with this url is deployed.
+    *
+    * @param url
+    * @return       true if deployed
+    */
    public boolean isDeployed(URL url)
    {
       return deployments.get(url) != null;
