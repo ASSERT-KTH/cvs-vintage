@@ -13,7 +13,7 @@
 
 	rd.include( request, response );
 
-	ServletUtil.printParamValues( "", " ]",
+	params.ServletUtil.printParamValues( "", " ]",
 				      "postInclude1:", " = [ ",
 				      "", "",
 				      " , ",
