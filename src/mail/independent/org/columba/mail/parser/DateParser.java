@@ -26,23 +26,32 @@ public class DateParser {
 	static final SimpleDateFormat DateHeaderFormats[] =
 		{
 			new SimpleDateFormat(
-				"EEE, dd MMM yy HH:mm:ss z",
+				"EEE, dd MMM yy HH:mm:ss z", // Sun, 06 Feb 03 10:20:00 GMT+0100
 				new DateFormatSymbols(Locale.US)),
 			new SimpleDateFormat(
-				"EEE, dd MMM yyyy HH:mm:ss z",
+				"EEE, dd MMM yyyy HH:mm:ss z", // Sun, 06 Feb 2003 10:20:00 GMT+0100
 				new DateFormatSymbols(Locale.US)),
 			new SimpleDateFormat(
-				"EEE, dd MMM yyyy HH:mm:ss",
+				"EEE, dd MMM yyyy HH:mm:ss", // Sun, 06 Feb 2003 10:20:00
 				new DateFormatSymbols(Locale.US)),
 			new SimpleDateFormat(
-				"dd MMM yyyy HH:mm:ss z",
+				"dd MMM yyyy HH:mm:ss z", // 06 Feb 2003 10:20:00 GMT+0100
 				new DateFormatSymbols(Locale.US)),
 			new SimpleDateFormat(
-				"dd MMM yyyy HH:mm:ss",
+				"dd MMM yyyy HH:mm:ss", // 06 Feb 2003 10:20:00
 				new DateFormatSymbols(Locale.US)),
 			new SimpleDateFormat(
-				"EEE MMM dd HH:mm:ss yyyy",
-				new DateFormatSymbols(Locale.US))};
+				"EEE MMM dd HH:mm:ss yyyy", // Sun Feb 06 10:20:00 2003
+				new DateFormatSymbols(Locale.US)),
+			new SimpleDateFormat(
+			  "dd MMM yyyy HH:mm 'GMT'", // 06 Feb 2003 10:20 GMT
+			  new DateFormatSymbols(Locale.US)),
+			new SimpleDateFormat(
+			  "EEE, dd MM yyyy HH:mm",  // Sun, 06 02 2003 10:20
+			  new DateFormatSymbols(Locale.US)), 
+			new SimpleDateFormat(
+			  "EEE, dd MMM yyyy HH:mm Z", // Sun, 06 Feb 2003 10:20 +0100
+			  new DateFormatSymbols(Locale.US))};
 
 	public DateParser() {
 	}

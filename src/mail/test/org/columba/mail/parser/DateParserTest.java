@@ -30,21 +30,57 @@ public class DateParserTest extends TestCase {
 		super(arg0);
 	}
 
-	public void testParseString() {
+	public void testParseString1() {
 //		day, month, year, hour, minute
 		String testData = "Sun, 07 03 2003 19:20";
 
 		Date date = DateParser.parseString(testData);
-		ColumbaLogger.log.debug("date="+date.toString());
-		
-		GregorianCalendar c = new GregorianCalendar();
-		// day, month, year, hour, minute
-		c.set(2003, 7, 3, 19, 20);
-		Date testDate = c.getTime();
-		ColumbaLogger.log.debug("testDate="+testDate.toString());
-		
-		Assert.assertTrue( testDate.equals(date) );
 
+		GregorianCalendar c = new GregorianCalendar();
+		c.clear();
+		// year, month, date, hour, second
+		c.set(2003, 2, 7, 19, 20, 0);
+		Date testDate = c.getTime();
+
+		Assert.assertTrue( testDate.equals(date) );
+	}
+	
+	public void testParseString2() {
+		String testStr = "Thu, 6 Feb 2003 11:05 +0100";
+		
+		Date date = DateParser.parseString(testStr);
+		GregorianCalendar c = new GregorianCalendar();
+		c.clear();
+		// year, month, date, hour, second
+		c.set(2003, 1, 6, 11,5,0);
+		Date testDate = c.getTime();
+		
+		assertTrue(testDate.equals(date));
+	}
+	
+	public void testParseString3() {
+		String testStr = "19 Jun 2003 09:46 GMT";
+		
+		Date date = DateParser.parseString(testStr);
+		GregorianCalendar c = new GregorianCalendar();
+		c.clear();
+		//		year, month, date, hour, second
+		c.set(2003, 5, 19, 9, 46, 0);
+		Date testDate = c.getTime();
+		assertTrue(testDate.equals(date));
+	}
+	
+	public void testParseString4() {
+		String testStr = "Thu, 17 Apr 2003 10:06 -0400";
+		Date date = DateParser.parseString(testStr);
+
+		GregorianCalendar c = new GregorianCalendar();
+		c.clear();
+		// year, month, date, hour, second
+		c.set(2003, 3, 17, 16, 6, 0);
+		Date testDate = c.getTime();
+
+		assertTrue(testDate.equals(date));
 	}
 
 }
