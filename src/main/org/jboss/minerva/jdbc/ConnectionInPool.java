@@ -29,7 +29,7 @@ import org.jboss.minerva.pools.PoolEventListener;
  * outstanding statements are closed, and the connection is rolled back.  This
  * class is also used by statements, etc. to update the last used time for the
  * connection.
- * @version $Revision: 1.4 $
+ * @version $Revision: 1.5 $
  * @author Aaron Mulder (ammulder@alumni.princeton.edu)
  */
 public class ConnectionInPool implements PooledObject, ConnectionWrapper {
@@ -117,17 +117,18 @@ public class ConnectionInPool implements PooledObject, ConnectionWrapper {
         if (st instanceof PreparedStatementInPool) {
             // Now return the "real" statement to the pool
             PreparedStatementInPool ps = (PreparedStatementInPool) st;
+            PreparedStatement ups = ps.getUnderlyingPreparedStatement();
             int rsType = ResultSet.TYPE_FORWARD_ONLY;
             int rsConcur = ResultSet.CONCUR_READ_ONLY;
+
             // We may have JDBC 1.0 driver
             try {
-                rsType = ps.getResultSetType();
-                rsConcur = ps.getResultSetConcurrency();
+                rsType = ups.getResultSetType();
+                rsConcur = ups.getResultSetConcurrency();
             } catch (Throwable th) {
             }
             PreparedStatementInPool.preparedStatementCache.put(
-                    new PSCacheKey(con, ps.getSql(), rsType, rsConcur),
-                    ps.getUnderlyingPreparedStatement());
+                    new PSCacheKey(con, ps.getSql(), rsType, rsConcur), ups);
         }
     }
 
