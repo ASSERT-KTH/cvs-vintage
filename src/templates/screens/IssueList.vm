@@ -1,10 +1,14 @@
 <div class="app" id="issuelist">
 
 #set ($user = $data.User)
-#set ($module = $scarabR.CurrentModule)
 #set ($search = $scarabR.Search)
 #set ($searchType = $data.Parameters.getString("searchType",""))
 
+#if ($user.CurrentMITList.isSingleModule())
+    #set ($module = $user.CurrentMITList.Module)
+#else
+    #set ($module = $scarabR.CurrentModule)
+#end
 #if (!$issueList)
    #set ($issueList = $scarabR.CurrentSearchResults)
 #end
@@ -51,8 +55,22 @@
 </div>
 #end
 
-<h3>$page.Title for $scarabR.CurrentRModuleIssueType.DisplayName
-($issueListSize #if ($issueListSize == 1)issue#else issues#end)</h3>
+<h3>
+#if ($user.CurrentMITList)
+  $page.Title for the following modules and/or issue types  
+#else
+  $page.Title for $scarabR.CurrentRModuleIssueType.DisplayName
+#end
+(No. of issues: $issueListSize)</h3>
+
+#if ($user.CurrentMITList)
+  <div class="colbar">
+  #set ($list = $user.CurrentMITList)
+  #foreach ($item in $list.ExpandedMITListItems)
+    <div>$item.Module.Name $item.IssueType.Name</div>
+  #end
+  </div>
+#end
 
 <div class="colbar">
 <small>
@@ -89,6 +107,7 @@ $link.setPage("ConfigureIssueList.vm").setLabel("Add/remove attributes from view
         <a href="$sortLink">Issue ID</a>
      #end
   </th>
+
 
 ## ISSUE ATTRIBUTE VALUES
 #set ($rmuas = $scarabR.RModuleUserAttributes)
@@ -160,12 +179,12 @@ $link.setPage("ConfigureIssueList.vm").setLabel("Add/remove attributes from view
 </div>
 
 <div class="functnbar3">
-#if ($scarabR.hasPermission($scarabG.Permission.ISSUE__ASSIGN, $module))
+#if ((!$user.CurrentMITList || $user.CurrentMITList.isSingleModule()) && $scarabR.hasPermission($scarabG.Permission.ISSUE__ASSIGN, $module))
    <input type="submit" value="Assign" name="eventSubmit_doReassignselected" />&#160;
 #end
 <input type="submit" value="View verbose"  name="eventSubmit_doViewselected" />&#160;
 <small>selected</small>&#160;&#160;<img src="$staticLink.setPath("/images/seperator.gif")" width="2" height="15" alt="" border="0" align="middle" />&#160;&#160;
-#if ($scarabR.hasPermission($scarabG.Permission.ISSUE__ASSIGN, $module))
+#if ((!$user.CurrentMITList || $user.CurrentMITList.isSingleModule()) && $scarabR.hasPermission($scarabG.Permission.ISSUE__ASSIGN, $module))
   <input type="submit" value="Assign" name="eventSubmit_doReassignall" />&#160;
 #end
 <input type="submit" value="View verbose" name="eventSubmit_doViewall" />&#160;
