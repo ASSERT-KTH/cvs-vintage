@@ -113,6 +113,11 @@ public class Hooks {
     public Vector getHooksVector( int type ) {
 	return hooksV[type];
     }
+
+    public void resetCache() {
+	for( int i=0; i<hookCount; i++ )
+	    hooks[i]=null;
+    }
     
     public int registerHook( String name ) {
 	for( int i=0; i<hookNames.length; i++ ) {
@@ -159,6 +164,11 @@ public class Hooks {
 	allModulesV.addElement( bi );
     }
 
+    public void addModule( String type, Object bi ) {
+	int typeId=getHookId( type );
+	hooksV[typeId].addElement( bi );
+	hooks[typeId]=null;
+    }
 
     public void removeModule( Object bi ) {
 	for( int i=0; i<hookNames.length; i++ ) {
