@@ -483,7 +483,6 @@
     <!-- ================================================================== -->
     <target name="clean" depends="create-build-dir, remove-generation">
         <delete dir="${build.dir}" quiet="true"/>
-        <delete dir="${tomcat.dir}/webapps/scarab"/>
         <delete quiet="true">
             <fileset dir="${src.java.dir.scarab}/org/tigris/scarab/om">
                 <include name="Base*.java"/>
