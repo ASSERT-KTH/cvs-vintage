@@ -140,8 +140,7 @@ public class AddressbookTableView extends JTable {
 	}
 
 	protected void addEmptyRow() {
-
-		if (emptyRowExists() == true)
+		if (emptyRowExists())
 			return;
 
 		HeaderItem item = new HeaderItem(HeaderItem.CONTACT);
@@ -155,19 +154,14 @@ public class AddressbookTableView extends JTable {
 		}
 
 		makeVisible(getRowCount() - 1, 1);
-
 	}
 
 	protected void editLastRow() {
-
 		int row = getRowCount() - 1;
 
-		boolean b = editCellAt(row, 1);
-
-		if (b == true) {
+		if (editCellAt(row, 1)) {
 			focusToTextField();
 		}
-
 	}
 
 	protected boolean isEmpty(int row) {
@@ -175,10 +169,7 @@ public class AddressbookTableView extends JTable {
 
 		String value = (String) item1.get("displayname");
 
-		if (value.length() == 0)
-			return true;
-
-		return false;
+		return value.length() == 0;
 	}
 
 	protected boolean emptyRowExists() {
@@ -192,10 +183,7 @@ public class AddressbookTableView extends JTable {
 
 		String value = (String) item1.get("displayname");
 
-		if (value.length() == 0)
-			return true;
-
-		return false;
+		return value.length() == 0;
 	}
 
 	public void setHeaderItem(HeaderItem item) {
@@ -213,11 +201,8 @@ public class AddressbookTableView extends JTable {
 		if (row == rowCount - 1)
 			return;
 
-		if ((row == -1) || (column == -1)) {
-			return;
-		} else {
+		if ((row != -1) && (column != -1)) {
 			getCellEditor(row, column).stopCellEditing();
-
 		}
 
 		HeaderItem[] items = new HeaderItem[1];
@@ -225,14 +210,14 @@ public class AddressbookTableView extends JTable {
 
 		addressbookModel.removeItem(items);
 
-		boolean b = false;
+		boolean b;
 
 		if (row == 0)
 			b = editCellAt(0, 1);
 		else
 			b = editCellAt(row - 1, 1);
 
-		if (b == true) {
+		if (b) {
 			focusToTextField();
 		}
 	}
@@ -248,7 +233,7 @@ public class AddressbookTableView extends JTable {
 		for (int i = getRowCount() - 1; i >= 0; i--) {
 			boolean b = isEmpty(i);
 
-			if (b == true) {
+			if (b) {
 				HeaderItem[] items = new HeaderItem[1];
 				items[0] = addressbookModel.getHeaderItem(i);
 
@@ -256,5 +241,4 @@ public class AddressbookTableView extends JTable {
 			}
 		}
 	}
-
 }
