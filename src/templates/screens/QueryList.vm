@@ -74,8 +74,8 @@ $page.setTitle("Stored query list")
   </td>
   #set ($createdUser = $scarabR.getUser($query.UserId.toString()) )
   <td><a href="mailTo:$createdUser.Email">$createdUser.FirstName $createdUser.LastName</a></td>
-  <td><input type="checkbox" name="default_$query.QueryId" 
-       #if ($rqu.Isdefault) checked="checked" #end/></td>
+  <td><input type="radio" name="default" value="$query.QueryId" 
+          #if ($rqu.Isdefault) checked="checked" #end /></td>
   <td>
     #if ($rqu.isSubscribed)
       y
