@@ -32,6 +32,7 @@ import org.jboss.util.SerializableEnumeration;
 
 /**
 *   This is a Container for EntityBeans (both BMP and CMP).
+*   
 *
 *   @see Container
 *   @see EntityEnterpriseContext
@@ -40,8 +41,18 @@ import org.jboss.util.SerializableEnumeration;
 *   @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
 *   @author <a href="mailto:docodan@mvcsoft.com">Daniel OConnor</a>
 *   @author <a href="bill@burkecentral.com">Bill Burke</a>
-*   @version $Revision: 1.43 $
+*   @version $Revision: 1.44 $
+*
+* 
+*   <p><b>Revisions:</b>
+*
+*   <p><b>20010701 marc fleury:</b>
+*   <ul>
+*   <li>Transaction to context wiring was moved to the instance interceptor
+*   </ul>
 */
+
+
 public class EntityContainer
 extends Container
 implements ContainerInvokerContainer, InstancePoolContainer
@@ -370,14 +381,12 @@ implements ContainerInvokerContainer, InstancePoolContainer
       getPersistenceManager().removeEntity((EntityEnterpriseContext)mi.getEnterpriseContext());
 
       // We signify "removed" with a null id
+		// There is no need to synchronize on the context since all the threads reaching here have
+		// gone through the InstanceInterceptor so the instance is locked and we only have one thread 
+		// the case of reentrant threads is unclear (would you want to delete an instance in reentrancy)
       mi.getEnterpriseContext().setId(null);
    }
 
-   /**
-   * MF FIXME these are implemented on the client
-   *
-   * For the JRMP CI yes, but should be implemented for other CI's
-   */
    public Handle getHandle(MethodInvocation mi)
    throws java.rmi.RemoteException
    {
@@ -851,11 +860,8 @@ implements ContainerInvokerContainer, InstancePoolContainer
          }
          else
          {
-            //wire the transaction on the context, this is how the instance remember the tx
-            if (mi.getEnterpriseContext().getTransaction() == null)
-               mi.getEnterpriseContext().setTransaction(mi.getTransaction());
-
-            // Invoke and handle exceptions
+    
+	         // Invoke and handle exceptions
             try
             {
                return m.invoke(mi.getEnterpriseContext().getInstance(), mi.getArguments());
