@@ -97,7 +97,7 @@ import org.apache.commons.lang.StringUtils;
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: Issue.java,v 1.316 2003/07/18 23:27:06 kmaples Exp $
+ * @version $Id: Issue.java,v 1.317 2003/07/21 23:58:50 jmcnally Exp $
  */
 public class Issue 
     extends BaseIssue
@@ -3195,12 +3195,9 @@ public class Issue
         }
 
         // Save activity record for deletion of old assignment
-        try
-        {
-            actionString = getUserDeleteString(assigner, assignee,
-                                                  oldAttVal.getAttribute());
-        }
-        catch (ScarabException e)
+        actionString = getUserDeleteString(assigner, assignee,
+                                           oldAttVal.getAttribute());
+        if (actionString == null)
         {
             Log.get().debug("User attribute '"+oldAttVal.getAttribute()
                     .getName()+"' removed from the artifact type");
@@ -3274,11 +3271,8 @@ public class Issue
         }
 
         // Save activity record
-        try
-        {
-            actionString = getUserDeleteString(assigner, assignee, attr);
-        }
-        catch (ScarabException e)
+        actionString = getUserDeleteString(assigner, assignee, attr);
+        if (actionString == null)
         {
             Log.get().debug("User attribute '"+attr.getName()+
                             "' removed from the artifact type." );
@@ -3307,17 +3301,20 @@ public class Issue
                                       Attribute attr)
         throws Exception
     {
-        String attrDisplayName = getModule()
-             .getRModuleAttribute(attr, getIssueType())
-             .getDisplayValue();
-        Object[] args = {
-            assigner.getUserName(), assignee.getUserName(),
-            attrDisplayName
-        };
-        String actionString = Localization.format(
-            ScarabConstants.DEFAULT_BUNDLE_NAME,
-            getLocale(),
-            "AssignIssueEmailRemovedUserAction", args);
+        String actionString = null;
+        RModuleAttribute rma = getModule()
+            .getRModuleAttribute(attr, getIssueType());
+        if (rma != null) 
+        {
+            String attrDisplayName = rma.getDisplayValue();
+            Object[] args = {
+                assigner.getUserName(), assignee.getUserName(),
+                attrDisplayName
+            };
+            actionString = Localization.format(
+                ScarabConstants.DEFAULT_BUNDLE_NAME, getLocale(),
+                "AssignIssueEmailRemovedUserAction", args);            
+        }
         return actionString;
     }
 

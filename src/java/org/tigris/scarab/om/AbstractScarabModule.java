@@ -125,7 +125,7 @@ import org.tigris.scarab.reports.ReportBridge;
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: AbstractScarabModule.java,v 1.103 2003/07/18 23:27:06 kmaples Exp $
+ * @version $Id: AbstractScarabModule.java,v 1.104 2003/07/21 23:58:51 jmcnally Exp $
  */
 public abstract class AbstractScarabModule
     extends BaseObject
@@ -1240,10 +1240,6 @@ public abstract class AbstractScarabModule
             {
                 rma = null;
             }
-        }
-        if (rma == null)
-        {
-            throw new ScarabException("UserAttributeRemoved");
         }
         return rma;
     }
