@@ -5,7 +5,7 @@ use the compile script:
 watch out: this script has to be made executable with the chmod u+x command...
 
 
-compile with:
+compile it manually:
 
 javac org/columba/main/Main.java -classpath .:./ext/parser.jar:./ext/jaxp.jar
 
