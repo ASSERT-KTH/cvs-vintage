@@ -42,7 +42,7 @@ AbstractWebContainer c.ass.
 @see #performUndeploy(String)
 
 @author  Scott_Stark@displayscape.com
-@version $Revision: 1.1 $
+@version $Revision: 1.2 $
 */
 public abstract class AbstractWebContainer extends ServiceMBeanSupport implements AbstractWebContainerMBean
 {
@@ -77,19 +77,23 @@ public abstract class AbstractWebContainer extends ServiceMBeanSupport implement
     */
     public synchronized void deploy(String ctxPath, String warUrl) throws DeploymentException
     {
-        WebApplication warInfo = performDeploy(ctxPath, warUrl);
-        ClassLoader loader = warInfo.getClassLoader();
-        Element webApp = warInfo.getWebApp();
-        Element jbossWeb = warInfo.getJbossWeb();
         try
         {
+            WebApplication warInfo = performDeploy(ctxPath, warUrl);
+            ClassLoader loader = warInfo.getClassLoader();
+            Element webApp = warInfo.getWebApp();
+            Element jbossWeb = warInfo.getJbossWeb();
             parseWebAppDescriptors(loader, webApp, jbossWeb);
+            deploymentMap.put(warUrl, warInfo);
+        }
+        catch(DeploymentException e)
+        {
+            throw (DeploymentException) e.fillInStackTrace();
         }
         catch(Exception e)
         {
-            throw new DeploymentException("Failed during parseWebAppDescriptors", e);
+            throw new DeploymentException("Error during deploy", e);
         }
-        deploymentMap.put(warUrl, warInfo);
     }
 
     /** The method called by the deploy() method that must be overriden by
@@ -102,7 +106,7 @@ public abstract class AbstractWebContainer extends ServiceMBeanSupport implement
         AbstractWebContainer class to setup the JNDI ENC and track the war
         deployment status.
     */
-    protected abstract WebApplication performDeploy(String ctxPath, String warUrl) throws DeploymentException;
+    protected abstract WebApplication performDeploy(String ctxPath, String warUrl) throws Exception;
 
     /** A template pattern implementation of the undeploy() method. This method
      calls the {@link #performUndeploy(String) performUndeploy()} method to
@@ -111,11 +115,22 @@ public abstract class AbstractWebContainer extends ServiceMBeanSupport implement
     */
     public synchronized void undeploy(String warUrl) throws DeploymentException
     {
-        performUndeploy(warUrl);
-        // Remove the web application ENC...
-        deploymentMap.remove(warUrl);
+        try
+        {
+            performUndeploy(warUrl);
+            // Remove the web application ENC...
+            deploymentMap.remove(warUrl);
+        }
+        catch(DeploymentException e)
+        {
+            throw (DeploymentException) e.fillInStackTrace();
+        }
+        catch(Exception e)
+        {
+            throw new DeploymentException("Error during deploy", e);
+        }
     }
-    protected abstract void performUndeploy(String warUrl) throws DeploymentException;
+    protected abstract void performUndeploy(String warUrl) throws Exception;
     /** See if a war is deployed.
     */
     public boolean isDeployed(String warUrl)
