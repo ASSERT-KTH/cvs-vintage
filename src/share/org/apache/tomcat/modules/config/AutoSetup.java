@@ -148,15 +148,30 @@ public class AutoSetup extends BaseInterceptor {
 		    path="";
 
 	    Context ctx = (Context)definedContexts.get(path);
-            // if context not defined or was expanded
-	    if( ctx  == null || expanded ) {
+	    // if context is defined and was expanded
+	    if( ctx != null && expanded ) {
+		// we need to reload the context since it was initialized
+		// before its directories existed. At minimum, its classloader
+		// needs updating.
+		if ( ctx.getReloadable() ) {
+		    ctx.setReload( true );
+		    if( debug > 0 )
+			log("setting context " + ctx.toString() + "to reload");
+		} else {
+		    log("Warning: predefined context " + ctx.toString() +
+	" is not reloadable, recreating instead. Some settings may be lost!");
+		    cm.removeContext(ctx);
+		    // XXX Make sure ctx is destroyed - we may have
+		    // undetected leaks 
+		    ctx=null;
+		}
+	    }
+
+            // if context not defined
+	    if( ctx  == null ) {
 		// if no explicit set up and is a directory
 		File f=new File( webappD, name);
 		if (f.isDirectory()) {
-		    // If the context is already defined and was expanded,
-		    // we need to remove it since it was initialized before
-		    // its directories existed. At minimum, its classloader
-		    // needs updating.
 		    if ( ctx != null )
 			cm.removeContext(ctx);
 		    ctx=new Context();
