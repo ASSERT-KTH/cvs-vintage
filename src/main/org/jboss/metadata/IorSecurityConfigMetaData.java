@@ -15,7 +15,8 @@ import org.jboss.deployment.DeploymentException;
  * Describes the security configuration information for the IOR.
  *
  * @author <a href="mailto:alex@jboss.org">Alexey Loubyansky</a>
- * @version <tt>$Revision: 1.6 $</tt>
+ * @author <a href="mailto:dimitris@jboss.org">Dimitris Andreadis</a>
+ * @version <tt>$Revision: 1.7 $</tt>
  */
 public class IorSecurityConfigMetaData
    implements Serializable
@@ -41,7 +42,8 @@ public class IorSecurityConfigMetaData
 
    /** Create a default security configuration.
     * TransportConfig[integrity=supported, confidentiality=supported,
-    * establish-trust-in-target=supported,establish-trust-in-client=supported]
+    * establish-trust-in-target=supported,establish-trust-in-client=supported,
+    * detect-misordering=supported, detect-replay=supported]
     * AsContext[auth-method=USERNAME_PASSWORD, realm=default, required=false]
     * SasContext[caller-propagation=NONE]
     */
@@ -289,7 +291,7 @@ public class IorSecurityConfigMetaData
          }
          else
          {
-            this.detectMisordering = DETECT_MISORDERING_SUPPORTED;
+            this.detectMisordering = DETECT_MISORDERING_NONE;
          }
 
          value = MetaData.getOptionalChildContent(element, "detect-replay");
@@ -307,7 +309,7 @@ public class IorSecurityConfigMetaData
          }
          else
          {
-            this.detectReplay = DETECT_REPLAY_SUPPORTED;
+            this.detectReplay = DETECT_REPLAY_NONE;
          }
       }
 
@@ -351,7 +353,9 @@ public class IorSecurityConfigMetaData
             "[integrity=" + integrity +
             ", confidentiality=" + confidentiality +
             ", establish-trust-in-target=" + establishTrustInTarget +
-            ", establish-trust-in-client=" + establishTrustInClient + "]";
+            ", establish-trust-in-client=" + establishTrustInClient + 
+			", detect-misordering=" + detectMisordering +
+			", detect-replay=" + detectReplay + "]";
       }
    }
 
