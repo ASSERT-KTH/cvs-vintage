@@ -6,55 +6,65 @@ Objective:
    ApacheCon substantial progress towards the goals of having a Tomcat
    that:
 
-     (a) is better integrated with Apache 
+     (a) is better integrated with Apache.
      (b) is moving towards becoming a clear replacement to Apache
          JServ.
+     (c) has more features that have been requested.
 
 The Tomcat 3.1 release cycle has two intermediate milestones (with
-"burn-in" periods for both) as well as a final milestone. 
+"burn-in" periods for both) after which it will be qualified as Beta
+by ApacheCon. 
 
-Milestone 1:
+Status:
 
-* Code freeze date: Jan 15
-* Tag date: Jan 22
+* The following list outlines the changes to Tomcat done in the
+  milestone cycles. All these features are newly implemented. They are
+  at "beta" level and need testing and feedback.
+
+	* Thread pooling.
+	* IIS and NES connectors to Tomcat. (JNI and AJP based.)
+	* Servlet reloading
+	* Logging
+	* Minimal admin tool
+	* jspc - a command line tool to compile JSP to servlets.
+	* Minimal implementation of security, including form-based
+          and basic authentication.
+	* Customizable server-configuration.
+	* Automatic generation of Apache conf files.
+	* Automatic loading of WAR files.
+	* Changes to internal "APIs" to better support integration
+          with Apache. Example, interceptors. 
+	* Miscellaneous internal source code cleanup. 
+
+Changes to the previous release plan:
+
+* Mark the current Tomcat snapshot as "Beta". 
+* Postpone the Tomcat final date by a month. The date is not set in
+  stone; it just means that we will continue testing and fixing bugs
+  and evaluate if we should call it final by that date.
+
+Tomcat 3.1 Beta:
+
+* Code freeze date: Mar 2
+* Tag date: Mar 7
 * Goals:
-    * Rearchitect request processing and deployment/configuration
-       - Developers: Costin Manolache (costin@eng.sun.com)
-       - QA: Ramesh Mandava (rameshm@eng.sun.com)
+    * Cut a release which can be used to as the base for performing
+      tests and reporting bugs. 
+    * Evaluate and clean up as many bugs that are there
+      jakarta.apache.org/bugs.
+    * All internal APIs are mostly frozen. Exceptions will be made on
+      a per-case basis and after discussion on tomcat-dev. 
 
-    * Rearchitect session management, incorporate some of Craig's
-      Tomcat.Next (www2.mytownnet.com/tomcat) concepts into the
-      Tomcat: 
-       - Developers: Craig Mcclanahan (cmcclanahan@mytownnet.com)
-                     Costin Manolache (costin@eng.sun.com)
-       - QA: Ramesh Mandava (rameshm@eng.sun.com)
-
-Milestone 2:
-
-* Code freeze date: Feb 15
-* Tag date: Feb 22
-* Goals: 
-
-    * Implement Servlet Reloading
-       - Developers: Sam Ruby (rubys@us.ibm.com)
-       - QA: Ramesh Mandava (rameshm@eng.sun.com)
- 
-    * Implement logging
-       - Developers: Anil Vijendran (akv@eng.sun.com)
-       - QA: Ramesh Mandava (rameshm@eng.sun.com)
-
-    * A Minimal Admin/Deployment Tool
-       - Developers: Justyna Horwat (horwat@eng.sun.com)
-       - QA: Ramesh Mandava (rameshm@eng.sun.com)
-
-    * A Command line JSP to Servlet Code tool
-       - Developer: Danno Ferrin (shemnon@earthlink.net)
-       - QA: ?             
-                     
 Tomcat 3.1 Final:
 
-* Code freeze date: Mar 1
-* Tag date: Mar 7
-* Goals: 
-    * Fix all bugs reported
-* Release Manager: Sam Ruby (rubys@us.ibm.com)
+* Code freeze date: April 2
+* Tag date: April 7
+* Goals:
+    * Fix bugs reported on the beta and subsequent builds. 
+    * Evaluate after the code freeze date if Tomcat is ready to be
+      called "final".
+    * Add more documentation and improve usability in general. 
+
+* Release Manager: Sam Ruby <rubys@us.ibm.com>
+
+
