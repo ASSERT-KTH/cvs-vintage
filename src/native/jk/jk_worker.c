@@ -56,33 +56,13 @@
 /***************************************************************************
  * Description: Workers controller                                         *
  * Author:      Gal Shachor <shachor@il.ibm.com>                           *
- * Version:     $Revision: 1.4 $                                           *
+ * Version:     $Revision: 1.5 $                                           *
  ***************************************************************************/
 
-#include "jk_ajp12_worker.h"
-#include "jk_ajp13_worker.h"
-/* #include "jk_ajp23_worker.h" */
-#include "jk_jni_worker.h"
-#include "jk_lb_worker.h"
+#define _PLACE_WORKER_LIST_HERE
+#include "jk_worker_list.h"
 #include "jk_worker.h"
 #include "jk_util.h"
-
-struct worker_factory_record {
-    const char *name;
-    worker_factory fac;
-};
-typedef struct worker_factory_record worker_factory_record_t;
-
-static jk_map_t *worker_map;
-
-static worker_factory_record_t worker_factories[] = {
-    { JK_AJP12_WORKER_NAME, ajp12_worker_factory},
-    { JK_AJP13_WORKER_NAME, ajp13_worker_factory},
-/*     { JK_AJP23_WORKER_NAME, ajp23_worker_factory}, */
-    { JK_JNI_WORKER_NAME, jni_worker_factory},
-    { JK_LB_WORKER_NAME, lb_worker_factory},
-    { NULL, NULL}
-};
 
 static void close_workers(void);
 
