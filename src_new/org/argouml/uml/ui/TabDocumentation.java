@@ -1,4 +1,4 @@
-// $Id: TabDocumentation.java,v 1.17 2003/05/10 12:38:41 alexb Exp $
+// $Id: TabDocumentation.java,v 1.18 2003/06/19 19:56:33 bobtarling Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,8 +27,11 @@ package org.argouml.uml.ui;
 import javax.swing.JScrollPane;
 
 import org.argouml.application.api.Argo;
+import org.argouml.application.api.Configuration;
 import org.argouml.model.ModelFacade;
+import org.argouml.swingext.Horizontal;
 import org.argouml.swingext.LabelledLayout;
+import org.argouml.swingext.Vertical;
 import org.argouml.util.ConfigLoader;
 import org.tigris.gef.presentation.Fig;
 
@@ -76,7 +79,9 @@ public class TabDocumentation extends PropPanel {
         //- should this change? (Raphael)
         super(
             Argo.localize(BUNDLE, "docpane.label.documentation"),
-            ConfigLoader.getTabPropsOrientation());
+            (Configuration.getString(Configuration.makeKey("layout", "tabdocumentation")).equals("West") ||
+             Configuration.getString(Configuration.makeKey("layout", "tabdocumentation")).equals("East"))
+             ? Vertical.getInstance() : Horizontal.getInstance());
         //        super("tab.documentation", null, 2); // Change this to call labelled layout constructor
 
         addField(

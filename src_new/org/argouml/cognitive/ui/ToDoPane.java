@@ -89,7 +89,7 @@ import org.tigris.gef.util.VectorSet;
  *  ToDoPerspective skill = new ToDoBySkill();
  *</pre>
 
- * $Id: ToDoPane.java,v 1.17 2003/05/02 21:12:07 kataka Exp $
+ * $Id: ToDoPane.java,v 1.18 2003/06/19 19:56:33 bobtarling Exp $
  */
 public class ToDoPane extends JPanel
     implements ItemListener,
@@ -199,10 +199,6 @@ public class ToDoPane extends JPanel
         // next line coming from projectbrowser
         setRoot(Designer.TheDesigner.getToDoList());
         Designer.TheDesigner.getToDoList().addToDoListListener(this);
-        setPreferredSize(new Dimension(
-            Configuration.getInteger(Argo.KEY_SCREEN_SOUTHWEST_WIDTH, ProjectBrowser.DEFAULT_COMPONENTWIDTH),
-            Configuration.getInteger(Argo.KEY_SCREEN_SOUTH_HEIGHT, ProjectBrowser.DEFAULT_COMPONENTHEIGHT)
-            ));
         
         if (doSplash) {
             SplashScreen splash = ProjectBrowser.getInstance().getSplashScreen();

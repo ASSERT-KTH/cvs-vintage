@@ -128,7 +128,7 @@ import ru.novosoft.uml.model_management.MSubsystem;
  *
  * <p>Perspectives are now built here.
  *
- * $Id: NavigatorPane.java,v 1.43 2003/05/31 10:38:44 kataka Exp $
+ * $Id: NavigatorPane.java,v 1.44 2003/06/19 19:56:34 bobtarling Exp $
  */
 public class NavigatorPane
     extends JPanel
@@ -199,12 +199,6 @@ public class NavigatorPane
         toolbarPanel.add(_toolbar, BorderLayout.WEST);
         add(toolbarPanel, BorderLayout.NORTH);
         add(new JScrollPane(_tree), BorderLayout.CENTER);
-        setPreferredSize(
-            new Dimension(
-                Configuration.getInteger(
-                    Argo.KEY_SCREEN_WEST_WIDTH,
-                    ProjectBrowser.DEFAULT_COMPONENTWIDTH),
-                0));
 
         Configuration.addListener(Notation.KEY_USE_GUILLEMOTS, this);
         Configuration.addListener(Notation.KEY_SHOW_STEREOTYPES, this);
