@@ -340,9 +340,9 @@
 #set ($atch = $scarabR.Attachment)
 #set ($intakeAttachment = $intake.Attachment.mapTo($atch))
 #set ($intakeAttachment = $intake.Attachment.setKey("fileKey"))
-#set ($attachments = $currentIssue.Attachments)
-#if ($attachments.size() > 0)
+#set ($attachments = $currentIssue.ExistingAttachments)
 <h3>Attachments</h3>
+#if ($attachments.size() > 0)
  <table width="100%" border="1" cellspacing="2" cellpadding="3">
    <tr>
      <th>&#160;</th>
@@ -350,7 +350,7 @@
      <th>Attachment description</th>
      <th>Attachment type</th>
    </tr>
-   #foreach ($file in $currentIssue.ExistingAttachments)
+   #foreach ($file in $attachments)
      #indexedRows($velocityCount)
      #if ($file.TypeId.toString().equals("1"))
        <td>
