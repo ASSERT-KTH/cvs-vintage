@@ -1,4 +1,4 @@
-// $Id: UMLStateDiagram.java,v 1.58 2004/09/19 09:46:09 mvw Exp $
+// $Id: UMLStateDiagram.java,v 1.59 2004/10/06 15:48:49 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -26,7 +26,7 @@
 // Classes: UMLStateDiagram
 // Original Author: your email here
 
-// $Id: UMLStateDiagram.java,v 1.58 2004/09/19 09:46:09 mvw Exp $
+// $Id: UMLStateDiagram.java,v 1.59 2004/10/06 15:48:49 mvw Exp $
 
 package org.argouml.uml.diagram.state.ui;
 
@@ -64,49 +64,49 @@ public class UMLStateDiagram extends UMLDiagram {
     ////////////////
     // actions for toolbar
 
-    private static Action actionState = new RadioAction(
+    private Action actionState = new RadioAction(
         new CmdCreateNode(ModelFacade.STATE, "State"));
 
-    private static Action actionCompositeState = new RadioAction(
+    private Action actionCompositeState = new RadioAction(
         new CmdCreateNode(ModelFacade.COMPOSITESTATE, "CompositeState"));
 
     // start state, end state, forks, joins, etc.
-    private static Action actionStartPseudoState = new RadioAction(
+    private Action actionStartPseudoState = new RadioAction(
         new ActionCreatePseudostate(
             ModelFacade.INITIAL_PSEUDOSTATEKIND,
             "Initial"));
 
-    private static Action actionFinalPseudoState = new RadioAction(
+    private Action actionFinalPseudoState = new RadioAction(
         new CmdCreateNode(ModelFacade.FINALSTATE, "FinalState"));
 
-    private static Action actionBranchPseudoState = new RadioAction(
+    private Action actionBranchPseudoState = new RadioAction(
         new ActionCreatePseudostate(
             ModelFacade.BRANCH_PSEUDOSTATEKIND, "Choice"));
 
-    private static Action actionForkPseudoState = new RadioAction(
+    private Action actionForkPseudoState = new RadioAction(
         new ActionCreatePseudostate(ModelFacade.FORK_PSEUDOSTATEKIND, "Fork"));
 
-    private static Action actionJoinPseudoState = new RadioAction(
+    private Action actionJoinPseudoState = new RadioAction(
         new ActionCreatePseudostate(ModelFacade.JOIN_PSEUDOSTATEKIND, "Join"));
 
-    private static Action actionShallowHistoryPseudoState = new RadioAction(
+    private Action actionShallowHistoryPseudoState = new RadioAction(
         new ActionCreatePseudostate(
             ModelFacade.SHALLOWHISTORY_PSEUDOSTATEKIND,
             "ShallowHistory"));
 
-    private static Action actionDeepHistoryPseudoState = new RadioAction(
+    private Action actionDeepHistoryPseudoState = new RadioAction(
         new ActionCreatePseudostate(
             ModelFacade.DEEPHISTORY_PSEUDOSTATEKIND,
             "DeepHistory"));
 
-    private static Action actionTransition = new RadioAction(
+    private Action actionTransition = new RadioAction(
         new CmdSetMode(
             ModeCreatePolyEdge.class,
             "edgeClass",
             ModelFacade.TRANSITION,
             "Transition"));
 
-    private static Action actionJunctionPseudoState = new RadioAction(
+    private Action actionJunctionPseudoState = new RadioAction(
         new ActionCreatePseudostate(
             ModelFacade.JUNCTION_PSEUDOSTATEKIND,
             "Junction")); 
