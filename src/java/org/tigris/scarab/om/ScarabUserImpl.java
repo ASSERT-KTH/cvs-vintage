@@ -80,6 +80,7 @@ import org.tigris.scarab.util.ScarabException;
 
 import org.apache.turbine.Turbine;
 import org.apache.turbine.Log;
+import org.apache.log4j.Category;
 
 
 /**
@@ -89,12 +90,15 @@ import org.apache.turbine.Log;
  * implementation needs.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ScarabUserImpl.java,v 1.47 2002/02/13 05:16:25 jmcnally Exp $
+ * @version $Id: ScarabUserImpl.java,v 1.48 2002/02/17 18:57:52 jmcnally Exp $
  */
 public class ScarabUserImpl 
     extends BaseScarabUserImpl 
     implements ScarabUser
 {
+    private static final Category torqueLog = 
+        Category.getInstance("org.apache.torque");
+
     private static final String REPORTING_ISSUE = "REPORTING_ISSUE";
     
     public static final String PASSWORD_EXPIRE = "PASSWORD_EXPIRE";
@@ -269,13 +273,31 @@ public class ScarabUserImpl
             return false;
         }
     }
-    
+
+
+
     /**
      * @see org.tigris.scarab.om.ScarabUser#hasPermission(String, ModuleEntity)
      */
     public boolean hasPermission(String perm, ModuleEntity module)
     {
         boolean hasPermission = false;
+        
+        if (torqueLog.isDebugEnabled()) 
+        {
+            torqueLog.debug("ScarabUserImpl.hasPermission(" + perm + ", " + 
+                            module.getName() + ") started");
+        }
+        
+        // Cache permission check results internally, so that we do not have
+        // to ask the acl everytime.  FIXME!  This mechanism needs to be
+        // modified to allow for invalidating the cached results.  Possible
+        // candidates are the TurbineGlobalCacheService or JCS.  But keeping
+        // this in place for the moment while investigating other sql, so
+        // turbine's security sql does not dominate.
+        Object obj = getTemp("hasPermission" + perm + module.getQueryKey());
+        if ( obj == null ) 
+        {        
         try
         {
             AccessControlList acl = TurbineSecurity.getACL(this);
@@ -301,6 +323,20 @@ public class ScarabUserImpl
         {
             hasPermission = false;
             Log.error("Permission check failed on:" + perm, e);
+        }
+        
+        Boolean b = hasPermission ? Boolean.TRUE : Boolean.FALSE;
+        setTemp("hasPermission" + perm + module.getQueryKey(), b);
+        }
+        else 
+        {
+            hasPermission = ((Boolean)obj).booleanValue();
+        }
+        
+        if (torqueLog.isDebugEnabled()) 
+        {
+            torqueLog.debug("ScarabUserImpl.hasPermission(" + perm + ", " + 
+                            module.getName() + ") end\n");
         }
         return hasPermission;
     }
