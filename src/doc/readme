@@ -1,4 +1,4 @@
-$Id: readme,v 1.6 2000/04/07 23:03:56 craigmcc Exp $
+$Id: readme,v 1.7 2000/04/08 00:43:06 craigmcc Exp $
         
                            Release Notes for
                            =================
@@ -130,4 +130,26 @@ note the following information about this implementation:
 
 - DIGEST authentication and HTTPS client authentication (i.e. SSL)
   are not supported in this release.
+
+5.3 Using RequestDispatcher.include() on a Welcome File [Bug Report #160]
+
+Using the following technique triggers an IllegalStateException: OutputStream
+is already being used for this request:
+
+- You have a subdirectory under your document root
+  (for example "subdir/").
+
+- This subdirectory contains a welcome file that you
+  have configured to be displayed when that subdirectory
+  is requested on a URL (for example "index.html").
+
+- You request a RequestDispatcher for path "/subdir"
+  or path "/subdir/" and then call include() on it.
+
+The same problem can occur when you do a <jsp:include/> to a page "/subdir"
+or "/subdir/" as well.
+
+A workaround is to ask for a RequestDispatcher on the complete context-
+relative path of the file you wish to have displayed, such as
+"/subdir/index.html".
 
