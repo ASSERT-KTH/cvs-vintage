@@ -71,15 +71,7 @@ public class MailMain extends DefaultMain {
     public void initGui() {
         MailInterface.popServerCollection = new POP3ServerCollection();
 
-        new MailResourceLoader();
-
         MailInterface.treeModel = new TreeModel(MailConfig.getFolderConfig());
-
-        /*
-        MainInterface.frameModel =
-                new MailFrameModel(
-                        MailConfig.get("options").getElement("/options/gui/viewlist"));
-        */
     }
 
     /* (non-Javadoc)
