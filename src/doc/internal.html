@@ -2,95 +2,97 @@
 <HTML>
 <HEAD>
 	<META HTTP-EQUIV="CONTENT-TYPE" CONTENT="text/html; charset=iso-8859-1">
-	
-<TITLE>Internal Tomcat</TITLE>
-	
-	
-	
-	
-	
-<link rel="stylesheet" href="style.css">
+	<TITLE>Internal Tomcat</TITLE>
+	<META NAME="GENERATOR" CONTENT="StarOffice/5.2 (Linux)">
+	<META NAME="CREATED" CONTENT="20000906;23560700">
+	<META NAME="CHANGEDBY" CONTENT="Costin Manolache">
+	<META NAME="CHANGED" CONTENT="20000907;12413500">
+	<STYLE>
+	<!--
+		TH P { color: #000000; font-family: "Times New Roman", "Times", serif; font-style: normal }
+		TD P { color: #000000; font-family: "Times New Roman", "Times", serif; font-style: normal }
+		H2 { color: #0033cc; font-family: "Arial", "Helvetica", sans-serif; font-style: normal }
+		H3 { color: #0033cc; font-family: "Arial", "Helvetica", sans-serif; font-style: normal; font-weight: medium }
+		P { color: #000000; font-family: "Times New Roman", "Times", serif; font-style: normal }
+		DD { color: #000000 }
+		DT { color: #000000 }
+	-->
+	</STYLE>
 </HEAD>
-<BODY>
-<P>This is the first draft - I will add more details and ( I hope )
-pictures soon. 
-</P>
-<P>Please help - this document needs a lot of work ( and I know I'm
-not good at writing ) ! 
-</P>
-<P>Missing:</P>
-<UL>
-	<LI><P>pictures/UML diagrams</P>
-	<LI><P>policy-based security - it's standard, but need to add more
-	info about the implementation</P>
-	<LI><P>Relation with JDK1.2 / JDK1.1 - based on the thread on
-	tomcat-dev</P>
-	<LI><P>Current RequestMapper arch and future - based on the mails
-	from carlos@aper.net</P>
-	<LI><P>reloading/class loaders - I'm working on cleaning up the
-	implementation, I'll add documentation after that</P>
-	<LI><P>Request notes - I have to clean up the actual design and
-	implementation first, make it a standalone utility</P>
-	<LI><P>Real numbers - this will be slow and change as we implement
-	tomcat3.3. We'll have a complete set before October ( ApacheCon). We
-	need to keep track of the effect on performance of all important
-	changes we do, and also the overhead.</P>
-	<LI><P>In-detail documentation for all stand-alone components. Those
-	are un-likely to change too much and is important to explain they
-	are independent of tomcat.</P>
-	<LI><P>In particular, XMLMapper and the configuration, mentions of
-	JNDI configuration.</P>
-	<LI><P>Module life cycle + picture</P>
-	<LI><P>The authentication module.</P>
-	<LI><P>Integration with apache - config generation,etc -
-	unfortunately we don't know yet very well how to do it.</P>
-	<LI><P>Clarity. I'm just a programmer, no writing skills ( as you
-	can see)  :-)</P>
-	<LI><P>Content. This should have started one year ago, we'll have to
-	add the actual content as is needed.</P>
-</UL>
+<BODY TEXT="#000000" BGCOLOR="#ffffff">
 <H2>Introduction</H2>
-<P>This document tries to document the design patterns used in
-tomcat-3 and the reasons behind this. Tomcat is the result of a long
-evolution, with many people with different perspectives contributing
-code and ideas. Most of the code in tomcat was rewritten 2 or 3 times
-in the last year, with many experiments and prototypes developed
-offline. It is important to distinguish between the actual patterns
-and ideas and the implementation - the later will change and did
-changed a lot.</P>
+<P>This document tries to document the design of tomcat-3 and the
+reasons behind this. Tomcat is the result of a long evolution, with
+many people with different perspectives contributing code and ideas.
+Most of the code in tomcat was rewritten 2 or 3 times in the last
+year, with many experiments and prototypes developed off-line. It is
+important to distinguish between the actual patterns and ideas and
+the implementation - the later will change and did changed a lot.</P>
 <P>To understand tomcat you need to focus on the patterns and not on
 the actual implementation. If you understand <B>why</B> it will help
 a lot to understand <B>how</B>.</P>
+<HR>
 <H2>Goals</H2>
 <UL>
-	<LI><P>Correctness. Implement the Servlet and JSP specification as
-	accurate as possible. 
+	<LI><P><B>Correctness</B>. Implement the Servlet and JSP
+	specification as accurate as possible. 
 	</P>
-	<LI><P>Code quality and clarity must match Apache's standards. 
+	<LI><P><B>Code quality</B> and clarity must match Apache's
+	standards. We also want a bit more comments and documentation :-)</P>
+	<LI><P><B>Security</B>. User applications will run in applet-like
+	sandboxes, and shouldn't be able to get out of the box. Servlet API
+	is the only API ( I am aware of ) that can provide this kind of
+	feature. That means an ISP should be able to let its users to deploy
+	WARs without having to worry about the system security or about the
+	possible interference between the users. It also means companies can
+	use JSPs and applications without having to review them for security
+	flaws ( and in complex web servers this is extremely difficult and
+	expensive ). 
 	</P>
-	<LI><P>Security. User applications will run in applet-like
-	sandboxes, and shouldn't be able to get out of the box.</P>
-	<LI><P>Embedable. The code must be embedable, acting as a servlet
-	container for various applications ( web servers, IDEs, etc.).
-	Apache web server is one of the most important targets, but the
-	design shouldn't be specific to a web server.</P>
+	<LI><P><B>Embedability</B>. The code must be embedable, acting as a
+	servlet container for various applications. There are 2 services
+	tomcat provides - servlet services for Web servers ( like Apache )
+	and http and servlet services for standalone applications. Tomcat
+	should be usable as a component providing web services for
+	applications ( in the form of the standalone server or in
+	association with a web server), allowing applications to provide
+	servlet-based interfaces. For example it should be possible to
+	create a web-based configuration for an IDE by just starting tomcat
+	and using servlets that access the application's internal APIs. We
+	also want to embed tomcat in existing web servers, providing generic
+	web programming using servlet and JSP for Apache, etc.</P>
 </UL>
 <UL>
-	<LI><P>Performance. As in Apache, the performance is less important
-	than code quality and must come from using the right algorithms and
-	data structures, not by low-level hacking. 
+	<LI><P><B>Performance</B>. As in Apache, the performance is less
+	important than code quality and must come from using the right
+	algorithms and data structures, not by low-level hacking. We want to
+	focus on the critical path and be sure we add the smallest overhead
+	possible, while making sure that only applications that make use of
+	special features are paying the price for it.</P>
+	<LI><P><B>Integration</B> with the current Web infrastructure. Web
+	applications will run on the web, and we want to make sure we do can
+	work with existing code and provide a smooth transition. We want to
+	take advantage of the existing optimizations and maturity of web
+	servers like apache, and make sure most of the modules and
+	extensions work well with tomcat.</P>
+	<LI><P><B>Modular structure</B>. The core should be small and as
+	simple as possible ( but not simpler :-), and the most functionality
+	must be provided in modules. By choosing the right modules we can
+	use it in toasters or big servers. Multiple versions of the same
+	module can be optimized for various VMs or special environments. 
 	</P>
-	<LI><P>Integration with the current Web infrastructure. Web
-	applications will run on the web, and we want to make sure we do
-	that well.</P>
-	<LI><P>Modular structure. The core should be small and as simple as
-	possible ( but not simpler), and the most functionality must be
-	provided in modules. By choosing the right modules we can use it in
-	toasters or big servers. Multiple versions of the same module can be
-	optimized for various Vms.</P>
-	<LI><P>Reusable components wherever possible. Functionality that is
-	generic enough should have minimal dependencies on tomcat core.</P>
+	<LI><P><B>Reusable components</B> wherever possible. Functionality
+	that is generic enough should have minimal dependencies on tomcat
+	core. This even more visible starting with tomcat3.3, where we tried
+	to clearly identify the &quot;modules&quot; and build a collection
+	of general-purpose and independent components that can be used in
+	any other project without any relation with tomcat. Having a
+	component that is reviewed, tested and enhanced in more than one
+	project is worth the price of slightly looser integration, and the
+	facade pattern helps integrating independent components without
+	changing their interfaces ( making them dependent on tomcat).</P>
 </UL>
+<HR>
 <H2>Design Patterns</H2>
 <P>In order to achieve that, a number of patterns are used. I will
 start by explaining the patterns and their role in achieving the
@@ -98,7 +100,7 @@ goals, and after that I'll go into the implementation details ( based
 on the current code and the near future ).</P>
 <H3>Chain of responsibility</H3>
 <P>This pattern, together with &quot;Strategy&quot; is the main tool
-for implementing  &quot;modularity&quot; and &quot;integration with
+for implementing &quot;modularity&quot; and &quot;integration with
 the web servers&quot;. 
 </P>
 <P>It avoids coupling the sender of the request ( tomcat core ) with
@@ -114,7 +116,7 @@ provide server extensions ). See also the performance discussion on
 how this will affect a production site. 
 </P>
 <P>The pattern has a (not yet perfect) implementation in the
-Interceptors.  A cleaner implementation can be done using
+Interceptors. A cleaner implementation can be done using
 Event/Listener model, but the current implementation seems a bit more
 efficient ( in empirical tests), and for 3.3 we'll try to find a good
 way to use Events without affecting the performance. The
@@ -173,13 +175,13 @@ other data structures, but we need to maintain those structures - and
 Observer allows us to stay in sync with the core.</P>
 <H3>Adapter</H3>
 <P>It converts the interfaces of a class into the interface
-tomcat.core expects.  This is the main enabler for &quot;integration
+tomcat.core expects. This is the main enabler for &quot;integration
 with other applications&quot; requirement.</P>
 <P>Adapter is very important for allowing tomcat to reuse external
 APIs and modules, without requiring them to change and without
 changing tomcat. It allows us to use multiple APIs for various tasks
 - for example authentication can be done using JAAS, J2EE APIs, other
-proprietary APIs or using the web server. Instead of hardcoding a
+proprietary APIs or using the web server. Instead of hard-coding a
 Realm interface and attempting to fit everything under it ( JAAS is a
 good candidate for such a &quot;generic auth API &quot;, but it's too
 much for simple cases ) we just build adapters for whatever API we
@@ -215,7 +217,7 @@ at the core of many performance optimizations and will allow a large
 number of features. 
 </P>
 <H3>Facade</H3>
-<P>Converts the interface of a class into another.  In particular,
+<P>Converts the interface of a class into another. In particular,
 this is used to present web applications with the (right) servlet
 API, while using more efficient interfaces for the core.</P>
 <P>The &quot;facade&quot; name was used ( wrongly ) in many security
@@ -225,7 +227,7 @@ performance.</P>
 <P><B>Why? </B><SPAN STYLE="font-weight: medium">The servlet API has
 certain goals and requirement that are oriented toward the servlet
 developer. The web server and tomcat.core have different
-requirements, and   by using the right API we can provide a number of
+requirements, and by using the right API we can provide a number of
 optimizations. For example it is possible to avoid String over-use,
 to use more specialized components, and to use adapters for the
 (native)</SPAN> web servers.</P>
@@ -241,7 +243,7 @@ to support both servlet 2.2 and servlet 2.3 APIs.</P>
 <P>In terms of performance, Facade and Proxy will enable most of the
 improvements we plan for 3.3.</P>
 <HR>
-<H2>Main Components</H2>
+<H2>Main Components ( tomcat.core )</H2>
 <H3>Request/Response</H3>
 <P>This is the tomcat representation of a request. It acts as an
 &quot;Adapter&quot; for the underlying application's representation -
@@ -263,35 +265,100 @@ buffers and we'll make more use of this - instead of using the
 Stream/Writer interfaces, core components will have direct control
 over the buffering and char/byte translation. 
 </P>
-<H3>Byte/CharBuffer</H3>
-<P>This is a new component in tomcat 3.2, not used in the &quot;default&quot;
-mode ( but only in the experimental http adapter). The idea is to
-have full control over tomcat buffering and over char/byte
-translation, as this is one of the most expensive operations (
-according to empirical tests ).</P>
-<P>An important feature will be the integration of jasper, where
-&quot;static&quot; text can be pre-computed and delivered to the
-server directly, without intermediary buffers.</P>
+<P>XXX It may be a good idea for the core to use concepts similar
+with web servers - i.e. only Request, and add Connection to represent
+the http connection data. The only reason to have Request/Response is
+to match the servlet model, but the role of core is to match the
+model used by the web server. A picture would be great. 
+</P>
+<H3>OutputBuffer</H3>
+<P>The idea is to have full control over tomcat buffering and over
+char/byte translation, as this is one of the most expensive
+operations ( according to empirical tests ). It should allow to plug
+external byte/char convertors. As we know, multiple copy from buffer
+to buffer proved to be an important factor in many systems. It
+doesn't show up in tomcat 3.2 because other factors are too big, but
+as we approach the limits it will be one of the most important issue.</P>
+<P>An important feature will be the integration of jasper and other
+template systems, where &quot;static&quot; text can be delivered to
+the server directly, without intermediary buffers, and the binary
+representation ( encoding) can be pre-computed.</P>
+<H3>MessageBytes</H3>
+<P>This is a very special and important component of tomcat3. The
+first problem it tried to solve was the conversion from byte to
+chars. The charset is known very late ( either when Content-Type
+header is parsed or even later, when the user sets it in servlet
+2.3), and converting the received bytes to Strings can't be done
+(corectly ) until the encoding is determined.</P>
+<P>MessageBytes have another benefit - it's a great mechanism to
+avoid Garbage Collection costs. Most of the time the user will not
+access all the headers, and probably neither most of the request
+information ( url components, etc). That means a &quot;HelloWorld&quot;
+servlet ( or any servlet that just display some info) will require no
+String allocations when MessageBytes are used - as oposed to 30-40
+Strings allocated ( and GC ) before.</P>
+<P>Another ( probably less visible ) benefit is the parsing of the
+request. Parsing using String proved to lead to inefficient code -
+Java provides general purpose utilities like StringTokenizer or
+substring() / indexOf(), but they are designed as &quot;general
+purpose&quot;, with different goals in mind. The parsing code in
+tomcat 3.0 used those mechanisms and that resulted in 100+ String
+allocations per request.</P>
+<P>Note that String is a very important class in Java - it have the
+special characteristic of beeing &quot;imutable&quot;. That has big
+implications from a security point of view, and most Servlet API
+methods are using String as result type/parameter. On the other side
+String is extremely expensive for server-side operation - it can't be
+recycled. See also the discussion on GarbageCollection and memory. 
+</P>
 <H3>Context</H3>
 <P>Context is the representation of a web application. It have all
 the properties that are definable in web.xml and server.xml. 
 </P>
 <P>The current implementation is complex and has much more than that
 - this have to change.</P>
+<P>The context is associated with a Request after the contextMap()
+callback completes. By default the mapping interceptor ( SimpleMapper
+in the default case ) will implement this hook, but other
+interceptors can provide extra functionality ( support for ~user,
+dynamic addition of contexts when the first request is made, etc ) 
+</P>
 <H3>Container</H3>
 <P>It represent a group of URLs sharing a common set of properties.
 It's analog with per_dir configuration in apache. The &quot;standard&quot;
 properties in servlet spec are the handler ( specified in servlet
 mappings) and the security properties. 
 </P>
-<P>In tomcat 3.2 it is possible to specify per/container interceptors
-- after the mapping, tomcat will know what is the container where the
-request belongs and can invoke specialized interceptors defined only
-for that particular set of URLs.</P>
+<P>The Container is associated with a Request after the requestMap()
+hook completes. SimpleMapper is the &quot;core&quot;<BR>implementation
+of this hook, providing support for prefix, exact and extension
+mappings. Other interceptors can provide optimized mappings for
+particular subsets ( like JspIntercepor ) or implement custom mapping
+schemes. 
+</P>
+<P>This is a very important operation ( it should be the most
+expensive part of the processing - unfortunately we still have to
+eliminate few other hotspots before this will happen ). We exepect
+alternate implementations using more advanced data structures and
+alghoritms ( Trees, etc ). See also the discussion on &quot;evolution&quot;.
+</P>
+<P>In tomcat 3.3 it is possible to specify per context and container
+interceptors - after the mapping, tomcat will know what is the
+container where the request belongs and can invoke specialized
+interceptors defined only for that particular set of URLs. This is
+similar with what all other web servers provide ( the order is
+similar with NES). 
+</P>
 <H3>ContextManager</H3>
 <P>Main entry point for tomcat execution. It coordinates the activity
-of modules.</P>
-<P>Probably a better name would be Server, or TomcatContainer. 
+of modules. 
+</P>
+<P>In tomcat, the application embedding tomcat ( web server, generic
+application, tomcat standalone server) have control over execution.
+Embedding tomcat requires an adapter that will construct the
+Request/Response adapters and use ContextManager to process the
+request.</P>
+<P>XXX Probably a better name would be Server, or TomcatContainer. 
 </P>
 <H3>Interceptor</H3>
 <P>You can control all aspects of request processing - parsing,
@@ -300,15 +367,17 @@ headers are sent), buffer commit ( before any buffer is sent - it can
 be used to support HTTP1.1 for example !), before and after body.</P>
 <P>Any similarity with an Apache module, IIS filter or NES SAF is
 intentional.</P>
-<H3>Web/application adapter</H3>
-<P>In tomcat, the application embedding tomcat ( web server, generic
-application, tomcat standalone server) have control over execution.
-Embedding tomcat requires an adapter that will construct the
-Request/Response adapters and use ContextManager to process the
-request.</P>
-<H2>Execution paths</H2>
+<P>Interceptors are also used to provide integration with web servers
+( in tomcat &lt;=3.2 a special &quot;Connector&quot; interface was
+used, but we found that Connector was in fact a subset of Interceptor
+and web integration requires more then just start/stop, so using the
+same mechanism is a better idea)</P>
+<HR>
+<H2>Execution paths ( ContextManager and core )</H2>
+<H3>Initialization</H3>
 <P>XXX server intialization and configuration, context
 add/init/shutdown/remove, etc</P>
+<H3>Request processing</H3>
 <P STYLE="margin-bottom: 0in">Each web request is received by the web
 adapter, which will provide the Request/Response adapters. It will
 then call ContextManager.service(), and tomcat core will begin
@@ -323,9 +392,9 @@ requests ( when tomcat is embedded in applications != web servers )</P>
 	each having a chance to process the request. Tomcat provides a
 	default implementation based on the mappings defined in the spec and
 	static configuration ( server.xml ), and also provide an interceptor
-	that will add all directories in webapp automatically.  Other
+	that will add all directories in webapp automatically. Other
 	interceptors may provide other features - like automatically adding
-	&quot;~user&quot;, etc. See also the performance discussion.  It is
+	&quot;~user&quot;, etc. See also the performance discussion. It is
 	possible to have different mapping algorithms ( &quot;Strategy&quot;
 	), including using the web server native mappers if tomcat is
 	integrated with a web server.</P>
@@ -359,14 +428,59 @@ turned out that the code organization improved a lot by using the
 &quot;Strategy&quot; pattern ( compared with tomcat 3.0 ), and many
 optimizations became possible. </SPAN>
 </P>
-<P ALIGN=LEFT><SPAN STYLE="font-weight: medium">Another reason is
-related with the idea of making tomcat a real web-server extension,
-allowing people to develop web server modules ( filter, SAF, hooks)
-in java using a clean API. There are many ways to implement a web
-server, but this design choose Apache, IIS and NES as model, and
-tries to allow bi-directional code reuse.</SPAN></P>
-<H2>Modules</H2>
-<H2>Components</H2>
+<P ALIGN=LEFT STYLE="font-weight: medium">Another reason is related
+with the idea of making tomcat a real web-server extension, allowing
+people to develop web server modules ( filter, SAF, hooks) in java
+using a clean API. There are many ways to implement a web server, but
+this design choose Apache, IIS and NES as model, and tries to allow
+bi-directional code reuse.</P>
+<HR>
+<H2>Modules ( tomcat.context, tomcat.request)</H2>
+<P>Most of tomcat functionality is implemented using modules. Modules
+operate on tomcat's core objects and can hook  in and extend tomcat.
+They are designed around &quot;Chain of Responsibility&quot; and
+&quot;Strategy&quot; patterns, and shamelessly inspired from Apache
+hooks, with influences from ISAPI and NSAPI.</P>
+<H3>Hooks</H3>
+<UL>
+	<LI><P>contextMap</P>
+	<LI><P>requestMap</P>
+	<LI><P>XXX add the other, descrition</P>
+</UL>
+<H3>Standard modules</H3>
+<UL>
+	<LI><P><B>SimpleMapper</B><SPAN STYLE="font-weight: medium"> hooks
+	into contextMap and requestMap and implements the standard mapping
+	rules defined in the servlet API. It is not a particulary fast
+	module, but it's well tested and stable. Most of the current code is
+	derived and can be traced back to tomcat 3.0. We hope that other
+	solutions will show up and will evolve to replace SimpleMapper.</SPAN></P>
+	<LI><P STYLE="font-weight: medium"> <B>LoaderInterceptor</B><SPAN STYLE="font-weight: medium">
+	will set the context ClassLoader. There are 2 modules - one that
+	provide a custom class loader to be used with JDK1.1 and one that
+	plugs JDK1.2 URLClassLoader.  </SPAN>
+	</P>
+</UL>
+<H3>Adding custom modules</H3>
+<H3>Revolution by Evolution</H3>
+<P>By using the &quot;Strategy&quot; pattern it is possible to
+provide alternative alghoritms and implementations without affecting
+the core modules. In time the new &quot;strategies&quot; can be
+tested ( by first using them on experimental sytes, then in
+production ) and eventually replace the &quot;core&quot; modules. 
+</P>
+<P>Tomcat is designed such that the core will have a minimal role in
+how the request is processed. We try to keep the number of methods
+and structures as small as possible, while &quot;evolving&quot; the
+core based on the use cases and needs of various modules. We expect
+that 3.3 or 3.4 will have a stable core.</P>
+<P>This method allowed a smooth evolution from tomcat3.0 who had a
+very complex and ugly (!) code, due to numerous additions and fixes.
+It is a standard form of refactoring that proved very useful.</P>
+<P><BR><BR>
+</P>
+<HR>
+<H2>Components ( tomcat.util )</H2>
 <P>Tomcat tries as much as possible to keep most of the code in
 standalone components, that have no dependency on tomcat.core. For
 example, the class loader, the session manager, the TCP server,
@@ -398,30 +512,59 @@ methods are public, and how internal object instances can be accessed
 from outside. FacadeManager should be the only point of entry.</P>
 <P>We do need to provide a certain internal API to applications that
 will allow enhanced performance - for example Jasper can make use of
-the internal buffers, etc. 
-</P>
+the internal buffers, etc.</P>
+<H3>Existing risks and problems</H3>
+<DL>
+	<DT>Isolation. It is possbile for an application to store the
+	reference to the HttpServletRequests it receives in a Hashtable. If
+	the server is using recycling, the &quot;bad&quot; application will
+	end up with references to all active requests, and will be able to
+	access parameters and informations of other web applications. 
+	</DT><DD STYLE="margin-bottom: 0.2in">
+	In tomcat the HttpServletRequest is a proxy and a facade for the
+	real request. Tomcat will recycle the Request object, and can (
+	based on a config option) create new HttpServletRequestFacades for
+	each request. 
+	</DD><DT>
+	Constructor access. It is possible that an application will use the
+	current internal APIs to gain unauthorized access and call internal
+	APIs</DT><DD>
+	The only way to get access to internal APIs is using a special
+	context/request attribute. We allow only &quot;trusted&quot;
+	applications to call the method, and return null if the trusted flag
+	is not set. We need to carefully review the code to be sure no other
+	way to access the internals is possible, and reduce the number of
+	public constructors and public methods. We also need to add a (
+	JDK1.1 compatible ) mechanism to do security checks when objects are
+	constructed. ( for example add a TomcatSecurity object with empty
+	methods for 1.1 and using TomcatPermission and the 1.2 security
+	system for 1.2.     
+	</DD><HR>
+</DL>
 <H2>Embedding tomcat</H2>
 <P>Use the tomcat APIs to create ContextManager and set it up or stop
-it.  Integration with your configuration API is very simple - tomcat
+it. Integration with your configuration API is very simple - tomcat
 doesn't care how you set it up, as long as the right object are
 created and the setter methods are called.</P>
 <P>All integration is done using the &quot;Adapter&quot; pattern -
 the Interceptors provide you with hooks into all tomcat internals,
 and you can control every aspect of request processing.</P>
+<HR>
 <H2>Integration with Web servers</H2>
 <P>Most commercial web sites run on one of the 4 big web servers, and
-we want to make sure tomcat can work well with those. After all, many
-people are using servlets for  web applications :-)</P>
+we want to make sure tomcat can work well with those. After all, most
+people are using servlets for web applications :-)</P>
 <P>There are huge problems, even with the current architecture. For
 example the mapping defined in servlet 2.2 is different from the
 mapping used in the current web servers, form based login is very
-difficult  to integrate ( and will require a lot of native code to
+difficult to integrate ( and will require a lot of native code to
 protect non-java resources using the same authentication ).</P>
 <P>Most of the problems still require a lot of work, but we hope that
 the current architecture will be able to handle that. A bigger goal
 will be to transform the Interceptors into real web server
 extensions, so people can develop hooks/modules/SAF/filters in java
 instead of C ( or mod_perl ).</P>
+<HR>
 <H2>Performance</H2>
 <P>This is an important subject and will have a separate paper ( that
 will be ready for ApacheCon ). We spent a lot of work identifying the
@@ -468,7 +611,7 @@ Tomcat. This is the configuration that will be used with
 load-balanced servers. In fact, a production site will probably need
 a tuned-up configuration, with compute-intensive webapps running on
 AJP13 and a farm of tomcat servers, while the most
-frequently-accessed pages running with JNI and in process.  
+frequently-accessed pages running with JNI and in process. 
 </P>
 <P>Standalone tomcat and other configurations will greatly benefit
 from reducing the overhead and optimizations, but this can't be the
@@ -519,7 +662,7 @@ invocation. Experiments shows this to not be significant in the
 current code ( i.e. The overhead is hardly detectable ), but as we
 remove the garbage it may play a role. Since this is only an
 implementation issue it will be trivial to resolve ( if it will show
-on the radar - we still try to avoid useless optimizations )  
+on the radar - we still try to avoid useless optimizations ) 
 </P>
 <H3>JNI overhead</H3>
 <P>Experience shows a big difference between a JNI and a normal
@@ -565,22 +708,211 @@ problem, the numbers are very small.</P>
 <P><BR><BR>
 </P>
 <HR>
-<H2>More information's</H2>
-<P>Please read the Apache, IIS and NES documentations &amp; code, as
-tomcat design is based on the common ( and special ) features of AP,
-ISAPI  and NSAPI. Except for using different names and Java-style for
-interfaces, the model is the same. 
+<H2>Tomcat and other Web Servers 
+</H2>
+<P>Tomcat design is based on the features of Apache modules/hooks,
+ISAPI and NSAPI. We tried to not limit ourself to what is common to
+all. In time it is likely that tomcat will have more hooks and
+provide the same level of extensibility as the other servers. We
+tried to add the hooks by following &quot;when somebody needs it &quot;
+rule - and so far a number of callbacks are still to be added.</P>
+<P>Please read the Apache, IIS and NES documentations &amp; code, as.
+Except for using different names and Java-style for interfaces, the
+model is the same. 
 </P>
 <P>The mapping is: 
 </P>
-<UL>
-	<LI><P> Request==request_struct</P>
-	<LI><P> ServletWrapper==handler</P>
-	<LI><P> Context==per_dir_config</P>
-	<LI><P>Interceptor=module 
-	</P>
-</UL>
-<P STYLE="margin-bottom: 0in"><BR>
+<TABLE WIDTH=100% BORDER=1 CELLPADDING=4 CELLSPACING=3>
+	<COL WIDTH=51*>
+	<COL WIDTH=51*>
+	<COL WIDTH=51*>
+	<COL WIDTH=51*>
+	<COL WIDTH=51*>
+	<THEAD>
+		<TR VALIGN=TOP>
+			<TH WIDTH=20%>
+				<P>Tomcat</P>
+			</TH>
+			<TH WIDTH=20%>
+				<P>Apache</P>
+			</TH>
+			<TH WIDTH=20%>
+				<P>ISAPI</P>
+			</TH>
+			<TH WIDTH=20%>
+				<P>NSAPI</P>
+			</TH>
+			<TH WIDTH=20%>
+				<P>Other</P>
+			</TH>
+		</TR>
+	</THEAD>
+	<TBODY>
+		<TR VALIGN=TOP>
+			<TD WIDTH=20%>
+				<P>Request / Response 
+				</P>
+			</TD>
+			<TD WIDTH=20%>
+				<P>request_rec<BR>conn_rec</P>
+			</TD>
+			<TD WIDTH=20%>
+				<P><BR>
+				</P>
+			</TD>
+			<TD WIDTH=20%>
+				<P><BR>
+				</P>
+			</TD>
+			<TD WIDTH=20%>
+				<P><BR>
+				</P>
+			</TD>
+		</TR>
+		<TR VALIGN=TOP>
+			<TD WIDTH=20%>
+				<P>ServletWrapper</P>
+			</TD>
+			<TD WIDTH=20%>
+				<P>Handler</P>
+			</TD>
+			<TD WIDTH=20%>
+				<P><BR>
+				</P>
+			</TD>
+			<TD WIDTH=20%>
+				<P><BR>
+				</P>
+			</TD>
+			<TD WIDTH=20%>
+				<P><BR>
+				</P>
+			</TD>
+		</TR>
+		<TR VALIGN=TOP>
+			<TD WIDTH=20%>
+				<P>Context</P>
+			</TD>
+			<TD WIDTH=20%>
+				<P>server_rec /<BR>per_dir_config</P>
+			</TD>
+			<TD WIDTH=20%>
+				<P><BR>
+				</P>
+			</TD>
+			<TD WIDTH=20%>
+				<P><BR>
+				</P>
+			</TD>
+			<TD WIDTH=20%>
+				<P><BR>
+				</P>
+			</TD>
+		</TR>
+		<TR VALIGN=TOP>
+			<TD WIDTH=20%>
+				<P>Container 
+				</P>
+			</TD>
+			<TD WIDTH=20%>
+				<P>per_dir_config</P>
+			</TD>
+			<TD WIDTH=20%>
+				<P><BR>
+				</P>
+			</TD>
+			<TD WIDTH=20%>
+				<P><BR>
+				</P>
+			</TD>
+			<TD WIDTH=20%>
+				<P><BR>
+				</P>
+			</TD>
+		</TR>
+		<TR VALIGN=TOP>
+			<TD WIDTH=20%>
+				<P>Interceptor</P>
+			</TD>
+			<TD WIDTH=20%>
+				<P>Module / hooks</P>
+			</TD>
+			<TD WIDTH=20%>
+				<P><BR>
+				</P>
+			</TD>
+			<TD WIDTH=20%>
+				<P><BR>
+				</P>
+			</TD>
+			<TD WIDTH=20%>
+				<P><BR>
+				</P>
+			</TD>
+		</TR>
+		<TR VALIGN=TOP>
+			<TD WIDTH=20%>
+				<P>ContextManager</P>
+			</TD>
+			<TD WIDTH=20%>
+				<P><BR>
+				</P>
+			</TD>
+			<TD WIDTH=20%>
+				<P><BR>
+				</P>
+			</TD>
+			<TD WIDTH=20%>
+				<P><BR>
+				</P>
+			</TD>
+			<TD WIDTH=20%>
+				<P><BR>
+				</P>
+			</TD>
+		</TR>
+	</TBODY>
+</TABLE>
+<P><BR><BR>
 </P>
+<HR>
+<H2>Notes</H2>
+<P>This is the first draft - I will add more details and ( I hope )
+pictures soon. 
+</P>
+<P>Please help - this document needs a lot of work ( and I know I'm
+not good at writing ) ! 
+</P>
+<P>Missing:</P>
+<UL>
+	<LI><P>pictures/UML diagrams</P>
+	<LI><P>policy-based security - it's standard, but need to add more
+	info about the implementation</P>
+	<LI><P>Relation with JDK1.2 / JDK1.1 - based on the thread on
+	tomcat-dev</P>
+	<LI><P>Current RequestMapper arch and future - based on the mails
+	from carlos@aper.net</P>
+	<LI><P>reloading/class loaders - I'm working on cleaning up the
+	implementation, I'll add documentation after that</P>
+	<LI><P>Request notes - I have to clean up the actual design and
+	implementation first, make it a standalone utility</P>
+	<LI><P>Real numbers - this will be slow and change as we implement
+	tomcat3.3. We'll have a complete set before October ( ApacheCon). We
+	need to keep track of the effect on performance of all important
+	changes we do, and also the overhead.</P>
+	<LI><P>In-detail documentation for all stand-alone components. Those
+	are un-likely to change too much and is important to explain they
+	are independent of tomcat.</P>
+	<LI><P>In particular, XMLMapper and the configuration, mentions of
+	JNDI configuration.</P>
+	<LI><P>Module life cycle + picture</P>
+	<LI><P>The authentication module.</P>
+	<LI><P>Integration with apache - config generation,etc -
+	unfortunately we don't know yet very well how to do it.</P>
+	<LI><P>Clarity. I'm just a programmer, no writing skills ( as you
+	can see) :-)</P>
+	<LI><P STYLE="margin-bottom: 0in">Content. This should have started
+	one year ago, we'll have to add the actual content as is needed.</P>
+</UL>
 </BODY>
 </HTML>
