@@ -1,148 +1,393 @@
-
 #set ( $currentIssueId = $data.Parameters.getString("id") )
 #set ( $currentIssue = $scarabR.getIssue($currentIssueId) )
 
 #if ($currentIssue)
-    #set ($attrValues = $currentIssue.ModuleAttributeValuesMap)
-
-  ## The issue details
+    #set ($attrValues = $currentIssue.AttributeValuesMap)
 
 
-      <TABLE BORDER="0" CELLPADDING="2" CELLSPACING="0" WIDTH="100%">
-        <TR>
-          <TD BGCOLOR="#999999">ISSUE DETAILS</TD>
-        </TR>
-        <TR>
-          <TD>
 
-            Issue ID#: $currentIssue.UniqueId
+<form name="IssueForm" method="post" action="$action" >
 
-          </TD>
-        </tr>
+#set($attVal =  $attrValues.get("DESCRIPTION"))
+#set ( $attrInput = $intake.AttributeValue.mapTo($attVal) ) 
 
-    #foreach ( $attKey in $attrValues )
-        #set ( $attVal = $attrValues.get($attKey) )
+      <p> $attrInput.Value </p>
 
-        <tr><td>
-
-    <b>$attVal.Attribute.Name:</b>
-    #if ($attVal.Attribute.AttributeType.Name == "email" && $attVal.Value && $attVal.Value.toString().length() != 0 )
-
-        <a href="mailto:$attVal.Value">$attVal.Value</a>
-
-    #else
-        $!attVal.Value
-    #end
-        </td></tr>
-
-  #end
-
-        <TR>
-          <TD>
-
-  Reported by:<br>
-  #set ( $email = $currentIssue.UserRelatedByCreatedBy.Email )
-          <A HREF="mailto:$email">$email</A>
-
-          </TD>
-        </tr>
-
+      <div class="functnbar">
+       <table width="100%" cellpadding="3" cellspacing="2" border="1">
         <tr>
-          <TD>
-
-  Date Entered:<br>
-  $currentIssue.CreatedDate
-
-          </TD>
-        </TR>
-
-        <tr>
-          <TD>
-
-  Last Modified:<br>
-  $currentIssue.ModifiedDate
-
-          </TD>
-        </TR>
-
-
-        <TR>
-          <TD>Votes:</TD>
-          <TD>12</TD>
-        </TR>
-
-
-        <TR>
-          <TD>Depends On:<br>
-
-  #set ( $comma = "" )
-  #foreach ($issue in $currentIssue.BlockerIssues)
-      #set ( $issueLink = $link.setPage("IssueDetails.vm").addPathInfo("currentIssueId", $currentIssueId).addPathInfo($data.Parameters).addPathInfo("prevTemplate", $link.CurrentTemplate) )
-
-            $comma<A HREF="$issueLink">$issue.UniqueId</A>
-      #set ( $comma = ", " )
-  #end
-          </TD>
+         <td><input type="submit" value="previous" class="buttonfunc" />&#160;<input type="submit" value="next" class="buttonfunc" />&#160;issues | 3 of 5</td>
         </tr>
+       </table>
+      </div>
 
-        <TR>
-          <TD>Dependents:<br>
+      <div class="grouper">
+       <div class="datatitle">
+        <table width="100%" cellpadding="3" cellspacing="2" border="1">
+         <tr>
+          <td>Issue ID #$currentIssue.UniqueId</td>
+         </tr>
+        </table>
+       </div>
 
-  #set ( $comma = "" )
-  #foreach ($issue in $currentIssue.BlockerIssues)
-      #set ( $issueLink = $link.setPage("IssueDetails.vm").addPathInfo("currentIssueId", $currentIssueId).addPathInfo($data.Parameters).addPathInfo("prevTemplate", $link.CurrentTemplate) )
+       <div class="listtable">
+        <table width="100%" cellpadding="3" cellspacing="2" border="1">
+         <tr>
+          <td width="120" class="a"><strong>issue id #:</strong></td>
 
-            $comma<A HREF="$issueLink">$issue.UniqueId</A>
-      #set ( $comma = ", " )
-  #end
+          <td class="b">#$currentIssue.UniqueId</td>
+         </tr>
 
-          </TD>
-        </tr>
+#set($attVal =  $attrValues.get("RESOLUTION"))
+#set ( $attrInput = $intake.AttributeValue.mapTo($attVal) )
 
+         <tr>
+          <td width="120" class="a"><strong>resolution:</strong></td>
 
-#*  Comments are not ready.
-<a href="#Comments">Add Comment</a>
+          <td class="b">$attrInput.Value </td>
+         </tr>
 
+#set($attVal =  $attrValues.get("PLATFORM"))
+#set ( $attrInput = $intake.AttributeValue.mapTo($attVal) )
+         <tr>
+          <td width="120" class="a"><strong>platform:</strong></td>
 
-<P>
-<a name="Comments">
-Comments<br>
-<br>
-          <TD CLASS="TableDataHeader">From: <SPAN CLASS="TableData"><A HREF="mailto:bob@collab.net">bob@collab.net</A></SPAN></TD>
-          <TD CLASS="TableDataHeader">Date: <SPAN CLASS="TableData">2000-08-12</SPAN></TD>
-        </TR>
-        <TR>
-          <TD HEIGHT="4" COLSPAN="5"><SPACER TYPE="block" HEIGHT="4"></TD>
-        </TR>
-        <TR>
-          <TD COLSPAN="2" CLASS="TableData">The Java SWING widget set is only cross-platform if you are using version 1.34 from Sun Microsystems. Issue#12856,#30856, and $2945 are also duplicates. Gervase needs to clean up this code.</TD>
-        </TR>
-        <TR>
-          <TD HEIGHT="4" COLSPAN="5"><SPACER TYPE="block" HEIGHT="4"></TD>
-        </TR>
-        <TR>
-          <TD HEIGHT="1" COLSPAN="5" BGCOLOR="#cccccc"><SPACER TYPE="block" HEIGHT="1"></TD>
-        </TR>
-        <TR>
-          <TD CLASS="TableDataHeader">From: <SPAN CLASS="TableData"><A HREF="mailto:matt@collab.net">matt@collab.net</A></SPAN></TD>
-          <TD CLASS="TableDataHeader">Date: <SPAN CLASS="TableData">2000-08-12</SPAN></TD>
-        </TR>
-        <TR>
-          <TD HEIGHT="4" COLSPAN="5"><SPACER TYPE="block" HEIGHT="4"></TD>
-        </TR>
-        <TR>
-          <TD COLSPAN="2" CLASS="TableData">Java is meant to be a cross-platform programming lnaguage, not a cross-platform user interface language. If using the Gecko browser this project can take advantage of the XUL language from Mozilla.</TD>
-        </TR>
+          <td class="b">$attrInput.Value </td>
+         </tr>
 
+#set($attVal =  $attrValues.get("OPERATING SYSTEM"))
+#set ( $attrInput = $intake.AttributeValue.mapTo($attVal) )
+         <tr>
+          <td width="120" class="a"><strong>os:</strong></td>
 
-Add a comment<br>
-<br>
-<TEXTAREA NAME="" value="$description" COLS="40" ROWS="3"></TEXTAREA><br>
-<input type="submit" name="eventSubmit_doAddComment" value="Add Comment">
+          <td class="b">$attrInput.Value</td>
+         </tr>
 
-*#
+<!-- what is this??
+ <tr>
+          <td width="120" class="a"><strong>found during:</strong></td>
 
-      </table>
+          <td class="b">normal use, QA, Beta, etc</td>
+         </tr>
+
+         <tr>
+          <td width="120" class="a"><strong>issue type:</strong></td>
+
+          <td class="b">e.g. change requirements / bug / enhancement</td>
+         </tr>
+-->
+#set($attVal =  $attrValues.get("FUNCTIONAL AREA"))
+#set ( $attrInput = $intake.AttributeValue.mapTo($attVal) )
+         <tr>
+          <td width="120" class="a"><strong>functional area:</strong></td>
+
+          <td class="b">$attrInput.Value</td>
+         </tr>
+
+#set($attVal =  $attrValues.get("SEVERITY"))
+#set ( $attrInput = $intake.AttributeValue.mapTo($attVal) )
+#set ( $field = "OptionId" )
+         <tr>
+          <td width="120" class="a"><strong>severity: $attrInput.Value</strong></td>
+
+          <td class="b">
+          #attrValueLeafSelect ($attVal $field "")
+          </td>
+         </tr>
+
+#set($attVal =  $attrValues.get("PRIORITY"))
+#set ( $attrInput = $intake.AttributeValue.mapTo($attVal) )
+#set ( $field = "OptionId" )
+         <tr>
+          <td width="120" class="a"><strong>priority: $attrInput.Value</strong></td>
+
+          <td class="b">
+          #attrValueLeafSelect ($attVal $field "")
+          </td>
+         </tr>
+
+         <tr>
+          <td width="120" class="a"><strong>committed by:</strong></td>
+
+          #set ( $email = $currentIssue.ScarabUserRelatedByCreatedBy.Email )
+          <td class="b"><a href="mailTo:$email">$email</a></td>
+         </tr>
+
+         <tr>
+          <td width="120" class="a"><strong>assignee:</strong></td>
+
+          #set ( $email = $currentIssue.ScarabUserRelatedByAssignedTo.Email )
+          <td class="b">
+           <a href="mailTo:$email">$email</a> 
+
+           <p><input type="submit" value="edit assignees" class="button" /></p>
+          </td>
+         </tr>
+        </table>
+       </div>
+      </div>
+
+      <div class="grouper">
+       <div class="datatitle">
+        <table width="100%" cellpadding="3" cellspacing="2" border="1">
+         <tr>
+          <td>Related Links</td>
+         </tr>
+        </table>
+       </div>
+
+       <div class="datatable">
+        <table width="100%" border="1" cellspacing="2" cellpadding="3">
+         <tr>
+          <th><a href="#"><img src="./images/icon_uparrow.gif" width="13" height="8" alt="sort" border="0" /></a><a href="#"><img src="./images/icon_downarrow.gif" width="13" height="8" alt="sort" border="0" /></a></th>
+
+          <th><a href="#">URL:</a></th>
+
+          <th><a href="#">description:</a></th>
+         </tr>
+
+#set($attVal =  $attrValues.get("URL"))
+#set ( $attrInput = $intake.AttributeValue.mapTo($attVal) )
+         <tr class="a">
+          <td><input type="checkbox" /></td>
+
+          <td><input type="text" size="25" class="text" value="$attrInput.Value" /></td>
+
+          <td><input type="text" size="25" class="text" value="url description x" /></td>
+         </tr>
+
+         <tr class="b">
+          <td><input type="checkbox" /></td>
+
+          <td><input type="text" size="25" class="text" value="http://" /></td>
+
+          <td><input type="text" size="25" class="text" value="url description y" /></td>
+         </tr>
+
+         <tr class="a">
+          <td><input type="checkbox" /></td>
+
+          <td><input type="text" size="25" class="text" value="http://" /></td>
+
+          <td><input type="text" size="25" class="text" value="url description z" /></td>
+         </tr>
+        </table>
+       </div>
+
+       <p><input type="submit" value="add url" class="button" />&#160;<input type="submit" value="delete url" class="button" /></p>
+      </div>
+
+      <div class="grouper">
+       <div class="datatitle">
+        <table width="100%" cellpadding="3" cellspacing="2" border="1">
+         <tr>
+          <td>Parent Issue</td>
+         </tr>
+        </table>
+       </div>
+
+       <div class="listtable">
+        <table width="100%" cellpadding="3" cellspacing="2" border="1">
+         <tr>
+          <td width="120" class="a"><strong>parent issue</strong></td>
+
+          <td class="b"><a href="#">parent issue x: non-blocking</a></td>
+         </tr>
+        </table>
+       </div>
+      </div>
+
+      <div class="grouper">
+       <div class="datatitle">
+        <table width="100%" cellpadding="3" cellspacing="2" border="1">
+         <tr>
+          <td>Child Issues</td>
+         </tr>
+        </table>
+       </div>
+
+       <div class="datatable">
+        <table width="100%" border="1" cellspacing="2" cellpadding="3">
+         <tr>
+          <th><a href="#"><img src="./images/icon_uparrow.gif" width="13" height="8" alt="sort" border="0" /></a><a href="#"><img src="./images/icon_downarrow.gif" width="13" height="8" alt="sort" border="0" /></a></th>
+
+          <th><a href="#">issue id#:</a></th>
+
+          <th><a href="#">issue summary:</a></th>
+
+          <th><a href="#">dependency type:</a></th>
+         </tr>
+
+         <tr class="a">
+          <td><input type="checkbox" /></td>
+
+          <td><a href="#">xxx</a></td>
+
+          <td><a href="#">child issue x</a></td>
+
+          <td><select class="select">
+           <option>
+            blocking
+           </option>
+
+           <option>
+            non-blocking
+           </option>
+          </select></td>
+         </tr>
+
+         <tr class="b">
+          <td><input type="checkbox" /></td>
+
+          <td><a href="#">xxx</a></td>
+
+          <td><a href="#">child issue x</a></td>
+
+          <td><select class="select">
+           <option>
+            blocking
+           </option>
+
+           <option>
+            non-blocking
+           </option>
+          </select></td>
+         </tr>
+        </table>
+
+       <p><input type="submit" value="add child issue" class="button" /></p>
+       </div>
+      </div>
+
+      <div class="grouper">
+       <div class="datatitle">
+        <table width="100%" cellpadding="3" cellspacing="2" border="1">
+         <tr>
+          <td>Comments <a href="#">hide section</a></td>
+         </tr>
+        </table>
+       </div>
+
+       <div class="listtable">
+        <table width="100%" cellpadding="3" cellspacing="2" border="1">
+         <tr>
+          <td width="120" class="a"><strong>xx/xx/01 <a href="mailto:x@xxx.com">author</a></strong></td>
+
+          <td class="b"><textarea rows="4" cols="40" class="text">
+           Comment Content: Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh
+          </textarea></td>
+         </tr>
+
+         <tr>
+          <td width="120" class="a"><strong>xx/xx/01 <a href="mailto:x@xxx.com">author</a></strong></td>
+
+          <td class="b"><textarea rows="4" cols="40" class="text">
+           Comment Content: Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh
+          </textarea></td>
+         </tr>
+
+         <tr>
+          <td width="120" class="a"><strong>xx/xx/01 <a href="mailto:x@xxx.com">author</a></strong></td>
+
+          <td class="b"><textarea rows="4" cols="40" class="text">
+           Comment Content: Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh
+          </textarea></td>
+         </tr>
+
+         <tr>
+          <td width="120" class="a"><strong>xx/xx/01 <a href="mailto:x@xxx.com">author</a></strong></td>
+
+          <td class="b">
+           <textarea rows="4" cols="40" class="text">
+            Comment Content: Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh
+           </textarea> 
+
+           <p><a href="#">view all comments (long form)</a></p>
+          </td>
+         </tr>
+
+         <tr>
+          <td width="120" class="a"><strong>add comment:</strong></td>
+
+          <td class="b">
+           <textarea rows="4" cols="40" class="text">
+           </textarea>
+
+           <p><input type="submit" value="submit comment" class="button" /></p>
+          </td>
+         </tr>
+        </table>
+       </div>
+      </div>
+
+      <div class="grouper">
+       <div class="datatitle">
+        <table width="100%" cellpadding="3" cellspacing="2" border="1">
+         <tr>
+          <td>Issue History (up to first ten)</td>
+         </tr>
+        </table>
+       </div>
+
+       <div class="datatable">
+        <table width="100%" cellpadding="3" cellspacing="2" border="1">
+         <tr>
+          <th width="120"><strong>date stamp:</strong></th>
+
+          <th><strong>action:</strong></th>
+
+          <th><strong>note:</strong></th>
+         </tr>
+
+         <tr class="a">
+          <td width="120">xx/xx/2001</td>
+
+          <td width="120">action descr. X</td>
+
+          <td>note content X</td>
+         </tr>
+
+         <tr class="b">
+          <td width="120">xx/xx/2001</td>
+
+          <td>action descr. X</td>
+
+          <td>note content X</td>
+         </tr>
+
+         <tr class="a">
+          <td width="120">xx/xx/2001</td>
+
+          <td>action descr. X</td>
+
+          <td>note content X</td>
+         </tr>
+
+         <tr class="b">
+          <td width="120">xx/xx/2001</td>
+
+          <td>action descr. X</td>
+
+          <td>note content X</td>
+         </tr>
+        </table>
+       </div>
+      </div>
+
+      <p><a href="#">view complete history</a></p>
+
+      <p><input type="submit" value="submit append" class="button" />&#160;<input type="submit" value="cancel" class="button" />&#160;<input type="reset" value="reset" class="button" /></p>
+
+      <div class="grouper">
+        <div class="functnbar">
+           <table width="100%" cellpadding="3" cellspacing="2" border="1">
+            <tr>
+             <td><input type="submit" value="previous" class="buttonfunc" />&#160;<input type="submit" value="next" class="buttonfunc" />&#160;issues | 3 of 5</td>
+            </tr>
+           </table>
+       </div>
+      </div>
+</form>
 
 #else     ## issue id was not valid
 
