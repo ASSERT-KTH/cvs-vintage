@@ -23,6 +23,7 @@ import java.io.ObjectOutputStream;
 import java.io.ObjectInputStream;
 import java.io.IOException;
 
+import java.sql.Blob;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -52,7 +53,7 @@ import org.jboss.logging.Logger;
  * utility methods that database commands may need to call.
  *
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
- * @version $Revision: 1.17 $
+ * @version $Revision: 1.18 $
  */
 public abstract class JDBCCommand
 {
@@ -282,16 +283,16 @@ public abstract class JDBCCommand
           } else if(jdbcType == Types.TIMESTAMP) {
               if(value.getClass().getName().equals("java.util.Date"))
                   value = new java.sql.Timestamp(((java.util.Date)value).getTime());
-          }			 
+          }
           if (jdbcType == Types.JAVA_OBJECT) {
-              
+
 			  // ejb-reference: store the handle
 			  if (value instanceof EJBObject) try {
 			  	 value = ((EJBObject)value).getHandle();
 			  } catch (RemoteException e) {
 				 throw new SQLException("Cannot get Handle of EJBObject: "+e);
 			  }
-			  
+
 			  ByteArrayOutputStream baos = new ByteArrayOutputStream();
 
               try {
@@ -330,7 +331,7 @@ public abstract class JDBCCommand
       throws IllegalAccessException, SQLException
    {
       Iterator it = jawsEntity.getPkFields();
-      
+
       if (jawsEntity.hasCompositeKey())
       {
          while (it.hasNext())
@@ -383,14 +384,22 @@ public abstract class JDBCCommand
 
         if(destination.isAssignableFrom(result.getClass()))
             return result;
-// DEBUG        else System.out.println("Got a "+result.getClass().getName()+": '"+result+"' while looking for a "+destination.getName());
+        else if(debug)
+            log.debug("Got a "+result.getClass().getName()+": '"+result+"' while looking for a "+destination.getName());
 
         // Also we should detect the EJB references here
 
         // Get the underlying byte[]
 
-        byte[] bytes = result instanceof byte[] ? (byte[])result : rs.getBytes(idx);
-		//byte[] bytes = rs.getBytes(idx);
+        byte[] bytes = null;
+        if(result instanceof byte[]) {
+            bytes = (byte[])result;
+        } else if(result instanceof Blob) {
+            Blob blob = (Blob)result;
+            bytes = blob.getBytes(1, (int)blob.length());
+        } else {
+            bytes = rs.getBytes(idx);
+        }
 
         if( bytes == null ) {
             result = null;
@@ -403,12 +412,12 @@ public abstract class JDBCCommand
 
             try {
 				ObjectInputStream ois = new ObjectInputStream(bais);
-				
+
 				result = ((MarshalledObject) ois.readObject()).get();
-				
+
 				// ejb-reference: get the object back from the handle
 				if (result instanceof Handle) result = ((Handle)result).getEJBObject();
-			
+
                 if(!destination.isAssignableFrom(result.getClass())) {
                     log.debug("Unable to load a ResultSet column into a variable of type '"+destination.getName()+"' (got a "+result.getClass().getName()+")");
                     result = null;
@@ -532,7 +541,7 @@ public abstract class JDBCCommand
 
       return state;
    }
-   
+
    protected Object getCMPFieldValue(Object instance, CMPFieldMetaData fieldMetaData)
       throws IllegalAccessException
    {
@@ -548,7 +557,7 @@ public abstract class JDBCCommand
       Field field = fieldMetaData.getField();
       field.set(instance, value);
    }
-   
+
    protected Object getPkFieldValue(Object pk, PkFieldMetaData pkFieldMetaData)
       throws IllegalAccessException
    {
