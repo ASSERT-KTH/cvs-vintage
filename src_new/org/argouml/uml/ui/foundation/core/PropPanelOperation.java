@@ -1,4 +1,4 @@
-// $Id: PropPanelOperation.java,v 1.67 2004/12/02 19:30:03 mvw Exp $
+// $Id: PropPanelOperation.java,v 1.68 2004/12/12 22:06:01 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -24,7 +24,6 @@
 
 package org.argouml.uml.ui.foundation.core;
 
-import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.util.Collection;
 import java.util.Iterator;
@@ -38,7 +37,6 @@ import javax.swing.border.TitledBorder;
 import org.argouml.i18n.Translator;
 import org.argouml.model.ModelFacade;
 import org.argouml.model.uml.UmlFactory;
-import org.argouml.ui.LookAndFeelMgr;
 import org.argouml.ui.targetmanager.TargetManager;
 import org.argouml.uml.diagram.ui.ActionAddOperation;
 import org.argouml.uml.ui.AbstractActionNewModelElement;
@@ -47,14 +45,11 @@ import org.argouml.uml.ui.ActionRemoveFromModel;
 import org.argouml.uml.ui.PropPanelButton;
 import org.argouml.uml.ui.PropPanelButton2;
 import org.argouml.uml.ui.UMLLinkedList;
-import org.argouml.uml.ui.UMLList;
-import org.argouml.uml.ui.UMLReflectionListModel;
 import org.argouml.util.ConfigLoader;
 import org.tigris.swidgets.GridLayout2;
 
 /**
- * A property panel for operations. TODO: this property panel needs refactoring
- * to remove dependency on old gui components.
+ * A property panel for operations. 
  */
 public class PropPanelOperation extends PropPanelFeature {
 
@@ -102,9 +97,8 @@ public class PropPanelOperation extends PropPanelFeature {
         modifiersPanel.add(new UMLGeneralizableElementRootCheckBox());
         modifiersPanel.add(new UMLBehavioralFeatureQueryCheckBox());
         modifiersPanel.add(new UMLFeatureOwnerScopeCheckBox());
-
         add(modifiersPanel);
-        // TODO: i18n
+
         add(new UMLOperationConcurrencyRadioButtonPanel(
                 Translator.localize("label.concurrency"), true));
 
@@ -113,14 +107,10 @@ public class PropPanelOperation extends PropPanelFeature {
         addField(Translator.localize("label.parameters"),
                 getParameterScroll());
 
-        JList exceptList = new UMLList(new UMLReflectionListModel(this,
-                "signal", true, "getRaisedSignals", "setRaisedSignals",
-                "addRaisedSignal", null), true);
-        exceptList.setForeground(Color.blue);
-        exceptList.setFont(LookAndFeelMgr.getInstance().getSmallFont());
         addField(Translator.localize("label.raisedsignals"),
-                new JScrollPane(exceptList));
-
+               new JScrollPane(new UMLLinkedList(
+               new UMLOperationRaisedSignalsListModel())));
+        
         addButton(new PropPanelButton2(this, new ActionNavigateOwner()));
         addButton(new PropPanelButton2(this, 
                         new ActionAddOperation()));
