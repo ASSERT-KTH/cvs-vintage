@@ -214,7 +214,18 @@ if (str.equals("In Order Received")) {
                 } else {
                     result = -1;
                 }
-            } else {
+            } else if (columnName.equals("Spam")) {
+                boolean f1 = ((Boolean) header1.get("columba.spam")).booleanValue();
+                boolean f2 = ((Boolean) header2.get("columba.spam")).booleanValue();
+
+                if (f1 == f2) {
+                    result = 0;
+                } else if (f1) { // define false < true
+                    result = 1;
+                } else {
+                    result = -1;
+                }
+            }else {
                 Object item1 = header1.get(columnName);
                 Object item2 = header2.get(columnName);
 
