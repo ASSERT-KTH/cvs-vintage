@@ -19,25 +19,18 @@ import java.awt.event.ActionEvent;
 
 import org.columba.core.action.FrameAction;
 import org.columba.core.gui.frame.FrameController;
-import org.columba.core.gui.util.ImageLoader;
-import org.columba.mail.util.MailResourceLoader;
+import org.columba.core.main.MainInterface;
 
-public class DefaultOpenNewWindowAction extends FrameAction {
+public class OpenNewMailWindowAction extends FrameAction {
 
-	public DefaultOpenNewWindowAction(FrameController controller) {
+	public OpenNewMailWindowAction(FrameController controller) {
 		super(
 			controller,
-			MailResourceLoader.getString(
-				"menu",
-				"mainframe",
-				"menu_file_opennewwindow"),
-			MailResourceLoader.getString(
-				"menu",
-				"mainframe",
-				"menu_file_opennewwindow"),
-				"OPEN_NEW_WINDOW",
-			ImageLoader.getSmallImageIcon("stock_new-16.png"),
-			ImageLoader.getImageIcon("stock_new-16.png"),
+			"Mail",
+			"Mail",
+			"OPEN_NEW_MAIL_WINDOW",
+			null,
+			null,
 			' ',
 			null);
 	}
@@ -46,8 +39,8 @@ public class DefaultOpenNewWindowAction extends FrameAction {
 	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
 	 */
 	public void actionPerformed(ActionEvent evt) {
-		//MainInterface.frameModel.openView();
-		getFrameController().getModel().openView();
+		MainInterface.frameModel.openView();
+		//getFrameController().getModel().openView();
 	}
 
 }

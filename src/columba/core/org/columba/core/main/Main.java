@@ -153,9 +153,11 @@ public class Main {
 
 				ThemeSwitcher.setTheme();
 
-				frame.advance();
-
+				doGuiInits();
+				
 				new ImageLoader();
+
+				
 
 				MainInterface.charsetManager = new CharsetManager();
 
@@ -174,21 +176,23 @@ public class Main {
 
 				MainInterface.pluginManager.initPlugins();
 
-				frame.advance();
+				
 
 				MainInterface.shutdownManager = new ShutdownManager();
 
 				MainInterface.shutdownManager.register(new SaveConfigPlugin());
 
+				frame.advance();
+				
 				addressbook.initPlugins();
 				mail.initPlugins();
 
-				doGuiInits();
-
+				frame.advance();
+				
 				addressbook.initGui();
 				mail.initGui();
 
-				frame.advance();
+				
 
 				return null;
 			}

@@ -17,7 +17,7 @@ package org.columba.core.gui.frame;
 import java.util.Enumeration;
 
 import org.columba.core.config.ViewItem;
-import org.columba.core.gui.action.DefaultOpenNewWindowAction;
+import org.columba.core.gui.action.OpenNewMailWindowAction;
 import org.columba.core.main.MainInterface;
 import org.columba.core.xml.XmlElement;
 /**
@@ -137,7 +137,7 @@ public abstract class MultiViewFrameModel extends DefaultFrameModel {
 		}
 	}
 	
-	public DefaultOpenNewWindowAction getOpenWindowAction()
+	public OpenNewMailWindowAction getOpenWindowAction()
 	{
 		
 		return null;

@@ -3,7 +3,10 @@
 <menubar>
 
 	<menu name="menu_file">
-	    <!--<menuitem imenu="OpenNewWindow"/>-->
+	    <menu name="menu_file_opennewwindow">
+	    	<menuitem action="OpenNewMailWindow"/>
+	    	<menuitem action="OpenNewAddressbookWindow"/>
+	    </menu>
 		<separator/>
 		<extensionpoint name="main" />	
 		<menuitem action="Print"/>	
