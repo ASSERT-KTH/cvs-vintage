@@ -50,7 +50,7 @@ import org.gjt.sp.util.Log;
  * jEdit's text component.
  *
  * @author Slava Pestov
- * @version $Id: JEditTextArea.java,v 1.138 2002/06/18 06:56:00 spestov Exp $
+ * @version $Id: JEditTextArea.java,v 1.139 2002/06/18 13:14:59 spestov Exp $
  */
 public class JEditTextArea extends JComponent
 {
@@ -3874,16 +3874,13 @@ loop:		for(int i = caretLine + 1; i < getLineCount(); i++)
 	{
 		int x = offsetToX(caretLine,caret - getLineStartOffset(caretLine));
 
-		if(!fully)
-		{
-			int line = foldVisibilityManager.expandFold(caretLine,fully);
+		int line = foldVisibilityManager.expandFold(caretLine,fully);
 
-			if(line != -1)
-			{
-				if(!multi)
-					selectNone();
-				moveCaretPosition(getLineStartOffset(line) + xToOffset(line,x));
-			}
+		if(!fully && line != -1)
+		{
+			if(!multi)
+				selectNone();
+			moveCaretPosition(getLineStartOffset(line) + xToOffset(line,x));
 		}
 	} //}}}
 
