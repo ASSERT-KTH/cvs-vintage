@@ -31,7 +31,7 @@ import org.columba.mail.pop3.POP3ServerCollection;
 
 public class MainInterface {
 
-	public static String version = "04-9-2003 cvs";
+	public static String version = "04-14-2003 cvs";
 
 	public static Boolean DEBUG = Boolean.FALSE;
 
