@@ -7,7 +7,7 @@
 <!--                                                                       -->
 <!-- ===================================================================== -->
 
-<!-- $Id: jboss-service.xml,v 1.4 2001/09/06 00:39:34 jules_gosnell Exp $ -->
+<!-- $Id: jboss-service.xml,v 1.5 2001/09/06 13:18:04 d_jencks Exp $ -->
 
 <!-- 
    |  This is where you can add and configure your MBeans.
@@ -358,7 +358,7 @@
    -->
 	 <mbean code="org.jboss.resource.ConnectionFactoryLoader" 
 	 name="JBOSS-SYSTEM:service=ConnectionFactoryLoader,name=DefaultDS">
-    <attribute name="Properties">ConnectionURL=jdbc\:HypersonicSQL\:hsql\://localhost\:1476</attribute>
+    <attribute name="Properties">ConnectionURL=jdbc:HypersonicSQL:hsql://localhost:1476</attribute>
     <attribute name="FactoryName">DefaultDS</attribute>
     <attribute name="TransactionManagerName">java:/TransactionManager</attribute>
     <attribute name="ResourceAdapterName">Minerva JDBC LocalTransaction ResourceAdapter</attribute>
