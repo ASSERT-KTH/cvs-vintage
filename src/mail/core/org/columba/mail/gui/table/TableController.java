@@ -29,6 +29,7 @@ import org.columba.mail.config.MailConfig;
 import org.columba.mail.folder.Folder;
 import org.columba.mail.folder.FolderTreeNode;
 import org.columba.mail.gui.frame.MailFrameController;
+import org.columba.mail.gui.message.command.ViewMessageCommand;
 import org.columba.mail.gui.table.action.FilterActionListener;
 import org.columba.mail.gui.table.action.HeaderItemActionListener;
 import org.columba.mail.gui.table.action.HeaderTableActionListener;
@@ -407,15 +408,6 @@ public class TableController
 		if (node == null)
 			return;
 			
-		getActionListener().changeMessageActions();
-	}
-
-	/**
-	 * show the message in the messageviewer
-	 */
-
-	public void showMessage() {
-
 		MessageNode[] nodes = getView().getSelectedNodes();
 		if (nodes == null) {
 			return;
@@ -434,6 +426,30 @@ public class TableController
 
 		getTableSelectionManager().fireMessageSelectionEvent(null, newUidList);
 
+	}
+
+	/**
+	 * show the message in the messageviewer
+	 */
+
+	public void showMessage() {
+
+		FolderCommandReference[] reference = (FolderCommandReference[]) MainInterface.frameController.tableController.getTableSelectionManager().getSelection();
+		
+		FolderTreeNode treeNode = reference[0].getFolder();
+		Object[] uids = reference[0].getUids();
+		
+		// this is no message-viewing action,
+		// but a selection of multiple messages
+		if ( uids.length > 1 ) return;
+		
+		MainInterface.frameController.attachmentController.getAttachmentSelectionManager().setFolder(treeNode);
+		MainInterface.frameController.attachmentController.getAttachmentSelectionManager().setUids(uids);
+		
+		MainInterface.processor.addOp(
+			new ViewMessageCommand(
+				mailFrameController,
+				reference));
 	}
 
 	/**

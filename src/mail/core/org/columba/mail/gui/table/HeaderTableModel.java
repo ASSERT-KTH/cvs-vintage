@@ -293,6 +293,7 @@ public class HeaderTableModel  extends AbstractTreeTableModel{
 
 		headerList = list;
 
+		/*
 		for (Enumeration e = headerList.keys(); e.hasMoreElements();) {
 			Object uid = e.nextElement();
 
@@ -302,7 +303,7 @@ public class HeaderTableModel  extends AbstractTreeTableModel{
 
 			root.add(child);
 		}
-
+		*/
 		
 		if (list == null) {
 			nodeStructureChanged(root);

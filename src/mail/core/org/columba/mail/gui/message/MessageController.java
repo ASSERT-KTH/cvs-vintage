@@ -146,8 +146,9 @@ public class MessageController implements MessageSelectionListener//implements C
 	
 	public void messageSelectionChanged( Object[] newUidList )
 	{
-		System.out.println("received new message-selection changed event");
+		//System.out.println("received new message-selection changed event");
 		
+		/*
 		FolderCommandReference[] reference = (FolderCommandReference[]) MainInterface.frameController.tableController.getTableSelectionManager().getSelection();
 		
 		FolderTreeNode treeNode = reference[0].getFolder();
@@ -164,7 +165,7 @@ public class MessageController implements MessageSelectionListener//implements C
 			new ViewMessageCommand(
 				mailFrameController,
 				reference));
-			
+		*/	
 		
 		/*
 		MainInterface.crossbar.operate(
