@@ -1,4 +1,4 @@
-// $Id: TestGeneratorCpp.java,v 1.11 2005/02/05 21:36:55 mvw Exp $
+// $Id: TestGeneratorCpp.java,v 1.12 2005/02/10 20:38:40 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -148,12 +148,15 @@ public class TestGeneratorCpp extends BaseTestGeneratorCpp {
 
     /**
      * Test of cppGenerate method.
+     * TODO: generate() used to generate code for .cpp file,
+     *   now generates for .h. There should be a method in
+     *   GeneratorCpp to select one so we could test both here.
      */
     public void testCppGenerate() {
-        // generate void AClass::foo();
+        // generate AClass::foo()
         String strFooMethod = getGenerator().generate(getFooMethod());
         assertNotNull(strFooMethod);
-        assertEquals("void AClass::foo()", strFooMethod.trim());
+        assertEquals("virtual void foo()", strFooMethod.trim());
     }
 
     /**
@@ -247,5 +250,79 @@ public class TestGeneratorCpp extends BaseTestGeneratorCpp {
         code = getGenerator().generate(aExtended);
         re = "(?m)(?s).*class\\s+AExtended\\s*:\\s*private\\s*AClass.*";
         assertTrue(code.matches(re));   
+    }
+
+    private Object createAttrWithMultiplicity(String name, Object mult) {
+        Object intType =
+            ProjectManager.getManager().getCurrentProject().findType("int");
+        Object attr = buildAttribute(getAClass(), intType, name);
+        Model.getCoreHelper().setMultiplicity(attr, mult);
+        return attr;
+    }
+    
+    private Object createAttrWithMultiplicity(String name, Object mult,
+                String multType) {
+        Object attr = createAttrWithMultiplicity(name, mult);
+        setTaggedValue(attr, "MultiplicityType", multType);
+        return attr;
+    }
+
+    /**
+     * Test if the multiplicity of an attribute is generated correctly. This
+     * tests multiplicity 0..* and 1..* without tags (should use std::vector)
+     */
+    public void testAttributeMultiplicity0NAnd1N() {
+        String re = "(?m)(?s)\\s*std\\s*::\\s*vector\\s*"
+            + "<\\s*int\\s*>\\s+myAttr\\s*;";
+        String code = getGenerator()
+            .generate(createAttrWithMultiplicity(
+                    "myAttr", Model.getMultiplicities().get0N()));
+        assertTrue(code.matches(re));
+        code = getGenerator()
+            .generate(createAttrWithMultiplicity(
+                    "myAttr", Model.getMultiplicities().get0N()));
+        assertTrue(code.matches(re));
+    }
+    
+    /**
+     * Test if the multiplicity of an attribute is generated correctly. This
+     * tests multiplicity 0..* and 1..* (MultiplicityType list)
+     */
+    public void testAttributeMultiplicity0NAnd1NList() {
+        String re = "(?m)(?s)\\s*std\\s*::\\s*list\\s*"
+            + "<\\s*int\\s*>\\s+myAttr\\s*;";
+        String code = getGenerator()
+            .generate(createAttrWithMultiplicity(
+                    "myAttr", Model.getMultiplicities().get0N(), "list"));
+        assertTrue(code.matches(re));
+        code = getGenerator()
+            .generate(createAttrWithMultiplicity(
+                    "myAttr", Model.getMultiplicities().get1N(), "list"));
+        assertTrue(code.matches(re));
+    }
+
+    /**
+     * Test if the multiplicity of an attribute is generated correctly. This
+     * tests multiplicity 0..* and 1..* (MultiplicityType stringmap)
+     */
+    public void testAttributeMultiplicity0NAnd1NStringMap() {
+        String re = "(?m)(?s)\\s*std\\s*::\\s*map\\s*"
+            + "<\\s*std\\s*::\\s*string\\s*,\\s*int\\s*>\\s+myAttr\\s*;";
+        String code = getGenerator()
+            .generate(createAttrWithMultiplicity(
+                    "myAttr", Model.getMultiplicities().get0N(), "stringmap"));
+        assertTrue(code.matches(re));
+    }
+
+    /**
+     * Test if the multiplicity of an attribute is generated correctly.
+     * This tests multiplicity 0..1.
+     */
+    public void testAttributeMultiplicity01() {
+        String re = "(?m)(?s)\\s*int\\s*\\*\\s*myAttr\\s*;";
+        String code = getGenerator()
+            .generate(createAttrWithMultiplicity(
+                    "myAttr", Model.getMultiplicities().get01()));
+        assertTrue(code.matches(re));
     }
 }

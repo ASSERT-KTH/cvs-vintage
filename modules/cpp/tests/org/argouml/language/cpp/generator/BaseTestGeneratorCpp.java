@@ -1,4 +1,4 @@
-// $Id: BaseTestGeneratorCpp.java,v 1.8 2005/01/14 01:02:32 euluis Exp $
+// $Id: BaseTestGeneratorCpp.java,v 1.9 2005/02/10 20:38:40 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -93,7 +93,23 @@ class BaseTestGeneratorCpp extends TestCase {
             String opName) {
         Collection propertyChangeListeners = getPropertyChangeListeners(me);
         return Model.getCoreFactory().buildOperation(me,
-                getModel(), returnType, "foo", propertyChangeListeners);
+                getModel(), returnType, opName, propertyChangeListeners);
+    }
+
+    /**
+     * Create a attribute in the given model element. 
+     * @param me the model element for which to build the attribute
+     * @param type type of the attribute
+     * @param attrName attribute name
+     * @return the attribute
+     */
+    protected Object buildAttribute(Object me, Object type, 
+            String attrName) {
+        Collection propertyChangeListeners = getPropertyChangeListeners(me);
+        Object attr = Model.getCoreFactory()
+            .buildAttribute(me, getModel(), type, propertyChangeListeners);
+        Model.getCoreHelper().setName(attr, attrName);
+        return attr;
     }
 
     /**
