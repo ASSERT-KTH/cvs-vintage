@@ -194,6 +194,7 @@
          port="8443" 
          secure="true" />
         -->
+
         <!--
              JNI connector, make sure that you update the native_lib
              Parameter to point to your jni_connect.dll.
@@ -206,10 +207,9 @@
 
         <!-- Apache AJP12 support. This is also used to shut down tomcat.
              Parameter "address" defines network interface this Interceptor
-             "binds" to. Delete it if you want to "bind" to all interfaces.
+             "binds" to. Add it if you want to "bind" to just "127.0.0.1".
              
              address="127.0.0.1"
-             
           -->
         <RequestInterceptor 
          className="org.apache.tomcat.modules.server.Ajp12Interceptor"
@@ -218,22 +218,13 @@
 
         <!-- Apache AJP13 support (mod_jk)
              Parameter "address" defines network interface this Interceptor
-             "binds" to. Delete it if you want to "bind" to all interfaces.            
+             "binds" to. Add it if you want to "bind" to just "127.0.0.1".
+
              address="127.0.0.1"
           -->
         <RequestInterceptor 
            className="org.apache.tomcat.modules.server.Ajp13Interceptor"
            port="8009" />
-
-        <!-- Apache AJP14 support ( experimental, jakarta-tomcat-connectors)
-            This will eventually replace Ajp12 and Ajp13
-          -->
-        <RequestInterceptor 
-           className="org.apache.ajp.tomcat33.Ajp14Interceptor"
-           tomcatAuthentication="false"
-           password="changeme"
-           debug="10"			    
-           port="8011" />
 
       <!-- 
            Context definitions can be placed here ( not recommended ) or 
