@@ -102,8 +102,8 @@
     -->
 
 
-    <fixcrlf srcdir="${tomcat.build}/bin" includes="*.sh" cr="remove"/>
-    <fixcrlf srcdir="${tomcat.build}/bin" includes="*.bat" cr="add"/>
+    <fixcrlf srcdir="${tomcat.build}/bin" includes="**/*.sh" cr="remove"/>
+    <fixcrlf srcdir="${tomcat.build}/bin" includes="**/*.bat" cr="add"/>
 
     <chmod perm="+x" file="${tomcat.build}/bin/ant"/>
     <chmod perm="+x" file="${tomcat.build}/bin/antRun"/>
