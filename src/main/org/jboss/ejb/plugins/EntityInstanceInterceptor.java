@@ -41,7 +41,7 @@ import org.jboss.util.NestedRuntimeException;
 * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
 * @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>
 * @author <a href="mailto:bill@burkecentral.com">Bill Burke</a>
-* @version $Revision: 1.67 $
+* @version $Revision: 1.68 $
 */
 public class EntityInstanceInterceptor
    extends AbstractInterceptor
@@ -196,20 +196,11 @@ public class EntityInstanceInterceptor
             // Make sure we clear the transaction on an error before synchronization.
             // But avoid a race with a transaction rollback on a synchronization
             // that may have moved the context onto a different transaction
-            BeanLock lock = container.getLockManager().getLock(ctx.getCacheKey());
-            lock.sync();
-            try
+            if (exceptionThrown != null && tx != null)
             {
-               if (exceptionThrown != null && tx != null)
-               {
-                  Transaction ctxTx = ctx.getTransaction();
-                  if (tx.equals(ctxTx) && ctx.hasTxSynchronization() == false)
-                     ctx.setTransaction(null);
-               }
-            }
-            finally
-            {
-               lock.releaseSync();
+               Transaction ctxTx = ctx.getTransaction();
+               if (tx.equals(ctxTx) && ctx.hasTxSynchronization() == false)
+                  ctx.setTransaction(null);
             }
 
 				// If an exception has been thrown,
