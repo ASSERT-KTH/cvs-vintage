@@ -1,4 +1,4 @@
-// $Id: Argo.java,v 1.31 2003/12/16 23:17:12 alexb Exp $
+// $Id: Argo.java,v 1.32 2003/12/22 22:56:17 alexb Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -211,6 +211,15 @@ public class Argo
      */
     public static final ConfigurationKey KEY_USER_IMPORT_CLASSPATH =
 	Configuration.makeKey("import", "clazzpath");
+    
+    /** Key for user explorer perspectives.
+     *<pre>
+     * format:
+     * perspective name,rule,rule,rule;perspective name, etc
+     *</pre>
+     */
+    public static final ConfigurationKey KEY_USER_EXPLORER_PERSPECTIVES =
+	Configuration.makeKey("explorer", "perspectives");
     
     /** Standard definition of the logging category for the console.
      */
