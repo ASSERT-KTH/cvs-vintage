@@ -7,11 +7,15 @@
   <property name="web.inf" value="${webapps.scarab}/WEB-INF"/>
   <property name="web.inf.lib" value="${web.inf}/lib"/>
   <property name="build.dest" value="${web.inf}/classes"/>
-  <property name="ant.home" value="."/>
   <property name="test.home" value="../test"/>
   <property name="junit.jar" value="../lib/junit-3.7.jar"/>
   <property name="config.dir"
            value="-Dconfig.dir=${webapps.scarab}"/>
+  
+  <property name="clover.dbdir" value="${web.inf}/src"/>
+  <property name="clover.dbfile" value="${clover.dbdir}/scarab_coverage.db"/>
+  <property name="clover.initstring" value="${clover.dbfile}"/>
+  <property name="clover.html.outdir" value="${webapps.scarab}/clover"/>
 
   <!-- JUnit Testbed properties -->
   <property name="test.runner" value="junit.textui.TestRunner"/>
@@ -30,8 +34,23 @@
     <pathelement location="${build.dest}"/>
   </path>
 
+  <target name="with.clover">
+	<property name="build.compiler" 
+	    value="org.apache.tools.ant.taskdefs.CloverCompilerAdapter"/>
+  </target>
+
   <target name="compile">
     <ant dir="${basedir}" target="compile-tests"/>
+  </target>
+
+  <!-- =================================================================== -->
+  <!-- generate a html report                                              -->
+  <!-- =================================================================== -->
+  <target name="clover.report.html">
+    <java classname="com.cortexeb.tools.clover.reporters.html.HtmlReporter">
+	  <arg line="-o ${clover.html.outdir} -i ${clover.initstring} -t 'scarab'"/>
+	  <classpath refid="classpath"/>
+	</java>
   </target>
 
   <target name="test-all" depends="compile">
