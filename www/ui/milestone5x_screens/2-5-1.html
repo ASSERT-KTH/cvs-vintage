@@ -1,0 +1,477 @@
+<!DOCTYPE html PUBLIC "-//CollabNet//DTD XHTML 1.0 Transitional//EN"
+"http://collabnet.com/dtds/collabnet_transitional_10.dtd">
+<html>
+
+<head>
+	<title>Define custom alert email (2.5.1)</title>
+	<link rel="stylesheet" type="text/css" href="../csi/style/main.css" media="screen" />
+	<link rel="stylesheet" type="text/css" href="../csi/style/print.css" media="print" />
+	<link rel="alternate stylesheet" title="compact" type="text/css" href="../csi/style/compact.css" />
+</head>
+
+<body>
+<form action="#" method="get">
+
+	<!-- SourceCast -->
+	<div id="banner">
+		<table border="0" cellspacing="12" cellpadding="0" width="100%">
+		<tr>
+		
+		<td>
+		<div align="right" id="loginstatus">
+			<div>
+				Logged in as: <strong class="username">User XX</strong>
+			</div>
+			<div>
+				<a href="#">Edit Profile</a> | <a href="#">Logout</a>
+			</div>
+		</div>
+		</td>
+		</tr>
+		</table>
+	</div>
+	<!-- SourceCast -->
+	
+	<!-- Structural Elements -->
+<table border="0" cellspacing="0" cellpadding="0" width="100%">
+<tr>
+<td id="leftcol" nowrap="nowrap" width="20%">
+<!-- Structural Elements -->
+	
+	<!-- SourceCast -->
+	<div id="navcol">
+		<table border="0" cellspacing="0" cellpadding="0" width="100%">
+			<tr>
+			<th>
+			<a href="#">Start page</a>
+			</th>
+			</tr>
+			<tr>
+			<th>
+			<a href="#">Projects</a>/<a href="#">Categories</a>
+			</th>
+			</tr>
+			<tr>
+			<td>&nbsp;</td>
+			</tr>
+			<tr>
+			<th>
+			Project tools
+			</th>
+			</tr>
+			<tr>
+			<td>
+			<div>&nbsp;&nbsp;<a href="#">Documents</a></div>
+			<div>&nbsp;&nbsp;Issue tracking</div>
+			<div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- Enter issue</div>
+			<div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- <a href="#">Reports</a></div>
+			<div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- <a href="#">Vote management</a></div>
+			<div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- <a href="#">Workflow options</a></div>
+			<div>&nbsp;&nbsp;<a href="#">Mailing lists</a></div> 
+			<div>&nbsp;&nbsp;<a href="#">Members</a></div>  
+			<div>&nbsp;&nbsp;<a href="#">News</a></div>
+			<div>&nbsp;&nbsp;<a href="#">Source code</a></div>
+			</td>
+			</tr>
+			<tr>
+			<td>&nbsp;</td>
+			</tr>
+			<tr>
+			<th>
+			&nbsp;<a href="#">Admin Functions</a>
+			</th>
+			</tr>
+		</table>
+	</div>
+	<!-- SourceCast -->
+	
+	<!-- SourceCast -->
+	<div id="helptext">
+		<table border="0" cellspacing="0" cellpadding="3" width="100%">
+		<tr>
+		<th>How do I...?</th>
+		</tr>
+		<tr>
+		<td>
+			<div> 
+				<a href="#">[Go to help index]</a>
+			</div>
+			<div> 
+				<a href="#">Use this page</a>...
+			</div>
+			<div>
+				<a href="#">Learn about a project</a>...
+			</div>
+			<div>
+				<a href="#">Join a project</a>...
+			</div>
+		</td>
+		</tr>
+		</table>
+	</div>
+	<!-- SourceCast -->
+	
+<!-- Structural Elements -->
+</td>
+<td id="bodycol">
+<!-- Structural Elements -->
+
+	<!-- Scarab - App -->
+	<div id="topmodule">
+		<table border="0" cellspacing="0" cellpadding="3" width="100%">
+		<tr>
+			<td nowrap="nowrap">
+			<select>
+			<option>saved queries</option>
+			<option>query one</option>
+			<option>query two</option>
+			</select> 
+			<input type="submit" name="query" value="Go" class="bttn" />
+			&nbsp;
+			<input type="text" size="15" name="" />
+			<input type="submit" name="query" value="Query" class="bttn" />
+			&nbsp;
+			<a href="#">Advanced</a>&nbsp;|&nbsp;<a href="#">Custom</a>
+			</td>			
+		</tr>
+		</table>
+	</div>
+	<!-- Scarab - App -->
+	
+	<!-- Scarab - App -->
+	<div class="app" id="div3-5-1">
+		<h2>Define custom alert email (2.5.1)</h2>
+	  	  	
+<p class="functnbar"><input type="submit" value="save" />&nbsp;<input type="submit" value="cancel" class="button" />&nbsp;<input type="submit" value="clear form" class="button" /></p>
+
+	  <h3>Subscription info</h3>
+
+<div class="axial">
+       <table width="100%" border="1" cellspacing="2" cellpadding="3">
+        <tr>
+         <th width="120">Default frequency</th>
+
+         <td><select>
+          <option>every half hour</option>
+          <option>hourly</option>
+		  <option>twice daily</option>
+		  <option>daily</option>
+		  <option>weekly</option>		  
+		 </select></td>
+        </tr>
+
+        <tr>
+         <th width="120">role permissions</th>
+
+         <td><select>
+          <option>Root admin</option>
+          <option>Project manager</option>
+		  <option>QA</option>
+		  <option>Developer</option>
+		  <option>Observer</option>		  
+		 </select></td>
+        </tr>
+        
+        </table>
+</div>
+
+	  <p>
+	  </p>
+	  
+	  <h3>email contents</h3>
+<div class="axial">
+       <table width="100%" border="1" cellspacing="2" cellpadding="3">
+        <tr>
+         <th width="120">Name<br>(subject)</th>
+
+         <td><input type="text" size="25" value="" /></td>
+        </tr>
+
+        <tr>
+         <th width="120">Description<br>(email body)</th>
+
+         <td><textarea rows="4" cols="40">
+         </textarea></td>
+        </tr>
+
+        <tr>
+         <th width="120">Issues per email</th>
+
+         <td><select>
+          <option>5</option>
+          <option>10</option>
+		  <option>15</option>
+		  <option>25</option>		  
+          <option>50</option>
+          <option>75</option>
+		  <option>100</option>
+		 </select></td>
+        </tr>
+
+        <tr>
+         <th width="120">author:</th>
+
+         <td>Joe Smo<br><a href="#">joes@users.com</a></td>
+        </tr>
+        
+        </table>
+</div>
+
+	  <h3>Personnel</h3>
+<div class="axial">
+       <table width="100%" border="1" cellspacing="2" cellpadding="3">
+        <tr>
+         <th width="120">Users / roles</th>
+
+         <td><select multiple>
+          <option>All users in project X</option>
+          <option>Role X</option>
+		  <option>Role Y</option>
+		  <option>Role Z</option>		  
+          <option>User A</option>
+          <option>User B</option>
+		  <option>User C</option>
+          <option>User D</option>
+          <option>User E</option>
+		  <option>User F</option>
+		 </select></td>
+        </tr>        
+        </table>
+</div>
+
+
+       <h3>State change query</h3>
+	<div class="axial">
+       <table width="100%" cellpadding="3" cellspacing="2" border="1">
+       <tr>
+         <th width="120">attribute</th>
+
+         <td><select>
+          <option>
+           state
+          </option>
+          
+          <option>
+           priority
+          </option>
+
+          <option>
+           operating sys
+          </option>
+
+          <option>
+          etc
+          </option>
+
+         </select>&nbsp;<input type="submit" name="" value="update options">
+
+          </td>
+        </tr>  
+        
+        <tr>
+         <th width="120">state change</th>
+
+         <td><select>
+          <option>
+          Option X
+          </option>
+
+          <option>
+          Option Y
+          </option>
+
+          <option>
+          Option Z
+          </option>
+
+         </select> to <select>
+          <option>
+          Option X
+          </option>
+
+          <option>
+          Option Y
+          </option>
+
+          <option>
+          Option Z
+          </option>
+
+         </select>
+
+          </td>
+        </tr>  
+        
+        <tr>
+         <th width="120">time range</th>
+
+         <td>
+<select>
+<option>0 min</option>
+<option>10</option>
+<option>20</option>
+<option>30</option>
+<option>40</option>
+<option>50</option>
+<option>60</option>
+</select>&#160;<select>
+<option>0 hr</option>
+<option>01</option>
+<option>02</option>
+<option>03</option>
+<option>04</option>
+<option>05</option>
+<option>06</option>
+<option>07</option>
+<option>08</option>
+<option>09</option>
+<option>10</option>
+<option>11</option>
+<option>12</option>
+<option>13</option>
+<option>14</option>
+<option>15</option>
+<option>16</option>
+<option>17</option>
+<option>18</option>
+<option>19</option>
+<option>20</option>
+<option>21</option>
+<option>22</option>
+<option>23</option>
+<option>24</option>
+</select>&#160;<select>
+<option>0 days</option>
+<option>1</option>
+<option>2</option>
+<option>3</option>
+<option>4</option>
+<option>5</option>
+<option>6</option>
+<option>7</option>
+</select>&#160;
+<select>
+<option>0 weeks</option>
+<option>1</option>
+<option>2</option>
+<option>3</option>
+<option>4</option>
+</select>
+
+</td>
+        </tr>
+
+       </table>
+      </div>
+
+	  <h3>attributes queried in email</h3>
+      <p><a href="#">Add/remove attributes from query</a></p>
+		
+      <p>Select radio button to select default sort attribute</p>
+      
+       <table width="100%" border="1" cellspacing="2" cellpadding="3">
+        <tr>
+         <th><input type="radio" name="sort by" />&nbsp;attribute a</th>
+
+         <th><input type="radio" name="sort by" />&nbsp;attribute b</th>
+
+         <th><input type="radio" name="sort by" />&nbsp;attribute c</th>
+
+         <th><input type="radio" name="sort by" />&nbsp;attribute d</th>
+        </tr>
+        <tr class="a">
+         <td><select>
+          <option>attrib a search string</option>
+		  </select>
+		  </td>
+
+         <td><input type="text" value="attrib b search string" /></td>
+
+         <td><input type="text" value="attrib c search string" /></td>
+
+         <td><input type="text" value="attrib d search string" /></td>
+        </tr>
+        </table>
+<div class="axial">
+       <table width="100%" border="1" cellspacing="2" cellpadding="3">
+        <tr>
+         <th width="120">Sort</th>
+
+         <td><select>
+          <option>ascending</option>
+		  <option>descending</option>
+		 </select></td>
+        </tr>        
+        </table>
+</div>
+
+
+	  <h3>Current subscriber list</h3>	
+      
+       <table width="100%" border="1" cellspacing="2" cellpadding="3">
+        <tr>
+         <th>User</th>
+
+         <th>Role</th>
+
+         <th>User selected frequency</th>
+
+        </tr>
+        <tr class="a">
+         <td><a href="mailto:">userX@text.com</a></td>
+
+         <td>Developer</td>
+
+         <td>weekly</td>
+
+        </tr>
+
+        <tr class="b">
+         <td><a href="mailto:">userX@text.com</a></td>
+
+         <td>Project manager</td>
+
+         <td>every half hour
+         </td>
+
+        </tr>
+        
+        <tr class="a">
+         <td><a href="mailto:">userX@text.com</a></td>
+
+         <td>Developer</td>
+
+         <td>daily</td>
+
+        </tr>        
+        </table>
+
+	 
+
+
+	  
+	  	  	
+<p class="functnbar"><input type="submit" value="save" />&nbsp;<input type="submit" value="cancel" class="button" />&nbsp;<input type="submit" value="clear form" class="button" /></p>
+	<!-- Scarab - App -->
+
+<!-- Structural Elements -->
+</td>
+</tr>
+</table>
+<!-- Structural Elements -->
+
+	<!-- SourceCast -->
+	<div id="footer">
+		<p>
+		<a href="#">Domain Home</a> |
+		<a href="#">Help</a> | 
+		<a href="#">Site FAQ</a> |
+		<a href="#">Feedback</a>
+		</p>
+	</div>
+	<!-- SourceCast -->
+
+</form>
+</body>
+</html>
+
