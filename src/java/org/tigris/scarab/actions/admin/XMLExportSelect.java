@@ -63,17 +63,18 @@ import org.tigris.scarab.actions.base.RequireLoginFirstAction;
 import org.tigris.scarab.util.xml.XMLExport;
 
 /**
- * This class is responsible for dealing with the Forgot Password
- * Action.
+ * This class is responsible for exporting a list of issue id's as
+ * XML.
  *
  * @author <a href="mailto:kevin.minshull@bitonic.com">Kevin Minshull</a>
+ * @version $Id: XMLExportSelect.java,v 1.2 2001/12/13 23:57:40 jon Exp $
  */
 public class XMLExportSelect extends RequireLoginFirstAction
 {
     private static final String format = "yyyy-MM-dd HH:mm:ss";
     
     /**
-     * This manages clicking the Forgot Password button
+     * this exports issues...
      */
     public void doXmlissues(RunData data, TemplateContext context)
         throws Exception
@@ -109,7 +110,7 @@ public class XMLExportSelect extends RequireLoginFirstAction
         throws Exception
     {
         setTarget(data, data.getParameters().getString(
-                      ScarabConstants.CANCEL_TEMPLATE, "Login.vm"));
+                      ScarabConstants.CANCEL_TEMPLATE, "Index.vm"));
     }
     
     /**
