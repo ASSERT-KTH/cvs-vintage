@@ -88,6 +88,7 @@ public final class SimpleSessionStore  extends BaseInterceptor {
     int maxActiveSessions = -1;
     int size=16;
     int max=256;
+    static final String SESSIONS_RELOAD = "tomcat.sessions.reload";
     
     public SimpleSessionStore() {
     }
@@ -114,56 +115,84 @@ public final class SimpleSessionStore  extends BaseInterceptor {
     }
 
     
+    public void copyContext(Request req, Context oldC, Context newC)
+	throws TomcatException {
+	contextInit(newC);
+	ClassLoader oldLoader = oldC.getClassLoader();
+	SimpleSessionManager sM = getManager( oldC );    
+	SimpleSessionManager sMnew = getManager( newC );
+
+	// remove all non-serializable objects from session
+	Enumeration sessionEnum=sM.getSessions();
+	while( sessionEnum.hasMoreElements() ) {
+	    ServerSession session = (ServerSession)sessionEnum.nextElement();
+	    ServerSession newS = sMnew.cloneSession(req, newC, 
+						    session.getId().toString());
+	    Enumeration e = session.getAttributeNames();
+	    while( e.hasMoreElements() ) {
+		String key = (String) e.nextElement();
+		Object value = session.getAttribute(key);
+		newS.setAttribute(key, value);
+	    }
+	}
+	newC.getContainer().setNote(SESSIONS_RELOAD, req);
+    }
+
+    private void processSession(ServerSession session, 
+				ClassLoader oldCL, ClassLoader newCL)
+	throws TomcatException {
+
+	Hashtable newSession=new Hashtable();
+	Enumeration e = session.getAttributeNames();
+	while( e.hasMoreElements() )   {
+	    String key = (String) e.nextElement();
+	    Object value = session.getAttribute(key);
+	    if( value.getClass().getClassLoader() != oldCL ) {
+		// it's loaded by the parent loader, no need to reload
+		newSession.put( key, value );
+	    } else if ( value instanceof Serializable ) {
+		Object newValue =
+		    ObjectSerializer.doSerialization( newCL,
+						      value);
+		newSession.put( key, newValue );
+	    } 
+	}
+	// If saving back to the same session.
+	// Remove all objects we know how to handle
+	e=newSession.keys();
+	while( e.hasMoreElements() )   {
+	    String key = (String) e.nextElement();
+	    session.removeAttribute(key);
+	}
+
+	if( debug > 0 ) log("Prepare for reloading, SUSPEND " + session );
+	// If anyone can save the rest of the attributes or at least notify
+	// the owner...
+	session.setState( ServerSession.STATE_SUSPEND, null );
+	    
+	if( debug > 0 ) log("After reloading, RESTORED " + session );
+	session.setState( ServerSession.STATE_RESTORED, null );
+
+	/* now put back all attributes */
+	e=newSession.keys();
+	while(e.hasMoreElements() ) {
+	    String key = (String) e.nextElement();
+	    Object value=newSession.get(key );
+	    session.setAttribute( key, value );
+	}
+    }
+
     public void reload( Request req, Context ctx ) throws TomcatException {
 	ClassLoader newLoader = ctx.getClassLoader();
+	ClassLoader oldLoader=(ClassLoader)ctx.getContainer().
+	    getNote("oldLoader");
 	SimpleSessionManager sM = getManager( ctx );    
 
 	// remove all non-serializable objects from session
 	Enumeration sessionEnum=sM.getSessions();
 	while( sessionEnum.hasMoreElements() ) {
 	    ServerSession session = (ServerSession)sessionEnum.nextElement();
-
-	    ClassLoader oldLoader=(ClassLoader)ctx.getContainer().
-		getNote("oldLoader");
-
-	    Hashtable newSession=new Hashtable();
-	    Enumeration e = session.getAttributeNames();
-	    while( e.hasMoreElements() )   {
-		String key = (String) e.nextElement();
-		Object value = session.getAttribute(key);
-
-		if( value.getClass().getClassLoader() != oldLoader ) {
-		    // it's loaded by the parent loader, no need to reload
-		    newSession.put( key, value );
-		} else if ( value instanceof Serializable ) {
-		    Object newValue =
-			ObjectSerializer.doSerialization( newLoader,
-							  value);
-		    newSession.put( key, newValue );
-		} 
-	    }
-	    // Remove all objects we know how to handle
-	    e=newSession.keys();
-	    while( e.hasMoreElements() )   {
-		String key = (String) e.nextElement();
-		session.removeAttribute(key);
-	    }
-
-	    if( debug > 0 ) log("Prepare for reloading, SUSPEND " + session );
-	    // If anyone can save the rest of the attributes or at least notify
-	    // the owner...
-	    session.setState( ServerSession.STATE_SUSPEND, req );
-	    
-	    if( debug > 0 ) log("After reloading, RESTORED " + session );
-	    session.setState( ServerSession.STATE_RESTORED, req );
-
-	    /* now put back all attributs */
-	    e=newSession.keys();
-	    while(e.hasMoreElements() ) {
-		String key = (String) e.nextElement();
-		Object value=newSession.get(key );
-		session.setAttribute( key, value );
-	    }
+	    processSession(session,  oldLoader, newLoader);
 	}
     }
 
@@ -212,6 +241,13 @@ public final class SimpleSessionStore  extends BaseInterceptor {
 	    sm.setModule( this );
 	    ctx.getContainer().setNote( manager_note, sm );
 	}
+	if(ctx.getContainer().getNote(SESSIONS_RELOAD) != null ) {
+	    Request req = (Request)ctx.getContainer().getNote(SESSIONS_RELOAD);
+	    reload(req, ctx);
+	    // Dump for GC.
+	    ctx.getContainer().setNote(SESSIONS_RELOAD,null);
+	}
+		
     }
 
     /** Notification of context shutdown.
@@ -277,6 +313,7 @@ public final class SimpleSessionStore  extends BaseInterceptor {
 	return sM.findSession( sessionId );
     }
 
+    
     // -------------------- Internal methods --------------------
 
     
@@ -380,6 +417,31 @@ public final class SimpleSessionStore  extends BaseInterceptor {
 		oldS.setState( ServerSession.STATE_EXPIRED );
 		oldS.recycle();
 	    }
+	    sessions.put( newId, session );
+	    return (session);
+	}
+	public ServerSession cloneSession(Request req, Context ctx, String oldS) {
+	    // Recycle or create a Session instance
+	    ServerSession session = (ServerSession)recycled.get();
+	    if (session == null) {
+		session = ctx.getContextManager().createServerSession();
+		session.setManager( this );
+		session.setDebug( debug );
+	    }
+	    session.setContext( ctx );
+
+	    session.setState( ServerSession.STATE_NEW, req );
+	    
+	    session.getId().setString(oldS);
+
+	    // The id will be set by one of the modules
+	    String newId=session.getId().toString();
+	    
+//XXXXX - the following is a temporary fix only!  Underlying problem
+//        is:  Why is the newId==null?
+
+	    newId=(newId==null)?"null":newId;
+	    
 	    sessions.put( newId, session );
 	    return (session);
 	}
