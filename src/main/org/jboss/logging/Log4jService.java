@@ -7,20 +7,20 @@
 
 package org.jboss.logging;
 
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Hashtable;
-import javax.management.MalformedObjectNameException;
+
 import javax.management.MBeanRegistration;
 import javax.management.MBeanServer;
 import javax.management.ObjectName;
 
 import org.apache.log4j.Category;
-import org.apache.log4j.NDC;
 import org.apache.log4j.PropertyConfigurator;
 import org.apache.log4j.xml.DOMConfigurator;
+
+import org.jboss.util.ThrowableHandler;
+import org.jboss.util.ThrowableListener;
 
 /**
  * This is a JMX MBean that provides three features:
@@ -41,7 +41,7 @@ import org.apache.log4j.xml.DOMConfigurator;
  * @author <a href="mailto:Scott_Stark@displayscape.com">Scott Stark</a>
  * @author <a href="mailto:davidjencks@earthlink.net">David Jencks</a>
  * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
- * @version $Revision: 1.14 $
+ * @version $Revision: 1.15 $
  */
 public class Log4jService
    implements Log4jServiceMBean, MBeanRegistration
@@ -60,7 +60,7 @@ public class Log4jService
                          "log4j.properties");
 
    // Attributes ----------------------------------------------------
-   
+
    private Category category;
    private String configurationPath;
    private int refreshPeriod;
@@ -167,6 +167,34 @@ public class Log4jService
       
       this.category = Category.getRoot();
       category.info("Started Log4jService, config=" + url);
+
+      // Install listener for unhandled throwables to turn them into log messages
+      ThrowableHandler.addThrowableListener(new ThrowableListener()
+         {
+            private Logger log = Logger.getLogger(this.getClass());
+            
+            public void onThrowable(int type, Throwable t)
+            {
+               switch (type)
+               {
+                  default:
+                     // if type is not valid then make it any error
+                     
+                  case ThrowableHandler.Type.ERROR:
+                     log.error("unhandled throwable", t);
+                     break;
+                     
+                  case ThrowableHandler.Type.WARNING:
+                     log.warn("unhandled throwable", t);
+                     break;
+
+                  case ThrowableHandler.Type.UNKNOWN:
+                     // these could be red-herrings, so log them as trace
+                     log.trace("unhandled throwable, status is unknown", t);
+                     break;
+               }
+            }
+         });
    }
    
    /**
