@@ -39,8 +39,8 @@
   </ul>
   <p>For ease of use, frequently used queries can be saved. Use the left navigation 
     link or the query bar to access saved queries. </p>
-  <p><strong><a name="bar" id="bar">The Query bar</a></strong> 
-  <p>The query bar contains links to frequently used search functionality. </p>
+  <p><strong><a name="bar" id="bar">The Query bar</a></strong></p>
+  <p>The query bar contains links to frequently used search functionality.</p>
   <ul>
     <li>If you have any saved queries, a drop down box will appear first on this 
       bar. Each of your saved queries appears in this box. You can select the 
@@ -64,7 +64,7 @@
   </ul>
   <p> For instance, jdoe is in the games (gam) project and wants to view an issue 
     from the interface (int) project. Jdoe can enter INT1 and click the <strong>Artifact 
-    Id</strong> button to view the first issue in the Interface project. </p>
+    Id</strong> button to view the first issue in the Interface project.</p>
   <p>If you do not have permission to view issues in the target project you will 
     receive an error message. Likewise, if you enter an invalid project id or 
     issue number an error message will be generated.</p>
