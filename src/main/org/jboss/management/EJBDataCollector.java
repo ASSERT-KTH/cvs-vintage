@@ -43,7 +43,7 @@ import management.TimeStatistic;
 *
 * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
 * @author <a href="mailto:andreas.schaefer@madplanet.com">Andreas Schaefer</a>
-* @version $Revision: 1.3 $
+* @version $Revision: 1.4 $
 *
 *  <p><b>Revisions:</b>
 *  <p><b>20010718 andreas schaefer:</b>
@@ -79,7 +79,6 @@ public class EJBDataCollector
    // -------------------------------------------------------------------------  
 
    public Collection refresh( MBeanServer pServer ) {
-      System.err.println( "EJBDataCollector.refresh(), start <<<<================" );
       Collection lReturn = new ArrayList();
       try {
          // Look up all the registered Containers for the EJB Module and loop through
@@ -87,7 +86,6 @@ public class EJBDataCollector
          Iterator i = pServer.queryNames( new ObjectName( "Management:*" ), null ).iterator();
          while( i.hasNext() ) {
             ObjectName lName = (ObjectName) i.next();
-            System.err.println( "===>>> Got Object Name: " + lName );
             if( lName.getKeyProperty( "jndiName" ) == null ) {
                continue;
             }
@@ -117,13 +115,9 @@ public class EJBDataCollector
             if( lContainer.getBeanMetaData().isMessageDriven() ) {
                lBeans.add( new JBossMessageDrivenBean( lContainer.getBeanMetaData().getEjbName() ) );
             }
-            System.out.println( "==>> Tries to get statistics" );
             // Only to test the Statistics Gathering
             if( lContainer instanceof EntityContainer ) {
                Map lStatistics = ( (EntityContainer) lContainer ).retrieveStatistic();
-               if( lStatistics != null ) {
-                  System.out.println( "==>> Statistics: " + lStatistics );
-               }
             }
          }
          i = lApplications.keySet().iterator();
