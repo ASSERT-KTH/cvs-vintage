@@ -75,6 +75,8 @@ import java.text.SimpleDateFormat;
  * StringBuffer, FieldPosition).  If you care about the field
  * position, call the underlying DateFormat directly.
  *
+ * @deprecated This class will be merged with DateTool and moved in buf, to be
+ *   used in all tomcat.
  * @author Stan Bailes
  * @author Alex Chaffee
  **/
@@ -121,7 +123,8 @@ public class FastDateFormat extends DateFormat {
 		    sb.setCharAt(--pos, Character.forDigit(ms % 10, 10));
 	    }
         }
-	toAppendTo.append(sb.toString());
+	toAppendTo.append(sb); // StringBuffer will call toString internally,
+	// except for 1.4 where append(SB) is defined - one more object saved
 	return toAppendTo;
     }
 
