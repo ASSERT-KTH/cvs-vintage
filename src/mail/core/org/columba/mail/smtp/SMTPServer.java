@@ -18,6 +18,8 @@ package org.columba.mail.smtp;
 import java.net.UnknownHostException;
 
 import org.columba.addressbook.parser.AddressParser;
+import org.columba.core.command.StatusObservable;
+import org.columba.core.command.StatusObservableImpl;
 import org.columba.core.command.WorkerStatusController;
 import org.columba.core.gui.util.NotifyDialog;
 import org.columba.mail.composer.SendableMessage;
@@ -127,6 +129,9 @@ public class SMTPServer {
 		// initialise protocol layer
 		try {
 			smtpProtocol = new SMTPProtocol(host, smtpItem.getInteger("port"), smtpItem.getBoolean("enable_ssl", true));
+			
+			// add observable
+			smtpProtocol.setObservable( new StatusObservableImpl() );
 
 		} catch (Exception e) {
 			if (e instanceof UnknownHostException) {
@@ -361,5 +366,19 @@ public class SMTPServer {
 
 		// now send message source 
 		smtpProtocol.sendMessage(message.getSource(), workerStatusController);
+	}
+	
+	/**
+	 * 
+	 * @return status notification observable
+	 */
+	public StatusObservable getObservable()
+	{
+		return smtpProtocol.getObservable();
+	}
+	
+	public void setObservable( StatusObservable observable )
+	{
+		smtpProtocol.setObservable(observable);
 	}
 }

@@ -25,8 +25,8 @@ import javax.swing.JOptionPane;
 import org.columba.core.command.Command;
 import org.columba.core.command.CommandCancelledException;
 import org.columba.core.command.DefaultCommandReference;
+import org.columba.core.command.StatusObservableImpl;
 import org.columba.core.command.Worker;
-import org.columba.core.command.WorkerStatusController;
 import org.columba.core.logging.ColumbaLogger;
 import org.columba.core.main.MainInterface;
 import org.columba.mail.command.FolderCommandReference;
@@ -73,22 +73,24 @@ public class FetchNewMessagesCommand extends Command {
 
 		server = r[0].getServer();
 
+		// register interest on status bar information
+		 ((StatusObservableImpl) server.getObservable()).setWorker(worker);
+
 		log(
 			MailResourceLoader.getString(
 				"statusbar",
 				"message",
-				"authenticating"),
-			worker);
+				"authenticating"));
 
 		try {
 			// login and get # of messages on server
-			totalMessageCount = server.getMessageCount(worker);
+			totalMessageCount = server.getMessageCount();
 
 			// fetch UID list from server
-			List newUIDList = fetchUIDList(totalMessageCount, worker);
+			List newUIDList = fetchUIDList(totalMessageCount);
 
 			// fetch message size list from server
-			List messageSizeList = fetchMessageSizes(worker);
+			List messageSizeList = fetchMessageSizes();
 
 			// synchronize local UID list with server UID list
 			List newMessagesUIDList = synchronize(newUIDList);
@@ -100,7 +102,7 @@ public class FetchNewMessagesCommand extends Command {
 				newMessagesUIDList,
 				worker);
 
-			logout(worker);
+			logout();
 
 		} catch (CommandCancelledException e) {
 			server.forceLogout();
@@ -117,8 +119,9 @@ public class FetchNewMessagesCommand extends Command {
 		}
 	}
 
-	protected void log(String message, WorkerStatusController worker) {
-		worker.setDisplayText(server.getFolderName() + ": " + message);
+	protected void log(String message) {
+		server.getObservable().setMessage(
+			server.getFolderName() + ": " + message);
 	}
 
 	public void downloadMessage(
@@ -130,7 +133,7 @@ public class FetchNewMessagesCommand extends Command {
 		// server message numbers start with 1
 		// whereas List numbers start with 0
 		//  -> always increase fetch number
-		Message message = server.getMessage(index + 1, serverUID, worker);
+		Message message = server.getMessage(index + 1, serverUID);
 		if (message == null)
 			throw new Exception(
 				"Message with UID="
@@ -187,7 +190,7 @@ public class FetchNewMessagesCommand extends Command {
 		Worker worker)
 		throws Exception {
 		ColumbaLogger.log.info(
-				"need to fetch " + newMessagesUIDList.size() + " messages.");
+			"need to fetch " + newMessagesUIDList.size() + " messages.");
 		int totalSize =
 			calculateTotalSize(newUIDList, messageSizeList, newMessagesUIDList);
 
@@ -209,13 +212,12 @@ public class FetchNewMessagesCommand extends Command {
 						"fetch_messages"),
 					new Object[] {
 						new Integer(i + 1),
-						new Integer(newMessageCount)}),
-				worker);
+						new Integer(newMessageCount)}));
 
 			// lookup index of message 
 			int index = newUIDList.indexOf(serverUID);
 			ColumbaLogger.log.info(
-					"List index=" + index + " server index=" + (index + 1));
+				"List index=" + index + " server index=" + (index + 1));
 
 			int size = Integer.parseInt((String) messageSizeList.get(index));
 			size = Math.round(size / 1024);
@@ -231,7 +233,7 @@ public class FetchNewMessagesCommand extends Command {
 				// if message-size is bigger skip download of this message
 				if (size > maxSize) {
 					ColumbaLogger.log.info(
-							"skipping download of message, too big");
+						"skipping download of message, too big");
 					continue;
 				}
 			}
@@ -259,75 +261,66 @@ public class FetchNewMessagesCommand extends Command {
 				//  -> always increase delete number
 
 				// delete message with <index>==index from server
-				server.deleteMessage(index + 1, worker);
+				server.deleteMessage(index + 1);
 
 				ColumbaLogger.log.info(
-						"deleted message with index=" + (index + 1));
+					"deleted message with index=" + (index + 1));
 			}
 		}
 	}
 
 	public List synchronize(List newUIDList) throws Exception {
 		ColumbaLogger.log.info(
-				"synchronize local UID-list with remote UID-list");
+			"synchronize local UID-list with remote UID-list");
 		// synchronize local UID-list with server 		
 		List newMessagesUIDList = server.synchronize(newUIDList);
 
 		return newMessagesUIDList;
 	}
 
-	public List fetchMessageSizes(WorkerStatusController worker)
-		throws Exception {
+	public List fetchMessageSizes() throws Exception {
 
 		log(
 			MailResourceLoader.getString(
 				"statusbar",
 				"message",
-				"fetch_size_list"),
-			worker);
+				"fetch_size_list"));
 		// fetch message-size list
-		List messageSizeList = server.getMessageSizeList(worker);
+		List messageSizeList = server.getMessageSizeList();
 		ColumbaLogger.log.info(
-				"fetched message-size-list capacity=" + messageSizeList.size());
+			"fetched message-size-list capacity=" + messageSizeList.size());
 		return messageSizeList;
 	}
 
-	public List fetchUIDList(
-		int totalMessageCount,
-		WorkerStatusController worker)
-		throws Exception {
+	public List fetchUIDList(int totalMessageCount) throws Exception {
 		// fetch UID list 
 
 		log(
 			MailResourceLoader.getString(
 				"statusbar",
 				"message",
-				"fetch_uid_list"),
-			worker);
+				"fetch_uid_list"));
 
-		List newUIDList = server.getUIDList(totalMessageCount, worker);
+		List newUIDList = server.getUIDList(totalMessageCount);
 		ColumbaLogger.log.info(
-				"fetched UID-list capacity=" + newUIDList.size());
+			"fetched UID-list capacity=" + newUIDList.size());
 
 		return newUIDList;
 	}
 
-	public void logout(WorkerStatusController worker) throws Exception {
+	public void logout() throws Exception {
 		server.logout();
 
 		ColumbaLogger.log.info("logout");
 
-		log(
-			MailResourceLoader.getString("statusbar", "message", "logout"),
-			worker);
+		log(MailResourceLoader.getString("statusbar", "message", "logout"));
 
 		if (newMessageCount == 0) {
 			log(
 				MailResourceLoader.getString(
 					"statusbar",
 					"message",
-					"no_new_messages"),
-				worker);
+					"no_new_messages"));
 		}
 	}
 }

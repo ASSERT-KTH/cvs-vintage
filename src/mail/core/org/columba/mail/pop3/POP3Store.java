@@ -21,7 +21,8 @@ import java.util.List;
 import javax.swing.JOptionPane;
 
 import org.columba.core.command.CommandCancelledException;
-import org.columba.core.command.WorkerStatusController;
+import org.columba.core.command.StatusObservable;
+import org.columba.core.command.StatusObservableImpl;
 import org.columba.core.gui.util.NotifyDialog;
 import org.columba.core.logging.ColumbaLogger;
 import org.columba.core.main.MainInterface;
@@ -76,6 +77,9 @@ public class POP3Store {
 				popItem.getInteger("port"),
 				popItem.getBoolean("enable_ssl", true));
 
+		// add status information observable
+		protocol.setObservable( new StatusObservableImpl() );
+		
 		try {
 
 			handler =
@@ -109,14 +113,11 @@ public class POP3Store {
 		this.state = state;
 	}
 
-	public List fetchUIDList(
-		int totalMessageCount,
-		WorkerStatusController worker)
-		throws Exception {
+	public List fetchUIDList(int totalMessageCount) throws Exception {
 
-		isLogin(worker);
+		isLogin();
 
-		String str = protocol.fetchUIDList(totalMessageCount, worker);
+		String str = protocol.fetchUIDList(totalMessageCount);
 
 		// need to parse here
 		List v = UIDListParser.parse(str);
@@ -124,10 +125,9 @@ public class POP3Store {
 		return v;
 	}
 
-	public List fetchMessageSizeList(WorkerStatusController worker)
-		throws Exception {
+	public List fetchMessageSizeList() throws Exception {
 
-		isLogin(worker);
+		isLogin();
 
 		String str = protocol.fetchMessageSizes();
 
@@ -137,9 +137,8 @@ public class POP3Store {
 		return v;
 	}
 
-	public int fetchMessageCount(WorkerStatusController worker)
-		throws Exception {
-		isLogin(worker);
+	public int fetchMessageCount() throws Exception {
+		isLogin();
 
 		int messageCount = protocol.fetchMessageCount();
 
@@ -147,10 +146,9 @@ public class POP3Store {
 
 	}
 
-	public boolean deleteMessage(int index, WorkerStatusController worker)
-		throws Exception {
+	public boolean deleteMessage(int index) throws Exception {
 
-		isLogin(worker);
+		isLogin();
 
 		return protocol.deleteMessage(index);
 	}
@@ -225,15 +223,13 @@ public class POP3Store {
 
 	}
 
-	public Message fetchMessage(int index, WorkerStatusController worker)
-		throws Exception {
+	public Message fetchMessage(int index) throws Exception {
 		ColumbaHeader header = new ColumbaHeader();
 		Rfc822Parser parser = new Rfc822Parser();
 
-		isLogin(worker);
+		isLogin();
 
-		String rawString =
-			protocol.fetchMessage(new Integer(index).toString(), worker);
+		String rawString = protocol.fetchMessage(new Integer(index).toString());
 		if (rawString.length() == 0)
 			return null;
 
@@ -286,7 +282,7 @@ public class POP3Store {
 	 * 
 	 * Bug number 619290 fixed.
 	 */
-	public void login(WorkerStatusController worker) throws Exception {
+	public void login() throws Exception {
 		PasswordDialog dialog;
 		boolean login = false;
 
@@ -316,7 +312,9 @@ public class POP3Store {
 
 				} else {
 					// cancel pressed
-					worker.cancel();
+					//worker.cancel();
+					getObservable().cancel(true);
+
 					throw new CommandCancelledException();
 				}
 			} else {
@@ -358,13 +356,17 @@ public class POP3Store {
 		}
 	}
 
-	public boolean isLogin(WorkerStatusController worker) throws Exception {
+	public boolean isLogin() throws Exception {
 		if (state == STATE_AUTHENTICATE)
 			return true;
 		else {
-			login(worker);
+			login();
 
 			return false;
 		}
+	}
+
+	public StatusObservable getObservable() {
+		return protocol.getObservable();
 	}
 }

@@ -28,7 +28,7 @@ import javax.net.ssl.SSLSocket;
 import javax.net.ssl.SSLSocketFactory;
 
 import org.columba.core.command.CommandCancelledException;
-import org.columba.core.command.WorkerStatusController;
+import org.columba.core.command.StatusObservable;
 import org.columba.core.logging.ColumbaLogger;
 import org.columba.mail.ssl.SSLProvider;
 
@@ -64,6 +64,8 @@ public class POP3Protocol {
 	public static final int USER = 1;
 	public static final int APOP = 2;
 	private boolean useSSL;
+	
+	private StatusObservable observable;
 
 	/**
 	 * @param user
@@ -85,6 +87,7 @@ public class POP3Protocol {
 		this.useSSL = useSSL;
 
 		logMethod = USER;
+		
 	}
 
 	/**
@@ -514,8 +517,7 @@ public class POP3Protocol {
 	 * @throws Exception
 	 */
 	public String fetchUIDList(
-		int totalMessageCount,
-		WorkerStatusController worker)
+		int totalMessageCount)
 		throws Exception {
 		StringBuffer buffer = new StringBuffer();
 		Integer parser = new Integer(0);
@@ -524,17 +526,26 @@ public class POP3Protocol {
 		sendString("UIDL");
 		if (getAnswer()) {
 
-			worker.setProgressBarMaximum(totalMessageCount);
-			worker.setProgressBarValue(0);
+			//worker.setProgressBarMaximum(totalMessageCount);
+			//worker.setProgressBarValue(0);
+			observable.setMax(totalMessageCount);
+			observable.setCurrent(0);
+			
 			getNextLine();
 			while (!answer.equals(".")) {
 
+				/*
 				if (worker.cancelled() == true)
 					throw new CommandCancelledException();
+				*/
+				if ( observable.isCancelled() )
+					throw new CommandCancelledException();
+					
 				buffer.append(answer + "\n");
 				progress++;
 
-				worker.setProgressBarValue(progress);
+				//worker.setProgressBarValue(progress);
+				observable.setCurrent(progress);
 				getNextLine();
 			}
 		}
@@ -567,11 +578,11 @@ public class POP3Protocol {
 	 * @throws Exception
 	 */
 	public String fetchMessage(
-		String messageNumber,
-		WorkerStatusController worker)
+		String messageNumber)
 		throws Exception {
 		StringBuffer messageBuffer = new StringBuffer();
 		Integer parser = new Integer(0);
+		int total = 0;
 		int progress = 0;
 		String sizeline = new String();
 		int test;
@@ -598,14 +609,22 @@ public class POP3Protocol {
 			getNextLine();
 			while (!answer.equals(".")) {
 
+				/*
 				if (worker.cancelled() == true)
 					throw new CommandCancelledException();
-
+				*/
+				if ( observable.isCancelled() )
+				throw new CommandCancelledException();
+				
 				messageBuffer.append(answer + "\n");
 
 				progress = answer.length() + 2;
 
-				worker.incProgressBarValue(progress);
+				total += progress;
+				
+				//worker.incProgressBarValue(progress);
+				//worker.setProgressBarValue(total);
+				observable.setCurrent(total);
 
 				getNextLine();
 			}
@@ -746,4 +765,19 @@ public class POP3Protocol {
 		}
 		return sb.toString();
 	}
+	
+	/**
+	 * @return
+	 */
+	public StatusObservable getObservable() {
+		return observable;
+	}
+
+	/**
+	 * @param observable
+	 */
+	public void setObservable(StatusObservable observable) {
+		this.observable = observable;
+	}
+
 }

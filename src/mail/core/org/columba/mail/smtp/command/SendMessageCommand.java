@@ -18,6 +18,7 @@ package org.columba.mail.smtp.command;
 import javax.swing.JOptionPane;
 
 import org.columba.core.command.DefaultCommandReference;
+import org.columba.core.command.StatusObservableImpl;
 import org.columba.core.command.Worker;
 import org.columba.core.main.MainInterface;
 import org.columba.mail.command.ComposerCommandReference;
@@ -31,6 +32,7 @@ import org.columba.mail.gui.composer.ComposerModel;
 import org.columba.mail.gui.composer.command.SaveMessageCommand;
 import org.columba.mail.smtp.SMTPException;
 import org.columba.mail.smtp.SMTPServer;
+import org.columba.mail.util.MailResourceLoader;
 
 /**
  * @author fdietz
@@ -58,18 +60,26 @@ public class SendMessageCommand extends FolderCommand {
 		ComposerCommandReference[] r =
 			(ComposerCommandReference[]) getReferences();
 
+		//		display status message
+		worker.setDisplayText(
+			MailResourceLoader.getString(
+				"statusbar",
+				"message",
+				"send_message"));
+				
+				
 		// get composer controller
 		// -> get all the account information from the controller 
 		ComposerController composerController = r[0].getComposerController();
 
 		AccountItem item =
 			((ComposerModel) composerController.getModel()).getAccountItem();
-			
+
 		// sent folder
 		Folder sentFolder =
 			(Folder) MainInterface.treeModel.getFolder(
 				item.getSpecialFoldersItem().getInteger("sent"));
-				
+
 		// get the SendableMessage object
 		SendableMessage message =
 			new MessageComposer(
@@ -79,6 +89,9 @@ public class SendMessageCommand extends FolderCommand {
 		// open connection
 		SMTPServer server = new SMTPServer(item);
 		boolean open = server.openConnection();
+		
+		// show interest on status information
+		((StatusObservableImpl)server.getObservable()).setWorker(worker);
 
 		if (open) {
 

@@ -29,13 +29,13 @@ import java.util.List;
 import javax.net.ssl.SSLSocket;
 import javax.net.ssl.SSLSocketFactory;
 
+import org.columba.core.command.StatusObservable;
 import org.columba.core.command.WorkerStatusController;
 import org.columba.core.logging.ColumbaLogger;
 import org.columba.core.main.MainInterface;
 import org.columba.mail.coder.Base64Decoder;
 import org.columba.mail.coder.Base64Encoder;
 import org.columba.mail.ssl.SSLProvider;
-import org.columba.mail.util.MailResourceLoader;
 
 /**
  * 
@@ -62,7 +62,7 @@ public class SMTPProtocol {
 	 *	name of host
 	 */
 	private String host;
-	
+
 	/**
 	 *	server port number
 	 */
@@ -72,12 +72,12 @@ public class SMTPProtocol {
 	 *	Socket
 	 */
 	private Socket socket;
-	
+
 	/**
 	 * output stream
 	 */
 	private DataOutputStream out;
-	
+
 	/**
 	 * input stream
 	 */
@@ -92,7 +92,7 @@ public class SMTPProtocol {
 	 * decoder is needed for authentication
 	 */
 	private Base64Decoder decoder;
-	
+
 	/**
 	 * encoder is needed for authentication
 	 */
@@ -107,6 +107,11 @@ public class SMTPProtocol {
 	 * is SSL enabled
 	 */
 	private boolean useSSL;
+
+	/**
+	 * progress/status information
+	 */
+	private StatusObservable observable;
 
 	/**
 	 * Constructor for SMTPProtocol
@@ -125,6 +130,7 @@ public class SMTPProtocol {
 		port = portNr;
 
 		this.useSSL = useSSL;
+
 	}
 
 	/**
@@ -139,8 +145,9 @@ public class SMTPProtocol {
 	private void checkAnswer(String answer, String start)
 		throws SMTPException {
 
-		if ( MainInterface.DEBUG ) ColumbaLogger.log.debug("SERVER:"+answer);
-		
+		if (MainInterface.DEBUG)
+			ColumbaLogger.log.debug("SERVER:" + answer);
+
 		// throw Exception if command failed
 		if (!answer.startsWith(start)) {
 			throw (new SMTPException(answer));
@@ -157,13 +164,13 @@ public class SMTPProtocol {
 	 */
 	private void sendString(String command) throws Exception {
 
-		if ( MainInterface.DEBUG ) ColumbaLogger.log.debug("CLIENT:"+command);
-		
+		if (MainInterface.DEBUG)
+			ColumbaLogger.log.debug("CLIENT:" + command);
+
 		out.writeBytes(command + "\r\n");
 		out.flush();
 	}
 
-	
 	/**
 	 * 
 	 * Authentication using the "AUTH" extension mechanism.
@@ -219,18 +226,18 @@ public class SMTPProtocol {
 		String loginMethod)
 		throws Exception {
 		String answer;
-		
+
 		StringWriter decoded = new StringWriter();
-		
+
 		String methods = (String) capabilities.get("AUTH");
 
 		// Try LOGIN
 		if (loginMethod.equalsIgnoreCase("LOGIN") == true) {
-			
+
 			authenticateLogin(username, password);
 
 		} else if (loginMethod.equalsIgnoreCase("PLAIN") == true) {
-			
+
 			authenticatePlain(username, password);
 
 		} else {
@@ -365,13 +372,11 @@ public class SMTPProtocol {
 		// value starting with "2" means success
 		checkAnswer(in.readLine(), "2");
 
-		
 		// check if we should use SSL
 		if (useSSL) {
 			// use SSL
 			initSSL();
 		}
-		
 
 		// send initial greeting
 		return helo();
@@ -610,15 +615,9 @@ public class SMTPProtocol {
 
 		int progressCounter = 0;
 
-		// display status message
-		workerStatusController.setDisplayText(
-			MailResourceLoader.getString(
-				"statusbar",
-				"message",
-				"send_message"));
-
 		// init progress bar
-		workerStatusController.setProgressBarMaximum(message.length() / 1024);
+		//workerStatusController.setProgressBarMaximum(message.length() / 1024);
+		observable.setMax(message.length() / 1024);
 
 		// send client command
 		out.writeBytes("DATA\r\n");
@@ -635,7 +634,10 @@ public class SMTPProtocol {
 
 			// update progressbar
 			if (progressCounter > 1024) {
-				workerStatusController.incProgressBarValue();
+				//observable.inc();
+				observable.setCurrent(progressCounter / 1024);
+
+				//workerStatusController.incProgressBarValue();
 				progressCounter %= 1024;
 			}
 
@@ -673,4 +675,18 @@ public class SMTPProtocol {
 		// check if answer succedded
 		checkAnswer(in.readLine(), "2");
 	}
+	/**
+	 * @return
+	 */
+	public StatusObservable getObservable() {
+		return observable;
+	}
+
+	/**
+	 * @param observable
+	 */
+	public void setObservable(StatusObservable observable) {
+		this.observable = observable;
+	}
+
 }

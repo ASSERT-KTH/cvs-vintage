@@ -174,7 +174,8 @@ public class QuotedPrintableEncoder extends Encoder {
 			progressCounter += read;
 			if( progressCounter > 1024 ) {
 				progressCounter %= 1024;
-				workerStatusController.incProgressBarValue();
+				//workerStatusController.incProgressBarValue();
+				workerStatusController.setProgressBarValue(progressCounter/1024);
 			}
 		}
 

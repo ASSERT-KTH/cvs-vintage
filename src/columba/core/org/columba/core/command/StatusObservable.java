@@ -15,17 +15,29 @@
 //All Rights Reserved.
 package org.columba.core.command;
 
-public interface WorkerStatusController {
-	public void setDisplayText( String text );
-	public String getDisplayText();
+/**
+ * 
+ * Represents the clue between the gui and all the folders which want
+ * to notify the statusbar.
+ * 
+ * <p>
+ * We want the folders to be independent from the gui code. So, the
+ * folders should communicate with the Observable, whereas the 
+ * status observers with the Observable.
+ * 
+ * <p>
+ * This makes it necessary of course to register as Observer.
+ * 
+ * @author fdietz
+ */
+public interface StatusObservable {
 	
-	public void setProgressBarMaximum( int max );	
-	public void setProgressBarValue( int value );
+	public void setCurrent(int i);
+	public void setMax(int i);
 	
-	public int getProgessBarMaximum();	
-	public int getProgressBarValue();
+	public boolean isCancelled();
+	public void cancel( boolean b );
 	
-	public void cancel();
-	public boolean cancelled();
+	public void setMessage(String string);
 	
 }

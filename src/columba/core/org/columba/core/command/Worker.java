@@ -154,22 +154,7 @@ public class Worker extends SwingWorker implements WorkerStatusController {
 		e.setNewValue(new Integer(progressBarValue));
 		fireWorkerStatusChanged(e);
 	}
-
-	public void incProgressBarValue() {
-		incProgressBarValue(1);
-	}
-
-	public void incProgressBarValue(int increment) {
-		WorkerStatusChangedEvent e = new WorkerStatusChangedEvent();
-		e.setType(WorkerStatusChangedEvent.PROGRESSBAR_VALUE_CHANGED);
-		e.setOldValue(new Integer(progressBarValue));
-
-		progressBarValue += increment;
-
-		e.setNewValue(new Integer(progressBarValue));
-		fireWorkerStatusChanged(e);
-	}
-
+	
 	public int getProgessBarMaximum() {
 		return progressBarMax;
 	}

@@ -25,6 +25,7 @@ import javax.swing.JOptionPane;
 import org.columba.core.command.Command;
 import org.columba.core.command.CommandCancelledException;
 import org.columba.core.command.DefaultCommandReference;
+import org.columba.core.command.StatusObservableImpl;
 import org.columba.core.command.Worker;
 import org.columba.core.logging.ColumbaLogger;
 import org.columba.core.util.PlaySound;
@@ -54,18 +55,21 @@ public class CheckForNewMessagesCommand extends Command {
 			(POP3CommandReference[]) getReferences(FIRST_EXECUTION);
 
 		server = r[0].getServer();
+		//		register interest on status bar information
+		 ((StatusObservableImpl) server.getObservable()).setWorker(worker);
 
-		command.log(MailResourceLoader.getString(
-                                "statusbar",
-                                "message",
-                                "authenticating"), worker);
+		command.log(
+			MailResourceLoader.getString(
+				"statusbar",
+				"message",
+				"authenticating"));
 
 		try {
-			int totalMessageCount = server.getMessageCount(worker);
+			int totalMessageCount = server.getMessageCount();
 
-			List newUIDList = command.fetchUIDList(totalMessageCount, worker);
+			List newUIDList = command.fetchUIDList(totalMessageCount);
 
-			List messageSizeList = command.fetchMessageSizes(worker);
+			List messageSizeList = command.fetchMessageSizes();
 
 			List newMessagesUIDList = command.synchronize(newUIDList);
 
@@ -87,14 +91,18 @@ public class CheckForNewMessagesCommand extends Command {
 					newMessagesUIDList,
 					worker);
 
-			command.logout(worker);
+			command.logout();
 
 		} catch (CommandCancelledException e) {
 			server.forceLogout();
 		} catch (IOException e) {
-                        String name = e.getClass().getName();
-			JOptionPane.showMessageDialog(null, e.getLocalizedMessage(), name.substring(name.lastIndexOf(".")), JOptionPane.ERROR_MESSAGE);
-                } finally {
+			String name = e.getClass().getName();
+			JOptionPane.showMessageDialog(
+				null,
+				e.getLocalizedMessage(),
+				name.substring(name.lastIndexOf(".")),
+				JOptionPane.ERROR_MESSAGE);
+		} finally {
 			// always enable the menuitem again 
 			r[0].getPOP3ServerController().enableActions(true);
 		}
@@ -105,13 +113,13 @@ public class CheckForNewMessagesCommand extends Command {
 		PopItem popItem = item.getPopItem();
 		String file = popItem.get("sound_file");
 
-                ColumbaLogger.log.info("playing sound file=" + file);
+		ColumbaLogger.log.info("playing sound file=" + file);
 
 		if (file.equalsIgnoreCase("default")) {
 			PlaySound.play("newmail.wav");
 		} else {
 			try {
-				PlaySound.play(new URL("file:+"+file));
+				PlaySound.play(new URL("file:+" + file));
 			} catch (Exception ex) {
 				ex.printStackTrace();
 			}

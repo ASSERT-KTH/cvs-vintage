@@ -22,7 +22,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.columba.core.command.WorkerStatusController;
+import org.columba.core.command.StatusObservable;
 import org.columba.core.config.Config;
 import org.columba.core.main.MainInterface;
 import org.columba.core.util.ListTools;
@@ -79,12 +79,10 @@ public class POP3Server {
 	public Folder getFolder() {
 		SpecialFoldersItem foldersItem = accountItem.getSpecialFoldersItem();
 		String inboxStr = foldersItem.get("inbox");
-		
 
 		int inboxInt = Integer.parseInt(inboxStr);
 
 		Folder f = (Folder) MainInterface.treeModel.getFolder(inboxInt);
-		
 
 		return f;
 	}
@@ -97,16 +95,12 @@ public class POP3Server {
 		getStore().close();
 	}
 
-	public List getUIDList(
-		int totalMessageCount,
-		WorkerStatusController worker)
-		throws Exception {
-		return getStore().fetchUIDList(totalMessageCount, worker);
+	public List getUIDList(int totalMessageCount) throws Exception {
+		return getStore().fetchUIDList(totalMessageCount);
 	}
 
-	public List getMessageSizeList(WorkerStatusController worker)
-		throws Exception {
-		return getStore().fetchMessageSizeList(worker);
+	public List getMessageSizeList() throws Exception {
+		return getStore().fetchMessageSizeList();
 	}
 
 	protected boolean existsLocally(Object uid, HeaderList list)
@@ -165,42 +159,33 @@ public class POP3Server {
 
 	}
 
-	public void deleteMessages(int[] indexes, WorkerStatusController worker)
-		throws Exception {
+	public void deleteMessages(int[] indexes) throws Exception {
 		for (int i = 0; i < indexes.length; i++) {
-			store.deleteMessage(indexes[i], worker);
+			store.deleteMessage(indexes[i]);
 		}
 	}
 
-	public void deleteMessage(int index, WorkerStatusController worker)
-		throws Exception {
-		store.deleteMessage(index, worker);
+	public void deleteMessage(int index) throws Exception {
+		store.deleteMessage(index);
 	}
 
-	public int getMessageCount(WorkerStatusController worker)
-		throws Exception {
-		return getStore().fetchMessageCount(worker);
+	public int getMessageCount() throws Exception {
+		return getStore().fetchMessageCount();
 	}
 
-	public Message getMessage(
-		int index,
-		Object uid,
-		WorkerStatusController worker)
-		throws Exception {
-			
-		Message message = getStore().fetchMessage(index, worker);
-		
+	public Message getMessage(int index, Object uid) throws Exception {
+
+		Message message = getStore().fetchMessage(index);
+
 		if (message == null)
 			return null;
 
-		
 		ColumbaHeader header = (ColumbaHeader) message.getHeader();
 		header.set("columba.pop3uid", uid);
 		header.set("columba.flags.recent", Boolean.TRUE);
 
 		headerCache.getHeaderList(null).add(header, uid);
-		
-		
+
 		return message;
 	}
 
@@ -214,6 +199,11 @@ public class POP3Server {
 	 */
 	public POP3Store getStore() {
 		return store;
+	}
+	
+	public StatusObservable getObservable()
+	{
+		return store.getObservable();
 	}
 
 }
