@@ -1,4 +1,4 @@
-// $Id: UseCaseDiagramRenderer.java,v 1.15 2004/07/18 18:56:06 kataka Exp $
+// $Id: UseCaseDiagramRenderer.java,v 1.16 2004/08/28 15:04:46 mvw Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: UseCaseDiagramRenderer.java
 // Classes: UseCaseDiagramRenderer
 // Original Author: abonner@ics.uci.edu
-// $Id: UseCaseDiagramRenderer.java,v 1.15 2004/07/18 18:56:06 kataka Exp $
+// $Id: UseCaseDiagramRenderer.java,v 1.16 2004/08/28 15:04:46 mvw Exp $
 
 // 3 Apr 2002: Jeremy Bennett (mail@jeremybennett.com). Extended to support the
 // Extend and Include relationships. JavaDoc added for clarity.
@@ -73,7 +73,7 @@ import org.tigris.gef.presentation.FigNode;
 public class UseCaseDiagramRenderer
     implements GraphNodeRenderer, GraphEdgeRenderer 
 {
-    protected static Logger cat =
+    private static final Logger LOG =
 	Logger.getLogger(UseCaseDiagramRenderer.class);
 
 
@@ -106,10 +106,10 @@ public class UseCaseDiagramRenderer
 
         // If we get here we were asked for a fig we can't handle.
 
-        cat.debug(this.getClass().toString() +
-		  ": getFigNodeFor(" + gm.toString() + ", " +
-		  lay.toString() + ", " + node.toString() +
-		  ") - cannot create this sort of node.");
+        LOG.debug(this.getClass().toString() 
+		  + ": getFigNodeFor(" + gm.toString() + ", " 
+		  + lay.toString() + ", " + node.toString() 
+		  + ") - cannot create this sort of node.");
         return null;
     }
 
@@ -128,11 +128,14 @@ public class UseCaseDiagramRenderer
      *
      * @return      The fig to be used, or <code>null</code> if we can't create
      *              one.
+     *
+     * @see org.tigris.gef.graph.GraphEdgeRenderer#getFigEdgeFor(
+     * org.tigris.gef.graph.GraphModel, org.tigris.gef.base.Layer, 
+     * java.lang.Object)
      */
+    public FigEdge getFigEdgeFor(GraphModel gm, Layer lay, Object edge) {       
 
-    public FigEdge getFigEdgeFor(GraphModel gm, Layer lay, Object edge) {        
-
-        cat.debug("making figedge for " + edge);
+        LOG.debug("making figedge for " + edge);
 
         // If the edge is an association, we'll need a FigAssociation
 
@@ -215,10 +218,10 @@ public class UseCaseDiagramRenderer
             // element in each case. There really ought to be a check that
             // there are some here for safety.
 
-            Object supplier =
-                /*(MModelElement)*/ ((ModelFacade.getSuppliers(dep).toArray())[0]);
-            Object client =
-                /*(MModelElement)*/ ((ModelFacade.getClients(dep).toArray())[0]);
+            Object supplier = /*(MModelElement)*/
+                 ((ModelFacade.getSuppliers(dep).toArray())[0]);
+            Object client = /*(MModelElement)*/
+                 ((ModelFacade.getClients(dep).toArray())[0]);
 
             // The figs for the two end nodes
 
@@ -235,9 +238,9 @@ public class UseCaseDiagramRenderer
 
             return depFig;
         } else 
-        if (edge instanceof CommentEdge) {
-            return new FigEdgeNote(edge, lay);
-        }
+            if (edge instanceof CommentEdge) {
+                return new FigEdgeNote(edge, lay);
+            }
             
 
         // If we get here, we can't handle this sort of edge.
@@ -246,10 +249,10 @@ public class UseCaseDiagramRenderer
         // model maybe they should be, just as an implementation issue, dont
         // remove any of the methods that are there now.
 
-        cat.debug(this.getClass().toString() +
-		  ": getFigEdgeFor(" + gm.toString() + ", " +
-		  lay.toString() + ", " + edge.toString() +
-		  ") - needs more work to handle this sort of edge");
+        LOG.debug(this.getClass().toString() 
+		  + ": getFigEdgeFor(" + gm.toString() + ", " 
+		  + lay.toString() + ", " + edge.toString() 
+		  + ") - needs more work to handle this sort of edge");
         return null;
     }
 
