@@ -47,7 +47,7 @@ package org.tigris.scarab.tools;
  */ 
 
 // Turbine
-import org.apache.turbine.om.security.User;
+import org.apache.turbine.services.security.entity.User;
 import org.apache.turbine.om.*;
 import org.apache.turbine.services.pull.ApplicationTool;
 
@@ -68,7 +68,7 @@ import org.tigris.scarab.services.module.ModuleEntity;
  * methodology</a> to be implemented.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ScarabRequestScope.java,v 1.7 2001/06/27 22:47:05 jmcnally Exp $
+ * @version $Id: ScarabRequestScope.java,v 1.8 2001/07/17 01:54:57 jmcnally Exp $
  */
 public interface ScarabRequestScope extends ApplicationTool
 {
