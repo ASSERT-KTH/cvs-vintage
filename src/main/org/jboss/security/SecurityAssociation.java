@@ -35,7 +35,7 @@ import org.jboss.logging.Logger;
  * the current VM.
  * @author Daniel O'Connor (docodan@nycap.rr.com)
  * @author Scott.Stark@jboss.org
- * @version $Revision: 1.22 $
+ * @version $Revision: 1.23 $
  */
 public final class SecurityAssociation
 {
@@ -121,7 +121,7 @@ public final class SecurityAssociation
 
    static
    {
-      boolean useThreadLocal = false;
+      boolean useThreadLocal = true;
       try
       {
          useThreadLocal = Boolean.getBoolean("org.jboss.security.SecurityAssociation.ThreadLocal");
