@@ -115,8 +115,10 @@ public class JspInterceptor extends BaseInterceptor {
 	JspFactory.setDefaultFactory(new JspFactoryImpl());
 
 	try {
+	    // Note: URLClassLoader in JDK1.2.2 doesn't work with file URLs
+	    // that contain '\' characters.  Insure only '/' is used.
 	    URL url=new URL( "file", null,
-			     ctx.getWorkDir().getAbsolutePath() + "/");
+			ctx.getWorkDir().getAbsolutePath().replace('\\','/') + "/");
 	    ctx.addClassPath( url );
 	    if( debug > 9 ) log( "Added to classpath: " + url );
 	} catch( MalformedURLException ex ) {

@@ -100,7 +100,10 @@ public class LoaderInterceptor12 extends BaseInterceptor {
         // Thanks for Kevin Jones for providing the fix.
 	if( dir.exists() ) {
 	    try {
-		URL url=new URL( "file", null, dir.getAbsolutePath() + "/" );
+		// Note: URLClassLoader in JDK1.2.2 doesn't work with file URLs
+		// that contain '\' characters.  Insure only '/' is used.
+		URL url=new URL( "file", null,
+			dir.getAbsolutePath().replace('\\','/') + "/" );
 		context.addClassPath( url );
 	    } catch( MalformedURLException ex ) {
 	    }
@@ -113,7 +116,9 @@ public class LoaderInterceptor12 extends BaseInterceptor {
 	for(int i=0; i < jars.size(); ++i) {
 	    String jarfile = (String) jars.elementAt(i);
 	    File jf=new File(f, jarfile );
-	    String absPath=jf.getAbsolutePath();
+	    // Note: URLClassLoader in JDK1.2.2 doesn't work with file URLs
+	    // that contain '\' characters.  Insure only '/' is used.
+	    String absPath=jf.getAbsolutePath().replace('\\','/');
 	    try {
 		URL url=new URL( "file", null, absPath );
 		context.addClassPath( url );
@@ -131,6 +136,11 @@ public class LoaderInterceptor12 extends BaseInterceptor {
 	if( debug>0 ) log( "Init context " + context.getPath());
         ContextManager cm = context.getContextManager();
 	URL urls[]=context.getClassPath();
+	if( debug>5 ) {
+	    log("  Context classpath URLs:");
+	    for (int i = 0; i < urls.length; i++)
+		log("    " + urls[i].toString() );
+	}
 
 	DependManager dm=context.getDependManager();
 	if( dm==null ) {
@@ -149,10 +159,15 @@ public class LoaderInterceptor12 extends BaseInterceptor {
     }
 
     public void reload( Request req, Context context) throws TomcatException {
-	log( "Reload event " );
+	log( "Reload event " + context.getPath());
 	
 	ContextManager cm = context.getContextManager();
 	URL urls[]=context.getClassPath();
+	if( debug>5 ) {
+	    log("  Context classpath URLs:");
+	    for (int i = 0; i < urls.length; i++)
+		log("    " + urls[i].toString() );
+	}
 
 	ClassLoader oldLoader=context.getClassLoader();
 	int oldLoaderNote=cm.getNoteId( ContextManager.CONTAINER_NOTE,
