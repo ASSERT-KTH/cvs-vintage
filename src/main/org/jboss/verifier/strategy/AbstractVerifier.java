@@ -19,7 +19,7 @@ package org.jboss.verifier.strategy;
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  * This package and its source code is available at www.jboss.org
- * $Id: AbstractVerifier.java,v 1.30 2002/04/09 20:03:29 luke_t Exp $
+ * $Id: AbstractVerifier.java,v 1.31 2002/04/23 02:50:29 jwalters Exp $
  */
 
 // standard imports
@@ -90,7 +90,7 @@ import org.gjt.lindfors.pattern.StrategyContext;
  * </ul>
  * </p>
  *
- * @version $Revision: 1.30 $
+ * @version $Revision: 1.31 $
  * @since  	JDK 1.3
  */
 public abstract class AbstractVerifier implements VerificationStrategy {
@@ -171,7 +171,6 @@ public abstract class AbstractVerifier implements VerificationStrategy {
 
     public abstract boolean isEjbCreateMethod(Method m);
 
-
     public boolean hasLegalRMIIIOPArguments(Method method) {
 
         Class[] params = method.getParameterTypes();
@@ -227,6 +226,33 @@ public abstract class AbstractVerifier implements VerificationStrategy {
            }
         }
         return false;
+    }
+
+    /*
+     * checks if the method accepts a single parameter of a specified type.
+     */
+    public boolean hasSingleArgument(Method method, Class argClass) {
+        Class[] params = method.getParameterTypes();
+        if (params.length == 1) {
+		    if (params[0].equals(argClass)) return true;
+        }
+		return false;
+    }
+
+    /*
+     * checks if the method accepts any parameters.
+     */
+    public boolean hasNoArguments(Method method) {
+        Class[] params = method.getParameterTypes();
+        return (params.length == 0) ? true : false;
+    }
+
+    /*
+     * checks if the method throws no exceptions in its throws clause.
+     */
+    public boolean throwsNoException(Method method) {
+        Class[] exception = method.getExceptionTypes();
+        return (exception.length == 0) ? true : false;
     }
 
     /*
@@ -385,6 +411,20 @@ public abstract class AbstractVerifier implements VerificationStrategy {
     }
 
     /*
+     * Finds java.ejb.MessageDrivenBean interface from the class
+     */
+    public boolean hasMessageDrivenBeanInterface(Class c) {
+        return javax.ejb.MessageDrivenBean.class.isAssignableFrom(c);
+    }
+
+    /*
+     * Finds javax.jms.MessageListener interface from the class
+     */
+    public boolean hasMessageListenerInterface(Class c) {
+        return javax.jms.MessageListener.class.isAssignableFrom(c);
+    }
+
+    /*
      * Finds java.ejb.SessionBean interface from the class
      */
     public boolean hasSessionBeanInterface(Class c) {
@@ -499,6 +539,10 @@ public abstract class AbstractVerifier implements VerificationStrategy {
         return (m.getName().startsWith("find"));
     }
 
+    public boolean isOnMessageMethod(Method m) {
+        return (m.getName().startsWith("onMessage"));
+    }
+
     /**
      * Checks for at least one non-static field.
      */
@@ -510,6 +554,22 @@ public abstract class AbstractVerifier implements VerificationStrategy {
                     return true;
         }
         catch(Exception ignored) {}
+
+        return false;
+    }
+
+    /*
+     * Searches for an instance of a public onMessage method from the class
+     */
+    public boolean hasOnMessageMethod(Class c) {
+
+        Method[] method = c.getMethods();
+
+        for (int i = 0; i < method.length; ++i) 
+        {
+            isOnMessageMethod(method[i]);
+                return true;
+        }
 
         return false;
     }
@@ -676,6 +736,22 @@ public abstract class AbstractVerifier implements VerificationStrategy {
         }
 
         return finders.iterator();
+    }
+
+    /*
+     * Returns the onMessage(...) method of a bean
+     */
+    public Iterator getOnMessageMethods(Class c) {
+
+        List onMessages = new LinkedList();
+
+        Method[] method = c.getMethods();
+
+        for (int i = 0; i < method.length; ++i)
+            if (isOnMessageMethod(method[i]))
+                onMessages.add(method[i]);
+
+        return onMessages.iterator();
     }
 
     /*
@@ -1151,6 +1227,9 @@ public abstract class AbstractVerifier implements VerificationStrategy {
 
     protected final static String EJB_CREATE_METHOD     =
         "ejbCreate";
+
+    protected final static String EJB_REMOVE_METHOD     =
+        "ejbRemove";
 
     private final static String EJB_POST_CREATE_METHOD =
         "ejbPostCreate";

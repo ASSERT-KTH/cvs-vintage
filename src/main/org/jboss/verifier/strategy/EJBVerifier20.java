@@ -19,7 +19,7 @@ package org.jboss.verifier.strategy;
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  * This package and its source code is available at www.jboss.org
- * $Id: EJBVerifier20.java,v 1.17 2002/04/14 12:00:07 jwalters Exp $
+ * $Id: EJBVerifier20.java,v 1.18 2002/04/23 02:50:29 jwalters Exp $
  */
 
 
@@ -41,24 +41,26 @@ import org.jboss.verifier.factory.DefaultEventFactory;
 import org.jboss.metadata.BeanMetaData;
 import org.jboss.metadata.SessionMetaData;
 import org.jboss.metadata.EntityMetaData;
-
-
+import org.jboss.metadata.MessageDrivenMetaData;
 
 /**
  * EJB 2.0 bean verifier.
  *
  * @author 	Juha Lindfors   (jplindfo@helsinki.fi)
  * @author  Jay Walters     (jwalters@computer.org)
- * @version $Revision: 1.17 $
+ * @version $Revision: 1.18 $
  * @since  	JDK 1.3
  */
 public class EJBVerifier20 extends AbstractVerifier {
+
+    protected EJBVerifier11 cmp1XVerifier;
 
     /*
      * Constructor
      */
     public EJBVerifier20(VerificationContext context) {
         super(context, new DefaultEventFactory());
+        cmp1XVerifier = new EJBVerifier11(context);
     }
 
     
@@ -107,8 +109,15 @@ public class EJBVerifier20 extends AbstractVerifier {
         }
     }            
 
-    public void checkEntity(EntityMetaData entity)
-    {
+    public void checkEntity(EntityMetaData entity) {
+        if (entity.isCMP1x()) {
+            cmp1XVerifier.checkEntity(entity);
+        } else {
+            checkBmpOrCmp2Entity(entity);
+        }
+    }
+
+    private void checkBmpOrCmp2Entity(EntityMetaData entity) {
         boolean pkVerified     = false;
         boolean beanVerified   = false; 
         boolean remoteHomeVerified = false;
@@ -150,9 +159,19 @@ public class EJBVerifier20 extends AbstractVerifier {
         }
     }
         
-    public void checkMessageBean(BeanMetaData bean)
+    public void checkMessageBean(MessageDrivenMetaData bean)
     {
-       System.out.println("WARNING: EJBVerifier2.0 Message Driven Bean verification not implemented");
+        boolean beanVerified   = false;
+
+        beanVerified   = verifyMessageDrivenBean(bean);
+
+        if (beanVerified) {
+            /*
+             * Verification for this message driven bean done. Fire the event
+             * to tell listeners everything is ok.
+             */
+            fireBeanVerifiedEvent(bean);
+        }
     }
 
     public boolean isCreateMethod(Method m) 
@@ -163,6 +182,11 @@ public class EJBVerifier20 extends AbstractVerifier {
     public boolean isEjbCreateMethod(Method m) 
     {
         return m.getName().startsWith(EJB_CREATE_METHOD);
+    }
+
+    public boolean isEjbRemoveMethod(Method m) 
+    {
+        return m.getName().startsWith(EJB_REMOVE_METHOD);
     }
 
 	public boolean isEjbSelectMethod(Method m)
@@ -186,6 +210,51 @@ public class EJBVerifier20 extends AbstractVerifier {
     public boolean isEjbHomeMethod(Method m) 
     {
         return m.getName().startsWith(EJB_HOME_METHOD);
+    }
+
+    /*
+     * Searches for an instance of an ejbRemove method from the class
+     */
+    public boolean hasEJBRemoveMethod(Class c) {
+
+        Method[] method = c.getMethods();
+
+        for (int i = 0; i < method.length; ++i) 
+        {
+            isEjbRemoveMethod(method[i]);
+                return true;
+        }
+
+        return false;
+    }
+
+    /*
+     * Returns the ejbRemove(...) methods of a bean
+     */
+    public Iterator getEJBRemoveMethods(Class c) {
+
+        List ejbRemoves = new LinkedList();
+
+        Method[] method = c.getMethods();
+
+        for (int i = 0; i < method.length; ++i)
+            if (isEjbRemoveMethod(method[i]))
+                ejbRemoves.add(method[i]);
+
+        return ejbRemoves.iterator();
+    }
+
+    public Iterator getEjbRemoveMethods(Class c) {
+
+        List removes = new LinkedList();
+
+        Method[] method = c.getMethods();
+
+        for (int i = 0; i < method.length; ++i)
+            if (isEjbRemoveMethod(method[i]))
+                removes.add(method[i]);
+
+        return removes.iterator();
     }
 
     /**
@@ -1185,6 +1254,12 @@ public class EJBVerifier20 extends AbstractVerifier {
                         status = false;
                     }
 
+                    if (entity.isCMP() &&
+                        !(hasRemoteReturnType(entity, method) || isMultiObjectFinder(method))) {
+                        fireSpecViolationEvent(entity, method, new Section("10.6.10.a"));
+                        status = false;
+                    }
+
                     if ((entity.isBMP()) && (hasMatchingEJBFind(bean, method))) {
                         Method ejbFind  = getMatchingEJBFind(bean, method);
                         if ( !(hasMatchingExceptions(ejbFind, method))) {
@@ -1193,8 +1268,13 @@ public class EJBVerifier20 extends AbstractVerifier {
                         }
                     }
 
-                    if (!throwsFinderException(method)) {
+                    if (entity.isBMP() && !throwsFinderException(method)) {
                         fireSpecViolationEvent(entity, method, new Section("12.2.9.l"));
+                        status = false;
+                    }
+
+                    if (entity.isCMP() && !throwsFinderException(method)) {
+                        fireSpecViolationEvent(entity, method, new Section("10.6.10.b"));
                         status = false;
                     }
 				} else {
@@ -1213,13 +1293,10 @@ public class EJBVerifier20 extends AbstractVerifier {
                         status = false;
                     }
 
-                    /**
-					 * Not sure if this should be here or not.
-					 if (!hasRemoteReturnType(entity, method)) {
+					if (!hasRemoteReturnType(entity, method)) {
                         fireSpecViolationEvent(entity, method, new Section("12.2.9.n"));
                         status = false;
                     }
-					*/
                 }
             }
         }
@@ -1965,7 +2042,7 @@ public class EJBVerifier20 extends AbstractVerifier {
 			                  fieldName.substring(1);
 	            Class fieldType = null;
                 try {
-			        Method m = bean.getDeclaredMethod(getName, new Class[0]);
+			        Method m = bean.getMethod(getName, new Class[0]);
 				    fieldType = m.getReturnType();
 				} catch (NoSuchMethodException nsme) {
                     fireSpecViolationEvent(entity, new Section("10.6.2.g"));
@@ -1976,11 +2053,11 @@ public class EJBVerifier20 extends AbstractVerifier {
                 Class[] args = new Class[1];
 				args[0] = fieldType;
                 try {
-				    Method m = bean.getDeclaredMethod(setName, args);
+				    Method m = bean.getMethod(setName, args);
 				} catch (NoSuchMethodException nsme) {
                     args[0] = classloader.loadClass("java.util.Collection");
                     try {
-				        Method m = bean.getDeclaredMethod(setName, args);
+				        Method m = bean.getMethod(setName, args);
                     } catch (NoSuchMethodException nsme2) {
                         fireSpecViolationEvent(entity, new Section("10.6.2.h"));
                         status = false;
@@ -2488,6 +2565,271 @@ public class EJBVerifier20 extends AbstractVerifier {
         }
 
         return status;
+   }
+/*
+ *************************************************************************
+ *
+ *      VERIFY MESSAGE DRIVEN BEAN CLASS
+ *
+ *************************************************************************
+ */
+
+    private boolean verifyMessageDrivenBean(MessageDrivenMetaData mdBean) {
+
+        /*
+         * Indicates whether we issued warnings or not during verification.
+         * This boolean is returned to the caller.
+         */
+        boolean status = true;
+
+        String  name   = mdBean.getEjbClass();
+
+        try {
+            Class bean = classloader.loadClass(name);
+
+            /*
+             * A message driven bean MUST implement, directly or indirectly,
+             * javax.ejb.MessageDrivenBean interface.
+             *
+             * Spec 15.7.2
+             */
+            if (!hasMessageDrivenBeanInterface(bean)) {
+                fireSpecViolationEvent(mdBean, new Section("15.7.2.a"));
+                status = false;
+            }
+
+            /*
+             * A message driven bean MUST implement, directly or indirectly,
+             * javax.jms.MessageListener interface.
+             *
+             * Spec 15.7.2
+             */
+            if (!hasMessageListenerInterface(bean)) {
+                fireSpecViolationEvent(mdBean, new Section("15.7.2.b"));
+                status = false;
+            }
+
+            /*
+             * The message driven bean class MUST be defined as public.
+             *
+             * Spec 15.7.2
+             */
+            if (!isPublic(bean)) {
+               fireSpecViolationEvent(mdBean, new Section("15.7.2.c1"));
+               status = false;
+            }
+
+            /*
+             * The message driven bean class MUST NOT be final.
+             *
+             * Spec 15.7.2
+             */
+            if (isFinal(bean)) {
+                fireSpecViolationEvent(mdBean, new Section("15.7.2.c2"));
+                status = false;
+            }
+
+            /*
+             * The message driven bean class MUST NOT be abstract.
+             *
+             * Spec 15.7.2
+             */
+            if (isAbstract(bean)) {
+                fireSpecViolationEvent(mdBean, new Section("15.7.2.c3"));
+                status = false;
+            }
+
+            /*
+             * The message driven bean class MUST have a public constructor that
+             * takes no arguments.
+             *
+             * Spec 15.7.2
+             */
+            if (!hasDefaultConstructor(bean)) {
+                fireSpecViolationEvent(mdBean, new Section("15.7.2.d"));
+                status = false;
+            }
+
+            /*
+             * The message driven bean class MUST NOT define the finalize() method.
+             *
+             * Spec 15.7.2
+             */
+            if (hasFinalizer(bean)) {
+                fireSpecViolationEvent(mdBean, new Section("15.7.2.e"));
+                status = false;
+            }
+
+            /*
+             * A message driven bean MUST implement the ejbCreate() method.
+             * The ejbCreate() method signature MUST follow these rules:
+             *
+             *      - The method name MUST be ejbCreate
+             *      - The method MUST be declared as public
+             *      - The method MUST NOT be declared as final or static
+             *      - The return type MUST be void
+             *      - The method arguments MUST have no arguments.
+             *      - The method MUST NOT define any application exceptions.
+             *
+             * Spec 15.7.2, 3
+             */
+            if (hasEJBCreateMethod(bean, false)) {
+
+                Iterator it = getEJBCreateMethods(bean);
+
+                Method ejbCreate = (Method)it.next();
+
+                if (!isPublic(ejbCreate)) {
+                    fireSpecViolationEvent(mdBean, ejbCreate, new Section("15.7.3.b"));
+                    status = false;
+                }
+
+                if ( (isFinal(ejbCreate)) ||
+                     (isStatic(ejbCreate)) ) {
+                    fireSpecViolationEvent(mdBean, ejbCreate, new Section("15.7.3.c"));
+                    status = false;
+                }
+
+                if (!hasVoidReturnType(ejbCreate)) {
+                    fireSpecViolationEvent(mdBean, ejbCreate, new Section("15.7.3.d"));
+                    status = false;
+                }
+
+                if (!hasNoArguments(ejbCreate)) {
+                    fireSpecViolationEvent(mdBean, ejbCreate, new Section("15.7.3.e"));
+                    status = false;
+                }
+
+                if (!throwsNoException(ejbCreate)) {
+                    fireSpecViolationEvent(mdBean, ejbCreate, new Section("15.7.3.f"));
+                    status = false;
+                }
+
+                if (it.hasNext()) {
+                    fireSpecViolationEvent(mdBean, new Section("15.7.3.a"));
+                    status = false;
+                }
+            } else {
+                fireSpecViolationEvent(mdBean, new Section("15.7.3.a"));
+                status = false;
+            }
+
+            /*
+             * A message driven bean MUST implement the onMessage(...) method.
+             * The onMessage() method signature MUST follow these rules:
+             *
+             *      - The method name MUST be onMessage
+             *      - The method MUST be declared as public
+             *      - The method MUST NOT be declared as final or static
+             *      - The return type MUST be void
+             *      - The method arguments MUST have a single argument of type
+             *        javax.jms.Message.
+             *      - The method MUST NOT define any application exceptions.
+             *
+             * Spec 15.7.4
+             */
+            if (hasOnMessageMethod(bean)) {
+
+                Iterator it = getOnMessageMethods(bean);
+
+                Method onMessage = (Method)it.next();
+
+                if (!isPublic(onMessage)) {
+                    fireSpecViolationEvent(mdBean, onMessage, new Section("15.7.4.b"));
+                    status = false;
+                }
+
+                if ( (isFinal(onMessage)) ||
+                     (isStatic(onMessage)) ) {
+                    fireSpecViolationEvent(mdBean, onMessage, new Section("15.7.4.c"));
+                    status = false;
+                }
+
+                Class message = classloader.loadClass("javax.jms.Message");
+                if (!hasSingleArgument(onMessage, message)) {
+                    fireSpecViolationEvent(mdBean, onMessage, new Section("15.7.4.e"));
+                    status = false;
+                }
+
+                if (!throwsNoException(onMessage)) {
+                    fireSpecViolationEvent(mdBean, onMessage, new Section("15.7.4.f"));
+                    status = false;
+                }
+
+                if (it.hasNext()) {
+                    fireSpecViolationEvent(mdBean, new Section("15.7.4.a"));
+                    status = false;
+                }
+            } else {
+                fireSpecViolationEvent(mdBean, new Section("15.7.4.a"));
+                status = false;
+            }
+
+            /*
+             * A message driven bean MUST implement the ejbRemove() method.
+             * The ejbRemove() method signature MUST follow these rules:
+             *
+             *      - The method name MUST be ejbRemove
+             *      - The method MUST be declared as public
+             *      - The method MUST NOT be declared as final or static
+             *      - The return type MUST be void
+             *      - The method MUST have no arguments.
+             *      - The method MUST NOT define any application exceptions.
+             *
+             * Spec 15.7.5
+             */
+            if (hasEJBRemoveMethod(bean)) {
+
+                Iterator it = getEJBRemoveMethods(bean);
+
+                Method ejbRemove = (Method)it.next();
+
+                if (!isPublic(ejbRemove)) {
+                    fireSpecViolationEvent(mdBean, ejbRemove, new Section("15.7.5.b"));
+                    status = false;
+                }
+
+                if ( (isFinal(ejbRemove)) ||
+                     (isStatic(ejbRemove)) ) {
+                    fireSpecViolationEvent(mdBean, ejbRemove, new Section("15.7.5.c"));
+                    status = false;
+                }
+
+                if (!hasNoArguments(ejbRemove)) {
+                    fireSpecViolationEvent(mdBean, ejbRemove, new Section("15.7.5.e"));
+                    status = false;
+                }
+
+                if (!throwsNoException(ejbRemove)) {
+                    fireSpecViolationEvent(mdBean, ejbRemove, new Section("15.7.5.f"));
+                    status = false;
+                }
+
+                if (it.hasNext()) {
+                    fireSpecViolationEvent(mdBean, new Section("15.7.5.a"));
+                    status = false;
+                }
+            } else {
+                fireSpecViolationEvent(mdBean, new Section("15.7.5.a"));
+                status = false;
+            }
+
+        }
+        catch (ClassNotFoundException e) {
+
+            /*
+             * The Bean Provider MUST specify the fully-qualified name of the
+             * Java class that implements the enterprise bean's business
+             * methods.
+             *
+             * Spec 22.2
+             */
+            fireSpecViolationEvent(mdBean, new Section("22.2.b"));
+            status = false;
+        }
+
+        return status;
     }
+
 }
 
