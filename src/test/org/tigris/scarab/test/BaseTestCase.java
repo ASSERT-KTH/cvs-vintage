@@ -7,6 +7,7 @@ import junit.framework.TestCase;
 import org.apache.fulcrum.TurbineServices;
 import org.apache.torque.om.NumberKey;
 import org.apache.turbine.TurbineConfig;
+import org.apache.turbine.TurbineXmlConfig;
 import org.tigris.scarab.om.ActivitySet;
 import org.tigris.scarab.om.ActivitySetManager;
 import org.tigris.scarab.om.ActivitySetTypePeer;
@@ -87,8 +88,11 @@ public class BaseTestCase extends TestCase {
 		File directoryFile = new File("src/test");
 		String directory = directoryFile.getAbsolutePath();
 
-		tc =
+		/*tc =
 			new TurbineConfig(directory, "TestTurbineResources.properties");
+			*/
+		tc =
+		    new TurbineXmlConfig(directory, "TestTurbineConfiguration.xml");
 		tc.init();
 		
 	}
