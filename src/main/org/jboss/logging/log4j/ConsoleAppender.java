@@ -12,6 +12,7 @@ import org.apache.log4j.AppenderSkeleton;
 import org.apache.log4j.Category;
 import org.apache.log4j.Priority;
 import org.apache.log4j.spi.LoggingEvent;
+import org.apache.log4j.Layout;
 
 /** A log4j Appender implementation that writes to the System.out and
 System.err console streams. It also installs PrintStreams for System.out
@@ -19,7 +20,7 @@ and System.err to route logging through those objects to the log4j
 system via a category named Default.
 
 @author <a href="mailto:Scott_Stark@displayscape.com">Scott Stark</a>.
-@version $Revision: 1.3 $
+@version $Revision: 1.4 $
 */
 public class ConsoleAppender extends AppenderSkeleton
 {
@@ -64,5 +65,26 @@ public class ConsoleAppender extends AppenderSkeleton
             err.print(msg);
         else
             out.print(msg);
+        if(this.layout.ignoresThrowable())
+        {
+            String[] s = event.getThrowableStrRep();
+            if (s != null)
+            {
+        	    int len = s.length;
+        	    for(int i = 0; i < len; i++)
+                {
+                    if( event.priority == Priority.ERROR )
+                    {
+        	            err.print(s[i]);
+                	    err.print(Layout.LINE_SEP);
+                    }
+                    else
+                    {
+        	            out.print(s[i]);
+        	            out.print(Layout.LINE_SEP);
+                    }
+                }
+            }
+        }
     }
 }
