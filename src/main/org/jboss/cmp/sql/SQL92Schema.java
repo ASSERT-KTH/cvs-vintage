@@ -9,7 +9,6 @@
 
 package org.jboss.cmp.sql;
 
-import java.sql.Types;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -21,20 +20,16 @@ import org.jboss.cmp.schema.DuplicateNameException;
 /**
  * Implementaion of an AbstractSchema for SQL92 based systems.
  */
-public class SQL92Schema implements AbstractSchema
+public abstract class SQL92Schema implements AbstractSchema
 {
-   private Map tables = new HashMap();
-   private Map constraints = new HashMap();
+   private final Map simpleTypes;
+   private final Map tables = new HashMap();
+   private final Map constraints = new HashMap();
 
-   private static final AbstractType[] builtins = {
-      new SQLDataType("NULL", AbstractType.VOID, Types.NULL),
-      new SQLDataType("TYPE", AbstractType.OBJECT, Types.JAVA_OBJECT),
-      new SQLDataType("BIT", AbstractType.BOOLEAN, Types.BIT),
-      new SQLDataType("VARCHAR", AbstractType.STRING, Types.VARCHAR),
-      new SQLDataType("INTEGER", AbstractType.INTEGER, Types.INTEGER),
-      new SQLDataType("DOUBLE", AbstractType.FLOAT, Types.DOUBLE),
-      new SQLDataType("TIMESTAMP", AbstractType.DATETIME, Types.TIMESTAMP)
-   };
+   public SQL92Schema(Map builtinTypeMap)
+   {
+      simpleTypes = new HashMap(builtinTypeMap);
+   }
 
    public AbstractClass getClassByName(String name)
    {
@@ -46,9 +41,16 @@ public class SQL92Schema implements AbstractSchema
       return tables.keySet().contains(name);
    }
 
-   public AbstractType getBuiltinType(int family)
+   public abstract AbstractType getBuiltinType(int family);
+
+   public void addType(AbstractType type)
    {
-      return builtins[family];
+      simpleTypes.put(type.getName(), type);
+   }
+
+   public AbstractType getTypeByName(String name)
+   {
+      return (AbstractType) simpleTypes.get(name);
    }
 
    /**

@@ -30,13 +30,14 @@ public class EJB20Schema implements AbstractSchema
    private Map relationsByName = new HashMap();
 
    private static final AbstractType[] builtins = {
-      new JavaType(void.class, AbstractType.VOID),
+      null,
       new JavaType(Object.class, AbstractType.OBJECT),
       new JavaType(boolean.class, AbstractType.BOOLEAN),
       new JavaType(String.class, AbstractType.STRING),
       new JavaType(int.class, AbstractType.INTEGER),
-      new JavaType(double.class, AbstractType.FLOAT),
-      new JavaType(java.util.Date.class, AbstractType.DATETIME)
+      new JavaType(double.class, AbstractType.DOUBLE),
+      new JavaType(java.util.Date.class, AbstractType.DATETIME),
+      new JavaType(byte[].class, AbstractType.BINARY)
    };
 
    public AbstractClass getClassByName(String name)

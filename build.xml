@@ -8,7 +8,7 @@
   <!ENTITY targets    SYSTEM "../tools/etc/buildfragments/targets.ent">
 ]>
 
-<!-- $Id: build.xml,v 1.135 2003/02/16 19:36:00 d_jencks Exp $ -->
+<!-- $Id: build.xml,v 1.136 2003/02/19 03:13:22 jboynes Exp $ -->
 
 <!--+======================================================================+-->
 <!--| JBoss (The OpenSource J2EE WebOS) Build File                         |-->
@@ -99,7 +99,7 @@
     <!--| Override any default properties here. |-->
     <!--+=======================================+-->
 
-    <!-- Configure defaults & build tools --> 
+    <!-- Configure defaults & build tools -->
     <call target="configure-defaults"/>
     <call target="configure-tools"/>
 
@@ -137,13 +137,13 @@
   <!--| documentation compiles.                                            |-->
   <!--+====================================================================+-->
 
-  <target name="compile" 
+  <target name="compile"
 	  description="Compile all source files."
 	  depends="generate-parsers,
-                   compile-bean-sources, 
+                   compile-bean-sources,
                    compile-mbean-sources,
                    compile-classes,
-                   compile-rmi, 
+                   compile-rmi,
                    _default:compile-etc,
                    _default:compile-resources,
                    _default:compile-bin">
@@ -161,7 +161,7 @@
 
     <!-- JBoss-QL parser -->
     <jjtree
-      target="${source.java}/org/jboss/ejb/plugins/cmp/ejbql/JBossQLParser.jjt" 
+      target="${source.java}/org/jboss/ejb/plugins/cmp/ejbql/JBossQLParser.jjt"
 	   outputdirectory="${build.gen-src}/org/jboss/ejb/plugins/cmp/ejbql"
 	   javacchome="${sun.javacc.lib}"/>
 
@@ -171,7 +171,7 @@
 
     <!-- EJB-QL parser -->
     <jjtree
-      target="${source.java}/org/jboss/ejb/plugins/cmp/ejbql/EJBQLParser.jjt" 
+      target="${source.java}/org/jboss/ejb/plugins/cmp/ejbql/EJBQLParser.jjt"
 	   outputdirectory="${build.gen-src}/org/jboss/ejb/plugins/cmp/ejbql"
 	   javacchome="${sun.javacc.lib}"/>
 
@@ -180,11 +180,11 @@
 	   javacchome="${sun.javacc.lib}"/>
 
     <!-- New EJB-QL Parser -->
-    <mkdir dir="${build.gen-src}/org/jboss/cmp/ejbql"/>
-    <jjtree target="${source.java}/org/jboss/cmp/ejbql/EJBQL20Parser.jjt"
-            outputdirectory="${build.gen-src}/org/jboss/cmp/ejbql"
+    <mkdir dir="${build.gen-src}/org/jboss/cmp/ejb/ejbql"/>
+    <jjtree target="${source.java}/org/jboss/cmp/ejb/ejbql/EJBQL20Parser.jjt"
+            outputdirectory="${build.gen-src}/org/jboss/cmp/ejb/ejbql"
             javacchome="${sun.javacc.lib}" />
-    <javacc target="${build.gen-src}/org/jboss/cmp/ejbql/EJBQL20Parser.jj"
+    <javacc target="${build.gen-src}/org/jboss/cmp/ejb/ejbql/EJBQL20Parser.jj"
             javacchome="${sun.javacc.lib}"/>
 
   </target>
@@ -277,7 +277,7 @@
   <!-- Compile all class files -->
   <target name="compile-classes" depends="init,gen-src-jdbc2,gen-src-jdbc3">
     <mkdir dir="${build.classes}"/>
-    
+
     <javac destdir="${build.classes}"
            optimize="${javac.optimize}"
 	   target="${javac.target}"
@@ -351,7 +351,7 @@
     <jar jarfile="${build.lib}/jboss.jar" manifest="${build.etc}/default.mf">
       <fileset dir="${build.classes}">
         <include name="org/jboss/**"/>
-        
+
         <!-- Exclude command line utilities -->
         <exclude name="org/jboss/*"/>
 
@@ -361,7 +361,7 @@
         <!-- Exclude key factory stuff -->
         <exclude name="org/jboss/ejb/plugins/keygenerator/uuid/**"/>
       </fileset>
-      
+
       <!-- HACK -->
       <fileset dir="${build.classes}">
         <!-- But include this interface because the Farm needs it -->
@@ -400,7 +400,7 @@
         <include name="org/jboss/ejb/CacheKey.class"/>
         <include name="org/jboss/ejb/ListCacheKey.class"/>
 <!--SOME VERSION OF INTERCEPTOR NEEDS TO BE AVAILABLE TO THE CLIENT,
- BUT CONTAINERPLUGIN AND STATISTICSPROVIDER ARE HERE ONLY BECAUSE 
+ BUT CONTAINERPLUGIN AND STATISTICSPROVIDER ARE HERE ONLY BECAUSE
 THE INTERCEPTOR INHERITANCE MODEL IS SCREWED. REMOVE WHEN INTERCEPTORS ARE UNIFIED-->
         <include name="org/jboss/ejb/ContainerPlugin.class"/>
         <include name="org/jboss/ejb/Interceptor.class"/>
@@ -427,7 +427,7 @@ THE INTERCEPTOR INHERITANCE MODEL IS SCREWED. REMOVE WHEN INTERCEPTORS ARE UNIFI
       <fileset dir="${build.resources}/org/jboss/verifier"/>
     </jar>
 
-    <!-- jmx-rmi-adaptor.sar --> 
+    <!-- jmx-rmi-adaptor.sar -->
     <jar jarfile="${build.lib}/jmx-rmi-adaptor.sar"
          manifest="${build.etc}/default.mf">
       <fileset dir="${build.classes}">
@@ -440,7 +440,7 @@ THE INTERCEPTOR INHERITANCE MODEL IS SCREWED. REMOVE WHEN INTERCEPTORS ARE UNIFI
       </fileset>
     </jar>
 
-    <!-- jmx-ejb-adaptor.jar --> 
+    <!-- jmx-ejb-adaptor.jar -->
     <jar jarfile="${build.lib}/jmx-ejb-adaptor.jar"
          manifest="${build.etc}/default.mf">
       <fileset dir="${build.classes}">
@@ -467,7 +467,7 @@ THE INTERCEPTOR INHERITANCE MODEL IS SCREWED. REMOVE WHEN INTERCEPTORS ARE UNIFI
       </fileset>
     </jar>
 
-    <!-- jmx-ejb-connector-server.sar --> 
+    <!-- jmx-ejb-connector-server.sar -->
     <jar jarfile="${build.lib}/jmx-ejb-connector-server.sar"
          manifest="${build.etc}/default.mf">
       <fileset dir="${build.classes}">
@@ -480,7 +480,7 @@ THE INTERCEPTOR INHERITANCE MODEL IS SCREWED. REMOVE WHEN INTERCEPTORS ARE UNIFI
     </jar>
 
     <!-- jmx-html-adaptor.sar -->
-    <!-- (should try to use jlink for this) -->  
+    <!-- (should try to use jlink for this) -->
 <!-- AS It seems that the HTML-Adaptor is gone therefore not need to create
      this SAR file anymore
     <unjar src="${sun.jmx.lib}/jmxtools.jar" dest="${build.classes}"/>
@@ -496,7 +496,7 @@ THE INTERCEPTOR INHERITANCE MODEL IS SCREWED. REMOVE WHEN INTERCEPTORS ARE UNIFI
       </fileset>
     </jar>
 -->
-   
+
     <!-- jmx-rmi-adaptor.jar -->
     <jar jarfile="${build.lib}/jmx-rmi-adaptor.jar"
          manifest="${build.etc}/manifest/rmi-adaptor.mf">

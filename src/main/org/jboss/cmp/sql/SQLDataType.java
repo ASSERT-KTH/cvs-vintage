@@ -9,13 +9,18 @@
 
 package org.jboss.cmp.sql;
 
+import java.sql.CallableStatement;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
 import org.jboss.cmp.schema.AbstractType;
 
-public class SQLDataType implements AbstractType
+public abstract class SQLDataType implements AbstractType
 {
-   private String name;
-   private int family;
-   private int jdbcType;
+   protected final String name;
+   protected final int family;
+   protected final int jdbcType;
 
    public SQLDataType(String name, int family, int jdbcType)
    {
@@ -38,4 +43,18 @@ public class SQLDataType implements AbstractType
    {
       return jdbcType;
    }
+
+   public void setValue(PreparedStatement ps, int index, Object value) throws SQLException
+   {
+      ps.setObject(index, value, jdbcType);
+   }
+
+   public abstract Object getValue(ResultSet rs, int index) throws SQLException;
+
+   public void bindParameter(CallableStatement cs, int index) throws SQLException
+   {
+      cs.registerOutParameter(index, jdbcType);
+   }
+
+   public abstract Object getValue(CallableStatement cs, int index) throws SQLException;
 }
