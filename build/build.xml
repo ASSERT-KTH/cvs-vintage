@@ -31,7 +31,6 @@
     <property name="src.sql.dir" value="${src.dir}/sql"/>
     <property name="src.templates.dir" value="${src.dir}/templates"/>
     <property name="src.test.dir" value="${src.dir}/test"/>
-    <property name="src.usecases.dir" value="${src.dir}/usecases"/>
     
     <property name="torque.dir.scarab" value="${build.src.scarab}/torque"/>
     <property name="javadoc.destdir" value="${build.project}/api"/>
@@ -996,14 +995,6 @@
         </javadoc>
     </target>
 
-    <!-- ================================================================== -->
-    <!-- Creates the Usecase documentation                                  -->
-    <!-- ================================================================== -->
-    <target name="usecases" depends="prepare">
-        <ant antfile="build.xml" 
-                dir="${src.usecases.dir}" target="docs">
-        </ant>
-    </target>
     
     <!-- ================================================================== -->
     <!-- Cleans up the build directory                                      -->
@@ -1081,7 +1072,6 @@
                 <exclude name="**/src/sql/schema-design-notes.txt"/>
                 <exclude name="**/src/sql/sql_questions.txt"/>
                 <exclude name="**/src/test/**"/>
-                <exclude name="**/src/usecases/**"/>
                 <exclude name="**/target/**"/>
                 <exclude name="**/www/**"/>
             </fileset>
