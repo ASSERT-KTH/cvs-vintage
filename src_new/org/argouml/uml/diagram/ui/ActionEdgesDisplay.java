@@ -1,5 +1,5 @@
-// $Id: ActionEdgesDisplay.java,v 1.2 2003/11/10 12:34:59 jhraigniac Exp $
-// Copyright (c) 1996-2001 The Regents of the University of California. All
+// $Id: ActionEdgesDisplay.java,v 1.3 2004/02/08 11:21:54 d00mst Exp $
+// Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
 // agreement is hereby granted, provided that the above copyright notice
@@ -24,6 +24,7 @@
 
 package org.argouml.uml.diagram.ui;
 
+import org.argouml.kernel.ProjectManager;
 import org.argouml.ui.*;
 import org.argouml.uml.ui.UMLAction;
 import org.tigris.gef.base.*;
@@ -35,7 +36,7 @@ import java.util.*;
 /** An action that makes all edges on the selected node visible/not visible
  *  on the diagram.
  *
- * <p>$Id: ActionEdgesDisplay.java,v 1.2 2003/11/10 12:34:59 jhraigniac Exp $
+ * <p>$Id: ActionEdgesDisplay.java,v 1.3 2004/02/08 11:21:54 d00mst Exp $
  *
  * @author David Manura
  * @since 0.13.5
@@ -67,8 +68,8 @@ public class ActionEdgesDisplay extends UMLAction {
     // main methods
 
     public void actionPerformed(ActionEvent ae) {
-        ProjectBrowser pb = ProjectBrowser.getInstance();
-        ArgoDiagram d = pb.getActiveDiagram();
+        ArgoDiagram d = ProjectManager.getManager()
+                .getCurrentProject().getActiveDiagram();
         Editor ce = Globals.curEditor();
         MutableGraphModel mgm = (MutableGraphModel) ce.getGraphModel();
 

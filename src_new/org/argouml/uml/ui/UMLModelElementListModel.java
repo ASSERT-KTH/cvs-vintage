@@ -1,4 +1,4 @@
-// $Id: UMLModelElementListModel.java,v 1.25 2003/09/20 13:10:44 bobtarling Exp $
+// $Id: UMLModelElementListModel.java,v 1.26 2004/02/08 11:22:37 d00mst Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -617,12 +617,12 @@ abstract public class UMLModelElementListModel
     public void delete(int index) {
         Object/*MModelElement*/ modElem = getModelElementAt(index);
         Object target = TargetManager.getInstance().getTarget();
-        ProjectBrowser.getInstance().setTarget(modElem);
+        TargetManager.getInstance().setTarget(modElem);
         ActionEvent event = new ActionEvent(this, 1, "delete");
         ActionRemoveFromModel.SINGLETON.actionPerformed(event);
         fireIntervalRemoved(this, index, index);
         if (!target.equals(modElem)) {
-            ProjectBrowser.getInstance().setTarget(target);
+            TargetManager.getInstance().setTarget(target);
         }
     }
 }
