@@ -58,7 +58,7 @@ import org.tigris.scarab.om.Module;
  * This is the QueryPeer class
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: QueryPeer.java,v 1.23 2003/08/19 23:59:20 jmcnally Exp $
+ * @version $Id: QueryPeer.java,v 1.24 2003/10/17 09:46:35 dep4b Exp $
  */
 public class QueryPeer 
     extends org.tigris.scarab.om.BaseQueryPeer
@@ -158,7 +158,6 @@ public class QueryPeer
                 cGlob.or(cPriv);
                 crit.add(cGlob);
             }
-            crit.setDistinct();
 
             // Add sort criteria
             if (SORT_DESCRIPTION.equals(sortColumn))
