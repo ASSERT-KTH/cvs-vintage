@@ -6,7 +6,7 @@
 <body bgcolor="#ffffff">
 
 <h2>Scarab - Hypersonic</h2>
-<h4>$Id: hypersonic.html,v 1.1 2003/01/31 18:10:01 jon Exp $</h4>
+<h4>$Id: hypersonic.html,v 1.2 2004/02/03 11:44:16 dep4b Exp $</h4>
 
 <p>
 Contributed by: "Gillam, Jason Jason.Gillam NO SPAM vignette.com"
@@ -80,30 +80,21 @@ J
 
 <p>
 <h4>Basic instructions</h4>
-In order to get Torque to generate the right Scarab .sql files for
-Hypersonic, try the following:
+Torque generates the sql properly except for a couple modifications.  After run ant create-db go
+into /target/scarab/web-inf/sql/hypersonic and do these changes:
+
+1) Change all # to --<p/>
+
+2) Change all drops from "drop table if exists TURBINE_USER_GROUP_ROLE;" to
+"drop table TURBINE_USER_GROUP_ROLE is exists"<p/>
+
+3) change mediumblob to object<p/>
+
+4) change mediumtext to varchar<p/>
+
+Then rerun the ant create-db and it'll work.
 </p>
 
-<ul>
-    <li>Copy the Hypersonic jdbc driver .jar file into the scarab/lib/
-        directory *before* building Scarab.</li>
-    <li>Create a scarab/build/build.properties file.</li>
-    <li>In it, fill out the following properties with the right information...</li>
-</ul>
-
-<p>
-scarab.database.host=localhost<br />
-scarab.database.port=<br />
-scarab.database.url=<br />
-scarab.database.admin.url=<br />
-scarab.database.type=hypersonic<br />
-scarab.database.jdbc.driver=????????????<br />
-scarab.database.username=<br />
-scarab.database.password=<br />
-scarab.database.admin.username=<br />
-scarab.database.admin.password=<br />
-scarab.database.validationQuery=SELECT ATTRIBUTE_ID FROM SCARAB_ATTRIBUTE WHERE ATTRIBUTE_ID='0'
-</p>
 
 </body>
 </html>
