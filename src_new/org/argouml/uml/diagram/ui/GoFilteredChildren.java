@@ -21,7 +21,7 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $Id: GoFilteredChildren.java,v 1.9 2003/02/01 01:08:12 kataka Exp $
+// $Id: GoFilteredChildren.java,v 1.10 2003/04/13 10:20:34 alexb Exp $
 
 package org.argouml.uml.diagram.ui;
 
@@ -36,6 +36,12 @@ import org.argouml.ui.AbstractGoRule;
 import org.tigris.gef.util.Predicate;
 import org.tigris.gef.util.PredicateTrue;
 
+/**
+ * @deprecated any use of this class should be replaced by
+ *             an AbstractGoRule subclass, because the use of the GEF Predicate
+ *             class is not necessary now that we have 
+ *             org.argouml.model.ModelFacade#isA(...) methods.
+ */
 public class GoFilteredChildren extends AbstractGoRule {
 
   ////////////////////////////////////////////////////////////////
