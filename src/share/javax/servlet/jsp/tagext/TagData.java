@@ -110,11 +110,7 @@ public class TagData implements Cloneable {
      * If you already have the attributes in a hashtable, use this
      * constructor. 
      *
-     ***** NEED TO REMOVE THIS COMMENT: JUST FOR pelegri/lpgc's eyes ****
-     * Since the JSP translator internally has attributes in a
-     * hashtable whenever a TagData needs to be constructed at
-     * translation time, this constructor is used... akv
-     ***** 
+
      */
     public TagData(Hashtable attrs) {
         this.attributes = attrs;
@@ -158,6 +154,14 @@ public class TagData implements Cloneable {
     public String getAttributeString(String attName) {
 	return (String) attributes.get(attName);
     }
+
+    /**
+     * Enumerates the attributes
+     *@return An enumeration of the attributes in a TagData
+     */
+    public java.util.Enumeration getAttributes() {
+        return attributes.keys();
+    };
 
     // private data
 
