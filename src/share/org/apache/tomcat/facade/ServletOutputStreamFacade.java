@@ -64,6 +64,7 @@ import org.apache.tomcat.core.*;
 import org.apache.tomcat.util.*;
 import java.io.*;
 import javax.servlet.ServletOutputStream;
+import org.apache.tomcat.core.Constants;
 
 /**
  * 
