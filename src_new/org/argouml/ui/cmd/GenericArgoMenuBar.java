@@ -1,4 +1,4 @@
-// $Id: GenericArgoMenuBar.java,v 1.4 2004/10/29 19:56:45 mvw Exp $
+// $Id: GenericArgoMenuBar.java,v 1.5 2004/10/31 20:52:55 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -575,7 +575,7 @@ public class GenericArgoMenuBar extends JMenuBar
         setMnemonic(adjustPageBreaks, "Adjust Pagebreaks");
         JMenuItem buttonsOnSelection = 
             view.addCheckItem(new ActionShowRapidButtons());
-        setMnemonic(buttonsOnSelection, "Buttons on Selection");
+        setMnemonic(buttonsOnSelection, "Buttons On Selection");
         //_view.addCheckItem(Actions.ShowDiagramList);
         //_view.addCheckItem(Actions.ShowToDoList);
         //_showDetailsMenuItem = _view.addCheckItem(Actions.ShowDetails);
