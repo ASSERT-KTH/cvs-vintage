@@ -60,7 +60,7 @@ import org.jboss.jms.asf.StdServerSessionPool;
  * @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
  * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
- * @version $Revision: 1.23 $
+ * @version $Revision: 1.24 $
  */
 public class JMSContainerInvoker
    implements ContainerInvoker, XmlLoadable
@@ -102,6 +102,7 @@ public class JMSContainerInvoker
    protected TransactionManager tm;
    protected ServerSessionPool pool;
    protected ExceptionListenerImpl exListener;
+   protected String beanName;
 
    // Static --------------------------------------------------------
 
@@ -252,8 +253,8 @@ public class JMSContainerInvoker
       }
       catch (NamingException e) {
          // if the lookup failes, the try to create it
-         log.warn("destination not found: " + jndiName, e);
-
+         log.warn("destination not found: " + jndiName + " reason: " + e);
+         log.warn("creating a new temporary destination: " + jndiName);
          //
          // attempt to create the destination (note, this is very
          // very, very unportable).
@@ -348,6 +349,9 @@ public class JMSContainerInvoker
       
       // Queue or Topic
       String destinationType = config.getDestinationType();
+
+      // Bean Name
+      beanName = config.getEjbName();
       
       // Is containermanages TX (not used?)
       boolean isContainerManagedTx = config.isContainerManagedTx();
@@ -471,7 +475,7 @@ public class JMSContainerInvoker
     */
    public void start() throws Exception
    {
-      log.debug("Starting JMSContainerInvoker");
+      log.debug("Starting JMSContainerInvoker for bean " + beanName);
       exListener = new ExceptionListenerImpl(this);
       connection.setExceptionListener(exListener);
       connection.start();
@@ -482,7 +486,7 @@ public class JMSContainerInvoker
     */
    public void stop()
    {
-      log.debug("Stopping JMSContainerInvoker");
+      log.debug("Stopping JMSContainerInvoker for bean " + beanName);
       // Silence the exception listener
       if (exListener != null) {
          exListener.stop();
@@ -520,7 +524,7 @@ public class JMSContainerInvoker
     */
    public void destroy()
    {
-      log.debug("Destroying JMSContainerInvoker");
+      log.debug("Destroying JMSContainerInvoker for bean " + beanName);
 
       // clear the server session pool (if it is clearable)
       try {
@@ -632,7 +636,7 @@ public class JMSContainerInvoker
             id = message.getJMSMessageID();
          } catch (JMSException e) {
             // what ?
-            id = "JMSContainerInvoke";
+            id = "JMSContainerInvoker";
          }
             
          // Invoke, shuld we catch any Exceptions??
