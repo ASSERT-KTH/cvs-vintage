@@ -41,7 +41,7 @@ import org.jboss.logging.Logger;
  * @see org.jboss.system.Service
  * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
  * @author <a href="mailto:d_jencks@users.sourceforge.net">David Jencks</a>
- * @version $Revision: 1.15 $ <p>
+ * @version $Revision: 1.16 $ <p>
  *
  * <b>Revisions:</b> <p>
  *
@@ -235,7 +235,6 @@ public class ServiceController
                   } // end of if ()   
                   //Now, does the needed mbean exist? if not, note suspension.
                   //We could use the mbean server or our own service map.
-                  //if (!nameToServiceMap.containsKey(ref)) 
                   if (!startedServices.contains(ref)) 
                   {
                      //Not there, mark suspended.
@@ -253,7 +252,14 @@ public class ServiceController
          throw e;
       }
       String serviceFactory = mbeanElement.getAttribute("serviceFactory");
-      registerAndStartService(objectName, serviceFactory);
+      try 
+      {
+         registerAndStartService(objectName, serviceFactory);
+      } 
+      catch (Exception e) 
+         //ignore errors, we created the mbean so we have to return the name
+      {} // end of try-catch
+      
       return objectName;
    }
 
@@ -275,8 +281,6 @@ public class ServiceController
       catch (Exception e) 
       {
          log.error("Problem in registerAndStartService", e);
-         //dont let anyone think we're started if we're not!
-         nameToServiceMap.remove(serviceName);
          throw e;
       } // end of try-catch
 
@@ -302,7 +306,12 @@ public class ServiceController
     */
    public void undeploy(ObjectName objectName) throws Exception
    {
-      stop(objectName);
+      try 
+      {
+         stop(objectName);
+      } 
+      catch (Exception e) 
+      { } // end of try-catch
       //We are not needing anyone or waiting for anyone
       ArrayList weNeededList = (ArrayList)mbeanToMBeanRefsMap.remove(objectName);
       if (weNeededList != null) 
@@ -350,8 +359,8 @@ public class ServiceController
          
          //Remove from local maps
          startedServices.remove(objectName);
-         Service service = (Service)nameToServiceMap.remove(objectName);
-
+         //Service service = (Service)nameToServiceMap.remove(objectName);
+         nameToServiceMap.remove(objectName);
          // Remove the MBean from the MBeanServer
          server.unregisterMBean(objectName);
 
@@ -625,7 +634,7 @@ public class ServiceController
     *
     * @param e The exception to be logged.
     */
-   private void logException(Throwable e)
+   private void logException(String message, Throwable e)
    {
       if (e instanceof RuntimeErrorException)
       {
@@ -647,8 +656,7 @@ public class ServiceController
       {
          e = ((ReflectionException)e).getTargetException();
       }
-      e.printStackTrace();
-      log.error(e);
+      log.error(message, e);
    }
 
    private void markWaiting(ObjectName missing, ObjectName waiting)
@@ -775,11 +783,15 @@ public class ServiceController
             }
             catch (JMRuntimeException e)
             {
-               logException(e);
+               logException("JMRuntimeException thrown during ServiceProxy operation " +
+                            name + " on mbean " + objectName, e);
+               throw e;
             }
             catch (JMException e)
             {
-               logException(e);
+               logException("JMException thrown during ServiceProxy operation " +
+                            name + " on mbean " + objectName, e);
+               throw e;
             }
          }
 
