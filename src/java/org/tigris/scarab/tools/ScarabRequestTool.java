@@ -1377,15 +1377,22 @@ try{
         {            
             NumberKey[] issueIds =  (NumberKey[])
                 issueGroup.get("Ids").getValue();
-            if ( issueIds != null ) 
-            {            
+            if ( issueIds != null )
+            {
                 issues = getIssues(Arrays.asList(issueIds));
             }
         }
-        else if ( data.getParameters().getString("issue_ids") != null ) 
-        {                
-            issues = getIssues(
-                Arrays.asList(data.getParameters().getStrings("issue_ids")));
+        else 
+        {
+            String[] issue_ids = data.getParameters().getStrings("issue_ids");
+            if (issue_ids != null)
+            {
+                issues = getIssues(Arrays.asList(issue_ids));
+            }
+        }
+        if (issues == null)
+        {
+            issues = Collections.EMPTY_LIST;
         }
         return issues;
     }
@@ -2347,12 +2354,15 @@ try{
     {
         HashMap assoUsers = new HashMap();
         List issueList = getIssues();
-        for (int i=0; i<issueList.size(); i++)
+        if (issueList != null)
         {
-            Issue issue = (Issue)issueList.get(i);
-            assoUsers.put(issue.getIssueId(), issue.getAssociatedUsers());
+            for (int i=0; i<issueList.size(); i++)
+            {
+                Issue issue = (Issue)issueList.get(i);
+                assoUsers.put(issue.getIssueId(), issue.getAssociatedUsers());
+            }
+            ((ScarabUser)data.getUser()).setAssociatedUsersMap(assoUsers);
         }
-        ((ScarabUser)data.getUser()).setAssociatedUsersMap(assoUsers);
     }
 
     public List getAssignIssuesList()
