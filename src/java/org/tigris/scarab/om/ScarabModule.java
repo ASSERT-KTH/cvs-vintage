@@ -104,7 +104,7 @@ import org.apache.fulcrum.security.impl.db.entity
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: ScarabModule.java,v 1.113 2002/05/13 21:07:16 jmcnally Exp $
+ * @version $Id: ScarabModule.java,v 1.114 2002/05/13 22:30:19 jmcnally Exp $
  */
 public class ScarabModule
     extends BaseScarabModule
@@ -354,6 +354,22 @@ public class ScarabModule
                !ROOT_ID.equals(prevModule.getModuleId()));
 
         return rModAtts;
+    }
+
+    /**
+     * Returns associated RModuleOptions.  if a related AttributeOption is
+     * deleted the RModuleOption will not show up in this list.
+     *
+     * @param crit a <code>Criteria</code> value
+     * @return a <code>List</code> value
+     */
+    public List getRModuleOptions(Criteria crit)
+        throws TorqueException
+    {
+        crit.addJoin(RModuleOptionPeer.OPTION_ID, 
+                     AttributeOptionPeer.OPTION_ID)
+            .add(AttributeOptionPeer.DELETED, false);
+        return super.getRModuleOptions(crit);
     }
 
 
