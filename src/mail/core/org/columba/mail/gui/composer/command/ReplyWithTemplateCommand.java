@@ -36,6 +36,7 @@ import org.columba.mail.message.ColumbaMessage;
 import org.columba.mail.message.HeaderList;
 import org.columba.mail.parser.text.HtmlParser;
 import org.columba.ristretto.coder.EncodedWord;
+import org.columba.ristretto.message.Header;
 import org.columba.ristretto.message.LocalMimePart;
 import org.columba.ristretto.message.MimeHeader;
 import org.columba.ristretto.message.MimePart;
@@ -105,9 +106,19 @@ public class ReplyWithTemplateCommand extends FolderCommand {
 
 		ColumbaMessage message = new ColumbaMessage();
 
-		ColumbaHeader header = (ColumbaHeader) folder.getMessageHeader(uids[0]);
-		// TODO: Get only the part of the header that is needed. See
-		// ReplyToMailinglist.
+		// get headerfields
+		Header header =
+			folder.getHeaderFields(
+				uids[0],
+				new String[] {
+					"Subject",
+					"From",
+					"To",
+					"Reply-To",
+					"Message-ID",
+					"In-Reply-To",
+					"References" });
+		message.setHeader(header);
 
 		message.setHeader(header);
 		MimeTree mimePartTree = folder.getMimePartTree(uids[0]);
@@ -172,9 +183,10 @@ public class ReplyWithTemplateCommand extends FolderCommand {
 		}
 
 		model.setSubject(
-			MessageBuilderHelper.createReplySubject((String) header.get("Subject")));
+			MessageBuilderHelper.createReplySubject(
+				(String) header.get("Subject")));
 
-		String to = MessageBuilderHelper.createTo(header.getHeader());
+		String to = MessageBuilderHelper.createTo(header);
 
 		if (to != null) {
 			to = EncodedWord.decode(to).toString();
@@ -182,7 +194,9 @@ public class ReplyWithTemplateCommand extends FolderCommand {
 			MessageBuilderHelper.addSenderToAddressbook(to);
 		}
 
-		MessageBuilderHelper.createMailingListHeaderItems(header.getHeader(), model);
+		MessageBuilderHelper.createMailingListHeaderItems(
+			header,
+			model);
 
 		// try to good guess the correct account
 		Integer accountUid = null;
@@ -190,7 +204,7 @@ public class ReplyWithTemplateCommand extends FolderCommand {
 			accountUid =
 				(Integer) folder.getAttribute(uids[0], "columba.accountuid");
 		String host = null;
-		if ( folder.getAttribute(uids[0], "columba.host") != null)
+		if (folder.getAttribute(uids[0], "columba.host") != null)
 			host = (String) folder.getAttribute(uids[0], "columba.host");
 		String address = (String) header.get("To");
 		AccountItem accountItem =
