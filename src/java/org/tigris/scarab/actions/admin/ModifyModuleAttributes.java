@@ -82,7 +82,7 @@ import org.tigris.scarab.tools.ScarabRequestTool;
  * action methods on RModuleAttribute table
  *      
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: ModifyModuleAttributes.java,v 1.46 2001/11/21 04:51:07 jmcnally Exp $
+ * @version $Id: ModifyModuleAttributes.java,v 1.47 2001/11/28 19:50:25 elicia Exp $
  */
 public class ModifyModuleAttributes extends RequireLoginFirstAction
 {
@@ -160,7 +160,8 @@ public class ModifyModuleAttributes extends RequireLoginFirstAction
 
         if (module.getRModuleIssueType(issueType) != null)
         {
-            data.setMessage("The Artifact type is already associated with the module.");
+            data.setMessage("The Artifact type is already associated "
+                            + "with the module.");
         }
         else
         {
@@ -358,7 +359,8 @@ public class ModifyModuleAttributes extends RequireLoginFirstAction
     /**
      * Deletes an issue type from a module.
      */
-    public void doDeletemoduleissuetype ( RunData data, TemplateContext context )
+    public void doDeletemoduleissuetype ( RunData data, 
+                                          TemplateContext context )
         throws Exception
     {
         ScarabRequestTool scarabR = getScarabRequestTool(context);
@@ -378,7 +380,8 @@ public class ModifyModuleAttributes extends RequireLoginFirstAction
             {
                 if (rmits.size() - 1 < 1)
                 {
-                    data.setMessage("You cannot have fewer than one artifact group.");
+                    data.setMessage("You cannot have fewer than one "
+                                    + "artifact group.");
                     break;
                 }
                 else
@@ -396,8 +399,10 @@ public class ModifyModuleAttributes extends RequireLoginFirstAction
                         for (int j=0; j<attGroups.size(); j++)
                         {
                             // delete attribute-attribute group map
-                            AttributeGroup attGroup = (AttributeGroup)attGroups.get(j);
-                            List raags = attGroup.getRAttributeAttributeGroups();
+                            AttributeGroup attGroup = 
+                               (AttributeGroup)attGroups.get(j);
+                            List raags = attGroup
+                                .getRAttributeAttributeGroups();
                             for (int k=0; k<raags.size(); k++)
                             {
                                 RAttributeAttributeGroup raag = 
@@ -730,7 +735,8 @@ public class ModifyModuleAttributes extends RequireLoginFirstAction
                    // Remove module-option mapping
                    List rmos = module.getRModuleOptions(attribute, issueType);
                    rmos.addAll(module.getRModuleOptions(attribute, 
-                         scarabR.getIssueType(issueType.getTemplateId().toString())));
+                         scarabR.getIssueType(issueType.getTemplateId()
+                                                       .toString())));
                    for (int j = 0; j<rmos.size();j++)
                    {
                        RModuleOption rmo = (RModuleOption)rmos.get(j);
@@ -753,7 +759,8 @@ public class ModifyModuleAttributes extends RequireLoginFirstAction
     /**
      * Unmaps attribute options to modules.
      */
-    public void doDeleteattributeoptions( RunData data, TemplateContext context ) 
+    public void doDeleteattributeoptions( RunData data,
+                                          TemplateContext context ) 
         throws Exception
     {
         ScarabRequestTool scarabR = getScarabRequestTool(context);
@@ -864,6 +871,16 @@ public class ModifyModuleAttributes extends RequireLoginFirstAction
         data.setMessage("Changes were not saved!");
         setTarget(data, getCancelTemplate(data, 
             "admin,ManageArtifactTypes.vm"));
+    }
+
+    /**
+     *   This manages clicking the cancel button
+     */
+    public void doCreateartifacttype( RunData data, TemplateContext context )
+        throws Exception
+    {
+        data.getParameters().remove("issueTypeId");
+	setTarget(data, "admin,ArtifactTypeCreate.vm");
     }
 
     /**
