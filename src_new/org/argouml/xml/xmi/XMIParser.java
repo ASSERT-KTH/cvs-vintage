@@ -1,4 +1,4 @@
-// $Id: XMIParser.java,v 1.14 2003/11/10 12:18:36 jhraigniac Exp $
+// $Id: XMIParser.java,v 1.15 2004/08/27 15:51:58 mvw Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -52,10 +52,10 @@ public class XMIParser {
     ////////////////////////////////////////////////////////////////
     // static variables
 
-	/** logger */
-	private static Logger cat = Logger.getLogger(XMIParser.class);
+    /** logger */
+    private static final Logger LOG = Logger.getLogger(XMIParser.class);
 
-	public static XMIParser SINGLETON = new XMIParser();
+    public static XMIParser singleton = new XMIParser();
 
     ////////////////////////////////////////////////////////////////
     // instance variables
@@ -90,15 +90,16 @@ public class XMIParser {
 
         _proj = p;
 
-        cat.info("=======================================");
-        cat.info("== READING MODEL " + url);
+        LOG.info("=======================================");
+        LOG.info("== READING MODEL " + url);
         try {
             XMIReader reader = new XMIReader();
             InputSource source = new InputSource(url.openStream());
             source.setSystemId(url.toString());
             _curModel = reader.parseToModel(source);
             if (reader.getErrors()) {
-            	throw new IOException("XMI file " + url.toString() + " could not be parsed.");
+            	throw new IOException("XMI file " + url.toString() 
+                        + " could not be parsed.");
             }
             _UUIDRefs = new HashMap(reader.getXMIUUIDToObjectMap());
 
@@ -120,7 +121,7 @@ public class XMIParser {
         catch (Exception ex) {
             ex.printStackTrace();
         }
-        cat.info("=======================================");
+        LOG.info("=======================================");
 
         
 	_proj.addModel(_curModel);
