@@ -31,7 +31,7 @@ import org.jboss.logging.Logger;
  * basis. The read ahead data for each entity is stored with a soft reference.
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.9 $
+ * @version $Revision: 1.10 $
  */
 public class ReadAheadCache {
    /**
@@ -304,7 +304,7 @@ public class ReadAheadCache {
                }
      
                // set the value
-               cmrField.loadPreloadedValue(ctx, (List)value);
+               cmrField.load(ctx, (List)value);
 
                // add the loaded list to the related entity's readahead cache
                JDBCStoreManager relatedManager = 
