@@ -5,7 +5,7 @@
 <body bgcolor="white">
 
 <div align="center">
-NOTE:  This document is the first cut at a status document<br>
+NOTE:  This document is the current cut at a status document<br>
 to track outstanding issues for the ongoing development of<br>
 Tomcat.  Nothing in this document should be considered<br>
 authoritative until it has been discussed and initially<br>
@@ -126,11 +126,10 @@ is maintained in the <code>proposals/catalina</code> subdirectory.
   <tr>
     <td>High</td>
     <td>3.3</td>
-    <td>Refactoring of existing code to improve configurability and flexibility
-        of Tomcat, as well as minimize the amount of spaghetti code to help
-        readability and maintainability of the code.  Though listed separately,
-        some of the performance improvements come about as part of this
-        refactoring effort.</td>
+    <td>Refactoring of existing code to improve the flexibility of Tomcat
+        and minimize the amount of spaghetti code to help readability and
+        maintainability.  Though listed separately, some of the performance
+        improvements come about as part of this refactoring effort.</td>
     <td><a href="mailto:costin@eng.sun.com">Costin Manolache</a></td>
   </tr>
   <tr>
@@ -518,7 +517,7 @@ is maintained in the <code>proposals/catalina</code> subdirectory.
   <tr>
     <td>High</td>
     <td>3.3</td>
-    <td>Simplify running of Tomcat's internal test and Watchdog to encourge
+    <td>Simplify running of Tomcat's internal test and Watchdog to encourage
         wider use of these tests.  If possible, create a user document describing
         how a user can develop a new test to test their own web application.  If
         user created tests are simple enough, we will get better verification that
@@ -549,25 +548,25 @@ is maintained in the <code>proposals/catalina</code> subdirectory.
   <tr>
     <td>High</td>
     <td>3.3</td>
-    <td>Code review and improve code documentation</td>
-    <td>Code review voluteers</td>
+    <td>Code review and improve code documentation.  All unfinished implementation
+        that can be identified, often marked with "XXX" in a comment, needs to
+        be examined to determine if its completion is required by the release
+        standard.</td>
+    <td>Code review volunteers</td>
   </tr>
   <tr>
     <td>High</td>
     <td>3.3</td>
-    <td>Add and improve user documentation.</td>
+    <td>Add and improve user documentation.  Documentation in both binary and
+        source distribution needs to be addressed.</td>
     <td>Documentation volunteers</td>
   </tr>
   <tr>
     <td>High</td>
     <td>3.3</td>
-    <td>---</td>
-    <td>---</td>
-  </tr>
-  <tr>
-    <td>High</td>
-    <td>3.3</td>
-    <td>---</td>
+    <td>Security holes opened to facilitate development and testing need to be
+        closed prior to final release.  Any additional security holes that are
+        identified need to be addressed.</td>
     <td>---</td>
   </tr>
 </table>
@@ -575,7 +574,7 @@ is maintained in the <code>proposals/catalina</code> subdirectory.
 
 <br>
 <div align="center"><hr width="75%"><font size="2">
-$Id: STATUS.html,v 1.8 2001/01/22 21:21:44 larryi Exp $
+$Id: STATUS.html,v 1.9 2001/01/23 20:45:09 larryi Exp $
 </font></div>
 
 </body>

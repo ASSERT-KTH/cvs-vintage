@@ -18,10 +18,11 @@ Objective:
 Changes:
 
     Tomcat 3.3 will implement no new major features compared with 3.2. 
-    Some tunning and improvements are made to various modules to increase
-    the usability and flexibility. The "changes3.3" document includes the 
-    code changes done during tomcat development. ( XXX needs to be 
-    cleaned and reorganized in STATUS )
+    Some tuning and improvements are made to various modules to increase
+    the usability and flexibility.  The STATUS.HTML document summarizes
+    some of these changes in the action items marked for the 3.3 release.
+    The "changes3.3" document provides a more detailed list of the 
+    code changes.
 
     Most of the changes are related with continuing the refactoring of the 
     3.x and performance enhancements that couldn't make it into 3.2. 
@@ -43,8 +44,8 @@ Tomcat 3.3 Milestone 1 Release:
     discussed and incorporated. Also, the documentation will be reviewed 
     and improved. 
     
-    In parallel, work will start on fixing a significant number ( most ? ) of 
-    bugs that were reported  and fixed in 3.2 and post 3.2. This work will
+    In parallel, work will start on fixing all bugs and making other changes
+    as required by the Release criteria given below. This work will
     continue during the beta period.
 
     Whenever possible, we should try to create a self-test case ( using
@@ -96,7 +97,7 @@ Tomcat 3.3 Final Release
 	Release Manager:	Larry Isaacs
 
     The final build. The pre-requisite for the release is having no bugs in
-    the test suite, resolution for all known bugs and aproval by the community.
+    the test suite, resolution for all known bugs and approval by the community.
     
 
 Release criteria
@@ -107,7 +108,7 @@ previous releases.
 
 1. Tomcat 3.3 should have no regression compared with 3.2. 
 Any reported regression is a show-stopper and a release can't be made
-before it is resovled. 
+before it is resolved. 
 
 2. Open bugs should be resolved.
 
@@ -122,7 +123,7 @@ and various enhancements that are deemed appropriate.
 6. Full review of the code, making sure the modularity and   extensibility 
   goals have been achieved.
   
-7. Make sure that the refactoring is clean, and maintainance will be
+7. Make sure that the refactoring is clean, and maintenance will be
 easier that 3.2
 
 8. Ensure that the performance is (significantly) better than
@@ -134,9 +135,9 @@ easier that 3.2
 
 
 
-Platorms.
+Platforms.
  We must make sure that tomcat test reports ( at least watchdog + self-test ) 
-contributed by developers and usrs exists for at least Linux, Solaris, 
+contributed by developers and users exists for at least Linux, Solaris, 
 Windows 9x, Windows NT/2000. It is desirable to have test reports on 
 MacOS 9/X, FreeBSD.
 
@@ -150,7 +151,7 @@ Configurations
 ( possibly ) with IIS and NES ( low priority ).
 
 
-Maintainance Plan
+Maintenance Plan
 =================
 
 The release team must consist of at least 3 people, and will fix any major
@@ -158,16 +159,16 @@ bugs that will be found after the 3.3 release, and propose to the group
 minor releases, if absolutely needed ( security or stability bugs ).
 In any case, no backward-incompatible or major changes should be made.
 
-The release team must coordinate the maintainace and support of tomcat, 
+The release team must coordinate the maintenance and support of tomcat, 
 dispatching bugs and user requests to developers and acting as the 
 last resort in resolving major support issues. 
 
 Release Team
 ============
 
-The release team will be composed from the commiters that give the binding
+The release team will be composed of the committers that give the binding
 +1 on the release plan and release proposal. It must have at least 3
-memebers, and follow the rules that will be established. 
+members, and follow the rules that will be established. 
 
 The release team will coordinate the execution of the release plan, dispatch
 bugs to volunteers, review commits, and act as a lead in the release
@@ -176,4 +177,4 @@ process.
 One of the team members will act as "Release Manager" and will be 
 responsible for building the milestones, making the announcements about
 the release progress and all other roles that will be set by PMC and 
-commiters.
+committers.
