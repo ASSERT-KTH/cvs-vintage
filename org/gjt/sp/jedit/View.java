@@ -38,7 +38,7 @@ import org.gjt.sp.util.Log;
  * class.
  *
  * @author Slava Pestov
- * @version $Id: View.java,v 1.3 2001/09/21 08:09:51 spestov Exp $
+ * @version $Id: View.java,v 1.4 2001/10/04 07:41:15 spestov Exp $
  */
 public class View extends JFrame implements EBComponent
 {
@@ -1012,16 +1012,8 @@ public class View extends JFrame implements EBComponent
 
 	class WindowHandler extends WindowAdapter
 	{
-		boolean gotFocus;
-
 		public void windowActivated(WindowEvent evt)
 		{
-			if(!gotFocus)
-			{
-				editPane.focusOnTextArea();
-				gotFocus = true;
-			}
-
 			final Vector buffers = new Vector();
 			EditPane[] editPanes = getEditPanes();
 			for(int i = 0; i < editPanes.length; i++)

@@ -43,7 +43,7 @@ import org.gjt.sp.util.Log;
  * jEdit's text component.
  *
  * @author Slava Pestov
- * @version $Id: JEditTextArea.java,v 1.7 2001/09/29 09:20:15 spestov Exp $
+ * @version $Id: JEditTextArea.java,v 1.8 2001/10/04 07:41:15 spestov Exp $
  */
 public class JEditTextArea extends JComponent
 {
@@ -1986,6 +1986,9 @@ public class JEditTextArea extends JComponent
 	 */
 	public final void setOverwriteEnabled(boolean overwrite)
 	{
+		blink = true;
+		caretTimer.restart();
+
 		this.overwrite = overwrite;
 		invalidateLine(caretLine);
 		if(view.getStatus() != null)
@@ -1998,10 +2001,7 @@ public class JEditTextArea extends JComponent
 	 */
 	public final void toggleOverwriteEnabled()
 	{
-		overwrite = !overwrite;
-		invalidateLine(caretLine);
-		if(view.getStatus() != null)
-			view.getStatus().updateMiscStatus();
+		setOverwriteEnabled(!overwrite);
 	}
 
 	/**

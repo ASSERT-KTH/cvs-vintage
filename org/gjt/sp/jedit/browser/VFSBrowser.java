@@ -37,7 +37,7 @@ import org.gjt.sp.util.Log;
 /**
  * The main class of the VFS browser.
  * @author Slava Pestov
- * @version $Id: VFSBrowser.java,v 1.3 2001/10/02 13:54:13 spestov Exp $
+ * @version $Id: VFSBrowser.java,v 1.4 2001/10/04 07:41:15 spestov Exp $
  */
 public class VFSBrowser extends JPanel implements EBComponent
 {
@@ -790,14 +790,9 @@ public class VFSBrowser extends JPanel implements EBComponent
 				setDirectory(System.getProperty("user.home"));
 			else if(source == synchronize)
 			{
-				if(view != null)
-				{
-					Buffer buffer = view.getBuffer();
-					setDirectory(buffer.getVFS().getParentOfPath(
-						buffer.getPath()));
-				}
-				else
-					getToolkit().beep();
+				Buffer buffer = view.getBuffer();
+				setDirectory(buffer.getVFS().getParentOfPath(
+					buffer.getPath()));
 			}
 		}
 	}

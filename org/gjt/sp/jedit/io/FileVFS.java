@@ -30,7 +30,7 @@ import org.gjt.sp.util.Log;
 /**
  * Local filesystem VFS.
  * @author Slava Pestov
- * @version $Id: FileVFS.java,v 1.5 2001/09/25 07:04:05 spestov Exp $
+ * @version $Id: FileVFS.java,v 1.6 2001/10/04 07:41:15 spestov Exp $
  */
 public class FileVFS extends VFS
 {
@@ -130,10 +130,13 @@ public class FileVFS extends VFS
 		}
 
 		// On Unix, preserve permissions
-		int permissions = getPermissions(buffer.getPath());
-		Log.log(Log.DEBUG,this,buffer.getPath() + " has permissions 0"
-			+ Integer.toString(permissions,8));
-		buffer.putProperty(PERMISSIONS_PROPERTY,new Integer(permissions));
+		if(isUnix)
+		{
+			int permissions = getPermissions(buffer.getPath());
+			Log.log(Log.DEBUG,this,buffer.getPath() + " has permissions 0"
+				+ Integer.toString(permissions,8));
+			buffer.putProperty(PERMISSIONS_PROPERTY,new Integer(permissions));
+		}
 
 		return super.save(view,buffer,path);
 	}

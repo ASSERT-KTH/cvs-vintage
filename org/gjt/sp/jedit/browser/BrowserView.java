@@ -32,7 +32,7 @@ import org.gjt.sp.jedit.*;
 /**
  * VFS browser tree view.
  * @author Slava Pestov
- * @version $Id: BrowserView.java,v 1.2 2001/09/29 09:20:15 spestov Exp $
+ * @version $Id: BrowserView.java,v 1.3 2001/10/04 07:41:15 spestov Exp $
  */
 public class BrowserView extends JPanel
 {
@@ -323,13 +323,30 @@ public class BrowserView extends JPanel
 			}
 			else if(evt.getID() == KeyEvent.KEY_TYPED)
 			{
-				typeSelectBuffer.append(evt.getKeyChar());
-				doTypeSelect(typeSelectBuffer.toString());
+				switch(evt.getKeyChar())
+				{
+				case '~':
+					browser.setDirectory(System.getProperty("user.home"));
+					break;
+				case '/':
+					browser.setDirectory("roots:");
+					break;
+				case '-':
+					View view = browser.getView();
+					Buffer buffer = view.getBuffer();
+					browser.setDirectory(buffer.getVFS().getParentOfPath(
+						buffer.getPath()));
+					break;
+				default:
+					typeSelectBuffer.append(evt.getKeyChar());
+					doTypeSelect(typeSelectBuffer.toString());
 
-				timer.stop();
-				timer.setInitialDelay(500);
-				timer.setRepeats(false);
-				timer.start();
+					timer.stop();
+					timer.setInitialDelay(500);
+					timer.setRepeats(false);
+					timer.start();
+					break;
+				}
 			}
 
 			if(!evt.isConsumed())

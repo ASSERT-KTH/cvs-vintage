@@ -43,7 +43,7 @@ import org.gjt.sp.util.Log;
  * from jEdit's global properties.
  *
  * @author Slava Pestov
- * @version $Id: Buffer.java,v 1.5 2001/09/28 14:12:09 spestov Exp $
+ * @version $Id: Buffer.java,v 1.6 2001/10/04 07:41:15 spestov Exp $
  */
 public class Buffer extends PlainDocument implements EBComponent
 {
@@ -928,6 +928,10 @@ public class Buffer extends PlainDocument implements EBComponent
 	public final void setReadOnly(boolean readOnly)
 	{
 		setFlag(READ_ONLY,readOnly);
+
+		// XXX: need a new message type?
+		EditBus.send(new BufferUpdate(this,null,
+			BufferUpdate.DIRTY_CHANGED));
 	}
 
 	/**
@@ -1771,6 +1775,8 @@ public class Buffer extends PlainDocument implements EBComponent
 				{
 					tokenBackground = styles[id].getBackgroundColor();
 					tokenForeground = styles[id].getForegroundColor();
+					if(tokenForeground == null)
+						tokenForeground = foreground;
 				}
 				else
 					tokenForeground = foreground;

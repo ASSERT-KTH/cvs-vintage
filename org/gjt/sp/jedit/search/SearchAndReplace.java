@@ -34,7 +34,7 @@ import org.gjt.sp.util.Log;
  * Class that implements regular expression and literal search within
  * jEdit buffers.
  * @author Slava Pestov
- * @version $Id: SearchAndReplace.java,v 1.1 2001/09/02 05:37:58 spestov Exp $
+ * @version $Id: SearchAndReplace.java,v 1.2 2001/10/04 07:41:15 spestov Exp $
  */
 public class SearchAndReplace
 {
@@ -315,7 +315,7 @@ public class SearchAndReplace
 			HyperSearchResults.NAME);
 		final HyperSearchResults results = (HyperSearchResults)
 			view.getDockableWindowManager()
-			.getDockableWindow(HyperSearchResults.NAME);
+			.getDockable(HyperSearchResults.NAME);
 		results.searchStarted();
 
 		try
