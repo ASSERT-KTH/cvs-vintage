@@ -185,6 +185,7 @@ public class GTest  {
 		return false;
 	    }
 	    if( responseBody.indexOf( responseMatch ) < 0) {
+		responseStatus = false;
 		System.out.println("ERROR: expecting match on " + responseMatch);
 		System.out.println("GOT: " );
 		System.out.println(responseBody );
