@@ -107,20 +107,20 @@ public class ShutdownManager {
                     Object[] options = { 
                         GlobalResourceLoader.getString(
                             RESOURCE_PATH,
-                            "dialog",
+                            "session",
                             "tasks_wait"),
                         GlobalResourceLoader.getString(
                             RESOURCE_PATH,
-                            "dialog",
+                            "session",
                             "tasks_exit") };
                     int n = JOptionPane.showOptionDialog(null,
                             GlobalResourceLoader.getString(
                                 RESOURCE_PATH,
-                                "dialog",
+                                "session",
                                 "tasks_msg"),
                             GlobalResourceLoader.getString(
                                 RESOURCE_PATH,
-                                "dialog",
+                                "session",
                                 "tasks_title"), JOptionPane.YES_NO_OPTION,
                             JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
                     if (n == 0) {
@@ -212,11 +212,11 @@ public class ShutdownManager {
     protected Component createShutdownDialog() {
         JFrame dialog = new JFrame(GlobalResourceLoader.getString(
                 RESOURCE_PATH,
-                "dialog",
+                "session",
                 "exit_title"));
         dialog.getContentPane().add(new JButton(GlobalResourceLoader.getString(
                 RESOURCE_PATH, 
-                "dialog",
+                "session",
                 "exit_msg")));
         dialog.setSize(new Dimension(300, 50));
         dialog.setLocationRelativeTo(null);
