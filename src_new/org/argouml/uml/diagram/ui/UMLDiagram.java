@@ -1,7 +1,4 @@
-
-
-
-// $Id: UMLDiagram.java,v 1.34 2003/08/30 23:11:50 bobtarling Exp $
+// $Id: UMLDiagram.java,v 1.35 2003/08/31 00:52:51 bobtarling Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -50,7 +47,6 @@ import org.tigris.toolbutton.ToolButton;
 import ru.novosoft.uml.MBase;
 import ru.novosoft.uml.MElementEvent;
 import ru.novosoft.uml.MElementListener;
-import ru.novosoft.uml.foundation.core.MModelElement;
 import ru.novosoft.uml.foundation.core.MNamespace;
 
 /**

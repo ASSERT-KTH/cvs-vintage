@@ -1,7 +1,4 @@
-
-
-
-// $Id: FigComment.java,v 1.16 2003/08/30 23:11:50 bobtarling Exp $
+// $Id: FigComment.java,v 1.17 2003/08/31 00:52:51 bobtarling Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -28,7 +25,7 @@
 // File: FigComment.java
 // Classes: FigComment
 // Original Author: a_rueckert@gmx.net
-// $Id: FigComment.java,v 1.16 2003/08/30 23:11:50 bobtarling Exp $
+// $Id: FigComment.java,v 1.17 2003/08/31 00:52:51 bobtarling Exp $
 
 package org.argouml.uml.diagram.static_structure.ui;
 
@@ -67,7 +64,6 @@ import org.tigris.gef.presentation.FigRect;
 import org.tigris.gef.presentation.FigText;
 import ru.novosoft.uml.MElementEvent;
 
-import ru.novosoft.uml.foundation.core.MComment;
 import ru.novosoft.uml.foundation.core.MModelElement;
 
 /** 
