@@ -215,7 +215,7 @@ public class ServerCookie implements Serializable {
      *  version
      */
     public static String getCookieHeaderName(int version) {
-	if( dbg>0 ) log( (version==1) ? "Set-Cookie2x" : "Set-Cookie");
+	if( dbg>0 ) log( (version==1) ? "Set-Cookie2" : "Set-Cookie");
         if (version == 1) {
 	    // RFC2109
 	    return "Set-Cookie";
@@ -229,28 +229,23 @@ public class ServerCookie implements Serializable {
         }
     }
 
-    /** Return the header value used to set this cookie
-     *  @deprecated Use StringBuffer version
-     */
-    public String getCookieHeaderValue() {
-        StringBuffer buf = new StringBuffer();
-	getCookieHeaderValue( buf );
-	if( dbg > 0 ) log( buf.toString());
-	return buf.toString();
-    }
-
     private static final String ancientDate=DateTool.oldCookieFormat
 	.format(new Date(10000));
-    
-    /** Return the header value used to set this cookie
-     */
-    public void getCookieHeaderValue(StringBuffer buf) {
-	ServerCookie cookie=this; 
-	
+
+    public static void appendCookieValue( StringBuffer buf,
+					  int version,
+					  String name,
+					  String value,
+					  String path,
+					  String domain,
+					  String comment,
+					  int maxAge,
+					  boolean isSecure )
+    {
         // this part is the same for all cookies
-	buf.append(cookie.getName());
+	buf.append( name );
         buf.append("=");
-        maybeQuote(version, buf, cookie.getValue().toString());
+        maybeQuote(version, buf, value);
 
 	// XXX Netscape cookie: "; "
  	// add version 1 specific information
@@ -259,21 +254,21 @@ public class ServerCookie implements Serializable {
 	    buf.append ("; Version=1");
 
 	    // Comment=comment
-	    if (! cookie.getComment().isNull()) {
+	    if ( comment!=null ) {
 		buf.append ("; Comment=");
-		maybeQuote (version, buf, cookie.getComment().toString());
+		maybeQuote (version, buf, comment);
 	    }
 	}
 	
 	// add domain information, if present
 
-	if (! cookie.getDomain().isNull()) {
+	if (domain!=null) {
 	    buf.append("; Domain=");
-	    maybeQuote (version, buf, cookie.getDomain().toString());
+	    maybeQuote (version, buf, domain);
 	}
 
 	// Max-Age=secs/Discard ... or use old "Expires" format
-	if (cookie.getMaxAge() >= 0) {
+	if (maxAge >= 0) {
 	    if (version == 0) {
 		// XXX XXX XXX We need to send both, for
 		// interoperatibility (long word )
@@ -281,32 +276,32 @@ public class ServerCookie implements Serializable {
 		// Wdy, DD-Mon-YY HH:MM:SS GMT ( Expires netscape format )
 		// To expire we need to set the time back in future
 		// ( pfrieden@dChain.com )
-                if (cookie.getMaxAge() == 0)
+                if (maxAge == 0)
 		    buf.append( ancientDate );
 		else
                     DateTool.oldCookieFormat.format
                         (new Date( System.currentTimeMillis() +
-                                   cookie.getMaxAge() *1000L), buf,
+                                   maxAge *1000L), buf,
                          new FieldPosition(0));
 
 	    } else {
 		buf.append ("; Max-Age=");
-		buf.append (cookie.getMaxAge());
+		buf.append (maxAge);
 	    }
 	}
-// 	else if (version == 1)
-// 	  buf.append ("; Discard");
 
 	// Path=path
-	if (! cookie.getPath().isNull()) {
+	if (path!=null) {
 	    buf.append ("; Path=");
-	    maybeQuote (version, buf, cookie.getPath().toString());
+	    maybeQuote (version, buf, path);
 	}
 
 	// Secure
-	if (cookie.getSecure()) {
+	if (isSecure) {
 	  buf.append ("; Secure");
 	}
+	
+	
     }
 
     public static void maybeQuote (int version, StringBuffer buf,
