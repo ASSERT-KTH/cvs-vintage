@@ -4,7 +4,7 @@
 elements into a JBoss deployment. This version applies to the JBoss 3.2.x
 releases.
 
-$Id: jboss-web_4_0.dtd,v 1.12 2005/02/08 07:29:15 bwang00 Exp $
+$Id: jboss-web_4_0.dtd,v 1.13 2005/02/11 00:47:39 nihility Exp $
 
   <!DOCTYPE jboss-web PUBLIC
     "-//JBoss//DTD Web Application 2.4//EN"
@@ -372,7 +372,7 @@ Examples:
       or
          <replication-field-batch-mode>FALSE</replication-field-batch-mode>
 -->
-<!ELEMENT replication-field-batch-mode (true|false) 'true'>
+<!ELEMENT replication-field-batch-mode (true|false)>
 
 <!-- The service-ref element provides jboss specific deployment values to
 the web service reference in web.xml.
