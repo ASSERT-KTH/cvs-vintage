@@ -15,7 +15,6 @@
 //All Rights Reserved.
 package org.columba.mail.folder;
 
-import java.io.IOException;
 import java.io.InputStream;
 
 import org.columba.core.io.DiskIO;
@@ -468,14 +467,27 @@ public abstract class LocalFolder extends Folder implements MailboxInterface {
 		return new SourceInputStream(mimepart.getSource());
 	}
 
-	/* (non-Javadoc)
+	/** 
+	 * Copies a set of messages from this folder to a destination folder.
+	 * <p>
+	 * First we copy the message source to the destination folder. Then we
+	 * also copy the flags attribute of this message.
+	 * 
 	 * @see org.columba.mail.folder.MailboxInterface#innerCopy(org.columba.mail.folder.MailboxInterface, java.lang.Object[])
 	 */
 	public void innerCopy(MailboxInterface destFolder, Object[] uids)
 		throws Exception {
+		if (getObservable() != null)
+			getObservable().setMax(uids.length);
+
 		for (int i = 0; i < uids.length; i++) {
-			Object destuid = destFolder.addMessage(getMessageSourceStream(uids[i]));
-			((LocalFolder)destFolder).setFlags(destuid, (Flags)getFlags(uids[i]).clone());
+			Object destuid =
+				destFolder.addMessage(getMessageSourceStream(uids[i]));
+			((LocalFolder) destFolder).setFlags(
+				destuid,
+				(Flags) getFlags(uids[i]).clone());
+			if (getObservable() != null)
+				getObservable().setCurrent(i);
 		}
 	}
 

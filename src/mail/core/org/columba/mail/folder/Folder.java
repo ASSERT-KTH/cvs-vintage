@@ -481,7 +481,10 @@ public abstract class Folder extends FolderTreeNode implements MailboxInterface 
 	 */
 	public abstract MimeTree getMimePartTree(Object uid) throws Exception;
 
-	/* (non-Javadoc)
+	/**
+	 * Nobody ever calls this method.
+	 * We should consider making it abstract.
+	 * 
 	 * @see org.columba.mail.folder.MailboxInterface#innerCopy(org.columba.mail.folder.MailboxInterface, java.lang.Object[])
 	 */
 	public void innerCopy(MailboxInterface destFolder, Object[] uids)

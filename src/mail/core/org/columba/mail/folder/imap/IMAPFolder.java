@@ -26,7 +26,6 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.columba.core.command.StatusObservable;
-import org.columba.core.command.WorkerStatusController;
 import org.columba.core.io.StreamUtils;
 import org.columba.core.logging.ColumbaLogger;
 import org.columba.core.util.ListTools;
@@ -34,8 +33,8 @@ import org.columba.core.xml.XmlElement;
 import org.columba.mail.config.FolderItem;
 import org.columba.mail.config.ImapItem;
 import org.columba.mail.filter.Filter;
-import org.columba.mail.folder.Folder;
 import org.columba.mail.folder.FolderTreeNode;
+import org.columba.mail.folder.MailboxInterface;
 import org.columba.mail.folder.RemoteFolder;
 import org.columba.mail.folder.command.MarkMessageCommand;
 import org.columba.mail.folder.headercache.RemoteHeaderCache;
@@ -115,8 +114,6 @@ public class IMAPFolder extends RemoteFolder {
 		//setChanged(true);
 	}
 
-	
-	
 	/**
 	 * This message is never called. Only local folders make use of this method, with
 	 * the uid array argument.
@@ -249,7 +246,7 @@ public class IMAPFolder extends RemoteFolder {
 
 		// if available -> fetch new headers
 		if (result.size() > 0) {
-			getStore().fetchHeaderList(headerList, result, getImapPath());			
+			getStore().fetchHeaderList(headerList, result, getImapPath());
 		}
 
 		messageFolderInfo = getStore().getSelectedFolderMessageFolderInfo();
@@ -264,8 +261,6 @@ public class IMAPFolder extends RemoteFolder {
 	 * @param flagsList
 	 */
 	protected void updateFlags(Flags[] flagsList) {
-		
-		
 
 		// ALP 04/29/03
 		// Reset the number of seen/resent/existing messages. Otherwise you
@@ -277,19 +272,19 @@ public class IMAPFolder extends RemoteFolder {
 		// END ADDS ALP 04/29/03
 
 		for (int i = 0; i < flagsList.length; i++) {
-			
-			
+
 			IMAPFlags flags = (IMAPFlags) flagsList[i];
-			
+
 			Integer uid = (Integer) flags.getUid();
-				
+
 			ColumbaHeader header = (ColumbaHeader) headerList.get(uid);
-			
+
 			// if the parser didn't return a complete flags object
 			// the UID in the flags object is totally wrong
 			// -> just skip this flags update
-			if ( header == null ) continue;
-			
+			if (header == null)
+				continue;
+
 			Flags localFlags = header.getFlags();
 
 			localFlags.setFlags(flags.getFlags());
@@ -314,7 +309,7 @@ public class IMAPFolder extends RemoteFolder {
 		if (hasChanged()) {
 			cache.save();
 			setChanged(false);
-		}		
+		}
 	}
 
 	/**
@@ -444,9 +439,15 @@ public class IMAPFolder extends RemoteFolder {
 	}
 
 	/**
+	 * Copies a set of messages from this folder to a destination folder.
+	 * <p>
+	 * The IMAP copy command also keeps the flags intact. So, there's no need
+	 * to change these manually.
+	 * 
 	 * @see org.columba.mail.folder.Folder#innerCopy(org.columba.mail.folder.Folder, java.lang.Object, org.columba.core.command.WorkerStatusController)
 	 */
-	public void innerCopy(Folder destFolder, Object[] uids) throws Exception {
+	public void innerCopy(MailboxInterface destFolder, Object[] uids)
+		throws Exception {
 
 		getStore().copy(
 			((IMAPFolder) destFolder).getImapPath(),
@@ -707,7 +708,7 @@ public class IMAPFolder extends RemoteFolder {
 
 		FolderItem item = getFolderItem();
 		item.set("property", "accessrights", "user");
-		item.set("property", "subfolder", "true");		
+		item.set("property", "subfolder", "true");
 	}
 
 	/* (non-Javadoc)
@@ -716,17 +717,18 @@ public class IMAPFolder extends RemoteFolder {
 	public void addSubfolder(FolderTreeNode child) throws Exception {
 		super.addSubfolder(child);
 
-		String path = getImapPath() + getStore().getDelimiter() + child.getName();
+		String path =
+			getImapPath() + getStore().getDelimiter() + child.getName();
 
 		boolean result = getStore().createFolder(path);
-		
+
 	}
 
 	/* (non-Javadoc)
 	 * @see org.columba.mail.folder.Folder#getObservable()
 	 */
 	public StatusObservable getObservable() {
-		return ((IMAPRootFolder)getRootFolder()).getObservable();
+		return ((IMAPRootFolder) getRootFolder()).getObservable();
 	}
 
 	/* (non-Javadoc)
@@ -796,7 +798,5 @@ public class IMAPFolder extends RemoteFolder {
 			.getInputStream();
 		//;
 	}
-
-	
 
 }
