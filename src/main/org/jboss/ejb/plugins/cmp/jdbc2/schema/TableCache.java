@@ -20,7 +20,7 @@ import java.util.HashMap;
  * Simple LRU cache. Items are evicted when maxCapacity is exceeded.
  *
  * @author <a href="mailto:alex@jboss.org">Alexey Loubyansky</a>
- * @version <tt>$Revision: 1.6 $</tt>
+ * @version <tt>$Revision: 1.7 $</tt>
  * @jmx:mbean extends="org.jboss.system.ServiceMBean"
  */
 public class TableCache
@@ -36,11 +36,14 @@ public class TableCache
 
    private boolean locked;
 
-   public TableCache(int initialCapacity, int maxCapacity)
+   private final int partitionIndex;
+
+   public TableCache(int partitionIndex, int initialCapacity, int maxCapacity)
    {
       this.maxCapacity = maxCapacity;
       this.minCapacity = initialCapacity;
       rowsById = new HashMap(initialCapacity);
+      this.partitionIndex = partitionIndex;
    }
 
    public TableCache(Element conf) throws DeploymentException
@@ -51,6 +54,8 @@ public class TableCache
 
       str = MetaData.getOptionalChildContent(conf, "max-capacity");
       maxCapacity = (str == null ? 10000 : Integer.parseInt(str));
+
+      this.partitionIndex = 0;
    }
 
    /**
@@ -118,7 +123,7 @@ public class TableCache
             }
          }
 
-         listener.contention(System.currentTimeMillis() - start);
+         listener.contention(partitionIndex, System.currentTimeMillis() - start);
       }
       locked = true;
    }
@@ -152,12 +157,12 @@ public class TableCache
          promoteRow(row);
          fields = new Object[row.fields.length];
          System.arraycopy(row.fields, 0, fields, 0, fields.length);
-         listener.hit();
+         listener.hit(partitionIndex);
       }
       else
       {
          fields = null;
-         listener.miss();
+         listener.miss(partitionIndex);
       }
       return fields;
    }
@@ -234,7 +239,7 @@ public class TableCache
          {
             dereference(victim);
             rowsById.remove(victim.pk);
-            listener.eviction(row.pk, rowsById.size());
+            listener.eviction(partitionIndex, row.pk, rowsById.size());
          }
          victim = nextVictim;
       }

@@ -15,7 +15,7 @@ import javax.transaction.Transaction;
 
 /**
  * @author <a href="mailto:alex@jboss.org">Alexey Loubyansky</a>
- * @version <tt>$Revision: 1.2 $</tt>
+ * @version <tt>$Revision: 1.3 $</tt>
  * @jmx:mbean extends="org.jboss.system.ServiceMBean"
  */
 public class PartitionedTableCache
@@ -31,8 +31,6 @@ public class PartitionedTableCache
 
    private final TableCache[] partitions;
 
-   private boolean locked;
-
    public PartitionedTableCache(int initialCapacity, int maxCapacity, int partitionsTotal)
    {
       this.minCapacity = initialCapacity;
@@ -43,7 +41,7 @@ public class PartitionedTableCache
       partitions = new TableCache[partitionsTotal];
       for(int i = 0; i < partitions.length; ++i)
       {
-         partitions[i] = new TableCache(minPartitionCapacity, maxPartitionCapacity);
+         partitions[i] = new TableCache(i, minPartitionCapacity, maxPartitionCapacity);
       }
    }
 
@@ -63,7 +61,7 @@ public class PartitionedTableCache
       partitions = new TableCache[partitionsTotal];
       for(int i = 0; i < partitions.length; ++i)
       {
-         partitions[i] = new TableCache(minPartitionCapacity, maxPartitionCapacity);
+         partitions[i] = new TableCache(i, minPartitionCapacity, maxPartitionCapacity);
       }
    }
 
@@ -146,49 +144,24 @@ public class PartitionedTableCache
       return maxPartitionCapacity;
    }
 
-   public synchronized void lock()
+   public void lock()
    {
-      if(locked)
-      {
-         long start = System.currentTimeMillis();
-         while(locked)
-         {
-            try
-            {
-               wait();
-            }
-            catch(InterruptedException e)
-            {
-            }
-         }
-
-         listener.contention(System.currentTimeMillis() - start);
-      }
-      locked = true;
    }
 
    public void lock(Object key)
    {
       int partitionIndex = getPartitionIndex(key);
       partitions[partitionIndex].lock(key);
-      //lock();
    }
 
-   public synchronized void unlock()
+   public void unlock()
    {
-      if(!locked)
-      {
-         throw new IllegalStateException("The instance is not locked!");
-      }
-      locked = false;
-      notify();
    }
 
    public void unlock(Object key)
    {
       int partitionIndex = getPartitionIndex(key);
       partitions[partitionIndex].unlock(key);
-      //unlock();
    }
 
    public Object[] getFields(Object pk)

@@ -11,7 +11,7 @@ import javax.transaction.Transaction;
 
 /**
  * @author <a href="mailto:alex@jboss.org">Alexey Loubyansky</a>
- * @version <tt>$Revision: 1.5 $</tt>
+ * @version <tt>$Revision: 1.6 $</tt>
  */
 public interface Cache
 {
@@ -113,29 +113,29 @@ public interface Cache
 
    interface Listener
    {
-      void contention(long time);
+      void contention(int partitionIndex, long time);
 
-      void eviction(Object pk, int size);
+      void eviction(int partitionIndex, Object pk, int size);
 
-      void hit();
+      void hit(int partitionIndex);
 
-      void miss();
+      void miss(int partitionIndex);
 
       public Listener NOOP = new Listener()
       {
-         public void contention(long time)
+         public void contention(int partitionIndex, long time)
          {
          }
 
-         public void eviction(Object pk, int size)
+         public void eviction(int partitionIndex, Object pk, int size)
          {
          }
 
-         public void hit()
+         public void hit(int partitionIndex)
          {
          }
 
-         public void miss()
+         public void miss(int partitionIndex)
          {
          }
       };
