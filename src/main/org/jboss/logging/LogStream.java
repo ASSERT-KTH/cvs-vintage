@@ -17,7 +17,7 @@ import javax.management.*;
  *      
  *   @see <related>
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
- *   @version $Revision: 1.2 $
+ *   @version $Revision: 1.3 $
  */
 public class LogStream
    extends PrintStream
@@ -46,6 +46,10 @@ public class LogStream
    public void println(Object msg)
    {
       println(msg == null ? "null" : msg.toString());
+   }
+
+   public void println(char[] msg) {
+      println(new String(msg));
    }
 }
 
