@@ -27,7 +27,9 @@ import org.columba.mail.gui.config.filter.ActionList;
 import org.columba.mail.gui.tree.util.SelectFolderDialog;
 import org.columba.mail.gui.tree.util.TreeNodeList;
 
-public class FolderChooserActionRow extends DefaultActionRow implements ActionListener {
+public class FolderChooserActionRow
+	extends DefaultActionRow
+	implements ActionListener {
 
 	private JButton treePathButton;
 
@@ -49,6 +51,13 @@ public class FolderChooserActionRow extends DefaultActionRow implements ActionLi
 			String treePath = treePathButton.getText();
 			TreeNodeList list = new TreeNodeList(treePath);
 			Folder folder = (Folder) MainInterface.treeModel.getFolder(list);
+
+			if (folder == null) {
+				// user didn't select any folder
+				// -> make Inbox the default folder
+				folder = (Folder) MainInterface.treeModel.getFolder(101);
+			}
+
 			int uid = folder.getUid();
 			filterAction.setUid(uid);
 		}
@@ -61,7 +70,7 @@ public class FolderChooserActionRow extends DefaultActionRow implements ActionLi
 		treePathButton = new JButton();
 		treePathButton.addActionListener(this);
 		treePathButton.setActionCommand("TREEPATH");
-		
+
 		addComponent(treePathButton);
 
 	}
@@ -71,10 +80,7 @@ public class FolderChooserActionRow extends DefaultActionRow implements ActionLi
 
 		if (action.equals("TREEPATH")) {
 			SelectFolderDialog dialog =
-				MainInterface
-					.treeModel
-					.getSelectFolderDialog();
-			
+				MainInterface.treeModel.getSelectFolderDialog();
 
 			if (dialog.success()) {
 				Folder folder = dialog.getSelectedFolder();
@@ -84,7 +90,7 @@ public class FolderChooserActionRow extends DefaultActionRow implements ActionLi
 				treePathButton.setText(treePath);
 			}
 
-		} 
+		}
 	}
 
 }
