@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/modules/server/JNIEndpoint.java,v 1.2 2001/08/15 02:32:02 mmanders Exp $
- * $Revision: 1.2 $
- * $Date: 2001/08/15 02:32:02 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/modules/server/JNIEndpoint.java,v 1.3 2001/08/23 15:02:42 costin Exp $
+ * $Revision: 1.3 $
+ * $Date: 2001/08/23 15:02:42 $
  *
  * ====================================================================
  *
@@ -205,7 +205,7 @@ class StartupThread extends Thread {
         boolean failed = true;
         try {
 	    System.out.println("Calling main" );
-            org.apache.tomcat.startup.Tomcat.main(cmdLine);
+            org.apache.tomcat.startup.Main.main(cmdLine);
 	    System.out.println("Main returned" );
             failed = false;
         } catch(Throwable t) {
