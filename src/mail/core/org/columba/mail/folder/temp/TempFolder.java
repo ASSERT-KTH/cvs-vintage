@@ -413,7 +413,7 @@ public class TempFolder extends Folder {
      */
     public Object addMessage(InputStream in)
         throws Exception {
-        return null;
+        return addMessage(in, null);
     }
 
 }
