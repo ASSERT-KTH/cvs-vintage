@@ -1,4 +1,4 @@
-// $Id: NotationHelper.java,v 1.11 2004/02/01 13:42:15 mvw Exp $
+// $Id: NotationHelper.java,v 1.12 2004/04/26 19:46:56 thn Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -26,7 +26,7 @@ package org.argouml.language.helpers;
 import org.argouml.application.api.Configuration;
 import org.argouml.application.api.Notation;
 import org.argouml.application.api.NotationName;
-import org.argouml.application.api.NotationProvider;
+import org.argouml.application.api.NotationProvider2;
 import org.argouml.model.ModelFacade;
 
 import ru.novosoft.uml.behavior.collaborations.MMessage;
@@ -57,7 +57,7 @@ import ru.novosoft.uml.model_management.MPackage;
  * "http://www.ccs.neu.edu/research/demeter/"> Demeter project</a>. */
 
 public abstract class NotationHelper
-    implements NotationProvider 
+    implements NotationProvider2
 {
 
     private NotationName _notationName;

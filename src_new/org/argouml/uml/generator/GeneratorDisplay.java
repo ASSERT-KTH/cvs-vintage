@@ -1,4 +1,4 @@
-// $Id: GeneratorDisplay.java,v 1.59 2004/04/25 13:04:01 thn Exp $
+// $Id: GeneratorDisplay.java,v 1.60 2004/04/26 19:46:57 thn Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -36,7 +36,7 @@ import org.argouml.model.ModelFacade;
 import org.argouml.model.uml.UmlHelper;
 
 /**
- * Generator subclass to generate code for display in diagrams in
+ * Generator2 subclass to generate code for display in diagrams in
  * text fields in the ArgoUML user interface.  The generated code
  * looks a lot like (invalid) Java.  The idea is that other generators
  * could be written for other languages.  This code is just a
@@ -49,7 +49,7 @@ import org.argouml.model.uml.UmlHelper;
 
 // TODO: always check for null!!!
 
-public class GeneratorDisplay extends Generator {
+public class GeneratorDisplay extends Generator2 {
 
     private static GeneratorDisplay SINGLETON;
 
@@ -125,7 +125,7 @@ public class GeneratorDisplay extends Generator {
      *  properties are shown/not shown.
      *
      *  @author jaap.branderhorst@xs4all.nl
-     *  @see org.argouml.application.api.NotationProvider#generateOperation(
+     *  @see org.argouml.application.api.NotationProvider2#generateOperation(
      *          MOperation, boolean)
      */
     public String generateOperation(Object op, boolean documented) {
@@ -241,7 +241,7 @@ public class GeneratorDisplay extends Generator {
      * Depending on settings in Notation, visibility, multiplicity,
      * initial value and properties are shown/not shown.
      *
-     * @see org.argouml.application.api.NotationProvider#generateAttribute(
+     * @see org.argouml.application.api.NotationProvider2#generateAttribute(
      *          MAttribute, boolean)
      */
     public String generateAttribute(Object attr, boolean documented) {
@@ -745,8 +745,8 @@ public class GeneratorDisplay extends Generator {
     }
 
     /* Returns a visibility String eihter for a MVisibilityKind (according to
-     * the definition in NotationProvider), but also for a model element.
-     * @see org.argouml.application.api.NotationProvider#generateVisibility(java.lang.Object)
+     * the definition in NotationProvider2), but also for a model element.
+     * @see org.argouml.application.api.NotationProvider2#generateVisibility(java.lang.Object)
      */
     public String generateVisibility(Object o) {
         if (o == null)
@@ -788,7 +788,7 @@ public class GeneratorDisplay extends Generator {
     }
 
     /**
-     * @see org.argouml.application.api.NotationProvider#generateMultiplicity(
+     * @see org.argouml.application.api.NotationProvider2#generateMultiplicity(
      *          MMultiplicity)
      */
     public String generateMultiplicity(Object m) {
@@ -923,7 +923,7 @@ public class GeneratorDisplay extends Generator {
                 Object arg = /*(MArgument)*/ it.next();
                 if (!first)
                     p += ", ";
-    
+
                 if (ModelFacade.getValue(arg) != null) {
                     p +=
     		    generateExpression(ModelFacade.getValue(arg));

@@ -1,4 +1,4 @@
-// $Id: Notation.java,v 1.44 2004/04/25 13:04:00 thn Exp $
+// $Id: Notation.java,v 1.45 2004/04/26 19:46:56 thn Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,10 +25,7 @@
 // File: Notation.java
 // Classes: Notation
 // Original Author: Thierry Lach
-// $Id: Notation.java,v 1.44 2004/04/25 13:04:00 thn Exp $
-
-// 8 Apr 2002: Jeremy Bennett (mail@jeremybennett.com). Extended to support
-// extension points.
+// $Id: Notation.java,v 1.45 2004/04/26 19:46:56 thn Exp $
 
 package org.argouml.application.api;
 
@@ -132,7 +129,7 @@ public final class Notation implements PropertyChangeListener {
     private static final Notation SINGLETON = new Notation();
 
     // private ArrayList _providers = null;
-    // private NotationProvider _defaultProvider = null;
+    // private NotationProvider2 _defaultProvider = null;
 
     private Notation() {
         // _providers = new ArrayList();
@@ -151,8 +148,8 @@ public final class Notation implements PropertyChangeListener {
         Configuration.removeListener(KEY_UML_NOTATION_ONLY, this);
     }
 
-    private static NotationProvider getProvider(NotationName notation) {
-        NotationProvider np;
+    private static NotationProvider2 getProvider(NotationName notation) {
+        NotationProvider2 np;
         np = NotationProviderFactory.getInstance().getProvider(notation);
         cat.debug("getProvider(" + notation + ") returns " + np);
         return np;
@@ -653,7 +650,7 @@ public final class Notation implements PropertyChangeListener {
             new ArgoNotationEvent(ArgoEvent.NOTATION_CHANGED, pce));
     }
 
-    public static NotationProvider getDefaultProvider() {
+    public static NotationProvider2 getDefaultProvider() {
         return NotationProviderFactory.getInstance().getDefaultProvider();
     }
 

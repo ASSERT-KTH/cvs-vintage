@@ -1,4 +1,4 @@
-// $Id: ActionGenerateProjectCode.java,v 1.13 2003/09/22 18:58:41 bobtarling Exp $
+// $Id: ActionGenerateProjectCode.java,v 1.14 2004/04/26 19:46:57 thn Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -35,7 +35,7 @@ import org.argouml.model.uml.modelmanagement.ModelManagementHelper;
 import org.argouml.ui.ArgoDiagram;
 import org.argouml.ui.ProjectBrowser;
 import org.argouml.uml.diagram.ui.UMLDiagram;
-import org.argouml.uml.generator.Generator;
+import org.argouml.uml.generator.Generator2;
 import org.argouml.uml.generator.ui.ClassGenerationDialog;
 
 /** Action to trigger code generation for all classes/interfaces in the
@@ -100,7 +100,7 @@ public class ActionGenerateProjectCode extends UMLAction {
     }
 
     private boolean isCodeRelevantClassifier(Object/*MClassifier*/ cls) {
-	String path = Generator.getCodePath(cls);
+	String path = Generator2.getCodePath(cls);
 	String name = ModelFacade.getName(cls);
 	if (name == null || name.length() == 0 || Character.isDigit(name.charAt(0))) {
 	    return false;
@@ -110,7 +110,7 @@ public class ActionGenerateProjectCode extends UMLAction {
 	}
 	Object/*MNamespace*/ parent = ModelFacade.getNamespace(cls);
 	while (parent != null) {
-	    path = Generator.getCodePath(parent);
+	    path = Generator2.getCodePath(parent);
 	    if (path != null) {
 		return (path.length() > 0);
 	    }

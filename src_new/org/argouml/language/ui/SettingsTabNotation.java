@@ -1,4 +1,4 @@
-// $Id: SettingsTabNotation.java,v 1.16 2003/09/17 21:29:03 thierrylach Exp $
+// $Id: SettingsTabNotation.java,v 1.17 2004/04/26 19:46:57 thn Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -51,7 +51,7 @@ import org.argouml.ui.ShadowComboBox;
  */
 
 public class SettingsTabNotation extends SettingsTabHelper
-    implements SettingsTabPanel 
+    implements SettingsTabPanel
 {
 
     private JCheckBox _allowNotations = null;
@@ -152,7 +152,7 @@ public class SettingsTabNotation extends SettingsTabHelper
 
     public void handleSettingsTabSave() {
         Notation.setUseGuillemots(_useGuillemots.isSelected());
-        Configuration.setBoolean(Notation.KEY_UML_NOTATION_ONLY, 
+        Configuration.setBoolean(Notation.KEY_UML_NOTATION_ONLY,
                  _allowNotations.isSelected());
         Configuration.setBoolean(Notation.KEY_SHOW_VISIBILITY,
                  _showVisibility.isSelected());

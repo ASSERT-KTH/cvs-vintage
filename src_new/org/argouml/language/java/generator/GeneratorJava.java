@@ -1,4 +1,4 @@
-// $Id: GeneratorJava.java,v 1.86 2004/04/25 13:04:00 thn Exp $
+// $Id: GeneratorJava.java,v 1.87 2004/04/26 19:46:56 thn Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: GeneratorJava.java
 // Classes: GeneratorJava
 // Original Author:
-// $Id: GeneratorJava.java,v 1.86 2004/04/25 13:04:00 thn Exp $
+// $Id: GeneratorJava.java,v 1.87 2004/04/26 19:46:56 thn Exp $
 
 // 12 Apr 2002: Jeremy Bennett (mail@jeremybennett.com). Extended to support
 // extension points.
@@ -55,14 +55,14 @@ import org.argouml.model.ModelFacade;
 import org.argouml.model.uml.UmlHelper;
 import org.argouml.uml.DocumentationManager;
 import org.argouml.uml.generator.FileGenerator;
-import org.argouml.uml.generator.Generator;
+import org.argouml.uml.generator.Generator2;
 
 import tudresden.ocl.OclTree;
 import tudresden.ocl.parser.node.AConstraintBody;
 
 import org.argouml.application.api.Configuration;
 
-/** Generator subclass to generate text for display in diagrams in in
+/** Generator2 subclass to generate text for display in diagrams in in
  * text fields in the Argo/UML user interface.  The generated code
  * looks a lot like (invalid) Java.  The idea is that other generators
  * could be written for outher languages.  This code is just a
@@ -72,7 +72,7 @@ import org.argouml.application.api.Configuration;
 // TODO: always check for null!!!
 
 public class GeneratorJava
-    extends Generator implements FileGenerator {
+    extends Generator2 implements FileGenerator {
 
     /** logger */
     private static final Logger cat = Logger.getLogger(GeneratorJava.class);
@@ -670,7 +670,7 @@ public class GeneratorJava
     /**
      * Generates code for a classifier. In case of Java code is
      * generated for classes and interfaces only at the moment.
-     * @see org.argouml.application.api.NotationProvider#generateClassifier(MClassifier)
+     * @see org.argouml.application.api.NotationProvider2#generateClassifier(MClassifier)
      */
     public String generateClassifier(Object cls) {
         /*
@@ -1513,10 +1513,10 @@ public class GeneratorJava
     }
 
     /* Returns a visibility String eihter for a MVisibilityKind (according to
-     * the definition in NotationProvider), but also for a model element,
+     * the definition in NotationProvider2), but also for a model element,
      * because if it is a MFeature, then the tag 'src_visibility' is to be
      * taken into account for generating language dependent visibilities.
-     * @see org.argouml.application.api.NotationProvider#generateVisibility(java.lang.Object)
+     * @see org.argouml.application.api.NotationProvider2#generateVisibility(java.lang.Object)
      */
     public String generateVisibility(Object o) {
 		if (ModelFacade.isAFeature(o)) {
