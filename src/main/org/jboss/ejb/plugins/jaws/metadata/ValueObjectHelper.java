@@ -22,7 +22,7 @@ import java.util.StringTokenizer;
  * needs to be done.
  *
  * @author <a href="mailto:vincent.harcq@hubmethods.com">Vincent Harcq</a>
- * @version $Revision: 1.2 $
+ * @version $Revision: 1.3 $
  */
 public class ValueObjectHelper
 {
@@ -41,6 +41,7 @@ public class ValueObjectHelper
       throws NoSuchMethodException, InvocationTargetException,
          IllegalAccessException
    {
+   	  if (value == null) return;
       Class[] paramTypes= { value.getClass() };
       Method m=o.getClass().getMethod(getSetMethod(fieldName),paramTypes);
       Object[] args = { value };
