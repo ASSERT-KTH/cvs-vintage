@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/deployment/Attic/UserDataConstraint.java,v 1.1 1999/10/09 00:20:46 duncan Exp $
- * $Revision: 1.1 $
- * $Date: 1999/10/09 00:20:46 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/deployment/Attic/UserDataConstraint.java,v 1.2 1999/10/30 18:12:30 craigmcc Exp $
+ * $Revision: 1.2 $
+ * $Date: 1999/10/30 18:12:30 $
  *
  * ====================================================================
  *
@@ -68,7 +68,7 @@ package org.apache.tomcat.deployment;
     ** @author Danny Coward
     */
 public interface UserDataConstraint {
-    public static String INEGRAL_TRANSPORT = "INTEGRAL";
+    public static String INTEGRAL_TRANSPORT = "INTEGRAL";
     public static String SECURE_TRANSPORT = "SECURE";
 
     public String getDescription();
