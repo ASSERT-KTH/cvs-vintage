@@ -60,7 +60,7 @@
                 <sql-type>VARCHAR(255)</sql-type>
             </mapping>
             <mapping>
-                <java-type>java.sql.Da	te</java-type>
+                <java-type>java.sql.Date</java-type>
                 <jdbc-type>DATE</jdbc-type>
                 <sql-type>DATE</sql-type>
             </mapping>
@@ -298,7 +298,7 @@
                 <jdbc-type>BIT</jdbc-type>
                 <sql-type>BIT</sql-type>
             </mapping>
-<!-- Current Sybase JDBC drivers (jConnect 5.2) don't support 
+<!-- Current Sybase JDBC drivers (jConnect 5.2) don't support
      byte or short.  Unfortunately they'll be serialized.
             <mapping>
                 <java-type>java.lang.Byte</java-type>
@@ -488,7 +488,7 @@
                 <sql-type>LONGVARBINARY</sql-type>
             </mapping>
             <mapping>
-                <java-type>java.sql.TimeStamp</java-type>
+                <java-type>java.sql.Timestamp</java-type>
                 <jdbc-type>DATE</jdbc-type>
                 <sql-type>DATE</sql-type>
             </mapping>
@@ -536,7 +536,7 @@
                 <sql-type>VARCHAR(256)</sql-type>
             </mapping>
             <mapping>
-                <java-type>java.sql.TimeStamp</java-type>
+                <java-type>java.sql.Timestamp</java-type>
                 <jdbc-type>TIMESTAMP</jdbc-type>
                 <sql-type>TIMESTAMP</sql-type>
             </mapping>
@@ -647,7 +647,7 @@
                 <sql-type>INTEGER</sql-type>
             </mapping>
             <mapping>
-                <java-type>java.sql.TimeStamp</java-type>
+                <java-type>java.sql.Timestamp</java-type>
                 <jdbc-type>TIMESTAMP</jdbc-type>
                 <sql-type>TIMESTAMP</sql-type>
             </mapping>
@@ -705,7 +705,7 @@
                 <sql-type>INTEGER</sql-type>
             </mapping>
             <mapping>
-                <java-type>java.sql.TimeStamp</java-type>
+                <java-type>java.sql.Timestamp</java-type>
                 <jdbc-type>TIMESTAMP</jdbc-type>
                 <sql-type>TIMESTAMP</sql-type>
             </mapping>
@@ -778,7 +778,7 @@
               <sql-type>TINYINT</sql-type>
           </mapping>
           <mapping>
-              <java-type>java.sql.TimeStamp</java-type>
+              <java-type>java.sql.Timestamp</java-type>
               <jdbc-type>TIMESTAMP</jdbc-type>
               <sql-type>TIMESTAMP</sql-type>
           </mapping>
@@ -810,11 +810,13 @@
               <jdbc-type>VARCHAR</jdbc-type>
               <sql-type>VARCHAR(256)</sql-type>
           </mapping>
+<!-- Apparent DB2/400 doesn't handle Byte type either
           <mapping>
               <java-type>java.lang.Byte</java-type>
               <jdbc-type>CHAR</jdbc-type>
               <sql-type>CHAR(1) FOR BIT DATA</sql-type>
           </mapping>
+-->
           <mapping>
               <java-type>java.util.Date</java-type>
               <jdbc-type>DATE</jdbc-type>
@@ -833,7 +835,7 @@
           <mapping>
               <java-type>java.lang.Integer</java-type>
               <jdbc-type>INTEGER</jdbc-type>
-              <sql-type>SMALLINT</sql-type>
+              <sql-type>INTEGER</sql-type>
           </mapping>
           <mapping>
               <java-type>java.lang.Double</java-type>
@@ -858,10 +860,10 @@
           <mapping>
               <java-type>java.lang.Object</java-type>
               <jdbc-type>JAVA_OBJECT</jdbc-type>
-              <sql-type>VARGRAPHIC(16369)</sql-type>
+              <sql-type>VARCHAR(4096) FOR BIT DATA</sql-type>
           </mapping>
           <mapping>
-              <java-type>java.sql.TimeStamp</java-type>
+              <java-type>java.sql.Timestamp</java-type>
               <jdbc-type>TIMESTAMP</jdbc-type>
               <sql-type>TIMESTAMP</sql-type>
           </mapping>
