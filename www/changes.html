@@ -1,4 +1,4 @@
-<!-- $Id: changes.html,v 1.214 2002/08/28 20:01:35 jon Exp $ -->
+<!-- $Id: changes.html,v 1.215 2002/08/29 22:02:22 jon Exp $ -->
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
 <html>
 
@@ -21,6 +21,8 @@
         <td width="100%" height="100" bgcolor="#F0F0F0"> 
             <h3>Changes since 1.0b10</h3>
             <ul>
+                <li>Removed restore to defaults button configure
+                    attribute list. (JSS)</li>
             </ul>
         </td>
     </tr>
@@ -28,6 +30,16 @@
         <td width="100%" height="100" bgcolor="#F0F0F0"> 
             <h3>Fixes since 1.0b10</h3>
             <ul>
+                <li>Make the validation query customizable. Should fix
+                    an Oracle usage issue. (JSS)</li>
+                <li>Don't copy CVS directories into target
+                    For more information, see Bug Report
+                    #<a href="http://scarab.whichever.com:8081/issues/id/SCB113">
+                    SCB113</a>. (JSS)</li>
+                <li>Fixed potential crash when editing module attributes.
+                    For more information, see Bug Report
+                    #<a href="http://scarab.whichever.com:8081/issues/id/SCB135">
+                    SCB135</a>. (JSS)</li>
             </ul>
         </td>
     </tr>
