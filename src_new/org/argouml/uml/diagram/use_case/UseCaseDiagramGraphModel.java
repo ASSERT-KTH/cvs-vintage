@@ -1,4 +1,4 @@
-// $Id: UseCaseDiagramGraphModel.java,v 1.29 2003/09/01 11:51:06 bobtarling Exp $
+// $Id: UseCaseDiagramGraphModel.java,v 1.30 2003/09/01 14:02:49 bobtarling Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -26,7 +26,7 @@
 // File: UseCaseDiagramGraphModel.java
 // Classes: UseCaseDiagramGraphModel
 // Original Author: your email address here
-// $Id: UseCaseDiagramGraphModel.java,v 1.29 2003/09/01 11:51:06 bobtarling Exp $
+// $Id: UseCaseDiagramGraphModel.java,v 1.30 2003/09/01 14:02:49 bobtarling Exp $
 
 // 3 Apr 2002: Jeremy Bennett (mail@jeremybennett.com). Extended to support
 // the Extend and Include relationships. JavaDoc added for clarity. Adding edge
@@ -47,7 +47,6 @@ import org.argouml.model.ModelFacade;
 import org.argouml.model.uml.foundation.core.CoreHelper;
 import org.argouml.uml.diagram.UMLMutableGraphSupport;
 import ru.novosoft.uml.behavior.use_cases.MActor;
-import ru.novosoft.uml.behavior.use_cases.MExtend;
 import ru.novosoft.uml.behavior.use_cases.MUseCase;
 import ru.novosoft.uml.foundation.core.MAssociation;
 import ru.novosoft.uml.foundation.core.MAssociationEnd;
@@ -402,7 +401,7 @@ public class UseCaseDiagramGraphModel
         }
         else if (org.argouml.model.ModelFacade.isAExtend(edge)) {
             end0 = ModelFacade.getBase(edge);
-            end1 = ((MExtend) edge).getExtension();
+            end1 = ModelFacade.getExtension(edge);
         }
         else if (org.argouml.model.ModelFacade.isAInclude(edge)) {
 
@@ -562,8 +561,8 @@ public class UseCaseDiagramGraphModel
 
             ends.addAll(((MUseCase) node).getIncludes());
             ends.addAll(((MUseCase) node).getIncludes2());
-            ends.addAll(((MUseCase) node).getExtends());
-            ends.addAll(((MUseCase) node).getExtends2());
+            ends.addAll(ModelFacade.getExtends(node));
+            ends.addAll(ModelFacade.getExtends2(node));
 
             Iterator iter = ends.iterator();
 

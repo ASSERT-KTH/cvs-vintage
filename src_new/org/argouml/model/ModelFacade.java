@@ -1,4 +1,4 @@
-// $Id: ModelFacade.java,v 1.98 2003/09/01 11:51:08 bobtarling Exp $
+// $Id: ModelFacade.java,v 1.99 2003/09/01 14:02:49 bobtarling Exp $
 // Copyright (c) 2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -1743,6 +1743,59 @@ public class ModelFacade {
         throw new IllegalArgumentException("Unrecognized object " + handle);
     }
 
+    /**
+     * Returns all extends of a use case or extension point
+     * @param handle
+     * @return the extends
+     */
+    public static Collection getExtends(Object handle) {
+        if (handle instanceof MUseCase) {
+            return ((MUseCase) handle).getExtends();
+        }
+        if (handle instanceof MExtensionPoint) {
+            return ((MExtensionPoint) handle).getExtends();
+        }
+        throw new IllegalArgumentException("Unrecognized object " + handle);
+    }
+
+    /**
+     * Returns all extends of a use case
+     * @param handle
+     * @return the extends
+     */
+    public static Collection getExtends2(Object handle) {
+        if (handle instanceof MUseCase) {
+            return ((MUseCase) handle).getExtends2();
+        }
+        throw new IllegalArgumentException("Unrecognized object " + handle);
+    }
+
+    /**
+     * Gets the use case extension of an extend
+     * @param handle
+     * @return The extension
+     */
+    public static Object getExtension(Object handle) {
+        if (handle instanceof MExtend)
+            return ((MExtend)handle).getExtension();
+        return null;
+    }
+    
+    /**
+     * Returns all extends of a use case
+     * @param handle
+     * @return the extends
+     */
+    public static Collection getExtensionPoints(Object handle) {
+        if (handle instanceof MUseCase) {
+            return ((MUseCase) handle).getExtensionPoints();
+        }
+        if (handle instanceof MExtend) {
+            return ((MExtend) handle).getExtensionPoints();
+        }
+        throw new IllegalArgumentException("Unrecognized object " + handle);
+    }
+
     /** The list of Features from a Classifier.
      *
      * @param handle Classifier to retrieve from.
@@ -1995,6 +2048,44 @@ public class ModelFacade {
         throw new IllegalArgumentException("Unrecognized object " + handle);
     }
 
+    public static Collection getContexts(Object handle) {
+        if (handle instanceof MSignal) {
+            return ((MSignal)handle).getContexts();
+        }
+        throw new IllegalArgumentException("Unrecognized object " + handle);
+    }
+
+    public static Collection getCreateActions(Object handle) {
+        if (handle instanceof MClassifier) {
+            return ((MClassifier)handle).getCreateActions();
+        }
+        throw new IllegalArgumentException("Unrecognized object " + handle);
+    }
+
+    /** Get the default value of a parameter
+     *
+     * @param handle the parameter that we are getting the defaultvalue from
+     * @returns the default value
+     */
+    public static Object getDefaultValue(Object handle) {
+        if (handle instanceof MParameter) {
+            return ((MParameter) handle).getDefaultValue();
+        }
+        throw new IllegalArgumentException("Unrecognized object " + handle);
+    }
+   
+    /** Get deferrable events of a state
+     *
+     * @param handle the state that we are getting the deferrable event from
+     * @returns the deferrable events collection
+     */
+    public static Collection getDeferrableEvents(Object handle) {
+        if (handle instanceof MState) {
+            return ((MState)handle).getDeferrableEvents();
+        }
+        throw new IllegalArgumentException("Unrecognized object " + handle);
+    }
+   
     /**
      * Returns the context of some given statemachine or the context
      * of some given interaction

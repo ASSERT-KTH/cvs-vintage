@@ -1,4 +1,4 @@
-// $Id: UMLInitialValueComboBox.java,v 1.24 2003/09/01 00:59:51 bobtarling Exp $
+// $Id: UMLInitialValueComboBox.java,v 1.25 2003/09/01 14:02:49 bobtarling Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -130,7 +130,7 @@ public class UMLInitialValueComboBox extends JComboBox
             }
         } 
         else if (org.argouml.model.ModelFacade.isAParameter(target)) {
-            MExpression initExpr = (MExpression) ((MParameter) target).getDefaultValue();
+            MExpression initExpr = (MExpression) ModelFacade.getDefaultValue(target);
             if (initExpr != null) {
                 String init = initExpr.getBody();
                 setSelectedItem(init);

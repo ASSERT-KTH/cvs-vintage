@@ -1,5 +1,4 @@
-
-// $Id: GoUseCaseToExtensionPoint.java,v 1.14 2003/08/25 19:15:50 bobtarling Exp $
+// $Id: GoUseCaseToExtensionPoint.java,v 1.15 2003/09/01 14:02:50 bobtarling Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -26,7 +25,7 @@
 // File: GoUseCaseToExtensionPoint.java
 // Classes: GoUseCaseToExtensionPoint
 // Original Author: mail@jeremybennett.com
-// $Id: GoUseCaseToExtensionPoint.java,v 1.14 2003/08/25 19:15:50 bobtarling Exp $
+// $Id: GoUseCaseToExtensionPoint.java,v 1.15 2003/09/01 14:02:50 bobtarling Exp $
 
 // 16 Apr 2002: Jeremy Bennett (mail@jeremybennett.com). Created to support
 // display of extension points in the navigator pane.
@@ -38,10 +37,8 @@ import java.util.Collection;
 
 import org.apache.log4j.Category;
 import org.argouml.application.api.Argo;
+import org.argouml.model.ModelFacade;
 import org.argouml.ui.AbstractGoRule;
-
-import ru.novosoft.uml.behavior.use_cases.MUseCase;
-
 
 /**
  * <p>Provides a rule to display extension points in the navigation pane.</p>
@@ -66,8 +63,8 @@ public class GoUseCaseToExtensionPoint extends AbstractGoRule {
     }
 
     public Collection getChildren(Object parent) { 
-        if (org.argouml.model.ModelFacade.isAUseCase(parent)) {
-            return ((MUseCase) parent).getExtensionPoints();
+        if (ModelFacade.isAUseCase(parent)) {
+            return ModelFacade.getExtensionPoints(parent);
         }
         return null;
     }

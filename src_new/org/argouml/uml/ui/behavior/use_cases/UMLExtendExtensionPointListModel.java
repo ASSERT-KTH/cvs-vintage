@@ -1,6 +1,4 @@
-
-
-// $Id: UMLExtendExtensionPointListModel.java,v 1.9 2003/08/25 23:57:43 bobtarling Exp $
+// $Id: UMLExtendExtensionPointListModel.java,v 1.10 2003/09/01 14:02:49 bobtarling Exp $
 // Copyright (c) 2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -26,12 +24,10 @@
 
 package org.argouml.uml.ui.behavior.use_cases;
 
+import org.argouml.model.ModelFacade;
 import org.argouml.uml.ui.UMLModelElementListModel2;
 
 import ru.novosoft.uml.MBase;
-import ru.novosoft.uml.behavior.use_cases.MExtend;
-
-
 /**
  * @since Oct 6, 2002
  * @author jaap.branderhorst@xs4all.nl
@@ -51,7 +47,7 @@ public class UMLExtendExtensionPointListModel
      * @see org.argouml.uml.ui.UMLModelElementListModel2#buildModelList()
      */
     protected void buildModelList() {
-        setAllElements(((MExtend) getTarget()).getExtensionPoints());
+        setAllElements(ModelFacade.getExtensionPoints(getTarget()));
     }
 
    
@@ -60,7 +56,7 @@ public class UMLExtendExtensionPointListModel
      * @see org.argouml.uml.ui.UMLModelElementListModel2#isValidElement(MBase)
      */
     protected boolean isValidElement(MBase o) {
-        return org.argouml.model.ModelFacade.isAExtensionPoint(o) && ((MExtend) getTarget()).getExtensionPoints().contains(o);
+        return ModelFacade.isAExtensionPoint(o) && ModelFacade.getExtensionPoints(getTarget()).contains(o);
     }
 
 }

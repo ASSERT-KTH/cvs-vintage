@@ -1,4 +1,4 @@
-// $Id: FigState.java,v 1.11 2003/06/30 18:00:33 linus Exp $
+// $Id: FigState.java,v 1.12 2003/09/01 14:02:50 bobtarling Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -22,13 +22,14 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $Id: FigState.java,v 1.11 2003/06/30 18:00:33 linus Exp $
+// $Id: FigState.java,v 1.12 2003/09/01 14:02:50 bobtarling Exp $
 package org.argouml.uml.diagram.state.ui;
 
 import java.awt.Color;
 import java.util.Iterator;
 
 import org.argouml.application.api.Notation;
+import org.argouml.model.ModelFacade;
 import org.argouml.model.uml.UmlModelEventPump;
 import org.tigris.gef.base.Selection;
 import org.tigris.gef.graph.GraphModel;
@@ -110,14 +111,13 @@ public abstract class FigState extends FigStateVertex {
         } else if (
 		   ((MState) getOwner()).getInternalTransitions().contains(mee.getSource())
 		   || // the internal transitions
-		   (mee.getSource() == ((MState) getOwner()).getEntry())
+		   (mee.getSource() == ModelFacade.getEntry(getOwner()))
 		   || // the entry
-		   (mee.getSource() == ((MState) getOwner()).getExit())
+		   (mee.getSource() == ModelFacade.getExit(getOwner()))
 		   || // the exit
-		   (mee.getSource() == ((MState) getOwner()).getDoActivity())
+		   (mee.getSource() == ModelFacade.getDoActivity(getOwner()))
 		   || // the doacitivity
-		   ((MState)
-		    getOwner()).getDeferrableEvents().contains(mee.getSource()))
+		   ModelFacade.getDeferrableEvents(getOwner()).contains(mee.getSource()))
 	{
 	    // the defered events
             updateInternal();

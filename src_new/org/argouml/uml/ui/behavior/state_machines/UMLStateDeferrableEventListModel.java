@@ -1,4 +1,4 @@
-// $Id: UMLStateDeferrableEventListModel.java,v 1.3 2003/06/29 23:50:12 linus Exp $
+// $Id: UMLStateDeferrableEventListModel.java,v 1.4 2003/09/01 14:02:49 bobtarling Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,11 +25,10 @@
 // $header$
 package org.argouml.uml.ui.behavior.state_machines;
 
+import org.argouml.model.ModelFacade;
 import org.argouml.uml.ui.UMLModelElementListModel2;
 
 import ru.novosoft.uml.MBase;
-import ru.novosoft.uml.behavior.state_machines.MState;
-
 /**
  * @since Dec 14, 2002
  * @author jaap.branderhorst@xs4all.nl
@@ -49,14 +48,14 @@ public class UMLStateDeferrableEventListModel
      * @see org.argouml.uml.ui.UMLModelElementListModel2#buildModelList()
      */
     protected void buildModelList() {
-        setAllElements(((MState) getTarget()).getDeferrableEvents());
+        setAllElements(ModelFacade.getDeferrableEvents(getTarget()));
     }
 
     /**
      * @see org.argouml.uml.ui.UMLModelElementListModel2#isValidElement(ru.novosoft.uml.MBase)
      */
     protected boolean isValidElement(MBase element) {
-        return ((MState) getTarget()).getDeferrableEvents().contains(element);
+        return ModelFacade.getDeferrableEvents(getTarget()).contains(element);
     }
 
 }

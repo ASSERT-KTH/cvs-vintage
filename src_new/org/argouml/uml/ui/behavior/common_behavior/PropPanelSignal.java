@@ -1,5 +1,4 @@
-
-// $Id: PropPanelSignal.java,v 1.30 2003/08/25 19:15:54 bobtarling Exp $
+// $Id: PropPanelSignal.java,v 1.31 2003/09/01 14:02:49 bobtarling Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -121,7 +120,7 @@ public class PropPanelSignal extends PropPanelModelElement {
     	Collection contexts = new Vector();
     	Object target = getTarget();
     	if (org.argouml.model.ModelFacade.isASignal(target)) {
-	    contexts = ((MSignal) target).getContexts();
+	    contexts = ModelFacade.getContexts(target);
     	}
     	return contexts;
     }
