@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/SunJavaCompiler.java,v 1.3 2001/01/14 20:45:40 larryi Exp $
- * $Revision: 1.3 $
- * $Date: 2001/01/14 20:45:40 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/SunJavaCompiler.java,v 1.4 2002/01/23 23:28:49 costin Exp $
+ * $Revision: 1.4 $
+ * $Date: 2002/01/23 23:28:49 $
  *
  * ====================================================================
  * 
@@ -62,7 +62,8 @@
 package org.apache.jasper.compiler;
 
 import java.io.OutputStream;
-import sun.tools.javac.Main;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Method;
 
 /**
  * The default compiler. This is the javac present in JDK 1.1.x and
@@ -132,29 +133,63 @@ public class SunJavaCompiler implements JavaCompiler {
         this.classDebugInfo = classDebugInfo;
     }
 
+    ClassLoader loader=null;
+    public void setLoader( ClassLoader cl  ) {
+        loader=cl;
+    }
+
     public boolean compile(String source) {
-        Main compiler = new Main(out, "jsp->javac");
-        String[] args;
 
-        if (classDebugInfo) {
-            args = new String[]
-            {
-                "-g",
-                "-encoding", encoding,
-                "-classpath", classpath,
-                "-d", outdir,
-                source
-            };
-	} else {
-            args = new String[]
-            {
-                "-encoding", encoding,
-                "-classpath", classpath,
-                "-d", outdir,
-                source
-            };
+        try {
+            Class c;
+            if( loader==null ) 
+                c = Class.forName("sun.tools.javac.Main");
+            else
+                c=loader.loadClass("sun.tools.javac.Main");
+            
+            Constructor cons =
+                c.getConstructor(new Class[] { OutputStream.class,
+                                               String.class });
+            
+            Object compiler = cons.newInstance(new Object[] { out,
+                                                              "jsp->javac" });
+
+            // Call the compile() method
+            Method compile = c.getMethod("compile",
+                                         new Class [] { String[].class });
+
+            String[] args;
+
+            if (classDebugInfo) {
+                args = new String[]
+                    {
+                        "-g",
+                        "-encoding", encoding,
+                        "-classpath", classpath,
+                        "-d", outdir,
+                        source
+                    };
+            } else {
+                args = new String[]
+                    {
+                        "-encoding", encoding,
+                        "-classpath", classpath,
+                        "-d", outdir,
+                        source
+                    };
+            }
+            Boolean ok =
+                (Boolean)compile.invoke(compiler,
+                                        new Object[] {args});
+            return ok.booleanValue();
         }
-
-        return compiler.compile(args);
+        catch (ClassNotFoundException ex) {
+            ex.printStackTrace();
+            return false;
+        }
+        catch (Exception ex1) {
+            ex1.printStackTrace();
+            return false;
+        } 
     }
 }
