@@ -6,7 +6,7 @@ The order of the following plugins is intentional. Do not change the order of ap
 <folderoptions>
  <folderoption state="before" name="ColumnOptions" class="org.columba.mail.folderoptions.ColumnOptionsPlugin" />
  <folderoption state="before" name="SortingOptions" class="org.columba.mail.folderoptions.SortingOptionsPlugin" />
- <folderoption state="before" name="FilterOptions" class="org.columba.mail.folderoptions.FilterOptionsPlugin" />
+ <!--<folderoption state="before" name="FilterOptions" class="org.columba.mail.folderoptions.FilterOptionsPlugin" />-->
  <folderoption state="before" name="ThreadedViewOptions" class="org.columba.mail.folderoptions.ThreadedViewOptionsPlugin" />
  <folderoption state="after" name="SelectionOptions" class="org.columba.mail.folderoptions.SelectionOptionsPlugin" />
 </folderoptions>
