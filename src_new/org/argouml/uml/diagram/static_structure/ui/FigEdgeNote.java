@@ -1,4 +1,4 @@
-// $Id: FigEdgeNote.java,v 1.5 2003/06/30 18:00:34 linus Exp $
+// $Id: FigEdgeNote.java,v 1.6 2003/12/31 20:04:11 jjones Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,7 +27,7 @@
 // File: FigEdgeNote.java
 // Classes: FigEdgeNote
 // Original Author: Andreas Rueckert <a_rueckert@gmx.net>
-// $Id: FigEdgeNote.java,v 1.5 2003/06/30 18:00:34 linus Exp $
+// $Id: FigEdgeNote.java,v 1.6 2003/12/31 20:04:11 jjones Exp $
 
 package org.argouml.uml.diagram.static_structure.ui;
 
@@ -36,6 +36,7 @@ import java.awt.event.MouseListener;
 import java.beans.PropertyChangeListener;
 import java.beans.VetoableChangeListener;
 
+import org.argouml.i18n.Translator;
 import org.argouml.kernel.DelayedVChangeListener;
 import org.argouml.kernel.ProjectManager;
 import org.argouml.uml.diagram.ui.FigEdgeModelElement;
@@ -108,5 +109,9 @@ public class FigEdgeNote
     }    
 
     protected boolean canEdit(Fig f) { return false; }
+    
+    public String toString() {
+        return Translator.localize("misc.comment-edge");
+    }
 
 } /* end class FigEdgeNote */
