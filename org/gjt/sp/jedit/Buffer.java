@@ -65,7 +65,7 @@ import org.gjt.sp.util.*;
  * </ul>
  *
  * @author Slava Pestov
- * @version $Id: Buffer.java,v 1.145 2003/04/02 01:45:25 spestov Exp $
+ * @version $Id: Buffer.java,v 1.146 2003/04/02 03:32:50 spestov Exp $
  */
 public class Buffer
 {
@@ -1560,7 +1560,10 @@ public class Buffer
 
 		String newWrap = getStringProperty("wrap");
 		if(wrap != null && !newWrap.equals(wrap))
+		{
 			offsetMgr.invalidateScreenLineCounts();
+			offsetMgr.resetAnchors();
+		}
 		this.wrap = newWrap;
 
 		EditBus.send(new BufferUpdate(this,null,BufferUpdate.PROPERTIES_CHANGED));
