@@ -128,7 +128,7 @@ public class GTestTag extends TagSupport {
 	    // 	    org.apache.tomcat.task.GTest.setHtmlMode( true );
 	    // new one
 	    GTest.setDefaultWriter(out);
-	    GTest.setDefaultOutput("none"); // external formatting
+	    GTest.setDefaultOutput(outputType); // external formatting
 	    if(debug!=null)
 		GTest.setDefaultDebug(Integer.valueOf( debug ).intValue());
 	    
@@ -142,6 +142,7 @@ public class GTestTag extends TagSupport {
 	    project.setUserProperty( "ant.file", testFile.toString());
 	    // XXX
 	    project.setUserProperty( "gdir", base + "/Golden");
+	    project.setUserProperty( "wgdir", base + "/Golden");
 	    
 	    ProjectHelper.configureProject( project, testFile );
 	    

@@ -223,6 +223,8 @@ public class DefaultMatcher {
 		desc.append( "equals file '" );
 	    else
 		desc.append( "like file '");
+	    int idx=goldenFile.lastIndexOf("/");
+	    String g=(idx>0) ? goldenFile.substring(idx) : goldenFile;
 	    desc.append( goldenFile + "') ");
 	}
 

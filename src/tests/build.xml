@@ -16,6 +16,10 @@
   <!-- Directories -->
 
   <property name="tomcat.home" value="../../../build/tomcat"/>
+  <property name="watchdog.src" 
+	    value="${tomcat.home}/../../jakarta-watchdog"/>
+  <property name="watchdog.build" 
+	    value="${watchdog.src}/../build/watchdog"/>
 
 
   <!-- External packages we depend on -->
@@ -28,6 +32,8 @@
 
   <!-- ==================== Initialization - guessing config ========== -->
   <target name="init">
+    <available file="${watchdog.src}/build.xml" 
+	       property="watchdog.available" />
   </target>
 
   <!-- ==================== Copy static files ==================== -->
@@ -71,6 +77,72 @@
 	 basedir="${tomcat.build}/webapps/test" includes="**"/> 
   </target>
 
+  <target name="watchdog" if="watchdog.available" depends="init"> 
+    <echo message="Building watchdog from ${watchdog.src} " />
+    <!-- special arangements to allow running watchdog from web -->
+    
+    <mkdir dir="${tomcat.build}/webapps/servlet-tests"/>
+    <mkdir dir="${tomcat.build}/webapps/jsp-tests"/>
+
+    <copy todir="${tomcat.build}/webapps/jsp-tests" >
+      <fileset dir="${watchdog.src}/src/server/jsp-tests" />
+    </copy>
+    <copy todir="${tomcat.build}/webapps/jsp-tests/Golden" >
+    <fileset dir="${watchdog.src}/src/clients/org/apache/jcheck/jsp/client" />
+    </copy>
+    <copy todir="${tomcat.build}/webapps/servlet-tests" >
+      <fileset dir="${watchdog.src}/src/server/servlet-tests" />
+    </copy>
+
+    <copyfile src="${watchdog.build}/conf/jsp-gtest.xml"
+	      dest="${tomcat.build}/webapps/jsp-tests/WEB-INF/jsp-gtest.xml"/>
+    <copyfile src="${watchdog.build}/conf/servlet-moo.xml"
+  dest="${tomcat.build}/webapps/servlet-tests/WEB-INF/servlet-moo.xml"/>
+
+    <javac 
+	   srcdir="${tomcat.build}/webapps/jsp-tests/WEB-INF/classes" 
+	   optimize="${optimize}" 
+	   destdir="${tomcat.build}/webapps/jsp-tests/WEB-INF/classes" 
+	   classpath="${tomcat.build}/classes;${servlet22.jar}"
+	   />
+
+    <!-- Watchdog requires a special client application -->
+    <javac 
+	   srcdir="${watchdog.src}/../jakarta-tools/moo/src/share"
+	   optimize="${optimize}" 
+	   destdir="${tomcat.build}/webapps/admin/WEB-INF/classes" 
+	   classpath="${tomcat.build}/classes;${servlet22.jar}"
+	   />
+    <javac 
+	   srcdir="${watchdog.src}/../jakarta-tools/moo/src/share"
+	   optimize="${optimize}" 
+	   destdir="${tomcat.build}/webapps/servlet-tests/WEB-INF/classes" 
+	   classpath="${tomcat.build}/classes;${servlet22.jar}"
+	   />
+    <javac 
+	   srcdir="${watchdog.src}/src/clients"
+	   optimize="${optimize}" 
+	   destdir="${tomcat.build}/webapps/admin/WEB-INF/classes" 
+	   classpath="${tomcat.build}/classes;${servlet22.jar}"
+	   />
+    <copydir src="${watchdog.src}/src/clients"
+	     dest="${tomcat.build}/webapps/admin/WEB-INF/classes" >
+      <include name="**/**.properties" />
+    </copydir>
+
+    <javac 
+	   srcdir="${tomcat.build}/webapps/servlet-tests/WEB-INF/classes" 
+	   optimize="${optimize}" 
+	   destdir="${tomcat.build}/webapps/servlet-tests/WEB-INF/classes" 
+	   classpath="${tomcat.build}/classes;${servlet22.jar}"
+	   />
+
+    <replace file="${tomcat.build}/webapps/jsp-tests/WEB-INF/jsp-gtest.xml" 
+	     token="org.apache.tomcat.task.GTest" 
+	     value="org.apache.tomcat.util.test.GTest" />
+
+  </target>
+
   <!-- ==================== Admin & agreagate ==================== -->
    
   <target name="clean-classes" depends="init">
@@ -83,6 +155,6 @@
   </target>
   
   <target name="all" depends=""/>
-  <target name="main" depends=""/>
+  <target name="main" depends="sanity-test"/>
     
 </project>

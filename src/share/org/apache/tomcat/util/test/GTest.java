@@ -289,7 +289,7 @@ public class GTest  {
 
 	    // don't print OKs
 	    if( result && failureOnly ) return;
-	    
+
 	    if( "text".equals(outType) )
 		textReport();
 	    if( "html".equals(outType) )

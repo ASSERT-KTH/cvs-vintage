@@ -105,12 +105,15 @@ public class AntServletLogger implements BuildLogger {
 
     public void messageLogged(BuildEvent event) {
         try {
-	    if( event.getPriority() > 2 )
+	    if( event.getPriority() > 2 ) 
 		return;
 
+	    String msg=event.getMessage();
+	    if( msg.indexOf("is deprecated") > 0 )
+		return;
+	    
 	    out.write("\n<br>");
 	    // Print the message
-	    String msg=event.getMessage();
 	    if( msg.startsWith( "ERROR" )) {
 		out.write("<font color='red'>");
 	    }

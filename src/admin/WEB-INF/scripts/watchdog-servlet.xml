@@ -1,0 +1,27 @@
+<project name="Watchdog-moo" default="main" basedir=".">
+
+  <property name="tomcat.home" value="../../../../.."/>
+  <property name="ant-file" 
+   value="${tomcat.home}/webapps/servlet-tests/WEB-INF/servlet-moo.xml"/>
+  
+
+  <target name="main" >
+    <echo message="XXX ${ant-file} ${tomcat.home} " />
+    <java classname="org.apache.tools.ant.Main" 
+	  fork="true" dir="../../../..">
+      <classpath>
+	<pathelement
+	        path="../classes" />
+	<pathelement 
+		path="../lib/ant.jar" />
+	<pathelement 
+		path="../../../../lib/jaxp.jar" />
+	<pathelement 
+		path="../../../../lib/parser.jar" />
+      </classpath>
+      <arg value="-f" />
+      <arg value="webapps/servlet-tests/WEB-INF/servlet-moo.xml" />
+    </java>
+  </target>
+
+</project>

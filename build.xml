@@ -342,7 +342,11 @@
   <!-- ==================== Build the internal test app =================== -->
 
   <target name="sanity-test">
-    <ant antfile="src/tests/build.xml" target="sanity-test"/>
+    <ant antfile="src/tests/build.xml" />
+  </target>
+
+  <target name="watchdog-web-based">
+    <ant antfile="src/tests/build.xml" target="watchdog" />
   </target>
 
   <!-- ==================== Copy the files to distribution format ======== -->
@@ -400,7 +404,7 @@
    
   <!-- The self-test app should be removed in the release, but it's 
        useful to have it builded by default -->
-  <target name="tomcat" depends="prepare,tomcat-jars-new,sanity-test">
+  <target name="tomcat" depends="prepare,tomcat-jars-new">
   </target>
 
   <target name="clean-classes" depends="init">
@@ -413,6 +417,6 @@
   </target>
   
   <target name="all" depends="clean,dist"/>
-  <target name="main" depends="tomcat,webapps"/>
+  <target name="main" depends="tomcat,webapps,sanity-test"/>
     
 </project>
