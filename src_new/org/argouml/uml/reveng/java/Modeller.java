@@ -1,4 +1,4 @@
-// $Id: Modeller.java,v 1.56 2003/02/22 00:37:36 alexb Exp $
+// $Id: Modeller.java,v 1.57 2003/02/22 14:58:09 alexb Exp $
 
 /*
   JavaRE - Code generation and reverse engineering for UML and Java
@@ -1008,7 +1008,15 @@ public class Modeller
 
             if (j < sJavaDocs.length()) {
               if (sJavaDocs.charAt (j) == '@') {
-                sbPureDocs.append (sJavaDocs.substring (j, sJavaDocs.indexOf('\n',j) + 1));  // afl 05/02/03 fix Issue 1511
+                // if the last javadoc is on the last line
+                // no new line will be found, causing an indexoutofboundexception.
+                int lineEndPos = 0;
+                if(sJavaDocs.indexOf('\n',j) < 0)
+                { lineEndPos = sJavaDocs.length()-2;}
+                else
+                { lineEndPos =sJavaDocs.indexOf('\n',j) + 1;}
+                
+                sbPureDocs.append (sJavaDocs.substring (j, lineEndPos));  // afl 05/02/03 fix Issue 1511
                 // start standard tag
                 // potentially add current tag to set of tagged values...
                 if (sCurrentTagName != null) {
