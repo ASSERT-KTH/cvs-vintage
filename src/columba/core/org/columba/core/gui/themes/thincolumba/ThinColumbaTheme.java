@@ -13,19 +13,22 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
+
 package org.columba.core.gui.themes.thincolumba;
+
+import java.awt.Font;
 
 import javax.swing.ImageIcon;
 import javax.swing.UIDefaults;
 import javax.swing.plaf.ColorUIResource;
+import javax.swing.plaf.FontUIResource;
+import javax.swing.plaf.metal.DefaultMetalTheme;
 
 import org.columba.core.config.GuiItem;
 import org.columba.core.config.ThemeItem;
-import org.columba.core.gui.themes.DefaultCTheme;
 import org.columba.core.gui.util.ImageLoader;
 
-public class ThinColumbaTheme extends DefaultCTheme {
-
+public class ThinColumbaTheme extends DefaultMetalTheme {
 	private final static Integer ANTI_ALIASING_ENABLED = new Integer(1);
 	private final static Integer ANTI_ALIASING_DISABLED = new Integer(0);
 	private final static Integer ANTI_ALIASING_MESSAGE_ONLY = new Integer(2);
@@ -44,20 +47,18 @@ public class ThinColumbaTheme extends DefaultCTheme {
 	private final ColorUIResource foreground;
 	private final ColorUIResource background;
 
+	private FontUIResource mainFontResource;
+	private FontUIResource messageFontResource;
+        
 	protected static final String thinPackage =
 		"org.columba.core.gui.themes.thincolumba.";
 
 	public ThinColumbaTheme(GuiItem item) {
-		super(item);
-
+                mainFontResource = new FontUIResource(item.getMainFont());
+                messageFontResource = new FontUIResource(item.getTextFont());
 		ThemeItem themeItem = new ThemeItem(item.getElement("theme"));
-
 		foreground = new ColorUIResource(themeItem.getForeground());
-
 		background = new ColorUIResource(themeItem.getBackground());
-
-		// mainFont = mFont;
-		// messageFont = eFont;
 	}
 
 	// menu border, labels
@@ -76,9 +77,11 @@ public class ThinColumbaTheme extends DefaultCTheme {
 	protected ColorUIResource getSecondary1() {
 		return secondary1;
 	}
+        
 	protected ColorUIResource getSecondary2() {
 		return secondary2;
 	}
+        
 	protected ColorUIResource getSecondary3() {
 		return secondary3;
 	}
@@ -87,6 +90,26 @@ public class ThinColumbaTheme extends DefaultCTheme {
 		return "Thin Columba";
 	}
 
+	public FontUIResource getMenuTextFont() {
+		return mainFontRessource;
+	}
+
+	public FontUIResource getControlTextFont() {
+		return mainFontRessource;
+	}
+
+	public FontUIResource getSubTextFont() {
+		return mainFontRessource;
+	}
+
+	public FontUIResource getSystemTextFont() {
+		return mainFontRessource;
+	}
+
+	public FontUIResource getUserTextFont() {
+		return mainFontRessource;
+	}
+        
 	public void addCustomEntriesToTable(UIDefaults table) {
 		Object map[] =
 			{
