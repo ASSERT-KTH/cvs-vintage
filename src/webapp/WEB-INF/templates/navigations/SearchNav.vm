@@ -19,6 +19,7 @@
 </form>
 </td>
 
+#if ($scarabR.hasPermission($scarabG.Permission.ISSUE__SEARCH, $module))
 <td>
 <form action="$link.setPage("IssueList.vm").setAction("Search")" method="get">
 <input type="hidden" name="$scarabG.Constant.NEXT_TEMPLATE" value="Index.vm" />
@@ -54,6 +55,7 @@
   <noscript><input type="submit" value="$l10n.Go" name="eventSubmit_doSelectquery" tabindex="4" /></noscript>
 </form>
   </td>
+#end
   </tr>
  </table>
 </div>

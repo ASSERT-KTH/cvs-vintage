@@ -7,6 +7,9 @@
 
   <body>
     <release version="b20" date="in dev">
+      <action dev="epugh" type="update" due-to="Anthony Wong" issue-id="SCB759">
+        Users without the "Issue | Search" role can still see the search GUI
+      </action>         
       <action dev="epugh" type="update">
         Remove old Fulcrum Upload and Mimetype components in favor of new Fulcrum Avalon based components.
       </action> 

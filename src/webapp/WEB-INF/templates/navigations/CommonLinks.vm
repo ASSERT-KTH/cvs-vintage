@@ -16,7 +16,9 @@
     #end
   #end
   #if (!$module.isGlobalModule())
+    #if ($scarabR.hasPermission($scarabG.Permission.ISSUE__SEARCH, $module))
     <div>$link.setPage("QueryList.vm").setLabel("$l10n.Queries")</div>
+    #end
     #if ($scarabR.hasPermission($scarabG.Permission.ISSUE__ENTER, $module))
     <div>$link.setPage("TemplateList.vm").setLabel("$l10n.EditTemplates")</div>
     #end
