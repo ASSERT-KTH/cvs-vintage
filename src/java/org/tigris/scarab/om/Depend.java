@@ -63,7 +63,7 @@ import org.tigris.scarab.util.ScarabException;
  * @author <a href="mailto:jmcnally@collab.new">John McNally</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: Depend.java,v 1.12 2002/08/23 01:30:08 jon Exp $
+ * @version $Id: Depend.java,v 1.13 2002/10/04 01:51:32 jon Exp $
  */
 public class Depend 
     extends BaseDepend
@@ -113,6 +113,12 @@ public class Depend
          throws Exception
     {
          return observerUniqueId;
+    }
+
+    public void setDependType(String type)
+        throws TorqueException
+    {
+        super.setDependType(DependTypeManager.getInstance(type));
     }
 
     /**
