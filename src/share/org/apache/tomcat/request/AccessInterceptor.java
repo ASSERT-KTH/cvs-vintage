@@ -161,7 +161,7 @@ public class AccessInterceptor extends  BaseInterceptor  {
 	SecurityConstraints ctxSecurityC=(SecurityConstraints)ctxCt.getNote( secMapNote );
 	
 	if( ct.getRoles()!=null || ct.getTransport()!=null ) {
-	    log( "ACCESS: Adding " + ctx.getHost() + " " + ctx.getPath() + " " + ct.getPath() );
+	    if( ctx.getDebug() > 0 ) log( "ACCESS: Adding " + ctx.getHost() + " " + ctx.getPath() + " " + ct.getPath() );
 	    ctxSecurityC.addContainer( ct );
 	}
     }

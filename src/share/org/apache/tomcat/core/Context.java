@@ -117,7 +117,7 @@ public class Context {
 
     private File workDir;
 
-    private RequestSecurityProvider rsProvider;
+    //    private RequestSecurityProvider rsProvider;
 
     private Vector contextInterceptors = new Vector();
     private Vector requestInterceptors = new Vector();
@@ -893,17 +893,17 @@ public class Context {
         engineHeader=s;
     }
 
-    /**  @deprecated
-     */
-    public void setRequestSecurityProvider(RequestSecurityProvider rsProvider) {
-	this.rsProvider = rsProvider;
-    }
+//     /**  @deprecated
+//      */
+//     public void setRequestSecurityProvider(RequestSecurityProvider rsProvider) {
+// 	this.rsProvider = rsProvider;
+//     }
 
-    /**  @deprecated
-     */
-    public RequestSecurityProvider getRequestSecurityProvider() {
-	return this.rsProvider;
-    }
+//     /**  @deprecated
+//      */
+//     public RequestSecurityProvider getRequestSecurityProvider() {
+// 	return this.rsProvider;
+//     }
 
     /**  @deprecated
      */

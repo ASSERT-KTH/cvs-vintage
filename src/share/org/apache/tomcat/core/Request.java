@@ -191,6 +191,10 @@ public interface Request  {
 
     boolean isSecure() ;
 
+    public void setUserRoles( String roles[] );
+
+    public String[] getUserRoles( );
+    
     // XXX It may be usefull to add few more fields - right now
     // tomcat use notes, after everything is stable we can
     // use typed methods
@@ -281,6 +285,8 @@ public interface Request  {
 
     /** @deprecated  */
     Principal getUserPrincipal() ;
+
+    void setUserPrincipal(Principal p) ;
 
     /** @deprecated  */
     boolean isUserInRole(String role) ;

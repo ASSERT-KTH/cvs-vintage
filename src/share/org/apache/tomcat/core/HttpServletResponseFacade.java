@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/HttpServletResponseFacade.java,v 1.13 2000/04/25 17:54:13 costin Exp $
- * $Revision: 1.13 $
- * $Date: 2000/04/25 17:54:13 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/HttpServletResponseFacade.java,v 1.14 2000/05/09 17:56:13 costin Exp $
+ * $Revision: 1.14 $
+ * $Date: 2000/05/09 17:56:13 $
  *
  * ====================================================================
  *
@@ -172,7 +172,7 @@ public class HttpServletResponseFacade
 	Request request=response.getRequest();
 	request.setAttribute("javax.servlet.error.message", msg);
 	ContextManager cm=request.getContextManager();
-	cm.handleError( request, response, null, sc );
+	cm.handleStatus( request, response, sc );
     }
 
     public void sendRedirect(String location)

@@ -101,10 +101,15 @@ public class DefaultErrorPage extends HttpServlet {
 
 	if( status==HttpServletResponse.SC_MOVED_TEMPORARILY) {
 	    redirect( request, response, msg);
-	} else {
-	    sendPrivateError( request, response, status, msg);
-
+	    return;
 	}
+
+	if( status==HttpServletResponse.SC_NOT_FOUND) {
+	    not_found( request, response);
+	    return;
+	}
+
+	sendPrivateError( request, response, status, msg);
     }
 
     // -------------------- Default error page --------------------
@@ -136,6 +141,7 @@ public class DefaultErrorPage extends HttpServlet {
 
     // -------------------- Redirect page --------------------
     public void redirect(Request request, Response response, String location) throws IOException {
+	Context ctx=request.getContext();
 
         location = makeAbsolute(request, location);
 
@@ -148,6 +154,30 @@ public class DefaultErrorPage extends HttpServlet {
 	buf.append("This document has moved <a href=\"");
 	buf.append(location);
 	buf.append("\">here</a>.<p>\r\n");
+	buf.append("</body>\r\n");
+
+	String body = buf.toString();
+
+	response.setContentLength(body.length());
+
+	if( response.isUsingStream() ) {
+	    ServletOutputStream out = response.getOutputStream();
+	    out.print(body);
+	    out.flush();
+	} else {
+	    PrintWriter out = response.getWriter();
+	    out.print(body);
+	    out.flush();
+	}
+    }
+
+    public void not_found(Request request, Response response) throws IOException {
+	response.setContentType("text/html");	// ISO-8859-1 default
+
+	StringBuffer buf = new StringBuffer();
+	buf.append("<head><title>Not Found (404)</title></head>\r\n");
+	buf.append("<body><h1>Not Found (404)</h1>\r\n");
+	buf.append("Original request ").append( request.getRequestURI());
 	buf.append("</body>\r\n");
 
 	String body = buf.toString();

@@ -91,7 +91,7 @@ public class SecurityTools {
 	    64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64,
 	    64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64
     };
-    
+
     public static String base64Decode( String orig ) {
 	char chars[]=orig.toCharArray();
 	StringBuffer sb=new StringBuffer();
@@ -117,4 +117,91 @@ public class SecurityTools {
 	}
 	return sb.toString();
     }
+
+    /** Extract the credentails from req
+     */
+    public static void credentials( Request req , Hashtable credentials ) {
+	Context ctx=req.getContext();
+	String login_type=ctx.getAuthMethod();
+	if( "BASIC".equals( login_type )) {
+	    basicCredentials( req, credentials );
+	}
+	if( "FORM".equals( login_type )) {
+	    formCredentials( req, credentials );
+	}
+    }
+	
+    
+    // XXX use more efficient structures instead of StringBuffer ?
+    // ( after everything is stable - not very important if web server is used)
+
+    /** Extract userName and password from a request using basic authentication.
+     *  Can be used in a JAAS callback or as it is. 
+     */
+    public static void basicCredentials( Request req, Hashtable credentials )
+    {
+	Context ctx=req.getContext();
+
+	String authMethod=ctx.getAuthMethod();
+	if( authMethod==null || "BASIC".equals(authMethod) ) {
+
+	    String authorization = req.getHeader("Authorization");
+
+	    if (authorization == null )
+		return; // no credentials
+	    if( ! authorization.startsWith("Basic "))
+		return; // wrong syntax
+
+	    authorization = authorization.substring(6).trim();
+	    String unencoded=SecurityTools.base64Decode( authorization );
+
+	    int colon = unencoded.indexOf(':');
+	    if (colon < 0)
+		return;
+
+	    credentials.put( "username" , unencoded.substring(0, colon));
+	    credentials.put( "password" , unencoded.substring(colon + 1));
+
+	}
+	return;
+    }
+
+
+    public static void formCredentials( Request req, Hashtable credentials ) {
+	Context ctx=req.getContext();
+	String authMethod=ctx.getAuthMethod();
+
+	if( "FORM".equals( authMethod ) ) {
+	    HttpSession session=req.getSession( false );
+
+	    if( session == null )
+		return; // not authenticated
+
+	    // XXX The attributes are set on the first access.
+	    // It is possible for a servlet to set the attributes and
+	    // bypass the security checking - but that's ok, since
+	    // everything happens inside a web application and all servlets
+	    // are in the same domain.
+	    String username=(String)session.getAttribute("j_username");
+	    String password=(String)session.getAttribute("j_password");
+	    credentials.put( "username" , username );
+	    credentials.put( "password", password);
+	}
+    }
+
+    public static boolean haveRole( String userRoles[], String requiredRoles[] ) {
+	for( int i=0; i< userRoles.length; i ++ ) {
+	    if( haveRole( userRoles[i], requiredRoles )) return true;
+	}
+	return false;
+    }
+
+    public static boolean haveRole( String element, String set[] ) {
+	for( int i=0; i< set.length; i ++ ) {
+	    if( element!=null && element.equals( set[i] ))
+		return true;
+	}
+	return false;
+    }
 }
+

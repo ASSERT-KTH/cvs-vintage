@@ -73,7 +73,43 @@
     	
       </dd>
     </dl>
+
+    <h2>Authentication and Authorization</h2>    
     
+    <p>Required steps:
+    <ol>
+      <li>Find if the request needs authorization. </li>
+      <li>Check if the request have the right credentials - if not generate 401  unauthorized.
+      </li>
+      <li>The normal error processing takes place: we can register special 401 error handler 
+	that will implement the desired auth method
+      </li>
+    </ol>
+
+    <p>The model we used is JAAS - the authenticator is a separate module that will 
+      find if enough credentials are available. We use a "normal" tomcat module to "glue"
+      between an auth API ( like JAAS or memoryRealm or catalina Realm if needed ) and 
+      tomcat's internal representation of request. ( no "callbacks" yet - just static util
+      functions to extract credentials from request. )
+    </p>
+      
+    <p>We provide a simple implementation for standalone tomcat.: 
+      <ul>
+	<li>AccessInterceptor will match the security contraints and set a note "required.roles"
+	  containing the list of valid groups.</li>
+	<li>SimpleRealm will authorize the request against in-memory users. </li>
+	<li>BasicLoginServlet, FormLoginServlet - implement the authentication protocol.
+      </ul>
+    </p>
     
+
+    <p>In "production" mode we expect tomcat to be integrated with various systems. 
+      Most web servers are using a similar mechanism - as long as the server is handling
+      the static files we need to let him deal with authorization/authentication. 
+      The only special case is Form based login, where the connector should forward
+      the request to tomcat. ( no complete implementation yet ).
+      
+    </p>
+
   </body>
 </html>

@@ -165,10 +165,20 @@ public class DefaultCMSetter extends BaseInterceptor {
 
 	ServletWrapper authWrapper=new ServletWrapper();
 	authWrapper.setContext( ctx );
-	authWrapper.setServletClass( "org.apache.tomcat.servlets.AuthServlet" );
 	authWrapper.setServletName( "tomcat.authServlet");
-	ctx.addServlet( authWrapper );
-
+	String login_type=ctx.getAuthMethod();
+	if( "BASIC".equals( login_type )) {
+	    authWrapper.setServletClass( "org.apache.tomcat.servlets.BasicLoginServlet" );
+	    ctx.addServlet( authWrapper );
+	} else if( "FORM".equals( login_type )) {
+	    authWrapper.setServletClass( "org.apache.tomcat.servlets.FormLoginServlet" );
+	    ctx.addServlet( authWrapper );
+	} else {
+	    authWrapper.setServletClass( "org.apache.tomcat.servlets.BasicLoginServlet" );
+	    ctx.addServlet( authWrapper );
+	    ctx.log("Unknown auth method " + login_type );
+	}
+	
 	ServletWrapper errorWrapper=new ServletWrapper();
 	errorWrapper.setContext( ctx );
 	errorWrapper.setServletClass( "org.apache.tomcat.servlets.DefaultErrorPage" );

@@ -1,8 +1,4 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/RequestSecurityProvider.java,v 1.4 2000/02/16 06:44:11 costin Exp $
- * $Revision: 1.4 $
- * $Date: 2000/02/16 06:44:11 $
- *
  * ====================================================================
  *
  * The Apache Software License, Version 1.1
@@ -60,34 +56,44 @@
  * [Additional notices, if required by prior licensing conditions]
  *
  */ 
+package org.apache.tomcat.util;
 
+import java.security.Principal;
 
-package org.apache.tomcat.core;
+public class SimplePrincipal implements Principal {
+    private String name;
 
-import javax.servlet.http.HttpServletRequest;
+    public SimplePrincipal(String name) {
+	this.name = name;
+    }
 
-// Not part of tomcat, will be moved to j2ee soon !
-
-/**
- * 
- * @author Harish Prabandham
- * @deprecated Will be removed after security is implemented in tomcat
- */
-
-//
-// WARNING: Some of the APIs in this class are used by J2EE. 
-// Please talk to harishp@eng.sun.com before making any changes.
-//
-public interface RequestSecurityProvider {
-    // Will require a sub-request if role is not
-    // one of the roles in security-constraints
-    public boolean isUserInRole(Context context,
-        HttpServletRequest req, String role);
-
-    // Set by Security interceptors
-    public java.security.Principal getUserPrincipal(
-        Context context, HttpServletRequest req);
-
-    // Flag set by request adapter
-    public boolean isSecure(Context context, HttpServletRequest req);
+    /**
+     * Returns true if the specified Object represents the
+     * same principal (i.e. a Principal with the same name)
+     *
+     * @param another Another Principal instance
+     * @return true if another is a Principal with the same name
+     */
+    public boolean equals(Object another) {
+	return another instanceof Principal &&
+	    ((Principal) another).getName().equals(getName());
+    }
+    
+    /**
+     * Returns the principal's name.
+     *
+     * @return The principal's name
+     */
+    public String getName() {
+	return name;
+    }
+    
+    /**
+     * Returns the principal's name.
+     *
+     * @return The principal's name
+     */
+    public String toString() {
+	return getName();
+    }
 }

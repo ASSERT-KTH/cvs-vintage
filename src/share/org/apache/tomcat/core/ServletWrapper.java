@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/ServletWrapper.java,v 1.42 2000/04/19 17:40:24 costin Exp $
- * $Revision: 1.42 $
- * $Date: 2000/04/19 17:40:24 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/ServletWrapper.java,v 1.43 2000/05/09 17:56:17 costin Exp $
+ * $Revision: 1.43 $
+ * $Date: 2000/05/09 17:56:17 $
  *
  * ====================================================================
  *
@@ -418,7 +418,7 @@ public class ServletWrapper {
 		context.log("ERROR: can't find default error handler or error in default error page", ex);
 		ex.printStackTrace();
 	    } else {
-		contextM.handleError( req, res, ex, 0 );
+		contextM.handleError( req, res, ex );
 	    }
 	    return;
 	}
@@ -447,7 +447,7 @@ public class ServletWrapper {
 				 unavailableTime + " wait " + moreWaitTime + " : " + msg, unavailable);
 		    req.setAttribute("javax.servlet.error.message", msg );	
 		    res.setStatus(HttpServletResponse.SC_SERVICE_UNAVAILABLE); // 503
-		    contextM.handleError( req, res, null , HttpServletResponse.SC_SERVICE_UNAVAILABLE );
+		    contextM.handleStatus( req, res, HttpServletResponse.SC_SERVICE_UNAVAILABLE );
 		    return;
 		}
 	    }
@@ -458,7 +458,7 @@ public class ServletWrapper {
 		// return not found
 		context.log( "Class Not Found in init", ex );
 		res.setStatus( 404 );
-		contextM.handleError( req, res, null,  404 );
+		contextM.handleStatus( req, res,  404 );
 		return;
 	    } catch( Exception ex ) {
 		context.log("Exception in init servlet " + ex.getMessage(), ex );
@@ -478,14 +478,14 @@ public class ServletWrapper {
 	    String msg=unavailable.getMessage();
 	    context.log( "Error in " + getServletName() + " init(): " + msg, unavailable);
 	    req.setAttribute("javax.servlet.error.message", msg );
-	    contextM.handleError( req, res, null, HttpServletResponse.SC_SERVICE_UNAVAILABLE );
+	    contextM.handleStatus( req, res,  HttpServletResponse.SC_SERVICE_UNAVAILABLE );
 	    return;
 	}
 
 	if( servlet == null ) {
 	    context.log( "Can't find servet " + getServletName() );
 	    res.setStatus( 404 );
-	    contextM.handleError( req, res, null,  404 );
+	    contextM.handleStatus( req, res,  404 );
 	    return;
 	}
 	
@@ -532,7 +532,7 @@ public class ServletWrapper {
 		// XXX XXX Security - we should log the message, but nothing should show up
 		// to the user - it gives up information about the internal system !
 		// Developers can/should use the logs !!!
-		contextM.handleError( req, res, t, 0 );
+		contextM.handleError( req, res, t );
 	    }
 	} 
     }

@@ -68,12 +68,47 @@ import javax.servlet.http.*;
 
 
 /**
- * Will authenticate the request for non-form auth
- * ( sort of "default form auth" );
  *
  */
-public class AuthServlet extends HttpServlet {
+public class FormLoginServlet extends HttpServlet {
+    int debug=0;
     
+    public void init() throws ServletException {
+	ServletConfig config=getServletConfig();
+	ServletContext context=config.getServletContext();
+
+	Context ctx=((ServletContextFacade)context).getRealContext();
+	if( ! "FORM".equals( ctx.getAuthMethod() ))
+	    return;
+	try {
+	    
+	    ServletWrapper jcheck=new ServletWrapper();
+	    jcheck.setContext( ctx );
+	    jcheck.setServletClass( "org.apache.tomcat.servlets.JSecurityCheck" );
+	    jcheck.setServletName( "tomcat.jcheck");
+	    ctx.addServlet( jcheck );
+	    
+	    // 
+	    String form=ctx.getFormLoginPage();
+	    
+	    if( debug > 0 ) ctx.log( "Adding form login " + form );
+	    if( form!= null ) {
+		int lastS=form.lastIndexOf( "/" );
+		if( lastS<=0 ) {
+		    ctx.addServletMapping( "/j_security_check", "tomcat.jcheck" );
+		    if( debug > 0 ) ctx.log( "Map  /j_security_check to tomcat.jcheck" );
+		}  else {
+		    String dir=form.substring( 0, lastS);
+		    ctx.addServletMapping( dir + "/j_security_check", "tomcat.jcheck");
+		    if( debug > 0 ) ctx.log( "Map " + dir + "/j_security_check to tomcat.jcheck");
+		}
+	    }
+	} catch( Exception ex ) {
+	    context.log( "Error in form login init " , ex );
+	    ex.printStackTrace();
+	}
+    }
+
     public void service(HttpServletRequest request,
 			HttpServletResponse response)
 	throws ServletException, IOException
@@ -82,14 +117,16 @@ public class AuthServlet extends HttpServlet {
 	Context ctx=req.getContext();
 	String realm=ctx.getRealmName();
 
-	if( "EXPERIMENTAL_FORM".equals( ctx.getAuthMethod() )) {
+
+	HttpSession session=req.getSession( false );
+	if( session == null ) {
 	    // the code is not uglier that the spec, we are just implementing it.
 	    // if you don't understand what's here - you're not alone !
 	    // ( it helps to  read the spec > 10 times !)
 
 	    String page=ctx.getFormLoginPage();
 	    if(page!=null) {
-		HttpSession session=request.getSession( true );
+		session=request.getSession( true );
 		// Because of _stupid_ "j_security_check" we have
 		// to start the session ( since login page migh not do it ),
 		// then save the current page ( since we'll have to return here
@@ -106,13 +143,20 @@ public class AuthServlet extends HttpServlet {
 		response.sendRedirect( ctx.getPath() + page );
 		return; 
 	    }
+	    
+	} else {
+	    // Second stage 
+
+	    String username=req.getFacade().getParameter( "j_username" );
+	    String password=req.getFacade().getParameter( "j_password" );
+	    if( ctx.getDebug() > 0 ) ctx.log( "JSecurityCheck - FORM auth " + username + " " + password );
+	    
+	    session.setAttribute( "j_username", username );
+	    session.setAttribute( "j_password", password );
+	    
+	    String origLocation=(String)session.getAttribute( "tomcat.auth.originalLocation");
+	    if( ctx.getDebug() > 0) ctx.log("JSecurityCheck - Back to orig location " + origLocation);
+	    response.sendRedirect( origLocation );
 	}
-
-	// Default is BASIC
-	if(realm==null) realm="default";
-	response.setHeader( "WWW-Authenticate",
-			    "Basic realm=\"" + realm + "\"");
-	response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
     }
-
 }
