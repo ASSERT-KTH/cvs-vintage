@@ -1,32 +1,41 @@
-##set ($action = $link.setPage("ViewIssueLong.vm").setAction("ModifyIssue").addPathInfo("nextTemplate", "ViewIssueLong.vm"))
-#set ($user = $data.User)
-#set( $issueList = $scarabR.IssueList )
+$page.setTitle("View Issue")
+
+<div class="app" id="viewissue">
+
+#set ($action = $link.setPage("ViewIssueLong.vm").setAction("ModifyIssue").addPathInfo("nextTemplate", "ViewIssueLong.vm").toString())
+#set ($issueList = $scarabR.IssueList)
 #set ($resultsPerPage = $data.Parameters.getInt("resultsPerPage"))
 #set ($pageNum = $data.Parameters.getInt("pageNum"))
+
 #if ($issueList.size() > $resultsPerPage)
    #set ($paginated = "true")
    #set ($issueList = $scarabR.getPaginatedList($issueList, $pageNum, $resultsPerPage))
 #end
-#if( $issueList )
+
+#if ($issueList)
 ## PAGINATION
-#if( $paginated)
+#if ($paginated)
  <div class="misc">
-  #if( $scarabR.PrevPage != 0 )
-    #set ( $prevLink = $link.setPathInfo("resultsperpage", $resultsPerPage.toString()).setPathInfo("pageNum", $scarabR.PrevPage.toString()).setPage("ViewIssueLong.vm"))
+  #if ($scarabR.PrevPage != 0)
+    #set ($prevLink = $link.setPathInfo("resultsperpage", $resultsPerPage.toString()).setPathInfo("pageNum", $scarabR.PrevPage.toString()).setPage("ViewIssueLong.vm").toString())
     <a href="$prevLink">&laquo;</a> previous |
   #end
      $pageNum of $scarabR.NbrPages
   #if( $scarabR.NextPage != 0)
-    #set ( $nextLink = $link.setPathInfo("resultsperpage", $resultsPerPage.toString()).setPathInfo("pageNum", $scarabR.NextPage.toString()).setPage("ViewIssueLong.vm"))
+    #set ($nextLink = $link.setPathInfo("resultsperpage", $resultsPerPage.toString()).setPathInfo("pageNum", $scarabR.NextPage.toString()).setPage("ViewIssueLong.vm").toString())
     | <a href="$nextLink">&raquo;</a> next
   #end
 #end
-  <form name="IssueForm" method="post" action="$link.setAction("ModifyIssue")" >
+
+  <form method="post" action="$action">
+  #set ($currentModule = $scarabR.CurrentModule)
   #foreach ($currentIssue in $issueList)
-    #viewIssue ($currentIssue)
+    #viewIssue ($currentIssue $currentModule)
   #end
   $intake.declareGroups()
   </form>
 #else
    <p><strong class="alert">You have not selected any issues to view.</strong></p>
 #end
+
+</div>
