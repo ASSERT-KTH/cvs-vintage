@@ -135,14 +135,22 @@
       property="scarab.context.regular.renamed"/>
 
 	<j:choose>
-        <j:when test="${scarab.context.regular.renamed}">
+      <j:when test="${scarab.context.regular.renamed}"/>
+      <j:otherwise>
+        <ant:move file="tomcat/webapps/scarab.xml" toFile="tomcat/webapps/scarab.regular.xml.off"/>
+        <ant:copy file="tomcat/webapps/scarab.inplace.xml.off" tofile="tomcat/webapps/scarab.xml"/>  
+      </j:otherwise>
+    </j:choose>  
+    
+    <ant:available file="tomcat/webapps/scarab.inplace.xml.off" type="file"
+      property="scarab.context.inplace.renamed"/>
 
-        </j:when>
-        <j:otherwise>
-          <ant:move file="tomcat/webapps/scarab.xml" toFile="tomcat/webapps/scarab.regular.xml.off"/>
-          <ant:copy file="tomcat/webapps/scarab.inplace.xml.off" tofile="tomcat/webapps/scarab.xml"/>  
-        </j:otherwise>
-      </j:choose>    
+	<j:choose>
+      <j:when test="${scarab.context.inplace.renamed}">
+        <ant:copy file="tomcat/webapps/scarab.inplace.xml.off" tofile="tomcat/webapps/scarab.xml" overwrite="true"/>  
+	  </j:when>
+    </j:choose>    
+    
      
    </goal>
 
