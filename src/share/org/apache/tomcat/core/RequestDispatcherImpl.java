@@ -211,7 +211,8 @@ public class RequestDispatcherImpl implements RequestDispatcher {
 
 	Object old_request_uri=realRequest.getAttribute("javax.servlet.include.request_uri");
 	realRequest.setAttribute("javax.servlet.include.request_uri",
-				 context.getPath() + path );
+				 path);
+	// context.getPath() + path );
 
 	Object old_context_path=realRequest.getAttribute("javax.servlet.include.context_path");
 	realRequest.setAttribute("javax.servlet.include.context_path",
