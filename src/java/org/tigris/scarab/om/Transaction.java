@@ -49,6 +49,7 @@ package org.tigris.scarab.om;
 import java.util.Date;
 import java.util.List;
 import java.util.Iterator;
+import javax.mail.SendFailedException;
 
 import org.apache.torque.util.Criteria; 
 import org.apache.torque.om.NumberKey;
@@ -154,10 +155,11 @@ public class Transaction
         If no subject and template specified, assume modify issue action.
         throws Exception
     */
-    public void sendEmail( TemplateContext context, Issue issue, 
+    public boolean sendEmail( TemplateContext context, Issue issue, 
                            String subject, String template )
          throws Exception
     {
+        boolean success = true;
         TemplateEmail te = new TemplateEmail();
         if ( context == null ) 
         {
@@ -212,6 +214,16 @@ public class Transaction
         while ( iter.hasNext() ) 
         {
             ScarabUser toUser = (ScarabUser)iter.next();
+            te.setTo(toUser.getFirstName() + " " + toUser.getLastName(), 
+                     toUser.getEmail());
+            try
+            {
+                te.sendMultiple();
+            }
+            catch (SendFailedException e)
+            {
+                success = false;
+            }
             te.addTo(toUser.getEmail(),
                      toUser.getFirstName() + " " + toUser.getLastName());
         }
@@ -225,7 +237,7 @@ public class Transaction
             te.addCc(ccUser.getEmail(),
                      ccUser.getFirstName() + " " + ccUser.getLastName());
         }
-        te.sendMultiple();
+        return success;
     }
 
     /** 
@@ -234,16 +246,16 @@ public class Transaction
         Using default values for modify issue.
         @throws Exception
     */
-    public void sendEmail(TemplateContext context, Issue issue)
+    public boolean sendEmail(TemplateContext context, Issue issue)
          throws Exception
     {
-        sendEmail(context, issue, null, null);
+        return sendEmail(context, issue, null, null);
     }
 
-    public void sendEmail(Issue issue)
+    public boolean sendEmail(Issue issue)
          throws Exception
     {
-        sendEmail(null, issue, null, null);
+        return sendEmail(null, issue, null, null);
     }
 
 
@@ -251,9 +263,9 @@ public class Transaction
         Convenience method for emails that require no extra context info. 
         @throws Exception
     */
-    public void sendEmail(Issue issue, String subject, String template)
+    public boolean sendEmail(Issue issue, String subject, String template)
          throws Exception
     {
-        sendEmail(null, issue, subject, template);
+        return sendEmail(null, issue, subject, template);
     }
 }

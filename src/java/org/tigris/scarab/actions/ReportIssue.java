@@ -98,7 +98,7 @@ import org.tigris.scarab.tools.ScarabRequestTool;
  * This class is responsible for report issue forms.
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: ReportIssue.java,v 1.93 2002/01/18 20:21:43 dlr Exp $
+ * @version $Id: ReportIssue.java,v 1.94 2002/01/18 20:26:24 elicia Exp $
  */
 public class ReportIssue extends RequireLoginFirstAction
 {
@@ -431,10 +431,14 @@ public class ReportIssue extends RequireLoginFirstAction
                 subj.append(issue.getModule().getRealName().toUpperCase());
                 subj.append("] Issue #").append(issue.getUniqueId());
                 subj.append(summary);
-                transaction.sendEmail(new ContextAdapter(context), issue, 
+            
+                if (!transaction.sendEmail(new ContextAdapter(context), issue, 
                                       subj.toString(),
-                                      "email/NewIssueNotification.vm"); 
-                
+                                      "email/NewIssueNotification.vm"))
+                {
+                    data.setMessage("Your issue was saved, but could not send notification email "
+                                     + "due to a sendmail error.");
+                }
                 cleanup(data, context);
                 data.getParameters().add("id", 
                                          issue.getUniqueId().toString());
