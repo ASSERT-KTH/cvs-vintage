@@ -46,7 +46,7 @@ import org.jboss.logging.Logger;
  * parameters and loading query results.
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.14 $
+ * @version $Revision: 1.15 $
  *
  * <p><b>20021023 Steve Coy:</b>
  * <ul>
@@ -563,7 +563,13 @@ public final class JDBCUtil
          {
             return value;
          }
-         
+
+         if(destination == java.math.BigInteger.class
+            && value.getClass() == java.math.BigDecimal.class)
+         {
+            return ((java.math.BigDecimal)value).toBigInteger();
+         }
+
          // oops got the wrong type - nothing we can do
          throw new SQLException("Got a " + value.getClass().getName() + "[cl=" +
                System.identityHashCode(value.getClass().getClassLoader()) +
