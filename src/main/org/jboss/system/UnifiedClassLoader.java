@@ -20,7 +20,8 @@ import java.io.InputStream;
 *
 * @author <a href="marc.fleury@jboss.org">Marc Fleury</a>
 * @author <a href="christoph.jung@jboss.org">Christoph G. Jung</a>
-* @version $Revision: 1.2 $
+* @author <a href="scott.stark@jboss.org">Scott Stark/a>
+* @version $Revision: 1.3 $
 * 
 * <p><b>20010830 marc fleury:</b>
 * <ul>
@@ -32,8 +33,8 @@ import java.io.InputStream;
 * </ul>
 */
 public class UnifiedClassLoader
-extends java.net.URLClassLoader
-implements UnifiedClassLoaderMBean
+   extends java.net.URLClassLoader
+   implements UnifiedClassLoaderMBean
 {
    /** One URL per classLoader in our case */   
    private URL url = null;
@@ -96,7 +97,7 @@ implements UnifiedClassLoaderMBean
    */
    
    public Class loadClass(String name, boolean resolve)
-   throws ClassNotFoundException
+      throws ClassNotFoundException
    {
       return libraries.loadClass(name, resolve, this);  
    }
@@ -157,10 +158,22 @@ implements UnifiedClassLoaderMBean
    {
       return url.hashCode();
    }
-   
+
+   /** This is overriden to return null to avoid excessive and most likely
+    *useless RMI annotated codebases. Unfortunately this appears to be the
+    *only wat to do this at the moment(JDK1.3.1).
+    */
    public URL[] getURLs()
    {
         return null;
+   }
+
+   /** This method simply invokes the super.getURLs() method to access the
+    *list of URLs that make up the UnifiedClassLoader classpath.
+    */
+   public URL[] getClasspath()
+   {
+      return super.getURLs();
    }
 
    public boolean equals(Object other) 
