@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/struts/contrib/tiles/src/share/org/apache/struts/taglib/tiles/Attic/GetTag.java,v 1.3 2001/09/28 17:00:11 cedric Exp $
- * $Revision: 1.3 $
- * $Date: 2001/09/28 17:00:11 $
+ * $Header: /tmp/cvs-vintage/struts/contrib/tiles/src/share/org/apache/struts/taglib/tiles/Attic/GetTag.java,v 1.4 2001/12/27 17:35:37 cedric Exp $
+ * $Revision: 1.4 $
+ * $Date: 2001/12/27 17:35:37 $
  * $Author: cedric $
  *
  */
