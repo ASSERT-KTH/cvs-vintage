@@ -251,7 +251,7 @@ public class SimpleMapper1 extends  BaseInterceptor  {
 	if( path.indexOf("?") >=0 )
 	    throw new RuntimeException("ASSERT: ? in requestURI");
 
-	if ((path.indexOf('%') >= 0) || (path.indexOf('+') >= 0)) {
+	if (path.indexOf('%') >= 0) {
 		// XXX rewrite URLDecode to avoid allocation
 		path = RequestUtil.URLDecode(path);
 	}
