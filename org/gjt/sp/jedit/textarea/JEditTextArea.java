@@ -50,7 +50,7 @@ import org.gjt.sp.util.Log;
  * jEdit's text component.
  *
  * @author Slava Pestov
- * @version $Id: JEditTextArea.java,v 1.141 2002/06/20 10:33:20 spestov Exp $
+ * @version $Id: JEditTextArea.java,v 1.142 2002/06/23 05:49:35 spestov Exp $
  */
 public class JEditTextArea extends JComponent
 {
@@ -3239,6 +3239,25 @@ loop:		for(int i = lineNo - 1; i >= 0; i--)
 		}
 		else
 		{
+			boolean indent;
+
+			// check if the user entered a bracket
+			String indentOpenBrackets = (String)buffer
+				.getProperty("indentOpenBrackets");
+			String indentCloseBrackets = (String)buffer
+				.getProperty("indentCloseBrackets");
+			if((indentCloseBrackets != null
+				&& indentCloseBrackets.indexOf(ch) != -1)
+				|| (indentOpenBrackets != null
+				&& indentOpenBrackets.indexOf(ch) != -1))
+			{
+				indent = true;
+			}
+			else
+			{
+				indent = false;
+			}
+
 			String str = String.valueOf(ch);
 			if(selection.size() != 0)
 			{
@@ -3258,35 +3277,27 @@ loop:		for(int i = lineNo - 1; i >= 0; i--)
 			{
 				// Don't overstrike if we're on the end of
 				// the line
-				if(overwrite)
-				{
+				if(overwrite || indent)
 					buffer.beginCompoundEdit();
 
+				if(overwrite)
+				{
 					int caretLineEnd = getLineEndOffset(caretLine);
 					if(caretLineEnd - caret > 1)
 						buffer.remove(caret,1);
 				}
 
 				buffer.insert(caret,str);
+
+				if(indent)
+					buffer.indentLine(caretLine,false,true);
 			}
 			finally
 			{
-				if(overwrite)
+				if(overwrite || indent)
 					buffer.endCompoundEdit();
 			}
-		}
 
-		// check if the user entered a bracket
-		String indentOpenBrackets = (String)buffer
-			.getProperty("indentOpenBrackets");
-		String indentCloseBrackets = (String)buffer
-			.getProperty("indentCloseBrackets");
-		if((indentCloseBrackets != null
-			&& indentCloseBrackets.indexOf(ch) != -1)
-			|| (indentOpenBrackets != null
-			&& indentOpenBrackets.indexOf(ch) != -1))
-		{
-			buffer.indentLine(caretLine,false,true);
 		}
 	} //}}}
 
