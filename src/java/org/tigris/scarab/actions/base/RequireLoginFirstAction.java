@@ -71,10 +71,13 @@ import org.tigris.scarab.om.ScarabUser;
  * Default.java Screen except that it has a few helper methods.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: RequireLoginFirstAction.java,v 1.22 2002/02/03 04:51:06 jmcnally Exp $    
+ * @version $Id: RequireLoginFirstAction.java,v 1.23 2002/02/03 19:10:08 jmcnally Exp $    
  */
 public abstract class RequireLoginFirstAction extends TemplateSecureAction
 {
+    private static final Category log = 
+        Category.getInstance("org.tigris.scarab");
+
     /**
      * sets the template to template.login if the user hasn't logged in yet
      */
@@ -292,6 +295,6 @@ public abstract class RequireLoginFirstAction extends TemplateSecureAction
 
     protected Category log()
     {
-        return Category.getInstance(getClass().getName());
+        return log;
     }
 }
