@@ -84,7 +84,7 @@ import org.tigris.scarab.services.cache.ScarabCache;
  * action methods on RModuleAttribute table
  *      
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: ArtifactTypeEdit.java,v 1.14 2002/03/14 01:13:10 jmcnally Exp $
+ * @version $Id: ArtifactTypeEdit.java,v 1.15 2002/03/14 01:59:06 elicia Exp $
  */
 public class ArtifactTypeEdit extends RequireLoginFirstAction
 {
@@ -193,10 +193,15 @@ public class ArtifactTypeEdit extends RequireLoginFirstAction
                 attGroup.save();
             }
 
+            ScarabCache.clear();
             // Set dedupe property for module-issueType
             if (!areThereDedupeAttrs || module.getAttributeGroups(issueType).size() < 2)
             {
                 rmit.setDedupe(false);
+            }
+            else
+            {
+                rmit.setDedupe(true);
             }
             rmit.save();
         }
@@ -267,26 +272,27 @@ public class ArtifactTypeEdit extends RequireLoginFirstAction
         for (int i =0; i<keys.length; i++)
         {
             key = keys[i].toString();
-            if (key.startsWith("delete_group_"))
+            if (key.startsWith("group_action"))
             {
-                if (attributeGroups.size() - 1 < 2)
+                try
                 {
-                    data.setMessage("You cannot have fewer than two groups.");
-                    break;
+                    groupId = key.substring(13);
+                    AttributeGroup ag = AttributeGroupManager
+                       .getInstance(new NumberKey(groupId), false); 
+                    ag.delete(user);
                 }
-                else
+                catch (Exception e)
                 {
-                    try
-                    {
-                        groupId = key.substring(13);
-                        AttributeGroup ag = AttributeGroupManager
-                            .getInstance(new NumberKey(groupId), false);
-                        ag.delete(user);
-                    }
-                    catch (Exception e)
-                    {
-                        data.setMessage(ScarabConstants.NO_PERMISSION_MESSAGE);
-                    }
+                    data.setMessage(ScarabConstants.NO_PERMISSION_MESSAGE);
+                }
+                if (attributeGroups.size()  < 2)
+                {
+                    // If there are fewer than 2 attribute groups,
+                    // Turn of deduping
+                    RModuleIssueType rmit =  module.getRModuleIssueType(issueType);
+                    rmit.setDedupe(false);
+                    rmit.save();
+                    ScarabCache.clear();
                 }
             }
         }
