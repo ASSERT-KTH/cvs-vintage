@@ -1,4 +1,4 @@
-// $Id: Import.java,v 1.41 2003/12/08 14:57:20 lepekhine Exp $
+// $Id: Import.java,v 1.42 2003/12/09 07:35:16 lepekhine Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -72,7 +72,7 @@ import org.tigris.gef.base.Globals;
  *
  * <p>Supports recursive search in folder for all .java classes.
  *
- * <p>$Id: Import.java,v 1.41 2003/12/08 14:57:20 lepekhine Exp $
+ * <p>$Id: Import.java,v 1.42 2003/12/09 07:35:16 lepekhine Exp $
  *
  * @author Andreas Rueckert <a_rueckert@gmx.net>
  */
@@ -632,7 +632,7 @@ public class Import {
 	    String pass = "2-nd pass";
 	    if (i <= numberOfFiles/2) pass = "1-st pass";
 	    
-            progressLabel.setText("Parsing file " + (i/2+1) + " of " + numberOfFiles/2
+            progressLabel.setText("Parsing file " + ((i-1)%(numberOfFiles/2)+1) + " of " + numberOfFiles/2
 				  + ". "+pass);
             repaint();
         }
