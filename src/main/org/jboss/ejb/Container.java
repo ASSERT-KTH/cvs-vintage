@@ -99,7 +99,7 @@ import org.jboss.system.ServiceMBeanSupport;
  * @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>.
  * @author <a href="bill@burkecentral.com">Bill Burke</a>
  * @author <a href="mailto:d_jencks@users.sourceforge.net">David Jencks</a>
- * @version $Revision: 1.93 $
+ * @version $Revision: 1.94 $
  */
 public abstract class Container
    extends ServiceMBeanSupport
@@ -397,7 +397,7 @@ public abstract class Container
     *
     * @return assemblyDescriptor;
     */
-   public Set getMethodPermissions(Method m, boolean home)
+   public Set getMethodPermissions(Method m, InvocationType iface)
    {
       Set permissions;
       
@@ -407,11 +407,12 @@ public abstract class Container
       }
       else
       {
-         permissions = getBeanMetaData().
-            getMethodPermissions(m.getName(), m.getParameterTypes(), !home);
+         String name = m.getName();
+         Class[] sig = m.getParameterTypes();
+         permissions = getBeanMetaData().getMethodPermissions(name, sig, iface);
          methodPermissionsCache.put(m, permissions);
       }
-      
+
       return permissions;
    }
    

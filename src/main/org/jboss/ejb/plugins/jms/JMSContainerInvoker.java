@@ -54,7 +54,7 @@ import org.jboss.metadata.InvokerProxyBindingMetaData;
 /**
  * EJBProxyFactory for JMS MessageDrivenBeans
  *
- * @version <tt>$Revision: 1.48 $</tt>
+ * @version <tt>$Revision: 1.49 $</tt>
  * @author <a href="mailto:peter.antman@tim.se">Peter Antman</a> .
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  * @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
@@ -424,10 +424,10 @@ public class JMSContainerInvoker
       // Is container managed?
       isContainerManagedTx = config.isContainerManagedTx();
       acknowledgeMode = config.getAcknowledgeMode();
-      isNotSupportedTx = 
-         config.getMethodTransactionType("onMessage", 
+      byte txType = config.getMethodTransactionType("onMessage", 
                                          new Class[]{ Message.class }, 
-                                         false) == MetaData.TX_NOT_SUPPORTED; 
+                                         InvocationType.LOCAL);
+      isNotSupportedTx = txType == MetaData.TX_NOT_SUPPORTED; 
       
       // Get configuration data from jboss.xml
       String destinationJNDI = config.getDestinationJndiName();

@@ -29,7 +29,7 @@ import org.jboss.metadata.BeanMetaData;
  *  @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
  *  @author <a href="mailto:akkerman@cs.nyu.edu">Anatoly Akkerman</a>
  *  @author <a href="mailto:osh@sparre.dk">Ole Husgaard</a>
- *  @version $Revision: 1.26 $
+ *  @version $Revision: 1.27 $
  */
 public class TxInterceptorCMT
 extends AbstractTxInterceptor
@@ -130,9 +130,7 @@ extends AbstractTxInterceptor
          log.trace("Current transaction in MI is " + oldTransaction);
       
       InvocationType type = invocation.getType();
-      byte transType = getTransactionMethod(
-            invocation.getMethod(), 
-            type == InvocationType.REMOTE || type == InvocationType.LOCAL);
+      byte transType = getTransactionMethod(invocation.getMethod(), type);
 
       if ( trace )
          printMethod(invocation.getMethod(), transType);
@@ -329,7 +327,7 @@ extends AbstractTxInterceptor
    // Protected  ----------------------------------------------------
    
    // This should be cached, since this method is called very often
-   protected byte getTransactionMethod(Method m, boolean remoteInvocation)
+   protected byte getTransactionMethod(Method m, InvocationType iface)
    {
       if(m == null)
       {
@@ -343,7 +341,7 @@ extends AbstractTxInterceptor
       
       //DEBUG        log.debug("Found metadata for bean '"+bmd.getEjbName()+"'"+" method is "+m.getName());
       
-      byte result = bmd.getMethodTransactionType(m.getName(), m.getParameterTypes(), remoteInvocation);
+      byte result = bmd.getMethodTransactionType(m.getName(), m.getParameterTypes(), iface);
       
       // provide default if method is not found in descriptor
       if (result == MetaData.TX_UNKNOWN) result = MetaData.TX_REQUIRED;
