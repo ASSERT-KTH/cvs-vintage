@@ -6,7 +6,7 @@
  */
 package org.jboss.webservice.metadata.jaxrpcmapping;
 
-// $Id: JavaWsdlMapping.java,v 1.1 2004/05/14 18:34:23 tdiesler Exp $
+// $Id: JavaWsdlMapping.java,v 1.2 2004/06/08 17:41:18 tdiesler Exp $
 
 import java.util.ArrayList;
 
@@ -62,6 +62,19 @@ public class JavaWsdlMapping
       ServiceEndpointInterfaceMapping[] arr = new ServiceEndpointInterfaceMapping[serviceEndpointInterfaceMappings.size()];
       serviceEndpointInterfaceMappings.toArray(arr);
       return arr;
+   }
+
+   // convenience methods ********************************************************************
+
+   public String getPackageTypeForURI(String uri) {
+      String packageStr = null;
+      for (int i = 0; packageStr == null && i < packageMappings.size(); i++)
+      {
+         PackageMapping mapping = (PackageMapping)packageMappings.get(i);
+         if (mapping.getNamespaceURI().equals(uri))
+            packageStr = mapping.getPackageType();
+      }
+      return packageStr;
    }
 
    // factory methods ********************************************************************
