@@ -1,4 +1,4 @@
-// $Id: FileConstants.java,v 1.2 2003/06/29 23:48:17 linus Exp $
+// $Id: FileConstants.java,v 1.3 2004/08/25 20:12:34 mvw Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -29,7 +29,18 @@ package org.argouml.util;
  * @stereotype utility
  */
 public class FileConstants {
-    public final static String COMPRESSED_FILE_EXT = ".zargo";
-    public final static String UNCOMPRESSED_FILE_EXT = ".argo";
-    public final static String PROJECT_FILE_EXT = ".argo";
+    /**
+     * The extension for .zargo files is COMPRESSED_FILE_EXT.
+     */
+    public static final String COMPRESSED_FILE_EXT = ".zargo";
+    
+    /**
+     * The extension for .argo files is UNCOMPRESSED_FILE_EXT.
+     */
+    public static final String UNCOMPRESSED_FILE_EXT = ".argo";
+    
+    /**
+     * The extension for .argo files is PROJECT_FILE_EXT.
+     */
+    public static final String PROJECT_FILE_EXT = ".argo";
 }
