@@ -28,7 +28,7 @@ email cannot be sent to you.
 <h3>Confirmation</h3>
 
 <form action="$link.setPage("RegisterConfirm.vm")" method="post">
-<input type="hidden" name="action" value="RegisterConfirm" />
+<input type="hidden" name="action" value="Register" />
 <input type="hidden" name="$scarabG.Constant.NEXT_TEMPLATE" value="Confirm.vm" />
 <input type="hidden" name="$scarabG.Constant.CANCEL_TEMPLATE" value="Register.vm" />
 

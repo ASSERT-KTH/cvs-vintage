@@ -36,16 +36,16 @@ Please enter the confirmation code that was sent to you in an email.
 #end
 
 <form method="post" action="$link.setPage("Confirm.vm")">
- <input type="hidden" name="action" value="Confirm" />
+ <input type="hidden" name="action" value="Register" />
  <input type="hidden" name="$scarabG.Constant.NEXT_TEMPLATE" value="Login.vm" />
  <input type="hidden" name="$scarabG.Constant.CANCEL_TEMPLATE" value="Login.vm" />
 
-<h3>Confirmation Information</h3>
+<h3>Confirmation information</h3>
 
 <div class="axial">
 <table cellpadding="3" cellspacing="2" border="0">
  <tr>
-  <th>Email Address</th>
+  <th>Email address</th>
   <td>
    <input type="text" size="25" name="$regGroup.Email.Key" value="$!emailValue" tabindex="1" />
    #fieldErrorMsg($regGroup.Email "")
@@ -63,7 +63,7 @@ Please enter the confirmation code that was sent to you in an email.
 
 <div class="functnbar2">
 <input type="submit" name="eventSubmit_doConfirm" value="Confirm" tabindex="3" />&#160;
-<input type="submit" name="eventSubmit_doCancel" value="Cancel" tabindex="4" />
+<input type="submit" name="eventSubmit_doResendconfirmationcode" value="Resend code" tabindex="4" />&#160;
 </div>
 
 $intake.declareGroups()
