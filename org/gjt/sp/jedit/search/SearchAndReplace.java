@@ -37,7 +37,7 @@ import org.gjt.sp.util.Log;
  * Class that implements regular expression and literal search within
  * jEdit buffers.
  * @author Slava Pestov
- * @version $Id: SearchAndReplace.java,v 1.9 2001/11/07 08:53:20 spestov Exp $
+ * @version $Id: SearchAndReplace.java,v 1.10 2001/11/10 06:45:18 spestov Exp $
  */
 public class SearchAndReplace
 {
@@ -461,6 +461,11 @@ loop:			for(;;)
 				{
 					view.getStatus().setMessageAndClear(
 						jEdit.getProperty("view.status.auto-wrap"));
+					// beep if beep property set
+					if(jEdit.getBooleanProperty("search.beepOnSearchAutoWrap"))
+					{
+						view.getToolkit().beep();
+					}
 					restart = true;
 				}
 				else
