@@ -13,6 +13,7 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
+
 package org.columba.core.gui.util;
 
 import java.awt.Component;
@@ -20,13 +21,11 @@ import java.awt.Component;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 
-import org.columba.core.util.Compatibility;
 import org.columba.mail.gui.frame.MailFrameView;
 
 public class DialogStore
 {
     private static MailFrameView mainFrame;
-
 
     public DialogStore( MailFrameView mainFrame )
     {
@@ -37,28 +36,19 @@ public class DialogStore
     public static JDialog getDialog()
     {
         JDialog dialog = new JDialog(mainFrame, true );
-        // for jdk1.3 compatibility, this is called dynamically
-		Compatibility.simpleSetterInvoke(dialog, "setLocationRelativeTo", Component.class, null );
-        //dialog.setLocationRelativeTo(null);
         return dialog;
     }
 
     public static JDialog getDialog( String title)
     {
         JDialog dialog = new JDialog(mainFrame, title, true );
-//		for jdk1.3 compatibility, this is called dynamically
-			 Compatibility.simpleSetterInvoke(dialog, "setLocationRelativeTo", Component.class, null );
-        //dialog.setLocationRelativeTo(null);
         return dialog;
     }
 
 	public static JDialog getDialog( JFrame frame )
 	{
 		JDialog dialog = new JDialog(frame, true);
-		dialog.setLocationRelativeTo(null);
+		dialog.setLocationRelativeTo(frame);
 		return dialog;
 	}
-	
-	
-
 }
