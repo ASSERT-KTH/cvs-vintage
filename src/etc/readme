@@ -1,4 +1,4 @@
-$Id: readme,v 1.2 1999/10/15 09:02:49 duncan Exp $
+$Id: readme,v 1.3 1999/10/16 03:09:28 bergsten Exp $
 	
 Tomcat 2.2 (development version)
 
@@ -26,17 +26,17 @@ http://java.sun.com/products/jdk.
 
 If you are using JDK 1.2, tools.jar (which can be found in
 /path/to/jdk1.2/lib/tools.jar) needs to be in your
-CLASSPATH. Tools.jar contains "javac" which is used by the JSP engine
+CLASSPATH. tools.jar contains "javac" which is used by the JSP engine
 to compile the servlets generated from .jsp's.
 
 There is a Unix based Korn Shell Script and a Windows based Batch File
-provided in the installation directory. To startup the server on Unix:
+provided in the installation directory. To start up the server on Unix:
 
-     % startserver
+     % startup.sh
 
 To start up the server on Windows
 
-     C:\jswdk\> startserver
+     C:\tomcat\> startup
 
 Once the server is running, you can use any web browser to browse
 
@@ -48,8 +48,8 @@ see some JSP and servlet examples.
 
 To stop the server, use the following commands:
 
-    Unix: 		% stopserver
-    Windows: 		> stopserver
+    Unix: 		% shutdown.sh
+    Windows: 		> shutdown
 
 KNOWN BUGS AND ISSUES
 ---------------------
@@ -67,6 +67,9 @@ KNOWN BUGS AND ISSUES
    .jar file that contains .class files for all user-defined tags and
    the tag library descriptor in the META-INF directory -
    META-INF/taglib.tld. 
+
+5. The server can not serve static files on a Windows platform if
+   you use JDK 1.1.x. Use JDK 1.2.x instead.
 
 
 TROUBLESHOOTING

@@ -1,17 +1,33 @@
-Some Frequently Asked Questions (FAQ) on JSWDK
+Some Frequently Asked Questions (FAQ) on Tomcat
 ----------------------------------------------
 
 Q: I am getting a 404 Error, what does it mean?
 
 A: In simple terms, it means the server was not able to locate 
-   the resource you requested. This can occur because of two 
+   the resource you requested. This can occur because of four 
    reasons:
 
-   One, the URL you typed was wrong or has a typo.
-   And two, the URL you requested could not be resolved with 
-   the current "docsBase". If you are trying to run your own 
-   "web-application" please read  the questions related to 
-   "installing your own web-application" in this FAQ.
+   * One, the URL you typed was wrong or has a typo.
+   * Two, the URL you requested could not be resolved with 
+     the current "docsBase". If you are trying to run your own 
+     "web-application" please read  the questions related to 
+     "installing your own web-application" in this FAQ.
+   * Three, you're using JDK 1.1.x on a Windows platform. It's
+     a known bug (see Readme) that the server doesn't serve files
+     in this configuration. Use JDK 1.2.x instead.
+   * And four, on a Windows platform you have installed Tomcat in
+     a directory with a path part longer than 8 characters, e.g.
+     C:\Program Files\jakarta, and run the "startup" script from
+     a command tool after you have cd'd to the directory using
+     the short form of the name, e.g.
+
+      > cd C:\Progra~1\jakarta
+      > startup
+
+     If you cd using the long name it works fine, e.g.
+
+      > cd "C:\Program Files\jakarta"
+      > startup
 
 Q: I am getting a 500 Error, what does it mean?
 
