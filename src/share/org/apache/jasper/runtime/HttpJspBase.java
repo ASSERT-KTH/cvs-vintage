@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/runtime/HttpJspBase.java,v 1.1 1999/10/09 00:20:39 duncan Exp $
- * $Revision: 1.1 $
- * $Date: 1999/10/09 00:20:39 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/runtime/HttpJspBase.java,v 1.2 1999/11/10 18:21:20 costin Exp $
+ * $Revision: 1.2 $
+ * $Date: 1999/11/10 18:21:20 $
  *
  * ====================================================================
  * 
@@ -118,6 +118,7 @@ public abstract class HttpJspBase
     }
     
     protected ClassLoader getClassLoader() {
+	if(cl==null) return this.getClass().getClassLoader();
 	return cl;
     }
 
