@@ -42,7 +42,7 @@
     <select name="$attgroup.TypeId.Key" size="1">
     #foreach ( $atype in $attribute.AllAttributeTypes )
       #if (!$atype.Name.equals("user"))
-      <option value="$atype.AttributeTypeId" #if($attribute.TypeId == $atype.AttributeTypeId)selected#end>$atype.Name</option>
+      <option value="$atype.AttributeTypeId" #if($attribute.TypeId && $attribute.TypeId == $atype.AttributeTypeId)selected#end>$atype.Name</option>
       #end
     #end
     </select>
