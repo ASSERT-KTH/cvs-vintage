@@ -30,6 +30,7 @@
 <div id="module" class="app">
 <h2>$page.Title</h2>
 
+
 <h3>Module Details</h3>
 
 <form action="$link.setPage("admin,ModifyModule.vm")" method="post">
@@ -47,7 +48,11 @@
 #else
 #set ($moduleGroup = $intake.Module.mapTo($editModule))
 <input type="hidden" name="new" value="false" /> 
-<input type="hidden" name="moduleId" value="$moduleId" /> 
+<input type="hidden" name="$moduleGroup.Id.Key" value="$moduleGroup.Id.Value" /> 
+#end
+
+#if ( !$moduleGroup.get("Id").isValid())
+<p><strong class="alert">$moduleGroup.get("Id").Message</strong></p>
 #end
 
 <div class="axial">

@@ -2,11 +2,7 @@ $page.setTitle("Issue template")
 
 #set ($module = $scarabR.CurrentModule)
 #set ($issueId = $data.Parameters.getString("issue_id"))
-#if ($issueId)
-   #set ($issue = $scarabR.Issue)
-#else
-   #set ($issue = $module.NewIssue)
-#end
+#set ($issue = $scarabR.Issue)
 #set ($templateInfo = $scarabR.IssueTemplateInfo)
 #set ($templateGroup = $intake.IssueTemplateInfo.mapTo($templateInfo))
 #set ($issueGroup = $intake.Issue.mapTo($issue))
