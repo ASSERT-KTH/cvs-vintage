@@ -68,6 +68,9 @@
 	 <menuitem action="EmptyFolder"/>
 	 -->
 	 <separator/>
+	 <menuitem action="MoveUp"/>
+	 <menuitem action="MoveDown"/>
+	 <separator/>
 	 <menuitem action="ApplyFilter"/>
 	 <menuitem action="FilterPreferences"/>
 	 <extensionpoint name="top" />	
