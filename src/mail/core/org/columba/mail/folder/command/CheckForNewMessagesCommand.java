@@ -61,23 +61,32 @@ public class CheckForNewMessagesCommand extends FolderCommand {
 		adapter = new FolderCommandAdapter(references);
 
 		FolderCommandReference[] r = adapter.getSourceFolderReferences();
+		
+		// get IMAP rootfolder 
 		IMAPRootFolder srcFolder = (IMAPRootFolder) r[0].getFolder();
 
 		boolean newMessages = false;
 
+		// we only check inbox
 		inboxFolder = (IMAPFolder) srcFolder.getChild("Inbox");
 		
+		// number of recent messages
 		int recent = inboxFolder.getMessageFolderInfo().getRecent();
 		
+		// fetch headerlist
 		inboxFolder.getHeaderList(worker);
 
+		// new recent message count
 		int newRecent = inboxFolder.getMessageFolderInfo().getRecent();
 
+		// update tree information
 		MainInterface.treeModel.nodeChanged(inboxFolder);
 
+		// if recent message count changed...
 		if (newRecent != recent)
 			newMessages = true;
 
+	
 		if (newMessages == true) {
 			ImapItem item = srcFolder.getAccountItem().getImapItem();
 			// new messages on server
@@ -105,6 +114,7 @@ public class CheckForNewMessagesCommand extends FolderCommand {
 	 * @see org.columba.core.command.Command#updateGUI()
 	 */
 	public void updateGUI() throws Exception {
+		// send update event to table
 		TableChangedEvent ev =
 			new TableChangedEvent(TableChangedEvent.UPDATE, inboxFolder);
 	}
