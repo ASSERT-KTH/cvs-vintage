@@ -46,6 +46,7 @@ package org.tigris.scarab.tools;
  * individuals on behalf of Collab.Net.
  */ 
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.LinkedList;
 import java.util.Iterator;
@@ -98,7 +99,7 @@ import org.tigris.scarab.services.cache.ScarabCache;
  * methodology</a> to be implemented.
  *
  * @author <a href="mailto:dr@bitonic.com">Douglas B. Robertson</a>
- * @version $Id: SecurityAdminTool.java,v 1.5 2002/04/22 22:13:28 jon Exp $
+ * @version $Id: SecurityAdminTool.java,v 1.6 2002/04/30 06:56:33 jon Exp $
  */
 public class SecurityAdminTool 
     implements SecurityAdminScope, Serializable
@@ -250,6 +251,20 @@ public class SecurityAdminTool
     public Permission[] getPermissions() throws Exception
     {
         return (TurbineSecurity.getAllPermissions().getPermissionsArray());
+    }
+
+    /** 
+     * Gets a list of all Permissions
+     */
+    public List getPermissionsAsStrings() throws Exception
+    {
+        Permission[] allPerms = this.getPermissions();
+        List list = new ArrayList(allPerms.length);
+        for (int i=0; i<allPerms.length;i++)
+        {
+            list.add(allPerms[i].getName());
+        }
+        return list;
     }
     
     /** 
