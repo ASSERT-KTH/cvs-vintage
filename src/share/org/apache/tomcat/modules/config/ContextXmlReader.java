@@ -108,8 +108,8 @@ public class ContextXmlReader extends BaseInterceptor {
 	xh.setDebug( debug );
 
 	// use the same tags for context-local modules
-	ServerXmlReader.setTagRules( xh );
-	ServerXmlReader.addDefaultTags(cm, xh);
+	setTagRules( xh );
+	addDefaultTags(cm, xh);
 	setContextRules( xh );
 	setBackward( xh );
 
@@ -209,5 +209,56 @@ public class ContextXmlReader extends BaseInterceptor {
 		   xh.addChild("setServletLogger",
 			       "org.apache.tomcat.util.log.Logger") );
     }
+
+    // --------------------
+    
+    public static void setTagRules( XmlMapper xh ) {
+	xh.addRule( "module",  new XmlAction() {
+		public void start(SaxContext ctx ) throws Exception {
+		    Object elem=ctx.currentObject();
+		    AttributeList attributes = ctx.getCurrentAttributes();
+		    String name=attributes.getValue("name");
+		    String classN=attributes.getValue("javaClass");
+		    if( name==null || classN==null ) return;
+		    XmlMapper mapper=ctx.getMapper();
+		    ContextXmlReader.addTag( mapper, name, classN );
+		}
+	    });
+    }
+
+    // read modules.xml, if any, and load taskdefs
+    public static  void addDefaultTags( ContextManager cm,
+					XmlMapper xh)
+	throws TomcatException
+    {
+	File f=new File( cm.getHome(), "/conf/modules.xml");
+	if( f.exists() ) {
+	    //            cm.setNote( "configFile", f.getAbsoluteFile());
+	    //	    cm.setNote( "modules", new Hashtable());
+	    ServerXmlReader.loadConfigFile( xh, f, cm );
+            // load module-*.xml
+            Vector v = ServerXmlReader.getUserConfigFiles(f);
+            for (Enumeration e = v.elements();
+                 e.hasMoreElements() ; ) {
+                f = (File)e.nextElement();
+                ServerXmlReader.loadConfigFile(xh,f,cm);
+            }
+	}
+    }
+
+    // similar with ant's taskdef
+    public static void addTag( XmlMapper xh, String tag, String classN) {
+
+	tag="Context" + "/" + tag;
+	xh.addRule(  tag ,
+		    xh.objectCreate( classN, null ));
+	xh.addRule( tag ,
+		    xh.setProperties());
+	xh.addRule( tag,
+		    xh.addChild( "addInterceptor",
+				 "org.apache.tomcat.core.BaseInterceptor"));
+    }
+
+
 }
 
