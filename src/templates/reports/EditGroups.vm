@@ -14,7 +14,6 @@
 
 #set ($reportGroupsSize = 0)
 #set ($reportGroups = $selectedHeading.ReportGroups)
-$selectedHeading $reportGroups
 #set ($reportGroupsSize = $reportGroups.size())
 <table width="100%" border="1" cellspacing="2" cellpadding="3">
  <tr>
