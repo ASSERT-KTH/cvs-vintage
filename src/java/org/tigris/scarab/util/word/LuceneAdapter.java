@@ -79,7 +79,7 @@ import org.apache.lucene.search.Hits;
  * Support for searching/indexing text
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: LuceneAdapter.java,v 1.1 2002/01/23 10:07:22 dlr Exp $
+ * @version $Id: LuceneAdapter.java,v 1.2 2002/01/23 10:41:42 dlr Exp $
  */
 public class LuceneAdapter 
     implements SearchIndex
@@ -119,8 +119,9 @@ public class LuceneAdapter
             createIndex = true;
         }
         
-        if ( createIndex) 
+        if (createIndex)
         {
+            Log.info("Creating index at '" + path '\'');
             IndexWriter indexer = 
                 new IndexWriter(path, new StandardAnalyzer(), true);
             indexer.close();   
