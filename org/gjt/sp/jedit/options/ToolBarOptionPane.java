@@ -35,7 +35,7 @@ import org.gjt.sp.util.Log;
 /**
  * Tool bar editor.
  * @author Slava Pestov
- * @version $Id: ToolBarOptionPane.java,v 1.4 2001/10/07 10:42:45 spestov Exp $
+ * @version $Id: ToolBarOptionPane.java,v 1.5 2001/10/18 07:41:23 spestov Exp $
  */
 public class ToolBarOptionPane extends AbstractOptionPane
 {
@@ -290,6 +290,7 @@ public class ToolBarOptionPane extends AbstractOptionPane
 				listModel.removeElementAt(index);
 				listModel.insertElementAt(selected,index-1);
 				list.setSelectedIndex(index-1);
+				list.ensureIndexIsVisible(index-1);
 			}
 			else if(source == moveDown)
 			{
@@ -298,6 +299,7 @@ public class ToolBarOptionPane extends AbstractOptionPane
 				listModel.removeElementAt(index);
 				listModel.insertElementAt(selected,index+1);
 				list.setSelectedIndex(index+1);
+				list.ensureIndexIsVisible(index+1);
 			}
 		}
 	}

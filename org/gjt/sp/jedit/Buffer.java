@@ -49,7 +49,7 @@ import org.gjt.sp.util.Log;
  * from jEdit's global properties.
  *
  * @author Slava Pestov
- * @version $Id: Buffer.java,v 1.16 2001/10/17 12:14:11 spestov Exp $
+ * @version $Id: Buffer.java,v 1.17 2001/10/18 07:41:23 spestov Exp $
  */
 public class Buffer extends PlainDocument implements EBComponent
 {
@@ -1993,6 +1993,11 @@ public class Buffer extends PlainDocument implements EBComponent
 			}
 
 			int len = tokens.length;
+			/*if(off + len > seg.offset + seg.count)
+			{
+				System.err.println((off - seg.offset)
+					+ "+" + len + ":" + seg.count);
+			}*/
 			x = renderer.drawChars(text,off,len,gfx,x,y,expander,
 				tokenForeground,tokenBackground,background);
 
@@ -2213,7 +2218,11 @@ public class Buffer extends PlainDocument implements EBComponent
 	public int getFoldLevel(int line)
 	{
 		if(offsetMgr.isFoldLevelValid(line))
+		{
+			//System.err.println("level valid: " + line + ":"
+			//	+ offsetMgr.getFoldLevel(line));
 			return offsetMgr.getFoldLevel(line);
+		}
 		else
 		{
 			int start = 0;
@@ -2705,6 +2714,9 @@ public class Buffer extends PlainDocument implements EBComponent
 			}
 		}
 
+		if(lastTokenizedLine >= startLine)
+			lastTokenizedLine = -1;
+
 		fireContentInserted(startLine,offset,numLines,length);
 
 		super.fireInsertUpdate(evt);
@@ -2755,6 +2767,9 @@ public class Buffer extends PlainDocument implements EBComponent
 		}
 
 		offsetMgr.contentRemoved(startLine,offset,numLines,length);
+
+		if(lastTokenizedLine >= startLine)
+			lastTokenizedLine = -1;
 
 		fireContentRemoved(startLine,offset,numLines,length);
 
