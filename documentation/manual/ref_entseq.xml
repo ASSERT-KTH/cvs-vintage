@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<!-- $Id: ref_entseq.xml,v 1.12 2003/10/12 09:33:33 linus Exp $ -->
+<!-- $Id: ref_entseq.xml,v 1.13 2004/01/04 14:46:52 mvw Exp $ -->
 
 <!--
 
@@ -171,23 +171,8 @@ need it because they are still working with &argouml; 0.10.1.
         <varlistentry>
           <term><literal>Constraints</literal></term>
 
-          <listitem><para>Standard tab. In the UML metamodel,
-            <literal>Object</literal> has the following standard
-            constraints defined (through its parent,
-            <literal>Instance</literal>).</para>
-
-            <itemizedlist>
-              <listitem><para><literal>destroyed</literal>. Applied to an
-                object that is destroyed during the
-                execution.</para></listitem>
-
-              <listitem><para><literal>new</literal>. Applied to an object
-                that is created during the execution.</para></listitem>
-
-              <listitem><para><literal>transient</literal>. Applied to an
-                object that is both created and destroyed during the
-                execution.</para></listitem>
-            </itemizedlist></listitem>
+          <listitem><para>&constraints_support;</para>
+          </listitem>
         </varlistentry>
 
         <!-- Entry for Tagged Values tab -->
@@ -605,9 +590,7 @@ need it because they are still working with &argouml; 0.10.1.
         <varlistentry>
           <term><literal>Constraints</literal></term>
 
-          <listitem><para>Standard tab. There are no standard constraints
-            defined for <literal>Stimulus</literal> within the UML
-            metamodel.</para></listitem>
+          <listitem><para>&constraints_support;</para></listitem>
         </varlistentry>
 
         <!-- Entry for Tagged Values tab -->
@@ -997,23 +980,8 @@ need it because they are still working with &argouml; 0.10.1.
         <varlistentry>
           <term><literal>Constraints</literal></term>
 
-          <listitem><para>Standard tab. In the UML metamodel,
-            <literal>Link</literal> has the following standard
-            constraints defined (through its parent,
-            <literal>Instance</literal>).</para>
-
-            <itemizedlist>
-              <listitem><para><literal>destroyed</literal>. Applied to a
-                link that is destroyed during the
-                execution.</para></listitem>
-
-              <listitem><para><literal>new</literal>. Applied to a link
-                that is created during the execution.</para></listitem>
-
-              <listitem><para><literal>transient</literal>. Applied to a
-                link that is both created and destroyed during the
-                execution.</para></listitem>
-            </itemizedlist></listitem>
+          <listitem><para>&constraints_support;</para>
+          </listitem>
         </varlistentry>
 
         <!-- Entry for Tagged Values tab -->

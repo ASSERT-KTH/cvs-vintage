@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<!-- $Id: ref_entactiv.xml,v 1.15 2003/11/09 09:16:47 mvw Exp $ -->
+<!-- $Id: ref_entactiv.xml,v 1.16 2004/01/04 14:46:52 mvw Exp $ -->
 
 <!--
 
@@ -161,9 +161,7 @@ an exit action and a Do activity are not permitted for action states.
         <varlistentry>
           <term><literal>Constraints</literal></term>
 
-          <listitem><para>Standard tab. There are no standard constraints
-            defined for <literal>ActionState</literal> within the UML
-            metamodel.</para></listitem>
+          <listitem><para>&constraints_support;</para></listitem>
         </varlistentry>
 
         <!-- Entry for Tagged Values tab -->
