@@ -82,178 +82,361 @@ public class MultiOrbInitialContext implements Context {
 
     // Inital context wrapper see the Context documentation for this methods
     public Object lookup(String name) throws NamingException {
-	return pcur.getCurrentInitialContext().lookup(name);
+	try {
+	    return pcur.getCurrentInitialContext().lookup(name);
+	} catch (Exception e) {
+	    throw new NamingException("lookup fail:\n" +
+				      getProperties() 
+				      + e);
+	}
+	
     }
-
+    
     public Object lookup(Name name) throws NamingException {
-	return pcur.getCurrentInitialContext().lookup(name);
-    }
-
-    public void bind(String name, Object obj) throws NamingException {
-	for (Enumeration e = activesInitialsContexts.keys() ; e.hasMoreElements() ;) {
-	    rmiName =  (String)e.nextElement();
-	    pcur.setRMI(rmiName);	    
-	    ((Context)activesInitialsContexts.get(rmiName)).bind(name, obj);	
-	    pcur.setDefault();
+	try {
+	    return pcur.getCurrentInitialContext().lookup(name);
+	} catch (Exception e) {
+	    throw new NamingException("lookup fail:\n"  +
+				      getProperties() 
+				      + e);
 	}
     }
-
+    
+    public void bind(String name, Object obj) throws NamingException {
+	try {
+	    for (Enumeration e = activesInitialsContexts.keys() ; e.hasMoreElements() ;) {
+		rmiName =  (String)e.nextElement();
+		pcur.setRMI(rmiName);	    
+		((Context)activesInitialsContexts.get(rmiName)).bind(name, obj);	
+		pcur.setDefault();
+	    }
+	} catch (Exception e) {
+	    throw new NamingException("bind fail:\n"  +
+				      getProperties() 
+				      + e);
+	}
+    }
+    
     public void bind(Name name, Object obj) throws NamingException {
-	for (Enumeration e = activesInitialsContexts.keys() ; e.hasMoreElements() ;) {
-	    rmiName =  (String)e.nextElement();
-	    pcur.setRMI(rmiName);	    
-	    ((Context)activesInitialsContexts.get(rmiName)).bind(name, obj);	
-	    pcur.setDefault();
+	try {
+	    for (Enumeration e = activesInitialsContexts.keys() ; e.hasMoreElements() ;) {
+		rmiName =  (String)e.nextElement();
+		pcur.setRMI(rmiName);	    
+		((Context)activesInitialsContexts.get(rmiName)).bind(name, obj);	
+		pcur.setDefault();
+	    }
+	} catch (Exception e) {
+	    throw new NamingException("bind fail:\n"  +
+				      getProperties() 
+				      + e);
 	}
     }
 
     public void rebind(String name, Object obj) throws NamingException {
-	for (Enumeration e = activesInitialsContexts.keys() ; e.hasMoreElements() ;) {
-	    rmiName =  (String)e.nextElement();
-	    pcur.setRMI(rmiName);
-	    ((Context)activesInitialsContexts.get(rmiName)).rebind(name, obj);	
-	    pcur.setDefault();
+	try {
+	    for (Enumeration e = activesInitialsContexts.keys() ; e.hasMoreElements() ;) {
+		rmiName =  (String)e.nextElement();
+		pcur.setRMI(rmiName);
+		((Context)activesInitialsContexts.get(rmiName)).rebind(name, obj);	
+		pcur.setDefault();
+	    }
+	} catch (Exception e) {
+	    throw new NamingException("rebind fail:\n" + 
+				      getProperties() 
+				      + e);
 	}
     }
 
     public void rebind(Name name, Object obj) throws NamingException {
-	for (Enumeration e = activesInitialsContexts.keys() ; e.hasMoreElements() ;) {
-	    rmiName =  (String)e.nextElement();
-	    pcur.setRMI(rmiName);	    
-	    ((Context)activesInitialsContexts.get(rmiName)).rebind(name, obj);	
-	    pcur.setDefault();
+	try {
+	    for (Enumeration e = activesInitialsContexts.keys() ; e.hasMoreElements() ;) {
+		rmiName =  (String)e.nextElement();
+		pcur.setRMI(rmiName);	    
+		((Context)activesInitialsContexts.get(rmiName)).rebind(name, obj);	
+		pcur.setDefault();
+	    }
+	} catch (Exception e) {
+	    throw new NamingException("rebind fail:\n"  +
+				      getProperties() 
+				      + e);
 	}	
     }
-
+    
     public void unbind(String name) throws NamingException  {
-	for (Enumeration e = activesInitialsContexts.keys() ; e.hasMoreElements() ;) {
-	    rmiName =  (String)e.nextElement();
-	    pcur.setRMI(rmiName);	    
-	    ((Context)activesInitialsContexts.get(rmiName)).unbind(name);	
-	    pcur.setDefault();
+	try {
+	    for (Enumeration e = activesInitialsContexts.keys() ; e.hasMoreElements() ;) {
+		rmiName =  (String)e.nextElement();
+		pcur.setRMI(rmiName);	    
+		((Context)activesInitialsContexts.get(rmiName)).unbind(name);	
+		pcur.setDefault();
+	    }
+	} catch (Exception e) {
+	    throw new NamingException("unbind fail:\n"  +
+				      getProperties() 
+				      + e);
 	}	
     }
 
     public void unbind(Name name) throws NamingException  {
-	for (Enumeration e = activesInitialsContexts.keys() ; e.hasMoreElements() ;) {
-	    rmiName =  (String)e.nextElement();
-	    pcur.setRMI(rmiName);	    
-	    ((Context)activesInitialsContexts.get(rmiName)).unbind(name);	
-	    pcur.setDefault();
+	try {
+	    for (Enumeration e = activesInitialsContexts.keys() ; e.hasMoreElements() ;) {
+		rmiName =  (String)e.nextElement();
+		pcur.setRMI(rmiName);	    
+		((Context)activesInitialsContexts.get(rmiName)).unbind(name);	
+		pcur.setDefault();
+	    }
+	} catch (Exception e) {
+	    throw new NamingException("unbind fail:\n" + 
+				      getProperties() 
+				      + e);
 	}	
     }
 
     public void rename(String oldName, String newName) throws NamingException {
-	for (Enumeration e = activesInitialsContexts.keys() ; e.hasMoreElements() ;) {
-	    rmiName =  (String)e.nextElement();
-	    pcur.setRMI(rmiName);	    
-	    ((Context)activesInitialsContexts.get(rmiName)).rename(oldName, newName);	
-	    pcur.setDefault();
+	try {
+	    for (Enumeration e = activesInitialsContexts.keys() ; e.hasMoreElements() ;) {
+		rmiName =  (String)e.nextElement();
+		pcur.setRMI(rmiName);	    
+		((Context)activesInitialsContexts.get(rmiName)).rename(oldName, newName);	
+		pcur.setDefault();
+	    }
+	} catch (Exception e) {
+	    throw new NamingException("rename fail:\n" + 
+				      getProperties() 
+				      + e);
 	}	
     }
 
     public void rename(Name oldName, Name newName) throws NamingException  {
-	for (Enumeration e = activesInitialsContexts.keys() ; e.hasMoreElements() ;) {
-	    rmiName =  (String)e.nextElement();
-	    pcur.setRMI(rmiName);	    
-	    ((Context)activesInitialsContexts.get(rmiName)).rename(oldName, newName);	
-	    pcur.setDefault();
+	try {
+	    for (Enumeration e = activesInitialsContexts.keys() ; e.hasMoreElements() ;) {
+		rmiName =  (String)e.nextElement();
+		pcur.setRMI(rmiName);	    
+		((Context)activesInitialsContexts.get(rmiName)).rename(oldName, newName);	
+		pcur.setDefault();
+	    }
+	} catch (Exception e) {
+	    throw new NamingException("rename fail:\n" + 
+				      getProperties() 
+				      + e);
 	}	
     }
-
+    
     public NamingEnumeration list(String name) throws NamingException {
-	return pcur.getCurrentInitialContext().list(name);
+	try {
+	    return pcur.getCurrentInitialContext().list(name);
+	} catch (Exception e) {
+	    throw new NamingException("list fail:\n" + 
+				      getProperties() 
+				      + e);
+	}
     }
-
+    
     public NamingEnumeration list(Name name) throws NamingException  {
-	return pcur.getCurrentInitialContext().list(name);
+	try {
+	    return pcur.getCurrentInitialContext().list(name);
+	} catch (Exception e) {
+	    throw new NamingException("list fail:\n" + 
+				      getProperties() 
+				      + e);
+	}
     }
-
+    
     public NamingEnumeration listBindings(String name)
-	    throws NamingException  {
-	return pcur.getCurrentInitialContext().listBindings(name);
+	throws NamingException  {
+	try {
+	    return pcur.getCurrentInitialContext().listBindings(name);
+	} catch (Exception e) {
+	    throw new NamingException("list fail:\n" + 
+				      getProperties() 
+				      + e);
+	}
     }
-
+    
     public NamingEnumeration listBindings(Name name)
-	    throws NamingException  {
-	return pcur.getCurrentInitialContext().listBindings(name);
+	throws NamingException  {
+	try {
+	    return pcur.getCurrentInitialContext().listBindings(name);
+	} catch (Exception e) {
+	    throw new NamingException(" listBindings fail:\n"  +
+				      getProperties() 
+				      + e);
+	}
     }
 
     public void destroySubcontext(String name) throws NamingException  {
-	for (Enumeration e = activesInitialsContexts.keys() ; e.hasMoreElements() ;) {
-	    rmiName =  (String)e.nextElement();
-	    pcur.setRMI(rmiName);	    
-	    ((Context)activesInitialsContexts.get(rmiName)).destroySubcontext(name);	
-	    pcur.setDefault();
-	}    
-    }
-
-    public void destroySubcontext(Name name) throws NamingException  {
-	for (Enumeration e = activesInitialsContexts.keys() ; e.hasMoreElements() ;) {
-	    rmiName =  (String)e.nextElement();
-	    pcur.setRMI(rmiName);	    
-	    ((Context)activesInitialsContexts.get(rmiName)).destroySubcontext(name);	
-	    pcur.setDefault();
+	try {
+	    for (Enumeration e = activesInitialsContexts.keys() ; e.hasMoreElements() ;) {
+		rmiName =  (String)e.nextElement();
+		pcur.setRMI(rmiName);	    
+		((Context)activesInitialsContexts.get(rmiName)).destroySubcontext(name);	
+		pcur.setDefault();
+	    } 
+	} catch (Exception e) {
+	    throw new NamingException("destroySubcontext fail:\n" + 
+				      getProperties() 
+				      + e);
 	}   
     }
 
+    public void destroySubcontext(Name name) throws NamingException  {
+	try {
+	    for (Enumeration e = activesInitialsContexts.keys() ; e.hasMoreElements() ;) {
+		rmiName =  (String)e.nextElement();
+		pcur.setRMI(rmiName);	    
+		((Context)activesInitialsContexts.get(rmiName)).destroySubcontext(name);	
+		pcur.setDefault();
+	    }  
+	} catch (Exception e) {
+	    throw new NamingException("destroySubcontext fail:\n" + 
+				      getProperties() 
+				      + e);
+	} 
+    }
+    
     public Context createSubcontext(String name) throws NamingException  {
-	return pcur.getCurrentInitialContext().createSubcontext(name);
+	try {
+	    return pcur.getCurrentInitialContext().createSubcontext(name);
+	} catch (Exception e) {
+	    throw new NamingException("createSubcontext fail:\n"  +
+				      getProperties() 
+				      + e);
+	}
     }
-
+    
     public Context createSubcontext(Name name) throws NamingException  {
-	return pcur.getCurrentInitialContext().createSubcontext(name);
+	try {
+	    return pcur.getCurrentInitialContext().createSubcontext(name);
+	} catch (Exception e) {
+	    throw new NamingException("createSubcontext fail:\n"  +
+				      getProperties() 
+				      + e);
+	}
     }
-
+    
     public Object lookupLink(String name) throws NamingException  {
-	return pcur.getCurrentInitialContext().lookupLink(name);
+	try {
+	    return pcur.getCurrentInitialContext().lookupLink(name);
+	} catch (Exception e) {
+	    throw new NamingException("lookupLink fail:\n"  +
+				      getProperties() 
+				      + e);
+	}
     }
 
     public Object lookupLink(Name name) throws NamingException {
-	return pcur.getCurrentInitialContext().lookupLink(name);
+	try {
+	    return pcur.getCurrentInitialContext().lookupLink(name);
+	} catch (Exception e) {
+	    throw new NamingException("lookupLink fail:\n"  +
+				      getProperties() 
+				      + e);
+    }
     }
 
     public NameParser getNameParser(String name) throws NamingException {
-	return pcur.getCurrentInitialContext().getNameParser(name);
+	try {
+	    return pcur.getCurrentInitialContext().getNameParser(name);
+	} catch (Exception e) {
+	    throw new NamingException("getNameParser fail:\n" + 
+				      getProperties() 
+				      + e);
+	}
     } 
-
+    
     public NameParser getNameParser(Name name) throws NamingException {
-	return pcur.getCurrentInitialContext().getNameParser(name);
+	try {
+	    return pcur.getCurrentInitialContext().getNameParser(name);
+	} catch (Exception e) {
+	    throw new NamingException("getNameParser fail:\n" + 
+				      getProperties() 
+				      + e);
+	}
     }
-
+    
     public String composeName(String name, String prefix)
-	    throws NamingException {
+	throws NamingException {
 	return name;
     }
-
+    
     public Name composeName(Name name, Name prefix) throws NamingException {
-	return (Name)name.clone();
+	try {
+	    return (Name)name.clone();
+	} catch (Exception e) {
+	    throw new NamingException("composeName fail:\n"  +
+				      getProperties() 
+				      + e);
+	}
     }
 
     public Object addToEnvironment(String propName, Object propVal) 
-	    throws NamingException {
-	return pcur.getCurrentInitialContext().addToEnvironment(propName, propVal);
+	throws NamingException {
+	try {
+	    return pcur.getCurrentInitialContext().addToEnvironment(propName, propVal);
+	} catch (Exception e) {
+	    throw new NamingException("addToEnvironment fail:\n"  +
+				      getProperties() 
+				      + e);
+	}
     }
-
+    
     public Object removeFromEnvironment(String propName) 
-	    throws NamingException {
-	return pcur.getCurrentInitialContext().removeFromEnvironment(propName);
+	throws NamingException {
+	try {
+	    return pcur.getCurrentInitialContext().removeFromEnvironment(propName);
+	} catch (Exception e) {
+	    throw new NamingException("removeFromEnvironment fail:\n"  +
+				      getProperties() 
+				      + e);
+	}
     }
-
+    
     public Hashtable getEnvironment() throws NamingException {
-	return pcur.getCurrentInitialContext().getEnvironment();
+	try {
+	    return pcur.getCurrentInitialContext().getEnvironment();
+	} catch (Exception e) {
+	    throw new NamingException("getEnvironment fail:\n"  +
+				      getProperties() 
+				      + e);
+	}
     }
-
+    
     public void close() throws NamingException {
-	for (Enumeration e = activesInitialsContexts.keys() ; e.hasMoreElements() ;) {
-	    rmiName =  (String)e.nextElement();
-	    pcur.setRMI(rmiName);	    
-	    ((Context)activesInitialsContexts.get(rmiName)).close();	
-	    pcur.setDefault();
-	} 
+	try {
+	    for (Enumeration e = activesInitialsContexts.keys() ; e.hasMoreElements() ;) {
+		rmiName =  (String)e.nextElement();
+		pcur.setRMI(rmiName);	    
+		((Context)activesInitialsContexts.get(rmiName)).close();	
+		pcur.setDefault();
+	    } 
+	} catch (Exception e) {
+	    throw new NamingException("close fail:\n"  +
+				      getProperties() 
+				      + e);
+	}
     }
-
+    
     public String getNameInNamespace() throws NamingException {
-	return pcur.getCurrentInitialContext().getNameInNamespace();
-    }	    
+	try {
+	    return pcur.getCurrentInitialContext().getNameInNamespace();
+	} catch (Exception e) {
+	    throw new NamingException("getNameInNamespace fail:\n"  +
+				      getProperties() 
+				      + e);
+	}
+    }
+    
+    /**
+     * Private method for building property string
+     */
+    private String getProperties() {
+	try {
+	    return "CAROL configuration:\n" 
+		+ org.objectweb.carol.util.configuration.CommunicationConfiguration.getAllRMIConfiguration() 
+		+" Classpath: " + System.getProperty("java.class.path") + "\n";
+	} catch (Exception e) {
+	    return "Can't check CAROL configuration:\n" + e 
+		+" Classpath: " + System.getProperty("java.class.path") + "\n";
+	}
+    }
 }

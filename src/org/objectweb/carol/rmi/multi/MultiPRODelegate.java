@@ -75,7 +75,9 @@ public class MultiPRODelegate implements PortableRemoteObjectDelegate {
 	try {
 	    initProtocols();
 	} catch (Exception e) {
-	    throw new RemoteException("init Protocols fail: " + e);
+	    throw new RemoteException("init Protocols fail: \n" +
+				      getProperties() 
+				      + e);
 	}
     }
     
@@ -101,7 +103,9 @@ public class MultiPRODelegate implements PortableRemoteObjectDelegate {
 	    
 	} catch (Exception e) {
 	    e.printStackTrace();
-	    throw new RemoteException("export Object fail: " + e);	    
+	    throw new RemoteException("Export Object fail, please check your configuration:\n" 
+				      + getProperties() +
+				      "Erreur:" + e);	    
 	}
     }
 
@@ -125,7 +129,9 @@ public class MultiPRODelegate implements PortableRemoteObjectDelegate {
 	    }
 	} catch (Exception e) {
 	    e.printStackTrace();
-	    throw new NoSuchObjectException("unexport Object fail: " + e);
+	    throw new NoSuchObjectException("unexport Object fail:\n"
+					    + getProperties() 
+					    + e);
 	}	
     }
 
@@ -149,7 +155,9 @@ public class MultiPRODelegate implements PortableRemoteObjectDelegate {
 	    }
 	} catch (Exception e) {
 	    e.printStackTrace();
-	    throw new RemoteException("connect fail: " + e);
+	    throw new RemoteException("connect fail:\n" +
+				      getProperties()
+				      + e);
 	}
     }
 
@@ -171,7 +179,9 @@ public class MultiPRODelegate implements PortableRemoteObjectDelegate {
 	    }
 	} catch (Exception e) {
 	    e.printStackTrace();
-	    throw new ClassCastException ("default narrow fail: " + e);
+	    throw new ClassCastException ("default narrow fail:\n"
+					  + getProperties()
+					  + e);
 	}
     }
 
@@ -191,7 +201,9 @@ public class MultiPRODelegate implements PortableRemoteObjectDelegate {
 	    }
 	} catch (Exception e) {
 	    e.printStackTrace();
-	    throw new NoSuchObjectException("toStub fail: " + e);
+	    throw new NoSuchObjectException("toStub fail:\n"
+					    + getProperties()
+					    + e);
 	}	
     }
 
@@ -203,6 +215,20 @@ public class MultiPRODelegate implements PortableRemoteObjectDelegate {
 	pcur = ProtocolCurrent.getCurrent();
 	activesProtocols = pcur.getPortableRemoteObjectHashtable();
 	init = true;
+    }
+
+    /**
+     * Private method for building property string
+     */
+    private String getProperties() {
+	try {
+	    return "CAROL configuration:\n" 
+		+ org.objectweb.carol.util.configuration.CommunicationConfiguration.getAllRMIConfiguration() 
+		+" Classpath: " + System.getProperty("java.class.path") + "\n";
+	} catch (Exception e) {
+	    return "Can't check CAROL configuration:\n" + e 
+		+" Classpath: " + System.getProperty("java.class.path") + "\n";
+	}
     }
 
 }
