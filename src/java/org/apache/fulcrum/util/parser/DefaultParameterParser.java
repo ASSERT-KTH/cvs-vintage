@@ -54,18 +54,22 @@ package org.apache.fulcrum.util.parser;
  * <http://www.apache.org/>.
  */
 
+import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.Enumeration;
+import java.util.Iterator;
 import java.util.StringTokenizer;
-import java.io.UnsupportedEncodingException;
+
 import javax.servlet.http.HttpServletRequest;
+
+import org.apache.commons.fileupload.FileItem;
+import org.apache.commons.fileupload.FileUploadException;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.fulcrum.ServiceException;
 import org.apache.fulcrum.pool.Recyclable;
-import org.apache.fulcrum.upload.TurbineUpload;
-import org.apache.commons.fileupload.FileItem;
-import org.apache.log4j.Category;
+import org.apache.fulcrum.upload.UploadServiceFacade;
 
 /**
  * DefaultParameterParser is a utility object to handle parsing and
@@ -89,7 +93,7 @@ import org.apache.log4j.Category;
  * @author <a href="mailto:ilkka.priha@simsoft.fi">Ilkka Priha</a>
  * @author <a href="mailto:jon@clearink.com">Jon S. Stevens</a>
  * @author <a href="mailto:sean@informage.net">Sean Legassick</a>
- * @version $Id: DefaultParameterParser.java,v 1.1 2004/10/24 22:12:30 dep4b Exp $
+ * @version $Id: DefaultParameterParser.java,v 1.2 2004/11/04 20:35:27 dep4b Exp $
  */
 public class DefaultParameterParser
     extends BaseValueParser
@@ -107,9 +111,9 @@ public class DefaultParameterParser
     private byte[] uploadData = null;
 
     /**
-     * Log4j category
+     * Logger to use
      */
-    Category category = Category.getInstance(getClass().getName());
+    private static final Log LOG = LogFactory.getLog(DefaultParameterParser.class);
 
     /**
      * Create a new empty instance of ParameterParser.  Uses the
@@ -185,12 +189,13 @@ public class DefaultParameterParser
         String tmp = null;
 
         tmp = req.getHeader("Content-type");
-        if (TurbineUpload.getAutomatic() &&
+        // Used to check a a getAutomatic, not needed apparently
+        if (
             tmp != null && tmp.startsWith("multipart/form-data"))
         {
             try
             {
-                ArrayList items = TurbineUpload.parseRequest(req);
+                ArrayList items = UploadServiceFacade.parseRequest(req);
                 Iterator i = items.iterator();
 
                 while (i.hasNext())
@@ -206,7 +211,7 @@ public class DefaultParameterParser
                         }
                         catch (UnsupportedEncodingException e)
                         {
-                            category.error(getCharacterEncoding() + 
+                            LOG.error(getCharacterEncoding() + 
                                 "encoding is not supported.  Used the default "
                                 + "when reading form data.");
                             value = item.getString();
@@ -219,9 +224,9 @@ public class DefaultParameterParser
                     }
                 }
             }
-            catch(ServiceException e)
+            catch(FileUploadException e)
             {
-                category.error(new ServiceException("File upload failed", e));
+                LOG.error(new ServiceException("File upload failed", e));
             }
         }
 

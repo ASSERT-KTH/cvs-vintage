@@ -60,13 +60,16 @@ import org.apache.fulcrum.yaafi.framework.container.ServiceConstants;
 /**
  * This service allows access to avalon components.
  *
- * @version $Id: YaafiComponentService.java,v 1.1 2004/10/25 13:49:14 dep4b Exp $
+ * @version $Id: YaafiComponentService.java,v 1.2 2004/11/04 20:35:28 dep4b Exp $
  */
 public interface YaafiComponentService
         extends Service, ServiceConstants
 {
     /** The publically visible name of the service */
     String SERVICE_NAME = "YaafiComponentService";
+    
+    /** property for the Components to look up */
+    String COMPONENT_LOOKUP_KEY = "lookup";    
 	
     /**
      * Returns an instance of the named component

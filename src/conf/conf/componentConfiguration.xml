@@ -10,4 +10,7 @@
    <HSQLService database="./target/scarab" dbname="scarab" trace="true" 
         silent="false" start="true">
    </HSQLService>    
+
+    <mimetype mimetypes="/WEB-INF/conf/mime.types"/>
+    <upload repository="WEB-INF" sizeMax="157286400" sizeThreshold="8192"/>   
 </componentConfig>

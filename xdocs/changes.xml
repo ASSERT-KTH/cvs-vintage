@@ -7,6 +7,12 @@
 
   <body>
     <release version="b20" date="in dev">
+      <action dev="epugh" type="update">
+        Remove old Fulcrum Upload and Mimetype components in favor of new Fulcrum Avalon based components.
+      </action> 
+      <action dev="epugh" type="add">
+        Allow TurbineYaafiComponentService to early init components.  Makes populating facade classes simple.
+      </action>      
       <action dev="epugh" type="update" due-to="Anthony Wong" issue-id="SCB1246">
         EditRole and DeleteRole does not catch the case when 'name' parameter is absent
       </action>        

@@ -58,7 +58,7 @@ import javax.mail.SendFailedException;
 import javax.mail.internet.InternetAddress;
 
 import org.apache.fulcrum.ServiceException;
-import org.apache.fulcrum.mimetype.TurbineMimeTypes;
+import org.apache.fulcrum.mimetype.MimeTypeServiceFacade;
 import org.apache.fulcrum.template.TemplateContext;
 import org.apache.fulcrum.template.TemplateEmail;
 import org.apache.fulcrum.velocity.ContextAdapter;
@@ -77,7 +77,7 @@ import org.tigris.scarab.tools.localization.L10NKeySet;
  * @author <a href="mailto:jon@collab.net">Jon Scott Stevens</a>
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: Email.java,v 1.46 2004/11/02 10:22:39 dabbous Exp $
+ * @version $Id: Email.java,v 1.47 2004/11/04 20:35:28 dep4b Exp $
  */
 public class Email extends TemplateEmail
 {
@@ -456,7 +456,7 @@ public class Email extends TemplateEmail
             }
             else
             {
-                charset = TurbineMimeTypes.getCharSet(locale);
+                charset = MimeTypeServiceFacade.getService().getCharSet(locale);
             }
         }
 

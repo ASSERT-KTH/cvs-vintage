@@ -17,4 +17,16 @@
         default-class="org.tigris.scarab.services.hsql.HSQLServiceImpl"
         early-init="true"
     />        
+
+    <role
+        name="org.apache.fulcrum.mimetype.MimeTypeService"
+        shorthand="mimetype"
+        default-class="org.apache.fulcrum.mimetype.DefaultMimeTypeService"/>
+            
+    <role
+        name="org.apache.fulcrum.upload.UploadService"
+        shorthand="upload"
+        default-class="org.apache.fulcrum.upload.DefaultUploadService"
+        early-init="true"
+    />    
 </role-list>

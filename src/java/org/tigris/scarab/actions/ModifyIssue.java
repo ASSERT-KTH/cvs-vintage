@@ -47,62 +47,56 @@ package org.tigris.scarab.actions;
  */ 
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-// Turbine Stuff 
-import org.apache.turbine.TemplateContext;
-import org.apache.turbine.RunData;
-import org.apache.turbine.Turbine;
-
-import org.apache.torque.om.NumberKey; 
-import org.apache.turbine.tool.IntakeTool;
-import org.apache.fulcrum.intake.model.Group;
-import org.apache.fulcrum.intake.model.Field;
-import org.apache.fulcrum.mimetype.TurbineMimeTypes;
 import org.apache.commons.collections.SequencedHashMap;
 import org.apache.commons.fileupload.FileItem;
+import org.apache.fulcrum.intake.model.Field;
+import org.apache.fulcrum.intake.model.Group;
+import org.apache.fulcrum.mimetype.MimeTypeServiceFacade;
+import org.apache.torque.om.NumberKey;
 import org.apache.turbine.ParameterParser;
-
-// Scarab Stuff
+import org.apache.turbine.RunData;
+import org.apache.turbine.TemplateContext;
+import org.apache.turbine.Turbine;
+import org.apache.turbine.tool.IntakeTool;
 import org.tigris.scarab.actions.base.BaseModifyIssue;
-import org.tigris.scarab.om.Issue;
-import org.tigris.scarab.om.IssueManager;
-import org.tigris.scarab.om.Module;
-import org.tigris.scarab.om.IssueType;
+import org.tigris.scarab.attribute.OptionAttribute;
+import org.tigris.scarab.om.ActivitySet;
 import org.tigris.scarab.om.Attachment;
 import org.tigris.scarab.om.AttachmentManager;
 import org.tigris.scarab.om.Attribute;
 import org.tigris.scarab.om.AttributeValue;
-import org.tigris.scarab.om.ActivitySet;
 import org.tigris.scarab.om.Depend;
 import org.tigris.scarab.om.DependManager;
 import org.tigris.scarab.om.DependType;
+import org.tigris.scarab.om.Issue;
+import org.tigris.scarab.om.IssueManager;
+import org.tigris.scarab.om.IssueType;
+import org.tigris.scarab.om.Module;
 import org.tigris.scarab.om.ScarabUser;
-import org.tigris.scarab.tools.ScarabRequestTool;
+import org.tigris.scarab.services.security.ScarabSecurity;
 import org.tigris.scarab.tools.ScarabLocalizationTool;
+import org.tigris.scarab.tools.ScarabRequestTool;
 import org.tigris.scarab.tools.localization.L10NKeySet;
 import org.tigris.scarab.tools.localization.L10NMessage;
 import org.tigris.scarab.tools.localization.LocalizationKey;
-import org.tigris.scarab.services.security.ScarabSecurity;
+import org.tigris.scarab.util.Log;
 import org.tigris.scarab.util.MutableBoolean;
+import org.tigris.scarab.util.ScarabConstants;
 import org.tigris.scarab.util.ScarabException;
 import org.tigris.scarab.util.ScarabUtil;
-
-import org.tigris.scarab.attribute.OptionAttribute;
-
-import org.tigris.scarab.util.ScarabConstants;
-import org.tigris.scarab.util.Log;
 
 /**
  * This class is responsible for edit issue forms.
  * ScarabIssueAttributeValue
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: ModifyIssue.java,v 1.189 2004/11/02 10:22:37 dabbous Exp $
+ * @version $Id: ModifyIssue.java,v 1.190 2004/11/04 20:35:27 dep4b Exp $
  */
 public class ModifyIssue extends BaseModifyIssue
 {
@@ -588,7 +582,7 @@ public class ModifyIssue extends BaseModifyIssue
                     String filename = 
                         ((FileItem)fileField.getValue()).getName();
                     String contentType = 
-                        TurbineMimeTypes.getContentType(filename, null);
+                        MimeTypeServiceFacade.getService().getContentType(filename, null);
                     if (contentType == null) 
                     {
                         // could not match extension.

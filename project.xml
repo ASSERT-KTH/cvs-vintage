@@ -197,11 +197,12 @@
     <dependency>
       <groupId>commons-fileupload</groupId>
       <artifactId>commons-fileupload</artifactId>
-      <version>1.0-dev</version>
+      <version>1.0</version>
       <type>jar</type>
       <properties>
         <war.bundle>true</war.bundle>
       </properties>
+      <url>http://jakarta.apache.org/commons/fileupload/index.html</url>
     </dependency>
     <dependency>
       <groupId>commons-lang</groupId>
@@ -502,9 +503,38 @@
       <properties>
         <war.bundle>true</war.bundle>
       </properties>      
-    </dependency>     
+    </dependency>  
+          
     
   <!-- Avalon Container and Components -->
+    <dependency>
+      <groupId>fulcrum</groupId>
+      <artifactId>fulcrum-mimetype-api</artifactId>
+      <version>1.0.4-dev</version>
+      <type>jar</type>
+      <properties>
+        <war.bundle>true</war.bundle>
+      </properties>      
+    </dependency>
+    <dependency>
+      <groupId>fulcrum</groupId>
+      <artifactId>fulcrum-mimetype-impl</artifactId>
+      <version>1.0.4-dev</version>
+      <type>jar</type>
+      <properties>
+        <war.bundle>true</war.bundle>
+      </properties>      
+    </dependency>      
+   <dependency>
+      <groupId>fulcrum</groupId>
+      <artifactId>fulcrum-upload</artifactId>
+      <version>1.0.3-dev</version>
+      <type>jar</type>
+      <properties>
+        <war.bundle>true</war.bundle>
+      </properties>
+    </dependency> 
+      
    <dependency>
       <groupId>fulcrum</groupId>
       <artifactId>fulcrum-yaafi</artifactId>

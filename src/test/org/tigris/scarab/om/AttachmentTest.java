@@ -48,8 +48,9 @@ package org.tigris.scarab.om;
 
 import java.io.File;
 
-import org.apache.commons.fileupload.DefaultFileItem;
+import org.apache.commons.fileupload.DefaultFileItemFactory;
 import org.apache.commons.fileupload.FileItem;
+import org.apache.commons.fileupload.FileItemFactory;
 import org.apache.torque.om.NumberKey;
 import org.tigris.scarab.test.BaseScarabOMTestCase;
 
@@ -58,7 +59,7 @@ import org.tigris.scarab.test.BaseScarabOMTestCase;
  * A Testing Suite for the om.Attachment class.
  *
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: AttachmentTest.java,v 1.16 2004/11/04 10:53:31 dep4b Exp $
+ * @version $Id: AttachmentTest.java,v 1.17 2004/11/04 20:34:24 dep4b Exp $
  */
 public class AttachmentTest extends BaseScarabOMTestCase
 {
@@ -93,7 +94,16 @@ public class AttachmentTest extends BaseScarabOMTestCase
 
     public void saveFile() throws Exception
     {
-        FileItem fileItem = DefaultFileItem.newInstance("scarab/images/", "logo.gif", "image/jpeg", 6480, 10000);
+        //FileItem fileItem = new DefaultFileItem(scarab/images/", "logo.gif", "image/jpeg", 6480, 10000);
+        FileItemFactory factory = new DefaultFileItemFactory(6480, null);
+        String textFieldName = "textField";
+
+        FileItem fileItem = factory.createItem(
+                textFieldName,
+                "image/jpeg",
+                true,
+                "logo.gif"
+        );
         fileAttachment.setFile(fileItem);
         fileAttachment.setName(fileItem.getName());
         fileAttachment.setMimeType("image/jpeg");
