@@ -83,7 +83,8 @@ import java.text.SimpleDateFormat;
 public abstract class Logger extends LogHandler {
     // -------------------- Internal fields --------------------
 
-    protected static Writer defaultSink = new OutputStreamWriter(System.err);
+    protected static PrintWriter defaultSink =
+	new PrintWriter( new OutputStreamWriter(System.err));
 
     protected long day;
     
@@ -99,14 +100,15 @@ public abstract class Logger extends LogHandler {
      * @param	w		the default output stream.
      */
     public static void setDefaultSink(Writer w) {
-	defaultSink = w;
+	if( w!=null )
+	    defaultSink = new PrintWriter(w);
     }
 
 
     // ----- instance (non-static) content -----
     
     protected boolean custom = true;
-    protected Writer sink = defaultSink;
+    //    protected Writer sink = defaultSink;
     protected String path;
     
     /**
@@ -129,44 +131,6 @@ public abstract class Logger extends LogHandler {
     protected DateFormat timestampFormatter
 	= new FastDateFormat(new SimpleDateFormat(timestampFormat));
 
-    /**
-     * Prints log message and stack trace.
-     *
-     * @param	message		the message to log. 
-     * @param	t		the exception that was thrown.
-     * @param	verbosityLevel	what type of message is this?
-     * 				(WARNING/DEBUG/INFO etc)
-     */
-    public final void log(String prefix, String message, Throwable t,
-			  int verbosityLevel)
-    {
-	if (prefix != null) {
-	    message = prefix + ": " + message;
-	}
-
-	if (verbosityLevel <= getVerbosityLevel()) {
-            // check wheter we are logging to a file
-            if (path!= null){
-                // If the date has changed, switch log files
-                if (day!=getDay(System.currentTimeMillis())) {
-                    synchronized (this) {
-                        close();
-                        open();
-                    }
-                }
-            }
-	    realLog(message,t);
-	}
-    }
-
-    /** 
-     * Subclasses implement these methods which are called by the
-     * log(..) methods internally. 
-     *
-     * @param	message		the message to log. 
-     * @param	t		the exception that was thrown.
-     */
-    protected abstract void realLog(String message, Throwable t);
 
     /**
      * Set the path name for the log output file.
@@ -200,7 +164,7 @@ public abstract class Logger extends LogHandler {
             file=new File(logName);
 	    if (!file.exists())
 		new File(file.getParent()).mkdirs();
-	    this.sink = new FileWriter(logName);
+	    this.sink = new PrintWriter( new FileWriter(logName));
 	} catch (IOException ex) {
 	    System.err.print("Unable to open log file: "+path+"! ");
 	    System.err.println(" Using stderr as the default.");
@@ -327,7 +291,7 @@ public abstract class Logger extends LogHandler {
     static final String START_FORMAT="${";
     static final String END_FORMAT="}";
 
-    private String getDatePrefix(long millis,String format) {
+    protected String getDatePrefix(long millis,String format) {
         try{
             int pos=format.indexOf(Logger.START_FORMAT);
             int lpos=format.lastIndexOf(Logger.END_FORMAT);
@@ -343,7 +307,7 @@ public abstract class Logger extends LogHandler {
         return format;
     }
 
-    private long getDay(long millis){
+    protected long getDay(long millis){
         return (millis+TimeZone.getDefault().getRawOffset()) /
 	    ( 24*60*60*1000 );
     }

@@ -62,60 +62,65 @@ import java.io.PrintWriter;
 
 import java.util.Date;
 
+import org.apache.tomcat.util.collections.SimplePool;
+import org.apache.tomcat.util.collections.Queue;
+
 /**
- * This is an entry that is created in response to every
- * Logger.log(...) call.
- *
- * @author Anil V (akv@eng.sun.com)
- * @since  Tomcat 3.1
+ * The daemon thread that looks in a queue and if it is not empty
+ * writes out everything in the queue to the sink.
  */
-public final  class LogEntry {
-    String logName;
-    long date=0;
-    String prefix;
-    String message;
-    Throwable t;
-    QueueLogger l;
+public final class LogDaemon implements Runnable {
+    private boolean shouldStop=false;
+    private Thread  logDaemonThread = null;
+    private Queue   logQueue  = null;
+    
+    public LogDaemon() {
+    }
 
-    LogEntry(QueueLogger l) {
-	this.l=l;
+    public void start() {
+	logQueue = new Queue();
+	logDaemonThread=new Thread(this);
+	logDaemonThread.setName("QueueLogDaemon");
+	// Don't set it as daemon - we don't want tomcat to exit 
+	//	    logDaemonThread.setDaemon(true);
+	shouldStop=false;
+	logDaemonThread.start();
     }
-    
-    QueueLogger getLogger() {
-	return l;
-    }
-    
 
-    void setDate(long date ) {
-	this.date = date;
-    }
-    void setPrefix( String prefix ) {
-	this.prefix=prefix;
-    }
-    
-    void setMessage( String message ) {
-	this.message = message;
-    }
-    void setThrowable( Throwable t) {
-	this.t = t;
-    }
-    
-    // XXX should move to LogFormat !!!
-    public void print( StringBuffer outSB) {
-	if (date!=0) {
-	    l.formatTimestamp( date, outSB );
-	    outSB.append(" - ");
-	}
-	if (prefix != null) {
-	    outSB.append(prefix).append( ": ");
-	}
 
-	if (message != null) 
-	    outSB.append(message);
-	
-	if (t != null) {
-	    outSB.append(" - ");
-	    outSB.append(l.throwableToString( t ));
+    
+    public void stop() {
+	if( shouldStop ) return;
+	shouldStop=true;
+	// wait for it to finish
+	logQueue.stop(); // unblock
+	logDaemonThread=null;
+	logQueue=null;
+    }
+
+    public boolean isStarted() {
+	return logDaemonThread!=null;
+    }
+    
+    public void add(LogEntry logE ) {
+	if( logQueue!=null ) {
+	    logQueue.put( logE );
+	} else {
+	    // We're not started, do it synchronously
+	    logE.getLogger().log( logE );
 	}
     }
+    
+    public void run() {
+	while (true) {
+	    // Will block !
+	    LogEntry logEntry =
+		(LogEntry)logQueue.pull();
+	    if( shouldStop ) return;
+	    logEntry.getLogger().log( logEntry );
+	    if( shouldStop ) return;
+	}
+    }
+    
 }
+

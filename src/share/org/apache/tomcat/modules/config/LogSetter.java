@@ -201,6 +201,13 @@ public class LogSetter extends  BaseInterceptor {
 	    cm.setNote("tc.LogManager", logManager);
 	    Log.setLogManager( logManager );
 	}
+
+	LogDaemon logDaemon=(LogDaemon)cm.getNote("tc.LogDaemon");
+	if( logDaemon==null ) {
+	    logDaemon=new LogDaemon();
+	    cm.setNote( "tc.LogDaemon", logDaemon );
+	    logDaemon.start();
+	}
 	
 	if( name==null ) {
 	    if( servletLogger )
@@ -225,11 +232,69 @@ public class LogSetter extends  BaseInterceptor {
 	    name=name +  "/"  + ctx.getId();
 	}
 
+	createLogger(logManager, logDaemon );
+	
+    }
+
+    public void engineInit( ContextManager cm )
+	throws TomcatException
+    {
+	// make sure it's started
+	LogDaemon logDaemon=(LogDaemon)cm.getNote("tc.LogDaemon");
+	logDaemon.start();
+    }
+
+    public void engineShutdown(ContextManager cm)
+	throws TomcatException
+    {
+	if( getContext() != null )
+	    return;
+	
+	cm.getLog().flush();
+	// engineShutdown shouldn't be called on local modules anyway !
+
+	LogDaemon logDaemon=(LogDaemon)cm.getNote("tc.LogDaemon");
+	if( logDaemon!=null ) {
+	    try{ 
+		logDaemon.stop();
+	    } catch( Exception ex ) {
+		ex.printStackTrace();
+	    }
+	    //	    cm.setNote( "tc.LogDaemon", null );
+	}
+
+    }
+
+
+
+    
+    /** Set default ServletLog for Context if necessary
+     */
+
+    public void addContext( ContextManager cm, Context ctx )
+	throws TomcatException
+    {
+	if( "org/apache/tomcat/facade".equals( name ) &&
+		    ctx.getServletLog() == null ) {
+	    ctx.setServletLog( Log.getLog( name, ctx.getId() ) );
+	}
+    }
+
+    /** Adapter and registry for QueueLoggers
+     */
+    static class TomcatLogManager extends LogManager {
+
+
+    }
+
+    
+    private void createLogger(LogManager logManager, LogDaemon logDaemon) {
+	
 	if( debug>0) 
 	    log( "Constructing logger " + name + " " + path + " " + ctx );
 	
-	// construct a queue logger
 	QueueLogger ql=new QueueLogger();
+	ql.setLogDaemon( logDaemon );
 	if( ! timestamps )
 	    ql.setTimestamp( "false" );
 	if( tsFormat!=null )
@@ -258,33 +323,5 @@ public class LogSetter extends  BaseInterceptor {
 		ctx.setLog( Log.getLog( name, ctx.getId() ) );
 	    }
 	}  
-
     }
-
-    /** Set default ServletLog for Context if necessary
-     */
-
-    public void addContext( ContextManager cm, Context ctx )
-	throws TomcatException
-    {
-	if( "org/apache/tomcat/facade".equals( name ) &&
-		    ctx.getServletLog() == null ) {
-	    ctx.setServletLog( Log.getLog( name, ctx.getId() ) );
-	}
-    }
-
-    /** Adapter and registry for QueueLoggers
-     */
-    static class TomcatLogManager extends LogManager {
-
-	void addChannel( String name, Log log ) {
-	    
-	}
-
-    }
-    
-
-    
-    // XXX Flush the buffers on shutdown !!!!!!
-
 }
