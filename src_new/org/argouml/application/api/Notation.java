@@ -24,7 +24,7 @@
 // File: Notation.java
 // Classes: Notation
 // Original Author: Thierry Lach
-// $Id: Notation.java,v 1.15 2002/07/31 18:39:27 kataka Exp $
+// $Id: Notation.java,v 1.16 2002/08/12 14:05:44 thierrylach Exp $
 
 // 8 Apr 2002: Jeremy Bennett (mail@jeremybennett.com). Extended to support
 // extension points.
@@ -86,6 +86,11 @@ implements PropertyChangeListener {
    */
   public static final ConfigurationKey KEY_DEFAULT_NOTATION =
          Configuration.makeKey("notation", "default");
+
+  /** The configuration key that indicates whether to show stereotypes
+   *  in the navigation panel
+   */
+  public static final ConfigurationKey KEY_SHOW_STEREOTYPES = Configuration.makeKey("notation", "navigation", "show", "stereotypes");
 
   /** The configuration key that indicates whether to use guillemots
    *  or greater/lessthan characters in stereotypes.
