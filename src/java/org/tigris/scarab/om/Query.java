@@ -252,6 +252,10 @@ public class Query
        {
            link += "&" + ScarabConstants.CURRENT_MITLIST_ID + "=" + listId;
        }
+       else 
+       {
+           link += "&" + ScarabConstants.REMOVE_CURRENT_MITLIST_QKEY + "=true";
+       }
        return link;
     }
 
@@ -267,6 +271,10 @@ public class Query
        if (listId != null) 
        {
            link += "&" + ScarabConstants.CURRENT_MITLIST_ID + "=" + listId;
+       }
+       else 
+       {
+           link += "&" + ScarabConstants.REMOVE_CURRENT_MITLIST_QKEY + "=true";
        }
        return link;
     }
