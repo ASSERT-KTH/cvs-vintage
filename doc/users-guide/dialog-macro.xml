@@ -3,7 +3,7 @@
 <!-- :indentSize=1:noTabs=yes:maxLineLen=72:tabSize=2:                  -->
 <!-- This file contains an extended discussion of a                     -->
 <!-- dialog-based macro example "Add_Prefix_and_Suffix.bsh"             -->
-<!-- $Id: dialog-macro.xml,v 1.3 2002/02/16 21:08:03 jgellene Exp $
+<!-- $Id: dialog-macro.xml,v 1.4 2002/02/19 05:35:05 jgellene Exp $
  -->
 
 <chapter id="dialog-macro"><title>A Dialog-Based Macro</title>
@@ -186,7 +186,7 @@ import javax.swing.border.*;</programlisting></informalexample>
     This macro makes use of classes in the
     <literal>javax.swing.border</literal> package, which is not
     automatically imported. As we mentioned
-    previously (see <xref linkend="first-example"/>), jEdit's implementation of
+    previously (see <xref linkend="first-example" />), jEdit's implementation of
     BeanShell causes a number of classes to be automatically imported. Classes
     that are not automatically imported must be identified by a full qualified
     name or be the subject of an <function>import</function> statement.
