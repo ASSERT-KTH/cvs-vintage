@@ -30,6 +30,7 @@ import javax.swing.Box;
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
+import javax.swing.JDialog;
 import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -75,9 +76,12 @@ public class ReceiveOptionsPanel
 	private PopAttributPanel popPanel;
 	private ImapAttributPanel imapPanel;
 
-	public ReceiveOptionsPanel(AccountItem item) {
+	private JDialog dialog;
+	
+	public ReceiveOptionsPanel(JDialog dialog, AccountItem item) {
 		this.item = item;
-
+		this.dialog = dialog;
+		
 		if (item.isPopAccount())
 			popItem = item.getPopItem();
 		else {
@@ -382,7 +386,7 @@ public class ReceiveOptionsPanel
 		chooseButton.addActionListener(this);
 
 		if (item.isPopAccount()) {
-			popPanel = new PopAttributPanel(item.getPopItem());
+			popPanel = new PopAttributPanel(dialog, item.getPopItem());
 			//attributPanel.add(popPanel, BorderLayout.CENTER);
 			//mainLayout.setConstraints(popPanel, mainConstraints);
 			//add(popPanel);

@@ -28,6 +28,7 @@ import javax.swing.Box;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
+import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -81,17 +82,22 @@ public class IncomingServerPanel
 	private ReceiveOptionsPanel receiveOptionsPanel;
 	//private ConfigFrame frame;
 
+	private JDialog dialog;
+
 	public IncomingServerPanel(
+		JDialog dialog,
 		AccountItem account,
 		ReceiveOptionsPanel receiveOptionsPanel) {
 		super();
+
+		this.dialog = dialog;
 		//super( frame, item );
 
 		//this.frame = frame;
 		this.accountItem = account;
 		this.receiveOptionsPanel = receiveOptionsPanel;
 
-		if( account.isPopAccount()) {
+		if (account.isPopAccount()) {
 			serverItem = account.getPopItem();
 		} else {
 			serverItem = account.getImapItem();

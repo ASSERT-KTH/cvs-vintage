@@ -84,7 +84,7 @@ public class AccountDialog implements ActionListener, ListSelectionListener {
 
 		dialog.pack();
 //		for jdk1.3 compatibility, this is called dynamically
-			 Compatibility.simpleSetterInvoke(dialog, "setLocationRelativeTo", Component.class, null );
+		Compatibility.simpleSetterInvoke(dialog, "setLocationRelativeTo", Component.class, null );
 		//dialog.setLocationRelativeTo(null);
 		dialog.setVisible(true);
 	}
@@ -94,10 +94,10 @@ public class AccountDialog implements ActionListener, ListSelectionListener {
 		IdentityItem identityItem = accountItem.getIdentityItem();
 		identityPanel = new IdentityPanel(accountItem, identityItem);
 
-		receiveOptionsPanel = new ReceiveOptionsPanel(accountItem);
+		receiveOptionsPanel = new ReceiveOptionsPanel(dialog, accountItem);
 
 		incomingServerPanel =
-			new IncomingServerPanel(accountItem, receiveOptionsPanel);
+			new IncomingServerPanel(dialog, accountItem, receiveOptionsPanel);
 
 		outgoingServerPanel = new OutgoingServerPanel(accountItem);
 

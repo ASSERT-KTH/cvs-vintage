@@ -16,7 +16,15 @@
 
 package org.columba.mail.gui.config.account;
 
-import java.awt.*;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.Graphics;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.GridLayout;
+import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
@@ -25,7 +33,19 @@ import java.awt.event.WindowEvent;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-import javax.swing.*;
+import javax.swing.BorderFactory;
+import javax.swing.Box;
+import javax.swing.BoxLayout;
+import javax.swing.DefaultListSelectionModel;
+import javax.swing.JButton;
+import javax.swing.JComponent;
+import javax.swing.JDialog;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTextField;
+import javax.swing.KeyStroke;
+import javax.swing.UIManager;
 import javax.swing.border.AbstractBorder;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
@@ -33,6 +53,7 @@ import javax.swing.event.ListSelectionListener;
 import org.columba.core.config.Config;
 import org.columba.core.gui.util.DialogStore;
 import org.columba.core.main.MainInterface;
+import org.columba.core.util.Compatibility;
 import org.columba.mail.config.AccountItem;
 import org.columba.mail.config.AccountList;
 import org.columba.mail.config.MailConfig;
@@ -63,9 +84,11 @@ public class ConfigFrame
 
 	//private AccountTreeNode selected;
 
+	/*
 	private IdentityPanel identityPanel;
 	private IncomingServerPanel incomingPanel;
 	private OutgoingServerPanel outgoingServerPanel;
+	*/
 	private boolean newAccount = false;
 
 	private AccountListTable listView;
@@ -112,7 +135,12 @@ public class ConfigFrame
 			KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0),
 			JComponent.WHEN_IN_FOCUSED_WINDOW);
 		dialog.pack();
-		dialog.setLocationRelativeTo(null);
+		//		for jdk1.3 compatibility, this is called dynamically
+		Compatibility.simpleSetterInvoke(
+			dialog,
+			"setLocationRelativeTo",
+			Component.class,
+			null);
 		dialog.setVisible(true);
 	}
 
@@ -288,11 +316,13 @@ public class ConfigFrame
 	protected JPanel createButtonPanel() {
 		JPanel buttonPanel = new JPanel(new GridLayout(1, 2, 5, 0));
 		buttonPanel.setBorder(BorderFactory.createEmptyBorder(17, 0, 11, 11));
-		closeButton = new JButton(MailResourceLoader.getString("global", "close"));
+		closeButton =
+			new JButton(MailResourceLoader.getString("global", "close"));
 		closeButton.setActionCommand("CLOSE"); //$NON-NLS-1$
 		closeButton.addActionListener(this);
 		buttonPanel.add(closeButton);
-		helpButton = new JButton(MailResourceLoader.getString("global", "help"));
+		helpButton =
+			new JButton(MailResourceLoader.getString("global", "help"));
 		helpButton.setActionCommand("HELP");
 		helpButton.addActionListener(this);
 		buttonPanel.add(helpButton);
@@ -340,17 +370,13 @@ public class ConfigFrame
 		} else if (action.equals("ADD")) //$NON-NLS-1$
 			{
 			System.out.println(MailResourceLoader.getString("dialog", "account", "add")); //$NON-NLS-1$
-			try
-			{
-			
-			AccountWizard wizard = new AccountWizard(true);
-			listView.update();
-			}
-			catch ( Exception ex)
-			{
+			try {
+
+				AccountWizard wizard = new AccountWizard(true);
+				listView.update();
+			} catch (Exception ex) {
 				ex.printStackTrace();
 			}
-
 
 		} else if (action.equals("REMOVE")) //$NON-NLS-1$
 			{
@@ -361,7 +387,7 @@ public class ConfigFrame
 			if (item.isPopAccount() == true) {
 				MainInterface.popServerCollection.removePopServer(
 					item.getUid());
-				
+
 			} else {
 				Folder folder =
 					(Folder) MainInterface.treeModel.getImapFolder(

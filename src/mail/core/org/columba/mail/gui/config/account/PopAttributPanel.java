@@ -30,10 +30,12 @@ import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
+import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
+import org.columba.core.xml.XmlElement;
 import org.columba.mail.config.PopItem;
 import org.columba.mail.util.MailResourceLoader;
 
@@ -78,9 +80,12 @@ public class PopAttributPanel extends JPanel implements ActionListener {
 
 	// private ConfigFrame frame;
 
-	public PopAttributPanel(PopItem item) {
+	private JDialog dialog;
+
+	public PopAttributPanel(JDialog dialog, PopItem item) {
 		super();
 		this.item = item;
+		this.dialog = dialog;
 		//this.frame = frame;
 
 		//mailCheckDialog = new MailCheckDialog( item );
@@ -252,7 +257,13 @@ public class PopAttributPanel extends JPanel implements ActionListener {
 		String action = e.getActionCommand();
 
 		if (action.equals("CONFIGURE_FILTER")) {
+			XmlElement list = item.getElement("pop3preprocessingfilterlist");
+			if (list == null) {
+				list = new XmlElement("pop3preprocessingfilterlist");
+				item.getRoot().addElement(list);
+			}
 
+			new org.columba.mail.gui.config.pop3preprocessor.ConfigFrame(dialog, list);
 		}
 
 	}
