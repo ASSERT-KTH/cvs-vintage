@@ -44,7 +44,7 @@ import org.jboss.logging.Logger;
  * @author <a href="mailto:michel.anke@wolmail.nl">Michel de Groot</a>
  * @author <a href="loubyansky@ua.fm">Alex Loubyansky</a>
  * @author <a href="heiko.rupp@cellent.de">Heiko W.Rupp</a>
- * @version $Revision: 1.41 $
+ * @version $Revision: 1.42 $
  */
 public final class JDBCStartCommand
 {
@@ -90,63 +90,61 @@ public final class JDBCStartCommand
       {
          if(entityMetaData.getAlterTable())
          {
-            java.util.Collection oldNames = SQLUtil.getOldColumnNames(entity.getTableName(), entity.getDataSource());
+            SQLUtil.OldColumns oldColumns = SQLUtil.getOldColumns(entity.getTableName(), entity.getDataSource());
+            ArrayList oldNames = oldColumns.getColumnNames();
+            ArrayList oldTypes = oldColumns.getTypeNames();
+            ArrayList oldSizes = oldColumns.getColumnSizes();
             ArrayList newNames = new ArrayList();
-            JDBCFieldBridge[] fields = entity.getTableFields();
-            for(int i = 0 ; i < fields.length ; ++i)
+            JDBCFieldBridge fields[] = entity.getTableFields();
+            String tableName=entity.getTableName();
+            for (int i=0 ; i<fields.length ;  i++)
             {
                JDBCFieldBridge field = fields[i];
-               String name = field.getJDBCType().getColumnNames()[0].toUpperCase();
+               JDBCType jdbcType = field.getJDBCType();
+               String[] columnNames = jdbcType.getColumnNames();
+               String[] sqlTypes = jdbcType.getSQLTypes();
+               boolean[] notNull = jdbcType.getNotNull();
 
-
-               newNames.add(name);
-
-               if(!oldNames.contains(name))
+               for(int j = 0; j < columnNames.length; j++)
                {
-                  // add new columns
-                  JDBCType type = field.getJDBCType();
-                  StringBuffer strType = new StringBuffer();
-                  addField(type, strType);
-                  String sql = "ALTER TABLE " + entity.getTableName() + " ADD " + strType;
-                  alterTable(entity.getDataSource(), entity.getTableName(), sql);
-               }
-               else
-               {
-                  // alter existing columns
-                  JDBCType type = field.getJDBCType();
-                  if(field.isPrimaryKeyMember())
+                  String name=columnNames[j].toUpperCase();
+
+                  newNames.add(name);
+
+                  int oldIndex = oldNames.indexOf(name);
+                  if (oldIndex == -1)
                   {
-                     break;
+                     // add new column
+                     StringBuffer buf = new StringBuffer();
+                     buf.append(columnNames[j]).append(' ').append(sqlTypes[j]);
+                     if(notNull[j])
+                        buf.append(SQLUtil.NOT).append(SQLUtil.NULL);
+                     alterTable(entity.getDataSource(), SQLUtil.ADD, tableName, name, buf.toString());
                   }
-                  StringBuffer strType = new StringBuffer();
-                  addField(type, strType);
-                  java.util.StringTokenizer tokenizer = new java.util.StringTokenizer(strType.toString(), " ");
-                  int cnt = 0;
-                  String strAlter = "";
-                  while(tokenizer.hasMoreElements())
+                  else
                   {
-                     String token = (String) tokenizer.nextElement();
-                     strAlter += token;
-                     if(cnt == 0)
+                     // alter existing columns
+                     // only CHAR and VARCHAR fields are altered, and only when they are longer then before
+                     String type = (String) oldTypes.get(oldIndex);
+                     if (type.equals("CHAR") || type.equals("VARCHAR"))
                      {
-                        strAlter += " TYPE ";
+                        try
+                        {
+                           // get new length
+                           String l = sqlTypes[j];
+                           l = l.substring(l.indexOf('(')+1,l.length()-1);
+                           Integer oldLength = (Integer)oldSizes.get(oldIndex);
+                           if (Integer.parseInt(l) > oldLength.intValue()) {
+                              StringBuffer buf = new StringBuffer();
+                              buf.append(columnNames[j]).append(SQLUtil.TYPE).append(sqlTypes[j]);
+                              alterTable(entity.getDataSource(), SQLUtil.ALTER, tableName, name, buf.toString());
+                           }
+                        }
+                        catch (Exception e)
+                        {
+                              log.warn("EXCEPTION ALTER :" + e.toString());
+                        }
                      }
-                     else
-                     {
-                        strAlter += " ";
-                     }
-                     cnt++;
-                     if(cnt == 2)
-                        break;
-                  }
-                  String sql = "ALTER TABLE " + entity.getTableName() + " ALTER " + strAlter;
-                  try
-                  {
-                     alterTable(entity.getDataSource(), entity.getTableName(), sql);
-                  }
-                  catch(Exception e)
-                  {
-                     log.info("EXCEPTION ALTER :" + e.toString());
                   }
                }
             } // for  int i;
@@ -158,8 +156,7 @@ public final class JDBCStartCommand
                String name = (String) ( it.next() );
                if(!newNames.contains(name))
                {
-                  String sql = "ALTER TABLE " + entity.getTableName() + " DROP " + name;
-                  alterTable(entity.getDataSource(), entity.getTableName(), sql);
+                  alterTable(entity.getDataSource(), SQLUtil.DROP, tableName, name, name);
                }
             }
 
@@ -222,7 +219,7 @@ public final class JDBCStartCommand
 
                if(relationMetaData.getAlterTable())
                {
-                  java.util.Collection oldNames = SQLUtil.getOldColumnNames( cmrField.getTableName(), dataSource );
+                  ArrayList oldNames = SQLUtil.getOldColumns(cmrField.getTableName(), dataSource).getColumnNames();
                   ArrayList newNames = new ArrayList();
                   JDBCCMPFieldBridge[] leftKeys = cmrField.getTableKeyFields();
                   JDBCCMPFieldBridge[] rightKeys = cmrField.getRelatedCMRField().getTableKeyFields();
@@ -264,7 +261,9 @@ public final class JDBCStartCommand
 
                   if(different)
                   {
-                     SQLUtil.dropTable( entity.getDataSource(), cmrField.getTableName() );
+                     // only log, don't drop table is this can cause data loss
+                     log.error("CMR table structure is incorrect for "+cmrField.getTableName());
+                     //SQLUtil.dropTable(entity.getDataSource(), cmrField.getTableName());
                   }
 
                } // if alter-table
@@ -293,7 +292,6 @@ public final class JDBCStartCommand
                      cmrField.getTableName());
                }
 
-               relationMetaData.setTableCreated();
             }
 
             // Only generate indices on foreign key columns if
@@ -317,11 +315,13 @@ public final class JDBCStartCommand
       }
    }
 
-   private void alterTable(DataSource dataSource,
-                           String tableName,
-                           String sql)
+   private void alterTable(DataSource dataSource, String action, String tableName, String fieldName, String sqlEnd)
       throws DeploymentException
    {
+      StringBuffer sql=new StringBuffer(SQLUtil.ALTER_TABLE);
+      sql.append(tableName);
+      sql.append(action);
+      sql.append(sqlEnd);
 
       // suspend the current transaction
       TransactionManager tm = manager.getContainer().getTransactionManager();
@@ -347,9 +347,8 @@ public final class JDBCStartCommand
 
             con = dataSource.getConnection();
             statement = con.createStatement();
-            statement.executeUpdate(sql);
-         }
-         finally
+            statement.executeUpdate(sql.toString());
+         } finally
          {
             // make sure to close the connection and statement before
             // comitting the transaction or XA will break
@@ -379,7 +378,7 @@ public final class JDBCStartCommand
       }
 
       // success
-      log.info("Alter table '" + tableName + "' successfully.");
+      log.info("Alter table '" + tableName + " " + action + " " + fieldName + "' successfully.");
    }
 
    private void createTable(DataSource dataSource, String tableName, String sql)
@@ -451,7 +450,7 @@ public final class JDBCStartCommand
 
       // success
       log.info("Created table '" + tableName + "' successfully.");
-      Set createdTables = (Set) manager.getApplicationData(CREATED_TABLES_KEY);
+      Set createdTables = (Set)manager.getApplicationData(CREATED_TABLES_KEY);
       createdTables.add(tableName);
    }
 
@@ -525,6 +524,7 @@ public final class JDBCStartCommand
       // success
       log.info("Created index '" + indexName + "' on '" + tableName + "' successfully.");
    }
+
 
    /**
     * Send (user-defined) SQL commands to the server.

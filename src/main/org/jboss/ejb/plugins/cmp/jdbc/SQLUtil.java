@@ -15,7 +15,6 @@ import java.sql.Statement;
 import java.sql.ResultSet;
 import java.util.zip.CRC32;
 import java.util.ArrayList;
-import java.util.Collection;
 
 import org.jboss.deployment.DeploymentException;
 import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCEntityBridge;
@@ -31,7 +30,7 @@ import java.util.Vector;
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @author <a href="mailto:alex@jboss.org">Alex Loubyansky</a>
- * @version $Revision: 1.21 $
+ * @version $Revision: 1.22 $
  */
 public final class SQLUtil
 {
@@ -83,6 +82,11 @@ public final class SQLUtil
    public static final String LIMIT = " LIMIT ";
    public static final String UPDATE = "UPDATE ";
    public static final String SET = " SET ";
+   public static final String ALTER_TABLE = "ALTER TABLE ";
+   public static final String ALTER = " ALTER ";
+   public static final String DROP = " DROP ";
+   public static final String ADD = " ADD ";
+   public static final String TYPE = " TYPE ";
    private static final String DOT = ".";
 
    private static final String EQ_QUESTMARK = "=?";
@@ -169,6 +173,7 @@ public final class SQLUtil
       if(!rwords.contains(word))
          rwords.add(word);
    }
+
 
    public static String fixConstraintName(String name, DataSource dataSource)
       throws DeploymentException
@@ -951,7 +956,7 @@ public final class SQLUtil
       {
          // This should not happen. A J2EE compatiable JDBC driver is
          // required fully support metadata.
-         throw new DeploymentException("Error while checking if table aleady exists" + tableName, e);
+         throw new DeploymentException("Error while checking if table aleady exists "+tableName, e);
       }
       finally
       {
@@ -960,13 +965,14 @@ public final class SQLUtil
       }
    }
 
-   public static Collection getOldColumnNames(String tableName,
-                                              DataSource dataSource)
+   public static OldColumns getOldColumns(String tableName, DataSource dataSource)
       throws DeploymentException
    {
       Connection con = null;
       ResultSet rs = null;
-      ArrayList columns = new ArrayList();
+      ArrayList columnNames = new ArrayList();
+      ArrayList typeNames = new ArrayList();
+      ArrayList columnSizes = new ArrayList();
       try
       {
          con = dataSource.getConnection();
@@ -977,78 +983,41 @@ public final class SQLUtil
          String catalog = con.getCatalog();
          String schema = null;
          String quote = dmd.getIdentifierQuoteString();
-         if(tableName.startsWith(quote))
+         if (tableName.startsWith(quote))
          {
-            if(tableName.endsWith(quote) == false)
+            if (tableName.endsWith(quote) == false)
             {
                throw new DeploymentException("Mismatched quote in table name: " + tableName);
             }
             int quoteLength = quote.length();
             tableName = tableName.substring(quoteLength, tableName.length() - quoteLength);
-            if(dmd.storesLowerCaseQuotedIdentifiers())
+            if (dmd.storesLowerCaseQuotedIdentifiers())
                tableName = tableName.toLowerCase();
-            else if(dmd.storesUpperCaseQuotedIdentifiers())
+            else if (dmd.storesUpperCaseQuotedIdentifiers())
                tableName = tableName.toUpperCase();
          }
          else
          {
-            if(dmd.storesLowerCaseIdentifiers())
+            if (dmd.storesLowerCaseIdentifiers())
                tableName = tableName.toLowerCase();
-            else if(dmd.storesUpperCaseIdentifiers())
+            else if (dmd.storesUpperCaseIdentifiers())
                tableName = tableName.toUpperCase();
          }
          rs = dmd.getColumns(catalog, schema, tableName, null);
-         while(rs.next())
+         while (rs.next())
          {
-            String name = rs.getString("COLUMN_NAME");
-            columns.add(name);
+            columnNames.add(rs.getString("COLUMN_NAME"));
+            typeNames.add(rs.getString("TYPE_NAME"));
+            columnSizes.add(new Integer(rs.getInt("COLUMN_SIZE")));
          }
-         return columns;
+         return new OldColumns(columnNames, typeNames, columnSizes);
 
       }
-      catch(SQLException e)
+      catch (SQLException e)
       {
          // This should not happen. A J2EE compatiable JDBC driver is
          // required fully support metadata.
          throw new DeploymentException("Error while geting column names", e);
-      }
-      finally
-      {
-         JDBCUtil.safeClose(rs);
-         JDBCUtil.safeClose(con);
-      }
-   }
-
-   public static Collection getOldTableNames(DataSource dataSource)
-      throws DeploymentException
-   {
-      Connection con = null;
-      ResultSet rs = null;
-      ArrayList tables = new ArrayList();
-      try
-      {
-         con = dataSource.getConnection();
-
-         // (a j2ee spec compatible jdbc driver has to fully
-         // implement the DatabaseMetaData)
-         DatabaseMetaData dmd = con.getMetaData();
-         String catalog = con.getCatalog();
-         String schema = null;
-         String[] types = {"TABLE"};
-         rs = dmd.getTables(catalog, schema, null, types);
-         while(rs.next())
-         {
-            String name = rs.getString("TABLE_NAME");
-            tables.add(name);
-         }
-         return tables;
-
-      }
-      catch(SQLException e)
-      {
-         // This should not happen. A J2EE compatiable JDBC driver is
-         // required fully support metadata.
-         throw new DeploymentException("Error while geting table names", e);
       }
       finally
       {
@@ -1091,11 +1060,42 @@ public final class SQLUtil
             JDBCUtil.safeClose(statement);
             JDBCUtil.safeClose(con);
          }
-      }
-      catch(Exception e)
+        } catch (Exception e) {
+            throw new DeploymentException("Error while droping table "+tableName, e);
+        }
+        log.info("Dropped table "+tableName+" succesfuly");
+    }
+
+   /**
+    * utility class to store the information returned by getOldColumns()
+    */
+   public static class OldColumns
+   {
+      private ArrayList columnNames;
+      private ArrayList typeNames;
+      private ArrayList columnSizes;
+
+      private OldColumns(ArrayList cn, ArrayList tn, ArrayList cs)
       {
-         throw new DeploymentException("Error while droping table " + tableName, e);
+         columnNames = cn;
+         typeNames = tn;
+         columnSizes = cs;
       }
-      log.info("Dropped table " + tableName + " succesfuly");
+
+      public ArrayList getColumnNames()
+      {
+         return columnNames;
+      }
+
+      public ArrayList getTypeNames()
+      {
+         return typeNames;
+      }
+
+      public ArrayList getColumnSizes()
+      {
+         return columnSizes;
    }
+   }
+
 }
