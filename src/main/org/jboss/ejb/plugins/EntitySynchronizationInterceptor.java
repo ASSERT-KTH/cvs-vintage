@@ -48,7 +48,7 @@ import org.jboss.logging.Logger;
 *   @see <related>
 *   @author Rickard Öberg (rickard.oberg@telkel.com)
 *   @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
-*   @version $Revision: 1.11 $
+*   @version $Revision: 1.12 $
 */
 public class EntitySynchronizationInterceptor
 extends AbstractInterceptor
@@ -170,9 +170,9 @@ extends AbstractInterceptor
        }
        
        // So we can go on with the invocation
-       
+       Logger.log("Tx is "+tx.toString());
        if (tx != null &&
-         tx.getStatus() == Status.STATUS_ACTIVE) {
+           tx.getStatus() == Status.STATUS_ACTIVE) {
          
          try {
           
@@ -257,12 +257,14 @@ extends AbstractInterceptor
        // Synchronization implementation -----------------------------
        public void beforeCompletion()
        {
-         try
+		   
+		   Logger.log("beforeCompletion called");
+		 try
          {
           try
           {
               // Lock instance
-              ((EntityContainer)getContainer()).getInstanceCache().get(ctx.getId());
+              ((EntityContainer)getContainer()).getInstanceCache().get(((EntityEnterpriseContext) ctx).getCacheKey());
               
               // Store instance if business method was
               if (((EntityEnterpriseContext) ctx).isInvoked())
@@ -287,6 +289,7 @@ extends AbstractInterceptor
        
        public void afterCompletion(int status)
        {
+		   Logger.log("afterCompletion called");
          // If rolled back -> invalidate instance
          if (status == Status.STATUS_ROLLEDBACK)
          {
@@ -348,7 +351,7 @@ extends AbstractInterceptor
                  try
                  {
                    //Lock in cache
-                   container.getInstanceCache().get(ctx.getId()); 
+                   container.getInstanceCache().get(((EntityEnterpriseContext)ctx).getCacheKey()); 
                    
                    // Passivate instance
                    ((EntityContainer)getContainer()).getPersistenceManager().passivateEntity((EntityEnterpriseContext)ctx); 
