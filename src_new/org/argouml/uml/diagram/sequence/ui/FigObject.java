@@ -21,7 +21,7 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $Id: FigObject.java,v 1.12 2004/01/01 23:04:28 bobtarling Exp $
+// $Id: FigObject.java,v 1.13 2004/01/03 00:20:34 bobtarling Exp $
 package org.argouml.uml.diagram.sequence.ui;
 
 import java.awt.Color;
@@ -374,7 +374,7 @@ public class FigObject extends FigNodeModelElement implements MouseListener {
 
     private void removeActivations() {
         for (int i = 0; i < _figActivations.size(); i++) {
-            getFigs().remove(_figActivations.get(i));
+            getFigs(null).remove(_figActivations.get(i));
         }
         _figActivations = new ArrayList();
         calcBounds();

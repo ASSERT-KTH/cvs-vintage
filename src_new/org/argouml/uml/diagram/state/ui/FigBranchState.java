@@ -1,4 +1,4 @@
-// $Id: FigBranchState.java,v 1.6 2003/06/29 23:52:18 linus Exp $
+// $Id: FigBranchState.java,v 1.7 2004/01/03 00:20:33 bobtarling Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: FigBranchState.java
 // Classes: FigBranchState
 // Original Author: jrobbins@ics.uci.edu
-// $Id: FigBranchState.java,v 1.6 2003/06/29 23:52:18 linus Exp $
+// $Id: FigBranchState.java,v 1.7 2004/01/03 00:20:33 bobtarling Exp $
 
 package org.argouml.uml.diagram.state.ui;
 
@@ -33,6 +33,7 @@ import java.awt.Color;
 import java.awt.Rectangle;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
+import java.util.Iterator;
 import java.util.Vector;
 
 import org.argouml.uml.diagram.ui.SelectionMoveClarifiers;
@@ -90,9 +91,9 @@ public class FigBranchState extends FigStateVertex {
 
     public Object clone() {
 	FigBranchState figClone = (FigBranchState) super.clone();
-	Vector v = figClone.getFigs();
-	figClone._bigPort = (FigPoly) v.elementAt(0);
-	figClone._head = (FigPoly) v.elementAt(1);
+	Iterator it = figClone.getFigs(null).iterator();
+	figClone._bigPort = (FigPoly) it.next();
+	figClone._head = (FigPoly) it.next();
 	return figClone;
     }
 

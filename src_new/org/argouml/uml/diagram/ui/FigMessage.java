@@ -1,4 +1,4 @@
-// $Id: FigMessage.java,v 1.20 2003/11/10 12:34:59 jhraigniac Exp $
+// $Id: FigMessage.java,v 1.21 2004/01/03 00:20:33 bobtarling Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -34,6 +34,7 @@ import java.awt.Polygon;
 import java.awt.Rectangle;
 import java.beans.PropertyVetoException;
 import java.text.ParseException;
+import java.util.Iterator;
 import java.util.Vector;
 
 import org.argouml.application.api.Notation;
@@ -103,9 +104,9 @@ public class FigMessage extends FigNodeModelElement {
 
     public Object clone() {
 	FigMessage figClone = (FigMessage) super.clone();
-	Vector v = figClone.getFigs();
-	figClone._name = (FigText) v.elementAt(0);
-	figClone._figPoly = (FigPoly) v.elementAt(1);
+	Iterator it = figClone.getFigs(null).iterator();
+	figClone._name = (FigText) it.next();
+	figClone._figPoly = (FigPoly) it.next();
 	//figClone._polygon = (Polygon) _polygon.clone();
 	return figClone;
     }

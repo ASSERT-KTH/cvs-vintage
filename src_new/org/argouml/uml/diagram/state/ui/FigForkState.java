@@ -1,4 +1,4 @@
-// $Id: FigForkState.java,v 1.7 2003/06/29 23:52:18 linus Exp $
+// $Id: FigForkState.java,v 1.8 2004/01/03 00:20:33 bobtarling Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: FigForkState.java
 // Classes: FigForkState
 // Original Author: jrobbins@ics.uci.edu
-// $Id: FigForkState.java,v 1.7 2003/06/29 23:52:18 linus Exp $
+// $Id: FigForkState.java,v 1.8 2004/01/03 00:20:33 bobtarling Exp $
 
 package org.argouml.uml.diagram.state.ui;
 
@@ -33,6 +33,7 @@ import java.awt.Color;
 import java.awt.Rectangle;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
+import java.util.Iterator;
 import java.util.Vector;
 
 import org.tigris.gef.graph.GraphModel;
@@ -77,9 +78,9 @@ public class FigForkState extends FigStateVertex {
 
     public Object clone() {
 	FigForkState figClone = (FigForkState) super.clone();
-	Vector v = figClone.getFigs();
-	figClone._bigPort = (FigRect) v.elementAt(0);
-	figClone._head = (FigRect) v.elementAt(1);
+	Iterator it = figClone.getFigs(null).iterator();
+	figClone._bigPort = (FigRect) it.next();
+	figClone._head = (FigRect) it.next();
 	return figClone;
     }
 

@@ -1,4 +1,4 @@
-// $Id: FigComment.java,v 1.23 2003/10/27 20:24:15 kataka Exp $
+// $Id: FigComment.java,v 1.24 2004/01/03 00:20:34 bobtarling Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: FigComment.java
 // Classes: FigComment
 // Original Author: a_rueckert@gmx.net
-// $Id: FigComment.java,v 1.23 2003/10/27 20:24:15 kataka Exp $
+// $Id: FigComment.java,v 1.24 2004/01/03 00:20:34 bobtarling Exp $
 
 package org.argouml.uml.diagram.static_structure.ui;
 
@@ -43,6 +43,7 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyVetoException;
 import java.beans.VetoableChangeListener;
+import java.util.Iterator;
 import java.util.Vector;
 
 import javax.swing.SwingUtilities;
@@ -241,11 +242,11 @@ public class FigComment
      */
     public Object clone() {
         FigComment figClone = (FigComment) super.clone();
-        Vector v = figClone.getFigs();
-        figClone._bigPort = (FigRect) v.elementAt(0);
-        figClone._body = (FigPoly) v.elementAt(1);
-        figClone._urCorner = (FigPoly) v.elementAt(2);
-        figClone._text = (FigText) v.elementAt(3);
+        Iterator it = figClone.getFigs(null).iterator();
+        figClone._bigPort = (FigRect) it.next();
+        figClone._body = (FigPoly) it.next();
+        figClone._urCorner = (FigPoly) it.next();
+        figClone._text = (FigText) it.next();
         return figClone;
     }
 

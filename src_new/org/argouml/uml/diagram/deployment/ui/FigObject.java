@@ -1,4 +1,4 @@
-// $Id: FigObject.java,v 1.17 2003/11/10 12:35:00 jhraigniac Exp $
+// $Id: FigObject.java,v 1.18 2004/01/03 00:20:34 bobtarling Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: FigObject.java
 // Classes: FigObject
 // Original Author: 5eichler@informatik.uni-hamburg.de
-// $Id: FigObject.java,v 1.17 2003/11/10 12:35:00 jhraigniac Exp $
+// $Id: FigObject.java,v 1.18 2004/01/03 00:20:34 bobtarling Exp $
 
 package org.argouml.uml.diagram.deployment.ui;
 
@@ -33,6 +33,7 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Rectangle;
 import java.beans.PropertyVetoException;
+import java.util.Iterator;
 import java.util.Vector;
 
 import org.argouml.model.ModelFacade;
@@ -88,10 +89,10 @@ public class FigObject extends FigNodeModelElement {
 
     public Object clone() {
 	FigObject figClone = (FigObject) super.clone();
-	Vector v = figClone.getFigs();
-	figClone._bigPort = (FigRect) v.elementAt(0);
-	figClone._cover = (FigRect) v.elementAt(1);
-	figClone._name = (FigText) v.elementAt(2);
+	Iterator it = figClone.getFigs(null).iterator();
+	figClone._bigPort = (FigRect) it.next();
+	figClone._cover = (FigRect) it.next();
+	figClone._name = (FigText) it.next();
 	return figClone;
     }
 

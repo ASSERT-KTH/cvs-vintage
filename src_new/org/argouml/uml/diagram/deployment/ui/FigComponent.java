@@ -1,4 +1,4 @@
-// $Id: FigComponent.java,v 1.22 2003/12/29 16:26:39 bobtarling Exp $
+// $Id: FigComponent.java,v 1.23 2004/01/03 00:20:34 bobtarling Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: FigComponent.java
 // Classes: FigComponent
 // Original Author: 5eichler@informatik.uni-hamburg.de
-// $Id: FigComponent.java,v 1.22 2003/12/29 16:26:39 bobtarling Exp $
+// $Id: FigComponent.java,v 1.23 2004/01/03 00:20:34 bobtarling Exp $
 
 package org.argouml.uml.diagram.deployment.ui;
 
@@ -100,13 +100,13 @@ public class FigComponent extends FigNodeModelElement {
 
     public Object clone() {
 	FigComponent figClone = (FigComponent) super.clone();
-	Vector v = figClone.getFigs();
-	figClone._bigPort = (FigRect) v.elementAt(0);
-	figClone._cover = (FigRect) v.elementAt(1);
-	figClone._stereo = (FigText) v.elementAt(2);
-	figClone._name = (FigText) v.elementAt(3);
-	figClone._upperRect = (FigRect) v.elementAt(4);
-	figClone._lowerRect = (FigRect) v.elementAt(5);
+	Iterator it = figClone.getFigs(null).iterator();
+	figClone._bigPort = (FigRect) it.next();
+	figClone._cover = (FigRect) it.next();
+	figClone._stereo = (FigText) it.next();
+	figClone._name = (FigText) it.next();
+	figClone._upperRect = (FigRect) it.next();
+	figClone._lowerRect = (FigRect) it.next();
 
 	return figClone;
     }

@@ -1,4 +1,4 @@
-// $Id: FigPackage.java,v 1.41 2003/12/30 20:33:32 jjones Exp $
+// $Id: FigPackage.java,v 1.42 2004/01/03 00:20:34 bobtarling Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: FigPackage.java
 // Classes: FigPackage
 // Original Author: agauthie@ics.uci.edu
-// $Id: FigPackage.java,v 1.41 2003/12/30 20:33:32 jjones Exp $
+// $Id: FigPackage.java,v 1.42 2004/01/03 00:20:34 bobtarling Exp $
 
 package org.argouml.uml.diagram.static_structure.ui;
 
@@ -35,6 +35,7 @@ import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseEvent;
 import java.util.Enumeration;
+import java.util.Iterator;
 import java.util.Vector;
 
 import javax.swing.JOptionPane;
@@ -276,12 +277,12 @@ public class FigPackage extends FigNodeModelElement {
 
     public Object clone() {
         FigPackage figClone = (FigPackage) super.clone();
-        Vector v = figClone.getFigs();
-        figClone._bigPort = (FigRect) v.elementAt(0);
-        figClone._stereo = (FigText) v.elementAt(1);
-        figClone._name = (FigText) v.elementAt(2);
-        figClone._stereoLineBlinder = (FigRect) v.elementAt(3);
-        figClone._body = (FigText) v.elementAt(4);
+        Iterator it = figClone.getFigs(null).iterator();
+        figClone._bigPort = (FigRect) it.next();
+        figClone._stereo = (FigText) it.next();
+        figClone._name = (FigText) it.next();
+        figClone._stereoLineBlinder = (FigRect) it.next();
+        figClone._body = (FigText) it.next();
         return figClone;
     }
 

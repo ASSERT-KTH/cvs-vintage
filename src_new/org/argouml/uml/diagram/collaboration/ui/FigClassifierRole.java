@@ -1,4 +1,4 @@
-// $Id: FigClassifierRole.java,v 1.26 2003/11/10 12:35:04 jhraigniac Exp $
+// $Id: FigClassifierRole.java,v 1.27 2004/01/03 00:20:34 bobtarling Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -33,6 +33,7 @@ import java.awt.Dimension;
 import java.awt.Rectangle;
 import java.beans.PropertyVetoException;
 import java.text.ParseException;
+import java.util.Iterator;
 import java.util.Vector;
 
 import org.argouml.application.api.Notation;
@@ -122,7 +123,7 @@ public class FigClassifierRole extends FigNodeModelElement {
 
         _stereo.setLineWidth(0);
         _stereo.setFilled(false);
-        _stereo.setJustifciaionByName("Center");
+        _stereo.setJustificationByName("Center");
         _stereo.setDisplayed(false);
 
         _stereo.setBounds(10, 10, 90, stereoMin.height);
@@ -199,12 +200,12 @@ public class FigClassifierRole extends FigNodeModelElement {
 
     public Object clone() {
         FigClassifierRole figClone = (FigClassifierRole) super.clone();
-        Vector            v        = figClone.getFigs();
-
-        figClone._bigPort = (FigRect) v.elementAt(0);
-        figClone._cover   = (FigRect) v.elementAt(1);
-        figClone._stereo  = (FigText) v.elementAt(2);
-        figClone._name    = (FigText) v.elementAt(3);
+        Iterator it = figClone.getFigs(null).iterator();
+        
+        figClone._bigPort = (FigRect) it.next();
+        figClone._cover   = (FigRect) it.next();
+        figClone._stereo  = (FigText) it.next();
+        figClone._name    = (FigText) it.next();
 
         return figClone;
     }

@@ -1,4 +1,4 @@
-// $Id: ProjectBrowser.java,v 1.124 2003/12/23 20:35:32 bobtarling Exp $
+// $Id: ProjectBrowser.java,v 1.125 2004/01/03 00:20:33 bobtarling Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -32,10 +32,8 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.ListIterator;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Vector;
@@ -43,7 +41,6 @@ import java.util.Vector;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JMenuBar;
-import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 
 import org.apache.log4j.Logger;

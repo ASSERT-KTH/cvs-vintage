@@ -1,4 +1,4 @@
-// $Id: FigSimpleState.java,v 1.7 2003/09/14 01:51:06 bobtarling Exp $
+// $Id: FigSimpleState.java,v 1.8 2004/01/03 00:20:33 bobtarling Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -32,7 +32,7 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Rectangle;
 import java.beans.PropertyVetoException;
-import java.util.Vector;
+import java.util.Iterator;
 
 import org.apache.log4j.Logger;
 
@@ -109,12 +109,12 @@ public class FigSimpleState extends FigState {
 
     public Object clone() {
 	FigSimpleState figClone = (FigSimpleState) super.clone();
-	Vector v = figClone.getFigs();
-	figClone._bigPort = (FigRect) v.elementAt(0);
-	figClone._cover = (FigRect) v.elementAt(1);
-	figClone._name = (FigText) v.elementAt(2);
-	figClone._divider = (FigLine) v.elementAt(3);
-	figClone._internal = (FigText) v.elementAt(4);
+	Iterator it = figClone.getFigs(null).iterator();
+	figClone._bigPort = (FigRect) it.next();
+	figClone._cover = (FigRect) it.next();
+	figClone._name = (FigText) it.next();
+	figClone._divider = (FigLine) it.next();
+	figClone._internal = (FigText) it.next();
 	return figClone;
     }
 

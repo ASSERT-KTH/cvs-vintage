@@ -1,4 +1,4 @@
-// $Id: ModeCreateEdgeAndNode.java,v 1.21 2003/12/29 16:26:39 bobtarling Exp $
+// $Id: ModeCreateEdgeAndNode.java,v 1.22 2004/01/03 00:20:33 bobtarling Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: ModeCreateEdgeAndNode.java
 // Classes: ModeCreateEdgeAndNode
 // Original Author: jrobbins
-// $Id: ModeCreateEdgeAndNode.java,v 1.21 2003/12/29 16:26:39 bobtarling Exp $
+// $Id: ModeCreateEdgeAndNode.java,v 1.22 2004/01/03 00:20:33 bobtarling Exp $
 
 package org.argouml.uml.diagram.ui;
 
@@ -38,7 +38,6 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.Collection;
 import java.util.Iterator;
-import java.util.Vector;
 
 import org.apache.log4j.Logger;
 import org.argouml.model.ModelFacade;
@@ -263,9 +262,10 @@ public class ModeCreateEdgeAndNode extends ModeCreate {
             // FigNode to see if a port exists 
             Object foundPort = destFigNode.deepHitPort(x, y);
             if (foundPort == null) {
-                Vector portFigs = destFigNode.getPortFigs();
-                if (portFigs.size() > 0)
-                    foundPort = ((Fig) portFigs.elementAt(0)).getOwner();
+                Iterator it = destFigNode.getPortFigs(null).iterator();
+                if (it.hasNext()) {
+                    foundPort = ((Fig) it.next()).getOwner();
+                }
             }
 
             FigPoly p = (FigPoly) _newItem;
