@@ -58,7 +58,7 @@ import org.xml.sax.SAXException;
 * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
 * @author <a href="mailto:David.Maplesden@orion.co.nz">David Maplesden</a>
 * @author <a href="mailto:d_jencks@users.sourceforge.net">David Jencks</a>
-* @version   $Revision: 1.2 $ <p>
+* @version   $Revision: 1.3 $ <p>
 *
 *      <b>20010830 marc fleury:</b>
 *      <ul>initial import
@@ -348,24 +348,6 @@ implements SARDeployerMBean
          // We have an archive whatever the codebase go ahead and load the libraries
          else if (!archives.equals(""))
          {
-            
-            // We have a real codebase specified in xml
-            // We add it to the classpath so we load files from it (http/file will work)
-            if (!codebase.equals(""))
-            {  
-               try 
-               {
-		  //XXXXXXXXXXXXXXXXXTEMP EXPERIMENT david j
-                  // Add the codebase to the classpath
-                  //classpath.add( new URL(codebase));
-               }
-               catch (Exception e2) 
-               {
-                  log.error("Couldn't create URL for codebase "+codebase, e2);
-                  throw new DeploymentException(e2.getMessage());
-               
-               }
-            }
             
             // Still no codebase? safeguard
             if (codebase.equals("")) codebase = System.getProperty("jboss.system.libraryDirectory");
