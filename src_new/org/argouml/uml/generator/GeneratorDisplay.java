@@ -1,4 +1,4 @@
-// $Id: GeneratorDisplay.java,v 1.77 2005/01/09 14:58:58 linus Exp $
+// $Id: GeneratorDisplay.java,v 1.78 2005/01/22 09:15:01 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -1092,7 +1092,8 @@ public class GeneratorDisplay extends Generator2 {
         } else if (ModelFacade.isASignalEvent(m)) {
             event.append(generateName(ModelFacade.getName(m)));
         } else if (ModelFacade.isACallEvent(m)) {
-            event.append(generateName(ModelFacade.getName(m)));
+            event.append(generateName(ModelFacade.getName(
+                    ModelFacade.getOperation(m))));
             event.append(generateParameterList(m));
         }
         return event.toString();
