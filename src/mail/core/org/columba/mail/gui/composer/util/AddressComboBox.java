@@ -21,6 +21,7 @@ import java.awt.event.KeyListener;
 import javax.swing.JComboBox;
 import javax.swing.JTextField;
 
+import org.columba.mail.gui.composer.HeaderView;
 import org.columba.mail.util.AddressCollector;
 
 /**
@@ -31,9 +32,9 @@ import org.columba.mail.util.AddressCollector;
  */
 public class AddressComboBox extends JComboBox implements KeyListener {
 
-	private AddressbookTableView table;
+	private HeaderView table;
 
-	public AddressComboBox(AddressbookTableView table) {
+	public AddressComboBox(HeaderView table) {
 		super();
 
 		this.table= table;
@@ -43,7 +44,8 @@ public class AddressComboBox extends JComboBox implements KeyListener {
 		Object[] completions= AddressCollector.getAddresses();
 
 		new AutoCompleter(this, table, completions);
-
+	
+		setRenderer(new AddressComboBoxRenderer());
 		//getTextField().addKeyListener(this);
 	}
 

@@ -17,37 +17,45 @@ package org.columba.mail.gui.composer.util;
 
 import java.awt.Component;
 
+import javax.swing.DefaultCellEditor;
 import javax.swing.JComboBox;
 import javax.swing.JTable;
-import javax.swing.table.TableCellRenderer;
 
+import org.columba.addressbook.folder.HeaderItem;
 
 /**
- * @author frd
+ * 
  *
- * To change this generated comment edit the template variable "typecomment":
- * Window>Preferences>Java>Templates.
- * To enable and disable the creation of type comments go to
- * Window>Preferences>Java>Code Generation.
+ * @author fdietz
  */
-public class FieldCellRenderer extends JComboBox implements TableCellRenderer {
-    public FieldCellRenderer() {
-        super();
+public class FieldEditor extends DefaultCellEditor {
 
-        addItem("To");
-        addItem("Cc");
-        addItem("Bcc");
+	/**
+	 * @param arg0
+	 */
+	public FieldEditor(JComboBox arg0) {
+		super(arg0);
 
-        setOpaque(true);
-    }
+	}
 
-    public Component getTableCellRendererComponent(JTable table, Object object,
-        boolean isSelected, boolean hasFocus, int row, int column) {
-        
-        System.out.println("object="+object.toString());
-        	
-        setSelectedItem((String) object);
+	/**
+	 * @see javax.swing.table.TableCellEditor#getTableCellEditorComponent(javax.swing.JTable, java.lang.Object, boolean, int, int)
+	 */
+	public Component getTableCellEditorComponent(
+		JTable arg0,
+		Object value,
+		boolean arg2,
+		int arg3,
+		int arg4) {
 
-        return this;
-    }
+		super.getTableCellEditorComponent(arg0, value, arg2, arg3, arg4);
+
+		HeaderItem item= (HeaderItem) value;
+		String s= (String) item.get("field");
+
+		((JComboBox) editorComponent).setSelectedItem(s);
+
+		return editorComponent;
+	}
+
 }

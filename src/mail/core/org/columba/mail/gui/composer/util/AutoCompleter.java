@@ -15,21 +15,20 @@
 //All Rights Reserved.
 package org.columba.mail.gui.composer.util;
 
-import org.columba.addressbook.folder.HeaderItem;
-
-import org.columba.mail.util.AddressCollector;
-
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-
 import java.util.List;
 import java.util.Vector;
 
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JComboBox;
 import javax.swing.JTextField;
+
+import org.columba.addressbook.folder.HeaderItem;
+import org.columba.mail.gui.composer.HeaderView;
+import org.columba.mail.util.AddressCollector;
 
 
 /**
@@ -38,21 +37,11 @@ import javax.swing.JTextField;
 public class AutoCompleter implements KeyListener, ItemListener {
     private JComboBox _comboBox = null;
     private JTextField _editor = null;
-    private AddressbookTableView _table = null;
+    private HeaderView _table = null;
     int cursor_pos = -1;
     private Object[] _options;
 
-    public AutoCompleter(JComboBox comboBox, Object[] options) {
-        _comboBox = comboBox;
-
-        _editor = (JTextField) comboBox.getEditor().getEditorComponent();
-        _editor.addKeyListener(this);
-
-        _options = options;
-        _comboBox.addItemListener(this);
-    }
-
-    public AutoCompleter(JComboBox comboBox, AddressbookTableView table,
+    public AutoCompleter(JComboBox comboBox, HeaderView table,
         Object[] options) {
         _comboBox = comboBox;
 
@@ -62,12 +51,6 @@ public class AutoCompleter implements KeyListener, ItemListener {
         _options = options;
 
         _comboBox.addItemListener(this);
-    }
-
-    public AutoCompleter(JTextField tf, Object[] options) {
-        _editor = tf;
-        _editor.addKeyListener(this);
-        _options = options;
     }
 
     public void keyTyped(KeyEvent e) {

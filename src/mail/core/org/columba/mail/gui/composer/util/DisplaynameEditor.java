@@ -15,13 +15,10 @@
 //All Rights Reserved.
 package org.columba.mail.gui.composer.util;
 
-import org.columba.addressbook.folder.HeaderItem;
-
 import java.awt.Component;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
-
 import java.util.EventObject;
 
 import javax.swing.JTable;
@@ -31,6 +28,9 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.EventListenerList;
 import javax.swing.table.TableCellEditor;
 
+import org.columba.addressbook.folder.HeaderItem;
+import org.columba.mail.gui.composer.HeaderView;
+
 /**
  * @author frd
  *
@@ -39,16 +39,16 @@ import javax.swing.table.TableCellEditor;
  * To enable and disable the creation of type comments go to
  * Window>Preferences>Java>Code Generation.
  */
-public class AddressCellEditor
+public class DisplaynameEditor
 	extends AddressComboBox
 	implements TableCellEditor, KeyListener {
-	AddressbookTableView table;
-	HeaderItem selection;
-	protected EventListenerList listenerList= new EventListenerList();
-	protected ChangeEvent changeEvent= new ChangeEvent(this);
+		private HeaderView table;
+	private HeaderItem selection;
+	private  EventListenerList listenerList= new EventListenerList();
+	private  ChangeEvent changeEvent= new ChangeEvent(this);
 	boolean editing= false;
 
-	public AddressCellEditor(AddressbookTableView table) {
+	public DisplaynameEditor(HeaderView table) {
 		super(table);
 		this.table= table;
 

@@ -21,8 +21,10 @@ import java.util.Vector;
 
 
 /**
- * @version         1.0
- * @author
+ * HeaderItemList wraps a list containing {@link HeaderItem} as
+ * elements.
+ * 
+ * @author fdietz
  */
 public class HeaderItemList {
     private List list;
@@ -57,6 +59,10 @@ public class HeaderItemList {
         } else {
             System.out.println("item == null!!!");
         }
+    }
+    
+    public HeaderItem remove(int index ) {
+    	return (HeaderItem) list.remove(index);
     }
 
     public void replace(int index, HeaderItem item) {
