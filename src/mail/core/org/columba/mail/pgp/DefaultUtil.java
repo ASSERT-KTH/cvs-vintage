@@ -209,7 +209,7 @@ public abstract class DefaultUtil {
 			return item.get("id");
 		}
 		if (name.equals("recipients")) {
-			return item.get("recipients");
+			return item.get("id");
 		}
 		if (name.equals("sigfile")) {
 			return item.get("sigfile");
