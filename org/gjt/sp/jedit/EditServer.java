@@ -53,7 +53,7 @@ import org.gjt.sp.util.Log;
  * complicated stuff can be done too.
  *
  * @author Slava Pestov
- * @version $Id: EditServer.java,v 1.12 2003/02/28 17:53:41 spestov Exp $
+ * @version $Id: EditServer.java,v 1.13 2003/03/08 19:01:14 spestov Exp $
  */
 public class EditServer extends Thread
 {
@@ -220,9 +220,9 @@ public class EditServer extends Thread
 			// At least on windows, Frame.toFront() doesn't cut it.
 			// Remove the isWindows check if it's broken under other
 			// OSes too.
-			if (OperatingSystem.isWindows())
+			if (jEdit.getBooleanProperty("server.brokenToFront"))
 				view.setState(java.awt.Frame.ICONIFIED);
-			
+
 			// un-iconify using JDK 1.3 API
 			view.setState(java.awt.Frame.NORMAL);
 			view.requestFocus();

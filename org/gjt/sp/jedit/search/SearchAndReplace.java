@@ -59,7 +59,7 @@ import org.gjt.sp.util.Log;
  *
  * @author Slava Pestov
  * @author John Gellene (API documentation)
- * @version $Id: SearchAndReplace.java,v 1.43 2003/02/09 05:16:57 spestov Exp $
+ * @version $Id: SearchAndReplace.java,v 1.44 2003/03/08 19:01:16 spestov Exp $
  */
 public class SearchAndReplace
 {
@@ -187,7 +187,7 @@ public class SearchAndReplace
 		if(reverse == SearchAndReplace.reverse)
 			return;
 
-		SearchAndReplace.reverse = (regexp ? false : reverse);
+		SearchAndReplace.reverse = reverse;
 
 		matcher = null;
 
@@ -444,6 +444,13 @@ public class SearchAndReplace
 			return false;
 		}
 
+		boolean _reverse = reverse && fileset instanceof CurrentBufferSet;
+		if(_reverse && regexp)
+		{
+			GUIUtilities.error(comp,"regexp-reverse",null);
+			return false;
+		}
+
 		try
 		{
 			SearchMatcher matcher = getSearchMatcher();
@@ -456,8 +463,6 @@ public class SearchAndReplace
 			record(view,"find(view)",false,true);
 
 			view.showWaitCursor();
-
-			boolean _reverse = reverse && fileset instanceof CurrentBufferSet;
 
 loop:			for(;;)
 			{
@@ -728,7 +733,8 @@ loop:			for(;;)
 				}
 			}
 
-			if(reverse)
+			boolean _reverse = !regexp && reverse && fileset instanceof CurrentBufferSet;
+			if(_reverse)
 			{
 				// so that Replace and Find continues from
 				// the right location

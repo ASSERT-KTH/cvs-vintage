@@ -100,7 +100,7 @@ import java.util.*;
  *
  * @author Slava Pestov
  * @author John Gellene (API documentation)
- * @version $Id: DockableWindowManager.java,v 1.49 2003/02/11 02:31:06 spestov Exp $
+ * @version $Id: DockableWindowManager.java,v 1.50 2003/03/08 19:01:15 spestov Exp $
  * @since jEdit 2.6pre3
  */
 public class DockableWindowManager extends JPanel
@@ -888,11 +888,11 @@ public class DockableWindowManager extends JPanel
 				}
 			}
 
-			if(entry.container instanceof FloatingWindowContainer)
+			/* if(entry.container instanceof FloatingWindowContainer)
 			{
 				SwingUtilities.updateComponentTreeUI(((JFrame)entry.container)
 					.getRootPane());
-			}
+			} */
 		}
 	} //}}}
 

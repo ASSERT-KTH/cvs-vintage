@@ -54,7 +54,7 @@ import org.gjt.sp.util.Log;
  *
  * @author Slava Pestov
  * @author John Gellene (API documentation)
- * @version $Id: JEditTextArea.java,v 1.188 2003/02/23 04:05:22 spestov Exp $
+ * @version $Id: JEditTextArea.java,v 1.189 2003/03/08 19:01:16 spestov Exp $
  */
 public class JEditTextArea extends JComponent
 {
@@ -6429,7 +6429,13 @@ loop:			for(int i = lineNo + 1; i < getLineCount(); i++)
 				setFirstLine(getFirstLine() + 1);
 			}
 
-			if(quickCopyDrag)
+			if(control && quickCopyDrag)
+			{
+				view.getStatus().setMessage(jEdit.getProperty(
+					"view.status.rect-quick-copy"));
+				clearStatus = true;
+			}
+			else if(quickCopyDrag)
 			{
 				view.getStatus().setMessage(jEdit.getProperty(
 					"view.status.quick-copy"));
@@ -6628,11 +6634,9 @@ loop:			for(int i = lineNo + 1; i < getLineCount(); i++)
 			// middle mouse button drag inserts selection
 			// at caret position
 			Selection sel = getSelectionAtOffset(dragStart);
-			if(sel != null)
-				Registers.setRegister('%',getSelectedText(sel));
-
 			if(dragged && sel != null)
 			{
+				Registers.setRegister('%',getSelectedText(sel));
 				if(quickCopyDrag)
 				{
 					removeFromSelection(sel);
