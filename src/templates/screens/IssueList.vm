@@ -185,10 +185,10 @@ $link.setPage("ConfigureIssueList.vm").setLabel("Add/remove attributes from view
     <tr>
        <th>Max items per page</td>
  <td>
- <input type="radio" value="25" name="resultsPerPage" #if ($resultsPerPage.toString().equals("25")) checked="checked" #end /> 25
- <input type="radio" name="resultsPerPage" value="50" #if ($resultsPerPage.toString().equals("50")) checked="checked" #end /> 50
- <input type="radio" name="resultsPerPage" value="75" #if ($resultsPerPage.toString().equals("75")) checked="checked" #end /> 75
- <input type="radio" name="resultsPerPage" value="100" #if ($resultsPerPage.toString().equals("100")) checked="checked" #end /> 100
+
+#foreach ($num in [25, 50, 75, 100])
+ <input type="radio" value="$num" name="resultsPerPage" #if ($resultsPerPage.toString().equals("$num")) checked="checked" #end /> $num
+#end
  <input type="submit" name="eventSubmit_doSearch" value="$l10n.Refresh" />
  </td>
    </tr>
