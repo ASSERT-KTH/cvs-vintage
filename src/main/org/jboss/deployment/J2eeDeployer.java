@@ -54,7 +54,7 @@ import org.w3c.dom.Element;
 *  (ContainerFactory for jBoss and EmbededTomcatService for Tomcat).
 *
 *   @author <a href="mailto:daniel.schulze@telkel.com">Daniel Schulze</a>
-*   @version $Revision: 1.9 $
+*   @version $Revision: 1.10 $
 */
 public class J2eeDeployer 
 extends ServiceMBeanSupport
@@ -120,7 +120,7 @@ implements J2eeDeployerMBean
       {}
       
       // now try to deploy
-      log.log ("deploy j2ee application: " + _url);
+      log.log ("Deploy J2EE application: " + _url);
       
       Deployment d = null;
       try
@@ -128,7 +128,7 @@ implements J2eeDeployerMBean
          d = installApplication (url);
          startApplication (d);
          
-         log.log ("j2ee application: " + _url + " is deployed.");
+         log.log ("J2EE application: " + _url + " is deployed.");
       } 
       catch (Exception _e)
       {
@@ -151,7 +151,7 @@ implements J2eeDeployerMBean
             // Runtime Exception - shouldnt happen
             log.exception (_e);
             uninstallApplication (getAppName (url));
-            throw new J2eeDeploymentException ("fatal error: "+_e.toString ());
+            throw new J2eeDeploymentException ("Fatal error: "+_e.toString ());
          }
       }
    }
@@ -201,7 +201,7 @@ implements J2eeDeployerMBean
       
       }
       else
-         throw new J2eeDeploymentException ("The application \""+name+"\" is not deployed.");
+         throw new J2eeDeploymentException ("The application \""+name+"\" has not been deployed.");
    }
    
    /** Checks if the given URL is currently deployed or not.
@@ -250,7 +250,7 @@ implements J2eeDeployerMBean
    // ServiceMBeanSupport overrides ---------------------------------
    public String getName()
    {
-      return "J2ee deployer";
+      return "J2EE Deployer";
    }
    
    protected ObjectName getObjectName(MBeanServer server, ObjectName name)
@@ -268,7 +268,7 @@ implements J2eeDeployerMBean
       //check if the deployment dir was set meaningful
       if (!DEPLOYMENT_DIR.exists () &&
           !DEPLOYMENT_DIR.mkdirs ())
-         throw new IOException ("temporary directory \""+DEPLOYMENT_DIR.getCanonicalPath ()+"\" does not exist!");
+         throw new IOException ("Temporary directory \""+DEPLOYMENT_DIR.getCanonicalPath ()+"\" does not exist!");
       
       // Save JMX name of the deployers
       jarDeployer = new ObjectName(jarDeployerName);
@@ -280,11 +280,11 @@ implements J2eeDeployerMBean
    throws Exception
    {
       if (!warDeployerAvailable ())
-         log.log ("No war deployer found - only EJB deployment available...");
+         log.log ("No web container found - only EJB deployment available...");
          
       // clean up the deployment directory since on some Windowz the file removement
       // during runtime doesnt work...
-      log.log("cleaning up deployment directory "+DEPLOYMENT_DIR.toURL());
+      log.log("Cleaning up deployment directory "+DEPLOYMENT_DIR.toURL());
       File[] files =  DEPLOYMENT_DIR.listFiles();
       for (int i = 0, l = files.length; i<l; ++i)
          try
@@ -293,7 +293,7 @@ implements J2eeDeployerMBean
          }
          catch (IOException _ioe)
          {
-            log.log("couldnd remove file tree: "+files[i].toURL().toString());
+            log.log("Could not remove file tree: "+files[i].toURL().toString());
          }
    }
    
@@ -301,7 +301,7 @@ implements J2eeDeployerMBean
    /** undeploys all deployments */
    protected void stopService()
    {
-      log.log ("undeploying all applications.");
+      log.log ("Undeploying all applications.");
       
       File[] files =  DEPLOYMENT_DIR.listFiles();
       int count = 0;
@@ -334,7 +334,7 @@ implements J2eeDeployerMBean
             ++count;
          }
       }
-      log.log ("undeployed "+count+" applications.");
+      log.log ("Undeployed "+count+" applications.");
    }
    
    // Private -------------------------------------------------------
@@ -386,7 +386,7 @@ implements J2eeDeployerMBean
       catch (IOException _ioe)
       {
          // dont abort just give a note...
-         log.log ("could not delete temporary file: "+localCopy.getFile ());
+         log.log ("Could not delete temporary file: "+localCopy.getFile ());
       }
       
       if (root == null)
@@ -403,7 +403,7 @@ implements J2eeDeployerMBean
       
       d.name = getAppName (_downloadUrl);
       d.localUrl = new File (DEPLOYMENT_DIR, d.name).toURL ();
-      log.log ("create application " + d.name);
+      log.log ("Create application " + d.name);
       
       // do the app type dependent stuff...
       if ("ejb-jar".equals (root.getTagName ()))
@@ -418,7 +418,7 @@ implements J2eeDeployerMBean
             throw new J2eeDeploymentException ("Currently are only packed web.war archives supported.");
          
          if (!warDeployerAvailable ())
-            throw new J2eeDeploymentException ("No WEB container available!");
+            throw new J2eeDeploymentException ("No web container available!");
          
          String context = getWebContext (_downloadUrl);
          installWAR (d, _downloadUrl, context, null);
@@ -427,7 +427,7 @@ implements J2eeDeployerMBean
       {
          // its a EAR.jar... hmmm, its a little more
          if (directory)
-            throw new J2eeDeploymentException ("Application.ear files are only in packed archive format supported.");
+            throw new J2eeDeploymentException ("Application .ear files are only in packed archive format supported.");
          
          // create a MetaData object...
          J2eeApplicationMetaData app = null; 
@@ -437,7 +437,7 @@ implements J2eeDeployerMBean
          }
          catch (DeploymentException _de)
          {
-            throw new J2eeDeploymentException ("error in parsing application.xml: "+_de.getMessage ());
+            throw new J2eeDeploymentException ("Error in parsing application.xml: "+_de.getMessage ());
          }
          
          // currently we only take care for the modules
@@ -460,7 +460,7 @@ implements J2eeDeployerMBean
             else if (mod.isWeb ())
             {
                if (!warDeployerAvailable ())
-                  throw new J2eeDeploymentException ("Application containes .war file. No war container available!");
+                  throw new J2eeDeploymentException ("Application contains .war file, but no web container available!");
                
                String context = mod.getWebContext ();
                if (context == null)
@@ -483,7 +483,7 @@ implements J2eeDeployerMBean
    {
       Deployment.Module m = _d.newModule ();
       m.name = getAppName (_source);
-      log.log ("installing ejb package: " + m.name);
+      log.log ("Installing EJB package: " + m.name);
       
       // download the package...
       URL localUrl = URLWizzard.downloadTemporary(_source, _d.localUrl, "ejb", ".jar");
@@ -510,7 +510,7 @@ implements J2eeDeployerMBean
    {
       Deployment.Module m = _d.newModule ();
       m.name = getAppName (_source);
-      log.log ("installing web package: " + m.name);
+      log.log ("Installing web package: " + m.name);
       
       // download the package...
       URL localUrl = URLWizzard.downloadAndInflateTemporary (_source, _d.localUrl, "war");
@@ -558,7 +558,7 @@ implements J2eeDeployerMBean
             {
                URL src = new URL(_base, classPath);
                _d.commonUrls.add (URLWizzard.downloadTemporary (src, _d.localUrl, "lib", ".jar"));
-               log.error("added " + classPath + " to common classpath");
+               log.error("Added " + classPath + " to common classpath");
             } 
             catch (Exception e)
             {
@@ -574,7 +574,7 @@ implements J2eeDeployerMBean
    */
    void uninstallApplication (String _name) throws IOException
    {
-      log.log ("destroying application " + _name);
+      log.log ("Destroying application " + _name);
       URL url = null;
       try 
       {
@@ -588,10 +588,10 @@ implements J2eeDeployerMBean
          log.log (CONFIG+" file deleted.");
          
          URLWizzard.deleteTree (url);      
-         log.log ("file tree "+url.toString ()+" deleted.");
+         log.log ("File tree "+url.toString ()+" deleted.");
       } catch (MalformedURLException _mfe) { // should never happen
       } catch (IOException _ioe) {
-         log.log ("could not remove file: "+url.toString ());
+         log.log ("Could not remove file: "+url.toString ());
          // throw _ioe;
       }
    }
@@ -621,7 +621,7 @@ implements J2eeDeployerMBean
          {
             m = (Deployment.Module)it.next ();
             
-            log.log ("starting module " + m.name);
+            log.log ("Starting module " + m.name);
             
             // Call the ContainerFactory that is loaded in the JMX server
             server.invoke(jarDeployer, "deploy",
@@ -635,7 +635,7 @@ implements J2eeDeployerMBean
          {
             m = (Deployment.Module)it.next ();
             
-            log.log ("starting module " + m.name);
+            log.log ("Starting module " + m.name);
             
             // Call the TomcatDeployer that is loaded in the JMX server
             server.invoke(warDeployer, "deploy",
@@ -643,11 +643,11 @@ implements J2eeDeployerMBean
          }
       }
       catch (MBeanException _mbe) {
-         log.error ("starting "+m.name+" failed!");
-         throw new J2eeDeploymentException ("error while starting "+m.name+": " + _mbe.getTargetException ().getMessage ());
+         log.error ("Starting "+m.name+" failed!");
+         throw new J2eeDeploymentException ("Error while starting "+m.name+": " + _mbe.getTargetException ().getMessage ());
       } catch (JMException _jme){
-         log.error ("starting failed!");
-         throw new J2eeDeploymentException ("fatal error while interacting with deployer MBeans... " + _jme.getMessage ());
+         log.error ("Starting failed!");
+         throw new J2eeDeploymentException ("Fatal error while interacting with deployer MBeans... " + _jme.getMessage ());
       } finally {  			
          Thread.currentThread().setContextClassLoader (oldCl);
       }
@@ -673,7 +673,7 @@ implements J2eeDeployerMBean
          {
             // in case we are not running with tomcat
             // should only happen for tomcat (i=1)
-            log.warning("cannot find .war container");
+            log.warning("Cannot find web container");
             continue;
          }         
          
@@ -688,31 +688,31 @@ implements J2eeDeployerMBean
                if (((Boolean)result).booleanValue ())
                {
                   
-                  log.log ("stopping module " + m.name);
+                  log.log ("Stopping module " + m.name);
                   server.invoke(container[i], "undeploy",
                      new Object[] { m.localUrls.firstElement ().toString () }, new String[] { "java.lang.String" });
                }
                else
-                  log.log ("module " + m.name+" is not running");
+                  log.log ("Module " + m.name+" is not running");
             
             }
             catch (MBeanException _mbe) 
             {
-               log.error ("unable to stop module " + m.name + ": " + _mbe.getTargetException ().getMessage ());
-               error.append("unable to stop module " + m.name + ": " + _mbe.getTargetException ().getMessage ());
+               log.error ("Unable to stop module " + m.name + ": " + _mbe.getTargetException ().getMessage ());
+               error.append("Unable to stop module " + m.name + ": " + _mbe.getTargetException ().getMessage ());
                error.append ("/n");
             } 
             catch (JMException _jme)
             {
-               log.error ("unable to stop module " + m.name + ": " + _jme.getMessage ());
-               error.append("unable to stop module " + m.name + ": fatal error while calling "+container[i]+": " + _jme.getMessage ());
+               log.error ("Unable to stop module " + m.name + ": " + _jme.getMessage ());
+               error.append("Unable to stop module " + m.name + ": fatal error while calling "+container[i]+": " + _jme.getMessage ());
                error.append ("/n");
             }
          }
       }
       if (!error.toString ().equals (""))
          // there was at least one error...
-      throw new J2eeDeploymentException ("error(s) on stopping application "+_d.name+":\n"+error.toString ());
+      throw new J2eeDeploymentException ("Error(s) on stopping application "+_d.name+":\n"+error.toString ());
 
       // restore the classloader
       Thread.currentThread().setContextClassLoader (oldCl);
@@ -737,7 +737,7 @@ implements J2eeDeployerMBean
          {
             // in case we are not running with tomcat
             // should only happen for tomcat (i=1)
-            log.warning("cannot find .war container");
+            log.warning("Cannot find web container");
             continue;
          }         
          
@@ -748,7 +748,7 @@ implements J2eeDeployerMBean
             try
             {
                
-               log.log ("checking module " + m.name);
+               log.log ("Checking module " + m.name);
                // Call the ContainerFactory/EmbededTomcat that is loaded in the JMX server
                o = server.invoke(container[i], "isDeployed",
                   new Object[] { m.localUrls.firstElement ().toString () }, new String[] { "java.lang.String" });
@@ -756,11 +756,11 @@ implements J2eeDeployerMBean
             }
             catch (MBeanException _mbe) 
             {
-               log.error ("error while checking module " + m.name + ": " + _mbe.getTargetException ().getMessage ());
+               log.error ("Error while checking module " + m.name + ": " + _mbe.getTargetException ().getMessage ());
             } 
             catch (JMException _jme)
             {
-               log.error ("fatal error while checking module " + m.name + ": " + _jme.getMessage ());
+               log.error ("Fatal error while checking module " + m.name + ": " + _jme.getMessage ());
             }
             
             if (o == null) // had an exception
@@ -773,7 +773,7 @@ implements J2eeDeployerMBean
       }
       if (others > 0)
          // there was at least one error...
-      throw new J2eeDeploymentException ("application "+_d.name+" is NOT correct deployed! ("+
+      throw new J2eeDeploymentException ("Application "+_d.name+" is not correctly deployed! ("+
          (result ? count-others : others)+
          " modules are running "+
          (result ? others : count-others)+
