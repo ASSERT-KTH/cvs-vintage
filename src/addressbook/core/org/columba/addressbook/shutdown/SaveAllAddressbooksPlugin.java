@@ -13,25 +13,7 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
-//$Log: SaveAllAddressbooksPlugin.java,v $
-//Revision 1.8  2003/11/21 11:29:49  fdietz
-//[intern] applied jalopy source code formatting -> reduced checkstyle warnings to about 20.000, disabled some checks as suggested by redsolo, re-enabled whitespace/tab checks
-//
-//Revision 1.7  2003/06/15 18:46:18  fdietz
-//[feature]cleanup of shutdown interface, create background-thread manager which saves configuration/header-cache/etc in the background while Columba is running
-//
-//Revision 1.6  2003/03/29 10:53:14  fdietz
-//[bug]fixed loading/saveing of views, size is saved/loaded correctly now
-//
-//Revision 1.5  2003/03/28 13:08:33  fdietz
-//[intern]more mail/addressbook splitting, code cleanups
-//
-//Revision 1.4  2003/03/09 13:08:34  fdietz
-//[intern]import cleanups
-//
-//Revision 1.3  2003/02/04 17:13:10  fdietz
-//[bug]fixed saving of header-cache, changed license header
-//
+
 package org.columba.addressbook.shutdown;
 
 import org.columba.addressbook.folder.AddressbookFolder;
@@ -39,7 +21,6 @@ import org.columba.addressbook.gui.tree.AddressbookTreeNode;
 
 import org.columba.core.backgroundtask.TaskInterface;
 import org.columba.core.main.MainInterface;
-
 
 /**
  * @author freddy
