@@ -19,7 +19,7 @@ package org.jboss.verifier.strategy;
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  * This package and its source code is available at www.jboss.org
- * $Id: EJBVerifier20.java,v 1.20 2002/05/09 10:14:53 jwalters Exp $
+ * $Id: EJBVerifier20.java,v 1.21 2002/05/09 10:21:21 jwalters Exp $
  */
 
 
@@ -48,7 +48,7 @@ import org.jboss.metadata.MessageDrivenMetaData;
  *
  * @author 	Juha Lindfors   (jplindfo@helsinki.fi)
  * @author  Jay Walters     (jwalters@computer.org)
- * @version $Revision: 1.20 $
+ * @version $Revision: 1.21 $
  * @since  	JDK 1.3
  */
 public class EJBVerifier20 extends AbstractVerifier {
@@ -94,7 +94,7 @@ public class EJBVerifier20 extends AbstractVerifier {
          *
          * Spec 7.10.1
          */
-        if (hasEJBObjectInterface()!(remoteHomeVerified && remoteVerified) &&
+        if (!(remoteHomeVerified && remoteVerified) &&
             !(localHomeVerified && localVerified)) {
             localOrHomeExists = false;
             fireSpecViolationEvent(session, new Section("7.10.1"));
