@@ -7,7 +7,7 @@
 <!--                                                                       -->
 <!-- ===================================================================== -->
 
-<!-- $Id: standardjbosscmp-jdbc.xml,v 1.50 2002/10/23 13:30:58 scoy Exp $ -->
+<!-- $Id: standardjbosscmp-jdbc.xml,v 1.51 2002/10/31 06:37:46 scoy Exp $ -->
 
 <jbosscmp-jdbc>
    
@@ -486,11 +486,11 @@
          </mapping>
          <mapping>
             <java-type>java.lang.Object</java-type>
-            <jdbc-type>JAVA_OBJECT</jdbc-type>
+            <jdbc-type>BLOB</jdbc-type>
             <sql-type>BLOB</sql-type>
             <!--
-            | Change this from BLOB to RAW(255) if you know your
-            | serialized object will be <= 255 bytes
+            | Change this from BLOB to RAW(n) if you know your
+            | serialized object will be <= n bytes and n <= 2000
             -->
          </mapping>
       </type-mapping>
@@ -623,8 +623,8 @@
             <jdbc-type>BLOB</jdbc-type>
             <sql-type>BLOB</sql-type>
             <!--
-            | Change this from BLOB to RAW(255) if you know your
-            | serialized object will be <= 255 bytes
+            | Change this from BLOB to RAW(n) if you know your
+            | serialized object will be <= n bytes and n <= 2000
             -->
          </mapping>
       </type-mapping>
@@ -749,11 +749,12 @@
          </mapping>
          <mapping>
             <java-type>java.lang.Object</java-type>
-            <jdbc-type>JAVA_OBJECT</jdbc-type>
+            <jdbc-type>LONGVARBINARY</jdbc-type>
             <sql-type>LONG RAW</sql-type>
             <!--
-            | Change this from LONG RAW to RAW(255) if you know your
-            | serialized object will be <= 255 bytes
+            | Change this from LONG RAW to RAW(n) if you know your
+            | serialized object will be <= n bytes and n <= 2000
+            | Oracle only permits one LONG type per table
             -->
          </mapping>
       </type-mapping>
@@ -957,8 +958,8 @@
          </mapping>
          <mapping>
             <java-type>java.lang.Object</java-type>
-            <jdbc-type>JAVA_OBJECT</jdbc-type>
-            <sql-type>OID</sql-type>
+            <jdbc-type>VARBINARY</jdbc-type>
+            <sql-type>BYTEA</sql-type>
          </mapping>
       </type-mapping>
 
@@ -1079,7 +1080,7 @@
          </mapping>
          <mapping>
             <java-type>java.lang.Object</java-type>
-            <jdbc-type>JAVA_OBJECT</jdbc-type>
+            <jdbc-type>VARBINARY</jdbc-type>
             <sql-type>BYTEA</sql-type>
          </mapping>
       </type-mapping>
@@ -1407,8 +1408,13 @@
             <sql-type>TINYINT</sql-type>
          </mapping>
          <mapping>
+            <java-type>java.math.BigDecimal</java-type>
+            <jdbc-type>DOUBLE</jdbc-type>
+            <sql-type>DOUBLE</sql-type>
+         </mapping>
+         <mapping>
             <java-type>java.lang.Object</java-type>
-            <jdbc-type>JAVA_OBJECT</jdbc-type>
+            <jdbc-type>BLOB</jdbc-type>
             <sql-type>LONGBLOB</sql-type>
             <!--
             | Change this from LONGBLOB to BLOB if you know your
@@ -1429,6 +1435,10 @@
             <java-type>java.sql.Timestamp</java-type>
             <jdbc-type>TIMESTAMP</jdbc-type>
             <sql-type>TIMESTAMP</sql-type>
+            <!--
+            | This type is problematical because mysql does not have any 
+            | date/time types that store milliseconds. You should avoid it.
+            -->
          </mapping>
          <mapping>
             <java-type>java.lang.Byte</java-type>
@@ -1454,6 +1464,10 @@
             <java-type>java.util.Date</java-type>
             <jdbc-type>TIMESTAMP</jdbc-type>
             <sql-type>DATETIME</sql-type>
+            <!--
+            | Note that you lose granularity here
+            | Use a numeric type and store milliseconds if you really need it
+            -->
          </mapping>
          <mapping>
             <java-type>java.sql.Date</java-type>
@@ -1463,9 +1477,8 @@
          <mapping>
             <java-type>java.sql.Time</java-type>
             <jdbc-type>TIME</jdbc-type>
-            <sql-type>BIGINT</sql-type>
+            <sql-type>TIME</sql-type>
          </mapping>
-
       </type-mapping>
 
       <type-mapping>
@@ -1559,9 +1572,13 @@
             <sql-type>TINYINT</sql-type>
          </mapping>
          <mapping>
+            <!--
+            | Note that you lose granularity here
+            | Use a numeric type and store milliseconds if you really need it
+            -->
             <java-type>java.sql.Timestamp</java-type>
             <jdbc-type>TIMESTAMP</jdbc-type>
-            <sql-type>TIMESTAMP</sql-type>
+            <sql-type>DATETIME</sql-type>
          </mapping>
          <mapping>
             <java-type>java.sql.Date</java-type>
@@ -1684,9 +1701,13 @@
          </mapping> 
     
          <mapping> 
+            <!--
+            | Note that you lose granularity here
+            | Use a numeric type and store milliseconds if you really need it
+            -->
             <java-type>java.sql.Timestamp</java-type> 
             <jdbc-type>TIMESTAMP</jdbc-type> 
-            <sql-type>TIMESTAMP</sql-type> 
+            <sql-type>DATETIME</sql-type> 
          </mapping> 
     
          <mapping> 
