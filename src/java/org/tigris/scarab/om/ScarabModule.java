@@ -62,6 +62,7 @@ import org.apache.torque.om.Persistent;
 import org.apache.torque.util.Criteria;
 import org.apache.torque.util.BasePeer;
 import org.apache.torque.oid.IDBroker;
+import org.apache.torque.pool.DBConnection;
 import org.apache.fulcrum.security.TurbineSecurity;
 import org.apache.fulcrum.security.util.RoleSet;
 import org.apache.fulcrum.security.util.TurbineSecurityException;
@@ -97,7 +98,7 @@ import org.apache.fulcrum.security.impl.db.entity
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: ScarabModule.java,v 1.75 2001/12/04 17:39:58 kminshull Exp $
+ * @version $Id: ScarabModule.java,v 1.76 2001/12/05 22:29:37 jmcnally Exp $
  */
 public class ScarabModule
     extends BaseScarabModule
@@ -180,59 +181,70 @@ public class ScarabModule
     public void save() 
         throws TurbineSecurityException
     {
-        // if new, make sure the code has a value.
         try
         {
-            if ( isNew() )
-            {
-                Criteria crit = new Criteria();
-                crit.add(ScarabModulePeer.MODULE_NAME, getRealName());
-                crit.add(ScarabModulePeer.PARENT_ID, getParentId());
-                // FIXME: this should be done with a method in ModuleEntity
-                // that takes the two criteria values as a argument so that other 
-                // implementations can benefit from being able to get the 
-                // list of modules. -- do not agree - jdm
-                List result = (List) ScarabModulePeer.doSelect(crit);
-                if (result.size() > 0)
-                {
-                    throw new Exception("Sorry, a module with that name " + 
-                        "and parent already exist.");
-                }
-
-                String code = getCode();
-                if ( code == null || code.length() == 0 )
-                {
-                    if ( getParentId().equals(ROOT_ID) )
-                    {
-                        throw new ScarabException(
-                            "A top level module addition was"
-                            + " attempted without assigning a Code");
-                    }
-
-                    setCode(getParent().getCode());
-                }
-
-                // need to do this before the relationship save below
-                // in order to set the moduleid for the new module.
-                super.save();
-
-                if ( getOwnerId() == null ) 
-                {
-                    throw new ScarabException(
-                     "Can't save a project without first assigning an owner.");
-                }
-                grant (UserManager.getInstance(getOwnerId()), 
-                    TurbineSecurity.getRole("Project Owner"));
-            }
-            else
-            {
-                super.save();
-            }
+            super.save();
         }
         catch (Exception e)
         {
             throw new TurbineSecurityException(e.getMessage(), e);
         }
+    }
+
+    /**
+     * Saves the module into the database
+     */
+    public void save(DBConnection dbCon) 
+        throws Exception
+    {
+        // if new, make sure the code has a value.
+        if ( isNew() )
+        {
+            Criteria crit = new Criteria();
+            crit.add(ScarabModulePeer.MODULE_NAME, getRealName());
+            crit.add(ScarabModulePeer.PARENT_ID, getParentId());
+            // FIXME: this should be done with a method in ModuleEntity
+            // that takes the two criteria values as a argument so that other 
+            // implementations can benefit from being able to get the 
+            // list of modules. -- do not agree - jdm
+            List result = (List) ScarabModulePeer.doSelect(crit);
+            if (result.size() > 0)
+            {
+                throw new Exception("Sorry, a module with that name " + 
+                                    "and parent already exist.");
+            }
+            
+            String code = getCode();
+            if ( code == null || code.length() == 0 )
+            {
+                if ( getParentId().equals(ROOT_ID) )
+                {
+                    throw new ScarabException(
+                        "A top level module addition was"
+                        + " attempted without assigning a Code");
+                }
+
+                setCode(getParent().getCode());
+            }
+
+            // need to do this before the relationship save below
+            // in order to set the moduleid for the new module.
+            super.save(dbCon);
+            
+            if ( getOwnerId() == null ) 
+            {
+                throw new ScarabException(
+                     "Can't save a project without first assigning an owner.");
+            }
+            grant (UserManager.getInstance(getOwnerId()), 
+                   TurbineSecurity.getRole("Project Owner"));
+        }
+        else
+        {
+            super.save(dbCon);
+        }
+        
+        setInitialAttributesAndIssueTypes();
     }
 
     // *******************************************************************

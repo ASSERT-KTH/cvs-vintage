@@ -96,6 +96,7 @@ import org.tigris.scarab.om.RModuleAttribute;
 import org.tigris.scarab.om.TransactionPeer;
 import org.tigris.scarab.om.ActivityPeer;
 import org.tigris.scarab.om.AttributeGroup;
+import org.tigris.scarab.om.RAttributeAttributeGroup;
 import org.tigris.scarab.util.ScarabException;
 import org.tigris.scarab.services.security.ScarabSecurity;
 
@@ -112,7 +113,7 @@ import org.apache.turbine.Log;
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: AbstractScarabModule.java,v 1.2 2001/11/19 23:52:37 elicia Exp $
+ * @version $Id: AbstractScarabModule.java,v 1.3 2001/12/05 22:29:37 jmcnally Exp $
  */
 public abstract class AbstractScarabModule
     extends BaseObject
@@ -1150,6 +1151,114 @@ try{
         return (List) IssuePeer.doSelect(crit);
     }
 
+    /**
+     * sets up attributes and issue types for this module based on.
+     * the parent module
+     */
+    protected void setInitialAttributesAndIssueTypes()
+        throws Exception
+    {
+        // Add defaults for issue types and attributes 
+        // from parent module
+        NumberKey newModuleId = getModuleId();
+        ModuleEntity parentModule = ModuleManager.getInstance(getParentId());
+        AttributeGroup ag1;
+        AttributeGroup ag2;
+        RModuleAttribute rma1;
+        RModuleAttribute rma2;
+            
+        // create enter issue template types
+        List templateTypes = parentModule.getTemplateTypes();
+        for (int i=0; i<templateTypes.size(); i++)
+        {
+            RModuleIssueType template1 = 
+                (RModuleIssueType)templateTypes.get(i);
+            RModuleIssueType template2 = template1.copy();
+            template2.setModuleId(newModuleId);
+            template2.save();
+            
+            //save RModuleAttributes for template types.
+            IssueType it = template1.getIssueType();
+            List rmas = parentModule.getRModuleAttributes(it);
+            for (int j=0; j<rmas.size(); j++)
+            {
+                rma1 = (RModuleAttribute)rmas.get(j);
+                rma2 = rma1.copy();
+                rma2.setModuleId(newModuleId);
+                rma2.setAttributeId(rma1.getAttributeId());
+                rma2.setIssueTypeId(rma1.getIssueTypeId());
+                rma2.save();
+            }
+        }
+
+        // set module-issue type mappings
+        List rmits = parentModule.getRModuleIssueTypes();
+        for (int i=0; i<rmits.size(); i++)
+        {
+            RModuleIssueType rmit1 = (RModuleIssueType)rmits.get(i);
+            RModuleIssueType rmit2 = rmit1.copy();
+            rmit2.setModuleId(newModuleId);
+            rmit2.save();
+            IssueType issueType = rmit1.getIssueType();
+                
+            // set attribute group defaults
+            List attributeGroups = issueType
+                .getAttributeGroups(parentModule);
+            for (int j=0; j<attributeGroups.size(); j++)
+            {
+                ag1 = (AttributeGroup)attributeGroups.get(j);
+                ag2 = ag1.copy();
+                ag2.setModuleId(newModuleId);
+                ag2.save();
+                
+                List attributes = ag1.getAttributes();
+                for (int k=0; k<attributes.size(); k++)
+                {
+                    Attribute attribute = (Attribute)attributes.get(k);
+                    
+                    // set attribute-attribute group defaults
+                    RAttributeAttributeGroup raag1 = ag1
+                        .getRAttributeAttributeGroup(attribute);
+                    RAttributeAttributeGroup raag2 = raag1.copy();
+                    raag2.setGroupId(ag2.getAttributeGroupId());
+                    raag2.setAttributeId(raag1.getAttributeId());
+                    raag2.setOrder(raag1.getOrder());
+                    
+                    // set module-attribute defaults
+                    rma1 = parentModule
+                        .getRModuleAttribute(attribute, issueType);
+                    rma2 = rma1.copy();
+                    rma2.setModuleId(newModuleId);
+                    rma2.setAttributeId(rma1.getAttributeId());
+                    rma2.setIssueTypeId(rma1.getIssueTypeId());
+                    rma2.save();
+                        
+                    // set module-option mappings
+                    if (attribute.isOptionAttribute())
+                    {
+                        List rmos = parentModule.getRModuleOptions(attribute,
+                                                                   issueType);
+                        for (int m=0; m<rmos.size(); m++)
+                        {
+                            RModuleOption rmo1 = (RModuleOption)rmos.get(m);
+                            RModuleOption rmo2 = rmo1.copy();
+                            rmo2.setOptionId(rmo1.getOptionId());
+                            rmo2.setModuleId(newModuleId);
+                            rmo2.setIssueTypeId(issueType.getIssueTypeId());
+                            rmo2.save();
+ 
+                            // Save module-option mappings for template types
+                            RModuleOption rmo3 = rmo1.copy();
+                            rmo3.setOptionId(rmo1.getOptionId());
+                            rmo3.setModuleId(newModuleId);
+                            rmo3.setIssueTypeId(issueType.getTemplateId());
+                               rmo3.save();
+                        }
+                    }
+                }
+            }
+        }
+    }
 
     /**
      * Used for ordering Groups.
