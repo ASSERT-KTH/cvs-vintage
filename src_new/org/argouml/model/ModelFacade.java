@@ -1,4 +1,4 @@
-// $Id: ModelFacade.java,v 1.43 2003/05/06 21:52:14 alexb Exp $
+// $Id: ModelFacade.java,v 1.44 2003/05/09 18:04:52 bobtarling Exp $
 // Copyright (c) 2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -46,6 +46,7 @@ import ru.novosoft.uml.behavior.common_behavior.MComponentInstance;
 import ru.novosoft.uml.behavior.common_behavior.MLink;
 import ru.novosoft.uml.behavior.common_behavior.MNodeInstance;
 import ru.novosoft.uml.behavior.common_behavior.MObject;
+import ru.novosoft.uml.behavior.common_behavior.MReception;
 import ru.novosoft.uml.behavior.state_machines.MCompositeState;
 import ru.novosoft.uml.behavior.state_machines.MStateMachine;
 import ru.novosoft.uml.behavior.state_machines.MStateVertex;
@@ -138,6 +139,9 @@ public class ModelFacade {
     public static final Object OBJECT             = MObject.class;
     public static final Object ACTOR              = MActor.class;
     public static final Object USE_CASE           = MUseCase.class;
+    
+    // Invisible model elements
+    public static final Object RECEPTION          = MReception.class;
     
     /** Constructor that forbids instantiation.
      */
@@ -369,6 +373,15 @@ public class ModelFacade {
      */
     public static boolean isAPackage(Object handle) {
         return handle instanceof MPackage;
+    }
+
+    /** Recognizer for Reception
+     *
+     * @param handle candidate
+     * @returns true if handle is a Reception
+     */
+    public static boolean isAReception(Object handle) {
+        return handle instanceof MReception;
     }
 
     /** Recognizer for StateMachine
