@@ -182,7 +182,8 @@ static int JK_METHOD ws_start_response(jk_ws_service_t *s,
             }
         }
 
-        ap_send_http_header(r);
+        /* this NOP function was removed in apache 2.0 alpha14 */
+        /* ap_send_http_header(r); */
         p->response_started = JK_TRUE;
         
         return JK_TRUE;
