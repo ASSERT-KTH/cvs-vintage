@@ -452,9 +452,10 @@ public class TextViewer extends JTextPane implements IMimePartViewer, Observer,
 	 * @see org.columba.mail.gui.message.viewer.IViewer#updateGUI()
 	 */
 	public void updateGUI() throws Exception {
-
+		// clear text viewer
+		setText("");
+		
 		if (!htmlMessage) {
-
 			// display bodytext
 			setText(body);
 		} else {
@@ -462,7 +463,7 @@ public class TextViewer extends JTextPane implements IMimePartViewer, Observer,
 			setPage(url);
 		}
 
-		//		 setup base url in order to be able to display images
+		// setup base url in order to be able to display images
 		// in html-component
 		URL baseUrl = DiskIO.getResourceURL("org/columba/core/images/");
 		LOG.info(baseUrl.toString());
