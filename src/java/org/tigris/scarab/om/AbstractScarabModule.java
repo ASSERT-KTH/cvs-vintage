@@ -123,7 +123,7 @@ import org.tigris.scarab.workflow.WorkflowFactory;
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: AbstractScarabModule.java,v 1.74 2003/02/01 01:54:12 jon Exp $
+ * @version $Id: AbstractScarabModule.java,v 1.75 2003/02/01 02:56:34 jon Exp $
  */
 public abstract class AbstractScarabModule
     extends BaseObject
@@ -626,6 +626,18 @@ public abstract class AbstractScarabModule
             reports = (List)obj;
         }
         return reports;
+    }
+
+    /**
+     * Gets a list of attributes for this module with a specific
+     * issue type.
+     */
+    public List getAttributes(IssueType issueType)
+        throws Exception
+    {
+        Criteria crit = new Criteria();
+        crit.add(RModuleAttributePeer.ISSUE_TYPE_ID, issueType.getIssueTypeId());
+        return getAttributes(crit);
     }
 
     /**
@@ -1137,7 +1149,6 @@ public abstract class AbstractScarabModule
         return rmo;
     }
 
-
     /**
      * Array of Attributes used for quick search.
      *
@@ -1164,7 +1175,6 @@ public abstract class AbstractScarabModule
         }
         return attributes;
     }
-
 
     /**
      * Array of Attributes which are active and required by this module.
