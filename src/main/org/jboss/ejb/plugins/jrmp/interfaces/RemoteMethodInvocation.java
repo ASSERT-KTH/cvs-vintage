@@ -19,16 +19,16 @@ import java.security.Principal;
 import javax.transaction.Transaction;
 
 /**
- *	MethodInvocation
+ *  RemoteMethodInvocation
  *
  *  This Serializable object carries the method to invoke and an identifier for the target ojbect
  *
- *	@see <related>
- *	@author Rickard Öberg (rickard.oberg@telkel.com)
+ *  @see <related>
+ *  @author Rickard Öberg (rickard.oberg@telkel.com)
  *  @author <a href="mailto:Richard.Monson-Haefel@jGuru.com">Richard Monson-Haefel</a>.
  *  @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>.
  *  @author <a href="mailto:docodan@nycap.rr.com">Daniel O'Connor</a>.
- *	@version $Revision: 1.10 $
+ *  @version $Revision: 1.11 $
  */
 public final class RemoteMethodInvocation
    implements java.io.Externalizable
@@ -41,12 +41,12 @@ public final class RemoteMethodInvocation
    int hash;
 	
    Object[] args;
+
+   private Object tpc; // Transaction propagation context.
+   private Principal identity;
+   private Object credential;
 	
-	Transaction tx;
-	Principal identity;
-   Object credential;
-	
-	transient Map methodMap;
+   transient Map methodMap;
 
    // Static --------------------------------------------------------
 
@@ -57,28 +57,27 @@ public final class RemoteMethodInvocation
    * This is taken from the RMH code in EJBoss 0.9
    *
    */
-   public static int calculateHash(Method method) {
+   public static int calculateHash(Method method)
+   {
+      int hash =
+          // We use the declaring class
+          method.getDeclaringClass().getName().hashCode() ^ //name of class
+          // We use the name of the method
+          method.getName().hashCode(); //name of method
 
-   	int hash =
-       	// We use the declaring class
-   		method.getDeclaringClass().getName().hashCode() ^ //name of class
-            // We use the name of the method
-   		method.getName().hashCode(); //name of method
+      Class[] clazz = method.getParameterTypes();
 
-   	Class[] clazz = method.getParameterTypes();
+      for (int i = 0; i < clazz.length; i++) {
+         // XOR
+         // We use the constant because
+         // a^b^b = a (thank you norbert)
+         // so that methodA() hashes to methodA(String, String)
 
-   	for (int i = 0; i < clazz.length; i++) {
-
-   		 // XOR
-   		 // We use the constant because
-   		 // a^b^b = a (thank you norbert)
-   		 // so that methodA() hashes to methodA(String, String)
-
-   		 hash = (hash +20000) ^ clazz[i].getName().hashCode();
-   	}
+         hash = (hash +20000) ^ clazz[i].getName().hashCode();
+      }
 
       //DEBUGSystem.out.println(method+"="+hash);
-   	return hash;
+      return hash;
    }
 	
    // Constructors --------------------------------------------------
@@ -96,8 +95,8 @@ public final class RemoteMethodInvocation
    {
       this.id = id;
       this.args = args;
-		this.hash = calculateHash(m);
-	   this.className = m.getDeclaringClass().getName();
+      this.hash = calculateHash(m);
+      this.className = m.getDeclaringClass().getName();
    }
 	
    // Public --------------------------------------------------------
@@ -107,7 +106,7 @@ public final class RemoteMethodInvocation
 
    public Method getMethod()
    {
-		return (Method)methodMap.get(new Integer(hash));
+      return (Method)methodMap.get(new Integer(hash));
    }
 
    public Object[] getArguments()
@@ -115,40 +114,40 @@ public final class RemoteMethodInvocation
       return args;
    }
 	
-	public void setMethodMap(Map methods)
-	{
-		methodMap = methods;
-	}
+   public void setMethodMap(Map methods)
+   {
+      methodMap = methods;
+   }
 	
-	public void setTransaction(Transaction tx)
-	{
-		this.tx = tx;
-	}
+   public void setTransactionPropagationContext(Object tpc)
+   {
+      this.tpc = tpc;
+   }
 	
-	public Transaction getTransaction()
-	{
-		return tx;
-	}
+   public Object getTransactionPropagationContext()
+   {
+      return tpc;
+   }
 
-	public void setPrincipal(Principal identity)
-	{
-		this.identity = identity;
-	}
+   public void setPrincipal(Principal identity)
+   {
+      this.identity = identity;
+   }
 
-	public Principal getPrincipal()
-	{
-		return identity;
-	}
+   public Principal getPrincipal()
+   {
+      return identity;
+   }
 
-  public Object getCredential()
-  {
-    return credential;
-  }
+   public Object getCredential()
+   {
+      return credential;
+   }
 
-  public void setCredential( Object credential )
-  {
-    this.credential = credential;
-  }
+   public void setCredential( Object credential )
+   {
+      this.credential = credential;
+   }
 	 
    // Package protected ---------------------------------------------
 
@@ -156,30 +155,31 @@ public final class RemoteMethodInvocation
    public void writeExternal(java.io.ObjectOutput out)
       throws IOException
    {
-   	out.writeObject(id);
-		out.writeUTF(className);
-		out.writeInt(hash);
-		out.writeObject(args);
-		out.writeObject(tx);
-		out.writeObject(identity);
-    out.writeObject(credential);
+      out.writeObject(id);
+      out.writeUTF(className);
+      out.writeInt(hash);
+      out.writeObject(args);
+
+      out.writeObject(tpc);
+      out.writeObject(identity);
+      out.writeObject(credential);
    }
    
    public void readExternal(java.io.ObjectInput in)
       throws IOException, ClassNotFoundException
    {
-   	id = in.readObject();
-		className = in.readUTF();
-		hash = in.readInt();
-		args = (Object[])in.readObject();
-		
-		tx = (Transaction)in.readObject();
-		identity = (Principal)in.readObject();
-    credential = in.readObject();
+      id = in.readObject();
+      className = in.readUTF();
+      hash = in.readInt();
+      args = (Object[])in.readObject();
+
+      tpc = in.readObject();
+      identity = (Principal)in.readObject();
+      credential = in.readObject();
    }
 
    // Private -------------------------------------------------------
 	
-	// Inner classes -------------------------------------------------
+   // Inner classes -------------------------------------------------
 }
 

@@ -53,6 +53,8 @@ import org.jboss.ejb.plugins.jrmp.interfaces.IteratorImpl;
 import org.jboss.ejb.plugins.jrmp.interfaces.EJBMetaDataImpl;
 import org.jboss.ejb.plugins.jrmp.interfaces.SecureSocketFactory;
 
+import org.jboss.tm.TransactionPropagationContextFactory;
+
 import org.jboss.security.SecurityAssociation;
 
 import org.jboss.logging.Logger;
@@ -73,7 +75,7 @@ import org.w3c.dom.Element;
  *		@author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
  *      @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  *		@author <a href="mailto:jplindfo@cc.helsinki.fi">Juha Lindfors</a>
- *      @version $Revision: 1.32 $
+ *      @version $Revision: 1.33 $
  */
 public class JRMPContainerInvoker
    extends RemoteServer
@@ -100,6 +102,8 @@ public class JRMPContainerInvoker
    protected ContainerInvoker ciDelegate; // Delegate depending on JDK version
 
    // Static --------------------------------------------------------
+
+   private static TransactionPropagationContextFactory tpcFactory;
 
    // Constructors --------------------------------------------------
 
@@ -132,10 +136,17 @@ public class JRMPContainerInvoker
    public void init()
    throws Exception
    {
+      Context ctx = new InitialContext();
+
       jndiName = container.getBeanMetaData().getJndiName();
-      
-      // Set transaction manager
-      GenericProxy.setTransactionManager(container.getTransactionManager());
+
+      // Get the transaction propagation context factory
+      tpcFactory = (TransactionPropagationContextFactory)ctx.lookup("java:/TransactionPropagationContextExporter");
+
+      // Set the transaction manager and transaction propagation
+      // context factory of the GenericProxy class
+      GenericProxy.setTransactionManager((TransactionManager)ctx.lookup("java:/TransactionManager"));
+      GenericProxy.setTPCFactory(tpcFactory);
 
       // Create method mappings for container invoker
       Method[] methods = ((ContainerInvokerContainer)container).getRemoteClass().getMethods();
@@ -332,6 +343,10 @@ public class JRMPContainerInvoker
    }
 
    // ContainerRemote implementation --------------------------------
+
+   /**
+    *  Invoke a Home interface method.
+    */
    public MarshalledObject invokeHome(MarshalledObject mimo)
    throws Exception
    {
@@ -342,16 +357,18 @@ public class JRMPContainerInvoker
       {
          RemoteMethodInvocation rmi = (RemoteMethodInvocation)mimo.get();
          rmi.setMethodMap(homeMethodInvokerMap);
-         Transaction tx = rmi.getTransaction();
 
-         return new MarshalledObject(container.invokeHome(new MethodInvocation(null, rmi.getMethod(), rmi.getArguments(), tx,
-            rmi.getPrincipal(), rmi.getCredential() )));
+         return new MarshalledObject(container.invokeHome(new MethodInvocation(null, rmi.getMethod(), rmi.getArguments(),
+            rmi.getPrincipal(), rmi.getCredential(), rmi.getTransactionPropagationContext() )));
       } finally
       {
          Thread.currentThread().setContextClassLoader(oldCl);
       }
    }
 
+   /**
+    *  Invoke a Remote interface method.
+    */
    public MarshalledObject invoke(MarshalledObject mimo)
    throws Exception
    {
@@ -362,16 +379,20 @@ public class JRMPContainerInvoker
       {
          RemoteMethodInvocation rmi = (RemoteMethodInvocation)mimo.get();
          rmi.setMethodMap(beanMethodInvokerMap);
-         Transaction tx = rmi.getTransaction();
+         Object tpc = rmi.getTransactionPropagationContext();
 
-         return new MarshalledObject(container.invoke(new MethodInvocation(rmi.getId(), rmi.getMethod(), rmi.getArguments(), tx,
-            rmi.getPrincipal(), rmi.getCredential() )));
+         return new MarshalledObject(container.invoke(new MethodInvocation(rmi.getId(), rmi.getMethod(), rmi.getArguments(),
+            rmi.getPrincipal(), rmi.getCredential(), rmi.getTransactionPropagationContext() )));
       } finally
       {
          Thread.currentThread().setContextClassLoader(oldCl);
       }
    }
 
+   /**
+    *  Invoke a Home interface method.
+    *  This is for optimized local calls.
+    */
    public Object invokeHome(Method m, Object[] args, Transaction tx,
       Principal identity, Object credential)
    throws Exception
@@ -383,9 +404,8 @@ public class JRMPContainerInvoker
       {
          RemoteMethodInvocation rmi = new RemoteMethodInvocation(null, m, args);
 
-         // Set the transaction context
-         TransactionManager tm = container.getTransactionManager();
-         rmi.setTransaction(tm != null? tm.getTransaction() : null);
+         // Set the transaction propagation context
+         rmi.setTransactionPropagationContext(tpcFactory.getTransactionPropagationContext(tx));
 
          // Set the security stuff
          rmi.setPrincipal( SecurityAssociation.getPrincipal() );
@@ -401,7 +421,7 @@ public class JRMPContainerInvoker
 
       try
       {
-         return container.invokeHome(new MethodInvocation(null , m, args, tx,
+         return container.invokeHome(new MethodInvocation(null, m, args, tx,
             identity, credential));
       } finally
       {
@@ -409,6 +429,10 @@ public class JRMPContainerInvoker
       }
    }
 
+   /**
+    *  Invoke a Remote interface method.
+    *  This is for optimized local calls.
+    */
    public Object invoke(Object id, Method m, Object[] args, Transaction tx,
       Principal identity, Object credential )
    throws Exception
@@ -420,9 +444,8 @@ public class JRMPContainerInvoker
       {
          RemoteMethodInvocation rmi = new RemoteMethodInvocation(id, m, args);
 
-         // Set the transaction context
-         TransactionManager tm = container.getTransactionManager();
-         rmi.setTransaction(tm != null? tm.getTransaction() : null);
+         // Set the transaction propagation context
+         rmi.setTransactionPropagationContext(tpcFactory.getTransactionPropagationContext(tx));
 
          // Set the security stuff
          rmi.setPrincipal( SecurityAssociation.getPrincipal() );

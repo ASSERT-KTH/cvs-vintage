@@ -19,7 +19,7 @@ import javax.transaction.xa.Xid;
  *  @see TransactionImpl
  *  @author Rickard Öberg (rickard.oberg@telkel.com)
  *  @author <a href="mailto:osh@sparre.dk">Ole Husgaard</a>
- *  @version $Revision: 1.9 $
+ *  @version $Revision: 1.10 $
  */
 class XidImpl
    implements Xid, java.io.Serializable
@@ -221,6 +221,18 @@ class XidImpl
 
    // Package protected ---------------------------------------------
 
+   /**
+    *  Return the global transaction id of this transaction.
+    *  Unlike the {@link #getGlobalTransactionId()} method, this one
+    *  returns a reference to the global id byte array that may <em>not</em>
+    *  be changed.
+    */
+   public byte[] getInternalGlobalTransactionId()
+   {
+      return (byte[])globalId.clone();
+   }
+
+   
    // Protected -----------------------------------------------------
 
    // Private -------------------------------------------------------

@@ -23,7 +23,7 @@ import org.jboss.ejb.CacheKey;
 *   @see <related>
 *   @author Rickard Öberg (rickard.oberg@telkel.com)
 *	@author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
-*   @version $Revision: 1.20 $
+*   @version $Revision: 1.21 $
 */
 public class EntityProxy
 extends GenericProxy
@@ -38,7 +38,7 @@ extends GenericProxy
     
     static Method getPrimaryKey;
     static Method getHandle;
-	static Method getEJBHome;
+    static Method getEJBHome;
     static Method isIdentical;
     static Method toStr;
     static Method eq;
@@ -52,7 +52,7 @@ extends GenericProxy
          getPrimaryKey = EJBObject.class.getMethod("getPrimaryKey", new Class[0]);
          getHandle = EJBObject.class.getMethod("getHandle", new Class[0]);
          getEJBHome = EJBObject.class.getMethod("getEJBHome", new Class[0]);
-		 isIdentical = EJBObject.class.getMethod("isIdentical", new Class[] { EJBObject.class });
+         isIdentical = EJBObject.class.getMethod("isIdentical", new Class[] { EJBObject.class });
          
          // Object methods
          toStr = Object.class.getMethod("toString", new Class[0]);
@@ -146,7 +146,7 @@ extends GenericProxy
           return container.invoke( // The entity id, method and arguments for the invocation
               cacheKey, m, args,
               // Transaction attributes
-              tm != null ? tm.getTransaction() : null,
+              getTransaction(),
               // Security attributes
               getPrincipal(), getCredential());
          } else
@@ -155,7 +155,7 @@ extends GenericProxy
           RemoteMethodInvocation rmi = new RemoteMethodInvocation(cacheKey, m, args);
           
           // Set the transaction context
-          rmi.setTransaction(tm != null? tm.getTransaction() : null);
+          rmi.setTransactionPropagationContext(getTransactionPropagationContext());
           
           // Set the security stuff
           // MF fixme this will need to use "thread local" and therefore same construct as above

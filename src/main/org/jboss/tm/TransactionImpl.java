@@ -25,26 +25,20 @@ import javax.transaction.xa.XAResource;
 import javax.transaction.xa.XAException;
 
 /**
- *  A light weight transaction.
- *
- *  It is the public face of the TxCapsule.
- *  Many of these "transactions" can coexist representing the TxCap.
- *  Access to the underlying txCap is done through the TransactionManager.
+ *  A light weight transaction frontend to a TxCapsule.
  *
  *  @see TxCapsule
  *  @author Rickard Öberg (rickard.oberg@telkel.com)
  *  @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  *  @author <a href="mailto:osh@sparre.dk">Ole Husgaard</a>
- *  @version $Revision: 1.12 $
+ *  @version $Revision: 1.13 $
  */
-public class TransactionImpl
-   implements Transaction, Serializable
+class TransactionImpl
+   implements Transaction
 {
    // Constants -----------------------------------------------------
 
    // Attributes ----------------------------------------------------
-
-   Xid xid; // Transaction ID.
 
    // Constructors --------------------------------------------------
 
@@ -52,7 +46,7 @@ public class TransactionImpl
    {
       this.txCapsule = txCapsule;
       this.xid = xid;
-      travelled = false;
+      globalId = new GlobalId(xid);
    }
 
    // Public --------------------------------------------------------
@@ -60,6 +54,14 @@ public class TransactionImpl
    // In the following methods we synchronize to avoid races with transaction
    // termination. The travelled flag is not checked, as we assume that the
    // transaction has already been imported.
+
+   // When the transaction is done, instance variable txCapsule is set
+   // to null, and this is used as an indicator that the methods here
+   // should throw an exception.
+   // To avoid too much optimization, txCapsule is declared volatile.
+   // The NPE catches below are meant to catch a null txCapsule. It is
+   // possible that the NPE might come from the method call, but that
+   // would be an error in TxCapsule.
 
    public void commit()
       throws RollbackException,
@@ -69,11 +71,10 @@ public class TransactionImpl
              java.lang.IllegalStateException,
              SystemException
    {
-      synchronized (this) {
-        if (done)
-           throw new IllegalStateException("No transaction.");
-
-        txCapsule.commit();
+      try {
+         txCapsule.commit();
+      } catch (NullPointerException ex) {
+         throw new IllegalStateException("No transaction.");
       }
    }
 
@@ -82,11 +83,10 @@ public class TransactionImpl
              java.lang.SecurityException,
              SystemException
    {
-      synchronized (this) {
-         if (done)
-            throw new IllegalStateException("No transaction.");
-
+      try {
          txCapsule.rollback();
+      } catch (NullPointerException ex) {
+         throw new IllegalStateException("No transaction.");
       }
    }
 
@@ -94,11 +94,10 @@ public class TransactionImpl
       throws java.lang.IllegalStateException,
              SystemException
    {
-      synchronized (this) {
-         if (done)
-            throw new IllegalStateException("No transaction.");
-
+      try {
          return txCapsule.delistResource(xaRes, flag);
+      } catch (NullPointerException ex) {
+         throw new IllegalStateException("No transaction.");
       }
    }
 
@@ -107,22 +106,20 @@ public class TransactionImpl
              java.lang.IllegalStateException,
              SystemException
    {
-      synchronized (this) {
-         if (done)
-            throw new IllegalStateException("No transaction.");
-
+      try {
          return txCapsule.enlistResource(xaRes);
+      } catch (NullPointerException ex) {
+         throw new IllegalStateException("No transaction.");
       }
    }
 
    public int getStatus()
       throws SystemException
    {
-      synchronized (this) {
-         if (done)
-            return Status.STATUS_NO_TRANSACTION;
-
+      try {
          return txCapsule.getStatus();
+      } catch (NullPointerException ex) {
+         return Status.STATUS_NO_TRANSACTION;
       }
    }
 
@@ -131,11 +128,10 @@ public class TransactionImpl
              java.lang.IllegalStateException,
              SystemException
    {
-      synchronized (this) {
-         if (done)
-            throw new IllegalStateException("No transaction.");
-
+      try {
          txCapsule.registerSynchronization(s);
+      } catch (NullPointerException ex) {
+         throw new IllegalStateException("No transaction.");
       }
    }
 
@@ -143,11 +139,10 @@ public class TransactionImpl
       throws java.lang.IllegalStateException,
              SystemException
    {
-      synchronized (this) {
-         if (done)
-            throw new IllegalStateException("No transaction.");
-
+      try {
          txCapsule.setRollbackOnly();
+      } catch (NullPointerException ex) {
+         throw new IllegalStateException("No transaction.");
       }
    }
 
@@ -170,21 +165,8 @@ public class TransactionImpl
 
    // Package protected ---------------------------------------------
 
-   /**
-    *  Setter for property txCapsule.
-    *
-    *  This is needed when a propagated transaction is imported into the
-    *  current transaction manager.
-    */
-   synchronized void setTxCapsule(TxCapsule txCapsule)
-   {
-      if (done)
-         // Shouldn't happen.
-         throw new IllegalStateException("Transaction " + toString() +
-                                         " is done.");
-      this.txCapsule = txCapsule;
-      travelled = false;
-   }
+   /** The ID of this transaction. */
+   Xid xid;
 
    /**
     *  Setter for property done.
@@ -193,8 +175,8 @@ public class TransactionImpl
     */
    synchronized void setDone()
    {
-      done = true;
       txCapsule = null;
+      TxManager.getInstance().releaseTransactionImpl(this);
    }
 
    /**
@@ -202,36 +184,31 @@ public class TransactionImpl
     */
    boolean isDone()
    {
-      return done;
+      return txCapsule == null;
    }
 
    /**
-    *  Returns true iff this transaction needs to be imported into the
-    *  local transaction manager.
+    *  Return the global id of this transaction.
     */
-   boolean importNeeded()
+   GlobalId getGlobalId()
    {
-      return !done && travelled;
+      return globalId;
    }
 
    // Private -------------------------------------------------------
 
-   private transient TxCapsule txCapsule; // The real implementation.
-   private boolean done; // Flags that the transaction has terminated.
-   transient boolean travelled; // Flags that the transaction has travelled.
+   /**
+    *  The backend of this transaction.
+    *  Null iff this transaction is done.
+    */
+   private volatile TxCapsule txCapsule;
 
-   private void writeObject(java.io.ObjectOutputStream stream)
-      throws java.io.IOException
-   {
-      stream.defaultWriteObject();
-   }
-
-   private void readObject(java.io.ObjectInputStream stream)
-      throws java.io.IOException, ClassNotFoundException
-   {
-      stream.defaultReadObject();
-      travelled = true;
-   }
+   /**
+    *  The global ID of this transaction.
+    *  This is used as a transaction propagation context, and in the
+    *  TxManager for mapping transaction IDs to transactions.
+    */
+   private GlobalId globalId;
 
    // Inner classes -------------------------------------------------
 }

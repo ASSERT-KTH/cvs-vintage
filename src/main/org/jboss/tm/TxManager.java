@@ -8,8 +8,6 @@ package org.jboss.tm;
 
 import java.lang.ref.SoftReference;
 
-import java.util.Hashtable;
-import java.util.LinkedList;
 import java.util.Map;
 import java.util.HashMap;
 import java.util.Collections;
@@ -38,10 +36,12 @@ import org.jboss.logging.Logger;
  *  @author Rickard Öberg (rickard.oberg@telkel.com)
  *  @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  *  @author <a href="mailto:osh@sparre.dk">Ole Husgaard</a>
- *  @version $Revision: 1.26 $
+ *  @version $Revision: 1.27 $
  */
 public class TxManager
-implements TransactionManager
+   implements TransactionManager,
+              TransactionPropagationContextImporter,
+              TransactionPropagationContextFactory
 {
    // Constants -----------------------------------------------------
     
@@ -63,7 +63,7 @@ implements TransactionManager
    /**
     *  Get a reference to the singleton instance.
     */
-   static TxManager getInstance()
+   public static TxManager getInstance()
    {
       return singleton;
    }
@@ -80,34 +80,24 @@ implements TransactionManager
 
    // Public --------------------------------------------------------
 
+   /**
+    *  Begin a new transaction.
+    *  The new transaction will be associated with the calling thread.
+    */
    public void begin()
       throws NotSupportedException,
              SystemException
    {
-      Transaction current = (Transaction)threadTx.get();
+      TransactionImpl current = (TransactionImpl)threadTx.get();
 
-      if (current != null &&
-          (!(current instanceof TransactionImpl) ||
-           !((TransactionImpl)current).isDone()))
+      if (current != null && !current.isDone())
          throw new NotSupportedException("Transaction already active, " +
                                          "cannot nest transactions.");
 
-      TxCapsule txCapsule = null;
-      synchronized (inactiveCapsules) {
-         while (inactiveCapsules.size() > 0) {
-            SoftReference ref = (SoftReference)inactiveCapsules.removeFirst();
-            txCapsule = (TxCapsule)ref.get();
-            if (txCapsule != null)
-              break;
-         }
-      }
-      if (txCapsule == null)
-         txCapsule = new TxCapsule(this, timeOut);
-      else
-         txCapsule.reUse(timeOut);
-      TransactionImpl tx = txCapsule.createTransactionImpl();
+      TxCapsule txCapsule = TxCapsule.getInstance(timeOut);
+      TransactionImpl tx = txCapsule.getTransactionImpl();
       threadTx.set(tx);
-      activeCapsules.put(tx.xid, txCapsule);
+      globalIdTx.put(tx.getGlobalId(), tx);
    }
 
    /**
@@ -118,10 +108,10 @@ implements TransactionManager
              HeuristicMixedException,
              HeuristicRollbackException,
              java.lang.SecurityException,
-             java.lang.IllegalStateException,
+             IllegalStateException,
              SystemException
    {
-      Transaction current = (Transaction)threadTx.get();
+      TransactionImpl current = (TransactionImpl)threadTx.get();
 
       if (current != null) {
          current.commit();
@@ -138,7 +128,7 @@ implements TransactionManager
    public int getStatus()
       throws SystemException
    {
-      Transaction current = (Transaction)threadTx.get();
+      TransactionImpl current = (TransactionImpl)threadTx.get();
 
       if (current != null)
          return current.getStatus();
@@ -153,46 +143,68 @@ implements TransactionManager
    public Transaction getTransaction()
       throws SystemException
    {
-      Transaction current = (Transaction)threadTx.get();
+      TransactionImpl current = (TransactionImpl)threadTx.get();
 
-      if (current != null && current instanceof TransactionImpl &&
-          ((TransactionImpl)current).isDone()) {
+      if (current != null && current.isDone()) {
          threadTx.set(null);
          return null;
       }
       return current;
    }
 
-   public void resume(Transaction tobj)
+   /**
+    *  Resume a transaction.
+    *
+    *  Note: This will not enlist any resources involved in this
+    *  transaction. According to JTA1.0.1 specification section 3.2.3,
+    *  that is the responsibility of the application server.
+    */
+   public void resume(Transaction transaction)
       throws InvalidTransactionException,
-             java.lang.IllegalStateException,
+             IllegalStateException,
              SystemException
    {
-        //Useless
+      if (transaction != null && !(transaction instanceof TransactionImpl))
+         throw new RuntimeException("Not a TransactionImpl, but a " +
+                                    transaction.getClass().getName() + ".");
+
+      TransactionImpl current = (TransactionImpl)threadTx.get();
         
-        //throw new Exception("txMan.resume() NYI");
+      if (current != null)
+         throw new IllegalStateException("Already associated with a tx");
+
+      if (current != transaction)
+         threadTx.set(transaction);
    }
 
+   /**
+    *  Suspend the transaction currently associated with the current
+    *  thread, and return it.
+    *
+    *  Note: This will not delist any resources involved in this
+    *  transaction. According to JTA1.0.1 specification section 3.2.3,
+    *  that is the responsibility of the application server.
+    */
    public Transaction suspend()
       throws SystemException
    {
-        //      Logger.log("suspend tx");
+      TransactionImpl current = (TransactionImpl)threadTx.get();
         
-        // Useless
+      if (current != null)
+         threadTx.set(null);
         
-        return null;
-        //throw new Exception("txMan.suspend() NYI");
+      return current;
    }
 
    /**
     *  Roll back the transaction associated with the currently running thread.
     */
    public void rollback()
-      throws java.lang.IllegalStateException,
+      throws IllegalStateException,
              java.lang.SecurityException,
              SystemException
    { 
-      Transaction current = (Transaction)threadTx.get();
+      TransactionImpl current = (TransactionImpl)threadTx.get();
 
       if (current != null) {
          current.rollback();
@@ -206,10 +218,10 @@ implements TransactionManager
     *  so that the only possible outcome is a rollback.
     */
    public void setRollbackOnly()
-      throws java.lang.IllegalStateException,
+      throws IllegalStateException,
              SystemException
    {
-      Transaction current = (Transaction)threadTx.get();
+      TransactionImpl current = (TransactionImpl)threadTx.get();
 
       if (current != null)
          current.setRollbackOnly();
@@ -226,6 +238,11 @@ implements TransactionManager
       timeOut = 1000 * seconds;
    }
     
+   /**
+    *  Get the transaction timeout for new transactions started here.
+    *
+    *  @return Transaction timeout in seconds.
+    */
    public int getTransactionTimeout()
    {
       return (int)(timeOut / 1000);
@@ -237,7 +254,7 @@ implements TransactionManager
     */
    public Transaction disassociateThread()
    {
-      Transaction current = (Transaction)threadTx.get();
+      TransactionImpl current = (TransactionImpl)threadTx.get();
         
       threadTx.set(null);
         
@@ -246,106 +263,76 @@ implements TransactionManager
     
    public void associateThread(Transaction transaction)
    {
-      //
-      // If the transaction has travelled, we have to import it.
-      //
-      // This implicit import will go away at some point in the
-      // future and be replaced by an explicit import by calling
-      // importTPC().
-      // That will make it possible to only propagate XidImpl over the
-      // wire so that we no longer have to handle multible Transaction
-      // frontends for each transaction.
-      //
-      if (transaction != null && transaction instanceof TransactionImpl) {
-         TransactionImpl tx = (TransactionImpl)transaction;
-
-         if (tx.importNeeded())
-            transaction = importTPC(transaction);
-      }
+      if (transaction != null && !(transaction instanceof TransactionImpl))
+         throw new RuntimeException("Not a TransactionImpl, but a " +
+                                    transaction.getClass().getName() + ".");
 
       // Associate with the thread
       threadTx.set(transaction);
    }
 
+
+   // Implements TransactionPropagationContextImporter ---------------
+
    /**
     *  Import a transaction propagation context into this TM.
     *  The TPC is loosely typed, as we may (at a later time) want to
-    *  import TPCs that come from other transaction monitors without
+    *  import TPCs that come from other transaction domains without
     *  offloading the conversion to the client.
     *
     *  @param tpc The transaction propagation context that we want to
     *             import into this TM. Currently this is an instance
-    *             of TransactionImpl. Later this will be changed to an
-    *             instance of XidImpl. And at some later time this may
-    *             even be an instance of a transaction propagation context
-    *             from another kind of transaction monitor like 
+    *             of GlobalId. At some later time this may be an instance
+    *             of a transaction propagation context from another
+    *             transaction domain like 
     *             org.omg.CosTransactions.PropagationContext. 
     *
     *  @return A transaction representing this transaction propagation
     *          context, or null if this TPC cannot be imported.
     */
-   public Transaction importTPC(Object tpc)
+   public Transaction importTransactionPropagationContext(Object tpc)
    {
-      if (tpc instanceof TransactionImpl) {
-         // TODO: Change to just return the transaction without importing.
-         // A raw TransactionImpl will only be used for optimized local calls,
-         // where the import will not be needed.
-         // But that will have to wait until remote calls use XidImpl instead,
-         // otherwise we cannot distinguish cases.
-         TransactionImpl tx = (TransactionImpl)tpc;
-
-         if (tx.importNeeded()) {
-            synchronized(tx) {
-               // Recheck with synchronization.
-               if (tx.importNeeded()) {
-                  TxCapsule txCapsule = (TxCapsule)activeCapsules.get(tx.xid);
-                  if (txCapsule != null)
-                     txCapsule.importTransaction(tx);
-                  else
-                     Logger.warning("Cannot import transaction: " +
-                                    tx.toString());
-               }
-            }
-         }
-         return tx;
-      } else if (tpc instanceof XidImpl)
-         Logger.warning("XidImpl import not yet implemented.");
-      else
+      if (tpc instanceof GlobalId)
+         return (Transaction)globalIdTx.get((GlobalId)tpc);
+      else {
          Logger.warning("Cannot import transaction propagation context: " +
                         tpc.toString());
-      return null;
+         return null;
+      }
    }
+
+
+   // Implements TransactionPropagationContextFactory ---------------
+
+   /**
+    *  Return a TPC for the current transaction.
+    */
+   public Object getTransactionPropagationContext()
+   {
+      return getTransactionPropagationContext((Transaction)threadTx.get());
+   }
+ 
+   /**
+    *  Return a TPC for the argument transaction.
+    */
+   public Object getTransactionPropagationContext(Transaction tx)
+   {
+      // If no transaction or unknown transaction class, return null.
+      if (tx == null || !(tx instanceof TransactionImpl))
+         return null;
+
+      return ((TransactionImpl)tx).getGlobalId();
+   }
+
 
    // Package protected ---------------------------------------------
     
    /**
-    *  Release the given txCapsule for reuse.
+    *  Release the given TransactionImpl.
     */
-   void releaseTxCapsule(TxCapsule txCapsule, XidImpl xid)
+   void releaseTransactionImpl(TransactionImpl tx)
    {
-      activeCapsules.remove(xid);
-
-      SoftReference ref = new SoftReference(txCapsule);
-      synchronized (inactiveCapsules) {
-         inactiveCapsules.add(ref);
-      }
-   }
-
-   /**
-    *  Return an Xid that identifies the transaction associated
-    *  with the invoking thread, or <code>null</code> if the invoking
-    *  thread is not associated with a transaction.
-    *  This is used for JRMP transaction context propagation.
-    */
-   Xid getXid()
-   {
-      Transaction current = (Transaction)threadTx.get();
-
-      // If no transaction or unknown transaction class, return null.
-      if (current == null || !(current instanceof TransactionImpl))
-         return null;
-
-      return ((TransactionImpl)current).xid;
+      globalIdTx.remove(tx.getGlobalId());
    }
 
    // Protected -----------------------------------------------------
@@ -359,16 +346,10 @@ implements TransactionManager
    private ThreadLocal threadTx = new ThreadLocal();
 
    /**
-    *  This map contains the active txCapsules as values.
-    *  The keys are the <code>Xid</code> of the txCapsules.
+    *  This map contains the active transactions as values.
+    *  The keys are the <code>GlobalId</code>s of the transactions.
     */
-   private Map activeCapsules = Collections.synchronizedMap(new HashMap());
-
-   /**
-    *  This collection contains the inactive txCapsules.
-    *  We keep these for reuse.
-    */
-   private LinkedList inactiveCapsules = new LinkedList();
+   private Map globalIdTx = Collections.synchronizedMap(new HashMap());
 
    // Inner classes -------------------------------------------------
 }

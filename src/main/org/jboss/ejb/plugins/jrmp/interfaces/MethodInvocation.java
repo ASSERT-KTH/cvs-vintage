@@ -19,11 +19,13 @@ import java.util.HashMap;
  *
  *  This Serializable object carries the method to invoke and an identifier for the target ojbect
  *
+ *      @deprecated Unused, will be removed in the near future.
+ *
  *	@see <related>
  *	@author Rickard Öberg (rickard.oberg@telkel.com)
  *  @author <a href="mailto:Richard.Monson-Haefel@jGuru.com">Richard Monson-Haefel</a>.
  *  @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>.
- *	@version $Revision: 1.9 $
+ *	@version $Revision: 1.10 $
  */
 public class MethodInvocation
    implements java.io.Serializable
@@ -48,19 +50,27 @@ public class MethodInvocation
    public static void removeLocal(String jndiName) { invokers.remove(jndiName); }
 
    // Constructors --------------------------------------------------
+   /** @deprecated Unused, will be removed in the near future. */
    public MethodInvocation(Method m, Object[] args)
    {
+      throw new RuntimeException("Bang! This was suspected to be unused. Please report.");
+/*
       this(null, m, args);
+*/
    }
 
+   /** @deprecated Unused, will be removed in the near future. */
    public MethodInvocation(Object id, Method m, Object[] args)
    {
+      throw new RuntimeException("Bang! This was suspected to be unused. Please report.");
+/*
       this.id = id;
       this.className = m.getDeclaringClass().getName();
 	  // m.hashCode only hashes on the name / class.
 	  // Overriding is not seen and must include parameters
       this.hash = calculateHash(m);
       this.args = args;
+*/
    }
    // Public --------------------------------------------------------
 

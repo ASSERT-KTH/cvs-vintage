@@ -6,9 +6,12 @@
  */
 package org.jboss.tm;
 
+import java.lang.ref.SoftReference;
+
 import java.io.Serializable;
 import java.lang.reflect.Constructor;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.Set;
 import java.util.HashSet;
 import java.util.HashMap;
@@ -45,7 +48,7 @@ import org.jboss.util.timeout.TimeoutFactory;
  *  @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  *  @author <a href="mailto:osh@sparre.dk">Ole Husgaard</a>
  *
- *  @version $Revision: 1.23 $
+ *  @version $Revision: 1.24 $
  */
 class TxCapsule implements TimeoutTarget
 {
@@ -86,16 +89,57 @@ class TxCapsule implements TimeoutTarget
       }
    }
 
+
+   /**
+    *  This collection contains the inactive txCapsules.
+    *  We keep these for reuse.
+    *  They are referenced through soft references so that they will
+    *  be garbage collected if the VM runs low on memory.
+    */
+   static private LinkedList inactiveCapsules = new LinkedList();
+
+   /**
+    *  Get a new instance.
+    *
+    *  @param timeout The timeout for this transaction in milliseconds.
+    */
+   static TxCapsule getInstance(long timeOut)
+   {
+      TxCapsule txCapsule = null;
+      synchronized (inactiveCapsules) {
+         while (inactiveCapsules.size() > 0) {
+            SoftReference ref = (SoftReference)inactiveCapsules.removeFirst();
+            txCapsule = (TxCapsule)ref.get();
+            if (txCapsule != null)
+              break;
+         }
+      }
+      if (txCapsule == null)
+         txCapsule = new TxCapsule(timeOut);
+      else
+         txCapsule.reUse(timeOut);
+
+      return txCapsule;
+   }
+
+   /**
+    *  Release an instance for reuse.
+    */
+   static private void releaseInstance(TxCapsule txCapsule)
+   {
+      synchronized (inactiveCapsules) {
+         inactiveCapsules.add(new SoftReference(txCapsule));
+      }
+   }
+
    // Constructors --------------------------------------------------
 
    /**
     *  Create a new TxCapsule.
     *
-    *  @param tm The transaction manager for this transaction.
-    *  @param timeout The timeout for this transaction in milliseconds
-    *                 (timeouts are not yet implemented).
+    *  @param timeout The timeout for this transaction in milliseconds.
     */
-   TxCapsule(TxManager tm, long timeout)
+   private TxCapsule(long timeout)
    {
       xid = new XidImpl();
 
@@ -106,7 +150,7 @@ class TxCapsule implements TimeoutTarget
          xidConstructorArgs[0] = new Integer(xid.getFormatId());
       }
 
-      this.tm = tm;
+      transaction = new TransactionImpl(this, xid);
 
       status = Status.STATUS_ACTIVE;
 
@@ -118,20 +162,9 @@ class TxCapsule implements TimeoutTarget
    }
 
    /**
-    *  Create a new front for this transaction.
-    */
-   TransactionImpl createTransactionImpl()
-   {
-      TransactionImpl tx = new TransactionImpl(this, xid);
-      addTransaction(tx);
-
-      return tx;
-   }
-
-   /**
     *  Prepare this instance for reuse.
     */
-   void reUse(long timeout)
+   private void reUse(long timeout)
    {
       if (!done)
         throw new IllegalStateException();
@@ -141,6 +174,8 @@ class TxCapsule implements TimeoutTarget
 
       xid = new XidImpl();
       lastBranchId = 0; // BQIDs start over again in scope of the new GID.
+
+      transaction = new TransactionImpl(this, xid);
 
       status = Status.STATUS_ACTIVE;
       heuristicCode = HEUR_NONE;
@@ -218,21 +253,15 @@ class TxCapsule implements TimeoutTarget
       return XidImpl.toString(xid);
    }
 
-   // Package protected ---------------------------------------------
-
    /**
-    *  Import a transaction encapsulated here.
+    *  Return the front for this transaction.
     */
-   void importTransaction(TransactionImpl tx) {
-      try {
-         lock();
-
-         tx.setTxCapsule(this);
-         addTransaction(tx);
-      } finally {
-        unlock();
-      }
+   TransactionImpl getTransactionImpl()
+   {
+      return transaction;
    }
+
+   // Package protected ---------------------------------------------
 
    /**
     *  Commit the transaction encapsulated here.
@@ -688,19 +717,9 @@ else {
    // Private -------------------------------------------------------
 
    /**
-    *  The public faces of this capsule are JTA Transaction implementations.
+    *  The public face of this capsule is a JTA Transaction implementation.
     */
-   private TransactionImpl[] transactions = new TransactionImpl[1];
-
-   /**
-    *  Size of allocated transaction frontend array.
-    */
-   private int transactionAllocSize = 1;
-
-   /**
-    *  Count of transaction frontends for this transaction.
-    */
-   private int transactionCount = 0;
+   private TransactionImpl transaction;
 
 
    /**
@@ -811,8 +830,8 @@ else {
 
    /**
     *  The transaction manager for this transaction.
+   private static TxManager tm = TxManager.getInstance();
     */
-   private TxManager tm;
 
    /**
     *  Mutex for thread-safety. This should only be changed in the
@@ -1040,22 +1059,6 @@ else {
       resourceSameRM[resourceCount] = idxSameRM;
 
       return resourceCount++;
-   }
-
-   /**
-    *  Add a transaction frontend, expanding the table if needed.
-    */
-   private void addTransaction(TransactionImpl tx)
-   {
-      if (transactionCount == transactionAllocSize) {
-         // expand table
-         transactionAllocSize = 2 * transactionAllocSize;
-
-         TransactionImpl[] tr = new TransactionImpl[transactionAllocSize];
-         System.arraycopy(transactions, 0, tr, 0, transactionCount);
-         transactions = tr;
-      }
-      transactions[transactionCount++] = tx;
    }
 
    /**
@@ -1346,9 +1349,8 @@ else {
     */
    private void instanceDone()
    {
-      // Notify transaction fronts that we are done.
-      for (int i = 0; i < transactionCount; ++i)
-        transactions[i].setDone();
+      // Notify transaction frontend that we are done.
+      transaction.setDone();
 
       synchronized (this) {
          // Done with this incarnation.
@@ -1367,9 +1369,10 @@ else {
          sync[i] = null; // release for GC
       syncCount = 0;
 
-      for (int i = 0; i < transactionCount; ++i)
-         transactions[i] = null; // release for GC
-      transactionCount = 0;
+      //for (int i = 0; i < transactionCount; ++i)
+      //   transactions[i] = null; // release for GC
+      //transactionCount = 0;
+      transaction = null; // release for GC
 
       for (int i = 0; i < resourceCount; ++i) {
          resources[i] = null; // release for GC
@@ -1382,7 +1385,7 @@ else {
         xidConstructorArgs[1] = null; // This now needs initializing
 
       // This instance is now ready for reuse (when we release the lock).
-      tm.releaseTxCapsule(this, xid);
+      releaseInstance(this);
    }
 
    /**

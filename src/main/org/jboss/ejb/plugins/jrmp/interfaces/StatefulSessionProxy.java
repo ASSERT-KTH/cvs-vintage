@@ -23,7 +23,7 @@ import org.jboss.ejb.plugins.jrmp.server.JRMPContainerInvoker;
  *      @see <related>
  *      @author Rickard Öberg (rickard.oberg@telkel.com)
  * 		@author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
- *      @version $Revision: 1.17 $
+ *      @version $Revision: 1.18 $
  */
 public class StatefulSessionProxy
    extends GenericProxy
@@ -150,7 +150,7 @@ public class StatefulSessionProxy
              return container.invoke( // The entity id, method and arguments for the invocation
                              id, m, args,
                           // Transaction attributes
-                          tm != null ? tm.getTransaction() : null,
+                          getTransaction(),
                           // Security attributes
                           getPrincipal(), getCredential());
           } else
@@ -159,7 +159,7 @@ public class StatefulSessionProxy
              RemoteMethodInvocation rmi = new RemoteMethodInvocation(id, m, args);
              
           // Set the transaction context
-          rmi.setTransaction(tm != null? tm.getTransaction() : null);
+          rmi.setTransactionPropagationContext(getTransactionPropagationContext());
              
           // Set the security stuff
           // MF fixme this will need to use "thread local" and therefore same construct as above

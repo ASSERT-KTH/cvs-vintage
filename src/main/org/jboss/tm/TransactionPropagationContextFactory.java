@@ -6,6 +6,8 @@
  */
 package org.jboss.tm;
 
+import javax.transaction.Transaction;
+
 
 /**
  *  Implementations of this interface are used for getting
@@ -15,10 +17,13 @@ package org.jboss.tm;
  *  we may have 20 new classes if we are going to interoperate
  *  with 20 different kinds of distributed transaction
  *  managers.)
+ *  The reason for having the methods in this interface return
+ *  Object is that we do not really know what kind of transaction
+ *  propagation context is returned.
  *
- *  @see TransactionImpl
+ *  @see TransactionPropagationContextImporter
  *  @author <a href="mailto:osh@sparre.dk">Ole Husgaard</a>
- *  @version $Revision: 1.1 $
+ *  @version $Revision: 1.2 $
  */
 public interface TransactionPropagationContextFactory
 {
@@ -26,9 +31,15 @@ public interface TransactionPropagationContextFactory
     *  Return a transaction propagation context for the transaction
     *  currently associated with the invoking thread, or <code>null</code>
     *  if the invoking thread is not associated with a transaction.
-    *  The reason for having this method return Object is that we do not
-    *  really know what kind of transaction propagation context we get.
     */
    public Object getTransactionPropagationContext();
+
+   /**
+    *  Return a transaction propagation context for the transaction
+    *  given as an argument, or <code>null</code>
+    *  if the argument is <code>null</code> or of a type unknown to
+    *  this factory.
+    */
+   public Object getTransactionPropagationContext(Transaction tx);
 }
 

@@ -31,12 +31,13 @@ import org.jboss.logging.Log;
 import org.jboss.util.ServiceMBeanSupport;
 
 /**
- *   This is a JMX service which manages the TransactionManager.
- *    The service creates it and binds a Reference to it into JNDI.
+ *  This is a JMX service which manages the TransactionManager.
+ *  The service creates it and binds a Reference to it into JNDI.
  *      
- *   @see TxManager
- *   @author Rickard Öberg (rickard.oberg@telkel.com)
- *   @version $Revision: 1.6 $
+ *  @see TxManager
+ *  @author Rickard Öberg (rickard.oberg@telkel.com)
+ *  @author <a href="mailto:osh@sparre.dk">Ole Husgaard</a>
+ *  @version $Revision: 1.7 $
  */
 public class TransactionManagerService
    extends ServiceMBeanSupport
@@ -44,53 +45,64 @@ public class TransactionManagerService
 {
    // Constants -----------------------------------------------------
    public static String JNDI_NAME = "java:/TransactionManager";
+   public static String JNDI_IMPORTER = "java:/TransactionPropagationContextExporter";
+   public static String JNDI_EXPORTER = "java:/TransactionPropagationContextImporter";
     
    // Attributes ----------------------------------------------------
-    MBeanServer server;
+
+   MBeanServer server;
     
-    int timeout;
+   int timeout;
    
    // Static --------------------------------------------------------
+
    static TxManager tm;
 
    // ServiceMBeanSupport overrides ---------------------------------
+
    public String getName()
    {
       return "Transaction manager";
-    }
+   }
    
    protected ObjectName getObjectName(MBeanServer server, ObjectName name)
       throws javax.management.MalformedObjectNameException
    {
-    this.server = server;
+      this.server = server;
       return new ObjectName(OBJECT_NAME);
    }
     
    protected void startService()
       throws Exception
    {
-       // Get a reference to the TxManager singleton.
-       tm = TxManager.getInstance();
+      // Get a reference to the TxManager singleton.
+      tm = TxManager.getInstance();
        
-       // Set timeout
-       tm.setTransactionTimeout(timeout);
+      // Set timeout
+      tm.setTransactionTimeout(timeout);
         
-       // Bind reference to TM in JNDI
-        // TODO: Move this to start when relationships are in place
-       Reference ref = new Reference(tm.getClass().toString(), getClass().getName(), null);
-       new InitialContext().bind(JNDI_NAME, ref);
+      // Bind reference to TM in JNDI
+      // Our TM also implement the tx importer and exporter
+      // interfaces, so we bind it under those names too.
+      // Other transaction managers may have seperate
+      // implementations of these objects, so they are
+      // accessed under seperate names.
+      bindRef(JNDI_NAME, "org.jboss.tm.TxManager");
+      bindRef(JNDI_IMPORTER, "org.jboss.tm.TransactionPropagationContextImporter");
+      bindRef(JNDI_EXPORTER, "org.jboss.tm.TransactionPropagationContextFactory");
    }
     
    protected void stopService()
    {
-        try
-        {
-            // Remove TM from JNDI
-            new InitialContext().unbind(JNDI_NAME);
-        } catch (Exception e)
-        {
-            log.exception(e);
-        }
+      try {
+         // Remove TM, importer and exporter from JNDI
+         Context ctx = new InitialContext();
+         ctx.unbind(JNDI_NAME);
+         ctx.unbind(JNDI_IMPORTER);
+         ctx.unbind(JNDI_EXPORTER);
+      } catch (Exception e) {
+         log.exception(e);
+      }
    }
     
    public int getTransactionTimeout() {
@@ -101,15 +113,25 @@ public class TransactionManagerService
       this.timeout = timeout;
    }
 
-    // ObjectFactory implementation ----------------------------------
-    public Object getObjectInstance(Object obj,
-                                Name name,
-                                Context nameCtx,
-                                Hashtable environment)
-                         throws Exception
-    {
-        // Return the transaction manager
-        return tm;
-    }
+
+   // ObjectFactory implementation ----------------------------------
+
+   public Object getObjectInstance(Object obj, Name name,
+                                   Context nameCtx, Hashtable environment)
+      throws Exception
+   {
+      // Return the transaction manager
+      return tm;
+   }
+
+
+   // Private -------------------------------------------------------
+
+   private void bindRef(String jndiName, String className)
+      throws Exception
+   {
+      Reference ref = new Reference(className, getClass().getName(), null);
+      new InitialContext().bind(jndiName, ref);
+   }
 }
 
