@@ -50,8 +50,6 @@ public class AddressbookTreeModel extends DefaultTreeModel implements TreeModel{
 	}
 
 	public SelectAddressbookFolderDialog getSelectAddressbookFolderDialog() {
-		
-
 		SelectAddressbookFolderDialog dialog =
 			new SelectAddressbookFolderDialog(this);
 
@@ -98,47 +96,11 @@ public class AddressbookTreeModel extends DefaultTreeModel implements TreeModel{
 
 		// i18n stuff
 
-		String name = null;
+		String name = item.get("property", "name");
 
 		//XmlElement.printNode(item.getRoot(), "");
 
 		int uid = item.getInteger("uid");
-
-		/*
-		try {
-			if (uid == 100)
-				name = MailResourceLoader.getString("tree", "localfolders");
-			else if (uid == 101)
-				name = MailResourceLoader.getString("tree", "inbox");
-		
-			else if (uid == 102)
-				name = MailResourceLoader.getString("tree", "drafts");
-		
-			else if (uid == 103)
-				name = MailResourceLoader.getString("tree", "outbox");
-		
-			else if (uid == 104)
-				name = MailResourceLoader.getString("tree", "sent");
-		
-			else if (uid == 105)
-				name = MailResourceLoader.getString("tree", "trash");
-		
-			else if (uid == 106)
-				name = MailResourceLoader.getString("tree", "search");
-			else if (uid == 107)
-				name = MailResourceLoader.getString("tree", "templates");
-		
-			else
-				name = item.get("property", "name");
-		
-			item.set("property", "name", name);
-		
-		} catch (MissingResourceException ex) {
-			name = item.get("property", "name");
-		}
-		*/
-
-		name = item.get("property", "name");
 
 		// now instanciate the folder classes
 
@@ -243,10 +205,8 @@ public class AddressbookTreeModel extends DefaultTreeModel implements TreeModel{
 
 				return node;
 			}
-
 		}
 		return null;
-
 	}
 
 	/* ===================================================================== */
