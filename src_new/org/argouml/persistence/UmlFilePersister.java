@@ -1,4 +1,4 @@
-// $Id: UmlFilePersister.java,v 1.13 2005/01/09 14:58:08 linus Exp $
+// $Id: UmlFilePersister.java,v 1.14 2005/01/11 11:28:33 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -108,18 +108,20 @@ public class UmlFilePersister extends AbstractFilePersister {
     public void doSave(Project project, File file)
         throws SaveException {
 
-        // frank: first backup the existing file to name+"#"
-        File tempFile = new File(file.getAbsolutePath() + "#");
-        File backupFile = new File(file.getAbsolutePath() + "~");
-        if (tempFile.exists()) {
-            tempFile.delete();
-        }
-
+        File lastArchiveFile = new File(file.getAbsolutePath() + "~");
+        File tempFile = null;
+        
         try {
-            if (file.exists()) {
-                copyFile(tempFile, file);
-            }
-            // frank end
+            tempFile = createTempFile(file);
+        } catch (FileNotFoundException e) {
+            throw new SaveException(
+                    "Failed to archive the previous file version", e);
+        } catch (IOException e) {
+            throw new SaveException(
+                    "Failed to archive the previous file version", e);
+        }
+        
+        try {
 
             project.setFile(file);
             project.setVersion(ArgoVersion.getVersion());
@@ -140,11 +142,11 @@ public class UmlFilePersister extends AbstractFilePersister {
             // if save did not raise an exception
             // and name+"#" exists move name+"#" to name+"~"
             // this is the correct backup file
-            if (backupFile.exists()) {
-                backupFile.delete();
+            if (lastArchiveFile.exists()) {
+                lastArchiveFile.delete();
             }
-            if (tempFile.exists() && !backupFile.exists()) {
-                tempFile.renameTo(backupFile);
+            if (tempFile.exists() && !lastArchiveFile.exists()) {
+                tempFile.renameTo(lastArchiveFile);
             }
             if (tempFile.exists()) {
                 tempFile.delete();
@@ -191,7 +193,7 @@ public class UmlFilePersister extends AbstractFilePersister {
                 Hashtable templates =
                     TemplateReader.getInstance().read(ARGO_TEE);
                 OCLExpander expander = new OCLExpander(templates);
-                expander.expand(writer, project, "  ", "");
+                expander.expand(writer, project, "  ");
                 // For next version of GEF:
                 // expander.expand(writer, project, "  ");
             } catch (FileNotFoundException e) {
