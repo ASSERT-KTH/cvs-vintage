@@ -954,8 +954,6 @@ public class ContextManager implements LogAware{
 	String errorPath=null;
 	Handler errorServlet=null;
 
-	res.resetBuffer();
-
 	if( code==0 )
 	    code=res.getStatus();
 	else
@@ -975,15 +973,26 @@ public class ContextManager implements LogAware{
 	errorPath = ctx.getErrorPage( code );
 	if( errorPath != null ) {
 	    errorServlet=getHandlerForPath( ctx, errorPath );
+
+	    // Make sure Jsps will work
+	    req.setAttribute( "javax.servlet.include.request_uri",
+				  ctx.getPath()  + "/" + errorPath );
+	    req.setAttribute( "javax.servlet.include.servlet_path", errorPath );
 	}
 
-	if( errorServlet==null )
+	boolean isDefaultHandler = false;
+	if( errorServlet==null ) {
 	    errorServlet=ctx.getServletByName( "tomcat.statusHandler");
+	    isDefaultHandler = true;
+	}
 
 	if (errorServlet == null) {
 	    ctx.log( "Handler errorServlet is null! errorPath:" + errorPath);
 	    return;
 	}
+
+	if (!isDefaultHandler)
+	    res.resetBuffer();
 
 	req.setAttribute("javax.servlet.error.status_code",new Integer( code));
 	req.setAttribute("tomcat.servlet.error.request", req);
@@ -1047,15 +1056,34 @@ public class ContextManager implements LogAware{
 
 	if( errorPath != null ) {
 	    errorServlet=getHandlerForPath( ctx, errorPath );
+
+	    // Make sure Jsps will work
+	    req.setAttribute( "javax.servlet.include.request_uri",
+				  ctx.getPath()  + "/" + errorPath );
+	    req.setAttribute( "javax.servlet.include.servlet_path", errorPath );
 	}
 
-	if( errorLoop( ctx, req ) || errorServlet==null) ;
+	boolean isDefaultHandler = false;
+	if( errorLoop( ctx, req ) || errorServlet==null) {
 	    errorServlet = ctx.getServletByName("tomcat.exceptionHandler");
+	    isDefaultHandler = true;
+	}
+
+	if (errorServlet == null) {
+	    ctx.log( "Handler errorServlet is null! errorPath:" + errorPath);
+	    return;
+	}
+
+	if (!isDefaultHandler)
+	    res.resetBuffer();
 
 	req.setAttribute("javax.servlet.error.exception_type", t.getClass());
 	req.setAttribute("javax.servlet.error.message", t.getMessage());
 	req.setAttribute("tomcat.servlet.error.throwable", t);
 	req.setAttribute("tomcat.servlet.error.request", req);
+
+	if( debug>0 )
+	    ctx.log( "Handler " + errorServlet + " " + errorPath);
 
 	errorServlet.service( req, res );
     }
