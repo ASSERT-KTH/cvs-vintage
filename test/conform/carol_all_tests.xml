@@ -49,7 +49,7 @@
       <property name="stub.jar.name" value="jeremie_stub.jar"/>
       <property name="client.properties.file.name" value="jeremie_carol.properties"/>
       <property name="server.properties.file.name" value="jeremie_carol.properties"/>
-      <property name="name.server.class.name" value="org.objectweb.jeremie.libs.services.registry.JRMIRegistry"/>
+      <property name="name.server.class.name" value="org.objectweb.jeremie.services.registry.JRMIRegistry"/>
       <property name="name.server.option" value="2001"/>
       <property name="test.name"          value="jeremie"/>
       <property name="test.client.pkg" value="org/objectweb/carol/jtests/conform/basic/clients/"/> 
@@ -149,7 +149,7 @@
       <property name="client.properties.file.name1" value="jeremie_carol.properties"/>
       <property name="client.properties.file.name2" value="iiop_carol.properties"/>
       <property name="server.properties.file.name" value="multisunjeremie_carol.properties"/>
-      <property name="name.server.class.name1" value="org.objectweb.jeremie.libs.services.registry.JRMIRegistry"/>
+      <property name="name.server.class.name1" value="org.objectweb.jeremie.services.registry.JRMIRegistry"/>
       <property name="name.server.option1" value="2001"/>
       <property name="name.server.class.name2" value="com.sun.corba.se.internal.CosNaming.TransientNameServer"/>
       <property name="name.server.option2"  value="-ORBInitialPort 2000"/>
