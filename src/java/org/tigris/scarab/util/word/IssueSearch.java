@@ -301,16 +301,10 @@ public class IssueSearch
     public SequencedHashMap getCommonAttributeValuesMap()
         throws Exception
     {
-        long start = System.currentTimeMillis(), now=start;
         SequencedHashMap result = null;
         if (isXMITSearch()) 
         {
-            now = System.currentTimeMillis();
-            System.out.println("A=" + (now-start));
-            start = now;
             result = getMITAttributeValuesMap();
-            now = System.currentTimeMillis();
-            System.out.println("B=" + (now-start));
         }
         else 
         {
@@ -1928,53 +1922,8 @@ public class IssueSearch
         // add pk sort so that rows can be combined easily
         sb.append(',').append(IssuePeer.ISSUE_ID).append(" ASC");
         
-        String sql = sb.toString();
-
-        long start = System.currentTimeMillis();
-        System.out.println("Executing query: " + sql);
-        List sortedRecords = BasePeer.executeQuery(sql);
-        System.out.println("Executed query size=" + sortedRecords.size()+
-            "; time= " + (System.currentTimeMillis()-start) + " ms");
-
-        List sortedResults = buildQueryResults(sortedRecords, sortAttrPos,
-                                               valueListSize);
-
-        /*        
-        // if all issues have a value for the sorted-by attribute
-        // we are done, otherwise we have to add the unsorted issues
-        // this is expensive!  The best would be an sql subselect but
-        // that is not supported in enough db's.
-        if (sortedResults.size() < getIssueCount()) 
-        {
-            Criteria crit2 = new Criteria();
-            crit2.setDistinct();
-            addCoreSearchCriteria(crit2);
-            
-            // Get pks of issues to exclude, note this can be large
-            // mysql did not have a problem with a list of 20000 ids.
-            // we could save code and create a list to pass to 
-            // Criteria.addNotIn, but that method is terribly inefficient
-            // for this simple case; 100X speed improvement is worth it.
-            if (sortedResults.size() > 0) 
-            {
-                StringBuffer pks = new StringBuffer(issues.size()*8);
-                pks.append(IssuePeer.ISSUE_ID).append(" NOT IN (");
-                Iterator i = sortedResults.iterator();
-                pks.append(((Issue)i.next()).getIssueId());
-                while (i.hasNext())
-                {
-                    pks.append(',').append(((Issue)i.next()).getIssueId());
-                }
-                pks.append(')');
-                crit2.add(IssuePeer.ISSUE_ID, (Object)pks.toString(), 
-                          Criteria.CUSTOM);
-
-                issues.addAll( IssuePeer.doSelect(crit2) );
-            }
-        }
-        */
-        
-        return sortedResults;
+        return buildQueryResults(BasePeer.executeQuery(sb.toString()), 
+                                 sortAttrPos, valueListSize);
     }
 
     /**
@@ -2032,15 +1981,10 @@ public class IssueSearch
             sb.insert(sql.indexOf(WHERE), outerJoin.toString());
             // add attribute columns for the table
             sb.insert(sql.indexOf(FROM), selectColumns.toString());
-            sql = sb.toString();        }
+            sql = sb.toString();
+        }
 
-        long start = System.currentTimeMillis();
-        System.out.println("Executing query: " + sql);
-        List sortedRecords = BasePeer.executeQuery(sql);
-        System.out.println("Executed query size=" + sortedRecords.size()+
-            "; time= " + (System.currentTimeMillis()-start) + " ms");
-
-        return buildQueryResults(sortedRecords, -1, valueListSize);
+        return buildQueryResults(BasePeer.executeQuery(sql), -1, valueListSize);
     }
     
     public List buildQueryResults(List records, int sortAttrPos, 
