@@ -18,7 +18,7 @@ import org.jboss.logging.Log;
  * Inserts relations into a relation table.
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  */
 public class JDBCInsertRelationsCommand {
 	protected JDBCStoreManager manager;
@@ -91,15 +91,15 @@ public class JDBCInsertRelationsCommand {
 	   sql.append("INSERT INTO ").append(relationData.getLeftCMRField().getRelationTableName());		
 
 		sql.append(" (");
-				sql.append(SQLUtil.getColumnNamesClause(relationData.getLeftCMRField().getKeyFields()));
+				sql.append(SQLUtil.getColumnNamesClause(relationData.getLeftCMRField().getTableKeyFields()));
 				sql.append(", ");
-				sql.append(SQLUtil.getColumnNamesClause(relationData.getRightCMRField().getKeyFields()));
+				sql.append(SQLUtil.getColumnNamesClause(relationData.getRightCMRField().getTableKeyFields()));
 		sql.append(")");
 
 		sql.append(" VALUES (");
-				sql.append(SQLUtil.getValuesClause(relationData.getLeftCMRField().getKeyFields()));
+				sql.append(SQLUtil.getValuesClause(relationData.getLeftCMRField().getTableKeyFields()));
 				sql.append(", ");
-				sql.append(SQLUtil.getValuesClause(relationData.getRightCMRField().getKeyFields()));
+				sql.append(SQLUtil.getValuesClause(relationData.getRightCMRField().getTableKeyFields()));
 		sql.append(")");		
       return sql.toString();
 	}
@@ -109,14 +109,14 @@ public class JDBCInsertRelationsCommand {
 
 		// left keys
 		Object leftId = pair.getLeftId();
-		JDBCCMPFieldBridge[] leftKeyFields = relationData.getLeftCMRField().getKeyFields();
+		JDBCCMPFieldBridge[] leftKeyFields = relationData.getLeftCMRField().getTableKeyFields();
 		for(int i=0; i<leftKeyFields.length; i++) {
 			parameterIndex = leftKeyFields[i].setPrimaryKeyParameters(ps, parameterIndex, leftId);
 		}
 				
 		// right keys
 		Object rightId = pair.getRightId();
-		JDBCCMPFieldBridge[] rightKeyFields = relationData.getRightCMRField().getKeyFields();
+		JDBCCMPFieldBridge[] rightKeyFields = relationData.getRightCMRField().getTableKeyFields();
 		for(int i=0; i<rightKeyFields.length; i++) {
 			parameterIndex = rightKeyFields[i].setPrimaryKeyParameters(ps, parameterIndex, rightId);
 		}

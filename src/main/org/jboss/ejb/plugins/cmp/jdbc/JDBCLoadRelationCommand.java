@@ -19,7 +19,7 @@ import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCCMRFieldBridge;
  * Loads relations for a particular entity from a relation table.
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  */
 public class JDBCLoadRelationCommand extends JDBCQueryCommand {
 	// Constructors --------------------------------------------------
@@ -49,9 +49,9 @@ public class JDBCLoadRelationCommand extends JDBCQueryCommand {
 
 		// Create table SQL
 		StringBuffer sql = new StringBuffer();
-		sql.append("SELECT ").append(SQLUtil.getColumnNamesClause(es.cmrField.getRelatedCMRField().getKeyFields()));
+		sql.append("SELECT ").append(SQLUtil.getColumnNamesClause(es.cmrField.getRelatedCMRField().getTableKeyFields()));
 		sql.append(" FROM ").append(es.cmrField.getRelationTableName());
-		sql.append(" WHERE ").append(SQLUtil.getWhereClause(es.cmrField.getKeyFields()));
+		sql.append(" WHERE ").append(SQLUtil.getWhereClause(es.cmrField.getTableKeyFields()));
 		
 		return sql.toString();
 	}
@@ -59,7 +59,7 @@ public class JDBCLoadRelationCommand extends JDBCQueryCommand {
 	protected void setParameters(PreparedStatement ps, Object arg) throws Exception {
 		ExecutionState es = (ExecutionState)arg;
 		
-		JDBCCMPFieldBridge[] myKeyFields = es.cmrField.getKeyFields();
+		JDBCCMPFieldBridge[] myKeyFields = es.cmrField.getTableKeyFields();
 		
 		int parameterIndex = 1;
 		for(int i=0; i<myKeyFields.length; i++) {
@@ -76,7 +76,7 @@ public class JDBCLoadRelationCommand extends JDBCQueryCommand {
 		while(rs.next()) {
 			pkRef[0] = null;	
 			
-			JDBCCMPFieldBridge[] relatedKeyFields = es.cmrField.getRelatedCMRField().getKeyFields();
+			JDBCCMPFieldBridge[] relatedKeyFields = es.cmrField.getRelatedCMRField().getTableKeyFields();
 
 			int parameterIndex = 1;
 			for(int i=0; i<relatedKeyFields.length; i++) {

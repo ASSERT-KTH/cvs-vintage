@@ -10,6 +10,7 @@ package org.jboss.ejb.plugins.cmp.jdbc;
 import java.lang.reflect.Method;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 
@@ -28,7 +29,7 @@ import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCValuePropertyMetaData;
  * this class is to flatten the JDBCValueClassMetaData into columns.
  * 
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.2 $
+ * @version $Revision: 1.3 $
  */
 public class JDBCTypeFactory {
 	// the type mapping to use with the specified database
@@ -37,11 +38,10 @@ public class JDBCTypeFactory {
 	// all the available dependent value classes (by javaType)
 	private HashMap valueClasses = new HashMap();
 
-	public JDBCTypeFactory(JDBCApplicationMetaData app) {
-		typeMapping = app.getTypeMapping();
-		Iterator classes = app.getValueClasses();
-		while(classes.hasNext()) {
-			JDBCValueClassMetaData valueClass = (JDBCValueClassMetaData)classes.next();
+	public JDBCTypeFactory(JDBCTypeMappingMetaData typeMapping, Collection dependentValueClasses) {
+		this.typeMapping = typeMapping;
+		for(Iterator i = dependentValueClasses.iterator(); i.hasNext(); ) {
+			JDBCValueClassMetaData valueClass = (JDBCValueClassMetaData)i.next();
 			valueClasses.put(valueClass.getJavaType(), valueClass);
 		}
 	}
@@ -58,7 +58,7 @@ public class JDBCTypeFactory {
 		return typeMapping.getJdbcTypeForJavaType(clazz);
 	}
 
-	protected JDBCType createSimpleType(JDBCCMPFieldMetaData cmpField) {
+	private JDBCType createSimpleType(JDBCCMPFieldMetaData cmpField) {
 		String columnName = cmpField.getColumnName();
 	   Class javaType = cmpField.getFieldType();
 		
@@ -74,7 +74,7 @@ public class JDBCTypeFactory {
 		return new JDBCTypeSimple(columnName, javaType, jdbcType, sqlType);
 	}		
 
-	protected JDBCType createComplexType(JDBCCMPFieldMetaData cmpField) {
+	private JDBCType createComplexType(JDBCCMPFieldMetaData cmpField) {
 		JDBCValueClassMetaData valueClass = (JDBCValueClassMetaData)valueClasses.get(cmpField.getFieldType());
 
 		// get the properties
@@ -87,7 +87,7 @@ public class JDBCTypeFactory {
 
 		// create a map between propertyNames and the override
       HashMap overrides = new HashMap();
-		Iterator iterator = cmpField.getPropertyOverrides();
+		Iterator iterator = cmpField.getPropertyOverrides().iterator();
 		while(iterator.hasNext()) {
 			JDBCCMPFieldPropertyMetaData p = (JDBCCMPFieldPropertyMetaData)iterator.next();
 			overrides.put(p.getPropertyName(), p);
@@ -129,7 +129,7 @@ public class JDBCTypeFactory {
 		ArrayList properties = new ArrayList();
 		
 		JDBCValuePropertyMetaData propertyMetaData;
-		Iterator iterator = valueClass.getProperties();
+		Iterator iterator = valueClass.getProperties().iterator();
 		while(iterator.hasNext()) {
 			propertyMetaData = (JDBCValuePropertyMetaData) iterator.next();
 			properties.addAll(createComplexProperties(propertyMetaData, propertyStack));

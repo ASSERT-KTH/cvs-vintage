@@ -22,7 +22,7 @@ import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCCMRFieldBridge;
  * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  * @author <a href="mailto:shevlandj@kpi.com.au">Joe Shevland</a>
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
- * @version $Revision: 1.2 $
+ * @version $Revision: 1.3 $
  */
 public class JDBCDestroyCommand extends JDBCUpdateCommand implements DestroyCommand {
    // Constructors --------------------------------------------------
@@ -35,12 +35,14 @@ public class JDBCDestroyCommand extends JDBCUpdateCommand implements DestroyComm
    
    public void execute() {
       if(entityMetaData.getRemoveTable()) {
+			log.debug("Droping tables for entity " + entity.getEntityName());
 			dropTable(entityMetaData.getTableName());
 
 			// drop relation tables
 			JDBCCMRFieldBridge[] cmrFields = entity.getJDBCCMRFields();
 			for(int i=0; i<cmrFields.length; i++) {
 				if(!cmrFields[i].hasForeignKey() && !cmrFields[i].getRelatedCMRField().hasForeignKey()) {
+					if(cmrFields[i].getRelationTableName() == null)  log.debug("Table name null for cmr field " + cmrFields[i].getFieldName());
 					dropTable(cmrFields[i].getRelationTableName());
 				}
 			}

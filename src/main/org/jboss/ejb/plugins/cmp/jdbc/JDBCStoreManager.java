@@ -13,6 +13,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 import javax.sql.DataSource;
+import javax.naming.InitialContext;
+import javax.naming.NamingException;
 import org.jboss.ejb.DeploymentException;
 import org.jboss.ejb.EntityEnterpriseContext;
 import org.jboss.ejb.plugins.cmp.CMPStoreManager;
@@ -42,7 +44,7 @@ import org.jboss.proxy.Proxy;
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @see org.jboss.ejb.EntityPersistenceStore
- * @version $Revision: 1.4 $
+ * @version $Revision: 1.5 $
  */                            
 public class JDBCStoreManager extends CMPStoreManager {
 	protected DataSource dataSource;
@@ -63,7 +65,18 @@ public class JDBCStoreManager extends CMPStoreManager {
 		initTxDataMap();
 		
 		metaData = loadJDBCEntityMetaData();
-		typeFactory = new JDBCTypeFactory(metaData.getJDBCApplication());
+
+		// set debug flag
+		debug = metaData.isDebug();
+		
+		// find the datasource
+		try {
+			dataSource = (DataSource)new InitialContext().lookup(metaData.getDataSourceName());
+		} catch(NamingException e) {
+			throw new DeploymentException("Error: can't find data source: " + metaData.getDataSourceName());
+		}
+		
+		typeFactory = new JDBCTypeFactory(metaData.getTypeMapping(), metaData.getJDBCApplication().getValueClasses());
 		entityBridge = new JDBCEntityBridge(metaData, log, this);
 
 		super.init();
@@ -126,8 +139,8 @@ public class JDBCStoreManager extends CMPStoreManager {
 		return dataSource.getConnection();
 	}
 	
-	public Set findByForeignKey(EntityEnterpriseContext ctx, JDBCCMPFieldBridge[] foreignKeyFields) {
-		return findByForeignKeyCommand.execute(ctx, foreignKeyFields);
+	public Set findByForeignKey(Object foreignKey, JDBCCMPFieldBridge[] foreignKeyFields) {
+		return findByForeignKeyCommand.execute(foreignKey, foreignKeyFields);
 	}
 	
 	public Set loadRelation(JDBCCMRFieldBridge cmrField, Object pk) {  
@@ -171,15 +184,6 @@ public class JDBCStoreManager extends CMPStoreManager {
 			JDBCXmlFileLoader jfl = new JDBCXmlFileLoader(amd, container.getClassLoader(), container.getLocalClassLoader(), log);
 			jamd = jfl.load();
 			amd.addPluginData("CMP-JDBC", jamd);
-		}
-		
-		// set debug flag
-		debug = jamd.getDebug();
-		
-		// Get the datasource
-		dataSource = jamd.getDataSource();
-	   if(dataSource == null) {
-			throw new DeploymentException("Unable to locate data source.");
 		}
 		
 		// Get JDBC Bean MetaData

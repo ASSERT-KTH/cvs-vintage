@@ -21,7 +21,7 @@ import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCCMPFieldBridge;
  * entity's table.
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  */
 public class JDBCFindByForeignKeyCommand extends JDBCQueryCommand {
 	// Constructors --------------------------------------------------
@@ -32,11 +32,11 @@ public class JDBCFindByForeignKeyCommand extends JDBCQueryCommand {
 	
 	// FindEntitiesCommand implementation -------------------------
 	
-	public Set execute(EntityEnterpriseContext ctx, 
+	public Set execute(Object foreignKey,
 			JDBCCMPFieldBridge[] foreignKeyFields) {
 				
 		ExecutionState es = new ExecutionState();
-		es.ctx = ctx;
+		es.foreignKey = foreignKey;
 		es.foreignKeyFields = foreignKeyFields;
 
 		try {
@@ -64,7 +64,7 @@ public class JDBCFindByForeignKeyCommand extends JDBCQueryCommand {
 		
 		int parameterIndex = 1;
 		for(int i=0; i<es.foreignKeyFields.length; i++) {
-			parameterIndex = es.foreignKeyFields[i].setInstanceParameters(ps, parameterIndex, es.ctx);
+			parameterIndex = es.foreignKeyFields[i].setPrimaryKeyParameters(ps, parameterIndex, es.foreignKey);
 		}
    }
 
@@ -82,7 +82,7 @@ public class JDBCFindByForeignKeyCommand extends JDBCQueryCommand {
 	}
 
 	private static class ExecutionState {
-		public EntityEnterpriseContext ctx;
+		public Object foreignKey;
 		public JDBCCMPFieldBridge[] foreignKeyFields;
 	}
 }

@@ -21,6 +21,7 @@ import javax.ejb.FinderException;
 
 import org.jboss.ejb.EntityEnterpriseContext;
 import org.jboss.ejb.plugins.cmp.FindEntitiesCommand;
+import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCAutomaticQueryMetaData;
 import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCQueryMetaData;
 import org.jboss.ejb.plugins.cmp.bmp.CustomFindByEntitiesCommand;
 import org.jboss.util.FinderResults;
@@ -35,7 +36,7 @@ import org.jboss.util.FinderResults;
  * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  * @author <a href="mailto:shevlandj@kpi.com.au">Joe Shevland</a>
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
- * @version $Revision: 1.2 $
+ * @version $Revision: 1.3 $
  */
 public class JDBCFindEntitiesCommand implements FindEntitiesCommand {
 	// Attributes ----------------------------------------------------
@@ -51,8 +52,7 @@ public class JDBCFindEntitiesCommand implements FindEntitiesCommand {
 		// Custom finders - Overrides defined and automatic finders.
 		//
 		try {
-			Class ejbClass = manager.getContainer().getClassLoader().loadClass(
-						manager.getMetaData().getEntity().getEjbClass());
+			Class ejbClass = manager.getMetaData().getEntityClass();
 
 			Method[] customMethods = ejbClass.getMethods();	      
 			for (int i = 0; i < customMethods.length; i++) {
@@ -72,7 +72,7 @@ public class JDBCFindEntitiesCommand implements FindEntitiesCommand {
 		// Defined finders - Overrides automatic finders.
 		//
 		try {
-			Iterator definedFinders = manager.getMetaData().getQueries();
+			Iterator definedFinders = manager.getMetaData().getQueries().iterator();
 			while(definedFinders.hasNext()) {
 				JDBCQueryMetaData q = (JDBCQueryMetaData)definedFinders.next();
 
@@ -106,11 +106,11 @@ public class JDBCFindEntitiesCommand implements FindEntitiesCommand {
 			if(!knownFinderCommands.containsKey(m)) {
 				String name = m.getName();
 				if(name.equals("findAll")) {
-					JDBCQueryMetaData q = new JDBCQueryMetaData(m, manager.getMetaData());
+					JDBCQueryMetaData q = new JDBCAutomaticQueryMetaData(m);
 					knownFinderCommands.put(m, manager.getCommandFactory().createFindAllCommand(q));
-				} else if(name.startsWith("findBy")  && !name.equals("findByPrimaryKey")) {
+				} else if(name.startsWith("findBy") && !name.equals("findByPrimaryKey")) {
 					try {
-						JDBCQueryMetaData q = new JDBCQueryMetaData(m, manager.getMetaData());
+						JDBCQueryMetaData q = new JDBCAutomaticQueryMetaData(m);
 						knownFinderCommands.put(m, manager.getCommandFactory().createFindByCommand(q));
 					} catch (IllegalArgumentException e) {
 						manager.getLog().debug("Could not create the finder " + name +

@@ -31,7 +31,7 @@ import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCCMPFieldBridge;
  * fields.
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  */
 public class JDBCLoadFieldCommand
    extends JDBCQueryCommand
@@ -46,7 +46,7 @@ public class JDBCLoadFieldCommand
 	
 	public void execute(JDBCCMPFieldBridge field, EntityEnterpriseContext ctx) {
 		// start with a set with containing just the field 
-		ArrayList fields = new ArrayList(entityMetaData.getCMPFieldCount());
+		ArrayList fields = new ArrayList(entityMetaData.getCMPFields().size());
 		fields.add(field);
 		
 		// union all the groups of which field is a member

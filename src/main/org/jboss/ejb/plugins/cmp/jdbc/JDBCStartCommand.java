@@ -23,7 +23,7 @@ import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCCMRFieldBridge;
  * @author <a href="mailto:shevlandj@kpi.com.au">Joe Shevland</a>
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
  * @author <a href="mailto:michel.anke@wolmail.nl">Michel de Groot</a>
- * @version $Revision: 1.2 $
+ * @version $Revision: 1.3 $
  */
 public class JDBCStartCommand extends JDBCUpdateCommand implements StartCommand {
    // Constructors --------------------------------------------------
@@ -128,9 +128,9 @@ public class JDBCStartCommand extends JDBCUpdateCommand implements StartCommand 
 		
 		sql.append(" (");
 			// list all cmp fields
-			sql.append(SQLUtil.getCreateTableColumnsClause(cmrField.getKeyFields()));
+			sql.append(SQLUtil.getCreateTableColumnsClause(cmrField.getTableKeyFields()));
 			sql.append(", ");		
-			sql.append(SQLUtil.getCreateTableColumnsClause(cmrField.getRelatedCMRField().getKeyFields()));
+			sql.append(SQLUtil.getCreateTableColumnsClause(cmrField.getRelatedCMRField().getTableKeyFields()));
 
 			// If there is a primary key field,
 			// and the bean has explicitly <pk-constraint>true</pk-constraint> in jbosscmp-jdbc.xml
@@ -139,9 +139,9 @@ public class JDBCStartCommand extends JDBCUpdateCommand implements StartCommand 
 //				sql.append(", CONSTRAINT pk").append(cmrField.getRelationTableName());
 //				
 //				sql.append(" PRIMARY KEY (");
-//					sql.append(SQLUtil.getColumnNamesClause(cmrField.getKeyFields())));
+//					sql.append(SQLUtil.getColumnNamesClause(cmrField.getTableKeyFields())));
 //					sql.append(", ");		
-//					sql.append(SQLUtil.getColumnNamesClause(cmrField.getRelatedCMRField().getKeyFields()));
+//					sql.append(SQLUtil.getColumnNamesClause(cmrField.getRelatedCMRField().getTableKeyFields()));
 //				sql.append(")");
 //			}	
 		sql.append(")");
