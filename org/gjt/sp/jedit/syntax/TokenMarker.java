@@ -38,7 +38,7 @@ import org.gjt.sp.util.Log;
  * or font style for painting that token.
  *
  * @author Slava Pestov, mike dillon
- * @version $Id: TokenMarker.java,v 1.49 2003/03/15 22:06:50 spestov Exp $
+ * @version $Id: TokenMarker.java,v 1.50 2003/03/16 20:55:48 spestov Exp $
  *
  * @see org.gjt.sp.jedit.syntax.Token
  * @see org.gjt.sp.jedit.syntax.TokenHandler
@@ -240,10 +240,8 @@ main_loop:	for(pos = line.offset; pos < lineLength; pos++)
 						context);
 				}
 
-				tokenHandler.handleToken(
-					(ch == '\t' ? Token.TAB
-					: Token.WHITESPACE),pos - line.offset,1,
-					context);
+				tokenHandler.handleToken(context.rules.getDefault(),
+					pos - line.offset,1,context);
 				lastOffset = pos + 1;
 
 				escaped = false;

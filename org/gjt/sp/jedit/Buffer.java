@@ -64,7 +64,7 @@ import org.gjt.sp.util.*;
  * </ul>
  *
  * @author Slava Pestov
- * @version $Id: Buffer.java,v 1.134 2003/03/16 05:37:50 spestov Exp $
+ * @version $Id: Buffer.java,v 1.135 2003/03/16 20:55:39 spestov Exp $
  */
 public class Buffer implements EBComponent
 {
@@ -2072,7 +2072,8 @@ public class Buffer implements EBComponent
 			{
 				start = 0;
 
-				for(int i = lineIndex - 1; i >= 0; i--)
+				for(int i = Math.min(offsetMgr.getLastValidLineContext(),
+					lineIndex - 1); i >= 0; i--)
 				{
 					if(offsetMgr.isLineContextValid(i))
 					{

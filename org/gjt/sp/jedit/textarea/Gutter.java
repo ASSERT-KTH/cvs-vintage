@@ -45,7 +45,7 @@ import org.gjt.sp.jedit.*;
  * @see JEditTextArea
  *
  * @author Mike Dillon and Slava Pestov
- * @version $Id: Gutter.java,v 1.29 2003/01/14 02:09:23 spestov Exp $
+ * @version $Id: Gutter.java,v 1.30 2003/03/16 20:55:48 spestov Exp $
  */
 public class Gutter extends JComponent implements SwingConstants
 {
@@ -87,6 +87,8 @@ public class Gutter extends JComponent implements SwingConstants
 		addMouseMotionListener(ml);
 
 		addExtension(new MarkerHighlight());
+
+		updateBorder();
 	} //}}}
 
 	//{{{ paintComponent() method
@@ -211,22 +213,12 @@ public class Gutter extends JComponent implements SwingConstants
 	 */
 	public void updateBorder()
 	{
-		// because we are called from the text area's focus handler,
-		// we do an invokeLater() so that the view's focus handler
-		// has a chance to execute and set the edit pane properly
-		SwingUtilities.invokeLater(new Runnable()
-		{
-			public void run()
-			{
-				if(view.getEditPane() == null)
-					return;
-
-				if(view.getEditPane().getTextArea() == textArea)
-					setBorder(focusBorder);
-				else
-					setBorder(noFocusBorder);
-			}
-		});
+		if(view.getEditPane() == null)
+			setBorder(noFocusBorder);
+		else if(view.getEditPane().getTextArea() == textArea)
+			setBorder(focusBorder);
+		else
+			setBorder(noFocusBorder);
 	} //}}}
 
 	//{{{ setBorder() method
