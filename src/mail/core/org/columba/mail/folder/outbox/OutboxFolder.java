@@ -17,26 +17,21 @@ package org.columba.mail.folder.outbox;
 
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.util.Enumeration;
 import java.util.Vector;
 
 import org.columba.core.command.WorkerStatusController;
 import org.columba.core.logging.ColumbaLogger;
 import org.columba.mail.composer.SendableMessage;
 import org.columba.mail.config.FolderItem;
-import org.columba.mail.folder.LocalFolder;
-import org.columba.mail.folder.command.MarkMessageCommand;
+import org.columba.mail.folder.headercache.CachedFolder;
 import org.columba.mail.folder.headercache.LocalHeaderCache;
-import org.columba.mail.folder.mh.MHFolder;
+import org.columba.mail.folder.mh.CachedMHFolder;
 import org.columba.mail.message.AbstractMessage;
-import org.columba.mail.message.ColumbaHeader;
 import org.columba.mail.message.HeaderInterface;
-import org.columba.mail.message.HeaderList;
-import org.columba.mail.message.Message;
 import org.columba.mail.message.SendableHeader;
 import org.columba.mail.parser.Rfc822Parser;
 
-public class OutboxFolder extends MHFolder {
+public class OutboxFolder extends CachedMHFolder {
 
 	private SendListManager[] sendListManager = new SendListManager[2];
 	private int actSender;
@@ -55,157 +50,6 @@ public class OutboxFolder extends MHFolder {
 
 		cache = new OutboxHeaderCache(this);
 
-	}
-
-	// this method needs to be fixed for the sake of completness
-	// (we don't use it anyway)
-	public Object addMessage(String source, WorkerStatusController worker)
-		throws Exception {
-
-		getHeaderList(worker);
-
-		Object newUid = super.addMessage(source, worker);
-
-		Rfc822Parser parser = new Rfc822Parser();
-
-		ColumbaHeader header = parser.parseHeader(source);
-
-		AbstractMessage m = new Message(header);
-		ColumbaHeader h = (ColumbaHeader) m.getHeader();
-
-		parser.addColumbaHeaderFields(h);
-
-		Integer sizeInt = new Integer(source.length());
-		int size = Math.round(sizeInt.intValue() / 1024);
-		h.set("columba.size", new Integer(size));
-
-		h.set("columba.uid", newUid);
-
-		if (h.get("columba.flags.recent").equals(Boolean.TRUE))
-			getMessageFolderInfo().incRecent();
-		if (h.get("columba.flags.seen").equals(Boolean.FALSE))
-			getMessageFolderInfo().incUnseen();
-
-		cache.add(h);
-
-		return newUid;
-	}
-
-	public Object addMessage(
-		AbstractMessage message,
-		WorkerStatusController worker)
-		throws Exception {
-
-		getHeaderList(worker);
-
-		Object newUid = super.addMessage(message, worker);
-
-		SendableHeader h =
-			(SendableHeader) ((SendableHeader) message.getHeader());
-
-		h.set("columba.uid", newUid);
-
-		if (h.get("columba.flags.recent").equals(Boolean.TRUE))
-			getMessageFolderInfo().incRecent();
-		if (h.get("columba.flags.seen").equals(Boolean.FALSE))
-			getMessageFolderInfo().incUnseen();
-
-		cache.add(h);
-
-		return newUid;
-	}
-
-	public Object[] getUids(WorkerStatusController worker) throws Exception {
-		cache.getHeaderList(worker);
-
-		int count = cache.count();
-		Object[] uids = new Object[count];
-
-		int i = 0;
-		for (Enumeration e = cache.getHeaderList(worker).keys();
-			e.hasMoreElements();
-			) {
-			uids[i++] = e.nextElement();
-		}
-
-		return uids;
-	}
-
-	public void expungeFolder(WorkerStatusController worker) throws Exception {
-
-		Object[] uids = getUids(worker);
-
-		for (int i = 0; i < uids.length; i++) {
-			Object uid = uids[i];
-
-			HeaderInterface h = getMessageHeader(uid, worker);
-			Boolean expunged = (Boolean) h.get("columba.flags.expunged");
-
-			//ColumbaLogger.log.debug("expunged=" + expunged);
-
-			if (expunged.equals(Boolean.TRUE)) {
-				// move message to trash
-
-				ColumbaLogger.log.info(
-					"moving message with UID " + uid + " to trash");
-
-				// remove message
-				removeMessage(uid, worker);
-
-			}
-		}
-		
-		changed = true;
-	}
-
-	protected void markMessage(
-		Object uid,
-		int variant,
-		WorkerStatusController worker)
-		throws Exception {
-		ColumbaHeader h = (ColumbaHeader) cache.getHeaderList(worker).get(uid);
-
-		switch (variant) {
-			case MarkMessageCommand.MARK_AS_READ :
-				{
-					if (h.get("columba.flags.recent").equals(Boolean.TRUE))
-						getMessageFolderInfo().decRecent();
-
-					if (h.get("columba.flags.seen").equals(Boolean.FALSE))
-						getMessageFolderInfo().decUnseen();
-
-					h.set("columba.flags.seen", Boolean.TRUE);
-					break;
-				}
-			case MarkMessageCommand.MARK_AS_FLAGGED :
-				{
-					h.set("columba.flags.flagged", Boolean.TRUE);
-					break;
-				}
-			case MarkMessageCommand.MARK_AS_EXPUNGED :
-				{
-					h.set("columba.flags.expunged", Boolean.TRUE);
-					break;
-				}
-			case MarkMessageCommand.MARK_AS_ANSWERED :
-				{
-					h.set("columba.flags.answered", Boolean.TRUE);
-					break;
-				}
-		}
-		
-		changed = true;
-	}
-
-	public void markMessage(
-		Object[] uids,
-		int variant,
-		WorkerStatusController worker)
-		throws Exception {
-
-		for (int i = 0; i < uids.length; i++) {
-			markMessage(uids[i], variant, worker);
-		}
 	}
 
 	public AbstractMessage getMessage(
@@ -238,47 +82,8 @@ public class OutboxFolder extends MHFolder {
 		return sendableMessage;
 	}
 
-	public HeaderList getHeaderList(WorkerStatusController worker)
-		throws Exception {
-		return cache.getHeaderList(worker);
-	}
-
 	public String getDefaultChild() {
-		return "MHFolder";
-	}
-
-	/*
-	public void expungeFolder(WorkerStatusController worker) throws Exception {
-		Object[] uids = getUids(worker);
-	
-		for (int i = 0; i < uids.length; i++) {
-			Object uid = uids[i];
-	
-			ColumbaHeader h = getMessageHeader(uid, worker);
-			Boolean expunged = (Boolean) h.get("columba.flags.expunged");
-	
-			ColumbaLogger.log.debug("expunged=" + expunged);
-	
-			if (expunged.equals(Boolean.TRUE)) {
-				// move message to trash
-	
-				ColumbaLogger.log.info(
-					"moving message with UID " + uid + " to trash");
-	
-				// remove message
-				removeMessage(uid);
-	
-			}
-		}
-	}
-	*/
-
-	public void removeMessage(Object uid, WorkerStatusController worker)
-		throws Exception {
-		cache.remove(uid);
-		super.removeMessage(uid, worker);
-		
-		changed = true;
+		return "CachedMHFolder";
 	}
 
 	private void swapListManagers() throws Exception {
@@ -324,7 +129,7 @@ public class OutboxFolder extends MHFolder {
 	}
 
 	class OutboxHeaderCache extends LocalHeaderCache {
-		public OutboxHeaderCache(LocalFolder folder) {
+		public OutboxHeaderCache(CachedFolder folder) {
 			super(folder);
 		}
 

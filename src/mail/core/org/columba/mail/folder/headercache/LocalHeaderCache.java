@@ -28,7 +28,6 @@ import org.columba.core.config.TableItem;
 import org.columba.core.util.BooleanCompressor;
 import org.columba.mail.config.MailConfig;
 import org.columba.mail.folder.FolderInconsistentException;
-import org.columba.mail.folder.LocalFolder;
 import org.columba.mail.message.HeaderInterface;
 
 /**
@@ -54,7 +53,7 @@ public class LocalHeaderCache extends AbstractHeaderCache {
 
 	private static final List standardList = Arrays.asList(standardCols);
 
-	public LocalHeaderCache(LocalFolder folder) {
+	public LocalHeaderCache(CachedFolder folder) {
 		super(folder);
 
 		columnNames = null;

@@ -121,6 +121,7 @@ public class Rfc822Header implements HeaderInterface {
 			//ColumbaLogger.log.debug("using lowerCase key:"+lowerCaseKey);
 		}
 		
+		
 		/*
 		else
 			ColumbaLogger.log.debug("key not found:"+s);
@@ -140,7 +141,9 @@ public class Rfc822Header implements HeaderInterface {
 		//s = s.toLowerCase();
 
 		if ((s != null) && (o != null))
+		{		
 			hashTable.put(s, o);
+		}
 	}
 
 	public void setMimeVer(String par) {

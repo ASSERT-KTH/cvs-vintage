@@ -15,21 +15,10 @@
 //All Rights Reserved.
 package org.columba.mail.folder.mh;
 
-import java.util.Enumeration;
-
-import org.columba.core.command.WorkerStatusController;
-import org.columba.core.config.HeaderItem;
-import org.columba.core.config.TableItem;
-import org.columba.mail.coder.EncodedWordDecoder;
+import org.columba.core.xml.XmlElement;
 import org.columba.mail.config.FolderItem;
-import org.columba.mail.config.MailConfig;
-import org.columba.mail.folder.Folder;
-import org.columba.mail.folder.command.MarkMessageCommand;
-import org.columba.mail.message.AbstractMessage;
-import org.columba.mail.message.ColumbaHeader;
-import org.columba.mail.message.HeaderInterface;
-import org.columba.mail.message.HeaderList;
-import org.columba.mail.parser.Rfc822Parser;
+import org.columba.mail.folder.DataStorageInterface;
+import org.columba.mail.folder.headercache.CachedFolder;
 
 /**
  * @author freddy
@@ -39,281 +28,28 @@ import org.columba.mail.parser.Rfc822Parser;
  * To enable and disable the creation of type comments go to
  * Window>Preferences>Java>Code Generation.
  */
-public class CachedMHFolder extends MHFolder {
+public class CachedMHFolder extends CachedFolder {
 
 	public CachedMHFolder(FolderItem item) {
 		super(item);
 	}
 
-	public HeaderList getHeaderList(WorkerStatusController worker)
-		throws Exception {
-		return getCachedHeaderList(worker);
+	public DataStorageInterface getDataStorageInstance() {
+		if (dataStorage == null)
+			dataStorage = new MHDataStorage(this);
+
+		return dataStorage;
 	}
 
-	protected HeaderList getCachedHeaderList(WorkerStatusController worker)
-		throws Exception {
-		HeaderList result;
-		result = getHeaderCacheInstance().getHeaderList(worker);
+	/**
+	 * @see org.columba.mail.folder.FolderTreeNode#getDefaultProperties()
+	 */
+	public static XmlElement getDefaultProperties() {
+		XmlElement props = new XmlElement("property");
+		props.addAttribute("accessrights", "user");
+		props.addAttribute("subfolder", "true");
 
-		return result;
-	}
-
-	public void save(WorkerStatusController worker) throws Exception {
-		// only save header-cache if folder data changed
-		if (getChanged() == true) {
-
-			getHeaderCacheInstance().save(worker);
-			setChanged(false);
-		}
-	}
-
-	public boolean exists(Object uid, WorkerStatusController worker)
-		throws Exception {
-		return getCachedHeaderList(worker).containsKey(uid);
-	}
-
-	public ColumbaHeader getMessageHeader(
-		Object uid,
-		WorkerStatusController worker)
-		throws Exception {
-
-		if ((aktMessage != null) && (aktMessage.getUID().equals(uid))) {
-			// message is already cached
-
-			// try to compare the headerfield count of
-			// the actually parsed message with the cached
-			// headerfield count
-			AbstractMessage message = getMessage(uid, worker);
-			int size = message.getHeader().count();
-
-			HeaderInterface h =
-				(ColumbaHeader) getCachedHeaderList(worker).get(uid);
-			if (h == null)
-				return null;
-
-			int cachedSize = h.count();
-
-			if (size > cachedSize)
-				return (ColumbaHeader) message.getHeader();
-
-			return (ColumbaHeader) h;
-		} else
-			return (ColumbaHeader) getCachedHeaderList(worker).get(uid);
-	}
-
-	public AbstractMessage getMessage(
-		Object uid,
-		WorkerStatusController worker)
-		throws Exception {
-		if (aktMessage != null) {
-			if (aktMessage.getUID().equals(uid)) {
-				// this message is already cached
-				//ColumbaLogger.log.info("using already cached message..");
-
-				return aktMessage;
-			}
-		}
-
-		String source = getMessageSource(uid, worker);
-		ColumbaHeader header =
-			(ColumbaHeader) getCachedHeaderList(worker).get(uid);
-
-		AbstractMessage message =
-			new Rfc822Parser().parse(source, true, header, 0);
-		message.setUID(uid);
-		message.setSource(source);
-
-		aktMessage = message;
-
-		return message;
-	}
-
-	public Object addMessage(
-		AbstractMessage message,
-		WorkerStatusController worker)
-		throws Exception {
-
-		getHeaderList(worker);
-
-		Object newUid = super.addMessage(message, worker);
-
-		ColumbaHeader h =
-			(ColumbaHeader) ((ColumbaHeader) message.getHeader()).clone();
-
-		EncodedWordDecoder decoder = new EncodedWordDecoder();
-		TableItem v = MailConfig.getMainFrameOptionsConfig().getTableItem();
-		String column;
-		for (int j = 0; j < v.count(); j++) {
-			HeaderItem headerItem = v.getHeaderItem(j);
-			column = (String) headerItem.get("name");
-
-			Object item = h.get(column);
-
-			if (item instanceof String) {
-				String str = (String) item;
-				h.set(column, decoder.decode(str));
-			}
-		}
-
-		h.set("columba.uid", newUid);
-
-		if (h.get("columba.flags.recent").equals(Boolean.TRUE))
-			getMessageFolderInfo().incRecent();
-		if (h.get("columba.flags.seen").equals(Boolean.FALSE))
-			getMessageFolderInfo().incUnseen();
-
-		getHeaderCacheInstance().add(h);
-
-		return newUid;
-	}
-
-	public void expungeFolder(WorkerStatusController worker) throws Exception {
-
-		Object[] uids = getUids(worker);
-
-		for (int i = 0; i < uids.length; i++) {
-			Object uid = uids[i];
-
-			if (exists(uid, worker) == false)
-				continue;
-
-			ColumbaHeader h = getMessageHeader(uid, worker);
-			Boolean expunged = (Boolean) h.get("columba.flags.expunged");
-
-			//ColumbaLogger.log.debug("expunged=" + expunged);
-
-			if (expunged.equals(Boolean.TRUE)) {
-				// move message to trash
-
-				//ColumbaLogger.log.info("moving message with UID " + uid + " to trash");
-
-				// remove message
-				removeMessage(uid, worker);
-
-			}
-		}
-		
-		changed = true;
-	}
-
-	public void removeMessage(Object uid, WorkerStatusController worker)
-		throws Exception {
-		ColumbaHeader header = (ColumbaHeader) getMessageHeader(uid, worker);
-
-		if (header.get("columba.flags.seen").equals(Boolean.FALSE))
-			getMessageFolderInfo().decUnseen();
-		if (header.get("columba.flags.recent").equals(Boolean.TRUE))
-			getMessageFolderInfo().decRecent();
-
-		getHeaderCacheInstance().remove(uid);
-		super.removeMessage(uid, worker);
-	}
-
-	protected void markMessage(
-		Object uid,
-		int variant,
-		WorkerStatusController worker)
-		throws Exception {
-		ColumbaHeader h = (ColumbaHeader) getCachedHeaderList(worker).get(uid);
-
-		switch (variant) {
-			case MarkMessageCommand.MARK_AS_READ :
-				{
-					if (h.get("columba.flags.recent").equals(Boolean.TRUE))
-						getMessageFolderInfo().decRecent();
-
-					if (h.get("columba.flags.seen").equals(Boolean.FALSE))
-						getMessageFolderInfo().decUnseen();
-
-					h.set("columba.flags.seen", Boolean.TRUE);
-					h.set("columba.flags.recent", Boolean.FALSE);
-					break;
-				}
-			case MarkMessageCommand.MARK_AS_UNREAD :
-				{
-					h.set("columba.flags.seen", Boolean.FALSE);
-					getMessageFolderInfo().incUnseen();
-					break;
-				}
-			case MarkMessageCommand.MARK_AS_FLAGGED :
-				{
-					h.set("columba.flags.flagged", Boolean.TRUE);
-					break;
-				}
-			case MarkMessageCommand.MARK_AS_UNFLAGGED :
-				{
-					h.set("columba.flags.flagged", Boolean.FALSE);
-					break;
-				}
-			case MarkMessageCommand.MARK_AS_EXPUNGED :
-				{
-
-					h.set("columba.flags.expunged", Boolean.TRUE);
-					break;
-				}
-			case MarkMessageCommand.MARK_AS_UNEXPUNGED :
-				{
-
-					h.set("columba.flags.expunged", Boolean.FALSE);
-					break;
-				}
-			case MarkMessageCommand.MARK_AS_ANSWERED :
-				{
-					h.set("columba.flags.answered", Boolean.TRUE);
-					break;
-				}
-		}
-		
-		changed = true;
-	}
-
-	public void markMessage(
-		Object[] uids,
-		int variant,
-		WorkerStatusController worker)
-		throws Exception {
-
-		for (int i = 0; i < uids.length; i++) {
-			if (exists(uids[i], worker)) {
-				markMessage(uids[i], variant, worker);
-			}
-		}
-	}
-
-	public String getDefaultChild() {
-		return "MHFolder";
-	}
-
-	public Object[] getUids(WorkerStatusController worker) throws Exception {
-		int count = getHeaderCacheInstance().count();
-		Object[] uids = new Object[count];
-		int i = 0;
-		for (Enumeration e = getCachedHeaderList(worker).keys();
-			e.hasMoreElements();
-			) {
-			uids[i++] = e.nextElement();
-		}
-
-		return uids;
-	}
-
-	public void innerCopy(
-		Folder destFolder,
-		Object[] uids,
-		WorkerStatusController worker)
-		throws Exception {
-		for (int i = 0; i < uids.length; i++) {
-
-			Object uid = uids[i];
-
-			if (exists(uid, worker)) {
-				AbstractMessage message = getMessage(uid, worker);
-
-				destFolder.addMessage(message, worker);
-			}
-
-			worker.setProgressBarValue(i);
-		}
+		return props;
 	}
 
 }

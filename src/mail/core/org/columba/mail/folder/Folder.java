@@ -774,14 +774,6 @@ public abstract class Folder extends FolderTreeNode {
 		saveMessageFolderInfo();
 	}
 	
-	/**
-	 * use this method to load folder meta-data when
-	 * starting Columba
-	 * 
-	 */
-	public void load(WorkerStatusController worker) throws Exception
-	{
-		loadMessageFolderInfo();
-	}
+	
 
 }

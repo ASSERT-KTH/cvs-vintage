@@ -30,22 +30,16 @@ import org.columba.core.main.MainInterface;
 import org.columba.core.util.Mutex;
 import org.columba.mail.folder.DataStorageInterface;
 import org.columba.mail.folder.FolderInconsistentException;
-import org.columba.mail.folder.LocalFolder;
 import org.columba.mail.folder.MessageFolderInfo;
-import org.columba.mail.message.AbstractMessage;
 import org.columba.mail.message.ColumbaHeader;
 import org.columba.mail.message.HeaderInterface;
 import org.columba.mail.message.HeaderList;
-import org.columba.mail.message.Message;
 import org.columba.mail.parser.Rfc822Parser;
 
 /**
- * @author freddy
+ * @author fdietz
  *
- * To change this generated comment edit the template variable "typecomment":
- * Window>Preferences>Java>Templates.
- * To enable and disable the creation of type comments go to
- * Window>Preferences>Java>Code Generation.
+ * 
  */
 public abstract class AbstractHeaderCache {
 
@@ -55,10 +49,13 @@ public abstract class AbstractHeaderCache {
 
 	private boolean headerCacheLoaded;
 
-	protected LocalFolder folder;
+	protected CachedFolder folder;
 	private static HashMap instanceMutexMap = new HashMap(71);
 
-	public AbstractHeaderCache(LocalFolder folder) {
+	/**
+	 * @param folder
+	 */
+	public AbstractHeaderCache(CachedFolder folder) {
 		this.folder = folder;
 
 		headerFile = new File(folder.getDirectoryFile(), ".header");
@@ -79,6 +76,9 @@ public abstract class AbstractHeaderCache {
 		headerCacheLoaded = false;
 	}
 
+	/**
+	 * @return
+	 */
 	/** Take a mutex for the header-cache path associated with this object.
 	 * Used to prevent multiple workers from creating or modifying a header cache and its disk file
 	 * @return true the mutex was indeed taken anew, false if calling thread already had mutex.
@@ -88,27 +88,48 @@ public abstract class AbstractHeaderCache {
 		return m.getMutex();
 	}
 
+	/**
+	 * 
+	 */
 	public void releaseMutex() {
 		Mutex m = (Mutex) instanceMutexMap.get(headerFile);
 		m.releaseMutex();
 	}
 
+	/**
+	 * @return
+	 */
 	public HeaderInterface createHeaderInstance() {
 		return new ColumbaHeader();
 	}
 
+	/**
+	 * @return
+	 */
 	public boolean isHeaderCacheLoaded() {
 		return headerCacheLoaded;
 	}
 
+	/**
+	 * @param uid
+	 * @return
+	 * @throws Exception
+	 */
 	public boolean exists(Object uid) throws Exception {
 		return headerList.contains(uid);
 	}
 
+	/**
+	 * @return
+	 */
 	public int count() {
 		return headerList.size();
 	}
 
+	/**
+	 * @param uid
+	 * @throws Exception
+	 */
 	public void remove(Object uid) throws Exception {
 		if (MainInterface.DEBUG) {
 			ColumbaLogger.log.debug("trying to remove message UID=" + uid);
@@ -123,10 +144,19 @@ public abstract class AbstractHeaderCache {
 		}
 	}
 
+	/**
+	 * @param header
+	 * @throws Exception
+	 */
 	public void add(HeaderInterface header) throws Exception {
 		headerList.add(header, header.get("columba.uid"));
 	}
 
+	/**
+	 * @param worker
+	 * @return
+	 * @throws Exception
+	 */
 	/** Get or (re)create the header cache file.
 	 *
 	 * @param worker
@@ -161,6 +191,10 @@ public abstract class AbstractHeaderCache {
 		return headerList;
 	}
 
+	/**
+	 * @param worker
+	 * @throws Exception
+	 */
 	public void load(WorkerStatusController worker) throws Exception {
 
 		if (MainInterface.DEBUG) {
@@ -202,7 +236,7 @@ public abstract class AbstractHeaderCache {
 		worker.setProgressBarValue(0);
 
 		int nextUid = -1;
-		
+
 		// exists/unread/recent should be set to 0
 		folder.setMessageFolderInfo(new MessageFolderInfo());
 
@@ -248,6 +282,10 @@ public abstract class AbstractHeaderCache {
 		worker.setProgressBarValue(capacity);
 	}
 
+	/**
+	 * @param worker
+	 * @throws Exception
+	 */
 	public void save(WorkerStatusController worker) throws Exception {
 
 		// we didn't load any header to save
@@ -287,12 +325,25 @@ public abstract class AbstractHeaderCache {
 		p.close();
 	}
 
+	/**
+	 * @param p
+	 * @param h
+	 * @throws Exception
+	 */
 	protected abstract void loadHeader(ObjectInputStream p, HeaderInterface h)
 		throws Exception;
 
+	/**
+	 * @param p
+	 * @param h
+	 * @throws Exception
+	 */
 	protected abstract void saveHeader(ObjectOutputStream p, HeaderInterface h)
 		throws Exception;
 
+	/**
+	 * @param list
+	 */
 	/**
 	 * @param list
 	 */
@@ -300,9 +351,13 @@ public abstract class AbstractHeaderCache {
 		headerList = list;
 	}
 
+	/**
+	 * @param worker
+	 * @throws Exception
+	 */
 	public void sync(WorkerStatusController worker) throws Exception {
 		if (worker != null) {
-			worker.setDisplayText("Syncing Header-Cache");
+			worker.setDisplayText("Syncing headercache...");
 		}
 		DataStorageInterface ds = folder.getDataStorageInstance();
 
@@ -311,27 +366,28 @@ public abstract class AbstractHeaderCache {
 		headerList = new HeaderList(uids.length);
 
 		// parse all message files to recreate the header cache
+
 		Rfc822Parser parser = new Rfc822Parser();
 		ColumbaHeader header;
 		MessageFolderInfo messageFolderInfo = folder.getMessageFolderInfo();
 
-
 		folder.setChanged(true);
-		
+
 		if (worker != null)
 			worker.setProgressBarMaximum(uids.length);
 
 		for (int i = 0; i < uids.length; i++) {
 			try {
 				String source = ds.loadMessage(uids[i]);
+				
 
 				header = parser.parseHeader(source);
 
-				AbstractMessage m = new Message(header);
-				ColumbaHeader h = (ColumbaHeader) m.getHeader();
-
+				
+				ColumbaHeader h = ColumbaHeader.stripHeaders(header);
+				
 				parser.addColumbaHeaderFields(h);
-
+				
 				int size = source.length() >> 10; // Size in KB
 				h.set("columba.size", new Integer(size));
 
@@ -344,15 +400,16 @@ public abstract class AbstractHeaderCache {
 
 				messageFolderInfo.incExists();
 
-				headerList.add(header, uids[i]);
-
-				m.freeMemory();
+				headerList.add(h, uids[i]);
+				
+				header = null;
+				source = null;
+				
 
 				if (worker != null && i % 100 == 0) {
 					worker.setProgressBarValue(i);
 				}
-				
-				
+
 			} catch (Exception ex) {
 				ColumbaLogger.log.error(
 					"Error syncing HeaderCache :" + ex.getLocalizedMessage());
@@ -360,5 +417,7 @@ public abstract class AbstractHeaderCache {
 
 		}
 	}
+
+	
 
 }
