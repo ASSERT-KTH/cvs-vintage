@@ -172,6 +172,23 @@ public class MessageBodytextViewer extends JTextPane implements Viewer,
 		initStyleSheet();
 	}
 
+	private boolean hasHtmlPart(MimePart mimeTypes)
+	{
+	
+	  if (mimeTypes.getHeader().getMimeType().equalsIgnoreCase("text/html"))
+	    return true; //exit immediately
+	  
+	  java.util.List children = mimeTypes.getChilds();
+
+	  for(int i=0;i<children.size();i++)
+	  {
+	    if (hasHtmlPart(mimeTypes.getChild(i)))
+	      return true;
+	  }
+	  
+	  return false;
+	  
+	}
 	/**
 	 * @see org.columba.mail.gui.message.viewer.Viewer#getViewer(org.columba.mail.folder.Folder,
 	 *      java.lang.Object)
@@ -187,11 +204,17 @@ public class MessageBodytextViewer extends JTextPane implements Viewer,
 				.getRoot().getElement("/options/html");
 		// Which Bodypart shall be shown? (html/plain)
 
+		
 		String htmlStyle = html.getAttribute("style", "html");
 		boolean htmlViewer = false;
 		boolean stripHtml = false;
 
-		if (htmlStyle.equals("html")) {
+		//ensure that there is an HTML part in the email, otherwise JTextPanel
+		//throws a RuntimeException
+		
+		if (htmlStyle.equals("html") && 
+		    hasHtmlPart(mimePartTree.getRootMimeNode())) {
+		  
 			bodyPart = mimePartTree.getFirstTextPart("html");
 			htmlViewer = true;
 		} else {
