@@ -73,6 +73,8 @@ $link.setPage('ConfigureIssueList.vm').setLabel($l10n.AddRemoreAttributesFromVie
 #set ($searchGroup = $intake.SearchIssue.mapTo($search))
 #set ($sortColumn = $searchGroup.get("SortAttributeId").Value.toString())
 #set ($sortPolarity = $searchGroup.get("SortPolarity").Value)
+<input type="hidden" name="sortColumn" value="$sortColumn" />
+<input type="hidden" name="sortPolarity" value="$sortPolarity" />
 
 ## PAGINATION
 #if ($paginated)
