@@ -38,20 +38,13 @@ public class Module
 
     private static final NumberKey ROOT_ID = new NumberKey("0");
 
-    private static final Criteria dedupeCriteria;
-    private static final Criteria quicksearchCriteria;
+    private Attribute[] activeAttributes;
+    private Attribute[] dedupeAttributes;
+    private Attribute[] quicksearchAttributes;
+    private List allRModuleAttributes;
+    private List activeRModuleAttributes;
 
-    static
-    {
-        dedupeCriteria = new Criteria(3)
-            .add(RModuleAttributePeer.DEDUPE, true)        
-            .add(RModuleAttributePeer.ACTIVE, true);        
-
-        quicksearchCriteria = new Criteria(3)
-            .add(RModuleAttributePeer.QUICK_SEARCH, true)        
-            .add(RModuleAttributePeer.ACTIVE, true);        
-    }
-
+    
     static String getCacheKey(ObjectKey key)
     {
          String keyString = key.getValue().toString();
@@ -133,7 +126,15 @@ public class Module
     public Attribute[] getDedupeAttributes()
         throws Exception
     {
-        return getAttributes(dedupeCriteria);
+        if ( dedupeAttributes == null ) 
+        {
+            Criteria dedupeCriteria = new Criteria(3)
+                .add(RModuleAttributePeer.DEDUPE, true)        
+                .add(RModuleAttributePeer.ACTIVE, true);        
+            dedupeAttributes = getAttributes(dedupeCriteria);
+        }
+        
+        return dedupeAttributes;
     }
 
     /**
@@ -144,25 +145,105 @@ public class Module
     public Attribute[] getQuickSearchAttributes()
         throws Exception
     {
-        return getAttributes(quicksearchCriteria);
+        if ( quicksearchAttributes == null ) 
+        {
+            Criteria quicksearchCriteria = new Criteria(3)
+                .add(RModuleAttributePeer.QUICK_SEARCH, true)        
+                .add(RModuleAttributePeer.ACTIVE, true);        
+            quicksearchAttributes = getAttributes(quicksearchCriteria);
+        }
+
+        return quicksearchAttributes;
+    }
+
+    /**
+     * Array of active Attributes.
+     *
+     * @return an <code>Attribute[]</code> value
+     */
+    public Attribute[] getActiveAttributes()
+        throws Exception
+    {
+        if ( activeAttributes == null ) 
+        {
+            Criteria activeCriteria = new Criteria(2)
+                .add(RModuleAttributePeer.ACTIVE, true);        
+            activeAttributes = getAttributes(activeCriteria);
+        }
+
+        return activeAttributes;
     }
 
     public RModuleAttribute getRModuleAttribute(Attribute attribute)
         throws Exception
     {
-        // !FIXME! better implementation
-        return RModuleAttributePeer
-            .retrieveByPK( getModuleId(), attribute.getAttributeId() );
+        RModuleAttribute rma = null;
+        List rmas = getRModuleAttributes(false);
+        Iterator i = rmas.iterator();
+        while ( i.hasNext() ) 
+        {
+            rma = (RModuleAttribute)i.next();
+            if ( rma.getAttribute().equals(attribute) ) 
+            {
+                break;
+            }
+        }
+        
+        return rma;
     }
 
     public List getRModuleAttributes(boolean activeOnly)
         throws Exception
     {
-        Criteria crit = new Criteria(2);
+        List allRModuleAttributes = null;
+        List activeRModuleAttributes = null;
+        // note this code could potentially read information from the
+        // db multiple times (MT), but this is okay
+        if ( this.allRModuleAttributes == null ) 
+        {
+            allRModuleAttributes = getAllRModuleAttributes();
+            this.allRModuleAttributes = allRModuleAttributes; 
+        }
+        else 
+        {
+            allRModuleAttributes = this.allRModuleAttributes; 
+        }
+
         if ( activeOnly ) 
         {
-            crit.add(RModuleAttributePeer.ACTIVE, true);
+            if ( this.activeRModuleAttributes == null ) 
+            {
+                activeRModuleAttributes = 
+                    new ArrayList(allRModuleAttributes.size());
+                for ( int i=0; i<allRModuleAttributes.size(); i++ ) 
+                {
+                    RModuleAttribute rma = 
+                        (RModuleAttribute)allRModuleAttributes.get(i);
+                    if ( rma.getActive() ) 
+                    {
+                        activeRModuleAttributes.add(rma);
+                    }
+                }
+                
+                this.activeRModuleAttributes = activeRModuleAttributes; 
+            }
+            else 
+            {
+                activeRModuleAttributes = this.activeRModuleAttributes; 
+            }
+
+            return activeRModuleAttributes;
         }
+        else 
+        {
+            return allRModuleAttributes;
+        }        
+    }
+    
+    private List getAllRModuleAttributes()
+        throws Exception
+    {
+        Criteria crit = new Criteria(0);
         crit.addOrderByColumn(RModuleAttributePeer.PREFERRED_ORDER);
         crit.addOrderByColumn(RModuleAttributePeer.DISPLAY_VALUE);
 
@@ -177,7 +258,7 @@ public class Module
         }
         while ( rModAtts.size() == 0 && 
                !ROOT_ID.equals(prevModule.getModuleId()));
-        return rModAtts;
+        return rModAtts;        
     }
 
     /**
@@ -195,22 +276,61 @@ public class Module
         return getRModuleOptions(attribute, true);
     }
 
-    public List getRModuleOptions(Attribute attribute, boolean activeOnly)
+    private Map allRModuleOptionsMap = new HashMap();
+    private Map activeRModuleOptionsMap = new HashMap();
+
+    public List 
+        getRModuleOptions(Attribute attribute, boolean activeOnly)
         throws Exception
     {
-        List options = attribute.getAttributeOptions(false) ;
-        NumberKey[] optIds = new NumberKey[options.size()];
-        for ( int i=optIds.length-1; i>=0; i-- ) 
+        List allRModuleOptions = (List)allRModuleOptionsMap.get(attribute);
+        if ( allRModuleOptions == null ) 
         {
-            optIds[i] = ((AttributeOption)options.get(i)).getOptionId();
+            allRModuleOptions = getAllRModuleOptions(attribute);
+            allRModuleOptionsMap.put(attribute, allRModuleAttributes); 
         }
-        
 
-        Criteria crit = new Criteria(2);
         if ( activeOnly ) 
         {
-            crit.add(RModuleOptionPeer.ACTIVE, true);
+            List activeRModuleOptions = 
+                (List)activeRModuleOptionsMap.get(attribute);
+            if ( activeRModuleOptions == null ) 
+            {
+                activeRModuleOptions = 
+                    new ArrayList(allRModuleOptions.size());
+                for ( int i=0; i<allRModuleOptions.size(); i++ ) 
+                {
+                    RModuleOption rmo = 
+                        (RModuleOption)allRModuleOptions.get(i);
+                    if ( rmo.getActive() ) 
+                    {
+                        activeRModuleOptions.add(rmo);
+                    }
+                }
+                
+                activeRModuleOptionsMap
+                    .put(attribute, activeRModuleOptions); 
+            }
+
+            return activeRModuleOptions;
         }
+        else 
+        {
+            return allRModuleOptions;
+        }        
+    }
+
+    private List getAllRModuleOptions(Attribute attribute)
+        throws Exception
+    {
+        AttributeOption[] options = attribute.getAttributeOptions(false) ;
+        NumberKey[] optIds = new NumberKey[options.length];
+        for ( int i=optIds.length-1; i>=0; i-- ) 
+        {
+            optIds[i] = options[i].getOptionId();
+        }
+        
+        Criteria crit = new Criteria(2);
         crit.addIn(RModuleOptionPeer.OPTION_ID, optIds);
         crit.addOrderByColumn(RModuleOptionPeer.PREFERRED_ORDER);
         crit.addOrderByColumn(RModuleOptionPeer.DISPLAY_VALUE);

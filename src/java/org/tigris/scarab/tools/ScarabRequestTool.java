@@ -195,7 +195,7 @@ try{
                 .get("Attribute", IntakeTool.DEFAULT_KEY).get("Id").toString();
             if ( attId == null || attId.length() == 0 )
             {
-                attribute = Attribute.getNewInstance();
+                attribute = Attribute.getInstance();
             }
             else 
             {

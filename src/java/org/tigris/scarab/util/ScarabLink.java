@@ -51,6 +51,8 @@ import org.apache.turbine.util.template.TemplateLink;
 import org.apache.turbine.util.RunData;
 import org.apache.turbine.util.DynamicURI;
 import org.apache.turbine.util.ParameterParser;
+import org.apache.turbine.util.pool.InitableRecyclable;
+
 // Scarab
 import org.tigris.scarab.om.*;
 
@@ -59,9 +61,10 @@ import org.tigris.scarab.om.*;
     into the context to replace the $link that Turbine adds.
     
     @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
-    @version $Id: ScarabLink.java,v 1.2 2001/04/04 08:43:49 jmcnally Exp $
+    @version $Id: ScarabLink.java,v 1.3 2001/05/11 17:34:18 jmcnally Exp $
 */
 public class ScarabLink extends TemplateLink
+                        implements InitableRecyclable
 {
     private RunData data;
 
@@ -89,12 +92,6 @@ public class ScarabLink extends TemplateLink
         // exception.
         super.init(data);
         this.data = (RunData)data;
-    }
-
-    public void dispose()
-    {
-        System.out.println("ScarabLink dispose() called");
-        this.data = null;
     }
 
     /**
@@ -135,4 +132,39 @@ public class ScarabLink extends TemplateLink
         addPathInfo(key, pp);
         return this;
     }
+    
+    // ****************************************************************
+    // ****************************************************************
+    // Implementation of Recyclable
+    // ****************************************************************
+    // ****************************************************************
+
+    private boolean disposed = false;
+
+    /**
+     * Recycles the object by removing its disposed flag.
+     */
+    public void recycle()
+    {
+        disposed = false;
+    }
+
+    /**
+     * Disposes the object by setting its disposed flag.
+     */
+    public void dispose()
+    {
+        this.data = null;
+        disposed = true;
+    }
+
+    /**
+     * Checks whether the object is disposed.
+     *
+     * @return true, if the object is disposed.
+     */
+    public boolean isDisposed()
+    {
+        return disposed;
+    }    
 }    

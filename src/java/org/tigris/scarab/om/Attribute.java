@@ -38,6 +38,8 @@ public class Attribute
     private static Criteria moduleOptionsCriteria;
 
     private HashMap optionsMap;
+    private AttributeOption[] optionsArray;
+    private AttributeOption[] currentOptions;
     private static HashMap optionAttributeMap = new HashMap();
 
     static
@@ -68,7 +70,7 @@ public class Attribute
     /**
      * A new Attribute
      */
-    public static Attribute getNewInstance() 
+    public static Attribute getInstance() 
     {
         return new Attribute();
     }
@@ -159,16 +161,32 @@ public class Attribute
     {
         // synchronized method due to getAllAttributeOptions, this needs
         // further investigation !FIXME!
-        HashMap optionsMap = new HashMap();
         List options = getAllAttributeOptions();
+        HashMap optionsMap = new HashMap((int)(1.25*options.size()+1));
+        AttributeOption[] optionsArray = new AttributeOption[options.size()];
 
         for ( int i=options.size()-1; i>=0; i-- ) 
         {
             AttributeOption option = (AttributeOption)options.get(i);
+            optionsArray[i] = option;
             optionsMap.put(option.getOptionId(), option);
             optionAttributeMap.put(option.getOptionId(), this);
         }
+
+        List optionsList = new ArrayList(optionsArray.length);
+        for ( int i=0; i<optionsArray.length; i++ ) 
+        {
+            if ( !optionsArray[i].getDeleted() ) 
+            {
+                optionsList.add(optionsArray[i]);
+            }
+        }
+        AttributeOption[] currentOptions = 
+            new AttributeOption[optionsList.size()];
+        optionsList.toArray(currentOptions);
         
+        this.optionsArray = optionsArray;
+        this.currentOptions = currentOptions;
         this.optionsMap = optionsMap;
     }
 
@@ -186,17 +204,17 @@ public class Attribute
     }
 
 
-    public List getAttributeOptions(boolean includeDeleted)
+    public AttributeOption[] getAttributeOptions(boolean includeDeleted)
         throws Exception
     {
-        Criteria crit = new Criteria(2);
-        if ( !includeDeleted ) 
+        if ( includeDeleted ) 
         {
-            crit.add(AttributeOptionPeer.DELETED, false);
+            return optionsArray;
         }
-        crit.addOrderByColumn(AttributeOptionPeer.NUMERIC_VALUE);
-        crit.addOrderByColumn(AttributeOptionPeer.OPTION_NAME);
-        return getAttributeOptions(crit);
+        else 
+        {
+            return currentOptions; 
+        }
     }
 
     /**

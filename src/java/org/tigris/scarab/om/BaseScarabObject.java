@@ -60,7 +60,7 @@ import org.tigris.scarab.util.*;
     across all of the Scarab db objects.
     
     @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
-    @version $Id: BaseScarabObject.java,v 1.2 2001/03/29 19:34:42 jmcnally Exp $    
+    @version $Id: BaseScarabObject.java,v 1.3 2001/05/11 17:34:17 jmcnally Exp $    
 */
 public class BaseScarabObject extends BaseObject
 {
@@ -140,8 +140,7 @@ public class BaseScarabObject extends BaseObject
         throws Exception
     {
           org.tigris.scarab.om.Module module = 
-             org.tigris.scarab.om.ModulePeer.retrieveByPK(
-                      new org.apache.turbine.om.NumberKey("5"));
+              Module.getInstance(new org.apache.turbine.om.NumberKey("5"));
           
           ScarabRequestTool scarab = (ScarabRequestTool)
               context.get(ScarabConstants.SCARAB_REQUEST_TOOL);

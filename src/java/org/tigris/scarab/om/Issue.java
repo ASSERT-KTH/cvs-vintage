@@ -165,15 +165,11 @@ public class Issue
     {
         SequencedHashtable map = null; 
 
-        Criteria crit = new Criteria(3)
-            .add(RModuleAttributePeer.ACTIVE, true)
-            .addOrderByColumn(RModuleAttributePeer.PREFERRED_ORDER);
-
         try{
         Attribute[] attributes = null;
         HashMap siaValuesMap = null;
         // this exception is getting lost 
-        attributes = getModule().getAttributes(crit);
+        attributes = getModule().getActiveAttributes();
         siaValuesMap = getAttributeValuesMap();
 
         map = new SequencedHashtable( (int)(1.25*attributes.length + 1) );
