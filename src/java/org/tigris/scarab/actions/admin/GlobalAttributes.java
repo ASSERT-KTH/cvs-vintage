@@ -70,7 +70,7 @@ import org.tigris.scarab.tools.ScarabRequestTool;
  * This class deals with modifying Global Attributes.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: GlobalAttributes.java,v 1.5 2001/09/26 01:11:19 jon Exp $
+ * @version $Id: GlobalAttributes.java,v 1.6 2001/10/14 01:17:15 jon Exp $
  */
 public class GlobalAttributes extends RequireLoginFirstAction
 {
@@ -222,13 +222,15 @@ public class GlobalAttributes extends RequireLoginFirstAction
             // get the Attribute that we are working on
             Group attGroup = intake.get("Attribute", IntakeTool.DEFAULT_KEY);
             String attributeID = attGroup.get("Id").toString();
-            Attribute attribute = Attribute.getInstance((ObjectKey)new NumberKey(attributeID));
+            Attribute attribute = Attribute
+                .getInstance((ObjectKey)new NumberKey(attributeID));
 
             // get the list of ParentChildAttributeOptions's used to display the page
             List pcaoList = attribute.getParentChildAttributeOptions();
             for (int i=pcaoList.size()-1; i>=0; i--) 
             {
-                ParentChildAttributeOption pcao = (ParentChildAttributeOption)pcaoList.get(i);
+                ParentChildAttributeOption pcao = 
+                    (ParentChildAttributeOption)pcaoList.get(i);
                 
                 Group pcaoGroup = intake.get("ParentChildAttributeOption", 
                                          pcao.getQueryKey());
@@ -279,7 +281,8 @@ public class GlobalAttributes extends RequireLoginFirstAction
             }
             
             // handle adding the new line.
-            ParentChildAttributeOption newPCAO = ParentChildAttributeOption.getInstance();
+            ParentChildAttributeOption newPCAO = 
+                ParentChildAttributeOption.getInstance();
             Group newPCAOGroup = intake.get("ParentChildAttributeOption", 
                                      newPCAO.getQueryKey());
             if ( newPCAOGroup != null ) 
@@ -328,8 +331,7 @@ public class GlobalAttributes extends RequireLoginFirstAction
             ScarabConstants.NEXT_TEMPLATE, template );
         setTarget(data, nextTemplate);
 
-        ScarabRequestTool scarabR = (ScarabRequestTool)context
-            .get(ScarabConstants.SCARAB_REQUEST_TOOL);
+        ScarabRequestTool scarabR = getScarabRequestTool(context);
 
         scarabR.setAttribute(Attribute.getInstance());        
     }
