@@ -46,7 +46,10 @@ Milestone 2:
     * A Minimal Admin/Deployment Tool
        - Developers: Justyna Horwat (horwat@eng.sun.com)
        - QA: Ramesh Mandava (rameshm@eng.sun.com)
-             
+
+    * A Command line JSP to Servlet Code tool
+       - Developer: Danno Ferrin (shemnon@earthlink.net)
+       - QA: ?             
                      
 Tomcat 3.1 Final:
 
