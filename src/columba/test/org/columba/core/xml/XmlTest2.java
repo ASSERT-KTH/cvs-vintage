@@ -32,6 +32,8 @@ public class XmlTest2 extends TestCase {
 
 		String dest = TextUtils.escapeText(source);
 
-		Assert.assertEquals(dest, "Heinz Müller &lt;heinz@mail.com&tg;");
+		Assert.assertEquals(dest, "Heinz Müller &lt;heinz@mail.com&gt;");
 	}
+    
+    
 }

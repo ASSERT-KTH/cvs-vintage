@@ -30,7 +30,7 @@ public class TextUtils {
 		stringReplaceAll(buffer, '&', "&amp;");
 
 		stringReplaceAll(buffer, '<', "&lt;");
-		stringReplaceAll(buffer, '>', "&tg;");
+		stringReplaceAll(buffer, '>', "&gt;");
 		stringReplaceAll(buffer, '"', "&quot;"); // *20030621, karlpeder*
 		stringReplaceAll(buffer, '\'', "&apos;");
 
