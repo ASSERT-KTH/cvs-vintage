@@ -298,7 +298,7 @@ class AJP12RequestAdapter extends RequestImpl {
 		    
 		    dummy = ajpin.readString(null);                   //script name
 		    //		System.out.println("AJP: Script name=" + dummy);
-		    
+
 		    serverName = ajpin.readString("");                //server name
 		    if( doLog ) log("AJP: serverName=" + serverName );
 		    try {
@@ -306,7 +306,7 @@ class AJP12RequestAdapter extends RequestImpl {
 		    } catch (Exception any) {
 			serverPort = 80;
 		    }
-		    
+
 		    dummy = ajpin.readString("");                     //server protocol
 		    //		System.out.println("AJP: Server proto=" + dummy);
 		    dummy = ajpin.readString("");                     //server signature
@@ -318,8 +318,8 @@ class AJP12RequestAdapter extends RequestImpl {
 			jvmRoute = null;
 		    }
 		    if( doLog ) log("AJP: Server jvmRoute=" + jvmRoute);
-		    
-		    
+
+
                     /**
                      * The two following lines are commented out because we don't
                      * want to depend on unreleased versions of the jserv module.
@@ -330,14 +330,14 @@ class AJP12RequestAdapter extends RequestImpl {
                      * Theses env vars are simply ignored. (just here for compatibility)
                      *                                            - jluc
                      */
-                     dummy = ajpin.readString(""); 
+                     dummy = ajpin.readString("");
                      dummy = ajpin.readString("");
 		    // XXX all dummy fields will be used after core is changed to make use
 		    // of them!
-		    
+
 		    break;
-		    
-                    
+
+
                     /**
                      * Marker = 5 will be used by mod_jserv to send environment vars
                      * as key+value (dynamically configurable).
@@ -352,18 +352,28 @@ class AJP12RequestAdapter extends RequestImpl {
                 case 5: // Environment vars
                     token1 = ajpin.readString(null);
                     token2 = ajpin.readString("");
-//                  env_vars.put(token1, token2);
+                    /*
+                     * Env variables should go into the request attributes
+                     * table. 
+					 *
+					 * Also, if one of the request attributes is HTTPS=on
+                     * assume that there is an SSL connection.
+					 */
+                    attributes.put(token1, token2);
+                    if(token1.equals("HTTPS") && token2.equals("on")) {
+                        setScheme("https");
+                    }
                     break;
-      
+
 		case 3: // Header
 		    token1 = ajpin.readString(null);
 		    token2 = ajpin.readString("");
 		    headers.putHeader(token1.toLowerCase(), token2);
 		    break;
-		    
+
 		case 254: // Signal
 		    signal = ajpin.read();
-		    
+
 		    if (signal == 0) { // PING implemented as signal
 			try {
 			    // close the socket connection after we send reply
