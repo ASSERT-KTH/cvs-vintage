@@ -30,7 +30,9 @@ import javax.transaction.HeuristicMixedException;
 import javax.transaction.HeuristicRollbackException;
 
 import org.jboss.logging.Logger;
+import org.jboss.metadata.ApplicationMetaData;
 import org.jboss.metadata.SecurityRoleRefMetaData;
+import org.jboss.security.RealmMapping;
 import org.jboss.security.SimplePrincipal;
 
 /**
@@ -44,7 +46,7 @@ import org.jboss.security.SimplePrincipal;
  *  @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
  *  @author <a href="mailto:juha@jboss.org">Juha Lindfors</a>
  *  @author <a href="mailto:osh@sparre.dk">Ole Husgaard</a>
- *  @version $Revision: 1.34 $
+ *  @version $Revision: 1.35 $
  */
 public abstract class EnterpriseContext
 {
@@ -64,10 +66,10 @@ public abstract class EnterpriseContext
    Transaction transaction;
    
    // The principal associated with the call
-   Principal principal;
+   private Principal principal;
 
    // The principal for the bean associated with the call
-   Principal beanPrincipal;
+   private Principal beanPrincipal;
     
     // Only StatelessSession beans have no Id, stateful and entity do
    Object id; 
@@ -196,21 +198,38 @@ public abstract class EnterpriseContext
        { 
          throw new EJBException("Deprecated"); 
        }
-      
-      public Principal getCallerPrincipal() 
-       { 
-         if (beanPrincipal == null && principal != null)
+
+   /** Get the Principal for the current caller. This method
+    cannot return null according to the ejb-spec.
+   */
+   public Principal getCallerPrincipal() 
+   { 
+      if( beanPrincipal == null )
+      {
+         RealmMapping rm = con.getRealmMapping();           
+         if( principal != null )
          {
-             if( con.getRealmMapping() == null ) {
-                 beanPrincipal = principal;
-             } else {
-                 beanPrincipal = con.getRealmMapping().getPrincipal(principal);
-             }
+            if( rm != null )
+               beanPrincipal = rm.getPrincipal(principal);
+            else
+               beanPrincipal = principal;      
          }
-         else if( beanPrincipal == null && con.getRealmMapping() == null )
-             throw new IllegalStateException("No security context set");
-         return beanPrincipal;
-       }
+         else if( rm != null )
+         {  // Let the RealmMapping map the null principal
+            beanPrincipal = rm.getPrincipal(principal);
+         }
+         else
+         {  // Check for a unauthenticated principal value
+            ApplicationMetaData appMetaData = con.getBeanMetaData().getApplicationMetaData();
+            String name = appMetaData.getUnauthenticatedPrincipal();
+            if( name != null )
+               beanPrincipal = new SimplePrincipal(name);
+         }
+      }
+      if( beanPrincipal == null )
+         throw new IllegalStateException("No security context set");
+      return beanPrincipal;
+   }
       
       public EJBHome getEJBHome()
       { 
