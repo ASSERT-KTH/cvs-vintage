@@ -30,7 +30,7 @@ import org.jboss.logging.Logger;
  *   @see <related>
  *   @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
  *   @author <a href="mailto:WolfgangWerner@gmx.net">Wolfgang Werner</a>
- *   @version $Revision: 1.6 $
+ *   @version $Revision: 1.7 $
  */
 public class XmlFileLoader {
    	// Constants -----------------------------------------------------
@@ -90,7 +90,9 @@ public class XmlFileLoader {
 
 		// Load jbossdefault.xml from the default classLoader
 		// we always load defaults first
-		URL defaultJbossUrl = getClassLoader().getResource("standardjboss.xml");
+      // we use the context classloader, because this guy has to know where
+      // this file is
+		URL defaultJbossUrl = Thread.currentThread().getContextClassLoader().getResource("standardjboss.xml");
 
 		if (defaultJbossUrl == null) {
 			throw new DeploymentException("no standardjboss.xml found");
@@ -121,8 +123,17 @@ public class XmlFileLoader {
 
    	// Protected -----------------------------------------------------
 	public static Document getDocument(URL url) throws DeploymentException {
+		
+      try {
+         return getDocument (url.openStream());
+      } catch (IOException _ioe) {
+			throw new DeploymentException(_ioe.getMessage());
+      }
+	}
+
+	public static Document getDocument(InputStream _in) throws DeploymentException {
 		try {
-			Reader in = new InputStreamReader(url.openStream());
+			Reader in = new InputStreamReader(_in);
 			com.sun.xml.tree.XmlDocumentBuilder xdb = new com.sun.xml.tree.XmlDocumentBuilder();
 
 			Parser parser = new com.sun.xml.parser.Parser();
