@@ -1,4 +1,4 @@
-// $Id: Actions.java,v 1.66 2004/07/17 17:25:45 mkl Exp $
+// $Id: Actions.java,v 1.67 2004/07/31 21:08:34 mkl Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -35,12 +35,17 @@ import javax.swing.AbstractAction;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
+import org.apache.log4j.Logger;
 import org.argouml.cognitive.Designer;
 import org.argouml.cognitive.Poster;
 import org.argouml.cognitive.ToDoItem;
 import org.argouml.cognitive.ToDoList;
 import org.argouml.cognitive.critics.ui.CriticBrowserDialog;
-import org.argouml.cognitive.ui.*;
+import org.argouml.cognitive.ui.AddToDoItemDialog;
+import org.argouml.cognitive.ui.DesignIssuesDialog;
+import org.argouml.cognitive.ui.DismissToDoItemDialog;
+import org.argouml.cognitive.ui.GoalsDialog;
+import org.argouml.cognitive.ui.TabToDo;
 import org.argouml.kernel.Project;
 import org.argouml.kernel.ProjectManager;
 import org.argouml.swingext.ActionUtilities;
@@ -54,6 +59,8 @@ import org.tigris.gef.base.Diagram;
 
 
 public class Actions implements TargetListener {
+    
+    private static final Logger LOG = Logger.getLogger(Actions.class);
 
     private static final Actions INSTANCE = new Actions();
 
@@ -129,6 +136,7 @@ public class Actions implements TargetListener {
     }
 
     public static void addAction(AbstractAction newAction) {
+        LOG.debug("Adding action: " + newAction.getClass().getName());
 	allActions.addElement(newAction);
     }
 
