@@ -52,13 +52,19 @@
 <h3>$l10n.StaticIssueInfo</h3>
 <div class="axial">
 <table cellpadding="3" cellspacing="2" border="0">
+#if ($currentIssue.CreatedDate)
 <tr>
 <th>$l10n.DateCommitted</th>
 <td>$format.getDate($scarabR.DateFormat, $currentIssue.CreatedDate)</td>
 </tr>
+#end
+#if ($currentIssue.ModifiedDate)
+<tr>
 <th>$l10n.LastModified</th>
 <td>$format.getDate($scarabR.DateFormat, $currentIssue.ModifiedDate)</td>
-</tr> </table>
+</tr>
+#end
+</table>
 </div>
 
 <div class="axial">
