@@ -221,8 +221,6 @@ public final class StandardSessionInterceptor  extends BaseInterceptor {
 	    ctx.getContainer().setNote( manager_note, sm );
 	    sm.setMaxInactiveInterval( (long)ctx.getSessionTimeOut() *
 				       60 * 1000 );
-	    // debug
-	    sm.setMaxInactiveInterval( 60000 );
 	}
 	sm.setMaxActiveSessions( maxActiveSessions );
 
