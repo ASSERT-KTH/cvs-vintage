@@ -97,7 +97,7 @@ $intake.declareGroups()
 #set ($maxNum = $pcaos.size())
 
 <div class="grouper">
-<div class="datatable">
+<div>
 <table width="70%" border="0" cellspacing="2" cellpadding="2">
 <tr>
 #if ($maxNum > 0)

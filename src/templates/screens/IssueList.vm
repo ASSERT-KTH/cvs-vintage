@@ -53,13 +53,13 @@ $page.setTitle("Queue List")
  </tr>
  <tr>
 #if ($searchType.equals("advanced"))
-  <td><input type="submit" value="query" name="eventSubmit_doRedirecttosavequery" class="bttn" /></td>
+  <td><input type="submit" value="query" name="eventSubmit_doRedirecttosavequery" /></td>
 #end
   <td>
-   <input type="submit" value="selected"  name="eventSubmit_doViewselected" name="eventSubmit_doViewselected" class="bttn" />&nbsp;<input type="submit" value="all" name="eventSubmit_doViewall" class="bttn" /></td>
-  <td><input type="submit" value="selected" name="eventSubmit_doReassignselected" class="bttn" />&nbsp;<input type="submit" value="all" name="eventSubmit_doReassignall" class="bttn" /></td>
+   <input type="submit" value="selected"  name="eventSubmit_doViewselected" name="eventSubmit_doViewselected" />&nbsp;<input type="submit" value="all" name="eventSubmit_doViewall" /></td>
+  <td><input type="submit" value="selected" name="eventSubmit_doReassignselected" />&nbsp;<input type="submit" value="all" name="eventSubmit_doReassignall" /></td>
 #if ($searchType.equals("advanced"))
-  <td><input type="submit" value="go" name="eventSubmit_doRefinequery" class="bttn" /></td>
+  <td><input type="submit" value="go" name="eventSubmit_doRefinequery" /></td>
 #end
  </tr>
  </table>
@@ -68,14 +68,14 @@ $page.setTitle("Queue List")
 <h3>Search Results</h3>
 (<a href="$link.setPage("ConfigureIssueList.vm")">add/remove attributes from view</a>)</div>
 
-<div class="datatable">
+<div>
  <table width="100%" border="1" cellspacing="2" cellpadding="3">
   <tr>
   <th>
    <img src="/scarab/images/icon_uparrow.gif" width="13" height="8" alt="sort" border="0" />
    <img src="/scarab/images/icon_downarrow.gif" width="13" height="8" alt="sort" border="0" />
   </th>
-  <th>Issue ID:</th>
+  <th>Issue ID</th>
 #set ($rmuas = $user.getRModuleUserAttributes($module))
 #if ($rmuas.isEmpty())
  #set ($rmuas = $module.DefaultRModuleUserAttributes)
@@ -83,7 +83,7 @@ $page.setTitle("Queue List")
 
 #foreach ($rmua in $rmuas)
  #set( $userAttribute = $rmua.Attribute)
- <th>$userAttribute.Name:</th>
+ <th>$userAttribute.Name</th>
 #end
   </tr>
   
@@ -135,13 +135,13 @@ $page.setTitle("Queue List")
  </tr>
  <tr>
 #if ($searchType.equals("advanced"))
-  <td><input type="submit" value="query" name="eventSubmit_doRedirecttosavequery" class="bttn" /></td>
+  <td><input type="submit" value="query" name="eventSubmit_doRedirecttosavequery" /></td>
 #end
   <td>
-   <input type="submit" value="selected"  name="eventSubmit_doViewselected" name="eventSubmit_doViewselected" class="bttn" />&nbsp;<input type="submit" value="all" name="eventSubmit_doViewall" class="bttn" /></td>
-  <td><input type="submit" value="selected" name="eventSubmit_doReassignselected" class="bttn" />&nbsp;<input type="submit" value="all" name="eventSubmit_doReassignall" class="bttn" /></td>
+   <input type="submit" value="selected"  name="eventSubmit_doViewselected" name="eventSubmit_doViewselected" />&nbsp;<input type="submit" value="all" name="eventSubmit_doViewall" /></td>
+  <td><input type="submit" value="selected" name="eventSubmit_doReassignselected" />&nbsp;<input type="submit" value="all" name="eventSubmit_doReassignall" /></td>
 #if ($searchType.equals("advanced"))
-  <td><input type="submit" value="go" name="eventSubmit_doRefinequery" class="bttn" /></td>
+  <td><input type="submit" value="go" name="eventSubmit_doRefinequery" /></td>
 #end
  </tr>
  </table>

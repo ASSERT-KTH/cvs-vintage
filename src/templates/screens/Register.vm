@@ -5,6 +5,7 @@ $page.setTitle("Scarab Registration")
    <h3>$page.Title</h3>
 
    <form name="RegisterForm" action="$link.setPage("Register.vm")" method="post">
+   <p>* Required field</p>
     <input type="hidden" name="action" value="Register" /> 
     <input type="hidden" name="$scarabG.Constant.NEXT_TEMPLATE" value="RegisterConfirm.vm" /> 
     <input type="hidden" name="$scarabG.Constant.CANCEL_TEMPLATE" value="Login.vm" /> 
@@ -16,57 +17,57 @@ $page.setTitle("Scarab Registration")
 #set ($regGroup = $intake.Register.Default)
 #end
 
-    <div class="axial">
-     <table cellpadding="3" cellspacing="2" border="0">
-      <tr>
-       <th>* First Name</th>
-       <td>
-        <input name="$regGroup.FirstName.Key" value="$regGroup.FirstName" type="text" size="25" />
-        #fieldErrorMsg($regGroup.FirstName "")
-       </td>
-      </tr>
-      <tr>
-       <th> *Last Name</th>
-       <td>
-        <input name="$regGroup.LastName.Key" value="$regGroup.LastName" type="text" size="25" />
-        #fieldErrorMsg($regGroup.LastName "")
-       </td>
-      </tr>
-      <tr>
-       <th> *Email Address</th>
-       <td>
-        <input name="$regGroup.Email.Key" value="$regGroup.Email" type="text" size="25" /> 
-        #fieldErrorMsg($regGroup.Email "")
-      <p>
-       Note: Enter your valid email address - including your "@serviceprovider" domain.<br/>
-       For example, if your AOL screen name is joe cool, your email address is joecool@aol.com.
-      </p>
-       </td>
-      </tr>
-      <tr>
-       <th> *Password</th>
-       <td>
-        <input name="$regGroup.Password.Key" type="password" value="$regGroup.Password" size="25" />
-        #fieldErrorMsg($regGroup.Password "")
-       </td>
-      </tr>
-      <tr>
-       <th> *Password Confirm</th>
-       <td>
-        <input name="$regGroup.PasswordConfirm.Key" type="password" value="$regGroup.PasswordConfirm" size="25" />
-        #fieldErrorMsg($regGroup.PasswordConfirm "")
-       </td>
-      </tr>
-      <tr>
-       <td>&nbsp;</td>
-       <td>
-           <input type="submit" name="eventSubmit_doCancel" value="Cancel" />
-           <input type="submit" name="eventSubmit_doRegister" value="Register" />
-       </td>
-      </tr>
-     </table>
-    </div>
-    $intake.declareGroups()
-   </form>
-  </div>
-  
+<div class="axial">
+<table cellpadding="3" cellspacing="2" border="0">
+<tr>
+	<th>* First name</th>
+	<td>
+		<input name="$regGroup.FirstName.Key" value="$regGroup.FirstName" type="text" size="25" />
+		#fieldErrorMsg($regGroup.FirstName "")
+	</td>
+</tr>
+<tr>
+	<th> *Last name</th>
+	<td>
+		<input name="$regGroup.LastName.Key" value="$regGroup.LastName" type="text" size="25" />
+		#fieldErrorMsg($regGroup.LastName "")
+	</td>
+</tr>
+<tr>
+	<th> *Email address</th>
+	<td>
+		<input name="$regGroup.Email.Key" value="$regGroup.Email" type="text" size="25" /> 
+		#fieldErrorMsg($regGroup.Email "")
+<p>
+	Note: Enter your valid email address - including your "@serviceprovider" domain.
+	For example, if your AOL screen name is joe cool, your email address is joecool@aol.com.
+</p>
+	</td>
+</tr>
+<tr>
+	<th> *Password</th>
+	<td>
+		<input name="$regGroup.Password.Key" type="password" value="$regGroup.Password" size="25" />
+		#fieldErrorMsg($regGroup.Password "")
+	</td>
+</tr>
+<tr>
+	<th> *Password confirm</th>
+	<td>
+		<input name="$regGroup.PasswordConfirm.Key" type="password" value="$regGroup.PasswordConfirm" size="25" />
+		#fieldErrorMsg($regGroup.PasswordConfirm "")
+	</td>
+</tr>
+<tr>
+	<td>&nbsp;</td>
+	<td>
+					<input type="submit" name="eventSubmit_doCancel" value="Cancel" />
+					<input type="submit" name="eventSubmit_doRegister" value="Register" />
+	</td>
+</tr>
+</table>
+</div>
+$intake.declareGroups()
+</form>
+</div>
+

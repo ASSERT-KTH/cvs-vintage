@@ -1,4 +1,4 @@
-$page.setTitle("Confirm New Account Information")
+$page.setTitle("Confirm new account information")
 
 <div id="registerconfirm" class="app">
 
@@ -8,10 +8,10 @@ $page.setTitle("Confirm New Account Information")
 #set ($user = $data.User.getTemp($scarabG.Constant.SESSION_REGISTER))
 #if (!$user.FirstName)
 
-<p class="alert">
+<p><strong class="alert">
 There has been an error locating the required information. Please go
 back to the <a href="$link.setPage("Register.vm")">Registration</a> page
-and try again.
+and try again.</strong>
 </p>
 
 #else
@@ -24,24 +24,25 @@ back to the Registration page.
 </p>
 
 <form action="$link.setPage("RegisterConfirm.vm")" method="post">
-    <input type="hidden" name="action" value="RegisterConfirm">
-    <input type="hidden" name="$scarabG.Constant.NEXT_TEMPLATE" value="Confirm.vm">
-    <input type="hidden" name="$scarabG.Constant.CANCEL_TEMPLATE" value="Register.vm">
+    <input type="hidden" name="action" value="RegisterConfirm" />
+    <input type="hidden" name="$scarabG.Constant.NEXT_TEMPLATE" value="Confirm.vm" />
+    <input type="hidden" name="$scarabG.Constant.CANCEL_TEMPLATE" value="Register.vm" />
 
 <div class="axial">
 <table cellpadding="3" cellspacing="2" border="0">
 	<tr>
-		<th>Email Address</th>
+		<th>Email address</th>
 		<td>$user.Email</td>
 	</tr>
 	<tr>
-		<th>Full Name</th>
+		<th>Full name</th>
 		<td>$user.FirstName $user.LastName</td>
 	</tr>
 	<tr>
-		<td colspan="2">
-            <input type="submit" name="eventSubmit_doBack" value="Back">
-    		<input type="submit" name="eventSubmit_doConfirmRegistration" value="Confirm Registration">
+	<td>&nbsp;</td>
+		<td>
+<input type="submit" name="eventSubmit_doBack" value="Back" />
+<input type="submit" name="eventSubmit_doConfirmRegistration" value="Confirm registration" />
 		</td>
 	</tr>
 </table>

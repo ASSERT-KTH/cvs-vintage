@@ -20,7 +20,7 @@ This page is for editing the Global Attributes.
 
 #datatitle("Attributes")
 
-<div class="datatable">
+<div>
 
 <table width="100%" border="1" cellspacing="2" cellpadding="3">
 <tr>

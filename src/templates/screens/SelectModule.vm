@@ -3,48 +3,43 @@
 
 <div id="selectmodule" class="app">
 
-<div class="grouper">
-
 #if ($currentModule)
-<h3>Current Module</h3>
-<div class="datatable">
-<table cellpadding="3" cellspacing="2" border="1">
+<h3>Current module</h3>
+<table cellpadding="3" cellspacing="2" border="1" width="100%">
 <tr>
-    <th>Current Module Name</th>
-    <td>$currentModule.Name</td>
+    <th>Current module name</th>
+    <th>Current module desc</th>
 </tr>
 <tr>
-    <th>Current Module Desc</th>
+    <td>$currentModule.Name</td>
     <td>$currentModule.Description</td>
 </tr>
 </table>
-</div>
 #end
 
-<h3>New Module Selection</h3>
+<h3>New module selection</h3>
 
 #if ($userModules.size() > 0)
 <form action="$link.setPage("SelectModule.vm").setAction("SelectModule")" method="get">
 #if ($nextTemplate && $nextTemplate.length() > 0)
-<input type="hidden" name="$scarabG.Constant.NEXT_TEMPLATE" value="$nextTemplate"/> 
+<input type="hidden" name="$scarabG.Constant.NEXT_TEMPLATE" value="$nextTemplate" /> 
 #else 
-<input type="hidden" name="$scarabG.Constant.NEXT_TEMPLATE" value="Links.vm"/> 
+<input type="hidden" name="$scarabG.Constant.NEXT_TEMPLATE" value="Links.vm" /> 
 #end
 
-<div class="datatable">
-<table border="1" cellspacing="2" cellpadding="3">
+<table border="1" cellspacing="2" cellpadding="3" width="100%">
 <tr>
-    <th>Module Name</th>
-    <th>Module Desc</th>
+    <th>Module name</th>
+    <th>Module desc</th>
 </tr>
 
 #foreach ($module in $userModules)
 #indexedRows($velocityCount)
 <td>
  #if ($module.Name.equals($currentModule.Name))
-<input type="radio" name="newmodule" value="$module.ModuleId" checked="true"/>$module.Name
+<input type="radio" name="newmodule" value="$module.ModuleId" checked="checked" />$module.Name
  #else
-<input type="radio" name="newmodule" value="$module.ModuleId"/>$module.Name
+<input type="radio" name="newmodule" value="$module.ModuleId" />$module.Name
  #end
 </td>
 <td>
@@ -54,10 +49,9 @@ $module.Description
 #end
 
 </table>
-</div>
 
 <p>
-<input type="submit" name="eventSubmit_doSelect" value="Select Module">
+<input type="submit" name="eventSubmit_doSelect" value="Select Module" />
 </p>
 
 </form>
