@@ -24,7 +24,7 @@
 // File: Critic.java
 // Classes: Critic
 // Original Author: jrobbins@ics.uci.edu
-// $Id: Critic.java,v 1.16 2002/11/04 07:39:05 kataka Exp $
+// $Id: Critic.java,v 1.17 2002/11/16 20:02:55 linus Exp $
 
 package org.argouml.cognitive.critics;
 
@@ -481,7 +481,8 @@ public class Critic implements Poster, Serializable {
     Enumeration enum = getSupportedDecisions().elements();
     while (enum.hasMoreElements()) {
       Decision d = (Decision) enum.nextElement();
-      cat.debug(d + " " + d.getPriority());
+      if (cat.isDebugEnabled())
+	  cat.debug(d + " " + d.getPriority());
       //if (dsgr.isConsidering(d)) return true;
       if (d.getPriority() > 0 && d.getPriority()<=getPriority()) return true;
     }

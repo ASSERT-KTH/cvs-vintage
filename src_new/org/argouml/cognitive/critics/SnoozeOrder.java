@@ -24,7 +24,7 @@
 // File: SnoozeOrder.java
 // Classes: SnoozeOrder
 // Original Author: jrobbins@ics.uci.edu
-// $Id: SnoozeOrder.java,v 1.3 2001/10/22 15:53:34 thierrylach Exp $
+// $Id: SnoozeOrder.java,v 1.4 2002/11/16 20:02:55 linus Exp $
 
 package org.argouml.cognitive.critics;
 
@@ -56,6 +56,12 @@ public class SnoozeOrder implements java.io.Serializable {
   /** The sleeping time, including the effects of repeated snoozeing. */
   private long _interval;
 
+    private Date _now = new Date();
+    private Date getNow() {
+	_now.setTime(System.currentTimeMillis());
+	return _now;
+    }
+	
   ////////////////////////////////////////////////////////////////
   // constructor
 
@@ -69,7 +75,7 @@ public class SnoozeOrder implements java.io.Serializable {
   // accessors
 
   public boolean getSnoozed() {
-    return _snoozeUntil.after(new Date());
+    return _snoozeUntil.after(getNow());
   }
 
   public void setSnoozed(boolean h) {
@@ -80,9 +86,9 @@ public class SnoozeOrder implements java.io.Serializable {
   // criticism control
 
   public void snooze() {
-    if (_snoozeAgain.after(new Date())) _interval = nextInterval(_interval);
+    if (_snoozeAgain.after(getNow())) _interval = nextInterval(_interval);
     else _interval = _initialIntervalMS;
-    long now = (new Date()).getTime();
+    long now = (getNow()).getTime();
     _snoozeUntil.setTime(now + _interval);
     _snoozeAgain.setTime(now + _interval + _initialIntervalMS);
     Critic.cat.info("Setting snooze order to: " +
