@@ -29,18 +29,24 @@ import java.util.Arrays;
  *
  */
 public class ClusterId implements Serializable {
+    private static WeakCache wc = new WeakCache();
     private transient byte id[];
     private transient int hash = 0;
 
     private ClusterId() {
     }
 
-    ClusterId(byte id[]) {
+    private ClusterId(byte id[]) {
         if (id.length > Short.MAX_VALUE) {
             throw new IllegalArgumentException("Too long array");
         }
         this.id = id;
         redoHash();
+    }
+
+    public static ClusterId toClusterId(byte[] id) {
+        ClusterId cid = new ClusterId(id);
+        return (ClusterId) wc.getCached(cid);
     }
 
     private void redoHash() {
@@ -112,7 +118,7 @@ public class ClusterId implements Serializable {
         ClusterId id = new ClusterId();
         id.id = a;
         id.redoHash();
-        return id;
+        return (ClusterId) wc.getCached(id);
     }
 
     private void writeObject(java.io.ObjectOutputStream out)

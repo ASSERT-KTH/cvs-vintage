@@ -103,7 +103,7 @@ public class ClusterIdFactory {
             localIdArray[9 - n] = (byte) (d & 0xff);
             d >>= 8;
         }
-        localId = new ClusterId(localIdArray);
+        localId = ClusterId.toClusterId(localIdArray);
         SecureRandom.setSeed(localIdArray);
     }
 
