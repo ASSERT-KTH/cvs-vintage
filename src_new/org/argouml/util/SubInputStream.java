@@ -1,4 +1,4 @@
-// $Id: SubInputStream.java,v 1.2 2003/06/29 23:48:17 linus Exp $
+// $Id: SubInputStream.java,v 1.3 2004/08/25 19:01:45 mvw Exp $
 // Copyright (c) 2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -29,17 +29,34 @@ import java.util.zip.*;
 
 public class SubInputStream extends java.io.FilterInputStream
 {
-    ZipInputStream in;
+    private ZipInputStream in;
+    
+    /**
+     * The constructor.
+     * 
+     * @param z the zip input stream
+     */
     public SubInputStream(ZipInputStream z)
     {
 	super(z);
 	in = z;
     } 
+    
+    /**
+     * @see java.io.InputStream#close()
+     */
     public void close() throws IOException 
     {
 	in.closeEntry();
     }
 
+    /**
+     * Reads the next ZIP file entry and positions stream at the beginning
+     * of the entry data.
+     * 
+     * @return the ZipEntry just read
+     * @throws IOException if an I/O error has occurred
+     */
     public ZipEntry getNextEntry() throws IOException
     {
 	return in.getNextEntry();
