@@ -116,7 +116,7 @@
   
     <servlet-mapping>
          <servlet-name>FeedServlet</servlet-name>
-         <url-pattern>/feed</url-pattern>
+         <url-pattern>/feeds/*</url-pattern>
     </servlet-mapping>  
 
     <welcome-file-list>
