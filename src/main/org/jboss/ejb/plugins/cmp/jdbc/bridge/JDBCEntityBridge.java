@@ -53,7 +53,7 @@ import org.jboss.proxy.compiler.InvocationHandler;
  *      One per cmp entity bean type.       
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.21 $
+ * @version $Revision: 1.22 $
  */                            
 public class JDBCEntityBridge implements EntityBridge {
    private JDBCEntityMetaData metadata;
@@ -442,9 +442,9 @@ public class JDBCEntityBridge implements EntityBridge {
    }
 
    public void setClean(EntityEnterpriseContext ctx) {
-      for(Iterator iter = cmpFields.iterator(); iter.hasNext();) {
-         JDBCCMPFieldBridge cmpField = (JDBCCMPFieldBridge)iter.next();
-         cmpField.setClean(ctx);
+      for(Iterator iter = fields.iterator(); iter.hasNext();) {
+         JDBCFieldBridge field = (JDBCFieldBridge)iter.next();
+         field.setClean(ctx);
       }
    }
 
