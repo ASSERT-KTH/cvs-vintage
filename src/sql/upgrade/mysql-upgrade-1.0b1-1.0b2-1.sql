@@ -1,0 +1,4 @@
+ALTER TABLE SCARAB_R_MODULE_ISSUE_TYPE add column Dedupe int(1) not null default 1;     
+INSERT INTO SCARAB_R_MODULE_ISSUE_TYPE (dedupe) SELECT Dedupe from SCARAB_MODULE
+;       
+ALTER TABLE SCARAB_MODULE drop DEDUPE;
