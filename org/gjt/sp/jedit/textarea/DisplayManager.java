@@ -34,7 +34,7 @@ import org.gjt.sp.util.Log;
  * Manages low-level text display tasks.
  * @since jEdit 4.2pre1
  * @author Slava Pestov
- * @version $Id: DisplayManager.java,v 1.99 2004/09/04 19:32:54 spestov Exp $
+ * @version $Id: DisplayManager.java,v 1.100 2004/09/05 20:14:10 spestov Exp $
  */
 public class DisplayManager
 {
@@ -554,6 +554,7 @@ public class DisplayManager
 	//{{{ Package-private members
 	boolean softWrap;
 	int wrapMargin;
+	boolean wrapToWidth;
 	FirstLine firstLine;
 	ScrollLineCount scrollLineCount;
 
@@ -625,8 +626,17 @@ public class DisplayManager
 		softWrap = wrap.equals("soft");
 		if(textArea.maxLineLen <= 0)
 		{
-			softWrap = false;
-			wrapMargin = 0;
+			if(softWrap)
+			{
+				wrapToWidth = true;
+				wrapMargin = textArea.getPainter().getWidth()
+					- textArea.charWidth * 3;
+			}
+			else
+			{
+				wrapToWidth = false;
+				wrapMargin = 0;
+			}
 		}
 		else
 		{
@@ -1633,11 +1643,11 @@ loop:		for(;;)
 				delayedUpdate(startLine,endLine);
 
 				//{{{ resize selections if necessary
-				for(int i = 0; i < textArea.selection.size(); i++)
+				Iterator iter = textArea.getSelectionIterator();
+				while(iter.hasNext())
 				{
-					Selection s = (Selection)textArea
-						.selection.elementAt(i);
-	
+					Selection s = (Selection)iter.next();
+
 					if(s.contentInserted(buffer,startLine,offset,
 						numLines,length))
 					{
@@ -1791,20 +1801,17 @@ loop:		for(;;)
 			if(textArea.getDisplayManager() == DisplayManager.this)
 			{
 				//{{{ resize selections if necessary
-				for(int i = 0; i < textArea.selection.size(); i++)
+				Iterator iter = textArea.getSelectionIterator();
+				while(iter.hasNext())
 				{
-					Selection s = (Selection)textArea
-						.selection.elementAt(i);
-	
+					Selection s = (Selection)iter.next();
+
 					if(s.contentRemoved(buffer,startLine,
 						start,numLines,length))
 					{
 						delayedUpdate(s.startLine,s.endLine);
 						if(s.start == s.end)
-						{
-							textArea.selection.removeElementAt(i);
-							i--;
-						}
+							iter.remove();
 					}
 				} //}}}
 
