@@ -16,16 +16,12 @@
 
 package org.columba.mail.gui.table;
 
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 import java.util.Iterator;
 import java.util.Vector;
 
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JPopupMenu;
-import javax.swing.SwingUtilities;
-import javax.swing.table.JTableHeader;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
 import javax.swing.tree.TreePath;
@@ -160,7 +156,8 @@ public class TableController {
 
 		getView().setDragEnabled(false);
 
-		addMouseListenerToHeaderInTable();
+		// MouseListener sorts table when clicking on a column header
+		new TableHeaderMouseListener(getView(), getTableModelSorter());
 
 		loadColumnConfig();
 	}
@@ -177,56 +174,8 @@ public class TableController {
 		TableColumnModel columnModel = getView().getColumnModel();
 		JLabel renderer =
 			(JLabel) columnModel.getColumn(columnNumber).getHeaderRenderer();
-		
+
 		renderer.setIcon(icon);
-	}
-
-	/**
-	 * MouseListener sorts table when clicking on a column header
-	 */
-	protected void addMouseListenerToHeaderInTable() {
-		getView().setColumnSelectionAllowed(false);
-
-		MouseAdapter listMouseListener = new MouseAdapter() {
-			public void mouseClicked(MouseEvent e) {
-				TableColumnModel columnModel = getView().getColumnModel();
-				int viewColumn = columnModel.getColumnIndexAtX(e.getX());
-				int column = getView().convertColumnIndexToModel(viewColumn);
-
-				if (column != -1) {
-
-					ImageIcon icon = null;
-					if (getTableModelSorter().getSortingOrder() == true)
-						icon = new AscendingIcon();
-					else
-						icon = new DescendingIcon();
-
-					for (int i = 0; i < columnModel.getColumnCount(); i++) {
-						JLabel renderer =
-							(JLabel) columnModel
-								.getColumn(i)
-								.getHeaderRenderer();
-						if (i == column)
-							renderer.setIcon(icon);
-						else
-							renderer.setIcon(null);
-					}
-
-					SwingUtilities.invokeLater(new Runnable() {
-						public void run() {
-							getView().getTableHeader().repaint();
-
-						}
-					});
-
-					getTableModelSorter().sort(column);
-
-				}
-			}
-		};
-
-		JTableHeader th = getView().getTableHeader();
-		th.addMouseListener(listMouseListener);
 	}
 
 	/********************* table change listener ************************/
