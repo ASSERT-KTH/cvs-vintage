@@ -70,7 +70,8 @@ public abstract class BaseRule extends Rule
     private String state = null;
     private DependencyTree dependencyTree = null;
     private ArrayList userList = null;
-    private Category cat = null;
+    private static Category cat = 
+        Category.getInstance(org.tigris.scarab.util.xml.XMLImport.class);
     
     /**
      * Sets the state and calls super(digester)
@@ -79,7 +80,6 @@ public abstract class BaseRule extends Rule
     {
         super(digester);
         this.state = state;
-        initLogging();
     }
     
     /**
@@ -96,11 +96,6 @@ public abstract class BaseRule extends Rule
     {
         this(digester, state);
         this.userList = userList;
-    }
-    
-    private void initLogging()
-    {
-        cat = Category.getInstance(org.tigris.scarab.util.xml.XMLImport.class);
     }
     
     public Category log()
