@@ -86,7 +86,10 @@ public class AddToAddressbookAction extends AbstractColumbaAction
       url = ((URLObservable) arg0).getUrl();
 
       // only enable this action, if this is a mailto: URL
-      setEnabled(url.isMailTo());
+      if (url==null)
+        setEnabled(false);
+      else
+      	setEnabled(url.isMailTo());
       
     }
 }

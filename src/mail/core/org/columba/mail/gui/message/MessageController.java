@@ -278,6 +278,9 @@ public class MessageController implements HyperlinkListener, MouseListener,
     {
       
       ColumbaURL url = new ColumbaURL(extractURL(event));
+      if (url.getRealURL() == null)
+        return null;
+      
 			if (!url.getRealURL().getProtocol().equalsIgnoreCase("mailto"))
 			  return url;
 			

@@ -71,7 +71,10 @@ public class ComposeMessageAction extends AbstractColumbaAction
 
         // only enable this action, if this is a mailto: URL
         url = o.getUrl();
-        setEnabled(url.isMailTo());
+        if (url == null)
+          setEnabled(false);
+        else
+        	setEnabled(url.isMailTo());
         
     }
 }
