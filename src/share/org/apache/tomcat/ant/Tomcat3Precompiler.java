@@ -56,7 +56,7 @@ package org.apache.tomcat.ant;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
-import org.apache.tools.ant.types.Commandline;
+import org.apache.tools.ant.types.CommandlineJava;
 import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.taskdefs.optional.jsp.JspC;
 import org.apache.tools.ant.taskdefs.optional.jsp.JspMangler;
@@ -90,7 +90,7 @@ public class Tomcat3Precompiler extends DefaultJspCompilerAdapter {
         Vector sources = getJspc().getCompileList();
         Enumeration enum = sources.elements();
         while (enum.hasMoreElements()) {
-            Commandline cmd = setupJasperCommand();
+            CommandlineJava cmd = setupJasperCommand();
             String source = (String) enum.nextElement();
             String base = getBase(source);
             addArg(cmd, "-c", base + "_1");
@@ -101,7 +101,7 @@ public class Tomcat3Precompiler extends DefaultJspCompilerAdapter {
     }
 
     /** Execute Jasper */
-    private boolean compile(Commandline cmd) throws BuildException {        
+    private boolean compile(CommandlineJava cmd) throws BuildException {        
         try {
             // Create an instance of the compiler, redirecting output to
             // the project log
@@ -113,7 +113,7 @@ public class Tomcat3Precompiler extends DefaultJspCompilerAdapter {
                 java.setClasspath(Path.systemClasspath);
             }
             java.setClassname("org.apache.jasper.JspC");
-            String args[] = cmd.getArguments();
+            String args[] = cmd.getJavaCommand().getArguments();
             for (int i = 0; i < args.length; i++) {
                 java.createArg().setValue(args[i]);
             }
@@ -154,8 +154,8 @@ public class Tomcat3Precompiler extends DefaultJspCompilerAdapter {
      * build up a command line
      * @return a command line for jasper
      */
-    private Commandline setupJasperCommand() {
-        Commandline cmd = new Commandline();
+    private CommandlineJava setupJasperCommand() {
+        CommandlineJava cmd = new CommandlineJava();
         JspC jspc = getJspc();
         addArg(cmd, "-d", jspc.getDestdir());
         addArg(cmd, "-p", jspc.getPackage());
