@@ -1,4 +1,4 @@
-// $Id: FigMNode.java,v 1.20 2004/02/28 12:29:42 linus Exp $
+// $Id: FigMNode.java,v 1.21 2004/07/28 15:12:49 mkl Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: FigMNode.java
 // Classes: FigMNode
 // Original Author: 5eichler@informatik.uni-hamburg.de
-// $Id: FigMNode.java,v 1.20 2004/02/28 12:29:42 linus Exp $
+// $Id: FigMNode.java,v 1.21 2004/07/28 15:12:49 mkl Exp $
 
 package org.argouml.uml.diagram.deployment.ui;
 
@@ -33,6 +33,7 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Rectangle;
 import java.awt.event.MouseEvent;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.Vector;
@@ -159,18 +160,23 @@ public class FigMNode extends FigNodeModelElement {
 	Vector figures = getEnclosedFigs();
 
 	if (getLayer() != null) {
-	    // elementOrdering(figures);
-	    Collection contents = getLayer().getContents(null);
-	    Iterator it = contents.iterator();
-	    while (it.hasNext()) {
-		Object o = it.next();
-		if (o instanceof FigEdgeModelElement) {
-		    FigEdgeModelElement figedge = (FigEdgeModelElement) o;
-		    figedge.getLayer().bringToFront(figedge);
-		}
-	    }
-	}
-
+            // elementOrdering(figures);
+            Collection contents = getLayer().getContents(null);
+            Collection bringToFrontList = new ArrayList();
+            Iterator it = contents.iterator();
+            while (it.hasNext()) {
+                Object o = it.next();
+                if (o instanceof FigEdgeModelElement) {
+                    bringToFrontList.add(o);
+                    
+                }
+            }
+            Iterator bringToFrontIter = bringToFrontList.iterator();
+            while (bringToFrontIter.hasNext()) {
+                FigEdgeModelElement figEdge = (FigEdgeModelElement) bringToFrontIter.next();
+                figEdge.getLayer().bringToFront(figEdge);
+            }
+        }
     }
 
     protected void updateStereotypeText() {
