@@ -25,10 +25,13 @@
 // File: PropPanelNode.java
 // Classes: PropPanelNode
 // Original Author: 5eichler@informatik.uni-hamburg.de
-// $Id: PropPanelNode.java,v 1.8 2002/03/29 11:04:57 mkl Exp $
+// $Id: PropPanelNode.java,v 1.9 2002/04/04 13:28:54 jeremybennett Exp $
 
 // 21 Mar 2002: Jeremy Bennett (mail@jeremybennett.com). Changed to use the
 // labels "Generalizes:" and "Specializes:" for inheritance.
+
+// 4 Apr 2002: Jeremy Bennett (mail@jeremybennett.com). Labels corrected to
+// "Generalizations:" and "Specializations".
 
 
 package org.argouml.uml.ui.foundation.core;
@@ -51,7 +54,7 @@ public class PropPanelNode extends PropPanelClassifier {
     addCaption("Name:",1,0,0);
     addField(nameField,1,0,0);
 
-    addCaption("Specializes:",2,0,0);
+    addCaption("Generalizations:",2,0,0);
     addField(extendsScroll,2,0,0);
 
     addCaption("Stereotype:",3,0,0);
@@ -67,7 +70,7 @@ public class PropPanelNode extends PropPanelClassifier {
     addCaption("Namespace:",5,0,0);
    addField(namespaceScroll,5,0,0);
 
-    addCaption("Generalizes:",6,0,1);
+    addCaption("Specializations:",6,0,1);
     addField(derivedScroll,6,0,1);
 
     addCaption("Components:",0,1,1);
