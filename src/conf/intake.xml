@@ -374,11 +374,13 @@
     <field name="Id" key="o" type="NumberKey" mapToProperty="PrimaryKey">
         <rule name="mask" value="[0-9]+">badIdMessage</rule>
     </field>
-    <field name="ObservedId" key="odi" type="NumberKey" >
-        <rule name="mask" value="[0-9]+">badIdMessage</rule>
+    <field name="ObservedId" key="odi" type="String" >
+        <required-message>Please enter an id.</required-message>
+        <rule name="maxLength" value="255">This is not a valid id.</rule>
     </field>
-    <field name="ObserverId" key="ori" type="NumberKey" >
-        <rule name="mask" value="[0-9]+">badIdMessage</rule>
+    <field name="ObserverId" key="ori" type="String" >
+        <required-message>Please enter an id.</required-message>
+        <rule name="maxLength" value="255">This is not a valid id.</rule>
     </field>
     <field name="TypeId" key="dti" type="NumberKey" >
         <rule name="mask" value="[0-9]+">badIdMessage</rule>
