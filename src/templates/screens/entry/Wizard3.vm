@@ -109,14 +109,37 @@ $page.setTitle("Enter issue")
 
 ## ATTACHMENT
 <h4>Add Attachment</h4>
-#set ($atch = $scarabR.Attachment)
-#set ($intakeAttachment = $intake.Attachment.mapTo($atch))
-#if ( !$intakeAttachment.Name.isValid())
-<p><strong class="alert">$intakeAttachment.Name.Message</strong></p>
-#end
 <div class="axial">
-    <table cellpadding="3" cellspacing="2" border="0">
-     <tr>
+  <table cellpadding="3" cellspacing="2" border="0">
+    #set ($atch = $scarabR.Attachment)
+    #set ($intakeAttachment = $intake.Attachment.mapTo($atch))
+    #if ( !$intakeAttachment.Name.isValid())
+        <p><strong class="alert">$intakeAttachment.Name.Message</strong></p>
+    #end
+    #set ($reportingIssue = $scarabR.ReportingIssue)
+    #set ($attachments = $reportingIssue.Attachments)
+    #if ($attachments.size()>0)
+       <tr>
+        <th> &nbsp; </th>
+        <th>File Name</th>
+        <th>File Description</th>
+       </tr>
+       #foreach ($file in $reportingIssue.Attachments)
+            counter = $velocityCount
+           #indexedRows($velocityCount)
+           #if ($file.TypeId.toString().equals("1"))
+             <tr>
+             <td>
+                <input type="checkbox" name="file_delete_$velocityCount" />
+             </td>
+             <td><a href="$file.File.FileName">$file.File.FileName</a> </td>
+             <td>$file.Name</td>
+            </tr>
+           #end
+       #end
+    #end
+ 
+    <tr>
       <th>Attachment path</th>
       <td>
        <input type="file" name="$intakeAttachment.File.Key" size="45"
@@ -127,19 +150,21 @@ $page.setTitle("Enter issue")
        complete file listing. The File field cannot be used to
        rename files.</p>
       </td>
-     </tr>
+    </tr>
      
-     <tr>
+    <tr>
       <th>Attachment description</th>
       <td>
        #textAreaMedium("$intakeAttachment.Name.Key" $intakeAttachment.Name)
       </td>
-     </tr>    </table>
+    </tr>    
+  </table>
+</div>
+<div class="functnbar3">
+    <input type="submit" value="Add file" name="eventSubmit_doAddfile"  />&#160;
+    <input type="submit" value="Delete file" name="eventSubmit_doRemovefile"  />&#160;
 </div>
 
-<div class="functnbar3">
-     <input type="submit" value="Add attachment" name="eventSubmit_doSaveattachment"  />
-</div>
 
 <div class="axial">
 <table width="100%" cellpadding="3" cellspacing="2" border="1">
@@ -147,12 +172,12 @@ $page.setTitle("Enter issue")
 <th width="120">After submit </th>
 <td><select name="$scarabG.Constant.NEXT_TEMPLATE">
 <option value="$data.Parameters.getString($scarabG.Constant.HISTORY_SCREEN, "entry,Wizard3.vm")">Enter new issue </option>
-<option value="ViewIssue.vm"> View this issue </option>			
-<option value="Index.vm"> Go to Start page </option>			
+<option value="ViewIssue.vm"> View this issue </option>         
+<option value="Index.vm"> Go to Start page </option>            
 </select></td>
 </tr>
 </table>
-</div>	
+</div>  
 
 
 <p class="functnbar2">
@@ -164,3 +189,4 @@ $page.setTitle("Enter issue")
 $intake.declareGroups()
 </form>
 </div>
+
