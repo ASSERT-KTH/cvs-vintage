@@ -16,6 +16,8 @@
   <mbean code="org.jboss.naming.NamingService" name="DefaultDomain:service=Naming">
     <attribute name="Port">1099</attribute>
   </mbean>
+  <mbean code="org.jboss.naming.JNDIView" name="DefaultDomain:service=JNDIView" />
+
 
   <!-- Transactions -->
   <mbean code="org.jboss.tm.TransactionManagerService" name="DefaultDomain:service=TransactionManager">
@@ -23,14 +25,37 @@
   </mbean>
 
   <!-- Security -->
+
+  <!-- Uncomment to enable the sample SRPVerifierStore service
+  <mbean code="org.jboss.security.plugins.SRPVerifierStoreService" name="Security:name=SRPVerifierStoreService">
+    <attribute name="JndiName">SRPDefaultVerifierSource</attribute>
+    <attribute name="StoreFile">SRPVerifierStore.ser</attribute>
+  </mbean>
+-->
+  <!-- Uncomment to enable the SRP login service
+  <mbean code="org.jboss.security.plugins.SRPService" name="service:name=SRPService">
+    <attribute name="JndiName">SRPServerInterface</attribute>
+    <attribute name="VerifierSourceJndiName">SRPDefaultVerifierSource</attribute>
+    <attribute name="AuthenticationCacheJndiName">SRPAuthenticationCache</attribute>
+    <attribute name="ServerPort">10099</attribute>
+  </mbean>
+-->
+
   <!-- JAAS security manager and realm mapping -->
-  <mbean code="org.jboss.security.plugins.JaasSecurityManagerService" name="DefaultDomain:service=JaasSecurityManager" />
+  <mbean code="org.jboss.security.plugins.JaasSecurityManagerService" name="Security:name=JaasSecurityManager">
+    <attribute name="SecurityManagerClassName">org.jboss.security.plugins.JaasSecurityManager</attribute>
+    <!--
+    <attribute name="SecurityProxyFactoryClassName">org.jboss.security.SubjectSecurityProxyFactory</attribute>
+    -->
+    <attribute name="AuthenticationCacheJndiName">SRPAuthenticationCache</attribute>
+  </mbean>
 
-  <!-- Direct implementation of realm mapping (sample) -->
-  <mbean code="org.jboss.security.plugins.samples.SimpleRealmMappingService" name="DefaultDomain:service=SimpleRealmMappingFactory" />
-
-  <!-- Direct implementation of security manager (sample) -->
-  <mbean code="org.jboss.security.plugins.samples.EJBSecurityManagerService" name="DefaultDomain:service=EJBSecurityManager" />
+  <!-- Uncomment to enable the XML implementation of the JAAS policy
+  <mbean code="org.jboss.security.plugins.SecurityPolicyService" name="Security:name=SecurityPolicyService">
+    <attribute name="JndiName">DefaultSecurityPolicy</attribute>
+    <attribute name="PolicyFile">sample_policy.xml</attribute>
+  </mbean>
+-->
 
   <!-- JDBC -->
   <mbean code="org.jboss.jdbc.JdbcProvider" name="DefaultDomain:service=JdbcProvider">
