@@ -19,16 +19,13 @@
  * USA
  *
  * --------------------------------------------------------------------------
- * $Id: AbsContext.java,v 1.2 2005/03/15 09:57:03 benoitf Exp $
+ * $Id: AbsContext.java,v 1.3 2005/04/01 09:58:33 benoitf Exp $
  * --------------------------------------------------------------------------
  */
 package org.objectweb.carol.jndi.spi;
 
-import java.io.Serializable;
-import java.rmi.NoSuchObjectException;
 import java.rmi.Remote;
 import java.util.Hashtable;
-import java.util.Properties;
 
 import javax.naming.CompositeName;
 import javax.naming.Context;
@@ -37,19 +34,10 @@ import javax.naming.Name;
 import javax.naming.NameParser;
 import javax.naming.NamingEnumeration;
 import javax.naming.NamingException;
-import javax.naming.Reference;
-import javax.naming.Referenceable;
 
 import org.objectweb.carol.jndi.wrapping.JNDIRemoteResource;
-import org.objectweb.carol.jndi.wrapping.JNDIResourceWrapper;
-import org.objectweb.carol.jndi.wrapping.UnicastJNDIReferenceWrapper;
 import org.objectweb.carol.rmi.exception.NamingExceptionHelper;
-import org.objectweb.carol.rmi.util.PortNumber;
-import org.objectweb.carol.util.configuration.CarolConfiguration;
 import org.objectweb.carol.util.configuration.CarolCurrentConfiguration;
-import org.objectweb.carol.util.configuration.CarolDefaultValues;
-import org.objectweb.carol.util.configuration.RMIConfiguration;
-import org.objectweb.carol.util.configuration.TraceCarol;
 
 /**
  * This abstract class define the common methods used for all existing protocol
@@ -124,6 +112,11 @@ public abstract class AbsContext implements Context {
         }
     }
 
+    /**
+     * Get the object port to use (0 by default, declare this method in a subclass if you want to change value)
+     * @return object port to use
+     * @throws NamingException if the port cannot be retrieved
+     */
     protected int getObjectPort() throws NamingException {
         return 0;
 
