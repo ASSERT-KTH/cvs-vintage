@@ -57,7 +57,7 @@ public class ToolbarButton extends CButton {
 
 		setIcon(a.getLargeIcon());
 		if (WITH_TEXT) {
-			boolean showText = a.isShowToolBarText();
+			boolean showText = (a.isShowToolBarText() || ALIGNMENT );
 			if (!showText) setText("");
 			else setText(a.getToolBarName());
 			
