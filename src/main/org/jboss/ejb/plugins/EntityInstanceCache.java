@@ -21,7 +21,7 @@ import org.jboss.util.Sync;
  * 
  * @author Simone Bordet (simone.bordet@compaq.com)
  * @author <a href="bill@burkecentral.com">Bill Burke</a>
- * @version $Revision: 1.6 $
+ * @version $Revision: 1.7 $
  */
 public class EntityInstanceCache
 	extends AbstractInstanceCache 
@@ -113,12 +113,7 @@ public class EntityInstanceCache
 	{
 		m_container.getInstancePool().free(ctx);
 	}
-        /**
-	 * (Bill Burke> added key parameter so that canPassivate
-	 * can verify that the object being passivated is really the
-	 * same object and hasn't already been freed then re-used.
-	 */
-	protected boolean canPassivate(Object key, EnterpriseContext ctx) 
+	protected boolean canPassivate(EnterpriseContext ctx) 
 	{
 		if (ctx.isLocked()) 
 		{
@@ -128,11 +123,6 @@ public class EntityInstanceCache
 		else if (ctx.getTransaction() != null) 
 		{
 				return false;
-		}
-		// (Bill Burke)make sure we're passivating the right object! 
-		else if (!((EntityEnterpriseContext)ctx).getCacheKey().equals(key))
-		{
-		    return false;
 		}
 		return true;
 	}

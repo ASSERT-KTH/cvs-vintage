@@ -36,6 +36,7 @@ import org.jboss.util.Sync;
 import org.jboss.util.Semaphore;
 import org.jboss.ejb.InstanceCache;
 import org.jboss.ejb.EnterpriseContext;
+import org.jboss.ejb.EntityEnterpriseContext;
 import org.jboss.ejb.DeploymentException;
 import org.jboss.ejb.Container;
 import org.jboss.metadata.MetaData;
@@ -57,7 +58,7 @@ import org.jboss.monitor.MetricsConstants;
  *
  * @author Simone Bordet (simone.bordet@compaq.com)
  * @author <a href="bill@burkecentral.com">Bill Burke</a>
- * @version $Revision: 1.9 $
+ * @version $Revision: 1.10 $
  */
 public abstract class AbstractInstanceCache
 	implements InstanceCache, XmlLoadable, Monitorable, MetricsConstants
@@ -566,11 +567,8 @@ public abstract class AbstractInstanceCache
 	/**
 	 * Returns whether the given context can be passivated or not
 	 *
-	 * (Bill Burke> added key parameter so that canPassivate
-	 * can verify that the object being passivated is really the
-	 * same object and hasn't already been freed then re-used.
 	 */
-	protected abstract boolean canPassivate(Object key, EnterpriseContext ctx);
+	protected abstract boolean canPassivate(EnterpriseContext ctx);
 
 	// Private -------------------------------------------------------
 
@@ -649,7 +647,17 @@ public abstract class AbstractInstanceCache
 							    
 							    synchronized (this)
 							    {
-								if (!canPassivate(id, ctx))
+								if (ctx instanceof EntityEnterpriseContext)
+								{
+								    // Verify that this ctx hasn't already
+								    // been freed and re-used by another thread.
+								    if (!((EntityEnterpriseContext)ctx).getCacheKey().equals(id))
+								    {
+									// ctx has been freed then re-used in another thread.
+									return;
+								    }
+								}
+								if (!canPassivate(ctx))
 								{
 								    // This check is done because there could have been
 								    // a request for passivation of this bean, but before
