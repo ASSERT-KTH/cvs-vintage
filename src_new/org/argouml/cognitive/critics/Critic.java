@@ -1,4 +1,4 @@
-// $Id: Critic.java,v 1.44 2005/02/20 19:42:11 linus Exp $
+// $Id: Critic.java,v 1.45 2005/03/09 15:56:26 mkl Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -254,8 +254,6 @@ public class Critic implements Poster, Serializable {
     private ListSet knowledgeTypes = new ListSet();
     private long triggerMask = 0L;
 
-    private static int numCriticsFired = 0;
-
     ////////////////////////////////////////////////////////////////
     // constructor
 
@@ -392,7 +390,6 @@ public class Critic implements Poster, Serializable {
 	// LOG.debug("applying critic: " + _headline);
 	if (predicate(dm, dsgr)) {
 	    // LOG.debug("predicate() returned true, creating ToDoItem");
-	    numCriticsFired++;
 	    ToDoItem item = toDoItem(dm, dsgr);
 	    postItem(item, dm, dsgr);
 	}
