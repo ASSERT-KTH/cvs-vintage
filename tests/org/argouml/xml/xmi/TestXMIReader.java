@@ -1,4 +1,4 @@
-// $Id: TestXMIReader.java,v 1.8 2004/02/24 08:28:20 linus Exp $
+// $Id: TestXMIReader.java,v 1.9 2004/08/15 22:49:01 bobtarling Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -32,8 +32,11 @@ import java.net.MalformedURLException;
 import junit.framework.TestCase;
 
 import org.argouml.kernel.Project;
+import org.argouml.kernel.ProjectFilePersister;
 import org.argouml.kernel.ProjectManager;
 import org.argouml.kernel.IllegalFormatException;
+import org.argouml.kernel.XmiFilePersister;
+import org.argouml.kernel.ZargoFilePersister;
 import org.argouml.model.ModelFacade;
 import org.argouml.model.uml.foundation.core.CoreFactory;
 
@@ -74,13 +77,16 @@ public class TestXMIReader extends TestCase {
         ModelFacade.setType(oper.getParameter(0), p.findType("String"));
         File file = new File("test.zargo");
 
-	p.save(true, file);
+        XmiFilePersister persister = new XmiFilePersister();
+      
+        p.preSave();
+        persister.save(p, file);
+        p.postSave();
 
         p = null;
         p = ProjectManager.getManager().makeEmptyProject();
 
-	URL url = file.toURL();
-	ProjectManager.getManager().loadProject(url);
+        URL url = file.toURL();
+        persister.loadProject(url);
     }
-
 }

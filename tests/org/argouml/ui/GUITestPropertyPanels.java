@@ -1,4 +1,4 @@
-// $Id: GUITestPropertyPanels.java,v 1.6 2004/02/24 08:28:19 linus Exp $
+// $Id: GUITestPropertyPanels.java,v 1.7 2004/08/15 22:49:02 bobtarling Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -57,6 +57,7 @@ import org.tigris.gef.util.ChildGenerator;
 import org.argouml.i18n.Translator;
 import org.argouml.kernel.Project;
 import org.argouml.kernel.ProjectManager;
+import org.argouml.kernel.ZargoFilePersister;
 import org.argouml.model.ModelFacade;
 // import org.argouml.model.uml.UmlFactory;
 import org.argouml.model.uml.UmlHelper;
@@ -139,7 +140,8 @@ public class GUITestPropertyPanels extends TestCase {
         File testfile =
 	    new File(_projectFile);
         
-        p = ProjectManager.getManager().loadProject(testfile.toURL());
+        ZargoFilePersister persister = new ZargoFilePersister();
+        p = persister.loadProject(testfile.toURL());
         ProjectManager.getManager().setCurrentProject(p);
         
         Collection me = UmlHelper.getHelper().getModelManagement().
