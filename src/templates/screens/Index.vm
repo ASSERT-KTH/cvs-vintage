@@ -1,7 +1,7 @@
 <div id="welcome" class="app">
 $page.setTitle("Welcome to Scarab!")
 
-<h2>$page.getTitle()!</h2>
+<h2>$page.getTitle()</h2>
 
 <p>
 This is going to be the homepage that you first get to when you bring up
