@@ -146,7 +146,7 @@ in the catalina module.
 @see org.jboss.security.SecurityAssociation;
 
 @author  Scott.Stark@jboss.org
-@version $Revision: 1.31 $
+@version $Revision: 1.32 $
 */
 public abstract class AbstractWebContainer 
    extends ServiceMBeanSupport 
@@ -240,8 +240,9 @@ public abstract class AbstractWebContainer
             // If directory we watch the xml files
             else di.watch = new URL(di.url, "WEB-INF/web.xml"); 
          }   
-         
-         parseWEBINFClasses(di);
+
+         // No, we do not want to look into the war
+         // parseWEBINFClasses(di);
       }
       catch (Exception e)
       {
