@@ -34,7 +34,7 @@ import org.gjt.sp.util.*;
 /**
  * A buffer I/O request.
  * @author Slava Pestov
- * @version $Id: BufferIORequest.java,v 1.13 2002/01/16 09:21:51 spestov Exp $
+ * @version $Id: BufferIORequest.java,v 1.14 2002/01/25 04:50:23 spestov Exp $
  */
 public class BufferIORequest extends WorkRequest
 {
@@ -562,6 +562,14 @@ public class BufferIORequest extends WorkRequest
 
 				buffer.readLock();
 
+				// Only backup once per session
+				if(buffer.getProperty(Buffer.BACKED_UP) == null 
+					|| jEdit.getBooleanProperty("backupEverySave"))
+				{
+					vfs._backup(session,path,view);
+					buffer.setBooleanProperty(Buffer.BACKED_UP,true);
+				}
+
 				/* if the VFS supports renaming files, we first
 				 * save to #<filename>#save#, then rename that
 				 * to <filename>, so that if the save fails,
@@ -589,14 +597,6 @@ public class BufferIORequest extends WorkRequest
 						out = new GZIPOutputStream(out);
 
 					write(buffer,out);
-				}
-
-				// Only backup once per session
-				if(buffer.getProperty(Buffer.BACKED_UP) == null 
-					|| jEdit.getBooleanProperty("backupEverySave"))
-				{
-					vfs._backup(session,path,view);
-					buffer.setBooleanProperty(Buffer.BACKED_UP,true);
 				}
 
 				if(twoStageSave)

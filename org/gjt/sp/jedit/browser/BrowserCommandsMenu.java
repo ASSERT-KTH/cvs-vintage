@@ -35,7 +35,7 @@ import org.gjt.sp.jedit.*;
 //}}}
 
 /**
- * @version $Id: BrowserCommandsMenu.java,v 1.4 2002/01/15 11:01:32 spestov Exp $
+ * @version $Id: BrowserCommandsMenu.java,v 1.5 2002/01/25 04:50:23 spestov Exp $
  * @author Slava Pestov and Jason Ginchereau
  */
 public class BrowserCommandsMenu extends JPopupMenu
@@ -234,7 +234,7 @@ public class BrowserCommandsMenu extends JPopupMenu
 			else if(actionCommand.equals("reload"))
 				browser.reloadDirectory();
 			else if(actionCommand.equals("roots"))
-				browser.setDirectory(FileRootsVFS.PROTOCOL + ":");
+				browser.rootDirectory();
 			else if(actionCommand.equals("home"))
 				browser.setDirectory(System.getProperty("user.home"));
 			else if(actionCommand.equals("synchronize"))

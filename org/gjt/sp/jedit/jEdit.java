@@ -47,7 +47,7 @@ import org.gjt.sp.util.Log;
 /**
  * The main class of the jEdit text editor.
  * @author Slava Pestov
- * @version $Id: jEdit.java,v 1.41 2002/01/23 00:01:22 spestov Exp $
+ * @version $Id: jEdit.java,v 1.42 2002/01/25 04:50:23 spestov Exp $
  */
 public class jEdit
 {
@@ -68,7 +68,7 @@ public class jEdit
 	public static String getBuild()
 	{
 		// (major).(minor).(<99 = preX, 99 = final).(bug fix)
-		return "04.00.04.00";
+		return "04.00.05.00";
 	} //}}}
 
 	//{{{ main() method
@@ -221,14 +221,6 @@ public class jEdit
 					+ " know what this means, don't worry.");
 				Log.log(Log.NOTICE,jEdit.class,e);
 			}
-		} //}}}
-
-		//{{{ MacOS X GUI hack
-		if(OperatingSystem.isMacOS())
-		{
-			// put the menu bar at the top of the screen, as opposed to
-			// inside the jEdit window
-			System.getProperties().put("com.apple.macos.useScreenMenuBar","true");
 		} //}}}
 
 		// don't show splash screen if there is a file named

@@ -56,7 +56,7 @@ import org.gjt.sp.util.Log;
  * </ul>
  *
  * @author Slava Pestov
- * @version $Id: GUIUtilities.java,v 1.23 2002/01/22 10:34:03 spestov Exp $
+ * @version $Id: GUIUtilities.java,v 1.24 2002/01/25 04:50:23 spestov Exp $
  */
 public class GUIUtilities
 {
@@ -334,8 +334,9 @@ public class GUIUtilities
 		{
 			toolTip = toolTip + " ("
 				+ (shortcut1 != null
-				? shortcut1 + " or "
-				: "")
+				? shortcut1 : "")
+				+ ((shortcut1 != null && shortcut2 != null)
+				? " or " : "")
 				+ (shortcut2 != null
 				? shortcut2
 				: "") + ")";

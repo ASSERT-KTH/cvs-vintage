@@ -41,7 +41,7 @@ import org.gjt.sp.util.Log;
  * text area for painting text.
  *
  * @author Slava Pestov
- * @version $Id: ChunkCache.java,v 1.15 2002/01/22 09:34:27 spestov Exp $
+ * @version $Id: ChunkCache.java,v 1.16 2002/01/25 04:50:24 spestov Exp $
  */
 public class ChunkCache
 {
@@ -352,7 +352,7 @@ public class ChunkCache
 
 						if(nextX > xInChunk)
 						{
-							if(round && nextX - xInChunk > xInChunk - glyphX)
+							if(!round || nextX - xInChunk > xInChunk - glyphX)
 								return chunks.offset + i;
 							else
 								return chunks.offset + i + 1;
