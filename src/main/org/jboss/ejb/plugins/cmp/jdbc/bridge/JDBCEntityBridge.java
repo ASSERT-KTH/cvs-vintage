@@ -53,7 +53,7 @@ import org.jboss.proxy.compiler.InvocationHandler;
  *      One per cmp entity bean type.       
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.22 $
+ * @version $Revision: 1.23 $
  */                            
 public class JDBCEntityBridge implements EntityBridge {
    private JDBCEntityMetaData metadata;
@@ -94,7 +94,7 @@ public class JDBCEntityBridge implements EntityBridge {
                metadata.getDataSourceName());
       } catch(NamingException e) {
          throw new DeploymentException("Error: can't find data source: " + 
-               metadata.getDataSourceName());
+               metadata.getDataSourceName(), e);
       }
 
       // CMP fields
