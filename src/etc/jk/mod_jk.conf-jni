@@ -1,0 +1,14 @@
+
+LoadModule jk_module modules/mod_jk.dll
+
+<IfModule mod_jk.c>
+
+JkWorkersFile <fill-path-to>/jni_workers.properties
+JkLogFile  logs/mod_jk-jni.log
+JkLogLevel error
+
+JkMount /*.jsp jni
+JkMount /servlet/* jni
+JkMount /examples/* jni
+
+</IfModule>
