@@ -7,7 +7,7 @@
 <!--                                                                       -->
 <!-- ===================================================================== -->
 
-<!-- $Id: standardjbosscmp-jdbc.xml,v 1.9 2001/11/27 00:15:30 peter_f Exp $ -->
+<!-- $Id: standardjbosscmp-jdbc.xml,v 1.10 2001/12/01 21:57:41 dsundstrom Exp $ -->
 
 <jbosscmp-jdbc>
    
@@ -19,6 +19,8 @@
       <remove-table>false</remove-table>
       <read-only>false</read-only>
       <time-out>300</time-out>
+      <pk-constraint>true</pk-constraint>
+      <fk-constraint>false</fk-constraint>
       <select-for-update>false</select-for-update>
       <preferred-relation-mapping>foreign-key</preferred-relation-mapping>
    </defaults>
