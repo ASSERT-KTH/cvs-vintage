@@ -32,7 +32,7 @@ import org.jboss.invocation.MarshalledInvocation;
 * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
 * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
 * @author <a href="mailto:docodan@mvcsoft.com">Daniel OConnor</a>
-* @version $Revision: 1.34 $
+* @version $Revision: 1.35 $
 * <p><b>2001219 marc fleury</b>
 * <ul>
 * <li> move to the new invocation layer and Invocation object
@@ -264,23 +264,28 @@ implements ContainerInvokerContainer, InstancePoolContainer
 
       try
       {
-         // Call default destroy
-         super.destroy();
-
          // Destroy container invoker
          if (containerInvoker != null)
+         {
             containerInvoker.destroy();
+            containerInvoker.setContainer(null);
+         }
 
          // Destroy the pool
          instancePool.destroy();
+         instancePool.setContainer(null);
 
          // Destroy all the interceptors in the chain
          Interceptor in = interceptor;
          while (in != null)
          {
             in.destroy();
+            in.setContainer(null);
             in = in.getNext();
          }
+
+         // Call default destroy
+         super.destroy();
       }
       finally
       {

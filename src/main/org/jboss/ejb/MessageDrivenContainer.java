@@ -34,7 +34,7 @@ import org.jboss.ejb.EnterpriseContext;
  * @author <a href="mailto:docodan@mvcsoft.com">Daniel OConnor</a>
  * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
  * @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>
- * @version $Revision: 1.18 $
+ * @version $Revision: 1.19 $
  */
 public class MessageDrivenContainer
     extends Container
@@ -261,22 +261,25 @@ public class MessageDrivenContainer
 
         try
         {
-           // Call default destroy
-           super.destroy();
-
            // Destroy container invoker
            containerInvoker.destroy();
+           containerInvoker.setContainer(null);
 
            // Destroy the pool
            instancePool.destroy();
+           instancePool.setContainer(null);
 
            // Destroy all the interceptors in the chain
            Interceptor in = interceptor;
            while (in != null)
            {
               in.destroy();
+              in.setContainer(null);
               in = in.getNext();
            }
+
+           // Call default destroy
+           super.destroy();
         }
         finally
         {

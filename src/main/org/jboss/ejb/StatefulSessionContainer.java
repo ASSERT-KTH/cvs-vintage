@@ -32,7 +32,7 @@ import org.jboss.invocation.MarshalledInvocation;
 * @author <a href="mailto:docodan@mvcsoft.com">Daniel OConnor</a>
 * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
 * @author <a href="mailto:scott.stark@jboss.org">Scott Stark</a>
-* @version $Revision: 1.44 $
+* @version $Revision: 1.45 $
 *
 * <p><b>Revisions</b>
 * <p><b>20010704</b>
@@ -323,29 +323,36 @@ public class StatefulSessionContainer
 
       try
       {
-         // Call default destroy
-         super.destroy();
-
          // Destroy container invoker
          if (containerInvoker != null)
+         {
             containerInvoker.destroy();
+            containerInvoker.setContainer(null);
+         }
 
          // Destroy instance cache
          instanceCache.destroy();
+         instanceCache.setContainer(null);
 
          // Destroy pool
          instancePool.destroy();
+         instancePool.setContainer(null);
 
          // Destroy persistence
          persistenceManager.destroy();
+         persistenceManager.setContainer(null);
 
          // Destroy all the interceptors in the chain
          Interceptor in = interceptor;
          while (in != null)
          {
             in.destroy();
+            in.setContainer(null);
             in = in.getNext();
          }
+
+         // Call default destroy
+         super.destroy();
       }
       finally
       {
