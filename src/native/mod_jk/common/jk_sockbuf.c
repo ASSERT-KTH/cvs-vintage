@@ -56,7 +56,7 @@
 /***************************************************************************
  * Description: Simple buffer object to handle buffered socket IO          *
  * Author:      Gal Shachor <shachor@il.ibm.com>                           *
- * Version:     $Revision: 1.2 $                                               *
+ * Version:     $Revision: 1.3 $                                               *
  ***************************************************************************/
 
 #include "jk_global.h"
@@ -90,7 +90,7 @@ int jk_sb_write(jk_sockbuf_t *sb,
                 return JK_FALSE;
             }
             if(sz > SOCKBUF_SIZE) {
-                return (send(sb->sd, (char *)buf, sz, 0) == (int)sz);
+                return (send(sb->sd, buf, sz, 0) == (int)sz);
             } 
             
             memcpy(sb->buf + sb->end, buf, sz);
@@ -131,7 +131,7 @@ int jk_sb_read(jk_sockbuf_t *sb,
 
         if(sb->end == sb->start) {
             sb->end = sb->start = 0;
-            if(!fill_buffer(sb)) {
+            if(fill_buffer(sb) < 0) {
                 return JK_FALSE;
             }
         }
@@ -154,6 +154,7 @@ int jk_sb_read(jk_sockbuf_t *sb,
 int jk_sb_gets(jk_sockbuf_t *sb,
                char **ps)
 {
+    int ret;
     if(sb) {
         while(1) {
             unsigned i;
@@ -169,8 +170,16 @@ int jk_sb_gets(jk_sockbuf_t *sb,
                     return JK_TRUE;
                 }
             }
-            if(!fill_buffer(sb)) {
+            if((ret = fill_buffer(sb)) < 0) {
                 return JK_FALSE;
+            } else if (ret == 0) {
+                *ps = sb->buf + sb->start;
+               if ((SOCKBUF_SIZE - sb->end) > 0) {
+                    sb->buf[sb->end] = '\0';
+                } else {
+                    sb->buf[sb->end-1] = '\0';
+                }
+                return JK_TRUE;
             }
         }
     }
@@ -178,13 +187,19 @@ int jk_sb_gets(jk_sockbuf_t *sb,
     return JK_FALSE;
 }
 
+/*
+ * Read data from the socket into the associated buffer, and update the
+ * start and end indices.  May move the data currently in the buffer.  If
+ * new data is read into the buffer (or if it is already full), returns 1.
+ * If EOF is received on the socket, returns 0.  In case of error returns
+ * -1.  
+ */
 static int fill_buffer(jk_sockbuf_t *sb)
 {
     int ret;
-
+    
     /*
-     * First move the current data to the beginning of the 
-     * buffer
+     * First move the current data to the beginning of the buffer
      */
     if(sb->start < sb->end) {
         if(sb->start > 0) {
@@ -196,19 +211,26 @@ static int fill_buffer(jk_sockbuf_t *sb)
     } else {
         sb->start = sb->end = 0;
     }
-
+    
     /*
-     * Now, read more data
+     * In the unlikely case where the buffer is already full, we won't be
+     * reading anything and we'd be calling recv with a 0 count.  
      */
-    ret = recv(sb->sd, 
-               sb->buf + sb->end, 
-               SOCKBUF_SIZE - sb->end, 0);   
-
-    if(ret < 0) {
-        return JK_FALSE;
-    } 
-
-    sb->end += ret;
-
-    return JK_TRUE;
+    if ((SOCKBUF_SIZE - sb->end) > 0) {
+	/*
+	 * Now, read more data
+	 */
+	ret = recv(sb->sd, 
+		   sb->buf + sb->end, 
+		   SOCKBUF_SIZE - sb->end, 0);   
+	
+	// 0 is EOF/SHUTDOWN, -1 is SOCK_ERROR
+	if (ret <= 0) {
+	    return ret;
+	} 
+	
+	sb->end += ret;
+    }
+    
+    return 1;
 }
