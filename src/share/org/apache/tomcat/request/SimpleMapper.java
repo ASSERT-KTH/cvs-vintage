@@ -171,8 +171,6 @@ public class SimpleMapper extends  BaseInterceptor  {
 	String ctxP=context.getPath();
 	Mappings m=(Mappings)contextPaths.get(ctxP);
 
-	if(debug>0) context.log( "Mapping: " + req );
-
 	container=findContainer( m, path, context, req );
 	
 	// set default container, return
@@ -185,18 +183,16 @@ public class SimpleMapper extends  BaseInterceptor  {
 	    req.setWrapper( m.defaultContainer.getHandler() );
 	    req.setServletPath( "" );
 	    req.setPathInfo( path);
-	    if(debug>0) context.log("Default mapper " + "\n    " + req);
 	}  else {
 	    req.setWrapper( container.getHandler() );
-	    
-	    if(debug>0) context.log("Found wrapper using getMapPath " + "\n    " + req);
 	}
+	if(debug>0) context.log("SM: Handler " + req + " " + container );
 	req.setContainer( container );
 
 	// the container already has security properties
 	// in it, no need to search again
 	if( container.getRoles() != null ) {
-	    if(debug>0) context.log("Existing security constraint " + "\n    " + container.getRoles());
+	    if(debug>0) context.log("Existing security constraint " +  container.toString());
 	    return OK;
 	}
 	
@@ -210,10 +206,20 @@ public class SimpleMapper extends  BaseInterceptor  {
 	}
 	// Merge the security info into the container
 	//
-	if(debug>0) context.log("Found security constraing " + "\n    " + scontainer.getRoles());
-	container.setRoles( scontainer.getRoles());
-	container.setTransport( scontainer.getTransport());
-	
+	// XXX merging is a very usefull optimization, but we should do it
+	// at init time, it's very expensive because we need to be sure it has the same
+	// pattern !!
+	// 	if(debug>0) context.log("Merging security constraint " + scontainer + " into " + container );
+	// 	container.setRoles( scontainer.getRoles());
+	// 	container.setTransport( scontainer.getTransport());
+
+	// until merging is implemented, we'll just create a new container with the combined
+	// properties. This code needs optimizations ( i.e. alghoritm + data, not OptimizeIt!)
+	Container ct=container.getClone();
+ 	ct.setRoles( scontainer.getRoles());
+	ct.setTransport( scontainer.getTransport());
+	req.setContainer( ct );
+	if(debug>0) context.log("Set security constraings " + req + " " + container );
 	return OK;
     }
 
@@ -337,7 +343,7 @@ public class SimpleMapper extends  BaseInterceptor  {
         Container wrapper = null;
 	wrapper = (Container)m.pathMappedServlets.get(path);
 
-	if (wrapper != null) {
+	if (wrapper != null && wrapper.getHandler() != null ) {
 	    req.setServletPath( path );
 	    // No path info - it's an exact match
 	    if(debug>1) context.log("path match " + path );
@@ -359,7 +365,7 @@ public class SimpleMapper extends  BaseInterceptor  {
 	while (s.length() > 0) {
 	    // XXX we can remove /* in prefix map when we add it, so no need
 	    // for another string creation
-	    if(debug>2) context.log( "Prefix: " + s  );
+	    //	    if(debug>8) context.log( "Prefix: " + s  );
 	    wrapper = (Container)m.prefixMappedServlets.get(s + "/*" );
 	    //Enumeration en=m.prefixMappedServlets.keys();
 	    //while( en.hasMoreElements() ) {
@@ -371,16 +377,17 @@ public class SimpleMapper extends  BaseInterceptor  {
 	    else
 		break;
 	}
-		
+	
 	// Set servlet path and path info
-	if( wrapper != null ) {
+	if( wrapper != null && wrapper.getHandler() != null ) {
 	    // Found a match !
 	    req.setServletPath( s );
 	    String pathI = path.substring(s.length(), path.length());
 	    if( ! "".equals(pathI) ) 
 		req.setPathInfo(pathI);
-	    if(debug>0) context.log("prefix match " + path );
 	}
+	if(wrapper!= null )
+	    if(debug>0) context.log("prefix match " + path + " " + wrapper );
 	return wrapper;
     }
 
@@ -397,6 +404,9 @@ public class SimpleMapper extends  BaseInterceptor  {
 	if (wrapper == null)
 	    return null;
 
+	if(debug>0) context.log("extension match " + path );
+
+	if( wrapper.getHandler() ==null) return wrapper;
 	// fix paths
 	// /a/b/c.jsp/d/e
         int i = path.lastIndexOf(".");
@@ -412,7 +422,6 @@ public class SimpleMapper extends  BaseInterceptor  {
 	    req.setServletPath( path );
 	}
 		
-	if(debug>0) context.log("extension match " + path );
 	return wrapper; 
     }
 

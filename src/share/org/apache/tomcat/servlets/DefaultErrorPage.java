@@ -94,6 +94,7 @@ public class DefaultErrorPage extends HttpServlet {
 
 	Throwable e= (Throwable)request.getAttribute("tomcat.servlet.error.throwable");
 	if( e!=null ) {
+	    e.printStackTrace();
 	    sendError(request, response, 500, exceptionString( e ));
 	    return;
 	}

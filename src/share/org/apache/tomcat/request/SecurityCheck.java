@@ -62,10 +62,12 @@ package org.apache.tomcat.request;
 
 import org.apache.tomcat.core.*;
 import org.apache.tomcat.util.*;
+import org.apache.tomcat.util.xml.*;
 import java.io.*;
 import java.net.*;
 import java.util.*;
 import javax.servlet.http.*;
+import org.xml.sax.*;
 
 /**
  * Will process the request and determine the session Id, and set it
@@ -77,13 +79,24 @@ import javax.servlet.http.*;
  * 
  */
 public class SecurityCheck extends  BaseInterceptor {
-    
+    MemoryRealm memoryRealm;
+
     public SecurityCheck() {
     }
 	
     public void contextInit( Context ctx)
 	throws TomcatException
     {
+	if( memoryRealm==null) {
+	    	memoryRealm = new MemoryRealm(ctx);
+		try {
+		    memoryRealm.readMemoryRealm(ctx);
+		} catch(Exception ex ) {
+		    ex.printStackTrace();
+		    memoryRealm=null;
+		}
+	}
+	
 	if( "FORM".equals( ctx.getAuthMethod() )) {
 	    ServletWrapper jcheck=new ServletWrapper();
 	    jcheck.setContext( ctx );
@@ -151,16 +164,25 @@ public class SecurityCheck extends  BaseInterceptor {
 	    HttpSession session=req.getSession( false );
 	    if( session == null )
 		return 0; // not authenticated
-	    String username=(String)session.getAttribute("j_username");
-	    String password=(String)session.getAttribute("j_password");
-	    
-	    if( ctx.getDebug() > 0 ) ctx.log( "Form Auth:  " + username + " " + password);
-	    if( checkPassword( username, password ) ) {
-		req.setRemoteUser( username );
+	    Credential cr=(Credential) session.getAttribute( "tomcat.credential");
+	    if( cr!=null ) {
+		req.setRemoteUser( cr.username );
+		// maybe we can set the role(s) too...
 	    } else {
-		// wrong password
-		errorPage( req, response );
-	    }
+		// it wasn't authenticated, maybe it's a new login 
+		String username=(String)session.getAttribute("j_username");
+		String password=(String)session.getAttribute("j_password");
+		if( ctx.getDebug() > 0 ) ctx.log( "Form Auth:  " + username + " " + password);
+		if( username!=null && checkPassword( username, password ) ) {
+		    req.setRemoteUser( username );
+		    Credential c=new Credential();
+		    c.username=username;
+		    session.setAttribute( "tomcat.credential", c );
+		} else {
+		    // wrong password
+		    errorPage( req, response );
+		}
+	    } 
 	}
 
 	return 0;
@@ -183,15 +205,15 @@ public class SecurityCheck extends  BaseInterceptor {
 	}
 
 	String user=req.getRemoteUser();
+	if( ctx.getDebug() > 0 ) ctx.log( "Controled access for " + user + " " + req + " " + req.getContainer() );
 	if( user!=null ) {
-	    if( ctx.getDebug() > 0 ) ctx.log( "Controled access for " + user );
 	    for( int i=0; i< roles.length; i++ ) {
 		if( userInRole( user, roles[i] ) )
 		    return 0;
 	    }
 	}
 
-	if( ctx.getDebug() > 0 ) ctx.log( "Unauthorized " + user);
+	if( ctx.getDebug() > 0 ) ctx.log( "Unauthorized " + user + " " + req.getContainer());
  	return HttpServletResponse.SC_UNAUTHORIZED;
 	// XXX check transport
     }
@@ -240,12 +262,91 @@ public class SecurityCheck extends  BaseInterceptor {
     }
 
     private boolean checkPassword( String user, String pass ) {
-	System.out.println("Checking " + user + " " + pass );
-	return true;
+	if( memoryRealm != null ) return memoryRealm.checkPassword( user, pass );
+	return false;
     }
 
     private boolean userInRole( String user, String role ) {
-	System.out.println("Checking role " + user + " " + role );
-	return true;
+	if( memoryRealm != null ) return memoryRealm.userInRole( user, role );
+	return false;
     }
+
+}
+
+class MemoryRealm {
+    // String user -> password
+    Hashtable passwords=new Hashtable();
+    // String role -> Vector users
+    Hashtable roles=new Hashtable();
+    Context ctx;
+    
+    MemoryRealm(Context ctx) {
+	this.ctx=ctx;
+    }
+
+    public void addUser(String name, String pass, String groups ) {
+	ctx.log( "Add user " + name + " " + pass + " " + groups );
+	passwords.put( name, pass );
+	addRole( groups, name );
+    }
+
+    public void addRole( String role, String user ) {
+	Vector users=(Vector)roles.get(role);
+	if(users==null) {
+	    users=new Vector();
+	    roles.put(role, users );
+	}
+	users.addElement( user );
+    }
+    
+    public boolean checkPassword( String user, String pass ) {
+	ctx.log( "check " + user+ " " + pass + " " + passwords.get( user ));
+	return pass.equals( (String)passwords.get( user ) );
+    }
+
+    public boolean userInRole( String user, String role ) {
+	Vector users=(Vector)roles.get(role);
+	ctx.log( "check role " + user+ " " + role + " "  );
+	if(users==null) return false;
+	return users.indexOf( user ) >=0 ;
+    }
+
+    void readMemoryRealm(Context ctx) throws Exception {
+	ContextManager cm=ctx.getContextManager();
+	String home=cm.getHome();
+	File f=new File( home + "/conf/tomcat-users.xml");
+	if( ! f.exists() ) {
+	    ctx.log( "File not found  " + f );
+	    return;
+	}
+	XmlMapper xh=new XmlMapper();
+	if( ctx.getDebug() > 5 ) xh.setDebug( 2 );
+
+	// call addUser using attributes as parameters 
+	xh.addRule("tomcat-users/user",
+		   new XmlAction() {
+			   public void start( SaxContext ctx) throws Exception {
+			       int top=ctx.getTagCount()-1;
+			       MemoryRealm mr=(MemoryRealm)ctx.getRoot();
+			       AttributeList attributes = ctx.getAttributeList( top );
+			       String user=attributes.getValue("name");
+			       String pass=attributes.getValue("password");
+			       String group=attributes.getValue("roles");
+			       mr.addUser( user, pass, group );
+			   }
+		       }
+		   );
+	
+	xh.readXml( f, this );
+    }
+}
+
+
+class Credential {
+    Credential() {}
+
+    String username;
+    String realm;
+    String role;
+
 }

@@ -100,7 +100,7 @@ public class AuthServlet extends HttpServlet {
 		// 		rd.include( request, response );
 
 		session.setAttribute( "tomcat.auth.originalLocation", req.getRequestURI());
-		ctx.log("Setting orig location " + req.getRequestURI());
+		if( ctx.getDebug() > 0 ) ctx.log("Setting orig location " + req.getRequestURI());
 		if( ! page.startsWith("/")) page="/" + page;
 		response.sendRedirect( ctx.getPath() + page );
 		return; 

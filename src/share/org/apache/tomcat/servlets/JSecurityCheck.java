@@ -80,7 +80,6 @@ public class JSecurityCheck extends HttpServlet {
     {
 	Request req=((HttpServletRequestFacade)request).getRealRequest();
 	Context ctx=req.getContext();
-	ctx.log( "In JSecurityCheck");
 	HttpSession session=req.getSession( false );
 	if( session == null ) {
 	    ctx.log("TRY TO AUTHENTICATE WITHOUT A SESSION " + req);
@@ -88,13 +87,13 @@ public class JSecurityCheck extends HttpServlet {
 	}
 	String username=req.getFacade().getParameter( "j_username" );
 	String password=req.getFacade().getParameter( "j_password" );
-	if( ctx.getDebug() > 0 ) ctx.log( "FORM auth " + username + " " + password );
+	if( ctx.getDebug() > 0 ) ctx.log( "JSecurityCheck - FORM auth " + username + " " + password );
 
 	session.setAttribute( "j_username", username );
 	session.setAttribute( "j_password", password );
 
 	String origLocation=(String)session.getAttribute( "tomcat.auth.originalLocation");
-	ctx.log("Back to orig location " + origLocation);
+	if( ctx.getDebug() > 0) ctx.log("JSecurityCheck - Back to orig location " + origLocation);
 	response.sendRedirect( origLocation );
     }
 

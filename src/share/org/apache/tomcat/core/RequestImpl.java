@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/RequestImpl.java,v 1.20 2000/02/17 12:15:03 shachor Exp $
- * $Revision: 1.20 $
- * $Date: 2000/02/17 12:15:03 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/RequestImpl.java,v 1.21 2000/02/17 21:19:01 costin Exp $
+ * $Revision: 1.21 $
+ * $Date: 2000/02/17 21:19:01 $
  *
  * ====================================================================
  *
@@ -694,8 +694,16 @@ public class RequestImpl  implements Request {
 
     public String toString() {
 	StringBuffer sb=new StringBuffer();
-	sb.append( "R( " + getRequestURI() + " ");
-	if( context!=null) sb.append( context.getPath() );
+	sb.append( "R( ");
+	if( context!=null) {
+	    sb.append( context.getPath() );
+	    if( getServletPath() != null )
+		sb.append( " + " + getServletPath() + " + " + getPathInfo());
+	    else
+		sb.append( " + " + getLookupPath());
+	} else {
+	    sb.append(getRequestURI());
+	}
 	sb.append(")");
 	return sb.toString();
     }

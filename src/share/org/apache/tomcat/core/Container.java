@@ -86,7 +86,7 @@ import javax.servlet.*;
  * map via addMapping() callback. It can set private informations as
  * attributes ( the Mapper or security interceptors will probably do so ).
  */
-public class Container {
+public class Container implements Cloneable {
 
     // The main difference between this container and Catalina
     // is that in Catalina, Container has an invoke() method.
@@ -242,4 +242,25 @@ public class Container {
     public void setRoles( String roles[] ) {
 	this.roles=roles;
     }
+
+    public String toString() {
+	StringBuffer sb=new StringBuffer();
+	sb.append( "Ct (" );
+	if( handler!= null) sb.append( handler.toString() );
+	if( roles!=null) {
+	    	sb.append(" Roles: ");
+		for( int i=0; i< roles.length; i++ )
+		    sb.append(" ").append( roles[i]);
+	}
+	sb.append( " )");
+	return sb.toString();
+    }
+
+    public Container getClone() {
+	try {
+	    return (Container)this.clone();
+	} catch( CloneNotSupportedException ex ) {
+	    return this;
+	}
+    } 
 }
