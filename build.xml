@@ -10,7 +10,7 @@
 <!--                                                                        -->
 <!-- ====================================================================== -->
 
-<!-- $Id: build.xml,v 1.36 2001/10/11 01:41:58 schaefera Exp $ -->
+<!-- $Id: build.xml,v 1.37 2001/10/23 07:10:45 schaefera Exp $ -->
 
 <project default="main" name="JBoss/Server">
 
@@ -525,7 +525,15 @@ os.version:      ${os.version}
         <!-- Exclude Main, it will go into run.jar -->
         <exclude name="org/jboss/Main*"/>
         <!-- Exclude JMX Connector stuff we will use the connector JSR for that -->
-	<exclude name="org/jboss/jmx/**"/>
+        <exclude name="org/jboss/jmx/**"/>
+        <!-- But include this interface because the Farm needs it -->
+        <include name="org/jboss/jmx/connector/RemoteMBeanServer.class"/>
+      </fileset>
+      <fileset dir="${build.classes}">
+        <!-- But include this interface because the Farm needs it -->
+        <include name="org/jboss/jmx/connector/RemoteMBeanServer.class"/>
+        <include name="org/jboss/jmx/adaptor/rmi/RMIAdaptorImpl.class"/>
+        <include name="org/jboss/jmx/adaptor/interfaces/Adaptor*.class"/>
       </fileset>
 
       <fileset dir="${build.resources}">

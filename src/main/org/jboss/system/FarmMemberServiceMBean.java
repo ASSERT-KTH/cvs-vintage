@@ -44,7 +44,7 @@ import org.jboss.jmx.connector.rmi.RMIConnectorImpl;
  * @see Service
  *
  * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  *
  * <p><b>20011015 andreas schaefer:</b>
  * <ul>
@@ -91,6 +91,16 @@ public interface FarmMemberServiceMBean
    public Member addMember( String pJNDIServerName, String pAdaptorJNDIName );
 
    /**
+   * Removes a member of the farm from the farm. The method ensures that after
+   * removing the member that all other members has it removed, too.
+   *
+   * @param pJNDIServerName Server name where the JNDI-Server is hosted
+   *                        to look up the Adaptor
+   * @param pAdaptorJNDIName Name of the Adaptor on the JNDI-Server
+   **/
+   public void removeMember( String pJNDIServerName, String pAdaptorJNDIName );
+   
+   /**
    * Adds all the servers given by the parameter and adds them as new
    * members of the farm.
    *
@@ -100,16 +110,6 @@ public interface FarmMemberServiceMBean
    *                    JNDI-Name
    **/
    public void setMembers( String pMemberData );
-   
-   /**
-   * Removes a member of the farm from the farm. The method ensures that after
-   * removing the member that all other members has it removed, too.
-   *
-   * @param pJNDIServerName Server name where the JNDI-Server is hosted
-   *                        to look up the Adaptor
-   * @param pAdaptorJNDIName Name of the Adaptor on the JNDI-Server
-   **/
-   public void removeMember( String pJNDIServerName, String pAdaptorJNDIName );
    
    /**
    * @return Own membership data of this service
@@ -124,14 +124,25 @@ public interface FarmMemberServiceMBean
    public void deploy( URL pFile );
    
    /**
-   * Deploys the service if not already done on this
-   * member
+   * Checks and if necessary deploys the given file on this
+   * member of the farm. If deployed it will also notify
+   * all other members to ensure that the file gets deployed.
    *
-   * @param pFIle File of the service to be deployed
-   * @param pDate Date of the file to be used to compare
-   *              if already deployed
+   * @param pFile File to be deployed
+   * @param pDate Date of the file of the first deployment
+   * @param pOriginator Member of the farm calling this method
    **/
-   public void deployOnMember( FileArray pFile, Date pDate );
+   public void doDeployment( File pFile, Date pDate, Member pOriginator );
+   
+   /**
+   * Creates and returns the file as a byte array to be
+   * sent over the wire
+   *
+   * @param pFile File to be retrieved
+   *
+   * @return Content of the File
+   **/
+   public FileContent getFileContent( File pFile );
 
    public class Member
       implements Serializable
@@ -207,11 +218,11 @@ public interface FarmMemberServiceMBean
       }
    }
    
-   public class FileArray implements Serializable {
+   public class FileContent implements Serializable {
       public File mFile;
       public byte[] mContent;
       
-      public FileArray( File pFile, byte[] pContent ) {
+      public FileContent( File pFile, byte[] pContent ) {
          mFile = pFile;
          mContent = pContent;
       }

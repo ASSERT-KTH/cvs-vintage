@@ -8,42 +8,42 @@
    
    <mbean code="org.jboss.system.FarmMemberService" 
       name="JBOSS-SYSTEM:spine=FarmMember">
+      <!--
+         Enter the Server-Name of the local JNDI-Server
+         ATTENTION: Must be the same as used below in the
+         list of members because this is part how to the
+         farm figures out if a member is local or not.
+         
+         Example: www.jboss.org
+      -->
       <attribute name="LocalJNDIServerName" >
-         <!--
-            Enter the Server-Name of the local JNDI-Server
-            ATTENTION: Must be the same as used below in the
-            list of members because this is part how to the
-            farm figures out if a member is local or not.
-            
-            Example: www.jboss.org
-         -->
       </attribute>
+      <!--
+         Enter the JNDI-Name of the Adaptor used by remote
+         members to connect to this server. Right now only
+         RMI-Adaptors and EJB-Adaptors are supported.
+         
+         Example: jmx:www.jboss.org:rmi
+      -->
       <attribute name="LocalAdaptorJNDIName" >
-         <!--
-            Enter the JNDI-Name of the Adaptor used by remote
-            members to connect to this server. Right now only
-            RMI-Adaptors and EJB-Adaptors are supported.
-            
-            Example: jmx:www.jboss.org:rmi
-         -->
       </attribute>
+      <!--
+         Enter the list of all members of the farm (even when
+         the are not started yet). This list must be the same
+         for all members of the same farm.
+         The syntax is:
+         <JNDI-Server Name>,<JNDI-Name of Adaptor>
+         
+         Example:
+         www.jboss.org,jmx:www.jboss.org:rmi
+         www.gugus.net,ejb/jmx/ejb/Adaptor
+         www.example.com,jmx:borg.example.org:rmi
+      -->
       <attribute name="Members" >
-         <!--
-            Enter the list of all members of the farm (even when
-            the are not started yet). This list must be the same
-            for all members of the same farm.
-            The syntax is:
-            <JNDI-Server Name>,<JNDI-Name of Adaptor>
-            
-            Example:
-            www.jboss.org,jmx:www.jboss.org:rmi
-            www.gugus.net,ejb/jmx/ejb/Adaptor
-            www.example.com,jmx:borg.example.org:rmi
-         -->
       </attribute>
    </mbean>
 
-   <mbean code="org.jboss.system.FarmAutoDeployer" name="JBOSS-SYSTEM:service=FarmAutoDeployer">
+   <mbean code="org.jboss.deployment.FarmAutoDeployer" name="JBOSS-SYSTEM:service=FarmAutoDeployer">
       <attribute name="Deployers">
          JBOSS-SYSTEM:spine=FarmMember
       </attribute>

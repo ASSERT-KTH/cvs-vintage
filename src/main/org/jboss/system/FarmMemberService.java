@@ -10,6 +10,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FilenameFilter;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.IOException;
@@ -62,7 +63,7 @@ import org.jboss.jmx.connector.RemoteMBeanServer;
  * </ul>
  *
  * @author <a href="mailto:andreas@jboss.org">Andreas Schaefer</a>
- * @version $Revision: 1.1 $ <p>
+ * @version $Revision: 1.2 $ <p>
  *
  * <b>Revisions:</b> <p>
  *
@@ -78,11 +79,12 @@ public class FarmMemberService
 
    // Attributes ----------------------------------------------------
 
+   private static ObjectName sFarmMemberService = null;
+   private static ObjectName sDeployerService = null;
+   
    /** A callback to the JMX Agent **/
    private MBeanServer mServer;
    
-   private ObjectName mDeployerService = null;
-
    private Member mLocal = new Member( null, null );
    
    private String mInitialMembers = null;
@@ -152,7 +154,7 @@ public class FarmMemberService
             RemoteMBeanServer lConnector = lServer.getConnector();
             // Check if the Remote FMS is up an running
             Set lMemberServices = lConnector.queryNames(
-               new ObjectName( OBJECT_NAME ),
+               sFarmMemberService,
                null
             );
             if( lMemberServices.size() == 1 ) {
@@ -166,9 +168,23 @@ public class FarmMemberService
                   if( !mLocal.equals( lMember ) ) {
                      log.info( "Invoke addMember() on the remote member: " + lMember );
                      lMember.getConnector().invoke(
-                        new ObjectName( OBJECT_NAME ),
+                        sFarmMemberService,
                         "addMember",
                         new Object[] { pJNDIServerName, pAdaptorJNDIName },
+                        new String[] { String.class.getName(), String.class.getName() }
+                     );
+                  }
+               }
+               // Not add all listed members here back to the just added server
+               i = mMembers.iterator();
+               while( i.hasNext() ) {
+                  Member lMember = (Member) i.next();
+                  if( !lServer.equals( lMember ) ) {
+                     log.info( "Invoke addMember() on the remote member: " + lServer );
+                     lServer.getConnector().invoke(
+                        sFarmMemberService,
+                        "addMember",
+                        new Object[] { lMember.getJNDIServerName(),lMember.getAdaptorJNDIName() },
                         new String[] { String.class.getName(), String.class.getName() }
                      );
                   }
@@ -201,7 +217,7 @@ public class FarmMemberService
             Member lMember = (Member) i.next();
             if( !mLocal.equals( lMember ) ) {
                lMember.getConnector().invoke(
-                  new ObjectName( OBJECT_NAME ),
+                  sFarmMemberService,
                   "removeMember",
                   new Object[] { pJNDIServerName, pAdaptorJNDIName },
                   new String[] { String.class.getName(), String.class.getName() }
@@ -243,7 +259,7 @@ public class FarmMemberService
    public FilenameFilter getDeployableFilter() {
       try {
          FilenameFilter lFilter = (FilenameFilter) mServer.getAttribute(
-            mDeployerService,
+            sDeployerService,
             "DeployableFilter"
          );
          log.info( "Deployable Filter is: " + lFilter );
@@ -280,7 +296,7 @@ public class FarmMemberService
    {
       try {
          return ( (Boolean) mServer.getAttribute(
-            mDeployerService,
+            sDeployerService,
             "Deployed"
          ) ).booleanValue();
       }
@@ -297,30 +313,78 @@ public class FarmMemberService
          File lFile = new File( pFile.getFile() );
          Date lFileDate = new Date( lFile.lastModified() );
          Iterator i = mMembers.iterator();
-         if( i.hasNext() ) {
-            // Create File ByteArray
-            byte[] lBuffer = new byte[ 1024 ];
-            InputStream lInput = new FileInputStream( lFile );
-            ByteArrayOutputStream lOutput = new ByteArrayOutputStream();
-            int j = 0;
-            while( ( j = lInput.read( lBuffer ) ) > 0 ) {
-               lOutput.write( lBuffer, 0, j );
-            }
-            FileArray lFileArray = new FileArray( lFile, lOutput.toByteArray() );
+         while( i.hasNext() ) {
+            Member lMember = (Member) i.next();
+            lMember.getConnector().invoke(
+               sFarmMemberService,
+               "doDeployment",
+               new Object[] {
+                  lFile,
+                  lFileDate,
+                  getMembership()
+               },
+               new String[] {
+                  File.class.getName(),
+                  Date.class.getName(),
+                  Member.class.getName()
+               }
+            );
+         }
+      }
+      catch( Exception e ) {
+         logException( e );
+      }
+   }
+   
+   public void doDeployment( File pFile, Date pDate, Member pOriginator ) {
+      try {
+         // First check if file not already deployed
+         log.info( "doDeployment(), File: " + pFile + ", data: " + pDate );
+         Date lLastDate = (Date) mDeployedServices.get( pFile.getName() );
+         int lIndex = mMembers.indexOf( pOriginator );
+         if( lIndex >= 0 && ( lLastDate == null || lLastDate.before( pDate ) ) ) {
+            Member lOriginator = (Member) mMembers.get( lIndex );
+            FileContent lContent = (FileContent) lOriginator.getConnector().invoke(
+               sFarmMemberService,
+               "getFileContent",
+               new Object[] { pFile },
+               new String[] { File.class.getName() }
+            );
+            // Create File locally and use it
+            File lFile = new File( "../tmp", pFile.getName() );
+            FileOutputStream lOutput = new FileOutputStream( lFile );
+            lOutput.write( lContent.mContent );
+            lOutput.close();
+            log.info( "doDeployment(), deploy locally: " + lFile );
+            // Deploy file on Service Deployer
+            mServer.invoke(
+               sDeployerService,
+               "deploy",
+               new Object[] { lFile.toURL().toString() },
+               new String[] { String.class.getName() }
+            );
+            log.info( "doDeployment(), add file served" );
+            mDeployedServices.put( lFile.getName(), pDate );
+            // Loop over all members and request a deployment there
+            Iterator i = mMembers.iterator();
             while( i.hasNext() ) {
                Member lMember = (Member) i.next();
-               lMember.getConnector().invoke(
-                  new ObjectName( OBJECT_NAME ),
-                  "deployOnMember",
-                  new Object[] {
-                     lFileArray,
-                     lFileDate
-                  },
-                  new String[] {
-                     FileArray.class.getName(),
-                     Date.class.getName()
-                  }
-               );
+               if( !lMember.equals( getMembership() ) ) {
+                  mServer.invoke(
+                     sFarmMemberService,
+                     "doDeployment",
+                     new Object[] {
+                        lFile,
+                        pDate,
+                        getMembership()
+                     },
+                     new String[] {
+                        File.class.getName(),
+                        Date.class.getName(),
+                        Member.class.getName()
+                     }
+                  );
+               }
             }
          }
       }
@@ -329,31 +393,25 @@ public class FarmMemberService
       }
    }
    
-   public void deployOnMember( FileArray pFile, Date pDate ) {
+   public FileContent getFileContent( File pFile ) {
       try {
-         // Create File locally and use it
-         File lFile = new File( "../tmp", pFile.mFile.getName() );
-         FileOutputStream lOutput = new FileOutputStream( lFile );
-         lOutput.write( pFile.mContent );
-         lOutput.close();
-         log.info( "deployOnMember(), File: " + lFile + ", data: " + pDate );
-         Date lLastDate = (Date) mDeployedServices.get( lFile.getName() );
-         if( lLastDate == null || lLastDate.before( pDate ) ) {
-            log.info( "deployOnMember(), deploy locally: " + lFile );
-            // Deploy file on Service Deployer
-            mServer.invoke(
-               mDeployerService,
-               "deploy",
-               new Object[] { lFile.toURL().toString() },
-               new String[] { String.class.getName() }
-            );
-            log.info( "deployOnMember(), add file served" );
-            mDeployedServices.put( lFile.getName(), pDate );
+         // Create File ByteArray
+         byte[] lBuffer = new byte[ 1024 ];
+         InputStream lInput = new FileInputStream( pFile );
+         ByteArrayOutputStream lOutput = new ByteArrayOutputStream();
+         int j = 0;
+         while( ( j = lInput.read( lBuffer ) ) > 0 ) {
+            lOutput.write( lBuffer, 0, j );
          }
+         return new FileContent( pFile, lOutput.toByteArray() );
       }
-      catch( Exception e ) {
-         logException( e );
+      catch( FileNotFoundException fnfe ) {
+         logException( fnfe );
       }
+      catch( IOException ioe ) {
+         logException( ioe );
+      }
+      return null;
    }
    
    // MBeanRegistration implementation ----------------------------------------
@@ -388,7 +446,9 @@ public class FarmMemberService
    protected void startService()
       throws Exception
    {
-      mDeployerService = new ObjectName( "JBOSS-SYSTEM:service=ServiceDeployer" );
+      // First add this member in the list
+//      mMembers.add( mLocal );
+//      addMember( mLocal.getJNDIServerName(), mLocal.getAdaptorJNDIName() );
       if( mInitialMembers != null ) {
          log.info( "start(), state: " + getState() );
          setMembers( mInitialMembers );
@@ -437,6 +497,15 @@ public class FarmMemberService
       }
       e.printStackTrace();
       log.error(e);
+   }
+
+   static {
+      try {
+         sFarmMemberService = new ObjectName( OBJECT_NAME );
+         sDeployerService = new ObjectName( "JBOSS-SYSTEM:service=ServiceDeployer" );
+      }
+      catch( JMException jme ) {
+      }
    }
 
 }
