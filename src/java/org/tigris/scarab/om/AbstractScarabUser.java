@@ -82,7 +82,7 @@ import org.tigris.scarab.services.cache.ScarabCache;
  * go here.
  * 
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: AbstractScarabUser.java,v 1.15 2002/02/23 19:30:27 jmcnally Exp $
+ * @version $Id: AbstractScarabUser.java,v 1.16 2002/03/01 15:44:22 jon Exp $
  */
 public abstract class AbstractScarabUser 
     extends BaseObject 
@@ -329,7 +329,7 @@ public abstract class AbstractScarabUser
 
 
     /**
-     * @see org.tigris.scarab.om.ScarabUser#setCurrentReport(Issue)
+     * @see org.tigris.scarab.om.ScarabUser#setCurrentReport(Report)
      */
     public String setCurrentReport(Report report)
         throws ScarabException
