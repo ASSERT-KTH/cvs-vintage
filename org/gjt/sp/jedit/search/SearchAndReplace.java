@@ -59,7 +59,7 @@ import org.gjt.sp.util.Log;
  *
  * @author Slava Pestov
  * @author John Gellene (API documentation)
- * @version $Id: SearchAndReplace.java,v 1.45 2003/03/09 23:49:40 spestov Exp $
+ * @version $Id: SearchAndReplace.java,v 1.46 2003/04/13 00:17:11 spestov Exp $
  */
 public class SearchAndReplace
 {
@@ -513,6 +513,8 @@ public class SearchAndReplace
 
 		try
 		{
+			view.showWaitCursor();
+
 			SearchMatcher matcher = getSearchMatcher();
 			if(matcher == null)
 			{
@@ -521,8 +523,6 @@ public class SearchAndReplace
 			}
 
 			record(view,"find(view)",false,true);
-
-			view.showWaitCursor();
 
 loop:			for(;;)
 			{

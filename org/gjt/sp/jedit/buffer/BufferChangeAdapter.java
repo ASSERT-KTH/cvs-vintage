@@ -3,7 +3,7 @@
  * :tabSize=8:indentSize=8:noTabs=false:
  * :folding=explicit:collapseFolds=1:
  *
- * Copyright (C) 2001, 2002 Slava Pestov
+ * Copyright (C) 2001, 2003 Slava Pestov
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -28,7 +28,7 @@ import org.gjt.sp.jedit.Buffer;
  * An adapter you can subclass to avoid having to implement all the methods
  * of the {@link BufferChangeListener} interface.
  * @author Slava Pestov
- * @version $Id: BufferChangeAdapter.java,v 1.8 2003/03/22 20:00:43 spestov Exp $
+ * @version $Id: BufferChangeAdapter.java,v 1.9 2003/04/13 00:17:11 spestov Exp $
  * @since jEdit 4.0pre1
  */
 public abstract class BufferChangeAdapter implements BufferChangeListener
@@ -99,5 +99,16 @@ public abstract class BufferChangeAdapter implements BufferChangeListener
 	 * @since jEdit 4.0pre6
 	 */
 	public void transactionComplete(Buffer buffer) {}
+	//}}}
+
+	//{{{ nextLineRequested() method
+	/**
+	 * Called when a syntax highlighting line context changes.
+	 *
+	 * @param buffer The buffer in question
+	 * @param line Reconsider all lines after this
+	 * @since jEdit 4.2pre1
+	 */
+	public void nextLineRequested(Buffer buffer, int line) {}
 	//}}}
 }
