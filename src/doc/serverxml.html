@@ -3,7 +3,7 @@
     "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-  <!-- $Id: serverxml.html,v 1.4 2001/09/18 03:25:57 larryi Exp $ -->
+  <!-- $Id: serverxml.html,v 1.5 2001/10/02 02:52:39 larryi Exp $ -->
   <!-- Copyright 1999-2001 Apache Software Foundation -->
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
   <link rel="stylesheet" href="style.css">
@@ -336,11 +336,184 @@ necessary.</p>
 
 <h3><a name="Ajp12Connector">Ajp12Connector</a></h3>
 
+<p><b>Type:</b> Server</p>
+
+<h4>Description</h4>
+
+<p>Handle incoming Ajp12 requests.  Ajp12 is a protocol used by the mod_jk
+based web server connectors and the mod_jserv connector.</p>
+
+<h4>Parameters</h4>
+
+<table border="1" cellpadding="2" cellspacing="0">
+  <tr valign="top">
+    <th>Attribute</th>
+    <th>Description</th>
+    <th>Default</th>
+  </tr>
+  <tr valign="top">
+    <td>ajpidFile</td>
+    <td>File in which to record Ajp12 connector info and password.</a>.</td>
+    <td>conf/ajp12.id</td>
+  </tr>
+  <tr valign="top">
+    <td>secret</td>
+    <td>The desired shutdown password.</td>
+    <td><i>not specified</i></td>
+  </tr>
+  <tr valign="top">
+    <td>tomcatAuthentication</td>
+    <td>Enables Tomcat's authentication, ignoring any authentication from the
+      web server sending the requests.</td>
+    <td>true</td>
+  </tr>
+  <tr valign="top">
+    <td>useSecret</td>
+    <td>Enables use of a random number as the shutdown password.</td>
+    <td>false</td>
+  </tr>
+  <tr valign="top">
+    <td><b>Socket Properties</b></td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr valign="top">
+    <td>address</td>
+    <td>Address to which the server socket binds.</td>
+    <td><i>null, bind on all addresses</i></td>
+  </tr>
+  <tr valign="top">
+    <td>backlog</td>
+    <td>Maximum length of the backlog queue for the server socket.</td>
+    <td>100</td>
+  </tr>
+  <tr valign="top">
+    <td>port</td>
+    <td>Port on which to receive requests.</td>
+    <td><i>no default, must be specified</i></td>
+  </tr>
+  <tr valign="top">
+    <td><b>Thread Pool Properties</b></td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr valign="top">
+    <td>maxThreads</td>
+    <td>Maximum number of threads in Thread pool.</td>
+    <td>200</td>
+  </tr>
+  <tr valign="top">
+    <td>maxSpareThreads</td>
+    <td>Maximun number of spare threads.  Unused threads will be terminated as
+      needed to keep the number of spare threads under this number.</td>
+    <td>50</td>
+  </tr>
+  <tr valign="top">
+    <td>minSpareThreads</td>
+    <td>Minimum number of spare threads. Additional threads will be created
+      as needed to keep the number of spare threads up to this number.</td>
+    <td>4</td>
+  </tr>
+  <tr valign="top">
+    <td>pools</td>
+    <td>Enables use of a Thread pool.</td>
+    <td>true</td>
+  </tr>
+</table>
+
+<h4>Example(s)</h4>
+
+<pre>
+&lt;Ajp12Interceptor port=&quot;8007&quot; ajpidFile="conf/ajp12_2.id" /&gt;
+</pre>
+
 <hr size="5">
 
 <!-- ======================================== -->
 
 <h3><a name="Ajp13Connector">Ajp13Connector</a></h3>
+
+<p><b>Type:</b> Server</p>
+
+<h4>Description</h4>
+
+<p>Handle incoming Ajp13 requests.  Ajp13 is a protocol used by the mod_jk
+based web server connectors.</p>
+
+<h4>Parameters</h4>
+
+<table border="1" cellpadding="2" cellspacing="0">
+  <tr valign="top">
+    <th>Attribute</th>
+    <th>Description</th>
+    <th>Default</th>
+  </tr>
+  <tr valign="top">
+    <td>shutDownEnable</td>
+    <td>Enable shutdown signal via this connector. Normally shutdown is done
+      through <a href="#Ajp12Interceptor">Ajp12Interceptor</a>.</td>
+    <td>false</td>
+  </tr>
+  <tr valign="top">
+    <td>tomcatAuthentication</td>
+    <td>Enables Tomcat's authentication, ignoring any authentication from the
+      web server sending the requests.</td>
+    <td>true</td>
+  </tr>
+  <tr valign="top">
+    <td><b>Socket Properties</b></td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr valign="top">
+    <td>address</td>
+    <td>Address to which the server socket binds.</td>
+    <td><i>null, bind on all addresses</i></td>
+  </tr>
+  <tr valign="top">
+    <td>backlog</td>
+    <td>Maximum length of the backlog queue for the server socket.</td>
+    <td>100</td>
+  </tr>
+  <tr valign="top">
+    <td>port</td>
+    <td>Port on which to receive requests.</td>
+    <td><i>no default, must be specified</i></td>
+  </tr>
+  <tr valign="top">
+    <td><b>Thread Pool Properties</b></td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr valign="top">
+    <td>maxThreads</td>
+    <td>Maximum number of threads in Thread pool.</td>
+    <td>200</td>
+  </tr>
+  <tr valign="top">
+    <td>maxSpareThreads</td>
+    <td>Maximun number of spare threads.  Unused threads will be terminated as
+      needed to keep the number of spare threads under this number.</td>
+    <td>50</td>
+  </tr>
+  <tr valign="top">
+    <td>minSpareThreads</td>
+    <td>Minimum number of spare threads. Additional threads will be created
+      as needed to keep the number of spare threads up to this number.</td>
+    <td>4</td>
+  </tr>
+  <tr valign="top">
+    <td>pools</td>
+    <td>Enables use of a Thread pool.</td>
+    <td>true</td>
+  </tr>
+</table>
+
+<h4>Example(s)</h4>
+
+<pre>
+&lt;Ajp13Interceptor port=&quot;8009&quot; tomcatAuthentication=&quot;false&quot; /&gt;
+</pre>
 
 <hr size="5">
 
@@ -412,8 +585,10 @@ to the <code>&lt;ContextManager ... &gt;</code> element in the
     <td>emerg</td>
   </tr>
   <tr valign="top">
-    <td>jkProtocol</td>
-    <td>The desired protocal, "ajp12", "ajp13" or "inprocess".</td>
+    <td>jkWorker</td>
+    <td>The desired worker. Must be set to one of the workers defined in the
+      workers.properties file. "ajp12", "ajp13" or "inprocess" are the workers
+      found in the default workers.properties file.</td>
     <td>Defaults to "ajp13" if an Ajp13Interceptor is in use, otherwise it
       defaults to "ajp12".</td>
   </tr>
@@ -753,6 +928,110 @@ error response if not specified.</p>
 
 <h3><a name="Http10Connector">Http10Connector</a></h3>
 
+<p><b>Type:</b> Server</p>
+
+<h4>Description</h4>
+
+<p>Handles incomming HTTP, or optionally HTTPS, requests.</p>
+
+<h4>Parameters</h4>
+
+<table border="1" cellpadding="2" cellspacing="0">
+  <tr valign="top">
+    <th>Attribute</th>
+    <th>Description</th>
+    <th>Default</th>
+  </tr>
+  <tr valign="top">
+    <td>reportedname</td>
+    <td>Specifies the string to use for the &quot;Server&quot; header</td>
+    <td>null, <i>use default Tomcat server string</i></td>
+  </tr>
+  <tr valign="top">
+    <td><b>Connection Properties</b></td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr valign="top">
+    <td>secure</td>
+    <td>Enables use of a SSL socket factory and act as an HTTPS server.</td>
+    <td>false</td>
+  </tr>
+  <tr valign="top">
+    <td>keystore</td>
+    <td>Keystore containing the Server certificate</td>
+    <td>.keystore in directory specified by the user.home System property</td>
+  </tr>
+  <tr valign="top">
+    <td>keypass</td>
+    <td>Password to the keystore.</td>
+    <td>changeit</td>
+  </tr>
+  <tr valign="top">
+    <td>clientauth</td>
+    <td>Enables requirement for client authentication.</td>
+    <td>false</td>
+  </tr>
+  <tr valign="top">
+    <td><b>Socket Properties</b></td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr valign="top">
+    <td>address</td>
+    <td>Address to which the server socket binds.</td>
+    <td><i>null, bind on all addresses</i></td>
+  </tr>
+  <tr valign="top">
+    <td>backlog</td>
+    <td>Maximum length of the backlog queue for the server socket.</td>
+    <td>100</td>
+  </tr>
+  <tr valign="top">
+    <td>port</td>
+    <td>Port on which to receive requests.</td>
+    <td><i>no default, must be specified</i></td>
+  </tr>
+  <tr valign="top">
+    <td>timeout</td>
+    <td>Socket read timeout in seconds.</td>
+    <td>300</td>
+  </tr>
+  <tr valign="top">
+    <td><b>Thread Pool Properties</b></td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr valign="top">
+    <td>maxThreads</td>
+    <td>Maximum number of threads in Thread pool.</td>
+    <td>200</td>
+  </tr>
+  <tr valign="top">
+    <td>maxSpareThreads</td>
+    <td>Maximun number of spare threads.  Unused threads will be terminated as
+      needed to keep the number of spare threads under this number.</td>
+    <td>50</td>
+  </tr>
+  <tr valign="top">
+    <td>minSpareThreads</td>
+    <td>Minimum number of spare threads. Additional threads will be created
+      as needed to keep the number of spare threads up to this number.</td>
+    <td>4</td>
+  </tr>
+  <tr valign="top">
+    <td>pools</td>
+    <td>Enables use of a Thread pool.</td>
+    <td>true</td>
+  </tr>
+</table>
+
+<h4>Example(s)</h4>
+
+<pre>
+&lt;Http10Interceptor port=&quot;8080&quot; timeout=&quot;60&quot; /&gt;
+</pre>
+
 <hr size="5">
 
 <!-- ======================================== -->
@@ -829,8 +1108,10 @@ to the <code>&lt;ContextManager ... &gt;</code> element in the
     <td>emerg</td>
   </tr>
   <tr valign="top">
-    <td>jkProtocol</td>
-    <td>The desired protocal, "ajp12", "ajp13" or "inprocess".</td>
+    <td>jkWorker</td>
+    <td>The desired worker. Must be set to one of the workers defined in the
+      workers.properties file. "ajp12", "ajp13" or "inprocess" are the workers
+      found in the default workers.properties file.</td>
     <td>Defaults to "ajp13" if an Ajp13Interceptor is in use, otherwise it
       defaults to "ajp12".</td>
   </tr>
@@ -888,6 +1169,89 @@ method of invoking servlets.</p>
 
 <h3><a name="JDBCRealm">JDBCRealm</a></h3>
 
+<p><b>Type:</b> Access, Authentication, and Authorization</p>
+
+<h4>Description</h4>
+
+<p>Authenticates the user if required for a request.  The authentication
+occurs using data from &quot;user&quot; and &quot;user roles&quot; tables
+accessed using a JDBC connection.</p>
+
+<h4>Parameters</h4>
+
+<table border="1" cellpadding="2" cellspacing="0">
+  <tr valign="top">
+    <th>Attribute</th>
+    <th>Description</th>
+    <th>Default</th>
+  </tr>
+  <tr valign="top">
+    <td>driverName</td>
+    <td>JDBC driver to use.</td>
+    <td><i>must be specified</i></td>
+  </tr>
+  <tr valign="top">
+    <td>connectionURL</td>
+    <td>URL to use to connect to the database.</td>
+    <td><i>must be specified</i></td>
+  </tr>
+  <tr valign="top">
+    <td>connectionName</td>
+    <td>User name to use to connect to the database.  The connectionPassword
+      must also be specified before the user name and password will be used.</td>
+    <td><i>not used</i></td>
+  </tr>
+  <tr valign="top">
+    <td>connectionPassword</td>
+    <td>Password to use to connect to the database.  The connectionName must
+      also be specified before the user name and password will be used.</td>
+    <td><i>not used</i></td>
+  </tr>
+  <tr valign="top">
+    <td>userTable</td>
+    <td>Table that holds the user data.</td>
+    <td><i>must be specified</i></td>
+  </tr>
+  <tr valign="top">
+    <td>userNameCol</td>
+    <td>Column in the user table that holds the user's name.</td>
+    <td><i>must be specified</i></td>
+  </tr>
+  <tr valign="top">
+    <td>userCredCol</td>
+    <td>Column in the user table that holds the user's credentials.</td>
+    <td><i>must be specified</i></td>
+  </tr>
+  <tr valign="top">
+    <td>userRoleTable</td>
+    <td>Table that holds the relation of users to their roles</td>
+    <td><i>must be specified</i></td>
+  </tr>
+  <tr valign="top">
+    <td>roleNameCol</td>
+    <td>Column in the user role table that names a role.</td>
+    <td><i>must be specified</i></td>
+  </tr>
+  <tr valign="top">
+    <td>connectOnInit</td>
+    <td>Enables establishing JDBC connection when Tomcat starts.  Otherwise,
+      establish JDBC connection on first use.</td>
+    <td>false</td>
+  </tr>
+</table>
+
+<h4>Example(s)</h4>
+
+<pre>
+&lt;JDBCRealm driverName=&quot;sun.jdbc.odbc.JdbcOdbcDriver&quot; 
+              connectionURL=&quot;jdbc:odbc:TOMCAT&quot; 
+              userTable=&quot;users&quot;
+              userNameCol=&quot;user_name&quot; 
+              userCredCol=&quot;user_pass&quot; 
+              userRoleTable=&quot;user_roles&quot; 
+              roleNameCol=&quot;role_name&quot; /&gt;
+</pre>
+
 <hr size="5">
 
 <!-- ======================================== -->
@@ -922,6 +1286,91 @@ execution.</p>
 <!-- ======================================== -->
 
 <h3><a name="JservConfig">JservConfig</a></h3>
+
+<p><b>Type:</b> Configuration</p>
+
+<h4>Description</h4>
+
+<p>Generate configuration file for mod_jk to be included in Apache's httpd.conf.</p>
+
+<p>For additional information on connecting Tomcat to Apache via mod_jk, see the
+<a href="mod_jk-howto.html">Working with mod_jk</a> document.</p>
+
+<p><b>Important Note:</b> The configuration files are not written as part of a
+normal startup of Tomcat.  To generate the configuration files on demand,
+append:
+<pre>    jkconf</pre>
+or
+<pre>    -jkconf</pre>
+to the startup command.  Tomcat will initialize sufficiently to write the
+configuration files and then exit. This may be done while Tomcat 3.3 is running.
+To generate the configuration files during normal startup, add:
+<pre>    jkconf=&quot;true&quot;</pre>
+to the <code>&lt;ContextManager ... &gt;</code> element in the
+<code>server.xml</code> file.</p>
+
+<h4>Parameters</h4>
+
+<table border="1" cellpadding="2" cellspacing="0">
+  <tr valign="top">
+    <th>Attribute</th>
+    <th>Description</th>
+    <th>Default</th>
+  </tr>
+  <tr valign="top">
+    <td>configHome</td>
+    <td>Default parent directory for the following paths. Ignored whenever any
+      of the following paths is absolute.</td>
+    <td>TOMCAT_HOME</td>
+  </tr>
+  <tr valign="top">
+    <td>jservConfig</td>
+    <td>Path to use for writing Apache tomcat-apache.conf configuration file.</td>
+    <td>conf/auto/tomcat-apache.conf</td>
+  </tr>
+  <tr valign="top">
+    <td>modJserv</td>
+    <td>Path to Apache mod_jserv plugin file.</td>
+    <td>Windows: modules/ApacheModuleJserv.dll<br>
+      Unix and all others: libexec/mod_jserv.so</td>
+  </tr>
+  <tr valign="top">
+    <td>jservLog</td>
+    <td>Path to log file to be used by mod_jserv.</td>
+    <td>logs/mod_jserv.log</td>
+  </tr>
+  <tr valign="top">
+    <td>jservDebug</td>
+    <td>JServ Loglevel setting.  May be debug, info, notice, warn, error, crit,
+       alert, or emerg.</td>
+    <td>emerg</td>
+  </tr>
+  <tr valign="top">
+    <td>forwardAll</td>
+    <td>If true, forward all requests to Tomcat. This helps insure that all the
+      behavior configured in the web.xml file functions correctly.  If false,
+      let Apache serve static resources. Warning: When false, some configuration
+      in the web.xml may not be duplicated in Apache.  Review the tomcat-apache.conf
+      configuration file to see the actual configuration being set in Apache.</td>
+    <td>true</td>
+  </tr>
+  <tr valign="top">
+    <td>noRoot</td>
+    <td>If true, the root context is not mapped to Tomcat. If false and
+	  forwardAll is true, all requests to the root context are mapped to Tomcat.
+	  If false and forwardAll is false, only JSP and servlets requests to the
+	  root context are mapped to Tomcat. If a root context is assigned to a virtual host,
+	  then the DocumentRoot is automatically included in the configuration for
+	  that virtual host.</td>
+    <td>true</td>
+  </tr>
+</table>
+
+<h4>Example(s)</h4>
+
+<pre>
+&lt;JservConfig forwardAll=&quot;true&quot; noRoot=&quot;false&quot; /&gt;
+</pre>
 
 <hr size="5">
 
