@@ -88,17 +88,32 @@ public  class RModuleIssueType
          throws Exception
     {                
         Module module = getModule();
+        IssueType issueType = getIssueType();
 
         if (user.hasPermission(ScarabSecurity.MODULE__CONFIGURE, module))
         {
             // Delete attribute groups first
-            List attGroups = module.getAttributeGroups(getIssueType());
+            List attGroups = module.getAttributeGroups(issueType);
             for (int j=0; j<attGroups.size(); j++)
             {
                 // delete attribute-attribute group map
                 AttributeGroup attGroup = 
                               (AttributeGroup)attGroups.get(j);
                 attGroup.delete(user, module);
+            }
+
+            // Delete mappings with user attributes
+            List rmas = module.getRModuleAttributes(issueType);
+            for (int i=0; i<rmas.size(); i++)
+            {
+                ((RModuleAttribute)rmas.get(i)).delete(user);
+            }
+            // Delete mappings with user attributes for template type
+            IssueType templateType = issueType.getTemplateIssueType();
+            rmas = module.getRModuleAttributes(templateType);
+            for (int i=0; i<rmas.size(); i++)
+            {
+                ((RModuleAttribute)rmas.get(i)).delete(user);
             }
 
             Criteria c = new Criteria()
