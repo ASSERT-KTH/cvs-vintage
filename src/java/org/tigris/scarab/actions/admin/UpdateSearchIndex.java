@@ -64,20 +64,29 @@ import org.tigris.scarab.util.word.SearchIndex;
  * This class allows an admin to update the search index.
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: UpdateSearchIndex.java,v 1.2 2002/10/23 21:44:33 jon Exp $
+ * @author <a href="mailto:jon@collab.net">Jon Scott Stevens</a>
+ * @version $Id: UpdateSearchIndex.java,v 1.3 2002/11/07 00:20:00 jon Exp $
  */
 public class UpdateSearchIndex extends RequireLoginFirstAction
 {
     public void doPerform( RunData data, TemplateContext context )
         throws Exception
     {
-        SearchIndex indexer = SearchFactory.getInstance();
-        indexer.updateIndex();
-
-        ScarabRequestTool scarabR = (ScarabRequestTool)context
-            .get(ScarabConstants.SCARAB_REQUEST_TOOL);
-        ScarabLocalizationTool l10n = getLocalizationTool(context);
-        scarabR.setConfirmMessage(l10n.get("SearchIndexUpdated"));
-        setTarget( data, ((ScarabUser)data.getUser()).getHomePage() );
+        ScarabRequestTool scarabR = getScarabRequestTool(context);
+        try
+        {
+            SearchIndex indexer = SearchFactory.getInstance();
+            indexer.updateIndex();
+    
+            ScarabLocalizationTool l10n = getLocalizationTool(context);
+            scarabR.setConfirmMessage(l10n.get("SearchIndexUpdated"));
+        }
+        catch (Exception e)
+        {
+            scarabR.setConfirmMessage(e.getMessage());            
+        }
+        String template = getCurrentTemplate(data, null);
+        String nextTemplate = getNextTemplate(data, template);
+        setTarget(data, nextTemplate);
     }
 }
