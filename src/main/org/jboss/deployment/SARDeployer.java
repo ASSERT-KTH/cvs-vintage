@@ -1,9 +1,10 @@
 /*
-* JBoss, the OpenSource J2EE webOS
-*
-* Distributable under LGPL license.
-* See terms of license at gnu.org.
-*/
+ * JBoss, the OpenSource J2EE webOS
+ *
+ * Distributable under LGPL license.
+ * See terms of license at gnu.org.
+ */
+
 package org.jboss.deployment;
 
 import java.io.File;
@@ -51,61 +52,62 @@ import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
 /**
-* This is the main Service Deployer API.
-*
-* @see       org.jboss.system.Service
-* @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
-* @author <a href="mailto:David.Maplesden@orion.co.nz">David Maplesden</a>
-* @author <a href="mailto:d_jencks@users.sourceforge.net">David Jencks</a>
-* @version   $Revision: 1.8 $ <p>
-*
-*      <b>20010830 marc fleury:</b>
-*      <ul>initial import
-*        <li>
-*      </ul>
-*
-*      <p><b>20010905 david maplesden:</b>
-*      <ul>
-*      <li>Changed deployment procedure to deploy all listed mbeans, then
-*      initialise them all before finally starting them all.  Changed services
-*      sets to lists to maintain ordering.
-*      </ul>
-*
-*      <b>20010908 david jencks</b>
-*      <ol>
-*        <li> fixed tabs to spaces and log4j logging. Made the urlToServiceSet
-*        map actually use the url supplied to deploy. Made postRegister use
-*        deploy. Made undeploy work, and implemented sar dependency management
-*        and recursive deploy/undeploy.
-*      </ol>
-*
-*      <p><b>20010907 david maplesden:</b>
-*      <ul>
-*      <li>Added support for "depends" tag
-*      </ul>
-*
-*      <p><b>20011210 marc fleury:</b>
-*      <ul>
-*      <li>Removing the classpath dependency to explicit jars
-*      </ul>
-*      <p><b>20011211 marc fleury:</b>
-*      <ul>
-*      <li>rewrite
-*      </ul>
-*/
+ * This is the main Service Deployer API.
+ *
+ * @see org.jboss.system.Service
+ *
+ * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
+ * @author <a href="mailto:David.Maplesden@orion.co.nz">David Maplesden</a>
+ * @author <a href="mailto:d_jencks@users.sourceforge.net">David Jencks</a>
+ * @version $Revision: 1.9 $
+ *
+ * <p><b>20010830 marc fleury:</b>
+ * <ul>
+ *    <li>initial import
+ * </ul>
+ *
+ * <p><b>20010905 david maplesden:</b>
+ * <ul>
+ *    <li>Changed deployment procedure to deploy all listed mbeans, then
+ *        initialise them all before finally starting them all.  Changed services
+ *        sets to lists to maintain ordering.
+ * </ul>
+ *
+ * <p><b>20010908 david jencks</b>
+ * <ul>
+ *    <li>fixed tabs to spaces and log4j logging. Made the urlToServiceSet
+ *        map actually use the url supplied to deploy. Made postRegister use
+ *        deploy. Made undeploy work, and implemented sar dependency management
+ *        and recursive deploy/undeploy.
+ * </ul>
+ *
+ * <p><b>20010907 david maplesden:</b>
+ * <ul>
+ *    <li>Added support for "depends" tag
+ * </ul>
+ *
+ * <p><b>20011210 marc fleury:</b>
+ * <ul>
+ *    <li>Removing the classpath dependency to explicit jars
+ * </ul>
+ *
+ * <p><b>20011211 marc fleury:</b>
+ * <ul>
+ *   <li>rewrite
+ * </ul>
+ */
 public class SARDeployer
    extends ServiceMBeanSupport
    implements SARDeployerMBean
 {
    // Attributes --------------------------------------------------------
-   private ObjectName objectName;
+   // private ObjectName objectName;
    
-   //Find all the deployment info for a url
-   private final Map urlToDeploymentInfoMap = new HashMap();
+   // Find all the deployment info for a url
+   // private final Map urlToDeploymentInfoMap = new HashMap();
    
-   //Find what package an mbean came from.
-   private final Map objectNameToSupplyingPackageMap = new HashMap();
-   
+   // Find what package an mbean came from.
+   // private final Map objectNameToSupplyingPackageMap = new HashMap();
    
    
    // Public --------------------------------------------------------
@@ -192,12 +194,17 @@ public class SARDeployer
    public void deploy(DeploymentInfo di)
       throws DeploymentException
    {
+      boolean debug = log.isDebugEnabled();
+
       try
       {
          // install the MBeans in this descriptor
-         if (log.isInfoEnabled())
-            log.info("Deploying SAR: url " + di.url);
+         if (debug) {
+            log.debug("Deploying SAR: url " + di.url);
+	 }
          
+	 ObjectName serviceController = getServiceControllerName();	 	 
+
          List mbeans = di.mbeans;
          mbeans.clear();
          
@@ -210,47 +217,52 @@ public class SARDeployer
             log.debug("deploying with ServiceController mbean " + mbean);
             
             ObjectName service = (ObjectName)invoke(
-               getServiceControllerName(),
+               serviceController,
                "install",
-               new Object[]{mbean},
-               new String[]{"org.w3c.dom.Element"});
+               new Object[]{ mbean },
+               new String[]{ "org.w3c.dom.Element" });
             
             if (service != null)
             {
                mbeans.add(service);
-               //      objectNameToSupplyingPackageMap.put(service, url);
+               // objectNameToSupplyingPackageMap.put(service, url);
             }
          }
          
+	 Iterator iter;
+	 ObjectName service;
+
          // create the services
-         Iterator iterator = di.mbeans.iterator();
-         while (iterator.hasNext()) 
+         iter = di.mbeans.iterator();
+         while (iter.hasNext()) 
          {
-            ObjectName service = (ObjectName) iterator.next();
+            service = (ObjectName)iter.next();
             
             // The service won't be created until explicitely dependent mbeans are created
             invoke(
-               getServiceControllerName(),
+               serviceController,
                "create",
-               new Object[]{service},
-               new String[]{"javax.management.ObjectName"});
+               new Object[]{ service },
+               new String[]{ "javax.management.ObjectName" });
          }
          
          // start the services
-         Iterator iterator2 = di.mbeans.iterator();
-         while (iterator2.hasNext()) 
+         iter = di.mbeans.iterator();
+         while (iter.hasNext()) 
          {
-            ObjectName service2 = (ObjectName) iterator2.next();
+            service = (ObjectName)iter.next();
             
             // The service won't be started until explicitely dependent mbeans are started
             invoke(
-               getServiceControllerName(),
+               serviceController,
                "start",
-               new Object[]{service2},
-               new String[]{"javax.management.ObjectName"});
+               new Object[]{ service },
+               new String[]{ "javax.management.ObjectName" });
          }
       }
-      catch (Exception e ) {log.error("Error in deploy ", e);}
+      catch (Exception e) {
+	 throw new DeploymentException(e);
+      }
    }
    
    protected void parseXMLClasspath(DeploymentInfo di) 
@@ -365,8 +377,10 @@ public class SARDeployer
             if (archives.equals("*")) 
             {
                // Safeguard
-               if (!codebase.startsWith("file:") && archives.equals("*"))
-                  throw new DeploymentException("No wildcard permitted in non-file URL deployment you must specify individual jars");
+               if (!codebase.startsWith("file:") && archives.equals("*")) {
+                  throw new DeploymentException
+		     ("No wildcard permitted in non-file URL deployment you must specify individual jars");
+	       }
 
                try
                {
@@ -425,9 +439,9 @@ public class SARDeployer
          //codebase is empty and archives is empty but we did have a classpath entry
          else
          {
-            String msg = "A classpath entry was declared but no non-file codebase"
-               + "and no jars specified. Please fix jboss-service.xml in your configuration";
-            throw new DeploymentException(msg);
+            throw new DeploymentException
+	       ("A classpath entry was declared but no non-file codebase " +
+		"and no jars specified. Please fix jboss-service.xml in your configuration");
          }
       }
       
@@ -531,7 +545,6 @@ public class SARDeployer
    {
       super.preRegister(server, name);
       log.debug("ServiceDeployer preregistered with mbean server");
-      objectName = name == null ? new ObjectName(OBJECT_NAME) : name;
       
       // Register with the main deployer
       server.invoke(
@@ -540,7 +553,7 @@ public class SARDeployer
          new Object[] {this},
          new String[] {"org.jboss.deployment.DeployerMBean"});
       
-      return objectName;
+      return name == null ? new ObjectName(OBJECT_NAME) : name;
    }
    
    /**
