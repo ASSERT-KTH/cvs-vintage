@@ -52,7 +52,7 @@ import org.jboss.management.j2ee.J2EEManagedObject;
 *
 * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
 * @author <a href="mailto:andreas@jboss.org">Andreas Schaefer</a>
-* @version $Revision: 1.1 $
+* @version $Revision: 1.2 $
 *
 * @ejb:bean name="MEJB"
 *           display-name="JBoss Management EJB (MEJB)"
@@ -263,7 +263,19 @@ public class ManagementBean
          ReflectionException,
          RemoteException
    {
+      System.out.println(
+         "ManagementBean.createMBean(), class: " + pClass +
+         ", name: " + pName +
+         ", parameters: " + pParameters +
+         ", signature: " + pSignature
+      );
+      try {
       return mConnector.createMBean( pClass, pName, pParameters, pSignature );
+      }
+      catch( ReflectionException e1 ) {
+         e1.printStackTrace();
+         throw e1;
+      }
    }
    
    /**

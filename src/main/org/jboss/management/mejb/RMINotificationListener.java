@@ -64,9 +64,18 @@ public class RMINotificationListener
 		Object pHandback
 	) {
       try {
+         System.out.println(
+            "RMINotificationListener.handleNotification() " +
+            ", notification: " + pNotification +
+            ", handback: " + pHandback +
+            ", client listener: " + mClientListener
+         );
          mClientListener.handleNotification( pNotification, pHandback );
       }
       catch( RemoteException re ) {
+         re.printStackTrace();
+         Throwable lDetail = re.detail;
+         lDetail.printStackTrace();
          throw new RuntimeException( re.getMessage() );
       }
    }

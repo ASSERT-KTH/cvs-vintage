@@ -68,7 +68,7 @@ public class JMSClientNotificationListener
       // Register the listener as MBean on the remote JMX server
       createListener(
          pConnector,
-         "org.jboss.jmx.connector.notification.JMSNotificationListener",
+         "org.jboss.management.mejb.JMSNotificationListener",
          new Object[] { pQueueJNDIName, lQueue },
          new String[] { String.class.getName(), Queue.class.getName() }
       );

@@ -50,7 +50,7 @@ public class PollingClientNotificationListener
       // Register the listener as MBean on the remote JMX server
       createListener(
          pConnector,
-         "org.jboss.jmx.connector.notification.PollingNotificationListener",
+         "org.jboss.management.mejb.PollingNotificationListener",
          new Object[] { new Integer( pMaximumListSize ), new Integer( pMaximumListSize ) },
          new String[] { Integer.TYPE.getName(), Integer.TYPE.getName() }
       );

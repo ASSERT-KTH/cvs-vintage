@@ -47,7 +47,7 @@ public class RMIClientNotificationListener
       // Register the listener as MBean on the remote JMX server
       createListener(
          pConnector,
-         "org.jboss.jmx.connector.notification.RMINotificationListener",
+         "org.jboss.management.mejb.RMINotificationListener",
          new Object[] { this },
          new String[] { RMIClientNotificationListenerInterface.class.getName() }
       );

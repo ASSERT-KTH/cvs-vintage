@@ -26,7 +26,7 @@ import org.jboss.management.mejb.MEJB;
  * {@link javax.management.j2ee.ListenerRegistration ListenerRegistration}.
  *
  * @author  <a href="mailto:andreas@jboss.org">Andreas Schaefer</a>.
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  *   
  * <p><b>Revisions:</b>
  *
@@ -141,9 +141,7 @@ public class ListenerRegistration
    
    public void removeNotificationListener(
       ObjectName pName,
-      NotificationListener pListener,
-      NotificationFilter pFilter,
-      Object pHandback
+      NotificationListener pListener
    )
       throws
          InstanceNotFoundException,

@@ -12,7 +12,7 @@
 <!--                                                                        -->
 <!-- ====================================================================== -->
 
-<!-- $Id: build.xml,v 1.43 2001/12/08 04:40:46 starksm Exp $ -->
+<!-- $Id: build.xml,v 1.44 2001/12/09 05:01:43 schaefera Exp $ -->
 
 <project default="main" name="JBoss/Server">
 
@@ -404,6 +404,7 @@
       <include name="org/jboss/tm/usertx/server/UserTransactionSessionImpl.class"/>
       <include name="org/jboss/jmx/adaptor/rmi/RMIAdaptorImpl.class"/>
       <include name="org/jboss/jmx/connector/notification/RMIClientNotificationListener.class"/>
+      <include name="org/jboss/management/mejb/RMIClientNotificationListener.class"/>
       <include name="org/jboss/ejb/plugins/jrmp/server/JRMPContainerInvoker.class"/>
     </rmic>
   </target>
