@@ -24,7 +24,7 @@
 // File: FigDependency.java
 // Classes: FigDependency
 // Original Author: ics 125b course, spring 1998
-// $Id: FigDependency.java,v 1.3 2002/10/22 08:48:45 mkl Exp $
+// $Id: FigDependency.java,v 1.4 2002/10/23 05:42:52 mkl Exp $
 
 package org.argouml.uml.diagram.ui;
 
@@ -35,6 +35,8 @@ import ru.novosoft.uml.foundation.core.*;
 
 import org.tigris.gef.base.*;
 import org.tigris.gef.presentation.*;
+
+import org.argouml.ui.ProjectBrowser;
 
 public class FigDependency extends FigEdgeModelElement {
 
@@ -48,6 +50,7 @@ public class FigDependency extends FigEdgeModelElement {
     endArrow.setFillColor(Color.red);
     setDestArrowHead(endArrow);
     setBetweenNearestPoints(true);
+    setLayer(ProjectBrowser.TheInstance.getActiveDiagram().getLayer());
   }
 
   public FigDependency(Object edge) {
@@ -61,6 +64,40 @@ public class FigDependency extends FigEdgeModelElement {
         setLayer(lay);
     }
 
+  public void setOwner(Object own) {
+    Object oldOwner = getOwner();
+    super.setOwner(own);
+    
+    if (own instanceof MDependency) {
+        MDependency newDep = (MDependency) own;
+        for (int i = 0; i < newDep.getSuppliers().size(); i++) {
+            ((MModelElement)((Object[]) newDep.getSuppliers().toArray())[i]).removeMElementListener(this);
+            ((MModelElement)((Object[]) newDep.getSuppliers().toArray())[i]).addMElementListener(this);
+        }
+        for (int i = 0; i < newDep.getClients().size(); i++) {
+            ((MModelElement)((Object[]) newDep.getClients().toArray())[i]).removeMElementListener(this);
+            ((MModelElement)((Object[]) newDep.getClients().toArray())[i]).addMElementListener(this);
+        }
+        newDep.removeMElementListener(this);
+        newDep.addMElementListener(this);
+        MModelElement supplier = 
+            (MModelElement)((newDep.getSuppliers().toArray())[0]);
+        MModelElement client = 
+            (MModelElement)((newDep.getClients().toArray())[0]);
+		  
+        FigNode supFN = (FigNode) getLayer().presentationFor(supplier);
+        FigNode cliFN = (FigNode) getLayer().presentationFor(client);
+		
+        if (cliFN != null) {
+            setSourcePortFig(cliFN);
+            setSourceFigNode(cliFN);
+        }
+        if (supFN != null) {
+            setDestPortFig(supFN);
+            setDestFigNode(supFN);
+        }
+    }
+  }
   ////////////////////////////////////////////////////////////////
   // accessors
 
