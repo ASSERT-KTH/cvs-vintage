@@ -33,7 +33,7 @@ import org.jboss.system.ServiceMBeanSupport;
  *
  * @author  <a href="mailto:cojonudo14@hotmail.com">Hiram Chirino</a>
  * @author  <a href="mailto:jason@planet57.com">Jason Dillon</a>
- * @version $Revision: 1.16 $
+ * @version $Revision: 1.17 $
  */
 public class JMSProviderLoader
    extends ServiceMBeanSupport
@@ -208,7 +208,6 @@ public class JMSProviderLoader
          context.unbind(bindName);
          if (log.isInfoEnabled())
             log.info("unbound adapter " + providerAdapter.getName() + " from " + bindName);
-
          //source.close();
          //log.log("XA Connection pool "+name+" shut down");
       }
