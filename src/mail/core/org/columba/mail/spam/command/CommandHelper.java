@@ -133,6 +133,12 @@ public final class CommandHelper {
             
         }
         
+        if ( item == null ) {
+            // use default account as fallback
+            
+            item = MailInterface.config.getAccountList().getDefaultAccount();
+        }
+        
 
         return item;
     }

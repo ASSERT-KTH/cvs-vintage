@@ -16,24 +16,22 @@
 //All Rights Reserved.
 package org.columba.mail.spam;
 
+import java.io.File;
+import java.io.InputStream;
+import java.util.List;
+
 import org.columba.core.gui.util.NotifyDialog;
 import org.columba.core.io.CloneStreamMaster;
 import org.columba.core.main.MainInterface;
-
 import org.macchiato.DBWrapper;
 import org.macchiato.Message;
 import org.macchiato.SpamFilter;
 import org.macchiato.SpamFilterImpl;
-
 import org.macchiato.db.FrequencyDB;
 import org.macchiato.db.FrequencyDBImpl;
 import org.macchiato.db.FrequencyIO;
 import org.macchiato.db.MD5SumHelper;
-
-import java.io.File;
-import java.io.InputStream;
-
-import java.util.List;
+import org.macchiato.maps.ProbabilityMap;
 
 /**
  * High-level wrapper for the spam filter.
@@ -72,8 +70,6 @@ public class SpamController {
      */
     private File file;
 
-    private boolean trainingMode;
-
     /**
      * private constructor
      *  
@@ -83,7 +79,6 @@ public class SpamController {
 
         filter = new SpamFilterImpl(db);
 
-        trainingMode = true;
     }
 
     /**
@@ -120,21 +115,18 @@ public class SpamController {
 
             byte[] md5sum = MD5SumHelper.createMD5(inputStream);
 
-            if (isTrainingModeEnabled()) {
-                // we are in training mode
-                // -> even if message was already learned, it can be re-learned
-                // again
-                filter.trainMessageAsSpam(new Message(master.getClone(), list,
-                        md5sum));
+            Message message = new Message(master.getClone(), list, md5sum);
+            // check if this message was already learned
+            // -> only add if this is not the case
+            if (db.MD5SumExists(md5sum)) {
+                // message already exists
+                // --> correct token data
+                filter.correctMessageAsSpam(message);
             } else {
-                // we are *not* in training mode
-                // -> check if this message was already learned
-                // -> only add if this is not the case
-                if (db.MD5SumExists(md5sum) == false) {
-                    filter.trainMessageAsSpam(new Message(master.getClone(),
-                            list, md5sum));
-                }
+                // new message
+                filter.trainMessageAsSpam(message);
             }
+
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -152,47 +144,38 @@ public class SpamController {
             InputStream inputStream = master.getClone();
 
             byte[] md5sum = MD5SumHelper.createMD5(inputStream);
+            Message message = new Message(master.getClone(), list, md5sum);
 
-            if (isTrainingModeEnabled()) {
-                // we are in training mode
-                // -> even if message was already learned, it can be re-learned
-                // again
-                filter.trainMessageAsHam(new Message(master.getClone(), list,
-                        md5sum));
+            // check if this message was already learned
+            if (db.MD5SumExists(md5sum)) {
+                // message already exists
+
+                // --> correct token data
+                filter.correctMessageAsHam(message);
             } else {
-                // we are *not* in training mode
-                // -> check if this message was already learned
-                // -> only add if this is not the case
-                if (db.MD5SumExists(md5sum) == false) {
-                    filter.trainMessageAsHam(new Message(master.getClone(),
-                            list, md5sum));
-                }
+                // new message
+
+                filter.trainMessageAsHam(message);
             }
+
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
     /**
-     * Score message.
-     * 
-     * @param istream
-     * @return probability this message is spam (0.0-1.0 float values)
-     */
-    private float score(InputStream istream) {
-        return filter.scoreMessage(new Message(istream));
-    }
-
-    /**
      * Score message. Using a threshold of 90% here. Every message with at
-     * least 90% is spam.
+     * least 90% is spam. This value should be increased in the future.
      * 
      * @param istream
      * 
      * @return true, if message is spam. False, otherwise.
      */
-    public boolean scoreMessage(InputStream istream) {
-        if (score(istream) > 0.9) { return true; }
+    public boolean scoreMessage(InputStream istream, ProbabilityMap map) {
+
+        float score = filter.scoreMessage(new Message(istream), map);
+        
+        if (score >= 0.9) { return true; }
 
         return false;
     }
@@ -240,12 +223,4 @@ public class SpamController {
         }
     }
 
-    /**
-     * Checks if training mode is enabled.
-     * 
-     * @return true, if enabled. False,otherwise.
-     */
-    public boolean isTrainingModeEnabled() {
-        return trainingMode;
-    }
 }

@@ -67,6 +67,7 @@ public class MarkMessageCommand extends FolderCommand {
     public final static int MARK_AS_NOTSPAM = -4;
 
     protected FolderCommandAdapter adapter;
+    private WorkerStatusController worker;
 
     /**
      * Constructor for MarkMessageCommand.
@@ -113,6 +114,8 @@ public class MarkMessageCommand extends FolderCommand {
      * @see org.columba.core.command.Command#execute(Worker)
      */
     public void execute(WorkerStatusController worker) throws Exception {
+        this.worker = worker;
+        
         // use wrapper class for easier handling of references array
         adapter = new FolderCommandAdapter(
                 (FolderCommandReference[]) getReferences());
@@ -143,7 +146,7 @@ public class MarkMessageCommand extends FolderCommand {
 
             if ((markVariant == MARK_AS_SPAM)
                     || (markVariant == MARK_AS_NOTSPAM)) {
-                processSpamFilter(worker, uids, srcFolder, markVariant);
+                processSpamFilter(uids, srcFolder, markVariant);
             }
 
         }
@@ -155,8 +158,7 @@ public class MarkMessageCommand extends FolderCommand {
      * Move message to specified folder or delete message immediately based on
      * account configuration.
      * 
-     * @param worker
-     *            status update observer
+
      * @param uids
      *            message uid
      * @param srcFolder
@@ -165,7 +167,7 @@ public class MarkMessageCommand extends FolderCommand {
      *            mark variant (spam/not spam)
      * @throws Exception
      */
-    private void processSpamFilter(WorkerStatusController worker,
+    private void processSpamFilter(
             Object[] uids, Folder srcFolder, int markVariant) throws Exception {
         // mark as/as not spam
         // for each message
@@ -197,11 +199,11 @@ public class MarkMessageCommand extends FolderCommand {
             c.execute(worker);
 
             // skip if message is *not* marked as spam
-            if (markVariant == MARK_AS_NOTSPAM) return;
+            if (markVariant == MARK_AS_NOTSPAM) continue;
             
             // skip if user didn't enable this option
             if (item.getSpamItem().isMoveMessageWhenMarkingEnabled() == false)
-                    return;
+                    continue;
 
             if (item.getSpamItem().isMoveTrashSelected() == false) {
                 // move message to user-configured folder (generally "Junk"
