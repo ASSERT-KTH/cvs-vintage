@@ -148,8 +148,18 @@ dd	{
 .functnbar {
 	vertical-align: middle;
 	padding: 3px;
+	margin-top: .5em;
 	}
 .functnbar th, .functnbar td {
+	color: #fff;
+	padding-left: 2px;
+	padding-right: 2px;
+	}
+.functnbar2 {
+	vertical-align: middle;
+	padding: 3px;
+	}
+.functnbar2 th, .functnbar2 td {
 	color: black;
 	padding-left: 2px;
 	padding-right: 2px;

@@ -157,10 +157,10 @@ ul, ol, dd	{
 
 /* Scarab/App - styles start here */
 .functnbar {
-	background: #999;
+	background: #000;
 	}
-.functnbar th, .functnbar td {
-	background: #999;
+.functnbar2 {
+	background: #666;
 	}
 #topmodule {
 	border-top: 1px solid white;
