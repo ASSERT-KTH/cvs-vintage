@@ -24,7 +24,7 @@
 // File: TabStyle.java
 // Classes: TabStyle
 // Original Author:
-// $Id: TabStyle.java,v 1.2 2002/05/03 19:17:05 jeremybennett Exp $
+// $Id: TabStyle.java,v 1.3 2002/07/18 20:33:54 thn Exp $
 
 // 12 Apr 2002: Jeremy Bennett (mail@jeremybennett.com). Extended to support
 // use case style panel that handles optional display of extension points.
@@ -86,6 +86,7 @@ implements TabFigTarget, PropertyChangeListener, DelayedVChangeListener {
 
   protected void initPanels() {
     StylePanelFigClass spfc      = new StylePanelFigClass();
+    StylePanelFigInterface spfi  = new StylePanelFigInterface();
     StylePanelFigUseCase spfuc   = new StylePanelFigUseCase();
     SPFigEdgeModelElement spfeme = new SPFigEdgeModelElement();
     StylePanelFig spf            = new StylePanelFig();
@@ -94,7 +95,7 @@ implements TabFigTarget, PropertyChangeListener, DelayedVChangeListener {
     _panels.put(FigUseCase.class, spfuc);
     _panels.put(FigNodeModelElement.class, spf);
     _panels.put(FigEdgeModelElement.class, spfeme);
-    _panels.put(FigInterface.class, spf);
+    _panels.put(FigInterface.class, spfi);
     _panels.put(FigAssociation.class, spfeme);
     _panels.put(FigState.class, spf);
     _panels.put(FigTransition.class, spfeme);
