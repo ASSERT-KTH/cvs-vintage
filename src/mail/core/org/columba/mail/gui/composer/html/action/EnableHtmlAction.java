@@ -19,10 +19,12 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.JCheckBoxMenuItem;
+import javax.swing.JOptionPane;
 
 import org.columba.core.action.CheckBoxAction;
 import org.columba.core.gui.frame.AbstractFrameController;
 import org.columba.core.gui.frame.AbstractFrameView;
+import org.columba.core.logging.ColumbaLogger;
 import org.columba.core.xml.XmlElement;
 import org.columba.mail.config.MailConfig;
 import org.columba.mail.util.MailResourceLoader;
@@ -31,7 +33,10 @@ import org.columba.mail.util.MailResourceLoader;
  * CheckBox for switching between HTML and text messages.
  * 
  * TODO: set ComposerModel html state (note that AbstractFrameController is
- *       really an instance of ComposerController)
+ *       really an instance of ComposerController). This will change the 
+ * 		 composer type immediately - now it changes when the composer is
+ *       reopened. To implement this, we need to find a way to convert
+ * 		 properly from text to html and back.
  *
  * @author fdietz
  */
@@ -60,12 +65,15 @@ public class EnableHtmlAction
 	 * 
 	 * @see org.columba.core.action.CheckBoxAction#setCheckBoxMenuItem(javax.swing.JCheckBoxMenuItem)
 	 */
-	public void setCheckBoxMenuItem(
-		JCheckBoxMenuItem checkBoxMenuItem,
-		AbstractFrameView frameView) {
+	public void setCheckBoxMenuItem(JCheckBoxMenuItem checkBoxMenuItem) {
+		/* *20030912, karlpeder* Method signature changed from 
+		 * setCheckBoxMenuItem(JCheckBoxMenuItem,AbstractFrameView).
+		 * Else it doesn't get called during creation of menu
+		 */
 		super.setCheckBoxMenuItem(checkBoxMenuItem);
 
-		System.out.println("---------->initialize enableHtmlAction");
+		ColumbaLogger.log.debug(
+				"Initializing selected state of EnableHtmlAction");
 		
 		// enable/disable menuitem, based on configuration text/html state
 		XmlElement optionsElement =
@@ -101,6 +109,13 @@ public class EnableHtmlAction
 
 		// change configuration based on menuitem selection	 
 		htmlElement.addAttribute("enable", new Boolean(selection).toString());
+		
+		// Display message to user (the change will not happen immediately
+		JOptionPane.showMessageDialog(
+				null,
+				"The composer type will change when the composer is reopened.",
+				"Change of composer type",
+				JOptionPane.INFORMATION_MESSAGE);
 	}
 
 }
