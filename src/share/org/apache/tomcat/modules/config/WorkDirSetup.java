@@ -185,7 +185,12 @@ public class WorkDirSetup extends BaseInterceptor {
 	StringBuffer sb=new StringBuffer();
 	sb.append( absPath ).append( File.separator );
 	sb.append( "WEB-INF" ).append( File.separator );
-	sb.append( "TOMCAT_WORKDIR" );
+	sb.append( "TOMCAT_WORKDIR" ).append( File.separator );
+
+        String path=ctx.getPath();
+        if( path.startsWith("/")) path=path.substring(1);
+        if( "".equals(path) ) path="ROOT";
+        sb.append( URLEncoder.encode( path ).replace('%', '_') );
 	File workDirF= new File( sb.toString() );
 	workDirF.mkdirs();
 
@@ -205,17 +210,14 @@ public class WorkDirSetup extends BaseInterceptor {
 	sb.append(cm.getWorkDir());
 	sb.append(File.separator);
 	String host=ctx.getHost();
-	// # 457
-	if( host!=null )
-	    host=host.replace(':', '_');
 	if( host==null ) 
 	    sb.append( "DEFAULT" );
 	else
-	    sb.append( host );
+	    sb.append( host.replace(':', '_') );
 	
 
 	if( oldStyle ) {
-	    sb.append(URLEncoder.encode( ctx.getPath() ));
+	    sb.append(URLEncoder.encode( ctx.getPath() ).replace('%', '_'));
 	    workDirF=new File(sb.toString());
 	} else {
 	    File hostD=new File( sb.toString());
@@ -224,7 +226,7 @@ public class WorkDirSetup extends BaseInterceptor {
 	    String path=ctx.getPath();
 	    if( path.startsWith("/")) path=path.substring(1);
             if( "".equals(path) ) path="ROOT";
-	    workDirF=new File( hostD, URLEncoder.encode( path ));
+	    workDirF=new File( hostD, URLEncoder.encode( path ).replace('%', '_') );
 	}
 	ctx.setWorkDir( workDirF );
     }
