@@ -127,7 +127,7 @@ import org.tigris.scarab.services.cache.ScarabCache;
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: AbstractScarabModule.java,v 1.47 2002/08/13 23:52:26 elicia Exp $
+ * @version $Id: AbstractScarabModule.java,v 1.48 2002/08/17 00:15:26 elicia Exp $
  */
 public abstract class AbstractScarabModule
     extends BaseObject
@@ -1325,7 +1325,8 @@ public abstract class AbstractScarabModule
      * gets a list of all of the active Attributes.
      * ordered by name
      */
-    public List getActiveAttributesByName(IssueType issueType)
+    public List getActiveAttributesByName(IssueType issueType,
+                                          String attributeType)
         throws Exception
     {
         Criteria crit = new Criteria();
@@ -1336,6 +1337,19 @@ public abstract class AbstractScarabModule
                      AttributePeer.ATTRIBUTE_ID);
         crit.add(AttributePeer.DELETED, false);
         crit.add(RModuleAttributePeer.ACTIVE, true);
+        if (USER.equals(attributeType))
+        {
+            crit.add(AttributePeer.ATTRIBUTE_TYPE_ID, 
+                     AttributeTypePeer.USER_TYPE_KEY);
+            crit.addJoin(AttributePeer.ATTRIBUTE_ID,
+                     RModuleAttributePeer.ATTRIBUTE_ID); 
+        }
+        else if (NON_USER.equals(attributeType))
+        {
+            crit.add(AttributePeer.ATTRIBUTE_TYPE_ID, 
+                     AttributeTypePeer.USER_TYPE_KEY,
+                     Criteria.NOT_EQUAL);
+        }
         crit.addAscendingOrderByColumn(
                 RModuleAttributePeer.DISPLAY_VALUE);
         return AttributePeer.doSelect(crit);
