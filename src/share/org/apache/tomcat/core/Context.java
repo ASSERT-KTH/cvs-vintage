@@ -121,12 +121,12 @@ public class Context {
     private boolean isWARExpanded = false;
     private boolean isWARValidated = false;
 
-    // Class Loading
-    private String classPath = ""; // classpath used by the classloader.
-    private Vector classPaths = new Vector();
-    private Vector libPaths = new Vector();
-    // XXX deprecated
-    private ServletClassLoader servletLoader;
+//     // Class Loading
+//     private String classPath = ""; // classpath used by the classloader.
+//     private Vector classPaths = new Vector();
+//     private Vector libPaths = new Vector();
+//     // XXX deprecated
+//     private ServletClassLoader servletLoader;
     private ServletLoader servletL;
 
     // Interceptors
@@ -620,10 +620,14 @@ public class Context {
     }
 
     public Object getAttribute(String name) {
-        if (name.equals("org.apache.tomcat.jsp_classpath"))
-	  return getClassPath();
+        if (name.equals("org.apache.tomcat.jsp_classpath")) {
+	    //return getServletLoader().getClassPath();
+	    String cp= getServletLoader().getClassPath();
+	    //	    System.out.println("CP: " + cp);
+	    return cp;
+	}
 	else if(name.equals("org.apache.tomcat.classloader")) {
-	  return this.getLoader();
+	  return this.getServletLoader();
         }else {
             Object o = attributes.get(name);
             return attributes.get(name);
@@ -999,51 +1003,51 @@ public class Context {
 	return servletL;
     }
 
-    /** @deprecated
-     */
-    public void setLoader(ServletClassLoader loader ) {
-	this.servletLoader=loader;
-    }
+//     /** @deprecated
+//      */
+//     public void setLoader(ServletClassLoader loader ) {
+// 	this.servletLoader=loader;
+//     }
 
-    /** @deprecated
-     */
-    public ServletClassLoader getLoader() {
-	return servletLoader;
-    }
+//     /** @deprecated
+//      */
+//     public ServletClassLoader getLoader() {
+// 	return servletLoader;
+//     }
 
-    public Enumeration getClassPaths() {
-        return this.classPaths.elements();
-    }
+//     public Enumeration getClassPaths() {
+//         return this.classPaths.elements();
+//     }
 
-    public void addClassPath(String path) {
-        this.classPaths.addElement(path);
-    }
+//     public void addClassPath(String path) {
+//         this.classPaths.addElement(path);
+//     }
 
-    public Enumeration getLibPaths() {
-        return this.libPaths.elements();
-    }
+//     public Enumeration getLibPaths() {
+//         return this.libPaths.elements();
+//     }
 
-    public void addLibPath(String path) {
-        this.libPaths.addElement(path);
-    }
+//     public void addLibPath(String path) {
+//         this.libPaths.addElement(path);
+//     }
 
-    // XXX XXX XXX ugly, need rewrite ( servletLoader will call getClassPaths and getLibPaths
-    // and will concatenate the "file" part of them ).
-    /** Returns the classpath as a string
-     */
-    public String getClassPath() {
-        String cp = this.classPath.trim();
-        String servletLoaderClassPath =
-            this.getLoader().getClassPath();
+//     // XXX XXX XXX ugly, need rewrite ( servletLoader will call getClassPaths and getLibPaths
+//     // and will concatenate the "file" part of them ).
+//     /** Returns the classpath as a string
+//      */
+//     public String getClassPath() {
+//         String cp = this.classPath.trim();
+//         String servletLoaderClassPath =
+//             this.getLoader().getClassPath();
 
-        if (servletLoaderClassPath != null &&
-            servletLoaderClassPath.trim().length() > 0) {
-            cp += ((cp.length() > 0) ? File.pathSeparator : "") +
-                servletLoaderClassPath;
-        }
+//         if (servletLoaderClassPath != null &&
+//             servletLoaderClassPath.trim().length() > 0) {
+//             cp += ((cp.length() > 0) ? File.pathSeparator : "") +
+//                 servletLoaderClassPath;
+//         }
 
-        return cp;
-    }
+//         return cp;
+//     }
 
     /* -------------------- Utils  -------------------- */
     public void setDebug( int level ) {

@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/util/Attic/URLResourceReader.java,v 1.2 1999/12/03 18:07:07 harishp Exp $
- * $Revision: 1.2 $
- * $Date: 1999/12/03 18:07:07 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/util/Attic/URLResourceReader.java,v 1.3 2000/02/10 18:55:55 costin Exp $
+ * $Revision: 1.3 $
+ * $Date: 2000/02/10 18:55:55 $
  *
  * ====================================================================
  *
@@ -199,6 +199,10 @@ public class URLResourceReader  {
     public void close() {
         resourceCache.clear();
         resourceCache = null;
+    }
+
+    public String toString() {
+	return url.toString();
     }
 }
 

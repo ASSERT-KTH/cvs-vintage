@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/util/Attic/NetworkClassLoader.java,v 1.4 1999/11/28 23:52:31 harishp Exp $
- * $Revision: 1.4 $
- * $Date: 1999/11/28 23:52:31 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/util/Attic/NetworkClassLoader.java,v 1.5 2000/02/10 18:55:55 costin Exp $
+ * $Revision: 1.5 $
+ * $Date: 2000/02/10 18:55:55 $
  *
  * ====================================================================
  *
@@ -150,6 +150,7 @@ public class NetworkClassLoader extends ClassLoader {
     private byte[] loadResource(URL url, String resourceName)
         throws IOException {
         URLResourceReader urr = (URLResourceReader) urlset.get(url);
+	//	System.out.println("Loading from " + urr + " " + resourceName);
         if(urr != null) {
             return urr.getResource(resourceName);
         }

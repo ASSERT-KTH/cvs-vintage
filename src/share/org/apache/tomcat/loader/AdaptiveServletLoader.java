@@ -151,7 +151,11 @@ public class AdaptiveServletLoader  extends AdaptiveClassLoader implements Servl
         for(Enumeration e = classP.elements() ; e.hasMoreElements(); ) {
             File f = (File) e.nextElement();
             if (cpath.length()>0) cpath += separator;
-            cpath += FileUtil.patch(f.getName());
+	    try {
+		cpath += FileUtil.patch(f.getCanonicalPath());
+	    } catch( IOException ex) {
+		ex.printStackTrace();
+	    }
         }
 
         return cpath;

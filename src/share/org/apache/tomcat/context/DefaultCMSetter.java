@@ -140,17 +140,10 @@ public class DefaultCMSetter extends BaseContextInterceptor {
 	    ctx.addContextInterceptor(new LoadOnStartupInterceptor());
 	}
 	
-	ctx.addClassPath("WEB-INF/classes");
-	ctx.addLibPath("WEB-INF/lib");
-
 	// XXX Loader properties - need to be set on loader!!
-	if(ctx.getLoader() == null) {
-	    // ctx.setLoader( new org.apache.tomcat.loader.ServletClassLoaderImpl(ctx));
-	    ctx.setServletLoader( new org.apache.tomcat.loader.AdaptiveServletLoader());
-	    initURLs( ctx );
-	}
-
-	
+	ctx.setServletLoader( new org.apache.tomcat.loader.ServletClassLoaderImpl());
+	//	    ctx.setServletLoader( new org.apache.tomcat.loader.AdaptiveServletLoader());
+	initURLs( ctx );
 
 	return 0;
     }
@@ -158,28 +151,20 @@ public class DefaultCMSetter extends BaseContextInterceptor {
     private void initURLs(Context context) {
 	ServletLoader loader=context.getServletLoader();
 	if( loader==null) return;
-	
+
+	// Add "WEB-INF/classes"
+
 	String base = context.getDocBase();
+	File dir = new File(base + "/WEB-INF/classes");
+	loader.addRepository( dir );
 
-        // The classes directory...
-        for(Enumeration e = context.getClassPaths();
-            e.hasMoreElements(); ) {
-            String cpath = (String) e.nextElement();
-	    File dir = new File(base + "/" + cpath + "/");
-	    loader.addRepository( dir );
-        }
-
-        for(Enumeration e = context.getLibPaths();
-            e.hasMoreElements(); ) {
-            String libpath = (String) e.nextElement();
-            File f =  new File(base + "/" + libpath + "/");
-            Vector jars = new Vector();
-            getJars(jars, f);
+	File f =  new File(base + "/WEB-INF/lib");
+	Vector jars = new Vector();
+	getJars(jars, f);
             
-            for(int i=0; i < jars.size(); ++i) {
-		String jarfile = (String) jars.elementAt(i);
-		loader.addRepository( new File( base + "/" + libpath + "/" +jarfile ));
-	    }
+	for(int i=0; i < jars.size(); ++i) {
+	    String jarfile = (String) jars.elementAt(i);
+	    loader.addRepository( new File( base + "/WEB-INF/" +jarfile ));
 	}
     }
 

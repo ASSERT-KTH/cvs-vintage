@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/ServletWrapper.java,v 1.19 2000/02/09 23:26:28 costin Exp $
- * $Revision: 1.19 $
- * $Date: 2000/02/09 23:26:28 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/ServletWrapper.java,v 1.20 2000/02/10 18:55:54 costin Exp $
+ * $Revision: 1.20 $
+ * $Date: 2000/02/10 18:55:54 $
  *
  * ====================================================================
  *
@@ -233,15 +233,7 @@ public class ServletWrapper {
 	    if (servletClassName == null) 
 		throw new IllegalStateException(sm.getString("wrapper.load.noclassname"));
 
-	    ServletLoader loader=context.getServletLoader();
-	    if( loader==null) {
-		// XXX old code
-		servletClass = context.getLoader().loadServlet(this,
-							       servletClassName);
-	    } else {
-		servletClass=loader.loadClass( servletClassName);
-	    }
-		
+	    servletClass=context.getServletLoader().loadClass( servletClassName);
 	}
 	
 	servlet = (Servlet)servletClass.newInstance();
