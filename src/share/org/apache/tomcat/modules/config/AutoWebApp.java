@@ -88,6 +88,7 @@ public class AutoWebApp extends BaseInterceptor {
     boolean ignoreDot=true;
     String profile=null;
     boolean trusted=false;
+    String prefix="";
     
     // encoding scheme - XXX review, customize, implement
     char hostSeparator='@'; // if support for vhost configuration is enabled
@@ -109,6 +110,12 @@ public class AutoWebApp extends BaseInterceptor {
 	appsD=d;
     }
 
+    /** Add a prefix to all deployed context paths
+     */
+    public void setPrefix(String s ) {
+	prefix=s;
+    }
+    
     /** All applications in the directory will be added to a
 	single virtual host. If not set, an encoding scheme
 	will be used to extract the virtual host name from
@@ -251,7 +258,7 @@ public class AutoWebApp extends BaseInterceptor {
 	if (dir.isDirectory()) {
 	    Context ctx=new Context();
 	    ctx.setContextManager( cm );
-	    ctx.setPath(path);
+	    ctx.setPath(prefix + path);
 	    if( ! "DEFAULT".equals( host ) )
 		ctx.setHost( host );
 	    try {
