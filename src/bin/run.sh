@@ -5,7 +5,7 @@
 ##                                                                          ##
 ### ====================================================================== ###
 
-### $Id: run.sh,v 1.32 2001/12/08 18:23:39 starksm Exp $ ###
+### $Id: run.sh,v 1.33 2002/01/04 00:09:54 user57 Exp $ ###
 
 DIRNAME=`dirname $0`
 PROGNAME=`basename $0`
@@ -19,30 +19,51 @@ die() {
     exit 1
 }
 
+# OS specific support (must be 'true' or 'false').
+cygwin=false;
+case "`uname`" in
+    CYGWIN*)
+        cygwin=true
+        ;;
+esac
+
+# For Cygwin, ensure paths are in UNIX format before anything is touched
+if $cygwin ; then
+    [ -n "$JBOSS_HOME" ] &&
+        JBOSS_HOME=`cygpath --unix "$JBOSS_HOME"`
+    [ -n "$JAVA_HOME" ] &&
+        JAVA_HOME=`cygpath --unix "$JAVA_HOME"`
+    [ -n "$JAVAC_JAR" ] &&
+        JAVAC_JAR=`cygpath --unix "$JAVAC_JAR"`
+fi
+
 # Setup JBOSS_HOME
 if [ "x$JBOSS_HOME" = "x" ]; then
+    # get the full path (without any relative bits)
     JBOSS_HOME=`cd $DIRNAME/..; pwd`
 fi
 export JBOSS_HOME
 
 # Setup the JVM
 if [ "x$JAVA_HOME" != "x" ]; then
-    JAVA=$JAVA_HOME/bin/java
+    JAVA="$JAVA_HOME/bin/java"
 else
     JAVA="java"
 fi
 
 # Setup the classpath
 JBOSS_BOOT_CLASSPATH="$JBOSS_HOME/bin/run.jar"
+
 # Include the JDK javac compiler for JSP pages. The default is for a Sun JDK
 # compatible distribution which JAVA_HOME points to
 if [ "x$JAVAC_JAR" = "x" ]; then
-    JAVAC_JAR=$JAVA_HOME/lib/tools.jar
+    JAVAC_JAR="$JAVA_HOME/lib/tools.jar"
 fi
+
 if [ "x$JBOSS_CLASSPATH" = "x" ]; then
-    JBOSS_CLASSPATH="$JBOSS_BOOT_CLASSPATH:$JAVAC_JAR:"
+    JBOSS_CLASSPATH="$JBOSS_BOOT_CLASSPATH:$JAVAC_JAR"
 else
-    JBOSS_CLASSPATH="$JBOSS_CLASSPATH:$JBOSS_BOOT_CLASSPATH:$JAVAC_JAR:"
+    JBOSS_CLASSPATH="$JBOSS_CLASSPATH:$JBOSS_BOOT_CLASSPATH:$JAVAC_JAR"
 fi
 
 # Check for SUN(tm) JVM w/ HotSpot support
@@ -84,9 +105,21 @@ esac
 JAVA_OPTS="$JAVA_OPTS -Djavax.xml.parsers.DocumentBuilderFactory=$JAXP_DOM_FACTORY"
 JAVA_OPTS="$JAVA_OPTS -Djavax.xml.parsers.SAXParserFactory=$JAXP_SAX_FACTORY"
 
+# Where we need to be to start the server
+startdir="$JBOSS_HOME/bin"
+
+# For Cygwin, switch paths to Windows format before running java
+if $cygwin; then
+    JBOSS_HOME=`cygpath --path --windows "$JBOSS_HOME"`
+    JAVA_HOME=`cygpath --path --windows "$JAVA_HOME"`
+    JBOSS_CLASSPATH=`cygpath --path --windows "$JBOSS_CLASSPATH"`
+fi
+
 # Display our environment
 echo "================================================================================"
 echo " JBoss Bootstrap Environment"
+echo ""
+echo " JBOSS_HOME: $JBOSS_HOME"
 echo ""
 echo " JAVA: $JAVA"
 echo ""
@@ -98,7 +131,7 @@ echo "==========================================================================
 echo ""
 
 # Make sure we are in the correctly directory
-cd $JBOSS_HOME/bin
+cd $startdir
 
 # Execute the JVM
 exec $JAVA \
