@@ -1,4 +1,4 @@
-// $Id: IDLFileImport.java,v 1.3 2004/08/27 05:43:28 linus Exp $
+// $Id: IDLFileImport.java,v 1.4 2004/09/23 20:53:10 mvw Exp $
 // Copyright (c) 2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -311,7 +311,7 @@ public class IDLFileImport extends FileImportSupport {
      */
     public SuffixFilter[] getSuffixFilters() {
 	SuffixFilter[] result = {
-	    FileFilters.IDLFilter,
+	    FileFilters.IDL_FILTER,
 	};
 	return result;
     }

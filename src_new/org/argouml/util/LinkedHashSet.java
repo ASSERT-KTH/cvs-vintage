@@ -1,4 +1,4 @@
-// $Id: LinkedHashSet.java,v 1.3 2004/02/29 12:35:47 linus Exp $
+// $Id: LinkedHashSet.java,v 1.4 2004/09/23 20:53:09 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -34,7 +34,9 @@ import java.util.LinkedList;
  * class and is provided to give the same functionality for previous
  * versions of JDK.<p>
  *
- * @see <a href="http://java.sun.com/j2se/1.4.2/docs/api/java/util/LinkedHashSet.html">LinkedHashSet in JDK1.4</a>
+ * @see <a 
+ * href="http://java.sun.com/j2se/1.4.2/docs/api/java/util/LinkedHashSet.html"
+ * >LinkedHashSet in JDK1.4</a>
  * @author Bob Tarling
  */
 public class LinkedHashSet extends HashSet {
@@ -61,18 +63,27 @@ public class LinkedHashSet extends HashSet {
         list = new LinkedList();
     }
     
+    /**
+     * @see java.util.Collection#add(java.lang.Object)
+     */
     public boolean add(Object o) {
         boolean changed = super.add(o);
         if (changed) list.add(o);
         return changed;
     }
     
+    /**
+     * @see java.util.Collection#remove(java.lang.Object)
+     */
     public boolean remove(Object o) {
         boolean found = super.remove(o);
         if (found) list.remove(o);
         return found;
     }
     
+    /**
+     * @see java.util.Collection#retainAll(java.util.Collection)
+     */
     public boolean retainAll(Collection c) {
         boolean changed = false;
         Iterator it = iterator();
@@ -86,26 +97,42 @@ public class LinkedHashSet extends HashSet {
         return changed;
     }
     
+    /**
+     * @see java.util.Collection#toArray()
+     */
     public Object[] toArray() {
         return list.toArray();
     }
     
+    /**
+     * @see java.util.Collection#toArray(java.lang.Object[])
+     */
     public Object[] toArray(Object[] a) {
         return list.toArray(a);
     }
     
+    /**
+     * @see java.util.Collection#clear()
+     */
     public void clear() {
         super.clear();
         list.clear();
     }
 
-    // TODO: Shouldn't there be a hashCode() function in this class?
+    /**
+     * TODO: Shouldn't there be a hashCode() function in this class?
+     * 
+     * @see java.lang.Object#equals(java.lang.Object)
+     */
     public boolean equals(Object o) {
         if (o == null || !(o instanceof LinkedHashSet)) return false;
         LinkedHashSet rhs = (LinkedHashSet) o;
         return list.equals(rhs.list);
     }
     
+    /**
+     * @see java.util.Collection#iterator()
+     */
     public Iterator iterator() {
         return new LinkedHashSetIterator(list.iterator());
     }

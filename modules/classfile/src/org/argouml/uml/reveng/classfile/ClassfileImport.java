@@ -1,4 +1,4 @@
-// $Id: ClassfileImport.java,v 1.11 2004/08/26 18:48:43 mvw Exp $
+// $Id: ClassfileImport.java,v 1.12 2004/09/23 20:53:09 mvw Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -47,8 +47,8 @@ import org.argouml.util.SuffixFilter;
 /**
  * This is the main class for the classfile import.
  *
- * $Revision: 1.11 $
- * $Date: 2004/08/26 18:48:43 $
+ * $Revision: 1.12 $
+ * $Date: 2004/09/23 20:53:09 $
  *
  * @author Andreas Rueckert <a_rueckert@gmx.net>
  */
@@ -435,8 +435,8 @@ public class ClassfileImport extends FileImportSupport {
      */
     public SuffixFilter[] getSuffixFilters() {
 	SuffixFilter[] result = {
-	    FileFilters.JavaClassFilter,
-	    FileFilters.JavaJarFilter
+	    FileFilters.JAVA_CLASS_FILTER,
+	    FileFilters.JAVA_JAR_FILTER
 	};
 	return result;
     }

@@ -1,4 +1,4 @@
-// $Id: TodoParser.java,v 1.8 2004/09/11 19:14:19 mvw Exp $
+// $Id: TodoParser.java,v 1.9 2004/09/23 20:53:10 mvw Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -479,7 +479,7 @@ public class TodoParser extends SAXParserBase {
 	if (str == null)
 	    return null;
 	sb = new StringBuffer();
-	for (i1 = i2 = 0; i2 < str.length(); i2++)
+	for (i1 = 0, i2 = 0; i2 < str.length(); i2++)
 	{
 	    c = str.charAt(i2);
 	    if (c == '%')
@@ -536,7 +536,7 @@ public class TodoParser extends SAXParserBase {
 	if (str == null)
 	    return null;
 	sb = new StringBuffer();
-	for (i1 = i2 = 0; i2 < str.length(); i2++)
+	for (i1 = 0, i2 = 0; i2 < str.length(); i2++)
 	{
 	    c = str.charAt(i2);
 	    if (c == '%')

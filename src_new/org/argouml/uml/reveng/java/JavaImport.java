@@ -1,4 +1,4 @@
-// $Id: JavaImport.java,v 1.30 2004/09/11 07:34:22 mvw Exp $
+// $Id: JavaImport.java,v 1.31 2004/09/23 20:53:07 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -101,7 +101,7 @@ public class JavaImport extends FileImportSupport {
      * @return SuffixFilter[] files with these suffixes will be processed.
      */
     public SuffixFilter[] getSuffixFilters() {
-	SuffixFilter[] result = {FileFilters.JavaFilter};
+	SuffixFilter[] result = {FileFilters.JAVA_FILE_FILTER};
 	return result;
     }
 	
