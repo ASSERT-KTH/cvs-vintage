@@ -1,7 +1,7 @@
 /**
- * JOnAS: Java(TM) Open Application Server
- * Copyright (C) 2004-2005 Bull S.A.
- * Contact: jonas-team@objectweb.org
+ * Copyright (C) 2004-2005 - Bull S.A.
+ *
+ * CAROL: Common Architecture for RMI ObjectWeb Layer
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -19,7 +19,7 @@
  * USA
  *
  * --------------------------------------------------------------------------
- * $Id: JacORBCosNaming.java,v 1.8 2005/03/04 14:04:11 benoitf Exp $
+ * $Id: JacORBCosNaming.java,v 1.9 2005/03/10 12:21:46 benoitf Exp $
  * --------------------------------------------------------------------------
  */
 package org.objectweb.carol.jndi.ns;
@@ -46,7 +46,7 @@ import org.objectweb.carol.util.configuration.TraceCarol;
  * Allow to start the nameservice of JacORB within Carol
  * @author Florent Benoit
  */
-public class JacORBCosNaming implements NameService {
+public class JacORBCosNaming extends AbsRegistry implements NameService {
 
     /**
      * JacORB nameserver
@@ -64,21 +64,6 @@ public class JacORBCosNaming implements NameService {
     private static final int DEFAULT_PORT_NUMBER = 38693;
 
     /**
-     * port number ( 38693 as default)
-     */
-    private int port = DEFAULT_PORT_NUMBER;
-
-    /**
-     * Hostname to use
-     */
-    private String host = null;
-
-    /**
-     * registry is started ?
-     */
-    private boolean started = false;
-
-    /**
      * process of JacORB
      */
     private Process jacORBNameServerProcess = null;
@@ -89,15 +74,10 @@ public class JacORBCosNaming implements NameService {
     private static ORB orb = null;
 
     /**
-     * Configuration properties (of carol.properties)
-     */
-    private Properties configurationProperties = null;
-
-    /**
      * Default constructor
      */
     public JacORBCosNaming() {
-
+        super(DEFAULT_PORT_NUMBER);
     }
 
     /**
@@ -107,25 +87,26 @@ public class JacORBCosNaming implements NameService {
      */
     public void start() throws NameServiceException {
 
+        // Don't start again
         if (isStarted()) {
             throw new IllegalStateException("Cannot start the server as the service is already running.");
         }
         if (TraceCarol.isDebugJndiCarol()) {
-            TraceCarol.debugJndiCarol("start() on port : '" + port + "'");
+            TraceCarol.debugJndiCarol("start() on port : '" + getPort() + "'");
         }
         String ipAddr = null;
         String hostCorbaLoc = RMIConfiguration.DEFAULT_HOST;
         // Ip of the host is not the default host (localhost)
-        if (!host.equalsIgnoreCase(RMIConfiguration.DEFAULT_HOST)) {
+        if (!getHost().equalsIgnoreCase(RMIConfiguration.DEFAULT_HOST)) {
             try {
-                ipAddr = InetAddress.getByName(host).getHostAddress();
+                ipAddr = InetAddress.getByName(getHost()).getHostAddress();
                 // Set the ip which was set in carol.properties (or if
                 // localhost, listen on all interfaces).
                 System.setProperty("OAIAddr", ipAddr);
             } catch (UnknownHostException uhe) {
                 if (TraceCarol.isDebugJndiCarol()) {
-                    TraceCarol
-                            .debugJndiCarol("Could net get ip address from host '" + host + "' : " + uhe.getMessage());
+                    TraceCarol.debugJndiCarol("Could net get ip address from host '" + getHost() + "' : "
+                            + uhe.getMessage());
                     uhe.printStackTrace();
                 }
             }
@@ -133,10 +114,9 @@ public class JacORBCosNaming implements NameService {
 
         // Fix iiop port if running inside a server
         if (System.getProperty(CarolDefaultValues.SERVER_MODE, "false").equalsIgnoreCase("true")) {
-            if (configurationProperties != null) {
+            if (getConfigProperties() != null) {
                 String propertyName = CarolDefaultValues.SERVER_IIOP_PORT;
-                int iiopPort = PortNumber
-                        .strToint(configurationProperties.getProperty(propertyName, "0"), propertyName);
+                int iiopPort = PortNumber.strToint(getConfigProperties().getProperty(propertyName, "0"), propertyName);
                 if (iiopPort > 0) {
                     TraceCarol.infoCarol("Using IIOP fixed server port number '" + iiopPort + "'.");
                     System.setProperty("OAPort", String.valueOf(iiopPort));
@@ -149,10 +129,10 @@ public class JacORBCosNaming implements NameService {
 
         // Set SSL Port
         if (System.getProperty(CarolDefaultValues.SERVER_MODE, "false").equalsIgnoreCase("true")) {
-            if (configurationProperties != null) {
+            if (getConfigProperties() != null) {
                 String propertyName = CarolDefaultValues.SERVER_SSL_IIOP_PORT;
-                int iiopSslPort = PortNumber.strToint(configurationProperties.getProperty(propertyName, String
-                        .valueOf(CarolDefaultValues.DEFAULT_SSL_PORT)), propertyName);
+                int iiopSslPort = PortNumber.strToint(getConfigProperties().getProperty(propertyName,
+                        String.valueOf(CarolDefaultValues.DEFAULT_SSL_PORT)), propertyName);
                 if (iiopSslPort > 0) {
                     TraceCarol.infoCarol("Using SSL IIOP port number '" + iiopSslPort + "'.");
                     System.setProperty("OASSLPort", String.valueOf(iiopSslPort));
@@ -171,9 +151,9 @@ public class JacORBCosNaming implements NameService {
                         + "-Dorg.omg.CORBA.ORBClass=org.jacorb.orb.ORB "
                         + "-Dorg.omg.CORBA.ORBSingletonClass=org.jacorb.orb.ORBSingleton " + "-DOAPort=";
 
-                jvmProperties += Integer.toString(port);
+                jvmProperties += Integer.toString(getPort());
                 jvmProperties += " -DORBInitRef.NameService=corbaloc:iiop:" + hostCorbaLoc + ":"
-                        + Integer.toString(port) + "/NameService";
+                        + Integer.toString(getPort()) + "/NameService";
 
                 if (ipAddr != null) {
                     jvmProperties += " -DOAIAddr=" + ipAddr;
@@ -211,14 +191,14 @@ public class JacORBCosNaming implements NameService {
                 });
             } else {
                 if (TraceCarol.isDebugJndiCarol()) {
-                    TraceCarol.debugJndiCarol("JacORBCosNaming is already start on port : '" + port + "'.");
+                    TraceCarol.debugJndiCarol("JacORBCosNaming is already start on port : '" + getPort() + "'.");
                 }
             }
         } catch (Exception e) {
             TraceCarol.error("Cannot start JacORBCosNaming for an unknown reason", e);
             throw new NameServiceException("cannot start cosnaming daemon: " + e);
         }
-        started = true;
+        setStarted();
     }
 
     /**
@@ -239,53 +219,7 @@ public class JacORBCosNaming implements NameService {
             TraceCarol.error("Cannot stop JacORBCosNaming for an unknown reason", e);
             throw new NameServiceException("cannot start cosnaming daemon: " + e);
         }
-
-    }
-
-    /**
-     * isStarted Method, check if a name service is started
-     * @return boolean true if the name service is started
-     */
-    public boolean isStarted() {
-        return started;
-    }
-
-    /**
-     * set port method, set the port for the name service
-     * @param p port number
-     */
-    public void setPort(int p) {
-        if (isStarted()) {
-            throw new IllegalStateException("The port cannot be changed as the server is running.");
-        }
-        if (p <= 0) {
-            throw new IllegalArgumentException(
-                    "The number for the port is incorrect. It must be a value > 0. Value was '" + port + "'");
-        }
-        this.port = p;
-    }
-
-    /**
-     * Set the address to use for bind
-     * @param host hostname/ip address
-     */
-    public void setHost(String host) {
-        this.host = host;
-    }
-
-    /**
-     * @return hostname/ip to use
-     */
-    public String getHost() {
-        return host;
-    }
-
-    /**
-     * get port method, get the port for the name service
-     * @return int port number
-     */
-    public int getPort() {
-        return port;
+        resetStarted();
     }
 
     /**
@@ -296,7 +230,7 @@ public class JacORBCosNaming implements NameService {
 
         Properties prop = new Properties();
         prop.put(Context.INITIAL_CONTEXT_FACTORY, "com.sun.jndi.cosnaming.CNCtxFactory");
-        prop.put(Context.PROVIDER_URL, "corbaloc:iiop:localhost:" + Integer.toString(port)
+        prop.put(Context.PROVIDER_URL, "corbaloc:iiop:localhost:" + Integer.toString(getPort())
                 + "/StandardNS/NameServer-POA/_root");
 
         if (orb == null) {
@@ -325,14 +259,6 @@ public class JacORBCosNaming implements NameService {
             initORB();
         }
         return orb;
-    }
-
-    /**
-     * Set the configuration properties of the protocol
-     * @param p configuration properties
-     */
-    public void setConfigProperties(Properties p) {
-        this.configurationProperties = p;
     }
 
     /**

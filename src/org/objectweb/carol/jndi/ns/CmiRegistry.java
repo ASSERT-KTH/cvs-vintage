@@ -25,8 +25,6 @@
  */
 package org.objectweb.carol.jndi.ns;
 
-import java.util.Properties;
-
 import org.objectweb.carol.cmi.ClusterRegistry;
 import org.objectweb.carol.cmi.ClusterRegistryImpl;
 import org.objectweb.carol.cmi.ClusterRegistryKiller;
@@ -36,18 +34,9 @@ import org.objectweb.carol.util.configuration.TraceCarol;
 /**
  * Class <code>CmiRegistry</code>
  * @author Simon Nieuviarts (Simon.Nieuviarts@inrialpes.fr)
+ * @author Florent Benoit (Refactoring)
  */
-public class CmiRegistry implements NameService {
-
-    /**
-     * URL
-     */
-    private int port = ClusterRegistry.DEFAULT_PORT;
-
-    /**
-     * Hostname to use
-     */
-    private String host = null;
+public class CmiRegistry extends AbsRegistry implements NameService {
 
     /**
      * Cluster equivalence system
@@ -60,19 +49,27 @@ public class CmiRegistry implements NameService {
     private ClusterRegistryKiller cregk = null;
 
     /**
+     * Default constructor
+     */
+    public CmiRegistry() {
+        super(ClusterRegistry.DEFAULT_PORT);
+    }
+
+
+    /**
      * start Method, Start a new NameService or do nothing if the name service
      * is all ready start
      * @throws NameServiceException if a problem occure
      */
     public void start() throws NameServiceException {
         if (TraceCarol.isDebugJndiCarol()) {
-            TraceCarol.debugJndiCarol("CmiRegistry.start() on port:" + port);
+            TraceCarol.debugJndiCarol("CmiRegistry.start() on port:" + getPort());
         }
         try {
             if (!isStarted()) {
-                if (port >= 0) {
+                if (getPort() >= 0) {
                     de = DistributedEquiv.start();
-                    cregk = ClusterRegistryImpl.start(port);
+                    cregk = ClusterRegistryImpl.start(getPort());
                     // add a shudown hook for this process
                     Runtime.getRuntime().addShutdownHook(new Thread() {
 
@@ -86,12 +83,12 @@ public class CmiRegistry implements NameService {
                     });
                 } else {
                     if (TraceCarol.isDebugJndiCarol()) {
-                        TraceCarol.debugJndiCarol("Can't start CmiRegistry, port=" + port + " is < 0");
+                        TraceCarol.debugJndiCarol("Can't start CmiRegistry, port=" + getPort() + " is < 0");
                     }
                 }
             } else {
                 if (TraceCarol.isDebugJndiCarol()) {
-                    TraceCarol.debugJndiCarol("CmiRegistry is already start on port:" + port);
+                    TraceCarol.debugJndiCarol("CmiRegistry is already start on port:" + getPort());
                 }
             }
         } catch (Exception e) {
@@ -129,54 +126,7 @@ public class CmiRegistry implements NameService {
         if (cregk != null) {
             return true;
         }
-        /*
-         * try { LocateRegistry.getRegistry(port).list(); } catch
-         * (RemoteException re) { return false; } return true;
-         */
         return false;
     }
 
-    /**
-     * set port method, set the port for the name service
-     * @param p port
-     */
-    public void setPort(int p) {
-        if (TraceCarol.isDebugJndiCarol()) {
-            TraceCarol.debugJndiCarol("CmiRegistry.setPort(" + p + ")");
-        }
-        if (p != 0) {
-            this.port = p;
-        }
-    }
-
-    /*
-     * (non-Javadoc)
-     * @see org.objectweb.carol.jndi.ns.NameService#getPort()
-     */
-    public int getPort() {
-        return port;
-    }
-
-    /**
-     * Set the address to use for bind
-     * @param host hostname/ip address
-     */
-    public void setHost(String host) {
-        this.host = host;
-    }
-
-    /**
-     * @return hostname/ip to use
-     */
-     public String getHost() {
-         return host;
-     }
-
-     /**
-      * Set the configuration properties of the protocol
-      * @param p configuration properties
-      */
-     public void setConfigProperties(Properties p) {
-
-     }
 }

@@ -22,14 +22,13 @@
  * USA
  *
  * --------------------------------------------------------------------------
- * $Id: JeremieRegistry.java,v 1.8 2005/03/03 16:10:32 benoitf Exp $
+ * $Id: JeremieRegistry.java,v 1.9 2005/03/10 12:21:46 benoitf Exp $
  * --------------------------------------------------------------------------
  */
 package org.objectweb.carol.jndi.ns;
 
 import java.rmi.RemoteException;
 import java.rmi.registry.Registry;
-import java.util.Properties;
 
 import org.objectweb.jeremie.binding.moa.UnicastRemoteObject;
 import org.objectweb.jeremie.services.registry.LocateRegistry;
@@ -40,64 +39,58 @@ import org.objectweb.carol.util.configuration.TraceCarol;
 
 /**
  * Class <code> JeremieRegistry </code>
- * @author Guillaume Riviere (Guillaume.Riviere@inrialpes.fr)
- * @version 1.0, 15/01/2003
+ * @author Guillaume Riviere
+ * @author Florent Benoit (Refactoring)
  */
-public class JeremieRegistry implements NameService {
+public class JeremieRegistry extends AbsRegistry implements NameService {
 
     /**
-     * Hostname to use
+     * Default port
      */
-    private String host = null;
+    private static final int DEFAULT_PORT_NUMBER = 12340;
 
     /**
-     * port number ( 12340 for default)
+     * Jeremie registry
      */
-    public int port = 12340;
+    private Registry registry = null;
 
     /**
-     * registry
+     * Default constructor
      */
-    public Registry registry = null;
-
-    /**
-     * Configuration properties (of carol.properties)
-     */
-    private Properties configurationProperties = null;
+    public JeremieRegistry() {
+        super(DEFAULT_PORT_NUMBER);
+    }
 
     /**
      * start Method, Start a new NameService or do nothing if the name service
      * is all ready start
-     * @param int port is port number
      * @throws NameServiceException if a problem occure
      */
     public void start() throws NameServiceException {
         if (TraceCarol.isDebugJndiCarol()) {
-            TraceCarol.debugJndiCarol("JeremieRegistry.start() on port:" + port);
+            TraceCarol.debugJndiCarol("JeremieRegistry.start() on port:" + getPort());
         }
 
         // Fix jeremie port if running inside a server
         if (System.getProperty(CarolDefaultValues.SERVER_MODE, "false").equalsIgnoreCase("true")) {
-            if (configurationProperties != null) {
+            if (getConfigProperties() != null) {
                 String propertyName = CarolDefaultValues.SERVER_JEREMIE_PORT;
-                int jeremiePort = PortNumber.strToint(configurationProperties.getProperty(propertyName, "0"), propertyName);
+                int jeremiePort = PortNumber.strToint(getConfigProperties().getProperty(propertyName, "0"),
+                        propertyName);
                 if (jeremiePort > 0) {
                     TraceCarol.infoCarol("Using Jeremie fixed server port number '" + jeremiePort + "'.");
                     System.setProperty("org.objectweb.jeremie.stub_factories.defaultport", String.valueOf(jeremiePort));
                 }
             } else {
-                TraceCarol.debugCarol("No properties '" + CarolDefaultValues.SERVER_IIOP_PORT + "' defined in carol.properties file.");
+                TraceCarol.debugCarol("No properties '" + CarolDefaultValues.SERVER_IIOP_PORT
+                        + "' defined in carol.properties file.");
             }
         }
 
-
-
-
-
         try {
             if (!isStarted()) {
-                if (port >= 0) {
-                    registry = LocateRegistry.createRegistry(port);
+                if (getPort() >= 0) {
+                    registry = LocateRegistry.createRegistry(getPort());
                     // add a shudown hook for this process
                     Runtime.getRuntime().addShutdownHook(new Thread() {
 
@@ -111,13 +104,13 @@ public class JeremieRegistry implements NameService {
                     });
                 } else {
                     if (TraceCarol.isDebugJndiCarol()) {
-                        TraceCarol.debugJndiCarol("Can't start JeremieRegistry, port=" + port + " is < 0");
+                        TraceCarol.debugJndiCarol("Can't start JeremieRegistry, port=" + getPort() + " is < 0");
                     }
                 }
 
             } else {
                 if (TraceCarol.isDebugJndiCarol()) {
-                    TraceCarol.debugJndiCarol("JeremieRegistry is already start on port:" + port);
+                    TraceCarol.debugJndiCarol("JeremieRegistry is already start on port:" + getPort());
                 }
             }
         } catch (Exception e) {
@@ -135,7 +128,9 @@ public class JeremieRegistry implements NameService {
             TraceCarol.debugJndiCarol("JeremieRegistry.stop()");
         }
         try {
-            if (registry != null) UnicastRemoteObject.unexportObject(registry, true);
+            if (registry != null) {
+                UnicastRemoteObject.unexportObject(registry, true);
+            }
             registry = null;
         } catch (Exception e) {
             throw new NameServiceException("can not stop jeremie registry: " + e);
@@ -147,57 +142,14 @@ public class JeremieRegistry implements NameService {
      * @return boolean true if the name service is started
      */
     public boolean isStarted() {
-
-        if (registry != null) return true;
+        if (registry != null) {
+            return true;
+        }
         try {
-            LocateRegistry.getRegistry(port).list();
+            LocateRegistry.getRegistry(getPort()).list();
         } catch (RemoteException re) {
             return false;
         }
         return true;
     }
-
-    /**
-     * set port method, set the port for the name service
-     * @param int port number
-     */
-    public void setPort(int p) {
-        if (TraceCarol.isDebugJndiCarol()) {
-            TraceCarol.debugJndiCarol("JeremieRegistry.setPort(" + p + ")");
-        }
-        if (p != 0) {
-            port = p;
-        }
-    }
-
-    /*
-     * (non-Javadoc)
-     * @see org.objectweb.carol.jndi.ns.NameService#getPort()
-     */
-    public int getPort() {
-        return port;
-    }
-
-    /**
-     * Set the address to use for bind
-     * @param host hostname/ip address
-     */
-    public void setHost(String host) {
-        this.host = host;
-    }
-
-    /**
-     * @return hostname/ip to use
-     */
-     public String getHost() {
-         return host;
-     }
-
-     /**
-      * Set the configuration properties of the protocol
-      * @param p configuration properties
-      */
-     public void setConfigProperties(Properties p) {
-         this.configurationProperties = p;
-     }
 }

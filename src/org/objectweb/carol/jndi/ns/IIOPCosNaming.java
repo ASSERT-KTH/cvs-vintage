@@ -22,7 +22,7 @@
  * USA
  *
  * --------------------------------------------------------------------------
- * $Id: IIOPCosNaming.java,v 1.10 2005/02/18 08:50:15 benoitf Exp $
+ * $Id: IIOPCosNaming.java,v 1.11 2005/03/10 12:21:46 benoitf Exp $
  * --------------------------------------------------------------------------
  */
 package org.objectweb.carol.jndi.ns;
@@ -40,30 +40,20 @@ import org.objectweb.carol.util.configuration.TraceCarol;
 /**
  * Class <code> IIOPCosNaming </code> Start in a separated process (see the sun
  * orbd documentation)
- * @author Guillaume Riviere (Guillaume.Riviere@inrialpes.fr)
- * @author Florent Benoit (add POA model)
+ * @author Guillaume Riviere
+ * @author Florent Benoit (add POA model / Refactoring)
  */
-public class IIOPCosNaming implements NameService {
+public class IIOPCosNaming extends AbsRegistry implements NameService {
 
     /**
      * Default port number ( 12350 for default)
      */
-    private static final int DEFAUL_PORT = 12350;
+    private static final int DEFAULT_PORT_NUMBER = 12350;
 
     /**
      * Sleep time to wait
      */
     private static final int SLEEP_TIME = 2000;
-
-    /**
-     * port number
-     */
-    private int port = DEFAUL_PORT;
-
-    /**
-     * Hostname to use
-     */
-    private String host = null;
 
     /**
      * process of the cosnaming
@@ -76,21 +66,28 @@ public class IIOPCosNaming implements NameService {
     private static ORB orb = null;
 
     /**
+     * Default constructor
+     */
+    public IIOPCosNaming() {
+        super(DEFAULT_PORT_NUMBER);
+    }
+
+    /**
      * start Method, Start a new NameService or do nothing if the name service
      * is all ready start
      * @throws NameServiceException if a problem occurs
      */
     public void start() throws NameServiceException {
         if (TraceCarol.isDebugJndiCarol()) {
-            TraceCarol.debugJndiCarol("IIOPCosNaming.start() on port:" + port);
+            TraceCarol.debugJndiCarol("IIOPCosNaming.start() on port:" + getPort());
         }
         try {
             if (!isStarted()) {
                 // start a new orbd procees
-                if (port >= 0) {
+                if (getPort() >= 0) {
                     cosNamingProcess = Runtime.getRuntime().exec(
                             System.getProperty("java.home") + System.getProperty("file.separator") + "bin"
-                                    + System.getProperty("file.separator") + "tnameserv -ORBInitialPort " + port);
+                                    + System.getProperty("file.separator") + "tnameserv -ORBInitialPort " + getPort());
                     // wait for starting
                     Thread.sleep(SLEEP_TIME);
 
@@ -127,12 +124,12 @@ public class IIOPCosNaming implements NameService {
                     });
                 } else {
                     if (TraceCarol.isDebugJndiCarol()) {
-                        TraceCarol.debugJndiCarol("Can't start IIOPCosNaming, port=" + port + " is < 0");
+                        TraceCarol.debugJndiCarol("Can't start IIOPCosNaming, port=" + getPort() + " is < 0");
                     }
                 }
             } else {
                 if (TraceCarol.isDebugJndiCarol()) {
-                    TraceCarol.debugJndiCarol("IIOPCosNaming is already start on port:" + port);
+                    TraceCarol.debugJndiCarol("IIOPCosNaming is already start on port:" + getPort());
                 }
             }
         } catch (Exception e) {
@@ -171,7 +168,7 @@ public class IIOPCosNaming implements NameService {
         }
         Properties prop = new Properties();
         prop.put(Context.INITIAL_CONTEXT_FACTORY, "com.sun.jndi.cosnaming.CNCtxFactory");
-        prop.put(Context.PROVIDER_URL, "iiop://localhost:" + port);
+        prop.put(Context.PROVIDER_URL, "iiop://localhost:" + getPort());
 
         if (orb == null) {
             initORB();
@@ -187,40 +184,6 @@ public class IIOPCosNaming implements NameService {
         return true;
     }
 
-    /**
-     * set port method, set the port for the name service
-     * @param p port number
-     */
-    public void setPort(int p) {
-        if (TraceCarol.isDebugJndiCarol()) {
-            TraceCarol.debugJndiCarol("IIOPCosNaming.setPort(" + p + ")");
-        }
-        if (p != 0) {
-            port = p;
-        }
-    }
-
-    /**
-     * Set the address to use for bind
-     * @param host hostname/ip address
-     */
-    public void setHost(String host) {
-        this.host = host;
-    }
-
-    /**
-     * @return hostname/ip to use
-     */
-     public String getHost() {
-         return host;
-     }
-
-    /**
-     * @return the port number
-     */
-    public int getPort() {
-        return port;
-    }
     /**
      * @return the orb.
      */
@@ -239,11 +202,4 @@ public class IIOPCosNaming implements NameService {
         orb = ORB.init(new String[0], null);
     }
 
-    /**
-     * Set the configuration properties of the protocol
-     * @param p configuration properties
-     */
-    public void setConfigProperties(Properties p) {
-
-    }
 }

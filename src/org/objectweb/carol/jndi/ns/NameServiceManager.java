@@ -22,7 +22,7 @@
  * USA
  *
  * --------------------------------------------------------------------------
- * $Id: NameServiceManager.java,v 1.9 2005/03/04 14:06:32 benoitf Exp $
+ * $Id: NameServiceManager.java,v 1.10 2005/03/10 12:21:46 benoitf Exp $
  * --------------------------------------------------------------------------
  */
 package org.objectweb.carol.jndi.ns;
@@ -37,7 +37,7 @@ import org.objectweb.carol.util.configuration.TraceCarol;
 /**
  * Class <code> NameServicemanager </code> is the CAROL Name Service manager.
  * This is the carol API for Nme services management
- * @author Guillaume Riviere (Guillaume.Riviere@inrialpes.fr)
+ * @author Guillaume Riviere
  */
 public class NameServiceManager {
 
