@@ -58,10 +58,11 @@ import org.jboss.logging.Logger;
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
  * @author <a href="mailto:dirk@jboss.de">Dirk Zimmermann</a>
  * @author <a href="mailto:danch@nvisia.com">danch (Dan Christopherson</a>
- * @version $Revision: 1.34 $ 
+ * @version $Revision: 1.35 $ 
  * 
  * Revision:
  * 20010621 danch: add getter for name
+ * 20010621 (ref 1.25) danch: improve logging: an exception execing SQL is an error!
  */
 public abstract class JDBCCommand
 {
@@ -164,11 +165,11 @@ public abstract class JDBCCommand
          {
             log.debug(name + " command executing: " + theSQL);
          }
-				 stmt = con.prepareStatement(theSQL);
-				 setParameters(stmt, argOrArgs);
-				 result = executeStatementAndHandleResult(stmt, argOrArgs);
+             stmt = con.prepareStatement(theSQL);
+             setParameters(stmt, argOrArgs);
+             result = executeStatementAndHandleResult(stmt, argOrArgs);
       } catch(SQLException e) {
-          log.debug(e);
+          log.error("Exception caught executing SQL: "+e);
           throw e;
       } finally
       {
@@ -458,12 +459,12 @@ public abstract class JDBCCommand
            // Use the class loader to deserialize
 
             try {
-				ObjectInputStream ois = new ObjectInputStream(bais);
+            ObjectInputStream ois = new ObjectInputStream(bais);
 
-				result = ((MarshalledObject) ois.readObject()).get();
+            result = ((MarshalledObject) ois.readObject()).get();
 
-				// ejb-reference: get the object back from the handle
-				if (result instanceof Handle) result = ((Handle)result).getEJBObject();
+            // ejb-reference: get the object back from the handle
+            if (result instanceof Handle) result = ((Handle)result).getEJBObject();
 
             // is this a marshalled object that we stuck in earlier?
             if (result instanceof MarshalledObject && !destination.equals(MarshalledObject.class)) 
@@ -491,8 +492,8 @@ public abstract class JDBCCommand
              }
 
              ois.close();
-			} catch (RemoteException e) {
-				throw new SQLException("Unable to load EJBObject back from Handle: " +e);
+         } catch (RemoteException e) {
+            throw new SQLException("Unable to load EJBObject back from Handle: " +e);
             } catch (IOException e) {
                 throw new SQLException("Unable to load a ResultSet column "+idx+" into a variable of type '"+destination.getName()+"': "+e);
             } catch (ClassNotFoundException e) {
@@ -503,20 +504,20 @@ public abstract class JDBCCommand
         return result;
     }
 
-	/**
-	 * Wrapper around getResultObject(ResultSet rs, int idx, Class destination).
-	 */
-	protected Object getResultObject(ResultSet rs, int idx, CMPFieldMetaData cmpField)
-		throws SQLException {
-		if (!cmpField.isNested()) {
-			// do it as before
-			return getResultObject(rs, idx, cmpField.getField().getType());
-		}
-		
-		// Assuming no one will ever use BLOPS in composite objects.
-		// TODO Should be tested for BLOPability
-		return rs.getObject(idx);
-	}
+   /**
+    * Wrapper around getResultObject(ResultSet rs, int idx, Class destination).
+    */
+   protected Object getResultObject(ResultSet rs, int idx, CMPFieldMetaData cmpField)
+      throws SQLException {
+      if (!cmpField.isNested()) {
+         // do it as before
+         return getResultObject(rs, idx, cmpField.getField().getType());
+      }
+      
+      // Assuming no one will ever use BLOPS in composite objects.
+      // TODO Should be tested for BLOPability
+      return rs.getObject(idx);
+   }
 
 
    /**
@@ -646,7 +647,7 @@ public abstract class JDBCCommand
    protected Object getCMPFieldValue(Object instance, CMPFieldMetaData fieldMetaData)
       throws IllegalAccessException
    {
-		 return fieldMetaData.getValue(instance);
+       return fieldMetaData.getValue(instance);
    }
 
    protected void setCMPFieldValue(Object instance,
@@ -654,15 +655,15 @@ public abstract class JDBCCommand
                                    Object value)
       throws IllegalAccessException
    {
-		 if (fieldMetaData.isNested()) {
-			 // we have a nested field
-			 fieldMetaData.set(instance, value);
-		 }
-		 else {
-			 // the usual way
-			 Field field = fieldMetaData.getField();
-			 field.set(instance, value);
-		 }
+       if (fieldMetaData.isNested()) {
+          // we have a nested field
+          fieldMetaData.set(instance, value);
+       }
+       else {
+          // the usual way
+          Field field = fieldMetaData.getField();
+          field.set(instance, value);
+       }
    }
 
    protected Object getPkFieldValue(Object pk, PkFieldMetaData pkFieldMetaData)

@@ -30,7 +30,15 @@ import org.jboss.ejb.plugins.jaws.metadata.PkFieldMetaData;
  * @author <a href="mailto:shevlandj@kpi.com.au">Joe Shevland</a>
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
  * @author <a href="mailto:michel.anke@wolmail.nl">Michel de Groot</a>
- * @version $Revision: 1.12 $
+ * @author <a href="mailto:david_jencks@earthlink.net">David Jencks</a>
+ * @author <a href="mailto:danch@nvisia.com">danch (Dan Christopherson</a>
+ * 
+ * @version $Revision: 1.13 $
+ * 
+ * Revison:
+ * 20010621 danch: merged patch from David Jenks - null constraint on columns.
+ *    Also fixed bug where remapping column name of key field caused an invalid
+ *    PK constraint to be build.
  */
 public class JDBCInitCommand
    extends JDBCUpdateCommand
@@ -53,23 +61,26 @@ public class JDBCInitCommand
          
          sql += (first ? "" : ",") +
                 cmpField.getColumnName() + " " +
-                cmpField.getSQLType();
+                cmpField.getSQLType() +
+                cmpField.getNullable();
                 
          
          first = false;
       }
 
-  	// If there is a primary key field,
-	// and the bean has explicitly <pk-constraint>true</pk-constraint> in jaws.xml
-	// add primary key constraint.
-       if (jawsEntity.getPrimKeyField() != null && jawsEntity.hasPkConstraint())  {
-		sql += ",CONSTRAINT pk"+jawsEntity.getTableName()+" PRIMARY KEY (";
-		for (Iterator i = jawsEntity.getPkFields();i.hasNext();) {
-			sql += ((PkFieldMetaData)i.next()).getName();
-			sql += i.hasNext()?",":"";
-		}
-		sql +=")";
+      // If there is a primary key field,
+      // and the bean has explicitly <pk-constraint>true</pk-constraint> in jaws.xml
+      // add primary key constraint.
+      if (jawsEntity.getPrimKeyField() != null && jawsEntity.hasPkConstraint())  
+      {
+         sql += ",CONSTRAINT pk"+jawsEntity.getTableName()+" PRIMARY KEY (";
+         for (Iterator i = jawsEntity.getPkFields();i.hasNext();) {
+            String keyCol = ((PkFieldMetaData)i.next()).getColumnName();
+            sql += keyCol;
+            sql += i.hasNext()?",":"";
          }
+         sql +=")";
+      }
 
       sql += ")";
 
@@ -115,17 +126,16 @@ public class JDBCInitCommand
              log.log("Table '"+jawsEntity.getTableName()+"' already exists");
          } else {
              try
-             {
-             
-                 // since we use the pools, we have to do this within a transaction
+             {          
+                // since we use the pools, we have to do this within a transaction
                 factory.getContainer().getTransactionManager().begin ();
                 jdbcExecute(null);
                 factory.getContainer().getTransactionManager().commit ();
 
-	             // Create successful, log this
-	             log.log("Created table '"+jawsEntity.getTableName()+"' successfully.");
-	             log.debug("Primary key of table '"+jawsEntity.getTableName()+"' is '"
-	             	+jawsEntity.getPrimKeyField()+"'.");
+                // Create successful, log this
+                log.log("Created table '"+jawsEntity.getTableName()+"' successfully.");
+                log.debug("Primary key of table '"+jawsEntity.getTableName()+"' is '"
+                  +jawsEntity.getPrimKeyField()+"'.");
              } catch (Exception e)
              {
                 log.debug("Could not create table " +
