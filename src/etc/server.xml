@@ -37,6 +37,9 @@
          -->
         
         <ContextInterceptor 
+            className="org.apache.tomcat.modules.config.ContextXmlReader" />
+
+        <ContextInterceptor 
             className="org.apache.tomcat.modules.config.AutoSetup" />
 
         <!-- Generate includeable Apache configuration files for mod_jserv

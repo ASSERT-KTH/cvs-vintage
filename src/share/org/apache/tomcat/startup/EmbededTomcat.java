@@ -274,7 +274,7 @@ public class EmbededTomcat {
     
     protected String moduleSet2[] = {
 	"org.apache.tomcat.modules.config.PathSetter",
-	"org.apache.tomcat.modules.config.ServerXmlInterceptor",
+	"org.apache.tomcat.modules.config.ServerXmlReader",
     };
     
     protected void initDefaultInterceptors() {

@@ -70,7 +70,7 @@ public class Tomcat extends Log {
 	PathSetter pS=new PathSetter();
 	tcat.addInterceptor( pS );
 	
-	ServerXmlInterceptor sxmlConf=new ServerXmlInterceptor();
+	ServerXmlReader sxmlConf=new ServerXmlReader();
 	sxmlConf.setConfig( configFile );
 	tcat.addInterceptor( sxmlConf );
 
