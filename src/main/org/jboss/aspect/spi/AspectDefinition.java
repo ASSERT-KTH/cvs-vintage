@@ -29,7 +29,7 @@ import org.jboss.aspect.internal.AspectSupport;
  * to the AspectFactory to create dynamicaly generated aspects.
  * <p>
  * 
- * @see org.jboss.aspect.AspectFactory#createAspect(AspectDefinition)
+ * @see org.jboss.aspect.AspectFactory#createAspect(AspectDefinition, Object)
  *
  * @author <a href="mailto:hchirino@jboss.org">Hiram Chirino</a>
  */
@@ -50,26 +50,6 @@ final public class AspectDefinition implements AspectDefinitionConstants, Serial
         this.name = name;
         this.interceptors = interceptors;
         this.interfaces = interfaces;
-    }
-
-	public AspectDefinition cloneAspectDefinition() {
-        try
-        {
-            return (AspectDefinition)clone();
-        }
-        catch (CloneNotSupportedException e)
-        {
-        	return new AspectDefinition(name, interceptors, interfaces);
-        }
-    }
-	
-	
-    /**
-     * Build the AspectDefinition from a XML Element Fragment.
-     */
-    public AspectDefinition(Element xml) throws AspectInitizationException
-    {
-        this(xml, new HashMap(), new HashMap());
     }
 
     /**
@@ -106,6 +86,17 @@ final public class AspectDefinition implements AspectDefinitionConstants, Serial
 
     }
 
+	public AspectDefinition cloneAspectDefinition() {
+        try
+        {
+            return (AspectDefinition)clone();
+        }
+        catch (CloneNotSupportedException e)
+        {
+        	return new AspectDefinition(name, interceptors, interfaces);
+        }
+    }
+		
     /**
      * Creates a duplicate AspectDefinition but with the provided
      * interceptor inserted at the index position in the stack.

@@ -28,7 +28,7 @@ import org.jboss.aspect.AspectInitizationException;
  * constructor.
  * <p>
  * 
- * @see org.jboss.aspect.proxy.AspectInvocation
+ * @see org.jboss.aspect.spi.AspectInvocation
  *
  * @author <a href="mailto:hchirino@jboss.org">Hiram Chirino</a>
  */

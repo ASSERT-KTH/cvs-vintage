@@ -65,7 +65,7 @@ public class JMXInvokerInterceptor implements AspectInterceptor
     }
 
     /**
-     * @see com.chirino.aspect.AspectInterceptor#invoke(AspectInvocation)
+     * @see org.jboss.aspect.spi.AspectInterceptor#invoke(AspectInvocation)
      */
     public Object invoke(AspectInvocation invocation) throws Throwable
     {
@@ -88,7 +88,7 @@ public class JMXInvokerInterceptor implements AspectInterceptor
     /**
      * Builds a Config object for the interceptor.
      * 
-     * @see com.chirino.aspect.AspectInterceptor#translateConfiguration(Element)
+     * @see org.jboss.aspect.spi.AspectInterceptor#init(Element)
      */
     public void init(Element xml) throws AspectInitizationException
     {

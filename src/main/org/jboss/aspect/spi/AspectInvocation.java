@@ -118,7 +118,7 @@ final public class AspectInvocation
     }
 
 	/**
-	 * @returns - true if there is another interceptor further down the stack
+	 * @return - true if there is another interceptor further down the stack
 	 *            that would be interested in the method call.
 	 */
     public boolean isNextIntrestedInMethodCall()

@@ -64,10 +64,13 @@ final public class AspectObject implements InvocationHandler, Serializable
     }
 
     /**
-     * Creates an AspectInvocation and 
-     * - puts it on a ThreadLocal object so that it can be retrieved later at any time.
-     * - passes it down the interceptor stack.
+     * Passes the method invocation down the inerceptors stack.
      * 
+     * Creates an AspectInvocation and :
+     * <ul>
+     * <li>puts it on a ThreadLocal object so that it can be retrieved later at any time.
+     * <li>passes it down the interceptor stack.
+     * </ul>
      */
     public Object invoke(Object target, Method method, Object[] args) throws Throwable
     {

@@ -32,7 +32,7 @@ import org.jboss.aspect.spi.AspectInterceptorHolder;
  * Holds functions that were usefull during the implemenation of
  * the Aspect related classes.
  * 
-* @ author < a href = "mailto:hchirino@jboss.org" > Hiram Chirino < / a >
+ * @author < a href = "mailto:hchirino@jboss.org" > Hiram Chirino < / a >
  */
 final public class AspectSupport implements AspectDefinitionConstants {
 	

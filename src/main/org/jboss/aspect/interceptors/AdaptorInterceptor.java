@@ -69,7 +69,7 @@ public class AdaptorInterceptor implements AspectInterceptor, Serializable
     }
 
     /**
-     * @see com.chirino.aspect.AspectInterceptor#invoke(AspectInvocation)
+     * @see org.jboss.aspect.spi.AspectInterceptor#invoke(AspectInvocation)
      */
     public Object invoke(AspectInvocation invocation) throws Throwable
     {
@@ -102,7 +102,7 @@ public class AdaptorInterceptor implements AspectInterceptor, Serializable
     /**
      * Builds a Config object for the interceptor.
      * 
-     * @see com.chirino.aspect.AspectInterceptor#translateConfiguration(Element)
+     * @see org.jboss.aspect.spi.AspectInterceptor#init(Element)
      */
     public void init(Element xml) throws AspectInitizationException
     {
@@ -126,7 +126,7 @@ public class AdaptorInterceptor implements AspectInterceptor, Serializable
     }
 
     /**
-     * @see AspectInterceptor#getInterfaces(Object)
+     * @see org.jboss.aspect.spi.AspectInterceptor#getInterfaces()
      */
     public Class[] getInterfaces()
     {

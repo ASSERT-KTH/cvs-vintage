@@ -15,7 +15,7 @@ package org.jboss.aspect;
  * Throw from the createAspect methods of the AspectFactory and also from 
  * the AspectClassLoader when a named aspect is not found.
  * 
- * @see org.jboss.aspect.AspectFactory#createAspect(AspectDefinition)
+ * @see org.jboss.aspect.AspectFactory#createAspect(String, Object)
  *
  * @author <a href="mailto:hchirino@jboss.org">Hiram Chirino</a>
  */

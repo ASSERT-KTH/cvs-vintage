@@ -60,7 +60,7 @@ public class DelegatingInterceptor implements AspectInterceptor, Serializable
     transient public Set exposedMethods;
 
     /**
-     * @see com.chirino.aspect.AspectInterceptor#invoke(AspectInvocation)
+     * @see org.jboss.aspect.spi.AspectInterceptor#invoke(AspectInvocation)
      */
     public Object invoke(AspectInvocation invocation) throws Throwable
     {
@@ -92,7 +92,7 @@ public class DelegatingInterceptor implements AspectInterceptor, Serializable
     }
 
     /**
-     * @see com.chirino.aspect.AspectInterceptor#init(Map)
+     * @see org.jboss.aspect.spi.AspectInterceptor#init(Element)
      */
     public void init(Element xml) throws AspectInitizationException
     {

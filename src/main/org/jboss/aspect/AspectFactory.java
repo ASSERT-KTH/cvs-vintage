@@ -69,9 +69,9 @@ import org.jboss.util.Classes;
  * </pre></code>
  * 
  * 
- * @see org.jboss.aspect.AspectInterceptor
+ * @see org.jboss.aspect.spi.AspectInterceptor
  *
- * @ author < a href = "mailto:hchirino@jboss.org" > Hiram Chirino < / a >
+ * @author < a href = "mailto:hchirino@jboss.org" > Hiram Chirino < / a >
  */
 public class AspectFactory
 {
@@ -106,7 +106,7 @@ public class AspectFactory
      * If the source contains a definition for a previously configured aspect,
      * a AspectInitizationException will be thrown.
      * 
-     * @AspectInitizationException if the source file is invalid or some aspects could not be initialized.
+     * @throws AspectInitizationException - if the source file is invalid or some aspects could not be initialized.
      */
     public AspectFactory configure(URL source) throws AspectInitizationException
     {
