@@ -9,7 +9,7 @@
 <!--                                                                       -->
 <!-- ===================================================================== -->
 
-<!-- $Id: standardjbosscmp-jdbc.xml,v 1.82 2004/07/21 16:54:08 loubyansky Exp $ -->
+<!-- $Id: standardjbosscmp-jdbc.xml,v 1.83 2004/09/02 08:26:57 schrouf Exp $ -->
 
 <jbosscmp-jdbc>
 
@@ -2500,8 +2500,8 @@ Mapping proposed by Computer Associates, but does not work with JBoss properly
 
          <mapping>
             <java-type>java.lang.Object</java-type>
-            <jdbc-type>JAVA_OBJECT</jdbc-type>
-            <sql-type>BYTE</sql-type>
+            <jdbc-type>BLOB</jdbc-type>
+            <sql-type>BLOB</sql-type>
          </mapping>
       </type-mapping>
 
