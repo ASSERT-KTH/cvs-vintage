@@ -72,7 +72,7 @@ import org.w3c.dom.Element;
  *      @author Rickard Öberg (rickard.oberg@telkel.com)
  *		@author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
  *      @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
- *      @version $Revision: 1.27 $
+ *      @version $Revision: 1.28 $
  */
 public abstract class JRMPContainerInvoker
    extends RemoteServer
@@ -190,8 +190,18 @@ public abstract class JRMPContainerInvoker
          return invokeHome(new MarshalledObject(rmi)).get();
       }
 	 
-       return container.invokeHome(new MethodInvocation(null , m, args, tx,
-        identity, credential));
+       // Set the right context classloader
+       ClassLoader oldCl = Thread.currentThread().getContextClassLoader();
+       Thread.currentThread().setContextClassLoader(container.getClassLoader());
+ 
+       try
+       {
+          return container.invokeHome(new MethodInvocation(null , m, args, tx,
+                                         identity, credential));
+       } finally
+       {
+          Thread.currentThread().setContextClassLoader(oldCl);
+       }
    }
 
    public Object invoke(Object id, Method m, Object[] args, Transaction tx,
@@ -216,14 +226,17 @@ public abstract class JRMPContainerInvoker
 	      return invoke(new MarshalledObject(rmi)).get();
 	   }
       
-	   // DEBUG
-//DEBUG	     Logger.debug("JRMPCI (local) :invoke "+m.getName());
-//DEBUG       if (tx != null)
-//DEBUG		 	Logger.debug("Tx is "+tx.toString());
-//DEBUG       else
-//DEBUG		 	Logger.debug("Tx is null");
-		//DEBUG
-       return container.invoke(new MethodInvocation(id, m, args, tx, identity, credential));
+       // Set the right context classloader
+       ClassLoader oldCl = Thread.currentThread().getContextClassLoader();
+       Thread.currentThread().setContextClassLoader(container.getClassLoader());
+ 
+       try
+       {
+          return container.invoke(new MethodInvocation(id, m, args, tx, identity, credential));
+       } finally
+       {
+          Thread.currentThread().setContextClassLoader(oldCl);
+       }
    }
 
    // ContainerService implementation -------------------------------
