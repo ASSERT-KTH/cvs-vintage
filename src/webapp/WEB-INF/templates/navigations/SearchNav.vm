@@ -58,7 +58,7 @@
   
 
 <td>
- <form action="$link.setPage("IssueList.vm").setAction("Search")" method="get">
+ <form action="$link.setPage("IssueList.vm").setAction("Search")" method="post">
   <input type="hidden" name="$scarabG.Constant.NEXT_TEMPLATE" value="Index.vm" />
   <input type="hidden" name="go" value="quickSearch"/>
   <input type="text"   name="searchString"/>
