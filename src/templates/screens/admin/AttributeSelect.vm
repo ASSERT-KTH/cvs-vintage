@@ -90,7 +90,7 @@ $page.setTitle("Select global attribute")
 #end
 
 #AttributeSelectBar("2")
-
+$intake.declareGroups()
 </form>
 
 </div>
