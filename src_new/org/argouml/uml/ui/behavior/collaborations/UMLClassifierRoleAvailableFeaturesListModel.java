@@ -1,4 +1,4 @@
-// $Id: UMLClassifierRoleAvailableFeaturesListModel.java,v 1.6 2002/12/31 09:58:48 kataka Exp $
+// $Id: UMLClassifierRoleAvailableFeaturesListModel.java,v 1.7 2003/05/04 14:38:06 kataka Exp $
 // Copyright (c) 2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,9 +27,11 @@ package org.argouml.uml.ui.behavior.collaborations;
 import java.util.Collection;
 import java.util.Iterator;
 
+import org.argouml.model.ModelFacade;
 import org.argouml.model.uml.UmlModelEventPump;
 import org.argouml.model.uml.behavioralelements.collaborations.CollaborationsHelper;
 import org.argouml.uml.ui.UMLModelElementListModel2;
+import org.tigris.gef.presentation.Fig;
 
 import ru.novosoft.uml.MBase;
 import ru.novosoft.uml.MElementEvent;
@@ -86,6 +88,8 @@ public class UMLClassifierRoleAvailableFeaturesListModel
             }
             UmlModelEventPump.getPump().removeModelEventListener(this, (MBase)getTarget(), "base");
         }
+        target = target instanceof Fig ? ((Fig)target).getOwner() : target;
+        if (!ModelFacade.isABase(target)) return;
         _target = target;
         if (_target != null) {
             Collection bases = ((MClassifierRole)_target).getBases();
