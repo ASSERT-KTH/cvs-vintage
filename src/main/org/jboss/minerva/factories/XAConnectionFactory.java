@@ -22,7 +22,7 @@ import org.jboss.minerva.xa.*;
  * and any work done isn't associated with the java.sql.Connection anyway.
  * <P><B>Note:</B> This implementation requires that the TransactionManager
  * be bound to a JNDI name.</P>
- * @version $Revision: 1.3 $
+ * @version $Revision: 1.4 $
  * @author Aaron Mulder (ammulder@alumni.princeton.edu)
  */
 public class XAConnectionFactory extends PoolObjectFactory {
@@ -176,11 +176,13 @@ public class XAConnectionFactory extends PoolObjectFactory {
         try {
             TransactionManager tm = (TransactionManager)ctx.lookup(tmJndiName);
             if(tm.getStatus() != Status.STATUS_NO_TRANSACTION) {
-                tm.getTransaction().enlistResource(con.getXAResource());
+                Transaction trans = tm.getTransaction();
+                trans.enlistResource(con.getXAResource());
                 con.addConnectionEventListener(listener);
                 if(log != null) log.println("Enlisted with transaction.");
+            } else {
+                if(log != null) log.println("No transaction right now.");
             }
-            if(log != null) log.println("No transaction right now.");
         } catch(Exception e) {
             e.printStackTrace();
             throw new RuntimeException("Unable to register with TransactionManager: "+e);
