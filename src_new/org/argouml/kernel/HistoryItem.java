@@ -1,4 +1,4 @@
-// $Id: HistoryItem.java,v 1.4 2003/06/30 19:23:18 linus Exp $
+// $Id: HistoryItem.java,v 1.5 2003/08/21 20:42:38 alexb Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -31,7 +31,12 @@ import org.argouml.cognitive.*;
 // TODO: how can this possibly be persistent?
 // TODO: provide accessors
 // TODO: define subclasses for: modification, criticism
-
+/**
+ * History is now managed by the TargetManager.
+ *
+ * @deprecated since 0.15.1, remove in 0.15.2,
+ *             Hreplaced by the TargetManager.
+ */
 public class HistoryItem {
 
     ////////////////////////////////////////////////////////////////

@@ -1,4 +1,4 @@
-// $Id: DelayedChangeNotify.java,v 1.2 2003/06/29 23:53:44 linus Exp $
+// $Id: DelayedChangeNotify.java,v 1.3 2003/08/21 20:42:38 alexb Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -26,6 +26,10 @@ package org.argouml.kernel;
 
 import java.beans.*;
 
+/**
+ * This appears to be a gui specific class, therefore it does not belong in
+ * the Kernel.
+ */
 public class DelayedChangeNotify implements Runnable {
     DelayedVChangeListener _listener;
     PropertyChangeEvent _pce;

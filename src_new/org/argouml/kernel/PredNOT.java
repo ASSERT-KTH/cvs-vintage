@@ -1,4 +1,4 @@
-// $Id: PredNOT.java,v 1.2 2003/06/29 23:53:44 linus Exp $
+// $Id: PredNOT.java,v 1.3 2003/08/21 20:42:38 alexb Exp $
 // Copyright (c) 2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -34,6 +34,7 @@ import org.tigris.gef.util.*;
  * Predicate to provide logical <B>NOT</B>. The predicate returns 
  * true if its internal <code>Predicate</code> return false;    
  * 
+ * This class belongs in org.argouml.util
  * @author Eugenio Alvarez
  *
  */
