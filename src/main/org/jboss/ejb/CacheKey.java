@@ -19,7 +19,7 @@ package org.jboss.ejb;
 *
 *   @see org.jboss.ejb.plugins.NoPassivationInstanceCache.java
 *   @author <a href="marc.fleury@telkel.com">Marc Fleury</a>
-*   @version $Revision: 1.4 $
+*   @version $Revision: 1.5 $
 */
 public class CacheKey
     implements java.io.Externalizable
@@ -66,7 +66,6 @@ public class CacheKey
    {
         out.writeObject(id);
        	out.writeInt(hashCode);
-		System.out.println(" Cachekye on writing "+hashCode);
    
    }
    
@@ -75,7 +74,6 @@ public class CacheKey
    {
         id = in.readObject();
        hashCode = in.readInt();
-	   System.out.println(" Cachekye on reading "+hashCode);
    }
 
     // HashCode and Equals over write --------------------------------
