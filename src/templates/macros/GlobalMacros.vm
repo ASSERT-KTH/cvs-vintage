@@ -458,6 +458,6 @@ $scarabR.IssuePosInList of $scarabR.CurrentSearchResults.size()
 
 #macro (asterisk)
 <p>
-<small>"<strong>*</strong>" indicates required fields</small>
+<small>"<strong>*</strong>" $l10n.RequiredFields</small>
 </p>
 #end

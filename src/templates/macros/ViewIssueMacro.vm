@@ -76,7 +76,7 @@
 ## PRIMARY INFO
 #if ($tab.equals("1") || $tab.equals("all"))
 
-<h3>Static issue info</h3>
+<h3>$l10n.StaticIssueInfo</h3>
 <div class="axial">
 <table cellpadding="3" cellspacing="2" border="0">
 <tr>
@@ -145,13 +145,13 @@
 </div>
  
 #if ($canEdit)
-<h4>Save changes</h4>
+<h4>$l10n.SaveChanges</h4>
 <div class="axial">
    #set ($attCommentGroup = $intake.Attachment.setKey("attCommentKey"))
 <table cellpadding="3" cellspacing="2" border="0">
 <tr>
-<th>Reason for change</th>
-<td>Please enter a reason for the changes made above before saving.
+<th>$l10n.ReasonForChange</th>
+<td>$l10n.EnterReason
    #fieldErrorMsg($attCommentGroup.DataAsString "")
    
    <p>#textAreaMedium("$attCommentGroup.DataAsString.Key" $attCommentGroup.DataAsString.Value)
@@ -169,12 +169,12 @@
 
 #if ($tab.equals("2") || $tab.equals("all"))
 ### PERSONNEL
-<h3>Personnel associated with issue</h3>
+<h3>$l10n.Personnel</h3>
 <table width="100%" border="1" cellspacing="2" cellpadding="3">
 <tr>
-  <th>Name</th>
-  <th>Email</th>
-  <th>Association</th>
+  <th>$l10n.Name</th>
+  <th>$l10n.Email</th>
+  <th>$l10n.Association</th>
 </tr>
 
 <tr class="a">
@@ -186,7 +186,7 @@
 
 #set ($userAttVals = $currentIssue.UserAttributeValues)
 #if ($userAttVals.isEmpty())
-  <tr><td colspan="3">None assigned.</td></tr>
+  <tr><td colspan="3">$l10n.NoneAssigned.</td></tr>
 #else
    #foreach ($attVal in $userAttVals)
       #indexedRows($velocityCount)
@@ -223,9 +223,9 @@
   #set ($comments = $currentIssue.getComments(false))
 #end
 
-<h3>Comments</h3>
+<h3>$l10n.Comments</h3>
 #if ($comments.isEmpty() && !$canEdit)
-There are no comments in this issue.
+$l10n.NoComments
 #else
   #foreach ($comment in $comments)
      #set ($commentUser = $scarabR.getUser($comment.CreatedBy))
@@ -238,7 +238,7 @@ There are no comments in this issue.
   #end
 
   #if ($canEdit)
-   <h4>Enter new comment</h4>
+   <h4>$l10n.EnterComment</h4>
    <table cellspacing="2" cellpadding="3" border="0">
      <tr>
        <td>
@@ -275,7 +275,7 @@ There are no comments in this issue.
 ## URL/Attachment/Dependency Tab
 #if ($tab.equals("4") || $tab.equals("all"))
 ## URLS
-<h3>Related links</h3>
+<h3>$l10n.RelatedLinks</h3>
 #if ($currentIssue.Urls.isEmpty() && !$canEdit)
     There are no links in this issue.
 #else
@@ -285,11 +285,11 @@ There are no comments in this issue.
          #if ($canEdit)
              <th>&#160;</th>
          #end
-     <th>Link</th>
+     <th>$l10n.Link</th>
      #end
      #if ($canEdit)
-     <th>URL</th>
-     <th>Description</th>
+     <th>$l10n.URL</th>
+     <th>$l10n.Description</th>
      #end
    </tr>
    #foreach ($url in $currentIssue.Urls)
@@ -348,9 +348,9 @@ There are no comments in this issue.
 #set ($intakeAttachment = $intake.Attachment.setKey("fileKey"))
 #set ($attachments = $currentIssue.ExistingAttachments)
 
-<h3>Attachments</h3>
+<h3>$l10n.Attachments</h3>
 #if ($attachments.isEmpty() && !$canEdit)
-There are no attachments for this issue.
+$l10n.NoAttachments
 #else
  #if ($attachments.size() > 0)
  <table width="100%" border="1" cellspacing="2" cellpadding="3">
@@ -358,9 +358,9 @@ There are no attachments for this issue.
      #if ($canEdit)
          <th>&#160;</th>
      #end
-     <th>Name</th>
-     <th>Description</th>
-     <th>Type</th>
+     <th>$l10n.Name</th>
+     <th>$l10n.Description</th>
+     <th>$l10n.Type</th>
    </tr>
    #foreach ($file in $attachments)
      #indexedRows($velocityCount)
@@ -393,31 +393,27 @@ There are no attachments for this issue.
 #end
 
 #if ($canEdit)
-<h4>Add attachment</h4>
+<h4>$l10n.AddAttachment</h4>
 
 <div class="axial">
   <table cellpadding="3" cellspacing="2" border="0">
     <tr>
-      <th>Path</th>
+      <th>$l10n.Path</th>
       <td>
        <input type="file" name="$intakeAttachment.File.Key" size="45"
             value="$!intakeAttachment.File.Value.FileName" />
-       <p><small>Click Browse and select a file. If you do not see a Browse
-       button, your browser does not support file uploads. Windows
-       users, set Files of Type: to be All Files (*.*) to get a
-       complete file listing. The File field cannot be used to
-       rename files.</small></p>
+       <p><small>$l10n.SelectFile</small></p>
       </td>
     </tr>
     <tr>
-       <th>Description</th>
+       <th>$l10n.Description</th>
        <td>
         #textAreaMedium("$intakeAttachment.Name.Key" "$intakeAttachment.Name")
         #fieldErrorMsg($intakeAttachment.Name "")
        </td>
     </tr>
     <tr>
-      <th>Type</th>
+      <th>$l10n.Type</th>
       <td>
         <select name="$intakeAttachment.MimeTypeA.Key" class="select">
         #if ($intakeAttachment.MimeTypeA)
@@ -450,18 +446,18 @@ There are no attachments for this issue.
 
     
 ## DEPENDENCIES
-<h3>Dependencies</h3>
+<h3>$l10n.Dependencies</h3>
 #if ($currentIssue.Children.isEmpty() && $currentIssue.Parents.isEmpty() && !$canEdit)
-There are no dependencies for this issue.
+$l10n.NoDependencies
 #else
 <table width="100%" border="1" cellspacing="2" cellpadding="3">
 <tr>
 #if ($canEdit)
  <th> &nbsp; </th>
 #end
- <th>Issue ID #</th>
- <th>Relationship</th>
- <th>Type</th>
+ <th>$l10n.Issue $l10n.ID #</th>
+ <th>$l10n.Relationship</th>
+ <th>$l10n.Type</th>
 </tr>
 
 #foreach ($depend in $currentIssue.Parents)
@@ -472,7 +468,7 @@ There are no dependencies for this issue.
     <td>#booleanCheckbox($dependGroup.Deleted)</td>
 #end
 <td>$link.setPage("ViewIssue.vm").addPathInfo("id", $parent.UniqueId).setLabel("$parent.UniqueId")</td>
-<td>Parent</td>
+<td>$l10n.Parent</td>
 <td>
 #if ($canEdit)
 <select name="$dependGroup.TypeId.Key" class="select">
@@ -571,13 +567,13 @@ There are no dependencies for this issue.
 #end
 
 #if (!$activity.isEmpty())
-<h3>Issue change history</h3>
+<h3>$l10n.IssueChangeHistory</h3>
   <table width="100%" cellpadding="3" cellspacing="2" border="1">
   <tr>
-    <th>Date stamp</th>
-    <th>Action</th>
-    <th>Reason</th>
-    <th>By</th>
+    <th>$l10n.DateStamp</th>
+    <th>$l10n.Action</th>
+    <th>$l10n.Reason</th>
+    <th>$l10n.By</th>
   </tr>
   #foreach ($act in $activity)
     #indexedRows($velocityCount)
@@ -595,7 +591,7 @@ There are no dependencies for this issue.
          $act.Transaction.Attachment.DataAsString
        #else Not provided. #end
      #elseif ($act.Transaction.TransactionType.Name.equals("Create Issue"))
-           Initial entry
+           $l10n.InitialEntry
      #end
      </td>
      <td>
@@ -615,7 +611,7 @@ There are no dependencies for this issue.
     #if ($resultsPerPage)
       #set ($historyLink = $historyLink.addPathInfo("resultsPerPage", $resultsPerPage))
     #end
-    <p><a href="$historyLink">Hide complete history</a></p>
+    <p><a href="$historyLink">$l10n.HideCompleteHistory</a></p>
   #else
     #set ($historyLink = $link.setPage("$template").addPathInfo("id", $currentIssueId).addPathInfo("fullhistory", "true"))
     #foreach ($issueId in $data.Parameters.getStrings("issue_ids"))
@@ -624,7 +620,7 @@ There are no dependencies for this issue.
     #if ($resultsPerPage)
       #set ($historyLink = $historyLink.addPathInfo("resultsPerPage", $resultsPerPage))
     #end
-    <p><a href="$historyLink">Show complete history</a></p>
+    <p><a href="$historyLink">$l10n.ShowCompleteHistory</a></p>
   #end
 #end
 #end
