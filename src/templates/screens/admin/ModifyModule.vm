@@ -2,7 +2,7 @@
 #set ($canEdit = "false")
 
 #set ($moduleId = $data.Parameters.getString("moduleid"))
-#if (!$moduleId)
+#if (!$moduleId || $moduleId.length() == 0)
    #set ($createNew = "true")
 #end
 
@@ -28,7 +28,6 @@
 <div id="module" class="app">
 <h2>$page.Title</h2>
 
-
 <h3>Module Details</h3>
 
 <form action="$link.setPage("admin,ModifyModule.vm")" method="post">
@@ -41,13 +40,12 @@
 #set ($moduleGroup = $intake.Module.Default)
 <input type="hidden" name="new" value="true" /> 
 #else
-#set ($moduleGroup = $intake.Module.Default)
+#set ($moduleGroup = $intake.Module.mapTo($editModule))
 <input type="hidden" name="new" value="false" /> 
 <input type="hidden" name="$moduleGroup.Id.Key" value="$moduleId" /> 
 <input type="hidden" name="moduleid" value="$moduleId" /> 
 #end
 
-#set ($moduleGroup = $intake.Module.mapTo($editModule))
 #if ( !$moduleGroup.get("Id").isValid())
 <p><strong class="alert">$moduleGroup.get("Id").Message</strong></p>
 #end
@@ -55,28 +53,28 @@
 <div class="axial">
  <table cellpadding="3" cellspacing="2" border="1">
   <tr>
-   <th>* Module Name:</th>
+   <th>* Module name</th>
    <td>
     <input name="$moduleGroup.RealName.Key" value="$moduleGroup.RealName" type="text" size="25" />
     #fieldErrorMsg($moduleGroup.RealName "")
    </td>
   </tr>
   <tr>
-   <th>* Description:</th>
+   <th>* Description</th>
    <td>
      #textAreaMedium ("$moduleGroup.Description.Key" $moduleGroup.Description)
     #fieldErrorMsg($moduleGroup.Description "")
    </td>
   </tr>
   <tr>
-   <th>* Code:</th>
+   <th>* Code</th>
    <td>
-    <input name="$moduleGroup.Code.Key" value="$moduleGroup.Code" type="text" size="10" maxsize="4" />
+    <input name="$moduleGroup.Code.Key" value="$moduleGroup.Code" type="text" size="10" maxlength="4" />
     #fieldErrorMsg($moduleGroup.Code "")
    </td>
   </tr>
   <tr>
-   <th>* URL:</th>
+   <th>* URL</th>
    <td>
     <input name="$moduleGroup.Url.Key" value="$moduleGroup.Url" type="text" size="25" />
     #fieldErrorMsg($moduleGroup.Url "")
@@ -84,7 +82,7 @@
   </tr>
 #if (($createNew == "true") || ($moduleId != "0"))
   <tr>
-   <th>* Parent Module:</th>
+   <th>* Parent module</th>
    <td> 
      #set ($userModules = $data.User.EditableModules)
     <select name="$moduleGroup.ParentId.Key">
