@@ -1,4 +1,4 @@
-// $Id: ActionFileOperations.java,v 1.23 2005/01/30 09:29:34 mvw Exp $
+// $Id: ActionFileOperations.java,v 1.24 2005/02/05 00:27:11 bobtarling Exp $
 // Copyright (c) 2004-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -31,6 +31,7 @@ import java.text.MessageFormat;
 
 import javax.swing.AbstractAction;
 import javax.swing.Icon;
+import javax.swing.JDialog;
 import javax.swing.JOptionPane;
 
 import org.apache.log4j.Logger;
@@ -42,6 +43,8 @@ import org.argouml.persistence.LastLoadInfo;
 import org.argouml.persistence.PersistenceManager;
 import org.argouml.persistence.ProjectFilePersister;
 import org.argouml.persistence.VersionException;
+import org.argouml.ui.ArgoDialog;
+import org.argouml.ui.ExceptionDialog;
 import org.argouml.ui.ProjectBrowser;
 
 /**
@@ -254,13 +257,27 @@ public abstract class ActionFileOperations extends AbstractAction {
      *               false if run in commandline mode
      */
     private void reportError(String message, boolean showUI, Throwable ex) {
-        StringWriter sw = new StringWriter();
-        PrintWriter pw = new PrintWriter(sw);
-        ex.printStackTrace(pw);
-        String exception = sw.toString();
-        
-        message += "\n\n" + exception;
-        
-        reportError(message, showUI);
+        if (showUI) {
+            JDialog dialog =
+                new ExceptionDialog(
+                        ProjectBrowser.getInstance(),
+                        "An error occured attempting to load the project.",
+                        ex);
+            dialog.setVisible(true);
+//            JOptionPane.showMessageDialog(
+//                      ProjectBrowser.getInstance(),
+//                      message,
+//                      "Error",
+//                      JOptionPane.ERROR_MESSAGE);
+        } else {
+            StringWriter sw = new StringWriter();
+            PrintWriter pw = new PrintWriter(sw);
+            ex.printStackTrace(pw);
+            String exception = sw.toString();
+            
+            message += "\n\n" + exception;
+            
+            reportError(message, showUI);
+        }
     }
 }
