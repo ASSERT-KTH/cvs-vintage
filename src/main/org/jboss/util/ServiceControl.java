@@ -22,7 +22,7 @@ import org.jboss.logging.Log;
  *   @see <related>
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
  *   @author Hugo Pinto (mailto:hugo@hugopinto.com)
- *   @version $Revision: 1.5 $
+ *   @version $Revision: 1.6 $
  */
 public class ServiceControl
 
