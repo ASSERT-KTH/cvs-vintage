@@ -238,7 +238,7 @@ final class HttpServletRequestFacade implements HttpServletRequest {
      */
     public String getParameter(String name) {
 	if( ! parametersProcessed ) {
-	    request.parameters().handleQueryParameters();
+	    request.handleQueryParameters();
 	    if( request.method().equals("POST")) {
 		request.handlePostParameters();
 	    }
@@ -249,7 +249,7 @@ final class HttpServletRequestFacade implements HttpServletRequest {
 
     public String[] getParameterValues(String name) {
 	if( ! parametersProcessed ) {
-	    request.parameters().handleQueryParameters();
+	    request.handleQueryParameters();
 	    if( request.method().equals("POST")) {
 		request.handlePostParameters();
 	    }
@@ -260,7 +260,7 @@ final class HttpServletRequestFacade implements HttpServletRequest {
 
     public Enumeration getParameterNames() {
 	if( ! parametersProcessed ) {
-	    request.parameters().handleQueryParameters();
+	    request.handleQueryParameters();
 	    if( request.method().equals("POST")) {
 		request.handlePostParameters();
 	    }
@@ -291,7 +291,8 @@ final class HttpServletRequestFacade implements HttpServletRequest {
     }
 
     public String getQueryString() {
-        String qS=request.queryString().toString();
+	// unprocessed
+	String qS=request.queryString().toString();
 	if( "".equals(qS) )
 	    return null;
 	return qS;
@@ -363,7 +364,9 @@ final class HttpServletRequestFacade implements HttpServletRequest {
     }
 
     public String getRequestURI() {
-        return request.requestURI().toString();
+	if( request.unparsedURI().isNull() )
+	    return request.requestURI().toString();
+        return request.unparsedURI().toString();
     }
 
     /** Facade: we delegate to the right object ( the context )
