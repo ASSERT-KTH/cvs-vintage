@@ -11,6 +11,7 @@ import java.rmi.RemoteException;
 
 import javax.ejb.EJBContext;
 import javax.ejb.EJBHome;
+import javax.ejb.EJBLocalObject;
 import javax.ejb.EJBObject;
 import javax.ejb.EJBLocalObject;
 import javax.ejb.SessionBean;
@@ -22,7 +23,7 @@ import javax.ejb.SessionContext;
  *	@see <related>
  *	@author Rickard Öberg (rickard.oberg@telkel.com)
  *      @author Daniel OConnor (docodan@mvcsoft.com)
- *	@version $Revision: 1.8 $
+ *	@version $Revision: 1.9 $
  */
 public class StatefulSessionEnterpriseContext
    extends EnterpriseContext
@@ -121,6 +122,11 @@ public class StatefulSessionEnterpriseContext
 			return ejbObject;
       	}
       
+        public EJBLocalObject getEJBLocalObject()
+        {
+          throw new IllegalStateException();
+        }
+
       	public Object getPrimaryKey()
       	{
          return id;

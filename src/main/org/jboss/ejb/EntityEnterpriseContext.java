@@ -10,6 +10,7 @@ import java.rmi.RemoteException;
 
 import javax.ejb.EJBContext;
 import javax.ejb.EJBHome;
+import javax.ejb.EJBLocalObject;
 import javax.ejb.EJBObject;
 import javax.ejb.EntityBean;
 import javax.ejb.EntityContext;
@@ -22,7 +23,7 @@ import javax.transaction.Transaction;
 *	@see EnterpriseContext
 *	@author Rickard Öberg (rickard.oberg@telkel.com)
 *   @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
-*	@version $Revision: 1.15 $
+*	@version $Revision: 1.16 $
 */
 public class EntityEnterpriseContext
 extends EnterpriseContext
@@ -165,6 +166,11 @@ extends EnterpriseContext
 
          return ejbObject;
        }
+
+      public EJBLocalObject getEJBLocalObject()
+      {
+        throw new IllegalStateException();
+      }
 
        public Object getPrimaryKey()
        {

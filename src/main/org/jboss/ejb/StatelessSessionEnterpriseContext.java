@@ -13,6 +13,7 @@ import java.rmi.ServerException;
 
 import javax.ejb.EJBContext;
 import javax.ejb.EJBHome;
+import javax.ejb.EJBLocalObject;
 import javax.ejb.EJBObject;
 import javax.ejb.SessionContext;
 import javax.ejb.SessionBean;
@@ -24,7 +25,7 @@ import javax.ejb.EJBException;
  *	@see <related>
  *	@author Rickard Öberg (rickard.oberg@telkel.com)
  *  @author <a href="sebastien.alborini@m4x.org">Sebastien Alborini</a>
- *	@version $Revision: 1.6 $
+ *	@version $Revision: 1.7 $
  */
 public class StatelessSessionEnterpriseContext
    extends EnterpriseContext
@@ -109,6 +110,11 @@ public class StatelessSessionEnterpriseContext
     
 	     	return ejbObject;
       }
+
+     public EJBLocalObject getEJBLocalObject()
+     {
+       throw new IllegalStateException();
+     }
    }
 }
 

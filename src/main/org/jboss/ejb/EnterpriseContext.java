@@ -14,6 +14,7 @@ import java.util.Properties;
 import java.util.HashSet;
 import java.util.Iterator;
 
+import javax.ejb.EJBLocalHome;
 import javax.ejb.EJBHome;
 import javax.ejb.EJBContext;
 import javax.ejb.EJBException;
@@ -40,7 +41,7 @@ import org.jboss.metadata.SecurityRoleRefMetaData;
  *  @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  *  @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
  *  @author <a href="mailto:juha@jboss.org">Juha Lindfors</a>
- *  @version $Revision: 1.27 $
+ *  @version $Revision: 1.28 $
  */
 public abstract class EnterpriseContext
 {
@@ -203,7 +204,7 @@ public abstract class EnterpriseContext
          return beanPrincipal;
        }
       
-      public EJBHome getEJBHome() 
+      public EJBHome getEJBHome()
       { 
          if (con instanceof EntityContainer)
          {
@@ -221,6 +222,11 @@ public abstract class EnterpriseContext
           // Should never get here
           throw new EJBException("No EJBHome available (BUG!)");
          }
+      }
+
+      public EJBLocalHome getEJBLocalHome()
+      { 
+          throw new EJBException("Not implemented yet");
       }
       
       /**
