@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/facade23/org/apache/tomcat/facade23/Attic/HttpServletResponseFacade.java,v 1.4 2000/09/24 18:11:26 costin Exp $
- * $Revision: 1.4 $
- * $Date: 2000/09/24 18:11:26 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/facade23/org/apache/tomcat/facade23/Attic/HttpServletResponseFacade.java,v 1.5 2000/09/25 17:17:52 costin Exp $
+ * $Revision: 1.5 $
+ * $Date: 2000/09/25 17:17:52 $
  *
  * ====================================================================
  *
@@ -109,17 +109,20 @@ final class HttpServletResponseFacade  implements HttpServletResponse
     // -------------------- Public methods --------------------
 
     public void addCookie(Cookie cookie) {
-	
-	addHeader( CookieTools.getCookieHeaderName(cookie),
-			    CookieTools.getCookieHeaderValue(cookie));
-	if( cookie.getVersion() == 1 ) {
-	    // add a version 0 header too.
-	    // XXX what if the user set both headers??
-	    Cookie c0 = (Cookie)cookie.clone();
-	    c0.setVersion(0);
-	    addHeader( CookieTools.getCookieHeaderName(c0),
-		       CookieTools.getCookieHeaderValue(c0));
-	}
+	// layer costs - this can be avoided, but it's not a
+	// frequent operation ( for example sc can be reused )
+	ServerCookie sc=new ServerCookie();
+	cookie2serverCookie( cookie, sc);
+	addHeader( CookieTools.getCookieHeaderName(cookie.getVersion()),
+		   CookieTools.getCookieHeaderValue(sc));
+	// This shouldn't be done - if the user asks for a specific
+	// version, only that version should be set !!!
+// 	if( cookie.getVersion() == 1 ) {
+// 	    // sc is not reused
+// 	    sc.setVersion(0);
+// 	    addHeader( CookieTools.getCookieHeaderName(sc.getVersion()),
+// 		       CookieTools.getCookieHeaderValue(sc));
+// 	}
 	// Is it needed ? ( result of refactoring, that's how the code
 	// worked) 
 	//response.addUserCookie(cookie);
@@ -453,5 +456,14 @@ final class HttpServletResponseFacade  implements HttpServletResponse
 
     }
 
+    private void cookie2serverCookie( Cookie cookie, ServerCookie sc ) {
+	sc.getName().setString( cookie.getName() );
+	sc.getValue().setString( cookie.getValue() );
+	sc.getPath().setString(cookie.getPath());
+	sc.getDomain().setString( cookie.getDomain());
+	sc.getComment().setString( cookie.getComment());
+	sc.setMaxAge( cookie.getMaxAge() );
+	sc.setSecure( cookie.getSecure());
+    }
 
 }

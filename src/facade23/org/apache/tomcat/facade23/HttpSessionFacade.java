@@ -89,14 +89,17 @@ import javax.servlet.http.*;
  * @author costin@eng.sun.com
  */
 final class HttpSessionFacade implements HttpSession {
-    HttpSession realSession;
+    private static StringManager sm =
+        StringManager.getManager("org.apache.tomcat.resources");
+    ServerSession realSession;
     
     HttpSessionFacade() {
     }
 
+    // -------------------- public facade --------------------
     /** Package-level method - accessible only by core
      */
-    void setRealSession(HttpSession s) {
+    void setRealSession(ServerSession s) {
  	realSession=s;
      }
 
@@ -109,11 +112,20 @@ final class HttpSessionFacade implements HttpSession {
     // -------------------- public facade --------------------
 
     public String getId() {
-	return realSession.getId();
+	checkValid();
+	return realSession.getId().toString();
     }
 
+    /**
+     * Return the time when this session was created, in milliseconds since
+     * midnight, January 1, 1970 GMT.
+     *
+     * @exception IllegalStateException if this method is called on an
+     *  invalidated session
+     */
     public long getCreationTime() {
-	return realSession.getCreationTime();
+	checkValid();
+	return realSession.getTimeStamp().getCreationTime();
     }
     
     /**
@@ -127,36 +139,73 @@ final class HttpSessionFacade implements HttpSession {
     }
     
     public long getLastAccessedTime() {
-	return realSession.getLastAccessedTime();
+	checkValid();
+	return realSession.getTimeStamp().getLastAccessedTime();
     }
 
+    /**
+     * Invalidates this session and unbinds any objects bound to it.
+     *
+     * @exception IllegalStateException if this method is called on
+     *  an invalidated session
+     */
     public void invalidate() {
-	realSession.invalidate();
+	checkValid();
+	ServerSessionManager ssm=realSession.getSessionManager();
+	ssm.removeSession( realSession );
+	realSession.removeAllAttributes();
+	realSession.getTimeStamp().setValid( false );
     }
 
+    /**
+     * Return <code>true</code> if the client does not yet know about the
+     * session, or if the client chooses not to join the session.  For
+     * example, if the server used only cookie-based sessions, and the client
+     * has disabled the use of cookies, then a session would be new on each
+     * request.
+     *
+     * @exception IllegalStateException if this method is called on an
+     *  invalidated session
+     */
     public boolean isNew() {
-	return realSession.isNew();
+	checkValid();
+	return realSession.getTimeStamp().isNew();
     }
     
     /**
      * @deprecated
      */
     public void putValue(String name, Object value) {
-	realSession.putValue(name, value);
+	setAttribute(name, value);
     }
 
     public void setAttribute(String name, Object value) {
+	checkValid();
+
+	ServerSessionManager ssm=realSession.getSessionManager();
+	// Original code - it's up to session manager to decide
+	// what it can handle. 
+	// 	if (ssm.isDistributable() &&
+	// 	  !(value instanceof Serializable))
+	// 	    throw new IllegalArgumentException
+	// 		(sm.getString("standardSession.setAttribute.iae"));
+	
 	realSession.setAttribute( name, value );
+	if (value instanceof HttpSessionBindingListener)
+	    ((HttpSessionBindingListener) value).valueBound
+		(new HttpSessionBindingEvent( this, name));
+
     }
 
     /**
      * @deprecated
      */
     public Object getValue(String name) {
-	return realSession.getValue(name);
+	return getAttribute(name);
     }
 
     public Object getAttribute(String name) {
+	checkValid();
 	return realSession.getAttribute(name);
     }
     
@@ -164,10 +213,24 @@ final class HttpSessionFacade implements HttpSession {
      * @deprecated
      */
     public String[] getValueNames() {
-	return realSession.getValueNames();
+	checkValid();
+	
+	Enumeration attrs = getAttributeNames();
+	String names[] = new String[realSession.getAttributeCount()];
+	for (int i = 0; i < names.length; i++)
+	    names[i] = (String)attrs.nextElement();
+	return names;
     }
 
+    /**
+     * Return an <code>Enumeration</code> of <code>String</code> objects
+     * containing the names of the objects bound to this session.
+     *
+     * @exception IllegalStateException if this method is called on an
+     *  invalidated session
+     */
     public Enumeration getAttributeNames() {
+	checkValid();
 	return realSession.getAttributeNames();
     }
 
@@ -175,18 +238,51 @@ final class HttpSessionFacade implements HttpSession {
      * @deprecated
      */
     public void removeValue(String name) {
-	realSession.removeAttribute(name);
+	removeAttribute(name);
     }
 
+    /**
+     * Remove the object bound with the specified name from this session.  If
+     * the session does not have an object bound with this name, this method
+     * does nothing.
+     * <p>
+     * After this method executes, and if the object implements
+     * <code>HttpSessionBindingListener</code>, the container calls
+     * <code>valueUnbound()</code> on the object.
+     *
+     * @param name Name of the object to remove from this session.
+     *
+     * @exception IllegalStateException if this method is called on an
+     *  invalidated session
+     */
     public void removeAttribute(String name) {
+	checkValid();
+	Object object=realSession.getAttribute( name );
 	realSession.removeAttribute(name);
+	if (object instanceof HttpSessionBindingListener) {
+	    ((HttpSessionBindingListener) object).valueUnbound
+		(new HttpSessionBindingEvent( this, name));
+	}
+
     }
 
     public void setMaxInactiveInterval(int interval) {
-	realSession.setMaxInactiveInterval( interval );
+	realSession.getTimeStamp().setMaxInactiveInterval( interval * 1000 );
     }
 
     public int getMaxInactiveInterval() {
-	return realSession.getMaxInactiveInterval();
+	checkValid();
+	// We use long because it's better to do /1000 here than
+	// every time the internal code does expire
+	return (int)realSession.getTimeStamp().getMaxInactiveInterval()/1000;
     }
+
+    // duplicated code, private
+    private void checkValid() {
+	if (!realSession.getTimeStamp().isValid()) {
+	    throw new IllegalStateException
+		(sm.getString("standardSession.getAttributeNames.ise"));
+	}
+    }
+
 }
