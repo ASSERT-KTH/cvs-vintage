@@ -40,6 +40,14 @@
             snoop
         </servlet-name>
         <url-pattern>
+            /snoop/*
+        </url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>
+            snoop
+        </servlet-name>
+        <url-pattern>
             *.snp
         </url-pattern>
     </servlet-mapping>
@@ -80,16 +88,15 @@
     </security-constraint>
 
     <!-- Default login configuration uses BASIC authentication -->
-    <!--
     <login-config>
       <auth-method>BASIC</auth-method>
       <realm-name>Example Basic Authentication Area</realm-name>
     </login-config>
-    -->
 
     <!-- Form-based login is enabled by default.  If you wish to
          try Basic authentication, comment out the <login-config>
          section below and uncomment the one above. -->
+    <!--
     <login-config>
       <auth-method>FORM</auth-method>
       <realm-name>Example Form-Based Authentication Area</realm-name>
@@ -98,5 +105,6 @@
         <form-error-page>/jsp/security/login/error.jsp</form-error-page>
       </form-login-config>
     </login-config>
+    -->
 
 </web-app>
