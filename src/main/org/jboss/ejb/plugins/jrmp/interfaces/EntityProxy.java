@@ -26,7 +26,7 @@ import org.jboss.ejb.CacheKey;
  * @author  Rickard Öberg (rickard.oberg@telkel.com)
  * @author  <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  * @author  Jason Dillon <a href="mailto:jason@planet57.com">&lt;jason@planet57.com&gt;</a>
- * @version $Revision: 1.23 $
+ * @version $Revision: 1.24 $
  */
 public class EntityProxy
     extends BeanProxy
@@ -105,27 +105,27 @@ public class EntityProxy
        
        // Implement local methods
        if (m.equals(TO_STRING)) {
-           return name + ":" + cacheKey.id.toString();
+           return name + ":" + cacheKey.getId().toString();
        }
        else if (m.equals(EQUALS)) {
            return invoke(proxy, IS_IDENTICAL, args);
        }
        else if (m.equals(HASH_CODE)) {
-         return new Integer(cacheKey.id.hashCode());
+         return new Integer(cacheKey.getId().hashCode());
        }
        
        // Implement local EJB calls
        else if (m.equals(GET_HANDLE)) {
-           return new EntityHandleImpl(initialContextHandle, name, cacheKey.id);
+           return new EntityHandleImpl(initialContextHandle, name, cacheKey.getId());
        }
        else if (m.equals(GET_PRIMARY_KEY)) {
-           return cacheKey.id;
+           return cacheKey.getId();
        }
 	   else if (m.equals(GET_EJB_HOME)) {
            return getEJBHome();
        }
        else if (m.equals(IS_IDENTICAL)) {
-           return isIdentical(args[0], cacheKey.id);
+           return isIdentical(args[0], cacheKey.getId());
        }
        
        // If not taken care of, go on and call the container

@@ -350,7 +350,7 @@ public class BaseLocalContainerInvoker implements LocalContainerInvoker
        
        protected Object getId()
        {
-           return cacheKey.id;
+           return cacheKey.getId();
        }
       
       
