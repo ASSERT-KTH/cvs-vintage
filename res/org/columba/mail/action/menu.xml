@@ -30,10 +30,8 @@
 		<menuitem checkboxaction="ViewFolderInfoPanel" />
 	</menu>
 	
-	<menu name="menu_view" extensionpoint="top">
-	    <!--
-		<menuitem imenu="SortMessagesMenu"/>
-		-->
+	<menu name="menu_view" extensionpoint="top">	    
+		<menuitem imenu="SortMessagesMenu"/>		
 		<separator/>
 		<menuitem checkboxaction="ThreadedView"/>
 		<separator/>

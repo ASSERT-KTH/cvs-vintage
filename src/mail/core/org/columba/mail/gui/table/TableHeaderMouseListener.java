@@ -43,6 +43,7 @@ public class TableHeaderMouseListener extends MouseAdapter {
 
 	private TableView view;
 	private TableModelSorter sorter;
+	private SortingStateObservable observable;
 	
 	/**
 	 * 
@@ -51,6 +52,7 @@ public class TableHeaderMouseListener extends MouseAdapter {
 		this.view = view;
 		this.sorter = sorter;
 		
+		this.observable = sorter.getSortingStateObservable();
 		
 		JTableHeader th = view.getTableHeader();
 		th.addMouseListener(this);
@@ -91,7 +93,12 @@ public class TableHeaderMouseListener extends MouseAdapter {
 
 			// notify the model to sort the table
 			sorter.sort(column);
-
+			
+			
+			// notify observers
+			observable.setSortingState(sorter.getSortingColumn(), sorter.getSortingOrder());
+			
+			
 		}
 
 	}

@@ -18,49 +18,137 @@ package org.columba.mail.gui.table.action;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Enumeration;
+import java.util.Observable;
+import java.util.Observer;
 
 import javax.swing.ButtonGroup;
+import javax.swing.JRadioButtonMenuItem;
 
 import org.columba.core.action.IMenu;
 import org.columba.core.gui.frame.AbstractFrameController;
+import org.columba.mail.gui.frame.TableOwnerInterface;
+import org.columba.mail.gui.table.SortingStateObservable;
 import org.columba.mail.util.MailResourceLoader;
 
-public class SortMessagesMenu extends IMenu implements ActionListener {
-	
-	private ButtonGroup menuButtons;
+public class SortMessagesMenu extends IMenu implements ActionListener, Observer {
 
+	private ButtonGroup columnGroup;
+	private ButtonGroup orderGroup;
+	
+	private JRadioButtonMenuItem ascendingMenuItem;
+	private JRadioButtonMenuItem descendingMenuItem;
+	
+	private Observable observable;
+	
 	public SortMessagesMenu(AbstractFrameController controller) {
-		super(controller, MailResourceLoader.getString(
-		"menu",
-		"mainframe",
-		"menu_view_sort"));
+		super(
+			controller,
+			MailResourceLoader.getString(
+				"menu",
+				"mainframe",
+				"menu_view_sort"));		
+		
+		// register as Observer
+		TableOwnerInterface table = (TableOwnerInterface) getController();
+		observable = table.getTableController().getTableModelSorter().getSortingStateObservable();
+		observable.addObserver(this);
 		
 		createSubMenu();
 	}
 
 	protected void createSubMenu() {
-		// TODO: create sorting sub-menu
-		/*
-		TableItem item = ((AbstractMailFrameController)getController()).tableController.getHeaderTableItem();
-		int headerCount= item.getChildCount();
-		menuButtons = new ButtonGroup();
+
+		TableOwnerInterface table = (TableOwnerInterface) getController();
+
+		Object[] items =
+			table.getTableController().getTableModelSorter().getColumns();
+
+		columnGroup = new ButtonGroup();
 		JRadioButtonMenuItem headerMenuItem;
-		
-		for( int i=0; i<headerCount; i++) {
-			headerMenuItem = new JRadioButtonMenuItem(item.getChildElement(i).getAttribute("name"));
-			headerMenuItem.setActionCommand(Integer.toString(i));
+
+		for (int i = 0; i < items.length; i++) {
+			String item = (String) items[i];
+			String i18n = MailResourceLoader.getString("header", item);
+			headerMenuItem = new JRadioButtonMenuItem(i18n);
+			headerMenuItem.setActionCommand(item);
 			headerMenuItem.addActionListener(this);
-			menuButtons.add(headerMenuItem);
+			columnGroup.add(headerMenuItem);
 			add(headerMenuItem);
 		}
-		*/
+
+		addSeparator();
+
+		orderGroup = new ButtonGroup();
+		ascendingMenuItem =
+			new JRadioButtonMenuItem("Ascending");
+		ascendingMenuItem.setActionCommand("Ascending");
+		ascendingMenuItem.addActionListener(this);
+		orderGroup.add(ascendingMenuItem);
+		add(ascendingMenuItem);
+		descendingMenuItem = new JRadioButtonMenuItem("Descending");
+		descendingMenuItem.setActionCommand("Descending");
+		descendingMenuItem.addActionListener(this);
+		orderGroup.add(descendingMenuItem);
+		add(descendingMenuItem);
+		
+		
+		update(observable, null);
+
 	}
 
 	/* (non-Javadoc)
 	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
 	 */
 	public void actionPerformed(ActionEvent e) {
-		int selectedColumn = Integer.parseInt(e.getActionCommand());
+		String action = e.getActionCommand();
+
+		TableOwnerInterface table = (TableOwnerInterface) getController();
+
+		if (action.equals("Ascending")) {
+			table.getTableController().getTableModelSorter().setSortingOrder(
+				true);
+			table.getTableController().getTableModelSorter().sort();
+		} else if (action.equals("Descending")) {
+			table.getTableController().getTableModelSorter().setSortingOrder(
+				false);
+			table.getTableController().getTableModelSorter().sort();
+		} else {
+
+			table.getTableController().getTableModelSorter().setSortingColumn(
+				action);
+			table.getTableController().getTableModelSorter().sort();
+		}
+	}
+
+	/* (non-Javadoc)
+	 * @see java.util.Observer#update(java.util.Observable, java.lang.Object)
+	 */
+	public void update(Observable observable, Object object) {
+		String column = ((SortingStateObservable) observable).getColumn();
+		boolean ascending = ((SortingStateObservable) observable).isOrder();
+		
+		Enumeration enum = columnGroup.getElements();
+		while ( enum.hasMoreElements() )
+		{
+			JRadioButtonMenuItem item = (JRadioButtonMenuItem) enum.nextElement();
+			if ( item.getActionCommand().equals(column))
+			{
+				item.setSelected(true);
+				break;
+			}
+			
+		}
+		
+		if ( ascending )
+		{
+			ascendingMenuItem.setSelected(true);
+		}
+		else
+		{
+			descendingMenuItem.setSelected(true);
+		}
+
 	}
 
 }

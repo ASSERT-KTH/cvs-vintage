@@ -80,7 +80,7 @@ public class TableController {
 	private HeaderTableMouseListener headerTableMouseListener;
 	private HeaderTableDnd headerTableDnd;
 
-	private HeaderItemActionListener headerItemActionListener;
+	
 	private FilterActionListener filterActionListener;
 
 	private TableItem headerTableItem;
@@ -110,6 +110,8 @@ public class TableController {
 	protected TableModelThreadedView tableModelThreadedView;
 
 	protected TableModelUpdateManager updateManager;
+	
+	
 
 	public TableController(AbstractMailFrameController mailFrameController) {
 
@@ -141,8 +143,7 @@ public class TableController {
 		headerTableMouseListener = new HeaderTableMouseListener(this);
 		view.addMouseListener(headerTableMouseListener);
 
-		headerItemActionListener =
-			new HeaderItemActionListener(this, headerTableItem);
+		
 		filterActionListener = new FilterActionListener(this);
 		// create a new markAsReadTimer
 		markAsReadTimer = new MarkAsReadTimer(this);
@@ -151,10 +152,11 @@ public class TableController {
 
 		getView().setDragEnabled(false);
 
+		getTableModelSorter().loadConfig(getView());
+					
 		// MouseListener sorts table when clicking on a column header
 		new TableHeaderMouseListener(getView(), getTableModelSorter());
-
-		getTableModelSorter().loadConfig(getView());
+		
 	}
 
 	
@@ -257,12 +259,6 @@ public class TableController {
 
 	}
 
-	/**
-	 * return ActionListener for the headeritem sorting
-	 */
-	public HeaderItemActionListener getHeaderItemActionListener() {
-		return headerItemActionListener;
-	}
 
 	/**
 	 * return ActionListener for FilterToolbar
@@ -528,4 +524,6 @@ public class TableController {
 	public TableModelFilter getTableModelFilteredView() {
 		return tableModelFilteredView;
 	}
+	
+
 }
