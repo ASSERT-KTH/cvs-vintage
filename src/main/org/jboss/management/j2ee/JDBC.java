@@ -27,7 +27,7 @@ import org.jboss.system.ServiceMBean;
  * {@link javax.management.j2ee.JDBC JDBC}.
  *
  * @author  <a href="mailto:andreas@jboss.org">Andreas Schaefer</a>.
- * @version $Revision: 1.5 $
+ * @version $Revision: 1.6 $
  *   
  * <p><b>Revisions:</b>
  *
@@ -121,7 +121,9 @@ public class JDBC
          }
       }
       catch( Exception e ) {
-         lLog.error( "Could not destroy JSR-77 JDBC Manager", e );
+       
+       // marcf 
+       // lLog.error( "Could not destroy JSR-77 JDBC Manager", e );
       }
    }
    
