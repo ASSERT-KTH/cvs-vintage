@@ -247,11 +247,19 @@
                  reloadable="true" > 
         </Context>
 
+        <!-- Admin context will use tomcat.core to add/remove/get info about
+             the webapplications and tomcat internals. 
+             By default it is not trusted - i.e. it is not allowed access to 
+             tomcat internals, only informations that are available to all 
+             servlets are visible.
+
+             If you change this to true, make sure you set a password.
+          -->
         <Context path="/admin" 
                  docBase="webapps/admin" 
                  debug="0" 
                  reloadable="true" 
-                 trusted="true" > 
+                 trusted="false" > 
         </Context>
 
         <!-- Virtual host example - 
