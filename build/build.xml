@@ -471,16 +471,16 @@
             password="${scarab.database.admin.password}">
             <classpath refid="classpath"/>
 
-            <transaction src="${file.prefix}${scarab.database.type}-${project}.sql"/>
             <transaction src="${file.prefix}turbine.sql"/>
+            <transaction src="${file.prefix}${project}.sql"/>
             <transaction src="${file.prefix}scheduler.sql"/>
             <transaction src="${file.prefix}id-table.sql"/>
             <transaction src="${file.prefix}turbine-id-table-init.sql"/>
-            <transaction src="${file.prefix}scarab-id-table-init.sql"/>
-            <transaction src="${file.prefix}scarab-required-data.sql"/>
-            <transaction src="${file.prefix}scarab-default-data.sql"/>
-            <transaction src="${file.prefix}scarab-security.sql"/>
-            <transaction src="${file.prefix}scarab-sample-data.sql"/>
+            <transaction src="${file.prefix}${project}-id-table-init.sql"/>
+            <transaction src="${file.prefix}${project}-required-data.sql"/>
+            <transaction src="${file.prefix}${project}-default-data.sql"/>
+            <transaction src="${file.prefix}${project}-security.sql"/>
+            <transaction src="${file.prefix}${project}-sample-data.sql"/>
         </sql>
     </target>
 
