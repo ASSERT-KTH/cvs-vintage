@@ -7,14 +7,22 @@
 
 package org.jboss.ejb;
 
-import java.lang.reflect.Method;
-import java.util.Map;
-import java.util.HashMap;
-import java.rmi.RemoteException;
-
-import javax.ejb.*;
-
+import org.jboss.ejb.txtimer.StatelessSessionBeanInvoker;
+import org.jboss.ejb.txtimer.TimedObjectInvoker;
 import org.jboss.invocation.Invocation;
+
+import javax.ejb.CreateException;
+import javax.ejb.EJBException;
+import javax.ejb.EJBLocalObject;
+import javax.ejb.EJBMetaData;
+import javax.ejb.EJBObject;
+import javax.ejb.Handle;
+import javax.ejb.HomeHandle;
+import javax.ejb.RemoveException;
+import java.lang.reflect.Method;
+import java.rmi.RemoteException;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * The container for <em>stateless</em> session beans.
@@ -23,7 +31,7 @@ import org.jboss.invocation.Invocation;
  * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  * @author <a href="mailto:docodan@mvcsoft.com">Daniel OConnor</a>
  * @author <a href="mailto:Christoph.Jung@infor.de">Christoph G. Jung</a>
- * @version $Revision: 1.52 $
+ * @version $Revision: 1.53 $
  */
 public class StatelessSessionContainer
    extends SessionContainer
@@ -153,14 +161,10 @@ public class StatelessSessionContainer
       homeMapping = map;
    }
 
-   /**
-    * Invokes the ejbTimeout method on the TimedObject with the given id.
-    * @param timedObjectId The id of the TimedObject
-    * @param timer the Timer that is passed to ejbTimeout
-    */
-   public void invokeTimedObject(String timedObjectId, Timer timer)
+   /** Provide an appropriate bean invoker for this container */
+   public TimedObjectInvoker getTimedObjectInvoker()
    {
-
+      return new StatelessSessionBeanInvoker(this);
    }
 
    Interceptor createContainerInterceptor()

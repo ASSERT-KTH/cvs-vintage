@@ -6,7 +6,7 @@
  */
 package org.jboss.ejb.txtimer;
 
-// $Id: EJBTimerServiceTx.java,v 1.1 2004/04/08 15:04:30 tdiesler Exp $
+// $Id: EJBTimerServiceTx.java,v 1.2 2004/04/08 21:54:27 tdiesler Exp $
 
 import javax.ejb.Timer;
 import javax.ejb.TimerService;
@@ -16,7 +16,7 @@ import java.util.HashMap;
  * The EJBTimerService manages the TimerService for
  * an associated TimedObject.
  *
- * @jmx:mbean name="jboss.ejb:service=EJBTimerServiceTx"
+ * @jmx:mbean name="jboss:service=EJBTimerServiceTx"
  *    extends="org.jboss.ejb.txtimer.EJBTimerService"
  *
  * @author Thomas.Diesler@jboss.org
@@ -82,7 +82,7 @@ public class EJBTimerServiceTx implements EJBTimerServiceTxMBean
     *
     * @jmx:managed-operation
     */
-   public void invokeTimedObject(String timedObjectId, Timer timer)
+   public void invokeTimedObject(String timedObjectId, Timer timer) throws Exception
    {
       ServiceEntry serviceEntry = (ServiceEntry) timerServiceMap.get(timedObjectId);
       if (serviceEntry != null)

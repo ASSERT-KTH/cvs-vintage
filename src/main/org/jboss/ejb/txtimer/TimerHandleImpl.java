@@ -6,7 +6,7 @@
  */
 package org.jboss.ejb.txtimer;
 
-// $Id: TimerHandleImpl.java,v 1.1 2004/04/08 15:03:54 tdiesler Exp $
+// $Id: TimerHandleImpl.java,v 1.2 2004/04/08 21:54:27 tdiesler Exp $
 
 import javax.ejb.EJBException;
 import javax.ejb.NoSuchObjectLocalException;
@@ -25,18 +25,21 @@ public class TimerHandleImpl implements TimerHandle
 {
    // The initial txtimer properties
    private String timedObjectId;
+   private Date firstTime;
    private Date createDate;
    private long periode;
    private long nextExpire;
    private Serializable info;
+   private int hashCode;
 
    TimerHandleImpl (TimerImpl timer)
    {
       timedObjectId = timer.getTimedObjectId();
+      firstTime = timer.getFirstTime();
       createDate = timer.getCreateDate();
       periode = timer.getPeriode();
       nextExpire = timer.getNextExpire();
-      info = timer.getInfo();
+      info = timer.getInfoInternal();
    }
 
    String getTimedObjectId()
@@ -85,6 +88,33 @@ public class TimerHandleImpl implements TimerHandle
          throw new NoSuchObjectLocalException("Timer not available: " + timedObjectId);
 
       return timer;
+   }
+
+   /**
+    * Return true if objectId, createDate, periode are equal
+    */
+   public boolean equals(Object obj)
+   {
+      if (obj == this) return true;
+      if (obj instanceof TimerHandleImpl)
+      {
+         TimerHandleImpl other = (TimerHandleImpl) obj;
+         return hashCode() == other.hashCode();
+      }
+      return false;
+   }
+
+   /**
+    * Hash code based on objectId, createDate, periode
+    */
+   public int hashCode()
+   {
+      if (hashCode == 0)
+      {
+         String hash = "[" + timedObjectId + "," + createDate + "," + firstTime + "," + periode + "]";
+         hashCode = hash.hashCode();
+      }
+      return hashCode;
    }
 
    /**

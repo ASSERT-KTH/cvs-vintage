@@ -1,6 +1,6 @@
 package org.jboss.ejb.txtimer;
 
-// $Id: TimerServiceImpl.java,v 1.1 2004/04/08 15:03:54 tdiesler Exp $
+// $Id: TimerServiceImpl.java,v 1.2 2004/04/08 21:54:27 tdiesler Exp $
 
 import org.jboss.logging.Logger;
 import org.jboss.tm.TxManager;
@@ -44,7 +44,7 @@ public class TimerServiceImpl implements TimerService
    private Map timers = new HashMap();
 
    /**
-    * Create a Timer service for thr given TimedObject
+    * Create a Timer service for the given TimedObject
     */
    public TimerServiceImpl(String timedObjectId)
    {
@@ -52,7 +52,7 @@ public class TimerServiceImpl implements TimerService
       try
       {
          InitialContext iniCtx = new InitialContext();
-         transactionManager = (TransactionManager) iniCtx.lookup("TransactionManager");
+         transactionManager = (TransactionManager) iniCtx.lookup("java:/TransactionManager");
       }
       catch (Exception e)
       {
@@ -75,6 +75,9 @@ public class TimerServiceImpl implements TimerService
     */
    public Timer createTimer(long duration, Serializable info) throws IllegalArgumentException, IllegalStateException, EJBException
    {
+      if (duration < 0)
+         throw new IllegalArgumentException("duration is negative");
+
       return createTimer(new Date(System.currentTimeMillis() + duration), 0, info);
    }
 
@@ -101,6 +104,11 @@ public class TimerServiceImpl implements TimerService
     */
    public Timer createTimer(long initialDuration, long intervalDuration, Serializable info) throws IllegalArgumentException, IllegalStateException, EJBException
    {
+      if (initialDuration < 0)
+         throw new IllegalArgumentException("initial duration is negative");
+      if (intervalDuration < 0)
+         throw new IllegalArgumentException("interval duration is negative");
+
       return createTimer(new Date(System.currentTimeMillis() + initialDuration), intervalDuration, info);
    }
 
@@ -118,6 +126,9 @@ public class TimerServiceImpl implements TimerService
     */
    public Timer createTimer(Date expiration, Serializable info) throws IllegalArgumentException, IllegalStateException, EJBException
    {
+      if (expiration == null)
+         throw new IllegalArgumentException("expiration is null");
+
       return createTimer(expiration, 0, info);
    }
 
@@ -143,6 +154,11 @@ public class TimerServiceImpl implements TimerService
     */
    public Timer createTimer(Date initialExpiration, long intervalDuration, Serializable info) throws IllegalArgumentException, IllegalStateException, EJBException
    {
+      if (initialExpiration == null)
+         throw new IllegalArgumentException("initial expiration is null");
+      if (intervalDuration < 0)
+         throw new IllegalArgumentException("interval duration is negative");
+
       try
       {
          TimerImpl timer = new TimerImpl(timedObjectId, initialExpiration, intervalDuration, info);
@@ -220,7 +236,8 @@ public class TimerServiceImpl implements TimerService
    {
       synchronized (timers)
       {
-         timers.put(txtimer.getHandle(), txtimer);
+         TimerHandle handle = new TimerHandleImpl(txtimer);
+         timers.put(handle, txtimer);
       }
    }
 
@@ -231,7 +248,8 @@ public class TimerServiceImpl implements TimerService
    {
       synchronized (timers)
       {
-         timers.remove(txtimer.getHandle());
+         TimerHandle handle = new TimerHandleImpl(txtimer);
+         timers.remove(handle);
       }
    }
 }

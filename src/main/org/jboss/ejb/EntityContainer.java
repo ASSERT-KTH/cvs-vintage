@@ -36,6 +36,7 @@ import org.jboss.monitor.StatisticsProvider;
 import org.jboss.metadata.EntityMetaData;
 import org.jboss.util.collection.SerializableEnumeration;
 import org.jboss.ejb.txtimer.TimedObjectInvoker;
+import org.jboss.ejb.txtimer.EntityBeanInvoker;
 
 /**
  * This is a Container for EntityBeans (both BMP and CMP).
@@ -50,7 +51,7 @@ import org.jboss.ejb.txtimer.TimedObjectInvoker;
  * @author <a href="mailto:bill@burkecentral.com">Bill Burke</a>
  * @author <a href="mailto:andreas.schaefer@madplanet.com">Andreas Schaefer</a>
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.110 $
+ * @version $Revision: 1.111 $
  *
  * @jmx:mbean extends="org.jboss.ejb.ContainerMBean"
  */
@@ -229,14 +230,10 @@ public class EntityContainer
       return persistenceManager.createBeanClassInstance();
    }
 
-   /**
-    * Invokes the ejbTimeout method on the TimedObject with the given id.
-    * @param timedObjectId The id of the TimedObject
-    * @param timer the Timer that is passed to ejbTimeout
-    */
-   public void invokeTimedObject(String timedObjectId, Timer timer)
+   /** Provide an appropriate bean invoker for this container */
+   public TimedObjectInvoker getTimedObjectInvoker()
    {
-
+      return new EntityBeanInvoker(this);
    }
 
    // Container implementation --------------------------------------

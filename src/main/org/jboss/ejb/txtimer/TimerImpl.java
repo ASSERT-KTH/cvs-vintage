@@ -6,7 +6,7 @@
  */
 package org.jboss.ejb.txtimer;
 
-// $Id: TimerImpl.java,v 1.1 2004/04/08 15:03:54 tdiesler Exp $
+// $Id: TimerImpl.java,v 1.2 2004/04/08 21:54:27 tdiesler Exp $
 
 import org.jboss.logging.Logger;
 
@@ -35,6 +35,7 @@ public class TimerImpl implements javax.ejb.Timer, Synchronization
 
    // The initial txtimer properties
    private String timedObjectId;
+   private Date firstTime;
    private Date createDate;
    private long periode;
    private Serializable info;
@@ -54,6 +55,7 @@ public class TimerImpl implements javax.ejb.Timer, Synchronization
    TimerImpl(String timedObjectId, Date firstTime, long periode, Serializable info)
    {
       this.timedObjectId = timedObjectId;
+      this.firstTime = firstTime;
       this.createDate = new Date();
       this.periode = periode;
       this.info = info;
@@ -76,6 +78,11 @@ public class TimerImpl implements javax.ejb.Timer, Synchronization
       return createDate;
    }
 
+   public Date getFirstTime()
+   {
+      return firstTime;
+   }
+
    public long getPeriode()
    {
       return periode;
@@ -84,6 +91,10 @@ public class TimerImpl implements javax.ejb.Timer, Synchronization
    public long getNextExpire()
    {
       return nextExpire;
+   }
+
+   public Serializable getInfoInternal() {
+      return info;
    }
 
    /**
@@ -189,7 +200,7 @@ public class TimerImpl implements javax.ejb.Timer, Synchronization
    {
       if (hashCode == 0)
       {
-         String hash = "[" + timedObjectId + "," + createDate + "," + periode + "]";
+         String hash = "[" + timedObjectId + "," + createDate + "," + firstTime + "," + periode + "]";
          hashCode = hash.hashCode();
       }
       return hashCode;
@@ -376,8 +387,15 @@ public class TimerImpl implements javax.ejb.Timer, Synchronization
 
          if (isStartedInTx() == true && isCanceledInTx() == false)
          {
-            EJBTimerService ejbTimerService = EJBTimerServiceTxLocator.getEjbTimerService();
-            ejbTimerService.invokeTimedObject(timedObjectId, timer);
+            try
+            {
+               EJBTimerService ejbTimerService = EJBTimerServiceTxLocator.getEjbTimerService();
+               ejbTimerService.invokeTimedObject(timedObjectId, timer);
+            }
+            catch (Exception e)
+            {
+               log.error("Error invoking ejbTimeout: " + e.toString());
+            }
          }
 
          if (periode == 0)

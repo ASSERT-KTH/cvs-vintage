@@ -79,13 +79,13 @@ import java.util.Set;
  * @author <a href="bill@burkecentral.com">Bill Burke</a>
  * @author <a href="mailto:d_jencks@users.sourceforge.net">David Jencks</a>
  * @author <a href="mailto:christoph.jung@infor.de">Christoph G. Jung</a>
- * @version $Revision: 1.137 $
+ * @version $Revision: 1.138 $
  *
  * @jmx:mbean extends="org.jboss.system.ServiceMBean"
  */
 public abstract class Container
         extends ServiceMBeanSupport
-        implements ContainerMBean, TimedObjectInvoker
+        implements ContainerMBean
 {
    public final static String BASE_EJB_CONTAINER_NAME =
            "jboss.j2ee:service=EJB";
@@ -618,8 +618,9 @@ public abstract class Container
             // No, then create a TimerService
             if (timerService == null)
             {
+               TimedObjectInvoker timedObjectInvoker = getTimedObjectInvoker();
                timerService = (TimerService) server.invoke(oname, "createTimerService",
-                       new Object[]{timedObjectId, this},
+                       new Object[]{timedObjectId, timedObjectInvoker},
                        new String[]{"java.lang.String", "org.jboss.ejb.txtimer.TimedObjectInvoker"});
             }
          }
@@ -646,12 +647,8 @@ public abstract class Container
       return timerService;
    }
 
-   /**
-    * Invokes the ejbTimeout method on the TimedObject with the given id.
-    * @param timedObjectId The id of the TimedObject
-    * @param timer the Timer that is passed to ejbTimeout
-    */
-   public abstract void invokeTimedObject(String timedObjectId, Timer timer);
+   /** Overwrite to provide an appropriate bean invoker for this container */
+   public abstract TimedObjectInvoker getTimedObjectInvoker();
 
    /**
     * Stops all the timers created by beans of this container
