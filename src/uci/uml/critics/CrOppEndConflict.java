@@ -27,7 +27,7 @@
 // File: CrOppEndConflict.java.java
 // Classes: CrOppEndConflict.java
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrOppEndConflict.java,v 1.9 1998/07/15 18:17:08 jrobbins Exp $
+// $Id: CrOppEndConflict.java,v 1.10 1998/08/06 21:21:34 jrobbins Exp $
 
 package uci.uml.critics;
 
@@ -79,8 +79,9 @@ public class CrOppEndConflict extends CrUML {
 	AssociationEnd ae = (AssociationEnd) enum2.nextElement();
 	if (ae.getType() == cls) continue;
 	Name aeName = ae.getName();
-	if (aeName == Name.UNSPEC) continue;
+	if (Name.UNSPEC.equals(aeName)) continue;
 	String aeNameStr = aeName.getBody();
+	if (aeNameStr.length() == 0) continue;
 	if (namesSeen.contains(aeNameStr)) return PROBLEM_FOUND;
 	namesSeen.addElement(aeNameStr);
       }

@@ -27,7 +27,7 @@
 // File: CrDupRoleNames.java
 // Classes: CrDupRoleNames
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrDupRoleNames.java,v 1.7 1998/07/15 18:16:44 jrobbins Exp $
+// $Id: CrDupRoleNames.java,v 1.8 1998/08/06 21:21:23 jrobbins Exp $
 
 package uci.uml.critics;
 
@@ -61,7 +61,7 @@ public class CrDupRoleNames extends CrUML {
     while (enum.hasMoreElements()) {
       AssociationEnd ae = (AssociationEnd) enum.nextElement();
       Name aeName = ae.getName();
-      if (aeName == Name.UNSPEC) continue;
+      if (Name.UNSPEC.equals(aeName)) continue;
       String nameStr = aeName.getBody();
       if (nameStr.length() == 0) continue;
       if (namesSeen.contains(nameStr)) return PROBLEM_FOUND;

@@ -27,7 +27,7 @@
 // File: CrMissingClassName.java.java
 // Classes: CrMissingClassName.java
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrMissingClassName.java,v 1.7 1998/07/17 22:54:23 jrobbins Exp $
+// $Id: CrMissingClassName.java,v 1.8 1998/08/06 21:21:26 jrobbins Exp $
 
 package uci.uml.critics;
 
@@ -46,7 +46,7 @@ import uci.uml.Model_Management.*;
 public class CrMissingClassName extends CrUML {
 
   public CrMissingClassName() {
-    setHeadline("Choose a name");
+    setHeadline("Choose a Name");
     sd("Every class and interface within a package must have a name. \n\n"+
        "Clear and unambiguous naming is key to code generation and "+
        "the understandability and maintainability of the design. \n\n"+

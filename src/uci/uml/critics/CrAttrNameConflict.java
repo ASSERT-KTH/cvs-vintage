@@ -27,11 +27,13 @@
 // File: CrSignatureConflict.java.java
 // Classes: CrAttrNameConflict.java
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrAttrNameConflict.java,v 1.6 1998/07/15 18:16:34 jrobbins Exp $
+// $Id: CrAttrNameConflict.java,v 1.7 1998/08/06 21:21:19 jrobbins Exp $
 
 package uci.uml.critics;
 
 import java.util.*;
+import com.sun.java.swing.*;
+
 import uci.argo.kernel.*;
 import uci.util.*;
 import uci.uml.Foundation.Core.*;
@@ -67,12 +69,17 @@ public class CrAttrNameConflict extends CrUML {
     while (enum.hasMoreElements()) {
       StructuralFeature sf = (StructuralFeature) enum.nextElement();
       Name sfName = sf.getName();
-      if (sfName == Name.UNSPEC) continue;
+      if (Name.UNSPEC.equals(sfName)) continue;
       String nameStr = sfName.getBody();
+      if (nameStr.length() == 0) continue;
       if (namesSeen.contains(nameStr)) return PROBLEM_FOUND;
       namesSeen.addElement(nameStr);
     }
     return NO_PROBLEM;
+  }
+
+  public Icon getClarifier() {
+    return ClAttributeCompartment.TheInstance;
   }
 
 } /* end class CrAttrNameConflict.java */

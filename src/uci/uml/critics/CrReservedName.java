@@ -27,7 +27,7 @@
 // File: CrReservedName.java.java
 // Classes: CrReservedName.java
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrReservedName.java,v 1.6 1998/07/17 22:54:27 jrobbins Exp $
+// $Id: CrReservedName.java,v 1.7 1998/08/06 21:21:37 jrobbins Exp $
 
 package uci.uml.critics;
 
@@ -171,10 +171,10 @@ public class CrReservedName extends CrUML {
 
 
 
-  
+
   ////////////////////////////////////////////////////////////////
   // constructor
-  
+
   public CrReservedName() {
     setHeadline("Change {name} to a Non-Reserved Word");
     sd("\"{name}\" is a reserver word or very close to one.  The "+
@@ -190,13 +190,14 @@ public class CrReservedName extends CrUML {
 
   ////////////////////////////////////////////////////////////////
   // Critic implementation
-  
+
   public boolean predicate2(Object dm, Designer dsgr) {
     if (!(dm instanceof ModelElement)) return NO_PROBLEM;
     ModelElement me = (ModelElement) dm;
     Name meName = me.getName();
     if (meName == null || meName.equals(Name.UNSPEC)) return NO_PROBLEM;
     String nameStr = meName.getBody();
+    if (nameStr == null || nameStr.length() == 0) return NO_PROBLEM;
 
     java.util.Enumeration enum = _umlReserved.elements();
     while (enum.hasMoreElements()) {

@@ -27,7 +27,7 @@
 // File: CrNameConflict.java.java
 // Classes: CrNameConflict.java
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrNameConflict.java,v 1.9 1998/07/15 18:16:58 jrobbins Exp $
+// $Id: CrNameConflict.java,v 1.10 1998/08/06 21:21:31 jrobbins Exp $
 
 package uci.uml.critics;
 
@@ -67,6 +67,7 @@ public class CrNameConflict extends CrUML {
       if (me instanceof Generalization) continue;
       Name meName = me.getName();
       if (meName == null || meName.equals(Name.UNSPEC)) continue;
+      if (meName.getBody().length() == 0) continue;
       if (namesSeen.contains(meName.getBody())) return PROBLEM_FOUND;
       namesSeen.addElement(meName.getBody());
     }

@@ -27,7 +27,7 @@
 // File: CrDisambigClassName.java.java
 // Classes: CrDisambigClassName.java
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrDisambigClassName.java,v 1.7 1998/07/17 22:54:19 jrobbins Exp $
+// $Id: CrDisambigClassName.java,v 1.8 1998/08/06 21:21:20 jrobbins Exp $
 
 package uci.uml.critics;
 
@@ -63,6 +63,7 @@ public class CrDisambigClassName extends CrUML {
     Name myName = cls.getName();
     if (myName.equals(Name.UNSPEC)) return NO_PROBLEM;
     String myNameString = myName.getBody();
+    if (myNameString.length() == 0) return NO_PROBLEM;
     ElementOwnership oe = cls.getElementOwnership();
     if (oe == null) return NO_PROBLEM;
     Namespace ns = oe.getNamespace();

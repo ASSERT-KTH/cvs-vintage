@@ -25,7 +25,7 @@
 // File: CrMultipleInitialStates.java
 // Classes: CrMultipleInitialStates
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrMultipleInitialStates.java,v 1.1 1998/07/15 19:08:04 jrobbins Exp $
+// $Id: CrMultipleInitialStates.java,v 1.2 1998/08/06 21:21:28 jrobbins Exp $
 
 package uci.uml.critics;
 
@@ -65,7 +65,7 @@ public class CrMultipleInitialStates extends CrUML {
     for (int i =0; i < size; i++) {
       Object sv = peers.elementAt(i);
       if (sv instanceof Pseudostate &&
-	  ((Pseudostate)sv).getKind() == PseudostateKind.INITIAL)
+	  (PseudostateKind.INITIAL.equals(((Pseudostate)sv).getKind())))
 	initialStateCount++;
     }
     if (initialStateCount > 1) return PROBLEM_FOUND;

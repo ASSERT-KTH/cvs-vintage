@@ -27,7 +27,7 @@
 // File: CrUnconventionalOperName.java.java
 // Classes: CrUnconventionalOperName.java
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrUnconventionalOperName.java,v 1.9 1998/07/15 18:17:19 jrobbins Exp $
+// $Id: CrUnconventionalOperName.java,v 1.10 1998/08/06 21:21:42 jrobbins Exp $
 
 package uci.uml.critics;
 
@@ -58,7 +58,7 @@ public class CrUnconventionalOperName extends CrUML {
     Name myName = oper.getName();
     if (myName == null || myName.equals(Name.UNSPEC)) return NO_PROBLEM;
     String nameStr = myName.getBody();
-    if (nameStr.length() == 0) return NO_PROBLEM;
+    if (nameStr == null || nameStr.length() == 0) return NO_PROBLEM;
     char initalChar = nameStr.charAt(0);
     if (!Character.isLowerCase(initalChar)) return PROBLEM_FOUND;
     return NO_PROBLEM;

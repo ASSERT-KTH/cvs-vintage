@@ -27,7 +27,7 @@
 // File: CrNameConfusion.java.java
 // Classes: CrNameConfusion.java
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrNameConfusion.java,v 1.6 1998/07/17 22:54:24 jrobbins Exp $
+// $Id: CrNameConfusion.java,v 1.7 1998/08/06 21:21:33 jrobbins Exp $
 
 package uci.uml.critics;
 
@@ -72,6 +72,7 @@ public class CrNameConfusion extends CrUML {
     Name n = dm.getName();
     if (n == null || n.equals(Name.UNSPEC)) return res;
     String dmNameStr = n.getBody();
+    if (dmNameStr == null || dmNameStr.length() == 0) return res;
     String stripped2 = strip(dmNameStr);
     if (ns == null) return res;
     Vector oes = ns.getOwnedElement();

@@ -27,7 +27,7 @@
 // File: CrNWayAgg.java.java
 // Classes: CrNWayAgg.java
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrNWayAgg.java,v 1.9 1998/07/15 18:16:57 jrobbins Exp $
+// $Id: CrNWayAgg.java,v 1.10 1998/08/06 21:21:30 jrobbins Exp $
 
 package uci.uml.critics;
 
@@ -63,7 +63,8 @@ public class CrNWayAgg extends CrUML {
     while (enum.hasMoreElements()) {
       AssociationEnd ae = (AssociationEnd) enum.nextElement();
       AggregationKind ak = ae.getAggregation();
-      if (ak != AggregationKind.UNSPEC && ak != AggregationKind.NONE)
+      if (!AggregationKind.UNSPEC.equals(ak) &&
+	  !AggregationKind.NONE.equals(ak))
 	aggCount++;
     }
     if (aggCount > 0) return PROBLEM_FOUND;

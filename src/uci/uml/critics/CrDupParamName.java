@@ -27,7 +27,7 @@
 // File: CrDupParamName.java.java
 // Classes: CrDupParamName.java
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrDupParamName.java,v 1.6 1998/07/15 18:16:43 jrobbins Exp $
+// $Id: CrDupParamName.java,v 1.7 1998/08/06 21:21:22 jrobbins Exp $
 
 package uci.uml.critics;
 
@@ -62,8 +62,9 @@ public class CrDupParamName extends CrUML {
     while (enum.hasMoreElements()) {
       Parameter p = (Parameter) enum.nextElement();
       Name pName = p.getName();
-      if (pName == Name.UNSPEC) continue;
+      if (Name.UNSPEC.equals(pName)) continue;
       String nameStr = pName.getBody();
+      if (nameStr.length() == 0) continue;
       if (namesSeen.contains(nameStr)) return PROBLEM_FOUND;
       namesSeen.addElement(nameStr);
     }

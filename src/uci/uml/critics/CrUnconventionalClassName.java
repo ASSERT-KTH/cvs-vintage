@@ -27,7 +27,7 @@
 // File: CrUnconventionalClassName.java.java
 // Classes: CrUnconventionalClassName.java
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrUnconventionalClassName.java,v 1.10 1998/07/17 22:54:29 jrobbins Exp $
+// $Id: CrUnconventionalClassName.java,v 1.11 1998/08/06 21:21:40 jrobbins Exp $
 
 package uci.uml.critics;
 
@@ -60,7 +60,7 @@ public class CrUnconventionalClassName extends CrUML {
     Name myName = cls.getName();
     if (myName == null || myName.equals(Name.UNSPEC)) return NO_PROBLEM;
     String nameStr = myName.getBody();
-    if (nameStr.length() == 0) return NO_PROBLEM;
+    if (nameStr == null || nameStr.length() == 0) return NO_PROBLEM;
     char initialChar = nameStr.charAt(0);
     if (!Character.isUpperCase(initialChar)) return PROBLEM_FOUND;
     return NO_PROBLEM;

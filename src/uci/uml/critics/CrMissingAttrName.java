@@ -27,7 +27,7 @@
 // File:CrMissingAttrName.java.java
 // Classes:CrMissingAttrName.java
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrMissingAttrName.java,v 1.6 1998/07/15 18:16:53 jrobbins Exp $
+// $Id: CrMissingAttrName.java,v 1.7 1998/08/06 21:21:24 jrobbins Exp $
 
 package uci.uml.critics;
 
@@ -56,6 +56,7 @@ public class CrMissingAttrName extends CrUML {
     Attribute attr = (Attribute) dm;
     Name myName = attr.getName();
     if (myName == null || myName.equals(Name.UNSPEC)) return PROBLEM_FOUND;
+    if (myName.getBody().length() == 0) return PROBLEM_FOUND;
     return NO_PROBLEM;
   }
 

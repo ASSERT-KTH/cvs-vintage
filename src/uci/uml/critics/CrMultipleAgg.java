@@ -27,7 +27,7 @@
 // File: CrMultipleAgg.java.java
 // Classes: CrMultipleAgg.java
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrMultipleAgg.java,v 1.6 1998/07/15 18:16:56 jrobbins Exp $
+// $Id: CrMultipleAgg.java,v 1.7 1998/08/06 21:21:27 jrobbins Exp $
 
 package uci.uml.critics;
 
@@ -62,7 +62,8 @@ public class CrMultipleAgg extends CrUML {
     while (enum.hasMoreElements()) {
       AssociationEnd ae = (AssociationEnd) enum.nextElement();
       AggregationKind ak = ae.getAggregation();
-      if (ak != AggregationKind.UNSPEC && ak != AggregationKind.NONE)
+      if (!AggregationKind.UNSPEC.equals(ak)  &&
+	  !AggregationKind.NONE.equals(ak))
 	aggCount++;
     }
     if (aggCount > 1) return PROBLEM_FOUND;
