@@ -67,11 +67,9 @@ import java.net.Socket;
 import java.util.Enumeration;
 import java.io.ByteArrayInputStream;
 
-import java.security.cert.X509Certificate;
-import java.security.cert.CertificateFactory;
-
 import org.apache.tomcat.core.*;
 import org.apache.tomcat.util.*;
+import org.apache.tomcat.util.compat.*;
 import org.apache.tomcat.util.http.MimeHeaders;
 import org.apache.tomcat.util.buf.MessageBytes;
 import org.apache.tomcat.util.aaa.SimplePrincipal;
@@ -195,7 +193,7 @@ public class Ajp13
 
 
     // ============ Instance Properties ====================
-
+    static Jdk11Compat jdk11Compat=Jdk11Compat.getJdkCompat();
     OutputStream out;
     InputStream in;
     int dL=0;
@@ -383,22 +381,18 @@ public class Ajp13
                 // Transform the string into certificate.
                 String certString = msg.getString();
                 byte[] certData = certString.getBytes();
-                ByteArrayInputStream bais = new ByteArrayInputStream(certData);
- 
-                // Fill the first element.
-                X509Certificate jsseCerts[] = null;
-                try {
-                    CertificateFactory cf =
-                        CertificateFactory.getInstance("X.509");
-                    X509Certificate cert = (X509Certificate)
-                        cf.generateCertificate(bais);
-                    jsseCerts =  new X509Certificate[1];
-                    jsseCerts[0] = cert;
-                } catch(java.security.cert.CertificateException e) {
+
+		try {
+		    Object jsseCerts=jdk11Compat.getX509Certificates(certData);
+		    req.setAttribute("javax.servlet.request.X509Certificate",
+				     jsseCerts);
+                } catch( Exception e) {
                     d("Certificate convertion failed" + e );
+		    // Save it at least as string... JDK1.1 doesn't
+		    // have X509Certificate class
+		    req.setAttribute("javax.servlet.request.X509Certificate",
+				     certString);
                 }
-		req.setAttribute("javax.servlet.request.X509Certificate",
-				 jsseCerts);
                 break;
 
 	    case SC_A_SSL_CIPHER   :

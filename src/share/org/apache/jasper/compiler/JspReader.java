@@ -349,12 +349,17 @@ public class JspReader {
     char[] getChars(Mark start, Mark stop) throws ParseException {
 	Mark oldstart = mark();
 	reset(start);
-	CharArrayWriter caw = new CharArrayWriter();
-	while (!stop.equals(mark()))
-	    caw.write(nextChar());
-	caw.close();
-	reset(oldstart);
-	return caw.toCharArray();
+	try {
+	    CharArrayWriter caw = new CharArrayWriter();
+	    while (!stop.equals(mark()))
+		caw.write(nextChar());
+	    caw.close();
+	    reset(oldstart);
+	    return caw.toCharArray();
+	} catch( Exception ex ) {
+	    ex.printStackTrace();
+	    throw new ParseException( ex.toString() );
+	}
     }
 
     public int peekChar() {

@@ -61,8 +61,11 @@ package org.apache.tomcat.util.compat;
 
 import java.net.*;
 import java.util.*;
+import java.security.cert.X509Certificate;
+import java.security.cert.CertificateFactory;
 import java.security.*;
 import org.apache.tomcat.util.depend.*;
+
 /**
  *  
  */
@@ -149,6 +152,22 @@ public class Jdk12Support extends Jdk11Compat {
 	else
 	    return ResourceBundle.getBundle(name, loc, cl);
     }
+
+    public Object getX509Certificates( byte x509[] ) throws Exception {
+	ByteArrayInputStream bais = new ByteArrayInputStream(x509);
+	
+	// Fill the first element.
+	X509Certificate jsseCerts[] = null;
+
+	CertificateFactory cf =
+	    CertificateFactory.getInstance("X.509");
+	X509Certificate cert = (X509Certificate)
+	    cf.generateCertificate(bais);
+	jsseCerts =  new X509Certificate[1];
+	jsseCerts[0] = cert;
+	return jsseCerts;
+    }
+
     
 
     // -------------------- Support --------------------

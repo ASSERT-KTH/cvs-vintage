@@ -149,6 +149,11 @@ public class Jdk11Compat {
     public java.util.ResourceBundle getBundle(String name, Locale loc, ClassLoader cl ) {
 	return ResourceBundle.getBundle(name, loc);
     }
+
+    public Object getX509Certificates( byte x509[] ) throws Exception {
+	// No x509 certificate in JDK1.1
+	return null;
+    }
     
 
     // -------------------- Factory -------------------- 
