@@ -74,28 +74,12 @@ import org.tigris.scarab.actions.base.RequireLoginFirstAction;
 /**
     This class is responsible for the user configuration of the issue list.
     @author <a href="mailto:elicia@collab.net">Elicia David</a>
-    @version $Id: ConfigureIssueList.java,v 1.18 2002/01/11 00:42:47 elicia Exp $
+    @version $Id: ConfigureIssueList.java,v 1.19 2002/01/28 02:51:00 elicia Exp $
 */
 public class ConfigureIssueList extends RequireLoginFirstAction
 {
 
-    public void doSelectattributes( RunData data, TemplateContext context )
-        throws Exception
-    {
-        selectAttributes (data, context);
-        data.setMessage("Changes were saved.");
-        String template = data.getParameters()
-            .getString(ScarabConstants.NEXT_TEMPLATE);
-        setTemplate(data, template);            
-    }
-
-    public void doResort( RunData data, TemplateContext context )
-        throws Exception
-    {
-        selectAttributes (data, context);
-    }
-        
-    private void selectAttributes( RunData data, TemplateContext context )
+    public void doSave( RunData data, TemplateContext context )
         throws Exception
     {
         IntakeTool intake = getIntakeTool(context);
@@ -154,7 +138,7 @@ public class ConfigureIssueList extends RequireLoginFirstAction
                 mua.save();
             }
         }
-
+        data.setMessage("Changes were saved.");
     }
 
     /**
@@ -164,7 +148,6 @@ public class ConfigureIssueList extends RequireLoginFirstAction
         throws Exception
     {
         data.getParameters().add("usedefaults", "true"); 
-        setTarget(data, "ConfigureIssueList.vm");            
     }
         
 
