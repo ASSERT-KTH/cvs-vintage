@@ -33,12 +33,6 @@
   <property name="install.dir" value=".." />
 
   <!-- External repositories -->
-  <property name="jakarta-tomcat-connectors"
-            location="${ws}/jakarta-tomcat-connectors" />
-
-  <property name="jakarta-tomcat-jasper"
-            location="${ws}/jakarta-tomcat-jasper" />
-            
   <property name="jakarta-commons"
             location="${ws}/jakarta-commons" />
 
@@ -75,10 +69,6 @@
                file="${jakarta-commons}/dbcp/dist/commons-dbcp.jar" />
     <available property="jdk12.present"
                classname="java.security.PrivilegedAction"/>
-    <available property="jakarta-tomcat-connectors-present"
-               file="${jakarta-tomcat-connectors}"/>
-    <available property="jakarta-tomcat-jasper-present"
-               file="${jakarta-tomcat-jasper}" />
     <available property="jaxp10-present"
                file="${jaxp.home}/parser.jar" />
     <available property="jaxp11-present"
@@ -99,14 +89,6 @@
     <echo message="Detected commons-DBCP"/>
   </target>
 
-  <target name="msg.jtc" unless="jakarta-tomcat-connectors-present" >
-    <fail message="Can't find jakarta-tomcat-connectors repository, you must check it out before building tomcat" />
-  </target>
-
-  <target name="msg.jtj" unless="jakarta-tomcat-jasper-present" >
-    <fail message="Can't find jakarta-tomcat-jasper repository, you must check it out before building tomcat" />
-  </target>
-  
   <target name="init" depends="detect,msg.jdk12,msg.jsse,msg.commons-dbcp" >
   </target>
 
@@ -205,37 +187,6 @@
     <chmod perm="+x" file="${tomcat.build}/bin/jspc.sh"/>
     <chmod perm="+x" file="${tomcat.build}/bin/startup.sh"/>
     <chmod perm="+x" file="${tomcat.build}/bin/shutdown.sh"/>
-  </target>
-
-  <!-- ==================== Tomcat util ==================== -->
-  <!-- Independent ( stand alone ) utilities -->
-
-  <target name="connector_util" depends="init">
-    <javac destdir="${tomcat.build}/classes"
-           debug="${debug}"
-           optimize="${optimize}"
-           deprecation="off"
-           srcdir="${jakarta-tomcat-connectors}/util/java">
-      <classpath>
-      </classpath>
-      <include name="org/apache/tomcat/util/**"/>
-    </javac>
-
-    <copy todir="${tomcat.build}/classes">
-      <fileset dir="${jakarta-tomcat-connectors}/util/java">
-        <include name="**/*.properties"/>
-        <include name="**/*.dtd"/>
-      </fileset>
-    </copy>
-
-    <jar jarfile="${tomcat.build}/lib/common/connector_util.jar"
-         basedir="${tomcat.build}/classes">
-      <include name="org/apache/tomcat/util/collections/**"/>
-      <include name="org/apache/tomcat/util/http/**"/>
-      <include name="org/apache/tomcat/util/res/**"/>
-      <include name="org/apache/tomcat/util/buf/**"/>
-    </jar>
-
   </target>
 
   <!-- ==================== Tomcat util ==================== -->
@@ -489,13 +440,6 @@
     </jar>
   </target>
 
-  <target name="connector" depends="init">
-    <ant antfile="${jakarta-tomcat-connectors}/jk/build.xml"
-         target="build-tomcat33" 
-	 dir="${jakarta-tomcat-connectors}/jk" />
-  </target>
-
-
   <!-- ====================  Jasper ( 1.0 )  ========== -->
   <target name="jasper" depends="init">
     <javac
@@ -631,6 +575,20 @@
     <jar jarfile="${tomcat.dist}/webapps/servlet-tests.war"
          basedir="${tomcat.build}/webapps/servlet-tests"
          includes="**"/>
+  </target>
+
+  <!-- ==================== Build the sample add-on modules =================== -->
+
+  <target name="sample.add-ons">
+    <ant antfile="proposals/PasswordPrompter/build.xml"/>
+  </target>
+
+  <target name="sample.add-ons.dist" depends="sample.add-ons">
+    <ant antfile="proposals/PasswordPrompter/build.xml" target="password.prompter.war"/>
+  </target>
+
+  <target name="sample.add-ons.clean">
+    <ant antfile="proposals/PasswordPrompter/build.xml" target="clean"/>
   </target>
 
   <!-- ==================== Copy the files to distribution format ======== -->
@@ -817,13 +775,11 @@
   <target name="clean-classes" depends="init">
     <delete dir="${tomcat.build}/classes"/>
     <delete dir="${tomcat.build}/lib"/>
-    <delete dir="${jakarta-tomcat-jasper}/build" />
   </target>
 
   <target name="clean" depends="init">
     <delete dir="${tomcat.build}"/>
     <delete dir="${tomcat.dist}"/>
-    <delete dir="${jakarta-tomcat-jasper}/build" />
   </target>
 
   <target name="all" depends="clean,dist"/>
