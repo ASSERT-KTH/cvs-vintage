@@ -132,7 +132,7 @@ public class MetricsInterceptor extends AbstractInterceptor
 
         try {
             msg.setLongProperty(TIME,  time);
-            metricsPub.publish(msg, DeliveryMode.NON_PERSISTENT, 1, 1);
+            metricsPub.publish(msg, DeliveryMode.NON_PERSISTENT, 1, 10000);
         }
         catch (Exception e) {
             // catch JMSExceptions, NPE's etc and prevent them from propagating
