@@ -65,7 +65,7 @@ import org.tigris.scarab.util.ScarabException;
  * anything.
  *   
  * @author <a href="mailto:elicia@tigris.org">Elicia David</a>
- * @version $Id: DefaultWorkflow.java,v 1.10 2003/01/30 22:25:24 jon Exp $
+ * @version $Id: DefaultWorkflow.java,v 1.11 2003/06/03 19:02:07 elicia Exp $
  */
 public class DefaultWorkflow implements Workflow
 {
@@ -172,6 +172,12 @@ public class DefaultWorkflow implements Workflow
 
     public void addIssueTypeWorkflowToModule(Module module, 
                                             IssueType issueType)
+        throws ScarabException
+    {
+       // nothing
+    } 
+
+    public void copyIssueTypeWorkflows(IssueType issueType, IssueType newIssueType)
         throws ScarabException
     {
        // nothing

@@ -62,13 +62,14 @@ import org.tigris.scarab.om.IssuePeer;
 import org.tigris.scarab.util.ScarabException;
 import org.tigris.scarab.util.ScarabConstants;
 import org.tigris.scarab.util.Log;
+import org.tigris.scarab.workflow.WorkflowFactory;
 
 /** 
  * This class represents an IssueType.
  *
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: IssueType.java,v 1.49 2003/05/02 16:18:49 jmcnally Exp $
+ * @version $Id: IssueType.java,v 1.50 2003/06/03 19:02:07 elicia Exp $
  */
 public  class IssueType 
     extends org.tigris.scarab.om.BaseIssueType
@@ -257,6 +258,10 @@ public  class IssueType
                 }
             }
         }
+
+        // add workflow 
+        WorkflowFactory.getInstance().copyIssueTypeWorkflows(this, newIssueType);
+
         return newIssueType;
     }
 
