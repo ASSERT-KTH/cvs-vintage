@@ -41,7 +41,7 @@
                   $rma.DisplayValue</th>
                   <td>
                 #if ($att.isOptionAttribute())
-                  #attrValueLeafSelect ($attVal $field "" false)
+                  #attrValueLeafSelect ($attVal $field "" false $attVal.isRequired())
                   #attrValueErrorMsg ($attVal $field)
                 #else
                   #attrValueErrorMsg($attVal "Value")
