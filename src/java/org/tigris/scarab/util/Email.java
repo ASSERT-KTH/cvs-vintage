@@ -81,7 +81,7 @@ import org.tigris.scarab.services.email.VelocityEmail;
  * @author <a href="mailto:jon@collab.net">Jon Scott Stevens</a>
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: Email.java,v 1.35 2003/05/31 04:02:31 dlr Exp $
+ * @version $Id: Email.java,v 1.36 2003/06/08 18:24:52 dlr Exp $
  */
 public class Email extends TemplateEmail
 {
@@ -417,8 +417,13 @@ public class Email extends TemplateEmail
     }
 
     /**
-     * Returns a charset for the given locale that is generally preferred
-     * by email clients.
+     * Returns a charset for the given locale that is generally
+     * preferred by email clients.  If not specified by the property
+     * named by {@link
+     * org.tigris.scarab.util.ScarabConstants#DEFAULT_EMAIL_ENCODING_KEY},
+     * ask the <code>MimeTypeService</code> for a good value (except
+     * for Japanese, which always uses the encoding
+     * <code>ISO-2022-JP</code>).
      *
      * @param locale a <code>Locale</code> value
      * @return a <code>String</code> value
@@ -427,12 +432,15 @@ public class Email extends TemplateEmail
     {
         String charset = Turbine.getConfiguration()
             .getString(ScarabConstants.DEFAULT_EMAIL_ENCODING_KEY, "").trim();
-        if (charset.length() == 0 || "native".equals(charset))
+        if (charset.length() == 0 || "native".equalsIgnoreCase(charset))
         {
-            charset = TurbineMimeTypes.getCharSet(locale);
             if ("ja".equals(locale.getLanguage())) 
             {
                 charset = "ISO-2022-JP";
+            }
+            else
+            {
+                charset = TurbineMimeTypes.getCharSet(locale);
             }
         }
 
