@@ -86,6 +86,11 @@ import org.apache.tomcat.util.SessionUtil;
  * the core level.  The Tomcat.Next "Manager" interface acts more like a
  * collection class, and has minimal knowledge of the detailed request
  * processing semantics of handling sessions.
+ * <p>
+ * XXX - At present, there is no way (via the SessionManager interface) for
+ * a Context to tell the Manager that we create what the default session
+ * timeout for this web application (specified in the deployment descriptor)
+ * should be.
  *
  * @author Craig R. McClanahan
  */

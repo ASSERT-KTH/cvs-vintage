@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/session/Attic/ManagerBase.java,v 1.1 2000/01/09 03:23:22 craigmcc Exp $
- * $Revision: 1.1 $
- * $Date: 2000/01/09 03:23:22 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/session/Attic/ManagerBase.java,v 1.2 2000/01/10 05:02:54 craigmcc Exp $
+ * $Revision: 1.2 $
+ * $Date: 2000/01/10 05:02:54 $
  *
  * ====================================================================
  *
@@ -84,7 +84,7 @@ import org.apache.tomcat.util.SessionUtil;
  * be subclassed to create more sophisticated Manager implementations.
  *
  * @author Craig R. McClanahan
- * @version $Revision: 1.1 $ $Date: 2000/01/09 03:23:22 $
+ * @version $Revision: 1.2 $ $Date: 2000/01/10 05:02:54 $
  */
 
 public abstract class ManagerBase implements Manager {
@@ -117,7 +117,7 @@ public abstract class ManagerBase implements Manager {
      * The default maximum inactive interval for Sessions created by
      * this Manager.
      */
-    protected int maxInactiveInterval = -1;
+    protected int maxInactiveInterval = 60;
 
 
     /**
