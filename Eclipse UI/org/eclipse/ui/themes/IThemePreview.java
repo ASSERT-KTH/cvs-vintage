@@ -8,19 +8,22 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
-package org.eclipse.ui;
+package org.eclipse.ui.themes;
 
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.ui.themes.ITheme;
 
 
 /**
- * <em>EXPERIMENTAL</em>
+ * Interface used by theme element developers to preview the usage of their 
+ * elements within the colors and fonts preference page.
+ * 
  * @since 3.0
  */
 public interface IThemePreview {
     
-    /** 
+    /**
+     * Create the preview control.
+     *  
      * @param parent the Composite in which to create the example
      * @param theme the theme to preview
      */
