@@ -92,6 +92,24 @@ public class Transaction
     /**
      * Populates a new transaction object.
      */
+    public void create(TransactionType tt, ScarabUser user)
+        throws Exception
+    {
+        create(tt.getTypeId(), user, null);
+    }
+
+    /**
+     * Populates a new transaction object.
+     */
+    public void create(TransactionType tt, ScarabUser user, Attachment attachment)
+        throws Exception
+    {
+        create(tt.getTypeId(), user, attachment);
+    }
+
+    /**
+     * Populates a new transaction object.
+     */
     public void create(NumberKey typeId, ScarabUser user)
         throws Exception
     {
