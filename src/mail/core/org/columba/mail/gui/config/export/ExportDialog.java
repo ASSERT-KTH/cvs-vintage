@@ -125,7 +125,7 @@ public class ExportDialog
 	protected void initComponents() {
 		JPanel mainPanel = new JPanel();
 		mainPanel.setLayout(new BorderLayout());
-		mainPanel.setBorder(BorderFactory.createEmptyBorder(12, 12, 11, 11));
+		mainPanel.setBorder(BorderFactory.createEmptyBorder(12, 12, 12, 12));
 		getContentPane().add(mainPanel);
 
 		exportButton = new JButton("Export...");
@@ -213,8 +213,8 @@ public class ExportDialog
 
 		JPanel bottomPanel = new JPanel(new BorderLayout());
 		bottomPanel.setBorder(new SingleSideEtchedBorder(SwingConstants.TOP));
-		JPanel buttonPanel = new JPanel(new GridLayout(1, 2, 5, 0));
-		buttonPanel.setBorder(BorderFactory.createEmptyBorder(17, 12, 11, 11));
+		JPanel buttonPanel = new JPanel(new GridLayout(1, 3, 6, 0));
+		buttonPanel.setBorder(BorderFactory.createEmptyBorder(12, 12, 12, 12));
 		ButtonWithMnemonic closeButton =
 			new ButtonWithMnemonic(
 				MailResourceLoader.getString("global", "close"));
