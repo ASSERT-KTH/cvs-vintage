@@ -67,7 +67,7 @@ import org.jnp.server.NamingServer;
  *   @see ContainerFactory
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
  *   @author <a href="marc.fleury@telkel.com">Marc Fleury</a>
- *   @version $Revision: 1.38 $
+ *   @version $Revision: 1.39 $
  */
 public abstract class Container
 {
@@ -506,6 +506,7 @@ public abstract class Container
                   // URL bindings
                   try
                   {
+                     Logger.debug("Binding URL "+finalName+ " to JDNI ENC " +ref.getRefName());
                      bind(ctx, ref.getRefName(), new URL(finalName));
                   } catch (MalformedURLException e)
                   {
