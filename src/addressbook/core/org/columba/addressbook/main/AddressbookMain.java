@@ -89,6 +89,7 @@ public class AddressbookMain extends DefaultMain {
 		}
 
 		MainInterface.shutdownManager.register(new SaveAllAddressbooksPlugin());
+		MainInterface.backgroundTaskManager.register(new SaveAllAddressbooksPlugin());
 
 	}
 

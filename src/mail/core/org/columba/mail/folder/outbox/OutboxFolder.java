@@ -41,7 +41,6 @@ public class OutboxFolder extends MHFolder {
 	private SendListManager[] sendListManager = new SendListManager[2];
 	private int actSender;
 	private boolean isSending;
-	
 
 	protected OutboxHeaderCache cache;
 
@@ -58,14 +57,13 @@ public class OutboxFolder extends MHFolder {
 
 	}
 
-	
 	// this method needs to be fixed for the sake of completness
 	// (we don't use it anyway)
 	public Object addMessage(String source, WorkerStatusController worker)
 		throws Exception {
-			
+
 		getHeaderList(worker);
-		
+
 		Object newUid = super.addMessage(source, worker);
 
 		Rfc822Parser parser = new Rfc822Parser();
@@ -82,7 +80,7 @@ public class OutboxFolder extends MHFolder {
 		h.set("columba.size", new Integer(size));
 
 		h.set("columba.uid", newUid);
-		
+
 		if (h.get("columba.flags.recent").equals(Boolean.TRUE))
 			getMessageFolderInfo().incRecent();
 		if (h.get("columba.flags.seen").equals(Boolean.FALSE))
@@ -97,16 +95,16 @@ public class OutboxFolder extends MHFolder {
 		AbstractMessage message,
 		WorkerStatusController worker)
 		throws Exception {
-			
+
 		getHeaderList(worker);
-		
+
 		Object newUid = super.addMessage(message, worker);
 
 		SendableHeader h =
 			(SendableHeader) ((SendableHeader) message.getHeader());
 
 		h.set("columba.uid", newUid);
-		
+
 		if (h.get("columba.flags.recent").equals(Boolean.TRUE))
 			getMessageFolderInfo().incRecent();
 		if (h.get("columba.flags.seen").equals(Boolean.FALSE))
@@ -116,10 +114,10 @@ public class OutboxFolder extends MHFolder {
 
 		return newUid;
 	}
-	
+
 	public Object[] getUids(WorkerStatusController worker) throws Exception {
 		cache.getHeaderList(worker);
-		
+
 		int count = cache.count();
 		Object[] uids = new Object[count];
 
@@ -132,11 +130,11 @@ public class OutboxFolder extends MHFolder {
 
 		return uids;
 	}
-	
+
 	public void expungeFolder(WorkerStatusController worker) throws Exception {
-	
+
 		Object[] uids = getUids(worker);
-		
+
 		for (int i = 0; i < uids.length; i++) {
 			Object uid = uids[i];
 
@@ -156,6 +154,8 @@ public class OutboxFolder extends MHFolder {
 
 			}
 		}
+		
+		changed = true;
 	}
 
 	protected void markMessage(
@@ -170,10 +170,10 @@ public class OutboxFolder extends MHFolder {
 				{
 					if (h.get("columba.flags.recent").equals(Boolean.TRUE))
 						getMessageFolderInfo().decRecent();
-						
+
 					if (h.get("columba.flags.seen").equals(Boolean.FALSE))
 						getMessageFolderInfo().decUnseen();
-						
+
 					h.set("columba.flags.seen", Boolean.TRUE);
 					break;
 				}
@@ -193,6 +193,8 @@ public class OutboxFolder extends MHFolder {
 					break;
 				}
 		}
+		
+		changed = true;
 	}
 
 	public void markMessage(
@@ -205,7 +207,7 @@ public class OutboxFolder extends MHFolder {
 			markMessage(uids[i], variant, worker);
 		}
 	}
-	
+
 	public AbstractMessage getMessage(
 		Object uid,
 		WorkerStatusController worker)
@@ -224,12 +226,12 @@ public class OutboxFolder extends MHFolder {
 		AbstractMessage message =
 			new Rfc822Parser().parse(source, true, null, 0);
 		message.setUID(uid);
-		
+
 		SendableHeader header = (SendableHeader) getHeaderList(worker).get(uid);
 		SendableMessage sendableMessage = new SendableMessage();
-		sendableMessage.setHeader( header );
-		sendableMessage.setMimePartTree( message.getMimePartTree() );
-		sendableMessage.setSource( source );
+		sendableMessage.setHeader(header);
+		sendableMessage.setMimePartTree(message.getMimePartTree());
+		sendableMessage.setSource(source);
 
 		aktMessage = sendableMessage;
 
@@ -248,32 +250,35 @@ public class OutboxFolder extends MHFolder {
 	/*
 	public void expungeFolder(WorkerStatusController worker) throws Exception {
 		Object[] uids = getUids(worker);
-
+	
 		for (int i = 0; i < uids.length; i++) {
 			Object uid = uids[i];
-
+	
 			ColumbaHeader h = getMessageHeader(uid, worker);
 			Boolean expunged = (Boolean) h.get("columba.flags.expunged");
-
+	
 			ColumbaLogger.log.debug("expunged=" + expunged);
-
+	
 			if (expunged.equals(Boolean.TRUE)) {
 				// move message to trash
-
+	
 				ColumbaLogger.log.info(
 					"moving message with UID " + uid + " to trash");
-
+	
 				// remove message
 				removeMessage(uid);
-
+	
 			}
 		}
 	}
 	*/
-	
-	public void removeMessage(Object uid, WorkerStatusController worker) throws Exception {
+
+	public void removeMessage(Object uid, WorkerStatusController worker)
+		throws Exception {
 		cache.remove(uid);
 		super.removeMessage(uid, worker);
+		
+		changed = true;
 	}
 
 	private void swapListManagers() throws Exception {
@@ -308,18 +313,22 @@ public class OutboxFolder extends MHFolder {
 	public void stoppedSending() {
 		isSending = false;
 	}
-	
-	public void save() throws Exception {
-		cache.save(null);
+
+	public void save(WorkerStatusController worker) throws Exception {
+		// only save header-cache if folder data changed
+		if (getChanged() == true) {
+
+			getHeaderCacheInstance().save(worker);
+			setChanged(false);
+		}
 	}
 
 	class OutboxHeaderCache extends LocalHeaderCache {
 		public OutboxHeaderCache(LocalFolder folder) {
 			super(folder);
 		}
-		
-		public HeaderInterface createHeaderInstance()
-		{
+
+		public HeaderInterface createHeaderInstance() {
 			return new SendableHeader();
 		}
 
@@ -339,8 +348,6 @@ public class OutboxFolder extends MHFolder {
 			throws Exception {
 			super.saveHeader(p, h);
 
-			
-			
 			p.writeInt(((SendableHeader) h).getAccountUid());
 
 			p.writeObject(((SendableHeader) h).getRecipients());

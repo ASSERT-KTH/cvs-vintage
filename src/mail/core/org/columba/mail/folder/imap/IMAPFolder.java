@@ -304,12 +304,14 @@ public class IMAPFolder extends RemoteFolder {
 	/**
 	 * Method save.
 	 */
-	public void save() {
-		try {
-			cache.save(null);
-		} catch (Exception ex) {
-			ex.printStackTrace();
+	public void save(WorkerStatusController worker) throws Exception {
+		// only save header-cache if folder data changed
+		if (getChanged() == true) {
+
+			cache.save(worker);
+			setChanged(false);
 		}
+
 	}
 
 	/**
@@ -576,8 +578,7 @@ public class IMAPFolder extends RemoteFolder {
 	/**
 	 * @see org.columba.mail.folder.Folder#expungeFolder(java.lang.Object, org.columba.core.command.WorkerStatusController)
 	 */
-	public void expungeFolder(WorkerStatusController worker)
-		throws Exception {
+	public void expungeFolder(WorkerStatusController worker) throws Exception {
 
 		boolean result = getStore().expunge(worker, getImapPath());
 		if (result == false)

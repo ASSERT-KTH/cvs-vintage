@@ -58,8 +58,13 @@ public class CachedMHFolder extends MHFolder {
 		return result;
 	}
 
-	public void save() throws Exception {
-		getHeaderCacheInstance().save(null);
+	public void save(WorkerStatusController worker) throws Exception {
+		// only save header-cache if folder data changed
+		if (getChanged() == true) {
+
+			getHeaderCacheInstance().save(worker);
+			setChanged(false);
+		}
 	}
 
 	public boolean exists(Object uid, WorkerStatusController worker)
@@ -187,6 +192,8 @@ public class CachedMHFolder extends MHFolder {
 
 			}
 		}
+		
+		changed = true;
 	}
 
 	public void removeMessage(Object uid, WorkerStatusController worker)
@@ -200,7 +207,6 @@ public class CachedMHFolder extends MHFolder {
 
 		getHeaderCacheInstance().remove(uid);
 		super.removeMessage(uid, worker);
-
 	}
 
 	protected void markMessage(
@@ -257,6 +263,8 @@ public class CachedMHFolder extends MHFolder {
 					break;
 				}
 		}
+		
+		changed = true;
 	}
 
 	public void markMessage(

@@ -17,13 +17,12 @@ package org.columba.mail.shutdown;
 
 import java.util.Enumeration;
 
+import org.columba.core.backgroundtask.TaskInterface;
+import org.columba.core.logging.ColumbaLogger;
 import org.columba.core.main.MainInterface;
-import org.columba.core.shutdown.ShutdownPluginInterface;
-import org.columba.mail.folder.Folder;
+import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.folder.FolderTreeNode;
-import org.columba.mail.folder.imap.IMAPFolder;
-import org.columba.mail.folder.mh.CachedMHFolder;
-import org.columba.mail.folder.outbox.OutboxFolder;
+import org.columba.mail.folder.command.SaveFolderConfigurationCommand;
 
 /**
  * @author freddy
@@ -33,9 +32,9 @@ import org.columba.mail.folder.outbox.OutboxFolder;
  * To enable and disable the creation of type comments go to
  * Window>Preferences>Java>Code Generation.
  */
-public class SaveAllFoldersPlugin implements ShutdownPluginInterface {
+public class SaveAllFoldersPlugin implements TaskInterface {
 
-	public void shutdown() {
+	public void run() {
 		saveAllFolders();
 	}
 
@@ -56,37 +55,16 @@ public class SaveAllFoldersPlugin implements ShutdownPluginInterface {
 
 			child = (FolderTreeNode) e.nextElement();
 
-			if (child instanceof Folder)
-				 ((Folder) child).saveMessageFolderInfo();
+			ColumbaLogger.log.debug("saving folder: " + child.getName());
 
-			if (child instanceof CachedMHFolder) {
-				CachedMHFolder mhFolder = (CachedMHFolder) child;
-				try {
+			FolderCommandReference[] r = new FolderCommandReference[1];
+			r[0] = new FolderCommandReference(child);
 
-					mhFolder.save();
-				} catch (Exception ex) {
-					ex.printStackTrace();
-				}
-			} else if (child instanceof OutboxFolder) {
-				OutboxFolder outboxFolder = (OutboxFolder) child;
-				try {
-
-					outboxFolder.save();
-				} catch (Exception ex) {
-					ex.printStackTrace();
-				}
-			} else if (child instanceof IMAPFolder) {
-				IMAPFolder imapFolder = (IMAPFolder) child;
-
-				try {
-
-					imapFolder.save();
-				} catch (Exception ex) {
-					ex.printStackTrace();
-				}
-			}
+			MainInterface.processor.addOp(
+				new SaveFolderConfigurationCommand(r));
 
 			saveFolder(child);
+
 		}
 	}
 

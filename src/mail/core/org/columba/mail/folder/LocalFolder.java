@@ -102,6 +102,8 @@ public abstract class LocalFolder extends Folder {
 		getMessageFolderInfo().incExists();
 		
 		getSearchEngineInstance().messageAdded(message);
+		
+		changed = true;
 
 		return newUid;
 	}	
@@ -119,6 +121,8 @@ public abstract class LocalFolder extends Folder {
 		AbstractMessage m = new Message(header);
 		m.setSource(source);
 
+		changed = true;
+		
 		return addMessage(m, worker);
 	}
 
@@ -128,6 +132,8 @@ public abstract class LocalFolder extends Folder {
 		getSearchEngineInstance().messageRemoved(uid);
 
 		getMessageFolderInfo().decExists();
+		
+		changed = true;
 	}
 
 	public AbstractMessage getMessage(

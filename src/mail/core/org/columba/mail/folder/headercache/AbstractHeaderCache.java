@@ -315,6 +315,9 @@ public abstract class AbstractHeaderCache {
 		ColumbaHeader header;
 		MessageFolderInfo messageFolderInfo = folder.getMessageFolderInfo();
 
+
+		folder.setChanged(true);
+		
 		if (worker != null)
 			worker.setProgressBarMaximum(uids.length);
 
@@ -348,6 +351,8 @@ public abstract class AbstractHeaderCache {
 				if (worker != null && i % 500 == 0) {
 					worker.setProgressBarValue(i);
 				}
+				
+				
 			} catch (Exception ex) {
 				ColumbaLogger.log.error(
 					"Error syncing HeaderCache :" + ex.getLocalizedMessage());

@@ -41,6 +41,11 @@ public class TaskManager {
 	public Vector getWorkerList() {
 		return workerList;
 	}
+	
+	public int count()
+	{
+		return workerList.size();
+	}
 
 	private void addWorker(Worker w) {
 		Worker compareWorker;

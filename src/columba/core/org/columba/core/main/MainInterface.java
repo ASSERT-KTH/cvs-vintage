@@ -17,6 +17,7 @@
 package org.columba.core.main;
 
 import org.columba.addressbook.gui.tree.AddressbookTreeModel;
+import org.columba.core.backgroundtask.BackgroundTaskManager;
 import org.columba.core.command.DefaultProcessor;
 import org.columba.core.config.Config;
 import org.columba.core.gui.ClipboardManager;
@@ -48,6 +49,8 @@ public class MainInterface {
 	public static PluginManager pluginManager;
 
 	public static ShutdownManager shutdownManager;
+	
+	public static BackgroundTaskManager backgroundTaskManager;
 
 	public static FrameModelManager frameModelManager;
 	

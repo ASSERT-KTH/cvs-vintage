@@ -15,7 +15,14 @@
 //All Rights Reserved.
 package org.columba.core.shutdown;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.Vector;
+
+import javax.swing.Timer;
+
+import org.columba.core.backgroundtask.TaskInterface;
+import org.columba.core.main.MainInterface;
 
 /**
  * @author freddy
@@ -25,54 +32,47 @@ import java.util.Vector;
  * To enable and disable the creation of type comments go to
  * Window>Preferences>Java>Code Generation.
  */
-public class ShutdownManager {
+public class ShutdownManager implements ActionListener {
+
+	private static int ONE_SECOND = 1000;
+	private static int DELAY = ONE_SECOND * 5;
 
 	Vector list;
+
+	Timer timer;
 
 	public ShutdownManager() {
 		list = new Vector();
 	}
 
-	public void register(ShutdownPluginInterface plugin) {
+	public void register(TaskInterface plugin) {
 		list.add(plugin);
 	}
 
 	public void shutdown() {
-		/*
-		JFrame dialog = new JFrame("Saving Folders...");
-		
-		dialog.getContentPane().add(new JButton("Saving Folders..."), BorderLayout.CENTER);
-		dialog.pack();
-		
-		java.awt.Dimension dim = new Dimension(300, 50);
-		dialog.setSize(dim);
-		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-		dialog.setLocation(
-			screenSize.width / 2 - dim.width / 2,
-			screenSize.height / 2 - dim.height / 2);
-		
-		dialog.setVisible(true);
-		
-		for (int i = 0; i < list.size(); i++) {
-			ShutdownPluginInterface plugin =
-				(ShutdownPluginInterface) list.get(i);
-		
-			plugin.shutdown();
-		}
-		
-		dialog.setVisible(false);
-		
-		System.exit(1);
-		*/
 
 		// we start from the end, to be sure that
 		// the core-plugins are saved as last
-		for (int i = list.size()-1; i >= 0; i--) {
-			ShutdownPluginInterface plugin =
-				(ShutdownPluginInterface) list.get(i);
+		for (int i = list.size() - 1; i >= 0; i--) {
+			TaskInterface plugin = (TaskInterface) list.get(i);
 
-			plugin.shutdown();
+			plugin.run();
 		}
-		System.exit(1);
+
+		timer = new Timer(DELAY, this);
+		timer.start();
 	}
+	/* (non-Javadoc)
+	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
+	 */
+	public void actionPerformed(ActionEvent arg0) {
+		// exit if no task is running anymore
+		if (MainInterface.processor.getTaskManager().count() == 0)
+			System.exit(1);
+		else {
+			// ask user to kill pending running tasks or wait
+		}
+
+	}
+
 }

@@ -62,8 +62,10 @@ public abstract class Folder extends FolderTreeNode {
 
 	/**
 	 *
+	 *	set changed to true if the folder data
+	 *  changes.
 	 */
-	protected boolean changed;
+	protected boolean changed = false;
 
 	/**
 	 *
@@ -276,10 +278,7 @@ public abstract class Folder extends FolderTreeNode {
 		filterList = list;
 	}
 
-	/**
-	 * Method getChanged.
-	 * @return boolean
-	 */
+	
 	/**
 	 * Method getChanged.
 	 * @return boolean
@@ -288,10 +287,7 @@ public abstract class Folder extends FolderTreeNode {
 		return changed;
 	}
 
-	/**
-	 * Method getMessageFolderInfo.
-	 * @return MessageFolderInfo
-	 */
+	
 	/**
 	 * Method getMessageFolderInfo.
 	 * @return MessageFolderInfo
@@ -300,10 +296,7 @@ public abstract class Folder extends FolderTreeNode {
 		return messageFolderInfo;
 	}
 
-	/**
-	 * Method getFilterList.
-	 * @return FilterList
-	 */
+
 	/**
 	 * Method getFilterList.
 	 * @return FilterList
@@ -312,10 +305,7 @@ public abstract class Folder extends FolderTreeNode {
 		return filterList;
 	}
 
-	/**
-	 * Method hasFilters.
-	 * @return boolean
-	 */
+	
 	/**
 	 * Method hasFilters.
 	 * @return boolean
@@ -772,5 +762,26 @@ public abstract class Folder extends FolderTreeNode {
 			
 			
 		}
+		
+	/**
+	 * 
+	 * use this method to save folder meta-data when
+	 * closing Columba
+	 *
+	 */
+	public void save(WorkerStatusController worker) throws Exception
+	{
+		saveMessageFolderInfo();
+	}
+	
+	/**
+	 * use this method to load folder meta-data when
+	 * starting Columba
+	 * 
+	 */
+	public void load(WorkerStatusController worker) throws Exception
+	{
+		loadMessageFolderInfo();
+	}
 
 }

@@ -113,9 +113,10 @@ public class MailMain extends DefaultMain {
 		}
 
 		MainInterface.shutdownManager.register(new SaveAllFoldersPlugin());
-
 		MainInterface.shutdownManager.register(new SavePOP3CachePlugin());
-
+		
+		MainInterface.backgroundTaskManager.register(new SaveAllFoldersPlugin());
+		MainInterface.backgroundTaskManager.register(new SavePOP3CachePlugin());
 	}
 
 }

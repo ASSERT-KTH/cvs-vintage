@@ -14,6 +14,9 @@
 //
 //All Rights Reserved.
 //$Log: SaveAllAddressbooksPlugin.java,v $
+//Revision 1.7  2003/06/15 18:46:18  fdietz
+//[feature]cleanup of shutdown interface, create background-thread manager which saves configuration/header-cache/etc in the background while Columba is running
+//
 //Revision 1.6  2003/03/29 10:53:14  fdietz
 //[bug]fixed loading/saveing of views, size is saved/loaded correctly now
 //
@@ -30,8 +33,8 @@ package org.columba.addressbook.shutdown;
 
 import org.columba.addressbook.folder.AddressbookFolder;
 import org.columba.addressbook.gui.tree.AddressbookTreeNode;
+import org.columba.core.backgroundtask.TaskInterface;
 import org.columba.core.main.MainInterface;
-import org.columba.core.shutdown.ShutdownPluginInterface;
 
 /**
  * @author freddy
@@ -41,7 +44,7 @@ import org.columba.core.shutdown.ShutdownPluginInterface;
  * To enable and disable the creation of type comments go to
  * Window>Preferences>Java>Code Generation.
  */
-public class SaveAllAddressbooksPlugin implements ShutdownPluginInterface {
+public class SaveAllAddressbooksPlugin implements TaskInterface {
 
 	/**
 	 * Constructor for SaveAllFoldersPlugin.
@@ -53,7 +56,7 @@ public class SaveAllAddressbooksPlugin implements ShutdownPluginInterface {
 	/**
 	 * @see org.columba.core.shutdown.ShutdownPluginInterface#run()
 	 */
-	public void shutdown() {	
+	public void run() {	
 		saveFolders(
 			(AddressbookTreeNode) MainInterface				
 				.addressbookTreeModel

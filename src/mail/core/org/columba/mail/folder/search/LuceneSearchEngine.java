@@ -42,11 +42,11 @@ import org.apache.lucene.search.WildcardQuery;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
 import org.apache.lucene.store.RAMDirectory;
+import org.columba.core.backgroundtask.TaskInterface;
 import org.columba.core.command.WorkerStatusController;
 import org.columba.core.io.DiskIO;
 import org.columba.core.logging.ColumbaLogger;
 import org.columba.core.main.MainInterface;
-import org.columba.core.shutdown.ShutdownPluginInterface;
 import org.columba.core.util.ListTools;
 import org.columba.core.util.Mutex;
 import org.columba.mail.filter.FilterCriteria;
@@ -69,7 +69,7 @@ import org.columba.mail.parser.Rfc822Parser;
  */
 public class LuceneSearchEngine
 	extends AbstractSearchEngine
-	implements ShutdownPluginInterface {
+	implements TaskInterface {
 
 	private final static int OPTIMIZE_AFTER_N_OPERATIONS = 30;
 
@@ -463,9 +463,9 @@ public class LuceneSearchEngine
 	}
 
 	/**
-	 * @see org.columba.core.shutdown.ShutdownPluginInterface#run()
+	 * @see org.columba.core.backgroundtask.TaskInterface#run()
 	 */
-	public void shutdown() {
+	public void run() {
 		try {
 			mergeRAMtoIndex();
 		} catch (IOException e) {

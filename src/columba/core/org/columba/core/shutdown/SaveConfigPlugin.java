@@ -15,6 +15,7 @@
 //All Rights Reserved.
 package org.columba.core.shutdown;
 
+import org.columba.core.backgroundtask.TaskInterface;
 import org.columba.core.config.Config;
 
 /**
@@ -25,12 +26,12 @@ import org.columba.core.config.Config;
  * To enable and disable the creation of type comments go to
  * Window>Preferences>Java>Code Generation.
  */
-public class SaveConfigPlugin implements ShutdownPluginInterface {
+public class SaveConfigPlugin implements TaskInterface {
 
 	/**
 	 * @see org.columba.core.gui.ShutdownPluginInterface#run()
 	 */
-	public void shutdown() {
+	public void run() {
 		try {
 
 			Config.save();

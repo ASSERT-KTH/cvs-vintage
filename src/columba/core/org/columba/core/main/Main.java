@@ -29,13 +29,13 @@ import javax.swing.text.Keymap;
 
 import org.columba.addressbook.main.AddressbookMain;
 import org.columba.core.action.ActionPluginHandler;
+import org.columba.core.backgroundtask.BackgroundTaskManager;
 import org.columba.core.command.DefaultProcessor;
 import org.columba.core.config.Config;
 import org.columba.core.gui.ClipboardManager;
 import org.columba.core.gui.frame.FrameModel;
 import org.columba.core.gui.menu.MenuPluginHandler;
 import org.columba.core.gui.themes.ThemeSwitcher;
-import org.columba.core.gui.util.ImageLoader;
 import org.columba.core.gui.util.StartUpFrame;
 import org.columba.core.logging.ColumbaLogger;
 import org.columba.core.plugin.FramePluginHandler;
@@ -128,6 +128,9 @@ public class Main {
     MainInterface.shutdownManager = new ShutdownManager();
 
     MainInterface.shutdownManager.register(new SaveConfigPlugin());
+    
+    MainInterface.backgroundTaskManager = new BackgroundTaskManager();
+	MainInterface.backgroundTaskManager.register( new SaveConfigPlugin() );
 
     addressbook.initPlugins();
     mail.initPlugins();
