@@ -83,7 +83,7 @@ import org.apache.lucene.search.Hits;
  * Support for searching/indexing text
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: LuceneAdapter.java,v 1.6 2002/02/07 19:30:57 maartenc Exp $
+ * @version $Id: LuceneAdapter.java,v 1.7 2002/02/07 22:14:41 jon Exp $
  */
 public class LuceneAdapter 
     implements SearchIndex
@@ -96,6 +96,9 @@ public class LuceneAdapter
 
     /** the words and boolean operators */
     private List queryText;
+
+    /** list of invalid characters when doing searches */
+    public static final String invalidChars = " \t(){}[]!,;:?./*-+=+&|<>";
 
     /**
      * Ctor.  Sets up an index directory if one does not yet exist in the
@@ -157,19 +160,24 @@ public class LuceneAdapter
         {        
             for ( int j=attributeIds.size()-1; j>=0; j-- ) 
             {
-                // compute approximate size of buffer needed. !FIXME!
-                StringBuffer fullQuery = new StringBuffer(100);
-
                 NumberKey[] ids = (NumberKey[])attributeIds.get(j);
                 String enteredQuery = (String) queryText.get(j);
-                String invalidChars = " \t(){}[]!,;:?./*-+=+&|<>";
+
+                int enteredQueryLength = enteredQuery.length();
+                StringBuffer fullQuery = new StringBuffer(enteredQueryLength + 100);
+
                 StringTokenizer tokens = new StringTokenizer(enteredQuery, invalidChars);
-                String query = "";
+                StringBuffer query = new StringBuffer(enteredQueryLength + 50);
                 while (tokens.hasMoreTokens())
                 {
-                    query = query.concat(" " + tokens.nextToken());
+                    query.append(" ");
+                    query.append(tokens.nextToken());
                 }
-                query = query.trim();
+                String queryStr = query.toString();
+                if (queryStr.length() > 0)
+                {
+                    queryStr.trim();
+                }
 
                 if ( ids != null && ids.length != 0 ) 
                 {
@@ -185,14 +193,14 @@ public class LuceneAdapter
                         }
                     }
                     fullQuery.append(") AND (")
-                        .append(query)
+                        .append(queryStr)
                         .append("))");            
                 }
                 else
                 {
                     fullQuery
                         .append("+(")
-                        .append(query)
+                        .append(queryStr)
                         .append(')');
                 }
 
