@@ -11,6 +11,7 @@ import java.util.ConcurrentModificationException;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.Set;
 import org.jboss.logging.Logger;
 /**
  * A generic object pool.  You must provide a PoolObjectFactory (or the class
@@ -28,7 +29,7 @@ import org.jboss.logging.Logger;
  *   <LI>Shut it down</LI>
  * </OL>
  * @see org.jboss.minerva.pools.PooledObject
- * @version $Revision: 1.17 $
+ * @version $Revision: 1.18 $
  * @author Aaron Mulder (ammulder@alumni.princeton.edu)
  */
 public class ObjectPool implements PoolEventListener {
@@ -567,6 +568,41 @@ public class ObjectPool implements PoolEventListener {
     }
 
     /**
+     * Gets all of the unused objects from the pool. The returned set
+     * will always contain at least one object; if there are no unused
+     * objects in the pool then one will be created.
+     */
+    public Set getObjects() {
+        if(objects == null)
+            throw new IllegalStateException(
+               "Tried to use pool before it was Initialized or after it was " +
+               "ShutDown!");
+
+        Set result = new HashSet();
+        Iterator it = objects.values().iterator();
+        while(it.hasNext()) {
+            ObjectRecord rec = (ObjectRecord)it.next();
+            if(!rec.isInUse()) {
+                try {
+                    rec.setInUse(true);
+                    Object ob = rec.getObject();
+                    Object resultObj = factory.prepareObject(ob);
+                    if(resultObj != ob) rec.setClientObject(result);
+                    if(resultObj instanceof PooledObject)
+                        ((PooledObject)resultObj).addPoolEventListener(this);
+                    log("Pool "+this+" gave out pooled object: "+resultObj);
+                    result.add(resultObj);
+                } catch(ConcurrentModificationException e) {}
+            }
+        }
+
+        if(result.size() == 0)
+            result.add(getObject());
+
+        return result;
+    }
+
+    /**
      * Sets the last used time for an object in the pool that is currently
      * in use.  If the timestamp parameter is not set, this call does nothing.
      * Otherwise, the object is marked as last used at the current time.
@@ -664,6 +700,19 @@ public class ObjectPool implements PoolEventListener {
             synchronized(this) {
                 notify();
             }
+        }
+    }
+
+    /**
+     * Returns a set of objects to the pool. This has the same effect
+     * as calling <code>releaseObject</code> on each object in the
+     * set.
+     */
+    public void releaseObjects(Set objects) {
+        Iterator it = objects.iterator();
+        while(it.hasNext()) {
+            Object object = it.next();
+            releaseObject(object);
         }
     }
 
