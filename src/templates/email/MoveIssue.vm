@@ -5,12 +5,16 @@
 #end
 
 #set ($user = $issue.ModifiedBy)
-#set ($msgArgs = [$oldModule, $newModule, $user.UserName])
+#set ($msgArgs = [$oldModule, $newModule, $newIssueType, $user.UserName])
 $l10n.format("IssueMoved", $issue.UniqueId, $actionWord) $l10n.format("IssueMoved2", $msgArgs) 
 
 $l10n.YouCanViewIssue
 
     <$link.getIssueIdAbsoluteLink($issue)>
+
+#if ($reason.length >0)
+The reason: $reason
+#end
 
 #if ($attachment.Data)
 $l10n.Comment  $attachment.Data
