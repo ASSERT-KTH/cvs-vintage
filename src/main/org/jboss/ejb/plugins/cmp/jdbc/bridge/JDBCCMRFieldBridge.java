@@ -65,7 +65,7 @@ import org.jboss.security.SecurityAssociation;
  *      One for each role that entity has.       
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.53 $
+ * @version $Revision: 1.54 $
  */                            
 public class JDBCCMRFieldBridge implements JDBCFieldBridge, CMRFieldBridge {
    /**
@@ -542,10 +542,11 @@ public class JDBCCMRFieldBridge implements JDBCFieldBridge, CMRFieldBridge {
                "collection-valued cmr-field [EJB 2.0 Spec. 10.3.8].");
       }
       if(fkPartOfPk) {
-         throw new IllegalStateException("A CMR field with a foreign key " +
-            "mapped to a primary key field can only be set in ejbCreate " +
-            "[EJB 2.0 Spec. 10.3.5]. " +
-            "CMR field: " + this.getFieldName());
+         throw new IllegalStateException(
+            "CMR field " + this.getFieldName() +
+            " is mapped to a " +
+            "foreign key which is a part for a primary key, and primary key " +
+            "may only be set once in ejbCreate [EJB 2.0 Spec. 10.3.5].");
       }
 
       setInstanceValue(ctx, value);      
@@ -977,14 +978,14 @@ public class JDBCCMRFieldBridge implements JDBCFieldBridge, CMRFieldBridge {
    }
    
    /**
-    * resets the persistence context of the foreign key fields
+    * resets the persistence context 
     */
    public void resetPersistenceContext(EntityEnterpriseContext ctx) {
       // only reset if the read has timed out
       if(!isReadTimedOut(ctx)) {
          return;
       }
-
+   
       // clear the field state
       setFieldState(ctx, null);
       
