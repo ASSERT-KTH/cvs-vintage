@@ -23,13 +23,14 @@ import org.jboss.system.ServiceMBeanSupport;
 import org.jboss.tm.usertx.client.ClientUserTransaction;
 import org.jboss.tm.usertx.interfaces.UserTransactionSessionFactory;
 
+import org.jboss.management.j2ee.JTAResource;
 
 /**
  *  This is a JMX service handling the serverside of UserTransaction
  *  usage for standalone clients.
  *      
  *  @author <a href="mailto:osh@sparre.dk">Ole Husgaard</a>
- *  @version $Revision: 1.5 $
+ *  @version $Revision: 1.6 $
  */
 public class ClientUserTransactionService
    extends ServiceMBeanSupport
@@ -63,12 +64,23 @@ public class ClientUserTransactionService
       this.server = server;
       return OBJECT_NAME;
    }
-    
+   
+   protected void createService()
+      throws Exception
+   {
+      JTAResource.create( server, "ClientUserTransactionService", getServiceName() );
+   }
+   
+   protected void destroyService()
+   {
+      JTAResource.destroy( server, "ClientUserTransactionService" );
+   }
+   
    protected void startService()
       throws Exception
    {
       factory = new UserTransactionSessionFactoryImpl();
-
+      
       Context ctx = new InitialContext();
       ctx.bind(FACTORY_NAME, factory);
       ctx.bind(JNDI_NAME, ClientUserTransaction.getSingleton());

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE server>
-<!-- $Id: jboss-service.xml,v 1.53 2002/06/04 15:17:37 lsanders Exp $ -->
+<!-- $Id: jboss-service.xml,v 1.54 2002/06/19 03:30:50 schaefera Exp $ -->
 
 <!-- ===================================================================== -->
 <!--                                                                       -->
@@ -45,8 +45,8 @@
   <!-- JSR-77 Single JBoss Server Management Domain                         -->
   <!-- ==================================================================== -->
 
-  <mbean code="org.jboss.management.j2ee.SingleJBossServerManagement"
-	 name="jboss.management.single:j2eeType=J2EEDomain,name=Manager">
+  <mbean code="org.jboss.management.j2ee.LocalJBossServerDomain"
+	 name="jboss.management.local:j2eeType=J2EEDomain,name=Manager">
   </mbean>
 
 
