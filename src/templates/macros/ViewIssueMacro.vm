@@ -383,7 +383,11 @@
                         &#160;
                     #end
                   </td>
-                  <td><a href="$file.FilePath">$file.FileName</a> </td>
+                  <td><a href="$file.FilePath" 
+                    onClick="fileWindow=window.open('',
+                    'filewindow','resizable=yes,scrollbars=yes,height=450,width=700')" 
+                    target="filewindow">$file.FileName</a> 
+                  </td>
                   <td>$file.Name</td>
                 </tr>
             #end
