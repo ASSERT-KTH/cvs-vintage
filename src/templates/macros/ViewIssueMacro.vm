@@ -164,7 +164,9 @@
       #set ($userId = $attVal.UserId)
       #set ($assignedUser = $scarabR.getUser($userId))
 
-      <td><input type="checkbox"></td>
+      <td>
+         ##<input type="checkbox">
+      </td>
       <td>
         $!assignedUser.Name
         #if (!$assignedUser.hasPermission($attVal.Attribute.Permission, $module))
