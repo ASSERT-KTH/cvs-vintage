@@ -239,7 +239,8 @@ public class AccessLogInterceptor extends BaseInterceptor {
 				fw.write(request.protocol().toString().trim());
 				break;
 			    case 'b':
-				String cl = request.getHeader("Content-Length");
+				String cl = response.getMimeHeaders().
+				                   getHeader("Content-Length");
 				if(cl != null) {
 				    fw.write(cl);
 				} else {
