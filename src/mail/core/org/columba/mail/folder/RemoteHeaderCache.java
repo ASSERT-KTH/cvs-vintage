@@ -1,16 +1,16 @@
 //The contents of this file are subject to the Mozilla Public License Version 1.1
-//(the "License"); you may not use this file except in compliance with the 
+//(the "License"); you may not use this file except in compliance with the
 //License. You may obtain a copy of the License at http://www.mozilla.org/MPL/
 //
 //Software distributed under the License is distributed on an "AS IS" basis,
-//WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License 
+//WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
 //for the specific language governing rights and
 //limitations under the License.
 //
 //The Original Code is "The Columba Project"
 //
 //The Initial Developers of the Original Code are Frederik Dietz and Timo Stich.
-//Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
+//Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003.
 //
 //All Rights Reserved.
 package org.columba.mail.folder;
@@ -48,19 +48,19 @@ public class RemoteHeaderCache {
 	protected boolean headerCacheAlreadyLoaded;
 
 	protected RemoteFolder folder;
-	
+
 	/**
 	 * Constructor for RemoteHeaderCache.
 	 * @param folder
 	 */
 	public RemoteHeaderCache(RemoteFolder folder) {
 		this.folder = folder;
-		
+
 		headerList = new HeaderList();
-		
+
 		headerFile = new File(folder.getDirectoryFile(), ".header");
 	}
-	
+
 	public boolean isHeaderCacheAlreadyLoaded() {
 		return headerCacheAlreadyLoaded;
 	}
@@ -72,30 +72,30 @@ public class RemoteHeaderCache {
 		return false;
 	}
 
-	
+
 	public HeaderList getHeaderList(WorkerStatusController worker) throws Exception {
 		// if there exists a ".header" cache-file
-		//  try to load the cache	
+		//  try to load the cache
 		if (headerCacheAlreadyLoaded==false) {
 			try {
-				
+
 				load(worker);
 				headerCacheAlreadyLoaded = true;
 			} catch (Exception ex) {
 				ex.printStackTrace();
 				headerCacheAlreadyLoaded = true;
-				
+
 			}
-			
+
 			if ( headerList == null ) headerList = new HeaderList();
 		}
 
-		
-		
+
+
 		return headerList;
 	}
-	
-	
+
+
 	protected void loadHeader(ObjectInputStream p, ColumbaHeader h)
 		throws Exception {
 		String uid = (String) p.readObject();
@@ -181,7 +181,7 @@ public class RemoteHeaderCache {
 		TableItem v =
 			MailConfig.getMainFrameOptionsConfig().getTableItem();
 		String column;
-		
+
 		Object o;
 		for (int j = 0; j < v.count(); j++) {
 			HeaderItem headerItem = v.getHeaderItem(j);
@@ -191,56 +191,61 @@ public class RemoteHeaderCache {
 		}
 	}
 
-	public void load(WorkerStatusController worker) throws Exception {
-		ColumbaLogger.log.info("loading header-cache=" + headerFile);
-		
-		FileInputStream istream = new FileInputStream(headerFile.getPath());
-		ObjectInputStream p = new ObjectInputStream(istream);
+  public void load(WorkerStatusController worker) throws Exception {
+    ColumbaLogger.log.info("loading header-cache=" + headerFile);
+    headerList = new HeaderList();
 
-		int capacity = p.readInt();
-		ColumbaLogger.log.info("capacity=" + capacity);
+    try {
+      FileInputStream istream = new FileInputStream(headerFile.getPath());
+      ObjectInputStream p = new ObjectInputStream(istream);
 
-		/*
+      int capacity = p.readInt();
+      ColumbaLogger.log.info("capacity=" + capacity);
+
+      /*
 		if (capacity != folder.getDataStorageInstance().getMessageCount()) {
-			// messagebox headercache-file is corrupted
+        // messagebox headercache-file is corrupted
 
-			headerList = folder.getDataStorageInstance().recreateHeaderList(worker);
-			return;
+        headerList = folder.getDataStorageInstance().recreateHeaderList(worker);
+        return;
 		}
-		*/
-		
-		worker.setDisplayText("Loading headers from cache...");
-		
-		headerList = new HeaderList();
-		Integer uid;
+      */
 
-		//System.out.println("Number of Messages : " + capacity);
+      worker.setDisplayText("Loading headers from cache...");
 
-		if (worker != null)
-			worker.setProgressBarMaximum(capacity);
+      Integer uid;
 
-		for (int i = 1; i <= capacity; i++) {
-			if (worker != null)
-				worker.setProgressBarValue(i);
+      //System.out.println("Number of Messages : " + capacity);
 
-			//ColumbaHeader h = message.getHeader();
-			ColumbaHeader h = new ColumbaHeader();
+      if (worker != null)
+        worker.setProgressBarMaximum(capacity);
 
-			// read current number of message
-			//p.readInt();
+      for (int i = 1; i <= capacity; i++) {
+        if (worker != null)
+          worker.setProgressBarValue(i);
 
-			loadHeader(p, h);
+        //ColumbaHeader h = message.getHeader();
+        ColumbaHeader h = new ColumbaHeader();
 
-			//System.out.println("message="+h.get("subject") );
-			
-			headerList.add( h, (String) h.get("columba.uid") );
+        // read current number of message
+        //p.readInt();
 
-			//folder.setNextUid(((Integer) h.get("columba.uid")).intValue());
-		}
+        loadHeader(p, h);
 
-		// close stream
-		p.close();
-	}
+        //System.out.println("message="+h.get("subject") );
+
+        headerList.add( h, (String) h.get("columba.uid") );
+
+        //folder.setNextUid(((Integer) h.get("columba.uid")).intValue());
+      }
+
+      // close stream
+      p.close();
+    } catch (java.io.FileNotFoundException ex){
+      // For those times when existing IMAP folders have no local header
+      // file.
+    }
+  }
 
 	public void save(WorkerStatusController worker) throws Exception {
 		// we didn't load any header to save
@@ -259,7 +264,7 @@ public class RemoteHeaderCache {
 		//int count = getMessageFileCount();
 		int count = headerList.count();
 		if ( count == 0 ) return;
-		
+
 		p.writeInt(count);
 
 		ColumbaHeader h;
@@ -267,9 +272,9 @@ public class RemoteHeaderCache {
 
 		for (Enumeration e = headerList.keys(); e.hasMoreElements();) {
 			String str = (String) e.nextElement();
-			
+
 			h = (ColumbaHeader) headerList.getHeader( str );
-			
+
 			saveHeader(p,h);
 		}
 		/*
