@@ -19,7 +19,7 @@
 // File: CrMultiComposite.java.java
 // Classes: CrMultiComposite.java
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrMultiComposite.java,v 1.3 1998/04/18 23:37:34 jrobbins Exp $
+// $Id: CrMultiComposite.java,v 1.4 1998/04/23 23:51:43 jrobbins Exp $
 
 package uci.uml.critics;
 

@@ -27,7 +27,7 @@
 // File: ModePlace.java
 // Classes: ModePlace
 // Original Author: jrobbins@ics.uci.edu
-// $Id: ModePlace.java,v 1.5 1998/04/18 01:26:38 jrobbins Exp $
+// $Id: ModePlace.java,v 1.6 1998/04/23 23:50:29 jrobbins Exp $
 
 package uci.gef;
 
@@ -126,15 +126,15 @@ public class ModePlace extends Mode {
     GraphModel gm = _editor.getGraphModel();
     if (!(gm instanceof MutableGraphModel)) return;
 
-    _editor.add(_pers);
-
     MutableGraphModel mgm = (MutableGraphModel) gm;
-    mgm.addNode(_node);
-    
-    if (_node instanceof GraphNodeHooks)
-      ((GraphNodeHooks)_node).postPlacement(_editor);
+    if (mgm.canAddNode(_node)) {
+      _editor.add(_pers);
+      mgm.addNode(_node);
+      if (_node instanceof GraphNodeHooks)
+	((GraphNodeHooks)_node).postPlacement(_editor);
+      _editor.getSelectionManager().select(_pers);
+    }
     done();
-    _editor.getSelectionManager().select(_pers);
     me.consume();
   }
 

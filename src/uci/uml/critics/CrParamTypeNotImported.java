@@ -19,7 +19,7 @@
 // File: CrParamTypeNotImported.java.java
 // Classes: CrParamTypeNotImported.java
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrParamTypeNotImported.java,v 1.3 1998/04/18 23:37:39 jrobbins Exp $
+// $Id: CrParamTypeNotImported.java,v 1.4 1998/04/23 23:51:49 jrobbins Exp $
 
 package uci.uml.critics;
 

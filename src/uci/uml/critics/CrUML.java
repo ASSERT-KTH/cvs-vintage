@@ -19,11 +19,12 @@
 // File: CrUML.java
 // Classes: CrUML
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrUML.java,v 1.4 1998/04/18 23:37:41 jrobbins Exp $
+// $Id: CrUML.java,v 1.5 1998/04/23 23:51:50 jrobbins Exp $
 
 package uci.uml.critics;
 
 import uci.argo.kernel.*;
+import uci.uml.Foundation.Core.*;
 
 /** "Abstract" Critic subclass that captures commonalities among all
  *  critics in the UML domain. */

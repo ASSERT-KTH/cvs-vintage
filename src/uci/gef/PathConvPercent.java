@@ -19,7 +19,7 @@
 // File: PathConvPercent.java
 // Classes: PathConvPercent
 // Original Author: abonner@ics.uci.edu
-// $Id: PathConvPercent.java,v 1.6 1998/04/18 22:50:50 jrobbins Exp $
+// $Id: PathConvPercent.java,v 1.7 1998/04/23 23:50:30 jrobbins Exp $
 
 package uci.gef;
 
@@ -28,38 +28,40 @@ import java.awt.*;
 import java.io.*;
 import java.util.*;
 
-public class PathConvPercent extends PathConv
-{
-	float percent = 0;
-	int offset = 0;
+/** Used to place labels as specific positions along a FigEdge.  For
+ *  example, a label can be placed in the middle of a FigEdge by using 50%. */
 
-	public PathConvPercent(Fig theFig, float newPercent, int newOffset)
-	{
-		super(theFig);
-		setPercentOffset(newPercent, newOffset);
-	}
+public class PathConvPercent extends PathConv {
+  float percent = 0;
+  int offset = 0;
 
-	public Point getPoint()
-	{
-		int figLength = pathFigure.getPerimeterLength();
+  public PathConvPercent(Fig theFig, float newPercent, int newOffset) {
+    super(theFig);
+    setPercentOffset(newPercent, newOffset);
+  }
+
+  public Point getPoint() {
+    int figLength = _pathFigure.getPerimeterLength();
     int pointToGet = (int) (figLength * percent);
 
-    Point linePoint = pathFigure.pointAlongPerimeter(pointToGet);
+    Point linePoint = _pathFigure.pointAlongPerimeter(pointToGet);
 
-    System.out.println("lP=" + linePoint + " ptG=" + pointToGet + " figLen=" + figLength);
+    //System.out.println("lP=" + linePoint + " ptG=" + pointToGet +
+    //" figLen=" + figLength);
 
-    Point offsetAmount = getOffsetAmount(pathFigure.pointAlongPerimeter(pointToGet + 5), pathFigure.pointAlongPerimeter(pointToGet - 5), offset);
+    Point offsetAmount =
+      getOffsetAmount(_pathFigure.pointAlongPerimeter(pointToGet + 5),
+		      _pathFigure.pointAlongPerimeter(pointToGet - 5), offset);
 
-    return new Point(linePoint.x + offsetAmount.x, linePoint.y + offsetAmount.y);
-	}
+    return new Point(linePoint.x + offsetAmount.x,
+		     linePoint.y + offsetAmount.y);
+  }
 
-	public void setPercentOffset(float newPercent, int newOffset)
-	{
-		percent = newPercent;
-		offset = newOffset;
-	}
+  public void setPercentOffset(float newPercent, int newOffset) {
+    percent = newPercent;
+    offset = newOffset;
+  }
 
-	public void setClosestPoint(Point newPoint)
-	{
-	}
-}
+  public void setClosestPoint(Point newPoint) { }
+
+}/* end class PathConvPercent */

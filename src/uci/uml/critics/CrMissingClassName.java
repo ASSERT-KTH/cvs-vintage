@@ -19,7 +19,7 @@
 // File: CrMissingClassName.java.java
 // Classes: CrMissingClassName.java
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrMissingClassName.java,v 1.3 1998/04/18 23:37:33 jrobbins Exp $
+// $Id: CrMissingClassName.java,v 1.4 1998/04/23 23:51:42 jrobbins Exp $
 
 package uci.uml.critics;
 

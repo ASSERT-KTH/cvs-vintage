@@ -19,7 +19,7 @@
 // File: CrDupRoleNames.java
 // Classes: CrDupRoleNames
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrDupRoleNames.java,v 1.3 1998/04/18 23:37:30 jrobbins Exp $
+// $Id: CrDupRoleNames.java,v 1.4 1998/04/23 23:51:38 jrobbins Exp $
 
 package uci.uml.critics;
 

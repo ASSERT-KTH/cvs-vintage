@@ -19,7 +19,7 @@
 // File: CrNameConflict.java.java
 // Classes: CrNameConflict.java
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrNameConflict.java,v 1.3 1998/04/18 23:37:35 jrobbins Exp $
+// $Id: CrNameConflict.java,v 1.4 1998/04/23 23:51:45 jrobbins Exp $
 
 package uci.uml.critics;
 

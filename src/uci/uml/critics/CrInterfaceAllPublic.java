@@ -19,7 +19,7 @@
 // File: CrInterfaceAllPublic.java.java
 // Classes: CrInterfaceAllPublic.java
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrInterfaceAllPublic.java,v 1.3 1998/04/18 23:37:31 jrobbins Exp $
+// $Id: CrInterfaceAllPublic.java,v 1.4 1998/04/23 23:51:40 jrobbins Exp $
 
 package uci.uml.critics;
 

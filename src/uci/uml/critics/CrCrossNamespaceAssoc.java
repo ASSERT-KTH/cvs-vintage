@@ -19,7 +19,7 @@
 // File: CrCrossNamespaceAssoc.java.java
 // Classes: CrCrossNamespaceAssoc.java
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrCrossNamespaceAssoc.java,v 1.3 1998/04/18 23:37:27 jrobbins Exp $
+// $Id: CrCrossNamespaceAssoc.java,v 1.4 1998/04/23 23:51:36 jrobbins Exp $
 
 package uci.uml.critics;
 

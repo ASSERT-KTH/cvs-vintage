@@ -19,7 +19,7 @@
 // File: CrInterfaceOperOnly.java.java
 // Classes: CrInterfaceOperOnly.java
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrInterfaceOperOnly.java,v 1.3 1998/04/18 23:37:32 jrobbins Exp $
+// $Id: CrInterfaceOperOnly.java,v 1.4 1998/04/23 23:51:41 jrobbins Exp $
 
 package uci.uml.critics;
 
