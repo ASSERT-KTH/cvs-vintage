@@ -1,4 +1,4 @@
-// $Id: DocumentationManager.java,v 1.18 2004/06/29 11:48:21 d00mst Exp $
+// $Id: DocumentationManager.java,v 1.19 2004/06/29 12:21:14 d00mst Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -61,25 +61,27 @@ public class DocumentationManager {
         if (sResult == null)
             return "(No comment)";
 
-        StringBuffer result = new StringBuffer();
-        if (header != null)
-            result.append(header).append('\n');
-        result.append(sResult);
+	StringBuffer result = new StringBuffer();
+	if (header != null) {
+	    result.append(header).append(LINE_SEPARATOR);
+	}
 
-        // Let every line start with a prefix.
-        if (prefix != null) {
-            for (int i = 0; i < result.length() - 1; i++) {
-                if (result.charAt(i) == '\n') {
-                    result.insert(i + 1, prefix);
-                    if (indent != null)
-                        result.insert(i + 1, indent);
-                }
-            }
-        }
+	if (indent != null) {
+	    if (prefix != null) {
+		prefix = indent + prefix;
+	    }
 
-        if (footer != null) {
-            result.append('\n').append(indent).append(footer);
-        }
+	    if (footer != null) {
+		footer = indent + footer;
+	    }
+	}
+
+	appendComment(result, prefix, sResult, 0);
+
+	if (footer != null) {
+	    result.append(footer);
+	}
+
         return result.toString();
     }
 
