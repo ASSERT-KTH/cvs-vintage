@@ -49,6 +49,7 @@ package org.tigris.scarab.reports;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.Collections;
 import org.apache.fulcrum.intake.Retrievable;
 
 import java.io.StringWriter;
@@ -277,6 +278,80 @@ public class ReportDefinition
         }
 
         return (ReportAxis)axisList.get(axisIndex);
+    }
+
+    public List retrieveAllReportOptionAttributes()
+    {
+        List result = null;
+        List axes = getReportAxisList();
+        if (axes != null && !axes.isEmpty()) 
+        {
+            for (Iterator axi = axes.iterator(); axi.hasNext();) 
+            {
+                List headings = ((ReportAxis)axi.next()).getReportHeadings();
+                if (headings != null && !headings.isEmpty()) 
+                {
+                    for (Iterator hi = headings.iterator(); hi.hasNext();) 
+                    {
+                        List options = ((ReportHeading)hi.next())
+                            .consolidateReportOptionAttributes();
+                        if (options != null && !options.isEmpty()) 
+                        {
+                            for (Iterator i = options.iterator(); i.hasNext();)
+                            {
+                                if (result == null) 
+                                {
+                                    result = new ArrayList();
+                                }
+                                result.add(i.next());
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        if (result == null) 
+        {
+            result = Collections.EMPTY_LIST;
+        }
+        return result;
+    }
+
+    public List retrieveAllReportUserAttributes()
+    {
+        List result = null;
+        List axes = getReportAxisList();
+        if (axes != null && !axes.isEmpty()) 
+        {
+            for (Iterator axi = axes.iterator(); axi.hasNext();) 
+            {
+                List headings = ((ReportAxis)axi.next()).getReportHeadings();
+                if (headings != null && !headings.isEmpty()) 
+                {
+                    for (Iterator hi = headings.iterator(); hi.hasNext();) 
+                    {
+                        List users = ((ReportHeading)hi.next())
+                            .consolidateReportUserAttributes();
+                        if (users != null && !users.isEmpty()) 
+                        {
+                            for (Iterator i = users.iterator(); i.hasNext();)
+                            {
+                                if (result == null) 
+                                {
+                                    result = new ArrayList();
+                                }
+                                result.add(i.next());
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        if (result == null) 
+        {
+            result = Collections.EMPTY_LIST;
+        }
+        return result;
     }
 
     public String toXmlString()

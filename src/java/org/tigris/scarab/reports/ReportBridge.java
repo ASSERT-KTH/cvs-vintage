@@ -86,6 +86,7 @@ import org.tigris.scarab.om.RModuleOption;
 import org.tigris.scarab.om.AttributeValue;
 import org.tigris.scarab.om.AttributeOption;
 import org.tigris.scarab.om.AttributeOptionManager;
+import org.tigris.scarab.om.AttributeManager;
 import org.tigris.scarab.om.Attribute;
 import org.tigris.scarab.om.ScarabUser;
 import org.tigris.scarab.om.ActivityPeer;
@@ -466,11 +467,43 @@ public  class ReportBridge
     public void setMITList(MITList mitList)
         throws Exception
     {
-        reportDefn.setModuleIssueTypes(null);
-        setModule(null);
-        setIssueType(null);
-        if (mitList != null) 
+        if (mitList == null) 
         {
+            reportDefn.setModuleIssueTypes(null);
+            setModule(null);
+            setIssueType(null);
+        }
+        else 
+        {
+            boolean isOk = true;
+            // need to check that the changes are compatible with the currently
+            // selected criteria
+            for (Iterator roai = reportDefn
+                .retrieveAllReportOptionAttributes().iterator(); 
+                 roai.hasNext() && isOk;) 
+            {
+                isOk = mitList.isCommon( AttributeOptionManager.getInstance( 
+                    new NumberKey( ((ReportOptionAttribute)roai.next())
+                    .getOptionId().intValue())) );
+            }
+            for (Iterator ruai = reportDefn
+                .retrieveAllReportUserAttributes().iterator(); 
+                 ruai.hasNext() && isOk;) 
+            {
+                isOk = mitList.isCommon( AttributeManager.getInstance( 
+                    new NumberKey(((ReportUserAttribute)ruai.next())
+                    .getAttributeId().toString())) );
+            }
+            
+            if (!isOk) 
+            {
+                throw new IncompatibleMITListException();
+            }
+            
+            reportDefn.setModuleIssueTypes(null);
+            setModule(null);
+            setIssueType(null);
+
             for (Iterator i = mitList.getExpandedMITListItems().iterator(); i.hasNext();) 
             {
                 MITListItem item = (MITListItem)i.next();

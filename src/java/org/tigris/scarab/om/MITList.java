@@ -63,7 +63,7 @@ import org.tigris.scarab.services.security.ScarabSecurity;
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: MITList.java,v 1.16 2003/02/07 02:26:23 jon Exp $
+ * @version $Id: MITList.java,v 1.17 2003/02/15 02:33:18 jmcnally Exp $
  */
 public  class MITList 
     extends org.tigris.scarab.om.BaseMITList
@@ -349,28 +349,23 @@ public  class MITList
     }
 
     /**
-     * Checks all items after the first to see if they contain the attribute.
-     * It is assumed the attribute is included in the first item.
+     * Checks all items to see if they contain the attribute.
      *
      * @param attribute an <code>Attribute</code> value
      * @return a <code>boolean</code> value
      */
-    private boolean isCommon(Attribute attribute)
+    public boolean isCommon(Attribute attribute)
         throws Exception
     {
         boolean common = true;
         Iterator items = iterator();
-        while (items.hasNext()) 
+        while (items.hasNext() && common) 
         {
             MITListItem compareItem = (MITListItem)items.next();
             RModuleAttribute modAttr = getModule(compareItem)
                         .getRModuleAttribute(attribute, 
                                              getIssueType(compareItem));
-            if (modAttr == null || !modAttr.getActive())
-            {
-                common = false;
-                break;
-            }
+            common = modAttr != null && modAttr.getActive();
         }
         return common;
     }
@@ -379,10 +374,10 @@ public  class MITList
     public List getCommonNonUserAttributes()
         throws Exception
     {
-        if (size() < 2) 
+        if (size() < 1) 
         {
             throw new IllegalStateException("method should not be called on" +
-                " a list of one or less items.");
+                " an empty list.");
         }
         
         List matchingAttributes = new ArrayList();
@@ -407,10 +402,10 @@ public  class MITList
     public List getCommonOptionAttributes()
         throws Exception
     {
-        if (size() < 2) 
+        if (size() < 1) 
         {
             throw new IllegalStateException("method should not be called on" +
-                " a list of one or less items.");
+                " an empty list.");
         }
         
         List matchingAttributes = new ArrayList();
@@ -667,10 +662,10 @@ public  class MITList
     public List getCommonLeafRModuleOptions(Attribute attribute)
         throws Exception
     {
-        if (size() < 2) 
+        if (size() < 1) 
         {
             throw new IllegalStateException("method should not be called on" +
-                " a list of one or less items.");
+                " an empty list.");
         }
         
         List matchingRMOs = new ArrayList();
@@ -693,10 +688,10 @@ public  class MITList
     public List getCommonRModuleOptionTree(Attribute attribute)
         throws Exception
     {
-        if (size() < 2) 
+        if (size() < 1) 
         {
             throw new IllegalStateException("method should not be called on" +
-                " a list of one or less items.");
+                " an empty list.");
         }
         
         List matchingRMOs = new ArrayList();
@@ -719,10 +714,10 @@ public  class MITList
     public List getDescendantsUnion(AttributeOption option)
         throws Exception
     {
-        if (size() < 2) 
+        if (size() < 1) 
         {
             throw new IllegalStateException("method should not be called on" +
-                " a list of one or less items.");
+                " an empty list.");
         }
         
         List matchingRMOs = new ArrayList();
@@ -755,23 +750,17 @@ public  class MITList
      * @param option an <code>Attribute</code> value
      * @return a <code>boolean</code> value
      */
-    private boolean isCommon(AttributeOption option)
+    public boolean isCommon(AttributeOption option)
         throws Exception
     {
         boolean common = true;
         Iterator items = iterator();
-        // skip the first one
-        items.next();
-        while (items.hasNext()) 
+        while (items.hasNext() && common) 
         {
             MITListItem compareItem = (MITListItem)items.next();
             RModuleOption modOpt = getModule(compareItem)
                 .getRModuleOption(option, getIssueType(compareItem));
-            if (modOpt == null || !modOpt.getActive())
-            {
-                common = false;
-                break;
-            }
+            common = modOpt != null && modOpt.getActive();
         }
         return common;
     }

@@ -65,6 +65,7 @@ import org.tigris.scarab.om.MITListManager;
 import org.tigris.scarab.om.RModuleIssueTypeManager;
 import org.tigris.scarab.om.Scope;
 import org.tigris.scarab.reports.ReportBridge;
+import org.tigris.scarab.reports.IncompatibleMITListException;
 import org.tigris.scarab.util.Log;
 import org.tigris.scarab.util.ScarabConstants;
 import org.tigris.scarab.tools.ScarabRequestTool;
@@ -74,7 +75,7 @@ import org.tigris.scarab.tools.ScarabLocalizationTool;
  * This class is responsible for building a list of Module/IssueTypes.
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: DefineXModuleList.java,v 1.13 2003/02/04 11:25:59 jon Exp $
+ * @version $Id: DefineXModuleList.java,v 1.14 2003/02/15 02:33:18 jmcnally Exp $
  */
 public class DefineXModuleList extends RequireLoginFirstAction
 {
@@ -122,11 +123,30 @@ public class DefineXModuleList extends RequireLoginFirstAction
         throws Exception
     {
         doFinished(data, context);
-        ScarabRequestTool scarabR = getScarabRequestTool(context);
         ScarabLocalizationTool l10n = getLocalizationTool(context);
+        ScarabUser user = (ScarabUser)data.getUser();
+        ScarabRequestTool scarabR = getScarabRequestTool(context);
         ReportBridge report = scarabR.getReport();
-        MITList mitList = ((ScarabUser)data.getUser()).getCurrentMITList();
-        report.setMITList(mitList);
+        if (!report.isEditable(user)) 
+        {
+            scarabR.setAlertMessage(
+                l10n.get(ConfigureReport.NO_PERMISSION_MESSAGE));
+            setTarget(data, "reports,ReportList.vm");
+            return;
+        }
+
+        MITList mitList = user.getCurrentMITList();
+        try 
+        {
+            report.setMITList(mitList);
+            scarabR.setConfirmMessage(l10n.get(DEFAULT_MSG));
+        }
+        catch (IncompatibleMITListException e)
+        {
+            scarabR.setInfoMessage(l10n.get("IncompatibleMITListReport"));
+            setTarget(data, "reports,XModuleList.vm");
+        }
+
         if (!mitList.isSingleModule() && 
             Scope.MODULE__PK.equals(report.getScopeId())) 
         {

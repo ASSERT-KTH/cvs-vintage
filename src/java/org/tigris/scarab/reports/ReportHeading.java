@@ -171,70 +171,17 @@ public class ReportHeading
     {
         boolean result = false;
         Integer firstId = null;
-        if (getReportGroups() != null) 
+        Iterator options = consolidateReportOptionAttributes().iterator();
+        if (options.hasNext()) 
         {
             result = true;
-            for (Iterator i = getReportGroups().iterator(); 
-                 i.hasNext() && result;) 
+            for (; options.hasNext() && result;) 
             {
-                ReportGroup group = (ReportGroup)i.next();
-                if (group.getReportOptionAttributes() != null) 
+                try
                 {
-                    for (Iterator j = group.getReportOptionAttributes()
-                             .iterator(); j.hasNext() && result;)
-                    {
-                        try 
-                        {
-                            Integer id = new Integer(
-                                AttributeOptionManager.getInstance(
-                                new NumberKey(((ReportOptionAttribute)j.next())
-                                              .getOptionId().toString()))
-                                .getAttributeId().toString());
-                            if (firstId == null) 
-                            {
-                                firstId = id;
-                            }
-                            else 
-                            {
-                                result = firstId.equals(id);
-                            }
-                        }
-                        catch (Exception e)
-                        {
-                            Log.get().warn("Error on attribute id", e);
-                            result = false;
-                        }
-                    }
-                }
-                else if (group.getReportUserAttributes() != null) 
-                {
-                    for (Iterator j = group.getReportUserAttributes()
-                             .iterator(); j.hasNext() && result;)
-                    {
-                        Integer id = ((ReportUserAttribute)j.next())
-                            .getAttributeId();
-                        if (firstId == null) 
-                        {
-                            firstId = id;
-                        }
-                        else 
-                        {
-                            result = firstId.equals(id);
-                        }
-                    }
-                }
-            }
-        }
-        else if (getReportOptionAttributes() != null) 
-        {
-            result = true;
-            for (Iterator j = getReportOptionAttributes().iterator(); 
-                 j.hasNext() && result;)
-            {
-                try 
-                {
-                    Integer id = new Integer(AttributeOptionManager.getInstance(
-                        new NumberKey(((ReportOptionAttribute)j.next())
+                    Integer id = new Integer(
+                        AttributeOptionManager.getInstance(
+                        new NumberKey(((ReportOptionAttribute)options.next())
                                       .getOptionId().toString()))
                                              .getAttributeId().toString());
                     if (firstId == null) 
@@ -253,23 +200,129 @@ public class ReportHeading
                 }
             }
         }
-        else if (getReportUserAttributes() != null) 
+
+        if (firstId == null) 
         {
-            result = true;
-            for (Iterator j = getReportUserAttributes().iterator(); 
-                 j.hasNext() && result;)
+            Iterator users = consolidateReportUserAttributes().iterator();
+            if (users.hasNext()) 
             {
-                Integer id = ((ReportUserAttribute)j.next()).getAttributeId();
-                if (firstId == null) 
+                result = true;
+                for (; users.hasNext() && result;) 
                 {
-                    firstId = id;
-                }
-                else 
-                {
-                    result = firstId.equals(id);
+                    Integer id = ((ReportUserAttribute)users.next())
+                        .getAttributeId();
+                    if (firstId == null) 
+                    {
+                        firstId = id;
+                    }
+                    else 
+                    {
+                        result = firstId.equals(id);
+                    }
                 }
             }
         }
+        return result;
+    }
+
+
+    /**
+     * returns all the the ReportOptionAttributes involved in the heading
+     * including those in groups
+     *
+     * @return a <code>List</code> value
+     */
+    public List consolidateReportOptionAttributes()
+    {
+        List result = null;
+        List groups = getReportGroups();
+        if (groups != null && !groups.isEmpty()) 
+        {
+            for (Iterator i = groups.iterator(); i.hasNext();) 
+            {
+                ReportGroup group = (ReportGroup)i.next();
+                List options = group.getReportOptionAttributes();
+                if (options != null && !options.isEmpty()) 
+                {
+                    for (Iterator j = options.iterator(); j.hasNext();)
+                    {
+                        if (result == null) 
+                        {
+                            result = new ArrayList();
+                        }
+                        result.add(j.next());
+                    }
+                }
+            }
+        }
+        
+        List options = getReportOptionAttributes();
+        if (options != null && !options.isEmpty()) 
+        {
+            for (Iterator j = options.iterator(); j.hasNext();)
+            {
+                if (result == null) 
+                {
+                    result = new ArrayList();
+                }
+                result.add(j.next());
+            }
+        }
+        if (result == null) 
+        {
+            result = Collections.EMPTY_LIST;
+        }
+
+        return result;
+    }
+
+    /**
+     * returns all the the ReportUserAttributes involved in the heading
+     * including those in groups
+     *
+     * @return a <code>List</code> value
+     */
+    public List consolidateReportUserAttributes()
+    {
+        List result = null;
+        List groups = getReportGroups();
+        if (groups != null && !groups.isEmpty()) 
+        {
+            for (Iterator i = groups.iterator(); i.hasNext();) 
+            {
+                ReportGroup group = (ReportGroup)i.next();
+                List users = group.getReportUserAttributes();
+                if (users != null && !users.isEmpty()) 
+                {
+                    for (Iterator j = users.iterator(); j.hasNext();)
+                    {
+                        if (result == null) 
+                        {
+                            result = new ArrayList();
+                        }
+                        result.add(j.next());
+                    }
+                }
+            }
+        }
+        
+        List users = getReportUserAttributes();
+        if (users != null && !users.isEmpty()) 
+        {
+            for (Iterator j = users.iterator(); j.hasNext();)
+            {
+                if (result == null) 
+                {
+                    result = new ArrayList();
+                }
+                result.add(j.next());
+            }
+        }
+        if (result == null) 
+        {
+            result = Collections.EMPTY_LIST;
+        }
+
         return result;
     }
 

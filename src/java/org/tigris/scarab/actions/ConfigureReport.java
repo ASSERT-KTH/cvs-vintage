@@ -86,12 +86,12 @@ import org.apache.commons.betwixt.io.BeanWriter;
 /**
     This class is responsible for report generation forms
     @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
-    @version $Id: ConfigureReport.java,v 1.7 2003/02/07 00:55:45 jmcnally Exp $
+    @version $Id: ConfigureReport.java,v 1.8 2003/02/15 02:33:18 jmcnally Exp $
 */
 public class ConfigureReport 
     extends RequireLoginFirstAction
 {
-    private static final String NO_PERMISSION_MESSAGE = 
+    static final String NO_PERMISSION_MESSAGE = 
         "NoPermissionToEditReport";
 
     private static final String ADD_USER = "add_user";
@@ -1006,35 +1006,6 @@ public class ConfigureReport
         ((ScarabUser)data.getUser()).setCurrentMITList(
             getScarabRequestTool(context).getReport().getMITList());
         setTarget(data, "reports,XModuleList.vm");
-    }
-
-    public void doSavecrossmodulelist(RunData data, TemplateContext context)
-         throws Exception
-    {
-        ScarabUser user = (ScarabUser)data.getUser();
-        ScarabRequestTool scarabR = getScarabRequestTool(context);
-        ReportBridge report = scarabR.getReport();
-        if (!report.isEditable(user)) 
-        {
-            setNoPermissionMessage(context);
-            setTarget(data, "reports,ReportList.vm");
-            return;
-        }
-
-        MITList mitList = user.getCurrentMITList();
-        if (mitList == null) 
-        {
-            report.setModule(scarabR.getCurrentModule());
-            report.setIssueType(scarabR.getCurrentIssueType());
-        }
-        else 
-        {
-            report.setMITList(mitList);
-        }
-
-        // FIXME: do we need a confirmation message? -jss
-        
-        setTarget(data, "reports,ConfineDataset.vm");
     }
 
     public void doConfinedataset(RunData data, TemplateContext context)
