@@ -47,7 +47,7 @@ import javax.management.j2ee.CountStatistic;
  * @author <a href="mailto:docodan@mvcsoft.com">Daniel OConnor</a>
  * @author <a href="bill@burkecentral.com">Bill Burke</a>
  * @author <a href="mailto:andreas.schaefer@madplanet.com">Andreas Schaefer</a>
- * @version $Revision: 1.52 $
+ * @version $Revision: 1.53 $
  *
  * <p><b>Revisions:</b>
  *
@@ -139,7 +139,7 @@ public class EntityContainer
     * @param tx the transaction that associated entites will be stored
     * @throws Exception if an problem occures while storing the entities
     */
-   public static void synchronizeEntitiesWithinTransaction(Transaction tx) throws RemoteException 
+   public static void synchronizeEntitiesWithinTransaction(Transaction tx)
    {
       // If there is no transaction, there is nothing to synchronize.
       try
@@ -157,7 +157,7 @@ public class EntityContainer
       }
       catch (Exception ex)
       {
-         throw new RemoteException("synchronizeEntitiesWithTransaction failed");
+         throw new EJBException(ex);
       }
    }
    
