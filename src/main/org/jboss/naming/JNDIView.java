@@ -26,7 +26,7 @@ import javax.naming.NamingException;
 
 import org.jboss.ejb.Application;
 import org.jboss.ejb.Container;
-import org.jboss.ejb.ContainerFactoryMBean;
+import org.jboss.ejb.EJBDeployerMBean;
 import org.jboss.system.ServiceMBeanSupport;
 
 /**
@@ -39,7 +39,7 @@ import org.jboss.system.ServiceMBeanSupport;
  *
  * @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>.
  * @author Vladimir Blagojevic <vladimir@xisnext.2y.net>
- * @version $Revision: 1.13 $
+ * @version $Revision: 1.14 $
  */
 public class JNDIView 
    extends ServiceMBeanSupport 
@@ -75,10 +75,10 @@ public class JNDIView
         try
         {
             applications = (Iterator) server.invoke(
-               new ObjectName(ContainerFactoryMBean.OBJECT_NAME),
-               "getDeployedApplications",
-               new Object[0],
-               new String[0]);
+            new ObjectName(EJBDeployerMBean.OBJECT_NAME),
+            "getDeployedApplications",
+            new Object[] { },
+            new String[] { });
         }
         catch(Exception e)
         {
@@ -179,7 +179,7 @@ public class JNDIView
         try
         {
             applications = (Iterator) server.invoke(
-            new ObjectName(ContainerFactoryMBean.OBJECT_NAME),
+            new ObjectName(EJBDeployerMBean.OBJECT_NAME),
             "getDeployedApplications",
             new Object[] { },
             new String[] { });
