@@ -1,4 +1,4 @@
-$Id: README.txt,v 1.16 2001/08/20 22:02:46 jon Exp $
+$Id: README.txt,v 1.17 2001/08/23 01:21:29 jon Exp $
 
 Welcome to Scarab!
 
@@ -20,7 +20,11 @@ system running.
 | R E Q U I R E M E N T S                                               |
 -------------------------------------------------------------------------
 
-JDK 1.2 or higher.
+JDK 1.2 or higher       --> <http://java.sun.com/>
+Ant 1.3 or higher       --> <http://jakarta.apache.org/ant/>
+MySQL 3.22 or higher    --> <http://www.mysql.org/>
+Tomcat 4.0 or higher    --> <http://jakarta.apache.org/tomcat/>
+                            (Note: Tomcat is included with Scarab.)
 
 You must have the JAVA_HOME environment variable properly set to be the 
 location of your JDK installation directory.
@@ -28,9 +32,10 @@ location of your JDK installation directory.
 You must have Ant installed and ANT_HOME defined in your environment as
 well as ANT_HOME/bin in your PATH.
 
-MySQL is assumed to be installed and running with appropriately configured 
-access control setup (see below for more detail). We will be supporting a
-wide range of databases in the released version of Scarab, however, we are
+MySQL is assumed to be installed and running with appropriately
+configured access control setup (see below for more detail). You must
+have the MySQL binaries in your PATH. We will be supporting a wide range
+of databases in the released version of Scarab, however, we are
 currently doing development primarily on MySQL.
 
 All of the necessary .jar files for building and running Scarab are included 
