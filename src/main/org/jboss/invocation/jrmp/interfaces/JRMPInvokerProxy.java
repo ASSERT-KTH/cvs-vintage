@@ -11,6 +11,7 @@ import java.io.Externalizable;
 import java.io.IOException;
 import java.io.ObjectInput;
 import java.io.ObjectOutput;
+import java.rmi.ConnectException;
 import java.rmi.MarshalledObject;
 import java.rmi.NoSuchObjectException;
 import java.rmi.RemoteException;
@@ -32,7 +33,7 @@ import org.jboss.tm.TransactionPropagationContextFactory;
  * 
  * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
  * @author <a href="mailto:scott.stark@jboss.org">Scott Stark</a>
- * @version $Revision: 1.10 $
+ * @version $Revision: 1.11 $
  */
 public class JRMPInvokerProxy
    implements Invoker, Externalizable
@@ -65,6 +66,11 @@ public class JRMPInvokerProxy
       tpcFactory = tpcf;
    }
    
+   /**
+    * max retries on a ConnectException.  
+    */
+   public static int MAX_RETRIES = 10;
+
    /**
     * Exposed for externalization.
     */
@@ -122,33 +128,47 @@ public class JRMPInvokerProxy
       //  @todo: MOVE TO TRANSACTION
       mi.setTransactionPropagationContext(getTransactionPropagationContext());
          
-      try
-      { 
-         MarshalledObject result = (MarshalledObject) remoteInvoker.invoke(mi);
-         return result.get();
-      }
-      catch (ServerException ex)
+      // RMI seems to make a connection per invocation.
+      // If too many clients are making an invocation
+      // at same time, ConnectionExceptions happen
+      for (int i = 0; i < MAX_RETRIES; i++)
       {
-         // Suns RMI implementation wraps NoSuchObjectException in
-         // a ServerException. We cannot have that if we want
-         // to comply with the spec, so we unwrap here.
-         if (ex.detail instanceof NoSuchObjectException)
-         {
-            throw (NoSuchObjectException) ex.detail;
+         try
+         { 
+            MarshalledObject result = (MarshalledObject) remoteInvoker.invoke(mi);
+            return result.get();
          }
-         //likewise
-         if (ex.detail instanceof TransactionRolledbackException)
+         catch (ConnectException ce)
          {
-            throw (TransactionRolledbackException) ex.detail;
+            if (i + 1 < MAX_RETRIES)
+            {
+               Thread.sleep(1);
+               continue;
+            }
+            throw ce;
          }
-         /* Shouldn't we unwrap _all_ remote exceptions with this code? 
-         if (ex.detail instanceof RemoteException)
+         catch (ServerException ex)
          {
-            throw (RemoteException) ex.detail;
-         }
-         */
-         throw ex;
-      }  
+            // Suns RMI implementation wraps NoSuchObjectException in
+            // a ServerException. We cannot have that if we want
+            // to comply with the spec, so we unwrap here.
+            if (ex.detail instanceof NoSuchObjectException)
+               throw (NoSuchObjectException) ex.detail;
+            //likewise
+            if (ex.detail instanceof TransactionRolledbackException)
+            {
+               throw (TransactionRolledbackException) ex.detail;
+            }
+            /* Shouldn't we unwrap _all_ remote exceptions with this code? 
+               if (ex.detail instanceof RemoteException)
+               {
+               throw (RemoteException) ex.detail;
+               }
+            */
+            throw ex;
+         }  
+      }
+      throw new Exception("Unreachable statement");
    }
    
    /**
