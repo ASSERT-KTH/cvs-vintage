@@ -81,7 +81,7 @@ import org.tigris.gef.util.VectorSet;
  * 2)GoalListener implementation
  * ?
  *
- * $Id: ToDoPane.java,v 1.13 2003/04/11 21:47:14 alexb Exp $
+ * $Id: ToDoPane.java,v 1.14 2003/04/12 12:38:31 alexb Exp $
  */
 public class ToDoPane extends JPanel
     implements ItemListener,
@@ -184,8 +184,6 @@ public class ToDoPane extends JPanel
         
         _combo.addItemListener(this);
         
-        _tree.setRootVisible(false);
-        _tree.setShowsRootHandles(true);
         _tree.addTreeSelectionListener(this);
         _tree.setCellRenderer(new ToDoTreeRenderer());
         _tree.addMouseListener(this);
