@@ -91,23 +91,23 @@ public class ThinColumbaTheme extends DefaultMetalTheme {
 	}
 
 	public FontUIResource getMenuTextFont() {
-		return mainFontRessource;
+		return mainFontResource;
 	}
 
 	public FontUIResource getControlTextFont() {
-		return mainFontRessource;
+		return mainFontResource;
 	}
 
 	public FontUIResource getSubTextFont() {
-		return mainFontRessource;
+		return mainFontResource;
 	}
 
 	public FontUIResource getSystemTextFont() {
-		return mainFontRessource;
+		return mainFontResource;
 	}
 
 	public FontUIResource getUserTextFont() {
-		return mainFontRessource;
+		return mainFontResource;
 	}
         
 	public void addCustomEntriesToTable(UIDefaults table) {
