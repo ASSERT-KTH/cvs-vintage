@@ -1,50 +1,55 @@
-#set ($action = $link.setPage("QueryList.vm").setAction("QueryList").addPathInfo("nextTemplate", "QueryList.vm"))
-
+$page.setTitle("Stored Query List")
 #set ($module = $scarabR.CurrentModule)
 #set ($user = $data.User)
 
-#if (!$user.UserId)
-<P>   If you wish to see your personal queries or to edit your subscriptions to a query, please log in.
+<div class="app" id="stored query list">
+
+<h3>$page.Title</h3>
+
+#set ($noQueries = "false")
+## FIXME: the logic needs to be fleshed out better here.
 #if ($module)
-   #if ( $module.GlobalQueries.isEmpty() )
+   #if ($module.GlobalQueries.isEmpty())
      #set ($noQueries = "true")
    #end
 #else
     #set ($noQueries = "true")
 #end
-#elseif ( ($module.getPrivateQueries($user).isEmpty()) && ($module.GlobalQueries.isEmpty())) 
+#if (($module.getPrivateQueries($user).isEmpty()) && ($module.GlobalQueries.isEmpty())) 
    #set ($noQueries = "true")
 #end
 
 #if ($noQueries.equals("true"))
-    <div class="alert">There are no stored queries.</div>
+    <div class="alert">There are no stored queries. 
+    Please go to <a href="$link.setPage("AdvancedQuery.vm")">Advanced Query</a> 
+    to create a new stored query.</div>
 #else
 
+#set ($action = $link.setPage("QueryList.vm").setAction("QueryList").addPathInfo("nextTemplate", "QueryList.vm"))
 <form method="post" action="$action" >
-#if ($user.UserId)
-<P>
+<p>
 <div class="functnbar">
 <table cellpadding="0" cellspacing="0" border="0">
 <tr>
 <th>General functions</th>
-<td rowspan="2"><img src="../csi/images/seperator.gif" width="2" height="35" alt="" border="0" /></td>
+<td rowspan="2"><img src="/scarab/images/seperator.gif" width="2" height="35" alt="" border="0" /></td>
 
 <th>Select list item(s) to:</th>
-<td rowspan="2"><img src="../csi/images/seperator.gif" width="2" height="35" alt="" border="0" /></td>
+<td rowspan="2"><img src="/scarab/images/seperator.gif" width="2" height="35" alt="" border="0" /></td>
 
 </tr>
 <tr>
-<td><input type="submit" value="save" class="bttn" name="eventSubmit_doSavefrequencies" />&nbsp;<input type="submit" value="cancel" class="bttn" name="eventSubmit_doCancel" />&nbsp;<input type="submit" value="new" class="bttn" name="eventSubmit_doNewquery" /></td>                       
+<td><input type="submit" value="save" class="bttn" name="eventSubmit_doSavefrequencies" />&nbsp;
+<input type="submit" value="cancel" class="bttn" name="eventSubmit_doCancel" />&nbsp;
+<input type="submit" value="new" class="bttn" name="eventSubmit_doNewquery" /></td>                       
 
 <td><input type="submit" value="copy" class="bttn" name="eventSubmit_doCopyquery" />&nbsp;
    #if ($security.hasPermission("Item | Delete") || !$module.getPrivateQueries($user).isEmpty())
 <input type="submit" value="delete" class="bttn" name="eventSubmit_doDeletequeries" />
    #end
-&nbsp;<input type="submit" value="subscribe" class="bttn" name="eventSubmit_doSubscribe" />&nbsp;<input type="submit" value="unsubscribe" class="bttn" name="eventSubmit_doUnsubscribe" /></td>
+&nbsp;<input type="submit" value="subscribe" class="bttn" name="eventSubmit_doSubscribe" />&nbsp;
+<input type="submit" value="unsubscribe" class="bttn" name="eventSubmit_doUnsubscribe" /></td>
 </tr>
-#end
-
-
 
 
 ##      <p>&#171; previous | 1 of 1 | next &#187; </p>
@@ -58,17 +63,17 @@
         <img src="/scarab/images/icon_uparrow.gif" width="13" height="8" alt="sort" border="0" />
         <img src="/scarab/images/icon_downarrow.gif" width="13" height="8" alt="sort" border="0" />
         </th>
-        <th><a href="#" title="sort">subscr</a></th>
-        <th><a href="#" title="sort">subsr frequency</a></th>
-        <th><a href="#" title="sort">Query name</a></th>
-        <th><a href="#" title="sort">Query description</a></th>
-        <th><a href="#" title="sort">Location</a></th>
-        <th><a href="#" title="sort">initiated by</a></th>
+        <th>Subscr</th>
+        <th>Subscr Frequency</th>
+        <th>Query Name</th>
+        <th>Query Description</th>
+        <th>Location</th>
+        <th>Initiated By</th>
         </tr>
         
 #foreach ( $query in $module.getPrivateQueries($user) )
 
-         #rows ()
+         #indexedRows($velocityCount)
         <td><input type="checkbox" name="action_$query.QueryId"/></td>
         <td>&nbsp;</td>
         <td>&nbsp;</td>
@@ -88,7 +93,7 @@
 
 #foreach ( $query in $module.GlobalQueries )
 
-         #rows ()
+         #indexedRows($velocityCount)
         <td>#if ($user.UserId)
           <input type="checkbox" name="action_$query.QueryId"/></td>
             #else
@@ -127,7 +132,7 @@
            #end
          </td>
         #set ($createdUser = $scarabR.getUser($query.UserId.toString()) )
-         <td><a href="mailTo:$createdUser.Email">$createdUser.UserName</a></td>
+         <td><a href="mailTo:$createdUser.Email">$createdUser.FirstName $createdUser.LastName</a></td>
         </tr>
 #end
       </table>
@@ -136,15 +141,15 @@
 
  
 #if ($user.UserId)
-<P>
+<p>
 <div class="functnbar">
 <table cellpadding="0" cellspacing="0" border="0">
 <tr>
 <th>General functions</th>
-<td rowspan="2"><img src="../csi/images/seperator.gif" width="2" height="35" alt="" border="0" /></td>
+<td rowspan="2"><img src="/scarab/images/seperator.gif" width="2" height="35" alt="" border="0" /></td>
 
 <th>Select list item(s) to:</th>
-<td rowspan="2"><img src="../csi/images/seperator.gif" width="2" height="35" alt="" border="0" /></td>
+<td rowspan="2"><img src="/scarab/images/seperator.gif" width="2" height="35" alt="" border="0" /></td>
 
 </tr>
 <tr>
@@ -166,3 +171,6 @@
 #end
    </table>
   </form>
+
+</div>
+
