@@ -1,0 +1,333 @@
+$Id: recording-issues.txt,v 1.1 2002/10/16 02:43:55 jon Exp $
+
+This document details all of the database modifications for each
+'action'. In other words, if you want to create a dependency (the
+action), then you would follow the steps immediately below to insert the
+appropriate data into the right parts of the database schema. This
+document should eventually evolve into a set of tests which can be run
+to ensure that the right data gets inserted into the right places. There
+are several areas in this document where there are bugs in the current
+code. These areas are marked with a FIXME. While most of them are not
+critical to the execution of Scarab, they are critical when it comes to
+trying to export the data and re-import it back in because in some cases
+data is not being saved or it is being saved in the wrong places.
+
+This document is a work in progress and is currently incomplete, however
+the parts that are currently in the document can be considered complete.
+
+-------------------------------------------------------------------------
+
+Dependencies:
+
+    Create:
+    
+        One ActivitySet
+            AttachmentId = (Need to add a UI box to allow user to describe the change.)
+        
+        Activity 1
+            IssueId = SCB1 (100)
+            AttributeId = 0
+            TransactionId = ActivitySetId
+            OLD_VALUE = NULL
+            NEW_VALUE = 'SCB2' (issue id)
+            DESCRIPTION = 'Added 'blocking' child dependency on issue SCB2'
+            AttachmentId = null (see above requirement)
+
+        Activity 2
+            IssueId = SCB2 (101)
+            AttributeId = 0
+            TransactionId = ActivitySetId
+            OLD_VALUE = NULL
+            NEW_VALUE = 'SCB1' (issue id)
+            DESCRIPTION = 'Added 'blocking' parent dependency on issue SCB1'
+            AttachmentId = null (see above requirement)
+
+        Scarab_DEPEND
+        
+            OBSERVED_ID = 100
+            OBSERVER_ID = 101
+            DEPEND_TYPE_ID = 1 (blocking)
+            DELETED = 0
+
+    Delete:
+    
+        One ActivitySet
+            AttachmentId = (Need to add a UI box to allow user to describe the change.)
+        
+        Activity 1
+            IssueId = SCB1 (100)
+            AttributeId = 0
+            TransactionId = ActivitySetId
+            OLD_VALUE = 'SCB2' (issue id)
+            NEW_VALUE = NULL (issue id)
+            DESCRIPTION = 'Removed 'blocking' child dependency on issue SCB2'
+            AttachmentId = null (see above requirement)
+
+        Activity 2
+            IssueId = SCB2 (101)
+            AttributeId = 0
+            TransactionId = ActivitySetId
+            OLD_VALUE = 'SCB1' (issue id)
+            NEW_VALUE = NULL (issue id)
+            DESCRIPTION = 'Removed 'blocking' parent dependency on issue SCB1'
+            AttachmentId = null (see above requirement)
+
+        Scarab_DEPEND
+        
+            OBSERVED_ID = 100
+            OBSERVER_ID = 101
+            DEPEND_TYPE_ID = 1 (blocking)
+            DELETED = 1
+
+URL:
+
+    Create:
+
+        One ActivitySet
+            AttachmentId = (Need to add a UI box to allow user to describe the change.)
+        
+        Activity 1
+            IssueId = SCB1 (100)
+            AttributeId = 0
+            TransactionId = ActivitySetId
+            OLD_VALUE = NULL
+            NEW_VALUE = NULL
+            DESCRIPTION = 'Added URL 'StudioZ.tv'
+            AttachmentId = 
+                ATTACHMENT_TYPE_ID = 3
+                ATTACHMENT_NAME = 'StudioZ.tv'
+                ATTACHMENT_DATA = 'http://studioz.tv'
+                ATTACHMENT_FILE_PATH = null
+                ATTACHMENT_MIME_TYPE = text/plain
+                MODIFIED_BY = null
+                CREATED_BY = SET to creator
+                MODIFIED_DATE = null
+                CREATED_DATE = SET to cre date
+                DELETED = 0
+
+    Update:
+
+        One ActivitySet
+            AttachmentId = (Need to add a UI box to allow user to describe the change.)
+        
+        Activity 1
+            IssueId = SCB1 (100)
+            AttributeId = 0
+            TransactionId = ActivitySetId
+            OLD_VALUE = NULL
+            NEW_VALUE = NULL
+            DESCRIPTION = 'Modified URL set 'StudioZ.tv' to 'Foo Bar'
+            AttachmentId = id of created attachment
+                ATTACHMENT_TYPE_ID = 3
+                ATTACHMENT_NAME = 'Foo Bar'
+                ATTACHMENT_DATA = 'http://foo.bar'
+                ATTACHMENT_FILE_PATH = null
+                ATTACHMENT_MIME_TYPE = text/plain
+                MODIFIED_BY = SET to modified by
+                CREATED_BY = DO NOT TOUCH
+                MODIFIED_DATE = SET to mod date
+                CREATED_DATE = DO NOT TOUCH
+                DELETED = 0
+
+    Delete:
+
+        One ActivitySet
+            AttachmentId = (Need to add a UI box to allow user to describe the change.)
+        
+        Activity 1
+            IssueId = SCB1 (100)
+            AttributeId = 0
+            TransactionId = ActivitySetId
+            OLD_VALUE = NULL
+            NEW_VALUE = NULL
+            DESCRIPTION = 'Deleted URL 'Foo Bar'
+            AttachmentId =  id of created attachment
+                ATTACHMENT_TYPE_ID = 3
+                ATTACHMENT_NAME = 'Foo Bar'
+                ATTACHMENT_DATA = 'http://foo.bar'
+                ATTACHMENT_FILE_PATH = null
+                ATTACHMENT_MIME_TYPE = text/plain
+                MODIFIED_BY = SET to modified by
+                CREATED_BY = DO NOT TOUCH
+                MODIFIED_DATE = SET to mod date
+                CREATED_DATE = DO NOT TOUCH
+                DELETED = 1
+
+Comments:
+
+    Create:
+    
+        One ActivitySet
+            AttachmentId = null
+        
+        Activity 1
+            IssueId = SCB1 (100)
+            AttributeId = 0
+            TransactionId = ActivitySetId
+            OLD_VALUE = NULL
+            NEW_VALUE = NULL
+            DESCRIPTION = 'Added comment 'First few words...'
+            AttachmentId = 
+                ATTACHMENT_TYPE_ID = 2
+                ATTACHMENT_NAME = comment (this column can't be null)
+                ATTACHMENT_DATA = 'First few words and then the rest of the comment'
+                ATTACHMENT_FILE_PATH = null
+                ATTACHMENT_MIME_TYPE = text/plain
+                MODIFIED_BY = null
+                CREATED_BY = SET to creator
+                MODIFIED_DATE = null
+                CREATED_DATE = SET to cre date
+                DELETED = 0
+
+    Update:
+    
+        One ActivitySet
+            AttachmentId = null
+        
+        Activity 1
+            IssueId = SCB1 (100)
+            AttributeId = 0
+            TransactionId = ActivitySetId
+            OLD_VALUE = NULL
+            NEW_VALUE = NULL
+            DESCRIPTION = 'Modified comment 'First few words...'
+            AttachmentId = id of created attachment
+                ATTACHMENT_TYPE_ID = 2
+                ATTACHMENT_NAME = comment (this column can't be null)
+                ATTACHMENT_DATA = 'This is now a modified comment'
+                ATTACHMENT_FILE_PATH = null
+                ATTACHMENT_MIME_TYPE = text/plain
+                MODIFIED_BY = SET to modified by
+                CREATED_BY = DO NOT TOUCH
+                MODIFIED_DATE = SET to mod date
+                CREATED_DATE = DO NOT TOUCH
+                DELETED = 0
+
+    Delete:
+    
+        One ActivitySet
+            AttachmentId = null
+        
+        Activity 1
+            IssueId = SCB1 (100)
+            AttributeId = 0
+            TransactionId = ActivitySetId
+            OLD_VALUE = NULL
+            NEW_VALUE = NULL
+            DESCRIPTION = 'Deleted comment 'This is now a modified comment...'
+            AttachmentId = id of created attachment
+                ATTACHMENT_TYPE_ID = 2
+                ATTACHMENT_NAME = comment (this column can't be null)
+                ATTACHMENT_DATA = 'This is now a modified comment'
+                ATTACHMENT_FILE_PATH = null
+                ATTACHMENT_MIME_TYPE = text/plain
+                MODIFIED_BY = SET to modified by
+                CREATED_BY = DO NOT TOUCH
+                MODIFIED_DATE = SET to mod date
+                CREATED_DATE = DO NOT TOUCH
+                DELETED = 1
+
+User assignment:
+
+    Create:
+
+        One ActivitySet (FIXME: currently one ActivitySet per user assigned)
+            AttachmentId = comment if provided otherwise null
+                ATTACHMENT_TYPE_ID = 4
+                ATTACHMENT_NAME = comment (this column can't be null)
+                ATTACHMENT_DATA = 'reason for the assignment.'
+                ATTACHMENT_FILE_PATH = null
+                ATTACHMENT_MIME_TYPE = text/plain
+                MODIFIED_BY = NULL
+                CREATED_BY = user doing assignment (FIXME: currently being set to user being assigned)
+                MODIFIED_DATE = NULL
+                CREATED_DATE = SET to cre date
+                DELETED = 0
+
+        SCARAB_ISSUE_ATTRIBUTE_VALUE (one entry for each user assigned):
+            IssueId = SCB1 (100)
+            AttributeId = Assigned to (102) *VARIES depending on popup menu*
+            NUMERIC_VALUE = 0
+            OPTION_ID = NULL
+            USER_ID = the user's id
+            VALUE = the user's login_name
+            DELETED = 0
+
+        Activity N (one activity for each user assigned and goes into one activityset for all...see FIXME)
+            IssueId = SCB1 (100)
+            AttributeId = Assigned to (102) *VARIES depending on popup menu*
+            TransactionId = ActivitySetId
+            OLD_USER_ID = NULL
+            NEW_USER_ID = userid
+            DESCRIPTION = 'Assigned to set to 'derekewla''
+            AttachmentId = NULL (FIXME: one attachment per activity is being created. these are duplicates. it should be one attachment to the activityset, not the activity.)
+            END_DATE = NULL (FIXME: currently is being set, but if multiple, last date isn't being set)
+
+    Update:
+
+        One ActivitySet
+            AttachmentId = comment if provided otherwise null
+                ATTACHMENT_TYPE_ID = 4
+                ATTACHMENT_NAME = comment (this column can't be null)
+                ATTACHMENT_DATA = 'reason for the modification'
+                ATTACHMENT_FILE_PATH = null
+                ATTACHMENT_MIME_TYPE = text/plain
+                MODIFIED_BY = NULL
+                CREATED_BY = user doing assignment (FIXME: currently being set to user being assigned)
+                MODIFIED_DATE = NULL
+                CREATED_DATE = SET to cre date
+                DELETED = 0
+
+        SCARAB_ISSUE_ATTRIBUTE_VALUE (uses existing data in db):
+            IssueId = SCB1 (100)
+            AttributeId = Assigned cc (100) *VARIES depending on popup menu*
+            NUMERIC_VALUE = 0
+            OPTION_ID = NULL
+            USER_ID = the user's id
+            VALUE = the user's login_name
+            DELETED = 0
+
+        Activity N (one activity for each user updated)
+            IssueId = SCB1 (100)
+            AttributeId = Assigned cc (100) *VARIES depending on popup menu*
+            TransactionId = ActivitySetId
+            OLD_USER_ID = NULL
+            NEW_USER_ID = userid
+            DESCRIPTION = 'Assigned cc set to 'derekewla''
+            AttachmentId = NULL (FIXME: one attachment per activity is being created. these are duplicates. it should be one attachment to the activityset, not the activity.)
+            END_DATE = NULL (FIXME: currently is being set, but if multiple, last date isn't being set)
+
+    Delete:
+
+        One ActivitySet (FIXME: currently one ActivitySet per user assigned)
+            AttachmentId = comment if provided otherwise null
+                ATTACHMENT_TYPE_ID = 4
+                ATTACHMENT_NAME = comment (this column can't be null)
+                ATTACHMENT_DATA = 'reason for the modification'
+                ATTACHMENT_FILE_PATH = null
+                ATTACHMENT_MIME_TYPE = text/plain
+                MODIFIED_BY = NULL
+                CREATED_BY = user doing assignment (FIXME: currently being set to user being assigned)
+                MODIFIED_DATE = NULL
+                CREATED_DATE = SET to cre date
+                DELETED = 0
+
+        SCARAB_ISSUE_ATTRIBUTE_VALUE (uses existing data in db):
+            IssueId = SCB1 (100)
+            AttributeId = Assigned to (102) *VARIES depending on popup menu*
+            NUMERIC_VALUE = 0
+            OPTION_ID = NULL
+            USER_ID = the user's id
+            VALUE = the user's login_name
+            DELETED = 1
+
+        Activity N (one activity for each user removed and goes into one activityset for all...see FIXME)
+            IssueId = SCB1 (100)
+            AttributeId = Assigned to (102) *VARIES depending on popup menu*
+            TransactionId = ActivitySetId
+            OLD_USER_ID = userid
+            NEW_USER_ID = NULL
+            DESCRIPTION = 'User turbine@tigris.org deleted user ddd from Assigned to'
+            AttachmentId = NULL (FIXME: one attachment per activity is being created. these are duplicates. it should be one attachment to the activityset, not the activity.)
+            END_DATE = NULL (FIXME: currently is being set, but if multiple, last date isn't being set)
+
