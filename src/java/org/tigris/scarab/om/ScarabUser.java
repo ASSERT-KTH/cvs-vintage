@@ -68,7 +68,7 @@ import org.tigris.scarab.baseom.peer.*;
     implementation needs.
 
     @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
-    @version $Id: ScarabUser.java,v 1.10 2001/01/23 07:30:32 jon Exp $
+    @version $Id: ScarabUser.java,v 1.11 2001/01/23 22:43:23 jmcnally Exp $
 */
 public class ScarabUser extends org.apache.turbine.om.security.TurbineUser
 {    
@@ -241,8 +241,11 @@ public class ScarabUser extends org.apache.turbine.om.security.TurbineUser
     public Vector getModules() throws Exception
     {
         Criteria crit = new Criteria(3)
-            .add(ScarabRModuleUserPeer.USER_ID, getPrimaryKeyAsLong())
-            .add(ScarabRModuleUserPeer.DELETED, false);
+            .add(ScarabRModuleUserPeer.USER_ID, getPrimaryKey())
+            .add(ScarabRModuleUserPeer.DELETED, false)
+            .addJoin(ScarabModulePeer.MODULE_ID, 
+                     ScarabRModuleUserPeer.MODULE_ID);
+
         Vector srmvs = ScarabRModuleUserPeer.doSelectJoinScarabModule(crit);
         // each srmvs represents a unique ScarabModule, so we do not 
         // need to check for duplicates.  Just stuff into the new Vector.

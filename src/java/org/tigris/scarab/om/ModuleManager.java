@@ -65,7 +65,7 @@ import org.apache.turbine.services.security.*;
     This class contains code for dealing with Modules.
 
     @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
-    @version $Id: ModuleManager.java,v 1.5 2001/01/23 19:50:20 jon Exp $
+    @version $Id: ModuleManager.java,v 1.6 2001/01/23 22:43:23 jmcnally Exp $
 */
 public class ModuleManager
 {
@@ -144,11 +144,16 @@ public class ModuleManager
             ScarabModule sm = (ScarabModule) e.nextElement();
             names[i] = new Integer(sm.getPrimaryKeyAsInt()).toString();
             values[i] = sm.getName();
-            if (selectedModule != null && sm.getPrimaryKeyAsInt() == selectedModule.intValue())
-                selected[i] = true;
-            else
-                selected[i] = false;    
-            i++;
+
+            if (selectedModule != null
+                && sm.getPrimaryKeyAsInt() == selectedModule.intValue())
+            {
+                selected[i++] = true;
+            }
+            else 
+            {
+                selected[i++] = false;       
+            }
         }
         // store the first project as the "default" project
         if ((selectedModule == null || selectedModule.intValue() <= 0) && names.length > 0)
@@ -180,7 +185,7 @@ public class ModuleManager
         String desc = data.getParameters().getString("project_description",null);
 
         ScarabModule sm = new ScarabModule();
-        sm.setId(project_id);
+        sm.setPrimaryKey(project_id);
         sm.setName( StringUtils.makeString( name ));
         sm.setDescription( StringUtils.makeString( desc ));
         sm.setUrl( StringUtils.makeString(data.getParameters().getString("project_url") ));
@@ -254,9 +259,9 @@ public class ModuleManager
         ScarabModulePeer.doInsert(module);
 
         // you are related to a new project
-        Criteria crit = new Criteria();
-        crit.add (ScarabRModuleUserPeer.MODULE_ID, module.getPrimaryKeyAsLong());
-        crit.add (ScarabRModuleUserPeer.USER_ID, 
+        Criteria crit = new Criteria(4)
+            .add (ScarabRModuleUserPeer.MODULE_ID, module.getPrimaryKey())
+            .add (ScarabRModuleUserPeer.USER_ID, 
                   ((org.apache.turbine.om.security.TurbineUser)
                    data.getUser()).getPrimaryKeyAsLong());
         ScarabRModuleUserPeer.doInsert(crit);

@@ -63,7 +63,7 @@ import org.tigris.scarab.util.*;
 
     @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
     @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
-    @version $Id: Module.java,v 1.2 2001/01/16 08:31:39 jon Exp $
+    @version $Id: Module.java,v 1.3 2001/01/23 22:43:23 jmcnally Exp $
 */
 public class Module extends BaseScarabObject
 {
@@ -116,12 +116,12 @@ public class Module extends BaseScarabObject
     
     public Object getId()
     {
-        return scarabModule.getId();
+        return scarabModule.getPrimaryKey();
     }
 
     public void setId(Object id) throws Exception
     {
-        scarabModule.setId(id);
+        scarabModule.setPrimaryKey(id);
     }
 
     /**
@@ -165,6 +165,20 @@ public class Module extends BaseScarabObject
     public void setUrl(String url)
     {
         scarabModule.setUrl(url);
+    }
+    /**
+        get the parent_id of the project
+    */
+    public int getParentId()
+    {
+        return scarabModule.getParentId();
+    }
+    /**
+        set the parent_id of the project
+    */
+    public void setParentId(int id) throws Exception
+    {
+        scarabModule.setParentId(id);
     }
     /**
         get the owner_id of the project
@@ -221,10 +235,7 @@ public class Module extends BaseScarabObject
     public String getQueryKey()
     {
         StringBuffer qs = new StringBuffer("Module[");
-        if ( !scarabModule.isNew() ) 
-        {
-            qs.append(scarabModule.getId().toString());
-        }
+        qs.append(scarabModule.getPrimaryKey().toString());
         return qs.append("]").toString();
     }
 

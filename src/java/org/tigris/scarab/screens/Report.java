@@ -46,28 +46,71 @@ package org.tigris.scarab.screens;
  * individuals on behalf of Collab.Net.
  */ 
 
-// Velocity Stuff 
+import java.util.*;
+
+// Velocity  Stuff 
 import org.apache.turbine.services.velocity.*; 
 import org.apache.velocity.*; 
 import org.apache.velocity.context.*; 
+
 // Turbine Stuff 
 import org.apache.turbine.modules.*; 
 import org.apache.turbine.modules.screens.*; 
 import org.apache.turbine.util.*; 
+
+// Scarab Stuff
+import org.tigris.scarab.om.*;
+import org.tigris.scarab.baseom.*;
+import org.tigris.scarab.baseom.peer.*;
 
 /**
     This class is responsible for building the Context up
     for the Report Screen.
 
     @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
-    @version $Id: Report.java,v 1.2 2001/01/04 03:02:11 jon Exp $
+    @version $Id: Report.java,v 1.3 2001/01/23 22:43:24 jmcnally Exp $
 */
 public class Report extends VelocityScreen
 {
     /**
         builds up the context for display of variables on the page.
     */
-    public void doBuildTemplate( RunData data, Context context ) throws Exception 
+    public void doBuildTemplate( RunData data, Context context ) 
+        throws Exception 
     {
+        HashMap classes = new HashMap();
+        context.put("classes", classes);
+
+        HashMap report = new HashMap();
+        context.put("report", report);
+        
+        Module module = new Module( ScarabModulePeer.retrieveByPK(5) );
+
+        ScarabUser user = new ScarabUser();
+        user.setPrimaryKey(new Integer(2));
+        user.setCurrentModule(module);
+        context.put("user", user );
+
+        System.out.println("getting user modules");
+        user.getModules();
+        System.out.println("done");
+
+
+        classes.put("Module", module);
+        
+        Issue issue = new Issue();
+        report.put( "issue", issue );
+        ScarabIssue sIssue = issue.getScarabIssue();
+        sIssue.setModuleId( module.getScarabModule().getModuleId() );
+        sIssue.setModifiedBy(user.getPrimaryKeyAsInt());
+        sIssue.setCreatedBy(user.getPrimaryKeyAsInt());
+        java.util.Date now = new java.util.Date();
+        sIssue.setModifiedDate(now);
+        sIssue.setCreatedDate(now);
+        sIssue.setDeleted(false);
     }
 }
+
+
+
+

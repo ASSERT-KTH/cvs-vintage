@@ -62,7 +62,7 @@ import org.tigris.scarab.system.*;
     for the Default Screen.
 
     @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
-    @version $Id: Default.java,v 1.3 2001/01/15 07:50:59 jon Exp $
+    @version $Id: Default.java,v 1.4 2001/01/23 22:43:24 jmcnally Exp $
 */
 public class Default extends VelocityScreen
 {
@@ -75,3 +75,5 @@ public class Default extends VelocityScreen
         //    context.put ("scarab", new ScarabSystem());
     }
 }
+
+

@@ -50,20 +50,21 @@ package org.tigris.scarab.om;
 import java.util.*;
 
 // Turbine
-import org.tigris.scarab.om.BaseScarabObject;
-import org.tigris.scarab.baseom.*;
-import org.tigris.scarab.baseom.peer.*;
 import org.tigris.scarab.util.*;
 import org.apache.turbine.util.*;
 import org.apache.turbine.util.db.*;
 // import org.tigris.scarab.om.project.peer.*;
 
+import org.tigris.scarab.om.BaseScarabObject;
+import org.tigris.scarab.attribute.Attribute;
+import org.tigris.scarab.baseom.*;
+import org.tigris.scarab.baseom.peer.*;
 
 /**
     This is an object representation of the Issue table.
 
     @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
-    @version $Id: Issue.java,v 1.2 2001/01/16 08:31:39 jon Exp $
+    @version $Id: Issue.java,v 1.3 2001/01/23 22:43:23 jmcnally Exp $
 */
 public class Issue extends BaseScarabObject
 {
@@ -116,12 +117,12 @@ public class Issue extends BaseScarabObject
     
     public Object getId()
     {
-        return scarabIssue.getId();
+        return scarabIssue.getPrimaryKey();
     }
 
     public void setId(Object id) throws Exception
     {
-        scarabIssue.setId(id);
+        scarabIssue.setPrimaryKey(id);
     }
 /*
     /**
@@ -143,6 +144,13 @@ public class Issue extends BaseScarabObject
     }
 */    
 
+    public void addAttribute(Attribute attribute) throws Exception
+    {
+        ScarabIssueAttributeValue sAtt = 
+            attribute.getScarabIssueAttributeValue();
+        scarabIssue.addScarabIssueAttributeValues(sAtt);
+    }
+
     /**
      * Should contain AttValues for the Issue as well as empty AttValues
      * that are relevant for the module, but have not been set for
@@ -153,7 +161,8 @@ public class Issue extends BaseScarabObject
         return null;
     }
 
-    public HashMap getSettedAttributes() throws Exception
+
+    public HashMap getAttributes() throws Exception
     {
         Criteria crit = new Criteria(2)
             .add(ScarabIssueAttributeValuePeer.DELETED, false);        
@@ -162,43 +171,47 @@ public class Issue extends BaseScarabObject
         HashMap map = new HashMap( (int)(1.25*siaValues.size() + 1) );
         for ( int i=0; i<siaValues.size(); i++ ) 
         {
-            ScarabIssueAttributeValue siaValue = 
-                (ScarabIssueAttributeValue) siaValues.get(i);
-            // should be optimized using cached attributes. FIXME!!
-            String name = siaValue.getScarabAttribute().getName();
-            map.put(name.toUpperCase(), siaValue);
+            Attribute att = Attribute.getInstance(
+               (ScarabIssueAttributeValue) siaValues.get(i) );
+            String name = att.getName();
+            map.put(name.toUpperCase(), att);
         }
 
         return map;
     }
 
-    public HashMap getModuleRelevantAttributes() throws Exception
+    public HashMap getModuleAttributes() throws Exception
     {
         Criteria crit = new Criteria(2)
             .add(ScarabRModuleAttributePeer.DELETED, false);        
         Vector moduleAttributes = 
             scarabIssue.getScarabModule().getScarabRModuleAttributes(crit);
-
-        HashMap siaValuesMap = getSettedAttributes();
+        HashMap siaValuesMap = getAttributes();
 
         HashMap map = new HashMap( (int)(1.25*moduleAttributes.size() + 1) );
+try{
         for ( int i=0; i<moduleAttributes.size(); i++ ) 
         {
-            ScarabRModuleAttribute srModAttr = 
-                (ScarabRModuleAttribute) moduleAttributes.get(i);
-            // should be optimized using cached attributes. FIXME!!
-            String key = srModAttr.getScarabAttribute().getName().toUpperCase();
-       
+            Attribute att = Attribute.getInstance(
+               (ScarabRModuleAttribute) moduleAttributes.get(i), 
+               this.getScarabIssue());
+            String key = att.getName().toUpperCase();
+
             if ( siaValuesMap.containsKey(key) ) 
             {
                 map.put( key, siaValuesMap.get(key) );
             }
             else 
             {
-                map.put( key, new ScarabIssueAttributeValue() ); 
+                ScarabIssueAttributeValue siav = 
+                    new ScarabIssueAttributeValue();
+                siav.setScarabAttribute(att.getScarabAttribute());
+                siav.setScarabIssue(this.getScarabIssue());
+                att.setScarabIssueAttributeValue(siav);
+                map.put( key, att ); 
             }             
         }
-
+}catch(Exception e){e.printStackTrace();}
         return map;
     }
 
@@ -243,10 +256,7 @@ public class Issue extends BaseScarabObject
     public String getQueryKey()
     {
         StringBuffer qs = new StringBuffer("Issue[");
-        if ( !scarabIssue.isNew() ) 
-        {
-            qs.append(scarabIssue.getId().toString());
-        }
+        qs.append(scarabIssue.getPrimaryKey().toString());
         return qs.append("]").toString();
     }
 
