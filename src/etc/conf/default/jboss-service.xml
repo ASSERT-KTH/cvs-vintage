@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE server>
-<!-- $Id: jboss-service.xml,v 1.48 2002/04/25 06:11:59 lsanders Exp $ -->
+<!-- $Id: jboss-service.xml,v 1.49 2002/05/24 21:24:44 starksm Exp $ -->
 
 <!-- ===================================================================== -->
 <!--                                                                       -->
@@ -17,6 +17,14 @@
      | then there is no need to list the files and it should commented
    -->
   <classpath codebase="lib" archives="*"/>
+
+  <!-- ==================================================================== -->
+  <!-- Log4j Initialization                                                 -->
+  <!-- ==================================================================== -->
+  <mbean code="org.jboss.logging.Log4jService"
+    name="jboss.system:type=Log4jService,service=Logging">
+    <attribute name="ConfigurationURL">resource:log4j.xml</attribute>
+  </mbean>
 
   <!-- ==================================================================== -->
   <!-- Class Loading                                                        -->
