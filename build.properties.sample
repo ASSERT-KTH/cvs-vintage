@@ -6,7 +6,7 @@
 # modules that Tomcat depends on.  Copy this file to "build.properties"
 # in the top-level source directory, and customize it as needed.
 #
-# $Id: build.properties.sample,v 1.1 2002/04/08 01:56:51 larryi Exp $
+# $Id: build.properties.sample,v 1.2 2002/06/11 12:13:22 hgomez Exp $
 # -----------------------------------------------------------------------------
 
 
@@ -42,4 +42,24 @@ jtc.http11.lib=${jtc.http11.home}/build/lib
 # ----- (optional) Jakarta Commons Logging (required by Http11) -----
 commons-logging.home=../commons-logging-1.0
 commons-logging.lib=${commons-logging.home}
-commond-logging.jar=${commons-logging.lib}/commons-logging.jar
+commons-logging.jar=${commons-logging.lib}/commons-logging.jar
+
+# ----- (optional) Jakarta Commons DB Pool (required by future PooledJDBCRealm ) -----
+commons-dbcp.home=../commons-dbcp-1.0
+commons-dbcp.lib=${commons-dbcp.home}
+commons-dbcp.jar=${commons-dbcp.lib}/commons-dbcp.jar
+
+# ----- (optional) Jakarta Commons Pool (required by Commons DBCP) -----
+commons-pool.home=../commons-pool-1.0
+commons-pool.lib=${commons-pool.home}
+commons-pool.jar=${commons-pool.lib}/commons-pool.jar
+
+# ----- (optional) Jakarta Commons Collections (required by Commons Pool)  -----
+commons-collections.home=../commons-collections-2.0
+commons-collections.lib=${commons-collections.home}
+commons-collections.jar=${commons-collections.lib}/commons-collections.jar
+
+# ----- ant lib for tomcat-ant (Jspc task) -----
+ant.home=${jakarta-ant}
+ant.bin=${ant.home}/bin
+ant.lib=${ant.home}/lib
