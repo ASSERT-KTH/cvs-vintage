@@ -1,12 +1,13 @@
-/*
-* JBoss, the OpenSource J2EE webOS
-*
-* Distributable under LGPL license.
-* See terms of license at gnu.org.
-*/
+/***************************************
+ *                                     *
+ *  JBoss: The OpenSource J2EE WebOS   *
+ *                                     *
+ *  Distributable under LGPL license.  *
+ *  See terms of license at gnu.org.   *
+ *                                     *
+ ***************************************/
+
 package org.jboss.deployment;
-
-
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -24,42 +25,46 @@ import java.util.Set;
 import java.util.Vector;
 import java.util.jar.JarFile;
 import java.util.jar.Manifest;
+
 import javax.management.ObjectName;
+
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
-import org.jboss.logging.Logger;
-import org.jboss.metadata.ApplicationMetaData;
-import org.jboss.metadata.BeanMetaData;
-import org.jboss.system.ServiceLibraries;
-import org.jboss.system.UnifiedClassLoader;
+
 import org.w3c.dom.Document;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
+import org.jboss.logging.Logger;
+import org.jboss.system.ServiceLibraries;
+import org.jboss.system.UnifiedClassLoader;
+
 /**
-* Service Deployment Info .
-*
-* Every deployment (even the J2EE ones) should be seen at some point as 
-* Service Deployment info
-*
-* @see       org.jboss.system.Service
-* @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
-* @author <a href="mailto:David.Maplesden@orion.co.nz">David Maplesden</a>
-* @author <a href="mailto:d_jencks@users.sourceforge.net">David Jencks</a>
-* @author <a href="mailto:daniel.schulze@telkel.com">Daniel Schulze</a>
-* @author <a href="mailto:Christoph.Jung@infor.de">Christoph G. Jung</a>
-* @author <a href="mailto:scott.stark@jboss.org">Scott Stark</a>
-* @version   $Revision: 1.10 $ <p>
-*
-*      <b>20011211 marc fleury:</b>
-*      <ul>
-*        <li>initial import based on d-jenck deployement info inner class in DeploymentMBeanSupport   
-*      </ul>
-*      <b>20011225 marc fleury:</b>
-*      <ul>
-*        <li>Unification of deployers and merge with Jung/Schulze's Deployment.java   
-*      </ul>
-*/
+ * Service Deployment Info .
+ *
+ * Every deployment (even the J2EE ones) should be seen at some point as 
+ * Service Deployment info
+ *
+ * @see org.jboss.system.Service
+ *
+ * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
+ * @author <a href="mailto:David.Maplesden@orion.co.nz">David Maplesden</a>
+ * @author <a href="mailto:d_jencks@users.sourceforge.net">David Jencks</a>
+ * @author <a href="mailto:daniel.schulze@telkel.com">Daniel Schulze</a>
+ * @author <a href="mailto:Christoph.Jung@infor.de">Christoph G. Jung</a>
+ * @author <a href="mailto:scott.stark@jboss.org">Scott Stark</a>
+ * @version   $Revision: 1.11 $ <p>
+ *
+ * <b>20011211 marc fleury:</b>
+ * <ul>
+ *    <li>initial import based on d-jenck deployement info inner class in DeploymentMBeanSupport   
+ * </ul>
+ *
+ * <b>20011225 marc fleury:</b>
+ * <ul>
+ *    <li>Unification of deployers and merge with Jung/Schulze's Deployment.java   
+ * </ul>
+ */
 public class DeploymentInfo 
 {   
    // Variables ------------------------------------------------------------
@@ -135,7 +140,7 @@ public class DeploymentInfo
    public ObjectName deployedObject;
    
    public DeploymentInfo(URL url, DeploymentInfo parent)
-   throws DeploymentException
+      throws DeploymentException
    { 
       // The key url the deployment comes from 
       this.url = url;
@@ -195,9 +200,9 @@ public class DeploymentInfo
    
    
    /**
-   * getManifest returns (if present) the deployment's manifest
-   * it is lazy loaded to work from the localURL
-   */
+    * getManifest returns (if present) the deployment's manifest
+    * it is lazy loaded to work from the localURL
+    */
    public Manifest getManifest() 
    {
       try 
@@ -258,77 +263,6 @@ public class DeploymentInfo
       return f.delete();
    }
 
-   /** A method that walks through the DeploymentInfo hiearchy looking
-    *for the ejb-name that corresponds to the given ejb-link value.
-    *@param ejbLink, the ejb-link value from the ejb-jar.xml or web.xml
-    *descriptor to find. Need to add support for the <path>/ejb.jar#ejb-name style.
-    *@return The deployment JNDI name of the ejb home to which the ejbLink
-    *refers if it is found, null if no such ejb exists.
-    */
-   public String findEjbLink(String ejbLink)
-   {
-      // Walk up to the topmost DeploymentInfo
-      DeploymentInfo top = parent;
-      while( top != null && top.parent != null )
-         top = top.parent;
-      if( top == null )
-         return null;
-      // Search from the top for a matching ejb
-      return findEjbLink(top, ejbLink, false);
-   }
-
-   /** A method that walks through the DeploymentInfo hiearchy looking
-    *for the ejb-name that corresponds to the given ejb-link value.
-    *@param ejbLink, the ejb-link value from the ejb-jar.xml or web.xml
-    *descriptor to find. Need to add support for the <path>/ejb.jar#ejb-name style.
-    *@return The deployment JNDI name of the ejb local home to which the ejbLink
-    *refers if it is found, null if no such ejb exists.
-    */
-   public String findEjbLocalLink(String ejbLink)
-   {
-      // Walk up to the topmost DeploymentInfo
-      DeploymentInfo top = parent;
-      while( top != null && top.parent != null )
-         top = top.parent;
-      if( top == null )
-         return null;
-      // Search from the top for a matching ejb
-      return findEjbLink(top, ejbLink, true);
-   }
-
-   /** Recursively search the DeploymentInfo looking for ApplicationMetaData
-    *nodes that may contain a BeanMetaData keyed by the ejbLink value.
-    *@param isLocal, a flag indicating if the JNDI name requested is for the
-    *local home vs the remote home.
-    */
-   private static String findEjbLink(DeploymentInfo parent, String ejbLink,
-      boolean isLocal)
-   {
-      String ejbName = null;
-      // Search the parent if it has ApplicationMetaData
-      if( parent.metaData instanceof ApplicationMetaData )
-      {
-         ApplicationMetaData appMD = (ApplicationMetaData) parent.metaData;
-         BeanMetaData beanMD = appMD.getBeanByEjbName(ejbLink);
-         if( beanMD != null )
-         {
-            if( isLocal == true )
-               ejbName = beanMD.getLocalJndiName();
-            else
-               ejbName = beanMD.getJndiName();
-            return ejbName;
-         }
-      }
-      // Search each subcontext
-      Iterator iter = parent.subDeployments.iterator();
-      while( iter.hasNext() && ejbName == null )
-      {
-         DeploymentInfo child = (DeploymentInfo) iter.next();
-         ejbName = findEjbLink(child, ejbLink, isLocal);
-      }
-      return ejbName;
-   }
-
    public int hashCode() 
    {
       return url.hashCode();
@@ -345,6 +279,6 @@ public class DeploymentInfo
 
    public String toString()
    {
-      return "DeploymentInfo:url=" + url;
+      return super.toString() + "{ url=" + url + " }";
    }
 }
