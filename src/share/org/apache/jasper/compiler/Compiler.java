@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/Compiler.java,v 1.10 2000/02/07 07:51:18 shemnon Exp $
- * $Revision: 1.10 $
- * $Date: 2000/02/07 07:51:18 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/Compiler.java,v 1.11 2000/02/09 06:50:49 shemnon Exp $
+ * $Revision: 1.11 $
+ * $Date: 2000/02/09 06:50:49 $
  *
  * ====================================================================
  * 
@@ -111,7 +111,8 @@ public abstract class Compiler {
         ctxt.setServletJavaFileName(javaFileName);
 
         Constants.message("jsp.message.package_name_is",
-                          new Object[] { pkgName },
+                          new Object[] { (pkgName==null)?
+                                          "[default package]":pkgName },
                           Constants.MED_VERBOSITY);
         Constants.message("jsp.message.class_name_is",
                           new Object[] { className },

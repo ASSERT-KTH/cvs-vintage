@@ -1,6 +1,6 @@
 #!/bin/sh
 #
-# $Id: jspc.sh,v 1.1 2000/02/07 08:02:14 shemnon Exp $
+# $Id: jspc.sh,v 1.2 2000/02/09 06:50:50 shemnon Exp $
 
 # Shell script to runt JspC
 
@@ -68,7 +68,7 @@ for i in ${TOMCAT_HOME}/lib/* ; do
 done
 
 CLASSPATH=${CLASSPATH}:${JAVA_HOME}/lib/tools.jar
-echo XXX $CLASSPATH
+#echo XXX $CLASSPATH
 
 
 # Backdoor classpath setting for development purposes when all classes

@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/JspC.java,v 1.1 2000/02/07 07:51:17 shemnon Exp $
- * $Revision: 1.1 $
- * $Date: 2000/02/07 07:51:17 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/JspC.java,v 1.2 2000/02/09 06:50:47 shemnon Exp $
+ * $Revision: 1.2 $
+ * $Date: 2000/02/09 06:50:47 $
  *
  * ====================================================================
  * 
@@ -84,6 +84,7 @@ public class JspC implements Options { //, JspCompilationContext {
     public static final String SWITCH_VERBOSE = "-v";
     public static final String SWITCH_QUIET = "-q";
     public static final String SWITCH_OUTPUT_DIR = "-d";
+    public static final String SWITCH_OUTPUT_SIMPLE_DIR = "-dd";
     public static final String SWITCH_IE_CLASS_ID = "-ieplugin";
     public static final String SWITCH_PACKAGE_NAME = "-p";
     public static final String SWITCH_CLASS_NAME = "-c";
@@ -115,6 +116,7 @@ public class JspC implements Options { //, JspCompilationContext {
 
     //JspLoader loader;
 
+    boolean dirset;
 
     public boolean getKeepGenerated() {
         // isn't this why we are running jspc?
@@ -195,12 +197,12 @@ public class JspC implements Options { //, JspCompilationContext {
 
         while ((tok = nextArg()) != null) {
             if (tok.equals(SWITCH_QUIET)) {
-                jspVerbosityLevel = Constants.WARNING;
+                Constants.jspVerbosityLevel = Constants.WARNING;
             } else if (tok.equals(SWITCH_VERBOSE)) {
-                jspVerbosityLevel = Constants.HIGH_VERBOSITY;
+                Constants.jspVerbosityLevel = Constants.HIGH_VERBOSITY;
             } else if (tok.startsWith(SWITCH_VERBOSE)) {
                 try {
-                    jspVerbosityLevel = Integer.parseInt(
+                    Constants.jspVerbosityLevel = Integer.parseInt(
                             tok.substring(SWITCH_VERBOSE.length()));
                 } catch (NumberFormatException nfe) {
                     log.println(
@@ -209,6 +211,18 @@ public class JspC implements Options { //, JspCompilationContext {
                         + " is not valid.  Option ignored.");
                 }
             } else if (tok.equals(SWITCH_OUTPUT_DIR)) {
+                tok = nextArg();
+                if (tok != null) {
+                    scratchDir = new File(tok);
+                    dirset = true;
+                } else {
+                    // either an in-java call with an explicit null
+                    // or a "-d --" sequence should cause this,
+                    // which would mean default handling
+                    /* no-op */
+                    scratchDir = null;
+                }
+            } else if (tok.equals(SWITCH_OUTPUT_SIMPLE_DIR)) {
                 tok = nextArg();
                 if (tok != null) {
                     scratchDir = new File(tok);
@@ -236,6 +250,7 @@ public class JspC implements Options { //, JspCompilationContext {
     };
     
     public void parseFiles(PrintStream log)  throws JasperException {
+        // set up a scratch/output dir if none is provided
         if (scratchDir == null) {
             String temp = System.getProperty("java.io.tempdir");
             if (temp == null) {
@@ -243,6 +258,36 @@ public class JspC implements Options { //, JspCompilationContext {
             }
             scratchDir = new File(temp);
         }
+
+        // set up the uri root if none is explicitly set
+        if (uriRoot == null) {
+            File f = new File(args[argPos]);
+            try {
+                if (f.exists()) {
+                    f = new File(f.getCanonicalPath());
+                    while (f != null) {
+                        File g = new File(f, "WEB-INF");
+                        if (g.exists() && g.isDirectory()) {
+                            uriRoot = f.getCanonicalPath();
+                            Constants.message("jspc.implicit.uriRoot",
+                                              new Object[] { uriRoot },
+                                              Constants.MED_VERBOSITY);
+                            break;
+                        }
+                        f = new File(f.getParent());
+                        // If there is no acceptible candidate, uriRoot will
+                        // remain null to indicate to the CompilerContext to
+                        // use the current working/user dir.
+                    }
+                }
+            } catch (IOException ioe) {
+                // since this is an optional default and a null value
+                // for uriRoot has a non-error meaning, we can just
+                // pass straight through
+            }
+        }
+
+
         String file = nextFile();
         while (file != null) {
             try {
@@ -251,15 +296,50 @@ public class JspC implements Options { //, JspCompilationContext {
                 CommandLineContext clctxt = new CommandLineContext(
                         loader, getClassPath(), file, uriBase, uriRoot, false,
                         this);
-                loader.addJar(clctxt.getRealPath("/WEB-INF/classes"));
+                if ((targetClassName != null) && (targetClassName.length() > 0)) {
+                    clctxt.setServletClassName(targetClassName);
+                    clctxt.lockClassName();
+                }
+                if (targetPackage != null) {
+                    clctxt.setServletPackageName(targetPackage);
+                    clctxt.lockPackageName();
+                }
+                if (dirset) {
+                    clctxt.setOutputInDirs(true);
+                };
+                File uriDir = new File(clctxt.getRealPath("/"));
+                if (uriDir.exists()) {
+                    if ((new File(uriDir, "WEB-INF/classes")).exists()) {
+                        loader.addJar(clctxt.getRealPath("/WEB-INF/classes"));
+                    }
+                    File lib = new File(clctxt.getRealPath("WEB-INF/lib"));
+                    if (lib.exists() && lib.isDirectory()) {
+                        String[] libs = lib.list();
+                        for (int i = 0; i < libs.length; i++) {
+                            try {
+                                loader.addJar(lib.getCanonicalPath()
+                                        + File.separator
+                                        + libs[i]);
+                            } catch (IOException ioe) {
+                                // failing a toCanonicalPath on a file that
+                                // exists() should be a JVM regression test,
+                                // therefore we have permission to freak out
+                                throw new RuntimeException(ioe.toString());
+                            }
+                        }
+                    }
+                };
                 CommandLineCompiler clc = new CommandLineCompiler(clctxt);
                 
                 clc.compile();
+
+                targetClassName = null;
             } catch (JasperException je) {
                 je.printStackTrace(System.err);
                 System.out.print("error:");
                 System.out.println(je.getMessage());
             } catch (Exception e) {
+                e.printStackTrace(System.out);
                 System.out.print("ERROR:");
                 System.out.println(e.toString());
             };

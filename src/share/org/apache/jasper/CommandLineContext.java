@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/CommandLineContext.java,v 1.1 2000/02/07 07:51:17 shemnon Exp $
- * $Revision: 1.1 $
- * $Date: 2000/02/07 07:51:17 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/CommandLineContext.java,v 1.2 2000/02/09 06:50:47 shemnon Exp $
+ * $Revision: 1.2 $
+ * $Date: 2000/02/09 06:50:47 $
  *
  * ====================================================================
  * 
@@ -99,6 +99,10 @@ public class CommandLineContext implements JspCompilationContext {
     String uriBase;
     File uriRoot;
 
+    boolean packageNameLocked;
+    boolean classNameLocked;
+    boolean outputInDirs;
+
     public CommandLineContext(JspLoader newLoader, String newClassPath,
                               String newJspFile, String newUriBase,
                               String newUriRoot, boolean newErrPage,
@@ -130,10 +134,6 @@ public class CommandLineContext implements JspCompilationContext {
         } else {
             uriRoot = new File(tUriRoot);
             if (!uriRoot.exists() || !uriRoot.isDirectory()) {
-               System.out.println(uriRoot);
-               System.out.println(uriRoot.exists());
-               System.out.println(uriRoot.isDirectory());
-               System.out.println(uriRoot.getAbsolutePath());
                throw new JasperException(
                         Constants.getString("jsp.error.jspc.uriroot_not_dir"));
             };
@@ -228,7 +228,12 @@ public class CommandLineContext implements JspCompilationContext {
      * generated. 
      */
     public String getServletJavaFileName() {
-        return servletJavaFileName;
+        if (outputInDirs) {
+            return getServletPackageName().replace('.', File.separatorChar)
+                   + servletJavaFileName;
+        } else {
+            return servletJavaFileName;
+        }
     };
 
     /**
@@ -266,11 +271,19 @@ public class CommandLineContext implements JspCompilationContext {
     };
     
     public void setServletClassName(String servletClassName) {
-        this.servletClassName = servletClassName;
+        if (classNameLocked) {
+            //System.out.println("Did not change clazz to " + servletClassName);
+        } else {
+            this.servletClassName = servletClassName;
+        };
     };
     
     public void setServletPackageName(String servletPackageName) {
-        this.servletPackageName = servletPackageName;
+        if (packageNameLocked) {
+            //System.out.println("Did not change pkg to " + servletPackageName);
+        } else {
+            this.servletPackageName = servletPackageName;
+        };
     };
     
     public void setServletJavaFileName(String servletJavaFileName) {
@@ -279,6 +292,22 @@ public class CommandLineContext implements JspCompilationContext {
     
     public void setErrorPage(boolean isErrPage) {
         errPage = isErrPage;
+    };
+
+    public void lockPackageName() {
+        packageNameLocked = true;
+    };
+
+    public void lockClassName() {
+        classNameLocked = true;
+    };
+
+    public void setOutputInDirs(boolean newValue) {
+        outputInDirs = true;
+    };
+
+    public boolean isOutputInDirs() {
+        return outputInDirs;
     };
 
     /**

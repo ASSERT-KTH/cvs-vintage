@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/CommandLineCompiler.java,v 1.1 2000/02/07 07:51:18 shemnon Exp $
- * $Revision: 1.1 $
- * $Date: 2000/02/07 07:51:18 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/CommandLineCompiler.java,v 1.2 2000/02/09 06:50:48 shemnon Exp $
+ * $Revision: 1.2 $
+ * $Date: 2000/02/09 06:50:48 $
  *
  * The Apache Software License, Version 1.1
  *
@@ -60,9 +60,11 @@
 package org.apache.jasper.compiler;
 
 import java.io.File;
+import java.io.IOException;
 
 import org.apache.jasper.Constants;
 import org.apache.jasper.JspCompilationContext;
+import org.apache.jasper.CommandLineContext;
 
 /**
  * Overrides some methods so that we get the desired effects.
@@ -77,11 +79,27 @@ public class CommandLineCompiler extends Compiler implements Mangler {
     File jsp;
     String outputDir;
 
-    public CommandLineCompiler(JspCompilationContext ctxt) {
+    public CommandLineCompiler(CommandLineContext ctxt) {
         super(ctxt);
 
         jsp = new File(ctxt.getJspFile());
         outputDir =  ctxt.getOptions().getScratchDir().getAbsolutePath();
+        // yes this is kind of messed up ... but it works
+        if (ctxt.isOutputInDirs()) {
+            String tmpDir = outputDir
+                   + File.separatorChar
+                   + ctxt.getServletPackageName()
+                         .replace('.', File.separatorChar);
+            File f = new File(tmpDir);
+            if (!f.exists()) {
+                if (f.mkdirs()) {
+                    outputDir = tmpDir;
+                }
+            } else {
+                outputDir = tmpDir;
+            }
+        }
+
         setMangler(this);
 
         computePackageName();
@@ -101,7 +119,7 @@ public class CommandLineCompiler extends Compiler implements Mangler {
 
 
     public final void computeJavaFileName() {
-	javaFileName = className + ".java";
+	javaFileName = ctxt.getServletClassName() + ".java";
 	if (outputDir != null && !outputDir.equals(""))
 	    javaFileName = outputDir + File.separatorChar + javaFileName;
     }
@@ -134,9 +152,10 @@ public class CommandLineCompiler extends Compiler implements Mangler {
 	StringBuffer modifiedpkgName = new StringBuffer ();
         int indexOfSepChar = pathName.lastIndexOf(File.separatorChar);
 
-	if (indexOfSepChar == -1 || indexOfSepChar == 0)
+        if (("".equals(ctxt.getServletPackageName())) ||
+	    (indexOfSepChar == -1) || (indexOfSepChar == 0)) {
 	    pkgName = null;
-	else {
+	} else {
 	    for (int i = 0; i < keywords.length; i++) {
 		char fs = File.separatorChar;
 		int index1 = pathName.indexOf(fs + keywords[i]);
@@ -156,6 +175,9 @@ public class CommandLineCompiler extends Compiler implements Mangler {
 	
 	    pkgName = pathName.substring(0, pathName.lastIndexOf(
 	    		File.separatorChar)).replace(File.separatorChar, '.');
+	    if (ctxt.getServletPackageName() != null) {
+	        pkgName = ctxt.getServletPackageName();
+	    }
 	    for (int i=0; i<pkgName.length(); i++)
 		if (Character.isLetter(pkgName.charAt(i)) == true ||
 		    pkgName.charAt(i) == '.') {
@@ -183,12 +205,14 @@ public class CommandLineCompiler extends Compiler implements Mangler {
     }
 
     private final String getBaseClassName() {
-	String className;
+	String className = ctxt.getServletClassName();
 
-        if (jsp.getName().endsWith(".jsp"))
-            className = jsp.getName().substring(0, jsp.getName().length() - 4);
-        else
-            className = jsp.getName();
+	if (className == null) {
+            if (jsp.getName().endsWith(".jsp"))
+                className = jsp.getName().substring(0, jsp.getName().length() - 4);
+            else
+                className = jsp.getName();
+        }
 
 	
 	// Fix for invalid characters. If you think of more add to the list.
