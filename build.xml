@@ -1,5 +1,4 @@
-<?xml version="1.0"?> 
-
+<?xml version="1.0" encoding="UTF-8"?>
 <!-- Emacs indentation & editting support: 
      edit XEMACS_HOME/xemacs-pacakges/etc/psgml/CATALOG
      Add: "DOCTYPE project ant.dtd"
@@ -8,14 +7,13 @@
     <antstructure output="ant.dtd"/>
 <!DOCTYPE ant SYSTEM "ant.dtd" >
 -->
-
 <project name="Tomcat" default="main" basedir=".">
 
   <!-- Compilation properties -->
 
   <property name="build.compiler" value="classic"/>
-  <property name="optimize" value="false" />
-  <property name="debug" value="off" />
+  <property name="optimize" value="false"/>
+  <property name="debug" value="off"/>
 
   <!-- Directories -->
 
@@ -26,9 +24,9 @@
 
   <!-- External packages we depend on -->
 
-  <property name="ant.home" value="../jakarta-ant" />
+  <property name="ant.home" value="../jakarta-ant"/>
   <property name="j2ee.home" value="../j2ee/build/unix"/>
-  <property name="jaxp" value="../jaxp-1.0.1" />
+  <property name="jaxp" value="../jaxp-1.0.1"/>
 
   <!-- ========== Hack for building 2.2 and 2.3 versions ========== -->
   <!-- both servlet-2.2.jar and servlet-2.3.jar are checked in
@@ -36,20 +34,17 @@
        building is too complex ( plus they use the same directories ).
     -->
 
-  <property name="servlet22.jar" 
-    value="bin/servlet22.jar"/>
+  <property name="servlet22.jar" value="bin/servlet22.jar"/>
 
   <!-- default servlet.jar, used to compile webapps -->
   <!-- we use 2.2 because the api is backward compatible, but it
        may have problems in the reverse direction -->
-  <property name="servlet.jar" value="${servlet22.jar}" />
+  <property name="servlet.jar" value="${servlet22.jar}"/>
 
   <!-- ==================== Initialization - guessing config ========== -->
   <target name="init">
-    <available property="jsse.present" 
-      classname="javax.net.ssl.SSLServerSocket" />
-    <available property="jdk12.present"
-      classname="java.security.PrivilegedAction" />
+    <available property="jsse.present" classname="javax.net.ssl.SSLServerSocket"/>
+    <available property="jdk12.present" classname="java.security.PrivilegedAction"/>
   </target>
 
   <!-- ==================== Copy static files ==================== -->
@@ -68,29 +63,37 @@
     <mkdir dir="${tomcat.build}/webapps"/>
     <mkdir dir="${tomcat.build}/native"/>
 
-    <copydir src="src/shell" dest="${tomcat.build}/bin" />
-    <copydir src="src/etc" dest="${tomcat.build}/conf"/>
-    <copydir src="src/doc" dest="${tomcat.build}/doc"/>
-    <copydir src="src/native" dest="${tomcat.build}/native"/>
-    <copyfile src="LICENSE" dest="${tomcat.build}/LICENSE"/>
+    <copy todir="${tomcat.build}/bin">
+            <fileset dir="src/shell"/>
+        </copy>
+    <copy todir="${tomcat.build}/conf">
+            <fileset dir="src/etc"/>
+        </copy>
+    <copy todir="${tomcat.build}/doc">
+            <fileset dir="src/doc"/>
+        </copy>
+    <copy todir="${tomcat.build}/native">
+            <fileset dir="src/native"/>
+        </copy>
+    <copy tofile="${tomcat.build}/LICENSE" file="LICENSE"/>
 
     <!-- include ant, it is used for testing and will be used for
     configuration and few other tasks -->
-    <copydir src="${ant.home}/bin" dest="${tomcat.build}/bin"/>
-    <copyfile src="${ant.home}/lib/ant.jar" 
-      dest="${tomcat.build}/lib/ant.jar"/>
-    <copyfile src="${jaxp}/jaxp.jar" dest="${tomcat.build}/lib/jaxp.jar"/>
-    <copyfile src="${jaxp}/parser.jar" dest="${tomcat.build}/lib/parser.jar"/>
+    <copy todir="${tomcat.build}/bin">
+            <fileset dir="${ant.home}/bin"/>
+        </copy>
+    <copy tofile="${tomcat.build}/lib/ant.jar" file="${ant.home}/lib/ant.jar"/>
+    <copy tofile="${tomcat.build}/lib/jaxp.jar" file="${jaxp}/jaxp.jar"/>
+    <copy tofile="${tomcat.build}/lib/parser.jar" file="${jaxp}/parser.jar"/>
     
     <!-- This act as a "default", Tomcat3.3 will not load it in
          classpath, just a hack to ease the transition
      -->
-    <copyfile src="${servlet.jar}" dest="${tomcat.build}/lib/servlet.jar"/>
+    <copy tofile="${tomcat.build}/lib/servlet.jar" file="${servlet.jar}"/>
 
     <!-- new dir struct for running both 2.2 and 2.3 -->
     <mkdir dir="${tomcat.build}/lib/servlet22"/>
-    <copyfile src="${servlet22.jar}" 
-      dest="${tomcat.build}/lib/servlet22/servlet22.jar"/>
+    <copy tofile="${tomcat.build}/lib/servlet22/servlet22.jar" file="${servlet22.jar}"/>
     <fixcrlf srcdir="${tomcat.build}/bin" includes="**/*.sh" cr="remove"/>
     <fixcrlf srcdir="${tomcat.build}/bin" includes="**/*.bat" cr="add"/>
 
@@ -105,216 +108,170 @@
   <!-- ==================== Tomcat util ==================== -->
   <!-- Independent ( stand alone ) utilities -->
 
-  <target name="tomcat_util" depends="init" >
-    <javac destdir="${tomcat.build}/classes"
-      debug="${debug}" 
-      optimize="${optimize}"
-      deprecation="off"
-      srcdir="src/share" >
+  <target name="tomcat_util" depends="init">
+    <javac destdir="${tomcat.build}/classes" debug="${debug}" optimize="${optimize}" deprecation="off" srcdir="src/share">
       <!-- no dependencies -->
-      <include name="org/apache/tomcat/util/**" />    
-      <include name="org/apache/tomcat/logging/**" />    
-      <exclude name="**/util/net/SSLSocketFactory.java"
- 	       unless="jsse.present" />
+      <include name="org/apache/tomcat/util/**"/>    
+      <include name="org/apache/tomcat/logging/**"/>    
+      <exclude name="**/util/net/SSLSocketFactory.java" unless="jsse.present"/>
     </javac>
-    <jar jarfile="${tomcat.build}/lib/tomcat_util.jar"
-      basedir="${tomcat.build}/classes" > 
-      <include name="org/apache/tomcat/util/**" />    
-      <include name="org/apache/tomcat/logging/**" />    
+    <jar jarfile="${tomcat.build}/lib/tomcat_util.jar" basedir="${tomcat.build}/classes"> 
+      <include name="org/apache/tomcat/util/**"/>    
+      <include name="org/apache/tomcat/logging/**"/>    
     </jar>
   </target>
 
   <!-- ==================== Tomcat.jar ( starter )  ==================== -->
 
-  <target name="tomcat.jar" depends="init" >
-    <javac destdir="${tomcat.build}/classes"
-      debug="${debug}" 
-      optimize="${optimize}"
-      deprecation="off"
-      srcdir="src/share" >
+  <target name="tomcat.jar" depends="init">
+    <javac destdir="${tomcat.build}/classes" debug="${debug}" optimize="${optimize}" deprecation="off" srcdir="src/share">
       <!-- no dependencies -->
-      <include name="org/apache/tomcat/startup/Main.java" />    
-      <include name="org/apache/tomcat/util/SimpleClassLoader.java" />    
+      <include name="org/apache/tomcat/startup/Main.java"/>    
+      <include name="org/apache/tomcat/util/SimpleClassLoader.java"/>    
     </javac>
-    <jar jarfile="${tomcat.build}/lib/tomcat.jar"
-      basedir="${tomcat.build}/classes" 
-      manifest="src/build/manifest" > 
-      <include name="org/apache/tomcat/startup/Main.class" /> 
-      <include name="org/apache/tomcat/startup/Main$*.class" /> 
-      <include name="org/apache/tomcat/util/SimpleClassLoader**" /> 
+    <jar jarfile="${tomcat.build}/lib/tomcat.jar" basedir="${tomcat.build}/classes" manifest="src/build/manifest"> 
+      <include name="org/apache/tomcat/startup/Main.class"/> 
+      <include name="org/apache/tomcat/startup/Main$*.class"/> 
+      <include name="org/apache/tomcat/util/SimpleClassLoader**"/> 
     </jar>
   </target>
 
   <!-- ==================== Tomcat core ==================== -->
 
-  <target name="tomcat_core" depends="init" >
-    <javac destdir="${tomcat.build}/classes"
-      debug="${debug}" 
-      optimize="${optimize}"
-      deprecation="off"
-      srcdir="src/share" >
+  <target name="tomcat_core" depends="init">
+    <javac destdir="${tomcat.build}/classes" debug="${debug}" optimize="${optimize}" deprecation="off" srcdir="src/share">
       <classpath>
-	<pathelement location="${tomcat.build}/lib/tomcat_util.jar" />
+	<pathelement location="${tomcat.build}/lib/tomcat_util.jar"/>
       </classpath>
-      <include name="org/apache/tomcat/core/**" />    
-      <include name="org/apache/tomcat/helper/**" />    
-      <include name="org/apache/tomcat/loader/**" />    
-      <exclude name="org/apache/tomcat/loader/AdaptiveClassLoader12.java" 
-               unless="jdk12.present"/>
+      <include name="org/apache/tomcat/core/**"/>    
+      <include name="org/apache/tomcat/helper/**"/>    
+      <include name="org/apache/tomcat/loader/**"/>    
+      <exclude name="org/apache/tomcat/loader/AdaptiveClassLoader12.java" unless="jdk12.present"/>
     </javac>
-    <copydir src="src/share/org/apache/tomcat" 
-             dest="${tomcat.build}/classes/org/apache/tomcat">
-      <include name="**/*.properties" />
-      <include name="**/*.dtd" />
-    </copydir>
-    <jar jarfile="${tomcat.build}/lib/tomcat_core.jar"
-      basedir="${tomcat.build}/classes" > 
-      <include name="org/apache/tomcat/core/**" />    
-      <include name="org/apache/tomcat/helper/**" />    
-      <include name="org/apache/tomcat/loader/**" />    
-      <include name="org/apache/tomcat/resources/**" />    
+    <copy todir="${tomcat.build}/classes/org/apache/tomcat">
+            <fileset dir="src/share/org/apache/tomcat">
+                <include name="**/*.properties"/>
+                <include name="**/*.dtd"/>
+            </fileset>
+        </copy>
+    <jar jarfile="${tomcat.build}/lib/tomcat_core.jar" basedir="${tomcat.build}/classes"> 
+      <include name="org/apache/tomcat/core/**"/>    
+      <include name="org/apache/tomcat/helper/**"/>    
+      <include name="org/apache/tomcat/loader/**"/>    
+      <include name="org/apache/tomcat/resources/**"/>    
     </jar>
   </target>
 
   <!-- ==================== Tomcat config ==================== -->
 
-  <target name="tomcat_config" depends="init" >
-    <javac destdir="${tomcat.build}/classes"
-      debug="${debug}" 
-      optimize="${optimize}"
-      deprecation="off"
-      srcdir="src/share" >
+  <target name="tomcat_config" depends="init">
+    <javac destdir="${tomcat.build}/classes" debug="${debug}" optimize="${optimize}" deprecation="off" srcdir="src/share">
       <classpath>
-	<pathelement location="${tomcat.build}/lib/tomcat_util.jar" />
-	<pathelement location="${tomcat.build}/lib/tomcat_core.jar" />
+	<pathelement location="${tomcat.build}/lib/tomcat_util.jar"/>
+	<pathelement location="${tomcat.build}/lib/tomcat_core.jar"/>
       </classpath>
-      <include name="org/apache/tomcat/task/**" />    
-      <include name="org/apache/tomcat/startup/**" />    
-      <exclude name="**/EmbededTomcat.java" unless="jdk12.present" />
+      <include name="org/apache/tomcat/task/**"/>    
+      <include name="org/apache/tomcat/startup/**"/>    
+      <exclude name="**/EmbededTomcat.java" unless="jdk12.present"/>
     </javac>
-    <jar jarfile="${tomcat.build}/lib/tomcat_config.jar"
-      basedir="${tomcat.build}/classes" > 
-      <include name="org/apache/tomcat/task/**" />    
-      <include name="org/apache/tomcat/startup/**" />    
+    <jar jarfile="${tomcat.build}/lib/tomcat_config.jar" basedir="${tomcat.build}/classes"> 
+      <include name="org/apache/tomcat/task/**"/>    
+      <include name="org/apache/tomcat/startup/**"/>    
     </jar>
   </target>
 
   <!-- ==================== Servlet 22 (default) implementation ========== -->
-  <target name="facade22" depends="init" >
-    <javac destdir="${tomcat.build}/classes"
-      debug="${debug}" 
-      optimize="${optimize}"
-      deprecation="off"
-      srcdir="src/facade22" >
+  <target name="facade22" depends="init">
+    <javac destdir="${tomcat.build}/classes" debug="${debug}" optimize="${optimize}" deprecation="off" srcdir="src/facade22">
       <classpath>
-	<pathelement location="${servlet22.jar}" />
-	<pathelement location="${tomcat.build}/lib/tomcat_util.jar" />
-	<pathelement location="${tomcat.build}/lib/tomcat_core.jar" />
-	<pathelement location="${tomcat.build}/lib/tomcat_modules.jar" />
+	<pathelement location="${servlet22.jar}"/>
+	<pathelement location="${tomcat.build}/lib/tomcat_util.jar"/>
+	<pathelement location="${tomcat.build}/lib/tomcat_core.jar"/>
+	<pathelement location="${tomcat.build}/lib/tomcat_modules.jar"/>
       </classpath>
-      <include name="org/apache/tomcat/facade/**" />    
-      <include name="org/apache/tomcat/modules/facade22/**" />    
+      <include name="org/apache/tomcat/facade/**"/>    
+      <include name="org/apache/tomcat/modules/facade22/**"/>    
     </javac>
-    <jar jarfile="${tomcat.build}/lib/servlet22/facade22.jar"
-      basedir="${tomcat.build}/classes" > 
-      <include name="org/apache/tomcat/facade/**" /> 
-      <include name="org/apache/tomcat/modules/facade22/**" />    
+    <jar jarfile="${tomcat.build}/lib/servlet22/facade22.jar" basedir="${tomcat.build}/classes"> 
+      <include name="org/apache/tomcat/facade/**"/> 
+      <include name="org/apache/tomcat/modules/facade22/**"/>    
     </jar>
     <!-- Copy the file in lib/ too, for tomcat.sh use ( until this is 
          fixed for multiple facades 
       -->
-    <jar jarfile="${tomcat.build}/lib/facade22.jar"
-      basedir="${tomcat.build}/classes" > 
-      <include name="org/apache/tomcat/facade/**" /> 
-      <include name="org/apache/tomcat/modules/facade22/**" />    
+    <jar jarfile="${tomcat.build}/lib/facade22.jar" basedir="${tomcat.build}/classes"> 
+      <include name="org/apache/tomcat/facade/**"/> 
+      <include name="org/apache/tomcat/modules/facade22/**"/>    
     </jar>
   </target>
 
   <!-- ==================== Webdav ========== -->
-  <target name="dav" depends="init" >
-    <javac destdir="${tomcat.build}/classes"
-      debug="${debug}" 
-      optimize="${optimize}"
-      deprecation="off"
-      srcdir="src/webdav" >
+  <target name="dav" depends="init">
+    <javac destdir="${tomcat.build}/classes" debug="${debug}" optimize="${optimize}" deprecation="off" srcdir="src/webdav">
       <classpath>
-	<pathelement location="${servlet22.jar}" />
+	<pathelement location="${servlet22.jar}"/>
       </classpath>
-      <include name="org/apache/tomcat/webdav/**" />    
+      <include name="org/apache/tomcat/webdav/**"/>    
     </javac>
-    <copydir src="src/webdav/org/apache/tomcat" 
-             dest="${tomcat.build}/classes/org/apache/tomcat">
-      <include name="**/*.properties" />
-    </copydir>
-    <jar jarfile="${tomcat.build}/lib/webdav.jar"
-      basedir="${tomcat.build}/classes" > 
-      <include name="org/apache/tomcat/webdav/**" /> 
-      <include name="org/apache/tomcat/webdav/**/*.properties" /> 
+    <copy todir="${tomcat.build}/classes/org/apache/tomcat">
+            <fileset dir="src/webdav/org/apache/tomcat">
+                <include name="**/*.properties"/>
+            </fileset>
+        </copy>
+    <jar jarfile="${tomcat.build}/lib/webdav.jar" basedir="${tomcat.build}/classes"> 
+      <include name="org/apache/tomcat/webdav/**"/> 
+      <include name="org/apache/tomcat/webdav/**/*.properties"/> 
     </jar>
   </target>
 
   <!-- ====================  "Standard" interceptors  ========== -->
-  <target name="tomcat_modules" depends="init" >
-    <javac destdir="${tomcat.build}/classes"
-      srcdir="src/share"
-      debug="${debug}" 
-      optimize="${optimize}"
-      deprecation="off" >
+  <target name="tomcat_modules" depends="init">
+    <javac destdir="${tomcat.build}/classes" srcdir="src/share" debug="${debug}" optimize="${optimize}" deprecation="off">
       <classpath>
-	<pathelement location="${tomcat.build}/lib/tomcat_util.jar" />
-	<pathelement location="${tomcat.build}/lib/tomcat_core.jar" />
+	<pathelement location="${tomcat.build}/lib/tomcat_util.jar"/>
+	<pathelement location="${tomcat.build}/lib/tomcat_core.jar"/>
       </classpath>
-      <include name="org/apache/tomcat/context/**" />    
-      <include name="org/apache/tomcat/request/**" />    
-      <include name="org/apache/tomcat/service/**" />    
-      <include name="org/apache/tomcat/session/**" />    
-      <include name="org/apache/tomcat/modules/**" />    
-      <exclude name="org/apache/tomcat/request/Jdk12Interceptor.java" 
-	unless="jdk12.present"/>
-      <exclude name="org/apache/tomcat/context/LoaderInterceptor1.java" 
-	unless="jdk12.present"/>
-      <exclude name="org/apache/tomcat/context/PolicyInterceptor.java" 
-	unless="jdk12.present"/>
+      <include name="org/apache/tomcat/context/**"/>    
+      <include name="org/apache/tomcat/request/**"/>    
+      <include name="org/apache/tomcat/service/**"/>    
+      <include name="org/apache/tomcat/session/**"/>    
+      <include name="org/apache/tomcat/modules/**"/>    
+      <exclude name="org/apache/tomcat/request/Jdk12Interceptor.java" unless="jdk12.present"/>
+      <exclude name="org/apache/tomcat/context/LoaderInterceptor1.java" unless="jdk12.present"/>
+      <exclude name="org/apache/tomcat/context/PolicyInterceptor.java" unless="jdk12.present"/>
     </javac>
-    <jar jarfile="${tomcat.build}/lib/tomcat_modules.jar"
-      basedir="${tomcat.build}/classes" > 
-      <include name="org/apache/tomcat/context/**" /> 
-      <include name="org/apache/tomcat/request/**" /> 
-      <include name="org/apache/tomcat/service/**" /> 
-      <include name="org/apache/tomcat/session/**" /> 
-      <include name="org/apache/tomcat/modules/**" /> 
+    <jar jarfile="${tomcat.build}/lib/tomcat_modules.jar" basedir="${tomcat.build}/classes"> 
+      <include name="org/apache/tomcat/context/**"/> 
+      <include name="org/apache/tomcat/request/**"/> 
+      <include name="org/apache/tomcat/service/**"/> 
+      <include name="org/apache/tomcat/session/**"/> 
+      <include name="org/apache/tomcat/modules/**"/> 
     </jar>
   </target>
 
   <!-- ====================  Jasper ( 1.0 )  ========== -->
-  <target name="jasper" depends="init" >
-    <javac destdir="${tomcat.build}/classes"
-      srcdir="src/share"
-      debug="${debug}" 
-      optimize="${optimize}"
-      deprecation="off" >
+  <target name="jasper" depends="init">
+    <javac destdir="${tomcat.build}/classes" srcdir="src/share" debug="${debug}" optimize="${optimize}" deprecation="off">
       <classpath>
-	<pathelement location="${servlet22.jar}" />
+	<pathelement location="${servlet22.jar}"/>
       </classpath>
-      <include name="org/apache/jasper/**" />    
+      <include name="org/apache/jasper/**"/>    
     </javac>
-    <copydir src="src/share/org/apache/jasper" 
-             dest="${tomcat.build}/classes/org/apache/jasper">
-      <include name="**/*.properties" />
-      <include name="**/*.dtd" />
-    </copydir>
-    <jar jarfile="${tomcat.build}/lib/jasper.jar"
-      basedir="${tomcat.build}/classes"
-      includes="org/apache/jasper/**"
-     />
+    <copy todir="${tomcat.build}/classes/org/apache/jasper">
+            <fileset dir="src/share/org/apache/jasper">
+                <include name="**/*.properties"/>
+                <include name="**/*.dtd"/>
+            </fileset>
+        </copy>
+    <jar jarfile="${tomcat.build}/lib/jasper.jar" basedir="${tomcat.build}/classes" includes="org/apache/jasper/**"/>
   </target>
 
   <target name="tomcat-jars-new" depends="tomcat_util,tomcat.jar,tomcat_core,jasper,tomcat_modules,facade22,tomcat_config,dav">
   </target>
 
   <!-- ==================== J2EE integration ========== -->
-  <target name="j2ee" >
-    <ant antfile="src/j2ee/build.xml" target="tomcat-j2ee.jar" />
+  <target name="j2ee">
+    <ant antfile="src/j2ee/build.xml" target="tomcat-j2ee.jar"/>
   </target>
 
   <!-- ==================== Build all web applications ==================== -->
@@ -322,18 +279,19 @@
   <target name="webapps" depends="prepare">
     <!-- Examples -->
     <mkdir dir="${tomcat.build}/webapps/examples"/>
-    <copydir src="src/examples" dest="${tomcat.build}/webapps/examples"/>
-    <javac srcdir="src/examples/WEB-INF/classes"
-      optimize="${optimize}"
-      destdir="${tomcat.build}/webapps/examples/WEB-INF/classes"
-      classpath="${tomcat.build}/classes;${servlet22.jar}"/>
-    <javac srcdir="src/examples/jsp/plugin/applet"
-      optimize="${optimize}"
-      destdir="${tomcat.build}/webapps/examples/jsp/plugin/applet"/>
+    <copy todir="${tomcat.build}/webapps/examples">
+            <fileset dir="src/examples"/>
+        </copy>
+    <javac srcdir="src/examples/WEB-INF/classes" 
+        optimize="${optimize}" destdir="${tomcat.build}/webapps/examples/WEB-INF/classes" 
+        classpath="${tomcat.build}/classes;${servlet22.jar}"/>
+    <javac srcdir="src/examples/jsp/plugin/applet" optimize="${optimize}" destdir="${tomcat.build}/webapps/examples/jsp/plugin/applet"/>
 
     <!-- webdav -->
     <mkdir dir="${tomcat.build}/webapps/webdav"/>
-    <copydir src="src/webdav/webdav" dest="${tomcat.build}/webapps/webdav"/>
+    <copy todir="${tomcat.build}/webapps/webdav">
+            <fileset dir="src/webdav/webdav"/>
+        </copy>
 
 
     <!-- Tomcat profiling webapp - not ready for check in yet
@@ -346,43 +304,43 @@
      -->
       <!-- Root context -->
     <mkdir dir="${tomcat.build}/webapps/ROOT"/>
-    <copydir src="src/webpages" dest="${tomcat.build}/webapps/ROOT"/>
-    <copydir src="src/doc" dest="${tomcat.build}/webapps/ROOT/doc"/>
-    <javac srcdir="src/webpages/WEB-INF/classes"
-      optimize="${optimize}"
-      destdir="${tomcat.build}/webapps/ROOT/WEB-INF/classes"
-      classpath="${tomcat.build}/classes;${servlet22.jar}"/>
+    <copy todir="${tomcat.build}/webapps/ROOT">
+            <fileset dir="src/webpages"/>
+        </copy>
+    <copy todir="${tomcat.build}/webapps/ROOT/doc">
+            <fileset dir="src/doc"/>
+        </copy>
+    <javac srcdir="src/webpages/WEB-INF/classes" optimize="${optimize}" destdir="${tomcat.build}/webapps/ROOT/WEB-INF/classes" classpath="${tomcat.build}/classes;${servlet22.jar}"/>
 
       <!-- admin context -->
     <mkdir dir="${tomcat.build}/webapps/admin"/>
-    <copydir src="src/admin" dest="${tomcat.build}/webapps/admin"/>
-    <javac srcdir="src/admin/WEB-INF/classes"
-      optimize="${optimize}"
-      destdir="${tomcat.build}/webapps/admin/WEB-INF/classes"
-      classpath="${tomcat.build}/classes;${servlet22.jar}"/>
+    <copy todir="${tomcat.build}/webapps/admin">
+            <fileset dir="src/admin"/>
+        </copy>
+    <javac srcdir="src/admin/WEB-INF/classes" optimize="${optimize}" destdir="${tomcat.build}/webapps/admin/WEB-INF/classes" classpath="${tomcat.build}/classes;${servlet22.jar}"/>
 
   </target>
 
   <!-- ==================== Build the internal test app ==================== -->
-  <target name="sanity-test" >
+  <target name="sanity-test">
     <mkdir dir="${tomcat.dist}/lib/test"/>
     <mkdir dir="${tomcat.dist}/lib/test/Golden"/>
-    <copydir src="src/tests/share/tests/jsp/Golden" 
-      dest="${tomcat.dist}/lib/test/Golden"/>
+    <copy todir="${tomcat.dist}/lib/test/Golden">
+            <fileset dir="src/tests/share/tests/jsp/Golden"/>
+        </copy>
 
       <!-- Test application -->
     <mkdir dir="${tomcat.build}/webapps/test"/>
-    <copydir src="src/tests/webpages" dest="${tomcat.build}/webapps/test"/>
-    <javac srcdir="src/tests/webpages/WEB-INF/classes"
-      optimize="${optimize}"
-      destdir="${tomcat.build}/webapps/test/WEB-INF/classes"
-      classpath="${tomcat.build}/classes;${servlet22.jar}"/>
-    <copydir src="${tomcat.build}/webapps/test" dest="${tomcat.dist}/webapps/test"/>
+    <copy todir="${tomcat.build}/webapps/test">
+            <fileset dir="src/tests/webpages"/>
+        </copy>
+    <javac srcdir="src/tests/webpages/WEB-INF/classes" optimize="${optimize}" destdir="${tomcat.build}/webapps/test/WEB-INF/classes" classpath="${tomcat.build}/classes;${servlet22.jar}"/>
+    <copy todir="${tomcat.dist}/webapps/test">
+            <fileset dir="${tomcat.build}/webapps/test"/>
+        </copy>
 
-    <jar   jarfile="${tomcat.dist}/webapps/test.war"
-      basedir="${tomcat.dist}/webapps/test"
-      includes="**" /> 
-    <deltree dir="${tomcat.dist}/webapps/test"/>
+    <jar jarfile="${tomcat.dist}/webapps/test.war" basedir="${tomcat.dist}/webapps/test" includes="**"/> 
+    <delete dir="${tomcat.dist}/webapps/test"/>
 
 
   </target>
@@ -391,46 +349,40 @@
   <target name="dist" depends="main,webapps,tomcat-jars-new">
 
     <mkdir dir="${tomcat.dist}"/>
-    <copydir src="${tomcat.build}" dest="${tomcat.dist}"/>
-    <copydir src="src/share/org" dest="${tomcat.dist}/src/org"/>
-    <copyfile src="${jaxp}/jaxp.jar" dest="${tomcat.dist}/lib/jaxp.jar"/>
-    <copyfile src="${jaxp}/parser.jar" dest="${tomcat.dist}/lib/parser.jar"/>
-    <copyfile src="${servlet.jar}" dest="${tomcat.dist}/lib/servlet.jar"/>
-    <copydir src="src/facade22/org" dest="${tomcat.dist}/src/org"/>
+    <copy todir="${tomcat.dist}">
+            <fileset dir="${tomcat.build}"/>
+        </copy>
+    <copy todir="${tomcat.dist}/src/org">
+            <fileset dir="src/share/org"/>
+        </copy>
+    <copy tofile="${tomcat.dist}/lib/jaxp.jar" file="${jaxp}/jaxp.jar"/>
+    <copy tofile="${tomcat.dist}/lib/parser.jar" file="${jaxp}/parser.jar"/>
+    <copy tofile="${tomcat.dist}/lib/servlet.jar" file="${servlet.jar}"/>
+    <copy todir="${tomcat.dist}/src/org">
+            <fileset dir="src/facade22/org"/>
+        </copy>
 
     <!-- Add Tomcat internal javadoc -->
-    <mkdir dir="${tomcat.dist}/webapps/ROOT/javadoc" />
+    <mkdir dir="${tomcat.dist}/webapps/ROOT/javadoc"/>
 <!--    <javadoc packagenames="org.apache.tomcat.*"-->
-    <javadoc packagenames="org.apache.tomcat.core"
-             sourcepath="src/share;src/facade22"
-             destdir="${tomcat.dist}/webapps/ROOT/javadoc"
-             author="true"
-             version="true"
-             use="true"
-             windowtitle="Tomcat internal API"
-             doctitle="Tomcat internal"
-             bottom="Copyright &#169; 2000 Apache Software Foundation. All Rights Reserved."
-    />
+    <javadoc packagenames="org.apache.tomcat.core" sourcepath="src/share;src/facade22" destdir="${tomcat.dist}/webapps/ROOT/javadoc" author="true" version="true" use="true" windowtitle="Tomcat internal API" doctitle="Tomcat internal" bottom="Copyright © 2000 Apache Software Foundation. All Rights Reserved."/>
 
-    <deltree dir="${tomcat.dist}/classes"/>
+    <delete dir="${tomcat.dist}/classes"/>
 
 
     <!-- create webapp WARS -->
-    <jar   jarfile="${tomcat.dist}/webapps/examples.war"
-      basedir="${tomcat.dist}/webapps/examples"
-      excludes="jsp/snp/snoop.jsp"
-      includes="**" /> 
-    <deltree dir="${tomcat.dist}/webapps/examples"/>
+    <jar jarfile="${tomcat.dist}/webapps/examples.war" basedir="${tomcat.dist}/webapps/examples" excludes="jsp/snp/snoop.jsp" includes="**"/> 
+    <delete dir="${tomcat.dist}/webapps/examples"/>
 
-    <jar   jarfile="${tomcat.dist}/webapps/admin.war"
-      basedir="${tomcat.dist}/webapps/admin"
-      includes="**" /> 
-    <deltree dir="${tomcat.dist}/webapps/admin"/>
+    <jar jarfile="${tomcat.dist}/webapps/webdav.war" basedir="${tomcat.dist}/webapps/webdav" includes="**"/>
+    <delete dir="${tomcat.dist}/webapps/webdav"/>
 
-    <jar   jarfile="${tomcat.dist}/webapps/ROOT.war"
-      basedir="${tomcat.dist}/webapps/ROOT"
-      includes="**" />
-    <deltree dir="${tomcat.dist}/webapps/ROOT"/>
+    <jar jarfile="${tomcat.dist}/webapps/admin.war" basedir="${tomcat.dist}/webapps/admin" includes="**"/> 
+    <delete dir="${tomcat.dist}/webapps/admin"/>
+
+    <jar jarfile="${tomcat.dist}/webapps/ROOT.war" basedir="${tomcat.dist}/webapps/ROOT" includes="**"/>
+    <delete dir="${tomcat.dist}/webapps/ROOT"/>
+
 
     <!-- Change permissions for unix -->
     <chmod perm="+x" file="${tomcat.dist}/bin/tomcat.sh"/>
@@ -443,8 +395,7 @@
   <!-- Packages the distribution with ZIP                                  -->
   <!-- =================================================================== -->
   <target name="dist-zip" depends="dist">
-    <zip zipfile="${Name}-${version}.zip" basedir="${tomcat.dist}" 
-      includes="**"/>
+    <zip zipfile="${Name}-${version}.zip" basedir="${tomcat.dist}" includes="**"/>
   </target>
   
 
@@ -454,12 +405,12 @@
   </target>
 
   <target name="clean-classes" depends="init">
-    <deltree dir="${tomcat.build}/classes/org"/>
+    <delete dir="${tomcat.build}/classes/org"/>
   </target>
 
   <target name="clean" depends="init">
-    <deltree dir="${tomcat.build}"/>
-    <deltree dir="${tomcat.dist}"/>
+    <delete dir="${tomcat.build}"/>
+    <delete dir="${tomcat.dist}"/>
   </target>
   
   <target name="all" depends="clean,dist"/>
