@@ -22,7 +22,7 @@ import org.columba.mail.util.MailResourceLoader;
  * To change this generated comment go to 
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
-public class CloseAction extends ComposerAction {
+public class CloseComposerAction extends ComposerAction {
 
 	/**
 	 * @param composerController
@@ -35,7 +35,7 @@ public class CloseAction extends ComposerAction {
 	 * @param mnemonic
 	 * @param keyStroke
 	 */
-	public CloseAction(ComposerController composerController) {
+	public CloseComposerAction(ComposerController composerController) {
 		super(
 			composerController,
 			MailResourceLoader.getString(
