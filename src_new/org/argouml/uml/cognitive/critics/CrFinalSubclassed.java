@@ -1,4 +1,4 @@
-// $Id: CrFinalSubclassed.java,v 1.6 2003/08/30 21:28:52 alexb Exp $
+// $Id: CrFinalSubclassed.java,v 1.7 2003/09/01 15:02:06 bobtarling Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,7 +27,7 @@
 // File: CrFinalSubclassed.java
 // Classes: CrFinalSubclassed
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrFinalSubclassed.java,v 1.6 2003/08/30 21:28:52 alexb Exp $
+// $Id: CrFinalSubclassed.java,v 1.7 2003/09/01 15:02:06 bobtarling Exp $
 
 package org.argouml.uml.cognitive.critics;
 
@@ -59,7 +59,7 @@ public class CrFinalSubclassed extends CrUML {
     public boolean predicate2(Object dm, Designer dsgr) {
 	if (!(ModelFacade.isAGeneralizableElement(dm))) return NO_PROBLEM;
 	if (!(ModelFacade.isLeaf(dm))) return NO_PROBLEM;
-	Iterator enum = ModelFacade.getSpecializations(dm);
+	Iterator enum = ModelFacade.getSpecializations(dm).iterator();
 	if (enum.hasNext()) return PROBLEM_FOUND;
 	return NO_PROBLEM;
     }

@@ -1,4 +1,4 @@
-// $Id: UMLTransitionGuardListModel.java,v 1.3 2003/06/29 23:50:12 linus Exp $
+// $Id: UMLTransitionGuardListModel.java,v 1.4 2003/09/01 15:02:05 bobtarling Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,11 +25,10 @@
 // $header$
 package org.argouml.uml.ui.behavior.state_machines;
 
+import org.argouml.model.ModelFacade;
 import org.argouml.uml.ui.UMLModelElementListModel2;
 
 import ru.novosoft.uml.MBase;
-import ru.novosoft.uml.behavior.state_machines.MTransition;
-
 /**
  * @since Dec 15, 2002
  * @author jaap.branderhorst@xs4all.nl
@@ -49,14 +48,14 @@ public class UMLTransitionGuardListModel extends UMLModelElementListModel2 {
      */
     protected void buildModelList() {
         removeAllElements();
-        addElement(((MTransition) getTarget()).getGuard());
+        addElement(ModelFacade.getGuard(getTarget()));
     }
 
     /**
      * @see org.argouml.uml.ui.UMLModelElementListModel2#isValidElement(ru.novosoft.uml.MBase)
      */
     protected boolean isValidElement(MBase element) {
-        return element == ((MTransition) getTarget()).getGuard();
+        return element == ModelFacade.getGuard(getTarget());
     }
 
 }

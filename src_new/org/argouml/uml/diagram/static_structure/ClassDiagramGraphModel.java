@@ -1,4 +1,4 @@
-// $Id: ClassDiagramGraphModel.java,v 1.45 2003/09/01 11:51:09 bobtarling Exp $
+// $Id: ClassDiagramGraphModel.java,v 1.46 2003/09/01 15:02:06 bobtarling Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: ClassDiagramGraphModel.java
 // Classes: ClassDiagramGraphModel
 // Original Author: jrobbins@ics.uci.edu
-// $Id: ClassDiagramGraphModel.java,v 1.45 2003/09/01 11:51:09 bobtarling Exp $
+// $Id: ClassDiagramGraphModel.java,v 1.46 2003/09/01 15:02:06 bobtarling Exp $
 
 
 package org.argouml.uml.diagram.static_structure;
@@ -126,7 +126,7 @@ public class ClassDiagramGraphModel extends UMLMutableGraphSupport
 	// then Generalizable Element
 	if (ModelFacade.isAGeneralizableElement(port)) {
           
-	    Iterator it = ModelFacade.getSpecializations(port);
+	    Iterator it = ModelFacade.getSpecializations(port).iterator();
 	    while (it.hasNext()) {
 		edges.add(it.next());
 	    }
@@ -202,8 +202,7 @@ public class ClassDiagramGraphModel extends UMLMutableGraphSupport
 	}
 	// then Generalizable Element
 	if (ModelFacade.isAGeneralizableElement(port)) {
-          
-	    Iterator it = ModelFacade.getGeneralizations(port);
+	    Iterator it = ModelFacade.getGeneralizations(port).iterator();
 	    while (it.hasNext()) {
 		edges.add(it.next());
 	    }
@@ -343,7 +342,7 @@ public class ClassDiagramGraphModel extends UMLMutableGraphSupport
 	    }
 	}
 	if ( org.argouml.model.ModelFacade.isAGeneralizableElement(node) ) {
-	    Collection gn = ((MGeneralizableElement) node).getGeneralizations();
+	    Collection gn = ModelFacade.getGeneralizations(node);
 	    Iterator iter = gn.iterator();
 	    while (iter.hasNext()) {
 		MGeneralization g = (MGeneralization) iter.next();

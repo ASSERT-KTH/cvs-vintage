@@ -1,4 +1,4 @@
-// $Id: DeploymentDiagramGraphModel.java,v 1.25 2003/08/30 13:23:41 bobtarling Exp $
+// $Id: DeploymentDiagramGraphModel.java,v 1.26 2003/09/01 15:02:06 bobtarling Exp $
 // Copyright (c) 2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -270,7 +270,7 @@ public class DeploymentDiagramGraphModel extends UMLMutableGraphSupport
 	    }
 	}
 	if ( ModelFacade.isAGeneralizableElement(node) ) {
-	    Iterator iter = ModelFacade.getGeneralizations(node);
+	    Iterator iter = ModelFacade.getGeneralizations(node).iterator();
 	    while (iter.hasNext()) {
 		// g contains a Generalization
 		Object g = iter.next();
@@ -278,7 +278,7 @@ public class DeploymentDiagramGraphModel extends UMLMutableGraphSupport
 		    addEdge(g);
 		return;
 	    }
-	    iter = ModelFacade.getSpecializations(node);
+	    iter = ModelFacade.getSpecializations(node).iterator();
 	    while (iter.hasNext()) {
 		// s contains a specialization
 		Object s = iter.next();

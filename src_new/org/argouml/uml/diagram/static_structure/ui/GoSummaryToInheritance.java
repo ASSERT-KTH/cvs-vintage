@@ -1,4 +1,4 @@
-// $Id: GoSummaryToInheritance.java,v 1.6 2003/06/30 21:59:33 linus Exp $
+// $Id: GoSummaryToInheritance.java,v 1.7 2003/09/01 15:02:05 bobtarling Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -36,9 +36,9 @@ import org.argouml.ui.AbstractGoRule;
 /**
  * This class is a Go Rule for the "Class - centric" Navigation perspective.
  *
- * $Revision: 1.6 $
+ * $Revision: 1.7 $
  *
- * @author  alexb, $Author: linus $
+ * @author  alexb, $Author: bobtarling $
  * @since argo 0.13.4, Created on 21 March 2003, 23:18
  */
 public class GoSummaryToInheritance extends AbstractGoRule {
@@ -76,9 +76,9 @@ public class GoSummaryToInheritance extends AbstractGoRule {
 	    }
           
 	    Iterator generalizationsIt =
-		ModelFacade.getGeneralizations(((InheritanceNode) parent).getParent());
+		ModelFacade.getGeneralizations(((InheritanceNode) parent).getParent()).iterator();
 	    Iterator specializationsIt =
-		ModelFacade.getSpecializations(((InheritanceNode) parent).getParent());
+		ModelFacade.getSpecializations(((InheritanceNode) parent).getParent()).iterator();
           
 	    while (generalizationsIt.hasNext())
 		list.add(generalizationsIt.next());

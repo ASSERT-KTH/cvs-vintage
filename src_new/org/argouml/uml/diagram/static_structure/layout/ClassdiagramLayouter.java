@@ -1,4 +1,4 @@
-// $Id: ClassdiagramLayouter.java,v 1.15 2003/08/30 13:23:42 bobtarling Exp $
+// $Id: ClassdiagramLayouter.java,v 1.16 2003/09/01 15:02:06 bobtarling Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -254,12 +254,10 @@ public class ClassdiagramLayouter implements Layouter {
                     }
                 }
                 
-                if ( ModelFacade.isAGeneralizableElement(node) ) {
+                if (ModelFacade.isAGeneralizableElement(node) ) {
+                    Iterator iter = ModelFacade.getGeneralizations(node).iterator();
                                         
-                    for (Iterator iter = ModelFacade.getGeneralizations(node);
-			 iter.hasNext();
-			 )
-		    {
+                    while(iter.hasNext()) {
                         Object g = iter.next();
                         ClassdiagramNode superNode = 
                             getClassdiagramNode4owner(ModelFacade.getParent(g));
@@ -269,10 +267,8 @@ public class ClassdiagramLayouter implements Layouter {
                         }
                     }
                     
-                    for (Iterator iter = ModelFacade.getSpecializations(node);
-			 iter.hasNext();
-			 )
-		    {
+                    iter = ModelFacade.getSpecializations(node).iterator();
+                    while (iter.hasNext()) {
                         Object s = iter.next();
                         ClassdiagramNode subNode = 
                             getClassdiagramNode4owner(ModelFacade.getChild(s));

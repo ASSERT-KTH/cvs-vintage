@@ -1,4 +1,4 @@
-// $Id: UseCaseDiagramGraphModel.java,v 1.30 2003/09/01 14:02:49 bobtarling Exp $
+// $Id: UseCaseDiagramGraphModel.java,v 1.31 2003/09/01 15:02:05 bobtarling Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -26,7 +26,7 @@
 // File: UseCaseDiagramGraphModel.java
 // Classes: UseCaseDiagramGraphModel
 // Original Author: your email address here
-// $Id: UseCaseDiagramGraphModel.java,v 1.30 2003/09/01 14:02:49 bobtarling Exp $
+// $Id: UseCaseDiagramGraphModel.java,v 1.31 2003/09/01 15:02:05 bobtarling Exp $
 
 // 3 Apr 2002: Jeremy Bennett (mail@jeremybennett.com). Extended to support
 // the Extend and Include relationships. JavaDoc added for clarity. Adding edge
@@ -598,7 +598,7 @@ public class UseCaseDiagramGraphModel
 
             // The generalizations
 
-            Collection gn = ((MGeneralizableElement) node).getGeneralizations();
+            Collection gn = ModelFacade.getGeneralizations(node);
 
             Iterator iter = gn.iterator();
 

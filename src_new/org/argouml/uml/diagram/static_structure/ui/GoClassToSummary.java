@@ -1,4 +1,4 @@
-// $Id: GoClassToSummary.java,v 1.6 2003/06/30 21:59:33 linus Exp $
+// $Id: GoClassToSummary.java,v 1.7 2003/09/01 15:02:05 bobtarling Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -35,9 +35,9 @@ import org.argouml.ui.AbstractGoRule;
 /**
  * This class is a Go Rule for the "Class - centric" Navigation perspective.
  *
- * $Revision: 1.6 $
+ * $Revision: 1.7 $
  *
- * @author  alexb, $Author: linus $
+ * @author  alexb, $Author: bobtarling $
  * @since argo 0.13.4, Created on 21 March 2003, 23:18
  */
 public class GoClassToSummary extends AbstractGoRule {
@@ -105,12 +105,12 @@ public class GoClassToSummary extends AbstractGoRule {
  
     private boolean hasInheritance(Object parent) {
       
-	Iterator incomingIt =
-	    ModelFacade.getSupplierDependencies(parent).iterator();
-	Iterator outgoingIt =
-	    ModelFacade.getClientDependencies(parent).iterator();
-	Iterator generalizationsIt = ModelFacade.getGeneralizations(parent);
-	Iterator specializationsIt = ModelFacade.getSpecializations(parent);
+        Iterator incomingIt =
+            ModelFacade.getSupplierDependencies(parent).iterator();
+        Iterator outgoingIt =
+            ModelFacade.getClientDependencies(parent).iterator();
+        Iterator generalizationsIt = ModelFacade.getGeneralizations(parent).iterator();
+        Iterator specializationsIt = ModelFacade.getSpecializations(parent).iterator();
           
 	if (generalizationsIt.hasNext())
 	    return true;
@@ -121,15 +121,16 @@ public class GoClassToSummary extends AbstractGoRule {
 	while (incomingIt.hasNext()) {
               
 	    // abstractions are represented in the Inheritance Node.
-	    if (ModelFacade.isAAbstraction(incomingIt.next()))
+	    if (ModelFacade.isAAbstraction(incomingIt.next())) {
                 return true;
+            }
 	}
           
 	while (outgoingIt.hasNext()) {
-              
 	    // abstractions are represented in the Inheritance Node.
-	    if (ModelFacade.isAAbstraction(outgoingIt.next()))
+	    if (ModelFacade.isAAbstraction(outgoingIt.next())) {
                 return true;
+            }
 	}
           
 	return false;

@@ -1,4 +1,4 @@
-// $Id: CrNoOperations.java,v 1.15 2003/08/30 21:28:52 alexb Exp $
+// $Id: CrNoOperations.java,v 1.16 2003/09/01 15:02:06 bobtarling Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -94,7 +94,7 @@ public class CrNoOperations extends CrUML {
 	if (depth > 50)
 	    return false;
 
-	Iterator iter = ModelFacade.getGeneralizations(dm);
+	Iterator iter = ModelFacade.getGeneralizations(dm).iterator();
 
 	while (iter.hasNext()) {
 	    Object parent = ModelFacade.getParent(iter.next());
