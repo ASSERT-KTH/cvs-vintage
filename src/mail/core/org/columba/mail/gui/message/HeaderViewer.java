@@ -45,16 +45,21 @@ import org.columba.mail.parser.text.HtmlParser;
  */
 public class HeaderViewer extends JTextPane {
 
+	/*
+	 * *20030720, karlpeder* Adjusted layout of header table to avoid lines
+	 * extending the right margin (bug #774117)
+	 */
+
 	// background: ebebeb
 	// frame: d5d5d5
 	private static final String LEFT_COLUMN_PROPERTIES =
-		"border=\"0\" nowrap font=\"dialog\" align=\"right\" valign=\"top\" width=\"65\"";
+		"border=\"0\" nowrap font=\"dialog\" align=\"right\" valign=\"top\" width=\"5%\""; //width=\"65\"";
 	private static final String RIGHT_COLUMN_PROPERTIES =
-		"border=\"0\" align=\"left\" valign=\"top\" width=\"100%\"";
+		"border=\"0\" align=\"left\" valign=\"top\" width=\"90%\""; //width=\"100%\"";
 	private static final String OUTTER_TABLE_PROPERTIES =
-		"border=\"1\" cellspacing=\"1\" cellpadding=\"1\" align=\"left\" width=\"100%\" style=\"border-width:1px; border-style:solid;  background-color:#ebebeb\"";
-	private static final String INNER_TABLE_PROPERTIES =
-		"border=\"0\" cellspacing=\"0\" cellpadding=\"0\" align=\"left\" width=\"100%\"";
+		"border=\"1\" cellspacing=\"1\" cellpadding=\"1\" " + 
+		"align=\"left\" width=\"100%\" " + 
+		"style=\"border-width:1px; border-style:solid;  background-color:#ebebeb\"";
 
 	// stylesheet is created dynamically because
 	// user configurable fonts are used
@@ -62,10 +67,6 @@ public class HeaderViewer extends JTextPane {
 
 	// contains headerfields which are to be displayed
 	List keys;
-
-	// *20030623, karlpeder* Replaced by HtmlParser
-	////	parser to transform text to html
-	//DocumentParser parser;
 
 	public HeaderViewer() {
 		setMargin(new Insets(5, 5, 5, 5));
@@ -80,10 +81,6 @@ public class HeaderViewer extends JTextPane {
 		URL baseUrl = DiskIO.getResourceURL("org/columba/core/images/");
 		ColumbaLogger.log.debug(baseUrl.toString());
 		((HTMLDocument) getDocument()).setBase(baseUrl);
-
-		// *20030623, karlpeder* Replaced by HtmlParser
-		//// initialse parser
-		//parser = new DocumentParser();
 
 		// add headerfields which are about to show up
 		initHeaderFields();
