@@ -68,13 +68,17 @@ class LocationStep extends AbstractStep implements ActionListener {
 		component.add(new MultiLineLabel(AddressbookResourceLoader.getString(
                                     "dialog",
                                     "addressbookimport",
-                                    "choose_source_destination")));
+                                    "location_text")));
 		component.add(Box.createVerticalStrut(40));
 		WizardTextField middlePanel = new WizardTextField();
 		JLabel sourceLabel = new JLabel(AddressbookResourceLoader.getString(
                                     "dialog",
                                     "addressbookimport",
-                                    "source_label"));
+                                    "source"));
+                sourceLabel.setDisplayedMnemonic(AddressbookResourceLoader.getMnemonic(
+                                    "dialog",
+                                    "addressbookimport",
+                                    "source"));
 		middlePanel.addLabel(sourceLabel);
 		sourceButton = new JButton("...");
 		sourceButton.addActionListener(this);
@@ -83,7 +87,11 @@ class LocationStep extends AbstractStep implements ActionListener {
 		JLabel destinationLabel = new JLabel(AddressbookResourceLoader.getString(
                                     "dialog",
                                     "addressbookimport",
-                                    "destination_label"));
+                                    "destination"));
+                destinationLabel.setDisplayedMnemonic(AddressbookResourceLoader.getMnemonic(
+                                    "dialog",
+                                    "addressbookimport",
+                                    "destination"));
 		middlePanel.addLabel(destinationLabel);
 		destinationButton = new JButton("...");
 		destinationButton.addActionListener(this);
@@ -92,7 +100,7 @@ class LocationStep extends AbstractStep implements ActionListener {
 		middlePanel.addExample(new JLabel(AddressbookResourceLoader.getString(
                                     "dialog",
                                     "addressbookimport",
-                                    "destination_example")));
+                                    "explanation")));
 		component.add(middlePanel);
 		return component;
 	}
