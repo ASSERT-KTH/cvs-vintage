@@ -73,7 +73,7 @@ import org.tigris.scarab.om.ScarabUser;
  * duplication of code.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: Default.java,v 1.75 2003/08/01 20:43:40 parun Exp $
+ * @version $Id: Default.java,v 1.76 2003/08/01 23:42:57 jmcnally Exp $
  */
 public class Default extends TemplateSecureScreen
 {
@@ -130,14 +130,14 @@ public class Default extends TemplateSecureScreen
         else
         {
             // Add the title text to the context.
-            String title;
+            String title = null;
             try
             {
                 title = getTitle(scarabR, l10n, data, context);
             }
             catch (Exception e)
             {
-                log.info("Error getting page title for Screen: "
+                Log.get().info("Error getting page title for Screen: "
                          + data.getTarget());
             }
             if (title == null)
