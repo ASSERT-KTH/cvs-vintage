@@ -113,7 +113,7 @@ in the contrib/tomcat module.
 @see org.jboss.security.SecurityAssociation;
 
 @author  Scott.Stark@jboss.org
-@version $Revision: 1.9 $
+@version $Revision: 1.10 $
 */
 public abstract class AbstractWebContainer extends ServiceMBeanSupport implements AbstractWebContainerMBean
 {
@@ -274,11 +274,19 @@ public abstract class AbstractWebContainer extends ServiceMBeanSupport implement
         return deploymentMap.values().iterator();
     }
 
+    /** An accessor for any configuration element set via setConfig. This
+     method always returns null and must be overriden by subclasses to
+     return a valid value.
+     */
+    public Element getConfig()
+    {
+       return null;
+    }
     /** This method is invoked to import an arbitrary XML configuration tree.
      Subclasses should override this method if they support such a configuration
      capability. This implementation does nothing.
      */
-    public void importXml(Element config)
+    public void setConfig(Element config)
     {
     }
 

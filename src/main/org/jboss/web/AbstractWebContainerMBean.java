@@ -10,7 +10,7 @@ import org.jboss.system.ServiceMBean;
 /** A template pattern for web container integration into JBoss.
 
 @author  Scott.Stark@jboss.org
-@version $Revision: 1.5 $
+@version $Revision: 1.6 $
 */
 public interface AbstractWebContainerMBean extends ServiceMBean
 {
@@ -21,7 +21,14 @@ public interface AbstractWebContainerMBean extends ServiceMBean
     @return An Iterator of WebApplication objects for the deployed wars.
     */
    public Iterator getDeployedApplications();
-   /** Allow the import of an arbitrary XML configuration tree
-    */
-   public void importXml(Element config);
+    /** An accessor for any configuration element set via setConfig. This
+     method always returns null and must be overriden by subclasses to
+     return a valid value.
+     */
+    public Element getConfig();
+    /** This method is invoked to import an arbitrary XML configuration tree.
+     Subclasses should override this method if they support such a configuration
+     capability. This implementation does nothing.
+     */
+   public void setConfig(Element config);
 }
