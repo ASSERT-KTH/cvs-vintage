@@ -6,7 +6,7 @@
 <body bgcolor="#ffffff">
 
 <h2>Scarab - Frequently Asked Questions</h2>
-<h4>$Id: faq.html,v 1.17 2002/12/03 17:50:42 jon Exp $</h4>
+<h4>$Id: faq.html,v 1.18 2003/02/01 02:02:58 jon Exp $</h4>
 
 <hr noshade="noshade" size="1" />
 
@@ -468,9 +468,27 @@ Incompatible object argument for function call
 </strong></p>
 
 <p>
-Please read this link:
-<a href="http://scarab.tigris.org/servlets/ReadMsg?list=users&msgId=203962">
-http://scarab.tigris.org/servlets/ReadMsg?list=users&msgId=203962</a>
+Tomcat has several directories setup in order to create different
+'levels' of classpaths. There is a classpath that is specific to Tomcat
+and a classpath that is shared by all of the webapplications that Tomcat
+is running. Since Scarab still depends on Xerces 1.x, we need to make
+sure that that is the only Xerces available to Scarab at runtime.
+</p>
+
+<p>
+In order to make Scarab work with Tomcat 4.1.x, you will need to move
+the xercesImpl.jar from tomcat/common/endorsed to tomcat/server/lib.
+This makes it so that the Xerces 2.x that comes with Tomcat is only used
+by Tomcat. You will also need to make sure that if you have any other
+webapplications which depend on Xerces (1.x or 2.x), that they include a
+copy of the .jar file in their WEB-INF/lib directory.
+</p>
+
+<p>
+It is sad that this needs to be this way, but due to Xerces
+incompatibility issues, that is the way it is. Note that we will
+eventually make Scarab dependent on Xerces 2.x so that this is not an
+issue, but we are not quite there yet.
 </p>
 
 <hr noshade="noshade" size="1" />
