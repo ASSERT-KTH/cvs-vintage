@@ -1,7 +1,7 @@
 ------------------------------------------------------------------------------
 | D E V E L O P E M E N T  N O T E S                                         |
 ------------------------------------------------------------------------------
-$Id: DEVELOPMENT.txt,v 1.3 2000/12/27 23:09:20 jon Exp $
+$Id: DEVELOPMENT.txt,v 1.4 2001/01/03 02:59:44 jon Exp $
 
             Below are some notes for doing development with Scarab.
 
@@ -42,4 +42,8 @@ At any point, you should be able to build a fresh target tree. This means
 that you should be able to kill Tomcat, remove the target directory and 
 re-execute the build.sh script.
 
+If you make a change to a .java file and then recompile, you need to wait at 
+least 3 seconds (this is configurable in Tomcat's server.xml file near the 
+bottom) for the classloader to notice that the class has changed and
+reload it.
 ------------------------------------------------------------------------------
