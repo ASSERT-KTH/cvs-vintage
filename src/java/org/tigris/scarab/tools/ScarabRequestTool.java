@@ -46,9 +46,11 @@ package org.tigris.scarab.tools;
  * individuals on behalf of Collab.Net.
  */ 
 
+import java.text.DateFormat;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.Locale;
 
 // Turbine
 import org.apache.turbine.Log;
@@ -58,6 +60,7 @@ import org.apache.torque.om.ComboKey;
 import org.apache.turbine.RunData;
 import org.apache.turbine.modules.Module;
 import org.apache.turbine.tool.IntakeTool;
+import org.apache.fulcrum.localization.Localization;
 import org.apache.fulcrum.intake.Intake;
 import org.apache.fulcrum.intake.model.Group;
 import org.apache.fulcrum.pool.RecyclableSupport;
@@ -213,6 +216,9 @@ public class ScarabRequestTool
     private int prevPage = 0;
     private int nextPage = 0;
     
+    /**
+     * This method expects to get a RunData object
+     */
     public void init(Object data)
     {
         this.data = (RunData)data;
@@ -1300,6 +1306,21 @@ try{
         return prevPage;
     }
 
+    /**
+     * This is used to get the format for a date in the 
+     * Locale sent by the browser.
+     */
+    public DateFormat getDateFormat()
+    {
+        Locale locale = Localization.getLocale(data.getRequest());
+        return DateFormat.getDateTimeInstance(DateFormat.MEDIUM, 
+            DateFormat.MEDIUM, locale);
+// We may want to eventually format the date other than default, 
+// this is how you would do it.
+//        SimpleDateFormat sdf = new SimpleDateFormat(
+//            "yyyy/MM/dd hh:mm:ss a z", locale);
+//        return (DateFormat) sdf;
+    }
 
     /**
      * Determine if the user currently interacting with the scarab

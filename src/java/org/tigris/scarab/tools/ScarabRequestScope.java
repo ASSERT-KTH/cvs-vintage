@@ -46,6 +46,7 @@ package org.tigris.scarab.tools;
  * individuals on behalf of Collab.Net.
  */ 
 
+import java.text.DateFormat;
 import java.util.List;
 
 // Turbine
@@ -78,7 +79,7 @@ import org.tigris.scarab.util.word.IssueSearch;
  * methodology</a> to be implemented.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ScarabRequestScope.java,v 1.16 2001/10/26 23:09:25 jmcnally Exp $
+ * @version $Id: ScarabRequestScope.java,v 1.17 2001/11/27 23:30:22 jon Exp $
  */
 public interface ScarabRequestScope extends ApplicationTool
 {
@@ -255,6 +256,12 @@ public interface ScarabRequestScope extends ApplicationTool
      * @return a <code>Issue</code> value
      */
     public IssueSearch getSearch() throws Exception;
+
+    /**
+     * This is used to get the format for a date in the 
+     * Locale sent by the browser.
+     */
+    public DateFormat getDateFormat();
 
     /**
      * Determine if the user currently interacting with the scarab

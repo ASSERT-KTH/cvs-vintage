@@ -49,7 +49,7 @@ This page is for selecting an Attribute to edit which is defined in a global sca
 <td>#if ($attribute.Description) $attribute.Description #else &nbsp; #end</td>
 #set ($createdUser = $scarabR.getUser($attribute.CreatedBy) )
 <td><a href="mailTo:$createdUser.Email">$createdUser.FirstName $createdUser.LastName</a></td>
-<td>$format.getDate($scarabG.DateFormat, $attribute.CreatedDate)</td>
+<td>$format.getDate($scarabR.DateFormat, $attribute.CreatedDate)</td>
 </tr>
 #end
 </table>

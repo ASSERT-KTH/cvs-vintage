@@ -79,7 +79,7 @@ import org.apache.torque.util.Criteria;
  * methodology</a> to be implemented.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ScarabGlobalTool.java,v 1.10 2001/11/26 23:56:09 jon Exp $
+ * @version $Id: ScarabGlobalTool.java,v 1.11 2001/11/27 23:30:22 jon Exp $
  */
 public class ScarabGlobalTool implements ScarabGlobalScope
 {
@@ -92,11 +92,6 @@ public class ScarabGlobalTool implements ScarabGlobalScope
      * holds the Scarab security permission constants
      */
     private FieldMethodizer security = null;
-    
-    /**
-     * Used for formatting dates in the format: M/d/yy
-     */
-    private static final String MDYY_DATE = "M/d/yy";
     
     public void init(Object data)
     {
@@ -133,17 +128,6 @@ public class ScarabGlobalTool implements ScarabGlobalScope
     public FieldMethodizer getPermission()
     {
         return security;
-    }
-    
-    /**
-     * This is used to get the format for a date
-     * right now, it returns "M/d/yy". In the future, we 
-     * can write code to return the correct date based on
-     * Localization needs.
-     */
-    public String getDateFormat()
-    {
-        return MDYY_DATE;
     }
     
     /**

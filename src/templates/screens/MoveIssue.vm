@@ -39,7 +39,7 @@ $page.setTitle("Copy/move issue")
    $attVal.Value
   </td>
 #end
-  <td>$format.getDate($scarabG.DateFormat, $issue.CreatedDate)</td>
+  <td>$format.getDate($scarabR.DateFormat, $issue.CreatedDate)</td>
   <td>
    #set ($createdUser = $issue.CreatedBy)
    <a href="mailTo:$createdUser.Email">$createdUser.FirstName $createdUser.LastName</a>

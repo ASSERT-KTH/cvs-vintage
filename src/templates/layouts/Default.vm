@@ -78,7 +78,7 @@ $renderer.render("navigations", $data, $template, "Default.vm")
   <table border="0" cellspacing="0" cellpadding="3" width="100%">
   <tr>
    <td nowrap="nowrap">
-    <form action="$link.setPage("IssueList.vm").setAction("Search")" method="post">
+    <form action="$link.setPage("IssueList.vm").setAction("Search")" method="get">
      #set ($module = $scarabR.CurrentModule)
      #set ($issuetype = $scarabR.CurrentIssueType)
      #set ($privateQueries = $module.getPrivateQueries($data.User, $issuetype))

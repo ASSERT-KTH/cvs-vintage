@@ -351,7 +351,7 @@
   <table cellpadding="3" cellspacing="2" border="0">
     #foreach ($comment in $comments)
      <tr>
-       <th>$format.getDate($scarabG.DateFormat, $comment.CreatedDate)
+       <th>$format.getDate($scarabR.DateFormat, $comment.CreatedDate)
        #set ($commentUser = $scarabR.getUser($comment.CreatedBy))
        <a href="mailto:$commentUser.Email">$commentUser.FirstName $commentUser.LastName</a>
        </th>
@@ -425,7 +425,7 @@
     #indexedRows($velocityCount)
      <td>
      #if ($act.Transaction)
-       $format.getDate($scarabG.DateFormat, $act.Transaction.CreatedDate)
+       $format.getDate($scarabR.DateFormat, $act.Transaction.CreatedDate)
      #end
      </td>
      <td>$act.Description

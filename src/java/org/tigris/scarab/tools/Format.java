@@ -56,6 +56,18 @@ import java.text.ParseException;
 public class Format
 {
     /**
+     * Formats the date according to the passed in SimpleDateFormat
+     * This is generally used with SRT.getDateFormat() and in the templates
+     * it looks something like this:
+     * $format.getDate($scarabR.DateFormat, $issue.CreatedDate)
+     */
+    public static String getDate(SimpleDateFormat format, Date date)
+         throws ParseException
+    {
+        return format.format(date);
+    }
+
+    /**
      * Formats the date according to the passed in format
      * Uses SimpleDateFormat to do its magic.
      */
@@ -70,10 +82,19 @@ public class Format
      * Formats the current date according to the passed in format
      * Uses SimpleDateFormat to do its magic.
      */
+    public static String getNow(SimpleDateFormat format)
+         throws ParseException
+    {
+        return getDate(format, new Date());
+    }
+
+    /**
+     * Formats the current date according to the passed in format
+     * Uses SimpleDateFormat to do its magic.
+     */
     public static String getNow(String format)
          throws ParseException
     {
-        SimpleDateFormat newFormat = new SimpleDateFormat(format);
-        return newFormat.format(new Date());
+        return getDate(format, new Date());
     }
 }

@@ -82,7 +82,7 @@ $page.setTitle("Select global attribute")
   <td>$attribute.Description</td>
   #set ($createdUser = $scarabR.getUser($attribute.CreatedBy))
   <td><a href="mailTo:$createdUser.Email">$createdUser.FirstName $createdUser.LastName</a></td>
-  <td>$format.getDate($scarabG.DateFormat, $attribute.CreatedDate)</td>
+  <td>$format.getDate($scarabR.DateFormat, $attribute.CreatedDate)</td>
  </tr>
 #end
 </table>

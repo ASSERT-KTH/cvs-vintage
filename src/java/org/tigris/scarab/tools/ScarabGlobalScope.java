@@ -68,7 +68,7 @@ import org.apache.fulcrum.security.util.AccessControlList;
  * methodology</a> to be implemented.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ScarabGlobalScope.java,v 1.6 2001/11/26 23:56:09 jon Exp $
+ * @version $Id: ScarabGlobalScope.java,v 1.7 2001/11/27 23:30:22 jon Exp $
  */
 public interface ScarabGlobalScope extends ApplicationTool
 {
@@ -77,15 +77,7 @@ public interface ScarabGlobalScope extends ApplicationTool
      * as $scarabG.Constant.CONSTANT_NAME.
      */
     public FieldMethodizer getConstant();
-    
-    /**
-     * This is used to get the format for a date
-     * right now, it returns "M/d/yy". In the future, we 
-     * can write code to return the correct date based on
-     * Localization needs.
-     */
-    public String getDateFormat();
-    
+
     /**
      * Gets a List of all of the Attribute objects.
      */

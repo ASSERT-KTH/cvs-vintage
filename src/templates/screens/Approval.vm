@@ -48,7 +48,7 @@ $page.setTitle("Approve/reject user submitted items")
   #indexedRows($velocityCount)
 
   <td><input type="checkbox" name="query_id_$query.QueryId" /></td>
-  <td>$format.getDate($scarabG.DateFormat, $query.CreatedDate)</td>
+  <td>$format.getDate($scarabR.DateFormat, $query.CreatedDate)</td>
   <td>Query</td>
 
   #set ($createdUser = $scarabR.getUser($query.UserId))
@@ -72,7 +72,7 @@ $page.setTitle("Approve/reject user submitted items")
   #indexedRows($velocityCount)
 
   <td><input type="checkbox" name="template_id_$template.IssueId" /></td>
-  <td>$format.getDate($scarabG.DateFormat, $template.CreatedDate)</td>
+  <td>$format.getDate($scarabR.DateFormat, $template.CreatedDate)</td>
   <td>enter issue template</td>
   #set ($createdUser = $template.CreatedBy)
   <input type = "hidden" name="template_user_$template.IssueId" value="$createdUser.UserId" />
