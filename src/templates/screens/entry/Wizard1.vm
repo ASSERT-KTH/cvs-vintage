@@ -4,8 +4,8 @@
 <div id="wizard1" class="app">
 <form method="post" action="$link.setPage("entry,Wizard1.vm").setAction("ReportIssue")">
 <input type="hidden" name="$scarabG.Constant.NEXT_TEMPLATE" value="entry,Wizard3.vm" />
-<input type="hidden" name="$scarabG.Constant.CURRENT_ISSUE_TYPE" 
-    value="$issueType.QueryKey" />
+
+<input type="hidden" name="issueType" value="$scarabR.CurrentRModuleIssueType.IssueType.IssueTypeId" />
 
 #set ($moduleAttributeGroups = $issue.Module.getDedupeGroupsWithAttributes($issueType))
 #entryTemplateAndAttributes ($issue $moduleAttributeGroups $l10n.Next "eventSubmit_doCheckforduplicates" true)

@@ -70,8 +70,10 @@ import org.tigris.scarab.actions.base.RequireLoginFirstAction;
 import org.tigris.scarab.attribute.OptionAttribute;
 import org.tigris.scarab.attribute.UserAttribute;
 import org.tigris.scarab.om.ScarabUser;
+import org.tigris.scarab.om.Module;
 import org.tigris.scarab.om.Issue;
 import org.tigris.scarab.om.IssueType;
+import org.tigris.scarab.om.RModuleIssueType;
 import org.tigris.scarab.om.AttributeValue;
 import org.tigris.scarab.om.ActivitySet;
 import org.tigris.scarab.om.Attribute;
@@ -90,7 +92,7 @@ import org.tigris.scarab.services.security.ScarabSecurity;
  * This class is responsible for report issue forms.
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: ReportIssue.java,v 1.173 2003/07/03 16:52:38 dlr Exp $
+ * @version $Id: ReportIssue.java,v 1.174 2003/07/11 17:04:45 irk_tpt Exp $
  */
 public class ReportIssue extends RequireLoginFirstAction
 {
@@ -104,8 +106,42 @@ public class ReportIssue extends RequireLoginFirstAction
     {
         doCheckforduplicates(data, context);
     }
-    
+
+    private boolean checkIssueTypeStatus(RunData data, TemplateContext context)
+        throws Exception
+    {
+        ScarabRequestTool scarabR = getScarabRequestTool(context);
+        Issue issue = scarabR.getReportingIssue();
+        Module module = issue.getModule();
+        IssueType issueType = issue.getIssueType();
+        boolean isValid = module != null && !module.getDeleted() &&
+            issueType != null;
+        if (isValid)
+        {
+            RModuleIssueType rmit = module.getRModuleIssueType(issueType);
+            isValid = rmit != null && rmit.getActive();
+        }
+
+        if (!isValid)
+        {
+          scarabR.setAlertMessage(
+              getLocalizationTool(context).get("IssueTypeUnavailable"));
+          data.setTarget( ((ScarabUser)data.getUser()).getHomePage());
+          cleanup(data, context);
+        }
+        return isValid;
+    }
+
     public void doCheckforduplicates(RunData data, TemplateContext context)
+        throws Exception
+    {
+        if (checkIssueTypeStatus(data, context))
+        {
+            checkForDuplicates(data, context);
+        }
+    }
+
+    public void checkForDuplicates(RunData data, TemplateContext context)
         throws Exception
     {
         ScarabLocalizationTool l10n = getLocalizationTool(context);
@@ -114,11 +150,11 @@ public class ReportIssue extends RequireLoginFirstAction
         try
         {
             Issue issue = scarabR.getReportingIssue();
-            SequencedHashMap avMap = issue.getModuleAttributeValuesMap(); 
+            SequencedHashMap avMap = issue.getModuleAttributeValuesMap();
 
             // set the values entered so far and if that is successful look
             // for duplicates
-            if (setAttributeValues(issue, intake, context, avMap)) 
+            if (setAttributeValues(issue, intake, context, avMap))
             {
                 // check for duplicates, if there are none skip the dedupe page
                 searchAndSetTemplate(data, context, 0, MAX_RESULTS, issue,
@@ -340,6 +376,18 @@ public class ReportIssue extends RequireLoginFirstAction
      * handles entering an issue
      */
     public void doEnterissue(RunData data, TemplateContext context)
+        throws Exception
+    {
+        if (checkIssueTypeStatus(data, context))
+        {
+            enterIssue(data, context);
+        }
+    }
+
+    /**
+     * handles entering an issue
+     */
+    private void enterIssue(RunData data, TemplateContext context)
         throws Exception
     {
         IntakeTool intake = getIntakeTool(context);

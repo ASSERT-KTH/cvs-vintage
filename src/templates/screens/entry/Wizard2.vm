@@ -10,8 +10,7 @@
 <input type="hidden" name="$scarabG.Constant.NEXT_TEMPLATE" value="entry,Wizard3.vm" />
 <input type="hidden" name="$scarabG.Constant.CANCEL_TEMPLATE" value="entry,Wizard1.vm" />
 <input type="hidden" name="templateId" value="$!templateId" />
-<input type="hidden" name="$scarabG.Constant.CURRENT_ISSUE_TYPE" 
-    value="$issueType.QueryKey" />
+
 
 <h3>$l10n.format("NewIssue", $scarabR.CurrentRModuleIssueType.DisplayName.toLowerCase())</h3>
 
