@@ -24,7 +24,7 @@
 // File: PropPanelNodeInstance.java
 // Classes: PropPanelNodeInstance
 // Original Author: 5eichler@informatik.uni-hamburg.de
-// $Id: PropPanelNodeInstance.java,v 1.3 2000/11/17 16:23:36 carnold Exp $
+// $Id: PropPanelNodeInstance.java,v 1.4 2001/01/09 08:25:43 carnold Exp $
 
 package org.argouml.uml.ui.behavior.common_behavior;
 
@@ -34,7 +34,7 @@ public class PropPanelNodeInstance extends PropPanelInstance {
         super();
     }
 
-    protected boolean isAcceptibleBaseMetaClass(String baseClass) {
+    public boolean isAcceptibleBaseMetaClass(String baseClass) {
         return baseClass.equals("NodeInstance") ||
             baseClass.equals("Instance");
     }
