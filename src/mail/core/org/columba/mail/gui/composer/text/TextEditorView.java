@@ -74,12 +74,12 @@ public class TextEditorView extends JTextPane implements Observer {
 		setContentType("text/plain; charset=\"" + charset + "\"");
 	}
 
-	/* (non-Javadoc)
-		 * 
-		 * @see org.columba.mail.gui.config.general.MailOptionsDialog
-		 * 
-		 * @see java.util.Observer#update(java.util.Observable, java.lang.Object)
-		 */
+	/**
+	 * 
+	 * @see org.columba.mail.gui.config.general.MailOptionsDialog
+	 * 
+	 * @see java.util.Observer#update(java.util.Observable, java.lang.Object)
+	 */
 	public void update(Observable arg0, Object arg1) {
 		Font font = FontProperties.getTextFont();
 		setFont(font);
