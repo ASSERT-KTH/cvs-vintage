@@ -5,7 +5,6 @@
 <!DOCTYPE ant SYSTEM "ant.dtd" >
 -->
 
-
 <project name="Tomcat" default="main" basedir=".">
 
   <!-- Compilation properties -->
@@ -23,22 +22,39 @@
   <!-- External packages we depend on -->
 
   <property name="ant.home" value="../jakarta-ant" />
-  <!-- servlet 2.2 -->
+  <property name="j2ee.home" value="../j2ee/build/unix"/>
+  <property name="jaxp" value="../jaxp1.0.1" />
 
-  <!-- cvs co  jakarta-servletapi; 
-  ant -Dservletapi.dist=../dist/servletapi dist 
+  <!-- ========== Hack for building 2.2 and 2.3 versions ========== -->
+  <!-- If "servlet23.jar" is defined it will be used to build
+       a 2.3 container. 
+       This will go away after we clean up tomcat so it can run both
+       ( building both is not a problem, but the runtime needs some
+        classloader tricks and cleanup )
+    -->
+  <!-- Geting servlet 2.2:
+       cvs co  jakarta-servletapi; 
+       ant -Dservletapi.dist=../dist/servletapi dist 
   -->
   <property name="servlet22.jar" 
     value="../dist/servletapi/lib/servlet.jar"/>
 
-  <!-- cvs co -r SERVLET_23_JSP_12 jakarta-servletapi; 
-  ant  -Dservletapi.build=../build/servletapi23 -Dservletapi.dist=../dist/servletapi23 dist 
+  <!-- Geting servlet 2.3: 
+       cvs co -r SERVLET_23_JSP_12 jakarta-servletapi; 
+       ant  -Dservletapi.build=../build/servletapi23 -Dservletapi.dist=../dist/servletapi23 dist 
+
+       To use the new build system you need to use "ant tomcat-new"
   -->
+  <!-- uncoment this or pass -Dservlet23.jar=... -Dservlet.jar=... params to and if 
+       you want to build with servlet 2.3 facade
   <property name="servlet23.jar"
     value="../dist/servletapi23/lib/servlet.jar" />
-  <property name="j2ee.home" value="../j2ee/build/unix"/>
-  <property name="jaxp" value="../jaxp1.0.1" />
+  <property name="servlet.jar" value="${servlet23.jar}" />
+    --> 
 
+  <property name="servlet.jar" value="${servlet22.jar}" />
+
+  <!-- ==================== Initialization - guessing config ========== -->
   <target name="init">
     <available property="jsse.present" 
       classname="javax.net.ssl.SSLServerSocket1111" />
@@ -71,15 +87,21 @@
     <copydir src="${ant.home}/bin" dest="${tomcat.build}/bin"/>
     <copyfile src="${ant.home}/lib/ant.jar" 
       dest="${tomcat.build}/lib/ant.jar"/>
+    <copyfile src="${jaxp}/jaxp.jar" dest="${tomcat.build}/lib/jaxp.jar"/>
+    <copyfile src="${jaxp}/parser.jar" dest="${tomcat.build}/lib/parser.jar"/>
     
-    <!-- XXX move it to lib/servlet22 -->
-    <copyfile src="${servlet22.jar}" dest="${tomcat.build}/lib/servlet22.jar"/>
-    <!-- new dir struct -->
-    <copyfile src="${servlet22.jar}" dest="${tomcat.build}/lib/servlet22/servlet22.jar"/>
-    <copyfile src="${servlet23.jar}" dest="${tomcat.build}/lib/servlet23/servlet23.jar"/>
+    <!-- XXX move it to lib/servlet22. This act as a "default" -->
+    <copyfile src="${servlet.jar}" dest="${tomcat.build}/lib/servlet.jar"/>
+    <!-- new dir struct for running both 2.2 and 2.3
+         <mkdir dir="${tomcat.build}/lib/servlet22"/>
+         <mkdir dir="${tomcat.build}/lib/servlet23"/>
+         <copyfile src="${servlet22.jar}" dest="${tomcat.build}/lib/servlet22/servlet22.jar"/>
+         <copyfile src="${servlet23.jar}" dest="${tomcat.build}/lib/servlet23/servlet23.jar"/>
+    -->
 
-    <fixcrlf srcdir="${tomcat.build}" includes="*.sh" cr="remove"/>
-    <fixcrlf srcdir="${tomcat.build}" includes="*.bat" cr="add"/>
+
+    <fixcrlf srcdir="${tomcat.build}/bin" includes="*.sh" cr="remove"/>
+    <fixcrlf srcdir="${tomcat.build}/bin" includes="*.bat" cr="add"/>
 
     <chmod perm="+x" file="${tomcat.build}/bin/ant"/>
     <chmod perm="+x" file="${tomcat.build}/bin/antRun"/>
@@ -98,6 +120,7 @@
       optimize="${optimize}"
       deprecation="off"
       srcdir="src/share" >
+      <!-- no dependencies -->
       <include name="org/apache/tomcat/util/**" />    
       <include name="org/apache/tomcat/logging/**" />    
       <exclude name="**/util/net/SSLSocketFactory.java"
@@ -139,7 +162,7 @@
       deprecation="off"
       srcdir="src/share" >
       <classpath>
-	<pathelement location="${servlet22.jar}" />
+	<pathelement location="${servlet.jar}" />
 	<pathelement location="${tomcat.build}/lib/tomcat_util.jar" />
       </classpath>
       <include name="org/apache/tomcat/core/**" />    
@@ -171,7 +194,7 @@
       deprecation="off"
       srcdir="src/share" >
       <classpath>
-	<pathelement location="${servlet22.jar}" />
+	<pathelement location="${servlet.jar}" />
 	<pathelement location="${tomcat.build}/lib/tomcat_util.jar" />
 	<pathelement location="${tomcat.build}/lib/tomcat_core.jar" />
       </classpath>
@@ -187,7 +210,7 @@
   </target>
 
   <!-- ==================== Servlet 22 (default) implementation ========== -->
-  <target name="facade22" depends="init" >
+  <target name="facade22" depends="init" unless="servlet23.jar">
     <javac destdir="${tomcat.build}/classes"
       debug="${debug}" 
       optimize="${optimize}"
@@ -197,17 +220,18 @@
 	<pathelement location="${servlet22.jar}" />
 	<pathelement location="${tomcat.build}/lib/tomcat_util.jar" />
 	<pathelement location="${tomcat.build}/lib/tomcat_core.jar" />
+	<pathelement location="${tomcat.build}/lib/tomcat_modules.jar" />
       </classpath>
       <include name="org/apache/tomcat/facade/**" />    
     </javac>
-    <jar jarfile="${tomcat.build}/lib/facade22.jar"
+    <jar jarfile="${tomcat.build}/lib/facade.jar"
       basedir="${tomcat.build}/classes" > 
       <include name="org/apache/tomcat/facade/**" /> 
     </jar>
   </target>
 
   <!-- ==================== Servlet 23 (default) implementation ========== -->
-  <target name="facade23" depends="init" >
+  <target name="facade23" depends="init" if="servlet23.jar">
     <javac destdir="${tomcat.build}/classes"
       debug="${debug}" 
       optimize="${optimize}"
@@ -217,10 +241,11 @@
 	<pathelement location="${servlet23.jar}" />
 	<pathelement location="${tomcat.build}/lib/tomcat_util.jar" />
 	<pathelement location="${tomcat.build}/lib/tomcat_core.jar" />
+	<pathelement location="${tomcat.build}/lib/tomcat_modules.jar" />
       </classpath>
       <include name="org/apache/tomcat/facade23/**" />    
     </javac>
-    <jar jarfile="${tomcat.build}/lib/facade23.jar"
+    <jar jarfile="${tomcat.build}/lib/facade.jar"
       basedir="${tomcat.build}/classes" > 
       <include name="org/apache/tomcat/facade23/**" /> 
     </jar>
@@ -235,7 +260,7 @@
       optimize="${optimize}"
       deprecation="off" >
       <classpath>
-	<pathelement location="${servlet22.jar}" />
+	<pathelement location="${servlet.jar}" />
 	<pathelement location="${tomcat.build}/lib/tomcat_util.jar" />
 	<pathelement location="${tomcat.build}/lib/tomcat_core.jar" />
       </classpath>
@@ -267,7 +292,7 @@
       optimize="${optimize}"
       deprecation="off" >
       <classpath>
-	<pathelement location="${servlet22.jar}" />
+	<pathelement location="${servlet.jar}" />
       </classpath>
       <include name="org/apache/jasper/**" />    
     </javac>
@@ -285,7 +310,7 @@
   <!-- ==================== Old "compile all" ==================== -->
   <target name="tomcat-compile" >
     <javac srcdir="src/share" destdir="${tomcat.build}/classes"
-      classpath="${servlet22.jar};${jaxp}/jaxp.jar" 
+      classpath="${servlet.jar};${jaxp}/jaxp.jar" 
       debug="${debug}" 
       optimize="${optimize}"
       deprecation="off" >
@@ -314,9 +339,8 @@
   </target>
 
   <!-- ==================== Old "jar all" ========== -->
-  <target name="tomcat-jars" depends="tomcat_util,tomcat.jar,tomcat_core,jasper,facade22,tomcat_modules,tomcat_config">
+  <target name="tomcat-jars" depends="init,prepare">
     <!-- create tomcat jar files -->
-    <!-- 
     <jar jarfile="${tomcat.build}/lib/webserver.jar"
       basedir="${tomcat.build}/classes" > 
       <include name="org/apache/tomcat/**" /> 
@@ -325,7 +349,12 @@
       <exclude name="org/apache/tomcat/util/XMLParser.class" /> 
       <exclude name="org/apache/tomcat/util/XMLTree.class" />
     </jar>
-    -->
+    <jar jarfile="${tomcat.home}/lib/jasper.jar"
+         basedir="${tomcat.build}/classes"
+         includes="org/apache/jasper/**"/>
+  </target>
+
+  <target name="tomcat-jars-new" depends="tomcat_util,tomcat.jar,tomcat_core,jasper,tomcat_modules,facade22,facade23,tomcat_config">
   </target>
 
   <!-- ==================== J2EE integration ========== -->
@@ -366,7 +395,7 @@
     <javac srcdir="src/examples/WEB-INF/classes"
       optimize="${optimize}"
       destdir="${tomcat.build}/webapps/examples/WEB-INF/classes"
-      classpath="${tomcat.build}/classes;${servlet22.jar}"/>
+      classpath="${tomcat.build}/classes;${servlet.jar}"/>
     <javac srcdir="src/examples/jsp/plugin/applet"
       optimize="${optimize}"
       destdir="${tomcat.build}/webapps/examples/jsp/plugin/applet"/>
@@ -378,7 +407,7 @@
     <javac srcdir="src/webpages/WEB-INF/classes"
       optimize="${optimize}"
       destdir="${tomcat.build}/webapps/ROOT/WEB-INF/classes"
-      classpath="${tomcat.build}/classes;${servlet22.jar}"/>
+      classpath="${tomcat.build}/classes;${servlet.jar}"/>
 
       <!-- admin context -->
     <mkdir dir="${tomcat.build}/webapps/admin"/>
@@ -386,7 +415,7 @@
     <javac srcdir="src/admin/WEB-INF/classes"
       optimize="${optimize}"
       destdir="${tomcat.build}/webapps/admin/WEB-INF/classes"
-      classpath="${tomcat.build}/classes;${servlet22.jar}"/>
+      classpath="${tomcat.build}/classes;${servlet.jar}"/>
 
   </target>
 
@@ -403,7 +432,7 @@
     <javac srcdir="src/tests/webpages/WEB-INF/classes"
       optimize="${optimize}"
       destdir="${tomcat.build}/webapps/test/WEB-INF/classes"
-      classpath="${tomcat.build}/classes;${servlet22.jar}"/>
+      classpath="${tomcat.build}/classes;${servlet.jar}"/>
 
     <jar   jarfile="${tomcat.home}/webapps/test.war"
       basedir="${tomcat.home}/webapps/test"
@@ -414,12 +443,12 @@
   </target>
 
   <!-- ==================== Copy the files to distribution format ======== -->
-  <target name="dist" depends="main,webapps">
+  <target name="dist" depends="main,webapps,tomcat-compile,tomcat-jars">
 
     <mkdir dir="${tomcat.home}"/>
     <copydir src="${tomcat.build}" dest="${tomcat.home}"/>
     <copydir src="src/share/org" dest="${tomcat.home}/src/org"/>
-    <copyfile src="${servlet22.jar}" dest="${tomcat.home}/lib/servlet22.jar"/>
+    <copyfile src="${servlet.jar}" dest="${tomcat.home}/lib/servlet.jar"/>
     <copyfile src="${jaxp}/jaxp.jar" dest="${tomcat.home}/lib/jaxp.jar"/>
     <copyfile src="${jaxp}/parser.jar" dest="${tomcat.home}/lib/parser.jar"/>
 
@@ -474,7 +503,10 @@
 
   <!-- ==================== Admin & agreagate ==================== -->
    
-  <target name="tomcat" depends="prepare,tomcat-jars">
+  <target name="tomcat" depends="prepare,tomcat-compile,tomcat-jars">
+  </target>
+
+  <target name="tomcat-new" depends="prepare,tomcat-jars-new">
   </target>
 
   <target name="clean-classes" depends="init">

@@ -242,13 +242,11 @@ public class Main {
     
     String cpComp[]=new String[] { "../classes/", "jaxp.jar",
 				   "parser.jar", "jasper.jar",
-				   "servlet22.jar",
-				   "facade22.jar",
-                                   "tomcat_core.jar",
-                                   "tomcat_config.jar",
-                                   "tomcat_util.jar",
-                                   "tomcat_modules.jar" };
-
+				   "webserver.jar",
+                                   "tomcat_core.jar", "tomcat_util.jar",
+                                   "tomcat_modules.jar", "tomcat_config.jar",
+				   "facade.jar", "servlet.jar"};
+    
     void execute( String args[] ) throws Exception {
 
 	try {
