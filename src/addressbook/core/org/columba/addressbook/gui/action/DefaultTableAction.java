@@ -17,12 +17,14 @@
 //All Rights Reserved.
 package org.columba.addressbook.gui.action;
 
+import org.columba.addressbook.gui.frame.AddressbookFrameMediator;
+
+import org.columba.core.action.AbstractColumbaAction;
+import org.columba.core.gui.frame.FrameMediator;
+
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
-import org.columba.addressbook.gui.frame.AddressbookFrameMediator;
-import org.columba.core.action.AbstractColumbaAction;
-import org.columba.core.gui.frame.FrameMediator;
 
 /**
  * Adds a table selection listener to DefaultTreeAction.
@@ -32,39 +34,37 @@ import org.columba.core.gui.frame.FrameMediator;
  * 
  * @author fdietz
  */
-public abstract class DefaultTableAction
-	extends AbstractColumbaAction
-	implements ListSelectionListener {
+public abstract class DefaultTableAction extends AbstractColumbaAction
+    implements ListSelectionListener {
+    /**
+ * @param frameMediator
+ * @param name
+ */
+    public DefaultTableAction(FrameMediator frameMediator, String name) {
+        super(frameMediator, name);
 
-	/**
-	 * @param frameMediator
-	 * @param name
-	 */
-	public DefaultTableAction(FrameMediator frameMediator, String name) {
-		super(frameMediator, name);
+        // register interest on table selection changes
+        ((AddressbookFrameMediator) frameMediator).addTableSelectionListener(this);
+    }
 
-		// register interest on table selection changes
-		((AddressbookFrameMediator) frameMediator).addTableSelectionListener(
-			this);
-	}
+    /**
+ * Enable or disable action on selection change.
+ * 
+ * @see javax.swing.event.ListSelectionListener#valueChanged(javax.swing.event.ListSelectionEvent)
+ */
+    public void valueChanged(ListSelectionEvent event) {
+        // return if selection change is in flux
+        if (event.getValueIsAdjusting()) {
+            return;
+        }
 
-	/**
-	 * Enable or disable action on selection change.
-	 * 
-	 * @see javax.swing.event.ListSelectionListener#valueChanged(javax.swing.event.ListSelectionEvent)
-	 */
-	public void valueChanged(ListSelectionEvent event) {
-		// return if selection change is in flux
-		if (event.getValueIsAdjusting())
-			return;
+        Object[] uids = ((AddressbookFrameMediator) frameMediator).getTable()
+                         .getUids();
 
-		Object[] uids =
-			((AddressbookFrameMediator) frameMediator).getTable().getUids();
-
-		if (uids.length > 0)
-			setEnabled(true);
-		else
-			setEnabled(false);
-	}
-
+        if (uids.length > 0) {
+            setEnabled(true);
+        } else {
+            setEnabled(false);
+        }
+    }
 }

@@ -17,13 +17,13 @@
 //All Rights Reserved.
 package org.columba.addressbook.folder.importfilter;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-
 import org.columba.addressbook.folder.ContactCard;
 import org.columba.addressbook.folder.Folder;
 import org.columba.addressbook.util.AddressbookResourceLoader;
+
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
 
 
 /**

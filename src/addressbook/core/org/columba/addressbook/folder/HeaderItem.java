@@ -137,16 +137,16 @@ public class HeaderItem {
     }
 
     /*
-    public DefaultCard getCard()
-    {
-            return item;
-    }
+public DefaultCard getCard()
+{
+        return item;
+}
 
-    public void setCard( DefaultCard item )
-    {
-            this.item = item;
-    }
-    */
+public void setCard( DefaultCard item )
+{
+        this.item = item;
+}
+*/
     public void setUid(Object uid) {
         this.uid = uid;
     }
@@ -161,14 +161,14 @@ public class HeaderItem {
 
     public Object clone() {
         /*
-        HeaderItem item = null;
-        try{
-                item = (HeaderItem)super.clone();
-        }catch(CloneNotSupportedException cnse){} //does not occur
-        //necessary?
-        item.setHashtable((Hashtable) hashtable.clone());
-        return item;
-        */
+HeaderItem item = null;
+try{
+        item = (HeaderItem)super.clone();
+}catch(CloneNotSupportedException cnse){} //does not occur
+//necessary?
+item.setHashtable((Hashtable) hashtable.clone());
+return item;
+*/
         HeaderItem item = new HeaderItem();
         item.setUid(getUid());
         item.setFolder(getFolder());

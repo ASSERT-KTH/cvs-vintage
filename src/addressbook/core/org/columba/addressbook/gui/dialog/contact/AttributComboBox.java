@@ -15,10 +15,15 @@
 //All Rights Reserved.
 package org.columba.addressbook.gui.dialog.contact;
 
+import org.columba.addressbook.folder.ContactCard;
+
+import org.columba.core.gui.util.ImageLoader;
+
 import java.awt.BorderLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+
 import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Iterator;
@@ -35,9 +40,6 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.text.Document;
 import javax.swing.text.JTextComponent;
-
-import org.columba.addressbook.folder.ContactCard;
-import org.columba.core.gui.util.ImageLoader;
 
 
 /**
@@ -138,17 +140,18 @@ public class AttributComboBox extends JPanel implements ActionListener,
         setLayout(new BorderLayout());
 
         /*
-        label = new JLabel(name + " (" + (String) list.get(0) + ")");
-        add(label, BorderLayout.WEST);
+label = new JLabel(name + " (" + (String) list.get(0) + ")");
+add(label, BorderLayout.WEST);
 
-        Component box = Box.createHorizontalStrut(20);
-        add(box, BorderLayout.CENTER);
-        */
+Component box = Box.createHorizontalStrut(20);
+add(box, BorderLayout.CENTER);
+*/
         //button = new ArrowButton(0);
         button = new JButton(name + " (" + (String) list.get(0) + "):",
                 ImageLoader.getSmallImageIcon("stock_down-16.png"));
         button.setActionCommand("BUTTON");
-        button.setMargin(new Insets(0,0,0,0));
+        button.setMargin(new Insets(0, 0, 0, 0));
+
         //button.setMargin(new Insets(2, 5, 2, 0));
         button.setHorizontalTextPosition(SwingConstants.LEADING);
 

@@ -26,46 +26,39 @@ import javax.swing.UIManager;
 import javax.swing.border.Border;
 import javax.swing.table.TableCellRenderer;
 
+
 /**
  * @author fdietz
  */
-public class DefaultHeaderRenderer
-	extends JButton
-	implements TableCellRenderer {
-	private Border unselectedBorder = null;
-	private Border selectedBorder = null;
-	private boolean isBordered = true;
-	private String name;
+public class DefaultHeaderRenderer extends JButton implements TableCellRenderer {
+    private Border unselectedBorder = null;
+    private Border selectedBorder = null;
+    private boolean isBordered = true;
+    private String name;
 
-	public DefaultHeaderRenderer(String name) {
-		super();
+    public DefaultHeaderRenderer(String name) {
+        super();
 
-		this.name = name;
+        this.name = name;
 
-		setHorizontalAlignment(SwingConstants.LEFT);
-		setHorizontalTextPosition(SwingConstants.LEFT);
+        setHorizontalAlignment(SwingConstants.LEFT);
+        setHorizontalTextPosition(SwingConstants.LEFT);
 
-		setOpaque(true); //MUST do this for background to show up.
+        setOpaque(true); //MUST do this for background to show up.
 
-		setBorder(UIManager.getBorder("TableHeader.cellBorder"));
-	}
+        setBorder(UIManager.getBorder("TableHeader.cellBorder"));
+    }
 
-	public void updateUI() {
-		super.updateUI();
+    public void updateUI() {
+        super.updateUI();
 
-		setBorder(UIManager.getBorder("TableHeader.cellBorder"));
-	}
+        setBorder(UIManager.getBorder("TableHeader.cellBorder"));
+    }
 
-	public Component getTableCellRendererComponent(
-		JTable table,
-		Object str,
-		boolean isSelected,
-		boolean hasFocus,
-		int row,
-		int column) {
+    public Component getTableCellRendererComponent(JTable table, Object str,
+        boolean isSelected, boolean hasFocus, int row, int column) {
+        setText(this.name);
 
-		setText(this.name);
-
-		return this;
-	}
+        return this;
+    }
 }

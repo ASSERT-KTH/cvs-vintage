@@ -26,24 +26,24 @@ import org.columba.addressbook.main.AddressbookInterface;
  */
 public class FolderFacade {
     /**
-     *
-     * Return a Folder object
-     *
-     *
-     * @param uid        id of folder
-     * @return                Folder
-     */
+ *
+ * Return a Folder object
+ *
+ *
+ * @param uid        id of folder
+ * @return                Folder
+ */
     public static Folder getAddressbook(int uid) {
         return (Folder) AddressbookInterface.addressbookTreeModel.getFolder(uid);
     }
 
     /**
-     *
-     * Returns a reference to the system addressbook which
-     * automatically collects addresses
-     *
-     * @return        Folder
-     */
+ *
+ * Returns a reference to the system addressbook which
+ * automatically collects addresses
+ *
+ * @return        Folder
+ */
     public static Folder getCollectedAddresses() {
         return (Folder) AddressbookInterface.addressbookTreeModel.getFolder(102);
     }

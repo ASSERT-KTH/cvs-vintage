@@ -13,11 +13,12 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
-
 package org.columba.addressbook.facade;
 
 import org.columba.addressbook.main.AddressbookInterface;
+
 import org.columba.core.xml.XmlElement;
+
 
 /**
  * @author fdietz

@@ -15,18 +15,20 @@
 //All Rights Reserved.
 package org.columba.addressbook.folder;
 
+import org.columba.addressbook.config.FolderItem;
+import org.columba.addressbook.gui.tree.AddressbookTreeNode;
+import org.columba.addressbook.main.AddressbookInterface;
+
+import org.columba.core.command.WorkerStatusController;
+import org.columba.core.io.DiskIO;
+import org.columba.core.main.MainInterface;
+
 import java.io.File;
+
 import java.util.List;
 import java.util.Vector;
 
 import javax.swing.tree.TreeNode;
-
-import org.columba.addressbook.config.FolderItem;
-import org.columba.addressbook.gui.tree.AddressbookTreeNode;
-import org.columba.addressbook.main.AddressbookInterface;
-import org.columba.core.command.WorkerStatusController;
-import org.columba.core.io.DiskIO;
-import org.columba.core.main.MainInterface;
 
 
 public abstract class Folder extends AddressbookTreeNode {
@@ -77,8 +79,8 @@ public abstract class Folder extends AddressbookTreeNode {
         */
         init();
 
-        String dir = MainInterface.config.getConfigDirectory() + "/addressbook/" +
-            getUid();
+        String dir = MainInterface.config.getConfigDirectory() +
+            "/addressbook/" + getUid();
 
         if (DiskIO.ensureDirectory(dir)) {
             directoryFile = new File(dir);

@@ -34,10 +34,10 @@ public abstract class LocalFolder extends Folder {
     protected DataStorage dataStorage;
 
     /**
-     *
-     * unique identification number for the list of HeaderItem's
-     *
-     */
+ *
+ * unique identification number for the list of HeaderItem's
+ *
+ */
     protected int nextUid;
 
     public LocalFolder(FolderItem item) {
@@ -52,13 +52,13 @@ public abstract class LocalFolder extends Folder {
     public abstract DataStorage getDataStorageInstance();
 
     /*
-    public void add(ContactCard item)
-    {
-            Object newUid = generateNextUid();
+public void add(ContactCard item)
+{
+        Object newUid = generateNextUid();
 
-            getDataStorageInstance().saveDefaultCard(item, newUid);
-    }
-    */
+        getDataStorageInstance().saveDefaultCard(item, newUid);
+}
+*/
     public void add(DefaultCard item) {
         Object newUid = generateNextUid();
 
@@ -70,14 +70,14 @@ public abstract class LocalFolder extends Folder {
     }
 
     /*
-    public void removeFolder()
-    {
-            super.removeFolder();
+public void removeFolder()
+{
+        super.removeFolder();
 
-            // remove folder from disc
-            directoryFile.delete();
-    }
-    */
+        // remove folder from disc
+        directoryFile.delete();
+}
+*/
     public DefaultCard get(Object uid) {
         return getDataStorageInstance().loadDefaultCard(uid);
     }

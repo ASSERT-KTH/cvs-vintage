@@ -17,8 +17,6 @@
 //All Rights Reserved.
 package org.columba.addressbook.gui.action;
 
-import java.awt.event.ActionEvent;
-
 import org.columba.addressbook.folder.AddressbookFolder;
 import org.columba.addressbook.folder.ContactCard;
 import org.columba.addressbook.folder.GroupListCard;
@@ -28,111 +26,105 @@ import org.columba.addressbook.gui.dialog.contact.ContactDialog;
 import org.columba.addressbook.gui.dialog.group.EditGroupDialog;
 import org.columba.addressbook.gui.frame.AddressbookFrameMediator;
 import org.columba.addressbook.util.AddressbookResourceLoader;
+
 import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.gui.util.ImageLoader;
 
+import java.awt.event.ActionEvent;
+
+
 /**
  * Edit properties of selected contact or group.
- * 
+ *
  * @author fdietz
  */
 public class EditPropertiesAction extends DefaultTableAction {
-	public EditPropertiesAction(FrameMediator frameController) {
-		super(
-			frameController,
-			AddressbookResourceLoader.getString(
-				"menu",
-				"mainframe",
-				"menu_file_properties"));
+    public EditPropertiesAction(FrameMediator frameController) {
+        super(frameController,
+            AddressbookResourceLoader.getString("menu", "mainframe",
+                "menu_file_properties"));
 
-		// tooltip text
-		putValue(
-			SHORT_DESCRIPTION,
-			AddressbookResourceLoader
-				.getString("menu", "mainframe", "menu_file_properties_tooltip")
-				.replaceAll("&", ""));
+        // tooltip text
+        putValue(SHORT_DESCRIPTION,
+            AddressbookResourceLoader.getString("menu", "mainframe",
+                "menu_file_properties_tooltip").replaceAll("&", ""));
 
-		putValue(
-			TOOLBAR_NAME,
-			AddressbookResourceLoader.getString(
-				"menu",
-				"mainframe",
-				"menu_file_properties_toolbar"));
+        putValue(TOOLBAR_NAME,
+            AddressbookResourceLoader.getString("menu", "mainframe",
+                "menu_file_properties_toolbar"));
 
-		// icons
-		putValue(
-			SMALL_ICON,
-			ImageLoader.getSmallImageIcon("stock_edit-16.png"));
-		putValue(LARGE_ICON, ImageLoader.getImageIcon("stock_edit.png"));
+        // icons
+        putValue(SMALL_ICON, ImageLoader.getSmallImageIcon("stock_edit-16.png"));
+        putValue(LARGE_ICON, ImageLoader.getImageIcon("stock_edit.png"));
 
-		setEnabled(false);
-	}
+        setEnabled(false);
+    }
 
-	/**
-	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
-	 */
-	public void actionPerformed(ActionEvent evt) {
-		AddressbookFrameMediator mediator =
-			(AddressbookFrameMediator) frameMediator;
+    /**
+     * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
+     */
+    public void actionPerformed(ActionEvent evt) {
+        AddressbookFrameMediator mediator = (AddressbookFrameMediator) frameMediator;
 
-		// get selected contact/group card
-		Object[] uids = mediator.getTable().getUids();
+        // get selected contact/group card
+        Object[] uids = mediator.getTable().getUids();
 
-		// get selected folder
-		AddressbookFolder folder =
-			(AddressbookFolder) mediator.getTree().getSelectedFolder();
+        // get selected folder
+        AddressbookFolder folder = (AddressbookFolder) mediator.getTree()
+                                                               .getSelectedFolder();
 
-		if (uids.length == 0) {
-			return;
-		}
+        if (uids.length == 0) {
+            return;
+        }
 
-		//TODO: Why do we need this HeaderItem anyway?
-		//      -> just get the card from the folder, wether it is a contact or
-		// group card
-		HeaderItem item = mediator.getTable().getSelectedItem();
+        //TODO: Why do we need this HeaderItem anyway?
+        //      -> just get the card from the folder, wether it is a contact or
+        // group card
+        HeaderItem item = mediator.getTable().getSelectedItem();
 
-		if (item.isContact()) {
-			ContactCard card = (ContactCard) folder.get(uids[0]);
-			ContactDialog dialog = new ContactDialog(mediator.getView());
+        if (item.isContact()) {
+            ContactCard card = (ContactCard) folder.get(uids[0]);
+            ContactDialog dialog = new ContactDialog(mediator.getView());
 
-			// TODO: move this code to dialog
-			dialog.updateComponents(card, true);
-			dialog.setVisible(true);
+            // TODO: move this code to dialog
+            dialog.updateComponents(card, true);
+            dialog.setVisible(true);
 
-			if (dialog.getResult()) {
-				//TODO:move this code to dialog
-				dialog.updateComponents(card, false);
+            if (dialog.getResult()) {
+                //TODO:move this code to dialog
+                dialog.updateComponents(card, false);
 
-				// modify card properties in folder
-				folder.modify(card, uids[0]);
+                // modify card properties in folder
+                folder.modify(card, uids[0]);
 
-				// update table
-				// TODO: fire event of table model instead
-				mediator.getTable().getAddressbookModel().update();
-			}
-		} else {
-			GroupListCard card = (GroupListCard) folder.get(uids[0]);
+                // update table
+                // TODO: fire event of table model instead
+                mediator.getTable().getAddressbookModel().update();
+            }
+        } else {
+            GroupListCard card = (GroupListCard) folder.get(uids[0]);
 
-			EditGroupDialog dialog =
-				new EditGroupDialog(mediator.getView(), null);
+            EditGroupDialog dialog = new EditGroupDialog(mediator.getView(),
+                    null);
 
-			Object[] groupUids = card.getUids();
-			HeaderItemList members = folder.getHeaderItemList(groupUids);
-			// TODO: move this code to dialog
-			dialog.updateComponents(card, members, true);
-			dialog.setVisible(true);
+            Object[] groupUids = card.getUids();
+            HeaderItemList members = folder.getHeaderItemList(groupUids);
 
-			if (dialog.getResult()) {
-				// TODO: move this code to dialog
-				dialog.updateComponents(card, null, false);
+            // TODO: move this code to dialog
+            dialog.updateComponents(card, members, true);
+            dialog.setVisible(true);
 
-				// modify card properties in folder
-				folder.modify(card, uids[0]);
+            if (dialog.getResult()) {
+                // TODO: move this code to dialog
+                dialog.updateComponents(card, null, false);
 
-				// update table
-				// TODO: fire event of table model instead
-				mediator.getTable().getAddressbookModel().update();
-			}
-		}
-	}
+                // modify card properties in folder
+                folder.modify(card, uids[0]);
+
+                // update table
+                // TODO: fire event of table model instead
+                mediator.getTable().getAddressbookModel().update();
+            }
+        }
+    }
 }

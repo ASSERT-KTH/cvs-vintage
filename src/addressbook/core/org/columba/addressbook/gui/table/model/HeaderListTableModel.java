@@ -15,9 +15,10 @@
 //All Rights Reserved.
 package org.columba.addressbook.gui.table.model;
 
+import org.columba.addressbook.folder.HeaderItemList;
+
 import javax.swing.table.TableModel;
 
-import org.columba.addressbook.folder.HeaderItemList;
 
 /**
  * Adds getter/setter methods to the TableModel interface.
@@ -25,7 +26,7 @@ import org.columba.addressbook.folder.HeaderItemList;
  * @author fdietz
  */
 public interface HeaderListTableModel extends TableModel {
+    void setHeaderList(HeaderItemList list);
 
-	void setHeaderList(HeaderItemList list);
-	HeaderItemList getHeaderList();
+    HeaderItemList getHeaderList();
 }

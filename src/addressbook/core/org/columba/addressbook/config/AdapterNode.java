@@ -241,10 +241,10 @@ public class AdapterNode //implements TreeNode
     }
 
     /*
-      public int getChildCount()
-      {
-      }
-    */
+  public int getChildCount()
+  {
+  }
+*/
     public int getIndex(Object node) {
         return getIndex(node);
     }
@@ -261,13 +261,13 @@ public class AdapterNode //implements TreeNode
 
     /*
 
-    public boolean isLeaf()
-    {
-        if ( domNode.hasChildNodes() ) return false;
-        else return true;
-    }
+public boolean isLeaf()
+{
+    if ( domNode.hasChildNodes() ) return false;
+    else return true;
+}
 
-    public int getIndex(javax.swing.tree.TreeNode treeNode) {
-    }
-    */
+public int getIndex(javax.swing.tree.TreeNode treeNode) {
+}
+*/
 }

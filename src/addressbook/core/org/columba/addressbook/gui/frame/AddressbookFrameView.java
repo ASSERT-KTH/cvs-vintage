@@ -15,8 +15,18 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003.
 //
 //All Rights Reserved.
-
 package org.columba.addressbook.gui.frame;
+
+import org.columba.addressbook.gui.menu.AddressbookMenu;
+import org.columba.addressbook.gui.table.TableView;
+import org.columba.addressbook.gui.tree.TreeView;
+import org.columba.addressbook.main.AddressbookInterface;
+
+import org.columba.core.gui.frame.AbstractFrameView;
+import org.columba.core.gui.frame.FrameMediator;
+import org.columba.core.gui.menu.Menu;
+import org.columba.core.gui.toolbar.ToolBar;
+import org.columba.core.gui.util.UIFSplitPane;
 
 import java.awt.BorderLayout;
 import java.awt.Container;
@@ -25,59 +35,45 @@ import javax.swing.BorderFactory;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 
-import org.columba.addressbook.gui.menu.AddressbookMenu;
-import org.columba.addressbook.gui.table.TableView;
-import org.columba.addressbook.gui.tree.TreeView;
-import org.columba.addressbook.main.AddressbookInterface;
-import org.columba.core.gui.frame.AbstractFrameView;
-import org.columba.core.gui.frame.FrameMediator;
-import org.columba.core.gui.menu.Menu;
-import org.columba.core.gui.toolbar.ToolBar;
-import org.columba.core.gui.util.UIFSplitPane;
 
 public class AddressbookFrameView extends AbstractFrameView {
+    public AddressbookFrameView(FrameMediator frameController) {
+        super(frameController);
+    }
 
-	public AddressbookFrameView(FrameMediator frameController) {
-		super(frameController);
+    /**
+     * @see org.columba.core.gui.FrameView#createMenu(org.columba.core.gui.FrameController)
+     */
+    protected Menu createMenu(FrameMediator controller) {
+        Menu menu = new AddressbookMenu("org/columba/core/action/menu.xml",
+                controller);
+        menu.extendMenuFromFile("org/columba/addressbook/action/menu.xml");
 
-	}
+        return menu;
+    }
 
-	/**
-	 * @see org.columba.core.gui.FrameView#createMenu(org.columba.core.gui.FrameController)
-	 */
-	protected Menu createMenu(FrameMediator controller) {
-		Menu menu =
-			new AddressbookMenu("org/columba/core/action/menu.xml", controller);
-		menu.extendMenuFromFile("org/columba/addressbook/action/menu.xml");
+    /**
+     * @see org.columba.core.gui.FrameView#createToolbar(org.columba.core.gui.FrameController)
+     */
+    protected ToolBar createToolbar(FrameMediator controller) {
+        return new ToolBar(AddressbookInterface.config.get("main_toolbar")
+                                                      .getElement("toolbar"),
+            controller);
+    }
 
-		return menu;
-	}
+    public void init(TreeView tree, TableView table) {
+        Container c = getContentPane();
 
-	/**
-	 * @see org.columba.core.gui.FrameView#createToolbar(org.columba.core.gui.FrameController)
-	 */
-	protected ToolBar createToolbar(FrameMediator controller) {
-		return new ToolBar(
-			AddressbookInterface.config.get("main_toolbar").getElement(
-				"toolbar"),
-			controller);
-	}
+        //table.setupRenderer();
+        JScrollPane treeScrollPane = new JScrollPane(tree);
+        treeScrollPane.setBorder(BorderFactory.createEmptyBorder(2, 2, 2, 2));
 
-	public void init(TreeView tree, TableView table) {
-		Container c = getContentPane();
+        JScrollPane tableScrollPane = new JScrollPane(table);
 
-		//table.setupRenderer();
+        JSplitPane splitPane = new UIFSplitPane(JSplitPane.HORIZONTAL_SPLIT,
+                treeScrollPane, tableScrollPane);
+        splitPane.setBorder(null);
 
-		JScrollPane treeScrollPane = new JScrollPane(tree);
-		treeScrollPane.setBorder(BorderFactory.createEmptyBorder(2, 2, 2, 2));
-		
-		JScrollPane tableScrollPane = new JScrollPane(table);
-		
-		JSplitPane splitPane =
-			new UIFSplitPane(JSplitPane.HORIZONTAL_SPLIT, treeScrollPane, tableScrollPane);
-		splitPane.setBorder(null);
-
-		c.add(splitPane, BorderLayout.CENTER);
-
-	}
+        c.add(splitPane, BorderLayout.CENTER);
+    }
 }

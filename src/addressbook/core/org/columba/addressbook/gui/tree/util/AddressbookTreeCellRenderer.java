@@ -15,15 +15,16 @@
 //All Rights Reserved.
 package org.columba.addressbook.gui.tree.util;
 
+import org.columba.addressbook.gui.tree.AddressbookTreeNode;
+
+import org.columba.core.gui.util.ImageLoader;
+
 import java.awt.Component;
 
 import javax.swing.ImageIcon;
 import javax.swing.JTree;
 import javax.swing.border.Border;
 import javax.swing.tree.DefaultTreeCellRenderer;
-
-import org.columba.addressbook.gui.tree.AddressbookTreeNode;
-import org.columba.core.gui.util.ImageLoader;
 
 
 public class AddressbookTreeCellRenderer extends DefaultTreeCellRenderer {
@@ -68,55 +69,55 @@ public class AddressbookTreeCellRenderer extends DefaultTreeCellRenderer {
         setIcon(folder.getIcon());
 
         /*
-        FolderItem item = folder.getFolderItem();
-        if ( item==null ) return this;
+FolderItem item = folder.getFolderItem();
+if ( item==null ) return this;
 
-        //int uid = item.getUid();
-        int uid = 100;
+//int uid = item.getUid();
+int uid = 100;
 
-        if ( uid == 100 )
-        {
-                setIcon(image2);
-        }
-        else if ( uid == 200 )
-        {
-                setIcon(image3);
-        }
-        else
-        {
-                setIcon(image1);
-        }
-        */
+if ( uid == 100 )
+{
+        setIcon(image2);
+}
+else if ( uid == 200 )
+{
+        setIcon(image3);
+}
+else
+{
+        setIcon(image1);
+}
+*/
         /*
-        if (value instanceof AddressbookFolder)
+if (value instanceof AddressbookFolder)
+{
+        AddressbookFolder folder = (AddressbookFolder) value;
+
+        FolderItem item = folder.getFolderItem();
+        if (item != null)
         {
-                AddressbookFolder folder = (AddressbookFolder) value;
+                String name = item.getName();
+                String type = item.getType();
 
-                FolderItem item = folder.getFolderItem();
-                if (item != null)
-                {
-                        String name = item.getName();
-                        String type = item.getType();
-
-                        if ( type == "addressbook") )
-                                setIcon(image1);
-                        else
-                                setIcon(image2);
-
-
-                }
-
-
-                setText(folder.getName());
+                if ( type == "addressbook") )
+                        setIcon(image1);
+                else
+                        setIcon(image2);
 
 
         }
-        else
-        {
 
 
-        }
-        */
+        setText(folder.getName());
+
+
+}
+else
+{
+
+
+}
+*/
         return this;
     }
 }

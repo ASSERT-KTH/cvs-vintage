@@ -17,92 +17,89 @@
 //All Rights Reserved.
 package org.columba.addressbook.gui.frame;
 
-import javax.swing.event.ListSelectionListener;
-import javax.swing.event.TreeSelectionListener;
-
 import org.columba.addressbook.gui.table.TableController;
 import org.columba.addressbook.gui.tree.TreeController;
+
 import org.columba.core.config.ViewItem;
 import org.columba.core.gui.frame.AbstractFrameController;
 import org.columba.core.gui.frame.AbstractFrameView;
+
+import javax.swing.event.ListSelectionListener;
+import javax.swing.event.TreeSelectionListener;
+
 
 /**
  * @author Timo Stich (tstich@users.sourceforge.net)
  *  
  */
-public class AddressbookFrameController
-	extends AbstractFrameController
-	implements AddressbookFrameMediator {
-	
-	protected TreeController tree;
-	protected TableController table;
+public class AddressbookFrameController extends AbstractFrameController
+    implements AddressbookFrameMediator {
+    protected TreeController tree;
+    protected TableController table;
 
-	/**
-	 * Constructor for AddressbookController.
-	 */
-	public AddressbookFrameController(ViewItem viewItem) {
-		super("Addressbook", viewItem);
-	}
+    /**
+ * Constructor for AddressbookController.
+ */
+    public AddressbookFrameController(ViewItem viewItem) {
+        super("Addressbook", viewItem);
+    }
 
-	/**
-	 * @see org.columba.core.gui.FrameController#createView()
-	 */
-	protected AbstractFrameView createView() {
-		AddressbookFrameView view = new AddressbookFrameView(this);
-		view.init(tree.getView(), table.getView());
+    /**
+ * @see org.columba.core.gui.FrameController#createView()
+ */
+    protected AbstractFrameView createView() {
+        AddressbookFrameView view = new AddressbookFrameView(this);
+        view.init(tree.getView(), table.getView());
 
-		view.pack();
+        view.pack();
 
-		view.setVisible(true);
+        view.setVisible(true);
 
-		return view;
-	}
+        return view;
+    }
 
-	/**
-	 * @see org.columba.core.gui.FrameController#init()
-	 */
-	protected void init() {
-		tree = new TreeController(this);
-		table = new TableController(this);
+    /**
+ * @see org.columba.core.gui.FrameController#init()
+ */
+    protected void init() {
+        tree = new TreeController(this);
+        table = new TableController(this);
 
-		// table should be updated when tree selection changes
-		tree.getView().addTreeSelectionListener(table);
-	}
+        // table should be updated when tree selection changes
+        tree.getView().addTreeSelectionListener(table);
+    }
 
-	/**
-	 * @see org.columba.core.gui.FrameController#initInternActions()
-	 */
-	protected void initInternActions() {
-	}
+    /**
+ * @see org.columba.core.gui.FrameController#initInternActions()
+ */
+    protected void initInternActions() {
+    }
 
-	/**
-	 * @return AddressbookTableController
-	 */
-	public TableController getTable() {
-		return table;
-	}
+    /**
+ * @return AddressbookTableController
+ */
+    public TableController getTable() {
+        return table;
+    }
 
-	/**
-	 * @return AddressbookTreeController
-	 */
-	public TreeController getTree() {
-		return tree;
-	}
-	
-	/**
-	 * @see org.columba.addressbook.gui.frame.AddressbookFrameMediator#addTableSelectionListener(javax.swing.event.ListSelectionListener)
-	 */
-	public void addTableSelectionListener(ListSelectionListener listener) {
-		getTable().getView().getSelectionModel().addListSelectionListener(listener);
+    /**
+ * @return AddressbookTreeController
+ */
+    public TreeController getTree() {
+        return tree;
+    }
 
-	}
+    /**
+ * @see org.columba.addressbook.gui.frame.AddressbookFrameMediator#addTableSelectionListener(javax.swing.event.ListSelectionListener)
+ */
+    public void addTableSelectionListener(ListSelectionListener listener) {
+        getTable().getView().getSelectionModel().addListSelectionListener(listener);
+    }
 
-	/**
-	 * @see org.columba.addressbook.gui.frame.AddressbookFrameMediator#addTreeSelectionListener(javax.swing.event.TreeSelectionListener)
-	 */
-	public void addTreeSelectionListener(TreeSelectionListener listener) {
-		getTree().getView().addTreeSelectionListener(listener);
-
-	}
-
+    /**
+ * @see org.columba.addressbook.gui.frame.AddressbookFrameMediator#addTreeSelectionListener(javax.swing.event.TreeSelectionListener)
+ */
+    public void addTreeSelectionListener(TreeSelectionListener listener) {
+        getTree().getView().addTreeSelectionListener(listener);
+    }
 }

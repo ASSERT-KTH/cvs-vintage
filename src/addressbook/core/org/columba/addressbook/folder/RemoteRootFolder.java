@@ -15,12 +15,13 @@
 //All Rights Reserved.
 package org.columba.addressbook.folder;
 
-import javax.swing.ImageIcon;
-
 import org.columba.addressbook.config.FolderItem;
 import org.columba.addressbook.gui.tree.AddressbookTreeNode;
+
 import org.columba.core.command.WorkerStatusController;
 import org.columba.core.gui.util.ImageLoader;
+
+import javax.swing.ImageIcon;
 
 
 /**
@@ -35,16 +36,16 @@ public class RemoteRootFolder extends AddressbookTreeNode {
     ImageIcon remoteIcon = ImageLoader.getSmallImageIcon("remotehost.png");
 
     /**
-     * Constructor for RemoteRootFolder.
-     * @param item
-     */
+ * Constructor for RemoteRootFolder.
+ * @param item
+ */
     public RemoteRootFolder(FolderItem item) {
         super(item);
     }
 
     /**
-     * @see org.columba.addressbook.gui.tree.AddressbookTreeNode#createChildren(org.columba.core.command.WorkerStatusController)
-     */
+ * @see org.columba.addressbook.gui.tree.AddressbookTreeNode#createChildren(org.columba.core.command.WorkerStatusController)
+ */
     public void createChildren(WorkerStatusController worker) {
     }
 

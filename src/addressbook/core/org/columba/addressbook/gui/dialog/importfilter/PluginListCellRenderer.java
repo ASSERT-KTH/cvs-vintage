@@ -15,16 +15,17 @@
 //All Rights Reserved.
 package org.columba.addressbook.gui.dialog.importfilter;
 
+import org.columba.addressbook.plugin.ImportPluginHandler;
+
+import org.columba.core.gui.util.NotifyDialog;
+import org.columba.core.main.MainInterface;
+import org.columba.core.plugin.PluginHandlerNotFoundException;
+
 import java.awt.Component;
 
 import javax.swing.DefaultListCellRenderer;
 import javax.swing.JList;
 import javax.swing.UIManager;
-
-import org.columba.addressbook.plugin.ImportPluginHandler;
-import org.columba.core.gui.util.NotifyDialog;
-import org.columba.core.main.MainInterface;
-import org.columba.core.plugin.PluginHandlerNotFoundException;
 
 
 public class PluginListCellRenderer extends DefaultListCellRenderer {
@@ -43,8 +44,8 @@ public class PluginListCellRenderer extends DefaultListCellRenderer {
     }
 
     /* (non-Javadoc)
-     * @see javax.swing.ListCellRenderer#getListCellRendererComponent(javax.swing.JList, java.lang.Object, int, boolean, boolean)
-     */
+ * @see javax.swing.ListCellRenderer#getListCellRendererComponent(javax.swing.JList, java.lang.Object, int, boolean, boolean)
+ */
     public Component getListCellRendererComponent(JList list, Object value,
         int index, boolean isSelected, boolean cellHasFocus) {
         if (isSelected) {

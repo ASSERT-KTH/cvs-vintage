@@ -15,20 +15,22 @@
 //All Rights Reserved.
 package org.columba.addressbook.gui.tree;
 
+import org.columba.addressbook.config.FolderItem;
+import org.columba.addressbook.folder.Folder;
+
+import org.columba.core.command.WorkerStatusController;
+import org.columba.core.gui.util.ImageLoader;
+import org.columba.core.util.Lock;
+import org.columba.core.xml.XmlElement;
+
 import java.lang.reflect.Method;
+
 import java.util.Hashtable;
 
 import javax.swing.ImageIcon;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
-
-import org.columba.addressbook.config.FolderItem;
-import org.columba.addressbook.folder.Folder;
-import org.columba.core.command.WorkerStatusController;
-import org.columba.core.gui.util.ImageLoader;
-import org.columba.core.util.Lock;
-import org.columba.core.xml.XmlElement;
 
 
 public abstract class AddressbookTreeNode extends DefaultMutableTreeNode {
@@ -50,12 +52,12 @@ public abstract class AddressbookTreeNode extends DefaultMutableTreeNode {
     }
 
     /*
-    public AddressbookTreeNode(String name) {
-            super(name);
+public AddressbookTreeNode(String name) {
+        super(name);
 
-            this.name = name;
-    }
-    */
+        this.name = name;
+}
+*/
     public FolderItem getFolderItem() {
         return node;
     }
@@ -77,9 +79,9 @@ public abstract class AddressbookTreeNode extends DefaultMutableTreeNode {
         // FAILURE!!!
 
         /*
-        XmlElement filter = new XmlElement("filter");
-        defaultElement.addElement(filter);
-        */
+XmlElement filter = new XmlElement("filter");
+defaultElement.addElement(filter);
+*/
         return new FolderItem(defaultElement);
     }
 
@@ -109,14 +111,14 @@ public abstract class AddressbookTreeNode extends DefaultMutableTreeNode {
     }
 
     /*
-    public void setName(String s) {
-            name = s;
-    }
+public void setName(String s) {
+        name = s;
+}
 
-    public String getName() {
-            return name;
-    }
-    */
+public String getName() {
+        return name;
+}
+*/
     public int getUid() {
         return node.getInteger("uid");
     }
@@ -130,17 +132,17 @@ public abstract class AddressbookTreeNode extends DefaultMutableTreeNode {
     }
 
     /**
-     * Returns the node.
-     * @return FolderItem
-     */
+ * Returns the node.
+ * @return FolderItem
+ */
     public XmlElement getNode() {
         return node.getRoot();
     }
 
     /**
-     * Sets the node.
-     * @param node The node to set
-     */
+ * Sets the node.
+ * @param node The node to set
+ */
     public void setNode(FolderItem node) {
         this.node = node;
     }
@@ -193,8 +195,8 @@ public abstract class AddressbookTreeNode extends DefaultMutableTreeNode {
     }
 
     /**
-             * @see org.columba.modules.mail.folder.FolderTreeNode#setName(String)
-             */
+         * @see org.columba.modules.mail.folder.FolderTreeNode#setName(String)
+         */
     public void setName(String newName) {
         FolderItem item = getFolderItem();
         item.set("property", "name", newName);

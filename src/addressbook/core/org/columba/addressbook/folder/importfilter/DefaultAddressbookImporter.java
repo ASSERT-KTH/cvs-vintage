@@ -15,21 +15,22 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003.
 //
 //All Rights Reserved.
-
 package org.columba.addressbook.folder.importfilter;
+
+import org.columba.addressbook.folder.ContactCard;
+import org.columba.addressbook.folder.Folder;
+import org.columba.addressbook.util.AddressbookResourceLoader;
+
+import org.columba.core.gui.util.ExceptionDialog;
+import org.columba.core.gui.util.ImageLoader;
+import org.columba.core.gui.util.NotifyDialog;
+import org.columba.core.plugin.PluginInterface;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 
 import javax.swing.JOptionPane;
 
-import org.columba.addressbook.folder.ContactCard;
-import org.columba.addressbook.folder.Folder;
-import org.columba.addressbook.util.AddressbookResourceLoader;
-import org.columba.core.gui.util.ExceptionDialog;
-import org.columba.core.gui.util.ImageLoader;
-import org.columba.core.gui.util.NotifyDialog;
-import org.columba.core.plugin.PluginInterface;
 
 public abstract class DefaultAddressbookImporter implements PluginInterface {
     public static int TYPE_FILE = 0;
@@ -103,26 +104,29 @@ public abstract class DefaultAddressbookImporter implements PluginInterface {
         } catch (Exception ex) {
             if (ex instanceof FileNotFoundException) {
                 NotifyDialog dialog = new NotifyDialog();
-                dialog.showDialog(AddressbookResourceLoader.getString("dialog", "addressbookimport", "source_file_not_found")); //$NON-NLS-1$
+                dialog.showDialog(AddressbookResourceLoader.getString(
+                        "dialog", "addressbookimport", "source_file_not_found")); //$NON-NLS-1$
             } else {
                 new ExceptionDialog(ex);
-                
             }
 
             NotifyDialog dialog = new NotifyDialog();
-            dialog.showDialog(
-                AddressbookResourceLoader.getString("dialog", "addressbookimport", "addressbook_import_failed")); //$NON-NLS-1$
+            dialog.showDialog(AddressbookResourceLoader.getString("dialog",
+                    "addressbookimport", "addressbook_import_failed")); //$NON-NLS-1$
 
             return;
         }
 
         if (getCount() == 0) {
             NotifyDialog dialog = new NotifyDialog();
-            dialog.showDialog(
-                AddressbookResourceLoader.getString("dialog", "addressbookimport", "addressbook_import_failed_2")); //$NON-NLS-1$
+            dialog.showDialog(AddressbookResourceLoader.getString("dialog",
+                    "addressbookimport", "addressbook_import_failed_2")); //$NON-NLS-1$
         } else {
             JOptionPane.showMessageDialog(null,
-                AddressbookResourceLoader.getString("dialog", "addressbookimport", "addressbook_import_was_successfull"), AddressbookResourceLoader.getString("dialog", "contact", "information"), //$NON-NLS-1$ //$NON-NLS-2$
+                AddressbookResourceLoader.getString("dialog",
+                    "addressbookimport", "addressbook_import_was_successfull"),
+                AddressbookResourceLoader.getString("dialog", "contact",
+                    "information"), //$NON-NLS-1$ //$NON-NLS-2$
                 JOptionPane.INFORMATION_MESSAGE,
                 ImageLoader.getImageIcon("stock_dialog_info_48.png")); //$NON-NLS-1$
         }

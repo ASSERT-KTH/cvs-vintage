@@ -15,6 +15,8 @@
 //All Rights Reserved.
 package org.columba.addressbook.gui.list;
 
+import org.columba.addressbook.folder.HeaderItem;
+
 import java.awt.Point;
 import java.awt.datatransfer.StringSelection;
 import java.awt.datatransfer.Transferable;
@@ -36,8 +38,6 @@ import java.awt.image.BufferedImage;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
-import org.columba.addressbook.folder.HeaderItem;
-
 
 //import sun.security.krb5.internal.i;
 //import sun.security.krb5.internal.crypto.b;
@@ -53,13 +53,13 @@ public class AddressbookDNDListView extends AddressbookListView
     private static AddressbookDNDListView source;
 
     /**
-    * enables this component to be a dropTarget
-    */
+* enables this component to be a dropTarget
+*/
     DropTarget dropTarget = null;
 
     /**
-     * enables this component to be a Drag Source
-     */
+ * enables this component to be a Drag Source
+ */
     DragSource dragSource = null;
     boolean acceptDrop = true;
     private HeaderItem[] selection1;
@@ -109,9 +109,9 @@ public class AddressbookDNDListView extends AddressbookListView
     }
 
     /**
-    * is invoked when you are dragging over the DropSite
-    *
-    */
+* is invoked when you are dragging over the DropSite
+*
+*/
     public void dragEnter(DropTargetDragEvent event) {
         // debug messages for diagnostics
         if (acceptDrop == true) {
@@ -122,23 +122,23 @@ public class AddressbookDNDListView extends AddressbookListView
     }
 
     /**
-     * is invoked when you are exit the DropSite without dropping
-     *
-     */
+ * is invoked when you are exit the DropSite without dropping
+ *
+ */
     public void dragExit(DropTargetEvent event) {
     }
 
     /**
-     * is invoked when a drag operation is going on
-     *
-     */
+ * is invoked when a drag operation is going on
+ *
+ */
     public void dragOver(DropTargetDragEvent event) {
     }
 
     /**
-     * a drop has occurred
-     *
-     */
+ * a drop has occurred
+ *
+ */
     public void drop(DropTargetDropEvent event) {
         if (acceptDrop == false) {
             event.rejectDrop();
@@ -163,23 +163,23 @@ public class AddressbookDNDListView extends AddressbookListView
     }
 
     /**
-     * is invoked if the use modifies the current drop gesture
-     *
-     */
+ * is invoked if the use modifies the current drop gesture
+ *
+ */
     public void dropActionChanged(DropTargetDragEvent event) {
     }
 
     /**
-     * a drag gesture has been initiated
-     *
-     */
+ * a drag gesture has been initiated
+ *
+ */
     public void dragGestureRecognized(DragGestureEvent event) {
         if (dndAction == false) {
             /*
-                    HeaderItem[] items = new HeaderItem[selection1.length];
-                    items = selection1;
-                    HeaderItemDNDManager.getInstance().setHeaderItemList(items);
-            */
+        HeaderItem[] items = new HeaderItem[selection1.length];
+        items = selection1;
+        HeaderItemDNDManager.getInstance().setHeaderItemList(items);
+*/
             if (selection1 == null) {
                 HeaderItem[] items = new HeaderItem[1];
                 items[0] = (HeaderItem) getSelectedValue();
@@ -192,20 +192,20 @@ public class AddressbookDNDListView extends AddressbookListView
             }
 
             /*
-            else
-            {
+else
+{
 
-                    HeaderItem[] items = new HeaderItem[1];
-                    items[0] = (HeaderItem) getSelectedValue();
-                    HeaderItemDNDManager.getInstance().setHeaderItemList(items);
-            }
-            */
+        HeaderItem[] items = new HeaderItem[1];
+        items[0] = (HeaderItem) getSelectedValue();
+        HeaderItemDNDManager.getInstance().setHeaderItemList(items);
+}
+*/
         } else {
             /*
-            HeaderItem[] items = new HeaderItem[selection2.length];
-                    items = selection2;
-                    HeaderItemDNDManager.getInstance().setHeaderItemList(items);
-            */
+HeaderItem[] items = new HeaderItem[selection2.length];
+        items = selection2;
+        HeaderItemDNDManager.getInstance().setHeaderItemList(items);
+*/
             if (selection2.length != 0) {
                 HeaderItem[] items = new HeaderItem[selection2.length];
                 items = selection2;
@@ -221,14 +221,14 @@ public class AddressbookDNDListView extends AddressbookListView
         source = this;
 
         /*
-        dragSource.startDrag(
-                event,
-                new Cursor(Cursor.DEFAULT_CURSOR),
-                ImageLoader.getImageIcon("contact_small","Add16").getImage(),
-                new Point(5, 5),
-                new StringSelection("contact"),
-                this);
-        */
+dragSource.startDrag(
+        event,
+        new Cursor(Cursor.DEFAULT_CURSOR),
+        ImageLoader.getImageIcon("contact_small","Add16").getImage(),
+        new Point(5, 5),
+        new StringSelection("contact"),
+        this);
+*/
         StringSelection text = new StringSelection("contact");
 
         dragSource.startDrag(event, DragSource.DefaultMoveDrop, text, this);
@@ -237,10 +237,10 @@ public class AddressbookDNDListView extends AddressbookListView
     }
 
     /**
-     * this message goes to DragSourceListener, informing it that the dragging
-     * has ended
-     *
-     */
+ * this message goes to DragSourceListener, informing it that the dragging
+ * has ended
+ *
+ */
     public void dragDropEnd(DragSourceDropEvent event) {
         if (event.getDropSuccess()) {
             if (acceptDrop == true) {
@@ -257,43 +257,43 @@ public class AddressbookDNDListView extends AddressbookListView
     }
 
     /**
-     * this message goes to DragSourceListener, informing it that the dragging
-     * has entered the DropSite
-     *
-     */
+ * this message goes to DragSourceListener, informing it that the dragging
+ * has entered the DropSite
+ *
+ */
     public void dragEnter(DragSourceDragEvent event) {
     }
 
     /**
-     * this message goes to DragSourceListener, informing it that the dragging
-     * has exited the DropSite
-     *
-     */
+ * this message goes to DragSourceListener, informing it that the dragging
+ * has exited the DropSite
+ *
+ */
     public void dragExit(DragSourceEvent event) {
     }
 
     /**
-     * this message goes to DragSourceListener, informing it that the dragging is currently
-     * ocurring over the DropSite
-     *
-     */
+ * this message goes to DragSourceListener, informing it that the dragging is currently
+ * ocurring over the DropSite
+ *
+ */
     public void dragOver(DragSourceDragEvent event) {
     }
 
     /**
-     * is invoked when the user changes the dropAction
-     *
-     */
+ * is invoked when the user changes the dropAction
+ *
+ */
     public void dropActionChanged(DragSourceDragEvent event) {
     }
 
     /**
-     * adds elements to itself
-     *
-     */
+ * adds elements to itself
+ *
+ */
     /**
-     * removes an element from itself
-     */
+ * removes an element from itself
+ */
     public void removeElement() {
         ((AddressbookListModel) getModel()).removeElement(getSelectedValue());
     }

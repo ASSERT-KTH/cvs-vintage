@@ -17,53 +17,50 @@
 //All Rights Reserved.
 package org.columba.addressbook.gui.tree;
 
-import javax.swing.JTree;
-
 import org.columba.addressbook.folder.Folder;
 import org.columba.addressbook.gui.frame.AddressbookFrameController;
 import org.columba.addressbook.gui.tree.util.AddressbookTreeCellRenderer;
 import org.columba.addressbook.main.AddressbookInterface;
 
+import javax.swing.JTree;
+
+
 /**
  * Custom JTree using an appropriate model and renderer.
- * 
+ *
  * @author fdietz
  */
 public class TreeView extends JTree {
-	private AddressbookTreeNode root;
+    private AddressbookTreeNode root;
+    private AddressbookTreeModel model;
+    protected AddressbookFrameController frameController;
 
-	private AddressbookTreeModel model;
+    public TreeView(AddressbookFrameController frameController) {
+        this.frameController = frameController;
 
-	protected AddressbookFrameController frameController;
+        model = AddressbookInterface.addressbookTreeModel;
 
-	public TreeView(AddressbookFrameController frameController) {
+        setModel(model);
 
-		this.frameController = frameController;
+        setShowsRootHandles(true);
+        setRootVisible(false);
+        expandRow(0);
 
-		model = AddressbookInterface.addressbookTreeModel;
+        setCellRenderer(new AddressbookTreeCellRenderer(true));
+    }
 
-		setModel(model);
+    public Folder getRootFolder() {
+        return (Folder) model.getRoot();
+    }
 
-		setShowsRootHandles(true);
-		setRootVisible(false);
-		expandRow(0);
+    public void removeAll() {
+        root.removeAllChildren();
+    }
 
-		setCellRenderer(new AddressbookTreeCellRenderer(true));
-
-	}
-
-	public Folder getRootFolder() {
-		return (Folder) model.getRoot();
-	}
-
-	public void removeAll() {
-		root.removeAllChildren();
-	}
-
-	/**
-	 * @return FrameController
-	 */
-	public AddressbookFrameController getFrameController() {
-		return frameController;
-	}
+    /**
+     * @return FrameController
+     */
+    public AddressbookFrameController getFrameController() {
+        return frameController;
+    }
 }

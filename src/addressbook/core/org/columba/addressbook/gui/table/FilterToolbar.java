@@ -17,6 +17,7 @@ package org.columba.addressbook.gui.table;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+
 import java.util.ResourceBundle;
 
 import javax.swing.JButton;
@@ -46,76 +47,76 @@ public class FilterToolbar extends JToolBar implements ActionListener {
 
     public void addCButtons() {
         /*
-        //addSeparator();
+//addSeparator();
 
-        //HeaderTableItem list = mainInterface.config.getOptionsConfig().getHeaderTableItem();
-        TableItem list = table.getHeaderTableItem();
-        comboBox = new JComboBox();
-        String name;
+//HeaderTableItem list = mainInterface.config.getOptionsConfig().getHeaderTableItem();
+TableItem list = table.getHeaderTableItem();
+comboBox = new JComboBox();
+String name;
 
-        for (int i = 0; i < list.count(); i++)
+for (int i = 0; i < list.count(); i++)
+{
+        name = list.getName(i);
+        boolean enabled = list.getEnabled(i);
+
+        if (enabled == false)
+                continue;
+
+        if (!(name.equalsIgnoreCase("type")))
+                comboBox.addItem(name);
+
+}
+
+//comboBox.setMaximumSize( new java.awt.Dimension( 100, 25 ) );
+comboBox.setSelectedIndex(0);
+comboBox.addActionListener(this);
+comboBox.setActionCommand("COMBO");
+add(comboBox);
+
+addSeparator();
+
+JLabel label = new JLabel("contains");
+add(label);
+
+addSeparator();
+
+textField = new JTextField(20);
+textField.addActionListener(this);
+textField.setActionCommand("TEXTFIELD");
+textField.addFocusListener(new FocusListener()
+{
+        public void focusGained(FocusEvent e)
         {
-                name = list.getName(i);
-                boolean enabled = list.getEnabled(i);
-
-                if (enabled == false)
-                        continue;
-
-                if (!(name.equalsIgnoreCase("type")))
-                        comboBox.addItem(name);
-
         }
 
-        //comboBox.setMaximumSize( new java.awt.Dimension( 100, 25 ) );
-        comboBox.setSelectedIndex(0);
-        comboBox.addActionListener(this);
-        comboBox.setActionCommand("COMBO");
-        add(comboBox);
-
-        addSeparator();
-
-        JLabel label = new JLabel("contains");
-        add(label);
-
-        addSeparator();
-
-        textField = new JTextField(20);
-        textField.addActionListener(this);
-        textField.setActionCommand("TEXTFIELD");
-        textField.addFocusListener(new FocusListener()
+        public void focusLost(FocusEvent e)
         {
-                public void focusGained(FocusEvent e)
+                TableModelFilteredView model = table.getTableModelFilteredView();
+                try
                 {
+                        model.setPatternString(textField.getText());
                 }
-
-                public void focusLost(FocusEvent e)
+                catch (Exception ex)
                 {
-                        TableModelFilteredView model = table.getTableModelFilteredView();
-                        try
-                        {
-                                model.setPatternString(textField.getText());
-                        }
-                        catch (Exception ex)
-                        {
-                                ex.printStackTrace();
-                        }
+                        ex.printStackTrace();
                 }
-        });
-        //textField.setMaximumSize( new java.awt.Dimension( 600, 25 ) );
+        }
+});
+//textField.setMaximumSize( new java.awt.Dimension( 600, 25 ) );
 
-        add(textField);
+add(textField);
 
-        addSeparator();
+addSeparator();
 
-        searchButton = new JButton("Search..");
-        //searchButton.setMaximumSize( new java.awt.Dimension( 150, 25 ) );
-        //attachmentButton.setSelected( false );
-        searchButton.addActionListener(this);
-        searchButton.setActionCommand("OK");
-        add(searchButton);
+searchButton = new JButton("Search..");
+//searchButton.setMaximumSize( new java.awt.Dimension( 150, 25 ) );
+//attachmentButton.setSelected( false );
+searchButton.addActionListener(this);
+searchButton.setActionCommand("OK");
+add(searchButton);
 
-        addSeparator();
-                */
+addSeparator();
+        */
     }
 
     public void update() {
@@ -124,39 +125,39 @@ public class FilterToolbar extends JToolBar implements ActionListener {
 
     public void actionPerformed(ActionEvent e) {
         String action = e.getActionCommand();
+
         /*
-        try {
-            //TableModelFilteredView model = mainInterface.headerTableViewer.getHeaderTable().getTableModelFilteredView();
-            TableModelFilteredView model = table.getFilteredView();
+try {
+    //TableModelFilteredView model = mainInterface.headerTableViewer.getHeaderTable().getTableModelFilteredView();
+    TableModelFilteredView model = table.getFilteredView();
 
-            if (action.equals("COMBO")) {
-                JComboBox cb = (JComboBox) e.getSource();
-                model.setPatternItem((String) cb.getSelectedItem());
-            } else if (action.equals("TEXTFIELD")) {
-                model.setPatternString(textField.getText());
+    if (action.equals("COMBO")) {
+        JComboBox cb = (JComboBox) e.getSource();
+        model.setPatternItem((String) cb.getSelectedItem());
+    } else if (action.equals("TEXTFIELD")) {
+        model.setPatternString(textField.getText());
 
-                //HeaderTableModel tableModel = mainInterface.headerTableViewer.getHeaderTable().getHeaderTableModel();
-                // tableModel.update();
-                //mainInterface.headerTableViewer.getHeaderTable().getIndexedTableModel().update();
-                //update();
-            } else if (action.equals("OK")) {
-                if (model == null) {
-                    System.out.println("model is null");
+        //HeaderTableModel tableModel = mainInterface.headerTableViewer.getHeaderTable().getHeaderTableModel();
+        // tableModel.update();
+        //mainInterface.headerTableViewer.getHeaderTable().getIndexedTableModel().update();
+        //update();
+    } else if (action.equals("OK")) {
+        if (model == null) {
+            System.out.println("model is null");
 
-                    return;
-                }
-
-                //HeaderTableModel tableModel = mainInterface.headerTableViewer.getHeaderTable().getHeaderTableModel();
-                //tableModel.update();
-                model.setDataFiltering(true);
-
-                //mainInterface.headerTableViewer.getHeaderTable().getIndexedTableModel().update();
-                update();
-            }
-        } catch (Exception ex) {
-            ex.printStackTrace();
+            return;
         }
-        */
+
+        //HeaderTableModel tableModel = mainInterface.headerTableViewer.getHeaderTable().getHeaderTableModel();
+        //tableModel.update();
+        model.setDataFiltering(true);
+
+        //mainInterface.headerTableViewer.getHeaderTable().getIndexedTableModel().update();
+        update();
     }
-    
+} catch (Exception ex) {
+    ex.printStackTrace();
+}
+*/
+    }
 }

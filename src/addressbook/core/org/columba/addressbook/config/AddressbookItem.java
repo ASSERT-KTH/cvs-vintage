@@ -15,11 +15,11 @@
 //All Rights Reserved.
 package org.columba.addressbook.config;
 
-import java.util.List;
-import java.util.Vector;
-
 import org.columba.core.config.DefaultItem;
 import org.columba.core.xml.XmlElement;
+
+import java.util.List;
+import java.util.Vector;
 
 
 public class AddressbookItem extends DefaultItem {
@@ -62,10 +62,10 @@ public class AddressbookItem extends DefaultItem {
 
     public int getUid() {
         /*
-        Integer i = new Integer(  getTextValue( uid ) );
+Integer i = new Integer(  getTextValue( uid ) );
 
-        return i.intValue();
-        */
+return i.intValue();
+*/
         return -1;
     }
 

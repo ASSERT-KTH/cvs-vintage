@@ -15,12 +15,13 @@
 //All Rights Reserved.
 package org.columba.addressbook.folder;
 
-import java.util.Hashtable;
-
 import org.columba.addressbook.config.AdapterNode;
+
 import org.w3c.dom.CDATASection;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+
+import java.util.Hashtable;
 
 
 /**
@@ -121,9 +122,9 @@ public class DefaultCard {
             Element e = createElementNode(key);
 
             /*
-            Element subelement = createTextElementNode(subkey,value);
-            addElement( subelement, e );
-            */
+Element subelement = createTextElementNode(subkey,value);
+addElement( subelement, e );
+*/
             AdapterNode newNode = new AdapterNode(e);
             getRootNode().add(newNode);
 
@@ -178,78 +179,78 @@ public class DefaultCard {
     }
 
     /*
-    public void add( String key, String attribut, String value )
-    {
-            key = key.toLowerCase();
-            for ( int i=0; i<getRootNode().getChildCount(); i++ )
-            {
-                    AdapterNode child = getRootNode().getChildAt(i);
-                    System.out.println("node-name:"+child.getName() );
-                    String name = child.getName();
+public void add( String key, String attribut, String value )
+{
+        key = key.toLowerCase();
+        for ( int i=0; i<getRootNode().getChildCount(); i++ )
+        {
+                AdapterNode child = getRootNode().getChildAt(i);
+                System.out.println("node-name:"+child.getName() );
+                String name = child.getName();
 
-                    if ( name.equalsIgnoreCase(key) == true )
-                    {
-                            // found key, now search for attributes
-                            //String value = (String) child.getValue();
-                            //System.out.println("node-value:"+value);
-                            child.setValue( value );
-                    }
+                if ( name.equalsIgnoreCase(key) == true )
+                {
+                        // found key, now search for attributes
+                        //String value = (String) child.getValue();
+                        //System.out.println("node-value:"+value);
+                        child.setValue( value );
+                }
 
-            }
-    }
+        }
+}
 
-    public String get( String key, String attribut )
-    {
-            key = key.toLowerCase();
+public String get( String key, String attribut )
+{
+        key = key.toLowerCase();
 
-            for ( int i=0; i<getRootNode().getChildCount(); i++ )
-            {
-                    AdapterNode child = getRootNode().getChildAt(i);
-                    System.out.println("node-name:"+child.getName() );
-                    String name = child.getName();
+        for ( int i=0; i<getRootNode().getChildCount(); i++ )
+        {
+                AdapterNode child = getRootNode().getChildAt(i);
+                System.out.println("node-name:"+child.getName() );
+                String name = child.getName();
 
-                    if ( name.equalsIgnoreCase(key) == true )
-                    {
-                            // found key, now search for attributes
-                            String value = (String) child.getValue();
-
-
-                            System.out.println("node-value:"+value);
-                            return value;
-                    }
-
-            }
-
-            return "";
-    }
-
-    public String get( String key  )
-    {
-            key = key.toLowerCase();
-
-            for ( int i=0; i<getRootNode().getChildCount(); i++ )
-            {
-                    AdapterNode child = getRootNode().getChildAt(i);
-                    System.out.println("node-name:"+child.getName() );
-                    String name = child.getName();
-
-                    if ( name.equalsIgnoreCase(key) == true )
-                    {
-                            // found key, now search for attributes
-                            String value = (String) child.getValue();
+                if ( name.equalsIgnoreCase(key) == true )
+                {
+                        // found key, now search for attributes
+                        String value = (String) child.getValue();
 
 
-                            System.out.println("node-value:"+value);
-                            return value;
-                    }
+                        System.out.println("node-value:"+value);
+                        return value;
+                }
 
-            }
+        }
 
-            return "";
-    }
+        return "";
+}
+
+public String get( String key  )
+{
+        key = key.toLowerCase();
+
+        for ( int i=0; i<getRootNode().getChildCount(); i++ )
+        {
+                AdapterNode child = getRootNode().getChildAt(i);
+                System.out.println("node-name:"+child.getName() );
+                String name = child.getName();
+
+                if ( name.equalsIgnoreCase(key) == true )
+                {
+                        // found key, now search for attributes
+                        String value = (String) child.getValue();
 
 
-    */
+                        System.out.println("node-value:"+value);
+                        return value;
+                }
+
+        }
+
+        return "";
+}
+
+
+*/
     public void setUid(Object uid) {
         this.uid = uid;
     }

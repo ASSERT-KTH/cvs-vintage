@@ -13,18 +13,19 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
-
 package org.columba.addressbook.util;
 
 import org.columba.core.util.GlobalResourceLoader;
 
+
 public class AddressbookResourceLoader extends GlobalResourceLoader {
     protected static final String ADDRESSBOOK_RESOURCE_PATH = "org.columba.addressbook.i18n";
-    
+
     /**
-     * No need to create instances of this class.
-     */
-    private AddressbookResourceLoader() {}
+ * No need to create instances of this class.
+ */
+    private AddressbookResourceLoader() {
+    }
 
     //This is used when package name and file name are different.
     //Example: getString("dialog", "composer", "statusbar_label");

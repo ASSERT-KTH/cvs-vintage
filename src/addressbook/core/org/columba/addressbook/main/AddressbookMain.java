@@ -13,7 +13,6 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
-
 package org.columba.addressbook.main;
 
 import org.columba.addressbook.config.AddressbookConfig;
@@ -21,6 +20,7 @@ import org.columba.addressbook.gui.tree.AddressbookTreeModel;
 import org.columba.addressbook.plugin.FolderPluginHandler;
 import org.columba.addressbook.plugin.ImportPluginHandler;
 import org.columba.addressbook.shutdown.SaveAllAddressbooksPlugin;
+
 import org.columba.core.backgroundtask.TaskInterface;
 import org.columba.core.main.DefaultMain;
 import org.columba.core.main.MainInterface;
@@ -28,6 +28,7 @@ import org.columba.core.plugin.ActionPluginHandler;
 import org.columba.core.plugin.MenuPluginHandler;
 import org.columba.core.plugin.PluginHandlerNotFoundException;
 import org.columba.core.shutdown.ShutdownManager;
+
 
 /**
  * @author frd
@@ -55,8 +56,8 @@ public class AddressbookMain extends DefaultMain {
      * @see org.columba.core.main.DefaultMain#initGui()
      */
     public void initGui() {
-        AddressbookInterface.addressbookTreeModel = new AddressbookTreeModel(
-                AddressbookInterface.config.get("tree").getElement("/tree"));
+        AddressbookInterface.addressbookTreeModel = new AddressbookTreeModel(AddressbookInterface.config.get(
+                    "tree").getElement("/tree"));
 
         /*
         MainInterface.addressbookModel =

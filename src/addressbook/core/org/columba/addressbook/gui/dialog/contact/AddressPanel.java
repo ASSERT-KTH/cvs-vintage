@@ -15,7 +15,11 @@
 //All Rights Reserved.
 package org.columba.addressbook.gui.dialog.contact;
 
+import org.columba.addressbook.folder.ContactCard;
+import org.columba.addressbook.gui.util.LabelTextFieldPanel;
+
 import java.awt.BorderLayout;
+
 import java.util.List;
 import java.util.Vector;
 
@@ -25,24 +29,21 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
-import org.columba.addressbook.folder.ContactCard;
-import org.columba.addressbook.gui.util.LabelTextFieldPanel;
-
 
 public class AddressPanel extends JPanel {
     JTextField phone1TextField;
     AttributComboBox phone1ComboBox;
 
     /*
-    JTextField phone2TextField;
-    AttributComboBox phone2ComboBox;
+JTextField phone2TextField;
+AttributComboBox phone2ComboBox;
 
-    JTextField phone3TextField;
-    AttributComboBox phone3ComboBox;
+JTextField phone3TextField;
+AttributComboBox phone3ComboBox;
 
-    JTextField phone4TextField;
-    AttributComboBox phone4ComboBox;
-    */
+JTextField phone4TextField;
+AttributComboBox phone4ComboBox;
+*/
     JTextArea addressTextArea;
     AttributComboBox addressComboBox;
 
@@ -51,23 +52,23 @@ public class AddressPanel extends JPanel {
     }
 
     /*
-    protected void set( AdapterNode rootNode, String key, JTextField textField )
-    {
-            AdapterNode node = rootNode.getChild(key);
-            if ( node != null )
-            {
-                    textField.setText( node.getValue() );
-            }
-    }
-    */
+protected void set( AdapterNode rootNode, String key, JTextField textField )
+{
+        AdapterNode node = rootNode.getChild(key);
+        if ( node != null )
+        {
+                textField.setText( node.getValue() );
+        }
+}
+*/
     public void updateComponents(ContactCard card, boolean b) {
         phone1ComboBox.updateComponents(card, b);
 
         /*
-        phone2ComboBox.updateComponents(rootNode,b);
-        phone3ComboBox.updateComponents(rootNode,b);
-        phone4ComboBox.updateComponents(rootNode,b);
-        */
+phone2ComboBox.updateComponents(rootNode,b);
+phone3ComboBox.updateComponents(rootNode,b);
+phone4ComboBox.updateComponents(rootNode,b);
+*/
         addressComboBox.updateComponents(card, b);
 
         if (b == true) {
@@ -107,24 +108,24 @@ public class AddressPanel extends JPanel {
         panel.addTextField(phone1TextField);
 
         /*
-        phone2TextField = new JTextField(20);
-        phone2ComboBox = new AttributComboBox(v, phone2TextField);
+phone2TextField = new JTextField(20);
+phone2ComboBox = new AttributComboBox(v, phone2TextField);
 
-        panel.addLabel( phone2ComboBox );
-        panel.addTextField( phone2TextField );
+panel.addLabel( phone2ComboBox );
+panel.addTextField( phone2TextField );
 
-        phone3TextField = new JTextField(20);
-        phone3ComboBox = new AttributComboBox(v, phone3TextField);
+phone3TextField = new JTextField(20);
+phone3ComboBox = new AttributComboBox(v, phone3TextField);
 
-        panel.addLabel( phone3ComboBox );
-        panel.addTextField( phone3TextField );
+panel.addLabel( phone3ComboBox );
+panel.addTextField( phone3TextField );
 
-        phone4TextField = new JTextField(20);
-        phone4ComboBox = new AttributComboBox(v, phone4TextField);
+phone4TextField = new JTextField(20);
+phone4ComboBox = new AttributComboBox(v, phone4TextField);
 
-        panel.addLabel( phone4ComboBox );
-        panel.addTextField( phone4TextField );
-        */
+panel.addLabel( phone4ComboBox );
+panel.addTextField( phone4TextField );
+*/
         v = new Vector();
         v.add("home"); //$NON-NLS-1$
         v.add("work"); //$NON-NLS-1$

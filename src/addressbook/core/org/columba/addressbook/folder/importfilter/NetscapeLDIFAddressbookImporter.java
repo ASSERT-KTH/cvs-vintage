@@ -15,18 +15,20 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003.
 //
 //All Rights Reserved.
-
 package org.columba.addressbook.folder.importfilter;
-
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.nio.ByteBuffer;
 
 import org.columba.addressbook.folder.ContactCard;
 import org.columba.addressbook.folder.Folder;
 import org.columba.addressbook.util.AddressbookResourceLoader;
+
 import org.columba.ristretto.coder.Base64;
+
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+
+import java.nio.ByteBuffer;
+
 
 /**
  * Import addressbook data in LDIF format.
@@ -57,15 +59,18 @@ public class NetscapeLDIFAddressbookImporter extends DefaultAddressbookImporter 
                 // parse key:value lines
                 int index = str.indexOf(':');
 
-                if (index > 0 && index < str.length() - 1) {
+                if ((index > 0) && (index < (str.length() - 1))) {
                     String key = str.substring(0, index);
                     String value;
+
                     if (str.charAt(index + 1) == ':') {
-                        ByteBuffer bytes = Base64.decode(str.substring(index + 2).trim());
+                        ByteBuffer bytes = Base64.decode(str.substring(index +
+                                    2).trim());
                         value = new String(bytes.array(), "UTF-8");
                     } else {
                         value = str.substring(index + 1);
                     }
+
                     value = value.trim();
 
                     if (key.equalsIgnoreCase("cn")) {

@@ -29,109 +29,109 @@ public class GroupItem extends DefaultItem {
 
     /*
 
-    public void setNameNode( AdapterNode node )
+public void setNameNode( AdapterNode node )
+{
+    name = node;
+}
+
+public void setUidNode( AdapterNode node )
+{
+    uid= node;
+}
+
+public void setListNode( AdapterNode node )
+{
+    list = node;
+}
+
+
+
+public void setUid( int i )
+{
+    Integer h = new Integer( i );
+
+    setTextValue( uid, h.toString() );
+}
+
+
+public void setName( String str )
+{
+    setTextValue( name, str );
+}
+
+
+
+
+
+public String getName()
+{
+    return getTextValue( name );
+}
+
+
+public int getUid()
+{
+    Integer i = new Integer(  getTextValue( uid ) );
+
+    return i.intValue();
+}
+
+
+
+public void add( int number )
+{
+    AdapterNode child;
+    boolean hit = false;
+
+    for ( int i=0; i<list.getChildCount(); i++ )
     {
-        name = node;
+        child = list.getChild(i);
+        Integer j = new Integer( getTextValue( child ) );
+
+        int uid = j.intValue();
+
+        if ( uid == number ) hit = true;
     }
 
-    public void setUidNode( AdapterNode node )
+      // new uid does not exist in group
+    if ( hit == false )
     {
-        uid= node;
-    }
+        Element element = createTextElementNode("uid", (new Integer( number )).toString() );
 
-    public void setListNode( AdapterNode node )
-    {
-        list = node;
-    }
-
-
-
-    public void setUid( int i )
-    {
-        Integer h = new Integer( i );
-
-        setTextValue( uid, h.toString() );
-    }
-
-
-    public void setName( String str )
-    {
-        setTextValue( name, str );
-    }
-
-
-
-
-
-    public String getName()
-    {
-        return getTextValue( name );
-    }
-
-
-    public int getUid()
-    {
-        Integer i = new Integer(  getTextValue( uid ) );
-
-        return i.intValue();
-    }
-
-
-
-    public void add( int number )
-    {
-        AdapterNode child;
-        boolean hit = false;
-
-        for ( int i=0; i<list.getChildCount(); i++ )
-        {
-            child = list.getChild(i);
-            Integer j = new Integer( getTextValue( child ) );
-
-            int uid = j.intValue();
-
-            if ( uid == number ) hit = true;
-        }
-
-          // new uid does not exist in group
-        if ( hit == false )
-        {
-            Element element = createTextElementNode("uid", (new Integer( number )).toString() );
-
-            list.addElement(  element );
-
-        }
+        list.addElement(  element );
 
     }
 
-    public Vector getListNodes()
+}
+
+public Vector getListNodes()
+{
+    Vector v = new Vector();
+
+    for ( int i=0; i<list.getChildCount(); i++ )
     {
-        Vector v = new Vector();
-
-        for ( int i=0; i<list.getChildCount(); i++ )
-        {
-            v.add( list.getChild(i) );
-        }
-        return v;
+        v.add( list.getChild(i) );
     }
+    return v;
+}
 
-    public int getUid( int i )
-    {
-        AdapterNode node = list.getChild(i);
-        String str = node.getValue();
+public int getUid( int i )
+{
+    AdapterNode node = list.getChild(i);
+    String str = node.getValue();
 
-        int uid = Integer.parseInt( str );
+    int uid = Integer.parseInt( str );
 
-        return uid;
-    }
+    return uid;
+}
 
-    public AdapterNode getNode( int i )
-    {
-        AdapterNode node = list.getChild(i);
+public AdapterNode getNode( int i )
+{
+    AdapterNode node = list.getChild(i);
 
-        return node;
-    }
+    return node;
+}
 
 
-        */
+    */
 }

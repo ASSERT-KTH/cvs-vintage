@@ -23,9 +23,9 @@ import org.columba.core.plugin.PluginHandlerNotFoundException;
  */
 public class AddressbookMenu extends Menu {
     /**
-     * @param xmlRoot
-     * @param frameMediator
-     */
+ * @param xmlRoot
+ * @param frameMediator
+ */
     public AddressbookMenu(String xmlRoot, FrameMediator frameController) {
         super(xmlRoot, frameController);
 

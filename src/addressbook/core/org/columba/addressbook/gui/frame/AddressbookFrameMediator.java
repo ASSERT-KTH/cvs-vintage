@@ -15,12 +15,13 @@
 //All Rights Reserved.
 package org.columba.addressbook.gui.frame;
 
-import javax.swing.event.ListSelectionListener;
-import javax.swing.event.TreeSelectionListener;
-
 import org.columba.addressbook.gui.table.TableController;
 import org.columba.addressbook.gui.tree.TreeController;
+
 import org.columba.core.gui.frame.FrameMediator;
+
+import javax.swing.event.ListSelectionListener;
+import javax.swing.event.TreeSelectionListener;
 
 
 /**
@@ -29,34 +30,31 @@ import org.columba.core.gui.frame.FrameMediator;
  * @author fdietz
  */
 public interface AddressbookFrameMediator extends FrameMediator {
+    /**
+ * Get table controller.
+ * 
+ * @return                table controller
+ */
+    TableController getTable();
 
-	
-	/**
-	 * Get table controller.
-	 * 
-	 * @return		table controller
-	 */
-	TableController getTable();
-	
-	/**
-	 * Add selection listener for table.
-	 * 
-	 * @param listener		selection listener
-	 */
-	void addTableSelectionListener(ListSelectionListener listener);
-	
-	/**
-	 * Get tree controller.
-	 * 
-	 * @return		tree controller
-	 */
-	TreeController getTree();
-	
-	/**
-	 * Add selection listener for tree.
-	 * 
-	 * @param listener		selection listener
-	 */
-	void addTreeSelectionListener(TreeSelectionListener listener);
-	
+    /**
+ * Add selection listener for table.
+ * 
+ * @param listener                selection listener
+ */
+    void addTableSelectionListener(ListSelectionListener listener);
+
+    /**
+ * Get tree controller.
+ * 
+ * @return                tree controller
+ */
+    TreeController getTree();
+
+    /**
+ * Add selection listener for tree.
+ * 
+ * @param listener                selection listener
+ */
+    void addTreeSelectionListener(TreeSelectionListener listener);
 }

@@ -26,112 +26,95 @@ import javax.swing.JTable;
 import javax.swing.border.Border;
 import javax.swing.table.TableCellRenderer;
 
+
 /**
  * @author fdietz
  */
 public class DefaultLabelRenderer extends JLabel implements TableCellRenderer {
-	private Border unselectedBorder = null;
-	private Border selectedBorder = null;
-	private Color background;
-	private Color foreground;
+    private Border unselectedBorder = null;
+    private Border selectedBorder = null;
+    private Color background;
+    private Color foreground;
+    private boolean isBordered = true;
 
-	private boolean isBordered = true;
+    /**
+ * Constructor for DefaultLabelRenderer.
+ */
+    public DefaultLabelRenderer() {
+        super();
+    }
 
-	/**
-	 * Constructor for DefaultLabelRenderer.
-	 */
-	public DefaultLabelRenderer() {
-		super();
+    /**
+ * @see javax.swing.table.TableCellRenderer#getTableCellRendererComponent(javax.swing.JTable,
+ *      java.lang.Object, boolean, boolean, int, int)
+ */
+    public Component getTableCellRendererComponent(JTable table, Object value,
+        boolean isSelected, boolean hasFocus, int row, int column) {
+        if (isBordered) {
+            if (isSelected) {
+                if (selectedBorder == null) {
+                    selectedBorder = BorderFactory.createMatteBorder(2, 5, 2,
+                            5, table.getSelectionBackground());
+                }
 
-	}
+                //setBorder(selectedBorder);
+                setBackground(table.getSelectionBackground());
+                setForeground(table.getSelectionForeground());
+            } else {
+                if (unselectedBorder == null) {
+                    unselectedBorder = BorderFactory.createMatteBorder(2, 5, 2,
+                            5, table.getBackground());
+                }
 
-	/**
-	 * @see javax.swing.table.TableCellRenderer#getTableCellRendererComponent(javax.swing.JTable,
-	 *      java.lang.Object, boolean, boolean, int, int)
-	 */
-	public Component getTableCellRendererComponent(
-		JTable table,
-		Object value,
-		boolean isSelected,
-		boolean hasFocus,
-		int row,
-		int column) {
-		if (isBordered) {
-			if (isSelected) {
-				if (selectedBorder == null) {
-					selectedBorder =
-						BorderFactory.createMatteBorder(
-							2,
-							5,
-							2,
-							5,
-							table.getSelectionBackground());
-				}
+                setBackground(table.getBackground());
 
-				//setBorder(selectedBorder);
-				setBackground(table.getSelectionBackground());
-				setForeground(table.getSelectionForeground());
-			} else {
-				if (unselectedBorder == null) {
-					unselectedBorder =
-						BorderFactory.createMatteBorder(
-							2,
-							5,
-							2,
-							5,
-							table.getBackground());
-				}
+                //setBorder(unselectedBorder);
+                setForeground(table.getForeground());
+            }
+        }
 
-				setBackground(table.getBackground());
+        return this;
+    }
 
-				//setBorder(unselectedBorder);
-				setForeground(table.getForeground());
-			}
-		}
+    public boolean isOpaque() {
+        return (background != null);
+    }
 
-		return this;
-	}
+    /**
+ * Returns the background.
+ * 
+ * @return Color
+ */
+    public Color getBackground() {
+        return background;
+    }
 
-	public boolean isOpaque() {
-		return (background != null);
-	}
+    /**
+ * Returns the foreground.
+ * 
+ * @return Color
+ */
+    public Color getForeground() {
+        return foreground;
+    }
 
-	/**
-	 * Returns the background.
-	 * 
-	 * @return Color
-	 */
-	public Color getBackground() {
-		return background;
-	}
+    /**
+ * Sets the background.
+ * 
+ * @param background
+ *            The background to set
+ */
+    public void setBackground(Color background) {
+        this.background = background;
+    }
 
-	/**
-	 * Returns the foreground.
-	 * 
-	 * @return Color
-	 */
-	public Color getForeground() {
-		return foreground;
-	}
-
-	/**
-	 * Sets the background.
-	 * 
-	 * @param background
-	 *            The background to set
-	 */
-	public void setBackground(Color background) {
-		this.background = background;
-	}
-
-	/**
-	 * Sets the foreground.
-	 * 
-	 * @param foreground
-	 *            The foreground to set
-	 */
-	public void setForeground(Color foreground) {
-		this.foreground = foreground;
-	}
-
+    /**
+ * Sets the foreground.
+ * 
+ * @param foreground
+ *            The foreground to set
+ */
+    public void setForeground(Color foreground) {
+        this.foreground = foreground;
+    }
 }

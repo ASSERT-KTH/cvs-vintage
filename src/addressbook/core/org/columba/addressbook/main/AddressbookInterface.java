@@ -13,22 +13,24 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
-
 package org.columba.addressbook.main;
 
 import org.columba.addressbook.config.AddressbookConfig;
 import org.columba.addressbook.gui.tree.AddressbookTreeModel;
 
+
 public class AddressbookInterface {
     /** Addressbook treemodel */
+
     // TODO: move this to the addressbook component
     public static AddressbookTreeModel addressbookTreeModel;
-    
+
     /** Addressbook configuration */
     public static AddressbookConfig config;
 
     /**
-     * No need for creating instances.
-     */
-    private AddressbookInterface() {}
+ * No need for creating instances.
+ */
+    private AddressbookInterface() {
+    }
 }

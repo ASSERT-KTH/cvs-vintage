@@ -17,113 +17,113 @@
 //All Rights Reserved.
 package org.columba.addressbook.gui.list;
 
+import org.columba.addressbook.folder.HeaderItem;
+import org.columba.addressbook.folder.HeaderItemList;
+
 import java.util.List;
 import java.util.Vector;
 
 import javax.swing.AbstractListModel;
 
-import org.columba.addressbook.folder.HeaderItem;
-import org.columba.addressbook.folder.HeaderItemList;
 
 /**
  * @version 1.0
  * @author
  */
 public class AddressbookListModel extends AbstractListModel {
-	private List listClone;
-	private List list;
-	private String patternString = "";
+    private List listClone;
+    private List list;
+    private String patternString = "";
 
-	public AddressbookListModel() {
-		super();
-		list = new Vector();
-		listClone = new Vector();
-	}
+    public AddressbookListModel() {
+        super();
+        list = new Vector();
+        listClone = new Vector();
+    }
 
-	public Object getElementAt(int index) {
-		return (HeaderItem) list.get(index);
-	}
+    public Object getElementAt(int index) {
+        return (HeaderItem) list.get(index);
+    }
 
-	public int getSize() {
-		return list.size();
-	}
+    public int getSize() {
+        return list.size();
+    }
 
-	public String getPatternString() {
-		return patternString;
-	}
+    public String getPatternString() {
+        return patternString;
+    }
 
-	public void setPatternString(String s) throws Exception {
-		patternString = s;
+    public void setPatternString(String s) throws Exception {
+        patternString = s;
 
-		//manipulateModel(TableModelPlugin.STRUCTURE_CHANGE);
-	}
+        //manipulateModel(TableModelPlugin.STRUCTURE_CHANGE);
+    }
 
-	public void clear() {
-		list.clear();
-	}
+    public void clear() {
+        list.clear();
+    }
 
-	public void addElement(Object item) {
-		list.add(item);
+    public void addElement(Object item) {
+        list.add(item);
 
-		int index = list.indexOf(item);
+        int index = list.indexOf(item);
 
-		fireIntervalAdded(this, index, index);
-	}
+        fireIntervalAdded(this, index, index);
+    }
 
-	public void setHeaderList(HeaderItemList l) {
-		System.out.println("list size:" + l.count());
+    public void setHeaderList(HeaderItemList l) {
+        System.out.println("list size:" + l.count());
 
-		list = (List) ((Vector) l.getVector()).clone();
+        list = (List) ((Vector) l.getVector()).clone();
 
-		fireContentsChanged(this, 0, list.size() - 1);
-	}
+        fireContentsChanged(this, 0, list.size() - 1);
+    }
 
-	public HeaderItem get(int i) {
-		return (HeaderItem) list.get(i);
-	}
+    public HeaderItem get(int i) {
+        return (HeaderItem) list.get(i);
+    }
 
-	public boolean addItem(HeaderItem header) {
-		boolean result1 = false;
+    public boolean addItem(HeaderItem header) {
+        boolean result1 = false;
 
-		Object o = header.get("displayname");
+        Object o = header.get("displayname");
 
-		if (o != null) {
-			if (o instanceof String) {
-				String item = (String) o;
+        if (o != null) {
+            if (o instanceof String) {
+                String item = (String) o;
 
-				//System.out.println("add item?:"+item);
-				item = item.toLowerCase();
+                //System.out.println("add item?:"+item);
+                item = item.toLowerCase();
 
-				String pattern = getPatternString().toLowerCase();
+                String pattern = getPatternString().toLowerCase();
 
-				if (item.indexOf(pattern) != -1) {
-					result1 = true;
-				} else {
-					result1 = false;
-				}
-			} else {
-				result1 = false;
-			}
-		} else {
-			result1 = false;
-		}
+                if (item.indexOf(pattern) != -1) {
+                    result1 = true;
+                } else {
+                    result1 = false;
+                }
+            } else {
+                result1 = false;
+            }
+        } else {
+            result1 = false;
+        }
 
-		return result1;
-	}
+        return result1;
+    }
 
-	public Object[] toArray() {
-		return list.toArray();
-	}
+    public Object[] toArray() {
+        return list.toArray();
+    }
 
-	public void remove(int index) {
-		list.remove(index);
-		fireIntervalRemoved(this, index, index);
-	}
+    public void remove(int index) {
+        list.remove(index);
+        fireIntervalRemoved(this, index, index);
+    }
 
-	public void removeElement(Object o) {
-		int index = list.indexOf(o);
+    public void removeElement(Object o) {
+        int index = list.indexOf(o);
 
-		remove(index);
-	}
-
+        remove(index);
+    }
 }

@@ -17,79 +17,84 @@
 //All Rights Reserved.
 package org.columba.addressbook.gui.table.model;
 
+import org.columba.addressbook.folder.HeaderItemList;
+
 import javax.swing.event.TableModelListener;
 import javax.swing.table.TableModel;
 
-import org.columba.addressbook.folder.HeaderItemList;
 
 /**
  * Decorator for TableModel.
  * 
  * @author fdietz
  */
-public abstract class TableModelDecorator
-	implements HeaderListTableModel, TableModelListener {
+public abstract class TableModelDecorator implements HeaderListTableModel,
+    TableModelListener {
+    // the model which is decorated
+    private HeaderListTableModel realModel;
 
-	// the model which is decorated
-	private HeaderListTableModel realModel;
+    public TableModelDecorator(HeaderListTableModel model) {
+        this.realModel = model;
+        realModel.addTableModelListener(this);
+    }
 
-	public TableModelDecorator(HeaderListTableModel model) {
-		this.realModel = model;
-		realModel.addTableModelListener(this);
-	}
+    /************************* TableModel implementation ******************* */
+    public void addTableModelListener(TableModelListener l) {
+        realModel.addTableModelListener(l);
+    }
 
-	/************************* TableModel implementation ******************* */
+    public Class getColumnClass(int columnIndex) {
+        return realModel.getColumnClass(columnIndex);
+    }
 
-	public void addTableModelListener(TableModelListener l) {
-		realModel.addTableModelListener(l);
-	}
-	public Class getColumnClass(int columnIndex) {
-		return realModel.getColumnClass(columnIndex);
-	}
-	public int getColumnCount() {
-		return realModel.getColumnCount();
-	}
-	public String getColumnName(int columnIndex) {
-		return realModel.getColumnName(columnIndex);
-	}
-	public int getRowCount() {
-		return realModel.getRowCount();
-	}
-	public Object getValueAt(int rowIndex, int columnIndex) {
-		return realModel.getValueAt(rowIndex, columnIndex);
-	}
-	public boolean isCellEditable(int rowIndex, int columnIndex) {
-		return realModel.isCellEditable(rowIndex, columnIndex);
-	}
-	public void removeTableModelListener(TableModelListener l) {
-		realModel.removeTableModelListener(l);
-	}
-	public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
-		realModel.setValueAt(aValue, rowIndex, columnIndex);
-	}
+    public int getColumnCount() {
+        return realModel.getColumnCount();
+    }
 
-	/**
-	 * Subclasses should use this method to access the underlying "real model"
-	 * 
-	 * @return
-	 */
-	protected TableModel getRealModel() {
-		return realModel;
-	}
+    public String getColumnName(int columnIndex) {
+        return realModel.getColumnName(columnIndex);
+    }
 
-	/**
-	 * @see org.columba.addressbook.gui.table.model.HeaderListTableModel#getHeaderList()
-	 */
-	public HeaderItemList getHeaderList() {
-		return realModel.getHeaderList();
-	}
+    public int getRowCount() {
+        return realModel.getRowCount();
+    }
 
-	/**
-	 * @see org.columba.addressbook.gui.table.model.HeaderListTableModel#setHeaderList(org.columba.addressbook.folder.HeaderItemList)
-	 */
-	public void setHeaderList(HeaderItemList list) {
-		realModel.setHeaderList(list);
+    public Object getValueAt(int rowIndex, int columnIndex) {
+        return realModel.getValueAt(rowIndex, columnIndex);
+    }
 
-	}
+    public boolean isCellEditable(int rowIndex, int columnIndex) {
+        return realModel.isCellEditable(rowIndex, columnIndex);
+    }
 
+    public void removeTableModelListener(TableModelListener l) {
+        realModel.removeTableModelListener(l);
+    }
+
+    public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
+        realModel.setValueAt(aValue, rowIndex, columnIndex);
+    }
+
+    /**
+ * Subclasses should use this method to access the underlying "real model"
+ * 
+ * @return
+ */
+    protected TableModel getRealModel() {
+        return realModel;
+    }
+
+    /**
+ * @see org.columba.addressbook.gui.table.model.HeaderListTableModel#getHeaderList()
+ */
+    public HeaderItemList getHeaderList() {
+        return realModel.getHeaderList();
+    }
+
+    /**
+ * @see org.columba.addressbook.gui.table.model.HeaderListTableModel#setHeaderList(org.columba.addressbook.folder.HeaderItemList)
+ */
+    public void setHeaderList(HeaderItemList list) {
+        realModel.setHeaderList(list);
+    }
 }

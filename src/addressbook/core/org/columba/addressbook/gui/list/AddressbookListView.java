@@ -15,11 +15,11 @@
 //All Rights Reserved.
 package org.columba.addressbook.gui.list;
 
-import javax.swing.BorderFactory;
-import javax.swing.JList;
-
 import org.columba.addressbook.folder.HeaderItem;
 import org.columba.addressbook.folder.HeaderItemList;
+
+import javax.swing.BorderFactory;
+import javax.swing.JList;
 
 
 public class AddressbookListView extends JList {

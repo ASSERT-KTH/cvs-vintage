@@ -17,10 +17,11 @@
 //All Rights Reserved.
 package org.columba.addressbook.gui.table.model;
 
+import org.columba.addressbook.folder.HeaderItemList;
+
 import javax.swing.event.TableModelEvent;
 import javax.swing.table.TableModel;
 
-import org.columba.addressbook.folder.HeaderItemList;
 
 /**
  * Decorates TableModel which additional sorting functionality.
@@ -34,68 +35,72 @@ import org.columba.addressbook.folder.HeaderItemList;
  * @author fdietz
  */
 public class SortDecorator extends TableModelDecorator {
+    /** ****************** sorting algorithm ******************* */
+    private int[] indexes;
 
-	public SortDecorator(HeaderListTableModel model) {
-		super(model);
-		allocate();
-	}
+    public SortDecorator(HeaderListTableModel model) {
+        super(model);
+        allocate();
+    }
 
-	/**
-	 * @see org.columba.addressbook.gui.table.model.HeaderListTableModel#setHeaderList(org.columba.addressbook.folder.HeaderItemList)
-	 */
-	public void setHeaderList(HeaderItemList list) {
-		super.setHeaderList(list);
+    /**
+ * @see org.columba.addressbook.gui.table.model.HeaderListTableModel#setHeaderList(org.columba.addressbook.folder.HeaderItemList)
+ */
+    public void setHeaderList(HeaderItemList list) {
+        super.setHeaderList(list);
 
-		tableChanged(new TableModelEvent(getRealModel()));
-	}
+        tableChanged(new TableModelEvent(getRealModel()));
+    }
 
-	public void tableChanged(TableModelEvent e) {
-		allocate();
-	}
+    public void tableChanged(TableModelEvent e) {
+        allocate();
+    }
 
-	public Object getValueAt(int row, int column) {
-		return getRealModel().getValueAt(indexes[row], column);
-	}
-	public void setValueAt(Object aValue, int row, int column) {
-		getRealModel().setValueAt(aValue, indexes[row], column);
-	}
+    public Object getValueAt(int row, int column) {
+        return getRealModel().getValueAt(indexes[row], column);
+    }
 
-	/** ****************** sorting algorithm ******************* */
+    public void setValueAt(Object aValue, int row, int column) {
+        getRealModel().setValueAt(aValue, indexes[row], column);
+    }
 
-	private int indexes[];
+    public void sort(int column) {
+        int rowCount = getRowCount();
 
-	public void sort(int column) {
-		int rowCount = getRowCount();
+        for (int i = 0; i < rowCount; i++) {
+            for (int j = i + 1; j < rowCount; j++) {
+                if (compare(indexes[i], indexes[j], column) < 0) {
+                    swap(i, j);
+                }
+            }
+        }
+    }
 
-		for (int i = 0; i < rowCount; i++) {
-			for (int j = i + 1; j < rowCount; j++) {
-				if (compare(indexes[i], indexes[j], column) < 0) {
-					swap(i, j);
-				}
-			}
-		}
-	}
-	
-	private void swap(int i, int j) {
-		int tmp = indexes[i];
-		indexes[i] = indexes[j];
-		indexes[j] = tmp;
-	}
-	private int compare(int i, int j, int column) {
-		TableModel realModel = getRealModel();
-		Object io = realModel.getValueAt(i, column);
-		Object jo = realModel.getValueAt(j, column);
+    private void swap(int i, int j) {
+        int tmp = indexes[i];
+        indexes[i] = indexes[j];
+        indexes[j] = tmp;
+    }
 
-		if ((io ==null ) || (jo ==null )) return 0;
-		
-		int c = jo.toString().compareTo(io.toString());
-		return (c < 0) ? -1 : ((c > 0) ? 1 : 0);
-	}
-	private void allocate() {
-		indexes = new int[getRowCount()];
-		for (int i = 0; i < indexes.length; ++i) {
-			indexes[i] = i;
-		}
-	}
+    private int compare(int i, int j, int column) {
+        TableModel realModel = getRealModel();
+        Object io = realModel.getValueAt(i, column);
+        Object jo = realModel.getValueAt(j, column);
 
+        if ((io == null) || (jo == null)) {
+            return 0;
+        }
+
+        int c = jo.toString().compareTo(io.toString());
+
+        return (c < 0) ? (-1) : ((c > 0) ? 1 : 0);
+    }
+
+    private void allocate() {
+        indexes = new int[getRowCount()];
+
+        for (int i = 0; i < indexes.length; ++i) {
+            indexes[i] = i;
+        }
+    }
 }

@@ -31,8 +31,8 @@ public class TreeController {
     AddressbookFrameController frameController;
 
     /**
-     *
-     */
+ *
+ */
     public TreeController(AddressbookFrameController frameController) {
         super();
         this.frameController = frameController;
@@ -41,20 +41,20 @@ public class TreeController {
     }
 
     /**
-     * @return AddressbookTreeView
-     */
+ * @return AddressbookTreeView
+ */
     public TreeView getView() {
         return view;
     }
 
     /**
-     * @return AddressbookFrameController
-     */
+ * @return AddressbookFrameController
+ */
     public AddressbookFrameController getFrameController() {
         return frameController;
     }
-    
+
     public Folder getSelectedFolder() {
-    	return (Folder) getView().getLastSelectedPathComponent();
+        return (Folder) getView().getLastSelectedPathComponent();
     }
 }

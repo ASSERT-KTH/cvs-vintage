@@ -17,15 +17,17 @@
 //All Rights Reserved.
 package org.columba.addressbook.gui.action;
 
-import java.awt.event.ActionEvent;
-
 import org.columba.addressbook.folder.AddressbookFolder;
 import org.columba.addressbook.folder.ContactCard;
 import org.columba.addressbook.gui.dialog.contact.ContactDialog;
 import org.columba.addressbook.gui.frame.AddressbookFrameMediator;
 import org.columba.addressbook.util.AddressbookResourceLoader;
+
 import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.gui.util.ImageLoader;
+
+import java.awt.event.ActionEvent;
+
 
 /**
  * Add new contact card to selected addressbook.
@@ -33,64 +35,52 @@ import org.columba.core.gui.util.ImageLoader;
  * @author fdietz
  */
 public class AddContactCardAction extends DefaultTreeAction {
-	public AddContactCardAction(FrameMediator frameController) {
-		super(
-			frameController,
-			AddressbookResourceLoader.getString(
-				"menu",
-				"mainframe",
-				"menu_file_addcontact"));
+    public AddContactCardAction(FrameMediator frameController) {
+        super(frameController,
+            AddressbookResourceLoader.getString("menu", "mainframe",
+                "menu_file_addcontact"));
 
-		// tooltip text
-		putValue(
-			SHORT_DESCRIPTION,
-			AddressbookResourceLoader
-				.getString("menu", "mainframe", "menu_file_addcontact_tooltip")
-				.replaceAll("&", ""));
+        // tooltip text
+        putValue(SHORT_DESCRIPTION,
+            AddressbookResourceLoader.getString("menu", "mainframe",
+                "menu_file_addcontact_tooltip").replaceAll("&", ""));
 
-		putValue(
-			TOOLBAR_NAME,
-			AddressbookResourceLoader.getString(
-				"menu",
-				"mainframe",
-				"menu_file_addcontact_toolbar"));
+        putValue(TOOLBAR_NAME,
+            AddressbookResourceLoader.getString("menu", "mainframe",
+                "menu_file_addcontact_toolbar"));
 
-		// icons
-		putValue(
-			SMALL_ICON,
-			ImageLoader.getSmallImageIcon("contact_small.png"));
-		putValue(LARGE_ICON, ImageLoader.getImageIcon("contact.png"));
+        // icons
+        putValue(SMALL_ICON, ImageLoader.getSmallImageIcon("contact_small.png"));
+        putValue(LARGE_ICON, ImageLoader.getImageIcon("contact.png"));
+    }
 
-	}
+    /**
+ * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
+ */
+    public void actionPerformed(ActionEvent evt) {
+        AddressbookFrameMediator mediator = (AddressbookFrameMediator) frameMediator;
 
-	/**
-	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
-	 */
-	public void actionPerformed(ActionEvent evt) {
-		AddressbookFrameMediator mediator =
-			(AddressbookFrameMediator) frameMediator;
+        // get selected folder
+        AddressbookFolder folder = (AddressbookFolder) mediator.getTree()
+                                                               .getSelectedFolder();
 
-		// get selected folder
-		AddressbookFolder folder =
-			(AddressbookFolder) mediator.getTree().getSelectedFolder();
+        ContactDialog dialog = new ContactDialog(mediator.getView());
 
-		ContactDialog dialog = new ContactDialog(mediator.getView());
+        // TODO:move this code to dialog
+        dialog.setVisible(true);
 
-		// TODO:move this code to dialog
-		dialog.setVisible(true);
+        if (dialog.getResult()) {
+            ContactCard card = new ContactCard();
 
-		if (dialog.getResult()) {
-			ContactCard card = new ContactCard();
+            // move this code to dialog
+            dialog.updateComponents(card, false);
 
-			// move this code to dialog
-			dialog.updateComponents(card, false);
+            // add contact to folder
+            folder.add(card);
 
-			// add contact to folder
-			folder.add(card);
-
-			// update table
-			// TODO: fire event of table model instead
-			mediator.getTable().getAddressbookModel().update();
-		}
-	}
+            // update table
+            // TODO: fire event of table model instead
+            mediator.getTable().getAddressbookModel().update();
+        }
+    }
 }

@@ -13,13 +13,14 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
-
 package org.columba.addressbook.shutdown;
 
 import org.columba.addressbook.folder.AddressbookFolder;
 import org.columba.addressbook.gui.tree.AddressbookTreeNode;
 import org.columba.addressbook.main.AddressbookInterface;
+
 import org.columba.core.backgroundtask.TaskInterface;
+
 
 /**
  * @author freddy
@@ -31,15 +32,15 @@ import org.columba.core.backgroundtask.TaskInterface;
  */
 public class SaveAllAddressbooksPlugin implements TaskInterface {
     /**
-     * Constructor for SaveAllFoldersPlugin.
-     */
+ * Constructor for SaveAllFoldersPlugin.
+ */
     public SaveAllAddressbooksPlugin() {
         super();
     }
 
     /**
-     * @see org.columba.core.shutdown.ShutdownPluginInterface#run()
-     */
+ * @see org.columba.core.shutdown.ShutdownPluginInterface#run()
+ */
     public void run() {
         saveFolders((AddressbookTreeNode) AddressbookInterface.addressbookTreeModel.getRoot());
     }

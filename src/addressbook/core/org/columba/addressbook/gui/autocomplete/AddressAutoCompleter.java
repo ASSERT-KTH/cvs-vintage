@@ -15,10 +15,15 @@
 //All Rights Reserved.
 package org.columba.addressbook.gui.autocomplete;
 
+import org.columba.addressbook.folder.HeaderItem;
+
+import org.columba.mail.util.AddressCollector;
+
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+
 import java.util.List;
 import java.util.Vector;
 
@@ -26,8 +31,6 @@ import javax.swing.DefaultComboBoxModel;
 import javax.swing.JComboBox;
 import javax.swing.JTextField;
 
-import org.columba.addressbook.folder.HeaderItem;
-import org.columba.mail.util.AddressCollector;
 
 /**
  * 
@@ -37,137 +40,135 @@ import org.columba.mail.util.AddressCollector;
  * @author fdietz
  */
 public class AddressAutoCompleter implements KeyListener, ItemListener {
-	private JComboBox _comboBox= null;
-	private JTextField _editor= null;
+    private JComboBox _comboBox = null;
+    private JTextField _editor = null;
+    int cursor_pos = -1;
+    private Object[] _options;
 
-	int cursor_pos= -1;
-	private Object[] _options;
+    public AddressAutoCompleter(JComboBox comboBox, Object[] options) {
+        _comboBox = comboBox;
 
-	public AddressAutoCompleter(JComboBox comboBox, Object[] options) {
-		_comboBox= comboBox;
+        _editor = (JTextField) comboBox.getEditor().getEditorComponent();
+        _editor.addKeyListener(this);
 
-		_editor= (JTextField) comboBox.getEditor().getEditorComponent();
-		_editor.addKeyListener(this);
+        _options = options;
+        _comboBox.addItemListener(this);
+    }
 
-		_options= options;
-		_comboBox.addItemListener(this);
-	}
+    public void keyTyped(KeyEvent e) {
+    }
 
-	public void keyTyped(KeyEvent e) {
-	}
+    public void keyPressed(KeyEvent e) {
+    }
 
-	public void keyPressed(KeyEvent e) {
-	}
+    public void keyReleased(KeyEvent e) {
+        char ch = e.getKeyChar();
 
-	public void keyReleased(KeyEvent e) {
-		char ch= e.getKeyChar();
+        if ((ch == KeyEvent.CHAR_UNDEFINED) || Character.isISOControl(ch) ||
+                (ch == KeyEvent.VK_DELETE)) {
+            return;
+        }
 
-		if ((ch == KeyEvent.CHAR_UNDEFINED)
-			|| Character.isISOControl(ch)
-			|| (ch == KeyEvent.VK_DELETE)) {
-			return;
-		}
+        int pos = _editor.getCaretPosition();
+        cursor_pos = _editor.getCaretPosition();
 
-		int pos= _editor.getCaretPosition();
-		cursor_pos= _editor.getCaretPosition();
+        String str = _editor.getText();
 
-		String str= _editor.getText();
+        if (str.length() == 0) {
+            return;
+        }
 
-		if (str.length() == 0) {
-			return;
-		}
+        autoComplete(str, pos);
+    }
 
-		autoComplete(str, pos);
-	}
+    private void autoComplete(String strf, int pos) {
+        Object[] opts = getMatchingOptions(strf.substring(0, pos));
 
-	private void autoComplete(String strf, int pos) {
-		Object[] opts= getMatchingOptions(strf.substring(0, pos));
+        if (_comboBox != null) {
+            _comboBox.setModel(new DefaultComboBoxModel(opts));
+        }
 
-		if (_comboBox != null) {
-			_comboBox.setModel(new DefaultComboBoxModel(opts));
-		}
+        if (opts.length > 0) {
+            String str = opts[0].toString();
 
-		if (opts.length > 0) {
-			String str= opts[0].toString();
+            HeaderItem item = AddressCollector.getHeaderItem((String) opts[0]);
 
-			HeaderItem item= AddressCollector.getHeaderItem((String) opts[0]);
+            if (item == null) {
+                item = new HeaderItem(HeaderItem.CONTACT);
+                item.add("displayname", str);
+                item.add("field", "To");
+            } else {
+                item = (HeaderItem) item.clone();
+            }
 
-			if (item == null) {
-				item= new HeaderItem(HeaderItem.CONTACT);
-				item.add("displayname", str);
-				item.add("field", "To");
-			} else {
-				item= (HeaderItem) item.clone();
-			}
+            String address = (String) item.get("displayname");
 
-			String address= (String) item.get("displayname");
+            if (address == null) {
+                address = (String) item.get("email;internet");
+            }
 
-			if (address == null) {
-				address= (String) item.get("email;internet");
-			}
+            _editor.setCaretPosition(cursor_pos);
 
-			_editor.setCaretPosition(cursor_pos);
+            //_editor.moveCaretPosition(cursor_pos);
+            if (_comboBox != null) {
+                try {
+                    _comboBox.showPopup();
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
+            }
+        }
+    }
 
-			//_editor.moveCaretPosition(cursor_pos);
-			if (_comboBox != null) {
-				try {
-					_comboBox.showPopup();
-				} catch (Exception ex) {
-					ex.printStackTrace();
-				}
-			}
-		}
-	}
+    private Object[] getMatchingOptions(String str) {
+        _options = AddressCollector.getAddresses();
 
-	private Object[] getMatchingOptions(String str) {
-		_options= AddressCollector.getAddresses();
+        List v = new Vector();
 
-		List v= new Vector();
+        for (int k = 0; k < _options.length; k++) {
+            String item = _options[k].toString().toLowerCase();
 
-		for (int k= 0; k < _options.length; k++) {
-			String item= _options[k].toString().toLowerCase();
+            if (item.startsWith(str.toLowerCase())) {
+                v.add(_options[k]);
+            }
+        }
 
-			if (item.startsWith(str.toLowerCase())) {
-				v.add(_options[k]);
-			}
-		}
+        if (v.isEmpty()) {
+            v.add(str);
+        }
 
-		if (v.isEmpty()) {
-			v.add(str);
-		}
+        return v.toArray();
+    }
 
-		return v.toArray();
-	}
+    public void itemStateChanged(ItemEvent event) {
+        if (event.getStateChange() == ItemEvent.SELECTED) {
+            String selected = (String) _comboBox.getSelectedItem();
 
-	public void itemStateChanged(ItemEvent event) {
-		if (event.getStateChange() == ItemEvent.SELECTED) {
-			String selected= (String) _comboBox.getSelectedItem();
+            HeaderItem item = AddressCollector.getHeaderItem(selected);
 
-			HeaderItem item= AddressCollector.getHeaderItem(selected);
+            if (item == null) {
+                item = new HeaderItem(HeaderItem.CONTACT);
+                item.add("displayname", selected);
+                item.add("field", "To");
+            } else {
+                item = (HeaderItem) item.clone();
+            }
 
-			if (item == null) {
-				item= new HeaderItem(HeaderItem.CONTACT);
-				item.add("displayname", selected);
-				item.add("field", "To");
-			} else {
-				item= (HeaderItem) item.clone();
-			}
+            String address = (String) item.get("displayname");
 
-			String address= (String) item.get("displayname");
+            if (address == null) {
+                address = (String) item.get("email;internet");
+            }
 
-			if (address == null) {
-				address= (String) item.get("email;internet");
-			}
+            int pos2 = _editor.getCaretPosition();
 
-			int pos2= _editor.getCaretPosition();
-
-			if (cursor_pos != -1) {
-				try {
-					_editor.moveCaretPosition(pos2);
-				} catch (IllegalArgumentException ex) {
-					ex.printStackTrace();
-				}
-			}
-		}
-	}
+            if (cursor_pos != -1) {
+                try {
+                    _editor.moveCaretPosition(pos2);
+                } catch (IllegalArgumentException ex) {
+                    ex.printStackTrace();
+                }
+            }
+        }
+    }
 }

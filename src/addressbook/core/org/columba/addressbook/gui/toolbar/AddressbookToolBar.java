@@ -15,12 +15,13 @@
 //All Rights Reserved.
 package org.columba.addressbook.gui.toolbar;
 
+import org.columba.addressbook.main.AddressbookInterface;
+
+import org.columba.core.gui.toolbar.ToolbarButton;
+
 import java.util.ResourceBundle;
 
 import javax.swing.JToolBar;
-
-import org.columba.addressbook.main.AddressbookInterface;
-import org.columba.core.gui.toolbar.ToolbarButton;
 
 
 public class AddressbookToolBar extends JToolBar {
@@ -47,27 +48,27 @@ public class AddressbookToolBar extends JToolBar {
 
     public void addCButtons() {
         /*
-                    //MouseAdapter handler = MainInterface.statusBar.getHandler();
-                    ToolbarButton button;
+            //MouseAdapter handler = MainInterface.statusBar.getHandler();
+            ToolbarButton button;
 
-                    addSeparator();
+            addSeparator();
 
 
-                    button = new ToolbarButton( addressbookInterface.actionListener.addContactAction);
-                    addButton( button  );
+            button = new ToolbarButton( addressbookInterface.actionListener.addContactAction);
+            addButton( button  );
 
-                    button = new ToolbarButton( addressbookInterface.actionListener.addGroupAction);
-                    addButton( button  );
+            button = new ToolbarButton( addressbookInterface.actionListener.addGroupAction);
+            addButton( button  );
 
-                    addSeparator();
+            addSeparator();
 
-                    button = new ToolbarButton( addressbookInterface.actionListener.propertiesAction);
-                    addButton( button  );
+            button = new ToolbarButton( addressbookInterface.actionListener.propertiesAction);
+            addButton( button  );
 
-                    button = new ToolbarButton( addressbookInterface.actionListener.removeAction);
-                    addButton( button  );
+            button = new ToolbarButton( addressbookInterface.actionListener.removeAction);
+            addButton( button  );
 
-                    addSeparator();
-        */
+            addSeparator();
+*/
     }
 }

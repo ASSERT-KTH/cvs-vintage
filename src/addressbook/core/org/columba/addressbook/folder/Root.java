@@ -15,8 +15,10 @@
 //All Rights Reserved.
 package org.columba.addressbook.folder;
 
+import org.columba.addressbook.config.AdapterNode;
 import org.columba.addressbook.config.FolderItem;
 import org.columba.addressbook.gui.tree.AddressbookTreeNode;
+
 import org.columba.core.command.WorkerStatusController;
 import org.columba.core.xml.XmlElement;
 
@@ -37,8 +39,8 @@ public class Root extends AddressbookTreeNode {
     }
 
     /**
-     * @see org.columba.modules.mail.folder.FolderTreeNode#instanceNewChildNode(AdapterNode, FolderItem)
-     */
+ * @see org.columba.modules.mail.folder.FolderTreeNode#instanceNewChildNode(AdapterNode, FolderItem)
+ */
     public Class getDefaultChild() {
         return null;
     }
@@ -47,8 +49,8 @@ public class Root extends AddressbookTreeNode {
     }
 
     /* (non-Javadoc)
-     * @see org.columba.addressbook.gui.tree.AddressbookTreeNode#getName()
-     */
+ * @see org.columba.addressbook.gui.tree.AddressbookTreeNode#getName()
+ */
     public String getName() {
         return "Root";
     }

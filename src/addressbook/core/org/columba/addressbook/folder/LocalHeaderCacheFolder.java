@@ -13,23 +13,25 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
-
 package org.columba.addressbook.folder;
+
+import org.columba.addressbook.config.FolderItem;
+import org.columba.addressbook.main.AddressbookInterface;
+import org.columba.addressbook.parser.DefaultCardLoader;
+
+import org.columba.core.command.WorkerStatusController;
+import org.columba.core.config.TableItem;
+import org.columba.core.logging.ColumbaLogger;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+
 import java.util.List;
 import java.util.Vector;
 
-import org.columba.addressbook.config.FolderItem;
-import org.columba.addressbook.main.AddressbookInterface;
-import org.columba.addressbook.parser.DefaultCardLoader;
-import org.columba.core.command.WorkerStatusController;
-import org.columba.core.config.TableItem;
-import org.columba.core.logging.ColumbaLogger;
 
 /**
  *
@@ -80,8 +82,8 @@ public class LocalHeaderCacheFolder extends LocalFolder {
 
         headerFile = new File(directoryFile.toString() + "/.header");
 
-        headerTableItemList = new TableItem(AddressbookInterface.config.get("options")
-                                                             .getElement("/options/gui/table"));
+        headerTableItemList = new TableItem(AddressbookInterface.config.get(
+                    "options").getElement("/options/gui/table"));
 
         // FIXME
 

@@ -17,12 +17,13 @@
 //All Rights Reserved.
 package org.columba.addressbook.gui.table.renderer;
 
+import org.columba.core.gui.util.ImageLoader;
+
 import java.awt.Component;
 
 import javax.swing.ImageIcon;
 import javax.swing.JTable;
 
-import org.columba.core.gui.util.ImageLoader;
 
 /**
  * Renderer for type column. Either displays a contact or a group icon.
@@ -30,46 +31,33 @@ import org.columba.core.gui.util.ImageLoader;
  * @author fdietz
  */
 public class TypeRenderer extends DefaultLabelRenderer {
+    ImageIcon image1 = ImageLoader.getSmallImageIcon("contact_small.png");
+    ImageIcon image2 = ImageLoader.getSmallImageIcon("group_small.png");
 
-	ImageIcon image1 = ImageLoader.getSmallImageIcon("contact_small.png");
-	ImageIcon image2 = ImageLoader.getSmallImageIcon("group_small.png");
-	/**
-	 *  
-	 */
-	public TypeRenderer() {
-		super();
+    /**
+ *  
+ */
+    public TypeRenderer() {
+        super();
+    }
 
-	}
+    /**
+ * @see javax.swing.table.TableCellRenderer#getTableCellRendererComponent(javax.swing.JTable,
+ *      java.lang.Object, boolean, boolean, int, int)
+ */
+    public Component getTableCellRendererComponent(JTable table, Object value,
+        boolean isSelected, boolean hasFocus, int row, int column) {
+        String str = (String) value;
 
-	/**
-	 * @see javax.swing.table.TableCellRenderer#getTableCellRendererComponent(javax.swing.JTable,
-	 *      java.lang.Object, boolean, boolean, int, int)
-	 */
-	public Component getTableCellRendererComponent(
-		JTable table,
-		Object value,
-		boolean isSelected,
-		boolean hasFocus,
-		int row,
-		int column) {
+        if (str.equalsIgnoreCase("contact")) {
+            setIcon(image1);
+        } else {
+            setIcon(image2);
+        }
 
-		String str =(String) value;
+        setText(null);
 
-		if (str.equalsIgnoreCase("contact")) {
-			setIcon(image1);
-		} else {
-			setIcon(image2);
-		}
-		
-		setText(null);
-
-		return super.getTableCellRendererComponent(
-			table,
-			value,
-			isSelected,
-			hasFocus,
-			row,
-			column);
-	}
-
+        return super.getTableCellRendererComponent(table, value, isSelected,
+            hasFocus, row, column);
+    }
 }

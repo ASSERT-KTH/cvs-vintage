@@ -60,9 +60,9 @@ public class HeaderItemList {
             System.out.println("item == null!!!");
         }
     }
-    
-    public HeaderItem remove(int index ) {
-    	return (HeaderItem) list.remove(index);
+
+    public HeaderItem remove(int index) {
+        return (HeaderItem) list.remove(index);
     }
 
     public void replace(int index, HeaderItem item) {

@@ -25,95 +25,95 @@ import org.columba.core.xml.XmlElement;
  */
 public class FolderItem extends DefaultItem {
     /*
-    AdapterNode name;
-    AdapterNode uid;
-    AdapterNode type;
-    AdapterNode rootNode;
-    */
+AdapterNode name;
+AdapterNode uid;
+AdapterNode type;
+AdapterNode rootNode;
+*/
     public FolderItem(XmlElement root) {
         super(root);
 
         /*
-        this.rootNode = root;
+this.rootNode = root;
 
-        parse();
+parse();
 
-        createMissingElements();
-        */
+createMissingElements();
+*/
 
         //filterList = new Vector();
     }
 
     /*
-    protected void parse()
-    {
-            for (int i = 0; i < getRootNode().getChildCount(); i++)
-            {
-                    AdapterNode child = getRootNode().getChildAt(i);
+protected void parse()
+{
+        for (int i = 0; i < getRootNode().getChildCount(); i++)
+        {
+                AdapterNode child = getRootNode().getChildAt(i);
 
-                    if (child.getName().equals("name"))
-                    {
-                            name = child;
-                    }
-                    else if (child.getName().equals("uid"))
-                    {
-                            uid = child;
-                    }
-                    else if (child.getName().equals("type"))
-                    {
-                            type = child;
-                    }
+                if (child.getName().equals("name"))
+                {
+                        name = child;
+                }
+                else if (child.getName().equals("uid"))
+                {
+                        uid = child;
+                }
+                else if (child.getName().equals("type"))
+                {
+                        type = child;
+                }
 
-            }
-    }
+        }
+}
 
-    protected void createMissingElements()
-    {
+protected void createMissingElements()
+{
 
-    }
+}
 
-    public AdapterNode getRootNode()
-    {
-            return rootNode;
-    }
+public AdapterNode getRootNode()
+{
+        return rootNode;
+}
 
-    public void setUid(int i)
-    {
-            Integer h = new Integer(i);
+public void setUid(int i)
+{
+        Integer h = new Integer(i);
 
-            setTextValue(uid, h.toString());
-    }
+        setTextValue(uid, h.toString());
+}
 
-    public void setName(String str)
-    {
-            setTextValue(name, str);
-    }
+public void setName(String str)
+{
+        setTextValue(name, str);
+}
 
-    public int getUid()
-    {
-            if ( uid != null )
-            {
-            Integer i = new Integer(getTextValue(uid));
+public int getUid()
+{
+        if ( uid != null )
+        {
+        Integer i = new Integer(getTextValue(uid));
 
-            return i.intValue();
-            }
-            else
-            {
-                    return -1;
-            }
-    }
+        return i.intValue();
+        }
+        else
+        {
+                return -1;
+        }
+}
 
-    public String getName()
-    {
-            if ( name != null )
-                    return getTextValue(name);
-            else
-                    return "";
-    }
+public String getName()
+{
+        if ( name != null )
+                return getTextValue(name);
+        else
+                return "";
+}
 
-    public String getType()
-    {
-            return getTextValue(type);
-    }
-    */
+public String getType()
+{
+        return getTextValue(type);
+}
+*/
 }

@@ -29,10 +29,10 @@ import org.columba.core.xml.XmlElement;
  */
 public class FolderPluginHandler extends AbstractPluginHandler {
     /**
-     * Constructor for FolderPluginHandler.
-     * @param id
-     * @param config
-     */
+ * Constructor for FolderPluginHandler.
+ * @param id
+ * @param config
+ */
     public FolderPluginHandler() {
         super("org.columba.addressbook.folder",
             "org/columba/addressbook/plugin/folder.xml");
@@ -41,8 +41,8 @@ public class FolderPluginHandler extends AbstractPluginHandler {
     }
 
     /* (non-Javadoc)
-     * @see org.columba.core.plugin.AbstractPluginHandler#addExtension(java.lang.String, org.columba.core.xml.XmlElement)
-     */
+ * @see org.columba.core.plugin.AbstractPluginHandler#addExtension(java.lang.String, org.columba.core.xml.XmlElement)
+ */
     public void addExtension(String id, XmlElement extension) {
         // TODO adding folders with the plugin-mechanism shouldn't work unless we don't implement this - this is mostly copy/paste from other plugin-handler classes
     }
