@@ -50,6 +50,7 @@ import java.util.Hashtable;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.ArrayList;
 import java.util.StringTokenizer;
 
 // Turbine Stuff 
@@ -79,6 +80,7 @@ import org.tigris.scarab.om.RModuleAttribute;
 import org.tigris.scarab.util.ScarabConstants;
 import org.tigris.scarab.util.ScarabException;
 import org.tigris.scarab.util.word.IssueSearch;
+import org.tigris.scarab.util.word.QueryResult;
 import org.tigris.scarab.tools.ScarabRequestTool;
 import org.tigris.scarab.tools.ScarabLocalizationTool;
 import org.tigris.scarab.services.security.ScarabSecurity;
@@ -87,7 +89,7 @@ import org.tigris.scarab.services.security.ScarabSecurity;
  * This class is responsible for report issue forms.
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: ReportIssue.java,v 1.151 2002/11/14 21:22:17 elicia Exp $
+ * @version $Id: ReportIssue.java,v 1.152 2002/11/20 21:55:50 jmcnally Exp $
  */
 public class ReportIssue extends RequireLoginFirstAction
 {
@@ -179,15 +181,20 @@ public class ReportIssue extends RequireLoginFirstAction
                 av.setValue(query.toString());       
             }
         }
-        List matchingIssues = search.getMatchingIssues();
+        List queryResults = search.getQueryResults();
 
         // set the template to dedupe unless none exist, then skip
         // to final entry screen
         String template = null;
-        boolean dupThresholdExceeded = (matchingIssues.size() > threshold);
+        boolean dupThresholdExceeded = (queryResults.size() > threshold);
         if (dupThresholdExceeded)
         {
-            context.put("issueList", matchingIssues);     
+            List matchingIssueIds = new ArrayList(queryResults.size());
+            for (Iterator i = queryResults.iterator(); i.hasNext();) 
+            {
+                matchingIssueIds.add( ((QueryResult)i.next()).getUniqueId() );
+            }
+            context.put("issueList", matchingIssueIds);
             template = "entry,Wizard2.vm";
         }
         else

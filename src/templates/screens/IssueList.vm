@@ -2,10 +2,10 @@
 
 #set ($user = $data.User)
 #set ($searchType = $data.Parameters.getString("searchType",""))
-#if (!$issueIdList)
-   #set ($issueIdList = $scarabR.CurrentSearchResults)
+#if (!$queryResults)
+   #set ($queryResults = $scarabR.CurrentSearchResults)
 #end
-#set ($issueListSize = $issueIdList.size())
+#set ($issueListSize = $queryResults.size())
 #set ($totalCount = $issueListSize)
 
 ## if results exceed limit, get subset list
@@ -13,14 +13,14 @@
 #set ($pageNum = $data.Parameters.getInt("pageNum",1))
 #if ($resultsPerPage > 0 && $issueListSize > $resultsPerPage)
  #set ($paginated = "true")
- #set ($issueIdList = $scarabR.getPaginatedList($issueIdList, $pageNum, $resultsPerPage))
- #set ($issueListSize = $issueIdList.size())
+ #set ($queryResults = $scarabR.getPaginatedList($queryResults, $pageNum, $resultsPerPage))
+ #set ($issueListSize = $queryResults.size())
 #end
 
 ## note it is expensive to determine the following and it is even
 ## more resource intensive to show a large list on the assign issue page, so
 ## limit showing the assign buttons to lists of less than 500 issues
-#set ($showAssignButtons = $issueListSize <= 500)
+#set ($showAssignButtons = $issueListSize <= 500 && false)
 #if ($showAssignButtons)
     #set ($modules = $scarabG.getModulesFromIssueList($scarabR.getIssues($issueIdList)))
     #set ($showAssignButtons = $user.hasPermission($scarabG.Permission.ISSUE__ASSIGN, $modules))
@@ -154,50 +154,41 @@ $link.setPage("ConfigureIssueList.vm").setLabel("Add/remove attributes from view
 #end
   </tr>
 
-#foreach ($issueId in $issueIdList)
- #set ($issue = $scarabR.getIssue($issueId))
+#set ($showModule = $mitlist && !$mitlist.isSingleModule())
+#set ($showIssueType = $mitlist && !$mitlist.isSingleIssueType())
+#foreach ($result in $queryResults)
+
+ #set ($issueLink = $link.setPage("ViewIssue.vm").setPathInfo("id", $result.UniqueId.toString()))
+
  ## append some of the neighbor ids, so that we do not always have to rerun
  ## the query to create prev/next links
  #set ($min = $velocityCount - 5)
  #set ($max = $velocityCount + 10)
- #set ($prevNextList = $scarabG.subset($issueIdList, $min, $max))
- #set ($issueLink = $link.setPage("ViewIssue.vm").setPathInfo("id", $issue.UniqueId.toString()))
+ #set ($prevNextList = $scarabG.subset($queryResults, $min, $max))
  #set ($dummy = $issueLink.addPathInfo("issueList", $min))
  #set ($dummy = $issueLink.addPathInfo("issueList", $totalCount))
- #foreach ($prevNextId in $prevNextList)
-    #set ($dummy = $issueLink.addPathInfo("issueList", $prevNextId))
+ #foreach ($prevNextQueryResult in $prevNextList)
+    #set ($dummy = $issueLink.addPathInfo("issueList", $prevNextQueryResult.UniqueId))
  #end
+
  #indexedRows($velocityCount)
   <td>
-   <input type="hidden" name="all_issue_ids" value="$issueId" />
-   <input type="checkbox" name="issue_ids" value="$issue.UniqueId" />
+   <input type="hidden" name="all_issue_ids" value="$result.UniqueId" />
+   <input type="checkbox" name="issue_ids" value="$result.UniqueId" />
   </td>
- #if ($mitlist && !$mitlist.isSingleModule())
-  <td>$issue.Module.RealName</td> 
+ #if ($showModule)
+  <td>$result.Module.RealName</td> 
  #end
- #if ($mitlist && !$mitlist.isSingleIssueType())
-  <td>$issue.RModuleIssueType.DisplayName</td> 
+ #if ($showIssueType)
+  <td>$result.RModuleIssueType.DisplayName</td> 
  #end
-  <td><a href="$issueLink">$issue.UniqueId</a></td>
-#foreach ($rmua in $rmuas)
- #set ($userAttribute = $rmua.Attribute)
+  <td><a href="$issueLink">$result.UniqueId</a></td>
+#foreach ($value in $result.AttributeValuesAsCSV)
   <td>
-  ## Setting value to "" first so it doesn't use value from last attribute
-  #set ($value = "")
-#if ($userAttribute.isUserAttribute())
-  #set ($values = $issue.getAttributeValues($userAttribute))
-  #set ($comma = "")
-  #foreach ($av in $values)
-    #set($value = "$value$comma$av.Value")
-  #set ($comma = ", ")
-  #end
-#else
-  #set ($value = $issue.getAttributeValue($userAttribute).Value)
-#end
-  #if (!$value.equals(""))
-   $value
-  #else
+  #if ($value.length() == 0)
     -------
+  #else
+    $value
   #end
   </td>
 #end

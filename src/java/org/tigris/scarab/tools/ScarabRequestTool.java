@@ -594,15 +594,24 @@ try{
         List result = null;
         try
         {
+            Module module = getCurrentModule();
+            IssueType issueType = getCurrentIssueType();
             MITList currentList = user.getCurrentMITList();
             if (currentList != null)
             {
-                result = currentList.getCommonRModuleUserAttributes();
+                if (currentList.isSingleModuleIssueType()) 
+                {
+                    module = currentList.getModule();
+                    issueType = currentList.getIssueType();
+                }
+                else 
+                {
+                    result = currentList.getCommonRModuleUserAttributes();
+                }                
             }
-            else 
+
+            if (result == null)
             {
-                Module module = getCurrentModule();
-                IssueType issueType = getCurrentIssueType();
                 result = user.getRModuleUserAttributes(module, issueType);
                 if (result.isEmpty())
                 {
@@ -1474,7 +1483,6 @@ try{
             {
                 issueSearch = new IssueSearch(mitList);
             }
-            
         }
         return issueSearch; 
     }
@@ -1617,7 +1625,9 @@ try{
         ScarabUser user = (ScarabUser)data.getUser();
         String currentQueryString = user.getMostRecentQuery();
         IssueSearch search = getSearch();
-        List matchingIssueIds = new ArrayList();
+        search.setIssueListAttributeColumns(getRModuleUserAttributes());
+
+        List queryResults = new ArrayList();
         boolean searchSuccess = true;
         Intake intake = null;
 
@@ -1677,7 +1687,7 @@ try{
             if (!searchSuccess)
             {
                 setAlertMessage(l10n.get("DateFormatPrompt"));
-                return matchingIssueIds;
+                return queryResults;
              }
             searchGroup.setProperties(search);
 
@@ -1708,12 +1718,12 @@ try{
             {
                 search.setSortPolarity(sortPolarity);
             }
-               
+
             // Do search
             try
             {
-                matchingIssueIds = search.getMatchingIssues();
-                if (matchingIssueIds == null || matchingIssueIds.size() <= 0)
+                queryResults = search.getQueryResults();
+                if (queryResults == null || queryResults.size() <= 0)
                 {
                     setInfoMessage(l10n.get("NoMatchingIssues"));
                 }            
@@ -1734,7 +1744,7 @@ try{
                 }
             }
         }
-        return matchingIssueIds;
+        return queryResults;
     }
 
     public int getCurrentSearchResultsSize()

@@ -53,15 +53,20 @@ import java.util.Iterator;
 import java.util.Vector;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Collections;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.text.ParseException;
 
 import com.workingdogs.village.Record;
 import org.apache.torque.om.NumberKey;
+import org.apache.torque.om.ComboKey;
+import org.apache.torque.om.ObjectKey;
 import org.apache.torque.util.Criteria;
+import org.apache.torque.util.BasePeer;
 import org.apache.torque.TorqueException;
 import org.apache.commons.collections.SequencedHashMap;
+import org.apache.commons.collections.LRUMap;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.ObjectUtils;
 
@@ -81,9 +86,13 @@ import org.tigris.scarab.om.ActivitySetPeer;
 import org.tigris.scarab.om.ActivitySetTypePeer;
 import org.tigris.scarab.om.RModuleOptionPeer;
 import org.tigris.scarab.om.RModuleOption;
+import org.tigris.scarab.om.RModuleIssueType;
+import org.tigris.scarab.om.RModuleIssueTypeManager;
 import org.tigris.scarab.om.Module;
+import org.tigris.scarab.om.ModuleManager;
 import org.tigris.scarab.om.MITList;
 import org.tigris.scarab.om.MITListItem;
+import org.tigris.scarab.om.RModuleUserAttribute;
 
 import org.tigris.scarab.util.ScarabException;
 import org.tigris.scarab.attribute.OptionAttribute;
@@ -208,6 +217,16 @@ public class IssueSearch
 
     private int lastTotalIssueCount = -1;
     private List lastMatchingIssueIds = null;
+    private List lastQueryResults = null;
+
+    // the attribute columns that will be shown
+    private List issueListAttributeColumns;
+
+    // used to cache a few modules and issuetypes to make listing
+    // a result set faster.
+    private LRUMap moduleMap = new LRUMap(20);
+    private LRUMap rmitMap = new LRUMap(20);
+    
      
     public IssueSearch(Issue issue)
         throws Exception
@@ -263,14 +282,35 @@ public class IssueSearch
         return mitList != null && !mitList.isSingleModuleIssueType();
     }
 
+    /**
+     * List of attributes to show with each issue.
+     *
+     * @param rmuas a <code>List</code> of RModuleUserAttribute objects
+     */
+    public void setIssueListAttributeColumns(List rmuas)
+    {
+        //FIXME! implement logic to determine if a new search is required.
+        issueListAttributeColumns = rmuas;
+    }
+
+    public List getIssueListAttributeColumns()
+    {
+        return issueListAttributeColumns;
+    }
 
     public SequencedHashMap getCommonAttributeValuesMap()
         throws Exception
     {
+        long start = System.currentTimeMillis(), now=start;
         SequencedHashMap result = null;
         if (isXMITSearch()) 
         {
+            now = System.currentTimeMillis();
+            System.out.println("A=" + (now-start));
+            start = now;
             result = getMITAttributeValuesMap();
+            now = System.currentTimeMillis();
+            System.out.println("B=" + (now-start));
         }
         else 
         {
@@ -898,6 +938,7 @@ public class IssueSearch
             modified = false;
             lastTotalIssueCount = -1;
             lastMatchingIssueIds = null;
+            lastQueryResults = null;
         }
     }
 
@@ -1730,13 +1771,13 @@ public class IssueSearch
      * @return a <code>List</code> value
      * @exception Exception if an error occurs
      */
-    public List getMatchingIssues()
+    public List getQueryResults()
         throws Exception
     {
         checkModified();
-        if (lastMatchingIssueIds == null) 
+        if (lastQueryResults == null) 
         {
-            List sortedIssues = null;
+            List rows = null;
             Criteria crit = new Criteria();
             crit.setDistinct();
             NumberKey[] matchingIssueIds = addCoreSearchCriteria(crit);
@@ -1746,23 +1787,17 @@ public class IssueSearch
             if ( matchingIssueIds == null || matchingIssueIds.length > 0 ) 
             {            
                 // Get matching issues, with sort criteria
-                sortedIssues = sortIssues(crit);
+                lastQueryResults = sortResults(crit);
             }
             else 
             {
-                sortedIssues = new ArrayList(0);
-            }            
-
-            // Return list as issue ids
-            lastMatchingIssueIds = new ArrayList(sortedIssues.size());
-            for (Iterator i = sortedIssues.iterator(); i.hasNext(); )
-            {
-                lastMatchingIssueIds.add(((Issue)i.next()).getUniqueId());
+                lastQueryResults = new ArrayList(0);
             }            
         }
         
-        return lastMatchingIssueIds;
+        return lastQueryResults;
     }
+
 
     public int getIssueCount()
         throws Exception
@@ -1790,7 +1825,7 @@ public class IssueSearch
         return count;
     }
 
-    private List sortIssues(Criteria crit)
+    private List sortResults(Criteria crit)
         throws Exception
     {
         List matchingIssues = null;
@@ -1807,63 +1842,104 @@ public class IssueSearch
         return matchingIssues;
     }
 
-    /**
-     * Sorts on issue unique id (default)
-     */
-    private List sortByUniqueId(Criteria crit) throws Exception
-    {
-        if (getSortPolarity().equals("desc"))
-        {
-            crit.addDescendingOrderByColumn(IssuePeer.ID_COUNT);
-        } 
-        else
-        {
-            crit.addAscendingOrderByColumn(IssuePeer.ID_COUNT);
-        }
-        return IssuePeer.doSelect(crit);
-    }
+    private static String WHERE = " WHERE ";
+    private static String FROM = " FROM ";
+    private static String ORDER_BY = " ORDER BY ";
+    private static String BASE_OPTION_SORT_LEFT_JOIN = " LEFT OUTER JOIN SCARAB_R_MODULE_OPTION sortRMO ON (SCARAB_ISSUE.MODULE_ID=sortRMO.MODULE_ID AND SCARAB_ISSUE.TYPE_ID=sortRMO.ISSUE_TYPE_ID AND sortRMO.OPTION_ID=";
 
     private List sortByAttribute(Criteria crit) throws Exception
     {
         NumberKey sortAttrId = getSortAttributeId();
         Attribute att = AttributeManager.getInstance(sortAttrId);
 
-        String sortColumn = null;  
+        crit.addSelectColumn(IssuePeer.ISSUE_ID);
+        crit.addSelectColumn(IssuePeer.MODULE_ID);
+        crit.addSelectColumn(IssuePeer.TYPE_ID);
+        crit.addSelectColumn(IssuePeer.ID_PREFIX);
+        crit.addSelectColumn(IssuePeer.ID_COUNT);
+
+        String baseSql = BasePeer.createQueryString(crit);
+        StringBuffer sb = new StringBuffer(baseSql.length() + 500);
+        sb.append(baseSql);
+
+        List rmuas = getIssueListAttributeColumns();
+        int valueListSize = rmuas.size();
+        StringBuffer outerJoin = new StringBuffer(10 * valueListSize + 20);
+        StringBuffer selectColumns = new StringBuffer(20 * valueListSize);
+
+        int sortAttrPos = -1;
+        int count = 0;
+        for (Iterator i = rmuas.iterator(); i.hasNext(); count++) 
+        {
+            RModuleUserAttribute rmua = (RModuleUserAttribute)i.next();
+            // locate the sort attribute position so we can move any 
+            // unset results to the end of the list.
+            NumberKey attrPK = rmua.getAttributeId();
+            if (attrPK.equals(sortAttrId)) 
+            {
+                sortAttrPos = count;
+            }
+            String id = attrPK.toString();
+            selectColumns.append(",av").append(id).append(".VALUE");
+            outerJoin.append(" LEFT OUTER JOIN SCARAB_ISSUE_ATTRIBUTE_VALUE av")
+                .append(id).append(" ON (SCARAB_ISSUE.ISSUE_ID=av").append(id)
+                .append(".ISSUE_ID AND av").append(id)
+                .append(".DELETED=0 AND av").append(id)
+                .append(".ATTRIBUTE_ID=").append(id).append(')');
+        }
+
+        // a VALUE sort column will be handled by the above 
+        // but we need add more sql for option sorting
+        String sortColumn = null;
+        String sortId = sortAttrId.toString();
         if ( att.isOptionAttribute())
         {
-            crit.add(AttributeValuePeer.ATTRIBUTE_ID, sortAttrId);
-            crit.add(AttributeValuePeer.DELETED, false);
-            crit.addJoin(AttributeValuePeer.OPTION_ID,
-                         RModuleOptionPeer.OPTION_ID);
-            crit.addJoin(AttributeValuePeer.ISSUE_ID, IssuePeer.ISSUE_ID);
-            crit.addJoin(IssuePeer.MODULE_ID, RModuleOptionPeer.MODULE_ID);
-            crit.addJoin(IssuePeer.TYPE_ID, RModuleOptionPeer.ISSUE_TYPE_ID);
-            sortColumn = RModuleOptionPeer.PREFERRED_ORDER;
+            // add the sort column
+            sortColumn = "sortRMO.PREFERRED_ORDER";
+            selectColumns.append(',').append(sortColumn);
+            //addSortOrderByColumn(crit, sortColumn);
+            outerJoin.append(BASE_OPTION_SORT_LEFT_JOIN).append("av")
+                .append(sortId).append(".OPTION_ID)");
         }
-        else
+        else 
         {
-            crit.add(AttributeValuePeer.ATTRIBUTE_ID, sortAttrId);
-            crit.addJoin(AttributeValuePeer.ISSUE_ID,
-                         IssuePeer.ISSUE_ID);
-            sortColumn = AttributeValuePeer.VALUE; 
+            sortColumn = "av" + sortId + ".VALUE";
         }
+
+        // add left outer join
+        sb.insert(baseSql.indexOf(WHERE), outerJoin.toString());
+        // add attribute columns for the table
+        sb.insert(baseSql.indexOf(FROM), selectColumns.toString());
+        // add order by clause
+        sb.append(ORDER_BY).append(sortColumn);
         if (getSortPolarity().equals("desc"))
         {
-            crit.addDescendingOrderByColumn(sortColumn);
+            sb.append(" DESC");
         }
         else
         {
-            crit.addAscendingOrderByColumn(sortColumn);
+            sb.append(" ASC");
         }
-        IssuePeer.addSelectColumns(crit);
-        crit.addSelectColumn(sortColumn);
-        List issues = IssuePeer.doSelect(crit);
+        // add pk sort so that rows can be combined easily
+        sb.append(',').append(IssuePeer.ISSUE_ID).append(" ASC");
         
+        String sql = sb.toString();
+
+        long start = System.currentTimeMillis();
+        System.out.println("Executing query: " + sql);
+        List sortedRecords = BasePeer.executeQuery(sql);
+        System.out.println("Executed query size=" + sortedRecords.size()+
+            "; time= " + (System.currentTimeMillis()-start) + " ms");
+
+        List sortedResults = buildQueryResults(sortedRecords, sortAttrPos,
+                                               valueListSize);
+
+        /*        
         // if all issues have a value for the sorted-by attribute
         // we are done, otherwise we have to add the unsorted issues
         // this is expensive!  The best would be an sql subselect but
         // that is not supported in enough db's.
-        if (issues.size() < getIssueCount()) 
+        if (sortedResults.size() < getIssueCount()) 
         {
             Criteria crit2 = new Criteria();
             crit2.setDistinct();
@@ -1874,11 +1950,11 @@ public class IssueSearch
             // we could save code and create a list to pass to 
             // Criteria.addNotIn, but that method is terribly inefficient
             // for this simple case; 100X speed improvement is worth it.
-            if (issues.size() > 0) 
+            if (sortedResults.size() > 0) 
             {
                 StringBuffer pks = new StringBuffer(issues.size()*8);
                 pks.append(IssuePeer.ISSUE_ID).append(" NOT IN (");
-                Iterator i = issues.iterator();
+                Iterator i = sortedResults.iterator();
                 pks.append(((Issue)i.next()).getIssueId());
                 while (i.hasNext())
                 {
@@ -1891,8 +1967,198 @@ public class IssueSearch
                 issues.addAll( IssuePeer.doSelect(crit2) );
             }
         }
+        */
         
-        return issues;
+        return sortedResults;
+    }
+
+    /**
+     * Sorts on issue unique id (default)
+     */
+    private List sortByUniqueId(Criteria crit) 
+        throws Exception
+    {
+        crit.addSelectColumn(IssuePeer.ISSUE_ID);
+        crit.addSelectColumn(IssuePeer.MODULE_ID);
+        crit.addSelectColumn(IssuePeer.TYPE_ID);
+        crit.addSelectColumn(IssuePeer.ID_PREFIX);
+        crit.addSelectColumn(IssuePeer.ID_COUNT);
+
+        if (getSortPolarity().equals("desc"))
+        {
+            crit.addDescendingOrderByColumn(IssuePeer.ID_COUNT);
+        } 
+        else
+        {
+            crit.addAscendingOrderByColumn(IssuePeer.ID_COUNT);
+        }
+        // add pk sort so that rows can be combined easily
+        crit.addAscendingOrderByColumn(IssuePeer.ISSUE_ID);
+        
+        String baseSql = BasePeer.createQueryString(crit);
+        StringBuffer sb = new StringBuffer(baseSql.length() + 150);
+        sb.append(baseSql);
+
+        List rmuas = getIssueListAttributeColumns();
+        int valueListSize = rmuas.size();
+        StringBuffer outerJoin = new StringBuffer(10 * valueListSize + 20);
+        StringBuffer selectColumns = new StringBuffer(20 * valueListSize);
+        
+        for (Iterator i = rmuas.iterator(); i.hasNext();) 
+        {
+            RModuleUserAttribute rmua = (RModuleUserAttribute)i.next();
+            String id = rmua.getAttributeId().toString();
+            selectColumns.append(",av").append(id).append(".VALUE");
+            outerJoin.append(" LEFT OUTER JOIN SCARAB_ISSUE_ATTRIBUTE_VALUE av")
+                .append(id).append(" ON (SCARAB_ISSUE.ISSUE_ID=av").append(id)
+                .append(".ISSUE_ID AND av").append(id)
+                .append(".DELETED=0 AND av").append(id)
+                .append(".ATTRIBUTE_ID=").append(id).append(')');
+        }
+        
+        // add left outer join
+        sb.insert(baseSql.indexOf(WHERE), outerJoin.toString());
+        // add attribute columns for the table
+        sb.insert(baseSql.indexOf(FROM), selectColumns.toString());
+        String sql = sb.toString();
+
+        long start = System.currentTimeMillis();
+        System.out.println("Executing query: " + sql);
+        List sortedRecords = BasePeer.executeQuery(sql);
+        System.out.println("Executed query size=" + sortedRecords.size()+
+            "; time= " + (System.currentTimeMillis()-start) + " ms");
+
+        return buildQueryResults(sortedRecords, -1, valueListSize);
+    }
+    
+    public List buildQueryResults(List records, int sortAttrPos, 
+                                  int valueListSize)
+        throws Exception
+    {
+        List queryResults = new ArrayList(records.size());
+        List heldRows = null;
+        if (sortAttrPos >= 0) 
+        {
+            heldRows = new ArrayList();
+        }
+        
+        String prevPk = null;
+        QueryResult qr = null;
+        for (Iterator i = records.iterator(); i.hasNext();) 
+        {
+            Record rec = (Record)i.next();
+            String pk = rec.getValue(1).asString();
+            if (pk.equals(prevPk)) 
+            {
+                List values = qr.getAttributeValues();
+                for (int j=0; j < valueListSize; j++) 
+                {
+                    String s = rec.getValue(j+6).asString();
+                    List prevValues = (List)values.get(j);
+                    boolean newValue = true;
+                    for (int k=0; k<prevValues.size(); k++) 
+                    {
+                        if (ObjectUtils.equals(prevValues.get(k), s)) 
+                        {
+                            newValue = false;
+                            break;
+                        }
+                    }                    
+                    if (newValue) 
+                    {
+                        prevValues.add(s);
+                    }
+                }
+            }
+            else 
+            {
+                qr = new QueryResult(this);
+                qr.setIssueId(pk);
+                qr.setModuleId(rec.getValue(2).asIntegerObj());
+                qr.setIssueTypeId(rec.getValue(3).asIntegerObj());
+                qr.setIdPrefix(rec.getValue(4).asString());
+                qr.setIdCount(rec.getValue(5).asString());
+                List values = new ArrayList(valueListSize);
+                boolean holdRow = false;
+                for (int j = 0; j < valueListSize; j++) 
+                {
+                    String s = rec.getValue(j+6).asString();
+                    if (j == sortAttrPos && s == null) 
+                    {
+                        holdRow = true;
+                    }
+                    
+                    ArrayList multiVal = new ArrayList(2);
+                    multiVal.add(s);
+                    values.add(multiVal);
+                }
+                qr.setAttributeValues(values);
+                if (holdRow) 
+                {
+                    heldRows.add(qr);
+                }
+                else 
+                {
+                    queryResults.add(qr);
+                }
+            }
+        }
+        if (heldRows != null) 
+        {
+            queryResults.addAll(heldRows);
+        }
+        
+        return queryResults;
+    }
+
+    /**
+     * Used by QueryResult to avoid multiple db hits in the event caching
+     * is not being used application-wide.  It is used if the IssueList.vm
+     * template is printing the module names next to each issue id.
+     * As this IssueSearch object is short-lived, use of a simple Map based
+     * cache is ok, need to re-examine if the lifespan is increased.
+     *
+     * @param id an <code>Integer</code> value
+     * @return a <code>Module</code> value
+     * @exception TorqueException if an error occurs
+     */
+    Module getModule(Integer id)
+        throws TorqueException
+    {
+        Module module = (Module)moduleMap.get(id);
+        if (module == null)
+        {
+            module = ModuleManager.getInstance(new NumberKey(id.intValue()));
+            moduleMap.put(id, module);
+        }
+        return module;
+    }
+    
+    /**
+     * Used by QueryResult to avoid multiple db hits in the event caching
+     * is not being used application-wide.  It is used if the IssueList.vm
+     * template is printing the issue type names next to each issue id.
+     * As this IssueSearch object is short-lived, use of a simple Map based
+     * cache is ok, need to re-examine if the lifespan is increased.
+     *
+     * @param moduleId an <code>Integer</code> value
+     * @param issueTypeId an <code>Integer</code> value
+     * @return a <code>RModuleIssueType</code> value
+     * @exception TorqueException if an error occurs
+     */
+    RModuleIssueType getRModuleIssueType(Integer moduleId, Integer issueTypeId)
+        throws TorqueException
+    {
+        NumberKey[] nks = {new NumberKey(moduleId.intValue()), 
+                           new NumberKey(issueTypeId.intValue())};
+        ObjectKey key = new ComboKey(nks);
+        RModuleIssueType rmit = (RModuleIssueType)rmitMap.get(key);
+        if (rmit == null)
+        {
+            rmit = RModuleIssueTypeManager.getInstance(key);
+            rmitMap.put(key, rmit);
+        }
+        return rmit;
     }
 }
 
