@@ -4,8 +4,13 @@
     xmlns:u="jelly:util"
     xmlns:ant="jelly:ant">
 
-  <preGoal name="site"> 
-    <attainGoal name="docbook:transform"/>
+  <preGoal name="site">
+    <!-- Only run DocBook if it is enabled -->
+    <j:set var="enable" value="${scarab.docbook.enable}"/>    
+
+    <j:if test="${enable == 'true'}">
+      <attainGoal name="docbook:transform"/>
+    </j:if>   
   </preGoal>
 
   <postGoal name="war:webapp"> 
