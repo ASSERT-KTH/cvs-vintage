@@ -59,6 +59,15 @@ public class GeneralPanel extends JPanel implements ActionListener {
 			String delay = markasread.getAttribute("delay", "2");
 
 			markTextField.setText(delay);
+                        
+                        Locale[] available = GlobalResourceLoader.getAvailableLocales();
+                        codepageComboBox.setModel(new DefaultComboBoxModel(available));
+                        for (int i=0; i<available.length; i++) {
+                                if (available[i].equals(Locale.getDefault())) {
+                                        codepageComboBox.setSelectedIndex(i);
+                                        break;
+                                }
+                        }
 
 			XmlElement html =
 				MailConfig.getMainFrameOptionsConfig().getRoot().getElement(
@@ -164,7 +173,7 @@ public class GeneralPanel extends JPanel implements ActionListener {
                                         "general",
                                         "locale"));
 		codepagePanel.add(codepageLabel);
-		codepageComboBox = new JComboBox(GlobalResourceLoader.getAvailableLocales());
+		codepageComboBox = new JComboBox();
                 codepageComboBox.setRenderer(new DefaultListCellRenderer() {
                         public Component getListCellRendererComponent(
                                                 JList list, Object value,
