@@ -3,7 +3,7 @@
                                  Release Notes
                                  =============
 
-$Id: RELEASE-NOTES-3.3.1.txt,v 1.20 2002/01/09 06:41:01 larryi Exp $
+$Id: RELEASE-NOTES-3.3.1.txt,v 1.21 2002/01/11 07:11:26 billbarker Exp $
 
 
 This document describes the changes that have been made since the
@@ -89,6 +89,9 @@ Bug No.  Description
          the test get a chance to receive its input before the socket
          is closed.  Otherwise, "Socket reset by peer" errors occur.
 
+	 Make the App-classloader configurable to allow using the 1.1
+	 loader even when running under Java2.  This should allow for better
+	 jar reloading at the cost of not enforcing sealing etc.  
 
 Server:
 
@@ -151,6 +154,9 @@ Bug No.  Description
          getReader() was called, you would get the old reader rather than
          a new reader for the current request.
 
+5724	 Supress the check for WEB-INF in the "Default Servlet" (aka 
+	 StaticInterceptor).  The check was redundant, and was causing
+	 Spec problems.
 
 Configuration:
 
