@@ -94,6 +94,31 @@
         </field>
 </group>
 
+<group name="AttributeGroup" key="attg" mapToObject="om.AttributeGroup">
+        <field name="AttributeGroupId" key="attgid" type="NumberKey">
+           <rule name="mask" value="^$|[0-9]+">Please select a valid choice</rule>
+        </field>
+        <field name="Name" key="name" type="String">
+            <rule name="maxLength" value="255"/>
+        </field>
+        <field name="Description" key="desc" type="String">
+            <rule name="maxLength" value="255"/>
+        </field>
+        <field name="Active" key="act" type="boolean"/>
+        <!--<field name="Dedupe" key="ded" type="boolean"/>-->
+        <field name="Order" key="order" type="int" mapToProperty="Order">
+           <rule name="maxValue" value="99">Please enter a value less than 99</rule>
+           <rule name="minValue" value="1">Please enter a value greater than 0</rule>
+        </field>
+</group>
+
+<group name="RAttributeAttributeGroup" key="raag" mapToObject="om.RAttributeAttributeGroup">
+        <field name="Order" key="order" type="int" mapToProperty="Order">
+           <rule name="maxValue" value="99">Please enter a value less than 99</rule>
+           <rule name="minValue" value="1">Please enter a value greater than 0</rule>
+        </field>
+</group>
+
 <group name="RModuleAttribute" key="rma" mapToObject="om.RModuleAttribute">
         <field name="DisplayValue" key="name" type="String">
             <rule name="maxLength" value="255"/>
@@ -223,6 +248,7 @@
            <rule name="mask" value="[0-9]+">badIdMessage</rule>
         </field>
         <field name="Deleted" key="del" type="boolean" />
+        <field name="Dedupe" key="ded" type="boolean" />
 </group>
 
 <group name="Login" key="login">
