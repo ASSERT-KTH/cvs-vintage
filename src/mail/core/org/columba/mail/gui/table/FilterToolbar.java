@@ -17,22 +17,6 @@
 //All Rights Reserved.
 package org.columba.mail.gui.table;
 
-import com.jgoodies.forms.builder.PanelBuilder;
-import com.jgoodies.forms.layout.CellConstraints;
-import com.jgoodies.forms.layout.FormLayout;
-
-import org.columba.core.gui.util.ButtonWithMnemonic;
-import org.columba.core.gui.util.CTextField;
-import org.columba.core.gui.util.ImageLoader;
-import org.columba.core.gui.util.LabelWithMnemonic;
-import org.columba.core.gui.util.ToolbarToggleButton;
-
-import org.columba.mail.folder.MessageFolder;
-import org.columba.mail.gui.frame.MailFrameMediator;
-import org.columba.mail.gui.table.model.TableModelFilter;
-import org.columba.mail.main.MailInterface;
-import org.columba.mail.util.MailResourceLoader;
-
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -45,6 +29,22 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.JToggleButton;
+
+import org.columba.core.gui.util.ButtonWithMnemonic;
+import org.columba.core.gui.util.CTextField;
+import org.columba.core.gui.util.ImageLoader;
+import org.columba.core.gui.util.LabelWithMnemonic;
+import org.columba.core.gui.util.ToolbarToggleButton;
+import org.columba.mail.folder.MessageFolder;
+import org.columba.mail.gui.config.search.SearchFrame;
+import org.columba.mail.gui.frame.MailFrameMediator;
+import org.columba.mail.gui.table.model.TableModelFilter;
+import org.columba.mail.main.MailInterface;
+import org.columba.mail.util.MailResourceLoader;
+
+import com.jgoodies.forms.builder.PanelBuilder;
+import com.jgoodies.forms.layout.CellConstraints;
+import com.jgoodies.forms.layout.FormLayout;
 
 
 public class FilterToolbar extends JPanel implements ActionListener {
@@ -204,11 +204,11 @@ public class FilterToolbar extends JPanel implements ActionListener {
                     return;
                 }
 
-                org.columba.mail.gui.config.search.SearchFrame frame = new org.columba.mail.gui.config.search.SearchFrame(tableController.getFrameController(),
-                        searchFolder);
+                SearchFrame frame = new SearchFrame(tableController.getFrameController(),
+                        searchFolder, folder);
 
-                frame.setSourceFolder(folder);
-                frame.setVisible(true);
+                //frame.setSourceFolder(folder);
+                //frame.setVisible(true);
             } else if (action.equals("NEW")) {
                 model.setNewFlag(!model.getNewFlag());
                 update();

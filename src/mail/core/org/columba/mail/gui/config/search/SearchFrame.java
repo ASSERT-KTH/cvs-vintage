@@ -65,293 +65,329 @@ import javax.swing.SwingConstants;
 import javax.swing.UIManager;
 import javax.swing.border.CompoundBorder;
 
-
+/**
+ * Search message Dialog. Lets you specify a source-folder and the search
+ * criteria.
+ * 
+ * @author fdietz
+ */
 public class SearchFrame extends JDialog implements ActionListener {
-    private JLabel folderLabel;
-    private JLabel nameLabel;
-    private JTextField folderTextField;
-    private JButton addButton;
+	private JLabel folderLabel;
 
-    //private JButton removeButton;
-    private JButton selectButton;
-    private JButton searchButton;
-    private JCheckBox includeSubfolderButton;
+	private JLabel nameLabel;
 
-    //private AdapterNode vFolderNode;
-    private CriteriaList criteriaList;
-    private VirtualFolder destFolder;
+	private JTextField folderTextField;
 
-    //private AbstractFolder folderTreeNode;
-    private JComboBox condList;
-    private FrameMediator frameController;
+	private JButton addButton;
 
-    public SearchFrame(FrameMediator frameController,
-        MessageFolder folder) {
-        super(frameController.getView().getFrame(), true);
-        this.frameController = frameController;
-        setTitle(MailResourceLoader.getString("dialog", "filter",
-                "searchdialog_title"));
+	private JButton selectButton;
 
-        //this.folder = folder;
-        //this.vFolderNode = vFolderNode;
-        this.destFolder = (VirtualFolder) folder;
+	private JButton searchButton;
 
-        JPanel contentPane = new JPanel(new BorderLayout());
+	private JCheckBox includeSubfolderButton;
 
-        //contentPane.setBorder(BorderFactory.createEmptyBorder(12, 12, 12, 12));
-        //contentPane.add(createTopPanel("Search messages","Specify your search criteria...",ImageLoader.getImageIcon("virtualfolder.png")));
-        contentPane.add(createCenterPanel(), BorderLayout.NORTH);
+	private CriteriaList criteriaList;
 
-        JPanel bottom = new JPanel(new BorderLayout());
-        bottom.setBorder(new SingleSideEtchedBorder(SwingConstants.TOP));
+	private VirtualFolder destFolder;
 
-        JPanel buttonPanel = new JPanel(new GridLayout(1, 3, 6, 0));
-        buttonPanel.setBorder(BorderFactory.createEmptyBorder(12, 12, 12, 12));
-        searchButton = new JButton(MailResourceLoader.getString("dialog",
-                    "filter", "search"));
-        searchButton.setIcon(ImageLoader.getImageIcon("stock_search-16.png"));
-        searchButton.addActionListener(this);
-        searchButton.setActionCommand("SEARCH");
-        buttonPanel.add(searchButton);
+	private JComboBox condList;
 
-        ButtonWithMnemonic closeButton = new ButtonWithMnemonic(MailResourceLoader.getString(
-                    "global", "close"));
-        closeButton.addActionListener(this);
-        closeButton.setActionCommand("CLOSE");
-        buttonPanel.add(closeButton);
+	private FrameMediator frameController;
 
-        ButtonWithMnemonic helpButton = new ButtonWithMnemonic(MailResourceLoader.getString(
-                    "global", "help"));
-        helpButton.addActionListener(this);
-        helpButton.setActionCommand("HELP");
-        helpButton.setEnabled(false);
-        buttonPanel.add(helpButton);
-        bottom.add(buttonPanel, BorderLayout.EAST);
-        contentPane.add(bottom, BorderLayout.SOUTH);
-        setContentPane(contentPane);
-        getRootPane().setDefaultButton(searchButton);
-        getRootPane().registerKeyboardAction(this, "CLOSE",
-            KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0),
-            JComponent.WHEN_IN_FOCUSED_WINDOW);
-        updateComponents(true);
-        pack();
-        setLocationRelativeTo(null);
-        setVisible(true);
-    }
+	public SearchFrame(FrameMediator frameController, MessageFolder searchFolder) {
+		super(frameController.getView().getFrame(), true);
+		
+		this.frameController = frameController;
+		this.destFolder = (VirtualFolder) searchFolder;
+		
+		setTitle(MailResourceLoader.getString("dialog", "filter",
+		"searchdialog_title"));
 
-    private JPanel createCenterPanel() {
-        JPanel rootPanel = new JPanel();
-        rootPanel.setLayout(new BorderLayout(0, 10));
-        rootPanel.setBorder(BorderFactory.createEmptyBorder(12, 12, 12, 12));
+		initComponents();
+		updateComponents(true);
+		pack();
+		setLocationRelativeTo(null);
+		setVisible(true);
+	}
+	
+	public SearchFrame(FrameMediator frameController, MessageFolder searchFolder, MessageFolder sourceFolder) {
+		super(frameController.getView().getFrame(), true);
+		
+		this.frameController = frameController;
+		this.destFolder = (VirtualFolder) searchFolder;
+		
+		setTitle(MailResourceLoader.getString("dialog", "filter",
+		"searchdialog_title"));
+		
+		initComponents();
+		
+		updateComponents(true);
+		
+		setSourceFolder(sourceFolder);
+		
+		pack();
+		setLocationRelativeTo(null);
+		setVisible(true);
+	}
 
-        JPanel folderPanel = new JPanel();
-        folderPanel.setLayout(new BoxLayout(folderPanel, BoxLayout.X_AXIS));
-        folderLabel = new LabelWithMnemonic(MailResourceLoader.getString(
-                    "dialog", "filter", "choose_folder"));
+	/**
+	 * init components
+	 */
+	protected void initComponents() {
+		JPanel contentPane = new JPanel(new BorderLayout());
+		contentPane.add(createCenterPanel(), BorderLayout.NORTH);
 
-        folderPanel.add(folderLabel);
-        folderPanel.add(Box.createHorizontalStrut(5));
-        selectButton = new JButton();
-        folderLabel.setLabelFor(selectButton);
-        selectButton.setActionCommand("SELECT");
-        selectButton.addActionListener(this);
-        folderPanel.add(selectButton);
-        folderPanel.add(Box.createHorizontalGlue());
-        includeSubfolderButton = new CheckBoxWithMnemonic(MailResourceLoader.getString(
-                    "dialog", "filter", "include_subfolders"));
-        folderPanel.add(includeSubfolderButton);
-        rootPanel.add(folderPanel, BorderLayout.NORTH);
+		JPanel bottom = new JPanel(new BorderLayout());
+		bottom.setBorder(new SingleSideEtchedBorder(SwingConstants.TOP));
 
-        JPanel middleIfPanel = new JPanel();
-        middleIfPanel.setLayout(new BorderLayout());
-        middleIfPanel.setBorder(BorderFactory.createCompoundBorder(
-                BorderFactory.createTitledBorder(MailResourceLoader.getString(
-                        "dialog", "filter", "if")),
-                BorderFactory.createEmptyBorder(5, 5, 5, 5)));
+		JPanel buttonPanel = new JPanel(new GridLayout(1, 3, 6, 0));
+		buttonPanel.setBorder(BorderFactory.createEmptyBorder(12, 12, 12, 12));
+		searchButton = new JButton(MailResourceLoader.getString("dialog",
+				"filter", "search"));
+		searchButton.setIcon(ImageLoader.getImageIcon("stock_search-16.png"));
+		searchButton.addActionListener(this);
+		searchButton.setActionCommand("SEARCH");
+		buttonPanel.add(searchButton);
 
-        JPanel ifPanel = new JPanel();
-        ifPanel.setBorder(BorderFactory.createEmptyBorder(0, 0, 5, 0));
-        ifPanel.setLayout(new BoxLayout(ifPanel, BoxLayout.X_AXIS));
+		ButtonWithMnemonic closeButton = new ButtonWithMnemonic(
+				MailResourceLoader.getString("global", "close"));
+		closeButton.addActionListener(this);
+		closeButton.setActionCommand("CLOSE");
+		buttonPanel.add(closeButton);
 
-        addButton = new ButtonWithMnemonic(MailResourceLoader.getString(
-                    "dialog", "filter", "add_criterion"));
-        addButton.setIcon(ImageLoader.getImageIcon("stock_add_16.png"));
-        addButton.addActionListener(this);
-        addButton.setActionCommand("ADD_CRITERION");
+		ButtonWithMnemonic helpButton = new ButtonWithMnemonic(
+				MailResourceLoader.getString("global", "help"));
+		helpButton.addActionListener(this);
+		helpButton.setActionCommand("HELP");
+		helpButton.setEnabled(false);
+		buttonPanel.add(helpButton);
+		bottom.add(buttonPanel, BorderLayout.EAST);
+		contentPane.add(bottom, BorderLayout.SOUTH);
+		setContentPane(contentPane);
+		getRootPane().setDefaultButton(searchButton);
+		getRootPane().registerKeyboardAction(this, "CLOSE",
+				KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0),
+				JComponent.WHEN_IN_FOCUSED_WINDOW);
+	}
 
-        //ifPanel.add(addButton);
-        //ifPanel.add(Box.createRigidArea(new java.awt.Dimension(5, 0)));
-        ifPanel.add(Box.createHorizontalGlue());
+	private JPanel createCenterPanel() {
+		JPanel rootPanel = new JPanel();
+		rootPanel.setLayout(new BorderLayout(0, 10));
+		rootPanel.setBorder(BorderFactory.createEmptyBorder(12, 12, 12, 12));
 
-        nameLabel = new LabelWithMnemonic(MailResourceLoader.getString(
-                    "dialog", "filter", "execute_actions"));
-        ifPanel.add(nameLabel);
+		JPanel folderPanel = new JPanel();
+		folderPanel.setLayout(new BoxLayout(folderPanel, BoxLayout.X_AXIS));
+		folderLabel = new LabelWithMnemonic(MailResourceLoader.getString(
+				"dialog", "filter", "choose_folder"));
 
-        ifPanel.add(Box.createRigidArea(new java.awt.Dimension(5, 0)));
+		folderPanel.add(folderLabel);
+		folderPanel.add(Box.createHorizontalStrut(5));
+		selectButton = new JButton();
+		folderLabel.setLabelFor(selectButton);
+		selectButton.setActionCommand("SELECT");
+		selectButton.addActionListener(this);
+		folderPanel.add(selectButton);
+		folderPanel.add(Box.createHorizontalGlue());
+		includeSubfolderButton = new CheckBoxWithMnemonic(MailResourceLoader
+				.getString("dialog", "filter", "include_subfolders"));
+		folderPanel.add(includeSubfolderButton);
+		rootPanel.add(folderPanel, BorderLayout.NORTH);
 
-        String[] cond = {
-            MailResourceLoader.getString("dialog", "filter", "all_criteria"),
-            MailResourceLoader.getString("dialog", "filter", "any_criteria")
-        };
-        condList = new JComboBox(cond);
+		JPanel middleIfPanel = new JPanel();
+		middleIfPanel.setLayout(new BorderLayout());
+		middleIfPanel.setBorder(BorderFactory.createCompoundBorder(
+				BorderFactory.createTitledBorder(MailResourceLoader.getString(
+						"dialog", "filter", "if")), BorderFactory
+						.createEmptyBorder(5, 5, 5, 5)));
 
-        ifPanel.add(condList);
+		JPanel ifPanel = new JPanel();
+		ifPanel.setBorder(BorderFactory.createEmptyBorder(0, 0, 5, 0));
+		ifPanel.setLayout(new BoxLayout(ifPanel, BoxLayout.X_AXIS));
 
-        middleIfPanel.add(ifPanel, BorderLayout.NORTH);
+		addButton = new ButtonWithMnemonic(MailResourceLoader.getString(
+				"dialog", "filter", "add_criterion"));
+		addButton.setIcon(ImageLoader.getImageIcon("stock_add_16.png"));
+		addButton.addActionListener(this);
+		addButton.setActionCommand("ADD_CRITERION");
 
-        criteriaList = new CriteriaList(destFolder.getFilter());
-        criteriaList.setPreferredSize(new Dimension(500, 100));
-        middleIfPanel.add(criteriaList, BorderLayout.CENTER);
+		//ifPanel.add(addButton);
+		//ifPanel.add(Box.createRigidArea(new java.awt.Dimension(5, 0)));
+		ifPanel.add(Box.createHorizontalGlue());
 
-        rootPanel.add(middleIfPanel, BorderLayout.CENTER);
+		nameLabel = new LabelWithMnemonic(MailResourceLoader.getString(
+				"dialog", "filter", "execute_actions"));
+		ifPanel.add(nameLabel);
 
-        return rootPanel;
-    }
+		ifPanel.add(Box.createRigidArea(new java.awt.Dimension(5, 0)));
 
-    public JPanel createTopPanel(String title, String description,
-        ImageIcon icon) {
-        JPanel panel = new JPanel(new BorderLayout());
-        panel.setBackground(Color.white);
-        panel.setPreferredSize(new Dimension(300, 60));
-        panel.setBorder(new CompoundBorder(
-                new SingleSideEtchedBorder(SwingConstants.BOTTOM),
-                BorderFactory.createEmptyBorder(10, 10, 10, 10)));
+		String[] cond = {
+				MailResourceLoader
+						.getString("dialog", "filter", "all_criteria"),
+				MailResourceLoader
+						.getString("dialog", "filter", "any_criteria") };
+		condList = new JComboBox(cond);
 
-        JPanel leftPanel = new JPanel();
-        leftPanel.setBackground(Color.white);
+		ifPanel.add(condList);
 
-        GridBagLayout layout = new GridBagLayout();
-        leftPanel.setLayout(layout);
+		middleIfPanel.add(ifPanel, BorderLayout.NORTH);
 
-        GridBagConstraints c = new GridBagConstraints();
+		criteriaList = new CriteriaList(destFolder.getFilter());
+		criteriaList.setPreferredSize(new Dimension(500, 100));
+		middleIfPanel.add(criteriaList, BorderLayout.CENTER);
 
-        JLabel titleLabel = new JLabel(title);
+		rootPanel.add(middleIfPanel, BorderLayout.CENTER);
 
-        //titleLabel.setAlignmentY(0);
-        Font font = UIManager.getFont("Label.font");
-        font = font.deriveFont(Font.BOLD);
-        titleLabel.setFont(font);
-        c.gridy = 0;
-        c.anchor = GridBagConstraints.NORTHWEST;
-        c.gridwidth = GridBagConstraints.REMAINDER;
-        layout.setConstraints(titleLabel, c);
-        leftPanel.add(titleLabel);
+		return rootPanel;
+	}
 
-        c.gridy = 1;
-        c.insets = new Insets(0, 20, 0, 0);
+	public JPanel createTopPanel(String title, String description,
+			ImageIcon icon) {
+		JPanel panel = new JPanel(new BorderLayout());
+		panel.setBackground(Color.white);
+		panel.setPreferredSize(new Dimension(300, 60));
+		panel.setBorder(new CompoundBorder(new SingleSideEtchedBorder(
+				SwingConstants.BOTTOM), BorderFactory.createEmptyBorder(10, 10,
+				10, 10)));
 
-        JLabel descriptionLabel = new JLabel(description);
-        layout.setConstraints(descriptionLabel, c);
-        leftPanel.add(descriptionLabel);
+		JPanel leftPanel = new JPanel();
+		leftPanel.setBackground(Color.white);
 
-        panel.add(leftPanel, BorderLayout.WEST);
+		GridBagLayout layout = new GridBagLayout();
+		leftPanel.setLayout(layout);
 
-        JLabel iconLabel = new JLabel(icon);
-        panel.add(iconLabel, BorderLayout.EAST);
+		GridBagConstraints c = new GridBagConstraints();
 
-        return panel;
-    }
+		JLabel titleLabel = new JLabel(title);
 
-    public void updateComponents(boolean b) {
-        if (b) {
-            FilterRule filterRule = destFolder.getFilter().getFilterRule();
-            String value = filterRule.getCondition();
+		//titleLabel.setAlignmentY(0);
+		Font font = UIManager.getFont("Label.font");
+		font = font.deriveFont(Font.BOLD);
+		titleLabel.setFont(font);
+		c.gridy = 0;
+		c.anchor = GridBagConstraints.NORTHWEST;
+		c.gridwidth = GridBagConstraints.REMAINDER;
+		layout.setConstraints(titleLabel, c);
+		leftPanel.add(titleLabel);
 
-            if (value.equals("matchall")) {
-                condList.setSelectedIndex(0);
-            } else {
-                condList.setSelectedIndex(1);
-            }
+		c.gridy = 1;
+		c.insets = new Insets(0, 20, 0, 0);
 
-            boolean isInclude = Boolean.valueOf(destFolder.getConfiguration().get("property",
-                        "include_subfolders")).booleanValue();
+		JLabel descriptionLabel = new JLabel(description);
+		layout.setConstraints(descriptionLabel, c);
+		leftPanel.add(descriptionLabel);
 
-            includeSubfolderButton.setSelected(isInclude);
+		panel.add(leftPanel, BorderLayout.WEST);
 
-            int uid = destFolder.getConfiguration().getInteger("property",
-                    "source_uid");
+		JLabel iconLabel = new JLabel(icon);
+		panel.add(iconLabel, BorderLayout.EAST);
 
-            MessageFolder f = (MessageFolder) MailInterface.treeModel.getFolder(uid);
+		return panel;
+	}
 
-            // If f==null because of deleted MessageFolder fallback to Inbox
-            if (f == null) {
-                uid = 101;
-                destFolder.getConfiguration().set("property", "source_uid", uid);
-                f = (MessageFolder) MailInterface.treeModel.getFolder(uid);
-            }
+	public void updateComponents(boolean b) {
+		if (b) {
+			FilterRule filterRule = destFolder.getFilter().getFilterRule();
+			String value = filterRule.getCondition();
 
-            selectButton.setText(f.getTreePath());
+			if (value.equals("matchall")) {
+				condList.setSelectedIndex(0);
+			} else {
+				condList.setSelectedIndex(1);
+			}
 
-            criteriaList.updateComponents(b);
-        } else {
-            // get values from components
-            FilterRule filterRule = destFolder.getFilter().getFilterRule();
-            int index = condList.getSelectedIndex();
+			boolean isInclude = Boolean.valueOf(
+					destFolder.getConfiguration().get("property",
+							"include_subfolders")).booleanValue();
 
-            if (index == 0) {
-                filterRule.setCondition("matchall");
-            } else {
-                filterRule.setCondition("matchany");
-            }
+			includeSubfolderButton.setSelected(isInclude);
 
-            if (includeSubfolderButton.isSelected()) {
-                destFolder.getConfiguration().set("property",
-                    "include_subfolders", "true");
-            } else {
-                destFolder.getConfiguration().set("property",
-                    "include_subfolders", "false");
-            }
+			int uid = destFolder.getConfiguration().getInteger("property",
+					"source_uid");
 
-            String path = selectButton.getText();
-            TreeNodeList list = new TreeNodeList(path);
-            MessageFolder folder = (MessageFolder) MailInterface.treeModel.getFolder(list);
-            int uid = folder.getUid();
-            destFolder.getConfiguration().set("property", "source_uid", uid);
+			MessageFolder f = (MessageFolder) MailInterface.treeModel
+					.getFolder(uid);
 
-            criteriaList.updateComponents(b);
-        }
-    }
+			// If f==null because of deleted MessageFolder fallback to Inbox
+			if (f == null) {
+				uid = 101;
+				destFolder.getConfiguration()
+						.set("property", "source_uid", uid);
+				f = (MessageFolder) MailInterface.treeModel.getFolder(uid);
+			}
 
-    public void setSourceFolder(MessageFolder f) {
-        selectButton.setText(f.getTreePath());
-    }
+			selectButton.setText(f.getTreePath());
 
-    public void actionPerformed(ActionEvent e) {
-        String action = e.getActionCommand();
+			criteriaList.updateComponents(b);
+		} else {
+			// get values from components
+			FilterRule filterRule = destFolder.getFilter().getFilterRule();
+			int index = condList.getSelectedIndex();
 
-        if (action.equals("CLOSE")) {
-            updateComponents(false);
-            setVisible(false);
-        } else if (action.equals("ADD_CRITERION")) {
-            criteriaList.add();
-        } else if (action.equals("SELECT")) {
-            SelectFolderDialog dialog = new SelectFolderDialog(frameController);
+			if (index == 0) {
+				filterRule.setCondition("matchall");
+			} else {
+				filterRule.setCondition("matchany");
+			}
 
-            if (dialog.success()) {
-                MessageFolder folder = dialog.getSelectedFolder();
-                String path = folder.getTreePath();
+			if (includeSubfolderButton.isSelected()) {
+				destFolder.getConfiguration().set("property",
+						"include_subfolders", "true");
+			} else {
+				destFolder.getConfiguration().set("property",
+						"include_subfolders", "false");
+			}
 
-                selectButton.setText(path);
-            }
-        } else if (action.equals("SEARCH")) {
-            updateComponents(false);
-            setVisible(false);
+			String path = selectButton.getText();
+			TreeNodeList list = new TreeNodeList(path);
+			MessageFolder folder = (MessageFolder) MailInterface.treeModel
+					.getFolder(list);
+			int uid = folder.getUid();
+			destFolder.getConfiguration().set("property", "source_uid", uid);
 
-            try {
-                ((VirtualFolder) destFolder).addSearchToHistory();
-            } catch (Exception ex) {
-                ex.printStackTrace();
-            }
+			criteriaList.updateComponents(b);
+		}
+	}
 
-            FolderCommandReference[] r = new FolderCommandReference[1];
-            r[0] = new FolderCommandReference(destFolder);
+	public void setSourceFolder(MessageFolder f) {
+		selectButton.setText(f.getTreePath());
+	}
 
-            ((MailFrameMediator) frameController).setTreeSelection(r);
+	public void actionPerformed(ActionEvent e) {
+		String action = e.getActionCommand();
 
-            MainInterface.processor.addOp(new ViewHeaderListCommand(
-                    frameController, r));
+		if (action.equals("CLOSE")) {
+			updateComponents(false);
+			setVisible(false);
+		} else if (action.equals("ADD_CRITERION")) {
+			criteriaList.add();
+		} else if (action.equals("SELECT")) {
+			SelectFolderDialog dialog = new SelectFolderDialog(frameController);
 
-            //frameMediator.treeController.setSelected(destFolder);
-        }
-    }
+			if (dialog.success()) {
+				MessageFolder folder = dialog.getSelectedFolder();
+				String path = folder.getTreePath();
+
+				selectButton.setText(path);
+			}
+		} else if (action.equals("SEARCH")) {
+			updateComponents(false);
+			setVisible(false);
+
+			try {
+				((VirtualFolder) destFolder).addSearchToHistory();
+			} catch (Exception ex) {
+				ex.printStackTrace();
+			}
+
+			FolderCommandReference[] r = new FolderCommandReference[1];
+			r[0] = new FolderCommandReference(destFolder);
+
+			((MailFrameMediator) frameController).setTreeSelection(r);
+
+			MainInterface.processor.addOp(new ViewHeaderListCommand(
+					frameController, r));
+
+			//frameMediator.treeController.setSelected(destFolder);
+		}
+	}
 }
