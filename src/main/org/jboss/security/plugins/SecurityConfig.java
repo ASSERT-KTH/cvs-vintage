@@ -11,31 +11,42 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.net.URL;
-import java.util.Properties;
-import java.util.Iterator;
+import java.util.Stack;
+import javax.management.JMException;
+import javax.management.MalformedObjectNameException;
 import javax.management.MBeanServer;
 import javax.management.ObjectName;
-import javax.naming.Context;
-import javax.naming.InitialContext;
+import javax.security.auth.login.Configuration;
 
 import org.jboss.system.ServiceMBeanSupport;
 
 /** The SecurityConfigMBean implementation. 
  
  @author Scott.Stark@jboss.org
- @version $Revision: 1.2 $
+ @version $Revision: 1.3 $
  */
-public class SecurityConfig extends ServiceMBeanSupport implements SecurityConfigMBean
+public class SecurityConfig extends ServiceMBeanSupport
+   implements SecurityConfigMBean
 {
    // Constants -----------------------------------------------------
    
    // Attributes ----------------------------------------------------
-   private MBeanServer server;
-   private String authConf = "auth.conf";
+   /** The default Configuration mbean name */
+   private String loginConfigName;
+   /** The stack of Configuration mbeans that are active */
+   private Stack loginConfigStack = new Stack();
 
-   // Static --------------------------------------------------------
-   
-   // Constructors --------------------------------------------------
+   static class ConfigInfo
+   {
+      ObjectName name;
+      Configuration config;
+      ConfigInfo(ObjectName name, Configuration config)
+      {
+         this.name = name;
+         this.config = config;
+      }
+   }
+
    public SecurityConfig()
    {
    }
@@ -47,44 +58,88 @@ public class SecurityConfig extends ServiceMBeanSupport implements SecurityConfi
 
    /** Get the resource path to the JAAS login configuration file to use.
     */
-   public String getAuthConf()
+   public String getLoginConfig()
    {
-      return authConf;
+      return loginConfigName;
    }
-   
+
    /** Set the resource path to the JAAS login configuration file to use.
     The default is "auth.conf".
     */
-   public void setAuthConf(String authConf)
+   public void setLoginConfig(String name) throws MalformedObjectNameException
    {
-      this.authConf = authConf;
+      this.loginConfigName = name;
    }
-   
-   // Public --------------------------------------------------------
-   /** Start the service by locating the AuthConf resource in the classpath
-    using the current thread context ClassLoader and set the
-    "java.security.auth.login.config" system property to  location of the
-    resource if this property has not already been set.
-    @exception Exception thrown if the property cannot be set.
+
+   /** Start the configuration service by pushing the mbean given by the
+    LoginConfig onto the configuration stack.
     */
    public void startService() throws Exception
    {
-      // Set the JAAS login config file if not already set
-      if( System.getProperty("java.security.auth.login.config") == null )
-      {
-         ClassLoader loader = Thread.currentThread().getContextClassLoader();
-         URL loginConfig = loader.getResource("auth.conf");
-         if( loginConfig != null )
-         {
-            System.setProperty("java.security.auth.login.config", loginConfig.toExternalForm());
-            if (log.isInfoEnabled())
-               log.info("Using JAAS LoginConfig: "+loginConfig.toExternalForm());
-         }
-         else
-         {
-            log.warn("No auth.conf resource found");
-         }
-      }
+      pushLoginConfig(loginConfigName);
    }
 
+   /** Start the configuration service by poping the top of the
+    configuration stack.
+    */
+   public void stopService() throws Exception
+   {
+      if( loginConfigStack.empty() == false )
+         popLoginConfig();
+   }
+
+   /** Push an mbean onto the login configuration stack and install its
+    Configuration as the current instance.
+    @see javax.security.auth.login.Configuration
+    */
+   public synchronized void pushLoginConfig(String objectName)
+      throws JMException, MalformedObjectNameException
+   {
+      ObjectName name = new ObjectName(objectName);
+      Configuration prevConfig = null;
+      if( loginConfigStack.empty() == false )
+      {
+         ConfigInfo prevInfo = (ConfigInfo) loginConfigStack.peek();
+         prevConfig = prevInfo.config;
+      }
+
+      ConfigInfo info = installConfig(name, prevConfig);
+      loginConfigStack.push(info);
+   }
+   /** Pop the current mbean from the login configuration stack and install
+    the previous Configuration as the current instance.
+    @see javax.security.auth.login.Configuration
+    */
+   public synchronized void popLoginConfig()
+      throws JMException
+   {
+      ConfigInfo info = (ConfigInfo) loginConfigStack.pop();
+      Configuration prevConfig = null;
+      if( loginConfigStack.empty() == false )
+      {
+         ConfigInfo prevInfo = (ConfigInfo) loginConfigStack.peek();
+         prevConfig = prevInfo.config;
+      }
+
+      installConfig(info.name, prevConfig);
+   }
+
+   /** Obtain the Configuration from the named mbean using its getConfiguration
+    operation and install it as the current Configuration.
+
+    @see Configuration.setConfiguration(javax.security.auth.login.Configuration)
+    */
+   private ConfigInfo installConfig(ObjectName name, Configuration prevConfig)
+      throws JMException
+   {
+      MBeanServer server = super.getServer();
+      Object[] args = {prevConfig};
+      String[] signature = {"javax.security.auth.login.Configuration"};
+      Configuration config = (Configuration) server.invoke(name,
+         "getConfiguration", args, signature);
+      Configuration.setConfiguration(config);
+      ConfigInfo info = new ConfigInfo(name, config);
+      log.debug("Installed JAAS Configuration service="+name+", config="+config);
+      return info;
+   }
 }

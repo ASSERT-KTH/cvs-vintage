@@ -6,24 +6,35 @@
  */
 package org.jboss.security.plugins;
 
+import javax.management.JMException;
+import javax.management.MalformedObjectNameException;
+
 import org.jboss.system.ServiceMBean;
 
 /** A security configuration MBean. This establishes the JAAS and Java2
  security properties and related configuration.
 
- Currently this only sets the "java.security.auth.login.config" system
- property to the URL to the AuthConf attribute.
+ @see DefaultLoginConfig
+ @see javax.security.auth.login.Configuration
 
 @author Scott.Stark@jboss.org
-@version $Revision: 1.1 $
+@version $Revision: 1.2 $
 */
 public interface SecurityConfigMBean extends ServiceMBean
 {
-   /** Get the resource path to the JAAS login configuration file to use.
+   /** Get the name of the mbean that provides the default JAAS login configuration */
+   public String getLoginConfig();
+   /** Set the name of the mbean that provides the default JAAS login configuration */
+   public void setLoginConfig(String objectName) throws MalformedObjectNameException;
+   /** Push an mbean onto the login configuration stack and install its
+    Configuration as the current instance.
+    @see javax.security.auth.login.Configuration
     */
-   public String getAuthConf();
-   /** Set the resource path to the JAAS login configuration file to use.
-    The default is "auth.conf".
+   public void pushLoginConfig(String objectName) throws JMException, MalformedObjectNameException;
+   /** Pop the current mbean from the login configuration stack and install
+    the previous Configuration as the current instance.
+    @see javax.security.auth.login.Configuration
     */
-   public void setAuthConf(String authConf);
+   public void popLoginConfig() throws JMException;
+
 }
