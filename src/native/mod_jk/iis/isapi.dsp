@@ -168,10 +168,6 @@ SOURCE=..\common\jk_ajp13_worker.h
 # End Source File
 # Begin Source File
 
-SOURCE=..\common\jk_ajp23_worker.h
-# End Source File
-# Begin Source File
-
 SOURCE=..\common\jk_connect.h
 # End Source File
 # Begin Source File
