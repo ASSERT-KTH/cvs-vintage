@@ -124,6 +124,7 @@ public class ContextManager {
 
     // Instalation directory  
     String home;
+    String tomcatHome;
     
     Vector connectors=new Vector();
 
@@ -184,7 +185,7 @@ public class ContextManager {
      */
     public void init()  throws TomcatException {
 	String cp=System.getProperty( "java.class.path");
-	log( "<l:tomcat home=\"" + home + "\" classPath=\"" + cp + "\" />");
+	log( "<l:tomcat install=\"" + tomcatHome + "\" home=\"" + home + "\" classPath=\"" + cp + "\" />");
 	//	long time=System.currentTimeMillis();
 	ContextInterceptor cI[]=getContextInterceptors();
 	for( int i=0; i< cI.length; i++ ) {
@@ -424,20 +425,46 @@ public class ContextManager {
 	if(home!=null) return home;
 
 	// If none defined, assume tomcat.home is used as base.
-	String homeS=System.getProperty("tomcat.home");
-	if( homeS != null )
-	    setHome( homeS );
-	else
-	    setHome("."); // try current dir - we should throw an exception
+	home=getCanonicalPath( tomcatHome );
+	if(home!=null) return home;
+
+	// try at least the system property
+	home=getCanonicalPath( System.getProperty("tomcat.home") );	
+	if(home!=null) return home;
+	
+	home=getCanonicalPath( "." ); // try current dir - we should throw an exception
 	return home;
     }
     
     /** Tomcat installation directory, where libraries and default files are located
      */
     public String getTomcatHome() {
-	return System.getProperty("tomcat.home");
+	if(tomcatHome!= null) return tomcatHome;
+	
+	tomcatHome=System.getProperty("tomcat.home");
+	if(tomcatHome!= null) return tomcatHome;
+
+	// If the property is not set ( for example JNI worker ) assume
+	// at least home is set up corectly.
+	tomcatHome=getHome();
+	return tomcatHome;
     }
 
+    public void setTomcatHome( String tH ) {
+	tomcatHome=tH;
+    }
+
+    // Used in few places.
+    static String getCanonicalPath(String name ) {
+	if( name==null ) return null;
+        File f = new File(name);
+        try {
+            return  f.getCanonicalPath();
+        } catch (IOException ioe) {
+             return name; // oh well, we tried...
+        }
+    }
+    
     /** 
      * Set installation directory.  If path specified is relative, 
      * evaluate it relative to the current working directory.
@@ -447,19 +474,7 @@ public class ContextManager {
      * not affect that.
      */
     public void setHome(String home) {
-        File homeFile = new File(home);
-
-	// change it if you want relative home based on tomcat.home
-	//         if (!homeFile.isAbsolute()) {
-	//             String tomcat_home = System.getProperty("tomcat.home");
-	//             if (tomcat_home != null) homeFile = new File(tomcat_home, home); 
-	//         }
-        
-        try {
-            this.home = homeFile.getCanonicalPath();
-        } catch (IOException ioe) {
-            this.home = home; // oh well, we tried...
-        }
+	home=getCanonicalPath( home ); 
 	log( "Setting home to " + this.home );
     }
     

@@ -87,10 +87,15 @@ public class AutoSetup extends BaseInterceptor {
     public void engineInit(ContextManager cm) throws TomcatException {
 	String home=cm.getHome();
 	File webappD=new File(home + "/webapps");
-	if (! webappD.exists() || ! webappD.isDirectory())
+	if (! webappD.exists() || ! webappD.isDirectory()) {
+	    System.out.println("No webapps/ directory " + webappD );
 	    return ; // nothing to set up
-
+	}
+	
 	String[] list = webappD.list();
+	if( list.length==0 ) {
+	    System.out.println("No apps in webapps/ ");
+	}
 	for (int i = 0; i < list.length; i++) {
 	    String name = list[i];
 	    if( name.endsWith(".war") ) {
@@ -139,7 +144,7 @@ public class AutoSetup extends BaseInterceptor {
 		// don't assume HOME==TOMCAT_HOME
 		File f=new File( webappD, name);
 		ctx.setDocBase( f.getAbsolutePath() );
-		if( debug > 0) ctx.log("<l:autoLoadContext docBase=\"" + ctx.getDocBase() + "\" />");
+		ctx.log("<l:autoLoadContext docBase=\"" + ctx.getDocBase() + "\" />");
 		cm.addContext(ctx);
 	    } else {
 		//System.out.println("Already set up: " + path + " " + cm.getContext(path));

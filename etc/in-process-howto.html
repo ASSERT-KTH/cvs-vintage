@@ -129,8 +129,7 @@ mandatory and some are an option...
   <tt>worker.jni.ld_path=d:\my\native\code</tt>
   </li>
 </ol>
-You can find a sample worker file (<tt>jni_workers.properties</tt>) in the
-CVS under <tt>jakarta-tomcat/etc</tt>.
+You can find a sample worker file (<tt>jni_workers.properties</tt>)  under <tt>tomcat/conf</tt>. 
 
 <h3>Update server.xml</h3>
 <p>
@@ -166,9 +165,9 @@ In order to work in-process you will have to perform the following actions:
   <tt>"/examples"</tt> and <tt>"/test"</tt>, you will have to fix their
   docBase too (as demonstrated above).
   </li>
+  <li>Make sure you set the home attribute to point to tomcat home.</li>
 </ol>
-You can find a sample server file (<tt>jni_servre.xml</tt>) in the
-CVS under <tt>jakarta-tomcat/etc</tt>.
+You can find a sample server file (<tt>jni_server.xml</tt>) under <tt>jakarta-tomcat/conf</tt>.
 
 <h3>Redirect contexts to the JNI workers</h3>
 <p>You will need to select the contexts that you wish to serve using your

@@ -62,7 +62,7 @@ import java.io.FileWriter;
 import java.io.File;
 import java.io.IOException;
 
-import java.util.Hashtable;
+import java.util.*;
 
 /**
  * Interface for a logging object. A logging object provides mechanism
@@ -211,12 +211,25 @@ public abstract class Logger {
      * @param	path		The path to the log file. 
      */
     public void setPath(String path) {
+	this.path=path;
+    }
+
+    public String getPath() {
+	return path;
+    }
+
+    /** Open the log - will create the log file and all the parent directories.
+     *  You must open the logger before use, or it will write to System.err
+     */
+    public void open() {
+	if( path==null ) return;
+	// use default sink == System.err
 	try {
 	    File file = new File(path);
-
+	    
 	    if (!file.exists())
 		new File(file.getParent()).mkdirs();
-		
+	    
 	    this.sink = new FileWriter(path);
 	} catch (IOException ex) {
 	    System.err.print("Unable to open log file: "+path+"! ");
@@ -301,6 +314,10 @@ public abstract class Logger {
 	return (Logger) loggers.get(name);
     }
 
+    public static Enumeration getLoggerNames() {
+	return loggers.keys();
+    }
+
     public static void putLogger(Logger logger) {
 	loggers.put(logger.getName(), logger);
     }
@@ -318,6 +335,7 @@ public abstract class Logger {
 
     protected boolean custom;
     protected Writer sink = defaultSink;
+    String path;
     protected String name;
     
     protected static Writer defaultSink = new PrintWriter(System.err);

@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/Attic/JNIEndpoint.java,v 1.1 2000/02/09 12:00:53 rubys Exp $
- * $Revision: 1.1 $
- * $Date: 2000/02/09 12:00:53 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/Attic/JNIEndpoint.java,v 1.2 2000/03/25 03:35:27 costin Exp $
+ * $Revision: 1.2 $
+ * $Date: 2000/03/25 03:35:27 $
  *
  * ====================================================================
  *
@@ -102,7 +102,8 @@ public class JNIEndpoint {
     // -------------------- Public methods --------------------
 
     public synchronized void startEndpoint() {
-	    running=true;
+	System.out.println("Running ...");
+	running=true;
         notify();
     }
 
@@ -137,16 +138,19 @@ public class JNIEndpoint {
             StartupThread startup = new StartupThread(cmdLine,
                                                       this);
             startup.start();
+	    System.out.println("Starting up StartupThread");
             synchronized (this) {
                 wait(60*1000);
             }
+	    System.out.println("End waiting");
         } catch(Throwable t) {
         }
 
         if(running) {
+	    System.out.println("Running fine ");
             return 1;
         }
-
+	System.out.println("Error - why doesn't run ??");
         return 0;
     }
 
@@ -201,7 +205,8 @@ class StartupThread extends Thread {
             t.printStackTrace();
         } finally {
             if(failed) {
-                jniEp.stopEndpoint();
+		System.out.println("Failed ??");
+		jniEp.stopEndpoint();
             }
         }
     }

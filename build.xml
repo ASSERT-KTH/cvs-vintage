@@ -25,7 +25,10 @@
     <copydir src="src/shell" dest="${tomcat.build}/bin" />
     <copydir src="src/etc" dest="${tomcat.build}/conf"/>
     <copydir src="src/doc" dest="${tomcat.build}/doc"/>
-    <copydir src="src/share/javax" dest="${tomcat.build}/src/javax"/>
+    <copydir src="src/share/javax" dest="${tomcat.home}/src/javax"/>
+    <copydir src="src/share/org" dest="${tomcat.home}/src/org"/>
+
+    <copyfile src="build.xml" dest="${tomcat.build}/conf/build.xml"/>
     <mkdir dir="${tomcat.build}/lib/test"/>
     <mkdir dir="${tomcat.build}/lib/test/Golden"/>
     <copydir src="src/tests/share/tests/jsp/Golden" dest="${tomcat.build}/lib/test/Golden"/>

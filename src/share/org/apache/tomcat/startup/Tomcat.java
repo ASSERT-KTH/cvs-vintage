@@ -74,7 +74,10 @@ public class Tomcat {
 	xh.addRule( "ContextManager/Connector/Parameter", xh.methodParam(1, "value") );
     }
 
-    	
+
+    /** Setup loggers when reading the configuration file - this will be called only when
+     *  starting tomcat as deamon, all other modes will output to stderr
+    */
     void setLogHelper( XmlMapper xh ) {
 	xh.addRule("Server/Logger",
 		   xh.objectCreate("org.apache.tomcat.logging.TomcatLogger"));
@@ -90,10 +93,12 @@ public class Tomcat {
      * used, the default configuration filename will be loaded from
      * the TOMCAT_HOME directory.
      *
+     * If a relative config file is used, it will be relative to the current working
+     * directory.
+     *
      * @param cm The ContextManager we are configuring
      **/
     File getConfigFile(ContextManager cm) {
-
 	// If configFile is already set, use it
 	if (configFile != null)
 	    return (new File(configFile));
@@ -104,11 +109,11 @@ public class Tomcat {
 	    System.out.println("No tomcat.home property, you need to set TOMCAT_HOME or add -Dtomcat.home");
 	    tchome = ".";	// Assume current working directory
 	}
-	cm.setHome(tchome);
+	// Home will be identical to tomcat home if default config is used.
+	cm.setTomcatHome(tchome);
 	return (new File(tchome, DEFAULT_CONFIG));
 
     }
-
 
     public void execute(String args[] ) throws Exception {
 	if( ! processArgs( args ) ) {
@@ -173,8 +178,6 @@ public class Tomcat {
 	xh.setDebug( 0 );
 	ContextManager cm=new ContextManager();
 	setConnectorHelper( xh );
-
-	// read only connector information out of server.xml
 	File f = getConfigFile(cm);
 	try {
 	    xh.readXml(f,cm);
