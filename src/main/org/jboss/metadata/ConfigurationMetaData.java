@@ -13,7 +13,7 @@ import org.jboss.ejb.DeploymentException;
 /** The configuration information for an EJB container.
  *   @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
  *   @author <a href="mailto:scott.stark@jboss.org">Scott Stark</a>
- *   @version $Revision: 1.19 $
+ *   @version $Revision: 1.20 $
  *
  *  <p><b>Revisions:</b><br>
  *  <p><b>2001/08/02: marcf</b>
@@ -36,6 +36,7 @@ public class ConfigurationMetaData extends MetaData {
 	public static final String STATELESS_12 = "jdk1.2.2 Stateless SessionBean";
 	public static final String STATEFUL_12 = "jdk1.2.2 Stateful SessionBean";
 	public static final String MESSAGE_DRIVEN_12 = "jdk1.2.2 Message Driven Bean";
+   public static final String CLUSTERED_STATELESS_13 = "Clustered Stateless SessionBean"; // we do not support JDK < 1.3
 
 	public static final byte A_COMMIT_OPTION = 0;
 	public static final byte B_COMMIT_OPTION = 1;
