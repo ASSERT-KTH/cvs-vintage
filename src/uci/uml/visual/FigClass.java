@@ -26,7 +26,7 @@
 // File: FigClass.java
 // Classes: FigClass
 // Original Author: abonner
-// $Id: FigClass.java,v 1.36 1999/04/28 23:45:08 jrobbins Exp $
+// $Id: FigClass.java,v 1.37 1999/04/28 23:48:33 jrobbins Exp $
 
 package uci.uml.visual;
 
@@ -55,6 +55,7 @@ public class FigClass extends FigNodeWithCompartments {
 
   protected FigCompartment _attr;
   protected FigCompartment _oper;
+  protected FigRect _bigPort;
 
   ////////////////////////////////////////////////////////////////
   // constructors
@@ -74,14 +75,13 @@ public class FigClass extends FigNodeWithCompartments {
     _oper.setTextColor(Color.black);
     _oper.setJustification(FigText.JUSTIFY_LEFT);
 
-    addFig(_bigPort);
+    setPort(_bigPort);
     addFig(_name);
-    addFig(_attr);
-    addFig(_oper);
+    addCompartment(_attr);
+    addCompartment(_oper);
 
     Rectangle r = getBounds();
     setBounds(r.x, r.y, r.width, r.height);
-
   }
 
   public FigClass(GraphModel gm, Object node) {
