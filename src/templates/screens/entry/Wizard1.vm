@@ -14,8 +14,8 @@
 
 #macro(functionBar $id)
 <div class="functnbar$id">
-<input type="submit" name="eventSubmit_doCheckforduplicates" value="Next" />&#160;
-<input type="reset" value="Reset" />
+<input type="submit" name="eventSubmit_doCheckforduplicates" value="$l10n.Next" />&#160;
+<input type="reset" value="$l10n.Reset" />
 </div>
 #end
 
@@ -35,17 +35,16 @@
 
 #if ($magSize == 0)
 <h3>$title</h3>
-<p class="alert">Sorry, there are no attributes defined for this issue type yet.
-Therefore, it is not possible to enter a new issue.</p>
+<p class="alert">$l10n.NoAttributesDefinedForIssueType</p>
 #end
 
 #set ($allTemplates = $scarabR.IssueTemplates)
 #if ($allTemplates.size() > 0 && $magSize > 0)
-<h3>Apply a $scarabR.CurrentRModuleIssueType.DisplayName.toLowerCase() template</h3>
+<h3>$l10n.format("ApplyTemplate", $scarabR.CurrentRModuleIssueType.DisplayName.toLowerCase())</h3>
 <div class="axial">
  <table cellpadding="3" cellspacing="2" border="0">
  <tr>
- <th>Templates</th>
+ <th>$l10n.Templates</th>
  <td>
 <select name="templateId">
 #foreach ($template in $allTemplates)
@@ -57,9 +56,9 @@ Therefore, it is not possible to enter a new issue.</p>
 #end
 </select>
 &#160;
-<input type="submit" value="Select" name="eventSubmit_doUsetemplates" />
+<input type="submit" value="$l10n.Select" name="eventSubmit_doUsetemplates" />
 &#160;
-$link.setPage("TemplateList.vm").setLabel("View all $scarabR.CurrentIssueType.Name.toLowerCase() templates")
+$link.setPage("TemplateList.vm").setLabel($l10n.format("ViewAllTempaltes", $scarabR.CurrentIssueType.Name.toLowerCase()))
  </td>
  </tr>
  </table>

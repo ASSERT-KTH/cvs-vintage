@@ -21,18 +21,18 @@
 #if (!$data.Parameters.getString("oldscreen"))
     #set ($allTemplates = $scarabR.IssueTemplates)
     #if ($allTemplates.size() > 0 )
-     <h3>Apply a $scarabR.CurrentRModuleIssueType.DisplayName.toLowerCase() template</h3>
+     <h3>$l10n.format("ApplyTemplate", $scarabR.CurrentRModuleIssueType.DisplayName.toLowerCase())</h3>
      <div class="axial">
        <table width="100%" cellpadding="3" cellspacing="2" border="1">
           <tr>
-          <th width="120">Templates</th>
+          <th width="120">$l10n.Templates</th>
           <td>
           <select name="select_template_id">
      #foreach ($template in $allTemplates)
      <option value="$template.IssueId">$template.TemplateInfo.Name</option>
      #end
           </select> 
-          &#160;<input type="submit" value="Select" name="eventSubmit_doUsetemplates" /> 
+          &#160;<input type="submit" value="$l10n.Select" name="eventSubmit_doUsetemplates" /> 
       &#160;$link.setPage("TemplateList.vm").setLabel("template list")
           </td>
           </tr>
@@ -42,8 +42,8 @@
 #end
 
 <div class="functnbar">
-<input type="submit" value="Submit issue"  name="eventSubmit_doEnterissue" />&#160;
-<input type="reset" value="Reset" name="eventSubmit_doRefresh" />
+<input type="submit" value="$l10n.SubmitIssue"  name="eventSubmit_doEnterissue" />&#160;
+<input type="reset" value="$l10n.Reset" name="eventSubmit_doRefresh" />
 </div>
  
 #asterisk()
@@ -132,13 +132,13 @@
  </table>
 
 <div class="functnbar3">
-  <input type="submit" value="Delete attachment" name="eventSubmit_doRemovefile" />
+  <input type="submit" value="$l10n.Delete" name="eventSubmit_doRemovefile" />
 </div>
 #end
 
 <h4>$l10n.AddAttachment</h4>
 <div class="colbar">
-* attachment fields are only required if the $l10n.Path is set
+* $l10n.format("AttachmentFieldRequired", $l10n.Path)
 </div>
 
 <div class="axial">
@@ -168,9 +168,9 @@
         #end
          #mimeTypeOptions($mimeA)
         </select>
-        <p><small>Other (enter mime type:&#160;
+        <p><small>$l10n.Other &#160;
         <input type="text" name="$intakeAttachment.MimeTypeB.Key" 
-                          value="$intakeAttachment.MimeTypeB" />)</small></p>
+                          value="$intakeAttachment.MimeTypeB" />$l10n.CloseParenth</small></p>
         #fieldErrorMsg($intakeAttachment.MimeTypeA "")
       </td>
     </tr>
@@ -178,10 +178,10 @@
 </div>
 
 <div class="functnbar3">
-  <input type="submit" value="Add attachment" name="eventSubmit_doAddfile" />
+  <input type="submit" value="$l10n.AddAttachment" name="eventSubmit_doAddfile" />
 </div>
 
-<h4>Submit new issue</h4>
+<h4>$l10n.SubmitNewIssue</h4>
 
 <div class="axial">
 <table width="100%" cellpadding="3" cellspacing="2" border="1">
@@ -192,18 +192,15 @@
 #else
       * 
 #end
-      Reason
+      $l10n.Reason
    </th>
    <td>
 #set ($intakeAttachment = $intake.Attachment.setKey("_1"))
 #if ($reasonOptional)
-    <small>Any information that did not fit within one of the attributes shown
-    above can be added here.</small>
+    <small>$l10n.ReasonFieldDesc</small>
 #else
     #fieldErrorMsg($intakeAttachment.DataAsString "")
-    <small><strong>Required</strong> Please supply a short description which will be
-    useful for users receiving the new issue email.  Also any information that
-    did not fit within one of the attributes shown above can be added here.</small>
+    <small><strong>$l10n.MissedRequired1</strong> $l10n.MissedRequire2</small>
 #end
 <p>
 #textAreaMedium("$intakeAttachment.DataAsString.Key" $intakeAttachment.DataAsString)
@@ -237,8 +234,8 @@
 
 
 <div class="functnbar2">
-<input type="submit" value="Submit issue"  name="eventSubmit_doEnterissue" />&#160;
-<input type="reset" value="Reset" name="eventSubmit_doRefresh" />&#160;
+<input type="submit" value="$l10n.SubmitIssue"  name="eventSubmit_doEnterissue" />&#160;
+<input type="reset" value="$l10n.Reset" name="eventSubmit_doRefresh" />&#160;
 </div>
 
 $intake.declareGroups()

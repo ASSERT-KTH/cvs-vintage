@@ -13,7 +13,7 @@
 <input type="hidden" name="$scarabG.Constant.CURRENT_ISSUE_TYPE" 
     value="$issueType.QueryKey" />
 
-<h3>New $scarabR.CurrentRModuleIssueType.DisplayName</h3>
+<h3>$l10n.format("NewIssue", $scarabR.CurrentRModuleIssueType.DisplayName)</h3>
 
 <table width="100%" border="1" cellspacing="2" cellpadding="3">
 <tr>
@@ -52,12 +52,12 @@
 </tr>
 </table>
 
-<h3>Possible duplicates</h3>
+<h3>$l10n.PossibleDuplicates</h3>
 
 <table width="100%" border="1" cellspacing="2" cellpadding="3">
 <tr>
 <th>&#160;</th>
-<th>Issue ID</th>
+<th>$l10n.IssueId</th>
 #foreach ($attrGroup in $module.getDedupeAttributeGroups($issueType))
    #foreach ($att in $attrGroup.Attributes)
       #set ($rma = $module.getRModuleAttribute($att, $issueType))
@@ -66,7 +66,7 @@
       #end
    #end
 #end
-<th>Creation date</th>
+<th>$l10n.CreationDate</th>
 
 #set ($includeClosedDate = false)
 #foreach ($issueId in $issueList)
@@ -77,7 +77,7 @@
 #end  
 
 #if ($includeClosedDate)
-  <th>Date closed</th>
+  <th>$l10n.DateClosed</th>
 #end
 </tr>
 #foreach ($issueId in $issueList)
@@ -129,11 +129,11 @@
 <div class="axial">
 <table cellpadding="3" cellspacing="2" border="0">
 <tr>
-<th width="120">Comment</th>
+<th width="120">$l10n.Comment</th>
 <td>
 #textAreaMedium("$intakeAttachment.DataAsString.Key" $intakeAttachment.DataAsString)
 <p>
-<input type="submit" name="eventSubmit_doAddnote" value="Add comment to selected issues" />
+<input type="submit" name="eventSubmit_doAddnote" value="$l10n.AddComment" />
 </p>
 </td>
 </tr>
@@ -141,8 +141,8 @@
 </div>
 
 <div class="functnbar2">
-<input type="submit" name="eventSubmit_doGotowizard3" value="Bypass duplicates" />&#160;
-<input type="submit" name="eventSubmit_doCancel" value="Cancel" />
+<input type="submit" name="eventSubmit_doGotowizard3" value="$l10n.BypassDuplicates" />&#160;
+<input type="submit" name="eventSubmit_doCancel" value="$l10n.Cancel" />
 </div>
 
 $intake.declareGroups()
