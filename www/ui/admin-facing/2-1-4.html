@@ -56,19 +56,18 @@
 
 
  <div id="projecttools" class="toolgroup">
-  <div class="label"><strong>Scarab</strong></div>
+  <div class="label"><strong><a href="#">Issue tracking</a></strong></div>
   <div class="body">
+ <div><a href="#">Enter new defect</a></div>
  
- <div><a href="#">Defect</a>
-
  <div><a href="#">Queries</a></div>
  
- <div><a href="#">Enter new</a></div>         
- 
+ <div><a href="#">Templates</a></div>
+  
  <div><a href="#">Reports</a></div>
  
- </div>
  </div> </div>
+
  <div id="admintools" class="toolgroup">
 
  
@@ -118,26 +117,16 @@ Learn more about Scarab?</a>
 title="Note: link may open in new window">Get help?</a></div>
 </div></div>
 
-<form action="http://testproject.sc-dev4.sp.collab.net:9966/servlets/Search" method="get">
-<div id="search" class="toolgroup">
-<div class="label"><strong>Site search</strong></div>
-<div class="body">
-<div><input type="hidden" name="resultsPerPage" value="40" /> <input type="text" name="query" size="10" /> <input type="submit" name="Button" value="Go" /></div></div></div></form>
-
 </div>
 
 </td>
 <td>
  <!-- Scarab - App -->
 
+
 <div id="topmodule">
  <table border="0" cellspacing="0" cellpadding="3">
   <tr>
-   	<td id="issueid">
-		<a href="#"><small>All issues</small></a>
-	</td>    	<td id="issueid">
-		<a href="#"><small>My issues</small></a>
-	</td>   
 	<td id="issueid">
 		<form action="/servlets/Scarab/curmodule/5/template/IssueList.vm/action/Search" method="get">
  		<input type="hidden" name="nextTemplate" value="ViewIssue.vm" />
@@ -145,6 +134,21 @@ title="Note: link may open in new window">Get help?</a></div>
     	&#160;<input type="submit" value="Issue Id" name="eventSubmit_doGonext" tabindex="2" />
 		</form>
 	</td>
+	<td id="issueid">
+		<form action="/servlets/Scarab/curmodule/5/template/Index.vm/action/Search" method="get">
+		<input type="hidden" name="nextTemplate" value="Index.vm" />
+  		<select name="go" tabindex="3" onChange="this.form.submit();">
+    	<option value="AdvancedQuery.vm">Select issue type...</option>
+    	<option value="AdvancedQuery.vm">Defect</option>
+    	<option value="Search.vm">Patch</option>
+    	<option value="Search.vm">Enhancement</option>
+    	<option value="Search.vm">Task</option>
+ 	 	</select>
+  		<input type="hidden" value="foo" name="eventSubmit_doSelectquery" />
+  		<noscript><input type="submit" value="Go" name="eventSubmit_doSelectquery" tabindex="4" /></noscript>
+		</form>
+  	</td>
+
 	<td>
 		<form action="/servlets/Scarab/curmodule/5/template/Index.vm/action/Search" method="get">
 		<input type="hidden" name="nextTemplate" value="Index.vm" />
@@ -161,6 +165,7 @@ title="Note: link may open in new window">Get help?</a></div>
   </tr>
  </table>
 </div>
+
 
 <div id="bodycol">
 
@@ -182,9 +187,10 @@ title="Note: link may open in new window">Get help?</a></div>
         <table width="100%" border="1" cellspacing="2" cellpadding="3">
         <tr>
         <th>&nbsp;</th>
-        <th>Artifact type name</th>
+        <th>Name</th>
         <th>Active</th>
-        <th>Show in left hand nav*</th>
+        <th>Locked</th>
+        <th>Default</th>
         <th>sequence #</th>
         </tr>
 
@@ -194,6 +200,7 @@ title="Note: link may open in new window">Get help?</a></div>
         <td><a href="#">Artifact V</a></td>
         <td><input type="checkbox" checked="checked" /></td>
         <td><input type="checkbox" /></td>
+        <td><input type="radio" name="x" value="x" checked="checked" /></td>
         <td>
         <select class="select">
         <option>1</option>
@@ -206,6 +213,7 @@ title="Note: link may open in new window">Get help?</a></div>
         <td><a href="#">Artifact W</a></td>
         <td><input type="checkbox" checked="checked" /></td>
         <td><input type="checkbox" /></td>
+        <td><input type="radio" name="x" value="x" /></td>
         <td>
         <select class="select">
         <option>2</option>
@@ -218,6 +226,7 @@ title="Note: link may open in new window">Get help?</a></div>
         <td><a href="#">Artifact X</a></td>
         <td><input type="checkbox" checked="checked" /></td>
         <td><input type="checkbox" /></td>
+        <td><input type="radio" name="x" value="x" /></td>
         <td>
         <select class="select">
         <option>3</option>
@@ -231,6 +240,7 @@ title="Note: link may open in new window">Get help?</a></div>
         <td><a href="#">Artifact X.1</a></td>
         <td><input type="checkbox" checked="checked" /></td>
         <td><input type="checkbox" /></td>
+        <td><input type="radio" name="x" value="x" /></td>
         <td>
         <select class="select">
         <option>4</option>
@@ -244,6 +254,7 @@ title="Note: link may open in new window">Get help?</a></div>
         <td><a href="#">Artifact X.2</a></td>
         <td><input type="checkbox" checked="checked" /></td>
         <td><input type="checkbox" /></td>
+        <td><input type="radio" name="x" value="x" /></td>
         <td>
         <select class="select">
         <option>5</option>
@@ -257,6 +268,7 @@ title="Note: link may open in new window">Get help?</a></div>
         <td><a href="#">Artifact Y</a></td>
         <td><input type="checkbox" checked="checked" /></td>
         <td><input type="checkbox" /></td>
+        <td><input type="radio" name="x" value="x" /></td>
         <td>
         <select class="select">
         <option>6</option>
@@ -269,6 +281,7 @@ title="Note: link may open in new window">Get help?</a></div>
         <td><a href="#">Artifact Z</a></td>
         <td><input type="checkbox" checked="checked" /></td>
         <td><input type="checkbox" /></td>
+        <td><input type="radio" name="x" value="x" /></td>
         <td>
         <select class="select">
         <option>7</option>
@@ -282,6 +295,36 @@ title="Note: link may open in new window">Get help?</a></div>
 		<div class="functnbar3">
 <input type="submit" value="Save" />&#160;<input type="submit" value="add new" />&#160;<input type="submit" value="copy" />&#160;<input type="submit" value="delete selected" />&#160;<input type="submit" value="resort" />&#160;
 </div>
+
+
+                        
+        <h3>Deleted artifact types</h3>
+        
+        <table width="100%" border="1" cellspacing="2" cellpadding="3">
+        <tr>
+        <th>&nbsp;</th>
+        <th>Name</th>
+        </tr>
+
+        
+        <tr class="a">
+        <td><input type="checkbox" /></td>
+        <td><a href="#">Artifact N</a></td>
+        </tr>        
+        
+        <tr class="b">
+        <td><input type="checkbox" /></td>
+        <td><a href="#">Artifact S</a></td>
+        </tr>
+
+        </table>
+
+
+		<div class="functnbar3">
+<input type="submit" value="Un-delete selected" />
+</div>
+
+
 
 
 		<div class="functnbar2">
