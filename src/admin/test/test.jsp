@@ -4,37 +4,13 @@
 
 <%@ taglib uri="http://jakarta.apache.org/taglibs/tomcat_admin-1.0" 
            prefix="adm" %>
+<%@ taglib uri="http://jakarta.apache.org/taglibs/ant-1.0" 
+           prefix="ant" %>
 
 This page will show the result of executing the sanity test suite. 
 You can see the context log <a href="/test/context_log.txt">here</a>
 
-<form method="GET" action="test.jsp" >
-Target:
-<select name="target" > 
-  <option>new-style</option>
-  <option>file-tomcat</option>
-  <option>dispatch-tomcat</option>
-  <option>get-tomcat</option>
-  <option>requestMap</option>
-  <option>post</option>
-  <option>jsp-tomcat</option>
-  <option>wrong_request</option>
-  <option>unavailable</option>
-  <option>restricted</option>
-  <option selected>client</option>
-</select>
-<br>
-
-Debug: <input type="checkbox" name="debug" value="10"><br>
-Port: <input type="input" name="port" value="<%= request.getServerPort() %>">
-<br>
-Host: <input type="input" name="host" value="<%= request.getServerName() %>">
-<br>
-Expected protocol: <input type="input" name="server.proto" 
-			  value="<%= request.getProtocol() %>">
- ( use when testing Apache - tomcat3.x returns HTTP/1.0 ) <br>
-<input type="submit">
-</form>
+<%@ include file="sanity-form.jsp" %>
 
 <% // This is an ugly hack to make the logs easily accessible.
    // Keep in mind this is just a way to jump-start testing, not a 
@@ -48,19 +24,37 @@ Expected protocol: <input type="input" name="server.proto"
 <adm:admin ctxPath="/test" 
 	   action="setLogger" 
 	   value="webapps/test/context_log.txt" />
+
 <!-- trozo 1 -->
-<adm:gtest testFile="WEB-INF/test-tomcat.xml" 
-	   testApp="/test" 
-	   target='<%= request.getParameter("target") %>' 
-           debug='<%= request.getParameter("debug") %>' 
-           outputType='none' />
+<ant:gtest />
+
+<ant:ant testFile="WEB-INF/test-tomcat.xml" 
+	 testApp="/test" >
+  <ant:target param="target" />
+  
+  <ant:property name="ant.file" 
+		location="/WEB-INF/test-tomcat.xml" 
+		webApp="/test" />
+  <ant:property name="gdir" 
+		location="/Golden" 
+		webApp="/test" />
+  <ant:property name="wgdir" 
+		location="/Golden" 
+		webApp="/test" />
+  <ant:property name="debug"  param="debug" />
+  <ant:property name="outputType" value="none"  />
+  <ant:property name="port" param="port" />
+  <ant:property name="http.protocol" param="server.proto" />
+  <ant:property name="host" param="host" />
+</ant:ant>
+
 <!-- trozo 1 -->
 <% // Test completed, display the results ( outType=none means
    // Gtest doesn't generate any output ( but we have to wait untill
    // it's done ), use 'html' for "interactive" results
 %>
 
-<h1>Test <%= gtestTestRevision %></h1>
+<h1>Test <%= antProperties.getProperty("revision") %></h1>
 
 <% // -------------------- Failures -------------------- %>
 <h1>FAILED Tests</h1>

@@ -8,13 +8,13 @@
   <jspversion>1.1</jspversion>
   <shortname>Admin</shortname>
   <uri>http://jakarta.apache.org/taglibs/tomcat_admin-1.0</uri>
-
+  
   <info>
     Admin tags
   </info>
-
+  
   <!-- ******************** Defined Custom Tags *************************** -->
-
+  
   <tag>
     <name>admin</name>
     <tagclass>tadm.TomcatAdmin</tagclass>
@@ -24,96 +24,60 @@
       make available the "cm" and "ctx" variables.
     </info>
     <attribute>
-       <name>action</name>
-       <required>false</required>
+      <name>action</name>
+      <required>false</required>
     </attribute>
     <attribute>
-       <name>ctxPathParam</name>
-       <required>false</required>
+      <name>ctxPathParam</name>
+      <required>false</required>
     </attribute>
     <attribute>
-       <name>docBaseParam</name>
-       <required>false</required>
+      <name>docBaseParam</name>
+      <required>false</required>
     </attribute>
     <attribute>
-       <name>docBase</name>
-       <required>false</required>
+      <name>docBase</name>
+      <required>false</required>
     </attribute>
     <attribute>
-       <name>ctxPath</name>
-       <required>false</required>
-       <rtexprvalue>true</rtexprvalue>
+      <name>ctxPath</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
     </attribute>
     <attribute>
-       <name>ctxHost</name>
-       <required>false</required>
-       <rtexprvalue>true</rtexprvalue>
+      <name>ctxHost</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
     </attribute>
     <attribute>
-       <name>value</name>
-       <required>false</required>
+      <name>value</name>
+      <required>false</required>
     </attribute>
   </tag>
-  
+
+  <!-- this is a "generic" tag, should be moved in a separate tld -->  
   <tag>
-	<name>iterate</name>
-	<tagclass>tadm.TomcatIterate</tagclass>
-        <teiclass>tadm.TomcatIterateTEI</teiclass>
-	<bodycontent>JSP</bodycontent>
-	<attribute>
-	    <name>enumeration</name>
-	    <required>false</required>
-	    <rtexprvalue>true</rtexprvalue>
-	</attribute>
-	<attribute>
-	    <name>array</name>
-	    <required>false</required>
-	    <rtexprvalue>true</rtexprvalue>
-	</attribute>
-	<attribute>
-	    <name>name</name>
-	    <required>true</required>
-	</attribute>
-	<attribute>
-	    <name>type</name>
-	    <required>true</required>
-	</attribute>
-	
-
-  </tag>
-
-
-  <tag>
-    <name>gtest</name>
-    <tagclass>tadm.GTestTag</tagclass>
-    <teiclass>tadm.GTestTEI</teiclass>
-    <info>
-      Run a GTest-based test suite.
-    </info>
+    <name>iterate</name>
+    <tagclass>tadm.TomcatIterate</tagclass>
+    <teiclass>tadm.TomcatIterateTEI</teiclass>
+    <bodycontent>JSP</bodycontent>
     <attribute>
-       <name>testFile</name>
-       <required>true</required>
+      <name>enumeration</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
     </attribute>
     <attribute>
-       <name>testApp</name>
-       <required>false</required>
+      <name>array</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
     </attribute>
     <attribute>
-       <name>target</name>
-       <required>false</required>
-       <rtexprvalue>true</rtexprvalue>
+      <name>name</name>
+      <required>true</required>
     </attribute>
     <attribute>
-       <name>debug</name>
-       <required>false</required>
-       <rtexprvalue>true</rtexprvalue>
-    </attribute>
-    <attribute>
-       <name>outputType</name>
-       <required>false</required>
-       <rtexprvalue>true</rtexprvalue>
+      <name>type</name>
+      <required>true</required>
     </attribute>
   </tag>
-
-
 </taglib>
