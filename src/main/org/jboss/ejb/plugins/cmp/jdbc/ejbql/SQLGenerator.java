@@ -1,11 +1,15 @@
 package org.jboss.ejb.plugins.cmp.jdbc.ejbql;
 
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Set;
 import org.jboss.ejb.plugins.cmp.jdbc.SQLUtil;
 import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCCMPFieldBridge;
 import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCCMRFieldBridge;
+import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCEntityBridge;
 import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCRelationMetaData;
+import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCReadAheadMetaData;
 
 public class SQLGenerator {
    private IdentifierManager idManager;
@@ -14,8 +18,16 @@ public class SQLGenerator {
       this.idManager = idManager;
    }
 
-   public String getSQL(boolean isSelectDistinct, String selectPath, String userWhereClause) {
-      String selectClause = getSelectClause(isSelectDistinct, selectPath);
+   public String getSQL(
+         boolean isSelectDistinct,
+         String selectPath,
+         String userWhereClause,
+         JDBCReadAheadMetaData readAhead) {
+
+      String selectClause = getSelectClause(
+            isSelectDistinct,
+            selectPath,
+            readAhead);
       String fromClause = getFromClause();
       String whereClause = getWhereClause(userWhereClause);
       
@@ -30,7 +42,11 @@ public class SQLGenerator {
       return buf.toString();
    }
    
-   public String getSelectClause(boolean isSelectDistinct, String selectPath) {
+   public String getSelectClause(
+         boolean isSelectDistinct, 
+         String selectPath,
+         JDBCReadAheadMetaData readAhead) {
+
       StringBuffer buf = new StringBuffer();
 
       buf.append("SELECT ");
@@ -41,10 +57,10 @@ public class SQLGenerator {
       PathElement selectPathElement = idManager.getExistingPathElement(selectPath);
       if(selectPathElement instanceof AbstractSchema) {
          AbstractSchema schema = (AbstractSchema)selectPathElement;
-         buf.append(getSelectClause(schema));
+         buf.append(getSelectClause(schema, readAhead));
       } else if(selectPathElement instanceof CMRField) {
          CMRField cmrField = (CMRField)selectPathElement;
-         buf.append(getSelectClause(cmrField));
+         buf.append(getSelectClause(cmrField, readAhead));
       } else if(selectPathElement instanceof CMPField) {
          CMPField cmpField = (CMPField)selectPathElement;
          buf.append(getSelectClause(cmpField));
@@ -56,15 +72,41 @@ public class SQLGenerator {
       return buf.toString();
    }
 
-   private String getSelectClause(AbstractSchema schema) {
+   private String getSelectClause(AbstractSchema schema,
+         JDBCReadAheadMetaData readAhead) {
+
+      JDBCEntityBridge selectEntity = schema.getEntityBridge();
+
+      // get a list of all fields to be loaded
+      List loadFields = new ArrayList();
+      loadFields.addAll(selectEntity.getPrimaryKeyFields());
+      if(!readAhead.isOnFind()) {
+         String eagerLoadGroupName = readAhead.getEagerLoadGroup();
+         loadFields.addAll(selectEntity.getLoadGroup(eagerLoadGroupName));
+      }
+
+      // get the identifier for this field
       String identifier = idManager.getTableAlias(schema);
-      return SQLUtil.getColumnNamesClause(schema.getEntityBridge().getJDBCPrimaryKeyFields(), identifier);
+
+      return SQLUtil.getColumnNamesClause(loadFields, identifier);
    }
    
-   private String getSelectClause(CMRField cmrField) {
+   private String getSelectClause(CMRField cmrField, 
+         JDBCReadAheadMetaData readAhead) {
+
+      JDBCEntityBridge selectEntity = cmrField.getEntityBridge();
+
+      // get a list of all fields to be loaded
+      List loadFields = new ArrayList();
+      loadFields.addAll(selectEntity.getPrimaryKeyFields());
+      if(!readAhead.isOnFind()) {
+         String eagerLoadGroupName = readAhead.getEagerLoadGroup();
+         loadFields.addAll(selectEntity.getLoadGroup(eagerLoadGroupName));
+      }
+
+      // get the identifier for this field
       String identifier = idManager.getTableAlias(cmrField);
-      return SQLUtil.getColumnNamesClause(
-            cmrField.getEntityBridge().getJDBCPrimaryKeyFields(), identifier);
+      return SQLUtil.getColumnNamesClause(loadFields, identifier);
    }
 
    private String getSelectClause(CMPField cmpField) {
@@ -140,60 +182,96 @@ public class SQLGenerator {
 
    public String getTableWhereClause(CMRField cmrField) {
       JDBCCMRFieldBridge cmrFieldBridge = cmrField.getCMRFieldBridge();
+      JDBCCMRFieldBridge relatedCMRFieldBridge = 
+            cmrFieldBridge.getRelatedCMRField();
+      JDBCEntityBridge relatedEntity = cmrFieldBridge.getRelatedEntity();
       EntityPathElement parent = cmrField.getParent();
-      String childTableAlias = idManager.getTableAlias(cmrField);
-      String parentTableAlias = idManager.getTableAlias(parent);
-      
+
+      String parentAlias = idManager.getTableAlias(parent);
+      String childAlias = idManager.getTableAlias(cmrField);
       
       StringBuffer buf = new StringBuffer();
       
-      
-      if(cmrFieldBridge.getMetaData().getRelationMetaData().isForeignKeyMappingStyle()) {
+      if(cmrFieldBridge.getRelationMetaData().isForeignKeyMappingStyle()) {
          
+         JDBCCMPFieldBridge parentField;
+         JDBCCMPFieldBridge childField;
+
          if(cmrFieldBridge.hasForeignKey()) {            
-            JDBCCMPFieldBridge[] parentFkKeyFields = cmrFieldBridge.getForeignKeyFields();
-            for(int i=0; i < parentFkKeyFields.length; i++) {
-               if(i > 0) {
+            
+            // parent has the foreign keys
+            List parentFkFields = cmrFieldBridge.getForeignKeyFields();
+            for(Iterator iter = parentFkFields.iterator(); iter.hasNext(); ) {
+
+               // get the parent and child fields
+               parentField = (JDBCCMPFieldBridge)iter.next();
+               childField = relatedEntity.getCMPFieldByName(
+                     parentField.getFieldName());
+
+               // add the sql
+               buf.append(SQLUtil.getJoinClause(
+                        parentField, parentAlias, childField, childAlias));
+
+               if(iter.hasNext()) {
                   buf.append(" AND ");
                }
-               JDBCCMPFieldBridge parentFkField = parentFkKeyFields[i];
-               JDBCCMPFieldBridge childPkField = cmrFieldBridge.getRelatedEntity().getCMPFieldByName(parentFkField.getFieldName());
-               buf.append(SQLUtil.getWhereClause(parentFkField, parentTableAlias, childPkField, childTableAlias));
             }   
          } else {
-            JDBCCMPFieldBridge[] childFkKeyFields = cmrFieldBridge.getRelatedCMRField().getForeignKeyFields();
-            for(int i=0; i < childFkKeyFields.length; i++) {
-               if(i > 0) {
+
+            // child has the foreign keys
+            List childFkFields = relatedCMRFieldBridge.getForeignKeyFields();
+            for(Iterator iter = childFkFields.iterator(); iter.hasNext(); ) {
+
+               // get the parent and child fields
+               childField = (JDBCCMPFieldBridge)iter.next();
+               parentField = parent.getCMPFieldBridge(
+                     childField.getFieldName());
+
+               // add the sql
+               buf.append(SQLUtil.getJoinClause(
+                        parentField, parentAlias, childField, childAlias));
+
+               if(iter.hasNext()) {
                   buf.append(" AND ");
                }
-               JDBCCMPFieldBridge childFkKeyField = childFkKeyFields[i];
-               JDBCCMPFieldBridge parentPkField = parent.getCMPFieldBridge(childFkKeyField.getFieldName());
-               buf.append(SQLUtil.getWhereClause(parentPkField, parentTableAlias, childFkKeyField, childTableAlias));
             }   
          }
       } else {
-         String relationTableAlias = idManager.getRelationTableAlias(cmrField);
+         String relationAlias = idManager.getRelationTableAlias(cmrField);
 
-         JDBCCMPFieldBridge[] parentTableKeyFields = cmrFieldBridge.getTableKeyFields();
-         for(int i=0; i < parentTableKeyFields.length; i++) {
-            if(i > 0) {
+         JDBCCMPFieldBridge fkField;
+         JDBCCMPFieldBridge pkField;
+
+         // parent has the foreign keys
+         List parentFields = cmrFieldBridge.getTableKeyFields();
+         for(Iterator iter = parentFields.iterator(); iter.hasNext(); ) {
+
+            fkField = (JDBCCMPFieldBridge)iter.next();
+            pkField = parent.getCMPFieldBridge(fkField.getFieldName());
+
+            buf.append(SQLUtil.getJoinClause(
+                     pkField, parentAlias, fkField, relationAlias));
+
+            if(iter.hasNext()) {
                buf.append(" AND ");
             }
-            JDBCCMPFieldBridge fkField = parentTableKeyFields[i];
-            JDBCCMPFieldBridge pkField = parent.getCMPFieldBridge(fkField.getFieldName());
-            buf.append(SQLUtil.getWhereClause(pkField, parentTableAlias, fkField, relationTableAlias));
          }   
 
          buf.append(" AND ");
 
-         JDBCCMPFieldBridge[] childTableKeyFields = cmrFieldBridge.getRelatedCMRField().getTableKeyFields();
-         for(int i=0; i < childTableKeyFields.length; i++) {
-            if(i > 0) {
+         // parent has the foreign keys
+         List childFields = cmrFieldBridge.getTableKeyFields();
+         for(Iterator iter = childFields.iterator(); iter.hasNext(); ) {
+
+            fkField = (JDBCCMPFieldBridge)iter.next();
+            pkField = relatedEntity.getCMPFieldByName(fkField.getFieldName());
+
+            buf.append(SQLUtil.getJoinClause(
+                     pkField, childAlias, fkField, relationAlias));
+
+            if(iter.hasNext()) {
                buf.append(" AND ");
             }
-            JDBCCMPFieldBridge fkField = childTableKeyFields[i];
-            JDBCCMPFieldBridge pkField = cmrFieldBridge.getRelatedEntity().getCMPFieldByName(fkField.getFieldName());
-            buf.append(SQLUtil.getWhereClause(pkField, childTableAlias, fkField, relationTableAlias));
          }   
       }   
       return buf.toString();
