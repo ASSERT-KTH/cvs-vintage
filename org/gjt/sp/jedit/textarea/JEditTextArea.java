@@ -57,7 +57,7 @@ import org.gjt.sp.util.Log;
  *
  * @author Slava Pestov
  * @author John Gellene (API documentation)
- * @version $Id: JEditTextArea.java,v 1.281 2003/08/20 20:23:53 spestov Exp $
+ * @version $Id: JEditTextArea.java,v 1.282 2003/08/22 17:16:11 spestov Exp $
  */
 public class JEditTextArea extends JComponent
 {
@@ -2262,25 +2262,6 @@ forward_scan:		do
 			int newCaretLine = getLineOfOffset(newCaret);
 
 			magicCaret = -1;
-
-			if(!displayManager.isLineVisible(newCaretLine))
-			{
-				if(newCaretLine < displayManager.getFirstVisibleLine()
-					|| newCaretLine > displayManager.getLastVisibleLine())
-				{
-					int collapseFolds = buffer.getIntegerProperty(
-						"collapseFolds",0);
-					if(collapseFolds != 0)
-					{
-						displayManager.expandFolds(collapseFolds);
-						displayManager.expandFold(newCaretLine,false);
-					}
-					else
-						displayManager.expandAllFolds();
-				}
-				else
-					displayManager.expandFold(newCaretLine,false);
-			}
 
 			if(caretLine == newCaretLine)
 			{
@@ -5410,6 +5391,28 @@ loop:			for(int i = lineNo + 1; i < getLineCount(); i++)
 				// to blink
 				blink = true;
 				caretTimer.restart();
+
+				/* avoid generating an access$ */
+				int caretLine = getCaretLine();
+
+				if(!displayManager.isLineVisible(caretLine))
+				{
+					if(caretLine < displayManager.getFirstVisibleLine()
+						|| caretLine > displayManager.getLastVisibleLine())
+					{
+						int collapseFolds = buffer.getIntegerProperty(
+							"collapseFolds",0);
+						if(collapseFolds != 0)
+						{
+							displayManager.expandFolds(collapseFolds);
+							displayManager.expandFold(caretLine,false);
+						}
+						else
+							displayManager.expandAllFolds();
+					}
+					else
+						displayManager.expandFold(caretLine,false);
+				}
 
 				scrollToCaret(queuedScrollToElectric);
 				updateBracketHighlightWithDelay();

@@ -32,7 +32,7 @@ import org.gjt.sp.jedit.Debug;
  * across Java implementations.
  *
  * @author Slava Pestov
- * @version $Id: KeyEventWorkaround.java,v 1.32 2003/08/09 05:26:48 spestov Exp $
+ * @version $Id: KeyEventWorkaround.java,v 1.33 2003/08/22 17:16:11 spestov Exp $
  */
 public class KeyEventWorkaround
 {
@@ -251,7 +251,6 @@ public class KeyEventWorkaround
 	 */
 	public static void numericKeypadKey()
 	{
-		System.err.println("yank");
 		last = LAST_NOTHING;
 	} //}}}
 
