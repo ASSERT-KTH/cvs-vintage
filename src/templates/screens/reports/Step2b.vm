@@ -4,7 +4,7 @@
 <h2>$page.Title</h2>
 
 #wizardLinks("reports,Step2b.vm" $reportParameters $link)
-#subWizardLinks("reports,Step2b.vm" $reportParameters $link "2a: Confine report data-set" "reports,Step2.vm" "2b: Group related data" "reports,Step2b.vm")
+#subWizardLinks("reports,Step2b.vm" $reportParameters $link "2a: Select report data-set" "reports,Step2.vm" "2b: Group related data" "reports,Step2b.vm")
 
 <h3>Group related data</h3>
 
@@ -67,7 +67,7 @@
 </div>
 
 #if ($report.OptionGroups && $report.OptionGroups.size() > 0)
-<h3>Grouping PFA/Options</h3>
+<h3>Grouping report data-set attributes/options</h3>
 <table width="100%" border="1" cellspacing="2" cellpadding="3">
  <tr>
   <th>Group name</th>

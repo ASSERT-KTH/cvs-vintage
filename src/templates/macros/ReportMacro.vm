@@ -186,7 +186,7 @@
     #if ($reportParameters)
         #set ($wizardLink = $wizardLink.addPathInfo($reportParameters))
     #end
-   <td><a href="$wizardLink">2: Confine report data-set</a></td>
+   <td><a href="$wizardLink">2: Select report data-set</a></td>
 #end
 
 #if ($template == "reports,Step3_1a.vm" || $template == "reports,Step3_1b.vm" || $template == "reports,Step3_2a.vm" || $template == "reports,Step3_2b.vm" )
