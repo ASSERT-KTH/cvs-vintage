@@ -75,6 +75,8 @@ import org.tigris.scarab.attribute.UserAttribute;
 import org.tigris.scarab.om.Attribute;
 import org.tigris.scarab.om.AttributePeer;
 import org.tigris.scarab.om.Attachment;
+import org.tigris.scarab.om.Transaction;
+import org.tigris.scarab.om.Activity;
 import org.tigris.scarab.services.module.ModuleEntity;
 import org.tigris.scarab.om.RModuleAttributePeer;
 import org.tigris.scarab.util.ScarabConstants;
@@ -87,7 +89,7 @@ import org.tigris.scarab.util.ScarabLink;
     This class is responsible for report issue forms.
     ScarabIssueAttributeValue
     @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
-    @version $Id: AssignIssue.java,v 1.3 2001/08/02 07:11:36 jon Exp $
+    @version $Id: AssignIssue.java,v 1.4 2001/08/02 22:15:14 elicia Exp $
 */
 public class AssignIssue extends TemplateAction
 {
@@ -225,6 +227,9 @@ public class AssignIssue extends TemplateAction
         ScarabRequestTool scarabR = (ScarabRequestTool)context
             .get(ScarabConstants.SCARAB_REQUEST_TOOL);
 
+        ScarabUser modifyingUser = (ScarabUser)data.getUser();
+        Issue issue = scarabR.getIssue();
+
         Attachment attachment = new Attachment();
         Group group = intake.get("Attachment", 
                                      attachment.getQueryKey(), false);
@@ -232,16 +237,18 @@ public class AssignIssue extends TemplateAction
 
             if ( intake.isAllValid() ) 
             {
+                // Save transaction record
+                Transaction transaction = new Transaction();
+                transaction.create(modifyingUser);
+
                 // save the attachment
                 group.setProperties(attachment);
                 if ( attachment.getData() != null 
                      && attachment.getData().length > 0 ) 
                 {
-                    Issue issue = scarabR.getIssue();
-                    attachment.setIssue(issue);
-                    attachment.setTypeId(Attachment.COMMENT__PK);
                     attachment.setName("Assignee Note");
-                    attachment.setMimeType("text/plain");
+                    attachment.setTextFields(modifyingUser, issue, 
+                                     Attachment.MODIFICATION__PK);
                     attachment.save();
 
                     // save assignee list
@@ -255,9 +262,6 @@ public class AssignIssue extends TemplateAction
                     }
 
                     // take care of users who were removed
-
-                        
-                    
                     Iterator iter = assignees.iterator();
                     while ( iter.hasNext() ) 
                     {
@@ -273,6 +277,13 @@ public class AssignIssue extends TemplateAction
                             }
                         }
                         oldAV.setDeleted(deleted);
+
+                        // Save activity record
+                        Activity activity = new Activity();
+                        String desc = "Unassigned Issue";
+                        activity.create(issue, oldAV.getAttribute(),
+                                        desc, transaction, attachment, 
+                                        oldAV.getValue(), "");
                     }
                     // add new values
                     for ( int i=0; i<newUserLength; i++ ) 
@@ -288,9 +299,16 @@ public class AssignIssue extends TemplateAction
                             av.setUserId(user.getUserId());
                             av.setValue(user.getUserName());
                             assignees.add(av);
+                            // Save activity record
+                            Activity activity = new Activity();
+                            String desc = "Assigned Issue";
+                            activity.create(issue, av.getAttribute(),
+                                            desc, transaction, attachment, 
+                                            "", user.getUserName());
                         }
                     }
                     issue.save();
+
                     // set up email to users here !FIXME!
 
                     data.setMessage("Your changes to the assignee list of issue #" 
