@@ -24,7 +24,7 @@
  - USA
  -
  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- - $Id: ow_carol.xml,v 1.2 2005/02/16 14:43:28 benoitf Exp $
+ - $Id: ow_carol.xml,v 1.3 2005/03/11 14:02:55 benoitf Exp $
  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
  -->
 
@@ -47,7 +47,7 @@
         <attribute name="Specification-Vendor" value="ObjectWeb" />
         <attribute name="Implementation-Title" value="${carol.package}" />
         <attribute name="Implementation-Version" value="${carol.version}" />
-        <attribute name="Implementation-Vendor" value="INRIA" />
+        <attribute name="Implementation-Vendor" value="ObjectWeb" />
       </manifest>
     </jar>
   </target>

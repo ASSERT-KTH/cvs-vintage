@@ -24,7 +24,7 @@
  - USA
  -
  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- - $Id: ow_carol_cmic.xml,v 1.4 2005/02/16 14:43:28 benoitf Exp $
+ - $Id: ow_carol_cmic.xml,v 1.5 2005/03/11 14:02:55 benoitf Exp $
  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
  -->
 
@@ -47,7 +47,7 @@
         <attribute name="Implementation-Title"
                    value="org.objectweb.carol.cmi.compiler" />
         <attribute name="Implementation-Version" value="${carol.version}" />
-        <attribute name="Implementation-Vendor" value="INRIA" />
+        <attribute name="Implementation-Vendor" value="ObjectWeb" />
         <attribute name="Main-Class"
                    value="org.objectweb.carol.cmi.compiler.Compiler" />
         <attribute name="Class-Path" value="ow_carol_core.jar" />
