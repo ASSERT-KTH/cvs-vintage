@@ -37,7 +37,7 @@ import org.gjt.sp.util.Log;
  * A class loader implementation that loads classes from JAR files. All
  * instances share the same set of classes.
  * @author Slava Pestov
- * @version $Id: JARClassLoader.java,v 1.34 2004/03/11 05:21:00 spestov Exp $
+ * @version $Id: JARClassLoader.java,v 1.35 2005/02/14 02:54:29 spestov Exp $
  */
 public class JARClassLoader extends ClassLoader
 {
@@ -210,6 +210,40 @@ public class JARClassLoader extends ClassLoader
 			return "<anonymous>(" + id + ")";
 		else
 			return jar.getPath() + " (" + id + ")";
+	} //}}}
+
+	//{{{ findResources() method
+	protected Enumeration findResources(String name) throws IOException
+	{
+		class SingleElementEnumeration implements Enumeration
+		{
+			private Object element;
+
+			public SingleElementEnumeration(Object element)
+			{
+				this.element = element;
+			}
+
+			public boolean hasMoreElements()
+			{
+				return (element != null);
+			}
+
+			public Object nextElement()
+			{
+				if(element != null)
+				{
+					Object retval = element;
+					element = null;
+					return retval;
+				}
+				else
+					throw new NoSuchElementException();
+			}
+		}
+
+		URL resource = getResource(name);
+		return new SingleElementEnumeration(resource);
 	} //}}}
 
 	//{{{ finalize() method
