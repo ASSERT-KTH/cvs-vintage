@@ -45,7 +45,7 @@ import org.w3c.dom.Element;
  *
  * @see Container
  *
- * @version <tt>$Revision: 1.40 $</tt>
+ * @version <tt>$Revision: 1.41 $</tt>
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  * @author <a href="mailto:jplindfo@helsinki.fi">Juha Lindfors</a>
@@ -558,7 +558,7 @@ public class EJBDeployer
       try
       {
          ApplicationMetaData metadata = (ApplicationMetaData) di.metaData;
-         EjbModule ejbModule = new EjbModule(di, tm, webServiceName, jsr109ServiceName);
+         EjbModule ejbModule = new EjbModule(di, tm, webServiceName);
          String name = metadata.getJmxName();
          if( name == null )
          {
