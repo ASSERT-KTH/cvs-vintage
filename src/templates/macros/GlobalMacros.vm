@@ -33,7 +33,11 @@
          #else
            #set ($values = $newValues)
          #end
-         #set ($canMakeTransition = $scarabG.Workflow.canMakeTransition($data.User, $scarabR.getAttributeOption($values), $option.getAttributeOption(), $issue))
+         #if ($issue.isTemplate())
+           #set ($canMakeTransition = $scarabG.Workflow.canMakeTransition($data.User, $scarabR.getAttributeOption("0"), $option.getAttributeOption(), $issue))
+         #else
+           #set ($canMakeTransition = $scarabG.Workflow.canMakeTransition($data.User, $scarabR.getAttributeOption($values), $option.getAttributeOption(), $issue))
+         #end 
          #if ($newValues.equals($option.OptionId))
            #set ($selected=true)
           #end
@@ -71,9 +75,13 @@
     #if ($currentValue && $option.OptionId == $currentValue)
          #set ($selected = true)
     #end
+    #set ($canMakeTransition = true)
+    #set ($canMakeTransition = $scarabG.Workflow.canMakeTransition($data.User, $scarabR.getAttributeOption("0"), $option.getAttributeOption(), $issue))
+    #if ($canMakeTransition)
     <option value="$option.OptionId"#selected($selected)>
     #foreach ($i in [0..$option.Level])#if($i != 0)&nbsp;&nbsp;&nbsp;&nbsp;#end#end
           $option.DisplayValue</option>
+    #end
   #end
 </select>
 #end
