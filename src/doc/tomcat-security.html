@@ -39,21 +39,21 @@ Violations</a></li>
 
 <h3>
 <a NAME="why"></a>Why use a SecurityManager?</h3>
-The Java SecurityManager is what allows your browser to run an applet in
-its own sandbox to prevent untrusted code from accessing files on your
+The Java SecurityManager is what allows a web browser to run an applet
+in its own sandbox to prevent untrusted code from accessing files on the
 local system, connecting to a host other than the one the applet was loaded
 from, etc.
 <p>In the same way the SecurityManager protects you from an untrusted applet
 running in your browser, use of a SecurityManager while running Tomcat
 can protect your server from trojan servlets, JSP's, JSP beans, and tag
-libraries.&nbsp; Or even inadvertant mistakes.
-<p>Imagine if someone who is authorized to publish JSP's on your site invadvertantly
+libraries.&nbsp; Or even inadvertent mistakes.
+<p>Imagine if someone who is authorized to publish JSP's on your site invadvertently
 included the following in their JSP:
 <blockquote>
 <pre>&lt;% System.exit(1); %></pre>
 </blockquote>
 
-<p><br>Everytime that JSP was executed by Tomcat, Tomcat would exit.
+<p><br>Every time that JSP was executed by Tomcat, Tomcat would exit.
 <p>Using the Java SecurityManager is just one more line of defense a system
 administrator can use to keep the server secure and reliable.
 <h3>
@@ -65,9 +65,9 @@ Use of the SecurityManager requires a JVM that supports JDK 1.2.
 Implementation of a SecurityManager in Tomcat has not been fully tested
 to ensure the security of Tomcat.&nbsp; No special Permissions have been
 created to prevent access to internal Tomcat classes by JSP's, web applications,
-servlets, beans, and tag libraries. Make sure that you are satisfied with
+servlets, beans, or tag libraries. Make sure that you are satisfied with
 your SecurityManager configuration before allowing untrusted users to publish
-web applications, JSP's, servlets, beans, or tag-libraries.
+web applications, JSP's, servlets, beans, or tag libraries.
 <p>Still, running with a SecurityManager is definitely better than running
 without one.
 <br>&nbsp;
@@ -78,7 +78,7 @@ Tomcat will have.&nbsp; There are a number of Permission classes as part
 of the JDK and you can even create your own Permission class for use in
 your own web applications.
 <p>This is just a short summary of the System SecurityManager Permission
-classes applicable to Tomcat.&nbsp; Please refer to the JDK documenation
+classes applicable to Tomcat.&nbsp; Please refer to the JDK documentation
 for more information on using the below Permissions.
 <p><b>java.util.PropertyPermission</b>
 <br>&nbsp;&nbsp;&nbsp; Controls read/write access to JVM properties such
@@ -112,101 +112,98 @@ tomcat.policy file can be edited by hand or you can use the <b>policytool
 that comes with Java 1.2.
 <p>Entries in the tomcat.policy file use the standard java.policy file
 format as follows:
-<pre>// Example policy file entry
+<table border=0><tr><td><pre>// Example policy file entry
 
 grant [signedBy &lt;signer> [,codeBase &lt;code source>] {
-
 &nbsp;&nbsp;&nbsp; permission &lt;class> [&lt;name> [, &lt;action list>]];
-
 };
-
-The <b>signedBy</b> and <b>codeBase </b>entries are optional when granting permissions.</pre>
-Comment lines are preceded by //.
+</td></tr></table></pre>
+The <b>signedBy</b> and <b>codeBase </b>entries are optional when granting permissions.
+Comment lines begin with // and end at a new line.
 <p>The codeBase is in the form of a URL and for a file URL can use the
 ${java.home} and ${tomcat.home} properties which are expanded out to the
 directory paths defined for them.
 <p>Default tomcat.policy file
-<pre>// Permissions for tomcat.
+<table border=0><tr><td><pre>// Permissions for tomcat.
 
 // javac needs this
 grant codeBase "file:${java.home}/lib/-" {
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; permission java.security.AllPermission;
+&nbsp; permission java.security.AllPermission;
 };
 
 // Tomcat gets all permissions
 grant codeBase "file:${tomcat.home}/lib/-" {
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; permission java.security.AllPermission;
+&nbsp; permission java.security.AllPermission;
 };
 
 grant codeBase "file:${tomcat.home}/classes/-" {
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; permission java.security.AllPermission;
+&nbsp; permission java.security.AllPermission;
 };
 
 // Example webapp policy
 // By default we grant read access on webapp dir
 // and read of the line.separator PropertyPermission
 grant codeBase "file:${tomcat.home}/webapps/examples" {
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; permission java.net.SocketPermission "localhost:1024-", "listen";
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; permission java.util.PropertyPermission "*", "read";
-};</pre>
+&nbsp; permission java.net.SocketPermission "localhost:1024-","listen";
+&nbsp; permission java.util.PropertyPermission "*","read";
+};</td></tr></table></pre>
 
 <p><br>Here is an example where in addition to the above, we want to grant
 the examples web application the ability to connect to the localhost smtp
 port so that it can send mail.
-<pre>grant codeBase "file:${tomcat.home}/webapps/examples" {
-&nbsp;&nbsp;&nbsp; permission java.net.SocketPermission "localhost:25",
-"connect";
-&nbsp;&nbsp;&nbsp; permission java.net.SocketPermission "localhost:1024","listen";
-&nbsp;&nbsp;&nbsp; permission java.util.PropertyPermission "*", "read";
-};</pre>
+<table border=0><tr><td><pre>grant codeBase "file:${tomcat.home}/webapps/examples" {
+&nbsp; permission java.net.SocketPermission "localhost:25","connect";
+&nbsp; permission java.net.SocketPermission "localhost:1024","listen";
+&nbsp; permission java.util.PropertyPermission "*","read";
+};</td></tr></table></pre>
 Now what if we wanted to give all contexts not configured by their own
 grant entry some default permissions in addition to what Tomcat assigns
 by default.
-<pre>grant {
-&nbsp;&nbsp;&nbsp; permission java.net.SocketPermission "localhost:1024","listen";
-&nbsp;&nbsp;&nbsp; permission java.util.PropertyPermission "*", "read";
-};</pre>
+<table border=0><tr><td><pre>grant {
+&nbsp; permission java.net.SocketPermission "localhost:1024","listen";
+&nbsp; permission java.util.PropertyPermission "*","read";
+};</td></tr></table></pre>
 Finally, a more complex tomcat.policy file.&nbsp; In this case we are using
 Tomcat as an app server for a number of remote web servers.&nbsp; We want
 to limit what remote web servers can connect to Tomcat by using the Java
 SecurityManager.
 <br>&nbsp;
-<pre>// Permissions for tomcat.
+<table border=0><tr><td><pre>// Permissions for tomcat.
 // javac needs this
 grant codeBase "file:${java.home}/lib/-" {
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; permission java.security.AllPermission;
+&nbsp; permission java.security.AllPermission;
 };
 
 // Tomcat with IP filtering
 grant codeBase "file:${tomcat.home}/lib/-" {
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // Tomcat should be able to read/write all properties
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; permission java.util.PropertyPermission "*", "read,write";
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // Tomcat needs to be able to read files in its own directory
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; permission java.io.FilePermission "/usr/local/kinetic/tomcat/-", "read";
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // Tomcat has to be able to write its logs
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; permission java.io.FilePermission "/usr/local/kinetic/tomcat/logs/-", "read,write";
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // Tomcat has to be able to write to the conf directory
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; permission java.io.FilePermission "/usr/local/kinetic/tomcat/conf/-", "read,write";
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // Tomcat has to be able to compile JSP's
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; permission java.io.FilePermission "/usr/local/kinetic/tomcat/work/-", "read,write,delete";
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // Tomcat needs all the RuntimePermission's
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; permission java.lang.RuntimePermission "*";
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // Needed so Tomcat can set security policy for a Context
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; permission java.security.SecurityPermission "*";
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // Needed so that Tomcat will accept connections from a remote web server
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // Replace XXX.XXX.XXX.XXX with the IP address of the remote web server
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; permission java.net.SocketPermission "XXX.XXX.XXX.XXX:1024-", "accept, listen, resolve";
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // Tomcat has to be able to use its port on the localhost
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; permission java.net.SocketPermission "localhost:1024-", "connect, accept, listen, resolve";
+&nbsp; // Tomcat should be able to read/write all properties
+&nbsp; permission java.util.PropertyPermission "*","read,write";
+&nbsp; // Tomcat needs to be able to read files in its own directory
+&nbsp; permission java.io.FilePermission "${tomcat.home}/-","read";
+&nbsp; // Tomcat has to be able to write its logs
+&nbsp; permission java.io.FilePermission "${tomcat.home}/logs/-","read,write";
+&nbsp; // Tomcat has to be able to write to the conf directory
+&nbsp; permission java.io.FilePermission "${tomcat.home}/conf/-","read,write";
+&nbsp; // Tomcat has to be able to compile JSP's
+&nbsp; permission java.io.FilePermission "${tomcat.home}/work/-","read,write,delete";
+&nbsp; // Tomcat needs all the RuntimePermission's
+&nbsp; permission java.lang.RuntimePermission "*";
+&nbsp; // Needed so Tomcat can set security policy for a Context
+&nbsp; permission java.security.SecurityPermission "*";
+&nbsp; // Needed so that Tomcat will accept connections from a remote web server
+&nbsp; // Replace XXX.XXX.XXX.XXX with the IP address of the remote web server
+&nbsp; permission java.net.SocketPermission "XXX.XXX.XXX.XXX:1024-","accept,listen,resolve";
+&nbsp; // Tomcat has to be able to use its port on the localhost
+&nbsp; permission java.net.SocketPermission "localhost:1024-","connect,accept,listen,resolve";
 };
 
 // Example webapp policy
 // By default we grant read access on webapp dir
 // and read of the line.separator PropertyPermission
 grant codeBase "file:${tomcat.home}/webapps/examples" {
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; permission java.net.SocketPermission "localhost:1024-", "listen";
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; permission java.util.PropertyPermission "*", "read";
-};</pre>
+&nbsp; permission java.net.SocketPermission "localhost:1024-","listen";
+&nbsp; permission java.util.PropertyPermission "*","read";
+};</td></tr></table></pre>
 
 <p><br><b>server.xml</b>
 <p>Uncomment out the entry in server.xml for the ContextInterceptor which
@@ -216,7 +213,7 @@ defines the class named PolicyInterceptor.
 <a NAME="start"></a>Starting Tomcat with a SecurityManager</h3>
 Once you have configured the tomcat.policy and server.xml files for use
 with a SecurityManager, Tomcat can be started with the SecurityManager
-in place by using the "-security" opton to bin/startup.bat or bin/startup.sh.
+in place by using the "-security" option to bin/startup.bat or bin/startup.sh.
 <br>&nbsp;
 <h3>
 <a NAME="violation"></a>What happens when the SecurityManager detects a
