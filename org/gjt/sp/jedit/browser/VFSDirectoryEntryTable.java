@@ -32,13 +32,14 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.Set;
 import org.gjt.sp.jedit.io.VFS;
+import org.gjt.sp.jedit.io.VFSManager;
 import org.gjt.sp.jedit.MiscUtilities;
 import org.gjt.sp.util.Log;
 //}}}
 
 /**
  * @author Slava Pestov
- * @version $Id: VFSDirectoryEntryTable.java,v 1.13 2003/05/26 02:57:39 spestov Exp $
+ * @version $Id: VFSDirectoryEntryTable.java,v 1.14 2003/05/29 02:46:48 spestov Exp $
  * @since jEdit 4.2pre1
  */
 public class VFSDirectoryEntryTable extends JTable
@@ -153,7 +154,10 @@ public class VFSDirectoryEntryTable extends JTable
 			return;
 
 		if(entry.expanded)
-			model.collapse(row);
+		{
+			model.collapse(VFSManager.getVFSForPath(
+				entry.dirEntry.path),row);
+		}
 		else
 		{
 			browserView.clearExpansionState();
@@ -162,7 +166,8 @@ public class VFSDirectoryEntryTable extends JTable
 	} //}}}
 
 	//{{{ setDirectory() method
-	public void setDirectory(Object node, ArrayList list, Set tmpExpanded)
+	public void setDirectory(VFS vfs, Object node, ArrayList list,
+		Set tmpExpanded)
 	{
 		timer.stop();
 		typeSelectBuffer.setLength(0);
@@ -172,12 +177,13 @@ public class VFSDirectoryEntryTable extends JTable
 		if(node == null)
 		{
 			startIndex = 0;
-			model.setRoot(list);
+			model.setRoot(vfs,list);
 		}
 		else
 		{
 			startIndex =
 				model.expand(
+				vfs,
 				(VFSDirectoryEntryTableModel.Entry)node,
 				list);
 			startIndex++;
@@ -228,7 +234,7 @@ public class VFSDirectoryEntryTable extends JTable
 			"foo","foo","foo",VFS.DirectoryEntry.FILE,0L,false);
 		setRowHeight(renderer.getTableCellRendererComponent(
 			this,new VFSDirectoryEntryTableModel.Entry(template,0),
-			false,false,0,1).getPreferredSize().height);
+			false,false,0,0).getPreferredSize().height);
 		Dimension prefSize = getPreferredSize();
 		setPreferredScrollableViewportSize(new Dimension(prefSize.width,
 			getRowHeight() * 12));
@@ -259,7 +265,10 @@ public class VFSDirectoryEntryTable extends JTable
 				{
 					if(model.files[row].expanded)
 					{
-						model.collapse(row);
+						model.collapse(
+							VFSManager.getVFSForPath(
+							model.files[row].dirEntry.path),
+							row);
 						break;
 					}
 

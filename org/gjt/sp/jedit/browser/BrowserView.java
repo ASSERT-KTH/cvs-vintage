@@ -37,7 +37,7 @@ import org.gjt.sp.jedit.*;
 /**
  * VFS browser tree view.
  * @author Slava Pestov
- * @version $Id: BrowserView.java,v 1.72 2003/05/28 22:37:18 spestov Exp $
+ * @version $Id: BrowserView.java,v 1.73 2003/05/29 02:46:48 spestov Exp $
  */
 class BrowserView extends JPanel
 {
@@ -203,7 +203,8 @@ class BrowserView extends JPanel
 			parentDirectories.ensureIndexIsVisible(index);
 		} //}}}
 
-		table.setDirectory(node,directory,tmpExpanded);
+		table.setDirectory(VFSManager.getVFSForPath(path),
+			node,directory,tmpExpanded);
 	} //}}}
 
 	//{{{ updateFileView() method
@@ -479,7 +480,7 @@ class BrowserView extends JPanel
 
 			int row = table.rowAtPoint(p);
 			int column = table.columnAtPoint(p);
-			if(column == 0)
+			if(column == 0 && row != -1)
 			{
 				VFSDirectoryEntryTableModel.Entry entry
 					= (VFSDirectoryEntryTableModel.Entry)
