@@ -1753,16 +1753,23 @@ e.printStackTrace();
         return intake;
     }
 
-
     /**
      * Performs search on current query (which is stored in user session).
     */
     public IteratorWithSize getCurrentSearchResults()
     {
+        return getCurrentSearchResults(false);
+    }
+
+    /**
+     * Performs search on current query (which is stored in user session).
+    */
+    public IteratorWithSize getCurrentSearchResults(boolean mergePartialQueryResults)
+    {
         IteratorWithSize matchingIssueIds = null;
         try 
         {
-            matchingIssueIds = getUnprotectedCurrentSearchResults();
+            matchingIssueIds = getUnprotectedCurrentSearchResults(mergePartialQueryResults);
         }
         catch (MaxConcurrentSearchException e)
         {
@@ -1790,7 +1797,7 @@ e.printStackTrace();
      * Caches the result of getUncachedCurrentSearchResults for the remainder
      * of the request.
      */
-    private IteratorWithSize getUnprotectedCurrentSearchResults()
+    private IteratorWithSize getUnprotectedCurrentSearchResults(boolean mergePartialQueryResults)
         throws Exception
     {
         // normally we would use "this" as the first arg to ScarabCache.get,
@@ -1806,7 +1813,7 @@ e.printStackTrace();
             ScarabCache.get(queryString, "getUnprotectedCurrentSearchResults");
         if (obj == null) 
         {       
-            results = getUncachedCurrentSearchResults();
+            results = getUncachedCurrentSearchResults(mergePartialQueryResults);
             ScarabCache.put(results, queryString, 
                             "getUnprotectedCurrentSearchResults");
         }
@@ -1820,7 +1827,7 @@ e.printStackTrace();
     /**
      * Performs search on current query (which is stored in user session).
      */
-    private IteratorWithSize getUncachedCurrentSearchResults()
+    private IteratorWithSize getUncachedCurrentSearchResults(boolean mergePartialQueryResults)
         throws Exception
     {
         ScarabLocalizationTool l10n = getLocalizationTool();
@@ -1840,7 +1847,7 @@ e.printStackTrace();
             }
             else 
             {
-                queryResults = search.getQueryResults();
+                queryResults = search.getQueryResults(mergePartialQueryResults);
                 if (!queryResults.hasNext())
                 {
                     setInfoMessage(L10NKeySet.NoMatchingIssues);

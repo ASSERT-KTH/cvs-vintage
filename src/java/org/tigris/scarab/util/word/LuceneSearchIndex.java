@@ -61,7 +61,6 @@ import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.context.Context;
 import org.apache.avalon.framework.context.ContextException;
 import org.apache.avalon.framework.context.Contextualizable;
-import org.apache.fulcrum.InitializationException;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
 import org.apache.lucene.index.IndexReader;
@@ -89,7 +88,7 @@ import com.workingdogs.village.Record;
  * Support for searching/indexing text
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: LuceneSearchIndex.java,v 1.2 2005/01/06 21:03:55 dabbous Exp $
+ * @version $Id: LuceneSearchIndex.java,v 1.3 2005/01/09 15:28:09 dabbous Exp $
  */
 public class LuceneSearchIndex 
     implements SearchIndex, Configurable,Contextualizable,Initializable
@@ -136,11 +135,19 @@ public class LuceneSearchIndex
         attachmentQueryText.add(text);
     }
 
+    public Long[] getRelatedIssues()
+    throws Exception
+    {
+        return getRelatedIssues(false); // perform AND operation
+    }
+
     /**
      *  returns a list of related issue IDs sorted by relevance descending.
      *  Should return an empty/length=0 array if search returns no results.
+     *  If mergeResults==true, internally merges results of partial queries,
+     *  otherwise performs an implicit AND operation on partial queries.
      */
-    public Long[] getRelatedIssues() 
+    public Long[] getRelatedIssues(boolean mergeResults) 
         throws Exception
     {
         Long[] result;
@@ -154,7 +161,8 @@ public class LuceneSearchIndex
                 Integer[] ids = (Integer[])attributeIds.get(j);
                 String query = (String) queryText.get(j);
                 issueIds = performPartialQuery(ATTRIBUTE_ID, 
-                                               ids, query, issueIds);
+                                               ids, query, issueIds,
+                                               mergeResults);
             }
 
             // attachments
@@ -163,7 +171,8 @@ public class LuceneSearchIndex
                 Integer[] ids = (Integer[])attachmentIds.get(j);
                 String query = (String) attachmentQueryText.get(j);
                 issueIds = performPartialQuery(ATTACHMENT_TYPE_ID, 
-                                               ids, query, issueIds);
+                                               ids, query, issueIds,
+                                               mergeResults);
             }
 
             // put results into final form
@@ -182,7 +191,8 @@ public class LuceneSearchIndex
     }
 
     private List performPartialQuery(String key, Integer[] ids, 
-                                     String query, List issueIds)
+                                     String query, List issueIds,
+                                     boolean mergeResults)
         throws ScarabException, IOException
     {
         StringBuffer fullQuery = new StringBuffer(query.length()+100);
@@ -258,8 +268,16 @@ public class LuceneSearchIndex
                 }
                 else 
                 {
-                    // perform an AND operation
-                    removeUniqueElements(issueIds, deduper);
+                    if (mergeResults)
+                    {
+                        // perform OR operation
+                        mergeResults(issueIds, deduper);
+                    }
+                    else
+                    {
+                        // perform an AND operation
+                        removeUniqueElements(issueIds, deduper);
+                    }
                 }
         return issueIds;
     }
@@ -277,6 +295,30 @@ public class LuceneSearchIndex
                 Log.get().debug("removing issueId from search: " + obj);
                 list.remove(i);
             }
+        }
+    }
+
+    /**
+     * Elements from the map, which are not in list are added to the list
+     */
+    private void mergeResults(List list, Map map)
+    {
+        for (int i=list.size()-1; i>=0; i--) 
+        {
+            Long issueId = (Long)list.get(i);
+            String id = issueId.toString();
+            if (map.containsKey(id)) 
+            {
+                map.remove(id);
+                Log.get().debug("removed duplicate issueId from map: " + id);
+            }
+        }
+        Iterator iter = map.keySet().iterator();
+        while(iter.hasNext())
+        {
+            String id = (String)iter.next();
+            list.add(new Long(Long.parseLong(id)));
+            Log.get().debug("Add issueId from map to List: " + id);
         }
     }
 

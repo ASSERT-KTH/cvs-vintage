@@ -56,7 +56,7 @@ import org.tigris.scarab.om.Attachment;
  * Support for searching/indexing text
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: SearchIndex.java,v 1.16 2005/01/06 21:03:55 dabbous Exp $
+ * @version $Id: SearchIndex.java,v 1.17 2005/01/09 15:28:09 dabbous Exp $
  */
 public interface SearchIndex
 {
@@ -88,6 +88,16 @@ public interface SearchIndex
      *  Should return an empty/length=0 array if search returns no results.
      */
     Long[] getRelatedIssues() 
+        throws Exception;
+
+    /**
+     *  returns a list of related issue IDs sorted by relevance descending.
+     *  Should return an empty/length=0 array if search returns no results.
+     *  if(mergeResults==false) performs an implicit AND on internal partial queries.
+     *  if(mergeResults==true) performs an implicit OR on internal partial queries.
+     *  The method getRelatedIssue() is equivalent to getRelatedIssues(false); 
+     */
+    Long[] getRelatedIssues(boolean mergeResults) 
         throws Exception;
 
     /**

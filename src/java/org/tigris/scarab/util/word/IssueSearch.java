@@ -113,7 +113,7 @@ import org.tigris.scarab.util.ScarabException;
  * not a more specific type of Issue.
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: IssueSearch.java,v 1.131 2005/01/06 21:03:55 dabbous Exp $
+ * @version $Id: IssueSearch.java,v 1.132 2005/01/09 15:28:09 dabbous Exp $
  */
 public class IssueSearch 
     extends Issue
@@ -354,7 +354,7 @@ public class IssueSearch
         String[] perms = {ScarabSecurity.ISSUE__SEARCH};
         MITList searchableList = mitList
             .getPermittedSublist(perms, searcher);
-        System.out.println("\n\nHardocding search allowed\n\n");
+        //System.out.println("\n\nHardocding search allowed\n\n");
         isSearchAllowed = searchableList.size() > 0;
         isSearchAllowed=true;
 
@@ -1820,7 +1820,7 @@ public class IssueSearch
     }
 
 
-    private Long[] getTextMatches(List attValues)
+    private Long[] getTextMatches(List attValues, boolean mergeTextResults)
         throws Exception
     {
         boolean searchCriteriaExists = false;
@@ -1864,7 +1864,15 @@ public class IssueSearch
 
         if (searchCriteriaExists) 
         {
-            matchingIssueIds = searchIndex.getRelatedIssues();    
+            try 
+            {
+                matchingIssueIds = searchIndex.getRelatedIssues(mergeTextResults);    
+            }
+            catch (Exception e)
+            {
+                SearchFactory.releaseInstance(searchIndex);
+                throw e;
+            }
         }
 
         SearchFactory.releaseInstance(searchIndex);
@@ -1926,7 +1934,8 @@ public class IssueSearch
 
     private Long[] addCoreSearchCriteria(StringBuffer fromClause, 
                                               StringBuffer whereClause,
-                                              Set tableAliases)
+                                              Set tableAliases,
+                                              boolean mergePartialQueryResults)
         throws Exception
     {
         if (isXMITSearch()) 
@@ -1954,7 +1963,7 @@ public class IssueSearch
         addSelectedAttributes(fromClause, setAttValues, tableAliases);
 
         // search for issues based on text
-        Long[] matchingIssueIds = getTextMatches(setAttValues);
+        Long[] matchingIssueIds = getTextMatches(setAttValues, mergePartialQueryResults);
 
         if (matchingIssueIds == null || matchingIssueIds.length > 0)
         {
@@ -1985,11 +1994,25 @@ public class IssueSearch
     /**
      * Get a List of Issues that match the criteria given by this
      * SearchIssue's searchWords and the quick search attribute values.
-     *
+     * Perform a logical AND on partial queries (in text searches)
      * @return a <code>List</code> value
      * @exception Exception if an error occurs
      */
     public IteratorWithSize getQueryResults()
+        throws ComplexQueryException, Exception
+    {
+        return getQueryResults(false);
+    }
+
+    /**
+     * Get a List of Issues that match the criteria given by this
+     * SearchIssue's searchWords and the quick search attribute values.
+     * if (mergePartialQueries==true) perform a logical OR on partial queries,
+     * otherwise perform a logical AND on partial queries.
+     * @return a <code>List</code> value
+     * @exception Exception if an error occurs
+     */
+    public IteratorWithSize getQueryResults(boolean mergePartialQueries)
         throws ComplexQueryException, Exception
     {
         checkModified();
@@ -2004,7 +2027,8 @@ public class IssueSearch
             StringBuffer where = new StringBuffer();
             joinCounter = 0;
             Long[] matchingIssueIds = addCoreSearchCriteria(from, where,
-                                                                 tableAliases);
+                                                            tableAliases,
+                                                            mergePartialQueries);
             if (joinCounter > MAX_INNER_JOIN) 
             {
                 //WORK [HD} Need refactoring here. How can a user
@@ -2016,7 +2040,7 @@ public class IssueSearch
             // text to search, so continue the search process.
             if (matchingIssueIds == null || matchingIssueIds.length > 0) 
             {            
-                lastQueryResults = getQueryResults(from, where, tableAliases);
+                lastQueryResults = getQueryResults(from, where, tableAliases, mergePartialQueries);
             }
             else 
             {
@@ -2027,8 +2051,14 @@ public class IssueSearch
         return lastQueryResults;
     }
 
-
     public int getIssueCount()
+    throws ComplexQueryException, Exception
+    {
+        
+        return getIssueCount(false);
+    }
+
+    public int getIssueCount(boolean mergePartialQueries)
         throws ComplexQueryException, Exception
     {
         checkModified();
@@ -2041,7 +2071,7 @@ public class IssueSearch
             }
             else 
             {
-                count = countFromDB();
+                count = countFromDB(mergePartialQueries);
             }
             lastTotalIssueCount = count;
         }
@@ -2049,7 +2079,7 @@ public class IssueSearch
         return count;
     }
 
-    private int countFromDB()
+    private int countFromDB(boolean mergePartialQueries)
         throws ComplexQueryException, Exception
     {
         int count = 0;
@@ -2057,7 +2087,8 @@ public class IssueSearch
         StringBuffer where = new StringBuffer();
         joinCounter = 0;
         Long[] matchingIssueIds = addCoreSearchCriteria(from, where,
-                                                        new HashSet());
+                                                        new HashSet(),
+                                                        mergePartialQueries);
         if (joinCounter > MAX_INNER_JOIN) 
         {
             //WORK [HD} Need refactoring here. How can a user
@@ -2277,7 +2308,8 @@ public class IssueSearch
 
     private IteratorWithSize getQueryResults(StringBuffer from, 
                                              StringBuffer where,
-                                             Set tableAliases)
+                                             Set tableAliases,
+                                             boolean mergePartialQueries)
         throws TorqueException, ComplexQueryException, Exception
     {
         // return a List of QueryResult objects
@@ -2295,7 +2327,7 @@ public class IssueSearch
             // now using 'conn'.  It leaves the possibility of running the two
             // queries within a transaction as well.  We also use the result 
             // here to avoid the more complex query if there are no results.
-            int count = getIssueCount();
+            int count = getIssueCount(mergePartialQueries);
             if (count > 0) 
             {
                 result = new QueryResultIterator(this, count, from, where,

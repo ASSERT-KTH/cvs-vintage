@@ -48,6 +48,7 @@ package org.tigris.scarab.actions;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -63,6 +64,7 @@ import org.apache.turbine.TemplateContext;
 import org.apache.turbine.Turbine;
 import org.tigris.scarab.actions.base.RequireLoginFirstAction;
 import org.tigris.scarab.om.Attribute;
+import org.tigris.scarab.om.AttributeType;
 import org.tigris.scarab.om.MITList;
 import org.tigris.scarab.om.MITListManager;
 import org.tigris.scarab.om.Module;
@@ -79,6 +81,7 @@ import org.tigris.scarab.tools.localization.L10NKeySet;
 import org.tigris.scarab.util.IteratorWithSize;
 import org.tigris.scarab.util.Log;
 import org.tigris.scarab.util.ScarabConstants;
+import org.tigris.scarab.util.ScarabRuntimeException;
 import org.tigris.scarab.util.ScarabUtil;
 import org.tigris.scarab.util.export.ExportFormat;
 import org.tigris.scarab.util.word.IssueSearch;
@@ -89,7 +92,7 @@ import org.tigris.scarab.util.word.IssueSearch;
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: Search.java,v 1.152 2005/01/06 21:03:54 dabbous Exp $
+ * @version $Id: Search.java,v 1.153 2005/01/09 15:28:09 dabbous Exp $
  */
 public class Search extends RequireLoginFirstAction
 {
@@ -589,28 +592,56 @@ public class Search extends RequireLoginFirstAction
                 user.setMostRecentQuery(query);
                 setTarget(data, "IssueList.vm");
             }
+
             else if (go.equals("quickSearch"))
             {
-                // this currently returns all visible
-                // issues. It should also take into
-                // acocunt the "quickSearch" parameter
-                // which tells for what String we shall
-                // search (TODO: [HD])
-                Module module = user.getCurrentModule();
-                user.setCurrentMITList(MITListManager.getAllModulesAllIssueTypesList(user));
+                String searchString = data.getParameters().get("searchString");
+                if(searchString==null || searchString.equals(""))
+                {
+                    scarabR.setAlertMessage(L10NKeySet.QueryParserError);
+                }
+                else
+                {
+                    Module module = user.getCurrentModule();
+                    MITList mitList = MITListManager.getSingleModuleAllIssueTypesList(module,user);
+                    user.setCurrentMITList(mitList); 
+                               
+                    Map attributeMap = new Hashtable();
+                    //List modules = mitList.getModules();
+                    //for (int index=0; index < modules.size(); index++)
+                    //{
+                    //    Module module = (Module)modules.get(index);
+                    String moduleName = module.getName();
+                    List attributes = module.getAllAttributes();
+                    for( int aindex = 0; aindex < attributes.size(); aindex++)
+                    {
+                        Attribute attribute = (Attribute) attributes.get(aindex);
+                        AttributeType type = attribute.getAttributeType();
+                        String typeName = type.getName();
+                        String attributeName = attribute.getName();
+                        if(typeName.equals("string") || typeName.equals("long-string"))
+                        {
+                            if (attribute.isTextAttribute())
+                            {
+                                Integer id = attribute.getAttributeId();
+                                if(attributeMap.get(id) == null)
+                                {
+                                    attributeMap.put(id,attribute);
+                                }
+                            }
+                        }
+                    }
+                    //}
 
-                String userId = user.getQueryKey();
-                StringBuffer sb = new StringBuffer(26 + 2*userId.length());
-                String query = sb.append("&user_attr_").append(userId).append("=any")
-                    .toString();
-                user.setMostRecentQuery(query);
+                    quickSearch(searchString, attributeMap, user, context);                
+                }
                 setTarget(data, "IssueList.vm");
             }
             else
             {
                 setTarget(data, go);
             }
-            if (go.equals("myIssues") || go.equals("mostRecent") || go.equals("quickSearch"))
+            if (go.equals("myIssues") || go.equals("mostRecent"))
             {
                 IteratorWithSize searchResults = null;
                 try
@@ -636,6 +667,54 @@ public class Search extends RequireLoginFirstAction
                 Turbine.getConfiguration()
                            .getString("template.homepage", "Index.vm"));
             setTarget(data, nextTemplate);
+        }
+    }
+
+    /**
+     * @param attributeMap
+     * @return
+     */
+    private void quickSearch(String searchString, Map attributeMap, ScarabUser user, TemplateContext context)
+    {
+        String query;
+
+        String userId = user.getQueryKey();
+
+        String queryStart = "&user_attr_"+userId+"=any"
+                         + "&intake-grp=attv"
+                         + "&intake-grp=search"
+                         + "&searchsp=asc"
+                         + "&searchtype=advanced";
+
+        final String queryEnd = "&searchsctoi=0"
+                              +  "&resultsperpage=25"
+                              +  "&searchscfoi=0";
+
+        Iterator iter = attributeMap.keySet().iterator();
+        query = queryStart;
+        while(iter.hasNext())
+        {
+            Integer id = (Integer)iter.next();
+            query += "&attv__"+id+"val="+searchString;
+        }
+        
+        query += queryEnd;
+
+        user.setMostRecentQuery(query);
+        
+        IteratorWithSize searchResults = null;
+        try
+        {
+            searchResults = scarabR.getCurrentSearchResults(true);
+        }
+        catch (java.lang.IllegalArgumentException e)
+        {
+            // Swallow this exception.
+            Log.get().debug("", e);
+        }
+        if (searchResults != null && searchResults.size() > 0)
+        {
+            context.put("issueList", searchResults);
         }
     }
 
