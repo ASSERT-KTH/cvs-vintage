@@ -70,7 +70,7 @@ import org.tigris.scarab.tools.ScarabRequestTool;
  * This class deals with modifying Global Attributes.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: GlobalAttributes.java,v 1.11 2002/02/28 01:43:09 elicia Exp $
+ * @version $Id: GlobalAttributes.java,v 1.12 2002/03/05 02:18:11 elicia Exp $
  */
 public class GlobalAttributes extends RequireLoginFirstAction
 {
@@ -81,16 +81,20 @@ public class GlobalAttributes extends RequireLoginFirstAction
     public void doSave( RunData data, TemplateContext context ) 
         throws Exception
     {
-        String template = data.getParameters()
-            .getString(ScarabConstants.TEMPLATE, null);
-        String nextTemplate = data.getParameters().getString(
-            ScarabConstants.NEXT_TEMPLATE, template );
-
         IntakeTool intake = (IntakeTool)context
             .get(ScarabConstants.INTAKE_TOOL);
+        String attributeType = data.getParameters().getString("attributeType");
         if ( intake.isAllValid() ) 
         {
-            List allAttributes = AttributePeer.getAttributes();
+            List allAttributes;
+            if (attributeType != null && attributeType.equals("user"))
+            {
+                allAttributes = AttributePeer.getAttributes("user");
+            }
+            else
+            {
+                allAttributes = AttributePeer.getAttributes();
+            }
             for (int i=0;i<allAttributes.size();i++)
             {
                 Attribute attr = (Attribute) allAttributes.get(i);
@@ -119,10 +123,8 @@ public class GlobalAttributes extends RequireLoginFirstAction
     public void doCreatenew( RunData data, TemplateContext context )
         throws Exception
     {
-        String template = data.getParameters()
-            .getString(ScarabConstants.TEMPLATE, null);
         String nextTemplate = data.getParameters().getString(
-            ScarabConstants.OTHER_TEMPLATE, template );
+            ScarabConstants.OTHER_TEMPLATE, "admin, GlobalAttributeEdit.vm" );
         setTarget(data, nextTemplate);
 
         ScarabRequestTool scarabR = getScarabRequestTool(context);
