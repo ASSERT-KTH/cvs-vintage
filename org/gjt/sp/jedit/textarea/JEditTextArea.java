@@ -65,7 +65,7 @@ import org.gjt.sp.util.Log;
  *
  * @author Slava Pestov
  * @author John Gellene (API documentation)
- * @version $Id: JEditTextArea.java,v 1.336 2005/01/20 01:04:24 spestov Exp $
+ * @version $Id: JEditTextArea.java,v 1.337 2005/01/20 04:45:27 spestov Exp $
  */
 public class JEditTextArea extends JComponent
 {
@@ -1975,6 +1975,17 @@ forward_scan:		do
 	//}}}
 
 	//{{{ Caret
+
+	//{{{ caretAutoScroll() method
+	/**
+	 * Return if change in buffer should scroll this text area.
+	 * @since jEdit 4.3pre2
+	 */
+	public boolean caretAutoScroll()
+	{
+		return view == jEdit.getActiveView()
+			&& view.getTextArea() == this;
+	} //}}}
 
 	//{{{ addStructureMatcher() method
 	/**
