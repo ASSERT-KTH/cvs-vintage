@@ -1,4 +1,4 @@
-// $Id: UMLExpressionModel.java,v 1.11 2004/09/14 20:12:16 mvw Exp $
+// $Id: UMLExpressionModel.java,v 1.12 2004/11/27 11:19:40 mvw Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -31,7 +31,7 @@ import ru.novosoft.uml.MElementEvent;
 
 /**
  * @deprecated as of ArgoUml 0.13.5 (10-may-2003),
- *             replaced by ?,
+ *             replaced by UMLExpressionModel2,
  *             this class is part of the 'old'(pre 0.13.*) 
  *             implementation of proppanels
  *             that used reflection a lot.
