@@ -126,27 +126,29 @@ public final class Jdk12Interceptor extends  BaseInterceptor implements RequestI
     // if we are in JDK1.2
     // XXX move it to interceptor !!!
     final private void fixJDKContextClassLoader( Context ctx ) {
-	ClassLoader cl=ctx.getServletLoader().getClassLoader();
+	final ClassLoader cl=ctx.getServletLoader().getClassLoader();
 	if( cl==null ) {
 	    System.out.println("ERROR: Jdk12Interceptor: classloader==null");
 	    return;
 	}
-// 	java.security.AccessController.doPrivileged(new java.security.PrivilegedAction() {
-// 	    public Object run()  {
-// 		Thread.currentThread().setContextClassLoader(cl);
-// 		return null;
-// 	    }
-// 	});
-	try {
-	    Thread t=Thread.currentThread();
-	    t.setContextClassLoader( cl );
-	    //	    System.out.println("Jdk12Interceptor: Setting CL " + cl );
-	} catch( Throwable t ) {
-	    t.printStackTrace();
-	}
+	// this may be called from include(), in which case we
+	// have the codebase==jsp or servlet
+	java.security.AccessController.doPrivileged(new
+	    java.security.PrivilegedAction()
+	    {
+		public Object run()  {
+		    Thread.currentThread().setContextClassLoader(cl);
+		    return null;
+		}
+	    });
+	
+// 	try {
+// 	    Thread t=Thread.currentThread();
+// 	    t.setContextClassLoader( cl );
+// 	    //	    System.out.println("Jdk12Interceptor: Setting CL " + cl );
+// 	} catch( Throwable t ) {
+// 	    t.printStackTrace();
+// 	}
     }
-
-    
-
     
 }

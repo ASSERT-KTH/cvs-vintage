@@ -258,6 +258,13 @@ public class ContextManager {
      */ 
     public void setWorkDir( String wd ) {
 	if(debug>0) log("set work dir " + wd);
+	// make it absolute
+	File f=new File( wd );
+	if( ! f.isAbsolute() ) {
+	    File wdF=getAbsolute( f );
+	    wd= wdF.getAbsolutePath();
+	}
+
 	this.workDir=wd;
     }
 
@@ -339,8 +346,8 @@ public class ContextManager {
      *  may be a better name ? ). ( Initializing is different from starting.)
      */
     public void init()  throws TomcatException {
-	log( "Tomcat install = " + getInstallDir());
-	log( "Tomcat home = " + home);
+	//	log( "Tomcat install = " + getInstallDir());
+	// log( "Tomcat home = " + home);
 	if(debug>0 ) log( "Tomcat classpath = " +  System.getProperty( "java.class.path" ));
 
 	setAccount( ACC_INIT_START, System.currentTimeMillis());
@@ -351,6 +358,7 @@ public class ContextManager {
 	}
 
     	// init contexts
+	// XXX init must be called whith no context inside !!!
 	Enumeration enum = getContexts();
 	while (enum.hasMoreElements()) {
 	    Context context = (Context)enum.nextElement();
@@ -1032,11 +1040,22 @@ public class ContextManager {
     Logger cmLog = null;
     
 
-    public void addLogger(Logger logger) {
+    public void addLogger(Logger l) {
 	// Will use this later once I feel more sure what I want to do here.
 	// -akv
 	// firstLog=false;
 	//	if("tc_log".equals( logger.getName()) cmLog=logger;
+	String path=l.getPath();
+	if( path!=null ) {
+	    File f=new File( path );
+	    if( ! f.isAbsolute() ) {
+		// Make it relative to home !
+		File wd= getAbsolute( f );
+		l.setPath( wd.getAbsolutePath() );
+	    }
+	    // create the files, ready to log.
+	} 
+	l.open();
     }
 
 

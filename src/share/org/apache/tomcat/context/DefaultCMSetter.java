@@ -82,55 +82,6 @@ public class DefaultCMSetter extends BaseInterceptor {
     public DefaultCMSetter() {
     }
 
-    public void engineInit(ContextManager cm) throws TomcatException {
-	File homeF=new File( cm.getHome());
-	
-	// Setup loggers - they may have relative paths.
-	Enumeration enum=Logger.getLoggerNames();
-	while( enum.hasMoreElements() ) {
-	    String loggerN=(String)enum.nextElement();
-	    Logger l=Logger.getLogger( loggerN );
-	    String path=l.getPath();
-	    if( path!=null ) {
-		File f=new File( path );
-		if( ! f.isAbsolute() ) {
-		    // Make it relative to home !
-		    File wd=new File(homeF , path );
-		    l.setPath( wd.getAbsolutePath() );
-		}
-		// create the files, ready to log.
-	    } 
-	    l.open();
-	}
-
-	// check if we have the right tomcat.home directory
-	// Tomcat.home is needed in several places - it keeps .dtd and default
-	// config files, etc - if it's not set probably something is wrong.
-	//
-	// It defaults to the home attribute - this is the common case anyway.
-	//
-	// XXX document all uses of tomcat.home
-	// ( as a rule: cm.getHome() is used to access all files, but if a file is not
-	// found, cm.getTomcatHome() is used)
-	// ( getHome returns the "instance" of tomcat, it may have it's own log, work, webapps,
-	//   getTomcatHome is where tomcat is installed )
-	//  Note: home defaults to tomcat.home if none is set...
-	File f=new File( cm.getInstallDir() + "/conf/web.xml");
-	if( ! f.exists() ) {
-	    throw new TomcatException( "Wrong tomcat home " +
-	                               cm.getInstallDir());
-	}
-	// update the workdir
-	String workDir=cm.getWorkDir();
-	f=new File( workDir );
-	if( ! f.isAbsolute() ) {
-	    // Make it relative to home !
-	    File wd=new File(homeF , workDir );
-	    cm.setWorkDir( wd.getAbsolutePath() );
-	}
-
-    }
-
     public void contextInit( Context ctx)
 	throws TomcatException
     {

@@ -40,6 +40,7 @@ public class WebXmlReader extends BaseInterceptor {
 	sw.setServletName( name );
 	sw.setServletClass( classN);
 	ctx.addServlet( sw );
+	sw.setLoadOnStartUp( -2147483646 );
 	return sw;
     }
     
@@ -148,7 +149,7 @@ public class WebXmlReader extends BaseInterceptor {
 	    xh.addRule("web-app/taglib/taglib-uri", xh.methodParam(0) );
 	    xh.addRule("web-app/taglib/taglib-location", xh.methodParam(1) );
 
-	    xh.addRule("web-app/env-entry", xh.methodSetter("addTaglib", 4) );
+	    xh.addRule("web-app/env-entry", xh.methodSetter("addEnvEntry", 4) );
 	    xh.addRule("web-app/env-entry/env-entry-name", xh.methodParam(0) );
 	    xh.addRule("web-app/env-entry/env-entry-type", xh.methodParam(1) );
 	    xh.addRule("web-app/env-entry/env-entry-value", xh.methodParam(2) );

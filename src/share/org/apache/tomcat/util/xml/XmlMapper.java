@@ -218,7 +218,7 @@ public class XmlMapper
 		if(System.getProperty("org.xml.sax.parser") != null )
 		    saxparser=ParserFactory.makeParser();
 		else
-		    saxparser=ParserFactory.makeParser("org.apache.crimson.parser.Parser");
+		    saxparser=ParserFactory.makeParser("com.sun.xml.parser.Parser");
 
 		saxparser.setDocumentHandler( this );
 		saxparser.setEntityResolver( this );

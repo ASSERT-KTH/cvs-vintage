@@ -86,7 +86,8 @@ public final class DefaultErrorPage extends TomcatInternalServlet {
 			HttpServletResponse responseH)
 	throws ServletException, IOException
     {
-  StringManager sm=StringManager.getManager("org.apache.tomcat.servlets",requestH.getLocale());
+	StringManager sm=StringManager.getManager("org.apache.tomcat.servlets",
+						  requestH.getLocale());
 	Request request=facadeM.getRealRequest( requestH );
 	Response response=request.getResponse();
 

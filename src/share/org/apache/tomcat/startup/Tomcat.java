@@ -45,8 +45,9 @@ public class Tomcat {
     void setHelper( XmlMapper xh ) {
  	// xh.addRule( "ContextManager", xh.objectCreate("org.apache.tomcat.core.ContextManager") );
 	xh.addRule( "ContextManager", xh.setProperties() );
-	//	xh.addRule( "ContextManager", xh.setParent( "setServer" ) );
-	//	xh.addRule( "ContextManager", xh.addChild( "setContextManager", null) );
+	//	xh.addRule( "ContextManager", xh.setParent(
+	//	"setServer" ) ); xh.addRule( "ContextManager",
+	//	xh.addChild( "setContextManager", null) );
 
 	xh.addRule( "ContextManager/ContextInterceptor", xh.objectCreate(null, "className"));
 	xh.addRule( "ContextManager/ContextInterceptor", xh.setProperties() );

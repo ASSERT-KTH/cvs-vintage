@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/runtime/JspLoader.java,v 1.8 2000/06/10 01:41:19 costin Exp $
- * $Revision: 1.8 $
- * $Date: 2000/06/10 01:41:19 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/runtime/JspLoader.java,v 1.9 2000/06/13 00:32:30 costin Exp $
+ * $Revision: 1.9 $
+ * $Date: 2000/06/13 00:32:30 $
  *
  * ====================================================================
  * 
@@ -152,8 +152,6 @@ public class JspLoader extends ClassLoader {
     }
     public InputStream getResourceAsStream(String name) {
 	if( debug>0) log("getResourcesAsStream()" + name );
-	if( parent != null && parent instanceof org.apache.tomcat.loader.AdaptiveClassLoader )
-	    return ((org.apache.tomcat.loader.AdaptiveClassLoader)parent).getResourceAsStream(name);
 	URL url = getResource(name);
 	try {
 	    return url != null ? url.openStream() : null;

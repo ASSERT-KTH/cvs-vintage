@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/runtime/PageContextImpl.java,v 1.10 2000/06/10 01:41:20 costin Exp $
- * $Revision: 1.10 $
- * $Date: 2000/06/10 01:41:20 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/runtime/PageContextImpl.java,v 1.11 2000/06/13 00:32:32 costin Exp $
+ * $Revision: 1.11 $
+ * $Date: 2000/06/13 00:32:32 $
  *
  * ====================================================================
  *
@@ -439,7 +439,12 @@ public class PageContextImpl extends PageContext {
 	else {
 	    // Set the exception as the root cause in the ServletException
 	    // to get a stack trace for the real problem
-	    //	    e.printStackTrace();
+	    if( e instanceof IOException )
+		throw (IOException)e;
+	    if( e instanceof ServletException )
+		throw (ServletException) e;
+
+	    e.printStackTrace();
 	    throw new ServletException(e);
 	}
 

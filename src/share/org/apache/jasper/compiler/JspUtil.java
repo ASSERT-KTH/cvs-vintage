@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/JspUtil.java,v 1.15 2000/06/11 21:41:06 mandar Exp $
- * $Revision: 1.15 $
- * $Date: 2000/06/11 21:41:06 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/JspUtil.java,v 1.16 2000/06/13 00:32:27 costin Exp $
+ * $Revision: 1.16 $
+ * $Date: 2000/06/13 00:32:27 $
  *
  * ====================================================================
  * 
@@ -184,7 +184,7 @@ public class JspUtil {
 	try {
 	    return parseXMLDocJaxp(in, dtdResource, dtdId );
 	} catch (Throwable pcfe) {
-	    System.out.println("JspUtil: error in jaxp " + pcfe);
+	    //	    System.out.println("JspUtil: error in jaxp " + pcfe);
 	}
 
 	return parseXMLDocOld( in, dtdResource, dtdId);

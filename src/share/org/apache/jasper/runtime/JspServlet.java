@@ -231,6 +231,7 @@ public class JspServlet extends HttpServlet {
                                   "<none>"
                               }, Logger.DEBUG);
 	}
+	//	System.out.println("JspServlet: init " + config.getServletName() );
 	this.loader = new JspLoader(parentClassLoader, 
 				    options);
 

@@ -72,10 +72,15 @@ import javax.servlet.http.*;
 public class BaseInterceptor implements RequestInterceptor, ContextInterceptor {
     ContextManager cm; 
     protected String methods[]=new String[0];
+    int debug=0;
     
     public BaseInterceptor() {
     }
-
+    
+    public void setDebug( int d ) {
+	debug=d;
+    }
+    
     public void setContextManager( ContextManager cm ) {
 	this.cm=cm;
     }
