@@ -49,7 +49,7 @@ import org.gjt.sp.util.Log;
  * @see JEditTextArea
  *
  * @author Slava Pestov
- * @version $Id: TextAreaPainter.java,v 1.96 2004/04/05 02:21:49 spestov Exp $
+ * @version $Id: TextAreaPainter.java,v 1.97 2004/04/28 18:18:40 spestov Exp $
  */
 public class TextAreaPainter extends JComponent implements TabExpander
 {
@@ -689,6 +689,9 @@ public class TextAreaPainter extends JComponent implements TabExpander
 		int x = textArea.getHorizontalOffset();
 
 		int height = fm.getHeight();
+		if(height == 0)
+			return;
+
 		int firstInvalid = clipRect.y / height;
 		// Because the clipRect's height is usually an even multiple
 		// of the font height, we subtract 1 from it, otherwise one

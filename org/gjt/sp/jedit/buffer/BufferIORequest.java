@@ -35,7 +35,7 @@ import org.gjt.sp.util.*;
 /**
  * A buffer I/O request.
  * @author Slava Pestov
- * @version $Id: BufferIORequest.java,v 1.25 2004/03/28 00:07:26 spestov Exp $
+ * @version $Id: BufferIORequest.java,v 1.26 2004/04/28 18:18:38 spestov Exp $
  */
 public class BufferIORequest extends WorkRequest
 {
@@ -568,11 +568,13 @@ public class BufferIORequest extends WorkRequest
 		setAbortable(false);
 
 		String lineSeparator;
-		if(length == 0)
+		if(seg.count == 0)
 		{
 			// fix for "[ 865589 ] 0-byte files should open using
 			// the default line seperator"
-			lineSeparator = null;
+			lineSeparator = jEdit.getProperty(
+				"buffer.lineSeparator",
+				System.getProperty("line.separator"));
 		}
 		else if(CRLF)
 			lineSeparator = "\r\n";

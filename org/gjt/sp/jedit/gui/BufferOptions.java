@@ -35,7 +35,7 @@ import org.gjt.sp.jedit.*;
 /**
  * Buffer-specific options dialog.
  * @author Slava Pestov
- * @version $Id: BufferOptions.java,v 1.29 2004/04/06 18:30:24 spestov Exp $
+ * @version $Id: BufferOptions.java,v 1.30 2004/04/28 18:18:38 spestov Exp $
  */
 public class BufferOptions extends EnhancedDialog
 {
@@ -303,8 +303,7 @@ public class BufferOptions extends EnhancedDialog
 				cancel();
 			else if(source == mode)
 			{
-				Mode _mode = jEdit.getMode((String)
-					mode.getSelectedItem());
+				Mode _mode = (Mode)mode.getSelectedItem();
 				folding.setSelectedItem(_mode.getProperty(
 					"folding"));
 				wrap.setSelectedItem(_mode.getProperty(
