@@ -14,15 +14,16 @@ import org.jboss.metadata.BeanMetaData;
 import org.jboss.metadata.SecurityIdentityMetaData;
 import org.jboss.security.SecurityAssociation;
 import org.jboss.security.SimplePrincipal;
+import org.jboss.security.RunAsIdentity;
 
 /** An interceptor that enforces the run-as identity declared by a bean.
 
 @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>.
-@version $Revision: 1.6 $
+@version $Revision: 1.7 $
 */
 public class RunAsSecurityInterceptor extends AbstractInterceptor
 {
-    protected Principal runAsRole;
+    protected RunAsIdentity runAsIdentity;
 
     public RunAsSecurityInterceptor()
     {
@@ -40,8 +41,9 @@ public class RunAsSecurityInterceptor extends AbstractInterceptor
            SecurityIdentityMetaData secMetaData = beanMetaData.getSecurityIdentityMetaData();
            if( secMetaData != null && secMetaData.getUseCallerIdentity() == false )
            {
-               String roleName = secMetaData.getRunAsRoleName();
-               runAsRole = new SimplePrincipal(roleName);
+              String roleName = secMetaData.getRunAsRoleName();
+              String principalName = secMetaData.getRunAsPrincipalName();
+              runAsIdentity = new RunAsIdentity(roleName, principalName);
            }
         }
     }
@@ -58,9 +60,9 @@ public class RunAsSecurityInterceptor extends AbstractInterceptor
          by this bean will have the runAsRole available for declarative
          security checks.
         */
-        if( runAsRole != null )
+        if( runAsIdentity != null )
         {
-            SecurityAssociation.pushRunAsRole(runAsRole);
+            SecurityAssociation.pushRunAsIdentity(runAsIdentity);
         }
         try
         {
@@ -69,9 +71,9 @@ public class RunAsSecurityInterceptor extends AbstractInterceptor
         }
         finally
         {
-            if( runAsRole != null )
+            if( runAsIdentity != null )
             {
-                SecurityAssociation.popRunAsRole();
+                SecurityAssociation.popRunAsIdentity();
             }
         }
     }
@@ -81,9 +83,9 @@ public class RunAsSecurityInterceptor extends AbstractInterceptor
          by this bean will have the runAsRole available for declarative
          security checks.
         */
-        if( runAsRole != null )
+        if( runAsIdentity != null )
         {
-            SecurityAssociation.pushRunAsRole(runAsRole);
+            SecurityAssociation.pushRunAsIdentity(runAsIdentity);
         }
         try
         {
@@ -92,9 +94,9 @@ public class RunAsSecurityInterceptor extends AbstractInterceptor
         }
         finally
         {
-            if( runAsRole != null )
+            if( runAsIdentity != null )
             {
-                SecurityAssociation.popRunAsRole();
+                SecurityAssociation.popRunAsIdentity();
             }
         }
     }
