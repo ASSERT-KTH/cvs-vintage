@@ -49,7 +49,7 @@ import org.jboss.metadata.MethodMetaData;
 *   @see <related>
 *   @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
 *   @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
-*   @version $Revision: 1.7 $
+*   @version $Revision: 1.8 $
 */
 public class TxInterceptorBMT
 extends AbstractInterceptor
@@ -224,6 +224,9 @@ extends AbstractInterceptor
 		
         // t2 refers to the instance transaction (spec ejb1.1, 11.6.1, p174) 
         Transaction t2 = mi.getEnterpriseContext().getTransaction();
+		
+		// This is BMT so the transaction is dictated by the Bean, the MethodInvocation follows
+		mi.setTransaction(t2);
         
 //DEBUG Logger.debug("TxInterceptorBMT t2 in context" + ((t2==null) ? "null": Integer.toString(t2.hashCode())));
 		
