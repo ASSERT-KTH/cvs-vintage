@@ -114,7 +114,7 @@ import org.apache.turbine.Log;
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: AbstractScarabModule.java,v 1.18 2002/01/23 23:21:54 jmcnally Exp $
+ * @version $Id: AbstractScarabModule.java,v 1.19 2002/01/31 02:57:28 elicia Exp $
  */
 public abstract class AbstractScarabModule
     extends BaseObject
@@ -536,26 +536,33 @@ public abstract class AbstractScarabModule
                                        String attributeType)
         throws Exception
     {
+        List allAttributes = AttributePeer.getAttributes(attributeType);
+        List availAttributes = new ArrayList();
         List rModuleAttributes = getRModuleAttributes(issueType, false,
                                                       attributeType);
         List moduleAttributes = new ArrayList();
-        for ( int i=0; i<rModuleAttributes.size(); i++ )
+        if (rModuleAttributes.isEmpty())
         {
-            moduleAttributes.add(
-               ((RModuleAttribute) rModuleAttributes.get(i)).getAttribute());
+             availAttributes = allAttributes;
         }
-
-        List allAttributes = AttributePeer.getAttributes(attributeType);
-        List availAttributes = new ArrayList();
-
-        for ( int i=0; i<allAttributes.size(); i++ )
+        else
         {
-            Attribute att = (Attribute)allAttributes.get(i);
-            if (!moduleAttributes.contains(att))
+            for ( int i=0; i<rModuleAttributes.size(); i++ )
             {
-                availAttributes.add(att);
+                moduleAttributes.add(
+                   ((RModuleAttribute) rModuleAttributes.get(i)).getAttribute());
             }
-        }
+
+
+            for ( int i=0; i<allAttributes.size(); i++ )
+            {
+                Attribute att = (Attribute)allAttributes.get(i);
+                if (!moduleAttributes.contains(att))
+                {
+                    availAttributes.add(att);
+                }
+            }
+         }
         return availAttributes;
     }
 
@@ -873,7 +880,7 @@ public abstract class AbstractScarabModule
                 Criteria.NOT_EQUAL);
         }
 
-        return getRModuleAttributes(crit);
+        return AttributePeer.doSelect(crit);
     }
 
 
