@@ -229,6 +229,14 @@ public abstract class PoolTcpConnector extends BaseInterceptor
 	attributes.put( "keypass", k);
     }
 
+    public boolean isKeystoreSet() {
+        return (attributes.get("keystore") != null);
+    }
+
+    public boolean isKeypassSet() {
+        return (attributes.get("keypass") != null);
+    }
+
     public static final String SSL_CHECK=
 	"javax.net.ssl.SSLServerSocketFactory";
     public static final String SSL_FACT=
