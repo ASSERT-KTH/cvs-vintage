@@ -1,7 +1,7 @@
 #**
 @author <a href="mailto:dr@bitonic.com">Douglas B. Robertson</a>
 @author <a href="mailto:jon@collab.net">Jon Stevens</a>
-@version $Id: ManageUserSearch.vm,v 1.23 2002/05/24 03:26:12 jmcnally Exp $
+@version $Id: ManageUserSearch.vm,v 1.24 2002/07/12 21:38:22 jon Exp $
 *#
 
 #set ($newSearch = $data.Parameters.getString("newSearch",""))
@@ -124,11 +124,13 @@ Results per page:
 
 #foreach ($user in $userList)
   #indexedRows ($velocityCount)
+   <label for="radio_$!user.UserName">
    <td>
-   <input type="radio" name="username" value="$!user.UserName" />
+   <input type="radio" name="username" value="$!user.UserName" id="radio_$!user.UserName" />
    </td>
    <td>$!user.UserName</td>
    <td><a href="mailto:$!user.Email">$!user.Name</a></td>
+   </label>
  </tr>
 #end
 

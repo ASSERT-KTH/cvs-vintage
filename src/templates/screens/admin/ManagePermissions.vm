@@ -1,6 +1,6 @@
 #**
 @author <a href="mailto:dr@bitonic.com">Douglas B.Robertson</a>
-@version $Id: ManagePermissions.vm,v 1.5 2002/05/24 03:26:12 jmcnally Exp $
+@version $Id: ManagePermissions.vm,v 1.6 2002/07/12 21:38:22 jon Exp $
 *#
 
 <div id="managePermissions" class="app">
@@ -18,8 +18,10 @@
 
 #foreach ($permission in $securityAdmin.Permissions)
 #indexedRows ($velocityCount)
-  <td><center><input type="radio" name="name" value="$permission.Name"></center></td>
+  <label for="radio_$permission.Name">
+  <td><center><input type="radio" name="name" value="$permission.Name" id="radio_$permission.Name" /></center></td>
   <td>$permission.Name</td>
+  </label>
 </tr>
 #end
 </table>
