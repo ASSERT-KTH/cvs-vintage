@@ -27,7 +27,7 @@
 // File: UseCaseDiagramRenderer.java
 // Classes: UseCaseDiagramRenderer
 // Original Author: abonner@ics.uci.edu
-// $Id: UseCaseDiagramRenderer.java,v 1.4 1998/07/03 21:06:36 abonner Exp $
+// $Id: UseCaseDiagramRenderer.java,v 1.5 1998/08/06 21:32:42 jrobbins Exp $
 
 package uci.uml.visual;
 
@@ -66,7 +66,7 @@ implements GraphNodeRenderer, GraphEdgeRenderer {
   /** Generally the same code as for the ClassDiagram, since its
       very related to it. */
   public FigEdge getFigEdgeFor(GraphModel gm, Layer lay, Object edge) {
-    System.out.println("making figedge for " + edge);
+    //System.out.println("making figedge for " + edge);
     if (edge instanceof Association) {
       Association asc = (Association) edge;
       FigAssociation ascFig = new FigAssociation(asc);

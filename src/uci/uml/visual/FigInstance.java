@@ -27,7 +27,7 @@
 // File: FigInstance.java
 // Classes: FigInstance
 // Original Author: your email address here
-// $Id: FigInstance.java,v 1.2 1998/07/02 02:57:20 jrobbins Exp $
+// $Id: FigInstance.java,v 1.3 1998/08/06 21:32:28 jrobbins Exp $
 
 package uci.uml.visual;
 
@@ -100,7 +100,7 @@ implements VetoableChangeListener, DelayedVetoableChangeListener {
    *  model changes complete before we update the screen. */
   public void vetoableChange(PropertyChangeEvent pce) {
     // throws PropertyVetoException 
-    System.out.println("FigInstance got a change notification!");
+    //System.out.println("FigInstance got a change notification!");
     Object src = pce.getSource();
     if (src == getOwner()) {
       DelayedChangeNotify delayedNotify = new DelayedChangeNotify(this, pce);
@@ -112,7 +112,7 @@ implements VetoableChangeListener, DelayedVetoableChangeListener {
    *  its current  state. */
   public void delayedVetoableChange(PropertyChangeEvent pce) {
     // throws PropertyVetoException 
-    System.out.println("FigInstance got a delayed change notification!");
+    //System.out.println("FigInstance got a delayed change notification!");
     Object src = pce.getSource();
     if (src == getOwner()) {
       updateText();

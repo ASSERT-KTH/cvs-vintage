@@ -27,7 +27,7 @@
 // File: RedrawManager.java
 // Classes: RedrawManager
 // Original Author: jrobbins@ics.uci.edu
-// $Id: RedrawManager.java,v 1.16 1998/07/17 22:54:07 jrobbins Exp $
+// $Id: RedrawManager.java,v 1.17 1998/08/06 21:31:51 jrobbins Exp $
 
 package uci.gef;
 
@@ -230,8 +230,8 @@ public class RedrawManager implements Runnable {
     if (c == null || !c.isVisible()) return;
     Graphics g = null;
     //synchronized (Toolkit.getDefaultToolkit()) {
-    g = _ed.getGraphics();
-    //}
+      g = _ed.getGraphics();
+      //}
     if (_lockLevel == 0 && g != null)
       synchronized (LOCK) { if (_lockLevel == 0) paint(_ed, g); }
   }

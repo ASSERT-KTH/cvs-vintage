@@ -27,7 +27,7 @@
 // File: ModeCreateEdge.java
 // Classes: ModeCreateEdge
 // Original Author: ics125 spring 1996
-// $Id: ModeCreateEdge.java,v 1.9 1998/07/15 18:21:50 jrobbins Exp $
+// $Id: ModeCreateEdge.java,v 1.10 1998/08/06 21:31:49 jrobbins Exp $
 
 package uci.gef;
 
@@ -97,7 +97,7 @@ public class ModeCreateEdge extends ModeCreate {
     Editor _editor = Globals.curEditor();
     Fig underMouse = _editor.hit(x, y);
     if (underMouse == null) { 
-        System.out.println("bighit");
+      //System.out.println("bighit");
         underMouse = _editor.hit(x-16, y-16, 32, 32); 
     }
     if (underMouse == null) { done(); me.consume(); return; }

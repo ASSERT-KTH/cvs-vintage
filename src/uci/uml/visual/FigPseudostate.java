@@ -27,7 +27,7 @@
 // File: FigPseudostate.java
 // Classes: FigPseudostate
 // Original Author: your email address here
-// $Id: FigPseudostate.java,v 1.3 1998/07/15 18:18:06 jrobbins Exp $
+// $Id: FigPseudostate.java,v 1.4 1998/08/06 21:32:33 jrobbins Exp $
 
 package uci.uml.visual;
 
@@ -100,7 +100,7 @@ implements VetoableChangeListener, DelayedVetoableChangeListener {
    *  model changes complete before we update the screen. */
   public void vetoableChange(PropertyChangeEvent pce) {
     // throws PropertyVetoException 
-    System.out.println("FigPseudostate got a change notification!");
+    //System.out.println("FigPseudostate got a change notification!");
     Object src = pce.getSource();
     if (src == getOwner()) {
       DelayedChangeNotify delayedNotify = new DelayedChangeNotify(this, pce);
@@ -112,7 +112,7 @@ implements VetoableChangeListener, DelayedVetoableChangeListener {
    *  its current  state. */
   public void delayedVetoableChange(PropertyChangeEvent pce) {
     // throws PropertyVetoException 
-    System.out.println("FigPseudostate got a delayed change notification!");
+    //System.out.println("FigPseudostate got a delayed change notification!");
     Object src = pce.getSource();
     if (src == getOwner()) {
       updateText();

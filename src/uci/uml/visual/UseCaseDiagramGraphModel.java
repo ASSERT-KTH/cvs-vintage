@@ -26,7 +26,7 @@
 // File: UseCaseDiagramGraphModel.java
 // Classes: UseCaseDiagramGraphModel
 // Original Author: your email address here
-// $Id: UseCaseDiagramGraphModel.java,v 1.4 1998/07/03 21:00:19 abonner Exp $
+// $Id: UseCaseDiagramGraphModel.java,v 1.5 1998/08/06 21:32:41 jrobbins Exp $
 
 package uci.uml.visual;
 
@@ -166,7 +166,7 @@ implements MutableGraphModel, VetoableChangeListener {
 
   /** Add the given node to the graph, if valid. */
   public void addNode(Object node) {
-    System.out.println("adding usecase node!!");
+    //System.out.println("adding usecase node!!");
     if (_nodes.contains(node)) return;
     _nodes.addElement(node);
     // needs-more-work: assumes public, user pref for default visibility?
@@ -183,7 +183,7 @@ implements MutableGraphModel, VetoableChangeListener {
 
   /** Add the given edge to the graph, if valid. */
   public void addEdge(Object edge) {
-    System.out.println("adding class edge!!!!!!");
+    //System.out.println("adding class edge!!!!!!");
     if (_edges.contains(edge)) return;
     _edges.addElement(edge);
     // needs-more-work: assumes public
@@ -255,13 +255,13 @@ implements MutableGraphModel, VetoableChangeListener {
       ElementOwnership eo = (ElementOwnership) pce.getNewValue();
       ModelElement me = eo.getModelElement();
       if (oldOwned.contains(eo)) {
-	System.out.println("model removed " + me);
+	//System.out.println("model removed " + me);
 	if (me instanceof Classifier) removeNode(me);
 	if (me instanceof Association) removeEdge(me);
 	if (me instanceof Generalization) removeEdge(me);
       }
       else {
-	System.out.println("model added " + me);
+	//System.out.println("model added " + me);
       }
     }
   }

@@ -27,7 +27,7 @@
 // File: FigState.java
 // Classes: FigState
 // Original Author: your email address here
-// $Id: FigState.java,v 1.5 1998/07/17 22:54:54 jrobbins Exp $
+// $Id: FigState.java,v 1.6 1998/08/06 21:32:35 jrobbins Exp $
 
 package uci.uml.visual;
 
@@ -129,7 +129,7 @@ public class FigState extends FigNodeModelElement {
 
 
   public void dispose() {
-    System.out.println("disposing FigState");
+    //System.out.println("disposing FigState");
     State s = (State) getOwner();
     try {
       s.setParent(null);

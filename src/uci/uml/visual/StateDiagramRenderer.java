@@ -27,7 +27,7 @@
 // File: StateDiagramRenderer.java
 // Classes: StateDiagramRenderer
 // Original Author: your email address here
-// $Id: StateDiagramRenderer.java,v 1.4 1998/07/15 18:18:12 jrobbins Exp $
+// $Id: StateDiagramRenderer.java,v 1.5 1998/08/06 21:32:39 jrobbins Exp $
 
 package uci.uml.visual;
 
@@ -81,7 +81,7 @@ implements GraphNodeRenderer, GraphEdgeRenderer {
 
   /** Return a Fig that can be used to represent the given edge */
   public FigEdge getFigEdgeFor(GraphModel gm, Layer lay, Object edge) {
-    System.out.println("making figedge for " + edge);
+    //System.out.println("making figedge for " + edge);
     if (edge instanceof Transition) {
       Transition tr = (Transition) edge;
       FigTransition trFig = new FigTransition(tr);

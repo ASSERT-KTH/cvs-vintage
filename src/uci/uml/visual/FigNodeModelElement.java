@@ -27,7 +27,7 @@
 // File: FigNodeModelElement.java
 // Classes: FigNodeModelElement
 // Original Author: abonner
-// $Id: FigNodeModelElement.java,v 1.2 1998/07/17 22:54:53 jrobbins Exp $
+// $Id: FigNodeModelElement.java,v 1.3 1998/08/06 21:32:29 jrobbins Exp $
 
 package uci.uml.visual;
 
@@ -70,8 +70,7 @@ implements VetoableChangeListener, DelayedVetoableChangeListener, MouseListener,
    *  itself as a listener. */
   public FigNodeModelElement(GraphModel gm, Object node) {
     super(node);
-    ModelElement me = (ModelElement) node;
-    me.addVetoableChangeListener(this);
+    //me.addVetoableChangeListener(this);
 
     _name = new FigText(10, 10, 90, 20);
     _name.setFont(LABEL_FONT);
@@ -79,6 +78,8 @@ implements VetoableChangeListener, DelayedVetoableChangeListener, MouseListener,
     _name.setExpandOnly(true);
     _name.setMultiLine(false);
     _name.setAllowsTab(false);
+
+    ModelElement me = (ModelElement) node;
     String placeString = me.getOCLTypeStr();
     Name n = me.getName();
     if (n != null && !n.equals(Name.UNSPEC)) placeString = n.getBody();
@@ -183,7 +184,7 @@ implements VetoableChangeListener, DelayedVetoableChangeListener, MouseListener,
   /** needs-more-work: When the user deletes a ModelElement, it is
    *  moved to a special trash container. */
   public void dispose() {
-    System.out.println("disposing FigNodeModelElement");
+    //System.out.println("disposing FigNodeModelElement");
     ModelElement me = (ModelElement) getOwner();
     if (me == null) return;
     Project p = ProjectBrowser.TheInstance.getProject();
@@ -191,6 +192,13 @@ implements VetoableChangeListener, DelayedVetoableChangeListener, MouseListener,
     super.dispose();
   }
 
-
+  public void setOwner(Object own) {
+    Object oldOwner = getOwner();
+    super.setOwner(own);
+    if (oldOwner instanceof ModelElement)
+      ((ModelElement)oldOwner).removeVetoableChangeListener(this);
+    if (own instanceof ModelElement)
+      ((ModelElement)own).addVetoableChangeListener(this);
+  }
 
 } /* end class FigNodeModelElement */

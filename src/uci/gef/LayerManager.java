@@ -28,7 +28,7 @@
 // File: LayerManager.java
 // Classes: LayerManager
 // Original Author: jrobbins@ics.uci.edu
-// $Id: LayerManager.java,v 1.4 1998/07/02 02:52:32 jrobbins Exp $
+// $Id: LayerManager.java,v 1.5 1998/08/06 21:31:45 jrobbins Exp $
 
 package uci.gef;
 
@@ -210,5 +210,20 @@ public class LayerManager implements java.io.Serializable  {
   }
 
   public Editor getEditor() { return _editor; }
+
+  public void preSave() {
+    for (int i = 0; i < _layers.size(); i++)
+      ((Layer) _layers.elementAt(i)).preSave();
+  }
+
+  public void postSave() {
+    for (int i = 0; i < _layers.size(); i++)
+      ((Layer) _layers.elementAt(i)).postSave();
+  }
+
+  public void postLoad() {
+    for (int i = 0; i < _layers.size(); i++)
+      ((Layer) _layers.elementAt(i)).postLoad();
+  }
 
 } /* end class LayerManager */

@@ -27,7 +27,7 @@
 // File: FigTransition.java
 // Classes: FigTransition
 // Original Author: your email address here
-// $Id: FigTransition.java,v 1.3 1998/07/15 18:18:08 jrobbins Exp $
+// $Id: FigTransition.java,v 1.4 1998/08/06 21:32:36 jrobbins Exp $
 
 
 package uci.uml.visual;
@@ -54,7 +54,7 @@ public class FigTransition extends FigEdgeLine {
   }
 
   public void dispose() {
-    System.out.println("disposing FigTransition");
+    //System.out.println("disposing FigTransition");
     if (!(getOwner() instanceof Element)) return;
     Element elmt = (Element) getOwner();
     Project p = ProjectBrowser.TheInstance.getProject();

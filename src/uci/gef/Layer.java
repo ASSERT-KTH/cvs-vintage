@@ -27,7 +27,7 @@
 // File: Layer.java
 // Classes: Layer
 // Original Author: jrobbins@ics.uci.edu
-// $Id: Layer.java,v 1.8 1998/07/15 18:21:47 jrobbins Exp $
+// $Id: Layer.java,v 1.9 1998/08/06 21:31:42 jrobbins Exp $
 
 package uci.gef;
 
@@ -266,6 +266,10 @@ public abstract class Layer implements java.io.Serializable {
     if (_editors == null) return;
     _editors.removeElement(ed);
   }
+
+  public void preSave() { }
+  public void postSave() { }
+  public void postLoad() { }
 
   ////////////////////////////////////////////////////////////////
   // user interface

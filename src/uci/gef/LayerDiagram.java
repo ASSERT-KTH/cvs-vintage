@@ -28,7 +28,7 @@
 // File: LayerDiagram.java
 // Classes: LayerDiagram
 // Original Author: jrobbins@ics.uci.edu
-// $Id: LayerDiagram.java,v 1.8 1998/07/02 02:52:30 jrobbins Exp $
+// $Id: LayerDiagram.java,v 1.9 1998/08/06 21:31:44 jrobbins Exp $
 
 package uci.gef;
 
@@ -249,6 +249,21 @@ public class LayerDiagram extends Layer {
     }
   }
 
-  
+  public void preSave() {
+    for (int i = 0; i < _contents.size(); i++)
+      ((Fig) _contents.elementAt(i)).preSave();
+  }
+
+  public void postSave() {
+    for (int i = 0; i < _contents.size(); i++)
+      ((Fig) _contents.elementAt(i)).postSave();
+  }
+
+  public void postLoad() {
+    for (int i = 0; i < _contents.size(); i++)
+      ((Fig) _contents.elementAt(i)).postLoad();
+  }
+
+
 } /* end class LayerDiagram */
 

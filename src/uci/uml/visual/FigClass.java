@@ -27,7 +27,7 @@
 // File: FigClass.java
 // Classes: FigClass
 // Original Author: abonner
-// $Id: FigClass.java,v 1.20 1998/07/17 22:54:51 jrobbins Exp $
+// $Id: FigClass.java,v 1.21 1998/08/06 21:32:22 jrobbins Exp $
 
 package uci.uml.visual;
 
@@ -130,8 +130,8 @@ public class FigClass extends FigNodeModelElement  {
 
   protected void textEdited(FigText ft) throws PropertyVetoException {
     super.textEdited(ft);
-    if (ft == _attr) { System.out.println("edited Attr"); }
-    if (ft == _oper) { System.out.println("edited Oper"); }
+    //if (ft == _attr) { System.out.println("edited Attr"); }
+    //if (ft == _oper) { System.out.println("edited Oper"); }
   }
 
   protected void modelChanged() {

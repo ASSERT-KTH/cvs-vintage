@@ -28,7 +28,7 @@
 // File: EquipmentApplet.java
 // Classes: EquipmentApplet
 // Original Author: ics125b spring 1996
-// $Id: EquipmentApplet.java,v 1.7 1998/07/02 02:53:06 jrobbins Exp $
+// $Id: EquipmentApplet.java,v 1.8 1998/08/06 21:31:52 jrobbins Exp $
 
 package uci.gef.demo;
 
@@ -55,7 +55,7 @@ import com.sun.java.swing.*;
  * @see EdgePower
  * @see EdgeData */
 
-public class EquipmentApplet extends Applet {
+public class EquipmentApplet extends JApplet {
 
   ////////////////////////////////////////////////////////////////
   // instance variables
