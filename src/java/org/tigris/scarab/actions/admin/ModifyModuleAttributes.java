@@ -82,7 +82,7 @@ import org.tigris.scarab.tools.ScarabRequestTool;
  * action methods on RModuleAttribute table
  *      
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: ModifyModuleAttributes.java,v 1.49 2001/12/05 01:14:30 elicia Exp $
+ * @version $Id: ModifyModuleAttributes.java,v 1.50 2001/12/05 23:43:31 elicia Exp $
  */
 public class ModifyModuleAttributes extends RequireLoginFirstAction
 {
@@ -783,9 +783,15 @@ public class ModifyModuleAttributes extends RequireLoginFirstAction
     /**
      * This manages clicking the create new button on AttributeSelect.vm
      */
-    public void doCreatenewglobalattribute( RunData data, TemplateContext context )
+    public void doCreatenewglobalattribute( RunData data, 
+                                            TemplateContext context )
         throws Exception
     {
+        IntakeTool intake = getIntakeTool(context);
+        ScarabRequestTool scarabR = getScarabRequestTool(context);
+        Group attGroup = intake.get("Attribute", IntakeTool.DEFAULT_KEY);
+        intake.remove(attGroup);
+        scarabR.setAttribute(null);
         String nextTemplate = data.getParameters()
             .getString(ScarabConstants.NEXT_TEMPLATE);
         setTarget(data, getNextTemplate(data, 
