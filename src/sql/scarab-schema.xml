@@ -2,7 +2,7 @@
 <!DOCTYPE app-data SYSTEM
           "http://jakarta.apache.org/turbine/dtd/database.dtd">
 
-<!-- $Id: scarab-schema.xml,v 1.55 2001/10/11 17:28:15 jmcnally Exp $ -->
+<!-- $Id: scarab-schema.xml,v 1.56 2001/10/16 00:24:43 elicia Exp $ -->
 
 <app-data>
 <database>
@@ -253,12 +253,19 @@
         Module.
     -->
     <column name="MODULE_ID" required="true" type="INTEGER"></column>
+    <!--
+        Issue type.
+    -->
+    <column name="ISSUE_TYPE_ID" required="true" type="INTEGER"></column>
     <column name="ACTIVE" required="false" type="BOOLEANINT" 
         default="0" size="1"></column>
     <column name="PREFERRED_ORDER" javaName="Order" required="false" 
             default="-1" type="INTEGER"></column>
     <foreign-key foreignTable="SCARAB_MODULE">
         <reference local="MODULE_ID" foreign="MODULE_ID"/>
+    </foreign-key>
+    <foreign-key foreignTable="SCARAB_ISSUE_TYPE">
+        <reference local="ISSUE_TYPE_ID" foreign="ISSUE_TYPE_ID"/>
     </foreign-key>
 </table>
 
@@ -495,6 +502,63 @@
     </foreign-key>
 </table>
 
+
+<table name="SCARAB_ISSUE_TYPE" idMethod="idbroker" javaName="IssueType">
+    <!--
+        Unique identifier used for primary key.
+    -->
+    <column name="ISSUE_TYPE_ID" primaryKey="true" required="true" type="INTEGER"></column>
+    <!--
+        Name.
+    -->
+    <column name="NAME" javaName="Name" required="true" type="VARCHAR" 
+            size="100"/>
+    <!--
+        Description.
+    -->
+    <column name="DESCRIPTION" javaName="Description" required="false" type="VARCHAR" size="255"></column>
+    <!--
+        Is this a regular artifact type, or a template artifact type.
+    -->
+    <column name="TEMPLATE" required="true" type="BOOLEANINT" 
+        default="0" size="1"></column>
+</table>
+
+
+<!--
+    Mapping between modules and issue types.
+-->
+<table name="SCARAB_R_MODULE_ISSUE_TYPE" idMethod="none" javaName="RModuleIssueType">
+    <!--
+        Module.
+    -->
+    <column name="MODULE_ID" primaryKey="true" required="true" type="INTEGER"/>
+    <!--
+        Artifact type.
+    -->
+    <column name="ISSUE_TYPE_ID" primaryKey="true" required="true" type="INTEGER"/>
+    <!--
+        Flag, which marks that the issue type is not used.
+    -->
+    <column name="ACTIVE" required="true" type="BOOLEANINT" 
+        default="1" size="1"></column>
+    <!--
+        Whether or not the issue type shows up in left hand nav.
+    -->
+    <column name="DISPLAY" required="true" type="BOOLEANINT" 
+        default="1" size="1"></column>
+    <!--
+        Order the the issue types appear in the left nav.
+    -->
+    <column name="PREFERRED_ORDER" javaName="Order" required="false" default="0" type="INTEGER"/>
+    <foreign-key foreignTable="SCARAB_MODULE">
+        <reference local="MODULE_ID" foreign="MODULE_ID"/>
+    </foreign-key>
+    <foreign-key foreignTable="SCARAB_ISSUE_TYPE">
+        <reference local="ISSUE_TYPE_ID" foreign="ISSUE_TYPE_ID"/>
+    </foreign-key>
+</table>
+
 <!--
     Actual attribute of the issue with its value.
 -->
@@ -681,6 +745,10 @@
     -->
     <column name="ATTRIBUTE_ID" primaryKey="true" required="true" type="INTEGER"/>
     <!--
+        Issue type.
+    -->
+    <column name="ISSUE_TYPE_ID" primaryKey="true" required="true" type="INTEGER"/>
+    <!--
         Value that represents the attribute in the UI.
     -->
     <column name="DISPLAY_VALUE" required="true" type="VARCHAR" size="255"/>
@@ -715,6 +783,9 @@
     </foreign-key>
     <foreign-key foreignTable="SCARAB_MODULE">
         <reference local="MODULE_ID" foreign="MODULE_ID"/>
+    </foreign-key>
+    <foreign-key foreignTable="SCARAB_ISSUE_TYPE">
+        <reference local="ISSUE_TYPE_ID" foreign="ISSUE_TYPE_ID"/>
     </foreign-key>
 
     <index name="IX_ACTIVE">
@@ -1203,29 +1274,34 @@
         The description of the saved template.
     -->
     <column name="DESCRIPTION" required="false" type="VARCHAR" size="255" />
+    <column name="ATTACHMENT_TYPE_ID" javaName="TypeId" required="true" type="INTEGER"></column>
     <column name="APPROVED" required="false" type="BOOLEANINT"
             default="0" size="1"></column>
+    <!--
+        Scope : personal or global.
+    -->
+    <column name="SCOPE_ID" javaName="ScopeId" required="true" type="INTEGER"></column>
     <foreign-key foreignTable="SCARAB_ISSUE">
         <reference local="ISSUE_ID" foreign="ISSUE_ID"/>
+    </foreign-key>
+    <foreign-key foreignTable="SCARAB_SCOPE">
+        <reference local="SCOPE_ID" foreign="SCOPE_ID"/>
     </foreign-key>
 </table>
 
 <!--
-    Possible types of templates.
-    Examples: global, personal account level
+    Scope: personal, global.
 -->
-<table name="SCARAB_ISSUE_TYPE" idMethod="none" 
-    javaName="IssueType">
+<table name="SCARAB_SCOPE" idMethod="none" javaName="Scope">
     <!--
         Unique identifier.
     -->
-    <column name="ISSUE_TYPE_ID" primaryKey="true" required="true" type="INTEGER"></column>
+    <column name="SCOPE_ID" primaryKey="true" required="true" type="INTEGER"></column>
     <!--
         Name.
     -->
-    <column name="ISSUE_TYPE_NAME" javaName="Name" required="true" type="VARCHAR" size="255"></column>
+    <column name="SCOPE_NAME" javaName="Name" required="true" type="VARCHAR" size="255"></column>
 </table>
-
 
 
 </database>
