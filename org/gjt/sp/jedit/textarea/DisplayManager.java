@@ -31,7 +31,7 @@ import org.gjt.sp.jedit.*;
  * Manages low-level text display tasks.
  * @since jEdit 4.2pre1
  * @author Slava Pestov
- * @version $Id: DisplayManager.java,v 1.13 2003/04/02 01:52:28 spestov Exp $
+ * @version $Id: DisplayManager.java,v 1.14 2003/04/02 01:55:43 spestov Exp $
  */
 public class DisplayManager
 {
@@ -647,7 +647,7 @@ public class DisplayManager
 		public void reset()
 		{
 			offsetMgr.removeAnchor(this);
-			System.err.println(buffer + ": reset: here is a scan for you");
+			org.gjt.sp.util.Log.log(org.gjt.sp.util.Log.ERROR,this,buffer + ": reset: here is a scan for you");
 			physicalLine = offsetMgr.getLineCount();
 			scrollLine = 0;
 			for(int i = 0; i < physicalLine; i++)
