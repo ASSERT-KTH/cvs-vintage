@@ -6,7 +6,7 @@
 <body bgcolor="#ffffff">
 
 <h2>Scarab - Frequently Asked Questions</h2>
-<h4>$Id: faq.html,v 1.19 2003/02/13 00:41:29 jon Exp $</h4>
+<h4>$Id: faq.html,v 1.20 2003/03/14 22:15:51 jon Exp $</h4>
 
 <hr noshade="noshade" size="1" />
 
@@ -576,6 +576,30 @@ services.UploadService.size.threshold=8192
 These files should get cleaned up as the object is garbage collected, or
 the Java Virtual Machine is shutdown. If they persist after a shutdown,
 you can most likely safely remove them.
+</p>
+
+<hr noshade="noshade" size="1" />
+
+<p><strong>
+Is there a way to turn off the auto-logoff feature or
+extend the amount of time before it automatically
+invalidates a user and forces them to log in again?
+</strong></p>
+
+<p>
+In your build.properties, define the following by removing the #:
+</p>
+
+<p>
+# This is the timeout in seconds for sessions. If the value is 
+# left commented out, the servlet container's default timeout 
+# will be left as is.
+scarab.session.timeout = # session.timeout = 1800
+</p>
+
+<p>
+If you want to disable logging people off, just set the value to 
+a very high number.
 </p>
 
 <hr noshade="noshade" size="1" />
