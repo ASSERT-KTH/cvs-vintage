@@ -34,7 +34,7 @@ import org.gjt.sp.jedit.*;
 /**
  * Text area with a history.
  * @author Slava Pestov
- * @version $Id: HistoryText.java,v 1.2 2004/10/23 19:10:12 spestov Exp $
+ * @version $Id: HistoryText.java,v 1.3 2004/10/24 01:36:46 spestov Exp $
  */
 public class HistoryText
 {
@@ -256,6 +256,7 @@ public class HistoryText
 	 */
 	public void setText(String text)
 	{
+		this.index = -1;
 		this.text.setText(text);
 	} //}}}
 
