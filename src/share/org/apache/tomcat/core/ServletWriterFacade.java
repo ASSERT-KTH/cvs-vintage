@@ -102,7 +102,7 @@ public class ServletWriterFacade extends PrintWriter {
 
     public void println( String str ) {
 	in();
-	super.print( str );
+	super.println( str );
 	out(); 
    }
 
