@@ -8,7 +8,7 @@ package org.columba.mail.folder.command;
 
 import org.columba.core.command.DefaultCommandReference;
 import org.columba.core.command.Worker;
-import org.columba.core.gui.frame.FrameController;
+import org.columba.core.gui.frame.AbstractFrameController;
 import org.columba.mail.command.FolderCommand;
 import org.columba.mail.command.ImportFolderCommandReference;
 import org.columba.mail.folder.mailboximport.DefaultMailboxImporter;
@@ -34,7 +34,7 @@ public class ImportMessageCommand extends FolderCommand {
 	 * @param references
 	 */
 	public ImportMessageCommand(
-		FrameController frame,
+		AbstractFrameController frame,
 		DefaultCommandReference[] references) {
 		super(frame, references);
 		

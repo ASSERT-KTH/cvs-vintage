@@ -15,15 +15,18 @@
 //All Rights Reserved.
 package org.columba.mail.gui.frame;
 
+import java.util.Enumeration;
+import java.util.Vector;
+
 import org.columba.core.config.ViewItem;
-import org.columba.core.gui.frame.FrameController;
-import org.columba.core.gui.frame.FrameView;
-import org.columba.core.gui.frame.MultiViewFrameModel;
+import org.columba.core.gui.frame.AbstractFrameController;
+import org.columba.core.gui.frame.AbstractFrameView;
 import org.columba.core.gui.selection.SelectionListener;
 import org.columba.core.gui.toolbar.ToolBar;
 import org.columba.core.gui.util.DialogStore;
 import org.columba.core.logging.ColumbaLogger;
 import org.columba.core.main.MainInterface;
+import org.columba.core.xml.XmlElement;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.config.MailConfig;
 import org.columba.mail.gui.action.GlobalActionCollection;
@@ -32,12 +35,11 @@ import org.columba.mail.gui.composer.HeaderController;
 import org.columba.mail.gui.frame.action.FrameActionListener;
 import org.columba.mail.gui.message.MessageController;
 import org.columba.mail.gui.table.FilterToolbar;
+import org.columba.mail.gui.table.TableChangedEvent;
 import org.columba.mail.gui.table.TableController;
 import org.columba.mail.gui.table.action.ViewMessageAction;
-import org.columba.mail.gui.table.selection.TableSelectionHandler;
 import org.columba.mail.gui.tree.TreeController;
 import org.columba.mail.gui.tree.action.ViewHeaderListAction;
-import org.columba.mail.gui.tree.selection.TreeSelectionHandler;
 import org.columba.mail.gui.tree.util.FolderInfoPanel;
 
 /**
@@ -48,7 +50,7 @@ import org.columba.mail.gui.tree.util.FolderInfoPanel;
  * To enable and disable the creation of type comments go to
  * Window>Preferences>Java>Code Generation.
  */
-public class MailFrameController extends FrameController {
+public class MailFrameController extends AbstractFrameController {
 
 	//public SelectionManager selectionManager;
 
@@ -64,10 +66,27 @@ public class MailFrameController extends FrameController {
 	private FrameActionListener actionListener;
 	private ToolBar toolBar;
 	public GlobalActionCollection globalActionCollection;
+	
+	protected static Vector list = new Vector();
 
-	public MailFrameController(String id, MultiViewFrameModel model) {
-		super(id, model);
+	public MailFrameController( ViewItem viewItem) {
+		super("Mail", viewItem);
+		
+		list.add(this);
+		
 	}
+	
+	public static void tableChanged(TableChangedEvent ev) throws Exception {
+			for (Enumeration e = list.elements(); e.hasMoreElements();) {
+				
+
+				MailFrameController frame =
+					(MailFrameController) e.nextElement();
+					
+				frame.tableController.tableChanged(ev);
+			}
+
+		}
 
 	public FolderCommandReference[] getTableSelection() {
 		FolderCommandReference[] r =
@@ -93,7 +112,7 @@ public class MailFrameController extends FrameController {
 		getSelectionManager().registerSelectionListener("mail.tree", l);
 	}
 
-	public FrameView createView() {
+	public AbstractFrameView createView() {
 
 		MailFrameView view = new MailFrameView(this);
 
@@ -106,12 +125,12 @@ public class MailFrameController extends FrameController {
 			messageController.getView(),
 			statusBar);
 
-		view.pack();
+		//view.pack();
 
 		return view;
 	}
 
-	public FrameView getView() {
+	public AbstractFrameView getView() {
 		return view;
 	}
 
@@ -174,20 +193,10 @@ public class MailFrameController extends FrameController {
 	 */
 	protected void init() {
 		treeController = new TreeController(this, MainInterface.treeModel);
-		// moved this into TreeController constructor, because
-		// its needed to create the context-menu 
-		/*
-		selectionManager.addSelectionHandler(
-			new TreeSelectionHandler(treeController.getView()));
-		*/
+		
 		
 		tableController = new TableController(this);
-		// moved this into TableController constructor, because
-	    // its needed to create the context-menu
-	    /* 
-		selectionManager.addSelectionHandler(
-			new TableSelectionHandler(tableController.getView()));
-		*/
+		
 
 		attachmentController = new AttachmentController(this);
 
@@ -197,6 +206,27 @@ public class MailFrameController extends FrameController {
 		filterToolbar = new FilterToolbar(tableController);
 
 		new DialogStore((MailFrameView) view);
+	}
+
+	/* (non-Javadoc)
+	 * @see org.columba.core.gui.frame.AbstractFrameController#createDefaultConfiguration(java.lang.String)
+	 */
+	protected XmlElement createDefaultConfiguration(String id) {
+		
+		XmlElement child = super.createDefaultConfiguration(id);
+
+		XmlElement toolbars = new XmlElement("toolbars");
+		toolbars.addAttribute("show_main", "true");
+		toolbars.addAttribute("show_filter", "true");
+		toolbars.addAttribute("show_folderinfo", "true");
+		child.addElement(toolbars);
+		XmlElement splitpanes = new XmlElement("splitpanes");
+		splitpanes.addAttribute("main", "200");
+		splitpanes.addAttribute("header", "200");
+		splitpanes.addAttribute("attachment", "100");
+		child.addElement(splitpanes);
+
+		return child;
 	}
 
 }

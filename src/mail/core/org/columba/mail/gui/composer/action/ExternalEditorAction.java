@@ -9,7 +9,7 @@ package org.columba.mail.gui.composer.action;
 import java.awt.event.ActionEvent;
 
 import org.columba.core.action.FrameAction;
-import org.columba.core.gui.frame.FrameController;
+import org.columba.core.gui.frame.AbstractFrameController;
 import org.columba.core.util.SwingWorker;
 import org.columba.mail.gui.composer.ComposerController;
 import org.columba.mail.gui.composer.util.ExternalEditor;
@@ -34,7 +34,7 @@ public class ExternalEditorAction extends FrameAction {
 	 * @param mnemonic
 	 * @param keyStroke
 	 */
-	public ExternalEditorAction(FrameController frameController) {
+	public ExternalEditorAction(AbstractFrameController frameController) {
 		super(
 			frameController,
 			MailResourceLoader.getString(

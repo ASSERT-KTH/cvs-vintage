@@ -6,7 +6,7 @@
  */
 package org.columba.mail.gui.menu;
 
-import org.columba.core.gui.frame.FrameController;
+import org.columba.core.gui.frame.AbstractFrameController;
 import org.columba.core.gui.menu.ContextMenu;
 import org.columba.core.gui.menu.PopupMenuGenerator;
 
@@ -22,7 +22,7 @@ public class MailContextMenu extends ContextMenu {
 	 * @param frameController
 	 * @param path
 	 */
-	public MailContextMenu(FrameController frameController, String path) {
+	public MailContextMenu(AbstractFrameController frameController, String path) {
 		super(frameController, path);
 
 	}
@@ -32,7 +32,7 @@ public class MailContextMenu extends ContextMenu {
 	 */
 	public PopupMenuGenerator createPopupMenuGeneratorInstance(
 		String xmlRoot,
-		FrameController frameController) {
+		AbstractFrameController frameController) {
 
 		if (menuGenerator == null) {
 			menuGenerator =

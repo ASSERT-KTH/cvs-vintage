@@ -33,12 +33,14 @@ import org.columba.core.action.ActionPluginHandler;
 import org.columba.core.command.DefaultProcessor;
 import org.columba.core.config.Config;
 import org.columba.core.config.ConfigPath;
+import org.columba.core.gui.frame.FrameModel;
 import org.columba.core.gui.frame.FrameModelManager;
 import org.columba.core.gui.menu.MenuPluginHandler;
 import org.columba.core.gui.util.ImageLoader;
 import org.columba.core.gui.util.StartUpFrame;
 import org.columba.core.gui.util.ThemeSwitcher;
 import org.columba.core.logging.ColumbaLogger;
+import org.columba.core.plugin.FramePluginHandler;
 import org.columba.core.plugin.InterpreterHandler;
 import org.columba.core.plugin.PluginManager;
 import org.columba.core.shutdown.SaveConfigPlugin;
@@ -46,6 +48,8 @@ import org.columba.core.shutdown.ShutdownManager;
 import org.columba.core.util.CharsetManager;
 import org.columba.core.util.CmdLineArgumentParser;
 import org.columba.core.util.TempFileStore;
+import org.columba.mail.config.MailConfig;
+import org.columba.mail.gui.config.accountwizard.AccountWizard;
 import org.columba.mail.main.MailMain;
 
 public class Main {
@@ -175,6 +179,9 @@ public class Main {
 				MainInterface.pluginManager.registerHandler(
 					new MenuPluginHandler("org.columba.core.menu"));
 					
+				
+				MainInterface.pluginManager.registerHandler(
+									new FramePluginHandler());
 
 
 				MainInterface.shutdownManager = new ShutdownManager();
@@ -198,11 +205,11 @@ public class Main {
 				frame.advance();
 				
 				mail.initGui();
-
-				// if no view is open 
-				//  -> open mail-component as default
-				MainInterface.frameModelManager.init();
-
+				
+				new FrameModel();
+				
+				if (MailConfig.getAccountList().count() == 0)
+							new AccountWizard(false);
 				return null;
 			}
 

@@ -99,12 +99,14 @@ public class ReplyCommand extends FolderCommand {
 
 		ComposerModel model = new ComposerModel();
 		
-		controller = (ComposerController) model.openView(); 
+		controller = new ComposerController();
 
 		MessageBuilder.getInstance().createMessage(
 			message,
 			model,
 			MessageBuilder.REPLY);
+			
+		controller.setComposerModel(model);
 
 	}
 

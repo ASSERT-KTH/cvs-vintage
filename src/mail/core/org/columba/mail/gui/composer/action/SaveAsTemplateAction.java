@@ -9,7 +9,7 @@ package org.columba.mail.gui.composer.action;
 import java.awt.event.ActionEvent;
 
 import org.columba.core.action.FrameAction;
-import org.columba.core.gui.frame.FrameController;
+import org.columba.core.gui.frame.AbstractFrameController;
 import org.columba.core.main.MainInterface;
 import org.columba.mail.command.ComposerCommandReference;
 import org.columba.mail.config.AccountItem;
@@ -39,7 +39,7 @@ public class SaveAsTemplateAction extends FrameAction {
 	 * @param mnemonic
 	 * @param keyStroke
 	 */
-	public SaveAsTemplateAction(FrameController frameController) {
+	public SaveAsTemplateAction(AbstractFrameController frameController) {
 		super(
 			frameController,
 			MailResourceLoader.getString(

@@ -24,7 +24,7 @@ import javax.swing.JRadioButtonMenuItem;
 
 import org.columba.core.action.IMenu;
 import org.columba.core.config.TableItem;
-import org.columba.core.gui.frame.FrameController;
+import org.columba.core.gui.frame.AbstractFrameController;
 import org.columba.mail.gui.frame.MailFrameController;
 import org.columba.mail.util.MailResourceLoader;
 
@@ -32,7 +32,7 @@ public class SortMessagesMenu extends IMenu implements ActionListener {
 	
 	private ButtonGroup menuButtons;
 
-	public SortMessagesMenu(FrameController controller) {
+	public SortMessagesMenu(AbstractFrameController controller) {
 		super(controller, MailResourceLoader.getString(
 		"menu",
 		"mainframe",

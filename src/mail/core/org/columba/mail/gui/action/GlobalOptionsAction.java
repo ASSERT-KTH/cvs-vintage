@@ -19,7 +19,7 @@ package org.columba.mail.gui.action;
 import java.awt.event.ActionEvent;
 
 import org.columba.core.action.FrameAction;
-import org.columba.core.gui.frame.FrameController;
+import org.columba.core.gui.frame.AbstractFrameController;
 import org.columba.core.gui.util.ImageLoader;
 import org.columba.core.gui.util.ThemeSwitcher;
 import org.columba.mail.gui.config.general.GeneralOptionsDialog;
@@ -27,7 +27,7 @@ import org.columba.mail.util.MailResourceLoader;
 
 public class GlobalOptionsAction extends FrameAction {
 
-	public GlobalOptionsAction(FrameController controller) {
+	public GlobalOptionsAction(AbstractFrameController controller) {
 		super(
 			controller,
 			MailResourceLoader.getString(

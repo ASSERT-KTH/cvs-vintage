@@ -22,14 +22,15 @@ import java.awt.event.KeyEvent;
 import javax.swing.KeyStroke;
 
 import org.columba.core.action.FrameAction;
-import org.columba.core.gui.frame.FrameController;
+import org.columba.core.gui.frame.AbstractFrameController;
+import org.columba.core.gui.frame.FrameModel;
 import org.columba.core.gui.util.ImageLoader;
 import org.columba.core.main.MainInterface;
 import org.columba.mail.util.MailResourceLoader;
 
 public class ExitAction extends FrameAction {
 
-	public ExitAction(FrameController controller) {
+	public ExitAction(AbstractFrameController controller) {
 		super(
 			controller,
 			MailResourceLoader.getString("menu", "mainframe", "menu_file_exit"),
@@ -46,8 +47,10 @@ public class ExitAction extends FrameAction {
 	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
 	 */
 	public void actionPerformed(ActionEvent evt) {
-		MainInterface.frameModel.saveAll();
-		MainInterface.addressbookModel.saveAll();
+		//MainInterface.frameModel.saveAll();
+		//MainInterface.addressbookModel.saveAll();
+		
+		FrameModel.saveAll();
 		MainInterface.shutdownManager.shutdown();
 	}
 

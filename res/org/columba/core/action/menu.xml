@@ -6,6 +6,7 @@
 	    <menu name="menu_file_new">
 	    	<menuitem action="OpenNewMailWindow"/>
 	    	<menuitem action="OpenNewAddressbookWindow"/>
+	    	<menuitem action="OpenNewMessageFrameWindow"/>
 	    	<extensionpoint name="open" />
 	    </menu>	    
 		<separator/>

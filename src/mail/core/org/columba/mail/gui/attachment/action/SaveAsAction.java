@@ -9,7 +9,7 @@ package org.columba.mail.gui.attachment.action;
 import java.awt.event.ActionEvent;
 
 import org.columba.core.action.FrameAction;
-import org.columba.core.gui.frame.FrameController;
+import org.columba.core.gui.frame.AbstractFrameController;
 import org.columba.core.gui.selection.SelectionChangedEvent;
 import org.columba.core.gui.selection.SelectionListener;
 import org.columba.core.gui.util.ImageLoader;
@@ -36,7 +36,7 @@ public class SaveAsAction extends FrameAction implements SelectionListener {
 	 * @param mnemonic
 	 * @param keyStroke
 	 */
-	public SaveAsAction(FrameController frameController) {
+	public SaveAsAction(AbstractFrameController frameController) {
 		super(frameController, MailResourceLoader.getString("menu", "mainframe", "attachmentsaveas"), //$NON-NLS-1$
 		MailResourceLoader.getString("menu", "mainframe", "attachmentsaveas_tooltip"), //$NON-NLS-1$
 		"SAVE_AS", //$NON-NLS-1$

@@ -22,6 +22,7 @@ import org.columba.mail.command.FolderCommand;
 import org.columba.mail.command.FolderCommandAdapter;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.folder.Folder;
+import org.columba.mail.gui.frame.MailFrameController;
 import org.columba.mail.gui.table.TableChangedEvent;
 
 /**
@@ -64,7 +65,7 @@ public class MarkMessageCommand extends FolderCommand {
 					r[i].getUids(),
 					r[i].getMarkVariant());
 
-			MainInterface.frameModel.tableChanged(ev);
+			MailFrameController.tableChanged(ev);
 
 			MainInterface.treeModel.nodeChanged(r[i].getFolder());
 		}
@@ -79,7 +80,7 @@ public class MarkMessageCommand extends FolderCommand {
 					u.getUids(),
 					u.getMarkVariant());
 
-			MainInterface.frameModel.tableChanged(ev);
+			MailFrameController.tableChanged(ev);
 			MainInterface.treeModel.nodeChanged(u.getFolder());
 		}
 

@@ -9,7 +9,7 @@ package org.columba.mail.gui.table.action;
 import java.awt.event.ActionEvent;
 
 import org.columba.core.action.FrameAction;
-import org.columba.core.gui.frame.FrameController;
+import org.columba.core.gui.frame.AbstractFrameController;
 import org.columba.core.gui.selection.SelectionChangedEvent;
 import org.columba.core.gui.selection.SelectionListener;
 import org.columba.core.main.MainInterface;
@@ -39,7 +39,7 @@ public class ForwardInlineAction
 	 * @param mnemonic
 	 * @param keyStroke
 	 */
-	public ForwardInlineAction(FrameController frameController) {
+	public ForwardInlineAction(AbstractFrameController frameController) {
 		super(
 			frameController,
 			MailResourceLoader.getString(

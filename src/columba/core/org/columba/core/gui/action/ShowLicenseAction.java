@@ -11,7 +11,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 import org.columba.core.action.FrameAction;
-import org.columba.core.gui.frame.FrameController;
+import org.columba.core.gui.frame.AbstractFrameController;
 import org.columba.mail.gui.util.URLController;
 import org.columba.mail.util.MailResourceLoader;
 
@@ -33,7 +33,7 @@ public class ShowLicenseAction extends FrameAction {
 	 * @param mnemonic
 	 * @param keyStroke
 	 */
-	public ShowLicenseAction(FrameController frameController) {
+	public ShowLicenseAction(AbstractFrameController frameController) {
 		super(
 			frameController,
 			MailResourceLoader.getString(

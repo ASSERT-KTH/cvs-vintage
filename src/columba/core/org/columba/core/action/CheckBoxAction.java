@@ -19,7 +19,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JCheckBoxMenuItem;
 import javax.swing.KeyStroke;
 
-import org.columba.core.gui.frame.FrameController;
+import org.columba.core.gui.frame.AbstractFrameController;
 
 /**
  * @author frd
@@ -44,7 +44,7 @@ public class CheckBoxAction extends FrameAction {
 	 * @param keyStroke
 	 */
 	public CheckBoxAction(
-		FrameController frameController,
+		AbstractFrameController frameController,
 		String name,
 		String longDescription,
 		String actionCommand,
@@ -75,7 +75,7 @@ public class CheckBoxAction extends FrameAction {
 	 * @param keyStroke
 	 */
 	public CheckBoxAction(
-		FrameController frameController,
+		AbstractFrameController frameController,
 		String name,
 		String longDescription,
 		String tooltip,

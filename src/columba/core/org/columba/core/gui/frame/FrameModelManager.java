@@ -33,18 +33,20 @@ public class FrameModelManager {
 	{
 		// if no frame is visible 
 		//  -> open mail-component
+		/*
 		if ( list.size() == 0 )
 		{
 			MainInterface.frameModel.openView();
 		}
+		*/
 	}
 	
-	public void register( FrameController view )
+	public void register( AbstractFrameController view )
 	{
 		list.add(view);
 	}
 	
-	public void unregister(FrameController view)
+	public void unregister(AbstractFrameController view)
 	{
 		list.remove(view);
 		

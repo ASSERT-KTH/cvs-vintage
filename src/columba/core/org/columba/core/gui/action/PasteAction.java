@@ -22,13 +22,13 @@ import java.awt.event.KeyEvent;
 import javax.swing.KeyStroke;
 
 import org.columba.core.action.FrameAction;
-import org.columba.core.gui.frame.FrameController;
+import org.columba.core.gui.frame.AbstractFrameController;
 import org.columba.core.gui.util.ImageLoader;
 import org.columba.mail.util.MailResourceLoader;
 
 public class PasteAction extends FrameAction {
 
-	public PasteAction(FrameController controller) {
+	public PasteAction(AbstractFrameController controller) {
 		super(
 			controller,
 			MailResourceLoader.getString(

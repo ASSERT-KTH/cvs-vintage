@@ -14,7 +14,7 @@ import org.columba.addressbook.gui.dialog.contact.ContactDialog;
 import org.columba.addressbook.gui.frame.AddressbookFrameController;
 import org.columba.addressbook.util.AddressbookResourceLoader;
 import org.columba.core.action.FrameAction;
-import org.columba.core.gui.frame.FrameController;
+import org.columba.core.gui.frame.AbstractFrameController;
 import org.columba.core.gui.util.ImageLoader;
 
 /**
@@ -35,7 +35,7 @@ public class AddContactCardAction extends FrameAction {
 	 * @param mnemonic
 	 * @param keyStroke
 	 */
-	public AddContactCardAction(FrameController frameController) {
+	public AddContactCardAction(AbstractFrameController frameController) {
 		super(
 			frameController,
 			AddressbookResourceLoader.getString(

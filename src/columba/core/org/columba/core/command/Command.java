@@ -17,7 +17,7 @@ package org.columba.core.command;
 
 import java.lang.reflect.Array;
 
-import org.columba.core.gui.frame.FrameController;
+import org.columba.core.gui.frame.AbstractFrameController;
 import org.columba.core.util.Lock;
 
 /**
@@ -76,7 +76,7 @@ public abstract class Command {
 	private DefaultCommandReference[] references;
 	private DefaultCommandReference[] undoReferences;
 
-	protected FrameController frameController;
+	protected AbstractFrameController frameController;
 
 	public Command(DefaultCommandReference[] references) {
 		this.references = references;
@@ -86,7 +86,7 @@ public abstract class Command {
 	}
 
 	public Command(
-		FrameController frameController,
+		AbstractFrameController frameController,
 		DefaultCommandReference[] references) {
 		this.references = references;
 		this.frameController = frameController;
@@ -262,7 +262,7 @@ public abstract class Command {
 	 * Returns the frameController.
 	 * @return FrameController
 	 */
-	public FrameController getFrameController() {
+	public AbstractFrameController getFrameController() {
 		return frameController;
 	}
 

@@ -19,11 +19,11 @@ package org.columba.core.action;
 import javax.swing.ImageIcon;
 import javax.swing.KeyStroke;
 
-import org.columba.core.gui.frame.FrameController;
+import org.columba.core.gui.frame.AbstractFrameController;
 
 public class FrameAction extends BasicAction {
 
-	protected FrameController frameController;
+	protected AbstractFrameController frameController;
 
 	/**
 	 * @param name
@@ -36,7 +36,7 @@ public class FrameAction extends BasicAction {
 	 * @param showToolbarText
 	 */
 	public FrameAction(
-		FrameController frameController,
+		AbstractFrameController frameController,
 		String name,
 		String longDescription,
 		String actionCommand,
@@ -68,7 +68,7 @@ public class FrameAction extends BasicAction {
 	 * @param keyStroke
 	 */
 	public FrameAction(
-		FrameController frameController,
+		AbstractFrameController frameController,
 		String name,
 		String longDescription,
 		String tooltip,
@@ -91,7 +91,7 @@ public class FrameAction extends BasicAction {
 	}
 	
 	public FrameAction(
-			FrameController frameController,
+			AbstractFrameController frameController,
 			String name,
 			String longDescription,
 			String tooltip,
@@ -119,7 +119,7 @@ public class FrameAction extends BasicAction {
 	/**
 	 * @return FrameController
 	 */
-	public FrameController getFrameController() {
+	public AbstractFrameController getFrameController() {
 		return frameController;
 	}
 
@@ -127,7 +127,7 @@ public class FrameAction extends BasicAction {
 	 * Sets the frameController.
 	 * @param frameController The frameController to set
 	 */
-	public void setFrameController(FrameController frameController) {
+	public void setFrameController(AbstractFrameController frameController) {
 		this.frameController = frameController;
 	}
 }

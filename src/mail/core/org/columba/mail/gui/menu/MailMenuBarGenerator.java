@@ -6,7 +6,7 @@
  */
 package org.columba.mail.gui.menu;
 
-import org.columba.core.gui.frame.FrameController;
+import org.columba.core.gui.frame.AbstractFrameController;
 import org.columba.core.gui.menu.MenuBarGenerator;
 import org.columba.mail.util.MailResourceLoader;
 
@@ -22,7 +22,7 @@ public class MailMenuBarGenerator extends MenuBarGenerator {
 	 * @param frameController
 	 * @param path
 	 */
-	public MailMenuBarGenerator(FrameController frameController, String path) {
+	public MailMenuBarGenerator(AbstractFrameController frameController, String path) {
 		super(frameController, path);
 		
 	}

@@ -79,13 +79,14 @@ public class ReplyAsAttachmentCommand extends FolderCommand {
 
 		ComposerModel model = new ComposerModel();
 		
-		controller = (ComposerController) model.openView();
+		controller = new ComposerController();
 
 		MessageBuilder.getInstance().createMessage(
 			message,
 			model,
 			MessageBuilder.REPLY_AS_ATTACHMENT);
 
+		controller.setComposerModel(model);
 	}
 
 	/**

@@ -11,7 +11,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 import org.columba.core.action.FrameAction;
-import org.columba.core.gui.frame.FrameController;
+import org.columba.core.gui.frame.AbstractFrameController;
 import org.columba.core.gui.util.ImageLoader;
 import org.columba.mail.gui.util.URLController;
 import org.columba.mail.util.MailResourceLoader;
@@ -34,7 +34,7 @@ public class ShowHelpAction extends FrameAction {
 	 * @param mnemonic
 	 * @param keyStroke
 	 */
-	public ShowHelpAction(FrameController frameController) {
+	public ShowHelpAction(AbstractFrameController frameController) {
 		super(
 			frameController,
 			MailResourceLoader.getString("menu", "mainframe", "menu_help_help"),

@@ -17,7 +17,7 @@ package org.columba.core.command;
 
 import java.util.Vector;
 
-import org.columba.core.gui.frame.FrameController;
+import org.columba.core.gui.frame.AbstractFrameController;
 import org.columba.core.gui.statusbar.event.WorkerStatusChangeListener;
 import org.columba.core.gui.statusbar.event.WorkerStatusChangedEvent;
 import org.columba.core.gui.util.ExceptionDialog;
@@ -230,7 +230,7 @@ public class Worker extends SwingWorker implements WorkerStatusController {
 		return timeStamp;
 	}
 
-	public FrameController getFrameController() {
+	public AbstractFrameController getFrameController() {
 		return op.getFrameController();
 	}
 

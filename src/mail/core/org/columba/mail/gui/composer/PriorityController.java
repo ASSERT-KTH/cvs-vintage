@@ -54,14 +54,14 @@ public class PriorityController implements ItemListener{
 		}
 		else
 		{
-			((ComposerModel)controller.getModel()).setPriority( (String) view.getSelectedItem() );
+			controller.getModel().setPriority( (String) view.getSelectedItem() );
 			//model.setHeaderField("X-Priority",(String) view.getSelectedItem());
 		}
 	}
 	
 	public void itemStateChanged(ItemEvent e) {
         if (e.getStateChange() == ItemEvent.SELECTED) {
-			((ComposerModel)controller.getModel()).setPriority( (String) view.getSelectedItem() );
+			controller.getModel().setPriority( (String) view.getSelectedItem() );
 
         } 
     }

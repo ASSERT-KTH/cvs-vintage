@@ -19,9 +19,6 @@ import java.util.Vector;
 
 import org.columba.addressbook.folder.HeaderItem;
 import org.columba.addressbook.parser.ListParser;
-import org.columba.core.gui.frame.FrameController;
-import org.columba.core.gui.frame.SingleViewFrameModel;
-import org.columba.core.xml.XmlElement;
 import org.columba.mail.config.AccountItem;
 import org.columba.mail.config.MailConfig;
 import org.columba.mail.message.Message;
@@ -33,7 +30,7 @@ import org.columba.mail.message.MimePart;
  * Model for message composer dialog
  * 
  */
-public class ComposerModel extends SingleViewFrameModel {
+public class ComposerModel {
 
 	Message message;
 	AccountItem accountItem;
@@ -50,25 +47,18 @@ public class ComposerModel extends SingleViewFrameModel {
 	boolean encryptMessage;
 
 	public ComposerModel() {
-		this(
-			MailConfig.getComposerOptionsConfig().getViewItem().getRoot(),
-			new Message());
+		message = new Message();
+
+		toList = new Vector();
+		ccList = new Vector();
+		bccList = new Vector();
+
+		attachments = new Vector();
+
+		charsetName = "auto";
 	}
 
 	public ComposerModel(Message message) {
-		this(
-			MailConfig.getComposerOptionsConfig().getViewItem().getRoot(),
-			message);
-	}
-
-	public ComposerModel(XmlElement root) {
-
-		this(root, new Message());
-	}
-
-	public ComposerModel(XmlElement root, Message message) {
-		super(root);
-
 		this.message = message;
 
 		toList = new Vector();
@@ -264,8 +254,9 @@ public class ComposerModel extends SingleViewFrameModel {
 		message.getHeader().set("X-Priority", s);
 	}
 
-	public FrameController createInstance(String id) {
+	/*
+	public AbstractFrameController createInstance(String id) {
 		return new ComposerController(id, this);
 	}
-
+	*/
 }

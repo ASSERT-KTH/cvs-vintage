@@ -44,7 +44,7 @@ public abstract class MultiViewFrameModel extends DefaultFrameModel {
 			XmlElement view = viewList.getElement(i);
 			String id = view.getAttribute("id");
 
-			FrameController c = createInstance(new Integer(id).toString());
+			AbstractFrameController c = createInstance(new Integer(id).toString());
 
 			c.getView().loadWindowPosition();
 			c.getView().setVisible(true);
@@ -73,7 +73,7 @@ public abstract class MultiViewFrameModel extends DefaultFrameModel {
 	public void saveAll() {
 		for (Enumeration e = controllers.keys(); e.hasMoreElements();) {
 			String key = (String) e.nextElement();
-			FrameController frame = (FrameController) controllers.get(key);
+			AbstractFrameController frame = (AbstractFrameController) controllers.get(key);
 			frame.saveAndClose();
 		}
 		/*
@@ -87,9 +87,9 @@ public abstract class MultiViewFrameModel extends DefaultFrameModel {
 		 * Registers the View
 		 * @param view
 		 */
-	protected void register(String id, FrameController controller) {
+	protected void register(String id, AbstractFrameController controller) {
 		controllers.put(id, controller);
-		controller.setItem(getViewItem(id));
+		controller.setViewItem(getViewItem(id));
 
 		MainInterface.frameModelManager.register(controller);
 	}
@@ -123,7 +123,7 @@ public abstract class MultiViewFrameModel extends DefaultFrameModel {
 	protected void unregister(String id) {
 
 		// remove from list
-		FrameController controller = (FrameController) controllers.get(id);
+		AbstractFrameController controller = (AbstractFrameController) controllers.get(id);
 		controllers.remove(id);
 
 		// remove from configuration

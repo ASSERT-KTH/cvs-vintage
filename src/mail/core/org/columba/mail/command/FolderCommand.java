@@ -17,7 +17,7 @@ package org.columba.mail.command;
 
 import org.columba.core.command.Command;
 import org.columba.core.command.DefaultCommandReference;
-import org.columba.core.gui.frame.FrameController;
+import org.columba.core.gui.frame.AbstractFrameController;
 import org.columba.mail.folder.Folder;
 
 /**
@@ -41,7 +41,7 @@ public abstract class FolderCommand extends Command {
 		super( references);
 	}
 	
-	public FolderCommand( FrameController frame, DefaultCommandReference[] references)
+	public FolderCommand( AbstractFrameController frame, DefaultCommandReference[] references)
 	{
 		super(frame, references);
 	}

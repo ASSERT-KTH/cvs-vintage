@@ -17,7 +17,7 @@
 package org.columba.mail.gui.table.action;
 
 import org.columba.core.action.InternAction;
-import org.columba.core.gui.frame.FrameController;
+import org.columba.core.gui.frame.AbstractFrameController;
 import org.columba.core.gui.selection.SelectionChangedEvent;
 import org.columba.core.gui.selection.SelectionListener;
 import org.columba.core.main.MainInterface;
@@ -29,7 +29,7 @@ public class ViewMessageAction extends InternAction implements SelectionListener
 	/**
 	 * @param controller
 	 */
-	public ViewMessageAction(FrameController controller)  {
+	public ViewMessageAction(AbstractFrameController controller)  {
 		super(controller);
 		controller.getSelectionManager().registerSelectionListener("mail.table", this);
 	}

@@ -9,7 +9,7 @@ package org.columba.mail.gui.table.action;
 import java.awt.event.ActionEvent;
 
 import org.columba.core.action.FrameAction;
-import org.columba.core.gui.frame.FrameController;
+import org.columba.core.gui.frame.AbstractFrameController;
 import org.columba.core.gui.selection.SelectionChangedEvent;
 import org.columba.core.gui.selection.SelectionListener;
 import org.columba.core.gui.util.ImageLoader;
@@ -40,7 +40,7 @@ public class MarkAsExpungedAction
 	 * @param mnemonic
 	 * @param keyStroke
 	 */
-	public MarkAsExpungedAction(FrameController frameController) {
+	public MarkAsExpungedAction(AbstractFrameController frameController) {
 		super(
 			frameController,
 			MailResourceLoader.getString(

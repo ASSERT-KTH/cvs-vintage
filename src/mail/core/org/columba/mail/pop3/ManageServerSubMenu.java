@@ -21,7 +21,7 @@ import java.util.ListIterator;
 import org.columba.core.action.IMenu;
 import org.columba.core.event.ModelChangeListener;
 import org.columba.core.event.ModelChangedEvent;
-import org.columba.core.gui.frame.FrameController;
+import org.columba.core.gui.frame.AbstractFrameController;
 import org.columba.core.main.MainInterface;
 import org.columba.mail.util.MailResourceLoader;
 
@@ -32,7 +32,7 @@ public class ManageServerSubMenu extends IMenu implements ModelChangeListener {
 	/**
 	 * 
 	 */
-	public ManageServerSubMenu(FrameController controller) {
+	public ManageServerSubMenu(AbstractFrameController controller) {
 		super(controller, MailResourceLoader.getString(
 		"menu",
 		"mainframe",

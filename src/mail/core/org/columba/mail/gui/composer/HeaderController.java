@@ -148,17 +148,17 @@ public class HeaderController
 
 			view.getAddressbookTableModel().setHeaderList(null);
 
-			addVectorToTable(((ComposerModel)controller.getModel()).getToList(), 0);
+			addVectorToTable(controller.getModel().getToList(), 0);
 
-			addVectorToTable(((ComposerModel)controller.getModel()).getCcList(), 1);
+			addVectorToTable(controller.getModel().getCcList(), 1);
 
-			addVectorToTable(((ComposerModel)controller.getModel()).getBccList(), 2);
+			addVectorToTable(controller.getModel().getBccList(), 2);
 
 			appendRow();
 		} else {
-			((ComposerModel)controller.getModel()).getToList().clear();
-			((ComposerModel)controller.getModel()).getToList().clear();
-			((ComposerModel)controller.getModel()).getToList().clear();
+			controller.getModel().getToList().clear();
+			controller.getModel().getToList().clear();
+			controller.getModel().getToList().clear();
 
 			for (int i = 0; i < view.table.getRowCount(); i++) {
 				HeaderItem item =
@@ -168,16 +168,16 @@ public class HeaderController
 
 				if (field == null) {
 					item.add("field", "To");
-					((ComposerModel)controller.getModel()).getToList().add(item);
+					controller.getModel().getToList().add(item);
 					continue;
 				}
 
 				if (field.equals("To")) {
-					((ComposerModel)controller.getModel()).getToList().add(item);
+					controller.getModel().getToList().add(item);
 				} else if (field.equals("Cc")) {
-					((ComposerModel)controller.getModel()).getCcList().add(item);
+					controller.getModel().getCcList().add(item);
 				} else if (field.equals("Bcc")) {
-					((ComposerModel)controller.getModel()).getBccList().add(item);
+					controller.getModel().getBccList().add(item);
 				}
 			}
 		}

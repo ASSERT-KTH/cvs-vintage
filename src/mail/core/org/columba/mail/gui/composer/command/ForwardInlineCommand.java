@@ -99,13 +99,14 @@ public class ForwardInlineCommand extends FolderCommand {
 
 		ComposerModel model = new ComposerModel();
 		
-		controller = (ComposerController) model.openView();
+		controller = new ComposerController();
 
 		MessageBuilder.getInstance().createMessage(
 			message,
 			model,
 			MessageBuilder.FORWARD_INLINE);
 
+		controller.setComposerModel(model);
 	}
 
 	/**

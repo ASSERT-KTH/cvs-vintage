@@ -1,0 +1,8 @@
+
+
+<framelist>
+ <frame name="Mail" class="org.columba.mail.gui.frame.MailFrameController" />
+ <frame name="Addressbook" class="org.columba.addressbook.gui.frame.AddressbookFrameController" />
+ <frame name="Composer" class="org.columba.mail.gui.composer.ComposerController" />
+ <frame name="MessageFrame" class="org.columba.mail.gui.messageframe.MessageFrameController" />
+</framelist>

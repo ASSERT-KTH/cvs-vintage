@@ -9,8 +9,8 @@ package org.columba.core.gui.action;
 import java.awt.event.ActionEvent;
 
 import org.columba.core.action.FrameAction;
-import org.columba.core.gui.frame.FrameController;
-import org.columba.core.main.MainInterface;
+import org.columba.core.gui.frame.AbstractFrameController;
+import org.columba.core.gui.frame.FrameModel;
 
 /**
  * @author frd
@@ -20,7 +20,7 @@ import org.columba.core.main.MainInterface;
  */
 public class OpenNewAddressbookWindowAction extends FrameAction {
 
-	public OpenNewAddressbookWindowAction(FrameController controller) {
+	public OpenNewAddressbookWindowAction(AbstractFrameController controller) {
 			super(
 				controller,
 				"Addressbook",
@@ -36,7 +36,7 @@ public class OpenNewAddressbookWindowAction extends FrameAction {
 		 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
 		 */
 		public void actionPerformed(ActionEvent evt) {
-			MainInterface.addressbookModel.openView();
+			FrameModel.openView("Addressbook");
 			//getFrameController().getModel().openView();
 		}
 }

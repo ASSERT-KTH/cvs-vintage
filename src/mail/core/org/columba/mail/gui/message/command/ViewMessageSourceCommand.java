@@ -19,7 +19,7 @@ import java.io.File;
 
 import org.columba.core.command.DefaultCommandReference;
 import org.columba.core.command.Worker;
-import org.columba.core.gui.frame.FrameController;
+import org.columba.core.gui.frame.AbstractFrameController;
 import org.columba.core.io.DiskIO;
 import org.columba.core.util.TempFileStore;
 import org.columba.mail.command.FolderCommand;
@@ -48,7 +48,7 @@ public class ViewMessageSourceCommand extends FolderCommand {
 	 * @param references
 	 */
 	public ViewMessageSourceCommand(
-		FrameController frameController,
+		AbstractFrameController frameController,
 		DefaultCommandReference[] references) {
 		super(frameController, references);
 	}

@@ -11,7 +11,5 @@
    	<column name="tel;work" position="4" size="196" enabled="true" />
    	<column name="url" position="5" size="146" enabled="true" />
   </table>
-  <viewlist>
-  </viewlist>
  </gui>
 </options>

@@ -17,8 +17,6 @@ import org.columba.mail.coder.CoderRouter;
 import org.columba.mail.coder.QuotedPrintableDecoder;
 import org.columba.mail.coder.QuotedPrintableEncoder;
 import org.columba.mail.config.MailConfig;
-import org.columba.mail.gui.config.accountwizard.AccountWizard;
-import org.columba.mail.gui.frame.MailFrameModel;
 import org.columba.mail.gui.tree.TreeModel;
 import org.columba.mail.plugin.FilterActionPluginHandler;
 import org.columba.mail.plugin.FilterPluginHandler;
@@ -73,14 +71,14 @@ public class MailMain extends DefaultMain {
 		
 		MainInterface.treeModel = new TreeModel(MailConfig.getFolderConfig());
 		
+		/*
 		MainInterface.frameModel =
 			new MailFrameModel(
 				MailConfig.get("options").getElement("/options/gui/viewlist"));
-
+		*/
 		
 
-		if (MailConfig.getAccountList().count() == 0)
-			new AccountWizard(false);
+		
 	}
 
 	/* (non-Javadoc)

@@ -19,13 +19,13 @@ package org.columba.core.gui.action;
 import java.awt.event.ActionEvent;
 
 import org.columba.core.action.FrameAction;
-import org.columba.core.gui.frame.FrameController;
+import org.columba.core.gui.frame.AbstractFrameController;
 import org.columba.core.logging.ColumbaLogger;
 import org.columba.mail.util.MailResourceLoader;
 
 public class PrintSetupAction extends FrameAction {
 
-	public PrintSetupAction(FrameController controller) {
+	public PrintSetupAction(AbstractFrameController controller) {
 		super(
 			controller,
 			MailResourceLoader.getString(

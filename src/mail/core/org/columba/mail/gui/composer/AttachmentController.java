@@ -73,19 +73,19 @@ public class AttachmentController implements KeyListener {
 
 	public void updateComponents(boolean b) {
 		if (b == true) {
-			for (int i = 0; i < ((ComposerModel)controller.getModel()).getAttachments().size(); i++) {
-				MimePart p = (MimePart) ((ComposerModel)controller.getModel()).getAttachments().get(i);
+			for (int i = 0; i < controller.getModel().getAttachments().size(); i++) {
+				MimePart p = (MimePart) controller.getModel().getAttachments().get(i);
 				view.add( p);
 			}
 		}
 		else
 		{
-			((ComposerModel)controller.getModel()).getAttachments().clear();
+			controller.getModel().getAttachments().clear();
 			
 			for ( int i=0; i<view.count(); i++ )
 			{
 				MimePart mp = view.get(i);
-				((ComposerModel)controller.getModel()).getAttachments().add(mp);
+				controller.getModel().getAttachments().add(mp);
 			}
 		}
 	}

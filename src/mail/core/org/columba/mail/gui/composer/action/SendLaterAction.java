@@ -9,7 +9,7 @@ package org.columba.mail.gui.composer.action;
 import java.awt.event.ActionEvent;
 
 import org.columba.core.action.FrameAction;
-import org.columba.core.gui.frame.FrameController;
+import org.columba.core.gui.frame.AbstractFrameController;
 import org.columba.core.gui.util.ImageLoader;
 import org.columba.core.main.MainInterface;
 import org.columba.mail.command.ComposerCommandReference;
@@ -40,7 +40,7 @@ public class SendLaterAction extends FrameAction {
 	 * @param mnemonic
 	 * @param keyStroke
 	 */
-	public SendLaterAction(FrameController FrameController) {
+	public SendLaterAction(AbstractFrameController FrameController) {
 		super(
 			FrameController,
 			MailResourceLoader.getString(

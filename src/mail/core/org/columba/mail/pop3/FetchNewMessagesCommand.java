@@ -29,6 +29,7 @@ import org.columba.mail.command.POP3CommandReference;
 import org.columba.mail.filter.Filter;
 import org.columba.mail.filter.FilterList;
 import org.columba.mail.folder.Folder;
+import org.columba.mail.gui.frame.MailFrameController;
 import org.columba.mail.gui.table.TableChangedEvent;
 import org.columba.mail.message.HeaderInterface;
 import org.columba.mail.message.Message;
@@ -131,7 +132,7 @@ public class FetchNewMessagesCommand extends Command {
 				inboxFolder,
 				headerList);
 
-		MainInterface.frameModel.tableChanged(ev);
+			MailFrameController.tableChanged(ev);
 
 		FilterList list = inboxFolder.getFilterList();
 		for (int j = 0; j < list.count(); j++) {

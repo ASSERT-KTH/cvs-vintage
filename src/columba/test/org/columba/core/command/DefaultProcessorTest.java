@@ -19,7 +19,7 @@ import java.util.Vector;
 
 import junit.framework.TestCase;
 
-import org.columba.core.gui.frame.FrameController;
+import org.columba.core.gui.frame.AbstractFrameController;
 import org.columba.core.logging.ColumbaLogger;
 
 /**
@@ -124,7 +124,7 @@ public class DefaultProcessorTest extends TestCase {
 
 class TestCommand extends Command {
 	
-	public TestCommand( FrameController controller, DefaultCommandReference[] arguments ) {
+	public TestCommand( AbstractFrameController controller, DefaultCommandReference[] arguments ) {
 		super( controller, arguments );		
 	}
 

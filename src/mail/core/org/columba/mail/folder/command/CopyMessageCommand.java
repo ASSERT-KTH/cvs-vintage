@@ -24,6 +24,7 @@ import org.columba.mail.command.FolderCommand;
 import org.columba.mail.command.FolderCommandAdapter;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.folder.Folder;
+import org.columba.mail.gui.frame.MailFrameController;
 import org.columba.mail.gui.table.TableChangedEvent;
 
 /**
@@ -56,7 +57,7 @@ public class CopyMessageCommand extends FolderCommand {
 		TableChangedEvent ev =
 			new TableChangedEvent(TableChangedEvent.UPDATE, destFolder);
 
-		MainInterface.frameModel.tableChanged(ev);
+		MailFrameController.tableChanged(ev);
 
 		MainInterface.treeModel.nodeChanged(destFolder);
 	}

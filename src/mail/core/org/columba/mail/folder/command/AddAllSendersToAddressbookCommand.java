@@ -20,7 +20,7 @@ import org.columba.addressbook.gui.tree.util.SelectAddressbookFolderDialog;
 import org.columba.addressbook.parser.AddressParser;
 import org.columba.core.command.DefaultCommandReference;
 import org.columba.core.command.Worker;
-import org.columba.core.gui.frame.FrameController;
+import org.columba.core.gui.frame.AbstractFrameController;
 import org.columba.core.main.MainInterface;
 import org.columba.mail.command.FolderCommand;
 import org.columba.mail.command.FolderCommandReference;
@@ -52,7 +52,7 @@ public class AddAllSendersToAddressbookCommand extends FolderCommand {
 	 * @param references
 	 */
 	public AddAllSendersToAddressbookCommand(
-		FrameController frame,
+		AbstractFrameController frame,
 		DefaultCommandReference[] references) {
 		super(frame, references);
 	}

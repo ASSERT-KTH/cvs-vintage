@@ -22,7 +22,7 @@ import java.awt.event.KeyEvent;
 import javax.swing.KeyStroke;
 
 import org.columba.core.action.FrameAction;
-import org.columba.core.gui.frame.FrameController;
+import org.columba.core.gui.frame.AbstractFrameController;
 import org.columba.core.gui.util.ImageLoader;
 import org.columba.core.main.MainInterface;
 import org.columba.mail.folder.Folder;
@@ -32,7 +32,7 @@ import org.columba.mail.util.MailResourceLoader;
 
 public class SearchMessageAction extends FrameAction {
 
-	public SearchMessageAction(FrameController controller) {
+	public SearchMessageAction(AbstractFrameController controller) {
 		super(
 			controller,
 			MailResourceLoader.getString(

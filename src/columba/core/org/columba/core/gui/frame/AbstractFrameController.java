@@ -23,45 +23,65 @@ import org.columba.core.gui.selection.SelectionManager;
 import org.columba.core.gui.statusbar.StatusBar;
 import org.columba.core.logging.ColumbaLogger;
 import org.columba.core.main.MainInterface;
+import org.columba.core.xml.XmlElement;
 import org.columba.mail.gui.frame.TooltipMouseHandler;
 
 /**
  * @author Timo Stich (tstich@users.sourceforge.net)
  * 
  */
-public abstract class FrameController {
+public abstract class AbstractFrameController {
 
 	protected StatusBar statusBar;
 	protected MouseAdapter mouseTooltipHandler;
-	protected String id;
-	protected ViewItem item;
-	protected DefaultFrameModel model;
-	protected FrameView view;
+
+	protected ViewItem viewItem;
+
+	protected AbstractFrameView view;
 	protected SelectionManager selectionManager;
-	
-	
+
+	protected String id;
+
+	protected XmlElement defaultView;
+
 	/**
 	 * Constructor for FrameController.
 	 * 
 	 * Warning: Never do any inits in the constructor -> use init() instead!
 	 */
-	public FrameController( String id, DefaultFrameModel model ) {
+	public AbstractFrameController(String id, ViewItem viewItem) {
 		this.id = id;
-		this.model =model;	
-		statusBar = new StatusBar( MainInterface.processor.getTaskManager() );
-		
-		mouseTooltipHandler = new TooltipMouseHandler( statusBar );
-		
-		model.register(id, this);
+		this.viewItem = viewItem;
+
+		defaultView = new XmlElement("view");
+		XmlElement window = new XmlElement("window");
+		window.addAttribute("width", "640");
+		window.addAttribute("height", "480");
+		window.addAttribute("maximized", "true");
+		defaultView.addElement(window);
+
+		if (viewItem == null)
+			this.viewItem = new ViewItem(createDefaultConfiguration(id));
+
+		statusBar = new StatusBar(MainInterface.processor.getTaskManager());
+
+		mouseTooltipHandler = new TooltipMouseHandler(statusBar);
 
 		selectionManager = new SelectionManager();
 		init();
-				
+
 		view = createView();
-		
+
 		initInternActions();
 	}
-	
+
+	protected XmlElement createDefaultConfiguration(String id) {
+		XmlElement child = (XmlElement) defaultView.clone();
+		child.addAttribute("id", id);
+		
+		return child;
+	}
+
 	/**
 	 * - create all additional controllers
 	 * - register SelectionHandlers
@@ -81,46 +101,53 @@ public abstract class FrameController {
 	public MouseAdapter getMouseTooltipHandler() {
 		return mouseTooltipHandler;
 	}
-	
-	
-	public void saveAndClose()
-	{
+
+	public void saveAndClose() {
 		view.saveWindowPosition();
-		model.saveAndUnregister(id);
+		//model.saveAndUnregister(id);
 	}
-	
-	public void close()
-	{
+
+	public void close() {
 		ColumbaLogger.log.info("closing FrameController");
-		
+
 		view.saveWindowPosition();
-		model.unregister(id);
+
+		FrameModel.unregister(this);
+		
+		//FrameModel.close(this);
+		//model.unregister(id);
 
 		//getView().setVisible(false);	
 	}
 
-	abstract protected FrameView createView();
+	abstract protected AbstractFrameView createView();
+
+	public void openView()
+	{	
+		view.loadWindowPosition();
+		
+		view.setVisible(true);
+	}
 	
 	/**
 	 * @return ViewItem
 	 */
-	public ViewItem getItem() {
-		return item;
+	public ViewItem getViewItem() {
+		return viewItem;
 	}
 
 	/**
 	 * Sets the item.
 	 * @param item The item to set
 	 */
-	public void setItem(ViewItem item) {
-		this.item = item;
+	public void setViewItem(ViewItem item) {
+		this.viewItem = item;
 	}
-	
-	
+
 	/**
 	 * @return FrameView
 	 */
-	public FrameView getView() {
+	public AbstractFrameView getView() {
 		return view;
 	}
 
@@ -141,13 +168,6 @@ public abstract class FrameController {
 	 */
 	public void setSelectionManager(SelectionManager selectionManager) {
 		this.selectionManager = selectionManager;
-	}
-
-	/**
-	 * @return DefaultFrameModel
-	 */
-	public DefaultFrameModel getModel() {
-		return model;
 	}
 
 }

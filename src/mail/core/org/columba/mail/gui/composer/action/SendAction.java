@@ -12,7 +12,7 @@ import java.awt.event.KeyEvent;
 import javax.swing.KeyStroke;
 
 import org.columba.core.action.FrameAction;
-import org.columba.core.gui.frame.FrameController;
+import org.columba.core.gui.frame.AbstractFrameController;
 import org.columba.core.gui.util.ImageLoader;
 import org.columba.core.main.MainInterface;
 import org.columba.mail.command.ComposerCommandReference;
@@ -40,7 +40,7 @@ public class SendAction extends FrameAction {
 	 * @param mnemonic
 	 * @param keyStroke
 	 */
-	public SendAction(FrameController frameController) {
+	public SendAction(AbstractFrameController frameController) {
 		super(
 			frameController,
 			MailResourceLoader.getString("menu", "composer", "menu_file_send"),

@@ -27,14 +27,16 @@ import org.columba.addressbook.folder.HeaderItem;
 import org.columba.addressbook.folder.HeaderItemList;
 import org.columba.addressbook.parser.AddressParser;
 import org.columba.addressbook.parser.ListParser;
-import org.columba.core.gui.frame.DefaultFrameModel;
-import org.columba.core.gui.frame.FrameController;
-import org.columba.core.gui.frame.FrameView;
+import org.columba.core.config.ViewItem;
+import org.columba.core.gui.frame.AbstractFrameController;
+import org.columba.core.gui.frame.AbstractFrameView;
+import org.columba.core.logging.ColumbaLogger;
 import org.columba.core.main.MainInterface;
 import org.columba.core.util.CharsetEvent;
 import org.columba.core.util.CharsetListener;
 import org.columba.core.util.CharsetManager;
 import org.columba.mail.composer.MessageComposer;
+import org.columba.mail.config.MailConfig;
 import org.columba.mail.gui.composer.util.IdentityInfoPanel;
 import org.columba.mail.message.Message;
 import org.columba.mail.util.AddressCollector;
@@ -45,7 +47,7 @@ import org.columba.mail.util.AddressCollector;
  * controller for message composer dialog
  */
 public class ComposerController
-	extends FrameController
+	extends AbstractFrameController
 	implements CharsetListener, ComponentListener, WindowListener {
 
 	private IdentityInfoPanel identityInfoPanel;
@@ -59,7 +61,7 @@ public class ComposerController
 	private CharsetManager charsetManager;
 	private ComposerSpellCheck composerSpellCheck;
 
-	//private ComposerModel composerModel;
+	private ComposerModel composerModel;
 
 	/*
 	Message message;
@@ -77,27 +79,29 @@ public class ComposerController
 	boolean encryptMessage;
 	*/
 
-	public ComposerController(String id, DefaultFrameModel model) {
-		this(id, model, new Message());
+	public ComposerController() {
+		super("Composer", new ViewItem(MailConfig.get("composer_options").getElement("/options/gui/view")));
 
 		getView().addWindowListener(this);
 
-		//composerModel = new ComposerModel();
+		getView().loadWindowPosition();
+		
+		getView().setVisible(true);
 	}
 
 	public ComposerController(
-		String id,
-		DefaultFrameModel model,
 		Message message) {
-		super(id, model);
+		this();
 
-		((ComposerModel) model).setMessage(message);
+		
+		composerModel.setMessage(message);
 
-		getView().addWindowListener(this);
+		//getView().addWindowListener(this);
 		//this.message = message;
 		//composerInterface.viewItem = MailConfig.getComposerOptionsConfig().getViewItem();
 		//composerModel = new ComposerModel();
 	}
+	
 
 	public void charsetChanged(CharsetEvent e) {
 		//((ComposerModel)getModel()).setCharsetName(e.getValue());
@@ -336,7 +340,7 @@ public class ComposerController
 	}
 
 	public void windowClosing(WindowEvent e) {
-		saveAndClose();
+		close();
 	}
 
 	public void windowDeactivated(WindowEvent e) {
@@ -351,11 +355,11 @@ public class ComposerController
 	/* (non-Javadoc)
 	 * @see org.columba.core.gui.FrameController#createView()
 	 */
-	protected FrameView createView() {
+	protected AbstractFrameView createView() {
 		ComposerView view = new ComposerView(this);
 
 		view.init();
-
+		
 		return view;
 	}
 
@@ -480,6 +484,35 @@ public class ComposerController
 		int count = MailConfig.getAccountList().count();
 		if ( count != 0 ) loadWindowPosition();*/
 
+	}
+
+	/**
+	 * @return
+	 */
+	public ComposerModel getModel() {
+		if ( composerModel == null ) composerModel = new ComposerModel();
+		
+		return composerModel;
+	}
+
+	/**
+	 * @param model
+	 */
+	public void setComposerModel(ComposerModel model) {
+		composerModel = model;
+	}
+
+	/* (non-Javadoc)
+	 * @see org.columba.core.gui.frame.AbstractFrameController#close()
+	 */
+	public void close() {
+	
+		ColumbaLogger.log.info("closing ComposerController");
+
+		view.saveWindowPosition();
+
+		view.setVisible(false);
+	
 	}
 
 }

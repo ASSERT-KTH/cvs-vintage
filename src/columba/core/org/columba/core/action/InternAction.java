@@ -16,21 +16,21 @@
 
 package org.columba.core.action;
 
-import org.columba.core.gui.frame.FrameController;
+import org.columba.core.gui.frame.AbstractFrameController;
 
 
 public class InternAction extends JAbstractAction {
 	
-	private FrameController frameController;
+	private AbstractFrameController frameController;
 	
-	public InternAction( FrameController controller ) {
+	public InternAction( AbstractFrameController controller ) {
 		frameController = controller;
 	}
 
 	/**
 	 * @return FrameController
 	 */
-	public FrameController getFrameController() {
+	public AbstractFrameController getFrameController() {
 		return frameController;
 	}
 

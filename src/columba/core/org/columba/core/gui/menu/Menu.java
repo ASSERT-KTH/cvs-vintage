@@ -21,7 +21,7 @@ import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 
 import org.columba.core.action.BasicAction;
-import org.columba.core.gui.frame.FrameController;
+import org.columba.core.gui.frame.AbstractFrameController;
 import org.columba.core.gui.util.CMenu;
 import org.columba.core.gui.util.CMenuItem;
 import org.columba.core.gui.util.NotifyDialog;
@@ -47,11 +47,11 @@ public class Menu extends JMenuBar {
 
 	//XmlElement menuRoot;
 
-	private FrameController frameController;
+	private AbstractFrameController frameController;
 
 	protected MenuBarGenerator menuGenerator;
 
-	public Menu(String xmlRoot, FrameController frameController) {
+	public Menu(String xmlRoot, AbstractFrameController frameController) {
 		super();
 
 		this.frameController = frameController;
@@ -75,7 +75,7 @@ public class Menu extends JMenuBar {
 
 	public MenuBarGenerator createMenuBarGeneratorInstance(
 		String xmlRoot,
-		FrameController frameController) {
+		AbstractFrameController frameController) {
 		if (menuGenerator == null) {
 			menuGenerator = new MenuBarGenerator(frameController, xmlRoot);
 		}

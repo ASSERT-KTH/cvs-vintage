@@ -24,8 +24,8 @@ import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 
 import org.columba.core.config.ViewItem;
-import org.columba.core.gui.frame.FrameController;
-import org.columba.core.gui.frame.FrameView;
+import org.columba.core.gui.frame.AbstractFrameController;
+import org.columba.core.gui.frame.AbstractFrameView;
 import org.columba.core.gui.menu.Menu;
 import org.columba.core.gui.statusbar.StatusBar;
 import org.columba.core.gui.toolbar.ToolBar;
@@ -38,7 +38,7 @@ import org.columba.mail.gui.table.TableView;
 import org.columba.mail.gui.tree.TreeView;
 import org.columba.mail.gui.tree.util.FolderInfoPanel;
 
-public class MailFrameView extends FrameView {
+public class MailFrameView extends AbstractFrameView {
 	//private StatusBar statusBar;
 	public JSplitPane mainSplitPane;
 	public JSplitPane rightSplitPane;
@@ -52,7 +52,7 @@ public class MailFrameView extends FrameView {
 	FilterToolbar filterToolbar;
 	HeaderView header;
 
-	public MailFrameView( FrameController frameController ) {
+	public MailFrameView( AbstractFrameController frameController ) {
 		super( frameController );
 		
 		//MainInterface.mainFrame = this;
@@ -111,10 +111,10 @@ public class MailFrameView extends FrameView {
 		tablePanel = new JPanel();
 		tablePanel.setLayout(new BorderLayout());
 
-		ViewItem item = MailConfig.getMainFrameOptionsConfig().getViewItem();
-		
+		ViewItem viewItem = getFrameController().getViewItem();
+				
 
-		if (item.getBoolean("toolbars", "show_filter") == true)
+		if (viewItem.getBoolean("toolbars", "show_filter") == true)
 			tablePanel.add(filterToolbar, BorderLayout.NORTH);
 
 		JScrollPane tableScrollPane = new JScrollPane(table);
@@ -134,7 +134,7 @@ public class MailFrameView extends FrameView {
 		// same as menu
 
 
-		if (item.getBoolean("toolbars", "show_folderinfo") == true)
+		if (viewItem.getBoolean("toolbars", "show_folderinfo") == true)
 			toolbarPane.add(folderInfoPanel);
 
 		int count = MailConfig.getAccountList().count();
@@ -144,10 +144,10 @@ public class MailFrameView extends FrameView {
 			rightSplitPane.setDividerLocation(150);
 		} else {
 			mainSplitPane.setDividerLocation(
-				item.getInteger("splitpanes", "main"));
+				viewItem.getInteger("splitpanes", "main"));
 
 			rightSplitPane.setDividerLocation(
-				item.getInteger("splitpanes", "header"));
+				viewItem.getInteger("splitpanes", "header"));
 		}
 
 	}
@@ -206,7 +206,7 @@ public class MailFrameView extends FrameView {
 	public void saveWindowPosition() {
 		super.saveWindowPosition();
 
-		ViewItem viewItem = frameController.getItem();
+		ViewItem viewItem = frameController.getViewItem();
 
 		viewItem.set("splitpanes", "main", mainSplitPane.getDividerLocation());
 		viewItem.set(
@@ -221,7 +221,7 @@ public class MailFrameView extends FrameView {
 	/* (non-Javadoc)
 	 * @see org.columba.core.gui.FrameView#createMenu(org.columba.core.gui.FrameController)
 	 */
-	protected Menu createMenu(FrameController controller) {
+	protected Menu createMenu(AbstractFrameController controller) {
 		Menu menu = new MailMenu("org/columba/core/action/menu.xml",controller);
 		
 
@@ -231,7 +231,7 @@ public class MailFrameView extends FrameView {
 	/* (non-Javadoc)
 	 * @see org.columba.core.gui.FrameView#createToolbar(org.columba.core.gui.FrameController)
 	 */
-	protected ToolBar createToolbar(FrameController controller) {
+	protected ToolBar createToolbar(AbstractFrameController controller) {
 		return new ToolBar(MailConfig.get("main_toolbar").getElement("toolbar"), controller);
 	}
 

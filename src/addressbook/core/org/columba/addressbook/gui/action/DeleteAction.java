@@ -13,7 +13,7 @@ import javax.swing.KeyStroke;
 
 import org.columba.addressbook.util.AddressbookResourceLoader;
 import org.columba.core.action.FrameAction;
-import org.columba.core.gui.frame.FrameController;
+import org.columba.core.gui.frame.AbstractFrameController;
 import org.columba.core.gui.util.ImageLoader;
 
 /**
@@ -34,7 +34,7 @@ public class DeleteAction extends FrameAction {
 	 * @param mnemonic
 	 * @param keyStroke
 	 */
-	public DeleteAction(FrameController frameController) {
+	public DeleteAction(AbstractFrameController frameController) {
 		super(
 			frameController,
 			AddressbookResourceLoader.getString(

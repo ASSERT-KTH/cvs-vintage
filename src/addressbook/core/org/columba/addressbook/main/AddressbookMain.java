@@ -15,7 +15,6 @@
 package org.columba.addressbook.main;
 
 import org.columba.addressbook.config.AddressbookConfig;
-import org.columba.addressbook.gui.frame.AddressbookFrameModel;
 import org.columba.addressbook.gui.tree.AddressbookTreeModel;
 import org.columba.addressbook.plugin.FolderPluginHandler;
 import org.columba.addressbook.shutdown.SaveAllAddressbooksPlugin;
@@ -62,11 +61,12 @@ public class AddressbookMain extends DefaultMain {
 			new AddressbookTreeModel(
 				AddressbookConfig.get("tree").getElement("/tree"));
 
+		/*
 		MainInterface.addressbookModel =
 			new AddressbookFrameModel(
 				AddressbookConfig.get("options").getElement(
 					"/options/gui/viewlist"));
-
+		*/
 	}
 
 	/* (non-Javadoc)

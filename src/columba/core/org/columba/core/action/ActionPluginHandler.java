@@ -18,7 +18,7 @@ package org.columba.core.action;
 
 import java.util.ListIterator;
 
-import org.columba.core.gui.frame.FrameController;
+import org.columba.core.gui.frame.AbstractFrameController;
 import org.columba.core.io.DiskIO;
 import org.columba.core.plugin.AbstractPluginHandler;
 import org.columba.core.xml.XmlElement;
@@ -92,11 +92,11 @@ public class ActionPluginHandler extends AbstractPluginHandler{
 	}
 
 	
-	public BasicAction getAction( String name, FrameController controller ) throws Exception {
+	public BasicAction getAction( String name, AbstractFrameController controller ) throws Exception {
 		return (BasicAction) getPlugin(name, new Object[] { controller } );
 	}
 
-	public IMenu getIMenu( String name, FrameController controller ) throws Exception {
+	public IMenu getIMenu( String name, AbstractFrameController controller ) throws Exception {
 		return (IMenu) getPlugin(name, new Object[] { controller } );
 	}
 

@@ -58,13 +58,13 @@ public class EditorController implements DocumentListener {
 	{
 		if ( b == true )
 		{
-			if ( ((ComposerModel)controller.getModel()).getBodyText() != null )
-				view.setText( ((ComposerModel)controller.getModel()).getBodyText() );
+			if ( controller.getModel().getBodyText() != null )
+				view.setText( controller.getModel().getBodyText() );
 		}
 		else
 		{
 			if ( view.getText() != null )
-			((ComposerModel)controller.getModel()).setBodyText( view.getText() );
+			controller.getModel().setBodyText( view.getText() );
 		}
 	}
 	

@@ -18,7 +18,7 @@ package org.columba.mail.pop3;
 import org.columba.core.command.Command;
 import org.columba.core.command.DefaultCommandReference;
 import org.columba.core.command.Worker;
-import org.columba.core.gui.frame.FrameController;
+import org.columba.core.gui.frame.AbstractFrameController;
 import org.columba.mail.command.POP3CommandReference;
 
 /**
@@ -40,7 +40,7 @@ public class FetchMessagesCommand extends Command {
 	 * @param references
 	 */
 	public FetchMessagesCommand(
-		FrameController frameController,
+		AbstractFrameController frameController,
 		DefaultCommandReference[] references) {
 		super(frameController, references);
 	}

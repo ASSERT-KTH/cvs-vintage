@@ -9,7 +9,7 @@ package org.columba.mail.gui.attachment.action;
 import java.awt.event.ActionEvent;
 
 import org.columba.core.action.FrameAction;
-import org.columba.core.gui.frame.FrameController;
+import org.columba.core.gui.frame.AbstractFrameController;
 import org.columba.core.gui.selection.SelectionChangedEvent;
 import org.columba.core.gui.selection.SelectionListener;
 import org.columba.core.main.MainInterface;
@@ -35,7 +35,7 @@ public class OpenWithAction extends FrameAction implements SelectionListener {
 	 * @param mnemonic
 	 * @param keyStroke
 	 */
-	public OpenWithAction(FrameController frameController) {
+	public OpenWithAction(AbstractFrameController frameController) {
 		super(frameController, MailResourceLoader.getString("menu", "mainframe", "attachmentopen_with"), //$NON-NLS-1$
 		MailResourceLoader.getString("menu", "mainframe", "attachmentopen_with_tooltip"), //$NON-NLS-1$
 		"OPEN_WITH", //$NON-NLS-1$

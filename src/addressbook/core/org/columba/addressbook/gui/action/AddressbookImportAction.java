@@ -10,7 +10,7 @@ import java.awt.event.ActionEvent;
 
 import org.columba.addressbook.util.AddressbookResourceLoader;
 import org.columba.core.action.FrameAction;
-import org.columba.core.gui.frame.FrameController;
+import org.columba.core.gui.frame.AbstractFrameController;
 
 /**
  * @author frd
@@ -30,7 +30,7 @@ public class AddressbookImportAction extends FrameAction {
 	 * @param mnemonic
 	 * @param keyStroke
 	 */
-	public AddressbookImportAction(FrameController frameController) {
+	public AddressbookImportAction(AbstractFrameController frameController) {
 		super(
 			frameController,
 			AddressbookResourceLoader.getString(

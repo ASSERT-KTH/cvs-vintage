@@ -18,7 +18,7 @@ package org.columba.mail.plugin;
 import org.columba.core.main.MainInterface;
 import org.columba.core.xml.XmlElement;
 import org.columba.mail.config.MailConfig;
-import org.columba.mail.gui.composer.ComposerModel;
+import org.columba.mail.gui.composer.ComposerController;
 import org.columba.mail.gui.tree.util.SelectFolderDialog;
 
 /**
@@ -46,9 +46,7 @@ public class MailFacade {
 	
 	public static void openComposer()
 	{
-		ComposerModel model = new ComposerModel();
-		
-		model.openView();
+		new ComposerController();
 	}
 	
 	public SelectFolderDialog getSelectFolderDialog()

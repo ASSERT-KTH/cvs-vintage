@@ -76,12 +76,15 @@ public class ForwardCommand extends FolderCommand {
 
 		ComposerModel model = new ComposerModel();
 		
-		controller = (ComposerController) model.openView(); 
+		controller = new ComposerController();
 
 		MessageBuilder.getInstance().createMessage(
 			message,
 			model,
 			MessageBuilder.FORWARD);
+			
+		
+		controller.setComposerModel(model);
 
 	}
 

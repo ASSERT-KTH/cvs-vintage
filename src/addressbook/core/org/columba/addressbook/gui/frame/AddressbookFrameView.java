@@ -25,17 +25,17 @@ import org.columba.addressbook.config.AddressbookConfig;
 import org.columba.addressbook.gui.menu.AddressbookMenu;
 import org.columba.addressbook.gui.table.TableView;
 import org.columba.addressbook.gui.tree.TreeView;
-import org.columba.core.gui.frame.FrameController;
-import org.columba.core.gui.frame.FrameView;
+import org.columba.core.gui.frame.AbstractFrameController;
+import org.columba.core.gui.frame.AbstractFrameView;
 import org.columba.core.gui.menu.Menu;
 import org.columba.core.gui.toolbar.ToolBar;
 
-public class AddressbookFrameView extends FrameView {
+public class AddressbookFrameView extends AbstractFrameView {
 	//private AddressbookInterface addressbookInterface;
 	//private TreeView tree;
 	//private TableView table;
 
-	public AddressbookFrameView(FrameController frameController) {
+	public AddressbookFrameView(AbstractFrameController frameController) {
 		super(frameController);
 
 		//super("Columba v" + MainInterface.version + " - Addressbook");
@@ -60,7 +60,7 @@ public class AddressbookFrameView extends FrameView {
 	/* (non-Javadoc)
 		 * @see org.columba.core.gui.FrameView#createMenu(org.columba.core.gui.FrameController)
 		 */
-	protected Menu createMenu(FrameController controller) {
+	protected Menu createMenu(AbstractFrameController controller) {
 		Menu menu = new AddressbookMenu("org/columba/core/action/menu.xml", controller);
 		menu.extendMenuFromFile("org/columba/addressbook/action/menu.xml");
 
@@ -70,7 +70,7 @@ public class AddressbookFrameView extends FrameView {
 	/* (non-Javadoc)
 	 * @see org.columba.core.gui.FrameView#createToolbar(org.columba.core.gui.FrameController)
 	 */
-	protected ToolBar createToolbar(FrameController controller) {
+	protected ToolBar createToolbar(AbstractFrameController controller) {
 		return new ToolBar(
 			AddressbookConfig.get("main_toolbar").getElement("toolbar"),
 			controller);

@@ -19,12 +19,12 @@ package org.columba.core.gui.action;
 import java.awt.event.ActionEvent;
 
 import org.columba.core.action.CheckBoxAction;
-import org.columba.core.gui.frame.FrameController;
+import org.columba.core.gui.frame.AbstractFrameController;
 import org.columba.mail.util.MailResourceLoader;
 
 public class ViewToolbarAction extends CheckBoxAction {
 
-	public ViewToolbarAction(FrameController controller) {
+	public ViewToolbarAction(AbstractFrameController controller) {
 		super(
 			controller,
 			MailResourceLoader.getString(
@@ -58,7 +58,7 @@ public class ViewToolbarAction extends CheckBoxAction {
 	 * @see org.columba.core.action.CheckBoxAction#getInitState()
 	 */
 	protected boolean getInitState() {
-		return getFrameController().getItem().getBoolean("toolbar","visible");
+		return getFrameController().getViewItem().getBoolean("toolbar","visible");
 	}
 
 }

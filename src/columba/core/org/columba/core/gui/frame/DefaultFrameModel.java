@@ -28,7 +28,7 @@ public abstract class DefaultFrameModel {
 
 	protected int nextId = 0;
 
-	public abstract FrameController createInstance(String id);
+	public abstract AbstractFrameController createInstance(String id);
 
 	protected XmlElement defaultView;
 
@@ -44,11 +44,11 @@ public abstract class DefaultFrameModel {
 
 	}
 
-	public FrameController openView() {
+	public AbstractFrameController openView() {
 
 		int id = nextId++;
 
-		FrameController c = createInstance(new Integer(id).toString());
+		AbstractFrameController c = createInstance(new Integer(id).toString());
 		c.getView().loadWindowPosition();
 		c.getView().setVisible(true);
 
@@ -76,7 +76,7 @@ public abstract class DefaultFrameModel {
 		return child;
 	}
 
-	void register(String id, FrameController controller)
+	void register(String id, AbstractFrameController controller)
 	{
 	}
 	

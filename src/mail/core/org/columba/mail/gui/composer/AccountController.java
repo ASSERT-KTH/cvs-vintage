@@ -50,7 +50,7 @@ public class AccountController implements ItemListener {
 			view.addItem(config.get(i));
 			if (i == 0) {
 				view.setSelectedItem(config.get(i));
-				((ComposerModel)controller.getModel()).setAccountItem(config.get(i));
+				controller.getModel().setAccountItem(config.get(i));
 			}
 		}
 

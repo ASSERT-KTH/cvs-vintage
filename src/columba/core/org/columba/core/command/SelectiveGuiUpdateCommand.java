@@ -15,7 +15,7 @@
 //All Rights Reserved.
 package org.columba.core.command;
 
-import org.columba.core.gui.frame.FrameController;
+import org.columba.core.gui.frame.AbstractFrameController;
 
 
 /**
@@ -37,7 +37,7 @@ public abstract class SelectiveGuiUpdateCommand extends Command {
 	}
 	
 	public SelectiveGuiUpdateCommand(
-			FrameController frame, DefaultCommandReference[] references) {
+			AbstractFrameController frame, DefaultCommandReference[] references) {
 			super(frame, references);
 		}
 	/**

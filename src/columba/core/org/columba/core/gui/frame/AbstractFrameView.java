@@ -39,16 +39,17 @@ import org.columba.core.util.WindowMaximizer;
  * To enable and disable the creation of type comments go to
  * Window>Preferences>Java>Code Generation.
  */
-public abstract class FrameView extends JFrame implements WindowListener {
-	protected FrameController frameController;
+public abstract class AbstractFrameView
+	extends JFrame
+	implements WindowListener {
+	protected AbstractFrameController frameController;
 	protected Menu menu;
 
 	protected ToolBar toolbar;
 
 	protected JPanel toolbarPane;
 
-
-	public FrameView(FrameController frameController) {
+	public AbstractFrameView(AbstractFrameController frameController) {
 		this.frameController = frameController;
 
 		this.setIconImage(
@@ -63,28 +64,30 @@ public abstract class FrameView extends JFrame implements WindowListener {
 		panel.add(frameController.getStatusBar(), BorderLayout.SOUTH);
 
 		addWindowListener(this);
-		
+
 		toolbarPane = new JPanel();
 		toolbarPane.setLayout(new BoxLayout(toolbarPane, BoxLayout.Y_AXIS));
-		panel.add(toolbarPane, BorderLayout.NORTH);		
+		panel.add(toolbarPane, BorderLayout.NORTH);
 	}
 
 	public void init() {
 		menu = createMenu(frameController);
-		if( menu != null) setJMenuBar(menu);
-		
+		if (menu != null)
+			setJMenuBar(menu);
+
 		toolbar = createToolbar(frameController);
-		if( ( toolbar != null ) && (isToolbarVisible()) ) {
+		if ((toolbar != null) && (isToolbarVisible())) {
 			toolbarPane.add(toolbar);
 		}
 	}
-	
+
 	public boolean isToolbarVisible() {
-		return toolbar.getVisible();//frameController.getItem().getBoolean("toolbar", "visible");
+		return toolbar.getVisible();
+		//frameController.getItem().getBoolean("toolbar", "visible");
 	}
 
 	public void loadWindowPosition() {
-		ViewItem viewItem = frameController.getItem();
+		ViewItem viewItem = frameController.getViewItem();
 		int x = viewItem.getInteger("window", "width");
 		int y = viewItem.getInteger("window", "height");
 		boolean maximized = viewItem.getBoolean("window", "maximized", true);
@@ -117,7 +120,7 @@ public abstract class FrameView extends JFrame implements WindowListener {
 
 		java.awt.Dimension d = getSize();
 
-		WindowItem item = frameController.getItem().getWindowItem();
+		WindowItem item = frameController.getViewItem().getWindowItem();
 
 		item.set("x", 0);
 		item.set("y", 0);
@@ -130,10 +133,11 @@ public abstract class FrameView extends JFrame implements WindowListener {
 	}
 
 	public void showToolbar(boolean b) {
-		
+
 		// TODO fix configuration changes
-		
-		if( toolbar == null) return;
+
+		if (toolbar == null)
+			return;
 		if (b) {
 			toolbarPane.add(toolbar);
 			//frameController.getItem().set("toolbar", "visible", "true");
@@ -141,9 +145,9 @@ public abstract class FrameView extends JFrame implements WindowListener {
 			toolbarPane.removeAll();
 			//frameController.getItem().set("toolbar", "visible", "false");
 		}
-		
+
 		validate();
-		repaint();		
+		repaint();
 	}
 	/**
 	 * @see java.awt.event.WindowListener#windowActivated(java.awt.event.WindowEvent)
@@ -195,13 +199,13 @@ public abstract class FrameView extends JFrame implements WindowListener {
 		return menu;
 	}
 
-	protected abstract Menu createMenu(FrameController controller);	
-	
-	protected abstract ToolBar createToolbar(FrameController controller);
+	protected abstract Menu createMenu(AbstractFrameController controller);
+
+	protected abstract ToolBar createToolbar(AbstractFrameController controller);
 	/**
 	 * @return FrameController
 	 */
-	public FrameController getFrameController() {
+	public AbstractFrameController getFrameController() {
 		return frameController;
 	}
 

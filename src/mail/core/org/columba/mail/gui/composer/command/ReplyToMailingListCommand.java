@@ -98,13 +98,14 @@ public class ReplyToMailingListCommand extends FolderCommand {
 
 		ComposerModel model = new ComposerModel();
 		
-		controller = (ComposerController) model.openView(); 
+		controller = new ComposerController();
 
 		MessageBuilder.getInstance().createMessage(
 			message,
 			model,
 			MessageBuilder.REPLY_MAILINGLIST);
 
+		controller.setComposerModel(model);
 	}
 
 	/**

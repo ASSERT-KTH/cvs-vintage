@@ -27,8 +27,8 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 
-import org.columba.core.gui.frame.FrameController;
-import org.columba.core.gui.frame.FrameView;
+import org.columba.core.gui.frame.AbstractFrameController;
+import org.columba.core.gui.frame.AbstractFrameView;
 import org.columba.core.gui.menu.Menu;
 import org.columba.core.gui.toolbar.ToolBar;
 import org.columba.mail.config.MailConfig;
@@ -40,17 +40,18 @@ import org.columba.mail.util.MailResourceLoader;
  *
  * view for message composer dialog
  */
-public class ComposerView extends FrameView {
+public class ComposerView extends AbstractFrameView {
 
 	
 	private JSplitPane rightSplitPane;
 	private JSplitPane mainSplitPane;
 	private Container editorPane;
 
-	public ComposerView(FrameController controller)
+	public ComposerView(AbstractFrameController controller)
 	{
 		super(controller);
 		setTitle(MailResourceLoader.getString("dialog","composer","composerview_title")); //$NON-NLS-1$
+		
 	}
 	
 	
@@ -208,7 +209,7 @@ public class ComposerView extends FrameView {
 	/* (non-Javadoc)
 	 * @see org.columba.core.gui.FrameView#createMenu(org.columba.core.gui.FrameController)
 	 */
-	protected Menu createMenu(FrameController controller) {
+	protected Menu createMenu(AbstractFrameController controller) {
 		Menu menu = new ComposerMenu("org/columba/core/action/menu.xml",controller);
 				menu.extendMenuFromFile("org/columba/mail/action/composer_menu.xml");
 		return menu;
@@ -217,7 +218,7 @@ public class ComposerView extends FrameView {
 	/* (non-Javadoc)
 	 * @see org.columba.core.gui.FrameView#createToolbar(org.columba.core.gui.FrameController)
 	 */
-	protected ToolBar createToolbar(FrameController controller) {
+	protected ToolBar createToolbar(AbstractFrameController controller) {
 		return new ToolBar( MailConfig.get("composer_toolbar").getElement("toolbar"), controller);
 	}
 

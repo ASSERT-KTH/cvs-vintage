@@ -12,7 +12,7 @@ import java.awt.event.KeyEvent;
 import javax.swing.KeyStroke;
 
 import org.columba.core.action.FrameAction;
-import org.columba.core.gui.frame.FrameController;
+import org.columba.core.gui.frame.AbstractFrameController;
 import org.columba.core.gui.selection.SelectionChangedEvent;
 import org.columba.core.gui.selection.SelectionListener;
 import org.columba.core.main.MainInterface;
@@ -43,7 +43,7 @@ public class ExpungeFolderAction
 	 * @param mnemonic
 	 * @param keyStroke
 	 */
-	public ExpungeFolderAction(FrameController frameController) {
+	public ExpungeFolderAction(AbstractFrameController frameController) {
 		super(
 			frameController,
 			MailResourceLoader.getString(

@@ -13,7 +13,7 @@ import javax.swing.ImageIcon;
 import javax.swing.KeyStroke;
 
 import org.columba.core.action.FrameAction;
-import org.columba.core.gui.frame.FrameController;
+import org.columba.core.gui.frame.AbstractFrameController;
 import org.columba.core.gui.selection.SelectionChangedEvent;
 import org.columba.core.gui.selection.SelectionListener;
 import org.columba.core.gui.util.ImageLoader;
@@ -42,7 +42,7 @@ public class ReplyAction extends FrameAction implements SelectionListener {
 	 * @param mnemonic
 	 * @param keyStroke
 	 */
-	public ReplyAction(FrameController frameController) {
+	public ReplyAction(AbstractFrameController frameController) {
 		super(
 			frameController,
 			MailResourceLoader.getString(
@@ -77,7 +77,7 @@ public class ReplyAction extends FrameAction implements SelectionListener {
 	 * @param keyStroke
 	 */
 	public ReplyAction(
-		FrameController frameController,
+		AbstractFrameController frameController,
 		String name,
 		String longDescription,
 		String tooltip,

@@ -15,7 +15,7 @@ import javax.swing.JMenu;
 import org.columba.core.action.ActionPluginHandler;
 import org.columba.core.action.BasicAction;
 import org.columba.core.action.CheckBoxAction;
-import org.columba.core.gui.frame.FrameController;
+import org.columba.core.gui.frame.AbstractFrameController;
 import org.columba.core.gui.util.CMenu;
 import org.columba.core.io.DiskIO;
 import org.columba.core.logging.ColumbaLogger;
@@ -34,13 +34,13 @@ public abstract class AbstractMenuGenerator {
 
 	protected XmlElement menuRoot;
 	protected XmlIO xmlFile;
-	protected FrameController frameController;
+	protected AbstractFrameController frameController;
 
 	/**
 	 * 
 	 */
 	public AbstractMenuGenerator(
-		FrameController frameController,
+		AbstractFrameController frameController,
 		String path) {
 		this.frameController = frameController;
 

@@ -12,7 +12,7 @@ import java.awt.event.KeyEvent;
 import javax.swing.KeyStroke;
 
 import org.columba.core.action.FrameAction;
-import org.columba.core.gui.frame.FrameController;
+import org.columba.core.gui.frame.AbstractFrameController;
 
 /**
  * @author frd
@@ -33,7 +33,7 @@ public class CloseAction extends FrameAction {
 	 * @param keyStroke
 	 */
 	public CloseAction(
-		FrameController frameController) {
+		AbstractFrameController frameController) {
 		super(
 			frameController,
 			"Close",
@@ -52,7 +52,7 @@ public class CloseAction extends FrameAction {
 	 */
 	public void actionPerformed(ActionEvent evt) {
 		frameController.close();
-		frameController.getView().setVisible(false);
+		//frameController.getView().setVisible(false);
 	}
 
 }

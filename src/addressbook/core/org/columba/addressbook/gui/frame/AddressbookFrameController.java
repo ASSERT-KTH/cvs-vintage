@@ -17,15 +17,15 @@ package org.columba.addressbook.gui.frame;
 
 import org.columba.addressbook.gui.table.TableController;
 import org.columba.addressbook.gui.tree.TreeController;
-import org.columba.core.gui.frame.FrameController;
-import org.columba.core.gui.frame.FrameView;
-import org.columba.core.gui.frame.MultiViewFrameModel;
+import org.columba.core.config.ViewItem;
+import org.columba.core.gui.frame.AbstractFrameController;
+import org.columba.core.gui.frame.AbstractFrameView;
 
 /**
  * @author Timo Stich (tstich@users.sourceforge.net)
  * 
  */
-public class AddressbookFrameController extends FrameController {
+public class AddressbookFrameController extends AbstractFrameController {
 	
 	protected TreeController tree;
 	protected TableController table;
@@ -33,8 +33,8 @@ public class AddressbookFrameController extends FrameController {
 	/**
 	 * Constructor for AddressbookController.
 	 */
-	public AddressbookFrameController( String id, MultiViewFrameModel model ) {
-		super( id, model );
+	public AddressbookFrameController(ViewItem viewItem) {
+		super( "Addressbook", viewItem);
 		
 		
 		
@@ -43,11 +43,13 @@ public class AddressbookFrameController extends FrameController {
 	/* (non-Javadoc)
 	 * @see org.columba.core.gui.FrameController#createView()
 	 */
-	protected FrameView createView() {
+	protected AbstractFrameView createView() {
 		AddressbookFrameView view = new AddressbookFrameView(this);
 		view.init(tree.getView(),table.getView());
 		
 		view.pack();
+		
+		view.setVisible(true);
 		
 		return view;
 	}

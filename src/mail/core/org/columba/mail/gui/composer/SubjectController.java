@@ -46,14 +46,14 @@ public class SubjectController implements DocumentListener {
 
 	public void updateComponents(boolean b) {
 		if (b == true) {
-			view.setText(((ComposerModel)controller.getModel()).getHeaderField("Subject"));
+			view.setText(controller.getModel().getHeaderField("Subject"));
 		} else {
-			((ComposerModel)controller.getModel()).setHeaderField("Subject", view.getText());
+			controller.getModel().setHeaderField("Subject", view.getText());
 		}
 	}
 
 	public boolean checkState() {
-		String subject = ((ComposerModel)controller.getModel()).getHeaderField("Subject");
+		String subject = controller.getModel().getHeaderField("Subject");
 
 		if (subject.length() == 0) {
 			subject = new String(MailResourceLoader.getString("dialog","composer","composer_no_subject")); //$NON-NLS-1$
@@ -63,7 +63,7 @@ public class SubjectController implements DocumentListener {
 			if (dialog.success() == true)
 				subject = dialog.getSubject();
 
-			((ComposerModel)controller.getModel()).setHeaderField("Subject", subject);
+			controller.getModel().setHeaderField("Subject", subject);
 		}
 		
 		return true;

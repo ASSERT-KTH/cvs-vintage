@@ -10,5 +10,12 @@
    <background r="74" g="105" b="131"/>
   </theme> 
   <toolbar enable_icon="true" enable_text="true" text_position="false"/>
+  <viewlist>
+   <view id="Mail" >
+    <window x="0" y="0" width="900" height="700" maximized="true"/> 
+    <toolbars show_main="true" show_filter="true" show_folderinfo="true" />  
+    <splitpanes main="200" header="200" attachment="100" />
+   </view>
+  </viewlist>
  </gui>
 </options>

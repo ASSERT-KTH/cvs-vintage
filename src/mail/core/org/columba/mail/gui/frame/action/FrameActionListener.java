@@ -134,6 +134,8 @@ public class FrameActionListener implements ActionListener {
 	}
 
 	public void actionPerformed(ActionEvent e) {
+		
+		/*
 		String action = e.getActionCommand();
 
 		if (action.equals("ACCOUNT_PREFERENCES")) {
@@ -193,10 +195,7 @@ public class FrameActionListener implements ActionListener {
 				MainInterface.processor.addOp(c);
 			}
 
-			/*
-			MainInterface.popServerCollection.fetchAllServers();
-			*/
-
+			
 		} else if (action.equals("SEND")) {
 			System.out.println("send messages");
 
@@ -265,33 +264,7 @@ public class FrameActionListener implements ActionListener {
 
 		} else if (action.equals("USE_ADVANCEDVIEWER")) {
 
-			/*
-			System.out.println("advance dviewer");
 			
-			boolean b =
-				MailConfig
-					.getMainFrameOptionsConfig()
-					.getWindowItem()
-					.getAdvancedViewer();
-			
-			if (b == true) {
-			
-				MainInterface.messageViewer.createTextPane(false, false);
-				MailConfig
-					.getMainFrameOptionsConfig()
-					.getWindowItem()
-					.setAdvancedViewer(
-					false);
-			} else {
-			
-				MainInterface.messageViewer.createTextPane(true, false);
-				MailConfig
-					.getMainFrameOptionsConfig()
-					.getWindowItem()
-					.setAdvancedViewer(
-					true);
-			}
-			*/
 		} else if (action.equals("ABOUT")) {
 			AboutDialog dialog = new AboutDialog();
 
@@ -350,11 +323,7 @@ public class FrameActionListener implements ActionListener {
 			} catch (MalformedURLException mue) {
 			}
 		} else if (action.equals("EXIT")) {
-			/*
-			ExitWorker worker = new ExitWorker();
-			worker.register(MainInterface.taskManager);
-			worker.start();
-			*/
+			
 			MainInterface.frameModel.saveAll();
 			MainInterface.shutdownManager.shutdown();
 			
@@ -369,7 +338,7 @@ public class FrameActionListener implements ActionListener {
 		} else if (action.equals("OPEN_NEW_WINDOW")) {
 			MainInterface.frameModel.openView();
 		}
-
+		*/
 	}
 
 }

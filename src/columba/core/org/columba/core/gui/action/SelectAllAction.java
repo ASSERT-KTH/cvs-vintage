@@ -22,12 +22,12 @@ import java.awt.event.KeyEvent;
 import javax.swing.KeyStroke;
 
 import org.columba.core.action.FrameAction;
-import org.columba.core.gui.frame.FrameController;
+import org.columba.core.gui.frame.AbstractFrameController;
 import org.columba.mail.util.MailResourceLoader;
 
 public class SelectAllAction extends FrameAction {
 
-	public SelectAllAction(FrameController controller) {
+	public SelectAllAction(AbstractFrameController controller) {
 		super(
 			controller,
 			MailResourceLoader.getString(

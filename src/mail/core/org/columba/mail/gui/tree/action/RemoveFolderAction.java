@@ -13,7 +13,7 @@ import javax.swing.JOptionPane;
 import javax.swing.KeyStroke;
 
 import org.columba.core.action.FrameAction;
-import org.columba.core.gui.frame.FrameController;
+import org.columba.core.gui.frame.AbstractFrameController;
 import org.columba.core.gui.selection.SelectionChangedEvent;
 import org.columba.core.gui.selection.SelectionListener;
 import org.columba.core.gui.util.ImageLoader;
@@ -46,7 +46,7 @@ public class RemoveFolderAction
 	 * @param mnemonic
 	 * @param keyStroke
 	 */
-	public RemoveFolderAction(FrameController frameController) {
+	public RemoveFolderAction(AbstractFrameController frameController) {
 		super(
 			frameController,
 			MailResourceLoader.getString(

@@ -26,9 +26,9 @@ public abstract class SingleViewFrameModel extends DefaultFrameModel {
 		defaultView = root;
 	}
 
-	protected void register(String id, FrameController controller) {
+	protected void register(String id, AbstractFrameController controller) {
 
-		controller.setItem(new ViewItem(defaultView));
+		controller.setViewItem(new ViewItem(defaultView));
 
 	}
 

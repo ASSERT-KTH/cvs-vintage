@@ -17,12 +17,12 @@
 package org.columba.core.gui.action;
 
 import org.columba.core.action.FrameAction;
-import org.columba.core.gui.frame.FrameController;
+import org.columba.core.gui.frame.AbstractFrameController;
 import org.columba.mail.util.MailResourceLoader;
 
 public class FindAgainAction extends FrameAction {
 
-	public FindAgainAction(FrameController controller) {
+	public FindAgainAction(AbstractFrameController controller) {
 		super(
 			controller,
 			MailResourceLoader.getString(

@@ -6,7 +6,7 @@
  */
 package org.columba.mail.gui.table;
 
-import org.columba.core.gui.frame.FrameController;
+import org.columba.core.gui.frame.AbstractFrameController;
 import org.columba.core.xml.XmlElement;
 import org.columba.mail.gui.menu.MailContextMenu;
 
@@ -24,7 +24,7 @@ public class TableMenu extends MailContextMenu {
 	/**
 	 * 
 	 */
-	public TableMenu(FrameController frameController) {
+	public TableMenu(AbstractFrameController frameController) {
 		super(frameController, "org/columba/mail/action/table_contextmenu.xml");
 		
 		/*

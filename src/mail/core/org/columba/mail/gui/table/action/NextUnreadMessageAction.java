@@ -12,7 +12,7 @@ import javax.swing.ImageIcon;
 import javax.swing.KeyStroke;
 
 import org.columba.core.action.FrameAction;
-import org.columba.core.gui.frame.FrameController;
+import org.columba.core.gui.frame.AbstractFrameController;
 import org.columba.core.gui.selection.SelectionChangedEvent;
 import org.columba.core.gui.selection.SelectionListener;
 import org.columba.mail.gui.frame.MailFrameController;
@@ -39,7 +39,7 @@ public class NextUnreadMessageAction
 	 * @param mnemonic
 	 * @param keyStroke
 	 */
-	public NextUnreadMessageAction(FrameController frameController) {
+	public NextUnreadMessageAction(AbstractFrameController frameController) {
 		super(
 			frameController,
 			MailResourceLoader.getString(
@@ -72,7 +72,7 @@ public class NextUnreadMessageAction
 	 * @param keyStroke
 	 */
 	public NextUnreadMessageAction(
-		FrameController frameController,
+		AbstractFrameController frameController,
 		String name,
 		String longDescription,
 		String tooltip,
