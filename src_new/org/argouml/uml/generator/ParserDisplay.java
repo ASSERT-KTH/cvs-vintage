@@ -1,4 +1,4 @@
-// $Id: ParserDisplay.java,v 1.125 2004/09/26 20:45:31 mvw Exp $
+// $Id: ParserDisplay.java,v 1.126 2004/10/01 14:01:42 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -3323,6 +3323,9 @@ public class ParserDisplay extends Parser {
      *             d00mst.
      *             It is used in {@link #parseTransition(Object, String)}
      *             above.
+     *
+     * @param s the string to parse
+     * @return the created object
      */
     public Object parseAction(String s) {
         Object a = UmlFactory.getFactory().getCommonBehavior()
@@ -3341,6 +3344,9 @@ public class ParserDisplay extends Parser {
      *             ArgoUML. d00mst.
      *             It is used in {@link #parseTransition(Object, String)}
      *             above.
+     *
+     * @param s the string to parse
+     * @return the new guard
      */
     public Object parseGuard(String s) {
         Object g = UmlFactory.getFactory().getStateMachines().createGuard();
