@@ -147,16 +147,10 @@
       #set ($searchResults = $scarabR.Users)
 #end
 
-#if ($resultsPerPage > 0 && $searchResults.size() > $resultsPerPage)
-  #set ($pagList = $scarabR.getPaginatedList($searchResults, $pageNum, $resultsPerPage))
-  #set ($paginated = "true")
-  #paginateWithSearch ($resultsPerPage $pageNum $sortColumn $sortPolarity $searchString $searchField)
-#end
-
+#set ($paginated = ($resultsPerPage > 0 && $searchResults.size() > $resultsPerPage))
 #if ($paginated)
- #if ($pagList)
-   #set ($searchResults = $pagList)
- #end
+  #set ($searchResults = $scarabR.getPaginatedList($searchResults, $pageNum, $resultsPerPage))
+  #paginateWithSearch ($resultsPerPage $pageNum $sortColumn $sortPolarity $searchString $searchField)
 #end
 
   <table width="100%" border="1" cellspacing="2" cellpadding="3">
@@ -183,7 +177,7 @@
    </table>
 
 #if ($paginated)
-  #paginate ($resultsPerPage $pageNum $sortColumn $sortPolarity)
+  #paginateWithSearch ($resultsPerPage $pageNum $sortColumn $sortPolarity $searchString $searchField)
 
 <div class="axial">
   <table cellpadding="3" cellspacing="2" border="0">
