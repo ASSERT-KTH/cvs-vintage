@@ -355,7 +355,7 @@ public class ThreePaneMailFrameController extends AbstractMailFrameController
 		TreeSelectionChangedEvent event = (TreeSelectionChangedEvent) e;
 		
 		AbstractFolder[] selectedFolders = event.getSelected();
-		if( selectedFolders.length == 1) {
+		if( selectedFolders.length == 1 && selectedFolders[0] != null) {
 			getContainer().getFrame().setTitle(selectedFolders[0].getName());
 		}
 	}
