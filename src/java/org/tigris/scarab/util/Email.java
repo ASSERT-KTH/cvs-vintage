@@ -83,7 +83,7 @@ import org.tigris.scarab.services.email.VelocityEmail;
  * @author <a href="mailto:jon@collab.net">Jon Scott Stevens</a>
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: Email.java,v 1.29 2003/04/25 19:10:34 dlr Exp $
+ * @version $Id: Email.java,v 1.30 2003/04/25 19:37:10 jon Exp $
  */
 public class Email extends TemplateEmail
 {
@@ -305,11 +305,13 @@ public class Email extends TemplateEmail
         String subjectTemplate = context.getSubjectTemplate();
         if (subjectTemplate == null) 
         {
-            // TODO: Clarify what the magic number "7" represents.
+            int templateLength = template.length();
+            // The magic number 7 represents "Subject"
             StringBuffer templateSB = 
-                new StringBuffer(template.length() + 7);
+                new StringBuffer(templateLength + 7);
+            // The magic number 3 represents ".vm"
             templateSB.append(
-                template.substring(0, template.length()-3));
+                template.substring(0, templateLength - 3));
             subjectTemplate = templateSB.append("Subject.vm").toString();
         }
 
