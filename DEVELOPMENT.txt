@@ -1,7 +1,7 @@
 ------------------------------------------------------------------------------
 | D E V E L O P E M E N T  N O T E S                                         |
 ------------------------------------------------------------------------------
-$Id: DEVELOPMENT.txt,v 1.9 2001/08/24 18:07:02 jon Exp $
+$Id: DEVELOPMENT.txt,v 1.10 2001/08/28 00:56:37 dlr Exp $
 
             Below are some notes for doing development with Scarab.
 
@@ -74,3 +74,21 @@ on the available input data and pass them to the appropriate business
 classes to carry out the requested action.
 
 ------------------------------------------------------------------------------
+
+Data which resides in the logged-in user's temp Hashtable should be
+keyed by a constant of the ScarabConstants interface, and have its
+name prefixed with "scarab.".
+
+For example:
+
+YourAction:
+List issueIdList = (List) user.getTemp("issueIdList");
+
+                        |
+                        v
+
+ScarabConstants:
+public static final String ISSUE_ID_LIST = "scarab.issueIdList";
+
+YourAction:
+List issueIdList = (List) user.getTemp(ScarabConstants.ISSUE_ID_LIST);
