@@ -100,7 +100,7 @@ from:&#160;<input type="text" size="20"
          >$l10n.Any</option>
       <option value="created_by"
          #if ($selectedAttr.equals("created_by")) selected="selected" #end
-         >$l10n.CommittedBy</option>
+         >$l10n.CreatedBy</option>
     #foreach ($selectUserAttr in $userAttrs)
        #set ($selected = false)
        #if ($selectedAttr.equals($selectUserAttr.AttributeId.toString())) 
@@ -126,7 +126,7 @@ from:&#160;<input type="text" size="20"
   <td><input type="text" name="add_user" /></td>
   <td><select name="add_user_attr" size="">
       <option value="any">$l10n.Any</option>
-      <option value="created_by">$l10n.CommittedBy</option>
+      <option value="created_by">$l10n.CreatedBy</option>
     #foreach ($selectUserAttr in $userAttrs)
       <option value="$selectUserAttr.AttributeId">$selectUserAttr.Name:</option>
     #end

@@ -11,7 +11,7 @@
   #set ($createdUser = $currentIssue.CreatedBy)
   <td><a href="mailTo:$createdUser.Email">$!createdUser.Name</a></td>
   <td>$createdUser.UserName</td>
-  <td>$l10n.CommittedBy</td>
+  <td>$l10n.CreatedBy</td>
 </tr>
 
 #set ($userAttVals = $currentIssue.UserAttributeValues)
