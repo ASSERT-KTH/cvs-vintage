@@ -1,4 +1,4 @@
-// $Id: ProjectMemberModel.java,v 1.30 2005/01/03 15:43:04 bobtarling Exp $
+// $Id: ProjectMemberModel.java,v 1.31 2005/01/03 17:14:07 bobtarling Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,13 +25,13 @@
 package org.argouml.uml;
 
 import org.argouml.kernel.Project;
-import org.argouml.kernel.ProjectMember;
+import org.argouml.kernel.AbstractProjectMember;
 import org.argouml.model.ModelFacade;
 
 /**
  * @author Piotr Kaminski
  */
-public class ProjectMemberModel extends ProjectMember {
+public class ProjectMemberModel extends AbstractProjectMember {
 
     private static final String MEMBER_TYPE = "xmi";
     private static final String FILE_EXT = "." + MEMBER_TYPE;
@@ -69,13 +69,13 @@ public class ProjectMemberModel extends ProjectMember {
     }
 
     /**
-     * @see org.argouml.kernel.ProjectMember#getType()
+     * @see org.argouml.kernel.AbstractProjectMember#getType()
      */
     public String getType() {
         return MEMBER_TYPE;
     }
     /**
-     * @see org.argouml.kernel.ProjectMember#getFileExtension()
+     * @see org.argouml.kernel.AbstractProjectMember#getFileExtension()
      */
     public String getFileExtension() {
         return FILE_EXT;
