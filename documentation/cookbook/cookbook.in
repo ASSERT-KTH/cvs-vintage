@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 <!DOCTYPE book SYSTEM "../docbook-setup/docbookx/docbookx.dtd" [
-<!-- $Id: cookbook.in,v 1.26 2004/07/04 18:36:10 mvw Exp $ -->
+<!-- $Id: cookbook.in,v 1.27 2004/07/27 09:16:56 linus Exp $ -->
 
+<!ENTITY changelog SYSTEM "changelog.xml">
 <!ENTITY building SYSTEM "building.xml">
 <!ENTITY requirements SYSTEM "require.xml">
 <!ENTITY cvs SYSTEM "cvs.xml">
@@ -87,6 +88,7 @@ This version of the cookbook is loosely connected to the version
      </bookinfo>
      <toc/>
 
+  &changelog;
   <chapter>
     <title>Introduction</title>
     <sect1 id="thanks">
