@@ -72,12 +72,10 @@ On this screen, one can modify system wide Attribute information.
   <th>Created by</th>
   <td>#attributeCreatedBy($attribute)</td>
  </tr>
-  #end
-  #if ($attribute.CreatedDate)
  <tr>
   <th>Creation date</th>
   <td>
-    $attribute.CreatedDate
+    $format.getDate($scarabR.DateFormat, $attribute.CreatedDate)
   </td>
  </tr>
   #end
