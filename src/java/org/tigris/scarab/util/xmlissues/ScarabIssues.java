@@ -83,7 +83,7 @@ import org.tigris.scarab.util.ScarabConstants;
  * inValidationMode set to false will do actual insert of the xml issues.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ScarabIssues.java,v 1.39 2003/07/25 19:11:26 dlr Exp $
+ * @version $Id: ScarabIssues.java,v 1.40 2003/07/26 02:53:47 dlr Exp $
  */
 public class ScarabIssues implements java.io.Serializable
 {
@@ -622,6 +622,26 @@ public class ScarabIssues implements java.io.Serializable
                     // Dependency activities don't require further
                     // validation.
                     return;
+                }
+                else if (activity.getAttachment() != null)
+                {
+                    XmlAttachment attachment = activity.getAttachment();
+                    if (attachment.getReconcilePath())
+                    {
+                        // Validate that the file exists.  Its file
+                        // name is expected to be the full path to the
+                        // file, which differs from how XML export
+                        // works.  Export includes only the last part
+                        // of the file name, and none of the path
+                        // (e.g. scarab-issues-export.xml).
+                        File f = new File(attachment.getFilename());
+                        if (!f.exists())
+                        {
+                            importErrors.add("Attachment '" +
+                                             attachment.getFilename() +
+                                             "' not found on the server");
+                        }
+                    }
                 }
             }
             else
