@@ -1,5 +1,5 @@
 /*
- * $Id: StringManager.java,v 1.2 2001/03/23 21:55:55 melaquias Exp $
+ * $Id: StringManager.java,v 1.3 2001/03/23 22:51:13 melaquias Exp $
  * ====================================================================
  *
  * The Apache Software License, Version 1.1
@@ -82,7 +82,7 @@ import java.util.*;
  * <p>Please see the documentation for java.util.ResourceBundle for
  * more information.
  *
- * @version $Revision: 1.2 $ $Date: 2001/03/23 21:55:55 $
+ * @version $Revision: 1.3 $ $Date: 2001/03/23 22:51:13 $
  *
  * @author James Duncan Davidson [duncan@eng.sun.com]
  * @author James Todd [gonzo@eng.sun.com]
@@ -172,33 +172,38 @@ public class StringManager {
      */
 
     public String getString(String key, Object[] args) {
-	      String iString = null;
+        String iString = null;
         String value = getString(key);
 
-	// this check for the runtime exception is some pre 1.1.6
-	// VM's don't do an automatic toString() on the passed in
-	// objects and barf out
+        // this check for the runtime exception is some pre 1.1.6
+        // VM's don't do an automatic toString() on the passed in
+        // objects and barf out
 
-	try {
+        try {
             // ensure the arguments are not null so pre 1.2 VM's don't barf
-            Object nonNullArgs[] = args;
+            if(args==null){
+                args = new Object[1];
+            }
+            
+            Object[] nonNullArgs = args;
             for (int i=0; i<args.length; i++) {
-		if (args[i] == null) {
-		    if (nonNullArgs==args) nonNullArgs=(Object[])args.clone();
-		    nonNullArgs[i] = "null";
-		}
-	    }
-
+                if (args[i] == null) {
+                    if (nonNullArgs==args){
+                        nonNullArgs=(Object[])args.clone();
+                    }
+                    nonNullArgs[i] = "null";
+                }
+            }
             iString = MessageFormat.format(value, nonNullArgs);
-	} catch (IllegalArgumentException iae) {
-	    StringBuffer buf = new StringBuffer();
-	    buf.append(value);
-	    for (int i = 0; i < args.length; i++) {
-		buf.append(" arg[" + i + "]=" + args[i]);
-	    }
-	    iString = buf.toString();
-	}
-	return iString;
+        } catch (IllegalArgumentException iae) {
+            StringBuffer buf = new StringBuffer();
+            buf.append(value);
+            for (int i = 0; i < args.length; i++) {
+                buf.append(" arg[" + i + "]=" + args[i]);
+            }
+            iString = buf.toString();
+        }
+        return iString;
     }
 
     /**
