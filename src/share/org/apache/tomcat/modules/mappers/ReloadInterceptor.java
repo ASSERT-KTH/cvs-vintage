@@ -94,6 +94,18 @@ public class ReloadInterceptor extends  BaseInterceptor
     public void setFullReload( boolean full ) {
 	fullReload=full;
     }
+
+    public void addContext( ContextManager cm, Context context)
+	throws TomcatException
+    {
+	DependManager dm=(DependManager)context.getContainer().
+	    getNote("DependManager");
+	if( dm==null ) {
+	    dm=new DependManager();
+	    context.getContainer().setNote("DependManager", dm);
+	}
+
+    }
     
     /** Example of adding web.xml to the dependencies.
      *  JspInterceptor can add all taglib descriptors.
@@ -104,12 +116,6 @@ public class ReloadInterceptor extends  BaseInterceptor
         ContextManager cm = context.getContextManager();
 	DependManager dm=(DependManager)context.getContainer().
 	    getNote("DependManager");
-	// getDependManager();
-	if( dm==null ) {
-	    dm=new DependManager();
-	    context.getContainer().setNote("DependManager", dm);
-	    //setDependManager( dm );
-	}
 
 	File inf_xml = new File(context.getAbsolutePath() +
 				"/WEB-INF/web.xml");
