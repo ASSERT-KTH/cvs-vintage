@@ -63,14 +63,14 @@ import org.jnp.server.NamingServer;
  *   @see ContainerFactory
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
  *   @author <a href="marc.fleury@telkel.com">Marc Fleury</a>
- *   @version $Revision: 1.15 $
+ *   @version $Revision: 1.16 $
  */
 public abstract class Container
 {
    // Constants -----------------------------------------------------
 
    // This is used in Class name comparisons
-   protected static final String EJB_OBJECT = "javax.ejx.EJBObject";
+   protected static final String EJB_OBJECT = "javax.ejb.EJBObject";
     
    // Attributes ----------------------------------------------------
     

@@ -31,7 +31,7 @@ import org.jboss.logging.Logger;
  *      
  *   @see <related>
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
- *   @version $Revision: 1.11 $
+ *   @version $Revision: 1.12 $
  */
 public class StatefulSessionContainer
    extends Container
@@ -397,8 +397,22 @@ public class StatefulSessionContainer
       Method[] m = homeInterface.getMethods();
       for (int i = 0; i < m.length; i++)
       {
-         // Implemented by container
-         map.put(m[i], getClass().getMethod(m[i].getName()+"Home", m[i].getParameterTypes()));
+         try
+         {
+            // Implemented by container
+            if (m[i].getName().equals("create"))
+            {
+               map.put(m[i], getClass().getMethod("createHome", new Class[] { MethodInvocation.class }));
+            }
+            else
+            {
+               map.put(m[i], getClass().getMethod(m[i].getName()+"Home", m[i].getParameterTypes()));
+            
+            }
+         } catch (NoSuchMethodException e)
+         {
+            System.out.println(m[i].getName() + " in bean has not been mapped");
+         }
       }
       
       homeMapping = map;
@@ -412,23 +426,23 @@ public class StatefulSessionContainer
       Method[] m = remoteInterface.getMethods();
       for (int i = 0; i < m.length; i++)
       {
-         if (!m[i].getDeclaringClass().getName().equals(EJB_OBJECT))
+         try
          {
-            // Implemented by bean
-            map.put(m[i], beanClass.getMethod(m[i].getName(), m[i].getParameterTypes()));
+            if (!m[i].getDeclaringClass().getName().equals(EJB_OBJECT))
+            {
+                // Implemented by bean
+                map.put(m[i], beanClass.getMethod(m[i].getName(), m[i].getParameterTypes()));
          
-         }
-         else
-         {
-            try
+            }
+            else
             {
                // Implemented by container
                map.put(m[i], getClass().getMethod(m[i].getName(), new Class[] { MethodInvocation.class }));
             
-            } catch (NoSuchMethodException e)
-            {
-               System.out.println(m[i].getName() + " in bean has not been mapped");
             }
+         } catch (NoSuchMethodException e)
+         {
+            System.out.println(m[i].getName() + " in bean has not been mapped");
          }
       }
       
