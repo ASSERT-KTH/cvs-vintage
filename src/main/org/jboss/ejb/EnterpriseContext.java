@@ -53,7 +53,7 @@ import org.jboss.tm.usertx.client.ServerVMClientUserTransaction;
  * @author <a href="mailto:juha@jboss.org">Juha Lindfors</a>
  * @author <a href="mailto:osh@sparre.dk">Ole Husgaard</a>
  * @author <a href="mailto:thomas.diesler@jboss.org">Thomas Diesler</a>
- * @version $Revision: 1.75 $
+ * @version $Revision: 1.76 $
  */
 public abstract class EnterpriseContext
         implements AllowedOperationsFlags
@@ -577,8 +577,10 @@ public abstract class EnterpriseContext
          Transaction tx = tm.getTransaction();
          if (log.isDebugEnabled())
             log.debug("UserTx setTransactionTimeout(" + seconds + "): " + tx);
-
-         timeout = seconds;
+         if (tx != null)
+         {
+            tm.setTransactionTimeout(seconds);
+         }
       }
    }
 }

@@ -22,6 +22,7 @@ import org.jboss.system.ServiceMBeanSupport;
 import org.jboss.tm.usertx.client.ClientUserTransaction;
 import org.jboss.tm.usertx.interfaces.UserTransactionSessionFactory;
 import org.jboss.tm.usertx.interfaces.UserTransactionSession;
+import org.jboss.tm.TransactionPropagationContextUtil;
 import org.jboss.invocation.Invocation;
 import org.jboss.invocation.MarshalledInvocation;
 
@@ -31,7 +32,7 @@ import org.jboss.invocation.MarshalledInvocation;
  *
  * @author <a href="mailto:osh@sparre.dk">Ole Husgaard</a>
  * @author Scott.Stark@jboss.org
- * @version $Revision: 1.10 $
+ * @version $Revision: 1.11 $
  */
 public class ClientUserTransactionService
       extends ServiceMBeanSupport

@@ -24,6 +24,7 @@ import org.jboss.invocation.Invocation;
 import org.jboss.invocation.Invoker;
 import org.jboss.invocation.MarshalledInvocation;
 import org.jboss.tm.TransactionPropagationContextFactory;
+import org.jboss.tm.TransactionPropagationContextUtil;
 
 /**
  * JRMPInvokerProxy, local to the proxy and is capable of delegating to
@@ -31,7 +32,7 @@ import org.jboss.tm.TransactionPropagationContextFactory;
  *
  * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
  * @author <a href="mailto:scott.stark@jboss.org">Scott Stark</a>
- * @version $Revision: 1.16 $
+ * @version $Revision: 1.17 $
  */
 public class JRMPInvokerProxy
    implements Invoker, Externalizable
@@ -42,25 +43,6 @@ public class JRMPInvokerProxy
 
    // Invoker to the remote JMX node
    protected Invoker remoteInvoker;
-
-   /**
-    * Factory for transaction propagation contexts.
-    *
-    * @todo: marcf remove all transaction spill from here
-    *
-    * When set to a non-null value, it is used to get transaction
-    * propagation contexts for remote method invocations.
-    * If <code>null</code>, transactions are not propagated on
-    * remote method invocations.
-    */
-   protected static TransactionPropagationContextFactory tpcFactory = null;
-
-   //  @todo: MOVE TO TRANSACTION
-   //
-   // TPC factory
-   public static void setTPCFactory(TransactionPropagationContextFactory tpcf) {
-      tpcFactory = tpcf;
-   }
 
    /**
     * max retries on a ConnectException.
@@ -107,6 +89,7 @@ public class JRMPInvokerProxy
    public Object getTransactionPropagationContext()
       throws SystemException
    {
+      TransactionPropagationContextFactory tpcFactory = TransactionPropagationContextUtil.getTPCFactoryClientSide();
       return (tpcFactory == null) ? null : tpcFactory.getTransactionPropagationContext();
    }
 

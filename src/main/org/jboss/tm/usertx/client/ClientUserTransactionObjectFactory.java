@@ -7,6 +7,8 @@
  
 package org.jboss.tm.usertx.client;
 
+import org.jboss.tm.TransactionPropagationContextUtil;
+
 import java.util.Hashtable;
 
 import javax.naming.Context;
@@ -24,7 +26,7 @@ import javax.transaction.UserTransaction;
  *  usage for standalone clients.
  *      
  *  @author <a href="mailto:osh@sparre.dk">Ole Husgaard</a>
- *  @version $Revision: 1.7 $
+ *  @version $Revision: 1.8 $
  */
 public class ClientUserTransactionObjectFactory
    implements ObjectFactory
@@ -50,7 +52,12 @@ public class ClientUserTransactionObjectFactory
             userTransaction = ServerVMClientUserTransaction.getSingleton();
          } catch (NamingException ex) {
             // We execute in a stand-alone client.
-            userTransaction = ClientUserTransaction.getSingleton();
+            ClientUserTransaction cut = ClientUserTransaction.getSingleton();
+
+            // Tell the proxy that this is the factory for
+            // transaction propagation contexts.
+            TransactionPropagationContextUtil.setTPCFactory(cut);
+            userTransaction = cut;
          }
       }
       return userTransaction;

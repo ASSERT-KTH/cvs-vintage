@@ -32,6 +32,7 @@ import org.jboss.system.Registry;
 import org.jboss.system.ServiceMBeanSupport;
 import org.jboss.tm.TransactionPropagationContextFactory;
 import org.jboss.tm.TransactionPropagationContextImporter;
+import org.jboss.tm.TransactionPropagationContextUtil;
 
 /**
  * This invoker pools Threads and client connections to one server socket.
@@ -150,18 +151,15 @@ public class PooledInvoker extends ServiceMBeanSupport
       InitialContext ctx = new InitialContext();
 
       // Get the transaction propagation context factory
-      tpcFactory = (TransactionPropagationContextFactory) ctx.lookup("java:/TransactionPropagationContextExporter");
+      tpcFactory = TransactionPropagationContextUtil.getTPCFactory();
 
       // and the transaction propagation context importer
-      tpcImporter = (TransactionPropagationContextImporter) ctx.lookup("java:/TransactionPropagationContextImporter");
+      tpcImporter = TransactionPropagationContextUtil.getTPCImporter();
 
       // FIXME marcf: This should not be here
       TransactionInterceptor.setTransactionManager((TransactionManager)ctx.lookup("java:/TransactionManager"));
 
-      //TransactionInterceptor.setTransactionManager((TransactionManager) ctx.lookup("java:/TransactionManager"));
-      JRMPInvokerProxy.setTPCFactory(tpcFactory);
-
-      ///////////////////////////////////////////////////////////      
+      ///////////////////////////////////////////////////////////
       // Setup the socket level stuff
       ///////////////////////////////////////////////////////////      
 

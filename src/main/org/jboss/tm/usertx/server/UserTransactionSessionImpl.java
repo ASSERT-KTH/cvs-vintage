@@ -27,6 +27,7 @@ import javax.transaction.HeuristicRollbackException;
 
 import org.jboss.logging.Logger;
 import org.jboss.tm.TransactionPropagationContextFactory;
+import org.jboss.tm.TransactionPropagationContextUtil;
 import org.jboss.tm.usertx.interfaces.UserTransactionSession;
 import org.jboss.util.collection.WeakValueHashMap;
 
@@ -34,7 +35,7 @@ import org.jboss.util.collection.WeakValueHashMap;
  *  It handles transactions on behalf of a single client.
  * @author Ole Husgaard
  * @author Scott.Stark@jboss.org
- * @version $Revision: 1.10 $
+ * @version $Revision: 1.11 $
  */
 public class UserTransactionSessionImpl
    implements UserTransactionSession
@@ -83,15 +84,7 @@ public class UserTransactionSessionImpl
    {
       if (tpcFactory == null)
       {
-         try
-         {
-            Context ctx = new InitialContext();
-            tpcFactory = (TransactionPropagationContextFactory)ctx.lookup("java:/TransactionPropagationContextExporter");
-         }
-         catch (NamingException ex)
-         {
-            log.error("java:/TransactionPropagationContextExporter lookup failed", ex);
-         }
+         tpcFactory = TransactionPropagationContextUtil.getTPCFactory();
       }
       return tpcFactory;
    }  

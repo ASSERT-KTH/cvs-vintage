@@ -28,7 +28,7 @@ import javax.transaction.HeuristicMixedException;
 import javax.transaction.HeuristicRollbackException;
 
 import org.jboss.tm.TransactionPropagationContextFactory;
-import org.jboss.invocation.jrmp.interfaces.JRMPInvokerProxy;
+import org.jboss.tm.TransactionPropagationContextUtil;
 
 import org.jboss.tm.usertx.interfaces.UserTransactionSession;
 import org.jboss.tm.usertx.interfaces.UserTransactionSessionFactory;
@@ -45,7 +45,7 @@ import org.jboss.tm.usertx.interfaces.UserTransactionSessionFactory;
  *  propagation contexts of the transactions started here.
  *
  *  @author <a href="mailto:osh@sparre.dk">Ole Husgaard</a>
- *  @version $Revision: 1.7 $
+ *  @version $Revision: 1.8 $
  */
 public class ClientUserTransaction
    implements UserTransaction,
@@ -78,9 +78,6 @@ public class ClientUserTransaction
     */
    private ClientUserTransaction()
    {
-      // Tell the proxy that this is the factory for
-      // transaction propagation contexts.
-      JRMPInvokerProxy.setTPCFactory(this);
    }
 
    // Public --------------------------------------------------------
@@ -196,7 +193,9 @@ public class ClientUserTransaction
       Object tpc = info.getTpc();
 
       if (tpc == null)
+      {
          return Status.STATUS_NO_TRANSACTION;
+      }
 
       try {
          return getSession().getStatus(tpc);

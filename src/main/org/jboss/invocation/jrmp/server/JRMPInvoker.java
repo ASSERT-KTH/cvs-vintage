@@ -47,6 +47,7 @@ import org.jboss.system.Registry;
 import org.jboss.system.ServiceMBeanSupport;
 import org.jboss.tm.TransactionPropagationContextFactory;
 import org.jboss.tm.TransactionPropagationContextImporter;
+import org.jboss.tm.TransactionPropagationContextUtil;
 
 /**
  * The JRMPInvoker is an RMI implementation that can generate Invocations
@@ -54,7 +55,7 @@ import org.jboss.tm.TransactionPropagationContextImporter;
  *
  * @author <a href="mailto:marc.fleury@jboss.org>Marc Fleury</a>
  * @author <a href="mailto:scott.stark@jboss.org>Scott Stark</a>
- * @version $Revision: 1.37 $
+ * @version $Revision: 1.38 $
  * @jmx.mbean extends="org.jboss.system.ServiceMBean"
  */
 public class JRMPInvoker
@@ -313,20 +314,17 @@ public class JRMPInvoker
 
       InitialContext ctx = new InitialContext();
 
+      // FIXME marcf: This should not be here
+
       // Get the transaction propagation context factory
-      tpcFactory = (TransactionPropagationContextFactory)
-         ctx.lookup("java:/TransactionPropagationContextExporter");
+      tpcFactory = TransactionPropagationContextUtil.getTPCFactory();
 
       // and the transaction propagation context importer
-      tpcImporter = (TransactionPropagationContextImporter)
-         ctx.lookup("java:/TransactionPropagationContextImporter");
+      tpcImporter = TransactionPropagationContextUtil.getTPCImporter();
+
 
       // Set the transaction manager and transaction propagation
       // context factory of the GenericProxy class
-
-      // FIXME marcf: This should not be here
-      TransactionInterceptor.setTransactionManager((TransactionManager) ctx.lookup("java:/TransactionManager"));
-      JRMPInvokerProxy.setTPCFactory(tpcFactory);
 
       Invoker delegateInvoker = createDelegateInvoker();
 
