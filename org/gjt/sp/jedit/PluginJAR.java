@@ -36,7 +36,7 @@ import org.gjt.sp.util.Log;
  * A JAR file.
  *
  * @author Slava Pestov
- * @version $Id: PluginJAR.java,v 1.8 2003/04/29 22:31:14 spestov Exp $
+ * @version $Id: PluginJAR.java,v 1.9 2003/04/30 05:47:11 spestov Exp $
  * @since jEdit 4.2pre1
  */
 public class PluginJAR
@@ -241,7 +241,7 @@ public class PluginJAR
 	} //}}}
 
 	//{{{ uninit() method
-	void uninit()
+	void uninit(boolean exit)
 	{
 		if(plugin != null)
 		{
@@ -256,6 +256,9 @@ public class PluginJAR
 				Log.log(Log.ERROR,this,t);
 			}
 		}
+
+		if(exit)
+			return;
 
 		if(actions != null)
 			jEdit.getActionContext().removeActionSet(actions);

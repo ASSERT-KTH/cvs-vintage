@@ -54,7 +54,7 @@ import org.gjt.sp.util.Log;
  *
  * @author Slava Pestov
  * @author John Gellene (API documentation)
- * @version $Id: JEditTextArea.java,v 1.247 2003/04/29 03:21:51 spestov Exp $
+ * @version $Id: JEditTextArea.java,v 1.248 2003/04/30 05:47:11 spestov Exp $
  */
 public class JEditTextArea extends JComponent
 {
@@ -6233,16 +6233,18 @@ loop:			for(int i = lineNo + 1; i < getLineCount(); i++)
 		{
 			/* if(buffer.insideCompoundEdit())
 				buffer.endCompoundEdit(); */
+			int x = evt.getX();
 
 			float dragStartLineWidth = offsetToXY(dragStartLine,
 				getLineLength(dragStartLine),returnValue).x;
 			int extraEndVirt;
-			int x = evt.getX();
 			if(x > dragStartLineWidth)
 			{
 				extraEndVirt = (int)((x - dragStartLineWidth)
 					/ charWidth);
-				if((x - getHorizontalOffset()) % charWidth > charWidth / 2)
+				if(!getPainter().isBlockCaretEnabled()
+					&& !isOverwriteEnabled()
+					&& (x - getHorizontalOffset()) % charWidth > charWidth / 2)
 						extraEndVirt++;
 			}
 			else
@@ -6420,7 +6422,9 @@ loop:			for(int i = lineNo + 1; i < getLineCount(); i++)
 				if(x > dotLineWidth)
 				{
 					extraEndVirt = (int)((x - dotLineWidth) / charWidth);
-					if((x - getHorizontalOffset()) % charWidth > charWidth / 2)
+					if(!getPainter().isBlockCaretEnabled()
+						&& !isOverwriteEnabled()
+						&& (x - getHorizontalOffset()) % charWidth > charWidth / 2)
 						extraEndVirt++;
 				}
 			}
