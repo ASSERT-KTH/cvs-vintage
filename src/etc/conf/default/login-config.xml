@@ -23,7 +23,7 @@ The outline of the application-policy is:
   </authentication>
 </application-policy>
 
-$Revision: 1.11 $
+$Revision: 1.12 $
 -->
 
 <policy>
@@ -121,7 +121,10 @@ $Revision: 1.11 $
     <application-policy name = "web-console">
        <authentication>
           <login-module code="org.jboss.security.auth.spi.UsersRolesLoginModule"
-             flag = "required" />
+             flag = "required">
+             <module-option name="usersProperties">web-console-users.properties</module-option>
+             <module-option name="rolesProperties">web-console-roles.properties</module-option>
+          </login-module>
        </authentication>
     </application-policy>
 
