@@ -13,7 +13,7 @@
 <input type="hidden" name="searchType" value=$data.Parameters.getString("searchType", "") />
 
 <div class="functnbar">
-<!--  <input type="submit" value="$l10n.ResetToDefault"  name="eventSubmit_doUsedefaults" />&#160; -->
+  ##<input type="submit" value="$l10n.ResetToDefault"  name="eventSubmit_doUsedefaults" />&#160;
   <input type="submit" value="$l10n.Done" name="eventSubmit_doSave" />&#160;
   <input type="submit" value="$l10n.Cancel" name="eventSubmit_doCancel" />
 </div>
