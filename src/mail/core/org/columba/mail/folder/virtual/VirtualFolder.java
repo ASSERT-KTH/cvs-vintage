@@ -39,6 +39,7 @@ import org.columba.mail.folder.FolderFactory;
 import org.columba.mail.folder.FolderTreeNode;
 import org.columba.mail.folder.HeaderListStorage;
 import org.columba.mail.folder.MailboxInterface;
+import org.columba.mail.folder.headercache.CachedHeaderfields;
 import org.columba.mail.folder.search.DefaultSearchEngine;
 import org.columba.mail.gui.config.search.SearchFrame;
 import org.columba.mail.gui.frame.AbstractMailFrameController;
@@ -52,7 +53,18 @@ import org.columba.ristretto.message.Header;
 import org.columba.ristretto.message.MimePart;
 import org.columba.ristretto.message.MimeTree;
 
-
+/**
+ * Virtual folder presenting search results and saving only references
+ * to messages of "real" folders.
+ * <p>
+ * Almost all methods don't do anything here, because the we pass all
+ * operatins to the source folders. This happens on the Command and
+ * CommandReference abstraction level.
+ * <p>
+ * 
+ * @author fdietz
+ *
+ */
 public class VirtualFolder extends Folder {
     protected static final ImageIcon virtualIcon = ImageLoader.getSmallImageIcon(
             "virtualfolder.png");
@@ -303,11 +315,17 @@ public class VirtualFolder extends Folder {
         Folder folder = parent;
 
         Object[] resultUids = folder.searchMessages(filter);
-
+        String[] headerfields = CachedHeaderfields.getCachedHeaderfields();
+        
         if (resultUids != null) {
             for (int i = 0; i < resultUids.length; i++) {
-                ColumbaHeader header = (ColumbaHeader) folder.getMessageHeader(resultUids[i]);
-
+                
+                Header h = folder.getHeaderFields(resultUids[i], headerfields);
+                ColumbaHeader header = new ColumbaHeader(h);
+                header.setAttributes(folder.getAttributes(resultUids[i]));
+                header.setFlags(folder.getFlags(resultUids[i]));
+                
+                
                 try {
                     if (header != null) {
                         add((ColumbaHeader) header, folder, resultUids[i]);
