@@ -42,8 +42,8 @@ public class Query
         throws Exception
     {
         ScarabSecurity security = SecurityFactory.getInstance();
-        // If it's a global query, user must have Query | Approve permission
-        // Or its Approved field gets set to false
+        // If it's a global query, user must have Item | Approve 
+        //   permission, Or its Approved field gets set to false
         if (getQueryType().getQueryTypeId().equals(USER__PK))
         {
             setApproved(true);
@@ -108,7 +108,6 @@ public class Query
                             boolean approved, RunData data)
          throws Exception
     {                
-        boolean hasPerm = false;
         ScarabSecurity security = SecurityFactory.getInstance();
 
         if (security.hasPermission(ScarabSecurity.ITEM__APPROVE, user,
