@@ -62,7 +62,7 @@ import org.tigris.scarab.migration.JDBCTask;
  * SCARAB_TRANSACTION table. 
  *
  * @author <a href="mailto:jon@collab.net">John McNally</a>
- * @version $Id: DB_1_MoveIssueCreateInfo.java,v 1.2 2003/05/15 17:01:24 dlr Exp $
+ * @version $Id: DB_1_MoveIssueCreateInfo.java,v 1.3 2003/05/15 17:06:52 dlr Exp $
  */
 public class DB_1_MoveIssueCreateInfo extends JDBCTask
 {
@@ -81,12 +81,12 @@ public class DB_1_MoveIssueCreateInfo extends JDBCTask
         {
             // check whether this script has already run
             Connection conn = null;
-            Statement stmt= null;
+            Statement stmt = null;
             try 
             {
                 conn = getConnection();
                 String sql = "SELECT CREATED_DATE FROM SCARAB_ISSUE";
-                stmt= conn.createStatement();
+                stmt = conn.createStatement();
                 try 
                 {
                     stmt.executeQuery(sql);                    
@@ -158,7 +158,7 @@ public class DB_1_MoveIssueCreateInfo extends JDBCTask
         throws SQLException
     {
         Connection conn = null;
-        Statement stmt= null;
+        Statement stmt = null;
         try 
         {
             conn = getConnection();
@@ -174,7 +174,7 @@ public class DB_1_MoveIssueCreateInfo extends JDBCTask
                 "Adding creation info to SCARAB_ISSUE");
             try 
             {
-                stmt= conn.createStatement();
+                stmt = conn.createStatement();
                 stmt.execute(sql);
             }
             finally
@@ -187,7 +187,7 @@ public class DB_1_MoveIssueCreateInfo extends JDBCTask
                 + " REFERENCES SCARAB_TRANSACTION(TRANSACTION_ID)";
             try 
             {
-                stmt= conn.createStatement();
+                stmt = conn.createStatement();
                 stmt.execute(sql);
             }
             finally
@@ -200,7 +200,7 @@ public class DB_1_MoveIssueCreateInfo extends JDBCTask
             sql = "select max(ISSUE_ID) from SCARAB_ISSUE";
             try 
             {
-                stmt= conn.createStatement();
+                stmt = conn.createStatement();
                 ResultSet rs = stmt.executeQuery(sql);                    
                 rs.next();
                 max = rs.getLong(1);
@@ -248,7 +248,7 @@ public class DB_1_MoveIssueCreateInfo extends JDBCTask
         throws SQLException
     {
         Map result = new HashMap(1500);
-        Statement stmt= null;
+        Statement stmt = null;
         String sql = "select " + 
             //"a.ISSUE_ID, t.CREATED_DATE, t.CREATED_BY, t.TYPE_ID " +
             "a.ISSUE_ID, t.TRANSACTION_ID, t.TYPE_ID " +
@@ -261,7 +261,7 @@ public class DB_1_MoveIssueCreateInfo extends JDBCTask
             System.out.print(".");
         try 
         {
-            stmt= conn.createStatement();
+            stmt = conn.createStatement();
             ResultSet rs = stmt.executeQuery(sql);
             while (rs.next()) 
             {
@@ -292,7 +292,7 @@ public class DB_1_MoveIssueCreateInfo extends JDBCTask
             activitySetId + " where ISSUE_ID=" + issueId;
         try 
         {        
-            stmt= conn.createStatement();
+            stmt = conn.createStatement();
             stmt.executeUpdate(sql);
         } 
         finally 
@@ -309,7 +309,7 @@ public class DB_1_MoveIssueCreateInfo extends JDBCTask
             {
                 stmt.close();
             }
-            catch (SQLException ingore){}
+            catch (SQLException ignore) {}
         }
         if (conn != null) 
         {
@@ -317,7 +317,7 @@ public class DB_1_MoveIssueCreateInfo extends JDBCTask
             {
                 conn.close();
             }
-            catch (SQLException ingore){}
+            catch (SQLException ignore) {}
         }
     }
 }
