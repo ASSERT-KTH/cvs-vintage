@@ -50,6 +50,9 @@ import java.util.List;
 import java.util.ArrayList;
 import org.apache.torque.util.Criteria;
 import org.apache.torque.om.Persistent;
+import org.tigris.scarab.util.ScarabConstants;
+import org.tigris.scarab.util.ScarabException;
+import org.tigris.scarab.services.security.ScarabSecurity;
 
 /** 
  * You should add additional methods to this class to meet the
@@ -61,9 +64,11 @@ public  class RIssueTypeOption
     implements Persistent
 {
 
-    public void delete( ScarabUser user )
+    public void delete( ScarabUser user, Module module )
          throws Exception
     {                
+        if (user.hasPermission(ScarabSecurity.DOMAIN__EDIT, module))
+        {
             Criteria c = new Criteria()
                 .add(RIssueTypeOptionPeer.ISSUE_TYPE_ID, getIssueTypeId())
                 .add(RIssueTypeOptionPeer.OPTION_ID, getOptionId());
@@ -89,6 +94,11 @@ public  class RIssueTypeOption
                 rio.save();
                 //rmos.add(rmo);
             }
+        }
+        else
+        {
+            throw new ScarabException(ScarabConstants.NO_PERMISSION_MESSAGE);
+        }            
     }
 
     /**

@@ -237,12 +237,19 @@ public  class AttributeGroup
     }
 
 
-    public void delete( ScarabUser user )
+    public void delete( ScarabUser user, Module module )
          throws Exception
     {                
-        Module module = getModule();
-
-        if (user.hasPermission(ScarabSecurity.MODULE__CONFIGURE, module))
+        String permission = null;
+        if (isGlobal())
+        {
+            permission = (ScarabSecurity.DOMAIN__EDIT);
+        }
+        else
+        {
+            permission = (ScarabSecurity.MODULE__CONFIGURE);
+        }
+        if (user.hasPermission(permission, module))
         {
             IssueType issueType = IssueTypeManager
                .getInstance(getIssueTypeId(), false);
@@ -393,102 +400,114 @@ public  class AttributeGroup
         getAttributes().add(attribute);
     }
 
-    public void deleteAttribute( Attribute attribute, ScarabUser user )
+    public void deleteAttribute( Attribute attribute, ScarabUser user,
+                                 Module module )
          throws Exception
     {                
-        IssueType issueType = getIssueType();
-        Module module = getModule();
-        IssueType template = IssueTypeManager.getInstance
-                             (issueType.getTemplateId());
-        boolean success = true;
-
-        RIssueTypeAttribute ria = issueType.getRIssueTypeAttribute(attribute);
+        String permission = null;
         if (isGlobal())
         {
-            // This is a global attribute group
-            // Remove attribute - issue type mapping
-            List rias = issueType.getRIssueTypeAttributes(false, "data");    
-            ria.delete(user);
-            rias.remove(ria);
-
-            // Remove attribute - module mapping from template type
-            RIssueTypeAttribute ria2 = template.getRIssueTypeAttribute(attribute);
-            ria2.delete(user);
-            rias.remove(ria2);
+            permission = (ScarabSecurity.DOMAIN__EDIT);
         }
         else
         {
-            // Check if attribute is locked
-            if (ria != null && ria.getLocked())
+            permission = (ScarabSecurity.MODULE__CONFIGURE);
+        }
+        if (user.hasPermission(permission, module))
+        {
+            IssueType issueType = getIssueType();
+            IssueType template = IssueTypeManager.getInstance
+                                 (issueType.getTemplateId());
+            boolean success = true;
+
+            RIssueTypeAttribute ria = issueType.getRIssueTypeAttribute(attribute);
+            if (isGlobal())
             {
-                success = false;
-                throw new TorqueException(attribute.getName() + "is locked");
+                // This is a global attribute group
+                // Remove attribute - issue type mapping
+                List rias = issueType.getRIssueTypeAttributes(false, "data");    
+                ria.delete(user);
+                rias.remove(ria);
+
             }
             else
             {
-                // Remove attribute - module mapping
-                List rmas = module.getRModuleAttributes(issueType, false,
-                                                        "data");    
-                RModuleAttribute rma = module
-                    .getRModuleAttribute(attribute, issueType);
-                rma.delete(user);
-                WorkflowFactory.getInstance().deleteWorkflowsForAttribute(attribute, 
-                                             module, issueType);
-                rmas.remove(rma);
-
-                // Remove attribute - module mapping from template type
-                RModuleAttribute rma2 = module
-                .getRModuleAttribute(attribute, template);
-                rma2.delete(user);
-                rmas.remove(rma2);
-            }
-        }
-
-        if (success)
-        {
-            // Remove attribute - group mapping
-            RAttributeAttributeGroup raag = 
-                getRAttributeAttributeGroup(attribute);
-            raag.delete(user);
-
-            if (attribute.isOptionAttribute())
-            {
-                if (isGlobal())
-                { 
-                    // global attributeGroup; remove issuetype-option maps
-                    List rios = issueType.getRIssueTypeOptions(attribute);
-                    for (int i = 0; i<rios.size();i++)
-                    {
-                        RIssueTypeOption rio = (RIssueTypeOption)rios.get(i);
-                        rio.delete(user);
-                    }
+                // Check if attribute is locked
+                if (ria != null && ria.getLocked())
+                {
+                    success = false;
+                    throw new TorqueException(attribute.getName() + "is locked");
                 }
                 else
                 {
-                    // Remove module-option mapping
-                    List rmos = module.getRModuleOptions(attribute, issueType);
-                    if (rmos != null)
-                    {
-                        rmos.addAll(module.getRModuleOptions(attribute, template));
-                        for (int j = 0; j<rmos.size();j++)
+                    // Remove attribute - module mapping
+                    List rmas = module.getRModuleAttributes(issueType, false,
+                                                            "data");    
+                    RModuleAttribute rma = module
+                        .getRModuleAttribute(attribute, issueType);
+                    rma.delete(user);
+                    WorkflowFactory.getInstance().deleteWorkflowsForAttribute(attribute, 
+                                                 module, issueType);
+                    rmas.remove(rma);
+
+                    // Remove attribute - module mapping from template type
+                    RModuleAttribute rma2 = module
+                    .getRModuleAttribute(attribute, template);
+                    rma2.delete(user);
+                    rmas.remove(rma2);
+                }
+            }
+
+            if (success)
+            {
+                // Remove attribute - group mapping
+                RAttributeAttributeGroup raag = 
+                    getRAttributeAttributeGroup(attribute);
+                raag.delete(user);
+
+                if (attribute.isOptionAttribute())
+                {
+                    if (isGlobal())
+                    { 
+                        // global attributeGroup; remove issuetype-option maps
+                        List rios = issueType.getRIssueTypeOptions(attribute);
+                        for (int i = 0; i<rios.size();i++)
                         {
-                            RModuleOption rmo = (RModuleOption)rmos.get(j);
-                             // rmo's may be inherited by the parent module.
-                             // don't delete unless they are directly associated
-                             // with this module.  Will know by the first one.
-                             if (rmo.getModuleId().equals(module.getModuleId())) 
-                             {
-                                 rmo.delete(user);
+                            RIssueTypeOption rio = (RIssueTypeOption)rios.get(i);
+                            rio.delete(user, module);
+                        }
+                    }
+                    else
+                    {
+                        // Remove module-option mapping
+                        List rmos = module.getRModuleOptions(attribute, issueType);
+                        if (rmos != null)
+                        {
+                            rmos.addAll(module.getRModuleOptions(attribute, template));
+                            for (int j = 0; j<rmos.size();j++)
+                            {
+                                RModuleOption rmo = (RModuleOption)rmos.get(j);
+                                 // rmo's may be inherited by the parent module.
+                                 // don't delete unless they are directly associated
+                                 // with this module.  Will know by the first one.
+                                 if (rmo.getModuleId().equals(module.getModuleId())) 
+                                 {
+                                     rmo.delete(user);
+                                 }
+                                 else 
+                                 {
+                                     break;
+                                 } 
                              }
-                             else 
-                             {
-                                 break;
-                             } 
                          }
                      }
                  }
              }
          }
+         else
+         {
+             throw new ScarabException(ScarabConstants.NO_PERMISSION_MESSAGE);
+         }            
     }
 
     private RAttributeAttributeGroup addRAttributeAttributeGroup( Attribute attribute )

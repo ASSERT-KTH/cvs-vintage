@@ -64,7 +64,7 @@ import org.tigris.scarab.util.ScarabException;
  *
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: IssueType.java,v 1.27 2002/09/18 20:27:24 elicia Exp $
+ * @version $Id: IssueType.java,v 1.28 2002/09/29 18:57:30 elicia Exp $
  */
 public  class IssueType 
     extends org.tigris.scarab.om.BaseIssueType
@@ -264,7 +264,7 @@ public  class IssueType
         for (int i=0; i<attrGroups.size(); i++)
         {
             AttributeGroup group = (AttributeGroup)attrGroups.get(i);
-            group.delete(user);
+            group.delete(user, group.getModule());
         }
     }
 
@@ -448,6 +448,21 @@ public  class IssueType
         return rias;
     }
 
+    /**
+     * Gets associated activeattributes.
+     */
+    public List getAttributes(String attributeType)
+        throws Exception
+    {
+        ArrayList attrs = new ArrayList();
+        List rias = getRIssueTypeAttributes(true, attributeType);
+        for (int i=0; i<rias.size(); i++)
+        {
+            attrs.add(((RIssueTypeAttribute)rias.get(i)).getAttribute());
+        }
+        return attrs;
+    }
+         
     /**
      * Adds issuetype-attribute mapping to issue type.
      */

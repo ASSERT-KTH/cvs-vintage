@@ -89,7 +89,7 @@ import org.tigris.scarab.workflow.WorkflowFactory;
  * action methods on RModuleAttribute or RIssueTypeAttribute tables
  *      
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: AttributeGroupEdit.java,v 1.37 2002/09/23 23:58:30 elicia Exp $
+ * @version $Id: AttributeGroupEdit.java,v 1.38 2002/09/29 18:57:30 elicia Exp $
  */
 public class AttributeGroupEdit extends RequireLoginFirstAction
 {
@@ -339,7 +339,7 @@ public class AttributeGroupEdit extends RequireLoginFirstAction
                 {
                     try
                     {
-                        ag.deleteAttribute(attribute, user);
+                        ag.deleteAttribute(attribute, user, module);
                     }
                     catch (Exception e) 
                     {

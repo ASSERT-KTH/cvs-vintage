@@ -86,7 +86,7 @@ import org.tigris.scarab.services.cache.ScarabCache;
  * action methods on RModuleAttribute table
  *      
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: ArtifactTypeEdit.java,v 1.36 2002/09/17 23:11:35 elicia Exp $
+ * @version $Id: ArtifactTypeEdit.java,v 1.37 2002/09/29 18:57:30 elicia Exp $
  */
 public class ArtifactTypeEdit extends RequireLoginFirstAction
 {
@@ -342,7 +342,7 @@ public class ArtifactTypeEdit extends RequireLoginFirstAction
                     groupId = key.substring(13);
                     AttributeGroup ag = AttributeGroupManager
                        .getInstance(new NumberKey(groupId), false); 
-                    ag.delete(user);
+                    ag.delete(user, module);
                     scarabR.setConfirmMessage(l10n.get(DEFAULT_MSG));  
                     ScarabCache.clear();
                     getIntakeTool(context).removeAll();

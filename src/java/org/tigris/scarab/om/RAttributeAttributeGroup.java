@@ -24,18 +24,9 @@ public  class RAttributeAttributeGroup
      */
     public void delete(ScarabUser user) throws Exception 
     { 
-        Module module = getAttributeGroup().getModule();
-
-        if (user.hasPermission(ScarabSecurity.MODULE__CONFIGURE, module))
-        {
-            Criteria c = new Criteria()
-                .add(RAttributeAttributeGroupPeer.GROUP_ID, getGroupId())
-                .add(RAttributeAttributeGroupPeer.ATTRIBUTE_ID, getAttributeId());
+        Criteria c = new Criteria()
+            .add(RAttributeAttributeGroupPeer.GROUP_ID, getGroupId())
+            .add(RAttributeAttributeGroupPeer.ATTRIBUTE_ID, getAttributeId());
             RAttributeAttributeGroupPeer.doDelete(c);
-        } 
-        else
-        {
-            throw new ScarabException(ScarabConstants.NO_PERMISSION_MESSAGE);
-        }            
     }
 }

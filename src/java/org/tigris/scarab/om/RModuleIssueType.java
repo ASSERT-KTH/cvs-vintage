@@ -98,7 +98,7 @@ public  class RModuleIssueType
                 // delete attribute-attribute group map
                 AttributeGroup attGroup = 
                               (AttributeGroup)attGroups.get(j);
-                attGroup.delete(user);
+                attGroup.delete(user, module);
             }
 
             Criteria c = new Criteria()

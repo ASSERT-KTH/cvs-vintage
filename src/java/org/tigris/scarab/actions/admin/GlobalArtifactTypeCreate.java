@@ -74,7 +74,7 @@ import org.tigris.scarab.util.ScarabConstants;
  * This class deals with modifying Global Artifact Types.
  *
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: GlobalArtifactTypeCreate.java,v 1.25 2002/09/20 02:48:20 elicia Exp $
+ * @version $Id: GlobalArtifactTypeCreate.java,v 1.26 2002/09/29 18:57:30 elicia Exp $
  */
 public class GlobalArtifactTypeCreate extends RequireLoginFirstAction
 {
@@ -302,7 +302,8 @@ public class GlobalArtifactTypeCreate extends RequireLoginFirstAction
                     groupId = key.substring(13);
                     AttributeGroup ag = AttributeGroupManager
                        .getInstance(new NumberKey(groupId), false); 
-                    ag.delete(user);
+System.out.println("CURRMOD " + scarabR.getCurrentModule().getModuleId());
+                    ag.delete(user, scarabR.getCurrentModule());
                 }
                 catch (Exception e)
                 {
