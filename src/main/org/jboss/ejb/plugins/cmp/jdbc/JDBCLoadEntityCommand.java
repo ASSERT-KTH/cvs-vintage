@@ -20,6 +20,7 @@ import javax.ejb.NoSuchEntityException;
 import org.jboss.ejb.EntityEnterpriseContext;
 import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCFieldBridge;
 import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCCMPFieldBridge;
+import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCCMRFieldBridge;
 import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCEntityBridge;
 import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCFunctionMappingMetaData;
 import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCReadAheadMetaData;
@@ -40,7 +41,7 @@ import org.jboss.logging.Logger;
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
  * @author <a href="mailto:dirk@jboss.de">Dirk Zimmermann</a>
  * @author <a href="mailto:danch@nvisia.com">danch (Dan Christopherson)</a>
- * @version $Revision: 1.23 $
+ * @version $Revision: 1.24 $
  */
 public class JDBCLoadEntityCommand {
    private final JDBCStoreManager manager;
@@ -288,13 +289,15 @@ public class JDBCLoadEntityCommand {
          // - it is a primary key member (should already be loaded)
          // - it is already loaded
          // - it is a read-only _already_loaded_ field that isn't timed out yet
-         if( field.isPrimaryKeyMember()
-            || (field.isLoaded( ctx )
-            && (!field.isReadOnly() || !field.isReadTimedOut( ctx )))) {
+         // - it is a CMR field with a foreign key mapped to a pk
+         if(field.isPrimaryKeyMember()
+            || field.isLoaded( ctx )
+               && (!field.isReadOnly() || !field.isReadTimedOut(ctx))
+            || field instanceof JDBCCMRFieldBridge
+               && ((JDBCCMRFieldBridge)field).isFkPartOfPk()) {
             fields.remove();
          }
       }
-      
       return loadFields;
    }
 }
