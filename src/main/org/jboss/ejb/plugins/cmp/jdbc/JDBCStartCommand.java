@@ -43,7 +43,7 @@ import org.jboss.logging.Logger;
  * @author <a href="mailto:michel.anke@wolmail.nl">Michel de Groot</a>
  * @author <a href="loubyansky@ua.fm">Alex Loubyansky</a>
  * @author <a href="heiko.rupp@cellent.de">Heiko W.Rupp</a>
- * @version $Revision: 1.38 $
+ * @version $Revision: 1.39 $
  */
 public final class JDBCStartCommand
 {
@@ -414,7 +414,7 @@ public final class JDBCStartCommand
       throws DeploymentException
    {
       StringBuffer sql = new StringBuffer();
-      sql.append(SQLUtil.CREATE_TABLE).append(entity.getTableName()).append('(');
+      sql.append(SQLUtil.CREATE_TABLE).append(entity.getTableName()).append(" (");
 
       // add fields
       boolean comma = false;
@@ -479,7 +479,7 @@ public final class JDBCStartCommand
             sql.append(SQLUtil.CREATE_INDEX);
             sql.append(entity.getTableName() + IDX_POSTFIX + idxCount);// index name
             sql.append(SQLUtil.ON);
-            sql.append(entity.getTableName() + '(');
+            sql.append(entity.getTableName() + " (");
             SQLUtil.getColumnNamesClause(field, sql);
             sql.append(")");
 
@@ -547,7 +547,7 @@ public final class JDBCStartCommand
       sql.append(SQLUtil.CREATE_INDEX);
       sql.append(fi.getColumnName() + IDX_POSTFIX + idxCount);
       sql.append(SQLUtil.ON);
-      sql.append(tableName + '(');
+      sql.append(tableName + " (");
       sql.append(fi.getColumnName());
       sql.append(')');
       return sql.toString();
@@ -586,7 +586,7 @@ public final class JDBCStartCommand
 
       StringBuffer sql = new StringBuffer();
       sql.append(SQLUtil.CREATE_TABLE).append(cmrField.getTableName())
-         .append('(')
+         .append(" (")
          // add field declaration
          .append(SQLUtil.getCreateTableColumnsClause(fieldsArr));
 
