@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Request.java,v 1.2 1999/10/22 21:52:07 costin Exp $
- * $Revision: 1.2 $
- * $Date: 1999/10/22 21:52:07 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Request.java,v 1.3 1999/10/24 16:53:18 costin Exp $
+ * $Revision: 1.3 $
+ * $Date: 1999/10/24 16:53:18 $
  *
  * ====================================================================
  *
@@ -110,6 +110,7 @@ public interface Request {
     
     public  BufferedReader getReader() throws IOException;
 
+
     
     // Attributes - we can have the attribute stuff in a
     // separate class
@@ -149,6 +150,8 @@ public interface Request {
 
 
     // Session
+    // XXX right now the code assume ServerSessionManager will be
+    // used, need to figure out how to use the session Id passed from Apache
     public ApplicationSession getSession();
 
     public ApplicationSession getSession(boolean create);
@@ -157,6 +160,14 @@ public interface Request {
 
     public ServerSession getServerSession(boolean create);
     
+    /** Hook required to support getRequestSessionId using ServerSession
+	manager.
+	If getSession use the default ServerSessionManager, it will call back
+	setting requestedSessionId.
+    */
+    public void setRequestedSessionId(String reqSessionId);
+    
+
 
     // Authentication
     public String getAuthType();
@@ -193,9 +204,6 @@ public interface Request {
     
 
 //     // ????
-    public void setRequestedSessionId(String reqSessionId);// used by ServerSessionManager
-    
-//     // ????
     public void setServerSession(ServerSession serverSession);// Used by Context.handleRequest ?
     
     public void setServletPath(String servletPath);// Used by Context.handleRequest ?
@@ -205,7 +213,7 @@ public interface Request {
     public void setResponse(Response response);// XXX used only in ServletWrapper - shouldn't
     public  void setURI(String requestURI); // XXX used in ServletWrapper, need to clean up 
 
-    // not needed, but it may be usefull
+    // One to one Request - Facade
     public HttpServletRequestFacade getFacade();
 
 

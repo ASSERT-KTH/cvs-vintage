@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/ServerSessionManager.java,v 1.2 1999/10/22 21:52:09 costin Exp $
- * $Revision: 1.2 $
- * $Date: 1999/10/22 21:52:09 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/ServerSessionManager.java,v 1.3 1999/10/24 16:53:19 costin Exp $
+ * $Revision: 1.3 $
+ * $Date: 1999/10/24 16:53:19 $
  *
  * ====================================================================
  *
@@ -108,6 +108,9 @@ public class ServerSessionManager {
 	String sessionId = null;
 	ServerSession session = null;
 
+	// XXX need to check if request.getRequestdSessionId() returns something,
+	// since the connector might have set it.
+	
 	//	Enumeration enum = request.getCookies().elements();
 	Cookie cookies[]=request.getCookies(); // assert !=null
 	

@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/shell/Attic/Startup.java,v 1.2 1999/10/22 01:47:10 costin Exp $
- * $Revision: 1.2 $
- * $Date: 1999/10/22 01:47:10 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/shell/Attic/Startup.java,v 1.3 1999/10/24 16:53:20 costin Exp $
+ * $Revision: 1.3 $
+ * $Date: 1999/10/24 16:53:20 $
  *
  * ====================================================================
  *
@@ -189,6 +189,12 @@ public class Startup {
 	        String msg = sm.getString("startup.server.re");
 
 	        System.out.println(msg);
+		re.printStackTrace();
+		// The original message is useless,
+		// I had no ideea what to do - if we can't figure a better
+		// message, please let the stack trace in
+
+		// in my case - I had no eth card, and it couldn't find the hostname
 	    } catch (AlreadyBoundException abe) {
 	        String msg = sm.getString("startup.server.abe");
 

@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/util/Attic/MimeHeaders.java,v 1.1 1999/10/09 00:20:56 duncan Exp $
- * $Revision: 1.1 $
- * $Date: 1999/10/09 00:20:56 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/util/Attic/MimeHeaders.java,v 1.2 1999/10/24 16:53:21 costin Exp $
+ * $Revision: 1.2 $
+ * $Date: 1999/10/24 16:53:21 $
  *
  * ====================================================================
  *
@@ -251,22 +251,29 @@ public class MimeHeaders {
      */
 
     public String[] getHeaders(String name) {
+	Vector values = getHeadersVector(name);
+
+	if (values.size() > 0) {
+	    String retval[] = new String[values.size()];
+
+	    for (int i = 0; i < retval.length; i++)
+		retval[i] = (String)values.elementAt(i);
+	    return retval;
+	}
+	return null;
+    }
+
+    /** Same as getHeaders, return a Vector - avoid Vector-[]-Vector conversion
+     */
+    public Vector getHeadersVector(String name) {
 	Vector values = new Vector();
-	String[] retval = null;
 
 	for (int i = 0; i < count; i++) {
 	    if (headers[i].nameEquals(name))
 		values.addElement(headers[i].getValue());
 	}
 
-	if (values.size() > 0) {
-	    retval = new String[values.size()];
-
-	    for (int i = 0; i < retval.length; i++)
-		retval[i] = (String)values.elementAt(i);
-	}
-
-	return retval;
+	return values;
     }
 
     /**
