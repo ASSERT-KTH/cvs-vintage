@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<!-- $Id: building.xml,v 1.3 2003/05/29 08:36:28 linus Exp $ -->
+<!-- $Id: building.xml,v 1.4 2003/06/14 21:07:23 linus Exp $ -->
 
   <chapter id="buildingandtools">
     <title>Building from source</title>
@@ -1106,8 +1106,8 @@ Normally this tag is "VERSION_<replaceable>X_Y_Z</replaceable>_F",
 e.g. VERSION_0_9_7_F.
 The according command line CVS command is 
 <command>cvs rtag VERSION_<replaceable>X_Y_Z</replaceable>_F argouml</command>.
-(Because of a problem on the Tigris site, this doesn't work, 
-instead make sure you have a complete checked out copy of ArgoUML,
+(Because of a problem on the Tigris site, this doesn't work. 
+Instead make sure you have a complete checked out copy of ArgoUML,
 go to the root directory 
 <filename class="directory">argouml</filename>
 and run the command
