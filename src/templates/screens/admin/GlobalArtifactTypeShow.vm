@@ -9,7 +9,7 @@ This page is for selecting an Issue type to edit which is defined in a global sc
 <form action="$link.setPage("admin,GlobalArtifactTypeShow.vm")" method="post">
 <input type="hidden" name="action" value="admin.GlobalArtifactTypes" />
 <input type="hidden" name="$scarabG.Constant.OTHER_TEMPLATE" value="admin,ArtifactTypeCreate.vm" />
-<input type="hidden" name="lastTemplate" value="admin,GlobalArtifactTypeShow.vm" />
+<input type="hidden" name="lastTemplate" value="global" />
 
 <div class="functnbar">
 <input type="submit" value="Done" name="eventSubmit_doDone" />&#160;

@@ -28,7 +28,7 @@ This page is for selecting an Attribute to edit which is defined in a global sca
 <form action="$link.setPage("admin,GlobalAttributeShow.vm")" method="post">
 <input type="hidden" name="action" value="admin.GlobalAttributes" />
 <input type="hidden" name="$scarabG.Constant.OTHER_TEMPLATE" value="admin,GlobalAttributeEdit.vm" />
-<input type="hidden" name="lastTemplate" value="admin,GlobalAttributeShow.vm" />
+<input type="hidden" name="lastTemplate" value="global" />
 
 <div class="tabs">
 <table cellpadding="3" cellspacing="0" border="0">

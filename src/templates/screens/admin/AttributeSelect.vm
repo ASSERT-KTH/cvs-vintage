@@ -17,8 +17,6 @@ $page.setTitle("Select global attribute")
 </div>
 #end
 
-
-
 <div class="app" id="globalAttributeSelect">
 <h2>$page.Title</h2>
 
@@ -28,7 +26,7 @@ $page.setTitle("Select global attribute")
 <input type="hidden" name="issueTypeId" value="$data.Parameters.getString("issueTypeId","").trim()" />
 <input type="hidden" name="groupid" value="$data.Parameters.getString("groupid")" />
 <input type="hidden" name=$scarabG.Constant.OTHER_TEMPLATE value="admin,GlobalAttributeEdit.vm" />
-<input type="hidden" name="lastTemplate" value="admin,AttributeSelect.vm" />
+<input type="hidden" name="lastTemplate" value="$data.Parameters.getString("lastTemplate")" />
 
 
 #AttributeSelectBar("")

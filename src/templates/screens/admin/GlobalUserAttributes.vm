@@ -18,7 +18,7 @@ $page.setTitle("User Attributes")
 <form action="$link.setPage("admin,GlobalUserAttributes.vm")" method="post">
 <input type="hidden" name="action" value="admin.GlobalAttributes" />
 <input type="hidden" name="$scarabG.Constant.OTHER_TEMPLATE" value="admin,UserAttributeEdit.vm" />
-<input type="hidden" name="nextTemplate" value="admin,GlobalUserAttributes.vm" />
+<input type="hidden" name="lastTemplate" value="global" />
 
 <div class="functnbar">
 <input type="submit" value="Done" name="eventSubmit_doDone" />&#160;

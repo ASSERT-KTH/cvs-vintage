@@ -25,8 +25,7 @@ $page.setTitle("Select user attribute")
 <input type="hidden" name="groupId" value="$data.Parameters.getString("groupId","").trim()" />
 <input type="hidden" name="issueTypeId" value="$data.Parameters.getString("issueTypeId","").trim()" />
 <input type="hidden" name="$scarabG.Constant.OTHER_TEMPLATE" value="admin,UserAttributeEdit.vm" />
-
-
+<input type="hidden" name="lastTemplate" value="$data.Parameters.getString("lastTemplate")" />
 #AttributeSelectBar("")
 
 #if ($attributes.size() == 0)
