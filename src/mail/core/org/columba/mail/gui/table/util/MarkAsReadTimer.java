@@ -17,7 +17,6 @@ package org.columba.mail.gui.table.util;
 
 import org.columba.core.gui.selection.SelectionChangedEvent;
 import org.columba.core.gui.selection.SelectionListener;
-import org.columba.core.logging.ColumbaLogger;
 import org.columba.core.main.MainInterface;
 import org.columba.core.xml.XmlElement;
 
@@ -32,6 +31,7 @@ import java.awt.event.ActionListener;
 
 import java.util.Observable;
 import java.util.Observer;
+import java.util.logging.Logger;
 
 import javax.swing.Timer;
 
@@ -49,8 +49,12 @@ import javax.swing.Timer;
  */
 public class MarkAsReadTimer implements ActionListener, SelectionListener,
     Observer {
+
+    /** JDK 1.4+ logging framework logger, used for logging. */
+    private static final Logger LOG = Logger.getLogger("org.columba.mail.gui.table.util");
+
     // definition of a second
-    private final static int ONE_SECOND = 1000;
+    private static final int ONE_SECOND = 1000;
 
     // timer to use
     private Timer timer;
@@ -106,7 +110,7 @@ public class MarkAsReadTimer implements ActionListener, SelectionListener,
     public synchronized void stopTimer() {
         value = 0;
 
-        ColumbaLogger.log.info("MarkAsRead-timer stopped");
+        LOG.info("MarkAsRead-timer stopped");
 
         if (timer != null) {
             timer.stop();
@@ -119,7 +123,7 @@ public class MarkAsReadTimer implements ActionListener, SelectionListener,
     * message is shown
     */
     public synchronized void restart(FolderCommandReference reference) {
-        ColumbaLogger.log.info("MarkAsRead-timer started");
+        LOG.info("MarkAsRead-timer started");
 
         message = reference;
         value = 0;
@@ -134,10 +138,10 @@ public class MarkAsReadTimer implements ActionListener, SelectionListener,
     * read. The MarkMessageCommand is called.
     */
     public void actionPerformed(ActionEvent e) {
-        ColumbaLogger.log.info("action perfomed");
+        LOG.info("action perfomed");
         timer.stop();
 
-        FolderCommandReference[] r = new FolderCommandReference[] { message };
+        FolderCommandReference[] r = new FolderCommandReference[] {message};
 
         if (r[0] == null) {
             return;
@@ -168,7 +172,7 @@ public class MarkAsReadTimer implements ActionListener, SelectionListener,
      * @see java.util.Observer#update(java.util.Observable, java.lang.Object)
      */
     public void update(Observable arg0, Object arg1) {
-        ColumbaLogger.log.info("/options/markasread#delay has changed");
+        LOG.info("/options/markasread#delay has changed");
 
         // configuration has changed
         XmlElement markasread = MailInterface.config.get("options").getElement("/options/markasread");

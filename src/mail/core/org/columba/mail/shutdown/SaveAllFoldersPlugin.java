@@ -1,22 +1,21 @@
 //The contents of this file are subject to the Mozilla Public License Version 1.1
-//(the "License"); you may not use this file except in compliance with the 
+//(the "License"); you may not use this file except in compliance with the
 //License. You may obtain a copy of the License at http://www.mozilla.org/MPL/
 //
 //Software distributed under the License is distributed on an "AS IS" basis,
-//WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License 
+//WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
 //for the specific language governing rights and
 //limitations under the License.
 //
 //The Original Code is "The Columba Project"
 //
 //The Initial Developers of the Original Code are Frederik Dietz and Timo Stich.
-//Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
+//Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003.
 //
 //All Rights Reserved.
 package org.columba.mail.shutdown;
 
 import org.columba.core.backgroundtask.TaskInterface;
-import org.columba.core.logging.ColumbaLogger;
 import org.columba.core.main.MainInterface;
 
 import org.columba.mail.command.FolderCommandReference;
@@ -25,6 +24,7 @@ import org.columba.mail.folder.command.SaveFolderConfigurationCommand;
 import org.columba.mail.main.MailInterface;
 
 import java.util.Enumeration;
+import java.util.logging.Logger;
 
 
 /**
@@ -34,6 +34,10 @@ import java.util.Enumeration;
  * @author freddy
  */
 public class SaveAllFoldersPlugin implements TaskInterface {
+
+    /** JDK 1.4+ logging framework logger, used for logging. */
+    private static final Logger LOG = Logger.getLogger("org.columba.mail.shutdown");
+
     public void run() {
         FolderTreeNode rootFolder = (FolderTreeNode) MailInterface.treeModel.getRoot();
         saveFolder(rootFolder);
@@ -48,7 +52,7 @@ public class SaveAllFoldersPlugin implements TaskInterface {
             FolderCommandReference[] r = new FolderCommandReference[1];
             r[0] = new FolderCommandReference(child);
 
-            ColumbaLogger.log.info("Saving folder " + child.getName());
+            LOG.info("Saving folder " + child.getName());
 
             MainInterface.processor.addOp(new SaveFolderConfigurationCommand(r));
 

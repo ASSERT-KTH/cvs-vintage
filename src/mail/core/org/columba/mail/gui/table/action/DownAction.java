@@ -1,22 +1,21 @@
 //The contents of this file are subject to the Mozilla Public License Version 1.1
-//(the "License"); you may not use this file except in compliance with the 
+//(the "License"); you may not use this file except in compliance with the
 //License. You may obtain a copy of the License at http://www.mozilla.org/MPL/
 //
 //Software distributed under the License is distributed on an "AS IS" basis,
-//WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License 
+//WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
 //for the specific language governing rights and
 //limitations under the License.
 //
 //The Original Code is "The Columba Project"
 //
 //The Initial Developers of the Original Code are Frederik Dietz and Timo Stich.
-//Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
+//Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003.
 //
 //All Rights Reserved.
 package org.columba.mail.gui.table.action;
 
 import org.columba.core.action.AbstractColumbaAction;
-import org.columba.core.logging.ColumbaLogger;
 import org.columba.core.main.MainInterface;
 
 import org.columba.mail.command.FolderCommandReference;
@@ -28,6 +27,7 @@ import org.columba.mail.gui.table.TableController;
 import org.columba.mail.gui.table.model.MessageNode;
 
 import java.awt.event.ActionEvent;
+import java.util.logging.Logger;
 
 import javax.swing.tree.DefaultMutableTreeNode;
 
@@ -40,6 +40,10 @@ import javax.swing.tree.DefaultMutableTreeNode;
  * message-view. If no more message down your key, then nothing changed.
  */
 public class DownAction extends AbstractColumbaAction {
+
+    /** JDK 1.4+ logging framework logger, used for logging. */
+    private static final Logger LOG = Logger.getLogger("org.columba.mail.gui.table.action");
+
     TableController tableController;
     AbstractMailFrameController frameController;
 
@@ -53,21 +57,21 @@ public class DownAction extends AbstractColumbaAction {
      * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
      */
     public void actionPerformed(ActionEvent arg0) {
-        ColumbaLogger.log.info("action down performed");
+        LOG.info("action down performed");
 
         // getting last selection
         FolderCommandReference[] r = frameController.getTableSelection();
         FolderCommandReference ref = r[0];
-        ColumbaLogger.log.info("folderCommandRef: " + ref);
+        LOG.info("folderCommandRef: " + ref);
 
         // getting current uid
         Object[] uids = ref.getUids();
-        ColumbaLogger.log.info("curr uids: " + uids);
+        LOG.info("curr uids: " + uids);
 
         // getting current node (under the selection)
         DefaultMutableTreeNode currNode = tableController.getView()
                                                          .getMessagNode(uids[0]);
-        ColumbaLogger.log.info("currNode: " + currNode);
+        LOG.info("currNode: " + currNode);
 
         // getting next node
         DefaultMutableTreeNode nextNode = currNode.getNextNode();
@@ -77,12 +81,12 @@ public class DownAction extends AbstractColumbaAction {
             return;
         }
 
-        ColumbaLogger.log.info("nextNode: " + nextNode);
+        LOG.info("nextNode: " + nextNode);
 
         // getting from the next node the uid
         Object[] nextUids = new Object[1];
         nextUids[0] = ((MessageNode) nextNode).getUid();
-        ColumbaLogger.log.info("prevUids: " + nextUids);
+        LOG.info("prevUids: " + nextUids);
 
         // and set this to the actual ref
         ref.setUids(nextUids);

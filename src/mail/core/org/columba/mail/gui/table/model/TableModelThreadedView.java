@@ -1,21 +1,19 @@
 //The contents of this file are subject to the Mozilla Public License Version 1.1
-//(the "License"); you may not use this file except in compliance with the 
+//(the "License"); you may not use this file except in compliance with the
 //License. You may obtain a copy of the License at http://www.mozilla.org/MPL/
 //
 //Software distributed under the License is distributed on an "AS IS" basis,
-//WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License 
+//WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
 //for the specific language governing rights and
 //limitations under the License.
 //
 //The Original Code is "The Columba Project"
 //
 //The Initial Developers of the Original Code are Frederik Dietz and Timo Stich.
-//Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
+//Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003.
 //
 //All Rights Reserved.
 package org.columba.mail.gui.table.model;
-
-import org.columba.core.logging.ColumbaLogger;
 
 import org.columba.mail.message.ColumbaHeader;
 import org.columba.mail.message.HeaderList;
@@ -29,17 +27,18 @@ import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
 import java.util.StringTokenizer;
+import java.util.logging.Logger;
 
 
 /**
- * Title:
- * Description:
- * Copyright:    Copyright (c) 2001
- * Company:
  * @author
  * @version 1.0
  */
 public class TableModelThreadedView extends TreeTableModelDecorator {
+
+    /** JDK 1.4+ logging framework logger, used for logging. */
+    private static final Logger LOG = Logger.getLogger("org.columba.mail.gui.table.model");
+
     private boolean enabled;
     private HashMap hashtable;
     private int idCount = 0;
@@ -79,8 +78,9 @@ public class TableModelThreadedView extends TreeTableModelDecorator {
                     return "";
                 }
 
-                while (subject.charAt(start) <= ' ')
+                while (subject.charAt(start) <= ' ') {
                     start++;
+                }
 
                 if ((start < (length - 2)) &&
                         ((subject.charAt(start) == 'r') ||
@@ -98,8 +98,9 @@ public class TableModelThreadedView extends TreeTableModelDecorator {
 
                         // skip  character in "[|
                         while ((i < length) && (subject.charAt(i) >= ' ') &&
-                                (subject.charAt(i) <= '9'))
+                                (subject.charAt(i) <= '9')) {
                             i++;
+                        }
 
                         if ((i < (length - 1)) &&
                                 ((subject.charAt(i) == ']') ||
@@ -115,8 +116,9 @@ public class TableModelThreadedView extends TreeTableModelDecorator {
 
             int end = length;
 
-            while ((end > start) && (subject.charAt(end - 1) < ' '))
+            while ((end > start) && (subject.charAt(end - 1) < ' ')) {
                 end--;
+            }
 
             if ((start == 0) && (end == length)) {
                 return subject;
@@ -374,19 +376,19 @@ for ( int index=i; index<referenceList.length; index++ )
         if (hashtable.containsKey(
                     referenceList[referenceList.length - 1].trim())) {
             //System.out.println("reference is in hashtable: "+index);
-            parent = (MessageNode) hashtable.get(referenceList[referenceList.length -
-                    1].trim());
+            parent = (MessageNode) hashtable.get(referenceList[referenceList.length
+                                                               - 1].trim());
         }
 
         return parent;
     }
 
     /**
- *
- * sort all children after date
- *
- * @param node        root MessageNode
- */
+     *
+     * sort all children after date
+     *
+     * @param node        root MessageNode
+     */
     protected void sort(MessageNode node) {
         for (int i = 0; i < node.getChildCount(); i++) {
             MessageNode child = (MessageNode) node.getChildAt(i);
@@ -413,7 +415,7 @@ for ( int index=i; index<referenceList.length; index++ )
 
             if (((ColumbaHeader) child.getHeader()).getFlags().getRecent()) {
                 // recent found
-                ColumbaLogger.log.info("found recent message");
+                LOG.info("found recent message");
 
                 return true;
             } else {
@@ -542,22 +544,22 @@ for ( int i=0; i<rootNode.getChildCount(); i++ )
     /******************************* implements TableModelModifier *******************/
 
     /* (non-Javadoc)
- * @see org.columba.mail.gui.table.model.TableModelModifier#modify(java.lang.Object[])
- */
+     * @see org.columba.mail.gui.table.model.TableModelModifier#modify(java.lang.Object[])
+     */
     public void modify(Object[] uids) {
         super.modify(uids);
     }
 
     /* (non-Javadoc)
- * @see org.columba.mail.gui.table.model.TableModelModifier#remove(java.lang.Object[])
- */
+     * @see org.columba.mail.gui.table.model.TableModelModifier#remove(java.lang.Object[])
+     */
     public void remove(Object[] uids) {
         super.remove(uids);
     }
 
     /* (non-Javadoc)
-         * @see org.columba.mail.gui.table.model.TreeTableModelInterface#set(org.columba.mail.message.HeaderList)
-         */
+     * @see org.columba.mail.gui.table.model.TreeTableModelInterface#set(org.columba.mail.message.HeaderList)
+     */
     public void set(HeaderList headerList) {
         super.set(headerList);
 
@@ -565,8 +567,8 @@ for ( int i=0; i<rootNode.getChildCount(); i++ )
     }
 
     /* (non-Javadoc)
- * @see org.columba.mail.gui.table.model.TableModelModifier#update()
- */
+     * @see org.columba.mail.gui.table.model.TableModelModifier#update()
+     */
     public void update() {
         super.update();
 

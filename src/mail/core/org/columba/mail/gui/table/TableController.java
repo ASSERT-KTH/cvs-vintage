@@ -15,8 +15,9 @@
 //All Rights Reserved.
 package org.columba.mail.gui.table;
 
+import java.util.logging.Logger;
+
 import org.columba.core.gui.focus.FocusOwner;
-import org.columba.core.logging.ColumbaLogger;
 import org.columba.core.main.MainInterface;
 
 import org.columba.mail.command.FolderCommandReference;
@@ -63,91 +64,95 @@ import javax.swing.tree.TreePath;
  * @author fdietz
  */
 public class TableController implements FocusOwner, ListSelectionListener {
+
+    /** JDK 1.4+ logging framework logger, used for logging. */
+    private static final Logger LOG = Logger.getLogger("org.columba.mail.gui.table");
+
     /**
- * table model
- */
+     * table model
+     */
     private HeaderTableModel headerTableModel;
 
     /**
- * mouse listener responsible for sorting actions fired
- * by the user selecting the column headers of the table
- */
+     * mouse listener responsible for sorting actions fired
+     * by the user selecting the column headers of the table
+     */
     private HeaderTableMouseListener headerTableMouseListener;
 
     /**
- * Drag'n'drop handling of messages
- */
+     * Drag'n'drop handling of messages
+     */
     private HeaderTableDnd headerTableDnd;
 
     /**
- * filter action which should be accessible from the menu
- * only
- */
+     * filter action which should be accessible from the menu
+     * only
+     */
     private FilterActionListener filterActionListener;
 
     /**
- * table view
- */
+     * table view
+     */
     protected TableView view;
 
     /**
- * reference to mail framemediator
- */
+     * reference to mail framemediator
+     */
     protected AbstractMailFrameController mailFrameController;
 
     /**
- * timer which marks a message as read after a certain amount
- * of time.
- */
+     * timer which marks a message as read after a certain amount
+     * of time.
+     */
     protected MarkAsReadTimer markAsReadTimer;
 
     /**
- * table view context menu
- */
+     * table view context menu
+     */
     protected TableMenu menu;
 
     /**
- * filter model
- */
+     * filter model
+     */
     protected TableModelFilter tableModelFilteredView;
 
     /**
- * sorting model
- */
+     * sorting model
+     */
     protected TableModelSorter tableModelSorter;
 
     /**
- * threaded-view model
- */
+     * threaded-view model
+     */
     protected TableModelThreadedView tableModelThreadedView;
 
     /**
- * update manager should handle all update requests
- * <p>
- * Don't update the models directly.
- */
+     * update manager should handle all update requests
+     * <p>
+     * Don't update the models directly.
+     */
     protected TableModelUpdateManager updateManager;
 
     /**
- * previously selected rows
- */
+     * previously selected rows
+     */
     protected int[] previouslySelectedRows;
 
     /**
- * previously selected folder
- */
+     * previously selected folder
+     */
     private Folder previouslySelectedFolder;
 
     /**
- * tooltip mouse handler
- */
+     * tooltip mouse handler
+     */
     private ColumnHeaderTooltips tips;
 
     /**
- * Constructor
- * 
- * @param mailFrameController      mail framemediator
- */
+     * Constructor
+     *
+     * @param mailFrameController      mail framemediator
+     */
     public TableController(AbstractMailFrameController mailFrameController) {
         this.mailFrameController = mailFrameController;
 
@@ -204,13 +209,13 @@ public class TableController implements FocusOwner, ListSelectionListener {
     }
 
     /**
- * Assigns a tooltip for each column
- * <p>
- * Tooltips for columns can be found in org.columba.mail.i18n.header.header.properties.
- * 
- * @see org.columba.mail.folderoptions.ColumnOptionsPlugin
- *
- */
+     * Assigns a tooltip for each column
+     * <p>
+     * Tooltips for columns can be found in org.columba.mail.i18n.header.header.properties.
+     *
+     * @see org.columba.mail.folderoptions.ColumnOptionsPlugin
+     *
+     */
     public void initTooltips() {
         tips.clear();
 
@@ -232,31 +237,31 @@ public class TableController implements FocusOwner, ListSelectionListener {
     }
 
     /**
- * Get view of table controller
- * 
- * @return table view
- */
+     * Get view of table controller
+     *
+     * @return table view
+     */
     public TableView getView() {
         return view;
     }
 
     /**
- * Get table model
- * 
- * @return      table model
- */
+     * Get table model
+     *
+     * @return      table model
+     */
     public HeaderTableModel getHeaderTableModel() {
         return headerTableModel;
     }
 
     /**
- * Select messages with UIDs.
- * <p>
- * Message UIDs are converted to {@link MessageNode}
- * objects.
- * 
- * @param uids      array of message UIDs
- */
+     * Select messages with UIDs.
+     * <p>
+     * Message UIDs are converted to {@link MessageNode}
+     * objects.
+     *
+     * @param uids      array of message UIDs
+     */
     public void setSelected(Object[] uids) {
         MessageNode[] nodes = new MessageNode[uids.length];
 
@@ -275,27 +280,27 @@ public class TableController implements FocusOwner, ListSelectionListener {
 
     /************************** actions ********************************/
     /**
- * create the PopupMenu
- */
+     * create the PopupMenu
+     */
     public void createPopupMenu() {
         menu = new TableMenu(mailFrameController);
     }
 
     /**
- * Get popup menu
- * @return      popup menu
- */
+     * Get popup menu
+     * @return      popup menu
+     */
     public JPopupMenu getPopupMenu() {
         return menu;
     }
 
     /**
- * Method is called if folder data changed.
- * <p>
- * It is responsible for updating the correct underlying model.
- * 
- * @param event     update event
- */
+     * Method is called if folder data changed.
+     * <p>
+     * It is responsible for updating the correct underlying model.
+     *
+     * @param event     update event
+     */
     public void tableChanged(TableModelChangedEvent event)
         throws Exception {
         // selected rows before updating the model
@@ -309,7 +314,7 @@ public class TableController implements FocusOwner, ListSelectionListener {
             return;
         }
 
-        ColumbaLogger.log.info("source folder=" + folder.getName());
+        LOG.info("source folder=" + folder.getName());
 
         // get current selection
         FolderCommandReference[] r = (FolderCommandReference[]) mailFrameController.getSelectionManager()
@@ -318,7 +323,7 @@ public class TableController implements FocusOwner, ListSelectionListener {
 
         // its always possible that no folder is currenlty selected
         if (srcFolder != null) {
-            ColumbaLogger.log.info("selected folder=" + srcFolder.getName());
+            LOG.info("selected folder=" + srcFolder.getName());
         }
 
         // make tree visible
@@ -380,25 +385,25 @@ public class TableController implements FocusOwner, ListSelectionListener {
     }
 
     /**
- * Returns the mailFrameController.
- * @return MailFrameController
- */
+     * Returns the mailFrameController.
+     * @return MailFrameController
+     */
     public AbstractMailFrameController getMailFrameController() {
         return mailFrameController;
     }
 
     /**
- * Returns the markAsReadTimer.
- * @return MarkAsReadTimer
- */
+     * Returns the markAsReadTimer.
+     * @return MarkAsReadTimer
+     */
     public MarkAsReadTimer getMarkAsReadTimer() {
         return markAsReadTimer;
     }
 
     /**
- * Save folder properties of currently selected folder.
- *
- */
+     * Save folder properties of currently selected folder.
+     *
+     */
     public void saveProperties() {
         if (previouslySelectedFolder != null) {
             getMailFrameController().getFolderOptionsController().save(previouslySelectedFolder);
@@ -406,8 +411,8 @@ public class TableController implements FocusOwner, ListSelectionListener {
     }
 
     /**
- * @see org.columba.mail.gui.frame.ViewHeaderListInterface#showHeaderList(org.columba.mail.folder.Folder, org.columba.mail.message.HeaderList)
- */
+     * @see org.columba.mail.gui.frame.ViewHeaderListInterface#showHeaderList(org.columba.mail.folder.Folder, org.columba.mail.message.HeaderList)
+     */
     public void showHeaderList(Folder folder, HeaderList headerList)
         throws Exception {
         // save previously selected folder options
@@ -433,11 +438,11 @@ public class TableController implements FocusOwner, ListSelectionListener {
     }
 
     /**
- * Show empty messagelist with no elements.
- *
- */
+     * Show empty messagelist with no elements.
+     *
+     */
     public void clear() {
-        //		send an update notification to the table model
+        //	send an update notification to the table model
         TableModelChangedEvent ev = new TableModelChangedEvent(TableModelChangedEvent.SET,
                 previouslySelectedFolder, new HeaderList());
 
@@ -450,29 +455,29 @@ public class TableController implements FocusOwner, ListSelectionListener {
 
     /************* implement getter/setter methods *********************/
     /**
- * return the table model sorter
- */
+     * return the table model sorter
+     */
     public TableModelSorter getTableModelSorter() {
         return tableModelSorter;
     }
 
     /**
- * return the threaded view model
- */
+     * return the threaded view model
+     */
     public TableModelThreadedView getTableModelThreadedView() {
         return tableModelThreadedView;
     }
 
     /**
- * return the filtered view model
- */
+     * return the filtered view model
+     */
     public TableModelFilter getTableModelFilteredView() {
         return tableModelFilteredView;
     }
 
     /**
- * @return
- */
+     * @return
+     */
     public TableModelUpdateManager getUpdateManager() {
         return updateManager;
     }
@@ -480,36 +485,36 @@ public class TableController implements FocusOwner, ListSelectionListener {
     /********************* FocusOwner interface ************************/
 
     /* (non-Javadoc)
- * @see org.columba.core.gui.focus.FocusOwner#copy()
- */
+     * @see org.columba.core.gui.focus.FocusOwner#copy()
+     */
     public void copy() {
         new CopyAction(getMailFrameController()).actionPerformed(null);
     }
 
     /* (non-Javadoc)
- * @see org.columba.core.gui.focus.FocusOwner#cut()
- */
+     * @see org.columba.core.gui.focus.FocusOwner#cut()
+     */
     public void cut() {
         new CutAction(getMailFrameController()).actionPerformed(null);
     }
 
     /* (non-Javadoc)
- * @see org.columba.core.gui.focus.FocusOwner#delete()
- */
+     * @see org.columba.core.gui.focus.FocusOwner#delete()
+     */
     public void delete() {
         new DeleteAction(getMailFrameController()).actionPerformed(null);
     }
 
     /* (non-Javadoc)
- * @see org.columba.core.gui.focus.FocusOwner#getComponent()
- */
+     * @see org.columba.core.gui.focus.FocusOwner#getComponent()
+     */
     public JComponent getComponent() {
         return getView();
     }
 
     /* (non-Javadoc)
- * @see org.columba.core.gui.focus.FocusOwner#isCopyActionEnabled()
- */
+     * @see org.columba.core.gui.focus.FocusOwner#isCopyActionEnabled()
+     */
     public boolean isCopyActionEnabled() {
         if (getView().getSelectedNodes().length > 0) {
             return true;
@@ -519,8 +524,8 @@ public class TableController implements FocusOwner, ListSelectionListener {
     }
 
     /* (non-Javadoc)
- * @see org.columba.core.gui.focus.FocusOwner#isCutActionEnabled()
- */
+     * @see org.columba.core.gui.focus.FocusOwner#isCutActionEnabled()
+     */
     public boolean isCutActionEnabled() {
         if (getView().getSelectedNodes().length > 0) {
             return true;
@@ -530,8 +535,8 @@ public class TableController implements FocusOwner, ListSelectionListener {
     }
 
     /* (non-Javadoc)
- * @see org.columba.core.gui.focus.FocusOwner#isDeleteActionEnabled()
- */
+     * @see org.columba.core.gui.focus.FocusOwner#isDeleteActionEnabled()
+     */
     public boolean isDeleteActionEnabled() {
         if (getView().getSelectedNodes().length > 0) {
             return true;
@@ -541,8 +546,8 @@ public class TableController implements FocusOwner, ListSelectionListener {
     }
 
     /* (non-Javadoc)
- * @see org.columba.core.gui.focus.FocusOwner#isPasteActionEnabled()
- */
+     * @see org.columba.core.gui.focus.FocusOwner#isPasteActionEnabled()
+     */
     public boolean isPasteActionEnabled() {
         if (MainInterface.clipboardManager.getMessageSelection() == null) {
             return false;
@@ -556,16 +561,16 @@ public class TableController implements FocusOwner, ListSelectionListener {
     }
 
     /* (non-Javadoc)
- * @see org.columba.core.gui.focus.FocusOwner#isRedoActionEnabled()
- */
+     * @see org.columba.core.gui.focus.FocusOwner#isRedoActionEnabled()
+     */
     public boolean isRedoActionEnabled() {
         // action not supported
         return false;
     }
 
     /* (non-Javadoc)
- * @see org.columba.core.gui.focus.FocusOwner#isSelectAllActionEnabled()
- */
+     * @see org.columba.core.gui.focus.FocusOwner#isSelectAllActionEnabled()
+     */
     public boolean isSelectAllActionEnabled() {
         if (getView().getRowCount() > 0) {
             return true;
@@ -575,37 +580,37 @@ public class TableController implements FocusOwner, ListSelectionListener {
     }
 
     /* (non-Javadoc)
- * @see org.columba.core.gui.focus.FocusOwner#isUndoActionEnabled()
- */
+     * @see org.columba.core.gui.focus.FocusOwner#isUndoActionEnabled()
+     */
     public boolean isUndoActionEnabled() {
         // action not supported
         return false;
     }
 
     /* (non-Javadoc)
- * @see org.columba.core.gui.focus.FocusOwner#paste()
- */
+     * @see org.columba.core.gui.focus.FocusOwner#paste()
+     */
     public void paste() {
         new PasteAction(getMailFrameController()).actionPerformed(null);
     }
 
     /* (non-Javadoc)
- * @see org.columba.core.gui.focus.FocusOwner#redo()
- */
+     * @see org.columba.core.gui.focus.FocusOwner#redo()
+     */
     public void redo() {
         // action not supported
     }
 
     /* (non-Javadoc)
- * @see org.columba.core.gui.focus.FocusOwner#selectAll()
- */
+     * @see org.columba.core.gui.focus.FocusOwner#selectAll()
+     */
     public void selectAll() {
         getView().selectAll();
     }
 
     /* (non-Javadoc)
- * @see org.columba.core.gui.focus.FocusOwner#undo()
- */
+     * @see org.columba.core.gui.focus.FocusOwner#undo()
+     */
     public void undo() {
         // todo is not supported
     }
@@ -613,8 +618,8 @@ public class TableController implements FocusOwner, ListSelectionListener {
     /*************************** ListSelectionListener interface **************/
 
     /* (non-Javadoc)
- * @see javax.swing.event.ListSelectionListener#valueChanged(javax.swing.event.ListSelectionEvent)
- */
+     * @see javax.swing.event.ListSelectionListener#valueChanged(javax.swing.event.ListSelectionEvent)
+     */
     public void valueChanged(ListSelectionEvent arg0) {
         MainInterface.focusManager.updateActions();
     }

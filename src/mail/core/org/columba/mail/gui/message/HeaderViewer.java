@@ -1,22 +1,21 @@
 //The contents of this file are subject to the Mozilla Public License Version 1.1
-//(the "License"); you may not use this file except in compliance with the 
+//(the "License"); you may not use this file except in compliance with the
 //License. You may obtain a copy of the License at http://www.mozilla.org/MPL/
 //
 //Software distributed under the License is distributed on an "AS IS" basis,
-//WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License 
+//WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
 //for the specific language governing rights and
 //limitations under the License.
 //
 //The Original Code is "The Columba Project"
 //
 //The Initial Developers of the Original Code are Frederik Dietz and Timo Stich.
-//Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
+//Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003.
 //
 //All Rights Reserved.
 package org.columba.mail.gui.message;
 
 import org.columba.core.io.DiskIO;
-import org.columba.core.logging.ColumbaLogger;
 import org.columba.core.xml.XmlElement;
 
 import org.columba.mail.main.MailInterface;
@@ -39,6 +38,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.StringTokenizer;
 import java.util.Vector;
+import java.util.logging.Logger;
 
 import javax.swing.JTextPane;
 import javax.swing.UIManager;
@@ -48,13 +48,12 @@ import javax.swing.text.html.HTMLEditorKit;
 
 /**
  * @author freddy
- *
- * To change this generated comment edit the template variable "typecomment":
- * Window>Preferences>Java>Templates.
- * To enable and disable the creation of type comments go to
- * Window>Preferences>Java>Code Generation.
  */
 public class HeaderViewer extends JTextPane {
+
+    /** JDK 1.4+ logging framework logger, used for logging. */
+    private static final Logger LOG = Logger.getLogger("org.columba.mail.gui.message");
+
     /*
      * *20030720, karlpeder* Adjusted layout of header table to avoid lines
      * extending the right margin (bug #774117)
@@ -69,16 +68,16 @@ public class HeaderViewer extends JTextPane {
 
     //width=\"100%\"";
     private static final String OUTTER_TABLE_PROPERTIES =
-        "border=\"1\" cellspacing=\"1\" cellpadding=\"1\" " +
-        "align=\"left\" width=\"100%\" " +
-        "style=\"border-width:1px; border-style:solid;  background-color:#ebebeb\"";
+        "border=\"1\" cellspacing=\"1\" cellpadding=\"1\" "
+        + "align=\"left\" width=\"100%\" "
+        + "style=\"border-width:1px; border-style:solid;  background-color:#ebebeb\"";
 
     // stylesheet is created dynamically because
     // user configurable fonts are used
     private String css = "";
 
     // contains headerfields which are to be displayed
-    List keys;
+    private List keys;
 
     public HeaderViewer() {
         setMargin(new Insets(5, 5, 5, 5));
@@ -91,7 +90,7 @@ public class HeaderViewer extends JTextPane {
         // setup base url in order to be able to display images
         // in html-component
         URL baseUrl = DiskIO.getResourceURL("org/columba/core/images/");
-        ColumbaLogger.log.info(baseUrl.toString());
+        LOG.info(baseUrl.toString());
         ((HTMLDocument) getDocument()).setBase(baseUrl);
 
         // add headerfields which are about to show up
@@ -145,10 +144,10 @@ public class HeaderViewer extends JTextPane {
         String name = font.getName();
         int size = font.getSize();
 
-        // create css-stylesheet string 
-        // set font of html-element <TD> 
-        css = "<style type=\"text/css\"><!--td {font-family:\"" + name +
-            "\"; font-size:\"" + size + "pt\"}--></style>";
+        // create css-stylesheet string
+        // set font of html-element <TD>
+        css = "<style type=\"text/css\"><!--td {font-family:\"" + name
+                + "\"; font-size:\"" + size + "pt\"}--></style>";
     }
 
     void setHeader(ColumbaHeader header, boolean hasAttachments)
@@ -160,8 +159,8 @@ public class HeaderViewer extends JTextPane {
         StringBuffer buf = new StringBuffer();
 
         // prepend HTML-code
-        buf.append("<HTML><HEAD>" + css + "</HEAD><BODY ><TABLE " +
-            OUTTER_TABLE_PROPERTIES + ">");
+        buf.append("<HTML><HEAD>" + css + "</HEAD><BODY ><TABLE "
+                + OUTTER_TABLE_PROPERTIES + ">");
 
         // for every existing headerfield
         for (Iterator it = keys.iterator(); it.hasNext();) {
@@ -248,7 +247,7 @@ public class HeaderViewer extends JTextPane {
         }
 
         if (hasAttachments) {
-            // email has attachments 
+            // email has attachments
             //  -> display attachment icon
             buf.append("<TR><TD " + LEFT_COLUMN_PROPERTIES + ">");
 

@@ -1,16 +1,16 @@
 //The contents of this file are subject to the Mozilla Public License Version 1.1
-//(the "License"); you may not use this file except in compliance with the 
+//(the "License"); you may not use this file except in compliance with the
 //License. You may obtain a copy of the License at http://www.mozilla.org/MPL/
 //
 //Software distributed under the License is distributed on an "AS IS" basis,
-//WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License 
+//WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
 //for the specific language governing rights and
 //limitations under the License.
 //
 //The Original Code is "The Columba Project"
 //
 //The Initial Developers of the Original Code are Frederik Dietz and Timo Stich.
-//Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
+//Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003.
 //
 //All Rights Reserved.
 package org.columba.mail.gui.message;
@@ -18,7 +18,6 @@ package org.columba.mail.gui.message;
 import org.columba.core.gui.util.FontProperties;
 import org.columba.core.io.DiskIO;
 import org.columba.core.io.TempFileStore;
-import org.columba.core.logging.ColumbaLogger;
 import org.columba.core.main.MainInterface;
 import org.columba.core.xml.XmlElement;
 
@@ -39,6 +38,7 @@ import java.net.URL;
 
 import java.util.Observable;
 import java.util.Observer;
+import java.util.logging.Logger;
 
 import javax.swing.JTextPane;
 import javax.swing.text.BadLocationException;
@@ -48,13 +48,12 @@ import javax.swing.text.html.HTMLEditorKit;
 
 /**
  * @author freddy
- *
- * To change this generated comment edit the template variable "typecomment":
- * Window>Preferences>Java>Templates.
- * To enable and disable the creation of type comments go to
- * Window>Preferences>Java>Code Generation.
  */
 public class BodyTextViewer extends JTextPane implements Observer {
+
+    /** JDK 1.4+ logging framework logger, used for logging. */
+    private static final Logger LOG = Logger.getLogger("org.columba.mail.gui.message");
+
     // stylesheet is created dynamically because
     // user configurable fonts are used
     private String css = "";
@@ -63,7 +62,7 @@ public class BodyTextViewer extends JTextPane implements Observer {
     private DocumentParser parser;
     private HTMLEditorKit htmlEditorKit;
 
-    // enable/disable smilies configuration 
+    // enable/disable smilies configuration
     private XmlElement smilies;
     private boolean enableSmilies;
 
@@ -128,7 +127,7 @@ public class BodyTextViewer extends JTextPane implements Observer {
         // register for configuration changes
         Font font = FontProperties.getTextFont();
         name = font.getName();
-        size = new Integer(font.getSize()).toString();
+        size = String.valueOf(font.getSize());
 
         XmlElement options = MainInterface.config.get("options").getElement("/options");
         XmlElement gui1 = options.getElement("gui");
@@ -152,11 +151,11 @@ public class BodyTextViewer extends JTextPane implements Observer {
      */
     protected void initStyleSheet() {
         // read configuration from options.xml file
-        // create css-stylesheet string 
-        // set font of html-element <P> 
-        css = "<style type=\"text/css\"><!-- .bodytext {font-family:\"" + name +
-            "\"; font-size:\"" + size + "pt; \"}" +
-            ".quoting {color:#949494;}; --></style>";
+        // create css-stylesheet string
+        // set font of html-element <P>
+        css = "<style type=\"text/css\"><!-- .bodytext {font-family:\"" + name
+                + "\"; font-size:\"" + size + "pt; \"}"
+                + ".quoting {color:#949494;}; --></style>";
     }
 
     public void setBodyText(String bodyText, boolean html) {
@@ -167,7 +166,7 @@ public class BodyTextViewer extends JTextPane implements Observer {
                 // this is a HTML message
                 // try to fix broken html-strings
                 String validated = HtmlParser.validateHTMLString(bodyText);
-                ColumbaLogger.log.info("validated bodytext:\n" + validated);
+                LOG.info("validated bodytext:\n" + validated);
 
                 // create temporary file
                 File tempFile = TempFileStore.createTempFileWithSuffix("html");
@@ -202,7 +201,7 @@ public class BodyTextViewer extends JTextPane implements Observer {
 
             try {
                 // substitute special characters like:
-                //  <,>,&,\t,\n		
+                // <,>,&,\t,\n
                 String r = HtmlParser.substituteSpecialCharacters(bodyText);
 
                 // parse for urls and substite with HTML-code
@@ -212,25 +211,25 @@ public class BodyTextViewer extends JTextPane implements Observer {
                 r = HtmlParser.substituteEmailAddress(r);
 
                 // parse for quotings and color the darkgray
-                r = parser.markQuotings(r);
+                r = DocumentParser.markQuotings(r);
 
                 // add smilies
-                if (enableSmilies == true) {
-                    r = parser.addSmilies(r);
+                if (enableSmilies) {
+                    r = DocumentParser.addSmilies(r);
                 }
 
                 // encapsulate bodytext in html-code
                 r = transformToHTML(new StringBuffer(r));
 
-                ColumbaLogger.log.info("validated bodytext:\n" + r);
+                LOG.info("validated bodytext:\n" + r);
 
                 // display bodytext
                 setText(r);
 
-                //		setup base url in order to be able to display images
+                //setup base url in order to be able to display images
                 // in html-component
                 URL baseUrl = DiskIO.getResourceURL("org/columba/core/images/");
-                ColumbaLogger.log.info(baseUrl.toString());
+                LOG.info(baseUrl.toString());
                 ((HTMLDocument) getDocument()).setBase(baseUrl);
             } catch (Exception ex) {
                 ex.printStackTrace();
@@ -266,7 +265,7 @@ public class BodyTextViewer extends JTextPane implements Observer {
     public void update(Observable arg0, Object arg1) {
         Font font = FontProperties.getTextFont();
         name = font.getName();
-        size = new Integer(font.getSize()).toString();
+        size = String.valueOf(font.getSize());
 
         initStyleSheet();
     }

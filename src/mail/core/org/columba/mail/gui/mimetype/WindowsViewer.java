@@ -15,7 +15,6 @@
 //All Rights Reserved.
 package org.columba.mail.gui.mimetype;
 
-import org.columba.core.logging.ColumbaLogger;
 import org.columba.core.util.OSInfo;
 
 import org.columba.ristretto.message.MimeHeader;
@@ -27,9 +26,14 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 
 import java.net.URL;
+import java.util.logging.Logger;
 
 
 public class WindowsViewer extends AbstractViewer {
+
+    /** JDK 1.4+ logging framework logger, used for logging. */
+    private static final Logger LOG = Logger.getLogger("org.columba.mail.gui.mimetype");
+
     public Process openWith(MimeHeader header, File tempFile) {
         // *20030714, karlpeder* openDocumentWidth now called
         openDocumentWith(tempFile.getPath());
@@ -53,8 +57,7 @@ public class WindowsViewer extends AbstractViewer {
                         '"' + url.toString() + '"'
                     };
                 Runtime rt = Runtime.getRuntime();
-                ColumbaLogger.log.fine("Executing " + cmd[0] + " " + cmd[1] +
-                    " " + cmd[2]);
+                LOG.fine("Executing " + cmd[0] + " " + cmd[1] + " " + cmd[2]);
                 proc = rt.exec(cmd);
 
                 // any error message?
@@ -69,7 +72,7 @@ public class WindowsViewer extends AbstractViewer {
 
                 // any error?
                 int exitVal = proc.waitFor();
-                ColumbaLogger.log.fine("ExitValue: " + exitVal);
+                LOG.fine("ExitValue: " + exitVal);
             } catch (Throwable t) {
                 t.printStackTrace();
             }
@@ -92,16 +95,14 @@ public class WindowsViewer extends AbstractViewer {
             Process proc = null;
 
             if (OSInfo.isWinNT()) {
-                String[] cmd = new String[] { "cmd.exe", "/C", filename };
+                String[] cmd = new String[] {"cmd.exe", "/C", filename};
                 Runtime rt = Runtime.getRuntime();
-                ColumbaLogger.log.fine("Executing " + cmd[0] + " " + cmd[1] +
-                    " " + cmd[2]);
+                LOG.fine("Executing " + cmd[0] + " " + cmd[1] + " " + cmd[2]);
                 proc = rt.exec(cmd);
-            } else if (OSInfo.isWin95() || OSInfo.isWin98() ||
-                    OSInfo.isWinME()) {
-                String[] cmd = new String[] { "start", filename };
+            } else if (OSInfo.isWin95() || OSInfo.isWin98() || OSInfo.isWinME()) {
+                String[] cmd = new String[] {"start", filename};
                 Runtime rt = Runtime.getRuntime();
-                ColumbaLogger.log.fine("Executing " + cmd[0] + " " + cmd[1]);
+                LOG.fine("Executing " + cmd[0] + " " + cmd[1]);
                 proc = rt.exec(cmd);
             } else if (OSInfo.isWin2K() || OSInfo.isWinXP()) {
                 /*
@@ -120,14 +121,13 @@ public class WindowsViewer extends AbstractViewer {
                     };
 
                 Runtime rt = Runtime.getRuntime();
-                ColumbaLogger.log.fine("Executing " + cmd[0] + " " + cmd[1] +
-                    " " + cmd[2] + " " + cmd[3] + " " + cmd[4]);
+                LOG.fine("Executing " + cmd[0] + " " + cmd[1]
+                           + " " + cmd[2] + " " + cmd[3] + " " + cmd[4]);
                 proc = rt.exec(cmd);
             }
 
             if (proc == null) {
-                ColumbaLogger.log.info(
-                    "The underlying Windows version is unknown.");
+                LOG.info("The underlying Windows version is unknown.");
 
                 return;
             }
@@ -144,7 +144,7 @@ public class WindowsViewer extends AbstractViewer {
 
             // any error?
             int exitVal = proc.waitFor();
-            ColumbaLogger.log.fine("ExitValue: " + exitVal);
+            LOG.fine("ExitValue: " + exitVal);
         } catch (Throwable t) {
             t.printStackTrace();
         }
@@ -161,21 +161,19 @@ public class WindowsViewer extends AbstractViewer {
         try {
             Process proc = null;
 
-            if (OSInfo.isWinNT() || OSInfo.isWin95() || OSInfo.isWin98() ||
-                    OSInfo.isWinME() || OSInfo.isWin2K() || OSInfo.isWinXP()) {
+            if (OSInfo.isWinNT() || OSInfo.isWin95() || OSInfo.isWin98()
+                    || OSInfo.isWinME() || OSInfo.isWin2K() || OSInfo.isWinXP()) {
                 String[] cmd = new String[] {
                         "rundll32.exe", "SHELL32.DLL,OpenAs_RunDLL", filename
                     };
 
                 Runtime rt = Runtime.getRuntime();
-                ColumbaLogger.log.fine("Executing " + cmd[0] + " " + cmd[1] +
-                    " " + cmd[2]);
+                LOG.fine("Executing " + cmd[0] + " " + cmd[1] + " " + cmd[2]);
                 proc = rt.exec(cmd);
             }
 
             if (proc == null) {
-                ColumbaLogger.log.info(
-                    "The underlying Windows version is unknown.");
+                LOG.info("The underlying Windows version is unknown.");
 
                 return;
             }
@@ -192,7 +190,7 @@ public class WindowsViewer extends AbstractViewer {
 
             // any error?
             int exitVal = proc.waitFor();
-            ColumbaLogger.log.fine("ExitValue: " + exitVal);
+            LOG.fine("ExitValue: " + exitVal);
         } catch (Throwable t) {
             t.printStackTrace();
         }
@@ -213,8 +211,9 @@ public class WindowsViewer extends AbstractViewer {
                 BufferedReader br = new BufferedReader(isr);
                 String line = null;
 
-                while ((line = br.readLine()) != null)
+                while ((line = br.readLine()) != null) {
                     System.out.println(type + ">" + line);
+                }
             } catch (IOException ioe) {
                 ioe.printStackTrace();
             }

@@ -1,5 +1,4 @@
-// The contents of this file are subject to the Mozilla Public License Version
-// 1.1
+//The contents of this file are subject to the Mozilla Public License Version 1.1
 //(the "License"); you may not use this file except in compliance with the
 //License. You may obtain a copy of the License at http://www.mozilla.org/MPL/
 //
@@ -10,8 +9,7 @@
 //
 //The Original Code is "The Columba Project"
 //
-//The Initial Developers of the Original Code are Frederik Dietz and Timo
-// Stich.
+//The Initial Developers of the Original Code are Frederik Dietz and Timo Stich.
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003.
 //
 //All Rights Reserved.
@@ -21,7 +19,6 @@ import org.columba.core.command.CommandCancelledException;
 import org.columba.core.command.StatusObservable;
 import org.columba.core.command.StatusObservableImpl;
 import org.columba.core.gui.util.NotifyDialog;
-import org.columba.core.logging.ColumbaLogger;
 import org.columba.core.main.MainInterface;
 import org.columba.core.plugin.PluginHandlerNotFoundException;
 import org.columba.core.xml.XmlElement;
@@ -47,18 +44,19 @@ import java.io.IOException;
 import java.util.Hashtable;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.logging.Logger;
 
 import javax.swing.JOptionPane;
 
 
 /**
  * @author freddy
- *
- * To change this generated comment edit the template variable "typecomment":
- * Window>Preferences>Java>Templates. To enable and disable the creation of
- * type comments go to Window>Preferences>Java>Code Generation.
  */
 public class POP3Store {
+
+    /** JDK 1.4+ logging framework logger, used for logging. */
+    private static final Logger LOG = Logger.getLogger("org.columba.mail.pop3");
+
     public static final int STATE_NONAUTHENTICATE = 0;
     public static final int STATE_AUTHENTICATE = 1;
     private static final int USER = 0;
@@ -185,12 +183,12 @@ public class POP3Store {
         // pre-processing filter-pipe
         // configuration example (/accountlist/<my-example-account>/popserver):
         //
-        //		<pop3preprocessingfilterlist>
-        //		  <pop3preprocessingfilter name="myFilter"
+        //	<pop3preprocessingfilterlist>
+        //	  <pop3preprocessingfilter name="myFilter"
         // class="myPackage.MyFilter"/>
-        //        <pop3preprocessingfilter name="mySecondFilter"
+        //    <pop3preprocessingfilter name="mySecondFilter"
         // class="myPackage.MySecondFilter"/>
-        //		</pop3preprocessingfilterlist>
+        //	</pop3preprocessingfilterlist>
         //
         XmlElement listElement = popItem.getElement(
                 "pop3preprocessingfilterlist");
@@ -212,8 +210,7 @@ public class POP3Store {
             try {
                 //		try to re-use already instanciated class
                 if (filterCache.containsKey(type) == true) {
-                    ColumbaLogger.log.info("re-using cached instanciation =" +
-                        type);
+                    LOG.info("re-using cached instanciation =" + type);
                     filter = (AbstractPOP3PreProcessingFilter) filterCache.get(type);
                 } else {
                     filter = (AbstractPOP3PreProcessingFilter) handler.getPlugin(type,
@@ -226,7 +223,7 @@ public class POP3Store {
             if (filter != null) {
                 // Filter was loaded correctly
                 //  -> apply filter --> modify messagesource
-                ColumbaLogger.log.info("applying pop3 filter..");
+                LOG.info("applying pop3 filter..");
 
                 if (filter != null) {
                     filterCache.put(type, filter);
@@ -234,7 +231,7 @@ public class POP3Store {
 
                 rawString = filter.modify(rawString);
 
-                ColumbaLogger.log.info("rawString=" + rawString);
+                LOG.info("rawString=" + rawString);
             }
         }
 
@@ -324,8 +321,8 @@ public class POP3Store {
         boolean login = false;
 
         String password = null;
-        String user = new String("");
-        String method = new String("");
+        String user = "";
+        String method = "";
         boolean save = false;
 
         // open a port to the server
@@ -342,7 +339,7 @@ public class POP3Store {
                     protocol.switchToSSL();
 
                     usingSSL = true;
-                    ColumbaLogger.log.info("Switched to SSL");
+                    LOG.info("Switched to SSL");
                 } catch (IOException e) {
                     Object[] options = new String[] {
                             MailResourceLoader.getString("", "global", "ok")
@@ -353,10 +350,10 @@ public class POP3Store {
 
                     int result = JOptionPane.showOptionDialog(null,
                             MailResourceLoader.getString("dialog", "error",
-                                "ssl_handshake_error") + ": " +
-                            e.getLocalizedMessage() + "\n" +
-                            MailResourceLoader.getString("dialog", "error",
-                                "ssl_turn_off"), "Warning",
+                                "ssl_handshake_error") + ": "
+                                + e.getLocalizedMessage() + "\n"
+                                + MailResourceLoader.getString("dialog", "error",
+                                         "ssl_turn_off"), "Warning",
                             JOptionPane.DEFAULT_OPTION,
                             JOptionPane.WARNING_MESSAGE, null, options,
                             options[0]);
@@ -378,10 +375,9 @@ public class POP3Store {
                                               .replaceAll("&", "")
                         };
                     int result = JOptionPane.showOptionDialog(null,
-                            MailResourceLoader.getString("dialog", "error",
-                                "ssl_not_supported") + "\n" +
-                            MailResourceLoader.getString("dialog", "error",
-                                "ssl_turn_off"), "Warning",
+                            MailResourceLoader.getString("dialog", "error", "ssl_not_supported")
+                            + "\n"
+                            + MailResourceLoader.getString("dialog", "error", "ssl_turn_off"), "Warning",
                             JOptionPane.DEFAULT_OPTION,
                             JOptionPane.WARNING_MESSAGE, null, options,
                             options[0]);
@@ -401,10 +397,10 @@ public class POP3Store {
                                           .replaceAll("&", "")
                     };
                 int result = JOptionPane.showOptionDialog(null,
-                        MailResourceLoader.getString("dialog", "error",
-                            "ssl_not_supported") + "\n" +
-                        MailResourceLoader.getString("dialog", "error",
-                            "ssl_turn_off"), "Warning",
+                        MailResourceLoader.getString("dialog", "error", "ssl_not_supported")
+                        + "\n"
+                        + MailResourceLoader.getString("dialog", "error","ssl_turn_off"),
+                        "Warning",
                         JOptionPane.DEFAULT_OPTION,
                         JOptionPane.WARNING_MESSAGE, null, options, options[0]);
 
@@ -463,7 +459,7 @@ public class POP3Store {
                 state = STATE_NONAUTHENTICATE;
             }
 
-            ColumbaLogger.log.info("login=" + login);
+            LOG.info("login=" + login);
         }
 
         popItem.set("save_password", save);
@@ -494,7 +490,7 @@ public class POP3Store {
 
         // else find the most secure method
         // NOTE if SSL is possible we just need the plain login
-        // since SSL does the encryption for us.        
+        // since SSL does the encryption for us.
         if (!usingSSL) {
             //TODO add AUTH support
             if (isSupported("APOP")) {
