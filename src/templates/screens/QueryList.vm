@@ -1,4 +1,4 @@
-$page.setTitle("Staved query list")
+$page.setTitle("Saved query list")
 
 <div class="app" id="querylist">
 
