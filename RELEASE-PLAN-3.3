@@ -147,16 +147,133 @@ Tomcat 3.3 Beta 2:
      1. TBD...
 
 
-Tomcat 3.3 Final Release
+Tomcat 3.3 Release Candidate 1:
 
-	Code Freeze Date:	August 1, 2001
+	Code Freeze/Tag Date:	Sept 14, 2001
 	Release Manager:	Larry Isaacs
 
-     The final build. The pre-requisite for the release is having no bugs in
-     the test suite, resolution for all known bugs and approval by the community.
+     This release should be used to verify that we really are
+     at release quality.  It should include any fixes needed
+     to reach that status.  Documentation updates may continue
+     after this release.
 
-     Known issues in order of priority:
-     1. Update/fix documentation as much as possible
+To Be Addressed for RC1:
+
+1. HttpSessionFacade.setAttribute() isn't synchronized.  If a second request
+called "setAttribute()" after this request's "removeAttribute()" and before
+"realSession.setAttribute()", the second request's value would be overwritten
+without an valueUnbound() being called.
+
+2. Evaluate Tomcat 3.3's vulnerability to "Double Checked Locking". This
+is referred to in Bug #177. See:
+http://www.cs.umd.edu/~pugh/java/memoryModel/DoubleCheckedLocking.html
+for details.  I think ServletHandler.init() is currently subject to this
+vulnerability.
+
+3. The spec doesn't address whether a the form-login-page and form-error-page
+should be excluded from the security-constraint, but it makes sense that
+it should.  It might be best to postpone this.
+
+4. Address user authentication via Ajp12 and Ajp13.  Ajp12 has a test for
+isTomcatAuthentication() to see if req.setRemoteUser() should be called.
+I think Ajp13 doesn't have this yet and probably should.  Also, if the
+user is anonymous, i.e. user = "", should we call req.setRemoteUser()
+with this value?  This prevents Tomcat's normal authentication from being
+triggered.
+
+5. If a error handler is not found for an exception, check the root cause
+as well if it is a ServletException.  This is mentioned in Bug 3233.  I think
+it would be a good idea to apply this.  I don't think we are prohibited
+by the spec.  We could add an option to be safe if there is concern.
+
+6. StaticInterceptor is missing a localization enhancement added to
+Tomcat 3.2.x.  Should this enhancement be ported to Tomcat 3.3?  Is
+this still considered a regression, though it isn't part of the
+Servlet 2.2/JSP 1.1 spec?
+
+7. Evaluate whether anything should be done to deal with the use of
+non-thread-safe DateFormat and related classes.
+
+Must Resolve Bugs:
+
+177   Race condition during servlet initialization BugRat Report#2
+182   JSP error-page doesn't work with virtual hosts BugRat Report
+274   request.getUserPrincipal() doesn't work when user is authent
+437   req.getParameter(name) Ignores charset. always assumes ISO88  
+463   Ctx( /examples ): IOException in: R( /examples + + null) No  
+1253  Frequent Connection reset by peer errors  
+1663  Tomcat -SSL problem  
+1798  Tomcat 3.2.2b5 with Apache and ajp13 stops responding after  
+3233  exception handling wrt errorpages seems to be incorrect  
+3486  Session problem (with case insensitive context matching on windows)
+3572  HttpSessionFacade.invalidate don't unbound Attributes
+3577  NPE when DecodeInterceptor gets confused
+
+Tomcat 3.3 Release Candidate 2:
+
+	Code Freeze/Tag Date:	Sept 21, 2001
+	Release Manager:	Larry Isaacs
+
+     Will be the build put to a vote as a release. This release should 
+     only include very minor fixes and documentation updates from the
+     RC1 release.
+
+To Be Addressed by RC2:
+
+8. We need to remove or optionally disable the shutdown support in
+Ajp13Interceptor.  This allows configuring a password protected
+Ajp12Interceptor shutdown to be the only shutdown available.
+
+9. Some files under src/native have embedded CR's, i.e. Unix files would have
+CRLF and Windows files would have CRCRLF's.  These need to be fixed.
+
+10. The jk_nt_service, and I assume jniconnect, redirect stdout and stderr to
+files.  With the default server.xml with no path for tc_log, Tomcat's
+startup output ends up in the "stderr" log. I would have expected it to
+be in the "stdout" log.  Is there a reason the o.a.t.u.qlog.Logger uses
+stderr as the default sink instead of stdout?
+
+11. Make sure we are okay with mod_jk not supporting Apache's rewrite
+in Tomcat 3.3's mod_jk.  I'm fine with not supporting it, but I want
+to include some justification in the documentation to avoid some of
+the "why don't you" questions.
+
+12. To simplify upgrade development, I would like to see the classpath
+for the "container", "common", and "apps" classloaders include the
+directory so classes placed under them will be picked up.
+
+13. Determine cause of pauses running Tomcat's internal test with
+Tomcat + IIS.
+
+Must Resolve Bugs:
+
+82    Jasper not affected by mod_rewrite BugRat Report#49  (part of issue 11)
+111   after httpd reload mod_jk fails to find a worker BugRat Repo  
+276   JNI problem: bufferedreader.read fails in Tomcat/IIS/JNI set  
+319   Nor Hig All cmanolache@yahoo.com UNCO  Tomcat does not launch with given
+      Unix script files BugRat R  
+405   response.sendRedirect() in MS Explorer 5.5 fails using both  
+620   StopTomcat defaults to localhost  
+2333  HTTP Reason will be destroyed in header using AJP12  
+2550  Ajp13 Connection hanging on static content.  
+2927  ArrayIndexOutOfBoundsException when accessing ajp13  
+3581  Ctx() : Error creating validation mark  - java.io.FileNotFoundException
+
+Tomcat 3.3 Final Release
+
+	Code Freeze Date:	Sept 28, 2001
+	Release Manager:	Larry Isaacs
+
+     The final build. The pre-requisite for the release is having no
+     bugs in the test suite, resolution for all known bugs and approval
+     by the community.
+
+
+Open in 3.2.x But Fixed in 3.3
+
+384   AJP13 returns no Status Message (Reason-Phrase RFC 2616) Bug  
+1482  Ignored session ids in encoded URLs  
+2057  URL contains encoded special chars  
 
 
 Bugs That Won't Be Fixed In Tomcat 3.3
