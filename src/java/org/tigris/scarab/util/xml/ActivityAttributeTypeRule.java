@@ -75,7 +75,7 @@ public class ActivityAttributeTypeRule extends BaseRule
     public void body(String text) throws Exception
     {
         log().debug("(" + getState() + ") activity attribute type body: " + text);
-        AttributeType issueType = AttributeType.getInstance(attributeTypeName);
+        AttributeType issueType = AttributeType.getInstance(text);
         ActivityInfo activityInfo = (ActivityInfo)digester.pop();
         activityInfo.setType(issueType);
         digester.push(activityInfo);
