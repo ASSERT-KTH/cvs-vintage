@@ -414,9 +414,8 @@ public final class ContextManager implements LogAware{
      *  - call Interceptor.engineShutdown() hooks.
      */
     public final void shutdown() throws TomcatException {
-	Enumeration enum = getContexts();
-	while (enum.hasMoreElements()) {
-	    removeContext((Context)enum.nextElement());
+	while (!contextsV.isEmpty()) {
+	    removeContext((Context)contextsV.firstElement());
 	}
 
 	BaseInterceptor cI[]=defaultContainer.getInterceptors();
