@@ -29,7 +29,7 @@ import org.jboss.system.URLClassLoader;
  * @see <related>
  * @author <a href="mailto:marc@jboss.org">Marc Fleury</a>
  * @author <a href="mailto:osh@sparre.dk">Ole Husgaard</a>
- * @version $Revision: 1.5 $ <p>
+ * @version $Revision: 1.6 $ <p>
  *
  *      <b>20010830 marc fleury:</b>
  *      <ul>initial import
@@ -77,6 +77,16 @@ public class ServiceLibraries
     */
    private Map clToClassSetMap;
 
+   /**
+    *  The version number of the {@link #clToClassSetMap} map.
+    *  If a lookup of a class detects a change in this while calling
+    *  the classloaders with locks removed, the {@link #clToClassSetMap}
+    *  and {@link #classes} fields should <em>only</em> be modified
+    *  if the classloader used for loading the class is still in the
+    *  {@link #classLoaders] set.
+    */
+   private long clToClassSetMapVersion = 0;
+
    /*
     *  Maps resource names of resources looked up here to the URLs used to
     *  load them.
@@ -87,6 +97,16 @@ public class ServiceLibraries
     *  Maps class loaders to the set of resource names they looked up here.
     */
    private Map clToResourceSetMap;
+
+   /**
+    *  The version number of the {@link #clToResourceSetMap} map.
+    *  If a lookup of a resource detects a change in this while
+    *  calling the classloaders with locks removed, the
+    *  {@link #clToResourceSetMap} and {@link #resources} fields should
+    *  <em>only</em> be modified if the classloader used for loading
+    *  the class is still in the {@link #classLoaders] set.
+    */
+   private long clToResourceSetMapVersion = 0;
 
    // Constructors --------------------------------------------------
 
@@ -129,19 +149,20 @@ public class ServiceLibraries
    public URL getResource(String name, ClassLoader scl)
    {
       Set classLoaders2;
-      Map resources2;
-      Map clToResourceSetMap2;
+      long clToResourceSetMapVersion2;
 
       synchronized (this) {
          // Is it in the global map?
          if (resources.containsKey(name))
             return (URL)resources.get(name);
 
-         // No, make copies of the references to avoid working on or changing
-         // a later version of these.
+         // No, make copies of the classLoader reference to avoid working on
+         // a later version of it.
          classLoaders2 = classLoaders;
-         resources2 = resources;
-         clToResourceSetMap2 = clToResourceSetMap;
+
+         // Save the current version of the resource map, so we
+         // can detect if it has changed.
+         clToResourceSetMapVersion2 = clToResourceSetMapVersion;
       }
 
       URL resource = null;
@@ -161,17 +182,25 @@ public class ServiceLibraries
 
                if (resource != null) {
                   synchronized (this) {
+                     // Did the version change?
+                     if (clToResourceSetMapVersion2 != clToResourceSetMapVersion) {
+                        // Yes. Is the class loader we used still here?
+                        if (!classLoaders.contains(cl)) {
+                           // No, it was removed from under us.
+                           // Don't change the maps, simply return the resource.
+                           return resource;
+                        }
+                     }
                      // We can keep track
-                     resources2.put(name, resource);
+                     resources.put(name, resource);
 
                      // When we cycle the cl we also need to remove the classes it loaded
-                     Set set = (Set)clToResourceSetMap2.get(cl);
+                     Set set = (Set)clToResourceSetMap.get(cl);
                      if (set == null) {
                         set = new HashSet();
-                        clToResourceSetMap2.put(cl, set);
+                        clToResourceSetMap.put(cl, set);
                      }
 
-                     //set.add(resource);
                      set.add(name);
 
                      return resource;
@@ -223,8 +252,8 @@ public class ServiceLibraries
       classLoaders.remove(cl);
 
       if (clToClassSetMap.containsKey(cl)) {
-         // Create a new copy of the map
-         clToClassSetMap = new HashMap(clToClassSetMap);
+         // We have a new version of the map
+         ++clToClassSetMapVersion;
 
          Set clClasses = (Set)clToClassSetMap.remove(cl);
 
@@ -237,7 +266,7 @@ public class ServiceLibraries
       
       // Same procedure for resources
       if (clToResourceSetMap.containsKey(cl)) {
-         clToResourceSetMap = new HashMap(clToResourceSetMap);
+         ++clToResourceSetMapVersion;
 
          Set clResources = (Set)clToResourceSetMap.remove(cl);
 
@@ -265,8 +294,7 @@ public class ServiceLibraries
    {
       Class foundClass;
       Set classLoaders2;
-      Map classes2;
-      Map clToClassSetMap2;
+      long clToClassSetMapVersion2;
 
       synchronized (this) {
          // Try the local map already
@@ -275,11 +303,13 @@ public class ServiceLibraries
          if (foundClass != null)
             return foundClass;
 
-         // Not found, make copies of the references to avoid working on
-         // or changing a later version of these.
+         // Not found, make copies of the classLoader reference to avoid
+         // working on a later version of it.
          classLoaders2 = classLoaders;
-         classes2 = classes;
-         clToClassSetMap2 = clToClassSetMap;
+
+         // Save the current version of the class map, so we
+         // can detect if it has changed.
+         clToClassSetMapVersion2 = clToClassSetMapVersion;
       }
 
       // If not start asking around to URL classloaders for it
@@ -314,17 +344,24 @@ public class ServiceLibraries
 
       if (foundClass != null) {
          synchronized (this) {
+            // Did the version change?
+            if (clToClassSetMapVersion2 != clToClassSetMapVersion) {
+               // Yes. Is the class loader we used still here?
+               if (!classLoaders.contains(cl)) {
+                  // No, it was removed from under us.
+                  // Don't change the maps, simply return the class.
+                  return foundClass;
+               }
+            }
             // We can keep track
-            classes2.put(name, foundClass);
+            classes.put(name, foundClass);
 
             // When we cycle the cl we also need to remove the classes it loaded
-            Set set = (Set)clToClassSetMap2.get(cl);
+            Set set = (Set)clToClassSetMap.get(cl);
             if (set == null) {
                set = new HashSet();
-               clToClassSetMap2.put(cl, set);
+               clToClassSetMap.put(cl, set);
             }
-
-            //set.add(foundClass);
             set.add(name);
          }
 
