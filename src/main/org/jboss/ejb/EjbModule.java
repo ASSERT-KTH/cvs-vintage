@@ -67,7 +67,7 @@ import org.jboss.util.jmx.ObjectNameFactory;
  * 
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  * @author <a href="mailto:d_jencks@users.sourceforge.net">David Jencks</a>
- * @version $Revision: 1.3 $
+ * @version $Revision: 1.4 $
  *
  * @jmx:mbean extends="org.jboss.system.ServiceMBean"
  */
@@ -114,7 +114,9 @@ public class EjbModule
    
    private final DeploymentInfo deploymentInfo;   
 
-   /** Module Object Name (JSr-77) **/
+   /** Application Object Name (JSR-77) **/
+   private String applicationName;
+   /** Module Object Name (JSR-77) **/
    private String moduleName;
 
    private ServiceControllerMBean serviceController;
@@ -236,7 +238,18 @@ public class EjbModule
       return deploymentInfo.url;
    }
 
+   /**
+   * @return Application Name if this is a standalone EJB module (JAR file)
+   *         otherwise null
+   **/
+   public String getApplicationName() {
+      return applicationName;
+   }
    
+   public void setApplicationName( String pApplicationName ) {
+      applicationName = pApplicationName;
+   }
+	
    public String getModuleName() {
       return moduleName;
    }
@@ -258,19 +271,28 @@ public class EjbModule
       // Create JSR-77 EJB-Module
       int sepPos = getName().lastIndexOf( "/" );
       String lName = getName().substring(sepPos >= 0 ? sepPos + 1 : 0);
-      //??????????Why only if parent != null? what about standalone ejb modules?
-      if( deploymentInfo.parent != null ) 
-      {
-         ObjectName lModule = 
-            org.jboss.management.j2ee.EjbModule.create(
-               server,
-               deploymentInfo.parent.shortName,
-               lName,
-               deploymentInfo.url);
-         if( lModule != null ) 
-         {
-            setModuleName( lModule.toString() );
+      // If Parent is not set then this is a standalone EJB module
+      // therefore create the JSR-77 application beforehand
+      if( deploymentInfo.parent == null ) {
+         ObjectName lApplication = org.jboss.management.j2ee.J2EEApplication.create(
+            server,
+            lName,
+            null
+         );
+         if( lApplication != null ) {
+            setApplicationName( lApplication.toString() );
          }
+      }
+      ObjectName lModule = 
+         org.jboss.management.j2ee.EjbModule.create(
+            server,
+            ( deploymentInfo.parent == null ? lName : deploymentInfo.parent.shortName ),
+            lName,
+            deploymentInfo.url
+         );
+      if( lModule != null ) 
+      {
+         setModuleName( lModule.toString() );
       }
       //Set up the beans in this module.
       for (Iterator beans = ((ApplicationMetaData) deploymentInfo.metaData).getEnterpriseBeans(); beans.hasNext(); ) 

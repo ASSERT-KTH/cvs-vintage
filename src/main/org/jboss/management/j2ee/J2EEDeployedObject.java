@@ -24,7 +24,7 @@ import org.jboss.logging.Logger;
  * {@link javax.management.j2ee.J2EEDeployedObject J2EEDeployedObject}.
  *
  * @author  <a href="mailto:andreas@jboss.org">Andreas Schaefer</a>.
- * @version $Revision: 1.5 $
+ * @version $Revision: 1.6 $
  *   
  * <p><b>Revisions:</b>
  *
@@ -63,6 +63,10 @@ public abstract class J2EEDeployedObject
    // Static --------------------------------------------------------
    
    public static String getDeploymentDescriptor( URL pJarUrl, int pType ) {
+      if( pJarUrl == null ) {
+         // Return if the given URL is null
+         return "";
+      }
       String lDD = null;
       InputStreamReader lInput = null;
       StringWriter lOutput = null;
