@@ -1,8 +1,8 @@
 $body
 
-Comment(s):
-
-#if($comment)$comment #end
 
 
-#if($globalComment)$globalComment #end
+#if($comment)Comment: $comment #end
+
+
+#if($globalComment)General Comment: $globalComment #end
