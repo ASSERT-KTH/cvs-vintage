@@ -25,13 +25,13 @@ import org.jboss.logging.Logger;
 
 /**
 *   MessageDrivenContainer, based on the StatelessSessionContainer
-*   
+*
 *   @see <related>
 *   @author Peter Antman (peter.antman@tim.se)
 *   @author Rickard Öberg (rickard.oberg@telkel.com)
 *   @author <a href="marc.fleury@telkel.com">Marc Fleury</a>
 *   @author Daniel OConnor (docodan@mvcsoft.com)
-*   @version $Revision: 1.5 $
+*   @version $Revision: 1.6 $
 *    extends StatelessSessionContainer
 */
 public class MessageDrivenContainer
@@ -43,98 +43,98 @@ extends Container
 
     // This is the container invoker for this container
     protected ContainerInvoker containerInvoker;
-    
+
     // This is the instancepool that is to be used
     protected InstancePool instancePool;
-    
+
     // This is the first interceptor in the chain. The last interceptor must be provided by the container itself
     protected Interceptor interceptor;
-    
+
     // Static --------------------------------------------------------
-    
+
     // Constructors --------------------------------------------------
-    
+
     // Public --------------------------------------------------------
-    public void setContainerInvoker(ContainerInvoker ci) 
-    { 
+    public void setContainerInvoker(ContainerInvoker ci)
+    {
         if (ci == null)
             throw new IllegalArgumentException("Null invoker");
-        
-        this.containerInvoker = ci; 
+
+        this.containerInvoker = ci;
         ci.setContainer(this);
     }
-    
-    public ContainerInvoker getContainerInvoker() 
-    { 
-        return containerInvoker; 
+
+    public ContainerInvoker getContainerInvoker()
+    {
+        return containerInvoker;
     }
-    
+
     public LocalContainerInvoker getLocalContainerInvoker()
     {
        return localContainerInvoker;
-    }  
-    
-    public void setInstancePool(InstancePool ip) 
-    { 
+    }
+
+    public void setInstancePool(InstancePool ip)
+    {
        if (ip == null)
         throw new IllegalArgumentException("Null pool");
-            
-       this.instancePool = ip; 
+
+       this.instancePool = ip;
        ip.setContainer(this);
     }
 
-    public InstancePool getInstancePool() 
-    { 
-        return instancePool; 
+    public InstancePool getInstancePool()
+    {
+        return instancePool;
     }
-    
-    public void addInterceptor(Interceptor in) 
-    { 
+
+    public void addInterceptor(Interceptor in)
+    {
        if (interceptor == null)
        {
           interceptor = in;
        } else
        {
-          
+
           Interceptor current = interceptor;
           while ( current.getNext() != null)
           {
              current = current.getNext();
           }
-             
+
           current.setNext(in);
        }
     }
-    
-    public Interceptor getInterceptor() 
-    { 
-        return interceptor; 
+
+    public Interceptor getInterceptor()
+    {
+        return interceptor;
     }
- 
+
     /* ContainerInvokerContainer - not needed, should we skip inherit this
      * or just throw Error??
      */
     public Class getHomeClass()
     {
-       throw new Error("Not valid for MessageDriven beans");
+       throw new Error("HomeClass not valid for MessageDriven beans");
     }
-    
+
     public Class getRemoteClass()
     {
-       throw new Error("Not valid for MessageDriven beans");
+       throw new Error("RemoteClass not valid for MessageDriven beans");
     }
-    
-    public Class getLocalClass() 
+
+    public Class getLocalClass()
     {
-       throw new Error("Not valid for MessageDriven beans");
+        return null;
     }
-   
-    public Class getLocalHomeClass() 
+
+    public Class getLocalHomeClass()
     {
-       throw new Error("Not valid for MessageDriven beans");
+       throw new Error("LocalHomeClass not valid for MessageDriven beans");
     }
-    
-    
+
+
     // Container implementation - overridden here ----------------------
     public void init()
         throws Exception
@@ -143,18 +143,18 @@ extends Container
         // Associate thread with classloader
         ClassLoader oldCl = Thread.currentThread().getContextClassLoader();
         Thread.currentThread().setContextClassLoader(getClassLoader());
-        
+
         // Call default init
         super.init();
-        
+
         // Map the bean methods
-        setupBeanMapping();        
-        
-        // Initialize pool 
+        setupBeanMapping();
+
+        // Initialize pool
         instancePool.init();
-        
+
         // Init container invoker
-        containerInvoker.init();        
+        containerInvoker.init();
 
         // Initialize the interceptor by calling the chain
         Interceptor in = interceptor;
@@ -164,8 +164,8 @@ extends Container
            in.init();
            in = in.getNext();
         }
-        
-        // Reset classloader  
+
+        // Reset classloader
         Thread.currentThread().setContextClassLoader(oldCl);
 	}catch(Throwable ex) {
 	    Logger.error("Serious error in init: " + ex);
@@ -173,106 +173,106 @@ extends Container
 	    throw new Exception(ex.toString());
 	}
     }
-    
+
     public void start()
         throws Exception
     {
         // Associate thread with classloader
         ClassLoader oldCl = Thread.currentThread().getContextClassLoader();
         Thread.currentThread().setContextClassLoader(getClassLoader());
-        
+
         // Call default start
         super.start();
-        
+
         // Start container invoker
         containerInvoker.start();
         // Start the instance pool
         instancePool.start();
-        
-        // Start all interceptors in the chain      
+
+        // Start all interceptors in the chain
         Interceptor in = interceptor;
         while (in != null)
         {
            in.start();
            in = in.getNext();
         }
-        
+
         // Reset classloader
         Thread.currentThread().setContextClassLoader(oldCl);
     }
-    
+
     public void stop()
     {
         // Associate thread with classloader
         ClassLoader oldCl = Thread.currentThread().getContextClassLoader();
         Thread.currentThread().setContextClassLoader(getClassLoader());
-        
+
         // Call default stop
         super.stop();
-        
+
         // Stop container invoker
         containerInvoker.stop();
-        
+
         // Stop the instance pool
         instancePool.stop();
-        
-        // Stop all interceptors in the chain       
+
+        // Stop all interceptors in the chain
         Interceptor in = interceptor;
         while (in != null)
         {
            in.stop();
            in = in.getNext();
         }
-        
+
         // Reset classloader
         Thread.currentThread().setContextClassLoader(oldCl);
     }
-    
+
     public void destroy()
     {
         // Associate thread with classloader
         ClassLoader oldCl = Thread.currentThread().getContextClassLoader();
         Thread.currentThread().setContextClassLoader(getClassLoader());
-        
+
         // Call default destroy
         super.destroy();
-        
+
         // Destroy container invoker
         containerInvoker.destroy();
-        
+
         // Destroy the pool
         instancePool.destroy();
-        
-        // Destroy all the interceptors in the chain        
+
+        // Destroy all the interceptors in the chain
         Interceptor in = interceptor;
         while (in != null)
         {
            in.destroy();
            in = in.getNext();
         }
-        
+
         // Reset classloader
         Thread.currentThread().setContextClassLoader(oldCl);
     }
-    
-    
+
+
     public Object invokeHome(MethodInvocation mi)
         throws Exception
     {
-	throw new Error("Not valid for MessageDriven beans");
+	throw new Error("invokeHome not valid for MessageDriven beans");
         //return getInterceptor().invokeHome(mi);
     }
-    
+
      /**
-    *   This method does invocation interpositioning of tx and security, 
+    *   This method does invocation interpositioning of tx and security,
     *   retrieves the instance from an object table, and invokes the method
     *   on the particular instance
     *
-    * @param   id  
-    * @param   m  
-    * @param   args  
-    * @return     
-    * @exception   Exception  
+    * @param   id
+    * @param   m
+    * @param   args
+    * @return
+    * @exception   Exception
     */
     public Object invoke(MethodInvocation mi)
     throws Exception
@@ -280,46 +280,46 @@ extends Container
         // Invoke through interceptors
         return getInterceptor().invoke(mi);
     }
-    
-    
+
+
     // EJBHome implementation ----------------------------------------
     public EJBObject createHome()
         throws java.rmi.RemoteException, CreateException
     {
-	throw new Error("Not valid for MessageDriven beans");
+	throw new Error("createHome not valid for MessageDriven beans");
     }
-    
+
 
     public void removeHome(Handle handle)
         throws java.rmi.RemoteException, RemoveException
     {
-	throw new Error("Not valid for MessageDriven beans");
+	throw new Error("removeHome not valid for MessageDriven beans");
         // TODO
     }
-    
+
     public void removeHome(Object primaryKey)
         throws java.rmi.RemoteException, RemoveException
     {
-	throw new Error("Not valid for MessageDriven beans");
+	throw new Error("removeHome not valid for MessageDriven beans");
         // TODO
     }
-    
+
     public EJBMetaData getEJBMetaDataHome()
         throws java.rmi.RemoteException
     {
         // TODO
         //return null;
-	throw new Error("Not valid for MessageDriven beans");
+	throw new Error("getEJBMetaDataHome not valid for MessageDriven beans");
     }
-    
+
     public HomeHandle getHomeHandleHome()
-        throws java.rmi.RemoteException   
+        throws java.rmi.RemoteException
     {
         // TODO
         //return null;
-	throw new Error("Not valid for MessageDriven beans");
+	throw new Error("getHomeHandleHome not valid for MessageDriven beans");
     }
-    
+
     protected void setupBeanMapping()
         throws NoSuchMethodException
     {
@@ -347,36 +347,36 @@ extends Container
 	// Implemented by bean
 	map.put(m, beanClass.getMethod(m.getName(), m.getParameterTypes()));
 	//DEBUG Logger.debug("Mapped "+m.getName()+" "+m.hashCode()+"to "+map.get(m));
-	
-	
+
+
 	beanMapping = map;
     }
-	
+
     Interceptor createContainerInterceptor()
     {
         return new ContainerInterceptor();
     }
-    
+
     // This is the last step before invocation - all interceptors are done
     class ContainerInterceptor
     implements Interceptor
     {
         public void setContainer(Container con) {}
-        
+
         public void setNext(Interceptor interceptor) {}
         public Interceptor getNext() { return null; }
-        
+
         public void init() {}
         public void start() {}
         public void stop() {}
         public void destroy() {}
-        
+
         public Object invokeHome(MethodInvocation mi)
             throws Exception
         {
-            throw new Error("Not valid for MessageDriven beans");
+            throw new Error("invokeHome not valid for MessageDriven beans");
         }
-        
+
 	/*
 	 * FIXME Design problem, who will do the acknowledging for
 	 * beans with bean managed transaction?? Probably best done in the
@@ -387,22 +387,22 @@ extends Container
         {
             //wire the transaction on the context, this is how the instance remember the tx
              if (mi.getEnterpriseContext().getTransaction() == null) mi.getEnterpriseContext().setTransaction(mi.getTransaction());
-			 
+
             // Get method and instance to invoke upon
             Method m = (Method)beanMapping.get(mi.getMethod());
-            
-           
+
+
 	    // we have a method that needs to be done by a bean instance
-            {    
+            {
 		// Invoke and handle exceptions
-		try 
+		try
                 {
             	    return m.invoke(mi.getEnterpriseContext().getInstance(), mi.getArguments());
                 } catch (IllegalAccessException e)
 		    {
 			// Throw this as a bean exception...(?)
 			throw new EJBException(e);
-		    } catch (InvocationTargetException e) 
+		    } catch (InvocationTargetException e)
 			{
 			    Throwable ex = e.getTargetException();
 			    if (ex instanceof EJBException)
