@@ -17,6 +17,7 @@ import java.util.Iterator;
 
 import javax.ejb.EntityBean;
 import javax.ejb.CreateException;
+import javax.ejb.FinderException;
 
 import org.jboss.util.FastKey;
 import org.jboss.ejb.Container;
@@ -33,7 +34,7 @@ import org.jboss.logging.Logger;
 *	@see <related>
 *	@author Rickard Öberg (rickard.oberg@telkel.com)
 *  @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
-*	@version $Revision: 1.6 $
+*	@version $Revision: 1.7 $
 */
 public class BMPPersistenceManager
 implements EntityPersistenceManager
@@ -146,7 +147,7 @@ implements EntityPersistenceManager
 	}
 	
 	public Object findEntity(Method finderMethod, Object[] args, EntityEnterpriseContext ctx)
-	throws RemoteException
+	   throws RemoteException, FinderException
 	{
 		// call the finder method
 		Object objectId = callFinderMethod(finderMethod, args, ctx);
@@ -156,7 +157,7 @@ implements EntityPersistenceManager
 	}
 	
 	public Collection findEntities(Method finderMethod, Object[] args, EntityEnterpriseContext ctx)
-	throws RemoteException
+   	throws RemoteException, FinderException
 	{
 		// call the finder method
 		Object result = callFinderMethod(finderMethod, args, ctx);
@@ -262,7 +263,9 @@ implements EntityPersistenceManager
 	// Protected -----------------------------------------------------
 	
 	// Private -------------------------------------------------------
-	private Object callFinderMethod(Method finderMethod, Object[] args, EntityEnterpriseContext ctx) throws RemoteException {
+	private Object callFinderMethod(Method finderMethod, Object[] args, EntityEnterpriseContext ctx) 
+      throws RemoteException, FinderException
+   {
 		// get the finder method
 		Method callMethod = null;
 		try {
@@ -277,10 +280,18 @@ implements EntityPersistenceManager
 		Object result = null;
 		try {
 			result = callMethod.invoke(ctx.getInstance(), args);
-		} catch (Exception e) {
+		} catch (InvocationTargetException e) {
+        Throwable targetException = e.getTargetException();
+        if (targetException instanceof FinderException) {
+          throw (FinderException)targetException;
+        }
+        else {
+          throw new ServerException("exception occured while invoking finder method", (Exception)targetException);
+        }
+      } catch (Exception e) {
 			// debug
 			// DEBUG Logger.exception(e);
-			throw new RemoteException("exception occured while invoking finder method:" + e.toString());
+			throw new ServerException("exception occured while invoking finder method",e);
 		}
 		
 		return result;
