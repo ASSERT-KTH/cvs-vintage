@@ -1033,8 +1033,8 @@ public final class Context {
     }
 
     public final  String toString() {
-	return "Ctx( " +  (vhost==null ? "" :
-					    vhost + ":" )  +  path +  ")";
+	return (vhost==null ? "DEFAULT:" : vhost + ":" )  +
+	       ("".equals(path)  ? "/ROOT" :  path);
     }
 
     // ------------------- Logging ---------------

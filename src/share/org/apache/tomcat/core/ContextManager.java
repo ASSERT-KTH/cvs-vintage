@@ -512,7 +512,7 @@ public final class ContextManager {
 		    existingI[i].addContext( this, ctx );
 		}
 		ctx.setState( Context.STATE_ADDED );
-		log("Adding context " +  ctx.toString());
+		log("Adding  " +  ctx.toString());
 	    } catch( TomcatException ex ) {
 		log( "Error adding context " + ctx , ex );
 		continue; 
@@ -927,7 +927,6 @@ public final class ContextManager {
 	BaseInterceptor ri[];
 	int status;
 	ri=req.getContainer().getInterceptors( Container.H_handleError );
-	
 	for( int i=0; i< ri.length; i++ ) {
 	    status=ri[i].handleError( req, res, t );
 	    if( status!=0 ) return;
