@@ -32,119 +32,122 @@ import org.columba.core.plugin.PluginManager;
 import org.columba.core.pluginhandler.ActionPluginHandler;
 import org.columba.core.xml.XmlElement;
 
-
 /**
  * Toolbar which uses xml files to generate itself.
  * <p>
- * TODO: separate code which creates the toolbar from
- * the swing JToolBar.
- *
+ * TODO: separate code which creates the toolbar from the swing JToolBar.
+ * 
  * @author fdietz
  */
 public class ColumbaToolBar extends JToolBar {
 
-    private static final Logger LOG = Logger.getLogger("org.columba.core.gui.toolbar");
+	private static final Logger LOG = Logger
+			.getLogger("org.columba.core.gui.toolbar");
 
-    ResourceBundle toolbarLabels;
-    GridBagConstraints gridbagConstraints;
-    GridBagLayout gridbagLayout;
-    int i;
-    XmlElement rootElement;
+	ResourceBundle toolbarLabels;
+	GridBagConstraints gridbagConstraints;
+	GridBagLayout gridbagLayout;
+	int i;
+	XmlElement rootElement;
 
-    //XmlIO xmlFile;
-    FrameMediator frameController;
+	FrameMediator frameController;
 
-    public ColumbaToolBar(FrameMediator controller) {
-        super();
-     
-        this.frameController = controller;
+	public ColumbaToolBar(FrameMediator controller) {
+		super();
 
-        createButtons();
+		this.frameController = controller;
 
-        setRollover(true);
+		createButtons();
 
-        setFloatable(false);
-    }
-    
-    public ColumbaToolBar(XmlElement rootElement, FrameMediator controller) {
-        super();
-        this.frameController = controller;
+		setRollover(true);
 
-        this.rootElement = rootElement;
+		setFloatable(false);
+	}
 
-        createButtons();
+	public ColumbaToolBar(XmlElement rootElement, FrameMediator controller) {
+		super();
+		this.frameController = controller;
 
-        setRollover(true);
+		this.rootElement = rootElement;
 
-        setFloatable(false);
-    }
-    
-    public void extendToolbar(XmlElement rootElement, FrameMediator mediator) {
-    	this.frameController = mediator;
-    	extendToolbar(rootElement);
-    }
-    
-    public void extendToolbar(XmlElement rootElement) {
-    	 this.rootElement = rootElement;
-    	 
-    	 removeAll();
-    	 
-    	 ListIterator iterator = rootElement.getElements().listIterator();
-         XmlElement buttonElement = null;
+		createButtons();
 
-         while (iterator.hasNext()) {
-             try {
-                 buttonElement = (XmlElement) iterator.next();
+		setRollover(true);
 
-                 if (buttonElement.getName().equals("button")) {
-                     addButton(((ActionPluginHandler) PluginManager.getInstance().getHandler(
-                             "org.columba.core.action")).getAction(
-                             buttonElement.getAttribute("action"),
-                             frameController));
-                 } else if (buttonElement.getName().equals("separator")) {
-                     addSeparator();
-                 }
-             } catch (Exception e) {
-                 LOG.info("toolbar-button=" + ((String) buttonElement.getAttribute("action")));
+		setFloatable(false);
+	}
 
-                 e.printStackTrace();
-             }
-         }
-         
-    	 createButtons();
-    }
+	public void extendToolbar(XmlElement rootElement, FrameMediator mediator) {
+		this.frameController = mediator;
+		extendToolbar(rootElement);
+	}
 
-    public boolean getVisible() {
-        return Boolean.valueOf(rootElement.getAttribute("visible"))
-                      .booleanValue();
-    }
+	public void extendToolbar(XmlElement rootElement) {
+		this.rootElement = rootElement;
 
-    private void createButtons() {
-        
+		removeAll();
 
-        //add(Box.createHorizontalGlue());
-       
-        try {
-			addButton(((ActionPluginHandler) PluginManager.getInstance().getHandler(
-			"org.columba.core.action")).getAction(
-			"Cancel",
-			frameController));
+		ListIterator iterator = rootElement.getElements().listIterator();
+		XmlElement buttonElement = null;
+
+		while (iterator.hasNext()) {
+			try {
+				buttonElement = (XmlElement) iterator.next();
+
+				if (buttonElement.getName().equals("button")) {
+					// skip creation of cancel button 
+					if ( buttonElement.getAttribute("action").equals("Cancel") ) continue;
+					
+					addButton(((ActionPluginHandler) PluginManager
+							.getInstance()
+							.getHandler("org.columba.core.action")).getAction(
+							buttonElement.getAttribute("action"),
+							frameController));
+				} else if (buttonElement.getName().equals("separator")) {
+					addSeparator();
+				}
+			} catch (Exception e) {
+				LOG.info("toolbar-button="
+						+ ((String) buttonElement.getAttribute("action")));
+
+				e.printStackTrace();
+			}
+		}
+
+		createButtons();
+	}
+
+	public boolean getVisible() {
+		return Boolean.valueOf(rootElement.getAttribute("visible"))
+				.booleanValue();
+	}
+
+	private void createButtons() {
+
+		//add(Box.createHorizontalGlue());
+
+		try {
+			addButton(((ActionPluginHandler) PluginManager.getInstance()
+					.getHandler("org.columba.core.action")).getAction("Cancel",
+					frameController));
 		} catch (PluginHandlerNotFoundException e) {
-			
+
 			e.printStackTrace();
 		}
 
-        add(Box.createHorizontalGlue());
-        
-        ImageSequenceTimer image = frameController.getContainer().getStatusBar()
-                                                  .getImageSequenceTimer();
-        add(image);
-    }
+		add(Box.createHorizontalGlue());
 
-    public void addButton(AbstractColumbaAction action) {
-        ToolbarButton button = new ToolbarButton(action);
-        button.setRolloverEnabled(true);
+		ImageSequenceTimer image = frameController.getContainer()
+				.getStatusBar().getImageSequenceTimer();
+		add(image);
+	}
 
-        add(button);
-    }
+	private void addButton(AbstractColumbaAction action) {
+
+		ToolbarButton button = new ToolbarButton(action);
+		button.setRolloverEnabled(true);
+
+		add(button);
+
+	}
 }
