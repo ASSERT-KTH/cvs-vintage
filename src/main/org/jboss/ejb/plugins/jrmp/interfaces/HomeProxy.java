@@ -17,8 +17,8 @@ import javax.ejb.EJBObject;
 import javax.ejb.Handle;
 import javax.ejb.HomeHandle;
 import javax.ejb.EJBMetaData;
+import org.jboss.ejb.CacheKey;
 
-import org.jboss.util.FastKey;
 import org.jboss.ejb.plugins.jrmp.server.JRMPContainerInvoker;
 
 /**
@@ -27,7 +27,7 @@ import org.jboss.ejb.plugins.jrmp.server.JRMPContainerInvoker;
 *      @see <related>
 *      @author Rickard Öberg (rickard.oberg@telkel.com)
 *		@author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
-*      @version $Revision: 1.17 $
+*      @version $Revision: 1.18 $
 */
 public class HomeProxy
 extends GenericProxy
@@ -150,7 +150,7 @@ extends GenericProxy
             {
                 return container.invoke(
                     // The first argument is the id
-                    new FastKey(args[0]), 
+                    new CacheKey(args[0]), 
                     // Pass the "removeMethod"
                     removeObject, 
                     // this is a remove() on the object
@@ -165,7 +165,7 @@ extends GenericProxy
                 // Build a method invocation that carries the identity of the target object
                 RemoteMethodInvocation rmi = new RemoteMethodInvocation(
                     // The first argument is the id
-                    new FastKey(args[0]), 
+                    new CacheKey(args[0]), 
                     // Pass the "removeMethod"
                     removeObject, 
                     // this is a remove() on the object

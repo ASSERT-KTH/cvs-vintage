@@ -71,7 +71,7 @@ import org.w3c.dom.Element;
  *      @author Rickard Öberg (rickard.oberg@telkel.com)
  *		@author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
  *      @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
- *      @version $Revision: 1.21 $
+ *      @version $Revision: 1.22 $
  */
 public abstract class JRMPContainerInvoker
    extends RemoteServer
@@ -128,6 +128,8 @@ System.out.println("Optimize in action: '"+optimize+"'");
    public MarshalledObject invokeHome(MarshalledObject mimo)
       throws Exception
    {
+	   
+	 
       ClassLoader oldCl = Thread.currentThread().getContextClassLoader();
       Thread.currentThread().setContextClassLoader(container.getClassLoader());
 
@@ -141,10 +143,14 @@ System.out.println("Optimize in action: '"+optimize+"'");
 
          //Logger.log(container.getTransactionManager().toString());
          // MF FIXME: the following don't belong here, the transaction is
-		 // passed by the call, not implicitely...
-		 //if (tx == null)
+        // passed by the call, not implicitely...
+        //if (tx == null)
          // tx = container.getTransactionManager().getTransaction();
 
+                                
+     //DEBUG Logger.log("JRMPCI:invokeHome "+m.getName());
+	 Logger.log("JRMPCI:invokeHome "+rmi.getMethod().getName());
+	 
          return new MarshalledObject(invokeHome(rmi.getMethod(), rmi.getArguments(), tx,
         rmi.getPrincipal(), rmi.getCredential() ));
       } catch (Exception e)
@@ -176,6 +182,10 @@ System.out.println("Optimize in action: '"+optimize+"'");
          Method m = rmi.getMethod();
          Object[] args = rmi.getArguments();
 
+
+	   //DEBUG Logger.log("JRMPCI:invoke "+m.getName());
+	 	Logger.log("JRMPCI:invoke "+m.getName());
+	 
          return new MarshalledObject(invoke(id, m, args, tx,
           rmi.getPrincipal(), rmi.getCredential()));
       } finally
@@ -188,17 +198,25 @@ System.out.println("Optimize in action: '"+optimize+"'");
     Principal identity, Object credential)
       throws Exception
    {
-       Logger.log("JRMPCI:invokeHome "+m.getName());
-	   if (tx != null) Logger.log("Tx is "+tx.toString());
-		   else Logger.log("Tx is null");
+	   //DEBUG
+       Logger.log("JRMPCI (local) :invokeHome "+m.getName());
+       if (tx != null) Logger.log("Tx is "+tx.toString());
+          else Logger.log("Tx is null");
+		  
+	   //DEBUG
        return container.invokeHome(new MethodInvocation(null , m, args, tx,
-      	identity, credential));
+        identity, credential));
    }
 
    public Object invoke(Object id, Method m, Object[] args, Transaction tx,
     Principal identity, Object credential )
       throws Exception
    {
+	   // DEBUG
+	     Logger.log("JRMPCI (local) :invoke "+m.getName());
+       if (tx != null) Logger.log("Tx is "+tx.toString());
+          else Logger.log("Tx is null");
+		//DEBUG
        return container.invoke(new MethodInvocation(id, m, args, tx, identity, credential));
    }
 
@@ -355,17 +373,16 @@ System.out.println("Optimize in action: '"+optimize+"'");
 
    public void stop()
    {
-      //MF FIXME: do we need to remove the stuff from JNDI and un-export the stuff?
-	  try {
-		  InitialContext ctx = new InitialContext();
-		  ctx.unbind(container.getBeanMetaData().getJndiName());
-		  ctx.unbind("invokers/"+container.getBeanMetaData().getJndiName());
+      try {
+         InitialContext ctx = new InitialContext();
+         ctx.unbind(container.getBeanMetaData().getJndiName());
+         ctx.unbind("invokers/"+container.getBeanMetaData().getJndiName());
 
-		  UnicastRemoteObject.unexportObject(this, true);
+         UnicastRemoteObject.unexportObject(this, true);
 
-	  } catch (Exception e) {
-		  // ignore.
-	  }
+      } catch (Exception e) {
+         // ignore.
+      }
 
       GenericProxy.removeLocal(container.getBeanMetaData().getJndiName());
    }

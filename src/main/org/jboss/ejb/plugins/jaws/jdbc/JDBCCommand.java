@@ -31,6 +31,7 @@ import java.sql.SQLException;
 import java.sql.Types;
 
 import java.rmi.RemoteException;
+import java.rmi.MarshalledObject;
 
 import javax.ejb.EJBObject;
 import javax.ejb.Handle;
@@ -51,7 +52,7 @@ import org.jboss.logging.Logger;
  * utility methods that database commands may need to call.
  *
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
- * @version $Revision: 1.13 $
+ * @version $Revision: 1.14 $
  */
 public abstract class JDBCCommand
 {
@@ -296,7 +297,7 @@ public abstract class JDBCCommand
               try {
                   ObjectOutputStream oos = new ObjectOutputStream(baos);
 
-                  oos.writeObject(value);
+                  oos.writeObject(new MarshalledObject(value));
 
                   oos.close();
 
@@ -376,20 +377,20 @@ public abstract class JDBCCommand
             }
         }
 
-        /*result = rs.getObject(idx);
+        result = rs.getObject(idx);
         if(result == null)
             return null;
 
         if(destination.isAssignableFrom(result.getClass()))
-            return result;*/
+            return result;
 // DEBUG        else System.out.println("Got a "+result.getClass().getName()+": '"+result+"' while looking for a "+destination.getName());
 
         // Also we should detect the EJB references here
 
         // Get the underlying byte[]
 
-        //byte[] bytes = result instanceof byte[] ? (byte[])result : rs.getBytes(idx);
-		byte[] bytes = rs.getBytes(idx);
+        byte[] bytes = result instanceof byte[] ? (byte[])result : rs.getBytes(idx);
+		//byte[] bytes = rs.getBytes(idx);
 
         if( bytes == null ) {
             result = null;

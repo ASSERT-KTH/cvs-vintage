@@ -60,7 +60,7 @@ import org.jboss.logging.Logger;
  *	@see <related>
  *	@author Rickard Öberg (rickard.oberg@telkel.com)
  *  @author <a href="marc.fleury@telkel.com">Marc Fleury</a>
- *	@version $Revision: 1.6 $
+ *	@version $Revision: 1.7 $
  */
 public class StatefulSessionFilePersistenceManager
    implements StatefulSessionPersistenceManager
@@ -143,10 +143,10 @@ public class StatefulSessionFilePersistenceManager
          
          // Set id
          ctx.setId(nextId());
-         
-         // Lock instance in cache
+       
+         // Insert in cache
          ((StatefulSessionContainer)con).getInstanceCache().insert(ctx);
-         
+        
          // Create EJBObject
          ctx.setEJBObject(con.getContainerInvoker().getStatefulSessionEJBObject(ctx.getId()));
 

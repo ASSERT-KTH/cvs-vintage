@@ -39,7 +39,7 @@ import org.jboss.ejb.MethodInvocation;
  *
  *   @see <related>
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
- *   @version $Revision: 1.2 $
+ *   @version $Revision: 1.3 $
  */
 public class StatelessSessionInstanceInterceptor
    extends AbstractInterceptor
@@ -77,6 +77,9 @@ public class StatelessSessionInstanceInterceptor
       // Get context
       mi.setEnterpriseContext(container.getInstancePool().get());
       
+	  // There is no need for synchronization since the instance is always fresh also there should
+	  // never be a tx associated with the instance.
+	 
       try
       {
          // Invoke through interceptors
@@ -86,6 +89,8 @@ public class StatelessSessionInstanceInterceptor
          // Return context
          container.getInstancePool().free(mi.getEnterpriseContext());
       }
+	  
    }
+   
 }
 
