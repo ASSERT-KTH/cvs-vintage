@@ -75,11 +75,15 @@ import org.tigris.scarab.util.word.IssueSearch;
     This class is responsible for report issue forms.
     ScarabIssueAttributeValue
     @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
-    @version $Id: Search.java,v 1.27 2001/08/28 02:55:56 jon Exp $
+    @version $Id: Search.java,v 1.28 2001/08/29 00:44:19 elicia Exp $
 */
 public class Search extends TemplateAction
 {
     private static int DEFAULT_ISSUE_LIMIT = 25;
+
+    private static final String ERROR_MESSAGE = "More information was " +
+                                "required to submit your request. Please " +
+                                "see error messages."; 
 
     public void doSearch( RunData data, TemplateContext context )
         throws Exception
@@ -144,13 +148,67 @@ public class Search extends TemplateAction
     {
     }
 
-    public void doSavequery( RunData data, TemplateContext context )
+    /**
+        Redirects to form to save the query. May redirect to Login page.
+    */
+    public void doRedirecttosavequery( RunData data, TemplateContext context )
          throws Exception
     {        
         String queryString = data.getParameters().getString("queryString");
         data.getParameters().remove("template");
         data.getParameters().add("template",  "secure,SaveQuery.vm");
         setTarget(data, "secure,SaveQuery.vm");            
+    }
+
+    /**
+        Saves query.
+    */
+    public void doSavequery( RunData data, TemplateContext context )
+         throws Exception
+    {        
+        IntakeTool intake = (IntakeTool)context
+            .get(ScarabConstants.INTAKE_TOOL);
+
+        ScarabUser user = (ScarabUser)data.getUser();
+        ScarabRequestTool scarab = (ScarabRequestTool)context
+            .get(ScarabConstants.SCARAB_REQUEST_TOOL);
+        Query query = scarab.getQuery();
+        Group queryGroup = intake.get("Query", 
+                                 scarab.getQuery().getQueryKey() );
+
+        Field name = queryGroup.get("Name");
+        name.setRequired(true);
+        Field value = queryGroup.get("Value");
+        context.put("queryString", value);
+
+        if ( intake.isAllValid() ) 
+        {
+            queryGroup.setProperties(query);
+            query.setUserId(user.getUserId());
+            query.save();
+
+            String template = data.getParameters()
+                .getString(ScarabConstants.NEXT_TEMPLATE);
+            setTarget(data, template);            
+        }
+        else
+        {
+            data.setMessage(ERROR_MESSAGE);
+        }
+    }
+
+    /**
+        Edits the stored story.
+    */
+    public void doEditstoredquery( RunData data, TemplateContext context )
+         throws Exception
+    {        
+        String newValue = getQueryString(data);
+        ScarabRequestTool scarabR = (ScarabRequestTool)context
+            .get(ScarabConstants.SCARAB_REQUEST_TOOL);
+        Query query = scarabR.getQuery();
+        query.setValue(newValue);
+        query.save();
     }
 
     /**
@@ -189,20 +247,6 @@ public class Search extends TemplateAction
     {        
         getSelected(data, context);
         setTarget(data, "AssignIssue.vm");            
-    }
-
-    /**
-        Edits the stored story.
-    */
-    public void doEditstoredquery( RunData data, TemplateContext context )
-         throws Exception
-    {        
-        String newValue = getQueryString(data);
-        ScarabRequestTool scarabR = (ScarabRequestTool)context
-            .get(ScarabConstants.SCARAB_REQUEST_TOOL);
-        Query query = scarabR.getQuery();
-        query.setValue(newValue);
-        query.save();
     }
 
     public String getQueryString( RunData data) throws Exception
