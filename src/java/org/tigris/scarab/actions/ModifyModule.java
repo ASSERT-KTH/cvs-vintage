@@ -76,7 +76,7 @@ import org.tigris.scarab.services.security.ScarabSecurity;
  * This class is responsible for creating / updating Scarab Modules
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ModifyModule.java,v 1.24 2002/05/01 00:31:45 jon Exp $
+ * @version $Id: ModifyModule.java,v 1.25 2002/07/10 00:50:02 jon Exp $
  */
 public class ModifyModule extends RequireLoginFirstAction
 {
@@ -153,6 +153,8 @@ public class ModifyModule extends RequireLoginFirstAction
                 me.save();
                 intake.remove(moduleGroup);
                 setTarget(data, nextTemplate);
+                getScarabRequestTool(context)
+                    .setConfirmMessage("Module updated.");
             }
         }
     }
