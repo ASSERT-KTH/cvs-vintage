@@ -51,7 +51,7 @@ import org.gjt.sp.util.Log;
  * </ul>
  *
  * @author Slava Pestov
- * @version $Id: GUIUtilities.java,v 1.48 2003/01/13 02:21:28 spestov Exp $
+ * @version $Id: GUIUtilities.java,v 1.49 2003/01/13 02:29:40 spestov Exp $
  */
 public class GUIUtilities
 {
@@ -1013,10 +1013,9 @@ public class GUIUtilities
 	{
 		if (OperatingSystem.isMacOS())
 		{
-			if ((modifiers & MouseEvent.BUTTON1_MASK) != 0)
+			if((modifiers & MouseEvent.BUTTON1_MASK) != 0)
 				return ((modifiers & MouseEvent.META_MASK) != 0);
-			String javaVersion = System.getProperty("java.version");
-			if(javaVersion.compareTo("1.4") < 0)
+			if(OperatingSystem.hasJava14())
 				return ((modifiers & MouseEvent.BUTTON3_MASK) != 0);
 			else
 				return ((modifiers & MouseEvent.BUTTON2_MASK) != 0);
@@ -1024,7 +1023,7 @@ public class GUIUtilities
 		else
 			return ((modifiers & MouseEvent.BUTTON2_MASK) != 0);
 	} //}}}
-	
+
 	//{{{ isRightButton() method
 	/**
 	 * @param modifiers The modifiers flag from a mouse event
@@ -1034,10 +1033,9 @@ public class GUIUtilities
 	{
 		if (OperatingSystem.isMacOS())
 		{
-			if ((modifiers & MouseEvent.BUTTON1_MASK) != 0)
+			if((modifiers & MouseEvent.BUTTON1_MASK) != 0)
 				return ((modifiers & MouseEvent.CTRL_MASK) != 0);
-			String javaVersion = System.getProperty("java.version");
-			if(javaVersion.compareTo("1.4") < 0)
+			if(OperatingSystem.hasJava14())
 				return ((modifiers & MouseEvent.BUTTON2_MASK) != 0);
 			else
 				return ((modifiers & MouseEvent.BUTTON3_MASK) != 0);
@@ -1045,7 +1043,7 @@ public class GUIUtilities
 		else
 			return ((modifiers & MouseEvent.BUTTON3_MASK) != 0);
 	} //}}}
-	
+
 	//{{{ showPopupMenu() method
 	/**
 	 * Shows the specified popup menu, ensuring it is displayed within
