@@ -56,7 +56,7 @@ import org.w3c.dom.Node;
  *      </a>
  * @author    <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  * @author    <a href="mailto:jason@planet57.com">Jason Dillon</a>
- * @version   $Revision: 1.41 $
+ * @version   $Revision: 1.42 $
  */
 public class JMSContainerInvoker
    implements ContainerInvoker, XmlLoadable
@@ -399,6 +399,29 @@ public class JMSContainerInvoker
          serverSessionPoolFactoryJNDI = "java:/" + serverSessionPoolFactoryJNDI;
       }
    }
+   
+   /**
+    * Initialize the container invoker. Sets up a connection, a server session
+    * pool and a connection consumer for the configured destination.
+    * 
+    * Any JMSExceptions produced while initializing will be assumed to be
+    * caused due to JMS Provider failure.
+    *
+    * @throws Exception  Failed to initalize.
+    */
+   public void create() throws Exception {
+      exListener = new ExceptionListenerImpl(this);
+      try {
+          innerCreate();
+      } catch ( final JMSException e ) {
+      	 // start a thread up to handle recovering the connection.
+      	 new Thread() {
+      	 	public void run() {
+      	 		exListener.onException(e);
+      	 	}
+      	 }.start();
+      }
+   }
 
    /**
     * Initialize the container invoker. Sets up a connection, a server session
@@ -406,7 +429,7 @@ public class JMSContainerInvoker
     *
     * @throws Exception  Failed to initalize.
     */
-   public void create() throws Exception
+   public void innerCreate() throws Exception
 
    {
       boolean debug = log.isDebugEnabled();
@@ -631,9 +654,10 @@ public class JMSContainerInvoker
    {
       if (log.isDebugEnabled())
       log.debug("Starting JMSContainerInvoker for bean " + beanName);
-      exListener = new ExceptionListenerImpl(this);
-      connection.setExceptionListener(exListener);
-      connection.start();
+      if( connection != null ) {
+	      connection.setExceptionListener(exListener);
+	      connection.start();
+      }
    }
    
    /**
@@ -1010,11 +1034,11 @@ public class JMSContainerInvoker
       {
          currentThread = Thread.currentThread();
          
-         log.warn("MDB lost connection to provider", ex);
+         log.warn("JMS provider failure detected: ", ex);
          boolean tryIt = true;
          while (tryIt && notStoped)
          {
-            log.info("MDB Trying to reconnect...");
+            log.info("Trying to reconnect to JMS provider");
             try
             {
                try
@@ -1030,14 +1054,14 @@ public class JMSContainerInvoker
                // Reboot container
                invoker.innerStop();
                invoker.destroy();
-               invoker.create();
+               invoker.innerCreate();
                invoker.start();
                tryIt = false;
-               log.info("OK - reconnected");
+               log.info("Reconnected to JMS provider");
             }
             catch (Exception e)
             {
-               log.error("MDB error reconnecting", e);
+               log.error("Reconnect failed: JMS provider failure detected:", e);
             }
          }
          currentThread = null;
