@@ -57,6 +57,7 @@ import org.apache.turbine.tool.IntakeTool;
 import org.apache.fulcrum.intake.model.Group;
 import org.apache.fulcrum.localization.LocalizationService;
 import org.apache.fulcrum.security.util.UnknownEntityException;
+import org.apache.fulcrum.security.util.PasswordMismatchException;
 import org.apache.fulcrum.security.util.TurbineSecurityException;
 
 // Scarab Stuff
@@ -73,7 +74,7 @@ import org.tigris.scarab.actions.base.ScarabTemplateAction;
  * Action.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: Login.java,v 1.46 2003/05/19 15:38:44 jmcnally Exp $
+ * @version $Id: Login.java,v 1.47 2003/05/20 14:49:19 jmcnally Exp $
  */
 public class Login extends ScarabTemplateAction
 {
@@ -155,7 +156,14 @@ public class Login extends ScarabTemplateAction
         catch (UnknownEntityException e)
         {
             scarabR.setAlertMessage(l10n.get("InvalidUsernameOrPassword"));
-            Log.get().info("org.tigris.scarab.actions.Login: " 
+            Log.get().info("org.tigris.scarab.actions.Login UEE: " 
+                           + e.getMessage());
+            return failAction(data, "Login.vm");            
+        }
+        catch (PasswordMismatchException e)
+        {
+            scarabR.setAlertMessage(l10n.get("InvalidUsernameOrPassword"));
+            Log.get().info("org.tigris.scarab.actions.Login PME: " 
                            + e.getMessage());
             return failAction(data, "Login.vm");            
         }
