@@ -13,6 +13,7 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
+
 package org.columba.mail.folder;
 
 import org.columba.core.gui.util.NotifyDialog;
@@ -21,6 +22,7 @@ import org.columba.core.plugin.PluginHandlerNotFoundException;
 import org.columba.core.xml.XmlElement;
 
 import org.columba.mail.config.FolderItem;
+import org.columba.mail.main.MailInterface;
 import org.columba.mail.plugin.FolderPluginHandler;
 
 import java.util.Iterator;
@@ -28,7 +30,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
 
 /**
  * Factory for creating subfolders.
@@ -46,7 +47,7 @@ public class FolderFactory {
 
     // parent directory for mail folders
     // for example: ".columba/mail/"
-    private String path = MainInterface.config.getConfigDirectory() + "/mail/";
+    private String path = MailInterface.config.getConfigDirectory().getPath();
 
     protected FolderFactory() {
         // Get the handler
