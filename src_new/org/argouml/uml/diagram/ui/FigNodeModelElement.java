@@ -1,4 +1,4 @@
-// $Id: FigNodeModelElement.java,v 1.91 2003/12/12 15:41:24 bobtarling Exp $
+// $Id: FigNodeModelElement.java,v 1.92 2003/12/23 20:43:54 jjones Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -89,6 +89,7 @@ import org.argouml.ui.ProjectBrowser;
 import org.argouml.uml.UUIDManager;
 import org.argouml.uml.generator.ParserDisplay;
 import org.argouml.util.Trash;
+import org.tigris.gef.base.Globals;
 import org.tigris.gef.base.Selection;
 import org.tigris.gef.graph.GraphModel;
 import org.tigris.gef.presentation.Fig;
@@ -522,7 +523,8 @@ public abstract class FigNodeModelElement
     public String getTipString(MouseEvent me) {
         ToDoItem item = hitClarifier(me.getX(), me.getY());
         String tip = "";
-        if (item != null)
+        if (item != null 
+            && Globals.curEditor().getSelectionManager().containsFig(this))
             tip = item.getHeadline() + " ";
         else if (getOwner() != null)
             tip = getOwner().toString();

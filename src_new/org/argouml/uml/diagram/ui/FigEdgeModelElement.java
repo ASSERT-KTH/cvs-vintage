@@ -1,4 +1,4 @@
-// $Id: FigEdgeModelElement.java,v 1.48 2003/12/09 14:39:15 mkl Exp $
+// $Id: FigEdgeModelElement.java,v 1.49 2003/12/23 20:43:54 jjones Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -26,7 +26,7 @@
 // Classes: FigEdgeModelElement
 // Original Author: abonner
 
-// $Id: FigEdgeModelElement.java,v 1.48 2003/12/09 14:39:15 mkl Exp $
+// $Id: FigEdgeModelElement.java,v 1.49 2003/12/23 20:43:54 jjones Exp $
 
 package org.argouml.uml.diagram.ui;
 
@@ -78,9 +78,8 @@ import org.argouml.ui.ArgoJMenu;
 import org.argouml.ui.Clarifier;
 import org.argouml.ui.cmd.CmdSetPreferredSize;
 import org.argouml.uml.UUIDManager;
-import org.argouml.uml.diagram.ui.ActionDeleteFromDiagram;
-import org.argouml.uml.diagram.ui.ActionProperties;
 import org.argouml.util.Trash;
+import org.tigris.gef.base.Globals;
 import org.tigris.gef.base.Selection;
 import org.tigris.gef.presentation.Fig;
 import org.tigris.gef.presentation.FigEdge;
@@ -196,7 +195,8 @@ public abstract class FigEdgeModelElement
     public String getTipString(MouseEvent me) {
         ToDoItem item = hitClarifier(me.getX(), me.getY());
         String tip = "";
-        if (item != null)
+        if (item != null 
+            && Globals.curEditor().getSelectionManager().containsFig(this))
             tip = item.getHeadline();
         else if (getOwner() != null)
             tip = getOwner().toString();
