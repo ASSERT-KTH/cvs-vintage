@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="ISO-8859-1" standalone="no"?>
-<!-- <!DOCTYPE database SYSTEM 
-"http://jakarta.apache.org/turbine/dtd/database.dtd"> -->
+<!DOCTYPE database SYSTEM 
+"http://jakarta.apache.org/turbine/dtd/database.dtd">
 
 <!-- ==================================================================== -->
 <!--                                                                      -->
@@ -11,11 +11,11 @@
 <!-- ID_TABLE table used by the id broker mechanism in Turbine.           -->
 <!-- ==================================================================== -->
 <!-- @author: <a href="mailto:jvanzyl@periapt.com">Jason van Zyl</a>      -->
-<!-- @version $Id: id-table-schema.xml,v 1.1 2001/12/30 16:07:38 jmcnally Exp $ -->
+<!-- @version $Id: id-table-schema.xml,v 1.2 2002/02/04 18:10:25 jmcnally Exp $ -->
 <!-- ==================================================================== -->
 
 <database name="@DATABASE_NAME@">
-  <table name="ID_TABLE" idMethod="idBroker">
+  <table name="ID_TABLE" idMethod="idbroker">
     <column name="ID_TABLE_ID" required="true" primaryKey="true" type="INTEGER"/>
     <column name="TABLE_NAME" required="true" size="255" type="VARCHAR"/>
     <column name="NEXT_ID" type="INTEGER"/>
