@@ -6,7 +6,7 @@
  */
 package org.jboss.ejb.txtimer;
 
-// $Id: EJBTimerService.java,v 1.6 2004/04/14 13:18:40 tdiesler Exp $
+// $Id: EJBTimerService.java,v 1.7 2004/09/09 22:04:29 tdiesler Exp $
 
 import org.jboss.ejb.Container;
 
@@ -21,10 +21,9 @@ import javax.ejb.TimerService;
  */
 public interface EJBTimerService
 {
-   /**
-    * default object name: jboss:service=EJBTimerServiceImpl
+   /** default object name
     */
-   public static final javax.management.ObjectName OBJECT_NAME = org.jboss.mx.util.ObjectNameFactory.create("jboss:service=EJBTimerService");
+   public static final javax.management.ObjectName OBJECT_NAME = org.jboss.mx.util.ObjectNameFactory.create("jboss.ejb:service=EJBTimerService");
 
    /**
     * Create a TimerService for a given TimedObjectId that lives in a JBoss Container.

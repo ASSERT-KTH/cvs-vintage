@@ -1,9 +1,11 @@
 package org.jboss.ejb.txtimer;
 
-// $Id: TimerServiceImpl.java,v 1.7 2004/04/15 14:28:41 tdiesler Exp $
+// $Id: TimerServiceImpl.java,v 1.8 2004/09/09 22:04:29 tdiesler Exp $
 
 import org.jboss.logging.Logger;
 import org.jboss.tm.TxManager;
+import org.jboss.mx.util.MBeanServerLocator;
+import org.jboss.mx.util.MBeanProxy;
 
 import javax.ejb.EJBException;
 import javax.ejb.Timer;
@@ -13,6 +15,8 @@ import javax.naming.InitialContext;
 import javax.transaction.SystemException;
 import javax.transaction.Transaction;
 import javax.transaction.TransactionManager;
+import javax.management.MBeanServer;
+import javax.management.ObjectName;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -36,11 +40,12 @@ public class TimerServiceImpl implements TimerService
    private static Logger log = Logger.getLogger(TimerServiceImpl.class);
 
    private TransactionManager transactionManager;
+   private PersistencePolicy persistencePolicy;
 
    private TimedObjectId timedObjectId;
    private TimedObjectInvoker timedObjectInvoker;
 
-   // maps TimerHandles to Timer objects
+   // Maps TimerHandles to Timer objects
    private Map timers = new HashMap();
 
    /**
@@ -50,6 +55,8 @@ public class TimerServiceImpl implements TimerService
    {
       this.timedObjectId = timedObjectId;
       this.timedObjectInvoker = timedObjectInvoker;
+
+      // Get the Tx manager
       try
       {
          InitialContext iniCtx = new InitialContext();
@@ -59,6 +66,19 @@ public class TimerServiceImpl implements TimerService
       {
          log.warn("Cannot obtain TransactionManager from JNDI: " + e.toString());
          transactionManager = TxManager.getInstance();
+      }
+
+      // Get a proxy to the persistence policy
+      try
+      {
+         MBeanServer server = MBeanServerLocator.locateJBoss();
+         ObjectName persistencePolicyName = (ObjectName)server.getAttribute(EJBTimerService.OBJECT_NAME, "PersistencePolicy");
+         persistencePolicy = (PersistencePolicy)MBeanProxy.get(PersistencePolicy.class, persistencePolicyName, server);
+      }
+      catch (Exception e)
+      {
+         log.warn("Cannot obtain the implementation of a PersistencePolicy: " + e.toString());
+         persistencePolicy = new NoopPersistencePolicy();
       }
    }
 
@@ -163,6 +183,7 @@ public class TimerServiceImpl implements TimerService
       try
       {
          TimerImpl timer = new TimerImpl(timedObjectId, timedObjectInvoker, info);
+         persistencePolicy.createTimer(timer, initialExpiration, intervalDuration);
          timer.startTimer(initialExpiration, intervalDuration);
          return timer;
       }
@@ -293,6 +314,7 @@ public class TimerServiceImpl implements TimerService
       synchronized (timers)
       {
          TimerHandle handle = new TimerHandleImpl(txtimer);
+         persistencePolicy.destroyTimer(txtimer);
          timers.remove(handle);
       }
    }

@@ -6,22 +6,23 @@
  */
 package org.jboss.ejb.txtimer;
 
-// $Id: FixedDelayRetryPolicy.java,v 1.3 2004/04/14 13:18:40 tdiesler Exp $
+// $Id: FixedDelayRetryPolicy.java,v 1.4 2004/09/09 22:04:29 tdiesler Exp $
 
 import org.jboss.logging.Logger;
+import org.jboss.system.ServiceMBeanSupport;
 
 import javax.ejb.Timer;
 
 /**
- * This service implements a TimeoutRetryPolicy that retries
+ * This service implements a RetryPolicy that retries
  * the call to ejbTimeout after a fixed delay.
  *
  * @author Thomas.Diesler@jboss.org
- * @jmx.mbean name="jboss:service=EJBTimerServiceRetryPolicy"
- * extends="org.jboss.ejb.txtimer.TimeoutRetryPolicy"
+ * @jmx.mbean name="jboss.ejb:service=EJBTimerService,plugin=RetryPolicy"
+ * extends="org.jboss.system.Service, org.jboss.ejb.txtimer.RetryPolicy"
  * @since 07-Apr-2004
  */
-public class FixedDelayRetryPolicy implements FixedDelayRetryPolicyMBean
+public class FixedDelayRetryPolicy extends ServiceMBeanSupport implements FixedDelayRetryPolicyMBean
 {
    // logging support
    private static Logger log = Logger.getLogger(FixedDelayRetryPolicy.class);

@@ -14,7 +14,7 @@
 <!--                                                                        -->
 <!-- ====================================================================== -->
 
-<!-- $Id: build.xml,v 1.172 2004/09/03 01:36:05 ejort Exp $ -->
+<!-- $Id: build.xml,v 1.173 2004/09/09 22:04:26 tdiesler Exp $ -->
 
 <project default="main" name="JBoss/Server">
 
@@ -281,6 +281,8 @@
         <include name="org/jboss/ejb/timer/SchedulerTimerSource.java"/>
         <include name="org/jboss/ejb/txtimer/EJBTimerServiceImpl.java"/>
         <include name="org/jboss/ejb/txtimer/FixedDelayRetryPolicy.java"/>
+        <include name="org/jboss/ejb/txtimer/DatabasePersistencePolicy.java"/>
+        <include name="org/jboss/ejb/txtimer/NoopPersistencePolicy.java"/>
         <include name="org/jboss/invocation/**/*.java"/>
         <include name="org/jboss/jms/**/*.java"/>
         <include name="org/jboss/jmx/**/*.java"/>

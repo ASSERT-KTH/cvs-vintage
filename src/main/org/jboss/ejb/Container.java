@@ -11,6 +11,7 @@ package org.jboss.ejb;
 import org.jboss.deployment.DeploymentException;
 import org.jboss.deployment.DeploymentInfo;
 import org.jboss.ejb.plugins.local.BaseLocalProxyFactory;
+import org.jboss.ejb.txtimer.EJBTimerService;
 import org.jboss.invocation.Invocation;
 import org.jboss.invocation.InvocationStatistics;
 import org.jboss.invocation.InvocationType;
@@ -26,6 +27,7 @@ import org.jboss.metadata.ResourceEnvRefMetaData;
 import org.jboss.metadata.ResourceRefMetaData;
 import org.jboss.mx.util.ObjectNameConverter;
 import org.jboss.mx.util.ObjectNameFactory;
+import org.jboss.mx.util.MBeanProxy;
 import org.jboss.naming.ENCThreadLocalKey;
 import org.jboss.naming.NonSerializableFactory;
 import org.jboss.naming.Util;
@@ -83,7 +85,7 @@ import java.security.PrivilegedActionException;
  * @author <a href="bill@burkecentral.com">Bill Burke</a>
  * @author <a href="mailto:d_jencks@users.sourceforge.net">David Jencks</a>
  * @author <a href="mailto:christoph.jung@infor.de">Christoph G. Jung</a>
- * @version $Revision: 1.159 $
+ * @version $Revision: 1.160 $
  *
  * @jmx.mbean extends="org.jboss.system.ServiceMBean"
  */
@@ -643,12 +645,9 @@ public abstract class Container
       TimerService timerService = null;
       try
       {
-         ObjectName oname = new ObjectName("jboss:service=EJBTimerService");
+         EJBTimerService service = (EJBTimerService)MBeanProxy.get(EJBTimerService.class, EJBTimerService.OBJECT_NAME, server);
          String containerId = getJmxName().getCanonicalName();
-         timerService = (TimerService) server.invoke(oname,
-                 "createTimerService",
-                 new Object[]{containerId, pKey, this},
-                 new String[]{String.class.getName(), Object.class.getName(), Container.class.getName()});
+         timerService = service.createTimerService(containerId, pKey, this);
       }
       catch (Exception e)
       {
@@ -670,11 +669,9 @@ public abstract class Container
    {
       try
       {
-         ObjectName oname = new ObjectName("jboss:service=EJBTimerService");
+         EJBTimerService service = (EJBTimerService)MBeanProxy.get(EJBTimerService.class, EJBTimerService.OBJECT_NAME, server);
          String containerId = getJmxName().getCanonicalName();
-         serverAction.invoke(oname, "removeTimerService",
-                 new Object[]{containerId, pKey},
-                 new String[]{String.class.getName(), Object.class.getName()});
+         service.removeTimerService(containerId, pKey);
       }
       catch (Exception e)
       {

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <!-- The JBoss service configuration file for the EJB deployer service.
-$Id: ejb-deployer.xml,v 1.2 2004/09/08 18:59:49 starksm Exp $
+$Id: ejb-deployer.xml,v 1.3 2004/09/09 22:04:27 tdiesler Exp $
 -->
 <server>
 
@@ -11,14 +11,48 @@ $Id: ejb-deployer.xml,v 1.2 2004/09/08 18:59:49 starksm Exp $
 
    <!-- An EJB Timer Service that is Tx aware -->
    <mbean code="org.jboss.ejb.txtimer.EJBTimerServiceImpl"
-      name="jboss:service=EJBTimerService">
-      <attribute name="RetryPolicy">jboss:service=EJBTimerServiceRetryPolicy</attribute>
+      name="jboss.ejb:service=EJBTimerService">
+      <attribute name="RetryPolicy">jboss.ejb:service=EJBTimerService,retryPolicy=fixedDelay</attribute>
+      <attribute name="PersistencePolicy">jboss.ejb:service=EJBTimerService,persistencePolicy=database</attribute>
       <attribute name="TimedObjectInvokerClassName">org.jboss.ejb.txtimer.TimedObjectInvokerImpl</attribute>
    </mbean>
-   <mbean code="org.jboss.ejb.txtimer.FixedDelayRetryPolicy"
-      name="jboss:service=EJBTimerServiceRetryPolicy">
-      <attribute name="Delay">100</attribute>
+
+   <!-- A retry policy that uses a fixed interval in milli seconds -->
+   <mbean code="org.jboss.ejb.txtimer.FixedDelayRetryPolicy" name="jboss.ejb:service=EJBTimerService,retryPolicy=fixedDelay">
+     <attribute name="Delay">100</attribute>
    </mbean>
+
+   <!-- A persistence policy that does not persist the timer
+   <mbean code="org.jboss.ejb.txtimer.NoopPersistencePolicy" name="jboss.ejb:service=EJBTimerService,persistencePolicy=noop"/>
+   -->
+
+   <!-- A persistence policy that persistes timers to a database -->
+   <mbean code="org.jboss.ejb.txtimer.DatabasePersistencePolicy" name="jboss.ejb:service=EJBTimerService,persistencePolicy=database">
+     <!-- DataSource JNDI name -->
+     <depends optional-attribute-name="DataSourceTx">jboss.jca:service=DataSourceBinding,name=DefaultDS</depends>
+     <depends optional-attribute-name="DataSourceNoTx">jboss.jca:service=DataSourceBinding,name=DefaultDSNoTx</depends>
+     <!-- table name -->
+     <attribute name="TableName">TIMERS</attribute>
+     <!-- Column that contains the target component JMX name -->
+     <attribute name="TargetIdColumn">TARGETID</attribute>
+     <!-- Column that contains the initial date value -->
+     <attribute name="InitialDateColumn">INITIALDATE</attribute>
+     <!-- Column that contains the optional interval value -->
+     <attribute name="IntervalColumn">INTERVAL</attribute>
+     <!-- Create table DDL -->
+     <attribute name="CreateTableDDL">
+        create table TIMERS (
+           TARGETID varchar(50) not null,
+           INITIALDATE TIMESTAMP not null,
+           INTERVAL bigint null,
+           constraint timers_pk primary key (TARGETID, INITIALDATE)
+        )
+     </attribute>
+   </mbean>
+
+   <!-- ==================================================================== -->
+   <!-- EJB Deployer                                                         -->
+   <!-- ==================================================================== -->
 
    <!-- EJB deployer, remove to disable EJB behavior-->
    <mbean code="org.jboss.ejb.EJBDeployer" name="jboss.ejb:service=EJBDeployer">
@@ -46,4 +80,5 @@ $Id: ejb-deployer.xml,v 1.2 2004/09/08 18:59:49 starksm Exp $
       <!-- The dynamic class loading simple web server -->
       <depends optional-attribute-name="WebServiceName">jboss:service=WebService</depends>
    </mbean>
+
 </server>

@@ -6,11 +6,12 @@
  */
 package org.jboss.ejb.txtimer;
 
-// $Id: EJBTimerServiceImpl.java,v 1.1 2004/04/14 13:18:40 tdiesler Exp $
+// $Id: EJBTimerServiceImpl.java,v 1.2 2004/09/09 22:04:29 tdiesler Exp $
 
 import org.jboss.ejb.Container;
 import org.jboss.logging.Logger;
 import org.jboss.mx.util.MBeanServerLocator;
+import org.jboss.mx.util.MBeanProxy;
 import org.jboss.system.ServiceMBeanSupport;
 
 import javax.ejb.Timer;
@@ -28,7 +29,7 @@ import java.util.Map;
  * A service that implements this interface provides an Tx aware EJBTimerService.
  *
  * @author Thomas.Diesler@jboss.org
- * @jmx.mbean name="jboss:service=EJBTimerService"
+ * @jmx.mbean name="jboss.ejb:service=EJBTimerService"
  * extends="org.jboss.ejb.txtimer.EJBTimerService"
  * @since 07-Apr-2004
  */
@@ -44,13 +45,13 @@ public class EJBTimerServiceImpl
 
    // The object name of the retry policy
    private ObjectName retryPolicyName;
+   // The object name of the retry policy
+   private ObjectName persistencePolicyName;
 
    // The TimedObjectInvoker class name
    private String timedObjectInvokerClassName;
 
-   /**
-    * Get the object name of the retry policy.
-    *
+   /** Get the object name of the retry policy.
     * @jmx.managed-attribute
     */
    public ObjectName getRetryPolicy()
@@ -58,14 +59,28 @@ public class EJBTimerServiceImpl
       return retryPolicyName;
    }
 
-   /**
-    * Set the object name of the retry policy.
-    *
+   /** Set the object name of the retry policy.
     * @jmx.managed-attribute
     */
    public void setRetryPolicy(ObjectName retryPolicyName)
    {
       this.retryPolicyName = retryPolicyName;
+   }
+
+   /** Get the object name of the persistence policy.
+    * @jmx.managed-attribute
+    */
+   public ObjectName getPersistencePolicy()
+   {
+      return persistencePolicyName;
+   }
+
+   /** Set the object name of the persistence policy.
+    * @jmx.managed-attribute
+    */
+   public void setPersistencePolicy(ObjectName persistencePolicyName)
+   {
+      this.persistencePolicyName = persistencePolicyName;
    }
 
    /**
@@ -106,7 +121,7 @@ public class EJBTimerServiceImpl
          TimedObjectId timedObjectId = new TimedObjectId(containerId, instancePk);
          Class invokerClass = getClass().getClassLoader().loadClass(timedObjectInvokerClassName);
          Constructor constr = invokerClass.getConstructor(new Class[]{TimedObjectId.class, Container.class});
-         invoker = (TimedObjectInvoker) constr.newInstance(new Object[]{timedObjectId, container});
+         invoker = (TimedObjectInvoker)constr.newInstance(new Object[]{timedObjectId, container});
       }
       catch (Exception e)
       {
@@ -129,7 +144,7 @@ public class EJBTimerServiceImpl
    public TimerService createTimerService(String containerId, Object instancePk, TimedObjectInvoker invoker)
    {
       TimedObjectId timedObjectId = new TimedObjectId(containerId, instancePk);
-      TimerServiceImpl timerService = (TimerServiceImpl) timerServiceMap.get(timedObjectId);
+      TimerServiceImpl timerService = (TimerServiceImpl)timerServiceMap.get(timedObjectId);
       if (timerService == null)
       {
          timerService = new TimerServiceImpl(timedObjectId, invoker);
@@ -150,7 +165,7 @@ public class EJBTimerServiceImpl
    public TimerService getTimerService(String containerId, Object instancePk)
    {
       TimedObjectId timedObjectId = new TimedObjectId(containerId, instancePk);
-      return (TimerServiceImpl) timerServiceMap.get(timedObjectId);
+      return (TimerServiceImpl)timerServiceMap.get(timedObjectId);
    }
 
    /**
@@ -164,28 +179,16 @@ public class EJBTimerServiceImpl
    public void retryTimeout(String containerId, Object instancePk, Timer timer)
    {
       TimedObjectId timedObjectId = new TimedObjectId(containerId, instancePk);
-      TimerServiceImpl timerService = (TimerServiceImpl) timerServiceMap.get(timedObjectId);
+      TimerServiceImpl timerService = (TimerServiceImpl)timerServiceMap.get(timedObjectId);
       if (timerService != null)
       {
          try
          {
             // Invoke retry policy, through the MBeanServer
             TimedObjectInvoker invoker = timerService.getTimedObjectInvoker();
-            if (retryPolicyName != null)
-            {
-               MBeanServer server = MBeanServerLocator.locateJBoss();
-               server.invoke(retryPolicyName,
-                       "retryTimeout",
-                       new Object[]{invoker, timer},
-                       new String[]{TimedObjectInvoker.class.getName(), Timer.class.getName()});
-            }
-
-            // If the retry policy is not set, fall back to the FixedDelayRetryPolicy
-            else
-            {
-               TimeoutRetryPolicy retryPolicy = new FixedDelayRetryPolicy();
-               retryPolicy.retryTimeout(invoker, timer);
-            }
+            MBeanServer server = MBeanServerLocator.locateJBoss();
+            RetryPolicy retryPolicy = (RetryPolicy)MBeanProxy.get(RetryPolicy.class, getRetryPolicy(), server);
+            retryPolicy.retryTimeout(invoker, timer);
          }
          catch (Exception e)
          {
@@ -208,7 +211,7 @@ public class EJBTimerServiceImpl
       TimedObjectId timedObjectId = new TimedObjectId(containerId, instancePk);
       if (timedObjectId.getInstancePk() != null)
       {
-         TimerServiceImpl timerService = (TimerServiceImpl) getTimerService(containerId, instancePk);
+         TimerServiceImpl timerService = (TimerServiceImpl)getTimerService(containerId, instancePk);
          if (timerService != null)
          {
             log.debug("removeTimerService: " + timerService);
@@ -222,9 +225,9 @@ public class EJBTimerServiceImpl
          Iterator it = timerServiceMap.entrySet().iterator();
          while (it.hasNext())
          {
-            Map.Entry entry = (Map.Entry) it.next();
-            TimedObjectId key = (TimedObjectId) entry.getKey();
-            TimerServiceImpl timerService = (TimerServiceImpl) entry.getValue();
+            Map.Entry entry = (Map.Entry)it.next();
+            TimedObjectId key = (TimedObjectId)entry.getKey();
+            TimerServiceImpl timerService = (TimerServiceImpl)entry.getValue();
             if (containerId.equals(key.getContainerId()))
             {
                log.debug("removeTimerService: " + timerService);
@@ -246,15 +249,15 @@ public class EJBTimerServiceImpl
       Iterator it = timerServiceMap.entrySet().iterator();
       while (it.hasNext())
       {
-         Map.Entry entry = (Map.Entry) it.next();
-         TimedObjectId timedObjectId = (TimedObjectId) entry.getKey();
+         Map.Entry entry = (Map.Entry)it.next();
+         TimedObjectId timedObjectId = (TimedObjectId)entry.getKey();
          retBuffer.append(timedObjectId + "\n");
 
-         TimerServiceImpl timerService = (TimerServiceImpl) entry.getValue();
+         TimerServiceImpl timerService = (TimerServiceImpl)entry.getValue();
          Collection col = timerService.getAllTimers();
          for (Iterator iterator = col.iterator(); iterator.hasNext();)
          {
-            TimerImpl timer = (TimerImpl) iterator.next();
+            TimerImpl timer = (TimerImpl)iterator.next();
             TimerHandleImpl handle = new TimerHandleImpl(timer);
             retBuffer.append("   handle: " + handle + "\n");
             retBuffer.append("      " + timer + "\n");
