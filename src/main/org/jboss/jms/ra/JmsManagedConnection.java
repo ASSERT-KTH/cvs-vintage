@@ -114,7 +114,7 @@ import org.jboss.jms.jndi.JMSProviderAdapter;
  *
  * @author <a href="mailto:peter.antman@tim.se">Peter Antman</a>.
  * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
- * @version $Revision: 1.6 $
+ * @version $Revision: 1.7 $
  */
 public class JmsManagedConnection
    implements ManagedConnection
@@ -621,7 +621,7 @@ public class JmsManagedConnection
             logger.log(Level.FINE, "xaQueueSession: " + xaQueueSession);
             logger.log(Level.FINE, "queueSession: " + queueSession);
          }
-
+	 con.start();
          logger.log(Level.FINE, "transacted: " + transacted);
          logger.log(Level.FINE, "ack mode: " + ack);
       }
