@@ -84,9 +84,11 @@ public class StopTomcat {
     // explicit command line params ( for port, host or secret )
     boolean commandLineParams=false;
     String secretFile=null;
+    String shutdown=null;
     String args[];
     boolean help=false;
     boolean isAjp13=false;
+    boolean isAjp12=false;
     
     public StopTomcat() 
     {
@@ -157,6 +159,12 @@ public class StopTomcat {
 
     public void setAjp13( boolean b ) {
         isAjp13=b;
+        isAjp12=!b;
+    }
+
+    public void setAjp12( boolean b ) {
+        isAjp12=b;
+        isAjp13=!b;
     }
 
     public void setArgs( String args[] ) {
@@ -187,64 +195,101 @@ public class StopTomcat {
     // -------------------- Implementation --------------------
     
     void stopTomcat() throws Exception {
-	String tchome=getTomcatHome();
+        // if a parameter isn't set, try to read it from a file
+        if( port < 0 || host == null || secret == null ) {
+            String tchome=getTomcatHome();
 
-	// read TOMCAT_HOME/conf/ajp12.id unless command line params
-	// specify a port/host/secret
-	try {
-	    if( secretFile==null ) {
-		secretFile=tchome + "/conf/ajp13.id";
-                File f=new File( secretFile );
-                // if ajp13.id exists, use it
-                if( f.exists() ) {
-                    isAjp13=true;
-                } else {
-                    secretFile=tchome + "/conf/ajp12.id";
+            String defAjp12File=tchome + "/conf/ajp12.id";
+            String defAjp13File=tchome + "/conf/ajp13.id";
+            String ajpFile=secretFile;
+
+            int portSave=port;
+            String hostSave=host;
+            String secretSave=secret;
+
+            boolean pickAjp=(!isAjp13 && !isAjp12);
+
+            // try to read unset parameters from appropriate file
+            try {
+                if( ajpFile==null ) {
+                    if (isAjp13) {
+                        ajpFile=defAjp13File;
+                    } else if (isAjp12) {
+                        ajpFile=defAjp12File;
+                    } else {
+                        File f=new File( defAjp13File );
+                        if( f.exists() ) {
+                            ajpFile=defAjp13File;
+                            isAjp13=true;
+                        } else {
+                            f=new File( defAjp12File );
+                            if( f.exists() ) {
+                                ajpFile=defAjp12File; 
+                                isAjp12=true;
+                            }
+                        }
+                    }
+                } else if( pickAjp ) {
+                    // default to ajp12 if file specifed with no protocal
+                    isAjp12=true;
                 }
-            }
-            
-	    if( isAjp13 ) {
-                Properties props=new Properties();
-                props.load( new FileInputStream( secretFile ));
 
-                String line=props.getProperty( "port" );
-                if( port < 0 ) {
-                    try {
-                        port=Integer.parseInt( line );
-                    } catch(NumberFormatException ex ) {
-                        ex.printStackTrace();
+                if( isAjp13 ) {
+                    Properties props=new Properties();
+                    props.load( new FileInputStream( ajpFile ));
+
+                    String line=props.getProperty( "port" );
+                    if( port < 0 ) {
+                        try {
+                            port=Integer.parseInt( line );
+                        } catch(NumberFormatException ex ) {
+                            ex.printStackTrace();
+                        }
+                    }
+                
+                    line=props.getProperty( "address" );
+                    if( host==null ) host=line;
+                    line=props.getProperty( "secret" );
+                    if( secret==null ) secret=line;
+                    shutdown=props.getProperty( "shutdown" );
+                    // if shutdown not enabled in default ajp13 file and
+                    // picking ajp, try ajp12 default file
+                    if( shutdown==null && secretFile == null && pickAjp) {
+                        isAjp12=true;
+                        isAjp13=false;
+                        port=portSave;
+                        host=hostSave;
+                        secret=secretSave;
+                        ajpFile=defAjp12File;
                     }
                 }
+
+                if( isAjp12 ) {
+                    BufferedReader rd=new BufferedReader
+                        ( new FileReader(ajpFile));
+                    String line=rd.readLine();
                 
-                line=props.getProperty( "address" );
-                if( host==null ) host=line;
-                line=props.getProperty( "secret" );
-                if( secret==null ) secret=line;
-            } else {
-                BufferedReader rd=new BufferedReader
-                    ( new FileReader(secretFile));
-                String line=rd.readLine();
-                
-                if( port < 0 ) {
-                    try {
-                        port=Integer.parseInt( line );
-                    } catch(NumberFormatException ex ) {
-                        ex.printStackTrace();
+                    if( port < 0 ) {
+                        try {
+                            port=Integer.parseInt( line );
+                        } catch(NumberFormatException ex ) {
+                            ex.printStackTrace();
+                        }
                     }
+
+                    line=rd.readLine();
+                    if( host==null ) host=line;
+                    line=rd.readLine();
+                    if( secret==null ) secret=line;
                 }
-                
-                line=rd.readLine();
-                if( host==null ) host=line;
-                line=rd.readLine();
-                if( secret==null ) secret=line;
+            } catch( IOException ex ) {
+                //ex.printStackTrace();
+                System.out.println("Can't read " + ajpFile);
+                // System.out.println(ex.toString());
+                if( ! commandLineParams )
+                    return;
             }
-	} catch( IOException ex ) {
-	    //ex.printStackTrace();
-	    System.out.println("Can't read " + secretFile);
-	    //	    System.out.println(ex.toString());
-	    if( ! commandLineParams )
-		return;
-	}
+        }
 
 	if( "".equals( secret ) )
 	    secret=null;
@@ -343,13 +388,16 @@ public class StopTomcat {
 	byte stopMessage[]=new byte[5];
 	stopMessage[0]=(byte)0x12;
 	stopMessage[1]=(byte)0x34;
-        int len=secret.length() + 4; // 1==shutdown cmd, 2==string len, 1=\0
+        int len=1;
+        if( secret != null )
+            len=secret.length() + 4; // 1==shutdown cmd, 2==string len, 1=\0
         stopMessage[2]= (byte) ( len/256 );
         stopMessage[3]= (byte) (len % 256 );
         stopMessage[4]= 7; // JK_AJP13_SHUTDOWN
         
 	os.write( stopMessage );
-        sendAjp13String( os, secret );
+        if( secret != null )
+            sendAjp13String( os, secret );
 
         // flush the stream and give the backend a chance to read the request
         // and shut down before we close the socket
@@ -372,7 +420,7 @@ public class StopTomcat {
 	os.write( s.getBytes() );// works only for ascii
     }
     
-    /** Small AJP12 client util
+    /** Small AJP13 client util
      */
     public void sendAjp13String( OutputStream os, String s )
 	throws IOException
@@ -397,7 +445,7 @@ public class StopTomcat {
 
     }
 
-    static String options1[]= { "help", "stop" };
+    static String options1[]= { "help", "stop", "ajp12", "ajp13" };
     static Hashtable optionAliases=new Hashtable();
     static Hashtable optionDescription=new Hashtable();
     static {
@@ -416,13 +464,20 @@ public class StopTomcat {
     public static void printUsage() {
         System.out.println("Usage: java org.apache.tomcat.startup.StopTomcat {options}");
         System.out.println("  Options are:");
-        System.out.println("    -ajpid file (or -secretFile file) Use this file instead of conf/ajp12.id");
-        System.out.println("    -help                             Show this usage report");
-        System.out.println("    -host                             Host to send the shutdown command");
-        System.out.println("    -home dir (or -h dir)             Use this directory as tomcat.home,");
-        System.out.println("                                          to find ajp12.id");
-        System.out.println("    -pass                             Password to use");
-        System.out.println("    -port                             Port to send the shutdown command");
+        System.out.println("    -ajp12                            Use Ajp12 protocol for shutdown");
+        System.out.println("    -ajp13                            Use Ajp13 protocol for shutdown");
+        System.out.println("                                          Shutdown feature of Ajp13");
+        System.out.println("                                          connector must be enabled.");
+        System.out.println("    -ajpid file (or -secretFile file) Use this file instead of conf/ajp13.id");
+        System.out.println("                                          or conf/ajp12.id.  You must set");
+        System.out.println("                                          -ajp13 option if file is from");
+        System.out.println("                                          Ajp13 connector");
+        System.out.println("    -help (or -?)                     Show this usage report");
+        System.out.println("    -host <host>                      Host to send the shutdown command");
+        System.out.println("    -home <dir> (or -h <dir>)         Use this directory as tomcat.home, to");
+        System.out.println("                                          find conf/ajp13.id or conf/ajp12.id");
+        System.out.println("    -pass <pw> (or -secret <pw>)      Password to use, aka secret");
+        System.out.println("    -port <port>                      Port to send the shutdown command");
         System.out.println("Note: the '-' on the options is optional.");
         System.out.println();
     }
