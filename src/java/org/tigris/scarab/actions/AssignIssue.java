@@ -85,7 +85,7 @@ import org.tigris.scarab.services.security.ScarabSecurity;
  * This class is responsible for assigning users to attributes.
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: AssignIssue.java,v 1.74 2002/12/12 22:42:31 jmcnally Exp $
+ * @version $Id: AssignIssue.java,v 1.75 2002/12/24 22:54:32 jon Exp $
  */
 public class AssignIssue extends BaseModifyIssue
 {
@@ -203,7 +203,7 @@ public class AssignIssue extends BaseModifyIssue
                 item.add(su);
                 userList.remove(item);
 
-                String newKey = "asso_user_{" + userId + "}_issue_{" + issueId + "}";
+                String newKey = "asso_user_{" + userId + "}_issue_{" + issueId + '}';
                 String newAttrId = params.get(newKey);
                 Attribute newAttribute = AttributeManager
                      .getInstance(new NumberKey(newAttrId));
@@ -231,7 +231,7 @@ public class AssignIssue extends BaseModifyIssue
         ScarabUser assigner = (ScarabUser)data.getUser();
         String reason = data.getParameters().getString("reason", "");
         Attachment attachment = null;
-        ActivitySet activitySet = new ActivitySet();
+        ActivitySet activitySet = null;
 
         for (int i=0; i < issues.size(); i++)
         {
@@ -336,9 +336,7 @@ public class AssignIssue extends BaseModifyIssue
                     }
                 }
             }
-                
         }
-
         
         if (scarabR.getAlertMessage() == null || 
             scarabR.getAlertMessage().toString().length() == 0)
