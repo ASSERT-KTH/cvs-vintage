@@ -117,10 +117,12 @@
 #end
 
 #macro ( booleanCheckbox $booleanField )
-<input type="checkbox" name="$booleanField.Key" value="true"
-#if ($booleanField.Value) checked="checked" #end />
-<input type="hidden" name="$booleanField.ValueIfAbsent"
-value="false" />
+#if ($booleanField.Value)
+<input type="checkbox" name="$booleanField.Key" value="true" checked="checked" />
+#else
+<input type="checkbox" name="$booleanField.Key" value="true" />
+#end
+<input type="hidden" name="$booleanField.ValueIfAbsent" value="false" />
 #end
 
 #macro ( textField $field $size )
