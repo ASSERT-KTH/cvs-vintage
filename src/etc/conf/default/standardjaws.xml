@@ -742,7 +742,7 @@
             <mapping>
                 <java-type>java.lang.String</java-type>
                 <jdbc-type>VARCHAR</jdbc-type>
-                <sql-type>VARCHAR(255)</sql-type>
+                <sql-type>VARCHAR(255) BINARY</sql-type>
             </mapping>
             <mapping>
                 <java-type>java.util.Date</java-type>
