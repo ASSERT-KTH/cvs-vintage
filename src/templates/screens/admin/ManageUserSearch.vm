@@ -1,7 +1,7 @@
 #**
 @author <a href="mailto:dr@bitonic.com">Douglas B. Robertson</a>
 @author <a href="mailto:jon@collab.net">Jon Stevens</a>
-@version $Id: ManageUserSearch.vm,v 1.6 2002/01/14 10:16:37 maartenc Exp $
+@version $Id: ManageUserSearch.vm,v 1.7 2002/01/14 20:47:42 jon Exp $
 *#
 
 $page.setTitle("User Search")
@@ -22,16 +22,13 @@ $page.setTitle("User Search")
   #set ($pageNum = 1)
 #end
 
-
-<div id="adminIndex" class="app">
+<div id="ManageUserSearch" class="app">
 
 <h2>$page.Title</h2>
 
 <h3>Search</h3>
 
-<p>
-Enter search criteria.
-</p>
+<p>Enter search criteria:</p>
 
 <form action="$link.setPage("admin,ManageUserSearch.vm")" method="post">
   <input type="hidden" name="action" value="admin.ManageUser" />
@@ -41,23 +38,23 @@ Enter search criteria.
 <tr>
 <td>
 <select name="searchField">
- <option value="FIRST_NAME" #if ($data.Parameters.getString("searchField").equals("FIRST_NAME")) selected #end>First Name
- <option value="LAST_NAME" #if ($data.Parameters.getString("searchField").equals("LAST_NAME")) selected #end>Last Name
- <option value="EMAIL" #if ($data.Parameters.getString("searchField").equals("EMAIL")) selected #end>E-mail Address
- <option value="LOGIN_NAME" #if ($data.Parameters.getString("searchField").equals("LOGIN_NAME")) selected #end>Login Name
+ <option value="FIRST_NAME" #if ($data.Parameters.getString("searchField").equals("FIRST_NAME")) selected #end />First Name
+ <option value="LAST_NAME" #if ($data.Parameters.getString("searchField").equals("LAST_NAME")) selected #end />Last Name
+ <option value="EMAIL" #if ($data.Parameters.getString("searchField").equals("EMAIL")) selected #end />E-mail Address
+ <option value="LOGIN_NAME" #if ($data.Parameters.getString("searchField").equals("LOGIN_NAME")) selected #end />Login Name
 </select>
-<input type="text" name="searchCriteria" value="$formSearchCriteria">
+<input type="text" name="searchCriteria" value="$formSearchCriteria" />
 </td>
 <td>
 Order by: <select name="orderbyField">
- <option value="FIRST_NAME" #if ($data.Parameters.getString("orderbyField").equals("FIRST_NAME")) selected #end>First Name
- <option value="LAST_NAME" #if ($data.Parameters.getString("orderbyField").equals("LAST_NAME")) selected #end>Last Name
- <option value="EMAIL" #if ($data.Parameters.getString("orderbyField").equals("EMAIL")) selected #end>E-mail Address
- <option value="LOGIN_NAME" #if ($data.Parameters.getString("orderbyField").equals("LOGIN_NAME")) selected #end>Login Name
+ <option value="FIRST_NAME" #if ($data.Parameters.getString("orderbyField").equals("FIRST_NAME")) selected #end />First Name
+ <option value="LAST_NAME" #if ($data.Parameters.getString("orderbyField").equals("LAST_NAME")) selected #end />Last Name
+ <option value="EMAIL" #if ($data.Parameters.getString("orderbyField").equals("EMAIL")) selected #end />E-mail Address
+ <option value="LOGIN_NAME" #if ($data.Parameters.getString("orderbyField").equals("LOGIN_NAME")) selected #end />Login Name
 </select>
 <select name="ascOrDesc">
-  <option value="ASC">Ascending
-  <option value="DESC">Descending
+  <option value="ASC" />Ascending
+  <option value="DESC" />Descending
 </select>  
 </td>
 </tr>
@@ -65,24 +62,23 @@ Order by: <select name="orderbyField">
 
 <p>
 Results per page: 
-<input type="radio" name="resultsPerPage" value="25" #if ($resultsPerPage == 25) checked #end> 25 &nbsp;
-<input type="radio" name="resultsPerPage" value="50" #if ($resultsPerPage == 50) checked #end> 50 &nbsp;
-<input type="radio" name="resultsPerPage" value="75" #if ($resultsPerPage == 75) checked #end> 75 &nbsp;
-<input type="radio" name="resultsPerPage" value="100" #if ($resultsPerPage == 100) checked #end> 100
+<input type="radio" name="resultsPerPage" value="25" #if ($resultsPerPage == 25) checked #end /> 25 &nbsp;
+<input type="radio" name="resultsPerPage" value="50" #if ($resultsPerPage == 50) checked #end /> 50 &nbsp;
+<input type="radio" name="resultsPerPage" value="75" #if ($resultsPerPage == 75) checked #end /> 75 &nbsp;
+<input type="radio" name="resultsPerPage" value="100" #if ($resultsPerPage == 100) checked #end /> 100
 </p>
 
 <div class="functnbar2">
 <table cellpadding="4" cellspacing="0" border="1">
  <tr>
   <td class="firstchild">
-   <input type="submit" name="eventSubmit_doSearch" value="Search" />
-   &#160;&#160;&#160;
+   <input type="submit" name="eventSubmit_doSearch" value="Search" />&#160;
    <input type="submit" name="eventSubmit_doGotoadduser" value="Add User" />
-
   </td>
  </tr>
 </table>
 </div>
+
 </form>
 
 
@@ -97,8 +93,8 @@ Results per page:
  #else
 
 <form name="ManageUserSearchForm" action="$link.setPage("admin,ManageUserSearch.vm")" method="post">
- <input type="hidden" name="action" value="admin.ManageUser">
- <input type="hidden" name="state" value="">
+ <input type="hidden" name="action" value="admin.ManageUser" />
+ <input type="hidden" name="state" value="" />
 
 <table cellspacing="0" cellpadding="2" width="100%">
  <tr>
@@ -138,7 +134,9 @@ Results per page:
 
 #foreach ($user in $userList)
   #indexedRows ($velocityCount)
-   <td width="10"><center><input type="radio" name="username" value="$!user.UserName"></center></td>
+   <td width="10">
+   <center><input type="radio" name="username" value="$!user.UserName" /></center>
+   </td>
    <td>$!user.UserName</td>
    <td>$!user.FirstName $!user.LastName</td>
    <td><a href=mailto:$!user.Email>$!user.Email</a>
@@ -164,4 +162,4 @@ Results per page:
 #end
 
 #end
-
+</div>
