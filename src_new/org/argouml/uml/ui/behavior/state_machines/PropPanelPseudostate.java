@@ -1,4 +1,4 @@
-// $Id: PropPanelPseudostate.java,v 1.20 2004/05/24 10:06:57 mkl Exp $
+// $Id: PropPanelPseudostate.java,v 1.21 2004/06/27 09:49:21 mvw Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: PropPanelPseudostate.java
 // Classes: PropPanelPseudostate
 // Original Author: your email address here
-// $Id: PropPanelPseudostate.java,v 1.20 2004/05/24 10:06:57 mkl Exp $
+// $Id: PropPanelPseudostate.java,v 1.21 2004/06/27 09:49:21 mvw Exp $
 
 package org.argouml.uml.ui.behavior.state_machines;
 
@@ -87,7 +87,7 @@ public class PropPanelPseudostate extends PropPanelStateVertex {
                     getTitleLabel().setText("Join State");
             if (ModelFacade.equalsPseudostateKind(kind,
                     ModelFacade.BRANCH_PSEUDOSTATEKIND))
-                    getTitleLabel().setText("Branch State");
+                    getTitleLabel().setText("Choice State");
             if (ModelFacade.equalsPseudostateKind(kind,
                     ModelFacade.DEEPHISTORY_PSEUDOSTATEKIND))
                     getTitleLabel().setText("Deep History State");
