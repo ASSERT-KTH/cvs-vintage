@@ -1,4 +1,4 @@
-// $Id: StartCritics.java,v 1.9 2004/03/09 20:41:10 mvw Exp $
+// $Id: StartCritics.java,v 1.10 2004/03/24 19:35:35 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -24,7 +24,7 @@
 
 package org.argouml.application;
 
-import java.util.Locale;
+//import java.util.Locale; //never used
 
 import org.apache.log4j.Logger;
 
