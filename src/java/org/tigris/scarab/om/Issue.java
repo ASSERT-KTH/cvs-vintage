@@ -979,7 +979,7 @@ public class Issue
                 {
                     id = idbroker.getIdAsInt(con, key);
                 }
-                catch (Exception e3)
+                catch (Exception idRetrievalErr)
                 {
                     // a module code entry in the id_table was likely not 
                     // entered, insert a row into the id_table and try again.
@@ -988,7 +988,7 @@ public class Issue
                         saveIdTableKey(dbMap.getName());
                         id = idbroker.getIdAsInt(con, key);
                     }
-                    catch (Exception e2)
+                    catch (Exception throwOriginal)
                     {
                         // throw the original
                         throw e;
