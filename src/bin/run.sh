@@ -5,7 +5,7 @@
 ##                                                                          ##
 ### ====================================================================== ###
 
-### $Id: run.sh,v 1.23 2001/08/11 23:50:55 user57 Exp $ ###
+### $Id: run.sh,v 1.24 2001/08/13 18:33:00 starksm Exp $ ###
 
 DIRNAME=`dirname $0`
 PROGNAME=`basename $0`
@@ -58,19 +58,16 @@ case "$JAXP" in
     crimson)
 	JAXP_DOM_FACTORY="org.apache.crimson.jaxp.DocumentBuilderFactoryImpl"
 	JAXP_SAX_FACTORY="org.apache.crimson.jaxp.SAXParserFactoryImpl"
-	JAXP_CLASSPATH="$JBOSS_HOME/lib/crimson.jar"
 	;;
 
     *)
 	if [ "x$JAXP_DOM_FACTORY" = "x" ] && 
-	   [ "x$JAXP_SAX_FACTORY" = "x" ] && 
-	   [ "x$JAXP_CLASSPATH" = "x" ]; then
+	   [ "x$JAXP_SAX_FACTORY" = "x" ] then
 	    die "unsupported JAXP parser: $JAXP"
 	fi
 	;;
 esac
 
-JBOSS_CLASSPATH="${JBOSS_CLASSPATH}:$JAXP_CLASSPATH"
 JAVA_OPTS="$JAVA_OPTS -Djavax.xml.parsers.DocumentBuilderFactory=$JAXP_DOM_FACTORY"
 JAVA_OPTS="$JAVA_OPTS -Djavax.xml.parsers.SAXParserFactory=$JAXP_SAX_FACTORY"
 
