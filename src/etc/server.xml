@@ -60,7 +60,7 @@
         <Context path="" docBase="webapps/ROOT" debug="0" reloadable="true" > 
         </Context>
 
-        <Context path="/test" docBase="webapps/test" debug="9" reloadable="true" > 
+        <Context path="/test" docBase="webapps/test" debug="0" reloadable="true" > 
         </Context>
 
     </ContextManager>

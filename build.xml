@@ -50,7 +50,7 @@
     <javac srcdir="src/j2ee" destdir="${tomcat.build}/classes"
            classpath="${tomcat.build}/lib/xml.jar" debug="on"/>
     <rmic base="${tomcat.build}/classes"
-          class="org.apache.tomcat.shell.AdminImpl"/>
+          classname="org.apache.tomcat.shell.AdminImpl"/>
   </target>
 
   <!-- ==================== Build all web applications ==================== -->
@@ -96,13 +96,13 @@
     <!-- create tomcat jar files -->
     <jar jarfile="${tomcat.home}/lib/webserver.jar"
          basedir="${tomcat.home}/classes"
-         items="org/apache/tomcat"/> 
+         includes="org/apache/tomcat/**"/> 
     <jar jarfile="${tomcat.home}/lib/servlet.jar"
          basedir="${tomcat.home}/classes"
-         items="javax/servlet"/>
+         includes="javax/servlet/**"/>
     <jar jarfile="${tomcat.home}/lib/jasper.jar"
          basedir="${tomcat.home}/classes"
-         items="org/apache/jasper"/>
+         includes="org/apache/jasper/**"/>
 
     <!-- Add Tomcat internal javadoc -->
     <mkdir dir="${tomcat.home}/webapps/ROOT/javadoc" />
@@ -123,22 +123,22 @@
     <!-- create webapp WARS -->
     <jar   jarfile="${tomcat.home}/webapps/examples.war"
            basedir="${tomcat.home}/webapps/examples"
-           items="." /> 
+           includes="**" /> 
     <deltree dir="${tomcat.home}/webapps/examples"/>
 
     <jar   jarfile="${tomcat.home}/webapps/admin.war"
            basedir="${tomcat.home}/webapps/admin"
-           items="." /> 
+           includes="**" /> 
     <deltree dir="${tomcat.home}/webapps/admin"/>
 
     <jar   jarfile="${tomcat.home}/webapps/ROOT.war"
            basedir="${tomcat.home}/webapps/ROOT"
-           items="." />
+           includes="**" />
     <deltree dir="${tomcat.home}/webapps/ROOT"/>
 
     <jar   jarfile="${tomcat.home}/webapps/test.war"
            basedir="${tomcat.home}/webapps/test"
-           items="." /> 
+           includes="**" /> 
     <deltree dir="${tomcat.home}/webapps/test"/>
 
     <!-- Change permissions for unix -->
@@ -149,7 +149,16 @@
     <chmod perm="+x" src="${tomcat.home}/bin/shutdown.sh"/>
     <chmod perm="+x" src="${tomcat.home}/bin/test-tomcat.sh"/>
   </target>
+ 
+  <!-- =================================================================== -->
+  <!-- Packages the distribution with ZIP                                  -->
+  <!-- =================================================================== -->
+  <target name="dist-zip" depends="dist">
+    <zip zipfile="${Name}-${version}.zip" basedir="${tomcat.home}" includes="**"/>
+  </target>
+
   
+
   <!-- ==================== Admin ==================== -->
   <target name="clean">
     <deltree dir="${tomcat.build}"/>

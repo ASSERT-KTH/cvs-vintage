@@ -538,7 +538,7 @@ public class ContextManager {
      */
     int processRequest( Request req ) {
 	req.setContextManager( this );
-	if(debug>0) log("ProcessRequest: "+req.toString());
+	//	if(debug>0) log("ProcessRequest: "+req.toString());
 
 	for( int i=0; i< requestInterceptors.size(); i++ ) {
 	    ((RequestInterceptor)requestInterceptors.elementAt(i)).contextMap( req );
@@ -548,7 +548,7 @@ public class ContextManager {
 	    ((RequestInterceptor)requestInterceptors.elementAt(i)).requestMap( req );
 	}
 
-	if(debug>0) log("After processing: "+req.toString());
+	// if(debug>0) log("After processing: "+req.toString());
 
 	return 0;
     }
