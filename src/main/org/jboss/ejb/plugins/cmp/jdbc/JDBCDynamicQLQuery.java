@@ -21,7 +21,7 @@ import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCReadAheadMetaData;
  * This class generates a query from JBoss-QL.
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  */
 public class JDBCDynamicQLQuery extends JDBCAbstractQueryCommand {
    private final Catalog catalog;
@@ -75,9 +75,6 @@ public class JDBCDynamicQLQuery extends JDBCAbstractQueryCommand {
       }
       
       // set the sql
-      if(getLog().isDebugEnabled()) {
-         getLog().debug("SQL:\r\n" + compiler.getSQL());
-      }
       setSQL(compiler.getSQL());
       
       // set select object

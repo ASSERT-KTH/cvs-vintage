@@ -16,7 +16,7 @@ import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCQueryMetaData;
  * This class generates a query from JBoss-QL.
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  */
 public class JDBCJBossQLQuery extends JDBCAbstractQueryCommand {
 
@@ -44,10 +44,6 @@ public class JDBCJBossQLQuery extends JDBCAbstractQueryCommand {
          throw new DeploymentException("Error compiling ejbql", t);
       }
       
-      // set the sql
-      if(getLog().isDebugEnabled()) {
-         getLog().debug("SQL:\r\n" + compiler.getSQL());
-      }
       setSQL(compiler.getSQL());
       
       // set select object
