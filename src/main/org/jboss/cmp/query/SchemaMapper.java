@@ -34,13 +34,31 @@ public class SchemaMapper extends QueryCloner
       this.map = map;
    }
 
+   private Object map(Object entry)
+   {
+      Object mapped = map.get(entry);
+      if (mapped == null)
+      {
+         throw new InternalNoMapException(entry);
+      }
+      return mapped;
+   }
+
    /**
     * Transform the query into the target schema.
     * @param query a query against the source schema
     * @return an equivalent query against the target schema
+    * @throws UnmappedEntryException if an entry cannot be mapped
     */
-   public Query map(Query query) {
-      return (Query) query.accept(this, null);
+   public Query map(Query query) throws UnmappedEntryException {
+      try
+      {
+         return (Query) query.accept(this, null);
+      }
+      catch (InternalNoMapException e)
+      {
+         throw new UnmappedEntryException("No map entry found for "+e.cause, e.cause);
+      }
    }
 
    public Object visit(Path path, Object param)
@@ -48,7 +66,7 @@ public class SchemaMapper extends QueryCloner
       Path newPath = new Path((NamedRelation) path.getRoot().accept(this, null));
       for (Iterator i = path.listSteps(); i.hasNext();)
       {
-         Object o = map.get(i.next());
+         Object o = map(i.next());
          if (o instanceof AbstractAttribute)
          {
             newPath.addStep((AbstractAttribute) o);
@@ -63,6 +81,15 @@ public class SchemaMapper extends QueryCloner
 
    public Object visit(RangeRelation relation, Object param)
    {
-      return new RangeRelation(relation.getAlias(), (AbstractClass) map.get(relation.getType()));
+      return new RangeRelation(relation.getAlias(), (AbstractClass) map(relation.getType()));
+   }
+
+   private class InternalNoMapException extends RuntimeException {
+      private Object cause;
+
+      public InternalNoMapException(Object cause)
+      {
+         this.cause = cause;
+      }
    }
 }

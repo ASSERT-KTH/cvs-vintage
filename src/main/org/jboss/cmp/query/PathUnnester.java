@@ -9,6 +9,11 @@
 
 package org.jboss.cmp.query;
 
+import java.util.Iterator;
+
+import org.jboss.cmp.schema.AbstractAssociationEnd;
+import org.jboss.cmp.schema.AbstractClass;
+
 /**
  * A transform that unnests Paths in a query by converting them to inner joins.
  */
@@ -32,13 +37,25 @@ public class PathUnnester extends QueryCloner
       if (right instanceof CollectionRelation == false) {
          return super.visit(join, param);
       }
-      CollectionRelation oldRight = (CollectionRelation) right;
-      RangeRelation newRight = new RangeRelation(oldRight.getAlias(), oldRight.getType());
-      return new InnerJoin(join.getLeft(), newRight);
+      Relation newLeft = (Relation)join.getLeft().accept(this, param);
+      return right.accept(this, newLeft);
    }
 
    public Object visit(CollectionRelation relation, Object param)
    {
-      throw new IllegalStateException();
+      Relation newLeft = (Relation) param;
+      Path path = relation.getPath();
+      StringBuffer newAlias = new StringBuffer();
+      newAlias.append(path.getRoot().getAlias());
+      for (Iterator i = path.listSteps(); i.hasNext();)
+      {
+         AbstractAssociationEnd step = (AbstractAssociationEnd) i.next();
+         if (i.hasNext()) {
+            newAlias.append('_').append(step.getName());
+            newLeft = new InnerJoin(newLeft, new RangeRelation(newAlias.toString(), step.getPeer().getType()));
+         }
+      }
+      RangeRelation newRight = new RangeRelation(relation.getAlias(), relation.getType());
+      return new InnerJoin(newLeft, newRight);
    }
 }

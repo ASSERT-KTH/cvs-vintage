@@ -55,4 +55,9 @@ public class CMPEntity extends Entity
    public void setPkFields(String[] pkFields)
    {
    }
+
+   public String toString()
+   {
+      return getName();
+   }
 }
