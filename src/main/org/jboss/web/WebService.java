@@ -32,7 +32,7 @@ import org.jboss.util.ThrowableHandler;
  *      extends="org.jboss.system.ServiceMBean"
  *      name="jboss:service=WebService"
  *
- * @version <tt>$Revision: 1.19 $</tt>
+ * @version <tt>$Revision: 1.20 $</tt>
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard �berg</a>.
  * @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>.
  * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
@@ -210,7 +210,7 @@ public class WebService extends ServiceMBeanSupport implements WebServiceMBean
       return name == null ? OBJECT_NAME : name;
    }
 
-   protected void createService()
+   protected void createService() throws Exception
    {
       // Load the file mime.types into the mapping list
       Properties mimeTypes = new Properties();
@@ -266,25 +266,10 @@ public class WebService extends ServiceMBeanSupport implements WebServiceMBean
             setHost(hostname);
          }
       }
-   }
-
-   /**
-    * Start the web server for dynamic downloading of classes and resources.
-    * 
-    * <p>
-    * The system <tt>java.rmi.server.codebase</tt> is also set to
-    * <em>http://<host>:<port>/</em> if the property has not been set.
-    */
-   protected void startService() throws Exception
-   {
       // Host must be set to continue (either by user or detection)
       String address = getHost();
       if (address == null)
          throw new MissingAttributeException("Host");
-
-      // Start the WebServer running
-      server.start();
-      log.debug("Started WebServer with address: " + server.getBindAddress() + ":" + getPort());
 
       // Set the rmi codebase if it is not already set
       String codebase = System.getProperty("java.rmi.server.codebase");
@@ -296,6 +281,20 @@ public class WebService extends ServiceMBeanSupport implements WebServiceMBean
          System.setProperty("java.rmi.server.codebase", codebase);
       }
       log.info("Using RMI server codebase: " + codebase);
+   }
+
+   /**
+    * Start the web server for dynamic downloading of classes and resources.
+    * 
+    * <p>
+    * The system <tt>java.rmi.server.codebase</tt> is also set to
+    * <em>http://<host>:<port>/</em> if the property has not been set.
+    */
+   protected void startService() throws Exception
+   {
+      // Start the WebServer running
+      server.start();
+      log.debug("Started WebServer with address: " + server.getBindAddress() + ":" + getPort());
    }
 
    protected void stopService() throws Exception
