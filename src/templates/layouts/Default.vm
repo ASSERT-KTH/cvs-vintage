@@ -25,7 +25,7 @@
      <td width="100" id="leftcol">
       <div id="projnav">
    Current Module:   
-   <a href="$link.setPage("PickModule.vm")">$scarabR.CurrentModule.Name</a>
+   <a href="$link.setPage("SelectModule.vm")">$scarabR.CurrentModule.Name</a>
    <hr>
       <form action="$link.setPage("ViewIssue.vm")" method="get">
    Issue# <input type="text" name="id" size="8" maxlength="255" />

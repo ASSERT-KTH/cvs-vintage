@@ -16,8 +16,9 @@
 
 <br/>
 
-<form action="$link.setPage("PickModule.vm")" method="get">
-<select name="curmodule">
+#if ($userModules.size() > 0)
+<form action="$link.setPage("SelectModule.vm").setAction("SelectModule")" method="get">
+<select name="newmodule">
 #foreach ($module in $userModules)
  #if ($module.Name.equals($currentModule.Name))
  <option selected="true" value="$module.ModuleId">$module.Name
@@ -28,6 +29,11 @@
 #end
 </select>
 <p>
-<input type="submit" value="Change Module">
+<input type="submit" name="eventSubmit_doSelect" value="Change Module">
 </p>
 </form>
+#else
+<p><strong class="alert">
+Sorry, you do not have access to select any other modules.
+</strong></p>
+#end
