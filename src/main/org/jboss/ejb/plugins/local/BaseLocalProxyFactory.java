@@ -40,6 +40,7 @@ import org.jboss.invocation.MarshalledInvocation;
 import org.jboss.logging.Logger;
 import org.jboss.metadata.BeanMetaData;
 import org.jboss.util.naming.Util;
+import org.jboss.util.MethodHashing;
 import org.jboss.security.SecurityAssociation;
 
 
@@ -125,7 +126,7 @@ public class BaseLocalProxyFactory implements LocalProxyFactory
       beanMethodInvokerMap = new HashMap();
       for (int i = 0; i < methods.length; i++)
       {
-         long hash = MarshalledInvocation.calculateHash(methods[i]);
+         long hash = MethodHashing.calculateHash(methods[i]);
          beanMethodInvokerMap.put(new Long(hash), methods[i]);
       }
 
@@ -133,7 +134,7 @@ public class BaseLocalProxyFactory implements LocalProxyFactory
       homeMethodInvokerMap = new HashMap();
       for (int i = 0; i < methods.length; i++)
       {
-         long hash = MarshalledInvocation.calculateHash(methods[i]);
+         long hash = MethodHashing.calculateHash(methods[i]);
          homeMethodInvokerMap.put(new Long(hash), methods[i]);
       }
 

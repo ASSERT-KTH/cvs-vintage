@@ -29,6 +29,7 @@ import javax.ejb.Timer;
 import org.jboss.invocation.Invocation;
 import org.jboss.invocation.MarshalledInvocation;
 import org.jboss.metadata.ConfigurationMetaData;
+import org.jboss.util.MethodHashing;
 
 /**
  * The container for <em>stateless</em> session beans.
@@ -36,7 +37,7 @@ import org.jboss.metadata.ConfigurationMetaData;
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  * @author <a href="mailto:docodan@mvcsoft.com">Daniel OConnor</a>
- * @version $Revision: 1.41 $
+ * @version $Revision: 1.42 $
  */
 public class StatelessSessionContainer extends Container
    implements EJBProxyFactoryContainer
@@ -460,7 +461,7 @@ public class StatelessSessionContainer extends Container
          Method [] m = homeInterface.getMethods();
          for (int i = 0 ; i<m.length ; i++)
          {
-            marshalledInvocationMapping.put( new Long(MarshalledInvocation.calculateHash(m[i])), m[i]);
+            marshalledInvocationMapping.put( new Long(MethodHashing.calculateHash(m[i])), m[i]);
          }
       }
       
@@ -469,7 +470,7 @@ public class StatelessSessionContainer extends Container
          Method [] m = remoteInterface.getMethods();
          for (int j = 0 ; j<m.length ; j++)
          {
-            marshalledInvocationMapping.put( new Long(MarshalledInvocation.calculateHash(m[j])), m[j]);
+            marshalledInvocationMapping.put( new Long(MethodHashing.calculateHash(m[j])), m[j]);
          }
       }
          
@@ -477,7 +478,7 @@ public class StatelessSessionContainer extends Container
       Method getEJBObjectMethod = Class.forName("javax.ejb.Handle").getMethod("getEJBObject", new Class[0]);
       
       // Hash it
-      marshalledInvocationMapping.put(new Long(MarshalledInvocation.calculateHash(getEJBObjectMethod)),getEJBObjectMethod);
+      marshalledInvocationMapping.put(new Long(MethodHashing.calculateHash(getEJBObjectMethod)),getEJBObjectMethod);
    }
    
    Interceptor createContainerInterceptor()

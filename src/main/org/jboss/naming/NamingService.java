@@ -27,11 +27,12 @@ import javax.naming.Reference;
 import javax.naming.StringRefAddr;
 
 import org.jboss.invocation.Invocation;
-import org.jboss.invocation.MarshalledInvocation;
 import org.jboss.management.j2ee.JNDIResource;
 import org.jboss.system.ServiceMBeanSupport;
 import org.jnp.interfaces.Naming;
 import org.jnp.server.Main;
+import org.jboss.invocation.MarshalledInvocation;
+import org.jboss.util.MethodHashing;
 
 /**
  * A JBoss service that starts the jnp JNDI server.
@@ -39,7 +40,7 @@ import org.jnp.server.Main;
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  * @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>.
  * @author <a href="mailto:andreas@jboss.org">Andreas Schaefer</a>.
- * @version $Revision: 1.36 $
+ * @version $Revision: 1.37 $
  *
  * @jmx:mbean name="jboss:service=Naming"
  *            extends="org.jboss.system.ServiceMBean, org.jnp.server.MainMBean"
@@ -199,7 +200,7 @@ public class NamingService
       for(int m = 0; m < methods.length; m ++)
       {
          Method method = methods[m];
-         Long hash = new Long(MarshalledInvocation.calculateHash(method));
+         Long hash = new Long(MethodHashing.calculateHash(method));
          tmpMap.put(hash, method);
       }
       marshalledInvocationMapping = Collections.unmodifiableMap(tmpMap);

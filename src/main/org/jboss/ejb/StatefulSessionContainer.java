@@ -28,11 +28,12 @@ import org.jboss.ejb.plugins.StatefulSessionInstancePool;
 import org.jboss.invocation.Invocation;
 import org.jboss.invocation.MarshalledInvocation;
 import org.jboss.metadata.ConfigurationMetaData;
+import org.jboss.util.MethodHashing;
 
 /**
  * The container for <em>stateful</em> session beans.
  *
- * @version <tt>$Revision: 1.52 $</tt>
+ * @version <tt>$Revision: 1.53 $</tt>
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  * @author <a href="mailto:docodan@mvcsoft.com">Daniel OConnor</a>
  * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
@@ -642,7 +643,7 @@ public class StatefulSessionContainer extends Container
          Method [] m = homeInterface.getMethods();
          for (int i = 0 ; i<m.length ; i++)
          {
-            marshalledInvocationMapping.put( new Long(MarshalledInvocation.calculateHash(m[i])), m[i]);
+            marshalledInvocationMapping.put( new Long(MethodHashing.calculateHash(m[i])), m[i]);
          }
       }
 
@@ -651,14 +652,14 @@ public class StatefulSessionContainer extends Container
          Method [] m = remoteInterface.getMethods();
          for (int j = 0 ; j<m.length ; j++)
          {
-            marshalledInvocationMapping.put( new Long(MarshalledInvocation.calculateHash(m[j])), m[j]);
+            marshalledInvocationMapping.put( new Long(MethodHashing.calculateHash(m[j])), m[j]);
          }
       }
       // Get the getEJBObjectMethod
       Method getEJBObjectMethod = Class.forName("javax.ejb.Handle").getMethod("getEJBObject", new Class[0]);
       
       // Hash it
-      marshalledInvocationMapping.put(new Long(MarshalledInvocation.calculateHash(getEJBObjectMethod)),getEJBObjectMethod);
+      marshalledInvocationMapping.put(new Long(MethodHashing.calculateHash(getEJBObjectMethod)),getEJBObjectMethod);
    }
    
    protected Interceptor createContainerInterceptor()

@@ -59,6 +59,7 @@ import org.jboss.metadata.EntityMetaData;
 import org.jboss.monitor.StatisticsProvider;
 import org.jboss.security.SecurityAssociation;
 import org.jboss.util.collection.SerializableEnumeration;
+import org.jboss.util.MethodHashing;
 
 /**
  * This is a Container for EntityBeans (both BMP and CMP).
@@ -73,7 +74,7 @@ import org.jboss.util.collection.SerializableEnumeration;
  * @author <a href="mailto:bill@burkecentral.com">Bill Burke</a>
  * @author <a href="mailto:andreas.schaefer@madplanet.com">Andreas Schaefer</a>
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.86 $
+ * @version $Revision: 1.87 $
  */
 public class EntityContainer
    extends Container implements EJBProxyFactoryContainer, 
@@ -549,7 +550,7 @@ public class EntityContainer
          for(int i = 0; i < methods.length; i++)
          {
             marshalledInvocationMapping.put(
-                  new Long(MarshalledInvocation.calculateHash(methods[i])),
+                  new Long(MethodHashing.calculateHash(methods[i])),
                   methods[i]);
          }
       }
@@ -560,7 +561,7 @@ public class EntityContainer
          for(int i = 0; i < methods.length; i++)
          {
             marshalledInvocationMapping.put(
-                  new Long(MarshalledInvocation.calculateHash(methods[i])),
+                  new Long(MethodHashing.calculateHash(methods[i])),
                   methods[i]);
          }
       }
