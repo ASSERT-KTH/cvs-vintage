@@ -16,7 +16,7 @@ import org.jboss.deployment.DeploymentException;
  *
  * @author <a href="mailto:alex@jboss.org">Alexey Loubyansky</a>
  * @author <a href="mailto:dimitris@jboss.org">Dimitris Andreadis</a>
- * @version <tt>$Revision: 1.7 $</tt>
+ * @version <tt>$Revision: 1.8 $</tt>
  */
 public class IorSecurityConfigMetaData
    implements Serializable
@@ -354,8 +354,8 @@ public class IorSecurityConfigMetaData
             ", confidentiality=" + confidentiality +
             ", establish-trust-in-target=" + establishTrustInTarget +
             ", establish-trust-in-client=" + establishTrustInClient + 
-			", detect-misordering=" + detectMisordering +
-			", detect-replay=" + detectReplay + "]";
+            ", detect-misordering=" + detectMisordering +
+            ", detect-replay=" + detectReplay + "]";
       }
    }
 
