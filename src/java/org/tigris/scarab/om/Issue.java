@@ -93,7 +93,7 @@ import org.apache.commons.lang.StringUtils;
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: Issue.java,v 1.254 2003/01/18 01:00:06 jon Exp $
+ * @version $Id: Issue.java,v 1.255 2003/01/18 19:36:48 jon Exp $
  */
 public class Issue 
     extends BaseIssue
@@ -116,6 +116,8 @@ public class Issue
         "getAttributeValues";
     protected static final String GET_USERS_TO_EMAIL = 
         "getUsersToEmail";
+    protected static final String GET_USER_ATTRIBUTEVALUE = 
+        "getUserAttributeValue";
     protected static final String GET_USER_ATTRIBUTEVALUES = 
         "getUserAttributeValues";
     protected static final String GET_CREATED_DATE = 
@@ -1208,6 +1210,34 @@ public class Issue
         return result;
     }
 
+    /**
+     * Returns the specific user's attribute value.
+     */
+    public AttributeValue getUserAttributeValue(ScarabUser user, Attribute attribute)
+        throws Exception
+    {
+        AttributeValue result = null;
+        Object obj = getMethodResult().get(this, GET_USER_ATTRIBUTEVALUE, attribute.getAttributeId(), user.getUserId()); 
+        if (obj == null) 
+        {
+            Criteria crit = new Criteria()
+                .add(AttributeValuePeer.ATTRIBUTE_ID, attribute.getAttributeId())
+                .add(AttributeValuePeer.ISSUE_ID, getIssueId())
+                .add(AttributeValuePeer.USER_ID, user.getUserId())
+                .add(AttributeValuePeer.DELETED, 0);
+            List resultList = AttributeValuePeer.doSelect(crit);
+            if (resultList != null && resultList.size() == 1)
+            {
+                result = (AttributeValue)resultList.get(0);
+            }
+            getMethodResult().put(result, this, GET_USER_ATTRIBUTEVALUE, attribute.getAttributeId(), user.getUserId());
+        }
+        else 
+        {
+            result = (AttributeValue)obj;
+        }
+        return result;
+    }
 
     /**
      * Returns attribute values for user attributes.
