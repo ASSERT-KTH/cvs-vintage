@@ -1,4 +1,4 @@
-// $Id: Modeller.java,v 1.55 2003/02/21 16:39:38 alexb Exp $
+// $Id: Modeller.java,v 1.56 2003/02/22 00:37:36 alexb Exp $
 
 /*
   JavaRE - Code generation and reverse engineering for UML and Java
@@ -548,7 +548,7 @@ public class Modeller
                                      Object parent,
                                      Object child)
     {
-        String name = ModelFacade.getName(parent) + "<-" + ModelFacade.getName(child);
+        String name = ModelFacade.getName(child) + " -> " + ModelFacade.getName(parent);
         Object mGeneralization = null;
         mGeneralization = ModelFacade.getGeneralization(child, parent);
         if(mGeneralization == null) {
@@ -573,7 +573,7 @@ public class Modeller
                                   Object parent,
                                   Object child)
     {
-        String name = ModelFacade.getName(parent) + "<-" + ModelFacade.getName(child);
+        String name = ModelFacade.getName(child) + " -> " + ModelFacade.getName(parent);
         Object mAbstraction = null;
         for(Iterator i = ModelFacade.getClientDependencies(child); i.hasNext(); ) {
             mAbstraction = i.next();
@@ -999,6 +999,7 @@ public class Modeller
 
             // check ahead for tag
             int j = nStartPos;
+
             while ((j < sJavaDocs.length()) &&
                    ((sJavaDocs.charAt (j) == ' ') ||
                     (sJavaDocs.charAt (j) == '\t'))) {
