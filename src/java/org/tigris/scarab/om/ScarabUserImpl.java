@@ -82,7 +82,7 @@ import org.apache.log4j.Category;
  * implementation needs.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ScarabUserImpl.java,v 1.85 2002/10/24 22:59:26 jon Exp $
+ * @version $Id: ScarabUserImpl.java,v 1.86 2002/11/01 00:59:21 jon Exp $
  */
 public class ScarabUserImpl 
     extends BaseScarabUserImpl 
@@ -228,12 +228,12 @@ public class ScarabUserImpl
     {        
         return getModules(permissions, showDeletedModules);
     }
+
     private void privateDeleteRModuleUserAttribute(RModuleUserAttribute rmua)
         throws Exception
     {
         rmua.delete(this);
     }
-
 
     /**
      *   Utility method that takes a username and a confirmation code
