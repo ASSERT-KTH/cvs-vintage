@@ -317,6 +317,9 @@ public class EmbededTomcat {
     public Context addContext(  String ctxPath, URL docRoot, String hosts[] )
 	throws TomcatException
     {
+	if( "ROOT".equals( ctxPath ) ) {
+	    ctxPath="";
+	}
 	if(dL>0)
 	    debug( "add context \"" + hosts[0] + ":" + ctxPath + "\" "+
 		   docRoot );
@@ -345,6 +348,7 @@ public class EmbededTomcat {
 	    }
 
 	    contextM.addContext( ctx );
+	    ctx.init();
 	    return ctx;
 	} catch( Exception ex ) {
 	    debug("exception adding context " + ctxPath + "/" + docRoot, ex);
@@ -494,7 +498,7 @@ public class EmbededTomcat {
 
 	setModuleProperty( mid, "port", Integer.toString( port )) ;
 	if( addr != null )
-	    setModuleProperty( mid, "address", addr.toString());
+	    setModuleProperty( mid, "address", addr.getHostAddress());
 	if( hostname != null )
 	    setModuleProperty( mid, "hostName",  hostname );
 	return mid;

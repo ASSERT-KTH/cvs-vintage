@@ -946,14 +946,15 @@ public class ContextManager {
 	}
 	req.setState(Request.STATE_CONTEXT_MAPPED );
 
-	if( req.getContext() == null ||
-	    req.getContext().getState() != Context.STATE_READY ) {
+	if( req.getContext() == null) {
+	    req.setAttribute("javax.servlet.error.message",
+			     "No context found");
+	}
+	if( req.getContext().getState() != Context.STATE_READY ) {
 	    // the context is not fully initialized.
 	    req.setAttribute("javax.servlet.error.message",
-			     "Application not available");
+			     "Context " + req.getContext() + " not ready");
 	    // return error code - the caller will handle it
-	    // handleStatus( req, req.getResponse(), 503 );
-	    // service unavailable
 	    return 503;
 	}
 	
