@@ -1,418 +1,178 @@
 /*
- * $Id: Tag.java,v 1.3 1999/10/15 09:28:29 duncan Exp $
- * ====================================================================
+ * @(#)Tag.java	1.35 99/10/11
  * 
- * The Apache Software License, Version 1.1
- *
- * Copyright (c) 1999 The Apache Software Foundation.  All rights 
- * reserved.
- *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions
- * are met:
- *
- * 1. Redistributions of source code must retain the above copyright
- *    notice, this list of conditions and the following disclaimer. 
- *
- * 2. Redistributions in binary form must reproduce the above copyright
- *    notice, this list of conditions and the following disclaimer in
- *    the documentation and/or other materials provided with the
- *    distribution.
- *
- * 3. The end-user documentation included with the redistribution, if
- *    any, must include the following acknowlegement:  
- *       "This product includes software developed by the 
- *        Apache Software Foundation (http://www.apache.org/)."
- *    Alternately, this acknowlegement may appear in the software itself,
- *    if and wherever such third-party acknowlegements normally appear.
- *
- * 4. The names "The Jakarta Project", "Tomcat", and "Apache Software
- *    Foundation" must not be used to endorse or promote products derived
- *    from this software without prior written permission. For written 
- *    permission, please contact apache@apache.org.
- *
- * 5. Products derived from this software may not be called "Apache"
- *    nor may "Apache" appear in their names without prior written
- *    permission of the Apache Group.
- *
- * THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESSED OR IMPLIED
- * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
- * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- * DISCLAIMED.  IN NO EVENT SHALL THE APACHE SOFTWARE FOUNDATION OR
- * ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
- * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
- * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF
- * USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
- * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
- * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT
- * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
- * SUCH DAMAGE.
- * ====================================================================
- *
- * This software consists of voluntary contributions made by many
- * individuals on behalf of the Apache Software Foundation.  For more
- * information on the Apache Software Foundation, please see
- * <http://www.apache.org/>.
- *
- * ====================================================================
- *
- * This source code implements specifications defined by the Java
- * Community Process. In order to remain compliant with the specification
- * DO NOT add / change / or delete method signatures!
+ * Copyright (c) 1999 Sun Microsystems, Inc. All Rights Reserved.
+ * 
+ * This software is the confidential and proprietary information of Sun
+ * Microsystems, Inc. ("Confidential Information").  You shall not
+ * disclose such Confidential Information and shall use it only in
+ * accordance with the terms of the license agreement you entered into
+ * with Sun.
+ * 
+ * SUN MAKES NO REPRESENTATIONS OR WARRANTIES ABOUT THE SUITABILITY OF THE
+ * SOFTWARE, EITHER EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR
+ * PURPOSE, OR NON-INFRINGEMENT. SUN SHALL NOT BE LIABLE FOR ANY DAMAGES
+ * SUFFERED BY LICENSEE AS A RESULT OF USING, MODIFYING OR DISTRIBUTING
+ * THIS SOFTWARE OR ITS DERIVATIVES.
+ * 
+ * CopyrightVersion 1.0
  */
  
 package javax.servlet.jsp.tagext;
 
-import javax.servlet.jsp.PageContext;
 import javax.servlet.jsp.*;
-import javax.servlet.jsp.tagext.*;
-import javax.servlet.*;
-import java.io.Writer;
-import java.util.Hashtable;
+
 
 /**
- * Actions in a Tag Library are defined through subclasses of Tag.
+ * The Tag interface defines the basic protocol between a Tag handler and JSP page
+ * implementation class.  It defines the life cycle and the methods to be invoked at
+ * start and end tag.
+ * <p>
+ * There are several methods that get invoked to set the state of a Tag handler.
+ * The Tag handler is required to keep this state so the page compiler can
+ * choose not to reinvoke some of the state setting.
+ * <p>
+ * The page compiler guarantees that setPageContext and setParent
+ * will all be invoked on the Tag handler, in that order, before doStartTag() or
+ * doEndTag() are invoked on it.
+ * The page compiler also guarantees that release will be invoked on the Tag
+ * handler before the end of the page.
+ * <p>
+ * Here is a typical invocation sequence:
+ *
+ * <pre>
+ * <code>
+ * 
+ * ATag t = new ATag();
+ *
+ * -- need to set required information 
+ * t.setPageContext(...);
+ * t.setParent(...);
+ * t.setAttribute1(value1);
+ * t.setAttribute2(value2);
+ *
+ * -- all ready to go
+ * t.doStartTag();
+ * t.doEndTag();
+ * 
+ * ... other tags and template text
+ *
+ * -- say one attribute is changed, but parent and pageContext have not changed
+ * t.setAttribute2(value3);
+ * t.doStartTag()
+ * t.doEndTag()
+ *
+ * ... other tags and template text
+ *
+ * -- assume that this new action happens to use the same attribute values
+ * -- it is legal to reuse the same handler instance,  with no changes...
+ * t.doStartTag();
+ * t.doEndTag();
+ *
+ * -- OK, all done
+ * t.release()
+ * </code>
+ * </pre>
+ *
+ * <p>
+ * The Tag interface also includes methods to set a parent chain, which is used
+ * to find enclosing tag handlers.
+ *
  */
 
-public abstract class Tag {
+public interface Tag {
+
     /**
-     * Return value for doStartTag() and doAfterBody():
-     * (re)evaluate the inner body of the tag.
+     * Skip body evaluation.
+     * Valid return value for doStartTag and doAfterBody.
      */
-    public final static int EVAL_BODY = 0;
-
+ 
+    public final static int SKIP_BODY = 0;
+ 
     /**
-     * Return value for doStartTag() and doAfterBody():
-     * skip the inner body of the tag.
+     * Evaluate body into existing out stream.
+     * Valid return value for doStartTag.
+     * This is an illegal return value for doStartTag when the class implements
+     * BodyTag, since BodyTag implies the creation of a new BodyContent.
      */
-    public final static int SKIP_BODY = 1;
+ 
+    public final static int EVAL_BODY_INCLUDE = 1;
 
     /**
-     * Return value for doEndTag():
-     * continue evaluating the page
-     */
-    public final static int EVAL_PAGE = 10;
-
-    /**
-     * Return value for doEndTag():
-     * skip the remaining evaluation of the page
-     */
-    public final static int SKIP_PAGE = 11;
-
-
-    /**
-     * Find the instance of a given class type that is closest to a given
-     * instance.
-     * This class is used for coordination among cooperating tags.
-     *
-     * @param the subclass of Tag or interface to be matched
-     * @return the nearest ancestor that implements the interface
-     * or is an instance of the class specified
+     * Skip the rest of the page.
+     * Valid return value for doEndTag.
      */
 
-    public static final Tag findAncestorWithClass(Tag from, Class klass) {
-	boolean isInterface = false;
-
-	if (from == null ||
-	    klass == null ||
-	    (!Tag.class.isAssignableFrom(klass) &&
-	     !(isInterface = klass.isInterface()))) {
-	    return null;
-	}
-
-	for (;;) {
-	    Tag tag = from.getParent();
-
-	    if ((isInterface && klass.isInstance(tag)) ||
-	        klass.equals(tag.getClass()))
-		return tag;
-	    else
-		from = tag;
-	}
-    }
+    public final static int SKIP_PAGE = 5;
 
     /**
-     * Default constructor, all subclasses are required to only define
-     * a public constructor with the same signature, and to call the
-     * superclass constructor.
-     *
-     * This constructor is called by the code generated by the JSP
-     * translator.
-     *
-     * @param libraryPrefix The namespace prefix used for this library.
-     * For example "jsp:".
-     * @param tagName The name of the element or yag, for example "useBean"
+     * Continue evaluating the page.
+     * Valid return value for doEndTag().
      */
 
-    public Tag(String libraryPrefix, String tagName) {
-	this.libraryPrefix = libraryPrefix;
-	this.tagName       = tagName;
-    }
+    public final static int EVAL_PAGE = 6;
 
+    // Setters for Tag handler data
 
     /**
-     * initialize() and release() are unlikely to be redefined by most
-     * tag library authors.
-     */
-
-    /**
-     * Initialize a Tag instance so it can be (re)used.
-     *
-     * A freshly created tag instance has to be prepared by invoking
-     * this method before invoking doStartTag().  A tag instance that has
-     * been used and released by invoking release(), must be reinitialized
-     * by invoking this method.
+     * Set the current page context.
+     * Called by the page implementation prior to doStartTag().
      * <p>
-     * Extreme care should be taken if this method is to be modified
-     * or interposed as it maintains invariants that are global to the
-     * whole page, specifically the parent Tag link list. 
-     * initialize() is not frequently changed or interposed by the Tag
-     * author.
-     *
-     * @param parent the parent extension tag for this tag or null
-     * @param tagData  attribute data for this tag instance
-     * @param pc  PageContext for this tag instance.
+     * This value is *not* reset by doEndTag() and must be explicitly reset
+     * by a page implementation
      */
 
-    public void initialize(Tag parent, TagData tagData, PageContext pc) {
-	this.parent      = parent;
-	this.tagData     = tagData;
-	this.pageContext = pc;
-    	this.tagId       = tagData == null ? null : tagData.getId();
-	this.previousOut = pc.getOut();
-    }
+    void setPageContext(PageContext pc);
 
     /**
-     * Release a Tag instance so it can be (re)used.
+     * Set the current nesting Tag of this Tag.
+     * Called by the page implementation prior to doStartTag().
      * <p>
-     * Extreme care should be taken if this method is to be modified
-     * or interposed as it maintains invariants that are global to the
-     * whole page, specifically the parent Tag link list. 
-     * initialize() is not frequently changed or interposed by the Tag
-     * author.
+     * This value is *not* reset by doEndTag() and must be explicitly reset
+     * by a page implementation.  Code can assume that setPageContext
+     * has been called with the proper values before this point.
      */
 
-    public void release() {
-	values      = null;
-	parent      = null;
-	tagId       = null;
-	pageContext = null;
-	tagData     = null;
-	previousOut = null;
-	bodyOut     = null;
-	
-    }
+    void setParent(Tag t);
 
     /**
-     * doStartTag(), doEndTag() are most basic.
-     * setBodyOut(), doBeforeBody(), and doAfterBody() deal with body
-     * 
-     * In many cases not all of them are redefined.
+     * @return the current parent
+     * @seealso TagSupport.findAncestorWithClass().
      */
+
+    Tag getParent();
+
 
     // Actions for basic start/end processing.
 
     /**
      * Process the start tag for this instance.
      *
-     * The doStartTag() method assumes that initialize() has been
-     * invoked before.
+     * @returns EVAL_BODY_INCLUDE if the tag wants to process body, SKIP_BODY if it
+     * does not want to process it.
      *
-     * When this method is invoked, the body has not yet been invoked.
+     * When a Tag returns EVAL_BODY_INCLUDE the body (if any) is evaluated
+     * and written into the current "out" JspWriter then doEndTag() is invoked.
      *
-     * @returns EVAL_BODY if the tag wants to process body, SKIP_BODY if it
-     * does ont want to process it.
-     */
-
-    public int doStartTag() throws JspException {
-	return SKIP_BODY;
-    }
-	      
-    /**
-     * Process the end tag. This method will be called on all Tag objects.
-     * Returns an indication of whether the rest of the page should be
-     * evaluated or skipped.
-     *
-     * All instance state associated with this instance must be reset.
-     * The release() method should be called after this invocation.
-     *
-     * @return SKIP_PAGE if the rest of the page should be skipped, and
-     * EVAL_PAGE if the evaluation of the page should continue.
-     */
-
-    public int doEndTag() throws JspException {
-	return EVAL_PAGE;
-    }
-
-
-    // Actions related to body evaluation
-
-    /**
-     * Set the BodyContent.
-     * It will be invoked at most once per action invocation.
-     * Will not be invoked if there is no body evaluation.
-     *
-     * Frequently it is not redefined by Tag author.
-     *
-     * @param b the BodyContent
-     */
-    public void setBodyOut(BodyContent b) {
-	this.bodyOut = b;
-    }
-
-
-    /**
-     * Actions before some body is to be evaluated.
-     *
-     * Not invoked in empty tags or in tags returning false in doStartTag()
-     * This method is invoked before every body evaluation.
-     * The companion method doAfterBody() is invoked after every body
-     * evaluation.
-     * The triple "doBeforeBody() -- BODY -- doAfterBody()" is invoked
-     * initially if doStartTag() returned EVAL_BODY, and it is repeated as long
-     * as the doAfterBody() evaluation returns EVAL_BODY.
-     *
-     * The method re-invocations may be lead to different actions because
-     * there might have been some changes to shared state, or because
-     * of external computation.
-     *
-     * @returns whether additional evaluations of the body are desired
-     * @seealso #doAfterBody
-     */
-
-    public void doBeforeBody() throws JspError {
-    }
-
-    /**
-     * Actions after some body has been evaluated.
-     *
-     * Not invoked in empty tags or in tags returning false in doStartTag()
-     * This method is invoked after every body evaluation.
-     * The companion method doBeforeBody() is invoked before every body
-     * evaluation.
-     * The triple "doBeforeBody() -- BODY -- doAfterBody()" is invoked
-     * initially if doStartTag() returned EVAL_BODY, and it is repeated as long
-     * as the doAfterBody() evaluation returns EVAL_BODY.
-     *
-     * The method re-invocations may be lead to different actions because
-     * there might have been some changes to shared state, or because
-     * of external computation.
-     *
-     * @returns whether additional evaluations of the body are desired
-     * @seealso #doBeforeBody
-     */
-
-    public int doAfterBody() throws JspError {
- 	return SKIP_BODY;
-    }
-
-    /**
-     * Methods to access state
-     */
-
-    /**
-     * @return the parent extension tag instance or null
-     */
-
-    public Tag getParent() {
-	return parent;
-    }
-
-    /**
-     * @return the value of the id or null
-     */
-
-    public String getTagId() {
-	return tagId;
-    }
-
-    /**
-     * @return the library prefix being used with this tag
-     */
-
-    public String getLibraryPrefix() {
-	return libraryPrefix;
-    }
-
-    /**
-     * @return the tag name 
-     */
-
-    public String getTagName() {
-	return tagName;
-    }
-
-    /**
-     * return the immmutable TagData for this tag
-     *
-     * @return the TagData for this Tag
-     */
-
-    public TagData getTagData() {
-	return tagData;
-    }
-
-    /**
-     * return the PageContext for this tag
-     *
-     * @return the PageContext for this Tag
-     */
-
-    public PageContext getPageContext() {
-	return pageContext;
-    }
-
-    /**
-     * set a user defined value on the Tag
-     * 
-     * @param key the name of the user defined value
-     * @param value the value to be associated
-     * 
+     * @see BodyTag
      */
  
-    public void setValue(String key, Object value) { 
-	if (values == null) values = new Hashtable();
-
-	values.put(key, value);
-    }
+    int doStartTag() throws JspException;
+ 
 
     /**
-     * @return the value associated with the key
+     * Process the end tag. This method will be called on all Tag objects.
      */
 
-    public Object getValue(String key) {
-	return values == null ? null : values.get(key);
-    }
+    int doEndTag() throws JspException;
 
     /**
-     * @return the value of the "out" JspWriter prior to pushing
-     * a BodyContent
+     * Called on a Tag handler to release state.
+     * The page compiler guarantees this method will be called on all tag handlers,
+     * but there may be multiple invocations on doStartTag and doEndTag in between.
      */
 
-    protected final JspWriter getPreviousOut() {
-	return previousOut;
-    }
+    void release();
 
-    /**
-     * @return the value of the current "out" JspWriter
-     */
-
-    protected final BodyContent getBodyOut() {
-	return bodyOut;
-    }
-
-
-    // private fields
-
-    private String        libraryPrefix;
-    private String        tagName;
-    private Tag           parent;
-    private String        tagId;
-    private JspWriter     previousOut;
-    private Hashtable     values;
-    
-    // protected fields
-    protected BodyContent bodyOut;
-    protected PageContext pageContext;
-    protected TagData     tagData;
 }
