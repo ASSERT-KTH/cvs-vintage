@@ -1,4 +1,4 @@
-// $Id: ModelFacade.java,v 1.148 2003/10/18 20:37:39 linus Exp $
+// $Id: ModelFacade.java,v 1.149 2003/10/26 18:32:06 alexb Exp $
 // Copyright (c) 2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -239,14 +239,17 @@ public class ModelFacade {
     public static final Object ASSOCIATION_END    = MAssociationEnd.class;
     public static final Object ASSOCIATION_END_ROLE = MAssociationEndRole.class;
     public static final Object CALL_ACTION        = MCallAction.class;
+    public static final Object CALLCONCURRENCYKIND= MCallConcurrencyKind.class;
     public static final Object CREATE_ACTION      = MCreateAction.class;
     public static final Object DESTROY_ACTION     = MDestroyAction.class;
     public static final Object NAMESPACE          = MNamespace.class;
     public static final Object RECEPTION          = MReception.class;
     public static final Object RETURN_ACTION      = MReturnAction.class;
+    public static final Object SCOPEKIND          = MScopeKind.class;
     public static final Object SEND_ACTION        = MSendAction.class;
     public static final Object STEREOTYPE         = MStereotype.class;
     public static final Object PARAMETER          = MParameter.class;
+    public static final Object PARAMETERDIRECTIONKIND= MParameterDirectionKind.class;
     public static final Object GENERALAIZABLE_ELEMENT
                                                   = MGeneralizableElement.class;
     public static final Object DATATYPE           = MDataType.class;
@@ -337,6 +340,18 @@ public class ModelFacade {
     
     public static final Object INSTANCE_SCOPEKIND =
         MScopeKind.INSTANCE;
+    
+    public static final Object INOUT_PARAMETERDIRECTIONKIND =
+        MParameterDirectionKind.INOUT;
+    
+    public static final Object IN_PARAMETERDIRECTIONKIND =
+        MParameterDirectionKind.IN;
+    
+    public static final Object OUT_PARAMETERDIRECTIONKIND =
+        MParameterDirectionKind.OUT;
+    
+    public static final Object RETURN_PARAMETERDIRECTIONKIND =
+        MParameterDirectionKind.RETURN;
     
     /** Singleton instance */        
 	private static ModelFacade singleton = new ModelFacade();
