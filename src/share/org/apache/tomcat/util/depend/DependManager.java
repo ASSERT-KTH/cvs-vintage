@@ -83,7 +83,7 @@ public class DependManager {
     long checkTime=0;
     int checkCount=0;
 
-    boolean expired=false;
+    private boolean expired=false;
     
     public DependManager() {
     }
@@ -100,22 +100,37 @@ public class DependManager {
     public long getCheckCount() {
 	return checkCount;
     }
-    
-    // Not synchronized - we do that inside
+
     public boolean shouldReload() {
+	boolean b=shouldReload1();
+	if( b!=expired)
+	    log("BUG ( VM or Tomcat? ) shouldReload returns expired=" + b +
+		" and the real value is " + expired);
+	return expired;
+    }
+
+    // Not synchronized - we do that inside
+    public boolean shouldReload1() {
 	// somebody else is checking, so we don't know yet.
 	// assume we're fine - reduce the need for sync
+	if( debug > 0 && expired )
+	    log( "ShouldReload1 E=" + expired + " C=" + checking);
 	if( checking ) return expired;
 
 	synchronized(this) {
 	    try {
 		// someone else got here and did it before me
+		if( debug>0 && expired )
+		    log( "ShouldReload2 E=" + expired + " C=" + checking);
 		if( checking ) return expired;
 			
 		// did a check in the last N seconds
 		long startCheck=System.currentTimeMillis();
-		if( startCheck - lastCheck < delay )
+		if( startCheck - lastCheck < delay ) {
+		    if( debug > 0 && expired )
+			log( "ShouldReload3 E=" + expired + " C=" + checking);
 		    return expired;
+		}
 		
 		checking=true;
 
@@ -127,7 +142,11 @@ public class DependManager {
 		    File f=d.getOrigin();
 		    if( lm < f.lastModified() ) {
 			// something got modified
+			//			if( debug>0 )
+			if( debug > 0)
+			    log("Found expired4 file " + f.getName());
 			expired=true;
+			// at least one file is expired
 		    }
 		}
 		checkTime += lastCheck-startCheck;
@@ -136,6 +155,8 @@ public class DependManager {
 	    } finally {
 		checking=false;
 	    }
+	    if( debug > 0 && expired )
+		log( "ShouldReload5 E=" + expired + " C=" + checking);
 	    return expired;
 	}
     }
@@ -149,10 +170,10 @@ public class DependManager {
 	deps[depsCount++]= dep ;
 	if( debug>2) log( "Added " + dep.getOrigin() + " " + dep.getTarget());
     }
-    
+
     // -------------------- Private 
 
-    private static final int debug=0;
+    private static final int debug=10;
     
     void log( String s ) {
 	System.out.println("DependManager: " + s );
