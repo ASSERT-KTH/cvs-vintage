@@ -194,7 +194,7 @@ public class Issue
     {
         if ( getIdDomain() != null ) 
         {
-            return getIdDomain() + getUniqueId();
+            return getIdDomain() + '-' + getUniqueId();
         }
         return getUniqueId();
     }
