@@ -43,7 +43,7 @@ import org.jboss.invocation.InvocationResponse;
  * @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>
  * @author <a href="mailto:bill@burkecentral.com">Bill Burke</a>
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.61 $
+ * @version $Revision: 1.62 $
  */
 public class EntityInstanceInterceptor extends AbstractInterceptor
 {
@@ -153,20 +153,6 @@ public class EntityInstanceInterceptor extends AbstractInterceptor
                {
                   log.trace("End home invocation, ctx=" + ctx);
                }
-            }
-         }
-         // If an exception has been thrown, and the ctx has been registered 
-         // in a transaction InstanceSynchronization, the synchronization will
-         // remove the context, so we shouldn't.  Otherwise, we need to 
-         // remove the context from the cache here.
-         else if(exceptionThrown != null && !ctx.hasTxSynchronization())
-         {
-            // Discard instance [EJB 1.1 spec 12.3.1]
-            container.getInstanceCache().remove(id);
-
-            if(trace)
-            {
-               log.trace("Ending invoke, exceptionThrown, ctx=" + ctx, exceptionThrown);
             }
          }
          // The current code signals that an instance should be deleted by 
