@@ -86,7 +86,7 @@ import org.tigris.scarab.util.word.IssueSearch;
     This class is responsible for report issue forms.
 
     @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
-    @version $Id: Search.java,v 1.54 2002/01/22 01:58:09 elicia Exp $
+    @version $Id: Search.java,v 1.55 2002/01/24 20:54:12 jon Exp $
 */
 public class Search extends RequireLoginFirstAction
 {
@@ -95,6 +95,12 @@ public class Search extends RequireLoginFirstAction
     private static final String ERROR_MESSAGE = "More information was " +
                                 "required to submit your request. Please " +
                                 "see error messages."; 
+
+    public void doPerform(RunData data, TemplateContext context)
+        throws Exception
+    {
+        doGonext(data, context);
+    }
 
     public void doSearch(RunData data, TemplateContext context)
         throws Exception
