@@ -52,22 +52,22 @@
                   </td>
                  </tr>
             #elseif ($attVal.isSet())
-               #set ($display = "true")
+               #set ($display = true)
                #set ($isOptionAttr = $attVal.Attribute.isOptionAttribute())
                #if ($isOptionAttr)
                  #if ($attVal.AttributeOption.Deleted.toString().equals("true"))
-                     #set ($display = "false")
+                     #set ($display = false)
                  #end
                #end
-               #if ($display.equals("true"))
+               #if ($display)
                  <tr>
                    <th>$attVal.RModuleAttribute.DisplayValue</th>
                    <td>
                    #set ($attrInput = $intake.AttributeValue.mapTo($attVal))
                    #if ($isOptionAttr)
-                      $!attVal.AttributeOption.Name
+                     $!module.getRModuleOption($attVal.AttributeOption, $issueType).DisplayValue
                    #else
-                   $!attrInput.Value
+                     $!attrInput.Value
                    #end
                    </td>
                  </tr>
@@ -102,4 +102,3 @@
 <input type="submit" value="$l10n.Done" name="eventSubmit_doSubmitattributes" />
 </div>
 #end
-
