@@ -78,7 +78,7 @@ import org.jboss.ejb.plugins.local.BaseLocalContainerInvoker;
 * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
 * @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>.
 * @author <a href="bill@burkecentral.com">Bill Burke</a>
-* @version $Revision: 1.74 $
+* @version $Revision: 1.75 $
 ** <p><b>Revisions:</b>
 *
 * <p><b>2001/07/26 bill burke:</b>
@@ -553,7 +553,8 @@ public abstract class Container implements DynamicMBean
       Invocation mi = (Invocation)params[0];
 
       // Must have a valid Invocation to continue
-      if (mi == null) {
+      if (mi == null)
+      {
          log.error("Method invocation object is null");
          throw new IllegalArgumentException("Method invocation object is null");
       }
@@ -704,7 +705,6 @@ public abstract class Container implements DynamicMBean
       }
       catch (Exception e)
       {
-         log.error("invoke failed", e);
          throw new MBeanException(e, "invoke failed");
       }
       finally
