@@ -123,7 +123,7 @@
   #end
  </tr>
 
- #if ($model.RowHeadings.size() > 1 || $model.RowHeadings.get(0).isSingleAttribute())
+ #if ($model.RowHeadings.size() > 1 || $model.RowHeadings.get(0).singleAttribute())
  <tr>
   #foreach ($curHeading in $model.RowHeadings)
     #set ($level = $velocityCount - 1)
