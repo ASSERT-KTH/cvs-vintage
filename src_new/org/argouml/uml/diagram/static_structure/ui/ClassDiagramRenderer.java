@@ -24,7 +24,7 @@
 // File: ClassDiagramRenderer.java
 // Classes: ClassDiagramRenderer
 // Original jrobbins@ics.uci.edu
-// $Id: ClassDiagramRenderer.java,v 1.4 2002/08/15 16:57:08 kataka Exp $
+// $Id: ClassDiagramRenderer.java,v 1.5 2002/09/10 21:28:21 kataka Exp $
 
 package org.argouml.uml.diagram.static_structure.ui;
 
@@ -118,16 +118,7 @@ implements GraphNodeRenderer, GraphEdgeRenderer {
     }
     if (edge instanceof MGeneralization) {
       MGeneralization gen = (MGeneralization) edge;
-      FigGeneralization genFig = new FigGeneralization(gen);
-      MGeneralizableElement subType = gen.getChild();
-      MGeneralizableElement superType = gen.getParent();
-      FigNode subTypeFN = (FigNode) lay.presentationFor(subType);
-      FigNode superTypeFN = (FigNode) lay.presentationFor(superType);
-      genFig.setSourcePortFig(subTypeFN);
-      genFig.setSourceFigNode(subTypeFN);
-      genFig.setDestPortFig(superTypeFN);
-      genFig.setDestFigNode(superTypeFN);
-      genFig.getFig().setLayer(lay);
+      FigGeneralization genFig = new FigGeneralization(gen, lay);
       return genFig;
     }
 	/*    if (edge instanceof Realization) {

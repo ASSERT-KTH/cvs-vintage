@@ -25,10 +25,11 @@
 // File: CollabDiagramGraphModel.java
 // Classes: CollabDiagramGraphModel
 // Original Author: agauthie@ics.uci.edu
-// $Id: CollabDiagramGraphModel.java,v 1.6 2002/08/23 12:21:49 kataka Exp $
+// $Id: CollabDiagramGraphModel.java,v 1.7 2002/09/10 21:28:21 kataka Exp $
 
 package org.argouml.uml.diagram.collaboration;
 import org.argouml.model.uml.UmlFactory;
+import org.argouml.model.uml.foundation.core.CoreFactory;
 
 import java.util.*;
 import java.beans.*;
@@ -246,6 +247,13 @@ implements MutableGraphModel, MElementListener, VetoableChangeListener {
 	    MAssociationRole asr = UmlFactory.getFactory().getCollaborations().buildAssociationRole((MClassifierRole)fromPort, (MClassifierRole)toPort);
 	    addEdge(asr);
 	    return asr;
+      } else
+      if (edgeClass == MGeneralization.class) {
+      	if (fromPort instanceof MClassifierRole && toPort instanceof MClassifierRole) {
+      		MGeneralization gen = CoreFactory.getFactory().buildGeneralization((MClassifierRole)fromPort, (MClassifierRole)toPort);
+      		addEdge(gen);
+      		return gen;
+      	}
       }
       /*else if (edgeClass == MGeneralization.class &&
 		((fromPort instanceof MActor && toPort instanceof MActor) ||
@@ -260,6 +268,7 @@ implements MutableGraphModel, MElementListener, VetoableChangeListener {
 	    System.out.println("Incorrect edge");
 	    return null;
       }
+      return null;
     //}
     //catch (java.beans.PropertyVetoException ex) { }
     //System.out.println("should not enter here! connect3");

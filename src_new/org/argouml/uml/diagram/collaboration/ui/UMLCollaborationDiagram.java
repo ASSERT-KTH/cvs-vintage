@@ -24,7 +24,7 @@
 // File: UMLCollaborationDiagram.java
 // Classes: UMLCollaborationDiagram
 // Original Author: agauthie@ics.uci.edu
-// $Id: UMLCollaborationDiagram.java,v 1.12 2002/08/19 20:43:50 kataka Exp $
+// $Id: UMLCollaborationDiagram.java,v 1.13 2002/09/10 21:28:21 kataka Exp $
 
 package org.argouml.uml.diagram.collaboration.ui;
 
@@ -69,6 +69,11 @@ public class UMLCollaborationDiagram extends UMLDiagram {
   new CmdSetMode(ModeCreatePolyEdge.class,
 		 "edgeClass", MAssociationRole.class,
 		 "AssociationRole");
+
+  protected static Action _actionGeneralize =
+		new CmdSetMode(ModeCreatePolyEdge.class,
+					   "edgeClass", MGeneralization.class,
+					   "Generalization");
 
 
   ////////////////////////////////////////////////////////////////
@@ -141,6 +146,7 @@ public class UMLCollaborationDiagram extends UMLDiagram {
     _toolBar.addSeparator();
     _toolBar.add(_actionAssoc);
     _toolBar.add(ActionAddMessage.SINGLETON);
+    _toolBar.add(_actionGeneralize);
     // other actions
     _toolBar.addSeparator();
 
