@@ -51,7 +51,7 @@ import org.gjt.sp.util.Log;
  * jEdit's text component.
  *
  * @author Slava Pestov
- * @version $Id: JEditTextArea.java,v 1.165 2003/01/03 23:16:15 spestov Exp $
+ * @version $Id: JEditTextArea.java,v 1.166 2003/01/05 20:42:30 spestov Exp $
  */
 public class JEditTextArea extends JComponent
 {
@@ -271,12 +271,12 @@ public class JEditTextArea extends JComponent
 			physFirstLine = foldVisibilityManager.getFirstVisibleLine();
 			chunkCache.setFirstLine(0,physFirstLine,true);
 
-			painter.repaint();
-			gutter.repaint();
-
 			propertiesChanged();
 
 			recalculateLastPhysicalLine();
+
+			painter.repaint();
+			gutter.repaint();
 
 			updateScrollBars();
 			fireScrollEvent(true);
@@ -358,11 +358,11 @@ public class JEditTextArea extends JComponent
 
 		recalculateLastPhysicalLine();
 
-		if(this.firstLine != vertical.getValue())
-			updateScrollBars();
-
 		painter.repaint();
 		gutter.repaint();
+
+		if(this.firstLine != vertical.getValue())
+			updateScrollBars();
 
 		fireScrollEvent(true);
 	} //}}}
