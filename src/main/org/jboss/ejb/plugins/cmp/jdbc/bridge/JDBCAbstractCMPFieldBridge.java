@@ -46,7 +46,7 @@ import org.jboss.logging.Logger;
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @author <a href="mailto:loubyansky@ua.fm">Alex Loubyansky</a>
  * @author <a href="mailto:heiko.rupp@cellent.de">Heiko W.Rupp</a>
- * @version $Revision: 1.25 $
+ * @version $Revision: 1.26 $
  *
  * <p><b>Revisions:</b>
  *
@@ -398,11 +398,10 @@ public abstract class JDBCAbstractCMPFieldBridge implements JDBCCMPFieldBridge
       // value of this field,  will be filled in below
       Object[] argumentRef = new Object[1];
 
-      // load the cmp field value from the result set
-      parameterIndex = loadArgumentResults(rs, parameterIndex, argumentRef);
+      parameterIndex = loadArgumentResults(rs, parameterIndex, argumentRef, true);
 
       // set the value of this field into the pk
-      pkRef[0] = setPrimaryKeyValue(pkRef[0], argumentRef[0]);
+      pkRef[0] = argumentRef[0] == null ? null : setPrimaryKeyValue(pkRef[0], argumentRef[0]);
 
       // retrun the updated parameterIndex
       return parameterIndex;
@@ -411,30 +410,7 @@ public abstract class JDBCAbstractCMPFieldBridge implements JDBCCMPFieldBridge
    public int loadArgumentResults(ResultSet rs, int parameterIndex, Object[] argumentRef)
       throws IllegalArgumentException
    {
-      try
-      {
-         // value of this field,  will be filled in below
-         // set the value of this field into the pk
-         argumentRef[0] = null;
-
-         // update the value from the result set
-         Class[] javaTypes = jdbcType.getJavaTypes();
-         JDBCResultSetReader[] rsReaders = jdbcType.getResultSetReaders();
-         for(int i = 0; i < javaTypes.length; i++)
-         {
-            Object columnValue = rsReaders[i].get(rs, parameterIndex++, javaTypes[i], log);
-            argumentRef[0] = jdbcType.setColumnValue(i, argumentRef[0], columnValue);
-         }
-
-         // retrun the updated parameterIndex
-         return parameterIndex;
-      }
-      catch(SQLException e)
-      {
-         // Non recoverable internal exception
-         throw new EJBException("Internal error getting results " +
-            "for field member " + getFieldName(), e);
-      }
+      return loadArgumentResults(rs, parameterIndex, argumentRef, false);
    }
 
    public boolean isRelationTableField()
@@ -468,6 +444,41 @@ public abstract class JDBCAbstractCMPFieldBridge implements JDBCCMPFieldBridge
    public boolean isCMPField()
    {
       return true;
+   }
+
+   private int loadArgumentResults(ResultSet rs, int parameterIndex, Object[] argumentRef, boolean nullColumnNullifiesResult)
+      throws IllegalArgumentException
+   {
+      try
+      {
+         // value of this field,  will be filled in below
+         // set the value of this field into the pk
+         argumentRef[0] = null;
+
+         // update the value from the result set
+         Class[] javaTypes = jdbcType.getJavaTypes();
+         JDBCResultSetReader[] rsReaders = jdbcType.getResultSetReaders();
+         for(int i = 0; i < javaTypes.length; i++)
+         {
+            Object columnValue = rsReaders[i].get(rs, parameterIndex++, javaTypes[i], log);
+            if(nullColumnNullifiesResult && columnValue == null)
+            {
+               argumentRef[0] = null;
+               parameterIndex += javaTypes.length - i - 1;
+               break;
+            }
+            argumentRef[0] = jdbcType.setColumnValue(i, argumentRef[0], columnValue);
+         }
+
+         // retrun the updated parameterIndex
+         return parameterIndex;
+      }
+      catch(SQLException e)
+      {
+         // Non recoverable internal exception
+         throw new EJBException("Internal error getting results " +
+            "for field member " + getFieldName(), e);
+      }
    }
 
    private Logger createLogger(JDBCStoreManager manager, String fieldName)
