@@ -8,6 +8,6 @@
     displayname="Resource name"/>
     
   <property 
-    name="Url" class="java.lang.String" 
-    displayname="Database URL"/>
+    name="JndiName" class="java.lang.String" 
+    displayname="JNDI-name of DataSource"/>
 </bean>
