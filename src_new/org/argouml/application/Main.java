@@ -1,4 +1,4 @@
-// $Id: Main.java,v 1.61 2003/02/01 15:09:27 kataka Exp $
+// $Id: Main.java,v 1.62 2003/02/08 19:44:13 d00mst Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -45,6 +45,7 @@ import org.argouml.application.api.Argo;
 import org.argouml.application.api.Configuration;
 import org.argouml.application.security.ArgoAwtExceptionHandler;
 import org.argouml.application.security.ArgoSecurityManager;
+import org.argouml.cognitive.Designer;
 import org.argouml.i18n.Translator;
 import org.argouml.kernel.Project;
 import org.argouml.kernel.ProjectManager;
@@ -294,7 +295,10 @@ public class Main {
         // Touch the trash
         Trash.SINGLETON.getSize();
 
+        Designer.disableCritiquing();
+        Designer.clearCritiquing();
         ProjectManager.getManager().setCurrentProject(p);
+        Designer.enableCritiquing();
 
 	st.mark("perspectives");
 

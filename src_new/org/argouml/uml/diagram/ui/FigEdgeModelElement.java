@@ -27,7 +27,7 @@
 // Classes: FigEdgeModelElement
 // Original Author: abonner
 
-// $Id: FigEdgeModelElement.java,v 1.25 2003/01/28 21:40:30 alexb Exp $
+// $Id: FigEdgeModelElement.java,v 1.26 2003/02/08 19:44:13 d00mst Exp $
 
 
 package org.argouml.uml.diagram.ui;
@@ -63,6 +63,7 @@ import org.argouml.application.events.ArgoEventPump;
 import org.argouml.application.events.ArgoNotationEvent;
 import org.argouml.application.events.ArgoNotationEventListener;
 import org.argouml.cognitive.Designer;
+import org.argouml.cognitive.ItemUID;
 import org.argouml.cognitive.ToDoItem;
 import org.argouml.cognitive.ToDoList;
 import org.argouml.kernel.DelayedChangeNotify;
@@ -123,6 +124,7 @@ implements VetoableChangeListener, DelayedVChangeListener, MouseListener, KeyLis
 
   protected FigText _name;
   protected FigText _stereo = new FigText(10, 30, 90, 20);
+  private ItemUID _id;
 
   ////////////////////////////////////////////////////////////////
   // constructors
@@ -169,6 +171,10 @@ implements VetoableChangeListener, DelayedVChangeListener, MouseListener, KeyLis
 
   ////////////////////////////////////////////////////////////////
   // accessors
+
+  public void setItemUID(ItemUID id) { _id = id; }
+
+  public ItemUID getItemUID() { return _id; }
 
   public String getTipString(MouseEvent me) {
     ToDoItem item = hitClarifier(me.getX(), me.getY());
