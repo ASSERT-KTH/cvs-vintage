@@ -34,6 +34,7 @@ import java.rmi.Remote;
 import java.rmi.RemoteException;
 
 import javax.rmi.CORBA.PortableRemoteObjectDelegate;
+import org.objectweb.carol.util.configuration.CarolDefaultValues;
 
 
 /**
@@ -44,6 +45,11 @@ import javax.rmi.CORBA.PortableRemoteObjectDelegate;
  */
 public class JeremiePRODelegate implements PortableRemoteObjectDelegate {
 
+	/**
+	 * port number 
+	 */
+	private int port;
+	
     /**
      * UnicastRemoteObjectClass
      */
@@ -60,7 +66,7 @@ public class JeremiePRODelegate implements PortableRemoteObjectDelegate {
     public JeremiePRODelegate() throws Exception {
 	// class for name
 	unicastClass = Class.forName(className);
-	
+	this.port=new Integer(System.getProperty(CarolDefaultValues.PORT_NUMBER_PROPERTY, "0")).intValue();
     }
 
 
@@ -71,8 +77,8 @@ public class JeremiePRODelegate implements PortableRemoteObjectDelegate {
      */
     public void exportObject(Remote obj) throws RemoteException {
 	try {
-	    Method exportO = unicastClass.getMethod("exportObject",  new Class [] { Remote.class });
-	    exportO.invoke(unicastClass, (new Object[] { obj } ));
+	    Method exportO = unicastClass.getMethod("exportObject",  new Class [] { Remote.class, Integer.TYPE });
+	    exportO.invoke(unicastClass, (new Object[] { obj , new Integer(port)} ));
 	} catch (Exception e) {
 	    throw new RemoteException(e.toString());
 	}

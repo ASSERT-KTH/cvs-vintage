@@ -48,16 +48,14 @@ import sun.rmi.transport.ObjectTable;
  * Unicast Reference ensuring context propagation with custom sockets
  * 
  * @author  Guillaume Riviere (Guillaume.Riviere@inrialpes.fr)
- * @version 1.0, 15/07/2002    
- * TO BE CHANGE, MORE SIMPLE CODING !!!!
+ * @version 1.0, 15/07/2002 
  */
 public class JUnicastRemoteObject extends RemoteServer {
 
-    protected int port = 0;
+	
     protected RMIClientSocketFactory csf = null;
     protected RMIServerSocketFactory ssf = null;
     private static JUnicastThreadFactory defaultThreadFactory = null;
-    private static String PORT_NUMBER_PROPERTY = "jrmp.server.portnumber";
 
     // parameter for generic export method
     protected static final Class[] exportObjectParamType = new Class[]{int.class,  
@@ -67,27 +65,25 @@ public class JUnicastRemoteObject extends RemoteServer {
 										  RMIServerSocketFactory.class,  
 										  JServerRequestInterceptor[].class, 
 										  JClientRequestInterceptor[].class};
-
-    protected JUnicastRemoteObject( JServerRequestInterceptor [] sis, JClientRequestInterceptor [] cis) throws RemoteException {
+										  
+    protected JUnicastRemoteObject(JServerRequestInterceptor [] sis, JClientRequestInterceptor [] cis) throws RemoteException {
 	// search in the jvm properties if the port number properties exist
-        this((new Integer(System.getProperty(PORT_NUMBER_PROPERTY, "0"))).intValue(), sis, cis);
+        this(0, sis, cis);
     }
 
-    protected JUnicastRemoteObject(int port, JServerRequestInterceptor [] sis, JClientRequestInterceptor [] cis) throws RemoteException {
-        this.port = port;
-        JUnicastRemoteObject.exportObject((Remote) this, port, sis, cis);
+    protected JUnicastRemoteObject(int p, JServerRequestInterceptor [] sis, JClientRequestInterceptor [] cis) throws RemoteException {
+        JUnicastRemoteObject.exportObject((Remote) this, p, sis, cis);
     }
 
-    protected JUnicastRemoteObject(int port,
+    protected JUnicastRemoteObject(int p,
 				   RMIClientSocketFactory csf,
 				   RMIServerSocketFactory ssf, 
 				   JServerRequestInterceptor [] sis,
 				   JClientRequestInterceptor [] cis)
             throws RemoteException {
-        this.port = port;
         this.csf = csf;
         this.ssf = ssf;
-        JUnicastRemoteObject.exportObject((Remote) this, port, csf, ssf, sis, cis);
+        JUnicastRemoteObject.exportObject((Remote) this, p, csf, ssf, sis, cis);
     }
 
     private void readObject(java.io.ObjectInputStream in)
@@ -109,9 +105,9 @@ public class JUnicastRemoteObject extends RemoteServer {
 
     protected void exportObject( JServerRequestInterceptor [] sis, JClientRequestInterceptor [] cis) throws RemoteException {
         if (csf == null && ssf == null) {
-            JUnicastRemoteObject.exportObject((Remote) this, port, sis, cis);
+            JUnicastRemoteObject.exportObject((Remote) this, 0, sis, cis);
         } else {
-            JUnicastRemoteObject.exportObject((Remote) this, port, csf, ssf, sis, cis);
+            JUnicastRemoteObject.exportObject((Remote) this, 0, csf, ssf, sis, cis);
         }
     }
 
@@ -120,16 +116,16 @@ public class JUnicastRemoteObject extends RemoteServer {
         return (RemoteStub) JUnicastRemoteObject.exportObject(obj, 0, sis, cis);
     }
 
-    public static Remote exportObject(Remote obj, int port,  JServerRequestInterceptor [] sis, JClientRequestInterceptor [] cis)
+    public static Remote exportObject(Remote obj, int p,  JServerRequestInterceptor [] sis, JClientRequestInterceptor [] cis)
             throws RemoteException {
 
         return JUnicastRemoteObject.exportObject(obj, "org.objectweb.carol.rmi.jrmp.server.JUnicastServerRef",
                 exportObjectParamType,
-                new Object[]{ new Integer(port), sis, cis });
+                new Object[]{ new Integer(p), sis, cis });
     }
 
 
-    public static Remote exportObject(Remote obj, int port,
+    public static Remote exportObject(Remote obj, int p,
                                       RMIClientSocketFactory csf,
                                       RMIServerSocketFactory ssf, 
 				      JServerRequestInterceptor [] sis, 
@@ -138,7 +134,7 @@ public class JUnicastRemoteObject extends RemoteServer {
 
         return JUnicastRemoteObject.exportObject(obj, "org.objectweb.carol.rmi.jrmp.server.JUnicastServerRefSf",
                 exportObjectWithFactoryParamType,
-                new Object[]{ new Integer(port), csf, ssf, sis, cis});
+                new Object[]{ new Integer(p), csf, ssf, sis, cis});
     }
 
     public static boolean unexportObject(Remote obj, boolean force)

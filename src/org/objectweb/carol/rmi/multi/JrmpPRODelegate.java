@@ -38,11 +38,17 @@ import org.objectweb.carol.rmi.jrmp.interceptor.JClientRequestInterceptor;
 import org.objectweb.carol.rmi.jrmp.interceptor.JInterceptorStore;
 import org.objectweb.carol.rmi.jrmp.interceptor.JServerRequestInterceptor;
 import org.objectweb.carol.rmi.jrmp.server.JUnicastRemoteObject;
+import org.objectweb.carol.util.configuration.CarolDefaultValues;
 
 /**
  * Class <code>JrmpPRODelegate</code>  for the mapping between Rmi jrmp UnicastRemoteObject and PortableRemoteObject
  */
 public class JrmpPRODelegate implements PortableRemoteObjectDelegate {
+
+	/**
+	 * private port number 
+	 */
+	private int port;
 
     /**
      * private Interceptor for Context propagation
@@ -60,6 +66,7 @@ public class JrmpPRODelegate implements PortableRemoteObjectDelegate {
     public JrmpPRODelegate() {
 	sis=JInterceptorStore.getLocalServerInterceptors();
 	cis=JInterceptorStore.getLocalClientInterceptors();
+	this.port=new Integer(System.getProperty(CarolDefaultValues.PORT_NUMBER_PROPERTY, "0")).intValue();
     }
 
     /**
@@ -68,7 +75,7 @@ public class JrmpPRODelegate implements PortableRemoteObjectDelegate {
      * @exception RemoteException exporting remote object problem 
      */
     public void exportObject(Remote obj) throws RemoteException {
-	JUnicastRemoteObject.exportObject(obj, sis, cis);
+	JUnicastRemoteObject.exportObject(obj, port, sis, cis);
     }
 
     

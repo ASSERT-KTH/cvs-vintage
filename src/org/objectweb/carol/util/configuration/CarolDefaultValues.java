@@ -142,6 +142,11 @@ public class CarolDefaultValues {
      * interceptor prefix
      */
     public static String INTERCEPTOR_VALUES_PREFIX = "interceptors";
+    
+	/**
+	 * System port property
+	 */
+	public static String PORT_NUMBER_PROPERTY = "rmi.server.port";
 
     /**
      * Hashtable mapping between default en rmi name
