@@ -83,7 +83,7 @@ import org.tigris.scarab.util.ScarabConstants;
  *
  * @author <a href="mailto:dr@bitonic.com">Douglas B. Robertson</a>
  * @author <a href="mailto:mpoeschl@martmot.at">Martin Poeschl</a>
- * @version $Id: ManageUser.java,v 1.33 2004/12/11 20:22:30 dabbous Exp $
+ * @version $Id: ManageUser.java,v 1.34 2004/12/28 23:07:07 jorgeuriarte Exp $
  */
 public class ManageUser extends RequireLoginFirstAction
 {
@@ -374,7 +374,9 @@ public class ManageUser extends RequireLoginFirstAction
             user =  TurbineSecurity.getUser(username);
             user.setConfirmed(ScarabUser.DELETED);
             TurbineSecurity.saveUser(user);
-           
+            List lista = (List)data.getUser().getTemp("userList");
+            if (lista != null)
+                lista.set(lista.indexOf(user), user);
             
             Localizable msg = new L10NMessage(L10NKeySet.UserDeleted, username);
             scarabR.setConfirmMessage(msg);
