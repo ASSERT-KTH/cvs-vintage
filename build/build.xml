@@ -344,7 +344,8 @@
         </copy>
 
         <echo>Using ${scarab.database.type} JDBC driver from:
-    ${lib.dir}/${scarab.jdbc.driver.jar}</echo>
+    ${lib.dir}/${scarab.jdbc.driver.jar}
+        </echo>
         <copy todir="${build.project.webinf}/lib" filtering="no"
               preservelastmodified="yes">
             <fileset dir="${lib.dir}/">
