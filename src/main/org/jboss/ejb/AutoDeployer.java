@@ -44,7 +44,7 @@ import org.jboss.util.ServiceMBeanSupport;
  *   @see org.jboss.deployment.J2eeDeployer
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
  *   @author Toby Allsopp (toby.allsopp@peace.com)
- *   @version $Revision: 1.14 $
+ *   @version $Revision: 1.15 $
  */
 public class AutoDeployer
 	extends ServiceMBeanSupport
@@ -92,7 +92,7 @@ public class AutoDeployer
    
    public AutoDeployer(String urlList)
    {
-	   this ("Default", urlList);
+	   this ("J2EE:service=J2eeDeployer", urlList);
    }
 	
 
@@ -256,7 +256,16 @@ public class AutoDeployer
       for (int i=0; i<deployerNames.length && deployers.hasMoreTokens(); ++i)
       {
          String deployerName = deployers.nextToken().trim();
-         deployerNames[i] = new ObjectName(deployerName);
+	 try
+	 {
+	    deployerNames[i] = new ObjectName(deployerName);
+	 }
+	 catch (MalformedObjectNameException mfone)
+	 {
+	    log.warning("The string '" + deployerName + "'is not a valid " +
+			"object name - ignoring it.");
+	    continue;
+	 }
 
          // Ask the deployer for a filter to detect deployable files
          try
