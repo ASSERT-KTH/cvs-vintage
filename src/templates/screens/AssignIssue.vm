@@ -1,24 +1,18 @@
-     
-<div id="projectlist" class="app">
+<div class="app" id="viewissue">
 
 $page.setTitle("Assign users")
 
 #set ($module = $scarabR.CurrentModule)
 #set ($issueType = $scarabR.CurrentIssueType)
 #set ($userAttrs = $module.getUserAttributes($issueType)) 
-#set ($issueGroup = $intake.Issue.Default)
 
 #set ($issueIdList = $data.Parameters.getString("issueIdList"))
 #if ($issueIdList)
  #set ($issueList = $issueIdList)
- #if ($issueIdList.size() != 1)
-    #set ($multiple = "true")
- #end
 #else
- #set ($issueList = $issueGroup.Ids.Value)
+ #set ($issueList = $data.Parameters.getStrings("issue_ids"))
 #end
 
-<div class="app" id="assignissue">
 <h2>$page.Title</h2>
 
 #if ($userAttrs.isEmpty())
@@ -36,29 +30,20 @@ $page.setTitle("Assign users")
 #end
 
 <form action="$actionLink" method="post">
+<div id="projectlist" class="app">
 <input type="hidden" name="action" value="AssignIssue" />
-#if ($issueIdList)
-  #foreach ($id in $issueIdList)
-    <input type="hidden" name="$issueGroup.Ids.Key" value="$id" />
-  #end
-#elseif ($issueGroup.Ids.Value)
-  #foreach ($id in $issueGroup.Ids.Value)
-    <input type="hidden" name="$issueGroup.Ids.Key" value="$id" />
-  #end
+#foreach ($id in $issueList)
+  <input type="hidden" name="$issue_ids" value="$id" />
+  <input type="hidden" name="$id" value="$id" />
 #end
-#if (!$multiple.equals("true"))
-  #foreach ($id in $issueList)
-  <input type="hidden" name="id" value="$id" />
-  #end
-#end
-<input type="hidden" name="multiple" value="$multiple");
   
 <div class="functnbar">
 <input type="submit" value="Done" name="eventSubmit_doDone" />
 </div>
+</div>
 </form>
 
-<p><a href="$link.setPage("AssignIssue.vm")#add.setPathInfo("$issueGroup.Ids.Key" ,"1" )">Click here</a> to select users to associate with this issue</p>
+<p><a href="$link.setPage("AssignIssue.vm")#add.setPathInfo("issueList" ,"$issueList" )">Click here</a> to select users to associate with this issue</p>
 		
 
 ##ASSIGNEE LIST
@@ -68,15 +53,8 @@ $page.setTitle("Assign users")
 <form action="$actionLink" method="post">
 <input type="hidden" name="action" value="AssignIssue" />
 <input type="hidden" name="id" value="$issue.UniqueId" />
-#if ($issueIdList)
-#foreach ($id in $issueIdList)
-  <input type="hidden" name="$issueGroup.Ids.Key" value="$id" />
-#end
-#elseif ($issueGroup.Ids.Value)
-#foreach ($id in $issueGroup.Ids.Value)
-  <input type="hidden" name="$issueGroup.Ids.Key" value="$id" />
-#end
-<input type="hidden" name="multiple" value="$multiple");
+#foreach ($id in $issueList)
+  <input type="hidden" name="issue_ids" value="$id" />
 #end
 
 <h3>Personnel associated with the issue $issue.UniqueId</h3>
@@ -133,21 +111,10 @@ $intake.declareGroups()
 
 <form action="$actionLink" method="post">
 <input type="hidden" name="action" value="AssignIssue" />
-#if ($issueIdList)
- #foreach ($id in $issueIdList)
-   <input type="hidden" name="$issueGroup.Ids.Key" value="$id" />
- #end
-#elseif ($issueGroup.Ids.Value)
- #foreach ($id in $issueGroup.Ids.Value)
-   <input type="hidden" name="$issueGroup.Ids.Key" value="$id" />
- #end
+#foreach ($id in $issueList)
+ <input type="hidden" name="issue_ids" value="$id" />
+ <input type="hidden" name="id" value="$id" />
 #end
-#if (!$multiple.equals("true"))
-  #foreach ($id in $issueList)
-  <input type="hidden" name="id" value="$id" />
-  #end
-#end
-<input type="hidden" name="multiple" value="$multiple");
 <div class="functnbar2">
 <input type="submit" value="Done" name="eventSubmit_doDone" />
 </div>
@@ -159,20 +126,9 @@ $intake.declareGroups()
 ## USER SEARCH
 <form action="$actionLink" method="post">
 <input type="hidden" name="action" value="AssignIssue" />
-#if ($issueIdList)
-#foreach ($id in $issueIdList)
-  <input type="hidden" name="$issueGroup.Ids.Key" value="$id" />
-#end
-#elseif ($issueGroup.Ids.Value)
-#foreach ($id in $issueGroup.Ids.Value)
-  <input type="hidden" name="$issueGroup.Ids.Key" value="$id" />
-#end
-#if (!$multiple.equals("true"))
-  #foreach ($id in $issueList)
-  <input type="hidden" name="id" value="$id" />
-  #end
-#end
-<input type="hidden" name="multiple" value="$multiple");
+#foreach ($id in $issueList)
+ <input type="hidden" name="issue_ids" value="$id" />
+ <input type="hidden" name="id" value="$id" />
 #end
 
 #set ($searchString = $data.Parameters.getString("searchString"))
