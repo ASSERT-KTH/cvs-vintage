@@ -641,6 +641,7 @@ public class Issue
 
     /**
      * The user that created the issue.
+     * FIXME: Not sure if this is the best way to get created user.
      *
      * @return a <code>ScarabUser</code> value
      * @exception Exception if an error occurs
@@ -657,11 +658,13 @@ public class Issue
             crit.add(ActivityPeer.ISSUE_ID, getIssueId());
             crit.add(TransactionPeer.TYPE_ID, 
                      TransactionTypePeer.CREATE_ISSUE__PK);
+            /*
             // there could be multiple attributes modified during the creation
             // which will lead to duplicates
             crit.setDistinct();
+            */
             List transactions = TransactionPeer.doSelect(crit);
-            if (transactions.size() == 1)
+            if (transactions.size() > 0)
             {
                 Transaction t = (Transaction)transactions.get(0);
                 user = UserManager.getInstance(t.getCreatedBy());
