@@ -550,9 +550,9 @@
     <target name="generated-check" depends="prepare">
         <echo message="checking: ${src.java.dir.scarab}/report.scarab.om.generation"/>
         <uptodate property="gen.uptodate"
-            targetfile=
-               "${src.java.dir.scarab}/report.scarab.om.generation">
-            <srcfiles dir="${src.sql.dir}" includes="scarab-schema.xml"/>
+            targetfile="${src.java.dir.scarab}/report.scarab.om.generation">
+            <srcfiles dir="${src.sql.dir}"
+                      includes="${scarab.torque.schemas}"/>
         </uptodate>
     </target>
 
