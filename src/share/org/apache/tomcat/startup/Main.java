@@ -1,4 +1,4 @@
-/* $Id: Main.java,v 1.28 2001/03/04 22:38:14 melaquias Exp $
+/* $Id: Main.java,v 1.29 2001/03/05 17:38:44 larryi Exp $
  * ====================================================================
  *
  * The Apache Software License, Version 1.1
@@ -107,7 +107,7 @@ import org.apache.tomcat.util.compat.Jdk11Compat;
 	@author Costin Manolache
 	@author Ignacio J. Ortega
 	@author Mel Martinez mmartinez@g1440.com
-	@version $Revision: 1.28 $ $Date: 2001/03/04 22:38:14 $
+	@version $Revision: 1.29 $ $Date: 2001/03/05 17:38:44 $
  */
 public class Main{
 
@@ -428,19 +428,6 @@ public class Main{
                     urlV.addElement( getURL(  p0 , cpComp[i] ));
                 }
             }
-	    // add CLASSPATH
-	    String cpath=System.getProperty( "tomcat.cp");
-	    if( cpath!=null ) {
-		System.out.println("Extra CLASSPATH: " + cpath);
-		String pathSep=System.getProperty( "path.separator");
-		StringTokenizer st=new StringTokenizer( cpath, pathSep );
-		while( st.hasMoreTokens() ) {
-		    String path=st.nextToken();
-		    urlV.addElement( getURL( path, "" ));
-		}
-	    }
-
-
         }catch(Exception ex){
             ex.printStackTrace();
         }
