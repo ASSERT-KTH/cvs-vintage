@@ -1,4 +1,4 @@
-// $Id: ActionAddOperation.java,v 1.5 2004/08/14 15:26:11 mvw Exp $
+// $Id: ActionAddOperation.java,v 1.6 2004/10/28 14:27:34 mkl Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -102,6 +102,7 @@ public class ActionAddOperation extends UMLChangeAction {
     }
     /**
      * @return Returns the singleton.
+     * @deprecated singleton use will be removed in 0.18.0. Use the constructor instead
      */
     public static ActionAddOperation getSingleton() {
         return singleton;
