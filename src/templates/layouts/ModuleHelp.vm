@@ -4,25 +4,16 @@
         <p><img src="$staticLink.setPath("/images/module2.gif")" 
         width="113" height="51" alt="" border="0" /></p>
         
-        <p>A module is the unit of work space representing a
-        unique set of "issue types" (e.g., defects, patches, tasks).
-        Each new module also has the following unique
-        attributes:</p>
-        
+        <p>$l10n.SelectModule2</p> 
         <ul>
-        <li>a set of users</li>
-        <li>a set of roles</li>
-        <li>a set of permissions per role, per issue type</li>
+        <li>$l10n.SetOfUsers</li>
+        <li>$l10n.SetOfRoles</li>
+        <li>$l10n.SetOfPermissions</li>
         </ul>
         
-        <p>Scarab uses the generic term "module" instead of the more
-        common term, "project", in order to avoid defining the
-        application as simply a "per project-issue management tool".
-        Scarab can be configured to manage cross-project data such as
-        milestones, technical requirements, marketing data, or human
-        resources information.</p>
+        <p>$l10n.ScarabUsesGenericTerm</p>
         
-        <p>If you are a registered user, but do not have access
-        to any modules, contact the administrator.</p>
+        <p>$l10n.NoModuleAccess</p>
     </div>    
 </td>
+
