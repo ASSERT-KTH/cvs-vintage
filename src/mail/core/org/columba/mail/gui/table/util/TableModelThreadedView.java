@@ -22,14 +22,12 @@ import java.util.Comparator;
 import java.util.Date;
 import java.util.Enumeration;
 import java.util.HashMap;
+import java.util.List;
 import java.util.StringTokenizer;
-import java.util.Vector;
 
 import org.columba.core.logging.ColumbaLogger;
 import org.columba.mail.gui.table.HeaderTableModel;
 import org.columba.mail.message.HeaderInterface;
-import java.util.List;
-
 
 /**
  * Title:
@@ -56,7 +54,7 @@ public class TableModelThreadedView extends TableModelPlugin {
 		collator = Collator.getInstance();
 	}
 
-	public void toggleView( boolean b ) {
+	public void toggleView(boolean b) {
 		setEnabled(b);
 		/*
 		getHeaderTableModel().update();
@@ -84,29 +82,36 @@ public class TableModelThreadedView extends TableModelPlugin {
 			while (!done) {
 				done = true;
 
-				if ( start >= length ) return "";
-				
+				if (start >= length)
+					return "";
+
 				while (subject.charAt(start) <= ' ')
 					start++;
 
 				if (start < (length - 2)
-					&& (subject.charAt(start) == 'r' || subject.charAt(start) == 'R')
-					&& (subject.charAt(start + 1) == 'e' || subject.charAt(start + 1) == 'E')) {
+					&& (subject.charAt(start) == 'r'
+						|| subject.charAt(start) == 'R')
+					&& (subject.charAt(start + 1) == 'e'
+						|| subject.charAt(start + 1) == 'E')) {
 					if (subject.charAt(start + 2) == ':') {
 						// skip "Re:"
 						start += 3;
 						done = false;
 					} else if (
 						start < (length - 2)
-							&& (subject.charAt(start + 2) == '[' || subject.charAt(start + 2) == '(')) {
+							&& (subject.charAt(start + 2) == '['
+								|| subject.charAt(start + 2) == '(')) {
 						int i = start + 3;
 
 						// skip  character in "[|
-						while (i < length && subject.charAt(i) >= ' ' && subject.charAt(i) <= '9')
+						while (i < length
+							&& subject.charAt(i) >= ' '
+							&& subject.charAt(i) <= '9')
 							i++;
 
 						if (i < (length - 1)
-							&& (subject.charAt(i) == ']' || subject.charAt(i) == ')')
+							&& (subject.charAt(i) == ']'
+								|| subject.charAt(i) == ')')
 							&& subject.charAt(i + 1) == ':') {
 							// skip "]:"
 							start = i + 2;
@@ -197,34 +202,19 @@ public class TableModelThreadedView extends TableModelPlugin {
 		String references = (String) header.get("References");
 		String inReply = (String) header.get("In-Reply-To");
 
-		if (references == null) {
-			if (inReply != null) {
-				inReply = inReply.trim();
+		if (inReply != null) {
+			inReply = inReply.trim();
 
-				if (hashtable.containsKey(inReply)) {
-					//System.out.println("contains: "+ inReply );
-					MessageNode parent = (MessageNode) hashtable.get(inReply);
-					parent.add(node);
-					return true;
-				} else {
-					/*
-					// create empty container
-					Message message = new Message();
-					message.getHeader().set("Message-ID", inReply);
-					message.getHeader().set("Subject", node.getParsedSubject() + " (message not available)");
-					
-					MessageNode parent = new MessageNode( message, null );
-					hashtable.put( inReply, parent );
-					rootNode.add( parent );
-					
-					parent.add( node );
-					return true;
-					*/
-					return false;
-				}
-
+			if (hashtable.containsKey(inReply)) {
+				//System.out.println("contains: "+ inReply );
+				MessageNode parent = (MessageNode) hashtable.get(inReply);
+				parent.add(node);
+				return true;
+			} else {
+				return false;
 			}
-		} else {
+		} else if (references != null) {
+
 			references = references.trim();
 			String[] referenceList = parseReferences(references);
 			int count = referenceList.length;
@@ -241,6 +231,9 @@ public class TableModelThreadedView extends TableModelPlugin {
 					return false;
 				//return true;
 			}
+
+		} else {
+			return false;
 		}
 
 		return false;
@@ -261,8 +254,9 @@ public class TableModelThreadedView extends TableModelPlugin {
 			HeaderInterface header = node.getHeader();
 
 			String id = (String) header.get("Message-ID");
-			if ( id==null ) id = (String) header.get("Message-Id");
-			
+			if (id == null)
+				id = (String) header.get("Message-Id");
+
 			//System.out.println("id: "+id);
 			if (id == null)
 				id = new String("<bogus-id:" + (idCount++) + ">");
@@ -382,10 +376,12 @@ public class TableModelThreadedView extends TableModelPlugin {
 		}
 		*/
 
-		if (hashtable.containsKey(referenceList[referenceList.length - 1].trim())) {
+		if (hashtable
+			.containsKey(referenceList[referenceList.length - 1].trim())) {
 			//System.out.println("reference is in hashtable: "+index);
 			parent =
-				(MessageNode) hashtable.get(referenceList[referenceList.length - 1].trim());
+				(MessageNode) hashtable.get(
+					referenceList[referenceList.length - 1].trim());
 		}
 
 		return parent;
@@ -410,34 +406,31 @@ public class TableModelThreadedView extends TableModelPlugin {
 					new MessageHeaderComparator(
 						getHeaderTableModel().getColumnNumber("Date"),
 						true));
-					
+
 				// check if there are messages marked as recent
 				//  -> in case underline parent node
-				
+
 				boolean contains = containsRecentChildren(child);
 				child.setHasRecentChildren(contains);
 			}
 		}
 
 	}
-	
-	protected boolean containsRecentChildren( MessageNode parent )
-	{
+
+	protected boolean containsRecentChildren(MessageNode parent) {
 		for (int i = 0; i < parent.getChildCount(); i++) {
 			MessageNode child = (MessageNode) parent.getChildAt(i);
-			
-			if ( child.getHeader().getFlags().getRecent() )
-			{
+
+			if (child.getHeader().getFlags().getRecent()) {
 				// recent found
-				
+
 				ColumbaLogger.log.debug("found recent message");
 				return true;
-			}
-			else
-			containsRecentChildren(child);
-			
+			} else
+				containsRecentChildren(child);
+
 		}
-		
+
 		return false;
 	}
 
@@ -469,9 +462,9 @@ public class TableModelThreadedView extends TableModelPlugin {
 					// FIXME
 					/*
 					MessageNode node = getHeaderTableModel().getSelectedMessageNode();
-
+					
 					MessageNode parent = addItem(node);
-
+					
 					getHeaderTableModel().insertNodeInto(node, parent, parent.getChildCount());
 					*/
 					return true;
@@ -487,8 +480,10 @@ public class TableModelThreadedView extends TableModelPlugin {
 		HeaderInterface childHeader = child.getHeader();
 
 		String id = (String) childHeader.get("Message-ID");
-		if ( id==null ) id = (String) childHeader.get("Message-Id");;
-		
+		if (id == null)
+			id = (String) childHeader.get("Message-Id");
+		;
+
 		if (id == null)
 			id = new String("<bogus-id:" + (idCount++) + ">");
 
@@ -649,7 +644,8 @@ public class TableModelThreadedView extends TableModelPlugin {
 
 				MessageHeaderComparator compObj = (MessageHeaderComparator) obj;
 
-				return (compObj.column == column) && (compObj.ascending == ascending);
+				return (compObj.column == column)
+					&& (compObj.ascending == ascending);
 
 			}
 
