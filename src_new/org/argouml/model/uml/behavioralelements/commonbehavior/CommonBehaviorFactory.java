@@ -1,4 +1,4 @@
-// $Id: CommonBehaviorFactory.java,v 1.28 2004/07/17 13:10:26 kataka Exp $
+// $Id: CommonBehaviorFactory.java,v 1.29 2004/07/25 20:53:41 kataka Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -349,6 +349,20 @@ public class CommonBehaviorFactory extends AbstractUmlModelFactory {
         ModelFacade.setOperation(action, oper);
         return action;
     }
+    
+    /**
+     * Builds a new uninterpreted action. If the argument is an action state,
+     * the new action is set as the entry action.
+     * @param actionState
+     * @return
+     */
+    public Object buildUninterpretedAction(Object actionState) {
+        Object action = createUninterpretedAction();
+        if (ModelFacade.isAActionState(actionState)) {
+            ModelFacade.setEntry(actionState, action);
+        }
+        return action;
+    }
 
     /** 
      * Builds a Link between two Instances
@@ -386,7 +400,7 @@ public class CommonBehaviorFactory extends AbstractUmlModelFactory {
                     + "interaction does not have "
                     + "a context");
         return action;
-    }
+    }       
 
     /**
      * Builds a signal belonging to some behavioralfeature

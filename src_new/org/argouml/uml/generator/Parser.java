@@ -1,4 +1,4 @@
-// $Id: Parser.java,v 1.20 2004/07/23 17:53:52 linus Exp $
+// $Id: Parser.java,v 1.21 2004/07/25 20:53:41 kataka Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -35,4 +35,13 @@ public abstract class Parser {
 	throws ParseException;
 
     public abstract Object parseTransition(Object trans, String s);
+    
+    /**
+     * Parse a given string s with the information given from the action state actionState and update
+     * this actionState.
+     * @param actionState
+     * @param s
+     * @return
+     */
+    public abstract Object parseActionState(String s, Object actionState );
 } /* end class Parser */
