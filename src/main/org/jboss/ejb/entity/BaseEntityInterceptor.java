@@ -30,7 +30,7 @@ import org.jboss.metadata.ConfigurationMetaData;
  * to the entity implementation class.
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.2 $
+ * @version $Revision: 1.3 $
  */
 public final class BaseEntityInterceptor extends AbstractEntityTypeInterceptor
 {
@@ -255,7 +255,7 @@ public final class BaseEntityInterceptor extends AbstractEntityTypeInterceptor
       ConfigurationMetaData configuration = 
             container.getBeanMetaData().getContainerConfiguration();
       if(!configuration.getSyncOnCommitOnly()) {
-         container.synchronizeEntitiesWithinTransaction(
+         container.getEntityInvocationRegistry().synchronizeEntities(
                invocation.getTransaction());
       }
    }
