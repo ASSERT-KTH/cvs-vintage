@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE server>
-<!-- $Id: jboss-service.xml,v 1.20 2002/01/03 04:00:56 user57 Exp $ -->
+<!-- $Id: jboss-service.xml,v 1.21 2002/01/04 00:11:35 user57 Exp $ -->
 
 <!-- ===================================================================== -->
 <!--                                                                       -->
@@ -199,15 +199,5 @@
   <mbean code="org.jboss.invocation.local.LocalInvoker" 
          name="jboss:service=invoker,type=local">
   </mbean>
-  
-  <!-- ==================================================================== -->
-  <!-- ADD YOUR CUSTOM MBEANS HERE IF YOU WANT THEM IN THE STATIC JBOSS     -->
-  <!-- USE A SAR/BARE XML IF YOU WANT DYNAMICITY OF REDEPLOY FOR MBEANS     -->
-  <!-- ==================================================================== -->
 
-  <!-- 
-     | Might want to use a standard user-service.xml for this and leave
-     | this file for JBoss stuff only.
-   -->
-   
 </server>
