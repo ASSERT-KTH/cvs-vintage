@@ -21,7 +21,7 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $Id: ActionLoadProject.java,v 1.1 2003/04/04 21:01:01 kataka Exp $
+// $Id: ActionLoadProject.java,v 1.2 2003/04/05 21:34:49 kataka Exp $
 package org.argouml.uml.ui;
 
 import java.awt.event.ActionEvent;
@@ -106,7 +106,7 @@ public class ActionLoadProject extends UMLChangeAction {
         // try catch block added
         Project p = null;
         try {
-            p = Project.loadProject(url);
+            p = ProjectManager.getManager().loadProject(url);
 
             ProjectBrowser.TheInstance.showStatus(
                 MessageFormat.format(

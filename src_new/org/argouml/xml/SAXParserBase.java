@@ -1,4 +1,4 @@
-// $Id: SAXParserBase.java,v 1.11 2002/12/27 16:59:59 linus Exp $
+// $Id: SAXParserBase.java,v 1.12 2003/04/05 21:34:49 kataka Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -31,6 +31,8 @@ import org.xml.sax.helpers.*;
 import java.util.Stack;
 import java.net.URL;
 import java.io.*;
+
+import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParserFactory;
 import javax.xml.parsers.SAXParser;
 
@@ -82,11 +84,11 @@ public abstract class SAXParserBase extends HandlerBase {
   ////////////////////////////////////////////////////////////////
   // main parsing method
 
-  public void parse(URL url) throws Exception {
+  public void parse(URL url) throws SAXException, IOException, ParserConfigurationException {
       parse(url.openStream());
   }
 
-  public void parse(InputStream is) throws Exception {
+  public void parse(InputStream is) throws SAXException, IOException, ParserConfigurationException {
 
     long start, end;
 
@@ -108,22 +110,18 @@ public abstract class SAXParserBase extends HandlerBase {
 	Argo.log.info("Elapsed time: " + (end - start) + " ms");
       }
     }
-    catch(SAXException saxEx) {
-        //
-        //  a SAX exception could have been generated
-        //    because of another exception.
-        //    Get the initial exception to display the
-        //    location of the true error
-        Exception ex = saxEx.getException();
-        if(ex == null) {
-            saxEx.printStackTrace();
-        }
-        else {
-            ex.printStackTrace();
-        }
+    catch (ParserConfigurationException e) {
+        cat.error("Parser not configured correctly.");
+        cat.error(e);
+        throw e;
     }
-    catch (Exception se) {
-      se.printStackTrace();
+    catch(SAXException saxEx) {
+        cat.error(saxEx);
+        throw saxEx;
+    }
+    catch (IOException e) {
+        cat.error(e);
+        throw e;
     }
   }
 
