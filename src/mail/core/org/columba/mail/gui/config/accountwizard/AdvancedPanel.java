@@ -60,12 +60,12 @@ public class AdvancedPanel extends DefaultWizardPanel {
 
 		WizardTextField middlePanel = new WizardTextField();
 
-		JLabel nameLabel = new JLabel(MailResourceLoader.getString("dialog", "accountwizard", "account_name")); //$NON-NLS-1$
+		JLabel nameLabel = new JLabel(MailResourceLoader.getString("dialog", "account", "accountname")); //$NON-NLS-1$
 		nameLabel.setDisplayedMnemonic(
 			MailResourceLoader.getMnemonic(
 				"dialog",
-				"accountwizard",
-				"account_name"));
+				"account",
+				"accountname"));
 		middlePanel.addLabel(nameLabel);
 		nameTextField = new JTextField("");
 		nameTextField.requestFocus();

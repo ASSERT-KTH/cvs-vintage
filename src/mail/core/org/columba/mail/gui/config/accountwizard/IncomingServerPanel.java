@@ -70,8 +70,8 @@ public class IncomingServerPanel
 				panel.add(Box.createRigidArea(new java.awt.Dimension(0, 40)));
 
 				WizardTextField middlePanel = new WizardTextField();
-				JLabel nameLabel = new JLabel(MailResourceLoader.getString("dialog","accountwizard","login")); //$NON-NLS-1$
-				nameLabel.setDisplayedMnemonic(MailResourceLoader.getMnemonic("dialog","accountwizard","login")); //$NON-NLS-1$
+				JLabel nameLabel = new JLabel(MailResourceLoader.getString("dialog","account","login")); //$NON-NLS-1$
+				nameLabel.setDisplayedMnemonic(MailResourceLoader.getMnemonic("dialog","account","login")); //$NON-NLS-1$
 				middlePanel.addLabel(nameLabel);
 				loginTextField = new JTextField("");
 				
@@ -91,13 +91,13 @@ public class IncomingServerPanel
 				JLabel addressExampleLabel = new JLabel(MailResourceLoader.getString("dialog","accountwizard","example__mail.microsoft.com")); //$NON-NLS-1$
 				middlePanel.addExample(addressExampleLabel);
 
-				JLabel typeLabel = new JLabel(MailResourceLoader.getString("dialog","accountwizard","type")); //$NON-NLS-1$
-				typeLabel.setDisplayedMnemonic( MailResourceLoader.getMnemonic("dialog","accountwizard","type"));
+				JLabel typeLabel = new JLabel(MailResourceLoader.getString("dialog","account","type")); //$NON-NLS-1$
+				typeLabel.setDisplayedMnemonic( MailResourceLoader.getMnemonic("dialog","account","type"));
 				middlePanel.addLabel(typeLabel);
 				typeComboBox = new JComboBox();
 				typeLabel.setLabelFor(typeComboBox);
-				typeComboBox.addItem(MailResourceLoader.getString("dialog","accountwizard","pop3")); //$NON-NLS-1$
-				typeComboBox.addItem(MailResourceLoader.getString("dialog","accountwizard","imap4")); //$NON-NLS-1$
+				typeComboBox.addItem("POP3");
+				typeComboBox.addItem("IMAP4");
 				typeComboBox.addActionListener(new ActionListener()
 				{
 					public void actionPerformed(ActionEvent e)

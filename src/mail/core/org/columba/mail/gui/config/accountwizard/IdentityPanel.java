@@ -60,12 +60,12 @@ public class IdentityPanel extends DefaultWizardPanel {
 		panel.add(Box.createRigidArea(new java.awt.Dimension(0, 40)));
 
 		WizardTextField middlePanel = new WizardTextField();
-		JLabel nameLabel = new JLabel(MailResourceLoader.getString("dialog", "accountwizard", "your_name")); //$NON-NLS-1$
+		JLabel nameLabel = new JLabel(MailResourceLoader.getString("dialog", "account", "yourname")); //$NON-NLS-1$
 		nameLabel.setDisplayedMnemonic(
 			MailResourceLoader.getMnemonic(
 				"dialog",
-				"accountwizard",
-				"your_name"));
+				"account",
+				"yourname"));
 		middlePanel.addLabel(nameLabel);
 		nameTextField = new JTextField("");
 		
@@ -75,12 +75,12 @@ public class IdentityPanel extends DefaultWizardPanel {
 		JLabel exampleLabel = new JLabel(MailResourceLoader.getString("dialog", "accountwizard", "example__bill_gates")); //$NON-NLS-1$
 		middlePanel.addExample(exampleLabel);
 
-		JLabel addressLabel = new JLabel(MailResourceLoader.getString("dialog", "accountwizard", "email_address")); //$NON-NLS-1$
+		JLabel addressLabel = new JLabel(MailResourceLoader.getString("dialog", "account", "address")); //$NON-NLS-1$
 		addressLabel.setDisplayedMnemonic(
 			MailResourceLoader.getMnemonic(
 				"dialog",
-				"accountwizard",
-				"email_address"));
+				"account",
+				"address"));
 		middlePanel.addLabel(addressLabel);
 		addressTextField = new JTextField("");
 		//register( addressTextField );
