@@ -26,7 +26,7 @@
 <input type="submit" value="$l10n.RefineQuery" name="eventSubmit_doRefinequery" />&#160;
 #end
 #exportFormats('eventSubmit_doSearch')
-#if ($issueListSize <= 10 && !$mitlist)
+#if ($issueListSize <= 10 && (!$mitlist || $mitlist.isSingleModuleIssueType()))
     #processQueryResults('eventSubmit_doSearch')
 #end
 </div>
