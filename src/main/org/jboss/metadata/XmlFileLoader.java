@@ -40,7 +40,7 @@ import org.jboss.logging.Logger;
  * @author <a href="mailto:Darius.D@jbees.com">Darius Davidavicius</a>
  * @author <a href="mailto:scott.stark@jboss.org">Scott Stark</a>
  *
- * @version $Revision: 1.31 $
+ * @version $Revision: 1.32 $
  *
  * Revisions:
  *
@@ -307,6 +307,16 @@ public class XmlFileLoader
       catch( Exception e )
       {
          throw new DeploymentException(e.getMessage(), e);
+      }
+      finally {
+         // get around "too many open files" errors
+         try {
+            is.close();
+         }
+         catch (Exception e)
+         {
+            // ignore
+         }
       }
    }
 
