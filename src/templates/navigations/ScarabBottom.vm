@@ -1,7 +1,7 @@
 <div id="footer">
 <table border="0" cellspacing="0" cellpadding="4">
 <tr><td>
-&copy; 2001-2002 <a href="http://www.collab.net/special/clickpbc0502.html?scarab">$l10n.CollabNet</a> | 
+&copy; 2001-2003 <a href="http://www.collab.net/special/clickpbc0502.html?scarab">$l10n.CollabNet</a> | 
 <a href="http://scarab.tigris.org/">$l10n.Scarab</a> $scarabG.BuildVersion
 
 #if ($data.Parameters.getString($scarabG.Constant.DEBUG))
