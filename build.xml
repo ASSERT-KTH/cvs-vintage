@@ -1,0 +1,91 @@
+<?xml version="1.0"?>
+
+
+<!-- created by waffel (alias Thomas Wabner -->
+<!-- version 0.1 -->
+<!-- date 10.05.2002 -->
+
+<project name="columba" default="build" basedir=".">
+
+	<property name="src" value="."/>
+	<property name="build" value="build"/>
+	<property name="dist" value="dist"/>
+	<property name="dest" value="../columba-dest"/>
+	<property name="classpath" value="${src}/ext/csWillySpell.jar"/>
+
+	<property name="user.name" value="The columba Team"/>
+	<!-- here we should use the cvs-verion info for automatic replace the version -->
+	<property name="version" value="0.9.8-post"/>
+	<!-- i'am not sure that we need this -->
+	<property name="TODAY" value="heute"/>
+
+	<!-- creating the destination directory -->
+	<target name="init">
+		<mkdir dir="${dest}"/>
+	</target>
+
+	<!-- copy required files for later tasks into the dest directory -->
+	<target name="copy-required">
+		<copy todir="${dest}">
+			<fileset dir="${src}"> 
+				<include name="**/*.xml"/>
+				<include name="**/*.dtd"/>
+				<include name="**/*.gif"/>
+				<include name="**/*.gif"/>
+				<include name="**/*.jpeg"/>
+				<include name="**/*.png"/>
+				<include name="**/*.wav"/>
+				<include name="**/*.properties"/>
+				<include name="README"/>
+				<include name="LICENSE"/>
+				<include name="CHANGES"/>
+				<exclude name="build.xml"/>
+				<exclude name="ant.dtd"/>
+			</fileset>
+		</copy>
+	</target>
+
+	<!-- compile the classes -->
+	<target name="compile" depends="init,copy-required">
+		<javac srcdir="${src}" destdir="${dest}"	classpath="${classpath}" encoding="ISO-8859-1"/>
+	</target>
+
+	<!-- pack the files into one jar file with automatic manifest file -->
+	<target name="jar" depends="compile">
+		<jar basedir="${dest}" jarfile="${dest}/columba.jar">
+			<include name="**"/>
+			<exclude name="columba.jar"/>
+			<exclude name="README"/>
+			<exclude name="CHANGES"/>
+			<exclude name="LICENSE"/>
+			<manifest>
+				<attribute name="Main-Class" value="org.columba.main.Main"/>
+				<attribute name="Class-Path" value="ext/parser.jar ext/jaxp.jar"/>
+				<attribute name="Sealed" value="true"/>
+			</manifest>
+		</jar>
+	</target>
+
+	<!-- create an release zip file, contains the jar file and README, LICENSE, CHANGES -->
+	<!-- this is the thing that do all for us -->
+	<target name="zip" depends="jar">
+		<zip zipfile="${dest}/columba-${version}.zip" update="true">
+			<fileset dir="${dest}">
+				<include name="README"/>
+				<include name="LICENSE"/>
+				<include name="CHANGES"/>
+				<include name="columba.jar"/>
+			</fileset>
+		</zip>
+	</target>
+
+	<!-- only for build the class-files -->
+	<target name="build" depends="compile"/>
+
+	<!-- to clean up the dest-directory -->
+	<target name="clean">
+		<delete dir="${dest}"/>
+	</target>
+		
+
+</project>
