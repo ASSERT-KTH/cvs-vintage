@@ -1449,8 +1449,7 @@ e.printStackTrace();
             .get("Issue", IntakeTool.DEFAULT_KEY, false);
         if (issueGroup != null) 
         {            
-            Integer[] issueIds =  (Integer[])
-                issueGroup.get("Ids").getValue();
+            Long[] issueIds =  (Long []) issueGroup.get("Ids").getValue();
             if (issueIds != null)
             {
                 issues = getIssues(Arrays.asList(issueIds));
