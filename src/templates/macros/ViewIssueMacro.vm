@@ -3,7 +3,7 @@
 <h2>Issue ID: $currentIssue.UniqueId</h2>
 
 <div class="functnbar">
-<input type="submit" value="Done" name="#" />&nbsp;<input type="submit" value="Move" name="name="eventSubmit_doGotoothertemplate"  />&nbsp;<input type="submit" value="Copy" name="name="eventSubmit_doGotoothertemplate"  />&nbsp;issue
+<input type="submit" value="Done" name="#" />&nbsp;<input type="submit" value="Move" name="eventSubmit_doGotoothertemplate"  />&nbsp;<input type="submit" value="Copy" name="eventSubmit_doGotoothertemplate"  />&nbsp;issue
    <input type="hidden" name="$scarabG.Constant.OTHER_TEMPLATE" value="MoveIssue.vm" />
 </div>
 
