@@ -32,13 +32,13 @@ import org.jboss.security.SecurityAssociation;
  *   @see <related>
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
  *   @author <a href="mailto:docodan@nycap.rr.com">Daniel O'Connor</a>.
- *   @version $Revision: 1.28 $
+ *   @version $Revision: 1.29 $
  */
 public class Main
 {
    // Constants -----------------------------------------------------
 
-   String versionIdentifier = "PRE-2.1";
+   String versionIdentifier = "2.1-BETA-Mar-24-2001";
    // Attributes ----------------------------------------------------
 
    // Static --------------------------------------------------------
@@ -189,17 +189,26 @@ public class Main
          server.invoke(new ObjectName(":service=ServiceControl"), "init", new Object[0] , new String[0]);
          server.invoke(new ObjectName(":service=ServiceControl"), "start", new Object[0] , new String[0]);
 
-      } catch (RuntimeOperationsException e)
+      }
+      catch (RuntimeOperationsException e)
       {
          System.out.println("Runtime error");
          e.getTargetException().printStackTrace();
-      } catch (MBeanException e)
+      }
+      catch (RuntimeErrorException e)
+      {
+         System.out.println("Runtime error");
+         e.getTargetError().printStackTrace();
+      }
+      catch (MBeanException e)
       {
          e.getTargetException().printStackTrace();
-      } catch (RuntimeMBeanException e)
+      }
+      catch (RuntimeMBeanException e)
       {
          e.getTargetException().printStackTrace();
-      } catch (Exception e)
+      }
+      catch (Exception e)
       {
          e.printStackTrace();
       }
