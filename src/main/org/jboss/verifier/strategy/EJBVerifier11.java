@@ -19,7 +19,7 @@ package org.jboss.verifier.strategy;
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  *
  * This package and its source code is available at www.jboss.org
- * $Id: EJBVerifier11.java,v 1.2 2000/06/01 22:29:43 juha Exp $
+ * $Id: EJBVerifier11.java,v 1.3 2000/06/03 15:24:15 juha Exp $
  */
 
 
@@ -51,7 +51,7 @@ import com.dreambean.ejx.ejb.Entity;
  * @see     << OTHER RELATED CLASSES >>
  *
  * @author 	Juha Lindfors (jplindfo@helsinki.fi
- * @version $Revision: 1.2 $
+ * @version $Revision: 1.3 $
  * @since  	JDK 1.3
  */
 public class EJBVerifier11 implements VerificationStrategy {
@@ -168,6 +168,10 @@ public class EJBVerifier11 implements VerificationStrategy {
         }
     }        
         
+    public void checkMessageDriven(Iterator beans) {
+            
+            // EMPTY IMPLEMENTATION, EJB 2.0 ONLY
+    }
         
         
 /*

@@ -18,22 +18,31 @@ package org.jboss.verifier.strategy;
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  *
- * This package and its source code is available at www.gjt.org
- * $Id: EJBVerifier20.java,v 1.1 2000/05/29 18:26:30 juha Exp $
- *
- * You can reach the author by sending email to jpl@gjt.org or
- * directly to jplindfo@helsinki.fi.
+ * This package and its source code is available at www.jboss.org
+ * $Id: EJBVerifier20.java,v 1.2 2000/06/03 15:24:15 juha Exp $
  */
 
 
 // standard imports
+import java.util.Iterator;
+import java.net.URL;
+import java.net.URLClassLoader;
+import java.lang.reflect.Method;
 
 
 // non-standard class dependencies
+import org.gjt.lindfors.pattern.StrategyContext;
+
+import org.jboss.verifier.event.VerificationEvent;
+import org.jboss.verifier.event.VerificationEventFactory;
+
+import com.dreambean.ejx.ejb.Session;
+import com.dreambean.ejx.ejb.Entity;
+
 
 
 /**
- * Not implemented. Uses the EJB1.1 implementation.
+ * EJB 2.0 bean verifier.
  *
  * For more detailed documentation, refer to the
  * <a href="" << INSERT DOC LINK HERE >> </a>
@@ -41,17 +50,71 @@ package org.jboss.verifier.strategy;
  * @see     << OTHER RELATED CLASSES >>
  *
  * @author 	Juha Lindfors
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  * @since  	JDK 1.3
  */
-public class EJBVerifier20 extends EJBVerifier11 {
+public class EJBVerifier20 implements VerificationStrategy {
 
     /*
-     *
+     * [TODO]   The EJB 1.1 verifier and EJB 2.0 verifier are going to share
+     *          some common code. These ought to be moved to an abstract
+     *          verifier super class.
+     */
+     
+    private VerificationContext context      = null; 
+
+
+    /*
+     * Constructor
      */
     public EJBVerifier20(VerificationContext context) {
-        super(context);
+        this.context = context;
     }
+
+    
+    /*
+     ***********************************************************************
+     *
+     *    IMPLEMENTS VERIFICATION STRATEGY INTERFACE
+     *
+     ***********************************************************************
+     */
+    
+    public StrategyContext getContext() {
+        return context;
+    }
+
+    public void checkSessions(Iterator beans) {
+
+        while (beans.hasNext()) { 
+            try {
+                //checkSession((Session)beans.next());
+            }
+            catch (ClassCastException e) {
+                System.err.println(e);
+                // THROW INTERNAL ERROR   
+            }
+        }
+    }            
+
+    public void checkEntities(Iterator beans) {
+        
+        while (beans.hasNext()) {
+            try {
+                //checkEntity((Entity)beans.next());
+            }
+            catch (ClassCastException e) {
+                System.err.println(e);
+                // THROW INTERNAL ERROR
+            }
+        }
+    }        
+        
+    public void checkMessageDriven(Iterator beans) {
+            
+            // NOT IMPLEMENTED YET
+    }
+        
     
 }
 
