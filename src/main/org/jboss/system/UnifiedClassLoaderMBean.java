@@ -12,11 +12,13 @@ import java.net.URL;
  * The management interface for the {@link URLClassLoader} mbean.
  * 
  * @author <a href="marc.fleury@jboss.org">Marc Fleury</a>
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  */
 public interface UnifiedClassLoaderMBean 
 {
-   public URL getURL();
-   // Empty, just a trick for the MBean base man jmx is dumb sometimes
+   /**
+    * Returns the single URL for this UCL.
+    */
+   URL getURL();
 }
 
