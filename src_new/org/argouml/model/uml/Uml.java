@@ -1,4 +1,4 @@
-// $Id: Uml.java,v 1.4 2003/09/17 21:15:37 thierrylach Exp $
+// $Id: Uml.java,v 1.5 2004/06/02 20:14:45 mvw Exp $
 // Copyright (c) 2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -309,7 +309,8 @@ public final class Uml {
         CALL_EVENT              = new UmlModelEntity("CallEvent",
                                                      false, true);
         CALL_STATE              = new UmlModelEntity("CallState");
-        CHANGE_EVENT            = new UmlModelEntity("ChangeEvent");
+        CHANGE_EVENT            = new UmlModelEntity("ChangeEvent",
+                                                     false, true);
         CLASS                   = new UmlModelEntity("Class");
         CLASSIFIER              = new UmlModelEntity("Classifier");
         CLASSIFIER_IN_STATE     = new UmlModelEntity("ClassifierInState");
@@ -337,7 +338,8 @@ public final class Uml {
                                                      false, true);
         ELEMENT_RESIDENCE       = new UmlModelEntity("ElementResidence",
                                                      false, true);
-        EVENT                   = new UmlModelEntity("Event");
+        EVENT                   = new UmlModelEntity("Event",
+                                                     false, true);
         EXCEPTION               = new UmlModelEntity("Exception");
         EXPRESSION              = new UmlModelEntity("Expression",
                                                      false, true);
@@ -399,7 +401,8 @@ public final class Uml {
                                                      false, true);
         SIGNAL                  = new UmlModelEntity("Signal",
                                                      false, true);
-        SIGNAL_EVENT            = new UmlModelEntity("SignalEvent");
+        SIGNAL_EVENT            = new UmlModelEntity("SignalEvent",
+                                                     false, true);
         SIMPLE_STATE            = new UmlModelEntity("SimpleState");
         STATE                   = new UmlModelEntity("State");
         STATE_MACHINE           = new UmlModelEntity("StateMachine",
@@ -421,7 +424,8 @@ public final class Uml {
                                                      false, true);
         TEMPLATE_PARAMETER      = new UmlModelEntity("TemplateParameter");
         TERMINATE_ACTION        = new UmlModelEntity("TerminateAction");
-        TIME_EVENT              = new UmlModelEntity("TimeEvent");
+        TIME_EVENT              = new UmlModelEntity("TimeEvent",
+                                                     false, true);
         TIME_EXPRESSION         = new UmlModelEntity("TimeExpression");
         TRANSITION              = new UmlModelEntity("Transition");
         TYPE_EXPRESSION         = new UmlModelEntity("TypeExpression");
