@@ -184,6 +184,9 @@ public class Ajp13
 
     public void recycle() 
     {
+      // This is a touch cargo-cultish, but I think wise.
+      blen = 0; 
+      pos = 0;
     }
     
     /**
@@ -257,7 +260,7 @@ public class Ajp13
         req.serverName().setString( msg.getString());
         req.setServerPort(          msg.getInt());
 
-	isSSL = (msg.getByte() != 0);
+	isSSL = msg.getBool();
 
 	// Decode headers
 	MimeHeaders headers = req.getMimeHeaders();
@@ -358,6 +361,7 @@ public class Ajp13
 	    }
 	    
 	    blen = msg.peekInt();
+	    pos = 0;
 	    msg.getBytes(bodyBuff);
     	}
     
@@ -374,7 +378,9 @@ public class Ajp13
     public int doRead() throws IOException 
     {
         if(pos >= blen) {
-            refillReadBuffer();
+            if( ! refillReadBuffer()) {
+		return -1;
+	    }
         }
         return bodyBuff[pos++];
     }
@@ -386,30 +392,61 @@ public class Ajp13
      * @param off The offset in the buffer at which to start filling.
      * @param len The number of bytes to copy into the buffer.
      *
-     * @return The number of bytes actually copied into the buffer.
+     * @return The number of bytes actually copied into the buffer, or -1
+     * if the end of the stream has been reached.
      *
      * @see Ajp13Request#doRead
      */
     public int doRead(byte[] b, int off, int len) throws IOException 
     {
-        // XXX Rewrite to use System.arrayCopy (please!)
-        for(int i = off ; i < (len + off) ; i++) {
-            int a = doRead();
-            if(-1 == a) {
-                return i-off;
-            }
-            b[i] = (byte)a;
-        }
-        
-        return len;
+	if(pos >= blen) {
+	    if( ! refillReadBuffer()) {
+		return -1;
+	    }
+	}
+
+	if(pos + len <= blen) { // Fear the off by one error
+	    // Sanity check b.length > off + len?
+	    System.arraycopy(bodyBuff, pos, b, off, len);
+	    pos += len;
+	    return len;
+	}
+
+	// Not enough data (blen < pos + len)
+	int toCopy = len;
+	while(toCopy > 0) {
+	    int bytesRemaining = blen - pos;
+	    if(bytesRemaining < 0) 
+		bytesRemaining = 0;
+	    int c = bytesRemaining < toCopy ? bytesRemaining : toCopy;
+
+	    System.arraycopy(bodyBuff, pos, b, off, c);
+
+	    toCopy    -= c;
+
+	    off       += c;
+	    pos       += c; // In case we exactly consume the buffer
+
+	    if(toCopy > 0) 
+		if( ! refillReadBuffer()) { // Resets blen and pos
+		    break;
+		}
+	}
+
+	return len - toCopy;
     }
     
     /**
      * Get more request body data from the web server and store it in the 
      * internal buffer.
+     *
+     * @return true if there is more data, false if not.    
      */
-    private void refillReadBuffer() throws IOException 
+    private boolean refillReadBuffer() throws IOException 
     {
+	// If the server returns an empty packet, assume that that end of
+	// the stream has been reached (yuck -- fix protocol??).
+
 	// Why not use outBuf??
 	inBuf.reset();
 	inBuf.appendByte(JK_AJP13_GET_BODY_CHUNK);
@@ -424,6 +461,8 @@ public class Ajp13
     	blen = inBuf.peekInt();
     	pos = 0;
     	inBuf.getBytes(bodyBuff);
+
+	return (blen > 0);
     }    
 
     // ==================== Servlet Output Support =================
@@ -442,18 +481,18 @@ public class Ajp13
         outBuf.appendInt(status);
         outBuf.appendString(""); // Http Status Message -- broken.
         
-        outBuf.appendInt(headers.size());
+	int numHeaders = headers.size();
+        outBuf.appendInt(numHeaders);
         
-        Enumeration e = headers.names();
-        while(e.hasMoreElements()) {
-            String headerName = (String)e.nextElement();            
-            int sc = headerNameToSc(headerName);
+	for( int i=0 ; i < numHeaders ; i++ ) {
+	    String headerName = headers.getName(i).toString();
+	    int sc = headerNameToSc(headerName);
             if(-1 != sc) {
                 outBuf.appendInt(sc);
             } else {
                 outBuf.appendString(headerName);
             }
-            outBuf.appendString(headers.getHeader(headerName));
+            outBuf.appendString(headers.getValue(i).toString());
         }
 
         outBuf.end();
@@ -520,13 +559,13 @@ public class Ajp13
 
     /**
      * Signal the web server that the servlet has finished handling this
-     * request.  
+     * request, and that the connection can be reused.
      */
     public void finish() throws IOException 
     {
 	outBuf.reset();
         outBuf.appendByte(JK_AJP13_END_RESPONSE);
-        outBuf.appendByte((byte)1);        
+        outBuf.appendBool(true); // Reuse this connection
         outBuf.end();
         send(outBuf);
     }
@@ -590,7 +629,7 @@ public class Ajp13
 	    // XXX log
 	    // XXX Return an error code?
 	}
-	// 	msg.dump( "Incoming");
+	// msg.dump( "Incoming");
 	return rd;
     }
 
@@ -723,6 +762,10 @@ public class Ajp13
 	    buff[pos++] = val;
 	}
 	
+	public void appendBool( boolean val) {
+	    buff[pos++] = (byte) (val ? 1 : 0);
+	}
+
 	/**
 	 * Write a String out at the current write position.  Strings are
 	 * encoded with the length in two bytes first, then the string, and
@@ -754,7 +797,7 @@ public class Ajp13
 	 * terminating \0 (which is <B>not</B> included in the encoded
 	 * length).
 	 *
-	 * @param b The array from whcih to copy bytes.
+	 * @param b The array from which to copy bytes.
 	 * @param off The offset into the array at which to start copying
 	 * @param len The number of bytes to copy.  
 	 */
@@ -803,6 +846,10 @@ public class Ajp13
 
 	public byte peekByte() {
 	    return buff[pos];
+	}
+
+	public boolean getBool() {
+	    return (getByte() == (byte) 1);
 	}
 
 	public static final String DEFAULT_CHAR_ENCODING = "8859_1";
@@ -858,11 +905,14 @@ public class Ajp13
 	}
 
 	private void hexLine( int start ) {
-	    for( int i=start; i< start+16; i++ ) {
+	    for( int i=start; i< start+16 ; i++ ) {
+	      if( i < len + 4)
 		System.out.print( hex( buff[i] ) + " ");
+	      else 
+		System.out.print( "   " );
 	    }
 	    System.out.print(" | ");
-	    for( int i=start; i< start+16; i++ ) {
+	    for( int i=start; i < start+16 && i < len + 4; i++ ) {
 		if( Character.isLetterOrDigit( (char)buff[i] ))
 		    System.out.print( new Character((char)buff[i]) );
 		else
@@ -872,9 +922,9 @@ public class Ajp13
 	}
     
 	public void dump(String msg) {
-	    System.out.println( msg + ": " + buff + " " + pos +"/" + len);
+	    System.out.println( msg + ": " + buff + " " + pos +"/" + (len + 4));
 
-	    for( int j=0; j<len + 16; j+=16 )
+	    for( int j=0; j < len + 4; j+=16 )
 		hexLine( j );
 	
 	    System.out.println();
