@@ -1,4 +1,4 @@
-// $Id: ExtensionMechanismsFactory.java,v 1.27 2004/08/18 21:01:07 mvw Exp $
+// $Id: ExtensionMechanismsFactory.java,v 1.28 2004/08/20 23:54:17 d00mst Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -89,19 +89,22 @@ public class ExtensionMechanismsFactory extends AbstractUmlModelFactory {
 
     /**
      * Builds a stereotype for some kind of modelelement.
-     * If any of the parameters are null, an IllegalArgumentException is thrown.
+     *
      * TODO: MVW: This needs rethinking/rework! I have the following questions:
-     *       What does a NameSpace have to do with this?
-     *       Why are the extended elm and the baseclass identical?
-     *       Why is an already existing stereotype for the namespace also 
-     *       set to the modelelem, and in this case the text thrown away?
+     *       Why does it not search for a stereotype in the namespace using
+     *       properties and only create a new stereotype if it will actually
+     *       be used? Ie, why is there not a
+     *       getStereotype(String name, String baseClass)? (edited by d00mst)
      * 
-     * @param theModelElementObject    the extended modelelement, which is 
-     *                                 also the baseclass for 
-     *                                 this build function
+     * @param theModelElementObject    a Model Element that the stereotype
+     *                                 will be applied to. The stereotype will
+     *                                 have its BaseClass set to an appropriate
+     *                                 value for this kind of Model Elements.
      * @param theName                  the name for the stereotype
-     * @param theNamespaceObject       the namespace 
+     * @param theNamespaceObject       the namespace the stereotype will be
+     *                                 created within.
      * @return                         the resulting stereotype object
+     * @throws IllegalArgumentException if either argument is null.
      */
     public MStereotype buildStereotype(Object theModelElementObject,
                                        Object theName,

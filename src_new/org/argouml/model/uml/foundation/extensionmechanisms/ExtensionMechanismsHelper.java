@@ -1,4 +1,4 @@
-// $Id: ExtensionMechanismsHelper.java,v 1.28 2004/08/19 16:35:21 mvw Exp $
+// $Id: ExtensionMechanismsHelper.java,v 1.29 2004/08/20 23:54:17 d00mst Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -72,7 +72,7 @@ public class ExtensionMechanismsHelper {
     }
 
     /**
-     * Returns all stereotypes in a namespace.
+     * Returns all stereotypes in a namespace, but not those in a subnamespace.
      *
      * @param ns is the namespace.
      * @return a Collection with the stereotypes.
@@ -93,6 +93,10 @@ public class ExtensionMechanismsHelper {
     /**
      * Returns all stereotypes in some model.
      *
+     * TODO: This method can never be called, and you would probably not want
+     * to since it does exactly the same thing as the method above (which is
+     * the one you will call if you try).
+     *
      * @param ns is the model.
      * @return Collection The stereotypes found. An empty arraylist is returned
      * if nothing is found.
@@ -111,8 +115,12 @@ public class ExtensionMechanismsHelper {
     }
 
     /**
-     * Finds a stereotype in some namespace. Returns null if no such
-     * stereotype is found.
+     * Finds a stereotype in some namespace, but not in its subnamespaces.
+     * Returns null if no such stereotype is found.
+     *
+     * TODO: What if stereo.getName() or stereo.getBaseClass() is null?
+     * Then you know immediately that none will be found, but is that the
+     * correct answer?
      *
      * @return the stereotype found or null.
      * @param ns is the namespace.
@@ -142,6 +150,8 @@ public class ExtensionMechanismsHelper {
      * in the current project.
      * The given stereotype can not have its namespace set yet; 
      * otherwise it will be returned itself!
+     *
+     * TODO: Should it only search for stereotypes owned by the Model object?
      *
      * @param stereo is the given stereotype
      * @return MStereotype
@@ -253,6 +263,8 @@ public class ExtensionMechanismsHelper {
     }
 
     /**
+     * TODO: Should it only search for stereotypes owned by the Model objects?
+     *
      * @return the collection of stereotypes in all models 
      *         in the current project
      */
