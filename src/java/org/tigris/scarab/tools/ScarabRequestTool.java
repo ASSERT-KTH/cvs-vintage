@@ -2337,9 +2337,13 @@ e.printStackTrace();
 
     }
 
-    private ScarabPaginatedList userFilteredSearchResults(MITList mitList, int pageNum, int resultsPerPage,
-                                                          String sortColumn, String sortPolarity, 
-                                                          String searchString, String searchField)
+    private ScarabPaginatedList userFilteredSearchResults(MITList mitList,
+                                                          int pageNum,
+                                                          int resultsPerPage,
+                                                          String sortColumn,
+                                                          String sortPolarity, 
+                                                          String searchString,
+                                                          String searchField)
         throws Exception
     {
 
