@@ -32,7 +32,7 @@ import org.jboss.logging.Logger;
  *      
  *   @see <related>
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
- *   @version $Revision: 1.19 $
+ *   @version $Revision: 1.20 $
  */
 public class StatefulSessionContainer
    extends Container
@@ -41,6 +41,12 @@ public class StatefulSessionContainer
    // Constants -----------------------------------------------------
     
    // Attributes ----------------------------------------------------
+   // This is the Home interface class
+   protected Class homeInterface;
+
+   // This is the Remote interface class
+   protected Class remoteInterface;
+
    // These are the mappings between the home interface methods and the container methods
    protected Map homeMapping;
    

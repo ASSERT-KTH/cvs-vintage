@@ -36,7 +36,7 @@ import org.jboss.util.SerializableEnumeration;
 *   @author Rickard Öberg (rickard.oberg@telkel.com)
 *   @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
 *   @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
-*   @version $Revision: 1.29 $
+*   @version $Revision: 1.30 $
 */
 public class EntityContainer
 extends Container
@@ -46,6 +46,12 @@ implements ContainerInvokerContainer, InstancePoolContainer
     
     // Attributes ----------------------------------------------------
     
+    // This is the Home interface class
+    protected Class homeInterface;
+
+    // This is the Remote interface class
+    protected Class remoteInterface;
+
     // These are the mappings between the home interface methods and the container methods
     protected Map homeMapping;
     

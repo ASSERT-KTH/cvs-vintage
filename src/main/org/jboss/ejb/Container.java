@@ -67,7 +67,7 @@ import org.jnp.server.NamingServer;
  *   @see ContainerFactory
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
  *   @author <a href="marc.fleury@telkel.com">Marc Fleury</a>
- *   @version $Revision: 1.29 $
+ *   @version $Revision: 1.30 $
  */
 public abstract class Container
 {
@@ -85,12 +85,6 @@ public abstract class Container
     // This is the new metadata. it includes information from both ejb-jar and jboss.xml
 	// the metadata for the application can be accessed trough metaData.getApplicationMetaData()
    protected BeanMetaData metaData;
-
-    // This is the Home interface class
-   protected Class homeInterface;
-
-   // This is the Remote interface class
-   protected Class remoteInterface;
 
    // This is the EnterpriseBean class
    protected Class beanClass;
@@ -342,16 +336,9 @@ public abstract class Container
    {
         try
         {
-            // Create a new java: namespace root
-          NamingServer root = new NamingServer();
-
-            // Associate this root with the classloader of the bean
-          ((BeanClassLoader)getClassLoader()).setJNDIRoot(root);
-
           // Since the BCL is already associated with this thread we can start using the java: namespace directly
-          Context ctx = (Context) new InitialContext().lookup("java:/");
-          ctx.createSubcontext("comp");
-          ctx = ctx.createSubcontext("comp/env");
+          Context ctx = (Context) new InitialContext().lookup("java:comp");
+          ctx = ctx.createSubcontext("env");
 
           // Bind environment properties
           {
