@@ -6,7 +6,7 @@ $page.setTitle("Attribute Editor")
 <p><b>Editing Attribute</b>: <i>$attribute.Name</i></p>
 <p>Each Attribute can have zero or more Attribute Options.</p>
 
-#if ($attOptions.size() > 0)
+#if ($attOptions)
 <p>This Attribute has the following Attribute Options (in order):</p>
 
 <blockquote><i>

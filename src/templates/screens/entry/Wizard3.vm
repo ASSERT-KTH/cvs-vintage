@@ -2,6 +2,7 @@
 #set ($user = $scarabR.User)
 #set ($module = $user.CurrentModule)
 #set ($issue = $user.ReportingIssue)
+#set ($attrValues = $issue.ModuleAttributeValuesMap)
 
 
 <FORM METHOD="get" NAME="Report3Form" action="$action">
@@ -9,8 +10,8 @@
 <p>Please review the attributes you have set so far and fill out the remaining
 attributes to submit the issue.</p>
 
-
-#foreach ( $attVal in $issue.OrderedModuleAttributeValues )
+#foreach ( $attKey in $attrValues )
+  #set ( $attVal = $attrValues.get($attKey) )
   #set ( $attrInput = $intake.AttributeValue.mapTo($attVal) ) 
 
   #if ( $attVal.Attribute.AttributeType.ValidationKey )
@@ -62,7 +63,8 @@ attributes to submit the issue.</p>
 
 <hr><br>Please fill in the following:<br><br>
 
-#foreach ( $attVal in $issue.OrderedModuleAttributeValues )
+#foreach ( $attKey in $attrValues )
+  #set ( $attVal = $attrValues.get($attKey) )
   #set ( $attrInput = $intake.AttributeValue.mapTo($attVal) ) 
 
   #if ( $attVal.Attribute.AttributeType.ValidationKey )

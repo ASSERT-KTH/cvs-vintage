@@ -2,12 +2,13 @@
 #set ($user = $scarabR.User)
 #set ($module = $user.CurrentModule)
 #set ($issue = $user.ReportingIssue)
+#set ($attrValues = $issue.ModuleAttributeValuesMap)
 
 <form name="ReportForm" method="post" action="$action">
 
 <p>
 
-    #set ( $attrValue = $issue.ModuleAttributeValuesMap.get("SUMMARY") )
+    #set ( $attrValue = $attrValues.get("SUMMARY") )
     #set ( $attrInput = $intake.AttributeValue.mapTo($attrValue) ) 
     #attrValueErrorMsg( $attrValue "Value" )<br>
     Summary:
@@ -18,7 +19,8 @@
     <br>
 
 
-#foreach ( $attVal in $issue.OrderedModuleAttributeValues )
+#foreach ( $attKey in $attrValues )
+  #set ( $attVal = $attrValues.get($attKey) )
   #if ( $attVal.isDedupeAttribute())
 
      ##set ( $attrInput = $intake.AttributeValue.mapTo($attVal) ) 
