@@ -20,17 +20,11 @@
 
 ## PAGINATION
 ## if results exceed limit, get subset list
-#set ($resultsPerPage = $data.Parameters.getInt("resultsPerPage",0))
-#set ($pageNum = $data.Parameters.getInt("pageNum",0))
-#if ($resultsPerPage == 0)
-  #set ($resultsPerPage = 25)
-#end
-#if ($pageNum == 0)
-  #set ($pageNum = 1)
-#end
-#if ($allQueries.size() > $resultsPerPage)
+#set ($resultsPerPage = $data.Parameters.getInt("resultsPerPage", 25))
+#set ($pageNum = $data.Parameters.getInt("pageNum", 1))
+#if ($resultsPerPage > 0 && $allQueries.size() > $resultsPerPage)
  #set ($paginated = "true")
- #set ($pagList = $scarabR.getPaginatedList($allQueries, $pageNum.toString(),$resultsPerPage.toString()))
+ #set ($pagList = $scarabR.getPaginatedList($allQueries, $pageNum, $resultsPerPage))
  #if ($pagList)
    #set ($allQueries = $pagList)
  #end

@@ -209,7 +209,7 @@
       #end
   <a href="$prevLink">&laquo; previous</a> |
  #end
-  #set ($pagLink = $link.setPathInfo("resultsperpage", "$resultsPerPage.toString()").setPathInfo("sortColumn", "$sortColumn").setPathInfo("sortPolarity", "$sortPolarity").setPage($scarabR.getCurrentTemplate()))
+  #set ($pagLink = $link.setPathInfo("resultsperpage", "$resultsPerPage").setPathInfo("sortColumn", "$sortColumn").setPathInfo("sortPolarity", "$sortPolarity").setPage($scarabR.getCurrentTemplate()))
  $pageNum of $scarabR.NbrPages
  #if ($scarabR.NextPage != 0)
       #set ($nextLink = $pagLink.setPathInfo("pageNum", "$scarabR.NextPage"))
@@ -249,8 +249,8 @@
       #set ($searchResults = $scarabR.Users)
 #end
 
-#if ($searchResults.size() > $resultsPerPage)
-  #set ($pagList = $scarabR.getPaginatedList($searchResults, $pageNum.toString(), $resultsPerPage.toString()))
+#if ($resultsPerPage > 0 && $searchResults.size() > $resultsPerPage)
+  #set ($pagList = $scarabR.getPaginatedList($searchResults, $pageNum, $resultsPerPage))
   #set ($paginated = "true")
   #paginateWithSearch ($resultsPerPage $pageNum $sortColumn $sortPolarity $searchString $searchField)
 #end
@@ -290,12 +290,10 @@
 <div class="axial">
   <table cellpadding="3" cellspacing="2" border="0">
      <tr>
-       <th>Max items per page</th>
-       <td><input type="radio" name="resultsPerPage" value="25" #if ($resultsPerPage.toString().equals("25")) checked="checked" #end /> 25
-         <input type="radio" name="resultsPerPage" value="50" #if ($resultsPerPage.toString().equals("50")) checked="checked" #end /> 50
-         <input type="radio" name="resultsPerPage" value="75" #if ($resultsPerPage.toString().equals("75")) checked="checked" #end /> 75
-         <input type="radio" name="resultsPerPage" value="100" #if ($resultsPerPage.toString().equals("100")) checked="checked" #end /> 100
-        &#160;<input type="submit" value="$l10n.Refresh" /></p>
+       <th>$l10n.MaxPerPage</th>
+       <td>
+           #resultsPerPageRadioSelect($resultsPerPage)
+           &#160;<input type="submit" value="$l10n.Refresh" />
        </td>
      </tr>
   </table>

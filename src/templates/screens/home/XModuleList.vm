@@ -164,7 +164,7 @@ $l10n.NoMoreIssueTypes
 #set ($pageNum = $data.Parameters.getInt("pageNum", 1))
 
 #macro (prepRMITPageLink)
- #set ($dummy = $link.setPage("home,XModuleList.vm").setPathInfo("resultsPerPage", $resultsPerPage.toString()).setPathInfo("searchString", $searchString).setPathInfo("searchField", $searchField).setPathInfo("sortColumn", "$sortColumn").setPathInfo("sortPolarity", "$sortPolarity"))
+ #set ($dummy = $link.setPage("home,XModuleList.vm").setPathInfo("resultsPerPage", "$resultsPerPage").setPathInfo("searchString", $searchString).setPathInfo("searchField", $searchField).setPathInfo("sortColumn", "$sortColumn").setPathInfo("sortPolarity", "$sortPolarity"))
 #end
 
 #macro (paginateXModuleList)
@@ -188,9 +188,9 @@ $l10n.NoMoreIssueTypes
 </div> 
 #end
 
-#set ($isAddPagination = $searchableRMITs.size() > $resultsPerPage)
+#set ($isAddPagination = $resultsPerPage > 0 && $searchableRMITs.size() > $resultsPerPage)
 #if ($isAddPagination)
-  #set ($searchableRMITs = $scarabR.getPaginatedList($searchableRMITs, $pageNum.toString(), $resultsPerPage.toString()))
+  #set ($searchableRMITs = $scarabR.getPaginatedList($searchableRMITs, $pageNum, $resultsPerPage))
   #paginateXModuleList()
 #end
 
@@ -248,10 +248,8 @@ $l10n.NoMoreIssueTypes
   <table cellpadding="3" cellspacing="2" border="0">
      <tr>
        <th>$l10n.MaxPerPage</th>
-       <td><input type="radio" name="resultsPerPage" value="25" #if ($resultsPerPage.toString().equals("25")) checked="checked" #end /> 25
-         <input type="radio" name="resultsPerPage" value="50" #if ($resultsPerPage.toString().equals("50")) checked="checked" #end /> 50
-         <input type="radio" name="resultsPerPage" value="75" #if ($resultsPerPage.toString().equals("75")) checked="checked" #end /> 75
-         <input type="radio" name="resultsPerPage" value="100" #if ($resultsPerPage.toString().equals("100")) checked="checked" #end /> 100
+       <td>
+        #resultsPerPageRadioSelect($resultsPerPage)
         &#160;<input type="submit" value="$l10n.Refresh" /></p>
        </td>
      </tr>

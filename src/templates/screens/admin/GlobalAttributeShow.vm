@@ -44,21 +44,11 @@ $l10n.PageForSelectingAttributes
 
 ## PAGINATION
 ## if results exceed limit, get subset list
-#set ($resultsPerPage = $data.Parameters.getInt("resultsPerPage",0))
-#set ($pageNum = $data.Parameters.getInt("pageNum",0))
-
-#if ($resultsPerPage == 0)
-  #set ($resultsPerPage = 25)
-#end
-
-#if ($pageNum == 0)
-  #set ($pageNum = 1)
-#end
-
-#if ($attributes.size() > $resultsPerPage)
+#set ($resultsPerPage = $data.Parameters.getInt("resultsPerPage", 25))
+#set ($pageNum = $data.Parameters.getInt("pageNum", 1))
+#if ($resultsPerPage > 0 && $attributes.size() > $resultsPerPage)
  #set ($paginated = "true")
- #set ($pagList = $scarabR.getPaginatedList($attributes, $pageNum.toString(), $resultsPerPage.toString()))
-
+ #set ($pagList = $scarabR.getPaginatedList($attributes, $pageNum, $resultsPerPage))
  #if ($pagList)
    #set ($attributes = $pagList)
  #end

@@ -19,23 +19,16 @@
 
 ## PAGINATION
 ## if results exceed limit, get subset list
-#set ($resultsPerPage = $data.Parameters.getInt("resultsPerPage",0))
-#set ($pageNum = $data.Parameters.getInt("pageNum",0))
-#if ($resultsPerPage == 0)
-  #set ($resultsPerPage = 25)
-#end
-#if ($pageNum == 0)
-  #set ($pageNum = 1)
-#end
+#set ($resultsPerPage = $data.Parameters.getInt("resultsPerPage", 25))
+#set ($pageNum = $data.Parameters.getInt("pageNum", 1))
 <input type="hidden" name="pageNum" value="$pageNum" />
 
 #set ($rmits = $module.getRModuleIssueTypes($sortColumn, $sortPolarity))
 #set ($listSize = $rmits.size())
 
-
-#if ($rmits.size() > $resultsPerPage)
+#if ($resultsPerPage > 0 && $rmits.size() > $resultsPerPage)
  #set ($paginated = "true")
- #set ($pagList = $scarabR.getPaginatedList($rmits, $pageNum.toString(), $resultsPerPage.toString()))
+ #set ($pagList = $scarabR.getPaginatedList($rmits, $pageNum, $resultsPerPage))
  ##  Pass display values from previous pages so can determine if there are
  ## More than 5 (the limit)
  #foreach ($rmit in $rmits)

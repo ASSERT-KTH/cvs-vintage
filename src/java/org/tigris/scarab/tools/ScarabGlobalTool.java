@@ -96,7 +96,7 @@ import org.apache.turbine.Turbine;
  * methodology</a> to be implemented.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ScarabGlobalTool.java,v 1.45 2002/10/18 23:58:08 elicia Exp $
+ * @version $Id: ScarabGlobalTool.java,v 1.46 2002/10/22 04:07:38 jmcnally Exp $
  */
 public class ScarabGlobalTool implements ScarabGlobalScope
 {
@@ -570,5 +570,27 @@ public class ScarabGlobalTool implements ScarabGlobalScope
             siteName = "";
         }
         return siteName;
+    }
+
+    /**
+     * Returns an int representation of the given Object whose toString
+     * method should be a valid integer.  if the string cannot be parsed
+     * zero is returned.  
+     */
+    public int getInt(Object obj)
+    {
+        int result = 0;
+        if (obj != null) 
+        {
+            try 
+            {
+                result = Integer.parseInt(obj.toString());
+            }
+            catch (Exception e)
+            {
+                Log.get().error(obj + " cannot convert to an integer.", e);
+            }   
+        }
+        return result;
     }
 }
