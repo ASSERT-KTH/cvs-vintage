@@ -62,7 +62,7 @@ import org.tigris.scarab.pages.ScarabPage;
     for the Issue Entry templates.
 
     @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
-    @version $Id: Default.java,v 1.12 2001/08/02 07:11:41 jon Exp $
+    @version $Id: Default.java,v 1.13 2001/08/02 23:41:10 jmcnally Exp $
 */
 public class Default extends TemplateSecureScreen
 {
@@ -86,8 +86,8 @@ public class Default extends TemplateSecureScreen
             .get(ScarabConstants.SCARAB_REQUEST_TOOL);
 
         if ( !(scarab.getUser().hasLoggedIn()
-               && security.hasPermission(ScarabSecurityPull.ISSUE__ENTER, 
-                                         scarab.getUser().getCurrentModule())))
+               ))//  && security.hasPermission(ScarabSecurityPull.ISSUE__ENTER, 
+            //                       scarab.getUser().getCurrentModule())))
         {
             // Note: we need to replace '/' with ',' so that 
             //       the hidden input field will have the right
