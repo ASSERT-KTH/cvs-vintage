@@ -56,6 +56,7 @@ import org.apache.turbine.Turbine;
 import org.apache.turbine.TemplateContext;
 import org.apache.turbine.modules.ContextAdapter;
 import org.apache.turbine.RunData;
+import org.apache.turbine.ParameterParser;
 
 import org.apache.commons.util.SequencedHashtable;
 import org.apache.commons.collections.ExtendedProperties;
@@ -96,7 +97,7 @@ import org.tigris.scarab.tools.ScarabRequestTool;
  * This class is responsible for report issue forms.
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: ReportIssue.java,v 1.78 2002/01/09 20:03:28 jmcnally Exp $
+ * @version $Id: ReportIssue.java,v 1.79 2002/01/09 22:14:32 richard Exp $
  */
 public class ReportIssue extends RequireLoginFirstAction
 {
@@ -107,7 +108,7 @@ public class ReportIssue extends RequireLoginFirstAction
         ScarabRequestTool scarabR = getScarabRequestTool(context);
         Issue issue = scarabR.getReportingIssue();
         IssueType issueType = scarabR.getIssueType();
-
+        
         try
         {
             // set any required flags
@@ -123,11 +124,11 @@ public class ReportIssue extends RequireLoginFirstAction
         {
             // set the values entered so far
             setAttributeValues(issue, intake, context);
-
+            
             // check for duplicates, if there are none skip the dedupe page
             searchAndSetTemplate(data, context, 0, "entry,Wizard3.vm");
         }
-
+        
         // we know we started at Wizard1 if we are here, Wizard3 needs
         // to know where the issue entry process starts because it may
         // branch back
@@ -135,7 +136,7 @@ public class ReportIssue extends RequireLoginFirstAction
             .add(ScarabConstants.HISTORY_SCREEN, "entry,Wizard1.vm");
         //getLinkTool(context).setHistoryScreen("entry,Wizard1.vm");
     }
-
+    
     /**
      * Common code related to deduping.  A search for duplicate issues is
      * performed and if the number of possible duplicates is greater than 
@@ -163,11 +164,11 @@ public class ReportIssue extends RequireLoginFirstAction
         ScarabRequestTool scarabR = getScarabRequestTool(context);
         //ScarabUser user = (ScarabUser)data.getUser();
         Issue issue = scarabR.getReportingIssue();
-
+        
         // search on the option attributes and keywords
         IssueSearch search = new IssueSearch(issue);                
         List matchingIssues = search.getMatchingIssues(25);
-                
+        
         // set the template to dedupe unless none exist, then skip
         // to final entry screen
         String template = null;
@@ -182,11 +183,11 @@ public class ReportIssue extends RequireLoginFirstAction
         {
             template = nextTemplate;
         }
-
+        
         setTarget(data, template);
         return beatThreshold;
     }
-
+    
     /**
      * Checks the Module the issue is being entered into to see what
      * attributes are required to have values. If a required field was present
@@ -203,7 +204,7 @@ public class ReportIssue extends RequireLoginFirstAction
         if (issue == null)
         {
             throw new Exception ("The Issue is not valid any longer. " + 
-                "Please try again.");
+                                     "Please try again.");
         }
         IssueType issueType = issue.getIssueType();
         Attribute[] requiredAttributes = issue.getModule()
@@ -235,8 +236,8 @@ public class ReportIssue extends RequireLoginFirstAction
                 for (int j=requiredAttributes.length-1; j>=0; j--) 
                 {
                     if (aval.getAttribute().getPrimaryKey().equals(
-                         requiredAttributes[j].getPrimaryKey())
-                         && !aval.isSet())
+                            requiredAttributes[j].getPrimaryKey())
+                        && !aval.isSet())
                     {
                         field.setRequired(true);
                         break;
@@ -245,7 +246,7 @@ public class ReportIssue extends RequireLoginFirstAction
             }
         }
     }
-
+    
     /**
      * Add/Modify any attribute values that were just entered into intake.
      *
@@ -286,7 +287,7 @@ public class ReportIssue extends RequireLoginFirstAction
                         .getValidationKey();
                 }
                 else if (aval.getAttribute().getAttributeType()
-                    .getName().equals("combo-box"))
+                         .getName().equals("combo-box"))
                 {
                     field = "OptionId";
                 }
@@ -299,13 +300,13 @@ public class ReportIssue extends RequireLoginFirstAction
                 if ((key != null) && (value != null)) 
                 {
                     values.put(group.get(field).getKey()
-                            , group.get(field).getValue());
+                                   , group.get(field).getValue());
                 }
             }
         }
         context.put("wizard1_intake", values);
     }
-
+    
     /**
      * handles entering an issue
      */
@@ -317,10 +318,10 @@ public class ReportIssue extends RequireLoginFirstAction
         Issue issue = scarabR.getReportingIssue();
         IssueType issueType = issue.getIssueType();
         ScarabUser user = (ScarabUser)data.getUser();
-
+        
         // set any required flags
         setRequiredFlags(issue, intake);
-
+        
         if (intake.isAllValid())
         {
             setAttributeValues(issue, intake, context);
@@ -330,7 +331,7 @@ public class ReportIssue extends RequireLoginFirstAction
                 Transaction transaction = new Transaction();
                 transaction
                     .create(TransactionTypePeer.CREATE_ISSUE__PK, user, null);
-
+                
                 // enter the values into the transaction
                 SequencedHashtable avMap = 
                     issue.getModuleAttributeValuesMap(); 
@@ -345,22 +346,19 @@ public class ReportIssue extends RequireLoginFirstAction
                     catch (ScarabException se)
                     {
                         data.setMessage("Fatal Error: " + se.getMessage() 
-                            + " Please start over.");
+                                            + " Please start over.");
                         setTarget(data, "entry,Wizard1.vm");
                         return;
                     }
                 }
                 issue.save();
-
-                // save the attachment
-                Attachment attachment = new Attachment();
-                Group group = intake.get("Attachment", 
-                                   attachment.getQueryKey(), false);
-                if (group != null) 
+                
+                List files = issue.getAttachments();
+                for(int k = 0; k < files.size(); k++)
                 {
-                    group.setProperties(attachment);
+                    Attachment attachment = (Attachment)files.get(k);
                     if (attachment.getData() != null 
-                         && attachment.getData().length > 0)
+                        && attachment.getData().length > 0)
                     {
                         FileItem file = attachment.getFile();
                         String fileNameWithPath =file.getFileName();
@@ -373,7 +371,7 @@ public class ReportIssue extends RequireLoginFirstAction
                         attachment.setIssue(issue);
                         attachment.setTypeId(new NumberKey(1));
                         attachment.save();    
-
+                        
                         String uploadFile = attachment
                             .getRepositoryDirectory(scarabR.getIssue().getModule().getCode())
                             + File.separator + attachment.getPrimaryKey().toString() + "_" + fileName; 
@@ -381,10 +379,10 @@ public class ReportIssue extends RequireLoginFirstAction
                         file.write(uploadFile);
                         attachment.setFilePath(uploadFile);
                         attachment.save();
-                         
+                        
                     }
+                    
                 }
-
                 // set the template to the user selected value
                 String template = data.getParameters()
                     .getString(ScarabConstants.NEXT_TEMPLATE, "ViewIssue.vm");
@@ -392,15 +390,15 @@ public class ReportIssue extends RequireLoginFirstAction
                 {
                     data.getParameters().add("intake-grp", "issue"); 
                     /*
-                    data.getParameters().add("issue", "_0"); 
-                    data.getParameters().add("issue_0id", 
-                                             issue.getIssueId().toString());
-                    */
+                     data.getParameters().add("issue", "_0"); 
+                     data.getParameters().add("issue_0id", 
+                     issue.getIssueId().toString());
+                     */
                     data.getParameters().add("id", 
                                              issue.getUniqueId().toString());
                 }
                 setTarget(data, template);
-
+                
                 // need to not hardcode summary here. !FIXME!
                 String summary = 
                     ((AttributeValue)avMap.get("SUMMARY")).getValue();
@@ -412,7 +410,7 @@ public class ReportIssue extends RequireLoginFirstAction
                 transaction.sendEmail(new ContextAdapter(context), issue, 
                                       subj.toString(),
                                       "email/NewIssueNotification.vm"); 
-
+                
                 cleanup(data, context);
                 data.getParameters().add("id", 
                                          issue.getUniqueId().toString());
@@ -423,7 +421,75 @@ public class ReportIssue extends RequireLoginFirstAction
             }            
         }
     }
-
+    
+    /**
+     * Add attachment file
+     */
+    public void doAddfile(RunData data, TemplateContext context)
+        throws Exception
+    {
+        IntakeTool intake = getIntakeTool(context);
+        ScarabRequestTool scarabR = getScarabRequestTool(context);
+        Issue issue = scarabR.getReportingIssue();
+        IssueType issueType = issue.getIssueType();
+        ScarabUser user = (ScarabUser)data.getUser();
+        
+        // set any required flags
+        setRequiredFlags(issue, intake);
+        if (intake.isAllValid())
+        {
+            
+            // save the attachment
+            Attachment attachment = new Attachment();
+            Group group = intake.get("Attachment", 
+                                     attachment.getQueryKey(), false);
+            if (group != null) 
+            {
+                group.setProperties(attachment);
+                if (attachment.getData() != null 
+                    && attachment.getData().length > 0)
+                {
+                    issue.addFile(attachment);
+                }
+                data.getParameters().add("intake-grp", "issue"); 
+                data.getParameters().add("id",issue.getUniqueId().toString());
+                
+                doGotowizard3(data, context);
+            }
+        }
+    }
+    
+    /**
+     * Remove an attachment file
+     */
+    public void doRemovefile(RunData data, TemplateContext context)
+        throws Exception
+    {
+        IntakeTool intake = getIntakeTool(context);
+        ScarabRequestTool scarabR = getScarabRequestTool(context);
+        Issue reportingIssue = scarabR.getReportingIssue();
+        ParameterParser params = data.getParameters();
+        Object[] keys = params.getKeys();
+        String key;
+        String attachmentIndex;
+        
+        for (int i =0; i<keys.length; i++)
+        {
+            key = keys[i].toString();
+            if (key.startsWith("file_delete_"))
+            {
+                attachmentIndex = key.substring(12);
+                reportingIssue.removeFile(attachmentIndex);
+            } 
+        }
+        data.getParameters().add("intake-grp", "issue"); 
+        data.getParameters().add("id", reportingIssue.getUniqueId().toString());
+        
+        doGotowizard3(data, context);
+    }
+    
+    
+    
     /**
      * Handles adding a note to an issue
      */
@@ -446,10 +512,10 @@ public class ReportIssue extends RequireLoginFirstAction
                     ScarabRequestTool scarabR = getScarabRequestTool(context);
                     Issue issue = scarabR.getIssue();
                     issue.addComment(attachment, (ScarabUser)data.getUser());
-
+                    
                     data.setMessage("Your comment for artifact #" + 
-                                    issue.getUniqueId() + 
-                                    " has been added.");
+                                        issue.getUniqueId() + 
+                                        " has been added.");
                     // if there was only one duplicate issue and we just added
                     // a note to it, assume user is done
                     String nextTemplate = Turbine.getConfiguration()
@@ -474,7 +540,7 @@ public class ReportIssue extends RequireLoginFirstAction
             searchAndSetTemplate(data, context, 0, "entry,Wizard2.vm");
         }
     }
-
+    
     public void doAddvote(RunData data, TemplateContext context)
         throws Exception
     {
@@ -484,12 +550,12 @@ public class ReportIssue extends RequireLoginFirstAction
             Group group = intake.get("Issue", IntakeTool.DEFAULT_KEY);        
             ScarabRequestTool scarabR = getScarabRequestTool(context);
             Issue issue = scarabR.getIssue();
-
+            
             try
             {
                 issue.addVote((ScarabUser)data.getUser());
                 data.setMessage("Your vote for artifact #" + issue.getUniqueId() 
-                                + " has been accepted.");
+                                    + " has been accepted.");
                 // if there was only one duplicate issue and the user just
                 // voted for it, assume user is done
                 String nextTemplate = Turbine.getConfiguration()
@@ -502,7 +568,7 @@ public class ReportIssue extends RequireLoginFirstAction
             catch (ScarabException e)
             {
                 data.setMessage("Vote could not be added.  Reason given: "
-                                + e.getMessage());
+                                    + e.getMessage());
                 // User attempted to vote when they were not allowed.  This
                 // should probably not be allowed in the ui, but right now
                 // it is and we should protect against url hacking anyway.
@@ -517,13 +583,13 @@ public class ReportIssue extends RequireLoginFirstAction
             searchAndSetTemplate(data, context, 0, "entry,Wizard2.vm");
         }
     }
-
+    
     public void doGotowizard3(RunData data, TemplateContext context)
         throws Exception
     {
         setTarget(data, "entry,Wizard3.vm");
     }
-
+    
     public void doUsetemplates(RunData data, TemplateContext context)
         throws Exception
     {
@@ -532,10 +598,10 @@ public class ReportIssue extends RequireLoginFirstAction
         String template = getCurrentTemplate(data, null);
         setTarget(data, template);
     }
-
+    
     /**
-        This manages clicking the Cancel button
-    */
+     This manages clicking the Cancel button
+     */
     public void doCancel(RunData data, TemplateContext context) throws Exception
     {
         data.setMessage("The artifact entry process was canceled.");
@@ -544,15 +610,15 @@ public class ReportIssue extends RequireLoginFirstAction
         setTarget(data, template);
         cleanup(data, context);
     }
-
+    
     /**
-        calls doCancel()
-    */
+     calls doCancel()
+     */
     public void doPerform(RunData data, TemplateContext context) throws Exception
     {
         doCancel(data, context);
     }
-
+    
     private void cleanup(RunData data, TemplateContext context)
     {
         data.getParameters().remove(ScarabConstants.HISTORY_SCREEN);
@@ -564,19 +630,19 @@ public class ReportIssue extends RequireLoginFirstAction
         IntakeTool intake = getIntakeTool(context);
         intake.removeAll();
     }
-
+    
     /*
-    private String getStartPoint()
-        throws Exception
-    {
-        String historyScreen = data.getParameters()
-            .getString(ScarabConstants.HISTORY_SCREEN);
-        if (historyScreen == null) 
-        {
-            historyScreen = "entry,Wizard3.vm";            
-        }
-        
-        return historyScreen;
-    }
-    */
-}
+     private String getStartPoint()
+     throws Exception
+     {
+     String historyScreen = data.getParameters()
+     .getString(ScarabConstants.HISTORY_SCREEN);
+     if (historyScreen == null) 
+     {
+     historyScreen = "entry,Wizard3.vm";            
+     }
+     
+     return historyScreen;
+     }
+     */
+     }
