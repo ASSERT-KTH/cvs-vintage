@@ -57,6 +57,7 @@ public class JUnicastRemoteObject extends RemoteServer {
     protected RMIClientSocketFactory csf = null;
     protected RMIServerSocketFactory ssf = null;
     private static JUnicastThreadFactory defaultThreadFactory = null;
+    private static String PORT_NUMBER_PROPERTY = "jrmp.server.portnumber";
 
     // parameter for generic export method
     protected static final Class[] exportObjectParamType = new Class[]{int.class,  
@@ -68,7 +69,8 @@ public class JUnicastRemoteObject extends RemoteServer {
 										  JClientRequestInterceptor[].class};
 
     protected JUnicastRemoteObject( JServerRequestInterceptor [] sis, JClientRequestInterceptor [] cis) throws RemoteException {
-        this(0, sis, cis);
+	// search in the jvm properties if the port number properties exist
+        this((new Integer(System.getProperty(PORT_NUMBER_PROPERTY, "0"))).intValue(), sis, cis);
     }
 
     protected JUnicastRemoteObject(int port, JServerRequestInterceptor [] sis, JClientRequestInterceptor [] cis) throws RemoteException {
