@@ -68,7 +68,7 @@ import org.apache.torque.util.Criteria;
  * This class describes a Module within the Scarab system
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ModuleEntity.java,v 1.42 2001/11/19 03:19:13 jmcnally Exp $
+ * @version $Id: ModuleEntity.java,v 1.43 2001/12/07 23:19:30 dr Exp $
  */
 public interface ModuleEntity
 {
@@ -78,6 +78,8 @@ public interface ModuleEntity
      * FIXME: define this in a properties file
      */
     public static String NAME_DELIMINATOR = " > ";
+
+    public static final NumberKey ROOT_ID = new NumberKey("0");
 
     /**
      * Get a list of <code>ScarabUser</code>'s that have the given
