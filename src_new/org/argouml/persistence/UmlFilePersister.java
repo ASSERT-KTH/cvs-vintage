@@ -1,4 +1,4 @@
-// $Id: UmlFilePersister.java,v 1.8 2004/12/30 14:29:31 bobtarling Exp $
+// $Id: UmlFilePersister.java,v 1.9 2004/12/31 19:07:47 bobtarling Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -201,12 +201,12 @@ public class UmlFilePersister extends AbstractFilePersister {
             int size = project.getMembers().size();
             for (int i = 0; i < size; i++) {
                 ProjectMember projectMember =
-                    (ProjectMember) project.getMembers().elementAt(i);
+                    (ProjectMember) project.getMembers().get(i);
                 if (projectMember.getType().equalsIgnoreCase("xmi")) {
                     if (LOG.isInfoEnabled()) {
                         LOG.info("Saving member of type: "
                               + ((ProjectMember) project.getMembers()
-                                    .elementAt(i)).getType());
+                                    .get(i)).getType());
                     }
                     projectMember.save(writer, indent);
                 }
@@ -215,12 +215,12 @@ public class UmlFilePersister extends AbstractFilePersister {
             // Write out all non-XMI sections
             for (int i = 0; i < size; i++) {
                 ProjectMember projectMember =
-                    (ProjectMember) project.getMembers().elementAt(i);
+                    (ProjectMember) project.getMembers().get(i);
                 if (!projectMember.getType().equalsIgnoreCase("xmi")) {
                     if (LOG.isInfoEnabled()) {
                         LOG.info("Saving member of type: "
-                              + ((ProjectMember) project.getMembers()
-                                    .elementAt(i)).getType());
+                              + ((ProjectMember) project.getMembers().
+                                    get(i)).getType());
                     }
                     projectMember.save(writer, indent);
                 }
