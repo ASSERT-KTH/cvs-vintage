@@ -55,9 +55,10 @@ public class ChooseViewerDialog implements ActionListener {
 		JPanel viewerPanel = new JPanel();
 		viewerPanel.setLayout(new BoxLayout(viewerPanel, BoxLayout.X_AXIS));
 		JLabel label = new JLabel(MailResourceLoader.getString("dialog", "mimetypeviewer", "viewer_label"));
+                label.setDisplayedMnemonic(MailResourceLoader.getMnemonic("dialog", "mimetypeviewer", "viewer_label"));
 		viewerPanel.add(label);
 		viewerPanel.add(Box.createHorizontalStrut(5));
-		viewerName = new JTextField();
+		viewerName = new JTextField(15);
 		viewerName.setActionCommand(CMD_OK);
 		viewerName.addActionListener(this);
 		label.setLabelFor(viewerName);
@@ -69,6 +70,7 @@ public class ChooseViewerDialog implements ActionListener {
 		viewerPanel.add(searchButton);
 		contentPane.add(viewerPanel, BorderLayout.NORTH);
 		saveCButton = new JCheckBox(MailResourceLoader.getString("dialog", "mimetypeviewer", "save_viewer"), save);
+                saveCButton.setMnemonic(MailResourceLoader.getMnemonic("dialog", "mimetypeviewer", "save_viewer"));
 		saveCButton.setBorder(BorderFactory.createEmptyBorder(10, 0, 17, 0));
 		contentPane.add(saveCButton, BorderLayout.CENTER);
 		JPanel bottomPanel = new JPanel(new BorderLayout(0, 0));
