@@ -69,6 +69,8 @@ import java.net.*;
 import java.util.*;
 import javax.servlet.http.*;
 
+import org.apache.tomcat.logging.*;
+
 /**
  * Check ContextManager and set defaults for non-set properties
  *
@@ -90,7 +92,7 @@ public class DefaultCMSetter extends BaseInterceptor {
  	RequestInterceptor rI[]=cm.getRequestInterceptors();
 	if( rI.length ==0  ) {
 	    // nothing set up by starter, add default ones
-	    if(cm.getDebug()>0) cm.log("Setting default interceptors ");
+	    cm.log("Setting default interceptors ", Logger.INFORMATION);
 
 	    // Use the simplified mapper - revert if too many bugs and
 	    SimpleMapper smap=new SimpleMapper();
