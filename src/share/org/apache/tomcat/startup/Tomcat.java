@@ -29,6 +29,7 @@ public class Tomcat {
     private String action="start";
 
     String home=null;
+    String install=null;
     String args[];
     ClassLoader parentClassLoader;
     boolean sandbox=false;
@@ -46,6 +47,10 @@ public class Tomcat {
     
     public void setHome(String home) {
 	this.home=home;
+    }
+    
+    public void setInstall(String install) {
+	this.install=install;
     }
     
     public void setArgs(String args[]) {
@@ -161,6 +166,7 @@ public class Tomcat {
 	System.out.println("    -config file (or -f file)  Use this fileinstead of server.xml");
 	System.out.println("    -help (or help)            Show this usage report");
 	System.out.println("    -home dir (or -h dir)      Use this directory as tomcat.home");
+	System.out.println("    -install dir (or -i dir)   Use this directory as tomcat.install");
 	System.out.println("    -stop                      Shut down currently running Tomcat");
     }
 
@@ -192,7 +198,15 @@ public class Tomcat {
 	    } else if (arg.equals("-h") || arg.equals("-home")) {
 		i++;
 		if (i < args.length)
-		    System.getProperties().put("tomcat.home", args[i]);
+		    System.getProperties().put(
+				ContextManager.TOMCAT_HOME, args[i]);
+		else
+		    return false;
+	    } else if (arg.equals("-i") || arg.equals("-install")) {
+		i++;
+		if (i < args.length)
+		    System.getProperties().put(
+				ContextManager.TOMCAT_INSTALL, args[i]);
 		else
 		    return false;
 	    }
@@ -204,6 +218,8 @@ public class Tomcat {
     public void setAttribute(String s,Object o) {
 	if( "home".equals( s ) )
 	    setHome( (String)o);
+	if( "install".equals( s ) )
+	    setInstall( (String)o);
 	else if("args".equals( s ) ) 
 	    setArgs((String[])o);
 	else if( "parentClassLoader".equals( s ) ) {

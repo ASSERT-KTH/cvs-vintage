@@ -178,9 +178,11 @@ public class StopTomcat {
     }
     
     public String getTomcatHome() {
+	// Try to establish install and home locations
+	String tchome=IntrospectionUtils.guessInstall("tomcat.install",
+				"tomcat.home","stop-tomcat.jar");
 	// Use the "tomcat.home" property to resolve the default filename
-	String tchome=IntrospectionUtils.guessHome("tomcat.home",
-						   "stop-tomcat.jar");
+	tchome = System.getProperty("tomcat.home");
 	if (tchome == null) {
 	    System.out.println(sm.getString("tomcat.nohome"));
 	    tchome = ".";
@@ -248,7 +250,8 @@ public class StopTomcat {
 	    if (arg.equals("-h") || arg.equals("-home")) {
 		i++;
 		if (i < args.length)
-		    System.getProperties().put("tomcat.home", args[i]);
+		    System.getProperties().put("tomcat.home",
+						args[i]);
 		else
 		    return false;
 	    }

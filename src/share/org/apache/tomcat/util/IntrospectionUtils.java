@@ -135,23 +135,42 @@ public final class IntrospectionUtils {
     }
 
 
-    public static String guessHome(String systemProperty, String jarName) {
-	return guessHome( systemProperty, jarName, null);
+    public static String guessInstall(String installSysProp,
+		String homeSysProp, String jarName) {
+	return guessInstall( installSysProp, homeSysProp, jarName, null);
     }
     
-    /** Guess a product home by analyzing the class path.
+    /** Guess a product install/home by analyzing the class path.
      *  It works for product using the pattern: lib/executable.jar
      *  or if executable.jar is included in classpath by a shell
      *  script. ( java -jar also works )
+     *
+     *  Insures both "install" and "home" System properties are set.
+     *  If either or both System properties are unset, "install" and
+     *  "home" will be set to the same value.  This value will be
+     *  the other System  property that is set, or the guessed value
+     *  if neither is set.
      */
-    public static String guessHome(String systemProperty, String jarName,
-				   String classFile) {
-	String h=null;
+    public static String guessInstall(String installSysProp, String homeSysProp,
+			String jarName,	String classFile) {
+	String install=null;
+	String home=null;
 	
-	if( systemProperty != null )
-	    h=System.getProperty( systemProperty );
-	
-	if( h!=null ) return h;
+	if ( installSysProp != null )
+	    install=System.getProperty( installSysProp );
+
+	if( homeSysProp != null )
+	    home=System.getProperty( homeSysProp );
+
+	if ( install != null ) {
+	    if ( home == null )
+		System.getProperties().put( homeSysProp, install );
+	    return install;
+	}
+	if ( home != null ) {
+	    System.setProperty( installSysProp, home );
+	    return home;
+	}
 
 	// Find the directory where jarName.jar is located
 	
@@ -162,14 +181,16 @@ public final class IntrospectionUtils {
 	    String path=st.nextToken();
 	    //	    log( "path " + path );
 	    if( path.endsWith( jarName ) ) {
-		h=path.substring( 0, path.length() - jarName.length() );
+		home=path.substring( 0, path.length() - jarName.length() );
 		try {
-		    File f=new File( h );
-		    File f1=new File ( h, "..");
-		    h = f1.getCanonicalPath();
-		    if( systemProperty != null )
-			System.getProperties().put( systemProperty, h );
-		    return h;
+		    File f=new File( home );
+		    File f1=new File ( f, "..");
+		    install = f1.getCanonicalPath();
+		    if( installSysProp != null )
+			System.getProperties().put( installSysProp, install );
+		    if( homeSysProp != null )
+			System.getProperties().put( homeSysProp, install );
+		    return install;
 		} catch( Exception ex ) {
 		    ex.printStackTrace();
 		}
@@ -178,11 +199,13 @@ public final class IntrospectionUtils {
 		if( new File( fname ).exists()) {
 		    try {
 			File f=new File( path );
-			File f1=new File ( h, "..");
-			h = f1.getCanonicalPath();
-			if( systemProperty != null )
-			    System.getProperties().put( systemProperty, h );
-			return h;
+			File f1=new File ( f, "..");
+			install = f1.getCanonicalPath();
+			if( installSysProp != null )
+			    System.getProperties().put( installSysProp, install );
+			if( homeSysProp != null )
+			    System.getProperties().put( homeSysProp, install );
+			return install;
 		    } catch( Exception ex ) {
 			ex.printStackTrace();
 		    }

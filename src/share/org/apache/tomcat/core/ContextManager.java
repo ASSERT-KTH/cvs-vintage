@@ -153,9 +153,13 @@ public final class ContextManager {
     
     /** System property used to set the base directory ( tomcat home ).
      *  use -DTOMCAT_HOME= in java command line or as a System.setProperty.
-     *  XXX hack - setHome is better
      */
     public static final String TOMCAT_HOME="tomcat.home";
+
+    /** System property used to set the install directory ( tomcat install ).
+     *  use -DTOMCAT_INSTALL= in java command line or as a System.setProperty.
+     */
+    public static final String TOMCAT_INSTALL="tomcat.install";
 
     // State
 

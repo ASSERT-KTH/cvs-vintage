@@ -113,23 +113,30 @@ public final class PathSetter extends BaseInterceptor {
 	    home=System.getProperty(ContextManager.TOMCAT_HOME);
 	}
 
+	// if "home" is not set, guess "install" and use as "home"
 	if( home==null ) {
-	    home=IntrospectionUtils.guessHome( "tomcat.home",
-					       "tomcat_core.jar",
-				       "org/apache/tomcat/core/Request.class");
+	    home=IntrospectionUtils.guessInstall(
+				ContextManager.TOMCAT_INSTALL,
+				ContextManager.TOMCAT_HOME,
+				"tomcat_core.jar",
+				"org/apache/tomcat/core/Request.class");
 	}
 
-	if (home == null) {
-	    System.out.println(sm.getString("tomcat.nohome"));
-	    home = ".";
-	    // Assume current working directory
+	if (home != null) {
+	    // Make it absolute
+	    home=FileUtil.getCanonicalPath( home );
+	    cm.setHome( home );
 	}
-
-	// Make it absolute
-	home=FileUtil.getCanonicalPath( home );
-	cm.setHome( home );
 	
 	String installDir=cm.getInstallDir();
+	// if "install" is not set, guess "install" if not already guessed
+	if ( installDir==null ) {
+	    installDir=IntrospectionUtils.guessInstall(
+				ContextManager.TOMCAT_INSTALL,
+				ContextManager.TOMCAT_HOME,
+				"tomcat_core.jar",
+				"org/apache/tomcat/core/Request.class");
+	}
 	if( installDir!= null ) {
 	    installDir=FileUtil.getCanonicalPath( installDir );
 	    cm.setInstallDir( installDir );
@@ -157,7 +164,8 @@ public final class PathSetter extends BaseInterceptor {
 	    cm.setInstallDir( home );
 	}
 
-	System.getProperties().put("tomcat.home", cm.getHome());
+	System.getProperties().put(ContextManager.TOMCAT_HOME, cm.getHome());
+	System.getProperties().put(ContextManager.TOMCAT_INSTALL, cm.getInstallDir());
     }
 
     /** After server.xml is read - make sure the workDir is absolute,
