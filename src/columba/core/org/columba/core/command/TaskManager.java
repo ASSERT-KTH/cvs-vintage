@@ -74,6 +74,19 @@ public class TaskManager {
     public Worker[] getWorkers() {
         return (Worker[])workerList.toArray(new Worker[0]);
     }
+    
+    public boolean exists(Worker worker) {
+    	 try {
+            workerListMutex.lock();
+
+            if ( workerList.contains(worker)) return true;
+            
+        } finally {
+            workerListMutex.release();
+        }
+    	
+    	return false;
+    }
 
     /**
      * Get number of workers
