@@ -393,26 +393,26 @@ insert into SCARAB_DEPEND_TYPE(DEPEND_TYPE_ID, DEPEND_TYPE_NAME)
 /*
  * Types of issues (artifact types).
  */
-insert into SCARAB_ISSUE_TYPE(ISSUE_TYPE_ID, NAME, TEMPLATE)
+insert into SCARAB_ISSUE_TYPE(ISSUE_TYPE_ID, NAME, PARENT_ID)
         values(1, 'Defect', 0);
-insert into SCARAB_ISSUE_TYPE(ISSUE_TYPE_ID, NAME, TEMPLATE)
+insert into SCARAB_ISSUE_TYPE(ISSUE_TYPE_ID, NAME, PARENT_ID)
         values(2, 'Defect Template', 1);
-insert into SCARAB_ISSUE_TYPE(ISSUE_TYPE_ID, NAME, TEMPLATE)
+insert into SCARAB_ISSUE_TYPE(ISSUE_TYPE_ID, NAME, PARENT_ID)
         values(3, 'Patch', 0);
-insert into SCARAB_ISSUE_TYPE(ISSUE_TYPE_ID, NAME, TEMPLATE)
-        values(4, 'Patch Template', 1);
-insert into SCARAB_ISSUE_TYPE(ISSUE_TYPE_ID, NAME, TEMPLATE)
+insert into SCARAB_ISSUE_TYPE(ISSUE_TYPE_ID, NAME, PARENT_ID)
+        values(4, 'Patch Template', 3);
+insert into SCARAB_ISSUE_TYPE(ISSUE_TYPE_ID, NAME, PARENT_ID)
         values(5, 'Task', 0);
-insert into SCARAB_ISSUE_TYPE(ISSUE_TYPE_ID, NAME, TEMPLATE)
-        values(6, 'Task Template', 1);
-insert into SCARAB_ISSUE_TYPE(ISSUE_TYPE_ID, NAME, TEMPLATE)
+insert into SCARAB_ISSUE_TYPE(ISSUE_TYPE_ID, NAME, PARENT_ID)
+        values(6, 'Task Template', 5);
+insert into SCARAB_ISSUE_TYPE(ISSUE_TYPE_ID, NAME, PARENT_ID)
         values(7, 'Feature', 0);
-insert into SCARAB_ISSUE_TYPE(ISSUE_TYPE_ID, NAME, TEMPLATE)
-        values(8, 'Feature Template', 1);
-insert into SCARAB_ISSUE_TYPE(ISSUE_TYPE_ID, NAME, TEMPLATE)
+insert into SCARAB_ISSUE_TYPE(ISSUE_TYPE_ID, NAME, PARENT_ID)
+        values(8, 'Feature Template', 7);
+insert into SCARAB_ISSUE_TYPE(ISSUE_TYPE_ID, NAME, PARENT_ID)
         values(9, 'Enhancement', 0);
-insert into SCARAB_ISSUE_TYPE(ISSUE_TYPE_ID, NAME, TEMPLATE)
-        values(10, 'Enhancement Template', 1);
+insert into SCARAB_ISSUE_TYPE(ISSUE_TYPE_ID, NAME, PARENT_ID)
+        values(10, 'Enhancement Template', 9);
 
 /*
  * populate the root module with all issue types.

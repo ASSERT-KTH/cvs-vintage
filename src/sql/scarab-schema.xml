@@ -2,7 +2,7 @@
 <!DOCTYPE app-data SYSTEM
           "http://jakarta.apache.org/turbine/dtd/database.dtd">
 
-<!-- $Id: scarab-schema.xml,v 1.58 2001/10/16 03:44:00 elicia Exp $ -->
+<!-- $Id: scarab-schema.xml,v 1.59 2001/10/16 05:02:24 elicia Exp $ -->
 
 <app-data>
 <database>
@@ -518,10 +518,13 @@
     -->
     <column name="DESCRIPTION" javaName="Description" required="false" type="VARCHAR" size="255"></column>
     <!--
-        Is this a regular artifact type, or a template artifact type.
+        If this issue type is a template, the id of the issue type it
+        Corresponds to. If is not, parent id is 0.
     -->
-    <column name="TEMPLATE" required="true" type="BOOLEANINT" 
-        default="0" size="1"></column>
+    <column name="PARENT_ID" required="true" type="INTEGER"></column>
+    <foreign-key foreignTable="SCARAB_ISSUE_TYPE">
+        <reference local="PARENT_ID" foreign="ISSUE_TYPE_ID"/>
+    </foreign-key>
 </table>
 
 
