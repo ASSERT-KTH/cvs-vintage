@@ -24,7 +24,7 @@
 // File: ToDoList.java
 // Class: ToDoList
 // Original Author: jrobbins@ics.uci.edu
-// $Id: ToDoList.java,v 1.12 2003/04/09 22:36:42 alexb Exp $
+// $Id: ToDoList.java,v 1.13 2003/05/31 03:50:16 mkl Exp $
 
 package org.argouml.cognitive;
 
@@ -144,7 +144,7 @@ public class ToDoList
         while (true) {
             forceValidityCheck(removes);
             removes.removeAllElements();
-            try { _validityChecker.sleep(3000); }
+            try { Thread.sleep(3000); }
             catch (InterruptedException ignore) {
                 cat.error("InterruptedException!!!", ignore);
             }

@@ -26,12 +26,11 @@
 // File: DecisionModel.java
 // Classes: DecisionModel
 // Original Author: jrobbins@ics.uci.edu
-// $Id: DecisionModel.java,v 1.3 2002/10/20 21:11:12 linus Exp $
+// $Id: DecisionModel.java,v 1.4 2003/05/31 03:50:16 mkl Exp $
 
 package org.argouml.cognitive;
 
 import java.util.*;
-import java.awt.*;
 
 /** The DecisionModel is part of the state of the Designer.  It
  *  describes what types of decisions, or design issues, the Designer

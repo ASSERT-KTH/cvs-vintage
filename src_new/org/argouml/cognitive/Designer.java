@@ -24,7 +24,7 @@
 // File: Designer.java
 // Classes: Designer
 // Original Author: jrobbins@ics.uci.edu
-// $Id: Designer.java,v 1.11 2003/05/19 11:34:34 mkl Exp $
+// $Id: Designer.java,v 1.12 2003/05/31 03:50:16 mkl Exp $
 
 package org.argouml.cognitive;
 
@@ -34,7 +34,6 @@ import org.argouml.cognitive.critics.*;
 import org.tigris.gef.util.*;
 
 import java.util.*;
-import java.awt.*;
 import java.beans.*;
 import javax.swing.*;
 
@@ -297,7 +296,7 @@ public class Designer
             long sleepDuration = Math.min(cycleDuration - _critiqueDuration, 3000);
             sleepDuration = Math.max(sleepDuration, 1000);
             cat.debug("sleepDuration= " + sleepDuration);
-            try { _critiquer.sleep(sleepDuration); }
+            try { Thread.sleep(sleepDuration); }
             catch (InterruptedException ignore) {
                 cat.error("InterruptedException!!!", ignore);
             }
