@@ -23,7 +23,7 @@ import org.jboss.logging.Logger;
  *      
  *	@see <related>
  *	@author Rickard Öberg (rickard.oberg@telkel.com)
- *	@version $Revision: 1.2 $
+ *	@version $Revision: 1.3 $
  */
 public class TxManager
    implements TransactionManager
@@ -131,7 +131,27 @@ public class TxManager
    {
       tx.set(null);
    }
+   void associateTransaction(Transaction transaction) {
+	
+	   tx.set(transaction);
+   }
    
+   // There has got to be something better :)
+   static TxManager getTransactionManager() {
+	   
+		try {
+			
+			javax.naming.InitialContext context = new javax.naming.InitialContext();
+			
+			//One tx in naming
+			System.out.println("Calling get manager from JNDI");
+			TxManager manager = (TxManager) context.lookup("TransactionManager");
+			System.out.println("Returning TM "+manager.hashCode());
+			
+			return manager;
+			
+		} catch (Exception e ) { return null;}
+	}
    int getTransactionTimeout()
    {
       return timeOut;

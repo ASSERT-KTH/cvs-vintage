@@ -29,7 +29,7 @@ import javax.transaction.xa.XAException;
  *
  *	@see <related>
  *	@author Rickard Öberg (rickard.oberg@telkel.com)
- *	@version $Revision: 1.3 $
+ *	@version $Revision: 1.4 $
  */
 public class TransactionImpl
    implements Transaction, Serializable
@@ -48,7 +48,7 @@ public class TransactionImpl
    // Static --------------------------------------------------------
    static long nextId = 0;
    public long getNextId() { return nextId++; }
-   public TxManager tm;
+   public transient TxManager tm;
 
    static String hostName;
 
@@ -71,6 +71,20 @@ public class TransactionImpl
       xid = new XidImpl((getHostName()+"/"+getNextId()).getBytes(), null);
 
       this.tm = tm;
+   }
+   
+   private TxManager getTxManager() {
+	
+	   if (tm != null) {
+		   
+		   return tm;
+	   }
+	   
+	   // A way to circle the mess
+	   // :(
+	   tm = TxManager.getTransactionManager();
+	   
+	   return tm;
    }
 
    // Public --------------------------------------------------------
@@ -179,7 +193,7 @@ public class TransactionImpl
       }
 
       // Remove thread association with this tx
-      tm.removeTransaction();
+      getTxManager().removeTransaction();
       resources.clear();
    }
 
