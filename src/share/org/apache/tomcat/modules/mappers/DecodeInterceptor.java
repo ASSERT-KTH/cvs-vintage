@@ -249,16 +249,6 @@ public class DecodeInterceptor extends  BaseInterceptor  {
 	if( pathMB.isNull())
 	    throw new RuntimeException("ASSERT: null path in request URI");
 
-	if( safe &&
-	    ( pathMB.indexOf("//") >= 0 ||
-	      pathMB.indexOf("/." ) >=0
-	      )) {
-	    //debug=1;
-	    normalizePath( pathMB );
-	    if( debug > 0 )
-		log( "Normalized url "  + pathMB );
-	}
-	
 	//if( path.indexOf("?") >=0 )
 	//   throw new RuntimeException("ASSERT: ? in requestURI");
 	
@@ -341,6 +331,16 @@ public class DecodeInterceptor extends  BaseInterceptor  {
 		log( "Error decoding request ", ex);
 		return 400;
 	    }
+	}
+
+	if( safe &&
+	    ( pathMB.indexOf("//") >= 0 ||
+	      pathMB.indexOf("/." ) >=0
+	      )) {
+	    //debug=1;
+	    normalizePath( pathMB );
+	    if( debug > 0 )
+		log( "Normalized url "  + pathMB );
 	}
 
 	return 0;
