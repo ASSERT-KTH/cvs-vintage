@@ -12,6 +12,8 @@ import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.sql.SQLException;
+import java.util.Iterator;
+import java.util.List;
 import javax.sql.DataSource;
 
 import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCCMRFieldBridge;
@@ -27,7 +29,7 @@ import org.jboss.logging.Logger;
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
- * @version $Revision: 1.8 $
+ * @version $Revision: 1.9 $
  */
 public class JDBCStopCommand {
 
@@ -50,16 +52,16 @@ public class JDBCStopCommand {
    
    public void execute() {
       if(entityMetaData.getRemoveTable()) {
-         if (log.isDebugEnabled())
-            log.debug("Droping table for entity " + entity.getEntityName());
+         log.debug("Droping table for entity " + entity.getEntityName());
          dropTable(entity.getDataSource(), entityMetaData.getTableName());
       }
 
       // drop relation tables
-      JDBCCMRFieldBridge[] cmrFields = entity.getJDBCCMRFields();
-      for(int i=0; i<cmrFields.length; i++) {
-         JDBCRelationMetaData relationMetaData = 
-               cmrFields[i].getRelationMetaData();
+      List cmrFields = entity.getCMRFields();
+      for(Iterator iter = cmrFields.iterator(); iter.hasNext();) { 
+         JDBCCMRFieldBridge cmrField = (JDBCCMRFieldBridge)iter.next();
+
+         JDBCRelationMetaData relationMetaData = cmrField.getRelationMetaData();
 
          if(relationMetaData.isTableMappingStyle() &&
             relationMetaData.getTableExists()) {
@@ -77,7 +79,6 @@ public class JDBCStopCommand {
    private void dropTable(DataSource dataSource, String tableName) {
       Connection con = null;
       ResultSet rs = null;
-      boolean debug = log.isDebugEnabled();
 
       // was the table already delete?
       try {
@@ -88,8 +89,7 @@ public class JDBCStopCommand {
             return;
          }
       } catch(SQLException e) {
-         if (debug)
-            log.debug("Error getting database metadata for DROP TABLE command. " +
+         log.debug("Error getting database metadata for DROP TABLE command. " +
                " DROP TABLE will not be executed. ", e);
          return;
       } finally {
@@ -117,8 +117,7 @@ public class JDBCStopCommand {
          // success
          log.info("Dropped table '" + tableName + "' successfully.");
       } catch (Exception e) {
-         if (debug)
-            log.debug("Could not drop table " + tableName + ": " + e.getMessage());
+         log.debug("Could not drop table " + tableName + ": " + e.getMessage());
          try {
             manager.getContainer().getTransactionManager().rollback ();
          } catch (Exception _e) {
