@@ -1,4 +1,4 @@
-// $Id: Actions.java,v 1.73 2004/09/18 09:34:45 mvw Exp $
+// $Id: Actions.java,v 1.74 2004/09/18 12:09:56 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -224,7 +224,6 @@ public class Actions implements TargetListener {
      */
     public static void addAction(AbstractAction newAction) {
         LOG.debug("Adding action: " + newAction.getClass().getName());
-        System.out.println("Adding action: " + newAction.getClass().getName());
         if (newAction instanceof UMLAction) {
             allActions.addElement(newAction);
         } else {
