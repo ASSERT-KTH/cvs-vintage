@@ -97,45 +97,45 @@ import org.w3c.dom.Element;
  *
  * <p>The EJBDeployer creates instances of subclasses of this class
  *    and calls the appropriate initialization methods.
- *    
+ *
  * <p>A Container does not perform any significant work, but instead delegates
  *    to the plugins to provide for all kinds of algorithmic functionality.
  *
  * @see EJBDeployer
- * 
+ *
  * @author <a href="mailto:loubyansky@hotmail.com">Alex Loubyansky</a>
  * @author <a href="mailto:rickard.oberg@jboss.org">Rickard Öberg</a>
  * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
  * @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>.
  * @author <a href="bill@burkecentral.com">Bill Burke</a>
  * @author <a href="mailto:d_jencks@users.sourceforge.net">David Jencks</a>
- * @version $Revision: 1.111 $
+ * @version $Revision: 1.112 $
  *
- * @todo convert all the deployment/service lifecycle stuff to an 
+ * @todo convert all the deployment/service lifecycle stuff to an
  * aspect/interceptor.  Make this whole stack into a model mbean.
  */
 public abstract class Container extends ServiceMBeanSupport
-   implements MBeanRegistration, DynamicMBean, 
-	      StatisticsProvider, InstancePoolContainer
+   implements MBeanRegistration, DynamicMBean,
+              StatisticsProvider, InstancePoolContainer
 {
-   public final static String BASE_EJB_CONTAINER_NAME = 
-         "jboss.j2ee:service=EJB";
+   public final static String BASE_EJB_CONTAINER_NAME =
+      "jboss.j2ee:service=EJB";
 
-   public final static ObjectName EJB_CONTAINER_QUERY_NAME = 
-         ObjectNameFactory.create(BASE_EJB_CONTAINER_NAME + ",*");
-   
+   public final static ObjectName EJB_CONTAINER_QUERY_NAME =
+      ObjectNameFactory.create(BASE_EJB_CONTAINER_NAME + ",*");
+
    // Constants uses with container interceptor configurations
    public static final int BMT = 1;
    public static final int CMT = 2;
    public static final int ANY = 3;
-   
+
    static final String BMT_VALUE = "Bean";
    static final String CMT_VALUE = "Container";
    static final String ANY_VALUE = "Both";
-   
+
    /** A reference to {@link TimedObject#ejbTimeout}. */
    protected static final Method EJB_TIMEOUT;
-   
+
    /**
     * Initialize <tt>TimedObject</tt> method references.
     */
@@ -148,7 +148,7 @@ public abstract class Container extends ServiceMBeanSupport
          throw new ExceptionInInitializerError(e);
       }
    }
-   
+
    /**
     * Externally supplied configuration data
     */
@@ -160,13 +160,13 @@ public abstract class Container extends ServiceMBeanSupport
     * metaData.getApplicationMetaData()
     */
    protected BeanMetaData metaData;
-   
-   /** 
-    * This is the application that this container is a part of 
+
+   /**
+    * This is the application that this container is a part of
     */
    protected EjbModule ejbModule;
-   
-   /** 
+
+   /**
     * ObjectName of Container
     * @todo use getObjectName() from serviceMBeanSupport.
     */
@@ -178,134 +178,134 @@ public abstract class Container extends ServiceMBeanSupport
     * NOT for loading classes!
     */
    protected ClassLoader localClassLoader;
-   
+
    /**
     * This is the classloader of this container. All classes and resources that
     * the bean uses will be loaded from here. By doing this we make the bean
     * re-deployable
     */
    protected ClassLoader classLoader;
-   
-   /** 
-    * The class loader for remote dynamic classloading 
+
+   /**
+    * The class loader for remote dynamic classloading
     */
    protected ClassLoader webClassLoader;
 
-   /** 
+   /**
     * This is the EnterpriseBean class.
     */
    protected Class beanClass;
-   
-   /** 
+
+   /**
     * This is the Home interface class.
     */
    protected Class homeInterface;
-   
+
    /**
     * This is the Remote interface class.
     */
    protected Class remoteInterface;
-   
-   /** 
+
+   /**
     * This is the Local Home interface class
     */
    protected Class localHomeInterface;
-   
+
    /**
     * This is the Local interface class
     */
    protected Class localInterface;
-    
-   /** 
-    * This is the instance cache for this container 
+
+   /**
+    * This is the instance cache for this container
     */
    private InstanceCache instanceCache;
-   
-   /** 
-    * This is the instancepool that is to be used 
+
+   /**
+    * This is the instancepool that is to be used
     */
    private InstancePool instancePool;
-  
-   /** 
+
+   /**
     * This is the TransactionManager
     */
    protected TransactionManager tm;
-   
+
    /**
-    * This is the SecurityManager 
+    * This is the SecurityManager
     */
    protected AuthenticationManager sm;
-   
-   /** 
+
+   /**
     * This is the realm mapping
     */
    protected RealmMapping rm;
-   
+
    /**
     * The custom security proxy used by the SecurityInterceptor
     */
    protected Object securityProxy;
-   
+
    /**
     * This is the bean lock manager that is to be used
     */
    protected BeanLockManager lockManager;
-   
+
    /**
     * The proxy factory for local interfaces
     */
    protected LocalProxyFactory localProxyFactory = new BaseLocalProxyFactory();
-   
+
    /**
     * This is a cache for method permissions
     */
    private HashMap methodPermissionsCache = new HashMap();
-   
+
    /**
     * Maps for MarshalledInvocation mapping
     */
    protected Map marshalledInvocationMapping = new HashMap();
-   
+
    /**
     * This Container's codebase, a sequence of URLs separated by spaces
     */
    protected String codebase = "";
-   
+
    /**
     * ObjectName of the JSR-77 EJB representation
     */
    protected String mEJBObjectName;
-   
+
    /**
     * ??? What is this for ???
     */
    protected HashMap proxyFactories = new HashMap();
 
-   /** 
+   /**
     * The Proxy factory is set in the Invocation.  This TL is used
     * for methods that do not have access to the Invocation.
     */
    protected ThreadLocal proxyFactoryTL = new ThreadLocal();
 
    /**
-    * boolean <code>started</code> indicates if this container is currently 
+    * boolean <code>started</code> indicates if this container is currently
     * started. if not, calls to non lifecycle methods will raise exceptions.
     */
    private boolean started = false;
-   
+
    /**
     * This is the first interceptor in the chain. The last interceptor must
     * be provided by the container itself.
     */
    protected Interceptor interceptor;
-   
+
    /**
     * Timer Service for this Container
     **/
    public HashMap timerServices = new HashMap();
 
    private Map methodToTxSupportMap;
-   
+
    /**
     * Get the Di value.
     * @return the Di value.
@@ -338,12 +338,12 @@ public abstract class Container extends ServiceMBeanSupport
       }
       ejbModule = app;
    }
-   
+
    public EjbModule getEjbModule()
    {
       return ejbModule;
    }
-   
+
    /**
     * Sets the meta data for this container. The meta data consists of the
     * properties found in the XML descriptors.
@@ -354,7 +354,7 @@ public abstract class Container extends ServiceMBeanSupport
    {
       this.metaData = metaData;
    }
-   
+
    /**
     * Returns the metadata of this container.
     *
@@ -369,25 +369,25 @@ public abstract class Container extends ServiceMBeanSupport
    {
       return homeInterface;
    }
-   
+
    public Class getRemoteClass()
    {
       return remoteInterface;
    }
- 
-   public Class getLocalClass() 
+
+   public Class getLocalClass()
    {
       return localInterface;
    }
-   
-   public Class getLocalHomeClass() 
+
+   public Class getLocalHomeClass()
    {
       return localHomeInterface;
    }
 
    public void setInstancePool(InstancePool instancePool)
    {
-      if(instancePool == null) 
+      if(instancePool == null)
       {
          throw new IllegalArgumentException("instancePool is null");
       }
@@ -395,7 +395,7 @@ public abstract class Container extends ServiceMBeanSupport
       this.instancePool = instancePool;
       instancePool.setContainer(this);
    }
-   
+
    public InstancePool getInstancePool()
    {
       return instancePool;
@@ -427,7 +427,7 @@ public abstract class Container extends ServiceMBeanSupport
    {
       this.tm = tm;
    }
-   
+
    /**
     * Returns this container's transaction manager.
     *
@@ -437,28 +437,28 @@ public abstract class Container extends ServiceMBeanSupport
    {
       return tm;
    }
-   
+
    public void setSecurityManager(AuthenticationManager sm)
    {
       this.sm = sm;
    }
-   
+
    public AuthenticationManager getSecurityManager()
    {
       return sm;
    }
-   
+
    public BeanLockManager getLockManager()
    {
       return lockManager;
    }
-   
-   public void setLockManager(final BeanLockManager lockManager) 
+
+   public void setLockManager(final BeanLockManager lockManager)
    {
       this.lockManager = lockManager;
       lockManager.setContainer(this);
    }
-   
+
    public void addProxyFactory(String invokerBinding, EJBProxyFactory factory)
    {
       proxyFactories.put(invokerBinding, factory);
@@ -468,22 +468,22 @@ public abstract class Container extends ServiceMBeanSupport
    {
       this.rm = rm;
    }
-   
+
    public RealmMapping getRealmMapping()
    {
       return rm;
    }
-   
+
    public void setSecurityProxy(Object proxy)
    {
       this.securityProxy = proxy;
    }
-   
+
    public Object getSecurityProxy()
    {
       return securityProxy;
    }
-   
+
    public EJBProxyFactory getProxyFactory()
    {
       return (EJBProxyFactory)proxyFactoryTL.get();
@@ -493,20 +493,20 @@ public abstract class Container extends ServiceMBeanSupport
    {
       proxyFactoryTL.set(factory);
    }
-   
+
    public LocalProxyFactory getLocalProxyFactory()
    {
       return localProxyFactory;
    }
-   
+
    public EJBProxyFactory lookupProxyFactory(String binding)
    {
       return (EJBProxyFactory)proxyFactories.get(binding);
    }
 
    /**
-    * Sets the local class loader for this container. 
-    * Used for loading resources from the local jar file for this container. 
+    * Sets the local class loader for this container.
+    * Used for loading resources from the local jar file for this container.
     * NOT for loading classes!
     *
     * @param cl the new local class loader
@@ -515,7 +515,7 @@ public abstract class Container extends ServiceMBeanSupport
    {
       this.localClassLoader = cl;
    }
-   
+
    /**
     * Returns the local classloader for this container.
     *
@@ -525,7 +525,7 @@ public abstract class Container extends ServiceMBeanSupport
    {
       return localClassLoader;
    }
-   
+
    /**
     * Sets the class loader for this container. All the classes and resources
     * used by the bean in this container will use this classloader.
@@ -536,7 +536,7 @@ public abstract class Container extends ServiceMBeanSupport
    {
       this.classLoader = cl;
    }
-   
+
    /**
     * Returns the class loader for this container.
     *
@@ -547,7 +547,7 @@ public abstract class Container extends ServiceMBeanSupport
       return classLoader;
    }
 
-   /** 
+   /**
     * Get the class loader for dynamic class loading via http.
     */
    public ClassLoader getWebClassLoader()
@@ -555,7 +555,7 @@ public abstract class Container extends ServiceMBeanSupport
       return webClassLoader;
    }
 
-   /** 
+   /**
     * Set the class loader for dynamic class loading via http.
     */
    public void setWebClassLoader(final ClassLoader webClassLoader)
@@ -575,11 +575,16 @@ public abstract class Container extends ServiceMBeanSupport
 
    public Map getMethodHashToTxSupportMap()
    {
+      if (methodToTxSupportMap == null)
+      {
+         return null;
+      } // end of if ()
+
       Map result = new HashMap(methodToTxSupportMap.size());
       for (Iterator i = methodToTxSupportMap.entrySet().iterator(); i.hasNext();)
       {
-	 Map.Entry e = (Map.Entry)i.next();
-	 result.put(new Integer(e.getKey().hashCode()), e.getValue()); 
+         Map.Entry e = (Map.Entry)i.next();
+         result.put(new Integer(e.getKey().hashCode()), e.getValue());
       } // end of for ()
       return result;
    }
@@ -593,8 +598,8 @@ public abstract class Container extends ServiceMBeanSupport
       this.methodToTxSupportMap = methodToTxSupportMap;
    }
 
-   
-   
+
+
    /**
     * Returns the permissions for a method. (a set of roles)
     *
@@ -603,7 +608,7 @@ public abstract class Container extends ServiceMBeanSupport
    public Set getMethodPermissions(Method m, InvocationType iface)
    {
       Set permissions;
-      
+
       if (methodPermissionsCache.containsKey(m))
       {
          permissions = (Set) methodPermissionsCache.get( m );
@@ -618,7 +623,7 @@ public abstract class Container extends ServiceMBeanSupport
 
       return permissions;
    }
-   
+
    /**
     * Returns the bean class instance of this container.
     *
@@ -628,32 +633,32 @@ public abstract class Container extends ServiceMBeanSupport
    {
       return beanClass;
    }
-   
+
    /**
     * Returns a new instance of the bean class or a subclass of the bean class.
     * This factory style method is speciffically used by a container to supply
-    * an implementation of the abstract accessors in EJB2.0, but could be 
-    * usefull in other situations. This method should ALWAYS be used instead 
+    * an implementation of the abstract accessors in EJB2.0, but could be
+    * usefull in other situations. This method should ALWAYS be used instead
     * of getBeanClass().newInstance();
-    * 
+    *
     * @return    the new instance
-    * 
-    * @see java.lang.Class#newInstance 
+    *
+    * @see java.lang.Class#newInstance
     */
    public Object createBeanClassInstance() throws Exception {
       return getBeanClass().newInstance();
    }
-   
+
    /**
     * Sets the codebase of this container.
-    * 
-    * @param   codebase a possibly empty, but non null String with 
+    *
+    * @param   codebase a possibly empty, but non null String with
     *                   a sequence of URLs separated by spaces
     */
-   public void setCodebase(final String codebase) 
-   { 
+   public void setCodebase(final String codebase)
+   {
       // Why not throw an IllegalArgumentException???
-      if(codebase != null) 
+      if(codebase != null)
       {
          this.codebase = codebase;
       }
@@ -661,22 +666,22 @@ public abstract class Container extends ServiceMBeanSupport
 
    /**
     * Gets the codebase of this container.
-    * 
-    * @return    this container's codebase String, a sequence of URLs 
-    *            separated by spaces 
+    *
+    * @return    this container's codebase String, a sequence of URLs
+    *            separated by spaces
     */
-   public String getCodebase() 
-   { 
-      return codebase; 
+   public String getCodebase()
+   {
+      return codebase;
    }
- 
+
    public ObjectName getJmxName()
    {
       BeanMetaData beanMetaData = getBeanMetaData();
       String jndiName = beanMetaData.getHome() != null ?
          beanMetaData.getJndiName() : beanMetaData.getLocalJndiName();
 
-      if (jndiName == null) 
+      if (jndiName == null)
       {
          throw new IllegalStateException("cannot get Container object " +
                "name unless jndi name is set!");
@@ -697,12 +702,12 @@ public abstract class Container extends ServiceMBeanSupport
       }
       return jmxName;
    }
- 
+
    /**
     * The EJBDeployer calls this method.  The EJBDeployer has set
     * all the plugins and interceptors that this bean requires and now proceeds
-    * to initialize the chain.  The method looks for the standard classes in 
-    * the URL, sets up the naming environment of the bean. The concrete 
+    * to initialize the chain.  The method looks for the standard classes in
+    * the URL, sets up the naming environment of the bean. The concrete
     * container classes should override this method to introduce
     * implementation specific initialization behaviour.
     *
@@ -734,18 +739,18 @@ public abstract class Container extends ServiceMBeanSupport
 
       // Acquire classes from CL
       beanClass = classLoader.loadClass(metaData.getEjbClass());
-      
+
       if (metaData.getLocalHome() != null)
          localHomeInterface = classLoader.loadClass(metaData.getLocalHome());
       if (metaData.getLocal() != null)
          localInterface = classLoader.loadClass(metaData.getLocal());
-      
+
       localProxyFactory.setContainer( this );
       localProxyFactory.create();
       if (localHomeInterface != null)
          ejbModule.addLocalHome(this, localProxyFactory.getEJBLocalHome() );
    }
-   
+
    /**
     * Creates the single Timer Servic for this container if not already created
     *
@@ -787,7 +792,7 @@ public abstract class Container extends ServiceMBeanSupport
       }
       return timerService;
    }
-   
+
    /**
     * Stops all the timers created by beans of this container
     **/
@@ -799,7 +804,7 @@ public abstract class Container extends ServiceMBeanSupport
          i.remove();
       }
    }
-   
+
    /**
     * Handles an Timed Event by gettting the appropriate EJB instance,
     * invoking the "ejbTimeout()" method on it with the given timer
@@ -809,23 +814,23 @@ public abstract class Container extends ServiceMBeanSupport
    public void handleEjbTimeout( Timer pTimer ) {
       ClassLoader oldCl = Thread.currentThread().getContextClassLoader();
       Thread.currentThread().setContextClassLoader( getClassLoader() );
-      
+
       try
       {
          Invocation invocation = new Invocation(
             "JNDI-NAME ??",
-            EJB_TIMEOUT, 
+            EJB_TIMEOUT,
             new Class[] { Timer.class },
             ( getTransactionManager() == null ?
                  null:
                  getTransactionManager().getTransaction()
             ),
-            SecurityAssociation.getPrincipal(), 
+            SecurityAssociation.getPrincipal(),
             SecurityAssociation.getCredential()
          );
          invocation.setArguments( new Object[] { pTimer } );
          invocation.setType( InvocationType.LOCAL );
-         
+
          invoke( invocation );
       }
       catch( Exception e ) {
@@ -847,7 +852,7 @@ public abstract class Container extends ServiceMBeanSupport
       }
       catch (TransactionRolledbackException trbe)
       {
-         throw new TransactionRolledbackLocalException( 
+         throw new TransactionRolledbackLocalException(
                trbe.getMessage(), trbe );
       }
 */
@@ -856,17 +861,17 @@ public abstract class Container extends ServiceMBeanSupport
          Thread.currentThread().setContextClassLoader(oldCl);
       }
    }
-   
+
    /**
     * A default implementation of starting the container service.
     * The container registers it's dynamic MBean interface in the JMX base.
-    * 
+    *
     * The concrete container classes should override this method to introduce
     * implementation specific start behaviour.
     *
-    * @todo implement the service lifecycle methods in an xmbean interceptor so 
+    * @todo implement the service lifecycle methods in an xmbean interceptor so
     * non lifecycle managed ops are blocked when mbean is not started.
-    * 
+    *
     * @throws Exception    An exception that occured during start
     */
    protected void startService() throws Exception
@@ -878,8 +883,8 @@ public abstract class Container extends ServiceMBeanSupport
       Interceptor in = interceptor;
       while (in != null)
       {
-	 in.start();
-	 in = in.getNext();
+         in.start();
+         in = in.getNext();
       }
       localProxyFactory.start();
 
@@ -894,7 +899,7 @@ public abstract class Container extends ServiceMBeanSupport
          temp.startRecovery();
       }
    }
-   
+
    /**
     * A default implementation of stopping the container service (no-op). The
     * concrete container classes should override this method to introduce
@@ -910,8 +915,8 @@ public abstract class Container extends ServiceMBeanSupport
       log.info( "=======================> Stop Timers" );
       stopTimers();
       teardownEnvironment();
-      WebServiceMBean webServer = 
-         (WebServiceMBean)MBeanProxy.create(WebServiceMBean.class, 
+      WebServiceMBean webServer =
+         (WebServiceMBean)MBeanProxy.create(WebServiceMBean.class,
                                             WebServiceMBean.OBJECT_NAME);
       ClassLoader wcl = getWebClassLoader();
       if( wcl != null )
@@ -930,11 +935,11 @@ public abstract class Container extends ServiceMBeanSupport
       Interceptor in = interceptor;
       while (in != null)
       {
-	 in.stop();
-	 in = in.getNext();
+         in.stop();
+         in = in.getNext();
       }
    }
-   
+
    /**
     * A default implementation of destroying the container service
     * The concrete container classes should override this method to introduce
@@ -952,8 +957,8 @@ public abstract class Container extends ServiceMBeanSupport
       this.classLoader = null;
       this.webClassLoader = null;
       this.localClassLoader = null;
-      
-      // this.lockManager = null; Setting this to null causes AbstractCache 
+
+      // this.lockManager = null; Setting this to null causes AbstractCache
       // to fail on undeployment
       this.methodPermissionsCache.clear();
    }
@@ -965,7 +970,7 @@ public abstract class Container extends ServiceMBeanSupport
     *
     * @param invocation the invocation information
     * @return the result of the invocation
-    * @throws Exception if a problem occurs 
+    * @throws Exception if a problem occurs
     */
    public InvocationResponse invoke(Invocation invocation) throws Exception
    {
@@ -982,9 +987,9 @@ public abstract class Container extends ServiceMBeanSupport
          Thread.currentThread().setContextClassLoader(oldCl);
       }
    }
-   
+
    // DynamicMBean interface implementation ----------------------------------
-   
+
    public Object getAttribute(String attribute)
       throws AttributeNotFoundException,
              MBeanException,
@@ -1020,17 +1025,17 @@ public abstract class Container extends ServiceMBeanSupport
              ReflectionException
    {
    }
-   
+
    public AttributeList getAttributes(String[] attributes)
    {
       return null;
    }
-   
+
    public AttributeList setAttributes(AttributeList attributes)
    {
       return null;
    }
-   
+
    /**
     * Handle a operation invocation.
     *
@@ -1045,39 +1050,39 @@ public abstract class Container extends ServiceMBeanSupport
     */
    public Object invoke(String ignored, Object[] params, String[] signature)
       throws MBeanException, ReflectionException
-   {      
-      if (params != null && 
-            params.length == 1 && 
+   {
+      if (params != null &&
+            params.length == 1 &&
             (params[0] instanceof Invocation))
       {
-         if (!started) 
+         if (!started)
          {
             throw new IllegalStateException("container is not started, you " +
                   "cannot invoke ejb methods on it");
          }
-      
-         // We are have a valid (not-null) invocation because of 
+
+         // We are have a valid (not-null) invocation because of
          // the instanceof check above
          Invocation invocation = (Invocation)params[0];
 
          // set the thread context class loader
          // dain: do we need to reset the class loader at the end of the call?
-         ClassLoader callerClassLoader = 
+         ClassLoader callerClassLoader =
                Thread.currentThread().getContextClassLoader();
          try
          {
-            Thread.currentThread().setContextClassLoader(this.classLoader);        
-            // Check against home, remote, localHome, local, getHome, 
+            Thread.currentThread().setContextClassLoader(this.classLoader);
+            // Check against home, remote, localHome, local, getHome,
             // getRemote, getLocalHome, getLocal
             Object type = invocation.getType();
             if(type == InvocationType.REMOTE ||
-                  type == InvocationType.LOCAL) 
+                  type == InvocationType.LOCAL)
             {
                if (invocation instanceof MarshalledInvocation)
                {
                   ((MarshalledInvocation) invocation).setMethodMap(
                         marshalledInvocationMapping);
-                  
+
                   if (log.isTraceEnabled())
                   {
                      log.trace("METHOD REMOTE INVOKE "+
@@ -1085,7 +1090,7 @@ public abstract class Container extends ServiceMBeanSupport
                            invocation.getMethod().getName()+"||");
                   }
                }
-               
+
                return invoke(invocation);
             }
             else if(type == InvocationType.HOME ||
@@ -1093,10 +1098,10 @@ public abstract class Container extends ServiceMBeanSupport
             {
                if (invocation instanceof MarshalledInvocation)
                {
-                  
+
                   ((MarshalledInvocation) invocation).setMethodMap(
                         marshalledInvocationMapping);
-                  
+
                   if (log.isTraceEnabled())
                   {
                      log.trace("METHOD HOME INVOKE " +
@@ -1105,10 +1110,10 @@ public abstract class Container extends ServiceMBeanSupport
                            invocation.getArguments().toString());
                   }
                }
-               
+
                return invoke(invocation);
             }
-            else 
+            else
             {
                throw new MBeanException(new IllegalArgumentException(
                         "Unknown invocation type: " + type));
@@ -1123,37 +1128,37 @@ public abstract class Container extends ServiceMBeanSupport
             Thread.currentThread().setContextClassLoader(callerClassLoader);
          }
       }
-      else if (params == null || params.length == 0) 
+      else if (params == null || params.length == 0)
       {
-         try 
+         try
          {
-            if ("create".equals(ignored)) 
+            if ("create".equals(ignored))
             {
                create();
             }
-            else if ("start".equals(ignored)) 
+            else if ("start".equals(ignored))
             {
                start();
             }
-            else if ("stop".equals(ignored)) 
+            else if ("stop".equals(ignored))
             {
                stop();
             }
-            else if ("destroy".equals(ignored)) 
+            else if ("destroy".equals(ignored))
             {
                destroy();
             }
             else
             {
-               throw new IllegalArgumentException("unknown operation! " + 
+               throw new IllegalArgumentException("unknown operation! " +
                      ignored);
             }
-            
+
             return null;
          }
          catch (Exception e)
          {
-            throw new MBeanException(e, 
+            throw new MBeanException(e,
                   "Exception in service lifecyle operation: " + ignored);
          }
       }
@@ -1168,7 +1173,7 @@ public abstract class Container extends ServiceMBeanSupport
                "Expected zero or single Invocation argument");
       }
    }
-   
+
    /**
     * Build the container MBean information on attributes, contstructors,
     * operations, and notifications. Currently there are no attributes, no
@@ -1190,128 +1195,128 @@ public abstract class Container extends ServiceMBeanSupport
    {
       MBeanParameterInfo[] miInfoParams = new MBeanParameterInfo[] {
          new MBeanParameterInfo(
-               "method", 
-               Invocation.class.getName(), 
+               "method",
+               Invocation.class.getName(),
                "Invocation data")
       };
-      
+
       MBeanParameterInfo[] miStatisticsParams = new MBeanParameterInfo[] {
          new MBeanParameterInfo(
-               "container", 
-               List.class.getName(), 
+               "container",
+               List.class.getName(),
                "Statitic Data Container"),
          new MBeanParameterInfo(
-               "reset", 
-               Boolean.TYPE.getName(), 
+               "reset",
+               Boolean.TYPE.getName(),
                "If true reset statisitcs data")
       };
-      
+
       MBeanParameterInfo[] noParams = new MBeanParameterInfo[] {};
-      
+
       MBeanConstructorInfo[] ctorInfo = new  MBeanConstructorInfo[] {};
-      
+
       MBeanAttributeInfo[] attrInfo = new MBeanAttributeInfo[] {
-	 new MBeanAttributeInfo("ClassLoader",
-				"java.lang.ClassLoader",
-				"Return the contained object's classloader",
-				true,
-				false,
-				false),
-	 new MBeanAttributeInfo("BeanClass",
-				"java.lang.Class",
-				"Return the Beans class",
-				true,
-				false,
-				false),
-	 new MBeanAttributeInfo("BeanMetaData",
-				"org.jboss.metadata.BeanMetaData",
-				"Return Beans metadata object",
-				true,
-				false,
-				false),
-	 new MBeanAttributeInfo("State",
-				"int",
-				"Return the containers state",
-				true,
-				false,
-				false),
-	 new MBeanAttributeInfo("StateString",
-				"java.lang.String",
-				"Return the container's state as a String",
-				true,
-				false,
-				false)
+         new MBeanAttributeInfo("ClassLoader",
+                                "java.lang.ClassLoader",
+                                "Return the contained object's classloader",
+                                true,
+                                false,
+                                false),
+         new MBeanAttributeInfo("BeanClass",
+                                "java.lang.Class",
+                                "Return the Beans class",
+                                true,
+                                false,
+                                false),
+         new MBeanAttributeInfo("BeanMetaData",
+                                "org.jboss.metadata.BeanMetaData",
+                                "Return Beans metadata object",
+                                true,
+                                false,
+                                false),
+         new MBeanAttributeInfo("State",
+                                "int",
+                                "Return the containers state",
+                                true,
+                                false,
+                                false),
+         new MBeanAttributeInfo("StateString",
+                                "java.lang.String",
+                                "Return the container's state as a String",
+                                true,
+                                false,
+                                false)
       };
-      
+
       MBeanOperationInfo[] opInfo = {
          new MBeanOperationInfo("home",
                                 "Invoke an EJBHome interface method",
                                 miInfoParams,
                                 "java.lang.Object",
                                 MBeanOperationInfo.ACTION_INFO),
-         
+
          new MBeanOperationInfo("remote",
                                 "Invoke an EJBObject interface method",
                                 miInfoParams,
                                 "java.lang.Object",
                                 MBeanOperationInfo.ACTION_INFO),
-         
+
          new MBeanOperationInfo("getHome",
                                 "Get the EJBHome interface class",
                                 noParams,
                                 "java.lang.Class",
                                 MBeanOperationInfo.INFO),
-         
+
          new MBeanOperationInfo("getRemote",
                                 "Get the EJBObject interface class",
                                 noParams,
                                 "java.lang.Class",
                                 MBeanOperationInfo.INFO),
-         
+
          new MBeanOperationInfo("create",
                                 "create service lifecycle operation",
                                 noParams,
                                 "void",
                                 MBeanOperationInfo.ACTION),
-         
+
          new MBeanOperationInfo("start",
                                 "start service lifecycle operation",
                                 noParams,
                                 "void",
                                 MBeanOperationInfo.ACTION),
-         
+
          new MBeanOperationInfo("stop",
                                 "stop service lifecycle operation",
                                 noParams,
                                 "void",
                                 MBeanOperationInfo.ACTION),
-         
+
          new MBeanOperationInfo("destroy",
                                 "destroy service lifecycle operation",
                                 noParams,
                                 "void",
                                 MBeanOperationInfo.ACTION),
-                                
+
          new MBeanOperationInfo("retrieveStatistics",
                                 "retrieve the performance statistics",
                                 miStatisticsParams,
                                 "void",
                                 MBeanOperationInfo.ACTION)
       };
-      
+
       MBeanNotificationInfo[] notifyInfo = null;
-      return new MBeanInfo(getClass().getName(), 
+      return new MBeanInfo(getClass().getName(),
                            "EJB Container MBean",
-                           attrInfo, 
-                           ctorInfo, 
-                           opInfo, 
+                           attrInfo,
+                           ctorInfo,
+                           opInfo,
                            notifyInfo);
    }
-   
+
    // End DynamicMBean interface
-   
+
    abstract Interceptor createContainerInterceptor();
-   
+
    public void addInterceptor(Interceptor in)
    {
       if (interceptor == null)
@@ -1325,16 +1330,16 @@ public abstract class Container extends ServiceMBeanSupport
          {
             current = current.getNext();
          }
-         
+
          current.setNext(in);
       }
    }
-   
+
    public Interceptor getInterceptor()
    {
       return interceptor;
    }
-  
+
    /**
     * This method sets up the naming environment of the bean.
     * We create the java:comp/env namespace with properties, EJB-References,
@@ -1350,12 +1355,12 @@ public abstract class Container extends ServiceMBeanSupport
          log.debug("Begin java:comp/env for EJB: "+beanMetaData.getEjbName());
          log.debug("TCL: "+Thread.currentThread().getContextClassLoader());
       }
-      
+
       // Since the BCL is already associated with this thread we can start
       // using the java: namespace directly
       Context ctx = (Context) new InitialContext().lookup("java:comp");
       Context envCtx = ctx.createSubcontext("env");
-         
+
       // Bind environment properties
       {
          Iterator enum = beanMetaData.getEnvironmentEntries();
@@ -1366,11 +1371,11 @@ public abstract class Container extends ServiceMBeanSupport
                log.debug("Binding env-entry: "+entry.getName()+" of type: "+
                          entry.getType()+" to value:"+entry.getValue());
             }
-               
+
             EnvEntryMetaData.bindEnvEntry(envCtx, entry);
          }
       }
-      
+
       // Bind EJB references
       {
          Iterator enum = beanMetaData.getEjbReferences();
@@ -1379,7 +1384,7 @@ public abstract class Container extends ServiceMBeanSupport
             EjbRefMetaData ref = (EjbRefMetaData)enum.next();
             if (debug)
                log.debug("Binding an EJBReference "+ref.getName());
-            
+
             if (ref.getLink() != null)
             {
                // Internal link
@@ -1390,10 +1395,10 @@ public abstract class Container extends ServiceMBeanSupport
                String jndiName = EjbUtil.findEjbLink( server, di, ref.getLink() );
 
                Util.bind(
-                     envCtx, 
-                     ref.getName(), 
+                     envCtx,
+                     ref.getName(),
                      new LinkRef(jndiName));
-               
+
             }
             else
             {
@@ -1411,11 +1416,11 @@ public abstract class Container extends ServiceMBeanSupport
                          ", expected either ejb-link in ejb-jar.xml or " +
                          "jndi-name in jboss.xml");
                   }
-                  
+
                   StringRefAddr addr = new StringRefAddr(invokerBinding, name);
-                  log.debug("adding " + invokerBinding + ":" + name + 
+                  log.debug("adding " + invokerBinding + ":" + name +
                         " to Reference");
-                  
+
                   if (reference == null)
                   {
                      reference = new Reference("javax.naming.LinkRef",
@@ -1429,7 +1434,7 @@ public abstract class Container extends ServiceMBeanSupport
                   if (ref.getJndiName() != null)
                   {
                      // Add default
-                     StringRefAddr addr = 
+                     StringRefAddr addr =
                            new StringRefAddr("default", ref.getJndiName());
                      reference.add(addr);
                   }
@@ -1444,14 +1449,14 @@ public abstract class Container extends ServiceMBeanSupport
                          "or jndi-name in jboss.xml");
                   }
                   Util.bind(
-                        envCtx, 
-                        ref.getName(), 
+                        envCtx,
+                        ref.getName(),
                         new LinkRef(ref.getJndiName()));
                }
             }
          }
       }
-         
+
       // Bind Local EJB references
       {
          Iterator enum = beanMetaData.getEjbLocalReferences();
@@ -1462,7 +1467,7 @@ public abstract class Container extends ServiceMBeanSupport
             EjbLocalRefMetaData ref = (EjbLocalRefMetaData)enum.next();
             String refName = ref.getName();
             log.debug("Binding an EJBLocalReference "+ref.getName());
-            
+
             if (ref.getLink() != null)
             {
                // Internal link
@@ -1486,27 +1491,27 @@ public abstract class Container extends ServiceMBeanSupport
       // Bind resource references
       {
          Iterator enum = beanMetaData.getResourceReferences();
-         
+
          // let's play guess the cast game ;)  New metadata should fix this.
-         ApplicationMetaData application = 
+         ApplicationMetaData application =
                beanMetaData.getApplicationMetaData();
-         
+
          while(enum.hasNext())
          {
             ResourceRefMetaData ref = (ResourceRefMetaData)enum.next();
-            
+
             String resourceName = ref.getResourceName();
             String finalName = application.getResourceByName(resourceName);
             // If there was no resource-manager specified then an immeadiate
             // jndi-name or res-url name should have been given
             if (finalName == null)
                finalName = ref.getJndiName();
-            
+
             if (finalName == null)
             {
                // the application assembler did not provide a resource manager
                // if the type is javax.sql.Datasoure use the default one
-                  
+
                if (ref.getType().equals("javax.sql.DataSource"))
                {
                   // Go through JNDI and look for DataSource - use the first one
@@ -1526,7 +1531,7 @@ public abstract class Container extends ServiceMBeanSupport
                      dsCtx.close();
                   }
                }
-                  
+
                // Default failed? Warn user and move on
                // POTENTIALLY DANGEROUS: should this be a critical error?
                if (finalName == null)
@@ -1536,12 +1541,12 @@ public abstract class Container extends ServiceMBeanSupport
                   continue;
                }
             }
-            
+
             if (ref.getType().equals("java.net.URL"))
             {
                // URL bindings
                if (debug)
-                  log.debug("Binding URL: " + finalName + 
+                  log.debug("Binding URL: " + finalName +
                         " to JDNI ENC as: " + ref.getRefName());
                Util.bind(envCtx, ref.getRefName(), new URL(finalName));
             }
@@ -1552,34 +1557,34 @@ public abstract class Container extends ServiceMBeanSupport
                   log.debug("Binding resource manager: "+finalName+
                             " to JDNI ENC as: " +ref.getRefName());
                }
-               
+
                Util.bind(envCtx, ref.getRefName(), new LinkRef(finalName));
             }
          }
       }
-         
+
       // Bind resource env references
       {
          Iterator enum = beanMetaData.getResourceEnvReferences();
          while( enum.hasNext() )
          {
-            ResourceEnvRefMetaData resRef = 
+            ResourceEnvRefMetaData resRef =
                   (ResourceEnvRefMetaData) enum.next();
             String encName = resRef.getRefName();
             String jndiName = resRef.getJndiName();
             // Should validate the type...
             if (debug)
-               log.debug("Binding env resource: " + jndiName + 
+               log.debug("Binding env resource: " + jndiName +
                      " to JDNI ENC as: " +encName);
             Util.bind(envCtx, encName, new LinkRef(jndiName));
          }
       }
-         
+
       // Create a java:comp/env/security/security-domain link to the container
       // or application security-domain if one exists so that access to the
       // security manager can be made without knowing the global jndi name.
 
-      String securityDomain = 
+      String securityDomain =
             metaData.getContainerConfiguration().getSecurityDomain();
       if( securityDomain == null )
          securityDomain = metaData.getApplicationMetaData().getSecurityDomain();
@@ -1589,17 +1594,17 @@ public abstract class Container extends ServiceMBeanSupport
             log.debug("Binding securityDomain: "+securityDomain+
                       " to JDNI ENC as: security/security-domain");
          }
-         
+
          Util.bind(
-               envCtx, 
-               "security/security-domain", 
+               envCtx,
+               "security/security-domain",
                new LinkRef(securityDomain));
          Util.bind(
-               envCtx, 
-               "security/subject", 
+               envCtx,
+               "security/subject",
                new LinkRef(securityDomain+"/subject"));
       }
-      
+
       if (debug)
          log.debug("End java:comp/env for EJB: "+beanMetaData.getEjbName());
    }
@@ -1642,12 +1647,12 @@ public abstract class Container extends ServiceMBeanSupport
       // Create local classloader for this container
       // For loading resources that must come from the local jar.  Not for loading classes!
       setLocalClassLoader( new URLClassLoader( new URL[ 0 ], localCl ) );
-      // Create the container's WebClassLoader 
+      // Create the container's WebClassLoader
       // and register it with the web service.
       String webClassLoaderName = getWebClassLoaderClassName();
       log.debug("Creating WebClassLoader of class " + webClassLoaderName);
       WebClassLoader wcl = null;
-      try 
+      try
       {
          Class clazz = cl.loadClass(webClassLoaderName);
          Constructor constructor = clazz.getConstructor(
@@ -1655,16 +1660,16 @@ public abstract class Container extends ServiceMBeanSupport
          wcl = (WebClassLoader)constructor.newInstance(
             new Object[] { getJmxName(), cl });
       }
-      catch (Exception e) 
+      catch (Exception e)
       {
          throw new DeploymentException(
-            "Failed to create WebClassLoader of class " 
+            "Failed to create WebClassLoader of class "
             + webClassLoaderName + ": ", e);
       }
-      //THis is an invalid operation in the create lifecycle step.  
+      //THis is an invalid operation in the create lifecycle step.
       //The webserver might not be started.
-      WebServiceMBean webServer = 
-         (WebServiceMBean)MBeanProxy.create(WebServiceMBean.class, 
+      WebServiceMBean webServer =
+         (WebServiceMBean)MBeanProxy.create(WebServiceMBean.class,
                                             WebServiceMBean.OBJECT_NAME);
       URL[] codebase = { webServer.addClassLoader(wcl) };
       wcl.setWebURLs(codebase);
@@ -1687,7 +1692,7 @@ public abstract class Container extends ServiceMBeanSupport
       // Set transaction manager
       InitialContext iniCtx = new InitialContext();
       setTransactionManager( (TransactionManager) iniCtx.lookup( "java:/TransactionManager" ) );
-      
+
       // Set security domain manager
       String securityDomain = getBeanMetaData().getApplicationMetaData().getSecurityDomain();
       String confSecurityDomain = getBeanMetaData().getContainerConfiguration().getSecurityDomain();
@@ -1735,7 +1740,7 @@ public abstract class Container extends ServiceMBeanSupport
                                           securityProxyClassName, e);
          }
       }
-      
+
       // Install the container interceptors based on the configuration
       addInterceptors(transType, getBeanMetaData().getContainerConfiguration().getContainerInterceptorsConf());
    }
@@ -1756,7 +1761,7 @@ public abstract class Container extends ServiceMBeanSupport
          InvokerProxyBindingMetaData imd = (InvokerProxyBindingMetaData)
                            amd.getInvokerProxyBindingMetaDataByName(invoker);
          Element proxyFactoryConfig = imd.getProxyFactoryConfig();
-         String webCL = MetaData.getOptionalChildContent(proxyFactoryConfig, 
+         String webCL = MetaData.getOptionalChildContent(proxyFactoryConfig,
                                                          "web-class-loader");
          if (webCL != null)
          {
@@ -1767,14 +1772,14 @@ public abstract class Container extends ServiceMBeanSupport
       }
       if (count > 1) {
          log.warn(count + " invokers have WebClassLoader specifications.");
-         log.warn("Using the last specification seen (" + webClassLoader + ")."); 
+         log.warn("Using the last specification seen (" + webClassLoader + ").");
       }
       else if (count == 0) {
          webClassLoader = getBeanMetaData().getContainerConfiguration().getWebClassLoader();
       }
       return webClassLoader;
    }
-   
+
    /**
     * Given a container-interceptors element of a container-configuration,
     * add the indicated interceptors to the container depending on the container
@@ -1782,9 +1787,9 @@ public abstract class Container extends ServiceMBeanSupport
     *
     *
     * @todo marcf: frankly the transaction type stuff makes no sense to me, we have externalized
-    * the container stack construction in jbossxml and I don't see why or why there would be a 
+    * the container stack construction in jbossxml and I don't see why or why there would be a
     * type missmatch on the transaction
-    * 
+    *
     * @param container   the container instance to setup.
     * @param transType   one of the BMT, CMT or ANY constants.
     * @param element     the container-interceptors element from the
@@ -1817,7 +1822,7 @@ public abstract class Container extends ServiceMBeanSupport
          {   // The transaction type matches the container bean trans type, check the metricsEnabled
             String metricsAttr = ielement.getAttribute("metricsEnabled");
             boolean metricsInterceptor = metricsAttr.equalsIgnoreCase("true");
-            try 
+            try
             {
                boolean metricsEnabled = ((Boolean)server.getAttribute(EJBDeployerMBean.OBJECT_NAME,
                                                                       "MetricsEnabled")).booleanValue();
@@ -1830,8 +1835,8 @@ public abstract class Container extends ServiceMBeanSupport
             {
                throw new DeploymentException("couldn't contact EJBDeployer!", e);
             } // end of try-catch
-            
-           
+
+
             String className = null;
             try
             {
@@ -1847,17 +1852,17 @@ public abstract class Container extends ServiceMBeanSupport
             }
          }
       }
-      
+
       if( istack.size() == 0 )
          log.warn("There are no interceptors configured. Check the standardjboss.xml file");
-      
+
       // Now add the interceptors
       for(int i = 0; i < istack.size(); i ++)
       {
          Interceptor interceptor = (Interceptor) istack.get(i);
          addInterceptor(interceptor);
       }
-      
+
       /* If there is a security proxy associated with the container add its
          interceptor just before the container interceptor
       */
@@ -1865,11 +1870,11 @@ public abstract class Container extends ServiceMBeanSupport
       {
          addInterceptor(new SecurityProxyInterceptor());
       }
-      
+
       // Finally we add the last interceptor from the container
       addInterceptor(createContainerInterceptor());
    }
-   
+
    private static String stringTransactionValue(int transType)
    {
       String transaction = ANY_VALUE;
@@ -1884,7 +1889,7 @@ public abstract class Container extends ServiceMBeanSupport
       }
       return transaction;
    }
-   
+
    /**
     * Create all proxy factories for this ejb
     */
@@ -1920,8 +1925,8 @@ public abstract class Container extends ServiceMBeanSupport
          }
       }
    }
-   
-   
+
+
    protected BeanLockManager createBeanLockManager(boolean reentrant, Element config,
                                                          ClassLoader cl )
       throws Exception
@@ -1938,14 +1943,14 @@ public abstract class Container extends ServiceMBeanSupport
       {
          throw new DeploymentException( "Missing or invalid lock class (in jboss.xml or standardjboss.xml): " + beanLock+ " - " + e );
       }
-      
+
       lockManager.setLockCLass(lockClass);
       lockManager.setReentrant(reentrant);
       lockManager.setConfiguration(config);
-      
+
       return lockManager;
    }
-   
+
    protected  InstancePool createInstancePool( ConfigurationMetaData conf,
                                                    ClassLoader cl )
       throws Exception
@@ -1960,13 +1965,13 @@ public abstract class Container extends ServiceMBeanSupport
       {
          throw new DeploymentException( "Missing or invalid Instance Pool (in jboss.xml or standardjboss.xml)", e);
       }
-      
+
       if( ip instanceof XmlLoadable )
          ( (XmlLoadable) ip ).importXml( conf.getContainerPoolConf() );
-      
+
       return ip;
    }
-   
+
    protected static InstanceCache createInstanceCache( ConfigurationMetaData conf,
                                                      boolean jmsMonitoring,
                                                      ClassLoader cl )
@@ -1974,11 +1979,11 @@ public abstract class Container extends ServiceMBeanSupport
    {
       // Set instance cache
       InstanceCache ic = null;
-      
+
       try
       {
          ic = (InstanceCache) cl.loadClass( conf.getInstanceCache() ).newInstance();
-         
+
          if( ic instanceof AbstractInstanceCache )
             ( (AbstractInstanceCache) ic ).setJMSMonitoringEnabled( jmsMonitoring );
       }
@@ -1986,22 +1991,22 @@ public abstract class Container extends ServiceMBeanSupport
       {
          throw new DeploymentException( "Missing or invalid Instance Cache (in jboss.xml or standardjboss.xml)", e );
       }
-      
+
       if( ic instanceof XmlLoadable )
          ( (XmlLoadable) ic ).importXml( conf.getContainerCacheConf() );
-      
+
       return ic;
    }
 
 
    /**
     * The base class for container interceptors.
-    * 
+    *
     * <p>
     * All container interceptors perform the same basic functionality
     * and only differ slightly.
     */
-   protected abstract class AbstractContainerInterceptor 
+   protected abstract class AbstractContainerInterceptor
          extends AbstractInterceptor
    {
       protected void rethrow(Exception e)
