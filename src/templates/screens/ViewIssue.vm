@@ -113,11 +113,11 @@
        <div class="datatable">
         <table width="100%" border="1" cellspacing="2" cellpadding="3">
          <tr>
-          <th><a href="#"><img src="./images/icon_uparrow.gif" width="13" height="8" alt="sort" border="0" /></a><a href="#"><img src="./images/icon_downarrow.gif" width="13" height="8" alt="sort" border="0" /></a></th>
+          <th><img src="/scarab/images/icon_uparrow.gif" width="13" height="8" alt="sort" border="0" /><img src="/scarab/images/icon_downarrow.gif" width="13" height="8" alt="sort" border="0" /></th>
 
-          <th><a href="#">URL:</a></th>
+          <th>URL:</th>
 
-          <th><a href="#">description:</a></th>
+          <th>Description:</th>
          </tr>
 
     #foreach($url in $currentIssue.Urls)
