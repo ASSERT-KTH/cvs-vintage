@@ -23,6 +23,8 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import org.columba.core.config.HeaderItem;
 import org.columba.core.config.TableItem;
 import org.columba.core.gui.util.CScrollPane;
+import org.columba.core.logging.ColumbaLogger;
+import org.columba.core.main.MainInterface;
 import org.columba.core.util.SwingWorker;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.config.MailConfig;
@@ -41,7 +43,6 @@ import org.columba.mail.gui.table.util.MarkAsReadTimer;
 import org.columba.mail.gui.table.util.MessageNode;
 import org.columba.mail.gui.tree.FolderSelectionListener;
 import org.columba.mail.message.HeaderList;
-import org.columba.core.main.MainInterface;
 
 /**
  * This class shows the messageheaderlist
@@ -141,6 +142,10 @@ public class TableController
 		markAsReadTimer = new MarkAsReadTimer(this);
 
 		view.addTreeSelectionListener(this);
+		
+		getHeaderTableModel().getTableModelSorter().setSortingColumn( headerTableItem.get("selected") );
+		getHeaderTableModel().getTableModelSorter().setSortingOrder( headerTableItem.getBoolean("ascending"));
+		
 		/*
 		headerTableActionListener = new HeaderTableActionListener(this);
 		
@@ -309,19 +314,30 @@ public class TableController
 			(TableItem) MailConfig
 				.getMainFrameOptionsConfig()
 				.getTableItem();
-				
+		
+		boolean ascending = getHeaderTableModel().getTableModelSorter().getSortingOrder();
+		String sortingColumn = getHeaderTableModel().getTableModelSorter().getSortingColumn();
+		
+		tableItem.set("ascending", ascending);
+		tableItem.set("selected", sortingColumn);
+
+		ColumbaLogger.log.info("save table column config");
+						
 				//.clone();
 		//v.removeEnabledItem();
 
 		for (int i = 0; i < tableItem.getChildCount(); i++) {
 			HeaderItem v = tableItem.getHeaderItem(i);
-			 
+			boolean enabled = v.getBoolean("enabled");
+			if ( enabled == false ) continue;
+			
 			String c = v.get("name");
+			ColumbaLogger.log.debug("name="+c);
 			
 			TableColumn tc = getView().getColumn(c);
 
-			v.set("width", tc.getWidth());
-
+			v.set("size", tc.getWidth());
+			ColumbaLogger.log.debug("size"+tc.getWidth());
 			try {
 				int index = getView().getColumnModel().getColumnIndex(c);
 				v.set("position", index);

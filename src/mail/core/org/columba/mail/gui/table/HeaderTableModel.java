@@ -27,6 +27,7 @@ import org.columba.core.config.TableItem;
 import org.columba.core.gui.util.treetable.AbstractTreeTableModel;
 import org.columba.core.gui.util.treetable.TreeTableModel;
 import org.columba.mail.folder.Folder;
+import org.columba.mail.folder.command.MarkMessageCommand;
 import org.columba.mail.gui.table.util.MessageNode;
 import org.columba.mail.gui.table.util.TableModelFilteredView;
 import org.columba.mail.gui.table.util.TableModelPlugin;
@@ -59,6 +60,16 @@ public class HeaderTableModel extends AbstractTreeTableModel {
 		this.item = item;
 
 
+		/*
+		Vector v = new Vector();
+		for (int i = 0; i < item.getChildCount(); i++) {
+			HeaderItem headerItem = item.getHeaderItem(i);
+			int position = headerItem.getInteger("position");
+			boolean enabled = headerItem.getBoolean("enabled");
+			if 	
+		}
+		*/
+				
 		tableModelPlugins = new Vector();
 
 		root = new MessageNode("root", null);
@@ -100,10 +111,6 @@ public class HeaderTableModel extends AbstractTreeTableModel {
 
 	}
 
-	public MessageNode findMessageNode(MessageNode parent, Object uid) {
-		return null;
-	}
-
 	public void markHeader(Object[] uids, int subMode) {
 
 		for (int i = 0; i < uids.length; i++) {
@@ -111,7 +118,7 @@ public class HeaderTableModel extends AbstractTreeTableModel {
 			MessageNode node = (MessageNode) uidList.get(uids[i]);
 
 			if (node != null) {
-				/*
+				
 				HeaderInterface header = node.getHeader();
 				switch (subMode) {
 					case MarkMessageCommand.MARK_AS_READ :
@@ -136,7 +143,7 @@ public class HeaderTableModel extends AbstractTreeTableModel {
 							break;
 						}
 				}
-				*/
+				
 				if (uids.length < 100)
 					nodeChanged(node);
 			} else {
@@ -381,6 +388,8 @@ public class HeaderTableModel extends AbstractTreeTableModel {
 			return String.class;
 	}
 
+	
+	
 	public Object getValueAt(Object node, int col) {
 
 		DefaultMutableTreeNode treeNode = (DefaultMutableTreeNode) node;

@@ -16,22 +16,15 @@ package org.columba.mail.gui.table.util;
 
 import java.awt.Component;
 
-import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
-import javax.swing.JLabel;
 import javax.swing.JTable;
 import javax.swing.SwingConstants;
-import javax.swing.border.Border;
-import javax.swing.table.TableCellRenderer;
 
 import org.columba.core.gui.util.ImageLoader;
+import org.columba.mail.gui.table.DefaultLabelRenderer;
 import org.columba.mail.message.Flags;
 
-public class StatusRenderer extends JLabel implements TableCellRenderer
-{
-	Border unselectedBorder = null;
-	Border selectedBorder = null;
-	boolean isBordered = true;
+public class StatusRenderer extends DefaultLabelRenderer {
 	boolean bool;
 
 	ImageIcon image1;
@@ -41,13 +34,11 @@ public class StatusRenderer extends JLabel implements TableCellRenderer
 	ImageIcon image5;
 	ImageIcon image6;
 
-	public StatusRenderer()
-	{
+	public StatusRenderer() {
 		super();
-	
 
 		setHorizontalAlignment(SwingConstants.CENTER);
-		setOpaque(true);
+		//setOpaque(true);
 
 		image1 = ImageLoader.getSmallImageIcon("reply_small.png");
 		image2 = ImageLoader.getSmallImageIcon("mail-new.png");
@@ -64,75 +55,46 @@ public class StatusRenderer extends JLabel implements TableCellRenderer
 		boolean isSelected,
 		boolean hasFocus,
 		int row,
-		int column)
-	{
-		if (isBordered)
-		{
-			if (isSelected)
-			{
-				if (selectedBorder == null)
-				{
-					selectedBorder =
-						BorderFactory.createMatteBorder(2, 5, 2, 5, table.getSelectionBackground());
-				}
-				//setBorder(selectedBorder);
-				setBackground(table.getSelectionBackground());
-				setForeground(table.getSelectionForeground());
-			}
-			else
-			{
-				if (unselectedBorder == null)
-				{
-					unselectedBorder =
-						BorderFactory.createMatteBorder(2, 5, 2, 5, table.getBackground());
-				}
-				setBackground(table.getBackground());
-				//setBorder(unselectedBorder);
-				setForeground(table.getForeground());
-			}
-		}
+		int column) {
 
-		if ( value == null ) 
-		{
+		super.getTableCellRendererComponent(
+			table,
+			value,
+			isSelected,
+			hasFocus,
+			row,
+			column);
+
+		if (value == null) {
 			setIcon(null);
 			return this;
 		}
-		
-		if (value instanceof String)
-		{
-			System.out.println("statusrenderer-> instanceof String not expected");
-			
+
+		if (value instanceof String) {
+			System.out.println(
+				"statusrenderer-> instanceof String not expected");
+
 			return this;
 		}
 
 		Flags flags = (Flags) value;
 
-		
-		if (flags.getDeleted())
-		{
-			
+		if (flags.getDeleted()) {
+
 			setIcon(image3);
-			
-			setToolTipText("Marked as expunged");
-		}
-		else if (flags.getAnswered())
-		{
+
+			//setToolTipText("Marked as expunged");
+		} else if (flags.getAnswered()) {
 			setIcon(image1);
-			setToolTipText("Marked as answered");
-		}
-		else if (!flags.getSeen())
-		{
+			//setToolTipText("Marked as answered");
+		} else if (!flags.getSeen()) {
 			setIcon(image6);
-			setToolTipText("Marked as unread");
-		}
-		else if (flags.getSeen())
-		{
+			//setToolTipText("Marked as unread");
+		} else if (flags.getSeen()) {
 			//setIcon( image5 );
 			setIcon(image5);
-			setToolTipText("Marked as read");
-		}
-		else
-		{
+			//setToolTipText("Marked as read");
+		} else {
 			setIcon(null);
 
 		}

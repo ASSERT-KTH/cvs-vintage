@@ -16,94 +16,73 @@ package org.columba.mail.gui.table.util;
 
 import java.awt.Component;
 
-import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
-import javax.swing.JLabel;
 import javax.swing.JTable;
 import javax.swing.SwingConstants;
-import javax.swing.border.Border;
-import javax.swing.table.TableCellRenderer;
-public class BooleanRenderer extends JLabel
-                        implements TableCellRenderer {
-        Border unselectedBorder = null;
-        Border selectedBorder = null;
-        boolean isBordered = true;
+
+import org.columba.mail.gui.table.DefaultLabelRenderer;
+
+public class BooleanRenderer extends DefaultLabelRenderer {
+
 	boolean bool;
 	//String str;
 	ImageIcon image;
 
-        public BooleanRenderer(boolean bool, ImageIcon image) {
-            super();
-	    this.bool = bool;
-                //this.str = str;
-	    this.image = image;
-            setHorizontalAlignment( SwingConstants.CENTER );
-            setOpaque(true); //MUST do this for background to show up.
-        }
+	public BooleanRenderer(boolean bool, ImageIcon image) {
+		super();
+		this.bool = bool;
+		//this.str = str;
+		this.image = image;
+		setHorizontalAlignment(SwingConstants.CENTER);
+		//setOpaque(true); //MUST do this for background to show up.
+	}
 
-        public Component getTableCellRendererComponent(
-                                JTable table, Object value,
-                                boolean isSelected, boolean hasFocus,
-                                int row, int column) {
+	public Component getTableCellRendererComponent(
+		JTable table,
+		Object value,
+		boolean isSelected,
+		boolean hasFocus,
+		int row,
+		int column) {
 
+		super.getTableCellRendererComponent(
+			table,
+			value,
+			isSelected,
+			hasFocus,
+			row,
+			column);
 
-
-            if (isBordered) {
-                if (isSelected) {
-                    if (selectedBorder == null) {
-                        selectedBorder = BorderFactory.createMatteBorder(2,5,2,5,table.getSelectionBackground() );
-                    }
-                      //setBorder(selectedBorder);
-                    setBackground( table.getSelectionBackground() );
-                } else {
-                    if (unselectedBorder == null) {
-                        unselectedBorder = BorderFactory.createMatteBorder(2,5,2,5,
-                                                  table.getBackground() );
-                    }
-                    setBackground( table.getBackground() );
-                      //setBorder(unselectedBorder);
-                }
-            }
-            
-            if ( value == null ) 
-		{
+		if (value == null) {
 			setIcon(null);
 			return this;
 		}
 
-            if ( value instanceof String ) return this;
+		if (value instanceof String)
+			return this;
 
-            if ( bool == true )
-            {
-                Boolean b = (Boolean) value;
-                if ( b==null ) return this;
+		if (bool == true) {
+			Boolean b = (Boolean) value;
+			if (b == null)
+				return this;
 
-                if ( b.equals( Boolean.TRUE ) )
-                {
-                    setIcon( image );
-                }
-                else
-                {
-                    setIcon( null );
-                }
-            }
-            else
-            {
-                Boolean b = (Boolean) value;
-                if ( b==null ) return this;
+			if (b.equals(Boolean.TRUE)) {
+				setIcon(image);
+			} else {
+				setIcon(null);
+			}
+		} else {
+			Boolean b = (Boolean) value;
+			if (b == null)
+				return this;
 
-                if ( b.equals( Boolean.FALSE ) )
-                {
-                    setIcon( image );
-                }
-                else
-                {
-                    setIcon( null );
-                }
-            }
+			if (b.equals(Boolean.FALSE)) {
+				setIcon(image);
+			} else {
+				setIcon(null);
+			}
+		}
 
-
-
-            return this;
-        }
-    }
+		return this;
+	}
+}

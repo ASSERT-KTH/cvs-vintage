@@ -22,24 +22,11 @@ import java.util.Date;
 import java.util.Locale;
 import java.util.TimeZone;
 
-import javax.swing.BorderFactory;
-import javax.swing.JLabel;
 import javax.swing.JTable;
 import javax.swing.JTree;
 import javax.swing.UIManager;
-import javax.swing.border.Border;
-import javax.swing.table.TableCellRenderer;
-import javax.swing.tree.TreePath;
 
-import org.columba.mail.gui.table.util.MessageNode;
-import org.columba.mail.message.HeaderInterface;
-
-public class HeaderTableDateRenderer
-	extends JLabel
-	implements TableCellRenderer {
-	private Border unselectedBorder = null;
-	private Border selectedBorder = null;
-	private boolean isBordered = true;
+public class HeaderTableDateRenderer extends DefaultLabelRenderer {
 
 	static SimpleDateFormat dfWeek =
 		new SimpleDateFormat("EEE HH:mm", Locale.getDefault());
@@ -56,9 +43,8 @@ public class HeaderTableDateRenderer
 	public HeaderTableDateRenderer(JTree tree, boolean isBordered) {
 		super();
 		this.tree = tree;
-		this.isBordered = isBordered;
 
-		setOpaque(true); //MUST do this for background to show up.
+		//setOpaque(true); //MUST do this for background to show up.
 
 		boldFont = UIManager.getFont("Tree.font");
 		boldFont = boldFont.deriveFont(Font.BOLD);
@@ -91,63 +77,21 @@ public class HeaderTableDateRenderer
 		boolean hasFocus,
 		int row,
 		int column) {
-		if (isBordered) {
-			if (isSelected) {
-				if (selectedBorder == null) {
-					selectedBorder =
-						BorderFactory.createMatteBorder(
-							2,
-							5,
-							2,
-							5,
-							table.getSelectionBackground());
-				}
-				//setBorder(selectedBorder);
-				setBackground(table.getSelectionBackground());
-				setForeground(table.getSelectionForeground());
-			} else {
-				if (unselectedBorder == null) {
-					unselectedBorder =
-						BorderFactory.createMatteBorder(
-							2,
-							5,
-							2,
-							5,
-							table.getBackground());
-				}
-				setBackground(table.getBackground());
-				//setBorder(unselectedBorder);
-				setForeground(table.getForeground());
-			}
-		}
+
+		super.getTableCellRendererComponent(
+			table,
+			value,
+			isSelected,
+			hasFocus,
+			row,
+			column);
 
 		if (value == null) {
 			setText("");
 			return this;
 		}
 
-		TreePath path = tree.getPathForRow(row);
-		MessageNode messageNode = (MessageNode) path.getLastPathComponent();
-
-		if (messageNode == null) {
-			System.out.println("messagenode is null");
-			return this;
-		}
-
-		HeaderInterface header = messageNode.getHeader();
-		if (header == null) {
-			System.out.println("header is null");
-			return this;
-		}
-
-		if (header.getFlags() != null) {
-			if (header.getFlags().getRecent()) {
-				setFont(boldFont);
-			} else {
-				setFont(plainFont);
-			}
-		}
-
+			/*
 		if (!(value instanceof Date)) {
 			setText("");
 			return this;
@@ -155,7 +99,8 @@ public class HeaderTableDateRenderer
 
 		if (value instanceof String)
 			return this;
-
+		*/
+		
 		Date date = (Date) value;
 
 		if (date == null)
