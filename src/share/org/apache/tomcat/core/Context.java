@@ -221,6 +221,8 @@ public final class Context {
 
     // Virtual host name ( null if default )
     private String vhost=null;
+    // Virtual host ip address (if vhost isn't an address)
+    private String vhostip=null;
     // vhost aliases 
     private Vector vhostAliases=new Vector();
 
@@ -605,6 +607,20 @@ public final class Context {
      */
     public final  String getHost() {
 	return vhost;
+    }
+
+    /**
+     * Set the virtual host ip address.
+     */
+    public final void setHostAddress( String ip ) {
+        vhostip=ip;
+    }
+
+    /**
+     * Return the virtual host ip address.
+     */
+    public final String getHostAddress() {
+        return vhostip;
     }
     
     /** DocBase points to the web application files.
