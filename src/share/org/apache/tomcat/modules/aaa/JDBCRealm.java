@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/modules/aaa/JDBCRealm.java,v 1.7 2001/07/14 03:20:37 nacho Exp $
- * $Revision: 1.7 $
- * $Date: 2001/07/14 03:20:37 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/modules/aaa/JDBCRealm.java,v 1.8 2001/10/05 21:41:20 nacho Exp $
+ * $Revision: 1.8 $
+ * $Date: 2001/10/05 21:41:20 $
  *
  * The Apache Software License, Version 1.1
  *
@@ -371,11 +371,11 @@ public class JDBCRealm extends RealmBase {
         }
     }
 
-    protected void ContextShutdown(Context ctx) throws TomcatException {
+    public void contextShutdown(Context ctx) throws TomcatException {
         if (started && JDBCStarted) close();
     }
 
-    protected void ContextInit(Context ctx) throws TomcatException {
+    public void contextInit(Context ctx) throws TomcatException {
         if (!started) {
             if (connectOnInit && !checkConnection()) {
                 throw new RuntimeException("JDBCRealm cannot be started");
