@@ -17,7 +17,7 @@ package org.columba.addressbook.gui.action;
 
 import org.columba.addressbook.util.AddressbookResourceLoader;
 
-import org.columba.core.action.FrameAction;
+import org.columba.core.action.AbstractColumbaAction;
 import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.gui.util.ImageLoader;
 
@@ -33,7 +33,7 @@ import javax.swing.KeyStroke;
  * To change this generated comment go to
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
-public class DeleteAction extends FrameAction {
+public class DeleteAction extends AbstractColumbaAction {
     public DeleteAction(FrameMediator frameMediator) {
         super(frameMediator,
             AddressbookResourceLoader.getString("menu", "mainframe",

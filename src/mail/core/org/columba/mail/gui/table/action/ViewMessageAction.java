@@ -15,7 +15,7 @@
 //All Rights Reserved.
 package org.columba.mail.gui.table.action;
 
-import org.columba.core.action.FrameAction;
+import org.columba.core.action.AbstractColumbaAction;
 import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.logging.ColumbaLogger;
 import org.columba.core.main.MainInterface;
@@ -26,7 +26,7 @@ import org.columba.mail.gui.message.command.ViewMessageCommand;
 import java.awt.event.ActionEvent;
 
 
-public class ViewMessageAction extends FrameAction {
+public class ViewMessageAction extends AbstractColumbaAction {
     protected Object oldUid;
 
     /**

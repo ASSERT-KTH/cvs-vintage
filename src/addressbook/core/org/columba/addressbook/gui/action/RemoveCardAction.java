@@ -19,7 +19,7 @@ import org.columba.addressbook.folder.AddressbookFolder;
 import org.columba.addressbook.gui.frame.AddressbookFrameController;
 import org.columba.addressbook.util.AddressbookResourceLoader;
 
-import org.columba.core.action.FrameAction;
+import org.columba.core.action.AbstractColumbaAction;
 import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.gui.util.ImageLoader;
 
@@ -32,7 +32,7 @@ import java.awt.event.ActionEvent;
  * To change this generated comment go to
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
-public class RemoveCardAction extends FrameAction {
+public class RemoveCardAction extends AbstractColumbaAction {
     public RemoveCardAction(FrameMediator frameController) {
         super(frameController,
             AddressbookResourceLoader.getString("menu", "mainframe",

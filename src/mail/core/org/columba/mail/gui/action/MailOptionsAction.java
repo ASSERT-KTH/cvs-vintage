@@ -15,7 +15,7 @@
 //All Rights Reserved.
 package org.columba.mail.gui.action;
 
-import org.columba.core.action.FrameAction;
+import org.columba.core.action.AbstractColumbaAction;
 import org.columba.core.gui.frame.FrameMediator;
 
 import org.columba.mail.gui.config.general.MailOptionsDialog;
@@ -31,7 +31,7 @@ import java.awt.event.ActionEvent;
  *
  * @author fdietz
  */
-public class MailOptionsAction extends FrameAction {
+public class MailOptionsAction extends AbstractColumbaAction {
     /**
      * @param frameMediator
      * @param name

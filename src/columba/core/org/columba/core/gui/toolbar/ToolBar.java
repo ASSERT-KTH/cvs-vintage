@@ -15,7 +15,7 @@
 //All Rights Reserved.
 package org.columba.core.gui.toolbar;
 
-import org.columba.core.action.FrameAction;
+import org.columba.core.action.AbstractColumbaAction;
 import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.gui.statusbar.ImageSequenceTimer;
 import org.columba.core.logging.ColumbaLogger;
@@ -102,7 +102,7 @@ public class ToolBar extends JToolBar {
         add(image);
     }
 
-    public void addButton(FrameAction action) {
+    public void addButton(AbstractColumbaAction action) {
         ToolbarButton button = new ToolbarButton(action);
         button.setRolloverEnabled(true);
 

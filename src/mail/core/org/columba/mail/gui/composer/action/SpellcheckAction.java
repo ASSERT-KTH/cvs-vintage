@@ -15,7 +15,7 @@
 //All Rights Reserved.
 package org.columba.mail.gui.composer.action;
 
-import org.columba.core.action.FrameAction;
+import org.columba.core.action.AbstractColumbaAction;
 import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.gui.util.ImageLoader;
 
@@ -33,7 +33,7 @@ import javax.swing.KeyStroke;
  *
  * @author fdietz
  */
-public class SpellcheckAction extends FrameAction {
+public class SpellcheckAction extends AbstractColumbaAction {
     public SpellcheckAction(FrameMediator frameMediator) {
         super(frameMediator,
             MailResourceLoader.getString("menu", "composer",

@@ -15,7 +15,7 @@
 //All Rights Reserved.
 package org.columba.core.gui.action;
 
-import org.columba.core.action.FrameAction;
+import org.columba.core.action.AbstractColumbaAction;
 import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.gui.util.ImageLoader;
 import org.columba.core.help.HelpManager;
@@ -33,7 +33,7 @@ import javax.help.CSH;
  * To change this generated comment go to
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
-public class ShowContextSpecificHelpAction extends FrameAction {
+public class ShowContextSpecificHelpAction extends AbstractColumbaAction {
     protected ActionListener target;
 
     /**

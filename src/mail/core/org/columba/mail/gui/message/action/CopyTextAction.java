@@ -15,7 +15,7 @@
 //All Rights Reserved.
 package org.columba.mail.gui.message.action;
 
-import org.columba.core.action.FrameAction;
+import org.columba.core.action.AbstractColumbaAction;
 import org.columba.core.gui.frame.FrameMediator;
 
 import java.awt.event.ActionEvent;
@@ -26,7 +26,7 @@ import java.awt.event.ActionEvent;
  *
  * @author fdietz
  */
-public class CopyTextAction extends FrameAction {
+public class CopyTextAction extends AbstractColumbaAction {
     /**
      *
      */

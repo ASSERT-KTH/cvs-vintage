@@ -17,7 +17,7 @@ package org.columba.mail.gui.composer.action;
 
 import org.columba.addressbook.gui.SelectAddressDialog;
 
-import org.columba.core.action.FrameAction;
+import org.columba.core.action.AbstractColumbaAction;
 import org.columba.core.gui.util.ImageLoader;
 import org.columba.core.main.MainInterface;
 
@@ -33,7 +33,7 @@ import java.awt.event.ActionEvent;
  * To change this generated comment go to
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
-public class AddressbookAction extends FrameAction {
+public class AddressbookAction extends AbstractColumbaAction {
     public AddressbookAction(ComposerController composerController) {
         super(composerController,
             MailResourceLoader.getString("menu", "composer",

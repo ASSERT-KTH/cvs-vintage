@@ -15,7 +15,7 @@
 //All Rights Reserved.
 package org.columba.mail.gui.composer.html.action;
 
-import org.columba.core.action.FrameAction;
+import org.columba.core.action.AbstractColumbaAction;
 import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.xml.XmlElement;
 
@@ -35,7 +35,7 @@ import java.util.Observer;
  *
  * @author Karl Peder Olesen (karlpeder), 20030923
  */
-public class InsertBreakAction extends FrameAction implements Observer {
+public class InsertBreakAction extends AbstractColumbaAction implements Observer {
     /**
      * @param frameMediator
      */

@@ -1,4 +1,4 @@
-import org.columba.core.action.FrameAction;
+import org.columba.core.action.AbstractColumbaAction;
 import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.gui.selection.SelectionChangedEvent;
 import org.columba.core.gui.selection.SelectionListener;
@@ -17,7 +17,7 @@ import java.awt.event.ActionEvent;
  *
  *
  */
-public class AnalyzeFolderAction extends FrameAction
+public class AnalyzeFolderAction extends AbstractColumbaAction
     implements SelectionListener {
     /**
      * @param frameMediator

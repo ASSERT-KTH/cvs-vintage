@@ -15,7 +15,7 @@
 //All Rights Reserved.
 package org.columba.core.gui.action;
 
-import org.columba.core.action.FrameAction;
+import org.columba.core.action.AbstractColumbaAction;
 import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.gui.plugin.PluginManagerDialog;
 import org.columba.core.util.GlobalResourceLoader;
@@ -29,7 +29,7 @@ import java.awt.event.ActionEvent;
  * To change the template for this generated type comment go to
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
-public class PluginManagerAction extends FrameAction {
+public class PluginManagerAction extends AbstractColumbaAction {
     public PluginManagerAction(FrameMediator controller) {
         super(controller,
             GlobalResourceLoader.getString(null, null, "menu_edit_pluginmanager"));

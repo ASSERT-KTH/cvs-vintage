@@ -15,7 +15,7 @@
 //All Rights Reserved.
 package org.columba.mail.gui.table.action;
 
-import org.columba.core.action.FrameAction;
+import org.columba.core.action.AbstractColumbaAction;
 import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.gui.selection.SelectionChangedEvent;
 import org.columba.core.gui.selection.SelectionListener;
@@ -36,7 +36,7 @@ import java.awt.event.ActionEvent;
  *
  * @author fdietz
  */
-public class MarkAsSpamAction extends FrameAction implements SelectionListener {
+public class MarkAsSpamAction extends AbstractColumbaAction implements SelectionListener {
     public MarkAsSpamAction(FrameMediator frameMediator) {
         super(frameMediator,
             MailResourceLoader.getString("menu", "mainframe",

@@ -15,7 +15,7 @@
 //All Rights Reserved.
 package org.columba.core.gui.action;
 
-import org.columba.core.action.FrameAction;
+import org.columba.core.action.AbstractColumbaAction;
 import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.util.GlobalResourceLoader;
 
@@ -30,7 +30,7 @@ import java.awt.event.ActionEvent;
  * To change the template for this generated type comment go to
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
-public class OpenNewMessageFrameWindowAction extends FrameAction {
+public class OpenNewMessageFrameWindowAction extends AbstractColumbaAction {
     public OpenNewMessageFrameWindowAction(FrameMediator frameMediator) {
         super(frameMediator,
             GlobalResourceLoader.getString(null, null, "menu_file_new_message"));

@@ -15,7 +15,7 @@
 //All Rights Reserved.
 package org.columba.core.gui.action;
 
-import org.columba.core.action.FrameAction;
+import org.columba.core.action.AbstractColumbaAction;
 import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.gui.util.ImageLoader;
 import org.columba.core.util.GlobalResourceLoader;
@@ -34,7 +34,7 @@ import java.net.URL;
  * To change this generated comment go to
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
-public class ShowHomepageAction extends FrameAction {
+public class ShowHomepageAction extends AbstractColumbaAction {
     public ShowHomepageAction(FrameMediator frameMediator) {
         super(frameMediator,
             GlobalResourceLoader.getString(null, null, "menu_help_homepage"));

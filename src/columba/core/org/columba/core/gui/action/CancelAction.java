@@ -15,7 +15,7 @@
 //All Rights Reserved.
 package org.columba.core.gui.action;
 
-import org.columba.core.action.FrameAction;
+import org.columba.core.action.AbstractColumbaAction;
 import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.gui.statusbar.event.WorkerListChangeListener;
 import org.columba.core.gui.statusbar.event.WorkerListChangedEvent;
@@ -29,7 +29,7 @@ import java.awt.event.KeyEvent;
 import javax.swing.KeyStroke;
 
 
-public class CancelAction extends FrameAction
+public class CancelAction extends AbstractColumbaAction
     implements WorkerListChangeListener {
     public CancelAction(FrameMediator controller) {
         super(controller,

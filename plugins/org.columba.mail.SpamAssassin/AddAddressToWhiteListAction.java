@@ -1,4 +1,4 @@
-import org.columba.core.action.FrameAction;
+import org.columba.core.action.AbstractColumbaAction;
 import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.gui.selection.SelectionChangedEvent;
 import org.columba.core.gui.selection.SelectionListener;
@@ -35,7 +35,7 @@ import java.awt.event.ActionEvent;
  * be running spamassassin or spamd with the -a switch.
  *
  */
-public class AddAddressToWhiteListAction extends FrameAction
+public class AddAddressToWhiteListAction extends AbstractColumbaAction
     implements SelectionListener {
     /**
      * @param frameMediator

@@ -15,7 +15,7 @@
 //All Rights Reserved.
 package org.columba.core.gui.action;
 
-import org.columba.core.action.FrameAction;
+import org.columba.core.action.AbstractColumbaAction;
 import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.gui.util.ImageLoader;
 import org.columba.core.main.MainInterface;
@@ -27,7 +27,7 @@ import java.awt.event.KeyEvent;
 import javax.swing.KeyStroke;
 
 
-public class PasteAction extends FrameAction {
+public class PasteAction extends AbstractColumbaAction {
     public PasteAction(FrameMediator controller) {
         super(controller,
             GlobalResourceLoader.getString(null, null, "menu_edit_paste"));
@@ -62,7 +62,7 @@ public class PasteAction extends FrameAction {
     }
 
     /* (non-Javadoc)
-     * @see org.columba.core.action.FrameAction#isSingleton()
+     * @see org.columba.core.action.AbstractColumbaAction#isSingleton()
      */
     public boolean isSingleton() {
         return true;

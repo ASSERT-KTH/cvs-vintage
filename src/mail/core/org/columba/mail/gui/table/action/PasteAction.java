@@ -15,7 +15,7 @@
 //All Rights Reserved.
 package org.columba.mail.gui.table.action;
 
-import org.columba.core.action.FrameAction;
+import org.columba.core.action.AbstractColumbaAction;
 import org.columba.core.main.MainInterface;
 
 import org.columba.mail.command.FolderCommand;
@@ -36,7 +36,7 @@ import java.awt.event.ActionEvent;
  * To change the template for this generated type comment go to
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
-public class PasteAction extends FrameAction {
+public class PasteAction extends AbstractColumbaAction {
     TableController tableController;
     AbstractMailFrameController frameController;
 

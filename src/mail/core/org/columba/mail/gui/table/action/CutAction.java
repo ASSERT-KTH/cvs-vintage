@@ -15,7 +15,7 @@
 //All Rights Reserved.
 package org.columba.mail.gui.table.action;
 
-import org.columba.core.action.FrameAction;
+import org.columba.core.action.AbstractColumbaAction;
 import org.columba.core.gui.ClipboardManager;
 import org.columba.core.main.MainInterface;
 
@@ -33,7 +33,7 @@ import java.awt.event.ActionEvent;
  * To change the template for this generated type comment go to
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
-public class CutAction extends FrameAction {
+public class CutAction extends AbstractColumbaAction {
     TableController tableController;
     AbstractMailFrameController frameController;
 

@@ -15,7 +15,7 @@
 //All Rights Reserved.
 package org.columba.mail.gui.action;
 
-import org.columba.core.action.FrameAction;
+import org.columba.core.action.AbstractColumbaAction;
 import org.columba.core.gui.frame.FrameMediator;
 
 import org.columba.mail.gui.config.export.ExportDialog;
@@ -30,7 +30,7 @@ import java.awt.event.ActionEvent;
  * To change the template for this generated type comment go to
  * Window - Preferences - Java - Code Generation - Code and Comments
  */
-public class ExportDialogAction extends FrameAction {
+public class ExportDialogAction extends AbstractColumbaAction {
     public ExportDialogAction(FrameMediator frameMediator) {
         super(frameMediator,
             MailResourceLoader.getString("menu", "mainframe",

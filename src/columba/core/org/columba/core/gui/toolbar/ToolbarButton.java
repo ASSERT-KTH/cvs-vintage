@@ -17,7 +17,7 @@
 //All Rights Reserved.
 package org.columba.core.gui.toolbar;
 
-import org.columba.core.action.FrameAction;
+import org.columba.core.action.AbstractColumbaAction;
 import org.columba.core.config.Config;
 import org.columba.core.config.GuiItem;
 import org.columba.core.gui.menu.CButton;
@@ -44,7 +44,7 @@ public class ToolbarButton extends CButton {
         setRequestFocusEnabled(false);
     }
 
-    public ToolbarButton(FrameAction a) {
+    public ToolbarButton(AbstractColumbaAction a) {
         super(a);
 
         setRequestFocusEnabled(false);
@@ -55,7 +55,7 @@ public class ToolbarButton extends CButton {
         WITH_TEXT = item.getBoolean("toolbar", "enable_text");
         ALIGNMENT = item.getBoolean("toolbar", "text_position");
 
-        ImageIcon icon = (ImageIcon) a.getValue(FrameAction.LARGE_ICON);
+        ImageIcon icon = (ImageIcon) a.getValue(AbstractColumbaAction.LARGE_ICON);
 
         if (icon != null) {
             setIcon(icon);
@@ -70,7 +70,7 @@ public class ToolbarButton extends CButton {
             if (!showText) {
                 setText("");
             } else {
-                setText((String) a.getValue(FrameAction.TOOLBAR_NAME));
+                setText((String) a.getValue(AbstractColumbaAction.TOOLBAR_NAME));
             }
 
             if (ALIGNMENT) {

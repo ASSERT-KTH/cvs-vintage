@@ -15,7 +15,7 @@
 //All Rights Reserved.
 package org.columba.mail.gui.attachment.action;
 
-import org.columba.core.action.FrameAction;
+import org.columba.core.action.AbstractColumbaAction;
 import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.gui.selection.SelectionChangedEvent;
 import org.columba.core.gui.selection.SelectionListener;
@@ -36,7 +36,7 @@ import java.awt.event.ActionEvent;
  * To change this generated comment go to
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
-public class SaveAsAction extends FrameAction implements SelectionListener {
+public class SaveAsAction extends AbstractColumbaAction implements SelectionListener {
     public SaveAsAction(FrameMediator frameMediator) {
         super(frameMediator,
             MailResourceLoader.getString("menu", "mainframe", "attachmentsaveas"));

@@ -21,7 +21,7 @@ import org.columba.addressbook.gui.frame.AddressbookFrameController;
 import org.columba.addressbook.parser.VCardParser;
 import org.columba.addressbook.util.AddressbookResourceLoader;
 
-import org.columba.core.action.FrameAction;
+import org.columba.core.action.AbstractColumbaAction;
 import org.columba.core.gui.frame.FrameMediator;
 
 import java.awt.event.ActionEvent;
@@ -39,7 +39,7 @@ import javax.swing.JFileChooser;
  * To change this generated comment go to
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
-public class AddVCardAction extends FrameAction {
+public class AddVCardAction extends AbstractColumbaAction {
     public AddVCardAction(FrameMediator frameController) {
         super(frameController,
             AddressbookResourceLoader.getString("menu", "mainframe",

@@ -15,7 +15,7 @@
 //All Rights Reserved.
 package org.columba.mail.gui.composer.action;
 
-import org.columba.core.action.FrameAction;
+import org.columba.core.action.AbstractColumbaAction;
 import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.util.SwingWorker;
 
@@ -32,7 +32,7 @@ import java.awt.event.ActionEvent;
  * To change this generated comment go to
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
-public class ExternalEditorAction extends FrameAction {
+public class ExternalEditorAction extends AbstractColumbaAction {
     public ExternalEditorAction(FrameMediator frameMediator) {
         super(frameMediator,
             MailResourceLoader.getString("menu", "composer",

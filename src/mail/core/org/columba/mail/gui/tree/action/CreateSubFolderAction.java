@@ -15,7 +15,7 @@
 //All Rights Reserved.
 package org.columba.mail.gui.tree.action;
 
-import org.columba.core.action.FrameAction;
+import org.columba.core.action.AbstractColumbaAction;
 import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.gui.selection.SelectionChangedEvent;
 import org.columba.core.gui.selection.SelectionListener;
@@ -41,7 +41,7 @@ import javax.swing.KeyStroke;
  * To change this generated comment go to
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
-public class CreateSubFolderAction extends FrameAction
+public class CreateSubFolderAction extends AbstractColumbaAction
     implements SelectionListener {
     public CreateSubFolderAction(FrameMediator frameMediator) {
         super(frameMediator,

@@ -15,7 +15,7 @@
 //All Rights Reserved.
 package org.columba.mail.gui.table.action;
 
-import org.columba.core.action.FrameAction;
+import org.columba.core.action.AbstractColumbaAction;
 import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.gui.selection.SelectionChangedEvent;
 import org.columba.core.gui.selection.SelectionListener;
@@ -36,7 +36,7 @@ import java.awt.event.ActionEvent;
  *
  * @author fdietz
  */
-public class ForwardInlineAction extends FrameAction
+public class ForwardInlineAction extends AbstractColumbaAction
     implements SelectionListener {
     public ForwardInlineAction(FrameMediator frameMediator) {
         super(frameMediator,

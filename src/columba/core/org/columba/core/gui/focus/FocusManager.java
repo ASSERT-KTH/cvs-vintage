@@ -15,7 +15,7 @@
 //All Rights Reserved.
 package org.columba.core.gui.focus;
 
-import org.columba.core.action.FrameAction;
+import org.columba.core.action.AbstractColumbaAction;
 
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
@@ -57,13 +57,13 @@ public class FocusManager implements FocusListener {
     /**
      * all actions
      */
-    FrameAction cutAction;
-    FrameAction copyAction;
-    FrameAction pasteAction;
-    FrameAction deleteAction;
-    FrameAction selectAllAction;
-    FrameAction undoAction;
-    FrameAction redoAction;
+    AbstractColumbaAction cutAction;
+    AbstractColumbaAction copyAction;
+    AbstractColumbaAction pasteAction;
+    AbstractColumbaAction deleteAction;
+    AbstractColumbaAction selectAllAction;
+    AbstractColumbaAction undoAction;
+    AbstractColumbaAction redoAction;
 
     /**
      * current focus owner
@@ -249,49 +249,49 @@ public class FocusManager implements FocusListener {
     /**
      * @param action
      */
-    public void setCopyAction(FrameAction action) {
+    public void setCopyAction(AbstractColumbaAction action) {
         copyAction = action;
     }
 
     /**
      * @param action
      */
-    public void setCutAction(FrameAction action) {
+    public void setCutAction(AbstractColumbaAction action) {
         cutAction = action;
     }
 
     /**
      * @param action
      */
-    public void setDeleteAction(FrameAction action) {
+    public void setDeleteAction(AbstractColumbaAction action) {
         deleteAction = action;
     }
 
     /**
      * @param action
      */
-    public void setPasteAction(FrameAction action) {
+    public void setPasteAction(AbstractColumbaAction action) {
         pasteAction = action;
     }
 
     /**
      * @param action
      */
-    public void setRedoAction(FrameAction action) {
+    public void setRedoAction(AbstractColumbaAction action) {
         redoAction = action;
     }
 
     /**
      * @param action
      */
-    public void setSelectAllAction(FrameAction action) {
+    public void setSelectAllAction(AbstractColumbaAction action) {
         selectAllAction = action;
     }
 
     /**
      * @param action
      */
-    public void setUndoAction(FrameAction action) {
+    public void setUndoAction(AbstractColumbaAction action) {
         undoAction = action;
     }
 }

@@ -15,7 +15,7 @@
 //All Rights Reserved.
 package org.columba.mail.smtp.action;
 
-import org.columba.core.action.FrameAction;
+import org.columba.core.action.AbstractColumbaAction;
 import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.gui.util.ImageLoader;
 import org.columba.core.main.MainInterface;
@@ -40,7 +40,7 @@ import javax.swing.KeyStroke;
  * It is visually represented with a menuentry and a toolbar.
  *
  */
-public class SendAllMessagesAction extends FrameAction {
+public class SendAllMessagesAction extends AbstractColumbaAction {
     /**
      * @param controller
      */

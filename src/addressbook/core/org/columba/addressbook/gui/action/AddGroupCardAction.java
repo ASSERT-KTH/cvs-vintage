@@ -21,7 +21,7 @@ import org.columba.addressbook.gui.EditGroupDialog;
 import org.columba.addressbook.gui.frame.AddressbookFrameController;
 import org.columba.addressbook.util.AddressbookResourceLoader;
 
-import org.columba.core.action.FrameAction;
+import org.columba.core.action.AbstractColumbaAction;
 import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.gui.util.ImageLoader;
 
@@ -34,7 +34,7 @@ import java.awt.event.ActionEvent;
  * To change this generated comment go to
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
-public class AddGroupCardAction extends FrameAction {
+public class AddGroupCardAction extends AbstractColumbaAction {
     public AddGroupCardAction(FrameMediator frameController) {
         super(frameController,
             AddressbookResourceLoader.getString("menu", "mainframe",

@@ -15,7 +15,7 @@
 //All Rights Reserved.
 package org.columba.core.gui.menu;
 
-import org.columba.core.action.FrameAction;
+import org.columba.core.action.AbstractColumbaAction;
 import org.columba.core.help.HelpManager;
 
 import javax.swing.Action;
@@ -44,7 +44,7 @@ public class CButton extends JButton {
     public CButton(Action action) {
         super(action);
 
-        String topicID = (String) action.getValue(FrameAction.TOPIC_ID);
+        String topicID = (String) action.getValue(AbstractColumbaAction.TOPIC_ID);
 
         if (topicID != null) {
             HelpManager.enableHelpOnButton(this, topicID);

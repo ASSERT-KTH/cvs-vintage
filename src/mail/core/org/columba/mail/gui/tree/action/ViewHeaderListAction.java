@@ -15,7 +15,7 @@
 //All Rights Reserved.
 package org.columba.mail.gui.tree.action;
 
-import org.columba.core.action.FrameAction;
+import org.columba.core.action.AbstractColumbaAction;
 import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.main.MainInterface;
 
@@ -26,7 +26,7 @@ import org.columba.mail.gui.table.command.ViewHeaderListCommand;
 import java.awt.event.ActionEvent;
 
 
-public class ViewHeaderListAction extends FrameAction {
+public class ViewHeaderListAction extends AbstractColumbaAction {
     /**
      * @param controller
      */

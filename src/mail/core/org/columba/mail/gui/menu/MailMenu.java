@@ -123,7 +123,7 @@ public class MailMenu extends Menu {
                                                 .getSortingColumn()))
                                 menuItem.setSelected(true);
 
-                        //menuItem.addActionListener( new FrameActionListener( mainInterface ));
+                        //menuItem.addActionListener( new AbstractColumbaActionListener( mainInterface ));
 
                         sortSubMenu.add(menuItem);
                         group.add(menuItem);

@@ -15,7 +15,7 @@
 //All Rights Reserved.
 package org.columba.mail.gui.message.action;
 
-import org.columba.core.action.FrameAction;
+import org.columba.core.action.AbstractColumbaAction;
 import org.columba.core.gui.frame.FrameMediator;
 
 import org.columba.mail.gui.frame.AbstractMailFrameController;
@@ -35,7 +35,7 @@ import java.util.Observer;
  *
  * @author fdietz
  */
-public class ComposeMessageAction extends FrameAction implements Observer {
+public class ComposeMessageAction extends AbstractColumbaAction implements Observer {
     URL url = null;
 
     /**

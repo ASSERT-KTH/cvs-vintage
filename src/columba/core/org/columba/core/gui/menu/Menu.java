@@ -15,7 +15,7 @@
 //All Rights Reserved.
 package org.columba.core.gui.menu;
 
-import org.columba.core.action.FrameAction;
+import org.columba.core.action.AbstractColumbaAction;
 import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.gui.util.NotifyDialog;
 import org.columba.core.main.MainInterface;
@@ -83,7 +83,7 @@ public class Menu extends JMenuBar {
         menuGenerator.createMenuBar(this);
     }
 
-    public void addMenuEntry(String id, FrameAction action) {
+    public void addMenuEntry(String id, AbstractColumbaAction action) {
         CMenuItem menuItem = new CMenuItem(action);
         menuItem.addMouseListener(handler);
 

@@ -15,7 +15,7 @@
 //All Rights Reserved.
 package org.columba.mail.gui.frame;
 
-import org.columba.core.action.FrameAction;
+import org.columba.core.action.AbstractColumbaAction;
 import org.columba.core.gui.statusbar.StatusBar;
 
 import java.awt.event.MouseAdapter;

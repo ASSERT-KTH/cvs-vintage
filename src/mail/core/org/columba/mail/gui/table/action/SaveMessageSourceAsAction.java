@@ -15,7 +15,7 @@
 //All Rights Reserved.
 package org.columba.mail.gui.table.action;
 
-import org.columba.core.action.FrameAction;
+import org.columba.core.action.AbstractColumbaAction;
 import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.gui.selection.SelectionChangedEvent;
 import org.columba.core.gui.selection.SelectionListener;
@@ -37,7 +37,7 @@ import java.awt.event.ActionEvent;
  * as-is incl. all headers.
  * @author Karl Peder Olesen (karlpeder), 20030615
  */
-public class SaveMessageSourceAsAction extends FrameAction
+public class SaveMessageSourceAsAction extends AbstractColumbaAction
     implements SelectionListener {
     public SaveMessageSourceAsAction(FrameMediator controller) {
         super(controller,

@@ -17,7 +17,7 @@
 //All Rights Reserved.
 package org.columba.mail.gui.action;
 
-import org.columba.core.action.FrameAction;
+import org.columba.core.action.AbstractColumbaAction;
 import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.gui.util.ImageLoader;
 
@@ -31,7 +31,7 @@ import java.awt.event.KeyEvent;
 import javax.swing.KeyStroke;
 
 
-public class NewMessageAction extends FrameAction {
+public class NewMessageAction extends AbstractColumbaAction {
     public NewMessageAction(FrameMediator controller) {
         super(controller,
             MailResourceLoader.getString("menu", "mainframe", "menu_message_new"));

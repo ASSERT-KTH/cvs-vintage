@@ -15,7 +15,7 @@
 //All Rights Reserved.
 package org.columba.mail.gui.message.action;
 
-import org.columba.core.action.FrameAction;
+import org.columba.core.action.AbstractColumbaAction;
 
 import org.columba.mail.gui.message.MessageController;
 
@@ -33,12 +33,12 @@ import java.awt.event.ActionListener;
  */
 public class MessageActionListener implements ActionListener {
     private MessageController messageController;
-    public FrameAction dictAction;
+    public AbstractColumbaAction dictAction;
 
     public MessageActionListener(MessageController messageController) {
         this.messageController = messageController;
 
-        dictAction = new FrameAction(null, "Dict.org lookup selection...") {
+        dictAction = new AbstractColumbaAction(null, "Dict.org lookup selection...") {
                     public void actionPerformed(ActionEvent e) {
                         // FIXME
 
@@ -51,7 +51,7 @@ public class MessageActionListener implements ActionListener {
                     }
                 };
 
-        dictAction.putValue(FrameAction.SHORT_DESCRIPTION,
+        dictAction.putValue(AbstractColumbaAction.SHORT_DESCRIPTION,
             "Look up definition of selection with online dictionary...");
     }
 

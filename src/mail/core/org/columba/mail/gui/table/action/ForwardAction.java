@@ -15,7 +15,7 @@
 //All Rights Reserved.
 package org.columba.mail.gui.table.action;
 
-import org.columba.core.action.FrameAction;
+import org.columba.core.action.AbstractColumbaAction;
 import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.gui.selection.SelectionChangedEvent;
 import org.columba.core.gui.selection.SelectionListener;
@@ -48,7 +48,7 @@ import javax.swing.KeyStroke;
  *
  * @author fdietz
  */
-public class ForwardAction extends FrameAction implements SelectionListener,
+public class ForwardAction extends AbstractColumbaAction implements SelectionListener,
     Observer {
     private XmlElement forward;
     private String forwardStyle;

@@ -15,7 +15,7 @@
 //All Rights Reserved.
 package org.columba.mail.gui.composer.action;
 
-import org.columba.core.action.FrameAction;
+import org.columba.core.action.AbstractColumbaAction;
 import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.gui.util.ImageLoader;
 import org.columba.core.main.MainInterface;
@@ -39,7 +39,7 @@ import java.awt.event.ActionEvent;
  * To change this generated comment go to
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
-public class SendLaterAction extends FrameAction {
+public class SendLaterAction extends AbstractColumbaAction {
     public SendLaterAction(FrameMediator FrameController) {
         super(FrameController,
             MailResourceLoader.getString("menu", "composer",

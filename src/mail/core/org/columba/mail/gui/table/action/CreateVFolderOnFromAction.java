@@ -15,7 +15,7 @@
 //All Rights Reserved.
 package org.columba.mail.gui.table.action;
 
-import org.columba.core.action.FrameAction;
+import org.columba.core.action.AbstractColumbaAction;
 import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.gui.selection.SelectionChangedEvent;
 import org.columba.core.gui.selection.SelectionListener;
@@ -37,7 +37,7 @@ import java.awt.event.ActionEvent;
  * To change this generated comment go to
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
-public class CreateVFolderOnFromAction extends FrameAction
+public class CreateVFolderOnFromAction extends AbstractColumbaAction
     implements SelectionListener {
     public CreateVFolderOnFromAction(FrameMediator frameMediator) {
         super(frameMediator,

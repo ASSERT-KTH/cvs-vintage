@@ -21,7 +21,7 @@ import javax.swing.JRadioButtonMenuItem;
 
 
 /**
- * Adds an Observable/Observer to {@link FrameAction}.
+ * Adds an Observable/Observer to {@link AbstractColumbaAction}.
  * <p>
  * This makes it possible to notify gui-elements like
  * JRadioButtonMenuItem and JRadioButton, which are created using this
@@ -29,7 +29,7 @@ import javax.swing.JRadioButtonMenuItem;
  *
  * @author fdietz
  */
-public abstract class RadioButtonAction extends FrameAction {
+public abstract class RadioButtonAction extends AbstractColumbaAction {
     JRadioButtonMenuItem menuItem;
     SelectionStateObservable observable;
 

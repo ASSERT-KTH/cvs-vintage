@@ -15,7 +15,7 @@
 //All Rights Reserved.
 package org.columba.core.command;
 
-import org.columba.core.action.FrameAction;
+import org.columba.core.action.AbstractColumbaAction;
 import org.columba.core.gui.statusbar.event.WorkerListChangeListener;
 import org.columba.core.gui.statusbar.event.WorkerListChangedEvent;
 import org.columba.core.gui.util.ImageLoader;
@@ -34,8 +34,8 @@ import javax.swing.KeyStroke;
 public class UndoManager implements WorkerListChangeListener {
     protected List undoQueue;
     protected List redoQueue;
-    public FrameAction undoAction;
-    public FrameAction redoAction;
+    public AbstractColumbaAction undoAction;
+    public AbstractColumbaAction redoAction;
     protected DefaultProcessor processor;
     protected int runningTasks = 0;
 
@@ -52,32 +52,32 @@ public class UndoManager implements WorkerListChangeListener {
 
     public void initActions() {
         // Initialize undo
-        undoAction = new FrameAction(null,
+        undoAction = new AbstractColumbaAction(null,
                 MailResourceLoader.getString("action", "menu_edit_undo")) {
                     public void actionPerformed(ActionEvent e) {
                         undoLast();
                     }
                 };
-        undoAction.putValue(FrameAction.SMALL_ICON,
+        undoAction.putValue(AbstractColumbaAction.SMALL_ICON,
             ImageLoader.getSmallImageIcon("stock_undo-16.png"));
-        undoAction.putValue(FrameAction.LARGE_ICON,
+        undoAction.putValue(AbstractColumbaAction.LARGE_ICON,
             ImageLoader.getImageIcon("stock_undo.png"));
-        undoAction.putValue(FrameAction.ACCELERATOR_KEY,
+        undoAction.putValue(AbstractColumbaAction.ACCELERATOR_KEY,
             KeyStroke.getKeyStroke(KeyEvent.VK_Z, ActionEvent.CTRL_MASK));
         undoAction.setEnabled(false);
 
         // Initialize redo
-        redoAction = new FrameAction(null,
+        redoAction = new AbstractColumbaAction(null,
                 MailResourceLoader.getString("action", "menu_edit_redo")) {
                     public void actionPerformed(ActionEvent e) {
                         redoLast();
                     }
                 };
-        redoAction.putValue(FrameAction.SMALL_ICON,
+        redoAction.putValue(AbstractColumbaAction.SMALL_ICON,
             ImageLoader.getSmallImageIcon("stock_redo-16.png"));
-        redoAction.putValue(FrameAction.LARGE_ICON,
+        redoAction.putValue(AbstractColumbaAction.LARGE_ICON,
             ImageLoader.getImageIcon("stock_redo.png"));
-        redoAction.putValue(FrameAction.ACCELERATOR_KEY,
+        redoAction.putValue(AbstractColumbaAction.ACCELERATOR_KEY,
             KeyStroke.getKeyStroke(KeyEvent.VK_R, ActionEvent.CTRL_MASK));
         redoAction.setEnabled(false);
     }

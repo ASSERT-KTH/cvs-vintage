@@ -15,7 +15,7 @@
 //All Rights Reserved.
 package org.columba.mail.gui.action;
 
-import org.columba.core.action.FrameAction;
+import org.columba.core.action.AbstractColumbaAction;
 import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.gui.util.ImageLoader;
 
@@ -32,7 +32,7 @@ import java.awt.event.ActionListener;
  * To change this generated comment go to
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
-public class ImportAction extends FrameAction implements ActionListener {
+public class ImportAction extends AbstractColumbaAction implements ActionListener {
     public ImportAction(FrameMediator frameMediator) {
         super(frameMediator,
             MailResourceLoader.getString("menu", "mainframe",

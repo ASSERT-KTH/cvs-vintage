@@ -15,7 +15,7 @@
 //All Rights Reserved.
 package org.columba.mail.gui.composer.action;
 
-import org.columba.core.action.FrameAction;
+import org.columba.core.action.AbstractColumbaAction;
 
 import org.columba.mail.gui.composer.ComposerController;
 
@@ -25,31 +25,31 @@ import java.awt.event.ActionListener;
 
 public class ComposerActionListener implements ActionListener {
     //private ComposerInterface composerInterface;
-    public FrameAction undoAction;
-    public FrameAction redoAction;
-    public FrameAction attachFileAction;
-    public FrameAction spellCheckAction;
-    public FrameAction attachMessageAction;
-    public FrameAction cutAction;
-    public FrameAction copyAction;
-    public FrameAction pasteAction;
-    public FrameAction deleteAction;
-    public FrameAction sendAction;
-    public FrameAction sendLaterAction;
-    public FrameAction newAction;
-    public FrameAction saveAction;
-    public FrameAction saveAsAction;
-    public FrameAction saveDraftAction;
-    public FrameAction saveTemplateAction;
-    public FrameAction exitAction;
-    public FrameAction addressbookAction;
-    public FrameAction selectAllAction;
-    public FrameAction signAction;
-    public FrameAction encryptAction;
+    public AbstractColumbaAction undoAction;
+    public AbstractColumbaAction redoAction;
+    public AbstractColumbaAction attachFileAction;
+    public AbstractColumbaAction spellCheckAction;
+    public AbstractColumbaAction attachMessageAction;
+    public AbstractColumbaAction cutAction;
+    public AbstractColumbaAction copyAction;
+    public AbstractColumbaAction pasteAction;
+    public AbstractColumbaAction deleteAction;
+    public AbstractColumbaAction sendAction;
+    public AbstractColumbaAction sendLaterAction;
+    public AbstractColumbaAction newAction;
+    public AbstractColumbaAction saveAction;
+    public AbstractColumbaAction saveAsAction;
+    public AbstractColumbaAction saveDraftAction;
+    public AbstractColumbaAction saveTemplateAction;
+    public AbstractColumbaAction exitAction;
+    public AbstractColumbaAction addressbookAction;
+    public AbstractColumbaAction selectAllAction;
+    public AbstractColumbaAction signAction;
+    public AbstractColumbaAction encryptAction;
 
     // 09/16/02 ALP
     // Added as part of external editor support
-    public FrameAction externEditAction;
+    public AbstractColumbaAction externEditAction;
 
     public ComposerActionListener(ComposerController c) {
         /*
@@ -62,7 +62,7 @@ public class ComposerActionListener implements ActionListener {
     private void initActions() {
         /*
         undoAction =
-                new FrameAction(
+                new AbstractColumbaAction(
                         MailResourceLoader.getString(
                                 "menu",
                                 "mainframe",
@@ -88,7 +88,7 @@ public class ComposerActionListener implements ActionListener {
         undoAction.setEnabled(true);
 
         redoAction =
-                new FrameAction(
+                new AbstractColumbaAction(
                         MailResourceLoader.getString(
                                 "menu",
                                 "mainframe",
@@ -114,7 +114,7 @@ public class ComposerActionListener implements ActionListener {
         redoAction.setEnabled(true);
 
         cutAction =
-                new FrameAction(
+                new AbstractColumbaAction(
                         MailResourceLoader.getString(
                                 "menu",
                                 "mainframe",
@@ -140,7 +140,7 @@ public class ComposerActionListener implements ActionListener {
         cutAction.setEnabled(true);
 
         copyAction =
-                new FrameAction(
+                new AbstractColumbaAction(
                         MailResourceLoader.getString(
                                 "menu",
                                 "mainframe",
@@ -166,7 +166,7 @@ public class ComposerActionListener implements ActionListener {
         copyAction.setEnabled(true);
 
         pasteAction =
-                new FrameAction(
+                new AbstractColumbaAction(
                         MailResourceLoader.getString(
                                 "menu",
                                 "mainframe",
@@ -193,7 +193,7 @@ public class ComposerActionListener implements ActionListener {
         pasteAction.setEnabled(false);
 
         attachFileAction =
-                new FrameAction(
+                new AbstractColumbaAction(
                         MailResourceLoader.getString(
                                 "menu",
                                 "composer",
@@ -218,7 +218,7 @@ public class ComposerActionListener implements ActionListener {
         attachFileAction.setEnabled(true);
 
         spellCheckAction =
-                new FrameAction(
+                new AbstractColumbaAction(
                         MailResourceLoader.getString(
                                 "menu",
                                 "composer",
@@ -244,7 +244,7 @@ public class ComposerActionListener implements ActionListener {
         spellCheckAction.setEnabled(true);
 
         attachMessageAction =
-                new FrameAction(
+                new AbstractColumbaAction(
                         MailResourceLoader.getString(
                                 "menu",
                                 "composer",
@@ -269,7 +269,7 @@ public class ComposerActionListener implements ActionListener {
         attachMessageAction.setEnabled(true);
 
         sendAction =
-                new FrameAction(
+                new AbstractColumbaAction(
                         MailResourceLoader.getString(
                                 "menu",
                                 "composer",
@@ -296,7 +296,7 @@ public class ComposerActionListener implements ActionListener {
         sendAction.setEnabled(true);
 
         sendLaterAction =
-                new FrameAction(
+                new AbstractColumbaAction(
                         MailResourceLoader.getString(
                                 "menu",
                                 "composer",
@@ -321,7 +321,7 @@ public class ComposerActionListener implements ActionListener {
         sendLaterAction.setEnabled(true);
 
         saveAction =
-                new FrameAction(
+                new AbstractColumbaAction(
                         MailResourceLoader.getString(
                                 "menu",
                                 "mainframe",
@@ -346,7 +346,7 @@ public class ComposerActionListener implements ActionListener {
         saveAction.setEnabled(false);
 
         saveAsAction =
-                new FrameAction(
+                new AbstractColumbaAction(
                         MailResourceLoader.getString(
                                 "menu",
                                 "mainframe",
@@ -371,7 +371,7 @@ public class ComposerActionListener implements ActionListener {
         saveAsAction.setEnabled(false);
 
         saveDraftAction =
-                new FrameAction(
+                new AbstractColumbaAction(
                         MailResourceLoader.getString(
                                 "menu",
                                 "composer",
@@ -398,7 +398,7 @@ public class ComposerActionListener implements ActionListener {
         saveAsAction.setEnabled(false);
 
         saveTemplateAction =
-                new FrameAction(
+                new AbstractColumbaAction(
                         MailResourceLoader.getString(
                                 "menu",
                                 "composer",
@@ -423,7 +423,7 @@ public class ComposerActionListener implements ActionListener {
         saveTemplateAction.setEnabled(true);
 
         newAction =
-                new FrameAction(
+                new AbstractColumbaAction(
                         MailResourceLoader.getString(
                                 "menu",
                                 "mainframe",
@@ -448,7 +448,7 @@ public class ComposerActionListener implements ActionListener {
         newAction.setEnabled(true);
 
         exitAction =
-                new FrameAction(
+                new AbstractColumbaAction(
                         MailResourceLoader.getString(
                                 "menu",
                                 "mainframe",
@@ -473,7 +473,7 @@ public class ComposerActionListener implements ActionListener {
         exitAction.setEnabled(true);
 
         addressbookAction =
-                new FrameAction(
+                new AbstractColumbaAction(
                         MailResourceLoader.getString(
                                 "menu",
                                 "composer",
@@ -499,7 +499,7 @@ public class ComposerActionListener implements ActionListener {
         addressbookAction.setEnabled(true);
 
         deleteAction =
-                new FrameAction(
+                new AbstractColumbaAction(
                         MailResourceLoader.getString(
                                 "menu",
                                 "mainframe",
@@ -524,7 +524,7 @@ public class ComposerActionListener implements ActionListener {
         deleteAction.setEnabled(true);
 
         selectAllAction =
-                new FrameAction(
+                new AbstractColumbaAction(
                         MailResourceLoader.getString(
                                 "menu",
                                 "mainframe",
@@ -549,7 +549,7 @@ public class ComposerActionListener implements ActionListener {
         selectAllAction.setEnabled(false);
 
         signAction =
-                new FrameAction(
+                new AbstractColumbaAction(
                         MailResourceLoader.getString(
                                 "menu",
                                 "composer",
@@ -574,7 +574,7 @@ public class ComposerActionListener implements ActionListener {
         signAction.setEnabled(true);
 
         encryptAction =
-                new FrameAction(
+                new AbstractColumbaAction(
                         MailResourceLoader.getString(
                                 "menu",
                                 "composer",
@@ -601,7 +601,7 @@ public class ComposerActionListener implements ActionListener {
         // 09/16/02 ALP
         // Added as part of external editor support
         externEditAction =
-                new FrameAction(
+                new AbstractColumbaAction(
                         MailResourceLoader.getString(
                                 "menu",
                                 "composer",

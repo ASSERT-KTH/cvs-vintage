@@ -17,27 +17,27 @@ package org.columba.addressbook.gui.action;
 
 import org.columba.addressbook.main.AddressbookInterface;
 
-import org.columba.core.action.FrameAction;
+import org.columba.core.action.AbstractColumbaAction;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 
 public class AddressbookActionListener implements ActionListener {
-    public FrameAction cutAction;
-    public FrameAction copyAction;
-    public FrameAction pasteAction;
-    public FrameAction selectAllAction;
-    public FrameAction deleteAction;
-    public FrameAction closeAction;
-    public FrameAction addContactAction;
-    public FrameAction addGroupAction;
-    public FrameAction removeAction;
-    public FrameAction propertiesAction;
-    public FrameAction addAddressbookAction;
-    public FrameAction addressbookImportAction;
-    public FrameAction addvcardAction;
-    public FrameAction savevcardAction;
+    public AbstractColumbaAction cutAction;
+    public AbstractColumbaAction copyAction;
+    public AbstractColumbaAction pasteAction;
+    public AbstractColumbaAction selectAllAction;
+    public AbstractColumbaAction deleteAction;
+    public AbstractColumbaAction closeAction;
+    public AbstractColumbaAction addContactAction;
+    public AbstractColumbaAction addGroupAction;
+    public AbstractColumbaAction removeAction;
+    public AbstractColumbaAction propertiesAction;
+    public AbstractColumbaAction addAddressbookAction;
+    public AbstractColumbaAction addressbookImportAction;
+    public AbstractColumbaAction addvcardAction;
+    public AbstractColumbaAction savevcardAction;
     private AddressbookInterface addressbookInterface;
 
     public AddressbookActionListener(AddressbookInterface i) {
@@ -88,7 +88,7 @@ public class AddressbookActionListener implements ActionListener {
     public void initAction() {
         /*
                         cutAction =
-                                new BasicAction(
+                                new AbstractColumbaAction(
                                         AddressbookResourceLoader.getString(
                                                 "menu",
                                                 "mainframe",
@@ -105,7 +105,7 @@ public class AddressbookActionListener implements ActionListener {
                         cutAction.setEnabled(true);
 
                         copyAction =
-                                new BasicAction(
+                                new AbstractColumbaAction(
                                         AddressbookResourceLoader.getString(
                                                 "menu",
                                                 "mainframe",
@@ -122,7 +122,7 @@ public class AddressbookActionListener implements ActionListener {
                         copyAction.setEnabled(true);
 
                         pasteAction =
-                                new BasicAction(
+                                new AbstractColumbaAction(
                                         AddressbookResourceLoader.getString(
                                                 "menu",
                                                 "mainframe",
@@ -139,7 +139,7 @@ public class AddressbookActionListener implements ActionListener {
                         pasteAction.setEnabled(true);
 
                         deleteAction =
-                                new BasicAction(
+                                new AbstractColumbaAction(
                                         AddressbookResourceLoader.getString(
                                                 "menu",
                                                 "mainframe",
@@ -156,7 +156,7 @@ public class AddressbookActionListener implements ActionListener {
                         deleteAction.setEnabled(true);
 
                         selectAllAction =
-                                new BasicAction(
+                                new AbstractColumbaAction(
                                         AddressbookResourceLoader.getString(
                                                 "menu",
                                                 "mainframe",
@@ -173,7 +173,7 @@ public class AddressbookActionListener implements ActionListener {
                         selectAllAction.setEnabled(true);
 
                         closeAction =
-                                new BasicAction(
+                                new AbstractColumbaAction(
                                         AddressbookResourceLoader.getString(
                                                 "menu",
                                                 "mainframe",
@@ -191,7 +191,7 @@ public class AddressbookActionListener implements ActionListener {
                         closeAction.addActionListener(this);
 
                         addContactAction =
-                                new BasicAction(
+                                new AbstractColumbaAction(
                                         AddressbookResourceLoader.getString(
                                                 "menu",
                                                 "mainframe",
@@ -209,7 +209,7 @@ public class AddressbookActionListener implements ActionListener {
                         addContactAction.addActionListener(this);
 
                         addGroupAction =
-                                new BasicAction(
+                                new AbstractColumbaAction(
                                         AddressbookResourceLoader.getString(
                                                 "menu",
                                                 "mainframe",
@@ -227,7 +227,7 @@ public class AddressbookActionListener implements ActionListener {
                         addGroupAction.addActionListener(this);
 
                         removeAction =
-                                new BasicAction(
+                                new AbstractColumbaAction(
                                         AddressbookResourceLoader.getString(
                                                 "menu",
                                                 "mainframe",
@@ -245,7 +245,7 @@ public class AddressbookActionListener implements ActionListener {
                         removeAction.addActionListener(this);
 
                         propertiesAction =
-                                new BasicAction(
+                                new AbstractColumbaAction(
                                         AddressbookResourceLoader.getString(
                                                 "menu",
                                                 "mainframe",
@@ -263,7 +263,7 @@ public class AddressbookActionListener implements ActionListener {
                         propertiesAction.addActionListener(this);
 
                         addAddressbookAction =
-                                new BasicAction(
+                                new AbstractColumbaAction(
                                         AddressbookResourceLoader.getString(
                                                 "menu",
                                                 "mainframe",
@@ -281,7 +281,7 @@ public class AddressbookActionListener implements ActionListener {
                         addAddressbookAction.addActionListener(this);
 
                         addressbookImportAction =
-                                new BasicAction(
+                                new AbstractColumbaAction(
                                         AddressbookResourceLoader.getString(
                                                 "menu",
                                                 "mainframe",
@@ -299,7 +299,7 @@ public class AddressbookActionListener implements ActionListener {
                         addressbookImportAction.addActionListener(this);
 
                         addvcardAction =
-                                new BasicAction(
+                                new AbstractColumbaAction(
                                         AddressbookResourceLoader.getString(
                                                 "menu",
                                                 "mainframe",

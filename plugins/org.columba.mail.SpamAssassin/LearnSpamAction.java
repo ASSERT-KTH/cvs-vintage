@@ -1,4 +1,4 @@
-import org.columba.core.action.FrameAction;
+import org.columba.core.action.AbstractColumbaAction;
 import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.gui.selection.SelectionChangedEvent;
 import org.columba.core.gui.selection.SelectionListener;
@@ -25,7 +25,7 @@ import java.awt.event.ActionEvent;
  * them this time around.
  *
  */
-public class LearnSpamAction extends FrameAction implements SelectionListener {
+public class LearnSpamAction extends AbstractColumbaAction implements SelectionListener {
     /**
      * @param frameMediator
      * @param name

@@ -21,7 +21,7 @@ import javax.swing.JCheckBoxMenuItem;
 
 
 /**
- * Adds an Observable/Observer to {@link FrameAction}.
+ * Adds an Observable/Observer to {@link AbstractColumbaAction}.
  * <p>
  * This makes it possible to notify gui-elements like
  * JCheckBoxMenuItem and JToogleButton, which are created using this
@@ -29,7 +29,7 @@ import javax.swing.JCheckBoxMenuItem;
  *
  * @author fdietz
  */
-public abstract class CheckBoxAction extends FrameAction {
+public abstract class CheckBoxAction extends AbstractColumbaAction {
     private JCheckBoxMenuItem checkBoxMenuItem;
     SelectionStateObservable observable;
 

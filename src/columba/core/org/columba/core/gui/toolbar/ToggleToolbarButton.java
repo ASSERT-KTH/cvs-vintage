@@ -16,7 +16,7 @@
 package org.columba.core.gui.toolbar;
 
 import org.columba.core.action.CheckBoxAction;
-import org.columba.core.action.FrameAction;
+import org.columba.core.action.AbstractColumbaAction;
 import org.columba.core.action.SelectionStateObservable;
 import org.columba.core.gui.util.ImageUtil;
 
@@ -71,7 +71,7 @@ public class ToggleToolbarButton extends JToggleButton implements Observer {
         // no text!
         setText("");
 
-        ImageIcon icon = (ImageIcon) action.getValue(FrameAction.SMALL_ICON);
+        ImageIcon icon = (ImageIcon) action.getValue(AbstractColumbaAction.SMALL_ICON);
 
         if (icon != null) {
             setIcon(icon);
@@ -80,7 +80,7 @@ public class ToggleToolbarButton extends JToggleButton implements Observer {
             setDisabledIcon(ImageUtil.createTransparentIcon((ImageIcon) icon));
         }
 
-        //setToolTipText(((BasicAction) action).getTooltipText());
+        //setToolTipText(((AbstractColumbaAction) action).getTooltipText());
         ((CheckBoxAction) getAction()).getObservable().addObserver(this);
     }
 

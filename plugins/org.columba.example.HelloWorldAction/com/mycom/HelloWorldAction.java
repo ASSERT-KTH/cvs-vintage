@@ -15,13 +15,13 @@
 //All Rights Reserved.
 package com.mycom;
 
-import org.columba.core.action.FrameAction;
+import org.columba.core.action.AbstractColumbaAction;
 import org.columba.core.gui.frame.FrameMediator;
 
 import java.awt.event.ActionEvent;
 
 
-public class HelloWorldAction extends FrameAction {
+public class HelloWorldAction extends AbstractColumbaAction {
     public HelloWorldAction(FrameMediator controller) {
         super(controller, "Hello, World!");
 

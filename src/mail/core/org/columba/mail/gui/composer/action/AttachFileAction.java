@@ -15,7 +15,7 @@
 //All Rights Reserved.
 package org.columba.mail.gui.composer.action;
 
-import org.columba.core.action.FrameAction;
+import org.columba.core.action.AbstractColumbaAction;
 import org.columba.core.gui.util.ImageLoader;
 
 import org.columba.mail.gui.composer.ComposerController;
@@ -32,7 +32,7 @@ import javax.swing.KeyStroke;
  *
  * @author fdietz
  */
-public class AttachFileAction extends FrameAction {
+public class AttachFileAction extends AbstractColumbaAction {
     public AttachFileAction(ComposerController composerController) {
         super(composerController,
             MailResourceLoader.getString("menu", "composer",

@@ -15,7 +15,7 @@
 //All Rights Reserved.
 package org.columba.mail.pop3.action;
 
-import org.columba.core.action.FrameAction;
+import org.columba.core.action.AbstractColumbaAction;
 import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.main.MainInterface;
 
@@ -34,7 +34,7 @@ import java.util.ListIterator;
 import javax.swing.KeyStroke;
 
 
-public class ReceiveMessagesAction extends FrameAction {
+public class ReceiveMessagesAction extends AbstractColumbaAction {
     public ReceiveMessagesAction(FrameMediator controller) {
         super(controller,
             MailResourceLoader.getString("menu", "mainframe",

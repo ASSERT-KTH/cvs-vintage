@@ -15,7 +15,7 @@
 //All Rights Reserved.
 package org.columba.mail.gui.composer.action;
 
-import org.columba.core.action.FrameAction;
+import org.columba.core.action.AbstractColumbaAction;
 import org.columba.core.gui.util.ImageLoader;
 
 import org.columba.mail.gui.composer.ComposerController;
@@ -33,7 +33,7 @@ import javax.swing.KeyStroke;
  * To change this generated comment go to
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
-public class CloseComposerAction extends FrameAction {
+public class CloseComposerAction extends AbstractColumbaAction {
     public CloseComposerAction(ComposerController composerController) {
         super(composerController,
             MailResourceLoader.getString("menu", "mainframe", "menu_file_close"));

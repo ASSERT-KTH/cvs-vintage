@@ -18,7 +18,7 @@ package org.columba.addressbook.gui.action;
 import org.columba.addressbook.gui.dialog.importfilter.ImportWizardLauncher;
 import org.columba.addressbook.util.AddressbookResourceLoader;
 
-import org.columba.core.action.FrameAction;
+import org.columba.core.action.AbstractColumbaAction;
 import org.columba.core.gui.frame.FrameMediator;
 
 import java.awt.event.ActionEvent;
@@ -30,7 +30,7 @@ import java.awt.event.ActionEvent;
  * To change this generated comment go to
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
-public class AddressbookImportAction extends FrameAction {
+public class AddressbookImportAction extends AbstractColumbaAction {
     public AddressbookImportAction(FrameMediator frameController) {
         super(frameController,
             AddressbookResourceLoader.getString("menu", "mainframe",

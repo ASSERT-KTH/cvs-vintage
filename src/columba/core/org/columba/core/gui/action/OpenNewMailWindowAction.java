@@ -15,7 +15,7 @@
 //All Rights Reserved.
 package org.columba.core.gui.action;
 
-import org.columba.core.action.FrameAction;
+import org.columba.core.action.AbstractColumbaAction;
 import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.gui.frame.FrameModel;
 import org.columba.core.util.GlobalResourceLoader;
@@ -23,7 +23,7 @@ import org.columba.core.util.GlobalResourceLoader;
 import java.awt.event.ActionEvent;
 
 
-public class OpenNewMailWindowAction extends FrameAction {
+public class OpenNewMailWindowAction extends AbstractColumbaAction {
     public OpenNewMailWindowAction(FrameMediator controller) {
         super(controller,
             GlobalResourceLoader.getString(null, null, "menu_file_new_mail"));

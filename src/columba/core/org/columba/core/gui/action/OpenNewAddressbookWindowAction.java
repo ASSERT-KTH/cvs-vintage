@@ -17,7 +17,7 @@
 //All Rights Reserved.
 package org.columba.core.gui.action;
 
-import org.columba.core.action.FrameAction;
+import org.columba.core.action.AbstractColumbaAction;
 import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.gui.frame.FrameModel;
 import org.columba.core.gui.util.ImageLoader;
@@ -32,7 +32,7 @@ import java.awt.event.ActionEvent;
  * To change this generated comment go to Window>Preferences>Java>Code
  * Generation>Code and Comments
  */
-public class OpenNewAddressbookWindowAction extends FrameAction {
+public class OpenNewAddressbookWindowAction extends AbstractColumbaAction {
     public OpenNewAddressbookWindowAction(FrameMediator controller) {
         super(controller,
             GlobalResourceLoader.getString(null, null,

@@ -13,9 +13,10 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
+
 package org.columba.core.plugin;
 
-import org.columba.core.action.FrameAction;
+import org.columba.core.action.AbstractColumbaAction;
 import org.columba.core.action.IMenu;
 import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.io.DiskIO;
@@ -25,7 +26,6 @@ import org.columba.core.xml.XmlIO;
 
 import java.util.HashMap;
 import java.util.Map;
-
 
 /**
  * Every action in Columba is handled by this class.
@@ -89,7 +89,7 @@ public class ActionPluginHandler extends AbstractPluginHandler {
         return Boolean.valueOf(getAttribute(name, "singleton")).booleanValue();
     }
 
-    public FrameAction getAction(String name, FrameMediator controller)
+    public AbstractColumbaAction getAction(String name, FrameMediator controller)
         throws Exception {
         if (isSingleton(name)) {
             // their should be only one shared instance
@@ -99,10 +99,10 @@ public class ActionPluginHandler extends AbstractPluginHandler {
                 // already loaded 
                 // -> return existing instance from hashmap
                 // -> don't use this temporary instance
-                return (FrameAction) map.get(name);
+                return (AbstractColumbaAction) map.get(name);
             } else {
                 // put first time instance in hashmap
-                FrameAction a = (FrameAction) getPlugin(name,
+                AbstractColumbaAction a = (AbstractColumbaAction) getPlugin(name,
                         new Object[] { controller });
                 map.put(name, a);
 
@@ -110,7 +110,7 @@ public class ActionPluginHandler extends AbstractPluginHandler {
             }
         }
 
-        return (FrameAction) getPlugin(name, new Object[] { controller });
+        return (AbstractColumbaAction) getPlugin(name, new Object[] { controller });
     }
 
     public IMenu getIMenu(String name, FrameMediator controller)

@@ -15,7 +15,7 @@
 //All Rights Reserved.
 package org.columba.core.gui.action;
 
-import org.columba.core.action.FrameAction;
+import org.columba.core.action.AbstractColumbaAction;
 import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.util.GlobalResourceLoader;
 
@@ -31,7 +31,7 @@ import javax.swing.KeyStroke;
  * To change this generated comment go to
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
-public class CloseAction extends FrameAction {
+public class CloseAction extends AbstractColumbaAction {
     public CloseAction(FrameMediator frameMediator) {
         super(frameMediator, GlobalResourceLoader.getString(null, null, "close"));
 

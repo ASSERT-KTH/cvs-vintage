@@ -15,7 +15,7 @@
 //All Rights Reserved.
 package org.columba.mail.pop3;
 
-import org.columba.core.action.FrameAction;
+import org.columba.core.action.AbstractColumbaAction;
 import org.columba.core.logging.ColumbaLogger;
 import org.columba.core.main.MainInterface;
 
@@ -43,8 +43,8 @@ public class POP3ServerController implements ActionListener {
     private final static int ONE_SECOND = 1000;
     protected POP3Server server;
     private boolean hide;
-    public FrameAction checkAction;
-    private FrameAction manageAction;
+    public AbstractColumbaAction checkAction;
+    private AbstractColumbaAction manageAction;
     private Timer timer;
     private int uid;
 
@@ -57,7 +57,7 @@ public class POP3ServerController implements ActionListener {
         hide = true;
 
         uid = accountItem.getUid();
-        checkAction = new FrameAction(null,
+        checkAction = new AbstractColumbaAction(null,
                 accountItem.getName() + " (" +
                 accountItem.getIdentityItem().get("address") + ")") {
                     public void actionPerformed(ActionEvent e) {
@@ -65,7 +65,7 @@ public class POP3ServerController implements ActionListener {
                     }
                 };
 
-        manageAction = new FrameAction(null,
+        manageAction = new AbstractColumbaAction(null,
                 accountItem.getName() + " (" +
                 accountItem.getIdentityItem().get("address") + ")") {
                     public void actionPerformed(ActionEvent e) {
@@ -102,20 +102,20 @@ public class POP3ServerController implements ActionListener {
     }
 
     public void updateAction() {
-        checkAction.putValue(FrameAction.NAME,
+        checkAction.putValue(AbstractColumbaAction.NAME,
             getAccountItem().getName() + " (" +
             getAccountItem().getIdentityItem().get("address") + ")");
-        manageAction.putValue(FrameAction.NAME,
+        manageAction.putValue(AbstractColumbaAction.NAME,
             getAccountItem().getName() + " (" +
             getAccountItem().getIdentityItem().get("address") + ")");
         uid = getAccountItem().getUid();
     }
 
-    public FrameAction getCheckAction() {
+    public AbstractColumbaAction getCheckAction() {
         return checkAction;
     }
 
-    public FrameAction getManageAction() {
+    public AbstractColumbaAction getManageAction() {
         return manageAction;
     }
 

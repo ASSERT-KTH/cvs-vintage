@@ -16,7 +16,7 @@
 package org.columba.core.gui.menu;
 
 import org.columba.core.action.CheckBoxAction;
-import org.columba.core.action.FrameAction;
+import org.columba.core.action.AbstractColumbaAction;
 import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.gui.util.NotifyDialog;
 import org.columba.core.logging.ColumbaLogger;
@@ -80,7 +80,7 @@ public class PopupMenuGenerator extends AbstractMenuGenerator {
             if (name.equals("menuitem")) {
                 if (next.getAttribute("action") != null) {
                     try {
-                        FrameAction action = ((ActionPluginHandler) MainInterface.pluginManager.getHandler(
+                        AbstractColumbaAction action = ((ActionPluginHandler) MainInterface.pluginManager.getHandler(
                                 "org.columba.core.action")).getAction(next.getAttribute(
                                     "action"), frameController);
 

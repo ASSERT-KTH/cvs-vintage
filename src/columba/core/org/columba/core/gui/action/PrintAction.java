@@ -15,7 +15,7 @@
 //All Rights Reserved.
 package org.columba.core.gui.action;
 
-import org.columba.core.action.FrameAction;
+import org.columba.core.action.AbstractColumbaAction;
 import org.columba.core.charset.CharsetOwnerInterface;
 import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.gui.selection.SelectionChangedEvent;
@@ -35,7 +35,7 @@ import java.awt.event.KeyEvent;
 import javax.swing.KeyStroke;
 
 
-public class PrintAction extends FrameAction implements SelectionListener {
+public class PrintAction extends AbstractColumbaAction implements SelectionListener {
     public PrintAction(FrameMediator controller) {
         super(controller,
             MailResourceLoader.getString("menu", "mainframe",

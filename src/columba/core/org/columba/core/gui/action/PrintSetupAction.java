@@ -15,7 +15,7 @@
 //All Rights Reserved.
 package org.columba.core.gui.action;
 
-import org.columba.core.action.FrameAction;
+import org.columba.core.action.AbstractColumbaAction;
 import org.columba.core.gui.frame.FrameMediator;
 
 import org.columba.mail.util.MailResourceLoader;
@@ -23,7 +23,7 @@ import org.columba.mail.util.MailResourceLoader;
 import java.awt.event.ActionEvent;
 
 
-public class PrintSetupAction extends FrameAction {
+public class PrintSetupAction extends AbstractColumbaAction {
     public PrintSetupAction(FrameMediator controller) {
         super(controller,
             MailResourceLoader.getString("menu", "mainframe",

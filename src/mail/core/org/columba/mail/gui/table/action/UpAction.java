@@ -15,7 +15,7 @@
 //All Rights Reserved.
 package org.columba.mail.gui.table.action;
 
-import org.columba.core.action.FrameAction;
+import org.columba.core.action.AbstractColumbaAction;
 import org.columba.core.logging.ColumbaLogger;
 import org.columba.core.main.MainInterface;
 
@@ -39,7 +39,7 @@ import javax.swing.tree.DefaultMutableTreeNode;
  * If you do so, the previouseMessage up your key is selected and shown in the
  * message-view. If no more message up your key, then nothing changed.
  */
-public class UpAction extends FrameAction {
+public class UpAction extends AbstractColumbaAction {
     TableController tableController;
     AbstractMailFrameController frameController;
 
