@@ -1,4 +1,4 @@
-// $Id: ModelFacade.java,v 1.95 2003/08/31 23:34:03 bobtarling Exp $
+// $Id: ModelFacade.java,v 1.96 2003/09/01 00:23:42 bobtarling Exp $
 // Copyright (c) 2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -1500,6 +1500,17 @@ public class ModelFacade {
     public static Collection getBehaviors(Object handle) {
         if (isAModelElement(handle))
             return ((MModelElement) handle).getBehaviors();
+        throw new IllegalArgumentException("Unrecognized object " + handle);
+    }
+
+    /** Get the behavioral feature of an parameter.
+     *
+     * @param handle expression.
+     * @return the behavioral feature.
+     */
+    public static Object getBehavioralFeature(Object handle) {
+        if (handle instanceof MParameter)
+            return ((MParameter) handle).getBehavioralFeature();
         throw new IllegalArgumentException("Unrecognized object " + handle);
     }
 
