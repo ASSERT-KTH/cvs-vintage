@@ -28,7 +28,7 @@ import javax.swing.text.Segment;
  * Builds a linked list of tokens without any additional processing.
  *
  * @author Slava Pestov
- * @version $Id: DefaultTokenHandler.java,v 1.16 2003/06/03 22:02:40 spestov Exp $
+ * @version $Id: DefaultTokenHandler.java,v 1.17 2003/10/26 19:43:57 spestov Exp $
  * @since jEdit 4.1pre1
  */
 public class DefaultTokenHandler implements TokenHandler
@@ -71,8 +71,35 @@ public class DefaultTokenHandler implements TokenHandler
 			addToken(token,context);
 	} //}}}
 
+	//{{{ getLineContext() method
+	/**
+	 * The token handler can compare this object with the object
+	 * previously given for this line to see if the token type at the end
+	 * of the line has changed (meaning subsequent lines might need to be
+	 * retokenized).
+	 * @since jEdit 4.2pre6
+	 */
+	public TokenMarker.LineContext getLineContext()
+	{
+		return lineContext;
+	} //}}}
+
+	//{{{ setLineContext() method
+	/**
+	 * The token handler can compare this object with the object
+	 * previously given for this line to see if the token type at the end
+	 * of the line has changed (meaning subsequent lines might need to be
+	 * retokenized).
+	 * @since jEdit 4.2pre6
+	 */
+	public void setLineContext(TokenMarker.LineContext lineContext)
+	{
+		this.lineContext = lineContext;
+	} //}}}
+
 	//{{{ Protected members
 	protected Token firstToken, lastToken;
+	protected TokenMarker.LineContext lineContext;
 
 	//{{{ getParserRuleSet() method
 	protected ParserRuleSet getParserRuleSet(TokenMarker.LineContext context)

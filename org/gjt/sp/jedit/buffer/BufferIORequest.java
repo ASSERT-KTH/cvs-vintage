@@ -35,7 +35,7 @@ import org.gjt.sp.util.*;
 /**
  * A buffer I/O request.
  * @author Slava Pestov
- * @version $Id: BufferIORequest.java,v 1.16 2003/10/26 05:50:41 spestov Exp $
+ * @version $Id: BufferIORequest.java,v 1.17 2003/10/26 19:43:57 spestov Exp $
  */
 public class BufferIORequest extends WorkRequest
 {
@@ -332,7 +332,6 @@ public class BufferIORequest extends WorkRequest
 			while((count = in.read(_xmlPI,offset,
 				XML_PI_LENGTH - offset)) != -1)
 			{
-				System.err.println(count);
 				offset += count;
 				if(offset == XML_PI_LENGTH)
 					break;

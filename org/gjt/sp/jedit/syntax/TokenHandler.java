@@ -29,7 +29,7 @@ import javax.swing.text.Segment;
  * Token markers send tokens to implementations of this interface.
  *
  * @author Slava Pestov
- * @version $Id: TokenHandler.java,v 1.5 2003/06/03 22:02:40 spestov Exp $
+ * @version $Id: TokenHandler.java,v 1.6 2003/10/26 19:43:58 spestov Exp $
  * @since jEdit 4.1pre1
  */
 public interface TokenHandler
@@ -46,4 +46,13 @@ public interface TokenHandler
 	 */
 	public void handleToken(Segment seg, byte id, int offset, int length,
 		TokenMarker.LineContext context);
+
+	/**
+	 * The token handler can compare this object with the object
+	 * previously given for this line to see if the token type at the end
+	 * of the line has changed (meaning subsequent lines might need to be
+	 * retokenized).
+	 * @since jEdit 4.2pre6
+	 */
+	public void setLineContext(TokenMarker.LineContext lineContext);
 }

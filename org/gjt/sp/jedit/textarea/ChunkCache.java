@@ -35,7 +35,7 @@ import org.gjt.sp.util.Log;
  * Manages low-level text display tasks.
  *
  * @author Slava Pestov
- * @version $Id: ChunkCache.java,v 1.91 2003/10/26 05:50:41 spestov Exp $
+ * @version $Id: ChunkCache.java,v 1.92 2003/10/26 19:43:58 spestov Exp $
  */
 class ChunkCache
 {
@@ -694,7 +694,8 @@ class ChunkCache
 			{
 				/* if the user changes the syntax token at the
 				 * end of a line, need to do a full repaint. */
-				if(buffer.isNextLineRequested())
+				if(tokenHandler.getLineContext() !=
+					info.lineContext)
 				{
 					lastScreenLine++;
 					needFullRepaint = true;
@@ -726,6 +727,7 @@ class ChunkCache
 			info.offset = offset;
 			info.length = length;
 			info.chunks = chunks;
+			info.lineContext = tokenHandler.getLineContext();
 		}
 
 		firstInvalidLine = Math.max(lastScreenLine + 1,firstInvalidLine);
@@ -756,5 +758,6 @@ class ChunkCache
 		boolean lastSubregion;
 		Chunk chunks;
 		int width;
+		TokenMarker.LineContext lineContext;
 	} //}}}
 }
