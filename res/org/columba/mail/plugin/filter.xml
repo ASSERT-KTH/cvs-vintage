@@ -50,4 +50,8 @@
  	name="Color" 
  	main_class="org.columba.mail.filter.plugins.ColorFilter" 
  	gui_class="org.columba.mail.gui.config.filter.plugins.ColorCriteriaRow" />
+ <filter 
+ 	name="Account" 
+ 	main_class="org.columba.mail.filter.plugins.AccountFilter" 
+ 	gui_class="org.columba.mail.gui.config.filter.plugins.AccountCriteriaRow" />
 </filterlist>
