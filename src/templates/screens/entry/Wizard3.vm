@@ -15,7 +15,6 @@ $page.setTitle("Enter issue")
 
 <h2>$page.Title</h2>
 
-<p></p>
 ## Only show templates if user has not come through the wizard.
 #if (!$data.Parameters.getString("oldscreen"))
 <form method="post" action="$link.setPage("entry,Wizard3.vm")">
@@ -154,9 +153,7 @@ $page.setTitle("Enter issue")
       <th>Attachment description</th>
       <td>
        #textAreaMedium("$intakeAttachment.Name.Key" "")
-       #if ( !$intakeAttachment.Name.isValid())
-        <p><strong class="alert">$intakeAttachment.Name.Message</strong></p>
-       #end
+       #fieldErrorMsg($intakeAttachment.Name "")
       </td>
     </tr>    
   </table>
