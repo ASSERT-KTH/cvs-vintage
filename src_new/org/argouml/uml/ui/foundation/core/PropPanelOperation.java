@@ -1,4 +1,4 @@
-// $Id: PropPanelOperation.java,v 1.31 2003/05/04 10:50:15 kataka Exp $
+// $Id: PropPanelOperation.java,v 1.32 2003/05/09 00:28:54 bobtarling Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -89,8 +89,7 @@ public class PropPanelOperation extends PropPanelModelElement {
                 Argo.localize("UMLMenu", "tooltip.nav-stereo"),
                 getStereotypeBox()));
 
-        JList ownerList =
-            new UMLList(
+        JList ownerList = new UMLList(
                 new UMLReflectionListModel(
                     this,
                     "owner",
