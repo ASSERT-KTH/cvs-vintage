@@ -20,14 +20,15 @@ import org.jboss.metadata.MetaData;
 import org.w3c.dom.Element;
 
 /**
- *   Imutable class which holds all the information jbosscmp-jdbc needs to know about a CMP field
- * It loads its data from standardjbosscmp-jdbc.xml and jbosscmp-jdbc.xml
+ * Imutable class which holds all the information jbosscmp-jdbc needs to know 
+ * about a CMP field It loads its data from standardjbosscmp-jdbc.xml and 
+ * jbosscmp-jdbc.xml
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- *   @author <a href="sebastien.alborini@m4x.org">Sebastien Alborini</a>
+ * @author <a href="sebastien.alborini@m4x.org">Sebastien Alborini</a>
  * @author <a href="mailto:dirk@jboss.de">Dirk Zimmermann</a>
  * @author <a href="mailto:vincent.harcq@hubmethods.com">Vincent Harcq</a>
- *   @version $Revision: 1.5 $
+ * @version $Revision: 1.6 $
  */
 public final class JDBCCMPFieldMetaData {
    /**
@@ -89,14 +90,17 @@ public final class JDBCCMPFieldMetaData {
    private final List propertyOverrides = new ArrayList();
 
    /**
-    * Constructs cmp field meta data for a field on the specified entity with the 
-    * specified fieldName.
+    * Constructs cmp field meta data for a field on the specified entity with 
+    * the specified fieldName.
     *
     * @param fieldName name of the field for which the meta data will be loaded
     * @param entity entity on which this field is defined
-    * @throws DeploymentException if data in the entity is inconsistent with field type
+    * @throws DeploymentException if data in the entity is inconsistent with 
+    * field type
     */
-   public JDBCCMPFieldMetaData(JDBCEntityMetaData entity, String fieldName) throws DeploymentException {
+   public JDBCCMPFieldMetaData(JDBCEntityMetaData entity, String fieldName) 
+         throws DeploymentException {
+
       this.entity = entity;
       this.fieldName = fieldName;
 
@@ -118,7 +122,8 @@ public final class JDBCCMPFieldMetaData {
             
             // verify field type
             if(!entity.getPrimaryKeyClass().equals(fieldType)) {
-               throw new DeploymentException("primkey-field must be the same type as prim-key-class"); 
+               throw new DeploymentException("primkey-field must be the " + 
+                     "same type as prim-key-class"); 
             }
             // we are the pk
             primaryKeyMember = true;
@@ -136,7 +141,8 @@ public final class JDBCCMPFieldMetaData {
                
                // verify field type
                if(!fields[i].getType().equals(fieldType)) {
-                  throw new DeploymentException("Field " + fieldName + " in prim-key-class must be the same type");
+                  throw new DeploymentException("Field " + fieldName + 
+                        " in prim-key-class must be the same type");
                }
                   
                // we are a pk member
@@ -150,37 +156,22 @@ public final class JDBCCMPFieldMetaData {
    }
 
    /**
-    * Constructs cmp field meta data with the data contained in the cmp-field xml 
-    * element from a jbosscmp-jdbc xml file. Optional values of the xml element that
-    * are not present are instead loaded from the defalutValues parameter.
+    * Constructs cmp field meta data with the data contained in the cmp-field 
+    * xml element from a jbosscmp-jdbc xml file. Optional values of the xml 
+    * element that are not present are instead loaded from the defalutValues 
+    * parameter.
     *
-    * @param element the xml Element which contains the metadata about this field
+    * @param element the xml Element which contains the metadata about 
+    * this field
     * @param defaultValues the JDBCCMPFieldMetaData which contains the values
-    *       for optional elements of the element
+    * for optional elements of the element
     * @throws DeploymentException if the xml element is not semantically correct
     */
-   public JDBCCMPFieldMetaData(JDBCEntityMetaData entity, Element element, JDBCCMPFieldMetaData defaultValues) throws DeploymentException {
-      this(entity, element, defaultValues, defaultValues.isPrimaryKeyMember());
-   }
+   public JDBCCMPFieldMetaData(
+         JDBCEntityMetaData entity,
+         Element element,
+         JDBCCMPFieldMetaData defaultValues) throws DeploymentException {
 
-   /**
-    * Constructs cmp field meta data with the data contained in the cmp-field xml 
-    * element from a jbosscmp-jdbc xml file. Optional values of the xml element that
-    * are not present are instead loaded from the defalutValues parameter.
-    *
-    * This constructor form is used to create cmp field meta data for use as foreign keys.
-    * The primaryKeyMember parameter is very important in this context because a foreign key
-    * is not a primary key member but used a pk member as the default value.  If we did not have
-    * the primary key member parameter this JDBCCMPFieldMetaData would get the value from the
-    * defaultValues and be declared a memeber.
-    *
-    * @param element the xml Element which contains the metadata about this field
-    * @param defaultValues the JDBCCMPFieldMetaData which contains the values
-    *       for optional elements of the element
-    * @param priamryKeyMember override the value of primary key member in the defaultValues
-    * @throws DeploymentException if the xml element is not semantically correct
-    */
-   public JDBCCMPFieldMetaData(JDBCEntityMetaData entity, Element element, JDBCCMPFieldMetaData defaultValues, boolean primaryKeyMember) throws DeploymentException {
       this.entity = entity;
 
       // Field name
@@ -190,7 +181,98 @@ public final class JDBCCMPFieldMetaData {
       fieldType = defaultValues.getFieldType();
 
       // Column name
-      String columnStr = MetaData.getOptionalChildContent(element, "column-name");
+      String columnStr = MetaData.getOptionalChildContent(
+            element, "column-name");
+      if(columnStr != null) {
+         columnName = columnStr;
+      } else {
+         columnName = defaultValues.getColumnName();
+      }
+
+      // JDBC Type
+      String jdbcStr = MetaData.getOptionalChildContent(element, "jdbc-type");
+      if(jdbcStr != null) {
+         jdbcType =  JDBCMappingMetaData.getJdbcTypeFromName(jdbcStr);
+         
+         // SQL Type
+         sqlType = MetaData.getUniqueChildContent(element, "sql-type");
+      } else {
+         jdbcType = defaultValues.getJDBCType();
+         sqlType = defaultValues.getSQLType();
+      }
+
+      // read-only
+      String readOnlyStr = MetaData.getOptionalChildContent(
+            element, "read-only");
+      if(readOnlyStr != null) {
+         readOnly = Boolean.valueOf(readOnlyStr).booleanValue();
+      } else {
+         readOnly = defaultValues.isReadOnly();
+      }
+
+      // read-time-out
+      String readTimeOutStr = MetaData.getOptionalChildContent(
+            element, "read-time-out");
+      if(readTimeOutStr != null) {
+         readTimeOut = Integer.parseInt(readTimeOutStr);
+      } else {
+         readTimeOut = defaultValues.getReadTimeOut();
+      }
+
+      // primary key member?
+      this.primaryKeyMember = defaultValues.isPrimaryKeyMember();
+      
+      // field object of the primary key
+      primaryKeyField = defaultValues.getPrimaryKeyField();
+
+      // property overrides
+      Iterator iterator = MetaData.getChildrenByTagName(element, "property");
+      while(iterator.hasNext()) {
+         propertyOverrides.add(new JDBCCMPFieldPropertyMetaData(
+                  this, (Element)iterator.next()));
+      }
+   }
+
+   /**
+    * Constructs cmp field meta data with the data contained in the cmp-field 
+    * xml element from a jbosscmp-jdbc xml file. Optional values of the xml 
+    * element that are not present are instead loaded from the defalutValues 
+    * parameter.
+    *
+    * This constructor form is used to create cmp field meta data for use as 
+    * foreign keys. The primaryKeyMember parameter is very important in this 
+    * context because a foreign key is not a primary key member but used a pk 
+    * member as the default value.  If we did not have the primary key member 
+    * parameter this JDBCCMPFieldMetaData would get the value from the 
+    * defaultValues and be declared a memeber.
+    *
+    * @param element the xml Element which contains the metadata about this 
+    * field
+    * @param defaultValues the JDBCCMPFieldMetaData which contains the values
+    * for optional elements of the element
+    * @param priamryKeyMember override the value of primary key member in the 
+    * defaultValues
+    * @throws DeploymentException if the xml element is not semantically correct
+    */
+   public JDBCCMPFieldMetaData(
+         JDBCEntityMetaData entity,
+         Element element,
+         JDBCCMPFieldMetaData defaultValues,
+         boolean primaryKeyMember,
+         boolean readOnly,
+         int readTimeOut) throws DeploymentException {
+
+      this.entity = entity;
+
+      // Field name
+      fieldName = defaultValues.getFieldName();
+
+      // Field type
+      fieldType = defaultValues.getFieldType();
+
+      // Column name
+      String columnStr = MetaData.getOptionalChildContent(
+            element, "column-name");
       if(columnStr != null) {
          columnName = columnStr;
       } else {
@@ -210,20 +292,10 @@ public final class JDBCCMPFieldMetaData {
       }
       
       // read-only
-      String readOnlyStr = MetaData.getOptionalChildContent(element, "read-only");
-      if(readOnlyStr != null) {
-         readOnly = Boolean.valueOf(readOnlyStr).booleanValue();
-      } else {
-         readOnly = defaultValues.isReadOnly();
-      }
+      this.readOnly = readOnly;
 
       // read-time-out
-      String readTimeOutStr = MetaData.getOptionalChildContent(element, "read-time-out");
-      if(readTimeOutStr != null) {
-         readTimeOut = Integer.parseInt(readTimeOutStr);
-      } else {
-         readTimeOut = defaultValues.getReadTimeOut();
-      }
+      this.readTimeOut = readTimeOut;
 
       // primary key member?
       this.primaryKeyMember = primaryKeyMember;
@@ -234,28 +306,43 @@ public final class JDBCCMPFieldMetaData {
       // property overrides
       Iterator iterator = MetaData.getChildrenByTagName(element, "property");
       while(iterator.hasNext()) {
-         propertyOverrides.add(new JDBCCMPFieldPropertyMetaData(this, (Element)iterator.next()));
+         propertyOverrides.add(new JDBCCMPFieldPropertyMetaData(
+                  this, (Element)iterator.next()));
       }
    }
 
    /**
-    * Constructs cmp field meta data with the data from the defaultValues parameter, except
-    * the columnName and primaryKeyMember are set from the parameters.
+    * Constructs cmp field meta data with the data from the defaultValues 
+    * parameter, except the columnName and primaryKeyMember are set from the 
+    * parameters.
     *
-    * This constructor form is used to create cmp field meta data for use as foreign keys.
-    * The primaryKeyMember parameter is very important in this context because a foreign key
-    * is not a primary key member but used a pk member as the default value.  If we did not have
-    * the primary key member parameter this JDBCCMPFieldMetaData would get the value from the
-    * defaultValues and be declared a memeber. The columnName prameter is similarly important
+    * This constructor form is used to create cmp field meta data for use as 
+    * foreign keys. The primaryKeyMember parameter is very important in this 
+    * context because a foreign key is not a primary key member but used a pk
+    * member as the default value.  If we did not have the primary key member 
+    * parameter this JDBCCMPFieldMetaData would get the value from the 
+    * defaultValues and be declared a memeber. The columnName prameter is 
+    * similarly important
     *
-    * @param element the xml Element which contains the metadata about this field
+    * @param element the xml Element which contains the metadata about this 
+    * field
     * @param defaultValues the JDBCCMPFieldMetaData which contains the values
-    *       for optional elements of the element
-    * @param columnName overrides the value of the column name in the defaultValues
-    * @param priamryKeyMember override the value of primary key member in the defaultValues
-    * @throws DeploymentException if data in the entity is inconsistent with field type
+    * for optional elements of the element
+    * @param columnName overrides the value of the column name in the 
+    * defaultValues
+    * @param priamryKeyMember override the value of primary key member in the 
+    * defaultValues
+    * @throws DeploymentException if data in the entity is inconsistent with 
+    * field type
     */
-   public JDBCCMPFieldMetaData(JDBCEntityMetaData entity, JDBCCMPFieldMetaData defaultValues, String columnName, boolean primaryKeyMember) {
+   public JDBCCMPFieldMetaData(
+         JDBCEntityMetaData entity,
+         JDBCCMPFieldMetaData defaultValues,
+         String columnName,
+         boolean primaryKeyMember,
+         boolean readOnly,
+         int readTimeOut) {
+
       this.entity = entity;
 
       // Field name
@@ -272,10 +359,10 @@ public final class JDBCCMPFieldMetaData {
       sqlType = defaultValues.getSQLType();
       
       // read-only
-      readOnly = defaultValues.isReadOnly();
+      this.readOnly = readOnly;
 
       // read-time-out
-      readTimeOut = defaultValues.getReadTimeOut();
+      this.readTimeOut = readTimeOut;
 
       // primary key member?
       this.primaryKeyMember = primaryKeyMember;
@@ -284,8 +371,9 @@ public final class JDBCCMPFieldMetaData {
       primaryKeyField = defaultValues.getPrimaryKeyField();
 
       // property overrides
-      for(Iterator i=defaultValues.propertyOverrides.iterator(); i.hasNext(); ) {
-         propertyOverrides.add(new JDBCCMPFieldPropertyMetaData(this, (JDBCCMPFieldPropertyMetaData)i.next()));
+      for(Iterator i=defaultValues.propertyOverrides.iterator(); i.hasNext();) {
+         propertyOverrides.add(new JDBCCMPFieldPropertyMetaData(
+                  this, (JDBCCMPFieldPropertyMetaData)i.next()));
       }
 
    }
@@ -363,9 +451,9 @@ public final class JDBCCMPFieldMetaData {
       
    /**
     * Gets the length of time (ms) that a read valid or -1 if data must 
-    *       always be reread from the database
+    * always be reread from the database
     * @return the length of time that data read database is valid, or -1 
-    *       if data must always be reread from the database
+    * if data must always be reread from the database
     */
    public int getReadTimeOut() {
       return readTimeOut;
@@ -381,10 +469,10 @@ public final class JDBCCMPFieldMetaData {
 
    /**
     * Gets the Field of the primary key object which contains the value of 
-    * this field. Returns null, if this field is not a member of the primary key, or if 
-    * the primray key is single valued.
+    * this field. Returns null, if this field is not a member of the primary 
+    * key, or if the primray key is single valued.
     * @return the Field of the primary key which contains the 
-    *       value of this field
+    * value of this field
     */
    public Field getPrimaryKeyField() {
       return primaryKeyField;
@@ -395,19 +483,22 @@ public final class JDBCCMPFieldMetaData {
     * true if the objects are the same. Two JDBCCMPFieldMetaData are the same 
     * if they both have the same name and are defined on the same entity.
     * @param o the reference object with which to compare
-    * @return true if this object is the same as the object argument; false otherwise
+    * @return true if this object is the same as the object argument; false 
+    * otherwise
     */
    public boolean equals(Object o) {
       if(o instanceof JDBCCMPFieldMetaData) {
          JDBCCMPFieldMetaData cmpField = (JDBCCMPFieldMetaData)o;
-         return fieldName.equals(cmpField.fieldName) && entity.equals(cmpField.entity);
+         return fieldName.equals(cmpField.fieldName) && 
+               entity.equals(cmpField.entity);
       }
       return false;
    }
    
    /**
     * Returns a hashcode for this JDBCCMPFieldMetaData. The hashcode is computed
-    * based on the hashCode of the declaring entity and the hashCode of the fieldName
+    * based on the hashCode of the declaring entity and the hashCode of the 
+    * fieldName
     * @return a hash code value for this object
     */
    public int hashCode() {
@@ -418,36 +509,43 @@ public final class JDBCCMPFieldMetaData {
    }
    /**
     * Returns a string describing this JDBCCMPFieldMetaData. The exact details
-    * of the representation are unspecified and subject to change, but the following
-    * may be regarded as typical:
+    * of the representation are unspecified and subject to change, but the
+    * following may be regarded as typical:
     * 
-    * "[JDBCCMPFieldMetaData: fieldName=name,  [JDBCEntityMetaData: entityName=UserEJB]]"
+    * "[JDBCCMPFieldMetaData: fieldName=name,  [JDBCEntityMetaData: 
+    * entityName=UserEJB]]"
     *
     * @return a string representation of the object
     */
    public String toString() {
-      return "[JDBCCMPFieldMetaData : fieldName=" + fieldName + ", " + entity + "]";
+      return "[JDBCCMPFieldMetaData : fieldName=" + fieldName + ", " + 
+            entity + "]";
    }
    
    /**
-    * Loads the java type of this field from the entity bean class. If this bean uses, cmp 1.x
-    * persistence, the field type is loaded from the field in the bean class with the same name
-    * as this field. If this bean uses, cmp 2.x persistence, the field type is loaded from the
-    * abstract getter or setter method for field in the bean class.
+    * Loads the java type of this field from the entity bean class. If this 
+    * bean uses, cmp 1.x persistence, the field type is loaded from the field
+    * in the bean class with the same name as this field. If this bean uses, 
+    * cmp 2.x persistence, the field type is loaded from the abstract getter 
+    * or setter method for field in the bean class.
     */
-   private Class loadFieldType(JDBCEntityMetaData entity, String fieldName) throws DeploymentException {
+   private Class loadFieldType(JDBCEntityMetaData entity, String fieldName)
+         throws DeploymentException {
+
       if(entity.isCMP1x()) {
          
          // CMP 1.x field Style
          try {
             return entity.getEntityClass().getField(fieldName).getType();
          } catch(NoSuchFieldException e) {
-            throw new DeploymentException("No field named '" + fieldName + "' found in entity class.");
+            throw new DeploymentException("No field named '" + fieldName + 
+                  "' found in entity class.");
          }
       } else {
          
          // CMP 2.x abstract accessor style
-         String baseName = Character.toUpperCase(fieldName.charAt(0)) + fieldName.substring(1);
+         String baseName = Character.toUpperCase(fieldName.charAt(0)) + 
+               fieldName.substring(1);
          String getName = "get" + baseName;
          String setName = "set" + baseName;
          
@@ -474,7 +572,8 @@ public final class JDBCCMPFieldMetaData {
                }
             }
          }
-         throw new DeploymentException("No abstract accessors for field named '" + fieldName + "' found in entity class.");
+         throw new DeploymentException("No abstract accessors for field " +
+               "named '" + fieldName + "' found in entity class.");
       }
    }
 }
