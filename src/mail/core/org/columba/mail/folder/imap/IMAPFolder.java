@@ -305,6 +305,10 @@ public class IMAPFolder extends RemoteFolder {
 	 * Method save.
 	 */
 	public void save() throws Exception {
+		//  make sure that messagefolderinfo(total/unread/recent count)
+		// is saved in tree.xml file
+		saveMessageFolderInfo();
+		
 		// only save header-cache if folder data changed
 		if (hasChanged()) {
 			cache.save();
@@ -538,6 +542,12 @@ public class IMAPFolder extends RemoteFolder {
 					}
 				case MarkMessageCommand.MARK_AS_EXPUNGED :
 					{
+						if (h.get("columba.flags.seen").equals(Boolean.FALSE))
+							getMessageFolderInfo().decUnseen();
+
+						h.set("columba.flags.seen", Boolean.TRUE);
+						h.set("columba.flags.recent", Boolean.FALSE);
+
 						h.set("columba.flags.expunged", Boolean.TRUE);
 						break;
 					}

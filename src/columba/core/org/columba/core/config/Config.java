@@ -253,11 +253,9 @@ public class Config {
 		List v = getPluginList();
 		for (Iterator it = v.iterator(); it.hasNext();) {
 			DefaultXmlConfig plugin = (DefaultXmlConfig) it.next();
-//		for (int i = 0; i < v.size(); i++) {
-//			DefaultXmlConfig plugin = (DefaultXmlConfig) v.get(i);
+
 			if (plugin == null)
 				continue;
-
 			plugin.save();
 
 		}

@@ -21,7 +21,6 @@ import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
 
@@ -100,11 +99,10 @@ public class ShutdownManager {
 
 		// we start from the end, to be sure that
 		// the core-plugins are saved as last
-		for (Iterator it = list.iterator(); it.hasNext();) {
-			TaskInterface plugin = (TaskInterface) it.next();
-		// for (int i = list.size() - 1; i >= 0; i--) {
-			// TaskInterface plugin = (TaskInterface) list.get(i);
-
+		
+		for (int i = list.size() - 1; i >= 0; i--) {
+			TaskInterface plugin = (TaskInterface) list.get(i);
+			
 			plugin.run();
 		}
 
@@ -145,6 +143,11 @@ public class ShutdownManager {
 		// exit if no task is running anymore
 		if (MainInterface.processor.getTaskManager().count() == 0) {
 			ColumbaLogger.log.debug("one second timer exited Columba");
+			
+			// save xml configuration 
+			new SaveConfigPlugin().run();
+					
+			// quit Columba	 
 			System.exit(1);
 		}
 	}
@@ -177,19 +180,16 @@ public class ShutdownManager {
 				// restart timer with increased delay time
 				
 				restartDelayedTimer();
-				
-				/*
-				delayedTimer.stop();
-				delayedTimer = new Timer(currentDelay, this);
-				delayedTimer.start();
-				*/
-				/*
-				delayedTimer.setDelay(currentDelay);
-				delayedTimer.restart();
-				*/
+			
 			} else {
+				
+				// save xml configuration 
+				new SaveConfigPlugin().run();
+				
 				// quit Columba
 				System.exit(1);
+				
+				
 			}
 		}
 	}

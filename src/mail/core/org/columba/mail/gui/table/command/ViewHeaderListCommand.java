@@ -86,6 +86,9 @@ public class ViewHeaderListCommand extends SelectiveGuiUpdateCommand {
 		//		register for status events
 		 ((StatusObservableImpl) folder.getObservable()).setWorker(worker);
 
+		// fetch the headerlist
+		headerList = (folder).getHeaderList();
+		
 		// this is a little hack !!
 
 		// check if this is an imap folder
@@ -126,6 +129,6 @@ public class ViewHeaderListCommand extends SelectiveGuiUpdateCommand {
 			}
 		}
 
-		headerList = (folder).getHeaderList();
+		
 	}
 }

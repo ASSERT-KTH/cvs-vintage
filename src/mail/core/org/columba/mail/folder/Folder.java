@@ -342,7 +342,7 @@ public abstract class Folder extends FolderTreeNode implements MailboxInterface 
 	{
 		MessageFolderInfo info = getMessageFolderInfo();
 		
-		FolderItem item = getFolderItem();
+		FolderItem item = getFolderItem();	
 		
 		XmlElement property = item.getElement("property");
 		
