@@ -49,7 +49,7 @@ import org.gjt.sp.util.*;
  * <li>And so on
  * </ul>
  *
- * @version $Id: StatusBar.java,v 1.30 2002/05/17 04:54:29 spestov Exp $
+ * @version $Id: StatusBar.java,v 1.31 2002/05/17 09:00:13 spestov Exp $
  * @author Slava Pestov
  * @since jEdit 3.2pre2
  */
@@ -132,12 +132,8 @@ public class StatusBar extends JPanel implements WorkThreadProgressListener
 		panel.setBackground(painter.getBackground());
 		panel.setForeground(painter.getForeground());
 
-		Font font = /* painter. */getFont();
+		Font font = UIManager.getFont("Label.font");
 		caretStatus.setFont(font);
-		message.setFont(font);
-		mode.setFont(font);
-		multiSelect.setFont(font);
-		overwrite.setFont(font);
 		memory.setFont(font);
 
 		FontMetrics fm = getFontMetrics(font);

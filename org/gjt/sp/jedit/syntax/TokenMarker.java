@@ -38,7 +38,7 @@ import org.gjt.sp.util.Log;
  * or font style for painting that token.
  *
  * @author Slava Pestov, mike dillon
- * @version $Id: TokenMarker.java,v 1.10 2002/05/17 06:41:08 spestov Exp $
+ * @version $Id: TokenMarker.java,v 1.11 2002/05/17 09:00:13 spestov Exp $
  *
  * @see org.gjt.sp.jedit.syntax.Token
  */
@@ -665,9 +665,9 @@ public class TokenMarker
 			boolean digit = false;
 			boolean mixed = false;
 
-			for(int i = 0; i < len; i++)
+			for(int i = start; i < end; i++)
 			{
-				char ch = line.array[start + i];
+				char ch = line.array[i];
 				if(Character.isDigit(ch))
 					digit = true;
 				else
@@ -681,7 +681,7 @@ public class TokenMarker
 				// only match against regexp if its not all
 				// digits; if all digits, no point matching
 				if(digit)
-				{
+				{ 
 					if(digitRE == null)
 					{
 						// mixed digit/alpha keyword,
@@ -693,8 +693,14 @@ public class TokenMarker
 					{
 						CharIndexedSegment seg = new CharIndexedSegment(
 							line,false);
+						int oldCount = line.count;
+						int oldOffset = line.offset;
+						line.offset = start;
+						line.count = len;
 						if(!digitRE.isMatch(seg))
 							digit = false;
+						line.offset = oldOffset;
+						line.count = oldCount;
 					}
 				}
 			}
