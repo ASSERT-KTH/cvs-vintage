@@ -1,7 +1,7 @@
 #**
 @author <a href="mailto:dr@bitonic.com">Douglas B. Robertson</a>
 @author <a href="mailto:jon@collab.net">Jon Stevens</a>
-@version $Id: AdminIndex.vm,v 1.14 2002/01/22 16:59:43 dlr Exp $
+@version $Id: AdminIndex.vm,v 1.15 2002/02/11 20:52:45 maartenc Exp $
 *#
 
 <div id="adminIndex" class="app">
@@ -31,7 +31,7 @@
 
 <h3>Global Data</h3>
 <ul>
- <li>$link.setPage("admin,GlobalArtifactTypeShow.vm").setLabel("Global Artifact Types")</li>
+ <li>$link.setPage("admin,GlobalArtifactTypeShow.vm").setLabel("Global Issue Types")</li>
  <li>$link.setPage("admin,GlobalAttributeShow.vm").setLabel("Global Attributes")</li>
 </ul>
 
@@ -40,7 +40,7 @@
 <h3>Modules</h3>
 <ul>
 #if ($link.setPage("admin,ManageArtifactTypes.vm").isAllowed())
- <li>$link.setLabel("Manage Artifact Types")</li>
+ <li>$link.setLabel("Manage Issue Types")</li>
 #end
 #if ($link.setPage("admin,ManageModules.vm").isAllowed())
  <li>$link.setLabel("Manage Modules")</li>
