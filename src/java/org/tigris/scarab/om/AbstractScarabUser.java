@@ -78,7 +78,7 @@ import org.tigris.scarab.services.cache.ScarabCache;
  * 
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:jon@collab.net">John McNally</a>
- * @version $Id: AbstractScarabUser.java,v 1.23 2002/05/01 00:27:23 jon Exp $
+ * @version $Id: AbstractScarabUser.java,v 1.24 2002/05/09 01:50:25 elicia Exp $
  */
 public abstract class AbstractScarabUser 
     extends BaseObject 
@@ -114,6 +114,13 @@ public abstract class AbstractScarabUser
      * Map to store <code>Report</code>'s the user is  currently entering 
      */
     private Map reportMap;
+
+    /** 
+     * Code for user's preference on which screen to return to
+     * After entering an issue
+     */
+    private int enterIssueRedirect = 0;
+
 
     /**
      * Calls the superclass constructor to initialize this object.
@@ -537,5 +544,48 @@ public abstract class AbstractScarabUser
     public void save(DBConnection dbCon) throws Exception
     {
         throw new UnsupportedOperationException("Not implemented");
+    }
+
+    /**
+     * Returns integer representing user preference for
+     * Which screen to return to after entering an issue.
+     * 1 = Enter New Issue. 2 = Assign Issue (default)
+     * 3 = View Issue. 4 = Issue Types index.
+     */
+    public int getEnterIssueRedirect()
+        throws Exception
+    {
+        if (enterIssueRedirect == 0)
+        {
+            UserPreference up = UserPreference.getInstance(getUserId());
+            if (up != null && up.getEnterIssueRedirect() != 0)
+            {
+                enterIssueRedirect = up.getEnterIssueRedirect();
+            }
+        } 
+        return enterIssueRedirect;
+    }
+    
+
+    /**
+     * Sets integer representing user preference for
+     * Which screen to return to after entering an issue.
+     * 1 = Enter New Issue. 2 = Assign Issue (default)
+     * 3 = View Issue. 4 = Issue Types index.
+     */
+    public void setEnterIssueRedirect(int templateCode)
+        throws Exception
+    {
+        UserPreference up = UserPreference.getInstance(getUserId());
+        String userPreference = null;
+        if (up == null)
+        {
+            up = UserPreference.getInstance();
+            up.setUserId(getUserId());
+            up.setPasswordExpire(null);
+        }
+        up.setEnterIssueRedirect(templateCode);
+        up.save();
+        enterIssueRedirect = templateCode;
     }
 }
