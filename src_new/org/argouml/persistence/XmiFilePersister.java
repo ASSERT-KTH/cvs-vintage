@@ -1,4 +1,4 @@
-// $Id: XmiFilePersister.java,v 1.2 2004/12/24 17:20:44 bobtarling Exp $
+// $Id: XmiFilePersister.java,v 1.3 2004/12/28 21:41:08 bobtarling Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,8 +25,11 @@ package org.argouml.persistence;
 
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
 import java.net.URL;
 
 import org.apache.log4j.Logger;
@@ -91,8 +94,12 @@ public class XmiFilePersister extends AbstractFilePersister {
     
             project.setFile(file);
             
+            String encoding = "UTF-8";
+            FileOutputStream stream =
+                new FileOutputStream(file);
             writer =
-                new BufferedWriter(new FileWriter(file));
+                new BufferedWriter(new OutputStreamWriter(
+                        stream, encoding));
     
             int size = project.getMembers().size();
             for (int i = 0; i < size; i++) {
