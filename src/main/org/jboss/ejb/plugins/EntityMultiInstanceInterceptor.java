@@ -21,7 +21,7 @@ import org.jboss.invocation.InvocationResponse;
  *    
  * @author <a href="mailto:bill@burkecentral.com">Bill Burke</a>
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.11 $
+ * @version $Revision: 1.12 $
  */
 public class EntityMultiInstanceInterceptor extends AbstractInterceptor
 {
@@ -59,7 +59,6 @@ public class EntityMultiInstanceInterceptor extends AbstractInterceptor
          if(ctx == null)
          {
             ctx = (EntityEnterpriseContext)container.getInstancePool().get();
-            ctx.setCacheKey(id);
             ctx.setId(id);
             container.activateEntity(ctx);
          }

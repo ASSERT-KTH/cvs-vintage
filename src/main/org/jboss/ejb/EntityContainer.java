@@ -77,7 +77,7 @@ import org.jboss.util.MethodHashing;
  * @author <a href="mailto:andreas.schaefer@madplanet.com">Andreas Schaefer</a>
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @author <a href="mailto:d_jencks@users.sourceforge.net">David Jencks</a>
- * @version $Revision: 1.91 $
+ * @version $Revision: 1.92 $
  */
 public class EntityContainer
    extends Container implements EJBProxyFactoryContainer,
@@ -455,7 +455,7 @@ public class EntityContainer
    public void handleEjbTimeout( Timer pTimer ) {
       EntityCache cache = (EntityCache) getInstanceCache();
 //AS      EntityContext lContext = (EntityContext) ( (ContainerTimer) pTimer ).getContext();
-      Object cacheKey = cache.createCacheKey( ( (ContainerTimer) pTimer ).getKey() );
+      Object id = ((ContainerTimer)pTimer).getKey();
 
       ClassLoader oldCl = Thread.currentThread().getContextClassLoader();
       Thread.currentThread().setContextClassLoader( getClassLoader() );
@@ -463,7 +463,7 @@ public class EntityContainer
       try
       {
          Invocation invocation = new Invocation(
-            cacheKey,
+            id,
             EJB_TIMEOUT,
             new Class[] { Timer.class },
             ( getTransactionManager() == null ?

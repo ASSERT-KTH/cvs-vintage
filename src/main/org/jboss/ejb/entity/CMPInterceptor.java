@@ -35,7 +35,7 @@ import org.jboss.metadata.ConfigurationMetaData;
  * This interceptor delegates calls to an EntiyPersistenceStore.
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.3 $
+ * @version $Revision: 1.4 $
  */
 public final class CMPInterceptor extends AbstractEntityTypeInterceptor
 {
@@ -148,19 +148,16 @@ public final class CMPInterceptor extends AbstractEntityTypeInterceptor
             return new InvocationResponse(null);
          }
 
-         // convert primary keys to cache keys
-         Object cacheKey = cache.createCacheKey(finderResult);
-
          // return the EJB[Local]Objects for the cache keys
          if(invocation.getType().isLocal())
          {
             LocalProxyFactory factory = container.getLocalProxyFactory();
-            return new InvocationResponse(factory.getEntityEJBLocalObject(cacheKey));
+            return new InvocationResponse(factory.getEntityEJBLocalObject(finderResult));
          }
          else
          {
             EJBProxyFactory factory = container.getProxyFactory();
-            return new InvocationResponse(factory.getEntityEJBObject(cacheKey));
+            return new InvocationResponse(factory.getEntityEJBObject(finderResult));
          }
       }
    
@@ -171,23 +168,18 @@ public final class CMPInterceptor extends AbstractEntityTypeInterceptor
       }
 
       // convert primary keys to cache keys
-      List cacheKeys = new ArrayList();
-      Collection primaryKeys = (Collection)finderResult;
-      for(Iterator iter = primaryKeys.iterator(); iter.hasNext(); )
-      {
-         cacheKeys.add(cache.createCacheKey(iter.next()));
-      }
+      List primaryKeys = new ArrayList((Collection)finderResult);
 
       // Get the EJB[Local]Objects for the cache keys
       if(invocation.getType().isLocal())
       {
          LocalProxyFactory factory = container.getLocalProxyFactory();
-         return new InvocationResponse(factory.getEntityLocalCollection(cacheKeys));
+         return new InvocationResponse(factory.getEntityLocalCollection(primaryKeys));
       }
       else
       {
          EJBProxyFactory factory = container.getProxyFactory();
-         return new InvocationResponse(factory.getEntityCollection(cacheKeys));
+         return new InvocationResponse(factory.getEntityCollection(primaryKeys));
       }
    }
 

@@ -28,11 +28,9 @@ import javax.transaction.Transaction;
 import javax.transaction.TransactionManager;
 import javax.transaction.RollbackException;
 import org.jboss.deployment.DeploymentException;
-import org.jboss.ejb.EntityCache;
 import org.jboss.ejb.EntityContainer;
 import org.jboss.ejb.EntityEnterpriseContext;
 import org.jboss.ejb.LocalProxyFactory;
-import org.jboss.ejb.plugins.EntityInstanceCache;
 import org.jboss.ejb.plugins.cmp.bridge.EntityBridge;
 import org.jboss.ejb.plugins.cmp.bridge.CMRFieldBridge;
 import org.jboss.ejb.plugins.cmp.jdbc.JDBCContext;
@@ -63,7 +61,7 @@ import org.jboss.security.SecurityAssociation;
  *      One for each role that entity has.
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.61 $
+ * @version $Revision: 1.62 $
  */
 public class JDBCCMRFieldBridge implements JDBCFieldBridge, CMRFieldBridge {
    /**
@@ -188,7 +186,7 @@ public class JDBCCMRFieldBridge implements JDBCFieldBridge, CMRFieldBridge {
             dataSource);
 
       //
-      // Set handles to the related entity's container, cache,
+      // Set handles to the related entity's container, 
       // manager, and invoker
       //
 
@@ -505,13 +503,6 @@ public class JDBCCMRFieldBridge implements JDBCFieldBridge, CMRFieldBridge {
       return getRelatedContainer().getLocalProxyFactory();
    }
 
-   /**
-    * Gets the EntityCache from the related entity.
-    */
-   public final EntityCache getRelatedCache() {
-      return (EntityCache)getRelatedContainer().getInstanceCache();
-   }
-
    public boolean isLoaded(EntityEnterpriseContext ctx) {
       return getFieldState(ctx).isLoaded;
    }
@@ -590,8 +581,7 @@ public class JDBCCMRFieldBridge implements JDBCFieldBridge, CMRFieldBridge {
          Collection c = fieldState.getValue();
          if(!c.isEmpty()) {
             Object fk = c.iterator().next();
-            return getRelatedInvoker().getEntityEJBLocalObject(
-                  getRelatedCache().createCacheKey(fk));
+            return getRelatedInvoker().getEntityEJBLocalObject(fk);
          }
          return null;
       } catch(EJBException e) {
@@ -765,15 +755,12 @@ public class JDBCCMRFieldBridge implements JDBCFieldBridge, CMRFieldBridge {
       thread.setContextClassLoader(manager.getContainer().getClassLoader());
 
       try {
-         EntityInstanceCache instanceCache =
-               (EntityInstanceCache)manager.getContainer().getInstanceCache();
-
          Invocation invocation = new Invocation();
          invocation.setValue(CMRMessage.CMR_MESSAGE_KEY,
                CMRMessage.GET_RELATED_ID, PayloadKey.AS_IS);
          invocation.setValue(Entrancy.ENTRANCY_KEY,
                Entrancy.NON_ENTRANT, PayloadKey.AS_IS);
-         invocation.setId(instanceCache.createCacheKey(myId));
+         invocation.setId(myId);
          invocation.setArguments(new Object[] { this });
          invocation.setTransaction(tx);
          invocation.setPrincipal(SecurityAssociation.getPrincipal());
@@ -801,15 +788,12 @@ public class JDBCCMRFieldBridge implements JDBCFieldBridge, CMRFieldBridge {
       thread.setContextClassLoader(manager.getContainer().getClassLoader());
 
       try {
-         EntityInstanceCache instanceCache =
-               (EntityInstanceCache)manager.getContainer().getInstanceCache();
-
          Invocation invocation = new Invocation();
          invocation.setValue(CMRMessage.CMR_MESSAGE_KEY,
                CMRMessage.ADD_RELATION, PayloadKey.AS_IS);
          invocation.setValue(Entrancy.ENTRANCY_KEY,
                Entrancy.NON_ENTRANT, PayloadKey.AS_IS);
-         invocation.setId(instanceCache.createCacheKey(myId));
+         invocation.setId(myId);
          invocation.setArguments(new Object[] { this, relatedId });
          invocation.setTransaction(tx);
          invocation.setPrincipal(SecurityAssociation.getPrincipal());
@@ -833,15 +817,12 @@ public class JDBCCMRFieldBridge implements JDBCFieldBridge, CMRFieldBridge {
       thread.setContextClassLoader(manager.getContainer().getClassLoader());
 
       try {
-         EntityInstanceCache instanceCache =
-               (EntityInstanceCache)manager.getContainer().getInstanceCache();
-
          Invocation invocation = new Invocation();
          invocation.setValue(CMRMessage.CMR_MESSAGE_KEY,
                CMRMessage.REMOVE_RELATION, PayloadKey.AS_IS);
          invocation.setValue(Entrancy.ENTRANCY_KEY,
                Entrancy.NON_ENTRANT, PayloadKey.AS_IS);
-         invocation.setId(instanceCache.createCacheKey(myId));
+         invocation.setId(myId);
          invocation.setArguments(new Object[] { this, relatedId });
          invocation.setTransaction(tx);
          invocation.setPrincipal(SecurityAssociation.getPrincipal());

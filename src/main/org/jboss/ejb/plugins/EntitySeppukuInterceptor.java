@@ -49,7 +49,7 @@ import org.w3c.dom.Element;
  * commits
  *
  * @author <a href="mailto:bill@burkecentral.com">Bill Burke</a>
- * @version $Revision: 1.5 $
+ * @version $Revision: 1.6 $
  */
 public class EntitySeppukuInterceptor extends AbstractInterceptor
 {
@@ -227,7 +227,7 @@ public class EntitySeppukuInterceptor extends AbstractInterceptor
                {
                   if(container.isModified(ctx))
                   {
-                     sendSeppukuEvent(ctx.getCacheKey());
+                     sendSeppukuEvent(ctx.getId());
                   }
                }
             }
@@ -235,7 +235,7 @@ public class EntitySeppukuInterceptor extends AbstractInterceptor
          else
          {
             // a remove happened so broadcast seppuku msg
-            sendSeppukuEvent(ctx.getCacheKey());
+            sendSeppukuEvent(ctx.getId());
          }
          return returnValue;
       }
@@ -257,7 +257,7 @@ public class EntitySeppukuInterceptor extends AbstractInterceptor
                seppukuSynchs.put(tx, synch);
             }
          }
-         synch.addSeppukuEvent(ctx.getCacheKey());
+         synch.addSeppukuEvent(ctx.getId());
          tx.registerSynchronization(synch);
       }
    }

@@ -46,7 +46,7 @@ import org.jboss.tm.TransactionLocal;
  * @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>
  * @author <a href="mailto:bill@burkecentral.com">Bill Burke</a>
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  */
 public class EntitySynchronizationInterceptor extends AbstractInterceptor
 {
@@ -191,7 +191,7 @@ public class EntitySynchronizationInterceptor extends AbstractInterceptor
          EntityEnterpriseContext ctx, 
          Transaction tx)
    {
-      BeanLock lock = getContainer().getLockManager().getLock(ctx.getCacheKey());
+      BeanLock lock = getContainer().getLockManager().getLock(ctx.getId());
       try 
       {
          lock.sync();

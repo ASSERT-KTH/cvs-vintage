@@ -43,7 +43,7 @@ import org.jboss.invocation.InvocationResponse;
  * @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>
  * @author <a href="mailto:bill@burkecentral.com">Bill Burke</a>
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.60 $
+ * @version $Revision: 1.61 $
  */
 public class EntityInstanceInterceptor extends AbstractInterceptor
 {
@@ -122,8 +122,7 @@ public class EntityInstanceInterceptor extends AbstractInterceptor
             if(ctx.getId() != null)
             {
                // lock all access to BeanLock while we stick it in the cache
-               BeanLock lock = 
-                  container.getLockManager().getLock(ctx.getCacheKey());
+               BeanLock lock = container.getLockManager().getLock(ctx.getId());
                lock.sync(); 
                try
                {
@@ -131,7 +130,7 @@ public class EntityInstanceInterceptor extends AbstractInterceptor
                   // e.g. commit-option B where the entity was
                   // created then removed externally
                   InstanceCache cache = container.getInstanceCache();
-                  cache.remove(ctx.getCacheKey());
+                  cache.remove(ctx.getId());
 
                   // marcf: possible race on creation and usage
                   // insert instance in cache,

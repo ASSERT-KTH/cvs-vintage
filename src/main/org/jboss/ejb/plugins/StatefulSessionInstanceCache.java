@@ -27,7 +27,7 @@ import org.jboss.ejb.StatefulSessionPersistenceManager;
  *
  * @author <a href="mailto:simone.bordet@compaq.com">Simone Bordet</a>
  * @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
- * @version $Revision: 1.21 $
+ * @version $Revision: 1.22 $
  */
 public class StatefulSessionInstanceCache
     extends AbstractInstanceCache
@@ -87,14 +87,6 @@ public class StatefulSessionInstanceCache
     protected void freeContext(EnterpriseContext ctx)
     {
         m_container.getInstancePool().free(ctx);
-    }
-    protected Object getKey(EnterpriseContext ctx)
-    {
-        return ctx.getId();
-    }
-    protected void setKey(Object id, EnterpriseContext ctx)
-    {
-        ctx.setId(id);
     }
     protected boolean canPassivate(EnterpriseContext ctx)
     {

@@ -27,20 +27,10 @@ import javax.ejb.TimerService;
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  * @author <a href="mailto:docodan@mvcsoft.com">Daniel OConnor</a>
- * @version $Revision: 1.29 $
- *
- * <p><b>Revisions</b>
- * <p>20010703 marcf
- * <ol>
- * <li>setInvoked replaced by "hasTxSynchronization", the reason being that we
- *     use it for Tx registration.
- * </ol>
+ * @version $Revision: 1.30 $
  */
-public class EntityEnterpriseContext
-   extends EnterpriseContext
+public class EntityEnterpriseContext extends EnterpriseContext
 {
-   // Attributes ----------------------------------------------------
-   
    EJBObject ejbObject;
    EJBLocalObject ejbLocalObject;
    EntityContext ctx;
@@ -64,11 +54,6 @@ public class EntityEnterpriseContext
     */
    private Object persistenceCtx;
 	
-   /** The cacheKey for this context */
-   Object key;
-	
-   // Constructors --------------------------------------------------
-   
    public EntityEnterpriseContext(Object instance, Container con)
       throws RemoteException
    {
@@ -77,14 +62,12 @@ public class EntityEnterpriseContext
       ((EntityBean)instance).setEntityContext(ctx);
    }
 	
-   // Public --------------------------------------------------------
-	
-   public void clear() {
+   public void clear() 
+   {
       super.clear();
       
       this.hasTxSynchronization = false;
       this.valid = false;
-      key = null;
       persistenceCtx = null;
       ejbObject = null;
    }
@@ -121,16 +104,6 @@ public class EntityEnterpriseContext
       return ejbLocalObject;
    }
 	
-   public void setCacheKey(Object key)
-   {
-      this.key = key;
-   }
-	
-   public Object getCacheKey()
-   {
-      return key;
-   }
-	
    public void setPersistenceContext(Object ctx)
    {
       this.persistenceCtx = ctx;
@@ -141,18 +114,6 @@ public class EntityEnterpriseContext
       return persistenceCtx;
    }
 	
-   /*
-     public void setCacheContext(Object ctx)
-     {
-     this.cacheCtx = ctx;
-     }
-	
-     public Object getCacheContext()
-     {
-     return cacheCtx;
-     }
-   */
-   
    public void hasTxSynchronization(boolean value)
    {
       hasTxSynchronization = value;
@@ -173,49 +134,47 @@ public class EntityEnterpriseContext
       return valid;
    }
 	
-   // Inner classes -------------------------------------------------
-   
    protected class EntityContextImpl
       extends EJBContextImpl
       implements EntityContext
    {
       public EJBObject getEJBObject()
       {
-         if (((EntityContainer)con).getProxyFactory()==null)
+         if(((EntityContainer)con).getProxyFactory() == null)
+         {
             throw new IllegalStateException( "No remote interface defined." );
-         
-         if (ejbObject == null)
+         }
+
+         if(ejbObject == null)
          {   
-               // Create a new CacheKey
-               Object cacheKey = ((EntityCache)((EntityContainer)con).getInstanceCache()).createCacheKey(id);
-               ejbObject = (EJBObject) ((EntityContainer)con).getProxyFactory().getEntityEJBObject(cacheKey);  
+            ejbObject = (EJBObject) ((EntityContainer)con).getProxyFactory().getEntityEJBObject(id);  
          }
 
          return ejbObject;
       }
-		
+
       public EJBLocalObject getEJBLocalObject()
       {
-         if (con.getLocalHomeClass()==null)
-            throw new IllegalStateException( "No local interface for bean." );
-         
-         if (ejbLocalObject == null)
+         if(con.getLocalHomeClass()==null)
          {
-            Object cacheKey = ((EntityCache)((EntityContainer)con).getInstanceCache()).createCacheKey(id);            
-            ejbLocalObject = ((EntityContainer)con).getLocalProxyFactory().getEntityEJBLocalObject(cacheKey);
+            throw new IllegalStateException( "No local interface for bean." );
+         }
+
+         if(ejbLocalObject == null)
+         {
+            ejbLocalObject = ((EntityContainer)con).getLocalProxyFactory().getEntityEJBLocalObject(id);
          }
          return ejbLocalObject;
       }
-		
+
       public Object getPrimaryKey()
       {
          return id;
       }
-      
-      public TimerService getTimerService()
-         throws IllegalStateException
+
+      public TimerService getTimerService() throws IllegalStateException
       {
-         return getContainer().getTimerService( id );
+         return getContainer().getTimerService(id);
       }
    }
 }

@@ -36,7 +36,7 @@ import org.jboss.util.collection.SerializableEnumeration;
  * to the entity implementation class.
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.2 $
+ * @version $Revision: 1.3 $
  */
 public final class BMPInterceptor extends AbstractEntityTypeInterceptor
 {
@@ -101,19 +101,16 @@ public final class BMPInterceptor extends AbstractEntityTypeInterceptor
             return new InvocationResponse(null);
          }
 
-         // convert primary keys to cache keys
-         Object cacheKey = cache.createCacheKey(finderResult);
-
          // return the EJB[Local]Objects for the cache keys
          if(invocation.getType().isLocal())
          {
             LocalProxyFactory factory = container.getLocalProxyFactory();
-            return new InvocationResponse(factory.getEntityEJBLocalObject(cacheKey));
+            return new InvocationResponse(factory.getEntityEJBLocalObject(finderResult));
          }
          else
          {
             EJBProxyFactory factory = container.getProxyFactory();
-            return new InvocationResponse(factory.getEntityEJBObject(cacheKey));
+            return new InvocationResponse(factory.getEntityEJBObject(finderResult));
          }
       }
    
@@ -124,22 +121,14 @@ public final class BMPInterceptor extends AbstractEntityTypeInterceptor
       }
 
       // convert primary keys to cache keys
-      List cacheKeys = new ArrayList();
+      List primaryKeys;
       if(finderResult instanceof java.util.Enumeration)
       {
-         Enumeration primaryKeys = (Enumeration)finderResult;
-         while(primaryKeys.hasMoreElements())
-         {
-            cacheKeys.add(cache.createCacheKey(primaryKeys.nextElement()));
-         }
+         primaryKeys = Collections.list((Enumeration)finderResult);
       }
       else
       {
-         Collection primaryKeys = (Collection)finderResult;
-         for(Iterator iter = primaryKeys.iterator(); iter.hasNext(); )
-         {
-            cacheKeys.add(cache.createCacheKey(iter.next()));
-         }
+         primaryKeys = new ArrayList((Collection)finderResult);
       }
 
       // Get the EJB[Local]Objects for the cache keys
@@ -147,12 +136,12 @@ public final class BMPInterceptor extends AbstractEntityTypeInterceptor
       if(invocation.getType().isLocal())
       {
          LocalProxyFactory factory = container.getLocalProxyFactory();
-         results = factory.getEntityLocalCollection(cacheKeys);
+         results = factory.getEntityLocalCollection(primaryKeys);
       }
       else
       {
          EJBProxyFactory factory = container.getProxyFactory();
-         results = factory.getEntityCollection(cacheKeys);
+         results = factory.getEntityCollection(primaryKeys);
       }
          
       // BMP entity finder methods are allowed to return an Enumeration.

@@ -63,7 +63,7 @@ import java.util.Iterator;
  * new CMP design.
  *
  * @author <a href="mailto:aloubyansky@hotmail.com">Alex Loubyansky</a>
- * @version $Revision: 1.4 $
+ * @version $Revision: 1.5 $
  */
 public class JDBCOptimisticLock
    extends BeanLockSupport
@@ -315,7 +315,6 @@ public class JDBCOptimisticLock
       if(ctx == null)
       {
          ctx = (EntityEnterpriseContext)container.getInstancePool().get();
-         ctx.setCacheKey(id);
          ctx.setId(id);
          container.activateEntity(ctx);
       }

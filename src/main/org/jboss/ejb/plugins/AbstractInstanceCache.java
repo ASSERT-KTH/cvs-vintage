@@ -49,46 +49,14 @@ import org.jboss.util.WorkerQueue;
  * @author <a href="bill@burkecentral.com">Bill Burke</a>
  * @author <a href="marc.fleury@jboss.org">Marc Fleury</a>
  *
- * @version $Revision: 1.36 $
- *
- *   <p><b>Revisions:</b>
- *
- *   <p><b>20010703 marcf:</b>
- *   <ul>
- *   <li> Synchronization is on the context and not on the mutex any longer
- *   </ul>
- *   <p><b>20010704 marcf:</b>
- *   <ul>
- *   <li> Commented the getLock removeLock, temporarely, might need to come back when we go beyond
- *        locking at the context level and lock by ID
- *   </ul>
- * <p><b>2001/07/26: billb</b>
- * <ol>
- *   <li>Locking is now separate from EntityEnterpriseContext objects and is now
- *   encapsulated in BeanLock and BeanLockManager.  Did this because the lifetime
- *   of an EntityLock is sometimes longer than the lifetime of the ctx.
- * </ol>
- * <p><b>2001/08/07: billb</b>
- * <ol>
- *   <li>releaseLockRef should be enclosed in peek in remove()
- * </ol>
- * <p><b>2001/12/03: billb</b>
- * <ol>
- *   <li>Make sure ctx.getID() is non-null when received from unschedulePassivation.
- * </ol>
- * <p><b>2001/01/29: billb</b>
- * <ol>
- *   <li>Do not grab a BeanLock reference when ctx is inserted into cache.  This has memory leakage issues
- * </ol>
+ * @version $Revision: 1.37 $
  */
 public abstract class AbstractInstanceCache
    implements InstanceCache, XmlLoadable, Monitorable, MetricsConstants
 {
-   // Constants -----------------------------------------------------
-
-   // Attributes ----------------------------------------------------
-   /* The worker queue that passivates beans in another thread. One passivator
-    is shared for all EJB deployments.
+   /*
+    * The worker queue that passivates beans in another thread. One passivator
+    *is shared for all EJB deployments.
     */
    static private WorkerQueue m_passivator = new WorkerQueue("EJB Passivator Thread", true);
    static
@@ -96,24 +64,24 @@ public abstract class AbstractInstanceCache
       // Start the passivator thread
       m_passivator.start();
    }
+   
    protected static Logger log = Logger.getLogger(AbstractInstanceCache.class);
 
    /* The object that is delegated to implement the desired caching policy */
    private CachePolicy m_cache;
+   
    /* The mutex object for the cache */
    private Object m_cacheLock = new Object();
+
    /* Helper class that handles synchronization for the passivation thread */
    private PassivationHelper m_passivationHelper;
+
    /* Flag for JMS monitoring of the cache */
    private boolean m_jmsMonitoring;
+
    /* Useful for log messages */
    private StringBuffer m_buffer = new StringBuffer();
 
-   // Static --------------------------------------------------------
-
-   // Constructors --------------------------------------------------
-
-   // Monitorable implementation ------------------------------------
    public void sample(Object s)
    {
       if( m_cache == null )
@@ -131,23 +99,21 @@ public abstract class AbstractInstanceCache
       }
    }
    
-   // StatisticsProvider implementation ------------------------------------
-   
    public void retrieveStatistics( List container, boolean reset ) {
    }
    
-   // Public --------------------------------------------------------
    public void setJMSMonitoringEnabled(boolean enable) {m_jmsMonitoring = enable;}
    public boolean isJMSMonitoringEnabled() {return m_jmsMonitoring;}
 
-   /* From InstanceCache interface */
    public EnterpriseContext get(Object id)
       throws RemoteException, NoSuchObjectException
    {
-      if (id == null) throw new IllegalArgumentException("Can't get an object with a null key");
+      if(id == null)
+      {
+         throw new IllegalArgumentException("Can't get an object with a null id");
+      }
 
       EnterpriseContext ctx = null;
-
       synchronized (getCacheLock())
       {
          ctx = (EnterpriseContext)getCache().get(id);
@@ -169,7 +135,7 @@ public abstract class AbstractInstanceCache
                try
                {
                   ctx = acquireContext();
-                  setKey(id, ctx);
+                  ctx.setId(id);
                   // FIXME marcf: in the case of entity the activation is a cheap call but
                   // in the case of stateful this a very expensive call (read from file)
                   // Locking on the whole cache lock?
@@ -195,7 +161,7 @@ public abstract class AbstractInstanceCache
 
       return ctx;
    }
-   /* From InstanceCache interface */
+
    public void insert(EnterpriseContext ctx)
    {
       if (ctx == null) throw new IllegalArgumentException("Can't insert a null object in the cache");
@@ -204,24 +170,23 @@ public abstract class AbstractInstanceCache
       synchronized (getCacheLock())
       {
          // This call must be inside the sync block, otherwise can happen that I get the
-         // key, then the context is passivated and I will insert in cache a meaningless
+         // id, then the context is passivated and I will insert in cache a meaningless
          // context.
-         Object key = getKey(ctx);
-
-         if (cache.peek(key) == null)
+         Object id = ctx.getId();
+         if(cache.peek(id) == null)
          {
-            cache.insert(key, ctx);
+            cache.insert(id, ctx);
          }
          else
          {
             // Here it is a bug.
             // Check for all places where insert is called, and ensure that they cannot
             // run without having acquired the cache lock via getCacheLock()
-            throw new IllegalStateException("INSERTING AN ALREADY EXISTING BEAN, ID = " + key);
+            throw new IllegalStateException("INSERTING AN ALREADY EXISTING BEAN, ID = " + id);
          }
       }
    }
-   /* From InstanceCache interface */
+
    public void release(EnterpriseContext ctx)
    {
       if (ctx == null) throw new IllegalArgumentException("Can't release a null object");
@@ -231,7 +196,7 @@ public abstract class AbstractInstanceCache
       // by the passivation, that eventually will remove it.
       synchronized (getCacheLock())
       {
-         Object id = getKey(ctx);
+         Object id = ctx.getId();
          if (getCache().peek(id) != null)
          {
             getCache().remove(id);
@@ -244,11 +209,14 @@ public abstract class AbstractInstanceCache
          schedulePassivation(ctx);
       }
    }
-   /* From InstanceCache interface */
+
    public void remove(Object id)
    {
-      if (id == null) throw new IllegalArgumentException("Can't remove an object using a null key");
-
+      if(id == null)
+      {
+         throw new IllegalArgumentException("Can't remove an object using a null id");
+      }
+      
       synchronized (getCacheLock())
       {
          if (getCache().peek(id) != null)
@@ -263,7 +231,7 @@ public abstract class AbstractInstanceCache
       // Check whether an object with the given id is available in the cache
       return getCache().peek(id) != null;
    }
-   // XmlLoadable implementation ----------------------------------------------
+
    public void importXml(Element element) throws DeploymentException
    {
       // This one is mandatory
@@ -296,18 +264,17 @@ public abstract class AbstractInstanceCache
       }
    }
 
-   /* From Service interface*/
    public void create() throws Exception
    {
       getCache().create();
       m_passivationHelper = new PassivationHelper();
    }
-   /* From Service interface*/
+
    public void start() throws Exception
    {
       getCache().start();
    }
-   /* From Service interface*/
+
    public void stop()
    {
       // Empty the cache
@@ -316,7 +283,7 @@ public abstract class AbstractInstanceCache
          getCache().stop();
       }
    }
-   /* From Service interface*/
+
    public void destroy()
    {
       synchronized (getCacheLock())
@@ -329,11 +296,6 @@ public abstract class AbstractInstanceCache
       m_buffer.setLength(0);
    }
 
-   // Y overrides ---------------------------------------------------
-
-   // Package protected ---------------------------------------------
-
-   // Protected -----------------------------------------------------
    /**
     * Schedules the given EnterpriseContext for passivation
     * @see PassivationHelper#schedule
@@ -341,7 +303,7 @@ public abstract class AbstractInstanceCache
    protected void schedulePassivation(EnterpriseContext ctx)
    {
       m_passivationHelper.schedule(ctx);
-      logPassivationScheduled(getKey(ctx));
+      logPassivationScheduled(ctx.getId());
    }
 
    /**
@@ -411,10 +373,12 @@ public abstract class AbstractInstanceCache
     * Returns the container for this cache.
     */
    protected abstract Container getContainer();
+
    /**
     * Returns the cache policy used for this cache.
     */
    protected CachePolicy getCache() {return m_cache;}
+
    /**
     * Returns the mutex used to sync access to the cache policy object
     */
@@ -422,39 +386,33 @@ public abstract class AbstractInstanceCache
    {
       return m_cacheLock;
    }
+
    /**
     * Passivates the given EnterpriseContext
     */
    protected abstract void passivate(EnterpriseContext ctx) throws Exception;
+
    /**
     * Activates the given EnterpriseContext
     */
    protected abstract void activate(EnterpriseContext ctx) throws Exception;
+
    /**
     * Acquires an EnterpriseContext from the pool
     */
    protected abstract EnterpriseContext acquireContext() throws Exception;
+   
    /**
     * Frees the given EnterpriseContext to the pool
     */
    protected abstract void freeContext(EnterpriseContext ctx);
-   /**
-    * Returns the key used by the cache to map the given context
-    */
-   protected abstract Object getKey(EnterpriseContext ctx);
-   /**
-    * Sets the given id as key for the given context
-    */
-   protected abstract void setKey(Object id, EnterpriseContext ctx);
+   
    /**
     * Returns whether the given context can be passivated or not
     *
     */
    protected abstract boolean canPassivate(EnterpriseContext ctx);
 
-   // Private -------------------------------------------------------
-
-   // Inner classes -------------------------------------------------
    /**
     * Helper class that schedules, unschedules, and executes the passivation jobs.
     */
@@ -486,14 +444,14 @@ public abstract class AbstractInstanceCache
       protected void schedule(EnterpriseContext bean)
       {
          // Register only once the job to be able to unschedule its passivation
-         Object key = getKey(bean);
-         if (m_passivationJobs.get(key) == null)
+         Object id = bean.getId();
+         if (m_passivationJobs.get(id) == null)
          {
             // (Bill Burke) We can't rely on the EnterpriseContext to provide PassivationJob
-            // with a valid key because it may get freed to the InstancePool, then
+            // with a valid id because it may get freed to the InstancePool, then
             // reused before the PassivationJob executes.
             // marcf, actually for simplicity I have removed the "freed" call in the pool (check entity pool)
-            AbstractPassivationJob job = new AbstractPassivationJob(bean, key)
+            AbstractPassivationJob job = new AbstractPassivationJob(bean, id)
                {
                   public void execute() throws Exception
                   {
@@ -564,7 +522,7 @@ public abstract class AbstractInstanceCache
                                  // Verify that this ctx hasn't already
                                  // been freed and re-used by another thread.
                                  EntityEnterpriseContext entityCtx = (EntityEnterpriseContext) ctx;
-                                 if( entityCtx.getCacheKey().equals(id) == false )
+                                 if(!entityCtx.getId().equals(id))
                                  {
                                     // ctx has been freed then re-used in another thread.
                                     entityCtx = null;
@@ -636,10 +594,10 @@ public abstract class AbstractInstanceCache
             // However, enforce this sync'ing on the passivation job's map
             synchronized (m_passivationJobs)
             {
-               if (m_passivationJobs.get(key) == null)
+               if (m_passivationJobs.get(id) == null)
                {
                   // Register job   
-                   m_passivationJobs.put(key, job);   
+                   m_passivationJobs.put(id, job);   
     
                    // Schedule the job for passivation   
                    m_passivator.putJob(job);
@@ -654,6 +612,7 @@ public abstract class AbstractInstanceCache
             }
          }
       }// schedule
+
       /**
        * Tries to unschedule a job paired with the given context's id
        * @return null if the bean has been passivated, the context

@@ -11,6 +11,7 @@ import java.lang.reflect.Method;
 import javax.ejb.EntityBean;
 import javax.ejb.EJBHome;
 import javax.ejb.EJBObject;
+import javax.ejb.FinderException;
 
 import org.jboss.ejb.EntityCache;
 import org.jboss.ejb.EntityContainer;
@@ -30,7 +31,7 @@ import org.jboss.metadata.ConfigurationMetaData;
  * to the entity implementation class.
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.3 $
+ * @version $Revision: 1.4 $
  */
 public final class BaseEntityInterceptor extends AbstractEntityTypeInterceptor
 {
@@ -74,26 +75,20 @@ public final class BaseEntityInterceptor extends AbstractEntityTypeInterceptor
       ctx.setId(id);
       invocation.setId(id);
 
-      // Create a new CacheKey
       EntityContainer container = (EntityContainer)getContainer();
-      EntityCache cache = (EntityCache)container.getInstanceCache();
-      Object cacheKey = cache.createCacheKey(id);
-
-      // Set the cache key into the context
-      ctx.setCacheKey(cacheKey);
 
       // Create EJBObject
       if(container.getProxyFactory() != null)
       {
          EJBProxyFactory proxyFactory = container.getProxyFactory();
-         ctx.setEJBObject((EJBObject)proxyFactory.getEntityEJBObject(cacheKey));
+         ctx.setEJBObject((EJBObject)proxyFactory.getEntityEJBObject(id));
       }
 
       // Create EJBLocalObject
       if(container.getLocalHomeClass() != null)
       {
          LocalProxyFactory localFactory = container.getLocalProxyFactory();
-         ctx.setEJBLocalObject(localFactory.getEntityEJBLocalObject(cacheKey));
+         ctx.setEJBLocalObject(localFactory.getEntityEJBLocalObject(id));
       }
 
       // return the actual entity 
@@ -153,25 +148,31 @@ public final class BaseEntityInterceptor extends AbstractEntityTypeInterceptor
          EntityCache cache = (EntityCache)container.getInstanceCache();
          EntityEnterpriseContext ctx = 
                (EntityEnterpriseContext) invocation.getEnterpriseContext();
-         Object key = ctx.getCacheKey();
-         if(key == null)
+
+         // get the primary key
+         Object[] args = invocation.getArguments();
+         if(args.length != 1)
          {
-            Object[] args = invocation.getArguments();
-            key = cache.createCacheKey(args[0]);
+            throw new FinderException("findByPrimaryKey must take a single argument: args.length=" + args.length);
+         }
+         Object id = args[0];
+         if(id == null)
+         {
+            throw new FinderException("<null> is not a valid argument to findByPrimaryKey");
          }
 
          // check if the key is active
-         if(cache.isActive(key))
+         if(cache.isActive(id))
          {
             // Object is active, and it exists, so no need to call query
             if(EJBHome.class.isAssignableFrom(queryMethod.getDeclaringClass()))
             {
-               return new InvocationResponse(container.getProxyFactory().getEntityEJBObject(key));
+               return new InvocationResponse(container.getProxyFactory().getEntityEJBObject(id));
             }
             else
             {
                LocalProxyFactory lpf = container.getLocalProxyFactory();
-               return new InvocationResponse(lpf.getEntityEJBLocalObject(key));
+               return new InvocationResponse(lpf.getEntityEJBLocalObject(id));
             }
          }
       }

@@ -31,7 +31,6 @@ import org.jboss.deployment.DeploymentException;
 import org.jboss.ejb.Container;
 import org.jboss.ejb.EJBProxyFactory;
 import org.jboss.ejb.EJBProxyFactoryContainer;
-import org.jboss.ejb.ListCacheKey;
 import org.jboss.invocation.Invoker;
 import org.jboss.invocation.jrmp.server.JRMPInvoker;
 import org.jboss.invocation.InvocationContext;
@@ -72,7 +71,7 @@ import org.w3c.dom.NodeList;
  * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
  * @author <a href="mailto:scott.stark@jboss.org">Scott Stark/a>
  * @author <a href="mailto:d_jencks@users.sourceforge.net">David Jencks</a>
- * @version $Revision: 1.22 $
+ * @version $Revision: 1.23 $
  */
 public class ProxyFactory
    implements EJBProxyFactory

@@ -15,19 +15,10 @@ package org.jboss.ejb;
  * @see EntityInstanceCache
  * 
  * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
- * @version $Revision: 1.5 $
+ * @version $Revision: 1.6 $
  */
-public interface EntityCache
-   extends InstanceCache
+public interface EntityCache extends InstanceCache
 {
-   /**
-    * Returns the key used to cache the context
-    *
-    * @param id    Object id / primary key
-    * @return      Cache key
-    */
-   Object createCacheKey(Object id);
-
    /**
     * Return number of cached objects;
     *
