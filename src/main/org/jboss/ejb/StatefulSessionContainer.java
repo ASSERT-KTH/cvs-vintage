@@ -33,7 +33,7 @@ import org.jboss.logging.Logger;
  *   @see <related>
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
  *   @author Daniel OConnor (docodan@mvcsoft.com)
- *   @version $Revision: 1.24 $
+ *   @version $Revision: 1.25 $
  */
 public class StatefulSessionContainer
    extends Container
@@ -166,8 +166,10 @@ public class StatefulSessionContainer
       Thread.currentThread().setContextClassLoader(getClassLoader());
       
       // Acquire classes from CL
-      homeInterface = classLoader.loadClass(metaData.getHome());
-      remoteInterface = classLoader.loadClass(metaData.getRemote());
+      if (metaData.getHome() != null)
+         homeInterface = classLoader.loadClass(metaData.getHome());
+      if (metaData.getRemote() != null)
+         remoteInterface = classLoader.loadClass(metaData.getRemote());
           
       // Call default init
      super.init();

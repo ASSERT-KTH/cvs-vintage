@@ -16,6 +16,8 @@ import javax.ejb.Handle;
 import javax.ejb.HomeHandle;
 import javax.ejb.EJBObject;
 import javax.ejb.EJBHome;
+import javax.ejb.EJBLocalObject;
+import javax.ejb.EJBLocalHome;
 import javax.ejb.EJBMetaData;
 import javax.ejb.CreateException;
 import javax.ejb.RemoveException;
@@ -30,7 +32,7 @@ import org.jboss.logging.Logger;
 *   @author Rickard Öberg (rickard.oberg@telkel.com)
 *   @author <a href="marc.fleury@telkel.com">Marc Fleury</a>
 *   @author Daniel OConnor (docodan@mvcsoft.com)
-*   @version $Revision: 1.18 $
+*   @version $Revision: 1.19 $
 */
 public class StatelessSessionContainer
     extends Container
@@ -136,8 +138,10 @@ public class StatelessSessionContainer
         Thread.currentThread().setContextClassLoader(getClassLoader());
         
         // Acquire classes from CL
-        homeInterface = classLoader.loadClass(metaData.getHome());
-        remoteInterface = classLoader.loadClass(metaData.getRemote());
+        if (metaData.getHome() != null)
+         homeInterface = classLoader.loadClass(metaData.getHome());
+        if (metaData.getRemote() != null)
+         remoteInterface = classLoader.loadClass(metaData.getRemote());
         
         // Call default init
         super.init();
@@ -312,6 +316,28 @@ public class StatelessSessionContainer
     {
         return false; // TODO
     }
+
+    // EJBLocalObject implementation
+    
+    public EJBLocalHome getEJBLocalHome(MethodInvocation mi)
+    {
+      return localContainerInvoker.getEJBLocalHome();
+    }
+    
+    // EJBLocalHome implementation
+    public EJBLocalObject createLocalHome()
+      throws CreateException
+    {
+      if (localContainerInvoker == null)
+         throw new IllegalStateException();
+      return localContainerInvoker.getStatelessSessionEJBLocalObject();
+    }
+    
+    public void removeLocalHome(Object primaryKey)
+    {
+       // todo
+    }
+    
     
     // EJBHome implementation ----------------------------------------
     public EJBObject createHome()
@@ -356,25 +382,36 @@ public class StatelessSessionContainer
     {
         Map map = new HashMap();
         
-        Method[] m = homeInterface.getMethods();
-        for (int i = 0; i < m.length; i++)
+        if (homeInterface != null)
         {
-            // Implemented by container
-            Logger.debug("Mapping "+m[i].getName());
-            map.put(m[i], getClass().getMethod(m[i].getName()+"Home", m[i].getParameterTypes()));
+           Method[] m = homeInterface.getMethods();
+           for (int i = 0; i < m.length; i++)
+           {
+               // Implemented by container
+               Logger.debug("Mapping "+m[i].getName());
+               map.put(m[i], getClass().getMethod(m[i].getName()+"Home", m[i].getParameterTypes()));
+           }
+        }
+        if (localHomeInterface != null)
+        {
+           Method[] m = localHomeInterface.getMethods();
+           for (int i = 0; i < m.length; i++)
+           {
+               // Implemented by container
+               Logger.debug("Mapping "+m[i].getName());
+               map.put(m[i], getClass().getMethod(m[i].getName()+"LocalHome", m[i].getParameterTypes()));
+           }
         }
         
         homeMapping = map;
     }
     
-    protected void setupBeanMapping()
-        throws NoSuchMethodException
+    private void setUpBeanMappingImpl( Map map, Method[] m, String declaringClass )
+      throws NoSuchMethodException
     {
-        Map map = new HashMap();
-        Method[] m = remoteInterface.getMethods();
-        for (int i = 0; i < m.length; i++)
+       for (int i = 0; i < m.length; i++)
         {
-            if (!m[i].getDeclaringClass().getName().equals("javax.ejb.EJBObject"))
+            if (!m[i].getDeclaringClass().getName().equals(declaringClass))
             {
                 // Implemented by bean
                 map.put(m[i], beanClass.getMethod(m[i].getName(), m[i].getParameterTypes()));
@@ -396,6 +433,23 @@ public class StatelessSessionContainer
                     
                 }
             }
+        }
+    }
+    
+    protected void setupBeanMapping()
+        throws NoSuchMethodException
+    {
+        Map map = new HashMap();
+        
+        if (remoteInterface != null)
+        {
+         Method[] m = remoteInterface.getMethods();
+         setUpBeanMappingImpl( map, m, "javax.ejb.EJBObject" );
+        }
+        if (localInterface != null)
+        {
+         Method[] m = localInterface.getMethods();
+         setUpBeanMappingImpl( map, m, "javax.ejb.EJBLocalObject" );
         }
         
         beanMapping = map;
