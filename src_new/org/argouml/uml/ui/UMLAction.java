@@ -1,4 +1,4 @@
-// $Id: UMLAction.java,v 1.16 2003/09/04 20:11:44 thierrylach Exp $
+// $Id: UMLAction.java,v 1.17 2003/10/11 10:56:24 alexb Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -34,7 +34,6 @@ import javax.swing.KeyStroke;
 import org.apache.log4j.Logger;
 import org.argouml.application.helpers.ResourceLoaderWrapper;
 import org.argouml.i18n.Translator;
-import org.argouml.kernel.History;
 import org.argouml.kernel.Project;
 import org.argouml.kernel.ProjectManager;
 import org.argouml.ui.Actions;
@@ -79,18 +78,11 @@ public class UMLAction extends AbstractAction {
         setEnabled(shouldBeEnabled());
     }
 
-    /** Perform the work the action is supposed to do. */
+    /** Perform the work the action is supposed to do.*/
     public void actionPerformed(ActionEvent e) {
         cat.debug("pushed " + getValue(Action.NAME));
         StatusBar sb = ProjectBrowser.getInstance().getStatusBar();
         sb.doFakeProgress(stripJunk(getValue(Action.NAME).toString()), 100);
-		// TODO Replace deprecated History with TargetManager
-        History.TheHistory.addItemManipulation(
-					       "pushed " + getValue(Action.NAME),
-					       "",
-					       null,
-					       null,
-					       null);
         Actions.updateAllEnabled();
     }
 
