@@ -57,7 +57,7 @@
  * Description: ajpv1.2 protocol, used to call local or remote jserv hosts   *
  * Author:      Pierpaolo Fumagalli <ianosh@iname.com>                       *
  * Author:      Michal Mosiewicz <mimo@interdata.pl>                         *
- * Version:     $Revision: 1.2 $                                            *
+ * Version:     $Revision: 1.3 $                                            *
  *****************************************************************************/
 #include "jserv.h"
 
@@ -539,13 +539,17 @@ static int ajpv12_handler(jserv_config *cfg, jserv_request *req,
     /* Send routing info var & SSL CLIENT Certificates DNs */
     if (r->subprocess_env) {
         ajpv12_sendstring( buffsocket, ap_table_get(r->subprocess_env, "JSERV_ROUTE"));
+	/* XXX commented out for tomcat release - need to be in sync with current JServ 
         ajpv12_sendstring( buffsocket, ap_table_get(r->subprocess_env, "SSL_CLIENT_DN"));
         ajpv12_sendstring( buffsocket, ap_table_get(r->subprocess_env, "SSL_CLIENT_IDN"));
+        */
     }
     else {
         ajpv12_sendstring( buffsocket, "");
+	/* XXX commented out for tomcat release - need to be in sync with current JServ 
         ajpv12_sendstring( buffsocket, "");
         ajpv12_sendstring( buffsocket, "");
+        */
     }
     /* end jluc */
   
