@@ -271,6 +271,11 @@
       </classpath>
       <include name="org/apache/jasper/**" />    
     </javac>
+    <copydir src="src/share/org/apache/jasper" 
+             dest="${tomcat.build}/classes/org/apache/jasper">
+      <include name="**/*.properties" />
+      <include name="**/*.dtd" />
+    </copydir>
     <jar jarfile="${tomcat.build}/lib/jasper.jar"
       basedir="${tomcat.build}/classes"
       includes="org/apache/jasper/**"
