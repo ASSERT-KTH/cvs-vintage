@@ -1,3 +1,7 @@
+/**
+ * Copyright (c) 1999 The Apache Software Foundation.  All rights 
+ * reserved.
+ */
 import javax.servlet.*;
 import javax.servlet.http.*;
 
