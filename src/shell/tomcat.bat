@@ -1,5 +1,5 @@
 @echo off
-rem $Id: tomcat.bat,v 1.10 2000/02/10 09:32:22 rubys Exp $
+rem $Id: tomcat.bat,v 1.11 2000/02/24 23:01:32 costin Exp $
 rem A batch file to start/stop tomcat server.
 
 rem This batch file written and tested under Windows NT
@@ -27,6 +27,8 @@ if "%1" == "start" goto startServer
 if "%1" == "stop" goto stopServer
 if "%1" == "run" goto runServer
 if "%1" == "env" goto setupEnv
+if "%1" == "ant" goto runAnt
+if "%1" == "jspc" goto runJspc
 
 echo Usage:
 echo tomcat (start^|run^|env^|stop)
@@ -34,28 +36,39 @@ echo         start - start tomcat in a separate window
 echo         run   - start tomcat in the current window
 echo         env   - setup the environment for tomcat
 echo         stop  - stop tomcat
+echo         ant   - run ant with tomcat context
+echo         jspc  - run jsp pre compiler
 goto cleanup
 
 :startServer
 echo Starting tomcat in new window
 echo Using classpath: %CLASSPATH%
-rem start java org.apache.tomcat.shell.Startup %2 %3 %4 %5 %6 %7 %8 %9
-start java org.apache.tomcat.startup.Tomcat %2 %3 %4 %5 %6 %7 %8 %9
+start -Dtomcat.home=%TOMCAT_HOME% java org.apache.tomcat.startup.Tomcat %2 %3 %4 %5 %6 %7 %8 %9
 goto cleanup
 
 :runServer
 rem Start the Tomcat Server
 echo Using classpath: %CLASSPATH%
-rem java org.apache.tomcat.shell.Startup %2 %3 %4 %5 %6 %7 %8 %9
-java org.apache.tomcat.startup.Tomcat %2 %3 %4 %5 %6 %7 %8 %9
+java -Dtomcat.home=%TOMCAT_HOME% org.apache.tomcat.startup.Tomcat %2 %3 %4 %5 %6 %7 %8 %9
 goto cleanup
 
 :stopServer
 rem Stop the Tomcat Server
 echo Using classpath: %CLASSPATH%
-rem java org.apache.tomcat.shell.Shutdown %2 %3 %4 %5 %6 %7 %8 %9
-java org.apache.tomcat.startup.Tomcat -stop %2 %3 %4 %5 %6 %7 %8 %9
+java -Dtomcat.home=%TOMCAT_HOME% org.apache.tomcat.startup.Tomcat -stop %2 %3 %4 %5 %6 %7 %8 %9
 goto cleanup
+goto cleanup
+
+:runAnt
+rem Run ant
+echo Using classpath: %CLASSPATH%
+java -Dant.home=%TOMACT_HOME%  -Dtomcat.home=%TOMCAT_HOME% org.apache.tools.ant.Main $@
+goto cleanup
+
+:runJspc
+rem Run ant
+echo Using classpath: %CLASSPATH%
+java -Dtomcat.home=%TOMCAT_HOME% org.apache.jasper.JspC $@
 goto cleanup
 
 :setupEnv

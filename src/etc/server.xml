@@ -20,6 +20,7 @@
          -->
 
     <Logger name="tc_log" 
+            path="logs/tomcat.log"
             customOutput="yes" />
 
     <Logger name="servlet_log" 

@@ -114,6 +114,7 @@ public class Tomcat {
     
     public static void main(String args[] ) {
 	try {
+	    System.out.println("Starting tomcat. Check logs/tomcat.log for error messages ");
 	    Tomcat tomcat=new Tomcat();
 	    tomcat.execute( args );
 	} catch(Exception ex ) {

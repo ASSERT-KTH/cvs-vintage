@@ -1,6 +1,6 @@
 #!/bin/sh
 #
-# $Id: tomcat.sh,v 1.11 2000/02/13 20:49:45 costin Exp $
+# $Id: tomcat.sh,v 1.12 2000/02/24 23:01:32 costin Exp $
 
 # Shell script to start and stop the server
 
@@ -98,35 +98,47 @@ fi
 if [ "$1" = "start" ] ; then 
   shift 
   echo Using classpath: ${CLASSPATH}
-  $JAVACMD org.apache.tomcat.startup.Tomcat "$@" &
+  $JAVACMD  -Dtomcat.home=${TOMCAT_HOME} org.apache.tomcat.startup.Tomcat "$@" &
 #   $JAVACMD org.apache.tomcat.shell.Startup "$@" &
 
 elif [ "$1" = "stop" ] ; then 
   shift 
   echo Using classpath: ${CLASSPATH}
-  $JAVACMD org.apache.tomcat.startup.Tomcat -stop "$@"
+  $JAVACMD  -Dtomcat.home=${TOMCAT_HOME} org.apache.tomcat.startup.Tomcat -stop "$@"
 #   $JAVACMD org.apache.tomcat.shell.Shutdown "$@"
 
 elif [ "$1" = "run" ] ; then 
   shift 
   echo Using classpath: ${CLASSPATH}
-  $JAVACMD org.apache.tomcat.startup.Tomcat "$@" 
+  $JAVACMD  -Dtomcat.home=${TOMCAT_HOME} org.apache.tomcat.startup.Tomcat "$@" 
 #  $JAVACMD org.apache.tomcat.shell.Startup "$@" 
   # no &
 
-## Call it with source tomcat.sh to set the env for tomcat
+elif [ "$1" = "ant" ] ; then 
+  shift 
+
+  $JAVACMD -Dant.home=${TOMCAT_HOME} -Dtomcat.home=${TOMCAT_HOME} org.apache.tools.ant.Main $@
+
+elif [ "$1" = "jspc" ] ; then 
+  shift 
+
+  $JAVACMD -Dtomcat.home=${TOMCAT_HOME} org.apache.jasper.JspC "$@"
+
 elif [ "$1" = "env" ] ; then 
+  ## Call it with source tomcat.sh to set the env for tomcat
   shift 
   echo Setting classpath to: ${CLASSPATH}
   oldCP=$CLASSPATH
 
 else
   echo "Usage:"
-  echo "tomcat (start|env|run|stop)"
+  echo "tomcat (start|env|run|stop|ant)"
   echo "        start - start tomcat in the background"
   echo "        run   - start tomcat in the foreground"
   echo "        stop  - stop tomcat"
   echo "        env  -  set CLASSPATH and TOMCAT_HOME env. variables"
+  echo "        ant  - run ant script in tomcat context ( classes, directories, etc)"
+  echo "        jspc - run jsp pre compiler"
 
   exit 0
 fi

@@ -47,11 +47,19 @@
         <property name="package.name" value="xml-xerces" />
      </ant>    
   </target>
+
+  <!-- Remove the cvs tree, needs to be called daily - without it
+       we will just get updates -->
+  <target name="cvsclean" depends="init">
+    <deltree dir="${ws.dir}/jakarta-tomcat" />
+    <deltree dir="${ws.dir}/jakarta-ant" />
+    <deltree dir="${ws.dir}/jakarta-tools" />
+    <deltree dir="${ws.dir}/jakarta-watchdog" />
+  </target>
   
   <!-- Customized target, needs to be called with parameters -->
   <!-- Parameters:  package.name -->
   <target name="package.snapshot" depends="init">
-    <deltree dir="${ws.dir}/${package.name}/" />
     <deltree dir="${ws.dir}/${package.name}.src.zip" />
     <cvs cvsRoot="${cvs.root}" 
          package="${package.name}"   dest="${ws.dir}"  />

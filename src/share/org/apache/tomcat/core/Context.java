@@ -587,7 +587,7 @@ public class Context {
 	    }
 	}
 	if (csLog != null) {
-	    csLog.log("<l:context path=\"" + path  + "\" >" + msg + "</l:context>");
+	    csLog.log("<l:context path=\"" + path  + "\" >" + msg + "</l:context>\n");
 	} else {
 	    System.out.println("<l:context path=\"" + path  + "\" >" + msg + "</l:context>");
 	}
