@@ -147,6 +147,12 @@
             className="org.apache.tomcat.request.SimpleMapper1" 
             debug="0" />
 
+        <!-- fix the context class loader, other JDK1.2 specific code
+        <RequestInterceptor 
+            className="org.apache.tomcat.request.Jdk12Interceptor" 
+            debug="0" />
+          -->
+
         <!-- Non-standard invoker, for backward compat. ( /servlet/* )
           -->
         <RequestInterceptor 
