@@ -34,19 +34,19 @@ $l10n.EnterConfirmation
  <input type="hidden" name="$scarabG.Constant.NEXT_TEMPLATE" value="Login.vm" />
  <input type="hidden" name="$scarabG.Constant.CANCEL_TEMPLATE" value="Login.vm" />
 
-<h3>Confirmation information</h3>
+<h3>$l10n.ConfirmationInformation</h3>
 
 <div class="axial">
 <table cellpadding="3" cellspacing="2" border="0">
  <tr>
-  <th>User name</th>
+  <th>$l10n.Username</th>
   <td>
    <input type="text" size="25" name="$regGroup.UserName.Key" value="$!userNameValue" tabindex="1" />
    #fieldErrorMsg($regGroup.UserName "")
   </td>
  </tr>
  <tr>
-  <th>Confirmation Code</th>
+  <th>$l10n.ConfirmationCode</th>
   <td>
    <input type="text" size="25" name="$regGroup.Confirm.Key" value="$!confirmValue" tabindex="2" />
    #fieldErrorMsg($regGroup.Confirm "")
@@ -57,7 +57,7 @@ $l10n.EnterConfirmation
 
 <div class="functnbar2">
 <input type="submit" name="eventSubmit_doConfirm" value="$l10n.Confirm" tabindex="3" />&#160;
-<input type="submit" name="eventSubmit_doResendconfirmationcode" value="$l10n.ResendCode" tabindex="4" />&#160;
+<input type="submit" name="eventSubmit_doResendconfirmationcode" value="$l10n.ResendCode" tabindex="4" />
 </div>
 
 $intake.declareGroups()
