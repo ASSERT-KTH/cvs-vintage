@@ -263,7 +263,7 @@
             <property name="tomcat33.home" value="${basedir}/build/tomcat"/>
         </ant>
         
-        <ant dir="${jakarta-tomcat-connectors}/http11" />
+        <ant dir="${jakarta-tomcat-connectors}/http11" inheritAll="false" />
             
         <ant dir="${jakarta-tomcat-connectors}/jk" target="build-jk">
             <property name="tomcat33.home" value="${basedir}/build/tomcat"/>
