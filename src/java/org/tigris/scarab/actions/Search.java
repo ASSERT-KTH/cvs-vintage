@@ -94,7 +94,7 @@ import org.tigris.scarab.util.word.IssueSearch;
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: Search.java,v 1.91 2002/10/07 22:46:48 jmcnally Exp $
+ * @version $Id: Search.java,v 1.92 2002/10/07 22:52:18 jmcnally Exp $
  */
 public class Search extends RequireLoginFirstAction
 {
@@ -470,14 +470,14 @@ public class Search extends RequireLoginFirstAction
     */
     private void getAllIssueIds(RunData data, TemplateContext context) 
     {
-        String[] allIssueIds = null;
-        if (data.getParameters().getStrings("all_issue_ids") != null)
+        ParameterParser pp = data.getParameters();
+        String[] allIssueIds = pp.getStrings("all_issue_ids");
+        if (allIssueIds != null)
         {
-            allIssueIds = data.getParameters().getStrings("all_issue_ids");
-        }
-        for (int i =0; i< allIssueIds.length; i++)
-        {
-            data.getParameters().add("issue_ids", allIssueIds[i]);
+            for (int i =0; i< allIssueIds.length; i++)
+            {
+                pp.add("issue_ids", allIssueIds[i]);
+            }
         }
     }
 
@@ -487,9 +487,7 @@ public class Search extends RequireLoginFirstAction
     private List getSelected(RunData data, TemplateContext context) 
     {
         List newIssueIdList = new ArrayList();
-        String key;
-        ParameterParser pp = data.getParameters();
-        String[] selectedIds = pp.getStrings("issue_ids");
+        String[] selectedIds = data.getParameters().getStrings("issue_ids");
         if (selectedIds != null) 
         {
             for (int i=0; i<selectedIds.length; i++) 
