@@ -1,4 +1,4 @@
-// $Id: UMLStructuralFeatureTypeComboBoxModel.java,v 1.3 2003/06/29 23:50:18 linus Exp $
+// $Id: UMLStructuralFeatureTypeComboBoxModel.java,v 1.4 2003/07/18 18:37:42 d00mst Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,12 +25,16 @@
 // $header$
 package org.argouml.uml.ui.foundation.core;
 
+import java.util.Collection;
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
+import java.util.TreeSet;
 
 import org.argouml.kernel.Project;
 import org.argouml.kernel.ProjectManager;
+import org.argouml.model.ModelFacade;
 import org.argouml.model.uml.UmlModelEventPump;
 import org.argouml.model.uml.modelmanagement.ModelManagementHelper;
 import org.argouml.uml.ui.UMLComboBoxModel2;
@@ -69,23 +73,68 @@ public class UMLStructuralFeatureTypeComboBoxModel extends UMLComboBoxModel2 {
     }
 
     /**
+     * Helper method for buildModelList
+     *
+     * <p>Adds those elements from source that do not have the same path as
+     * any path in paths to elements, and its path to paths. Thus elements
+     * will never contain two objects with the same path, unless they are
+     * added by other means.
+     */
+    private static void addAllUniqueModelElementsFrom(Set elements, Set paths,
+							Collection source) {
+        Iterator it2 = source.iterator();
+
+	while (it2.hasNext()) {
+	    Object obj = it2.next();
+	    Object path = ModelManagementHelper.getHelper().getPath(obj);
+	    if (!paths.contains(path)) {
+	        paths.add(path);
+	        elements.add(obj);
+	    }
+	}
+    }
+
+    /**
      * @see org.argouml.uml.ui.UMLComboBoxModel2#buildModelList()
      */
     protected void buildModelList() {
-        Set elements = new HashSet();
+        Set paths = new HashSet();
+        Set elements = new TreeSet(new Comparator() {
+            public int compare(Object o1, Object o2) {
+                try {
+                    String name1 = ModelFacade.getName(o1);
+                    String name2 = ModelFacade.getName(o2);
+                    name1 = (name1 != null ? name1 : "");
+                    name2 = (name2 != null ? name2 : "");
+
+                    return name1.compareTo(name2);
+                } catch (Exception e) {
+                    throw new ClassCastException(e.getMessage());
+                }
+            }});
         Project p = ProjectManager.getManager().getCurrentProject();
         Iterator it = p.getUserDefinedModels().iterator();
+
         while (it.hasNext()) {
             MModel model = (MModel) it.next();
-            elements.addAll(
-			    ModelManagementHelper.getHelper().getAllModelElementsOfKind(
-											model,
-											MClassifier.class));
+
+	    addAllUniqueModelElementsFrom(
+		elements,
+		paths,
+		ModelManagementHelper.getHelper().getAllModelElementsOfKind(
+									    model,
+									    MClassifier.class)
+		);
         }
-        elements.addAll(
-			ModelManagementHelper.getHelper().getAllModelElementsOfKind(
-										    p.getDefaultModel(),
-										    MClassifier.class));
+
+	addAllUniqueModelElementsFrom(
+	    elements,
+	    paths,
+	    ModelManagementHelper.getHelper().getAllModelElementsOfKind(
+									p.getDefaultModel(),
+									MClassifier.class)
+	    );
+
         setElements(elements);
     }
 
