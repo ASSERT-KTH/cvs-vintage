@@ -95,7 +95,7 @@ import org.tigris.scarab.util.ScarabConstants;
     This class is responsible for edit issue forms.
     ScarabIssueAttributeValue
     @author <a href="mailto:elicia@collab.net">Elicia David</a>
-    @version $Id: ModifyIssue.java,v 1.47 2001/11/05 20:15:05 elicia Exp $
+    @version $Id: ModifyIssue.java,v 1.48 2001/11/13 01:18:01 elicia Exp $
 */
 public class ModifyIssue extends RequireLoginFirstAction
 {
@@ -270,7 +270,7 @@ public class ModifyIssue extends RequireLoginFirstAction
         throws Exception
     {                          
         String id = data.getParameters().getString("id");
-        Issue issue = (Issue) IssuePeer.retrieveByPK(new NumberKey(id));
+        Issue issue = Issue.getIssueById(id);
         IntakeTool intake = getIntakeTool(context);
         Attachment attachment = new Attachment();
         NumberKey typeId = null;
@@ -430,8 +430,7 @@ public class ModifyIssue extends RequireLoginFirstAction
         String id = data.getParameters().getString("id");
         ParameterParser params = data.getParameters();
         Object[] keys = params.getKeys();
-        Issue currentIssue = (Issue) IssuePeer.retrieveByPK(
-                             new NumberKey(id));
+        Issue currentIssue = Issue.getIssueById(id);
         ScarabUser user = (ScarabUser)data.getUser();
         String key;
         String childId;
@@ -445,8 +444,8 @@ public class ModifyIssue extends RequireLoginFirstAction
                String dependTypeId = params.getString(key);
                
                childId = key.substring(21);
-               Issue child = (Issue) IssuePeer.retrieveByPK(
-                              new NumberKey(childId));
+               Issue child = (Issue) IssuePeer
+                              .retrieveByPK(new NumberKey(childId));
                depend = currentIssue.getDependency(child);
                String oldValue = depend.getDependType().getName();
                String newValue = null;
@@ -499,7 +498,7 @@ public class ModifyIssue extends RequireLoginFirstAction
         throws Exception
     {                          
         String id = data.getParameters().getString("id");
-        Issue issue = (Issue) IssuePeer.retrieveByPK(new NumberKey(id));
+        Issue issue = Issue.getIssueById(id);
         ParameterParser params = data.getParameters();
         Object[] keys = params.getKeys();
         ScarabUser user = (ScarabUser)data.getUser();
@@ -515,7 +514,7 @@ public class ModifyIssue extends RequireLoginFirstAction
                 String dependTypeId = params.getString(key);
                 parentId = key.substring(22);
                 Issue parent = (Issue) IssuePeer
-                      .retrieveByPK(new NumberKey(parentId));
+                              .retrieveByPK(new NumberKey(parentId));
                 depend = parent.getDependency(issue);
                 String oldValue = depend.getDependType().getName();
                 String newValue = null;
@@ -565,7 +564,7 @@ public class ModifyIssue extends RequireLoginFirstAction
         throws Exception
     {                          
         String id = data.getParameters().getString("id");
-        Issue issue = (Issue) IssuePeer.retrieveByPK(new NumberKey(id));
+        Issue issue = Issue.getIssueById(id);
         ScarabUser user = (ScarabUser)data.getUser();
         IntakeTool intake = getIntakeTool(context);
         Group group = intake.get("Depend", "dependKey", false);
@@ -590,8 +589,7 @@ public class ModifyIssue extends RequireLoginFirstAction
         {
             try
             {
-                parentIssue = (Issue) IssuePeer.retrieveByPK(
-                                    new NumberKey(observedId.toString()));
+                parentIssue = Issue.getIssueById(observedId.toString());
                 if (parentIssue.getDependency(issue) != null)
                 {
                     observedId.setMessage("This issue already has a dependency" 
@@ -617,10 +615,10 @@ public class ModifyIssue extends RequireLoginFirstAction
         {
             Depend depend = new Depend();
             depend.setObserverId(issue.getIssueId());
-            depend.setObservedId(new NumberKey(observedId.toString()));
+            depend.setObservedId(parentIssue.getIssueId());
             depend.setTypeId(new NumberKey(dependTypeId.toString()));
 
-            // TODO: would like to set these properties using 
+            // FIXME: would like to set these properties using 
             // group.setProperties, but getting errors. (John?)
             //group.setProperties(depend);
             depend.save();
@@ -672,16 +670,6 @@ public class ModifyIssue extends RequireLoginFirstAction
         setTarget(data, "AssignIssue.vm");            
     }
 
-    /**
-     * Redirects to MoveIssue page.
-     */
-    public void doGotomoveissue(RunData data, TemplateContext context)
-         throws Exception
-    {
-        setTarget(data, 
-            data.getParameters()
-                .getString("moveIssueTemplate", "MoveIssue.vm"));
-    }
 
     /**
         This manages clicking the Cancel button
