@@ -113,10 +113,16 @@ public class GlobalResourceLoader {
         protected static void initClassLoader() {
                 File langpack = new File("langpack_" + Locale.getDefault().toString() + ".jar");
                 if (langpack.exists() && langpack.isFile()) {
+                        if (MainInterface.DEBUG) {
+                                ColumbaLogger.log.info("Creating new i18n class loader for " + langpack.getPath());
+                        }
                         try {
                                 classLoader = new URLClassLoader(new URL[]{ langpack.toURL() });
                         } catch (MalformedURLException mue) {} //does not occur
                 } else {
+                        if (MainInterface.DEBUG) {
+                                ColumbaLogger.log.warning("No language pack found for " + Locale.getDefault().toString());
+                        }
                         classLoader = ClassLoader.getSystemClassLoader();
                 }
         }
@@ -183,6 +189,9 @@ public class GlobalResourceLoader {
         
         public static void reload() {
                 initClassLoader();
+                if (MainInterface.DEBUG) {
+                        ColumbaLogger.log.info("Reloading cached resource bundles for locale " + Locale.getDefault().toString());
+                }
                 try {
                         globalBundle = ResourceBundle.getBundle(GLOBAL_BUNDLE_PATH, Locale.getDefault(), classLoader);
                 } catch(MissingResourceException mre) {} //should not occur, otherwise the static initializer should have thrown a RuntimeException
