@@ -468,6 +468,16 @@ public class Container implements Cloneable{
     public BaseInterceptor[] getInterceptors( int type )
     {
 	if( hooksCache != null ) {
+	    if( hooksCache[type] == null ) {
+		Container gContainer = getContextManager().getContainer();
+		Hooks gHooks = gContainer.getHooks();
+		if( this != gContainer ) {
+		    hooksCache[type] = mergeHooks(gHooks.getModules(type),
+						  getHooks().getModules(type));
+		} else {
+		    hooksCache[type] = mergeHooks(gHooks.getModules(type), null);
+		}
+	    }
 	    return hooksCache[type];
 	}
 
