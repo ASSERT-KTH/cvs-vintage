@@ -107,7 +107,7 @@ public class EditGroupDialog
 	private JPanel createGroupNamePanel() {
 		JPanel panel= new JPanel();
 		FormLayout layout=
-			new FormLayout("6dlu, right:default, 3dlu, default:grow", ""); //$NON-NLS-1$ //$NON-NLS-2$
+			new FormLayout("12px, right:default, 6px, default:grow", ""); //$NON-NLS-1$ //$NON-NLS-2$
 
 		DefaultFormBuilder b= new DefaultFormBuilder(panel, layout);
 		b.setRowGroupingEnabled(true);
@@ -128,8 +128,8 @@ public class EditGroupDialog
 		JPanel panel= new JPanel();
 		FormLayout layout=
 			new FormLayout(
-				"6dlu, fill:default:grow, 3dlu, default", //$NON-NLS-1$
-				"default, 6dlu, default, 3dlu, default, fill:default:grow"); //$NON-NLS-1$
+				"6dlu, fill:default:grow, 6px, default", //$NON-NLS-1$
+				"default, 12px, default, 6px, default, fill:default:grow"); //$NON-NLS-1$
 
 		PanelBuilder builder= new PanelBuilder(panel, layout);
 		CellConstraints cc= new CellConstraints();
@@ -152,7 +152,7 @@ public class EditGroupDialog
 		FormLayout layout=
 			new FormLayout(
 				"fill:default:grow", //$NON-NLS-1$
-				"default, 6dlu, fill:default:grow"); //$NON-NLS-1$
+				"default, 12px, fill:default:grow"); //$NON-NLS-1$
 
 		CellConstraints cc= new CellConstraints();
 		mainPanel.setLayout(layout);
@@ -165,8 +165,8 @@ public class EditGroupDialog
 		JPanel bottomPanel= new JPanel(new BorderLayout());
 		bottomPanel.setBorder(new SingleSideEtchedBorder(SwingConstants.TOP));
 
-		JPanel buttonPanel= new JPanel(new GridLayout(1, 2, 10, 10));
-		buttonPanel.setBorder(BorderFactory.createEmptyBorder(17, 12, 11, 11));
+		JPanel buttonPanel= new JPanel(new GridLayout(1, 2, 6, 0));
+		buttonPanel.setBorder(BorderFactory.createEmptyBorder(12, 12, 12, 12));
 
 		buttonPanel.add(okButton);
 		buttonPanel.add(cancelButton);
