@@ -2,7 +2,7 @@
 <!DOCTYPE mbean PUBLIC
    "-//JBoss//DTD JBOSS XMBEAN 1.1//EN"
    "http://www.jboss.org/j2ee/dtd/jboss_xmbean_1_1.dtd">
-<!-- $Id: org.jboss.deployment.MainDeployer-xmbean.xml,v 1.6 2005/01/20 09:44:19 starksm Exp $ The MainDeployer XMBean descriptor -->
+<!-- $Id: org.jboss.deployment.MainDeployer-xmbean.xml,v 1.7 2005/03/22 13:11:25 andd Exp $ The MainDeployer XMBean descriptor -->
 <mbean>
    <description>The Main deployer is the service which acts as the entry
        point for the deployment/undeployment requests.
@@ -38,7 +38,7 @@
       <type>[Ljava.lang.String;</type>
       <!--
       <descriptors>
-        <value value="100:deployer,100:deployer.xml,200:sar,200:service.xml,300:rar,300:ds.xml,500:jar,600:war,600:wsr,600:ear,700:zip,900:last"/>
+        <value value="100:.deployer,100:-deployer.xml,200:.sar,200:-service.xml,300:.rar,300:-ds.xml,500:.jar,600:.war,600:.wsr,600:.ear,700:.zip,900:.last"/>
       </descriptors>
       -->
    </attribute>   
