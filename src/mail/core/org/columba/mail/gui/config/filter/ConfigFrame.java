@@ -348,11 +348,22 @@ public class ConfigFrame
 		}
 	}
 
-	public void showFilterDialog() {
-		Filter parent = getSelected();
-		if (parent != null) {
-			FilterDialog dialog = new FilterDialog(parent);
+	/**
+	 * Shows the edit filter dialog.
+	 * Method returns false if the dialog was cancelled by the user or if
+	 * the specified filter was null. It returns true if the user has pressed
+	 * <code>Close</code> in order to save the filter into the filter list.
+	 * @param filter the filter to edit.
+	 * @return true if the filter dialog was closed (not cancelled); 
+	 * false if the editing was cancelled or if the argument was null.
+	 */
+	public boolean showFilterDialog(Filter filter) {
+		boolean saveFilter = false;
+		if (filter != null) {
+			FilterDialog dialog = new FilterDialog(filter);
+			saveFilter = ! dialog.wasCancelled();
 		}
+		return saveFilter;
 	}
 
 	public void actionPerformed(ActionEvent e) {
@@ -365,14 +376,12 @@ public class ConfigFrame
 			setVisible(false);
 		} else if (action.equals("ADD")) {
 			Filter filter = FilterList.createEmptyFilter();
-			filterList.add(filter);
-
-			listView.update();
-
-			setSelected(filter);
-
-			showFilterDialog();
-
+			
+			if (showFilterDialog(filter)) {
+				filterList.add(filter);
+				setSelected(filter);
+			}
+			
 			listView.update();
 
 		} else if (action.equals("REMOVE")) {
@@ -384,7 +393,7 @@ public class ConfigFrame
 			listView.update();
 
 		} else if (action.equals("EDIT")) {
-			showFilterDialog();
+			showFilterDialog(getSelected());
 
 			listView.update();
 		}
