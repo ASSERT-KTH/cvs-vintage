@@ -59,7 +59,7 @@ import org.tigris.scarab.util.Log;
  * Handles dynamic title
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: SaveTemplate.java,v 1.3 2003/07/19 22:57:53 elicia Exp $
+ * @version $Id: SaveTemplate.java,v 1.4 2003/07/21 19:03:28 elicia Exp $
  */
 public class SaveTemplate extends Default
 {
@@ -88,7 +88,7 @@ public class SaveTemplate extends Default
         catch (Exception e)
         {
             title = l10n.get("SaveTemplate");
-            Log.get().debug("", e);
+            Log.get().debug("no current issue type, cannot retrieve SaveTemplate title", e);
         }
         return title;
     }
