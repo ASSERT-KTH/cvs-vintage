@@ -1,5 +1,5 @@
 --------------------------------------------------------------------------
-$Id: README.txt,v 1.7 2002/07/11 22:07:02 jon Exp $
+$Id: README.txt,v 1.8 2002/09/18 20:02:47 jon Exp $
 --------------------------------------------------------------------------
 
 The files in this directory are here for your convenience in building
@@ -223,7 +223,7 @@ DATABASE JDBC DRIVERS
 
   Postgresql JDBC Driver
 
-  http://www.postgresql.org/
+  http://jdbc.postgresql.org/download.html
 
 
 BUILD TOOLS
