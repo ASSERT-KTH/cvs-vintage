@@ -147,8 +147,6 @@ public class ScarabLocalizationTool
         {
             // $l10n.get($props.get($template, "title"))
 
-            // HELP: Not sure if values like "entry/Wizard1.vm.title"
-            // will be valid keys for Java .properties files...
             String templateName =
                 (useDefaultScope ? DEFAULT_SCOPE : data.getTarget());
             if (templateName == null)
