@@ -16,14 +16,11 @@ import org.jboss.security.SimplePrincipal;
 import org.jboss.tm.usertx.client.ServerVMClientUserTransaction;
 
 import javax.ejb.*;
-import javax.ejb.Timer;
 import javax.transaction.*;
 import java.rmi.RemoteException;
 import java.security.Identity;
 import java.security.Principal;
 import java.util.*;
-import java.lang.reflect.Proxy;
-import java.io.Serializable;
 
 /**
  * The EnterpriseContext is used to associate EJB instances with
@@ -39,7 +36,7 @@ import java.io.Serializable;
  * @author <a href="mailto:juha@jboss.org">Juha Lindfors</a>
  * @author <a href="mailto:osh@sparre.dk">Ole Husgaard</a>
  * @author <a href="mailto:thomas.diesler@jboss.org">Thomas Diesler</a>
- * @version $Revision: 1.68 $
+ * @version $Revision: 1.69 $
  *
  * Revisions:
  * 2001/06/29: marcf
@@ -515,6 +512,7 @@ public abstract class EnterpriseContext
       { 
          if (principal == null)
             return false;
+
          RealmMapping rm = con.getRealmMapping();
          if( rm == null )
          {
