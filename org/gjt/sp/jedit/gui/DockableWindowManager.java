@@ -40,7 +40,7 @@ import java.util.*;
 /**
  * Manages dockable windows.
  * @author Slava Pestov
- * @version $Id: DockableWindowManager.java,v 1.41 2002/09/04 20:44:06 spestov Exp $
+ * @version $Id: DockableWindowManager.java,v 1.42 2002/09/20 19:53:23 spestov Exp $
  * @since jEdit 2.6pre3
  */
 public class DockableWindowManager extends JPanel
@@ -701,24 +701,33 @@ public class DockableWindowManager extends JPanel
 	 */
 	public void closeCurrentArea()
 	{
-		Component comp = view.getFocusOwner();
-		while(comp != null)
+		// I don't know of any other way to fix this, since invoking this
+		// command from a menu results in the focus owner being the menu
+		// until the menu goes away.
+		SwingUtilities.invokeLater(new Runnable()
 		{
-			System.err.println(comp.getClass());
-			if(comp instanceof PanelWindowContainer
-				.DockablePanel)
+			public void run()
 			{
-				PanelWindowContainer container =
-					((PanelWindowContainer.DockablePanel)
-					comp).getWindowContainer();
-				container.show(null);
-				return;
+				Component comp = view.getFocusOwner();
+				while(comp != null)
+				{
+					//System.err.println(comp.getClass());
+					if(comp instanceof PanelWindowContainer
+						.DockablePanel)
+					{
+						PanelWindowContainer container =
+							((PanelWindowContainer.DockablePanel)
+							comp).getWindowContainer();
+						container.show(null);
+						return;
+					}
+
+					comp = comp.getParent();
+				}
+
+				getToolkit().beep();
 			}
-
-			comp = comp.getParent();
-		}
-
-		getToolkit().beep();
+		});
 	} //}}}
 
 	//{{{ close() method

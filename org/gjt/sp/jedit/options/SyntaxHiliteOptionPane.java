@@ -41,7 +41,7 @@ import org.gjt.sp.jedit.*;
 /**
  * Style option pane.
  * @author Slava Pestov
- * @version $Id: SyntaxHiliteOptionPane.java,v 1.1 2002/08/02 17:31:58 spestov Exp $
+ * @version $Id: SyntaxHiliteOptionPane.java,v 1.2 2002/09/20 19:53:23 spestov Exp $
  */
 public class SyntaxHiliteOptionPane extends AbstractOptionPane
 {
@@ -61,26 +61,18 @@ public class SyntaxHiliteOptionPane extends AbstractOptionPane
 	{
 		setLayout(new BorderLayout(6,6));
 
-		/* Parse fully */
-		parseFully = new JCheckBox(jEdit.getProperty(
-			"options.syntax.parseFully"));
-		parseFully.setSelected(jEdit.getBooleanProperty("parseFully"));
-
-		add(BorderLayout.NORTH,parseFully);
 		add(BorderLayout.CENTER,createStyleTableScroller());
 	} //}}}
 
 	//{{{ _save() method
 	protected void _save()
 	{
-		jEdit.setBooleanProperty("parseFully",parseFully.isSelected());
 		styleModel.save();
 	} //}}}
 
 	//}}}
 
 	//{{{ Private members
-	private JCheckBox parseFully;
 	private StyleTableModel styleModel;
 	private JTable styleTable;
 
