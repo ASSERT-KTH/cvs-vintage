@@ -211,6 +211,21 @@
         -->
 
         <!--
+	    Uncomment for HTTP 1.1 support using the Coyote adapter and
+	    and Http11 processor from jakarta-tomcat-connectors.
+
+	    Note: CoyoteConnector supports the same attributes as
+	          Http10Connector
+	 -->
+        <!--
+        <CoyoteConnector   port="8081" 
+			   secure="false"
+			   maxThreads="100"
+			   maxSpareThreads="50"
+			   minSpareThreads="10" />
+	-->
+
+        <!--
              JNI connector. It assumes the library is located in 
              TOMCAT_HOME/bin/native/jni_connect.[dll, nlm, so]. or in LD_LIBRARY_PATH.
              For different paths set "nativeLibrary" parameter.
