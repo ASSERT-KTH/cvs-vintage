@@ -19,7 +19,7 @@ import org.w3c.dom.Element;
  * It loads its data from standardjbosscmp-jdbc.xml and jbosscmp-jdbc.xml
  *
  * @author <a href="mailto:on@ibis.odessa.ua">Oleg Nitz</a>
- * @version $Revision: 1.5 $
+ * @version $Revision: 1.6 $
  */
 public final class JDBCReadAheadMetaData {
 
@@ -72,6 +72,24 @@ public final class JDBCReadAheadMetaData {
       strategy = ON_LOAD;
       pageSize = 255;
       eagerLoadGroup = "*";
+   }
+
+   /**
+    * Constructs read ahead meta data with specified strategy, pageSize and 
+    * eagerLoadGroup.
+    */
+   public JDBCReadAheadMetaData(
+         String strategy, 
+         int pageSize, 
+         String eagerLoadGroup) {
+      
+      this.strategy = (byte) STRATEGIES.indexOf(strategy);
+      if(this.strategy < 0) {
+         throw new IllegalArgumentException("Unknown read ahead strategy '" + 
+               strategy + "'.");
+      }
+      this.pageSize = pageSize;
+      this.eagerLoadGroup = eagerLoadGroup;
    }
 
    /**
