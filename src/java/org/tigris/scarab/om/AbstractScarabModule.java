@@ -103,7 +103,7 @@ import org.tigris.scarab.reports.ReportBridge;
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: AbstractScarabModule.java,v 1.120 2004/05/10 21:28:39 thierrylach Exp $
+ * @version $Id: AbstractScarabModule.java,v 1.121 2004/09/10 09:28:25 legout Exp $
  */
 public abstract class AbstractScarabModule
     extends BaseObject
@@ -605,19 +605,41 @@ public abstract class AbstractScarabModule
                                       IssueType issueType)
         throws Exception
     {
-        List moduleOptions = getRModuleOptions(attribute, issueType);
-        int last = 0;
-
-        for (int i=0; i<moduleOptions.size(); i++)
+      List moduleOptions = getRModuleOptions(attribute, issueType);
+      int last = 0;
+      for (int i=0; i<moduleOptions.size(); i++)
         {
-               int order = ((RModuleOption) moduleOptions.get(i))
-                         .getOrder();
-               if (order > last)
-               {
-                   last = order;
-               }
+          int order = ((RModuleOption) moduleOptions.get(i))
+            .getOrder();
+          if (order > last)
+            {
+              last = order;
+            }
         }
-        return last;
+      return last;
+    }
+
+  /*
+   * shift all the module options by 1 for all the non-active options with 
+   * an order higher or equal than offset
+   */
+    public void shiftAttributeOption(Attribute attribute, 
+                                    IssueType issueType,
+                                    int offset)
+        throws Exception
+    {
+      List moduleOptions = getRModuleOptions(attribute, issueType, false);
+      RModuleOption rmo;
+      for (int i=0; i<moduleOptions.size(); i++)
+        {
+          rmo = (RModuleOption) moduleOptions.get(i);
+          int order = rmo.getOrder();
+          if (order >= offset && !rmo.getActive())
+            {
+              rmo.setOrder(order+1);
+              rmo.save();
+            }
+        }
     }
 
     /**
@@ -1452,12 +1474,19 @@ public abstract class AbstractScarabModule
     {
         RModuleOption rmo = addRModuleOption(issueType, option);
         rmo.save();
+        shiftAttributeOption(option.getAttribute(), issueType, rmo.getOrder());
 
         // add module-attributeoption mappings to template type
         IssueType templateType = IssueTypeManager
                  .getInstance(issueType.getTemplateId());
         RModuleOption rmo2 = addRModuleOption(templateType, option);
         rmo2.save();
+        //FIXME: is it useful to shift options for the templateType?
+        //shiftAttributeOption(option.getAttribute(), templateType, rmo.getOrder());
+        
+        //if the cache is not cleared, when two options are added at the same time, 
+        //getLastAttributeOption does not take into account the newest active options.
+        ScarabCache.clear();
     }
   
 
