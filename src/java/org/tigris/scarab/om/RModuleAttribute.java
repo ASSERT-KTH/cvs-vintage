@@ -119,7 +119,7 @@ public class RModuleAttribute
     {                
         ModuleEntity module = getScarabModule();
 
-        if (user.hasPermission(ScarabSecurity.ITEM__APPROVE, module))
+        if (user.hasPermission(ScarabSecurity.MODULE__EDIT, module))
         {
             Criteria c = new Criteria()
                 .add(RModuleAttributePeer.MODULE_ID, getModuleId())

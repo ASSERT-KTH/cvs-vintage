@@ -80,7 +80,7 @@ import org.tigris.scarab.tools.ScarabRequestTool;
  * action methods on RModuleAttribute table
  *      
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ModifyModuleAttributes.java,v 1.36 2001/11/01 02:12:37 elicia Exp $
+ * @version $Id: ModifyModuleAttributes.java,v 1.37 2001/11/01 22:09:59 elicia Exp $
  */
 public class ModifyModuleAttributes extends RequireLoginFirstAction
 {
@@ -728,11 +728,19 @@ public class ModifyModuleAttributes extends RequireLoginFirstAction
                Attribute attribute = (Attribute)AttributePeer
                                      .retrieveByPK(new NumberKey(attributeId));
 
+
                // Remove attribute - module mapping
                IssueType issueType = ag.getIssueType();
                RModuleAttribute rma = module
                    .getRModuleAttribute(attribute, issueType);
-               rma.delete(user);
+               try
+               {
+                   rma.delete(user);
+               }
+               catch (Exception e)
+               {
+                   data.setMessage(ScarabConstants.NO_PERMISSION_MESSAGE);
+               }
 
                // Remove attribute - module mapping from template type
                IssueType templateType = (IssueType)IssueTypePeer
@@ -744,7 +752,15 @@ public class ModifyModuleAttributes extends RequireLoginFirstAction
                // Remove attribute - group mapping
                RAttributeAttributeGroup raag = 
                    ag.getRAttributeAttributeGroup(attribute);
-               raag.delete(user);
+               
+               try
+               {
+                   raag.delete(user);
+               }
+               catch (Exception e)
+               {
+                  data.setMessage(ScarabConstants.NO_PERMISSION_MESSAGE);
+               }
             }
         }        
         data.getParameters().add("groupid", groupId);
@@ -757,10 +773,10 @@ public class ModifyModuleAttributes extends RequireLoginFirstAction
     public void doCreatenewglobalattribute( RunData data, TemplateContext context )
         throws Exception
     {
-        data.getParameters().setString(ScarabConstants.NEXT_TEMPLATE, 
-            "admin,AttributeSelect.vm");
-        setTarget(data, getCancelTemplate(data, 
-            "admin,GlobalAttributeEdit.vm"));
+        String nextTemplate = data.getParameters()
+            .getString(ScarabConstants.NEXT_TEMPLATE);
+        setTarget(data, getNextTemplate(data, 
+            "admin,GlobalAttributeShow.vm"));
     }
 
     /**

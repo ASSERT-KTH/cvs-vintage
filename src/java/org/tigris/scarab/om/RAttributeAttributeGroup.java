@@ -26,7 +26,7 @@ public  class RAttributeAttributeGroup
     { 
         ModuleEntity module = getAttributeGroup().getModule();
 
-        if (user.hasPermission(ScarabSecurity.ITEM__APPROVE, module))
+        if (user.hasPermission(ScarabSecurity.MODULE__EDIT, module))
         {
             Criteria c = new Criteria()
                 .add(RAttributeAttributeGroupPeer.GROUP_ID, getGroupId())
