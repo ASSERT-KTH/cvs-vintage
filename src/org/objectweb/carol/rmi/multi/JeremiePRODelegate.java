@@ -22,7 +22,7 @@
  * USA
  *
  * --------------------------------------------------------------------------
- * $Id: JeremiePRODelegate.java,v 1.14 2005/03/03 16:10:32 benoitf Exp $
+ * $Id: JeremiePRODelegate.java,v 1.15 2005/03/04 10:01:36 benoitf Exp $
  * --------------------------------------------------------------------------
  */
 package org.objectweb.carol.rmi.multi;
@@ -83,7 +83,7 @@ public class JeremiePRODelegate implements PortableRemoteObjectDelegate {
         // class for name
         unicastClass = Thread.currentThread().getContextClassLoader().loadClass(className);
         try {
-            RMIConfiguration rmiConfig = CarolConfiguration.getDefaultProtocol();
+            RMIConfiguration rmiConfig = CarolConfiguration.getRMIConfiguration("jeremie");
             String propertyName = CarolDefaultValues.SERVER_JEREMIE_PORT;
             Properties p = rmiConfig.getConfigProperties();
             if (p != null) {

@@ -22,7 +22,7 @@
  * USA
  *
  * --------------------------------------------------------------------------
- * $Id: JrmpPRODelegate.java,v 1.12 2005/03/03 16:11:03 benoitf Exp $
+ * $Id: JrmpPRODelegate.java,v 1.13 2005/03/04 10:01:36 benoitf Exp $
  * --------------------------------------------------------------------------
  */
 package org.objectweb.carol.rmi.multi;
@@ -79,7 +79,7 @@ public class JrmpPRODelegate implements PortableRemoteObjectDelegate {
         sis = JInterceptorStore.getLocalServerInterceptors();
         cis = JInterceptorStore.getLocalClientInterceptors();
         try {
-            RMIConfiguration rmiConfig = CarolConfiguration.getDefaultProtocol();
+            RMIConfiguration rmiConfig = CarolConfiguration.getRMIConfiguration("jrmp");
             String propertyName = CarolDefaultValues.SERVER_JRMP_PORT;
             Properties p = rmiConfig.getConfigProperties();
             if (p != null) {
