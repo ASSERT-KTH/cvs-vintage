@@ -79,7 +79,7 @@ import org.gjt.sp.util.Log;
  *
  * @author Slava Pestov
  * @author John Gellene (API documentation)
- * @version $Id: View.java,v 1.115 2004/09/10 18:26:56 spestov Exp $
+ * @version $Id: View.java,v 1.116 2004/10/23 19:10:12 spestov Exp $
  */
 public class View extends JFrame implements EBComponent
 {
@@ -650,7 +650,7 @@ public class View extends JFrame implements EBComponent
 		case KeyEvent.KEY_PRESSED:
 			if(keyEventInterceptor != null)
 				keyEventInterceptor.keyPressed(evt);
-			else
+			else if(!KeyEventWorkaround.isModifier(evt))
 			{
 				/* boolean */ focusOnTextArea = false;
 				if(prefixFocusOwner != null)
