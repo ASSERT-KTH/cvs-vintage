@@ -1,4 +1,4 @@
-// $Id: UMLStructuralFeatureTypeComboBoxModel.java,v 1.13 2004/11/01 19:55:15 mvw Exp $
+// $Id: UMLStructuralFeatureTypeComboBoxModel.java,v 1.14 2004/12/21 18:05:51 bobtarling Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -52,7 +52,7 @@ public class UMLStructuralFeatureTypeComboBoxModel extends UMLComboBoxModel2 {
         super("type", false);
         UmlModelEventPump.getPump()
 	    .addClassModelEventListener(this,
-					(Class) ModelFacade.NAMESPACE,
+					ModelFacade.NAMESPACE,
 					"ownedElement");
     }
 

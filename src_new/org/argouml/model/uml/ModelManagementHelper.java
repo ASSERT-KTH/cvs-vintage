@@ -1,4 +1,4 @@
-// $Id: ModelManagementHelper.java,v 1.5 2004/12/21 17:20:44 bobtarling Exp $
+// $Id: ModelManagementHelper.java,v 1.6 2004/12/21 18:05:52 bobtarling Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -204,6 +204,9 @@ public class ModelManagementHelper {
      * @return Collection
      */
     public Collection getAllModelElementsOfKind(Object nsa, Object type) {
+        if (type instanceof String) {
+            return getAllModelElementsOfKind(nsa, (String) type);
+        }
         Class kind = (Class) type;
         if (nsa == null || kind == null)
             return Collections.EMPTY_LIST;

@@ -1,4 +1,4 @@
-// $Id: PropPanel.java,v 1.100 2004/12/21 16:21:41 bobtarling Exp $
+// $Id: PropPanel.java,v 1.101 2004/12/21 18:05:51 bobtarling Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -560,8 +560,8 @@ public abstract class PropPanel
      * proppanels are interested, these components should register
      * themselves.<p>
      *
-     * @deprecated As of ArgoUml version unknown(earlier than 0.13.5),
-     *             replaced by
+     * @deprecated by Jaap 3 Nov 2002 (ArgoUml version unknown -
+     * earlier than 0.13.5), replaced by
      * {@link org.argouml.model.uml.UmlModelEventPump#addModelEventListener(
      *            Object , Object)}.
      *             since components should register themselves.

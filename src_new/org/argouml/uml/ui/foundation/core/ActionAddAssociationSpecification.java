@@ -1,4 +1,4 @@
-// $Id: ActionAddAssociationSpecification.java,v 1.9 2004/11/01 19:55:14 mvw Exp $
+// $Id: ActionAddAssociationSpecification.java,v 1.10 2004/12/21 18:05:51 bobtarling Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -62,7 +62,7 @@ public class ActionAddAssociationSpecification
         Vector ret = new Vector();
         if (getTarget() != null) {
             ret.addAll(ModelManagementHelper.getHelper()
-                .getAllModelElementsOfKind((Class) ModelFacade.CLASSIFIER));
+                .getAllModelElementsOfKind(ModelFacade.CLASSIFIER));
         }
         return ret;
     }
