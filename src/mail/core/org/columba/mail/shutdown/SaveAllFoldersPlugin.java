@@ -66,9 +66,9 @@ public class SaveAllFoldersPlugin implements TaskInterface {
 				MainInterface.processor.addOp(
 					new SaveFolderConfigurationCommand(r));
 
-				saveFolder(child);
 			}
 
+			saveFolder(child);
 		}
 	}
 
