@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <!-- The JBoss service configuration file for the EJB deployer service.
-$Id: ejb-deployer.xml,v 1.9 2004/09/22 09:33:40 tdiesler Exp $
+$Id: ejb-deployer.xml,v 1.10 2004/11/20 15:30:42 starksm Exp $
 -->
 <server>
 
@@ -20,7 +20,7 @@ $Id: ejb-deployer.xml,v 1.9 2004/09/22 09:33:40 tdiesler Exp $
 
    <!-- A retry policy that uses a fixed interval in milli seconds -->
    <mbean code="org.jboss.ejb.txtimer.FixedDelayRetryPolicy" name="jboss.ejb:service=EJBTimerService,retryPolicy=fixedDelay">
-     <attribute name="Delay">100</attribute>
+      <attribute name="Delay">100</attribute>
    </mbean>
 
    <!-- A persistence policy that does not persist the timer
@@ -29,12 +29,10 @@ $Id: ejb-deployer.xml,v 1.9 2004/09/22 09:33:40 tdiesler Exp $
 
    <!-- A persistence policy that persistes timers to a database -->
    <mbean code="org.jboss.ejb.txtimer.DatabasePersistencePolicy" name="jboss.ejb:service=EJBTimerService,persistencePolicy=database">
-     <!-- DataSource JNDI name -->
-     <depends optional-attribute-name="DataSource">jboss.jca:service=DataSourceBinding,name=DefaultDS</depends>
-     <!-- The plugin that handles database persistence -->
-     <attribute name="DatabasePersistencePlugin">org.jboss.ejb.txtimer.GeneralPurposeDatabasePersistencePlugin</attribute>
-     <!-- The table name -->
-     <attribute name="TableName">TIMERS</attribute>
+      <!-- DataSource JNDI name -->
+      <depends optional-attribute-name="DataSource">jboss.jca:service=DataSourceBinding,name=DefaultDS</depends>
+      <!-- The plugin that handles database persistence -->
+      <attribute name="DatabasePersistencePlugin">org.jboss.ejb.txtimer.GeneralPurposeDatabasePersistencePlugin</attribute>
    </mbean>
 
    <!-- ==================================================================== -->
