@@ -1,4 +1,4 @@
-// $Id: ParserDisplay.java,v 1.55 2003/02/04 20:04:42 d00mst Exp $
+// $Id: ParserDisplay.java,v 1.56 2003/02/05 22:28:58 d00mst Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: ParserDisplay.java
 // Classes: ParserDisplay
 // Original Author:
-// $Id: ParserDisplay.java,v 1.55 2003/02/04 20:04:42 d00mst Exp $
+// $Id: ParserDisplay.java,v 1.56 2003/02/05 22:28:58 d00mst Exp $
 
 
 
@@ -53,6 +53,7 @@ import org.argouml.model.uml.UmlFactory;
 import org.argouml.model.uml.UmlHelper;
 import org.argouml.model.uml.UmlModelEventPump;
 import org.argouml.model.uml.foundation.core.CoreFactory;
+import org.argouml.model.uml.foundation.core.CoreHelper;
 import org.argouml.model.uml.foundation.extensionmechanisms.ExtensionMechanismsFactory;
 import org.argouml.model.uml.foundation.extensionmechanisms.ExtensionMechanismsHelper;
 import org.argouml.model.uml.modelmanagement.ModelManagementHelper;
@@ -458,14 +459,17 @@ public class ParserDisplay extends Parser {
 		me.setStereotype(null);
 	}
 
-//	if (path != null) {
-//	    MNamespace nsp = ;
-//
-//	    if (nsp == null)
-//		throw new ParseException("Unable to resolve namespace", 0);
-//
-//	    me.setNamespace(nsp);
-//	}
+	if (path != null) {
+	    MModelElement nspe = ModelManagementHelper.getHelper()
+					.getElement(path, me.getModel());
+
+	    if (nspe == null || !(nspe instanceof MNamespace))
+		throw new ParseException("Unable to resolve namespace", 0);
+	    if (!CoreHelper.getHelper().getAllPossibleNamespaces(me).contains(nspe))
+		throw new ParseException("Invalid namespace for element", 0);
+
+	    ((MNamespace)nspe).addOwnedElement(me);
+	}
     }
 
 
