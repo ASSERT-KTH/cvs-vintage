@@ -27,57 +27,6 @@
 #set ($currentIssueId = $currentIssue.UniqueId)
 #set ($attrValues = $currentIssue.ModuleAttributeValuesMap)
 
-#if ($data.User.getTemp($scarabG.Constant.TAB_KEY))
-    #set ($tab = $data.User.getTemp($scarabG.Constant.TAB_KEY))
-#else
-    #set ($tab = $data.Parameters.getString("tab","1"))
-#end
-
-
-#if ($tab.equals("all"))
-    <div align="right"><small><a href="$link.setPage("ViewIssue.vm").addPathInfo("id", "$currentIssue.UniqueId").addPathInfo("tab", "1").addPathInfo("action", "ModifyIssue").addPathInfo("eventSubmit_doSetissueview", "foo")">View as tabs</a></small></div>
-    #if ($scarabR.CurrentQuery)
-        #navigate()
-    #end
-#else
-    <div align="right"><small><a href="$link.setPage("ViewIssue.vm").addPathInfo("id", "$currentIssue.UniqueId").addPathInfo("tab", "all").addPathInfo("action", "ModifyIssue").addPathInfo("eventSubmit_doSetissueview", "foo")">View as single screen</a></small></div>
-    #if ($scarabR.CurrentQuery)
-        #navigate()
-    #end
-
-<div class="tabs">
-<table cellpadding="3" cellspacing="0" border="0">
-<tr>
-#if ($tab.equals("1"))
-<th>Attributes</th>
-#else
-<td><a href="$link.setPage("ViewIssue.vm").addPathInfo("id", "$currentIssue.UniqueId").addPathInfo("tab", "1").addPathInfo("action", "ModifyIssue").addPathInfo("eventSubmit_doSetissueview", "foo")">Attributes</a></td>
-#end
-#if ($tab.equals("2"))
-<th>Personnel</th>
-#else
-<td><a href="$link.setPage("ViewIssue.vm").addPathInfo("id", "$currentIssue.UniqueId").addPathInfo("tab", "2").addPathInfo("action", "ModifyIssue").addPathInfo("eventSubmit_doSetissueview", "foo")">Personnel</a></td>
-#end
-#if ($tab.equals("3"))
-<th>Comments</th>
-#else
-<td><a href="$link.setPage("ViewIssue.vm").addPathInfo("id", "$currentIssue.UniqueId").addPathInfo("tab", "3").addPathInfo("action", "ModifyIssue").addPathInfo("eventSubmit_doSetissueview", "foo")">Comments</a></td>
-#end
-#if ($tab.equals("4"))
-<th>URLs/Attachments/Dependencies</th>
-#else
-<td><a href="$link.setPage("ViewIssue.vm").addPathInfo("id", "$currentIssue.UniqueId").addPathInfo("tab", "4").addPathInfo("action", "ModifyIssue").addPathInfo("eventSubmit_doSetissueview", "foo")">URLs/Attachments/Dependencies</a></td>
-#end
-#if ($tab.equals("5"))
-<th>History</th>
-#else
-<td><a href="$link.setPage("ViewIssue.vm").addPathInfo("id", "$currentIssue.UniqueId").addPathInfo("tab", "5").addPathInfo("action", "ModifyIssue").addPathInfo("eventSubmit_doSetissueview", "foo")">History</a></td>
-#end
-</tr>
-</table>
-</div>
-#end
-
 
 <div class="functnbar">
 #if ($data.User.hasPermission($scarabG.Permission.MODULE__EDIT, $module))

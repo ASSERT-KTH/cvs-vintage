@@ -60,7 +60,7 @@
 ##ASSIGNEE LIST
 ## Determine if there are any users to show up in the added/assigned list
 #foreach ($issueId in $issueList)
- #set ($issue = $scarabR.getIssueByPk($issueId.toString()))
+ #set ($issue = $scarabR.getIssue($issueId))
  #if ($issue)
 
 <h3>Personnel associated with the issue $issue.UniqueId</h3>
@@ -123,8 +123,8 @@
 		 #set ($assignedUser = $scarabR.getUser($userId))
 			<tr class="a">
 			<td><input type="checkbox" name="remove_user_$userId" value=$attrId>
-			<td><strong>$!assignedUser.Name</strong></td>
-			<td><a href="mailto:$assignedUser.Email">$assignedUser.UserName</a></td>
+			<td><a href="mailto:$assignedUser.Email"><strong>$!assignedUser.Name</strong></a></td>
+			<td>$assignedUser.UserName</td>
 			<td><select name="temp_user_attr_$userId">
 			 #foreach ($selectUserAttr in $userAttrs)
                 #set ($selected = "")

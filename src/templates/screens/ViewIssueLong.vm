@@ -2,40 +2,17 @@
 
 #set ($action = $link.setPage("ViewIssueLong.vm").setAction("ModifyIssue").addPathInfo("$scarabG.Constant.NEXT_TEMPLATE", "ViewIssueLong.vm").toString())
 #set ($issueList = $data.Parameters.getStrings("issue_ids"))
-#set ($resultsPerPage = $data.Parameters.getInt("resultsPerPage"))
-#set ($pageNum = $data.Parameters.getInt("pageNum"))
-
-#if ($issueList.size() > $resultsPerPage)
-   #set ($paginated = "true")
-   #set ($issueList = $scarabR.getPaginatedList($issueList, $pageNum, $resultsPerPage))
-#end
+#set ($currentModule = $scarabR.CurrentModule)
+#set ($tab = "all")
 
 
 #if ($issueList)
-## PAGINATION
-#if ($paginated)
- <div class="misc">
-  #if ($scarabR.PrevPage != 0)
-    #set ($prevLink = $link.setPathInfo("resultsperpage", $resultsPerPage.toString()).setPathInfo("pageNum", $scarabR.PrevPage.toString()).setPage("ViewIssueLong.vm").toString())
-    <a href="$prevLink">&laquo;</a> previous |
-  #end
-     $pageNum of $scarabR.NbrPages
-  #if( $scarabR.NextPage != 0)
-    #set ($nextLink = $link.setPathInfo("resultsperpage", $resultsPerPage.toString()).setPathInfo("pageNum", $scarabR.NextPage.toString()).setPage("ViewIssueLong.vm").toString())
-    | <a href="$nextLink">&raquo;</a> next
-  #end
-#end
-
-  #set ($currentModule = $scarabR.CurrentModule)
   #foreach ($issueId in $issueList)
-     #set ($currentIssue = $scarabR.getIssueByPk($issueId.toString()))
+     #set ($currentIssue = $scarabR.getIssue($issueId))
+     <h2>$currentIssue.UniqueId</h2>
   <form method="post" action="$action">
-$intake.newForm()
-    #foreach ($issueId in $issueList)
-        <input type="hidden" name="issue_ids" value="$issueId">
-    #end
-    <input type="hidden" name="id" value="$currentIssue.UniqueId">
-    <input type="hidden" name="resultsPerPage" value="$resultsPerPage">
+#printCollisionInfo()
+    $intake.newForm()
     #viewIssue ($currentIssue $currentModule)
   $intake.declareGroups()
   </form>
