@@ -25,7 +25,7 @@
 // Classes: FigClass
 // Original Author: abonner
 
-// $Id: FigClass.java,v 1.58 2003/05/05 11:25:38 kataka Exp $
+// $Id: FigClass.java,v 1.59 2003/05/05 14:51:31 kataka Exp $
 
 // 21 Mar 2002: Jeremy Bennett (mail@jeremybennett.com). Fix for ever
 // increasing vertical size of classes with stereotypes (issue 745).
@@ -34,6 +34,7 @@ package org.argouml.uml.diagram.static_structure.ui;
 
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.Rectangle;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
@@ -1137,6 +1138,18 @@ public class FigClass extends FigNodeModelElement {
         }
 
         super.updateListeners(newOwner);
+    }
+
+    /**
+     * @see org.tigris.gef.presentation.Fig#postLoad()
+     */
+    public void postLoad() {      
+        super.postLoad();
+        Object owner = getOwner();
+        if (ModelFacade.isAbstract(owner)) {
+            Font font = _name.getFont();              
+            _name.setFont(font.deriveFont(Font.ITALIC));
+        }
     }
 
 } /* end class FigClass */

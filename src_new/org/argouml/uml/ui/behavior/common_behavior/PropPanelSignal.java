@@ -1,4 +1,4 @@
-// $Id: PropPanelSignal.java,v 1.23 2003/05/04 10:50:15 kataka Exp $
+// $Id: PropPanelSignal.java,v 1.24 2003/05/05 14:51:31 kataka Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -114,7 +114,7 @@ public class PropPanelSignal extends PropPanelModelElement {
     	if (target instanceof MSignal) {
     		MSignal signal = (MSignal)target;
     		MReception reception = CommonBehaviorFactory.getFactory().buildReception(signal);
-    		ProjectBrowser.getInstance().setTarget(reception);
+            TargetManager.getInstance().setTarget(reception);
     	}
     }
 

@@ -24,7 +24,7 @@
 // File: PropPanelUseCase.java
 // Classes: PropPanelUseCase
 // Original Author: your email address here
-// $Id: PropPanelUseCase.java,v 1.32 2003/05/05 11:25:39 kataka Exp $
+// $Id: PropPanelUseCase.java,v 1.33 2003/05/05 14:51:31 kataka Exp $
 
 // 21 Mar 2002: Jeremy Bennett (mail@jeremybennett.com). Changed to use the
 // labels "Generalizes:" for inheritance (needs Specializes some time).
@@ -43,7 +43,6 @@ import javax.swing.JScrollPane;
 import org.argouml.application.api.Argo;
 import org.argouml.model.uml.behavioralelements.usecases.UseCasesFactory;
 import org.argouml.swingext.LabelledLayout;
-import org.argouml.ui.ProjectBrowser;
 import org.argouml.ui.targetmanager.TargetManager;
 import org.argouml.uml.ui.PropPanelButton;
 import org.argouml.uml.ui.PropPanelModifiers;
@@ -151,7 +150,7 @@ public class PropPanelUseCase extends PropPanelClassifier {
                 MUseCase useCase = UseCasesFactory.getFactory().createUseCase();
 
                 ns.addOwnedElement(useCase);
-                ProjectBrowser.getInstance().setTarget(useCase);
+                TargetManager.getInstance().setTarget(useCase);
             }
         }
     }
