@@ -1,0 +1,236 @@
+<!DOCTYPE html PUBLIC "-//CollabNet//DTD XHTML 1.0 Transitional//EN"
+"http://collabnet.com/dtds/collabnet_transitional_10.dtd">
+<html>
+
+<head>
+	<title>Define report (2.4.1) step 2</title>
+	<link rel="stylesheet" type="text/css" href="../csi/style/main.css" media="screen" />
+	<link rel="stylesheet" type="text/css" href="../csi/style/print.css" media="print" />
+	<link rel="alternate stylesheet" title="compact" type="text/css" href="../csi/style/compact.css" />
+</head>
+
+<body>
+<form action="#" method="get">
+
+	<!-- SourceCast -->
+	<div id="banner">
+		<table border="0" cellspacing="12" cellpadding="0" width="100%">
+		<tr>
+		
+		<td>
+		<div align="right" id="loginstatus">
+			<div>
+				Logged in as: <strong class="username">User XX</strong>
+			</div>
+			<div>
+				<a href="#">Edit Profile</a> | <a href="#">Logout</a>
+			</div>
+		</div>
+		</td>
+		</tr>
+		</table>
+	</div>
+	<!-- SourceCast -->
+	
+	<!-- Structural Elements -->
+<table border="0" cellspacing="0" cellpadding="0" width="100%">
+<tr>
+<td id="leftcol" nowrap="nowrap" width="20%">
+<!-- Structural Elements -->
+	
+	<!-- SourceCast -->
+	<div id="navcol">
+		<table border="0" cellspacing="0" cellpadding="0" width="100%">
+			<tr>
+			<th>
+			<a href="#">Start page</a>
+			</th>
+			</tr>
+			<tr>
+			<th>
+			<a href="#">Projects</a>/<a href="#">Categories</a>
+			</th>
+			</tr>
+			<tr>
+			<td>&nbsp;</td>
+			</tr>
+			<tr>
+			<th>
+			Project tools
+			</th>
+			</tr>
+			<tr>
+			<td>
+			<div>&nbsp;&nbsp;<a href="#">Documents</a></div>
+			<div>&nbsp;&nbsp;Issue tracking</div>
+			<div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- Enter issue</div>
+			<div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- <a href="#">Reports</a></div>
+			<div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- <a href="#">Vote management</a></div>
+			<div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- <a href="#">Workflow options</a></div>
+			<div>&nbsp;&nbsp;<a href="#">Mailing lists</a></div> 
+			<div>&nbsp;&nbsp;<a href="#">Members</a></div>  
+			<div>&nbsp;&nbsp;<a href="#">News</a></div>
+			<div>&nbsp;&nbsp;<a href="#">Source code</a></div>
+			</td>
+			</tr>
+			<tr>
+			<td>&nbsp;</td>
+			</tr>
+			<tr>
+			<th>
+			&nbsp;<a href="#">Admin Functions</a>
+			</th>
+			</tr>
+		</table>
+	</div>
+	<!-- SourceCast -->
+	
+	<!-- SourceCast -->
+	<div id="helptext">
+		<table border="0" cellspacing="0" cellpadding="3" width="100%">
+		<tr>
+		<th>How do I...?</th>
+		</tr>
+		<tr>
+		<td>
+			<div> 
+				<a href="#">[Go to help index]</a>
+			</div>
+			<div> 
+				<a href="#">Use this page</a>...
+			</div>
+			<div>
+				<a href="#">Learn about a project</a>...
+			</div>
+			<div>
+				<a href="#">Join a project</a>...
+			</div>
+		</td>
+		</tr>
+		</table>
+	</div>
+	<!-- SourceCast -->
+	
+<!-- Structural Elements -->
+</td>
+<td id="bodycol">
+<!-- Structural Elements -->
+
+	<!-- Scarab - App -->
+	<div id="topmodule">
+		<table border="0" cellspacing="0" cellpadding="3" width="100%">
+		<tr>
+			<td nowrap="nowrap">
+			<select>
+			<option>saved queries</option>
+			<option>query one</option>
+			<option>query two</option>
+			</select> 
+			<input type="submit" name="query" value="Go" class="bttn" />
+			&nbsp;<img src="../csi/images/seperator2.gif" width="2" height="15" alt="" border="0" />&nbsp;
+			<input type="text" size="15" name="" />
+			<input type="submit" name="query" value="Query" class="bttn" />
+			&nbsp;<img src="../csi/images/seperator2.gif" width="2" height="15" alt="" border="0" />&nbsp;
+			<a href="#">Advanced</a>&nbsp;|&nbsp;<a href="#">Custom</a>
+			</td>			
+		</tr>
+		</table>
+	</div>
+	<!-- Scarab - App -->
+	
+	<!-- Scarab - App -->
+	<div class="app" id="div2-4-1-step1">
+		<h2>Define report (2.4.1) step2</h2>
+		
+		<div id="tabs">
+			<table cellpadding="3" cellspacing="0" border="0">
+			<tr>
+			<td><small>1:</small> <a href="#" title="#">Summary info</a></td>
+			<th><small>2:</small> Primary filter attribute (PFA)</th>
+			<td><small>3:</small> <a href="#" title="#">Select row/column heading(s)</a></td>
+			</tr>
+			</table>
+		</div>
+		<p class="functnbar"><small>2a:</small><strong>Select PFA(s)</strong> | <small>2b:</small> PFA display options</p>
+
+
+				
+		
+		<h3>Select primary filter attribute(s)</h3>
+		
+		<p><strong>Primary filter attribute</strong><br> This selection defines the subset of issues that this report will be drawn from. It is often useful (but not required) to set the primary filter attribute "state" or "status", limiting the report to options such as "open", "open unassigned", "open assigned", "closed", or a combination of several of these options.</p>
+
+<p>note: Selecting the attribute's name will select all options within that attribute. If you choose to "continue", without defining PFA groups, each selected Attribute and/or Attribute Option will appear as a seperate column (i.e. side-by-side comparison).<p>
+		
+		<div class="axial">
+			<table border="1" cellspacing="2" cellpadding="3">
+
+			<tr>
+			<th width="120">attributes</th>
+			<td>
+			<select multiple size="20">
+			<option>Attribute X</option>
+			<option>&nbsp;&nbsp;option X.1</option>
+			<option>&nbsp;&nbsp;option X.2</option>
+			<option>&nbsp;&nbsp;option X.3</option>
+			<option>&nbsp;&nbsp;option X.4</option>
+			<option>&nbsp;&nbsp;option X.5</option>
+			<option>&nbsp;&nbsp;option X.6</option>
+			<option>----------------------------------</option>
+			<option>Attribute Y</option>
+			<option>&nbsp;&nbsp;option Y.1</option>
+			<option>&nbsp;&nbsp;option Y.2</option>
+			<option>&nbsp;&nbsp;option Y.3</option>
+			<option>&nbsp;&nbsp;option Y.4</option>
+			<option>&nbsp;&nbsp;option Y.5</option>
+			<option>&nbsp;&nbsp;option Y.6</option>
+			<option>&nbsp;&nbsp;option Y.7</option>
+			<option>&nbsp;&nbsp;option Y.8</option>	
+			<option>&nbsp;&nbsp;option Y.9</option>
+			<option>&nbsp;&nbsp;option Y.10</option>
+			<option>----------------------------------</option>
+			<option>Attribute Z</option>
+			<option>&nbsp;&nbsp;option Z.1</option>
+			<option>&nbsp;&nbsp;option Z.2</option>
+			<option>&nbsp;&nbsp;option Z.3</option>
+			<option>&nbsp;&nbsp;option Z.4</option>
+			<option>&nbsp;&nbsp;option Z.5</option>
+			<option>&nbsp;&nbsp;option Z.6</option>
+			<option>&nbsp;&nbsp;option Z.7</option>
+			<option>&nbsp;&nbsp;option Z.8</option>	
+			<option>&nbsp;&nbsp;option Z.9</option>
+			<option>&nbsp;&nbsp;option Z.10</option>
+			<option>----------------------------------</option>
+			</select>		
+			</td>
+			</tr>
+
+			</table>
+
+		</div>
+
+		<p class="functnbar"><input type="submit" value="continue" />&nbsp;<input type="submit" value="Define PFA/Option(s) group(s)" />&nbsp;<input type="submit" value="cancel" /></p>
+	</div>
+	<!-- Scarab - App -->
+
+<!-- Structural Elements -->
+</td>
+</tr>
+</table>
+<!-- Structural Elements -->
+
+	<!-- SourceCast -->
+	<div id="footer">
+		<p>
+		<a href="#">Domain Home</a> |
+		<a href="#">Help</a> | 
+		<a href="#">Site FAQ</a> |
+		<a href="#">Feedback</a>
+		</p>
+	</div>
+	<!-- SourceCast -->
+
+</form>
+</body>
+</html>
+

@@ -45,38 +45,37 @@
 			<th>
 			<a href="#">Start page</a>
 			</th>
-			</tr>			
+			</tr>
 			<tr>
 			<th>
 			<a href="#">Projects</a>/<a href="#">Categories</a>
 			</th>
-			</tr>			
+			</tr>
 			<tr>
 			<td>&nbsp;</td>
-			</tr>			
+			</tr>
 			<tr>
 			<th>
 			Project tools
 			</th>
-			</tr>			
+			</tr>
 			<tr>
 			<td>
-			<div>&nbsp;&nbsp;+ <a href="#">Documents</a></div>
-			<div>&nbsp;&nbsp;- <strong>Issue tracking</strong></div>
-			<div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- <a href="#" title="enter issue, verbose and advanced">Enter issue</a></div>
-			<div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- <a href="#" title="queries, saved and custom">Queries</a></div>
-			<div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- Reports</div>
-			<div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- <a href="#" title="vote management panel">Vote mgmt.</a></div>
-			<div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- <a href="#" title="adjust your workflow options">Workflow optns.</a></div>
-			<div>&nbsp;&nbsp;+ <a href="#">Mailing lists</a></div> 
-			<div>&nbsp;&nbsp;+ <a href="#">Members</a></div>  
-			<div>&nbsp;&nbsp;+ <a href="#">News</a></div>
-			<div>&nbsp;&nbsp;+ <a href="#">Source code</a></div>
+			<div>&nbsp;&nbsp;<a href="#">Documents</a></div>
+			<div>&nbsp;&nbsp;Issue tracking</div>
+			<div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- Enter issue</div>
+			<div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- <a href="#">Reports</a></div>
+			<div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- <a href="#">Vote management</a></div>
+			<div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- <a href="#">Workflow options</a></div>
+			<div>&nbsp;&nbsp;<a href="#">Mailing lists</a></div> 
+			<div>&nbsp;&nbsp;<a href="#">Members</a></div>  
+			<div>&nbsp;&nbsp;<a href="#">News</a></div>
+			<div>&nbsp;&nbsp;<a href="#">Source code</a></div>
 			</td>
-			</tr>			
+			</tr>
 			<tr>
 			<td>&nbsp;</td>
-			</tr>			
+			</tr>
 			<tr>
 			<th>
 			&nbsp;<a href="#">Admin Functions</a>
@@ -141,49 +140,51 @@
 	
 	<!-- Scarab - App -->
 	<div class="app" id="div2-4-1-step1">
-		<h2>Define report (2.4.1) step1</h2>
+		<h2>Define report (2.4.1) step 4</h2>
 		
-		<h3>Report builder</h3>
-		
-		<div class="axial">
-			<table border="1" cellspacing="2" cellpadding="3">
+		<div id="tabs">
+			<table cellpadding="3" cellspacing="0" border="0">
 			<tr>
-			<th width="120">report name:</th>
-			<td>         
-			<input type="text" name="name" />		
-			</td>
-			</tr>
-			
-			<tr>
-			<th width="120">report description (optional):</th>
-			<td><textarea rows="3" cols="30"></textarea></td>
-			</tr>
-			
-			<tr>
-			<th width="120">type of report:</th>
-			<td>         
-			<select>
-			<option>comparative analysis (single date/time)</option>		  
-			<option>rate of change (multiple date/time)</option>		  
-			</select>		
-			</td>
-			</tr>
-			
-			<tr>
-			<th width="120">issue state:</th>
-			<td>
-			<select>
-			<option>all issues</option>
-			<option>open issues</option>
-			<option>closed issues</option>
-			<option>side by side comparion open/close</option>
-			</select>		
-			</td>
+			<td><small>1:</small> <a href="#" title="#">Summary info</td>
+			<td><small>2:</small> <a href="#" title="#">Primary filter attribute (PFA)</a></td>
+			<th><small>3:</small> Select row/column heading(s)</th>
 			</tr>
 			</table>
 		</div>
+		<p class="functnbar"><small>3a:</small><strong>Define Row/Column criteria</strong> | <small>3b:</small> Select row content</p>
 
-		<p class="functnbar"><input type="submit" value="continue" /></p>
+		
+		<h3>Report content: Rate of change analysis</h3>	  
+		
+		<div class="axial">
+			<table width="100%" cellpadding="3" cellspacing="2" border="1">			
+
+			<tr>
+			<th>rows: criteria</th>
+
+			<td>
+			<select>
+			<option>select criteria</option>		  
+			<option>attributes/options</option>			 	
+			<option>build versions</option>			 	
+			<option>users</option>			 	
+			</select>
+			</td>
+			</tr>
+			
+			<tr>
+			<th>columns: date(s)</th>
+
+			<td>
+				Added during next step
+			</td>
+
+			</tr>
+			</table>
+
+		<p class="functnbar"><input type="submit" value="continue" />&nbsp;<input type="submit" value="back" /></p>
+
+
 	</div>
 	<!-- Scarab - App -->
 

@@ -3,7 +3,7 @@
 <html>
 
 <head>
-	<title>Define report (2.4.1) step1-5b</title>
+	<title>Define report (2.4.1) step 1</title>
 	<link rel="stylesheet" type="text/css" href="../csi/style/main.css" media="screen" />
 	<link rel="stylesheet" type="text/css" href="../csi/style/print.css" media="print" />
 	<link rel="alternate stylesheet" title="compact" type="text/css" href="../csi/style/compact.css" />
@@ -45,38 +45,37 @@
 			<th>
 			<a href="#">Start page</a>
 			</th>
-			</tr>			
+			</tr>
 			<tr>
 			<th>
 			<a href="#">Projects</a>/<a href="#">Categories</a>
 			</th>
-			</tr>			
+			</tr>
 			<tr>
 			<td>&nbsp;</td>
-			</tr>			
+			</tr>
 			<tr>
 			<th>
 			Project tools
 			</th>
-			</tr>			
+			</tr>
 			<tr>
 			<td>
-			<div>&nbsp;&nbsp;+ <a href="#">Documents</a></div>
-			<div>&nbsp;&nbsp;- <strong>Issue tracking</strong></div>
-			<div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- <a href="#" title="enter issue, verbose and advanced">Enter issue</a></div>
-			<div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- <a href="#" title="queries, saved and custom">Queries</a></div>
-			<div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- Reports</div>
-			<div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- <a href="#" title="vote management panel">Vote mgmt.</a></div>
-			<div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- <a href="#" title="adjust your workflow options">Workflow optns.</a></div>
-			<div>&nbsp;&nbsp;+ <a href="#">Mailing lists</a></div> 
-			<div>&nbsp;&nbsp;+ <a href="#">Members</a></div>  
-			<div>&nbsp;&nbsp;+ <a href="#">News</a></div>
-			<div>&nbsp;&nbsp;+ <a href="#">Source code</a></div>
+			<div>&nbsp;&nbsp;<a href="#">Documents</a></div>
+			<div>&nbsp;&nbsp;Issue tracking</div>
+			<div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- Enter issue</div>
+			<div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- <a href="#">Reports</a></div>
+			<div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- <a href="#">Vote management</a></div>
+			<div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- <a href="#">Workflow options</a></div>
+			<div>&nbsp;&nbsp;<a href="#">Mailing lists</a></div> 
+			<div>&nbsp;&nbsp;<a href="#">Members</a></div>  
+			<div>&nbsp;&nbsp;<a href="#">News</a></div>
+			<div>&nbsp;&nbsp;<a href="#">Source code</a></div>
 			</td>
-			</tr>			
+			</tr>
 			<tr>
 			<td>&nbsp;</td>
-			</tr>			
+			</tr>
 			<tr>
 			<th>
 			&nbsp;<a href="#">Admin Functions</a>
@@ -139,60 +138,62 @@
 	</div>
 	<!-- Scarab - App -->
 	
-	<!-- Scarab - App -->
-	<div class="app" id="div2-4-1-step1-5b">
-		<h2>Define report (2.4.1) step1-5b</h2>
+	<div class="app" id="div2-4-1-step1">
+		<h2>Define report (2.4.1) step1</h2>
 		
-		<h3>Report builder</h3>
+		<div id="tabs">
+			<table cellpadding="3" cellspacing="0" border="0">
+			<tr>
+			<th><small>1:</small> Summary info</th>
+			<td><small>2:</small> Primary filter attribute (PFA)</td>
+			<td><small>3:</small> Select row/column heading(s)</td>
+			</tr>
+			</table>
+		</div>
+		
+		<h3>Summary information</h3>
+		
+		<p><strong>Considering saving this report?</strong><br>If so,  enter the following information (it can be edited later).<p>
 		
 		<div class="axial">
 			<table border="1" cellspacing="2" cellpadding="3">
 			<tr>
 			<th width="120">report name:</th>
-			<td><input type="text" name="name" /></td>
+			<td>         
+			<input type="text" name="name" />		
+			</td>
 			</tr>
 			
 			<tr>
 			<th width="120">report description (optional):</th>
 			<td><textarea rows="3" cols="30"></textarea></td>
 			</tr>
-			
+			</table>
+
+		<h3>Type of report</h3>
+
+<p>		
+<strong>Comparative analysis</strong><br>map attributes, attribute options, to  attributes, attribute options, or users for a single date/time</p>
+
+<p>
+<strong>Rate of change</strong><br>map attributes, attribute options, or users to multiple dates in an array</p>
+
+		
+			<table border="1" cellspacing="2" cellpadding="3">			
 			<tr>
 			<th width="120">type of report:</th>
-			<td>rate of change (multiple date/time)</td>
-			</tr>
-			
-			<tr>
-			<th width="120">issue state:</th>
-			<td>open issues</td>
-			</tr>
-			</table>
-		</div>	  
-		
-		<h3>Report content</h3>	  
-		
-		<div>
-			<table width="100%" border="1" cellspacing="2" cellpadding="3">
-			<tr>
-			<th>rows: criteria</th>
-			<th>columns: date(s)</th>
-			</tr>
-			
-			<tr>
-			<td>
+			<td>         
 			<select>
-			<option>select criteria</option>		  
-			<option>attributes/options</option>			 	
-			<option>build versions</option>			 	
-			<option>users</option>			 	
-			</select>
+			<option>comparative analysis (single date/time)</option>		  
+			<option>rate of change (multiple date/time)</option>		  
+			</select>		
 			</td>
-			<td>&nbsp;</td>
 			</tr>
+			
 			</table>
 		</div>
-		
-		<p class="functnbar"><input type="submit" value="continue" />&nbsp;<input type="submit" value="back" /></p>
+
+		<p class="functnbar"><input type="submit" value="continue" /></p>
 	</div>
 	<!-- Scarab - App -->
 
@@ -216,5 +217,4 @@
 </form>
 </body>
 </html>
-
 
