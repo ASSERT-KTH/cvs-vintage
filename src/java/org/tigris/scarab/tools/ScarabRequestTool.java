@@ -252,7 +252,7 @@ public class ScarabRequestTool
         if (TIME_ZONE != null) 
         {
             tmpTimeZone = TimeZone.getTimeZone(TIME_ZONE);
-        }
+        }        
         timezone = tmpTimeZone;
     }
 
@@ -1958,7 +1958,7 @@ try{
     {
         Locale locale = Localization.getLocale(data.getRequest());
         DateFormat df = DateFormat
-            .getDateTimeInstance(DateFormat.MEDIUM, DateFormat.MEDIUM, locale);
+            .getDateTimeInstance(DateFormat.MEDIUM, DateFormat.LONG, locale);
         if (timezone != null) 
         {
             df.setTimeZone(timezone);
