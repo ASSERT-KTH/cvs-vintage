@@ -32,7 +32,7 @@ import javax.ejb.EJBException;
 *   @see <related>
 *   @author Rickard Öberg (rickard.oberg@telkel.com)
 *   @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
-*   @version $Revision: 1.9 $
+*   @version $Revision: 1.10 $
 */
 public class StatefulSessionInstanceInterceptor
 extends AbstractInterceptor
@@ -248,7 +248,7 @@ extends AbstractInterceptor
 					// Lookup the methods on it
 					beforeCompletion = sync.getMethod("beforeCompletion", new Class[0]);
 					
-					afterCompletion =  sync.getMethod("afterCompletion", new Class[] {Integer.TYPE});
+					afterCompletion =  sync.getMethod("afterCompletion", new Class[] {boolean.class});
 				}
 				catch (Exception e) { Logger.exception(e);}
 			}
