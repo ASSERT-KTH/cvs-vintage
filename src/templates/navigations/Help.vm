@@ -8,7 +8,7 @@ Usage: #enterHelp($link "#middle" "label")
 
 #if( $link.setPage("help,Introduction.vm").isAllowed() ) 
  
-<div>#enterHelp($link "" "$l10n.ScarabHelp")</div>
+<div>#enterHelp($link "" "$l10n.GetHelp")</div>
 #end
 #if( $link.setPage("help,UserIssues.vm").isAllowed() ) 
  
