@@ -11,6 +11,7 @@ package org.jboss.ejb;
 import javax.transaction.Transaction;
 
 import org.jboss.invocation.Invocation;
+import org.w3c.dom.Element;
 
 /**
  * BeanLock interface
@@ -18,7 +19,7 @@ import org.jboss.invocation.Invocation;
  * @author <a href="bill@burkecentral.com">Bill Burke</a>
  * @author <a href="marc.fleury@jboss.org">Marc Fleury</a>
  *
- * @version $Revision: 1.14 $
+ * @version $Revision: 1.15 $
  *
  * <p><b>Revisions:</b><br>
 *  <p><b>2001/07/29: marcf</b>
@@ -59,13 +60,18 @@ public interface BeanLock
    public void setTimeout(int timeout);
 
    /**
+    * Change configuration of bean lock
+    */
+   public void setConfiguration(Element config);
+
+   /**
     *  set the ejb container of this lock.
     */
    public void setContainer(Container container);
    /**
     *  Obtain exclusive access to this lock instance.
     */
-   public void sync();
+   public void sync() throws InterruptedException;
 
    /**
     *  Release exclusive access to this lock instance.

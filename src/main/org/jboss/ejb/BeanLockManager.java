@@ -10,6 +10,7 @@ package org.jboss.ejb;
 import java.util.HashMap;
 
 import org.jboss.ejb.Container;
+import org.w3c.dom.Element;
 
 /**
  * Manages BeanLocks.  All BeanLocks have a reference count.
@@ -19,7 +20,7 @@ import org.jboss.ejb.Container;
  * @author <a href="bill@burkecentral.com">Bill Burke</a>
  * @author <a href="marc.fleury@jboss.org">Marc Fleury</a>
  *
- * @version $Revision: 1.7 $
+ * @version $Revision: 1.8 $
  * <p><b>Revisions:</b><br>
  * <p><b>20010802: marcf</b>
  * <ol>
@@ -39,6 +40,7 @@ public class BeanLockManager
    private int txTimeout = 5000;
 	
    public Class lockClass;
+   public Element config;
 
    /**
     * returns the lock associated with the key passed.  If there is
@@ -60,6 +62,7 @@ public class BeanLockManager
             lock.setReentrant(reentrant);
             lock.setTimeout(txTimeout);
 	    lock.setContainer(container);
+            lock.setConfiguration(config);
          }
          catch (Exception e ) {e.printStackTrace();}
          
@@ -86,5 +89,6 @@ public class BeanLockManager
    public void setLockCLass(Class lockClass) {this.lockClass=lockClass;}
    public void setReentrant(boolean reentrant) {this.reentrant = reentrant;}
    public void setContainer(Container container) {this.container = container;}
+   public void setConfiguration(Element config) {this.config = config;}
 }
 
