@@ -34,7 +34,7 @@ import org.gjt.sp.util.*;
 /**
  * A buffer I/O request.
  * @author Slava Pestov
- * @version $Id: BufferIORequest.java,v 1.16 2002/02/19 06:51:12 spestov Exp $
+ * @version $Id: BufferIORequest.java,v 1.17 2002/02/20 03:17:23 spestov Exp $
  */
 public class BufferIORequest extends WorkRequest
 {
@@ -351,7 +351,7 @@ public class BufferIORequest extends WorkRequest
 		if(length == 0)
 			length = IOBUFSIZE;
 
-		SegmentBuffer seg = new SegmentBuffer((int)length);
+		SegmentBuffer seg = new SegmentBuffer((int)length + 1);
 
 		InputStreamReader in = new InputStreamReader(_in,
 			(String)buffer.getProperty(Buffer.ENCODING));

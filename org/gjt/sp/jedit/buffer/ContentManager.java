@@ -32,7 +32,7 @@ import javax.swing.text.Segment;
  * called through, implements such protection.
  *
  * @author Slava Pestov
- * @version $Id: ContentManager.java,v 1.6 2001/11/24 02:27:08 spestov Exp $
+ * @version $Id: ContentManager.java,v 1.7 2002/02/20 03:17:23 spestov Exp $
  * @since jEdit 4.0pre1
  */
 public class ContentManager
@@ -119,6 +119,14 @@ public class ContentManager
 		System.arraycopy(seg.array,seg.offset,text,start,seg.count);
 		gapStart += seg.count;
 		length += seg.count;
+	} //}}}
+
+	//{{{ _setContent() method
+	public void _setContent(char[] text, int length)
+	{
+		this.text = text;
+		this.gapStart = this.gapEnd = 0;
+		this.length = length;
 	} //}}}
 
 	//{{{ remove() method
