@@ -112,6 +112,33 @@
     </java>
   </target>
 
+  <target name="test-attributegroup" depends="compile">
+    <echo>Running Attribute Group tests...</echo>
+
+    <java     classname="${test.runner}" fork="yes" 
+            failonerror="${testbed.failonerror}">
+      <jvmarg value="${config.dir}"/>
+      <arg value="org.tigris.scarab.om.AttributeGroupTest"/>
+      <classpath>
+        <path refid="classpath"/>
+      </classpath>
+    </java>
+  </target>
+
+  <target name="test-rmoduleattribute" depends="compile">
+    <echo>Running RModuleAttribute tests...</echo>
+
+    <java     classname="${test.runner}" fork="yes" 
+            failonerror="${testbed.failonerror}">
+      <jvmarg value="${config.dir}"/>
+      <arg value="org.tigris.scarab.om.RModuleAttributeTest"/>
+      <classpath>
+        <path refid="classpath"/>
+      </classpath>
+    </java>
+  </target>
+
+
   <target name="test-query" depends="compile">
     <echo>Running Query tests...</echo>
 
