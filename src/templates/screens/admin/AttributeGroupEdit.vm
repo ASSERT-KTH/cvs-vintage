@@ -94,7 +94,7 @@
     N/A
 #end
 </td>
- <td>#numericSelect( "$raagGroup.Order.Key" 1 $group.HighestOrderedAttribute $raagGroup.Order.Value 1 )</td>
+ <td>#numericSelect( "$raagGroup.Order.Key" 1 $group.Attributes.size() $raagGroup.Order.Value 1 )</td>
  </tr>
  </td>
  </tr>
