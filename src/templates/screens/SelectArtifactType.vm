@@ -33,14 +33,13 @@
 #else
   ## If there are no active issue types 
   #if ( $scarabR.hasPermission($scarabG.Permission.MODULE__EDIT, $module))
-    #if ($module.Name.equals($scarabG.Constant.GLOBAL_MODULE_NAME))
-      <p class="alert">There are no active issue types for the global module. Please go to the
-      <a href="$link.setPage("admin,GlobalArtifactTypeShow.vm")">global issue type admin page</a>
-      to create new ones.</p>
+    #if ($module.isGlobalModule())
+      <p class="alert">There are no issue types in the global module. 
+      Please <a href="$link.setPage("admin,GlobalArtifactTypeEdit.vm")">create</a> a new one.</p>
     #else
       <p class="alert">There are no active issue types for this
       module. Please go to <a href="$link.setPage("admin,ManageArtifactTypes.vm")"> the admin
-      screens</a> to create new ones.<p>
+      screens</a> to create new ones.</p>
     #end
   #else
     <p class="alert">There are no active issue types for this

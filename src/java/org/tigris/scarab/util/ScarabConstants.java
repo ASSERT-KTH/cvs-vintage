@@ -53,7 +53,7 @@ import org.apache.torque.om.NumberKey;
  * A place to put public final static strings and other constants.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ScarabConstants.java,v 1.42 2002/06/28 20:02:36 jmcnally Exp $
+ * @version $Id: ScarabConstants.java,v 1.43 2002/07/02 22:30:47 jon Exp $
  */
 public interface ScarabConstants
 {
@@ -172,11 +172,6 @@ public interface ScarabConstants
      */
     String NO_PERMISSION_MESSAGE = "You do not have " +
                                "permissions to perform this action.";
-
-    /**
-     * Name of the global module.
-     */
-    String GLOBAL_MODULE_NAME = "Global";
 
     /**
      * The primary key of the assigned_to attribute.  We need this because
