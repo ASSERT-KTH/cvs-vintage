@@ -1752,16 +1752,6 @@ try{
         return result;
     }
 
-    private String listStringArray(String[] s)
-    {
-        String result = "";
-        for (int i=0; i<s.length; i++) 
-        {
-            result += s[i] + " ";
-        }
-        return result;
-    }
-
     /**
      * Returns index of issue's position in current issue list.
     */
