@@ -71,11 +71,13 @@ Used in: jaws, entity
  in ejb-jar.xml. -->
 <!ELEMENT ejb-name (#PCDATA)>
 
-<!ELEMENT cmp-field (field-name , column-name , (jdbc-type , sql-type)?)>
+<!ELEMENT cmp-field (field-name , column-name , (jdbc-type , sql-type)? , nullable?)>
 
 <!ELEMENT field-name (#PCDATA)>
 
 <!ELEMENT column-name (#PCDATA)>
+
+<!ELEMENT nullable (#PCDATA)>
 
 <!-- the finder element overrides JAWS default behavior for a finder, or
  specifies JAWS behavior for finders requiring multi-column where clauses or
