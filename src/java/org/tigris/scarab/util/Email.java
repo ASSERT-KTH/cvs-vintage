@@ -68,7 +68,7 @@ import org.tigris.scarab.om.Module;
  * @author <a href="mailto:jon@collab.net">Jon Scott Stevens</a>
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: Email.java,v 1.8 2002/10/02 20:30:12 jmcnally Exp $
+ * @version $Id: Email.java,v 1.9 2002/10/04 17:38:26 jmcnally Exp $
  */
 public class Email
 {
@@ -125,22 +125,16 @@ public class Email
                              ccUser.getFirstName() + " " + ccUser.getLastName());
                 }
             }
-            
+
+            String archiveEmail = module.getArchiveEmail();
+            if (archiveEmail != null && archiveEmail.trim().length() > 0)
+            {
+                te.addCc(archiveEmail, null);
+            }
+
             try
             {
                 te.sendMultiple();
-
-                // Now send again, but to the archive. Do the multiple sends
-                // to allow people who are getting to the previous email
-                // to distinguish and filter out the archive email                              
-                String archiveEmail = module.getArchiveEmail();
-                if (archiveEmail != null && archiveEmail.trim().length() > 0)
-                {
-                    te = getTemplateEmail(context,  module, fromUser, 
-                                          replyToUser, subject, template);
-                    te.setTo(archiveEmail, archiveEmail);
-                    te.send();
-                }
             }
             catch (SendFailedException e)
             {
