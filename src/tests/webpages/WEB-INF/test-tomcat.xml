@@ -16,7 +16,7 @@
         early tests.
     -->
 
-     <property name="revision" value="$Revision: 1.52 $" />  
+     <property name="revision" value="$Revision: 1.53 $" />  
      <property name="host" value="127.0.0.1" />
      <property name="port"     value="8080" />
      <property name="colonPort" value=":${port}" />
@@ -549,6 +549,20 @@
           <httpRequest path="/test/servlet/dispatch.IncludeJspWithTaglib" />
           <httpStatusMatch match="200" />
           <responseMatch match="This is a taglib test"/>
+      </httpClient>
+
+      <httpClient>
+          <comment>RequestDispatcher.include to JSP which RequestDispatcher.forward to a static page</comment>
+          <httpRequest path="/test/dispatch/rdInclude.jsp" />
+          <httpStatusMatch match="200" />
+          <responseMatch match="FOO"/>
+      </httpClient>
+
+      <httpClient>
+          <comment>RequestDispatcher.include to JSP which RequestDispatcher.forward to a JSP page</comment>
+          <httpRequest path="/test/dispatch/rdInclude.jsp?type=jsp" />
+          <httpStatusMatch match="200" />
+          <responseMatch match="JSPFOO"/>
       </httpClient>
 
     </target>
