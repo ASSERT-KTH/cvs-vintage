@@ -25,7 +25,7 @@
 // Classes: FigClass
 // Original Author: abonner
 
-// $Id: FigClass.java,v 1.41 2002/11/03 19:39:12 kataka Exp $
+// $Id: FigClass.java,v 1.42 2002/11/05 19:10:45 kataka Exp $
 
 
 
@@ -987,11 +987,11 @@ public class FigClass extends FigNodeModelElement {
                     Iterator it2 = oper.getParameters().iterator();
                     while (it2.hasNext()) {
                         MParameter param = (MParameter)it2.next();
-                        UmlModelEventPump.getPump().removeModelEventListener(this, param);
+                        // UmlModelEventPump.getPump().removeModelEventListener(this, param);
                         UmlModelEventPump.getPump().addModelEventListener(this, param);
                     }
                }
-               UmlModelEventPump.getPump().removeModelEventListener(this, feat);
+               // UmlModelEventPump.getPump().removeModelEventListener(this, feat);
                UmlModelEventPump.getPump().addModelEventListener(this, feat);
            }
        }

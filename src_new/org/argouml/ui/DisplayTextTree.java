@@ -24,7 +24,7 @@
 // File: DisplayTextTree.java
 // Classes: DisplayTextTree
 // Original Author:
-// $Id: DisplayTextTree.java,v 1.9 2002/11/03 19:39:11 kataka Exp $
+// $Id: DisplayTextTree.java,v 1.10 2002/11/05 19:10:45 kataka Exp $
 
 // 26 Apr 2002: Jeremy Bennett (mail@jeremybennett.com). Patch to give a better
 // naming for extension points in convertValueToText.
@@ -152,7 +152,7 @@ implements MElementListener, VetoableChangeListener {
 
   protected void addListenerToNode(Object node) {
     if (node instanceof MBase) {
-        UmlModelEventPump.getPump().removeModelEventListener(this, ((MBase)node));
+        // UmlModelEventPump.getPump().removeModelEventListener(this, ((MBase)node));
         UmlModelEventPump.getPump().addModelEventListener(this, ((MBase)node)); 
     }
     if (node instanceof Project) {
@@ -192,7 +192,7 @@ implements MElementListener, VetoableChangeListener {
     super.setModel(newModel);
     Object r = newModel.getRoot();
     if (r instanceof MBase) {
-      UmlModelEventPump.getPump().removeModelEventListener(this, (MBase)r);
+      // UmlModelEventPump.getPump().removeModelEventListener(this, (MBase)r);
       UmlModelEventPump.getPump().addModelEventListener(this, (MBase)r);
     }
     if (r instanceof Project)
@@ -204,7 +204,7 @@ implements MElementListener, VetoableChangeListener {
     for (int i = 0; i < childCount; i++) {
       Object child = newModel.getChild(r, i);
       if (child instanceof MBase) {
-	   UmlModelEventPump.getPump().removeModelEventListener(this, (MBase)child);
+	// UmlModelEventPump.getPump().removeModelEventListener(this, (MBase)child);
         UmlModelEventPump.getPump().addModelEventListener(this, (MBase)child);
       }
       if (child instanceof Diagram)

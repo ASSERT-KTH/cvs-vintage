@@ -1,4 +1,4 @@
-// $Id: Modeller.java,v 1.37 2002/11/03 19:39:13 kataka Exp $
+// $Id: Modeller.java,v 1.38 2002/11/05 19:10:45 kataka Exp $
 
 /*
   JavaRE - Code generation and reverse engineering for UML and Java
@@ -746,9 +746,9 @@ public class Modeller
             Iterator it2 = ProjectBrowser.TheInstance.getProject().findFigsForMember(parseState.getClassifier()).iterator();
             while (it2.hasNext()) {
                 MElementListener listener = (MElementListener)it2.next();
-                UmlModelEventPump.getPump().removeModelEventListener(listener, mOperation);
+                // UmlModelEventPump.getPump().removeModelEventListener(listener, mOperation);
                 UmlModelEventPump.getPump().addModelEventListener(listener, mOperation); 
-                UmlModelEventPump.getPump().removeModelEventListener(listener, mOperation.getParameter(0));
+                // UmlModelEventPump.getPump().removeModelEventListener(listener, mOperation.getParameter(0));
                 UmlModelEventPump.getPump().addModelEventListener(listener, mOperation.getParameter(0)); 
             }
 	}

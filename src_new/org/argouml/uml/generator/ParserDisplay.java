@@ -25,7 +25,7 @@
 // Classes: ParserDisplay
 // Original Author:
 
-// $Id: ParserDisplay.java,v 1.45 2002/11/03 19:39:12 kataka Exp $
+// $Id: ParserDisplay.java,v 1.46 2002/11/05 19:10:45 kataka Exp $
 
 
 
@@ -1561,7 +1561,7 @@ nextProp:
                                     Iterator it = pr.findFigsForMember(op).iterator();
                                     while (it.hasNext()) {
                                         MElementListener listener = (MElementListener)it.next();
-                                        UmlModelEventPump.getPump().removeModelEventListener(listener, p);
+                                        // UmlModelEventPump.getPump().removeModelEventListener(listener, p);
                                         UmlModelEventPump.getPump().addModelEventListener(listener, p); 
                                     }
 			         }

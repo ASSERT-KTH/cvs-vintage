@@ -298,7 +298,7 @@ public abstract class UMLComboBoxModel2
         }
         _target = target;
         if (_target instanceof MBase) {
-             UmlModelEventPump.getPump().removeModelEventListener(this, (MBase)_target, _propertySetName);
+             // UmlModelEventPump.getPump().removeModelEventListener(this, (MBase)_target, _propertySetName);
              UmlModelEventPump.getPump().addModelEventListener(this, (MBase)_target, _propertySetName);
         }
         removeAllElements();
