@@ -20,7 +20,7 @@ This page is for selecting an Issue type to edit which is defined in a global sc
 
 <table width="100%" border="1" cellspacing="2" cellpadding="3">
 <tr>
-<th>&#160;</th>
+<th>Deleted</th>
 <th>Issue Type Name</th>
 <th>Description</th>
 </tr>
@@ -41,8 +41,7 @@ This page is for selecting an Issue type to edit which is defined in a global sc
 <input type="submit" value="Save" name="eventSubmit_doSave" />&#160;
 <input type="submit" value="Add new" name="eventSubmit_doGotoothertemplate" />&#160;
 <input type="submit" value="Copy" />&#160;
-<input type="submit" value="Delete selected" name="eventSubmit_doSave" />&#160;
-<small>issue type(s)</small>
+<input type="submit" value="Delete selected" name="eventSubmit_doSave" />
 </div>
 
 <div class="functnbar2">
