@@ -30,7 +30,7 @@ import org.w3c.dom.Element;
  * @author <a href="mailto:vincent.harcq@hubmethods.com">Vincent Harcq</a>
  * @author <a href="mailto:loubyansky@hotmail.com">Alex Loubyansky</a>
  *
- * @version $Revision: 1.13 $
+ * @version $Revision: 1.14 $
  */
 public final class JDBCCMPFieldMetaData {
    /**
@@ -115,18 +115,17 @@ public final class JDBCCMPFieldMetaData {
    {
       this.entity = entity;
       fieldName = entity.getName() + "_upk";
-      fieldType = java.lang.String.class;
+      fieldType = entity.getPrimaryKeyClass();  // java.lang.Object.class
       columnName = entity.getName() + "_upk";
-      jdbcType = java.sql.Types.VARCHAR;
-      sqlType = "VARCHAR(32)";
-      readOnly = false;
-      readTimeOut = 0;
+      jdbcType = Integer.MIN_VALUE;
+      sqlType = null;
+      readOnly = entity.isReadOnly();
+      readTimeOut = entity.getReadTimeOut();
       primaryKeyMember = true;
       notNull = true;
       primaryKeyField = null;
       unknownPkField = true;
-      // setup the default key generator factory
-      keyGeneratorFactory = "UUIDKeyGeneratorFactory";
+      keyGeneratorFactory = null;
    }
 
    /**
@@ -223,7 +222,20 @@ public final class JDBCCMPFieldMetaData {
       fieldName = defaultValues.getFieldName();
 
       // Field type
-      fieldType = defaultValues.getFieldType();
+      // AL: must be set for unknow-pk
+      String unknownPkClass = MetaData.getOptionalChildContent(
+         element, "unknown-pk-class" );
+      if( unknownPkClass == null )
+         fieldType = defaultValues.getFieldType();
+      else
+      {
+         try {
+            fieldType = entity.getClassLoader().loadClass( unknownPkClass );
+         } catch( ClassNotFoundException e ) {
+            throw new DeploymentException("could not load unknown primary " +
+               " key class: " + unknownPkClass );
+         }
+      }
 
       // Column name
       String columnStr = MetaData.getOptionalChildContent(
