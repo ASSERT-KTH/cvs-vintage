@@ -5,7 +5,7 @@
 ##                                                                          ##
 ### ====================================================================== ###
 
-### $Id: deployer.sh,v 1.1 2002/05/13 06:14:03 user57 Exp $ ###
+### $Id: deployer.sh,v 1.2 2002/05/14 00:06:46 user57 Exp $ ###
 
 DIRNAME=`dirname $0`
 PROGNAME=`basename $0`
@@ -102,4 +102,4 @@ fi
 # Execute the JVM
 exec $JAVA $JAVA_OPTS \
     -classpath "$JBOSS_CLASSPATH" \
-    org.jboss.jmx.service.Deployer "$@"
+    org.jboss.jmx.service.RemoteDeployer "$@"

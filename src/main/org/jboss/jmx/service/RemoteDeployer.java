@@ -8,6 +8,7 @@
 package org.jboss.jmx.service;
 
 import java.io.File;
+import java.io.IOException;
 
 import java.net.InetAddress;
 import java.net.URL;
@@ -16,6 +17,7 @@ import java.net.MalformedURLException;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.Hashtable;
 
 import javax.management.ObjectName;
 import javax.management.MalformedObjectNameException;
@@ -25,6 +27,7 @@ import javax.management.RuntimeOperationsException;
 import javax.management.RuntimeMBeanException;
 import javax.management.RuntimeErrorException;
 
+import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 
@@ -36,44 +39,132 @@ import org.jboss.jmx.connector.rmi.RMIConnectorImpl;
 import org.jboss.jmx.connector.RemoteMBeanServer;
 
 import org.jboss.deployment.MainDeployerMBean;
+import org.jboss.deployment.Deployer;
+import org.jboss.deployment.DeployerMBean;
 import org.jboss.deployment.DeploymentException;
 
 import org.jboss.util.jmx.JMXExceptionDecoder;
+import org.jboss.util.jmx.MBeanProxy;
 
 import org.jboss.logging.Logger;
 
 /**
- * A JMX client to deploy an application into a running JBoss server.
+ * A JMX client to deploy an application into a running JBoss server via RMI.
  *
- * @version <tt>$Revision: 1.8 $</tt>
+ * @version <tt>$Revision: 1.1 $</tt>
  * @author  <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  * @author  <a href="mailto:jason@planet57.com">Jason Dillon</a>
  * @author  <a href="mailto:Christoph.Jung@infor.de">Christoph G. Jung</a>
  * @author  <a href="mailto:andreas@jboss.org">Andreas Schaefer</a>
  * @author  <a href="mailto:jason@planet57.com">Jason Dillon</a>
  */
-public class Deployer
-   implements org.jboss.deployment.Deployer, org.jboss.deployment.DeployerMBean
+public class RemoteDeployer
+   implements Deployer, DeployerMBean
 {
    /** Class logger. */
    private static final Logger log = Logger.getLogger(Deployer.class);
-   
+
+   /** A proxy to the deployer instance on the remote server. */
+   protected Deployer deployer;
+
    /**
-    * Name of the server (how it is registered on the JNDI server as second
-    * part of the name (name spec is: "jmx:<server name>:rmi")).
+    * Construct a new <tt>RemoteDeployer</tt>.
     */
-   protected String mServerName;
-   
-   /**
-    * Creates a deployer accessing the RMI Connector for the given server.
-    *
-    * @param pServerName Name of the server (how it is registered on
-    *                    the JNDI server as second part of the name
-    *                    (name spec is: "jmx:<server name>:rmi").
-    */
-   public Deployer(final String pServerName)
+   public RemoteDeployer(ObjectName deployerName, Hashtable env) throws Exception
    {
-      mServerName = pServerName;
+      init(deployerName, env);
+   }
+
+   /**
+    * Construct a new <tt>RemoteDeployer</tt>.
+    *
+    * @param url   The URL of the JNDI provider or null to use the default.
+    */
+   public RemoteDeployer(ObjectName deployerName, String url) throws Exception
+   {
+      Hashtable env = null;
+      
+      if (url != null) {
+         env = new Hashtable();
+         env.put(Context.PROVIDER_URL, url);
+      }
+
+      init(deployerName, env);      
+   }
+
+   /**
+    * Construct a new <tt>RemoteDeployer</tt>.
+    *
+    * <p>Uses MainDeployer and the given url for Context.PROVIDER_URL.
+    */
+   public RemoteDeployer(String url) throws Exception
+   {
+      this(MainDeployerMBean.OBJECT_NAME, url);
+   }
+   
+   /**
+    * Construct a new <tt>RemoteDeployer</tt>.
+    */
+   public RemoteDeployer(ObjectName deployerName) throws Exception
+   {
+      init(deployerName, null);
+   }
+
+   /**
+    * Construct a new <tt>RemoteDeployer</tt>.
+    *
+    * <p>Uses MainDeployer.
+    */
+   public RemoteDeployer() throws Exception
+   {
+      this(MainDeployerMBean.OBJECT_NAME);
+   }
+
+   protected void init(ObjectName deployerName, Hashtable env) throws Exception
+   {
+      RemoteMBeanServer server = lookupRemoteMBeanServer(env);
+      deployer = (Deployer)MBeanProxy.create(Deployer.class, deployerName, server);
+   }
+   
+   /**
+    * Lookup the RemoteMBeanServer which will be used to invoke methods on.
+    *
+    * @param env   The initial context environment or null to use default.
+    *
+    * @throws Exception   Failed to lookup connector reference or retruned reference
+    *                     was not of type {@link RMIAdapter}.
+    */
+   protected RemoteMBeanServer lookupRemoteMBeanServer(Hashtable env) throws Exception
+   {
+      RemoteMBeanServer server = null;
+      InitialContext ctx;
+      if (env == null) {
+         ctx = new InitialContext();
+      }
+      else {
+         ctx = new InitialContext(env);
+      }
+
+      // jason: fix me!!!
+      String serverName = InetAddress.getLocalHost().getHostName();
+      
+      try {
+         Object obj = ctx.lookup( "jmx:" + serverName + ":rmi" );
+         log.debug("RMI Adapter: " + obj);
+         
+         if (!(obj instanceof RMIAdaptor)) {
+            throw new RuntimeException("Object not of type: RMIAdaptorImpl, but: " +
+                                       (obj == null ? "not found" : obj.getClass().getName()));
+         }
+         
+         server = new RMIConnectorImpl((RMIAdaptor) obj);
+         log.debug("Remote MBean Server : " + server);
+      }
+      finally {
+         ctx.close();
+      }
+      
+      return server;
    }
 
    /**
@@ -88,16 +179,21 @@ public class Deployer
          url = new URL(urlspec);
       }
       catch (Exception e) {
-         // make sure we have a absolute file url
-         File file = new File(urlspec).getAbsoluteFile();
-         url = file.toURL();
+         // make sure we have a absolute & canonical file url
+         try {
+            File file = new File(urlspec).getCanonicalFile();
+            url = file.toURL();
+         }
+         catch (IOException n) {
+            throw new MalformedURLException(n.toString());
+         }
       }
 
       log.debug("Using URL: " + url);
       
       return url;
    }
-   
+
    /**
     * Deploys the given url on the remote server.
     *
@@ -107,7 +203,7 @@ public class Deployer
     */
    public void deploy(final URL url) throws DeploymentException
    {
-      invoke("deploy", url);
+      deployer.deploy(url);
    }
 
    /**
@@ -120,7 +216,7 @@ public class Deployer
     */
    public void deploy(final String url) throws MalformedURLException, DeploymentException
    {
-      deploy(makeURL(url));
+      deployer.deploy(makeURL(url));
    }
    
    /**
@@ -132,7 +228,7 @@ public class Deployer
     */
    public void undeploy(final URL url) throws DeploymentException
    {
-      invoke("undeploy", url);
+      deployer.undeploy(url);
    }
 
    /**
@@ -145,7 +241,7 @@ public class Deployer
     */
    public void undeploy(final String url) throws MalformedURLException, DeploymentException
    {
-      undeploy(makeURL(url));
+      deployer.undeploy(makeURL(url));
    }
    
    /**
@@ -156,13 +252,7 @@ public class Deployer
     */
    public boolean isDeployed(final URL url)
    {
-      try {
-         Boolean bool = (Boolean)invoke("isDeployed", url);
-         return bool.booleanValue();
-      }
-      catch (Exception e) {
-         return false;
-      }
+      return deployer.isDeployed(url);
    }
 
    /**
@@ -176,83 +266,9 @@ public class Deployer
     */
    public boolean isDeployed(final String url) throws MalformedURLException
    {
-      return isDeployed(makeURL(url));
+      return deployer.isDeployed(makeURL(url));
    }
    
-   /**
-    * Get the JMX object name of the factory to use.
-    *
-    * @return   {@link MainDeployerMBean#OBJECT_NAME}
-    */
-   protected ObjectName getFactoryName()
-      throws MalformedObjectNameException
-   {
-      return MainDeployerMBean.OBJECT_NAME;
-   }
-
-   /**
-    * Lookup the RemoteMBeanServer which will be used to invoke methods on.
-    *
-    * @throws Exception   Failed to lookup connector reference or retruned reference
-    *                     was not of type {@link RMIAdapter}.
-    */
-   protected RemoteMBeanServer lookupConnector() throws Exception
-   {
-      RemoteMBeanServer connector = null;
-      InitialContext ctx = new InitialContext();
-      
-      try {
-         Object lObject = ctx.lookup( "jmx:" + mServerName + ":rmi" );
-         log.debug("RMI Adapter: " + lObject);
-         
-         if (!(lObject instanceof RMIAdaptor)) {
-            throw new RuntimeException("Object not of type: RMIAdaptorImpl, but: " +
-                                       (lObject == null ? "not found" : lObject.getClass().getName()));
-         }
-         
-         connector = new RMIConnectorImpl((RMIAdaptor) lObject);
-         log.debug("RMI Connector: " + connector);
-      }
-      finally {
-         ctx.close();
-      }
-      
-      return connector;
-   }
-   
-   /**
-    * Invoke the target deployer and decode JMX exceptions that are thrown.
-    *
-    * @param methodName    The menthod name of the target deployer to invoke.
-    * @param url           The url to deploy/undeploy.
-    * @return              The return value of the invocation.
-    *
-    * @throws DeploymentException    Server invoke failed (JMX exceptions are decoded).
-    */
-   protected Object invoke(final String methodName, final URL url)
-      throws DeploymentException
-   {
-      try {
-         // lookup the adapter to use
-         RemoteMBeanServer server = lookupConnector();
-
-         // get the deployer name to use
-         ObjectName name = getFactoryName();
-
-         // invoke the server and decode jmx exceptions
-         return server.invoke(name, methodName,
-                              new Object[] { url },
-                              new String[] { "java.net.URL" });
-      }
-      catch (Exception e) {
-         Throwable t = JMXExceptionDecoder.decode(e);
-         if (t instanceof DeploymentException) {
-            throw (DeploymentException)t;
-         }
-         throw new DeploymentException(t);
-      }
-   }
-
 
    /////////////////////////////////////////////////////////////////////////
    //                         Command Line Support                        //
@@ -260,78 +276,19 @@ public class Deployer
 
    public static final String PROGRAM_NAME = System.getProperty("program.name", "deployer");
 
-   //
-   // Switches equate to commands for the desired deploy/undeploy operation to execute
-   //
-   
+   /**
+    * Switches equate to commands for the desired deploy/undeploy operation to execute;
+    * this is the base class for those commands.
+    */
    protected static abstract class DeployerCommand
    {
-      protected String url;
+      protected URL url;
+
+      public DeployerCommand(String url) throws Exception {
+         this.url = makeURL(url);
+      }
       
       public abstract void execute(Deployer deployer) throws Exception;
-   }
-
-   protected static class DeployCommand
-      extends DeployerCommand
-   {
-      public DeployCommand(final String url)
-      {
-         this.url = url;
-      }
-
-      public void execute(Deployer deployer) throws Exception
-      {
-         deployer.deploy(url);
-         System.out.println(url + " has been deployed.");         
-      }
-   }
-
-   protected static class UndeployCommand
-      extends DeployerCommand
-   {
-      public UndeployCommand(final String url)
-      {
-         this.url = url;
-      }
-
-      public void execute(Deployer deployer) throws Exception
-      {
-         deployer.undeploy(url);
-         System.out.println(url + " has been undeployed.");
-      }
-   }
-
-   protected static class RedeployCommand
-      extends DeployerCommand
-   {
-      public RedeployCommand(final String url)
-      {
-         this.url = url;
-      }
-
-      public void execute(Deployer deployer) throws Exception
-      {
-         if (deployer.isDeployed(url)) {
-            deployer.undeploy(url);
-         }
-         deployer.deploy(url);
-         System.out.println(url + " has been redeployed.");
-      }
-   }
-   
-   protected static class IsDeployedCommand
-      extends DeployerCommand
-   {
-      public IsDeployedCommand(final String url)
-      {
-         this.url = url;
-      }
-      
-      public void execute(Deployer deployer) throws Exception
-      {
-         boolean deployed = deployer.isDeployed(url);
-         System.out.println(url + " is " + (deployed ? "deployed." : "not deployed."));
-      }
    }
 
    protected static void displayUsage()
@@ -342,7 +299,7 @@ public class Deployer
       System.out.println("    -h, --help                Show this help message");
       System.out.println("    -D<name>[=<value>]        Set a system property");
       System.out.println("    --                        Stop processing options");
-      System.out.println("    -s, --server=<name>       Specify the hostname name of the server to use");
+      System.out.println("    -s, --server=<url>        Specify the JNDI URL of the remote server");
       System.out.println();
       System.out.println("operations:");
       System.out.println("    -d, --deploy=<url>        Deploy a URL into the remote server");
@@ -363,7 +320,7 @@ public class Deployer
       LongOpt[] lopts =
       {
          new LongOpt("help", LongOpt.NO_ARGUMENT, null, 'h'),
-         new LongOpt("server", LongOpt.REQUIRED_ARGUMENT, null, 's'),
+         new LongOpt("server", LongOpt.NO_ARGUMENT, null, 's'),
          new LongOpt("deploy", LongOpt.REQUIRED_ARGUMENT, null, 'd'),
          new LongOpt("undeploy", LongOpt.REQUIRED_ARGUMENT, null, 'u'),
          new LongOpt("isdeployed", LongOpt.REQUIRED_ARGUMENT, null, 'i'),
@@ -374,8 +331,8 @@ public class Deployer
       int code;
       String arg;
 
-      String serverName = InetAddress.getLocalHost().getHostName();
       List commands = new ArrayList();
+      String serverURL = null;
       
       while ((code = getopt.getopt()) != -1)
       {
@@ -419,34 +376,61 @@ public class Deployer
                System.setProperty(name, value);
                break;
             }
-
+            
             case 's':
             {
-               serverName = getopt.getOptarg();
+               serverURL = getopt.getOptarg();
                break;
             }
-            
+
             case 'd':
             {
-               commands.add(new DeployCommand(getopt.getOptarg()));
+               commands.add(new DeployerCommand(getopt.getOptarg()) {
+                     public void execute(Deployer deployer) throws Exception
+                     {
+                        deployer.deploy(url);
+                        System.out.println(url + " has been deployed.");         
+                     }
+                  });
                break;
             }
 
             case 'u':
             {
-               commands.add(new UndeployCommand(getopt.getOptarg()));
+               commands.add(new DeployerCommand(getopt.getOptarg()) {
+                     public void execute(Deployer deployer) throws Exception
+                     {
+                        deployer.undeploy(url);
+                        System.out.println(url + " has been undeployed.");
+                     }
+                  });
                break;
             }
 
             case 'r':
             {
-               commands.add(new RedeployCommand(getopt.getOptarg()));
+               commands.add(new DeployerCommand(getopt.getOptarg()) {
+                     public void execute(Deployer deployer) throws Exception
+                     {
+                        if (deployer.isDeployed(url)) {
+                           deployer.undeploy(url);
+                        }
+                        deployer.deploy(url);
+                        System.out.println(url + " has been redeployed.");
+                     }
+                  });
                break;
             }
             
             case 'i':
             {
-               commands.add(new IsDeployedCommand(getopt.getOptarg()));
+               commands.add(new DeployerCommand(getopt.getOptarg()) {
+                     public void execute(Deployer deployer) throws Exception
+                     {
+                        boolean deployed = deployer.isDeployed(url);
+                        System.out.println(url + " is " + (deployed ? "deployed." : "not deployed."));
+                     }
+                  });
                break;               
             }
 
@@ -458,7 +442,7 @@ public class Deployer
       }
 
       // setup the deployer
-      Deployer deployer = new Deployer(serverName);
+      Deployer deployer = new RemoteDeployer(serverURL);
       
       // now execute all of the commands
       Iterator iter = commands.iterator();

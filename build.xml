@@ -12,7 +12,7 @@
 <!--                                                                        -->
 <!-- ====================================================================== -->
 
-<!-- $Id: build.xml,v 1.89 2002/05/13 06:15:55 user57 Exp $ -->
+<!-- $Id: build.xml,v 1.90 2002/05/14 00:06:46 user57 Exp $ -->
 
 <project default="main" name="JBoss/Server">
 
@@ -736,7 +736,7 @@
     <!-- Build deployer.jar -->
     <jar jarfile="${build.lib}/deployer.jar" manifest="${build.etc}/manifest/deployer.mf">
       <fileset dir="${build.classes}">
-        <include name="org/jboss/jmx/service/Deployer*.class"/>
+        <include name="org/jboss/jmx/service/RemoteDeployer*.class"/>
       </fileset>
       <fileset dir="${build.resources}">
         <include name="log4j.properties"/>
@@ -764,7 +764,7 @@
     <jar jarfile="${build.lib}/testsuite-support.jar"
          manifest="${build.etc}/manifest/deploy.mf">
       <fileset dir="${build.classes}">
-         <include name="org/jboss/jmx/service/Deployer.class"/>
+         <include name="org/jboss/jmx/service/RemoteDeployer*.class"/>
          <include name="org/jboss/jmx/connector/RemoteMBeanServer**"/>
          <include name="org/jboss/jmx/connector/notification/RMI**"/>
          <include name="org/jboss/jmx/connector/rmi/RMIConnector.class"/>

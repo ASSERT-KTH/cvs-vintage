@@ -1,4 +1,4 @@
-Main-Class: org.jboss.jmx.service.Deployer
+Main-Class: org.jboss.jmx.service.RemoteDeployer
 Class-Path: ../client/jboss-common-client.jar ../client/jboss-system-client.jar ../client/jmx-rmi-connector-client.jar ../client/jnp-client.jar ../client/jboss-j2ee.jar ../client/log4j.jar ../lib/jboss-jmx.jar 
 Specification-Title: JBoss-@version.major@.@version.minor@.@version.revision@@version.tag@
 Specification-Version: @version.major@.@version.minor@.@version.revision@@version.tag@

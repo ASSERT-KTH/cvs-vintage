@@ -8,7 +8,9 @@
 package org.jboss.jmx.connector.rmi;
 
 import java.io.ObjectInputStream;
+
 import java.rmi.server.UnicastRemoteObject;
+
 import java.rmi.RemoteException;
 import java.rmi.ServerException;
 import java.util.ArrayList;
@@ -49,6 +51,7 @@ import javax.management.IntrospectionException;
 import javax.management.InvalidAttributeValueException;
 import javax.management.ListenerNotFoundException;
 import javax.management.MBeanException;
+import javax.management.RuntimeMBeanException;
 import javax.management.MBeanRegistrationException;
 import javax.management.NotCompliantMBeanException;
 import javax.management.OperationsException;
@@ -63,7 +66,6 @@ import org.jboss.system.ServiceMBeanSupport;
 
 import org.jboss.jmx.adaptor.rmi.RMIAdaptor;
 import org.jboss.jmx.connector.RemoteMBeanServer;
-// import org.jboss.jmx.connector.RemoteMBeanServerMBean;
 import org.jboss.jmx.connector.notification.ClientNotificationListener;
 import org.jboss.jmx.connector.notification.JMSClientNotificationListener;
 import org.jboss.jmx.connector.notification.PollingClientNotificationListener;
@@ -72,123 +74,86 @@ import org.jboss.jmx.connector.notification.SearchClientNotificationListener;
 
 import org.jboss.logging.Logger;
 
+import org.jboss.util.NestedRuntimeException;
+
 /**
  * Implementation of the JMX Connector over the RMI protocol 
- *      
- * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
- * @author <A href="mailto:andreas@jboss.org">Andreas &quot;Mad&quot; Schaefer</A>
+ *
+ * @version <tt>$Revision: 1.8 $</tt>
+ * @author  <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
+ * @author  <A href="mailto:andreas@jboss.org">Andreas &quot;Mad&quot; Schaefer</A>
+ * 
  */
 public class RMIConnectorImpl
-   implements /* RemoteMBeanServerMBean, */ RMIConnectorImplMBean
+   implements RemoteMBeanServer, RMIConnectorImplMBean
 {
-   protected static final Logger log = Logger.getLogger(RMIConnectorImpl.class);
+   protected Logger log = Logger.getLogger(this.getClass());
 
-   private RMIAdaptor        mRemoteAdaptor;
-   private Object            mServer = "";
-   private Vector            mListeners = new Vector();
-   private int               mEventType = NOTIFICATION_TYPE_RMI;
-   private String[]          mOptions = new String[ 0 ];
-   private Random            mRandom = new Random();
+   protected RMIAdaptor mRemoteAdaptor;
+   protected Object mServer = "";
+   protected Vector mListeners = new Vector();
+   protected int mEventType = NOTIFICATION_TYPE_RMI;
+   protected String[] mOptions = new String[ 0 ];
+   protected Random mRandom = new Random();
+
+   /**
+    * For sub-class support.
+    */
+   protected RMIConnectorImpl()
+   {
+      super();
+   }
    
    /**
-   * AS For evaluation purposes
-   * Creates a Connector based on an already found Adaptor
-   *
-   * @param pAdaptor RMI-Adaptor used to connect to the remote JMX Agent
-   **/
-   public RMIConnectorImpl(
-      RMIAdaptor pAdaptor
-   ) {
+    * AS For evaluation purposes
+    * Creates a Connector based on an already found Adaptor
+    *
+    * @param pAdaptor RMI-Adaptor used to connect to the remote JMX Agent
+    **/
+   public RMIConnectorImpl(RMIAdaptor pAdaptor)
+   {
       mRemoteAdaptor = pAdaptor;
       mServer = "Dummy";
    }
    
-   public RMIConnectorImpl(
-      int pNotificationType,
-      String[] pOptions,
-      String pServerName
-   ) {
-      super();
+   public RMIConnectorImpl(int pNotificationType,
+                           String[] pOptions,
+                           String pServerName)
+   {
       mEventType = pNotificationType;
+      
       if( pOptions == null ) {
          mOptions = new String[ 0 ];
       } else {
          mOptions = pOptions;
       }
+      
       start( pServerName );
    }
    
-   // JMXClientConnector implementation -------------------------------
-   public void start(
-      Object pServer
-   ) throws IllegalArgumentException {
-      if( pServer == null ) {
-         throw new IllegalArgumentException( "Server cannot be null. "
-            + "To close the connection use stop()" );
-      }
-      try {
-         InitialContext lNamingContext = new InitialContext();
-         log.debug( "RMIClientConnectorImp.start(), got Naming Context: " +   lNamingContext +
-            ", environment: " + lNamingContext.getEnvironment() +
-            ", name in namespace: " + lNamingContext.getNameInNamespace()
-         );
-         // This has to be adjusted later on to reflect the given parameter
-         mRemoteAdaptor = (RMIAdaptor) new InitialContext().lookup( "jmx:" + pServer + ":rmi" );
-         log.error( "RMIClientConnectorImpl.start(), got remote connector: " + mRemoteAdaptor );
-         mServer = pServer;
-      }
-      catch( Exception e ) {
-         log.error("operation failed... SHOULD NOT MASK THIS EXCEPTION", e);
-      }
-   }
-
-   public void stop() {
-      log.debug( "RMIClientConnectorImpl.stop(), start" );
-      // First go through all the reistered listeners and remove them
-      if( mRemoteAdaptor != null ) {
-         // Loop through all the listeners and remove them
-         Iterator i = mListeners.iterator();
-         while( i.hasNext() ) {
-            ClientNotificationListener lListener = (ClientNotificationListener) i.next();
-            try {
-               lListener.removeNotificationListener( this );
-            }
-            catch( Exception e ) {
-            }
-            i.remove();
-         }
-      }
-      mRemoteAdaptor = null;
-      mServer = "";
-   }
-   
-   public boolean isAlive() {
-      return mRemoteAdaptor != null;
-   }
-
-   public String getServerDescription() {
-      return "" + mServer;
-   }
-
    /**
-   * Creates a Queue Connection
-   *
-   * @return Returns a QueueConnection if found otherwise null
-   **/
-   private QueueConnection getQueueConnection( String pJNDIName )
-      throws
-         NamingException,
-         JMSException
+    * Creates a Queue Connection
+    *
+    * @return Returns a QueueConnection if found otherwise null
+    **/
+   /*
+
+   jason: this is not used anywhere
+   
+   protected QueueConnection getQueueConnection( String pJNDIName )
+      throws NamingException, JMSException
    {
       Context lJNDIContext = null;
       if( mOptions.length > 0 && mOptions[ 0 ] != null ) {
          Hashtable lProperties = new Hashtable();
-//         lProperties.put( Context.PROVIDER_URL, mOptions[ 0 ] );
+         // lProperties.put( Context.PROVIDER_URL, mOptions[ 0 ] );
          lProperties.put( Context.PROVIDER_URL, (String) mServer );
          lJNDIContext = new InitialContext( lProperties );
-      } else {
+      }
+      else {
          lJNDIContext = new InitialContext();
       }
+      
       log.debug( "JNDI Environment: " + lJNDIContext.getEnvironment() );
       log.debug( "Lookup Queue Connection Factory: " + pJNDIName );
       Object aRef = lJNDIContext.lookup( pJNDIName );
@@ -200,39 +165,81 @@ public class RMIConnectorImpl
       lConnection.start();
       return lConnection;
    }
+   */
    
    // RemoteMBeanServer implementation -------------------------------------
 
-   public ObjectInstance createMBean(
-      String pClassName,
-      ObjectName pName
-   ) throws
-      ReflectionException,
-      InstanceAlreadyExistsException,
-      MBeanRegistrationException,
-      MBeanException,
-      NotCompliantMBeanException
+   public Object instantiate(String className) 
+      throws ReflectionException, MBeanException
+   {
+      try {
+         return mRemoteAdaptor.instantiate(className);
+      }
+      catch (RemoteException e) {
+         throw new MBeanException(e);
+      }
+   }
+
+   public Object instantiate(String className, ObjectName loaderName) 
+      throws ReflectionException, MBeanException, InstanceNotFoundException
+   {
+      try {
+         return mRemoteAdaptor.instantiate(className, loaderName);
+      }
+      catch (RemoteException e) {
+         throw new MBeanException(e);
+      }
+   }
+   
+   public Object instantiate(String className, Object[] params, String[] signature)
+      throws ReflectionException, MBeanException
+   {
+      try {
+         return mRemoteAdaptor.instantiate(className, params, signature);
+      }
+      catch (RemoteException e) {
+         throw new MBeanException(e);
+      }      
+   }
+   
+   public Object instantiate(String className,
+                             ObjectName loaderName,
+                             Object[] params,
+                             String[] signature)
+      throws ReflectionException, MBeanException, InstanceNotFoundException
+   {
+      try {
+         return mRemoteAdaptor.instantiate(className, loaderName, params, signature);
+      }
+      catch (RemoteException e) {
+         throw new MBeanException(e);
+      }      
+   }
+
+   public ObjectInstance createMBean(String pClassName, ObjectName pName)
+      throws ReflectionException,
+             InstanceAlreadyExistsException,
+             MBeanRegistrationException,
+             MBeanException,
+             NotCompliantMBeanException
    {
       try {
          return mRemoteAdaptor.createMBean( pClassName, pName );
       }
       catch( RemoteException re ) {
-         //AS Not a good style but for now
-         return null;
+         throw new MBeanException(re);
       }
    }
 
-   public ObjectInstance createMBean(
-      String pClassName,
-      ObjectName pName,
-      ObjectName pLoaderName
-   ) throws
-      ReflectionException,
-      InstanceAlreadyExistsException,
-      MBeanRegistrationException,
-      MBeanException,
-      NotCompliantMBeanException,
-      InstanceNotFoundException
+   public ObjectInstance createMBean(String pClassName,
+                                     ObjectName pName,
+                                     ObjectName pLoaderName)
+      throws ReflectionException,
+             InstanceAlreadyExistsException,
+             MBeanRegistrationException,
+             MBeanException,
+             NotCompliantMBeanException,
+             InstanceNotFoundException
    {
       try {
          return mRemoteAdaptor.createMBean( pClassName, pName, pLoaderName );
@@ -242,17 +249,15 @@ public class RMIConnectorImpl
       }
    }
 
-   public ObjectInstance createMBean(
-      String pClassName,
-      ObjectName pName,
-      Object[] pParams,
-      String[] pSignature
-   ) throws
-      ReflectionException,
-      InstanceAlreadyExistsException,
-      MBeanRegistrationException,
-      MBeanException,
-      NotCompliantMBeanException
+   public ObjectInstance createMBean(String pClassName,
+                                     ObjectName pName,
+                                     Object[] pParams,
+                                     String[] pSignature)
+      throws ReflectionException,
+             InstanceAlreadyExistsException,
+             MBeanRegistrationException,
+             MBeanException,
+             NotCompliantMBeanException
    {
       try {
          return mRemoteAdaptor.createMBean( pClassName, pName, pParams, pSignature );
@@ -262,19 +267,17 @@ public class RMIConnectorImpl
       }
    }
 
-   public ObjectInstance createMBean(
-      String pClassName,
-      ObjectName pName,
-      ObjectName pLoaderName,
-      Object[] pParams,
-      String[] pSignature
-   ) throws
-      ReflectionException,
-      InstanceAlreadyExistsException,
-      MBeanRegistrationException,
-      MBeanException,
-      NotCompliantMBeanException,
-      InstanceNotFoundException
+   public ObjectInstance createMBean(String pClassName,
+                                     ObjectName pName,
+                                     ObjectName pLoaderName,
+                                     Object[] pParams,
+                                     String[] pSignature)
+      throws ReflectionException,
+             InstanceAlreadyExistsException,
+             MBeanRegistrationException,
+             MBeanException,
+             NotCompliantMBeanException,
+             InstanceNotFoundException
    {
       try {
          return mRemoteAdaptor.createMBean( pClassName, pName, pLoaderName, pParams, pSignature );
@@ -284,228 +287,196 @@ public class RMIConnectorImpl
       }
    }
 
-   public void unregisterMBean(
-      ObjectName pName
-   ) throws
-      InstanceNotFoundException,
-      MBeanRegistrationException
+   public ObjectInstance registerMBean(Object object, ObjectName name) 
+      throws InstanceAlreadyExistsException, MBeanRegistrationException, NotCompliantMBeanException
+   {
+      try {
+         return mRemoteAdaptor.registerMBean(object, name);
+      }
+      catch (RemoteException e) {
+         throw new RuntimeMBeanException(new NestedRuntimeException(e));
+      }
+   }
+   
+   public void unregisterMBean(ObjectName pName)
+      throws InstanceNotFoundException,
+             MBeanRegistrationException
    {
       try {
          mRemoteAdaptor.unregisterMBean( pName );
       }
-      catch( RemoteException re ) {
+      catch( RemoteException e ) {
+         throw new RuntimeMBeanException(new NestedRuntimeException(e));
       }
    }
 
-   public ObjectInstance getObjectInstance(
-      ObjectName pName
-   ) throws
-      InstanceNotFoundException
+   public ObjectInstance getObjectInstance(ObjectName pName)
+      throws InstanceNotFoundException
    {
       try {
          return mRemoteAdaptor.getObjectInstance( pName );
       }
-      catch( RemoteException re ) {
-         //AS Not a good style but for now
-         return null;
+      catch( RemoteException e ) {
+         throw new RuntimeMBeanException(new NestedRuntimeException(e));
       }
    }
 
-   public Set queryMBeans(
-      ObjectName pName,
-      QueryExp pQuery
-   ) {
+   public Set queryMBeans(ObjectName pName, QueryExp pQuery)
+   {
       try {
          return mRemoteAdaptor.queryMBeans( pName, pQuery );
       }
-      catch( RemoteException re ) {
-         log.error("operation failed... SHOULD NOT MASK THIS EXCEPTION", re);
-         //AS Not a good style but for now
-         return null;
+      catch( RemoteException e ) {
+         throw new RuntimeMBeanException(new NestedRuntimeException(e));
       }
    }
 
-   public Set queryNames(
-      ObjectName pName,
-      QueryExp pQuery
-   ) {
+   public Set queryNames(ObjectName pName, QueryExp pQuery)
+   {
       try {
          return mRemoteAdaptor.queryNames( pName, pQuery );
       }
-      catch( RemoteException re ) {
-         log.error("operation failed... SHOULD NOT MASK THIS EXCEPTION", re);         
-         //AS Not a good style but for now
-         return null;
+      catch( RemoteException e ) {
+         throw new RuntimeMBeanException(new NestedRuntimeException(e));
       }
    }
 
-   public boolean isRegistered(
-      ObjectName pName
-   ) {
+   public boolean isRegistered(ObjectName pName)
+   {
       try {
          return mRemoteAdaptor.isRegistered( pName );
       }
-      catch( RemoteException re ) {
-         log.error("operation failed... SHOULD NOT MASK THIS EXCEPTION", re);
-         //AS Not a good style but for now
-         return false;
+      catch( RemoteException e ) {
+         throw new RuntimeMBeanException(new NestedRuntimeException(e));
       }
    }
 
-   public boolean isInstanceOf(
-      ObjectName pName,
-      String pClassName
-   ) throws
-      InstanceNotFoundException
+   public boolean isInstanceOf(ObjectName pName, String pClassName)
+      throws InstanceNotFoundException
    {
       try {
          return mRemoteAdaptor.isInstanceOf( pName, pClassName );
       }
-      catch( RemoteException re ) {
-         //AS Not a good style but for now
-         return false;
+      catch( RemoteException e ) {
+         throw new RuntimeMBeanException(new NestedRuntimeException(e));
       }
    }
 
-   public Integer getMBeanCount(
-   ) {
+   public Integer getMBeanCount()
+   {
       try {
          return mRemoteAdaptor.getMBeanCount();
       }
-      catch( RemoteException re ) {
-         //AS Not a good style but for now
-         return null;
+      catch( RemoteException e ) {
+         throw new RuntimeMBeanException(new NestedRuntimeException(e));
       }
    }
 
-   public Object getAttribute(
-      ObjectName pName,
-      String pAttribute
-   ) throws
-      MBeanException,
-      AttributeNotFoundException,
-      InstanceNotFoundException,
-      ReflectionException
+   public Object getAttribute(ObjectName pName, String pAttribute)
+      throws MBeanException,
+             AttributeNotFoundException,
+             InstanceNotFoundException,
+             ReflectionException
    {
       try {
          return mRemoteAdaptor.getAttribute( pName, pAttribute );
       }
-      catch( RemoteException re ) {
-         //AS Not a good style but for now
-         return null;
+      catch( RemoteException e ) {
+         throw new MBeanException(e);
       }
    }
 
-   public AttributeList getAttributes(
-      ObjectName pName,
-      String[] pAttributes
-   ) throws
-      InstanceNotFoundException,
-      ReflectionException
+   public AttributeList getAttributes(ObjectName pName, String[] pAttributes)
+      throws InstanceNotFoundException,
+             ReflectionException
    {
       try {
          return mRemoteAdaptor.getAttributes( pName, pAttributes );
       }
-      catch( RemoteException re ) {
-         //AS Not a good style but for now
-         return null;
+      catch( RemoteException e ) {
+         throw new RuntimeMBeanException(new NestedRuntimeException(e));
       }
    }
 
-   public void setAttribute(
-      ObjectName pName,
-      Attribute pAttribute
-   ) throws
-      InstanceNotFoundException,
-      AttributeNotFoundException,
-      InvalidAttributeValueException,
-      MBeanException,
-      ReflectionException
+   public void setAttribute(ObjectName pName, Attribute pAttribute)
+      throws InstanceNotFoundException,
+             AttributeNotFoundException,
+             InvalidAttributeValueException,
+             MBeanException,
+             ReflectionException
    {
       try {
          mRemoteAdaptor.setAttribute( pName, pAttribute );
       }
-      catch( RemoteException re ) {
+      catch( RemoteException e ) {
+         throw new MBeanException(e);
       }
    }
 
-   public AttributeList setAttributes(
-      ObjectName pName,
-      AttributeList pAttributes
-   ) throws
-      InstanceNotFoundException,
-      ReflectionException
+   public AttributeList setAttributes(ObjectName pName,
+                                      AttributeList pAttributes)
+      throws InstanceNotFoundException,
+             ReflectionException
    {
       try {
          return mRemoteAdaptor.setAttributes( pName, pAttributes );
       }
-      catch( RemoteException re ) {
-         //AS Not a good style but for now
-         return null;
+      catch( RemoteException e ) {
+         throw new RuntimeMBeanException(new NestedRuntimeException(e));
       }
    }
 
-   public Object invoke(
-      ObjectName pName,
-      String pActionName,
-      Object[] pParams,
-      String[] pSignature
-   ) throws
-      InstanceNotFoundException,
-      MBeanException,
-      ReflectionException
+   public Object invoke(ObjectName pName,
+                        String pActionName,
+                        Object[] pParams,
+                        String[] pSignature)
+      throws InstanceNotFoundException,
+             MBeanException,
+             ReflectionException
    {
       try {
          return mRemoteAdaptor.invoke( pName, pActionName, pParams, pSignature );
       }
-      catch( RemoteException re ) {
-         //AS Not a good style but for now
-         log.error("operation failed... SHOULD NOT MASK THIS EXCEPTION", re);
-         return null;
+      catch( RemoteException e ) {
+         throw new MBeanException(e);
       }
    }
 
-   public String getDefaultDomain(
-   ) {
+   public String getDefaultDomain()
+   {
       try {
          return mRemoteAdaptor.getDefaultDomain();
       }
-      catch( RemoteException re ) {
-         //AS Not a good style but for now
-         log.error("operation failed... SHOULD NOT MASK THIS EXCEPTION", re);         
-         return null;
+      catch( RemoteException e ) {
+         throw new RuntimeMBeanException(new NestedRuntimeException(e));
       }
    }
 
    /**
-   * Add a notification listener which was previously loaded
-   * as MBean. ATTENTION: note that the both the Notification-
-   * Filter and Handback must be serializable and the class
-   * definition must be available for the RMI-Connector
-   **/
-   public void addNotificationListener(
-      ObjectName pName,
-      ObjectName pListener,
-      NotificationFilter pFilter,
-      Object pHandback
-   ) throws
-      InstanceNotFoundException
+    * Add a notification listener which was previously loaded
+    * as MBean. ATTENTION: note that the both the Notification-
+    * Filter and Handback must be serializable and the class
+    * definition must be available for the RMI-Connector
+    **/
+   public void addNotificationListener(ObjectName pName,
+                                       ObjectName pListener,
+                                       NotificationFilter pFilter,
+                                       Object pHandback)
+      throws InstanceNotFoundException
    {
       try {
          mRemoteAdaptor.addNotificationListener( pName, pListener, pFilter, pHandback );
       }
-      catch( RemoteException re ) {
-         throw new RuntimeException( "Remote access to perform this operation failed: " + re );
+      catch( RemoteException e ) {
+         throw new RuntimeMBeanException(new NestedRuntimeException(e));
       }
    }
 
-   public void addNotificationListener(
-      ObjectName pName,
-      NotificationListener pListener,
-      NotificationFilter pFilter,
-      Object pHandback
-   ) throws
-      InstanceNotFoundException
+   public void addNotificationListener(ObjectName pName,
+                                       NotificationListener pListener,
+                                       NotificationFilter pFilter,
+                                       Object pHandback)
+      throws InstanceNotFoundException
    {
       try {
          ClientNotificationListener lListener = null;
@@ -519,6 +490,7 @@ public class RMIConnectorImpl
                   this
                );
                break;
+               
             case NOTIFICATION_TYPE_JMS:
                lListener = new JMSClientNotificationListener(
                   pName,
@@ -530,6 +502,7 @@ public class RMIConnectorImpl
                   this
                );
                break;
+               
             case NOTIFICATION_TYPE_POLLING:
                lListener = new PollingClientNotificationListener(
                   pName,
@@ -541,6 +514,7 @@ public class RMIConnectorImpl
                   this
                );
          }
+         
          // Add this listener on the client to remove it when the client goes down
          mListeners.addElement( lListener );
       }
@@ -551,16 +525,15 @@ public class RMIConnectorImpl
          if( e instanceof InstanceNotFoundException ) {
             throw (InstanceNotFoundException) e;
          }
-         throw new RuntimeException("Remote access to perform this operation failed: " + e);
+
+         throw new RuntimeMBeanException(new NestedRuntimeException(e));
       }
    }
 
-   public void removeNotificationListener(
-      ObjectName pName,
-      NotificationListener pListener
-   ) throws
-      InstanceNotFoundException,
-      ListenerNotFoundException
+   public void removeNotificationListener(ObjectName pName,
+                                          NotificationListener pListener)
+      throws InstanceNotFoundException,
+             ListenerNotFoundException
    {
       ClientNotificationListener lCheck = new SearchClientNotificationListener( pName, pListener );
       int i = mListeners.indexOf( lCheck );
@@ -570,36 +543,126 @@ public class RMIConnectorImpl
       }
    }
 
-   public void removeNotificationListener(
-      ObjectName pName,
-      ObjectName pListener
-   ) throws
-      InstanceNotFoundException,
-      ListenerNotFoundException
+   public void removeNotificationListener(ObjectName pName, ObjectName pListener)
+      throws InstanceNotFoundException,
+             ListenerNotFoundException
    {
       try {
          mRemoteAdaptor.removeNotificationListener( pName, pListener );
       }
-      catch( RemoteException re ) {
-         throw new RuntimeException( "Remote access to perform this operation failed: " + re.getMessage() );
+      catch( RemoteException e ) {
+         throw new RuntimeMBeanException(new NestedRuntimeException(e));
       }
    }
 
-   public MBeanInfo getMBeanInfo(
-      ObjectName pName
-   ) throws
-      InstanceNotFoundException,
-      IntrospectionException,
-      ReflectionException
+   public MBeanInfo getMBeanInfo(ObjectName pName)
+      throws InstanceNotFoundException,
+             IntrospectionException,
+             ReflectionException
    {
       try {
          return mRemoteAdaptor.getMBeanInfo( pName );
       }
-      catch( RemoteException re ) {
-         log.error("operation failed... SHOULD NOT MASK THIS EXCEPTION", re);
-         //AS Not a good style but for now
-         return null;
+      catch( RemoteException e ) {
+         throw new RuntimeMBeanException(new NestedRuntimeException(e));
       }
    }
+
+   /**
+    * Always throws {@link java.lang.UnsupportedOperationException}.
+    *
+    * @throws UnsupportedOperationException
+    */
+   public ObjectInputStream deserialize(ObjectName name, byte[] data) 
+      throws InstanceNotFoundException, OperationsException
+   {
+      throw new UnsupportedOperationException();
+   }
+ 
+   /**
+    * Always throws {@link java.lang.UnsupportedOperationException}.
+    *
+    * @throws UnsupportedOperationException
+    */
+   public ObjectInputStream deserialize(String className, byte[] data) 
+      throws OperationsException, ReflectionException
+   {
+      throw new UnsupportedOperationException();
+   }
+
+   /**
+    * Always throws {@link java.lang.UnsupportedOperationException}.
+    *
+    * @throws UnsupportedOperationException
+    */
+   public ObjectInputStream deserialize(String className, ObjectName loaderName, byte[] data)
+      throws InstanceNotFoundException, OperationsException, ReflectionException
+   {
+      throw new UnsupportedOperationException();
+   }
+
+   // JMXClientConnector implementation -------------------------------
+   
+   public void start(Object pServer)
+      throws IllegalArgumentException
+   {
+      log.debug( "Starting");
+      
+      if( pServer == null ) {
+         throw new IllegalArgumentException( "Server cannot be null. "
+                                             + "To close the connection use stop()" );
+      }
+
+      try {
+         InitialContext ctx = new InitialContext();
+         
+         log.debug("Using Naming Context: " + ctx +
+                   ", environment: " + ctx.getEnvironment() +
+                   ", name in namespace: " + ctx.getNameInNamespace());
+         
+         // This has to be adjusted later on to reflect the given parameter
+         mRemoteAdaptor = (RMIAdaptor)ctx.lookup( "jmx:" + pServer + ":rmi" );
+         log.error( "Using remote adaptor: " + mRemoteAdaptor );
+         mServer = pServer;
+
+         ctx.close();
+      }
+      catch( Exception e ) {
+         //
+         // jason: why does start() only declare a IAE?
+         //
+         throw new NestedRuntimeException(e);
+      }
+   }
+
+   public void stop() {
+      log.debug( "Stopping");
+      
+      // First go through all the reistered listeners and remove them
+      if( mRemoteAdaptor != null ) {
+         // Loop through all the listeners and remove them
+         Iterator i = mListeners.iterator();
+         while( i.hasNext() ) {
+            ClientNotificationListener lListener = (ClientNotificationListener) i.next();
+            try {
+               lListener.removeNotificationListener( this );
+            }
+            catch( Exception ignore ) {}
+
+            i.remove();
+         }
+      }
+      
+      mRemoteAdaptor = null;
+      mServer = "";
+   }
+   
+   public boolean isAlive() {
+      return mRemoteAdaptor != null;
+   }
+
+   public String getServerDescription() {
+      return String.valueOf(mServer);
+   }   
 }   
 
