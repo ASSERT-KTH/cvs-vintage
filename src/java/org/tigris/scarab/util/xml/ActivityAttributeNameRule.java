@@ -76,6 +76,7 @@ public class ActivityAttributeNameRule extends BaseRule
         log().debug("(" + getState() + ") activity attribute name body: " + text);
         ActivityInfo activityInfo = (ActivityInfo)digester.pop();
         activityInfo.setName(text);
+        activityInfo.setActivityInfoType(ActivityInfo.TYPE_ATTRIBUTE);
         digester.push(activityInfo);
     }
 }

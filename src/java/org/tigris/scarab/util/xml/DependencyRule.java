@@ -51,6 +51,7 @@ import org.apache.commons.digester.Digester;
 import org.tigris.scarab.om.Issue;
 import org.tigris.scarab.om.DependType;
 import org.tigris.scarab.om.Depend;
+import org.tigris.scarab.om.Transaction;
 
 /**
  * Handler for the xpath "scarab/module/issue/dependency"
@@ -81,8 +82,10 @@ public class DependencyRule extends BaseRule
         String nodeType = (String)digester.pop();
         String parentOrChildIssueXmlId = (String)digester.pop();
         DependType dependType = (DependType)digester.pop();
+        ActivityInfo activityInfo = (ActivityInfo)digester.pop();
         String issueXmlId = (String)digester.pop();
-        digester.push(issueXmlId);
+        
+        activityInfo.setActivityInfoType(ActivityInfo.TYPE_DEPENDENCY);
         
         DependencyNode dn = new DependencyNode(nodeType, issueXmlId, 
                                                parentOrChildIssueXmlId, 
@@ -100,9 +103,9 @@ public class DependencyRule extends BaseRule
                                     dependType, true);
             getDependencyTree().addIssueDependency(issueXmlId, dn);
         }
-        
-        Object obj = digester.pop();
-        digester.push(obj);
+
+        digester.push(issueXmlId);
+        digester.push(activityInfo);
     }
     
     protected void doInsertionAtEnd()
@@ -111,10 +114,16 @@ public class DependencyRule extends BaseRule
         String nodeType = (String)digester.pop();
         String parentOrChildIssueXmlId = (String)digester.pop();
         DependType dependType = (DependType)digester.pop();
+        ActivityInfo activityInfo = (ActivityInfo)digester.pop();
+        Transaction transaction = (Transaction)digester.pop();
         Issue issue = (Issue)digester.pop();
+        
         String issueXmlId = getDependencyTree().getIssueXmlId(issue.getIssueId());
         Depend depend = Depend.getInstance();
         depend.setDependType(dependType);
+        
+        activityInfo.setActivityInfoType(ActivityInfo.TYPE_DEPENDENCY);
+        
         if (nodeType.equals(DependencyNode.NODE_TYPE_PARENT)) 
         {
             if(getDependencyTree().isIssueResolvedYet(parentOrChildIssueXmlId)) 
@@ -140,5 +149,7 @@ public class DependencyRule extends BaseRule
         } 
         
         digester.push(issue);
+        digester.push(transaction);
+        digester.push(activityInfo);
     }
 }

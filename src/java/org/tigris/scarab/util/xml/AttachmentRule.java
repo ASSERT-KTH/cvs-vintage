@@ -46,6 +46,8 @@ package org.tigris.scarab.util.xml;
  * individuals on behalf of Collab.Net.
  */
 
+import java.io.File;
+
 import org.xml.sax.Attributes;
 
 import org.apache.commons.digester.Digester;
@@ -103,7 +105,22 @@ public class AttachmentRule extends BaseRule
     {
         Attachment attachment = (Attachment)digester.pop();
         Issue issue = (Issue)digester.pop();
+        
         attachment.setIssueId(issue.getIssueId());
+        
+        if (attachment.getFilePath() != null)
+        {
+            String path = attachment.getFilePath();
+            File source = new File(path);
+            attachment.setFilePath(null);
+            attachment.save();
+            String newFile = attachment.getRepositoryDirectory(issue.getModule().getCode())
+                + path.substring(path.lastIndexOf(File.separator)+1)
+                + "_" + attachment.getPrimaryKey().toString();
+            File dest = new File(newFile);
+            source.renameTo(dest);
+            attachment.setFilePath(newFile);
+        }
         attachment.save();
         digester.push(issue);
     }

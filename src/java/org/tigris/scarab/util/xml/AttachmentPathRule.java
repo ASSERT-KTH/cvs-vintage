@@ -46,6 +46,8 @@ package org.tigris.scarab.util.xml;
  * individuals on behalf of Collab.Net.
  */
 
+import java.io.File;
+
 import org.apache.commons.digester.Digester;
 
 import org.tigris.scarab.om.Attachment;
@@ -73,10 +75,16 @@ public class AttachmentPathRule extends BaseRule
     public void body(String text) throws Exception
     {
         log().debug("(" + getState() + ") attachment path body: " + text);
+        File file = new File(text);
+        if (!file.exists() || !file.isFile())
+        {
+            throw new Exception("File: " + text + " does not exist.");
+        }
         super.doInsertionOrValidationAtBody(text);
     }
     
     protected void doInsertionAtBody(String text)
+        throws Exception
     {
         Attachment attachment = (Attachment)digester.pop();
         attachment.setFilePath(text);
