@@ -26,6 +26,7 @@ import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.UIManager;
 
 import org.columba.core.gui.frame.ContainerInfoPanel;
 import org.columba.core.gui.selection.ISelectionListener;
@@ -50,7 +51,7 @@ public class FolderInfoPanel extends ContainerInfoPanel implements ISelectionLis
         super.initComponents();
 
         leftLabel = new JLabel("Total: Unseen:");
-        leftLabel.setForeground(Color.white);
+        leftLabel.setForeground(UIManager.getColor("List.selectionForeground"));
         leftLabel.setBorder(BorderFactory.createEmptyBorder(2, 2, 2, 2));
         leftLabel.setFont(font);
         leftLabel.setIconTextGap(10);
@@ -87,19 +88,19 @@ public class FolderInfoPanel extends ContainerInfoPanel implements ISelectionLis
         readLabel = new JLabel();
 
         readLabel.setFont(font);
-        readLabel.setForeground(Color.white);
+        readLabel.setForeground(UIManager.getColor("List.selectionForeground"));
         readLabel.setBorder(BorderFactory.createEmptyBorder(2, 2, 2, 2));
 
         unreadLabel = new JLabel();
 
         unreadLabel.setFont(font);
-        unreadLabel.setForeground(Color.white);
+        unreadLabel.setForeground(UIManager.getColor("List.selectionForeground"));
         unreadLabel.setBorder(BorderFactory.createEmptyBorder(2, 2, 2, 2));
 
         recentLabel = new JLabel();
         recentLabel.setBorder(BorderFactory.createEmptyBorder(2, 2, 2, 2));
         recentLabel.setFont(font);
-        recentLabel.setForeground(Color.white);
+        recentLabel.setForeground(UIManager.getColor("List.selectionForeground"));
         recentLabel.setIconTextGap(10);
 
         gridbagConstraints = new GridBagConstraints();

@@ -16,13 +16,13 @@
 
 package org.columba.mail.gui.composer.util;
 
-import java.awt.Color;
 import java.awt.GridBagConstraints;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
+import javax.swing.UIManager;
 
 import org.columba.core.gui.frame.ContainerInfoPanel;
 import org.columba.core.gui.util.ImageLoader;
@@ -53,7 +53,7 @@ public class IdentityInfoPanel extends ContainerInfoPanel {
         panel.add(box);
 
         label = new JLabel("Identity");
-        label.setForeground(Color.white);
+        label.setForeground(UIManager.getColor("List.selectionForeground"));
         label.setBorder(BorderFactory.createEmptyBorder(2, 2, 2, 2));
         label.setFont(font);
         label.setIconTextGap(10);
