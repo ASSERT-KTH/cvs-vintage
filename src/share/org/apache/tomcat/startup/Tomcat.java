@@ -136,20 +136,6 @@ public class Tomcat {
 	xh.addRule("Server/Logger", 
 		   xh.addChild("addLogger", "org.apache.tomcat.logging.Logger") );
     }
-    
-
-    /** Setup a SecurityManager, this can only be called once or a
-     *  SecurityException will be generated.
-    */
-    void setSecurityManager( XmlMapper xh ) {
-        xh.addRule("Server/SecurityManager", xh.objectCreate("org.apache.tomcat.loader.SetSecurityManager"));
-        xh.addRule("Server/SecurityManager", xh.setProperties());
-//         xh.addRule("Server/SecurityManager/Permission",xh.methodSetter("setPermission",3));
-//         xh.addRule("Server/SecurityManager/Permission",xh.methodParam(0,"className"));
-//         xh.addRule("Server/SecurityManager/Permission",xh.methodParam(1,"attribute"));
-//         xh.addRule("Server/SecurityManager/Permission",xh.methodParam(2,"value"));
-//         xh.addRule("Server/SecurityManager",xh.addChild("addPermissions",null));
-    }
 
     /**
      * Return the configuration file we are processing.  If the
@@ -198,7 +184,6 @@ public class Tomcat {
 	setHelper( xh );
 	setConnectorHelper( xh );
 	setLogHelper( xh );
-        setSecurityManager( xh );
 
 	File f = getConfigFile(cm);
 	try {

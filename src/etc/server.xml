@@ -45,6 +45,9 @@
         
         <ContextInterceptor className="org.apache.tomcat.context.AutoSetup" />
 
+        <ContextInterceptor 
+            className="org.apache.tomcat.context.WebXmlReader" />
+
         <!-- Uncomment out if you have JDK1.2 and want to use policy 
         <ContextInterceptor 
             className="org.apache.tomcat.context.PolicyInterceptor" />
@@ -56,8 +59,6 @@
             className="org.apache.tomcat.context.DefaultCMSetter" />
         <ContextInterceptor 
             className="org.apache.tomcat.context.WorkDirInterceptor" />
-        <ContextInterceptor 
-            className="org.apache.tomcat.context.WebXmlReader" />
         <ContextInterceptor 
             className="org.apache.tomcat.context.LoadOnStartupInterceptor" />
 

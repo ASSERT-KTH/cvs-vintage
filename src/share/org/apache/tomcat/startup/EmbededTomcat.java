@@ -50,7 +50,7 @@ public class EmbededTomcat { // extends WebService
     String workDir;
     
     // configurable properties
-    int debug=21;
+    int debug=0;
     
     public EmbededTomcat() {
     }
@@ -125,7 +125,10 @@ public class EmbededTomcat { // extends WebService
 	sc.setAttribute( "vhost_port" , new Integer( port ) );
 	if( addr != null ) sc.setAttribute( "vhost_address", addr );
 	if( hostname != null ) sc.setAttribute( "vhost_name", hostname );
-	
+
+// 	sc.setAttribute( "socketFactory",
+// 			 "org.apache.tomcat.net.SSLSocketFactory");
+	System.out.println("XXX " + keyFile + " " + keyPass);
 	sc.setTcpConnectionHandler( new HttpConnectionHandler());
 	// XXX add the secure socket
 	
@@ -173,13 +176,10 @@ public class EmbededTomcat { // extends WebService
 		return;
 	    }
 	    Context ctx=facadeM.getRealContext( sctx );
-	    contextM.initContext( ctx );
+	    contextM.removeContext( ctx );
 	} catch( Exception ex ) {
 	    ex.printStackTrace();
 	}
-	// XXX todo
-	// XXX Make sure we remove the HttpSecurityHandler:
-	// 	HttpSecurityHandler.removeInstance(ctx);	
     }
 
 
@@ -290,6 +290,10 @@ public class EmbededTomcat { // extends WebService
 	// no AutoSetup !
 	
 	// set workdir, engine header, auth Servlet, error servlet, loader
+	WebXmlReader webXmlI=new WebXmlReader();
+	webXmlI.setValidate( false );
+	addContextInterceptor( webXmlI );
+
 	PolicyInterceptor polI=new PolicyInterceptor();
 	addContextInterceptor( polI );
 
@@ -299,9 +303,9 @@ public class EmbededTomcat { // extends WebService
 	DefaultCMSetter defaultCMI=new DefaultCMSetter();
 	addContextInterceptor( defaultCMI );
 
-	WebXmlReader webXmlI=new WebXmlReader();
-	webXmlI.setValidate( false );
-	addContextInterceptor( webXmlI );
+	WorkDirInterceptor wdI=new WorkDirInterceptor();
+	addContextInterceptor( wdI );
+
 	
 	LoadOnStartupInterceptor loadOnSI=new LoadOnStartupInterceptor();
 	addContextInterceptor( loadOnSI );
@@ -314,18 +318,22 @@ public class EmbededTomcat { // extends WebService
 	addRequestInterceptor( sessI );
 
 	SimpleMapper1 mapI=new SimpleMapper1();
-	//	mapI.setDebug(10);
 	addRequestInterceptor( mapI );
+	//	mapI.setDebug(10);
 	
 	addRequestInterceptor( new StandardSessionInterceptor());
 	
 	// access control ( find if a resource have constraints )
 	AccessInterceptor accessI=new AccessInterceptor();
 	addRequestInterceptor( accessI );
+	accessI.setDebug(20);
 
 	// set context class loader
 	Jdk12Interceptor jdk12I=new Jdk12Interceptor();
 	addRequestInterceptor( jdk12I );
+
+	// xXXX
+	addRequestInterceptor( new SimpleRealm());
     }
     
 

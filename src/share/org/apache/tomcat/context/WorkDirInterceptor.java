@@ -75,21 +75,66 @@ import javax.servlet.http.*;
  * @author costin@dnt.ro
  */
 public class WorkDirInterceptor extends BaseInterceptor {
-
+    boolean cleanWorkDir=false;
+    
     public WorkDirInterceptor() {
+    }
+
+    /** IMHO this shouldn't be used - if true, we'll loose
+	all jsp compiled files. The workdir is the only directory
+	where the servlet is allowed to write anyway ( if policy
+	is used ).
+
+	In case this proves to be usefull, the property should
+	belong to context.
+    */
+    public void setCleanWorkDir( boolean b ) {
+	cleanWorkDir=b;
     }
 	
     public void contextInit(Context ctx) {
-	// 	if (! ctx.isWorkDirPersistent()) {
-	// 	    clearDir(ctx.getWorkDir() );
-	//         }
+	if( ctx.getWorkDir() == null)
+	    setWorkDir(ctx);
+
+	if (! ctx.getWorkDir().exists()) {
+	    //log  System.out.println("Creating work dir " + ctx.getWorkDir() );
+	    ctx.getWorkDir().mkdirs();
+	}
+	ctx.setAttribute(Constants.ATTRIB_WORKDIR1, ctx.getWorkDir());
+	ctx.setAttribute(Constants.ATTRIB_WORKDIR , ctx.getWorkDir());
+
+	if ( cleanWorkDir ) {
+	    clearDir(ctx.getWorkDir() );
+	}
     }
 
     public void contextShutdown( Context ctx ) {
-	// 	if (! ctx.isWorkDirPersistent()) {
-	//             clearDir(ctx.getWorkDir());
-	// 	}
+	if ( cleanWorkDir ) {
+	    clearDir(ctx.getWorkDir());
+	}
     }
+
+    // -------------------- Implementation --------------------
+
+    /** Encoded ContextManager.getWorkDir() + host + port + path
+     */
+    private void setWorkDir(Context ctx ) {
+	ContextManager cm=ctx.getContextManager();
+
+	StringBuffer sb=new StringBuffer();
+	sb.append(cm.getWorkDir());
+	sb.append(File.separator);
+	String host=ctx.getHost();
+	if( host==null ) 
+	    sb.append(cm.getHostName() );
+	else
+	    sb.append( host );
+	sb.append("_").append(cm.getPort());
+	sb.append(URLEncoder.encode( ctx.getPath() ));
+	
+	ctx.setWorkDir( new File(sb.toString()));
+    }
+    
 
     private void clearDir(File dir) {
         String[] files = dir.list();

@@ -70,7 +70,7 @@ import javax.servlet.http.*;
 /**
  *  JDK1.2 specific options. Fix the class loader, etc.
  */
-public final class Jdk12Interceptor extends  BaseInterceptor implements RequestInterceptor {
+public final class Jdk12Interceptor extends  BaseInterceptor {
     private ContextManager cm;
     private int debug=0;
 

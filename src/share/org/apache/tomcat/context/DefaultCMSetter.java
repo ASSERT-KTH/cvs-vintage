@@ -87,34 +87,9 @@ public class DefaultCMSetter extends BaseInterceptor {
     {
 	setEngineHeader( ctx );
 
-	if( ctx.getWorkDir() == null)
-	    setWorkDir(ctx);
 
-	if (! ctx.getWorkDir().exists()) {
-	    //log  System.out.println("Creating work dir " + ctx.getWorkDir() );
-	    ctx.getWorkDir().mkdirs();
-	}
-	ctx.setAttribute(Constants.ATTRIB_WORKDIR1, ctx.getWorkDir());
-	ctx.setAttribute(Constants.ATTRIB_WORKDIR , ctx.getWorkDir());
-
-	// Set default session manager if none set
-	ServletWrapper authWrapper=new ServletWrapper();
-	authWrapper.setContext( ctx );
-	authWrapper.setServletName( "tomcat.authServlet");
-	String login_type=ctx.getAuthMethod();
-	if( "BASIC".equals( login_type )) {
-	    authWrapper.setServletClass( "org.apache.tomcat.servlets.BasicLoginServlet" );
-	    ctx.addServlet( authWrapper );
-	} else if( "FORM".equals( login_type )) {
-	    authWrapper.setServletClass( "org.apache.tomcat.servlets.BasicLoginServlet" );
-	    //authWrapper.setServletClass( "org.apache.tomcat.servlets.FormLoginServlet" );
-	    ctx.addServlet( authWrapper );
-	} else {
-	    authWrapper.setServletClass( "org.apache.tomcat.servlets.BasicLoginServlet" );
-	    ctx.addServlet( authWrapper );
-	    //	    ctx.log("Unknown auth method " + login_type );
-	}
-	
+	// XXX XXX this will go away - error handling needs to
+	// be re-writen !!!!!! 
 	ServletWrapper errorWrapper=new ServletWrapper();
 	errorWrapper.setContext( ctx );
 	errorWrapper.setServletClass( "org.apache.tomcat.servlets.DefaultErrorPage" );
@@ -134,25 +109,6 @@ public class DefaultCMSetter extends BaseInterceptor {
     }
 
     // -------------------- implementation
-    /** Encoded ContextManager.getWorkDir() + host + port + path
-     */
-    private void setWorkDir(Context ctx ) {
-	ContextManager cm=ctx.getContextManager();
-
-	StringBuffer sb=new StringBuffer();
-	sb.append(cm.getWorkDir());
-	sb.append(File.separator);
-	String host=ctx.getHost();
-	if( host==null ) 
-	    sb.append(cm.getHostName() );
-	else
-	    sb.append( host );
-	sb.append("_").append(cm.getPort());
-	sb.append(URLEncoder.encode( ctx.getPath() ));
-	
-	ctx.setWorkDir( new File(sb.toString()));
-    }
-    
     private void setEngineHeader(Context ctx) {
         String engineHeader=ctx.getEngineHeader();
 

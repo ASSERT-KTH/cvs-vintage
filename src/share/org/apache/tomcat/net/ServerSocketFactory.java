@@ -1,8 +1,4 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/net/Attic/ServerSocketFactory.java,v 1.4 2000/06/14 19:07:19 costin Exp $
- * $Revision: 1.4 $
- * $Date: 2000/06/14 19:07:19 $
- *
  * ====================================================================
  *
  * The Apache Software License, Version 1.1
@@ -92,12 +88,6 @@ import java.util.Hashtable;
  * @author db@eng.sun.com
  * @author Harish Prabandham
  */
-
-
-//
-// WARNING: Some of the APIs in this class are used by J2EE. 
-// Please talk to harishp@eng.sun.com before making any changes.
-//
 public abstract class ServerSocketFactory implements Cloneable {
 
     //

@@ -83,7 +83,7 @@ import java.util.*;
  *  concepts - I think we can do that, but need to experiment with that)
  */
 public class AccessInterceptor extends  BaseInterceptor  {
-    int debug=0;
+    int debug=20;
     ContextManager cm;
 
     // Security mapping note
@@ -91,21 +91,21 @@ public class AccessInterceptor extends  BaseInterceptor  {
 
     // Required roles attribute
     int reqRolesNote;
+    int reqTransportNote;
     
     public AccessInterceptor() {
     }
 
     /* -------------------- Support functions -------------------- */
-    public void setDebug( int level ) {
-	if(level!=0) log("SM: AccessInterceptor - set debug " + level);
-	debug=level;
+    public void setDebug( int i ) {
+	System.out.println("setDebug " + i );
     }
-
+    
     void log( String msg ) {
 	if( cm==null) 
 	    System.out.println("AccessInterceptor: " + msg );
 	else
-	    cm.log( msg );
+	    cm.log( "AccessInterceptor: " + msg );
     }
 
 
@@ -114,23 +114,52 @@ public class AccessInterceptor extends  BaseInterceptor  {
     /** Set the context manager. To keep it simple we don't support
      *  dynamic add/remove for this interceptor. 
      */
-    public void setContextManager( ContextManager cm ) {
+    public void engineInit(ContextManager cm) throws TomcatException {
+	
 	super.setContextManager( cm );
 	
 	this.cm=cm;
 	// set-up a per/container note for maps
 	try {
-	    secMapNote = cm.getNoteId( ContextManager.CONTAINER_NOTE, "map.security");
-	    reqRolesNote = cm.getNoteId( ContextManager.REQUEST_NOTE, "required.roles");
+	    secMapNote = cm.getNoteId( ContextManager.CONTAINER_NOTE,
+				       "map.security");
+	    // Used for inter-module communication - required role, tr
+	    reqRolesNote = cm.getNoteId( ContextManager.REQUEST_NOTE,
+					 "required.roles");
+	    reqTransportNote = cm.getNoteId( ContextManager.REQUEST_NOTE,
+					 "required.transport");
 	} catch( TomcatException ex ) {
 	    ex.printStackTrace();
 	    throw new RuntimeException( "Invalid state ");
 	}
     }
 
+    public void contextInit( Context ctx)
+	throws TomcatException
+    {
+	// Set default session manager if none set
+	ServletWrapper authWrapper=new ServletWrapper();
+	authWrapper.setContext( ctx );
+	authWrapper.setServletName( "tomcat.authServlet");
+	String login_type=ctx.getAuthMethod();
+	if( "FORM".equals( login_type )) {
+	    authWrapper.setServletClass( "org.apache.tomcat.servlets.FormLoginServlet" );
+	} else if( "BASIC".equals( login_type )) {
+	    authWrapper.setServletClass( "org.apache.tomcat.servlets.BasicLoginServlet" );
+	} else {
+	    // if unknown, leave the normal 404 error handler to deal
+	    // with unauthorized access.
+	}
+
+	if( debug > 0 ) log( "Init  " + ctx.getHost() + " " +
+			     ctx.getPath() + " " + login_type );
+	ctx.addServlet( authWrapper );
+    }
+    
     /** Called when a context is added.
      */
-    public void addContext( ContextManager cm, Context ctx ) throws TomcatException
+    public void addContext( ContextManager cm, Context ctx )
+	throws TomcatException
     {
 	Container ct=ctx.getContainer();
 	ct.setNote( secMapNote, new SecurityConstraints() );
@@ -139,7 +168,8 @@ public class AccessInterceptor extends  BaseInterceptor  {
     /** Called when a context is removed from a CM - we must ask the mapper to
 	remove all the maps related with this context
      */
-    public void removeContext( ContextManager cm, Context ctx ) throws TomcatException
+    public void removeContext( ContextManager cm, Context ctx )
+	throws TomcatException
     {
 	// nothing - will go away with the ctx
     }
@@ -158,10 +188,14 @@ public class AccessInterceptor extends  BaseInterceptor  {
     {
 	Context ctx=ct.getContext();
 	Container ctxCt=ctx.getContainer();
-	SecurityConstraints ctxSecurityC=(SecurityConstraints)ctxCt.getNote( secMapNote );
+	SecurityConstraints ctxSecurityC=(SecurityConstraints)ctxCt.
+	    getNote( secMapNote );
 	
 	if( ct.getRoles()!=null || ct.getTransport()!=null ) {
-	    if( ctx.getDebug() > 0 ) log( "ACCESS: Adding " + ctx.getHost() + " " + ctx.getPath() + " " + ct.getPath() );
+	    if( debug > 0 )
+		log( "ACCESS: Adding " + ctx.getHost() + " " +
+		     ctx.getPath() + " " +
+		     ct.getPath() );
 	    ctxSecurityC.addContainer( ct );
 	}
     }
@@ -169,37 +203,36 @@ public class AccessInterceptor extends  BaseInterceptor  {
     /* -------------------- Request mapping -------------------- */
 
     /** Check if this request requires auth, and if so check the roles.
-     *  This interceptor needs to be "up-chain" from security check interceptor.
-     *  It is also possible to move this check at requestMap stage.
      */
-    public int authorize( Request req, Response response )
+    public int requestMap( Request req )
     {
 	Context ctx=req.getContext();
-	SecurityConstraints ctxSec=(SecurityConstraints)ctx.getContainer().getNote( secMapNote );
+	SecurityConstraints ctxSec=(SecurityConstraints)ctx.getContainer().
+	    getNote( secMapNote );
+	log("XXX1 " + ctxSec + " " + debug);
 	if( ctxSec.patterns==0 ) return 0; // fast exit
 	
 	String reqURI = req.getRequestURI();
 	String ctxPath= ctx.getPath();
 	String path=reqURI.substring( ctxPath.length());
 	String method=req.getMethod();
-
-	if( ctx.getDebug() > 0 ) log( "ACCESS: checking " + path );
+	
+	if( debug > 1 ) log( "ACCESS: checking " + path );
 	
 	for( int i=0; i< ctxSec.patterns ; i++ ) {
 	    Container ct=ctxSec.securityPatterns[i];
 	    if( match( ct, path, method ) ) {
-		log( "ACCESS: matched " + ct.getPath() + " " + ct.getMethods() + " " +
-		     ct.getTransport() + " " + ct.getRoles());
+		if( debug>0) log( "ACCESS: matched " + ct.getPath() + " " +
+				  ct.getMethods() + " " +
+				  ct.getTransport() + " " + ct.getRoles());
 		String roles[]=ct.getRoles();
 		String transport=ct.getTransport();
 
-		if( transport != null && (
-					  "INTEGRAL".equals( transport ) ||
-					  "CONFIDENTIAL".equals( transport ))) {
-		    // check if SSL is used
-		    log( "ACCESS: SSL required " + req );
+		if( transport != null &&
+		    ! "NONE".equals( transport )) {
+		    req.setNote( reqTransportNote, transport );
 		}
-
+	    
 		// roles will be checked by a different interceptor
 		req.setNote( reqRolesNote, roles );
 	    }

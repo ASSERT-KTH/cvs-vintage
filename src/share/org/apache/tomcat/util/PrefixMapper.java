@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/util/PrefixMapper.java,v 1.1 2000/05/01 23:07:48 costin Exp $
- * $Revision: 1.1 $
- * $Date: 2000/05/01 23:07:48 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/util/PrefixMapper.java,v 1.2 2000/06/16 17:08:58 costin Exp $
+ * $Revision: 1.2 $
+ * $Date: 2000/06/16 17:08:58 $
  *
  * ====================================================================
  *
@@ -68,7 +68,7 @@ import java.net.URL;
 import java.io.File;
 import java.net.MalformedURLException;
 import java.io.IOException;
-import java.util.Hashtable;
+import java.util.*;
 
 /** Prefix and exact mapping alghoritm.
  *XXX finish factoring out the creation of the map ( right now direct field access is
@@ -83,13 +83,13 @@ public class PrefixMapper {
     Hashtable vhostMaps=new Hashtable();
 
 
-    SimpleHashtable prefixMappedServlets;
-    SimpleHashtable exactMappedServlets;
+    Hashtable prefixMappedServlets;
+    Hashtable exactMappedServlets;
 
         // Cache the most recent mappings
     // Disabled by default ( since we haven't implemented
     // capacity and remove ). 
-    SimpleHashtable mapCache;
+    Hashtable mapCache;
     // By using TreeMap instead of SimpleMap you go from 143 to 161 RPS
     // ( at least on my machine )
     // Interesting - even if SimpleHashtable is faster than Hashtable
@@ -105,34 +105,55 @@ public class PrefixMapper {
 
     
     public PrefixMapper() {
-	prefixMappedServlets=new SimpleHashtable();
-	exactMappedServlets=new SimpleHashtable();
-	mapCache=new SimpleHashtable();
+	prefixMappedServlets=new Hashtable();
+	exactMappedServlets=new Hashtable();
+	mapCache=new Hashtable();
     }
 
     public void setMapCache( boolean v ) {
 	mapCacheEnabled=v;
     }
     
-    public void removeMapping( String host, String path ) {
-	// XXX not implemented
-    }
+//     public void removeMapping( String host, String path ) {
+// 	// XXX not implemented
+//     }
 
     /** Remove all mappings matching path
      */
     public void removeAllMappings( String host, String path ) {
-	// XXX not implemented
+	PrefixMapper vmap=this;
+	if( host==null ) {
+	    vmap=(PrefixMapper)vhostMaps.get(host);
+	}
+	
+	// remove all paths starting with path
+	Enumeration en=vmap.prefixMappedServlets.keys();
+	while( en.hasMoreElements() ) {
+	    String s=(String)en.nextElement();
+	    if( s.startsWith( path ))
+		vmap.prefixMappedServlets.remove( s );
+	}
+	
+	en=vmap.exactMappedServlets.keys();
+	while( en.hasMoreElements() ) {
+	    String s=(String)en.nextElement();
+	    if( s.startsWith( path ))
+		vmap.exactMappedServlets.remove( s );
+	}
+	// reset the cache
+	mapCache=new Hashtable();
+	
     }
 
     /**
      */
-    public void addMapping( String path, Object target ) {
+    void addMapping( String path, Object target ) {
 	prefixMappedServlets.put( path, target);
     }
 
     /**
      */
-    public void addExactMapping( String path, Object target ) {
+    void addExactMapping( String path, Object target ) {
 	exactMappedServlets.put( path, target);
     }
     

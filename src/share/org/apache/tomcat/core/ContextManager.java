@@ -682,8 +682,8 @@ public class ContextManager {
 	return 0;
     }
 
-    /** Call all authentication callbacks. If any of them is able to identify the user
-     *  it will set the principal in req.
+    /** Call all authentication callbacks. If any of them is able to
+	identify the user it will set the principal in req.
      */
     public int authenticate( Request req, Response res ) {
 	for( int i=0; i< requestInterceptors.size(); i++ ) {
@@ -692,12 +692,14 @@ public class ContextManager {
 	return 0;
     }
 
-    /** Call all authorization callbacks. The "require valid user" attributes are probably
-     *  set during the mapping stage ( for efficiency), but it can be done here too.
+    /** Call all authorization callbacks. The "require valid user" attributes
+	are probably set during the mapping stage ( for efficiency), but it
+	can be done here too.
      */
     int authorize( Request req, Response res ) {
 	for( int i=0; i< requestInterceptors.size(); i++ ) {
-	    int err = ((RequestInterceptor)requestInterceptors.elementAt(i)).authorize( req, res );
+	    int err = ((RequestInterceptor)requestInterceptors.elementAt(i)
+		       ).authorize( req, res );
 	    if ( err != 0 ) {
 		if( debug>0) log( "Authorize result " + err );
 		return err;
@@ -712,7 +714,8 @@ public class ContextManager {
     */
     int doBeforeBody( Request req, Response res ) {
 	for( int i=0; i< requestInterceptors.size(); i++ ) {
-	    ((RequestInterceptor)requestInterceptors.elementAt(i)).beforeBody( req, res );
+	    ((RequestInterceptor)requestInterceptors.elementAt(i)
+	     ).beforeBody( req, res );
 	}
 	return 0;
     }
