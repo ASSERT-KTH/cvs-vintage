@@ -11,6 +11,7 @@ import java.util.ConcurrentModificationException;
 import java.util.HashSet; 
 import java.util.Iterator; 
 import java.util.Set; 
+import javax.ejb.EJBException; 
 import javax.ejb.EJBLocalObject; 
 import org.jboss.ejb.EntityEnterpriseContext; 
 import org.jboss.ejb.LocalContainerInvoker; 
@@ -23,7 +24,7 @@ import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCCMRFieldBridge;
  * or the responsibilities of this class.
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.3 $
+ * @version $Revision: 1.4 $
  */                            
 public class RelationSet implements Set {
    private JDBCCMRFieldBridge cmrField;
@@ -70,6 +71,10 @@ public class RelationSet implements Set {
 
    public boolean add(Object o) {
       Set idSet = getIdSet();
+      if(cmrField.isReadOnly()) {
+         throw new EJBException("Field is read-only: " + 
+               cmrField.getFieldName());
+      }
 
       if(!relatedLocalInterface.isInstance(o)) {
          throw new IllegalArgumentException("Object must be an instance of " + relatedLocalInterface.getName());
@@ -85,6 +90,10 @@ public class RelationSet implements Set {
    
    public boolean addAll(Collection c) {
       Set idSet = getIdSet();
+      if(cmrField.isReadOnly()) {
+         throw new EJBException("Field is read-only: " + 
+               cmrField.getFieldName());
+      }
 
       if(c == null) {
          throw new IllegalArgumentException("Collection is null");
@@ -101,6 +110,10 @@ public class RelationSet implements Set {
 
    public boolean remove(Object o) {
       Set idSet = getIdSet();
+      if(cmrField.isReadOnly()) {
+         throw new EJBException("Field is read-only: " + 
+               cmrField.getFieldName());
+      }
 
       if(!relatedLocalInterface.isInstance(o)) {
          throw new IllegalArgumentException("Object must be an instance of " + relatedLocalInterface.getName());
@@ -116,6 +129,10 @@ public class RelationSet implements Set {
 
    public boolean removeAll(Collection c) {
       Set idSet = getIdSet();
+      if(cmrField.isReadOnly()) {
+         throw new EJBException("Field is read-only: " + 
+               cmrField.getFieldName());
+      }
 
       if(c == null) {
          throw new IllegalArgumentException("Collection is null");
@@ -132,6 +149,10 @@ public class RelationSet implements Set {
 
    public void clear() {
       Set idSet = getIdSet();
+      if(cmrField.isReadOnly()) {
+         throw new EJBException("Field is read-only: " + 
+               cmrField.getFieldName());
+      }
 
       Iterator iterator = (new HashSet(idSet)).iterator();
       while(iterator.hasNext()) {
@@ -141,6 +162,10 @@ public class RelationSet implements Set {
 
    public boolean retainAll(Collection c) {
       Set idSet = getIdSet();
+      if(cmrField.isReadOnly()) {
+         throw new EJBException("Field is read-only: " + 
+               cmrField.getFieldName());
+      }
 
       if(c == null) {
          throw new IllegalArgumentException("Collection is null");
@@ -256,6 +281,10 @@ public class RelationSet implements Set {
          
          public void remove() {
             verifyIteratorIsValid();
+            if(cmrField.isReadOnly()) {
+               throw new EJBException("Field is read-only: " + 
+                     cmrField.getFieldName());
+            }
 
             try {
                idIterator.remove();
