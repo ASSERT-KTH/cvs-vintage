@@ -46,10 +46,6 @@
   #paginate ($resultsPerPage $pageNum $sortColumn $sortPolarity)
 #end
 
-<div class="functnbar">
-<input type="submit" value="Done"  name="eventSubmit_doDone" />&#160;
-<input type="submit" value="Cancel" name="eventSubmit_doCancel" />
-</div>
 
 
 <h3>Issue types</h3>
@@ -106,10 +102,6 @@
   #paginate ($resultsPerPage $pageNum $sortColumn $sortPolarity)
 #end
 
-<div class="functnbar2">
-<input type="submit" value="Done" name="eventSubmit_doDone" />&#160;
-<input type="submit" value="Cancel" name="eventSubmit_doCancel" />&#160;
-</div>
 
 $intake.declareGroups()
 </form>

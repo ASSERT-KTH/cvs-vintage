@@ -21,11 +21,11 @@ $link.setPage("admin,ManageArtifactTypes.vm").setLabel("here") to proceed.
 <input type="hidden" name="action" value="admin.ArtifactTypeEdit" />
 <input type="hidden" name="issueTypeId" value="$issueTypeId" />
 <input type="hidden" name="$scarabG.Constant.OTHER_TEMPLATE" value="admin,UserAttributeSelect.vm" />
-<input type="hidden" name="$scarabG.Constant.LAST_TEMPLATE" value="admin,ArtifactTypeEdit.vm" />
+#set ($cancelTemplate = $data.Parameters.getString("$scarabG.Constant.CANCEL_TEMPLATE", "admin,ManageArtifactTypes.vm"))
+<input type="hidden" name="$scarabG.Constant.CANCEL_TEMPLATE" value="$cancelTemplate" />
 
 <div class="functnbar">
-<input type="submit" value="Done"  name="eventSubmit_doDone" />&#160;
-<input type="submit" value="Cancel"  name="eventSubmit_doCancel" />
+<input type="submit" value="Back"  name="eventSubmit_doCancel" />
 </div>
 
 <h3>Issue type information</h3>
@@ -180,8 +180,7 @@ $link.setPage("admin,ManageArtifactTypes.vm").setLabel("here") to proceed.
 #end
 
 <div class="functnbar2">
-<input type="submit" value="Done"  name="eventSubmit_doDone" />&#160;
-<input type="submit" value="Cancel"  name="eventSubmit_doCancel" />
+<input type="submit" value="Back"  name="eventSubmit_doCancel" />
 </div>        
 
 $intake.declareGroups()

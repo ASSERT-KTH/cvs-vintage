@@ -8,6 +8,7 @@
 <input type="hidden" name="action" value="admin.ManageArtifactTypes" />
 <input type="hidden" name="$scarabG.Constant.OTHER_TEMPLATE" value="admin,GlobalArtifactTypeEdit.vm" />
 <input type="hidden" name="$scarabG.Constant.LAST_TEMPLATE" value="module" />
+<input type="hidden" name="$scarabG.Constant.CANCEL_TEMPLATE" value="admin,ManageArtifactTypes.vm" />
 
 #set ($issueTypes = $scarabR.CurrentModule.AvailableIssueTypes)
 #if ($issueTypes.isEmpty())
@@ -16,7 +17,7 @@
     #if ($canEditDomain)
       <input type="submit" value="Create new" name="eventSubmit_doCreateartifacttype" />&#160;
     #end
-    <input type="submit" value="Cancel" name="eventSubmit_doCancel" />
+    <input type="submit" value="Back" name="eventSubmit_doCancel" />
 </div>
 
     <h3>Issue types</h3>
@@ -28,7 +29,7 @@
     #if ($canEditDomain)
       <input type="submit" value="Create new" name="eventSubmit_doCreateartifacttype" />&#160;
     #end
-    <input type="submit" value="Cancel" name="eventSubmit_doCancel" />
+    <input type="submit" value="Back" name="eventSubmit_doCancel" />
 </div>
 
 #else
@@ -38,7 +39,7 @@
     #if ($canEditDomain)
       <input type="submit" value="Create new" name="eventSubmit_doCreateartifacttype" />&#160;
     #end
-    <input type="submit" value="Cancel" name="eventSubmit_doCancel" />
+    <input type="submit" value="Back" name="eventSubmit_doCancel" />
 </div>
         
     <h3>Issue Types</h3>
@@ -64,7 +65,7 @@
     #if ($canEditDomain)
        <input type="submit" value="Create new" name="eventSubmit_doCreateartifacttype" />&#160;
     #end
-    <input type="submit" value="Cancel" name="eventSubmit_doCancel" />
+    <input type="submit" value="Back" name="eventSubmit_doCancel" />
 </div>
         
 #end

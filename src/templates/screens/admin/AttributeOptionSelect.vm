@@ -14,8 +14,10 @@ $page.setTitle("Add global attribute option to attribute '$attribute.Name'")
 <input type="hidden" name="attributeId" value="$data.Parameters.getString("attributeId","").trim()" />
 <input type="hidden" name="att_0id" value="$data.Parameters.getString("attributeId","").trim()" />
 <input type="hidden" name="issueTypeId" value="$data.Parameters.getString("issueTypeId","").trim()" />
+<input type="hidden" name="groupId" value="$data.Parameters.getString("groupId")" />
 <input type="hidden" name="$scarabG.Constant.NEXT_TEMPLATE" value="admin,ModuleAttributeEdit.vm" />
 <input type="hidden" name="$scarabG.Constant.OTHER_TEMPLATE" value="admin,GlobalAttributeEdit.vm" />
+<input type="hidden" name="$scarabG.Constant.CANCEL_TEMPLATE" value="admin,ModuleAttributeEdit.vm" />
 		
 <div class="functnbar">
 #if ($availOptions.size() > 0)
@@ -24,7 +26,7 @@ $page.setTitle("Add global attribute option to attribute '$attribute.Name'")
 #if ($canEditDomain)
 <input type="submit" value="Create new" name="eventSubmit_doGotoothertemplate" />&#160;
 #end
-<input type="submit" value="Cancel"  name="eventSubmit_doCancel" />&#160;
+<input type="submit" value="Back"  name="eventSubmit_doCancel" />&#160;
 </div>
 
 #if ($availOptions.size() == 0)
@@ -58,7 +60,7 @@ associated with this attribute in this module.</strong></p>
 #if ($canEditDomain)
 <input type="submit" value="Create new" name="eventSubmit_doGotoothertemplate" />&#160;
 #end
-<input type="submit" value="Cancel"  name="eventSubmit_doCancel" />&#160;
+<input type="submit" value="Back"  name="eventSubmit_doCancel" />&#160;
 </div>
 
 </form>

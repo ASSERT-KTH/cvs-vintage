@@ -25,7 +25,6 @@ $page.setTitle("Simple query")
 
 <p class="functnbar">
 <input type="submit" value="Search" name="eventSubmit_doSearch" />&#160;
-<input type="submit" value="Cancel" name="eventSubmit_doCancel" />
 </p>
 
 #if (!$searchTextAttributes.isEmpty())
@@ -132,7 +131,6 @@ $page.setTitle("Simple query")
 
 <p class="functnbar2">
 <input type="submit" value="Search" name="eventSubmit_doSearch" />&#160;
-<input type="submit" value="Cancel" name="eventSubmit_doCancel" />
 </p>
 
 $intake.declareGroups()

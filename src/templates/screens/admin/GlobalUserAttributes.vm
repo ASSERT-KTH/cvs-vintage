@@ -18,10 +18,6 @@
 <input type="hidden" name="$scarabG.Constant.LAST_TEMPLATE" value="global" />
 <input type="hidden" name="attributeType" value="user" />
 
-<div class="functnbar">
-<input type="submit" value="Done" name="eventSubmit_doDone" />&#160;
-<input type="submit" name="eventSubmit_doCancel" value="Cancel" />
-</div>      
         
 ## SORTING
 #set ($sortColumn = $data.Parameters.getString("sortColumn",""))
@@ -114,10 +110,6 @@
   #paginate ($resultsPerPage $pageNum $sortColumn $sortPolarity)
 #end
 
-<div class="functnbar2">
-<input type="submit" value="Done" name="eventSubmit_doDone" />&#160;
-<input type="submit" name="eventSubmit_doCancel" value="Cancel" />
-</div>
         
 $intake.declareGroups()
 </form>

@@ -11,7 +11,7 @@
 #if ($canEditDomain)
     <input type="submit" value="Create new" name="eventSubmit_doCreatenewglobalattribute"/>&#160;
 #end
-<input type="submit" value="Cancel" name="eventSubmit_doCancel" />
+<input type="submit" value="Back" name="eventSubmit_doCancel" />
 </div>
 #end
 
@@ -21,10 +21,10 @@
 <form action="$link.setPage("admin,AttributeSelect.vm")" method="post">
 <input type="hidden" name="action" value="admin.AttributeGroupEdit" />
 <input type="hidden" name="$agGroup.AttributeGroupId.Key" value="$data.Parameters.getString("groupId","").trim()" />
+<input type="hidden" name="groupid" value="$data.Parameters.getString("groupId","").trim()" />
 <input type="hidden" name="issueTypeId" value="$data.Parameters.getString("issueTypeId","").trim()" />
-<input type="hidden" name="groupid" value="$data.Parameters.getString("groupid")" />
 <input type="hidden" name=$scarabG.Constant.OTHER_TEMPLATE value="admin,GlobalAttributeEdit.vm" />
-<input type="hidden" name="$scarabG.Constant.LAST_TEMPLATE" value="$data.Parameters.getString($scarabG.Constant.LAST_TEMPLATE)" />
+<input type="hidden" name="$scarabG.Constant.CANCEL_TEMPLATE" value="admin,AttributeGroupEdit.vm" />
 
 #AttributeSelectBar("")
 

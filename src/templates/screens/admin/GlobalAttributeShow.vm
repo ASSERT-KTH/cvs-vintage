@@ -40,7 +40,7 @@ This page is for selecting an Attribute to edit which is defined in a global sca
 <form action="$link.setPage("admin,GlobalAttributeShow.vm")" method="post">
 <input type="hidden" name="action" value="admin.GlobalAttributes" />
 <input type="hidden" name="$scarabG.Constant.OTHER_TEMPLATE" value="admin,GlobalAttributeEdit.vm" />
-<input type="hidden" name="$scarabG.Constant.LAST_TEMPLATE" value="global" />
+<input type="hidden" name="$scarabG.Constant.CANCEL_TEMPLATE" value="admin,GlobalAttributeShow.vm" />
 
 <div class="tabs">
 <table cellpadding="3" cellspacing="0" border="0">
@@ -52,10 +52,6 @@ Global attributes</th>
 </table>
 </div>
 
-<div class="functnbar">
-<input type="submit" value="Done" name="eventSubmit_doDone" />&#160;
-<input type="submit" value="Cancel" name="eventSubmit_doCancel" />
-</div>       
 
 #if ($paginated)
   #paginate ($resultsPerPage $pageNum $sortColumn $sortPolarity)
@@ -106,10 +102,6 @@ Global attributes</th>
   #paginate ($resultsPerPage $pageNum $sortColumn $sortPolarity)
 #end
 
-<div class="functnbar2">
-<input type="submit" value="Done" name="eventSubmit_doDone" />&#160;
-<input type="submit" value="Cancel" name="eventSubmit_doCancel" />&#160;
-</div>       
 
 $intake.declareGroups()
 

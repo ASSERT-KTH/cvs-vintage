@@ -25,13 +25,11 @@
 #end
 <input type="hidden" name="groupId" value="$data.Parameters.getString("groupId")" />
 <input type="hidden" name="issueTypeId" value="$data.Parameters.getString("issueTypeId")" />
-#if (!$lastTemplate.equals(""))
-  <input type="hidden" name="$scarabG.Constant.LAST_TEMPLATE" value="$lastTemplate" />
-#end
+#set ($cancelTemplate = $data.Parameters.getString("$scarabG.Constant.CANCEL_TEMPLATE", "admin,GlobalUserAttributes.vm"))
+  <input type="hidden" name="$scarabG.Constant.CANCEL_TEMPLATE" value="$cancelTemplate" />
 
 <div class="functnbar">
-<input type="submit" value="Done" name="eventSubmit_doDone" />&#160;
-<input type="submit" value="Cancel" name="eventSubmit_doCancel"/>
+<input type="submit" value="Back" name="eventSubmit_doCancel"/>
 </div>
 
 <h3>User attribute information</h3>
@@ -96,8 +94,7 @@
 </div>
 
 <div class="functnbar2">
-<input type="submit" value="Done" name="eventSubmit_doDone" />&#160;
-<input type="submit" value="Cancel" name="eventSubmit_doCancel" />
+<input type="submit" value="Back" name="eventSubmit_doCancel" />
 </div>
 
 $intake.declareGroups()

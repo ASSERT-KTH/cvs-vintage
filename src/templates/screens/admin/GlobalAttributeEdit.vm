@@ -1,6 +1,5 @@
 #set ($module = $scarabR.CurrentModule)
 #set ($attribute = $scarabR.Attribute)
-#set ($lastTemplate = $data.Parameters.getString($scarabG.Constant.LAST_TEMPLATE, ""))
 
 #if ($attribute.AttributeId)
    #set ($attgroup = $intake.Attribute.mapTo($attribute))
@@ -24,18 +23,14 @@ On this screen, one can modify system wide Attribute information.
 #if ($createNew.equals("false"))
    <input type="hidden" name="attId" value="$attribute.AttributeId" />
 #end
-#if (!$lastTemplate.equals(""))
-  <input type="hidden" name="$scarabG.Constant.LAST_TEMPLATE" value="$lastTemplate" />
-#end
+#set ($cancelTemplate = $data.Parameters.getString("$scarabG.Constant.CANCEL_TEMPLATE", "admin,GlobalAttributeShow.vm"))
+  <input type="hidden" name="$scarabG.Constant.CANCEL_TEMPLATE" value="$cancelTemplate" />
 
 <input type="hidden" name="groupId" value="$data.Parameters.getString("groupId")" />
 <input type="hidden" name="issueTypeId" value="$data.Parameters.getString("issueTypeId")" />
 
 <div class="functnbar">
-#if ($createNew.equals("false"))
-<input type="submit" value="Done"  name="eventSubmit_doDone" />&#160;
-#end
-<input type="submit" value="Cancel"  name="eventSubmit_doCancel" />&#160;
+<input type="submit" value="Back"  name="eventSubmit_doCancel" />&#160;
 </div>
 
 <h3>Info</h3>
@@ -189,10 +184,7 @@ Options because you can quickly end up with a mess.</small></p>
 #end
 
 <div class="functnbar2">
-#if ($createNew.equals("false"))
-<input type="submit" value="Done"  name="eventSubmit_doDone" />&#160;
-#end
-<input type="submit" value="Cancel"  name="eventSubmit_doCancel" />&#160;
+<input type="submit" value="Back"  name="eventSubmit_doCancel" />&#160;
 </div>
 $intake.declareGroups()
 </form>
