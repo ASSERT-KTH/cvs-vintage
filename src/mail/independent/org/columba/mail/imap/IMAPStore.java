@@ -406,8 +406,7 @@ public class IMAPStore {
 			}
 			IMAPResponse[] responses = getProtocol().select(path);
 
-			messageFolderInfo =
-				MessageFolderInfoParser.parse(responses);
+			messageFolderInfo = MessageFolderInfoParser.parse(responses);
 
 			ColumbaLogger.log.info("exists:" + messageFolderInfo.getExists());
 
@@ -776,13 +775,18 @@ public class IMAPStore {
 		ensureLoginState();
 		ensureSelectedState(path);
 
-		//Object[] expungedUids = null;
 		try {
-			MessageSet set = new MessageSet(uids);
 
-			IMAPResponse[] responses = imap.copy(set.getString(), destFolder);
+			// we use a token size of 100
+			MessageSetTokenizer tok = new MessageSetTokenizer(uids, 100);
 
-			//expungedUids = FlagsParser.parseFlags(responses);
+			while (tok.hasNext()) {
+				List list = (List) tok.next();
+				MessageSet set = new MessageSet(list.toArray());
+
+				IMAPResponse[] responses =
+					imap.copy(set.getString(), destFolder);
+			}
 
 		} catch (BadCommandException ex) {
 		} catch (CommandFailedException ex) {
@@ -916,65 +920,52 @@ public class IMAPStore {
 		// calculate number of requests
 		int requestCount = list.size() / 100;
 
-		ColumbaLogger.log.debug("list.size()=" + list.size());
-		ColumbaLogger.log.debug("requestCount=" + requestCount);
+		// initialize progressbar
+		getObservable().setMax(requestCount);
+		getObservable().setCurrent(0);
 
-		if (list.size() < 100) {
-			int startIndex = 0;
-			int endIndex = list.size();
+		// we use a token size of 100
+		MessageSetTokenizer tok = new MessageSetTokenizer(list, 100);
 
-			if (list.size() == 1)
-				endIndex = 1;
+		int counter = 0;
+		while (tok.hasNext()) {
+			List l = (List) tok.next();
+			MessageSet set = new MessageSet(l.toArray());
 
-			ColumbaLogger.log.debug(
-				"fetching from " + startIndex + " to " + endIndex);
+			// fetch headers from server
+			IMAPResponse[] r =
+				getProtocol().fetchHeaderList(
+					set.getString().trim(),
+					headerFields.toString().trim());
 
-			// create sublist
-			List sublist = list.subList(startIndex, endIndex);
+			// parse headers
+			for (int i = 0; i < r.length; i++) {
+				if (r[i].getResponseSubType().equals("FETCH")) {
+					// parse the reponse 
+					IMAPHeader imapHeader = IMAPHeaderParser.parse(r[i]);
+					// consume this line
+					r[i] = null;
 
-			// fetch partial headerlist
-			fetchPartialHeaderlist(
-				headerList,
-				sublist,
-				headerFields.toString());
+					// add it to the headerlist
+					ColumbaHeader header =
+						new ColumbaHeader(imapHeader.getHeader());
+					Object uid = imapHeader.getUid();
+					header.set("columba.uid", uid);
+					headerList.add(header, uid);
+				}
 
-		} else {
-			// initialize progressbar
-			getObservable().setMax(requestCount);
-			getObservable().setCurrent(0);
-
-			for (int i = 0; i <= requestCount; i++) {
-				String messageset = null;
-				// always use 100 as step size
-				int startIndex = i * 100;
-				int endIndex = startIndex + 100;
-
-				// check for boundary
-				if (endIndex > list.size())
-					endIndex = list.size() - 1;
-
-				ColumbaLogger.log.debug(
-					"fetching from " + startIndex + " to " + endIndex);
-
-				// create sublist
-				List sublist = list.subList(startIndex, endIndex);
-
-				// fetch partial headerlist
-				fetchPartialHeaderlist(
-					headerList,
-					sublist,
-					headerFields.toString());
-
-				if (getObservable() != null)
-					getObservable().setCurrent(i);
-
-				printStatusMessage(
-					MailResourceLoader.getString(
-						"statusbar",
-						"message",
-						"fetch_headers"));
 			}
+
+			if (getObservable() != null)
+				getObservable().setCurrent(counter++);
+
+			printStatusMessage(
+				MailResourceLoader.getString(
+					"statusbar",
+					"message",
+					"fetch_headers"));
 		}
+
 	}
 
 	/**
@@ -1011,8 +1002,7 @@ public class IMAPStore {
 		ensureSelectedState(path);
 		try {
 
-			IMAPResponse[] responses =
-				getProtocol().fetchMimePartTree(uid);
+			IMAPResponse[] responses = getProtocol().fetchMimePartTree(uid);
 
 			MimeTree mptree = MimeTreeParser.parse(responses);
 
@@ -1083,8 +1073,7 @@ public class IMAPStore {
 		ensureSelectedState(path);
 
 		try {
-			IMAPResponse[] responses =
-				getProtocol().fetchMessageSource( uid);
+			IMAPResponse[] responses = getProtocol().fetchMessageSource(uid);
 
 			String source = MessageSourceParser.parse(responses);
 
@@ -1115,24 +1104,32 @@ public class IMAPStore {
 		ensureSelectedState(path);
 
 		try {
-			MessageSet set = new MessageSet(uids);
 
-			String flagsString = parseVariant(variant);
-			ColumbaLogger.log.debug("flags=" + flagsString);
+			// we use a token size of 100
+			MessageSetTokenizer tok = new MessageSetTokenizer(uids, 100);
 
-			// unset flags command
-			if (variant >= 4) {
-				IMAPResponse[] responses =
-					getProtocol().removeFlags(
-						set.getString(),
-						flagsString,
-						true);
-			} else {
-				IMAPResponse[] responses =
-					getProtocol().storeFlags(
-						set.getString(),
-						flagsString,
-						true);
+			while (tok.hasNext()) {
+				List list = (List) tok.next();
+				MessageSet set = new MessageSet(list.toArray());
+
+				String flagsString = parseVariant(variant);
+				ColumbaLogger.log.debug("flags=" + flagsString);
+
+				// unset flags command
+				if (variant >= 4) {
+					IMAPResponse[] responses =
+						getProtocol().removeFlags(
+							set.getString(),
+							flagsString,
+							true);
+				} else {
+					IMAPResponse[] responses =
+						getProtocol().storeFlags(
+							set.getString(),
+							flagsString,
+							true);
+				}
+
 			}
 
 		} catch (BadCommandException ex) {
