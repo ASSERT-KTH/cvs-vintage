@@ -35,7 +35,7 @@
     
     <property name="torque.dir.scarab" value="${build.src.scarab}/torque"/>
     <property name="javadoc.destdir" value="${build.project}/api"/>
-    <property name="torquedoc.destdir" value="${build.project}/docs"/>
+    <property name="torquedoc.destdir" value="${src.html.dir}/docs"/>
     <property name="scarab.war.file" value="${build.webapps}/${scarab.context}.war"/>
 
     <!-- Build classpath -->
