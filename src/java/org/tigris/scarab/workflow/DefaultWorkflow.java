@@ -47,7 +47,7 @@ package org.tigris.scarab.workflow;
  */ 
 
 import java.util.List;
-import java.util.HashMap;
+import java.util.Map;
 
 
 import org.tigris.scarab.om.ScarabUser;
@@ -65,7 +65,7 @@ import org.tigris.scarab.util.ScarabException;
  * into the context to replace the $link that Turbine adds.
  *   
  * @author <a href="mailto:elicia@tigris.org">Elicia David</a>
- * @version $Id: DefaultWorkflow.java,v 1.8 2002/11/15 01:08:59 elicia Exp $
+ * @version $Id: DefaultWorkflow.java,v 1.9 2003/01/13 21:18:04 elicia Exp $
  */
 public class DefaultWorkflow implements Workflow
 {
@@ -81,7 +81,7 @@ public class DefaultWorkflow implements Workflow
 
     public String checkTransition(AttributeOption fromOption, 
                                   AttributeOption toOption,
-                                  Issue issue, HashMap newAttVals,
+                                  Issue issue, Map newAttVals,
                                   ScarabUser user)
         throws ScarabException
     {
@@ -89,7 +89,7 @@ public class DefaultWorkflow implements Workflow
     }
 
     public String checkInitialTransition(AttributeOption toOption,
-                                         Issue issue, HashMap newAttVals,
+                                         Issue issue, Map newAttVals,
                                          ScarabUser user)
         throws ScarabException
     {
