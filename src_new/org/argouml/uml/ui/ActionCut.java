@@ -1,4 +1,4 @@
-// $Id: ActionCut.java,v 1.11 2004/06/24 06:25:45 linus Exp $
+// $Id: ActionCut.java,v 1.12 2004/07/26 22:40:10 mkl Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -58,7 +58,7 @@ public class ActionCut extends AbstractAction implements CaretListener {
     private ActionCut() {
         super(Translator.localize(LOCALIZE_KEY));
         Icon icon =
-            ResourceLoaderWrapper.getResourceLoaderWrapper()
+            ResourceLoaderWrapper
 	        .lookupIconResource(
 				    Translator.getImageBinding(LOCALIZE_KEY),
 				    Translator.localize(LOCALIZE_KEY));
