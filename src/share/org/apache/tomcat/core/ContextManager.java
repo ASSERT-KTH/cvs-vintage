@@ -117,7 +117,7 @@ import org.apache.tomcat.service.PoolTcpConnector;
  * @author costin@eng.sun.com
  * @author Hans Bergsten [hans@gefionsoftware.com]
  */
-public class ContextManager {
+public class ContextManager implements LogAware {
 
     /**
      * The string constants for this ContextManager.
@@ -184,7 +184,7 @@ public class ContextManager {
      */
     public void setHome(String home) {
 	this.home=FileUtil.getCanonicalPath( home );
-	logInt( "Setting home to " + this.home );
+	log( "Setting home to " + this.home );
     }
 
     /**
@@ -201,11 +201,11 @@ public class ContextManager {
 	if( debug > 20 ) {
 	    // we want to know all places that need this property
 	    // and find how it's computed - for embeding tc.
-	    logInt( "getHome " + home + " " + installDir + " " +
+	    log( "getHome " + home + " " + installDir + " " +
 		 System.getProperty("tomcat.home") + " " +
-		 FileUtil.getCanonicalPath( "." ));
-	    /*DEBUG*/ try {throw new Exception(); } catch(Exception ex)
-		{ex.printStackTrace();}
+		 FileUtil.getCanonicalPath( "." ),
+		 new Throwable("trace")
+		 );
 	}
 
 	if(home!=null) return home;
@@ -233,10 +233,9 @@ public class ContextManager {
 	if( debug > 20 ) {
 	    // we want to know all places that need this property
 	    // and find how it's computed - for embeding tc.
-	    logInt( "getInstallDir " + installDir + " " +
-		 System.getProperty("tomcat.home"));
-	    /*DEBUG*/ try {throw new Exception(); } catch(Exception ex) {
-		ex.printStackTrace();}
+	    log( "getInstallDir " + installDir + " " +
+		 System.getProperty("tomcat.home"),
+		 new Throwable("trace"));
 	}
 
 	if(installDir!= null) return installDir;
@@ -262,7 +261,7 @@ public class ContextManager {
      * WorkDir property - where all working files will be created
      */
     public void setWorkDir( String wd ) {
-	if(debug>0) logInt("set work dir " + wd);
+	if(debug>0) log("set work dir " + wd);
 	// make it absolute
 	File f=new File( wd );
 	if( ! f.isAbsolute() ) {
@@ -313,7 +312,7 @@ public class ContextManager {
      */
     public void setDefaults() {
 	if(connectors.size()==0) {
-	    if(debug>5) logInt("Setting default adapter");
+	    if(debug>5) log("Setting default adapter");
 	    PoolTcpConnector sc=new PoolTcpConnector();
 	    sc.setTcpConnectionHandler( new
 		org.apache.tomcat.service.http.HttpConnectionHandler());
@@ -321,7 +320,7 @@ public class ContextManager {
 	}
 
 	if( contextInterceptors.size()==0) {
-	    if(debug>5) logInt("Setting default context interceptors");
+	    if(debug>5) log("Setting default context interceptors");
 	    addContextInterceptor(new LogEvents());
 	    addContextInterceptor(new AutoSetup());
 	    //	    addContextInterceptor(new PolicyInterceptor());
@@ -333,7 +332,7 @@ public class ContextManager {
 	}
 
 	if( requestInterceptors.size()==0) {
-	    if(debug>5) logInt("Setting default request interceptors");
+	    if(debug>5) log("Setting default request interceptors");
 	    addRequestInterceptor(new SessionInterceptor());
 	    SimpleMapper1 smap=new SimpleMapper1();
 	    smap.setContextManager( this );
@@ -353,9 +352,9 @@ public class ContextManager {
      *  may be a better name ? ). ( Initializing is different from starting.)
      */
     public void init()  throws TomcatException {
-	//	logInt( "Tomcat install = " + getInstallDir());
-	// logInt( "Tomcat home = " + home);
-	if(debug>0 ) logInt( "Tomcat classpath = " +
+	//	log( "Tomcat install = " + getInstallDir());
+	// log( "Tomcat home = " + home);
+	if(debug>0 ) log( "Tomcat classpath = " +
 			     System.getProperty( "java.class.path" ));
 
 	setAccount( ACC_INIT_START, System.currentTimeMillis());
@@ -374,10 +373,9 @@ public class ContextManager {
 		initContext( context );
 	    } catch (TomcatException ex ) {
 		if( context!=null ) {
-		    logInt( "ERROR initializing " + context.toString() );
+		    log( "ERROR initializing " + context.toString(), ex );
+		    // log will print root cause too if it's there
 		    removeContext( context  );
-		    Throwable ex1=ex.getRootCause();
-		    if( ex1!=null ) ex.printStackTrace();
 		}
 	    }
 	}
@@ -454,7 +452,7 @@ public class ContextManager {
     /** Will stop all connectors
      */
     public void stop() throws Exception {// XXX TomcatException {
-	if(debug>0) logInt("Stopping context manager ");
+	if(debug>0) log("Stopping context manager ");
 	Enumeration connE=getConnectors();
 	while( connE.hasMoreElements() ) {
 	    ((ServerConnector)connE.nextElement()).stop();
@@ -475,6 +473,8 @@ public class ContextManager {
      * @param ctx context to be added.
      */
     public void addContext( Context ctx ) throws TomcatException {
+	log("Adding context " +  ctx.toString());
+
 	// Make sure context knows about its manager.
 	ctx.setContextManager( this );
 
@@ -490,7 +490,6 @@ public class ContextManager {
 	}
 
 	String vhost=ctx.getHost();
-	logInt("Adding context " +  ctx.toString());
 
 	// XXX temporary workaround for the old SimpleMapper -
 	// This code will be removed as soon as the new mapper is stable.
@@ -504,7 +503,7 @@ public class ContextManager {
     public void removeContext( Context context ) throws TomcatException {
 	if( context==null ) return;
 
-	logInt( "Removing context " + context.toString());
+	log( "Removing context " + context.toString());
 
 	ContextInterceptor cI[]=getContextInterceptors();
 	for( int i=0; i< cI.length; i++ ) {
@@ -518,7 +517,7 @@ public class ContextManager {
     void doReload( Request req, Context context ) throws TomcatException {
 	if( context==null ) return;
 
-	if( debug>0 ) logInt( "Reloading context " + context.toString());
+	if( debug>0 ) log( "Reloading context " + context.toString());
 
 	ContextInterceptor cI[]=getContextInterceptors();
 	for( int i=0; i< cI.length; i++ ) {
@@ -557,7 +556,7 @@ public class ContextManager {
      * @param con The new server connector
      */
     public synchronized void addServerConnector( ServerConnector con ) {
-	if(debug>0) logInt("Add connector javaClass=\"" +
+	if(debug>0) log("Add connector javaClass=\"" +
 			   con.getClass().getName() + "\"");
 	con.setServer( this );
 	connectors.addElement( con );
@@ -568,7 +567,7 @@ public class ContextManager {
     }
 
     public void addRequestInterceptor( RequestInterceptor ri ) {
-	if(debug>0) logInt("Add requestInterceptor javaClass=\"" +
+	if(debug>0) log("Add requestInterceptor javaClass=\"" +
 			   ri.getClass().getName() + "\" ");
 	requestInterceptors.addElement( ri );
 	if( ri instanceof ContextInterceptor )
@@ -614,7 +613,7 @@ public class ContextManager {
     }
 
     public void addContextInterceptor( ContextInterceptor ci) {
-	if(debug>0) logInt("Add contextInterceptor javaClass=\"" +
+	if(debug>0) log("Add contextInterceptor javaClass=\"" +
 			   ci.getClass().getName() + "\" ");
 	contextInterceptors.addElement( ci );
     }
@@ -729,7 +728,7 @@ public class ContextManager {
      *  where the Context is already known.
      */
     public int processRequest( Request req ) {
-	if(debug>9) logInt("ProcessRequest: "+req.toString());
+	if(debug>9) log("ProcessRequest: "+req.toString());
 	int status=0;
 
 	for( int i=0; i< requestInterceptors.size(); i++ ) {
@@ -744,7 +743,7 @@ public class ContextManager {
 	    if( status!=0 ) return status;
 	}
 
-	if(debug>9) logInt("After processing: "+req.toString());
+	if(debug>9) log("After processing: "+req.toString());
 
 	return 0;
     }
@@ -759,7 +758,7 @@ public class ContextManager {
 	for( int i=0; i< reqI.length; i++ ) {
 	    status=reqI[i].authenticate( req, res );
 	    if ( status != 0 ) {
-		if( debug>0) logInt( "Authenticate status " + status );
+		if( debug>0) log( "Authenticate status " + status );
 		return status;
 	    }
 	}
@@ -777,7 +776,7 @@ public class ContextManager {
 	for( int i=0; i< reqI.length; i++ ) {
 	    status = reqI[i].authorize( req, res, roles );
 	    if ( status != 0 ) {
-		if( debug>0) logInt( "Authorize status " + status );
+		if( debug>0) log( "Authorize status " + status );
 		return status;
 	    }
 	}
@@ -879,7 +878,7 @@ public class ContextManager {
 		urlPath= "/" + urlPath;
 	}
 
-	if( debug >4 ) logInt("createRequest " + origPath + " " + urlPath  );
+	if( debug >4 ) log("createRequest " + origPath + " " + urlPath  );
 	Request req= createRequest( urlPath );
 	String host=ctx.getHost();
 	if( host != null) req.setServerName( host );
@@ -931,8 +930,8 @@ public class ContextManager {
 	Context ctx = req.getContext();
 	if(ctx==null) ctx=getContext("");
 
-	ctx.log( code + " "  + req + " " +
-		 req.getAttribute("javax.servlet.error.message"));
+	ctx.log( "Status code:" + code + " request:"  + req + " msg:" +
+		 req.getAttribute("javax.servlet.error.message"));  // tuneme
 
 	errorPath = ctx.getErrorPage( code );
 	if( errorPath != null ) {
@@ -970,25 +969,24 @@ public class ContextManager {
 	    the client. AFAIK the trace is the _best_ debugger.
 	*/
 	if( t instanceof IllegalStateException ) {
-	    ctx.log("IllegalStateException in: " + req  + " " +
-		    t.getMessage() );
+	    ctx.log("IllegalStateException in " + req, t);
 	} else if( t instanceof org.apache.jasper.JasperException ) {
-	    ctx.log("JasperException: " + req + " "  + t.getMessage());
+	    ctx.log("JasperException in " + req, t);
 	} else if( t instanceof IOException ) {
 	    if( ((IOException)t).getMessage().equals("Broken pipe"))
+	    {
+		ctx.log("Broken pipe in " + req, t, Logger.DEBUG);  // tuneme
 		return;
-	    ctx.log("IOException in: " + req + " "  + t.getMessage());
+	    }
+	    ctx.log("IOException in " + req, t );
 	} else {
-	    ctx.log("Exception in: " + req , t );
+	    ctx.log("Exception in " + req , t );
 	}
 
 	if(null!=req.getAttribute("tomcat.servlet.error.defaultHandler")){
 	    // we are in handleRequest for the "default" error handler
-	    System.out.println("ERROR: can't find default error handler "+
-			       "or error in default error page");
-	    t.printStackTrace();
+	    log("ERROR: can't find default error handler, or error in default error page", t);
 	}
-
 
 	String errorPath=null;
 	Handler errorServlet=null;
@@ -1127,11 +1125,34 @@ public class ContextManager {
 
     // -------------------- Logging and debug --------------------
     boolean firstLog = true;
-    LogHelper loghelper = new LogHelper("tc_log", "ContextManager");
+    Logger.Helper loghelper = new Logger.Helper("tc_log", "ContextManager");
 
-    // Not used, except in server.xml, and usage is unclear -- should
-    // we kill it? Looks very obsolete.
+    /**
+     * Get the Logger object that the context manager is writing to (necessary?)
+     **/
+    public Logger getLogger() {
+	return loghelper.getLogger();
+    }
+
+    /**
+     * So other classes can piggyback on the context manager's log
+     * stream, using Logger.Helper.setProxy()
+     **/
+    public Logger.Helper getLoggerHelper() {
+	return loghelper;
+    }
+ 
+    /**
+     * Force this object to use the given Logger.
+     **/
+    public void setLogger( Logger logger ) {
+	log("!!!! setLogger: " + logger, Logger.DEBUG);
+	loghelper.setLogger(logger);
+    }
+
     public void addLogger(Logger l) {
+	if (debug>20)
+	    log("addLogger: " + l, new Throwable("trace"), Logger.DEBUG);
 	// Will use this later once I feel more sure what I want to do here.
 	// -akv
 	// firstLog=false;
@@ -1149,9 +1170,9 @@ public class ContextManager {
 	l.open();
     }
 
-
     public void setDebug( int level ) {
-	if( level != 0 ) System.out.println( "Setting level to " + level);
+	if( level != debug )
+	    log( "Setting debug level to " + level);
 	debug=level;
     }
 
@@ -1163,19 +1184,15 @@ public class ContextManager {
 	loghelper.log(msg);
     }
 
-    private final void logInt(String msg) {
-	loghelper.log(msg);
-    }
-
-    public final void doLog(String msg) {
-	loghelper.log(msg);
-    }
-
-    public final void doLog(String msg, Throwable t) {
+    public final void log(String msg, Throwable t) {
 	loghelper.log(msg, t);
     }
 
-    public final void doLog(String msg, Throwable t, int level) {
+    public final void log(String msg, int level) {
+	loghelper.log(msg, level);
+    }
+
+    public final void log(String msg, Throwable t, int level) {
 	loghelper.log(msg, t, level);
     }
 
@@ -1214,7 +1231,7 @@ public class ContextManager {
      * @deprecated
      */
     public void setPort(int port) {
-	/*DEBUG*/ try {throw new Exception(); } catch(Exception ex) {ex.printStackTrace();}
+	if (debug>0) log("setPort", new Throwable("trace"));
 	this.port=port;
     }
 
@@ -1223,7 +1240,6 @@ public class ContextManager {
      * @deprecated
      */
     public int getPort() {
-	//	/*DEBUG*/ try {throw new Exception(); } catch(Exception ex) {ex.printStackTrace();}
 	if(port==0) port=DEFAULT_PORT;
 	return port;
     }
@@ -1235,7 +1251,7 @@ public class ContextManager {
      * @deprecated
      */
     public void setHostName( String host) {
-	/*DEBUG*/ try {throw new Exception(); } catch(Exception ex) {ex.printStackTrace();}
+	if (debug>0)  log("setHostName", new Throwable("trace"));
 	this.hostname=host;
     }
 
@@ -1244,7 +1260,7 @@ public class ContextManager {
      * @deprecated
      */
     public String getHostName() {
-	//	/*DEBUG*/ try {throw new Exception(); } catch(Exception ex) {ex.printStackTrace();}
+	// if (debug>0)  log("getHostName", new Throwable("trace"));
 	if(hostname==null)
 	    hostname=DEFAULT_HOSTNAME;
 	return hostname;
@@ -1264,7 +1280,7 @@ public class ContextManager {
      * @deprecated Path is not "unique key".
      */
     public Enumeration getContextNames() {
-	/*DEBUG*/ try {throw new Exception(); } catch(Exception ex) {ex.printStackTrace();}
+	loghelper.log("getContextNames is deprecated", new Throwable("trace"), Logger.DEBUG);
         return contexts.keys();
     }
 
@@ -1278,8 +1294,7 @@ public class ContextManager {
      *
      */
     public Context getContext(String name) {
-	// System.out.println("Using deprecated getContext");
-	//	/*DEBUG*/ try {throw new Exception(); } catch(Exception ex) {ex.printStackTrace();}
+	loghelper.log("getContext(String) is deprecated", new Throwable("trace"), Logger.DEBUG);
 	return (Context)contexts.get(name);
     }
 
@@ -1290,6 +1305,7 @@ public class ContextManager {
      * @deprecated Use removeContext( Context ).
      */
     public void removeContext(String name) throws TomcatException {
+	loghelper.log("removeContext(String) is deprecated", new Throwable("trace"), Logger.DEBUG);
 	Context context = (Context)contexts.get(name);
 	log( "Removing context " + context.toString());
 
@@ -1312,7 +1328,7 @@ public class ContextManager {
 	    try {
 		cI[i].preServletInit( ctx, sw );
 	    } catch( TomcatException ex) {
-		ex.printStackTrace();
+		log("preServletInit" , ex);
 	    }
 	}
     }
@@ -1325,7 +1341,7 @@ public class ContextManager {
 	    try {
 		cI[i].postServletInit( ctx, sw );
 	    } catch( TomcatException ex) {
-		ex.printStackTrace();
+		log("postServletInit", ex);
 	    }
 	}
     }
@@ -1338,7 +1354,7 @@ public class ContextManager {
 	    try {
 		cI[i].preServletDestroy( ctx, sw );
 	    } catch( TomcatException ex) {
-		ex.printStackTrace();
+		log("preServletDestroy", ex);
 	    }
 	}
     }
@@ -1351,7 +1367,7 @@ public class ContextManager {
 	    try {
 		cI[i].postServletDestroy( ctx, sw );
 	    } catch( TomcatException ex) {
-		ex.printStackTrace();
+		log("postServletDestroy", ex);
 	    }
 	}
     }
@@ -1359,12 +1375,14 @@ public class ContextManager {
     /** @deprecated
      */
     public void setTomcatHome( String s ) {
+	log ("setTomcatHome(String) is deprecated", new Throwable("trace"), Logger.DEBUG);
 	setInstallDir( s );
     }
 
     /** @deprecated
      */
     public String getTomcatHome() {
+	log ("getTomcatHome() is deprecated", new Throwable("trace"), Logger.DEBUG);
 	return getInstallDir();
     }
 
