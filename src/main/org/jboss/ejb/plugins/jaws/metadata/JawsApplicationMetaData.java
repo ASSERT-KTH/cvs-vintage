@@ -9,6 +9,7 @@ package org.jboss.ejb.plugins.jaws.metadata;
 import java.util.Hashtable;
 import java.util.Iterator;
 
+import java.sql.Connection;
 import javax.sql.DataSource;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
@@ -30,7 +31,7 @@ import org.jboss.metadata.ApplicationMetaData;
  *      
  *	@see <related>
  *	@author <a href="sebastien.alborini@m4x.org">Sebastien Alborini</a>
- *	@version $Revision: 1.6 $
+ *	@version $Revision: 1.7 $
  */
 public class JawsApplicationMetaData extends MetaData implements XmlLoadable {
 	// Constants -----------------------------------------------------
@@ -51,6 +52,7 @@ public class JawsApplicationMetaData extends MetaData implements XmlLoadable {
 	// the datasource to use for this application
 	private String dbURL;
 	private DataSource dataSource;
+	private Integer transactionIsolation;
    
    private boolean debug = false;
 
@@ -99,6 +101,10 @@ public class JawsApplicationMetaData extends MetaData implements XmlLoadable {
    
 	public String getDbURL() { return dbURL; }
    
+	public Integer getTransactionIsolation() {
+		return transactionIsolation;
+	}
+	
 	public TypeMappingMetaData getTypeMapping() { return typeMapping; }
 
    public boolean getDebug() { return debug; }
@@ -159,6 +165,24 @@ public class JawsApplicationMetaData extends MetaData implements XmlLoadable {
 		if (!dbURL.startsWith("java:/"))
 		   dbURL = "java:/"+dbURL;
 		
+		// get the datasource (optional, but always set in standardjbosscmp-jdbc.xml)
+		String txIsolation = getElementContent(getOptionalChild(element, "transaction-isolation"));
+		if(txIsolation != null) {
+			if(txIsolation.equals("transaction-none")) {
+				transactionIsolation = new Integer(Connection.TRANSACTION_NONE);
+			} else if(txIsolation.equals("transaction-read-committed")) {
+				transactionIsolation = new Integer(Connection.TRANSACTION_READ_COMMITTED);
+			} else if(txIsolation.equals("transaction-read-uncommitted")) {
+				transactionIsolation = new Integer(Connection.TRANSACTION_READ_UNCOMMITTED);
+			} else if(txIsolation.equals("transaction-repeatable-read")) {
+				transactionIsolation = new Integer(Connection.TRANSACTION_REPEATABLE_READ);
+			} else if(txIsolation.equals("transaction-serializable")) {
+				transactionIsolation = new Integer(Connection.TRANSACTION_SERIALIZABLE);
+			} else {
+				throw new DeploymentException("Unknown transaction isolation level " + txIsolation);
+			}
+		}
+
 		// get the type mapping for this datasource (optional, but always set in standardjaws.xml)
 		String typeMappingString = getElementContent(getOptionalChild(element, "type-mapping"));
 

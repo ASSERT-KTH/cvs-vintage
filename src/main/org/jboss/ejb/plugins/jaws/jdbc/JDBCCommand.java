@@ -58,7 +58,7 @@ import org.jboss.logging.Logger;
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
  * @author <a href="mailto:dirk@jboss.de">Dirk Zimmermann</a>
  * @author <a href="mailto:danch@nvisia.com">danch (Dan Christopherson</a>
- * @version $Revision: 1.35 $ 
+ * @version $Revision: 1.36 $ 
  * 
  * Revision:
  * 20010621 danch: add getter for name
@@ -687,7 +687,13 @@ public abstract class JDBCCommand
       DataSource ds = jawsEntity.getDataSource();
       if (ds != null)
       {
-         return ds.getConnection();
+         Connection connection = ds.getConnection();
+			
+			Integer txIsolation = jawsEntity.getJawsApplication().getTransactionIsolation();
+			if(txIsolation != null) {
+				connection.setTransactionIsolation(txIsolation.intValue());
+			}
+			return connection;
       } else throw new RuntimeException("Unable to locate data source!");
    }
 
