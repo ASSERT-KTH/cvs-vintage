@@ -70,6 +70,13 @@
   <property name="tomcat-util.jar"
             location="${jtc.util.build}/lib/tomcat-util.jar"/>
 
+  <property name="jtc.coyote.home" location="${jakarta-tomcat-connectors}/coyote"/>
+
+  <property name="jtc.http11.home" location="${jakarta-tomcat-connectors}/http11"/>
+  <property name="jtc.http11.lib" location="${jtc.http11.home}/build/lib"/>
+
+  <property name="jtc.jk.home" location="${jakarta-tomcat-connectors}/jk"/>
+
   <property name="jsse.home" location="${install.dir}/jsse1.0.2"/>
   <property name="jsse.lib" location="${jsse.home}/lib"/>
   <property name="jsse.jar" location="${jsse.lib}/jsse.jar"/>
@@ -99,9 +106,6 @@
   <property name="commons-modeler.home" location="${jakarta-commons}/commons-modeler-1.0" />
   <property name="commons-modeler.lib" location="${commons-modeler.home}" />
   <property name="commons-modeler.jar" location="${commons-modeler.lib}/commons-modeler.jar" />
-
-  <property name="jtc.http11.home" location="${jakarta-tomcat-connectors}/http11"/>
-  <property name="jtc.http11.lib" location="${jtc.http11.home}/build/lib"/>
 
   <property name="jmx.jar" location="${jakarta-tomcat-connectors}/lib/mx4j.jar"/>
   <property name="jmxtools.jar" location="${jakarta-tomcat-connectors}/lib/mx4j-tools.jar"/>
@@ -382,19 +386,21 @@
 
   <target name="dep.tomcat-util" unless="tomcat-util.is.uptodate"
           description="Build j-t-c util which we depend on. To be called before main">
-    <ant dir="${jakarta-tomcat-connectors}/util" />
+    <ant dir="${jtc.util.home}" />
   </target>
 
   <target name="deps" description="Build repositoried that depends on. To be called before main" >
-        <ant dir="${jakarta-tomcat-connectors}/coyote">
+        <ant dir="${jtc.coyote.home}">
             <property name="tomcat33.home" value="${tomcat.build}"/>
+            <property name="util.home" value="${jtc.util.home}"/>
         </ant>
         
-        <ant dir="${jakarta-tomcat-connectors}/http11" inheritAll="false">
+        <ant dir="${jtc.http11.home}" inheritAll="false">
+            <property name="util.home" value="${jtc.util.home}"/>
             <property name="commons-modeler.jar" value="${commons-modeler.jar}"/>
         </ant>
             
-        <ant dir="${jakarta-tomcat-connectors}/jk" target="build-jk">
+        <ant dir="${jtc.jk.home}" target="build-jk">
             <property name="tomcat33.home" value="${tomcat.build}"/>
             <property name="servlet-api.jar" value="${basedir}/${servlet22.jar}"/>
         </ant>
@@ -444,7 +450,7 @@
     <!-- Add jakarta-tomcat-connectors utils -->
     <!-- Includes the tomcat-utils.jar and common-logging.jar -->
     <copy todir="${tomcat.build}/lib/common">
-      <fileset dir="${jakarta-tomcat-connectors}/util/build/lib">
+      <fileset dir="${jtc.util.build}/lib">
         <include name="*.jar"/>
       </fileset>
     </copy>
@@ -665,7 +671,7 @@
 
     <!-- This can't be compiled while j-t-c is built - tomcat is built
          after, so files depending on 3.3 are ignored -->
-    <ant dir="${jakarta-tomcat-connectors}/coyote" target="compile.tomcat33" >
+    <ant dir="${jtc.coyote.home}" target="compile.tomcat33" >
         <property name="tomcat33.home" value="${tomcat.build}"/>
     </ant>
 
@@ -679,10 +685,10 @@
           file="${jtc.http11.lib}/tomcat33-coyote.jar"/>
 
     <copy todir="${tomcat.build}/lib/container"
-          file="${jakarta-tomcat-connectors}/jk/build/lib/tomcat-jk2.jar"/>
+          file="${jtc.jk.home}/build/lib/tomcat-jk2.jar"/>
 
     <copy todir="${tomcat.build}/conf"
-          file="${jakarta-tomcat-connectors}/jk/conf/jk2.properties"/>
+          file="${jtc.jk.home}/conf/jk2.properties"/>
 
   </target>
 
