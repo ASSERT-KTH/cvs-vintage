@@ -1,7 +1,7 @@
 #!/bin/sh
 
 #
-# $Id: create-db.sh,v 1.14 2002/08/09 01:21:27 jon Exp $
+# $Id: create-db.sh,v 1.15 2002/10/25 17:46:38 jon Exp $
 #
 
 CMDNAME=`basename "$0"`
@@ -27,7 +27,7 @@ EMPTY=
 while [ "$#" -gt 0 ]
 do
     case "$1" in
-    --help|-\?|-h)
+    --help|-\?)
         usage=t
         break
         ;;
