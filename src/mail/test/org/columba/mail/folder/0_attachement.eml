@@ -1,0 +1,68 @@
+Return-Path: <twabner@imn.htwk-leipzig.de>
+Received: from bigwaffel ([unix socket])
+	by bigwaffel (Cyrus v2.1.12) with LMTP; Wed, 14 Apr 2004 13:28:36 +0200
+X-Sieve: CMU Sieve 2.2
+Received: from localhost (localhost [127.0.0.1])
+	by localhost (Postfix) with ESMTP id 080EF3085B7
+	for <waffel@localhost>; Wed, 14 Apr 2004 13:28:34 +0200 (CEST)
+Received: from david.imn.htwk-leipzig.de [141.57.9.1]
+	by localhost with IMAP (fetchmail-6.2.1)
+	for waffel@localhost (single-drop); Wed, 14 Apr 2004 13:28:35 +0200 (CEST)
+Received: from [141.57.8.70] ([141.57.8.70])
+	by imn.htwk-leipzig.de (8.12.9/8.12.9) with ESMTP id i3EBMeEf003163
+	for <twabner@imn.htwk-leipzig.de>; Wed, 14 Apr 2004 13:22:43 +0200 (MEST)
+X-Priority: Normal
+Subject: test message with attachement
+From: "Thomas Wabner" <twabner@imn.htwk-leipzig.de>
+Mime-Version: 1.0
+Date: Wed, 14 Apr 2004 13:24:38 +0100
+Message-Id: <dt1c9c5n.yxb87xx5c7nk@bigwaffel>
+X-Mailer: Columba v1.0 Milestone M2
+Content-Type: multipart/mixed; boundary="g5Wuo5/Zwo9vBz4ppm4fzFWCY5p2HBTBgfCZt+Bv9Xo="
+To: twabner@imn.htwk-leipzig.de
+
+
+--g5Wuo5/Zwo9vBz4ppm4fzFWCY5p2HBTBgfCZt+Bv9Xo=
+Content-Type: text/plain; charset="ISO-8859-15"
+
+This is a testmessage with an attachement. This message can be used in columbas test to see if attachements are correct used.
+
+The attachement is an image from columba.
+
+Waffel
+
+
+
+-------- SIgnature --------
+Thomas Wabner
+wissenschaftlicher Mitarbeiter
+Karl-Liebknechtstrasse 145
+04277 Leipzig
+HTWK Leipzig
+
+---------------------------
+Thomas Wabner
+CIO
+Ancoso Development GMBH
+
+---------------------------
+PGP Key:
+http://search.keyserver.net:11371/pks/lookup?op=get&search=0x48681715&template=netenextract,netennomatch,netenerror
+
+--g5Wuo5/Zwo9vBz4ppm4fzFWCY5p2HBTBgfCZt+Bv9Xo=
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename="stock_copy.png"
+Content-Type: image/png; name="stock_copy.png"
+
+iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAABGdBTUEAALGPC/xhBQAAAAZiS0dEAP8A/wD/oL2nkwAAAAlw
+SFlzAAALEgAACxIB0t1+/AAAAAd0SU1FB9ICAQsAA8QCndoAAAIDSURBVHjavZW/q9pQFMc/eX0tCqWUgph0KwVB+mMIirz/
+wf/BMQVBsrkUtA7dim4lINTRzUHnLhlEBEf9Cx6om6BJkDa3S67Ni/oSLfTAgVzIPZ9z7vfcc+E/2RdAXOifgaeAkgQgRqOR
+8Dwv1h3HEbZtS8irAHLWJF14nsdms0lccjabBXgLrIFdADyy2/BiMBiwXq8BSKVSVCoVptMps9kMwzCwLAtd1ykWi3JLKoih
+nANcVIEQf2OoqgrwEbgHNoB/assDQLVaxXVd2u02rVaLbDaLrusUCgUZ8BIzgB+EAGK1Wp10QAyHQ5HU5vP5oQnOaiDPXB5L
+uVxOnHo+n5efL2M1EEKgqipCCPr9PsvlEoB0Oo1hGIzHYyaTCaZp0ul0KJVK3N3doSgKwLuTGgAHHTKZDM1m84HASSwAfIit
+wPd9NE1DCEGtVsNxHLrdLvV6HU3TDhmHKzkL6PV6JzVoNBrXVvD+ANjtdmy328QayDMHDlVYloXrupimeQywbZtcLvco4F8q
++AR8j7vFUgMgVoco4BZ4DrwAngUjRPpr4Oe1XSQv2m9gC+yBm9CMUoCV3HSJBtFZFB1+4bUC/LpWg5voUUfcl1NysVgkDh76
+10+UDPD1iif1G/BGSZjUY02gRN+WwPfAJilAAZ4EwaNNcCqGCBpnr1z4iMQ1xZGefwC3rp5DfbKCZwAAAABJRU5ErkJggg==
+--g5Wuo5/Zwo9vBz4ppm4fzFWCY5p2HBTBgfCZt+Bv9Xo=--
+
+
