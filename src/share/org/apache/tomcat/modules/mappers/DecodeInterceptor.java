@@ -192,7 +192,12 @@ public class DecodeInterceptor extends  BaseInterceptor  {
 	if (pathMB.indexOf('%') >= 0 || pathMB.indexOf( '+' ) >= 0) {
 	    try {
 		req.unparsedURI().duplicate( pathMB );
+		if(debug>1 )
+		    log( "Before " + pathMB.toString());
 		req.getURLDecoder().convert( pathMB );
+		pathMB.resetStringValue();
+		if(debug>1 )
+		    log( "After " + pathMB.toString());
 		if( pathMB.indexOf( '\0' ) >=0 ) {
 		    return 404; // XXX should be 400 
 		}
@@ -246,7 +251,7 @@ public class DecodeInterceptor extends  BaseInterceptor  {
 		ServerSession sess=req.getSession( false );
 		if( sess!=null ) {
 		    charset=(String)sess.getNote( sessionEncodingNote );
-		    if( debug>0 && charset!=null )
+		    if( debug>-1 && charset!=null )
 			log("Charset from session " + charset );
 		}
 	    }
@@ -255,9 +260,11 @@ public class DecodeInterceptor extends  BaseInterceptor  {
 	    
 	    if( charset != null ) return charset;
 	    
-	    log( "Default getInfo UTF-8" );
+	    charset=ctx.getProperty("charset");
+	    if( charset!=null )
+		log( "Default per context " + charset );
 	    // Use per context default
-	    return "UTF-8";
+	    return charset;
 	}
 	return null;
     }

@@ -115,10 +115,6 @@ public final class Context {
     public static final String ATTRIB_PROTECTION_DOMAIN=
 	"org.apache.tomcat.protection_domain";
     
-    // public static final String ATTRIB_WORKDIR1 = "javax.servlet.context.tempdir";
-    // public static final String ATTRIB_WORKDIR2 = "sun.servlet.workdir";
-    
-
     /** This attribute will return the real context (
      *  org.apache.tomcat.core.Context).
      *  Only "trusted" applications will get the value. Null if the application
