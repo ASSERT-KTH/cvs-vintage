@@ -52,7 +52,7 @@ import org.jboss.metadata.MetaData;
  * Created: Thu Aug 23 21:17:26 2001
  *
  * @author
- * @version $Revision: 1.4 $ $Date: 2001/12/14 02:21:45 $
+ * @version $Revision: 1.5 $ $Date: 2001/12/19 05:54:09 $
  */
 public class DLQHandler
 {
@@ -114,8 +114,8 @@ public class DLQHandler
     *
     * @throws Exception    Service failed to initalize.
     */
-   void init() throws Exception
-   {
+   void create() throws Exception {
+
       Context ctx = new InitialContext();
       QueueConnectionFactory factory = (QueueConnectionFactory)
       ctx.lookup(FACTORY_JNDI);
