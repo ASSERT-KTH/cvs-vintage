@@ -68,7 +68,7 @@ import org.tigris.scarab.om.Issue;
  * This class contains logic for finding issue ids in generic text.
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: IssueIdParser.java,v 1.4 2003/01/24 19:10:15 jmcnally Exp $
+ * @version $Id: IssueIdParser.java,v 1.5 2003/01/31 19:38:08 jon Exp $
  */
 public class IssueIdParser
 {
@@ -112,9 +112,9 @@ public class IssueIdParser
     /**
      * Parses text for any valid issue ids.  The text is broken up
      * into tokens at potential id boundaries.  if a token corresponds
-     * to a valid issue id, a String[2] is returned with [0] as the
+     * to a valid issue id, a List is returned with [0] as the
      * token and [1] is the id.  if a token does not contain an id
-     * the text is added as a simple string.
+     * the text is added as a String.
      */
     public static List tokenizeText(Module module, String text)
         throws TorqueException
@@ -125,7 +125,7 @@ public class IssueIdParser
         int pos = 0;
         while (re.match(text, pos))
         {
-            Log.get().debug(re.getParen(0) +" found at "+ re.getParenStart(0));
+            Log.get().debug(re.getParen(0) + " found at " + re.getParenStart(0));
             // Add any text that did not contain an id
             if (re.getParenStart(0) > pos) 
             {
