@@ -31,6 +31,8 @@ import org.columba.core.logging.ColumbaLogger;
 import org.columba.core.main.MainInterface;
 import org.columba.core.util.CharsetEvent;
 import org.columba.core.util.CharsetListener;
+import org.columba.core.util.CharsetManager;
+import org.columba.core.xml.XmlElement;
 import org.columba.mail.config.MailConfig;
 import org.columba.mail.gui.composer.util.IdentityInfoPanel;
 import org.columba.mail.util.AddressCollector;
@@ -92,7 +94,6 @@ public class ComposerController
 		
 		headerController.editLastRow();
 		
-
 	}
 
 	
@@ -121,6 +122,7 @@ public class ComposerController
 
 		headerController.updateComponents(b);
 
+		getCharsetManager().displayCharset(composerModel.getCharsetName());
 		//headerController.appendRow();
 	}
 
@@ -327,10 +329,19 @@ public class ComposerController
 
 		editorController = new EditorController(this);
 
-		MainInterface.charsetManager.addCharsetListener(this);
-
 		composerSpellCheck = new ComposerSpellCheck(this);
 
+		XmlElement optionsElement = MailConfig.get("composer_options").getElement("/options");
+		XmlElement charsetElement = optionsElement.getElement("charset");
+		if( charsetElement == null ) {
+			charsetElement = new XmlElement("charset");
+			charsetElement.addAttribute("name","auto");
+			
+			optionsElement.addElement(charsetElement);
+		}
+		
+		setCharsetManager(new CharsetManager(charsetElement));
+		getCharsetManager().addCharsetListener(this);
 	}
 
 	/**

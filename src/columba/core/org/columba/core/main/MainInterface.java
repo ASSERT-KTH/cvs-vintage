@@ -25,7 +25,6 @@ import org.columba.core.gui.ClipboardManager;
 import org.columba.core.gui.frame.FrameModelManager;
 import org.columba.core.plugin.PluginManager;
 import org.columba.core.shutdown.ShutdownManager;
-import org.columba.core.util.CharsetManager;
 import org.columba.mail.gui.tree.TreeModel;
 import org.columba.mail.pgp.PGPController;
 import org.columba.mail.pop3.POP3ServerCollection;
@@ -49,10 +48,6 @@ public class MainInterface {
 	public static DefaultProcessor processor;
 
 	public static PGPController pgpController;
-
-	//public static AddressbookInterface addressbookInterface;
-
-	public static CharsetManager charsetManager;
 
 	public static PluginManager pluginManager;
 

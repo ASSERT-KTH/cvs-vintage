@@ -26,6 +26,7 @@ import javax.swing.JMenu;
 
 import org.columba.core.gui.util.CMenu;
 import org.columba.core.gui.util.CMenuItem;
+import org.columba.core.xml.XmlElement;
 import org.columba.mail.util.MailResourceLoader;
 
 /**
@@ -36,7 +37,7 @@ import org.columba.mail.util.MailResourceLoader;
  * To enable and disable the creation of type comments go to
  * Window>Preferences>Java>Code Generation.
  */
-public class CharsetManager implements ActionListener{
+public class CharsetManager implements ActionListener {
 
 	private static final String[] charsets = {
 		// Auto
@@ -75,42 +76,93 @@ public class CharsetManager implements ActionListener{
 
 		// East Asian # 29
 		"GB2312",
-		"GBK",
-		"GB18030",
-		"Big5",
-		"Big5-HKSCS",
-		"EUC-TW",
-		"EUC-JP",
-		"Shift_JIS",
-		"ISO-2022-JP",
-		"MS932",
-		"EUC-KR",
-		"JOHAB",
-		"ISO-2022-KR",
-		
+			"GBK",
+			"GB18030",
+			"Big5",
+			"Big5-HKSCS",
+			"EUC-TW",
+			"EUC-JP",
+			"Shift_JIS",
+			"ISO-2022-JP",
+			"MS932",
+			"EUC-KR",
+			"JOHAB",
+			"ISO-2022-KR",
+
 		// West Asian # 42
 		"TIS620",
-		"IBM857",
-		"ISO-8859-9",
-		"MacTurkish",
-		"windows-1254",
-		"windows-1258"
-		
+			"IBM857",
+			"ISO-8859-9",
+			"MacTurkish",
+			"windows-1254",
+			"windows-1258"
+
 		// # 48
 	};
 
-	private static final String[] groups = { "global", "westeurope", "easteurope", "eastasian", "seswasian"};
+	private static final String[] groups =
+		{ "global", "westeurope", "easteurope", "eastasian", "seswasian" };
 
 	private static final int[] groupOffset = { 1, 4, 14, 29, 42, 48 };
 
 	private Vector listeners;
-	
-	private CharsetMenuItem selectedMenuItem;
-	private int selectedId;
 
-	public CharsetManager() {
+	private CharsetMenuItem selectedMenuItem;
+
+	private XmlElement config;
+
+	private int defaultId;
+
+	public CharsetManager(XmlElement config) {
 		listeners = new Vector();
-		selectedId = 0;	// TODO: Make the menu remember its last setting
+		this.config = config;
+
+		defaultId = getCharsetId(System.getProperty("file.encoding"));
+		int charsetId;
+		int selectedId = 0;
+
+		if (config != null) {
+			selectedId = getCharsetId(config.getAttribute("name"));
+		}
+
+		if (selectedId == 0) {
+			charsetId = defaultId;
+		} else {
+			charsetId = selectedId;
+		}
+
+		selectedMenuItem =
+			new CharsetMenuItem(
+				MailResourceLoader.getString(
+					"menu",
+					"mainframe",
+					"menu_view_charset_" + charsets[charsetId]),
+				-1,
+				0,
+				charsets[selectedId]);
+	}
+
+	public void displayCharset(String name) {
+		int charsetId = getCharsetId(name);
+
+		if (charsetId != -1) {
+			selectedMenuItem.setText(
+				MailResourceLoader.getString(
+					"menu",
+					"mainframe",
+					"menu_view_charset_" + charsets[charsetId]));
+		}
+	}
+
+	private int getCharsetId(String name) {
+		int charsetId = -1;
+
+		for (int i = 0; i < charsets.length; i++) {
+			if (charsets[i].equalsIgnoreCase(name)) {
+				charsetId = i;
+			}
+		}
+		return charsetId;
 	}
 
 	public void createMenu(JMenu subMenu, MouseListener handler) {
@@ -126,24 +178,29 @@ public class CharsetManager implements ActionListener{
 		subMenu.setIcon( ImageLoader.getImageIcon("stock_font_16.png"));
 		*/
 
+		/*
 		selectedMenuItem = new CharsetMenuItem( 
 				MailResourceLoader.getString("menu","mainframe", "menu_view_charset_"+charsets[0]),
 				-1, 0, charsets[0]);
 		
 		selectedMenuItem.addMouseListener(handler);
+		*/
 
 		subMenu.add(selectedMenuItem);
 
 		subMenu.addSeparator();
 
-
 		menuItem =
 			new CharsetMenuItem(
-				MailResourceLoader.getString("menu","mainframe", "menu_view_charset_"+charsets[0]),
-				-1, 0, charsets[0]);
+				MailResourceLoader.getString(
+					"menu",
+					"mainframe",
+					"menu_view_charset_" + charsets[0]),
+				-1,
+				0,
+				charsets[0]);
 		menuItem.addMouseListener(handler);
-		menuItem.addActionListener( this );
-
+		menuItem.addActionListener(this);
 
 		subMenu.add(menuItem);
 
@@ -153,7 +210,8 @@ public class CharsetManager implements ActionListener{
 			subsubMenu =
 				new CMenu(
 					MailResourceLoader.getString(
-						"menu","mainframe",
+						"menu",
+						"mainframe",
 						"menu_view_charset_" + groups[i]));
 			subMenu.add(subsubMenu);
 
@@ -161,12 +219,14 @@ public class CharsetManager implements ActionListener{
 				menuItem =
 					new CharsetMenuItem(
 						MailResourceLoader.getString(
-							"menu","mainframe",
-							"menu_view_charset_"+charsets[j]),
+							"menu",
+							"mainframe",
+							"menu_view_charset_" + charsets[j]),
 						-1,
-						j, charsets[j]);
+						j,
+						charsets[j]);
 				menuItem.addMouseListener(handler);
-				menuItem.addActionListener( this );
+				menuItem.addActionListener(this);
 				subsubMenu.add(menuItem);
 			}
 		}
@@ -178,36 +238,55 @@ public class CharsetManager implements ActionListener{
 	 * @param listener The listener to set
 	 */
 	public void addCharsetListener(CharsetListener listener) {
-		if( !listeners.contains(listener) )
-			listeners.add( listener );
+		if (!listeners.contains(listener))
+			listeners.add(listener);
 	}
-	
-	public void actionPerformed( ActionEvent e ) {
+
+	public void actionPerformed(ActionEvent e) {
 		CharsetEvent event;
 
-		int charsetId = ((CharsetMenuItem)e.getSource()).getId();
+		int charsetId = ((CharsetMenuItem) e.getSource()).getId();
 
-		event = new CharsetEvent( this, charsetId, charsets[charsetId]);
-			
-		selectedMenuItem.setText( MailResourceLoader.getString(
-							"menu","mainframe",
-							"menu_view_charset_"+charsets[event.getId()]) );
-		
-		for( int i=0; i<listeners.size(); i++ ) 
-			((CharsetListener)listeners.get(i)).charsetChanged(event);		
+		changeCharset(charsetId);
+	}
+
+	private void changeCharset(int charsetId) {
+		CharsetEvent event;
+		event = new CharsetEvent(this, charsetId, charsets[charsetId]);
+
+		if (config != null) {
+			config.addAttribute("name",charsets[charsetId]);
+		}
+
+		if (charsetId == 0) {
+			selectedMenuItem.setText(
+				MailResourceLoader.getString(
+					"menu",
+					"mainframe",
+					"menu_view_charset_" + charsets[defaultId]));
+		} else {
+			selectedMenuItem.setText(
+				MailResourceLoader.getString(
+					"menu",
+					"mainframe",
+					"menu_view_charset_" + charsets[charsetId]));
+		}
+
+		for (int i = 0; i < listeners.size(); i++)
+			 ((CharsetListener) listeners.get(i)).charsetChanged(event);
 	}
 
 }
 
-class CharsetMenuItem extends CMenuItem{
-		
+class CharsetMenuItem extends CMenuItem {
+
 	int id;
 	String javaCodingName;
-	
-	public CharsetMenuItem( String name, int i, int id, String javaCodingName) {
+
+	public CharsetMenuItem(String name, int i, int id, String javaCodingName) {
 		//super( name, i );
 		super(name);
-		
+
 		this.id = id;
 		this.javaCodingName = javaCodingName;
 	}

@@ -228,6 +228,7 @@ public class ComposerModel {
 	 */
 	public void setCharsetName(String charsetName) {
 		this.charsetName = charsetName;
+		
 	}
 
 	/**

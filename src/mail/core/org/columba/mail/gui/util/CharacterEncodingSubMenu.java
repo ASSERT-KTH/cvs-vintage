@@ -9,7 +9,6 @@ package org.columba.mail.gui.util;
 import org.columba.core.action.IMenu;
 import org.columba.core.gui.frame.AbstractFrameController;
 import org.columba.core.gui.util.ImageLoader;
-import org.columba.core.main.MainInterface;
 import org.columba.mail.util.MailResourceLoader;
 
 /**
@@ -40,8 +39,7 @@ public class CharacterEncodingSubMenu extends IMenu {
 	}
 
 	protected void createMenu() {		
-		MainInterface.charsetManager.createMenu(this, controller.getMouseTooltipHandler());
-
+		getController().getCharsetManager().createMenu(this, controller.getMouseTooltipHandler());
 	}
 
 }

@@ -45,6 +45,7 @@ import org.columba.mail.gui.frame.MailFrameController;
 import org.columba.mail.gui.message.action.MessageActionListener;
 import org.columba.mail.gui.message.action.MessageFocusListener;
 import org.columba.mail.gui.message.action.MessagePopupListener;
+import org.columba.mail.gui.message.command.ViewMessageCommand;
 import org.columba.mail.gui.message.menu.MessageMenu;
 import org.columba.mail.gui.table.selection.MessageSelectionListener;
 import org.columba.mail.gui.util.URLController;
@@ -105,7 +106,7 @@ public class MessageController
 		keys[3] = new String("To");
 		*/
 
-		MainInterface.charsetManager.addCharsetListener(this);
+		mailFrameController.getCharsetManager().addCharsetListener(this);
 
 		Font mainFont = Config.getOptionsConfig().getGuiItem().getMainFont();
 
@@ -190,10 +191,12 @@ public class MessageController
 
 		String charset;
 
-		if (activeCharset.equals("auto"))
+		if (activeCharset.equals("auto")) {
 			charset = bodyPart.getHeader().getContentParameter("charset");
-		else
+			getMailFrameController().getCharsetManager().displayCharset(charset);
+		} else {
 			charset = activeCharset;
+		}
 
 		Decoder decoder =
 			CoderRouter.getDecoder(
@@ -432,6 +435,11 @@ public class MessageController
 	public void charsetChanged(CharsetEvent e) {
 		activeCharset = e.getValue();
 
+		MainInterface.processor.addOp(
+			new ViewMessageCommand(
+				getMailFrameController(),
+				getMailFrameController().getSelectionManager().getSelection(
+					"mail.table")));		
 	}
 
 }

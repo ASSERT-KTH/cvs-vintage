@@ -43,7 +43,6 @@ import org.columba.core.plugin.InterpreterHandler;
 import org.columba.core.plugin.PluginManager;
 import org.columba.core.shutdown.SaveConfigPlugin;
 import org.columba.core.shutdown.ShutdownManager;
-import org.columba.core.util.CharsetManager;
 import org.columba.mail.config.MailConfig;
 import org.columba.mail.gui.config.accountwizard.AccountWizard;
 import org.columba.mail.main.MailMain;
@@ -114,8 +113,6 @@ public class Main {
     MainInterface.clipboardManager = new ClipboardManager();
 
     new ImageLoader();
-
-    MainInterface.charsetManager = new CharsetManager();
 
     MainInterface.processor = new DefaultProcessor();
     MainInterface.processor.start();

@@ -27,6 +27,7 @@ import org.columba.core.gui.toolbar.ToolBar;
 import org.columba.core.gui.util.DialogStore;
 import org.columba.core.logging.ColumbaLogger;
 import org.columba.core.main.MainInterface;
+import org.columba.core.util.CharsetManager;
 import org.columba.core.xml.XmlElement;
 import org.columba.mail.command.FolderCommand;
 import org.columba.mail.command.FolderCommandReference;
@@ -76,14 +77,12 @@ public class MailFrameController extends AbstractFrameController {
 
 	public MailFrameController(ViewItem viewItem) {
 		this("Mail", viewItem);
-
-		list.add(this);
-
 	}
 
 	public MailFrameController(String id, ViewItem viewItem) {
 		super(id, viewItem);
 
+		list.add(this);
 	}
 
 	public static void tableChanged(TableChangedEvent ev) throws Exception {
@@ -209,6 +208,9 @@ public class MailFrameController extends AbstractFrameController {
 	 * @see org.columba.core.gui.FrameController#init()
 	 */
 	protected void init() {
+		
+		setCharsetManager( new CharsetManager(null) );
+		
 		treeController = new TreeController(this, MainInterface.treeModel);
 
 		tableController = new TableController(this);

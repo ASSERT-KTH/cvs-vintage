@@ -334,8 +334,11 @@ public class MessageBuilder {
 	 */
 	private static String createBodyText(Message message) {
 		String bodyText = "";
+		
 
 		MimePart bodyPart = message.getBodyPart();
+
+		String charset = bodyPart.getHeader().getContentParameter("charset");
 
 		// init decoder with appropriate content-transfer-encoding
 		Decoder decoder =
@@ -345,7 +348,7 @@ public class MessageBuilder {
 		// decode bodytext
 		try {
 
-			bodyText = decoder.decode(bodyPart.getBody(), null);
+			bodyText = decoder.decode(bodyPart.getBody(), charset);
 		} catch (UnsupportedEncodingException e) {
 		}
 
@@ -394,6 +397,15 @@ public class MessageBuilder {
 		int operation) {
 
 		ColumbaHeader header = (ColumbaHeader) message.getHeader();
+		
+		MimePart bodyPart = message.getBodyPart();
+
+		if( bodyPart != null ) {
+			String charset = bodyPart.getHeader().getContentParameter("charset");
+			if( charset != null ) {
+				model.setCharsetName(charset);
+			}
+		}
 
 		if ((operation == FORWARD) || (operation == FORWARD_INLINE)) {
 			model.setSubject(createForwardSubject(header));
