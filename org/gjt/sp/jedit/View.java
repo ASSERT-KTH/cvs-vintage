@@ -79,7 +79,7 @@ import org.gjt.sp.util.Log;
  *
  * @author Slava Pestov
  * @author John Gellene (API documentation)
- * @version $Id: View.java,v 1.118 2004/12/31 21:22:29 spestov Exp $
+ * @version $Id: View.java,v 1.119 2004/12/31 21:27:50 spestov Exp $
  */
 public class View extends JFrame implements EBComponent
 {
@@ -918,7 +918,7 @@ public class View extends JFrame implements EBComponent
 		if(lastSplitConfig == null)
 			getToolkit().beep();
 		else
-			setSplitConfig(getBuffer(),lastSplitConfig);
+			setSplitConfig(null,lastSplitConfig);
 	} //}}}
 
 	//{{{ nextTextArea() method
@@ -1430,6 +1430,9 @@ public class View extends JFrame implements EBComponent
 			// this should never throw an exception.
 			throw new InternalError();
 		}
+		
+		dockableWindowManager.revalidate();
+		dockableWindowManager.repaint();
 	} //}}}
 
 	//{{{ restoreSplitConfig() method
