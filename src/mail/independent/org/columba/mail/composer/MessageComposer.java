@@ -29,7 +29,7 @@ import java.util.List;
 
 import org.columba.addressbook.parser.ListParser;
 import org.columba.core.command.WorkerStatusController;
-import org.columba.core.logging.ColumbaLogger;
+import org.columba.core.io.StreamUtils;
 import org.columba.core.xml.XmlElement;
 import org.columba.mail.config.AccountItem;
 import org.columba.mail.config.IdentityItem;
@@ -530,17 +530,21 @@ public class MessageComposer {
 		root.getHeader().getHeader().merge(header.getHeader());
 
 		InputStream in = renderer.renderMimePart(root);
+		/*
 		int next = in.read();
 		while (next != -1) {
 			composedMessage.append((char) next);
 			next = in.read();
 		}
 		message.setStringSource(composedMessage.toString());
-
 		ColumbaLogger.log.debug("Message:\n" + composedMessage.toString());
-
+		*/
+		message.setSourceStream(in);
+		
+		//StreamUtils.streamCopy(message.getSourceStream(), System.out);
+		
 		// size
-		int size = composedMessage.length() / 1024;
+		int size = in.available() / 1024;
 		header.set("columba.size", new Integer(size));
 
 		message.setHeader(header);

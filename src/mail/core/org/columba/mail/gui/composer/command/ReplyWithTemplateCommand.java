@@ -141,7 +141,7 @@ public class ReplyWithTemplateCommand extends FolderCommand {
 
 		String charset = bodyPart.getHeader().getContentParameter("charset");
 
-		String templateBodytext = mimePart.getBody().toString();
+		//String templateBodytext = mimePart.getBody().toString();
 
 		// open new message in composer
 		ComposerModel model = new ComposerModel();
@@ -149,7 +149,7 @@ public class ReplyWithTemplateCommand extends FolderCommand {
 		MessageBuilder.getInstance().createMessageFromTemplate(
 			message,
 			model,
-			templateBodytext,
+			mimePart,
 			htmlTemplate);
 		controller.setComposerModel(model);
 
