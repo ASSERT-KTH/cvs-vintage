@@ -1,8 +1,8 @@
-$Id: readme,v 1.18 2001/08/02 17:15:47 larryi Exp $
+$Id: readme,v 1.19 2001/09/03 02:13:44 larryi Exp $
         
                            Release Notes for:
                            ====================
-                           TOMCAT Version 3.3b1
+                           TOMCAT Version 3.3b2
                            ====================
 
 
@@ -42,79 +42,68 @@ For detailed information about installing and running Tomcat, point your
 browser at the file "tomcat_ug.html" found in the same directory as this
 file.
 
-IMPORTANT NOTE: Some important changes have been recently added to
-Tomcat 3.3b1 which are not yet covered in the accompanying documentation.
-These changes make Tomcat 3.3b1 quite different from Tomcat 3.2 in a number
-of ways.  These changes include the following:
+IMPORTANT NOTE: Some major changes have occurred in Tomcat 3.3 which
+make it quite different from Tomcat 3.2.x in a number of ways.  Many of
+these differences are covered in the Tomcat User's Guide (tomcat-ug.html)
+found in Tomcat's "docs" directory.  Some of the more important changes
+include the following:
 
 - Class Loading:
 
-  Tomcat 3.3b1 now uses a new hierarchy of class loaders. It provides for the
-  separation of the classes used by the Tomcat container and the classes used
-  by web applications.  This solves a major problem in Tomcat 3.2 where all
-  web applications had to share Tomcat's XML parser. Now each web applicaton
-  can have its own XML parser, or if desired all web applications can share
-  an XML parser different from the one used by Tomcat. As a side effect of
-  this change, web applications in Tomcat 3.3b1 are not provided an XML
-  parser by default.  You must supply one if your web application requires
-  one. For details about where to place jar files, see the README files in the
-  "lib/container", "lib/common", and "lib/apps" directories of your Tomcat
-  installation.
+  Tomcat 3.3 shell and batch files ignore your CLASSPATH environment variable.
+
+  Also, Tomcat 3.3 uses a much different hierarchy of class loaders from
+  Tomcat 3.2.x. This allows Tomcat 3.3 to avoid imposing its XML parser
+  on all the web applications. In fact, web applications in Tomcat 3.3 don't
+  get an XML parser by default.  You must provide one if needed.
+
+  For information on configuring classes, refer to the "Configuring Classes"
+  section of the Tomcat User's guide (tomcat-ug.html) in Tomcat's doc directory.
 
 - Tomcat Configuration:
 
-  The configuration of Tomcat has been reorganized into separate configuration
-  files.  The conf/modules.xml file contains module definitions for the modules
-  (a.k.a Interceptors) available in Tomcat 3.3b1. The conf/server.xml file
-  specifies which modules and connectors the Tomcat container should use along
-  with their settings.
+  Tomcat's configuration is still controlled by the server.xml file. But this
+  file will look a little bit different and configuration is supported by a
+  number of new features in Tomcat 3.3. Some of these new features are:
 
-  Web application configuration can now be specified in a conf/apps.xml file or
-  in separate flies using the name conf/apps-[name].xml. For example,
-  conf/apps-examples.xml would be the configuration file for the examples web
-  application.
+  1. A modules.xml file which simplifies the syntax found in server.xml.
 
-  The tomcat.policy file remains in the "conf" directory.  However, other
-  configuration files have been moved to directories under "conf".
+  2. Context configurations can be specified in other files, instead of
+     server.xml.
 
-  Another change related to Tomcat configuration is that auto-generated
-  web server configuration files, such as tomcat-apache.conf, are not generated
-  by default.  To turn these on, add the following modules after the
-  <AutoWebApp ... /> module in the server.xml file.  The locations for their
-  configuration files is also shown.
+  3. Auto WAR file expansion and auto-deployment is now configurable and
+     no longer hardwired to specific directories.
 
-  Apache mod_jk config:    <ApacheConfig />
-         Def conf file:    conf/auto/mod_jk.conf
-      Def workers file:    conf/jk/workers.properties
+  4. The "conf" directory is better organized using subdirectorys. For
+     example, all auto-generated files are written to the "conf\auto"
+     directory.
 
-  Apache mod_jserv config: <JservConfig />
-         Def conf file:    conf/jserv/tomcat-apache.conf
+  5. For mod_jk based connectors, their auto-generated files are not
+     written during normal Tomcat startup.  Instead you should append
+     "jkconf" to the startup command.  This will cause Tomcat to initialize,
+     write the config files, and exit.  This may be done while Tomcat
+     is already running.  For mod_jserv, you will need to add
+     "<JservConfig />" to the server.xml file.  The
+     "conf/auto/tomcat-apache.conf" file will be written each time Tomcat
+     is started.
 
-  IIS config:              <IISConfig />
-              Reg file:    conf/jk/iis_redirect.reg-auto
-          Workers file:    conf/jk/workers.properties
-      Workers map file:    conf/jk/uriworkermap.properties
-
-  Netscape config:         <NSConfig />
-             Conf file:    conf/jk/obj.conf-auto
-          Workers file:    conf/jk/workers.properties
-
-  Note: The ApacheConfig, JservConfig, and IISConfig by default write a
-  config file that tries to send all requests for a context to Tomcat.  That
-  is the best way to insure that behavior specified in the web application's
-  web.xml functions properly.  If you desire, you can copy the auto generated
-  file and modify it to have the web server serve some of the web application's
-  resources.
+  6. The default auto-generated configuration files configure the external
+     web server to send all requests for a context to Tomcat.  That is the
+     best way to insure that behavior specified in the web application's
+     web.xml functions properly.  Also, by default, the configuration file
+     doesn't try to send any requests for the root context to Tomcat.  The
+     external web server continues to serve its root context as they would
+     normally.
 
 - Tomcat Testing:
 
-  The "test" web application along with the test-tomcat.xml and
-  associated support files are not part of the binary Tomcat 3.3b1 distribution.
-  The "test" web application is supplied separately as "test.war".  This file
-  may be downloaded from the "v3.3-b1/apps" directory of the Tomcat 3.3b1
+  The "test" web application along with the test-tomcat.xml and associated
+  support files are not part of the binary Tomcat 3.3 distribution.  The
+  "test" web application is supplied separately as "test.war".  This file
+  may be downloaded from the "v3.3-b2/apps" directory of the Tomcat 3.3b2
   release and placed in the "webapps" directory of your installation.  Running
   the test has been integrated into the Admin web application that is part of
-  the Tomcat 3.3b1 distribution.  A preliminary step to running the test is to
+  the Tomcat 3.3b2 distribution.  A preliminary step to running the test is to
   "trust" the Admin web application.  It is set to "untrusted" by default. This
   change can be accomplished by executing the command from the TOMCAT_HOME
   directory with JAVA_HOME set:
@@ -122,7 +111,7 @@ of ways.  These changes include the following:
 	./bin/tomcat.sh run -enableAdmin    <-- Unix
 	bin\tomcat run -enableAdmin         <-- Windows
 
-  Start or restart Tomcat 3.3b1 and invoke the following URL in your browser:
+  Start or restart Tomcat 3.3b2 and invoke the following URL in your browser:
 
 	http://localhost:8080/admin/test/test.jsp
 
@@ -147,9 +136,6 @@ of ways.  These changes include the following:
 	http://localhost:8080/admin/test/watchdog-servlet.jsp
 	http://localhost:8080/admin/test/watchdog-jsp.jsp
 
-  Note: Sometimes the watchdog-jsp test will fail to list the tests that are
-  executed.  Run the watchdog-servlet.jsp test first to avoid this problem.
-  
 
 =============================================================================
 3.  APPLICATION DEVELOPMENT USING TOMCAT
@@ -219,11 +205,6 @@ primary changes are:
 
 - The Tomcat Users Guide (i.e. tomcat-ug.html) is now in the TOMCAT_HOME/doc
   directory instead of the TOMCAT_HOME/doc/uguide directory as it Tomcat 3.2.x.
-
-- The writing of the connector configuration files, such as tomcat-apache.conf
-  is not enabled by default.  Each config file may be enabled by modifying the
-  server.xml file.  For details, see the information in section 2 of this
-  document or refer to the Tomcat documentation.
 
 - (more to be added)
 
