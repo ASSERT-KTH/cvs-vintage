@@ -15,7 +15,6 @@ import java.lang.reflect.Constructor;
 import java.rmi.ServerException;
 import java.rmi.RemoteException;
 import java.rmi.MarshalledObject;
-import java.rmi.NoSuchObjectException;
 import java.rmi.server.RemoteServer;
 import java.rmi.server.UnicastRemoteObject;
 import java.security.Principal;
@@ -73,7 +72,7 @@ import org.w3c.dom.Element;
  *      @author Rickard Öberg (rickard.oberg@telkel.com)
  *		@author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
  *      @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
- *      @version $Revision: 1.17 $
+ *      @version $Revision: 1.18 $
  */
 public abstract class JRMPContainerInvoker
    extends RemoteServer
@@ -137,9 +136,9 @@ public abstract class JRMPContainerInvoker
           rmi.setMethodMap(homeMethodInvokerMap);
        
          Transaction tx = rmi.getTransaction();
-//DEBUG	        System.out.println("The home transaction is "+tx);
+//DEBUG	        Logger.log("The home transaction is "+tx);
     
-         System.out.println(container.getTransactionManager());
+         //Logger.log(container.getTransactionManager().toString());
          if (tx == null)
           tx = container.getTransactionManager().getTransaction();
        
@@ -147,7 +146,7 @@ public abstract class JRMPContainerInvoker
         rmi.getPrincipal(), rmi.getCredential() ));
       } catch (Exception e)
       {
-        e.printStackTrace();
+        // DEBUG Logger.exception(e);
          throw e;
       } finally
       {
@@ -186,7 +185,7 @@ public abstract class JRMPContainerInvoker
     Principal identity, Object credential)
       throws Exception
    {
-       System.out.println("JRMPCI:invokeHome "+m);
+       Logger.log("JRMPCI:invokeHome "+m);
        return container.invokeHome(new MethodInvocation(null , m, args, tx,
       identity, credential));
    }
@@ -239,7 +238,7 @@ public abstract class JRMPContainerInvoker
         // Hash it
         homeMethodInvokerMap.put(new Integer(RemoteMethodInvocation.calculateHash(getEJBObjectMethod)),getEJBObjectMethod);
       }
-      catch (Exception e) {e.printStackTrace();}
+      catch (Exception e) {Logger.exception(e);}
       
       
       // Create metadata
@@ -336,19 +335,8 @@ public abstract class JRMPContainerInvoker
    
    public void stop()
    {
-      // remove the stuff from JNDI and un-export the stuff
-	  try {
-		  InitialContext ctx = new InitialContext();
-		  ctx.unbind(container.getBeanMetaData().getJndiName());
-		  ctx.unbind("invokers/"+container.getBeanMetaData().getJndiName());
-		  
-		  UnicastRemoteObject.unexportObject(this, true);
-		  
-	  } catch (Exception e) {
-		  // ignore.
-	  }
-	  
-	  GenericProxy.removeLocal(container.getBeanMetaData().getJndiName());
+      //MF FIXME: do we need to remove the stuff from JNDI and un-export the stuff?
+      GenericProxy.removeLocal(container.getBeanMetaData().getJndiName());
    }
 
    public void destroy()
