@@ -17,6 +17,11 @@
 //All Rights Reserved.
 package org.columba.mail.gui.table.model;
 
+import java.text.Collator;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Date;
+import java.util.List;
 import java.util.Vector;
 
 import org.columba.core.config.WindowItem;
@@ -24,7 +29,8 @@ import org.columba.core.xml.XmlElement;
 import org.columba.mail.config.FolderItem;
 import org.columba.mail.gui.table.SortingStateObservable;
 import org.columba.mail.gui.table.TableView;
-import org.columba.mail.message.IHeaderList;
+import org.columba.mail.message.ColumbaHeader;
+import org.columba.ristretto.message.Flags;
 
 /**
  * 
@@ -38,108 +44,264 @@ import org.columba.mail.message.IHeaderList;
  * 
  * @author fdietz
  */
-public class TableModelSorter extends BasicTableModelSorter {
+public class TableModelSorter implements ModelVisitor {
 
-    protected WindowItem config;
+	protected boolean ascending = true;
 
-    protected SortingStateObservable sortingStateObservable;
+	protected String sort = new String("Date");
 
-    public TableModelSorter(TreeTableModelInterface tableModel) {
-        super(tableModel);
+	protected Collator collator;
 
-        setSortingColumn("Date");
+	protected WindowItem config;
 
-        setSortingOrder(true);
+	protected SortingStateObservable sortingStateObservable;
 
-        // observable connects the sorting table with the sort menu (View->Sort
-        // Messages)
-        sortingStateObservable = new SortingStateObservable();
-        sortingStateObservable.setSortingState(getSortingColumn(),
-                getSortingOrder());
-    }
+	public TableModelSorter() {
 
-    /**
-     * @return
-     */
-    public SortingStateObservable getSortingStateObservable() {
-        return sortingStateObservable;
-    }
+		setSortingColumn("Date");
 
-    /**
-     * 
-     * This method is used by <class>SortMessagesMenu </class> to generate the
-     * available menuitem entries
-     * 
-     * @return array of visible columns
-     */
-    public Object[] getColumns() {
-        XmlElement tableElement = FolderItem.getGlobalOptions();
+		setSortingOrder(true);
 
-        XmlElement columns = tableElement.getElement("columns");
+		// observable connects the sorting table with the sort menu (View->Sort
+		// Messages)
+		sortingStateObservable = new SortingStateObservable();
+		sortingStateObservable.setSortingState(getSortingColumn(),
+				getSortingOrder());
 
-        Vector v = new Vector();
+		collator = Collator.getInstance();
+	}
 
-        for (int i = 0; i < columns.count(); i++) {
-            XmlElement column = columns.getElement(i);
+	/**
+	 * @return
+	 */
+	public SortingStateObservable getSortingStateObservable() {
+		return sortingStateObservable;
+	}
 
-            String name = column.getAttribute("name");
-            v.add(name);
-        }
+	/**
+	 * 
+	 * This method is used by <class>SortMessagesMenu </class> to generate the
+	 * available menuitem entries
+	 * 
+	 * @return array of visible columns
+	 */
+	public Object[] getColumns() {
+		XmlElement tableElement = FolderItem.getGlobalOptions();
 
-        Object[] result = new String[v.size()];
-        result = v.toArray();
+		XmlElement columns = tableElement.getElement("columns");
 
-        return result;
-    }
+		Vector v = new Vector();
 
-    public void loadConfig(TableView view) {
+		for (int i = 0; i < columns.count(); i++) {
+			XmlElement column = columns.getElement(i);
 
-    }
+			String name = column.getAttribute("name");
+			v.add(name);
+		}
 
-    /**
-     * ***************************** implements TableModelModifier
-     * ******************
-     */
+		Object[] result = new String[v.size()];
+		result = v.toArray();
 
-    public void sort() {
-        super.sort();
+		return result;
+	}
 
-        // notify tree
-        getRealModel().getTreeModel().nodeStructureChanged(getRootNode());
+	public void loadConfig(TableView view) {
 
-    }
+	}
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.columba.mail.gui.table.model.TableModelModifier#update()
-     */
-    public void update() {
-        super.update();
+	/**
+	 * ***************************** implements TableModelModifier
+	 * ******************
+	 */
 
-        // sort table model data
-        sort();
+	public String getSortingColumn() {
+		return sort;
+	}
 
-        // notify tree
-        getRealModel().getTreeModel().nodeStructureChanged(getRootNode());
+	public boolean getSortingOrder() {
+		return ascending;
+	}
 
-    }
+	public void setSortingColumn(String str) {
+		sort = str;
+	}
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.columba.mail.gui.table.model.TreeTableModelInterface#set(org.columba.mail.message.HeaderList)
-     */
-    public void set(IHeaderList headerList) {
-        super.set(headerList);
+	public void setSortingOrder(boolean b) {
+		ascending = b;
+	}
 
-        if ((headerList != null) && (headerList.count() != 0)) {
-            update();
-        } else {
-            // messagelist is empty
-            //		notify tree
-            getRealModel().getTreeModel().nodeStructureChanged(getRootNode());
+	/**
+	 * 
+	 * sort the table
+	 * 
+	 * use selected column and sorting order
+	 *  
+	 */
+	public void sort(HeaderTableModel tableModel) {
+		String str = getSortingColumn();
 
-        }
-    }
+		/*
+		 * if (str.equals("In Order Received")) { // do not sort the table, just
+		 * use MessageNode rootNode = getRootNode(); } else {
+		 */
+		MessageNode rootNode = tableModel.getRootNode();
+
+		// get a list of MessageNode objects of the first
+		// hierachy level
+		List v = rootNode.getVector();
+		if (v == null)
+			return;
+
+		// do the sorting
+		Collections.sort(v, new MessageHeaderComparator(getSortingColumn(),
+				tableModel.getColumnNumber(getSortingColumn()),
+				getSortingOrder()));
+
+		//      notify tree
+		//getRealModel().getTreeModel().nodeStructureChanged(getRootNode());
+		//}
+	}
+
+	class MessageHeaderComparator implements Comparator {
+		protected int column;
+
+		protected boolean ascending;
+
+		protected String columnName;
+
+		public MessageHeaderComparator(String columnName, int sortCol,
+				boolean sortAsc) {
+			column = sortCol;
+			ascending = sortAsc;
+			this.columnName = columnName;
+		}
+
+		public int compare(Object o1, Object o2) {
+			MessageNode node1 = (MessageNode) o1;
+			MessageNode node2 = (MessageNode) o2;
+
+			ColumbaHeader header1 = (ColumbaHeader) node1.getUserObject();
+			ColumbaHeader header2 = (ColumbaHeader) node2.getUserObject();
+
+			if ((header1 == null) || (header2 == null)) {
+				return 0;
+			}
+
+			int result = 0;
+
+			if (columnName.equals("Status")) {
+				Flags flags1 = header1.getFlags();
+				Flags flags2 = header2.getFlags();
+
+				if ((flags1 == null) || (flags2 == null)) {
+					result = 0;
+				} else if ((flags1.getSeen()) && (!flags2.getSeen())) {
+					result = -1;
+				} else if ((!flags1.getSeen()) && (flags2.getSeen())) {
+					result = 1;
+				} else {
+					result = 0;
+				}
+			} else if (columnName.equals("Flagged")) {
+				Flags flags1 = header1.getFlags();
+				Flags flags2 = header2.getFlags();
+
+				boolean f1 = flags1.getFlagged();
+				boolean f2 = flags2.getFlagged();
+
+				if (f1 == f2) {
+					result = 0;
+				} else if (f1) { // define false < true
+					result = 1;
+				} else {
+					result = -1;
+				}
+			} else if (columnName.equals("Attachment")) {
+				boolean f1 = ((Boolean) header1.get("columba.attachment"))
+						.booleanValue();
+				boolean f2 = ((Boolean) header2.get("columba.attachment"))
+						.booleanValue();
+
+				if (f1 == f2) {
+					result = 0;
+				} else if (f1) { // define false < true
+					result = 1;
+				} else {
+					result = -1;
+				}
+			} else if (columnName.equals("Date")) {
+				Date d1 = (Date) header1.get("columba.date");
+				Date d2 = (Date) header2.get("columba.date");
+
+				if ((d1 == null) || (d2 == null)) {
+					result = 0;
+				} else {
+					result = d1.compareTo(d2);
+				}
+			} else if (columnName.equals("Size")) {
+				int i1 = ((Integer) header1.get("columba.size")).intValue();
+				int i2 = ((Integer) header2.get("columba.size")).intValue();
+
+				if (i1 == i2) {
+					result = 0;
+				} else if (i1 > i2) {
+					result = 1;
+				} else {
+					result = -1;
+				}
+			} else if (columnName.equals("Spam")) {
+				boolean f1 = ((Boolean) header1.get("columba.spam"))
+						.booleanValue();
+				boolean f2 = ((Boolean) header2.get("columba.spam"))
+						.booleanValue();
+
+				if (f1 == f2) {
+					result = 0;
+				} else if (f1) { // define false < true
+					result = 1;
+				} else {
+					result = -1;
+				}
+			} else {
+				Object item1 = header1.get(columnName);
+				Object item2 = header2.get(columnName);
+
+				if ((item1 != null) && (item2 == null)) {
+					result = 1;
+				} else if ((item1 == null) && (item2 != null)) {
+					result = -1;
+				} else if ((item1 == null) && (item2 == null)) {
+					result = 0;
+				} else if (item1 instanceof String) {
+					result = collator.compare((String) item1, (String) item2);
+				} else if (item1 instanceof Boolean) {
+					result = collator.compare((Boolean) item1, (Boolean) item2);
+				}
+			}
+
+			if (!ascending) {
+				result = -result;
+			}
+
+			return result;
+		}
+
+		public boolean equals(Object obj) {
+			if (obj instanceof MessageHeaderComparator) {
+				MessageHeaderComparator compObj = (MessageHeaderComparator) obj;
+
+				return (compObj.column == column)
+						&& (compObj.ascending == ascending);
+			}
+
+			return false;
+		}
+	}
+
+	/**
+	 * @see org.columba.mail.gui.table.model.ModelVisitor#visit(org.columba.mail.gui.table.model.TreeTableModelInterface)
+	 */
+	public void visit(HeaderTableModel realModel) {
+		sort(realModel);
+	}
 }

@@ -62,7 +62,8 @@ import org.columba.mail.util.MailResourceLoader;
  *  
  */
 public class ThreePaneMailFrameController extends AbstractMailFrameController
-		implements TreeViewOwner, TableViewOwner, ContentPane, ISelectionListener {
+		implements TreeViewOwner, TableViewOwner, ContentPane,
+		ISelectionListener {
 
 	public TreeController treeController;
 
@@ -88,8 +89,6 @@ public class ThreePaneMailFrameController extends AbstractMailFrameController
 	public ThreePaneMailFrameController(ViewItem viewItem) {
 		super(viewItem);
 
-		TableUpdater.add(this);
-
 		treeController = new TreeController(this, FolderTreeModel.getInstance());
 		tableController = new TableController(this);
 		folderInfoPanel = new FolderInfoPanel();
@@ -111,8 +110,9 @@ public class ThreePaneMailFrameController extends AbstractMailFrameController
 		// also register interest in tree seleciton events
 		// for updating the title
 		treeHandler.addSelectionListener(this);
-		
-		AttachmentSelectionHandler attachmentHandler = new AttachmentSelectionHandler(attachmentController);		
+
+		AttachmentSelectionHandler attachmentHandler = new AttachmentSelectionHandler(
+				attachmentController);
 		getSelectionManager().addSelectionHandler(attachmentHandler);
 		// attachment viewer registers interest in table selection events
 		tableHandler.addSelectionListener(attachmentHandler);
@@ -155,7 +155,7 @@ public class ThreePaneMailFrameController extends AbstractMailFrameController
 
 	public void enableMessagePreview(boolean enable) {
 		getViewItem().set("header_enabled", enable);
-		
+
 		if (enable) {
 			rightSplitPane = new UIFSplitPane();
 			rightSplitPane.setOrientation(JSplitPane.VERTICAL_SPLIT);
@@ -165,17 +165,17 @@ public class ThreePaneMailFrameController extends AbstractMailFrameController
 			mainSplitPane.add(rightSplitPane, JSplitPane.RIGHT);
 		} else {
 			rightSplitPane = null;
-			
+
 			mainSplitPane.add(tablePanel, JSplitPane.RIGHT);
 		}
-		
+
 		mainSplitPane.setDividerLocation(viewItem.getInteger("splitpanes",
 				"main", 100));
 
 		if (enable)
-			rightSplitPane.setDividerLocation(viewItem.getInteger(
-					"splitpanes", "header", 100));
-		
+			rightSplitPane.setDividerLocation(viewItem.getInteger("splitpanes",
+					"header", 100));
+
 		getContainer().getFrame().validate();
 	}
 
@@ -208,9 +208,9 @@ public class ThreePaneMailFrameController extends AbstractMailFrameController
 
 		mainSplitPane = new UIFSplitPane();
 		mainSplitPane.setBorder(null);
-		
+
 		panel.setLayout(new BorderLayout());
-		
+
 		panel.add(mainSplitPane, BorderLayout.CENTER);
 
 		mainSplitPane.setOrientation(JSplitPane.HORIZONTAL_SPLIT);
@@ -271,26 +271,27 @@ public class ThreePaneMailFrameController extends AbstractMailFrameController
 						"splitpanes", "header", 100));
 		}
 
-		getContainer().extendMenuFromFile(this, "org/columba/mail/action/menu.xml");
+		getContainer().extendMenuFromFile(this,
+				"org/columba/mail/action/menu.xml");
 
 		try {
-			((MenuPluginHandler) PluginManager.getInstance()
-					.getHandler("org.columba.mail.menu"))
-					.insertPlugins(getContainer().getMenu());
+			((MenuPluginHandler) PluginManager.getInstance().getHandler(
+					"org.columba.mail.menu")).insertPlugins(getContainer()
+					.getMenu());
 		} catch (PluginHandlerNotFoundException ex) {
 			throw new RuntimeException(ex);
 		}
 
-		getContainer().extendToolbar(this, MailConfig.getInstance().get("main_toolbar")
-				.getElement("toolbar"));
+		getContainer().extendToolbar(
+				this,
+				MailConfig.getInstance().get("main_toolbar").getElement(
+						"toolbar"));
 
-		
 		tableController.createPopupMenu();
 		treeController.createPopupMenu();
 		messageController.createPopupMenu();
 		attachmentController.createPopupMenu();
-		
-		
+
 		return panel;
 	}
 
@@ -323,9 +324,10 @@ public class ThreePaneMailFrameController extends AbstractMailFrameController
 			IMailFolder folder = (IMailFolder) r.getSourceFolder();
 
 			// folder-based configuration
-			
-			 if (folder instanceof AbstractMessageFolder) 
-			 	getFolderOptionsController().save((AbstractMessageFolder)folder);
+
+			if (folder instanceof AbstractMessageFolder)
+				getFolderOptionsController().save(
+						(AbstractMessageFolder) folder);
 		}
 	}
 
@@ -343,7 +345,7 @@ public class ThreePaneMailFrameController extends AbstractMailFrameController
 	public String getString(String sPath, String sName, String sID) {
 		return MailResourceLoader.getString(sPath, sName, sID);
 	}
-	
+
 	/**
 	 * @see org.columba.core.gui.frame.FrameMediator#getContentPane()
 	 */
@@ -356,9 +358,9 @@ public class ThreePaneMailFrameController extends AbstractMailFrameController
 	 */
 	public void selectionChanged(SelectionChangedEvent e) {
 		TreeSelectionChangedEvent event = (TreeSelectionChangedEvent) e;
-		
+
 		AbstractFolder[] selectedFolders = event.getSelected();
-		if( selectedFolders.length == 1 && selectedFolders[0] != null) {
+		if (selectedFolders.length == 1 && selectedFolders[0] != null) {
 			getContainer().getFrame().setTitle(selectedFolders[0].getName());
 		}
 	}

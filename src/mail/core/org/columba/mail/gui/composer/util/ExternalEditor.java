@@ -84,8 +84,6 @@ public class ExternalEditor {
 		//Font OldFont = EditView.getFont();
 		Font OldFont = EditCtrl.getViewFont();
 
-		System.out.println("Setting Font to REALLY BIG!!! :-)");
-
 		/*
 		 * // Why doesn't this work??? EditView.setFont( new
 		 * Font(Config.getOptionsConfig().getThemeItem().getTextFontName(),

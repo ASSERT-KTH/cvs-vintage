@@ -29,63 +29,50 @@ import org.columba.mail.config.AccountItem;
 import org.columba.mail.folder.AbstractMessageFolder;
 import org.columba.mail.gui.composer.ComposerController;
 import org.columba.mail.gui.composer.ComposerModel;
-import org.columba.mail.gui.frame.TableUpdater;
-import org.columba.mail.gui.table.model.TableModelChangedEvent;
-import org.columba.mail.gui.tree.FolderTreeModel;
 import org.columba.mail.util.MailResourceLoader;
-
 
 /**
  * @author freddy
  */
 public class SaveMessageCommand extends Command {
-    private AbstractMessageFolder folder;
+	private AbstractMessageFolder folder;
 
-    /**
-     * Constructor for SaveMessageCommand.
-     *
-     * @param frameMediator
-     * @param references
-     */
-    public SaveMessageCommand(ICommandReference reference) {
-        super(reference);
-    }
+	/**
+	 * Constructor for SaveMessageCommand.
+	 * 
+	 * @param frameMediator
+	 * @param references
+	 */
+	public SaveMessageCommand(ICommandReference reference) {
+		super(reference);
+	}
 
-    public void updateGUI() throws Exception {
-        // update the table
-        TableModelChangedEvent ev = new TableModelChangedEvent(TableModelChangedEvent.UPDATE,
-                folder);
+	/**
+	 * @see org.columba.core.command.Command#execute(Worker)
+	 */
+	public void execute(WorkerStatusController worker) throws Exception {
+		ComposerCommandReference r = (ComposerCommandReference) getReference();
 
-        TableUpdater.tableChanged(ev);
+		ComposerController composerController = r.getComposerController();
 
-        FolderTreeModel.getInstance().nodeChanged(folder);
-    }
+		AccountItem item = ((ComposerModel) composerController.getModel())
+				.getAccountItem();
 
-    /**
-     * @see org.columba.core.command.Command#execute(Worker)
-     */
-    public void execute(WorkerStatusController worker)
-        throws Exception {
-        ComposerCommandReference r = (ComposerCommandReference) getReference();
+		SendableMessage message = (SendableMessage) r.getMessage();
 
-        ComposerController composerController = r.getComposerController();
+		if (message == null) {
+			message = new MessageComposer(((ComposerModel) composerController
+					.getModel())).compose(worker);
+		}
+		folder = (AbstractMessageFolder) r.getSourceFolder();
 
-        AccountItem item = ((ComposerModel) composerController.getModel()).getAccountItem();
-
-        SendableMessage message = (SendableMessage) r.getMessage();
-
-        if (message == null) {
-            message = new MessageComposer(((ComposerModel) composerController.getModel())).compose(worker);
-        }
-        folder = (AbstractMessageFolder) r.getSourceFolder();
-        
-        worker.setDisplayText(MailResourceLoader.getString("statusbar",
+		worker.setDisplayText(MailResourceLoader.getString("statusbar",
 				"message", "save_message"));
-        
 
-        InputStream sourceStream = new ProgressObservedInputStream( message.getSourceStream(), worker );
-        folder.addMessage(sourceStream,
-            message.getHeader().getAttributes(), message.getHeader().getFlags());
-        sourceStream.close();
-    }
+		InputStream sourceStream = new ProgressObservedInputStream(message
+				.getSourceStream(), worker);
+		folder.addMessage(sourceStream, message.getHeader().getAttributes(),
+				message.getHeader().getFlags());
+		sourceStream.close();
+	}
 }

@@ -21,10 +21,7 @@ import org.columba.core.xml.XmlElement;
 import org.columba.mail.folder.IMailbox;
 import org.columba.mail.gui.frame.MailFrameMediator;
 import org.columba.mail.gui.frame.TableViewOwner;
-import org.columba.mail.gui.frame.ThreePaneMailFrameController;
-import org.columba.mail.gui.table.FilterToolbar;
 import org.columba.mail.gui.table.TableController;
-import org.columba.mail.gui.table.model.TableModelFilter;
 
 
 /**
@@ -53,7 +50,7 @@ public class FilterOptionsPlugin extends AbstractFolderOptionsPlugin {
 
         TableController tableController = ((TableController)((TableViewOwner) getMediator()).getTableController());
 
-        /*
+        	/*
         TableModelFilter model = tableController.getTableModelFilteredView();
 
         item.set("new_state", model.getNewFlag());
@@ -75,10 +72,10 @@ public class FilterOptionsPlugin extends AbstractFolderOptionsPlugin {
         IDefaultItem item = new DefaultItem(parent);
 
         TableController tableController = ((TableController)((TableViewOwner) getMediator()).getTableController());
+        /*
         TableModelFilter model = tableController.getTableModelFilteredView();
         FilterToolbar toolbar = ((ThreePaneMailFrameController) getMediator()).getFilterToolbar();
 
-        /*
         model.setNewFlag(item.getBoolean("new_state"));
         toolbar.enableNew(item.getBoolean("new_state"));
 
@@ -93,9 +90,7 @@ public class FilterOptionsPlugin extends AbstractFolderOptionsPlugin {
 
         model.setExpungedFlag(item.getBoolean("expunged_state"));
         toolbar.enableExpunged(item.getBoolean("expunged_state"));
-        */
-        
-        /*
+
         String t = item.get("pattern");
 
         if (t == null) {

@@ -501,7 +501,7 @@ public class ComposerModel {
 			String adr = (String) toList.get(i);
 			// remove leading/trailing whitespaces
 			adr = adr.trim();
-			System.out.println("adr=" + adr);
+			
 			if (!emailPattern.matcher(adr).matches())
 				return adr;
 

@@ -29,92 +29,106 @@ import org.columba.core.gui.util.DescendingIcon;
 import org.columba.mail.gui.table.model.MessageNode;
 import org.columba.mail.gui.table.model.TableModelSorter;
 
-
 /**
- * Mouse listener for selecting columns with the left mouse
- * to change the sorting order.
+ * Mouse listener for selecting columns with the left mouse to change the
+ * sorting order.
  * <p>
  * Also responsible for changing the icon in the renderer
- *
+ * 
  * @author fdietz
  */
 public class TableHeaderMouseListener extends MouseAdapter {
-    private TableView view;
-    private TableModelSorter sorter;
-    private SortingStateObservable observable;
-    private ImageIcon ascending = new AscendingIcon();
-    private ImageIcon descending = new DescendingIcon();
-    
-    private TableController controller;
-    
-    /**
- *
- */
-    public TableHeaderMouseListener(TableController controller, TableModelSorter sorter) {
-    	this.controller = controller;
-        this.view = controller.getView();
-        this.sorter = sorter;
+	private TableView view;
 
-        this.observable = sorter.getSortingStateObservable();
+	private TableModelSorter sorter;
 
-        JTableHeader th = view.getTableHeader();
-        th.addMouseListener(this);
-    }
+	private SortingStateObservable observable;
 
-    public void mouseClicked(MouseEvent e) {
-        TableColumnModel columnModel = view.getColumnModel();
-        int viewColumn = columnModel.getColumnIndexAtX(e.getX());
-        int column = viewColumn;
+	private ImageIcon ascending = new AscendingIcon();
 
-        //int column = view.convertColumnIndexToModel(viewColumn);
-        //int column2 = view.convertColumnIndexToView(viewColumn);
-        if (column != -1) {
-            ImageIcon icon = null;
+	private ImageIcon descending = new DescendingIcon();
 
-            if (sorter.getSortingOrder() == true) {
-                icon = ascending;
-            } else {
-                icon = descending;
-            }
+	private TableController controller;
 
-            // disable every icon
-            // -> set appropriate icon for selected column
-            for (int i = 0; i < columnModel.getColumnCount(); i++) {
-                JLabel renderer = (JLabel) columnModel.getColumn(i)
-                                                      .getHeaderRenderer();
+	/**
+	 *  
+	 */
+	public TableHeaderMouseListener(TableController controller,
+			TableModelSorter sorter) {
+		this.controller = controller;
+		this.view = controller.getView();
+		this.sorter = sorter;
 
-                if (i == column) {
-                    renderer.setIcon(icon);
-                } else {
-                    renderer.setIcon(null);
-                }
-            }
+		this.observable = sorter.getSortingStateObservable();
 
-            // remember selected node
-            MessageNode[] nodes = view.getSelectedNodes();
-            Object uid = null;
-            
-            if ( ( nodes != null) && ( nodes.length>0) )
-            	uid = nodes[0].getUid();
-            
-            // repaint table header
-            SwingUtilities.invokeLater(new Runnable() {
-                    public void run() {
-                        view.getTableHeader().repaint();
-                    }
-                });
+		JTableHeader th = view.getTableHeader();
+		th.addMouseListener(this);
+	}
 
-            // notify the model to sort the table
-            sorter.sort(column);
+	public void mouseClicked(MouseEvent e) {
+		TableColumnModel columnModel = view.getColumnModel();
+		int viewColumn = columnModel.getColumnIndexAtX(e.getX());
+		int column = viewColumn;
 
-            // notify observers
-            observable.setSortingState(sorter.getSortingColumn(),
-                sorter.getSortingOrder());
-            
-            // make selected row visible again
-            if ( uid != null)
-            	controller.setSelected(new Object[] {uid});
-                      
-        }
-    }
+		//int column = view.convertColumnIndexToModel(viewColumn);
+		//int column2 = view.convertColumnIndexToView(viewColumn);
+		if (column != -1) {
+			ImageIcon icon = null;
+
+			if (sorter.getSortingOrder() == true) {
+				icon = ascending;
+			} else {
+				icon = descending;
+			}
+
+			// disable every icon
+			// -> set appropriate icon for selected column
+			for (int i = 0; i < columnModel.getColumnCount(); i++) {
+				JLabel renderer = (JLabel) columnModel.getColumn(i)
+						.getHeaderRenderer();
+
+				if (i == column) {
+					renderer.setIcon(icon);
+				} else {
+					renderer.setIcon(null);
+				}
+			}
+
+			// remember selected node
+			MessageNode[] nodes = view.getSelectedNodes();
+			Object uid = null;
+
+			if ((nodes != null) && (nodes.length > 0))
+				uid = nodes[0].getUid();
+
+			// repaint table header
+			SwingUtilities.invokeLater(new Runnable() {
+				public void run() {
+					view.getTableHeader().repaint();
+				}
+			});
+
+			String columnName = controller.getHeaderTableModel().getColumnName(
+					column);
+
+			// notify the model to sort the table
+			//sorter.sort(column);
+			boolean order = false;
+			
+			if (sorter.getSortingColumn().equals(columnName)) {
+				order = !sorter.getSortingOrder();
+			}
+			// notify observers (sorting state submenu)
+			observable.setSortingState(columnName, order);
+
+			controller.setSortingColumn(columnName);
+			controller.setSortingOrder(order);
+			controller.getHeaderTableModel().update();
+			
+			// make selected row visible again
+			if (uid != null)
+				controller.setSelected(new Object[] { uid });
+
+		}
+	}
 }

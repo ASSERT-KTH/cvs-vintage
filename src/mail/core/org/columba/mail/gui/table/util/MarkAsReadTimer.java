@@ -123,7 +123,7 @@ public class MarkAsReadTimer implements ActionListener, ISelectionListener,
     public synchronized void restart(IMailFolderCommandReference reference) {
         LOG.info("MarkAsRead-timer started");
 
-        message = reference;
+        message =  reference;
         value = 0;
 
         if (timer != null) {

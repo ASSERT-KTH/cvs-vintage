@@ -28,12 +28,13 @@ import javax.swing.table.JTableHeader;
 import javax.swing.table.TableColumn;
 import javax.swing.tree.TreePath;
 
+import org.columba.core.folder.IFolder;
+import org.columba.core.folder.IFolderCommandReference;
 import org.columba.core.gui.ClipboardManager;
 import org.columba.core.gui.focus.FocusManager;
 import org.columba.core.gui.focus.FocusOwner;
 import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.gui.menu.ColumbaPopupMenu;
-import org.columba.mail.command.MailFolderCommandReference;
 import org.columba.mail.command.IMailFolderCommandReference;
 import org.columba.mail.folder.IMailFolder;
 import org.columba.mail.folder.IMailbox;
@@ -51,10 +52,8 @@ import org.columba.mail.gui.table.model.HeaderTableModel;
 import org.columba.mail.gui.table.model.MessageNode;
 import org.columba.mail.gui.table.model.TableModelChangedEvent;
 import org.columba.mail.gui.table.model.TableModelChangedListener;
-import org.columba.mail.gui.table.model.TableModelFilter;
 import org.columba.mail.gui.table.model.TableModelSorter;
 import org.columba.mail.gui.table.model.TableModelThreadedView;
-import org.columba.mail.gui.table.model.TableModelUpdateManager;
 import org.columba.mail.gui.table.util.MarkAsReadTimer;
 import org.columba.mail.message.IColumbaHeader;
 import org.columba.mail.message.IHeaderList;
@@ -115,11 +114,6 @@ public class TableController implements FocusOwner, ListSelectionListener,
 	protected ColumbaPopupMenu menu;
 
 	/**
-	 * filter model
-	 */
-	protected TableModelFilter tableModelFilteredView;
-
-	/**
 	 * sorting model
 	 */
 	protected TableModelSorter tableModelSorter;
@@ -128,13 +122,6 @@ public class TableController implements FocusOwner, ListSelectionListener,
 	 * threaded-view model
 	 */
 	protected TableModelThreadedView tableModelThreadedView;
-
-	/**
-	 * update manager should handle all update requests
-	 * <p>
-	 * Don't update the models directly.
-	 */
-	protected TableModelUpdateManager updateManager;
 
 	/**
 	 * previously selected rows
@@ -165,20 +152,13 @@ public class TableController implements FocusOwner, ListSelectionListener,
 		// init table model
 		headerTableModel = new HeaderTableModel();
 
-		// init filter model
-		tableModelFilteredView = new TableModelFilter(headerTableModel);
-
 		// init threaded-view model
-		tableModelThreadedView = new TableModelThreadedView(
-				tableModelFilteredView);
+		tableModelThreadedView = new TableModelThreadedView();
+		headerTableModel.registerVisitor(tableModelThreadedView);
 
 		// init sorting model
-		tableModelSorter = new TableModelSorter(tableModelThreadedView);
-
-		// now, init update manager
-		// -> sorting is applied at the end after all other
-		// -> operations like filtering
-		updateManager = new TableModelUpdateManager(tableModelSorter);
+		tableModelSorter = new TableModelSorter();
+		headerTableModel.registerVisitor(tableModelSorter);
 
 		// init view
 		view = new TableView(headerTableModel, tableModelSorter);
@@ -258,7 +238,7 @@ public class TableController implements FocusOwner, ListSelectionListener,
 	 * 
 	 * @return table model
 	 */
-	public HeaderTableModel getHeaderTableModel() {
+	public IHeaderTableModel getHeaderTableModel() {
 		return headerTableModel;
 	}
 
@@ -322,7 +302,7 @@ public class TableController implements FocusOwner, ListSelectionListener,
 		previouslySelectedRows = view.getSelectedRows();
 
 		// folder in which the update occurs
-		IMailFolder folder = event.getSrcFolder();
+		IFolder folder = event.getSrcFolder();
 
 		if (folder == null) {
 			return;
@@ -331,9 +311,9 @@ public class TableController implements FocusOwner, ListSelectionListener,
 		LOG.info("source folder=" + folder.getName());
 
 		// get current selection
-		MailFolderCommandReference r = (MailFolderCommandReference) ((MailFrameMediator) frameController)
+		IFolderCommandReference r = (IFolderCommandReference) ((MailFrameMediator) frameController)
 				.getTableSelection();
-		IMailFolder srcFolder = (IMailFolder) r.getSourceFolder();
+		IFolder srcFolder = r.getSourceFolder();
 
 		// its always possible that no folder is currenlty selected
 		if (srcFolder != null) {
@@ -345,7 +325,7 @@ public class TableController implements FocusOwner, ListSelectionListener,
 		if (getFrameController() instanceof MailFrameMediator) {
 			if (srcFolder != null) {
 				((ThreePaneMailFrameController) getFrameController())
-						.getFolderInfoPanel().setFolder(srcFolder);
+						.getFolderInfoPanel().setFolder((IMailFolder) srcFolder);
 			}
 		}
 
@@ -356,43 +336,38 @@ public class TableController implements FocusOwner, ListSelectionListener,
 		}
 
 		switch (event.getEventType()) {
-		case TableModelChangedEvent.SET: {
-			updateManager.set(event.getHeaderList());
+		case -1: {
+			getHeaderTableModel().set(event.getHeaderList());
 
-			if (getTableModelThreadedView().isEnabled()) {
-
-				// expand all unread message nodes
-				for (int i = 0; i < getView().getRowCount(); i++) {
-					System.out.println("i=" + i + " count="
-							+ getView().getRowCount());
-
-					TreePath path = getView().getTree().getPathForRow(i);
-					MessageNode node = (MessageNode) path
-							.getLastPathComponent();
-					IColumbaHeader h = node.getHeader();
-					boolean unseen = !h.getFlags().getSeen();
-					if (unseen) {
-						getView().getTree().expandPath(path);
-					}
-				}
-			}
+			// FIXME threaded-view auto collapse
+			/*
+			 * if (getTableModelThreadedView().isEnabled()) {
+			 *  // expand all unread message nodes for (int i = 0; i <
+			 * getView().getRowCount(); i++) { System.out.println("i=" + i + "
+			 * count=" + getView().getRowCount());
+			 * 
+			 * TreePath path = getView().getTree().getPathForRow(i); MessageNode
+			 * node = (MessageNode) path .getLastPathComponent(); IColumbaHeader
+			 * h = node.getHeader(); boolean unseen = !h.getFlags().getSeen();
+			 * if (unseen) { getView().getTree().expandPath(path); } } }
+			 */
 			break;
 		}
 
 		case TableModelChangedEvent.UPDATE: {
-			updateManager.update();
+			getHeaderTableModel().update();
 
 			break;
 		}
 
 		case TableModelChangedEvent.REMOVE: {
-			updateManager.remove(event.getUids());
+			getHeaderTableModel().remove(event.getUids());
 
 			break;
 		}
 
 		case TableModelChangedEvent.MARK: {
-			updateManager.modify(event.getUids());
+			getHeaderTableModel().modify(event.getUids());
 
 			break;
 		}
@@ -400,8 +375,6 @@ public class TableController implements FocusOwner, ListSelectionListener,
 
 		// when marking messages, don't touch selection
 		if (event.getEventType() == TableModelChangedEvent.MARK)
-			return;
-		if (event.getEventType() == TableModelChangedEvent.SET)
 			return;
 
 		// re-select previous selection
@@ -469,9 +442,11 @@ public class TableController implements FocusOwner, ListSelectionListener,
 				.load(folder, FolderOptionsController.STATE_BEFORE);
 
 		// send an update notification to the table model
-		TableModelChangedEvent ev = new TableModelChangedEvent(
-				TableModelChangedEvent.SET, folder, headerList);
-		tableChanged(ev);
+		/*
+		 * TableModelChangedEvent ev = new TableModelChangedEvent(
+		 * TableModelChangedEvent.SET, folder, headerList); tableChanged(ev);
+		 */
+		getHeaderTableModel().set(headerList);
 
 		// load options of newly selected folder
 		((MailFrameMediator) getFrameController()).getFolderOptionsController()
@@ -487,7 +462,7 @@ public class TableController implements FocusOwner, ListSelectionListener,
 	 */
 	public void clear() {
 		// clear model
-		updateManager.set(null);
+		getHeaderTableModel().set(null);
 
 	}
 
@@ -504,20 +479,6 @@ public class TableController implements FocusOwner, ListSelectionListener,
 	 */
 	public TableModelThreadedView getTableModelThreadedView() {
 		return tableModelThreadedView;
-	}
-
-	/**
-	 * return the filtered view model
-	 */
-	public TableModelFilter getTableModelFilteredView() {
-		return tableModelFilteredView;
-	}
-
-	/**
-	 * @return
-	 */
-	public TableModelUpdateManager getUpdateManager() {
-		return updateManager;
 	}
 
 	/** ******************* FocusOwner interface *********************** */
@@ -717,7 +678,7 @@ public class TableController implements FocusOwner, ListSelectionListener,
 	}
 
 	/**
-	 * @see org.columba.mail.gui.table.model.TableModelChangedListener#isInterestedIn(IMailFolder)
+	 * @see org.columba.mail.gui.table.model.TableModelChangedListener#isInterestedIn(IFolder)
 	 */
 	public boolean isInterestedIn(IMailFolder folder) {
 
@@ -762,13 +723,30 @@ public class TableController implements FocusOwner, ListSelectionListener,
 	/**
 	 * @see org.columba.mail.gui.table.ITableController#enableThreadedView(boolean)
 	 */
-	public void enableThreadedView(boolean enableThreadedMode, boolean updateModel) {
+	public void enableThreadedView(boolean enableThreadedMode,
+			boolean updateModel) {
 		getTableModelThreadedView().setEnabled(enableThreadedMode);
 		getHeaderTableModel().enableThreadedView(enableThreadedMode);
 		getView().enableThreadedView(enableThreadedMode);
-		
-		if ( updateModel)
-			getUpdateManager().update();
+
+		if (updateModel)
+			getHeaderTableModel().update();
+
+		if (enableThreadedMode) {
+			//			 expand all unread message nodes
+			for (int i = 0; i < getView().getRowCount(); i++) {
+				System.out.println("i=" + i + " count="
+						+ getView().getRowCount());
+
+				TreePath path = getView().getTree().getPathForRow(i);
+				MessageNode node = (MessageNode) path.getLastPathComponent();
+				IColumbaHeader h = node.getHeader();
+				boolean unseen = !h.getFlags().getSeen();
+				if (unseen) {
+					getView().getTree().expandPath(path);
+				}
+			}
+		}
 	}
 
 	/**
@@ -797,8 +775,8 @@ public class TableController implements FocusOwner, ListSelectionListener,
 	 * @see org.columba.mail.gui.table.ITableController#setSortingOrder(boolean)
 	 */
 	public void setSortingOrder(boolean order) {
-		getTableModelSorter().setSortingOrder(true);
-		getUpdateManager().update();
+		getTableModelSorter().setSortingOrder(order);
+		//getHeaderTableModel().update();
 	}
 
 	/**
@@ -806,13 +784,27 @@ public class TableController implements FocusOwner, ListSelectionListener,
 	 */
 	public void setSortingColumn(String column) {
 		getTableModelSorter().setSortingColumn(column);
-		getUpdateManager().update();
+		//getHeaderTableModel().update();
 	}
 
 	/**
-	 * @see org.columba.mail.gui.table.ITableController#restartMarkAsReadTimer(org.columba.mail.command.IMailFolderCommandReference)
+	 * @see org.columba.mail.gui.table.ITableController#restartMarkAsReadTimer(org.columba.mail.command.IFolderCommandReference)
 	 */
 	public void restartMarkAsReadTimer(IMailFolderCommandReference reference) {
 		getMarkAsReadTimer().restart(reference);
+	}
+
+	/**
+	 * @see org.columba.mail.gui.table.ITableController#getSortingColumn()
+	 */
+	public String getSortingColumn() {
+		return getTableModelSorter().getSortingColumn();
+	}
+
+	/**
+	 * @see org.columba.mail.gui.table.ITableController#getSortingOrder()
+	 */
+	public boolean getSortingOrder() {
+		return getTableModelSorter().getSortingOrder();
 	}
 }

@@ -40,7 +40,7 @@ public interface ITableController {
 	 * 
 	 * @return table model
 	 */
-	//HeaderTableModel getHeaderTableModel();
+	IHeaderTableModel getHeaderTableModel();
 
 	/**
 	 * Show the headerlist of currently selected folder.
@@ -70,6 +70,9 @@ public interface ITableController {
 	Observable getSortingStateObservable();
 	void setSortingOrder(boolean order);
 	void setSortingColumn(String column);
+	
+	String getSortingColumn();
+	boolean getSortingOrder();
 	
 	void restartMarkAsReadTimer(IMailFolderCommandReference reference);
 	

@@ -17,49 +17,50 @@ package org.columba.mail.gui.table;
 
 import java.util.Observable;
 
-
 /**
+ * This is the model which handles the selected sorting column and the sorting
+ * order (ascending/descending) of the table
+ * <p>
+ * The sorting state submenu registers interest on this observable to change its
+ * selection state.
  * 
- *
- * This is the model which handles the selected sorting column
- * and the sorting order (ascending/descending) of the table
- *
  * @author fdietz
  */
 public class SortingStateObservable extends Observable {
-    private String column;
-    private boolean order;
+	private String column;
 
-    /**
- *
- */
-    public SortingStateObservable() {
-        super();
-    }
+	private boolean order;
 
-    /**
- * @return
- */
-    public String getColumn() {
-        return column;
-    }
+	/**
+	 *  
+	 */
+	public SortingStateObservable() {
+		super();
+	}
 
-    /**
- * @return
- */
-    public boolean isOrder() {
-        return order;
-    }
+	/**
+	 * @return
+	 */
+	public String getColumn() {
+		return column;
+	}
 
-    /**
- * @param string
- */
-    public void setSortingState(String string, boolean order) {
-        column = string;
-        this.order = order;
+	/**
+	 * @return
+	 */
+	public boolean isOrder() {
+		return order;
+	}
 
-        setChanged();
+	/**
+	 * @param string
+	 */
+	public void setSortingState(String string, boolean order) {
+		column = string;
+		this.order = order;
 
-        notifyObservers();
-    }
+		setChanged();
+
+		notifyObservers();
+	}
 }

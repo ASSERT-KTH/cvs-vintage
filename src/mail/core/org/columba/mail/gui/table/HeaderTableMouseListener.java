@@ -80,7 +80,7 @@ public class HeaderTableMouseListener extends MouseAdapter {
     protected void processDoubleClick() {
         int selectedRow = headerTableViewer.getView().getSelectedRow();
         MessageNode node = (MessageNode) headerTableViewer
-                .getHeaderTableModel().getValueAt(selectedRow, 0);
+                .getHeaderTableModel().getMessageNodeAtRow(selectedRow);
         boolean markedAsDraft = node.getHeader().getFlags().getDraft();
 
         if (markedAsDraft) {
