@@ -113,14 +113,12 @@ import org.apache.turbine.Log;
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: AbstractScarabModule.java,v 1.3 2001/12/05 22:29:37 jmcnally Exp $
+ * @version $Id: AbstractScarabModule.java,v 1.4 2001/12/07 23:18:56 dr Exp $
  */
 public abstract class AbstractScarabModule
     extends BaseObject
     implements ModuleEntity, Comparable
 {
-    protected static final NumberKey ROOT_ID = new NumberKey("0");
-
 
     /* removing the internal cache until it can be fixed using artifact_types
     private List allRModuleAttributes;
