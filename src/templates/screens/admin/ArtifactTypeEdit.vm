@@ -21,12 +21,7 @@ $link.setPage("admin,ManageArtifactTypes.vm").setLabel("here") to proceed.
 <input type="hidden" name="action" value="admin.ArtifactTypeEdit" />
 <input type="hidden" name="issueTypeId" value="$issueTypeId" />
 <input type="hidden" name="$scarabG.Constant.OTHER_TEMPLATE" value="admin,UserAttributeSelect.vm" />
-#set ($cancelTemplate = $data.Parameters.getString("$scarabG.Constant.CANCEL_TEMPLATE", "admin,ManageArtifactTypes.vm"))
-<input type="hidden" name="$scarabG.Constant.CANCEL_TEMPLATE" value="$cancelTemplate" />
 
-<div class="functnbar">
-<input type="submit" value="Back"  name="eventSubmit_doCancel" />
-</div>
 
 <h3>Issue type information</h3>
 <div class="axial">
@@ -47,6 +42,11 @@ $link.setPage("admin,ManageArtifactTypes.vm").setLabel("here") to proceed.
     </tr>
     </table>
 </div>
+
+<div class="functnbar3">
+<input type="submit" value="Save"  name="eventSubmit_doSaveinfo" />&#160;
+</div>
+
 
 #* Commenting out for now, later will implement as part of User Prefs
 <h3>Issue view display options</h3>
@@ -87,7 +87,7 @@ $link.setPage("admin,ManageArtifactTypes.vm").setLabel("here") to proceed.
 <table width="100%" border="1" cellspacing="2" cellpadding="3">
 <tr>
 <th nowrap="nowrap">Select</th>
-<th>Attribute group name</th>
+<th>Name</th>
 <th>Active</th>
 <th>Sequence #</th>
 </tr>
@@ -178,10 +178,6 @@ $link.setPage("admin,ManageArtifactTypes.vm").setLabel("here") to proceed.
 <input type="submit" value="Resort" name="eventSubmit_doSaveuserattributes" />
 </div>
 #end
-
-<div class="functnbar2">
-<input type="submit" value="Back"  name="eventSubmit_doCancel" />
-</div>        
 
 $intake.declareGroups()
 </form>
