@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/Attic/TcpEndpoint.java,v 1.6 2000/01/15 23:30:23 costin Exp $
- * $Revision: 1.6 $
- * $Date: 2000/01/15 23:30:23 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/Attic/TcpEndpoint.java,v 1.7 2000/02/09 01:18:39 costin Exp $
+ * $Revision: 1.7 $
+ * $Date: 2000/02/09 01:18:39 $
  *
  * ====================================================================
  *
@@ -217,7 +217,12 @@ public class TcpEndpoint  { // implements Endpoint {
     
     public void stopEndpoint() {
 	running=false;
-	// serverSocket.close(); XXX?
+	try {
+	    serverSocket.close(); // XXX?
+	} catch(Exception e) {
+	}
+	serverSocket = null;
+
     }
 
 
@@ -244,11 +249,16 @@ public class TcpEndpoint  { // implements Endpoint {
     
     void acceptConnections() {
 	try {
-	    Socket socket = serverSocket.accept();
-	    if (running == false) {
-		socket.close();  // rude, but unlikely!
+	    if (running == false)
+		return;
+
+	    if( null!= serverSocket) {
+		Socket socket = serverSocket.accept();
+		if (running == false) {
+		    socket.close();  // rude, but unlikely!
+		}
+		processSocket(socket);
 	    }
-	    processSocket(socket);
 	} catch (InterruptedIOException iioe) {
 	    // normal part -- should happen regularly so
 	    // that the endpoint can release if the server
@@ -257,6 +267,14 @@ public class TcpEndpoint  { // implements Endpoint {
 	    // way for the socket to timeout without
 	    // tripping an exception. Exceptions are so
 	    // 'spensive.
+	} catch (SocketException e) {
+	    if (running != false) {
+		running = false;
+		String msg = sm.getString("endpoint.err.fatal",
+					  serverSocket, e);
+		e.printStackTrace(); // something very wrong happened - better know what
+		System.err.println(msg);
+	    }
 	} catch (Exception e) {
 	    running = false;
 	    String msg = sm.getString("endpoint.err.fatal",
