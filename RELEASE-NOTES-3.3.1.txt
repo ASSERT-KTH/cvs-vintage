@@ -3,7 +3,7 @@
                                  Release Notes
                                  =============
 
-$Id: RELEASE-NOTES-3.3.1.txt,v 1.19 2002/01/08 00:49:24 larryi Exp $
+$Id: RELEASE-NOTES-3.3.1.txt,v 1.20 2002/01/09 06:41:01 larryi Exp $
 
 
 This document describes the changes that have been made since the
@@ -93,6 +93,10 @@ Bug No.  Description
 Server:
 
 Bug No.  Description
+
+         Fixed problem with JSP page names that match a Windows DOS device
+         name, such as aux.jsp.  Instead of potentially hanging the thread
+         that services the request, these requests now return "404 Not Found".
 
 4418     Ported Tomcat 3.2.x fix for race condition in ServerSocketFactory.
 
