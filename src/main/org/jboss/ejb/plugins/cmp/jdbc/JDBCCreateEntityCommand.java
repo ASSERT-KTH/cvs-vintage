@@ -33,7 +33,7 @@ import org.jboss.logging.Logger;
  * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  * @author <a href="mailto:shevlandj@kpi.com.au">Joe Shevland</a>
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
- * @version $Revision: 1.13 $
+ * @version $Revision: 1.14 $
  */
 public class JDBCCreateEntityCommand {
    private JDBCStoreManager manager;
@@ -208,7 +208,7 @@ public class JDBCCreateEntityCommand {
                "affected row: rowsAffected=" + rowsAffected +
                "id=" + ctx.getId());
       }
-      log.debug("Create: Rows affected = " + rowsAffected);
+      log.debug("Rows affected = " + rowsAffected);
 
       // Mark the inserted fields as clean.
       for(Iterator iter = insertFields.iterator(); iter.hasNext(); ) {

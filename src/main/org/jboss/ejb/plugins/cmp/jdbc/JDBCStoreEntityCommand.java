@@ -29,7 +29,7 @@ import org.jboss.logging.Logger;
  * @author <a href="mailto:shevlandj@kpi.com.au">Joe Shevland</a>
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
  * @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
- * @version $Revision: 1.12 $
+ * @version $Revision: 1.13 $
  */
 public class JDBCStoreEntityCommand {
    private JDBCStoreManager manager;
@@ -104,7 +104,7 @@ public class JDBCStoreEntityCommand {
                "id=" + ctx.getId());
       }
       if(log.isDebugEnabled()) {
-         log.debug("Create: Rows affected = " + rowsAffected);
+         log.debug("Rows affected = " + rowsAffected);
       }
 
       // Mark the inserted fields as clean.
