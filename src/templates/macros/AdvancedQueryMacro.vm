@@ -293,6 +293,14 @@ from:&#160;<input type="text" size="20"
 #resultsPerPageRadioSelect($data.getParameters().getInt("resultsperpage", 25))
 </td>
 </tr>
+<tr>
+<th>Format</th>
+<td>
+ <input type="radio" name="format" value="" checked="checked">$l10n.Web</input>
+ <input type="radio" name="format" value="excel">$l10n.Excel</input>
+ <input type="radio" name="format" value="tsv">$l10n.TabSeparatedValues</input>
+</td>
+</tr>
 </table>
 </div>
 

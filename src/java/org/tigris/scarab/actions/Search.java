@@ -89,7 +89,7 @@ import org.tigris.scarab.util.ScarabUtil;
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: Search.java,v 1.115 2003/03/20 00:57:30 jon Exp $
+ * @version $Id: Search.java,v 1.116 2003/03/20 01:07:06 dlr Exp $
  */
 public class Search extends RequireLoginFirstAction
 {
@@ -110,10 +110,20 @@ public class Search extends RequireLoginFirstAction
         if (queryResults != null && queryResults.size() > 0)
         {
             context.put("queryResults", queryResults);
-            String template = data.getParameters()
-                .getString(ScarabConstants.NEXT_TEMPLATE, 
-                           "IssueList.vm");
-            setTarget(data, template);            
+            String format = data.getParameters().getString("format");
+            if (StringUtils.isNotEmpty(format))
+            {
+                // Send to the IssueListExport screen (which actually
+                // has no corresponding Velocity template).
+                setTarget(data, "IssueListExport.vm");
+            }
+            else
+            {
+                String template = data.getParameters()
+                    .getString(ScarabConstants.NEXT_TEMPLATE, 
+                               "IssueList.vm");
+                setTarget(data, template);
+            }
         }
     }
 
