@@ -49,7 +49,7 @@ import org.gjt.sp.util.Log;
  * jEdit's text component.
  *
  * @author Slava Pestov
- * @version $Id: JEditTextArea.java,v 1.16 2001/10/16 07:04:21 spestov Exp $
+ * @version $Id: JEditTextArea.java,v 1.17 2001/10/21 06:40:32 spestov Exp $
  */
 public class JEditTextArea extends JComponent
 {
@@ -2161,12 +2161,10 @@ forward_scan:		do
 		invalidateLine(caretLine);
 
 		if(caretLine != newCaretLine)
-		{
 			invalidateLine(newCaretLine);
 
-			if(!foldVisibilityManager.isLineVisible(newCaretLine))
-				foldVisibilityManager.expandFold(newCaretLine,false);
-		}
+		if(!foldVisibilityManager.isLineVisible(newCaretLine))
+			foldVisibilityManager.expandFold(newCaretLine,false);
 
 		caret = newCaret;
 		caretLine = newCaretLine;

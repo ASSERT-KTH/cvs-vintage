@@ -26,6 +26,7 @@ package org.gjt.sp.jedit.buffer;
 import javax.swing.text.Segment;
 import org.gjt.sp.jedit.syntax.*;
 import org.gjt.sp.jedit.Buffer;
+import org.gjt.sp.util.IntegerArray;
 //}}}
 
 /**
@@ -36,7 +37,7 @@ import org.gjt.sp.jedit.Buffer;
  * called through, implements such protection.
  *
  * @author Slava Pestov
- * @version $Id: OffsetManager.java,v 1.4 2001/10/20 09:32:23 spestov Exp $
+ * @version $Id: OffsetManager.java,v 1.5 2001/10/21 06:40:31 spestov Exp $
  * @since jEdit 4.0pre1
  */
 public class OffsetManager
@@ -70,14 +71,14 @@ public class OffsetManager
 			switch(end - start)
 			{
 			case 0:
-				if(getLineEndOffset(start) < offset)
+				if(getLineEndOffset(start) <= offset)
 					return start + 1;
 				else
 					return start;
 			case 1:
-				if(getLineEndOffset(start) < offset)
+				if(getLineEndOffset(start) <= offset)
 				{
-					if(getLineEndOffset(end) < offset)
+					if(getLineEndOffset(end) <= offset)
 						return end + 1;
 					else
 						return end;
@@ -88,7 +89,7 @@ public class OffsetManager
 				int pivot = (end + start) / 2;
 				int value = getLineEndOffset(pivot);
 				if(value == offset)
-					return pivot;
+					return pivot + 1;
 				else if(value < offset)
 					start = pivot + 1;
 				else
