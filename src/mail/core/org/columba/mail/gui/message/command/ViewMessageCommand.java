@@ -24,12 +24,17 @@ public class ViewMessageCommand extends FolderCommand {
 	MimePart bodyPart;
 	MimePartTree mimePartTree;
 	HeaderInterface header;
+	Folder folder;
+	Object uid;
+	
 
 	/**
 	 * Constructor for ViewMessageCommand.
 	 * @param references
 	 */
-	public ViewMessageCommand(FrameController frame, DefaultCommandReference[] references) {
+	public ViewMessageCommand(
+		FrameController frame,
+		DefaultCommandReference[] references) {
 		super(frame, references);
 
 		priority = Command.REALTIME_PRIORITY;
@@ -41,6 +46,10 @@ public class ViewMessageCommand extends FolderCommand {
 		Object uid,
 		WorkerStatusController wsc)
 		throws Exception {
+		
+		this.folder = srcFolder;
+		this.uid = uid;
+		
 
 		bodyPart = null;
 
@@ -73,18 +82,36 @@ public class ViewMessageCommand extends FolderCommand {
 	 * @see org.columba.core.command.Command#updateGUI()
 	 */
 	public void updateGUI() throws Exception {
-		((MailFrameController)frameController).messageController.showMessage(bodyPart);
+		((MailFrameController) frameController).messageController.showMessage(
+			bodyPart);
 
 		if ((mimePartTree.count() > 1)
 			|| (!mimePartTree.get(0).getHeader().contentType.equals("text"))) {
-			((MailFrameController)frameController).attachmentController.setMimePartTree(
+			(
+				(
+					MailFrameController) frameController)
+						.attachmentController
+						.setMimePartTree(
 				mimePartTree);
-			((MailFrameController)frameController).getView().showAttachmentViewer();
+			((MailFrameController) frameController)
+				.getView()
+				.showAttachmentViewer();
 		} else
-			((MailFrameController)frameController).getView().hideAttachmentViewer();
+			((MailFrameController) frameController)
+				.getView()
+				.hideAttachmentViewer();
 
-		((MailFrameController)frameController).headerController.getView().setHeader(
+		((MailFrameController) frameController)
+			.headerController
+			.getView()
+			.setHeader(
 			header);
+
+		((MailFrameController) frameController)
+			.tableController
+			.getMarkAsReadTimer()
+			.restart( folder, uid);
+
 	}
 
 	/**

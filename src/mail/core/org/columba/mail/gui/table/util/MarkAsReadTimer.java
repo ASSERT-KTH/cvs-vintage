@@ -20,7 +20,11 @@ import java.awt.event.ActionListener;
 import javax.swing.Timer;
 
 import org.columba.core.config.Config;
+import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.folder.Folder;
+import org.columba.mail.folder.command.MarkMessageCommand;
+import org.columba.mail.gui.table.TableController;
+import org.columba.main.MainInterface;
 /**
  * Title:
  * Description:
@@ -30,79 +34,72 @@ import org.columba.mail.folder.Folder;
  * @version 1.0
  */
 
-public class MarkAsReadTimer implements ActionListener
-{
-    private Timer timer;
+public class MarkAsReadTimer implements ActionListener {
+	private Timer timer;
 
-    private final static int ONE_SECOND = 1000;
+	private final static int ONE_SECOND = 1000;
 
-    private int value;
-    private int maxValue;
+	private int value;
+	private int maxValue;
 
-    private Folder folder;
-    private Object[] uids;
+	private Folder folder;
+	private Object[] uids;
 
-    public MarkAsReadTimer()
-    {
+	private TableController tableController;
+	
+	public MarkAsReadTimer( TableController tableController ) {
 
-        this.maxValue = Config.getOptionsConfig()
-                        .getIntegerGuiOptions("markasreaddelay",2);
+		this.tableController = tableController;
+		this.maxValue =
+			Config.getOptionsConfig().getIntegerGuiOptions(
+				"markasreaddelay",
+				2);
 
+		timer = new Timer(ONE_SECOND * maxValue, this);
 
+	}
 
-        timer = new Timer( ONE_SECOND*maxValue, this );
+	public void setMaxValue(int i) {
+		maxValue = i;
+	}
 
-    }
+	public synchronized void stopTimer() {
+		value = 0;
 
-    public void setMaxValue( int i )
-    {
-        maxValue = i;
-    }
+		System.out.println("timer stopped--------->");
 
-    public synchronized void stopTimer()
-    {
-        value = 0;
+		timer.stop();
+	}
 
-        System.out.println("timer stopped--------->");
+	public synchronized void restart(Folder f, Object uid) {
+		folder = f;
+		uids = new Object[1];
+		uids[0] = uid;
 
-        timer.stop();
-    }
+		System.out.println("timer started--------->");
 
-    public synchronized void restart( Folder f, Object uid )
-    {
-        folder = f;
-        uids = new Object[1];
-        uids[0] = uid;
+		value = 0;
+		timer.restart();
+	}
 
-        System.out.println("timer started--------->");
+	public void actionPerformed(ActionEvent e) {
+		System.out.println("value: " + value);
 
-        value = 0;
-        timer.restart();
-    }
+		timer.stop();
 
-    public void actionPerformed( ActionEvent e )
-    {
-        System.out.println("value: "+ value);
+		System.out.println("timer starts markasread operation");
 
-        timer.stop();
-
-        System.out.println("timer starts markasread operation");
-
-		/*
-		
 		FolderCommandReference[] r =
-				(FolderCommandReference[]) tableController
-					.getTableSelectionManager()
-					.getSelection();
-			r[0].setMarkVariant( MarkMessageCommand.MARK_AS_READ );
+			(FolderCommandReference[]) tableController
+				.getTableSelectionManager()
+				.getSelection();
+		r[0].setMarkVariant(MarkMessageCommand.MARK_AS_READ);
 
-			MarkMessageCommand c =
-				new MarkMessageCommand(
-					tableController.getMailFrameController(),
-					r);
+		MarkMessageCommand c =
+			new MarkMessageCommand(tableController.getMailFrameController(), r);
 
-			MainInterface.processor.addOp(c);
-		*/
-        value++;
-    }
+		MainInterface.processor.addOp(c);
+
+		value++;
+	}
 }

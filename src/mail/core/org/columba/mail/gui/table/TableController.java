@@ -21,7 +21,6 @@ import org.columba.core.config.HeaderTableItem;
 import org.columba.core.gui.util.CScrollPane;
 import org.columba.core.logging.ColumbaLogger;
 import org.columba.core.util.SwingWorker;
-import org.columba.main.MainInterface;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.config.MailConfig;
 import org.columba.mail.folder.Folder;
@@ -35,9 +34,11 @@ import org.columba.mail.gui.table.action.HeaderTableFocusListener;
 import org.columba.mail.gui.table.action.HeaderTableMouseListener;
 import org.columba.mail.gui.table.command.ViewHeaderListCommand;
 import org.columba.mail.gui.table.menu.HeaderTableMenu;
+import org.columba.mail.gui.table.util.MarkAsReadTimer;
 import org.columba.mail.gui.table.util.MessageNode;
 import org.columba.mail.gui.tree.FolderSelectionListener;
 import org.columba.mail.message.HeaderList;
+import org.columba.main.MainInterface;
 
 /**
  * This class shows the messageheaderlist
@@ -92,6 +93,8 @@ public class TableController
 	protected MailFrameController mailFrameController;
 
 	protected Object[] newUidList;
+	
+	protected MarkAsReadTimer markAsReadTimer;
 
 	public TableController(MailFrameController mailFrameController) {
 
@@ -131,6 +134,7 @@ public class TableController
 			new HeaderItemActionListener(this, headerTableItem);
 		filterActionListener = new FilterActionListener(this);
 
+		markAsReadTimer = new MarkAsReadTimer( this );
 		
 		/*
 		headerTableActionListener = new HeaderTableActionListener(this);
@@ -509,6 +513,14 @@ public class TableController
 	 */
 	public MailFrameController getMailFrameController() {
 		return mailFrameController;
+	}
+
+	/**
+	 * Returns the markAsReadTimer.
+	 * @return MarkAsReadTimer
+	 */
+	public MarkAsReadTimer getMarkAsReadTimer() {
+		return markAsReadTimer;
 	}
 
 }
