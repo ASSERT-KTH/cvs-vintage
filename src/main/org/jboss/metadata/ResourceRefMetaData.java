@@ -22,8 +22,8 @@ import org.jboss.deployment.DeploymentException;
  * Used in: entity, message-driven, and session
  *
  *   @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
- *   @author <a href="mailto:Scott_Stark@displayscape.com">Scott Stark</a>
- *   @version $Revision: 1.9 $
+ *   @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>
+ *   @version $Revision: 1.10 $
  */
 public class ResourceRefMetaData
    extends MetaData
@@ -69,9 +69,13 @@ public class ResourceRefMetaData
    will sign on to the resource manager on behalf of the enterprise bean.
    In the latter case, the Container uses information that is supplied by
    the Deployer.
-   The value of this element must be one of the two following:
-   <res-auth>Application</res-auth>
-   <res-auth>Container</res-auth>
+    The value of this element must be one of the following for EJB2.0,
+    Servlet 2.3:
+    <res-auth>Application</res-auth>
+    <res-auth>Container</res-auth>
+    or for Servlet 2.2:
+    <res-auth>CONTAINER</res-auth>
+    <res-auth>SERVLET</res-auth>
     */
    private boolean containerAuth;
 
@@ -126,18 +130,18 @@ public class ResourceRefMetaData
       type = getElementContent(getUniqueChild(element, "res-type"));
       String auth = getElementContent(getUniqueChild(element, "res-auth"));
 
-      if( auth.equals("Container") )
+      if (auth.equalsIgnoreCase("Container"))
       {
          containerAuth = true;
       }
-      else if( auth.equals("Application") )
+      else if (auth.equals("Application") || auth.equals("SERVLET") )
       {
          containerAuth = false;
       }
       else
       {
-         throw new DeploymentException( "res-auth tag should be " +
-            "'Container' or 'Application'");
+         throw new DeploymentException("res-auth tag should be 'Container' or "
+            + "'Application' or 'SERVLET'");
       }
 
       // The res-sharing-scope element
