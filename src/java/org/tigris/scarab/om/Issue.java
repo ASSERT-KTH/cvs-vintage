@@ -503,6 +503,7 @@ public class Issue
 
     /**
      * Returns list of Activity objects associated with this Issue.
+     * Limits it to 10 history items (this is the default)
      */
     public Vector getActivity() throws Exception  
     {
@@ -512,6 +513,18 @@ public class Issue
             .addAscendingOrderByColumn(ActivityPeer.TRANSACTION_ID);
         return ActivityPeer.doSelect(crit);
     }
+
+    /**
+     * Returns full list of Activity objects associated with this Issue.
+     */
+    public Vector getActivity(boolean fullHistory) throws Exception  
+    {
+        Criteria crit = new Criteria()
+            .add(ActivityPeer.ISSUE_ID, getIssueId())
+            .addAscendingOrderByColumn(ActivityPeer.TRANSACTION_ID);
+        return ActivityPeer.doSelect(crit);
+    }
+
 
     /**
      * Returns list of child issues
@@ -526,7 +539,8 @@ public class Issue
         for ( int i=0; i<depends.size(); i++ ) 
         {
             Depend depend = (Depend) depends.get(i); 
-            Issue childIssue = (Issue) IssuePeer.retrieveByPK(new NumberKey(depend.getObserverId()));
+            Issue childIssue = (Issue) IssuePeer
+                      .retrieveByPK(new NumberKey(depend.getObserverId()));
             children.add(childIssue);
         }
         return children;
@@ -545,7 +559,8 @@ public class Issue
         for ( int i=0; i<depends.size(); i++ ) 
         {
             Depend depend = (Depend) depends.get(i); 
-            Issue parentIssue = (Issue) IssuePeer.retrieveByPK(new NumberKey(depend.getObservedId()));
+            Issue parentIssue = (Issue) IssuePeer
+                      .retrieveByPK(new NumberKey(depend.getObservedId()));
             parents.add(parentIssue);
         }
         return parents;
