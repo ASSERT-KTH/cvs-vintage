@@ -3,45 +3,51 @@
 #set ($issueType = $scarabR.CurrentIssueType)
 <h2>$currentIssue.IssueType.Name ID: $currentIssue.UniqueId</h2>
 
+
 #set ($fullHistory = $data.Parameters.getString("fullhistory",""))
 #set ($fullComments = $data.Parameters.getString("fullcomments",""))
 #set ($canEdit = $scarabR.hasPermission($scarabG.Permission.ISSUE__EDIT, $module))
 #set ($attrValues = $currentIssue.ModuleAttributeValuesMap)
 #set ($currentIssueId = $currentIssue.UniqueId)
 #set ($attrValues = $currentIssue.ModuleAttributeValuesMap)
-#set ($tab = $data.Parameters.getInt("tab",1))
+#set ($tab = $data.Parameters.getString("tab","1"))
 
+#if ($tab.equals("all"))
+    <div align="right"><small><a href="$link.setPage("ViewIssue.vm").addPathInfo("id", "$currentIssue.UniqueId").addPathInfo("tab", "1")">View as tabs</a></small></div>
+#else
+    <div align="right"><small><a href="$link.setPage("ViewIssue.vm").addPathInfo("id", "$currentIssue.UniqueId").addPathInfo("tab", "all")">View as single screen</a></small></div>
 <div class="tabs">
 <table cellpadding="3" cellspacing="0" border="0">
 <tr>
-#if ($tab == 1)
+#if ($tab.equals("1"))
 <th>Attributes</th>
 #else
-<td><a href="$link.setPage("ViewIssue.vm").addPathInfo("id", "$currentIssue.UniqueId").addPathInfo("tab", 1)">Attributes</a></td>
+<td><a href="$link.setPage("ViewIssue.vm").addPathInfo("id", "$currentIssue.UniqueId").addPathInfo("tab", "1")">Attributes</a></td>
 #end
-#if ($tab == 2)
+#if ($tab.equals("2"))
 <th>Personnel</th>
 #else
-<td><a href="$link.setPage("ViewIssue.vm").addPathInfo("id", "$currentIssue.UniqueId").addPathInfo("tab", 2)">Personnel</a></td>
+<td><a href="$link.setPage("ViewIssue.vm").addPathInfo("id", "$currentIssue.UniqueId").addPathInfo("tab", "2")">Personnel</a></td>
 #end
-#if ($tab == 3)
+#if ($tab.equals("3"))
 <th>Comments</th>
 #else
-<td><a href="$link.setPage("ViewIssue.vm").addPathInfo("id", "$currentIssue.UniqueId").addPathInfo("tab", 3)">Comments</a></td>
+<td><a href="$link.setPage("ViewIssue.vm").addPathInfo("id", "$currentIssue.UniqueId").addPathInfo("tab", "3")">Comments</a></td>
 #end
-#if ($tab == 4)
+#if ($tab.equals("4"))
 <th>URLs/Attachments/Dependencies</th>
 #else
-<td><a href="$link.setPage("ViewIssue.vm").addPathInfo("id", "$currentIssue.UniqueId").addPathInfo("tab", 4)">URLs/Attachments/Dependencies</a></td>
+<td><a href="$link.setPage("ViewIssue.vm").addPathInfo("id", "$currentIssue.UniqueId").addPathInfo("tab", "4")">URLs/Attachments/Dependencies</a></td>
 #end
-#if ($tab == 5)
+#if ($tab.equals("5"))
 <th>History</th>
 #else
-<td><a href="$link.setPage("ViewIssue.vm").addPathInfo("id", "$currentIssue.UniqueId").addPathInfo("tab", 5)">History</a></td>
+<td><a href="$link.setPage("ViewIssue.vm").addPathInfo("id", "$currentIssue.UniqueId").addPathInfo("tab", "5")">History</a></td>
 #end
 </tr>
 </table>
 </div>
+#end
 
 <div class="functnbar">
 #if ($data.User.hasPermission($scarabG.Permission.MODULE__EDIT, $module))
@@ -54,7 +60,7 @@
 
 
 ## PRIMARY INFO
-#if ($tab == 1)
+#if ($tab.equals("1") || $tab.equals("all"))
 
 <h3>Static issue info</h3>
 <div class="axial">
@@ -147,7 +153,7 @@
 #end
 #end
 
-#if ($tab == 2)
+#if ($tab.equals("2") || $tab.equals("all"))
 ### PERSONNEL
 <h3>Personnel associated with issue</h3>
 <table width="100%" border="1" cellspacing="2" cellpadding="3">
@@ -196,7 +202,7 @@
 
 
 ## COMMENTS
-#if ($tab == 3)
+#if ($tab.equals("3") || $tab.equals("all"))
 #if ($fullComments.equals("true"))
   #set ($comments = $currentIssue.getComments(true))
 #else
@@ -251,7 +257,7 @@
 #end
 
 ## URL/Attachment/Dependency Tab
-#if ($tab == 4)
+#if ($tab.equals("4") || $tab.equals("all"))
 ## URLS
 #if (!$currentIssue.Urls.isEmpty() || $canEdit)
 <h3>Related links</h3>
@@ -509,7 +515,7 @@
 
 #end
 
-#if ($tab == 5)
+#if ($tab.equals("5") || $tab.equals("all"))
 ## ISSUE HISTORY
 #set ($activity = $scarabG.reverse($currentIssue.getActivity(true)))
 #if (!$fullHistory.equals("true"))
