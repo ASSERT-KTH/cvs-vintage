@@ -70,12 +70,13 @@ import org.tigris.scarab.util.ScarabConstants;
 import org.tigris.scarab.tools.ScarabRequestTool;
 import org.tigris.scarab.util.ScarabConstants;
 import org.tigris.scarab.util.word.IssueSearch;
+import org.tigris.scarab.security.ScarabSecurityPull;
 
 /**
     This class is responsible for report issue forms.
     ScarabIssueAttributeValue
     @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
-    @version $Id: Search.java,v 1.28 2001/08/29 00:44:19 elicia Exp $
+    @version $Id: Search.java,v 1.29 2001/08/30 00:14:17 elicia Exp $
 */
 public class Search extends TemplateAction
 {
@@ -154,10 +155,10 @@ public class Search extends TemplateAction
     public void doRedirecttosavequery( RunData data, TemplateContext context )
          throws Exception
     {        
-        String queryString = data.getParameters().getString("queryString");
+        context.put("queryString", getQueryString(data));
         data.getParameters().remove("template");
-        data.getParameters().add("template",  "secure,SaveQuery.vm");
-        setTarget(data, "secure,SaveQuery.vm");            
+        data.getParameters().add("template",  "SaveQuery.vm");
+        setTarget(data, "SaveQuery.vm");            
     }
 
     /**
@@ -185,7 +186,7 @@ public class Search extends TemplateAction
         {
             queryGroup.setProperties(query);
             query.setUserId(user.getUserId());
-            query.save();
+            query.save( context, user);
 
             String template = data.getParameters()
                 .getString(ScarabConstants.NEXT_TEMPLATE);
@@ -196,6 +197,7 @@ public class Search extends TemplateAction
             data.setMessage(ERROR_MESSAGE);
         }
     }
+
 
     /**
         Edits the stored story.
@@ -208,7 +210,8 @@ public class Search extends TemplateAction
             .get(ScarabConstants.SCARAB_REQUEST_TOOL);
         Query query = scarabR.getQuery();
         query.setValue(newValue);
-        query.save();
+        ScarabUser user = (ScarabUser)data.getUser();
+        query.save( context, user );
     }
 
     /**
