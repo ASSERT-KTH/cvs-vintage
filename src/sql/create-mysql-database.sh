@@ -16,6 +16,11 @@ if [ "$3" != "" ] ; then
 else
     DB_NAME=scarab
 fi
+if [ "$4" != "" ] ; then
+    LOAD_ORDER=$4
+else
+    LOAD_ORDER=./LoadOrder.lst
+fi
 
 MYSQL=`which mysql`
 MYSQLSHOW=`which mysqlshow`
@@ -43,17 +48,7 @@ fi
 echo "Creating Database ${DB_NAME}..."
 ${MYSQLADMIN} -u ${USER} ${PASSCMD} create ${DB_NAME}
 
-FILES="mysql-scarab.sql \
-       mysql-turbine.sql \
-       mysql-turbine-scheduler.sql \
-       mysql-id-table-schema.sql \
-       mysql-turbine-id-table-init.sql \
-       mysql-scarab-id-table-init.sql \
-       mysql-scarab-required-data.sql \
-       mysql-scarab-default-data.sql \
-       mysql-scarab-security.sql \
-       mysql-scarab-sample-data.sql
-       "
+FILES=`cat ${LOAD_ORDER}`
 
 for i in ${FILES} ; do
     echo "Importing $i..."
