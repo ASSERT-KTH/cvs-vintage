@@ -1,3 +1,33 @@
+Columba v1.0 RC1-final
+
+New features:
+- replaced recipient editor in composer with new component (fdietz)
+- replaced attachment editor with iconpanel (fdietz)
+- added Redirect Message action/command (kastanie)
+
+Fixed bugs:
+- #987481, classcast exception in ToRenderer (fdietz)
+- only save spam DB if necessary (fdietz)
+- Contact Dialog: adapted to GUI design guidelines by making 
+  use of OK-Cancel pattern (javaprog)
+- don't send bcc in message header, fixed bug which caused 
+  random contacts to be placed in the Cc: and Bcc: headerfields (fdietz)
+- #985982 fixed (tstich)
+- Ristretto Refactoring (tstich)  
+- #985284, Composing - wrong mail adress from adressbook (fdietz)
+- get rid of "is never used" Warnings (kastanie)
+- #984579, can't delete group folder (fdietz)
+- fixed Nullpointer exception in ForwardCommand (diginetdev)
+- #983356, save as draft/template recipient problem (fdietz)
+- added a source reference to composermodel, this way the composer 
+  knows the initial message and is able to mark the message as 
+  answered after successfully sending it (fdietz)
+- .html or .htm Links weren't able to launch (kastanie) 
+- changed default mimetype to RFC1521 conform type Application/octet-stream (kastanie)
+- Improved handling of unexpected IMAP disconnect and unsolicited reponses (tstich)
+- Added Handling of IMAPExceptions (tstich)
+- add fall-back if filetype is unknown on windows (kastanie)
+
 Columba v1.0 RC1-test4
 
 New features:
