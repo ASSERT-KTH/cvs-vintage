@@ -65,7 +65,23 @@
 	</java>
   </target>
 
-  <target name="test-all" depends="compile">
+  <target name="test-all" depends="test-all-om, test-all-util">
+  </target>
+
+  <target name="test-all-util" depends="compile">
+    <echo>Running All Util tests...</echo>
+
+    <java classname="${test.runner}" fork="yes" 
+          failonerror="${testbed.failonerror}">
+      <jvmarg value="${config.dir}"/>
+      <arg value="org.tigris.scarab.util.AllTest"/>
+      <classpath>
+        <path refid="classpath"/>
+      </classpath>
+    </java>
+  </target>
+
+  <target name="test-all-om" depends="compile">
     <echo>Running All OM tests...</echo>
 
     <java classname="${test.runner}" fork="yes" 
