@@ -48,7 +48,7 @@ document.write('<link rel="stylesheet" type="text/css" href="$staticLink.setPath
 <div id="breadcrumbs"><table border="0" cellspacing="0" cellpadding="4" width="100%"><tr><td> 
 #if ($scarabR.CurrentModule)
 <a href="$link.setPage("SelectModule.vm")">Modules</a> > 
- $link.setPage("SelectModule.vm").setLabel("$scarabR.CurrentModule.Name")
+ $scarabR.CurrentModule.Name
 #else
 <a href="$link.setPage("SelectModule.vm")">Modules</a>
 #end
