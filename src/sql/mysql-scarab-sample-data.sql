@@ -440,7 +440,7 @@ INSERT INTO SCARAB_R_ATTRIBUTE_ATTRIBUTEGROUP VALUES (30, 12, 8);
  */
 
 insert into SCARAB_ISSUE(ISSUE_ID, MODULE_ID, TYPE_ID, ID_PREFIX, ID_COUNT) 
-       values (1, 5, 1, 'PACD', 1);
+       values (1, 5, 1, 'PACS', 1);
 
 /* description */
 insert into SCARAB_ISSUE_ATTRIBUTE_VALUE(VALUE_ID, ISSUE_ID, ATTRIBUTE_ID, VALUE) values (1, 1, 1, 'Documents are not as current as they should be.');
@@ -467,7 +467,7 @@ insert into SCARAB_ACTIVITY(ACTIVITY_ID, ISSUE_ID, ATTRIBUTE_ID, TRANSACTION_ID,
        values (2, 1, 3, 1, 2, 'Issue 1 had Status set to New');
 
 insert into SCARAB_ISSUE(ISSUE_ID, MODULE_ID, TYPE_ID, ID_PREFIX, ID_COUNT) 
-       values (2, 2, 1, 'PACS', 1);
+       values (2, 2, 1, 'PACD', 1);
 /* description */
 insert into SCARAB_ISSUE_ATTRIBUTE_VALUE(VALUE_ID, ISSUE_ID, ATTRIBUTE_ID, VALUE) values (10, 2, 1, 'Items do not display correctly.');
 /* summary */
