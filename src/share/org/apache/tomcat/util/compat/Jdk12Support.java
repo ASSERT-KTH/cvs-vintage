@@ -57,92 +57,64 @@
  *
  */
 
-package org.apache.tomcat.modules.generators;
+package org.apache.tomcat.util.compat;
 
-import org.apache.tomcat.core.*;
-import org.apache.tomcat.util.*;
-import org.apache.tomcat.util.compat.*;
-import java.io.*;
 import java.net.*;
 import java.util.*;
-
+import java.security.*;
 /**
- *  JDK1.2 specific options. Fix the class loader, etc.
+ *  
  */
-public final class Jdk12Interceptor extends  BaseInterceptor {
-    private ContextManager cm;
-    private int debug=0;
+public class Jdk12Support extends Jdk11Compat {
 
-    public Jdk12Interceptor() {
-    }
 
-    public void preServletInit( Context ctx, Handler sw )
-	throws TomcatException
-    {
-	fixJDKContextClassLoader(ctx);
-    }
-
-    /** Servlet Destroy  notification
+    /** Return a class loader. For JDK1.2+ will return a URLClassLoader.
+     *  For JDK1.1 will return the util.SimepleClassLoader
      */
-    public void preServletDestroy( Context ctx, Handler sw )
-	throws TomcatException
+    public ClassLoader newClassLoaderInstance( URL urls[],
+					       ClassLoader parent )
     {
-	fixJDKContextClassLoader(ctx);
-    }
-    
-    public void postServletInit( Context ctx, Handler sw )
-	throws TomcatException
-    {
-	// no need to change the cl - next requst will do that
-	// ( it's per-thread information )
-    }
-    
-    /** Called before service method is invoked. 
-     */
-    public int preService(Request request, Response response) {
-	if( request.getContext() == null ) return 0;
-	fixJDKContextClassLoader(request.getContext());
-	return 0;
+	return URLClassLoader.newInstance( urls, parent );
     }
 
-    static Jdk11Compat jdk11Compat=Jdk11Compat.getJdkCompat();
-    
-    
-    // Before we do init() or service(), we need to do some tricks
-    // with the class loader - see bug #116.
-    // some JDK1.2 code will not work without this fix
-    // we save the originalCL because we might be in include
-    // and we need to revert to it when we finish
-    // that will set a new (JDK)context class loader, and return the old one
-    // if we are in JDK1.2
-    // XXX move it to interceptor !!!
-    final private void fixJDKContextClassLoader( Context ctx ) {
-	final ClassLoader cl=ctx.getClassLoader();
-	if( cl==null ) {
-	    log("ERROR: Jdk12Interceptor: classloader==null");
-	    return;
+
+    public Object doPrivileged( Action action ) throws Exception {
+	Object proxy=action.getProxy();
+	if( proxy==null ) {
+	    proxy=new PrivilegedProxy(action);
+	    action.setProxy( proxy );
 	}
-	if( cl == jdk11Compat.getContextClassLoader() )
-	    return; // nothing to do - or in include if same context
-	
-	jdk11Compat.setContextClassLoader(cl);
-	// XXX if sandboxing is enabled and include() is not doing
-	// doPriviledged, then the code that checks for cross-context
-	// calls must also set the class loader or doPriviledged.
-	
-	// include() has it's own doPrivileged, no need for a second.
-	
-// 	// this may be called from include(), in which case we
-// 	// have the codebase==jsp or servlet
-// 	java.security.AccessController.doPrivileged(new
-// 	    java.security.PrivilegedAction()
-// 	    {
-// 		public Object run()  {
-// 		    Thread.currentThread().setContextClassLoader(cl);
-// 		    return null;
-// 		}
-// 	    });
-	
+
+	try {
+	    return AccessController.
+		doPrivileged((PrivilegedExceptionAction)proxy);
+	} catch( PrivilegedActionException pe ) {
+	    Exception e = pe.getException();
+	    throw e;
+	}
     }
-    
+
+    public void setContextClassLoader( ClassLoader cl ) {
+	// we can't doPrivileged here - it'll be a major security
+	// problem
+	Thread.currentThread().setContextClassLoader(cl);
+    }
+
+    public ClassLoader getContextClassLoader() {
+	return Thread.currentThread().getContextClassLoader();
+    }
+
+    // -------------------- Support -------------------- 
+    static class PrivilegedProxy implements PrivilegedExceptionAction
+    {
+	Action action;
+	PrivilegedProxy( Action act ) {
+	    action=act;
+	}
+	public Object run() throws Exception
+	{
+	    return action.run();
+	}
+    }
+
 }

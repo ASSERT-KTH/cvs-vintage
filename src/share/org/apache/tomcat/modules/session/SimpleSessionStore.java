@@ -61,6 +61,7 @@ package org.apache.tomcat.modules.session;
 import java.io.*;
 import java.util.Random;
 import org.apache.tomcat.util.*;
+import org.apache.tomcat.util.compat.*;
 import org.apache.tomcat.util.threads.*;
 import org.apache.tomcat.core.*;
 import java.util.*;
@@ -410,6 +411,8 @@ class SimpleSessionManager
     public ServerSession getNewSession() {
 	return getNewSession( null ) ;
     }
+
+    static Jdk11Compat jdk11Compat=Jdk11Compat.getJdkCompat();
     
     public ServerSession getNewSession(String jsIdent) {
 	if ((maxActiveSessions >= 0) &&
@@ -436,7 +439,7 @@ class SimpleSessionManager
          */
 	String newId;
         if( System.getSecurityManager() != null ) {
-            class doInit implements PrivilegedAction {
+            class doInit extends Action { // implements PrivilegedAction {
 		private Random randomSource;
                 private String jsIdent;
                 public doInit(Random rs, String ident) {
@@ -444,11 +447,17 @@ class SimpleSessionManager
                     jsIdent = ident;
                 }           
                 public Object run() {
-                    return SessionIdGenerator.getIdentifier(randomSource, jsIdent);
+                    return SessionIdGenerator.getIdentifier(randomSource,
+							    jsIdent);
                 }           
             }    
             doInit di = new doInit(randomSource,jsIdent);
-            newId= (String)AccessController.doPrivileged(di);
+	    try {
+		newId= (String)jdk11Compat.doPrivileged(di);
+	    } catch( Exception ex ) {
+		newId=null;
+	    }
+	    //AccessController.doPrivileged(di);
 	} else {
 	    newId= SessionIdGenerator.getIdentifier(randomSource, jsIdent);
 	}

@@ -78,7 +78,8 @@ import org.apache.tomcat.util.log.*;
  * @author  Glenn Nielsen 
  * @author costin@dnt.ro
  */
-public class PolicyInterceptor extends BaseInterceptor {
+public class PolicyInterceptor extends PolicyLoader { //  BaseInterceptor {
+    // PolicyLoader is used to load PolicyInterceptor
     String securityManagerClass="java.lang.SecurityManager";
     String policyFile=null;
     
@@ -92,7 +93,13 @@ public class PolicyInterceptor extends BaseInterceptor {
     public void setPolicyFile( String pf) {
 	policyFile=pf;
     }
-    
+
+    public void addInterceptor(ContextManager cm, Context ctx,
+			       BaseInterceptor module)
+	throws TomcatException
+    {
+    }
+
     /** Set the security manager, so that policy will be used
      */
     public void engineInit(ContextManager cm) throws TomcatException {
@@ -129,9 +136,16 @@ public class PolicyInterceptor extends BaseInterceptor {
     protected void addDefaultPermissions( Context context,String base,
 					  Permissions p )
     {
+	if( context.isTrusted() ) {
+	    AllPermission aP=new AllPermission();
+	    p.add( aP );
+	    return;
+	}
+
 	// Add default read "-" FilePermission for docBase, classes, lib
 	// Default per context permissions
-	FilePermission fp = new FilePermission(base + File.separator + "-", "read");
+	FilePermission fp = new FilePermission(base + File.separator + "-",
+					       "read");
 	if( fp != null )
 	    p.add((Permission)fp);
 	// JspFactory.getPageContext() runs in JSP Context and needs the below
@@ -152,6 +166,7 @@ public class PolicyInterceptor extends BaseInterceptor {
     {
 	ContextManager cm = context.getContextManager();
 	String base = context.getAbsolutePath();
+	//	File wd = context.getWorkDir();
 	    
 	try {	
 	    File dir = new File(base);

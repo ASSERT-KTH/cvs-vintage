@@ -107,6 +107,7 @@
       <!-- no dependencies -->
       <include name="org/apache/tomcat/util/**"/>    
       <exclude name="**/util/net/SSLSocketFactory.java" unless="jsse.present"/>
+      <exclude name="**/util/compat/Jdk12Support.java" unless="jdk12.present"/>
     </javac>
     <jar jarfile="${tomcat.build}/lib/tomcat_util.jar" 
 	 basedir="${tomcat.build}/classes"> 
@@ -238,9 +239,10 @@
 	<pathelement location="${tomcat.build}/lib/tomcat_core.jar"/>
       </classpath>
       <include name="org/apache/tomcat/modules/**"/>    
-      <exclude 
+      <!-- <exclude 
           name="org/apache/tomcat/modules/generators/Jdk12Interceptor.java" 
 	  unless="jdk12.present"/>
+       -->
       <exclude 
 	  name="org/apache/tomcat/modules/config/LoaderInterceptor12.java" 
           unless="jdk12.present"/>

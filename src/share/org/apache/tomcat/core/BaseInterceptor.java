@@ -78,7 +78,17 @@ import org.apache.tomcat.util.hooks.*;
  *
  *  Interceptors are the main extension mechanism for tomcat. They have full
  *  access and control all aspects in tomcat operation.
- * 
+ *
+ *  <p><b>Sandboxing. </b> Tomcat may be run in a java2 sandboxed environment.
+ *  All request processing callbacks can be initiated as a result of 
+ *  user ( untrusted ) code ( for example - a servlet creating a new session ).
+ *
+ *  The module is responsible for using doPriviledged() blocks for all
+ *  actions that require special priviledges. "Base" modules ( included
+ *  in the distribution ) that perform essential functionality must also
+ *  ensure JDK1.1 compatibility. The priviledged block must be as small
+ *  as possible and do only a clearly defined action.
+ *  
  */
 public class BaseInterceptor
 {

@@ -61,6 +61,7 @@ package org.apache.tomcat.modules.config;
 
 import org.apache.tomcat.core.*;
 import org.apache.tomcat.util.*;
+import org.apache.tomcat.util.compat.*;
 import org.apache.tomcat.util.depend.*;
 import java.io.*;
 import java.net.*;
@@ -69,15 +70,32 @@ import java.security.*;
 
 /**
  * Set class loader based on WEB-INF/classes, lib.
- * Use with JDK1.1.
+ * Compatible with JDK1.1, but takes advantage of URLClassLoader if
+ * java2 is detected.
+ * 
  *
  * @author costin@dnt.ro
  */
 public class LoaderInterceptor11 extends BaseInterceptor {
-
+    boolean useAL=false;
+    boolean useNoParent=false;
+    
     public LoaderInterceptor11() {
     }
 
+    /** Use ContextManager.getParentLoader() - typlically the class loader
+     *  that is set by the application embedding tomcat.
+     */
+    public void setUseApplicationLoader( boolean b ) {
+	useAL=b;
+    }
+
+    /** Use no parent loader. The contexts will be completely isolated.
+     */
+    public void setUseNoParent( boolean b ) {
+	useNoParent=b;
+    }
+    
     public void addContext( ContextManager cm, Context context)
 	throws TomcatException
     {
@@ -137,12 +155,21 @@ public class LoaderInterceptor11 extends BaseInterceptor {
 	    context.setDependManager( dm );
 	}
 
-	// XXX Customize this - based on context prefs,
-	// select the right parent - it may be CM.getParentLoader()
-	ClassLoader parent=this.getClass().getClassLoader();
+	ClassLoader parent=null;
+	if( useAL )
+	    parent=cm.getParentLoader();
+	else if( useNoParent )
+	    parent=null;
+	else
+	    parent=this.getClass().getClassLoader();
 
-	SimpleClassLoader loader=new SimpleClassLoader(classP, parent);
+	// Construct a class loader. Use URLClassLoader if Java2,
+	// replacement ( SimpleClassLoader ) if not
+	//	SimpleClassLoader loader=new SimpleClassLoader(classP, parent);
+	ClassLoader loader=jdk11Compat.newClassLoaderInstance( classP, parent);
 	DependClassLoader dcl=new DependClassLoader( dm, loader);
+	if( debug > 0 )
+	    log("Loader " + loader.getClass().getName() + " " + parent);
 	context.setClassLoader( dcl );
     }
 
@@ -164,15 +191,26 @@ public class LoaderInterceptor11 extends BaseInterceptor {
 					"oldLoader");
 	context.getContainer().setNote( oldLoaderNote, oldLoader);
 	
-	// XXX Customize this - based on context prefs,
-	// select the right parent - it may be CM.getParentLoader()
-	ClassLoader parent=this.getClass().getClassLoader();
+	ClassLoader parent=null;
+	if( useAL )
+	    parent=cm.getParentLoader();
+	else if( useNoParent )
+	    parent=null;
+	else
+	    parent=this.getClass().getClassLoader();
 
-	SimpleClassLoader loader=new SimpleClassLoader(urls, parent);
+	// Construct a class loader. Use URLClassLoader if Java2,
+	// replacement ( SimpleClassLoader ) if not
+	//	SimpleClassLoader loader=new SimpleClassLoader(urls, parent);
+	ClassLoader loader=jdk11Compat.newClassLoaderInstance( urls, parent);
 	DependClassLoader dcl=new DependClassLoader( dm, loader);
 	context.setClassLoader( dcl );
     }
 
+    // --------------------
+
+    static final Jdk11Compat jdk11Compat=Jdk11Compat.getJdkCompat();
+    
     private void getJars(Vector v, File f) {
         FilenameFilter jarfilter = new FilenameFilter() {
 		public boolean accept(File dir, String fname) {

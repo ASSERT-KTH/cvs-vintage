@@ -23,3 +23,11 @@ grant codeBase "file:${tomcat.home}/webapps/examples" {
       permission java.util.PropertyPermission "*", "read";
 };
 
+grant codeBase "file:${tomcat.home}/webapps/admin/-" {
+      permission java.security.AllPermission;
+};
+
+grant codeBase "file:${tomcat.home}/work/DEFAULT/admin/-" {
+      permission java.security.AllPermission;
+};
+

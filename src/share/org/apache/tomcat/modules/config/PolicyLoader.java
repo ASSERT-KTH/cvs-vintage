@@ -3,7 +3,7 @@
  *
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 1999 The Apache Software Foundation.  All rights
+ * Copyright (c) 1999 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -11,7 +11,7 @@
  * are met:
  *
  * 1. Redistributions of source code must retain the above copyright
- *    notice, this list of conditions and the following disclaimer.
+ *    notice, this list of conditions and the following disclaimer. 
  *
  * 2. Redistributions in binary form must reproduce the above copyright
  *    notice, this list of conditions and the following disclaimer in
@@ -19,15 +19,15 @@
  *    distribution.
  *
  * 3. The end-user documentation included with the redistribution, if
- *    any, must include the following acknowlegement:
- *       "This product includes software developed by the
+ *    any, must include the following acknowlegement:  
+ *       "This product includes software developed by the 
  *        Apache Software Foundation (http://www.apache.org/)."
  *    Alternately, this acknowlegement may appear in the software itself,
  *    if and wherever such third-party acknowlegements normally appear.
  *
  * 4. The names "The Jakarta Project", "Tomcat", and "Apache Software
  *    Foundation" must not be used to endorse or promote products derived
- *    from this software without prior written permission. For written
+ *    from this software without prior written permission. For written 
  *    permission, please contact apache@apache.org.
  *
  * 5. Products derived from this software may not be called "Apache"
@@ -57,7 +57,7 @@
  *
  */
 
-package org.apache.tomcat.modules.generators;
+package org.apache.tomcat.modules.config;
 
 import org.apache.tomcat.core.*;
 import org.apache.tomcat.util.*;
@@ -65,84 +65,77 @@ import org.apache.tomcat.util.compat.*;
 import java.io.*;
 import java.net.*;
 import java.util.*;
+import java.security.*;
+
+import org.apache.tomcat.util.log.*;
 
 /**
- *  JDK1.2 specific options. Fix the class loader, etc.
+ * Load the PolicyInterceptor if JDK1.2 is detected and if "sandbox"
+ * property of ContextManager is set.
+ *
+ * This simplifies the configuration of tomcat - we don't need to
+ * use special configs for jdk1.1/jdk1.2+ ( the code can auto-detect that ).
+ * We use a simple ContextManager property ( that can be set from command
+ * line, or via sandbox="true" ).
+ *
+ * This class acts as a proxy for the PolicyInterceptor.
  */
-public final class Jdk12Interceptor extends  BaseInterceptor {
-    private ContextManager cm;
-    private int debug=0;
-
-    public Jdk12Interceptor() {
-    }
-
-    public void preServletInit( Context ctx, Handler sw )
-	throws TomcatException
-    {
-	fixJDKContextClassLoader(ctx);
-    }
-
-    /** Servlet Destroy  notification
-     */
-    public void preServletDestroy( Context ctx, Handler sw )
-	throws TomcatException
-    {
-	fixJDKContextClassLoader(ctx);
-    }
+public class PolicyLoader extends BaseInterceptor {
+    String securityManagerClass="java.lang.SecurityManager";
+    String policyFile=null;
     
-    public void postServletInit( Context ctx, Handler sw )
-	throws TomcatException
-    {
-	// no need to change the cl - next requst will do that
-	// ( it's per-thread information )
+    public PolicyLoader() {
     }
-    
-    /** Called before service method is invoked. 
-     */
-    public int preService(Request request, Response response) {
-	if( request.getContext() == null ) return 0;
-	fixJDKContextClassLoader(request.getContext());
-	return 0;
+
+    public void setSecurityManagerClass(String cls) {
+	securityManagerClass=cls;
+    }
+
+    public String getSecurityManagerClass() {
+	return securityManagerClass;
+    }
+
+    public String getPolicyFile() {
+	return policyFile;
+    }
+
+    public void setPolicyFile(String pf) {
+	policyFile=pf;
     }
 
     static Jdk11Compat jdk11Compat=Jdk11Compat.getJdkCompat();
     
-    
-    // Before we do init() or service(), we need to do some tricks
-    // with the class loader - see bug #116.
-    // some JDK1.2 code will not work without this fix
-    // we save the originalCL because we might be in include
-    // and we need to revert to it when we finish
-    // that will set a new (JDK)context class loader, and return the old one
-    // if we are in JDK1.2
-    // XXX move it to interceptor !!!
-    final private void fixJDKContextClassLoader( Context ctx ) {
-	final ClassLoader cl=ctx.getClassLoader();
-	if( cl==null ) {
-	    log("ERROR: Jdk12Interceptor: classloader==null");
+    public void addInterceptor(ContextManager cm, Context ctx,
+			       BaseInterceptor module)
+	throws TomcatException
+    {
+	if( this != module ) return;
+
+	if( ! jdk11Compat.isJava2() )
 	    return;
+	
+	// find if PolicyInterceptor has already been loaded
+	if( System.getSecurityManager() != null ||
+	    cm.getProperty("sandbox") != null )
+	    {
+	    log("Found security manager ");
+	    try {
+		Class c=Class.
+             forName( "org.apache.tomcat.modules.config.PolicyInterceptor" );
+		// trick to configure PolicyInterceptor.
+		PolicyLoader policyModule=(PolicyLoader)c.newInstance();
+		policyModule.setSecurityManagerClass( securityManagerClass);
+		policyModule.setPolicyFile( policyFile );
+
+		cm.addInterceptor( policyModule );
+
+		// we could also remove PolicyLoader, since it's no longer
+		// needed
+	    } catch( Exception ex ) {
+		ex.printStackTrace();
+	    }
 	}
-	if( cl == jdk11Compat.getContextClassLoader() )
-	    return; // nothing to do - or in include if same context
-	
-	jdk11Compat.setContextClassLoader(cl);
-	// XXX if sandboxing is enabled and include() is not doing
-	// doPriviledged, then the code that checks for cross-context
-	// calls must also set the class loader or doPriviledged.
-	
-	// include() has it's own doPrivileged, no need for a second.
-	
-// 	// this may be called from include(), in which case we
-// 	// have the codebase==jsp or servlet
-// 	java.security.AccessController.doPrivileged(new
-// 	    java.security.PrivilegedAction()
-// 	    {
-// 		public Object run()  {
-// 		    Thread.currentThread().setContextClassLoader(cl);
-// 		    return null;
-// 		}
-// 	    });
+	// load the PolicyInterceptor
 	
     }
-    
 }

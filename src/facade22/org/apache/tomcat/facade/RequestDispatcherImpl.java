@@ -62,6 +62,7 @@ package org.apache.tomcat.facade;
 
 import org.apache.tomcat.core.*;
 import org.apache.tomcat.util.StringManager;
+import org.apache.tomcat.util.compat.*;
 import java.io.*;
 import java.util.*;
 import java.security.*;
@@ -135,27 +136,37 @@ final class RequestDispatcherImpl implements RequestDispatcher {
     }
 
     // -------------------- Public methods --------------------
+    Jdk11Compat jdk11Compat=Jdk11Compat.getJdkCompat();
+    RDIAction forwardAction=new RDIAction( this,false);
+    RDIAction includeAction=new RDIAction( this,true);
     
     public void forward(ServletRequest request, ServletResponse response)
 	throws ServletException, IOException
     {
 	if( System.getSecurityManager() != null ) {
-	    final ServletRequest req = request;
-	    final ServletResponse res = response;
+// 	    final ServletRequest req = request;
+// 	    final ServletResponse res = response;
 	    try {
-		java.security.AccessController.doPrivileged(
-		    new java.security.PrivilegedExceptionAction()
-		    {
-			public Object run() throws ServletException, IOException {
-			    doForward(req,res);
-			    return null;
-			}
-		    }               
-		);
-	    } catch( PrivilegedActionException pe) {
-		Exception e = pe.getException();
+		forwardAction.prepare( request, response );
+		jdk11Compat.doPrivileged( forwardAction );
+
+// 		java.security.AccessController.doPrivileged(
+// 		    new java.security.PrivilegedExceptionAction()
+// 		    {
+// 			public Object run() throws ServletException, IOException {
+// 			    doForward(req,res);
+// 			    return null;
+// 			}
+// 		    }               
+// 		);
+// 	    } catch( PrivilegedActionException pe) {
+// 		Exception e = pe.getException();
+	    } catch( Exception e) {
 		if( e instanceof ServletException )
 		    throw (ServletException)e;
+		if( e instanceof RuntimeException )
+		    throw (RuntimeException)e;
+		// can only be IOException
 		throw (IOException)e;
 	    }
 	} else {
@@ -246,24 +257,35 @@ final class RequestDispatcherImpl implements RequestDispatcher {
 	throws ServletException, IOException
     {
 	if( System.getSecurityManager() != null ) {
-	    final ServletRequest req = request;
-	    final ServletResponse res = response;
+// 	    final ServletRequest req = request;
+// 	    final ServletResponse res = response;
 	    try {
-		java.security.AccessController.doPrivileged(
-		    new java.security.PrivilegedExceptionAction()
-		    {
-			public Object run() throws ServletException, IOException {
-			    doInclude(req,res);
-			    return null;     
-			}               
-		    }    
-		);   
-	    } catch( PrivilegedActionException pe) {
-		Exception e = pe.getException();       
+		includeAction.prepare( request, response );
+		jdk11Compat.doPrivileged( includeAction );
+
+// 		java.security.AccessController.doPrivileged(
+// 		    new java.security.PrivilegedExceptionAction()
+// 		    {
+// 			public Object run() throws ServletException, IOException {
+// 			    doInclude(req,res);
+// 			    return null;     
+// 			}               
+// 		    }    
+// 		);   
+// 	    } catch( PrivilegedActionException pe) {
+	    } catch( Exception e) {
 		if( e instanceof ServletException )
 		    throw (ServletException)e;
+		if( e instanceof RuntimeException )
+		    throw (RuntimeException)e;
+		// can only be IOException
 		throw (IOException)e;
 	    }
+// 		Exception e = pe.getException();       
+// 		if( e instanceof ServletException )
+// 		    throw (ServletException)e;
+// 		throw (IOException)e;
+// 	    }
 	} else {
 	    doInclude(request,response);
 	}
@@ -599,6 +621,28 @@ final class RequestDispatcherImpl implements RequestDispatcher {
 	    if( ex instanceof IOException )
 		throw (IOException)ex;
 	    throw new ServletException( ex );
+	}
+    }
+
+    static class RDIAction extends Action {
+	ServletRequest req;
+	ServletResponse res;
+	RequestDispatcherImpl rdi;
+	boolean include;
+	RDIAction(RequestDispatcherImpl rdi, boolean incl) {
+	    this.rdi=rdi;
+	    include=incl;
+	}
+	public void prepare( ServletRequest req, ServletResponse res ) {
+	    this.req=req;
+	    this.res=res;
+	}
+	public Object action() throws Exception {
+	    if( include )
+		rdi.doInclude( req, res );
+	    else
+		rdi.doForward( req, res );
+	    return null;
 	}
     }
 }

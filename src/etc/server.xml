@@ -112,6 +112,9 @@
         <ContextInterceptor 
             className="org.apache.tomcat.facade.WebXmlReader" />
 
+        <ContextInterceptor 
+            className="org.apache.tomcat.modules.config.PolicyLoader" />
+
         <!-- Uncomment out if you have JDK1.2 and want to implement
 	     the Java SecurityManager
         <ContextInterceptor 
@@ -149,11 +152,11 @@
             className="org.apache.tomcat.modules.mappers.SimpleMapper1" 
             debug="0" />
 
-        <!-- fix the context class loader, other JDK1.2 specific code
+        <!-- fix the context class loader, other JDK1.2 specific code -->
         <RequestInterceptor 
-            className="org.apache.tomcat.modules.mappers.Jdk12Interceptor" 
+            className="org.apache.tomcat.modules.generators.Jdk12Interceptor" 
             debug="0" />
-          -->
+          <!-- -->
 
         <!-- Non-standard invoker, for backward compat. ( /servlet/* )
           -->

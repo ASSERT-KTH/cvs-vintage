@@ -109,7 +109,7 @@ public class ServerXmlInterceptor extends BaseInterceptor {
 	cm.setInstallDir( tchome);
 
 	// load server.xml
-	File f = null;
+	File f  = null;
 	if (configFile != null)
 	    f=new File(configFile);
 	else
