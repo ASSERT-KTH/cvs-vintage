@@ -49,6 +49,8 @@ public class StreamUtils {
 		return _lBytesCopied;
 	}
 
+	
+	
 	/**
 	 * Copied all bytes from an InputStream to an OutputStream. The Bufsize is set to 8000 bytes.  
 	 * @param _isInput InputStream from wihch the bytes are to copied.
