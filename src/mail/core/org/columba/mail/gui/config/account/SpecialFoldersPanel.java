@@ -335,7 +335,7 @@ public class SpecialFoldersPanel extends DefaultPanel implements ActionListener 
 
 
             if (dialog.success()) {
-            	IMailFolder selectedFolder = dialog.getSelectedFolder();
+            	IMailFolder selectedFolder = (IMailFolder) dialog.getSelectedFolder();
                 String path = selectedFolder.getTreePath();
 
                 trashButton.setText(path);
@@ -349,7 +349,7 @@ public class SpecialFoldersPanel extends DefaultPanel implements ActionListener 
 
 
             if (dialog.success()) {
-            	IMailFolder selectedFolder = dialog.getSelectedFolder();
+            	IMailFolder selectedFolder = (IMailFolder) dialog.getSelectedFolder();
                 String path = selectedFolder.getTreePath();
 
                 inboxButton.setText(path);
@@ -363,7 +363,7 @@ public class SpecialFoldersPanel extends DefaultPanel implements ActionListener 
 
 
             if (dialog.success()) {
-            	IMailFolder selectedFolder = dialog.getSelectedFolder();
+            	IMailFolder selectedFolder = (IMailFolder) dialog.getSelectedFolder();
                 String path = selectedFolder.getTreePath();
 
                 draftsButton.setText(path);
@@ -377,7 +377,7 @@ public class SpecialFoldersPanel extends DefaultPanel implements ActionListener 
 
 
             if (dialog.success()) {
-            	IMailFolder selectedFolder = dialog.getSelectedFolder();
+            	IMailFolder selectedFolder = (IMailFolder)  dialog.getSelectedFolder();
                 String path = selectedFolder.getTreePath();
 
                 templatesButton.setText(path);
@@ -391,7 +391,7 @@ public class SpecialFoldersPanel extends DefaultPanel implements ActionListener 
 
 
             if (dialog.success()) {
-            	IMailFolder selectedFolder = dialog.getSelectedFolder();
+            	IMailFolder selectedFolder = (IMailFolder) dialog.getSelectedFolder();
                 String path = selectedFolder.getTreePath();
 
                 sentButton.setText(path);

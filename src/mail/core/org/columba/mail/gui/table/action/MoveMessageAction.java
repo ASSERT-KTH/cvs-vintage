@@ -80,7 +80,7 @@ public class MoveMessageAction extends AbstractColumbaAction implements
 		SelectFolderDialog dialog = new SelectFolderDialog(getFrameMediator());
 
 		if (dialog.success()) {
-			IMailFolder destFolder = dialog.getSelectedFolder();
+			IMailFolder destFolder = (IMailFolder) dialog.getSelectedFolder();
 
 			IMailFolderCommandReference result = ((MailFrameMediator) getFrameMediator())
 					.getTableSelection();

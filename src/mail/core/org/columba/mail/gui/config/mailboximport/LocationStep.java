@@ -142,7 +142,7 @@ class LocationStep extends AbstractStep implements ActionListener {
             SelectFolderDialog dialog = new SelectFolderDialog(mediator);
 
             if (dialog.success()) {
-                destinationFolder = dialog.getSelectedFolder();
+                destinationFolder = (IMailFolder) dialog.getSelectedFolder();
                 destinationButton.setText(destinationFolder.getTreePath());
                 updateCanFinish();
             }

@@ -33,8 +33,8 @@ public class StringAccountRenderer extends JLabel implements TableCellRenderer {
     private boolean isBordered = true;
     private Font plainFont;
     private Font boldFont;
-    private ImageIcon image1 = ImageLoader.getSmallImageIcon("localhost.png");
-    private ImageIcon image2 = ImageLoader.getSmallImageIcon("remotehost.png");
+    private ImageIcon image1 = ImageLoader.getSmallImageIcon("16_computer.png");
+    private ImageIcon image2 = ImageLoader.getSmallImageIcon("stock_internet-16.png");
     private boolean b;
 
     public StringAccountRenderer(boolean b) {

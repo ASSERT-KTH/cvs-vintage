@@ -47,6 +47,7 @@ import javax.swing.border.CompoundBorder;
 import net.javaprog.ui.wizard.plaf.basic.SingleSideEtchedBorder;
 
 import org.columba.core.filter.FilterRule;
+import org.columba.core.folder.IFolder;
 import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.gui.util.ButtonWithMnemonic;
 import org.columba.core.gui.util.CheckBoxWithMnemonic;
@@ -54,12 +55,11 @@ import org.columba.core.gui.util.ImageLoader;
 import org.columba.core.gui.util.LabelWithMnemonic;
 import org.columba.mail.command.MailFolderCommandReference;
 import org.columba.mail.folder.AbstractMessageFolder;
-import org.columba.mail.folder.IMailFolder;
 import org.columba.mail.folder.virtual.VirtualFolder;
 import org.columba.mail.gui.config.filter.CriteriaList;
 import org.columba.mail.gui.frame.MailFrameMediator;
 import org.columba.mail.gui.tree.FolderTreeModel;
-import org.columba.mail.gui.tree.util.SelectFolderDialog;
+import org.columba.mail.gui.tree.util.SelectSearchFolderDialog;
 import org.columba.mail.gui.tree.util.TreeNodeList;
 import org.columba.mail.util.MailResourceLoader;
 
@@ -360,10 +360,10 @@ public class SearchFrame extends JDialog implements ActionListener {
 		} else if (action.equals("ADD_CRITERION")) {
 			criteriaList.add();
 		} else if (action.equals("SELECT")) {
-			SelectFolderDialog dialog = new SelectFolderDialog(frameController);
+			SelectSearchFolderDialog dialog = new SelectSearchFolderDialog(frameController);
 
 			if (dialog.success()) {
-				IMailFolder folder = dialog.getSelectedFolder();
+				IFolder folder = dialog.getSelectedFolder();
 				String path = folder.getTreePath();
 
 				selectButton.setText(path);

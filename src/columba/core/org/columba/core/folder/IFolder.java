@@ -37,5 +37,7 @@ public interface IFolder extends MutableTreeNode {
 	boolean tryToGetLock(Object locker);
 
 	void releaseLock(Object locker);
+	
+	String getTreePath();
 
 }

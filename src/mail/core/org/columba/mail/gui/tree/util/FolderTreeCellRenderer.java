@@ -59,7 +59,7 @@ public class FolderTreeCellRenderer extends DefaultTreeCellRenderer {
 				.getSmallImageIcon("folder-closed.png");
 		expandedFolderIcon = ImageLoader.getSmallImageIcon("folder-open.png");
 		virtualFolderIcon = ImageLoader.getSmallImageIcon("virtualfolder.png");
-		localRootFolderIcon = ImageLoader.getSmallImageIcon("localhost.png");
+		localRootFolderIcon = ImageLoader.getSmallImageIcon("16_computer.png");
 		imapRootFolderIcon = ImageLoader
 				.getSmallImageIcon("stock_internet-16.png");
 		inboxIcon = ImageLoader.getSmallImageIcon("inbox-16.png");

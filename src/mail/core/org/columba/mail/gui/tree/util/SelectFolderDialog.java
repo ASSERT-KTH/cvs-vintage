@@ -40,15 +40,15 @@ import javax.swing.tree.TreeModel;
 import javax.swing.tree.TreePath;
 
 import org.columba.core.command.CommandProcessor;
+import org.columba.core.folder.IFolder;
 import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.gui.util.ButtonWithMnemonic;
 import org.columba.mail.command.MailFolderCommandReference;
 import org.columba.mail.folder.AbstractFolder;
 import org.columba.mail.folder.AbstractMessageFolder;
-import org.columba.mail.folder.IMailFolder;
 import org.columba.mail.gui.frame.TreeViewOwner;
-import org.columba.mail.gui.tree.ISelectFolderDialog;
 import org.columba.mail.gui.tree.FolderTreeModel;
+import org.columba.mail.gui.tree.ISelectFolderDialog;
 import org.columba.mail.gui.tree.command.CreateAndSelectSubFolderCommand;
 import org.columba.mail.util.MailResourceLoader;
 import org.frapuccino.swing.SortedJTree;
@@ -66,13 +66,13 @@ public class SelectFolderDialog extends JDialog implements ActionListener,
 
 	private boolean bool = false;
 
-	private JTree tree;
+	protected JTree tree;
 
-	private JButton okButton;
+	protected JButton okButton;
 
-	private JButton newButton;
+	protected JButton newButton;
 
-	private AbstractFolder selectedFolder;
+	protected AbstractFolder selectedFolder;
 
 	private ButtonWithMnemonic cancelButton;
 
@@ -189,7 +189,7 @@ public class SelectFolderDialog extends JDialog implements ActionListener,
 
 		okButton = new ButtonWithMnemonic(MailResourceLoader
 				.getString("", "ok"));
-		okButton.setEnabled(false);
+		okButton.setEnabled(true);
 		okButton.setActionCommand("OK");
 		okButton.addActionListener(this);
 
@@ -210,8 +210,8 @@ public class SelectFolderDialog extends JDialog implements ActionListener,
 		return bool;
 	}
 
-	public IMailFolder getSelectedFolder() {
-		return (AbstractMessageFolder) selectedFolder;
+	public IFolder getSelectedFolder() {
+		return  selectedFolder;
 	}
 
 	public void actionPerformed(ActionEvent e) {

@@ -41,8 +41,8 @@ public class IdentityInfoPanel extends ContainerInfoPanel {
     public void initComponents() {
         super.initComponents();
 
-        image1 = ImageLoader.getSmallImageIcon("localhost.png");
-        image2 = ImageLoader.getSmallImageIcon("remotehost.png");
+        image1 = ImageLoader.getSmallImageIcon("16_computer.png");
+        image2 = ImageLoader.getSmallImageIcon("stock_internet-16.png");
 
         gridbagConstraints.gridwidth = GridBagConstraints.RELATIVE;
         gridbagConstraints.gridx = 0;

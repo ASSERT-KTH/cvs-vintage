@@ -258,7 +258,7 @@ FolderTreeModel.getInstance().getFolder(list);
         } else if (action.equals("MARK_BUTTON")) {
             SelectFolderDialog dialog = new SelectFolderDialog(mediator);
             if (dialog.success()) {
-                IMailFolder folder = dialog.getSelectedFolder();
+                IMailFolder folder = (IMailFolder) dialog.getSelectedFolder();
                 
                 String treePath = folder.getTreePath();
                 markChooseFolderButton.setText(treePath);
@@ -266,7 +266,7 @@ FolderTreeModel.getInstance().getFolder(list);
         } else if (action.equals("INCOMING_BUTTON")) {
             SelectFolderDialog dialog = new SelectFolderDialog(mediator);
             if (dialog.success()) {
-               IMailFolder folder = dialog.getSelectedFolder();
+               IMailFolder folder = (IMailFolder) dialog.getSelectedFolder();
                 
                 String treePath = folder.getTreePath();
                 incomingChooseFolderButton.setText(treePath);

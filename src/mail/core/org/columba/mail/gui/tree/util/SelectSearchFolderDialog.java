@@ -15,16 +15,34 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003.
 //
 //All Rights Reserved.
-package org.columba.mail.gui.tree;
+package org.columba.mail.gui.tree.util;
 
-import org.columba.core.folder.IFolder;
+import javax.swing.event.TreeSelectionEvent;
+
+import org.columba.core.gui.frame.FrameMediator;
+import org.columba.mail.folder.AbstractFolder;
 
 /**
  * @author fdietz
- *
+ *  
  */
-public interface ISelectFolderDialog {
-	boolean success();
+public class SelectSearchFolderDialog extends SelectFolderDialog {
 
-	IFolder getSelectedFolder();
+	public SelectSearchFolderDialog(FrameMediator mediator) {
+		super(mediator);
+	}
+
+	public void valueChanged(TreeSelectionEvent e) {
+		AbstractFolder node = (AbstractFolder) tree
+				.getLastSelectedPathComponent();
+
+		selectedFolder = node;
+		
+		if (node == null)
+			okButton.setEnabled(false);
+		else
+
+			okButton.setEnabled(true);
+
+	}
 }

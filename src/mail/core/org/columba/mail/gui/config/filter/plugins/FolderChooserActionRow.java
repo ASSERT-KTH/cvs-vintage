@@ -99,7 +99,7 @@ public class FolderChooserActionRow extends DefaultActionRow implements
 		SelectFolderDialog dialog = new SelectFolderDialog(getMediator());
 
 		if (dialog.success()) {
-			IMailFolder folder = dialog.getSelectedFolder();
+			IMailFolder folder = (IMailFolder) dialog.getSelectedFolder();
 
 			String treePath = folder.getTreePath();
 

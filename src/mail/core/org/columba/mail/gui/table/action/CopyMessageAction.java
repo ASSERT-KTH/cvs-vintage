@@ -81,7 +81,7 @@ public class CopyMessageAction extends AbstractColumbaAction implements
 		SelectFolderDialog dialog = new SelectFolderDialog(getFrameMediator());
 
 		if (dialog.success()) {
-			IMailFolder destFolder = dialog.getSelectedFolder();
+			IMailFolder destFolder = (IMailFolder) dialog.getSelectedFolder();
 
 			IMailFolderCommandReference r = ((MailFrameMediator) getFrameMediator())
 					.getTableSelection();
