@@ -41,7 +41,7 @@ public class IMAPQueryEngine implements QueryEngine {
     // answered anyway, using locally cached headerfields
     private static final String[] CAPABILITY_LIST = {
         "Body", "Subject", "From", "To", "Cc", "Bcc", "Custom Headerfield",
-        "Date", "Flags", "Priority"
+        "Date", "Priority"
     };
     private IMAPFolder folder;
 
