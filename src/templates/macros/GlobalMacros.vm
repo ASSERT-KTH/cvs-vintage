@@ -17,7 +17,7 @@
   #foreach ($option in $module.getLeafRModuleOptions($attr, $issueType))
     #set ($selected = false)
     #set ($canMakeTransition = "true")
-    #if ($values && !$values.toString().equals(""))   
+    #if ($values && !$values.toString().length() > 0)   
        #if ($multiple.equals("true"))
          #foreach ($value in $values)
             #if ($value.equals($option.OptionId))
@@ -120,7 +120,7 @@
   #end
   #foreach ($option in $module.getOptionTree($attr, $scarabR.CurrentIssueType))
     #set ($selected = false)
-    #if ($values && $values.length() > 0)
+    #if ($values && $values.toString().length() > 0)
        #if ($multiple.toString().equals("true"))
          #foreach ($value in $values)
             #if ($value.equals($option.OptionId))
