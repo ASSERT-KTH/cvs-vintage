@@ -1,4 +1,4 @@
-// $Id: XmiFilePersister.java,v 1.3 2004/12/28 21:41:08 bobtarling Exp $
+// $Id: XmiFilePersister.java,v 1.4 2004/12/31 10:30:54 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -26,10 +26,8 @@ package org.argouml.persistence;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
-import java.io.PrintWriter;
 import java.net.URL;
 
 import org.apache.log4j.Logger;
