@@ -155,7 +155,7 @@
   </mbean>
 
   <!-- Uncomment to add embedded tomcat service
-  <mbean code="org.jboss.tomcat.EmbeddedTomcatService" name="DefaultDomain:service=EmbeddedTomcat" />
+  <mbean code="org.jboss.tomcat.EmbeddedTomcatServiceSX" name="DefaultDomain:service=EmbeddedTomcat" />
    -->
 
   <!-- Uncomment and set file URL to add Jetty service (you can set config more than once)
