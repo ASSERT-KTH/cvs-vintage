@@ -1,4 +1,4 @@
-// $Id: XmiFilePersister.java,v 1.6 2004/09/06 20:20:31 mvw Exp $
+// $Id: XmiFilePersister.java,v 1.7 2004/09/07 14:09:15 bobtarling Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -72,13 +72,8 @@ public class XmiFilePersister extends AbstractFilePersister {
      * @param file The file to write.
      * @throws SaveException if anything goes wrong.
      */
-    public void save(Project project, File file)
+    public void doSave(Project project, File file)
         throws SaveException {
-        
-        project.setFile(file);
-        project.setVersion(ArgoVersion.getVersion());
-
-        getExpander(getArgoTee2Template()); // do we need this?
 
         // frank: first backup the existing file to name+"#"
         File tempFile = new File( file.getAbsolutePath() + "#");
@@ -94,15 +89,12 @@ public class XmiFilePersister extends AbstractFilePersister {
             }
             // frank end
     
+            project.setFile(file);
+            
             writer =
                 new BufferedWriter(new FileWriter(file));
     
-            String path = file.getParent();
-            if (LOG.isInfoEnabled()) {
-                LOG.info("Dir ==" + path);
-            }
             int size = project.getMembers().size();
-
             for (int i = 0; i < size; i++) {
                 ProjectMember projectMember = 
                     (ProjectMember) project.getMembers().elementAt(i);
