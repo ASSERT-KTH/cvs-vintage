@@ -1,5 +1,5 @@
 #set ( $action = $link.setPage("entry,Wizard3.vm").setAction("ReportIssue").addPathInfo("nextTemplate", "entry,Wizard4.vm") )
-#set ($user = $scarabR.User)
+#set ($user = $data.User)
 #set ($module = $user.CurrentModule)
 #set ($issue = $user.ReportingIssue)
 #set ($attrValues = $issue.ModuleAttributeValuesMap)
@@ -131,7 +131,7 @@
       <p>
       workflow options:&#160 return to&#160; 
       <input type="radio" name="nextTemplate" 
-          value="$scarabR.User.ReportingIssueStartPoint"/> 
+          value="$data.User.ReportingIssueStartPoint"/> 
           2.1.0 (Enter Issue) 
       <input type="radio" name="nextTemplate" value="Index.vm" /> 
           2.0.0 (Start Page) 

@@ -89,7 +89,7 @@ import org.tigris.scarab.util.ScarabLink;
     This class is responsible for report issue forms.
     ScarabIssueAttributeValue
     @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
-    @version $Id: AssignIssue.java,v 1.5 2001/08/09 07:59:52 jon Exp $
+    @version $Id: AssignIssue.java,v 1.6 2001/08/15 04:42:40 jon Exp $
 */
 public class AssignIssue extends TemplateAction
 {
@@ -235,101 +235,99 @@ public class AssignIssue extends TemplateAction
                                      attachment.getQueryKey(), false);
         group.get("DataAsString").setRequired(true);
 
-            if ( intake.isAllValid() ) 
+        if ( intake.isAllValid() ) 
+        {
+            // Save transaction record
+            Transaction transaction = new Transaction();
+            transaction.create(modifyingUser);
+
+            // save the attachment
+            group.setProperties(attachment);
+            if ( attachment.getData() != null 
+                 && attachment.getData().length > 0 ) 
             {
-                // Save transaction record
-                Transaction transaction = new Transaction();
-                transaction.create(modifyingUser);
+                attachment.setName("Assignee Note");
+                attachment.setTextFields(modifyingUser, issue, 
+                                 Attachment.MODIFICATION__PK);
+                attachment.save();
 
-                // save the attachment
-                group.setProperties(attachment);
-                if ( attachment.getData() != null 
-                     && attachment.getData().length > 0 ) 
+                // save assignee list
+                List assignees = issue.getAssigneeAttributeValues();
+                String[] newUsernames = 
+                    data.getParameters().getStrings(ASSIGNEES);
+                int newUserLength = 0;
+                if ( newUsernames != null ) 
                 {
-                    attachment.setName("Assignee Note");
-                    attachment.setTextFields(modifyingUser, issue, 
-                                     Attachment.MODIFICATION__PK);
-                    attachment.save();
+                    newUserLength = newUsernames.length;
+                }
 
-                    // save assignee list
-                    List assignees = issue.getAssigneeAttributeValues();
-                    String[] newUsernames = 
-                        data.getParameters().getStrings(ASSIGNEES);
-                    int newUserLength = 0;
-                    if ( newUsernames != null ) 
-                    {
-                        newUserLength = newUsernames.length;
-                    }
-
-                    // take care of users who were removed
-                    Iterator iter = assignees.iterator();
-                    while ( iter.hasNext() ) 
-                    {
-                        AttributeValue oldAV = (AttributeValue)iter.next();
-                        boolean deleted = true;
-                        for ( int i=0; i<newUserLength; i++ ) 
-                        {
-                            if (oldAV.getValue().equals(newUsernames[i])) 
-                            {
-                                newUsernames[i] = null;
-                                deleted = false;
-                                break;
-                            }
-                        }
-                        oldAV.setDeleted(deleted);
-
-                        // Save activity record
-                        Activity activity = new Activity();
-                        String desc = "Unassigned Issue";
-                        activity.create(issue, oldAV.getAttribute(),
-                                        desc, transaction, attachment, 
-                                        oldAV.getValue(), "");
-                    }
-                    // add new values
+                // take care of users who were removed
+                Iterator iter = assignees.iterator();
+                while ( iter.hasNext() ) 
+                {
+                    AttributeValue oldAV = (AttributeValue)iter.next();
+                    boolean deleted = true;
                     for ( int i=0; i<newUserLength; i++ ) 
                     {
-                        if ( newUsernames[i] != null ) 
+                        if (oldAV.getValue().equals(newUsernames[i])) 
                         {
-                            Criteria crit = new Criteria()
-                                .add(ScarabUserImplPeer.USERNAME, newUsernames[i]);
-                            List users = ScarabUserImplPeer.doSelect(crit);
-                            ScarabUser user = (ScarabUser)users.get(0);
-                            AttributeValue av = AttributeValue.getNewInstance(
-                                AttributePeer.ASSIGNED_TO__PK, issue);
-                            av.setUserId(user.getUserId());
-                            av.setValue(user.getUserName());
-                            assignees.add(av);
-                            // Save activity record
-                            Activity activity = new Activity();
-                            String desc = "Assigned Issue";
-                            activity.create(issue, av.getAttribute(),
-                                            desc, transaction, attachment, 
-                                            "", user.getUserName());
+                            newUsernames[i] = null;
+                            deleted = false;
+                            break;
                         }
                     }
-                    issue.save();
+                    oldAV.setDeleted(deleted);
 
-                    // set up email to users here !FIXME!
-
-                    data.setMessage("Your changes to the assignee list of issue #" 
-                                    + issue.getUniqueId() + " have been saved.");
-
-                    String nextTemplate = Turbine.getConfiguration()
-                        .getString("template.homepage", "Links.vm");
-                    setTarget(data, nextTemplate);
+                    // Save activity record
+                    Activity activity = new Activity();
+                    String desc = "Unassigned Issue";
+                    activity.create(issue, oldAV.getAttribute(),
+                                    desc, transaction, attachment, 
+                                    oldAV.getValue(), "");
                 }
+                // add new values
+                for ( int i=0; i<newUserLength; i++ ) 
+                {
+                    if ( newUsernames[i] != null ) 
+                    {
+                        Criteria crit = new Criteria()
+                            .add(ScarabUserImplPeer.USERNAME, newUsernames[i]);
+                        List users = ScarabUserImplPeer.doSelect(crit);
+                        ScarabUser user = (ScarabUser)users.get(0);
+                        AttributeValue av = AttributeValue.getNewInstance(
+                            AttributePeer.ASSIGNED_TO__PK, issue);
+                        av.setUserId(user.getUserId());
+                        av.setValue(user.getUserName());
+                        assignees.add(av);
+                        // Save activity record
+                        Activity activity = new Activity();
+                        String desc = "Assigned Issue";
+                        activity.create(issue, av.getAttribute(),
+                                        desc, transaction, attachment, 
+                                        "", user.getUserName());
+                    }
+                }
+                issue.save();
+
+                // set up email to users here !FIXME!
+
+                data.setMessage("Your changes to the assignee list of issue #" 
+                                + issue.getUniqueId() + " have been saved.");
+
+                String nextTemplate = Turbine.getConfiguration()
+                    .getString("template.homepage", "Links.vm");
+                setTarget(data, nextTemplate);
             }
-            else 
-            {                
-                String[] eligibleUsers = 
-                    data.getParameters().getStrings(ELIGIBLE_USERS);
-                String[] assignees = 
-                    data.getParameters().getStrings(ASSIGNEES);
-                context.put("actionLink", 
-                            getActionLink(data, eligibleUsers, assignees) );
-            }
-            
-        
+        }
+        else 
+        {                
+            String[] eligibleUsers = 
+                data.getParameters().getStrings(ELIGIBLE_USERS);
+            String[] assignees = 
+                data.getParameters().getStrings(ASSIGNEES);
+            context.put("actionLink", 
+                        getActionLink(data, eligibleUsers, assignees) );
+        }
     }
 }
 

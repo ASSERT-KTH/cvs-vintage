@@ -52,7 +52,7 @@ $page.setTitle("Confirm Your Email Address")
     <input type="hidden" name="$scarabG.Constant.CANCEL_TEMPLATE" value="Login.vm">
     <input type="hidden" name="$scarabG.Constant.NEXT_TEMPLATE" value="Start.vm">
 
-#set ($user = $scarabR.User)
+#set ($user = $data.User)
 #set ($email = $data.Parameters.Email)
 #if ($email.length() > 0)
     $user.setEmail($email)

@@ -1,6 +1,6 @@
 #set ( $action = $link.setPage("QueryList.vm").setAction("QueryList").addPathInfo("nextTemplate", "QueryList.vm") )
 
-#set ($user = $scarabR.User)
+#set ($user = $data.User)
 #set ($module = $user.CurrentModule)
 
 

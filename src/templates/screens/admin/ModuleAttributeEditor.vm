@@ -1,6 +1,6 @@
 $page.setTitle("Attribute Editor")
 
-#set ( $module = $scarabR.User.CurrentModule )
+#set ( $module = $data.User.CurrentModule )
 
 <p><b>Editing Module</b>: <i>$module.Name</i></p>
 <p>Modify Attributes<br>

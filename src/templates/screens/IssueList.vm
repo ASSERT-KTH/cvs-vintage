@@ -1,6 +1,6 @@
 #set ( $action = $link.setPage("IssueList.vm").setAction("Search") )
 
-#set ($user = $scarabR.User)
+#set ($user = $data.User)
 #set ($module = $user.CurrentModule)
 #set($search = $scarabR.Search)
 #set ( $searchGroup = $intake.SearchIssue.mapTo($search) ) 

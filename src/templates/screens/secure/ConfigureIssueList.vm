@@ -1,6 +1,6 @@
 #set ( $action = $link.setPage("secure,ConfigureIssueList.vm").setAction("ConfigureIssueList").addPathInfo("nextTemplate", "secure,ConfigureIssueList.vm") )
 
-#set ($user = $scarabR.User)
+#set ($user = $data.User)
 #set ($module = $user.CurrentModule)
 
 #if( $user.UserId )

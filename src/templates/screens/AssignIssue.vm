@@ -1,7 +1,7 @@
 #if ( !$actionLink )
     #set ( $actionLink = $link.setPage("AssignIssue.vm").setAction("AssignIssue").addPathInfo("nextTemplate", "Index.vm") )
 #end
-#set ($user = $scarabR.User)
+#set ($user = $data.User)
 #set ($module = $user.CurrentModule)
 #set ($issue = $scarabR.Issue)
 #set ($attrValues = $issue.ModuleAttributeValuesMap)
@@ -34,14 +34,14 @@
       <td>
 
 #if ($reentry)
-    #foreach ( $user in $issue.EligibleAssignees )
-       <input type="hidden" name="removedusers" value="$user.UserName" />
+    #foreach ( $userAssignee in $issue.EligibleAssignees )
+       <input type="hidden" name="removedusers" value="$userAssignee.UserName" />
     #end
 #end
        <select name="newaddusers" size="8" multiple="multiple">
 #if ($reentry)
-    #foreach ( $user in $issue.EligibleAssignees )
-       <option value="$user.UserName">$user.UserName</option>
+    #foreach ( $userAssignee in $issue.EligibleAssignees )
+       <option value="$userAssignee.UserName">$userAssignee.UserName</option>
     #end
 #else
     #foreach ( $username in $data.Parameters.getStrings("removedusers") )

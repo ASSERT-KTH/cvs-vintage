@@ -1,4 +1,4 @@
-#set ($user = $scarabR.User)
+#set ($user = $data.User)
 #set ($module = $user.CurrentModule)
 
 	<h3>Advanced Query (2.2.0)</h3>

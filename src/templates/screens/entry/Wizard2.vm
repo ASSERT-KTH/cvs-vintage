@@ -1,7 +1,7 @@
 <div id="wizard2" class="app">
 $page.setTitle("Identified as duplicate")
 #set ( $action = $link.setPage("entry,Wizard2.vm").setAction("ReportIssue").addPathInfo($data.Parameters).addPathInfo("nextTemplate", "entry,Wizard3.vm") )
-#set ($user = $scarabR.User)
+#set ($user = $data.User)
 #set ($module = $user.CurrentModule)
 #set ($currentIssue = $user.ReportingIssue)
 

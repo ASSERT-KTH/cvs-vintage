@@ -1,8 +1,8 @@
-#set ( $action = $link.setPage("MoveIssue.vm").setAction("MoveIssue").addPathInfo("nextTemplate", "MoveIssue2.vm") )
-#set ($user = $scarabR.User)
+#set ($action = $link.setPage("MoveIssue.vm").setAction("MoveIssue").addPathInfo("nextTemplate", "MoveIssue2.vm"))
+#set ($user = $data.User)
 #set ($currentModule = $user.CurrentModule)
-#set ( $issueId = $data.Parameters.getString("id") )
-#set ( $issue = $scarabR.getIssue($issueId) )
+#set ($issueId = $data.Parameters.getString("id"))
+#set ($issue = $scarabR.getIssue($issueId))
 
 
 

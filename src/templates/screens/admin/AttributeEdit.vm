@@ -1,7 +1,10 @@
 $page.setTitle("Attribute Editor")
 
 #set ($attribute = $scarabR.Attribute)
-#set ($attOptions = $attribute.AttributeOptions)
+
+## only get the AttributeOptions that are marked as not being deleted
+#set ($attOptions = $attribute.getAttributeOptions(false))
+
 #set ($attType = $attribute.AttributeType)
 #set ($attgroup = $intake.Attribute.Default )
 #set ($atttgroup = $intake.AttributeType.Default )

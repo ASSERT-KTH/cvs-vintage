@@ -1,4 +1,4 @@
-#set ($user = $scarabR.User)
+#set ($user = $data.User)
 #set ($module = $user.CurrentModule)
 
       <div class="app" id="search.vm">

@@ -1,7 +1,7 @@
-#set ( $action = $link.setPage("SaveQuery.vm").setAction("SaveQuery").addPathInfo("nextTemplate", "IssueList.vm") )
-#set($query = $scarabR.Query)
-#set ( $queryGroup = $intake.Query.mapTo($query) ) 
-#set ($user = $scarabR.User)
+#set ($action = $link.setPage("SaveQuery.vm").setAction("SaveQuery").addPathInfo("nextTemplate", "IssueList.vm"))
+#set ($query = $scarabR.Query)
+#set ($queryGroup = $intake.Query.mapTo($query)) 
+#set ($user = $data.User)
 
       <h2>Save Query</h2>
 

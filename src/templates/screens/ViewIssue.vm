@@ -1,12 +1,12 @@
-#set ( $action = $link.setPage("ViewIssue.vm").setAction("ModifyIssue").addPathInfo("nextTemplate", "ViewIssue.vm") )
-#set ( $currentIssueId = $data.Parameters.getString("id") )
-#set ( $currentIssue = $scarabR.getIssue($currentIssueId) )
-#set ( $fullHistory = $data.Parameters.getString("fullhistory") )
+#set ($action = $link.setPage("ViewIssue.vm").setAction("ModifyIssue").addPathInfo("nextTemplate", "ViewIssue.vm"))
+#set ($currentIssueId = $data.Parameters.getString("id"))
+#set ($currentIssue = $scarabR.getIssue($currentIssueId))
+#set ($fullHistory = $data.Parameters.getString("fullhistory"))
 
 
 #if ($currentIssue)
     #set ($attrValues = $currentIssue.ModuleAttributeValuesMap)
-#set ($user = $scarabR.User)
+#set ($user = $data.User)
 #set ($module = $user.CurrentModule)
 
 #set ( $canEdit = $security.hasPermission("Issue | Edit", $module) )
