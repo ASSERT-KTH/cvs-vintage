@@ -26,7 +26,7 @@
 // File: UMLSequenceDiagram.java
 // Classes: UMLSequenceDiagram
 // Original Author: 5eichler@informatik.uni-hamburg.de
-// $Id: UMLSequenceDiagram.java,v 1.3 2001/01/03 13:01:20 boger Exp $
+// $Id: UMLSequenceDiagram.java,v 1.4 2002/07/11 06:34:55 mkl Exp $
 
 
 package org.argouml.uml.diagram.sequence.ui;
@@ -113,7 +113,16 @@ public class UMLSequenceDiagram extends UMLDiagram {
     SequenceDiagramGraphModel gm = new SequenceDiagramGraphModel();
     gm.setNamespace(m);
     setGraphModel(gm);
-    LayerPerspective lay = new SequenceDiagramLayout(m.getName(), gm);
+    
+    LayerPerspective lay;
+    if (m == null) {
+        System.out.println("SEVERE WARNING: Sequence diagram was created " +
+                           "without a valid namesspace. " + 
+                           "Setting namespace to empty.");
+        lay = new SequenceDiagramLayout("", gm);
+    }
+    else
+        lay = new SequenceDiagramLayout(m.getName(), gm);
     setLayer(lay);
     SequenceDiagramRenderer rend = new SequenceDiagramRenderer(); // singleton
     lay.setGraphNodeRenderer(rend);
