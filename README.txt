@@ -1,4 +1,4 @@
-$Id: README.txt,v 1.8 2001/01/04 00:00:15 jon Exp $
+$Id: README.txt,v 1.9 2001/01/21 22:47:37 jon Exp $
 
 Welcome to Scarab!
 
@@ -100,8 +100,8 @@ variable. Once you have done that and you have MySQL up and running with no
 username/password for localhost access, you can simply execute the following:
 
 cd src/sql
-./create-database.sh   <-- Unix
-create-database.bat    <-- Win32
+./create-mysql-database.sh   <-- Unix
+create-mysql-database.bat    <-- Win32
 
 NOTE: This will attempt to first drop a database called "scarab" and 
       then re-create it. If you execute this script, all of your previous data 
