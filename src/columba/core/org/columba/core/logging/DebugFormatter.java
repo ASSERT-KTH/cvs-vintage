@@ -23,7 +23,7 @@ import java.util.logging.LogRecord;
 /**
  * DebugFormatter is a LogFormatter for the Java.util.logging logging framework.
  * Using this class outputs a oneline log that looks like this:
- * "01/12/2002 22:00 [Classname.Methoname@Threadname] (LEVEL) - MESSAGE"
+ * "01/12/2002 22:00 [Classname.Methoname()] MESSAGE"
  *
  * @author redsolo
  */
@@ -33,7 +33,7 @@ public class DebugFormatter extends Formatter {
 
     /**
      * Format the given log record and return the formatted string.
-     * 
+     *
      * @param record the log record to be formatted
      * @return the formatted log record
      */
