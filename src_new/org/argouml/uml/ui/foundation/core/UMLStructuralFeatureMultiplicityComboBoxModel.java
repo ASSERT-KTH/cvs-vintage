@@ -1,4 +1,4 @@
-// $Id: UMLStructuralFeatureMultiplicityComboBoxModel.java,v 1.4 2003/09/01 17:56:34 bobtarling Exp $
+// $Id: UMLStructuralFeatureMultiplicityComboBoxModel.java,v 1.5 2004/02/08 12:45:28 mvw Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -22,7 +22,7 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $Id: UMLStructuralFeatureMultiplicityComboBoxModel.java,v 1.4 2003/09/01 17:56:34 bobtarling Exp $
+// $Id: UMLStructuralFeatureMultiplicityComboBoxModel.java,v 1.5 2004/02/08 12:45:28 mvw Exp $
 package org.argouml.uml.ui.foundation.core;
 
 import org.argouml.model.ModelFacade;
@@ -37,7 +37,6 @@ public class UMLStructuralFeatureMultiplicityComboBoxModel extends UMLMultiplici
 
     /**
      * Constructor for UMLStructuralFeatureMultiplicityComboBoxModel.
-     * @param propertySetName
      */
     public UMLStructuralFeatureMultiplicityComboBoxModel() {
         super("multiplicity");

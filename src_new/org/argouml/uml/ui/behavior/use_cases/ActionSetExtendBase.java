@@ -1,4 +1,4 @@
-// $Id: ActionSetExtendBase.java,v 1.10 2003/10/12 08:55:25 linus Exp $
+// $Id: ActionSetExtendBase.java,v 1.11 2004/02/08 12:45:27 mvw Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -44,7 +44,6 @@ public class ActionSetExtendBase extends UMLChangeAction {
 
     /**
      * Constructor for ActionSetExtendBase.
-     * @param s
      */
     protected ActionSetExtendBase() {
         super(Translator.localize("action.set"), true, NO_ICON);

@@ -1,4 +1,4 @@
-// $Id: ActionSetElementOwnershipVisibility.java,v 1.9 2003/10/26 16:40:03 alexb Exp $
+// $Id: ActionSetElementOwnershipVisibility.java,v 1.10 2004/02/08 12:45:27 mvw Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -22,7 +22,7 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $Header: /tmp/cvs-vintage/argouml/argouml/src_new/org/argouml/uml/ui/foundation/core/Attic/ActionSetElementOwnershipVisibility.java,v 1.9 2003/10/26 16:40:03 alexb Exp $
+// $Header: /tmp/cvs-vintage/argouml/argouml/src_new/org/argouml/uml/ui/foundation/core/Attic/ActionSetElementOwnershipVisibility.java,v 1.10 2004/02/08 12:45:27 mvw Exp $
 package org.argouml.uml.ui.foundation.core;
 
 import java.awt.event.ActionEvent;
@@ -50,7 +50,7 @@ public class ActionSetElementOwnershipVisibility extends AbstractAction {
 
     /**
      * Constructor for ActionSetElementOwnershipVisibility.
-     * @param s
+     * @param group
      */
     public ActionSetElementOwnershipVisibility(UMLButtonGroup group) {
         super();

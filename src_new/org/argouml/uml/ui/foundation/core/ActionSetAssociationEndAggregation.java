@@ -1,4 +1,4 @@
-// $Id: ActionSetAssociationEndAggregation.java,v 1.7 2003/10/26 16:40:03 alexb Exp $
+// $Id: ActionSetAssociationEndAggregation.java,v 1.8 2004/02/08 12:45:27 mvw Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -49,7 +49,6 @@ public class ActionSetAssociationEndAggregation extends UMLChangeAction {
 
     /**
      * Constructor for ActionSetElementOwnershipSpecification.
-     * @param s
      */
     protected ActionSetAssociationEndAggregation() {
         super(Translator.localize("action.set"), true, NO_ICON);

@@ -1,4 +1,4 @@
-// $Id: UMLDependencySupplierListModel.java,v 1.8 2003/11/11 21:54:10 linus Exp $
+// $Id: UMLDependencySupplierListModel.java,v 1.9 2004/02/08 12:45:27 mvw Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -22,7 +22,7 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $Id: UMLDependencySupplierListModel.java,v 1.8 2003/11/11 21:54:10 linus Exp $
+// $Id: UMLDependencySupplierListModel.java,v 1.9 2004/02/08 12:45:27 mvw Exp $
 package org.argouml.uml.ui.foundation.core;
 
 import org.argouml.model.ModelFacade;
@@ -37,7 +37,6 @@ public class UMLDependencySupplierListModel extends UMLModelElementListModel2 {
 
     /**
      * Constructor for UMLDependencySupplierListModel.
-     * @param container
      */
     public UMLDependencySupplierListModel() {
         super("supplier");

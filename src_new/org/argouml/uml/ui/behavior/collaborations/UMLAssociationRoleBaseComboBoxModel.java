@@ -1,4 +1,4 @@
-// $Id: UMLAssociationRoleBaseComboBoxModel.java,v 1.13 2003/11/11 21:54:09 linus Exp $
+// $Id: UMLAssociationRoleBaseComboBoxModel.java,v 1.14 2004/02/08 12:45:26 mvw Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -37,8 +37,6 @@ public class UMLAssociationRoleBaseComboBoxModel extends UMLComboBoxModel2 {
 
     /**
      * Constructor for UMLAssociationRoleBaseComboBoxModel.
-     * @param container
-     * @param propertySetName
      */
     public UMLAssociationRoleBaseComboBoxModel() {
         super("base", true);

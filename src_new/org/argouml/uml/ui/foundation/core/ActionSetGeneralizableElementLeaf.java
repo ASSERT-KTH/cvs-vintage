@@ -1,4 +1,4 @@
-// $Id: ActionSetGeneralizableElementLeaf.java,v 1.5 2003/10/12 08:55:25 linus Exp $
+// $Id: ActionSetGeneralizableElementLeaf.java,v 1.6 2004/02/08 12:45:27 mvw Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -22,7 +22,7 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $Id: ActionSetGeneralizableElementLeaf.java,v 1.5 2003/10/12 08:55:25 linus Exp $
+// $Id: ActionSetGeneralizableElementLeaf.java,v 1.6 2004/02/08 12:45:27 mvw Exp $
 package org.argouml.uml.ui.foundation.core;
 
 import java.awt.event.ActionEvent;
@@ -43,7 +43,6 @@ public class ActionSetGeneralizableElementLeaf extends UMLChangeAction {
 
     /**
      * Constructor for ActionSetElementOwnershipSpecification.
-     * @param s
      */
     protected ActionSetGeneralizableElementLeaf() {
         super(Translator.localize("Set"), true, NO_ICON);

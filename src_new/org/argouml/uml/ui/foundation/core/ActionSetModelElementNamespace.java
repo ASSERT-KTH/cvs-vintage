@@ -1,4 +1,4 @@
-// $Id: ActionSetModelElementNamespace.java,v 1.8 2003/10/15 20:11:47 linus Exp $
+// $Id: ActionSetModelElementNamespace.java,v 1.9 2004/02/08 12:45:27 mvw Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -42,7 +42,6 @@ public class ActionSetModelElementNamespace extends UMLChangeAction {
 
     /**
      * Constructor for ActionSetModelElementNamespace.
-     * @param s
      */
     protected ActionSetModelElementNamespace() {
         super(Translator.localize("Set"), true, NO_ICON);

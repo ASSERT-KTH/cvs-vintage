@@ -1,4 +1,4 @@
-// $Id: UMLParameterTypeComboBoxModel.java,v 1.8 2003/08/27 13:05:42 bobtarling Exp $
+// $Id: UMLParameterTypeComboBoxModel.java,v 1.9 2004/02/08 12:45:28 mvw Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -34,7 +34,6 @@ public class UMLParameterTypeComboBoxModel
 
     /**
      * Constructor for UMLParameterTypeComboBoxModel.
-     * @param container
      */
     public UMLParameterTypeComboBoxModel() {
         super();

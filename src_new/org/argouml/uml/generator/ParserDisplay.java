@@ -1,4 +1,4 @@
-// $Id: ParserDisplay.java,v 1.87 2004/02/07 00:39:49 d00mst Exp $
+// $Id: ParserDisplay.java,v 1.88 2004/02/08 12:47:22 mvw Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: ParserDisplay.java
 // Classes: ParserDisplay
 // Original Author:
-// $Id: ParserDisplay.java,v 1.87 2004/02/07 00:39:49 d00mst Exp $
+// $Id: ParserDisplay.java,v 1.88 2004/02/08 12:47:22 mvw Exp $
 
 
 
@@ -484,8 +484,8 @@ public class ParserDisplay extends Parser {
      * The case that a String or char contains a ';' (e.g. in an initializer)
      * is handled, but not other occurences of ';'.
      *
-     * @param text  The classifier the operation(s) belong to
-     * @param text  The operation on which the editing happened
+     * @param cls  The classifier the operation(s) belong to
+     * @param op  The operation on which the editing happened
      * @param text  The string to parse
      */
     public void parseOperationFig(Object/*MClassifier*/ cls, Object/*MOperation*/ op, String text)
@@ -548,8 +548,8 @@ public class ParserDisplay extends Parser {
      * The case that a String or char contains a ';' (e.g. in an initializer)
      * is handled, but not other occurences of ';'.
      *
-     * @param text  The classifier the attribute(s) belong to
-     * @param text  The attribute on which the editing happened
+     * @param cls  The classifier the attribute(s) belong to
+     * @param at  The attribute on which the editing happened
      * @param text  The string to parse
      */
     public void parseAttributeFig(Object/*MClassifier*/ cls, Object/*MAttribute*/ at, String text)

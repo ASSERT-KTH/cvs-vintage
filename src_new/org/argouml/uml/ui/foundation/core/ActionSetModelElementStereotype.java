@@ -1,4 +1,4 @@
-// $Id: ActionSetModelElementStereotype.java,v 1.9 2003/10/15 20:11:47 linus Exp $
+// $Id: ActionSetModelElementStereotype.java,v 1.10 2004/02/08 12:45:27 mvw Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -44,7 +44,6 @@ public class ActionSetModelElementStereotype extends UMLChangeAction {
 
     /**
      * Constructor for ActionSetModelElementStereotype.
-     * @param s
      */
     protected ActionSetModelElementStereotype() {
         super(Translator.localize("Set"), true, NO_ICON);

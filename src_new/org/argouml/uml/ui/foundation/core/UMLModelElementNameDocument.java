@@ -1,4 +1,4 @@
-// $Id: UMLModelElementNameDocument.java,v 1.6 2003/09/07 18:03:13 bobtarling Exp $
+// $Id: UMLModelElementNameDocument.java,v 1.7 2004/02/08 12:45:28 mvw Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -36,8 +36,6 @@ public class UMLModelElementNameDocument extends UMLPlainTextDocument {
 
     /**
      * Constructor for UMLModelElementNameDocument.
-     * @param panel
-     * @param propertyList
      */
     public UMLModelElementNameDocument() {
         super("name");

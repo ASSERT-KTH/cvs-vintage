@@ -1,4 +1,4 @@
-// $Id: UMLIncludeBaseComboBoxModel.java,v 1.14 2003/11/11 21:54:10 linus Exp $
+// $Id: UMLIncludeBaseComboBoxModel.java,v 1.15 2004/02/08 12:45:27 mvw Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -40,7 +40,6 @@ public class UMLIncludeBaseComboBoxModel extends UMLComboBoxModel2 {
 
     /**
      * Constructor for UMLIncludeBaseComboBoxModel.
-     * @param container
      */
     public UMLIncludeBaseComboBoxModel() {
         super("base", false);

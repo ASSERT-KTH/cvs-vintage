@@ -1,4 +1,4 @@
-// $Id: PropPanelStubState.java,v 1.6 2003/11/25 10:58:15 jhraigniac Exp $
+// $Id: PropPanelStubState.java,v 1.7 2004/02/08 12:45:26 mvw Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -38,9 +38,6 @@ public class PropPanelStubState extends PropPanelStateVertex {
 
     /**
      * Constructor for PropPanelStubState.
-     * @param name
-     * @param icon
-     * @param orientation
      */
     public PropPanelStubState() {
         // TODO: give the stubstate it's own icon

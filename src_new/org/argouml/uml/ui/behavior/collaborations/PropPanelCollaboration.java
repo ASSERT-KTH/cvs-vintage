@@ -1,4 +1,4 @@
-// $Id: PropPanelCollaboration.java,v 1.16 2003/11/25 10:58:13 jhraigniac Exp $
+// $Id: PropPanelCollaboration.java,v 1.17 2004/02/08 12:45:26 mvw Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -46,9 +46,6 @@ public class PropPanelCollaboration extends PropPanelNamespace {
 
     /**
      * Constructor for PropPanelCollaboration.
-     * @param title
-     * @param icon
-     * @param panelCount
      */
     public PropPanelCollaboration() {
         super("Collaboration", ConfigLoader.getTabPropsOrientation());

@@ -1,4 +1,4 @@
-// $Id: UMLAssociationRoleAssociationEndRoleListModel.java,v 1.11 2003/11/11 21:54:09 linus Exp $
+// $Id: UMLAssociationRoleAssociationEndRoleListModel.java,v 1.12 2004/02/08 12:45:26 mvw Exp $
 // Copyright (c) 2002-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -38,7 +38,6 @@ public class UMLAssociationRoleAssociationEndRoleListModel
 
     /**
      * Constructor for UMLAssociationRoleAssociationEndRoleListModel.
-     * @param container
      */
     public UMLAssociationRoleAssociationEndRoleListModel() {
         super("connection");

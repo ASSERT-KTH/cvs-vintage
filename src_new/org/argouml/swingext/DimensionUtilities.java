@@ -1,4 +1,4 @@
-// $Id: DimensionUtilities.java,v 1.6 2003/06/30 18:00:23 linus Exp $
+// $Id: DimensionUtilities.java,v 1.7 2004/02/08 12:44:55 mvw Exp $
 // Copyright (c) 2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -44,8 +44,8 @@ public class DimensionUtilities {
      * <code>Dimension</code> with its width and height increased by
      * the width and height of another <code>Dimension</code>.
      *
-     * @parameter original The <code>Dimension</code> to be added to.
-     * @parameter add The <code>Dimension</code> whose length and
+     * @param original The <code>Dimension</code> to be added to.
+     * @param add The <code>Dimension</code> whose length and
      * breadth are to be taken as the added values.
      * @return The resulting <code>Dimension</code>.
      */
@@ -59,8 +59,8 @@ public class DimensionUtilities {
      * <code>Dimension</code> with its width and height increased by
      * the width and height of an <code>Insets</code> object.
      *
-     * @parameter original The <code>Dimension</code> to be added to.
-     * @parameter add The <code>Insets</code> object whose width and
+     * @param original The <code>Dimension</code> to be added to.
+     * @param add The <code>Insets</code> object whose width and
      * height are to be taken as the added values.
      * @return The resulting <code>Dimension</code>.
      */

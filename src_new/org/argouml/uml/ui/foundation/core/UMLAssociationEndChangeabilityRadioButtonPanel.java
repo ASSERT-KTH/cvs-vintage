@@ -1,4 +1,4 @@
-// $Id: UMLAssociationEndChangeabilityRadioButtonPanel.java,v 1.5 2003/11/25 11:38:55 jhraigniac Exp $
+// $Id: UMLAssociationEndChangeabilityRadioButtonPanel.java,v 1.6 2004/02/08 12:45:27 mvw Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -22,7 +22,7 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $Id: UMLAssociationEndChangeabilityRadioButtonPanel.java,v 1.5 2003/11/25 11:38:55 jhraigniac Exp $
+// $Id: UMLAssociationEndChangeabilityRadioButtonPanel.java,v 1.6 2004/02/08 12:45:27 mvw Exp $
 package org.argouml.uml.ui.foundation.core;
 
 import java.util.HashMap;
@@ -50,9 +50,6 @@ public class UMLAssociationEndChangeabilityRadioButtonPanel extends UMLRadioButt
     /**
      * Constructor for UMLAssociationEndChangeabilityRadioButtonPanel.
      * @param title
-     * @param labeltexts
-     * @param propertySetName
-     * @param setAction
      * @param horizontal
      */
     public UMLAssociationEndChangeabilityRadioButtonPanel(String title, boolean horizontal) {

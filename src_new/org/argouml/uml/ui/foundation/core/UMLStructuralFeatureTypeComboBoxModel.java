@@ -1,4 +1,4 @@
-// $Id: UMLStructuralFeatureTypeComboBoxModel.java,v 1.10 2003/11/11 21:54:10 linus Exp $
+// $Id: UMLStructuralFeatureTypeComboBoxModel.java,v 1.11 2004/02/08 12:45:28 mvw Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -47,9 +47,6 @@ public class UMLStructuralFeatureTypeComboBoxModel extends UMLComboBoxModel2 {
 
     /**
      * Constructor for UMLStructuralFeatureTypeComboBoxModel.
-     * @param container
-     * @param propertySetName
-     * @param clearable
      */
     public UMLStructuralFeatureTypeComboBoxModel() {
         super("type", false);

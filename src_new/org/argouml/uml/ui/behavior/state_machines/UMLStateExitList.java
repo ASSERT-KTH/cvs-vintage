@@ -1,4 +1,4 @@
-// $Id: UMLStateExitList.java,v 1.4 2003/06/29 23:50:12 linus Exp $
+// $Id: UMLStateExitList.java,v 1.5 2004/02/08 12:45:26 mvw Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -40,9 +40,7 @@ public class UMLStateExitList extends UMLMutableLinkedList {
 
     /**
      * Constructor for UMLStateEntryList.
-     * @param container
      * @param dataModel
-     * @param popup
      */
     public UMLStateExitList(
         UMLModelElementListModel2 dataModel) {

@@ -1,4 +1,4 @@
-// $Id: ActionNavigability.java,v 1.2 2003/11/10 12:34:59 jhraigniac Exp $
+// $Id: ActionNavigability.java,v 1.3 2004/02/08 12:45:29 mvw Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -46,9 +46,9 @@ public class ActionNavigability extends UMLAction {
     /**
      * The <code>ActionNavigability</code> constructor.
      *
-     * @param start a <code>MAssociationEnd</code> object at the start
+     * @param assocStart a <code>MAssociationEnd</code> object at the start
      * of an association.
-     * @param end a <code>MAssociationEnd</code> object at the end of
+     * @param assocEnd a <code>MAssociationEnd</code> object at the end of
      * an association.
      * @param nav the type of navigation required in the association
      * being either <ul> <li>BIDIRECTIONAL <li>STARTTOEND

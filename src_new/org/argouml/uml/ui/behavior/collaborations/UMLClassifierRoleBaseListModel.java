@@ -1,4 +1,4 @@
-// $Id: UMLClassifierRoleBaseListModel.java,v 1.11 2003/11/11 21:54:09 linus Exp $
+// $Id: UMLClassifierRoleBaseListModel.java,v 1.12 2004/02/08 12:45:26 mvw Exp $
 // Copyright (c) 2002-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -36,7 +36,6 @@ public class UMLClassifierRoleBaseListModel extends UMLModelElementListModel2 {
 
     /**
      * Constructor for UMLClassifierRoleBaseListModel.
-     * @param container
      */
     public UMLClassifierRoleBaseListModel() {
         super("base");
