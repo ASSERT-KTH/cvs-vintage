@@ -322,13 +322,13 @@ public abstract class AttributeValue
      *
      * @param optionId a <code>NumberKey</code> value
      */
-    public void setOptionId(NumberKey optionId)
+    public void setOptionId(NumberKey optionId, IssueType issueType)
         throws Exception
     {
         if ( optionId != null && optionId.getValue() != null ) 
         {
             List options = getIssue().getModule()
-                .getRModuleOptions(getAttribute());
+                .getRModuleOptions(getAttribute(), issueType);
             for ( int i=options.size()-1; i>=0; i-- ) 
             {
                 RModuleOption option = (RModuleOption)options.get(i);
@@ -714,13 +714,16 @@ public abstract class AttributeValue
         String id = getIssue().getFederatedId();
         String name = getAttribute().getName();
         String newValue = getValue();
-        int length = 40 + id.length() + name.length() + newValue.length();
+        /*
+       int length = 40 + id.length() + name.length() + newValue.length();
         if ( oldValue != null ) 
         {
             length += oldValue.length();
         }
         
         StringBuffer sb = new StringBuffer(length)
+        */
+        StringBuffer sb = new StringBuffer()
             .append("Issue ")
             .append(id)
             .append(" had attribute ")
