@@ -48,6 +48,8 @@
    $link.setPage("SelectModule.vm").setLabel("$scarabR.CurrentModule.Name")
   </strong></small>
 </div>
+#else
+<div class="modbar"></div>
 #end
 
 <table border="0" cellspacing="0" cellpadding="8" width="98%" id="main">
