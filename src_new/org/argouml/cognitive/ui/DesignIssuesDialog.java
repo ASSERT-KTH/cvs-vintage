@@ -1,4 +1,4 @@
-// $Id: DesignIssuesDialog.java,v 1.10 2004/08/23 20:24:54 mvw Exp $
+// $Id: DesignIssuesDialog.java,v 1.11 2004/09/05 13:18:07 mvw Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -86,7 +86,7 @@ public class DesignIssuesDialog extends ArgoDialog implements ChangeListener {
 
 
     private void initMainPanel() {
-        DecisionModel dm = Designer.TheDesigner.getDecisionModel();
+        DecisionModel dm = Designer.theDesigner().getDecisionModel();
         Vector decs = dm.getDecisions();
 
         GridBagLayout gb = new GridBagLayout();

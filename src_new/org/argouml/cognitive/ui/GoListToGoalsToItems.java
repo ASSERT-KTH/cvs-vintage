@@ -1,4 +1,4 @@
-// $Id: GoListToGoalsToItems.java,v 1.9 2004/09/03 19:55:28 mvw Exp $
+// $Id: GoListToGoalsToItems.java,v 1.10 2004/09/05 13:18:07 mvw Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -62,7 +62,7 @@ public class GoListToGoalsToItems implements TreeModel {
 	if (parent instanceof Goal) {
 	    Goal g = (Goal) parent;
 	    Enumeration itemEnum =
-		Designer.TheDesigner.getToDoList().elements();
+		Designer.theDesigner().getToDoList().elements();
 	    while (itemEnum.hasMoreElements()) {
 		ToDoItem item = (ToDoItem) itemEnum.nextElement();
 		if (item.getPoster().supports(g)) {
@@ -85,7 +85,7 @@ public class GoListToGoalsToItems implements TreeModel {
 	if (parent instanceof Goal) {
 	    Goal g = (Goal) parent;
 	    Enumeration itemEnum =
-		Designer.TheDesigner.getToDoList().elements();
+		Designer.theDesigner().getToDoList().elements();
 	    int count = 0;
 	    while (itemEnum.hasMoreElements()) {
 		ToDoItem item = (ToDoItem) itemEnum.nextElement();
@@ -110,7 +110,7 @@ public class GoListToGoalsToItems implements TreeModel {
 	    Vector candidates = new Vector();
 	    Goal g = (Goal) parent;
 	    Enumeration itemEnum =
-		Designer.TheDesigner.getToDoList().elements();
+		Designer.theDesigner().getToDoList().elements();
 	    while (itemEnum.hasMoreElements()) {
 		ToDoItem item = (ToDoItem) itemEnum.nextElement();
 		if (item.getPoster().supports(g)) candidates.addElement(item);
@@ -154,7 +154,7 @@ public class GoListToGoalsToItems implements TreeModel {
      * @return the goals
      */
     public Vector getGoals() {
-	return Designer.TheDesigner.getGoalModel().getGoals();
+	return Designer.theDesigner().getGoalModel().getGoals();
     }
   
 } /* end class GoListToGoalsToItems */

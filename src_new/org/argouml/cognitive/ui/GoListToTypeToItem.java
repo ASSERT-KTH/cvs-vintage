@@ -1,4 +1,4 @@
-// $Id: GoListToTypeToItem.java,v 1.9 2004/09/03 19:55:28 mvw Exp $
+// $Id: GoListToTypeToItem.java,v 1.10 2004/09/05 13:18:08 mvw Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -61,7 +61,7 @@ public class GoListToTypeToItem implements TreeModel {
 	if (parent instanceof KnowledgeTypeNode) {
 	    KnowledgeTypeNode ktn = (KnowledgeTypeNode) parent;
 	    Enumeration itemEnum =
-		Designer.TheDesigner.getToDoList().elements();
+		Designer.theDesigner().getToDoList().elements();
 	    while (itemEnum.hasMoreElements()) {
 		ToDoItem item = (ToDoItem) itemEnum.nextElement();
 		if (item.containsKnowledgeType(ktn.getName())) {
@@ -84,7 +84,7 @@ public class GoListToTypeToItem implements TreeModel {
 	if (parent instanceof KnowledgeTypeNode) {
 	    KnowledgeTypeNode ktn = (KnowledgeTypeNode) parent;
 	    Enumeration itemEnum =
-		Designer.TheDesigner.getToDoList().elements();
+		Designer.theDesigner().getToDoList().elements();
 	    int count = 0;
 	    while (itemEnum.hasMoreElements()) {
 		ToDoItem item = (ToDoItem) itemEnum.nextElement();
@@ -110,7 +110,7 @@ public class GoListToTypeToItem implements TreeModel {
 	    Vector candidates = new Vector();
 	    KnowledgeTypeNode ktn = (KnowledgeTypeNode) parent;
 	    Enumeration itemEnum =
-		Designer.TheDesigner.getToDoList().elements();
+		Designer.theDesigner().getToDoList().elements();
 	    while (itemEnum.hasMoreElements()) {
 		ToDoItem item = (ToDoItem) itemEnum.nextElement();
 		if (item.containsKnowledgeType(ktn.getName()))

@@ -1,4 +1,4 @@
-// $Id: ToDoByOffender.java,v 1.11 2004/09/04 07:57:37 mvw Exp $
+// $Id: ToDoByOffender.java,v 1.12 2004/09/05 13:18:08 mvw Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -63,9 +63,9 @@ public class ToDoByOffender extends ToDoPerspective
         Vector items = tde.getToDoItems();
         int nItems = items.size();
         Object path[] = new Object[2];
-        path[0] = Designer.TheDesigner.getToDoList();
+        path[0] = Designer.theDesigner().getToDoList();
 
-        VectorSet allOffenders = Designer.TheDesigner.getToDoList()
+        VectorSet allOffenders = Designer.theDesigner().getToDoList()
                 .getOffenders();
         Enumeration elems = allOffenders.elements();
         while (elems.hasMoreElements()) {
@@ -102,9 +102,9 @@ public class ToDoByOffender extends ToDoPerspective
         Vector items = tde.getToDoItems();
         int nItems = items.size();
         Object path[] = new Object[2];
-        path[0] = Designer.TheDesigner.getToDoList();
+        path[0] = Designer.theDesigner().getToDoList();
 
-        VectorSet allOffenders = Designer.TheDesigner.getToDoList()
+        VectorSet allOffenders = Designer.theDesigner().getToDoList()
                 .getOffenders();
         Enumeration elems = allOffenders.elements();
         while (elems.hasMoreElements()) {
@@ -141,9 +141,9 @@ public class ToDoByOffender extends ToDoPerspective
         Vector items = tde.getToDoItems();
         int nItems = items.size();
         Object path[] = new Object[2];
-        path[0] = Designer.TheDesigner.getToDoList();
+        path[0] = Designer.theDesigner().getToDoList();
 
-        VectorSet allOffenders = Designer.TheDesigner.getToDoList()
+        VectorSet allOffenders = Designer.theDesigner().getToDoList()
                 .getOffenders();
         Enumeration elems = allOffenders.elements();
         while (elems.hasMoreElements()) {

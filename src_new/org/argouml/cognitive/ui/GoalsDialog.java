@@ -1,4 +1,4 @@
-// $Id: GoalsDialog.java,v 1.8 2004/08/23 20:24:50 mvw Exp $
+// $Id: GoalsDialog.java,v 1.9 2004/09/05 13:18:07 mvw Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -86,7 +86,7 @@ public class GoalsDialog extends ArgoDialog implements ChangeListener
 
 
     private void initMainPanel() {
-	GoalModel gm = Designer.TheDesigner.getGoalModel();
+	GoalModel gm = Designer.theDesigner().getGoalModel();
 	Vector goals = gm.getGoals();
 
 	GridBagLayout gb = new GridBagLayout();

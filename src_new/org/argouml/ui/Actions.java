@@ -1,4 +1,4 @@
-// $Id: Actions.java,v 1.71 2004/09/01 18:48:04 mvw Exp $
+// $Id: Actions.java,v 1.72 2004/09/05 13:18:09 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -548,7 +548,7 @@ class ActionAutoCritique extends UMLAction {
     public void actionPerformed(ActionEvent ae) {
         
         // stop/start creating more critics
-	Designer d = Designer.TheDesigner;
+	Designer d = Designer.theDesigner();
 	boolean b = d.getAutoCritique();
 	d.setAutoCritique(!b);
         
@@ -699,7 +699,7 @@ class ActionEmailExpert extends ToDoItemAction {
                 subject = s.replace(i, i + 1, "%20").toString();
             }
             
-            Designer dsgr = Designer.TheDesigner;
+            Designer dsgr = Designer.theDesigner();
             try {                
                 //MVW: This works under MSWindows only, I guess.
                 Runtime.getRuntime().exec(

@@ -1,4 +1,4 @@
-// $Id: Import.java,v 1.59 2004/08/23 23:53:06 bobtarling Exp $
+// $Id: Import.java,v 1.60 2004/09/05 13:18:07 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -382,8 +382,8 @@ public class Import {
                 Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
 
         //turn off critiquing for reverse engineering
-        boolean b = Designer.TheDesigner.getAutoCritique();
-        if (b)  Designer.TheDesigner.setAutoCritique(false);
+        boolean b = Designer.theDesigner().getAutoCritique();
+        if (b)  Designer.theDesigner().setAutoCritique(false);
         UmlModelEventPump.getPump().stopPumpingEvents();
         
         // now start importing (with an empty problem list)
@@ -677,7 +677,7 @@ public class Import {
             }
             
             // turn criticing on again
-            if (criticThreadWasOn)  Designer.TheDesigner.setAutoCritique(true);
+            if (criticThreadWasOn)  Designer.theDesigner().setAutoCritique(true);
 
             UmlModelEventPump.getPump().startPumpingEvents();
 

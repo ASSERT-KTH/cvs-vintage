@@ -1,4 +1,4 @@
-// $Id: AddToDoItemDialog.java,v 1.24 2004/07/17 16:52:03 linus Exp $
+// $Id: AddToDoItemDialog.java,v 1.25 2004/09/05 13:18:08 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -144,7 +144,7 @@ public class AddToDoItemDialog extends ArgoDialog {
     }
     
     private void doAdd() {
-        Designer designer = Designer.TheDesigner;
+        Designer designer = Designer.theDesigner();
         String headline = headLineTextField.getText();
         int priority = ToDoItem.HIGH_PRIORITY;
         switch (priorityComboBox.getSelectedIndex()) {

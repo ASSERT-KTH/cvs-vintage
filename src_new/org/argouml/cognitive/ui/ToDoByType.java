@@ -1,4 +1,4 @@
-// $Id: ToDoByType.java,v 1.9 2004/09/04 07:57:37 mvw Exp $
+// $Id: ToDoByType.java,v 1.10 2004/09/05 13:18:07 mvw Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -65,7 +65,7 @@ public class ToDoByType extends ToDoPerspective
 	Vector items = tde.getToDoItems();
 	int nItems = items.size();
 	Object path[] = new Object[2];
-	path[0] = Designer.TheDesigner.getToDoList();
+	path[0] = Designer.theDesigner().getToDoList();
 
 	Enumeration elems = KnowledgeTypeNode.getTypes().elements();
 	while (elems.hasMoreElements()) {
@@ -101,7 +101,7 @@ public class ToDoByType extends ToDoPerspective
 	Vector items = tde.getToDoItems();
 	int nItems = items.size();
 	Object path[] = new Object[2];
-	path[0] = Designer.TheDesigner.getToDoList();
+	path[0] = Designer.theDesigner().getToDoList();
 
 	Enumeration elems = KnowledgeTypeNode.getTypes().elements();
 	while (elems.hasMoreElements()) {
@@ -134,11 +134,11 @@ public class ToDoByType extends ToDoPerspective
      */
     public void toDoItemsRemoved(ToDoListEvent tde) {
 	LOG.debug("toDoItemRemoved");
-	ToDoList list = Designer.TheDesigner.getToDoList(); //source?
+	ToDoList list = Designer.theDesigner().getToDoList(); //source?
 	Vector items = tde.getToDoItems();
 	int nItems = items.size();
 	Object path[] = new Object[2];
-	path[0] = Designer.TheDesigner.getToDoList();
+	path[0] = Designer.theDesigner().getToDoList();
 
 	Enumeration elems = KnowledgeTypeNode.getTypes().elements();
 	while (elems.hasMoreElements()) {

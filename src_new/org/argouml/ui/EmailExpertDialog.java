@@ -1,4 +1,4 @@
-// $Id: EmailExpertDialog.java,v 1.15 2004/08/20 20:00:29 mvw Exp $
+// $Id: EmailExpertDialog.java,v 1.16 2004/09/05 13:18:09 mvw Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -138,7 +138,7 @@ public class EmailExpertDialog extends ArgoDialog {
     public void actionPerformed(ActionEvent e) {
 	super.actionPerformed(e);   
 	if (e.getSource() == getOkButton()) {
-	    Designer dsgr = Designer.TheDesigner;
+	    Designer dsgr = Designer.theDesigner();
 	    String to = emailTo.getText();
 	    String cc = emailCc.getText();
 	    String subject = emailSubject.getText();

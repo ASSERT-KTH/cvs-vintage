@@ -1,4 +1,4 @@
-// $Id: ToDoPane.java,v 1.35 2004/09/04 08:54:48 mvw Exp $
+// $Id: ToDoPane.java,v 1.36 2004/09/05 13:18:08 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -88,7 +88,7 @@ import org.tigris.gef.ui.ToolBar;
  *  ToDoPerspective skill = new ToDoBySkill();
  *</pre>
 
- * $Id: ToDoPane.java,v 1.35 2004/09/04 08:54:48 mvw Exp $
+ * $Id: ToDoPane.java,v 1.36 2004/09/05 13:18:08 mvw Exp $
  */
 public class ToDoPane extends JPanel
     implements ItemListener,
@@ -189,8 +189,8 @@ public class ToDoPane extends JPanel
         tree.addMouseListener(this);
         
         // next line coming from projectbrowser
-        setRoot(Designer.TheDesigner.getToDoList());
-        Designer.TheDesigner.getToDoList().addToDoListListener(this);
+        setRoot(Designer.theDesigner().getToDoList());
+        Designer.theDesigner().getToDoList().addToDoListListener(this);
         
         if (doSplash) {
             SplashScreen splash = SplashScreen.getInstance();
@@ -488,7 +488,7 @@ public class ToDoPane extends JPanel
      * Update the count label.
      */
     public void updateCountLabel() {
-        int size = Designer.TheDesigner.getToDoList().size();
+        int size = Designer.theDesigner().getToDoList().size();
         if (size > oldSize) {
 	    dir = '+';
 	}

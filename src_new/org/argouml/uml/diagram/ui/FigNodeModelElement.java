@@ -1,4 +1,4 @@
-// $Id: FigNodeModelElement.java,v 1.119 2004/08/15 20:57:00 mvw Exp $
+// $Id: FigNodeModelElement.java,v 1.120 2004/09/05 13:18:08 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -379,7 +379,7 @@ public abstract class FigNodeModelElement
      */
     public Vector getPopUpActions(MouseEvent me) {
         Vector popUpActions = super.getPopUpActions(me);
-        ToDoList list = Designer.TheDesigner.getToDoList();
+        ToDoList list = Designer.theDesigner().getToDoList();
         Vector items = (Vector) list.elementsForOffender(getOwner()).clone();
         if (items != null && items.size() > 0) {
             ArgoJMenu critiques = new ArgoJMenu(BUNDLE, "menu.popup.critiques");

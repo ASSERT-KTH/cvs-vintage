@@ -1,4 +1,4 @@
-// $Id: GoListToPriorityToItem.java,v 1.8 2004/09/03 19:55:28 mvw Exp $
+// $Id: GoListToPriorityToItem.java,v 1.9 2004/09/05 13:18:08 mvw Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -58,7 +58,7 @@ public class GoListToPriorityToItem implements TreeModel {
 	}
 	if (parent instanceof PriorityNode) {
 	    PriorityNode pn = (PriorityNode) parent;
-	    ToDoList list = Designer.TheDesigner.getToDoList();
+	    ToDoList list = Designer.theDesigner().getToDoList();
 	    int size = list.size();
 	    for (int i = 0; i < size; i++) {
 		ToDoItem item = list.elementAt(i);
@@ -82,7 +82,7 @@ public class GoListToPriorityToItem implements TreeModel {
 	if (parent instanceof PriorityNode) {
 	    int res = 0;
 	    PriorityNode pn = (PriorityNode) parent;
-	    ToDoList list = Designer.TheDesigner.getToDoList();
+	    ToDoList list = Designer.theDesigner().getToDoList();
 	    int size = list.size();
 	    for (int i = 0; i < size; i++) {
 		ToDoItem item = list.elementAt(i);
@@ -104,7 +104,7 @@ public class GoListToPriorityToItem implements TreeModel {
 	if (parent instanceof PriorityNode) {
 	    int index = 0;
 	    PriorityNode pn = (PriorityNode) parent;
-	    ToDoList list = Designer.TheDesigner.getToDoList();
+	    ToDoList list = Designer.theDesigner().getToDoList();
 	    int size = list.size();
 	    for (int i = 0; i < size; i++) {
 		ToDoItem item = list.elementAt(i);

@@ -1,4 +1,4 @@
-// $Id: GoListToPosterToItem.java,v 1.9 2004/09/03 19:55:28 mvw Exp $
+// $Id: GoListToPosterToItem.java,v 1.10 2004/09/05 13:18:07 mvw Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -94,14 +94,14 @@ public class GoListToPosterToItem implements TreeModel {
      * @return the children
      */
     public Vector getChildren(Object parent) {
-	VectorSet allPosters = Designer.TheDesigner.getToDoList().getPosters();
+	VectorSet allPosters = Designer.theDesigner().getToDoList().getPosters();
 	if (parent instanceof ToDoList) {
 	    return allPosters.asVector();
 	}
 	//otherwise parent must be an offending design material
 	if (allPosters.contains(parent)) {
 	    Vector res = new Vector();
-	    ToDoList list = Designer.TheDesigner.getToDoList();
+	    ToDoList list = Designer.theDesigner().getToDoList();
 	    Enumeration elems = list.elements();
 	    while (elems.hasMoreElements()) {
 		ToDoItem item = (ToDoItem) elems.nextElement();
