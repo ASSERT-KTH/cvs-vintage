@@ -27,7 +27,7 @@ import org.jboss.system.URLClassLoader;
  * @see <related>
  * @author <a href="mailto:marc@jboss.org">Marc Fleury</a>
  * @author <a href="mailto:osh@sparre.dk">Ole Husgaard</a>
- * @version $Revision: 1.7 $ <p>
+ * @version $Revision: 1.8 $ <p>
  *
  *      <b>20010830 marc fleury:</b>
  *      <ul>initial import
@@ -81,7 +81,7 @@ public class ServiceLibraries
     *  the classloaders with locks removed, the {@link #clToClassSetMap}
     *  and {@link #classes} fields should <em>only</em> be modified
     *  if the classloader used for loading the class is still in the
-    *  {@link #classLoaders] set.
+    *  {@link #classLoaders} set.
     */
    private long clToClassSetMapVersion = 0;
 
