@@ -48,7 +48,7 @@ import org.jboss.util.WorkerQueue;
  * @author <a href="bill@burkecentral.com">Bill Burke</a>
  * @author <a href="marc.fleury@jboss.org">Marc Fleury</a>
  *
- * @version $Revision: 1.29 $
+ * @version $Revision: 1.30 $
  *
  *   <p><b>Revisions:</b>
  *
@@ -471,7 +471,7 @@ public abstract class AbstractInstanceCache
          Iterator iter = m_passivationJobs.values().iterator();
          while( iter.hasNext() )
          {
-            PassivationJob job = (PassivationJob) iter.next();
+            AbstractPassivationJob job = (AbstractPassivationJob) iter.next();
             job.cancel();
          }
          m_passivationJobs.clear();
@@ -652,7 +652,7 @@ public abstract class AbstractInstanceCache
          // unscheduling requests can arrive. This way all will be served
 
          // Is the passivation job for id still to be executed ?
-         PassivationJob job = (PassivationJob)m_passivationJobs.get(id);
+         AbstractPassivationJob job = (AbstractPassivationJob)m_passivationJobs.get(id);
          if (job != null)
          {
             // Still to execute or executing now, cancel the job
