@@ -1,4 +1,4 @@
-// $Id: ProportionalLayout.java,v 1.8 2004/08/20 15:59:58 mvw Exp $
+// $Id: ProportionalLayout.java,v 1.9 2004/10/28 14:18:19 mkl Exp $
 // Copyright (c) 2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -74,7 +74,7 @@ public class ProportionalLayout extends LineLayout {
      */
     public void addLayoutComponent(String name, Component comp) {
         try {
-	    componentTable.put(comp, name.toString());
+	    componentTable.put(comp, name);
         }
         catch (Exception e) {
 	    componentTable.put(comp, "");
