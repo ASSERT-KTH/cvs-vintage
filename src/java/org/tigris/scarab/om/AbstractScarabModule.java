@@ -130,7 +130,7 @@ import org.tigris.scarab.services.cache.ScarabCache;
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: AbstractScarabModule.java,v 1.56 2002/10/09 00:25:27 jon Exp $
+ * @version $Id: AbstractScarabModule.java,v 1.57 2002/10/09 00:26:00 jon Exp $
  */
 public abstract class AbstractScarabModule
     extends BaseObject
@@ -165,7 +165,7 @@ public abstract class AbstractScarabModule
         "getActiveAttributes";
     protected static final String GET_ALL_R_MODULE_OPTIONS = 
         "getAllRModuleOptions";
-    protected static String GET_LEAF_R_MODULE_OPTIONS = 
+    protected static final String GET_LEAF_R_MODULE_OPTIONS = 
         "getLeafRModuleOptions";
     protected static final String GET_R_MODULE_ISSUE_TYPES = 
         "getRModuleIssueTypes";
