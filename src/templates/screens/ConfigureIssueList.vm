@@ -7,10 +7,9 @@ $page.setTitle("Add/remove attributes from view")
 #set ($action = $link.setPage("ConfigureIssueList.vm").setAction("ConfigureIssueList").addPathInfo("$scarabG.Constant.NEXT_TEMPLATE", "ConfigureIssueList.vm").toString())
 #set ($user = $data.User)
 #set ($module = $scarabR.CurrentModule)
-## !FIXME! jdm add $scarabR.CurrentIssueType to args or get it some other way?
-#set ($moduleAttributes = $module.getRModuleAttributes(true))
+#set ($issueType = $scarabR.CurrentIssueType)
+#set ($moduleAttributes = $module.getRModuleAttributes($issueType, true))
 #set ($maxNum = $moduleAttributes.size())
-#set ($usedefaults = $moduleAttributes.size())
 #set ($usedefaults = $data.Parameters.getString("usedefaults"))
 
 <form action="$action" method="post">
@@ -29,7 +28,6 @@ $page.setTitle("Add/remove attributes from view")
  </tr>
 </table>
 </div>
-
 <h3>Attributes</h3>
 <table width="100%" border="1" cellspacing="2" cellpadding="3">
  <tr>
@@ -41,15 +39,15 @@ $page.setTitle("Add/remove attributes from view")
  #foreach ($moduleAttribute in $moduleAttributes)
   #set ($checked = "")
   #set ($attribute = $moduleAttribute.Attribute)
-  #set ($userAttribute = $user.getModuleUserAttribute($module.ModuleId, $attribute.AttributeId))
+  #set ($userAttribute = $user.getRModuleUserAttribute($module, $attribute, $issueType))
+
   #set ($intakeUserAttr = $intake.RModuleUserAttribute.mapTo($userAttribute))
 
-## Get the attributes user has selected. If they have not select any,
+## Get the attributes user has selected. If they have not selected any,
 ## Use defaults in database.
-
-  #set ($rmuas = $user.getRModuleUserAttributes($module))
+  #set ($rmuas = $user.getRModuleUserAttributes($module, $issueType))
   #if ($rmuas.isEmpty() || $usedefaults.equals("true"))
-   #set ($rmuas = $module.DefaultRModuleUserAttributes)
+   #set ($rmuas = $module.getDefaultRModuleUserAttributes($issueType))
   #end
   
   #set ($order = 1)
