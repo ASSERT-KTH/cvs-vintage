@@ -24,7 +24,7 @@ import org.jboss.util.ServiceMBeanSupport;
  *      
  *   @see <related>
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
- *   @version $Revision: 1.2 $
+ *   @version $Revision: 1.3 $
  */
 public class WebService
    extends ServiceMBeanSupport
@@ -35,7 +35,7 @@ public class WebService
    // Attributes ----------------------------------------------------
    WebServer server;
 	
-	Log log = new Log(getName());
+	Log log = Log.createLog(getName());
    
    // Static --------------------------------------------------------
 
@@ -116,4 +116,5 @@ public class WebService
    }
    // Protected -----------------------------------------------------
 }
+
 

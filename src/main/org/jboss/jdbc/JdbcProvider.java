@@ -20,7 +20,7 @@ import org.jboss.logging.Log;
  *      
  *   @see <related>
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
- *   @version $Revision: 1.2 $
+ *   @version $Revision: 1.3 $
  */
 public class JdbcProvider
    extends org.jboss.util.ServiceMBeanSupport
@@ -78,3 +78,4 @@ public class JdbcProvider
       }
    }
 }
+

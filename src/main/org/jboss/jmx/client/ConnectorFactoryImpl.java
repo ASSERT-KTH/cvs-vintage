@@ -65,6 +65,7 @@ public class ConnectorFactoryImpl {
 		String pProtocol
 //AS		ServerQuery pServerQuery
 	) {
+		System.out.println( "ConnectorFactoryImpl.getServers(), protocol: " + pProtocol );
 		// Check if there is a protocol given to query for
 		boolean lProtocolQuery = pProtocol != null && pProtocol.length() > 0;
 		// Get all available connectors from the JNDI server

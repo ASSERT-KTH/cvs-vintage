@@ -29,7 +29,7 @@ import org.jboss.util.ServiceMBeanSupport;
  *
  *   @see <related>
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
- *   @version $Revision: 1.11 $
+ *   @version $Revision: 1.12 $
  */
 public class ConfigurationService
    extends ServiceMBeanSupport
@@ -48,7 +48,7 @@ public class ConfigurationService
     }
 
    // Attributes ----------------------------------------------------
-    Log log = new Log(getName());
+    Log log = Log.createLog(getName());
 
     MBeanServer server;
 
@@ -394,4 +394,5 @@ public class ConfigurationService
         return false;
     }
 }
+
 

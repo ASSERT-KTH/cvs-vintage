@@ -100,7 +100,7 @@
            debug="on"
            deprecation="off"
            optimize="off"
-       includes="test/jboss/jmx/**"
+           includes="test/jboss/jmx/**"
            excludes=""
     />
   </target>
@@ -172,7 +172,7 @@
     <jar jarfile="${build.dir}/client/connector.jar"
          basedir="${build.classes.dir}"
          manifest="${etc.dir}/connector.mf"
-         includes="org/jboss/jmx/interfaces/MBeanServer.class,org/jboss/jmx/interfaces/JMXConnector.class,org/jboss/jmx/interfaces/JMXConnectorMBean.class,org/jboss/jmx/interfaces/RMIConnector.class,org/jboss/jmx/interfaces/RMINotificationListener.class,org/jboss/jmx/client/RMIClientConnectorImpl*.class,org/jboss/jmx/server/RMIConnectorImpl_Stub.class,org/jboss/jmx/server/ObjectHandler.class,org/jboss/jmx/client/ConnectorFactory*.class,org/jboss/util/Service*.class,org/jboss/logging/Log*.class,test/jboss/jmx/TestClient*.class"
+         includes="org/jboss/jmx/interfaces/JMXConnector.class,org/jboss/jmx/interfaces/JMXConnectorMBean.class,org/jboss/jmx/interfaces/RMIConnector.class,org/jboss/jmx/interfaces/RMINotificationListener.class,org/jboss/jmx/client/RMIClientConnectorImpl*.class,org/jboss/jmx/server/RMIConnectorImpl_Stub.class,org/jboss/jmx/server/ObjectHandler.class,org/jboss/jmx/client/ConnectorFactory*.class,org/jboss/util/Service.class,org/jboss/util/ServiceMBean*.class,org/jboss/logging/Log.class,org/jboss/logging/Log$$*.class,test/jboss/jmx/TestClient*.class"
     />
   </target>
 
@@ -309,6 +309,19 @@
   </target>
 
   <!-- =================================================================== -->
+  <!-- Creates the JMX Connector Server-Side distribution                  -->
+  <!-- =================================================================== -->
+  <target name="connector" depends="compile,compileTest">
+    <jar jarfile="${build.dir}/client/rmiconnector.jar"
+         basedir="${build.classes.dir}"
+         manifest="${etc.dir}/rmiconnector.mf"
+         includes="org/jboss/jmx/interfaces/JMXConnector**,org/jboss/jmx/interfaces/RMI**,org/jboss/jmx/server/RMIConnector**,org/jboss/jmx/server/ObjectHandler.class,org/jboss/util/Service**,org/jboss/logging/Log.class,org/jboss/logging/Log$$**,test/jboss/jmx/TestServer**,org/jboss/naming/**"
+    />
+    <mkdir dir="${dist.dir}/external"/>
+    <copyfile src="${build.dir}/client/rmiconnector.jar" dest="${dist.dir}/external/rmiconnector.jar"/>
+  </target>
+
+  <!-- =================================================================== -->
   <!-- Cleans up generated stuff                                           -->
   <!-- =================================================================== -->
   <target name="clean" depends="init">
@@ -325,3 +338,4 @@
     <delete file="${Name}-${version}.tar.gz"/>
   </target>
 </project>
+

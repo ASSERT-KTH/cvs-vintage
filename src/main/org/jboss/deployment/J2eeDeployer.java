@@ -63,7 +63,7 @@ import org.w3c.dom.Element;
 *  (ContainerFactory for JBoss and EmbededTomcatService for Tomcat).
 *
 *   @author <a href="mailto:daniel.schulze@telkel.com">Daniel Schulze</a>
-*   @version $Revision: 1.13 $
+*   @version $Revision: 1.14 $
 */
 public class J2eeDeployer 
 extends ServiceMBeanSupport
@@ -117,7 +117,7 @@ implements J2eeDeployerMBean
    {
       name = name.equals("") ? "" : " "+name;
       this.name = name;
-      this.log = new Log(getName());
+      this.log = Log.createLog(getName());
    }
    
    public String getDeployerName()

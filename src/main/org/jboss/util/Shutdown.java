@@ -19,7 +19,7 @@ import org.jboss.logging.Log;
  *      
  *   @see <related>
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
- *   @version $Revision: 1.1 $
+ *   @version $Revision: 1.2 $
  */
 public class Shutdown
    implements MBeanRegistration, ShutdownMBean
@@ -28,7 +28,7 @@ public class Shutdown
    public static final String OBJECT_NAME = ":type=Shutdown";
     
    // Attributes ----------------------------------------------------
-   Log log = new Log("Shutdown");
+   Log log = Log.createLog("Shutdown");
    
    List mbeans = new ArrayList();
    MBeanServer server;
@@ -100,4 +100,5 @@ public class Shutdown
       }
    }
 }
+
 

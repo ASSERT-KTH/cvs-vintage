@@ -19,7 +19,7 @@ import org.jboss.logging.Log;
  *      
  *   @see <related>
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
- *   @version $Revision: 1.2 $
+ *   @version $Revision: 1.3 $
  */
 public class ServiceControl
    implements ServiceControlMBean, MBeanRegistration, NotificationListener
@@ -28,7 +28,7 @@ public class ServiceControl
    public static final String OBJECT_NAME = ":service=ServiceControl";
     
    // Attributes ----------------------------------------------------
-   Log log = new Log("Service Control");
+   Log log = Log.createLog("Service Control");
    
    List mbeans = new ArrayList();
    MBeanServer server;
@@ -176,4 +176,5 @@ public class ServiceControl
       }
    }
 }
+
 

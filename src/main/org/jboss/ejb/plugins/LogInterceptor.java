@@ -36,7 +36,7 @@ import org.jboss.logging.Logger;
  *      
  *   @see <related>
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
- *   @version $Revision: 1.13 $
+ *   @version $Revision: 1.14 $
  */
 public class LogInterceptor
    extends AbstractInterceptor
@@ -76,7 +76,7 @@ public class LogInterceptor
       // Should we log all calls?
       callLogging = getContainer().getBeanMetaData().getContainerConfiguration().getCallLogging();
         
-      log = new Log(name);
+      log = Log.createLog(name);
    }
    
    public Object invokeHome(MethodInvocation mi)
@@ -247,4 +247,5 @@ public class LogInterceptor
    
    // Private -------------------------------------------------------
 }
+
 

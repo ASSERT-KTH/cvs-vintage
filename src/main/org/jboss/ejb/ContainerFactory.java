@@ -79,7 +79,7 @@ import org.jboss.logging.Logger;
 *   @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
 *   @author Peter Antman (peter.antman@tim.se)
 *
-*   @version $Revision: 1.59 $
+*   @version $Revision: 1.60 $
 */
 public class ContainerFactory
     extends org.jboss.util.ServiceMBeanSupport
@@ -96,7 +96,7 @@ public class ContainerFactory
    File tmpDir;
 
    // The logger of this service
-   Log log = new Log(getName());
+   Log log = Log.createLog(getName());
 
    // A map of current deployments. If a deployment is made and it is already in this map,
    // then undeploy it first (i.e. make it a re-deploy).
@@ -315,7 +315,7 @@ public class ContainerFactory
          cl = new URLClassLoader(urls, Thread.currentThread().getContextClassLoader ()); 
 
          // Check validity
-         Log.setLog(new Log("Verifier"));
+         Log.setLog(Log.createLog("Verifier"));
 
          // wrapping this into a try - catch block to prevent errors in
          // verifier from stopping the deployment

@@ -34,7 +34,7 @@ import org.jboss.logging.Log;
  * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  * @author <a href="mailto:shevlandj@kpi.com.au">Joe Shevland</a>
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
- * @version $Revision: 1.25 $
+ * @version $Revision: 1.26 $
  */
 public class JAWSPersistenceManager
    implements EntityPersistenceStore
@@ -60,7 +60,7 @@ public class JAWSPersistenceManager
    JPMActivateEntityCommand activateEntityCommand;
    JPMPassivateEntityCommand passivateEntityCommand;
 
-   Log log = new Log("JAWS");
+   Log log = Log.createLog("JAWS");
 
    // EntityPersistenceStore implementation -------------------------
 
@@ -178,3 +178,4 @@ public class JAWSPersistenceManager
       public long lastRead = -1;
    }
 }
+

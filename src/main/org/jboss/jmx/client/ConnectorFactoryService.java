@@ -63,6 +63,7 @@ public class ConnectorFactoryService
 		String pProtocol
 //AS		ServerQuery pServerQuery
 	) {
+		System.out.println( "ConnectorFactoryService.getServers(), protocol: " + pProtocol );
 		return mFactory.getServers( pProtocol );
 	}
 	
@@ -135,15 +136,17 @@ public class ConnectorFactoryService
 	}
 	
 	protected void startService() throws Exception {
-		new InitialContext().bind( JNDI_NAME, mFactory );
+//AS		new InitialContext().bind( JNDI_NAME, mFactory );
 	}
 	
 	protected void stopService() {
+/* AS
 		try {
 			new InitialContext().unbind(JNDI_NAME);
 		}
 		catch( Exception e )	{
 			log.exception( e );
 		}
+*/
 	}
 }

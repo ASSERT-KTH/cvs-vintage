@@ -20,7 +20,7 @@ import org.jboss.util.ServiceMBeanSupport;
  *      
  *   @see <related>
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
- *   @version $Revision: 1.8 $
+ *   @version $Revision: 1.9 $
  */
 public class ClassPathExtension
    implements ClassPathExtensionMBean, MBeanRegistration
@@ -32,7 +32,7 @@ public class ClassPathExtension
    String url;
    String name;
    
-   Log log = new Log("Classpath extension");
+   Log log = Log.createLog("Classpath extension");
    
    // Static --------------------------------------------------------
 
@@ -166,3 +166,4 @@ public class ClassPathExtension
       
    }
 }
+

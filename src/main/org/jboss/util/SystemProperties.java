@@ -19,7 +19,7 @@ import org.jboss.logging.Log;
  *      
  *   @see <related>
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
- *   @version $Revision: 1.2 $
+ *   @version $Revision: 1.3 $
  */
 public class SystemProperties
    implements SystemPropertiesMBean, MBeanRegistration
@@ -29,7 +29,7 @@ public class SystemProperties
     
    // Attributes ----------------------------------------------------
    
-   Log log = new Log("System properties");
+   Log log = Log.createLog("System properties");
    
    // Static --------------------------------------------------------
 
@@ -69,3 +69,4 @@ public class SystemProperties
    }
    // Protected -----------------------------------------------------
 }
+

@@ -13,13 +13,14 @@ import javax.management.*;
 import javax.management.loading.MLet;
 
 import org.jboss.logging.Log;
+import org.jboss.logging.DefaultLog;
 
 /**
  *   <description> 
  *      
  *   @see <related>
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
- *   @version $Revision: 1.2 $
+ *   @version $Revision: 1.3 $
  */
 public class Executor
    implements ExecutorMBean, MBeanRegistration
@@ -30,7 +31,7 @@ public class Executor
    // Attributes ----------------------------------------------------
    String exec;
    
-   Log log = new Log("Executor");
+    Log log = Log.createLog("Executor");
    
    // Static --------------------------------------------------------
 
@@ -73,4 +74,5 @@ public class Executor
    }
    // Protected -----------------------------------------------------
 }
+
 

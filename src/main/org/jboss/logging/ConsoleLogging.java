@@ -21,7 +21,7 @@ import org.jboss.util.ServiceMBeanSupport;
  *      
  *   @see <related>
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
- *   @version $Revision: 1.6 $
+ *   @version $Revision: 1.7 $
  */
 public class ConsoleLogging
    implements ConsoleLoggingMBean, NotificationListener, MBeanRegistration
@@ -35,7 +35,7 @@ public class ConsoleLogging
    
    boolean verbose = false;
    
-   Log log = new Log("Console logging");
+   Log log = new DefaultLog("Console logging");
    
    String filter = "Information,Debug,Warning,Error";
    

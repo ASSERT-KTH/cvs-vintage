@@ -17,9 +17,9 @@ import javax.management.*;
  *      
  *   @see <related>
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
- *   @version $Revision: 1.5 $
+ *   @version $Revision: 1.6 $
  */
-public class Log
+public abstract class Log
 {
    // Constants -----------------------------------------------------
     
@@ -44,8 +44,8 @@ public class Log
 				return null;
    		}
    };
-   
-   static Log defaultLog = new Log();
+	 
+	 protected static Log defaultLog;
    
    public static void setLog(Log log)
    {
@@ -77,6 +77,20 @@ public class Log
       Stack s = (Stack)currentLog.get();
       return s == null ? defaultLog : (Log)s.peek();
    }
+	 
+	 public static Log createLog( Object pSource ) {
+		 Log lReturn;
+		try {
+			Class lLog = Class.forName( "org.jboss.logging.DefaultLog" );
+			lReturn = (Log) lLog.getConstructor( new Class[] { Object.class } ).newInstance(
+			new Object[] { pSource }
+			);
+		}
+		catch( Exception e ) {
+			lReturn = new Log.NoLog( pSource );
+		}
+		return lReturn;
+	 }
    
    // Constructors --------------------------------------------------
    public Log()
@@ -90,10 +104,7 @@ public class Log
    }
    
    // Public --------------------------------------------------------
-   public synchronized void log(String type, String message)
-   {
-      Logger.getLogger().fireNotification(type, source, message);
-   }
+   public abstract void log(String type, String message);
    
    public synchronized void log(String message)
    {
@@ -154,5 +165,19 @@ public class Log
    {
       return count++;
    }
+	 
+	 public static class NoLog extends Log {
+		 public NoLog() {
+			 super();
+		 }
+		 public NoLog( Object pSource ) {
+			 super( pSource );
+		 }
+		 public Log getDefault() {
+			 return new NoLog();
+		 }
+		 public synchronized void log( String pType, String pMessage ) {
+		 }
+	 }
 }
 

@@ -20,7 +20,7 @@ import org.jboss.logging.Log;
  *      
  *   @see <related>
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
- *   @version $Revision: 1.8 $
+ *   @version $Revision: 1.9 $
  */
 public abstract class ServiceMBeanSupport
    extends NotificationBroadcasterSupport
@@ -57,8 +57,9 @@ public abstract class ServiceMBeanSupport
 	public void init()
 		throws Exception
 	{
-	   log = new Log(getName());
    
+	 log = Log.createLog( getName() );
+	 
 		log.log("Initializing");
 		log.setLog(log);
 		try

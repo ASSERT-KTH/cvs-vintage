@@ -18,7 +18,7 @@ import javax.swing.table.*;
  *
  *   @see <related>
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
- *   @version $Revision: 1.4 $
+ *   @version $Revision: 1.5 $
  */
 public class ViewerLogging
    implements ViewerLoggingMBean, MBeanRegistration, NotificationListener
@@ -29,7 +29,7 @@ public class ViewerLogging
    PrintStream out;
    DateFormat fmt = new SimpleDateFormat();
 
-   Log log = new Log("Viewer logging");
+   Log log = new DefaultLog("Viewer logging");
 
    DefaultTableModel tableModel;
 
@@ -113,4 +113,5 @@ public class ViewerLogging
 
    public void postDeregister() {}
 }
+
 

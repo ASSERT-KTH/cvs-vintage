@@ -9,6 +9,7 @@ import java.util.Collection;
 import java.util.Iterator;
 
 import javax.management.MBeanAttributeInfo;
+import javax.management.MBeanException;
 import javax.management.MBeanInfo;
 import javax.management.MBeanOperationInfo;
 import javax.management.MBeanServer;
@@ -62,15 +63,23 @@ public class TestClient {
 			);
 			// First create a MBeanServer and let it start
 			final MBeanServer lLocalServer = MBeanServerFactory.createMBeanServer();
-			// Then register the logger
-			lLocalServer.createMBean(
-				"org.jboss.logging.Logger",
-				new ObjectName( "DefaultDomain :name=Logger" )
-			);
 			// Then register the connector factory
 			final ObjectInstance lFactoryInstance = lLocalServer.createMBean(
 				"org.jboss.jmx.client.ConnectorFactoryService",
-				new ObjectName( "DefaultDomain:name=ConnectorFactory" )
+				new ObjectName( lLocalServer.getDefaultDomain(), "name", "ConnectorFactory" )
+			);
+			System.out.println( "Found Factory: " + lFactoryInstance.getObjectName() );
+			lLocalServer.invoke(
+				lFactoryInstance.getObjectName(),
+				"init",
+				new Object[] {},
+				new String[] {}
+			);
+			lLocalServer.invoke(
+				lFactoryInstance.getObjectName(),
+				"start",
+				new Object[] {},
+				new String[] {}
 			);
 			getUserInput(
 				"\n" +
@@ -81,7 +90,7 @@ public class TestClient {
 			Collection lServers = (Collection) lLocalServer.invoke(
 				lFactoryInstance.getObjectName(),
 				"getServers",
-				new String[] {
+				new Object[] {
 					null
 				},
 				new String[] {
@@ -223,6 +232,11 @@ public class TestClient {
 			System.err.println( "TestClient.main(), caught: " + rme +
 				", target: " + rme.getTargetException() );
 			rme.printStackTrace();
+		}
+		catch( MBeanException me ) {
+			System.err.println( "TestClient.main(), caught: " + me +
+				", target: " + me.getTargetException() );
+			me.printStackTrace();
 		}
 		catch( RuntimeErrorException rte ) {
 			System.err.println( "TestClient.main(), caught: " + rte +

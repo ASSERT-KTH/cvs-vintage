@@ -19,7 +19,7 @@ import org.jboss.logging.Log;
  *      
  *   @see <related>
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
- *   @version $Revision: 1.3 $
+ *   @version $Revision: 1.4 $
  */
 public class Info
    implements InfoMBean, MBeanRegistration
@@ -29,7 +29,7 @@ public class Info
     
    // Attributes ----------------------------------------------------
    
-   Log log = new Log("Info");
+   Log log = Log.createLog("Info");
    
    // Static --------------------------------------------------------
 
@@ -61,4 +61,5 @@ public class Info
    }
    // Protected -----------------------------------------------------
 }
+
 
