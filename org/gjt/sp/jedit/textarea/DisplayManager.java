@@ -35,7 +35,7 @@ import org.gjt.sp.util.Log;
  * Manages low-level text display tasks.
  * @since jEdit 4.2pre1
  * @author Slava Pestov
- * @version $Id: DisplayManager.java,v 1.119 2005/03/09 23:46:08 spestov Exp $
+ * @version $Id: DisplayManager.java,v 1.120 2005/03/22 00:33:59 spestov Exp $
  */
 public class DisplayManager
 {
@@ -495,8 +495,6 @@ public class DisplayManager
 			&& !isLineVisible(start + 1))
 			expandFold(start,false);
 
-		// Hack... need a more direct way of obtaining a view?
-		// JEditTextArea.getView() method?
 		textArea.fireNarrowActive();
 
 		notifyScreenLineChanges();

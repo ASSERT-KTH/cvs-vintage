@@ -56,7 +56,7 @@ import org.gjt.sp.util.Log;
  * @see View#getEditPanes()
  *
  * @author Slava Pestov
- * @version $Id: EditPane.java,v 1.57 2005/03/09 23:46:07 spestov Exp $
+ * @version $Id: EditPane.java,v 1.58 2005/03/22 00:33:58 spestov Exp $
  */
 public class EditPane extends JPanel implements EBComponent
 {
@@ -256,9 +256,10 @@ public class EditPane extends JPanel implements EBComponent
 		buffer.setIntegerProperty(Buffer.CARET,
 			textArea.getCaretPosition());
 
-		/*Selection[] selection = textArea.getSelection();
-		if(selection != null)
-			buffer.setProperty(Buffer.SELECTION,selection);*/
+		Selection[] selection = textArea.getSelection();
+		for(int i = 0; i < selection.length; i++)
+			selection[i] = (Selection)selection[i].clone();
+		buffer.setProperty(Buffer.SELECTION,selection);
 
 		buffer.setIntegerProperty(Buffer.SCROLL_VERT,
 			textArea.getFirstPhysicalLine());
@@ -274,10 +275,6 @@ public class EditPane extends JPanel implements EBComponent
 	public void loadCaretInfo()
 	{
 		Integer caret = (Integer)buffer.getProperty(Buffer.CARET);
-		//Selection[] selection = (Selection[])buffer.getProperty(Buffer.SELECTION);
-
-		Integer firstLine = (Integer)buffer.getProperty(Buffer.SCROLL_VERT);
-		Integer horizontalOffset = (Integer)buffer.getProperty(Buffer.SCROLL_HORIZ);
 
 		if(caret != null)
 		{
@@ -285,12 +282,25 @@ public class EditPane extends JPanel implements EBComponent
 				buffer.getLength()));
 		}
 
-		/*if(selection != null)
-			textArea.setSelection(selection);*/
+		Selection[] selection = (Selection[])buffer.getProperty(Buffer.SELECTION);
+		if(selection != null)
+		{
+			for(int i = 0; i < selection.length; i++)
+			{
+				Selection s = selection[i];
+				int max = buffer.getLength();
+				if(s.getStart() > max || s.getEnd() > max)
+					selection[i] = null;
+			}
 
+			textArea.setSelection(selection);
+		}
+
+		Integer firstLine = (Integer)buffer.getProperty(Buffer.SCROLL_VERT);
 		if(firstLine != null)
 			textArea.setFirstPhysicalLine(firstLine.intValue());
 
+		Integer horizontalOffset = (Integer)buffer.getProperty(Buffer.SCROLL_HORIZ);
 		if(horizontalOffset != null)
 			textArea.setHorizontalOffset(horizontalOffset.intValue());
 

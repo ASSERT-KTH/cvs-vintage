@@ -64,7 +64,7 @@ import org.gjt.sp.util.Log;
  *
  * @author Slava Pestov
  * @author John Gellene (API documentation)
- * @version $Id: JEditTextArea.java,v 1.351 2005/03/21 23:55:49 spestov Exp $
+ * @version $Id: JEditTextArea.java,v 1.352 2005/03/22 00:33:59 spestov Exp $
  */
 public class JEditTextArea extends JComponent
 {
@@ -1603,7 +1603,7 @@ forward_scan:		do
 	//{{{ setSelection() method
 	/**
 	 * Sets the selection. Nested and overlapping selections are merged
-	 * where possible.
+	 * where possible. Null elements of the array are ignored.
 	 * @param selection The new selection
 	 * since jEdit 3.2pre1
 	 */

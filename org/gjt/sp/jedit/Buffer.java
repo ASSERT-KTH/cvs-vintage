@@ -68,7 +68,7 @@ import org.gjt.sp.util.*;
  * </ul>
  *
  * @author Slava Pestov
- * @version $Id: Buffer.java,v 1.229 2005/02/21 07:52:15 spestov Exp $
+ * @version $Id: Buffer.java,v 1.230 2005/03/22 00:33:57 spestov Exp $
  */
 public class Buffer
 {
@@ -89,6 +89,10 @@ public class Buffer
 	 * @since jEdit 3.2pre1
 	 */
 	public static final String CARET = "Buffer__caret";
+	
+	/**
+	 * Stores a List of {@link Selection} instances.
+	 */
 	public static final String SELECTION = "Buffer__selection";
 
 	/**
