@@ -1,7 +1,8 @@
-#set ($action = $link.setPage("SaveQuery.vm").setAction("SaveQuery").addPathInfo("nextTemplate", "IssueList.vm"))
+#set ($action = $link.setPage("SaveQuery.vm").setAction("SaveQuery").addPathInfo("nextTemplate", "QueryList.vm"))
 #set ($query = $scarabR.Query)
 #set ($queryGroup = $intake.Query.mapTo($query)) 
 #set ($user = $data.User)
+#set ($queryString = $data.Parameters.getString("queryString"))
 
       <h2>Save Query</h2>
 
@@ -34,16 +35,8 @@
         <tr>
          <th width="120">Availability:</th>
 
-         <td><select name="$queryGroup.TypeId.Key">
-          <option value = "1">
-           personal profile
-          </option>
-
-          <option value = "2">
-           project X users
-          </option>
-
-         </select></td>
+         <td>#queryTypeSelectBox ($query)
+         </td>
         
         </tr>
 
@@ -62,7 +55,7 @@
 $intake.declareGroups()
 
 #else
-  <p class="alert">No query to save. Please <a href="Search.vm">enter a query.</a>
+  <p class="alert">No query to save. Please <a href="AdvancedQuery.vm">enter a query.</a>
 #end
 
 
