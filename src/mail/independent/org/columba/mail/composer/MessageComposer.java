@@ -32,6 +32,7 @@ import org.columba.mail.config.IdentityItem;
 import org.columba.mail.gui.composer.ComposerModel;
 import org.columba.mail.message.PgpMimePart;
 import org.columba.mail.message.SendableHeader;
+import org.columba.mail.parser.text.HtmlParser;
 import org.columba.ristretto.composer.MimeTreeRenderer;
 import org.columba.ristretto.message.LocalMimePart;
 import org.columba.ristretto.message.MessageIDGenerator;
@@ -217,7 +218,153 @@ public class MessageComposer {
 	
 		}
 	*/
+	
+	/**
+	 * Composes a multipart/alternative mime part for the body of a message
+	 * containing a text part and a html part.
+	 * <br>
+	 * This is to be used for sending html messages, when an alternative
+	 * text part - to be read by users not able to read html - is required.
+	 * <br>
+	 * Pre-condition: It is assumed that the model contains a message
+	 * in html format.
+	 *  
+	 * @return	The composed mime part for the message body
+	 * @author	Karl Peder Olesen (karlpeder)
+	 */
+	private StreamableMimePart composeMultipartAlternativeMimePart() {
 
+		// compose text part
+		StreamableMimePart textPart = composeTextMimePart();
+				 
+		// compose html part
+		StreamableMimePart htmlPart = composeHtmlMimePart();
+		
+		// merge mimeparts and return
+		LocalMimePart bodyPart = 
+			new LocalMimePart(new MimeHeader("multipart", "alternative"));
+		bodyPart.addChild(textPart);
+		bodyPart.addChild(htmlPart);
+		
+		return bodyPart;		
+		
+	}
+
+	/**
+	 * Composes a text/html mime part from the body contained in
+	 * the composer model. This could be for a pure html message or
+	 * for the html part of a multipart/alternative.
+	 * <br>
+	 * If a signature is defined, it is added to the body.
+	 * <br>
+	 * Pre-condition: It is assumed that the model contains
+	 * a html message.
+	 * 
+	 * @return	The composed text/html mime part
+	 * @author	Karl Peder Olesen (karlpeder)
+	 */
+	private StreamableMimePart composeHtmlMimePart() {
+		LocalMimePart bodyPart =
+			new LocalMimePart(new MimeHeader("text", "html"));
+		// Init Mime-Header with Default-Values (text/html)	
+
+		// Set Default Charset or selected		
+		String charsetName = model.getCharsetName();
+		bodyPart.getHeader().putContentParameter("charset", charsetName);
+
+		StringBuffer buf = new StringBuffer();
+		String body  = model.getBodyText();
+		String lcase = body.toLowerCase();	// for text comparisons
+		
+		// insert document type decl.
+		if (lcase.indexOf("<!doctype") == -1) {
+			
+			// TODO: Is 3.2 the proper version of html to refer to? 
+			
+			buf.append("<!DOCTYPE HTML PUBLIC " + 
+					"\"-//W3C//DTD HTML 3.2//EN\">\r\n");
+			
+		}
+		
+		// insert head section with charset def.
+		String meta = "<meta " + 
+				"http-equiv=\"Content-Type\" " + 
+				"content=\"text/html; charset=" + charsetName + "\">";
+		int pos = lcase.indexOf("<head");
+		int bodyStart;
+		if (pos == -1) {
+			// add <head> section
+			pos = lcase.indexOf("<html") + 6;
+			buf.append(body.substring(0, pos));
+			buf.append("<head>");
+			buf.append(meta);
+			buf.append("</head>");
+			
+			bodyStart = pos;
+			
+		} else {
+			// replace <head> section
+			pos = lcase.indexOf('>', pos) + 1;
+			buf.append(body.substring(0, pos));
+			buf.append(meta);
+
+			// TODO: If existing meta tags are to be kept, code changes are necessary
+
+			bodyStart = lcase.indexOf("</head");
+			
+		}
+		
+		// add rest of body until start of </body>
+		int bodyEnd = lcase.indexOf("</body");
+		buf.append(body.substring(bodyStart, bodyEnd));
+		
+		// add signature if defined
+		AccountItem item = model.getAccountItem();
+		IdentityItem identity = item.getIdentityItem();
+		boolean appendSignature = identity.getBoolean("attach_signature");
+
+		if (appendSignature == true) {
+			String signature = getSignature(identity);
+
+			if (signature != null) {
+				buf.append("\r\n\r\n");
+				
+				// TODO: Should we take some action to ensure signature is valid html?
+				
+				buf.append(signature);
+			}
+		}
+		
+		// add the rest of the original body - and transfer back to body var.
+		buf.append(body.substring(bodyEnd));
+		body = buf.toString();
+
+		// add encoding if necessary
+		if (needQPEncoding(body))
+			bodyPart.getHeader().setContentTransferEncoding("quoted-printable");
+
+		// to allow empty messages
+		if (body.length() == 0) {
+			body = " ";
+		}
+
+		bodyPart.setBody(new CharSequenceSource(body));
+
+		return bodyPart;
+	}
+
+	/**
+	 * Composes a text/plain mime part from the body contained in
+	 * the composer model. This could be for a pure text message or
+	 * for the text part of a multipart/alternative.
+	 * <br>
+	 * If the model contains a html message, tags are stripped to 
+	 * get plain text.
+	 * <br>
+	 * If a signature is defined, it is added to the body.
+	 * 
+	 * @return	The composed text/plain mime part
+	 */
 	private StreamableMimePart composeTextMimePart() {
 		LocalMimePart bodyPart =
 			new LocalMimePart(new MimeHeader("text", "plain"));
@@ -228,6 +375,15 @@ public class MessageComposer {
 		bodyPart.getHeader().putContentParameter("charset", charsetName);
 
 		String body = model.getBodyText();
+		
+		/*
+		 * *20030918, karlpeder* Tags are stripped if the model
+		 * contains a html message (since we are composing
+		 * a plain text message here.
+		 */
+		if (model.isHtml()) {
+			body = HtmlParser.htmlToText(body);
+		}
 
 		AccountItem item = model.getAccountItem();
 		IdentityItem identity = item.getIdentityItem();
@@ -270,7 +426,19 @@ public class MessageComposer {
 
 		List mimeParts = model.getAttachments();
 
-		StreamableMimePart body = composeTextMimePart();
+		// *20030919, karlpeder* Added handling of html messages
+		StreamableMimePart body;
+		if (model.isHtml()) {
+			// compose message body as multipart/alternative
+			
+			// TODO: Add option to chose btw. multipart/alternative and text/html
+			
+			body = composeMultipartAlternativeMimePart();
+		} else {
+			// compose message body as text/plain
+			body = composeTextMimePart();
+		}
+ 
 		if (body != null)
 			mimeParts.add(0, body);
 
