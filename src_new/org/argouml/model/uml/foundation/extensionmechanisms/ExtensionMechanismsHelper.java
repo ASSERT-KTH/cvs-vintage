@@ -1,4 +1,4 @@
-// $Id: ExtensionMechanismsHelper.java,v 1.24 2003/10/03 23:41:25 d00mst Exp $
+// $Id: ExtensionMechanismsHelper.java,v 1.25 2003/10/04 23:13:16 d00mst Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -232,12 +232,14 @@ public class ExtensionMechanismsHelper {
      * @param stereo
      */
     public void setStereoType(Object modelElement, Object stereotype) {
+	if (stereotype != null)
+	    stereotype = ModelManagementHelper.getHelper().getCorrespondingElement(
+				stereotype,
+				ModelFacade.getModel(modelElement),
+				true);
         ModelFacade.setStereotype(
 		modelElement,
-		ModelManagementHelper.getHelper().getCorrespondingElement(
-			stereotype,
-			ModelFacade.getModel(modelElement),
-			true));
+		stereotype);
     }
 
     /**
