@@ -86,6 +86,11 @@
         </copy>
         <filter token="SCARAB_CONTEXT" value="${scarab.context}"/>
         <filter token="DATABASE_NAME" value="${scarab.database.name}"/>
+        <filter token="SESSION_VALIDATOR" value="${scarab.sessionvalidator}"/>
+        <filter token="USER_SERVICE" value="${scarab.user.service}"/>
+        <filter token="MODULE_SERVICE" value="${scarab.module.service}"/>
+        <filter token="EXTRA_TR_PROPERTIES" 
+            value="${scarab.extra.tr.properties}"/>
         <copy todir="${build.dir}/conf" filtering="yes">
             <fileset dir="${tomcat.dist.dir}/conf"/>
         </copy>
