@@ -19,6 +19,7 @@
 
 package org.columba.mail.gui.composer.html;
 
+import org.columba.core.charset.*;
 import org.columba.core.main.MainInterface;
 import org.columba.core.gui.util.FontProperties;
 import org.columba.core.logging.ColumbaLogger;
@@ -34,6 +35,8 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
 import java.io.IOException;
+
+import java.nio.charset.Charset;
 
 import java.util.ArrayList;
 import java.util.Enumeration;
@@ -56,7 +59,9 @@ import javax.swing.text.html.HTML;
  *
  * @author Karl Peder Olesen (karlpeder)
  */
-public class HtmlEditorView extends JTextPane implements KeyListener, Observer {
+public class HtmlEditorView extends JTextPane
+    implements KeyListener, Observer, CharsetListener {
+    
     /** Reference to the controller of this view */
     private HtmlEditorController controller;
 
@@ -155,8 +160,12 @@ public class HtmlEditorView extends JTextPane implements KeyListener, Observer {
     }
 
     /** Sets the charset to use */
-    public void setCharset(String charset) {
-        setContentType("text/html; charset=\"" + charset + "\"");
+    public void charsetChanged(CharsetEvent e) {
+        Charset charset = e.getCharset();
+        if (charset == null) {
+            charset = Charset.forName(System.getProperty("file.encoding"));
+        }
+        setContentType("text/html; charset=\"" + charset.name() + "\"");
     }
 
     // ***************** Methods for formatting and editing ******

@@ -53,6 +53,7 @@ public class ForwardCommand extends FolderCommand {
     public void updateGUI() throws Exception {
         // open composer frame
         controller = new ComposerController();
+        controller.openView();
 
         // apply model
         controller.setComposerModel(model);

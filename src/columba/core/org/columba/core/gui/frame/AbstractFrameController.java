@@ -97,15 +97,6 @@ public abstract class AbstractFrameController implements FrameMediator {
 
         // init selection handler
         selectionManager = new SelectionManager();
-
-        // initialize the view here
-        init();
-
-        // initialize all actions
-        initActions();
-
-        // create view
-        view = createView();
     }
 
     /**
@@ -214,6 +205,8 @@ public abstract class AbstractFrameController implements FrameMediator {
      *
      */
     public void openView() {
+        AbstractFrameView view = getView();
+        
         view.loadWindowPosition();
 
         view.setVisible(true);
@@ -262,11 +255,21 @@ public abstract class AbstractFrameController implements FrameMediator {
      * @return FrameView
      */
     public AbstractFrameView getView() {
+        if (view == null) {
+            // initialize the view here
+            init();
+
+            // initialize all actions
+            initActions();
+
+            // create view
+            view = createView();
+        }
         return view;
     }
 
     public Menu getMenu() {
-        return view.getMenu();
+        return getView().getMenu();
     }
 
     /**

@@ -15,10 +15,13 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003.
 //
 //All Rights Reserved.
+
 package org.columba.mail.gui.composer.command;
 
 import java.io.IOException;
 import java.io.InputStream;
+
+import java.nio.charset.Charset;
 
 import org.columba.core.command.DefaultCommandReference;
 import org.columba.core.command.Worker;
@@ -74,6 +77,7 @@ public class ReplyCommand extends FolderCommand {
     public void updateGUI() throws Exception {
         // open composer frame
         controller = new ComposerController();
+        controller.openView();
 
         // apply model
         controller.setComposerModel(model);
@@ -136,7 +140,7 @@ public class ReplyCommand extends FolderCommand {
         // Select the charset of the original message
         String charset = bodyHeader.getContentParameter("charset");
         if (charset != null) {
-            model.setCharsetName(charset);
+            model.setCharset(Charset.forName(charset));
         }
     }
 

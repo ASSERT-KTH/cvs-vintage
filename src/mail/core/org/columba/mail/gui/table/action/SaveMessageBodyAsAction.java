@@ -13,6 +13,7 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
+
 package org.columba.mail.gui.table.action;
 
 import org.columba.core.action.AbstractColumbaAction;
@@ -32,6 +33,7 @@ import org.columba.mail.util.MailResourceLoader;
 
 import java.awt.event.ActionEvent;
 
+import java.nio.charset.Charset;
 
 /**
  * @author frd
@@ -67,10 +69,7 @@ public class SaveMessageBodyAsAction extends AbstractColumbaAction
         FolderCommandReference[] r = ((AbstractMailFrameController) getFrameMediator()).getTableSelection();
 
         // get active charset - necessary to decode msg for saving
-        String charset = ((CharsetOwnerInterface) getFrameMediator()).getCharsetManager()
-                          .getSelectedCharset();
-
-        // add command for execution
+        Charset charset = ((CharsetOwnerInterface) getFrameMediator()).getCharset();
         SaveMessageBodyAsCommand c = new SaveMessageBodyAsCommand(r, charset);
         MainInterface.processor.addOp(c);
     }

@@ -106,6 +106,7 @@ public class URLController implements ActionListener {
         model.setHtml(Boolean.valueOf(enableHtml).booleanValue());
 
         ComposerController controller = new ComposerController();
+        controller.openView();
         controller.setComposerModel(model);
     }
 

@@ -107,6 +107,7 @@ public class CmdLineArgumentHandler {
             }
 
             ComposerController c = new ComposerController();
+            c.openView();
             c.setComposerModel(model);
         }
     }

@@ -13,8 +13,10 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.undation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+
 package org.columba.mail.gui.composer.text;
 
+import org.columba.core.charset.*;
 import org.columba.core.main.MainInterface;
 import org.columba.core.gui.util.FontProperties;
 import org.columba.core.xml.XmlElement;
@@ -24,11 +26,12 @@ import org.columba.mail.gui.composer.util.UndoDocument;
 import java.awt.Dimension;
 import java.awt.Font;
 
+import java.nio.charset.Charset;
+
 import java.util.Observable;
 import java.util.Observer;
 
 import javax.swing.JTextPane;
-
 
 /**
  * @author frd
@@ -38,7 +41,7 @@ import javax.swing.JTextPane;
  * To enable and disable the creation of type comments go to
  * Window>Preferences>Java>Code Generation.
  */
-public class TextEditorView extends JTextPane implements Observer {
+public class TextEditorView extends JTextPane implements Observer, CharsetListener {
     private TextEditorController controller;
     private UndoDocument message;
 
@@ -46,6 +49,7 @@ public class TextEditorView extends JTextPane implements Observer {
         super();
 
         this.controller = controller;
+        controller.getController().addCharsetListener(this);
 
         message = m;
 
@@ -73,10 +77,6 @@ public class TextEditorView extends JTextPane implements Observer {
         message.addDocumentListener(controller);
     }
 
-    public void setCharset(String charset) {
-        setContentType("text/plain; charset=\"" + charset + "\"");
-    }
-
     /**
      *
      * @see org.columba.mail.gui.config.general.MailOptionsDialog
@@ -86,5 +86,13 @@ public class TextEditorView extends JTextPane implements Observer {
     public void update(Observable arg0, Object arg1) {
         Font font = FontProperties.getTextFont();
         setFont(font);
+    }
+    
+    public void charsetChanged(CharsetEvent e) {
+        Charset charset = e.getCharset();
+        if (charset == null) {
+            charset = Charset.forName(System.getProperty("file.encoding"));
+        }
+        setContentType("text/plain; charset=\"" + charset.name() + "\"");
     }
 }

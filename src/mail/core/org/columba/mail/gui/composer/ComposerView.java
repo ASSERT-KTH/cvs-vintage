@@ -229,13 +229,6 @@ public class ComposerView extends AbstractFrameView {
 			controller);
 	}
 
-	/* (non-Javadoc)
-	 * @see org.columba.core.gui.frame.FrameView#loadWindowPosition()
-	 */
-	public void loadWindowPosition() {
-		super.loadWindowPosition();
-	}
-
 	public IdentityInfoPanel getAccountInfoPanel() {
 		ComposerController controller= (ComposerController) frameController;
 

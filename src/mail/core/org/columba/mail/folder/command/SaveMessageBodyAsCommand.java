@@ -79,7 +79,7 @@ public class SaveMessageBodyAsCommand extends FolderCommand {
     //System.getProperty("line.separator");
 
     /** The charset to use for decoding messages before save */
-    private String charset;
+    private Charset charset;
 
     /**
 	 * Constructor for SaveMessageBodyAsCommand. Calls super constructor and
@@ -91,7 +91,7 @@ public class SaveMessageBodyAsCommand extends FolderCommand {
 	 */
     public SaveMessageBodyAsCommand(
         DefaultCommandReference[] references,
-        String charset) {
+        Charset charset) {
         super(references);
         this.charset = charset;
     }
@@ -411,17 +411,7 @@ public class SaveMessageBodyAsCommand extends FolderCommand {
 	 */
     private String getDecodedMessageBody(StreamableMimePart bodyPart)
         throws IOException {
-        // First determine which charset to use
-        String charsetToUse;
-
-        if (charset.equals("auto")) {
-            // get charset from message
-            charsetToUse = bodyPart.getHeader().getContentParameter("charset");
-        } else {
-            // use default charset
-            charsetToUse = charset;
-        }
-
+        
         MimeHeader header = bodyPart.getHeader();
 
         // Decode message according to charset
@@ -443,13 +433,15 @@ public class SaveMessageBodyAsCommand extends FolderCommand {
                 }
         }
 
-        Charset charset;
-
-        try {
-            charset = Charset.forName(charsetToUse);
-        } catch (UnsupportedCharsetException ex) {
-            // decode using default charset
-            charset = Charset.forName(System.getProperty("file.encoding"));
+        // First determine which charset to use
+        if (charset == null) {
+            try {
+                // get charset from message
+                charset = Charset.forName(bodyPart.getHeader().getContentParameter("charset"));
+            } catch (UnsupportedCharsetException ex) {
+                // decode using default charset
+                charset = Charset.forName(System.getProperty("file.encoding"));
+            }
         }
 
         bodyStream = new CharsetDecoderInputStream(bodyStream, charset);

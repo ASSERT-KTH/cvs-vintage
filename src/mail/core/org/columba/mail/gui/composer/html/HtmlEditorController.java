@@ -403,13 +403,6 @@ public class HtmlEditorController extends AbstractEditorController
     }
 
     /* (non-Javadoc)
-     * @see org.columba.mail.gui.composer.AbstractEditorController#setViewCharset(java.lang.String)
-     */
-    public void setViewCharset(String charset) {
-        view.setCharset(charset);
-    }
-
-    /* (non-Javadoc)
      * @see org.columba.mail.gui.composer.AbstractEditorController#setViewEnabled(boolean)
      */
     public void setViewEnabled(boolean enabled) {

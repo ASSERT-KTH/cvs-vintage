@@ -92,7 +92,7 @@ public class PrintMessageCommand extends FolderCommand {
     private String[] headerKeys = { "From", "To", "Date", "Subject" };
     private String dateHeaderKey = "Date";	// the header key for date field
     private String attHeaderKey = "attachment";
-    private String charset;
+    private Charset charset;
 
     /**
 	 * Constructor for PrintMessageCommdn.
@@ -102,7 +102,7 @@ public class PrintMessageCommand extends FolderCommand {
 	 */
     public PrintMessageCommand(
         DefaultCommandReference[] references,
-        String charset) {
+        Charset charset) {
         super(references);
         this.charset = charset;
 
@@ -463,17 +463,7 @@ public class PrintMessageCommand extends FolderCommand {
 	 */
     private String getDecodedMessageBody(StreamableMimePart bodyPart)
         throws IOException {
-        // First determine which charset to use
-        String charsetToUse;
-
-        if (charset.equals("auto")) {
-            // get charset from message
-            charsetToUse = bodyPart.getHeader().getContentParameter("charset");
-        } else {
-            // use default charset
-            charsetToUse = charset;
-        }
-
+        
         MimeHeader header = bodyPart.getHeader();
 
         // Decode message according to charset
@@ -495,27 +485,22 @@ public class PrintMessageCommand extends FolderCommand {
                 }
         }
 
-        // charset may be null if not specified properly in Content-Type header
-        if (charsetToUse != null) {
-            Charset charset;
-
+        // First determine which charset to use
+        if (charset == null) {
+            // get charset from message
             try {
-                charset = Charset.forName(charsetToUse);
+                charset = Charset.forName(bodyPart.getHeader().getContentParameter("charset"));
             } catch (UnsupportedCharsetException ex) {
                 // decode using default charset
                 ColumbaLogger.log.severe("The charset " + 
-                		charsetToUse + 
+                		ex.getCharsetName() +
 						" is not supported. " + 
 						"System default encoding will be used.");
                 charset = Charset.forName(System.getProperty("file.encoding"));
             }
-
-            bodyStream = new CharsetDecoderInputStream(bodyStream, charset);
-        } else {
-            ColumbaLogger.log.info(
-                "No charset specified " + "- no decoding will be performed");
         }
 
+        bodyStream = new CharsetDecoderInputStream(bodyStream, charset);
         return StreamUtils.readInString(bodyStream).toString();
     }
 }

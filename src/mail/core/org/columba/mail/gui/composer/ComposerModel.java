@@ -13,7 +13,10 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
+
 package org.columba.mail.gui.composer;
+
+import java.nio.charset.Charset;
 
 import java.util.Iterator;
 import java.util.List;
@@ -41,7 +44,7 @@ public class ComposerModel {
     ColumbaMessage message;
     AccountItem accountItem;
     String bodytext;
-    String charsetName;
+    Charset charset;
     List attachments;
     List toList;
     List ccList;
@@ -89,10 +92,9 @@ public class ComposerModel {
     public ComposerModel(ColumbaMessage message, boolean html) {
         // set message
         if (message == null) {
-            this.message = new ColumbaMessage();
-        } else {
-            this.message = message;
+            message = new ColumbaMessage();
         }
+        this.message = message;
 
         // set whether the model should handle html or plain text
         isHtmlMessage = html;
@@ -102,7 +104,6 @@ public class ComposerModel {
         ccList = new Vector();
         bccList = new Vector();
         attachments = new Vector();
-        charsetName = "auto";
     }
 
     public void setTo(Address[] a) {
@@ -268,20 +269,20 @@ public class ComposerModel {
      * Returns the charsetName.
      * @return String
      */
-    public String getCharsetName() {
-        if (charsetName.equals("auto")) {
-            charsetName = System.getProperty("file.encoding");
+    public Charset getCharset() {
+        if (charset == null) {
+            charset = Charset.forName(System.getProperty("file.encoding"));
         }
 
-        return charsetName;
+        return charset;
     }
 
     /**
      * Sets the charsetName.
      * @param charsetName The charsetName to set
      */
-    public void setCharsetName(String charsetName) {
-        this.charsetName = charsetName;
+    public void setCharset(Charset charset) {
+        this.charset = charset;
     }
 
     /**

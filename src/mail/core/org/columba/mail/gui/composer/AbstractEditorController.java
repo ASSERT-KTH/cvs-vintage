@@ -13,6 +13,7 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
+
 package org.columba.mail.gui.composer;
 
 import org.columba.core.gui.focus.FocusOwner;
@@ -22,7 +23,6 @@ import java.awt.Font;
 import java.util.Observable;
 
 import javax.swing.JComponent;
-
 
 /**
  * This class serves as a common super class for the Editor
@@ -51,7 +51,7 @@ public abstract class AbstractEditorController extends Observable
     /**
      * Returns the controller
      */
-    protected ComposerController getController() {
+    public ComposerController getController() {
         return controller;
     }
 
@@ -104,13 +104,6 @@ public abstract class AbstractEditorController extends Observable
      * Gets the font of the editor view
      */
     public abstract Font getViewFont();
-
-    /**
-     * Sets the charset of the view
-     *
-     * @param        charset                Name of charset
-     */
-    public abstract void setViewCharset(String charset);
 
     // ********************* FocusOwner methods **********************
     public abstract boolean isCutActionEnabled();

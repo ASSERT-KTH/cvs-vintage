@@ -15,6 +15,7 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003.
 //
 //All Rights Reserved.
+
 package org.columba.mail.gui.action;
 
 import org.columba.core.action.AbstractColumbaAction;
@@ -29,7 +30,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 
 import javax.swing.KeyStroke;
-
 
 public class NewMessageAction extends AbstractColumbaAction {
     public NewMessageAction(FrameMediator controller) {
@@ -57,7 +57,8 @@ public class NewMessageAction extends AbstractColumbaAction {
         // stored option
         // only open composer when at least one account exists
         if (MailInterface.config.getAccountList().count() != 0) {
-            new ComposerController();
+            ComposerController composer = new ComposerController();
+            composer.openView();
         }
     }
 }

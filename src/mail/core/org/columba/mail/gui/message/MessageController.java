@@ -13,6 +13,7 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003.
 //
 //All Rights Reserved.
+
 package org.columba.mail.gui.message;
 
 import java.awt.Font;
@@ -58,17 +59,16 @@ import org.columba.ristretto.message.MimePart;
 import org.columba.ristretto.message.MimeTree;
 import org.columba.ristretto.message.StreamableMimePart;
 
-
 /**
  * this class shows the messagebody
  */
 public class MessageController implements HyperlinkListener, MouseListener,
     CharsetListener, FocusOwner, CaretListener {
+    
     private Folder folder;
     private Object uid;
     private MessageMenu menu;
     private JButton button;
-    private String activeCharset;
     private MessageView view;
     private URLObservable urlObservable;
     protected AbstractMailFrameController abstractFrameController;
@@ -80,15 +80,13 @@ public class MessageController implements HyperlinkListener, MouseListener,
         AttachmentController attachmentController) {
         this.abstractFrameController = abstractFrameController;
         this.attachmentController = attachmentController;
-        activeCharset = "auto";
 
         view = new MessageView(this, attachmentController.getView());
 
         //view.addHyperlinkListener(this);
         view.addMouseListener(this);
 
-        ((CharsetOwnerInterface) getFrameController()).getCharsetManager()
-         .addCharsetListener(this);
+        ((CharsetOwnerInterface) getFrameController()).addCharsetListener(this);
 
         MainInterface.focusManager.registerComponent(this);
 
@@ -139,15 +137,12 @@ public class MessageController implements HyperlinkListener, MouseListener,
         }
 
         // Which Charset shall we use ?
-        String charsetName;
+        Charset charset = ((CharsetOwnerInterface)getFrameController()).getCharset();
 
-        if (activeCharset.equals("auto")) {
-            charsetName = bodyPart.getHeader().getContentParameter("charset");
+        if (charset == null) {
+            charset = Charset.forName(bodyPart.getHeader().getContentParameter("charset"));
 
-            ((CharsetOwnerInterface) getFrameController()).getCharsetManager()
-             .displayCharset(charsetName);
-        } else {
-            charsetName = activeCharset;
+            ((CharsetOwnerInterface) getFrameController()).setCharset(charset);
         }
 
         // Shall we use the HTML-Viewer?
@@ -170,18 +165,11 @@ public class MessageController implements HyperlinkListener, MouseListener,
                    }
         }
         
-        if (charsetName != null) {
-            Charset charset;
-
-            try {
-                charset = Charset.forName(charsetName);
-            } catch (UnsupportedCharsetException e) {
-                charset = Charset.forName(System.getProperty("file.encoding"));
-            }
-
-            bodyStream = new CharsetDecoderInputStream(bodyStream, charset);
+        if (charset == null) {
+            charset = Charset.forName(System.getProperty("file.encoding"));
         }
 
+        bodyStream = new CharsetDecoderInputStream(bodyStream, charset);
         boolean hasAttachments = header.hasAttachments().booleanValue();
         
         attachmentController.setMimePartTree(mimePartTree);
@@ -291,8 +279,6 @@ public class MessageController implements HyperlinkListener, MouseListener,
      * @see org.columba.core.util.CharsetListener#charsetChanged(org.columba.core.util.CharsetEvent)
      */
     public void charsetChanged(CharsetEvent e) {
-        activeCharset = e.getValue();
-
         MainInterface.processor.addOp(new ViewMessageCommand(
                 getFrameController(),
                 ((AbstractMailFrameController) getFrameController()).getTableSelection()));

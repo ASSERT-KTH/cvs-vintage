@@ -13,58 +13,31 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
+
 package org.columba.core.charset;
+
+import java.nio.charset.Charset;
 
 import java.util.EventObject;
 
-
 /**
- * @author -
- *
- * To change this generated comment edit the template variable "typecomment":
- * Window>Preferences>Java>Templates.
- * To enable and disable the creation of type comments go to
- * Window>Preferences>Java>Code Generation.
+ * Encapsulates information about charset changes.
  */
 public class CharsetEvent extends EventObject {
-    private int id;
-    private String value;
+    protected Charset value;
 
-    public CharsetEvent(Object source, int id, String name) {
+    /**
+     * Creates a new event for the given charset.
+     */
+    public CharsetEvent(Object source, Charset charset) {
         super(source);
-        this.id = id;
-        value = name;
+        value = charset;
     }
 
     /**
-     * Returns the id.
-     * @return int
+     * Returns the newly chosen charset.
      */
-    public int getId() {
-        return id;
-    }
-
-    /**
-     * Returns the value.
-     * @return String
-     */
-    public String getValue() {
+    public Charset getCharset() {
         return value;
-    }
-
-    /**
-     * Sets the id.
-     * @param id The id to set
-     */
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    /**
-     * Sets the value.
-     * @param value The value to set
-     */
-    public void setValue(String value) {
-        this.value = value;
     }
 }

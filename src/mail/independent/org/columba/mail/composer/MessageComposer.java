@@ -13,6 +13,7 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
+
 package org.columba.mail.composer;
 
 import org.columba.addressbook.parser.ListParser;
@@ -56,7 +57,6 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
-
 public class MessageComposer {
     private ComposerModel model;
     private int accountUid;
@@ -89,7 +89,7 @@ public class MessageComposer {
 		//		EncodedWord.QUOTED_PRINTABLE).toString());
 		header.set("Subject",
 			EncodedWord.encode(model.getSubject(),
-				Charset.forName(getCharsetNameFromModel()),
+				model.getCharset(),
 				EncodedWord.QUOTED_PRINTABLE).toString());
 
         AccountItem item = model.getAccountItem();
@@ -197,7 +197,7 @@ public class MessageComposer {
 			//return new String(strbuf.toString().getBytes(),
 			//	model.getCharsetName());
 			return new String(strbuf.toString().getBytes(),
-					getCharsetNameFromModel());
+					model.getCharset().name());
         } catch (UnsupportedEncodingException e) {
         }
 
@@ -280,7 +280,7 @@ public class MessageComposer {
 
         // Init Mime-Header with Default-Values (text/html)	
         // Set Default Charset or selected		
-        String charsetName = getCharsetNameFromModel();
+        String charsetName = model.getCharset().name();
         //String charsetName = model.getCharsetName();
         bodyPart.getHeader().putContentParameter("charset", charsetName);
 
@@ -382,7 +382,7 @@ public class MessageComposer {
 
         // Init Mime-Header with Default-Values (text/plain)	
         // Set Default Charset or selected		
-        String charsetName = getCharsetNameFromModel();
+        String charsetName = model.getCharset().name();
         //String charsetName = model.getCharsetName();
         bodyPart.getHeader().putContentParameter("charset", charsetName);
 
@@ -553,40 +553,4 @@ public class MessageComposer {
 
         return message;
     }
-
-	/**
-	 * Private utility which fetches the charset name from the 
-	 * composer model. If the charset specified in the model
-	 * is not supported, the system default encoding is returned.
-	 * <br>
-	 * By calling this method, further handling of unsupported 
-	 * charsets is not necessary.
-	 * 
-	 * @return	Charset name from model, or system default if the
-	 * 			charset specified in the model is not supported.
-	 */
-	private String getCharsetNameFromModel() {
-		String charset = model.getCharsetName();
-		
-		// test if the given charset is supported
-		try {
-			if (Charset.isSupported(charset)) {
-				return charset;
-			} else {
-				// not supported - return system default
-				ColumbaLogger.log.severe("The charset " + 
-						charset + 
-						" is not supported. " + 
-						"System default encoding will be used.");
-				return System.getProperty("file.encoding");
-			}
-		} catch (IllegalCharsetNameException e) {
-			ColumbaLogger.log.severe("The charste name " + 
-					charset + 
-					" is illegal. " +
-					"System default encoding will be used.");
-			return System.getProperty("file.encoding");
-		}
-	}
-
 }

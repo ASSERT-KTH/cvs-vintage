@@ -13,10 +13,14 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
+
 package org.columba.mail.gui.frame;
 
-import org.columba.core.charset.CharsetManager;
-import org.columba.core.charset.CharsetOwnerInterface;
+import java.nio.charset.Charset;
+
+import javax.swing.event.EventListenerList;
+
+import org.columba.core.charset.*;
 import org.columba.core.config.ViewItem;
 import org.columba.core.gui.frame.AbstractFrameController;
 import org.columba.core.gui.frame.AbstractFrameView;
@@ -28,7 +32,6 @@ import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.folderoptions.FolderOptionsController;
 import org.columba.mail.gui.attachment.AttachmentController;
 import org.columba.mail.gui.message.MessageController;
-
 
 /**
  *
@@ -56,17 +59,18 @@ import org.columba.mail.gui.message.MessageController;
 public abstract class AbstractMailFrameController
     extends AbstractFrameController implements MailFrameMediator,
         MessageViewOwner, AttachmentViewOwner, CharsetOwnerInterface {
+    
     private ToolBar toolBar;
     public MessageController messageController;
     public AttachmentController attachmentController;
-    protected CharsetManager charsetManager;
-
     private FolderOptionsController folderOptionsController;
+    protected EventListenerList listenerList = new EventListenerList();
+    
+    // needs to be private so that subclasses won't forget calling fireCharsetChanged
+    private Charset charset;
     
     public AbstractMailFrameController(String id, ViewItem viewItem) {
         super(id, viewItem);
-        
-        
     }
 
     public FolderCommandReference[] getTableSelection() {
@@ -114,10 +118,6 @@ public abstract class AbstractMailFrameController
         getSelectionManager().registerSelectionListener("mail.attachment", l);
     }
 
-    public AbstractFrameView getView() {
-        return view;
-    }
-
     protected void registerSelectionHandlers() {
     }
 
@@ -137,21 +137,11 @@ public abstract class AbstractMailFrameController
     }
 
     protected void init() {
-        setCharsetManager(new CharsetManager(null));
-
         attachmentController = new AttachmentController(this);
 
         messageController = new MessageController(this, attachmentController);
         
         folderOptionsController = new FolderOptionsController(this);
-    }
-
-    public CharsetManager getCharsetManager() {
-        return charsetManager;
-    }
-
-    public void setCharsetManager(CharsetManager manager) {
-        charsetManager = manager;
     }
 
     public MessageController getMessageController() {
@@ -169,4 +159,33 @@ public abstract class AbstractMailFrameController
        return folderOptionsController;
     }
 
+    public void setCharset(Charset charset) {
+        this.charset = charset;
+        fireCharsetChanged(new CharsetEvent(this, charset));
+    }
+    
+    public void removeCharsetListener(CharsetListener l) {
+        listenerList.remove(CharsetListener.class, l);
+    }
+    
+    public Charset getCharset() {
+        return charset;
+    }
+    
+    public void addCharsetListener(CharsetListener l) {
+        listenerList.add(CharsetListener.class, l);
+    }
+    
+    protected void fireCharsetChanged(CharsetEvent e) {
+        // Guaranteed to return a non-null array
+        Object[] listeners = listenerList.getListenerList();
+
+        // Process the listeners last to first, notifying
+        // those that are interested in this event
+        for (int i = listeners.length - 2; i >= 0; i -= 2) {
+            if (listeners[i] == CharsetListener.class) {
+                ((CharsetListener) listeners[i + 1]).charsetChanged(e);
+            }
+        }
+    }
 }

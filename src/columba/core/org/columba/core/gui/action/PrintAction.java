@@ -13,6 +13,7 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
+
 package org.columba.core.gui.action;
 
 import org.columba.core.action.AbstractColumbaAction;
@@ -32,8 +33,9 @@ import org.columba.mail.util.MailResourceLoader;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 
-import javax.swing.KeyStroke;
+import java.nio.charset.Charset;
 
+import javax.swing.KeyStroke;
 
 public class PrintAction extends AbstractColumbaAction implements SelectionListener {
     public PrintAction(FrameMediator controller) {
@@ -73,12 +75,8 @@ public class PrintAction extends AbstractColumbaAction implements SelectionListe
                                                                     .getSelectionManager()
                                                                     .getSelection("mail.table");
 
-        // GetCharset() added
-        String charset = ((CharsetOwnerInterface) getFrameMediator()).getCharsetManager()
-                          .getSelectedCharset();
-
+        Charset charset = ((CharsetOwnerInterface) getFrameMediator()).getCharset();
         PrintMessageCommand c = new PrintMessageCommand(r, charset);
-
         MainInterface.processor.addOp(c);
     }
 

@@ -13,25 +13,29 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
+
 package org.columba.mail.gui.composer;
 
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
 import java.awt.event.ContainerListener;
+
+import java.nio.charset.Charset;
+import java.nio.charset.UnsupportedCharsetException;
+
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
 
+import javax.swing.event.EventListenerList;
+
 import org.columba.addressbook.folder.Folder;
 import org.columba.addressbook.folder.HeaderItem;
 import org.columba.addressbook.folder.HeaderItemList;
 import org.columba.addressbook.main.AddressbookInterface;
-import org.columba.core.charset.CharsetEvent;
-import org.columba.core.charset.CharsetListener;
-import org.columba.core.charset.CharsetManager;
-import org.columba.core.charset.CharsetOwnerInterface;
+import org.columba.core.charset.*;
 import org.columba.core.config.ViewItem;
 import org.columba.core.gui.frame.AbstractFrameController;
 import org.columba.core.gui.frame.AbstractFrameView;
@@ -52,11 +56,11 @@ import org.columba.mail.util.AddressCollector;
 public class ComposerController
 	extends AbstractFrameController
 	implements
-		CharsetListener,
 		CharsetOwnerInterface,
 		ComponentListener,
 		Observer {
-	private IdentityInfoPanel identityInfoPanel;
+	
+        private IdentityInfoPanel identityInfoPanel;
 	private AttachmentController attachmentController;
 	private SubjectController subjectController;
 	private PriorityController priorityController;
@@ -69,7 +73,8 @@ public class ComposerController
 	//private MessageComposer messageComposer;
 	private ComposerSpellCheck composerSpellCheck;
 	private ComposerModel composerModel;
-	protected CharsetManager charsetManager;
+	private Charset charset;
+        protected EventListenerList listenerList = new EventListenerList();
 
 	/** Buffer for listeners used by addContainerListenerForEditor and createView */
 	private List containerListenerBuffer;
@@ -80,19 +85,6 @@ public class ComposerController
 			new ViewItem(
 				MailInterface.config.get("composer_options").getElement(
 					"/options/gui/view")));
-
-		getView().loadWindowPosition();
-		headerController.view.initFocus(subjectController.view);
-		getView().setVisible(true);
-		initAddressCompletion();
-		headerController.getView().editLastRow();
-	}
-
-	public void charsetChanged(CharsetEvent e) {
-		((ComposerModel) getModel()).setCharsetName(e.getValue());
-
-		//editorController.getView().setCharset(e.getValue());
-		editorController.setViewCharset(e.getValue());
 	}
 
 	public boolean checkState() {
@@ -113,7 +105,6 @@ public class ComposerController
 		accountController.updateComponents(b);
 		attachmentController.updateComponents(b);
 		headerController.updateComponents(b);
-		getCharsetManager().displayCharset(composerModel.getCharsetName());
 
 		//headerController.appendRow();
 	}
@@ -203,9 +194,8 @@ public class ComposerController
 	 * @see org.columba.core.gui.FrameController#createView()
 	 */
 	protected AbstractFrameView createView() {
-		ComposerView view= new ComposerView(this);
+		ComposerView view = new ComposerView(this);
 
-		//view.init();
 		// *20030917, karlpeder* If ContainerListeners are waiting to be
 		// added, add them now.
 		if (containerListenerBuffer != null) {
@@ -221,8 +211,15 @@ public class ComposerController
 			containerListenerBuffer= null; // done, the buffer has been emptied
 		}
 
+		headerController.view.initFocus(subjectController.view);
 		return view;
 	}
+        
+        public void openView() {
+                super.openView();
+		initAddressCompletion();
+		headerController.getView().editLastRow();
+        }
 
 	/* (non-Javadoc)
 	 * @see org.columba.core.gui.FrameController#initInternActions()
@@ -336,28 +333,18 @@ public class ComposerController
 			editorController= new TextEditorController(this);
 		}
 
-		// init charset handling
-		XmlElement charsetElement= optionsElement.getElement("charset");
-
-		if (charsetElement == null) {
-			charsetElement= new XmlElement("charset");
-			charsetElement.addAttribute("name", "auto");
-
-			optionsElement.addElement(charsetElement);
-		}
-
-		setCharsetManager(new CharsetManager(charsetElement));
-		getCharsetManager().addCharsetListener(this);
-
 		// Hack to ensure charset is set correctly at start-up
-		String charset= charsetElement.getAttribute("name");
-
-		if (charset != null) {
-			((ComposerModel) getModel()).setCharsetName(charset);
-
-			//editorController.getView().setCharset(charset);
-			editorController.setViewCharset(charset);
-		}
+		XmlElement charsetElement = optionsElement.getElement("charset");
+                if (charsetElement != null) {
+                        String charset = charsetElement.getAttribute("name");
+                        if (charset != null) {
+                                try {
+                                        setCharset(Charset.forName(charset));
+                                } catch (UnsupportedCharsetException ex) {
+                                        //ignore this
+                                }
+                        }
+                }
 	}
 
 	/**
@@ -452,11 +439,9 @@ public class ComposerController
 	 * framework for the composer
 	 */
 	public void addContainerListenerForEditor(ContainerListener cl) {
-		ComposerView view= (ComposerView) getView();
-
 		if (view != null) {
 			// add listener
-			view.getEditorPanel().addContainerListener(cl);
+			((ComposerView)view).getEditorPanel().addContainerListener(cl);
 		} else {
 			// view not yet created - store listener in buffer
 			if (containerListenerBuffer == null) {
@@ -476,27 +461,48 @@ public class ComposerController
 		((ComposerView) getView()).getEditorPanel().removeContainerListener(cl);
 	}
 
-	/* *20030831, karlpeder* Using method on super class instead
-	public void close() {
-	            ColumbaLogger.log.fine("closing ComposerController");
-	        view.saveWindowPosition();
-	        view.setVisible(false);
-	}
-	*/
-
-	/**
-	 * @return CharsetManager
-	 */
-	public CharsetManager getCharsetManager() {
-		return charsetManager;
+	public Charset getCharset() {
+		return charset;
 	}
 
-	/**
-	 * @param manager
-	 */
-	public void setCharsetManager(CharsetManager manager) {
-		charsetManager= manager;
+	public void setCharset(Charset charset) {
+		this.charset = charset;
+                XmlElement optionsElement =
+                        MailInterface.config.get("composer_options").getElement("/options");
+                XmlElement charsetElement = optionsElement.getElement("charset");
+                if (charset == null) {
+                        optionsElement.removeElement(charsetElement);
+                } else {
+                        if (charsetElement == null) {
+                                charsetElement = new XmlElement("charset");
+                                optionsElement.addElement(charsetElement);
+                        }
+                        charsetElement.addAttribute("name", charset.name());
+                }
+		((ComposerModel) getModel()).setCharset(charset);
+                fireCharsetChanged(new CharsetEvent(this, charset));
 	}
+        
+        public void addCharsetListener(CharsetListener l) {
+                listenerList.add(CharsetListener.class, l);
+        }
+        
+        public void removeCharsetListener(CharsetListener l) {
+                listenerList.remove(CharsetListener.class, l);
+        }
+    
+        protected void fireCharsetChanged(CharsetEvent e) {
+                // Guaranteed to return a non-null array
+                Object[] listeners = listenerList.getListenerList();
+
+                // Process the listeners last to first, notifying
+                // those that are interested in this event
+                for (int i = listeners.length - 2; i >= 0; i -= 2) {
+                        if (listeners[i] == CharsetListener.class) {
+                            ((CharsetListener) listeners[i + 1]).charsetChanged(e);
+                        }
+                }
+        }
 
 	/**
 	 * Used for listenen to the enable html option
