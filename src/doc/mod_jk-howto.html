@@ -918,8 +918,8 @@ JkMount /*.vm ajp13
 </pre></blockquote>
 </td></tr></table>
 
-mod_jk will pass requests for all JSP or Velocity pages to Tomcat. If some of
-those pages are configured as login and error pages in web.xml:
+mod_jk will pass requests for all JSP or Velocity pages to Tomcat. If form
+authentication is configured like this:
 
 <table class="inlinetable"><tr><td class="inlinetd">
 <blockquote><pre>
@@ -934,10 +934,10 @@ those pages are configured as login and error pages in web.xml:
 </pre></blockquote>
 </td></tr></table>
 
-there is also another, somewhat hidden request involved in the authentication
-process: <strong>/login/j_security_check</strong>, which is the 'action' of the
-form specified within <strong>login.vm</strong> and <strong>error.vm</strong>
-like this:
+then there is also another, somewhat hidden request involved in the
+authentication process: <strong>/login/j_security_check</strong>. It is the
+'action' of the form specified within <strong>login.vm</strong> and
+<strong>error.vm</strong>, usually:
 
 <table class="inlinetable"><tr><td class="inlinetd">
 <blockquote><pre>
@@ -945,7 +945,9 @@ like this:
 </pre></blockquote>
 </td></tr></table>
 
-This request is not mapped. This following fixes the problem:
+The request <strong>/login/j_security_check</strong> is not mapped, therefore
+mod_jk doesn't know that it should pass it to Tomcat. The following fixes the
+problem:
 
 <table class="inlinetable"><tr><td class="inlinetd">
 <blockquote><pre>
