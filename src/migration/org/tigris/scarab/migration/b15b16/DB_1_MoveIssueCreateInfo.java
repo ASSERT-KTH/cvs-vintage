@@ -62,7 +62,7 @@ import org.tigris.scarab.migration.JDBCTask;
  * SCARAB_TRANSACTION table. 
  *
  * @author <a href="mailto:jon@collab.net">John McNally</a>
- * @version $Id: DB_1_MoveIssueCreateInfo.java,v 1.3 2003/05/15 17:06:52 dlr Exp $
+ * @version $Id: DB_1_MoveIssueCreateInfo.java,v 1.4 2003/07/06 17:46:13 jmcnally Exp $
  */
 public class DB_1_MoveIssueCreateInfo extends JDBCTask
 {
@@ -85,7 +85,7 @@ public class DB_1_MoveIssueCreateInfo extends JDBCTask
             try 
             {
                 conn = getConnection();
-                String sql = "SELECT CREATED_DATE FROM SCARAB_ISSUE";
+                String sql = "SELECT CREATED_TRANS_ID FROM SCARAB_ISSUE";
                 stmt = conn.createStatement();
                 try 
                 {
