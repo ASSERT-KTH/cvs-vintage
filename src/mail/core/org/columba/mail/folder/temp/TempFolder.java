@@ -215,7 +215,7 @@ public class TempFolder extends MessageFolder {
         throws Exception {
 
         Message message = MessageParser.parse(
-                TempSourceFactory.createTempSource(in, -1, null));
+                TempSourceFactory.createTempSource(in, -1));
 
         Object newUid = generateNextUid();
 

@@ -15,6 +15,7 @@
 //All Rights Reserved.
 package org.columba.mail.folder.headercache;
 
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
@@ -60,7 +61,7 @@ public class LocalHeaderCache extends AbstractFolderHeaderCache {
         configurationChanged = false;
     }
 
-    public HeaderList getHeaderList() throws Exception {
+    public HeaderList getHeaderList() throws IOException {
         boolean needToRelease = false;
 
         // if there exists a ".header" cache-file
@@ -276,7 +277,7 @@ public class LocalHeaderCache extends AbstractFolderHeaderCache {
      * @param worker
      * @throws Exception
      */
-    public void sync() throws Exception {
+    public void sync() throws IOException {
         if (getObservable() != null) {
             getObservable().setMessage(folder.getName()
                     + ": Syncing headercache...");

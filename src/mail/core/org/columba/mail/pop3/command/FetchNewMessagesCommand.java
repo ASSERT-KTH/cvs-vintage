@@ -15,7 +15,9 @@
 //All Rights Reserved.
 package org.columba.mail.pop3.command;
 
+import java.io.IOException;
 import java.text.MessageFormat;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.logging.Logger;
@@ -31,10 +33,12 @@ import org.columba.core.command.WorkerStatusController;
 import org.columba.core.main.MainInterface;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.command.POP3CommandReference;
+import org.columba.mail.config.AccountItem;
 import org.columba.mail.folder.MessageFolder;
 import org.columba.mail.message.ColumbaMessage;
 import org.columba.mail.pop3.POP3Server;
 import org.columba.mail.util.MailResourceLoader;
+import org.columba.ristretto.pop3.POP3Exception;
 
 /**
  * @author freddy
@@ -102,6 +106,9 @@ public class FetchNewMessagesCommand extends Command {
 			// only download new messages
 			downloadNewMessages(newMessagesUidList, worker);
 
+			// Delete old message from server if the feature is enabled
+			server.cleanUpServer();
+			
 			// logout cleanly
 			logout();
 

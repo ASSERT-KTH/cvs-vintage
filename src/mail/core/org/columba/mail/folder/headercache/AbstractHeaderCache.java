@@ -16,6 +16,7 @@
 package org.columba.mail.folder.headercache;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.List;
 import java.util.Vector;
 import java.util.logging.Logger;
@@ -99,7 +100,7 @@ public abstract class AbstractHeaderCache {
 	 * @param uid
 	 * @throws Exception
 	 */
-	public void remove(Object uid) throws Exception {
+	public void remove(Object uid) {
 		LOG.info("trying to remove message UID=" + uid);
 
 		if (headerList.containsKey(uid)) {
@@ -123,7 +124,7 @@ public abstract class AbstractHeaderCache {
 	 * @return the HeaderList
 	 * @throws Exception
 	 */
-	public HeaderList getHeaderList() throws Exception {
+	public HeaderList getHeaderList() throws IOException {
 		boolean needToRelease = false;
 
 		// if there exists a ".header" cache-file

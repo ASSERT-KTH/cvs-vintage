@@ -18,11 +18,15 @@
 package org.columba.mail.pop3;
 
 import java.io.File;
+import java.io.IOException;
+import java.util.Date;
 import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.logging.Logger;
 
+import org.columba.core.command.CommandCancelledException;
 import org.columba.core.command.StatusObservable;
 import org.columba.core.util.ListTools;
 import org.columba.core.util.Lock;
@@ -33,9 +37,18 @@ import org.columba.mail.folder.MessageFolder;
 import org.columba.mail.main.MailInterface;
 import org.columba.mail.message.ColumbaHeader;
 import org.columba.mail.message.ColumbaMessage;
+import org.columba.mail.message.HeaderList;
+import org.columba.ristretto.pop3.POP3Exception;
 
 
 public class POP3Server {
+	/** JDK 1.4+ logging framework logger, used for logging. */
+	private static final Logger LOG = Logger
+			.getLogger("org.columba.mail.folder.headercache");
+
+	private static final long DAY_IN_MS = 24 * 60 * 60 * 1000;
+	
+	
     private AccountItem accountItem;
     private File file;
     private boolean alreadyLoaded;
@@ -126,17 +139,55 @@ public class POP3Server {
         // update the cache 
         while (it.hasNext()) {
             headerCache.getHeaderList().remove(it.next());
+            cacheChanged = true;
         }
 
         // return the uids that are new
         return newUids;
     }
 
-    public void deleteMessage(Object uid) throws Exception {
-        store.deleteMessage(uid);
+    public void deleteMessage(Object uid) throws IOException, POP3Exception, CommandCancelledException {
+        try {
+			store.deleteMessage(uid);
+		
+	        headerCache.remove(uid);
+	        
+	        // set dirty flag
+	        setCacheChanged(true);
+        } catch (POP3Exception e) {
+        	if( e.getResponse().isERR() ) {
+        		// Message already deleted from server
+        		headerCache.remove(uid);
+        		setCacheChanged(true);
+        	} else throw e;
+		}
         
-        // set dirty flag
-        setCacheChanged(true);
+    }
+    
+    public void deleteMessagesOlderThan(Date date) throws IOException, POP3Exception, CommandCancelledException {
+    	LOG.info("Removing message older than " + date);
+    	HeaderList headerList = headerCache.getHeaderList();
+    	Enumeration uids = headerList.keys();
+    	while( uids.hasMoreElements() ) {
+    		Object uid = uids.nextElement();
+    		ColumbaHeader header = headerList.get(uid);
+    		if( ((Date)header.get("columba.date")).before(date) ) {
+    			deleteMessage(uid);
+    			LOG.info("removed "+ uid + " from " + accountItem.getName());
+    		}    		
+    	}    	
+    }
+    
+    public void cleanUpServer() throws IOException, POP3Exception, CommandCancelledException {
+		PopItem item = getAccountItem().getPopItem();
+		
+		if( item.getBoolean("leave_messages_on_server", false) && item.getBoolean("remove_old_from_server", false)) {
+			int days  = item.getInteger("older_than");
+			long date = new Date().getTime();
+			date -= days * DAY_IN_MS;
+			
+			deleteMessagesOlderThan(new Date(date));
+		}
     }
 
     public int getMessageCount() throws Exception {
@@ -206,7 +257,7 @@ public class POP3Server {
 	/**
 	 * @param hasChanged The hasChanged to set.
 	 */
-	public void setCacheChanged(boolean hasChanged) {
+	private void setCacheChanged(boolean hasChanged) {
 		this.cacheChanged = hasChanged;
 	}
 	

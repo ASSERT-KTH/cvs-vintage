@@ -17,6 +17,7 @@
 package org.columba.mail.pop3;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Hashtable;
 import java.util.LinkedList;
 import java.util.List;
@@ -41,6 +42,7 @@ import org.columba.mail.plugin.POP3PreProcessingFilterPluginHandler;
 import org.columba.mail.pop3.plugins.AbstractPOP3PreProcessingFilter;
 import org.columba.mail.util.MailResourceLoader;
 import org.columba.ristretto.io.Source;
+import org.columba.ristretto.io.TempSourceFactory;
 import org.columba.ristretto.message.Header;
 import org.columba.ristretto.parser.HeaderParser;
 import org.columba.ristretto.pop3.POP3Exception;
@@ -82,7 +84,6 @@ public class POP3Store {
 
 		// add status information observable
 		observable = new StatusObservableImpl();
-		protocol.registerInterest(observable);
 
 		try {
 			handler = (POP3PreProcessingFilterPluginHandler) MainInterface.pluginManager
@@ -143,7 +144,7 @@ public class POP3Store {
 		return stat[0];
 	}
 
-	public boolean deleteMessage(Object uid) throws Exception {
+	public boolean deleteMessage(Object uid) throws CommandCancelledException, IOException, POP3Exception {
 		ensureTransaction();
 
 		return protocol.dele(getIndex(uid));
@@ -231,8 +232,9 @@ public class POP3Store {
 	public ColumbaMessage fetchMessage(Object uid) throws Exception {
 		ensureTransaction();
 
-		Source source = protocol.retr(getIndex(uid));
-
+		InputStream messageStream = protocol.retr(getIndex(uid), getSize(uid)); 
+		Source source = TempSourceFactory.createTempSource(messageStream, messageStream.available());
+		
 		// pipe through preprocessing filter
 		//if (popItem.getBoolean("enable_pop3preprocessingfilter", false))
 		//	rawString = modifyMessage(rawString);
@@ -319,9 +321,6 @@ public class POP3Store {
 
 					save = dialog.getSave();
 				} else {
-					// cancel pressed
-					protocol.cancelCurrent();
-
 					throw new CommandCancelledException();
 				}
 			} else {

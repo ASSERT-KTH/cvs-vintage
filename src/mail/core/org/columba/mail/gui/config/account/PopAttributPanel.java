@@ -15,15 +15,6 @@
 //All Rights Reserved.
 package org.columba.mail.gui.config.account;
 
-import com.jgoodies.forms.layout.FormLayout;
-
-import org.columba.core.gui.util.CheckBoxWithMnemonic;
-import org.columba.core.gui.util.DefaultFormBuilder;
-import org.columba.core.gui.util.LabelWithMnemonic;
-
-import org.columba.mail.config.PopItem;
-import org.columba.mail.util.MailResourceLoader;
-
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -32,7 +23,17 @@ import javax.swing.JCheckBox;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JSpinner;
 import javax.swing.JTextField;
+import javax.swing.SpinnerNumberModel;
+
+import org.columba.core.gui.util.CheckBoxWithMnemonic;
+import org.columba.core.gui.util.DefaultFormBuilder;
+import org.columba.core.gui.util.LabelWithMnemonic;
+import org.columba.mail.config.PopItem;
+import org.columba.mail.util.MailResourceLoader;
+
+import com.jgoodies.forms.layout.FormLayout;
 
 
 /**
@@ -47,7 +48,10 @@ public class PopAttributPanel implements ActionListener {
     private JCheckBox storePasswordCheckBox;
     private JCheckBox excludeCheckBox;
     private JCheckBox enablePreProcessingFilterCheckBox;
-
+    private JCheckBox removeOldMessagesCheckBox;
+    private JSpinner olderThanSpinner;
+    private JLabel daysLabel;
+    
     //private JCheckBox intervalCheckingCheckBox;
     //private JButton mailcheckButton;
     //private JCheckBox limitMessageDownloadCheckBox;
@@ -91,7 +95,12 @@ public String getDestinationFolder()
         if (b) {
             leaveOnServerCheckBox.setSelected(item.getBoolean(
                     "leave_messages_on_server"));
+        	removeOldMessagesCheckBox.setSelected(item.getBoolean("remove_old_from_server", false));
+        	
+        	updateRemoveOldMessagesEnabled();
 
+        	olderThanSpinner.getModel().setValue(new Integer( item.getInteger("older_than", 30)));
+        	
             excludeCheckBox.setSelected(item.getBoolean(
                     "exclude_from_checkall", false));
 
@@ -105,7 +114,11 @@ enablePreProcessingFilterCheckBox.setSelected(item.getBoolean(
 "enable_pop3preprocessingfilter", false));
 */
         } else {
-            item.set("leave_messages_on_server",
+        	item.set("remove_old_from_server", removeOldMessagesCheckBox.isSelected());
+
+        	item.set("older_than", ((SpinnerNumberModel)olderThanSpinner.getModel()).getNumber().intValue() );
+        	
+        	item.set("leave_messages_on_server",
                 leaveOnServerCheckBox.isSelected()); //$NON-NLS-1$
 
             item.set("exclude_from_checkall", excludeCheckBox.isSelected()); //$NON-NLS-1$
@@ -122,25 +135,53 @@ enablePreProcessingFilterCheckBox.isSelected());
         }
     }
 
-    public void createPanel(DefaultFormBuilder builder) {
-        builder.appendSeparator(MailResourceLoader.getString("dialog",
+    /**
+	 * 
+	 */
+	private void updateRemoveOldMessagesEnabled() {
+		removeOldMessagesCheckBox.setEnabled(leaveOnServerCheckBox.isSelected());
+		olderThanSpinner.setEnabled(leaveOnServerCheckBox.isSelected());
+		daysLabel.setEnabled(leaveOnServerCheckBox.isSelected());
+	}
+
+	public void createPanel(DefaultFormBuilder builder) {
+    	JPanel panel;
+    	FormLayout l;
+    	DefaultFormBuilder b;
+		
+    	builder.appendSeparator(MailResourceLoader.getString("dialog",
                 "account", "options"));
 
         builder.append(leaveOnServerCheckBox, 4);
         builder.nextLine();
 
+        builder.setLeadingColumnOffset(2);
+        
+        panel = new JPanel();
+        l = new FormLayout("default, 3dlu, min(50;default), 3dlu, default",
+            // 2 columns
+            ""); // rows are added dynamically (no need to define them here)
+
+        // create a form builder
+        b = new DefaultFormBuilder(panel, l);
+        b.append(removeOldMessagesCheckBox);
+        b.append(olderThanSpinner);
+        b.append(daysLabel);
+        builder.append(panel,3);
+        builder.nextLine();
+        
+        builder.setLeadingColumnOffset(1);
         builder.append(excludeCheckBox, 4);
         builder.nextLine();
 
-        JPanel panel = new JPanel();
-
-        FormLayout l = new FormLayout("max(100;default), 3dlu, left:max(50dlu;default)",
+        panel = new JPanel();
+        l = new FormLayout("max(100;default), 3dlu, left:max(50dlu;default)",
                 
             // 2 columns
             ""); // rows are added dynamically (no need to define them here)
 
         // create a form builder
-        DefaultFormBuilder b = new DefaultFormBuilder(panel, l);
+        b = new DefaultFormBuilder(panel, l);
         b.append(limitMessageDownloadCheckBox, limitMessageDownloadTextField);
 
         builder.append(panel, 4);
@@ -166,7 +207,9 @@ builder.nextLine();
     protected void initComponents() {
         leaveOnServerCheckBox = new CheckBoxWithMnemonic(MailResourceLoader.getString(
                     "dialog", "account", "leave_messages_on_server"));
-
+        leaveOnServerCheckBox.setActionCommand("LEAVE_ON_SERVER");
+        leaveOnServerCheckBox.addActionListener(this);
+        
         limitMessageDownloadCheckBox = new CheckBoxWithMnemonic(MailResourceLoader.getString(
                     "dialog", "account", "limit_message_download_to"));
 
@@ -181,6 +224,13 @@ builder.nextLine();
         excludeCheckBox = new CheckBoxWithMnemonic(MailResourceLoader.getString(
                     "dialog", "account", "exclude_from_fetch_all"));
 
+        removeOldMessagesCheckBox = new CheckBoxWithMnemonic(MailResourceLoader.getString(
+                "dialog", "account", "remove_old_from_server"));
+        
+        olderThanSpinner = new JSpinner(new SpinnerNumberModel(1,1,Integer.MAX_VALUE,1));
+        
+        daysLabel = new JLabel(MailResourceLoader.getString(
+                "dialog", "account", "days"));
         /*
 enablePreProcessingFilterCheckBox = new CheckBoxWithMnemonic(MailResourceLoader.getString(
     "dialog", "account", "enable_pop3_preprocessing"));
@@ -337,6 +387,8 @@ list);
 */
         } else if (action.equals("LIMIT_MESSAGE_DOWNLOAD")) {
             limitMessageDownloadTextField.setEnabled(limitMessageDownloadCheckBox.isSelected());
+        } else if (action.equals("LEAVE_ON_SERVER")) {
+        	updateRemoveOldMessagesEnabled();
         }
     }
 }
