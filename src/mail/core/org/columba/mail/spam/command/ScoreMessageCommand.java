@@ -36,9 +36,6 @@ import org.columba.mail.config.AccountItem;
 import org.columba.mail.filter.plugins.AddressbookFilter;
 import org.columba.mail.folder.MessageFolder;
 import org.columba.mail.folder.command.MarkMessageCommand;
-import org.columba.mail.gui.frame.TableUpdater;
-import org.columba.mail.gui.table.model.TableModelChangedEvent;
-import org.columba.mail.main.MailInterface;
 import org.columba.mail.spam.SpamController;
 import org.columba.mail.spam.rules.RuleList;
 import org.columba.ristretto.message.Header;
@@ -207,12 +204,18 @@ public class ScoreMessageCommand extends FolderCommand {
 		InputStream istream = CommandHelper.getBodyPart(srcFolder, uids[j]);
 
 		// we are using this inpustream multiple times
+		// --> istream will be closed by CloneStreamMaster
 		master = new CloneStreamMaster(istream);
 
+		// get stream
+		istream = master.getClone();
 		// calculate message score
 		boolean result = SpamController.getInstance().scoreMessage(
-				master.getClone(), map);
-
+				istream, map);
+		
+		// close stream
+		istream.close();
+		
 		// message belongs to which account?
 		AccountItem item = CommandHelper
 				.retrieveAccountItem(srcFolder, uids[j]);
@@ -227,7 +230,7 @@ public class ScoreMessageCommand extends FolderCommand {
 
 		// only go on if all values are true
 		result = result && checkAddressbook && !isInAddressbook;
-		istream.close();
+		
 		return result;
 	}
 
@@ -253,12 +256,17 @@ public class ScoreMessageCommand extends FolderCommand {
 			list.add(h.get(key));
 		}
 
+		// get another inputstream
+		InputStream istream = master.getClone();
+		
 		// add this message to frequency database
 		if (result)
-			SpamController.getInstance().trainMessageAsSpam(master.getClone(),
+			SpamController.getInstance().trainMessageAsSpam(istream,
 					list);
 		else
-			SpamController.getInstance().trainMessageAsHam(master.getClone(),
+			SpamController.getInstance().trainMessageAsHam(istream,
 					list);
+		// close stream
+		istream.close();
 	}
 }

@@ -114,8 +114,13 @@ public class SpamController {
             InputStream inputStream = master.getClone();
 
             byte[] md5sum = MD5SumHelper.createMD5(inputStream);
-
-            Message message = new Message(master.getClone(), list, md5sum);
+            // close stream
+            inputStream.close();
+            
+            // get new inputstream
+            inputStream = master.getClone();
+            
+            Message message = new Message(inputStream, list, md5sum);
             // check if this message was already learned
             // -> only add if this is not the case
             if (db.MD5SumExists(md5sum)) {
@@ -127,6 +132,8 @@ public class SpamController {
                 filter.trainMessageAsSpam(message);
             }
 
+            // close stream
+            inputStream.close();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -144,7 +151,12 @@ public class SpamController {
             InputStream inputStream = master.getClone();
 
             byte[] md5sum = MD5SumHelper.createMD5(inputStream);
-            Message message = new Message(master.getClone(), list, md5sum);
+            // close stream
+            inputStream.close();
+            
+            // get new inputstream
+            inputStream = master.getClone();
+            Message message = new Message(inputStream, list, md5sum);
 
             // check if this message was already learned
             if (db.MD5SumExists(md5sum)) {
@@ -157,6 +169,9 @@ public class SpamController {
 
                 filter.trainMessageAsHam(message);
             }
+            
+            // close stream
+            inputStream.close();
 
         } catch (Exception e) {
             e.printStackTrace();
