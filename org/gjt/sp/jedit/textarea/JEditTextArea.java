@@ -56,7 +56,7 @@ import org.gjt.sp.util.Log;
  *
  * @author Slava Pestov
  * @author John Gellene (API documentation)
- * @version $Id: JEditTextArea.java,v 1.274 2003/08/08 02:22:18 spestov Exp $
+ * @version $Id: JEditTextArea.java,v 1.275 2003/08/08 03:11:36 spestov Exp $
  */
 public class JEditTextArea extends JComponent
 {
@@ -723,7 +723,8 @@ public class JEditTextArea extends JComponent
 			{
 				setFirstPhysicalLine(nextLine,
 					subregion + electricScroll
-					- visibleLines - 1);
+					- visibleLines
+					+ (lastLinePartial ? 2 : 1));
 			}
 			else
 			{
