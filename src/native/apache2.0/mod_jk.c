@@ -103,6 +103,7 @@ typedef struct {
     jk_map_t *uri_to_context;
     jk_uri_worker_map_t *uw_map;
 
+    int was_initialized;
     server_rec *s;
 } jk_server_conf_t;
 
@@ -506,6 +507,7 @@ static void *create_jk_config(ap_pool_t *p, server_rec *s)
     c->log_level   = -1;
     c->log         = NULL;
     c->mountcopy   = JK_FALSE;
+    c->was_initialized = JK_FALSE;
 
     if(!map_alloc(&(c->uri_to_context))) {
         jk_error_exit(APLOG_MARK, APLOG_EMERG, s, "Memory error");
@@ -580,7 +582,7 @@ static void jk_child_init(ap_pool_t *pconf,
         if(map_read_properties(init_map, conf->worker_file)) {
 	    if(wc_open(init_map, conf->log)) {
 		return;
-                }            
+        }            
         }
     }
 
@@ -592,39 +594,48 @@ static void jk_post_config(ap_pool_t *pconf,
                            ap_pool_t *ptemp, 
                            server_rec *s)
 {
-    char *p = getenv("WAS_BORN_BY_APACHE");
-    jk_map_t *init_map = NULL;
-    jk_server_conf_t *conf =
-        (jk_server_conf_t *)ap_get_module_config(s->module_config, &jk_module);
-
-    fprintf(stdout, "jk_post_config %s\n", p ? p : "NULL"); fflush(stdout);
-        
-    if(conf->log_file && conf->log_level >= 0) {
-        if(!jk_open_file_logger(&(conf->log), conf->log_file, conf->log_level)) {
-            conf->log = NULL;
-        } else {
-            main_log = conf->log;
-        }
-    }
-    
-    if(!uri_worker_map_alloc(&(conf->uw_map), conf->uri_to_context, conf->log)) {
-        jk_error_exit(APLOG_MARK, APLOG_EMERG, s, "Memory error");
-    }
-
-    if(map_alloc(&init_map)) {
-        if(map_read_properties(init_map, conf->worker_file)) {
-            if(!p) {
-                putenv("WAS_BORN_BY_APACHE=true");
-                return;
-            } else {
-                if(wc_open(init_map, conf->log)) {
-                    return;
-                }            
+    if(!s->is_virtual) {
+        char *p = getenv("WAS_BORN_BY_APACHE");
+        jk_map_t *init_map = NULL;
+        jk_server_conf_t *conf =
+            (jk_server_conf_t *)ap_get_module_config(s->module_config, &jk_module);
+        if(!conf->was_initialized) {
+            fprintf(stdout, "jk_post_config %s %s %d %d %s\n", 
+                    s->server_hostname, 
+                    s->server_admin,
+                    s,
+                    conf,
+                    p ? p : "NULL"); fflush(stdout);
+            
+            conf->was_initialized = JK_TRUE;        
+            if(conf->log_file && conf->log_level >= 0) {
+                if(!jk_open_file_logger(&(conf->log), conf->log_file, conf->log_level)) {
+                    conf->log = NULL;
+                } else {
+                    main_log = conf->log;
+                }
             }
+    
+            if(!uri_worker_map_alloc(&(conf->uw_map), conf->uri_to_context, conf->log)) {
+                jk_error_exit(APLOG_MARK, APLOG_EMERG, s, "Memory error");
+            }
+
+            if(map_alloc(&init_map)) {
+                if(map_read_properties(init_map, conf->worker_file)) {
+                    if(!p) {
+                        putenv("WAS_BORN_BY_APACHE=true");
+                        return;
+                    } else {                        
+                        if(wc_open(init_map, conf->log)) {
+                            return;
+                        }            
+                    }
+                }
+            }
+
+            jk_error_exit(APLOG_MARK, APLOG_EMERG, s, "Error while opening the workers");
         }
     }
-
-    jk_error_exit(APLOG_MARK, APLOG_EMERG, s, "Error while opening the workers");
 }
 
 static int jk_translate(request_rec *r)
@@ -651,22 +662,22 @@ static int jk_translate(request_rec *r)
 
 static void jk_register_hooks(void)
 {
-#ifdef LINUX
-        ap_hook_child_init(jk_child_init,
+#ifdef WIN32
+    ap_hook_post_config(jk_post_config,
                         NULL,
                         NULL,
-                        HOOK_MIDDLE);    
+                        AP_HOOK_MIDDLE);    
 
 #else
-       ap_hook_post_config(jk_post_config,
-                        NULL,
-                        NULL,
-                        HOOK_MIDDLE);    
+    ap_hook_child_init(jk_child_init,
+                       NULL,
+                       NULL,
+                       AP_HOOK_MIDDLE);    
 #endif
     ap_hook_translate_name(jk_translate,
                            NULL,
                            NULL,
-                           HOOK_FIRST);    
+                           AP_HOOK_FIRST);    
 }
 
 static const handler_rec jk_handlers[] =
@@ -687,4 +698,3 @@ module MODULE_VAR_EXPORT jk_module =
     jk_handlers,		/* handlers */
     jk_register_hooks	/* register hooks */
 };
-
