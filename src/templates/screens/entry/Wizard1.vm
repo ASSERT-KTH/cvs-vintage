@@ -7,7 +7,9 @@ $page.setTitle("Enter New: $scarabR.CurrentIssueType.Name")
 #set ($module = $scarabR.CurrentModule)
 #set ($issueType = $scarabR.CurrentIssueType)
 #set ($user = $data.User)
-#set ($templateId = $data.Parameters.getString("templateId"))
+#if ($data.Parameters.getString("templateId"))
+    #set ($templateId = $data.Parameters.getString("templateId"))
+#end
 #if ($templateId && $templateId.trim().length() > 0)
    #set ($templ = $scarabR.IssueTemplate)
 #end
@@ -63,8 +65,10 @@ $page.setTitle("Enter New: $scarabR.CurrentIssueType.Name")
   #set ( $attVal = $attrValues.get($attKey) )
   #set ($templAttVal = "")
   #set ($templAttrInput = "")
-  #set ($templAttVal = $templ.getAttributeValue($attVal.Attribute))
-  #if ($templAttVal)
+  #if($templ.getAttributeValue($attVal.Attribute))
+      #set ($templAttVal = $templ.getAttributeValue($attVal.Attribute))
+  #end
+  #if ($templAttVal != "")
      #set ($templAttrInput = $intake.AttributeValue.mapTo($templAttVal))
   #end
   #if ($attVal.isDedupeAttribute())

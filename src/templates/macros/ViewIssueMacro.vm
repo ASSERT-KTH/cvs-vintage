@@ -69,6 +69,7 @@
   #end
  #end
 #end
+</table>
  
 #if ($canEdit)
 <h4>Save changes</h4>
