@@ -104,6 +104,7 @@ public class AttributePeer
         {        
             Criteria crit = new Criteria();
             crit.add(AttributePeer.ATTRIBUTE_ID, 0, Criteria.NOT_EQUAL);
+            crit.add(AttributePeer.DELETED, 0);
             // add user type criteria  - user or data (non-user)
             if (attributeType.equals("user"))
             {
