@@ -1,6 +1,6 @@
 #!/bin/sh
 #
-# $Id: jspc.sh,v 1.2 2000/02/09 06:50:50 shemnon Exp $
+# $Id: jspc.sh,v 1.3 2001/06/29 20:53:53 hgomez Exp $
 
 # Shell script to runt JspC
 
@@ -63,7 +63,7 @@ fi
 oldCP=$CLASSPATH
  
 CLASSPATH=.
-for i in ${TOMCAT_HOME}/lib/* ; do
+for i in ${TOMCAT_HOME}/lib/container/* ${TOMCAT_HOME}/lib/common/* ; do
   CLASSPATH=${CLASSPATH}:$i
 done
 
