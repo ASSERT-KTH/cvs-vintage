@@ -1,4 +1,4 @@
-// $Id: ModelFacade.java,v 1.166 2003/12/02 20:47:39 kataka Exp $
+// $Id: ModelFacade.java,v 1.167 2003/12/13 18:48:46 mkl Exp $
 // Copyright (c) 2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -4085,9 +4085,15 @@ public class ModelFacade {
     }
 
     public static void addRaisedSignal(Object target, Object sig) {
-        if (target instanceof MMessage && sig instanceof MSignal) {
-            ((MBehavioralFeature)target).addRaisedSignal((MSignal)sig);
-            return;
+        if (sig instanceof MSignal) {
+            if (target instanceof MMessage) {
+                ((MBehavioralFeature)target).addRaisedSignal((MSignal)sig);  
+                return;
+            }
+            if (target instanceof MOperation) {
+                ((MOperation)target).addRaisedSignal((MSignal)sig);
+                return;
+            }
         }
         throw new IllegalArgumentException(
             "Unrecognized object " + getClassNull(target) + " or " + 
