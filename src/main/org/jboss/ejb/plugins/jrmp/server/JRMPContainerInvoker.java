@@ -71,7 +71,7 @@ import org.w3c.dom.Element;
  *      @author Rickard Öberg (rickard.oberg@telkel.com)
  *		@author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
  *      @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
- *      @version $Revision: 1.13 $
+ *      @version $Revision: 1.14 $
  */
 public abstract class JRMPContainerInvoker
    extends RemoteServer
@@ -235,17 +235,54 @@ public abstract class JRMPContainerInvoker
         homeMethodInvokerMap.put(new Integer(RemoteMethodInvocation.calculateHash(getEJBObjectMethod)),getEJBObjectMethod);
       }
       catch (Exception e) {e.printStackTrace();}
+      
+      
       // Create metadata
+      
+	  /**
+         Constructor signature is  
+           
+	  	 public EJBMetaDataImpl(Class remote, 
+	  							Class home, 
+	  							Class pkClass,
+							    boolean session, 
+								boolean statelessSession, 
+								HomeHandle homeHandle)
+       */
+	   
       if (container.getBeanMetaData() instanceof EntityMetaData)
       {
-         ejbMetaData = new EJBMetaDataImpl(((ContainerInvokerContainer)container).getRemoteClass(), ((ContainerInvokerContainer)container).getHomeClass(), container.getClassLoader().loadClass(((EntityMetaData)container.getBeanMetaData()).getPrimaryKeyClass()), false, false, new HomeHandleImpl(jndiName));
+         ejbMetaData = new EJBMetaDataImpl(
+		 								((ContainerInvokerContainer)container).getRemoteClass(), 
+										((ContainerInvokerContainer)container).getHomeClass(), 
+										container.getClassLoader().loadClass(((EntityMetaData)container.getBeanMetaData()).getPrimaryKeyClass()), 
+										false, //Session 
+										false, //Stateless
+										new HomeHandleImpl(jndiName));
       }
       else
       {
-         if (((SessionMetaData)container.getBeanMetaData()).isStateless())
-            ejbMetaData = new EJBMetaDataImpl(((ContainerInvokerContainer)container).getRemoteClass(), ((ContainerInvokerContainer)container).getHomeClass(), null, true, false, new HomeHandleImpl(jndiName));
-         else
-            ejbMetaData = new EJBMetaDataImpl(((ContainerInvokerContainer)container).getRemoteClass(), ((ContainerInvokerContainer)container).getHomeClass(), null, true, true, new HomeHandleImpl(jndiName));
+         if (((SessionMetaData)container.getBeanMetaData()).isStateless()) {
+             
+            ejbMetaData = new EJBMetaDataImpl(
+										((ContainerInvokerContainer)container).getRemoteClass(), 
+										((ContainerInvokerContainer)container).getHomeClass(), 
+										null, //No PK
+										true, //Session
+										true, //Stateless
+										new HomeHandleImpl(jndiName));
+         }
+         // we are stateful
+         else  {
+             
+            ejbMetaData = new EJBMetaDataImpl(
+										((ContainerInvokerContainer)container).getRemoteClass(), 
+                                        ((ContainerInvokerContainer)container).getHomeClass(), 
+                                        null, //No PK 
+                                        true, //Session
+                                        false,//Stateless 
+                                        new HomeHandleImpl(jndiName));
+        }
       }      
 
    }

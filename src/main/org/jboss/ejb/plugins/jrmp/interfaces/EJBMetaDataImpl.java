@@ -17,7 +17,7 @@ import java.rmi.RemoteException;
 *	@see <related>
 *	@author Rickard Öberg (rickard.oberg@telkel.com)
 *	@author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>  
-*	@version $Revision: 1.5 $
+*	@version $Revision: 1.6 $
 */
 public class EJBMetaDataImpl
 implements EJBMetaData, java.io.Serializable
@@ -30,19 +30,19 @@ implements EJBMetaData, java.io.Serializable
 	Class pkClass;
 	
 	boolean session;
-	boolean statefulSession;
+	boolean statelessSession;
 	
 	HomeHandle homeHandle;
 	
 	// Constructors --------------------------------------------------
-	public EJBMetaDataImpl(Class remote, Class home, Class pkClass, boolean session, boolean statefulSession, HomeHandle homeHandle)
+	public EJBMetaDataImpl(Class remote, Class home, Class pkClass, boolean session, boolean statelessSession, HomeHandle homeHandle)
 	{
 		
 		this.remote = remote;
 		this.home = home;
 		this.pkClass = pkClass;
 		this.session = session;
-		this.statefulSession = statefulSession;
+		this.statelessSession = statelessSession;
 		this.homeHandle = homeHandle;
 	}
 	
@@ -68,6 +68,6 @@ implements EJBMetaData, java.io.Serializable
 	public java.lang.Class getRemoteInterfaceClass() { return remote; }
 	public java.lang.Class getPrimaryKeyClass() { return pkClass; }
 	public boolean isSession() { return session; }
-	public boolean isStatelessSession() { return statefulSession; }
+	public boolean isStatelessSession() { return statelessSession; }
 }
 
