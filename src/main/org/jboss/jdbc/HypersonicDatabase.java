@@ -27,11 +27,12 @@ import org.jboss.util.ServiceMBeanSupport;
  *      
  *   @see HypersonicDatabaseMBean
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
- *   @version $Revision: 1.5 $
+ *   @author Scott_Stark@displayscape.com
+ *   @version $Revision: 1.6 $
  */
 public class HypersonicDatabase
    extends ServiceMBeanSupport
-   implements HypersonicDatabaseMBean, MBeanRegistration, NotificationListener
+   implements HypersonicDatabaseMBean, MBeanRegistration
 {
    // Constants -----------------------------------------------------
     
@@ -109,9 +110,6 @@ public class HypersonicDatabase
    public void startService()
       throws Exception
    {
-      // Register as log listener
-      server.addNotificationListener(new ObjectName(server.getDefaultDomain(),"service","Log"),this,null,null);
-   
       // Start DB in new thread, or else it will block us
       runner = new Thread(new Runnable()
       {
@@ -133,47 +131,13 @@ public class HypersonicDatabase
             
             // Start server
             org.hsql.Server.main(args);
-            
-            // Now wait for "Server x.x is running" message
          }
       });
-      
+
       // Wait for startup message
-      try
-      {
-         synchronized (runner)
-         {
-            runner.start();
-            runner.wait(30000); // Wait for database to start; timeout = not started
-         }
-      } finally
-      {
-         try
-         {
-            server.removeNotificationListener(new ObjectName(server.getDefaultDomain(),"service","Log"), this);
-         } catch (ListenerNotFoundException e)
-         {
-            // Ignore
-         }
-      }
+      runner.start();
       log.log("Database started");
    }
-   
-   // NotificationListener implementation ---------------------------
-   public void handleNotification(Notification n,
-                                  java.lang.Object handback)
-   {
-      if (n.getUserData().toString().equals(getName()))
-      {
-         if (n.getMessage().endsWith("is running"))
-         {
-            // Notify other thread that DB is now started
-            synchronized(runner)
-            {
-               runner.notify();
-            }
-         }
-      }
-   }
+
    // Protected -----------------------------------------------------
 }
