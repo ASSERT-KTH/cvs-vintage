@@ -35,7 +35,7 @@ import org.gjt.sp.util.Log;
  * Manages low-level text display tasks.
  *
  * @author Slava Pestov
- * @version $Id: ChunkCache.java,v 1.82 2003/04/23 01:59:45 spestov Exp $
+ * @version $Id: ChunkCache.java,v 1.83 2003/05/16 01:34:42 spestov Exp $
  */
 class ChunkCache
 {
@@ -238,6 +238,19 @@ class ChunkCache
 	{
 		updateChunksUpTo(screenLine);
 		return lineInfo[screenLine];
+	} //}}}
+
+	//{{{ getLineSubregionCount() method
+	int getLineSubregionCount(int physicalLine)
+	{
+		out.clear();
+		lineToChunkList(physicalLine,out);
+
+		int size = out.size();
+		if(size == 0)
+			return 1;
+		else
+			return size;
 	} //}}}
 
 	//{{{ getSubregionOfOffset() method
