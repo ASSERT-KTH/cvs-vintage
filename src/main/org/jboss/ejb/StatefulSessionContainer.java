@@ -19,6 +19,7 @@ import javax.ejb.Handle;
 import javax.ejb.HomeHandle;
 import javax.ejb.EJBObject;
 import javax.ejb.EJBLocalObject;
+import javax.ejb.EJBLocalHome;
 import javax.ejb.EJBHome;
 import javax.ejb.EJBMetaData;
 import javax.ejb.CreateException;
@@ -34,7 +35,7 @@ import org.jboss.logging.Logger;
  *   @see <related>
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
  *   @author Daniel OConnor (docodan@mvcsoft.com)
- *   @version $Revision: 1.26 $
+ *   @version $Revision: 1.27 $
  */
 public class StatefulSessionContainer
    extends Container
@@ -390,6 +391,13 @@ public class StatefulSessionContainer
       getPersistenceManager().createSession(mi.getMethod(), mi.getArguments(), (StatefulSessionEnterpriseContext)mi.getEnterpriseContext());
      return ((StatefulSessionEnterpriseContext)mi.getEnterpriseContext()).getEJBObject();
    }
+
+   // local object interface implementation
+   
+    public EJBLocalHome getEJBLocalHome(MethodInvocation mi)
+    {
+      return localContainerInvoker.getEJBLocalHome();
+    }  
    
    // local home interface implementation
    
@@ -398,6 +406,7 @@ public class StatefulSessionContainer
    {
        throw new Error("Not Yet Implemented");
    }
+   
    
    public EJBLocalObject createLocalHome(MethodInvocation mi)
       throws Exception
