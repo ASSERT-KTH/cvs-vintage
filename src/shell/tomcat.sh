@@ -1,6 +1,6 @@
 #!/bin/sh
 #
-# $Id: tomcat.sh,v 1.36 2003/03/06 16:29:31 hgomez Exp $
+# $Id: tomcat.sh,v 1.37 2003/03/06 16:30:45 hgomez Exp $
 
 # Environment Variable Prequisites
 #
@@ -21,7 +21,7 @@
 #                   command is executed. The default is 8000.
 #
 #   TOMCAT_PID     (Optional) Path of the file which should contains the pid
-#                   of catalina startup java process, when start (fork) is used
+#                   of tomcat startup java process, when start (fork) is used
 #
 
 # Shell script to start and stop the server
@@ -43,7 +43,7 @@ esac
 # For Cygwin, ensure paths are in UNIX format before anything is touched
 if $cygwin; then
   [ -n "$JAVA_HOME" ] && JAVA_HOME=`cygpath --unix "$JAVA_HOME"`
-  [ -n "$TOMCAT_HOME" ] && TOMCAT_HOME=`cygpath --unix "$CATALINA_HOME"`
+  [ -n "$TOMCAT_HOME" ] && TOMCAT_HOME=`cygpath --unix "$TOMCAT_HOME"`
   [ -n "$CLASSPATH" ] && CLASSPATH=`cygpath --path --unix "$CLASSPATH"`
 fi
 
@@ -180,7 +180,7 @@ TOMCAT_OPTS="$TOMCAT_OPTS -Djava.security.policy==${TOMCAT_HOME}/conf/tomcat.pol
 # For Cygwin, switch paths to Windows format before running java
 if $cygwin; then
   JAVA_HOME=`cygpath --path --windows "$JAVA_HOME"`
-  TOMCAT_HOME=`cygpath --path --windows "$CATALINA_HOME"`
+  TOMCAT_HOME=`cygpath --path --windows "$TOMCAT_HOME"`
   CLASSPATH=`cygpath --path --windows "$CLASSPATH"`
 fi
 
