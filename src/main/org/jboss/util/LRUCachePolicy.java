@@ -12,7 +12,7 @@ import java.util.HashMap;
  * Implementation of a Least Recently Used cache policy.
  *
  * @author <a href="mailto:simone.bordet@compaq.com">Simone Bordet</a>
- * @version $Revision: 1.11 $
+ * @version $Revision: 1.12 $
  */
 public class LRUCachePolicy
 	implements CachePolicy
@@ -68,7 +68,7 @@ public class LRUCachePolicy
 	 * @see #start
 	 * @see #destroy
 	 */
-	public void create() throws Exception
+	public void create()
 	{
 		m_map = new HashMap();
 		m_list = createList();
@@ -81,7 +81,7 @@ public class LRUCachePolicy
 	 * @see #init
 	 * @see #stop
 	 */
-	public void start() throws Exception
+	public void start()
 	{
 	}
 	/**
