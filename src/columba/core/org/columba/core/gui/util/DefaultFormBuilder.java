@@ -151,7 +151,7 @@ public final class DefaultFormBuilder extends PanelBuilder {
  * Sets the size of gaps between component lines using the given
  * constant size.
  *
- * @param lineGapSize   the <coide>ConstantSize</code> that describes
+ * @param lineGapSize   the <code>ConstantSize</code> that describes
  * the size of the gaps between component lines
  */
     public void setLineGapSize(ConstantSize lineGapSize) {
@@ -163,7 +163,7 @@ public final class DefaultFormBuilder extends PanelBuilder {
  * Sets the size of gaps between paragraphs using the given
  * constant size.
  *
- * @param paragraphGapSize   the <coide>ConstantSize</code> that describes
+ * @param paragraphGapSize   the <code>ConstantSize</code> that describes
  * the size of the gaps between paragraphs
  */
     public void setParagraphGapSize(ConstantSize paragraphGapSize) {
