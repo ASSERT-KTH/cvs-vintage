@@ -22,7 +22,7 @@ package org.jboss.monitor;
  * identifiers for the metrics messages.
  *
  * @author  <a href="mailto:jplindfo@helsinki.fi">Juha Lindfors</a>
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  */     
 public interface MetricsConstants {
     
@@ -45,6 +45,10 @@ public interface MetricsConstants {
     final static String TYPE        = "TYPE";
     /** Message property 'ACTIVITY' */
     final static String ACTIVITY    = "ACTIVITY";
+    /** Message property 'CHECKPOINT' */
+    final static String CHECKPOINT  = "CHECKPOINT";
+    /** Message property 'METHOD' */
+    final static String METHOD      = "METHOD";
     
 }
 
