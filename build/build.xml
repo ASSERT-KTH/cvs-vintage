@@ -28,8 +28,6 @@
     <property name="src.test.dir" value="${src.dir}/test"/>
     <property name="src.usecases.dir" value="${src.dir}/usecases"/>
     
-    <property name="tomcat.dist.dir" value="${src.dir}/tomcat-4.0"/>
-
     <property name="torque.dir.scarab" value="${build.src.scarab}/torque"/>
     <property name="javadoc.destdir" value="${build.project}/api"/>
     <property name="scarab.war.file" value="${build.webapps}/${scarab.context}.war"/>
