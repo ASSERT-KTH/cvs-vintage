@@ -157,9 +157,12 @@ public class MessageComposer {
 		header.set("columba.date", date);
 		header.set("Date", MessageDate.toString(date));
 
+		//attachments
+		header.set("columba.attachment", new Boolean(model.getAttachments().size() > 0));
+		
 		// copy flags
 		header.setFlags(model.getMessage().getHeader().getFlags());
-
+		
 		return header;
 	}
 
@@ -561,8 +564,6 @@ public class MessageComposer {
 		}
 
 		String composedBody;
-
-		header.set("columba.attachment", Boolean.TRUE);
 
 		root.getHeader().getHeader().merge(header.getHeader());
 
