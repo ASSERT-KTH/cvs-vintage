@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Context.java,v 1.4 1999/10/15 03:20:25 harishp Exp $
- * $Revision: 1.4 $
- * $Date: 1999/10/15 03:20:25 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Context.java,v 1.5 1999/10/20 11:23:46 akv Exp $
+ * $Revision: 1.5 $
+ * $Date: 1999/10/20 11:23:46 $
  *
  * ====================================================================
  *
@@ -521,7 +521,7 @@ public class Context {
     }
 
     public Object getAttribute(String name) {
-        if (name.equals("servlet.classpath"))
+        if (name.equals("org.apache.tomcat.jsp_classpath"))
             return getClassPath();
         else {
             Object o = attributes.get(name);
