@@ -92,56 +92,34 @@ public class ContextManager {
     MapperInterceptor mapperInterceptor=new MapperInterceptor();
     
     /**
-     * The default Context used to process paths not associated with
-     * any other Context.
-     */
-    private Context defaultContext;
-
-    /**
      * The set of Contexts associated with this ContextManager,
-     * keyed by context name.
+     * keyed by context paths.
      */
-
     private Hashtable contexts = new Hashtable();
-
-
-    /**
-     * The set of Contexts associated with this ContextManager,
-     * keyed by the path prefix to be processed by this Context.
-     */
-
-    private Hashtable contextMaps = new Hashtable();
-
 
     /**
      * The server information string to be returned by the server
      * associated with this ContextManager.
      */
-
     private String serverInfo = null;
 
 
     /**
      * The virtual host name for the Server this ContextManager
      * is associated with.
-     * XXX Why is this here instead of in the Server?
      */
-    // Used by Contexts
     String hostname;
 
     /**
      * The port number being listed to by the Server this ContextManager
      * is associated with.
-     * XXX Why is this here instead of in the Server?
      */
-
     int port;
 
 
     /**
      * Construct a new ContextManager instance with default values.
      */
-
     public ContextManager() {
 
     }
@@ -153,7 +131,6 @@ public class ContextManager {
     /**
      * Gets the server info string for this server
      */
-    
     public String getServerInfo() {
 	if( serverInfo==null) 
 	    serverInfo=getContext("").getEngineHeader();
@@ -162,13 +139,13 @@ public class ContextManager {
     }
 
 
+    // XXX context property
     /**
      * Sets the server info string for this server. This string must
      * be of the form <productName>/<productVersion> [(<optionalInfo>)]
      *
      * @param serverInfo The new server information string
      */
-
     public void setServerInfo(String serverInfo) {
         this.serverInfo = serverInfo;
     }
@@ -212,10 +189,6 @@ public class ContextManager {
 	return (Context)contexts.get(name);
     }
 
-    public Context getMappedContext( String path ) {
-	return  (Context)contextMaps.get(path);
-    }
-
     /**
      * Adds a new Context to the set managed by this ContextManager.
      * XXX Why is there no context name argument?
@@ -247,13 +220,6 @@ public class ContextManager {
 	    throw new IllegalStateException(msg);
 	}
 
-	if (contextMaps.get(path) != null) {
-	    String msg = sm.getString("server.createctx.existmap",
-	        path);
-
-	    throw new IllegalStateException(msg);
-	}
-
 	if (docBase == null) {
 	    throw new RuntimeException("XXX SHOULD NEVER HAPPEN");
 	}
@@ -267,7 +233,6 @@ public class ContextManager {
 	    contexts.put("",context);
 	} else {
 	    contexts.put(path, context);
-	    contextMaps.put(path, context);
 	}
 
 	return context;
@@ -291,7 +256,6 @@ public class ContextManager {
 	if(context != null) {
 	    context.shutdown();
 	    contexts.remove(name);
-	    contextMaps.remove(name);
 	}
     }
 

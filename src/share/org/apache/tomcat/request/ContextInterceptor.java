@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/request/Attic/ContextInterceptor.java,v 1.2 2000/01/10 19:23:56 costin Exp $
- * $Revision: 1.2 $
- * $Date: 2000/01/10 19:23:56 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/request/Attic/ContextInterceptor.java,v 1.3 2000/01/10 22:01:19 costin Exp $
+ * $Revision: 1.3 $
+ * $Date: 2000/01/10 22:01:19 $
  *
  * ====================================================================
  *
@@ -115,7 +115,7 @@ public class ContextInterceptor implements RequestInterceptor {
 
         lookup:
 	do {
-	    ctx = cm.getMappedContext(path);
+	    ctx = cm.getContext(path);
 	    if (ctx == null) {
 	        int i = path.lastIndexOf('/');
 		if (i > -1 && path.length() > 1) {
