@@ -6,18 +6,20 @@
  */
 package org.jboss.metadata;
 
-// $Id: PortComponentRefMetaData.java,v 1.4 2004/05/29 19:17:13 tdiesler Exp $
+// $Id: PortComponentRefMetaData.java,v 1.5 2004/06/16 18:49:29 starksm Exp $
 
 import org.jboss.deployment.DeploymentException;
 import org.w3c.dom.Element;
 
 import javax.xml.rpc.JAXRPCException;
 import java.io.Serializable;
+import java.util.Properties;
+import java.util.Iterator;
 
 /** The metdata data from service-ref/port-component-ref element in web.xml, ejb-jar.xml, and application-client.xml.
  *
  * @author Thomas.Diesler@jboss.org
- * @version $Revision: 1.4 $
+ * @version $Revision: 1.5 $
  */
 public class PortComponentRefMetaData implements Serializable
 {
@@ -28,6 +30,9 @@ public class PortComponentRefMetaData implements Serializable
    private String serviceEndpointInterface;
    // The optional <port-component-link> element
    private String portComponentLink;
+
+   /** Arbitrary proxy properties given by <call-property> */
+   private Properties callProperties;
 
    public PortComponentRefMetaData(ServiceRefMetaData serviceRefMetaData)
    {
@@ -62,6 +67,11 @@ public class PortComponentRefMetaData implements Serializable
       }
    }
 
+   public Properties getCallProperties()
+   {
+      return callProperties;
+   }
+
    public void importStandardXml(Element element)
            throws DeploymentException
    {
@@ -72,5 +82,17 @@ public class PortComponentRefMetaData implements Serializable
 
    public void importJBossXml(Element element) throws DeploymentException
    {
+      // Look for call-property elements
+      Iterator iterator = MetaData.getChildrenByTagName(element, "call-property");
+      while (iterator.hasNext())
+      {
+         Element propElement = (Element) iterator.next();
+         String name = MetaData.getUniqueChildContent(propElement, "prop-name");
+         String value = MetaData.getUniqueChildContent(propElement, "prop-value");
+         if( callProperties == null )
+            callProperties = new Properties();
+         callProperties.setProperty(name, value);
+      }
+
    }
 }

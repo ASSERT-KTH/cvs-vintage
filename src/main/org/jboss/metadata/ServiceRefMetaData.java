@@ -6,7 +6,7 @@
  */
 package org.jboss.metadata;
 
-// $Id: ServiceRefMetaData.java,v 1.15 2004/06/15 01:27:31 starksm Exp $
+// $Id: ServiceRefMetaData.java,v 1.16 2004/06/16 18:49:29 starksm Exp $
 
 import java.io.Serializable;
 import java.net.MalformedURLException;
@@ -15,6 +15,7 @@ import java.net.URLClassLoader;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Properties;
+import java.util.LinkedHashMap;
 import javax.wsdl.Definition;
 import javax.wsdl.WSDLException;
 import javax.xml.namespace.QName;
@@ -31,7 +32,7 @@ import org.w3c.dom.Element;
  * application-client.xml.
  *
  * @author Thomas.Diesler@jboss.org
- * @version $Revision: 1.15 $
+ * @version $Revision: 1.16 $
  */
 public class ServiceRefMetaData implements Serializable
 {
@@ -45,8 +46,8 @@ public class ServiceRefMetaData implements Serializable
    private String jaxrpcMappingFile;
    // The optional <service-qname> element
    private QName serviceQName;
-   // The optional <port-component-ref> elements
-   private ArrayList portComponentRefs = new ArrayList();
+   // The LinkedHashMap<String, PortComponentRefMetaData> for <port-component-ref> elements
+   private LinkedHashMap portComponentRefs = new LinkedHashMap();
    // The optional <handler> elements
    private ArrayList handlers = new ArrayList();
 
@@ -118,7 +119,7 @@ public class ServiceRefMetaData implements Serializable
    public PortComponentRefMetaData[] getPortComponentRefs()
    {
       PortComponentRefMetaData[] array = new PortComponentRefMetaData[portComponentRefs.size()];
-      portComponentRefs.toArray(array);
+      portComponentRefs.values().toArray(array);
       return array;
    }
 
@@ -205,7 +206,7 @@ public class ServiceRefMetaData implements Serializable
          Element pcrefElement = (Element) iterator.next();
          PortComponentRefMetaData pcrefMetaData = new PortComponentRefMetaData(this);
          pcrefMetaData.importStandardXml(pcrefElement);
-         portComponentRefs.add(pcrefMetaData);
+         portComponentRefs.put(pcrefMetaData.getServiceEndpointInterface(), pcrefMetaData);
       }
 
       // Parse the handler elements
@@ -219,6 +220,10 @@ public class ServiceRefMetaData implements Serializable
       }
    }
 
+   /** Parse jboss specific service-ref child elements
+    * @param element
+    * @throws DeploymentException
+    */ 
    public void importJBossXml(Element element) throws DeploymentException
    {
       String wsdlOverrideOption = MetaData.getOptionalChildContent(element, "wsdl-override");
@@ -232,8 +237,26 @@ public class ServiceRefMetaData implements Serializable
          throw new DeploymentException("Invalid WSDL override: " + wsdlOverrideOption);
       }
 
+      // Parse the port-component-ref elements
+      Iterator iterator = MetaData.getChildrenByTagName(element, "port-component-ref");
+      while (iterator.hasNext())
+      {
+         Element portElement = (Element) iterator.next();
+         String name = MetaData.getUniqueChildContent(portElement, "service-endpoint-interface");
+         PortComponentRefMetaData pcrefMetaData = 
+            (PortComponentRefMetaData) portComponentRefs.get(name);
+         if( pcrefMetaData == null )
+         {
+            String msg = "Failed to find port-component-ref in jboss descriptor "
+               + "for service-endpoint-interface: "+name;
+            throw new DeploymentException(msg);
+         }
+
+         pcrefMetaData.importJBossXml(portElement);         
+      }
+
       // Parse the call-property elements
-      Iterator iterator = MetaData.getChildrenByTagName(element, "call-property");
+      iterator = MetaData.getChildrenByTagName(element, "call-property");
       while (iterator.hasNext())
       {
          Element propElement = (Element) iterator.next();
