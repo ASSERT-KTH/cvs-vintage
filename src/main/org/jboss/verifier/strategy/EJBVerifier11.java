@@ -19,7 +19,7 @@ package org.jboss.verifier.strategy;
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  *
  * This package and its source code is available at www.jboss.org
- * $Id: EJBVerifier11.java,v 1.20 2000/10/15 20:52:29 juha Exp $
+ * $Id: EJBVerifier11.java,v 1.21 2000/10/18 08:59:24 juha Exp $
  */
 
 
@@ -61,7 +61,7 @@ import org.jboss.metadata.EntityMetaData;
  * @author  Juha Lindfors (jplindfo@helsinki.fi)
  * @author  Aaron Mulder  (ammulder@alumni.princeton.edu)
  *
- * @version $Revision: 1.20 $
+ * @version $Revision: 1.21 $
  * @since   JDK 1.3
  */
 public class EJBVerifier11 extends AbstractVerifier {
@@ -835,14 +835,14 @@ public class EJBVerifier11 extends AbstractVerifier {
                     
                     if (!hasMatchingEJBCreate(bean, create)) {
                         
-                        fireSpecViolationEvent(entity, new Section("9.2.8.f"));
+                        fireSpecViolationEvent(entity, create, new Section("9.2.8.f"));
                         
                         status = false;
                     }
                     
                     if (!hasRemoteReturnType(entity, create)) {
                         
-                        fireSpecViolationEvent(entity, new Section("9.2.8.g"));
+                        fireSpecViolationEvent(entity, create, new Section("9.2.8.g"));
                         
                         status = false;
                     }
@@ -856,13 +856,13 @@ public class EJBVerifier11 extends AbstractVerifier {
                         if ( !(hasMatchingExceptions(ejbCreate, create)     &&
                                hasMatchingExceptions(ejbPostCreate, create)) ) {
                                    
-                            fireSpecViolationEvent(entity, new Section("9.2.8.h"));
+                            fireSpecViolationEvent(entity, create, new Section("9.2.8.h"));
                         }
                     }
                     
                     if (!throwsCreateException(create)) {
                         
-                        fireSpecViolationEvent(entity, new Section("9.2.8.i"));
+                        fireSpecViolationEvent(entity, create, new Section("9.2.8.i"));
                         
                         status = false;
                     }
@@ -947,21 +947,21 @@ public class EJBVerifier11 extends AbstractVerifier {
 
                 if (!hasLegalRMIIIOPArguments(method)) {
 
-                    fireSpecViolationEvent(entity, new Section("9.2.7.b"));
+                    fireSpecViolationEvent(entity, method, new Section("9.2.7.b"));
 
                     status = false;
                 }
 
                 if (!hasLegalRMIIIOPReturnType(method)) {
 
-                    fireSpecViolationEvent(entity, new Section("9.2.7.c"));
+                    fireSpecViolationEvent(entity, method, new Section("9.2.7.c"));
 
                     status = false;
                 }
 
                 if (!throwsRemoteException(method)) {
 
-                    fireSpecViolationEvent(entity, new Section("9.2.7.d"));
+                    fireSpecViolationEvent(entity, method, new Section("9.2.7.d"));
 
                     status = false;
                 }
@@ -998,7 +998,7 @@ public class EJBVerifier11 extends AbstractVerifier {
                         
                     if (!hasMatchingMethod(bean, method)) {
                         
-                        fireSpecViolationEvent(entity, new Section("9.2.7.e"));
+                        fireSpecViolationEvent(entity, method, new Section("9.2.7.e"));
 
                         status = false;
                     }
@@ -1010,14 +1010,14 @@ public class EJBVerifier11 extends AbstractVerifier {
                         
                             if (!hasMatchingReturnType(beanMethod, method)) {
                                 
-                                fireSpecViolationEvent(entity, new Section("9.2.7.f"));
+                                fireSpecViolationEvent(entity, method, new Section("9.2.7.f"));
                                 
                                 status = false;
                             }
                             
                             if (!hasMatchingExceptions(beanMethod, method)) {
                                 
-                                fireSpecViolationEvent(entity, new Section("9.2.7.g"));
+                                fireSpecViolationEvent(entity, method, new Section("9.2.7.g"));
                                 
                                 status = false;
                             }
@@ -1164,32 +1164,32 @@ public class EJBVerifier11 extends AbstractVerifier {
 
                     if (!isPublic(ejbCreate)) {
 
-                        fireSpecViolationEvent(entity, new Section("9.2.3.a"));
+                        fireSpecViolationEvent(entity, ejbCreate, new Section("9.2.3.a"));
                         status = false;
                     }
 
                     if ( (isFinal(ejbCreate)) ||
                          (isStatic(ejbCreate)) ) {
 
-                        fireSpecViolationEvent(entity, new Section("9.2.3.b"));
+                        fireSpecViolationEvent(entity, ejbCreate, new Section("9.2.3.b"));
                         status = false;
                     }
 
                     if (!hasPrimaryKeyReturnType(entity, ejbCreate)) {
 
-                        fireSpecViolationEvent(entity, new Section("9.2.3.c"));
+                        fireSpecViolationEvent(entity, ejbCreate, new Section("9.2.3.c"));
                         status = false;
                     }
 
                     if (!hasLegalRMIIIOPArguments(ejbCreate)) {
 
-                        fireSpecViolationEvent(entity, new Section("9.2.3.d"));
+                        fireSpecViolationEvent(entity, ejbCreate, new Section("9.2.3.d"));
                         status = false;
                     }
 
                     if (!hasLegalRMIIIOPReturnType(ejbCreate)) {
 
-                        fireSpecViolationEvent(entity, new Section("9.2.3.e"));
+                        fireSpecViolationEvent(entity, ejbCreate, new Section("9.2.3.e"));
                         status = false;
                     }
                 }
@@ -1217,7 +1217,7 @@ public class EJBVerifier11 extends AbstractVerifier {
 
                     if (!hasMatchingEJBPostCreate(bean, ejbCreate)) {
 
-                        fireSpecViolationEvent(entity, new Section("9.2.4.a"));
+                        fireSpecViolationEvent(entity, ejbCreate, new Section("9.2.4.a"));
 
                         status = false;
                     }
@@ -1228,27 +1228,27 @@ public class EJBVerifier11 extends AbstractVerifier {
 
                         if (!isPublic(ejbPostCreate)) {
 
-                            fireSpecViolationEvent(entity, new Section("9.2.4.b"));
+                            fireSpecViolationEvent(entity, ejbPostCreate, new Section("9.2.4.b"));
 
                             status = false;
                         }
 
                         if (isStatic(ejbPostCreate)) {
 
-                            fireSpecViolationEvent(entity, new Section("9.2.4.c"));
+                            fireSpecViolationEvent(entity, ejbPostCreate, new Section("9.2.4.c"));
 
                             status = false;
                         }
 
                         if (isFinal(ejbPostCreate)) {
 
-                            fireSpecViolationEvent(entity, new Section("9.2.4.d"));
+                            fireSpecViolationEvent(entity, ejbPostCreate, new Section("9.2.4.d"));
 
                             status = false;
                         }
 
                         if(!hasVoidReturnType(ejbPostCreate)) {
-                            fireSpecViolationEvent(entity, new Section("9.2.4.e"));
+                            fireSpecViolationEvent(entity, ejbPostCreate, new Section("9.2.4.e"));
                             status = false;
                         }
                     }
@@ -1278,14 +1278,14 @@ public class EJBVerifier11 extends AbstractVerifier {
 
                 if (!hasPrimaryKeyReturnType(entity, ejbFindByPrimaryKey)) {
 
-                    fireSpecViolationEvent(entity, new Section("9.2.5.b"));
+                    fireSpecViolationEvent(entity, ejbFindByPrimaryKey, new Section("9.2.5.b"));
 
                     status = false;
                 }
 
                 if (!isSingleObjectFinder(entity, ejbFindByPrimaryKey)) {
 
-                    fireSpecViolationEvent(entity, new Section("9.2.5.c"));
+                    fireSpecViolationEvent(entity, ejbFindByPrimaryKey, new Section("9.2.5.c"));
 
                     status = false;
                 }
@@ -1317,28 +1317,28 @@ public class EJBVerifier11 extends AbstractVerifier {
 
                     if (!isPublic(finder)) {
 
-                        fireSpecViolationEvent(entity, new Section("9.2.5.d"));
+                        fireSpecViolationEvent(entity, finder, new Section("9.2.5.d"));
 
                         status = false;
                     }
 
                     if (isFinal(finder)) {
 
-                        fireSpecViolationEvent(entity, new Section("9.2.5.e"));
+                        fireSpecViolationEvent(entity, finder, new Section("9.2.5.e"));
 
                         status = false;
                     }
 
                     if (isStatic(finder)) {
 
-                        fireSpecViolationEvent(entity, new Section("9.2.5.f"));
+                        fireSpecViolationEvent(entity, finder, new Section("9.2.5.f"));
 
                         status = false;
                     }
 
                     if (!hasLegalRMIIIOPArguments(finder)) {
 
-                        fireSpecViolationEvent(entity, new Section("9.2.5.g"));
+                        fireSpecViolationEvent(entity, finder, new Section("9.2.5.g"));
 
                         status = false;
                     }
@@ -1346,14 +1346,12 @@ public class EJBVerifier11 extends AbstractVerifier {
                     if (! (isSingleObjectFinder(entity, finder)
                         || isMultiObjectFinder(finder))) {
 
-                        fireSpecViolationEvent(entity, new Section("9.2.5.h"));
+                        fireSpecViolationEvent(entity, finder, new Section("9.2.5.h"));
 
                         status = false;
                     }
                 }
             }
-
-
 
 
         }

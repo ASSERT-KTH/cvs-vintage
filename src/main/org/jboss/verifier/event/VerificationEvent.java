@@ -19,7 +19,7 @@ package org.jboss.verifier.event;
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  *
  * This package and its source code is available at www.jboss.org
- * $Id: VerificationEvent.java,v 1.4 2000/10/15 20:52:28 juha Exp $
+ * $Id: VerificationEvent.java,v 1.5 2000/10/18 08:59:25 juha Exp $
  */
 
 
@@ -36,7 +36,7 @@ import org.jboss.verifier.Section;
 /**
  *
  * @author 	Juha Lindfors   (jplindfo@helsinki.fi)
- * @version $Revision: 1.4 $
+ * @version $Revision: 1.5 $
  * @since  	JDK 1.3
  */
 public class VerificationEvent extends EventObject {
@@ -148,10 +148,12 @@ public class VerificationEvent extends EventObject {
             int len     = returnClassName.length();
             int roffset = returnClassName.lastIndexOf(".");
             
-            if (roffset == -1)
-                roffset = 0;
+            String returnType = "";
             
-            String returnType = returnClassName.substring(roffset+1, len);
+            if (roffset == -1)
+                returnType = returnClassName;
+            else           
+                returnType = returnClassName.substring(roffset+1, len);
             
             Class[] exceptions  = method.getExceptionTypes();
             StringBuffer excbuf = new StringBuffer(100);
@@ -161,19 +163,26 @@ public class VerificationEvent extends EventObject {
                 int elen    = exceptionClassName.length();
                 int eoffset = exceptionClassName.lastIndexOf(".");
                 
+                String exceptionType = "";
+                
                 if (eoffset == -1)
-                    eoffset = 0;
+                    exceptionType = exceptionClassName;
+                else
+                    exceptionType = exceptionClassName.substring(eoffset+1, elen);
                     
-                excbuf.append(exceptionClassName.substring(eoffset+1, elen))
+                excbuf.append(exceptionType)
                       .append(", ");
             }
-            excbuf.delete(excbuf.length()-2, excbuf.length());
+            if (excbuf.length() > 2)
+                excbuf.delete(excbuf.length()-2, excbuf.length());
             
             buf.append("Method : " + Modifier.toString(method.getModifiers()) + " " +
                                      returnType        + " " + 
-                                     method.getName()  + "() throws " +
-                                     excbuf.toString() + 
-                                     linebreak);
+                                     method.getName()  + "()");
+            if (excbuf.length() > 0)
+                buf.append(" throws " + excbuf.toString());
+               
+            buf.append(linebreak);
         }
         
         int offset = section.lastIndexOf(".");
