@@ -1,29 +1,12 @@
 #**
 @author <a href="mailto:dr@bitonic.com">Douglas B. Robertson</a>
 @author <a href="mailto:jon@collab.net">Jon Stevens</a>
-@version $Id: AdminIndex.vm,v 1.19 2002/03/28 18:50:32 jon Exp $
+@version $Id: AdminIndex.vm,v 1.20 2002/04/24 22:50:17 jon Exp $
 *#
 
 <div id="adminIndex" class="app">
 
 <h2>$page.Title</h2>
-
-#if ($scarabR.hasPermission($scarabG.Permission.DOMAIN__ADMIN,$scarabR.CurrentModule))
-<h3>Users</h3>
-
-<ul>
- <li>$link.setPage("admin,ManageUserSearch.vm").setPathInfo("newSearch","true").setLabel("User management")</li>
- <li>$link.setPage("admin,AddUser.vm").addQueryData("state","showadduser").setLabel("Add new user")</li>
-</ul>
-
-
-<h3>Roles</h3>
-
-<ul>
- <li><a href="admin,ManageRoles.vm">Role list</a></li>
- <li><a href="admin,AddRole.vm">Add new role</a></li>
-</ul>
-#end
 
 #if ($scarabR.hasPermission($scarabG.Permission.DOMAIN__EDIT, $scarabR.CurrentModule))
 <h3>Global data</h3>
@@ -52,6 +35,22 @@
 #if ($link.setPage("admin,XMLExportSelect.vm").isAllowed())
  <li>$link.setLabel("XML export")</li>
 #end
+</ul>
+#end
+
+#if ($scarabR.hasPermission($scarabG.Permission.DOMAIN__ADMIN,$scarabR.CurrentModule))
+<h3>Roles</h3>
+
+<ul>
+ <li><a href="admin,ManageRoles.vm">Role list</a></li>
+ <li><a href="admin,AddRole.vm">Add new role</a></li>
+</ul>
+
+<h3>Users</h3>
+
+<ul>
+ <li>$link.setPage("admin,ManageUserSearch.vm").setPathInfo("newSearch","true").setLabel("User management")</li>
+ <li>$link.setPage("admin,AddUser.vm").addQueryData("state","showadduser").setLabel("Add new user")</li>
 </ul>
 #end
 
