@@ -40,7 +40,15 @@ import org.jboss.logging.Logger;
  * be coded here in the externalization implementation of the class
  *
  * @author  <a href="mailto:marc@jboss.org">Marc Fleury</a>
- * @version $Revision: 1.10 $
+ * @version $Revision: 1.11 $
+ *
+ * <p><b>Revisions:</b>
+ *
+ * <p><b>20020719 bill burke:</b>
+ * <ul>
+ * <li>Custom externalization for payload hashmaps, OBJECT_NAME, ARGUMENTS, METHOD
+ * are all put directly on wire now instead of in payload.  3 less keys to worry about.
+ * </ul>
  */
 public class MarshalledInvocation
    extends Invocation
@@ -288,58 +296,99 @@ public class MarshalledInvocation
       return value;
    }
    
+   // Externalizable implementation ---------------------------------
    public void writeExternal(java.io.ObjectOutput out)
-      throws IOException
+   throws IOException
    {
-      // FIXME marcf: the "specific" treatment of Transactions should be 
-      // abstracted.
+      
+      // FIXME marcf: the "specific" treatment of Transactions should be abstracted.
       // Write the TPC, not the local transaction
       out.writeObject(tpc);
+
+      Method method = (Method)payload.get(InvocationKey.METHOD);
+      long methodHash = calculateHash(method);
+      out.writeLong(methodHash);
       
-      HashMap sentData = new HashMap ();
-      
-      /* Everything else is possibly tied to classloaders that exist inside the
-      server but not in the generic JMX land. they will travel in the  payload
-      as MarshalledValue objects, see the Invocation getter logic
-      */
+      out.writeObject(payload.get(InvocationKey.OBJECT_NAME));
+      // REVISIT: MarshalledValue is inefficient
+      out.writeObject(new MarshalledValue(payload.get(InvocationKey.ARGUMENTS)));
+
+
+      // Write out payload hashmap
+      // Don't use hashmap serialization to avoid not-needed data being
+      // marshalled
+      // The map contains only serialized representations of every other object
+      // Everything else is possibly tied to classloaders that exist inside the
+      // server but not in the generic JMX land. they will travel in the  payload
+      // as MarshalledValue objects, see the Invocation getter logic
+      //
+      out.writeInt(payload.size() - 3);
       
       Iterator keys = payload.keySet().iterator();
       while (keys.hasNext())
       {
          Object currentKey = keys.next();
          
-         // This code could be:
-         //    if (object.getClass().getName().startsWith("java"))
-         // then don't serialize.  Bench the above for speed.
+         // This code could be if (object.getClass().getName().startsWith("java")) then don't serialize. 
+         // Bench the above for speed.
          
          //Replace the current object with a Marshalled representation
-         if (currentKey == InvocationKey.METHOD) {
+         if (currentKey == InvocationKey.METHOD
+             || currentKey == InvocationKey.ARGUMENTS
+             || currentKey == InvocationKey.OBJECT_NAME)
+         {
             // We write the hash instead of the method
-            sentData.put(InvocationKey.METHOD, new Long(calculateHash(
-                        (Method) payload.get(InvocationKey.METHOD))));
+            continue;
          }
-         else {
-            sentData.put (currentKey, 
-                  new MarshalledValue(payload.get(currentKey)));
+         else
+         {
+            out.writeObject(currentKey);
+            // REVISIT: MarshalledValue is inefficient
+            out.writeObject(new MarshalledValue(payload.get(currentKey)));
          }
       }
       
-      // The map contains only serialized representations of every other object
-      out.writeObject(sentData);
-      
       // This map is "safe" as is
-      out.writeObject(as_is_payload);
+      //out.writeObject(as_is_payload);
+      out.writeInt(as_is_payload.size());
+      
+      keys = as_is_payload.keySet().iterator();
+      while (keys.hasNext())
+      {
+         Object currentKey = keys.next();
+         out.writeObject(currentKey);
+         out.writeObject(as_is_payload.get(currentKey));
+      }
    }
    
    public void readExternal(java.io.ObjectInput in)
-      throws IOException, ClassNotFoundException
+   throws IOException, ClassNotFoundException
    {
+      payload = new HashMap();
+      as_is_payload = new HashMap();
+
       // Read TPC
       tpc = in.readObject();
+      long methodHash = in.readLong();
+      payload.put(InvocationKey.METHOD, new Long(methodHash));
+
+      payload.put(InvocationKey.OBJECT_NAME, in.readObject());
+      payload.put(InvocationKey.ARGUMENTS, in.readObject());
+
+      int payloadSize = in.readInt();
+      for (int i = 0; i < payloadSize; i++)
+      {
+         Object key = in.readObject();
+         Object value = in.readObject();
+         payload.put(key, value);
+      }
       
-      // The map contains only serialized representations of every other object
-      payload = (Map) in.readObject();
-      
-      as_is_payload = (Map) in.readObject();
+      int as_is_payloadSize = in.readInt();
+      for (int i = 0; i < as_is_payloadSize; i++)
+      {
+         Object key = in.readObject();
+         Object value = in.readObject();
+         as_is_payload.put(key, value);
+      }
    }
 }
