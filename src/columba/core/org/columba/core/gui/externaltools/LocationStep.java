@@ -103,10 +103,16 @@ class LocationStep extends AbstractStep implements ActionListener {
 
 			WizardTextField middlePanel = new WizardTextField();
 			LabelWithMnemonic sourceLabel =
-				new LabelWithMnemonic("Choose &Location:");
+				new LabelWithMnemonic(GlobalResourceLoader.getString(
+                                        RESOURCE_PATH,
+                                        "externaltools",
+                                        "LocationStep.location"));
 			middlePanel.add(sourceLabel);
 
-			sourceButton = new ButtonWithMnemonic("&Browse...");
+			sourceButton = new ButtonWithMnemonic(GlobalResourceLoader.getString(
+                                        RESOURCE_PATH,
+                                        "externaltools",
+                                        "LocationStep.browse"));
 			sourceLabel.setLabelFor(sourceButton);
 			sourceButton.addActionListener(this);
 			middlePanel.add(sourceButton);
@@ -128,7 +134,10 @@ class LocationStep extends AbstractStep implements ActionListener {
 			label2.setFont(font);
 			sourceFilePanel.add(label2);
 
-			sourceButton = new ButtonWithMnemonic("&Change...");
+			sourceButton = new ButtonWithMnemonic(GlobalResourceLoader.getString(
+                                        RESOURCE_PATH,
+                                        "externaltools",
+                                        "LocationStep.change"));
 			sourceButton.addActionListener(this);
                         sourceFilePanel.add(sourceButton);
                         
