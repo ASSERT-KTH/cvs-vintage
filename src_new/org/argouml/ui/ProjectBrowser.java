@@ -1,4 +1,4 @@
-// $Id: ProjectBrowser.java,v 1.121 2003/11/08 01:39:57 d00mst Exp $
+// $Id: ProjectBrowser.java,v 1.122 2003/11/08 16:05:08 mkl Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -856,7 +856,9 @@ public class ProjectBrowser
 
     public void targetSet(TargetEvent e) {
         Object target = e.getNewTarget();
-        if (target instanceof UMLDiagram) {
+        if (target instanceof ArgoDiagram) {
+	    ProjectManager.getManager().getCurrentProject().
+		setActiveDiagram((ArgoDiagram)target);
             updateTitle();
         }
     }    
