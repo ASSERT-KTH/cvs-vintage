@@ -92,8 +92,6 @@ public class OutgoingServerPanel extends DefaultPanel implements ActionListener 
     private AccountItem accountItem;
     private JButton checkAuthMethods;
     
-    private JComboBox sslComboBox;
-
     public OutgoingServerPanel(AccountItem accountItem) {
         super();
 
@@ -278,7 +276,6 @@ public class OutgoingServerPanel extends DefaultPanel implements ActionListener 
         // create a form builder
         DefaultFormBuilder b2 = new DefaultFormBuilder(panel2, l2);
         b2.setRowGroupingEnabled(true);
-        b2.append(secureCheckBox, sslComboBox);
         builder.append(panel2, 3);
         builder.nextLine();
         
@@ -370,12 +367,6 @@ public class OutgoingServerPanel extends DefaultPanel implements ActionListener 
 
         loginTextField = new JTextField();
         loginLabel.setLabelFor(loginTextField);
-        
-        sslComboBox = new JComboBox();
-        sslComboBox.addItem(MailResourceLoader
-                .getString("dialog", "account", "ssl_combobox_popimaps"));
-        sslComboBox.addItem(MailResourceLoader
-                .getString("dialog", "account", "ssl_combobox_tls"));
     }
 
     /**

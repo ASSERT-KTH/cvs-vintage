@@ -52,6 +52,7 @@ import org.columba.core.gui.util.LabelWithMnemonic;
 import org.columba.mail.config.AccountItem;
 import org.columba.mail.main.MailInterface;
 import org.columba.mail.util.MailResourceLoader;
+import org.columba.ristretto.imap.protocol.IMAPProtocol;
 import org.columba.ristretto.pop3.protocol.POP3Exception;
 import org.columba.ristretto.pop3.protocol.POP3Protocol;
 
@@ -69,7 +70,11 @@ public class IncomingServerPanel extends DefaultPanel implements ActionListener 
 
     private static final Pattern AUTH_MODE_TOKENIZE_PATTERN = Pattern
             .compile("([^;]+);?");
-
+    
+    public static final int IMAPS_POP3S = 0;
+    public static final int TLS = 1;
+    
+    
     private JLabel loginLabel;
 
     private JTextField loginTextField;
@@ -176,7 +181,10 @@ public class IncomingServerPanel extends DefaultPanel implements ActionListener 
 
             secureCheckBox.setSelected(serverItem.getBoolean("enable_ssl",
                     false));
-
+            
+            sslComboBox.setSelectedIndex(serverItem.getInteger("ssl_type",1));
+            sslComboBox.setEnabled( secureCheckBox.isSelected() );
+            
             defaultAccountCheckBox.setEnabled(MailInterface.config
                     .getAccountList().getDefaultAccountUid() != accountItem
                     .getInteger("uid"));
@@ -196,7 +204,8 @@ public class IncomingServerPanel extends DefaultPanel implements ActionListener 
             serverItem.set("save_password", storePasswordCheckBox.isSelected());
 
             serverItem.set("enable_ssl", secureCheckBox.isSelected());
-
+            serverItem.set("ssl_type", sslComboBox.getSelectedIndex());
+            
             if (isPopAccount()) {
                 // if securest write DEFAULT
                 if (authenticationComboBox.getSelectedIndex() != 0) {
@@ -390,7 +399,9 @@ public class IncomingServerPanel extends DefaultPanel implements ActionListener 
 
         secureCheckBox = new CheckBoxWithMnemonic(MailResourceLoader.getString(
                 "dialog", "account", "use_SSL_for_secure_connection"));
-
+        secureCheckBox.setActionCommand("SSL");
+        secureCheckBox.addActionListener(this);
+        
         authenticationLabel = new LabelWithMnemonic(MailResourceLoader
                 .getString("dialog", "account", "authentication_type"));
 
@@ -405,10 +416,17 @@ public class IncomingServerPanel extends DefaultPanel implements ActionListener 
         checkAuthMethods.addActionListener(this);
         
         sslComboBox = new JComboBox();
-        sslComboBox.addItem(MailResourceLoader
-                .getString("dialog", "account", "ssl_combobox_popimaps"));
-        sslComboBox.addItem(MailResourceLoader
-                .getString("dialog", "account", "ssl_combobox_tls"));
+        if( isPopAccount() ) {
+        	sslComboBox.addItem(MailResourceLoader.getString(
+                    "dialog", "account", "pop3s_in_checkbox"));
+        } else {
+        	sslComboBox.addItem(MailResourceLoader.getString(
+                    "dialog", "account", "imaps_in_checkbox"));
+        }
+        sslComboBox.addItem(MailResourceLoader.getString(
+                    "dialog", "account", "tls_in_checkbox"));
+        sslComboBox.setActionCommand("SSL");
+        sslComboBox.addActionListener(this);
     }
 
     private void updateAuthenticationComboBox() {
@@ -454,10 +472,73 @@ public class IncomingServerPanel extends DefaultPanel implements ActionListener 
             receiveOptionsPanel.revalidate();
         } else if (action.equals("CHECK_AUTHMETHODS")) {
             getAuthMechanisms();
+        } else if (action.equals("SSL")) {
+        	sslComboBox.setEnabled(secureCheckBox.isSelected());
+        	
+        	if(secureCheckBox.isSelected() ) {
+        		// Update the Port
+        		if( sslComboBox.getSelectedIndex() == TLS) {
+        			// Default Port
+        			if( isPopAccount() ) {
+        				if( ((Integer)portSpinner.getValue()).intValue() != POP3Protocol.DEFAULT_PORT) {
+        					portSpinner.setValue(new Integer(POP3Protocol.DEFAULT_PORT));
+        					showPortChangeMessageBox();
+        				}
+        			} else {
+        				if( ((Integer)portSpinner.getValue()).intValue() != IMAPProtocol.DEFAULT_PORT) {
+        					portSpinner.setValue(new Integer(IMAPProtocol.DEFAULT_PORT));
+        					showPortChangeMessageBox();
+        				}
+        			}
+        		} else {
+        			// POP3s / IMAPs
+        			if( isPopAccount() ) {
+        				if( ((Integer)portSpinner.getValue()).intValue() != POP3Protocol.DEFAULT_SSL_PORT) {
+        					portSpinner.setValue(new Integer(POP3Protocol.DEFAULT_SSL_PORT));
+        					showPortChangeMessageBox();
+        				}
+        			} else {
+        				if( ((Integer)portSpinner.getValue()).intValue() != IMAPProtocol.DEFAULT_SSL_PORT) {
+        					portSpinner.setValue(new Integer(IMAPProtocol.DEFAULT_SSL_PORT));
+        					showPortChangeMessageBox();
+        				}
+        			}
+        		}
+        	} else {
+        		// Check for default Ports
+    			if( isPopAccount() ) {
+    				if( ((Integer)portSpinner.getValue()).intValue() != POP3Protocol.DEFAULT_PORT) {
+    					portSpinner.setValue(new Integer(POP3Protocol.DEFAULT_PORT));
+    					showPortChangeMessageBox();
+    				}
+    			} else {
+    				if( ((Integer)portSpinner.getValue()).intValue() != IMAPProtocol.DEFAULT_PORT) {
+    					portSpinner.setValue(new Integer(IMAPProtocol.DEFAULT_PORT));
+    					showPortChangeMessageBox();
+    				}
+    			}
+        	}
         }
     }
 
-    private void getAuthMechanisms() {
+    /**
+	 * 
+	 */
+	private int showPortChangeMessageBox() {
+		Object[] options = new String[]{
+				MailResourceLoader.getString("", "global", "ok").replaceAll(
+						"&", "")
+						/*,MailResourceLoader.getString("", "global", "cancel")
+						.replaceAll("&", "")*/
+						};
+
+		int result = JOptionPane.showOptionDialog(this, MailResourceLoader.getString("dialog", "account", "change_port_ssl"), "Information",
+				JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null,
+				options, options[0]);
+		return result;
+	}
+
+	private void getAuthMechanisms() {
         {
             List list = new LinkedList();
 

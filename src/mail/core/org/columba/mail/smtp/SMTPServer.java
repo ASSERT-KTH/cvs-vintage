@@ -169,7 +169,7 @@ public class SMTPServer {
         if (smtpItem.getBoolean("enable_ssl")) {
             if (isSupported("STARTTLS")) {
                 try {
-                    protocol.switchToSSL();
+                    protocol.startTLS();
                     ssl = true;
                 } catch (Exception e) {
                     Object[] options = new String[] {
@@ -421,9 +421,7 @@ public class SMTPServer {
      */
     protected void pop3Authentification() throws IOException, POP3Exception,
             CommandCancelledException {
-        POP3Store pop3Store = new POP3Store(accountItem.getPopItem());
-        pop3Store.login();
-        pop3Store.logout();
+        POP3Store.doPOPbeforeSMTP(accountItem.getPopItem());
     }
 
     /**

@@ -89,7 +89,11 @@ public String get(String pathToElement, String key, String defaultValue) {
             set(key, value);
         }
 
-        return Integer.parseInt(value);
+        try {
+			return Integer.parseInt(value);
+		} catch (NumberFormatException e) {
+			return defaultValue;
+		}
     }
 
     public int getInteger(String pathToElement, String key) {
@@ -443,4 +447,17 @@ public AdapterNode addKey(
             throw new InternalError("Could not clone DefaultItem: " + cnse);
         }
     }
+
+	/**
+	 * @param string
+	 * @param string2
+	 * @return
+	 */
+	public String getString(String key, String defaultValue) {
+		String result = (String) getRoot().getAttribute(key);
+		if( result == null ) {
+			result = defaultValue;
+		}
+		return result;
+	}
 }

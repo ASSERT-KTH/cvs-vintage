@@ -26,6 +26,9 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Logger;
 
+import javax.net.ssl.SSLException;
+import javax.swing.JOptionPane;
+
 import org.columba.core.command.Command;
 import org.columba.core.command.CommandCancelledException;
 import org.columba.core.command.NullWorkerStatusController;
@@ -39,6 +42,7 @@ import org.columba.mail.folder.command.MarkMessageCommand;
 import org.columba.mail.folder.headercache.CachedHeaderfields;
 import org.columba.mail.folder.imap.IMAPFolder;
 import org.columba.mail.folder.imap.IMAPRootFolder;
+import org.columba.mail.gui.config.account.IncomingServerPanel;
 import org.columba.mail.gui.tree.command.FetchSubFolderListCommand;
 import org.columba.mail.gui.util.PasswordDialog;
 import org.columba.mail.message.ColumbaHeader;
@@ -54,7 +58,6 @@ import org.columba.ristretto.imap.SearchKey;
 import org.columba.ristretto.imap.SequenceSet;
 import org.columba.ristretto.imap.protocol.IMAPException;
 import org.columba.ristretto.imap.protocol.IMAPProtocol;
-import org.columba.ristretto.imap.protocol.IMAPProtocol;
 import org.columba.ristretto.message.Header;
 import org.columba.ristretto.message.MailboxInfo;
 import org.columba.ristretto.message.MimePart;
@@ -63,6 +66,7 @@ import org.columba.ristretto.message.io.CharSequenceSource;
 import org.columba.ristretto.message.io.SequenceInputStream;
 import org.columba.ristretto.parser.HeaderParser;
 import org.columba.ristretto.parser.ParserException;
+import org.columba.ristretto.pop3.protocol.POP3Exception;
 
 /**
  * IMAPStore encapsulates IMAPProtocol and the parsers for IMAPFolder.
@@ -128,7 +132,11 @@ public class IMAPServer {
 	private MailboxInfo messageFolderInfo;
 	
 	private boolean firstLogin;
+	
+	boolean usingSSL;
 
+	String[] capabilities;
+	
 	public IMAPServer(ImapItem item, IMAPRootFolder root) {
 		this.item = item;
 		this.imapRoot = root;
@@ -140,6 +148,7 @@ public class IMAPServer {
 		//protocol.registerInterest((ProgressObserver) root.getObservable());
 
 		firstLogin = true;
+		usingSSL = false;
 	}
 
 	/**
@@ -196,16 +205,127 @@ public class IMAPServer {
 		protocol.logout();
 	}
 
-	private void openConnection() throws IOException, IMAPException {
+	private void openConnection() throws IOException, IMAPException, CommandCancelledException  {
 		printStatusMessage(MailResourceLoader.getString("statusbar", "message",
 				"connecting"));
 
-		protocol.openPort();
+		int sslType = item.getInteger("ssl_type",IncomingServerPanel.TLS);
+		boolean sslEnabled = item.getBoolean("enable_ssl");
+		
+		
 
-		if (item.getBoolean("enable_ssl", false)) {
-			protocol.switchToSSL();
+		// open a port to the server
+		if (sslEnabled && sslType == IncomingServerPanel.IMAPS_POP3S) {
+			try {
+				protocol.openSSLPort();
+				usingSSL = true;
+			} catch (SSLException e) {
+				int result = showErrorDialog(MailResourceLoader.getString(
+						"dialog", "error", "ssl_handshake_error")
+						+ ": "
+						+ e.getLocalizedMessage()
+						+ "\n"
+						+ MailResourceLoader.getString("dialog", "error",
+								"ssl_turn_off"));
+
+				if (result == 1) {
+					throw new CommandCancelledException();
+				}
+
+				// turn off SSL for the future
+				item.set("enable_ssl", false);
+				item.set("port", IMAPProtocol.DEFAULT_PORT);
+				
+				// reopen the port
+				protocol.openPort();
+			}
+		} else {
+			protocol.openPort();
 		}
-		//TODO: Implement IMAPS
+
+		// shall we switch to SSL?
+		if (!usingSSL
+				&& sslEnabled && sslType == IncomingServerPanel.TLS) {
+			// if CAPA was not support just give it a try...
+			if (isSupported("STLS") || (capabilities.length == 0)) {
+				try {
+					protocol.startTLS();
+
+					usingSSL = true;
+					LOG.info("Switched to SSL");
+				} catch (IOException e) {
+					int result = showErrorDialog(MailResourceLoader.getString(
+							"dialog", "error", "ssl_handshake_error")
+							+ ": "
+							+ e.getLocalizedMessage()
+							+ "\n"
+							+ MailResourceLoader.getString("dialog", "error",
+									"ssl_turn_off"));
+
+					if (result == 1) {
+						throw new CommandCancelledException();
+					}
+
+					// turn off SSL for the future
+					item.set("enable_ssl", false);
+
+					// reopen the port
+					protocol.openPort();
+				} catch (IMAPException e) {
+					int result = showErrorDialog(MailResourceLoader.getString(
+							"dialog", "error", "ssl_not_supported")
+							+ "\n"
+							+ MailResourceLoader.getString("dialog", "error",
+									"ssl_turn_off"));
+
+					if (result == 1) {
+						throw new CommandCancelledException();
+					}
+
+					// turn off SSL for the future
+					item.set("enable_ssl", false);
+				}
+			} else {
+				// CAPAs say that SSL is not supported
+				int result = showErrorDialog(MailResourceLoader.getString(
+						"dialog", "error", "ssl_not_supported")
+						+ "\n"
+						+ MailResourceLoader.getString("dialog", "error",
+								"ssl_turn_off"));
+
+				if (result == 1) {
+					throw new CommandCancelledException();
+				}
+
+				// turn off SSL for the future
+				item.set("enable_ssl", false);
+			}
+		}
+	
+	}
+
+	/**
+	 * @param command
+	 * @return
+	 */
+	private boolean isSupported(String command) throws IOException {
+		if( capabilities == null ) {
+		
+		try {
+			capabilities = protocol.capability();
+		} catch (IMAPException e) {
+			// CAPA not supported
+			capabilities = new String[0];
+		}
+		}
+		
+		for (int i = 0; i < capabilities.length; i++) {
+			if (capabilities[i].startsWith(command)) {
+				return true;
+			}
+		}
+
+		return false;		
 	}
 
 	/**
@@ -1194,4 +1314,23 @@ public class IMAPServer {
 	public boolean isSelected(String path) {
 		return (protocol.getState() == IMAPProtocol.SELECTED && protocol.getSelectedMailbox().equals(path ));
 	}
+
+	/**
+	 * @param e
+	 * @return
+	 */
+	private int showErrorDialog(String message) {
+		Object[] options = new String[]{
+				MailResourceLoader.getString("", "global", "ok").replaceAll(
+						"&", ""),
+				MailResourceLoader.getString("", "global", "cancel")
+						.replaceAll("&", "")};
+
+		int result = JOptionPane.showOptionDialog(null, message, "Warning",
+				JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE, null,
+				options, options[0]);
+		return result;
+	}
+
 }
+

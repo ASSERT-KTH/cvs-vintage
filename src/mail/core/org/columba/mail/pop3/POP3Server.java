@@ -17,10 +17,15 @@
 //All Rights Reserved.
 package org.columba.mail.pop3;
 
+import java.io.File;
+import java.util.Enumeration;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+
 import org.columba.core.command.StatusObservable;
 import org.columba.core.util.ListTools;
 import org.columba.core.util.Lock;
-
 import org.columba.mail.config.AccountItem;
 import org.columba.mail.config.PopItem;
 import org.columba.mail.config.SpecialFoldersItem;
@@ -28,22 +33,11 @@ import org.columba.mail.folder.MessageFolder;
 import org.columba.mail.main.MailInterface;
 import org.columba.mail.message.ColumbaHeader;
 import org.columba.mail.message.ColumbaMessage;
-import org.columba.mail.message.HeaderList;
-
-import org.columba.ristretto.pop3.protocol.POP3Protocol;
-
-import java.io.File;
-
-import java.util.Enumeration;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
 
 
 public class POP3Server {
     private AccountItem accountItem;
     private File file;
-    private POP3Protocol pop3Connection;
     private boolean alreadyLoaded;
     private POP3Store store;
     protected POP3HeaderCache headerCache;
@@ -105,39 +99,6 @@ public class POP3Server {
 
     public void forceLogout() throws Exception {
         getStore().logout();
-    }
-
-    protected boolean existsLocally(Object uid, HeaderList list)
-        throws Exception {
-        for (Enumeration e = headerCache.getHeaderList().keys();
-                e.hasMoreElements();) {
-            Object localUID = e.nextElement();
-
-            //System.out.println("local message uid: " + localUID);
-            if (uid.equals(localUID)) {
-                //System.out.println("remote uid exists locally");
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    protected boolean existsRemotely(Object uid, List uidList)
-        throws Exception {
-        for (Iterator it = uidList.iterator(); it.hasNext();) {
-            Object serverUID = it.next();
-
-            // for (int i = 0; i < uidList.size(); i++) {
-            // Object serverUID = uidList.get(i);
-            //System.out.println("server message uid: " + serverUID);
-            if (uid.equals(serverUID)) {
-                //System.out.println("local uid exists remotely");
-                return true;
-            }
-        }
-
-        return false;
     }
 
     public List synchronize() throws Exception {

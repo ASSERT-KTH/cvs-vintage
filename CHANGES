@@ -13,6 +13,7 @@ New features:
 - added taskmanager dialog
 - added acknowledge panel to About Dialog listing all third-party libraries, use 
   Contributurs and License file instead of hardcoded Strings
+- support of secure connections via IMAPs/POP3s and TLS for IMAP, POP3 and SMTP
 
 Fixed bugs:
 - #980605, can't install plugin
