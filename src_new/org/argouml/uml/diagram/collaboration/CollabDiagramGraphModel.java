@@ -25,10 +25,13 @@
 // File: CollabDiagramGraphModel.java
 // Classes: CollabDiagramGraphModel
 // Original Author: agauthie@ics.uci.edu
-// $Id: CollabDiagramGraphModel.java,v 1.14 2002/10/20 21:11:15 linus Exp $
+// $Id: CollabDiagramGraphModel.java,v 1.15 2002/11/20 05:54:33 mkl Exp $
 
 package org.argouml.uml.diagram.collaboration;
+
 import org.apache.log4j.Category;
+
+import org.argouml.uml.diagram.UMLMutableGraphSupport;
 import org.argouml.model.uml.UmlFactory;
 import org.argouml.model.uml.foundation.core.CoreFactory;
 import org.argouml.model.uml.foundation.core.CoreHelper;
@@ -43,19 +46,14 @@ import ru.novosoft.uml.behavior.use_cases.*;
 import ru.novosoft.uml.behavior.collaborations.*;
 import ru.novosoft.uml.model_management.*;
 
-import org.tigris.gef.graph.*;
 
 /** This class defines a bridge between the UML meta-model
  *  representation of the design and the GraphModel interface used by
  *  GEF.  This class handles only UML Use Case Digrams.  */
 
-public class CollabDiagramGraphModel extends MutableGraphSupport
+public class CollabDiagramGraphModel extends UMLMutableGraphSupport
 implements VetoableChangeListener {
     protected static Category cat = Category.getInstance(CollabDiagramGraphModel.class);
-  ////////////////////////////////////////////////////////////////
-  // instance variables
-  protected Vector _nodes = new Vector();
-  protected Vector _edges = new Vector();
 
   /** The "home" UML model of this diagram, not all ModelElements in this
    *  graph are in the home model, but if they are added and don't
@@ -82,12 +80,7 @@ implements VetoableChangeListener {
   ////////////////////////////////////////////////////////////////
   // GraphModel implementation
 
-  /** Return all nodes in the graph */
-  public Vector getNodes() { return _nodes; }
-
-  /** Return all nodes in the graph */
-  public Vector getEdges() { return _edges; }
-
+ 
   /** Return all ports on node or edge */
   public Vector getPorts(Object nodeOrEdge) {
     Vector res = new Vector();  //wasteful!
@@ -175,12 +168,6 @@ implements VetoableChangeListener {
     return true;
   }
 
-  /** Remove the given node from the graph. */
-  public void removeNode(Object node) {
-    if (!_nodes.contains(node)) return;
-    _nodes.removeElement(node);
-    fireNodeRemoved(node);
-  }
 
   /** Add the given node to the graph, if valid. */
   public void addNode(Object node) {
@@ -253,13 +240,6 @@ implements VetoableChangeListener {
     }
  }
 
-
-  /** Remove the given edge from the graph. */
-  public void removeEdge(Object edge) {
-    if (!_edges.contains(edge)) return;
-    _edges.removeElement(edge);
-    fireEdgeRemoved(edge);
-  }
 
   /** Return true if the two given ports can be connected by a
    * kind of edge to be determined by the ports. */
