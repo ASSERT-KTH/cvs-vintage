@@ -1,4 +1,4 @@
-// $Id: FigClass.java,v 1.82 2003/12/05 21:56:06 alexb Exp $
+// $Id: FigClass.java,v 1.83 2003/12/06 16:07:18 alexb Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -1178,11 +1178,6 @@ public class FigClass extends FigNodeModelElement {
         calcBounds();
         setBounds(getBounds());
         
-        Object owner = getOwner();
-        if (owner != null && ModelFacade.isAbstract(owner)) {
-            Font font = _name.getFont();              
-            _name.setFont(font.deriveFont(Font.ITALIC));
-        }
         // setBounds(rect.x, rect.y, rect.width, rect.height);
     }
 
@@ -1252,7 +1247,7 @@ public class FigClass extends FigNodeModelElement {
      * @see org.tigris.gef.presentation.Fig#postLoad()
      */
     public void postLoad() {      
-//        super.postLoad();
+        super.postLoad();
         Object owner = getOwner();
         if (owner != null && ModelFacade.isAbstract(owner)) {
             Font font = _name.getFont();              
