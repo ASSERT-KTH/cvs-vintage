@@ -1,4 +1,4 @@
-// $Id: GUITestParserDisplay.java,v 1.16 2004/12/28 22:23:52 bobtarling Exp $
+// $Id: GUITestParserDisplay.java,v 1.17 2004/12/29 02:44:28 bobtarling Exp $
 // Copyright (c) 2003-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -168,13 +168,9 @@ public class GUITestParserDisplay extends TestCase {
     public void testAttributeType() throws ParseException {
         Object attr;
 
-        Object ns = null;
-        Object intType = null;
         Project project = ProjectManager.getManager().getCurrentProject();
-        if (project != null) {
-            ns = project.getModel();
-            intType = project.findType("int");
-        }
+        Object ns = project.getModel();
+        Object intType = project.findType("int");
         
         attr = UmlFactory.getFactory().getCore().buildAttribute(ns, intType);
         ModelFacade.setNamespace(attr, ns);
@@ -205,13 +201,9 @@ public class GUITestParserDisplay extends TestCase {
     public void testAttributeVisibility() throws ParseException {
         Object attr;
 
-        Object ns = null;
-        Object intType = null;
         Project project = ProjectManager.getManager().getCurrentProject();
-        if (project != null) {
-            ns = project.getModel();
-            intType = project.findType("int");
-        }
+        Object ns = project.getModel();
+        Object intType = project.findType("int");
 
         attr = UmlFactory.getFactory().getCore().buildAttribute(ns, intType);
         ModelFacade.setNamespace(attr, ns);
