@@ -1,4 +1,4 @@
-// $Id: StateDiagramGraphModel.java,v 1.33 2003/09/14 01:51:06 bobtarling Exp $
+// $Id: StateDiagramGraphModel.java,v 1.34 2003/09/14 14:08:06 alexb Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,6 @@
 // File: StateDiagramGraphModel.java
 // Classes: StateDiagramGraphModel
 // Original Author: your email address here
-// $Id: StateDiagramGraphModel.java,v 1.33 2003/09/14 01:51:06 bobtarling Exp $
 package org.argouml.uml.diagram.state;
 
 import java.beans.PropertyChangeEvent;
@@ -38,8 +37,7 @@ import org.argouml.model.ModelFacade;
 import org.argouml.model.uml.behavioralelements.statemachines.StateMachinesFactory;
 import org.argouml.model.uml.behavioralelements.statemachines.StateMachinesHelper;
 import org.argouml.uml.diagram.UMLMutableGraphSupport;
-import ru.novosoft.uml.behavior.state_machines.MTransition;
-import ru.novosoft.uml.foundation.data_types.MPseudostateKind;
+
 /** This class defines a bridge between the UML meta-model
  *  representation of the design and the GraphModel interface used by
  *  GEF.  This class handles only UML MState Digrams.  */
@@ -236,7 +234,8 @@ public class StateDiagramGraphModel extends UMLMutableGraphSupport
             return false;
         }
 	if (org.argouml.model.ModelFacade.isAPseudostate(toSV)) {
-	    if (MPseudostateKind.INITIAL.equals(ModelFacade.getKind(toSV))) {
+	    if ((ModelFacade.INITIAL_PSEUDOSTATEKIND)
+                    .equals(ModelFacade.getKind(toSV))) {
 		return false;
             }
         }
@@ -263,11 +262,11 @@ public class StateDiagramGraphModel extends UMLMutableGraphSupport
 	if (org.argouml.model.ModelFacade.isAFinalState(fromSV))
 	    return null;
 	if (org.argouml.model.ModelFacade.isAPseudostate(toSV))
-	    if (MPseudostateKind.INITIAL
+	    if ((ModelFacade.INITIAL_PSEUDOSTATEKIND)
 		.equals(ModelFacade.getKind(toSV)))
 		return null;
 
-	if (edgeClass == MTransition.class) {
+	if (edgeClass == (Class)ModelFacade.TRANSITION) {
 	    Object tr = null;
 	    Object comp = ModelFacade.getContainer(fromSV);
 	    tr = StateMachinesFactory.getFactory().buildTransition(fromSV,

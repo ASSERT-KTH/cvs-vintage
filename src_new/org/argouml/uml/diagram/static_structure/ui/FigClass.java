@@ -1,4 +1,4 @@
-// $Id: FigClass.java,v 1.73 2003/09/14 12:26:19 bobtarling Exp $
+// $Id: FigClass.java,v 1.74 2003/09/14 14:08:07 alexb Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -26,7 +26,7 @@
 // Classes: FigClass
 // Original Author: abonner
 
-// $Id: FigClass.java,v 1.73 2003/09/14 12:26:19 bobtarling Exp $
+// $Id: FigClass.java,v 1.74 2003/09/14 14:08:07 alexb Exp $
 
 // 21 Mar 2002: Jeremy Bennett (mail@jeremybennett.com). Fix for ever
 // increasing vertical size of classes with stereotypes (issue 745).
@@ -76,8 +76,6 @@ import org.tigris.gef.presentation.FigRect;
 import org.tigris.gef.presentation.FigText;
 
 import ru.novosoft.uml.MElementEvent;
-import ru.novosoft.uml.foundation.data_types.MScopeKind;
-import ru.novosoft.uml.foundation.data_types.MVisibilityKind;
 import ru.novosoft.uml.foundation.extension_mechanisms.MStereotype;
 
 /**
@@ -356,8 +354,8 @@ public class FigClass extends FigNodeModelElement {
 				   "visibility", "getVisibility",
 				   "setVisibility",
 				   mclass,
-				   MVisibilityKind.class,
-				   MVisibilityKind.PUBLIC,
+				   (Class)ModelFacade.VISIBILITYKIND,
+				   ModelFacade.PUBLIC_VISIBILITYKIND,
 				   null));
         modifierMenu.addCheckItem(
 		new ActionModifier("Abstract",
@@ -1088,7 +1086,7 @@ public class FigClass extends FigNodeModelElement {
                 attr.setText(Notation.generate(this, sf));
                 attr.setOwner(sf);
                 // underline, if static
-                attr.setUnderline(MScopeKind.CLASSIFIER
+                attr.setUnderline(ModelFacade.CLASSIFIER_SCOPEKIND
 				  .equals(ModelFacade.getOwnerScope(sf)));
                 acounter++;
             }
@@ -1147,7 +1145,7 @@ public class FigClass extends FigNodeModelElement {
                 oper.setText(Notation.generate(this, bf));
                 oper.setOwner(bf);
                 // underline, if static
-                oper.setUnderline(MScopeKind.CLASSIFIER
+                oper.setUnderline(ModelFacade.CLASSIFIER_SCOPEKIND
 				  .equals(ModelFacade.getOwnerScope(bf)));
                 // italics, if abstract
                 //oper.setItalic(((MOperation)bf).isAbstract()); //

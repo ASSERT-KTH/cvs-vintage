@@ -1,4 +1,4 @@
-// $Id: GoProjectToStateMachine.java,v 1.4 2003/06/30 18:00:33 linus Exp $
+// $Id: GoProjectToStateMachine.java,v 1.5 2003/09/14 14:08:06 alexb Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -30,9 +30,8 @@ import java.util.Iterator;
 
 import org.argouml.kernel.Project;
 import org.argouml.model.uml.modelmanagement.ModelManagementHelper;
+import org.argouml.model.ModelFacade;
 import org.argouml.ui.AbstractGoRule;
-
-import ru.novosoft.uml.behavior.state_machines.MStateMachine;
 
 public class GoProjectToStateMachine extends AbstractGoRule {
 
@@ -45,7 +44,7 @@ public class GoProjectToStateMachine extends AbstractGoRule {
 	    while (it.hasNext()) {
 		col.addAll(ModelManagementHelper.getHelper()
 			   .getAllModelElementsOfKind(it.next(),
-						      MStateMachine.class));
+					(Class)ModelFacade.STATEMACHINE));
 	    }
 	}
 	return col;

@@ -1,4 +1,4 @@
-// $Id: UMLStateDiagram.java,v 1.39 2003/09/14 01:51:06 bobtarling Exp $
+// $Id: UMLStateDiagram.java,v 1.40 2003/09/14 14:08:06 alexb Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: UMLStateDiagram.java
 // Classes: UMLStateDiagram
 // Original Author: your email here
-// $Id: UMLStateDiagram.java,v 1.39 2003/09/14 01:51:06 bobtarling Exp $
+// $Id: UMLStateDiagram.java,v 1.40 2003/09/14 14:08:06 alexb Exp $
 
 package org.argouml.uml.diagram.state.ui;
 
@@ -50,7 +50,6 @@ import org.tigris.gef.base.LayerPerspectiveMutable;
 import org.tigris.gef.base.ModeCreatePolyEdge;
 
 import ru.novosoft.uml.MElementEvent;
-import ru.novosoft.uml.behavior.state_machines.MStateMachine;
 
 public class UMLStateDiagram extends UMLDiagram {
     private Logger _cat = Logger.getLogger(UMLStateDiagram.class);
@@ -116,10 +115,14 @@ public class UMLStateDiagram extends UMLDiagram {
         }
     }
 
-    public UMLStateDiagram(Object namespace, MStateMachine sm) {
+    public UMLStateDiagram(Object namespace, Object sm) {
         this();
+        
+        if(!ModelFacade.isAStateMachine(sm))
+            throw new IllegalArgumentException();
+        
         if (sm != null && namespace == null) {
-            Object context = sm.getContext();
+            Object context = ModelFacade.getContext(sm);
             if (ModelFacade.isAClassifier(context)) {
                 namespace = context;
             } else if (ModelFacade.isABehavioralFeature(context)) {
@@ -224,7 +227,11 @@ public class UMLStateDiagram extends UMLDiagram {
      * @param sm
      * @param m
      */
-    public void setStateMachine(MStateMachine sm) {
+    public void setStateMachine(Object sm) {
+        
+        if(!ModelFacade.isAStateMachine(sm))
+            throw new IllegalArgumentException();
+        
         ((StateDiagramGraphModel) getGraphModel()).setMachine(sm);
     }
 
