@@ -23,12 +23,12 @@ import java.net.URL;
  *
  * @author <a href="mailto:dewayne@dmsoft.com">Dewayne McNair</a>
  * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
- * @version $Revision: 1.3 $
+ * @version $Revision: 1.4 $
  */
 public class Shutdown
 {
    private static final String COMMAND =
-      "/InvokeAction//DefaultDomain%3Atype%3DShutdown/action=shutdown?action=shutdown";
+      "/InvokeAction//JBOSS%2DSYSTEM%3Atype%3DShutdown/action=shutdown?action=shutdown";
 
    /**
     * Parse the command line and shutdown the remote server.
