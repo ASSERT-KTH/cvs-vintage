@@ -17,10 +17,17 @@
 //All Rights Reserved.
 package org.columba.mail.gui.message.viewer;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
 import javax.swing.JComponent;
 
+import org.columba.core.main.MainInterface;
+import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.folder.Folder;
+import org.columba.mail.folder.command.MarkMessageCommand;
 import org.columba.mail.gui.frame.MailFrameMediator;
+import org.columba.mail.spam.command.LearnMessageAsHamCommand;
 
 
 /**
@@ -29,14 +36,20 @@ import org.columba.mail.gui.frame.MailFrameMediator;
  * @author fdietz
  *
  */
-public class SpamStatusController implements Viewer {
+public class SpamStatusController implements Viewer, ActionListener {
 
     private SpamStatusView label;
-    
-    public SpamStatusController() {
+    private boolean visible;
+    private MailFrameMediator mediator;
+    public SpamStatusController(MailFrameMediator mediator) {
         super();
         
+        this.mediator = mediator;
+        
         label = new SpamStatusView();
+        label.addActionListener(this);
+        
+        visible = false;
     }
     /**
      * @see org.columba.mail.gui.message.status.Status#show(org.columba.mail.folder.Folder, java.lang.Object)
@@ -44,7 +57,9 @@ public class SpamStatusController implements Viewer {
     public void view(Folder folder, Object uid, MailFrameMediator mediator) throws Exception {
         Boolean spam = (Boolean) folder.getAttribute(uid, "columba.spam");
         
-        label.setSpam(spam.booleanValue());
+        visible = spam.booleanValue();
+        
+        label.setSpam(visible);
         
         
        
@@ -56,5 +71,29 @@ public class SpamStatusController implements Viewer {
     public JComponent getView() {
         return label;
     }
+    
+    
 
+    /**
+     * @see org.columba.mail.gui.message.viewer.Viewer#isVisible()
+     */
+    public boolean isVisible() {
+        // only show view if message is marked as spam
+        return visible;
+    }
+    /**
+     * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
+     */
+    public void actionPerformed(ActionEvent arg0) {
+        // get selected message
+        FolderCommandReference[] r = mediator.getTableSelection();
+        
+        // learn message as ham
+        MainInterface.processor.addOp(new LearnMessageAsHamCommand(r));
+
+        // mark as not spam
+        r[0].setMarkVariant(MarkMessageCommand.MARK_AS_NOTSPAM);
+        MarkMessageCommand c = new MarkMessageCommand(r);
+        MainInterface.processor.addOp(c);
+    }
 }

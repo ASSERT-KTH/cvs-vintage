@@ -27,9 +27,10 @@ import org.columba.mail.gui.message.filter.SecurityStatusListener;
  * Viewer displays security status information.
  * 
  * @author fdietz
- *
+ *  
  */
-public class SecurityInformationController implements Viewer, SecurityStatusListener {
+public class SecurityInformationController implements Viewer,
+        SecurityStatusListener {
 
     public static final int DECRYPTION_SUCCESS = 0;
 
@@ -45,11 +46,14 @@ public class SecurityInformationController implements Viewer, SecurityStatusList
 
     private SecurityInformationView panel;
 
+    private boolean visible;
+
     public SecurityInformationController() {
         super();
 
         panel = new SecurityInformationView();
 
+        visible = false;
     }
 
     /**
@@ -60,21 +64,33 @@ public class SecurityInformationController implements Viewer, SecurityStatusList
             throws Exception {
 
     }
-    
+
     /**
      * @see org.columba.mail.gui.message.viewer.Viewer#getView()
      */
     public JComponent getView() {
         return panel;
     }
+
     /**
      * @see org.columba.mail.gui.message.filter.SecurityStatusListener#statusUpdate(org.columba.mail.gui.message.filter.SecurityStatusEvent)
      */
     public void statusUpdate(SecurityStatusEvent event) {
-      String message = event.getMessage();
-      int status = event.getStatus();
-      
-      panel.setValue(status, message);
+        String message = event.getMessage();
+        int status = event.getStatus();
 
+        panel.setValue(status, message);
+
+        if (status == NOOP)
+            visible = false;
+        else
+            visible = true;
+    }
+
+    /**
+     * @see org.columba.mail.gui.message.viewer.Viewer#isVisible()
+     */
+    public boolean isVisible() {
+        return visible;
     }
 }

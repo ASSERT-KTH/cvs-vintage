@@ -86,7 +86,7 @@ public class MessageController implements HyperlinkListener, MouseListener,
     private HeaderController headerController;
 
     private PGPMessageFilter pgpFilter;
-    
+
     //private MessageSelectionManager messageSelectionManager;
     public MessageController(
             AbstractMailFrameController abstractFrameController,
@@ -94,11 +94,11 @@ public class MessageController implements HyperlinkListener, MouseListener,
         this.abstractFrameController = abstractFrameController;
         this.attachmentController = attachmentController;
 
-        spamStatusController = new SpamStatusController();
+        spamStatusController = new SpamStatusController(abstractFrameController);
         bodytextViewer = new MessageBodytextViewer();
         securityInformationController = new SecurityInformationController();
         headerController = new HeaderController();
-        
+
         //headerController.addHyperlinkListener(this);
         bodytextViewer.addHyperlinkListener(this);
         //headerController.addMouseListener(this);
@@ -107,19 +107,19 @@ public class MessageController implements HyperlinkListener, MouseListener,
 
         pgpFilter = new PGPMessageFilter(abstractFrameController);
         pgpFilter.addSecurityStatusListener(securityInformationController);
-        pgpFilter.addSecurityStatusListener(((HeaderView)headerController.getView()).getStatusPanel());
-        
+        pgpFilter.addSecurityStatusListener(((HeaderView) headerController
+                .getView()).getStatusPanel());
+
         view = new MessageView(this);
-        view.layoutComponents(headerController, spamStatusController, bodytextViewer,
-                securityInformationController, attachmentController.getView());
+        view.layoutComponents(headerController, spamStatusController,
+                bodytextViewer, securityInformationController,
+                attachmentController.getView());
         //view.addHyperlinkListener(this);
         view.addMouseListener(this);
 
         ((CharsetOwnerInterface) getFrameController()).addCharsetListener(this);
 
         MainInterface.focusManager.registerComponent(this);
-
-        
 
         urlObservable = new URLObservable();
     }
@@ -162,17 +162,16 @@ public class MessageController implements HyperlinkListener, MouseListener,
     /*
      * public void showMessage(ColumbaHeader header, MimePart bodyPart,
      * MimeTree mimePartTree) throws Exception { if ((header == null) ||
-     * (bodyPart == null)) { return; }
-     *  // Which Charset shall we use ? Charset charset =
-     * ((CharsetOwnerInterface) getFrameController()).getCharset();
+     * (bodyPart == null)) { return; } // Which Charset shall we use ? Charset
+     * charset = ((CharsetOwnerInterface) getFrameController()).getCharset();
      * 
      * if (charset == null) { String charsetName =
-     * bodyPart.getHeader().getContentParameter("charset");
-     *  // There is no charset info -> the default system charset is used if
-     * (charsetName != null) { charset = Charset.forName(charsetName);
+     * bodyPart.getHeader().getContentParameter("charset"); // There is no
+     * charset info -> the default system charset is used if (charsetName !=
+     * null) { charset = Charset.forName(charsetName);
      * 
-     * ((CharsetOwnerInterface) getFrameController()).setCharset(charset); } }
-     *  // Shall we use the HTML-Viewer? boolean htmlViewer =
+     * ((CharsetOwnerInterface) getFrameController()).setCharset(charset); } } //
+     * Shall we use the HTML-Viewer? boolean htmlViewer =
      * bodyPart.getHeader().getMimeType().getSubtype() .equals("html");
      * 
      * InputStream bodyStream = ((StreamableMimePart)
@@ -516,8 +515,7 @@ public class MessageController implements HyperlinkListener, MouseListener,
 
     public void showMessage(Folder folder, Object uid) throws Exception {
 
-        MessageBodytextViewer bodytextViewer = getBodytextViewer();
-        bodytextViewer.view(folder, uid,
+        getBodytextViewer().view(folder, uid,
                 (MailFrameMediator) abstractFrameController);
         getHeaderController().view(folder, uid,
                 (MailFrameMediator) abstractFrameController);
@@ -526,13 +524,19 @@ public class MessageController implements HyperlinkListener, MouseListener,
         getSecurityInformationViewer().view(folder, uid,
                 (MailFrameMediator) abstractFrameController);
 
+        getView().layoutComponents(headerController, spamStatusController,
+                bodytextViewer, securityInformationController,
+                attachmentController.getView());
+
     }
+
     /**
      * @return Returns the pgpFilter.
      */
     public PGPMessageFilter getPgpFilter() {
         return pgpFilter;
     }
+
     /**
      * @return Returns the attachmentController.
      */

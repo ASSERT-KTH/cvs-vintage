@@ -70,18 +70,22 @@ public class MessageView extends JScrollPane {
         JPanel top = new JPanel();
         top.setLayout(new BorderLayout());
 
-        top.add(spamStatusController.getView(), BorderLayout.NORTH);
-        top.add(headerController.getView(), BorderLayout.CENTER);
+        if ( spamStatusController.isVisible() ) 
+            top.add(spamStatusController.getView(), BorderLayout.NORTH);
+        
+        if ( headerController.isVisible() )
+            top.add(headerController.getView(), BorderLayout.CENTER);
+        
         panel.add(top, BorderLayout.NORTH);
-
-        //bodyTextViewer = new BodyTextViewer();
 
         panel.add(bodytextViewer, BorderLayout.CENTER);
 
         JPanel bottom = new JPanel();
         bottom.setLayout(new BorderLayout());
 
-        bottom.add(securityInformationController.getView(), BorderLayout.NORTH);
+        if ( securityInformationController.isVisible() )
+            bottom.add(securityInformationController.getView(), BorderLayout.NORTH);
+        
         bottom.add(attachmentView, BorderLayout.CENTER);
 
         panel.add(bottom, BorderLayout.SOUTH);

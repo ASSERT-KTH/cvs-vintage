@@ -46,4 +46,11 @@ public class TextViewer implements Viewer {
        
         return null;
     }
+    /**
+     * @see org.columba.mail.gui.message.viewer.Viewer#isVisible()
+     */
+    public boolean isVisible() {
+        
+        return false;
+    }
 }

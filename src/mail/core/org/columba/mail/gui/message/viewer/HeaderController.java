@@ -48,9 +48,12 @@ public class HeaderController implements Viewer {
     //  contains headerfields which are to be displayed
     private Map keys;
 
+    private boolean visible;
     public HeaderController() {
 
         view = new HeaderView();
+        
+        visible = false;
 
     }
 
@@ -68,6 +71,7 @@ public class HeaderController implements Viewer {
 
         view.getStatusPanel().setStatus(header.hasAttachments().booleanValue());
 
+        visible = true;
     }
 
     /**
@@ -149,4 +153,10 @@ public class HeaderController implements Viewer {
         return keys;
     }
 
+    /**
+     * @see org.columba.mail.gui.message.viewer.Viewer#isVisible()
+     */
+    public boolean isVisible() {
+      return visible;
+    }
 }

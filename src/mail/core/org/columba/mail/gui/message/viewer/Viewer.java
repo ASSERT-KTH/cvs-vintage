@@ -33,7 +33,29 @@ import org.columba.mail.gui.frame.MailFrameMediator;
  */
 public interface Viewer {
 
+    /**
+     * Use passed parameters to retrieve information from folder.
+     * <p>
+     * Display data.
+     * 
+     * @param folder			selected folder
+     * @param uid				selected message
+     * @param mediator			top-level mediator
+     * @throws Exception
+     */
     void view(Folder folder, Object uid, MailFrameMediator mediator) throws Exception;
-    
+ 
+    /**
+     * Return view of component.
+     * 
+     * @return
+     */
     JComponent getView();
+    
+    /**
+     * Check if component should be viewed.
+     * 
+     * @return		true, if component is visible. False, otherwise.
+     */
+    boolean isVisible();
 }

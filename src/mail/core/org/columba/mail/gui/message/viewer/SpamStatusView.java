@@ -20,13 +20,20 @@ package org.columba.mail.gui.message.viewer;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Font;
+import java.awt.event.ActionListener;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.border.Border;
 
 /**
+ * Spam panel showing status information and providing a button to 
+ * change the spam status.
+ * <p>
+ * View becomes visible if message is marked as spam.
+ * 
  * @author fdietz
  *  
  */
@@ -41,22 +48,43 @@ public class SpamStatusView extends JPanel {
     public SpamStatusView() {
         super();
 
+        setBackground(Color.white);
+
         panel = new JPanel();
         label = new JLabel("");
+        label.setFont(label.getFont().deriveFont(Font.BOLD));
         button = new JButton("No Spam");
-        
-        layoutComponents(false);
 
+        setLayout(new BorderLayout());
+        setBorder(BorderFactory.createEmptyBorder(5, 5, 2, 5));
+        panel.setBackground(new Color(0xFABB48));
+        panel.setLayout(new BorderLayout());
+
+        Border border = BorderFactory.createLineBorder(Color.gray);
+
+        panel.setBorder(BorderFactory.createCompoundBorder(border, BorderFactory
+                .createEmptyBorder(2, 5, 2, 2)));
+
+        add(panel, BorderLayout.CENTER);
+
+        panel.add(label, BorderLayout.WEST);
+
+        panel.add(button, BorderLayout.EAST);
+
+    }
+    
+    public void addActionListener(ActionListener l) {
+        button.addActionListener(l);
     }
 
     protected void layoutComponents(boolean isSpam) {
-       
+
         if (isSpam) {
             panel.removeAll();
-            
+
             setLayout(new BorderLayout());
             setBorder(BorderFactory.createEmptyBorder(5, 5, 2, 5));
-            panel.setBackground(new Color(1.0f,0.8f,0.5f));
+            panel.setBackground(new Color(1.0f, 0.8f, 0.5f));
             panel.setLayout(new BorderLayout());
             panel.setBorder(BorderFactory.createEmptyBorder(2, 2, 2, 2));
 
@@ -65,9 +93,9 @@ public class SpamStatusView extends JPanel {
             panel.add(label, BorderLayout.WEST);
 
             panel.add(button, BorderLayout.EAST);
+
         } else {
             removeAll();
-            setBorder(BorderFactory.createEmptyBorder(0,0,0,0));
         }
 
         revalidate();
@@ -82,9 +110,10 @@ public class SpamStatusView extends JPanel {
 
         setBackground(Color.white);
         if (panel != null) panel.setBackground(Color.orange);
-        
-        if ( label != null ) label.setFont(label.getFont().deriveFont(Font.BOLD));
-        
+
+        if (label != null)
+                label.setFont(label.getFont().deriveFont(Font.BOLD));
+
     }
 
     public void setSpam(boolean isSpam) {
@@ -95,7 +124,7 @@ public class SpamStatusView extends JPanel {
             else
                 label.setText("");
 
-            layoutComponents(isSpam);
+            //layoutComponents(isSpam);
         }
     }
 }
