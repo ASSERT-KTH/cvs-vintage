@@ -1,4 +1,4 @@
-// $Id: UMLClassDiagram.java,v 1.42 2003/10/30 20:45:46 jjones Exp $
+// $Id: UMLClassDiagram.java,v 1.43 2003/10/31 15:24:52 jjones Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: UMLClassDiagram.java
 // Classes: UMLClassDiagram
 // Original Author: jrobbins@ics.uci.edy
-// $Id: UMLClassDiagram.java,v 1.42 2003/10/30 20:45:46 jjones Exp $
+// $Id: UMLClassDiagram.java,v 1.43 2003/10/31 15:24:52 jjones Exp $
 
 package org.argouml.uml.diagram.static_structure.ui;
 
@@ -34,6 +34,7 @@ import javax.swing.Action;
 import org.argouml.kernel.ProjectManager;
 import org.argouml.model.ModelFacade;
 import org.argouml.ui.CmdCreateNode;
+import org.argouml.ui.CmdSetMode;
 import org.argouml.uml.diagram.static_structure.ClassDiagramGraphModel;
 import org.argouml.uml.diagram.ui.ActionAddAssociation;
 import org.argouml.uml.diagram.ui.RadioAction;
@@ -41,7 +42,6 @@ import org.argouml.uml.diagram.ui.UMLDiagram;
 import org.argouml.uml.diagram.ui.ActionAddNote;
 import org.argouml.uml.diagram.ui.ActionAddAttribute;
 import org.argouml.uml.diagram.ui.ActionAddOperation;
-import org.tigris.gef.base.CmdSetMode;
 import org.tigris.gef.base.LayerPerspective;
 import org.tigris.gef.base.LayerPerspectiveMutable;
 import org.tigris.gef.base.ModeCreatePolyEdge;

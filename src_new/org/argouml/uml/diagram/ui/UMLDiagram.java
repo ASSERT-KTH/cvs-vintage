@@ -1,4 +1,4 @@
-// $Id: UMLDiagram.java,v 1.39 2003/10/27 20:24:15 kataka Exp $
+// $Id: UMLDiagram.java,v 1.40 2003/10/31 15:24:49 jjones Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -37,8 +37,8 @@ import org.argouml.kernel.ProjectManager;
 import org.argouml.model.ModelFacade;
 import org.argouml.model.uml.UmlModelEventPump;
 import org.argouml.ui.ArgoDiagram;
+import org.argouml.ui.CmdSetMode;
 import org.argouml.ui.targetmanager.TargetManager;
-import org.tigris.gef.base.CmdSetMode;
 import org.tigris.gef.base.ModeBroom;
 import org.tigris.gef.base.ModeCreateFigCircle;
 import org.tigris.gef.base.ModeCreateFigInk;
@@ -50,7 +50,6 @@ import org.tigris.gef.base.ModeCreateFigSpline;
 import org.tigris.gef.base.ModeCreateFigText;
 import org.tigris.gef.base.ModeSelect;
 import org.tigris.gef.presentation.Fig;
-
 import org.tigris.toolbar.ToolBarFactory;
 import org.tigris.toolbutton.ToolButton;
 

@@ -1,4 +1,4 @@
-// $Id: RadioAction.java,v 1.3 2003/08/26 17:42:59 linus Exp $
+// $Id: RadioAction.java,v 1.4 2003/10/31 15:24:49 jjones Exp $
 // Copyright (c) 2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -49,6 +49,7 @@ public class RadioAction extends AbstractButtonAction {
 
     public RadioAction(Action action) {
         super(new JButton(action).getName(), new JButton(action).getIcon());
+        putValue(Action.SHORT_DESCRIPTION, action.getValue(Action.SHORT_DESCRIPTION));
         realAction = action;
     }
 

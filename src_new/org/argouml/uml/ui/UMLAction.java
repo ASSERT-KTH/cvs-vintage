@@ -1,4 +1,4 @@
-// $Id: UMLAction.java,v 1.18 2003/10/12 08:55:24 linus Exp $
+// $Id: UMLAction.java,v 1.19 2003/10/31 15:24:50 jjones Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -71,7 +71,7 @@ public class UMLAction extends AbstractAction {
         }
         putValue(
 		 Action.SHORT_DESCRIPTION,
-		 Translator.localize(name) + " ");
+		 Translator.localize(name));
         if (global)
             Actions.addAction(this);
         // Jaap B. 17-6-2003 added next line to make sure every action is in the right enable condition on creation.
