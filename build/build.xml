@@ -1099,6 +1099,11 @@
         <delete dir="${build.project}"/>
     </target>
     <target name="clean-all" depends="prepare-build-dir">
+        <delete file="${scarab.log.file.turbine}"/>
+        <delete file="${scarab.log.file.torque}"/>
+        <delete file="${scarab.log.file.fulcrum}"/>
+        <delete file="${scarab.log.file.stratum}"/>
+        <delete file="${scarab.log.file.velocity}"/>
         <delete dir="${build.dir}"/>
         <delete>
             <fileset dir="..">
