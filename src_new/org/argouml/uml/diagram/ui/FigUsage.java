@@ -24,7 +24,7 @@
 // File: FigUsage.java
 // Classes: FigUsage
 // Original Author: Markus Klink
-// $Id: FigUsage.java,v 1.2 2002/10/29 09:05:51 mkl Exp $
+// $Id: FigUsage.java,v 1.3 2002/11/04 08:51:08 mkl Exp $
 
 package org.argouml.uml.diagram.ui;
 
@@ -35,6 +35,8 @@ import ru.novosoft.uml.foundation.core.*;
 
 import org.tigris.gef.base.*;
 import org.tigris.gef.presentation.*;
+
+import org.argouml.language.helpers.*;
 
 public class FigUsage extends FigDependency {
 
@@ -60,7 +62,7 @@ public class FigUsage extends FigDependency {
 	String stereoTypeStr = _stereo.getText();
 
 	if (stereoTypeStr == null || "".equals(stereoTypeStr)) {
-	    _stereo.setText("<<usage>>");
+	    _stereo.setText(NotationHelper.getLeftGuillemot()+"use"+NotationHelper.getRightGuillemot());
 	}
     } 
 
