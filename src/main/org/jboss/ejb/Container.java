@@ -67,7 +67,7 @@ import org.jnp.server.NamingServer;
  *   @see ContainerFactory
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
  *   @author <a href="marc.fleury@telkel.com">Marc Fleury</a>
- *   @version $Revision: 1.34 $
+ *   @version $Revision: 1.35 $
  */
 public abstract class Container
 {
@@ -320,6 +320,7 @@ public abstract class Container
    // Protected -----------------------------------------------------
 
    abstract Interceptor createContainerInterceptor();
+   public abstract void addInterceptor(Interceptor in);
 
    // Private -------------------------------------------------------
 
