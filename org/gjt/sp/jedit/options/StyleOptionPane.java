@@ -41,7 +41,7 @@ import org.gjt.sp.jedit.*;
 /**
  * Style option pane.
  * @author Slava Pestov
- * @version $Id: StyleOptionPane.java,v 1.9 2002/05/31 07:38:57 spestov Exp $
+ * @version $Id: StyleOptionPane.java,v 1.10 2002/05/31 08:07:34 spestov Exp $
  */
 public class StyleOptionPane extends AbstractOptionPane
 {
@@ -293,7 +293,7 @@ class StyleEditor extends EnhancedDialog implements ActionListener
 		super(JOptionPane.getFrameForComponent(comp),
 			jEdit.getProperty("style-editor.title"),true);
 
-		JPanel content = new JPanel(new BorderLayout());
+		JPanel content = new JPanel(new BorderLayout(12,12));
 		content.setBorder(new EmptyBorder(12,12,12,12));
 		setContentPane(content);
 
