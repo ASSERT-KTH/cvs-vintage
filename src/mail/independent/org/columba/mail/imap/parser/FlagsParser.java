@@ -66,11 +66,14 @@ public class FlagsParser {
 			String data = ImapParserUtils.parseData(responses[i].getSource());
 			//ColumbaLogger.log.debug("IMAP Flags: answer=" + data);
 			//System.out.println("IMAP Flags: answer=" + data);
-			// empty "()"
-			if ( data.indexOf("()") != -1) continue;
-
-			// parse=(\Seen \Answered)
-			IMAPFlags flags = parseFlagsLine(ImapParserUtils.parseData(data));
+            IMAPFlags flags;
+			if ( data.indexOf("()") == -1){
+              // parse=(\Seen \Answered)
+              flags = parseFlagsLine(ImapParserUtils.parseData(data));
+            }else{
+              // empty "()" so just create a flags object with no flags set
+              flags = new IMAPFlags();
+            }
 
             // parse UID portion
 			String uid = parseUidsLine(data);
