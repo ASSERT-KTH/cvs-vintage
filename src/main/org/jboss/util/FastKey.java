@@ -16,7 +16,7 @@ package org.jboss.util;
 *   
 *   @see org.jboss.ejb.plugins.NoPassivationInstanceCache.java
 *   @author <a href="marc.fleury@telkel.com">Marc Fleury</a>
-*   @version $Revision: 1.2 $
+*   @version $Revision: 1.3 $
 */
 public class FastKey
 {
@@ -36,7 +36,7 @@ public class FastKey
     // MF FIXME: I suspect this is weak, if somebody ask for these all the time (heavy server)
     // then a server restart will recieve requests from previous servers and miss these... 
     // Think more about it.
-    private static long id = System.currentTimeMillis();
+    private static long seedKey = System.currentTimeMillis();
     
     
     // Constructors --------------------------------------------------
@@ -60,7 +60,7 @@ public class FastKey
     protected Long nextFastKey()
     {
         //increment the timeStamp
-        return new Long(id++);
+        return new Long(seedKey++);
     }
     
     // Private -------------------------------------------------------
