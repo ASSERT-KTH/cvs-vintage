@@ -84,12 +84,13 @@ import org.jboss.util.jmx.ObjectNameFactory;
  *
  * @see EJBDeployer
  * 
+ * @author <a href="mailto:loubyansky@hotmail.com">Alex Loubyansky</a>
  * @author <a href="mailto:rickard.oberg@jboss.org">Rickard Öberg</a>
  * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
  * @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>.
  * @author <a href="bill@burkecentral.com">Bill Burke</a>
  * @author <a href="mailto:d_jencks@users.sourceforge.net">David Jencks</a>
- * @version $Revision: 1.96 $
+ * @version $Revision: 1.97 $
  */
 public abstract class Container
    extends ServiceMBeanSupport
@@ -456,7 +457,10 @@ public abstract class Container
  
    public ObjectName getJmxName()
    {
-      String jndiName = getBeanMetaData().getJndiName(); 
+      BeanMetaData beanMetaData = getBeanMetaData();
+      String jndiName = beanMetaData.getHome() != null ?
+         beanMetaData.getJndiName() : beanMetaData.getLocalJndiName();
+
       if (jndiName == null) 
       {
          throw new IllegalStateException("cannot get Container object " +
