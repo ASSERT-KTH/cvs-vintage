@@ -1,4 +1,4 @@
-// $Id: ProjectMemberModel.java,v 1.12 2003/06/29 23:52:57 linus Exp $
+// $Id: ProjectMemberModel.java,v 1.13 2003/08/20 22:27:32 alexb Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -31,10 +31,12 @@ import org.apache.log4j.Category;
 import org.argouml.kernel.Project;
 import org.argouml.kernel.ProjectMember;
 import org.argouml.xml.xmi.XMIParser;
+import org.argouml.model.ModelFacade;
 
 import ru.novosoft.uml.model_management.MModel;
 import ru.novosoft.uml.xmi.IncompleteXMIException;
 import ru.novosoft.uml.xmi.XMIWriter;
+import ru.novosoft.uml.model_management.MModel;
 
 /**
  * @author Piotr Kaminski
@@ -65,8 +67,13 @@ public class ProjectMemberModel extends ProjectMember {
         super(name, p);
     }
 
-    public ProjectMemberModel(MModel m, Project p) {
+    public ProjectMemberModel(Object m, Project p) {
+        
         super(p.getBaseName() + FILE_EXT, p);
+        
+        if(!ModelFacade.isAModel(m))
+            throw new IllegalArgumentException();
+        
         setModel(m);
     }
 
@@ -76,8 +83,8 @@ public class ProjectMemberModel extends ProjectMember {
     public MModel getModel() {
         return _model;
     }
-    protected void setModel(MModel model) {
-        _model = model;
+    protected void setModel(Object model) {
+        _model = (MModel)model;
     }
 
     public String getType() {

@@ -1,4 +1,4 @@
-// $Id: ExtensionMechanismsFactory.java,v 1.21 2003/06/30 18:00:21 linus Exp $
+// $Id: ExtensionMechanismsFactory.java,v 1.22 2003/08/20 22:27:32 alexb Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -34,6 +34,7 @@ import ru.novosoft.uml.foundation.core.MModelElement;
 import ru.novosoft.uml.foundation.core.MNamespace;
 import ru.novosoft.uml.foundation.extension_mechanisms.MStereotype;
 import ru.novosoft.uml.foundation.extension_mechanisms.MTaggedValue;
+import ru.novosoft.uml.model_management.MModel;
 
 /**
  * Factory to create UML classes for the UML
@@ -141,8 +142,8 @@ public class ExtensionMechanismsFactory extends AbstractUmlModelFactory {
             UmlFactory.getFactory().delete(stereo);
             return stereo2;
         } else {
-            ProjectManager.getManager()
-		.getCurrentProject().getModel().addOwnedElement(stereo);
+            ((MModel)ProjectManager.getManager()
+		.getCurrentProject().getModel()).addOwnedElement(stereo);
             if (m != null)
                 stereo.addExtendedElement(m);
             return stereo;

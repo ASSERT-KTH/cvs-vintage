@@ -1,4 +1,4 @@
-// $Id: StateMachinesFactory.java,v 1.22 2003/06/30 18:00:20 linus Exp $
+// $Id: StateMachinesFactory.java,v 1.23 2003/08/20 22:27:31 alexb Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -52,6 +52,7 @@ import ru.novosoft.uml.foundation.core.MBehavioralFeature;
 import ru.novosoft.uml.foundation.core.MModelElement;
 import ru.novosoft.uml.foundation.core.MNamespace;
 import ru.novosoft.uml.foundation.data_types.MPseudostateKind;
+import ru.novosoft.uml.model_management.MModel;
 
 /**
  * Factory to create UML classes for the UML
@@ -483,7 +484,7 @@ public class StateMachinesFactory extends AbstractUmlModelFactory {
      */
     public MCallEvent buildCallEvent() {
         MCallEvent event = createCallEvent();
-        event.setNamespace(ProjectManager.getManager()
+        event.setNamespace((MModel)ProjectManager.getManager()
 			   .getCurrentProject().getModel());
         event.setName("");
         return event;
@@ -496,7 +497,7 @@ public class StateMachinesFactory extends AbstractUmlModelFactory {
      */
     public MSignalEvent buildSignalEvent() {
         MSignalEvent event = createSignalEvent();
-        event.setNamespace(ProjectManager.getManager()
+        event.setNamespace((MModel)ProjectManager.getManager()
 			   .getCurrentProject().getModel());
         event.setName("");
         return event;
@@ -509,7 +510,7 @@ public class StateMachinesFactory extends AbstractUmlModelFactory {
      */
     public MTimeEvent buildTimeEvent() {
         MTimeEvent event = createTimeEvent();
-        event.setNamespace(ProjectManager.getManager()
+        event.setNamespace((MModel)ProjectManager.getManager()
 			   .getCurrentProject().getModel());
         event.setName("");
         return event;
@@ -522,7 +523,7 @@ public class StateMachinesFactory extends AbstractUmlModelFactory {
      */
     public MChangeEvent buildChangeEvent() {
         MChangeEvent event = createChangeEvent();
-        event.setNamespace(ProjectManager.getManager()
+        event.setNamespace((MModel)ProjectManager.getManager()
 			   .getCurrentProject().getModel());
         event.setName("");
         return event;

@@ -1,4 +1,4 @@
-// $Id: CollaborationsHelper.java,v 1.16 2003/06/30 18:00:19 linus Exp $
+// $Id: CollaborationsHelper.java,v 1.17 2003/08/20 22:27:31 alexb Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -85,7 +85,7 @@ public class CollaborationsHelper {
     // TODO: The ProjectManager shall not be reference from the model.
     public Collection getAllClassifierRoles() {
 	MNamespace model =
-	    ProjectManager.getManager().getCurrentProject().getModel();
+	    (MModel)ProjectManager.getManager().getCurrentProject().getModel();
 	return getAllClassifierRoles(model);
     }
 	

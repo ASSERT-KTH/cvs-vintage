@@ -1,4 +1,4 @@
-// $Id: UseCasesHelper.java,v 1.13 2003/06/30 18:00:20 linus Exp $
+// $Id: UseCasesHelper.java,v 1.14 2003/08/20 22:27:32 alexb Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -41,6 +41,7 @@ import ru.novosoft.uml.behavior.use_cases.MUseCase;
 import ru.novosoft.uml.foundation.core.MClass;
 import ru.novosoft.uml.foundation.core.MNamespace;
 import ru.novosoft.uml.model_management.MSubsystem;
+import ru.novosoft.uml.model_management.MModel;
 
 /**
  * Helper class for UML BehavioralElements::UseCases Package.
@@ -92,7 +93,7 @@ public class UseCasesHelper {
      */
     public Collection getAllUseCases() {
     	MNamespace model =
-	    ProjectManager.getManager().getCurrentProject().getModel();
+	    (MModel)ProjectManager.getManager().getCurrentProject().getModel();
 	return getAllUseCases(model);
     }
 	
@@ -122,7 +123,7 @@ public class UseCasesHelper {
      */
     public Collection getAllActors() {
     	MNamespace model =
-	    ProjectManager.getManager().getCurrentProject().getModel();
+	    (MModel)ProjectManager.getManager().getCurrentProject().getModel();
 	return getAllActors(model);
     }
 	

@@ -1,4 +1,4 @@
-// $Id: UmlModelEventPump.java,v 1.25 2003/08/19 19:57:06 sz9 Exp $
+// $Id: UmlModelEventPump.java,v 1.26 2003/08/20 22:27:31 alexb Exp $
 // Copyright (c) 2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -170,7 +170,7 @@ public final class UmlModelEventPump implements MElementListener {
             ModelManagementHelper.getHelper()
 	    .getAllModelElementsOfKind(modelClass);
         if (modelClass.isAssignableFrom(MModel.class)) {
-            MModel root =
+            Object root =
                 ProjectManager.getManager().getCurrentProject().getRoot();
             if (root != null)
                 col.add(root);

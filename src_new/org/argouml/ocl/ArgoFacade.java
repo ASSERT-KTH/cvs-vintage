@@ -1,4 +1,4 @@
-// $Id: ArgoFacade.java,v 1.16 2003/06/30 18:00:21 linus Exp $
+// $Id: ArgoFacade.java,v 1.17 2003/08/20 22:27:32 alexb Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -77,7 +77,7 @@ public class ArgoFacade implements tudresden.ocl.check.types.ModelFacade {
 	     p.getCurrentNamespace());
 	     *
 	     */
-	    MClassifier classifier = p.findTypeInModel(name, p.getModel());
+	    MClassifier classifier = (MClassifier)p.findTypeInModel(name, p.getModel());
 
 	    if (classifier == null) {
 		/**

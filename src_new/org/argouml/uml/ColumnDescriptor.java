@@ -1,4 +1,4 @@
-// $Id: ColumnDescriptor.java,v 1.18 2003/06/30 18:00:26 linus Exp $
+// $Id: ColumnDescriptor.java,v 1.19 2003/08/20 22:27:32 alexb Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -951,7 +951,7 @@ class ColumnReturn extends ColumnDescriptor {
 	MOperation op = (MOperation) target;
 	String s = (String) value;
 	Project p = ProjectManager.getManager().getCurrentProject();
-	MClassifier rt = p.findType(s);
+	MClassifier rt = (MClassifier)p.findType(s);
 	ParserDisplay pd = ParserDisplay.SINGLETON;
 	MParameter rp = UmlFactory.getFactory().getCore().buildParameter(op);
 	rp.setType(rt);
@@ -1020,7 +1020,7 @@ class ColumnType extends ColumnDescriptor {
 	MAttribute op = (MAttribute) target;
 	String s = (String) value;
 	Project p = ProjectManager.getManager().getCurrentProject();
-	MClassifier t = p.findType(s);
+	MClassifier t = (MClassifier)p.findType(s);
 	if (t == null) {
 	    cat.warn("attribute type not found");
 	    return;

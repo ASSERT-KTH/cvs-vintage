@@ -1,4 +1,4 @@
-// $Id: CoreFactory.java,v 1.53 2003/06/30 18:00:20 linus Exp $
+// $Id: CoreFactory.java,v 1.54 2003/08/20 22:27:32 alexb Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -88,6 +88,7 @@ import ru.novosoft.uml.foundation.data_types.MParameterDirectionKind;
 import ru.novosoft.uml.foundation.data_types.MScopeKind;
 import ru.novosoft.uml.foundation.data_types.MVisibilityKind;
 import ru.novosoft.uml.foundation.extension_mechanisms.MStereotype;
+import ru.novosoft.uml.model_management.MModel;
 
 /**
  * Factory to create UML classes for the UML
@@ -846,13 +847,13 @@ public class CoreFactory extends AbstractUmlModelFactory {
 	// this should not be here via the ProjectBrowser but the CoreHelper
 	// should provide this functionality
 	Project p = ProjectManager.getManager().getCurrentProject();
-	MClassifier intType = p.findType("int");
+	MClassifier intType = (MClassifier)p.findType("int");
 	if (p.getModel() != intType.getNamespace()
 	    && !(ModelManagementHelper.getHelper()
-		 .getAllNamespaces(p.getModel())
+		 .getAllNamespaces((MModel)p.getModel())
 		 .contains(intType.getNamespace())))
 	{
-	    intType.setNamespace(p.getModel());
+	    intType.setNamespace((MModel)p.getModel());
 	}
 	MAttribute attr = createAttribute();
 	attr.setName("newAttr");
@@ -1318,9 +1319,9 @@ public class CoreFactory extends AbstractUmlModelFactory {
 	// this should not be here via the ProjectBrowser but the CoreHelper
 	// should provide this functionality
 	Project p = ProjectManager.getManager().getCurrentProject();
-	MClassifier voidType = p.findType("void");
+	MClassifier voidType = (MClassifier)p.findType("void");
 	if (voidType.getModel() != p.getModel()) {
-	    voidType.setNamespace(p.getModel());
+	    voidType.setNamespace((MModel)p.getModel());
 	}
 	MParameter res = UmlFactory.getFactory().getCore().createParameter();
 	res.setName("");
@@ -1438,7 +1439,7 @@ public class CoreFactory extends AbstractUmlModelFactory {
 	if (nsc != null && nsc.equals(nss)) {
 	    ns = nsc;
 	} else {
-	    ns = ProjectManager.getManager().getCurrentProject().getModel();
+	    ns = (MModel)ProjectManager.getManager().getCurrentProject().getModel();
 	}
 	ExtensionMechanismsFactory.getFactory().buildStereotype(realization,
 								"realize", ns);
@@ -1489,7 +1490,7 @@ public class CoreFactory extends AbstractUmlModelFactory {
 	    comment.addAnnotatedElement(elementToComment);
 	    comment.setNamespace(elementToComment.getModel());
 	} else
-	    comment.setNamespace(ProjectManager.getManager()
+	    comment.setNamespace((MModel)ProjectManager.getManager()
 				 .getCurrentProject().getModel());
 
 	return comment;

@@ -1,4 +1,4 @@
-// $Id: UMLUseCaseDiagram.java,v 1.27 2003/06/30 21:59:33 linus Exp $
+// $Id: UMLUseCaseDiagram.java,v 1.28 2003/08/20 22:27:32 alexb Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: UMLUseCaseDiagram.java
 // Classes: UMLUseCaseDiagram
 // Original Author: your email here
-// $Id: UMLUseCaseDiagram.java,v 1.27 2003/06/30 21:59:33 linus Exp $
+// $Id: UMLUseCaseDiagram.java,v 1.28 2003/08/20 22:27:32 alexb Exp $
 
 // 3 Apr 2002: Jeremy Bennett (mail@jeremybennett.com). Extended to support the
 // Extend and Include relationships. JavaDoc added for clarity. Default
@@ -206,8 +206,13 @@ public class UMLUseCaseDiagram extends UMLDiagram {
      *
      * @param m  the desired namespace for this diagram.
      */
-    public UMLUseCaseDiagram(MNamespace m) {
+    public UMLUseCaseDiagram(Object m) {
+        
         this();
+        
+        if(!ModelFacade.isANamespace(m))
+            throw new IllegalArgumentException();
+        
         setNamespace(m);
     }
 

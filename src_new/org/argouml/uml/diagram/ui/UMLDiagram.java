@@ -1,4 +1,4 @@
-// $Id: UMLDiagram.java,v 1.27 2003/06/30 21:59:33 linus Exp $
+// $Id: UMLDiagram.java,v 1.28 2003/08/20 22:27:32 alexb Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -108,8 +108,12 @@ public abstract class UMLDiagram
   	super();
     }
   
-    public UMLDiagram(MNamespace ns) {
+    public UMLDiagram(Object ns) {
         this();
+        
+        if(!ModelFacade.isANamespace(ns))
+            throw new IllegalArgumentException();
+        
         setNamespace(ns);
     }
   
