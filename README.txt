@@ -1,4 +1,4 @@
-$Id: README.txt,v 1.63 2004/01/26 22:06:53 pledbrook Exp $
+$Id: README.txt,v 1.64 2004/02/04 09:20:48 dep4b Exp $
 
 Welcome to Scarab!
 
@@ -9,7 +9,9 @@ the instructions for building and running an installation as well as
 requirements for setting up the database.
 
 If you are doing development work with Scarab, please make sure to read 
-this link: http://scarab.tigris.org/development.html
+
+        http://scarab.tigris.org/development.html
+        http://scarab-gen.tigris.org/nonav/HEAD/
 
 We appreciate your deciding to try Scarab out and appreciate constructive 
 feedback on your success (or failure...we hope not!) in getting the 
@@ -20,20 +22,67 @@ system running.
 | R E Q U I R E M E N T S                                               |
 '-----------------------------------------------------------------------'
 
-SDK 1.3.1 or higher      --> <http://java.sun.com/>
-Make sure that you download the SDK and not the JRE!
-Note: On some operating systems (OS X, for instance), the SDK is
-included.
+SDK 1.3.1 or higher available from 
 
-Ant 1.5 or higher        --> <http://jakarta.apache.org/ant/>
-The version of torque used with scarab must be compiled with Ant 1.5.x
+        http://java.sun.com/
 
-Tomcat 4.0.4 or higher   --> <http://jakarta.apache.org/tomcat/>
-                             (Note: Tomcat 4.1.x is included with Scarab.)
+        Make sure that you download the SDK and not the JRE!
+        On some operating systems (OS X, for instance), 
+        the SDK is included.
 
-MySQL 3.23.x/4.x         --> <http://www.mysql.org/>
-                           OR
-Postgresql 7.3.x         --> <http://www.postgresql.org/>
+        When compiling Scarab with Jikes, version 1.18 or higher is
+        required.  Please do not try with Jikes 1.17, as it is buggy.
+
+Ant 1.5 or higher available from 
+
+        http://jakarta.apache.org/ant/
+
+        The version of torque used with scarab must be compiled 
+        with Ant 1.5.x
+
+Tomcat 4.0.4 or higher available from 
+
+        http://jakarta.apache.org/tomcat/
+
+        Tomcat 4.1.x is included with Scarab.
+        If you are using an existing Tomcat 4.1.x installation, 
+        you MUST *move* the common/endorsed/xercesImpl.jar to 
+        the server/lib directory. Please note that if you have 
+        any existing web applications that depend on Xerces 2, 
+        you will need to copy that .jar file into their WEB-INF/lib 
+        in order to make things work properly after the move.
+
+
+An RDBMS preferably one out of the list below
+
+MySQL 3.23.x/4.x  available from 
+
+        http://www.mysql.org/
+
+        If you want to use the faster/newer JDBC driver with MySQL, 
+        you can download it from the MySQL website and use them 
+        instead. We do not distribute it because it is GPL. 
+        To use it, just copy the .jar file into your scarab/lib 
+        directory and put this in your build.properties file: 
+
+        scarab.jdbc.driver.jar=mysql-connector*.jar
+      
+        see: <http://www.mysql.com/downloads/api-jdbc-dev.html>
+
+        Scarab will eventually require the transactional support 
+        present only in MySQL version 4 and higher, and will drop 
+        support for the transaction-less versions 3.23.x and lower.  
+        If getting started using MySQL, it's recommended that you 
+        install version 4 or higher.
+
+Postgresql 7.3.x available from  
+
+        http://www.postgresql.org/
+
+hypersonic 1.7.1 available from 
+
+        http://hsqldb.sourceforge.net
+
 
 NOTE: More detailed instructions for setting up the database on
       different database vendors is available on our website.
@@ -42,36 +91,25 @@ NOTE: More detailed instructions for setting up the database on
 
       <http://scarab.tigris.org/project_docs.html>
 
-NOTE: If you want to use the faster/newer JDBC driver with MySQL, you can
-      download it from the MySQL website and use them instead. We do not
-      distribute it because it is GPL. To use it, just copy the .jar
-      file into your scarab/lib directory and put this in your
-      build.properties file: scarab.jdbc.driver.jar=mysql-connector*.jar
-      
-      <http://www.mysql.com/downloads/api-jdbc-dev.html>
 
-      Scarab will eventually require the transactional support present
-      only in MySQL version 4 and higher, and will drop support for
-      the transaction-less versions 3.23.x and lower.  If getting
-      started using MySQL, it's recommended that you install version 4
-      or higher.
+,-----------------------------------------------------------------------.
+| E N V I R O N M E N T A L   S E T T I N G S                           |
+'-----------------------------------------------------------------------'
 
-NOTE: When compiling Scarab with Jikes, version 1.18 or higher is
-      required.  Please do not try with Jikes 1.17, as it is buggy.
-
-NOTE: If you are using an existing Tomcat 4.1.x installation, you MUST
-      *move* the common/endorsed/xercesImpl.jar to the server/lib
-      directory. Please note that if you have any existing web
-      applications that depend on Xerces 2, you will need to copy that
-      .jar file into their WEB-INF/lib in order to make things work
-      properly after the move.
+JAVA_HOME
 
 You must have the JAVA_HOME environment variable properly set to be the 
 location of your SDK installation directory. On MacOSX, this path is:
 /System/Library/Frameworks/JavaVM.framework/Home
 
+
+ANT_HOME
+
 You must have Ant installed and ANT_HOME defined in your environment as
 well as ANT_HOME/bin in your PATH.
+
+
+Database settings (for MYSQL)
 
 The database is assumed to be installed and running with appropriately
 configured access control setup (see below for more detail). You must
@@ -93,32 +131,43 @@ have the database binaries in your PATH (ie: $MYSQL_HOME/bin).
           .rc file for your shell. For example, if you use tcsh, put the
           lines above into your ~/.tcshrc
 
+
+Database settings for other RDBM's
+
 With the Scarab communities help, we will be supporting a wide range of
-databases in the released version of Scarab, however, the CollabNet 
+databases in the released version of Scarab, however, the Scarab 
 developers are currently doing development primarily on MySQL and thus
 do not guarantee that Scarab will work on other databases.
 
+.jar files
+
 All of the necessary .jar files for building and running Scarab are
-included in the /lib directory and the build system is setup to include
-these into your classpath for you. Please do not add any jar files to
-your CLASSPATH as it may cause compile errors.
+included in the /lib and the /www/repository directories and the build 
+system is setup to include these into your classpath for you. Please do 
+not add any jar files to your CLASSPATH as it may cause compile errors.
+
+
+port settings of the application server
 
 If you already have an existing webserver or service running on ports
 8080 and 8005, and you are using Scarab's version of Tomcat, you will
-need to change the port number to another unused port number by defining
-the scarab.tomcat.http.port and scarab.tomcat.shutdown.port properties
-in your build.properties (please see the "Settings" instructions below
-for how to create a build.properties file). Once you have done this, you
-will need to rebuild the sandbox.
+need to change the port number to another unused port number by editing
+the /tomcat/webapps/scarab.xml file.
+
+
+file permission settings
 
 By default, the web applications WEB-INF directory needs to have
 permissions set so that the userid which the JVM is running under can
 write into that directory.
 
-NOTE: One should use the copy of Xerces 1.x that is included with
-Scarab and make sure that no other copies of Xerces (especially
-Xerces 2.x) are in your JAVA_HOME, ANT_HOME or your CLASSPATH.
-Otherwise, you may get build errors.
+
+XML-environment
+
+NOTE: Make shure to use the copy of Xerces 1.x which is included 
+with the Scarab distribution and make sure that no other copies 
+of Xerces (especially Xerces 2.x) are in your JAVA_HOME, 
+ANT_HOME or in your CLASSPATH. Otherwise, you will get build errors.
 
 
 ,-----------------------------------------------------------------------.
@@ -127,36 +176,43 @@ Otherwise, you may get build errors.
 
 Here is a description of the Scarab directory tree:
 
-scarab/
-    /build      <-- This is where the scripts are to build the target sandbox
-                    and compile the source code for Scarab.
-    /lib        <-- These are the .jar files used by Scarab.
-    /src        <-- This where the source files are stored.
-    /extensions <-- This where the builder can place modifications to the standard
-                    distribution that will be incorporated into the build.
-                    This simplifies the process of replacing *.vm files,
-                    among other things.
-    /target     <-- This is the output directory where the sandbox will be 
-                    created. It doesn't exist until you run the build script.
-    /www        <-- This is where the website is stored.
+scarab
+  +- build      <-- This is where the Ant scripts are to build the sample webapp
+  |                 and create the sql scripts.  Additionally Ant can load the sql scripts.
+  +- extensions/usermods 
+  |             <-- This where the builder can place modifications to the standard
+  |                 distribution that will be incorporated into the build.
+  |                 This simplifies the process of replacing *.vm files,
+  |                 among other things.
+  +- extensions/scripts
+  |             <-- Helper shell scripts
+  +- extensions/dtd
+  |             <-- DTD's for validating XML files
+  +- extensions/bugzilla
+  |             <-- Scripts for converting from Bugzilla to Scarab
+  +- extensions/migration
+  |             <-- Ant task for migrating from b15 to b16
+  +- lib
+  +- www/repository
+  |             <-- These are the directoris storing .jar files used by Scarab.
+  +- src        <-- This where the source files are stored.
+  +- tomcat     <-- This is the included Tomcat configured to be ready to run with Scarab.
+  +- www        <-- This is where the website is stored.
+  +- xdocs      <-- xml versions of manuals (adminguide, userguide, etc)
 
-Within the /src directory are a number of sub directories...
+Within the /src directory you find following subdirectories...
 
-/src
-    /conf       <-- Various configuration files for Scarab.
-                    TurbineResources.properties and Scarab.properties
-                    live here.
-    /dtd        <-- Scarab, Intake and Torque DTD's.
-    /html       <-- Files which show up within the webapp directory.
-    /i18n       <-- Location of internationalized files.
-    /images     <-- Copied to the webapp/images directory.
-    /java       <-- The Java source code for Scarab.
-    /scripts    <-- Helper shell scripts.
-    /sql        <-- SQL files for defining the database.
-    /templates  <-- Velocity templates for the HTML and Email.
-    /test       <-- Test suite code.
-    /tomcat-4.1 <-- A minimal copy of Tomcat 4.1.x for use with the Scarab
-                    sandbox.
+src
+  +- conf/conf  <-- Various configuration files for Scarab.
+  |                 TurbineResources.properties and Scarab.properties
+  |                 live here.  Copied to WEB-INF/conf
+  +- conf/classes
+  |             <-- Various configuration files copied directly into the classpath.
+  +- java       <-- The Java source code for Scarab.
+  +- sql        <-- SQL files for defining the database.
+  +--webapp     <-- All the web resources required for Scarab like images, css files,
+  |                 javascript files, html files, velocity templates.
+  +--test       <-- Test suite code.
 
 
 ,-----------------------------------------------------------------------.
@@ -164,9 +220,9 @@ Within the /src directory are a number of sub directories...
 '-----------------------------------------------------------------------'
 
 The Scarab build process depends on having a few properties which are
-defined in the build/default.properties. The settings in the
-build/default.properties are fairly well documented within the file.
-These properties should be set accordingly *before* you build Scarab.
+defined in the build/default.*.properties. These settings are fairly 
+well documented within the files. These properties must be set 
+accordingly *before* you build Scarab.
 
 If you would like to change the settings in the default.properties there
 is no need to edit the default.properties file, you can override the
@@ -181,13 +237,22 @@ The first property which is found in the order with which the files are
 loaded becomes the property setting which is used by the Ant build
 system.
 
-Chances are that you are going to have to define your own database and
-mail server properties as well as a few other properties. Please look in
-the scarab/build/default.properties for a list of things that you can
-define.
-
 NOTE: The ~ character represents your user account home directory.
 
+Chances are that you are going to have to define your own database and
+mail server properties as well as a few other properties in the resulting
+Scarab WAR file.  There is no need to edit the WEB-INF/conf/TurbineResources.properties
+file in the WAR file.  Instead, put any properties you need to edit in 
+WEB-INF/conf/CustomSettings.properties.  Or, alternatively, you can define
+environment properties in your servlet's JNDI tree.  For more information
+read about Commons-Configuration:
+
+        http://jakarta.apache.org/commons/configuration/
+
+
+
+
+no changes below this line from me (HD)
 
 ,-----------------------------------------------------------------------.
 | S E T T I N G  T H E  M A I L S E R V E R                             |
@@ -199,20 +264,10 @@ different aspects of Scarab, such as the confirmation email sent when a
 user registers with the system. By default, the mail server is defined
 as "localhost". That means that you need to have an SMTP server running
 on the same box as Scarab. It is possible to modify this value by
-following the directions above and setting the property
-"scarab.system.mail.host" and then rebuilding Scarab.
+changing the property system.mail.host in CustomSettings.properties and
+uncommenting the property.
 
-Behind the scenes, in the build system, the "system.mail.host" property
-is located in the src/conf/TurbineResources.properties file and gets
-replaced with setting for "scarab.system.mail.host" in your local copy
-of the TurbineResources.properties file (which is located in the target)
-directory.
-
-NOTE: If you modify this value after you have build the sandbox
-      (instructions below), then you will need to re-run the ant
-      script and restart the servlet engine in order for the changes to
-      take effect.
-
+You will need to stop and start Scarab
 
 ,-----------------------------------------------------------------------.
 | S E T T I N G  T H E  U P L O A D  D I R E C T O R Y                  |
@@ -233,12 +288,10 @@ default, this path is relative to the webapp directory and is set to
 "WEB-INF/attachments". It is also possible to define an absolute path
 such as "/bigdisk/scarab/attachments".
 
-It is also recommended to set the scarab.file.upload.path property as
-well. This property is used as a temporary location for the uploaded
-data during the upload process. By default it is "WEB-INF".
+It is also recommended to set the services.UploadService.repository property in
+CustomSettings.properties as well. This property is used as a temporary location
+for the uploaded data during the upload process. By default it is "WEB-INF".
 
-NOTE: Please see the documentation above for instructions on how to set
-      properties and rebuild Scarab.
 
 
 ,-----------------------------------------------------------------------.
@@ -248,12 +301,10 @@ NOTE: Please see the documentation above for instructions on how to set
 Scarab uses Lucene to create searchable indexes for the issue data.
 Lucene needs to be able to store its indexes somewhere on disk. If the
 disk is low on space, it is recommended to put the indexes on another
-disk. This can be done by setting the scarab.lucene.index.path property.
+disk. This can be done by setting the searchindex.path property in 
+CustomSettings.properties.
 This path defaults to "WEB-INF/index" and can be defined as either a
 relative path or an absolute path.
-
-NOTE: Please see the documentation above for instructions on how to set
-      properties and rebuild Scarab.
 
 
 ,-----------------------------------------------------------------------.
@@ -271,10 +322,10 @@ call in DetermineCharsetValve.  Removing this call weakens Scarab's
 support for character set encoding, but it allows running Scarab with
 Websphere 4.0 application server.
 
-To implement this feature, add the following line to one of the custom
-build properties files as documented above:
+To implement this feature, add the following line to the CustomSettings.properties
+file as documented above:
 
-scarab.default.pipeline.descriptor=org/tigris/scarab/pipeline/scarab-pipeline22.xml
+pipeline.default.descriptor=org/tigris/scarab/pipeline/scarab-pipeline22.xml
 
 
 ,-----------------------------------------------------------------------.
@@ -343,29 +394,23 @@ username/password to connect to the database on localhost. For example,
 if you have MySQL up and running with no username/password for localhost
 access, you can simply execute the following:
 
-    cd src/sql
-    ./create-db.sh               <-- Unix
-    create-mysql-database.bat    <-- Win32
+    cd build
+    ant create-db
 
 If you need to specify a host/username/password/databasename, you will
-need to specify command line arguments to the create-db.sh script (Unix)
-or edit the create-mysql-database.bat script (Win32) in order to specify
-these settings to the MySQL client. For example:
-
-    cd src/sql
-    ./create-db.sh -u jon --password -P 3306 -h mysql.server.com
+need to edit the build/build.properties.  See the Settings section
+above.
 
 Also make sure to define your own scarab.database.* properties in your
 local build.properties (see above for the explanation about how to use
 build.properties) based on what is in the
-scarab/build/default.properties. Once you have done this, you will need
-to build the sandbox again in order to generate the right configuration
-files based on this information.
+scarab/build/default.properties. You will also need to update the war file
+by editing the CustomSettings.xml
 
 NOTE: If you would like to only load the required database data and not
-      the sample/default data, you can do so by passing the -e flag to
-      the ./create-db.sh script or editing the .bat script to not load
-      the *default*.sql and *sample*.sql files.
+      the sample/default data, you can do so by passing skip.seed.data
+      value or adding it to your build.properties:  
+      ant create-db -Dskip.seed.data=true
 
 NOTE: More detailed instructions for setting up the database on
       different database vendors is available on our website.
@@ -373,7 +418,7 @@ NOTE: More detailed instructions for setting up the database on
       <http://scarab.tigris.org/project_docs.html>
 
 NOTE: The create scripts will attempt to first drop a database called
-      "scarab" and then re-create it. If you execute this create-*
+      "scarab" and then re-create it. If you execute ant create-db
       script, all of your previous data in that specific database will
       be lost without warning!
 
@@ -407,27 +452,20 @@ NOTE: If you get a 'Server configuration denies access to data source'
       <http://www.mysql.com/documentation/mysql/bychapter/
        manual_MySQL_Database_Administration.html#Access_denied>
 
-      <http://sourceforge.net/docman/display_doc.php?docid=8968&group_id=15923>
-
-NOTE: Sometimes it may be useful to use "ant create-db" rather than "create-db.sh"
-      to diagnose connection issues since ant uses jdbc and the same URL
-      that Scarab does while running.
-      
-NOTE: We realize that the Win32 script is not as good as the Unix
-      script. Contributions to improve the script are appreciated.
+      <http://sourceforge.net/docman/display_doc.php?docid=8968&group_id=15923>     .
 
 
 ,-----------------------------------------------------------------------.
 | R U N N I N G  T H E  S A N D B O X                                   |
 '-----------------------------------------------------------------------'
 
-To run Tomcat from within the target directory that was created by 
-following the steps above under building the sandbox, all you need to do 
-is:
+To run the preconfigured Tomcat that comes with Scarab, all you need to do 
+is verify that the file /tomcat/webapps/scarab.xml is point to where you
+built Scarab (typically the value should be ../../target/scarab).
 
-cd target
-./scarab.sh     <-- Unix
-bin\startup.bat <-- Win32
+cd tomcat/bin
+scarab.sh     <-- Unix
+startup.bat <-- Win32
 
 Then, in your web browser, go to:
 
@@ -446,8 +484,9 @@ NOTE: Make sure that your TOMCAT_HOME is defined correctly. If you are
 NOTE: Substitute 'my.server.com' for the DNS name that the server is
       running on.
 
-NOTE: You can define your own URL by editing src/conf/web.xml and defining
-      a different servlet mapping and then rebuilding.
+NOTE: You can define your own URL by editing tomcat/webapps/scarab.xml or
+      /src/webapp/WEB-INF/web.xml and defining a different servlet mapping
+      and then rebuilding.
 
 ,-----------------------------------------------------------------------.
 | C U S T O M I Z I N G   S C A R A B                                   |
@@ -458,7 +497,7 @@ will cause CVS to report those differences, and even worse, the custom
 modifications might get unintentionally checked into the Scarab CVS
 repository by a Scarab developer).
 
-The extensions directory structure allows this to be done fairly simply.
+The extensions/usermod directory structure allows this to be done fairly simply.
 
 It contains three directories, lib, conf, and templates.  Any files in
 the lib directory will be copied into the appropriate target
@@ -466,10 +505,7 @@ directory _after_ any such files in the standard distribution,
 and will replace the standard distribution files.  Any files in the
 template directory will be copied to the target template directory
 _ONLY_IF_ the property "scarab.copy.templates" is set, again after
-the files from the standard distribution.  Currently only web.xml
-and server-config.wsdd are copied from the conf directory into the
-target directory, again after those from the standard distribution.
-
+the files from the standard distribution. 
 NOTE: It is the responsibility of the builder to ensure that any
       subsequent changes to modified Velocity macros are transferred
       to these replacements.
@@ -490,3 +526,4 @@ If you have problems or questions, please join the Scarab developer mailing
 list and post a detailed message describing your issues. :-)
 
 <http://scarab.tigris.org/>
+
