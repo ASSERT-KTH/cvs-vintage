@@ -229,6 +229,10 @@
                 <equals arg1="${scarab.copy.templates}" arg2="true"/>
             </not>
         </condition>
+        <!-- add custom template folders -->
+        <available property="template.path" 
+                      value="file://${scarab.template.path},${template.path}"
+                       type="dir" file="${scarab.template.path}" />
 
         <!-- things to go into the web-inf directory -->
         <filter token="VERSION" value="${version}"/>
