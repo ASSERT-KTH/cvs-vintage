@@ -184,7 +184,7 @@ public class FetchNewMessagesCommand extends Command {
 			ColumbaLogger.log.info("fetch message with UID=" + serverUID);
 
 			log(
-				"Fetching " + i + "/" + newMessageCount + " messages...",
+				"Fetching " + (i+1) + "/" + newMessageCount + " messages...",
 				worker);
 
 			//int index = ( (Integer) result.get(serverUID) ).intValue();
