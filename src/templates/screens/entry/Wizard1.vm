@@ -44,7 +44,7 @@ $page.setTitle("Enter New: $scarabR.CurrentIssueType.Name")
 #end
 </select>
       &#160;<input type="submit" value="Select" name="eventSubmit_doUsetemplates" /> 
-      &#160;<a href="$link.setPage("TemplateList.vm")">template list</a>
+      &#160;<a href="$link.setPage("TemplateList.vm")">View all patch templates</a>
  </td>
  </tr>
  </table>
@@ -110,16 +110,7 @@ $page.setTitle("Enter New: $scarabR.CurrentIssueType.Name")
 </table>
 </div>
 
-<div class="functnbar2">
-<table cellpadding="4" cellspacing="0" border="1">
- <tr>
-  <td class="firstchild">
-  <input type="submit" name="eventSubmit_doCheckforduplicates" value="Next" />&#160;
-  <input type="reset" value="Reset" />
-  </td>
- </tr>
-</table>
-</div>
+<p class="functnbar2"><input type="submit" name="eventSubmit_doCheckforduplicates" value="Next" />&#160;<input type="reset" value="Reset form" /></p>
 
 $intake.declareGroups()
 </form>
