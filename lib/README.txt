@@ -1,5 +1,5 @@
 --------------------------------------------------------------------------
-$Id: README.txt,v 1.8 2002/09/18 20:02:47 jon Exp $
+$Id: README.txt,v 1.9 2003/01/31 19:43:32 jon Exp $
 --------------------------------------------------------------------------
 
 The files in this directory are here for your convenience in building
@@ -113,6 +113,12 @@ considered 'standard' and well supported in our community circles.
   Singleton Services framework. Part of the Jakarta Turbine Project.
   
   http://jakarta.apache.org/turbine/
+
+* jakarta-oro*.jar
+
+  heavyweight regex package
+  
+  http://jakarta.apache.org/oro/
 
 * jakarta-regexp*.jar
 
