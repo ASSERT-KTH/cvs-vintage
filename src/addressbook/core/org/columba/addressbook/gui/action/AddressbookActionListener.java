@@ -375,9 +375,9 @@ public class AddressbookActionListener implements ActionListener {
 				addressbookInterface.table.setFolder(folder);
 			}
 		} else if (command.equals(addGroupAction.getActionCommand())) {
-
 			Folder folder =
 				(Folder) addressbookInterface.tree.getSelectedFolder();
+			if (folder == null) return;
 
 			EditGroupDialog dialog =
 				new EditGroupDialog(
@@ -398,9 +398,6 @@ public class AddressbookActionListener implements ActionListener {
 				folder.add(card);
 				addressbookInterface.table.setFolder(folder);
 			}
-
-			//dialog.showDialog();
-
 		} else if (command.equals(removeAction.getActionCommand())) {
 			Object[] uids = addressbookInterface.table.getSelectedUids();
 			AddressbookFolder folder =
