@@ -62,12 +62,13 @@ import org.tigris.scarab.util.ScarabConstants;
 import org.tigris.scarab.services.cache.ScarabCache;
 import org.tigris.scarab.tools.ScarabRequestTool;
 import org.tigris.scarab.tools.ScarabLocalizationTool;
+import org.tigris.scarab.util.Log;
 
 /**
  * This class deals with modifying Global Attributes.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: GlobalAttributes.java,v 1.30 2003/03/28 01:21:34 jon Exp $
+ * @version $Id: GlobalAttributes.java,v 1.31 2003/04/24 17:03:35 jackrepenning Exp $
  */
 public class GlobalAttributes extends RequireLoginFirstAction
 {
@@ -89,6 +90,7 @@ public class GlobalAttributes extends RequireLoginFirstAction
     public void doSave(RunData data, TemplateContext context)
         throws Exception
     {
+        Log.get().debug("doSave");
         IntakeTool intake = getIntakeTool(context);
         List userAttrs = AttributePeer.getAttributes("user");
         for (int i=0; i<userAttrs.size(); i++)
@@ -96,7 +98,8 @@ public class GlobalAttributes extends RequireLoginFirstAction
             Attribute attr = (Attribute)userAttrs.get(i);
             Group attrGroup = intake.get("Attribute", attr.getQueryKey());
             if (attrGroup != null)
-            { 
+            {
+                Log.get().debug("Setting property " + attr);
                 attrGroup.setProperties(attr);
                 attr.save();
             }
