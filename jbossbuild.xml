@@ -1,0 +1,78 @@
+<?xml version="1.0"?>
+
+<!--
+ JBoss, the OpenSource J2EE webOS
+ 
+ Distributable under LGPL license.
+ See terms of license at gnu.org.
+-->
+
+<!-- ================================================================== -->
+<!-- Server component definition                                        -->
+<!-- ================================================================== -->
+
+<project name="project" 
+         default="build" 
+         basedir="."
+>
+   <!-- The main build -->
+   <import file="../jbossas/build.xml"/>
+
+   <!-- =============================================================== -->
+   <!-- The component definition                                        -->
+   <!-- =============================================================== -->
+
+   <componentdef component="server" description="JBoss Server">
+
+      <!-- ============================================================ -->
+      <!-- The main source                                              -->
+      <!-- ============================================================ -->
+
+      <generatedsource id="jboss-ql-parser" 
+         srcdir="main"
+         javacc="org/jboss/ejb/plugins/cmp/ejbql/JBossQLParser.jjt"/>
+         
+      <generatedsource id="ejb-ql-parser" 
+         srcdir="main"
+         path="jboss-ql-parser"
+         javacc="org/jboss/ejb/plugins/cmp/ejbql/EJBQLParser.jjt"/>
+
+      <source id="main">
+         <include input="jboss-ql-parser"/>
+
+         <include input="commons"/>
+         <include input="concurrent"/>
+         <include input="log4j"/>
+         <include input="junit"/>
+         <include input="servlet"/>
+         <include input="bcel"/>
+         <include input="jpl-util"/>
+         <include input="getopt"/>
+         <include input="wsdl4j"/>
+
+         <include input="jmx-project"/>
+         <include input="common-project"/>
+         <include input="j2ee-project"/>
+         <include input="naming-project"/>
+         <include input="transaction-project"/>
+         <include input="remoting-project"/>
+         <include input="system-project"/>
+      </source>
+
+      <resource id="resources-root" path="."/>
+
+
+      <!-- ============================================================ -->
+      <!-- jboss.jar                                                    -->
+      <!-- ============================================================ -->
+
+      <artifactdef artifact="jboss.jar">
+         <include input="main"/>
+      </artifactdef>
+
+   </componentdef>
+
+   <!-- Generate the targets -->   
+   <generate generate="server"/>
+
+</project>
