@@ -6,7 +6,7 @@
 #set ($attTypeName = $attType.AttributeClass.Name)
 
 #macro (ModuleAttributeEditBar $val)
-<div class="functnbar">
+<div class="functnbar$val">
 #if ($attTypeName.equals("select-one"))
 <input type="submit" value="Done"  name="eventSubmit_doDone" />
 #end
