@@ -5,7 +5,7 @@
 
 <!-- This file contains a discussion of the host architecture -->
 <!-- in the jEdit Plugin API                                  -->
-<!-- $Id: host-design.xml,v 1.10 2002/03/17 10:21:56 spestov Exp $
+<!-- $Id: host-design.xml,v 1.11 2002/04/02 02:32:17 spestov Exp $
 -->
 
 <chapter id="host-design"><title>jEdit as a Plugin Host</title>
@@ -364,7 +364,7 @@ The DockableWindowManager and the EditBus</title>
   views and editing panes, changes in the set of properties maintained
   by the application, and the closing of the application.  A full list
   of message classes used by the EditBus are summarized beginning with
-  <xref linkend="class-EBMessage"/>.
+  <xref linkend="class-ebmessage"/>.
 </para>
 
 <para>

@@ -47,7 +47,7 @@ import org.gjt.sp.util.Log;
  * @see JEditTextArea
  *
  * @author Mike Dillon and Slava Pestov
- * @version $Id: Gutter.java,v 1.22 2002/02/15 10:07:38 spestov Exp $
+ * @version $Id: Gutter.java,v 1.23 2002/04/02 02:32:18 spestov Exp $
  */
 public class Gutter extends JComponent implements SwingConstants
 {
@@ -78,6 +78,9 @@ public class Gutter extends JComponent implements SwingConstants
 	{
 		this.view = view;
 		this.textArea = textArea;
+
+		setAutoscrolls(true);
+		setOpaque(true);
 
 		extensionMgr = new ExtensionManager();
 
