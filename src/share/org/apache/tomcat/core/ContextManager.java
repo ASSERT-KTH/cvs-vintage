@@ -1255,6 +1255,8 @@ public class ContextManager {
     }
 
     public ServerSession createServerSession() {
-	return new ServerSession();
+	ServerSession ss=new ServerSession();
+	ss.setContextManager( this );
+	return ss;
     }
 }
