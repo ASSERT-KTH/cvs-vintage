@@ -94,7 +94,7 @@ import org.apache.commons.lang.StringUtils;
  * @author <a href="mailto:jmcnally@collab.new">John McNally</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: Issue.java,v 1.194 2002/10/01 00:02:54 jmcnally Exp $
+ * @version $Id: Issue.java,v 1.195 2002/10/04 01:52:33 jon Exp $
  */
 public class Issue 
     extends BaseIssue
@@ -1652,9 +1652,8 @@ public class Issue
 
         // Save activity record
         ActivityManager
-            .createTextActivity(this, null, activitySet,
-                                desc, null,
-                                null, childIssue.getUniqueId());
+            .createAddDependencyActivity(this, activitySet,
+                                desc, childIssue.getUniqueId());
 
         // Save activitySet record for child
         desc = new StringBuffer("Added '")
@@ -1665,9 +1664,8 @@ public class Issue
 
         // Save activity record
         ActivityManager
-            .createTextActivity(childIssue, null, activitySet,
-                                desc, null,
-                                null, this.getUniqueId());
+            .createAddDependencyActivity(childIssue, activitySet,
+                                desc, this.getUniqueId());
         return activitySet;
     }
 
@@ -2711,7 +2709,7 @@ public class Issue
      *
      * @throws Exception when the workflow has an error to report
      */
-    public ActivitySet setInitialAttributeValues(HashMap newValues, ScarabUser user)
+    public ActivitySet setInitialAttributeValues(ActivitySet activitySet, HashMap newValues, ScarabUser user)
         throws Exception
     {
         // Check new values for workflow
@@ -2721,10 +2719,13 @@ public class Issue
             throw new Exception(msg);
         }
         
-        // Save activitySet record
-        ActivitySet activitySet = ActivitySetManager
-            .getInstance(ActivitySetTypePeer.CREATE_ISSUE__PK, user);
-        activitySet.save();
+        if (activitySet == null)
+        {
+            // Save activitySet record
+            activitySet = ActivitySetManager
+                .getInstance(ActivitySetTypePeer.CREATE_ISSUE__PK, user);
+            activitySet.save();
+        }
 
         // enter the values into the activitySet
         SequencedHashMap avMap = getModuleAttributeValuesMap(); 
