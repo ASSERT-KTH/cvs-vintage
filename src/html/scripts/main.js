@@ -1,11 +1,3 @@
-// focus on username field; filched from google
-
-function focus() {
-if (document.loginform) {
-document.loginform.loginID.focus();
- }
-}
-
 /* open windows smart/friendly way; thanks glish!
 
 theURL -- the URL to load in the new window
