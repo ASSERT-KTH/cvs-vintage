@@ -10,7 +10,7 @@
 <!--                                                                        -->
 <!-- ====================================================================== -->
 
-<!-- $Id: build.xml,v 1.27 2001/09/12 20:41:48 schaefera Exp $ -->
+<!-- $Id: build.xml,v 1.28 2001/09/13 07:38:14 schaefera Exp $ -->
 
 <project default="main" name="JBoss/Server">
 
@@ -386,7 +386,7 @@ os.version:      ${os.version}
     <taskdef name="ejbdoclet" classname="ejbdoclet.EJBDocletTask"/>
 
     <mkdir dir="${build.beans}"/>
-    <mkdir dir="${build.metadata}"/>
+    <mkdir dir="${build.metadata}/META-INF"/>
     <ejbdoclet sourcepath="${source.java}"
 	       destdir="${build.beans}"
 	       classpath="${dreambean.ejbdoclet.task.classpath}"
@@ -399,9 +399,9 @@ os.version:      ${os.version}
       <homeinterface/>
       <session/>
       <deploymentdescriptor xmlencoding ="UTF-8"
-			    destdir="${build.metadata}"/>
+			    destdir="${build.metadata}/META-INF"/>
       <jboss xmlencoding="UTF-8" 
-	     destdir="${build.metadata}"/>
+	     destdir="${build.metadata}/META-INF"/>
     </ejbdoclet>
   </target>
 
@@ -619,13 +619,36 @@ os.version:      ${os.version}
       </fileset>
     </jar>
 
-    <!-- Build jmx-ejb-connector.jsr (should try to use jlink for this)--> 
-    <jar jarfile="${build.lib}/jmx-ejb-connector.jsr"
-         manifest="${build.etc}/rmiconnector.mf">
+    <!-- Build jmx-ejb-adaptor.jar --> 
+    <jar jarfile="${build.lib}/jmx-ejb-adaptor.jar">
+      <fileset dir="${build.classes}">
+        <include name="org/jboss/jmx/adaptor/ejb/**"/>
+        <include name="org/jboss/jmx/adaptor/interfaces/**"/>
+      </fileset>
+      <fileset dir="${build.metadata}">
+        <include name="META-INF/*.xml"/>
+      </fileset>
+    </jar>
+
+    <!-- Build jmx-ejb-connector.jar (should try to use jlink for this)--> 
+    <jar jarfile="${build.lib}/jmx-ejb-connector.jar"
+         manifest="${build.etc}/ejb-connector.mf">
       <fileset dir="${build.classes}">
         <include name="org/jboss/jmx/ObjectHandler**"/>
         <include name="org/jboss/jmx/connector/notification/**"/>
         <include name="org/jboss/jmx/connector/ejb/**"/>
+        <include name="org/jboss/jmx/adaptor/ejb/*Exception.class"/>
+        <include name="org/jboss/jmx/adaptor/ejb/AdaptorSession.class"/>
+        <include name="org/jboss/jmx/adaptor/interfaces/**"/>
+      </fileset>
+    </jar>
+
+    <!-- Build jmx-ejb-connector-server.jsr (should try to use jlink for this)--> 
+    <jar jarfile="${build.lib}/jmx-ejb-connector-server.jsr"
+         manifest="${build.etc}/ejb-connector.mf">
+      <fileset dir="${build.classes}">
+        <include name="org/jboss/jmx/connector/notification/**"/>
+        <include name="org/jboss/jmx/connector/ejb/**Stub.class"/>
       </fileset>
       <fileset dir="${source.java}/org/jboss/jmx/connector/ejb">
         <include name="META-INF/**"/>

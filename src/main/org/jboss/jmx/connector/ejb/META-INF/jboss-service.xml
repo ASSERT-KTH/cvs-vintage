@@ -2,12 +2,8 @@
 
 <server>
 
-  <depends>JBOSS-SYSTEM:service=Naming</depends>
+   <classpath archives="
+      jmx-ejb-connector-server.jar
+   "/>
 
-  <mbean code="org.jboss.jmx.connector.ejb.EJBConnector" name="JMX:name=Connector,type=EJB">
-    <constructor>
-      <arg value="1" type="int"/>
-      <arg value="null" type="java.lang.String[]"/>
-    </constructor>
-  </mbean>
 </server>

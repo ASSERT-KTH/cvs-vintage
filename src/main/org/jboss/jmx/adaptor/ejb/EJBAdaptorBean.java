@@ -1,8 +1,8 @@
 // ----------------------------------------------------------------------------
 // File: EJBAdaptorBean.java
 // Copyright ( c ) 2001 JBoss Group.  All rights reserved.
-// Version: $Revision: 1.1 $
-// Last Checked In: $Date: 2001/09/12 01:49:06 $
+// Version: $Revision: 1.2 $
+// Last Checked In: $Date: 2001/09/13 07:38:15 $
 // Last Checked In By: $Author: schaefera $
 // ----------------------------------------------------------------------------
 
@@ -53,10 +53,12 @@ import org.jboss.jmx.ObjectHandler;
 * MBean Server.
 *
 * @author Andreas Schaefer
-* @version $Revision: 1.1 $
+* @version $Revision: 1.2 $
 *
 * @ejb:ejb-name jmx/ejb/Adaptor
 * @ejb:stateless-session
+* @ejb:env-entry Agent-Id null
+* @ejb:env-entry Server-Number -1
 *
 * @ejb:jndi-name ejb/jmx/ejb/Adaptor
 **/
@@ -856,40 +858,35 @@ public class EJBAdaptorBean
          RemoteException
    {
       if( mServer == null ) {
-         mServer = (MBeanServer) MBeanServerFactory.findMBeanServer( null ).iterator().next();
-      }
-   }
-   
-   /**
-   * Create the Session Bean
-   *
-   * @param pAgentId Agent Id of the MBeanServer used here as target server. If null then
-   *                 there are not restriction for the query
-   * @param pIndex Index of the MBeanServer being selected after the query is performed.
-   *
-   * @throws RemoteException If the given Index is less than 0 or greater than the number
-   *                         of returned Servers by the query.
-   *
-   * @ejb:create-method
-   **/
-/* AS Not working right now because there is only one ejb-create allowed with no arguments
-   public void ejbCreate(
-      String pAgentId,
-      int pIndex
-   ) throws
-         RemoteException
-   {
-      if( mServer == null ) {
-         ArrayList lServers = MBeanServerFactory.findMBeanServer( pAgentId );
-         if( pIndex >= 0 && pIndex < lServers.size() ) {
-            mServer = (MBeanServer) lServers.get( pIndex );
-         } else {
-            throw new RemoteException( "Index is out of bounds. There were only " +
-               lServers.size() + " servers returned by the query" );
+         try {
+            Context aJNDIContext = new InitialContext();
+            String lAgentId = null;
+            String lServerNumber = "-1";
+            lAgentId = (String) aJNDIContext.lookup( 
+               "java:comp/env/Agent-Id" 
+            );
+            lServerNumber = (String) aJNDIContext.lookup( 
+               "java:comp/env/Server-Number" 
+            );
+            if( lAgentId == null || lAgentId.equals( "" ) || lAgentId.equals( "null" ) ) {
+               lAgentId = null;
+            }
+            if( lServerNumber == null || lServerNumber.equals( "" ) ) {
+               lServerNumber = "-1";
+            }
+            int lNumber = new Integer( lServerNumber ).intValue();
+            ArrayList lServers = MBeanServerFactory.findMBeanServer( lAgentId );
+            if( lNumber >= 0 && lNumber < lServers.size() ) {
+               mServer = (MBeanServer) lServers.get( lNumber );
+            } else {
+               mServer = (MBeanServer) lServers.get( 0 );
+            }
+         }
+         catch( NamingException ne ) {
+            throw new EJBException( ne );
          }
       }
    }
-*/
    
    /**
    * Describes the instance and its content for debugging purpose
@@ -990,12 +987,10 @@ public class EJBAdaptorBean
    *  should store the reference to the context in an instance variable.
    * @throws EJBException Should something go wrong while seting the context,
    *  an EJBException will be thrown.
-   * @throws RemoteException Legacy exception from EJB 1.0    
    **/
    public void setSessionContext( SessionContext aContext )
       throws
          EJBException
-//         RemoteException
    {
       mContext = aContext;
    }

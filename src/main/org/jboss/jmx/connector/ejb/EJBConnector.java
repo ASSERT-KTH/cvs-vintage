@@ -82,7 +82,7 @@ import org.jboss.jmx.connector.notification.JMSNotificationListener;
 * and the EJB-Adaptor (meaning the EJB-Container).
 *
 * @author Andreas Schaefer (andreas.schaefer@madplanet.com)
-* @version $Revision: 1.1 $
+* @version $Revision: 1.2 $
 **/
 public class EJBConnector
    implements MBeanServer
@@ -97,12 +97,12 @@ public class EJBConnector
    * then this connector will use JMS to transfer the events asynchronous
    * back from the server to the client.
    **/
-   public static final int EVENT_TYPE_JMS = 0;
+   public static final int NOTIFICATION_TYPE_JMS = 0;
    /**
    * If this type is used the Connector will use RMI Callback Objects to
    * transfer the events back from the server synchronously.
    **/
-   public static final int EVENT_TYPE_RMI = 1;
+   public static final int NOTIFICATION_TYPE_RMI = 1;
    
    // -------------------------------------------------------------------------
    // Members 
@@ -113,7 +113,7 @@ public class EJBConnector
    private String            mJNDIServer;
    private Hashtable         mHandbackPool = new Hashtable();
    private Vector            mListeners = new Vector();
-   private int               mEventType = EVENT_TYPE_RMI;
+   private int               mEventType = NOTIFICATION_TYPE_RMI;
    private String[]          mOptions = new String[ 0 ];
 
    // -------------------------------------------------------------------------
@@ -125,7 +125,7 @@ public class EJBConnector
    * access the remote JMX Server.
    *
    * @param pType Defines the type of event transport. Please have a
-   *              look at the constants with the prefix EVENT_TYPE
+   *              look at the constants with the prefix NOTIFICATION_TYPE
    *              which protocols are supported
    * @param pOptions List of options used for the event transport. Right
    *                 now only for event type JMS there is the JMS Queue-
@@ -140,7 +140,7 @@ public class EJBConnector
    * access the remote JMX Server.
    *
    * @param pType Defines the type of event transport. Please have a
-   *              look at the constants with the prefix EVENT_TYPE
+   *              look at the constants with the prefix NOTIFICATION_TYPE
    *              which protocols are supported
    * @param pOptions List of options used for the event transport. Right
    *                 now only for event type JMS there is the JMS Queue-
@@ -157,7 +157,7 @@ public class EJBConnector
    * access the remote JMX Server.
    *
    * @param pType Defines the type of event transport. Please have a
-   *              look at the constants with the prefix EVENT_TYPE
+   *              look at the constants with the prefix NOTIFICATION_TYPE
    *              which protocols are supported
    * @param pOptions List of options used for the event transport. Right
    *                 now only for event type JMS there is the JMS Queue-
@@ -171,7 +171,7 @@ public class EJBConnector
    **/
    public EJBConnector( int pType, String[] pOptions, String pJNDIName, String pJNDIServer ) {
       try {
-         if( pType == EVENT_TYPE_RMI || pType == EVENT_TYPE_JMS ) {
+         if( pType == NOTIFICATION_TYPE_RMI || pType == NOTIFICATION_TYPE_JMS ) {
             mEventType = pType;
          }
          if( pOptions != null ) {
@@ -180,7 +180,7 @@ public class EJBConnector
          if( pJNDIName == null || pJNDIName.trim().length() == 0 ) {
             pJNDIName = "ejb/jmx/ejb/Adaptor";
          }
-         if( pJNDIServer.trim().length() == 0 ) {
+         if( pJNDIServer == null || pJNDIServer.trim().length() == 0 ) {
             mJNDIServer = null;
          } else {
             mJNDIServer = pJNDIServer;
@@ -654,7 +654,7 @@ public class EJBConnector
       InstanceNotFoundException
    {
       switch( mEventType ) {
-         case EVENT_TYPE_RMI:
+         case NOTIFICATION_TYPE_RMI:
             // Because the it is not possible to create a remote
             // NotificationListener directly a MBean must be loaded
             // and then added as new listener
@@ -684,7 +684,7 @@ public class EJBConnector
                throw new RuntimeException( "Remote access to perform this operation failed: " + e.getMessage() );
             }
             break;
-         case EVENT_TYPE_JMS:
+         case NOTIFICATION_TYPE_JMS:
             try {
                // Get the JMX QueueConnectionFactory from the J2EE server
                QueueConnection lConnection = getQueueConnection( mOptions[ 0 ] );
@@ -740,7 +740,7 @@ public class EJBConnector
    {
       Iterator i = mListeners.iterator();
       switch( mEventType ) {
-         case EVENT_TYPE_RMI:
+         case NOTIFICATION_TYPE_RMI:
             Listener lCheck = new Listener( pListener, null, pName );
             // Lookup if the given listener is registered
             while( i.hasNext() ) {
@@ -771,7 +771,7 @@ public class EJBConnector
                }
             }
             break;
-         case EVENT_TYPE_JMS:
+         case NOTIFICATION_TYPE_JMS:
             JMSListenerSet lSet = new JMSListenerSet( pName, pListener, null );
             // Lookup if the given listener is registered
             while( i.hasNext() ) {
