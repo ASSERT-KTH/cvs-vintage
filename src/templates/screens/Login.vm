@@ -3,7 +3,7 @@
 <p>$l10n.IfYouAreNotRegistered
   <strong>$link.setPage("Register.vm").setLabel("$l10n.CreateAnAccount")</strong>.</p>
 <p>$l10n.ForgotYourPassword
-  <strong>$link.setPage("ForgotPassword.vm").setLabel("click here")</strong>.</p>
+  <strong>$link.setPage("ForgotPassword.vm").setLabel("$l10n.ClickHere")</strong>$l10n.ClickHerePeriod</p>
 
 <h3>$l10n.Login</h3>
 
