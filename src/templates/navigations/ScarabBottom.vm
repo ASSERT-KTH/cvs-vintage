@@ -12,7 +12,7 @@ $link.setPage("Links.vm").setLabel("Links") |
     $link.setPage("Login.vm").setLabel("Login")
 #end
 
-<p><small>Debugging: [ $data.Parameters ]</small></p>
+<p><small>Debugging: [ {target=$data.Target} $data.Parameters ]</small></p>
 </td></tr>
 </table>
 </div>
