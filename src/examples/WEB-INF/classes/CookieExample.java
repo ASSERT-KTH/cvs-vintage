@@ -1,4 +1,4 @@
-/* $Id: CookieExample.java,v 1.1 1999/10/09 00:19:59 duncan Exp $
+/* $Id: CookieExample.java,v 1.2 2003/02/16 23:13:59 larryi Exp $
  *
  */
 
@@ -7,6 +7,8 @@ import java.text.*;
 import java.util.*;
 import javax.servlet.*;
 import javax.servlet.http.*;
+
+import util.HTMLFilter;
 
 /**
  * Example servlet showing request headers
@@ -50,13 +52,15 @@ public class CookieExample extends HttpServlet {
         out.println("<h3>" + title + "</h3>");
 
         Cookie[] cookies = request.getCookies();
-        if (cookies.length > 0) {
+        if ((cookies != null) && (cookies.length > 0)) {
             out.println(rb.getString("cookies.cookies") + "<br>");
             for (int i = 0; i < cookies.length; i++) {
                 Cookie cookie = cookies[i];
-                out.print("Cookie Name: " + cookie.getName() + "<br>");
-                out.println("  Cookie Value: " + cookie.getValue() +
-			    "<br><br>");
+                out.print("Cookie Name: " + HTMLFilter.filter(cookie.getName())
+                          + "<br>");
+                out.println("  Cookie Value: " 
+                            + HTMLFilter.filter(cookie.getValue())
+                            + "<br><br>");
             }
         } else {
             out.println(rb.getString("cookies.no-cookies"));
@@ -69,9 +73,10 @@ public class CookieExample extends HttpServlet {
             response.addCookie(cookie);
             out.println("<P>");
             out.println(rb.getString("cookies.set") + "<br>");
-            out.print(rb.getString("cookies.name") + "  " + cookieName +
-		      "<br>");
-            out.print(rb.getString("cookies.value") + "  " + cookieValue);
+            out.print(rb.getString("cookies.name") + "  " 
+                      + HTMLFilter.filter(cookieName) + "<br>");
+            out.print(rb.getString("cookies.value") + "  " 
+                      + HTMLFilter.filter(cookieValue));
         }
         
         out.println("<P>");

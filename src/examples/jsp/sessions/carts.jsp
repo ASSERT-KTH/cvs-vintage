@@ -19,7 +19,7 @@
 	String[] items = cart.getItems();
 	for (int i=0; i<items.length; i++) {
 %>
-<li> <%= items[i] %> 
+<li> <% out.print(util.HTMLFilter.filter(items[i])); %>
 <%
 	}
 %>

@@ -1,4 +1,4 @@
-/* $Id: RequestInfoExample.java,v 1.2 2001/12/07 05:15:10 billbarker Exp $
+/* $Id: RequestInfoExample.java,v 1.3 2003/02/16 23:13:59 larryi Exp $
  *
  */
 
@@ -8,6 +8,7 @@ import java.util.*;
 import javax.servlet.*;
 import javax.servlet.http.*;
 
+import util.HTMLFilter;
 
 /**
  * Example servlet showing request information.
@@ -58,7 +59,7 @@ public class RequestInfoExample extends HttpServlet {
         out.println("</td></tr><tr><td>");
         out.println(rb.getString("requestinfo.label.requesturi"));
         out.println("</td><td>");        
-        out.println(request.getRequestURI());
+        out.println(HTMLFilter.filter(request.getRequestURI()));
         out.println("</td></tr><tr><td>");        
         out.println(rb.getString("requestinfo.label.protocol"));
         out.println("</td><td>");        
@@ -66,7 +67,7 @@ public class RequestInfoExample extends HttpServlet {
         out.println("</td></tr><tr><td>");
         out.println(rb.getString("requestinfo.label.pathinfo"));
         out.println("</td><td>");        
-        out.println(request.getPathInfo());
+        out.println(HTMLFilter.filter(request.getPathInfo()));
         out.println("</td></tr><tr><td>");
         out.println(rb.getString("requestinfo.label.remoteaddr"));
         out.println("</td><td>");

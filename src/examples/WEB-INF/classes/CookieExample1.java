@@ -1,4 +1,4 @@
-/* $Id: CookieExample1.java,v 1.2 2000/12/26 22:46:39 costin Exp $
+/* $Id: CookieExample1.java,v 1.3 2003/02/16 23:13:59 larryi Exp $
  *
  */
 
@@ -7,6 +7,8 @@ import java.text.*;
 import java.util.*;
 import javax.servlet.*;
 import javax.servlet.http.*;
+
+import util.HTMLFilter;
 
 /**
  * Example servlet showing request headers
@@ -50,16 +52,24 @@ public class CookieExample1 extends HttpServlet {
         out.println("<h3>" + title + "</h3>");
 
         Cookie[] cookies = request.getCookies();
-        if (cookies.length > 0) {
+        if ((cookies != null) && (cookies.length > 0)) {
             out.println(rb.getString("cookies.cookies") + "<br>");
             for (int i = 0; i < cookies.length; i++) {
                 Cookie cookie = cookies[i];
-                out.print("Cookie Name: " + cookie.getName() + "<br>");
-                out.print("Cookie Value: " + cookie.getValue() + "<br>");
-                out.println("Cookie Version: " + cookie.getVersion() + "<br>");
-		out.println("Cookie Domain: " + cookie.getDomain() + "<br>");
-		out.println("Cookie Path: " + cookie.getPath() + "<br>");
-		out.println("<br>");
+                out.print("Cookie Name: " + HTMLFilter.filter(cookie.getName())
+                          + "<br>");
+                out.println("  Cookie Value: " 
+                            + HTMLFilter.filter(cookie.getValue())
+                            + "<br><br>");
+                out.println("Cookie Version: " + cookie.getVersion()
+                            + "<br>");
+                out.println("Cookie Domain: "
+                            + HTMLFilter.filter(cookie.getDomain())
+                            + "<br>");
+                out.println("Cookie Path: "
+                            + HTMLFilter.filter(cookie.getPath())
+                            + "<br>");
+                out.println("<br>");
             }
         } else {
             out.println(rb.getString("cookies.no-cookies"));
@@ -97,9 +107,10 @@ public class CookieExample1 extends HttpServlet {
             response.addCookie(cookie);
             out.println("<P>");
             out.println(rb.getString("cookies.set") + "<br>");
-            out.print(rb.getString("cookies.name") + "  " + cookieName +
-		      "<br>");
-            out.print(rb.getString("cookies.value") + "  " + cookieValue);
+            out.print(rb.getString("cookies.name") + "  " 
+                      + HTMLFilter.filter(cookieName) + "<br>");
+            out.print(rb.getString("cookies.value") + "  " 
+                      + HTMLFilter.filter(cookieValue));
         }
         
         out.println("<P>");

@@ -22,7 +22,7 @@ The checked fruits (got using request) are: <br>
 %>
 <li>
 <%
-	      out.println (fruits[i]);
+          out.println (util.HTMLFilter.filter(fruits[i]));
 	  }
 	} else out.println ("none selected");
 %>
@@ -42,7 +42,7 @@ The checked fruits (got using beans) are <br>
 %>
 <li>
 <%
-		  out.println (fruits[i]);
+          out.println (util.HTMLFilter.filter(fruits[i]));
 	  }
 	} else out.println ("none selected");
 %>

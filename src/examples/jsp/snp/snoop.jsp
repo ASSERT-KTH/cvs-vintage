@@ -15,11 +15,11 @@ Request Protocol: <%= request.getProtocol() %>
 <br>
 Servlet path: <%= request.getServletPath() %>
 <br>
-Path info: <%= request.getPathInfo() %>
+Path info: <% out.print(util.HTMLFilter.filter(request.getPathInfo())); %>
 <br>
 Path translated: <%= request.getPathTranslated() %>
 <br>
-Query string: <%= request.getQueryString() %>
+Query string: <% out.print(util.HTMLFilter.filter(request.getQueryString())); %>
 <br>
 Content length: <%= request.getContentLength() %>
 <br>
@@ -39,7 +39,7 @@ Authorization scheme: <%= request.getAuthType() %>
 <br>
 Locale: <%= request.getLocale() %>
 <hr>
-The browser you are using is <%= request.getHeader("User-Agent") %>
+The browser you are using is <% out.print(util.HTMLFilter.filter(request.getHeader("User-Agent"))); %>
 <hr>
 </font>
 </body>

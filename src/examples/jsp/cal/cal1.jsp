@@ -45,7 +45,7 @@
 		<%= entr.getHour() %> </A>
 	</TD>
 	<TD BGCOLOR=<%= entr.getColor() %>>
-	<%= entr.getDescription() %>
+	<% out.print(util.HTMLFilter.filter(entr.getDescription())); %>
 	</TD> 
 	</TR>
 <%
@@ -58,8 +58,8 @@
 <!-- footer -->
 <TABLE WIDTH=60% BGCOLOR=yellow CELLPADDING=15>
 <TR>
-<TD ALIGN=CENTER>  <%= table.getName() %> : 
-		     <%= table.getEmail() %> </TD>
+<TD ALIGN=CENTER>  <% out.print(util.HTMLFilter.filter(table.getName())); %> : 
+		     <% out.print(util.HTMLFilter.filter(table.getEmail())); %> </TD>
 </TR>
 </TABLE>
 </CENTER>

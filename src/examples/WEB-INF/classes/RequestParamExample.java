@@ -1,4 +1,4 @@
-/* $Id: RequestParamExample.java,v 1.1 1999/10/09 00:20:00 duncan Exp $
+/* $Id: RequestParamExample.java,v 1.2 2003/02/16 23:13:59 larryi Exp $
  *
  */
 
@@ -8,7 +8,7 @@ import java.util.*;
 import javax.servlet.*;
 import javax.servlet.http.*;
 
-
+import util.HTMLFilter;
 
 /**
  * Example servlet showing request headers
@@ -58,9 +58,9 @@ public class RequestParamExample extends HttpServlet {
         out.println(rb.getString("requestparams.params-in-req") + "<br>");
         if (firstName != null || lastName != null) {
             out.println(rb.getString("requestparams.firstname"));
-            out.println(" = " + firstName + "<br>");
+            out.println(" = " + HTMLFilter.filter(firstName) + "<br>");
             out.println(rb.getString("requestparams.lastname"));
-            out.println(" = " + lastName);
+            out.println(" = " + HTMLFilter.filter(lastName));
         } else {
             out.println(rb.getString("requestparams.no-params"));
         }

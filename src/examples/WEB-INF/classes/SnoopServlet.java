@@ -1,4 +1,4 @@
-/* $Id: SnoopServlet.java,v 1.2 1999/10/15 21:31:48 duncan Exp $
+/* $Id: SnoopServlet.java,v 1.3 2003/02/16 23:13:59 larryi Exp $
  *
  */
 
@@ -7,6 +7,7 @@ import java.io.PrintWriter;
 import java.util.Enumeration;
 import javax.servlet.*;
 import javax.servlet.http.*;
+import util.HTMLFilter;
 
 /**
  *
@@ -58,21 +59,21 @@ public class SnoopServlet extends HttpServlet {
         while (e.hasMoreElements()) {
             String key = (String)e.nextElement();
             Object value = request.getAttribute(key);
-            out.println("   " + key + " = " + value);
+            out.println("   " + HTMLFilter.filter(key) + " = " + value);
         }
         out.println();
         out.println("Servlet Name: " + getServletName());
         out.println("Protocol: " + request.getProtocol());
         out.println("Scheme: " + request.getScheme());
-        out.println("Server Name: " + request.getServerName());
+        out.println("Server Name: " + HTMLFilter.filter(request.getServerName()));
         out.println("Server Port: " + request.getServerPort());
         out.println("Server Info: " + context.getServerInfo());
         out.println("Remote Addr: " + request.getRemoteAddr());
         out.println("Remote Host: " + request.getRemoteHost());
-        out.println("Character Encoding: " + request.getCharacterEncoding());
+        out.println("Character Encoding: " + HTMLFilter.filter(request.getCharacterEncoding()));
         out.println("Content Length: " + request.getContentLength());
-        out.println("Content Type: "+ request.getContentType());
-        out.println("Locale: "+ request.getLocale());
+        out.println("Content Type: "+ HTMLFilter.filter(request.getContentType()));
+        out.println("Locale: "+ HTMLFilter.filter(request.getLocale().toString()));
         out.println("Default Response Buffer: "+ response.getBufferSize());
         out.println();
         out.println("Parameter names in this request:");
@@ -80,9 +81,9 @@ public class SnoopServlet extends HttpServlet {
         while (e.hasMoreElements()) {
             String key = (String)e.nextElement();
             String[] values = request.getParameterValues(key);
-            out.print("   " + key + " = ");
+            out.print("   " + HTMLFilter.filter(key) + " = ");
             for(int i = 0; i < values.length; i++) {
-                out.print(values[i] + " ");
+                out.print(HTMLFilter.filter(values[i]) + " ");
             }
             out.println();
         }
@@ -92,14 +93,14 @@ public class SnoopServlet extends HttpServlet {
         while (e.hasMoreElements()) {
             String key = (String)e.nextElement();
             String value = request.getHeader(key);
-            out.println("   " + key + ": " + value);
+            out.println(HTMLFilter.filter("   " + key + ": " + value));
         }
         out.println();  
         out.println("Cookies in this request:");
         Cookie[] cookies = request.getCookies();
         for (int i = 0; i < cookies.length; i++) {
             Cookie cookie = cookies[i];
-            out.println("   " + cookie.getName() + " = " + cookie.getValue());
+            out.println(HTMLFilter.filter("   " + cookie.getName() + " = " + cookie.getValue()));
         }
         out.println();
 
@@ -110,14 +111,14 @@ public class SnoopServlet extends HttpServlet {
         out.println("Request URI: " + request.getRequestURI());
         out.println("Context Path: " + request.getContextPath());
         out.println("Servlet Path: " + request.getServletPath());
-        out.println("Path Info: " + request.getPathInfo());
+        out.println("Path Info: " + HTMLFilter.filter(request.getPathInfo()));
 	out.println("Path Trans: " + request.getPathTranslated());
-        out.println("Query String: " + request.getQueryString());
+        out.println("Query String: " + HTMLFilter.filter(request.getQueryString()));
 
         out.println();
         HttpSession session = request.getSession();
         out.println("Requested Session Id: " +
-                    request.getRequestedSessionId());
+                    HTMLFilter.filter(request.getRequestedSessionId()));
         out.println("Current Session Id: " + session.getId());
 	out.println("Session Created Time: " + session.getCreationTime());
         out.println("Session Last Accessed Time: " +
@@ -129,7 +130,7 @@ public class SnoopServlet extends HttpServlet {
         Enumeration names = session.getAttributeNames();
         while (names.hasMoreElements()) {
             String name = (String) names.nextElement();
-            out.println("   " + name + " = " + session.getAttribute(name));
+            out.println(HTMLFilter.filter("   " + name + " = " + session.getAttribute(name)));
         }
     }
 }

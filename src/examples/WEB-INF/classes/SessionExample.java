@@ -1,4 +1,4 @@
-/* $Id: SessionExample.java,v 1.3 2001/03/06 21:29:46 larryi Exp $
+/* $Id: SessionExample.java,v 1.4 2003/02/16 23:13:59 larryi Exp $
  *
  */
 
@@ -8,7 +8,7 @@ import java.util.*;
 import javax.servlet.*;
 import javax.servlet.http.*;
 
-
+import util.HTMLFilter;
 
 /**
  * Example servlet showing request headers
@@ -82,7 +82,8 @@ public class SessionExample extends HttpServlet {
             while (names.hasMoreElements()) {
                 String name = (String) names.nextElement(); 
                 String value = session.getAttribute(name).toString();
-                out.println(name + " = " + value + "<br>");
+                out.println(HTMLFilter.filter(name) + " = " 
+                            + HTMLFilter.filter(value) + "<br>");
             }
         }
 
