@@ -41,7 +41,7 @@ import org.gjt.sp.util.Log;
  * text area for painting text.
  *
  * @author Slava Pestov
- * @version $Id: ChunkCache.java,v 1.38 2002/04/06 06:00:48 spestov Exp $
+ * @version $Id: ChunkCache.java,v 1.39 2002/04/12 04:18:27 spestov Exp $
  */
 public class ChunkCache
 {
@@ -274,7 +274,7 @@ public class ChunkCache
 					xorGfx.dispose();
 				}
 
-				if(chunks.text != null)
+				if(chunks.str != null)
 				{
 					gfx.setFont(font);
 					gfx.setColor(chunks.style.getForegroundColor());
