@@ -19,7 +19,7 @@
 // File: SampleNode.java
 // Classes: SampleNode
 // Original Author: ics125b spring 1996
-// $Id: SampleNode.java,v 1.1 1998/01/26 22:19:27 jrobbins Exp $
+// $Id: SampleNode.java,v 1.2 1998/02/11 22:30:23 jrobbins Exp $
 
 package uci.gef.demo;
 
@@ -33,6 +33,8 @@ import uci.gef.*;
  * @see Example */
 public class SampleNode extends NetNode {
 
+  SamplePort north, east, west, south;
+
    /** Initialize a new SampleNode from the given default node and
     *  application specific model. <p>
     *
@@ -45,11 +47,10 @@ public class SampleNode extends NetNode {
     */
 
   public void initialize(NetNode deft, Object model) {
-      portList = new NetPort[4];
-      portList[0] = new SamplePort(this);
-      portList[1] = new SamplePort(this);
-      portList[2] = new SamplePort2(this);
-      portList[3] = new SamplePort2(this);
+    addPort(east = new SamplePort(this));
+    addPort(west = new SamplePort(this));
+    addPort(north = new SamplePort2(this));
+    addPort(south = new SamplePort2(this));
    }
 
   public FigNode makePresentation(Layer lay) {
@@ -67,10 +68,10 @@ public class SampleNode extends NetNode {
     temp_list.addElement(obj5);
     temp_list.addElement(obj6);
     FigNode fn = new FigNode(this, temp_list);
-    fn.addPort(portList[0], obj3);
-    fn.addPort(portList[1], obj4);
-    fn.addPort(portList[2], obj5);
-    fn.addPort(portList[3], obj6);
+    fn.bindPort(north, obj3);
+    fn.bindPort(south, obj4);
+    fn.bindPort(east, obj5);
+    fn.bindPort(west, obj6);
     return fn;
   }
 

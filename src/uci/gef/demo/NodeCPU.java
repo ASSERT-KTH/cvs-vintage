@@ -19,7 +19,7 @@
 // File: NodeCPU.java
 // Classes: NodeCPU
 // Original Author: jrobbins@ics.uci.edu
-// $Id: NodeCPU.java,v 1.1 1998/01/26 22:19:27 jrobbins Exp $
+// $Id: NodeCPU.java,v 1.2 1998/02/11 22:30:03 jrobbins Exp $
 
 package uci.gef.demo;
 
@@ -55,6 +55,8 @@ public class NodeCPU extends SampleNode {
   protected String _ownerInfo = "Your Name Here\n"+
   "Your Company\n" + "Your Address Line1\n" + "Your Address Line 2";
 
+  PortPower powerPort;
+  PortData dataPort;
 
   ////////////////////////////////////////////////////////////////
   // constructors and initialization code
@@ -71,9 +73,8 @@ public class NodeCPU extends SampleNode {
    *  <p> */
 
   public void initialize(NetNode deft, Object model) {
-    portList = new NetPort[2];
-    portList[0] = new PortPower(this, PortPower.RECEPTICAL);
-    portList[1] = new PortData(this);
+    addPort(powerPort = new PortPower(this, PortPower.RECEPTICAL));
+    addPort(dataPort = new PortData(this));
    }
 
   ////////////////////////////////////////////////////////////////
@@ -198,8 +199,8 @@ public class NodeCPU extends SampleNode {
     temp_list.addElement(obj2);
     temp_list.addElement(obj3);
     FigNode fn = new FigNode(this, temp_list);
-    fn.addPort(portList[0], obj2);
-    fn.addPort(portList[1], obj3);
+    fn.bindPort(powerPort, obj2);
+    fn.bindPort(dataPort, obj3);
     return fn;
   }
 

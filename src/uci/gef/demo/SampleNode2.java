@@ -19,7 +19,7 @@
 // File: SampleNode2.java
 // Classes: SampleNode2
 // Original Author: ics125b spring 1996
-// $Id: SampleNode2.java,v 1.1 1998/01/26 22:19:27 jrobbins Exp $
+// $Id: SampleNode2.java,v 1.2 1998/02/11 22:30:14 jrobbins Exp $
 
 package uci.gef.demo;
 
@@ -46,11 +46,7 @@ public class SampleNode2 extends SampleNode {
     *  copies?<p> */
 
   public void initialize(NetNode deft, Object model) {
-    portList = new NetPort[4];
-    portList[0] = new SamplePort(this);
-    portList[1] = new SamplePort(this);
-    portList[2] = new SamplePort2(this);
-    portList[3] = new SamplePort2(this);
+    super.initialize(deft, model);
    }
 
   public FigNode makePresentation(Layer lay) {
@@ -69,10 +65,10 @@ public class SampleNode2 extends SampleNode {
     temp_list.addElement(obj6);
     FigNode fn = new FigNode(this, temp_list);
     fn.setBlinkPorts(true);
-    fn.addPort(portList[0], obj3);
-    fn.addPort(portList[1], obj4);
-    fn.addPort(portList[2], obj5);
-    fn.addPort(portList[3], obj6);
+    fn.bindPort(north, obj3);
+    fn.bindPort(south, obj4);
+    fn.bindPort(east, obj5);
+    fn.bindPort(west, obj6);
     return fn;
   }
 
