@@ -3,7 +3,7 @@
  * :tabSize=8:indentSize=8:noTabs=false:
  * :folding=explicit:collapseFolds=1:
  *
- * Copyright (C) 2001, 2003 Slava Pestov
+ * Copyright (C) 2001, 2004 Slava Pestov
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -34,7 +34,7 @@ import org.gjt.sp.util.Log;
  * Manages low-level text display tasks.
  * @since jEdit 4.2pre1
  * @author Slava Pestov
- * @version $Id: DisplayManager.java,v 1.87 2004/05/06 20:37:19 spestov Exp $
+ * @version $Id: DisplayManager.java,v 1.88 2004/05/31 22:19:39 spestov Exp $
  */
 public class DisplayManager
 {
@@ -158,6 +158,9 @@ public class DisplayManager
 	 */
 	public int getNextVisibleLine(int line)
 	{
+		if(line < 0 || line >= buffer.getLineCount())
+			throw new ArrayIndexOutOfBoundsException(line);
+
 		int index = fvmget(line);
 		/* in collapsed range */
 		if(index % 2 != 0)
@@ -192,6 +195,9 @@ public class DisplayManager
 	 */
 	public int getPrevVisibleLine(int line)
 	{
+		if(line < 0 || line >= buffer.getLineCount())
+			throw new ArrayIndexOutOfBoundsException(line);
+
 		int index = fvmget(line);
 		/* before first visible line */
 		if(index == -1)
@@ -995,16 +1001,26 @@ loop:		for(;;)
 				fvmput2(starti,endi,start,end);
 			else
 			{
-				fvmput(starti + 1,endi,null);
-				fvm[starti + 1] = start;
+				if(start == fvm[0])
+					fvmput(starti,endi + 1,null);
+				else
+				{
+					fvmput(starti + 1,endi,null);
+					fvm[starti + 1] = start;
+				}
 			}
 		}
 		else
 		{
 			if(endi % 2 == 0)
 			{
-				fvmput(starti + 1,endi,null);
-				fvm[starti + 1] = end + 1;
+				if(end + 1 == fvm[fvmcount - 1])
+					fvmput(starti + 1,endi + 2,null);
+				else
+				{
+					fvmput(starti + 1,endi,null);
+					fvm[starti + 1] = end + 1;
+				}
 			}
 			else
 				fvmput(starti + 1,endi + 1,null);
