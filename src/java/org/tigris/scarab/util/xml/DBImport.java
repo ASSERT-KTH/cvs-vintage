@@ -65,12 +65,16 @@ public class DBImport
     public static final String STATE_DB_VALIDATION = "DBVALIDATION";
     public static final String STATE_DB_INSERTION = "DBINSERTION";
     
-    private static final String USAGE = "Usage: DBImport [" + STATE_XML_VALIDATION + " | " + STATE_DB_VALIDATION + " | " + STATE_DB_INSERTION + "] <import-xml-file>";
-    private static final String TR_PROPS = "/WEB-INF/conf/TurbineResources.properties";
+    private static final String USAGE = "Usage: DBImport [" + 
+        STATE_XML_VALIDATION + " | " + STATE_DB_VALIDATION + " | " + 
+        STATE_DB_INSERTION + "] <import-xml-file>";
+    private static final String TR_PROPS = 
+        "/WEB-INF/conf/TurbineResources.properties";
     
     private static boolean initialized = false;
-    private static Category cat = Category.getInstance(org.tigris.scarab.util.xml.DBImport.class);
-    
+    private static Category cat = 
+        Category.getInstance(org.tigris.scarab.util.xml.DBImport.class);
+
     public DBImport()
     {
     }
@@ -89,10 +93,13 @@ public class DBImport
         
         ArrayList userList = new ArrayList();
         
+/* Why is this here?
         if (state.equals(STATE_XML_VALIDATION))
         {
         }
-        else if (state.equals(STATE_DB_VALIDATION) || state.equals(STATE_DB_INSERTION))
+        else
+*/ 
+        if (state.equals(STATE_DB_VALIDATION) || state.equals(STATE_DB_INSERTION))
         {
             digester.addRule("scarab/user", new UserRule(digester, state, userList));
             digester.addRule("scarab/user/firstname", new PropertyRule(digester, state, "user-firstname"));
@@ -188,7 +195,9 @@ public class DBImport
             cat.error(USAGE);
             return;
         }
-        if (!args[0].equals(STATE_DB_INSERTION) && !args[0].equals(STATE_DB_VALIDATION) && !args[0].equals(STATE_XML_VALIDATION))
+        if (!args[0].equals(STATE_DB_INSERTION) && 
+            !args[0].equals(STATE_DB_VALIDATION) && 
+            !args[0].equals(STATE_XML_VALIDATION))
         {
             cat.error(USAGE + "\nInvalid argument: " + args[0]);
             return;
@@ -221,8 +230,8 @@ public class DBImport
         catch(Exception e)
         {
             cat.error("\nThe following error(s) found for " + state + 
-                          "\n-------------------------------------------------------------------------\n" +
-                          e.getMessage());
+                      "\n-------------------------------------------------------------------------\n" +
+                      e.getMessage());
         }
     }
     
@@ -245,7 +254,9 @@ public class DBImport
                 initialized = true;
                 
                 Properties props = new Properties();
-                InputStream is = new File(configDir + "/WEB-INF/conf/dataimport.properties").toURL().openStream();
+                InputStream is = new File(configDir + 
+                    "/WEB-INF/conf/dataimport.properties")
+                    .toURL().openStream();
                 props = new Properties();
                 try
                 {
@@ -254,7 +265,8 @@ public class DBImport
                 }
                 catch (Exception e)
                 {
-                    System.err.println("Can't read the properties file (" + configDir + "/WEB-INF/conf/dataimport.properties). ");
+                    System.err.println("Can't read the properties file (" + 
+                        configDir + "/WEB-INF/conf/dataimport.properties). ");
                 }
             }
             else

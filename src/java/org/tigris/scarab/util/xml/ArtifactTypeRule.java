@@ -80,8 +80,7 @@ public class ArtifactTypeRule extends BaseRule
      */
     public void body(String text) throws Exception
     {
-        Category cat = Category.getInstance(org.tigris.scarab.util.xml.DBImport.class);
-        cat.debug("("+state+") artifact-type body: " + text);
+        cat.debug("(" + state + ") artifact-type body: " + text);
         super.doInsertionOrValidationAtBody(text);
     }
     

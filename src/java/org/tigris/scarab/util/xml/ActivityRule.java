@@ -79,7 +79,6 @@ public class ActivityRule extends BaseRule
      */
     public void end() throws Exception
     {
-        Category cat = Category.getInstance(org.tigris.scarab.util.xml.DBImport.class);
         cat.debug("(" + state + ") activity end()");
         if(state.equals(DBImport.STATE_DB_INSERTION))
         {
@@ -105,7 +104,8 @@ public class ActivityRule extends BaseRule
                 
                 if (attribute.isOptionAttribute())
                 {
-                    ParentChildAttributeOption newPCAO = ParentChildAttributeOption.getInstance();
+                    ParentChildAttributeOption newPCAO = 
+                        ParentChildAttributeOption.getInstance();
                     newPCAO.setName(name);
                     newPCAO.setAttributeId(attribute.getAttributeId());
                     newPCAO.save();
@@ -114,19 +114,22 @@ public class ActivityRule extends BaseRule
             
             if (attribute.isOptionAttribute())
             {
-                AttributeOption attributeOption = AttributeOption.getInstance(attribute, name);
+                AttributeOption attributeOption = AttributeOption
+                    .getInstance(attribute, name);
                 
                 // did not find the attribute option, so create it
                 if (attributeOption == null)
                 {
-                    ParentChildAttributeOption newPCAO = ParentChildAttributeOption.getInstance();
+                    ParentChildAttributeOption newPCAO = 
+                        ParentChildAttributeOption.getInstance();
                     newPCAO.setName(name);
                     newPCAO.setAttributeId(attribute.getAttributeId());
                     newPCAO.save();
                 }
             }
             
-            activity.create(issue, attribute, description, transaction, oldValue, value);
+            activity.create(issue, attribute, description, transaction, 
+                            oldValue, value);
             
             digester.push(issue);
             digester.push(createTransaction);

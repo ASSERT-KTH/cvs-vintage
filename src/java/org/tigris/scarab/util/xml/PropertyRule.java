@@ -55,11 +55,10 @@ import org.apache.log4j.Category;
  * @author <a href="mailto:kevin.minshull@bitonic.com">Kevin Minshull</a>
  * @author <a href="mailto:richard.han@bitonic.com">Richard Han</a>
  */
-public class PropertyRule extends Rule
+public class PropertyRule extends BaseRule
 {
-    private String state;
     /** String identifing this particular <code>TestRule</code> */
-    private String identifier;
+    private String identifier = null;
     
     /**
      * Base constructor.
@@ -69,9 +68,8 @@ public class PropertyRule extends Rule
      */
     public PropertyRule(Digester digester, String state, String identifier)
     {
-        super(digester);
-        this.identifier=identifier;
-        this.state = state;
+        super(digester, state);
+        this.identifier = identifier;
     }
 
     /**
@@ -99,8 +97,7 @@ public class PropertyRule extends Rule
      */
     public void body(String text) throws Exception
     {
-        Category cat = Category.getInstance(org.tigris.scarab.util.xml.DBImport.class);
-        cat.debug("(" + state+ ") " +identifier + " body: " +text);
+        cat.debug("(" + state + ") " + identifier + " body: " + text);
         digester.push(text);
     }
 }

@@ -59,16 +59,11 @@ import org.tigris.scarab.om.Transaction;
  * @author <a href="mailto:kevin.minshull@bitonic.com">Kevin Minshull</a>
  * @author <a href="mailto:richard.han@bitonic.com">Richard Han</a>
  */
-public class IssueRule extends Rule 
+public class IssueRule extends BaseRule 
 {
-    private String state;
-    private Category cat;
-    
     public IssueRule(Digester digester, String state)
     {
-        super(digester);
-        this.state = state; 
-        cat = Category.getInstance(org.tigris.scarab.util.xml.DBImport.class);
+        super(digester, state);
     }
     
     /**
@@ -79,7 +74,7 @@ public class IssueRule extends Rule
      */
     public void begin(Attributes attributes) throws Exception
     {
-        cat.debug("("+state+") issue begin()");
+        cat.debug("(" + state + ") issue begin()");
         digester.push(attributes.getValue("id"));
     }
     
@@ -89,7 +84,7 @@ public class IssueRule extends Rule
      */
     public void end() throws Exception
     {
-        cat.debug("("+state+") issue end()");
+        cat.debug("(" + state + ") issue end()");
         
         if(state.equals(DBImport.STATE_DB_INSERTION))
         {

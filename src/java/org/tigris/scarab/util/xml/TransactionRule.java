@@ -58,16 +58,11 @@ import org.tigris.scarab.om.Transaction;
  * @author <a href="mailto:kevin.minshull@bitonic.com">Kevin Minshull</a>
  * @author <a href="mailto:richard.han@bitonic.com">Richard Han</a>
  */
-public class TransactionRule extends Rule
+public class TransactionRule extends BaseRule
 {
-    private String state;
-    private Category cat;
-    
     public TransactionRule(Digester digester, String state)
     {
-        super(digester);
-        this.state = state;
-        cat = Category.getInstance(org.tigris.scarab.util.xml.DBImport.class);
+        super(digester, state);
     }
     
     /**

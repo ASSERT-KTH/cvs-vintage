@@ -57,14 +57,11 @@ import org.tigris.scarab.om.AttachmentType;
  * @author <a href="mailto:kevin.minshull@bitonic.com">Kevin Minshull</a>
  * @author <a href="mailto:richard.han@bitonic.com">Richard Han</a>
  */
-public class AttachmentTypeRule extends Rule
+public class AttachmentTypeRule extends BaseRule
 {
-    private String state;
-    
     public AttachmentTypeRule(Digester digester, String state)
     {
-        super(digester);
-        this.state = state;
+        super(digester, state);
     }
 
     /**
@@ -76,19 +73,12 @@ public class AttachmentTypeRule extends Rule
      */
     public void body(String text) throws Exception
     {
-        Category cat = Category.getInstance(org.tigris.scarab.util.xml.DBImport.class);
         cat.debug("(" +state +") attachment type body: " + text);
-        if(state.equals(DBImport.STATE_DB_INSERTION))
-        {
-            doInsertionAtBody(text);
-        }
-        else if(state.equals(DBImport.STATE_DB_INSERTION))
-        {
-            doValidationAtBody(text);
-        }
+        super.doInsertionOrValidationAtBody(text);
     }
     
-    private void doInsertionAtBody(String attachmentTypeName) throws Exception
+    protected void doInsertionAtBody(String attachmentTypeName)
+        throws Exception
     {
         Attachment attachment = (Attachment)digester.pop();
         AttachmentType attachmentType = AttachmentType.getInstance(attachmentTypeName);
@@ -100,7 +90,8 @@ public class AttachmentTypeRule extends Rule
         digester.push(attachment);
     }
 
-    private void doValidationAtBody(String attachmentTypeName) throws Exception
+    protected void doValidationAtBody(String attachmentTypeName)
+        throws Exception
     {
         AttachmentType.getInstance(attachmentTypeName);
     }

@@ -62,16 +62,12 @@ import org.tigris.scarab.om.TransactionTypePeer;
  * @author <a href="mailto:kevin.minshull@bitonic.com">Kevin Minshull</a>
  * @author <a href="mailto:richard.han@bitonic.com">Richard Han</a>
  */
-public class CommittedByRule extends Rule
+public class CommittedByRule extends BaseRule
 {
-    private String state;
-    private ArrayList userList;
-    
-    public CommittedByRule(Digester digester, String state, ArrayList userList)
+    public CommittedByRule(Digester digester, String state, 
+                           ArrayList userList)
     {
-        super(digester);
-        this.state = state;
-        this.userList = userList;
+        super(digester, state, userList);
     }
     
     /**
@@ -83,19 +79,11 @@ public class CommittedByRule extends Rule
      */
     public void body(String text) throws Exception
     {
-        Category cat = Category.getInstance(org.tigris.scarab.util.xml.DBImport.class);
         cat.debug("("+state+") committed-by body: " + text);
-        if(state.equals(DBImport.STATE_DB_INSERTION))
-        {
-            doInsertionAtBody(text);
-        }
-        else if (state.equals(DBImport.STATE_DB_VALIDATION))
-        {
-            doValidationAtBody(text);
-        }
+        super.doInsertionOrValidationAtBody(text);
     }
     
-    private void doInsertionAtBody(String committedByName) throws Exception
+    protected void doInsertionAtBody(String committedByName) throws Exception
     {
         ScarabUser user = (ScarabUser)TurbineSecurity.getUser(committedByName);
         
@@ -105,17 +93,19 @@ public class CommittedByRule extends Rule
         digester.push(transaction);
     }
     
-    private void doValidationAtBody(String committedByName) throws Exception
+    protected void doValidationAtBody(String committedByName) throws Exception
     {
         try
         {
-            ScarabUser user = (ScarabUser)TurbineSecurity.getUser(committedByName);
+            ScarabUser user = (ScarabUser)TurbineSecurity
+                                .getUser(committedByName);
         }
         catch(Exception e)
         {
             if (!userList.contains(committedByName))
             {
-                throw new Exception("User: " + committedByName + ", is not defined");
+                throw new Exception("User: " + committedByName + 
+                                    ", is not defined");
             }
         }
     }

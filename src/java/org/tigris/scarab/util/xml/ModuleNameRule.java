@@ -56,14 +56,11 @@ import org.tigris.scarab.om.ScarabModule;
  * @author <a href="mailto:kevin.minshull@bitonic.com">Kevin Minshull</a>
  * @author <a href="mailto:richard.han@bitonic.com">Richard Han</a>
  */
-public class ModuleNameRule extends Rule
+public class ModuleNameRule extends BaseRule
 {
-    private String state;
-    
     public ModuleNameRule(Digester digester, String state)
     {
-        super(digester);
-        this.state = state;
+        super(digester, state);
     }
     
     /**
@@ -75,27 +72,19 @@ public class ModuleNameRule extends Rule
      */
     public void body(String text) throws Exception
     {
-        Category cat = Category.getInstance(org.tigris.scarab.util.xml.DBImport.class);
         cat.debug("(" + state + ") module name body: " + text);
-        if(state.equals(DBImport.STATE_DB_INSERTION))
-        {
-            doInsertionAtBody(text);
-        }
-        else if (state.equals(DBImport.STATE_DB_VALIDATION))
-        {
-            doValidationAtBody(text);
-        }
+        super.doInsertionOrValidationAtBody(text);
     }
     
-    private void doInsertionAtBody(String moduleName)
+    protected void doInsertionAtBody(String moduleName)
     {
         ScarabModule module = (ScarabModule)digester.pop();
         module.setRealName(moduleName);
         module.setDescription(moduleName);
         digester.push(module);
     }
-    
-    private void doValidationAtBody(String moduleName)
+
+    protected void doValidationAtBody(String moduleName)
     {
     }
 }

@@ -59,17 +59,12 @@ import org.tigris.scarab.om.Transaction;
  * @author <a href="mailto:kevin.minshull@bitonic.com">Kevin Minshull</a>
  * @author <a href="mailto:richard.han@bitonic.com">Richard Han</a>
  */
-public class DependencyRule extends Rule
+public class DependencyRule extends BaseRule
 {
-    private String state;
-    private DependencyTree dependTree;
-    private Category cat;
-    public DependencyRule(Digester digester, String state, DependencyTree dependTree)
+    public DependencyRule(Digester digester, String state,
+                          DependencyTree dependTree)
     {
-        super(digester);
-        this.state = state;
-        this.dependTree = dependTree;
-        cat = Category.getInstance(org.tigris.scarab.util.xml.DBImport.class);
+        super(digester, state, dependTree);
     }
     
     /**
@@ -78,18 +73,11 @@ public class DependencyRule extends Rule
      */
     public void end() throws Exception
     {
-        
         cat.debug("(" + state + ") dependency end()");
-        if(state.equals(DBImport.STATE_DB_INSERTION))
-        {
-            doInsertionAtEnd();
-        }
-        else{
-            doValidationAtEnd();
-        }
+        super.doInsertionOrValidationAtEnd();
     }
     
-    private void doValidationAtEnd()
+    protected void doValidationAtEnd()
     {
         String nodeType = (String)digester.pop();
         String parentOrChildIssueXmlId = (String)digester.pop();
@@ -97,22 +85,28 @@ public class DependencyRule extends Rule
         String issueXmlId = (String)digester.pop();
         digester.push(issueXmlId);
         
-        if(!dependTree.isIssueDependencyValid(new DependencyNode(nodeType,issueXmlId, parentOrChildIssueXmlId, dependType, false)))
+        DependencyNode dn = new DependencyNode(nodeType, issueXmlId, 
+                                               parentOrChildIssueXmlId, 
+                                               dependType, false);
+        if(!dependTree.isIssueDependencyValid(dn))
         {
-            
-            //if we can't resolve the dependency yet, it may still resolve it at the end when we have seen
-            //all ids
-            dependTree.addIssueDependency(issueXmlId, new DependencyNode(nodeType,issueXmlId, parentOrChildIssueXmlId, dependType, false));
+            //if we can't resolve the dependency yet, it may still 
+            // resolve it at the end when we have seen all ids
+            dependTree.addIssueDependency(issueXmlId, dn);
         }
-        else{
-            dependTree.addIssueDependency(issueXmlId, new DependencyNode(nodeType,issueXmlId, parentOrChildIssueXmlId, dependType, true));
+        else
+        {
+            dn = new DependencyNode(nodeType, issueXmlId, 
+                                    parentOrChildIssueXmlId, 
+                                    dependType, true);
+            dependTree.addIssueDependency(issueXmlId, dn);
         }
         
         Object obj = digester.pop();
         digester.push(obj);
     }
 
-    private void doInsertionAtEnd() throws Exception
+    protected void doInsertionAtEnd() throws Exception
     {
         String nodeType = (String)digester.pop();
         String parentOrChildIssueXmlId = (String)digester.pop();
@@ -122,33 +116,46 @@ public class DependencyRule extends Rule
         String issueXmlId = dependTree.getIssueXmlId(issue.getIssueId());
         Depend depend = Depend.getInstance();
         depend.setDependType(dependType);
-//        if (nodeType.equals(DependencyNode.NODE_TYPE_CHILD)) 
-//        {
-//            if(dependTree.isIssueResolvedYet(parentOrChildIssueXmlId)) 
-//            {
-//                depend.setObserverId(dependTree.getIssueId(parentOrChildIssueXmlId));
-//                depend.setObservedId(issue.getIssueId());
-//                depend.save();
-//            }
-//            else{
-//                //resolve at the end 
-//                dependTree.addIssueDependency(issueXmlId, new DependencyNode(nodeType, issueXmlId, parentOrChildIssueXmlId, dependType, true));
-//            }
-//        } 
-//we only need to save the SAME depend relationship ONCE
+/*
+        we only need to save the SAME depend relationship ONCE
+        if (nodeType.equals(DependencyNode.NODE_TYPE_CHILD)) 
+        {
+            if(dependTree.isIssueResolvedYet(parentOrChildIssueXmlId)) 
+            {
+                depend.setObserverId(dependTree.getIssueId(parentOrChildIssueXmlId));
+                depend.setObservedId(issue.getIssueId());
+                depend.save();
+            }
+            else
+            {
+                resolve at the end 
+                dependTree.addIssueDependency(issueXmlId, 
+                                              new DependencyNode(nodeType, issueXmlId, 
+                                                                 parentOrChildIssueXmlId, 
+                                                                 dependType, true));
+            }
+        } 
+*/
         if (nodeType.equals(DependencyNode.NODE_TYPE_PARENT)) 
         {
             if(dependTree.isIssueResolvedYet(parentOrChildIssueXmlId)) 
             {
-                cat.debug("parent dependency of " + parentOrChildIssueXmlId + " has been resolved");
+                cat.debug("parent dependency of " + parentOrChildIssueXmlId + 
+                          " has been resolved");
                 depend.setObserverId(issue.getIssueId());
                 depend.setObservedId(dependTree.getIssueId(parentOrChildIssueXmlId));
                 depend.save();
             }
-            else{
-                cat.debug("can't resolve the parent dependency of " + parentOrChildIssueXmlId);
+            else
+            {
+                cat.debug("can't resolve the parent dependency of " + 
+                    parentOrChildIssueXmlId);
                 //resolve at the end 
-                dependTree.addIssueDependency(issueXmlId, new DependencyNode(nodeType, issueXmlId, parentOrChildIssueXmlId, dependType, false));
+                DependencyNode dn = new DependencyNode(nodeType, issueXmlId, 
+                                                       parentOrChildIssueXmlId, 
+                                                       dependType, false);
+
+                dependTree.addIssueDependency(issueXmlId, dn);
             }
             
         } 

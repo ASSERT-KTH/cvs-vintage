@@ -45,6 +45,7 @@ package org.tigris.scarab.util.xml;
  * This software consists of voluntary contributions made by many
  * individuals on behalf of Collab.Net.
  */
+
 import java.util.ArrayList;
 
 import org.apache.commons.digester.Rule;
@@ -60,16 +61,15 @@ import org.tigris.scarab.om.Attachment;
  * @author <a href="mailto:kevin.minshull@bitonic.com">Kevin Minshull</a>
  * @author <a href="mailto:richard.han@bitonic.com">Richard Han</a>
  */
-public class AttachmentCreatedByRule extends Rule
+public class AttachmentCreatedByRule extends BaseRule
 {
-    private String state;
-    private ArrayList userList;
-    
-    public AttachmentCreatedByRule(Digester digester, String state, ArrayList userList)
+    /**
+     * Calls super(digester, state, userList)
+     */
+    public AttachmentCreatedByRule(Digester digester, String state, 
+                                   ArrayList userList)
     {
-        super(digester);
-        this.state = state;
-        this.userList = userList;
+        super(digester, state, userList);
     }
     
     /**
@@ -81,19 +81,11 @@ public class AttachmentCreatedByRule extends Rule
      */
     public void body(String text) throws Exception
     {
-        Category cat = Category.getInstance(org.tigris.scarab.util.xml.DBImport.class);
         cat.debug("(" + state + ") attachment CreatedBy body: " + text);
-        if(state.equals(DBImport.STATE_DB_INSERTION))
-        {
-            doInsertionAtBody(text);
-        }
-        else if (state.equals(DBImport.STATE_DB_VALIDATION))
-        {
-            doValidationAtBody(text);
-        }
+        super.doInsertionOrValidationAtBody(text);
     }
     
-    private void doInsertionAtBody(String text) throws Exception
+    protected void doInsertionAtBody(String text) throws Exception
     {
         Attachment attachment = (Attachment)digester.pop();
         ScarabUser user = (ScarabUser)TurbineSecurity.getUser(text);
@@ -101,7 +93,7 @@ public class AttachmentCreatedByRule extends Rule
         digester.push(attachment);
     }
     
-    private void doValidationAtBody(String text) throws Exception
+    protected void doValidationAtBody(String text) throws Exception
     {
         try
         {

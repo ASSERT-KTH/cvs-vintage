@@ -65,17 +65,13 @@ import org.tigris.scarab.om.ParentChildAttributeOption;
  * @author <a href="mailto:kevin.minshull@bitonic.com">Kevin Minshull</a>
  * @author <a href="mailto:richard.han@bitonic.com">Richard Han</a>
  */
-public class IssueAttributeRule extends Rule 
+public class IssueAttributeRule extends BaseRule
 {
     private Issue issue;
-    private String state;
-    private Category cat;
     
     public IssueAttributeRule(Digester digester, String state)
     {
-        super(digester);
-        this.state = state;
-        cat = Category.getInstance(org.tigris.scarab.util.xml.DBImport.class);
+        super(digester, state);
     }
     
     /**
@@ -84,21 +80,12 @@ public class IssueAttributeRule extends Rule
      */
     public void end() throws Exception
     {
-        cat.debug("("+state+ ") issue attribute end()");  
-        
-        if(state.equals(DBImport.STATE_DB_INSERTION))
-        {
-            doInsertionAtEnd();
-        }
-        else if (state.equals(DBImport.STATE_DB_VALIDATION))
-        {
-            doValidationAtEnd();
-        }
+        cat.debug("(" + state + ") issue attribute end()");  
+        super.doInsertionOrValidationAtEnd();
     }
     
-    private void doInsertionAtEnd() throws Exception
+    protected void doInsertionAtEnd() throws Exception
     {
-        
         AttributeType attributeType = (AttributeType)digester.pop();
         //this attributeValueValue should be one of the AttributeOption display value
         String attributeValueValue = (String)digester.pop();
@@ -109,7 +96,7 @@ public class IssueAttributeRule extends Rule
         // if the attribute is not found, create it
         if(attribute == null)
         {
-            cat.debug("Creating new attribute");
+            cat.debug("Creating new attribute: " + attributeName);
             attribute = Attribute.getInstance();
             attribute.setName(attributeName);
             attribute.setAttributeType(attributeType);
@@ -118,7 +105,8 @@ public class IssueAttributeRule extends Rule
             
             if (attribute.isOptionAttribute())
             {
-                ParentChildAttributeOption newPCAO = ParentChildAttributeOption.getInstance();
+                ParentChildAttributeOption newPCAO = 
+                    ParentChildAttributeOption.getInstance();
                 newPCAO.setName(attributeValueValue);
                 newPCAO.setAttributeId(attribute.getAttributeId());
                 newPCAO.save();
@@ -127,20 +115,24 @@ public class IssueAttributeRule extends Rule
         
         Transaction transaction = (Transaction)digester.pop();
         Issue issue = (Issue)digester.pop();
-        AttributeValue attributeValue = AttributeValue.getNewInstance(attribute, issue);
+        AttributeValue attributeValue = 
+            AttributeValue.getNewInstance(attribute, issue);
         
         if (attribute.isOptionAttribute())
         {
-            AttributeOption attributeOption = AttributeOption.getInstance(attribute, attributeValueValue);
+            AttributeOption attributeOption = 
+                AttributeOption.getInstance(attribute, attributeValueValue);
             
             // did not find the attribute option, so create it
             if (attributeOption == null)
             {
-                ParentChildAttributeOption newPCAO = ParentChildAttributeOption.getInstance();
+                ParentChildAttributeOption newPCAO = 
+                    ParentChildAttributeOption.getInstance();
                 newPCAO.setName(attributeValueValue);
                 newPCAO.setAttributeId(attribute.getAttributeId());
                 newPCAO.save();
-                attributeOption = AttributeOption.getInstance(attribute, attributeValueValue);
+                attributeOption = AttributeOption
+                    .getInstance(attribute, attributeValueValue);
             }
             attributeValue.setOptionId(attributeOption.getOptionId());
         }
@@ -156,7 +148,8 @@ public class IssueAttributeRule extends Rule
         digester.push(transaction);
     }
     
-    private void doValidationAtEnd()
+    protected void doValidationAtEnd()
+        throws Exception
     {
     }
 }

@@ -64,17 +64,13 @@ import org.apache.fulcrum.security.TurbineSecurity;
  * @author <a href="mailto:kevin.minshull@bitonic.com">Kevin Minshull</a>
  * @author <a href="mailto:richard.han@bitonic.com">Richard Han</a>
  */
-public class UserRule extends Rule 
+public class UserRule extends BaseRule 
 {
-    private String state;
-    private ArrayList userList;
     private static final int UNIQUE_ID_MAX_LEN = 10;
     
     public UserRule(Digester digester, String state, ArrayList userList)
     {
-        super(digester);
-        this.state = state;
-        this.userList = userList;
+        super(digester, state, userList);
     }
     
     /**
@@ -84,16 +80,8 @@ public class UserRule extends Rule
     public void end()
         throws Exception
     {
-        Category cat = Category.getInstance(org.tigris.scarab.util.xml.DBImport.class);
-        cat.debug("("+state+") user end()");
-        if(state.equals(DBImport.STATE_DB_INSERTION))
-        {
-            doInsertionAtEnd();
-        }
-        else if (state.equals(DBImport.STATE_DB_VALIDATION))
-        {
-            doValidationAtEnd();
-        }
+        cat.debug("(" + state + ") user end()");
+        super.doInsertionOrValidationAtEnd();
     }
     
     /**
@@ -102,7 +90,7 @@ public class UserRule extends Rule
      * will reset their password so that they can access the application.  No roles
      * are granted to the individual, just a user account created.
      */
-    private void doInsertionAtEnd()
+    protected void doInsertionAtEnd()
         throws Exception
     {
         String email = (String)digester.pop();
@@ -136,14 +124,15 @@ public class UserRule extends Rule
     /**
      * handle the validation
      */
-    private void doValidationAtEnd()
+    protected void doValidationAtEnd()
         throws Exception
     {
         String email = (String)digester.pop();
         String lastName = (String)digester.pop();
         String firstName = (String)digester.pop();
         
-        if (userList.contains(email)) {
+        if (userList.contains(email))
+        {
             throw new Exception("User: " + email + ", already defined");
         }
         

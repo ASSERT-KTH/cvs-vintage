@@ -56,14 +56,11 @@ import org.tigris.scarab.om.AttributeType;
  * @author <a href="mailto:kevin.minshull@bitonic.com">Kevin Minshull</a>
  * @author <a href="mailto:richard.han@bitonic.com">Richard Han</a>
  */
-public class IssueAttributeTypeRule extends Rule
+public class IssueAttributeTypeRule extends BaseRule
 {
-    private String state;
-    
     public IssueAttributeTypeRule(Digester digester, String state)
     {
-        super(digester);
-        this.state = state;
+        super(digester, state);
     }
     
     /**
@@ -75,25 +72,17 @@ public class IssueAttributeTypeRule extends Rule
      */
     public void body(String text) throws Exception
     {
-        Category cat = Category.getInstance(org.tigris.scarab.util.xml.DBImport.class);
-        cat.debug("("+state+") issue-attribute-type body: " + text);
-        if(state.equals(DBImport.STATE_DB_INSERTION))
-        {
-            doInsertionAtBody(text);
-        }
-        else if (state.equals(DBImport.STATE_DB_VALIDATION))
-        {
-            doValidationAtBody(text);
-        }
+        cat.debug("(" + state + ") issue-attribute-type body: " + text);
+        super.doInsertionOrValidationAtBody(text);
     }
     
-    private void doInsertionAtBody(String attributeTypeName)throws Exception
+    protected void doInsertionAtBody(String attributeTypeName)throws Exception
     {
         AttributeType issueType = AttributeType.getInstance(attributeTypeName);
         digester.push(issueType);
     }
     
-    private void doValidationAtBody(String attributeTypeName) throws Exception
+    protected void doValidationAtBody(String attributeTypeName) throws Exception
     {
         AttributeType.getInstance(attributeTypeName);
     }

@@ -59,16 +59,11 @@ import org.tigris.scarab.om.Attachment;
  * @author <a href="mailto:kevin.minshull@bitonic.com">Kevin Minshull</a>
  * @author <a href="mailto:richard.han@bitonic.com">Richard Han</a>
  */
-public class AttachmentCreatedDateRule extends Rule
-{
-    private String state;
-    private Category cat;
-    
+public class AttachmentCreatedDateRule extends BaseRule
+{    
     public AttachmentCreatedDateRule(Digester digester, String state)
     {
-        super(digester);
-        this.state = state;
-        cat = Category.getInstance(org.tigris.scarab.util.xml.DBImport.class);
+        super(digester, state);
     }
     
     /**
@@ -79,7 +74,7 @@ public class AttachmentCreatedDateRule extends Rule
      */
     public void begin(Attributes attributes) throws Exception
     {
-        cat.debug("("+state + ") attachment created date begin()");
+        cat.debug("(" + state + ") attachment created date begin()");
         digester.push(attributes.getValue("format"));
     }
     
@@ -93,17 +88,10 @@ public class AttachmentCreatedDateRule extends Rule
     public void body(String text) throws Exception
     {
         cat.debug("(" + state + ") attachment CreatedDate body: " + text);
-        if(state.equals(DBImport.STATE_DB_INSERTION))
-        {
-            doInsertionAtBody(text);
-        }
-        else if(state.equals(DBImport.STATE_DB_VALIDATION))
-        {
-            doValidationAtBody(text);
-        }
+        super.doInsertionOrValidationAtBody(text);
     }
     
-    private void doInsertionAtBody(String date) throws Exception
+    protected void doInsertionAtBody(String date) throws Exception
     {
         String format = (String)digester.pop();
         SimpleDateFormat sdf = new SimpleDateFormat(format);
@@ -113,7 +101,7 @@ public class AttachmentCreatedDateRule extends Rule
         digester.push(attachment);
     }
     
-    private void doValidationAtBody(String date) throws Exception
+    protected void doValidationAtBody(String date) throws Exception
     {
         String format = (String)digester.pop();
         SimpleDateFormat sdf = new SimpleDateFormat(format);

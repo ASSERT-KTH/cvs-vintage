@@ -63,7 +63,9 @@ public class DependencyNode
     private DependType dependType;
     private boolean resolved;
     
-    public DependencyNode (String nodeType, String issueId, String parentOrChildId, DependType dependType, boolean resolved) 
+    public DependencyNode (String nodeType, String issueId, 
+                           String parentOrChildId, DependType dependType, 
+                           boolean resolved) 
     {
         this.nodeType = nodeType;
         this.issueId = issueId;

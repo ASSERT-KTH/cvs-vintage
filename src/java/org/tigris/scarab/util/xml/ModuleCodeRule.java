@@ -58,14 +58,11 @@ import org.apache.torque.om.NumberKey;
  * @author <a href="mailto:kevin.minshull@bitonic.com">Kevin Minshull</a>
  * @author <a href="mailto:richard.han@bitonic.com">Richard Han</a>
  */
-public class ModuleCodeRule extends Rule
+public class ModuleCodeRule extends BaseRule
 {
-    private String state;
-    
     public ModuleCodeRule(Digester digester, String state)
     {
-        super(digester);
-        this.state = state;
+        super(digester, state);
     }
     
     /**
@@ -77,40 +74,39 @@ public class ModuleCodeRule extends Rule
      */
     public void body(String text) throws Exception
     {
-        Category cat = Category.getInstance(org.tigris.scarab.util.xml.DBImport.class);
         cat.debug("(" + state + ") module code body: " + text);
-        if(state.equals(DBImport.STATE_DB_INSERTION))
-        {
-            doInsertionAtBody(text);
-        }
-        else if (state.equals(DBImport.STATE_DB_VALIDATION))
-        {
-            doValidationAtBody(text);
-        }
+        super.doInsertionOrValidationAtBody(text);
     }
     
-    private void doInsertionAtBody(String moduleCode) throws Exception
+    protected void doInsertionAtBody(String moduleCode)
+        throws Exception
     {
         ScarabModule module = (ScarabModule)digester.pop();
         module.setCode(moduleCode);
-        if (module.isNew()) {
+        if (module.isNew())
+        {
             module.save();
         }
         digester.push(module);
     }
     
-    private void doValidationAtBody(String moduleCode) throws Exception
+    protected void doValidationAtBody(String moduleCode)
+        throws Exception
     {
         ScarabModule module;
         String moduleId = (String)digester.pop();
         
-        module = (ScarabModule)ModuleManager.getInstance(new NumberKey(moduleId));
+        module = (ScarabModule)ModuleManager
+            .getInstance(new NumberKey(moduleId));
         //make sure the existing module has the same code
         String existingModuleCode = module.getCode();
         if(!existingModuleCode.equals(moduleCode))
         {
-            throw new Exception("The existing module with module id: " + moduleId + " has module code: " + existingModuleCode
-                                    + " which is not same as the import module code: " + moduleCode);
+            throw new Exception("The existing module with module id: " + 
+                                moduleId + " has module code: " + 
+                                existingModuleCode + 
+                                " which is not same as the import module code: " + 
+                                moduleCode);
         }
         else
         {

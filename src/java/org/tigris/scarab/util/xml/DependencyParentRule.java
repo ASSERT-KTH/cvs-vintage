@@ -54,14 +54,11 @@ import org.apache.log4j.Category;
  * @author <a href="mailto:kevin.minshull@bitonic.com">Kevin Minshull</a>
  * @author <a href="mailto:richard.han@bitonic.com">Richard Han</a>
  */
-public class DependencyParentRule extends Rule
+public class DependencyParentRule extends BaseRule
 {
-    private String state;
-    
     public DependencyParentRule(Digester digester, String state)
     {
-        super(digester);
-        this.state = state;
+        super(digester, state);
     }
 
     /**
@@ -73,8 +70,7 @@ public class DependencyParentRule extends Rule
      */
     public void body(String text) throws Exception
     {
-        Category cat = Category.getInstance(org.tigris.scarab.util.xml.DBImport.class);
-        cat.debug("("+ state + ") dependancy parent body: " + text);
+        cat.debug("(" + state + ") dependancy parent body: " + text);
         digester.push(text);
         digester.push(DependencyNode.NODE_TYPE_PARENT);
     }

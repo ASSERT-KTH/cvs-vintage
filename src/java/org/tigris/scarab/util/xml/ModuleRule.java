@@ -61,18 +61,12 @@ import org.tigris.scarab.services.module.ModuleManager;
  * @author <a href="mailto:kevin.minshull@bitonic.com">Kevin Minshull</a>
  * @author <a href="mailto:richard.han@bitonic.com">Richard Han</a>
  */
-public class ModuleRule extends Rule
+public class ModuleRule extends BaseRule
 {
-    private String state;
-    private DependencyTree dependTree;
-    private Category cat;
-    
-    public ModuleRule(Digester digester, String state, DependencyTree dependTree)
+    public ModuleRule(Digester digester, String state, 
+                      DependencyTree dependTree)
     {
-        super(digester);
-        this.state = state;
-        this.dependTree = dependTree;
-        cat = Category.getInstance(org.tigris.scarab.util.xml.DBImport.class);
+        super(digester, state, dependTree);
     }
     
     /**
@@ -83,7 +77,7 @@ public class ModuleRule extends Rule
      */
     public void begin(Attributes attributes) throws Exception
     {
-        cat.debug("("+state + ") module begin()");
+        cat.debug("(" + state + ") module begin()");
         if(state.equals(DBImport.STATE_DB_INSERTION))
         {
             doInsertionAtBegin(attributes);
@@ -96,12 +90,13 @@ public class ModuleRule extends Rule
     
     private void doInsertionAtBegin(Attributes attributes) throws Exception
     {
-        ScarabModule module;
+        ScarabModule module = null;
         
         // try to find the module
         try
         {
-            module = (ScarabModule)ModuleManager.getInstance(new NumberKey(attributes.getValue("id")));
+            module = (ScarabModule)ModuleManager
+                .getInstance(new NumberKey(attributes.getValue("id")));
         }
         catch (Exception e)
         {
@@ -116,11 +111,17 @@ public class ModuleRule extends Rule
     {
         digester.push(attributes.getValue("id"));
         
-        try {
-            ScarabModule parentModule = (ScarabModule)ModuleManager.getInstance(new NumberKey(attributes.getValue("parent")));
-        } catch (Exception e) {
+        try
+        {
+            ScarabModule parentModule = (ScarabModule)ModuleManager
+                .getInstance(new NumberKey(attributes.getValue("parent")));
+        }
+        catch (Exception e)
+        {
             // store it for check later in file
-            dependTree.addModuleDependency(new NumberKey(attributes.getValue("id")), new NumberKey(attributes.getValue("parent")));
+            dependTree.addModuleDependency(
+                new NumberKey(attributes.getValue("id")), 
+                new NumberKey(attributes.getValue("parent")));
         }
     }
     
@@ -130,7 +131,7 @@ public class ModuleRule extends Rule
      */
     public void end() throws Exception
     {
-        cat.debug("("+state + ") module end()");
+        cat.debug("(" + state + ") module end()");
         if(state.equals(DBImport.STATE_DB_INSERTION))
         {
             ScarabModule module = (ScarabModule)digester.pop();

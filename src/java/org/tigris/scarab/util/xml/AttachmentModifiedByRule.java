@@ -60,16 +60,12 @@ import org.tigris.scarab.om.Attachment;
  * @author <a href="mailto:kevin.minshull@bitonic.com">Kevin Minshull</a>
  * @author <a href="mailto:richard.han@bitonic.com">Richard Han</a>
  */
-public class AttachmentModifiedByRule extends Rule
+public class AttachmentModifiedByRule extends BaseRule
 {
-    private String state;
-    private ArrayList userList;
-    
-    public AttachmentModifiedByRule(Digester digester, String state, ArrayList userList)
+    public AttachmentModifiedByRule(Digester digester, String state, 
+                                    ArrayList userList)
     {
-        super(digester);
-        this.state = state;
-        this.userList = userList;
+        super(digester, state, userList);
     }
     
     /**
@@ -81,19 +77,11 @@ public class AttachmentModifiedByRule extends Rule
      */
     public void body(String text) throws Exception
     {
-        Category cat = Category.getInstance(org.tigris.scarab.util.xml.DBImport.class);
         cat.debug("(" + state + ") attachment ModifiedBy body: " + text);
-        if(state.equals(DBImport.STATE_DB_INSERTION))
-        {
-            doInsertionAtBody(text);
-        }
-        else if (state.equals(DBImport.STATE_DB_VALIDATION))
-        {
-            doValidationAtBody(text);
-        }
+        super.doInsertionOrValidationAtBody(text);
     }
     
-    private void doInsertionAtBody(String text) throws Exception
+    protected void doInsertionAtBody(String text) throws Exception
     {
         Attachment attachment = (Attachment)digester.pop();
         ScarabUser user = (ScarabUser)TurbineSecurity.getUser(text);
@@ -101,7 +89,7 @@ public class AttachmentModifiedByRule extends Rule
         digester.push(attachment);
     }
     
-    private void doValidationAtBody(String text) throws Exception
+    protected void doValidationAtBody(String text) throws Exception
     {
         try
         {

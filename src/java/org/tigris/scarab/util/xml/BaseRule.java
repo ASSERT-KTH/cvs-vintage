@@ -45,6 +45,9 @@ package org.tigris.scarab.util.xml;
  * This software consists of voluntary contributions made by many
  * individuals on behalf of Collab.Net.
  */
+
+import java.util.ArrayList;
+
 import org.apache.commons.digester.Rule;
 import org.apache.commons.digester.Digester;
 import org.apache.log4j.Category;
@@ -60,7 +63,9 @@ public class BaseRule extends Rule
 {
     protected String state = null;
     protected DependencyTree dependTree = null;
-
+    protected ArrayList userList = null;
+    protected Category cat = null;
+    
     /**
      * Sets the state and calls super(digester)
      */
@@ -68,6 +73,7 @@ public class BaseRule extends Rule
     {
         super(digester);
         this.state = state;
+        initLogging();
     }
     
     /**
@@ -79,6 +85,20 @@ public class BaseRule extends Rule
         super(digester);
         this.state = state;
         this.dependTree = dependTree;
+        initLogging();
+    }
+
+    public BaseRule(Digester digester, String state, ArrayList userList)
+    {
+        super(digester);
+        this.state = state;
+        this.userList = userList;
+        initLogging();
+    }
+
+    private void initLogging()
+    {
+        cat = Category.getInstance(org.tigris.scarab.util.xml.DBImport.class);
     }
 
     /**
@@ -88,7 +108,8 @@ public class BaseRule extends Rule
      *
      * @param text The text of the body of this element
      */
-    protected void digesterPush(String text) throws Exception
+    protected void digesterPush(String text)
+        throws Exception
     {
         if(state.equals(DBImport.STATE_DB_INSERTION))
         {
@@ -103,7 +124,8 @@ public class BaseRule extends Rule
      *
      * @param text The text of the body of this element
      */
-    protected void doInsertionOrValidationAtBody(String text) throws Exception
+    protected void doInsertionOrValidationAtBody(String text)
+        throws Exception
     {
         if(state.equals(DBImport.STATE_DB_INSERTION))
         {
@@ -115,6 +137,23 @@ public class BaseRule extends Rule
         }
     }
 
+    /**
+     * This method is called when the end of a matching XML element
+     * is encountered.
+     */
+    protected void doInsertionOrValidationAtEnd()
+        throws Exception
+    {
+        if(state.equals(DBImport.STATE_DB_INSERTION))
+        {
+            doInsertionAtEnd();
+        }
+        else if (state.equals(DBImport.STATE_DB_VALIDATION))
+        {
+            doValidationAtEnd();
+        }
+    }
+
     protected void doInsertionAtBody(String value)
         throws Exception
     {
@@ -122,6 +161,18 @@ public class BaseRule extends Rule
     }
 
     protected void doValidationAtBody(String value)
+        throws Exception
+    {
+        throw new Exception("You should extend this method and implement it.");
+    }
+
+    protected void doInsertionAtEnd()
+        throws Exception
+    {
+        throw new Exception("You should extend this method and implement it.");
+    }
+    
+    protected void doValidationAtEnd()
         throws Exception
     {
         throw new Exception("You should extend this method and implement it.");

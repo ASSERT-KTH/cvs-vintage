@@ -75,8 +75,7 @@ public class ActivityAttributeTypeRule extends BaseRule
      */
     public void body(String text) throws Exception
     {
-        Category cat = Category.getInstance(org.tigris.scarab.util.xml.DBImport.class);
-        cat.debug("("+state+") activity-attribute-type body: " + text);
+        cat.debug("(" + state + ") activity-attribute-type body: " + text);
         super.doInsertionOrValidationAtBody(text);
     }
     

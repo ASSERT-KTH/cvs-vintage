@@ -56,14 +56,11 @@ import org.tigris.scarab.om.Attachment;
  * @author <a href="mailto:kevin.minshull@bitonic.com">Kevin Minshull</a>
  * @author <a href="mailto:richard.han@bitonic.com">Richard Han</a>
  */
-public class AttachmentMimetypeRule extends Rule
+public class AttachmentMimetypeRule extends BaseRule
 {
-    private String state;
-    
     public AttachmentMimetypeRule(Digester digester, String state)
     {
-        super(digester);
-        this.state = state;
+        super(digester, state);
     }
 
     /**
@@ -75,7 +72,6 @@ public class AttachmentMimetypeRule extends Rule
      */
     public void body(String text) throws Exception
     {
-        Category cat = Category.getInstance(org.tigris.scarab.util.xml.DBImport.class);
         cat.debug("(" + state + ") attachment Mime Type body: " + text);
         if(state.equals(DBImport.STATE_DB_INSERTION))
         {
