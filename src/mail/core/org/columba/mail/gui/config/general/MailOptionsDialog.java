@@ -57,34 +57,31 @@ import com.jgoodies.forms.layout.FormLayout;
  * @author fdietz
  */
 public class MailOptionsDialog extends JDialog implements ActionListener {
+	protected JButton okButton;
+	protected JButton cancelButton;
+	protected JButton helpButton;
 
-	JButton okButton;
-	JButton cancelButton;
-	JButton helpButton;
+	protected JCheckBox markCheckBox;
+	protected JSpinner markSpinner;
 
-	JCheckBox markCheckBox;
-	JSpinner markSpinner;
+	protected JCheckBox preferHtmlCheckBox;
+	protected JCheckBox enableSmiliesCheckBox;
+	protected JCheckBox quotedColorCheckBox;
+	protected JButton quotedColorButton;
 
-	JCheckBox preferHtmlCheckBox;
-	JCheckBox enableSmiliesCheckBox;
-	JCheckBox quotedColorCheckBox;
-	JButton quotedColorButton;
+	protected JCheckBox emptyTrashCheckBox;
 
-	JCheckBox emptyTrashCheckBox;
+	protected JCheckBox emptySubjectCheckBox;
+	protected JCheckBox sendHtmlMultipartCheckBox;
 
-	JLabel spellLabel;
-	JButton spellButton;
-
-	JCheckBox emptySubjectCheckBox;
-	JCheckBox sendHtmlMultipartCheckBox;
-
-	JLabel forwardLabel;
-	JComboBox forwardComboBox;
+	protected JLabel forwardLabel;
+	protected JComboBox forwardComboBox;
 
 	public MailOptionsDialog(JFrame frame) {
-		super(
-			frame,
-			MailResourceLoader.getString("dialog", "general", "dialog_title"),
+		super(frame, MailResourceLoader.getString(
+                        "dialog",
+                        "general",
+                        "dialog_title"),
 			true);
 
 		initComponents();
@@ -94,14 +91,11 @@ public class MailOptionsDialog extends JDialog implements ActionListener {
 		updateComponents(true);
 
 		pack();
-
 		setLocationRelativeTo(null);
-
 		setVisible(true);
 	}
 
 	public void updateComponents(boolean b) {
-
 		if (b) {
 
 			XmlElement options =
@@ -209,7 +203,6 @@ public class MailOptionsDialog extends JDialog implements ActionListener {
 			spellButton.setText(path);
 			*/
 			
-
 		} else {
 
 			XmlElement options =
@@ -309,58 +302,37 @@ public class MailOptionsDialog extends JDialog implements ActionListener {
 	protected void initComponents() {
 
 		// general
-		markCheckBox =
-			new JCheckBox(
-				MailResourceLoader.getString(
+		markCheckBox = new JCheckBox(MailResourceLoader.getString(
 					"dialog", "general", "mark_messages_read"));
 
 		markSpinner = new JSpinner();
 		markSpinner.setModel(new SpinnerNumberModel(1, 0, 99, 1));
 
-		emptyTrashCheckBox = new JCheckBox(
-				MailResourceLoader.getString(
+		emptyTrashCheckBox = new JCheckBox(MailResourceLoader.getString(
 					"dialog", "general", "empty_trash"));
 		emptyTrashCheckBox.setEnabled(false);
 
-		enableSmiliesCheckBox = new JCheckBox(
-				MailResourceLoader.getString(
+		enableSmiliesCheckBox = new JCheckBox(MailResourceLoader.getString(
 					"dialog", "general", "enable_smilies"));
 
-		quotedColorCheckBox = new JCheckBox(
-				MailResourceLoader.getString(
+		quotedColorCheckBox = new JCheckBox(MailResourceLoader.getString(
 					"dialog", "general", "color_quoted_text"));
-		quotedColorButton = new JButton("..");
+		quotedColorButton = new JButton("...");
 		quotedColorButton.setActionCommand("COLOR");
 		quotedColorButton.addActionListener(this);
 
-		preferHtmlCheckBox =
-			new JCheckBox(
-				MailResourceLoader.getString(
+		preferHtmlCheckBox = new JCheckBox(MailResourceLoader.getString(
 					"dialog", "general", "prefer_html"));
 
 		// composer
-		spellLabel =
-			new JLabel(
-				MailResourceLoader.getString(
-					"dialog", "general", "aspell_path"));
-
-		spellButton = new JButton("aspell.exe");
-		spellButton.setActionCommand("PATH");
-		spellButton.addActionListener(this);
-		spellLabel.setLabelFor(spellButton);
-
-		emptySubjectCheckBox =
-			new JCheckBox(
-				MailResourceLoader.getString(
+		emptySubjectCheckBox = new JCheckBox(MailResourceLoader.getString(
 					"dialog", "general", "ask_on_empty_subject"));
 
-		sendHtmlMultipartCheckBox =
-			new JCheckBox(
+		sendHtmlMultipartCheckBox = new JCheckBox(
 				MailResourceLoader.getString(
 					"dialog", "general", "send_html_multipart"));
 
-		forwardLabel = new JLabel(
-				MailResourceLoader.getString(
+		forwardLabel = new JLabel(MailResourceLoader.getString(
 					"dialog", "general", "forward_as"));
 		String[] items = {
 			MailResourceLoader.getString(
@@ -386,11 +358,9 @@ public class MailOptionsDialog extends JDialog implements ActionListener {
 				MailResourceLoader.getString("global", "help"));
 		// associate with JavaHelp
 		HelpManager.enableHelpOnButton(helpButton, "configuring_columba_7");
-
 	}
 
 	protected void layoutComponents() {
-
 		JPanel contentPane = new JPanel();
 		setContentPane(contentPane);
 		contentPane.setLayout(new BorderLayout());
@@ -414,7 +384,7 @@ public class MailOptionsDialog extends JDialog implements ActionListener {
 		// Add components to the panel:
 		builder.appendSeparator(
 				MailResourceLoader.getString(
-					"dialog", "general", "general_options"));
+					"dialog", "general", "general"));
 		builder.nextLine();
 
 		builder.append(preferHtmlCheckBox, 4);
@@ -434,8 +404,7 @@ public class MailOptionsDialog extends JDialog implements ActionListener {
 
 		builder.nextLine();
 
-		builder.appendSeparator(
-				MailResourceLoader.getString(
+		builder.appendSeparator(MailResourceLoader.getString(
 					"dialog", "general", "composing_messages"));
 		builder.nextLine();
 
@@ -493,15 +462,6 @@ public class MailOptionsDialog extends JDialog implements ActionListener {
 
 			setVisible(false);
 
-		} else if (action.equals("PATH")) {
-			final JFileChooser fc = new JFileChooser();
-
-			int returnVal = fc.showOpenDialog(this);
-			if (returnVal == JFileChooser.APPROVE_OPTION) {
-				File file = fc.getSelectedFile();
-
-				spellButton.setText(file.getPath());
-			}
 		} else if (action.equals("COLOR")) {
 			//Set up color chooser for setting quoted color
 			Color newColor =

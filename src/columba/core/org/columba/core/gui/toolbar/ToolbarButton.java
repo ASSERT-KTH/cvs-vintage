@@ -13,6 +13,7 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
+
 package org.columba.core.gui.toolbar;
 
 import java.awt.Insets;
@@ -28,14 +29,11 @@ import org.columba.core.gui.menu.CButton;
 public class ToolbarButton extends CButton {
 	String buttonText;
 
-	static boolean WITH_ICON = true;
 	static boolean WITH_TEXT = false;
 	static boolean ALIGNMENT = true;
 
-	
 	public ToolbarButton()
 	{
-		
 		super();
 		setRequestFocusEnabled(false);
 	}
@@ -46,7 +44,6 @@ public class ToolbarButton extends CButton {
 		setRequestFocusEnabled(false);
 	}
 	
-	
 	public ToolbarButton(BasicAction a) {
 		super(a);
 
@@ -55,63 +52,32 @@ public class ToolbarButton extends CButton {
 
 		GuiItem item = Config.getOptionsConfig().getGuiItem();
 		
-		
-		if (item.getBoolean("toolbar","enable_icon") == true)
-			WITH_ICON = true;
-		else
-			WITH_ICON = false;
+                WITH_TEXT = item.getBoolean("toolbar","enable_text");
+                ALIGNMENT = item.getBoolean("toolbar","text_position");
 
-		if (item.getBoolean("toolbar","enable_text") == true)
-			WITH_TEXT = true;
-		else
-			WITH_TEXT = false;
-
-		if (item.getBoolean("toolbar","text_position") == true)
-			ALIGNMENT = true;
-		else
-			ALIGNMENT = false;
-
-		if ((WITH_ICON == true)
-			&& (WITH_TEXT == true)
-			&& (ALIGNMENT == true)) {
-
+		if (WITH_TEXT && ALIGNMENT) {
 			setVerticalTextPosition(SwingConstants.BOTTOM);
 			setHorizontalTextPosition(SwingConstants.CENTER);
 			setIcon(a.getLargeIcon());
 
 			//setText(a.getToolbarName());
 			setText( a.getName() );
-
-		} else if (
-			(WITH_ICON == true)
-				&& (WITH_TEXT == true)
-				&& (ALIGNMENT == false)) {
+		} else if (WITH_TEXT && !ALIGNMENT) {
 			setVerticalTextPosition(SwingConstants.CENTER);
 			setHorizontalTextPosition(SwingConstants.RIGHT);
 			setIcon(a.getLargeIcon());
 
 			boolean showText = a.isShowToolBarText();
-			if ( showText == false ) setText("");
-			else setText( a.getToolBarName() );
+			if (!showText) setText("");
+			else setText(a.getToolBarName());
 			//setText(a.getName());
-
-		} else if ((WITH_ICON == true) && (WITH_TEXT == false)) {
-
+		} else if (!WITH_TEXT) {
 			setIcon(a.getLargeIcon());
 			setText(null);
-
-		} else if ((WITH_ICON == false) && (WITH_TEXT == true)) {
-
-			setIcon(null);
-			setText(a.getName());
-
-		}
-		
-		
+                }
 	}
 
 	public boolean isFocusTraversable() {
 		return isRequestFocusEnabled();
 	}
-
 }

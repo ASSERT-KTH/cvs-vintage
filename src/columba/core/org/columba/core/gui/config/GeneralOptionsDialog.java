@@ -56,14 +56,12 @@ import org.columba.core.plugin.ConfigPluginHandler;
 import org.columba.core.plugin.ThemePluginHandler;
 import org.columba.core.util.GlobalResourceLoader;
 import org.columba.core.xml.XmlElement;
-import org.columba.mail.util.MailResourceLoader;
 
 import com.jgoodies.forms.layout.FormLayout;
 
 public class GeneralOptionsDialog extends JDialog implements ActionListener {
 
-	// TODO: this dialog should make use of core i18n properties only
-	private static final String RESOURCE_PATH = "org.columba.mail.i18n.dialog";
+	private static final String RESOURCE_PATH = "org.columba.core.i18n.dialog";
 
 	// button panel
 	JButton okButton;
@@ -103,9 +101,10 @@ public class GeneralOptionsDialog extends JDialog implements ActionListener {
 	String configID;
 
 	public GeneralOptionsDialog(JFrame frame) {
-		super(
-			frame,
-			MailResourceLoader.getString("dialog", "general", "dialog_title"),
+		super(frame, GlobalResourceLoader.getString(
+                        RESOURCE_PATH,
+                        "general",
+                        "dialog_title"),
 			true);
 
 		this.frame = frame;
@@ -137,9 +136,7 @@ public class GeneralOptionsDialog extends JDialog implements ActionListener {
 		updateComponents(true);
 
 		pack();
-
 		setLocationRelativeTo(null);
-
 		setVisible(true);
 	}
 
@@ -218,9 +215,6 @@ public class GeneralOptionsDialog extends JDialog implements ActionListener {
 				}
 			}
 
-			boolean withIcon = false;
-			if (item.getBoolean("toolbar", "enable_icon"))
-				withIcon = true;
 			boolean enableText = false;
 			if (item.getBoolean("toolbar", "enable_text"))
 				enableText = true;
@@ -228,19 +222,14 @@ public class GeneralOptionsDialog extends JDialog implements ActionListener {
 			if (item.getBoolean("toolbar", "text_position"))
 				alignment = true;
 
-			int state = -1;
-			if (withIcon && !enableText)
-				state = 0;
-			else if (!withIcon && enableText)
-				state = 1;
-			else if (withIcon && enableText) {
+			int state = 0;
+			if (enableText) {
 				if (alignment)
-					state = 2;
+					state = 1;
 				else
-					state = 3;
+					state = 2;
 
 				toolbarComboBox.setSelectedIndex(state);
-
 			}
 		} else {
 
@@ -284,15 +273,10 @@ public class GeneralOptionsDialog extends JDialog implements ActionListener {
 
 			if (state == 0) {
 				item.set("toolbar", "enable_text", Boolean.FALSE.toString());
-				item.set("toolbar", "enable_icon", Boolean.TRUE.toString());
-			} else if (state == 1) {
+			} else {
 				item.set("toolbar", "enable_text", Boolean.TRUE.toString());
-				item.set("toolbar", "enable_icon", Boolean.FALSE.toString());
-			} else if (state >= 2) {
-				item.set("toolbar", "enable_text", Boolean.TRUE.toString());
-				item.set("toolbar", "enable_icon", Boolean.TRUE.toString());
 
-				if (state == 2)
+				if (state == 1)
 					item.set(
 						"toolbar",
 						"text_position",
@@ -305,7 +289,6 @@ public class GeneralOptionsDialog extends JDialog implements ActionListener {
 
 			}
 		}
-
 	}
 
 	protected void layoutComponents() {
@@ -330,26 +313,27 @@ public class GeneralOptionsDialog extends JDialog implements ActionListener {
 		// Add components to the panel:
 
 		// TODO: LOCALIZE
-		builder.appendSeparator("General");
+		builder.appendSeparator(GlobalResourceLoader.getString(
+                        RESOURCE_PATH,
+                        "general",
+                        "general"));
 		builder.nextLine();
 
 		builder.append(languageLabel);
 		builder.append(languageComboBox, 3);
 		builder.nextLine();
 
+		builder.append(lfLabel, lfComboBox, lfButton);
+		builder.nextLine();
+
 		builder.append(toolbarLabel);
 		builder.append(toolbarComboBox, 3);
 		builder.nextLine();
 
-		// TODO: LOCALIZE
-		builder.appendSeparator("Look And Feel");
-		builder.nextLine();
-
-		builder.append(lfLabel, lfComboBox, lfButton);
-		builder.nextLine();
-
-		// TODO: LOCALIZE
-		builder.appendSeparator("Fonts");
+		builder.appendSeparator(GlobalResourceLoader.getString(
+                        RESOURCE_PATH,
+                        "general",
+                        "fonts"));
 		builder.nextLine();
 
 		builder.append(overwriteCheckBox, 5);
@@ -390,34 +374,35 @@ public class GeneralOptionsDialog extends JDialog implements ActionListener {
 	}
 
 	protected void initComponents() {
-
-		lfLabel = new JLabel("Look and Feel:");
+		lfLabel = new JLabel(GlobalResourceLoader.getString(
+                        RESOURCE_PATH,
+                        "general",
+                        "look_feel"));
 		String[] plugins = handler.getPluginIdList();
 		lfComboBox = new JComboBox(plugins);
 		lfComboBox.setRenderer(new ThemeComboBoxRenderer());
 		lfComboBox.setActionCommand("THEME");
 		lfComboBox.addActionListener(this);
 
-		// TODO: LOCALIZE
-		lfButton = new JButton("Options...");
+		lfButton = new JButton(GlobalResourceLoader.getString(
+                        RESOURCE_PATH, 
+                        "general",
+                        "look_feel_options"));
 		lfButton.setActionCommand("THEME_OPTIONS");
 		lfButton.addActionListener(this);
 
-		overwriteCheckBox =
-			new JCheckBox(
+		overwriteCheckBox = new JCheckBox(
 				GlobalResourceLoader.getString(
 					RESOURCE_PATH,
 					"general",
-					"overwrite_main_font"));
+					"override_fonts"));
 		overwriteCheckBox.addActionListener(this);
-		mainFontLabel =
-			new JLabel(
+		mainFontLabel = new JLabel(
 				GlobalResourceLoader.getString(
 					RESOURCE_PATH,
 					"general",
 					"main_font"));
-		textFontLabel =
-			new JLabel(
+		textFontLabel = new JLabel(
 				GlobalResourceLoader.getString(
 					RESOURCE_PATH,
 					"general",
@@ -428,31 +413,30 @@ public class GeneralOptionsDialog extends JDialog implements ActionListener {
 		textFontButton = new JButton("text font");
 		textFontButton.addActionListener(this);
 
-		toolbarLabel = new JLabel("Toolbar Style:");
-		toolbarComboBox =
-			new JComboBox(
+		toolbarLabel = new JLabel(GlobalResourceLoader.getString(
+                        RESOURCE_PATH,
+                        "general",
+                        "toolbar"));
+		toolbarComboBox = new JComboBox(
 				new String[] {
-					MailResourceLoader.getString(
-						"dialog",
+					GlobalResourceLoader.getString(
+						RESOURCE_PATH,
 						"general",
 						"toolbar_icons"),
-					MailResourceLoader.getString(
-						"dialog",
-						"general",
-						"toolbar_text"),
-					MailResourceLoader.getString(
-						"dialog",
+					GlobalResourceLoader.getString(
+						RESOURCE_PATH,
 						"general",
 						"toolbar_below"),
-					MailResourceLoader.getString(
-						"dialog",
+					GlobalResourceLoader.getString(
+						RESOURCE_PATH,
 						"general",
 						"toolbar_beside")});
 		toolbarLabel.setLabelFor(toolbarComboBox);
 
-		languageLabel =
-			new JLabel(
-				MailResourceLoader.getString("dialog", "general", "locale"));
+		languageLabel = new JLabel(GlobalResourceLoader.getString(
+                        RESOURCE_PATH,
+                        "general",
+                        "locale"));
 		languageComboBox = new JComboBox();
 		languageComboBox.setRenderer(new DefaultListCellRenderer() {
 			public Component getListCellRendererComponent(
@@ -476,24 +460,26 @@ public class GeneralOptionsDialog extends JDialog implements ActionListener {
 
 		// button panel
 
-		okButton =
-			new ButtonWithMnemonic(
-				MailResourceLoader.getString("global", "ok"));
+		okButton = new ButtonWithMnemonic(GlobalResourceLoader.getString(
+                        "",
+                        "global",
+                        "ok"));
 		okButton.setActionCommand("OK");
 		okButton.addActionListener(this);
 
-		cancelButton =
-			new ButtonWithMnemonic(
-				MailResourceLoader.getString("global", "cancel"));
+		cancelButton = new ButtonWithMnemonic(GlobalResourceLoader.getString(
+                        "",
+                        "global",
+                        "cancel"));
 		cancelButton.setActionCommand("CANCEL");
 		cancelButton.addActionListener(this);
 
-		helpButton =
-			new ButtonWithMnemonic(
-				MailResourceLoader.getString("global", "help"));
+		helpButton = new ButtonWithMnemonic(GlobalResourceLoader.getString(
+                        "",
+                        "global",
+                        "help"));
 		// associate with JavaHelp
 		HelpManager.enableHelpOnButton(helpButton, "configuring_columba_8");
-		
 	}
 
 	public void actionPerformed(ActionEvent event) {
