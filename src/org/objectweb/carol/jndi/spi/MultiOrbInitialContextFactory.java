@@ -59,7 +59,7 @@ public class MultiOrbInitialContextFactory implements ObjectFactory, InitialCont
 	if (TraceCarol.isDebugJndiCarol()) {
 	    TraceCarol.debugJndiCarol("MultiOrbInitialContextFactory.getInitialContext(Hashtable env)");
 	}
-	return new MultiOrbInitialContext();
+	return new ContextWrapper(env);
     }
 
     /**

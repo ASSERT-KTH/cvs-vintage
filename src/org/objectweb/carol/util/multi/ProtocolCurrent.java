@@ -152,14 +152,24 @@ public class ProtocolCurrent {
     * Get the Context Hashtable
     * @return Hashtable the hashtable of Context 
     */
-    public Hashtable getNewContextHashtable() throws NamingException {
+    public Hashtable getNewContextHashtable(Hashtable env) throws NamingException {
 
     	// build a new hashtable of context
 		Hashtable result = new Hashtable();
-		for (Enumeration e = icHashtable.keys() ; e.hasMoreElements() ;) {
-			String k= (String)e.nextElement();
-			result.put(k,new InitialContext((Properties)icHashtable.get(k)));
-		}
+        if (env==null) {
+            for (Enumeration e = icHashtable.keys() ; e.hasMoreElements() ;) {
+                String k= (String)e.nextElement();
+                result.put(k,new InitialContext((Properties)icHashtable.get(k)));
+            }
+        } else {
+            
+            String rmiName = CarolDefaultValues.getRMIProtocol(env.get(CarolDefaultValues.JNDI_URL_PREFIX));
+            
+            Properties prop = (Properties)icHashtable.get(rmiName);
+            env.put(CarolDefaultValues.JNDI_FACTORY_PREFIX,prop.get(CarolDefaultValues.JNDI_FACTORY_PREFIX));
+            result.put(rmiName,new InitialContext(env));
+                    
+        }
 	return result;
     }    
 
