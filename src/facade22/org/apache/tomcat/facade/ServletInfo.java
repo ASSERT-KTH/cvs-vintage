@@ -270,6 +270,10 @@ public class ServletInfo {
 	dependency=dep;
     }
 
+    public void setDescription(String s ) {
+	
+    }
+
     // -------------------- 
 
     public ServletConfig getServletConfig() {
