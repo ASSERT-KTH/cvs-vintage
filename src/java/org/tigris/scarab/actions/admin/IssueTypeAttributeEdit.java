@@ -70,7 +70,7 @@ import org.tigris.scarab.services.cache.ScarabCache;
 
 /**
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: IssueTypeAttributeEdit.java,v 1.5 2002/10/24 22:59:26 jon Exp $
+ * @version $Id: IssueTypeAttributeEdit.java,v 1.6 2002/10/29 00:42:59 elicia Exp $
  */
 public class IssueTypeAttributeEdit extends RequireLoginFirstAction
 {
@@ -98,7 +98,7 @@ public class IssueTypeAttributeEdit extends RequireLoginFirstAction
                     rioGroup.setProperties(rio);
                     rio.save();
                     ScarabCache.clear();
-                    scarabR.setConfirmMessage(DEFAULT_MSG);  
+                    scarabR.setConfirmMessage(getLocalizationTool(context).get(DEFAULT_MSG));
                 }
             }
         } 
@@ -141,6 +141,7 @@ public class IssueTypeAttributeEdit extends RequireLoginFirstAction
                    scarabR.setAlertMessage(ScarabConstants.NO_PERMISSION_MESSAGE);
                }
                ScarabCache.clear();
+               scarabR.setConfirmMessage(getLocalizationTool(context).get(DEFAULT_MSG));
             }
         }        
     }
@@ -179,7 +180,7 @@ public class IssueTypeAttributeEdit extends RequireLoginFirstAction
                 }
             }
             doCancel(data, context);
-            scarabR.setConfirmMessage(DEFAULT_MSG);  
+            scarabR.setConfirmMessage(getLocalizationTool(context).get(DEFAULT_MSG));
         }
     }
 
