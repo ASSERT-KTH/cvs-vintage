@@ -69,7 +69,7 @@ import org.tigris.scarab.om.ScarabUser;
     into the context to replace the $link that Turbine adds.
     
     @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
-    @version $Id: ScarabLink.java,v 1.21 2002/01/04 23:16:57 jmcnally Exp $
+    @version $Id: ScarabLink.java,v 1.22 2002/01/05 00:01:40 jmcnally Exp $
 */
 public class ScarabLink extends TemplateLink
                         implements InitableRecyclable
@@ -242,10 +242,7 @@ public class ScarabLink extends TemplateLink
      */
     public String toString()
     {
-        System.out.println("called ScarabLink.toString()");
         String tostring = null;
-        try
-        {
         String t = template.replace(',','.');
         String perm = ScarabSecurity.getScreenPermission(t);
         if (perm != null)
@@ -276,7 +273,6 @@ public class ScarabLink extends TemplateLink
         template = null;
         attributeText = null;
         alternateText = null;
-        } catch (Exception e) { e.printStackTrace(); }
         return tostring;
     }
 
