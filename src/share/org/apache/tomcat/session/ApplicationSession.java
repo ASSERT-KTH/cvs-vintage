@@ -76,7 +76,7 @@ import javax.servlet.http.*;
  * @author James Todd [gonzo@eng.sun.com]
  */
 
-public class ApplicationSession implements HttpSession {
+public class ApplicationSession implements HttpSession, Serializable {
 
     private StringManager sm =
         StringManager.getManager("org.apache.tomcat.session");
