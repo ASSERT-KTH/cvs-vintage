@@ -26,10 +26,10 @@ import org.jboss.ejb.plugins.jaws.metadata.TypeMappingMetaData;
  * @author <a href="mailto:shevlandj@kpi.com.au">Joe Shevland</a>
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
  * @author <a href="mailto:michel.anke@wolmail.nl">Michel de Groot</a>
- * @author Vinay Menon
+ * @author <a href="mailto:menonv@cpw.co.uk">Vinay Menon</a>
  * @author <a href="mailto:danch@nvisia.com">danch (Dan Christopherson)</a>
  * @author <a href="mailto:bill@burkecentral.com">Bill Burke</a>
- * @version $Revision: 1.15 $
+ * @version $Revision: 1.16 $
  *
  * Revisions:
  * 20010621 Bill Burke: exposed parameterArray through get method.
@@ -40,7 +40,7 @@ public class JDBCDefinedFinderCommand extends JDBCFinderCommand
 
    private int[] parameterArray;
    private TypeMappingMetaData typeMapping;
-   
+
    private String fromClause = "";
    private String whereClause = "";
    private String orderClause = "";
@@ -89,7 +89,7 @@ public class JDBCDefinedFinderCommand extends JDBCFinderCommand
       // In case of join query:
       // order must explicitly identify tablename.field to order on
       // query must start with "INNER JOIN <table to join with> WHERE
-      // <regular query with fully identified fields>"      
+      // <regular query with fully identified fields>"
       if (lcQuery.startsWith(",") || lcQuery.startsWith("inner join")) {
          //this is the case of a 'where' that is build to actually join tables:
          //  ,table2 as foo where foo.col1 = entitytable.col2 AND entitytable.filter = {1}
@@ -102,21 +102,21 @@ public class JDBCDefinedFinderCommand extends JDBCFinderCommand
             // they mean a findAll.
             log.debug("Strange query for finder "+f.getName()+
                ". Includes join, but no 'where' clause. Is this a findAll?");
-            tableList = lcQuery;
+            tableList = query;
             whereClause = "";
          } else {
-            tableList = lcQuery.substring(0, whereStart);
-            whereClause = lcQuery.substring(whereStart);
+            tableList = query.substring(0, whereStart);
+            whereClause = query.substring(whereStart);
          }
          fromClause = "FROM "+jawsEntity.getTableName()+tableList;
       } else {
          fromClause = "FROM "+jawsEntity.getTableName();
          if (lcQuery.startsWith("where"))
-            whereClause = lcQuery;
-         else 
-            whereClause = "where "+lcQuery;
+            whereClause = query;
+         else
+            whereClause = "where "+query;
       }
-      
+
 
       StringBuffer sqlBuffer = new StringBuffer();
       sqlBuffer.append("SELECT ");
@@ -138,7 +138,7 @@ public class JDBCDefinedFinderCommand extends JDBCFinderCommand
       sqlBuffer.append(fromClause);
       sqlBuffer.append(' ');
       sqlBuffer.append(whereClause);
-      
+
       if (f.getOrder() != null && !f.getOrder().equals(""))
       {
          orderClause = " ORDER BY "+f.getOrder();
@@ -163,7 +163,7 @@ public class JDBCDefinedFinderCommand extends JDBCFinderCommand
       return parameterArray;
    }
 
-   /** helper method to clean the order clause into a list of table.field 
+   /** helper method to clean the order clause into a list of table.field
     *  entries. This is used only to clean up the algorythm in the ctor.
     *  @return String array containing order fields stripped of 'ASC' or 'DESC'
     *  modifiers.
@@ -207,7 +207,7 @@ public class JDBCDefinedFinderCommand extends JDBCFinderCommand
       if(f.getOrder()!=null && f.getOrder()!="")
       {
         String[] checkedOrderTokens = cleanOrderClause(f.getOrder());
-   
+
         //Next step is to make up a Set of all pk tokens
         StringTokenizer pkTokens = new StringTokenizer(getPkColumnList(), ",");
         Set setOfPkTokens = new HashSet(pkTokens.countTokens());
@@ -215,7 +215,7 @@ public class JDBCDefinedFinderCommand extends JDBCFinderCommand
         {
           setOfPkTokens.add(pkTokens.nextToken().trim());
         }
-   
+
         //Now is the time to check for duplicates between pk and order tokens
         int i = 0;
         while(i < checkedOrderTokens.length)
@@ -227,7 +227,7 @@ public class JDBCDefinedFinderCommand extends JDBCFinderCommand
           }
           i++;
         }
-   
+
         //Ok, build a new order string that we can use later on
         StringBuffer orderTokensToUse = new StringBuffer("");
         i = 0;
@@ -244,7 +244,7 @@ public class JDBCDefinedFinderCommand extends JDBCFinderCommand
         strippedOrder = orderTokensToUse.toString();
       }
       return strippedOrder;
-   }      
+   }
    // JDBCFinderCommand overrides ------------------------------------
 
    protected void setParameters(PreparedStatement stmt, Object argOrArgs)
