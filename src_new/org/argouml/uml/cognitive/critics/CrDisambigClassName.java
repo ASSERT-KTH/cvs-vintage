@@ -26,7 +26,7 @@
 // File: CrDisambigClassName.java
 // Classes: CrDisambigClassName
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrDisambigClassName.java,v 1.2 2002/02/25 08:37:50 linus Exp $
+// $Id: CrDisambigClassName.java,v 1.3 2002/03/01 13:50:57 mkl Exp $
 
 package org.argouml.uml.cognitive.critics;
 
@@ -60,7 +60,8 @@ public class CrDisambigClassName extends CrUML {
     String myName = cls.getName();
     //@ if (myName.equals(Name.UNSPEC)) return NO_PROBLEM;
     String myNameString = myName;
-    if (myNameString.length() == 0) return NO_PROBLEM;
+    
+    if (myNameString != null && myNameString.length() == 0) return NO_PROBLEM;
     Collection pkgs = cls.getElementImports2();
     if (pkgs == null) return NO_PROBLEM;
     for (Iterator iter = pkgs.iterator(); iter.hasNext();) {
