@@ -25,16 +25,22 @@ insert into SCARAB_ATTRIBUTE(ATTRIBUTE_ID, ATTRIBUTE_NAME, ATTRIBUTE_TYPE_ID, DE
         values(8, 'Vote', 5, 'Vote');
 insert into SCARAB_ATTRIBUTE(ATTRIBUTE_ID, ATTRIBUTE_NAME, ATTRIBUTE_TYPE_ID, DESCRIPTION) /* Severity */
         values(9, 'Severity', 5, 'Severity');
-insert into SCARAB_ATTRIBUTE(ATTRIBUTE_ID, ATTRIBUTE_NAME, ATTRIBUTE_TYPE_ID, DESCRIPTION) /* Tracking */
-        values(10, 'Tracking', 10, 'Tracking');
+/* 
+ * removing until further discussion
+ * insert into SCARAB_ATTRIBUTE(ATTRIBUTE_ID, ATTRIBUTE_NAME, ATTRIBUTE_TYPE_ID, DESCRIPTION) /* Tracking * /
+ *         values(10, 'Tracking', 10, 'Tracking')
+ */
 insert into SCARAB_ATTRIBUTE(ATTRIBUTE_ID, ATTRIBUTE_NAME, ATTRIBUTE_TYPE_ID, DESCRIPTION) /* Brief (one-line) Description */
         values(11, 'Summary', 1, 'Summary');
 insert into SCARAB_ATTRIBUTE(ATTRIBUTE_ID, ATTRIBUTE_NAME, ATTRIBUTE_TYPE_ID, DESCRIPTION) /* Functional Area */
         values(12, 'Functional Area', 5, 'Functional Area');
-insert into SCARAB_ATTRIBUTE(ATTRIBUTE_ID, ATTRIBUTE_NAME, ATTRIBUTE_TYPE_ID, DESCRIPTION) /* Total Votes */
-        values(13, 'Total Votes', 9, 'Total Votes');
+/* 
+ * removing until further discussion
+ * insert into SCARAB_ATTRIBUTE(ATTRIBUTE_ID, ATTRIBUTE_NAME, ATTRIBUTE_TYPE_ID, DESCRIPTION) /* Total Votes * /
+ *       values(13, 'Total Votes', 9, 'Total Votes')
+ */
 
-update SCARAB_ATTRIBUTE set CREATED_BY='2';
+update SCARAB_ATTRIBUTE set CREATED_BY='1';
 
 /*
  * Attribute Options

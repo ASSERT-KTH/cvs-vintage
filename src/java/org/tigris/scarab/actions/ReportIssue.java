@@ -97,7 +97,7 @@ import org.tigris.scarab.tools.ScarabRequestTool;
  * This class is responsible for report issue forms.
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: ReportIssue.java,v 1.79 2002/01/09 22:14:32 richard Exp $
+ * @version $Id: ReportIssue.java,v 1.80 2002/01/10 19:53:01 jmcnally Exp $
  */
 public class ReportIssue extends RequireLoginFirstAction
 {
@@ -541,6 +541,10 @@ public class ReportIssue extends RequireLoginFirstAction
         }
     }
     
+    /**
+     * The button for this action is commented out on Wizard2, so it
+     * will not be called
+     */
     public void doAddvote(RunData data, TemplateContext context)
         throws Exception
     {

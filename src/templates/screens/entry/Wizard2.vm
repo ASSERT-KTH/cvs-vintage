@@ -110,7 +110,9 @@ $page.setTitle("Identified as duplicate")
 #end
 </table>
 
+<!-- Removing until the design of voting is discussed further
 <p><input type="submit"  name="eventSubmit_doAddvote" value="Add vote to selected" /></p>
+-->
 #set ($atch = $scarabR.Attachment)
 #set ($intakeAttachment = $intake.Attachment.mapTo($atch))
 
