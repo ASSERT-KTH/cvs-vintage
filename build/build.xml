@@ -5,13 +5,15 @@
 <project name="Scarab" default="compile" basedir=".">
 
     <!-- Allow the user to have multiple configuration files and
-         specify them using -Dconfiguration.file=filename -->
+         specify them using -Dconfiguration.file=filename -->         
     <property name="configuration.file" value="build.properties"/> 
+    <property file="${basedir}/build.properties" />    
 
     <!-- Give user a chance to override without editing this file
          (and without using -D arguments each time they build) -->
     <property file="${user.home}/scarab.build.properties" /> 
     <property file="${user.home}/build.properties" />
+
     <property file="${basedir}/default.properties" />
     <property file="${basedir}/default.${scarab.database.type}.properties" />
 
