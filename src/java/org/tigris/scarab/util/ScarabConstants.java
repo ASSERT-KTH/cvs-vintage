@@ -53,7 +53,7 @@ import org.apache.torque.om.NumberKey;
  * A place to put public final static strings and other constants.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ScarabConstants.java,v 1.41 2002/06/25 23:04:48 jmcnally Exp $
+ * @version $Id: ScarabConstants.java,v 1.42 2002/06/28 20:02:36 jmcnally Exp $
  */
 public interface ScarabConstants
 {
@@ -141,6 +141,9 @@ public interface ScarabConstants
     String USER_SELECTED_MODULE = "scarab.user.selected.module";
     /** @deprecated No longer used */
     String PROJECT_CHANGE_BOX = "project_change_box";
+
+    String THREAD_QUERY_KEY = "tqk";
+    String REMOVE_CURRENT_MITLIST_QKEY = "remcurmitl";
 
     /**
      * This name will be used to distinguish specific scarab application

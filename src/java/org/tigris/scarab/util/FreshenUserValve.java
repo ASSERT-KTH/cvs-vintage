@@ -46,6 +46,8 @@ package org.tigris.scarab.util;
  * individuals on behalf of Collab.Net.
  */ 
 
+import java.util.Map;
+import java.util.HashMap;
 import java.io.IOException;
 import org.apache.turbine.RunData;
 import org.apache.turbine.TurbineException;
@@ -68,6 +70,17 @@ public class FreshenUserValve
     private static final Category log = 
         Category.getInstance( FreshenUserValve.class );
         
+    private static final Map xmitScreens = new HashMap();
+
+    static
+    {
+        xmitScreens.put("home,XModuleList.vm", null);
+        xmitScreens.put("AdvancedQuery.vm", null);
+        xmitScreens.put("IssueList.vm", null);
+        xmitScreens.put("ViewIssue.vm", null);
+        //xmitScreens.put(, null);
+    }
+
     /**
      * @see org.apache.turbine.Valve#invoke(RunData, ValveContext)
      */
@@ -80,6 +93,17 @@ public class FreshenUserValve
         if (reportKey != null && reportKey.length() > 0)
         {
             ((ScarabUser)data.getUser()).setCurrentReport(reportKey, null);
+        }
+
+        // remove the current module/issuetype list
+        String key = data.getParameters()
+            .getString(ScarabConstants.THREAD_QUERY_KEY);
+        String removeMitKey = data.getParameters()
+            .getString(ScarabConstants.REMOVE_CURRENT_MITLIST_QKEY);
+        if (key != null && key.length() > 0 && (removeMitKey != null 
+            || !xmitScreens.containsKey(data.getTarget())) )
+        {
+            ((ScarabUser)data.getUser()).setCurrentMITList(null);
         }
 
         // should add the currently reporting issue here as well

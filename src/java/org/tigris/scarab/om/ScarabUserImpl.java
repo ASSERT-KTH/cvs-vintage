@@ -89,7 +89,7 @@ import org.apache.log4j.Category;
  * implementation needs.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ScarabUserImpl.java,v 1.69 2002/06/27 22:17:14 elicia Exp $
+ * @version $Id: ScarabUserImpl.java,v 1.70 2002/06/28 20:02:36 jmcnally Exp $
  */
 public class ScarabUserImpl 
     extends BaseScarabUserImpl 
@@ -854,11 +854,19 @@ public class ScarabUserImpl
     }
 
     /**
-     * @see ScarabUser#clearCurrentMITList()
+     * @see ScarabUser#getThreadKey()
      */
-    public void clearCurrentMITList()
+    public Object getThreadKey()
     {
-        internalUser.clearCurrentMITList();
+        return internalUser.getThreadKey();
+    }
+
+    /**
+     * @see ScarabUser#setThreadKey(Integer)
+     */
+    public void setThreadKey(Integer key)
+    {  
+        internalUser.setThreadKey(key);
     }
 
     public boolean canMakeTransition(NumberKey fromOptionId, 

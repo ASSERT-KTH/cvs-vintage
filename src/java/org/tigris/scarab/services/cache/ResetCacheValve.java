@@ -54,6 +54,9 @@ import org.apache.turbine.pipeline.AbstractValve;
 import org.apache.turbine.ValveContext;
 import org.apache.log4j.Category;
 
+import org.tigris.scarab.util.ScarabConstants;
+import org.tigris.scarab.om.ScarabUser;
+
 /**
  * This valve resets the cache that is used by business objects to avoid
  * multiple, duplicate db queries.  
@@ -94,6 +97,15 @@ public class ResetCacheValve
                 log.debug(s);
                 System.out.println(s);
             }
+        }
+
+        // this only needs to be done at the beginning of the pipeline.  it 
+        // should go into its own valve.
+        String key = data.getParameters()
+            .getString(ScarabConstants.THREAD_QUERY_KEY);
+        if (key != null) 
+        {
+            ((ScarabUser)data.getUser()).setThreadKey(new Integer(key));
         }
         
         // clear the short-term cache

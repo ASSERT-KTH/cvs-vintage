@@ -79,7 +79,7 @@ import org.tigris.scarab.services.cache.ScarabCache;
  * 
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:jon@collab.net">John McNally</a>
- * @version $Id: AbstractScarabUser.java,v 1.29 2002/06/27 04:50:21 jmcnally Exp $
+ * @version $Id: AbstractScarabUser.java,v 1.30 2002/06/28 20:02:36 jmcnally Exp $
  */
 public abstract class AbstractScarabUser 
     extends BaseObject 
@@ -131,7 +131,25 @@ public abstract class AbstractScarabUser
      * The list of MITListItems that will be searched in a 
      * X-project query.
      */
-    private MITList mitList;
+    private Map mitListMap;
+
+    private Map activeKeys = new HashMap();
+    private ThreadLocal threadKey = new ThreadLocal();
+
+    /** 
+     * counter used as a key to keep concurrent activities by the same
+     * user from overwriting each others state.  Might want to use something
+     * better than a simple counter.
+     */
+    private int threadCount = 0;
+
+    // we could create Maps for these and use the threadKey, but these
+    // will be reset for each request, so we can keep it simple and use
+    // a ThreadLocal for each.  Even though the threads may be pooled the
+    // value will be set correctly when first needed in a request cycle.
+    private ThreadLocal currentModule = new ThreadLocal();
+    private ThreadLocal currentIssueType = new ThreadLocal();
+    
     
     /**
      * Calls the superclass constructor to initialize this object.
@@ -141,6 +159,7 @@ public abstract class AbstractScarabUser
         super();
         issueMap = new HashMap();
         reportMap = new HashMap();
+        mitListMap = new HashMap();
     }
 
     /** The Primary Key used to reference this user in storage */
@@ -706,12 +725,11 @@ public abstract class AbstractScarabUser
             crit.addAscendingOrderByColumn(RModuleIssueTypePeer.MODULE_ID);
 
             // do not include RMIT's related to current MITListItems.
-            if (getCurrentMITList() != null 
-                && getCurrentMITList().getMITListItems() != null) 
+            MITList mitList = getCurrentMITList(getGenThreadKey());            
+            if (mitList != null && mitList.getMITListItems() != null) 
             {
                 boolean addAnd = false;
                 StringBuffer sb = new StringBuffer();
-                MITList mitList = getCurrentMITList();
                 Iterator mitItems = 
                     mitList.getExpandedMITListItems().iterator();
                 while (mitItems.hasNext()) 
@@ -750,7 +768,6 @@ public abstract class AbstractScarabUser
             result = Collections.EMPTY_LIST;
         }
         
-
         return result;
     }
 
@@ -759,9 +776,11 @@ public abstract class AbstractScarabUser
     {
         if (rmits != null && !rmits.isEmpty()) 
         {
+            MITList mitList = getCurrentMITList(getGenThreadKey());
             if (mitList == null) 
             {
                 mitList = MITListManager.getInstance();
+                setCurrentMITList(mitList);
             }
 
             Iterator i = rmits.iterator();
@@ -773,28 +792,88 @@ public abstract class AbstractScarabUser
                 item.setIssueTypeId(rmit.getIssueTypeId());
                 mitList.addMITListItem(item);
             }
-        }        
+        }
+    }
+
+    private Object getGenThreadKey()
+    {
+        Object key = threadKey.get();
+        if (key == null) 
+        {
+            key = getNewThreadKey();
+            setThreadKey((Integer)key);
+        }
+        return key;
+    }
+
+    private synchronized Object getNewThreadKey()
+    {
+        // this algorithm is not very good.  what happens if someone bookmarks
+        // a deep link which includes a thread key
+        Integer key = new Integer(threadCount++);
+        activeKeys.put(key, null);
+        // make sure user is not using up too many resources, set a 
+        // reasonable limit of 10 open "threads"/browser windows.
+        Integer testKey = new Integer(key.intValue()-10);
+        if (activeKeys.containsKey(testKey))
+        {
+            activeKeys.remove(testKey);
+            // remove any usage of testKey
+            if (getCurrentMITList(testKey) != null) 
+            {
+                mitListMap.remove(testKey);
+            }            
+        } 
+        return key;
+    }
+
+    /**
+     * @see ScarabUser#getThreadKey()
+     */
+    public Object getThreadKey()
+    {
+        return threadKey.get();
+    }
+
+    /**
+     * @see ScarabUser#setThreadKey(Integer)
+     */
+    public void setThreadKey(Integer key)
+    {  
+        threadKey.set(key);
     }
 
     public MITList getCurrentMITList()
     {
-        return mitList;
+        return getCurrentMITList(getGenThreadKey());
+    }
+    private MITList getCurrentMITList(Object key)
+    {
+        return (MITList)mitListMap.get(key);
     }
 
+    /**
+     * @see org.tigris.scarab.om.ScarabUser#setCurrentMITList(MITList)
+     */
     public void setCurrentMITList(MITList list)
     {
-        mitList = list;
+            setCurrentMITList(getGenThreadKey(), list);
     }
-
-    public void clearCurrentMITList()
+    private void setCurrentMITList(Object key, MITList list)
     {
-        mitList = null;
+        if ( list == null ) 
+        {
+            mitListMap.remove(key);
+        }
+        else 
+        {
+            mitListMap.put(key, list);
+        }
     }
-
 
     public void removeItemsFromCurrentMITList(String[] ids)
     {
-        MITList mitList = getCurrentMITList();
+        MITList mitList = getCurrentMITList(getGenThreadKey());
         if (mitList != null && !mitList.isEmpty() 
             && ids != null && ids.length > 0) 
         {
@@ -815,15 +894,12 @@ public abstract class AbstractScarabUser
         }
     }
 
-    private Module currentModule;
-    private IssueType currentIssueType;
-    
     /**
      * The current module
      */
     public Module getCurrentModule() 
     {
-        return currentModule;
+        return (Module)currentModule.get();
     }
     
     /**
@@ -831,7 +907,7 @@ public abstract class AbstractScarabUser
      */
     public void setCurrentModule(Module  v) 
     {
-        this.currentModule = v;
+        this.currentModule.set(v);
     }
      
     /**
@@ -839,7 +915,7 @@ public abstract class AbstractScarabUser
      */
     public IssueType getCurrentIssueType() 
     {
-        return currentIssueType;
+        return (IssueType)currentIssueType.get();
     }
     
     /**
@@ -847,6 +923,6 @@ public abstract class AbstractScarabUser
      */
     public void setCurrentIssueType(IssueType  v) 
     {
-        this.currentIssueType = v;
+        this.currentIssueType.set(v);
     }    
 }

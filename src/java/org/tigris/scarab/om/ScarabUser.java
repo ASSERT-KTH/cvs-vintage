@@ -62,7 +62,7 @@ import org.tigris.scarab.util.ScarabException;
  * This is an interface which describes what a ScarabUser is...
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ScarabUser.java,v 1.65 2002/06/27 22:17:14 elicia Exp $
+ * @version $Id: ScarabUser.java,v 1.66 2002/06/28 20:02:36 jmcnally Exp $
  */
 public interface ScarabUser extends User
 {
@@ -342,9 +342,19 @@ public interface ScarabUser extends User
 
     public MITList getCurrentMITList();
     public void setCurrentMITList(MITList list);
-    public void clearCurrentMITList();
-
     public void removeItemsFromCurrentMITList(String[] ids);
+
+    /**
+     * key used to keep concurrent activities by the same
+     * user from overwriting each others state.
+     */
+    public Object getThreadKey();
+
+    /**
+     * key used to keep concurrent activities by the same
+     * user from overwriting each others state.
+     */
+    public void setThreadKey(Integer key);
 
     public boolean canMakeTransition(NumberKey fromOptionId, 
                                      NumberKey toOptionId,
