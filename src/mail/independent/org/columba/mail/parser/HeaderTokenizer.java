@@ -80,8 +80,13 @@ class HeaderTokenizer
             while( input.charAt(actPos) == '\t' | input.charAt(actPos) == ' ' )
             {                
                 crlfPos = input.indexOf('\n',actPos);
-                output.append( killComments( input.substring(actPos,crlfPos)) );
-                actPos = crlfPos + 1;
+                if( crlfPos == -1) {
+                	output.append( killComments( input.substring( actPos) ));
+					actPos = input.length();
+                } else {
+					output.append( killComments( input.substring(actPos,crlfPos)) );
+					actPos = crlfPos + 1;
+                }
                 if( actPos >= input.length() ) return output.toString().trim();
             }
                 
