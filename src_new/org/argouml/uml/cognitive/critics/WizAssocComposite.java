@@ -1,4 +1,4 @@
-// $Id: WizAssocComposite.java,v 1.13 2004/08/24 06:33:47 linus Exp $
+// $Id: WizAssocComposite.java,v 1.14 2004/08/29 17:03:26 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -44,7 +44,8 @@ import org.tigris.gef.util.VectorSet;
  * <em>Note</em>. This only applies to binary associations. A separate
  * wizard is needed for 3-way (or more) associations.<p>
  *
- * @see <a href="http://argouml.tigris.org/documentation/printablehtml/manual/argouml.html/#s2.ref.critics_multiple_agg">
+ * @see <a 
+ * href="http://argouml.tigris.org/documentation/printablehtml/manual/argouml.html/#s2.ref.critics_multiple_agg">
  * ArgoUML User Manual: Two Aggregate ends (roles) in binary Association
  * </a>
  * @author jrobbins@ics.uci.edu
