@@ -33,7 +33,8 @@ import org.jboss.logging.Logger;
  * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  * @author <a href="mailto:docodan@mvcsoft.com">Daniel OConnor</a>
  * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
- * @version $Revision: 1.8 $
+ * @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>
+ * @version $Revision: 1.9 $
  */
 public class MessageDrivenContainer
     extends Container
@@ -123,12 +124,14 @@ public class MessageDrivenContainer
      */
     public Class getHomeClass()
     {
-       throw new Error("HomeClass not valid for MessageDriven beans");
+       //throw new Error("HomeClass not valid for MessageDriven beans");
+       return null;
     }
 
     public Class getRemoteClass()
     {
-       throw new Error("RemoteClass not valid for MessageDriven beans");
+       //throw new Error("RemoteClass not valid for MessageDriven beans");
+       return null;
     }
 
     public Class getLocalClass()
@@ -138,7 +141,8 @@ public class MessageDrivenContainer
 
     public Class getLocalHomeClass()
     {
-       throw new Error("LocalHomeClass not valid for MessageDriven beans");
+       //throw new Error("LocalHomeClass not valid for MessageDriven beans");
+       return null;
     }
 
     // Container implementation - overridden here ----------------------
