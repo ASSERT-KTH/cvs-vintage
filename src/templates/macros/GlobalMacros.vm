@@ -185,8 +185,8 @@
   </select>
 #end
 
-#macro (frequencySelectBox $query $id)
-  #foreach ($frequency in $query.Frequencies)
+#macro (frequencySelectBox $id)
+  #foreach ($frequency in $scarabR.Frequencies)
     <option value = "$frequency.FrequencyId" #if( $frequency.FrequencyId.equals($id)) selected="selected" #end>
     $frequency.Name
     </option>
