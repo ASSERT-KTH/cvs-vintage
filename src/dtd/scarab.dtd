@@ -19,7 +19,7 @@
 <!ELEMENT created-date (#PCDATA)>
 <!ATTLIST created-date format CDATA #REQUIRED>
 
-<!ELEMENT transaction (type, committed-by, activity+)>
+<!ELEMENT transaction (type, committed-by, attachment*, activity+)>
 <!ATTLIST transaction id CDATA #REQUIRED>
 
 <!ELEMENT activity (attribute, description)>
