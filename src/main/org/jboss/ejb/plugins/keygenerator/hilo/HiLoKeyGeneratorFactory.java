@@ -10,7 +10,9 @@ import org.jboss.system.ServiceMBeanSupport;
 import org.jboss.ejb.plugins.keygenerator.KeyGeneratorFactory;
 import org.jboss.ejb.plugins.keygenerator.KeyGenerator;
 import org.jboss.ejb.plugins.cmp.jdbc.JDBCUtil;
+import org.jboss.ejb.plugins.cmp.jdbc.SQLUtil;
 import org.jboss.naming.Util;
+import org.jboss.deployment.DeploymentException;
 
 import javax.management.ObjectName;
 import javax.naming.InitialContext;
@@ -22,12 +24,11 @@ import java.io.Serializable;
 import java.sql.SQLException;
 import java.sql.Connection;
 import java.sql.Statement;
-import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
 
 /**
  * @author <a href="mailto:alex@jboss.org">Alexey Loubyansky</a>
- * @version <tt>$Revision: 1.4 $</tt>
+ * @version <tt>$Revision: 1.5 $</tt>
  * @jmx.mbean name="jboss.system:service=KeyGeneratorFactory,type=HiLo"
  * extends="org.jboss.system.ServiceMBean"
  */
@@ -221,7 +222,7 @@ public class HiLoKeyGeneratorFactory
    // Private
 
    private void initSequence(String tableName, String sequenceColumn, String sequenceName, String idColumnName)
-      throws SQLException
+      throws SQLException, DeploymentException
    {
       createTableIfNotExists(tableName);
 
@@ -271,57 +272,47 @@ public class HiLoKeyGeneratorFactory
    }
 
    private void createTableIfNotExists(String tableName)
-      throws SQLException
+      throws SQLException, DeploymentException
    {
       Connection con = null;
       Statement st = null;
-      ResultSet rs = null;
       try
       {
-         con = ds.getConnection();
-         final DatabaseMetaData dbMD = con.getMetaData();
-         rs = dbMD.getTables(null, null, tableName, null);
-
-         if(!rs.next())
+         if(!SQLUtil.tableExists(tableName, ds))
          {
             log.debug("Executing DDL: " + createTableDdl);
 
+            con = ds.getConnection();
             st = con.createStatement();
             st.executeUpdate(createTableDdl);
          }
       }
       finally
       {
-         JDBCUtil.safeClose(rs);
          JDBCUtil.safeClose(st);
          JDBCUtil.safeClose(con);
       }
    }
 
    private void dropTableIfExists(String tableName)
-      throws SQLException
+      throws SQLException, DeploymentException
    {
       Connection con = null;
       Statement st = null;
-      ResultSet rs = null;
       try
       {
-         con = ds.getConnection();
-         final DatabaseMetaData dbMD = con.getMetaData();
-         rs = dbMD.getTables(null, null, tableName, null);
-
-         if(rs.next())
+         if(SQLUtil.tableExists(tableName, ds))
          {
             final String ddl = "drop table " + tableName;
             log.debug("Executing DDL: " + ddl);
 
+            con = ds.getConnection();
             st = con.createStatement();
             st.executeUpdate(ddl);
          }
       }
       finally
       {
-         JDBCUtil.safeClose(rs);
          JDBCUtil.safeClose(st);
          JDBCUtil.safeClose(con);
       }
