@@ -22,13 +22,19 @@ import java.net.MalformedURLException;
  *    Should use nested version when JDK 1.4 is standardized.
  *      
  * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
- * @version $Revision: 1.2 $
+ * @version $Revision: 1.3 $
  */
 public class ServerConfig
    implements ServerConfigMBean
 {
    /** The local home directory for the server. */
    private File homeDir;
+
+   /** The directory for server temporay files. */
+   private File tempDir;
+
+   /** The directory for local state data files. */
+   private File stateDataDir;
    
    /** The JMX domain for the base MBean server. */
    private String domain = "jboss";
@@ -88,18 +94,73 @@ public class ServerConfig
    public String getDomain() {
       return domain;
    }
+
+   public void setConfigName(final String name) {
+      if (name == null)
+         throw new IllegalArgumentException("name is null");
+      
+      configName = name;
+   }
    
+   public String getConfigName() {
+      return configName;
+   }
+
    public void setHomeDir(final File dir) {
       if (dir == null)
          throw new IllegalArgumentException("dir is null");
-      
-      // check if this is really a directory ?
+
+      // FIXME: check if this is really a directory      
       
       homeDir = dir;
    }
 
    public File getHomeDir() {
       return homeDir;
+   }
+
+   public void setTempDir(final File dir) {
+      if (dir == null)
+         throw new IllegalArgumentException("dir is null");
+      
+      // FIXME: check if this is really a directory
+      // FIXME: check if this is writable
+      tempDir = dir;
+   }
+   
+   /**
+    * Get the directory where temporary files will be stored.
+    *
+    * @return    The directory where the server stores temporary files.
+    */
+   public File getTempDir() {
+      if (tempDir == null) {
+         tempDir = new File(homeDir, "tmp");
+      }
+      
+      return tempDir;
+   }
+
+   public void setStateDataDir(final File dir) {
+      if (dir == null)
+         throw new IllegalArgumentException("dir is null");
+      
+      // FIXME: check if this is really a directory
+      // FIXME: check if this is writable
+      stateDataDir = dir;
+   }
+
+   /**
+    * Get the directory where local state data will be stored.
+    *
+    * @return    The directory where the server stores local state data.
+    */
+   public File getStateDataDir() {
+      if (stateDataDir == null) {
+         stateDataDir = new File(homeDir, "db");
+      }
+
+      return stateDataDir;
    }
    
    public void setInstallURL(final URL url) {
@@ -134,17 +195,6 @@ public class ServerConfig
       return libraryURL;
    }
 
-   public void setConfigName(final String name) {
-      if (name == null)
-         throw new IllegalArgumentException("name is null");
-      
-      configName = name;
-   }
-   
-   public String getConfigName() {
-      return configName;
-   }
-   
    public void setConfigURL(final URL url) {
       if (url == null)
          throw new IllegalArgumentException("url is null");

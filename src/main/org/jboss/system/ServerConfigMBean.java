@@ -14,24 +14,78 @@ import java.net.URL;
  * The JMX MBean interface for the <tt>ServerConfig</tt> component.
  *      
  * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  */
 public interface ServerConfigMBean
 {
+   /**
+    * Get the JMX domain for which the system is bound under.
+    *
+    * @return    JMX domain name.
+    */
    String getDomain();
 
+   /**
+    * Get the configuration name of the server.
+    *
+    * @return    The configuration name of the server.
+    */
+   String getConfigName();
+
+   /**
+    * Get the local home directory which the server is running from.
+    *
+    * @return    The local server home directory.
+    */
    File getHomeDir();
+
+   /**
+    * Get the directory where temporary files will be stored.
+    *
+    * @return    The directory where the server stores temporary files.
+    */
+   File getTempDir();
+
+   /**
+    * Get the directory where local state data will be stored.
+    *
+    * @return    The directory where the server stores local state data.
+    */
+   File getStateDataDir();
    
+   /**
+    * Get the installation URL for the server.
+    *
+    * @return    The installation URL for the server.
+    */
    URL getInstallURL();
    
+   /**
+    * Get the library URL for the server.
+    *
+    * @return    The library URL for the server.
+    */
    URL getLibraryURL();
    
-   String getConfigName();
-   
+   /**
+    * Get the configuration URL for the server.
+    *
+    * @return    The configuration URL for the server.
+    */
    URL getConfigURL();
    
+   /**
+    * Get the patch URL for the server.
+    *
+    * @return    The patch URL for the server.
+    */
    URL getPatchURL();
    
+   /**
+    * Get the spine URL for the server.
+    *
+    * @return    The spine URL for the server.
+    */
    URL getSpineURL();
 
    /**
