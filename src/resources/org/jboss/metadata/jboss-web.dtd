@@ -2,6 +2,10 @@
 
 <!-- The JBoss specific elements used to integrate the servlet web.xml elements into a
 JBoss deployment.
+
+DOCTYPE jboss-web
+    PUBLIC "-//JBoss//DTD Web Application 2.2//EN"
+    "http://www.jboss.org/j2ee/dtds/jboss-web.dtd"
 -->
 <!-- The jboss-web element is the root element.
 -->
