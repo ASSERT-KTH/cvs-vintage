@@ -27,7 +27,7 @@
 // File: FigTransition.java
 // Classes: FigTransition
 // Original Author: your email address here
-// $Id: FigTransition.java,v 1.7 1998/10/20 00:31:20 jrobbins Exp $
+// $Id: FigTransition.java,v 1.8 1999/01/01 00:16:39 jrobbins Exp $
 
 
 package uci.uml.visual;
@@ -45,15 +45,21 @@ import uci.uml.generate.*;
 
 public class FigTransition extends FigEdgeModelElement {
 
-  public FigTransition(Object edge) {
-    super(edge);
+  ////////////////////////////////////////////////////////////////
+  // constructors
+  public FigTransition() {
     addPathItem(_name, new PathConvPercent(this, 50, 10));
-
-    // set whatever arrow heads and colors are appropriate
     _fig.setLineColor(Color.black);
-
     setDestArrowHead(new ArrowHeadGreater());
   }
+
+  public FigTransition(Object edge) {
+    this();
+    setOwner(edge);
+  }
+
+  ////////////////////////////////////////////////////////////////
+  // event handlers
 
   /** This method is called after the user finishes editing a text
    *  field that is in the FigEdgeModelElement.  Determine which field

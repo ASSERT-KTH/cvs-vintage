@@ -27,7 +27,7 @@
 // File: CmdPaste.java
 // Classes: CmdPaste
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CmdPaste.java,v 1.1 1998/12/14 17:54:17 jrobbins Exp $
+// $Id: CmdPaste.java,v 1.2 1999/01/01 00:16:04 jrobbins Exp $
 
 package uci.gef;
 
@@ -48,7 +48,7 @@ import uci.uml.Foundation.Core.ElementImpl;
 
 public class CmdPaste extends Cmd {
 
-  public CmdPaste() { super("Paste..."); }
+  public CmdPaste() { super("Paste"); }
 
   // needs-more-work: if the Fig was removed from the model, then I would
   // need to create a new owner.

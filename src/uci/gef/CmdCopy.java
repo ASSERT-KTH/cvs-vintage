@@ -27,7 +27,7 @@
 // File: CmdCopy.java
 // Classes: CmdCopy
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CmdCopy.java,v 1.1 1998/12/14 17:54:17 jrobbins Exp $
+// $Id: CmdCopy.java,v 1.2 1999/01/01 00:16:03 jrobbins Exp $
 
 package uci.gef;
 
@@ -45,7 +45,7 @@ import uci.uml.ui.*;
 
 public class CmdCopy extends Cmd {
 
-  public CmdCopy() { super("Copy..."); }
+  public CmdCopy() { super("Copy"); }
 
   public void doIt() {
     Editor ce = Globals.curEditor();

@@ -18,7 +18,7 @@
 
 # File: Makefile in uci/graphedit/demo
 # Oringinal Author: jrobbins@ics.uci.edu
-# $Id: Makefile,v 1.1 1998/04/21 02:54:49 jrobbins Exp $
+# $Id: Makefile,v 1.2 1999/01/01 00:16:19 jrobbins Exp $
 
 include ../../Makefile.config
 
@@ -27,7 +27,9 @@ GEN =
 
 CLASSES = \
 	GraphSelectionEvent.class \
-	GraphSelectionListener.class
+	GraphSelectionListener.class \
+	ModeChangeEvent.class \
+	ModeChangeListener.class
 
 
 all: $(GEN) $(CLASSES)

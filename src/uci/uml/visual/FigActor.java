@@ -25,7 +25,7 @@
 // File: FigActor.java
 // Classes: FigActor
 // Original Author: abonner@ics.uci.edu
-// $Id: FigActor.java,v 1.7 1998/12/14 17:53:33 jrobbins Exp $
+// $Id: FigActor.java,v 1.8 1999/01/01 00:16:26 jrobbins Exp $
 
 package uci.uml.visual;
 
@@ -66,9 +66,7 @@ public class FigActor extends FigNodeModelElement {
   ////////////////////////////////////////////////////////////////
   // constructors
 
-  public FigActor(GraphModel gm, Object node) {
-    super(gm, node);
-
+  public FigActor() {
     // Put this rectangle behind the rest, so it goes first
     _bigPort = new FigRect(5, 5, 30, 85, Color.gray, Color.gray);
     _head = new FigCircle(10, 10, 20, 30, Color.black, Color.white);
@@ -92,10 +90,13 @@ public class FigActor extends FigNodeModelElement {
     addFig(_rightLeg);
     addFig(_name);
 
-    Object onlyPort = node;
-    bindPort(onlyPort, _bigPort);
     setBlinkPorts(true); // make port invisble unless mouse enters
     Rectangle r = getBounds();
+  }
+
+  public FigActor(GraphModel gm, Object node) {
+    this();
+    setOwner(node);
   }
 
   public Object clone() {
@@ -109,6 +110,11 @@ public class FigActor extends FigNodeModelElement {
     figClone._rightLeg = (FigLine) v.elementAt(5);
     figClone._name = (FigText) v.elementAt(6);
     return figClone;
+  }
+
+  public void setOwner(Object node) {
+    super.setOwner(node);
+    bindPort(node, _bigPort);
   }
 
   /** Returns true if this Fig can be resized by the user. */

@@ -27,7 +27,7 @@
 // File: FigRealization.java
 // Classes: FigRealization
 // Original Author: agauthie@ics.uci.edu
-// $Id: FigRealization.java,v 1.5 1998/10/20 00:31:18 jrobbins Exp $
+// $Id: FigRealization.java,v 1.6 1999/01/01 00:16:38 jrobbins Exp $
 
 
 package uci.uml.visual;
@@ -41,15 +41,24 @@ import uci.uml.Foundation.Core.*;
 
 public class FigRealization extends FigEdgeModelElement {
 
-  public FigRealization(Object edge) {
-    super(edge);
+  ////////////////////////////////////////////////////////////////
+  // constructors
+
+  public FigRealization() {
     addPathItem(_stereo, new PathConvPercent(this, 50, 10));
     ArrowHeadTriangle endArrow = new ArrowHeadTriangle();
     endArrow.setFillColor(Color.white);
     setDestArrowHead(endArrow);
     setBetweenNearestPoints(true);
-    modelChanged();
   }
+
+  public FigRealization(Object edge) {
+    this();
+    setOwner(edge);
+  }
+
+  ////////////////////////////////////////////////////////////////
+  // accessors
 
   public void setFig(Fig f) {
     super.setFig(f);

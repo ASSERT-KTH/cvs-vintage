@@ -28,7 +28,7 @@
 // File: BasicApplication.java
 // Class: BasicApplication
 // original author: jrobbins@ics.uci.edu
-// $Id: BasicApplication.java,v 1.11 1998/12/14 17:53:26 jrobbins Exp $
+// $Id: BasicApplication.java,v 1.12 1999/01/01 00:16:17 jrobbins Exp $
 
 package uci.gef.demo;
 
@@ -67,8 +67,12 @@ public class BasicApplication {
     lay.addNodeTypeRegion(SampleNode2.class, new Rectangle(250, 10, 200, 200));
     DefaultGraphModel dgm = (DefaultGraphModel) _jgf.getGraphModel();
     for (int i = 0; i < 6; i++) {
-      dgm.addNode(new SampleNode());
-      dgm.addNode(new SampleNode2());
+      SampleNode sn = new SampleNode();
+      sn.initialize(null);
+      dgm.addNode(sn);
+      SampleNode2 sn2 = new SampleNode2();
+      sn2.initialize(null);
+      dgm.addNode(sn2);
     }
     System.out.println("finished adding nodes");
   }

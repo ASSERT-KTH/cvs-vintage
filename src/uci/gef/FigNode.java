@@ -27,7 +27,7 @@
 // File: FigNode.java
 // Classes: FigNode
 // Original Author: ics125 spring 1996
-// $Id: FigNode.java,v 1.21 1998/12/14 17:53:18 jrobbins Exp $
+// $Id: FigNode.java,v 1.22 1999/01/01 00:16:08 jrobbins Exp $
 
 package uci.gef;
 
@@ -74,6 +74,8 @@ implements MouseListener, PropertyChangeListener, Highlightable {
   
   ////////////////////////////////////////////////////////////////
   // constructors
+
+  public FigNode() {  }
 
   /** Constructs a new FigNode on the given node with the given owner. */
   public FigNode(Object node) {
@@ -409,7 +411,7 @@ implements MouseListener, PropertyChangeListener, Highlightable {
     }
     return null;
   }
-  
+
   public String getTipString(MouseEvent me) {
     ToDoItem item = hitClarifier(me.getX(), me.getY());
     if (item != null) return item.getHeadline();
@@ -424,7 +426,7 @@ implements MouseListener, PropertyChangeListener, Highlightable {
   }
   public boolean getHighlight() { return _highlight; }
 
-  
+
   ////////////////////////////////////////////////////////////////
   // notifications and updates
 
@@ -473,15 +475,11 @@ implements MouseListener, PropertyChangeListener, Highlightable {
 
   /** If the mouse enters this FigNode's bbox and the
    *  _blinkPorts flag is set, then show ports. */
-  public void mouseEntered(MouseEvent me) {
-    if (_blinkPorts) showPorts();
-  }
+  public void mouseEntered(MouseEvent me) { if (_blinkPorts) showPorts(); }
 
   /** If the mouse exits this FigNode's bbox and the
    *  _blinkPorts flag is set, then hide ports. */
-  public void mouseExited(MouseEvent me) {
-    if (_blinkPorts) hidePorts();
-  }
+  public void mouseExited(MouseEvent me) { if (_blinkPorts) hidePorts(); }
 
   /** Do nothing when mouse is pressed in FigNode. */
   public void mousePressed(MouseEvent me) { }
@@ -498,9 +496,7 @@ implements MouseListener, PropertyChangeListener, Highlightable {
     updateEdges();
   }
 
-  public void superTranslate(int dx, int dy) {
-    super.translate(dx, dy);
-  }
+  public void superTranslate(int dx, int dy) { super.translate(dx, dy); }
 
   public void setBounds(int x, int y, int w, int h) {
     super.setBounds(x, y, w, h);

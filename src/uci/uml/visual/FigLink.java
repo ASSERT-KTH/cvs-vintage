@@ -27,7 +27,7 @@
 // File: FigLink.java
 // Classes: FigLink
 // Original Author: your email address here
-// $Id: FigLink.java,v 1.6 1998/10/20 00:31:15 jrobbins Exp $
+// $Id: FigLink.java,v 1.7 1999/01/01 00:16:34 jrobbins Exp $
 
 
 package uci.uml.visual;
@@ -41,13 +41,17 @@ import uci.uml.Behavioral_Elements.Common_Behavior.*;
 
 public class FigLink extends FigEdgeModelElement {
 
-  public FigLink(Object edge) {
-    super(edge);
+  ////////////////////////////////////////////////////////////////
+  // constructors
 
-    // set whatever arrow heads and colors are appropriate
+  public FigLink() {
     _fig.setLineColor(Color.black);
     setBetweenNearestPoints(true);
-    modelChanged();
+  }
+
+  public FigLink(Object edge) {
+    this();
+    setOwner(edge);
   }
 
   // needs-more-work: should edit something...
@@ -65,7 +69,7 @@ public class FigLink extends FigEdgeModelElement {
 //     }
     super.dispose();
   }
-  
+
 
 
 } /* end class FigLink */

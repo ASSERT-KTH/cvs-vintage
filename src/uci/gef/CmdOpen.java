@@ -28,7 +28,7 @@
 // File: CmdOpen.java
 // Classes: CmdOpen
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CmdOpen.java,v 1.7 1998/10/20 00:22:39 jrobbins Exp $
+// $Id: CmdOpen.java,v 1.8 1999/01/01 00:16:03 jrobbins Exp $
 
 package uci.gef;
 
@@ -42,7 +42,6 @@ import java.io.*;
  * @see CmdSave */
 
 public class CmdOpen extends Cmd implements FilenameFilter {
-
   public CmdOpen() { super("Open..."); }
 
   /** Only allow the user to select files that match the fiven
@@ -58,11 +57,12 @@ public class CmdOpen extends Cmd implements FilenameFilter {
       FileDialog fd =
 	new FileDialog(ce.findFrame(), "Open...", FileDialog.LOAD);
       fd.setFilenameFilter(this);
-      fd.setDirectory(".");
+      fd.setDirectory(Globals.getLastDirectory());
       fd.show();
       String filename = fd.getFile(); // blocking
       String path = fd.getDirectory(); // blocking
-
+      Globals.setLastDirectory(path);
+      
       if (filename != null) {
     	Globals.showStatus("Reading " + path + filename + "...");
     	FileInputStream fis = new FileInputStream(path + filename);

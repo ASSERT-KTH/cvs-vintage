@@ -28,7 +28,7 @@
 // File: FigRect.java
 // Classes: FigRect
 // Original Author: ics125 spring 1996
-// $Id: FigRect.java,v 1.6 1998/10/20 00:23:00 jrobbins Exp $
+// $Id: FigRect.java,v 1.7 1999/01/01 00:16:10 jrobbins Exp $
 
 package uci.gef;
 
@@ -55,7 +55,6 @@ public class FigRect extends Fig implements Serializable {
     super(x, y, w, h, lColor, fColor);
   }
 
-  
   ////////////////////////////////////////////////////////////////
   // painting methods
 
@@ -67,7 +66,14 @@ public class FigRect extends Fig implements Serializable {
     }
     if (_lineWidth > 0 && _lineColor != null) {
       g.setColor(_lineColor);
-      g.drawRect(_x, _y, _w - _lineWidth, _h - _lineWidth);
+      if (!getDashed()) g.drawRect(_x, _y, _w - _lineWidth, _h - _lineWidth);
+      else {
+	int phase = 0;
+	phase = drawDashedLine(g, phase, _x, _y, _x + _w, _y);
+	phase = drawDashedLine(g, phase, _x + _w, _y, _x + _w, _y + _h);
+	phase = drawDashedLine(g, phase, _x + _w, _y + _h, _x, _y + _h);
+	phase = drawDashedLine(g, phase, _x, _y + _h, _x, _y);
+      }
     }
   }
 

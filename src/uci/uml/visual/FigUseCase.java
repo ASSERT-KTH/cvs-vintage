@@ -27,7 +27,7 @@
 // File: FigUseCase.java
 // Classes: FigUseCase
 // Original Author: your email address here
-// $Id: FigUseCase.java,v 1.10 1998/12/14 17:53:40 jrobbins Exp $
+// $Id: FigUseCase.java,v 1.11 1999/01/01 00:16:40 jrobbins Exp $
 
 package uci.uml.visual;
 
@@ -68,9 +68,7 @@ public class FigUseCase extends FigNodeModelElement {
   ////////////////////////////////////////////////////////////////
   // constructors
 
-  public FigUseCase(GraphModel gm, Object node) {
-    super(gm, node);
-
+  public FigUseCase() {
     _bigPort = new FigCircle(0, 0, 100, 40, Color.black, Color.white);
     _cover = new FigCircle(0, 0, 100, 40, Color.black, Color.white);
     _name.setBounds(10, 10, 80, 20);
@@ -84,10 +82,13 @@ public class FigUseCase extends FigNodeModelElement {
     addFig(_cover);
     addFig(_name);
 
-    Object onlyPort = node;
-    bindPort(onlyPort, _bigPort);
     Rectangle r = getBounds();
     setBounds(r.x, r.y, r.width, r.height);
+  }
+
+  public FigUseCase(GraphModel gm, Object node) {
+    this();
+    setOwner(node);
   }
 
   public Object clone() {
@@ -99,7 +100,10 @@ public class FigUseCase extends FigNodeModelElement {
     return figClone;
   }
 
-
+  public void setOwner(Object node) {
+    super.setOwner(node);
+    bindPort(node, _bigPort);
+  }
 
   /** Update the text labels */
   protected void modelChanged() {

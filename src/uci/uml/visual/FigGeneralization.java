@@ -27,7 +27,7 @@
 // File: FigGeneralization.java
 // Classes: FigGeneralization
 // Original Author: abonner@ics.uci.edu
-// $Id: FigGeneralization.java,v 1.11 1998/10/20 00:31:12 jrobbins Exp $
+// $Id: FigGeneralization.java,v 1.12 1999/01/01 00:16:31 jrobbins Exp $
 
 
 package uci.uml.visual;
@@ -43,35 +43,42 @@ import uci.uml.Foundation.Core.*;
 
 public class FigGeneralization extends FigEdgeModelElement {
 
-  public FigGeneralization(Object edge) {
-    super(edge);
-    addPathItem(_stereo, new PathConvPercent(this, 50, 10));
+  ////////////////////////////////////////////////////////////////
+  // constructors
 
+  public FigGeneralization() {
+    addPathItem(_stereo, new PathConvPercent(this, 50, 10));
     ArrowHeadTriangle endArrow = new ArrowHeadTriangle();
     endArrow.setFillColor(Color.white);
-
     setDestArrowHead(endArrow);
     setBetweenNearestPoints(true);
-    modelChanged();
   }
 
-   public void dispose() {
-     Generalization g = (Generalization) getOwner();
-     if (g == null) return;
-     GeneralizableElement sup = g.getSupertype();
-     GeneralizableElement sub = g.getSubtype();
-     try {
-       sup.removeSpecialization(g);
-       sub.removeGeneralization(g);
-     }
-     catch (PropertyVetoException pve) {
-       System.out.println("could not remove Generalization");
-     }
-     super.dispose();
-   }
+  public FigGeneralization(Object edge) {
+    this();
+    setOwner(edge);
+  }
+
+  public void dispose() {
+    Generalization g = (Generalization) getOwner();
+    if (g == null) return;
+    GeneralizableElement sup = g.getSupertype();
+    GeneralizableElement sub = g.getSubtype();
+    try {
+      sup.removeSpecialization(g);
+      sub.removeGeneralization(g);
+    }
+    catch (PropertyVetoException pve) {
+      System.out.println("could not remove Generalization");
+    }
+    super.dispose();
+  }
 
   protected boolean canEdit(Fig f) { return false; }
-  
+
+  ////////////////////////////////////////////////////////////////
+  // event handlers
+
   /** This is called aftern any part of the UML ModelElement has
    *  changed. This method automatically updates the name FigText.
    *  Subclasses should override and update other parts. */

@@ -27,7 +27,7 @@
 // File: FigTrace.java
 // Classes: FigTrace
 // Original Author: your email address here
-// $Id: FigTrace.java,v 1.3 1998/10/20 00:31:19 jrobbins Exp $
+// $Id: FigTrace.java,v 1.4 1999/01/01 00:16:39 jrobbins Exp $
 
 
 package uci.uml.visual;
@@ -40,17 +40,20 @@ import uci.uml.Foundation.Core.*;
 
 public class FigTrace extends FigEdgeLine {
 
-  public FigTrace(Object edge) {
-    super();
-    setOwner(edge);
+  ////////////////////////////////////////////////////////////////
+  // constructors
 
-    // set whatever arrow heads and colors are appropriate
+  public FigTrace() {
     _fig.setLineColor(Color.red);
-
     ArrowHeadTriangle endArrow = new ArrowHeadTriangle();
     endArrow.setFillColor(Color.red);
     setDestArrowHead(endArrow);
     setBetweenNearestPoints(true);
+  }
+
+  public FigTrace(Object edge) {
+    this();
+    setOwner(edge);
   }
 
   public void dispose() {
@@ -60,7 +63,7 @@ public class FigTrace extends FigEdgeLine {
     p.moveToTrash(elmt);
     super.dispose();
   }
-  
+
 
   static final long serialVersionUID = -2094146244090391544L;
 

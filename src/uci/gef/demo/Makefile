@@ -18,7 +18,7 @@
 
 # File: Makefile in uci/graphedit/demo
 # Oringinal Author: jrobbins@ics.uci.edu
-# $Id: Makefile,v 1.4 1998/06/24 14:30:04 jrobbins Exp $
+# $Id: Makefile,v 1.5 1999/01/01 00:16:18 jrobbins Exp $
 
 include ../../Makefile.config
 
@@ -27,6 +27,7 @@ GEN =
 
 CLASSES = \
 	BasicApplication.class \
+	BroomStudy.class \
 	EdgeData.class \
 	EdgePower.class \
 	EquipmentApplet.class \

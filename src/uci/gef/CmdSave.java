@@ -29,7 +29,7 @@
 // File: CmdSave.java
 // Classes: CmdSave
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CmdSave.java,v 1.6 1998/10/20 00:22:42 jrobbins Exp $
+// $Id: CmdSave.java,v 1.7 1999/01/01 00:16:05 jrobbins Exp $
 
 package uci.gef;
 
@@ -81,10 +81,11 @@ public class CmdSave extends Cmd implements FilenameFilter {
       FileDialog fd = new
      	FileDialog(ce.findFrame(), "Save Diagram", FileDialog.SAVE);
       fd.setFilenameFilter(this);
-      fd.setDirectory(".");
+      fd.setDirectory(Globals.getLastDirectory());
       fd.show();
       String filename = fd.getFile(); // blocking
       String path = fd.getDirectory(); // blocking
+      Globals.setLastDirectory(path);
       if (filename != null) {
      	Globals.showStatus("Writing " + path + filename + "...");
      	FileOutputStream f = new FileOutputStream(path + filename);

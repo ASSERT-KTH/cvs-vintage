@@ -28,7 +28,7 @@
 // File: LayerGrid.java
 // Classes: LayerGrid
 // Original Author: jrobbins@ics.uci.edu
-// $Id: LayerGrid.java,v 1.13 1998/10/20 00:23:05 jrobbins Exp $
+// $Id: LayerGrid.java,v 1.14 1999/01/01 00:16:13 jrobbins Exp $
 
 package uci.gef;
 
@@ -72,10 +72,10 @@ public class LayerGrid extends Layer {
   private int _stampWidth = 128, _stampHeight = 128;
 
   /** The color of the grid lines or dots. */
-  protected Color _color = new Color(180, 180, 180); //Color.gray;
+  protected Color _color = Color.gray;//new Color(100, 100, 100); //new Color(180, 180, 180); //Color.gray;
 
   /** The color of the space between the lines or dots.  */
-  protected Color _bgColor = Color.lightGray;
+  protected Color _bgColor = Color.gray; //Color.lightGray;
 
   /** True means to fill in the image stamp or drawing area with the
    *  background color. False means to just paint the lines or dots. */
