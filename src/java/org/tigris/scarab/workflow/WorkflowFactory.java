@@ -54,7 +54,7 @@ import org.apache.turbine.Turbine;
 /**
     This class retrieves the appropriate workflow tool.
     @author <a href="mailto:elicia@tigris.org">Elicia David</a>
-    @version $Id: WorkflowFactory.java,v 1.2 2002/08/08 01:46:21 elicia Exp $
+    @version $Id: WorkflowFactory.java,v 1.3 2002/08/15 19:43:41 jon Exp $
 */
 public class WorkflowFactory 
 {
@@ -66,7 +66,8 @@ public class WorkflowFactory
         try
         {
             Vector classNames = Turbine.getConfiguration()
-                .getVector("scarab.workflow.classname");
+                .getVector("scarab.workflow.classname", 
+                    "org.tigris.scarab.workflow.DefaultWorkflow");
             if (classNames.size() > 1)
             {
                 className = (String)classNames.get(1); 
