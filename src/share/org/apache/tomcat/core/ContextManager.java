@@ -136,11 +136,13 @@ public class ContextManager {
     }
 
     public void init()  throws TomcatException {
-
 	long time=System.currentTimeMillis();
-	(new AutoSetup()).handleContextManagerInit(this);
+
+	(new DefaultCMSetter()).engineInit(this);
+
+	
+	(new AutoSetup()).engineInit(this);
 	// Initialize and check Context Manager 
-	(new DefaultCMSetter()).handleContextManagerInit(this);
 	
     	// init contexts
 	Enumeration enum = getContextNames();
@@ -148,6 +150,7 @@ public class ContextManager {
             Context context = getContext((String)enum.nextElement());
             context.init();
 	}
+	
 	System.out.println("Init time " + ( System.currentTimeMillis() - time ));
 
 
@@ -190,10 +193,6 @@ public class ContextManager {
 	    
 	    context.shutdown();
 	}
-	// same behavior as in past, because it seems that
-	// stopping everything doesn't work - need to figure
-	// out what happens with the threads ( XXX )
-	System.exit(0);
     }
 
     /**

@@ -66,7 +66,7 @@ import java.util.*;
 
 /**
  * This class now extends NetworkClassLoader. Previous
- * implementation of ServletClassLoader was called ServletLoader.
+ * implementation of GenericClassLoader was called ServletLoader.
  * This implementation is a complete rewrite of the earlier
  * class loader. This should speed up performance compared
  * to the earlier class loader.
@@ -81,7 +81,8 @@ public class ServletClassLoaderImpl extends NetworkClassLoader implements Servle
     private Context  context;
     
     public ServletClassLoaderImpl(Context context) {
-        super(context.getClassLoader());
+        super(null);
+        // XXX Hangs up: super((ClassLoader)context.getLoader());
 	this.context = context;
         initURLs(); 
     }
@@ -141,7 +142,7 @@ public class ServletClassLoaderImpl extends NetworkClassLoader implements Servle
         throws ClassNotFoundException {
         // This is a bad idea. Unfortunately the class loader may
         // be set on the context at any point.
-        setParent(context.getClassLoader());
+        setParent(null); // XXX that hangs up tomcat: (ClassLoader)context.getLoader());
         return super.loadClass(name, resolve);
     }
 

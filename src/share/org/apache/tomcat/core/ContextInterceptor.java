@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/ContextInterceptor.java,v 1.3 2000/02/08 23:52:47 costin Exp $
- * $Revision: 1.3 $
- * $Date: 2000/02/08 23:52:47 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/ContextInterceptor.java,v 1.4 2000/02/09 20:36:10 costin Exp $
+ * $Revision: 1.4 $
+ * $Date: 2000/02/09 20:36:10 $
  *
  * ====================================================================
  *
@@ -66,7 +66,8 @@ package org.apache.tomcat.core;
 import javax.servlet.Servlet;
 
 /**
- * Called to set up and destroy a context.
+ * Notifications for all context events. 
+ * 
  * Example: expand WAR, move files in the right directories ( Apache ?),
  * read web.xml or check for a serialized form for faster init, etc.
  *
@@ -74,11 +75,35 @@ import javax.servlet.Servlet;
  */
 public interface ContextInterceptor {
     public static final int OK=0;
+
+    /** Called when the ContextManger is started
+     */
+    public int engineInit(ContextManager cm);
+
+    /** Called before the ContextManager is stoped.
+     *  You need to stop any threads and remove any resources.
+     */
+    public int engineShutdown(ContextManager cm);
+
+
+    /** Called when a context is added to a CM
+     */
+    public int addContext( ContextManager cm, Context ctx );
+
+    /** Called when a context is removed from a CM
+     */
+    public int removeContext( ContextManager cm, Context ctx );
+
     
+    /** Notification when a context is initialized
+     */
     public int contextInit(Context ctx);
-    
+
+    /** Called when a context is stoped.
+     */
     public int contextShutdown(Context ctx);
 
+    
     /** Notify when a new servlet is added
      */
     public int addServlet( Context ctx, ServletWrapper sw);

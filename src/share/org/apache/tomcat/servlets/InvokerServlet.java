@@ -172,22 +172,34 @@ public class InvokerServlet extends HttpServlet {
         }
 
         // try the easy one -- lookup by name
-        
+
         ServletWrapper wrapper = context.getServletByName(servletName);
+	//	System.out.println("Invoker: getServletByName " + servletName + "=" + wrapper);
 
         if (wrapper == null) {
-            // try the more forceful approach
+	    // Moved loadServlet here //loadServlet(servletName);
+	    wrapper = new ServletWrapper();
+	    wrapper.setContext(context);
+	    wrapper.setServletClass(servletName);
+	    wrapper.setServletName(servletName); // XXX it can create a conflict !
+	    
+            context.addServlet( wrapper );
 
-            wrapper = context.loadServlet(servletName);
+	    // XXX add mapping - if the engine supports dynamic changes in mappings,
+	    // we'll avoid the extra parsing in Invoker !!!
+
+	    // XXX Invoker can be avoided easily - it's a special mapping, easy to
+	    // support
         }
 
-        if (wrapper == null) {
-            // we are out of luck
+	
 
-            doError(response, "Wrapper is null - " + servletName);
-
-            return;
-        }
+	// Can't be null - loadServlet creates a new wrapper .
+	//         if (wrapper == null) {
+	//             // we are out of luck
+	//             doError(response, "Wrapper is null - " + servletName);
+	//             return;
+	//         }
 
         HttpServletRequestFacade requestfacade =
 	    (HttpServletRequestFacade)request;

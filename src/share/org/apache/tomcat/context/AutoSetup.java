@@ -84,7 +84,7 @@ public class AutoSetup { //  implements TomcatHandler
     public AutoSetup() {
     }
 	
-    public int handleContextManagerInit(ContextManager cm) {
+    public int engineInit(ContextManager cm) {
 	String home=cm.getHome();
 	File webappD=new File(home + "/webapps");
 	if (! webappD.exists() || ! webappD.isDirectory())

@@ -75,12 +75,12 @@ import javax.servlet.http.*;
  *
  * @author costin@dnt.ro
  */
-public class DefaultCMSetter { //  implements TomcatHandler
+public class DefaultCMSetter extends BaseContextInterceptor {
 
     public DefaultCMSetter() {
     }
 	
-    public int handleContextManagerInit(ContextManager cm)  throws TomcatException {
+    public int engineInit(ContextManager cm)  {
 	// set a default connector ( http ) if none defined yet
 	Enumeration conn=cm.getConnectors();
 	if( ! conn.hasMoreElements() ) {
@@ -88,14 +88,7 @@ public class DefaultCMSetter { //  implements TomcatHandler
 	    cm.addServerConnector(  new org.apache.tomcat.service.http.HttpAdapter() );
 	}
 	
-	// Verify default context 
-	Context defaultContext=cm.getContext("");
-	if (defaultContext == null ||
-	    defaultContext.getDocumentBase() == null) {
-	    throw new TomcatException("No default context " + defaultContext);
-	}
-
-	Enumeration riE=cm.getRequestInterceptors();
+ 	Enumeration riE=cm.getRequestInterceptors();
 	if( ! riE.hasMoreElements() ) {
 	    // nothing set up by starter, add default ones
 	    if(cm.getDebug()>0) cm.log("Setting default interceptors ");
@@ -147,14 +140,14 @@ public class DefaultCMSetter { //  implements TomcatHandler
 	    ctx.addContextInterceptor(new LoadOnStartupInterceptor());
 	}
 	
-	// XXX Loader properties - need to be set on loader!!
 	ctx.addClassPath("WEB-INF/classes");
 	ctx.addLibPath("WEB-INF/lib");
 
+	// XXX Loader properties - need to be set on loader!!
 	if(ctx.getLoader() == null) {
-	    ctx.setLoader( new org.apache.tomcat.loader.ServletClassLoaderImpl(ctx));
+	    ctx.setLoader( new org.apache.tomcat.loader.ServletClassLoaderImpl());
+	    // ctx.setLoader( new org.apache.tomcat.loader.AdaptiveServletLoader());
 	}
-
 
 	return 0;
     }

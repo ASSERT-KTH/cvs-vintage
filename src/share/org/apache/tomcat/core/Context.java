@@ -121,7 +121,6 @@ public class Context {
     private boolean isWARValidated = false;
 
     // Class Loading
-    // XXX Nobody sets it     private ClassLoader classLoader;
     private String classPath = ""; // classpath used by the classloader.
     private Vector classPaths = new Vector();
     private Vector libPaths = new Vector();
@@ -850,25 +849,6 @@ public class Context {
 	return (ServletWrapper)servlets.get(servletName);
     }
 
-    /** @deprecated Create a ServletWrapper and add it.
-	This allows you to set other Wrapper properties 
-     */
-    public ServletWrapper loadServlet(String servletClassName) {
-        // XXX
-        // check for duplicates!
-
-        // XXX
-        // maybe dispatch to addServlet?
-        
-        ServletWrapper wrapper = new ServletWrapper(this);
-
-        wrapper.setServletClass(servletClassName);
-
-        servlets.put(servletClassName, wrapper);
-
-        return wrapper;
-    }
-
     /**
      * Add a servlet with the given name to the container. The
      * servlet will be loaded by the container's class loader
@@ -951,21 +931,6 @@ public class Context {
     }
 
     // -------------------- Class Loading --------------------
-
-    // XXX I have no ideea how it works !
-    // Used by JSP and loader
-    /** ClassLoader used to load this servlet.
-     */
-    public ClassLoader getClassLoader() {
-	// Doesn't work:	return (ClassLoader)servletLoader;
-
-	// ClassLoader is allways null, nobody sets it
-	return null;
-    }
-
-    //     public void setClassLoader(ClassLoader classLoader) {
-    //       this.classLoader = classLoader;
-    //     }
 
     public void setLoader(ServletClassLoader loader ) {
 	this.servletLoader=loader;

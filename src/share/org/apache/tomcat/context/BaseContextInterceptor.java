@@ -107,5 +107,32 @@ public class BaseContextInterceptor implements ContextInterceptor {
 	return 0;
     }
 
+    /** Called when the ContextManger is started
+     */
+    public int engineInit(ContextManager cm) {
+	return 0;
+    }
+
+    /** Called before the ContextManager is stoped.
+     *  You need to stop any threads and remove any resources.
+     */
+    public int engineShutdown(ContextManager cm) {
+	return 0;
+    }
+
+
+    /** Called when a context is added to a CM
+     */
+    public int addContext( ContextManager cm, Context ctx ) {
+	return 0;
+    }
+
+    /** Called when a context is removed from a CM
+     */
+    public int removeContext( ContextManager cm, Context ctx ) {
+	return 0;
+    }
+
+    
     
 }

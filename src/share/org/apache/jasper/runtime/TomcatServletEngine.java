@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/runtime/Attic/TomcatServletEngine.java,v 1.2 1999/10/15 00:35:32 akv Exp $
- * $Revision: 1.2 $
- * $Date: 1999/10/15 00:35:32 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/runtime/Attic/TomcatServletEngine.java,v 1.3 2000/02/09 20:36:09 costin Exp $
+ * $Revision: 1.3 $
+ * $Date: 2000/02/09 20:36:09 $
  *
  * ====================================================================
  * 
@@ -72,6 +72,6 @@ import org.apache.tomcat.core.ServletContextFacade;
  */
 public class TomcatServletEngine extends ServletEngine {
     public ClassLoader getClassLoader(ServletContext ctx) {
-        return ((ServletContextFacade) ctx).getRealContext().getClassLoader();
+        return null;// XXX (ClassLoader)((ServletContextFacade) ctx).getRealContext().getLoader();
     }
 }

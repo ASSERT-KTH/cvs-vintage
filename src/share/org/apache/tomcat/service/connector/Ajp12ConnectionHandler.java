@@ -293,6 +293,11 @@ class AJP12RequestAdapter extends RequestImpl {
 			if ( signal== 15 ) {
 			    // Shutdown - probably apache was stoped with apachectl stop
 			    contextM.stop();
+			    // same behavior as in past, because it seems that
+			    // stopping everything doesn't work - need to figure
+			    // out what happens with the threads ( XXX )
+			    System.exit(0);
+			    
 			    shutdown=true;
 			    return;
 			}

@@ -116,7 +116,7 @@ import java.util.zip.*;
  * @author Martin Pool
  * @author Jim Heintz
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version $Revision: 1.2 $ $Date: 2000/02/08 20:37:14 $
+ * @version $Revision: 1.3 $ $Date: 2000/02/09 20:36:11 $
  * @see java.lang.ClassLoader
  */
 public class AdaptiveClassLoader extends ClassLoader {
@@ -618,6 +618,7 @@ public class AdaptiveClassLoader extends ClassLoader {
                     s = loadResourceFromDirectory(file, name);
                 }
                 else if(name.endsWith(".initArgs")) {
+		    // XXX XXX XXX What is this ?
                     File dir = new File(file.getParent());
                     s = loadResourceFromDirectory(dir, name);
                 } else {
