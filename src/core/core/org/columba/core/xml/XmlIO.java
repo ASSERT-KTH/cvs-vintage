@@ -1,3 +1,16 @@
+// this is -*- java -*- code
+/////////////////////////////////////////////////////////////////////////////
+// FILE:         XmlIO.java
+// SUMMARY:
+// USAGE:
+//
+// AUTHOR:       Tony Parent
+// ORG:          AMCC
+// ORIG-DATE:     8-Oct-02 at 12:24:05
+// LAST-MOD:     28-Oct-02 at 13:07:25 by Tony Parent
+// DESCRIPTION:
+// DESCRIP-END.
+//
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
 // the Free Software Foundation; either version 2 of the License, or
@@ -8,9 +21,13 @@
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU Library General Public License for more details.
 //
-// You should have received a copy of the GNU General Public License
-// along with this program; if not, write to the Free Software
-// Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+// You should have received a copy of the GNU General Public License along
+// with this program; if not, write to the Free Software Foundation, Inc.,
+// 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+//
+//
+// $Log: file-hdr.java,v $
+/////////////////////////////////////////////////////////////////////////////
 
 package org.columba.core.xml;
 
@@ -18,6 +35,8 @@ import org.xml.sax.*;
 import org.xml.sax.helpers.*;
 import java.util.*;
 import java.io.*;
+import javax.swing.JOptionPane;
+import org.columba.main.MainInterface;
 //import common.*;
 
 import org.columba.core.xml.XmlElement;
@@ -56,9 +75,18 @@ public class XmlIO extends DefaultHandler {
     currentElement = null;
     load(FilePath);
   }
+  // setup and load constructor
+  public XmlIO(File F){
+    currentElement = null;
+    load(F.getAbsoluteFile());
+  }
+
+  public boolean load(File F){
+    return load(F.getAbsoluteFile());
+  }
 
   // Load a file. This is what starts things off.
-  public boolean load(String in){
+  public boolean load(String inputFile){
     Elements = new Vector();
     rootElement = new XmlElement("__CULUMBA_XML_TREE_TOP__");
     currentElement = rootElement;
@@ -76,10 +104,10 @@ public class XmlIO extends DefaultHandler {
       // Parse the file...
       System.out.println("About to parse XML document." );
       //xr.parse( in );
-      System.out.println(in);
+      System.out.println(inputFile);
       System.out.println(saxParser);
 
-      saxParser.parse( in, this);
+      saxParser.parse( inputFile, this);
       System.out.println("XML document parsing complete.");
     }
     catch(javax.xml.parsers.ParserConfigurationException ex){
@@ -167,6 +195,21 @@ public class XmlIO extends DefaultHandler {
     return(rootElement);
   }
 
+  public void errorDialog(String Msg){
+    JOptionPane.showMessageDialog(MainInterface.mainFrame,
+                                  "Error: "+Msg);
+
+  }
+  public void warningDialog(String Msg){
+    JOptionPane.showMessageDialog(MainInterface.mainFrame,
+                                  "Warning: "+Msg);
+
+  }
+  public void infoDialog(String Msg){
+    JOptionPane.showMessageDialog(MainInterface.mainFrame,
+                                  "Info: "+Msg);
+
+  }
 
   //
   // Writer interface
