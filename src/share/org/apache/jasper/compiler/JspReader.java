@@ -184,7 +184,7 @@ public class JspReader {
                                                encoding);
             else {
 	        String fileName = context.getRealPath(file.toString());
-                InputStream in = new FileInputStream(fileName);
+		InputStream in = context.getResourceAsStream(file.toString());
                 if (in == null)
                     throw new FileNotFoundException(fileName);
                 
