@@ -61,6 +61,8 @@ import org.jboss.metadata.EntityMetaData;
 import org.jboss.metadata.ConfigurationMetaData;
 import org.jboss.metadata.XmlLoadable;
 import org.jboss.metadata.XmlFileLoader;
+import org.jboss.logging.Logger;
+
 
 
 /**
@@ -74,7 +76,7 @@ import org.jboss.metadata.XmlFileLoader;
 *   @author <a href="mailto:jplindfo@helsinki.fi">Juha Lindfors</a>
 *   @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
 *
-*   @version $Revision: 1.31 $
+*   @version $Revision: 1.32 $
 */
 public class ContainerFactory
 	extends org.jboss.util.ServiceMBeanSupport
@@ -324,18 +326,18 @@ public class ContainerFactory
                     {
                        public void beanChecked(VerificationEvent event)
                        {
-                            Log.getLog().log(event.getMessage());
+                            Logger.log(event.getMessage());
                        }
                     });
     
                     
-                    Log.getLog().log("Verifying " + url);
+                    Logger.log("Verifying " + url);
                     
                     verifier.verify(url, metaData);
                 }
             }
             catch (Throwable t) {
-                Log.getLog().exception(t);
+                //DEBUG Logger.exception(t);
             }
             
             // unset verifier log
@@ -555,7 +557,7 @@ public class ContainerFactory
 			deployments.put(origUrl, app);
 		} catch (Throwable e)
 		{
-			e.printStackTrace();
+			// DEBUG Logger.exception(e);
 
 			app.stop();
 			app.destroy();
