@@ -30,7 +30,7 @@ public class CertCompat {
         try {
             Class c=Class.forName(JSSE_SUPPORT);
             compat=(CertCompat)c.newInstance();
-        } catch( Exception ex ) {
+        } catch ( Throwable t ) {
             compat=new CertCompat();
         }
     }
