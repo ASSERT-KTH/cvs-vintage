@@ -367,7 +367,6 @@
             <fileset dir="${lib.dir}/">
                 <exclude name="**/servlet*.jar"/>
                 <exclude name="**/xalan*.jar"/>
-                <exclude name="**/${torque.zip}"/>
                 <exclude name="**/*mysql*.jar"/>
                 <exclude name="**/*postgresql*.jar"/>
                 <exclude name="**/*oracle*.jar"/>
