@@ -231,8 +231,6 @@ public class TableController implements FocusOwner, ListSelectionListener {
 
 		view.getTree().setSelectionPaths(paths);
 
-		// FIXME
-		//getTableSelectionManager().fireMessageSelectionEvent(null, uids);
 	}
 
 	/************************** actions ********************************/
@@ -273,7 +271,7 @@ public class TableController implements FocusOwner, ListSelectionListener {
 		Folder srcFolder = (Folder) r[0].getFolder();
 
 		// its always possible that no folder is currenlty selected
-		if ( srcFolder != null )
+		if (srcFolder != null)
 			ColumbaLogger.log.debug("selected folder=" + srcFolder.getName());
 
 		// make tree visible
@@ -289,10 +287,10 @@ public class TableController implements FocusOwner, ListSelectionListener {
 		// showing total/unread/recent messages count
 		if (getMailFrameController() instanceof ThreePaneMailFrameController) {
 
-			if ( srcFolder != null)
-			((ThreePaneMailFrameController) getMailFrameController())
-				.folderInfoPanel
-				.setFolder(srcFolder);
+			if (srcFolder != null)
+				((ThreePaneMailFrameController) getMailFrameController())
+					.folderInfoPanel
+					.setFolder(srcFolder);
 		}
 
 		// only update table if, this folder is the same
@@ -425,6 +423,23 @@ public class TableController implements FocusOwner, ListSelectionListener {
 			// no messages in this folder
 			if (lastSelUids[0] == null)
 				return;
+
+			// this message doesn't exit in this folder anymore
+			if (getHeaderTableModel().getMessageNode(lastSelUids[0]) == null) {
+				Object uid = null;
+				if (ascending == true)
+					uid = view.selectLastRow();
+				else
+					uid = view.selectFirstRow();
+
+				// no messages in this folder
+				if (uid == null)
+					return;
+					
+				// link to the new uid
+				
+				lastSelUids[0] = uid;
+			}
 
 			// selecting the message
 			setSelected(lastSelUids);
