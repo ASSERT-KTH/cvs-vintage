@@ -22,7 +22,7 @@
  * USA
  *
  * --------------------------------------------------------------------------
- * $Id: IIOPInitializer.java,v 1.3 2005/02/08 10:03:48 benoitf Exp $
+ * $Id: IIOPInitializer.java,v 1.4 2005/02/14 09:41:56 benoitf Exp $
  * --------------------------------------------------------------------------
  */
 package org.objectweb.carol.jtests.conform.interceptor.iiop;
@@ -38,6 +38,10 @@ import org.omg.PortableInterceptor.ORBInitializer;
  */
 public class IIOPInitializer extends LocalObject implements ORBInitializer {
 
+    /**
+     * Init interceptors
+     * @param info ORB info
+     */
     public void pre_init(ORBInitInfo info) {
         try {
             info.add_client_request_interceptor(new IIOPDummyClientInterceptor("client interceptor"));
@@ -48,6 +52,13 @@ public class IIOPInitializer extends LocalObject implements ORBInitializer {
         }
     }
 
+    /**
+     * Called during ORB initialization. If a service must resolve initial
+     * references as part of its initialization, it can assume that all initial
+     * references will be available at this point.
+     * @param info provides initialization attributes and operations by which
+     *        Interceptors can be registered.
+     */
     public void post_init(ORBInitInfo info) {
         // do nothing
     }

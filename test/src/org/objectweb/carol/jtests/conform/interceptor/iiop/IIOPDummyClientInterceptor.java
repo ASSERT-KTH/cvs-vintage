@@ -22,7 +22,7 @@
  * USA
  *
  * --------------------------------------------------------------------------
- * $Id: IIOPDummyClientInterceptor.java,v 1.4 2005/02/08 10:03:48 benoitf Exp $
+ * $Id: IIOPDummyClientInterceptor.java,v 1.5 2005/02/14 09:41:56 benoitf Exp $
  * --------------------------------------------------------------------------
  */
 package org.objectweb.carol.jtests.conform.interceptor.iiop;
@@ -32,6 +32,8 @@ import org.omg.IOP.ServiceContext;
 import org.omg.PortableInterceptor.ClientRequestInfo;
 import org.omg.PortableInterceptor.ClientRequestInterceptor;
 import org.omg.PortableInterceptor.ForwardRequest;
+
+import org.objectweb.carol.util.configuration.TraceCarol;
 
 /**
  * Class <code>IIOPDummyClientInterceptor</code> is a IIOP Dummy client
@@ -43,12 +45,12 @@ public class IIOPDummyClientInterceptor extends LocalObject implements ClientReq
     /**
      * Server dummy context id
      */
-    private static int SERVER_CTX_ID = 50;
+    //private static final int SERVER_CTX_ID = 50;
 
     /**
      * Client dummy context id
      */
-    private static int CLIENT_CTX_ID = 51;
+    private static final int CLIENT_CTX_ID = 51;
 
     /**
      * interceptor name
@@ -57,7 +59,7 @@ public class IIOPDummyClientInterceptor extends LocalObject implements ClientReq
 
     /**
      * constructor
-     * @param String name
+     * @param name of the interceptor
      */
     public IIOPDummyClientInterceptor(String name) {
         interceptorName = name;
@@ -65,12 +67,15 @@ public class IIOPDummyClientInterceptor extends LocalObject implements ClientReq
 
     /**
      * get the name of this interceptor
-     * @return name
+     * @return name of this interceptor
      */
     public String name() {
         return interceptorName;
     }
 
+    /**
+     * Destroy interceptor
+     */
     public void destroy() {
     }
 
@@ -78,43 +83,59 @@ public class IIOPDummyClientInterceptor extends LocalObject implements ClientReq
      * send client context with the request. The sendingRequest method of the
      * JPortableInterceptors is called prior to marshalling arguments and
      * contexts
-     * @param JClientRequestInfo jri the jrmp client info
+     * @param jri the jrmp client info
      * @exception ForwardRequest if an exception occur with the ObjectOutput
      */
     public void send_request(ClientRequestInfo jri) throws ForwardRequest {
         try {
             byte[] data = java.net.InetAddress.getLocalHost().getHostName().getBytes();
-            //System.out.println("IIOPDummyClientInterceptor Add/Send Dummy
-            // Client Service Context");
+            TraceCarol.debugCarol("Add/Send Dummy Client Service Context");
             jri.add_request_service_context(new ServiceContext(CLIENT_CTX_ID, data), true);
         } catch (Exception e) {
-            // no service context : do nothing
+            TraceCarol.debugCarol("No service context");
         }
     }
 
     /**
-     * Receive reply interception
-     * @param JClientRequestInfo jri the jrmp client info
+     * Allows an Interceptor to query the information on a reply after it is
+     * returned from the server and before control is returned to the client.
+     * @param jri the jrmp client info
      */
     public void receive_reply(ClientRequestInfo jri) {
-        try {
-            //System.out.println("IIOPDummyClientInterceptor Get/Receive Dummy
-            // Server Service Context:");
-            //System.out.println(new String
-            // (((ServiceContext)jri.get_reply_service_context(SERVER_CTX_ID)).context_data));
-        } catch (Exception e) {
-            // no service context : do nothing
-        }
+        TraceCarol.debugCarol("Get/Receive Dummy Server Service Context:");
+        //System.out.println(new String
+        // (((ServiceContext)jri.get_reply_service_context(SERVER_CTX_ID)).context_data));
 
     }
 
-    // empty method
+    /**
+     * Allows an Interceptor to query information during a Time-Independent
+     * Invocation (TII) polling get reply sequence.
+     * @param jri Information about the current request being intercepted.
+     */
     public void send_poll(ClientRequestInfo jri) {
     }
 
+    /**
+     * Indicates to the interceptor that an exception occurred. Allows an
+     * Interceptor to query the exception's information before it is thrown to
+     * the client.
+     * @param jri Information about the current request being intercepted.
+     * @exception ForwardRequest If thrown, indicates to the ORB that a retry of
+     *            the request should occur with the new object given in the
+     *            exception.
+     */
     public void receive_exception(ClientRequestInfo jri) throws ForwardRequest {
     }
 
+    /**
+     * Allows an Interceptor to query the information available when a request
+     * results in something other than a normal reply or an exception.
+     * @param jri Information about the current request being intercepted.
+     * @exception ForwardRequest If thrown, indicates to the ORB that a retry of
+     *            the request should occur with the new object given in the
+     *            exception.
+     */
     public void receive_other(ClientRequestInfo jri) throws ForwardRequest {
     }
 }
