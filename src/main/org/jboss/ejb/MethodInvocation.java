@@ -26,7 +26,7 @@ import javax.transaction.Transaction;
  *	@see <related>
  *	@author Rickard Öberg (rickard.oberg@telkel.com)
  *  @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>.
- *	@version $Revision: 1.1 $
+ *	@version $Revision: 1.2 $
  */
 public class MethodInvocation
 {
@@ -47,9 +47,9 @@ public class MethodInvocation
    // Constructors --------------------------------------------------
    public MethodInvocation(Object id, Method m, Object[] args, Transaction tx, Principal identity)
    {
-      this.id = id;
+      	this.id = id;
 		this.m = m;
-      this.args = args;
+      	this.args = args;
 		this.tx = tx;
 		this.identity = identity;
    }
@@ -68,7 +68,10 @@ public class MethodInvocation
 	
 	public void setTransaction(Transaction tx)
 	{
+		
+		//System.out.println("Setting a transaction on Method invocation"+hashCode()+" "+m.getName()+" with "+tx);
 		this.tx = tx;
+		
 	}
 	
 	public Transaction getTransaction()
@@ -86,9 +89,21 @@ public class MethodInvocation
 		return identity;
 	}
 	 
+	/*
+	* setEnterpriseContext()
+	*
+	* Once a context is associated to a Method Invocation the MI can pass it all the relevant information
+	* We set Transaction and Principal
+	*/
 	public void setEnterpriseContext(EnterpriseContext ctx)
 	{
 		this.ctx = ctx;
+		
+		//Set the transaction
+		ctx.setTransaction(tx);
+		
+		// Set the principal
+		ctx.setPrincipal(identity);
 	}
 
 	public EnterpriseContext getEnterpriseContext()
