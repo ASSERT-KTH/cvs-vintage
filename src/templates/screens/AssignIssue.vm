@@ -38,12 +38,11 @@
     <td>$!user.Name</td>
     <td><select name="asso_user_{$userId}_issue_{$issue.IssueId}">
      #foreach ($selectUserAttr in $userAttrs)
+      #set ($selected = $attr.AttributeId.toString().equals($selectUserAttr.AttributeId.toString()))
       #if ($user.hasPermission($selectUserAttr.Permission, $module))
-        #set ($selected = false)
-        #if ($attr.AttributeId.toString().equals($selectUserAttr.AttributeId.toString())) 
-            #set ($selected = true)
-        #end
         <option value="$selectUserAttr.AttributeId" #selected($selected)>$selectUserAttr.Name</option>
+      #elseif ($selected)
+        <option value="$attr.AttributeId" selected="selected">$attr.Name $l10n.ParenDisabled</option>
       #end
      #end
        </select></td>
@@ -142,63 +141,3 @@ $intake.declareGroups()
 #end
 </form>
 </div>
-
-
-#macro (assignIssue $issue)
-    #set ($module = $issue.Module)
-    #set ($issueType = $issue.IssueType)
-<h3>$l10n.format("PersonnelAssociatedWithIssue", "$issue.UniqueId")</h3>
-
-
-<div class="colbar">
-<ul>
-<li>$l10n.format("ClickHereToSelectUsers", $issueListSize)</li>
-<li>$l10n.ChangesSavedOnDone</li>
-</ul>
-</div>
-
-#set ($pair = $assoUsers.get($issue.IssueId))
-    #if ($pair.size() == 0)
-     <p><em>$l10n.NoneAssigned.</em></p>
-    #else
-		
-		<table width="100%" border="1" cellspacing="2" cellpadding="3">
-		<tr>
-		<th nowrap="nowrap">$l10n.Select</th>
-		<th>$l10n.Username</th>
-		<th>$l10n.FullName</th>
-		<th>$l10n.Association</th>
-		</tr>
-#foreach ($item in $pair)
-  #set ($attr = $item.get(0))
-  #set ($user = $item.get(1))
-  #set ($userId = $user.UserId)
-    #indexedRows($velocityCount)
-    <td>
-      <input type="checkbox" name="select_user" value="$userId" />
-      <input type="hidden" name="old_attr_$userId" value="$attr.AttributeId" />
-    </td>
-    <td><a href="mailto:$user.Email">$user.UserName</a></td>
-    <td>$!user.Name</td>
-    <td><select name="asso_user_{$userId}_issue_{$issue.IssueId}">
-     #foreach ($selectUserAttr in $userAttrs)
-      #if ($user.hasPermission($selectUserAttr.Permission, $module))
-        #set ($selected = false)
-        #if ($attr.AttributeId.toString().equals($selectUserAttr.AttributeId.toString())) 
-            #set ($selected = true)
-        #end
-        <option value="$selectUserAttr.AttributeId" #selected($selected)>$selectUserAttr.Name</option>
-      #end
-     #end
-       </select></td>
-    </tr>
-#end
-
-   </table>  
-
-<div class="functnbar3">
- <input type="submit" name="eventSubmit_doRemove_$issue.IssueId" value="$l10n.RemoveSelected" />
- <input type="submit" name="eventSubmit_doUpdate_$issue.IssueId" value="$l10n.UpdateSelected" />
-</div>
-#end
-#end

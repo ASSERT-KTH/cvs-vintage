@@ -23,7 +23,7 @@
       <td>
         <a href="mailto:$assignedUser.Email">$!assignedUser.Name</a>
         #if (!$assignedUser.hasPermission($attVal.Attribute.Permission, $module))
-            <strong>(disabled)</strong>
+            <strong>$l10n.ParenDisabled</strong>
         #end
       </td>
       <td>$assignedUser.UserName</td>
