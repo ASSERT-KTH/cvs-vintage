@@ -13,7 +13,14 @@ import org.jboss.ejb.DeploymentException;
 /** The configuration information for an EJB container.
  *   @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
  *   @author <a href="mailto:scott.stark@jboss.org">Scott Stark</a>
- *   @version $Revision: 1.16 $
+ *   @version $Revision: 1.17 $
+ *
+ *  <p><b>Revisions:</b><br>
+ *  <p><b>2001/08/02: marcf</b>
+ *  <ol>
+ *   <li>Added locking policy as optional tag in jboss.xml 
+ *  </ol>
+ *
  */
 public class ConfigurationMetaData extends MetaData {
 
@@ -44,6 +51,10 @@ public class ConfigurationMetaData extends MetaData {
     private String instanceCache;
     private String persistenceManager;
     private String transactionManager;
+	 // This is to provide backward compatibility with 2.4 series jboss.xml
+	 // but it should come from standardjboss alone 
+	 // marcf:FIXME deprecate the "hardcoded string"
+	 private String lockClass = "org.jboss.ejb.plugins.lock.SimplePessimisticEJBLock";
     private byte commitOption;
     private long optionDRefreshRate = 30000;
     private boolean callLogging;
@@ -84,8 +95,10 @@ public class ConfigurationMetaData extends MetaData {
 
 	public String getTransactionManager() { return transactionManager; }
 
-        public Element getContainerInvokerConf() { return containerInvokerConf; }
-        public Element getContainerPoolConf() { return containerPoolConf; }
+	public String getLockClass() {return lockClass;} 
+	
+	public Element getContainerInvokerConf() { return containerInvokerConf; }
+	public Element getContainerPoolConf() { return containerPoolConf; }
 	public Element getContainerCacheConf() { return containerCacheConf; }
 	public Element getContainerInterceptorsConf() { return containerInterceptorsConf; }
 
@@ -93,7 +106,7 @@ public class ConfigurationMetaData extends MetaData {
 
 	public byte getCommitOption() { return commitOption; }
 
-        public long getOptionDRefreshRate() { return optionDRefreshRate; }
+	public long getOptionDRefreshRate() { return optionDRefreshRate; }
 
 	public boolean getReadOnlyGetMethods() { return readOnlyGetMethods; }
 
@@ -123,7 +136,10 @@ public class ConfigurationMetaData extends MetaData {
         // set the transaction manager
         transactionManager = getElementContent(getOptionalChild(element, "transaction-manager"), transactionManager);
 
-        // set the security domain
+		  // set the lock class
+        lockClass = getElementContent(getOptionalChild(element, "locking-policy"), lockClass);
+		 
+		  // set the security domain
         securityDomain = getElementContent(getOptionalChild(element, "security-domain"), securityDomain);
         // set the authentication module
         authenticationModule = getElementContent(getOptionalChild(element, "authentication-module"), authenticationModule);
