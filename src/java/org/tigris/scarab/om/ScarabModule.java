@@ -88,7 +88,7 @@ import org.tigris.scarab.security.SecurityFactory;
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: ScarabModule.java,v 1.50 2001/10/19 20:43:09 jon Exp $
+ * @version $Id: ScarabModule.java,v 1.51 2001/10/20 00:12:11 elicia Exp $
  */
 public class ScarabModule
     extends BaseScarabModule
@@ -419,11 +419,13 @@ public class ScarabModule
     /**
      * Returns default issue list attributes for this module.
      */
-    public List getDefaultRModuleUserAttributes()
+    public List getDefaultRModuleUserAttributes(IssueType issueType)
         throws Exception
     {
         Criteria crit = new Criteria(2)
-           .add(RModuleUserAttributePeer.USER_ID, 0);
+           .add(RModuleUserAttributePeer.USER_ID, 0)
+           .add(RModuleUserAttributePeer.ISSUE_TYPE_ID, 
+                issueType.getIssueTypeId());
         crit.setDistinct();
         return RModuleUserAttributePeer.doSelect(crit);
     }
