@@ -1,4 +1,4 @@
-// $Id: FileImportSupport.java,v 1.10 2004/12/04 08:37:51 linus Exp $
+// $Id: FileImportSupport.java,v 1.11 2004/12/10 19:48:12 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -55,7 +55,7 @@ import org.tigris.gef.base.Globals;
  * for other input sources.
  *
  * @author Alexander Lepekhine
- * @version $Revision: 1.10 $
+ * @version $Revision: 1.11 $
  */
 public abstract class FileImportSupport implements PluggableImport {
 
@@ -273,7 +273,7 @@ public abstract class FileImportSupport implements PluggableImport {
 			if (theImport.isDiscendDirectoriesRecursively()) {
 			    if (doneDirectories.indexOf(curFile) >= 0
 				|| toDoDirectories.indexOf(curFile) >= 0) {
-				// This one is already seen or to be seen.
+				; // This one is already seen or to be seen.
 			    } else {
 				toDoDirectories.add(curFile);
 			    }
