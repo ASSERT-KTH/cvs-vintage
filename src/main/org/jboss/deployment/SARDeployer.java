@@ -6,7 +6,6 @@
 */
 package org.jboss.deployment;
 
-
 import java.io.File;
 import java.io.FilenameFilter;
 import java.io.IOException;
@@ -58,7 +57,7 @@ import org.xml.sax.SAXException;
 * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
 * @author <a href="mailto:David.Maplesden@orion.co.nz">David Maplesden</a>
 * @author <a href="mailto:d_jencks@users.sourceforge.net">David Jencks</a>
-* @version   $Revision: 1.5 $ <p>
+* @version   $Revision: 1.6 $ <p>
 *
 *      <b>20010830 marc fleury:</b>
 *      <ul>initial import
@@ -95,8 +94,8 @@ import org.xml.sax.SAXException;
 *      </ul>
 */
 public class SARDeployer
-extends ServiceMBeanSupport
-implements SARDeployerMBean
+   extends ServiceMBeanSupport
+   implements SARDeployerMBean
 {
    // Attributes --------------------------------------------------------
    private ObjectName objectName;
@@ -132,11 +131,10 @@ implements SARDeployerMBean
    {
       return (di.url.toString().endsWith(".sar")
          || di.url.toString().endsWith("service.xml"));
-   }
-   
-   
+   }   
+
    public void init(DeploymentInfo di)
-   throws DeploymentException
+      throws DeploymentException
    {
       try 
       {
@@ -149,7 +147,6 @@ implements SARDeployerMBean
          
          else if(di.url.getProtocol().startsWith("file"))
          {
-            
             File file = new File (di.url.getFile());
             
             // If not directory we watch the package
@@ -191,13 +188,12 @@ implements SARDeployerMBean
          throw new DeploymentException(e.getMessage());
       }
    }
-   
-   
+
    public void deploy(DeploymentInfo di)
-   throws DeploymentException
+      throws DeploymentException
    {
-      
-      try {
+      try
+      {
          // install the MBeans in this descriptor
          if (log.isInfoEnabled())
             log.info("Deploying SAR: url " + di.url);
@@ -209,7 +205,6 @@ implements SARDeployerMBean
          
          for (int i = 0; i < nl.getLength(); i++)
          {
-            
             Element mbean = (Element)nl.item(i);
             
             log.debug("deploying with ServiceController mbean " + mbean);
@@ -259,7 +254,7 @@ implements SARDeployerMBean
    }
    
    protected void parseXMLClasspath(DeploymentInfo di) 
-   throws DeploymentException
+      throws DeploymentException
    {
       Set classpath = new HashSet();
       
@@ -276,7 +271,6 @@ implements SARDeployerMBean
          //Does it specify a codebase?
          if (classpathElement != null)
          {
-            
             log.debug("setting up classpath " + classpath);
             // Load the codebase
             codebase = classpathElement.getAttribute("codebase").trim();
@@ -349,9 +343,9 @@ implements SARDeployerMBean
          // We have an archive whatever the codebase go ahead and load the libraries
          else if (!archives.equals(""))
          {
-            
             // Still no codebase? safeguard
-            if (codebase.equals("")) codebase = System.getProperty("jboss.system.libraryDirectory");
+            if (codebase.equals(""))
+               codebase = System.getProperty("jboss.system.libraryDirectory");
                
             if (archives.equals("*") || archives.equals("")) 
             {
@@ -390,8 +384,7 @@ implements SARDeployerMBean
                   throw new DeploymentException(e.getMessage());
                }
             }
-            
-            
+
             else // A real archive listing (as opposed to wildcard)
             {
                StringTokenizer jars = new StringTokenizer(archives, ",");
@@ -405,8 +398,8 @@ implements SARDeployerMBean
                }
             }
          }
-         
-         else //codebase is empty and archives is empty but we did have a classpath entry
+         //codebase is empty and archives is empty but we did have a classpath entry
+         else
          {
             throw new DeploymentException("A classpath entry was declared but no codebase and no jars specified. Please fix jboss-service.xml in your configuration");
          }
@@ -421,8 +414,8 @@ implements SARDeployerMBean
          neededUrl = (URL)jars.next();
          
          // Call the main deployer with it
-         try {
-            
+         try
+         {   
             // Create a new Deployment not as a subdeployment,
             // An external package is not a "subdeployment" it is a stand alone 
             // deployment scanned as such 
@@ -434,15 +427,13 @@ implements SARDeployerMBean
                new Object[] {sub},
                new String[] {"org.jboss.deployment.DeploymentInfo"});
          }
-         catch (Exception e) {
-	     log.error("operation failed", e);
-	 }
-         
+         catch (Exception e)
+         {
+            log.error("operation failed", e);
+         }
          log.debug("deployed classes for " + neededUrl);
-      
       } // end of while ()
    }
-   
    
    /**
    * Undeploys the package at the url string specified. This will: Undeploy
@@ -461,7 +452,7 @@ implements SARDeployerMBean
    *      undeployed
    */
    public void undeploy(DeploymentInfo sdi)
-   throws DeploymentException
+      throws DeploymentException
    {
       log.debug("undeploying document " + sdi.url);
       
@@ -510,10 +501,8 @@ implements SARDeployerMBean
    * @exception java.lang.Exception  Thrown if we are supplied an invalid name.
    */
    public ObjectName preRegister(MBeanServer server, ObjectName name)
-   throws java.lang.Exception
+      throws Exception
    {
-      
-      
       super.preRegister(server, name);
       log.debug("ServiceDeployer preregistered with mbean server");
       objectName = name == null ? new ObjectName(OBJECT_NAME) : name;
@@ -527,7 +516,6 @@ implements SARDeployerMBean
       
       return objectName;
    }
-   
    
    /**
    * PostRegister initialized the ServiceDeployed mbean and tries to load a
@@ -562,7 +550,7 @@ implements SARDeployerMBean
    */
    
    public void preDeregister()
-   throws Exception
+      throws Exception
    {
       server.invoke(
          new ObjectName(org.jboss.deployment.MainDeployerMBean.OBJECT_NAME),
@@ -573,20 +561,23 @@ implements SARDeployerMBean
    }
    
    protected void parseDocument(DeploymentInfo di)
-   throws DeploymentException
+      throws DeploymentException
    {
       try
       {
          DocumentBuilder parser = DocumentBuilderFactory.newInstance().newDocumentBuilder();
-         
          InputStream stream = null;
          
          // If we are in a xml only get the URL
-         if (di.isXML) stream = di.localUrl.openStream();
-            
+         if (di.isXML)
+            stream = di.localUrl.openStream();
          // Else load from the jar or directory
-         else stream = di.localCl.getResourceAsStream("META-INF/jboss-service.xml");
-            
+         else
+            stream = di.localCl.getResourceAsStream("META-INF/jboss-service.xml");
+         // Validate that the stream is not null
+         if( stream == null )
+            throw new DeploymentException("Failed to find META-INF/jboss-service.xml");
+
          InputSource is = new InputSource(stream);
          di.document = parser.parse(is);
       }
@@ -611,13 +602,18 @@ implements SARDeployerMBean
    // Private --------------------------------------------------------
    
    private ObjectName getServiceControllerName()
-   throws DeploymentException
+      throws DeploymentException
    {
-      try { return new ObjectName(ServiceControllerMBean.OBJECT_NAME);}
-         
-      catch (Exception e) {throw new DeploymentException ("Couldn't get the ObjectName for the ServiceControllerMBean");}
+      try
+      {
+         return new ObjectName(ServiceControllerMBean.OBJECT_NAME);
+      }   
+      catch (Exception e)
+      {
+         throw new DeploymentException ("Couldn't get the ObjectName for the ServiceControllerMBean");
+      }
    }
-   
+
    private void removeMBeans(URL url, DeploymentInfo sdi) throws DeploymentException
    {
    }
@@ -635,7 +631,7 @@ implements SARDeployerMBean
    * @exception IOException if an error occurs
    */
    protected void inflateJar(URL url, File destDir, String path)
-   throws DeploymentException, IOException
+      throws DeploymentException, IOException
    {
       /*
       //Why doesn't this work???? Maybe in java 1.4?
@@ -707,7 +703,7 @@ implements SARDeployerMBean
    * @throws MalformedObjectNameException
    */
    private ObjectName parseObjectName(final Element element)
-   throws org.jboss.system.ConfigurationException, MalformedObjectNameException
+      throws org.jboss.system.ConfigurationException, MalformedObjectNameException
    {
       String name = ((org.w3c.dom.Text)element.getFirstChild()).getData().trim();
       if (name == null || name.trim().equals("")) {
@@ -753,5 +749,3 @@ implements SARDeployerMBean
       return null;
    }
 }
-
-
