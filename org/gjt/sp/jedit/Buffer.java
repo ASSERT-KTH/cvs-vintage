@@ -54,7 +54,7 @@ import org.gjt.sp.util.*;
  * <li>
  *
  * @author Slava Pestov
- * @version $Id: Buffer.java,v 1.114 2003/01/31 18:28:51 spestov Exp $
+ * @version $Id: Buffer.java,v 1.115 2003/02/01 17:18:58 spestov Exp $
  */
 public class Buffer implements EBComponent
 {
@@ -1882,6 +1882,7 @@ public class Buffer implements EBComponent
 			"view.status.linesep-changed",new String[] {
 			jEdit.getProperty("lineSep." + status) }));
 		setProperty("lineSeparator",lineSep);
+		setDirty(true);
 		propertiesChanged();
 	} //}}}
 
