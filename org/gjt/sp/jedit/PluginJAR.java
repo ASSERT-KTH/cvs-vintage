@@ -98,7 +98,7 @@ import org.gjt.sp.util.Log;
  * @see org.gjt.sp.jedit.ServiceManager
  *
  * @author Slava Pestov
- * @version $Id: PluginJAR.java,v 1.31 2003/06/15 02:59:21 spestov Exp $
+ * @version $Id: PluginJAR.java,v 1.32 2003/07/24 20:25:40 spestov Exp $
  * @since jEdit 4.2pre1
  */
 public class PluginJAR
@@ -807,8 +807,6 @@ public class PluginJAR
 				cache.cachedActionToggleFlags,
 				cache.actionsURI);
 		}
-		else
-			actions = new ActionSet();
 
 		if(cache.browserActionsURI != null
 			&& cache.cachedBrowserActionNames != null)
@@ -968,9 +966,6 @@ public class PluginJAR
 		{
 			actions = new ActionSet(this,null,null,
 				cache.actionsURI);
-			actions.setLabel(jEdit.getProperty(
-				"action-set.plugin",
-				new String[] { label }));
 			actions.load();
 			cache.cachedActionNames =
 				actions.getCacheableActionNames();
@@ -1010,6 +1005,13 @@ public class PluginJAR
 		{
 			DockableWindowManager.loadDockableWindows(this,
 				dockablesURI,cache);
+		}
+
+		if(label != null)
+		{
+			actions.setLabel(jEdit.getProperty(
+				"action-set.plugin",
+				new String[] { label }));
 		}
 
 		if(actions.size() != 0)

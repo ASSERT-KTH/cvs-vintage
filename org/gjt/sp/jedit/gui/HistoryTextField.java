@@ -36,7 +36,7 @@ import org.gjt.sp.jedit.*;
 /**
  * Text field with an arrow-key accessable history.
  * @author Slava Pestov
- * @version $Id: HistoryTextField.java,v 1.9 2003/04/19 03:48:14 spestov Exp $
+ * @version $Id: HistoryTextField.java,v 1.10 2003/07/24 20:25:40 spestov Exp $
  */
 public class HistoryTextField extends JTextField
 {
@@ -174,16 +174,22 @@ public class HistoryTextField extends JTextField
 	 */
 	public void setModel(String name)
 	{
+		Border textFieldBorder = UIManager.getBorder("TextField.border");
+
 		if(name == null)
 		{
 			historyModel = null;
-			setBorder(UIManager.getBorder("TextField.border"));
+			if(textFieldBorder != null)
+				setBorder(textFieldBorder);
 		}
 		else
 		{
 			historyModel = HistoryModel.getModel(name);
-			setBorder(new CompoundBorder(UIManager.getBorder("TextField.border"),
-			new HistoryBorder()));
+			if(textFieldBorder != null)
+			{
+				setBorder(new CompoundBorder(textFieldBorder,
+					new HistoryBorder()));
+			}
 		}
 		index = -1;
 		repaint();
