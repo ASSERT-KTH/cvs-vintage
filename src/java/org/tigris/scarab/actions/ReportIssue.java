@@ -98,7 +98,7 @@ import org.tigris.scarab.tools.ScarabRequestTool;
  * This class is responsible for report issue forms.
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: ReportIssue.java,v 1.106 2002/01/26 07:15:07 jmcnally Exp $
+ * @version $Id: ReportIssue.java,v 1.107 2002/01/27 01:22:02 jmcnally Exp $
  */
 public class ReportIssue extends RequireLoginFirstAction
 {
@@ -129,7 +129,6 @@ public class ReportIssue extends RequireLoginFirstAction
         // for duplicates
         if (setAttributeValues(issue, intake, context)) 
         {
-//System.out.println("Parameters:\n " + data.getParameters() );
             // check for duplicates, if there are none skip the dedupe page
             searchAndSetTemplate(data, context, 0, "entry,Wizard3.vm");
         }
@@ -276,14 +275,15 @@ public class ReportIssue extends RequireLoginFirstAction
             AttributeValue aval = (AttributeValue)avMap.get(i.next());
             Group group = 
                 intake.get("AttributeValue", aval.getQueryKey(), false);
-
-            // System.out.println("Looking at: " + aval.getAttribute().getName() +" ->" + aval.getQueryKey() );
             if (group != null) 
             {
                 group.setProperties(aval);
-                // System.out.println("Setting: " + aval.getAttribute().getName() + " to " + aval.getValue());
                 
                 /*
+                 * FIXME! I think changes in the code have made this
+                 * hack unnecessary, but I do not have time to test
+                 * this theory atm. -jdm
+                 *
                  * The next piece of code is for storing the values
                  * of the attributes into the context (which is than
                  * used by Wizard2.vm) This is necessary because it 
@@ -318,6 +318,8 @@ public class ReportIssue extends RequireLoginFirstAction
             }
         }
         context.put("wizard1_intake", values);
+        // end code related to issue 70
+
         success = true;
         }
         return success;
