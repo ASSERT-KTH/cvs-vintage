@@ -35,11 +35,11 @@
 <div class="axial">
  <table border="0" cellspacing="2" cellpadding="3">
  <tr>
- <th>Group name</th>
+ <th>Name</th>
  <td><input type="text" size="25" name="$agGroup.Name.Key" value="$!agGroup.Name" /></td>
  </tr>
  <tr>
- <th>Group description</th>
+ <th>Description</th>
  <td>#textAreaMedium("$agGroup.Description.Key" $agGroup.Description.Value)</td>
  </tr>
  </table>
