@@ -65,7 +65,7 @@ import org.tigris.scarab.util.ScarabException;
  * into the context to replace the $link that Turbine adds.
  *   
  * @author <a href="mailto:elicia@tigris.org">Elicia David</a>
- * @version $Id: DefaultWorkflow.java,v 1.6 2002/08/29 00:01:00 elicia Exp $
+ * @version $Id: DefaultWorkflow.java,v 1.7 2002/09/29 18:56:07 elicia Exp $
  */
 public class DefaultWorkflow implements Workflow
 {
@@ -101,6 +101,12 @@ public class DefaultWorkflow implements Workflow
                                              String roleName,
                                              Module module,
                                              IssueType issueType)
+        throws ScarabException
+    {
+        return null;
+    }
+
+    public List getWorkflowsForIssueType(IssueType issueType)
         throws ScarabException
     {
         return null;
