@@ -204,7 +204,14 @@ public class IMAPStore {
 		//System.out.println("isSelected");
 
 		if (getState() == STATE_SELECTED) {
-			return true;
+			
+			
+			if ( path.equals(getSelectedFolderPath() )) return true;
+			else
+			{
+				select( worker, path );
+				return false;
+			}
 			/*
 			if (getSelectedFolderPath().equals(path))
 				return true;
@@ -243,6 +250,7 @@ public class IMAPStore {
 			getProtocol().select(path);
 			
 			state = STATE_SELECTED;
+			selectedFolderPath = path;
 		} catch (BadCommandException ex) {
 			System.out.println("bad command exception");
 			System.out.println("no messages on server");
