@@ -74,7 +74,7 @@ import org.gjt.sp.jedit.textarea.*;
  *
  * @author Slava Pestov
  * @author John Gellene (API documentation)
- * @version $Id: View.java,v 1.70 2003/04/13 00:17:11 spestov Exp $
+ * @version $Id: View.java,v 1.71 2003/04/14 03:59:21 spestov Exp $
  */
 public class View extends JFrame implements EBComponent
 {
@@ -1529,18 +1529,6 @@ public class View extends JFrame implements EBComponent
 		{
 			jEdit.setActiveView(View.this);
 
-			final Vector buffers = new Vector();
-			EditPane[] editPanes = getEditPanes();
-			for(int i = 0; i < editPanes.length; i++)
-			{
-				Buffer buffer = ((EditPane)editPanes[i])
-					.getBuffer();
-				if(buffers.contains(buffer))
-					continue;
-				else
-					buffers.addElement(buffer);
-			}
-
 			// People have reported hangs with JDK 1.4; might be
 			// caused by modal dialogs being displayed from
 			// windowActivated()
@@ -1548,11 +1536,7 @@ public class View extends JFrame implements EBComponent
 			{
 				public void run()
 				{
-					for(int i = 0; i < buffers.size(); i++)
-					{
-						((Buffer)buffers.elementAt(i))
-							.checkModTime(editPane);
-					}
+					jEdit.checkBufferStatus(View.this);
 				}
 			});
 		}

@@ -54,7 +54,7 @@ import org.gjt.sp.jedit.textarea.*;
  * @see View#getEditPanes()
  *
  * @author Slava Pestov
- * @version $Id: EditPane.java,v 1.40 2003/03/29 20:29:31 spestov Exp $
+ * @version $Id: EditPane.java,v 1.41 2003/04/14 03:59:21 spestov Exp $
  */
 public class EditPane extends JPanel implements EBComponent
 {
@@ -136,7 +136,6 @@ public class EditPane extends JPanel implements EBComponent
 			public void run()
 			{
 				loadCaretInfo();
-				buffer.checkModTime(EditPane.this);
 			}
 		};
 
