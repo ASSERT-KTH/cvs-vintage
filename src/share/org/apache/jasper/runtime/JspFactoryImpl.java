@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/runtime/JspFactoryImpl.java,v 1.16 2004/02/23 03:23:13 billbarker Exp $
- * $Revision: 1.16 $
- * $Date: 2004/02/23 03:23:13 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/runtime/JspFactoryImpl.java,v 1.17 2004/02/23 06:26:32 billbarker Exp $
+ * $Revision: 1.17 $
+ * $Date: 2004/02/23 06:26:32 $
  *
  *
  *  Copyright 1999-2004 The Apache Software Foundation
@@ -15,7 +15,8 @@
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
  *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the License for the specific language 
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
  */
 
 package org.apache.jasper.runtime;
