@@ -62,7 +62,7 @@ import org.tigris.scarab.util.ScarabException;
  * Scarab.properties file.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ModuleServiceImpl.java,v 1.5 2001/06/29 01:57:26 jmcnally Exp $
+ * @version $Id: ModuleServiceImpl.java,v 1.6 2001/07/13 23:18:14 jon Exp $
  */
 public class ModuleServiceImpl extends BaseService 
                             implements ModuleService
@@ -75,7 +75,7 @@ public class ModuleServiceImpl extends BaseService
     public void init()
         throws InitializationException
     {
-        String moduleEntityClassName = getProperties().getProperty(
+        String moduleEntityClassName = getConfiguration().getString(
             ModuleService.MODULE_SERVICE_CLASS_KEY,
             ModuleService.DEFAULT_MODULE_CLASS);
         try

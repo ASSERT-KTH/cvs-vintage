@@ -64,7 +64,7 @@ import org.tigris.scarab.util.ScarabConstants;
     Action.
     
     @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
-    @version $Id: Confirm.java,v 1.9 2001/07/11 07:33:46 jon Exp $
+    @version $Id: Confirm.java,v 1.10 2001/07/13 23:18:13 jon Exp $
 */
 public class Confirm extends TemplateAction
 {
@@ -89,12 +89,12 @@ public class Confirm extends TemplateAction
             {
                 // NO PROBLEMS! :-)
                 data.setMessage("Your account has been confirmed. Welcome to Scarab!");
-                setTemplate(data, nextTemplate);
+                setTarget(data, nextTemplate);
             }
             else
             {
                 data.setMessage("Your account has not been confirmed. There has been an error.");
-                setTemplate(data, template);
+                setTarget(data, template);
             }
         }
         else // we don't have confirmation! :-(
@@ -110,7 +110,7 @@ public class Confirm extends TemplateAction
             }
         
             data.setMessage("Sorry, that email address and/or confirmation code is invalid.");
-            setTemplate(data, template);
+            setTarget(data, template);
         }
     }
     /**
@@ -118,7 +118,7 @@ public class Confirm extends TemplateAction
     */
     public void doCancel( RunData data, TemplateContext context ) throws Exception
     {
-        setTemplate(data, data.getParameters().getString(
+        setTarget(data, data.getParameters().getString(
                 ScarabConstants.CANCEL_TEMPLATE, "Login.vm"));
     }
     /**

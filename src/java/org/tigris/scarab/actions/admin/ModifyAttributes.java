@@ -73,7 +73,7 @@ import org.tigris.scarab.tools.ScarabRequestTool;
     This class will store the form data for a project modification
         
     @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
-    @version $Id: ModifyAttributes.java,v 1.11 2001/07/11 07:33:46 jon Exp $
+    @version $Id: ModifyAttributes.java,v 1.12 2001/07/13 23:18:13 jon Exp $
 */
 public class ModifyAttributes extends RequireLoginFirstAction
 {
@@ -97,7 +97,7 @@ public class ModifyAttributes extends RequireLoginFirstAction
         id.setRequired(true);
         if ( id.isValid() ) 
         {
-            setTemplate(data, nextTemplate);                
+            setTarget(data, nextTemplate);                
         }
     }
 
@@ -113,7 +113,7 @@ public class ModifyAttributes extends RequireLoginFirstAction
         String nextTemplate = data.getParameters().getString(
             ScarabConstants.NEXT_TEMPLATE, template );
 
-        setTemplate(data, nextTemplate);
+        setTarget(data, nextTemplate);
     }
 
     /**
@@ -259,7 +259,7 @@ public class ModifyAttributes extends RequireLoginFirstAction
         String nextTemplate = data.getParameters().getString(
             ScarabConstants.NEXT_TEMPLATE );
 
-        setTemplate(data, nextTemplate);
+        setTarget(data, nextTemplate);
     }
     
     /**

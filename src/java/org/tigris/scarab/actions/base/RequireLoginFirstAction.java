@@ -61,7 +61,7 @@ import org.tigris.scarab.util.ScarabConstants;
     logged in. That part isn't a priority yet though.
 
     @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
-    @version $Id: RequireLoginFirstAction.java,v 1.4 2001/07/11 07:33:47 jon Exp $    
+    @version $Id: RequireLoginFirstAction.java,v 1.5 2001/07/13 23:18:14 jon Exp $    
 */
 public abstract class RequireLoginFirstAction extends TemplateSecureAction
 {
@@ -74,7 +74,7 @@ public abstract class RequireLoginFirstAction extends TemplateSecureAction
         {
             data.getParameters().add (ScarabConstants.NEXT_TEMPLATE,
                 data.getTemplateInfo().getScreenTemplate());
-            setTemplate(data, "Login.vm");
+            setTarget(data, "Login.vm");
             return false;
         }
         return true;

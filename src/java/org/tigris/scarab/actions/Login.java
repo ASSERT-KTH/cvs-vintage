@@ -71,7 +71,7 @@ import org.tigris.scarab.om.ScarabUser;
     Action.
     
     @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
-    @version $Id: Login.java,v 1.11 2001/07/11 07:33:46 jon Exp $
+    @version $Id: Login.java,v 1.12 2001/07/13 23:18:13 jon Exp $
 */
 public class Login extends TemplateAction
 {
@@ -92,7 +92,7 @@ public class Login extends TemplateAction
             String template = data.getParameters()
                 .getString(ScarabConstants.NEXT_TEMPLATE, 
                 TurbineResources.getString("template.homepage", "Start.vm") );
-            setTemplate(data, template);
+            setTarget(data, template);
         }
         else 
         {
@@ -140,7 +140,7 @@ public class Login extends TemplateAction
                     ((ScarabRequestTool)srt).setUser((ScarabUser)user);
                 }
 
-                setTemplate(data, "Confirm.vm");
+                setTarget(data, "Confirm.vm");
                 throw new TurbineSecurityException("User is not confirmed!");
             }
 
@@ -174,7 +174,7 @@ public class Login extends TemplateAction
     {
         // Retrieve an anonymous user
         data.setUser (TurbineSecurity.getAnonymousUser());
-        setTemplate(data, 
+        setTarget(data, 
             data.getParameters().getString(ScarabConstants.TEMPLATE, "Login.vm"));
         return false;
     }

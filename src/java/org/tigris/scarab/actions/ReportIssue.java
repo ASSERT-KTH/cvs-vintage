@@ -84,7 +84,7 @@ import org.tigris.scarab.tools.ScarabRequestTool;
     This class is responsible for report issue forms.
     ScarabIssueAttributeValue
     @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
-    @version $Id: ReportIssue.java,v 1.25 2001/07/11 07:33:46 jon Exp $
+    @version $Id: ReportIssue.java,v 1.26 2001/07/13 23:18:13 jon Exp $
 */
 public class ReportIssue extends TemplateAction
 {
@@ -203,7 +203,7 @@ public class ReportIssue extends TemplateAction
             template = nextTemplate;
         }
 
-        setTemplate(data, template);
+        setTarget(data, template);
         return beatThreshold;
     }
 
@@ -323,7 +323,7 @@ public class ReportIssue extends TemplateAction
                 String template = data.getParameters()
                     .getString(ScarabConstants.NEXT_TEMPLATE, 
                                "entry,Wizard4.vm");
-                setTemplate(data, template);
+                setTarget(data, template);
                 // !FIXME! this should be uncommented to allow jumping 
                 // directly back to entering another issue, but an easy
                 // update of intake is difficult at the moment
@@ -426,7 +426,7 @@ public class ReportIssue extends TemplateAction
     public void doGotowizard3( RunData data, TemplateContext context )
         throws Exception
     {
-        setTemplate(data, "entry,Wizard3.vm");
+        setTarget(data, "entry,Wizard3.vm");
     }
 
     /**
@@ -436,7 +436,7 @@ public class ReportIssue extends TemplateAction
     {
         String template = TurbineResources
             .getString("template.homepage", "Start.vm");
-        setTemplate(data, template);
+        setTarget(data, template);
     }
     /**
         calls doCancel()

@@ -62,7 +62,7 @@ import org.tigris.scarab.util.ScarabConstants;
     Action.
     
     @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
-    @version $Id: Register.java,v 1.6 2001/07/11 07:33:46 jon Exp $
+    @version $Id: Register.java,v 1.7 2001/07/13 23:18:13 jon Exp $
 */
 public class Register extends TemplateAction
 {
@@ -92,11 +92,11 @@ public class Register extends TemplateAction
             // we don't actually create the user in the system until the next page.
             data.getUser().setTemp(ScarabConstants.SESSION_REGISTER, su);
 
-            setTemplate (data, nextTemplate);
+            setTarget(data, nextTemplate);
         }
         catch (Exception e)
         {
-            setTemplate (data, template );
+            setTarget(data, template );
             data.setMessage (e.getMessage());
             return;
         }        
@@ -106,7 +106,7 @@ public class Register extends TemplateAction
     */
     public void doCancel( RunData data, TemplateContext context ) throws Exception
     {
-        setTemplate(data, data.getParameters().getString(
+        setTarget(data, data.getParameters().getString(
                 ScarabConstants.CANCEL_TEMPLATE, "Login.vm"));
     }
     /**

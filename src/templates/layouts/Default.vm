@@ -28,10 +28,11 @@
        <p class="crumbing"><a href="#">crumbing</a> &gt; <a href="#">item1</a> &gt; item2</p>
        <p><a href="#">primaryfeaturenav</a> | <a href="#">item1</a> | <a href="#">item2</a></p>
       </div>
-$screen_placeholder
+$renderer.render("screens", $data, $template) 
+##$screen_placeholder
      </td>
     </tr>
    </table>
-$navigation.setTemplate("/ScarabBottom.vm")
+$renderer.render("navigations", $data, "/ScarabBottom.vm") 
  </body>
 </html>

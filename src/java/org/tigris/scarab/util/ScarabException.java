@@ -47,7 +47,7 @@ package org.tigris.scarab.util;
  */ 
 
 // Turbine
-import org.apache.turbine.util.TurbineException;
+import org.apache.turbine.TurbineException;
 
 /**
     This class extends TurbineException and does not change its
@@ -55,7 +55,7 @@ import org.apache.turbine.util.TurbineException;
     exceptions
     
     @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
-    @version $Id: ScarabException.java,v 1.1 2001/01/03 06:40:05 jmcnally Exp $
+    @version $Id: ScarabException.java,v 1.2 2001/07/13 23:18:14 jon Exp $
 */
 public class ScarabException extends TurbineException
 {

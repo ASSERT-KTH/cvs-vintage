@@ -76,7 +76,7 @@ import org.tigris.scarab.tools.ScarabRequestTool;
  * action methods on RModuleAttribute table
  *      
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ModifyModuleAttributes.java,v 1.5 2001/07/11 07:33:46 jon Exp $
+ * @version $Id: ModifyModuleAttributes.java,v 1.6 2001/07/13 23:18:13 jon Exp $
  */
 public class ModifyModuleAttributes extends RequireLoginFirstAction
 {
@@ -234,7 +234,7 @@ public class ModifyModuleAttributes extends RequireLoginFirstAction
         String nextTemplate = data.getParameters().getString(
             ScarabConstants.NEXT_TEMPLATE );
 
-        setTemplate(data, nextTemplate);
+        setTarget(data, nextTemplate);
     }
 
     /**

@@ -68,7 +68,7 @@ import org.tigris.scarab.util.ScarabConstants;
         page.
         
     @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
-    @version $Id: RegisterConfirm.java,v 1.12 2001/07/11 07:33:46 jon Exp $
+    @version $Id: RegisterConfirm.java,v 1.13 2001/07/13 23:18:13 jon Exp $
 */
 public class RegisterConfirm extends TemplateAction
 {
@@ -122,11 +122,11 @@ public class RegisterConfirm extends TemplateAction
             ve.send();
 */            
             // set the next template on success
-            setTemplate (data, nextTemplate);
+            setTarget(data, nextTemplate);
         }
         catch (Exception e)
         {
-            setTemplate (data, template);
+            setTarget(data, template);
             data.setMessage (e.getMessage());
             Log.error(e);
             return;
@@ -148,7 +148,7 @@ public class RegisterConfirm extends TemplateAction
                 .getTemp(ScarabConstants.SESSION_REGISTER));
         }
         // set the template to the template that we should be going back to
-        setTemplate(data, data.getParameters().getString(
+        setTarget(data, data.getParameters().getString(
                 ScarabConstants.CANCEL_TEMPLATE, "Register.vm"));
     }
     /**
