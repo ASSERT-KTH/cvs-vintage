@@ -459,7 +459,8 @@ public class Issue
             {
                 for ( int j=assigneeAVs.size()-1; j>=0; j-- ) 
                 {
-                    if ( ((AttributeValue)assigneeAVs.get(j)).getUserId()
+                    AttributeValue av = (AttributeValue)assigneeAVs.get(j);
+                    if ( av != null && av.getUserId()
                          .equals( users[i].getUserId() ) )
                     {
                         users[i] = null;
