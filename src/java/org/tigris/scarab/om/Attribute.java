@@ -76,7 +76,7 @@ import org.tigris.scarab.util.ScarabException;
   * and AttributeOption objects.
   *
   * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
-  * @version $Id: Attribute.java,v 1.34 2001/11/08 02:12:38 elicia Exp $
+  * @version $Id: Attribute.java,v 1.35 2001/11/13 06:18:36 jmcnally Exp $
   */
 public class Attribute 
     extends BaseAttribute
@@ -86,9 +86,6 @@ public class Attribute
     
     private static final String SELECT_ONE = "select-one";
     
-    /** should be cloned to use */
-    //private static Criteria moduleOptionsCriteria;
-
     private List orderedROptionOptionList = null;
     private List orderedAttributeOptionList = null;
     private List parentChildAttributeOptions = null;
@@ -96,18 +93,6 @@ public class Attribute
     private HashMap optionsMap;
     private List attributeOptionsWithDeleted;
     private List attributeOptionsWithoutDeleted;
-    private static HashMap optionAttributeMap = new HashMap();
-
-/*
-    static
-    {
-        moduleOptionsCriteria = new Criteria();
-        moduleOptionsCriteria
-            .addAscendingOrderByColumn(RModuleOptionPeer.PREFERRED_ORDER);
-        moduleOptionsCriteria
-            .addAscendingOrderByColumn(RModuleOptionPeer.DISPLAY_VALUE);
-    }
-*/
 
     /**
      * Must call getInstance()
@@ -312,14 +297,6 @@ public class Attribute
 /****************************************************************************/
 
     /**
-     * For a given Attribute Option id, get the matching Attribute
-     */
-    public static Attribute getAttributeForOption(NumberKey optionId)
-    {
-        return (Attribute)optionAttributeMap.get(optionId);
-    }
-
-    /**
      * Gets one of the options belonging to this attribute. if the 
      * PrimaryKey does not belong to an option in this attribute
      * null is returned.
@@ -505,7 +482,6 @@ public class Attribute
             {
                 AttributeOption option = (AttributeOption)attributeOptionsWithDeleted.get(i);
                 optionsMap.put(option.getOptionId(), option);
-                optionAttributeMap.put(option.getOptionId(), this);
                 if ( !option.getDeleted() ) 
                 {
                     attributeOptionsWithoutDeleted.add(attributeOptionsWithDeleted.get(i));
