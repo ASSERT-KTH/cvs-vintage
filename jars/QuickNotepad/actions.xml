@@ -1,45 +1,27 @@
 <!-- Action definition file for QuickNotepad plugin -->
-<!-- $Id: actions.xml,v 1.3 2001/11/10 18:57:08 jgellene Exp $
+<!-- $Id: actions.xml,v 1.4 2001/11/11 03:02:31 jgellene Exp $
 -->
 
 <!DOCTYPE ACTIONS SYSTEM "actions.dtd">
 
 <ACTIONS>
-    <ACTION NAME="quicknotepad.toggle">
-        <CODE>
-            view.getDockableWindowManager()
-                .toggleDockableWindow(QuickNotepadPlugin.NAME);
-        </CODE>
-        <IS_SELECTED>
-            return view.getDockableWindowManager()
-                .isDockableWindowVisible(QuickNotepadPlugin.NAME);
-        </IS_SELECTED>
-    </ACTION>
-
-    <ACTION NAME="quicknotepad-to-front">
-		<CODE>
-			view.getDockableWindowManager()
-                .getDockable(QuickNotepadPlugin.NAME);
-        </CODE>
-    </ACTION>
-
     <ACTION NAME="quicknotepad.choose-file">
         <CODE>
-          wm = view.getDockableWindowManager()
+          view.getDockableWindowManager()
 		  		   .getDockable(QuickNotepadPlugin.NAME).chooseFile();
         </CODE>
     </ACTION>
 
     <ACTION NAME="quicknotepad.save-file">
         <CODE>
-          wm = view.getDockableWindowManager()
+          view.getDockableWindowManager()
 		  		   .getDockable(QuickNotepadPlugin.NAME).saveFile();
         </CODE>
     </ACTION>
 
     <ACTION NAME="quicknotepad.copy-to-buffer">
         <CODE>
-          wm = view.getDockableWindowManager()
+          view.getDockableWindowManager()
 		  		   .getDockable(QuickNotepadPlugin.NAME).copyToBuffer();
         </CODE>
     </ACTION>
