@@ -27,10 +27,13 @@
     <option value="AdvancedQuery.vm">Select query...</option>
     <option value="AdvancedQuery.vm">&#160;Advanced</option>
     <option value="Search.vm">&#160;Custom</option>
-    <option value="IssueList.vm">&#160;Most Recent</option>
-    #if ($scarabR.CurrentIssueType && $data.User.getDefaultQuery($module, $scarabR.CurrentIssueType))
-    <option value="$data.User.getDefaultQuery($module, $scarabR.CurrentIssueType).QueryId" >&#160;Default Query</option> 
+    #if ($scarabR.CurrentIssueType && $scarabR.CurrentQuery)
+        <option value="IssueList.vm">&#160;Most Recent</option>
     #end
+    #if ($scarabR.CurrentIssueType && $data.User.getDefaultQuery($module, $scarabR.CurrentIssueType))
+        <option value="$data.User.getDefaultQuery($module, $scarabR.CurrentIssueType).QueryId" >&#160;Default Query</option> 
+    #end
+
 #set ($privateQueries = $module.getPrivateQueries($data.User, $issuetype))
 #set ($globalQueries = $module.getGlobalQueries($issuetype))
 
