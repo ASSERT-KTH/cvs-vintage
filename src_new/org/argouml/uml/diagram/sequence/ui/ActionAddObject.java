@@ -1,4 +1,4 @@
-// $Id: ActionAddObject.java,v 1.6 2004/11/01 19:55:26 mvw Exp $
+// $Id: ActionAddObject.java,v 1.7 2004/12/11 16:04:37 bobtarling Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -32,8 +32,6 @@ import org.tigris.gef.base.Editor;
 import org.tigris.gef.base.Globals;
 import org.tigris.gef.graph.GraphModel;
 
-import ru.novosoft.uml.behavior.common_behavior.MObject;
-
 /**
  * Action to add an object to a sequence diagram.
  *
@@ -47,7 +45,7 @@ public class ActionAddObject extends CmdCreateNode {
      * 
      */
     public ActionAddObject() {
-        super(MObject.class, false, "Object");
+        super(ModelFacade.OBJECT, false, "Object");
     }
 
     /**
