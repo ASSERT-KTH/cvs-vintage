@@ -15,6 +15,7 @@
 //All Rights Reserved.
 package org.columba.mail.command;
 
+import java.io.File;
 import java.lang.reflect.Array;
 
 import org.columba.core.command.DefaultCommandReference;
@@ -37,6 +38,8 @@ public class FolderCommandReference extends DefaultCommandReference {
 	private AbstractMessage message;
 	private int markVariant;
 	private String folderName;
+	
+	private File destFile;
 	
 	/**
 	 * Constructor for FolderCommandReference.
@@ -166,6 +169,20 @@ public class FolderCommandReference extends DefaultCommandReference {
 	 */
 	public void setFolderName(String folderName) {
 		this.folderName = folderName;
+	}
+
+	/**
+	 * @return
+	 */
+	public File getDestFile() {
+		return destFile;
+	}
+
+	/**
+	 * @param destFile
+	 */
+	public void setDestFile(File destFile) {
+		this.destFile = destFile;
 	}
 
 }

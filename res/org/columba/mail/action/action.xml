@@ -16,6 +16,7 @@
  <action name="SearchMessage" class="org.columba.mail.gui.action.SearchMessageAction"/> 
  <action name="MailAccount" class="org.columba.mail.gui.action.MailAccountAction"/>
  <action name="MailOptions" class="org.columba.mail.gui.action.MailOptionsAction"/>
+ <action name="ExportDialog" class="org.columba.mail.gui.action.ExportDialogAction"/>
  
  
  <!-- view menu -->
