@@ -388,8 +388,11 @@ class FormAuthHandler extends ServletWrapper {
 	    return;
 	}
 
+	String originalLocation = req.getRequestURI();
+	if (req.getQueryString() != null)
+	    originalLocation += "?" + req.getQueryString();
 	session.setAttribute( "tomcat.auth.originalLocation",
-			      req.getRequestURI());
+			      originalLocation);
 	if( debug > 0 )
 	    log("Redirect1: " + page  + " originalUri=" + req.getRequestURI());
 
