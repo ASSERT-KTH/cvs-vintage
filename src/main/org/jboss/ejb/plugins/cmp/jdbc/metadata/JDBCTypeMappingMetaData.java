@@ -16,8 +16,9 @@ import org.w3c.dom.Element;
  * Imutable class which holds a map between Java Classes and JDBCMappingMetaData.
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- *   @author <a href="sebastien.alborini@m4x.org">Sebastien Alborini</a>
- *   @version $Revision: 1.14 $
+ * @author <a href="sebastien.alborini@m4x.org">Sebastien Alborini</a>
+ * @author <a href="mailto:loubyansky@ua.fm">Alex Loubyansky</a>
+ * @version $Revision: 1.15 $
  */
 public final class JDBCTypeMappingMetaData {
    
@@ -47,6 +48,9 @@ public final class JDBCTypeMappingMetaData {
    private JDBCFunctionMappingMetaData rowLocking = null;
    private JDBCFunctionMappingMetaData fkConstraint = null;
    private JDBCFunctionMappingMetaData pkConstraint = null;
+   private JDBCFunctionMappingMetaData autoIncrement = null;
+
+   private final HashMap entityCommandsByName = new HashMap();
 
    /**
     * Constructs a mapping with the data contained in the type-mapping xml
@@ -89,6 +93,17 @@ public final class JDBCTypeMappingMetaData {
          fkConstraint = new JDBCFunctionMappingMetaData(
                "fk-constraint",
                fkConstraintSQL);
+      }
+
+      // auto increment
+      // WARN: it's optional
+      String autoIncrementSQL = 
+            MetaData.getOptionalChildContent(element, "auto-increment-template");
+      if(autoIncrementSQL != null && !autoIncrementSQL.trim().equals(""))
+      {
+         autoIncrement = new JDBCFunctionMappingMetaData(
+               "auto-increment",
+               autoIncrementSQL);
       }
 
       // get the mappings
@@ -135,6 +150,21 @@ public final class JDBCTypeMappingMetaData {
 
       trueMapping = MetaData.getUniqueChildContent(element, "true-mapping");
       falseMapping = MetaData.getUniqueChildContent(element, "false-mapping");
+
+      // entity commands
+      Element commandsElement = MetaData.getOptionalChild(
+         element, "entity-commands");
+      if(commandsElement != null) {
+         Iterator entityCommands = 
+            MetaData.getChildrenByTagName(commandsElement, "entity-command");
+         while(entityCommands.hasNext()) {
+            Element commandElement = (Element)entityCommands.next();
+            JDBCEntityCommandMetaData entityCommand = 
+                  new JDBCEntityCommandMetaData(commandElement);
+            entityCommandsByName.put( entityCommand.getCommandName(),
+                                      entityCommand);
+         }
+      }
    }
        
    /**
@@ -292,6 +322,14 @@ public final class JDBCTypeMappingMetaData {
       return fkConstraint;
    }
 
+   /**
+    * Returns auto increment SQL template.
+    */
+   public JDBCFunctionMappingMetaData getAutoIncrementTemplate() 
+   {
+      return autoIncrement;
+   }
+
    private void addDefaultFunctionMapping() {
       JDBCFunctionMappingMetaData function;
       
@@ -371,5 +409,13 @@ public final class JDBCTypeMappingMetaData {
                },
                new int[] {0} );
       functionMappings.put(function.getFunctionName().toLowerCase(), function);
+   }
+
+   /**
+    * @param name the name of the command to return
+    * @return the JDBCEntityCommandMetaData for the passed in name
+    */
+   public JDBCEntityCommandMetaData getEntityCommand( String name ) {
+      return (JDBCEntityCommandMetaData) entityCommandsByName.get( name );
    }
 }
