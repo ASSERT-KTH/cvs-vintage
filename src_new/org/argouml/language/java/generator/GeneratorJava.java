@@ -1,4 +1,4 @@
-// $Id: GeneratorJava.java,v 1.81 2003/11/10 12:14:20 jhraigniac Exp $
+// $Id: GeneratorJava.java,v 1.82 2003/11/11 18:14:14 mkl Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: GeneratorJava.java
 // Classes: GeneratorJava
 // Original Author:
-// $Id: GeneratorJava.java,v 1.81 2003/11/10 12:14:20 jhraigniac Exp $
+// $Id: GeneratorJava.java,v 1.82 2003/11/11 18:14:14 mkl Exp $
 
 // 12 Apr 2002: Jeremy Bennett (mail@jeremybennett.com). Extended to support
 // extension points.
@@ -588,6 +588,7 @@ public class GeneratorJava
         // nsuml: realizations!
         if (org.argouml.model.ModelFacade.isAClass(cls)) {
             String interfaces = generateSpecification((MClass) cls);
+	    System.out.println("Specification: " + interfaces);
             if (!interfaces.equals("")) {
                 sb.append(" ").append("implements ").append(interfaces);
             }
@@ -1508,6 +1509,7 @@ public class GeneratorJava
             ModelFacade.getSpecifications(cls);
         if (realizations == null)
             return "";
+	System.out.println("realizations: " + realizations.size());
         StringBuffer sb = new StringBuffer(80);
         Iterator clsEnum = realizations.iterator();
         while (clsEnum.hasNext()) {
@@ -1742,11 +1744,13 @@ public class GeneratorJava
 
     public String generateAction(Object m) {
         // return m.getName();
-        Object script = ModelFacade.getScript(m);
-        if (m != null
-            && (script != null)
-            && (ModelFacade.getBody(script) != null))
-            return ModelFacade.getBody(script).toString();
+        
+        if (m != null) {
+            Object script = ModelFacade.getScript(m);
+            if ((script != null)
+            && (ModelFacade.getBody(script) != null))                
+                return ModelFacade.getBody(script).toString();
+        }
         return "";
     }
 
