@@ -27,7 +27,7 @@
  *
  * This macro requires version 3.2 (or greater) of jEdit.
  *
- * $Id: Toggle_Line_Comment.bsh,v 1.4 2001/12/21 07:02:13 spestov Exp $
+ * $Id: Toggle_Line_Comment.bsh,v 1.5 2002/02/26 01:27:36 spestov Exp $
  *
  * Checked for jEdit 4.0 API
  *
@@ -109,7 +109,7 @@ void toggleLineComment()
 		Macros.error(view, "Could not create regexp for locating comments");
 		return;
 	}
-	buffer.beginCompoundEdit();
+
 	selections = textArea.getSelection();
 	if(selections.length == 0)
 	{
