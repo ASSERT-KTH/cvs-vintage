@@ -619,7 +619,8 @@ final class JasperLiaison {
 
 	    // May be called from include, we need to set the context class loader
 	    // for jaxp1.1 to work using the container class loader
-	    ClassLoader savedContextCL= containerCCL( req.getClass().getClassLoader());
+	    ClassLoader savedContextCL= containerCCL( ctx.getContextManager()
+						      .getContainerLoader() );
 	    
 	    try {
 		Options options=new JasperOptionsImpl(args); 
