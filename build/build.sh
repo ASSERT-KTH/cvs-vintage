@@ -10,7 +10,7 @@ if test -z "${JAVA_HOME}" ; then
     exit
 fi
 
-CLASSPATH=""
+CLASSPATH="."
 
 if [ -f ${JAVA_HOME}/lib/tools.jar ] ; then
     CLASSPATH=${JAVA_HOME}/lib/tools.jar
@@ -43,10 +43,14 @@ echo "Classpath:"
 echo "$CLASSPATH"
 echo ""
 
+# deal with the dtd files specially because of bugs in Unix JDK 1.3 JVM's
+rm -rf ./org
+. cpdtd.sh
+
 BUILDFILE=build.xml
 
 ${JAVA_HOME}/bin/java -classpath ${CLASSPATH} org.apache.tools.ant.Main \
                       -buildfile ${BUILDFILE} "$@"
 
-
-
+# clean up after cpdtd.sh
+rm -rf ./org
