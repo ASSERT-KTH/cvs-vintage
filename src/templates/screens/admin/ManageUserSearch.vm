@@ -1,7 +1,7 @@
 #**
 @author <a href="mailto:dr@bitonic.com">Douglas B. Robertson</a>
 @author <a href="mailto:jon@collab.net">Jon Stevens</a>
-@version $Id: ManageUserSearch.vm,v 1.8 2002/01/14 21:05:55 jon Exp $
+@version $Id: ManageUserSearch.vm,v 1.9 2002/01/14 21:11:50 dlr Exp $
 *#
 
 $page.setTitle("User Search")
@@ -38,19 +38,19 @@ $page.setTitle("User Search")
 <tr>
 <td>
 <select name="searchField">
- <option value="FIRST_NAME" #if ($data.Parameters.getString("searchField").equals("FIRST_NAME")) selected #end>First Name</option>
- <option value="LAST_NAME" #if ($data.Parameters.getString("searchField").equals("LAST_NAME")) selected #end>Last Name</option>
- <option value="EMAIL" #if ($data.Parameters.getString("searchField").equals("EMAIL")) selected #end>E-mail Address</option>
- <option value="LOGIN_NAME" #if ($data.Parameters.getString("searchField").equals("LOGIN_NAME")) selected #end>Login Name</option>
+ <option value="FIRST_NAME" #if ($data.Parameters.getString("searchField").equals("FIRST_NAME")) selected="selected" #end>First Name</option>
+ <option value="LAST_NAME" #if ($data.Parameters.getString("searchField").equals("LAST_NAME")) selected="selected" #end>Last Name</option>
+ <option value="EMAIL" #if ($data.Parameters.getString("searchField").equals("EMAIL")) selected="selected" #end>E-mail Address</option>
+ <option value="LOGIN_NAME" #if ($data.Parameters.getString("searchField").equals("LOGIN_NAME")) selected="selected" #end>Login Name</option>
 </select>
 <input type="text" name="searchCriteria" value="$formSearchCriteria" />
 </td>
 <td>
 Order by: <select name="orderbyField">
- <option value="FIRST_NAME" #if ($data.Parameters.getString("orderbyField").equals("FIRST_NAME")) selected #end>First Name</option>
- <option value="LAST_NAME" #if ($data.Parameters.getString("orderbyField").equals("LAST_NAME")) selected #end>Last Name</option>
- <option value="EMAIL" #if ($data.Parameters.getString("orderbyField").equals("EMAIL")) selected #end>E-mail Address</option>
- <option value="LOGIN_NAME" #if ($data.Parameters.getString("orderbyField").equals("LOGIN_NAME")) selected #end>Login Name</option>
+ <option value="FIRST_NAME" #if ($data.Parameters.getString("orderbyField").equals("FIRST_NAME")) selected="selected" #end>First Name</option>
+ <option value="LAST_NAME" #if ($data.Parameters.getString("orderbyField").equals("LAST_NAME")) selected="selected" #end>Last Name</option>
+ <option value="EMAIL" #if ($data.Parameters.getString("orderbyField").equals("EMAIL")) selected="selected" #end>E-mail Address</option>
+ <option value="LOGIN_NAME" #if ($data.Parameters.getString("orderbyField").equals("LOGIN_NAME")) selected="selected" #end>Login Name</option>
 </select>
 <select name="ascOrDesc">
   <option value="ASC">Ascending</option>
