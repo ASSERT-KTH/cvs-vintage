@@ -19,7 +19,7 @@ import org.w3c.dom.Element;
  * It loads its data from standardjbosscmp-jdbc.xml and jbosscmp-jdbc.xml
  *
  * @author <a href="mailto:on@ibis.odessa.ua">Oleg Nitz</a>
- * @version $Revision: 1.4 $
+ * @version $Revision: 1.5 $
  */
 public final class JDBCReadAheadMetaData {
 
@@ -31,151 +31,131 @@ public final class JDBCReadAheadMetaData {
    /**
     * Don't read ahead.
     */
-   public static final byte NONE = 0;
+   private static final byte NONE = 0;
 
    /**
-    * Read ahead when some entity is being loaded (lazily, good for all queries).
+    * Read ahead when some entity is being loaded (lazily, good for 
+    * all queries).
     */
-   public static final byte ON_LOAD = 1;
+   private static final byte ON_LOAD = 1;
 
    /**
-    * Read ahead during "find" (not lazily, the best for queries with small result set).
+    * Read ahead during "find" (not lazily, the best for queries with 
+    * small result set).
     */
-   public static final byte ON_FIND = 2;
+   private static final byte ON_FIND = 2;
 
 
-   private static final List STRATEGIES = Arrays.asList(new String[] {"none", "on-load", "on-find"});
-
-   public static final byte DEFAULT_STRATEGY = ON_LOAD;
-
-   public static final int DEFAULT_LIMIT = 255;
-
-   public static final int DEFAULT_CACHE_SIZE = 100;
+   private static final List STRATEGIES = 
+         Arrays.asList(new String[] {"none", "on-load", "on-find"});
 
    /**
-    * The strategy of reading ahead, one of {@link #NONE}, {@link #ON_LOAD}, {@link #ON_FIND}.
+    * The strategy of reading ahead, one of 
+    * {@link #NONE}, {@link #ON_LOAD}, {@link #ON_FIND}.
     */
    private final byte strategy;
 
    /**
-    * The limit of the read ahead buffer
+    * The page size of the read ahead buffer
     */
-   private final int limit;
+   private final int pageSize;
 
    /**
-    * The size of the cache of queries
+    * The name of the load group to eager load.
     */
-   private final int cacheSize;
+   private final String eagerLoadGroup;
 
    /**
     * Constructs default read ahead meta data: no read ahead.
     */
    private JDBCReadAheadMetaData() {
-      strategy = DEFAULT_STRATEGY;
-      limit = DEFAULT_LIMIT;
-      cacheSize = DEFAULT_CACHE_SIZE;
+      strategy = ON_LOAD;
+      pageSize = 255;
+      eagerLoadGroup = "*";
    }
 
    /**
-    * Constructs read ahead meta data with the data contained in the cmp-field xml
-    * element from a jbosscmp-jdbc xml file. Optional values of the xml element that
-    * are not present are instead loaded from the defalutValues parameter.
+    * Constructs read ahead meta data with the data contained in the read-ahead
+    * xml element from a jbosscmp-jdbc xml file. Optional values of the xml 
+    * element that are not present are instead loaded from the defalutValues
+    * parameter.
     *
-    * @param element the xml Element which contains the metadata about this field
-    * @param defaultValues the JDBCCMPFieldMetaData which contains the values
-    * for optional elements of the element
-    * @throws DeploymentException if data in the entity is inconsistent with field type
+    * @param element the xml Element which contains the read-ahead metadata
+    * @throws DeploymentException if the xml element is invalid
     */
-   public JDBCReadAheadMetaData(Element element) throws DeploymentException {
-      // "true"/"false" content is JAWS style, we support it.
-      String trueOrFalse = MetaData.getElementContent(element);
-      if (trueOrFalse.equals("true")) {
-         strategy = DEFAULT_STRATEGY;
-         limit = DEFAULT_LIMIT;
-         cacheSize = DEFAULT_CACHE_SIZE;
-      } else if (trueOrFalse.equals("false")) {
-         strategy = NONE;
-         limit = DEFAULT_LIMIT;
-         cacheSize = DEFAULT_CACHE_SIZE;
+   public JDBCReadAheadMetaData(
+         Element element,
+         JDBCReadAheadMetaData defaultValue) throws DeploymentException {
+
+      // Strategy
+      String strategyStr = MetaData.getUniqueChildContent(element, "strategy");
+      strategy = (byte) STRATEGIES.indexOf(strategyStr);
+      if(strategy < 0) {
+         throw new DeploymentException("Unknown read ahead strategy '" + 
+               strategyStr + "'.");
+      }
+
+      // page-size
+      String pageSizeStr = 
+            MetaData.getOptionalChildContent(element, "page-size");
+      if(pageSizeStr != null) {
+         try {
+            pageSize = Integer.parseInt(pageSizeStr);
+         } catch (NumberFormatException ex) {
+            throw new DeploymentException("Wrong number format of read " +
+                  "ahead page-size '" + pageSizeStr + "': " + ex);
+         }
+         if(pageSize < 0) {
+            throw new DeploymentException("Negative value for read ahead " +
+                  "page-size '" + pageSizeStr + "'.");
+         }
       } else {
-         // This is new style: strategy and limit sub-elements
+         pageSize = defaultValue.getPageSize();
+      }
 
-         // Strategy
-         String strategyStr = MetaData.getOptionalChildContent(element, "strategy");
-         if (strategyStr != null) {
-            strategy = (byte) STRATEGIES.indexOf(strategyStr);
-            if (strategy < 0) {
-               throw new DeploymentException("Unknown read ahead strategy '" + strategyStr + "'.");
-            }
-         } else {
-            strategy = DEFAULT_STRATEGY;
-         }
-
-         // Limit
-         String limitStr = MetaData.getOptionalChildContent(element, "limit");
-         if (limitStr != null) {
-            try {
-               limit = Integer.parseInt(limitStr);
-            } catch (NumberFormatException ex) {
-               throw new DeploymentException("Wrong number format of read ahead limit '" + limitStr + "': " + ex);
-            }
-            if (limit < 0) {
-               throw new DeploymentException("Negative value for read ahead limit '" + limitStr + "'.");
-            }
-         } else {
-            limit = DEFAULT_LIMIT;
-         }
-
-         // Size of the cache of queries
-         String cacheSizeStr = MetaData.getOptionalChildContent(element, "cache-size");
-         if (cacheSizeStr != null) {
-            try {
-               cacheSize = Integer.parseInt(cacheSizeStr);
-            } catch (NumberFormatException ex) {
-               throw new DeploymentException("Wrong number format of read ahead cache size '" + cacheSizeStr + "': " + ex);
-            }
-            if (cacheSize < 2) {
-               throw new DeploymentException("The ahead cache size is '" + cacheSizeStr + "', should be >= 2.");
-            }
-         } else {
-            cacheSize = DEFAULT_CACHE_SIZE;
-         }
+      // eager-load-group
+      Element eagerLoadGroupElement = 
+            MetaData.getOptionalChild(element, "eager-load-group");
+      if(eagerLoadGroupElement != null) {
+         eagerLoadGroup = MetaData.getElementContent(eagerLoadGroupElement);
+      } else {
+         eagerLoadGroup = defaultValue.getEagerLoadGroup();
       }
    }
 
    /**
-    * Convenience method, tells whether read ahead is used (i.e. whether the strategy is not NONE).
+    * Is read ahead strategy is none.
     */
-   public boolean isUsed() {
-      return (strategy != NONE);
+   public boolean isNone() {
+      return (strategy == NONE);
    }
 
    /**
-    * Convenience method, tells whether read ahead on load is used (i.e. whether the strategy is not ON_LOAD).
+    * Is the read ahead stratey on-load
     */
-   public boolean isOnLoadUsed() {
+   public boolean isOnLoad() {
       return (strategy == ON_LOAD);
    }
 
    /**
-    * @returns Read ahead strategy, one of {@link #NONE}, {@link #ON_LOAD}, {@link #ON_FIND}.
+    * Is the read ahead stratey on-find
     */
-   public byte getStrategy() {
-      return strategy;
+   public boolean isOnFind() {
+      return (strategy == ON_FIND);
    }
 
    /**
-    * @returns Limit for read ahead buffer, 0 means "infinite".
+    * Gets the read ahead page size.
     */
-   public int getLimit() {
-      return limit;
+   public int getPageSize() {
+      return pageSize;
    }
 
    /**
-    * @returns Size of the cache of queries.
+    * Gets the eager load group.
     */
-   public int getCacheSize() {
-      return cacheSize;
+   public String getEagerLoadGroup() {
+      return eagerLoadGroup;
    }
 
    /**
@@ -183,6 +163,9 @@ public final class JDBCReadAheadMetaData {
     * @return a string representation of the object
     */
    public String toString() {
-      return "[JDBCReadAheadMetaData : strategy=" + STRATEGIES.get(strategy) + ", limit=" + limit + "]";
+      return "[JDBCReadAheadMetaData :"+
+            " strategy=" + STRATEGIES.get(strategy) +
+            ", pageSize=" + pageSize +
+            ", eagerLoadGroup=" + eagerLoadGroup + "]";
    }
 }
