@@ -6,15 +6,18 @@
  */
 package org.jboss.util;
 
+import java.lang.Object;
+
 /**
  *   <description> 
  *      
  *   @see <related>
  *   @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>.
- *   @version $Revision: 1.3 $
+ *   @author <a href="mailto:hiram.chirino@jboss.org">Hiram Chirino</a>.
+ *   @version $Revision: 1.4 $
  */
-public interface InfoMBean
-{
-   // Public --------------------------------------------------------
+public interface InfoMBean {
+	public String listMemoryUsage();
+	public String listSystemInfo();
+	public String listThreadDump();
 }
-
