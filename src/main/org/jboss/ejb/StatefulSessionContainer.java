@@ -35,7 +35,14 @@ import org.jboss.logging.Logger;
  *   @see <related>
  *   @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  *   @author <a href="mailto:docodan@mvcsoft.com">Daniel OConnor</a>
- *   @version $Revision: 1.28 $
+ *   @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
+ *   @version $Revision: 1.29 $
+ *
+ *   <p><b>Revisions</b>
+ *   <p><b>20010704</b>
+ *   <ul>
+ *   <li>- Throw an exception when removing a bean in transaction (in remove)? (I dissagree)
+ *   </ul>
  */
 public class StatefulSessionContainer
    extends Container
@@ -345,6 +352,13 @@ public class StatefulSessionContainer
    public void remove(MethodInvocation mi)
       throws java.rmi.RemoteException, RemoveException
    {
+		
+/*	
+   	// 7.6 EJB2.0, it is illegal to remove a bean while in a transaction
+		if (mi.getEnterpriseContext().getTransaction() != null)
+		   throw new RemoveException("StatefulSession bean in transaction, cannot remove (EJB2.0 7.6)");
+*/	
+		
       // Remove from storage 
       getPersistenceManager().removeSession((StatefulSessionEnterpriseContext)mi.getEnterpriseContext());
       
@@ -353,7 +367,8 @@ public class StatefulSessionContainer
    }
    
    /**
-   *  MF FIXME these are implemented on the client
+   *  While the following methods are implemented in the client in the case of JRMP
+	*   we would need to implement them to fully support other transport protocols
    */
   
    public Handle getHandle(MethodInvocation mi)
@@ -614,7 +629,8 @@ public class StatefulSessionContainer
          throws Exception
       {
          //wire the transaction on the context, this is how the instance remember the tx
-          if (mi.getEnterpriseContext().getTransaction() == null) mi.getEnterpriseContext().setTransaction(mi.getTransaction());
+         // Unlike Entity beans we can't do that in the previous interceptors (ordering)
+			 if (mi.getEnterpriseContext().getTransaction() == null) mi.getEnterpriseContext().setTransaction(mi.getTransaction());
           
          // Get method
          Method m = (Method)beanMapping.get(mi.getMethod());
