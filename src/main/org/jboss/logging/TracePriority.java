@@ -1,9 +1,10 @@
 /*
-* JBoss, the OpenSource J2EE webOS
-*
-* Distributable under LGPL license.
-* See terms of license at gnu.org.
-*/
+ * JBoss, the OpenSource J2EE webOS
+ *
+ * Distributable under LGPL license.
+ * See terms of license at gnu.org.
+ */
+
 package org.jboss.logging;
 
 import org.apache.log4j.Priority;
@@ -18,17 +19,25 @@ import org.apache.log4j.Priority;
  * @see org.apache.log4j.Priority
  *
  * @author  <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>
- * @version $Revision: 1.2 $
+ * @version $Revision: 1.3 $
  */
 public class TracePriority 
    extends Priority
 {
    /** The integer representation of the priority, (Priority.DEBUG_INT - 100) */
    public static final int TRACE_INT = Priority.DEBUG_INT - 100;
+
+   /** The string name of the trace priority. */
+   public static String TRACE_STR = "TRACE";
    
    /** The TRACE priority object singleton */
-   public static final TracePriority TRACE = new TracePriority(TRACE_INT, "TRACE");
-  
+   public static final TracePriority TRACE = new TracePriority(TRACE_INT, TRACE_STR, 7);
+
+   protected TracePriority(int level, String strLevel, int syslogEquiv)
+   {
+      super(level, strLevel, syslogEquiv);
+   }
+   
    /** 
     * Convert an integer passed as argument to a priority. If the conversion
     * fails, then this method returns the specified default.
@@ -36,15 +45,27 @@ public class TracePriority
     */
    public static Priority toPriority(String name, Priority defaultPriority)
    {
-      if( name == null )
+      if (name == null)
+         return defaultPriority;
+
+      String upper = name.toUpperCase();
+      if (upper.equals(TRACE_STR)) {
          return TRACE;
-      
-      Priority p = TRACE;
-      if( name.charAt(0) != 'T' )
-         p = Priority.toPriority(name, defaultPriority);
-      return p;
+      }
+
+      return Priority.toPriority(name, defaultPriority);
    }
 
+   /** 
+    * Convert an integer passed as argument to a priority.
+    * 
+    * @return the Priority object for name if one exists
+    */
+   public static Priority toPriority(String name)
+   {
+      return toPriority(name, TRACE);
+   }
+   
    /** 
     * Convert an integer passed as argument to a priority. If the conversion
     * fails, then this method returns the specified default.
@@ -58,10 +79,5 @@ public class TracePriority
       else
          p = Priority.toPriority(i);
       return p;
-   }
-
-   protected TracePriority(int level, String strLevel)
-   {
-      super(level, strLevel, 7);
    }
 }
