@@ -30,7 +30,7 @@ import org.jboss.deployment.DeploymentException;
  * this class is to flatten the JDBCValueClassMetaData into columns.
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.14 $
+ * @version $Revision: 1.15 $
  */
 public class JDBCTypeFactory
 {
@@ -285,11 +285,11 @@ public class JDBCTypeFactory
       ArrayList properties = new ArrayList();
 
       // add the properties each property to the list
-      Iterator iterator = valueClass.getProperties().iterator();
-      while(iterator.hasNext())
+      java.util.List valueClassProperties = valueClass.getProperties();
+      for (int i = 0; i < valueClassProperties.size(); ++i)
       {
          JDBCValuePropertyMetaData propertyMetaData =
-            (JDBCValuePropertyMetaData)iterator.next();
+            (JDBCValuePropertyMetaData)valueClassProperties.get(i);
          properties.addAll(createComplexProperties(propertyMetaData,
             valueClassesByType, propertyStack));
       }

@@ -63,9 +63,9 @@ public class QueryParameter
    {
       List parameters = new ArrayList();
       List pkFields = entity.getPrimaryKeyFields();
-      for(Iterator iter = pkFields.iterator(); iter.hasNext();)
+      for(int i = 0; i < pkFields.size(); ++i)
       {
-         JDBCCMPFieldBridge pkField = (JDBCCMPFieldBridge)iter.next();
+         JDBCCMPFieldBridge pkField = (JDBCCMPFieldBridge)pkFields.get(i);
 
          JDBCType type = pkField.getJDBCType();
          if(type instanceof JDBCTypeComplex)
@@ -101,9 +101,9 @@ public class QueryParameter
    {
       List parameters = new ArrayList();
       List pkFields = entity.getPrimaryKeyFields();
-      for(Iterator iter = pkFields.iterator(); iter.hasNext();)
+      for(int i = 0; i < pkFields.size(); ++i)
       {
-         JDBCCMPFieldBridge pkField = (JDBCCMPFieldBridge)iter.next();
+         JDBCCMPFieldBridge pkField = (JDBCCMPFieldBridge)pkFields.get(i);
 
          JDBCType type = pkField.getJDBCType();
          if(type instanceof JDBCTypeComplex)
