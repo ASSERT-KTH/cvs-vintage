@@ -12,12 +12,15 @@
 package org.eclipse.ui.internal.keys;
 
 import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.ui.keys.CharacterKey;
+import org.eclipse.ui.keys.KeySequence;
 import org.eclipse.ui.keys.KeyStroke;
 import org.eclipse.ui.keys.ModifierKey;
 import org.eclipse.ui.keys.NaturalKey;
@@ -44,25 +47,25 @@ public final class KeySupport {
 		return modifiers + key;
 	}
 
-    public static KeyStroke convertAcceleratorToKeyStroke(int key) {
+    public static KeyStroke convertAcceleratorToKeyStroke(int accelerator) {
         final SortedSet modifierKeys = new TreeSet();
         NaturalKey naturalKey = null;
 
-        if ((key & SWT.ALT) != 0)
+        if ((accelerator & SWT.ALT) != 0)
             modifierKeys.add(ModifierKey.ALT);
 
-        if ((key & SWT.COMMAND) != 0)
+        if ((accelerator & SWT.COMMAND) != 0)
             modifierKeys.add(ModifierKey.COMMAND);
 
-        if ((key & SWT.CTRL) != 0)
+        if ((accelerator & SWT.CTRL) != 0)
             modifierKeys.add(ModifierKey.CTRL);
 
-        if ((key & SWT.SHIFT) != 0)
+        if ((accelerator & SWT.SHIFT) != 0)
             modifierKeys.add(ModifierKey.SHIFT);
 
-		key &= SWT.KEY_MASK;
+		accelerator &= SWT.KEY_MASK;
 
-		switch (key) {
+		switch (accelerator) {
             case SWT.ARROW_DOWN :
                 naturalKey = SpecialKey.ARROW_DOWN;
                 break;
@@ -127,7 +130,7 @@ public final class KeySupport {
                 naturalKey = SpecialKey.PAGE_UP;
                 break;
             default:
-            	naturalKey = CharacterKey.getInstance((char) (key & 0xFFFF));
+            	naturalKey = CharacterKey.getInstance((char) (accelerator & 0xFFFF));
         }
 
         return KeyStroke.getInstance(modifierKeys, naturalKey);
@@ -137,75 +140,111 @@ public final class KeySupport {
     	if (keyStroke == null)
     		throw new NullPointerException();
     	
-        int key = 0;
+        int accelerator = 0;
         final Iterator iterator = keyStroke.getModifierKeys().iterator();
         
         while (iterator.hasNext()) {
             final ModifierKey modifierKey = (ModifierKey) iterator.next();
             
             if (modifierKey == ModifierKey.ALT)
-                key |= SWT.ALT;
+                accelerator |= SWT.ALT;
 			else if (modifierKey == ModifierKey.COMMAND)
-                key |= SWT.COMMAND;
+                accelerator |= SWT.COMMAND;
 			else if (modifierKey == ModifierKey.CTRL)
-                key |= SWT.CTRL;
+                accelerator |= SWT.CTRL;
             else if (modifierKey == ModifierKey.SHIFT)
-                key |= SWT.SHIFT;
+                accelerator |= SWT.SHIFT;
         }
 
         final NaturalKey naturalKey = keyStroke.getNaturalKey();
         
         if (naturalKey instanceof CharacterKey)
-            key |= ((CharacterKey) naturalKey).getCharacter();
+            accelerator |= ((CharacterKey) naturalKey).getCharacter();
 		else if (naturalKey instanceof SpecialKey) {
             final SpecialKey specialKey = (SpecialKey) naturalKey;
             
             if (specialKey == SpecialKey.ARROW_DOWN)
-                key |= SWT.ARROW_DOWN;
+                accelerator |= SWT.ARROW_DOWN;
             else if (specialKey == SpecialKey.ARROW_LEFT)
-                key |= SWT.ARROW_LEFT;
+                accelerator |= SWT.ARROW_LEFT;
             else if (specialKey == SpecialKey.ARROW_RIGHT)
-                key |= SWT.ARROW_RIGHT;
+                accelerator |= SWT.ARROW_RIGHT;
             else if (specialKey == SpecialKey.ARROW_UP)
-                key |= SWT.ARROW_UP;
+                accelerator |= SWT.ARROW_UP;
             else if (specialKey == SpecialKey.END)
-                key |= SWT.END;
+                accelerator |= SWT.END;
             else if (specialKey == SpecialKey.F1)
-                key |= SWT.F1;
+                accelerator |= SWT.F1;
             else if (specialKey == SpecialKey.F10)
-                key |= SWT.F10;
+                accelerator |= SWT.F10;
             else if (specialKey == SpecialKey.F11)
-                key |= SWT.F11;
+                accelerator |= SWT.F11;
             else if (specialKey == SpecialKey.F12)
-                key |= SWT.F12;
+                accelerator |= SWT.F12;
             else if (specialKey == SpecialKey.F2)
-                key |= SWT.F2;
+                accelerator |= SWT.F2;
             else if (specialKey == SpecialKey.F3)
-                key |= SWT.F3;
+                accelerator |= SWT.F3;
             else if (specialKey == SpecialKey.F4)
-                key |= SWT.F4;
+                accelerator |= SWT.F4;
             else if (specialKey == SpecialKey.F5)
-                key |= SWT.F5;
+                accelerator |= SWT.F5;
             else if (specialKey == SpecialKey.F6)
-                key |= SWT.F6;
+                accelerator |= SWT.F6;
             else if (specialKey == SpecialKey.F7)
-                key |= SWT.F7;
+                accelerator |= SWT.F7;
             else if (specialKey == SpecialKey.F8)
-                key |= SWT.F8;
+                accelerator |= SWT.F8;
             else if (specialKey == SpecialKey.F9)
-                key |= SWT.F9;
+                accelerator |= SWT.F9;
             else if (specialKey == SpecialKey.HOME)
-                key |= SWT.HOME;
+                accelerator |= SWT.HOME;
             else if (specialKey == SpecialKey.INSERT)
-                key |= SWT.INSERT;
+                accelerator |= SWT.INSERT;
             else if (specialKey == SpecialKey.PAGE_DOWN)
-                key |= SWT.PAGE_DOWN;
+                accelerator |= SWT.PAGE_DOWN;
             else if (specialKey == SpecialKey.PAGE_UP)
-                key |= SWT.PAGE_UP;
+                accelerator |= SWT.PAGE_UP;
         }
 
-        return key;
+        return accelerator;
     }
+
+	public static String formatCarbon(KeySequence keySequence) {
+		StringBuffer stringBuffer = new StringBuffer();
+		List keyStrokes = keySequence.getKeyStrokes();
+
+		for (int i = 0; i < keyStrokes.size(); i++) {
+			if (i >= 1)
+				stringBuffer.append(' ');
+
+			KeyStroke keyStroke = (KeyStroke) keyStrokes.get(i);
+			stringBuffer.append(formatCarbon(keyStroke));
+		}
+
+		return stringBuffer.toString();
+	}
+
+	public static String formatCarbon(KeyStroke keyStroke) {
+		StringBuffer stringBuffer = new StringBuffer();
+		Set modifierKeys = keyStroke.getModifierKeys();
+
+		if (modifierKeys.contains(ModifierKey.SHIFT))
+			stringBuffer.append('\u21E7');
+
+		if (modifierKeys.contains(ModifierKey.CTRL))
+			stringBuffer.append('\u2303');
+
+		if (modifierKeys.contains(ModifierKey.ALT))
+			stringBuffer.append('\u2325');
+
+		if (modifierKeys.contains(ModifierKey.COMMAND))
+			stringBuffer.append('\u2318');
+
+		keyStroke = KeyStroke.getInstance(keyStroke.getNaturalKey());
+		stringBuffer.append(keyStroke.format());
+		return stringBuffer.toString();
+	}
 
     private KeySupport() {
     }
