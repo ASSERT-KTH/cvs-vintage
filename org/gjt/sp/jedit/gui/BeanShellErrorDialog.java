@@ -26,8 +26,6 @@ package org.gjt.sp.jedit.gui;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
-import java.io.PrintWriter;
-import java.io.StringWriter;
 import org.gjt.sp.jedit.*;
 //}}}
 
@@ -35,16 +33,13 @@ import org.gjt.sp.jedit.*;
  * A dialog box showing a stack trace. Perhaps badly named, since any error, not
  * just a BeanShell error can be shown.
  * @author Slava Pestov
- * @version $Id: BeanShellErrorDialog.java,v 1.6 2003/10/10 23:46:24 spestov Exp $
+ * @version $Id: BeanShellErrorDialog.java,v 1.7 2004/04/05 03:11:47 spestov Exp $
  */
 public class BeanShellErrorDialog extends TextAreaDialog
 {
 	public BeanShellErrorDialog(Frame frame, Throwable t)
 	{
-		super(frame,jEdit.getProperty("beanshell-error.title"),
-			jEdit.getProperty("beanshell-error.message"),
-			UIManager.getIcon("OptionPane.errorIcon"),
-			MiscUtilities.throwableToString(t));
+		super(frame,"beanshell-error",t);
 	}
 
 	// for ABI compatibility
