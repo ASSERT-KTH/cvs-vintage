@@ -114,12 +114,9 @@ public final class Context {
     */
     public static final String ATTRIB_PROTECTION_DOMAIN=
 	"org.apache.tomcat.protection_domain";
-
-    /** Workdir - a place where the servlets are allowed to write
-     */
-    public static final String ATTRIB_WORKDIR="org.apache.tomcat.workdir";
-    public static final String ATTRIB_WORKDIR1 = "javax.servlet.context.tempdir";
-    public static final String ATTRIB_WORKDIR2 = "sun.servlet.workdir";
+    
+    // public static final String ATTRIB_WORKDIR1 = "javax.servlet.context.tempdir";
+    // public static final String ATTRIB_WORKDIR2 = "sun.servlet.workdir";
     
 
     /** This attribute will return the real context (
@@ -261,6 +258,7 @@ public final class Context {
     private Hashtable envEntryTypes=new Hashtable();
     private Hashtable envEntryValues=new Hashtable();
 
+    private int attributeInfo;
     // -------------------- Constructor --------------------
     
     public Context() {
@@ -366,49 +364,6 @@ public final class Context {
 	}
     }
 
-    /** getAttribute( "org.apache.tomcat.*" ) may return something
-	special
-    */
-    private Object getSpecialAttribute( String name ) {
-	// deprecated - invalid and wrong prefix
-	if( name.equals( ATTRIB_WORKDIR1 ) ) 
-	    return getWorkDir();
-	if( name.equals( ATTRIB_WORKDIR2 ) ) 
-	    return getWorkDir();
-
-	// this saves 5 compare for non-special attributes
-	if (name.startsWith( ATTRIB_PREFIX )) {
-	    // XXX XXX XXX XXX Security - servlets may get too much access !!!
-	    // right now we don't check because we need JspServlet to
-	    // be able to access classloader and classpath
-	    if( name.equals( ATTRIB_WORKDIR ) ) 
-		return getWorkDir();
-	    
-	    if (name.equals("org.apache.tomcat.jsp_classpath")) {
-		String separator = System.getProperty("path.separator", ":");
-		StringBuffer cpath=new StringBuffer();
-		URL classPaths[]=getClassPath();
-		for(int i=0; i< classPaths.length ; i++ ) {
-		    URL cp = classPaths[i];
-		    if (cpath.length()>0) cpath.append( separator );
-		    cpath.append(cp.getFile());
-		}
-		if( debug>9 ) log("Getting classpath " + cpath);
-		return cpath.toString();
-	    }
-	    if(name.equals("org.apache.tomcat.classloader")) {
-		return this.getClassLoader();
-	    }
-	    if(name.equals(ATTRIB_REAL_CONTEXT)) {
-		if( ! allowAttribute(name) ) {
-			return null;
-		}
-		return this;
-	    }
-	}
-	return null; 
-    }
-    
     /** Check if "special" attributes can be used by
      *   user application. Only trusted apps can get 
      *   access to the implementation object.
@@ -459,6 +414,13 @@ public final class Context {
     public final  void setContextManager(ContextManager cm) {
 	if( contextM != null ) return;
 	contextM=cm;
+	try {
+	    attributeInfo=cm.getNoteId(ContextManager.REQUEST_NOTE,
+				       "req.attribute");
+	} catch( TomcatException ex ) {
+	    ex.printStackTrace();
+	}
+
     }
 
     /** Default container for this context.
@@ -730,18 +692,36 @@ public final class Context {
      *  "Special" attributes ( defined org.apache.tomcat )
      *  are computed
      * 
-     *  XXX Use callbacks !!
      */
     public final  Object getAttribute(String name) {
-	Object o=getSpecialAttribute( name );
-	if ( o!=null ) return o;
-	return attributes.get(name);    
+	Object o=attributes.get( name );
+	if( o!=null ) return o;
+	if(name.equals(ATTRIB_REAL_CONTEXT)) {
+	    if( ! allowAttribute(name) ) {
+		return null;
+	    }
+	    return this;
+	}
+	// interceptors may return special attributes
+	BaseInterceptor reqI[]= this.getContainer().
+	    getInterceptors(Container.H_getInfo);
+	for( int i=0; i< reqI.length; i++ ) {
+	    o=reqI[i].getInfo( this, null, attributeInfo, name );
+	    if ( o != null ) {
+		break;
+	    }
+	}
+
+	return o;    
     }
 
     public final  Enumeration getAttributeNames() {
         return attributes.keys();
     }
 
+    /**
+     *  XXX Use callbacks !!
+     */
     public final  void setAttribute(String name, Object object) {
         attributes.put(name, object);
     }
