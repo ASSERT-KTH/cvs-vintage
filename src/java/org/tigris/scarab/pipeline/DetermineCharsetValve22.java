@@ -48,12 +48,12 @@ package org.tigris.scarab.pipeline;
 
 import java.io.IOException;
 
-import org.apache.fulcrum.mimetype.MimeTypeServiceFacade;
 import org.apache.turbine.RunData;
 import org.apache.turbine.Turbine;
 import org.apache.turbine.TurbineException;
 import org.apache.turbine.ValveContext;
 import org.apache.turbine.pipeline.AbstractValve;
+import org.tigris.scarab.util.ComponentLocator;
 
 /**
  * This valve determines the charset to use when parsing request parameters.
@@ -61,7 +61,7 @@ import org.apache.turbine.pipeline.AbstractValve;
  * servlet 2.2 libraries.
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: DetermineCharsetValve22.java,v 1.4 2004/11/14 21:07:00 dep4b Exp $
+ * @version $Id: DetermineCharsetValve22.java,v 1.5 2004/12/03 12:10:28 dep4b Exp $
  */
 public class DetermineCharsetValve22 
     extends AbstractValve
@@ -89,7 +89,7 @@ public class DetermineCharsetValve22
         if (encoding == null) 
         {
             // guess the charset from the client's headers
-            encoding = MimeTypeServiceFacade.getService().getCharSet(data.getLocale());
+            encoding = ComponentLocator.getMimeTypeService().getCharSet(data.getLocale());
         }
 
         // if the charset was specified in the configuration or the charset

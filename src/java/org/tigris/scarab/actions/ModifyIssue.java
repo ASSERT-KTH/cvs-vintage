@@ -58,7 +58,6 @@ import org.apache.commons.collections.SequencedHashMap;
 import org.apache.commons.fileupload.FileItem;
 import org.apache.fulcrum.intake.model.Field;
 import org.apache.fulcrum.intake.model.Group;
-import org.apache.fulcrum.mimetype.MimeTypeServiceFacade;
 import org.apache.fulcrum.parser.ParameterParser;
 import org.apache.torque.om.NumberKey;
 import org.apache.turbine.RunData;
@@ -87,6 +86,7 @@ import org.tigris.scarab.tools.ScarabRequestTool;
 import org.tigris.scarab.tools.localization.L10NKeySet;
 import org.tigris.scarab.tools.localization.L10NMessage;
 import org.tigris.scarab.tools.localization.LocalizationKey;
+import org.tigris.scarab.util.ComponentLocator;
 import org.tigris.scarab.util.Log;
 import org.tigris.scarab.util.MutableBoolean;
 import org.tigris.scarab.util.ScarabConstants;
@@ -97,7 +97,7 @@ import org.tigris.scarab.util.ScarabUtil;
  * This class is responsible for edit issue forms.
  * ScarabIssueAttributeValue
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: ModifyIssue.java,v 1.193 2004/11/27 19:29:56 jorgeuriarte Exp $
+ * @version $Id: ModifyIssue.java,v 1.194 2004/12/03 12:10:27 dep4b Exp $
  */
 public class ModifyIssue extends BaseModifyIssue
 {
@@ -588,7 +588,7 @@ public class ModifyIssue extends BaseModifyIssue
                     String filename = 
                         ((FileItem)fileField.getValue()).getName();
                     String contentType = 
-                        MimeTypeServiceFacade.getService().getContentType(filename, null);
+                        ComponentLocator.getMimeTypeService().getContentType(filename, null);
                     if (contentType == null) 
                     {
                         // could not match extension.
