@@ -1,4 +1,4 @@
-// $Id: FigEdgeModelElement.java,v 1.67 2004/11/01 19:55:21 mvw Exp $
+// $Id: FigEdgeModelElement.java,v 1.68 2004/11/11 13:45:57 mkl Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -603,7 +603,7 @@ public abstract class FigEdgeModelElement
             return;
         }
         String stereoStr = ModelFacade.getName(stereotype);
-        if (stereoStr.length() == 0)
+        if (stereoStr == null || stereoStr.length() == 0)
             stereo.setText("");
         else {
             stereo.setText(Notation.generateStereotype(this, stereotype));

@@ -1,4 +1,4 @@
-// $Id: FigNodeModelElement.java,v 1.125 2004/11/01 19:55:21 mvw Exp $
+// $Id: FigNodeModelElement.java,v 1.126 2004/11/11 13:45:57 mkl Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -1155,16 +1155,25 @@ public abstract class FigNodeModelElement
     protected void updateStereotypeText() {
         Object stereotype = null;
         if (getOwner() == null) {
-            LOG.warn("Owner of [" + this.toString() + "/"
-		     + this.getClass() + "] is null.");
+            LOG.warn("Owner of [" + this.toString() + "/" + this.getClass()
+                    + "] is null.");
             LOG.warn("I return...");
-	    return;
+            return;
         }
         if (ModelFacade.getStereotypes(getOwner()).size() > 0) {
-            stereotype =
-		ModelFacade.getStereotypes(getOwner()).iterator().next();
+            stereotype = ModelFacade.getStereotypes(getOwner()).iterator()
+                    .next();
         }
-        stereo.setText(Notation.generate(this, stereotype));
+        if (stereotype == null) {
+            stereo.setText("");
+            return;
+        }
+        String stereoStr = ModelFacade.getName(stereotype);
+        if (stereoStr == null || stereoStr.length() == 0)
+            stereo.setText("");
+        else {
+            stereo.setText(Notation.generate(this, stereotype));
+        }
     }
 
     /**
