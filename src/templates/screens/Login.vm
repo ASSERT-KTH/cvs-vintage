@@ -1,4 +1,4 @@
-<div class="app" id="login">
+<div class="app" id="loginDONOTCHANGETHISID">
 $page.setTitle("Login to Scarab") 
 
 <h2>$page.Title</h2>
