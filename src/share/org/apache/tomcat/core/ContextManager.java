@@ -412,7 +412,7 @@ public class ContextManager {
 	// Will use this later once I feel more sure what I want to do here.
 	// -akv
 	firstLog=false;
-	cmLog=logger;
+	//cmLog=logger;
     }
 
 
