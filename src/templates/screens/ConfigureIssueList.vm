@@ -1,4 +1,7 @@
+<div class="app" id="configureissuelist">
 $page.setTitle("Add/Remove Attributes From View")
+
+<h2>$page.Title</h2>
 
 #set ($action = $link.setPage("ConfigureIssueList.vm").setAction("ConfigureIssueList").addPathInfo("nextTemplate", "ConfigureIssueList.vm"))
 #set ($user = $data.User)
@@ -12,65 +15,67 @@ $page.setTitle("Add/Remove Attributes From View")
 <input type="hidden" name="user_id" value="$user.UserId">
 <input type="hidden" name="module_id" value="$module.ModuleId">
 
-      <div class="app" id="div2-6-1">
-      <h3>$page.Title</h3>
+<div class="functnbar">
+<table cellpadding="0" cellspacing="0" border="0">
+ <tr>
+  <td><input type="submit" value="save" name="eventSubmit_doSelectattributes" />&nbsp;</td>
+  <td><input type="submit" value="cancel" name="eventSubmit_doCancel"/>&nbsp;</td>
+  <td><input type="submit" value="reset to default"  name="eventSubmit_doCancel" /></td>
+  <td><input type="submit" value="go to issue list"  name="eventSubmit_doGoissuelist"/></td>
+ </tr>
+</table>
+</div>
 
-<p class="functnbar">
-<input type="submit" value="save" name="eventSubmit_doSelectattributes" />&nbsp;
-<input type="submit" value="cancel" name="eventSubmit_doCancel"/>&nbsp;
-<input type="submit" value="reset to default"  name="eventSubmit_doCancel" />
-<input type="submit" value="go to issue list"  name="eventSubmit_doGoissuelist"/>
-</p>
+<h3>Attributes</h3>
 
-      <h3>Attributes</h3>
+<table width="100%" border="1" cellspacing="2" cellpadding="3">
+ <tr>
+  <th>Select</th>
+  <th>Attribute Name</th>
+  <th>Columnar Sequence</th>
+ </tr>
 
-       <table width="100%" border="1" cellspacing="2" cellpadding="3">
-        <tr>
-         <th>Select</th>
-         <th>Attribute Name</th>
-         <th>Columnar Sequence</th>
-        </tr>
-
-
-#foreach ($moduleAttribute in $moduleAttributes)
-    #set ($checked = "")
-    #set ($attribute = $moduleAttribute.Attribute)
-    #set ($userAttribute = $user.getModuleUserAttribute($module.ModuleId, $attribute.AttributeId))
-    #set ($intakeUserAttr = $intake.RModuleUserAttribute.mapTo($userAttribute))
+ #foreach ($moduleAttribute in $moduleAttributes)
+  #set ($checked = "")
+  #set ($attribute = $moduleAttribute.Attribute)
+  #set ($userAttribute = $user.getModuleUserAttribute($module.ModuleId, $attribute.AttributeId))
+  #set ($intakeUserAttr = $intake.RModuleUserAttribute.mapTo($userAttribute))
 
 ## Get the attributes user has selected. If they have not select any, 
 ## Use defaults in database.
-#set ($rmuas = $user.getRModuleUserAttributes($module))
-#if ($rmuas.isEmpty() || $usedefaults.equals("true"))
-  #set ($rmuas = $module.DefaultRModuleUserAttributes)
-#end
+  #set ($rmuas = $user.getRModuleUserAttributes($module))
+  #if ($rmuas.isEmpty() || $usedefaults.equals("true"))
+   #set ($rmuas = $module.DefaultRModuleUserAttributes)
+  #end
 
-    #set ($order = 1)
-    #foreach ($moduleUserAttribute in $rmuas)
-       #if ($attribute.Name.equals($moduleUserAttribute.Attribute.Name))
-          #set ($checked = "checked")
-          #set ($order = $moduleUserAttribute.Order)    
-       #end
-    #end
-        <tr class="a">
-         <td><input type="checkbox" name="selected_$attribute.AttributeId" $checked /></td>
+  #set ($order = 1)
+  #foreach ($moduleUserAttribute in $rmuas)
+   #if ($attribute.Name.equals($moduleUserAttribute.Attribute.Name))
+    #set ($checked = "checked")
+    #set ($order = $moduleUserAttribute.Order)    
+   #end
+  #end
+  <tr class="a">
+   <td><input type="checkbox" name="selected_$attribute.AttributeId" $checked /></td>
+   <td>$attribute.Name</td>
+   <td>
+    #numericSelect ($intakeUserAttr.Order.Key 1 $maxNum $order 1)
+   </td>
+  </tr>
+ #end
+</table>
 
-         <td>$attribute.Name</td>
+<div class="functnbar2">
+<table cellpadding="0" cellspacing="0" border="0">
+ <tr>
+  <td><input type="submit" value="save" name="eventSubmit_doSelectattributes" />&nbsp;</td>
+  <td><input type="submit" value="cancel" name="eventSubmit_doCancel"/>&nbsp;</td>
+  <td><input type="submit" value="reset to default"  name="eventSubmit_doCancel" /></td>
+  <td><input type="submit" value="go to issue list"  name="eventSubmit_doGoissuelist"/></td>
+ </tr>
+</table>
+</div>
 
-         <td>
-          #numericSelect ($intakeUserAttr.Order.Key 1 $maxNum $order 1)
-         </td>
-        </tr>
-    #end
-      </table>
-
-<p class="functnbar">
-<input type="submit" value="save" name="eventSubmit_doSelectattributes"/>&nbsp;
-<input type="submit" value="cancel" name="eventSubmit_doCancel"/>&nbsp;
-<input type="submit" value="reset to default"  name="eventSubmit_doUsedefaults"/>
-<input type="submit" value="go to issue list"  name="eventSubmit_doGoissuelist"/>
-</p>
-        
-     </div>
 $intake.declareGroups()
-  </form>
+</form>
+</div>

@@ -1,5 +1,9 @@
-#set ( $action = $link.setPage("IssueList.vm").setAction("Search") )
+<div class="app" id="issuelist">
+$page.setTitle("Queue List")
 
+<h2>$page.Title</h2>
+
+#set ( $action = $link.setPage("IssueList.vm").setAction("Search") )
 #set ($user = $data.User)
 #set ($module = $scarabR.CurrentModule)
 #set ($search = $scarabR.Search)
@@ -10,134 +14,151 @@
 
 #set( $issueList = $scarabR.IssueList )
 #if ($issueList.size() > $resultsPerPage)
-   #set ($paginated = "true")
-   #set ($issueList = $scarabR.getPaginatedList($issueList, $pageNum, $resultsPerPage))
+ #set ($paginated = "true")
+ #set ($issueList = $scarabR.getPaginatedList($issueList, $pageNum, $resultsPerPage))
 #end
 
 <form name="IssueListForm" action="$action" method="post">
-<input type="hidden" name="$scarabG.Constant.CURRENT_QUERY" value="$queryString">
+<input type="hidden" name="$scarabG.Constant.CURRENT_QUERY" value="$queryString" />
 <input type="hidden" name="pageNum" value="$pageNum" /> 
 
 ## PAGINATION
 #if( $paginated)
-	<div class="misc">
-  #if( $scarabR.PrevPage != 0 )
-    #set ( $prevLink = $link.setPathInfo("resultsperpage", $resultsPerPage.toString()).setPathInfo("pageNum", $scarabR.PrevPage.toString()).setPage("IssueList.vm"))
-    <a href="$prevLink">&laquo;</a> previous |
-  #end
-     $pageNum of $scarabR.NbrPages 
-  #if( $scarabR.NextPage != 0)
-    #set ( $nextLink = $link.setPathInfo("resultsperpage", $resultsPerPage.toString()).setPathInfo("pageNum", $scarabR.NextPage.toString()).setPage("IssueList.vm"))
-    | <a href="$nextLink">&raquo;</a> next
-  #end
+ <div class="misc">
+ #if( $scarabR.PrevPage != 0 )
+  #set ( $prevLink = $link.setPathInfo("resultsperpage", $resultsPerPage.toString()).setPathInfo("pageNum", $scarabR.PrevPage.toString()).setPage("IssueList.vm"))
+  <a href="$prevLink">&laquo;</a> previous |
+ #end
+ $pageNum of $scarabR.NbrPages 
+ #if( $scarabR.NextPage != 0)
+  #set ( $nextLink = $link.setPathInfo("resultsperpage", $resultsPerPage.toString()).setPathInfo("pageNum", $scarabR.NextPage.toString()).setPage("IssueList.vm"))
+  | <a href="$nextLink">&raquo;</a> next
+ #end
 #end
 
-
-<p class="functnbar">
-    <input type="submit" value="view selected (verbose)" 
-        name="eventSubmit_doViewselected" name="eventSubmit_doViewselected" />&#160;
-    <input type="submit" value="view all (verbose)" 
-        name="eventSubmit_doViewall" />
-</p>
-
-<p class="functnbar">
-    <input type="submit" value="reassign selected" 
-        name="eventSubmit_doReassignselected" />&#160;<sup>|</sup>&#160;
-    <input type="submit" value="reassign all" name="eventSubmit_doReassignall" />
+<div class="functnbar">
+ <table cellpadding="0" cellspacing="0" border="0">
+  <tr>
 #if ($searchType.equals("advanced"))
-    &#160;<sup>|</sup>&#160;
-    <input type="submit" value="save query" 
-        name="eventSubmit_doRedirecttosavequery" />
-    &#160;<sup>|</sup>&#160;
-    <input type="submit" value="refine query" name="eventSubmit_doRefinequery" />
+  <td><strong>save:</strong></td>
 #end
-</p>
+  <td rowspan="2"><img src="../csi/images/seperator.gif" width="2" height="35" alt="" border="0" /></td>
+  <td><strong>verbose view:</strong></td>
+  <td rowspan="2"><img src="../csi/images/seperator.gif" width="2" height="35" alt="" border="0" /></td>
+  <td><strong>reassign:</strong></td>
+  <td rowspan="2"><img src="../csi/images/seperator.gif" width="2" height="35" alt="" border="0" /></td>
+#if ($searchType.equals("advanced"))
+  <td><strong>refine query:</strong></td>
+#end
+ </tr>
+ <tr>
+#if ($searchType.equals("advanced"))
+  <td><input type="submit" value="query" name="eventSubmit_doRedirecttosavequery" class="bttn" /></td>
+#end
+  <td>
+   <input type="submit" value="selected"  name="eventSubmit_doViewselected" name="eventSubmit_doViewselected" class="bttn" />&nbsp;<input type="submit" value="all" name="eventSubmit_doViewall" class="bttn" /></td>
+  <td><input type="submit" value="selected" name="eventSubmit_doReassignselected" class="bttn" />&nbsp;<input type="submit" value="all" name="eventSubmit_doReassignall" class="bttn" /></td>
+#if ($searchType.equals("advanced"))
+  <td><input type="submit" value="go" name="eventSubmit_doRefinequery" class="bttn" /></td>
+#end
+ </tr>
+ </table>
+</div>
 	
+<h3>Search Results</h3>
+(<a href="$link.setPage("ConfigureIssueList.vm")">add/remove attributes from view</a>)</div>
 
-	<h3>Search Results</h3>
-    (<a href="$link.setPage("ConfigureIssueList.vm")">add/remove attributes from view</a>)</div>
-
-	<div class="datatable">
-		<table width="100%" border="1" cellspacing="2" cellpadding="3">
-		<tr>
-		<th>
-            <img src="/scarab/images/icon_uparrow.gif" width="13" height="8" 
-                alt="sort" border="0" />
-            <img src="/scarab/images/icon_downarrow.gif" width="13" height="8" 
-                alt="sort" border="0" />
-        </th>
-		<th>Issue ID:</th>
+<div class="datatable">
+ <table width="100%" border="1" cellspacing="2" cellpadding="3">
+  <tr>
+  <th>
+   <img src="/scarab/images/icon_uparrow.gif" width="13" height="8" alt="sort" border="0" />
+   <img src="/scarab/images/icon_downarrow.gif" width="13" height="8" alt="sort" border="0" />
+  </th>
+  <th>Issue ID:</th>
 #set ($rmuas = $user.getRModuleUserAttributes($module))
 #if ($rmuas.isEmpty())
-  #set ($rmuas = $module.DefaultRModuleUserAttributes)
+ #set ($rmuas = $module.DefaultRModuleUserAttributes)
 #end
 
 #foreach ($rmua in $rmuas)
-  #set( $userAttribute = $rmua.Attribute)
-		<th>$userAttribute.Name:</th>
+ #set( $userAttribute = $rmua.Attribute)
+ <th>$userAttribute.Name:</th>
 #end
-		</tr>
-		
+  </tr>
+  
 #foreach ($issue in $issueList)
-    #set ( $issueLink = $link.setPage("ViewIssue.vm").setPathInfo("id", $issue.IssueId.toString()))
-        #rows ()
-		<td><input type="checkbox" name="selected_$issue.IssueId" /></td>
-		<td><a href="$issueLink">$issue.UniqueId</a></td>
+ #set ( $issueLink = $link.setPage("ViewIssue.vm").setPathInfo("id", $issue.IssueId.toString()))
+ #rows ()
+  <td><input type="checkbox" name="selected_$issue.IssueId" /></td>
+  <td><a href="$issueLink">$issue.UniqueId</a></td>
 #foreach ($rmua in $rmuas)
-  #set( $userAttribute = $rmua.Attribute)
-    <td>
-       #set ($value = "" )
-       #set ( $value = $issue.ModuleAttributeValuesMap.get($userAttribute.Name.toString().toUpperCase()).Value )
-       #if ( !$value.equals("") )
-         $value
-       #else
-         Not set
-       #end
-    </td>
+ #set( $userAttribute = $rmua.Attribute)
+  <td>
+  #set ($value = "" )
+  #set ( $value = $issue.ModuleAttributeValuesMap.get($userAttribute.Name.toString().toUpperCase()).Value )
+  #if ( !$value.equals("") )
+   $value
+  #else
+    Not set
+  #end
+  </td>
 #end
-		</tr>		
+  </tr>  
 #end
-		</table>
-	</div>
+  </table>
+</div>
 
-	<div class="misc">
-        issues per page:&#160; 
-        <input type="radio" value="2" name="resultsPerPage" #if( $resultsPerPage == 2 ) checked="checked" #end /> 2 
-        <input type="radio" name="resultsPerPage" value="50" #if( $resultsPerPage == 50 ) checked="checked" #end /> 50 
-        <input type="radio" name="resultsPerPage" value="75" #if( $resultsPerPage == 75 ) checked="checked" #end /> 75 
-        <input type="radio" name="resultsPerPage" value="100" #if( $resultsPerPage == 100 ) checked="checked" #end /> 100
-        <input type="submit" name="eventSubmit_doSearch" value="Refresh">
-    </div>
+<div class="misc">
+ issues per page:&#160; 
+ <input type="radio" value="2" name="resultsPerPage" #if( $resultsPerPage == 2 ) checked="checked" #end /> 2 
+ <input type="radio" name="resultsPerPage" value="50" #if( $resultsPerPage == 50 ) checked="checked" #end /> 50 
+ <input type="radio" name="resultsPerPage" value="75" #if( $resultsPerPage == 75 ) checked="checked" #end /> 75 
+ <input type="radio" name="resultsPerPage" value="100" #if( $resultsPerPage == 100 ) checked="checked" #end /> 100
+ <input type="submit" name="eventSubmit_doSearch" value="Refresh" />
+</div>
 
-<p class="functnbar">
-    <input type="submit" value="view selected (verbose)" 
-        name="eventSubmit_doViewselected" name="eventSubmit_doViewselected" />&#160;
-    <input type="submit" value="view all (verbose)" name="eventSubmit_doViewall" />
-</p>
-
-<p class="functnbar">
-    <input type="submit" value="reassign selected" 
-        name="eventSubmit_doReassignselected" />&#160;<sup>|</sup>&#160;
-    <input type="submit" value="reassign all" name="eventSubmit_doReassignall" />
+<div class="functnbar">
+ <table cellpadding="0" cellspacing="0" border="0">
+  <tr>
 #if ($searchType.equals("advanced"))
-    &#160;<sup>|</sup>&#160;
-    <input type="submit" value="save query" name="eventSubmit_doRedirecttosavequery" />
-    &#160;<sup>|</sup>&#160;
-    <input type="submit" value="refine query" name="eventSubmit_doRefinequery" />
+  <td><strong>save:</strong></td>
 #end
-</p>
-	
+  <td rowspan="2"><img src="../csi/images/seperator.gif" width="2" height="35" alt="" border="0" /></td>
+  <td><strong>verbose view:</strong></td>
+  <td rowspan="2"><img src="../csi/images/seperator.gif" width="2" height="35" alt="" border="0" /></td>
+  <td><strong>reassign:</strong></td>
+  <td rowspan="2"><img src="../csi/images/seperator.gif" width="2" height="35" alt="" border="0" /></td>
+#if ($searchType.equals("advanced"))
+  <td><strong>refine query:</strong></td>
+#end
+ </tr>
+ <tr>
+#if ($searchType.equals("advanced"))
+  <td><input type="submit" value="query" name="eventSubmit_doRedirecttosavequery" class="bttn" /></td>
+#end
+  <td>
+   <input type="submit" value="selected"  name="eventSubmit_doViewselected" name="eventSubmit_doViewselected" class="bttn" />&nbsp;<input type="submit" value="all" name="eventSubmit_doViewall" class="bttn" /></td>
+  <td><input type="submit" value="selected" name="eventSubmit_doReassignselected" class="bttn" />&nbsp;<input type="submit" value="all" name="eventSubmit_doReassignall" class="bttn" /></td>
+#if ($searchType.equals("advanced"))
+  <td><input type="submit" value="go" name="eventSubmit_doRefinequery" class="bttn" /></td>
+#end
+ </tr>
+ </table>
+</div>
+	 
 #if( $paginated)
-	<div class="misc">
-  #if( $scarabR.PrevPage != 0 )
-    #set ( $prevLink = $link.setPage("IssueList.vm").setPathInfo("resultsperpage", $resultsPerPage.toString()).setPathInfo("pageNum", $scarabR.PrevPage.toString()))
-    <a href="$prevLink">&laquo;</a> previous |
-  #end
-     $pageNum of $scarabR.NbrPages 
-  #if( $scarabR.NextPage != 0)
-    #set ( $nextLink = $link.setPage("IssueList.vm").setPathInfo("resultsperpage", $resultsPerPage.toString()).setPathInfo("pageNum", $scarabR.NextPage.toString()))
-    | <a href="$nextLink">&raquo;</a> next
-  #end
+ <div class="misc">
+ #if( $scarabR.PrevPage != 0 )
+  #set ( $prevLink = $link.setPage("IssueList.vm").setPathInfo("resultsperpage", $resultsPerPage.toString()).setPathInfo("pageNum", $scarabR.PrevPage.toString()))
+  <a href="$prevLink">&laquo;</a> previous |
+ #end
+ $pageNum of $scarabR.NbrPages 
+ #if( $scarabR.NextPage != 0)
+  #set ( $nextLink = $link.setPage("IssueList.vm").setPathInfo("resultsperpage", $resultsPerPage.toString()).setPathInfo("pageNum", $scarabR.NextPage.toString()))
+  | <a href="$nextLink">&raquo;</a> next
+ #end
 #end
 $intake.declareGroups()
 </form>
+</div>

@@ -1,17 +1,16 @@
+<div class="app" id="confirm">
 $page.setTitle("Confirm Your Email Address")
 
-<div id="registerconfirm" class="app">
-
-<h3>$page.Title</h3>
+<h2$page.Title</h2
 
 ## attempt to get the user out of the temp hashtable
 #set ($user = $data.User.getTemp($scarabG.Constant.SESSION_REGISTER))
 #if ($user)
-    #set ($regGroup = $intake.Register.mapTo($user))
-    #set ($emailValue = $user.Email)
+ #set ($regGroup = $intake.Register.mapTo($user))
+ #set ($emailValue = $user.Email)
 #else
-    #set ($regGroup = $intake.Register.Default)
-    #set ($emailValue = $data.Parameters.Email)
+ #set ($regGroup = $intake.Register.Default)
+ #set ($emailValue = $data.Parameters.Email)
 #end
 #set ($confirmValue = $data.Parameters.Confirm)
 
@@ -28,30 +27,30 @@ be asked to confirm it the next time you try to login.
 </p>
 
 <form method="post" action="$link.setPage("Confirm.vm")">
-    <input type="hidden" name="action" value="Confirm">
-    <input type="hidden" name="$scarabG.Constant.NEXT_TEMPLATE" value="Links.vm">
-    <input type="hidden" name="$scarabG.Constant.CANCEL_TEMPLATE" value="Login.vm">
+ <input type="hidden" name="action" value="Confirm">
+ <input type="hidden" name="$scarabG.Constant.NEXT_TEMPLATE" value="Links.vm">
+ <input type="hidden" name="$scarabG.Constant.CANCEL_TEMPLATE" value="Login.vm">
 
 <div class="axial">
 <table cellpadding="3" cellspacing="2" border="0">
  <tr>
   <th>Email Address</th>
   <td>
-    <input type="text" size="25" name="$regGroup.Email.Key" value="$!emailValue">
-    #fieldErrorMsg($regGroup.Email "")
+   <input type="text" size="25" name="$regGroup.Email.Key" value="$!emailValue">
+   #fieldErrorMsg($regGroup.Email "")
   </td>
  </tr>
  <tr>
   <th>Confirmation Code</th>
   <td>
-    <input type="text" size="25" name="$regGroup.Confirm.Key" value="$!confirmValue">
-    #fieldErrorMsg($regGroup.Confirm "")
+   <input type="text" size="25" name="$regGroup.Confirm.Key" value="$!confirmValue">
+   #fieldErrorMsg($regGroup.Confirm "")
   </td>
  </tr>
  <tr>
   <td colspan="2">
-      <input type="submit" name="eventSubmit_doCancel" value="Cancel">
-      <input type="submit" name="eventSubmit_doConfirm" value="Confirm">
+   <input type="submit" name="eventSubmit_doCancel" value="Cancel">
+   <input type="submit" name="eventSubmit_doConfirm" value="Confirm">
   </td>
  </tr>
 </table>

@@ -1,60 +1,54 @@
+<div class="app" id="editquery">
+$page.setTitle("Edit Query '$currentQuery.Name'")
+
+<h2>$page.Title</h2>
+
 #set ( $queryId = $data.Parameters.getString("queryId"))
 #set ( $currentQuery = $scarabR.getQuery() )
 #set ( $queryGroup = $intake.Query.mapTo($currentQuery)) 
 #set ($module = $scarabR.CurrentModule)
-
-      <div class="app" id="search.vm">
-       <h2>Edit Query '$currentQuery.Name'</h2>
-
-
 #set ($action = $link.setPage("EditQuery.vm").setAction("Search").addPathInfo("nextTemplate", "EditQuery.vm"))
 
 <form action="$action" method="post">
-<input type="hidden" name="queryId" value="$queryId">
-<input type="hidden" name="$queryGroup.Value.Key" value="$currentQuery.Value">
-      <div class="axial">
-       <table cellpadding="3" cellspacing="2" border="0">
-        <tr>
-         <th width="120">query name</th>
+<input type="hidden" name="queryId" value="$queryId" />
+<input type="hidden" name="$queryGroup.Value.Key" value="$currentQuery.Value" />
+<div class="axial">
+ <table cellpadding="3" cellspacing="2" border="0">
+  <tr>
+   <th width="120">query name</th>
+   <td>#fieldErrorMsg($queryGroup.Name "") <input type="text" name="$queryGroup.Name.Key" size="25" value="$!queryGroup.Name" /></td>
+  </tr>
+  <tr>
+   <th width="120">query description</th>
+   <td><textarea name="$queryGroup.Description.Key" rows="4" cols="40">$!queryGroup.Description</textarea></td>
+  </tr>
+  <tr>
+   <th width="120">Availability</th>
+   <td>#queryTypeSelectBox ($currentQuery)</td>
+  </tr>
+  <tr>
+   <th width="120">location</th>
+   <td>current project '$module.Name'</td>
+   <input type = "hidden" name="$queryGroup.ModuleId.Key" value = "$module.ModuleId" />
+  </tr>
+ </table>
+</div>
 
-         <td>#fieldErrorMsg($queryGroup.Name "") <input type="text" name="$queryGroup.Name.Key" size="25" value="$!queryGroup.Name" /></td>
-        </tr>
-
-        <tr>
-         <th width="120">query description</th>
-
-         <td><textarea name="$queryGroup.Description.Key" rows="4" cols="40">$!queryGroup.Description</textarea></td>
-        </tr>
-
-        <tr>
-         <th width="120">Availability</th>
-
-         <td>#queryTypeSelectBox ($currentQuery)
-           </td>
-        
-        </tr>
-
-        <tr>
-         <th width="120">location</th>
-         <td>current project '$module.Name'</td>
-         <input type = "hidden" name="$queryGroup.ModuleId.Key" value = "$module.ModuleId">
-        </tr>
-       </table>
-      </div>
-
-       <p class="functnbar">
-        <input type="submit" name="eventSubmit_doSavequery" 
-            value="Save" />&#160;
-        <input type="submit" name="eventSubmit_doCancel" 
-            value="cancel" />
-       </p>
+<div class="functnbar">
+<table cellpadding="0" cellspacing="0" border="0">
+ <tr>
+  <td><input type="submit" name="eventSubmit_doSavequery" value="Save" />&#160;</td>
+  <td><input type="submit" name="eventSubmit_doCancel" value="cancel" /></td>
+ </tr>
+</table>
+</div>
 
 </form>
 
 #set ($action = $link.setPage("EditQuery.vm").setAction("Search").addPathInfo("nextTemplate", "IssueList.vm"))
 
 <form action="$action" method="get">
-<input type="hidden" name="queryId" value="$queryId">
+<input type="hidden" name="queryId" value="$queryId" />
 <input type="hidden" name="searchType" value="advanced" />
 
 #set ( $search = $scarabR.Search )
@@ -69,57 +63,50 @@
  <h3>Subscription info</h3>
 
 <div class="axial">
-       <table border="0" cellspacing="2" cellpadding="3">
-        <tr>
-         <th width="120">Default frequency</th>
-         <td>
-         <select name="$queryGroup.Frequency.Key">
-         #frequencySelectBox ($currentQuery $currentQuery.SubscriptionFrequency)
-         </select></td>
-        </tr>
-
-        </table>
+ <table border="0" cellspacing="2" cellpadding="3">
+  <tr>
+   <th width="120">Default frequency</th>
+   <td>
+   <select name="$queryGroup.Frequency.Key">
+   #frequencySelectBox ($currentQuery $currentQuery.SubscriptionFrequency)
+   </select></td>
+  </tr>
+ </table>
 </div>
 
 
 #if (!$currentQuery.RQueryUsers.isEmpty())
-      <h3>Current subscriber list</h3>  
-      
-       <table width="100%" border="1" cellspacing="2" cellpadding="3">
-        <tr>
-         <th>&nbsp;</th>
+<h3>Current subscriber list</h3>  
 
-         <th>User</th>
-
-         <th>User selected frequency</th>
-
-        </tr>
+ <table width="100%" border="1" cellspacing="2" cellpadding="3">
+  <tr>
+   <th>&nbsp;</th>
+   <th>User</th>
+   <th>User selected frequency</th>
+  </tr>
 #foreach ($su in $currentQuery.RQueryUsers)
   #set ($user = $su.ScarabUserImpl)
-        #rows ()
-         <td><input type="checkbox" name="subscribed_user_$user.UserId" /></td>
-         
-         <td><a href="mailto:$user.Email">$user.UserName</a></td>
-
-         <td>$su.Frequency.Name</td>
-
-        </tr>
+  #rows ()
+   <td><input type="checkbox" name="subscribed_user_$user.UserId" /></td>
+   <td><a href="mailto:$user.Email">$user.UserName</a></td>
+   <td>$su.Frequency.Name</td>
+  </tr>
 #end
 
-        </table>
-        <input type="submit" value="revoke subscription" name="eventSubmit_doUnsubscribeusers" />
+  </table>
+  <input type="submit" value="revoke subscription" name="eventSubmit_doUnsubscribeusers" />
    #end
 #end
-       <p class="functnbar">
-        <input type="submit" name="eventSubmit_doEditstoredquery" 
-            value="Save Query" />&#160;
-        <input type="submit" name="eventSubmit_doSearch" 
-            value="Run Query" />&#160;
-        <input type="submit" name="eventSubmit_doCancel" 
-            value="cancel" />
-       </p>
 
-        $intake.declareGroups()
-        </form>
+<div class="functnbar2">
+<table cellpadding="0" cellspacing="0" border="0">
+ <tr>
+  <td><input type="submit" name="eventSubmit_doSavequery" value="Save" />&#160;</td>
+  <td><input type="submit" name="eventSubmit_doCancel" value="cancel" /></td>
+ </tr>
+</table>
+</div>
 
-      </div>
+$intake.declareGroups()
+</form>
+</div>
