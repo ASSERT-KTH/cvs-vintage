@@ -47,109 +47,88 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
 class PluginStep extends AbstractStep implements ListSelectionListener {
-	protected DataModel data;
-
-	protected MultiLineLabel descriptionLabel;
-
-	private ImportPluginHandler pluginHandler;
-
-	public PluginStep(DataModel data) {
-		super(
-				MailResourceLoader.getString("dialog", "mailboximport",
-						"plugin"), MailResourceLoader.getString("dialog",
-						"mailboximport", "plugin_description"));
-		this.data = data;
-
-		try {
-			pluginHandler = (ImportPluginHandler) MainInterface.pluginManager
-					.getHandler("org.columba.mail.import");
-		} catch (PluginHandlerNotFoundException ex) {
-			NotifyDialog d = new NotifyDialog();
-
-			//show neat error message here
-			d.showDialog(ex);
-
-			return;
-		}
-	}
-
-	protected JComponent createComponent() {
-		descriptionLabel = new MultiLineLabel("description");
-
-		JList list = new JList(((ImportPluginHandler) data
-				.getData("Plugin.handler")).getPluginIdList());
-		list.setCellRenderer(new PluginListCellRenderer());
-
-		JComponent component = new JPanel(new BorderLayout(0, 30));
-		component.add(new MultiLineLabel(MailResourceLoader.getString("dialog",
-				"mailboximport", "plugin_text")), BorderLayout.NORTH);
-
-		JPanel middlePanel = new JPanel();
-		middlePanel.setAlignmentX(1);
-
-		GridBagLayout layout = new GridBagLayout();
-		middlePanel.setLayout(layout);
-
-		Method method = null;
-
-		try {
-			method = list.getClass().getMethod("getSelectedValue", null);
-		} catch (NoSuchMethodException nsme) {
-		}
-
-		data.registerDataLookup("Plugin.ID", new DefaultDataLookup(list,
-				method, null));
-		list.addListSelectionListener(this);
-		list.setSelectedIndex(0);
-
-		JScrollPane scrollPane = new JScrollPane(list);
-		scrollPane
-				.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-
-		GridBagConstraints c = new GridBagConstraints();
-		c.anchor = GridBagConstraints.NORTHWEST;
-		c.gridx = 0;
-		c.fill = GridBagConstraints.BOTH;
-		c.weightx = 0.4;
-
-		//c.gridwidth = GridBagConstraints.RELATIVE;
-		c.weighty = 1.0;
-		layout.setConstraints(scrollPane, c);
-		middlePanel.add(scrollPane);
-
-		c.gridwidth = GridBagConstraints.REMAINDER;
-		c.weightx = 0.6;
-		c.gridx = 1;
-		c.anchor = GridBagConstraints.NORTHWEST;
-		c.insets = new Insets(0, 10, 0, 0);
-
-		JScrollPane scrollPane2 = new JScrollPane(descriptionLabel);
-		scrollPane2
-				.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-
-		layout.setConstraints(scrollPane2, c);
-		middlePanel.add(scrollPane2);
-		component.add(middlePanel);
-
-		return component;
-	}
-
-	public void valueChanged(ListSelectionEvent event) {
-		
-		//adjust description field
-		AbstractMailboxImporter importer;
-		try {
-			importer = (AbstractMailboxImporter) pluginHandler
-					.getPlugin((String) data.getData("Plugin.ID"), null);
-			String description = importer.getDescription();
-			descriptionLabel.setText(description);
-		} catch (PluginLoadingFailedException e) {
-			if ( MainInterface.DEBUG)
-				e.printStackTrace();
-		}
-	
-	}
-
-	public void prepareRendering() {
-	}
+    protected DataModel data;
+    protected MultiLineLabel descriptionLabel;
+    private ImportPluginHandler pluginHandler;
+    
+    public PluginStep(DataModel data) {
+        super(MailResourceLoader.getString("dialog", "mailboximport", "plugin"),
+            MailResourceLoader.getString("dialog", "mailboximport", "plugin_description"));
+        this.data = data;
+        pluginHandler = (ImportPluginHandler)data.getData("Plugin.handler");
+    }
+    
+    protected JComponent createComponent() {
+        descriptionLabel = new MultiLineLabel("description");
+        
+        JList list = new JList(pluginHandler.getPluginIdList());
+        list.setCellRenderer(new PluginListCellRenderer());
+        
+        JComponent component = new JPanel(new BorderLayout(0, 30));
+        component.add(new MultiLineLabel(MailResourceLoader.getString("dialog",
+            "mailboximport", "plugin_text")), BorderLayout.NORTH);
+        
+        JPanel middlePanel = new JPanel();
+        middlePanel.setAlignmentX(1);
+        
+        GridBagLayout layout = new GridBagLayout();
+        middlePanel.setLayout(layout);
+        
+        Method method = null;
+        try {
+            method = list.getClass().getMethod("getSelectedValue", null);
+        } catch (NoSuchMethodException nsme) {}
+        data.registerDataLookup("Plugin.ID", new DefaultDataLookup(list,
+            method, null));
+        list.addListSelectionListener(this);
+        list.setSelectedIndex(0);
+        
+        JScrollPane scrollPane = new JScrollPane(list);
+        scrollPane.setHorizontalScrollBarPolicy(
+            JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+        
+        GridBagConstraints c = new GridBagConstraints();
+        c.anchor = GridBagConstraints.NORTHWEST;
+        c.gridx = 0;
+        c.fill = GridBagConstraints.BOTH;
+        c.weightx = 0.4;
+        
+        //c.gridwidth = GridBagConstraints.RELATIVE;
+        c.weighty = 1.0;
+        layout.setConstraints(scrollPane, c);
+        middlePanel.add(scrollPane);
+        
+        c.gridwidth = GridBagConstraints.REMAINDER;
+        c.weightx = 0.6;
+        c.gridx = 1;
+        c.anchor = GridBagConstraints.NORTHWEST;
+        c.insets = new Insets(0, 10, 0, 0);
+        
+        JScrollPane scrollPane2 = new JScrollPane(descriptionLabel);
+        scrollPane2.setHorizontalScrollBarPolicy(
+            JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+        
+        layout.setConstraints(scrollPane2, c);
+        middlePanel.add(scrollPane2);
+        component.add(middlePanel);
+        
+        return component;
+    }
+    
+    public void valueChanged(ListSelectionEvent event) {
+        //adjust description field
+        AbstractMailboxImporter importer;
+        try {
+            importer = (AbstractMailboxImporter) pluginHandler.getPlugin(
+                (String)data.getData("Plugin.ID"), null);
+            String description = importer.getDescription();
+            descriptionLabel.setText(description);
+        } catch (PluginLoadingFailedException e) {
+            if (MainInterface.DEBUG) {
+                e.printStackTrace();
+            }
+        }
+    }
+    
+    public void prepareRendering() {}
 }
