@@ -37,22 +37,20 @@ public class SearchIssue
 
     private static final String PARENT_ID;
     private static final String CHILD_ID;
-    private static final Criteria.Criterion AV_OO_JOIN;
+    private static final String AV_ISSUE_ID;
+    private static final String AV_OPTION_ID;
 
     static 
     {
-        // column names only
         PARENT_ID = ROptionOptionPeer.OPTION1_ID;
         CHILD_ID = ROptionOptionPeer.OPTION2_ID;
 
-        // av.option_id=roo.option2_id AND roo.relationship_id=1
-        Criteria crit = new Criteria(0);
-        AV_OO_JOIN = crit.getNewCriterion(CHILD_ID, 
-            AttributeValuePeer.OPTION_ID + "=" + ROptionOptionPeer.OPTION2_ID,
-            Criteria.CUSTOM);
-        AV_OO_JOIN.and(
-            crit.getNewCriterion( ROptionOptionPeer.RELATIONSHIP_ID,
-                OptionRelationship.PARENT_CHILD, Criteria.EQUAL) );
+        // column names only
+        AV_OPTION_ID = AttributeValuePeer.OPTION_ID.substring(
+            AttributeValuePeer.OPTION_ID.indexOf('.')+1);
+        AV_ISSUE_ID = AttributeValuePeer.ISSUE_ID.substring(
+            AttributeValuePeer.ISSUE_ID.indexOf('.')+1);
+
     }
     /**
      * Get the value of searchWords.
@@ -213,13 +211,13 @@ public class SearchIssue
             {
                 atLeastOne = true;
                 Criteria.Criterion c1 = crit.getNewCriterion("av" + i,
-                    "ISSUE_ID", "av" + i + ".ISSUE_ID=" + IssuePeer.ISSUE_ID,
-                    Criteria.CUSTOM); 
+                    AV_ISSUE_ID, "av" + i + "." + AV_ISSUE_ID + "=" + 
+                    IssuePeer.ISSUE_ID, Criteria.CUSTOM); 
                 crit.addAlias("av" + i, AttributeValuePeer.TABLE_NAME);
                 List descendants = aval.getAttributeOption().getDescendants();
                 if ( descendants.size() == 0 ) 
                 {
-                    c1.and(crit.getNewCriterion( "av" + i, "OPTION_ID",
+                    c1.and(crit.getNewCriterion( "av" + i, AV_OPTION_ID,
                         aval.getOptionId(), Criteria.EQUAL));
                 }
                 else
@@ -230,7 +228,7 @@ public class SearchIssue
                         ids[j] = ((AttributeOption)descendants.get(j))
                             .getOptionId();
                     }
-                    c1.and(crit.getNewCriterion( "av" + i, "OPTION_ID",
+                    c1.and(crit.getNewCriterion( "av" + i, AV_OPTION_ID,
                         ids, Criteria.IN));
                 }                
                 if ( c == null ) 

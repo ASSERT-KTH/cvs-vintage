@@ -64,7 +64,7 @@ import org.apache.turbine.services.security.*;
     This class contains code for dealing with Modules.
 
     @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
-    @version $Id: ModuleManager.java,v 1.8 2001/03/03 00:07:09 jmcnally Exp $
+    @version $Id: ModuleManager.java,v 1.9 2001/05/01 00:03:37 jmcnally Exp $
 */
 public class ModuleManager
 {
@@ -76,10 +76,10 @@ public class ModuleManager
     {
     }
 
-    /**
+    /* *
         This is a utility method to quickly get the list of modules associated
         to a user.
-    */
+    * /
     public static Vector getProjects(ObjectKey visitorid)
         throws Exception
     {
@@ -88,6 +88,8 @@ public class ModuleManager
         crit.add (RModuleUserPeer.USER_ID, visitorid);
         return ModulePeer.doSelect(crit);
     }
+    */
+
     /**
         gets a single project
         @return null on error
@@ -110,7 +112,7 @@ public class ModuleManager
         return project;    
     }
     
-    /**
+    /* *
         This method will pull all of the projects associated to a user
         out of the database and then format them into a SelectorBox which
         you can just stick into the context.
@@ -120,7 +122,7 @@ public class ModuleManager
         <p>
         It will attempt to get the USER_SELECTED_MODULE from data.getUser().getTemp()
         in order to auto mark the "selected" option.
-    */
+    * /
     public static SelectorBox getProjectsBox(RunData data, int size)
         throws Exception
     {
@@ -160,7 +162,7 @@ public class ModuleManager
             data.getParameters().add(CURRENT_PROJECT, (String)names[0]);
         return new SelectorBox(PROJECT_CHANGE_BOX, names, values, size, selected);
     }
-    
+    */
     /**
         give me a list of components that match the parent project id
     */
@@ -241,10 +243,10 @@ public class ModuleManager
             " already exists. Please choose another name!" );        
     }
     
-    /**
+    /* *
         create a new project. it will throw an exception with the
         error message in it which you can catch.
-    */
+    * /
     public static void createNewProject(RunData data)
         throws Exception
     {
@@ -265,4 +267,6 @@ public class ModuleManager
                    data.getUser()).getPrimaryKey());
         RModuleUserPeer.doInsert(crit);
     }
+    */
+
 }

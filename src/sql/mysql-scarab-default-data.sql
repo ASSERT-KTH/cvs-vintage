@@ -9,7 +9,7 @@ insert into SCARAB_ATTRIBUTE_CLASS(ATTRIBUTE_CLASS_ID, ATTRIBUTE_CLASS_NAME, ATT
 insert into SCARAB_ATTRIBUTE_CLASS(ATTRIBUTE_CLASS_ID, ATTRIBUTE_CLASS_NAME, ATTRIBUTE_CLASS_DESC, JAVA_CLASS_NAME)
         values(3, 'voted', 'Voted attribute', 'org.tigris.scarab.attribute.VotedAttribute');
 insert into SCARAB_ATTRIBUTE_CLASS(ATTRIBUTE_CLASS_ID, ATTRIBUTE_CLASS_NAME, ATTRIBUTE_CLASS_DESC, JAVA_CLASS_NAME)
-        values(4, 'visitor', 'Visitor attribute', 'org.tigris.scarab.attribute.VisitorAttribute');
+        values(4, 'user', 'User attribute', 'org.tigris.scarab.attribute.UserAttribute');
 
 /*
  *  Attribute types
@@ -30,7 +30,7 @@ insert into SCARAB_ATTRIBUTE_TYPE(ATTRIBUTE_TYPE_ID, ATTRIBUTE_CLASS_ID, ATTRIBU
 insert into SCARAB_ATTRIBUTE_TYPE(ATTRIBUTE_TYPE_ID, ATTRIBUTE_CLASS_ID, ATTRIBUTE_TYPE_NAME, JAVA_CLASS_NAME)
         values(7, 3, 'voted-simple-majority', 'org.tigris.scarab.attribute.VotedSimpleMajorityAttribute');
 insert into SCARAB_ATTRIBUTE_TYPE(ATTRIBUTE_TYPE_ID, ATTRIBUTE_CLASS_ID, ATTRIBUTE_TYPE_NAME, JAVA_CLASS_NAME)
-        values(8, 4, 'visitor', 'org.tigris.scarab.attribute.ComboBoxAttribute');
+        values(8, 4, 'user', 'org.tigris.scarab.attribute.UserAttribute');
 insert into SCARAB_ATTRIBUTE_TYPE(ATTRIBUTE_TYPE_ID, ATTRIBUTE_CLASS_ID, ATTRIBUTE_TYPE_NAME, JAVA_CLASS_NAME) /* Bugzilla-style vote */
         values(9, 3, 'voted-total', 'org.tigris.scarab.attribute.VotedTotalAttribute');
 insert into SCARAB_ATTRIBUTE_TYPE(ATTRIBUTE_TYPE_ID, ATTRIBUTE_CLASS_ID, ATTRIBUTE_TYPE_NAME, JAVA_CLASS_NAME) /* Tracking */
@@ -326,7 +326,6 @@ insert into SCARAB_ATTACHMENT_TYPE(ATTACHMENT_TYPE_ID, ATTACHMENT_TYPE_NAME)
 /*
  * root module
  */
-
 insert into SCARAB_MODULE(MODULE_ID, MODULE_NAME, MODULE_DESCRIPTION, MODULE_URL)
         values(0, "ROOT", "Built-in root module, parent for all top-level modules(projects)", "/");
 

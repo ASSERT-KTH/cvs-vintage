@@ -55,74 +55,49 @@ import org.apache.turbine.util.db.Criteria;
 
 /**
  *
- * @author <a href="mailto:fedor.karpelevitch@home.com">Fedor</a>
- * @version $Revision: 1.6 $ $Date: 2001/03/03 00:07:07 $
+ * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
+ * @version $Revision: 1.1 $ $Date: 2001/05/01 00:03:37 $
  */
-public abstract class VisitorAtribute extends AttributeValue
+public class UserAttribute extends AttributeValue
 {
     private Hashtable usersById;
     private Vector users;
     private ScarabUser user;
-    boolean loaded;
-    public void init() throws Exception
-    {
-        Criteria crit = new Criteria()
-            .add(AttributeValuePeer.ISSUE_ID, 
-                 getIssue().getPrimaryKey())
-            .add(AttributeValuePeer.ATTRIBUTE_ID, 
-                 getAttribute().getPrimaryKey());
 
-        Vector results = AttributeValuePeer.doSelect(crit);
-        if (results.size() == 1)
-        {
-            user = (ScarabUser)usersById.get(
-                ((AttributeValue)results.get(0)).getUserId());
-            loaded = true;
-        }
-    }
-    
-    public void setResources(Object resources)
-    {
-        Object[] res = (Object[])resources;
-        users = (Vector)res[0];
-        usersById = (Hashtable)res[1];
-    }
-    
-    /** Updates both InternalValue and Value of the Attribute object and saves them
-     * to database
-     * @param newValue String representation of new value.
-     * @param data app data. May be needed to get user info for votes and/or for security checks.
-     * @throws Exception Generic exception
-     *
+    /**
+     * Looks for users using prefix and suffix wildcards on the
+     * username.
      */
-    public void setValue(String newValue,RunData data) throws Exception
+    public List getMatchingUsers(Module module, String partialUserName)
     {
-        user = (ScarabUser)usersById.get(new Integer(newValue));
-        Criteria crit = new Criteria()
-            .add(AttributeValuePeer.ISSUE_ID, 
-                 getIssue().getPrimaryKey())
-            .add(AttributeValuePeer.ATTRIBUTE_ID, 
-                 getAttribute().getPrimaryKey())
-            .add(AttributeValuePeer.VALUE, user.getUserName())
-            .add(AttributeValuePeer.USER_ID, user.getPrimaryKey());
-        if (loaded)
-        {
-            AttributeValuePeer.doUpdate(crit);
-        }
-        else
-        {
-            AttributeValuePeer.doInsert(crit);
-            loaded = true;
-        }
+        // exclude users with Roles Guest or Observer 
+        // !FIXME! these roles need to be defined
+        Role[] excludeRoles = null;
+
+        List matches = module.getUsers(partialUserName, null, excludeRoles);
+        
+        return matches;
     }
+
+    
+
     /** Gets the Value attribute of the Attribute object
      *
      * @return    The Value value
      */
-    public String getValue()
+    public String getUserName()
     {
-        return user.getUserName();
+        return getValue();
     }
+
+    public void init() throws Exception
+    {
+    }
+
+    public void setResources(Object resources)
+    {
+    }
+    
     /** displays the attribute.
      * @return Object to display the property. May be a String containing HTML
      * @param data app data. may be needed to render control
@@ -132,20 +107,10 @@ public abstract class VisitorAtribute extends AttributeValue
      */
     public Object loadResources() throws Exception
     {
-        int i;
-        ScarabUser user;
-        Criteria crit = new Criteria();
-        //FIXME: should we filter users somehow?
-        crit.addOrderByColumn(ScarabUserPeer.USERNAME);
-        Vector users = ScarabUserPeer.doSelect(crit);
-        Hashtable usersById = new Hashtable(users.size());
-        for (i=0; i<users.size(); i++)
-        {
-            user = (ScarabUser)users.get(i);
-            usersById.put(((ScarabUser)user).getPrimaryKey(), user);
-        }
-        Object[] res = {users, usersById};
-        return res;
+        return null;
     }
+
+
 }
+
 

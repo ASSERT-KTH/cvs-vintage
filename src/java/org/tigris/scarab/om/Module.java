@@ -6,6 +6,7 @@ import java.util.*;
 // Turbine classes
 import org.apache.turbine.om.*;
 import org.apache.turbine.om.peer.BasePeer;
+import org.apache.turbine.om.security.Role;
 import org.apache.turbine.util.db.Criteria;
 import org.apache.turbine.util.ObjectUtils;
 import org.apache.turbine.util.StringUtils;
@@ -260,6 +261,62 @@ try{
     }
 
     /**
+     * Gets users which are currently associated (relationship has not 
+     * been deleted) with this module with Roles specified in includeRoles
+     * and excluding Roles in the exclude list. 
+     *
+     * @param partialUserName username fragment to match against
+     * @param includeRoles a <code>Role[]</code> value
+     * @param excludeRoles a <code>Role[]</code> value
+     * @return a <code>List</code> of ScarabUsers
+     * @exception Exception if an error occurs
+     */
+    public List getUsers(String partialUserName, 
+                         Role[] includeRoles, Role[] excludeRoles) 
+        throws Exception
+    {
+        Criteria crit = new Criteria(3)
+            .add(RModuleUserRolePeer.DELETED, false);
+        Criteria.Criterion c = null;
+        if ( includeRoles != null ) 
+        {            
+            crit.addIn(RModuleUserRolePeer.ROLE_ID, includeRoles);
+            c = crit.getCriterion(RModuleUserRolePeer.ROLE_ID);
+        }
+        if ( excludeRoles != null ) 
+        {   
+            if ( c == null ) 
+            {
+                crit.addNotIn(RModuleUserRolePeer.ROLE_ID, excludeRoles);
+            }
+            else 
+            {
+                c.and(crit
+                      .getNewCriterion(RModuleUserRolePeer.ROLE_ID, 
+                                       excludeRoles, Criteria.NOT_IN));
+            }
+        }
+        if ( partialUserName != null && partialUserName.length() != 0 ) 
+        {
+            crit.add(ScarabUserPeer.USERNAME, 
+                     (Object)("%" + partialUserName + "%"), Criteria.LIKE);
+        }
+
+        List moduleRoles = getRModuleUserRolesJoinScarabUser(crit);
+
+        // rearrange so list contains Users
+        List users = new ArrayList(moduleRoles.size());
+        Iterator i = moduleRoles.iterator();
+        while (i.hasNext()) 
+        {
+            ScarabUser user = ((RModuleUserRole)i.next()).getScarabUser();
+            users.add(user);
+        }
+        
+        return users;
+    }
+
+    /**
      * Saves the module into the database
      */
     public void save() throws Exception
@@ -267,15 +324,17 @@ try{
         // if new, relate the Module to the user who created it.
         if ( isNew() ) 
         {
-            RModuleUser relation = new RModuleUser();
+            RModuleUserRole relation = new RModuleUserRole();
             if ( getOwnerId() == null ) 
             {
                 throw new ScarabException("Can't save a project without" + 
                     "first assigning an owner.");
             }         
             relation.setUserId(getOwnerId());
+            // !FIXME! this needs to be set to the Module Owner Role
+            relation.setRoleId(new NumberKey("1"));
             relation.setDeleted(false);
-            addRModuleUser(relation);
+            addRModuleUserRole(relation);
 
             // make sure the code has a value;
             String code = getCode();

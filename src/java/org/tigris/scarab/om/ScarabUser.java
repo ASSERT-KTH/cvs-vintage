@@ -65,7 +65,7 @@ import org.apache.turbine.services.uniqueid.*;
     implementation needs.
 
     @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
-    @version $Id: ScarabUser.java,v 1.14 2001/04/18 21:26:32 jmcnally Exp $
+    @version $Id: ScarabUser.java,v 1.15 2001/05/01 00:03:37 jmcnally Exp $
 */
 public class ScarabUser extends BaseScarabUser
 {    
@@ -236,28 +236,58 @@ public class ScarabUser extends BaseScarabUser
 
 
     /**
-     * 
+     * Gets all modules which are currently associated with this user 
+     * (relationship has not been deleted.)
      */
-    public Vector getModules() throws Exception
+    public List getModules() throws Exception
     {
         Criteria crit = new Criteria(3)
-            .add(RModuleUserPeer.USER_ID, getPrimaryKey())
-            .add(RModuleUserPeer.DELETED, false)
-            .addJoin(ModulePeer.MODULE_ID, 
-                     RModuleUserPeer.MODULE_ID);
+            .add(RModuleUserRolePeer.DELETED, false);
+        List moduleRoles = getRModuleUserRolesJoinModule(crit);
 
-        Vector srmvs = RModuleUserPeer.doSelectJoinModule(crit);
-        // each srmvs represents a unique ScarabModule, so we do not 
-        // need to check for duplicates.  Just stuff into the new Vector.
-        Vector modules = new Vector(srmvs.size());
-        for ( int i=0; i<srmvs.size(); i++ ) 
+        // this list will contain multiple entries for a module, if
+        // the user has multiple roles
+        List modules = new ArrayList(moduleRoles.size());
+        Iterator i = moduleRoles.iterator();
+        while (i.hasNext()) 
         {
-            RModuleUser srmv = (RModuleUser)srmvs.get(i);
-            modules.add( srmv.getModule() );
+            Module module = ((RModuleUserRole)i.next()).getModule();
+            if ( !modules.contains(module) ) 
+            {
+                modules.add(module);
+            }
         }
         
         return modules;
     }
+
+    /**
+     * Gets modules which are currently associated (relationship has not 
+     * been deleted) with this user through the specified Role. 
+     * 
+     */
+    public List getModules(Role role) 
+        throws Exception
+    {
+        Criteria crit = new Criteria(3)
+            .add(RModuleUserRolePeer.DELETED, false)
+            .add(RModuleUserRolePeer.ROLE_ID, 
+                 ((BaseObject)role).getPrimaryKey());        
+        List moduleRoles = getRModuleUserRolesJoinModule(crit);
+
+        // rearrange so list contains Modules
+        List modules = new ArrayList(moduleRoles.size());
+        Iterator i = moduleRoles.iterator();
+        while (i.hasNext()) 
+        {
+            Module module = ((RModuleUserRole)i.next()).getModule();
+            modules.add(module);
+        }
+        
+        return modules;
+    }
+
+
 
     public Module getCurrentModule()
     {

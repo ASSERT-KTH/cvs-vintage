@@ -81,11 +81,16 @@ INSERT INTO SCARAB_R_MODULE_ATTRIBUTE VALUES (5,13,NULL,1,0,12,0,0);
  * Insert a relationship between user_id 1 and module_id 3
  * Insert a relationship between user_id 2 and module_id 1
  * Insert a relationship between user_id 2 and module_id 3
+ * Roles are not defined yet so we will give role_id=1
  */
-insert into SCARAB_R_MODULE_USER(USER_ID, MODULE_ID) values (1, 1);
-insert into SCARAB_R_MODULE_USER(USER_ID, MODULE_ID) values (1, 3);
-insert into SCARAB_R_MODULE_USER(USER_ID, MODULE_ID) values (2, 1);
-insert into SCARAB_R_MODULE_USER(USER_ID, MODULE_ID) values (2, 3);
+insert into SCARAB_R_MODULE_USER_ROLE(USER_ID, MODULE_ID, ROLE_ID) 
+    values (1, 1, 1);
+insert into SCARAB_R_MODULE_USER_ROLE(USER_ID, MODULE_ID, ROLE_ID) 
+    values (1, 3, 1);
+insert into SCARAB_R_MODULE_USER_ROLE(USER_ID, MODULE_ID, ROLE_ID) 
+    values (2, 1, 1);
+insert into SCARAB_R_MODULE_USER_ROLE(USER_ID, MODULE_ID, ROLE_ID) 
+    values (2, 3, 1);
 
 
 /*
