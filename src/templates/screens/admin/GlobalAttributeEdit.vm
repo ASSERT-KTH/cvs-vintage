@@ -38,7 +38,7 @@ Back to $link.setPage("admin,GlobalAttributeShow.vm").setLabel("Attribute Select
 <input type="submit" value="Cancel"  name="eventSubmit_doCancel" />&#160;
 </div>
 
-<h3>Attribute Info</h3>
+<h3>Attribute info</h3>
 
 <div class="axial">
 <table cellpadding="3" cellspacing="2" border="0">
