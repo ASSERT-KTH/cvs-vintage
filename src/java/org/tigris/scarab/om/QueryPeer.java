@@ -58,7 +58,7 @@ import org.tigris.scarab.om.Module;
  * This is the QueryPeer class
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: QueryPeer.java,v 1.20 2003/04/04 19:28:00 jon Exp $
+ * @version $Id: QueryPeer.java,v 1.21 2003/04/07 18:38:12 jmcnally Exp $
  */
 public class QueryPeer 
     extends org.tigris.scarab.om.BaseQueryPeer
@@ -127,29 +127,31 @@ public class QueryPeer
                 Criteria.EQUAL);
             cGlob.and(crit.getNewCriterion(QueryPeer.APPROVED, 
                                            Boolean.TRUE, Criteria.EQUAL));
+            cGlob.and(moduleCrit);
 
             Criteria.Criterion cPriv = crit.getNewCriterion(
                 QueryPeer.USER_ID, user.getUserId(), Criteria.EQUAL);
             cPriv.and(crit.getNewCriterion(
                 QueryPeer.SCOPE_ID, Scope.PERSONAL__PK, 
                 Criteria.EQUAL));
+            // need to be careful here, we are adding moduleCrit to 
+            // two different criterion.  if we switched the order of
+            // the OR below we would screw up cGlob.
+            cPriv.and(notNullListCrit.or(moduleCrit));
 
             if (TYPE_PRIVATE.equals(type))
             {
                 crit.add(cPriv);                    
-                crit.add(notNullListCrit.or(moduleCrit));
             }
             else if (TYPE_GLOBAL.equals(type))
             {
                 crit.add(cGlob);
-                crit.add(moduleCrit);
             }
             else
             {
                 // All queries
                 cGlob.or(cPriv);
                 crit.add(cGlob);
-                crit.add(notNullListCrit.or(moduleCrit));
             }
             crit.setDistinct();
 
