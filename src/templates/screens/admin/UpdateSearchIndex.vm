@@ -1,6 +1,6 @@
 <div id="updatesearchindex" class="app">
 
-<form action="$link.setPage("admin,Approval.vm")" method="post">
+<form action="$link.setPage("admin,Approval.vm")" method="post" name="updatesearchindex">
 <input type="hidden" name="action" value="admin.UpdateSearchIndex" />
 <input type="hidden" name="$scarabG.Constant.NEXT_TEMPLATE" value="admin,UpdateSearchIndex.vm" />
 
