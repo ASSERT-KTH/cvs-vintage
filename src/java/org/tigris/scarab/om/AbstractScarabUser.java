@@ -71,7 +71,7 @@ import org.tigris.scarab.util.Log;
  * 
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: AbstractScarabUser.java,v 1.69 2003/03/27 23:57:19 jon Exp $
+ * @version $Id: AbstractScarabUser.java,v 1.70 2003/04/03 03:19:06 jmcnally Exp $
  */
 public abstract class AbstractScarabUser 
     extends BaseObject 
@@ -82,9 +82,6 @@ public abstract class AbstractScarabUser
     /** Method name used as part of a cache key */
     private static final String GET_R_MODULE_USERATTRIBUTE = 
         "getRModuleUserAttribute";
-    /** Method name used as part of a cache key */
-    private static final String GET_DEFAULT_QUERY_USER = 
-        "getDefaultQueryUser";
 
     private static final String[] HOME_PAGES = {"home,EnterNew.vm", 
         "home,ModuleQuery.vm", "home,XModuleList.vm", "Index.vm"};
@@ -642,85 +639,6 @@ public abstract class AbstractScarabUser
         }
     }
 
-
-    /**
-     * @see org.tigris.scarab.om.ScarabUser#getDefaultQueryUser(Module, IssueType)
-     */
-    public RQueryUser getDefaultQueryUser(Module me, IssueType issueType)
-        throws Exception
-    {
-        RQueryUser rqu = null;
-        List result = null;
-        Object obj = ScarabCache.get(this, GET_DEFAULT_QUERY_USER, 
-                                     me, issueType); 
-        if (obj == null) 
-        {        
-            Criteria crit = new Criteria();
-            crit.add(RQueryUserPeer.USER_ID, getUserId());
-            crit.add(RQueryUserPeer.ISDEFAULT, 1);
-            crit.addJoin(RQueryUserPeer.QUERY_ID,
-                     QueryPeer.QUERY_ID);
-            crit.add(QueryPeer.MODULE_ID, me.getModuleId());
-            crit.add(QueryPeer.ISSUE_TYPE_ID, issueType.getIssueTypeId());
-            result = RQueryUserPeer.doSelect(crit);
-            ScarabCache.put(result, this, GET_DEFAULT_QUERY_USER,  
-                            me, issueType);
-        }
-        else 
-        {
-            result = (List)obj;
-        }
-        if (result.size() > 0)
-        {
-            rqu = (RQueryUser)result.get(0);
-        }
-        else 
-        {
-            // could call getDefaultDefaultQuery here
-        }
-        
-        return rqu;
-    }
-
-    /**
-     * @see org.tigris.scarab.om.ScarabUser#getDefaultQuery(Module, IssueType)
-     */
-    public Query getDefaultQuery(Module me, IssueType issueType)
-        throws Exception
-    {
-        Query query = null;
-        RQueryUser rqu = getDefaultQueryUser(me, issueType);
-        if (rqu != null)
-        { 
-            query = rqu.getQuery();
-        }
-        return query;
-    }
-
-    /**
-     * @see org.tigris.scarab.om.ScarabUser#resetDefaultQuery(Module, IssueType)
-     */
-    public void resetDefaultQuery(Module me, IssueType issueType)
-        throws Exception
-    {
-        RQueryUser rqu = getDefaultQueryUser(me, issueType);
-        if (rqu != null)
-        { 
-            rqu.setIsdefault(false);
-            rqu.save();
-        }
-    }
-
-    // commented out as not yet used.
-    /**
-     * If user has no default query set, gets a default default query.
-    private String getDefaultDefaultQuery() throws Exception
-    {
-        StringBuffer buf = new StringBuffer("&searchcb=");
-        buf.append(getEmail());
-        return buf.toString();
-    }
-    */
 
     /**
      * @see org.apache.torque.om.Persistent#save()

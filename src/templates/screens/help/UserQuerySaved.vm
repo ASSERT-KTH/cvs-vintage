@@ -16,7 +16,6 @@
                 <li><a href="#saving">$l10n.SavingQueries</a></li>
                 <li><a href="#managing">$l10n.ManagingQueries</a></li>
                 <!--<li><a href="#subscribing">$l10n.SubscribingQueries</a></li>-->
-                <li><a href="#default">$l10n.SettingDefaultQuery</a></li>
               </ul>
             </li>
           </ul>
@@ -49,8 +48,7 @@
   <!--<p><strong><a name="subscribing" id="subscribing"> $l10n.SubscribingQueries</a></strong></p>
   <p>$l10n.UQSP10S1 <em>$l10n.SavedQueries</em> $l10n.UQSP10S2 <em>$l10n.Subscr</em> $l10n.UQSP10S3 <em>$l10n.SubscrFreq</em> $l10n.UQSP10S4</p>
   <p>$l10n.UQSP11</p>
-  <p>$l10n.UQSP12</a></strong></p>
-  <p>$l10n.UQSP13</p>-->
+  <p>$l10n.UQSP12</a></strong></p>-->
   
 <div class="courtesylinks"><p><a href="#toc">$l10n.Top</a></div> 
  

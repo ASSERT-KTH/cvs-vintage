@@ -74,11 +74,14 @@ import org.tigris.scarab.services.cache.ScarabCache;
  * This class is responsible for managing the query lists (deleting queries).
  *    
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: QueryList.java,v 1.24 2003/04/01 02:50:43 jon Exp $
+ * @version $Id: QueryList.java,v 1.25 2003/04/03 03:19:06 jmcnally Exp $
  */
 public class QueryList extends RequireLoginFirstAction
 {
 
+    /**
+     * This method is not used until subscribed queries is working
+     */
     public void doSave(RunData data, TemplateContext context)
         throws Exception
     {
@@ -123,20 +126,6 @@ public class QueryList extends RequireLoginFirstAction
        else
        {
            scarabR.setAlertMessage(l10n.get(ERROR_MESSAGE));
-       }
-
-       // Delete previous default
-       user.resetDefaultQuery(me, issueType);
-
-       // Save default query.
-       String queryId = data.getParameters().getString("default");
-       if (queryId != null && queryId.length() > 0)
-       {
-           Query defaultQuery = QueryManager
-               .getInstance(new NumberKey(queryId), false);
-           RQueryUser rqu = defaultQuery.getRQueryUser(user);
-           rqu.setIsdefault(true);
-           rqu.save();
        }
        ScarabCache.clear();
     } 

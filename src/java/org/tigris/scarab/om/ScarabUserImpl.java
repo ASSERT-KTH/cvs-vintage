@@ -80,7 +80,7 @@ import org.apache.log4j.Logger;
  * implementation needs.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ScarabUserImpl.java,v 1.94 2003/03/28 02:08:17 jon Exp $
+ * @version $Id: ScarabUserImpl.java,v 1.95 2003/04/03 03:19:06 jmcnally Exp $
  */
 public class ScarabUserImpl 
     extends BaseScarabUserImpl 
@@ -660,34 +660,6 @@ public class ScarabUserImpl
     public void setCurrentReport(String key, ReportBridge report)
     {
         internalUser.setCurrentReport(key, report);
-    }
-    
-    /**
-     * Gets default query-user map for this module/issuetype.
-     */
-    public RQueryUser getDefaultQueryUser(Module module, 
-                                          IssueType issueType)
-        throws Exception
-    {
-        return internalUser.getDefaultQueryUser(module, issueType);
-    }
-    
-    /**
-     * gets default query for this module/issuetype.
-     */
-    public Query getDefaultQuery(Module module, IssueType issueType)
-        throws Exception
-    {
-        return internalUser.getDefaultQuery(module, issueType);
-    }
-    
-    /**
-     * Clears default query for this module/issuetype.
-     */
-    public void resetDefaultQuery(Module module, IssueType issueType)
-        throws Exception
-    {
-        internalUser.resetDefaultQuery(module, issueType);
     }
     
     /**

@@ -57,11 +57,6 @@
     #if ($currentIssueType && $user.hasMostRecentQuery())
         <option value="IssueList.vm">&#160;$l10n.MostRecent</option>
     #end
-  
-      #set ($defaultQuery = $user.getDefaultQuery($module, $currentIssueType))
-      #if ($defaultQuery)
-        <option value="$defaultQuery.QueryId" >&#160;Default query</option>
-      #end 
 
 #set ($privateQueries = $scarabR.PrivateQueries)
 #set ($globalQueries = $scarabR.GlobalQueries)
