@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/util/net/Attic/PoolTcpEndpoint.java,v 1.16 2001/12/07 04:40:06 billbarker Exp $
- * $Revision: 1.16 $
- * $Date: 2001/12/07 04:40:06 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/util/net/Attic/PoolTcpEndpoint.java,v 1.17 2002/02/24 03:36:15 larryi Exp $
+ * $Revision: 1.17 $
+ * $Date: 2002/02/24 03:36:15 $
  *
  * ====================================================================
  *
@@ -256,11 +256,15 @@ public class PoolTcpEndpoint { // implements Endpoint {
 	    if(factory==null)
 		factory=ServerSocketFactory.getDefault();
 	    if(serverSocket==null) {
-		if (inet == null) {
-		    serverSocket = factory.createSocket(port, backlog);
-		} else {
-		    serverSocket = factory.createSocket(port, backlog, inet);
-		}
+                try {
+                    if (inet == null) {
+                        serverSocket = factory.createSocket(port, backlog);
+                    } else {
+                        serverSocket = factory.createSocket(port, backlog, inet);
+                    }
+                } catch ( BindException be ) {
+                    throw new BindException(be.getMessage() + ":" + port);
+                }
 	    }
 	    if( serverTimeout >= 0 )
 		serverSocket.setSoTimeout( serverTimeout );
