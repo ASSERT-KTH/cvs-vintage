@@ -1,4 +1,4 @@
-// $Id: NotationProvider2.java,v 1.8 2004/10/18 14:02:09 mkl Exp $
+// $Id: NotationProvider2.java,v 1.9 2004/12/28 13:23:08 linus Exp $
 // Copyright (c) 2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -26,18 +26,18 @@ package org.argouml.application.api;
 
 /**
  * Interface provided by classes that provide a notation.<p>
- * 
+ *
  * This interface is used by all elements in the Diagrams whenever
  * some UML-object needs to be converted into a text string.<p>
- * 
- * For UML this interface is implemented by 
- * {@link org.argouml.uml.generator.GeneratorDisplay}. 
- * For Java it is implemented by 
+ *
+ * For UML this interface is implemented by
+ * {@link org.argouml.uml.generator.GeneratorDisplay}.
+ * For Java it is implemented by
  * {@link org.argouml.language.java.generator.GeneratorJava}.
- * 
- * TODO: {@link org.argouml.uml.generator.ParserDisplay} and this interface 
+ *
+ * TODO: {@link org.argouml.uml.generator.ParserDisplay} and this interface
  * should probably be joined into an editable field instead.
- *  
+ *
  * @see org.argouml.language
  */
 public interface NotationProvider2 {
@@ -59,7 +59,7 @@ public interface NotationProvider2 {
      * Generate the String representation for an Operation.
      *
      * @param op Object to generate representation for.
-     * @param documented <tt>true</tt> if documentation shall be generated.
+     * @param documented <code>true</code> if documentation shall be generated.
      * @return The String representation of the object.
      */
     String generateOperation(Object op, boolean documented);
@@ -68,7 +68,7 @@ public interface NotationProvider2 {
      * Generate the String representation for an Attribute.
      *
      * @param attr Object to generate representation for.
-     * @param documented <tt>true</tt> if documentation shall be generated.
+     * @param documented <code>true</code> if documentation shall be generated.
      * @return The String representation of the object.
      */
     String generateAttribute(Object attr, boolean documented);
@@ -119,6 +119,7 @@ public interface NotationProvider2 {
      * Generate the String representation for a Stereotype.
      *
      * @param s Object to generate representation for.
+     *          This can also be a Collection with all stereotypes.
      * @return The String representation of the object.
      */
     String generateStereotype(Object s);
@@ -170,7 +171,7 @@ public interface NotationProvider2 {
      * @return The String representation of the object.
      */
     String generateState(Object m);
-    
+
     /**
      * Generate the String representation for a StateBody.
      *
@@ -202,7 +203,7 @@ public interface NotationProvider2 {
      * @return The String representation of the object.
      */
     String generateAction(Object m);
-    
+
     /**
      * Generate the String representation for an Action State.
      *
