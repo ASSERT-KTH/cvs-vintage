@@ -72,7 +72,7 @@ import org.tigris.scarab.workflow.WorkflowFactory;
  *
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: IssueType.java,v 1.56 2003/07/26 18:26:57 jmcnally Exp $
+ * @version $Id: IssueType.java,v 1.57 2003/07/28 14:41:21 thierrylach Exp $
  */
 public  class IssueType 
     extends org.tigris.scarab.om.BaseIssueType
@@ -233,7 +233,7 @@ public  class IssueType
         IssueType newIssueType = new IssueType();
         newIssueType.setName(getName() + " (copy)");
         newIssueType.setDescription(getDescription());
-        newIssueType.setParentId(new Integer(0));
+        newIssueType.setParentId(ScarabConstants.INTEGER_0);
         newIssueType.save();
         Integer newId = newIssueType.getIssueTypeId();
 

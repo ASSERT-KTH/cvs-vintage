@@ -71,7 +71,7 @@ import org.tigris.scarab.om.Module;
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: AttributeValue.java,v 1.97 2003/06/03 20:26:34 elicia Exp $
+ * @version $Id: AttributeValue.java,v 1.98 2003/07/28 14:41:21 thierrylach Exp $
  */
 public abstract class AttributeValue 
     extends BaseAttributeValue
@@ -818,7 +818,7 @@ Leaving here so that John can remove or fix.
             {
                 saveActivity = ActivityManager
                                 .create(getIssue(), getAttribute(), activitySet, 
-                                        desc, null, getNumericValue(), new Integer(0), 
+                                        desc, null, getNumericValue(), ScarabConstants.INTEGER_0,
                                         getUserId(), null, getOptionId(), null, 
                                         getValue(), null, dbcon);
             }
