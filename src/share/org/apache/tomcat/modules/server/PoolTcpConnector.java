@@ -58,6 +58,7 @@ public abstract class PoolTcpConnector extends BaseInterceptor
 
     public PoolTcpConnector() {
     	ep = new PoolTcpEndpoint();
+	ep.setStrategy("lf");
     }
 
     // -------------------- Start/stop --------------------
@@ -107,9 +108,6 @@ public abstract class PoolTcpConnector extends BaseInterceptor
     
     // -------------------- Pool setup --------------------
 
-    public void setPools( boolean t ) {
-	ep.setPoolOn(t);
-    }
 
     public void setMaxThreads( int maxThreads ) {
 	ep.setMaxThreads(maxThreads);
