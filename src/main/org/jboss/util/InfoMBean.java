@@ -13,7 +13,8 @@ import java.lang.Object;
  *      
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>.
  * @author <a href="mailto:hiram.chirino@jboss.org">Hiram Chirino</a>.
- * @version $Revision: 1.5 $
+ * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
+ * @version $Revision: 1.6 $
  */
 public interface InfoMBean
 {
@@ -21,4 +22,6 @@ public interface InfoMBean
    String listSystemInfo();
    String listThreadDump();
    String runGarbageCollector();
+   void traceMethodCalls(boolean flag);
+   void traceInstructions(boolean flag);
 }

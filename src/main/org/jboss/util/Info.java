@@ -20,7 +20,8 @@ import org.apache.log4j.Category;
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>.
  * @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>.
  * @author <a href="mailto:hiram.chirino@jboss.org">Hiram Chirino</a>.
- * @version $Revision: 1.12 $
+ * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
+ * @version $Revision: 1.13 $
  */
 public class Info
    implements InfoMBean, MBeanRegistration
@@ -178,5 +179,19 @@ public class Info
          "<b>Total Thread Groups:</b> "+activeGroups+"<br>"+
          getThreadGroupInfo(root) ;
       return rc;
+   }
+
+   /**
+    * Enable or disable tracing method calls at the Runtime level.
+    */
+   public void traceMethodCalls(final boolean flag) {
+      Runtime.getRuntime().traceMethodCalls(flag);
+   }
+   
+   /**
+    * Enable or disable tracing instructions the Runtime level.
+    */
+   public void traceInstructions(final boolean flag) {
+      Runtime.getRuntime().traceInstructions(flag);
    }
 }
