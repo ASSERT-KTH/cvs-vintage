@@ -99,10 +99,11 @@ INSERT INTO SCARAB_R_MODULE_ISSUE_TYPE VALUES (7,5,1,1,1,5,5,NULL,NULL);
 INSERT INTO SCARAB_R_MODULE_ISSUE_TYPE VALUES (7,7,1,1,1,5,5,NULL,NULL);
 INSERT INTO SCARAB_R_MODULE_ISSUE_TYPE VALUES (7,9,1,1,1,5,5,NULL,NULL);
 
-#
-# 'SCARAB_ATTRIBUTE_GROUP'
-# attribute_group_id, name, description, module_id, issue_type_id,active, preferred_order
-#
+/*
+ * 'SCARAB_ATTRIBUTE_GROUP'
+ * attribute_group_id, name, description, module_id, issue_type_id,
+ * active, preferred_order
+ */
 
 INSERT INTO SCARAB_ATTRIBUTE_GROUP VALUES (100,'group one','dedupe attributes',1,1,1,1);
 INSERT INTO SCARAB_ATTRIBUTE_GROUP VALUES (101,'group two','non-dedupe attributes',1,1,1,3);
@@ -175,11 +176,10 @@ INSERT INTO SCARAB_ATTRIBUTE_GROUP VALUES (167,'group two','non-dedupe attribute
 INSERT INTO SCARAB_ATTRIBUTE_GROUP VALUES (168,'group one','dedupe attributes',7,9,1,1);
 INSERT INTO SCARAB_ATTRIBUTE_GROUP VALUES (169,'group two','non-dedupe attributes',7,9,1,3);
 
-#
-# 'SCARAB_ATTRIBUTE_GROUP'
-# group_id, attribute_id, preferred_order
-#
-
+/*
+ * 'SCARAB_ATTRIBUTE_GROUP'
+ * group_id, attribute_id, preferred_order
+ */
 INSERT INTO SCARAB_R_ATTRIBUTE_ATTRIBUTEGROUP VALUES (100,5,1);
 INSERT INTO SCARAB_R_ATTRIBUTE_ATTRIBUTEGROUP VALUES (100,6,2);
 INSERT INTO SCARAB_R_ATTRIBUTE_ATTRIBUTEGROUP VALUES (100,11,3);
@@ -503,12 +503,11 @@ INSERT INTO SCARAB_R_ATTRIBUTE_ATTRIBUTEGROUP VALUES (169,7,5);
 INSERT INTO SCARAB_R_ATTRIBUTE_ATTRIBUTEGROUP VALUES (169,8,6);
 INSERT INTO SCARAB_R_ATTRIBUTE_ATTRIBUTEGROUP VALUES (169,12,7);
 
-#
-# SCARAB_R_MODULE_ATTRIBUTE
-# module_id, attribute_id,issue_type_id, display_value, active, required,
-# preferred_order,dedupe, quick_search
-#
-
+/*
+ * SCARAB_R_MODULE_ATTRIBUTE
+ * module_id, attribute_id,issue_type_id, display_value, active, required,
+ * preferred_order,dedupe, quick_search
+ */
 INSERT INTO SCARAB_R_MODULE_ATTRIBUTE VALUES (1,11,2,'Summary',1,1,1,1,1);
 INSERT INTO SCARAB_R_MODULE_ATTRIBUTE VALUES (1,5,2,'Platform',1,1,2,1,0);
 INSERT INTO SCARAB_R_MODULE_ATTRIBUTE VALUES (1,6,2,'Operating System',1,1,3,1,0);
@@ -1154,11 +1153,10 @@ INSERT INTO SCARAB_R_MODULE_ATTRIBUTE VALUES (7,7,9,'Priority',1,0,500,0,0);
 INSERT INTO SCARAB_R_MODULE_ATTRIBUTE VALUES (7,8,9,'Vote',1,0,600,0,0);
 INSERT INTO SCARAB_R_MODULE_ATTRIBUTE VALUES (7,12,9,'Functional Area',1,0,1000,0,0);
 
-#
-# Dumping data for table 'SCARAB_R_MODULE_OPTION'
-# module_id, issue_type_id, option_id, display_value, active, preferred_order
-#
-
+/*
+ * Dumping data for table 'SCARAB_R_MODULE_OPTION'
+ * module_id, issue_type_id, option_id, display_value, active, preferred_order
+ */
 INSERT INTO SCARAB_R_MODULE_OPTION VALUES (1,1,16,NULL,1,1,1);
 INSERT INTO SCARAB_R_MODULE_OPTION VALUES (1,2,16,NULL,1,1,1);
 INSERT INTO SCARAB_R_MODULE_OPTION VALUES (1,1,17,NULL,1,1,2);
@@ -4362,7 +4360,9 @@ insert into SCARAB_ISSUE_ATTRIBUTE_VALUE(VALUE_ID, ISSUE_ID, ATTRIBUTE_ID, VALUE
 /* summary */
 insert into SCARAB_ISSUE_ATTRIBUTE_VALUE(VALUE_ID, ISSUE_ID, ATTRIBUTE_ID, VALUE) values (11, 2, 11, 'Dates display in long form instead of short form.');
 /* assigned to visitor id 1 */
-#insert into SCARAB_ISSUE_ATTRIBUTE_VALUE(VALUE_ID, ISSUE_ID, ATTRIBUTE_ID, USER_ID, VALUE) values (12, 2, 2, 1, 'jon');
+/* 
+insert into SCARAB_ISSUE_ATTRIBUTE_VALUE(VALUE_ID, ISSUE_ID, ATTRIBUTE_ID, USER_ID, VALUE) values (12, 2, 2, 1, 'jon')
+*/
 /* status is New */
 insert into SCARAB_ISSUE_ATTRIBUTE_VALUE(VALUE_ID, ISSUE_ID, ATTRIBUTE_ID, OPTION_ID, VALUE) values (13, 2, 3, 2, 'New');
 /* resolution is verified */

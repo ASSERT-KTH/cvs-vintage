@@ -252,14 +252,18 @@ insert into SCARAB_ATTRIBUTE_OPTION(OPTION_ID, ATTRIBUTE_ID, OPTION_NAME) /*  */
         values(70, 9, 'serious');
 insert into SCARAB_ATTRIBUTE_OPTION(OPTION_ID, ATTRIBUTE_ID, OPTION_NAME) /*  */
         values(71, 9, 'undecided');
-insert into SCARAB_ATTRIBUTE_OPTION(OPTION_ID, ATTRIBUTE_ID, OPTION_NAME) /* Tracking options */
-        values(72, 10, 'never'); /* never send notification */
-insert into SCARAB_ATTRIBUTE_OPTION(OPTION_ID, ATTRIBUTE_ID, OPTION_NAME) /*  */
-        values(73, 10, 'major'); /* send notification on major change */
-insert into SCARAB_ATTRIBUTE_OPTION(OPTION_ID, ATTRIBUTE_ID, OPTION_NAME) /*  */
-        values(74, 10, 'any'); /* send notification on any change */
-
-insert into SCARAB_ATTRIBUTE_OPTION(OPTION_ID, ATTRIBUTE_ID, OPTION_NAME) /* Functional Area */
+/* Tracking options */
+/* never send notification */
+insert into SCARAB_ATTRIBUTE_OPTION(OPTION_ID, ATTRIBUTE_ID, OPTION_NAME)
+        values(72, 10, 'never'); 
+/* send notification on major change */
+insert into SCARAB_ATTRIBUTE_OPTION(OPTION_ID, ATTRIBUTE_ID, OPTION_NAME)
+        values(73, 10, 'major'); 
+/* send notification on any change */
+insert into SCARAB_ATTRIBUTE_OPTION(OPTION_ID, ATTRIBUTE_ID, OPTION_NAME)
+        values(74, 10, 'any'); 
+/* Functional Area */
+insert into SCARAB_ATTRIBUTE_OPTION(OPTION_ID, ATTRIBUTE_ID, OPTION_NAME) 
         values(88, 12, 'UI');
 insert into SCARAB_ATTRIBUTE_OPTION(OPTION_ID, ATTRIBUTE_ID, OPTION_NAME) /*  */
         values(89, 12, 'Setup');
