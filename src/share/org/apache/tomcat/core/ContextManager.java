@@ -1051,7 +1051,7 @@ public class ContextManager {
     /** Note id counters. Synchronized access is not necesarily needed
      *  ( the initialization is in one thread ), but anyway we do it
      */
-    private  int noteId[]=new int[3];
+    private  int noteId[]=new int[4];
 
     /** Maximum number of notes supported
      */
@@ -1061,10 +1061,11 @@ public class ContextManager {
     public static final int SERVER_NOTE=0;
     public static final int CONTAINER_NOTE=1;
     public static final int REQUEST_NOTE=2;
+    public static final int HANDLER_NOTE=3;
 
     public static final int REQ_RE_NOTE=0;
     
-    String noteName[][]=new String[3][MAX_NOTES];
+    String noteName[][]=new String[4][MAX_NOTES];
 
     /** used to allow interceptors to set specific per/request, per/container
      * and per/CM informations.

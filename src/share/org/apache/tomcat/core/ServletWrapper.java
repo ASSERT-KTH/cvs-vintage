@@ -119,6 +119,10 @@ public class ServletWrapper extends Handler {
         configF = context.getFacadeManager().createServletConfig( this );
     }
 
+    public String toString() {
+	return name + "(" + servletClassName + "/" + path);
+    }
+    
     // -------------------- Servlet specific properties 
     public void setLoadOnStartUp( int level ) {
 	loadOnStartup=level;
@@ -165,6 +169,9 @@ public class ServletWrapper extends Handler {
     public void setServletClass(String servletClassName) {
 	if( name==null ) name=servletClassName;
 	this.servletClassName = servletClassName;
+	servlet=null; // reset the servlet, if it was set
+	servletClass=null;
+	initialized=false;
     }
 
     /** Security Role Ref represent a mapping between servlet role names and
@@ -239,6 +246,8 @@ public class ServletWrapper extends Handler {
     {
 	// XXX Move this to an interceptor, so it will be configurable.
 	// ( and easier to read )
+	// 	System.out.println("LoadServlet " + servletClass + " "
+	// 			   + servletClassName);
 	if (servletClass == null) {
 	    if (servletClassName == null) {
 		throw new IllegalStateException("Can't happen - classname "
@@ -262,7 +271,8 @@ public class ServletWrapper extends Handler {
     {
 	// make sure the servlet in loaded before calling preInit
 	// Jsp case - maybe another Jsp engine is used
-	if( servlet==null && path != null ) {
+	if( servlet==null && path != null &&  servletClassName == null) {
+	    System.out.println("Handle Jsp init " + servletClassName);
 	    handleJspInit();
 	}
 	// Will throw exception if it can't load, let upper

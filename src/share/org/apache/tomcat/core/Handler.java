@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Handler.java,v 1.6 2000/06/22 23:59:23 costin Exp $
- * $Revision: 1.6 $
- * $Date: 2000/06/22 23:59:23 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Handler.java,v 1.7 2000/06/28 15:42:54 costin Exp $
+ * $Revision: 1.7 $
+ * $Date: 2000/06/28 15:42:54 $
  *
  * ====================================================================
  *
@@ -212,7 +212,6 @@ public class Handler {
 	    
 	    if( ! internal )
 		contextM.doPreServletInit( context, (ServletWrapper)this);
-
 	    doInit();
 
 	    // if an exception is thrown in init, no end interceptors will
@@ -340,6 +339,19 @@ public class Handler {
 
     public long getAccount( int pos ) {
 	return accTable[pos];
+    }
+
+    // -------------------- Notes
+    Object notes[]=new Object[ContextManager.MAX_NOTES];
+
+    /** See ContextManager comments.
+     */
+    public void setNote( int pos, Object value ) {
+	notes[pos]=value;
+    }
+
+    public Object getNote( int pos ) {
+	return notes[pos];
     }
 
 }
