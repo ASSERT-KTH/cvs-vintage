@@ -21,7 +21,7 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $Id: ProjectManager.java,v 1.7 2003/04/16 16:00:35 alexb Exp $
+// $Id: ProjectManager.java,v 1.8 2003/05/05 09:48:24 kataka Exp $
 
 package org.argouml.kernel;
 
@@ -29,6 +29,7 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.IOException;
 import java.net.URL;
+import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
 import javax.swing.event.EventListenerList;
@@ -254,9 +255,10 @@ public final class ProjectManager {
             ZipInputStream zis = new ZipInputStream(url.openStream());
 
             // first read the .argo file from Zip
-            String name = zis.getNextEntry().getName();
-            while (!name.endsWith(PROJECT_FILE_EXT)) {
-                name = zis.getNextEntry().getName();
+            ZipEntry entry = zis.getNextEntry();
+            String name = null;
+            while (entry != null && !entry.getName().endsWith(PROJECT_FILE_EXT)) {                            
+                entry = zis.getNextEntry();
             }
 
             // the "false" means that members should not be added,
