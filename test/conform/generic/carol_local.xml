@@ -60,6 +60,11 @@
   <!-- test launching --> 
   <!-- those tests are launch with a parallele task -->
   <target name="launch.test.local">
+  
+  <condition property="is.jvm.1.4">
+      <equals  arg1="${ant.java.version}" arg2="1.4"/>
+    </condition>
+  
     <mkdir dir="${report.dir}" />
     <mkdir dir="${report.dir}/html" />
     <junit printsummary="yes" 
