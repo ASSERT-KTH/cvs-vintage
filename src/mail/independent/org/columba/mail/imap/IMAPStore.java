@@ -35,10 +35,10 @@ import org.columba.mail.gui.util.PasswordDialog;
 import org.columba.mail.message.ColumbaHeader;
 import org.columba.mail.message.HeaderList;
 import org.columba.mail.util.MailResourceLoader;
+import org.columba.ristretto.imap.IMAPHeader;
 import org.columba.ristretto.imap.IMAPResponse;
 import org.columba.ristretto.imap.ListInfo;
 import org.columba.ristretto.imap.parser.FlagsParser;
-import org.columba.ristretto.imap.parser.IMAPHeader;
 import org.columba.ristretto.imap.parser.IMAPHeaderParser;
 import org.columba.ristretto.imap.parser.ListInfoParser;
 import org.columba.ristretto.imap.parser.MessageFolderInfoParser;
@@ -364,10 +364,10 @@ public class IMAPStore {
 
 		} else {
 			// force selection of correct folder
-			
+
 			// currenlty selected folder == null
 			setSelectedFolderPath(null);
-			
+
 			select(path);
 		}
 
@@ -452,36 +452,6 @@ public class IMAPStore {
 	}
 
 	/**
-	 * Convert list of indices to list of UIDs.
-	 * 
-	 * @param v		list of indices
-	 * @return		list of UIDs
-	 * @throws Exception
-	 */
-	public List convertIndexToUid(List v) throws Exception {
-		if (v.size() == 0)
-			return v;
-
-		List result = new Vector();
-		String messageSet = new MessageSet(v.toArray()).getString();
-
-		try {
-
-			IMAPResponse[] responses =
-				imap.fetchUIDList(messageSet, messageFolderInfo.getExists());
-
-			result = UIDParser.parse(responses);
-
-			return v;
-		} catch (BadCommandException ex) {
-		} catch (CommandFailedException ex) {
-		}
-		return result;
-	}
-
-	/**************************** authenticate state ************************/
-
-	/**
 	 * Fetch delimiter.
 	 * 
 	 */
@@ -537,7 +507,7 @@ public class IMAPStore {
 					continue;
 				}
 
-				if( responses[i].getResponseSubType().equals("LSUB") ) {
+				if (responses[i].getResponseSubType().equals("LSUB")) {
 					ListInfo listInfo = ListInfoParser.parse(responses[i]);
 					v.add(listInfo);
 				}
@@ -748,8 +718,16 @@ public class IMAPStore {
 					"message",
 					"fetch_uid_list"));
 
+			LinkedList uids = new LinkedList();
 			IMAPResponse[] responses = imap.fetchUIDList("1:*", count);
-			return UIDParser.parse(responses);
+
+			for (int i = 0; i < responses.length; i++) {
+				if (responses[i].getResponseSubType().equals("FETCH")) {
+					uids.add(UIDParser.parse(responses[i]));
+					responses[i] = null;
+				}
+			}
+			return uids;
 		} catch (BadCommandException ex) {
 		} catch (CommandFailedException ex) {
 		} catch (DisconnectedException ex) {
@@ -893,20 +871,21 @@ public class IMAPStore {
 				headerFields.trim());
 
 		// parse headers
-		for( int i=0; i<r.length; i++) {
-			if( r[i].getResponseSubType().equals("FETCH") ) {
+		for (int i = 0; i < r.length; i++) {
+			if (r[i].getResponseSubType().equals("FETCH")) {
 				// parse the reponse 
 				IMAPHeader imapHeader = IMAPHeaderParser.parse(r[i]);
 				// consume this line
 				r[i] = null;
-				
+
 				// add it to the headerlist
-				ColumbaHeader header = new ColumbaHeader(imapHeader.getHeader());
+				ColumbaHeader header =
+					new ColumbaHeader(imapHeader.getHeader());
 				Object uid = imapHeader.getUid();
 				header.set("columba.uid", uid);
 				headerList.add(header, uid);
 			}
-			
+
 		}
 	}
 
