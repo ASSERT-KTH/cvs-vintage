@@ -29,7 +29,7 @@ import org.jboss.util.ServiceMBeanSupport;
  *
  *   @see <related>
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
- *   @version $Revision: 1.17 $
+ *   @version $Revision: 1.18 $
  */
 public class ConfigurationService
    extends ServiceMBeanSupport
@@ -141,6 +141,10 @@ public class ConfigurationService
             if (e instanceof RuntimeMBeanException)
             {
                e = ((RuntimeMBeanException)e).getTargetException();
+            }
+            else if( e instanceof MBeanException)
+            {
+               e = ((MBeanException)e).getTargetException();
             }
 
             Log.getLog().exception(e);
