@@ -57,6 +57,7 @@ import org.apache.torque.om.NumberKey;
 
 import org.tigris.scarab.services.security.ScarabSecurity;
 import org.tigris.scarab.services.module.ModuleEntity;
+import org.tigris.scarab.services.user.UserManager;
 import org.tigris.scarab.util.ScarabConstants;
 import org.tigris.scarab.util.ScarabException;
 import org.tigris.scarab.tools.Email;
@@ -129,8 +130,7 @@ public class Query
                 String template = Turbine.getConfiguration().
                     getString("scarab.email.requireapproval.template",
                               "email/RequireApproval.vm");
-                ScarabUser toUser = (ScarabUser) ScarabUserImplPeer
-                                  .retrieveByPK((NumberKey)module.getOwnerId());
+                ScarabUser toUser = UserManager.getInstance(module.getOwnerId());
                 Email.sendEmail(context, null, toUser, subject, template);
             }
         }
