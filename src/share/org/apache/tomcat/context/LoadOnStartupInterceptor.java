@@ -152,12 +152,9 @@ public class LoadOnStartupInterceptor extends BaseInterceptor {
 	String path=result.getPath();
 	Request request = new Request();
 	Response response = new Response();
-	request.setContextManager( cm );
 	request.recycle();
 	response.recycle();
-	
-	request.setResponse(response);
-	response.setRequest(request);
+	cm.initRequest(request,response);
 	
 	String requestURI = path + "?jsp_precompile=true";
 	
@@ -165,7 +162,6 @@ public class LoadOnStartupInterceptor extends BaseInterceptor {
 	request.setQueryString( "jsp_precompile=true" );
 	
 	request.setContext(context);
-	request.getSession(true);
 
 	cm.service( request, response );
     }

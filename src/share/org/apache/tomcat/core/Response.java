@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Response.java,v 1.34 2000/08/31 18:05:53 nacho Exp $
- * $Revision: 1.34 $
- * $Date: 2000/08/31 18:05:53 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Response.java,v 1.35 2000/09/14 00:53:59 larryi Exp $
+ * $Revision: 1.35 $
+ * $Date: 2000/09/14 00:53:59 $
  *
  * ====================================================================
  *
@@ -193,7 +193,7 @@ public class Response {
 	started = false;
 	commited = false;
 	included=false;
-	oBuffer.recycle();
+	if ( oBuffer != null ) oBuffer.recycle();
 	headers.clear();
     }
 
