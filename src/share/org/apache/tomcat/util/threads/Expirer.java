@@ -105,7 +105,7 @@ public final class Expirer  implements ThreadPoolRunnable
     
     public void addManagedObject( TimeStamp ts ) {
 	synchronized( managedObjs ) {
-	    if( managedCount > managedLen ) {
+	    if( managedCount >= managedLen ) {
 		// What happens if expire is on the way ? Nothing,
 		// expire will do it's job on the old array ( GC magic )
 		// and the expired object will be marked as such
@@ -113,8 +113,10 @@ public final class Expirer  implements ThreadPoolRunnable
 		TimeStamp newA[]=new TimeStamp[ 2 * managedLen ];
 		System.arraycopy( managedObjs, 0, newA, 0, managedLen);
 		managedObjs = newA;
+		managedLen = 2 * managedLen;
 	    }
-	    managedObjs[managedCount++]=ts;
+	    managedObjs[managedCount]=ts;
+	    managedCount++;
 	}
     }
 

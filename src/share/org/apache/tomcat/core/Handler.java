@@ -278,7 +278,11 @@ public class Handler {
     {
 	if( ! initialized ) {
 	    try {
-		init();
+		synchronized( this ) {
+		    // we may be initialized when we enter the sync block
+		    if( ! initialized )
+			init();
+		}
 	    } catch( Exception ex ) {
 		initialized=false;
 		if( ex instanceof ClassNotFoundException ) {

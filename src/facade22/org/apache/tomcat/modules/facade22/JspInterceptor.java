@@ -94,6 +94,7 @@ public class JspInterceptor extends BaseInterceptor {
     public void addContext(ContextManager cm, Context ctx)
 	throws TomcatException 
     {
+	JspFactory.setDefaultFactory(new JspFactoryImpl());
 	try {
 	    URL url=new URL( "file", null,
 			     ctx.getWorkDir().getAbsolutePath() + "/");
@@ -101,12 +102,6 @@ public class JspInterceptor extends BaseInterceptor {
 	    if( debug > 0 ) log( "Added to classpath: " + url );
 	} catch( MalformedURLException ex ) {
 	}
-    }
-
-    public void contextInit(Context ctx)
-	throws TomcatException 
-    {
-	JspFactory.setDefaultFactory(new JspFactoryImpl());
     }
 
     public void preServletInit( Context ctx, Handler sw )
@@ -154,11 +149,19 @@ public class JspInterceptor extends BaseInterceptor {
 	    
 	    // jump version number - the file needs to
 	    // be recompiled, and we don't want a reload
-	    if( debug>0 )
-		log( "Compiling " + jspInfo );
-	    jspInfo.nextVersion();
-	    compile( req, jspInfo );
-	    mapJspPage( req , jspInfo, jspInfo.uri, jspInfo.fullClassN);
+	    log( "Before sync block  " + jspInfo );
+	    synchronized( jspInfo ) {
+		//		if( debug>0 )
+		if( jspInfo.jspSource.lastModified() 
+		    > jspInfo.compileTime ) {
+		    log( "Compiling " + jspInfo );
+		
+		    jspInfo.nextVersion();
+		    compile( req, jspInfo );
+		    mapJspPage( req , jspInfo, jspInfo.uri,
+				jspInfo.fullClassN);
+		}
+	    } 
 	}
 
 	return 0;
@@ -195,7 +198,6 @@ public class JspInterceptor extends BaseInterceptor {
 		     " path=" + servletPath );
 	    }
 	    wrapper.setServletClass( classN );
-	    wrapper.getServlet();
 	    wrapper.setNote( jspInfoNOTE, jspInfo );
 	} catch( TomcatException ex ) {
 	    log("mapJspPage: request=" + req + ", jspInfo=" + jspInfo + ", servletName=" + servletName + ", classN=" + classN, ex);

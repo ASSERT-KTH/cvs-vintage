@@ -220,8 +220,8 @@ static int JK_METHOD ws_write(jk_ws_service_t *s,
 
         if(l) {
             BUFF *bf = p->r->connection->client;
-            ap_size_t w = (ap_size_t)l;
-            ap_size_t r = 0;
+            size_t w = (size_t)l;
+            size_t r = 0;
 
             if(!p->response_started) {
                 if(!s->start_response(s, 200, NULL, NULL, NULL, 0)) {

@@ -146,6 +146,12 @@
             className="org.apache.tomcat.request.InvokerInterceptor" 
             debug="0" />
 
+        <!-- "jsp" handler 
+          -->
+        <RequestInterceptor 
+            className="org.apache.tomcat.modules.facade22.JspInterceptor" 
+            debug="0"  />
+        
         <!-- "default" handler - static files and dirs
           -->
         <RequestInterceptor 

@@ -68,6 +68,8 @@ import org.apache.tomcat.util.*;
 import org.apache.tomcat.util.threads.*;
 import org.apache.tomcat.helper.*;
 import org.apache.tomcat.core.*;
+import org.apache.tomcat.logging.Logger.Helper;
+import org.apache.tomcat.logging.Logger;
 
 /**
  *
@@ -75,6 +77,8 @@ import org.apache.tomcat.core.*;
  */
 public final class ServerSessionManager  
 {
+    protected Logger.Helper loghelper = new Logger.Helper("tc_log", this);
+    
     /** The set of previously recycled Sessions for this Manager.
      */
     protected SimplePool recycled = new SimplePool();
@@ -165,8 +169,10 @@ public final class ServerSessionManager
 
     public ServerSession getNewSession() {
 	if ((maxActiveSessions >= 0) &&
-	    (sessions.size() >= maxActiveSessions))
+	    (sessions.size() >= maxActiveSessions)) {
+	    loghelper.log( "Too many sessions " + maxActiveSessions );
 	    return null;
+	}
 
 	// Recycle or create a Session instance
 	ServerSession session = (ServerSession)recycled.get();

@@ -1,7 +1,7 @@
 ## You need to edit this file - configure later :-)
 
-APACHE_HOME=/home/shachor/jakarta/apache2.0a3
-AP20_SRC=/home/shachor/jakarta/apache_2.0a3/src
+APACHE_HOME=/usr/local/apache2.0
+AP20_SRC=/home/costin/src/jakarta/apache-2.0/src
 OS=linux
 
 ## I assume this one is set up already
