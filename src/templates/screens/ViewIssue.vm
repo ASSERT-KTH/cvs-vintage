@@ -31,7 +31,7 @@ $l10n.format("ViewIssueInDifferentModule", $currentIssue.Module.Name)
 #end
 
 #macro (initializeTabLink)
-  #set ($tabLink = $link.setPage("ViewIssue.vm").addPathInfo("id", "$currentIssue.UniqueId").addPathInfo("eventSubmit_doSetissueview", "foo"))
+  #set ($tabLink = $link.setPage("ViewIssue.vm").addPathInfo("id", "$currentIssue.UniqueId").addPathInfo("eventSubmit_doSetissueview", "foo").setAction("ViewIssue"))
 
  #foreach ($prevNextId in $prevNextList)
     #set ($dummy = $tabLink.addPathInfo("issueList", $prevNextId))
