@@ -27,7 +27,7 @@ import org.jboss.ejb.LocalProxyFactory;
  * or the responsibilities of this class.
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.18 $
+ * @version $Revision: 1.19 $
  */
 public class RelationSet implements Set
 {
@@ -117,16 +117,7 @@ public class RelationSet implements Set
          throw new IllegalArgumentException(msg);
       }
 
-      Object id;
-      try
-      {
-         id = ((EJBLocalObject) o).getPrimaryKey();
-      }
-      catch(NoSuchObjectLocalException e)
-      {
-         throw new IllegalArgumentException(e.getMessage());
-      }
-
+      Object id = getPrimaryKey((EJBLocalObject)o);
       if(idList.contains(id))
       {
          return false;
@@ -181,16 +172,7 @@ public class RelationSet implements Set
             relatedLocalInterface.getName());
       }
 
-      Object id;
-      try
-      {
-         id = ((EJBLocalObject) o).getPrimaryKey();
-      }
-      catch(NoSuchObjectLocalException e)
-      {
-         throw new IllegalArgumentException(e.getMessage());
-      }
-
+      Object id = getPrimaryKey((EJBLocalObject) o);
       if(!idList.contains(id))
       {
          return false;
@@ -277,16 +259,7 @@ public class RelationSet implements Set
       while(iterator.hasNext())
       {
          EJBLocalObject localObject = (EJBLocalObject) iterator.next();
-         Object relatedId;
-         try
-         {
-            relatedId = localObject.getPrimaryKey();
-         }
-         catch(NoSuchObjectLocalException e)
-         {
-            throw new IllegalArgumentException(e.getMessage());
-         }
-
+         Object relatedId = getPrimaryKey(localObject);
          argIds.add(relatedId);
       }
 
@@ -315,16 +288,7 @@ public class RelationSet implements Set
             relatedLocalInterface.getName());
       }
 
-      Object id;
-      try
-      {
-         id = ((EJBLocalObject) o).getPrimaryKey();
-      }
-      catch(NoSuchObjectLocalException e)
-      {
-         throw new IllegalArgumentException(e.getMessage());
-      }
-
+      Object id = getPrimaryKey((EJBLocalObject) o);
       return idList.contains(id);
    }
 
@@ -343,16 +307,7 @@ public class RelationSet implements Set
       while(iterator.hasNext())
       {
          EJBLocalObject localObject = (EJBLocalObject) iterator.next();
-         Object relatedId;
-         try
-         {
-            relatedId = localObject.getPrimaryKey();
-         }
-         catch(NoSuchObjectLocalException e)
-         {
-            throw new IllegalArgumentException(e.getMessage());
-         }
-         
+         Object relatedId = getPrimaryKey(localObject);
          argIds.add(relatedId);
       }
 
@@ -479,5 +434,17 @@ public class RelationSet implements Set
          .append(':')
          .append(getIdList()).append(']')
          .toString();
+   }
+
+   private Object getPrimaryKey(EJBLocalObject o)
+   {
+      try
+      {
+         return o.getPrimaryKey();
+      }
+      catch(NoSuchObjectLocalException e)
+      {
+         throw new IllegalArgumentException(e.getMessage());
+      }
    }
 }
