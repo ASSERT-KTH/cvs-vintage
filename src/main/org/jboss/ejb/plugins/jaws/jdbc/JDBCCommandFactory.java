@@ -42,7 +42,7 @@ import org.jboss.logging.Log;
  * JAWSPersistenceManager JDBCCommandFactory
  *
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
- * @version $Revision: 1.4 $
+ * @version $Revision: 1.5 $
  */
 public class JDBCCommandFactory implements JPMCommandFactory
 {
@@ -74,7 +74,7 @@ public class JDBCCommandFactory implements JPMCommandFactory
 	  
 	  if (jamd == null) {
 	     // we are the first cmp entity to need jaws. Load jaws.xml for the whole application
-		 JawsXmlFileLoader jfl = new JawsXmlFileLoader(amd, container.getClassLoader(), log);
+		 JawsXmlFileLoader jfl = new JawsXmlFileLoader(amd, container.getClassLoader(), container.getLocalClassLoader(), log);
          jamd = jfl.load();
 		 amd.addPluginData("JAWS", jamd);
 	  }

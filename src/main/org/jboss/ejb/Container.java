@@ -67,7 +67,7 @@ import org.jnp.server.NamingServer;
  *   @see ContainerFactory
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
  *   @author <a href="marc.fleury@telkel.com">Marc Fleury</a>
- *   @version $Revision: 1.35 $
+ *   @version $Revision: 1.36 $
  */
 public abstract class Container
 {
@@ -77,6 +77,10 @@ public abstract class Container
 
    // This is the application that this container is a part of
    protected Application application;
+
+   // This is the local classloader of this container. Used for loading resources that
+   // must come from the local jar file for the container.  NOT for loading classes!
+   protected ClassLoader localClassLoader;
 
    // This is the classloader of this container. All classes and resources that
    // the bean uses will be loaded from here. By doing this we make the bean re-deployable
@@ -168,6 +172,28 @@ public abstract class Container
    public Application getApplication()
    {
       return application;
+   }
+
+   /**
+   * Sets the local class loader for this container. 
+   * Used for loading resources from the local jar file for this container. 
+   * NOT for loading classes!
+   *
+   * @param   cl
+   */
+   public void setLocalClassLoader(ClassLoader cl)
+   {
+      this.localClassLoader = cl;
+   }
+
+   /**
+   * Returns the local classloader for this container.
+   *
+   * @return
+   */
+   public ClassLoader getLocalClassLoader()
+   {
+      return localClassLoader;
    }
 
    /**

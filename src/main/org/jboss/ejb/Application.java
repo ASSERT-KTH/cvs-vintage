@@ -20,7 +20,7 @@ import org.jboss.util.Service;
  *   @see Container
  *   @see ContainerFactory
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
- *   @version $Revision: 1.7 $
+ *   @version $Revision: 1.8 $
  */
 public class Application
 	implements Service
@@ -31,6 +31,9 @@ public class Application
    
    // stores the containers for this application unit
    HashMap containers = new HashMap();
+   
+   // class loader of this application
+   ClassLoader classLoader = null;
    
    // name of this application
    String name = "";
@@ -88,6 +91,28 @@ public class Application
    public Collection getContainers()
    {
       return containers.values();
+   }
+   
+
+	/**
+	 *	Get the class loader of this Application. 
+	 *
+	 * @return     
+	 */
+   public ClassLoader getClassLoader()
+   {
+      return classLoader;
+   }
+   
+
+	/**
+	 *	Set the class loader of this Application
+	 *
+	 * @param   name  
+	 */
+   public void setClassLoader(ClassLoader cl)
+   {
+      this.classLoader = cl;
    }
    
 

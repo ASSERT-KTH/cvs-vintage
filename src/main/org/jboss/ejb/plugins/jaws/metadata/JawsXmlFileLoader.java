@@ -26,20 +26,22 @@ import org.jboss.metadata.XmlFileLoader;
  *
  *	@see <related>
  *	@author <a href="sebastien.alborini@m4x.org">Sebastien Alborini</a>
- *	@version $Revision: 1.4 $
+ *	@version $Revision: 1.5 $
  */
 public class JawsXmlFileLoader {
 
 	// Attributes ----------------------------------------------------
     private ApplicationMetaData application;
 	private ClassLoader classLoader;
+	private ClassLoader localClassLoader;
     private Log log;
 
 
 	// Constructors --------------------------------------------------
-	public JawsXmlFileLoader(ApplicationMetaData app, ClassLoader cl, Log l) {
+	public JawsXmlFileLoader(ApplicationMetaData app, ClassLoader cl, ClassLoader localCl, Log l) {
 		application = app;
 		classLoader = cl;
+		localClassLoader = localCl;
 		log = l;
 	}
 
@@ -61,7 +63,7 @@ public class JawsXmlFileLoader {
 		jamd.importXml(stdJawsDocument.getDocumentElement());
 
 		// Load jaws.xml if provided
-		URL jawsUrl = classLoader.getResource("META-INF/jaws.xml");
+		URL jawsUrl = localClassLoader.getResource("META-INF/jaws.xml");
 
 		if (jawsUrl != null) {
 			log.debug(jawsUrl.toString() + " found. Overriding defaults");
