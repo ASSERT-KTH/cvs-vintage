@@ -83,7 +83,7 @@ import org.tigris.scarab.om.Module;
  * Action.
  *   
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: Register.java,v 1.19 2002/03/27 18:10:28 jon Exp $
+ * @version $Id: Register.java,v 1.20 2002/04/13 02:39:32 jmcnally Exp $
  */
 public class Register extends ScarabTemplateAction
 {
@@ -121,7 +121,7 @@ public class Register extends ScarabTemplateAction
             if (register == null)
             {
                 setTarget(data,"Register.vm");
-                data.setMessage("Sorry! There is an error in your session. " + 
+                getScarabRequestTool(context).setAlertMessage("Sorry! There is an error in your session. " + 
                 "Please close your browser and start over.");
                 return;
             }
@@ -133,7 +133,7 @@ public class Register extends ScarabTemplateAction
             if (!password.equals(passwordConfirm))
             {
                 setTarget(data, template);
-                data.setMessage("The password's you entered do not match!");
+                getScarabRequestTool(context).setAlertMessage("The password's you entered do not match!");
                 return;
             }
 
@@ -148,7 +148,7 @@ public class Register extends ScarabTemplateAction
             catch (Exception e)
             {
                 setTarget(data, template);
-                data.setMessage (e.getMessage());
+                getScarabRequestTool(context).setAlertMessage (e.getMessage());
                 return;
             }
 
@@ -156,7 +156,7 @@ public class Register extends ScarabTemplateAction
             if(ScarabUserImplPeer.checkExists(su))
             {
                 setTarget(data, template);
-                data.setMessage(
+                getScarabRequestTool(context).setAlertMessage(
                     "Sorry, a user with that email address already exists!");
                 return;
             }
@@ -201,7 +201,7 @@ public class Register extends ScarabTemplateAction
             }
             catch (org.apache.fulcrum.security.util.EntityExistsException e)
             {
-                data.setMessage(e.getMessage());
+                getScarabRequestTool(context).setAlertMessage(e.getMessage());
                 setTarget(data, "Confirm.vm");
                 return;
             }
@@ -241,7 +241,7 @@ public class Register extends ScarabTemplateAction
         catch (Exception e)
         {
             setTarget(data, template);
-            data.setMessage (e.getMessage());
+            getScarabRequestTool(context).setAlertMessage (e.getMessage());
             Log.error(e);
             return;
         }
@@ -298,7 +298,7 @@ public class Register extends ScarabTemplateAction
 
             if (register == null)
             {
-                data.setMessage(
+                getScarabRequestTool(context).setAlertMessage(
                     "Register group is null, please report this error.");
                 return;
             }
@@ -308,13 +308,13 @@ public class Register extends ScarabTemplateAction
             Field confirmField = register.get("Confirm");
             if (usernameField == null)
             {
-                data.setMessage(
+                getScarabRequestTool(context).setAlertMessage(
                     "Username field is null, please report this error.");
                 return;
             }
             else if (confirmField == null)
             {
-                data.setMessage(
+                getScarabRequestTool(context).setAlertMessage(
                     "Confirm field is null, please report this error.");
                 return;
             }
@@ -342,7 +342,7 @@ public class Register extends ScarabTemplateAction
                     data.setUser(confirmedUser);
                     data.save();
     
-                    data.setMessage(
+                    getScarabRequestTool(context).setConfirmMessage(
                         "Your account has been confirmed. Welcome to Scarab! " + 
                         "Please login now.");
                     setTarget(data, nextTemplate);
@@ -376,14 +376,14 @@ public class Register extends ScarabTemplateAction
                 }
                 else
                 {
-                    data.setMessage("Your account has not been confirmed. " + 
+                    getScarabRequestTool(context).setAlertMessage("Your account has not been confirmed. " + 
                                     "There has been an error.");
                     setTarget(data, template);
                 }
             }
             else // we don't have confirmation! :-(
             {
-                data.setMessage("Sorry, that email address and/or confirmation"
+                getScarabRequestTool(context).setAlertMessage("Sorry, that email address and/or confirmation"
                                 + "code is invalid.");
                 setTarget(data, template);
             }
@@ -421,11 +421,12 @@ public class Register extends ScarabTemplateAction
         
             if (register == null)
             {
-                data.setMessage(
+                getScarabRequestTool(context).setAlertMessage(
                     "Register group is null, please report this error.");
                 return;
             }
             String username = register.get("Email").toString();
+            ScarabRequestTool scarabR = getScarabRequestTool(context);
             try
             {
                 // Authenticate the user and get the object.
@@ -434,7 +435,6 @@ public class Register extends ScarabTemplateAction
                 // grab the ScarabRequestTool object so that we can 
                 // populate the User object for redisplay of the form 
                 // data on the screen
-                ScarabRequestTool scarabR = getScarabRequestTool(context);
                 if (scarabR != null)
                 {
                     scarabR.setUser((ScarabUser) user);
@@ -442,14 +442,14 @@ public class Register extends ScarabTemplateAction
             }
             catch (TurbineSecurityException e)
             {
-                data.setMessage("Invalid username.");
+                scarabR.setAlertMessage("Invalid username.");
                 Log.error ("RegisterConfirm: ", e);
                 return;
             }
         
             // send an email that is for confirming the registration
             sendConfirmationEmail((ScarabUser) user, context);
-            data.setMessage("Confirmation Code sent!");
+            scarabR.setConfirmMessage("Confirmation Code sent!");
 
             // set the next template on success
             data.getUser().setTemp(ScarabConstants.SESSION_REGISTER, user);
@@ -460,7 +460,7 @@ public class Register extends ScarabTemplateAction
         catch (Exception e)
         {
             setTarget(data, template);
-            data.setMessage (e.getMessage());
+            getScarabRequestTool(context).setAlertMessage (e.getMessage());
             Log.error(e);
             return;
         }

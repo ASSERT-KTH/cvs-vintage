@@ -91,7 +91,8 @@ public class ForgotPassword extends ScarabTemplateAction
         IntakeTool intake = getIntakeTool(context);
         if (intake.isAllValid() && forgotPassword(data, context))
         {
-            data.setMessage("An email has been sent to you with your password.");
+            getScarabRequestTool(context).setConfirmMessage(
+                "An email has been sent to you with your password.");
             setTarget(data, "Login.vm");
         }
     }
@@ -155,7 +156,7 @@ public class ForgotPassword extends ScarabTemplateAction
         }
         catch (TurbineSecurityException e)
         {
-            data.setMessage("Invalid username.");
+            getScarabRequestTool(context).setAlertMessage("Invalid username.");
             Log.error("ForgotPassword: ", e);
             setTarget(data, "ForgotPassword.vm");
             return false;

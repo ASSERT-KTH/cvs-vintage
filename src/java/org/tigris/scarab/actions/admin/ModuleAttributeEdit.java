@@ -75,7 +75,7 @@ import org.tigris.scarab.tools.ScarabRequestTool;
 
 /**
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: ModuleAttributeEdit.java,v 1.8 2002/03/14 01:13:10 jmcnally Exp $
+ * @version $Id: ModuleAttributeEdit.java,v 1.9 2002/04/13 02:39:33 jmcnally Exp $
  */
 public class ModuleAttributeEdit extends RequireLoginFirstAction
 {
@@ -137,7 +137,7 @@ public class ModuleAttributeEdit extends RequireLoginFirstAction
                }
                catch (Exception e)
                {
-                   data.setMessage(ScarabConstants.NO_PERMISSION_MESSAGE);
+                   scarabR.setAlertMessage(ScarabConstants.NO_PERMISSION_MESSAGE);
                }
 
                // Remove option - module mapping from template type
@@ -149,7 +149,7 @@ public class ModuleAttributeEdit extends RequireLoginFirstAction
                }
                catch (Exception e)
                {
-                   data.setMessage(ScarabConstants.NO_PERMISSION_MESSAGE);
+                   scarabR.setAlertMessage(ScarabConstants.NO_PERMISSION_MESSAGE);
                }
             }
         }        
@@ -174,7 +174,7 @@ public class ModuleAttributeEdit extends RequireLoginFirstAction
  
         if (optionIds == null || optionIds.length <= 0)
         { 
-            data.setMessage("Please select an option.");
+            scarabR.setAlertMessage("Please select an option.");
             return;
         }
         else

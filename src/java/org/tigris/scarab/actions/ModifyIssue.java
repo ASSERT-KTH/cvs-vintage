@@ -107,7 +107,7 @@ import org.tigris.scarab.util.ScarabConstants;
     This class is responsible for edit issue forms.
     ScarabIssueAttributeValue
     @author <a href="mailto:elicia@collab.net">Elicia David</a>
-    @version $Id: ModifyIssue.java,v 1.85 2002/03/28 00:06:20 jmcnally Exp $
+    @version $Id: ModifyIssue.java,v 1.86 2002/04/13 02:39:32 jmcnally Exp $
 */
 public class ModifyIssue extends RequireLoginFirstAction
 {
@@ -247,11 +247,11 @@ public class ModifyIssue extends RequireLoginFirstAction
             }
             intake.removeAll();
             sendEmail(transaction, issue, DEFAULT_MSG, context, data);
-            data.setMessage("Your changes have been saved.");
+            getScarabRequestTool(context).setConfirmMessage("Your changes have been saved.");
         } 
         else
         {
-            data.setMessage(ERROR_MESSAGE);
+            getScarabRequestTool(context).setAlertMessage(ERROR_MESSAGE);
         }
     }
 
@@ -335,7 +335,8 @@ public class ModifyIssue extends RequireLoginFirstAction
                 group.setProperties(attachment);
                 
                 ScarabUser user = (ScarabUser)data.getUser();
-                Issue issue = getScarabRequestTool(context).getIssue();
+                ScarabRequestTool scarabR = getScarabRequestTool(context);
+                Issue issue = scarabR.getIssue();
 
                 if (type.equals("url") || type.equals("comment"))
                 {
@@ -365,7 +366,8 @@ public class ModifyIssue extends RequireLoginFirstAction
                 }
                 else if (type.equals("file"))
                 {
-                    addAttachment(issue, group, attachment, data, intake);
+                    addAttachment(issue, group, attachment, 
+                                  scarabR, data, intake);
                     issue.save();
 
                     // Generate description of modification
@@ -381,7 +383,7 @@ public class ModifyIssue extends RequireLoginFirstAction
             } 
             else
             {
-                data.setMessage(ERROR_MESSAGE);
+                getScarabRequestTool(context).setAlertMessage(ERROR_MESSAGE);
             }
         }
     } 
@@ -395,13 +397,13 @@ public class ModifyIssue extends RequireLoginFirstAction
             StringBuffer sb = 
                 new StringBuffer(msg.length() + EMAIL_ERROR.length());
             sb.append(msg).append(EMAIL_ERROR);
-            data.setMessage(sb.toString());
+            getScarabRequestTool(context).setConfirmMessage(sb.toString());
         }
     }
 
 
     static void addAttachment(Issue issue, Group group, Attachment attachment, 
-                              RunData data, IntakeTool intake)
+        ScarabRequestTool scarabR, RunData data, IntakeTool intake)
         throws Exception
     {
         if (group != null)
@@ -432,18 +434,18 @@ public class ModifyIssue extends RequireLoginFirstAction
                 ScarabUser user = (ScarabUser)data.getUser();
                 attachment.setCreatedBy(user.getUserId());
                 issue.addFile(attachment);
-                data.setMessage("Attachment was added");
+                scarabR.setConfirmMessage("Attachment was added");
                 // remove the group so that the form data doesn't show up again
                 intake.remove(group);
             }
             else
             {
-                data.setMessage(ERROR_MESSAGE);
+                scarabR.setAlertMessage(ERROR_MESSAGE);
             }
         }
         else
         {
-            data.setMessage("Could not locate Attachment group");
+            scarabR.setAlertMessage("Could not locate Attachment group");
         }
     }
 
@@ -673,7 +675,7 @@ public class ModifyIssue extends RequireLoginFirstAction
         }
         else
         {
-            data.setMessage(ERROR_MESSAGE);
+            getScarabRequestTool(context).setAlertMessage(ERROR_MESSAGE);
         }
     }
 
@@ -767,7 +769,7 @@ public class ModifyIssue extends RequireLoginFirstAction
         }
         else
         {
-            data.setMessage(ERROR_MESSAGE);
+            scarabR.setAlertMessage(ERROR_MESSAGE);
         }
     }
 

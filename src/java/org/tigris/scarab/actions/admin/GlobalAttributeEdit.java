@@ -77,7 +77,7 @@ import org.tigris.scarab.services.cache.ScarabCache;
  * This class deals with modifying Global Attributes.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: GlobalAttributeEdit.java,v 1.16 2002/03/19 06:32:29 jmcnally Exp $
+ * @version $Id: GlobalAttributeEdit.java,v 1.17 2002/04/13 02:39:33 jmcnally Exp $
  */
 public class GlobalAttributeEdit extends RequireLoginFirstAction
 {
@@ -111,7 +111,7 @@ public class GlobalAttributeEdit extends RequireLoginFirstAction
                 String attributeName = attrGroup.get("Name").toString();
                 if (Attribute.checkForDuplicate(attributeName))
                 {
-                    data.setMessage("Cannot create a duplicate Attribute "
+                    scarabR.setAlertMessage("Cannot create a duplicate Attribute "
                                     +"with the same name!");
                     return;
                 }
@@ -127,7 +127,7 @@ public class GlobalAttributeEdit extends RequireLoginFirstAction
         }
         else
         {
-          data.setMessage(ERROR_MESSAGE);
+          scarabR.setAlertMessage(ERROR_MESSAGE);
         }
     }
 
@@ -181,7 +181,7 @@ public class GlobalAttributeEdit extends RequireLoginFirstAction
                         // anyway just in case.
                         if (pcao.getOptionId().equals(pcao.getParentId()))
                         {
-                            data.setMessage("Sorry, a recursive Parent " +
+                            scarabR.setAlertMessage("Sorry, a recursive Parent " +
                               " Child relationship is not allowed!");
                             intake.remove(pcaoGroup);
                             return;
@@ -206,7 +206,7 @@ public class GlobalAttributeEdit extends RequireLoginFirstAction
                     {
                         // on error, reset to previous values
                         intake.remove(pcaoGroup);
-                        data.setMessage(se.getMessage());
+                        scarabR.setAlertMessage(se.getMessage());
                         se.printStackTrace();
                         return;
                     }
@@ -227,7 +227,7 @@ public class GlobalAttributeEdit extends RequireLoginFirstAction
                     catch (Exception se)
                     {
                         intake.remove(newPCAOGroup);
-                        data.setMessage(se.getMessage());
+                        scarabR.setAlertMessage(se.getMessage());
                         Log.error(se);
                         return;
                     }
@@ -245,7 +245,7 @@ public class GlobalAttributeEdit extends RequireLoginFirstAction
                         catch (Exception e)
                         {
                             Log.error(e);
-                            data.setMessage(e.getMessage());
+                            scarabR.setAlertMessage(e.getMessage());
                         }
                     }
 
@@ -300,7 +300,7 @@ public class GlobalAttributeEdit extends RequireLoginFirstAction
                 scarabR.getCurrentModule()
                        .addRModuleAttribute(scarabR.getIssueType(), attribute);
             }
-            data.setMessage("The attribute has been added.");
+            scarabR.setConfirmMessage("The attribute has been added.");
             ScarabCache.clear();
             cancelBackTo( data, context, lastTemplate);
         }

@@ -74,7 +74,7 @@ import org.tigris.scarab.om.IssueType;
  * duplication of code.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: Default.java,v 1.43 2002/03/14 01:13:12 jmcnally Exp $
+ * @version $Id: Default.java,v 1.44 2002/04/13 02:39:34 jmcnally Exp $
  */
 public class Default extends TemplateSecureScreen
 {
@@ -174,7 +174,7 @@ public class Default extends TemplateSecureScreen
                 if (! user.hasLoggedIn() 
                     || !user.hasPermission(perm, currentModule))
                 {
-                    data.setMessage("Please log in with an account " +
+                    scarabR.setInfoMessage("Please log in with an account " +
                                     "that has permissions to " +
                                     "access this page.");
                     setTargetLogin(data);
@@ -182,7 +182,7 @@ public class Default extends TemplateSecureScreen
                 }
                 else if (currentModule == null)
                 {
-                    data.setMessage("Please select the Module " +
+                    scarabR.setInfoMessage("Please select the Module " +
                                     "that you would like to work " +
                                     "in.");
                     setTargetSelectModule(data);
@@ -192,7 +192,7 @@ public class Default extends TemplateSecureScreen
                          && data.getParameters().getString("id") == null
                          && template.indexOf("admin") == -1)
                 {
-                    data.setMessage("Please select the Issue type " +
+                    scarabR.setInfoMessage("Please select the Issue type " +
                                     "that you would like to work " +
                                     "in.");
                     setTargetSelectIssueType(data);
@@ -207,8 +207,8 @@ public class Default extends TemplateSecureScreen
             {
                 scarabR.setCurrentModule(null);
                 data.getParameters().remove(ScarabConstants.CURRENT_MODULE);
-                data.setMessage("Sorry, you do not have permission to " + 
-                                "work in the selected module.");
+                scarabR.setAlertMessage("Sorry, you do not have permission to"
+                                        + " work in the selected module.");
                 setTargetSelectModule(data);
                 return false;
             }

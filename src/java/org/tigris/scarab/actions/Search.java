@@ -90,7 +90,7 @@ import org.tigris.scarab.util.word.IssueSearch;
     This class is responsible for report issue forms.
 
     @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
-    @version $Id: Search.java,v 1.70 2002/04/11 21:37:45 jmcnally Exp $
+    @version $Id: Search.java,v 1.71 2002/04/13 02:39:32 jmcnally Exp $
 */
 public class Search extends RequireLoginFirstAction
 {
@@ -161,7 +161,7 @@ public class Search extends RequireLoginFirstAction
             if (Scope.GLOBAL__PK.equals(query.getScopeId()) &&
                 (userList == null || userList.length == 0))
             {
-                data.setMessage(
+                scarabR.setAlertMessage(
                     "Sorry, no users have the  permission to approve" +
                     " global queries in this module (" + module.getName() + 
                     "). Please contact your Scarab administrator and ask " + 
@@ -179,7 +179,7 @@ public class Search extends RequireLoginFirstAction
         }
         else
         {
-            data.setMessage(ERROR_MESSAGE);
+            scarabR.setAlertMessage(ERROR_MESSAGE);
         }
     }
 
@@ -350,10 +350,11 @@ public class Search extends RequireLoginFirstAction
         throws Exception
     {
         String userName = data.getParameters().getString("add_user");
-        ScarabUser user = getScarabRequestTool(context).getUserByUserName(userName);
+        ScarabRequestTool scarabR = getScarabRequestTool(context);
+        ScarabUser user = scarabR.getUserByUserName(userName);
         if (user == null)
         {
-            data.setMessage("User was not found.");
+            scarabR.setAlertMessage("User was not found.");
         }
         else
         {

@@ -71,7 +71,7 @@ import org.tigris.scarab.actions.base.ScarabTemplateAction;
  * Action.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: Login.java,v 1.28 2002/03/14 04:10:51 jon Exp $
+ * @version $Id: Login.java,v 1.29 2002/04/13 02:39:32 jmcnally Exp $
  */
 public class Login extends ScarabTemplateAction
 {
@@ -102,6 +102,7 @@ public class Login extends ScarabTemplateAction
         throws Exception
     {
         IntakeTool intake = getIntakeTool(context);
+        ScarabRequestTool scarabR = getScarabRequestTool(context);
 
         Group login = intake.get("Login", IntakeTool.DEFAULT_KEY);
         String username = login.get("Username").toString();
@@ -116,7 +117,7 @@ public class Login extends ScarabTemplateAction
         }
         catch (TurbineSecurityException e)
         {
-            data.setMessage("Invalid username or password.");
+            scarabR.setAlertMessage("Invalid username or password.");
             Log.error ("Login: ", e);
             return failAction(data, "Login.vm");
         }
@@ -126,7 +127,6 @@ public class Login extends ScarabTemplateAction
             // check the CONFIRM_VALUE
             if (!user.isConfirmed())
             {
-                ScarabRequestTool scarabR = getScarabRequestTool(context);
                 if (scarabR != null)
                 {
                     user = (ScarabUser) TurbineSecurity.getUserInstance();
@@ -134,13 +134,12 @@ public class Login extends ScarabTemplateAction
                     scarabR.setUser(user);
                 }
 
-                data.setMessage("User is not confirmed!");
+                scarabR.setAlertMessage("User is not confirmed!");
                 return failAction(data, "Confirm.vm");
             }
             // check if the password is expired
             if (user.isPasswordExpired())
             {
-                ScarabRequestTool scarabR = getScarabRequestTool(context);
                 if (scarabR != null)
                 {
                     user = (ScarabUser) TurbineSecurity.getUserInstance();
@@ -148,7 +147,7 @@ public class Login extends ScarabTemplateAction
                     scarabR.setUser(user);
                 }
 
-                data.setMessage("Your password has expired.");
+                scarabR.setAlertMessage("Your password has expired.");
                 return failAction(data, "ChangePassword.vm");
             }
 
@@ -169,7 +168,7 @@ public class Login extends ScarabTemplateAction
         }
         catch (TurbineSecurityException e)
         {
-            data.setMessage(e.getMessage());
+            scarabR.setAlertMessage(e.getMessage());
             return failAction(data, "Login.vm");
         }
         return true;

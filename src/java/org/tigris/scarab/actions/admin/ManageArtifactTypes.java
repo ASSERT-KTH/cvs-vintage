@@ -73,7 +73,7 @@ import org.tigris.scarab.services.cache.ScarabCache;
 
 /**
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: ManageArtifactTypes.java,v 1.10 2002/03/29 01:08:59 elicia Exp $
+ * @version $Id: ManageArtifactTypes.java,v 1.11 2002/04/13 02:39:33 jmcnally Exp $
  */
 public class ManageArtifactTypes extends RequireLoginFirstAction
 {
@@ -106,7 +106,7 @@ public class ManageArtifactTypes extends RequireLoginFirstAction
                 }
                 if (navCount > 5)
                 {
-                   data.setMessage("You cannot select more than 5 Issue types "
+                   scarabR.setAlertMessage("You cannot select more than 5 Issue types "
                                    + "to appear in the left hand navigation.");
                    return;
                 }
@@ -137,17 +137,17 @@ public class ManageArtifactTypes extends RequireLoginFirstAction
 
         if (issueType.getIssueTypeId() == null)
         {
-            data.setMessage("Please select an issue type.");
+            scarabR.setAlertMessage("Please select an issue type.");
         }
         else if (module.getRModuleIssueType(issueType) != null)
         {
-            data.setMessage("The issue type is already associated "
+            scarabR.setAlertMessage("The issue type is already associated "
                             + "with the module.");
         }
         else
         {
             module.addRModuleIssueType(issueType);
-            data.setMessage("The issue type has been added to the module.");
+            scarabR.setConfirmMessage("The issue type has been added to the module.");
             setTarget(data, "admin,ManageArtifactTypes.vm");            
         }
     }
@@ -187,7 +187,7 @@ public class ManageArtifactTypes extends RequireLoginFirstAction
             {
                 if (rmits.size() < 1)
                 {
-                    data.setMessage("You cannot have fewer than one "
+                    scarabR.setAlertMessage("You cannot have fewer than one "
                                     + "artifact type.");
                     break;
                 }
@@ -205,13 +205,14 @@ public class ManageArtifactTypes extends RequireLoginFirstAction
                                .getRModuleIssueType(issueType);
                             rmit.delete(user);
 
-                            data.setMessage("The selected issue Types have"
-                                            + " been removed from the module.");
+                            scarabR.setConfirmMessage(
+                                "The selected issue Types have"
+                                + " been removed from the module.");
                         }
                     }
                     catch (Exception e)
                     {
-                        data.setMessage(ScarabConstants.NO_PERMISSION_MESSAGE);
+                        scarabR.setAlertMessage(ScarabConstants.NO_PERMISSION_MESSAGE);
                     }
                 }
             }
@@ -219,7 +220,7 @@ public class ManageArtifactTypes extends RequireLoginFirstAction
 
         if (!foundOne)
         {
-            data.setMessage("Please select an issue Type " + 
+            scarabR.setAlertMessage("Please select an issue Type " + 
                 "to delete from the module.");
         }
     }

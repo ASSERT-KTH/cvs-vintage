@@ -81,7 +81,7 @@ import org.tigris.scarab.tools.ScarabGlobalTool;
  * Action(s).
  *
  * @author <a href="mailto:dr@bitonic.com">Douglas B. Robertson</a>
- * @version $Id: ManageUser.java,v 1.9 2002/03/03 16:37:43 maartenc Exp $
+ * @version $Id: ManageUser.java,v 1.10 2002/04/13 02:39:33 jmcnally Exp $
  */
 public class ManageUser extends RequireLoginFirstAction
 {
@@ -90,6 +90,7 @@ public class ManageUser extends RequireLoginFirstAction
      */
     public void doAdduser( RunData data, TemplateContext context ) throws Exception
     {
+        ScarabRequestTool scarabR = getScarabRequestTool(context);
         String template = getCurrentTemplate(data, null);
         String nextTemplate = getNextTemplate(data, template);
         String state = data.getParameters().getString("state");
@@ -123,7 +124,7 @@ public class ManageUser extends RequireLoginFirstAction
             if (ScarabUserImplPeer.checkExists(su))
             {
                 setTarget(data, template);
-                data.setMessage("Sorry, a user with that email address already exists!");
+                scarabR.setAlertMessage("Sorry, a user with that email address already exists!");
                 data.getParameters().setString("errorLast","true");
                 data.getParameters().setString("state","showadduser");
                 return;
@@ -136,7 +137,7 @@ public class ManageUser extends RequireLoginFirstAction
                 ScarabUserImpl.confirmUser(register.get("Email").toString());
                 // force the user to change their password the first time they login
                 su.setPasswordExpire(Calendar.getInstance());
-                data.setMessage("SUCCESS: a new user was created [username: " + register.get("Email").toString() +"]");
+                scarabR.setConfirmMessage("SUCCESS: a new user was created [username: " + register.get("Email").toString() +"]");
                 data.getParameters().setString("state","showadduser");
                 data.getParameters().setString("lastAction","addeduser");
                 
@@ -147,7 +148,7 @@ public class ManageUser extends RequireLoginFirstAction
             {
                 setTarget(data, template);
                 data.getParameters().setString("lastAction","");
-                data.setMessage (e.getMessage());
+                scarabR.setAlertMessage (e.getMessage());
                 Log.error(e);
                 data.getParameters().setString("state","showadduser");
                 return;
@@ -162,6 +163,7 @@ public class ManageUser extends RequireLoginFirstAction
     
     public void doEdituser( RunData data, TemplateContext context ) throws Exception
     {
+        ScarabRequestTool scarabR = getScarabRequestTool(context);
         String template = getCurrentTemplate(data, null);
         String nextTemplate = getNextTemplate(data, template);
         String state = data.getParameters().getString("state");
@@ -205,9 +207,9 @@ public class ManageUser extends RequireLoginFirstAction
                         if (!ScarabUserImplPeer.checkExists(su))
                         {
                             setTarget(data, template);
-                            data.setMessage(
-                                            "Sorry, a user with that email address [" + 
-                                                newEmail + "] already exists!");
+                            scarabR.setAlertMessage(
+                                "Sorry, a user with that email address [" + 
+                                newEmail + "] already exists!");
                             data.getParameters().setString("state","showedituser");
                             return;
                         }
@@ -226,7 +228,7 @@ public class ManageUser extends RequireLoginFirstAction
                         TurbineSecurity.forcePassword(su, password.trim());
                     }
                     
-                    data.setMessage("SUCCESS: changes to the user have " + 
+                    scarabR.setConfirmMessage("SUCCESS: changes to the user have " + 
                                         " been saved [username: " + 
                                         register.get("Email").toString() +"]");
                     data.getParameters().setString("state","showedituser");
@@ -237,7 +239,7 @@ public class ManageUser extends RequireLoginFirstAction
                 }
                 else
                 {
-                    data.setMessage("ERROR: couldn't retrieve the user " + 
+                    scarabR.setAlertMessage("ERROR: couldn't retrieve the user " + 
                                         " from the DB [username: " + 
                                         register.get("Email").toString() +"]");
                     data.getParameters().setString("state","showedituser");                    
@@ -247,7 +249,7 @@ public class ManageUser extends RequireLoginFirstAction
             {
                 setTarget(data, template);
                 data.getParameters().setString("lastAction","");
-                data.setMessage (e.getMessage());
+                scarabR.setAlertMessage (e.getMessage());
                 Log.error(e);
                 data.getParameters().setString("state","showedituser");
                 return;
@@ -263,13 +265,13 @@ public class ManageUser extends RequireLoginFirstAction
     public void doDeleteuser( RunData data, TemplateContext context )
         throws Exception
     {
-        data.setMessage("User delete is not yet implemented. Instructions on"
-                        + " implementation are given in issue# 165.  " + 
-                            "deleted [username: " + data.getParameters()
-                            .getString("username") +"]");
+        getScarabRequestTool(context)
+        .setAlertMessage("User delete is not yet implemented. Instructions on"
+                         + " implementation are given in issue# 165.  " + 
+                         "deleted [username: " + data.getParameters()
+                         .getString("username") +"]");
         setTarget(data, data.getParameters()
-                      .getString(ScarabConstants.NEXT_TEMPLATE, "admin,AdminIndex.vm"));
-        
+            .getString(ScarabConstants.NEXT_TEMPLATE, "admin,AdminIndex.vm"));
     }
     
     
@@ -327,7 +329,7 @@ public class ManageUser extends RequireLoginFirstAction
         }
         else
         {
-            data.setMessage("Please select a user first!");
+            getScarabRequestTool(context).setAlertMessage("Please select a user first!");
         }
     }
     
@@ -344,7 +346,7 @@ public class ManageUser extends RequireLoginFirstAction
         }
         else
         {
-            data.setMessage("Please select a user first!");
+            getScarabRequestTool(context).setAlertMessage("Please select a user first!");
         }
     }
     

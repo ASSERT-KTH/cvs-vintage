@@ -93,7 +93,7 @@ import org.tigris.scarab.actions.base.RequireLoginFirstAction;
 /**
     This class is responsible for report generation forms
     @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
-    @version $Id: GenerateReport.java,v 1.18 2002/04/11 23:50:24 jmcnally Exp $
+    @version $Id: GenerateReport.java,v 1.19 2002/04/13 02:39:32 jmcnally Exp $
 */
 public class GenerateReport 
     extends RequireLoginFirstAction
@@ -105,7 +105,7 @@ public class GenerateReport
         Intake intake = getIntakeTool(context);
         if ( !intake.isAllValid() ) 
         {
-            data.setMessage("Invalid data");
+            getScarabRequestTool(context).setAlertMessage("Invalid data");
             setTarget(data, "reports,Step1.vm");            
         }
         else if (report.getType() == 1)
@@ -118,7 +118,7 @@ public class GenerateReport
         }
         else 
         {
-            data.setMessage("Invalid data");
+            getScarabRequestTool(context).setAlertMessage("Invalid data");
             setTarget(data, "reports,Step1.vm");            
         }
     }
@@ -343,7 +343,8 @@ public class GenerateReport
             // make sure report has a name
             if ( report.getName() == null || report.getName().length() == 0 ) 
             {
-                data.setMessage("Saved reports must have a name.");
+                getScarabRequestTool(context)
+                    .setAlertMessage("Saved reports must have a name.");
                 setTarget(data, "reports,SaveReport.vm");
             }
             else 
@@ -355,20 +356,22 @@ public class GenerateReport
                     || savedReport.getReportId().equals(report.getReportId()))
                 {
                     report.save();
-                    data.setMessage("The report has been saved.");
+                    getScarabRequestTool(context)
+                        .setAlertMessage("The report has been saved.");
                     setTarget(data, "reports,Report_1.vm");                    
                 }
                 else 
                 {
-                    data.setMessage("A report already exists under this name."
-                                    + "Please choose a unique name.");
+                    getScarabRequestTool(context).setAlertMessage(
+                        "A report already exists under this name."
+                        + "Please choose a unique name.");
                     setTarget(data, "reports,SaveReport.vm");
                 }
             }
         }
         else 
         {
-            data.setMessage("An error prevented saving your report.");
+            getScarabRequestTool(context).setAlertMessage("An error prevented saving your report.");
         }
     }
 
@@ -413,7 +416,7 @@ public class GenerateReport
     {
         ScarabUser user = (ScarabUser)data.getUser();
         if (user.hasPermission("Item | Delete", 
-                                getScarabRequestTool(context).getCurrentModule()))
+            getScarabRequestTool(context).getCurrentModule()))
         {
             String[] reportIds = data.getParameters().getStrings("report_id");
             for (int i=0;i<reportIds.length; i++)
@@ -435,7 +438,8 @@ public class GenerateReport
     {
         Report report = populateReport("reports,Report_1.vm", data, context);
         setTarget(data, "reports,Report_1.vm");
-        data.setMessage("Use your browser to print the report.");
+        getScarabRequestTool(context)
+            .setInfoMessage("Use your browser to print the report.");
     }
 
     private Report populateReport( String template, 

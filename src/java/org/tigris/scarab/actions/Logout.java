@@ -60,7 +60,7 @@ import org.tigris.scarab.actions.base.ScarabTemplateAction;
     This class is responsible for Logging a user out of the system.
     
     @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
-    @version $Id: Logout.java,v 1.10 2002/01/18 22:26:02 jon Exp $
+    @version $Id: Logout.java,v 1.11 2002/04/13 02:39:32 jmcnally Exp $
 */
 public class Logout extends ScarabTemplateAction
 {
@@ -75,7 +75,7 @@ public class Logout extends ScarabTemplateAction
         data.setACL(null);
         data.setUser (TurbineSecurity.getAnonymousUser());
         data.save();
-        data.setMessage("You have been logged out!");
+        scarabR.setConfirmMessage("You have been logged out!");
         setTarget(data, "Login.vm");
     }
     /**

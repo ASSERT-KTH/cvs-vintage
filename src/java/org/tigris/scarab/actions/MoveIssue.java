@@ -66,6 +66,7 @@ import org.apache.torque.util.Criteria;
 
 // Scarab Stuff
 import org.tigris.scarab.actions.base.RequireLoginFirstAction;
+import org.tigris.scarab.tools.ScarabRequestTool;
 import org.tigris.scarab.om.Module;
 import org.tigris.scarab.om.ModuleManager;
 import org.tigris.scarab.om.ScarabUserManager;
@@ -93,7 +94,7 @@ import org.tigris.scarab.util.ScarabConstants;
  *
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: MoveIssue.java,v 1.26 2002/04/09 23:43:53 jon Exp $
+ * @version $Id: MoveIssue.java,v 1.27 2002/04/13 02:39:32 jmcnally Exp $
  */
 public class MoveIssue extends RequireLoginFirstAction
 {
@@ -106,6 +107,7 @@ public class MoveIssue extends RequireLoginFirstAction
         throws Exception
     {
         IntakeTool intake = getIntakeTool(context);
+        ScarabRequestTool scarabR = getScarabRequestTool(context);
         if (intake.isAllValid())
         {
             Group moveIssue = intake.get("MoveIssue",
@@ -122,7 +124,7 @@ public class MoveIssue extends RequireLoginFirstAction
                 && (oldModule.getModuleId().equals(newModuleId)))
             {
                 //setTarget(data, template);
-                data.setMessage("Cannot move an issue to the same destination " +
+                scarabR.setAlertMessage("Cannot move an issue to the same destination " +
                     "module as its source module");
                 return;
             }
@@ -314,8 +316,9 @@ public class MoveIssue extends RequireLoginFirstAction
                               + descBuf.toString(),
                               "email/MoveIssue.vm"))
         {
-             data.setMessage("Your changes were saved, but could not send "
-                             + "notification email due to a sendmail error.");
+             getScarabRequestTool(context).setInfoMessage(
+                 "Your changes were saved, but could not send "
+                 + "notification email due to a sendmail error.");
         }                      
 
         // Redirect to moved or copied issue

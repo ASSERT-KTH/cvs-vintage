@@ -85,7 +85,7 @@ import org.tigris.scarab.tools.ScarabRequestTool;
  * Action(s).
  *
  * @author <a href="mailto:dr@bitonic.com">Douglas B. Robertson</a>
- * @version $Id: ManagePermissions.java,v 1.2 2002/01/18 22:26:04 jon Exp $
+ * @version $Id: ManagePermissions.java,v 1.3 2002/04/13 02:39:33 jmcnally Exp $
  */
 public class ManagePermissions extends RequireLoginFirstAction
 {
@@ -138,12 +138,13 @@ public class ManagePermissions extends RequireLoginFirstAction
                 
                 TurbineSecurity.addPermission(permission);
                 data.getParameters().setString("lastAction","addedpermission");
-                data.setMessage("SUCCESS: a new permission was created [permission: " + name +"]");
+                getScarabRequestTool(context).setConfirmMessage("SUCCESS: a new permission was created [permission: " + name +"]");
                 
             }
             catch (EntityExistsException eee)
             {
-                data.setMessage("ERROR: a permission already exists with that name [permission: " + name +"]");
+                getScarabRequestTool(context).setAlertMessage(
+                    "A permission already exists with that name: " + name);
                 data.getParameters().setString("lastAction","");
             }
         }       
@@ -160,7 +161,7 @@ public class ManagePermissions extends RequireLoginFirstAction
         Permission permission = TurbineSecurity.getPermission(name);    
         TurbineSecurity.removePermission(permission);
         
-        data.setMessage("SUCCESS: the " + name + " permission was deleted.");
+        getScarabRequestTool(context).setConfirmMessage("SUCCESS: the " + name + " permission was deleted.");
         setTarget(data, data.getParameters().getString(ScarabConstants.NEXT_TEMPLATE, "admin,ManagePermissions.vm"));
         
     }

@@ -56,6 +56,7 @@ import org.apache.fulcrum.intake.model.Group;
 import org.apache.fulcrum.intake.model.Field;
 
 import org.tigris.scarab.actions.base.RequireLoginFirstAction;
+import org.tigris.scarab.tools.ScarabRequestTool;
 import org.tigris.scarab.om.IssueType;
 import org.tigris.scarab.om.IssueTypePeer;
 import org.tigris.scarab.om.RModuleIssueType;
@@ -67,7 +68,7 @@ import org.tigris.scarab.services.security.ScarabSecurity;
  * This class deals with modifying Global Artifact Types.
  *
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: GlobalArtifactTypes.java,v 1.11 2002/03/05 03:12:56 elicia Exp $
+ * @version $Id: GlobalArtifactTypes.java,v 1.12 2002/04/13 02:39:33 jmcnally Exp $
  */
 public class GlobalArtifactTypes extends RequireLoginFirstAction
 {
@@ -98,7 +99,8 @@ public class GlobalArtifactTypes extends RequireLoginFirstAction
                 }
                 else 
                 {
-                    data.setMessage("Changes would result in duplicate names");
+                    getScarabRequestTool(context).setAlertMessage(
+                        "Changes would result in duplicate names");
                     field.setMessage("Duplicate");
                 }
             }
@@ -149,8 +151,10 @@ public class GlobalArtifactTypes extends RequireLoginFirstAction
     public void doDelete( RunData data, TemplateContext context )
         throws Exception
     {
-        if (((ScarabUser)data.getUser()).hasPermission(ScarabSecurity.DOMAIN__ADMIN,
-            getScarabRequestTool(context).getCurrentModule()))
+        ScarabRequestTool scarabR = getScarabRequestTool(context);
+        if (((ScarabUser)data.getUser())
+            .hasPermission(ScarabSecurity.DOMAIN__ADMIN,
+                           scarabR.getCurrentModule()))
         {
             Object[] keys = data.getParameters().getKeys();
             String key;
@@ -172,7 +176,8 @@ public class GlobalArtifactTypes extends RequireLoginFirstAction
          }
          else
          {
-             data.setMessage("You do not have permission to perform this action.");
+             scarabR.setAlertMessage(
+                 "You do not have permission to perform this action.");
          }
      }
 

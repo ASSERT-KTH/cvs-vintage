@@ -84,7 +84,7 @@ import org.tigris.scarab.services.cache.ScarabCache;
  * action methods on RModuleAttribute table
  *      
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: ArtifactTypeEdit.java,v 1.18 2002/04/09 23:26:33 jmcnally Exp $
+ * @version $Id: ArtifactTypeEdit.java,v 1.19 2002/04/13 02:39:33 jmcnally Exp $
  */
 public class ArtifactTypeEdit extends RequireLoginFirstAction
 {
@@ -145,7 +145,7 @@ public class ArtifactTypeEdit extends RequireLoginFirstAction
             }
             if (areThereDupes)
             {
-               data.setMessage("Please do not enter duplicate "
+               scarabR.setAlertMessage("Please do not enter duplicate "
                                 + " sequence numbers for attribute groups.");
                isValid = false;
             }
@@ -153,7 +153,7 @@ public class ArtifactTypeEdit extends RequireLoginFirstAction
             // Check that duplicate check is not at the beginning or end.
             if (dupeOrder == 1 || dupeOrder == attGroups.size() +1)
             {
-                data.setMessage("The duplicate check cannot be at the "
+                scarabR.setAlertMessage("The duplicate check cannot be at the "
                                 + "beginning or the end.");
                 isValid = false;
             }
@@ -207,7 +207,7 @@ public class ArtifactTypeEdit extends RequireLoginFirstAction
         }
         else
         {
-            data.setMessage(ERROR_MESSAGE);
+            scarabR.setAlertMessage(ERROR_MESSAGE);
         }
         ScarabCache.clear();
     }
@@ -283,7 +283,7 @@ public class ArtifactTypeEdit extends RequireLoginFirstAction
                 }
                 catch (Exception e)
                 {
-                    data.setMessage(ScarabConstants.NO_PERMISSION_MESSAGE);
+                    scarabR.setAlertMessage(ScarabConstants.NO_PERMISSION_MESSAGE);
                 }
                 if (attributeGroups.size() -1 < 2)
                 {
@@ -331,7 +331,7 @@ public class ArtifactTypeEdit extends RequireLoginFirstAction
                }
                catch (Exception e)
                {
-                   data.setMessage(ScarabConstants.NO_PERMISSION_MESSAGE);
+                   scarabR.setAlertMessage(ScarabConstants.NO_PERMISSION_MESSAGE);
                }
 
                // Remove attribute - module mapping from template type
@@ -344,7 +344,7 @@ public class ArtifactTypeEdit extends RequireLoginFirstAction
                }
                catch (Exception e)
                {
-                   data.setMessage(ScarabConstants.NO_PERMISSION_MESSAGE);
+                   scarabR.setAlertMessage(ScarabConstants.NO_PERMISSION_MESSAGE);
                }
            }
         }        
@@ -379,7 +379,7 @@ public class ArtifactTypeEdit extends RequireLoginFirstAction
  
         if (attribute.getAttributeId() == null)
         { 
-            data.setMessage("Please select an attribute.");
+            scarabR.setAlertMessage("Please select an attribute.");
         }
         else
         {        

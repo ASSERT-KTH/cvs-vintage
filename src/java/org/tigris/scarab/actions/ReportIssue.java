@@ -97,7 +97,7 @@ import org.tigris.scarab.tools.ScarabRequestTool;
  * This class is responsible for report issue forms.
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: ReportIssue.java,v 1.120 2002/04/10 03:57:11 jmcnally Exp $
+ * @version $Id: ReportIssue.java,v 1.121 2002/04/13 02:39:32 jmcnally Exp $
  */
 public class ReportIssue extends RequireLoginFirstAction
 {
@@ -119,7 +119,7 @@ public class ReportIssue extends RequireLoginFirstAction
         }
         catch (Exception e)
         {
-            data.setMessage("Error: " + e.getMessage());
+            scarabR.setAlertMessage("Error: " + e.getMessage());
             setTarget(data, "entry,Wizard1.vm");
             return;
         }
@@ -395,7 +395,7 @@ public class ReportIssue extends RequireLoginFirstAction
                         }
                         catch (ScarabException se)
                         {
-                            data.setMessage("Fatal Error: " + se.getMessage() 
+                            scarabR.setAlertMessage("Fatal Error: " + se.getMessage() 
                                              + " Please start over.");    
                         return;
                         }
@@ -440,18 +440,19 @@ public class ReportIssue extends RequireLoginFirstAction
                     if (!transaction.sendEmail(new ContextAdapter(context), issue, 
                                      subj.toString(), "email/NewIssueNotification.vm"))
                     {
-                        data.setMessage("Your issue was saved, but could not send "
-                                    + "notification email due to a sendmail error.");
+                        scarabR.setInfoMessage(
+                            "Your issue was saved, but could not send "
+                            + "notification email due to a sendmail error.");
                     }
                     cleanup(data, context);
                     data.getParameters().add("id", issue.getUniqueId().toString());
-                    data.setMessage("Issue " + issue.getUniqueId() +
+                    scarabR.setConfirmMessage("Issue " + issue.getUniqueId() +
                          " added to module " + getScarabRequestTool(context)
                           .getCurrentModule().getRealName());
                 }
                 else
                 {
-                    data.setMessage(ERROR_MESSAGE);
+                    scarabR.setAlertMessage(ERROR_MESSAGE);
                 }
             }
             else 
@@ -540,7 +541,7 @@ public class ReportIssue extends RequireLoginFirstAction
                         issue.addComment(attachment, (ScarabUser)data.getUser());
                     }
                     
-                    data.setMessage("Your comment has been added.");
+                    scarabR.setConfirmMessage("Your comment has been added.");
                     // if there was only one duplicate issue and we just added
                     // a note to it, assume user is done
                     String nextTemplate = Turbine.getConfiguration()
@@ -552,7 +553,7 @@ public class ReportIssue extends RequireLoginFirstAction
                 }
                 else 
                 {
-                    data.setMessage(
+                    getScarabRequestTool(context).setAlertMessage(
                         "No text was entered into the Notes textarea.");
                     searchAndSetTemplate(data, context, 0, "entry,Wizard2.vm");
                 }
@@ -583,8 +584,9 @@ public class ReportIssue extends RequireLoginFirstAction
             try
             {
                 issue.addVote((ScarabUser)data.getUser());
-                data.setMessage("Your vote for artifact #" + issue.getUniqueId() 
-                                    + " has been accepted.");
+                scarabR.setConfirmMessage(
+                     "Your vote for artifact #" + issue.getUniqueId() 
+                     + " has been accepted.");
                 // if there was only one duplicate issue and the user just
                 // voted for it, assume user is done
                 String nextTemplate = Turbine.getConfiguration()
@@ -596,8 +598,8 @@ public class ReportIssue extends RequireLoginFirstAction
             }
             catch (ScarabException e)
             {
-                data.setMessage("Vote could not be added.  Reason given: "
-                                    + e.getMessage());
+                scarabR.setAlertMessage(
+                    "Vote could not be added.  Reason given: "+e.getMessage());
                 // User attempted to vote when they were not allowed.  This
                 // should probably not be allowed in the ui, but right now
                 // it is and we should protect against url hacking anyway.

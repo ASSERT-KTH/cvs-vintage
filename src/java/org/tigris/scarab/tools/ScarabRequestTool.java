@@ -229,6 +229,12 @@ public class ScarabRequestTool
     private int nbrPages = 0;
     private int prevPage = 0;
     private int nextPage = 0;
+
+    /* messages usually set in actions */
+    private String confirmMessage;
+    private String infoMessage;
+    private String alertMessage;
+
     
     /**
      * Constructor does initialization stuff
@@ -271,6 +277,9 @@ public class ScarabRequestTool
         nbrPages = 0;
         prevPage = 0;
         nextPage = 0;
+        confirmMessage = null;
+        infoMessage = null;
+        alertMessage = null;
     }
 
     /**
@@ -653,7 +662,7 @@ try{
         {
             if ( templateId == null || templateId.length() == 0 )
             {
-                data.setMessage("No template id specified.");
+                setAlertMessage("No template id specified.");
             }
             else 
             {
@@ -1098,7 +1107,7 @@ try{
         }
         catch (Exception e)
         {
-            data.setMessage("Issue id was invalid.");
+            setAlertMessage("Issue id was invalid.");
         }
         return issue;
     }
@@ -1111,7 +1120,7 @@ try{
         Issue issue = null;
         if (id == null)
         {
-            data.setMessage("Please enter an id.");
+            setInfoMessage("Please enter an id.");
         }
         else
         {
@@ -1127,7 +1136,7 @@ try{
 	    }        
 	    catch (Exception e)
 	    {
-	        data.setMessage("That id is not valid.");
+	        setAlertMessage("That id is not valid.");
 	    }
         }
         return issue;
@@ -1329,7 +1338,7 @@ try{
 
         if (currentQueryString == null)
         {
-            data.setMessage("Please enter a query.");
+            setInfoMessage("Please enter a query.");
             searchSuccess = false;
             intake = new Intake();
         }
@@ -1420,7 +1429,7 @@ try{
                 matchingIssueIds = search.getMatchingIssues();
                 if (matchingIssueIds == null || matchingIssueIds.size() <= 0)
                 {
-                    data.setMessage("No matching issues.");
+                    setInfoMessage("No matching issues.");
                 }            
             }
             catch (ScarabException e)
@@ -1429,7 +1438,7 @@ try{
                 if (queryError.startsWith(SearchIndex.PARSE_ERROR)) 
                 {
                     Log.info(queryError);
-                    data.setMessage(queryError);
+                    setAlertMessage(queryError);
                 }
                 else 
                 {
@@ -1452,7 +1461,7 @@ try{
         }
         catch (Exception e)
         {
-            data.setMessage("Invalid date.");
+            setAlertMessage("Invalid date.");
             throw new Exception("Invalid date.");
         }
     }
@@ -1724,7 +1733,7 @@ try{
         Module module = getCurrentModule();  
         if (searchField == null)
         {
-            data.setMessage("Please enter a search field.");
+            setInfoMessage("Please enter a search field.");
             return null ;
         }
         
@@ -2042,6 +2051,61 @@ try{
         lapTime = endTime;
         return s;
     }
+
+    /**
+     * Get any confirmation message usually set in the action.
+     * @return value of confirmMessage.
+     */
+    public String getConfirmMessage() 
+    {
+        return confirmMessage;
+    }
+    
+    /**
+     * Set confirmation message.
+     * @param v  Value to assign to confirmMessage.
+     */
+    public void setConfirmMessage(String  v) 
+    {
+        this.confirmMessage = v;
+    }
+
+    /**
+     * Get any informational message usually set in the action.
+     * @return value of infoMessage.
+     */
+    public String getInfoMessage() 
+    {
+        return infoMessage;
+    }
+    
+    /**
+     * Set informational message.
+     * @param v  Value to assign to infoMessage.
+     */
+    public void setInfoMessage(String  v) 
+    {
+        this.infoMessage = v;
+    }
+
+    /**
+     * Get any alert message usually set in the action.
+     * @return value of alertMessage.
+     */
+    public String getAlertMessage() 
+    {
+        return alertMessage;
+    }
+    
+    /**
+     * Set alert message.
+     * @param v  Value to assign to alertMessage.
+     */
+    public void setAlertMessage(String  v) 
+    {
+        this.alertMessage = v;
+    }
+    
 
     // ****************** Recyclable implementation ************************
 

@@ -78,7 +78,7 @@ import org.tigris.scarab.tools.ScarabRequestTool;
     This class is responsible for edit issue forms.
     ScarabIssueAttributeValue
     @author <a href="mailto:elicia@collab.net">Elicia David</a>
-    @version $Id: Approval.java,v 1.15 2002/03/19 18:16:54 jon Exp $
+    @version $Id: Approval.java,v 1.16 2002/04/13 02:39:33 jmcnally Exp $
 */
 public class Approval extends TemplateAction
 {
@@ -134,7 +134,7 @@ public class Approval extends TemplateAction
                    }
                    catch (ScarabException e)
                    {
-                       data.setMessage(e.getMessage());
+                       scarabR.setAlertMessage(e.getMessage());
                    }
                    actionWord = "rejected";
                } 
@@ -146,7 +146,7 @@ public class Approval extends TemplateAction
                    }
                    catch(ScarabException e)
                    {
-                       data.setMessage(e.getMessage());
+                       scarabR.setAlertMessage(e.getMessage());
                    }
                    actionWord = "approved";
                }
@@ -175,7 +175,7 @@ public class Approval extends TemplateAction
                    }
                    catch(ScarabException e)
                    {
-                       data.setMessage(e.getMessage());
+                       scarabR.setAlertMessage(e.getMessage());
                    }
                    actionWord = "rejected";
                } 
@@ -187,7 +187,7 @@ public class Approval extends TemplateAction
                    }
                    catch(ScarabException e)
                    {
-                       data.setMessage(e.getMessage());
+                       scarabR.setAlertMessage(e.getMessage());
                    }
                    actionWord = "approved";
                }
@@ -215,7 +215,7 @@ public class Approval extends TemplateAction
                                      module, user, toUser, subject,
                                      template))
                 {
-                    data.setMessage(EMAIL_ERROR);
+                    scarabR.setAlertMessage(EMAIL_ERROR);
                 }
             }
         }

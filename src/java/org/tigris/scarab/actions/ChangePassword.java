@@ -102,7 +102,9 @@ public class ChangePassword extends ScarabTemplateAction
             
             if (oldPassword.equals(password))
             {
-                data.setMessage("Your new password was the same as your old one. Your password has not been changed!");
+                getScarabRequestTool(context).setInfoMessage(
+                    "Your new password was the same as your old one. " + 
+                    "Your password has not been changed!");
                 setTarget(data, template);
             } 
             else if (password.equals(passwordConfirm))
@@ -122,19 +124,21 @@ public class ChangePassword extends ScarabTemplateAction
                     TurbineSecurity.changePassword(confirmedUser, 
                         oldPassword, password);
 
-                    data.setMessage("Your password has been changed. " + 
-                        "Please login with your new password.");
+                    getScarabRequestTool(context).setConfirmMessage(
+                        "Your password has been changed."
+                        + " Please login with your new password.");
                     setTarget(data, "Login.vm");
                 }
                 catch (PasswordMismatchException pme)
                 {
-                    data.setMessage(pme.getMessage());
+                    getScarabRequestTool(context).setAlertMessage(pme.getMessage());
                     setTarget(data, template);
                 }
             }
             else /* !password.equals(passwordConfirm) */
             {
-                data.setMessage("The passwords you entered do not match!");
+                getScarabRequestTool(context).setAlertMessage(
+                    "The passwords you entered do not match!");
                 setTarget(data, template);
             }
         }

@@ -71,7 +71,7 @@ import org.tigris.scarab.tools.ScarabRequestTool;
  * This class deals with modifying Global Attributes.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: GlobalAttributes.java,v 1.15 2002/03/14 01:13:10 jmcnally Exp $
+ * @version $Id: GlobalAttributes.java,v 1.16 2002/04/13 02:39:33 jmcnally Exp $
  */
 public class GlobalAttributes extends RequireLoginFirstAction
 {
@@ -115,7 +115,8 @@ public class GlobalAttributes extends RequireLoginFirstAction
                 }
                 catch (Exception e)
                 {
-                    data.setMessage("Failure: " + e.getMessage());
+                    getScarabRequestTool(context)
+                        .setAlertMessage("Failure: " + e.getMessage());
                     return;
                 }
             }

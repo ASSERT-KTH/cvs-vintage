@@ -145,15 +145,47 @@
 	</p>
 #end
 
+#macro (confirm $text)
+	<p class="confirm">
+	<img src="$staticLink.setPath("/images/icon_confirmsml.gif")" width="16" height="14" alt="Alert notification" border="0" />
+	<small>$text</small>
+	</p>
+#end
+
+#macro (info $text)
+	<p class="info">
+	<img src="$staticLink.setPath("/images/icon_infosml.gif")" width="16" height="14" alt="Alert notification" border="0" />
+	<small>$text</small>
+	</p>
+#end
+
+#macro (alert $text)
+	<p class="alert">
+	<strong>
+	<img src="$staticLink.setPath("/images/icon_alertsml.gif")" width="16" height="14" alt="Alert notification" border="0" />&#160;Alert!
+	</strong>
+	<small>$text</small>
+	</p>
+#end
+
 #macro (fieldErrorMsg $field $br)
 #if ($field && $field.Message.length() > 0 && !$field.isValid())
 <p class="alert"><small><strong>Alert!</strong>&#160;$field.Message</small></p>$br
 #end
 #end
 
-#macro (actionErrorMsg)
+#macro (actionMessage)
 #if ($data.Message)
-#alert($data.Message)
+  #confirm($data.Message)
+#end
+#if($scarabR.ConfirmMessage)
+  #confirm($scarabR.ConfirmMessage)  
+#end
+#if($scarabR.InfoMessage)
+  #info($scarabR.InfoMessage)  
+#end
+#if($scarabR.AlertMessage)
+  #alert($scarabR.AlertMessage)  
 #end
 #end
 

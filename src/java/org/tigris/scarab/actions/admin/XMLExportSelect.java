@@ -67,7 +67,7 @@ import org.tigris.scarab.util.xml.XMLExport;
  * XML.
  *
  * @author <a href="mailto:kevin.minshull@bitonic.com">Kevin Minshull</a>
- * @version $Id: XMLExportSelect.java,v 1.5 2002/02/14 00:48:17 jon Exp $
+ * @version $Id: XMLExportSelect.java,v 1.6 2002/04/13 02:39:33 jmcnally Exp $
  */
 public class XMLExportSelect extends RequireLoginFirstAction
 {
@@ -96,7 +96,7 @@ public class XMLExportSelect extends RequireLoginFirstAction
             }
             catch (Exception e)
             {
-                data.setMessage(e.getMessage());
+                getScarabRequestTool(context).setAlertMessage(e.getMessage());
             }
             setTarget(data, template);
         }

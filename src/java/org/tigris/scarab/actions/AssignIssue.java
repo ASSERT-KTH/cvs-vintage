@@ -100,7 +100,7 @@ import org.tigris.scarab.util.Email;
  * This class is responsible for report issue forms.
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: AssignIssue.java,v 1.42 2002/03/19 18:16:53 jon Exp $
+ * @version $Id: AssignIssue.java,v 1.43 2002/04/13 02:39:32 jmcnally Exp $
  */
 public class AssignIssue extends RequireLoginFirstAction
 {
@@ -179,7 +179,7 @@ public class AssignIssue extends RequireLoginFirstAction
                                .add(AttributeValuePeer.DELETED, false);
                             if (!issue.getAttributeValues(crit).isEmpty())
                             {
-                                data.setMessage("User " + assignee.getUserName() + 
+                                scarabR.setAlertMessage("User " + assignee.getUserName() + 
                                                 " is already assigned to attribute " +
                                                 newAttribute.getName() + ".");
                                 intake.remove(group);
@@ -228,7 +228,7 @@ public class AssignIssue extends RequireLoginFirstAction
                              if (!notify(context, issue, assignee, 
                                          userAction, othersAction))
                              {
-                                 data.setMessage(EMAIL_ERROR);
+                                 scarabR.setAlertMessage(EMAIL_ERROR);
                              }
                         }
                     }
@@ -237,7 +237,7 @@ public class AssignIssue extends RequireLoginFirstAction
         }
         else
         {
-           data.setMessage(ERROR_MESSAGE);
+           scarabR.setAlertMessage(ERROR_MESSAGE);
         }
     }
 
@@ -266,12 +266,12 @@ public class AssignIssue extends RequireLoginFirstAction
               
                 if (attributeId == null)
                 {
-                    data.setMessage("Missing user attribute data.");
+                    scarabR.setAlertMessage("Missing user attribute data.");
                     return;
                 } 
                 else if (assigneeId == null)
                 {
-                    data.setMessage("Missing user data.");
+                    scarabR.setAlertMessage("Missing user data.");
                     return;
                 }
                 else
@@ -327,7 +327,7 @@ public class AssignIssue extends RequireLoginFirstAction
                             if (!notify(context, issue, assignee, 
                                          userAction, othersAction))
                             {
-                                 data.setMessage(EMAIL_ERROR);
+                                 scarabR.setAlertMessage(EMAIL_ERROR);
                             }
                         }
                     }

@@ -84,7 +84,7 @@ import org.tigris.scarab.services.security.ScarabSecurity;
  * action methods on RModuleAttribute table
  *      
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: AttributeGroupEdit.java,v 1.18 2002/03/26 20:30:32 elicia Exp $
+ * @version $Id: AttributeGroupEdit.java,v 1.19 2002/04/13 02:39:33 jmcnally Exp $
  */
 public class AttributeGroupEdit extends RequireLoginFirstAction
 {
@@ -157,7 +157,7 @@ public class AttributeGroupEdit extends RequireLoginFirstAction
 
         if (!user.hasPermission(ScarabSecurity.MODULE__EDIT, module))
         {
-            data.setMessage(NO_PERMISSION_MESSAGE);
+            scarabR.setAlertMessage(NO_PERMISSION_MESSAGE);
             return;
         }
        
@@ -232,7 +232,7 @@ public class AttributeGroupEdit extends RequireLoginFirstAction
  
         if (attributeIds == null || attributeIds.length <= 0)
         { 
-            data.setMessage("Please select an attribute.");
+            scarabR.setAlertMessage("Please select an attribute.");
             return;
         }
         else
