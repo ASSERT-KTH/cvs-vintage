@@ -57,7 +57,7 @@ import org.jboss.logging.Logger;
  *
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
  * @author <a href="mailto:dirk@jboss.de">Dirk Zimmermann</a>
- * @version $Revision: 1.24 $
+ * @version $Revision: 1.25 $
  */
 public abstract class JDBCCommand
 {
@@ -288,29 +288,33 @@ public abstract class JDBCCommand
               if(value.getClass().getName().equals("java.util.Date"))
                   value = new java.sql.Timestamp(((java.util.Date)value).getTime());
           }
-          if (jdbcType == Types.JAVA_OBJECT) {
-
-			  // ejb-reference: store the handle
-			  if (value instanceof EJBObject) try {
-			  	 value = ((EJBObject)value).getHandle();
-			  } catch (RemoteException e) {
-				 throw new SQLException("Cannot get Handle of EJBObject: "+e);
-			  }
-
-			  ByteArrayOutputStream baos = new ByteArrayOutputStream();
+          if (isBinaryType(jdbcType)) {
+              // ejb-reference: store the handle
+              if (value instanceof EJBObject) try {
+                  value = ((EJBObject)value).getHandle();
+              } catch (RemoteException e) {
+                  throw new SQLException("Cannot get Handle of EJBObject: "+e);
+              }
 
               try {
+                  ByteArrayOutputStream baos = new ByteArrayOutputStream();
                   ObjectOutputStream oos = new ObjectOutputStream(baos);
-
                   oos.writeObject(new MarshalledObject(value));
-
+                  byte[] bytes = baos.toByteArray();
                   oos.close();
 
+                  // it's more efficient to use setBinaryStream for large streams, and
+                  // causes problems if not done on some DBMS implementations
+                  if (bytes.length < 2000) {
+                      stmt.setBytes(idx, bytes);
+                  } else {
+                      ByteArrayInputStream bais = new ByteArrayInputStream(bytes);
+                      stmt.setBinaryStream(idx, bais, bytes.length);
+                      bais.close();
+                  }
               } catch (IOException e) {
                   throw new SQLException("Can't write Java object type to DB: " + e);
               }
-              byte[] bytes = baos.toByteArray();
-              stmt.setBytes(idx, bytes);
           } else {
               stmt.setObject(idx, value, jdbcType);
           }
@@ -523,6 +527,24 @@ public abstract class JDBCCommand
 
       return (String)jdbcTypeNames.get(new Integer(jdbcType));
    }
+
+   /**
+    * Returns true if the JDBC type should be (de-)serialized as a
+    * binary stream and false otherwise.
+    *
+    * @param jdbcType the JDBC type
+    * @return true if binary type, false otherwise
+    */
+   protected final boolean isBinaryType(int jdbcType) {
+       return (Types.BLOB == jdbcType ||
+               Types.CLOB == jdbcType ||
+               Types.JAVA_OBJECT == jdbcType ||
+               Types.LONGVARBINARY == jdbcType ||
+               Types.OTHER == jdbcType ||
+               Types.STRUCT == jdbcType ||
+               Types.VARBINARY == jdbcType);
+   }
+
 
    /**
     * Returns the comma-delimited list of primary key column names
