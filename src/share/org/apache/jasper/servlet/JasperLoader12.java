@@ -55,7 +55,7 @@
  *
  */ 
 
-package org.apache.jasper.runtime;
+package org.apache.jasper.servlet;
 
 import java.io.FileInputStream;
 import java.io.ByteArrayOutputStream;
@@ -88,9 +88,9 @@ import javax.servlet.http.*;
  * @author Harish Prabandham
  * @author Costin Manolache 
  */
-public class JspLoader12 extends JspLoader {
+public class JasperLoader12 extends JasperLoader {
 
-    JspLoader12()
+    JasperLoader12()
     {
 	super();
     }

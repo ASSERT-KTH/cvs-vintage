@@ -53,7 +53,7 @@
  *
  */ 
 
-package org.apache.jasper.runtime;
+package org.apache.jasper.servlet;
 
 import javax.servlet.Servlet;
 import javax.servlet.ServletContext;
@@ -79,6 +79,7 @@ import org.apache.jasper.Options;
 import org.apache.jasper.EmbededServletOptions;
 import org.apache.jasper.JspCompilationContext;
 import org.apache.jasper.JspEngineContext;
+import org.apache.jasper.runtime.*;
 
 import org.apache.jasper.compiler.Compiler;
 
@@ -205,7 +206,7 @@ public class JspServlet extends HttpServlet {
     protected Hashtable jsps = new Hashtable();
     protected Hashtable loadedJSPs = new Hashtable();
     protected ServletConfig config;
-    protected JspLoader loader;
+    protected JasperLoader loader;
     protected Options options;
     protected ClassLoader parentClassLoader;
     protected ServletEngine engine;
@@ -252,14 +253,14 @@ public class JspServlet extends HttpServlet {
 	if( loader==null ) {
 	    if( jdk12 ) {
 		try {
-		    Class ld=Class.forName("org.apache.jasper.runtime.JspLoader12");
-		    loader=(JspLoader)ld.newInstance();
+		    Class ld=Class.forName("org.apache.jasper.servlet.JasperLoader12");
+		    loader=(JasperLoader)ld.newInstance();
 		} catch(Throwable t ) {
 		    t.printStackTrace();
 		}
 	    }
 	    if( loader==null )
-		loader = new JspLoader();
+		loader = new org.apache.jasper.servlet.JasperLoader();
 
 	    loader.setParentClassLoader(parentClassLoader);
 	    loader.setOptions(options);

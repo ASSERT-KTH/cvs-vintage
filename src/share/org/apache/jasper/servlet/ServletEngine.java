@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/runtime/Attic/TomcatServletEngine.java,v 1.4 2000/05/24 00:47:42 costin Exp $
- * $Revision: 1.4 $
- * $Date: 2000/05/24 00:47:42 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/servlet/ServletEngine.java,v 1.1 2000/06/23 21:37:32 costin Exp $
+ * $Revision: 1.1 $
+ * $Date: 2000/06/23 21:37:32 $
  *
  * ====================================================================
  * 
@@ -58,19 +58,61 @@
  * <http://www.apache.org/>.
  *
  */ 
-package org.apache.jasper.runtime;
+package org.apache.jasper.servlet;
 
 import java.io.File;
+
 import javax.servlet.ServletContext;
 
 /**
- * Implementation of Servlet Engine that is used when the JSP engine
- * is running with Tomcat. 
+ * Simple class to factor out servlet runner dependencies from the JSP
+ * engine. There's a few motivations here: 
+ *
+ *	(a) ability for the JSP engine to be able to run on multiple
+ *          servlet engines - 2.1 and 2.2
+ *	(b) ability for the JSP engine to take advantage of specific
+ *          servlet engines; this is crucial from a J2EE point of
+ *          view. 
  *
  * @author Anil K. Vijendran
+ * @author Harish Prabandham
  */
-public class TomcatServletEngine extends ServletEngine {
+public class ServletEngine {
+    static ServletEngine tomcat;
+    static ServletEngine deflt;
+    
+    /**
+     * Get a specific ServletEngine instance for the particular servlet runner
+     * we are running on.
+     */
+    static ServletEngine getServletEngine(String serverInfo) {
+        if (serverInfo.startsWith("Tomcat Web Server")) {
+            if (tomcat == null) {
+                try {
+                    tomcat = (ServletEngine)
+                        Class.forName("org.apache.jasper.runtime.TomcatServletEngine").newInstance();
+                } catch (Exception ex) {
+                    return null;
+                }
+            }
+            return tomcat;
+        } else {
+            if (deflt == null) 
+                deflt = new ServletEngine();
+            return deflt;
+        }
+    }
+    
+    /**
+     * Get the class loader for this ServletContext object. 
+     */
     public ClassLoader getClassLoader(ServletContext ctx) {
-        return null;// XXX (ClassLoader)((ServletContextFacade) ctx).getRealContext().getLoader();
+        return null;
     }
 }
+
+
+
+
+
+

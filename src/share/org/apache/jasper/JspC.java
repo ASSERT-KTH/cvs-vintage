@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/JspC.java,v 1.13 2000/06/15 00:26:42 costin Exp $
- * $Revision: 1.13 $
- * $Date: 2000/06/15 00:26:42 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/JspC.java,v 1.14 2000/06/23 21:37:16 costin Exp $
+ * $Revision: 1.14 $
+ * $Date: 2000/06/23 21:37:16 $
  *
  * ====================================================================
  * 
@@ -321,7 +321,7 @@ public class JspC implements Options { //, JspCompilationContext {
     {
         try {
             JspLoader loader =
-                    new JspLoader();
+                    new org.apache.jasper.servlet.JasperLoader();
 	    loader.setParentClassLoader(getClass().getClassLoader());
 	    loader.setOptions( this);
             CommandLineContext clctxt = new CommandLineContext(

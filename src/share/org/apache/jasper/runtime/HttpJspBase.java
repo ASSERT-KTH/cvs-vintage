@@ -69,8 +69,6 @@ import javax.servlet.jsp.*;
 import org.apache.jasper.JasperException;
 import org.apache.jasper.Constants;
 
-import org.apache.jasper.compiler.TagLibraries;
-
 /**
  * This is the subclass of all JSP-generated servlets.
  *
@@ -107,7 +105,7 @@ public abstract class HttpJspBase
 	jspDestroy();
     }
 
-    final void setClassLoader(ClassLoader cl) {
+    public final void setClassLoader(ClassLoader cl) {
         this.cl = cl;
     }
     
