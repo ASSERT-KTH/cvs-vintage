@@ -64,7 +64,7 @@ import org.apache.tomcat.helper.*;
 import org.apache.tomcat.util.*;
 import org.apache.tomcat.util.xml.*;
 import org.apache.tomcat.logging.*;
-
+import java.security.*;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.security.Principal;
@@ -179,12 +179,13 @@ public final class JDBCRealm extends BaseInterceptor {
 
     /**
      *
-     * Encode used in passwords that sane values acceepted by MessageDigest
+     * Digest algorithm used in passwords thit is same values
+     * accepted by MessageDigest  for algorithm
      * plus "No" ( no encode ) that is the default
      *
      */
 
-    private String encode="No";
+    private String digest="No";
 
 
     // ------------------------------------------------------------- Properties
@@ -271,26 +272,26 @@ public final class JDBCRealm extends BaseInterceptor {
         this.roleNameCol = roleNameCol;
     }
     /**
-     * Gets the encode used for credentials in the database
-     * could be the same that MessageDigest accepts
+     * Gets the digest algorithm  used for credentials in the database
+     * could be the same that MessageDigest accepts vor algorithm
      * and "No" that is the Default
      *
      */
 
-    public String getEncode() {
-        return encode;
+    public String getDigest() {
+        return digest;
     }
 
     /**
-     * Sets the ncode used for credentials in the database
-     * could be the same that MessageDigest accepts
+     * Gets the digest algorithm  used for credentials in the database
+     * could be the same that MessageDigest accepts vor algorithm
      * and "No" that is the Default
      *
-     * @param newEncode the Encode type
+     * @param algorithm the Encode type
      */
 
-    public void setEncode(String newEncode) {
-        encode = newEncode;
+    public void setEncode(String algorithm) {
+        digest = algorithm;
     }
 
     /**
@@ -326,7 +327,7 @@ public final class JDBCRealm extends BaseInterceptor {
             ResultSet rs1 = preparedAuthenticate.executeQuery();
             boolean found = false;
             if (rs1.next()) {
-                if (encode.equals("No")) {
+                if (digest.equalsIgnoreCase("No")) {
                     if (credentials.equals(rs1.getString(1))) {
                         if (debug >= 2)
                             log(sm.getString("jdbcRealm.authenticateSuccess",
@@ -334,8 +335,12 @@ public final class JDBCRealm extends BaseInterceptor {
                         return true;
                     }
                 } else {
-                // FixMe:  Test if the password is expected encoded
-                // for now only the place marked
+                    if (credentials.equals(Digest(rs1.getString(1),digest))) {
+                        if (debug >= 2)
+                            log(sm.getString("jdbcRealm.authenticateSuccess",
+                                     username));
+                        return true;
+                    }
                 }
             }
             rs1.close();
@@ -572,6 +577,48 @@ public final class JDBCRealm extends BaseInterceptor {
 	return 401; //HttpServletResponse.SC_UNAUTHORIZED
         // XXX check transport
     }
+    /**
+     * Digestedentials (password) using MD5 and
+     * convert the result to a corresponding hex string.
+     * If exception, the plain credentials string is returned
+     *
+     * @param credentials Password or other credentials to use in
+     *  authenticating this username
+     *
+     * @param algorithm Algorithm used to do th digest
+     *
+     */
+    final private static String Digest(String credentials,String algorithm) {
+        try {
+            // Obtain a new message digest with MD5 encryption
+            MessageDigest md = (MessageDigest)MessageDigest.getInstance(algorithm).clone();
+            // encode the credentials
+            md.update( credentials.getBytes() );
+            // obtain the byte array from the digest
+            byte[] dig = md.digest();
+            // convert the byte array to hex string
+//            Base64 enc=new Base64();
+//            return new String(enc.encode(HexUtils.convert(dig).getBytes()));
+            return HexUtils.convert(dig);
+
+        } catch( Exception ex ) {
+                ex.printStackTrace();
+                return credentials;
+        }
+    }
+    
+    public static void main(String args[] ) {
+        if (args.length >= 2) {
+            if( args[0].equalsIgnoreCase("-a")){
+                for( int i=2; i < args.length ; i++){
+                    System.out.print(args[i]+":");
+                    System.out.println(Digest(args[i],args[1]));
+                }
+            }
+        }
+
+    }
+
 
 }
 
