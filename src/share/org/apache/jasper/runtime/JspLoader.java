@@ -91,7 +91,7 @@ import javax.servlet.http.*;
  * @author Harish Prabandham
  * @author Costin Manolache
  */
-public class JspLoader extends ClassLoader {
+public abstract class JspLoader extends ClassLoader {
     protected ClassLoader parent;
     protected Options options;
     //    Object pd;

@@ -72,7 +72,7 @@
                     unless="jdk12.present"/>
            <exclude name="**/PolicyInterceptor.java" 
                     unless="jdk12.present"/>
-           <exclude name="**/JspLoader12.java" 
+           <exclude name="**/JasperLoader12.java" 
                     unless="jdk12.present"/>
            <exclude name="**/AdaptiveClassLoader12.java" 
                     unless="jdk12.present"/>
