@@ -35,6 +35,7 @@ import org.columba.core.command.StatusObservable;
 import org.columba.core.command.StatusObservableImpl;
 import org.columba.core.gui.frame.FrameModel;
 import org.columba.core.gui.util.MultiLineLabel;
+import org.columba.core.util.Blowfish;
 import org.columba.mail.config.IncomingItem;
 import org.columba.mail.config.PopItem;
 import org.columba.mail.gui.util.PasswordDialog;
@@ -240,8 +241,8 @@ public class POP3Store {
         int loginMethod = getLoginMethod();
         
         while (!login) {
-            if ((password = popItem.getRoot().getAttribute("password", "")
-            .toCharArray()).length == 0) {
+            if ((password = Blowfish.decrypt(popItem.getRoot().getAttribute("password", "")
+            )).length == 0) {
                 dialog = new PasswordDialog();
                 
                 dialog.showDialog(MessageFormat.format(MailResourceLoader
@@ -320,9 +321,7 @@ public class POP3Store {
         popItem.setBoolean("save_password", save);
         
         if (save) {
-            // save plain text password in config file
-            // this is a security risk !!!
-            popItem.setString("password", new String(password));
+            popItem.setString("password", Blowfish.encrypt(password));
         }
     }
     

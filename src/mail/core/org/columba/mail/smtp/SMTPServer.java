@@ -33,12 +33,13 @@ import org.columba.core.command.ProgressObservedInputStream;
 import org.columba.core.command.WorkerStatusController;
 import org.columba.core.gui.frame.FrameModel;
 import org.columba.core.gui.util.MultiLineLabel;
+import org.columba.core.util.Blowfish;
 import org.columba.mail.composer.SendableMessage;
 import org.columba.mail.config.AccountItem;
 import org.columba.mail.config.Identity;
 import org.columba.mail.config.ImapItem;
-import org.columba.mail.config.PopItem;
 import org.columba.mail.config.OutgoingItem;
+import org.columba.mail.config.PopItem;
 import org.columba.mail.config.SpecialFoldersItem;
 import org.columba.mail.gui.util.PasswordDialog;
 import org.columba.mail.pop3.AuthenticationManager;
@@ -126,7 +127,7 @@ public class SMTPServer  {
 	public void openConnection() throws IOException, SMTPException,
 			CommandCancelledException {
 		String username;
-		char[] password;
+		char[] password = new char[0];
 		boolean savePassword;
 
 		// Init Values
@@ -222,8 +223,7 @@ public class SMTPServer  {
 
 		if (!authenticated) {
 			username = smtpItem.get("user");
-			password = smtpItem.getRoot().getAttribute("password", "")
-					.toCharArray();
+			password = Blowfish.decrypt(smtpItem.getRoot().getAttribute("password", ""));
 			savePassword = accountItem.getSmtpItem()
 					.getBoolean("save_password");
 
@@ -319,7 +319,7 @@ public class SMTPServer  {
 			smtpItem.setString("user", username);
 			smtpItem.setBoolean("save_password", savePassword);
 			if (savePassword) {
-				smtpItem.setString("password", new String(password));
+				smtpItem.setString("password", Blowfish.encrypt(password));
 			}
 		}
 	}

@@ -42,6 +42,7 @@ import org.columba.core.filter.FilterCriteria;
 import org.columba.core.filter.FilterRule;
 import org.columba.core.gui.frame.FrameModel;
 import org.columba.core.gui.util.MultiLineLabel;
+import org.columba.core.util.Blowfish;
 import org.columba.core.util.ListTools;
 import org.columba.mail.command.MailFolderCommandReference;
 import org.columba.mail.config.ImapItem;
@@ -53,7 +54,6 @@ import org.columba.mail.folder.headercache.CachedHeaderfields;
 import org.columba.mail.folder.imap.IMAPFolder;
 import org.columba.mail.folder.imap.IMAPRootFolder;
 import org.columba.mail.folder.imap.UpdateFlagCommand;
-import org.columba.mail.gui.config.account.IncomingServerPanel;
 import org.columba.mail.gui.tree.command.FetchSubFolderListCommand;
 import org.columba.mail.gui.util.PasswordDialog;
 import org.columba.mail.message.ColumbaHeader;
@@ -466,7 +466,7 @@ public class IMAPServer implements IMAPListener {
 		boolean authenticated = false;
 		boolean first = true;
 
-		char[] password = null;
+		char[] password = new char[0];
 
 		printStatusMessage(MailResourceLoader.getString("statusbar", "message",
 				"authenticating"));
@@ -475,16 +475,15 @@ public class IMAPServer implements IMAPListener {
 
 		// Try to get Password from Configuration
 		if (item.get("password").length() != 0) {
-			password = item.get("password").toCharArray();
+			password = Blowfish.decrypt(item.get("password"));
 		}
 		// Login loop until authenticated
 		while (!authenticated) {
 			// On the first try check if we need to show the password dialog
 			// -> not necessary when password was stored
-			if (!first || password == null) {
+			if (!first || password.length == 0) {
 				// Show the password dialog
-				if (password == null)
-					password = new char[0];
+				if (password.length == 0)
 				dialog.showDialog(MessageFormat.format(MailResourceLoader
 						.getString("dialog", "password", "enter_password"),
 						new Object[] { item.get("user"), item.get("host") }),
@@ -496,7 +495,7 @@ public class IMAPServer implements IMAPListener {
 					// Save or Clear the password in the configuration
 					item.setBoolean("save_password", dialog.getSave());
 					if (dialog.getSave()) {
-						item.setString("password", new String(password));
+						item.setString("password", Blowfish.encrypt(password));
 					} else {
 						item.setString("password", "");
 					}
