@@ -732,12 +732,13 @@ final class JasperLiaison {
         String cpath = "";
         cpath+=extractClassPath(classP);
         Jdk11Compat jdkProxy=Jdk11Compat.getJdkCompat();
-        URL serverCP[];
+        URL appsCP[];
         URL commonCP[];
-        serverCP=jdkProxy.getParentURLs(this.getClass().getClassLoader());
-        commonCP=jdkProxy.getURLs(this.getClass().getClassLoader());
-	if( serverCP!=null ) 
-	    cpath+=separator+extractClassPath(serverCP);
+        ClassLoader parentLoader=ctx.getContextManager().getParentLoader();
+        appsCP=jdkProxy.getParentURLs(parentLoader);
+        commonCP=jdkProxy.getURLs(parentLoader);
+	if( appsCP!=null ) 
+	    cpath+=separator+extractClassPath(appsCP);
 	if( commonCP!=null ) 
 	    cpath+=separator+extractClassPath(commonCP);
 	return cpath;
