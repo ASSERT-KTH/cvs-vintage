@@ -1,0 +1,80 @@
+<html>
+<head>
+<title>Workflow</title>
+</head>
+
+<body bgcolor="#ffffff">
+
+<h2>Scarab - Workflow</h2>
+<h4>$Id: workflow.html,v 1.1 2002/02/11 22:19:12 jon Exp $</h4>
+
+<p>
+This document is a bit of a FAQ document about something that Scarab
+is currently sorely missing. What Scarab is missing is the concept of
+workflow. This means that there is some sort of 'process' by which 
+an Issue changes its attributes relating to a particular issue's state.
+</p>
+
+<p>
+on 2/11/02 1:28 PM, "Dong Xiao" <dongxiao AT NOSPAM ashleylaurent.com> wrote:
+</p>
+
+<p>
+&gt; Scarab IS flexible in terms of attribute/permission management (Awesome
+&gt; data model design!)
+</p>
+
+<p>
+Thanks!
+</p>
+
+<p>
+&gt; But I don't know how to manage Scarab to satisfy this use case:<br />
+&gt; <br />
+&gt; Customers/partners and developers work on same module. <br />
+&gt; 1. We want customers/partners to see limited fields, for example,<br />
+&gt; without seeing <br />
+&gt; fields like status/priority/resolution/vote etc when they enter new<br />
+&gt; issues. These <br />
+&gt; fields will take default values.<br />
+&gt; 2. Later on, customers should be able to query/view status change on<br />
+&gt; these fields.<br />
+&gt; 3. Developers can always enter/view/query on all fields.<br />
+</p>
+
+<p>
+This is part of what we generically refer to as 'workflow' and is not
+yet implemented.
+</p>
+
+<p>
+Part of the main problem with implementing 'workflow' is figuring out
+how to implement it in such a way as to be easily setup and defined as
+well as work with the fact that Attributes within Scarab are not static.
+In other words, you can define anything as an Attribute...since that is
+the case, what if a particular Issue Type does not have the attribute
+"Status"?
+</p>
+
+<p>
+So far, I have looked into using some of the open source workflow
+packages that are available (Commons-Workflow, Jess, Drools, and a
+future proposed JSR based on Jess), but the issue is that none of these
+are easily used. It takes quite a bit of understanding of how everything
+works in order to build a customized workflow.
+</p>
+
+<p>
+In your description above, you start to describe the workflow that you
+would like to see, however, it is far from complete. On top of finding a
+tool to execute the workflow, we also need complete workflows from
+Scarab Users. If you would like to document one that you would like to
+see, that would be great.
+</p>
+
+<p>
+-jon stevens
+</p>
+
+</body>
+</html>
