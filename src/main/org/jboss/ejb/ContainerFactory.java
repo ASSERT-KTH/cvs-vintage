@@ -79,7 +79,7 @@ import org.jboss.logging.Logger;
 *   @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
 *   @author Peter Antman (peter.antman@tim.se)
 *
-*   @version $Revision: 1.60 $
+*   @version $Revision: 1.61 $
 */
 public class ContainerFactory
     extends org.jboss.util.ServiceMBeanSupport
@@ -108,8 +108,16 @@ public class ContainerFactory
 
    // Enable metrics interceptor
    boolean metricsEnabled    = false;
+   
+   /* Enable JMS monitoring of the bean cache */
+   private boolean m_beanCacheJMSMonitoring;
 
    // Public --------------------------------------------------------
+
+   /**
+    * Returns the deployed applications.
+    */
+   public java.util.Iterator getDeployedApplications() {return deployments.values().iterator();}
 
    /**
    * Implements the abstract <code>getObjectName()</code> method in superclass
@@ -226,6 +234,14 @@ public class ContainerFactory
    public boolean isMetricsEnabled()
    {
       return metricsEnabled;
+   }
+   
+   /**
+    * Set JMS monitoring of the bean cache.
+    */
+   public void setBeanCacheJMSMonitoringEnabled(boolean enable)
+   {
+	   m_beanCacheJMSMonitoring = enable;
    }
 
    /**
@@ -623,27 +639,37 @@ public class ContainerFactory
 
                   // Set container invoker
                   ContainerInvoker ci = null;
-                 try {
+                 try 
+				 {
                     ci = (ContainerInvoker)cl.loadClass(conf.getContainerInvoker()).newInstance();
-                     } catch(Exception e) {
+                 } catch(Exception e) {
                     throw new DeploymentException("Missing or invalid Container Invoker (in jboss.xml or standardjboss.xml)");
-                     }
-                 if (ci instanceof XmlLoadable) {
+                 }
+                 if (ci instanceof XmlLoadable) 
+				 {
                    // the container invoker can load its configuration from the jboss.xml element
                    ((XmlLoadable)ci).importXml(conf.getContainerInvokerConf());
-                     }
+                 }
                  container.setContainerInvoker(ci);
 
                   // Set instance cache
                   InstanceCache ic = null;
-                 try {
+                 try 
+				 {
                     ic = (InstanceCache)cl.loadClass(conf.getInstanceCache()).newInstance();
-                     } catch(Exception e) {
+					if (ic instanceof AbstractInstanceCache) 
+					{
+						((AbstractInstanceCache)ic).setJMSMonitoringEnabled(m_beanCacheJMSMonitoring);
+					}
+                 } 
+				 catch(Exception e) 
+				 {
                     throw new DeploymentException("Missing or invalid Instance Cache (in jboss.xml or standardjboss.xml)");
-                     }
-                 if (ic instanceof XmlLoadable) {
+                 }
+                 if (ic instanceof XmlLoadable) 
+				 {
                    ((XmlLoadable)ic).importXml(conf.getContainerCacheConf());
-                     }
+                 }
                  container.setInstanceCache(ic);
 
                   // No real instance pool, use the shadow class
@@ -731,39 +757,54 @@ public class ContainerFactory
 
                // Set container invoker
                ContainerInvoker ci = null;
-              try {
+              try 
+			  {
                  ci = (ContainerInvoker)cl.loadClass(conf.getContainerInvoker()).newInstance();
-                  } catch(Exception e) {
+              } 
+			  catch(Exception e) 
+			  {
                  throw new DeploymentException("Missing or invalid Container Invoker (in jboss.xml or standardjboss.xml)");
-                  }
-              if (ci instanceof XmlLoadable) {
+              }
+              if (ci instanceof XmlLoadable) 
+			  {
                 // the container invoker can load its configuration from the jboss.xml element
                 ((XmlLoadable)ci).importXml(conf.getContainerInvokerConf());
-                  }
+              }
               container.setContainerInvoker(ci);
 
                // Set instance cache
                InstanceCache ic = null;
-              try {
+              try 
+			  {
                  ic = (InstanceCache)cl.loadClass(conf.getInstanceCache()).newInstance();
-                  } catch(Exception e) {
+				 if (ic instanceof AbstractInstanceCache) 
+				 {
+					((AbstractInstanceCache)ic).setJMSMonitoringEnabled(m_beanCacheJMSMonitoring);
+ 				 }
+              } 
+			  catch(Exception e) {
                  throw new DeploymentException("Missing or invalid Instance Cache (in jboss.xml or standardjboss.xml)");
-                  }
-              if (ic instanceof XmlLoadable) {
+              }
+              if (ic instanceof XmlLoadable) 
+			  {
                 ((XmlLoadable)ic).importXml(conf.getContainerCacheConf());
-                  }
+              }
               container.setInstanceCache(ic);
 
                // Set instance pool
                InstancePool ip = null;
-              try {
+              try 
+			  {
                  ip = (InstancePool)cl.loadClass(conf.getInstancePool()).newInstance();
-                  } catch(Exception e) {
+              } 
+			  catch(Exception e) 
+			  {
                  throw new DeploymentException("Missing or invalid Instance Pool (in jboss.xml or standardjboss.xml)");
-                  }
-               if (ip instanceof XmlLoadable) {
+              }
+              if (ip instanceof XmlLoadable) 
+			  {
                 ((XmlLoadable)ip).importXml(conf.getContainerPoolConf());
-                  }
+              }
               container.setInstancePool(ip);
 
                // Set persistence manager

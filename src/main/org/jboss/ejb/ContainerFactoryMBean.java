@@ -15,7 +15,7 @@ import java.net.MalformedURLException;
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
  *   @author Juha Lindfors (jplindfo@helsinki.fi)
  *
- *   @version $Revision: 1.8 $
+ *   @version $Revision: 1.9 $
  */
 public interface ContainerFactoryMBean
 	extends org.jboss.util.ServiceMBean
@@ -25,7 +25,11 @@ public interface ContainerFactoryMBean
     
    // Public --------------------------------------------------------
 
-	/**
+   /**
+    * Returns the applications deployed by the container factory
+    */
+   public java.util.Iterator getDeployedApplications();
+   /**
 	 *	Deploy an application
 	 *
 	 * @param   url  
@@ -97,5 +101,9 @@ public interface ContainerFactoryMBean
    public boolean isDeployed(String url)
       throws MalformedURLException;
 
+   /**
+    * Set the JMS monitoring of the bean cache.
+    */
+   public void setBeanCacheJMSMonitoringEnabled(boolean enable);
 }
 
