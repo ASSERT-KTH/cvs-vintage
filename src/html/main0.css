@@ -30,7 +30,7 @@ body, tr, td, th, span {
 
 /* ----- */
 
-#globalnav { 
+.globalnav { 
 	padding: 15px;
 	background: #ccc;
 	}
@@ -168,11 +168,11 @@ h1 {
 
 /* ----- */
 
-#form { 
+form { 
 	font-size: 11px;
 	color: black;
 	}
-#form .button {
+#.button {
 	font-size: 11px;
 	color: black;
 	font-weight: bold;
@@ -182,7 +182,7 @@ h1 {
 	border-right: 1px solid #000;
 	border-bottom: 1px solid #000;
 	}
-#form .buttonfunc {
+#.buttonfunc {
 	font-size: 11px;
 	color: black;
 	font-weight: bold;
@@ -192,11 +192,11 @@ h1 {
 	border-right: 1px solid #ccc;
 	border-bottom: 1px solid #ccc;
 	}
-#form .select {
+#.select {
 	font-size: 11px;
 	color: black;
 	}
-#form .text {
+#.text {
 	font-size: 11px;
 	color: black;
 	}
