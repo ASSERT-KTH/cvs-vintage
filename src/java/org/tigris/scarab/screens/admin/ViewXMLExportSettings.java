@@ -62,7 +62,7 @@ import org.tigris.scarab.util.ScarabConstants;
  * Sends XML Export settings contents directly to the output stream.
  *
  * @author <a href="mailto:jon@collab.net">Jon Scott Stevens</a>
- * @version $Id: ViewXMLExportSettings.java,v 1.3 2002/09/18 00:17:13 jon Exp $
+ * @version $Id: ViewXMLExportSettings.java,v 1.4 2003/01/24 00:07:35 jon Exp $
  */
 public class ViewXMLExportSettings extends Default
 {
@@ -111,7 +111,8 @@ public class ViewXMLExportSettings extends Default
         context.put("sdf", new SimpleDateFormat(ScarabConstants.DATE_FORMAT));
         String result = 
             Module.handleRequest (context, "macros/XMLExportSettingsMacro.vm");
-        data.getOut().write(result);
+        data.getResponse().setContentLength(result.length());
+        data.getResponse().getOutputStream().print(result);
         context.remove("renderedFromScreen");
 
         // we already sent the response, there is no target to render
