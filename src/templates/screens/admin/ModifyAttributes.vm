@@ -1,0 +1,54 @@
+<form action="$link.setPage("admin,ModifyAttributes.vm")" method="POST">
+    <input type="hidden" name="action" value="admin.ModifyAttributes">
+    <input type="hidden" name="nextTemplate" value="">
+
+#set ($user = $scarabR.User)
+#set ($module = $user.CurrentModule)
+
+<p>
+Please select an attribute from the list below, then click the "Modify
+Attribute Options" button:
+</p>
+
+#set ( $group = $intake.Attribute.Default )
+<input type="hidden" name="$group.CID" value="$group.OID">
+
+<select name="$group.Id.Key" size="5">
+#foreach( $attribute in $module.AllAttributes )
+<option value="$attribute.AttributeId"
+#if ("$attribute.AttributeId" == "$!group.Id.Value")selected#end
+>$attribute.Name</option>
+#end
+</select>
+
+
+<p>
+<input type="submit" name="eventSubmit_doSelectattribute" value="Modify Attribute Options">
+</p>
+
+</form>
+
+#if ($data.Parameters.getString("action") == "admin.ModifyAttributes")
+<hr>
+
+#set ($attribute = $scarabR.Attribute)
+<form action="$link.setPage("admin,ModifyAttributes.vm")" method="POST">
+    <input type="hidden" name="action" value="ModifyAttributes">
+    <input type="hidden" name="nextTemplate" value="">
+    <input type="hidden" name="attribute_id" value="$attribute.Id">
+
+#set ( $attOptions = $attribute.getAttributeOptions())
+
+##set ( $group = $intake.Attribute.Default )
+##<input type="hidden" name="$group.CID" value="$group.OID">
+
+<select name="$group.Id.Key" size="5">
+    #if ( $attOptions.size() > 0 )
+    #foreach ($option in $attOptions)
+    <option value="$option.OptionId">$option.DisplayValue</option>
+    #end
+    #end
+</select>
+
+</form>
+#end
