@@ -16,7 +16,7 @@ if [ "${ONE}" = "-c" ] ; then
     cd ../src/sql
     NAME=${2}
     PASS=${3}
-    create-mysql-database.sh "${NAME}" "${PASS}" scarab-test
+    create-db.sh "${NAME}" "${PASS}" scarab-test
     cd ${BUILD_DIR}
     exit
 fi
