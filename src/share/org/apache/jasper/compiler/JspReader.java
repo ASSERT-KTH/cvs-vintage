@@ -234,6 +234,11 @@ public class JspReader {
 
 	// Restore parser state:
 	//size--;
+	if (currFileId < 0) {
+	    throw new ParseException(
+		          Constants.getString("jsp.error.no.more.content"));
+	}
+
 	String fName = getFile(currFileId);
 	currFileId = unregisterSourceFile(fName);
 	if (currFileId < -1)

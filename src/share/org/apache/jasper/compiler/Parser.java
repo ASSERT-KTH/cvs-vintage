@@ -831,7 +831,14 @@ public class Parser {
                             // Parse until the end of the tag body. 
                             // Then skip the tag end... 
                             parser.parse(tagEnd);
-                            reader.advance(tagEnd.length());
+                            try {
+                                reader.advance(tagEnd.length());
+                            } catch (ParseException ex) {
+                                throw new ParseException(
+                                    start,
+                                    Constants.getString("jsp.error.unterminated.user.tag", 
+                                        new Object[]{JspUtil.escapeXml(tagEnd)}));
+                            }
 			    listener.setTemplateInfo(parser.tmplStart, parser.tmplStop);
                             listener.handleTagEnd(parser.tmplStop, reader.mark(), prefix, 
                                                   shortTagName, attrs, tli, ti);

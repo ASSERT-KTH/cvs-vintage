@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/JspUtil.java,v 1.18 2000/07/07 11:59:59 rubys Exp $
- * $Revision: 1.18 $
- * $Date: 2000/07/07 11:59:59 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/JspUtil.java,v 1.19 2000/11/08 13:11:07 larryi Exp $
+ * $Revision: 1.19 $
+ * $Date: 2000/11/08 13:11:07 $
  *
  * ====================================================================
  * 
@@ -263,7 +263,31 @@ public class JspUtil {
 	}
 	return escString;
     }
-    
+
+    /**
+     *  Escape the 5 entities defined by XML.
+     */
+    public static String escapeXml(String s) {
+        if (s == null) return null;
+        StringBuffer sb = new StringBuffer();
+        for(int i=0; i<s.length(); i++) {
+            char c = s.charAt(i);
+            if (c == '<') {
+                sb.append("&lt;");
+            } else if (c == '>') {
+                sb.append("&gt;");
+            } else if (c == '\'') {
+                sb.append("&apos;");
+            } else if (c == '&') {
+                sb.append("&amp;");
+            } else if (c == '"') {
+                sb.append("&quote;");
+            } else {
+                sb.append(c);
+            }
+        }
+        return sb.toString();
+    }
 
     public static class ValidAttribute {
    	String name;
