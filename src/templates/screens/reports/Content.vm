@@ -1,3 +1,7 @@
+## This template is the start of implementation of a briano UI mockup
+## for report configuration, but i could not sort out how it was all
+## supposed to fit together - jmcnally
+
 #set ($report = $scarabR.Report)
 #set ($reportDefn = $report.ReportDefinition)
 #set ($reportIsEditable = $report.isEditable($data.User))
