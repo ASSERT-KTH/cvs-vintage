@@ -380,7 +380,8 @@ public class XmlMapper implements DocumentHandler, SaxContext, EntityResolver, D
 	// We need to return a valid IS - or the default will be used,
 	// and that means reading from net.
 	InputSource is=new InputSource();
-	is.setByteStream( new StringBufferInputStream(""));
+	//	is.setByteStream( new StringBufferInputStream(""));
+	is.setByteStream(new ByteArrayInputStream(new byte[0]));
 	return is;
     }
 
