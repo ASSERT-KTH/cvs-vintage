@@ -64,7 +64,7 @@ $page.setTitle("Enter issue")
   #foreach ($att in $group.Attributes)
     #set ($rma = $module.getRModuleAttribute($att, $issueType))
       #if ($rma.Active)
-        #set ($attVal = $scarabR.getNewAttributeValue($att, $issue))
+        #set ($attVal = $issue.getAttributeValue($att))
         ## If templAttVal is null, set to ""
         #if ( $templ.getAttributeValue($att))   
             #set ($templAttVal = $templ.getAttributeValue($att))
@@ -152,6 +152,7 @@ $page.setTitle("Enter issue")
       <td>
        <input type="file" name="$intakeAttachment.File.Key" size="45"
             value="$!intakeAttachment.File.Value.FileName" />
+       #fieldErrorMsg($intakeAttachment.File "")
        <p><small>Click Browse and select a file. If you do not see a Browse
        button, your browser does not support file uploads. Windows
        users, set Files of Type: to be All Files (*.*) to get a

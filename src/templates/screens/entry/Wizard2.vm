@@ -22,7 +22,7 @@ $page.setTitle("Identified as duplicate")
   #foreach ($att in $group.Attributes)
     #set ($rma = $module.getRModuleAttribute($att, $issueType))
     #if ($rma.Active)
-      #set ($attVal = $scarabR.getNewAttributeValue($att, $issue))
+      #set ($attVal = $issue.getAttributeValue($att))
       <th>$attVal.RModuleAttribute.DisplayValue</th>
     #end
  #end
@@ -33,13 +33,13 @@ $page.setTitle("Identified as duplicate")
   #foreach ($att in $group.Attributes)
     #set ($rma = $module.getRModuleAttribute($att, $issueType))
     #if ($rma.Active)
-      #set ($attVal = $scarabR.getNewAttributeValue($att, $issue))
+      #set ($attVal = $issue.getAttributeValue($att))
       #set ($attrInput = $intake.AttributeValue.mapTo($attVal))
       <td>
         #if ($attVal.Attribute.AttributeType.ValidationKey)
              ## TODO not sure what this is
         #elseif ($attVal.Attribute.AttributeType.Name == "combo-box")
-             $att.getAttributeOption($attrInput.OptionId.toString()).Name
+ xx  ##          $att.getAttributeOption($attrInput.OptionId.toString()).Name
         #else
              $!attrInput.Value
         #end

@@ -98,7 +98,7 @@ import org.tigris.scarab.tools.ScarabRequestTool;
  * This class is responsible for report issue forms.
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: ReportIssue.java,v 1.105 2002/01/25 02:57:13 jmcnally Exp $
+ * @version $Id: ReportIssue.java,v 1.106 2002/01/26 07:15:07 jmcnally Exp $
  */
 public class ReportIssue extends RequireLoginFirstAction
 {
@@ -125,11 +125,11 @@ public class ReportIssue extends RequireLoginFirstAction
             setTarget(data, "entry,Wizard1.vm");
             return;
         }
-        if (intake.isAllValid()) 
+        // set the values entered so far and if that is successful look
+        // for duplicates
+        if (setAttributeValues(issue, intake, context)) 
         {
-            // set the values entered so far
-            setAttributeValues(issue, intake, context);
-            
+//System.out.println("Parameters:\n " + data.getParameters() );
             // check for duplicates, if there are none skip the dedupe page
             searchAndSetTemplate(data, context, 0, "entry,Wizard3.vm");
         }
@@ -259,20 +259,29 @@ public class ReportIssue extends RequireLoginFirstAction
      * issue's attribute values.
      * @exception Exception pass thru
      */
-    private void setAttributeValues(Issue issue, IntakeTool intake, TemplateContext context)
+    private boolean setAttributeValues(Issue issue, IntakeTool intake, TemplateContext context)
         throws Exception
     {
+        boolean success = false;
+        // set any required flags on attribute values
+        setRequiredFlags(issue, intake);
+        if ( intake.isAllValid() ) 
+        {
         Hashtable values = new Hashtable();
         SequencedHashtable avMap = issue.getModuleAttributeValuesMap();
         Iterator i = avMap.iterator();
+
         while (i.hasNext()) 
         {
             AttributeValue aval = (AttributeValue)avMap.get(i.next());
             Group group = 
                 intake.get("AttributeValue", aval.getQueryKey(), false);
+
+            // System.out.println("Looking at: " + aval.getAttribute().getName() +" ->" + aval.getQueryKey() );
             if (group != null) 
             {
                 group.setProperties(aval);
+                // System.out.println("Setting: " + aval.getAttribute().getName() + " to " + aval.getValue());
                 
                 /*
                  * The next piece of code is for storing the values
@@ -309,6 +318,9 @@ public class ReportIssue extends RequireLoginFirstAction
             }
         }
         context.put("wizard1_intake", values);
+        success = true;
+        }
+        return success;
     }
     
     /**
@@ -323,12 +335,9 @@ public class ReportIssue extends RequireLoginFirstAction
         IssueType issueType = issue.getIssueType();
         ScarabUser user = (ScarabUser)data.getUser();
         
-        // set any required flags on attribute values
-        setRequiredFlags(issue, intake);
-
-        if (intake.isAllValid())
+        // set the attribute values and if that was successful save the issue.
+        if (setAttributeValues(issue, intake, context))
         {
-            setAttributeValues(issue, intake, context);
             if (issue.containsMinimumAttributeValues())
             {
                 // Save transaction record
@@ -470,6 +479,8 @@ public class ReportIssue extends RequireLoginFirstAction
             }            
         }
     }
+
+
     
     /**
      * Add attachment file
@@ -480,8 +491,6 @@ public class ReportIssue extends RequireLoginFirstAction
         IntakeTool intake = getIntakeTool(context);
         ScarabRequestTool scarabR = getScarabRequestTool(context);
         Issue issue = scarabR.getReportingIssue();
-        IssueType issueType = issue.getIssueType();
-        ScarabUser user = (ScarabUser)data.getUser();
         Attachment attachment = new Attachment();
         Group group = intake.get("Attachment", 
                                  attachment.getQueryKey(), false);
@@ -489,16 +498,36 @@ public class ReportIssue extends RequireLoginFirstAction
         if (group != null)
         {
             Field nameField = group.get("Name");
-            Field descField = group.get("File");
+            Field fileField = group.get("File");
             nameField.setRequired(true);
-            descField.setRequired(true);
-            if (!nameField.isValid())
+            fileField.setRequired(true);
+            Field mimeAField = group.get("MimeTypeA");
+            Field mimeBField = group.get("MimeTypeB");
+            String mimeA = mimeAField.toString();
+            String mimeB = mimeBField.toString();
+            String mimeType = null;
+            if (mimeB != null && mimeB.trim().length() > 0)
             {
-                nameField.setMessage("This field requires a value.");
+                mimeType = mimeB;
             }
-            if (!descField.isValid())
+            else
             {
-                descField.setMessage("This field requires a value.");
+                mimeAField.setRequired(true);
+                mimeType = mimeA;
+            }
+            
+            if ( group.isAllValid() ) 
+            {
+                group.setProperties(attachment);
+                attachment.setMimeType(mimeType);
+                issue.addFile(attachment);
+                data.setMessage("Attachment was added");
+                // remove the group so that the form data doesn't show up again
+                intake.remove(group);
+            }
+            else
+            {
+                data.setMessage(ERROR_MESSAGE);
             }
         }
         else
@@ -506,49 +535,8 @@ public class ReportIssue extends RequireLoginFirstAction
             data.setMessage("Could not locate Attachment group");
         }
 
-        if (intake.isAllValid())
-        {
-            if (group != null) 
-            {
-                Field mimeAField = group.get("MimeTypeA");
-                Field mimeBField = group.get("MimeTypeB");
-        
-                String mimeA = mimeAField.toString();
-                String mimeB = mimeBField.toString();
-                String mimeType = null;
-                if (mimeA != null && mimeA.trim().length() > 0)
-                {
-                    mimeType = mimeA;
-                }
-                else if (mimeB != null && mimeB.trim().length() > 0)
-                {
-                    mimeType = mimeB;
-                }
-                if (mimeType == null)
-                {
-                    mimeAField.setMessage("This field requires a value.");
-                    data.setMessage(ERROR_MESSAGE);
-                    doGotowizard3(data, context);
-                    return;
-                }
-
-                group.setProperties(attachment);
-                attachment.setMimeType(mimeType);
-                if (attachment.getData() != null 
-                    && attachment.getData().length > 0)
-                {
-                    issue.addFile(attachment);
-                }
-                data.getParameters().setString("intake-grp", "issue"); 
-                data.getParameters().setString("id",issue.getUniqueId().toString());
-                // remove the group so that the form data doesn't show up again
-                intake.remove(group);
-            }
-        }
-        else
-        {
-            data.setMessage(ERROR_MESSAGE);
-        }
+        // set any attribute values that were entered before adding the file.
+        setAttributeValues(issue, intake, context);
         doGotowizard3(data, context);        
     }
     
@@ -575,9 +563,8 @@ public class ReportIssue extends RequireLoginFirstAction
                 reportingIssue.removeFile(attachmentIndex);
             } 
         }
-        data.getParameters().add("intake-grp", "issue"); 
-        data.getParameters().add("id", reportingIssue.getUniqueId().toString());
-        
+        // set any attribute values that were entered before adding the file.
+        setAttributeValues(scarabR.getReportingIssue(), intake, context);
         doGotowizard3(data, context);
     }
     
