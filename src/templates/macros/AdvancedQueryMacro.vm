@@ -342,11 +342,9 @@ $l10n.From:&#160;<input type="text" size="20"
     <table cellpadding="3" cellspacing="2" border="0">
    #foreach ($att in $group.Attributes)
     #set ($rma = $module.getRModuleAttribute($att, $issueType))
-    #if ($rma.Active)
-        #set ($attVal = $attrValues.get($att.Name.toUpperCase()))
-        #if (!$optionsOnly || $attVal.Attribute.isOptionAttribute())
-          #attributeWidget($attVal)
-        #end
+    #set ($attVal = $attrValues.get($att.Name.toUpperCase()))
+    #if (!$optionsOnly || $attVal.Attribute.isOptionAttribute())
+      #attributeWidget($attVal)
     #end
    #end
     </table>

@@ -97,7 +97,7 @@ import org.apache.commons.lang.StringUtils;
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: Issue.java,v 1.310 2003/07/10 23:40:58 dlr Exp $
+ * @version $Id: Issue.java,v 1.311 2003/07/14 10:22:41 venkatesh Exp $
  */
 public class Issue 
     extends BaseIssue
@@ -108,7 +108,7 @@ public class Issue
         "getAttributeValuesMap";
     protected static final String GET_ASSOCIATED_USERS = 
         "getAssociatedUsers";
-    protected static final String GET_MODULE_ATTRVALUES_MAP = 
+    protected static final String GET_MODULE_ATTRVALUES_MAP =
         "getModuleAttributeValuesMap";
     protected static final String GET_ATTRVALUE = 
         "getAttributeValue";
@@ -848,26 +848,48 @@ public class Issue
         return rmit;
     }
 
+   /**
+    * Calls the overloaded version by passing 'true' so that only active
+    * attributes will be considered.
+    * @see #getModuleAttributeValuesMap(boolean)
+    */
+    public SequencedHashMap getModuleAttributeValuesMap()
+        throws Exception
+    {
+        return getModuleAttributeValuesMap(true);
+    }
+
     /**
      * AttributeValues that are relevant to the issue's current module.
-     * Empty AttributeValues that are relevant for the module, but have 
+     * Empty AttributeValues that are relevant for the module, but have
      * not been set for the issue are included.  The values are ordered
      * according to the module's preference
+     *
+     * @param isActive TRUE if only active attributes need to be considered
+     * and FALSE if both active and inactive attributes need to be considered
      */
-    public SequencedHashMap getModuleAttributeValuesMap() 
+    public SequencedHashMap getModuleAttributeValuesMap(boolean isActive)
         throws Exception
     {
         SequencedHashMap result = null;
-        Object obj = getCachedObject(GET_MODULE_ATTRVALUES_MAP);
+        Object obj = getCachedObject(GET_MODULE_ATTRVALUES_MAP, isActive ? Boolean.TRUE : Boolean.FALSE);
         if (obj == null) 
         {        
-            List attributes = getModule().getActiveAttributes(getIssueType());
+            List attributes = null;
+            if (isActive)
+            {
+                attributes = getModule().getActiveAttributes(getIssueType());
+            }
+            else
+            {
+                attributes = getModule().getAttributes(getIssueType());
+            }
             Map siaValuesMap = getAttributeValuesMap();
             result = new SequencedHashMap((int)(1.25*attributes.size() + 1));
-            for (int i=0; i<attributes.size(); i++) 
+            for (int i=0; i<attributes.size(); i++)
             {
                 String key = ((Attribute)attributes.get(i)).getName().toUpperCase();
-                if (siaValuesMap.containsKey(key)) 
+                if (siaValuesMap.containsKey(key))
                 {
                     result.put(key, siaValuesMap.get(key));
                 }
@@ -881,9 +903,9 @@ public class Issue
                     result.put(key, aval);
                 }
             }
-            putCachedObject(result, GET_MODULE_ATTRVALUES_MAP);
+            putCachedObject(result, GET_MODULE_ATTRVALUES_MAP, isActive ? Boolean.TRUE : Boolean.FALSE);
         }
-        else 
+        else
         {
             result = (SequencedHashMap)obj;
         }

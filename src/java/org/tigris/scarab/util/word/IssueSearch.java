@@ -116,7 +116,7 @@ import org.tigris.scarab.services.security.ScarabSecurity;
  * not a more specific type of Issue.
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: IssueSearch.java,v 1.103 2003/06/25 18:05:34 jmcnally Exp $
+ * @version $Id: IssueSearch.java,v 1.104 2003/07/14 10:22:41 venkatesh Exp $
  */
 public class IssueSearch 
     extends Issue
@@ -372,7 +372,7 @@ public class IssueSearch
         }
         else 
         {
-            result = super.getModuleAttributeValuesMap();
+            result = super.getModuleAttributeValuesMap(false);
         }
         return result;
     }
