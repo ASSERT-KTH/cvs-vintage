@@ -16,8 +16,6 @@
 
 package org.columba.core.main;
 
-import java.io.File;
-
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.EventListenerList;
@@ -35,6 +33,8 @@ import org.columba.core.gui.util.StartUpFrame;
 import org.columba.core.logging.ColumbaLogger;
 import org.columba.core.nativ.NativeWrapperHandler;
 import org.columba.core.plugin.PluginManager;
+import org.columba.core.profiles.Profile;
+import org.columba.core.profiles.ProfileManager;
 import org.columba.core.session.ColumbaServer;
 import org.columba.core.session.SessionController;
 import org.columba.core.util.GlobalResourceLoader;
@@ -59,7 +59,12 @@ public class Main {
 
 		// initialize configuration backend
 		String path = cmdLineParser.getPathOption();
-		MainInterface.config = new Config(path == null ? null : new File(path));
+		
+		// prompt user for profile
+		Profile profile = ProfileManager.getInstance().getProfile(path);
+		
+		// initialize configuration with selected profile
+		MainInterface.config = new Config(profile.getLocation());
 
 		// if user doesn't overwrite logger settings with commandline arguments
 		// just initialize default logging
