@@ -7,8 +7,8 @@ The DOCTYPE is:
       "-//JBoss//DTD JBOSS 3.2//EN"
       "http://www.jboss.org/j2ee/dtd/jboss_3_2.dtd">
 
-$Id: jboss_3_2.dtd,v 1.9 2003/08/27 04:32:39 patriot1burke Exp $
-$Revision: 1.9 $
+$Id: jboss_3_2.dtd,v 1.10 2003/09/18 05:22:42 starksm Exp $
+$Revision: 1.10 $
 
 Overview of the architecture of jboss.xml
 
@@ -995,8 +995,8 @@ elements corresponds to the order of the interceptor chain.
   Used in: container-cache-conf (when cache-policy is the LRU cache)
 -->
 <!ELEMENT cache-policy-conf (min-capacity , max-capacity , remover-period? ,
- max-bean-life? , overager-period , max-bean-age , resizer-period ,
- max-cache-miss-period , min-cache-miss-period , cache-load-factor)>
+ max-bean-life? , overager-period? , max-bean-age? , resizer-period? ,
+ max-cache-miss-period? , min-cache-miss-period? , cache-load-factor?)>
 
 <!--
   The minimum capacity of this cache
