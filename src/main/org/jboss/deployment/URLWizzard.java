@@ -33,7 +33,8 @@ import java.util.jar.Manifest;
 * Very scratchy! Any improvements are welcome!
 *      
 *	@author Daniel Schulze <daniel.schulze@telkel.com>
-*	@version $Revision: 1.8 $
+*	@author Andreas Schaefer <andreas@jboss.org>
+*	@version $Revision: 1.9 $
 */
 public class URLWizzard
 {
@@ -121,7 +122,12 @@ public class URLWizzard
          }
          else
          {
-            _jout.putNextEntry (new ZipEntry(_prefix + "/" + content[i].getName ()));
+            // If no prefix then no '/' necessary
+            _jout.putNextEntry(
+               new ZipEntry(
+                  ( "".equals( _prefix ) ? "" : _prefix + "/" ) + content[i].getName()
+               )
+            );
             FileInputStream in = new FileInputStream (content[i]);
             write (in, _jout);
             in.close ();
