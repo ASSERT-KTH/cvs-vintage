@@ -94,6 +94,8 @@ final class HttpServletRequestFacade implements HttpServletRequest {
     private boolean usingStream = false;
     private boolean usingReader = false;
 
+    private boolean parametersProcessed=false;
+    
     /** Not public 
      */
     HttpServletRequestFacade(Request request) {
@@ -106,6 +108,7 @@ final class HttpServletRequestFacade implements HttpServletRequest {
     void recycle() {
 	usingReader=false;
 	usingStream=false;
+	parametersProcessed=false;
 	if( sessionFacade!=null) sessionFacade.recycle();
 	if( isFacade != null ) isFacade.recycle();
 	isFacadeInitialized=false;
@@ -230,15 +233,36 @@ final class HttpServletRequestFacade implements HttpServletRequest {
     /** Adapter: Request doesn't deal with this servlet convention
      */
     public String getParameter(String name) {
-        return request.getParameter( name );
+	if( ! parametersProcessed ) {
+	    request.parameters().handleQueryParameters();
+	    if( request.method().equals("POST")) {
+		request.handlePostParameters();
+	    }
+	    parametersProcessed=true;
+	}
+        return request.parameters().getParameter( name );
     }
 
     public String[] getParameterValues(String name) {
-        return request.getParameterValues(name);
+	if( ! parametersProcessed ) {
+	    request.parameters().handleQueryParameters();
+	    if( request.method().equals("POST")) {
+		request.handlePostParameters();
+	    }
+	    parametersProcessed=true;
+	}
+        return request.parameters().getParameterValues(name);
     }
 
     public Enumeration getParameterNames() {
-        return request.getParameterNames();
+	if( ! parametersProcessed ) {
+	    request.parameters().handleQueryParameters();
+	    if( request.method().equals("POST")) {
+		request.handlePostParameters();
+	    }
+	    parametersProcessed=true;
+	}
+        return request.parameters().getParameterNames();
     }
     
     public String getPathInfo() {

@@ -279,6 +279,8 @@ public class JspInterceptor extends BaseInterceptor {
 	    }
 
 	    jspServlet.setServletClassName(jspServletCN);
+	} else {
+	    ctx.addServlet( new JspPrecompileH());
 	}
     }
 
@@ -373,6 +375,26 @@ public class JspInterceptor extends BaseInterceptor {
 		return 0; // not a jsp
 	}
 
+	// if it's a jsp_precompile request, don't execute - just
+	// compile ( if needed ). Since we'll compile the jsp on
+	// the first request the only special thing is to not
+	// execute the jsp if jsp_precompile param is in parameters.
+	String qString=req.queryString().toString();
+	// look for ?jsp_precompile or &jsp_precompile
+
+	// quick test to see if we need to worry about params
+	// ( preserve lazy eval for parameters )
+	boolean pre_compile=false;
+	int i=(qString==null) ? -1: qString.indexOf( "jsp_precompile" );
+	if( i>= 0 ) {
+	    // Probably we are in the problem case. 
+	    req.parameters().handleQueryParameters();
+	    String p=req.parameters().getParameter( "jsp_precompile");
+	    if( p==null || p.equalsIgnoreCase("true")) {
+		pre_compile=true;
+	    }
+	}
+	
 	// Each .jsp file is compiled to a servlet, and will
 	// have a dependency to check if it's expired
 	Dependency dep= handler.getServletInfo().getDependency();
@@ -386,6 +408,18 @@ public class JspInterceptor extends BaseInterceptor {
 	// we need to compile... ( or find previous .class )
 	JasperLiaison liasion=new JasperLiaison(getLog(), debug);
 	liasion.processJspFile(req, jspFile, handler, args);
+
+	if( pre_compile ) {
+	    // we may have compiled the page ( if needed ), but
+	    // we can't execute it. The handler will just
+	    // report that we detected the trick.
+
+	    // Future: detail information about compile results
+	    // and if indeed we had to do something or not
+	    req.setHandler(  ctx.
+			     getServletByName( "tomcat.jspPrecompileHandler"));
+	}
+	
 	return 0;
     }
 
@@ -438,6 +472,34 @@ public class JspInterceptor extends BaseInterceptor {
     }
 
 }
+
+// -------------------- Jsp_precompile handler --------------------
+
+/** What to do for jsp precompile
+ */
+class JspPrecompileH extends Handler {
+    static StringManager sm=StringManager.
+	getManager("org.apache.tomcat.resources");
+    
+    JspPrecompileH() {
+	name="tomcat.jspPrecompileHandler";
+    }
+
+    public void doService(Request req, Response res)
+	throws Exception
+    {
+	res.setContentType("text/html");	
+
+	String msg="<h1>Jsp Precompile Done</h1>";
+
+	res.setContentLength(msg.length());
+
+	res.getBuffer().write( msg );
+    }
+}
+
+
+
 
 // -------------------- The main Jasper Liaison --------------------
 
