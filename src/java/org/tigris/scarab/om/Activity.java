@@ -64,7 +64,7 @@ import org.tigris.scarab.services.cache.ScarabCache;
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: Activity.java,v 1.42 2002/12/24 22:03:02 elicia Exp $
+ * @version $Id: Activity.java,v 1.43 2003/03/07 16:39:53 jmcnally Exp $
  */
 public class Activity 
     extends BaseActivity
@@ -185,5 +185,26 @@ public class Activity
             desc = new String(chDesc);
         }
         return desc;
+    }
+
+    public Activity copy(Issue issue, ActivitySet activitySet)
+        throws Exception
+    {
+        Activity newA = new Activity();
+        newA.setIssueId(issue.getIssueId());
+        newA.setDescription(getDescription());
+        newA.setAttributeId(getAttributeId());
+        newA.setTransactionId(activitySet.getActivitySetId());
+        newA.setOldNumericValue(getOldNumericValue());
+        newA.setNewNumericValue(getNewNumericValue());
+        newA.setOldUserId(getOldUserId());
+        newA.setNewUserId(getNewUserId());
+        newA.setOldValue(getOldValue());
+        newA.setNewValue(getNewValue());
+        newA.setDependId(getDependId());
+        newA.setEndDate(getEndDate());
+        newA.setAttachmentId(getAttachmentId());
+        newA.save();
+        return newA;
     }
 }

@@ -54,12 +54,14 @@ import java.io.FileOutputStream;
 
 import java.sql.Connection;
 import java.util.Date;
+import java.util.List;
 
 import org.apache.torque.TorqueException;
 import org.apache.torque.om.Persistent;
 import org.apache.torque.om.NumberKey;
 
 import org.apache.turbine.Turbine;
+import org.apache.torque.util.Criteria;
 
 import org.apache.commons.fileupload.FileItem;
 
@@ -81,7 +83,7 @@ import org.tigris.scarab.util.word.SearchFactory;
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: Attachment.java,v 1.53 2003/02/04 11:26:00 jon Exp $
+ * @version $Id: Attachment.java,v 1.54 2003/03/07 16:39:53 jmcnally Exp $
  */
 public class Attachment 
     extends BaseAttachment
@@ -453,4 +455,20 @@ public class Attachment
         copyObj.setDeleted(getDeleted());
         return copyObj;
     }
+    /**
+     * Returns users assigned to all user attributes.
+     */
+    public Activity getActivity() throws Exception
+    {
+        Activity activity = null;
+        Criteria crit = new Criteria()
+            .add(ActivityPeer.ATTACHMENT_ID, getAttachmentId());
+        
+        List activities = ActivityPeer.doSelect(crit);
+        if (activities.size() > 0) 
+        {
+            activity = (Activity)activities.get(0);
+        }
+        return activity;
+     }
 }

@@ -1,5 +1,6 @@
 #set ($report = $scarabR.Report)
 #set ($intakeReport = $intake.Report.mapTo($report))
+#set ($reportIsEditable = $report.isEditable($data.User))
 
 <div class="app" id="div2-4-1-step1">
 
@@ -17,8 +18,14 @@
 <input type="hidden" name="action" value="ConfigureReport"/>
 
 #if ($report.isReadyForCalculation())
-<div class="functnbar"><input type="submit" value="$l10n.RecalculateOutput" 
-    name="eventSubmit_doGenerateReport" /></div>
+<div class="functnbar">
+  <input type="submit" value="$l10n.RecalculateOutput" 
+    name="eventSubmit_doGenerateReport" />
+ #if ($reportIsEditable)
+  &#160;<input type="submit" value="$l10n.SaveReport" 
+    name="eventSubmit_doSavereport" />
+ #end
+</div>
 #end						
 
 $data.User.setCurrentMITList($report.getMITList())
@@ -59,8 +66,14 @@ $data.User.setCurrentMITList($report.getMITList())
 </div>
 
 #if ($report.isReadyForCalculation())
-<div class="functnbar2"><input type="submit" value="$l10n.RecalculateOutput" 
-    name="eventSubmit_doGenerateReport" /></div>
+<div class="functnbar2">
+  <input type="submit" value="$l10n.RecalculateOutput" 
+    name="eventSubmit_doGenerateReport" />
+ #if ($reportIsEditable)
+  &#160;<input type="submit" value="$l10n.SaveReport" 
+    name="eventSubmit_doSavereport" />
+ #end
+</div>
 #end						
 
 $intake.declareGroups()

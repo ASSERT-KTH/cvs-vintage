@@ -87,7 +87,7 @@ import org.tigris.scarab.services.security.ScarabSecurity;
  * This class is responsible for assigning users to attributes.
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: AssignIssue.java,v 1.83 2003/03/04 17:27:18 jmcnally Exp $
+ * @version $Id: AssignIssue.java,v 1.84 2003/03/07 16:39:52 jmcnally Exp $
  */
 public class AssignIssue extends BaseModifyIssue
 {
@@ -351,7 +351,7 @@ public class AssignIssue extends BaseModifyIssue
         EmailContext ectx = new EmailContext();
         ectx.setLocalizationTool((ScarabLocalizationTool)context.get("l10n"));
         ectx.setLinkTool((ScarabLink)context.get("link"));
-        ectx.setSubjectTemplate("email/AssignIssueModifyIssueSubject.vm");
+        ectx.setSubjectTemplate("AssignIssueModifyIssueSubject.vm");
 
         return activitySet.sendEmail(ectx, issue, template);
     }

@@ -148,3 +148,6 @@ insert into SCARAB_MIT_LISTITEM (ITEM_ID, LIST_ID, MODULE_ID, ISSUE_TYPE_ID)
  */
 insert into SCARAB_GLOBAL_PARAMETER (PARAMETER_ID, NAME, VALUE)
     values (1, 'db-l10n-state', 'pre-l10n');
+insert into SCARAB_GLOBAL_PARAMETER values (2, 'email-enabled', 'T', NULL);
+insert into SCARAB_GLOBAL_PARAMETER values (3, 'email-include-issue-details', 'T', NULL);
+insert into SCARAB_GLOBAL_PARAMETER values (4, 'email-allow-module-overrides', 'T', NULL);

@@ -63,7 +63,7 @@ $l10n.Report
 
 #if ($reportIsEditable)
 <form method="get" action="$link.setPage("reports,Report_1.vm")">
-<input type="hidden" name="action" value="GenerateReport" />
+<input type="hidden" name="action" value="ConfigureReport" />
 <div class="functnbar3">
   <input type="submit" value="$l10n.SaveReport" name="eventSubmit_doSavereport" />
 </div>

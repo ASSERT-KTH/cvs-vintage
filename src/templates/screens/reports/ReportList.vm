@@ -1,7 +1,7 @@
 <div id="savereport" class="app">
 
 <form method="post" action="$link.setPage("reports,ReportList.vm")" >
-<input type="hidden" name="action" value="GenerateReport" />
+<input type="hidden" name="action" value="ConfigureReport" />
 <input type="hidden" name="$scarabG.Constant.OTHER_TEMPLATE" value="reports,Info.vm" />
 
 ##<p class="paginate">&#171; $l10n.Previous | 1 of 1 | $l10n.Next &#187;</p>

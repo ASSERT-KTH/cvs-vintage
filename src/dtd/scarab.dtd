@@ -82,9 +82,25 @@
         <!--
             The ActivitySet needs to have a unique id in the file.
 
+            The activity-set id passed is checked against the db to see if
+            this activity-set already exists (The activity-set id 
+            == SCARAB_TRANSACTION.TRANSACTION_ID).  If the activity-set id
+            does not refer to an already-existing activity-set, a new
+            activity-set id is created by taking the next id off the top of 
+            auto-incrementing sequence; the passed activity-set id is
+            discarded.  If an activity-set w/ the passed id already exists,
+            then we'll use the already-existing activity-set during import of 
+            this activity-set's activites. To avoid picking up an extant
+            activity-set unintentionally on import, i.e. in the case where
+            you are doing an import of all new issues w/ no desire to refer
+            to already existing activity-sets, do not use a purely numerical
+            id for your activity-set id: Give the activity-set an alphabetic 
+            prefix.  In other words, instead of using numeric ids like 
+            1,2,3,4,5, use ids that run new1, new2, new3, etc.
+
             If you are creating an ActivitySet with a dependency in it,
             then there should be duplicate ActivitySet's in both issues.
-            They should have the same ID value. The only difference is
+            They should have the same id value. The only difference is
             the activity id should be unique between the two.
             
         -->

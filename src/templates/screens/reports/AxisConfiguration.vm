@@ -1,5 +1,6 @@
 #set ($report = $scarabR.Report)
 #set ($reportDefn = $report.ReportDefinition)
+#set ($reportIsEditable = $report.isEditable($data.User))
 #set ($axisIndex = $data.Parameters.getInt("axis"))
 #set ($isRow = ($axisIndex == 0))
 #if ($isRow)
@@ -44,6 +45,10 @@
 <div class="functnbar">
     <input type="submit" value="$l10n.RecalculateOutput" 
       name="eventSubmit_doGenerateReport" />
+ #if ($reportIsEditable)
+  &#160;<input type="submit" value="$l10n.SaveReport" 
+    name="eventSubmit_doSavereport" />
+ #end
 </div>
 #end						
 

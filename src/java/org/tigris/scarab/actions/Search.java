@@ -83,7 +83,7 @@ import org.tigris.scarab.util.ScarabUtil;
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: Search.java,v 1.113 2003/03/04 17:27:18 jmcnally Exp $
+ * @version $Id: Search.java,v 1.114 2003/03/07 16:39:52 jmcnally Exp $
  */
 public class Search extends RequireLoginFirstAction
 {
@@ -589,7 +589,8 @@ public class Search extends RequireLoginFirstAction
             {
                 Query q = (Query)i.next();
                 areThereDupes = (pk == null || !pk.equals(q.getQueryId())) &&
-                    name.equals(q.getName());
+                    name.trim().toLowerCase().equals(
+                        q.getName().trim().toLowerCase());
             }
         }
         return areThereDupes;

@@ -1,5 +1,6 @@
 #set ($report = $scarabR.Report)
 #set ($reportDefn = $report.ReportDefinition)
+#set ($reportIsEditable = $report.isEditable($data.User))
 
 <div class="app" id="div2-4-1-step1">
 <div id="apphead"><h2>$l10n.ReportBuilder</h2></div>
@@ -20,8 +21,14 @@
 #if ($report.isReadyForCalculation())
 <form method="get" action="$link.setPage("reports,Content.vm")">
   <input type="hidden" name="action" value="ConfigureReport"/>
-  <div class="functnbar"><input type="submit" value="$l10n.RecalculateOutput"
-      name="eventSubmit_doGenerateReport" /></div>
+  <div class="functnbar">
+    <input type="submit" value="$l10n.RecalculateOutput"
+      name="eventSubmit_doGenerateReport" />
+ #if ($reportIsEditable)
+  &#160;<input type="submit" value="$l10n.SaveReport" 
+    name="eventSubmit_doSavereport" />
+ #end
+</div>
 </form>
 #end
 
@@ -270,5 +277,12 @@
 </form>
 </div>
 
-<div class="functnbar2"><input type="submit" value="View updated report output"  name="eventSubmit_doGenerateReport" /></div>
+<div class="functnbar2">
+  <input type="submit" value="View updated report output"  
+    name="eventSubmit_doGenerateReport" />
+ #if ($reportIsEditable)
+  &#160;<input type="submit" value="$l10n.SaveReport" 
+    name="eventSubmit_doSavereport" />
+ #end
+</div>
 

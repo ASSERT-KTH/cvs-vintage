@@ -25,10 +25,10 @@
 #if ($mitlist)
   $page.Title  
 #else
-  $page.Title for $scarabR.CurrentRModuleIssueType.DisplayName
+  $l10n.format("ForRModuleIssueType", $page.Title, $scarabR.CurrentRModuleIssueType.DisplayName)
 #end
 </h3>
-  <p class="alert">There are no matching issues.</p>
+  <p class="alert">$l10n.NoMatchingIssues</p>
 #else
 <form action="$link.setPage("IssueList.vm").setAction("Search")" method="post">
 <input type="hidden" name="pageNum" value="$pageNum" />
@@ -48,9 +48,9 @@
 
 <h3>
 #if ($mitlist)
-  $page.Title for the following modules and/or issue types  
+  $l10n.format("ForFollowingModulesIssueTypes", $page.Title)
 #else
-  $page.Title for $scarabR.CurrentRModuleIssueType.DisplayName
+  $l10n.format("ForRModuleIssueType", $page.Title, $scarabR.CurrentRModuleIssueType.DisplayName)
 #end
 $l10n.format("IssueListCount", $totalCount)</h3>
 
@@ -69,7 +69,11 @@ $l10n.format("IssueListCount", $totalCount)</h3>
 
 <div class="colbar">
 <small>
-$link.setPage("ConfigureIssueList.vm").setLabel("Add/remove attributes from view")
+#if ($scarabR.ValidIssueListAttributes.isEmpty())
+<p class="info">$l10n.NoCommonAttributesInList</p>
+#else
+$link.setPage("ConfigureIssueList.vm").setLabel($l10n.AddRemoreAttributesFromView)
+#end
 </small>
 </div>
 		
@@ -105,11 +109,11 @@ $link.setPage("ConfigureIssueList.vm").setLabel("Add/remove attributes from view
         #if ($sortPolarity.equals("desc"))
            #prepIssueListPageLink()
            #set ($arrowLink = $link.setPathInfo("sortPolarity", "asc").addPathInfo("sortColumn", ""))
-           <a href="$arrowLink"><img src="$staticLink.setPath("/images/icon_downarrow_on.gif")" width="13" height="8" alt="sort descending" title="sort descending" border="0" /></a>&#160;
+           <a href="$arrowLink"><img src="$staticLink.setPath("/images/icon_downarrow_on.gif")" width="13" height="8" alt="$l10n.SortDescending" title="$l10n.SortDescending" border="0" /></a>&#160;
         #else
            #prepIssueListPageLink()
            #set ($arrowLink = $link.setPathInfo("sortPolarity", "desc").addPathInfo("sortColumn", ""))
-           <a href="$arrowLink"><img src="$staticLink.setPath("/images/icon_uparrow_on.gif")" width="13" height="8" alt="sort ascending" title="sort ascending" border="0" /></a>&#160;
+           <a href="$arrowLink"><img src="$staticLink.setPath("/images/icon_uparrow_on.gif")" width="13" height="8" alt="$l10n.SortAscending" title="$l10n.SortAscending" border="0" /></a>&#160;
         #end
      $l10n.IssueId
      #else
@@ -137,11 +141,11 @@ $link.setPage("ConfigureIssueList.vm").setLabel("Add/remove attributes from view
         #if ($sortPolarity.equals("desc"))
            #prepIssueListPageLink()
            #set ($arrowLink = $link.setPathInfo("sortPolarity", "asc").setPathInfo("sortColumn", "$userAttribute.AttributeId"))
-           <a href="$arrowLink"><img src="$staticLink.setPath("/images/icon_downarrow_on.gif")" width="13" height="8" alt="sort descending" title="sort descending" border="0" /></a>&#160;
+           <a href="$arrowLink"><img src="$staticLink.setPath("/images/icon_downarrow_on.gif")" width="13" height="8" alt="$l10n.SortDescending" title="$l10n.SortDescending" border="0" /></a>&#160;
         #else
            #prepIssueListPageLink()
            #set ($arrowLink = $link.setPathInfo("sortPolarity", "desc").setPathInfo("sortColumn", "$userAttribute.AttributeId"))
-           <a href="$arrowLink"><img src="$staticLink.setPath("/images/icon_uparrow_on.gif")" width="13" height="8" alt="sort descending" title="sort descending" border="0" /></a>&#160;
+           <a href="$arrowLink"><img src="$staticLink.setPath("/images/icon_uparrow_on.gif")" width="13" height="8" alt="$l10n.SortAscending" title="$l10n.SortSscending" border="0" /></a>&#160;
         #end
         $value
      #else
@@ -212,12 +216,12 @@ $link.setPage("ConfigureIssueList.vm").setLabel("Add/remove attributes from view
    <input type="submit" value="$l10n.Assign" name="eventSubmit_doReassignselected" />&#160;
 #end
 <input type="submit" value="$l10n.ViewVerbose"  name="eventSubmit_doViewselected" />&#160;
-<small>selected</small>&#160;&#160;<img src="$staticLink.setPath("/images/seperator.gif")" width="2" height="15" alt="" border="0" align="middle" />&#160;&#160;
+<small>$l10n.SelectedLC</small>&#160;&#160;<img src="$staticLink.setPath("/images/seperator.gif")" width="2" height="15" alt="" border="0" align="middle" />&#160;&#160;
 #if ($showAssignButtons)
   <input type="submit" value="$l10n.Assign" name="eventSubmit_doReassignall" />&#160;
 #end
 <input type="submit" value="$l10n.ViewVerbose" name="eventSubmit_doViewall" />&#160;
-<small>all</small>
+<small>$l10n.AllLC</small>
 </div>
         
 #if ($paginated)

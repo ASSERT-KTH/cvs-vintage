@@ -31,9 +31,9 @@
   <table width="100%" border="1" cellspacing="2" cellpadding="3">
     <tr>
       <th>$l10n.Name</th>
-<!-- commenting out until functionality is added
-      <th>$l10n.ShowInLeftNav</th>
--->
+    ## commenting out until functionality is added
+    ##  <th>$l10n.ShowInLeftNav</th>
+
       <th>$l10n.Description</th>
     </tr>
 

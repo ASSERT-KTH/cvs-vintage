@@ -98,7 +98,7 @@ import org.apache.commons.lang.StringUtils;
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: Issue.java,v 1.277 2003/03/04 17:27:18 jmcnally Exp $
+ * @version $Id: Issue.java,v 1.278 2003/03/07 16:39:53 jmcnally Exp $
  */
 public class Issue 
     extends BaseIssue
@@ -515,7 +515,7 @@ public class Issue
         }
         String desc = Localization.format(
             ScarabConstants.DEFAULT_BUNDLE_NAME,
-            Locale.getDefault(),
+            getLocale(),
             "UrlAddedDesc", nameFieldString);
 
         // Save activitySet record
@@ -529,6 +529,16 @@ public class Issue
             .createTextActivity(this, activitySet, desc, attachment);
         
         return activitySet;
+    }
+
+    // note this could be more efficient and cache the one locale, but
+    // we will want to find a way to alter this by user or some other
+    // criteria, so keeping the implementation simple/flexible
+    private Locale getLocale()
+    {
+        return new Locale(
+            Localization.getDefaultLanguage(), 
+            Localization.getDefaultCountry());
     }
 
     /**
@@ -554,7 +564,7 @@ public class Issue
             throw new ScarabException(
                 Localization.getString(
                 ScarabConstants.DEFAULT_BUNDLE_NAME,
-                Locale.getDefault(),
+                getLocale(),
                 "NoDataInComment"));
         }
         if (activitySet == null)
@@ -567,7 +577,7 @@ public class Issue
         // create the localized string...
         String desc = Localization.getString(
             ScarabConstants.DEFAULT_BUNDLE_NAME,
-            Locale.getDefault(),
+            getLocale(),
             "AddedCommentToIssue");
         int total = 248 - desc.length();
         if (comment.length() > total)
@@ -669,7 +679,7 @@ public class Issue
             Object[] args = {name};
             String description = Localization.format(
                 ScarabConstants.DEFAULT_BUNDLE_NAME,
-                Locale.getDefault(),
+                getLocale(),
                 "FileAddedDesc", args);
 
             // Save activity record
@@ -1900,13 +1910,13 @@ public class Issue
 
         Object[] args = {
             this.getUniqueId(),
-            childIssue.getUniqueId(),
-            depend.getDependType().getName()
+            depend.getAction(),
+            childIssue.getUniqueId()
         };
 
         String desc = Localization.format(
             ScarabConstants.DEFAULT_BUNDLE_NAME,
-            Locale.getDefault(),
+            getLocale(),
             "AddDependency", args);
 
         // Save activity record for the parent issue
@@ -1919,7 +1929,6 @@ public class Issue
 
         return activitySet;
     }
-
     /**
      * Checks to see if this issue has a dependency on the passed in issue.
      * or if the passed in issue has a dependency on this issue.
@@ -2169,6 +2178,11 @@ public class Issue
         {
             newIssue = this;
             newIssue.setIssueType(newIssueType);
+            // if moved to new module, delete original issue
+            if (!newModule.getModuleId().equals(getModule().getModuleId()))
+            {
+                delete(user);
+            }
         }
         else
         {
@@ -2178,27 +2192,18 @@ public class Issue
 
         if (newIssue != this) 
         {
-            // Adjust dependencies if its a new issue id
-            // (i.e.. moved to new module)
-            List children = getChildren();
-            for (Iterator i = children.iterator(); i.hasNext();)
-            {
-                 Depend depend = (Depend)i.next();
-                 depend.setObservedId(newIssue.getIssueId());
-                 depend.save();
-            }
-            List parents = getParents();
-            for (Iterator j = parents.iterator(); j.hasNext();)
-            {
-                 Depend depend = (Depend)j.next();
-                 depend.setObserverId(newIssue.getIssueId());
-                 depend.save();
-            }
             // Save activitySet record
             ActivitySet activitySet = ActivitySetManager
                 .getInstance(ActivitySetTypePeer.CREATE_ISSUE__PK, getCreatedBy());
             activitySet.save();
-            
+        
+            // If moving issue to new module, delete original
+            if (action.equals("move"))
+            {
+                setDeleted(true);
+                save();
+            }
+
             // Copy over attributes
             List matchingAttributes = getMatchingAttributeValuesList(newModule, 
                                                                      newIssueType);
@@ -2212,8 +2217,92 @@ public class Issue
                 newAttVal.startActivitySet(activitySet);
                 newAttVal.save();
             }
+
+            // Adjust dependencies if its a new issue id
+            // (i.e.. moved to new module)
+            List children = getChildren();
+            for (Iterator i = children.iterator(); i.hasNext();)
+            {
+                 Depend depend = (Depend)i.next();
+                 if (action.equals("move"))
+                 {
+                     doDeleteDependency(null, depend, user);
+                 }
+                 Issue child = (Issue)IssueManager.getInstance(depend.getObserverId());
+                 Depend newDepend = new Depend();
+                 newDepend.setObserverId(child.getIssueId());
+                 newDepend.setObservedId(newIssue.getIssueId());
+                 newDepend.setTypeId(depend.getTypeId());
+                 newIssue.doAddDependency(null, newDepend, child, user);
+            }
+            List parents = getParents();
+            for (Iterator j = parents.iterator(); j.hasNext();)
+            {
+                 Depend depend = (Depend)j.next();
+                 if (action.equals("move"))
+                 {
+                     doDeleteDependency(null, depend, user);
+                 }
+                 Issue parent = (Issue)IssueManager.getInstance(depend.getObservedId());
+                 Depend newDepend = new Depend();
+                 newDepend.setObserverId(newIssue.getIssueId());
+                 newDepend.setObservedId(parent.getIssueId());
+                 newDepend.setTypeId(depend.getTypeId());
+                 parent.doAddDependency(null, newDepend, newIssue, user);
+            }
+
+            // copy attachments: comments/files etc.
+            Iterator attachments = getAttachments().iterator();
+            while (attachments.hasNext()) 
+            {
+                Attachment oldA = (Attachment)attachments.next();
+                Attachment newA = oldA.copy();
+                newA.setIssueId(newIssue.getIssueId());
+                newA.save();
+                activitySet = getActivitySet(user, ActivitySetTypePeer.EDIT_ISSUE__PK);
+                activitySet.save();            
+                Activity oldAct = oldA.getActivity();
+                if (oldAct != null)
+                {
+                    Activity act = ActivityManager.createTextActivity(newIssue, 
+                                   activitySet, oldA.getActivity().getDescription(), newA);
+                }
+                if (Attachment.FILE__PK.equals(newA.getTypeId())) 
+                {
+                    oldA.copyFileTo(newA.getFullPath());
+                }
+            }
+
+            // Copy over activity sets for edit and copy issue transactions
+            List activitySets = getActivitySets();
+            for (Iterator i = activitySets.iterator(); i.hasNext();)
+            {
+                ActivitySet as = (ActivitySet)i.next();
+                ActivitySet newAS = null;
+                if (as.getTypeId().equals(ActivitySetTypePeer.EDIT_ISSUE__PK))
+                {
+                    newAS = new ActivitySet();
+                    newAS.setTypeId(ActivitySetTypePeer.EDIT_ISSUE__PK);
+                    newAS.setAttachmentId(as.getAttachmentId());
+                    newAS.setCreatedBy(user.getUserId());
+                    newAS.setCreatedDate(new Date());
+                    newAS.save();
+
+                    // Copy over activities with sets
+                    List activities = as.getActivityList();
+                    for (Iterator j = activities.iterator(); j.hasNext();)
+                    {
+                        Activity a = (Activity)j.next();
+                        if (a.getAttachmentId() == null && a.getDependId() == null)
+                        {
+                            Activity newA = a.copy(newIssue, activitySet);
+                            newIssue.getActivity(true).add(newA);
+                        }
+                    }
+                }
+            }        
         }
-        
+
         // Generate comment to deal with attributes that do not
         // Exist in destination module, as well as the user attributes.
         StringBuffer attachmentBuf = new StringBuffer();
@@ -2226,7 +2315,7 @@ public class Issue
         {
             attachmentBuf.append(Localization.getString(
                ScarabConstants.DEFAULT_BUNDLE_NAME,
-               Locale.getDefault(),
+               getLocale(),
                "DidNotCopyAttributes"));
             attachmentBuf.append("\n");
             for (int i=0;i<commentAttrs.size();i++)
@@ -2250,13 +2339,13 @@ public class Issue
 
            StringBuffer commentBuf = new StringBuffer(Localization.format(
               ScarabConstants.DEFAULT_BUNDLE_NAME,
-              Locale.getDefault(),
+              getLocale(),
               "DidNotCopyAttributesFromArtifact", getUniqueId()));
            commentBuf.append("\n").append(delAttrs);
            comment.setData(commentBuf.toString());
            comment.setName(Localization.getString(
                ScarabConstants.DEFAULT_BUNDLE_NAME,
-               Locale.getDefault(),
+               getLocale(),
                "Comment"));
            comment.save();
         }
@@ -2264,7 +2353,7 @@ public class Issue
         {
             attachmentBuf.append(Localization.getString(
                ScarabConstants.DEFAULT_BUNDLE_NAME,
-               Locale.getDefault(),
+               getLocale(),
                "AllCopied"));
         }
         attachment.setData(attachmentBuf.toString()); 
@@ -2273,35 +2362,19 @@ public class Issue
         {
             attachment.setName(Localization.getString(
                ScarabConstants.DEFAULT_BUNDLE_NAME,
-               Locale.getDefault(),
+               getLocale(),
                "MovedIssueNote"));
         }
         else
         {
             attachment.setName(Localization.getString(
                ScarabConstants.DEFAULT_BUNDLE_NAME,
-               Locale.getDefault(),
+               getLocale(),
                "CopiedIssueNote"));
         }
         attachment.setTextFields(user, newIssue, Attachment.MODIFICATION__PK);
         attachment.save();
 
-        // copy attachments: comments/files etc.
-        if (newIssue != this) 
-        {
-            Iterator attachments = getAttachments().iterator();
-            while (attachments.hasNext()) 
-            {
-                Attachment oldA = (Attachment)attachments.next();
-                Attachment newA = oldA.copy();
-                newA.setIssueId(newIssue.getIssueId());
-                newA.save();
-                if (Attachment.FILE__PK.equals(newA.getTypeId())) 
-                {
-                    oldA.copyFileTo(newA.getFullPath());
-                }
-            }
-        }        
 
         // Create activitySet for the MoveIssue activity
         ActivitySet activitySet2 = ActivitySetManager
@@ -2309,7 +2382,6 @@ public class Issue
         activitySet2.save();
 
         // Generate comment
-        // If moving issue to new module, delete original
         String comment = null;
         String comment2 = null;
         if (action.equals("copy"))
@@ -2317,12 +2389,12 @@ public class Issue
             Object[] args3= {"copied", "from"};
             comment = Localization.format(
                ScarabConstants.DEFAULT_BUNDLE_NAME,
-               Locale.getDefault(),
+               getLocale(),
                "MoveCopyString", args3);
             Object[] args4= {"copied", "to"};
             comment2 = Localization.format(
                ScarabConstants.DEFAULT_BUNDLE_NAME,
-               Locale.getDefault(),
+               getLocale(),
                "MoveCopyString", args4);
         }
         else
@@ -2330,19 +2402,13 @@ public class Issue
             Object[] args5= {"moved", "from"};
             comment = Localization.format(
                ScarabConstants.DEFAULT_BUNDLE_NAME,
-               Locale.getDefault(),
+               getLocale(),
                "MoveCopyString", args5);
             Object[] args6 = {"moved", "to"};
             comment2 = Localization.format(
                ScarabConstants.DEFAULT_BUNDLE_NAME,
-               Locale.getDefault(),
+               getLocale(),
                "MoveCopyString", args6);
-            // if moved to new module, delete original issue
-            if (!newModule.getModuleId().equals(getModule().getModuleId()))
-            {
-                setDeleted(true);
-                save();
-            }
         }
 
         // Save activity record
@@ -2354,7 +2420,7 @@ public class Issue
         };
         String desc = Localization.format(
             ScarabConstants.DEFAULT_BUNDLE_NAME,
-            Locale.getDefault(),
+            getLocale(),
             "MovedIssueDescription", args);
 
         Attribute zeroAttribute = AttributeManager
@@ -2375,7 +2441,7 @@ public class Issue
             };
             desc = Localization.format(
                 ScarabConstants.DEFAULT_BUNDLE_NAME,
-                Locale.getDefault(),
+                getLocale(),
                 "MovedIssueDescription", args2);
 
             ActivityManager
@@ -2384,6 +2450,7 @@ public class Issue
                                     getUniqueId(), newIssue.getUniqueId());
         }
 
+          
         return newIssue;
     }
 
@@ -2740,10 +2807,17 @@ public class Issue
             }
             if (result == null) 
             {
-                result = getInitialActivitySet().getAttachment().getData();
+                Attachment reason = getInitialActivitySet().getAttachment();
+                if (reason != null && reason.getData() != null 
+                    && reason.getData().trim().length() > 0) 
+                {
+                    result = reason.getData();
+                }                
             }
-            
-            result = (result == null ? "" : result);
+            result = (result == null) ? 
+                Localization.getString(ScarabConstants.DEFAULT_BUNDLE_NAME,
+                                       getLocale(), "NoIssueSummaryAvailable")
+                      : result;
             ScarabCache.put(result, this, GET_DEFAULT_TEXT);
         }
         else 
@@ -3017,7 +3091,7 @@ public class Issue
         };
         String actionString = Localization.format(
             ScarabConstants.DEFAULT_BUNDLE_NAME,
-            Locale.getDefault(),
+            getLocale(),
             "AssignIssueEmailAddedUserAction", args);
         return actionString;
     }
@@ -3092,7 +3166,7 @@ public class Issue
         };
         String actionString = Localization.format(
             ScarabConstants.DEFAULT_BUNDLE_NAME,
-            Locale.getDefault(),
+            getLocale(),
             "AssignIssueEmailChangedUserAttributeAction", args);
         return actionString;
     }
@@ -3151,7 +3225,7 @@ public class Issue
         };
         String actionString = Localization.format(
             ScarabConstants.DEFAULT_BUNDLE_NAME,
-            Locale.getDefault(),
+            getLocale(),
             "AssignIssueEmailRemovedUserAction", args);
         return actionString;
     }
@@ -3165,10 +3239,12 @@ public class Issue
     {
         Issue otherIssue = IssueManager
                         .getInstance(oldDepend.getObserverId(), false);
+/* Why can a child not delete a dependency??
         if (otherIssue.equals(this))
         {
             throw new ScarabException("CannotDeleteDependency");
         }
+*/
         Issue thisIssue = IssueManager
                         .getInstance(oldDepend.getObservedId(), false);
 
@@ -3179,7 +3255,7 @@ public class Issue
         };
         String desc = Localization.format(
             ScarabConstants.DEFAULT_BUNDLE_NAME,
-            Locale.getDefault(),
+            getLocale(),
             "DependencyDeletedDesc", args);
 
         // get the original object so that we do an update
@@ -3234,7 +3310,7 @@ public class Issue
             };
             String desc = Localization.format(
                 ScarabConstants.DEFAULT_BUNDLE_NAME,
-                Locale.getDefault(),
+                getLocale(),
                 "UrlDescChangedDesc", args);
 
             if (desc.length() > 248)
@@ -3273,7 +3349,7 @@ public class Issue
             };
             String desc = Localization.format(
                 ScarabConstants.DEFAULT_BUNDLE_NAME,
-                Locale.getDefault(),
+                getLocale(),
                 "UrlChangedDesc", args);
 
             if (desc.length() > 248)
@@ -3329,7 +3405,7 @@ public class Issue
             };
             String desc = Localization.format(
                 ScarabConstants.DEFAULT_BUNDLE_NAME,
-                Locale.getDefault(),
+                getLocale(),
                 "DependencyTypeChangedDesc", args);
 
             // need to null out the cache entry so that Issue.getDependency()
@@ -3593,7 +3669,7 @@ public class Issue
             };
             String desc = Localization.format(
                 ScarabConstants.DEFAULT_BUNDLE_NAME,
-                Locale.getDefault(),
+                getLocale(),
                 "ChangedComment", args);
 
             if (activitySet == null)
@@ -3629,7 +3705,7 @@ public class Issue
         String name = attachment.getName();
         String desc = Localization.format(
             ScarabConstants.DEFAULT_BUNDLE_NAME,
-            Locale.getDefault(),
+            getLocale(),
             "UrlDeletedDesc", name);
 
         if (activitySet == null)
@@ -3662,7 +3738,7 @@ public class Issue
         Object[] args = {name};
         String desc = Localization.format(
             ScarabConstants.DEFAULT_BUNDLE_NAME,
-            Locale.getDefault(),
+            getLocale(),
             "FileDeletedDesc", args);
 
         if (activitySet == null)
@@ -3731,4 +3807,6 @@ public class Issue
         }
         return users;
     }
+
+
 }

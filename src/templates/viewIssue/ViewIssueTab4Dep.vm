@@ -11,7 +11,7 @@ $l10n.NoDependencies
  <th>$l10n.Select</th>
 #end
  <th>$l10n.Issue $l10n.ID #</th>
-<th>$l10n.Relationship</th>
+ ##<th>$l10n.Relationship</th>
  <th>$l10n.Type</th>
 </tr>
 
@@ -22,8 +22,7 @@ $l10n.NoDependencies
   #indexedRows($counter)
   #set ($counter = $counter + 1)
 #if ( $canEdit && $scarabR.hasPermission($scarabG.Permission.ISSUE__EDIT, $parent.Module) )
-  <td> #* Don't allow children issues to delete parent issues. Only
-         parents can delete children. #booleanCheckbox($dependGroup.Deleted) *#</td>
+  <td>#booleanCheckbox($dependGroup.Deleted)</td>
 #elseif ($canEdit)
   <td>&nbsp;</td>
 #end
@@ -33,8 +32,15 @@ $l10n.NoDependencies
 #else
   $l10n.PrivateIssue
 #end
+#if ($depend.DependType.Name.equals("blocking"))
+$l10n.depend_blocking this issue
+#elseif ($depend.DependType.Name.equals("duplicate"))
+$l10n.depend_duplicate this issue
+#else
+$l10n.depend_nonblocking this issue
+#end
 </td>
-<td>$l10n.Parent</td>
+##<td>$l10n.Parent</td>
 <td>
 #if ( $canEdit && $scarabR.hasPermission($scarabG.Permission.ISSUE__EDIT, $parent.Module) )
 <select name="$dependGroup.TypeId.Key" class="select">
@@ -71,8 +77,15 @@ $link.setPage("ViewIssue.vm").addPathInfo("id", $child.UniqueId).setLabel("$chil
 #else
   $l10n.PrivateIssue
 #end
+#if ($depend.DependType.Name.equals("blocking"))
+$l10n.depend_blockingReverse this issue
+#elseif ($depend.DependType.Name.equals("duplicate"))
+$l10n.depend_duplicateReverse this issue
+#else
+$l10n.depend_nonblockingReverse this issue
+#end
 </td>
-<td>$l10n.Child</td>
+##<td>$l10n.Child</td>
 <td> 
 #if ( $canEdit && $scarabR.hasPermission($scarabG.Permission.ISSUE__EDIT, $child.Module) )
 <select name="$dependGroup.TypeId.Key" class="select">
@@ -106,7 +119,7 @@ $link.setPage("ViewIssue.vm").addPathInfo("id", $child.UniqueId).setLabel("$chil
   <p class="alert">$idMessage</p>
  #end
 </td>
-<td>$l10n.Child</td>
+##<td>$l10n.Child</td>
 <td> 
  <select name="$newDependGroup.TypeId.Key" class="select">
    <option value="">$l10n.ChooseDependencyType</option>

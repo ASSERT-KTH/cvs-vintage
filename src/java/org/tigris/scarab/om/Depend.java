@@ -49,6 +49,8 @@ package org.tigris.scarab.om;
 // Turbine classes
 import org.apache.torque.om.Persistent;
 import org.apache.torque.TorqueException;
+import org.apache.torque.om.NumberKey;
+import org.apache.fulcrum.localization.Localization;
 
 // Scarab classes
 import org.tigris.scarab.om.Module;
@@ -60,7 +62,7 @@ import org.tigris.scarab.util.ScarabException;
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: Depend.java,v 1.21 2003/02/03 19:12:21 jmcnally Exp $
+ * @version $Id: Depend.java,v 1.22 2003/03/07 16:39:53 jmcnally Exp $
  */
 public class Depend 
     extends BaseDepend
@@ -197,4 +199,27 @@ public class Depend
         this.setObserverId(depend.getObserverId());
         this.setTypeId(depend.getTypeId());
     }
+
+    /**
+     * Returns phrase describing this dependency's type.
+     */
+    public String getAction()
+    {
+        NumberKey typeId = getTypeId();
+        String action = null;
+        if (typeId.equals(DependTypePeer.BLOCKING__PK))
+        {
+            action = Localization.getString("depend_blocking");
+        }
+        else if (typeId.equals(DependTypePeer.DUPLICATE__PK))
+        {
+            action = Localization.getString("depend_duplicate");
+        }
+        else
+        {
+            action = Localization.getString("depend_nonblocking");
+        }
+        return action;
+    }
+        
 }

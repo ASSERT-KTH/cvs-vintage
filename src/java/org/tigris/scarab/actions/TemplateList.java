@@ -87,7 +87,7 @@ import org.tigris.scarab.util.ScarabException;
  * This class is responsible for report managing enter issue templates.
  *   
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: TemplateList.java,v 1.40 2003/03/04 17:27:18 jmcnally Exp $
+ * @version $Id: TemplateList.java,v 1.41 2003/03/07 16:39:53 jmcnally Exp $
  */
 public class TemplateList extends RequireLoginFirstAction
 {
@@ -368,7 +368,8 @@ public class TemplateList extends RequireLoginFirstAction
             {
                 IssueTemplateInfo  t = (IssueTemplateInfo)i.next();
                 areThereDupes = ((pk == null || !pk.equals(t.getIssueId())) &&
-                    newName.equals(t.getName()));
+                    newName.trim().toLowerCase().equals(
+                        t.getName().trim().toLowerCase()));
             }
         }
         return areThereDupes;

@@ -1,5 +1,6 @@
 #set ($report = $scarabR.Report)
 #set ($reportDefn = $report.ReportDefinition)
+#set ($reportIsEditable = $report.isEditable($data.User))
 #set ($intakeReport = $intake.Report.mapTo($report))
 #set ($search = $scarabR.Search)
 #set ($intakeSearch = $intake.IssueSearch.mapTo($search))
@@ -26,8 +27,14 @@ $data.User.setCurrentMITList($report.getMITList());
 #showMITList($l10n.MITListReportHeading $data.User true)
 
 #if ($report.isReadyForCalculation())
-<div class="functnbar"><input type="submit" value="$l10n.RecalculateOutput" 
-    name="eventSubmit_doGenerateReport" /></div>
+<div class="functnbar">
+  <input type="submit" value="$l10n.RecalculateOutput" 
+    name="eventSubmit_doGenerateReport" />
+ #if ($reportIsEditable)
+  &#160;<input type="submit" value="$l10n.SaveReport" 
+    name="eventSubmit_doSavereport" />
+ #end
+</div>
 #end						
 
 #*
@@ -88,8 +95,14 @@ from:&#160;<input type="text" size="20"
 </div>
 
 #if ($report.isReadyForCalculation())
-<div class="functnbar2"><input type="submit" value="$l10n.RecalculateOutput" 
-    name="eventSubmit_doGenerateReport" /></div>
+<div class="functnbar2">
+  <input type="submit" value="$l10n.RecalculateOutput" 
+    name="eventSubmit_doGenerateReport" />
+ #if ($reportIsEditable)
+  &#160;<input type="submit" value="$l10n.SaveReport" 
+    name="eventSubmit_doSavereport" />
+ #end
+</div>
 #end						
 
 $intake.declareGroups()

@@ -112,11 +112,12 @@
 ## initialize in case the second #set has null RHS
 #set ($values = "")
 #set ($values = $attrInput.get($optionFieldName).Value)
-
 <select name="$attrInput.get($optionFieldName).Key"
 #if($size.length() != 0)size="$size"#end #if($multiple)multiple="multiple"#end>
-  <option value="">$l10n.Choose</option>
-  #foreach ($option in $module.getOptionTree($attr, $scarabR.CurrentIssueType))
+  #if($size.length() == 0 || $size == "1")
+     <option value="">$l10n.Choose</option>
+  #end
+  #foreach ($option in $module.getOptionTree($attr, $attrValue.Issue.IssueType))
     #set ($selected = false)
     #if ($values && $values.toString().length() > 0)
        #if ($multiple.toString().equals("true"))

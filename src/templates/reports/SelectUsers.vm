@@ -51,8 +51,14 @@
   #end
 
 #if ($report.isReadyForCalculation())
-<div class="functnbar2"><input type="submit" value="$l10n.RecalculateOutput" 
-    name="eventSubmit_doGenerateReport" /></div>
+<div class="functnbar2">
+  <input type="submit" value="$l10n.RecalculateOutput" 
+    name="eventSubmit_doGenerateReport" />
+ #if ($reportIsEditable)
+  &#160;<input type="submit" value="$l10n.SaveReport" 
+    name="eventSubmit_doSavereport" />
+ #end
+</div>
 #end						
 
 #userList($mitList)

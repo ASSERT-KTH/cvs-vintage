@@ -71,7 +71,7 @@ import org.tigris.scarab.om.GlobalParameterManager;
  * @author <a href="mailto:jon@collab.net">Jon Scott Stevens</a>
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: Email.java,v 1.18 2003/03/04 17:27:19 jmcnally Exp $
+ * @version $Id: Email.java,v 1.19 2003/03/07 16:39:53 jmcnally Exp $
  */
 public class Email
 {
@@ -281,7 +281,7 @@ public class Email
         catch (Exception e)
         {
             Log.get()
-                .error("Error rendering subject for" + template + ". ", e);
+                .error("Error rendering subject for " + template + ". ", e);
             result = "Scarab System Notification";
         }
         return result;
