@@ -1,4 +1,4 @@
-// $Id: CollabDiagramGraphModel.java,v 1.50 2005/02/03 21:50:40 mvw Exp $
+// $Id: CollabDiagramGraphModel.java,v 1.51 2005/02/05 13:52:29 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -326,4 +326,10 @@ public class CollabDiagramGraphModel extends UMLMutableGraphSupport
 	}
     }
 
+    /**
+     * @return returns the collaboration
+     */
+    public Object getCollaboration() {
+        return collab;
+    }
 } /* end class CollabDiagramGraphModel */
