@@ -1,4 +1,4 @@
-// $Id: GoNamespaceToClassifierAndPackage.java,v 1.2 2003/09/29 18:51:52 alexb Exp $
+// $Id: GoStimulusToAction.java,v 1.1 2003/10/04 07:32:05 alexb Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -22,46 +22,34 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-package org.argouml.ui.explorer;
+// $Id: GoStimulusToAction.java,v 1.1 2003/10/04 07:32:05 alexb Exp $
+
+package org.argouml.ui.explorer.rules;
 
 import java.util.Collection;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Iterator;
-import org.argouml.model.ModelFacade;
+import java.util.Vector;
 
+import org.argouml.application.api.Argo;
+import org.argouml.model.ModelFacade;
 import org.argouml.ui.AbstractGoRule;
 
-/**
- * Generates only package and classifier children from a namespace parent.
- *
- * @since 0.15.2
- */
-public class GoNamespaceToClassifierAndPackage extends AbstractGoRule {
-
-    public String getRuleName() {
-        return "nsp -> owned elems";
-    }
+public class GoStimulusToAction implements PerspectiveRule {
 
     public Collection getChildren(Object parent) {
-        
-        if (!(org.argouml.model.ModelFacade.isANamespace(parent)))
+        if (!(org.argouml.model.ModelFacade.isAStimulus(parent)))
             return null;
-        
-        Iterator elements = ModelFacade.getOwnedElements(parent).iterator();
-        List result = new ArrayList();
-        
-        while(elements.hasNext()){
-            
-            Object element = elements.next();
-            if (ModelFacade.isAPackage(element) ||
-                ModelFacade.isAClassifier(element)){
-                
-                    result.add(element);
-            }
-        }
-        
-        return result;
+        Object ms = /*(MStimulus)*/ parent;
+        Object action = ModelFacade.getDispatchAction(ms);
+        Vector vector = new Vector();
+        vector.addElement(action);
+        return vector;
+
     }
 
+    /**
+     * @see org.argouml.ui.AbstractGoRule#getRuleName()
+     */
+    public String getRuleName() {
+        return Argo.localize("Tree", "misc.stimulus.action");
+    }
 }

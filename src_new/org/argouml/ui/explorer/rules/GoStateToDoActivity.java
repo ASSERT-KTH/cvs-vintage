@@ -1,4 +1,4 @@
-// $Id: ExplorerPerspective.java,v 1.3 2003/10/04 07:32:05 alexb Exp $
+// $Id: GoStateToDoActivity.java,v 1.1 2003/10/04 07:32:05 alexb Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -22,50 +22,45 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-package org.argouml.ui.explorer;
+// $Id: GoStateToDoActivity.java,v 1.1 2003/10/04 07:32:05 alexb Exp $
 
-import java.util.List;
-import java.util.ArrayList;
+package org.argouml.ui.explorer.rules;
 
-import org.argouml.ui.explorer.rules.PerspectiveRule;
-import org.argouml.application.api.Argo;
+import java.util.Collection;
+import java.util.Vector;
+import org.argouml.model.ModelFacade;
+
+import org.argouml.ui.AbstractGoRule;
+
 /**
- * Represents a perspective (or view) of the uml model for display in the
- * explorer.
- *
- * This class replaces the old NavPerspective class. This is much simpler.
- *
- * The rules in the perspective generate child nodes for any given parent
- * node in the explorer tree view. Those nodes are then stored as user objects
- * in the ExplorerTreeModel for efficient rendering.
- *
- * @author  alexb
- * @since 0.15.2, Created on 27 September 2003, 09:32
+ * Go rule to navigate from a state to it's doactivity. Used in the package
+ * perspective.
+ * 
+ * @author jaap.branderhorst@xs4all.nl	
+ * @since Dec 25, 2002
  */
-public class ExplorerPerspective {
-    
-    List rules;
-    String name;
-    
-    /** Creates a new instance of ExplorerPerspective */
-    public ExplorerPerspective(String newName) {
-        
-        name = Argo.localize("Tree", newName);
-        rules = new ArrayList();
+public class GoStateToDoActivity implements PerspectiveRule {
+
+    /**
+     * @see org.argouml.ui.AbstractGoRule#getChildren(java.lang.Object)
+     */
+    public Collection getChildren(Object parent) {
+        if (ModelFacade.isAState(parent)
+	    && ModelFacade.getDoActivity(parent) != null)
+	{
+            Vector children = new Vector();
+            
+            children.add(ModelFacade.getDoActivity(parent));
+            return children;
+        }
+        return null;
     }
-    
-    public void addRule(PerspectiveRule rule){
-        
-        rules.add(rule);
+
+    /**
+     * @see org.argouml.ui.AbstractGoRule#getRuleName()
+     */
+    public String getRuleName() {
+        return "State->Do Activity"; 
     }
-    
-    public Object[] getRulesArray(){
-        
-        return rules.toArray();
-    }
-    
-    public String toString(){
-        
-        return name;
-    }
+
 }

@@ -1,5 +1,5 @@
-// $Id: ExplorerPerspective.java,v 1.3 2003/10/04 07:32:05 alexb Exp $
-// Copyright (c) 1996-2001 The Regents of the University of California. All
+// $Id: OperationsNode.java,v 1.1 2003/10/04 07:32:05 alexb Exp $
+// Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
 // agreement is hereby granted, provided that the above copyright notice
@@ -22,50 +22,28 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-package org.argouml.ui.explorer;
+package org.argouml.ui.explorer.rules;
 
-import java.util.List;
-import java.util.ArrayList;
-
-import org.argouml.ui.explorer.rules.PerspectiveRule;
-import org.argouml.application.api.Argo;
 /**
- * Represents a perspective (or view) of the uml model for display in the
- * explorer.
+ * This class is a support class for The Navigation panel Go Rules.
+ * Don't confuse it with anything to do with GEF nodes or the like.
  *
- * This class replaces the old NavPerspective class. This is much simpler.
+ * $Revision: 1.1 $
  *
- * The rules in the perspective generate child nodes for any given parent
- * node in the explorer tree view. Those nodes are then stored as user objects
- * in the ExplorerTreeModel for efficient rendering.
- *
- * @author  alexb
- * @since 0.15.2, Created on 27 September 2003, 09:32
+ * @author  alexb, $Author: alexb $
+ * @since argo 0.13.4, Created on 21 March 2003, 23:18
  */
-public class ExplorerPerspective {
+public class OperationsNode {
     
-    List rules;
-    String name;
+    Object parent;
     
-    /** Creates a new instance of ExplorerPerspective */
-    public ExplorerPerspective(String newName) {
+    /** Creates a new instance of OperationsNode */
+    public OperationsNode(Object parent) {
         
-        name = Argo.localize("Tree", newName);
-        rules = new ArrayList();
+        this.parent = parent;
     }
     
-    public void addRule(PerspectiveRule rule){
+    public Object getParent() { return parent; }
         
-        rules.add(rule);
-    }
-    
-    public Object[] getRulesArray(){
-        
-        return rules.toArray();
-    }
-    
-    public String toString(){
-        
-        return name;
-    }
+    public String toString() { return "Operations"; }
 }

@@ -1,4 +1,4 @@
-// $Id: AbstractGoRule.java,v 1.16 2003/10/02 22:03:04 alexb Exp $
+// $Id: AbstractGoRule.java,v 1.17 2003/10/04 07:32:05 alexb Exp $
 // Copyright (c) 2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -43,7 +43,7 @@ import org.apache.log4j.Logger;
  * are shown for some tree element.
  *
  * <p>Since the new Explorer implemnentation,
- *    the only method used in go rules is the getChildren() method.
+ *    this class is no longer used by the explorer, replaced by PerspectiveRule.
  *
  *
  * @author jaap.branderhorst@xs4all.nl

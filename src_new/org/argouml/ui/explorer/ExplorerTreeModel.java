@@ -1,4 +1,4 @@
-// $Id: ExplorerTreeModel.java,v 1.2 2003/09/29 18:51:52 alexb Exp $
+// $Id: ExplorerTreeModel.java,v 1.3 2003/10/04 07:32:05 alexb Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -37,7 +37,7 @@ import java.awt.event.ItemListener;
 import org.argouml.kernel.Project;
 import org.argouml.kernel.ProjectManager;
 import org.argouml.ui.NavPerspective;
-import org.argouml.ui.AbstractGoRule;
+import org.argouml.ui.explorer.rules.PerspectiveRule;
 
 /**
  * The model for the Explorer tree view of the uml model.
@@ -150,7 +150,7 @@ ItemListener{
         
         for(int x=0;x<rules.length;x++){
             
-            Collection children = ((AbstractGoRule)rules[x]).getChildren(modelElement);
+            Collection children = ((PerspectiveRule)rules[x]).getChildren(modelElement);
             if(children != null){
                 Iterator childrenIt = children.iterator();
                 
