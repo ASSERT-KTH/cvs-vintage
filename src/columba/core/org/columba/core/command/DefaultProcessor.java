@@ -65,7 +65,7 @@ public class DefaultProcessor extends Thread {
 	}
 
 	synchronized void addOp(Command op, int operationMode) {		
-		ColumbaLogger.log.debug( "Adding Operation..." );
+		//ColumbaLogger.log.debug( "Adding Operation..." );
         boolean needToRelease = false;
         try {
             needToRelease = operationMutex.getMutex();
@@ -88,7 +88,7 @@ public class DefaultProcessor extends Thread {
 		operationMutex.releaseMutex();
             }
         }
-		ColumbaLogger.log.debug( "Operation added" );
+		//ColumbaLogger.log.debug( "Operation added" );
 		
         notify();
 	}
@@ -140,7 +140,7 @@ public class DefaultProcessor extends Thread {
 		workerMutex.releaseMutex();
             }
         }
-		ColumbaLogger.log.debug( "Operation finished" );
+		//ColumbaLogger.log.debug( "Operation finished" );
 		notify();
 	}
 
@@ -167,7 +167,7 @@ public class DefaultProcessor extends Thread {
 		} catch (InterruptedException e) {
 		}
 		isBusy = true;
-		ColumbaLogger.log.debug( "Operator woke up" );
+		//ColumbaLogger.log.debug( "Operator woke up" );
 	}
 
 	public void run() // Scheduler
@@ -179,19 +179,19 @@ public class DefaultProcessor extends Thread {
 			while ((opItem = getNextOpItem()) == null)
 				waitForNotify();
 
-			ColumbaLogger.log.debug( "Processing new Operation" );
+			//ColumbaLogger.log.debug( "Processing new Operation" );
 
 			while ((worker = getWorker()) == null)
 				waitForNotify();
 
-			ColumbaLogger.log.debug( "Found Worker for new Operation" );
+			//ColumbaLogger.log.debug( "Found Worker for new Operation" );
 			worker.process(opItem.operation, opItem.operationMode, timeStamp++);
-			ColumbaLogger.log.debug( "Worker initilized" );
+			//ColumbaLogger.log.debug( "Worker initilized" );
 			worker.register(taskManager);
-			ColumbaLogger.log.debug( "Starting Worker" );
+			//ColumbaLogger.log.debug( "Starting Worker" );
 			worker.start();
 			
-			ColumbaLogger.log.debug( "New Operation started..." );
+			//ColumbaLogger.log.debug( "New Operation started..." );
 		}
 	}
 	

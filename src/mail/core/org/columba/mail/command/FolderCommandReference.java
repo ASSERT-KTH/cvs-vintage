@@ -125,31 +125,16 @@ public class FolderCommandReference extends DefaultCommandReference {
 	}
 
 	public boolean tryToGetLock(Object locker) {
-		ColumbaLogger.log.debug("try to get lock on: "+folder.getName() );
+		//ColumbaLogger.log.debug("try to get lock on: "+folder.getName() );
 		
 		//Lock result = folder.tryToGetLock();
 		return folder.tryToGetLock(locker);
-		/*
-		if (result != null) {
-			lock = result;
-			ColumbaLogger.log.debug("locked successfully: "+folder.getName() );
-			return true;
-		} else {
-			ColumbaLogger.log.debug("lock failed: "+folder.getName() );
-			return false;
-		}
-		*/
+		
 	}
 
 	public void releaseLock() {
-		/*
-		if (lock != null) {
-			lock.release();
-			lock = null;
-			ColumbaLogger.log.debug("released lock for: "+folder.getName() );
-		}
-		*/
-		ColumbaLogger.log.debug("releasing lock: "+folder.getName() );
+		
+		//ColumbaLogger.log.debug("releasing lock: "+folder.getName() );
 		folder.releaseLock();
 	}
 	/**
