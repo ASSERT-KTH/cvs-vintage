@@ -47,7 +47,8 @@ public class XmlMapper
 
     int debug=0;
     boolean validating=false;
-
+    private Hashtable entities = new Hashtable();
+    
     public XmlMapper() {
 	attributeStack = new Object[200]; // depth of the xml doc
 	tagStack = new String[200];
@@ -369,6 +370,9 @@ public class XmlMapper
 	resDTDs.put(publicId, dtdRes);
     }
 
+    public Hashtable getEntities() {
+	return entities;
+    }
 
     class Rule {
 	XmlMatch match;
@@ -441,6 +445,11 @@ public class XmlMapper
     }
 
     public void addRule( String path, XmlAction action ) {
+	if( ruleCount >= rules.length ) {
+	    Rule tmp[]=new Rule[ 2* rules.length ];
+	    System.arraycopy( rules, 0, tmp, 0, rules.length);
+	    rules=tmp;
+	}
 	rules[ruleCount]=new Rule( new PathMatch( path ) , action);
 	ruleCount++;
     }
@@ -492,8 +501,10 @@ public class XmlMapper
         
         if(systemId == null) {
            log("systemId is 'null'");
-           return null;
+           systemId="";
         }
+
+	entities.put( publicId, systemId );
 	String dtd = (String) fileDTDs.get(publicId);
 	if( dtd != null ) {
 	    File dtdF=new File( dtd );
@@ -507,17 +518,38 @@ public class XmlMapper
 
 	dtd = (String) resDTDs.get( publicId );
 	if( dtd != null ) {
-	    InputStream is = this.getClass().getResourceAsStream( dtd );
+	    InputStream is = getClassLoader().getResourceAsStream( dtd );
 	    if( is!= null )
 		return new InputSource(is);
-	    System.out.println("XXX resource not found !!! " + dtd);
-	    System.out.println(this.getClass().getClassLoader().getClass().getName());
+	    dumpCP( getClassLoader() );
 	}
 	
-	log("Can't find resource for entity: " + publicId + " --> " + systemId + " \"" + dtd +"\"");
-
+	log("Can't find resource for entity: " + publicId + " --> " +
+	    systemId + " \"" + dtd +"\"");
 	return null;
     }
+
+    public static void dumpCP(  ClassLoader cl ) {
+	org.apache.tomcat.util.compat.Jdk11Compat jdk=
+	    org.apache.tomcat.util.compat.Jdk11Compat.getJdkCompat();
+	URL urls[]=jdk.getURLs( cl, 0 );
+	System.out.println("CLASSPATH " );
+	for( int i=0; i< urls.length; i++ ) {
+	    System.out.println("    " + urls[i] );
+	}
+	urls=jdk.getURLs( cl, 1 );
+	System.out.println();
+	for( int i=0; i< urls.length; i++ ) {
+	    System.out.println("    " + urls[i] );
+	}
+	urls=jdk.getURLs( cl, 2 );
+	System.out.println();
+	for( int i=0; i< urls.length; i++ ) {
+	    System.out.println("    " + urls[i] );
+	}
+    }
+
+
 
     public void notationDecl (String name,
 			      String publicId,
