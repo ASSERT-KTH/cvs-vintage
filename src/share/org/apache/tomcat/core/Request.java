@@ -816,6 +816,7 @@ public class Request {
         charEncoding = null;
         authType = null;
         remoteUser = null;
+	principal = null;
         reqSessionId = null;
         serverSession = null;
         didParameters = false;
