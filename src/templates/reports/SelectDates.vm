@@ -20,7 +20,7 @@
     <td><input type="checkbox" name="selectdate" value="$velocityCount"/></td>
     <td>$rowCol $velocityCount</td>
 #* showing dates as unmodifiable since there is not a button to handle it
-    <td>#dateEntry("y_$velocityCount" 2002 $calendar.get($scarabG.CALENDAR_YEAR_FIELD) "m_$velocityCount" $selectedMonth "d_$velocityCount" $calendar.get($scarabG.CALENDAR_DAY_FIELD) "h_$velocityCount" $calendar.get($scarabG.CALENDAR_HOUR_FIELD))</td>
+    <td>#dateEntry("y_$velocityCount" 2004 $calendar.get($scarabG.CALENDAR_YEAR_FIELD) "m_$velocityCount" $selectedMonth "d_$velocityCount" $calendar.get($scarabG.CALENDAR_DAY_FIELD) "h_$velocityCount" $calendar.get($scarabG.CALENDAR_HOUR_FIELD))</td>
 *#
     <td>$format.getDate('yyyy MMMM dd - HH:mm', $reportDate.dateValue())
     <td>$l10n.SingleDateTime</td>
