@@ -30,13 +30,13 @@ import org.jboss.system.SecurityAssociation;
  *   @see <related>
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
  *   @author <a href="mailto:docodan@nycap.rr.com">Daniel O'Connor</a>.
- *   @version $Revision: 1.20 $
+ *   @version $Revision: 1.21 $
  */
 public class Main
 {
    // Constants -----------------------------------------------------
 
-    String versionIdentifier = "BETA-PROD-PRE-05";
+    String versionIdentifier = "PRE-2.1";
    // Attributes ----------------------------------------------------
 
    // Static --------------------------------------------------------
@@ -258,6 +258,6 @@ public class Main
       }
 
        // Done
-       System.out.println("jBoss 2.0 "+versionIdentifier+" Started");
+       System.out.println("jBoss "+versionIdentifier+" Started");
     }
 }
