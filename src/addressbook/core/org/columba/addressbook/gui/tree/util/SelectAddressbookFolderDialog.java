@@ -20,16 +20,7 @@ import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-import javax.swing.BorderFactory;
-import javax.swing.Box;
-import javax.swing.BoxLayout;
-import javax.swing.JButton;
-import javax.swing.JDialog;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTree;
+import javax.swing.*;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.TreeModel;
@@ -63,7 +54,6 @@ public class SelectAddressbookFolderDialog
 
 	public SelectAddressbookFolderDialog(JFrame frame, TreeModel model)
 	{
-
 		super(frame, "Select Folder", true);
 
 		this.model = model;
@@ -75,7 +65,6 @@ public class SelectAddressbookFolderDialog
 		name = new String("name");
 
 		init();
-
 	}
 
 	public void init()
@@ -165,22 +154,13 @@ public class SelectAddressbookFolderDialog
 		}
 
 		pack();
-
-		java.awt.Dimension dim = getPreferredSize();
-
-		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-
-		setLocation(
-			screenSize.width / 2 - dim.width / 2,
-			screenSize.height / 2 - dim.height / 2);
-
+		setLocationRelativeTo(null);
 		setVisible(true);
 	}
 
 	public boolean success()
 	{
 		return bool;
-
 	}
 
 	public Folder getSelectedFolder()
@@ -204,19 +184,16 @@ public class SelectAddressbookFolderDialog
 	public void actionPerformed(ActionEvent e)
 	{
 		String action = e.getActionCommand();
-
 		if (action.equals("OK"))
 		{
 			//name = textField.getText();
 
 			bool = true;
-
 			dispose();
 		}
 		else if (action.equals("CANCEL"))
 		{
 			bool = false;
-
 			dispose();
 		}
 		else if (action.equals("NEW"))
@@ -246,7 +223,6 @@ public class SelectAddressbookFolderDialog
 			*/
 
 		}
-
 	}
 
 	/******************************* tree selection listener ********************************/
@@ -291,5 +267,4 @@ public class SelectAddressbookFolderDialog
 		*/
 
 	}
-
 }
