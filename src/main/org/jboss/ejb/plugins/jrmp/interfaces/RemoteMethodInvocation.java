@@ -27,7 +27,7 @@ import javax.transaction.Transaction;
  *	@author Rickard Öberg (rickard.oberg@telkel.com)
  *  @author <a href="mailto:Richard.Monson-Haefel@jGuru.com">Richard Monson-Haefel</a>.
  *  @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>.
- *	@version $Revision: 1.4 $
+ *	@version $Revision: 1.5 $
  */
 public final class RemoteMethodInvocation
    implements java.io.Serializable
@@ -114,7 +114,6 @@ public final class RemoteMethodInvocation
 	
 	public void setTransaction(Transaction tx)
 	{
-		System.out.println("Set Transaction is CALLED with tx "+tx.hashCode());
 		this.tx = tx;
 	}
 	
