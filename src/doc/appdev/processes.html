@@ -185,7 +185,8 @@ the project source directory, so that only the last command is needed):
 <pre>
 	cd {my home directory}
 	cd myapp		<-- Normally leave a window open here
-	build			<-- Defaults to "build compile"
+	build			<-- (Windows) Defaults to "build compile"
+	./build.sh		<-- (Unix) Defaults to "build compile"
 </pre>
 
 <p>The Ant tool will be utilized to compile any new or updated Java code.
@@ -196,7 +197,8 @@ everything to be recompiled.
 <pre>
 	cd {my home directory}
 	cd myapp
-	build all
+	build all                <-- (Windows)
+	./build.sh all           <-- (Unix)
 </pre>
 
 <p>This is a very good habit immediately before checking in changes, to

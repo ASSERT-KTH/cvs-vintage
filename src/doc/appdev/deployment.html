@@ -155,27 +155,39 @@ approaches:
     form, and execute the application that way.  This approach would typically
     be used to install an additional application, provided by a third party
     vendor or by your internal development staff, into an existing
-    Tomcat installation.
+    Tomcat installation.  <strong>NOTE</strong> - If you use this approach,
+    and wish to update your application later, you must both replace the
+    web application archive file <strong>AND</strong> delete the expanded
+    directory that Tomcat created, and then restart Tomcat, in order to reflect
+    your changes.  (For Tomcat 3.3, this assumes the default installation
+    where auto-redeployment of WAR files is turned off.)
     <br><br>
 <li><i>Add a <code>&lt;Context&gt;</code> entry in the Tomcat
-    <code>server.xml</code> configuration file</i>.  This approach is
+    <code>apps.xml</code> configuration file</i>.  This approach is
     described briefly below, and allows you to position the document root
     of your web application at some point other than the
     <code>$TOMCAT_HOME/webapps/</code> directory.  Doing this requires
-    the following steps (for Tomcat 3.1):
+    the following steps (for Tomcat 3.3):
 </ul>
 
 <p>Adding a new <code>&lt;Context&gt;</code> entry in Tomcat's
-<code>server.xml</code> file involves the following steps (for Tomcat 3.1):
+<code>apps.xml</code> file involves the following steps (for Tomcat 3.3):
 <ul>
-<li>Open file <code>$TOMCAT_HOME/conf/server.xml</code> in an editor.
+<li>If the <code>$TOMCAT_HOME/conf/apps.xml</code> doesn't exist, create one
+    with the following initial content:
+    <pre>
+    &lt;?xml version=&quot;1.0&quot; encoding=&quot;ISO-8859-1&quot;?&gt;
+    &lt;webapps&gt;
+
+    &lt;/webapps&gt;</pre></li>
+<li>Open file <code>$TOMCAT_HOME/conf/apps.xml</code> in an editor.
     <br><br>
-<li>Navigate to the bottom of the file (after the last existing
-    <code>&lt;Context&gt;</code> element.
+<li>Navigate to the bottom of the file, just above the 
+    <code>&lt;/webapps&gt;</code> element.
     <br><br>
 <li>Add a new <code>&lt;Context&gt;</code> element for your application,
-    using the existing examples as a guide.  The following attributes are
-    supported:
+    using the existing examples in other <code>apps-*.xml</code> files as a
+    guide.  The following attributes are supported:
     <ul>
     <li><b>path</b>.  The <i>context path</i> for your application, which
         is the prefix of a request URI that tells Tomcat which application
@@ -186,7 +198,8 @@ approaches:
     <li><b>docBase</b>.  The <i>document root</i> directory for this web
         application.  This can be a relative path (relative to the
         directory in which Tomcat is started), or an absolute path, to the
-        directory containing your app.  On a Windows platform, you must
+        directory containing your app.  On a Windows platform, you
+        <strong>MUST</strong>
         use the drive prefix and a colon when specifying an absolute path.
         This attribute is required.
     <li><b>debug</b>.  Debugging detail level (from "0" to "9") that defines
@@ -202,6 +215,9 @@ approaches:
         useful during development, it requires overhead to do the checking.
         This capability should generally <i>not</i> be used in deployed
         production applications.
+    <li><b>trusted</b>.  Set to "true" if this application requires access
+        to Tomcat 3.3 internal classes.  Normally, this will only be required
+        for the administration application that ships with Tomcat.
     </ul>
 </ul>
 

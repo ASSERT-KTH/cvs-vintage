@@ -70,14 +70,18 @@
 -->
 
   <target name="prepare">
-    <mkdir dir="${deploy.home}"/>
-    <copydir src="web" dest="${deploy.home}"/>
-    <mkdir dir="${deploy.home}/WEB-INF"/>
-    <copyfile src="etc/web.xml" dest="${deploy.home}/WEB-INF/web.xml"/>
-    <mkdir dir="${deploy.home}/WEB-INF/classes"/>
-    <mkdir dir="${deploy.home}/WEB-INF/lib"/>
-    <copydir src="lib" dest="${deploy.home}/WEB-INF/lib"/>
-    <mkdir dir="${javadoc.home}"/>
+    <mkdir  dir="${deploy.home}"/>
+    <copy todir="${deploy.home}">
+      <fileset dir="web"/>
+    </copy>
+    <mkdir  dir="${deploy.home}/WEB-INF"/>
+    <copy  file="etc/web.xml" tofile="${deploy.home}/WEB-INF/web.xml"/>
+    <mkdir  dir="${deploy.home}/WEB-INF/classes"/>
+    <mkdir  dir="${deploy.home}/WEB-INF/lib"/>
+    <copy todir="${deploy.home}/WEB-INF/lib">
+      <fileset dir="lib"/>
+    </copy>
+    <mkdir  dir="${javadoc.home}"/>
   </target>
 
 
@@ -87,7 +91,7 @@
 -->
 
   <target name="clean">
-    <deltree dir="${deploy.home}"/>
+    <delete dir="${deploy.home}"/>
   </target>
 
 
@@ -96,10 +100,7 @@
      structure makes this very easy because the <javac> task automatically
      works its way down a source code hierarchy and compiles any class that
      has not yet been compiled, or where the source file is newer than the
-     class file.  After compilation is complete, any non-Java files (such as
-     properties files containing resource bundles) found in the source code
-     hierarchy are copied to a corresponding position in the destination
-     directory hierarchy.
+     class file.
 
      Feel free to adjust the compilation option parameters (debug,
      optimize, and deprecation) to suit your requirements.  It is also
@@ -114,19 +115,23 @@
     <javac srcdir="src" destdir="${deploy.home}/WEB-INF/classes"
            classpath="${deploy.home}/WEB-INF/classes"
            debug="on" optimize="off" deprecation="off"/>
+    <copy   todir="${deploy.home}/WEB-INF/classes">
+      <fileset dir="src" includes="**/*.properties"/>
+    </copy>
   </target>
-
 
 
 <!-- The "javadoc" target is used to create the Javadoc API documentation
      for the Java classes in this web application.  It is assumed that
      this documentation is included in the deployed application, so the
      example below generates the Javadoc HTML files in a subdirectory under
-     the deployment home directory.
+     the deployment home directory.  Feel free to customize the options for
+     the JavaDoc task, after consulting the Ant documentation.
 -->
 
   <target name="javadoc" depends="prepare">
-    <!-- TODO -->
+    <javadoc sourcepath="src" packagenames="*"
+                destdir="${javadoc.home}"/>
   </target>
 
 

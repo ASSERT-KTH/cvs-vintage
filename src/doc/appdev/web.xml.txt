@@ -1,6 +1,6 @@
 <!DOCTYPE web-app 
     PUBLIC "-//Sun Microsystems, Inc.//DTD Web Application 2.2//EN" 
-        "http://java.sun.com/j2ee/dtds/web-app_2_2.dtd">
+    "http://java.sun.com/j2ee/dtds/web-app_2_2.dtd">
 
 <web-app>
 
@@ -85,11 +85,11 @@
       </description>
       <servlet-class>com.mycompany.mypackage.ControllerServlet</servlet-class>
       <init-param>
-        <param-name>listOrders</paramName>
+        <param-name>listOrders</param-name>
         <param-value>com.mycompany.myactions.ListOrdersAction</param-value>
       </init-param>
       <init-param>
-        <param-name>saveCustomer</paramName>
+        <param-name>saveCustomer</param-name>
         <param-value>com.mycompany.myactions.SaveCustomerAction</param-value>
       </init-param>
       <!-- Load this servlet at server startup time -->
