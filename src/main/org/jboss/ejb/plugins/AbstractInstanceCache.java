@@ -48,7 +48,7 @@ import org.jboss.util.WorkerQueue;
  * @author <a href="bill@burkecentral.com">Bill Burke</a>
  * @author <a href="marc.fleury@jboss.org">Marc Fleury</a>
  *
- * @version $Revision: 1.31 $
+ * @version $Revision: 1.32 $
  *
  *   <p><b>Revisions:</b>
  *
@@ -639,7 +639,11 @@ public abstract class AbstractInstanceCache
             {
                if (m_passivationJobs.get(key) == null)
                {
-
+                  // Register job   
+                   m_passivationJobs.put(key, job);   
+    
+                   // Schedule the job for passivation   
+                   m_passivator.putJob(job);
                }
                else
                {
