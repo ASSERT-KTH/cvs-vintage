@@ -52,8 +52,8 @@ import org.apache.log4j.Category;
  *
  * <p>Supports recursive search in folder for all .java classes.
  *
- * <p>$Revision: 1.17 $
- * <p>$Date: 2003/03/07 07:52:54 $
+ * <p>$Revision: 1.18 $
+ * <p>$Date: 2003/03/16 01:02:45 $
  *
  * @author Andreas Rueckert <a_rueckert@gmx.net>
  */
@@ -328,7 +328,10 @@ public class Import {
 	 * @return true, if "Create diagrams from imported code" is selected
 	 */
 	public static boolean isCreateDiagramsChecked() {
+            if(create_diagrams != null)
 		return create_diagrams.isSelected();
+            else
+                return true;
 	}
 	
     /**
