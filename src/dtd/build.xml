@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 
 <!-- Bugzilla -> Scarab Transform -->
-<project name="main" default="transform" basedir=".">
+<project name="main" default="transform-data" basedir=".">
 
   <!-- Give user a chance to override without editing this file
       (and without typing -D each time it compiles it -->
@@ -11,8 +11,10 @@
   <property file="${basedir}/default.properties" />
 
   <property name="scarab.transform.input" value="bugzilla-sample-bug.xml" />
-  <property name="scarab.transform.output" value="transform.xml" />
-  <property name="scarab.transform.xsl" value="bugzilla-scarab.xsl" />
+  <property name="scarab.transform.data.output" value="transform-data.xml" />
+  <property name="scarab.transform.user.output" value="transform-user.xml" />
+  <property name="scarab.transform.data.xsl" value="bugzilla-scarab.xsl" />
+  <property name="scarab.transform.user.xsl" value="bugzilla-user-TO-scarab-user.xsl" />
   <property name="scarab.transform.lib.dir" value="../../lib" />
 
   <!-- Build classpath -->
@@ -22,11 +24,21 @@
     </fileset>
   </path>
 
-  <target name="transform">
+  <target name="transform-data">
     <style basedir="." destdir="." 
            in="${scarab.transform.input}"
-           out="${scarab.transform.output}"
-           style="${scarab.transform.xsl}"
+           out="${scarab.transform.data.output}"
+           style="${scarab.transform.data.xsl}"
+           >
+      <classpath refid="classpath"/>
+    </style>
+  </target>
+
+  <target name="transform-user">
+    <style basedir="." destdir="." 
+           in="${scarab.transform.input}"
+           out="${scarab.transform.user.output}"
+           style="${scarab.transform.user.xsl}"
            >
       <classpath refid="classpath"/>
     </style>
