@@ -1,4 +1,4 @@
-<!-- $Id: changes.html,v 1.93 2002/03/25 21:13:28 maartenc Exp $ -->
+<!-- $Id: changes.html,v 1.94 2002/03/26 19:57:23 jon Exp $ -->
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
 <html>
 
@@ -19,8 +19,9 @@
             <ul>
                 <li>Added the execution of junit tests to the nightly
                     build. (JSS)</li>
-                <li>Removed extra information from the description elements in the Scarab sample XML;
-                    changed example path element from absolute to relative. (NRR)</li>
+                <li>Removed extra information from the description
+                    elements in the Scarab sample XML; changed example path
+                    element from absolute to relative. (NRR)</li>
                 <li>Used GET instead of POST for the form which wraps the
                     query navigation select, also added js to avoid having
                     to press the Go button. This better simulates a set of
@@ -32,6 +33,11 @@
                     user hasn't logged in yet. (MC)</li>
                 <li>Removed Flux which is no longer supported or used.
                     (JSS)</li>
+                <li>Changed the DTD to have the user element defined within
+                    the module element. Also added the ability to define
+                    roles for the user. (JSS)</li>
+                <li>Upgraded several .jar file dependencies to fix
+                    various bugs. (JSS)</li>
             </ul>
         </td>
     </tr>
@@ -50,6 +56,11 @@
                     data to be displayed into the columns. See Bug Report:
                     #<a href="http://scarab.tigris.org/issues/show_bug.cgi?id=235">235</a>
                     (MC)</li>
+                <li>Fixed issues with rendering the XMLExportSelect.vm page 
+                    properly. (JSS)</li>
+                <li>The XSLT for transforming from Bugzilla to Scarab now
+                    outputs XML which can be properly validated. More work is needed
+                    still though to get things to import properly. (JSS)</li>
             </ul>
         </td>
     </tr>
