@@ -47,7 +47,7 @@ attributes to submit the issue.</p>
           <br>
         #if ($attVal.Attribute.AttributeType.Name == "long-string" )        
 
-            <textarea name= "$attrInput.Value.Key" cols="40" 
+            <textarea name="$attrInput.Value.Key" cols="40" 
                rows="5">$!attrInput.Value</textarea>
         #else
 

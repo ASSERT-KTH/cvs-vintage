@@ -68,7 +68,6 @@ import org.apache.turbine.om.*;
 import org.tigris.scarab.om.BaseScarabObject;
 import org.tigris.scarab.om.ScarabUser;
 import org.tigris.scarab.om.ScarabUserPeer;
-import org.tigris.scarab.om.SearchIssue;
 import org.tigris.scarab.om.Issue;
 import org.tigris.scarab.om.IssuePeer;
 import org.tigris.scarab.om.AttributeValue;
@@ -76,13 +75,13 @@ import org.tigris.scarab.attribute.OptionAttribute;
 import org.tigris.scarab.om.Attribute;
 import org.tigris.scarab.om.RModuleAttributePeer;
 import org.tigris.scarab.util.*;
-import org.tigris.scarab.util.word.Vocabulary;
+import org.tigris.scarab.util.word.IssueSearch;
 
 /**
     This class is responsible for report issue forms.
     ScarabIssueAttributeValue
     @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
-    @version $Id: ReportIssue.java,v 1.12 2001/04/30 03:55:29 jmcnally Exp $
+    @version $Id: ReportIssue.java,v 1.13 2001/05/05 03:57:27 jmcnally Exp $
 */
 public class ReportIssue extends VelocityAction
 {
@@ -142,7 +141,7 @@ public class ReportIssue extends VelocityAction
         
         if ( intake.isAllValid() ) 
         {
-            SearchIssue search = new SearchIssue();
+            IssueSearch search = new IssueSearch();
             search.setSearchWords(summary.toString());
 
             search.setModule(user.getCurrentModule());

@@ -13,10 +13,8 @@ $page.setTitle("Scarab Links")
 <li><a href="$link.setPage("Register.vm")">Register.vm</a>
 <li><a href="$link.setPage("RegisterConfirm.vm")">RegisterConfirm.vm</a>
 
-<li><a href="$link.setPage("entry,Wizard1.vm")">EnterIssue.vm</a>
-<li><a href="$link.setPage("entry,Wizard2.vm")">EnterIssue2.vm</a>
-<li><a href="$link.setPage("entry,Wizard3.vm")">EnterIssue3.vm</a>
-<li><a href="$link.setPage("entry,Wizard4.vm")">EnterIssue4.vm</a>
+<li><a href="$link.setPage("entry,Wizard1.vm")">Enter Issue</a>
+<li><a href="$link.setPage("entry,Wizard3.vm")">EnterIssue (no dedupe).vm</a>
 <li><a href="$link.setPage("Search.vm")">Search.vm</a>
 <li><a href="$link.setPage("Start.vm")">Start.vm</a>
 <li><a href="$link.setPage("Start2.vm")">Start2.vm</a>
@@ -31,7 +29,14 @@ Working:
 </p>
 
 <ul>
-<li><a href="$link.setPage("admin,AttributeShow.vm")">admin,AttributeShow.vm</a>
+<li>
+    <a href="$link.setPage("admin,AttributeShow.vm")">
+        admin,AttributeShow.vm</a>
+</li>
+<li>
+    <a href="$link.setPage("admin,ModuleAttributeEditor.vm")">
+        admin,ModuleAttributeEditor.vm</a>
+</li>
 </ul>
 
 <p>

@@ -50,6 +50,12 @@
     #end
 #end
 
+#macro ( fieldErrorMsg $field $br)
+    #if ( !$field.isValid() )
+        <font color="red">$field.Message</font>$br
+    #end
+#end
+
 #macro ( actionErrorMsg )
     #if ($data.Message)
         <font color="red">$data.Message</font>
@@ -73,3 +79,11 @@
     </select>
 
 #end      
+
+
+#macro ( booleanCheckbox $booleanField )
+   <input type="checkbox" name="$booleanField.Key" value="true"
+        #if ($booleanField.Value) checked #end>
+   <input type="hidden" name="$booleanField.ValueIfAbsent"
+        value="false">
+#end

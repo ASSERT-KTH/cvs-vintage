@@ -66,9 +66,10 @@ import org.tigris.scarab.util.ScarabConstants;
  * This class handles vocabulary information for a single issue
  *
  * @author <a href="mailto:fedor.karpelevitch@home.com">Fedor Karpelevitch</a>
- * @version $Id: Vocabulary.java,v 1.2 2001/04/30 03:55:30 jmcnally Exp $
+ * @version $Id: Vocabulary.java,v 1.3 2001/05/05 03:57:28 jmcnally Exp $
  */
 public class Vocabulary
+    implements SearchIndex
 {
     private static HashSet ignoredWords;
     // pardon our dust
@@ -114,24 +115,19 @@ public class Vocabulary
 
     public Vocabulary() throws Exception
     {
-        this("", null);
-    }
-
-    public Vocabulary(String text, NumberKey[] attributeIds) 
-        throws Exception
-    {
-        words = new Hashtable(1+text.length()/5); // should be a good guess?
+        words = new Hashtable();
         foundWords = new ArrayList();
-        add(text);
-        this.attributeIds = attributeIds;
     }
 
-    private Vocabulary(AttributeValue aval) 
-        throws Exception
+    /**
+     * The text attributes that will be searched.
+     *
+     * @param ids, a NumberKey array of attribute ids.
+     */
+    public void setAttributeIds(NumberKey[] ids)
     {
-        this(aval.getValue(), null);
-    }
-
+        this.attributeIds = ids;
+    }        
 
     /**
      *  used to determine whether a word should not be indexed
@@ -148,10 +144,9 @@ public class Vocabulary
     }
 
     /**
-     *  indexes more text. this is incremental.
-     *
+     *  Add words and phrases to search on. this is incremental.
      */
-    public void add(String text) throws Exception
+    public void addQuery(String text) throws Exception
     {
         StringTokenizer st = new StringTokenizer(text.toLowerCase());
         String tok;
@@ -200,11 +195,10 @@ public class Vocabulary
      */
     public NumberKey[] getRelatedIssues() throws Exception
     {
-        // if there are no words to search for let's return an empty list.
-        //  or should we throw instead? 
+        // if there are no words to search for return no results 
         if (foundWords.size() == 0)
         {
-            return new NumberKey[0]; 
+            return EMPTY_LIST; 
         }
 
         //for now use plain old SQL as GROUP BY is not supported by Criteria
@@ -238,14 +232,13 @@ public class Vocabulary
     }
 
 
-    public static void index(AttributeValue aval)
+    public void index(AttributeValue aval)
         throws Exception
     {
-        Vocabulary voc = new Vocabulary(aval);
+        addQuery(aval.getValue());
 
             //should we remove old records first?
-            for(Iterator i = voc.getEntries().iterator();
-                i.hasNext();)
+            for(Iterator i = getEntries().iterator(); i.hasNext();)
             {
                 Vocabulary.Entry entry = (Vocabulary.Entry)i.next();
                 Word word;

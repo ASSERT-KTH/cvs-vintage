@@ -46,7 +46,37 @@ public class RModuleAttribute
         aAttribute = v;
         super.setAttribute(v);
     }
+
+    /**
+     * Get the Display Value for the attribute.  In the event that this
+     * is a new RModuleAttribute that has not been assigned a Display 
+     * Value, this method will return the Attribute Name.
+     */
+    public String getDisplayValue()
+    {
+        String dispVal = super.getDisplayValue();
+        if ( dispVal == null ) 
+        {
+            try
+            {
+                dispVal = getAttribute().getName();
+            }
+            catch (Exception e)
+            {
+                Log.error(e);
+                dispVal = "!Error-Check Logs!";
+            }
+        }
+        return dispVal;
+    }
+
 }
+
+
+
+
+
+
 
 
 

@@ -1,4 +1,4 @@
-package org.tigris.scarab.attribute;
+package org.tigris.scarab.util.word;
 
 /* ================================================================
  * Copyright (c) 2000 Collab.Net.  All rights reserved.
@@ -50,30 +50,35 @@ import org.apache.turbine.services.resources.TurbineResources;
 import org.apache.turbine.util.RunData;
 import org.apache.turbine.util.Log;
 import org.apache.turbine.util.db.pool.DBConnection;
-import org.tigris.scarab.util.word.SearchIndex;
-import org.tigris.scarab.util.word.SearchFactory;
 
 /**
- *  Description of the Class
+ *  Returns an instance of the SearchIndex specified in Scarab.properties
  *
- * @author <a href="mailto:fedor.karpelevitch@home.com">Fedor</a>
- * @version $Revision: 1.4 $ $Date: 2001/05/05 03:57:28 $
+ * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
+ * @version $Id: SearchFactory.java,v 1.1 2001/05/05 03:57:28 jmcnally Exp $
  */
-public class StringAttribute extends FreeFormAttribute
+public class SearchFactory
 {
-    /**
-     * Saves the StringAttribute and related objects in persistent
-     * storage.  This method calls the parent save method and then
-     * indexes the text value for searching.
-     */
-    public void save(DBConnection dbCon)
-        throws Exception
+    private static final SearchIndex searchIndex;
+
+    static
     {
-        super.save(dbCon);
-        SearchIndex searchIndex = SearchFactory.getInstance();
-        if ( searchIndex != null ) 
+        String className = TurbineResources.getString(SearchIndex.CLASSNAME);
+        SearchIndex si = null;
+        try
         {
-            searchIndex.index(this);
+            si = (SearchIndex)Class.forName(className).newInstance();
         }
-    }    
+        catch (Exception e)
+        {
+            Log.warn("An indexer and search engine has not been specified\n"
+                     + "so text will not be searchable.");
+        }
+        searchIndex = si;
+    }
+
+    public static SearchIndex getInstance()
+    {
+        return searchIndex;
+    }
 }

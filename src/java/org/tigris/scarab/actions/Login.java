@@ -70,7 +70,7 @@ import org.tigris.scarab.util.ScarabConstants;
     Action.
     
     @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
-    @version $Id: Login.java,v 1.6 2001/04/02 20:32:01 jmcnally Exp $
+    @version $Id: Login.java,v 1.7 2001/05/05 03:57:27 jmcnally Exp $
 */
 public class Login extends VelocityAction
 {
@@ -81,6 +81,10 @@ public class Login extends VelocityAction
     {
         IntakeTool intake = (IntakeTool)context
             .get(ScarabConstants.INTAKE_TOOL);
+
+        Group login = intake.get("Login", IntakeTool.DEFAULT_KEY);
+        login.get("Username").setRequired(true);
+        login.get("Password").setRequired(true);
         
         if ( intake.isAllValid() && checkUser(data, context) ) 
         {
@@ -102,29 +106,18 @@ public class Login extends VelocityAction
     public boolean checkUser(RunData data, Context context)
         throws Exception
     {
-        User user = null;
         IntakeTool intake = (IntakeTool)context
             .get(ScarabConstants.INTAKE_TOOL);
 
+        Group login = intake.get("Login", IntakeTool.DEFAULT_KEY);
+        String username = login.get("Username").toString();
+        String password = login.get("Password").toString();
+        
+        // Authenticate the user and get the object.
+        User user = TurbineSecurity.getAuthenticatedUser( username, password );
+        
         try
         {
-            String username = null;
-            String password = null;
-            try
-            {
-                Group login = intake.get("Login", IntakeTool.DEFAULT_KEY);
-                username = login.get("Username").toString();
-                password = login.get("Password").toString();
-            }
-            catch ( Exception e )
-            {
-                throw new TurbineSecurityException(
-                    "Login information was not supplied.");
-            }
-
-            // Authenticate the user and get the object.
-            user = TurbineSecurity.getAuthenticatedUser( username, password );
-        
             // check the CONFIRM_VALUE
             if (!user.isConfirmed())
             {

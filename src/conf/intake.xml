@@ -9,13 +9,11 @@
 <!--                P R O J E C T  I N P U T S                            -->
 <!--                                                                      -->
 <!-- ==================================================================== -->
-<!-- This is an example.                      .                           -->
-<!-- ==================================================================== -->
 
 <input-data basePackage="org.tigris.scarab.">
 <group name="Attribute" key="att" mapToObject="om.Attribute">
         <field name="Id" key="id" type="NumberKey" mapToProperty="PrimaryKey">
-           <rule mask="^$|[0-9]+">Invalid Id</rule>
+           <rule mask="[0-9]+">Invalid Id</rule>
            <required-message>No attribute was selected.</required-message>
         </field>
         <field name="TypeId" key="typeid" type="NumberKey">
@@ -41,6 +39,7 @@
         </field>
         <field name="Deleted" key="del" type="boolean"/>
 </group>
+
 <group name="AttributeType" key="attt" mapToObject="om.AttributeType">
         <field name="AttributeTypeId" key="atttid" type="NumberKey">
            <rule mask="^$|[0-9]+">Please select a valid choice</rule>
@@ -49,6 +48,24 @@
             <rule maxLength="255"/>
         </field>
 </group>
+
+
+<group name="RModuleAttribute" key="rma" mapToObject="om.RModuleAttribute">
+        <field name="DisplayValue" key="name" type="String">
+            <rule maxLength="255"/>
+        </field>
+        <field name="Active" key="active" type="boolean"/>
+        <field name="Required" key="req" type="boolean"/>
+        <field name="Dedupe" key="dedupe" type="boolean"/>
+        <field name="QuickSearch" key="qs" type="boolean"/>
+        <field name="Order" key="order" type="int" 
+                mapToProperty="PreferredOrder">
+           <rule maxValue="99">Please enter a value less than 99</rule>
+           <rule minValue="1">Please enter a value greater than 0</rule>
+        </field>
+</group>
+
+
 <group name="AttributeValue" key="attv" 
             mapToObject="om.AttributeValue">
         <field name="Id" key="id" type="ComboKey" mapToProperty="PrimaryKey">
@@ -71,6 +88,10 @@
            <required-message>This module requires a valid url.</required-message>
         </field>
         <field name="Deleted" key="del" type="boolean" />
+        <field name="Order" key="order" type="int">
+           <rule maxValue="99">Please enter a value less than 99</rule>
+           <rule minValue="1">Please enter a value greater than 0</rule>
+        </field>
 </group>
 
 <group name="Issue" key="issue" mapToObject="om.Issue">
@@ -83,7 +104,7 @@
         <field name="FederatedId" key="fid" type="String"/> 
         <field name="Deleted" key="del" type="boolean" />
 </group>
-<group name="SearchIssue" key="search" mapToObject="om.SearchIssue">
+<group name="SearchIssue" key="search" mapToObject="util.word.IssueSearch">
         <field name="SearchWords" key="sw" type="String"/>
         <field name="TextScope" key="ts" type="NumberKey" multiValued="true"/>
 </group>
@@ -97,7 +118,7 @@
         <field name="Description" key="desc" type="String">
             <rule maxLength="1024"/>
         </field>
-        <field name="URL" key="url" type="String">
+        <field name="Url" key="url" type="String">
             <rule maxLength="255"/>
         </field>
         <field name="ParentId" key="parentid" type="NumberKey">
@@ -109,8 +130,8 @@
         <field name="Deleted" key="del" type="boolean" />
 </group>
 
-<group name="Login" key="login" mapToObject="om.ScarabUser">
-    <field name="Username" key="u" type="String" mapToProperty="Username">
+<group name="Login" key="login">
+    <field name="Username" key="u" type="String">
         <rule minLength="1">Please enter an email address</rule>
         <rule mask=".+@.+\..+">Please enter a valid email address</rule>
     </field>

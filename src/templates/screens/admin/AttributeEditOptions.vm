@@ -37,19 +37,15 @@ $page.setTitle("Attribute Editor")
       <td width="25%">
         <div align="center">
 
-          <input type="checkbox" name="$intakeOption.Deleted.Key" value="true"
-              #if ($intakeOption.Deleted.Value.Value) checked #end>
-          <input type="hidden" name="$intakeOption.Deleted.ValueIfAbsent"
-                 value="false">
+          #booleanCheckbox ($intakeOption.Deleted)
       
       </div>
       </td>
 
       <td width="25%">          
         <div align="center">
-#if (!$intakeOption.Name.isValid())
-    $intakeOption.Name.Message<br>
-#end
+
+          #fieldErrorMsg($intakeOption "<br>")
           <input type="text" name="$intakeOption.Name.Key" 
                   value="$intakeOption.Name">
     
@@ -92,8 +88,8 @@ $page.setTitle("Attribute Editor")
         <div align="center">
 
 #set ( $maxNum = $maxNum + 1 )
-#if ($intakeOption.NumericValue.Value.Value != 0)
-    #set ( $selected = $intakeOption.NumericValue.Value.Value )
+#if ($intakeOption.NumericValue.Value != 0)
+    #set ( $selected = $intakeOption.NumericValue.Value )
 #else
     #set ( $selected = $maxNum )
 #end

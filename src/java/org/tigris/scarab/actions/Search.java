@@ -69,7 +69,6 @@ import org.tigris.scarab.om.BaseScarabObject;
 import org.tigris.scarab.om.ScarabUser;
 import org.tigris.scarab.om.ScarabUserPeer;
 import org.tigris.scarab.om.Issue;
-import org.tigris.scarab.om.SearchIssue;
 import org.tigris.scarab.om.IssuePeer;
 import org.tigris.scarab.om.AttributeValue;
 import org.tigris.scarab.attribute.OptionAttribute;
@@ -78,13 +77,13 @@ import org.tigris.scarab.om.AttributeValue;
 import org.tigris.scarab.om.RModuleAttributePeer;
 import org.tigris.scarab.util.*;
 import org.tigris.scarab.tools.ScarabRequestTool;
-import org.tigris.scarab.util.word.Vocabulary;
+import org.tigris.scarab.util.word.IssueSearch;
 
 /**
     This class is responsible for report issue forms.
     ScarabIssueAttributeValue
     @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
-    @version $Id: Search.java,v 1.1 2001/04/30 03:55:29 jmcnally Exp $
+    @version $Id: Search.java,v 1.2 2001/05/05 03:57:27 jmcnally Exp $
 */
 public class Search extends VelocityAction
 {
@@ -155,7 +154,7 @@ public class Search extends VelocityAction
             ScarabRequestTool scarab = (ScarabRequestTool)context
                 .get(ScarabConstants.SCARAB_REQUEST_TOOL);
 
-            SearchIssue search = new SearchIssue();
+            IssueSearch search = new IssueSearch();
             Group group = intake.get("SearchIssue", 
                                      scarab.getSearch().getQueryKey() );
             group.setProperties(search);

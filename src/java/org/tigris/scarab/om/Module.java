@@ -139,6 +139,31 @@ public class Module
         return getAttributes(crit);
     }
 
+    public List getRModuleAttributes(boolean activeOnly)
+        throws Exception
+    {
+        Criteria crit = new Criteria(2);
+        if ( activeOnly ) 
+        {
+            crit.add(RModuleAttributePeer.ACTIVE, true);
+        }
+        crit.addOrderByColumn(RModuleAttributePeer.PREFERRED_ORDER);
+        crit.addOrderByColumn(RModuleAttributePeer.DISPLAY_VALUE);
+
+        List rModAtts = null;
+        Module module = this;
+        Module prevModule = null;
+        do
+        {
+            rModAtts = module.getRModuleAttributes(crit);
+            prevModule = module;
+            module = prevModule.getModuleRelatedByParentId();
+        }
+        while ( rModAtts.size() == 0 && 
+               !ROOT_ID.equals(prevModule.getModuleId()));
+        return rModAtts;
+    }
+
     /**
      * gets a list of all of the Attributes.
      */

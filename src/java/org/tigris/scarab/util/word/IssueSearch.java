@@ -1,4 +1,4 @@
-package org.tigris.scarab.om;
+package org.tigris.scarab.util.word;
 
 // JDK classes
 import java.util.*;
@@ -18,8 +18,8 @@ import org.apache.turbine.services.db.TurbineDB;
 import org.apache.turbine.util.db.pool.DBConnection;
 import org.apache.turbine.util.db.map.DatabaseMap;
 
+import org.tigris.scarab.om.*;
 import org.tigris.scarab.util.ScarabConstants;
-import org.tigris.scarab.util.word.Vocabulary;
 import org.tigris.scarab.attribute.OptionAttribute;
 import org.tigris.scarab.attribute.StringAttribute;
 
@@ -28,7 +28,7 @@ import org.tigris.scarab.attribute.StringAttribute;
  * similar issues.  It subclasses Issue for functionality, it is 
  * not a more specific type of Issue.
  */
-public class SearchIssue 
+public class IssueSearch 
     extends Issue
 {
     private String searchWords;
@@ -280,8 +280,10 @@ public class SearchIssue
         NumberKey[] matchingIssueIds = null;      
         if ( getSearchWords() != null && getSearchWords().length() != 0 ) 
         {
-            Vocabulary voc = new Vocabulary(getSearchWords(), getTextScope());
-            matchingIssueIds = voc.getRelatedIssues();      
+            SearchIndex searchIndex = SearchFactory.getInstance();
+            searchIndex.addQuery(getSearchWords());
+            searchIndex.setAttributeIds(getTextScope());
+            matchingIssueIds = searchIndex.getRelatedIssues();      
         }
         
         // only have text search
@@ -344,4 +346,3 @@ public class SearchIssue
         return matchingIssues;
     }
 }
-

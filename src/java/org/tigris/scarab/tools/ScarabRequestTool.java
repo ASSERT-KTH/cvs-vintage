@@ -58,6 +58,7 @@ import org.apache.turbine.util.pool.Recyclable;
 // Scarab
 import org.tigris.scarab.om.*;
 import org.tigris.scarab.util.*;
+import org.tigris.scarab.util.word.IssueSearch;
 
 /**
  * This class is used by the Scarab API
@@ -278,7 +279,7 @@ try{
     public Issue getSearch()
         throws Exception
     {
-        SearchIssue search = new SearchIssue();
+        IssueSearch search = new IssueSearch();
         search.setModule(((ScarabUser)getUser()).getCurrentModule());
         return search;
     }
