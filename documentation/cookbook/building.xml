@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<!-- $Id: building.xml,v 1.14 2003/09/30 17:46:14 linus Exp $ -->
+<!-- $Id: building.xml,v 1.15 2003/11/06 22:56:06 mvw Exp $ -->
 
   <chapter id="buildingandtools">
     <title>Building from source</title>
@@ -260,6 +260,43 @@ where <replaceable>login</replaceable> is your Tigris login.
 This needs to be done for the first checkout.
 After that the root will be remembered by the checked out copy.
 </para>
+
+      <para>
+        If you use one of the CVS clients with a graphical userinterface,
+        (like WinCVS, GruntSpud,...)
+        then configuration will be done by filling in fields. These fields mean
+        the following:
+      </para>
+      <itemizedlist>
+        <listitem>
+          <para>
+            Type: pserver
+          </para>
+        </listitem>
+        <listitem>
+          <para>
+            User: Your Tigris login name
+          </para>
+        </listitem>
+        <listitem>
+          <para>
+            Host: cvs.tigris.org
+          </para>
+        </listitem>
+        <listitem>
+          <para>
+            Repository: /cvs
+          </para>
+        </listitem>
+      </itemizedlist>
+      
+      <para>
+        If you used the commandline CVS client before, then your Tigris password 
+        is stored in the file <filename>~/.cvspass</filename>. 
+        Some graphical UI CVS clients are
+        able to use this password, in others you'll have to enter it again.
+      </para>
+
       <para>
 The next thing to do is to login. It is done using the command:
 <command>cvs login</command>.
