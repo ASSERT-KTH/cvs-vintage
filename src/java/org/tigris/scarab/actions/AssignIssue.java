@@ -78,7 +78,7 @@ import org.tigris.scarab.util.EmailContext;
  * This class is responsible for assigning users to attributes.
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: AssignIssue.java,v 1.100 2003/07/09 18:32:45 elicia Exp $
+ * @version $Id: AssignIssue.java,v 1.101 2003/07/18 23:27:06 kmaples Exp $
  */
 public class AssignIssue extends BaseModifyIssue
 {
@@ -99,6 +99,9 @@ public class AssignIssue extends BaseModifyIssue
         String[] userIds = params.getStrings(ADD_USER);
         if (userIds != null && userIds.length > 0) 
         {
+            boolean isUserAttrRemoved = false;
+            StringBuffer msg = new StringBuffer();
+            List removedUserAttrs = null;
             for (int i =0; i<userIds.length; i++)
             {
                 List item = new ArrayList();
@@ -120,14 +123,44 @@ public class AssignIssue extends BaseModifyIssue
                     {
                         userList = new HashSet();
                     }
-                    userList.add(item);
-                    //userMap.put(issueId, userList);
-                    //user.setAssociatedUsersMap(userMap);
-                }
-            } 
-            scarabR.setConfirmMessage(l10n.get("SelectedUsersWereAdded"));
+                    List attributeList = scarabR.getCurrentModule()
+                        .getUserAttributes(issue.getIssueType(), true);
+                    if (!attributeList.contains(attribute))
+                    {
+                        if (removedUserAttrs == null)
+                        {
+                            removedUserAttrs = new ArrayList();
+                            removedUserAttrs.add(attribute);
+                            msg.append("'").append(attribute.getName())
+                                .append("'");
+                        }
+                        else if (!removedUserAttrs.contains(attribute))
+                        {
+                            removedUserAttrs.add(attribute);
+                            msg.append(", '").append(attribute.getName())
+                                .append("'");
+                        }
+                        isUserAttrRemoved = true;
+                    }
+                    else
+                    {
+                        userList.add(item);
+                        // userMap.put(issueId, userList);
+                        // user.setAssociatedUsersMap(userMap);
+                    }
+                } 
+            }
+            if (!isUserAttrRemoved)
+            {
+                scarabR.setConfirmMessage(l10n.get("SelectedUsersWereAdded"));
+            }
+            else 
+            {
+                scarabR.setAlertMessage(l10n.format("UserAttributeRemoved",
+                                            msg.toString()));
+            }
         }
-        else 
+        else
         {
             scarabR.setAlertMessage(l10n.get("NoUsersSelected"));
         }
@@ -235,18 +268,23 @@ public class AssignIssue extends BaseModifyIssue
         {
             issues = scarabR.getAssignIssuesList();
         }
+
         Map userMap = user.getAssociatedUsersMap();
         ScarabUser assigner = (ScarabUser)data.getUser();
         String reason = data.getParameters().getString("reason", "");
         Attachment attachment = null;
         ActivitySet activitySet = null;
+        boolean isUserAttrRemoved = false;
+        StringBuffer msg = new StringBuffer();
+        List removedUserAttrs = null;
 
         for (int i=0; i < issues.size(); i++)
         {
             Issue issue = (Issue)issues.get(i);
             Set userList = (Set) userMap.get(issue.getIssueId());
             List oldAssignees = issue.getUserAttributeValues();
-           
+            List attributeList = scarabR.getCurrentModule()
+                                .getUserAttributes(issue.getIssueType(), true);
             // save attachment with user-provided reason
             if (reason != null && reason.length() > 0)
             {
@@ -266,41 +304,60 @@ public class AssignIssue extends BaseModifyIssue
                 ScarabUser assignee = (ScarabUser)item.get(1);
                 Integer assigneeId = assignee.getUserId();
                 boolean alreadyAssigned = false;
-
-                for (int k=0; k < oldAssignees.size(); k++)
+                if (!attributeList.contains(newAttr))
                 {
-                    AttributeValue oldAttVal = (AttributeValue)oldAssignees.get(k);
-                    Attribute oldAttr = oldAttVal.getAttribute();
-                    // ignore already assigned users
-                    if (assigneeId.equals(oldAttVal.getUserId()))
+                    if (removedUserAttrs == null)
                     {
-                        // unless user has different attribute id, then
-                        // switch their user attribute
-                        if (!newAttr.getAttributeId().equals(oldAttr.getAttributeId()))
+                        removedUserAttrs = new ArrayList();
+                        removedUserAttrs.add(newAttr);
+                        msg.append("'").append(newAttr.getName()).append("'");
+                    }
+                    else if (!removedUserAttrs.contains(newAttr))
+                    {
+                        removedUserAttrs.add(newAttr);
+                        msg.append(", '").append(newAttr.getName()).append("'");
+                    }
+                    isUserAttrRemoved = true;
+                }
+                else
+                {
+                    for (int k=0; k < oldAssignees.size(); k++)
+                    {
+                            AttributeValue oldAttVal = (AttributeValue)
+                                                        oldAssignees.get(k);
+                        Attribute oldAttr = oldAttVal.getAttribute();
+                        // ignore already assigned users
+                        if (assigneeId.equals(oldAttVal.getUserId()))
                         {
-                            List tmpItem = new ArrayList();
-                            tmpItem.add(newAttr);
-                            tmpItem.add(assignee);
-                            if (!userList.contains(tmpItem))
+                            // unless user has different attribute id, then
+                            // switch their user attribute
+                                if (!newAttr.getAttributeId().equals(
+                                                oldAttr.getAttributeId()))
+                            {
+                                List tmpItem = new ArrayList();
+                                tmpItem.add(newAttr);
+                                tmpItem.add(assignee);
+                                if (!userList.contains(tmpItem))
+                                {
+                                    alreadyAssigned = true;
+                                    activitySet = issue.changeUserAttributeValue(
+                                                          activitySet, assignee,
+                                                          assigner, oldAttVal,
+                                                          newAttr, attachment);
+                                }
+                            }
+                            else
                             {
                                 alreadyAssigned = true;
-                                activitySet = issue.changeUserAttributeValue(
-                                                      activitySet,
-                                                      assignee, assigner, 
-                                                      oldAttVal, newAttr, attachment);
                             }
                         }
-                        else
-                        {
-                            alreadyAssigned = true;
-                        }
                     }
-                }
-                // if user was not already assigned, assign them
-                if (!alreadyAssigned)
-                {
-                    activitySet = issue.assignUser(activitySet, assignee, assigner,  
-                                                   newAttr, attachment);
+                    // if user was not already assigned, assign them
+                    if (!alreadyAssigned)
+                    {
+                            activitySet = issue.assignUser(activitySet, assignee,
+                                        assigner, newAttr, attachment);
+                    }
                 }
             }
 
@@ -333,6 +390,11 @@ public class AssignIssue extends BaseModifyIssue
             {
                 scarabR.setAlertMessage(l10n.get(EMAIL_ERROR));
             }
+        }
+        if (isUserAttrRemoved)
+        {
+            scarabR.setAlertMessage(l10n.format("UserAttributeRemoved",
+                                          msg.toString()));
         }
         
         Object alertMessage = scarabR.getAlertMessage();
