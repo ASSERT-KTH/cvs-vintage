@@ -21,7 +21,7 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $Id: PropPanelStateMachine.java,v 1.7 2003/01/29 22:21:56 kataka Exp $
+// $Id: PropPanelStateMachine.java,v 1.8 2003/04/28 07:48:16 jhraigniac Exp $
 package org.argouml.uml.ui.behavior.state_machines;
 
 import javax.swing.JList;
@@ -53,11 +53,11 @@ public class PropPanelStateMachine extends PropPanelModelElement {
         
         // the context in which the statemachine resides
         JList contextList = new UMLLinkedList(new UMLStateMachineContextListModel());
-        addField(Argo.localize("UMLMenu", "label.representedModelelement"), new JScrollPane(contextList));
+        addField(Argo.localize("UMLMenu", "label.represented-modelelement"), new JScrollPane(contextList));
         
         // the top state
         JList topList = new UMLLinkedList(new UMLStateMachineTopListModel());
-        addField(Argo.localize("UMLMenu", "label.topState"), new JScrollPane(topList));
+        addField(Argo.localize("UMLMenu", "label.top-state"), new JScrollPane(topList));
         
         add(LabelledLayout.getSeperator());
         
