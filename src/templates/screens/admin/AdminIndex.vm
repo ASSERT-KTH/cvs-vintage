@@ -1,7 +1,7 @@
 #**
 @author <a href="mailto:dr@bitonic.com">Douglas B. Robertson</a>
 @author <a href="mailto:jon@collab.net">Jon Stevens</a>
-@version $Id: AdminIndex.vm,v 1.5 2001/12/04 23:43:06 dr Exp $
+@version $Id: AdminIndex.vm,v 1.6 2001/12/05 13:39:46 dr Exp $
 *#
 
 $page.setTitle("Scarab Administration")
@@ -26,13 +26,6 @@ code. This was done for a number of reasons:
 </p>
 
 <p>
-The following pieces are still using Flux in some manner or another:
-<ul>
-  <li> Group admin </li>
-</ul>
-</p>
-
-<p>
 The following are some other things to do (in no particular order):
 <ul>
  <li> on 'User Management' pass the search info forward, so that if a user presses cancel it takes them back to the last search (rather than an empty search) </li>
@@ -47,29 +40,12 @@ The following are some other things to do (in no particular order):
 </ul>
 
 
-<h3>Groups</h3>
-
-<ul>
- <li> <a href="group,FluxGroupList.vm">Group List</a> (via Flux) </li>
- <li> <a href="group,FluxGroupForm.vm?mode=insert">Add New Group</a> (via Flux) </li>
-</ul>
-
-
 <h3>Roles</h3>
 
 <ul>
  <li> <a href="admin,ManageRoles.vm">Role List</a> </li>
  <li> <a href="admin,AddRole.vm">Add New Role</a> </li>
 </ul>
-
-
-<h3>Permissions</h3>
-
-<ul>
- <li> <a href="admin,ManagePermissions.vm">Permission List</a> </li>
- <li> <a href="admin,AddPermission.vm">Add New Permission</a> </li>
-</ul>
-
 
 </div>
 
