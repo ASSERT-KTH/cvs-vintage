@@ -1,3 +1,22 @@
+## FIXME: define this macro in another file or in the database
+##        so that it is more easily customized by end users
+##
+#macro (mimeTypeOptions $mimeA)
+<option value="" #if (!$mimeA || $mimeA.length() == 0)selected="selected"#end>Select...</option>
+<option value="text/plain" #if ($mimeA == "text/plain"))selected="selected"#end>Patch file (text/plain, diffs)</option>
+<option value="text/plain" #if ($mimeA == "text/plain")selected="selected"#end>Plain text (text/plain)</option>
+<option value="text/html" #if ($mimeA == "text/html")selected="selected"#end>HTML source (text/html)</option>
+<option value="image/bmp" #if ($mimeA == "image/bmp")selected="selected"#end>BMP image (image/bmp)</option>
+<option value="image/gif" #if ($mimeA == "image/gif")selected="selected"#end>GIF image (image/gif)</option>
+<option value="image/jpeg" #if ($mimeA == "image/jpeg")selected="selected"#end>JPEG image (image/jpeg)</option>
+<option value="image/png" #if ($mimeA == "image/png")selected="selected"#end>PNG image (image/png)</option>
+<option value="application/mac-binhex40" #if ($mimeA == "application/mac-binhex40")selected="selected"#end>Mac binhex (application/mac-binhex40)</option>
+<option value="application/pdf" #if ($mimeA == "application/pdf")selected="selected"#end>PDF Portable document format (application/pdf)</option>
+<option value="application/x-zip-compressed" #if ($mimeA == "application/x-zip-compressed")selected="selected"#end>Zip compressed data (application/x-zip-compressed)</option>
+<option value="application/x-gzip" #if ($mimeA == "application/x-gzip")selected="selected"#end>GZip compressed data (application/x-gzip)</option>
+<option value="application/octet-stream" #if ($mimeA == "application/octet-stream")selected="selected"#end>Generic binary file (application/octet-stream)</option>
+#end
+
 #macro (viewIssue $currentIssue $module)
 
 #set ($issueType = $scarabR.CurrentIssueType)
@@ -419,16 +438,7 @@ $l10n.NoAttachments
         #if ($intakeAttachment.MimeTypeA)
           #set ($mimeA = $intakeAttachment.MimeTypeA.toString())
         #end
-          <option value="" #if (!$mimeA || $mimeA.length() == 0)selected="selected"#end>Select...</option>
-          <option value="text/plain" #if ($mimeA == "text/plain"))selected="selected"#end>Patch file (text/plain, diffs)</option>
-          <option value="text/plain" #if ($mimeA == "text/plain")selected="selected"#end>Plain text (text/plain)</option> 
-          <option value="text/html" #if ($mimeA == "text/html")selected="selected"#end>HTML source (text/html)</option> 
-          <option value="image/gif" #if ($mimeA == "image/gif")selected="selected"#end>GIF Image (image/gif)</option> 
-          <option value="image/jpeg" #if ($mimeA == "image/jpeg")selected="selected"#end>JPEG Image (image/jpeg)</option> 
-          <option value="image/png" #if ($mimeA == "image/png")selected="selected"#end>PNG Image (image/png)</option> 
-          <option value="application/pdf" #if ($mimeA == "application/pdf")selected="selected"#end>PDF Portable Document Format (application/pdf)</option> 
-          <option value="application/x-zip-compressed" #if ($mimeA == "application/x-zip-compressed")selected="selected"#end>Zip: Compressed data (application/x-zip-compressed)</option> 
-          <option value="application/octet-stream" #if ($mimeA == "application/octet-stream")selected="selected"#end>Binary file (application/octet-stream)</option>        
+         #mimeTypeOptions($mimeA)
         </select>
         <p><small>Other (enter mime type:&#160;
         <input type="text" name="$intakeAttachment.MimeTypeB.Key" 

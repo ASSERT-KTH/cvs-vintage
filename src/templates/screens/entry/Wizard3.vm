@@ -10,7 +10,6 @@
   #set ($templ = $scarabR.getIssueTemplate($templateId))
 #end
 
-
 <div class="app" id="div2-1-0">
 
 <h2>$page.Title</h2>
@@ -44,7 +43,7 @@
 
 <div class="functnbar">
 <input type="submit" value="Submit issue"  name="eventSubmit_doEnterissue" />&#160;
-<input type="reset" value="Reset" name="eventSubmit_doRefresh" />&#160;
+<input type="reset" value="Reset" name="eventSubmit_doRefresh" />
 </div>
  
 #asterisk()
@@ -133,7 +132,7 @@
  </table>
 
 <div class="functnbar3">
-  <input type="submit" value="Delete attachment" name="eventSubmit_doRemovefile"  />
+  <input type="submit" value="Delete attachment" name="eventSubmit_doRemovefile" />
 </div>
 #end
 
@@ -167,16 +166,7 @@
         #if ($intakeAttachment.MimeTypeA)
           #set ($mimeA = $intakeAttachment.MimeTypeA.toString())
         #end
-          <option value="" #if (!$mimeA || $mimeA.length() == 0)selected="selected"#end>Select...</option>
-          <option value="text/plain" #if ($mimeA == "text/plain"))selected="selected"#end>Patch file (text/plain, diffs)</option>
-          <option value="text/plain" #if ($mimeA == "text/plain")selected="selected"#end>Plain text (text/plain)</option> 
-          <option value="text/html" #if ($mimeA == "text/html")selected="selected"#end>HTML source (text/html)</option> 
-          <option value="image/gif" #if ($mimeA == "image/gif")selected="selected"#end>GIF Image (image/gif)</option> 
-          <option value="image/jpeg" #if ($mimeA == "image/jpeg")selected="selected"#end>JPEG Image (image/jpeg)</option> 
-          <option value="image/png" #if ($mimeA == "image/png")selected="selected"#end>PNG Image (image/png)</option> 
-          <option value="application/pdf" #if ($mimeA == "application/pdf")selected="selected"#end>PDF Portable Document Format (application/pdf)</option> 
-          <option value="application/x-zip-compressed" #if ($mimeA == "application/x-zip-compressed")selected="selected"#end>Zip: Compressed data (application/x-zip-compressed)</option> 
-          <option value="application/octet-stream" #if ($mimeA == "application/octet-stream")selected="selected"#end>Binary file (application/octet-stream)</option>        
+         #mimeTypeOptions($mimeA)
         </select>
         <p><small>Other (enter mime type:&#160;
         <input type="text" name="$intakeAttachment.MimeTypeB.Key" 
@@ -188,7 +178,7 @@
 </div>
 
 <div class="functnbar3">
-  <input type="submit" value="Add attachment" name="eventSubmit_doAddfile"  />
+  <input type="submit" value="Add attachment" name="eventSubmit_doAddfile" />
 </div>
 
 <h4>Submit new issue</h4>
@@ -229,20 +219,20 @@
 <tr>
 <th width="120">After submit</th>
 <td><select name="template_code">
-<option value=1
+<option value="1"
   #if ($userPref == 1) selected="selected" #end>Enter new issue </option>
 #if ($scarabR.hasPermission($scarabG.Permission.ISSUE__ASSIGN, $module))
-  <option value=2
+  <option value="2"
   #if ($userPref == 0 || $userPref == 2) selected="selected" #end>Assign issue</option>
 #end
-<option value=3
+<option value="3"
   #if ($userPref == 3) selected="selected" #end>View this issue</option>
-<option value=4
+<option value="4"
   #if ($userPref == 4) selected="selected" #end>Return to issue types index</option>
 </select></td>
 </tr>
 </table>
-</div>  
+</div>
 
 
 <div class="functnbar2">
