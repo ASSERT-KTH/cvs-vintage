@@ -1,4 +1,4 @@
-// $Id: ActionSequenceDiagram.java,v 1.34 2005/01/30 01:21:57 bobtarling Exp $
+// $Id: ActionSequenceDiagram.java,v 1.35 2005/01/30 01:27:08 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -90,11 +90,11 @@ public class ActionSequenceDiagram extends UMLAction {
     public boolean shouldBeEnabled() {
         // TODO: Once the sequence diagrams are working again, they should
         //       be re-enabled.
-	        Object target = TargetManager.getInstance().getModelTarget();
-	        if (ModelFacade.isAClassifier(target)
-	            || ModelFacade.isAOperation(target)) {
-	            return true;
-	        }
+//	        Object target = TargetManager.getInstance().getModelTarget();
+//	        if (ModelFacade.isAClassifier(target)
+//	            || ModelFacade.isAOperation(target)) {
+//	            return true;
+//	        }
 
         return false;
     }
