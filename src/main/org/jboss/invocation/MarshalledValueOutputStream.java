@@ -10,6 +10,9 @@ package org.jboss.invocation;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.ObjectOutputStream;
+import java.rmi.Remote;
+import java.rmi.server.RemoteObject;
+import java.rmi.server.RemoteStub;
 
 /**
  * An ObjectOutputStream subclass used by the MarshalledValue class to
@@ -18,17 +21,20 @@ import java.io.ObjectOutputStream;
  * proxy annotations are used.
  *
  * @author Scott.Stark@jboss.org
- * @version $Revision: 1.2 $
+ * @version $Revision: 1.3 $
  */
 public class MarshalledValueOutputStream
    extends ObjectOutputStream
 {
-   /**
-    * Creates a new instance of MarshalledValueOutputStream
+   /** Creates a new instance of MarshalledValueOutputStream
+    If there is a security manager installed, this method requires a
+    SerializablePermission("enableSubstitution") permission to ensure it's
+    ok to enable the stream to do replacement of objects in the stream.
     */
    public MarshalledValueOutputStream(OutputStream os) throws IOException
    {
       super(os);
+      enableReplaceObject(true);
    }
 
    /**
@@ -45,5 +51,18 @@ public class MarshalledValueOutputStream
    protected void annotateProxyClass(Class cl) throws IOException
    {
       super.annotateProxyClass(cl);
+   }
+
+   /** Override replaceObject to check for Remote objects that are
+    not RemoteStubs.
+   */
+   protected Object replaceObject(Object obj) throws IOException
+   {
+      if( (obj instanceof Remote) && !(obj instanceof RemoteStub) )
+      {
+         Remote remote = (Remote) obj;
+         obj = RemoteObject.toStub(remote);
+      }
+      return obj;
    }
 }
