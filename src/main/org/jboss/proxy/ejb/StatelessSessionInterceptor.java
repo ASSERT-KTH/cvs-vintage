@@ -11,6 +11,8 @@ import java.lang.reflect.Method;
 import org.jboss.invocation.Invoker;
 import org.jboss.invocation.Invocation;
 import org.jboss.invocation.InvocationContext;
+import org.jboss.invocation.InvocationKey;
+import org.jboss.invocation.InvocationType;
 import org.jboss.proxy.ejb.handle.StatelessHandleImpl;
 
 
@@ -18,12 +20,7 @@ import org.jboss.proxy.ejb.handle.StatelessHandleImpl;
  * An EJB stateless session bean proxy class.
  *
  * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
- * @version $Revision: 1.2 $
- *
- * <p><b>2001/11/23: marcf</b>
- * <ol>
- *   <li>Initial checkin
- * </ol>
+ * @version $Revision: 1.3 $
  */
 public class StatelessSessionInterceptor
    extends GenericEJBInterceptor
@@ -84,11 +81,12 @@ public class StatelessSessionInterceptor
       // Implement local EJB calls
       else if (m.equals(GET_HANDLE))
       {
-         return new StatelessHandleImpl((String)ctx.getValue(JNDI_NAME));
+         return new StatelessHandleImpl(
+               (String)ctx.getValue(InvocationKey.JNDI_NAME));
       }
       else if (m.equals(GET_PRIMARY_KEY))
       {  
-         return ctx.getValue(JNDI_NAME);
+         return ctx.getValue(InvocationKey.JNDI_NAME);
       }
       else if (m.equals(GET_EJB_HOME))
       {
@@ -106,7 +104,7 @@ public class StatelessSessionInterceptor
       // If not taken care of, go on and call the container
       else
       {
-         invocation.setType(Invocation.REMOTE);
+         invocation.setType(InvocationType.REMOTE);
          
          return getNext().invoke(invocation);
       }
@@ -119,6 +117,6 @@ public class StatelessSessionInterceptor
    // Private -------------------------------------------------------
    private String toString(InvocationContext ctx)
    {
-      return ctx.getValue(JNDI_NAME) + ":Stateless";
+      return ctx.getValue(InvocationKey.JNDI_NAME) + ":Stateless";
    }   
 }

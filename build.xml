@@ -12,7 +12,7 @@
 <!--                                                                        -->
 <!-- ====================================================================== -->
 
-<!-- $Id: build.xml,v 1.97 2002/05/31 04:13:43 user57 Exp $ -->
+<!-- $Id: build.xml,v 1.98 2002/06/14 01:31:52 dsundstrom Exp $ -->
 
 <project default="main" name="JBoss/Server">
 
@@ -585,8 +585,11 @@
         <include name="org/jboss/proxy/**"/>
         <include name="org/jboss/invocation/Invocation.class"/>
         <include name="org/jboss/invocation/InvocationContext.class"/>
+        <include name="org/jboss/invocation/InvocationKey.class"/>
+        <include name="org/jboss/invocation/InvocationType.class"/>
         <include name="org/jboss/invocation/Invoker.class"/>
         <include name="org/jboss/invocation/InvokerInterceptor.class"/>
+        <include name="org/jboss/invocation/PayloadKey.class"/>
         <include name="org/jboss/invocation/MarshalledInvocation.class"/>
         <include name="org/jboss/invocation/MarshalledValue.class"/>
         <include name="org/jboss/invocation/MarshalledValueInputStream.class"/>

@@ -33,6 +33,7 @@ import org.jboss.ejb.Container;
 import org.jboss.ejb.EnterpriseContext;
 import org.jboss.ejb.Interceptor;
 import org.jboss.invocation.Invocation;
+import org.jboss.invocation.InvocationKey;
 import org.jboss.metadata.BeanMetaData;
 import org.jboss.system.Registry;
 import org.jboss.naming.ENCThreadLocalKey;
@@ -42,7 +43,7 @@ import org.jboss.naming.ENCThreadLocalKey;
  * 
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  * @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>
- * @version $Revision: 1.3 $
+ * @version $Revision: 1.4 $
  */
 public class ProxyFactoryFinderInterceptor
    extends AbstractInterceptor
@@ -107,7 +108,8 @@ public class ProxyFactoryFinderInterceptor
    public Object invokeHome(Invocation mi)
       throws Exception
    {
-      String invokerBinding = (String)mi.getValue(org.jboss.invocation.InvocationContext.INVOKER_PROXY_BINDING);
+      String invokerBinding = 
+            (String)mi.getValue(InvocationKey.INVOKER_PROXY_BINDING);
       setProxyFactory(invokerBinding, mi);
 
       String oldInvokerBinding = ENCThreadLocalKey.getKey();
@@ -135,7 +137,8 @@ public class ProxyFactoryFinderInterceptor
    public Object invoke(Invocation mi)
       throws Exception
    {
-      String invokerBinding = (String)mi.getValue(org.jboss.invocation.InvocationContext.INVOKER_PROXY_BINDING);
+      String invokerBinding = 
+            (String)mi.getValue(InvocationKey.INVOKER_PROXY_BINDING);
       setProxyFactory(invokerBinding, mi);
 
       String oldInvokerBinding = ENCThreadLocalKey.getKey();

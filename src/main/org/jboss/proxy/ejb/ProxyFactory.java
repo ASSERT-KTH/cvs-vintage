@@ -35,6 +35,7 @@ import org.jboss.ejb.ListCacheKey;
 import org.jboss.invocation.Invoker;
 import org.jboss.invocation.jrmp.server.JRMPInvoker;
 import org.jboss.invocation.InvocationContext;
+import org.jboss.invocation.InvocationKey;
 import org.jboss.logging.Logger;
 import org.jboss.metadata.InvokerProxyBindingMetaData;
 import org.jboss.metadata.MetaData;
@@ -53,31 +54,24 @@ import org.w3c.dom.NodeList;
 
 
 /**
- * As we remove the one one association between container STACK and invoker we keep this around
- * IN the future the creation of proxies is a task done on a container basis but the container
- * as a logical representation, in other words, the container "Entity with RMI/IIOP" is not a 
- * container stack but an association at the invocation level that points to all metadata for 
+ * As we remove the one one association between container STACK and invoker we
+ * keep this around. IN the future the creation of proxies is a task done on a
+ * container basis but the container as a logical representation. In other 
+ * words, the container "Entity with RMI/IIOP" is not a container stack but 
+ * an association at the invocation level that points to all metadata for 
  * a given container. 
  *
- * In other words this is here for legacy reason and to not disrupt the container at once
- * In particular we declare that we "implement" the container invoker interface when we are
- * just implementing the Proxy generation calls. Separation of concern. 
+ * In other words this is here for legacy reason and to not disrupt the 
+ * container at once. 
+ * In particular we declare that we "implement" the container invoker 
+ * interface when we are just implementing the Proxy generation calls.
+ * Separation of concern. 
  *
  * @todo eliminate this class, at least in its present form.
  *
- *  @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
- *  @author <a href="mailto:scott.stark@jboss.org">Scott Stark/a>
- *  @version $Revision: 1.17 $
- *
- *  <p><b>Revisions:</b><br>
- *  <p><b>2001/12/30: billb</b>
- *  <ol>
- *   <li>made home and bean invokers pluggable
- *  </ol>
- *  <p><b>2002/03/08: billb</b>
- *  <ol>
- *   <li>client interceptors from config.
- *  </ol>
+ * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
+ * @author <a href="mailto:scott.stark@jboss.org">Scott Stark/a>
+ * @version $Revision: 1.18 $
  */
 public class ProxyFactory
    implements EJBProxyFactory
@@ -136,7 +130,8 @@ public class ProxyFactory
       objectName = container.getJmxName().hashCode();
       // Create metadata
 
-      boolean isSession = !(container.getBeanMetaData() instanceof EntityMetaData);
+      boolean isSession = 
+            !(container.getBeanMetaData() instanceof EntityMetaData);
       Class pkClass = null;
       if (!isSession)
       {
@@ -294,10 +289,10 @@ public class ProxyFactory
          InvocationContext context = new InvocationContext();
 
          context.setObjectName(new Integer(objectName));
-         context.setValue(org.jboss.proxy.ejb.GenericEJBInterceptor.JNDI_NAME, jndiBinding);
+         context.setValue(InvocationKey.JNDI_NAME, jndiBinding);
          // The behavior for home proxying should be isolated in an interceptor FIXME
          context.setInvoker(homeInvoker);
-         context.setValue(org.jboss.proxy.ejb.HomeInterceptor.EJB_METADATA, ejbMetaData);
+         context.setValue(InvocationKey.EJB_METADATA, ejbMetaData);
          context.setInvokerProxyBinding(invokerMetaData.getName());
          
          ClientContainer client = new ClientContainer(context);
@@ -322,7 +317,7 @@ public class ProxyFactory
             context = new InvocationContext();
             
             context.setObjectName(new Integer(objectName));
-            context.setValue(org.jboss.proxy.ejb.GenericEJBInterceptor.JNDI_NAME, jndiBinding);
+            context.setValue(InvocationKey.JNDI_NAME, jndiBinding);
             // The behavior for home proxying should be isolated in an interceptor FIXME
             context.setInvoker(beanInvoker);
             context.setInvokerProxyBinding(invokerMetaData.getName());
@@ -406,7 +401,7 @@ public class ProxyFactory
       
       context.setObjectName(new Integer(objectName));
       context.setCacheId(id);
-      context.setValue(org.jboss.proxy.ejb.GenericEJBInterceptor.JNDI_NAME, jndiBinding);
+      context.setValue(InvocationKey.JNDI_NAME, jndiBinding);
       context.setInvoker(beanInvoker);
       log.debug("seting invoker proxy binding for stateful session: " + invokerMetaData.getName());
       context.setInvokerProxyBinding(invokerMetaData.getName());
@@ -440,7 +435,7 @@ public class ProxyFactory
       
       context.setObjectName(new Integer(objectName));
       context.setCacheId(id);
-      context.setValue(org.jboss.proxy.ejb.GenericEJBInterceptor.JNDI_NAME, jndiBinding);
+      context.setValue(InvocationKey.JNDI_NAME, jndiBinding);
       context.setInvoker(beanInvoker);
       context.setInvokerProxyBinding(invokerMetaData.getName());
       
@@ -481,9 +476,7 @@ public class ProxyFactory
       
          context.setObjectName(new Integer(objectName));
          context.setCacheId(idEnum.next());
-         context.setValue(
-               org.jboss.proxy.ejb.GenericEJBInterceptor.JNDI_NAME, 
-               jndiBinding);
+         context.setValue(InvocationKey.JNDI_NAME, jndiBinding);
          context.setInvoker(beanInvoker);
          context.setInvokerProxyBinding(invokerMetaData.getName());
       

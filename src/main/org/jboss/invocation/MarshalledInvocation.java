@@ -27,39 +27,27 @@ import org.jboss.invocation.Invocation;
 import org.jboss.logging.Logger;
 
 /**
- * The MarshalledInvocation is an invocation that travels.  As such it serializes
- * its payload because of lack of ClassLoader visibility.
- * As such it contains Marshalled data representing the byte[] of the Invocation object it extends
- * Besides handling the specifics of "marshalling" the payload, which could be done at the Invocation level
- * the Marshalled Invocation can hold optimization and needed code for distribution for example the 
- * TransactionPropagationContext which is a serialization of the TX for distribution purposes as
- * well as the "hash" for the methods that we send, as opposed to sending Method objects. 
- * Serialization "optimizations" should be coded here in the externalization implementation of the class
+ * The MarshalledInvocation is an invocation that travels.  As such it 
+ * serializes its payload because of lack of ClassLoader visibility.
+ * As such it contains Marshalled data representing the byte[] of the 
+ * Invocation object it extends. Besides handling the specifics of 
+ * "marshalling" the payload, which could be done at the Invocation level,
+ * the Marshalled Invocation can hold optimization and needed code for 
+ * distribution.  For example, it can contains the 
+ * TransactionPropagationContext, which is a serialization of the TX, for 
+ * distribution purposes as well as the "hash" for the methods that we send, 
+ * as opposed to sending Method objects. Serialization "optimizations" should 
+ * be coded here in the externalization implementation of the class
  *
  * @author  <a href="mailto:marc@jboss.org">Marc Fleury</a>
- * @version $Revision: 1.9 $
- * 
- * <p><b>Revisions:</b>
- *
- * <p><b>2001120 marc fleury:</b>
- * <ul>
- *   <li> Initial check-in
- * </ul>
- * 
- * <p><b>20020113 Sacha Labourey:</b>
- * <ul>
- *   <li>Make Externalizable calls (writeExternal) idempotent: until now,
- *       serialization on a MarshalledInvocation could only performed once (transaction was removed 
- *       and METHOD type was modified). If another call was re-using the same object (in 
- *       clustering for example), the call was making a ClassCastException because of 
- *       the changed METHOD type in the Map that occured in the previous call to writeExternal)
- * </ul>
+ * @version $Revision: 1.10 $
  */
 public class MarshalledInvocation
    extends Invocation
    implements java.io.Externalizable
 {
-   private static final Logger log = Logger.getLogger(MarshalledInvocation.class);
+   private static final Logger log = 
+         Logger.getLogger(MarshalledInvocation.class);
    
    /** Serial Version Identifier. */
    private static final long serialVersionUID = -718723094688127810L;
@@ -97,9 +85,11 @@ public class MarshalledInvocation
          try
          {
             long hash = 0;
-            ByteArrayOutputStream bytearrayoutputstream = new ByteArrayOutputStream(512);
+            ByteArrayOutputStream bytearrayoutputstream = 
+                  new ByteArrayOutputStream(512);
             MessageDigest messagedigest = MessageDigest.getInstance("SHA");
-            DataOutputStream dataoutputstream = new DataOutputStream(new DigestOutputStream(bytearrayoutputstream, messagedigest));
+            DataOutputStream dataoutputstream = new DataOutputStream(
+                  new DigestOutputStream(bytearrayoutputstream, messagedigest));
             dataoutputstream.writeUTF(methodDesc);
             dataoutputstream.flush();
             byte abyte0[] = messagedigest.digest();
@@ -227,7 +217,7 @@ public class MarshalledInvocation
    
    public Method getMethod()
    {
-      Object value = getValue(METHOD);
+      Object value = getValue(InvocationKey.METHOD);
       
       if (value instanceof Method) {
          return (Method) value;
@@ -239,7 +229,7 @@ public class MarshalledInvocation
          // Keep it in the payload
          if (m != null)  
          {
-            transient_payload.put(METHOD, m);
+            transient_payload.put(InvocationKey.METHOD, m);
             
             return m;
          }
@@ -301,7 +291,8 @@ public class MarshalledInvocation
    public void writeExternal(java.io.ObjectOutput out)
       throws IOException
    {
-      // FIXME marcf: the "specific" treatment of Transactions should be abstracted.
+      // FIXME marcf: the "specific" treatment of Transactions should be 
+      // abstracted.
       // Write the TPC, not the local transaction
       out.writeObject(tpc);
       
@@ -317,16 +308,19 @@ public class MarshalledInvocation
       {
          Object currentKey = keys.next();
          
-         // This code could be if (object.getClass().getName().startsWith("java"))
+         // This code could be:
+         //    if (object.getClass().getName().startsWith("java"))
          // then don't serialize.  Bench the above for speed.
          
          //Replace the current object with a Marshalled representation
-         if (currentKey == METHOD) {
+         if (currentKey == InvocationKey.METHOD) {
             // We write the hash instead of the method
-            sentData.put(METHOD, new Long(calculateHash((Method) payload.get(METHOD))));
+            sentData.put(InvocationKey.METHOD, new Long(calculateHash(
+                        (Method) payload.get(InvocationKey.METHOD))));
          }
          else {
-            sentData.put (currentKey, new MarshalledValue(payload.get(currentKey)));
+            sentData.put (currentKey, 
+                  new MarshalledValue(payload.get(currentKey)));
          }
       }
       

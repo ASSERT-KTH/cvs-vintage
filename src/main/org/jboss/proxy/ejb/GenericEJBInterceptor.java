@@ -7,65 +7,45 @@
 
 package org.jboss.proxy.ejb;
 
-import org.jboss.proxy.Interceptor;
 import java.io.IOException;
 import java.io.ObjectInput;
 import java.io.ObjectOutput;
 import java.io.Externalizable;
 import java.lang.reflect.Method;
-
-import org.jboss.invocation.Invocation;
 import java.rmi.RemoteException;
 
 import javax.ejb.EJBHome;
-import javax.naming.NamingException;
-
 import javax.ejb.EJBObject;
 import javax.naming.InitialContext;
+import javax.naming.NamingException;
 
-/*
-
-import java.lang.reflect.InvocationHandler;
-import javax.transaction.TransactionManager;
-import java.security.Principal;
-import javax.transaction.Transaction;
-import javax.transaction.SystemException;
-
-
-import org.jboss.proxy.ejb.ReadAheadBuffer;
-import org.jboss.proxy.ejb.ListEntityProxy;
-import org.jboss.invocation.Invoker;
-import org.jboss.tm.TransactionPropagationContextFactory;
-import org.jboss.security.SecurityAssociation;
-*/
+import org.jboss.invocation.Invocation;
+import org.jboss.invocation.InvocationKey;
+import org.jboss.proxy.Interceptor;
 
 /**
  * Generic Proxy 
  *
- * These proxies are independent of the transportation protocol.  Their role is to take
- * care of some of the local calls on the client (done in extension like EJB) 
+ * These proxies are independent of the transportation protocol.  Their role 
+ * is to take care of some of the local calls on the client (done in extension
+ * like EJB) 
  *      
- * 
  * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
- * @version $Revision: 1.2 $
- *
- * <p><b>2001/11/19: marcf</b>
- * <ol>
- *   <li>Initial checkin
- * </ol>
+ * @version $Revision: 1.3 $
  */
 public abstract class GenericEJBInterceptor
    extends Interceptor
    implements Externalizable
 {
    
-   public static final Integer JNDI_NAME = new Integer(new String("JNDI_NAME").hashCode());
-   
    // Static method references 
-   protected static final Method TO_STRING, HASH_CODE, EQUALS;
-   
-   // Static method references to EJB
-   protected static final Method GET_PRIMARY_KEY, GET_HANDLE, GET_EJB_HOME, IS_IDENTICAL;
+   protected static final Method TO_STRING;
+   protected static final Method HASH_CODE;
+   protected static final Method EQUALS;
+   protected static final Method GET_PRIMARY_KEY;
+   protected static final Method GET_HANDLE;
+   protected static final Method GET_EJB_HOME;
+   protected static final Method IS_IDENTICAL;
    
    /** Initialize the static variables. */
    static
@@ -103,32 +83,11 @@ public abstract class GenericEJBInterceptor
       // For externalization to work
    }
    
-   
-   /**
-    * Test the identitiy of an <tt>EJBObject</tt>.
-    *
-    * @param a    <tt>EJBObject</tt>.
-    * @param b    Object to test identity with.
-    * @return     True if objects are identical.
-    *
-    * @throws RemoteException      Failed to get primary key.
-    * @throws ClassCastException   Not an EJBObject instance.
-    */
-/*
-   protected Boolean isIdentical(final Object a, final Object b)
-      throws RemoteException
-   {
-      if (a == null) return new Boolean(a==b);
-         final EJBObject ejb = (EJBObject)a;
-      final Object pk = ejb.getPrimaryKey();
-      return new Boolean(pk.equals(b));
-   }
-*/   
-   
    protected EJBHome getEJBHome(Invocation invocation) throws NamingException
    {
       InitialContext iniCtx = new InitialContext();
-      String jndiName = (String) invocation.getInvocationContext().getValue(JNDI_NAME);
+      String jndiName = (String)invocation.getInvocationContext().getValue(
+            InvocationKey.JNDI_NAME);
       return (EJBHome) iniCtx.lookup(jndiName);
    }
 }

@@ -17,18 +17,15 @@ import javax.naming.Name;
 
 import org.jboss.invocation.Invocation;
 import org.jboss.invocation.InvocationContext;
+import org.jboss.invocation.InvocationKey;
+import org.jboss.invocation.InvocationType;
 import org.jboss.invocation.Invoker;
 import org.jboss.proxy.ejb.handle.StatefulHandleImpl;
 
 /**
  *
  * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
- * @version $Revision: 1.3 $
- *
- * <p><b>2001/11/23: marcf</b>
- * <ol>
- *   <li>Initial checkin
- * </ol>
+ * @version $Revision: 1.4 $
  */
 public class StatefulSessionInterceptor
    extends GenericEJBInterceptor
@@ -85,10 +82,15 @@ public class StatefulSessionInterceptor
       else if (m.equals(GET_HANDLE))
       {
          int objectName = ((Integer) ctx.getObjectName()).intValue();
-         String jndiName = (String) ctx.getValue(JNDI_NAME);
+         String jndiName = (String) ctx.getValue(InvocationKey.JNDI_NAME);
          Invoker invoker = ctx.getInvoker();
          Object id = ctx.getCacheId();
-         return new StatefulHandleImpl(objectName, jndiName, invoker, ctx.getInvokerProxyBinding(), id);
+         return new StatefulHandleImpl(
+               objectName, 
+               jndiName, 
+               invoker, 
+               ctx.getInvokerProxyBinding(), 
+               id);
       }
       else if (m.equals(GET_EJB_HOME))
       {
@@ -109,7 +111,7 @@ public class StatefulSessionInterceptor
       else
       {
          // It is a remote invocation
-         invocation.setType(Invocation.REMOTE);
+         invocation.setType(InvocationType.REMOTE);
          
          // On this entry in cache
          invocation.setId(ctx.getCacheId());
@@ -120,6 +122,7 @@ public class StatefulSessionInterceptor
 
    private String toString(InvocationContext ctx)
    {
-      return ctx.getValue(JNDI_NAME) + ":" + ctx.getCacheId().toString();
+      return ctx.getValue(InvocationKey.JNDI_NAME) + ":" + 
+            ctx.getCacheId().toString();
    }
 }

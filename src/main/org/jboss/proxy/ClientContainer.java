@@ -18,23 +18,22 @@ import java.lang.reflect.InvocationHandler;
 
 import org.jboss.invocation.Invocation;
 import org.jboss.invocation.InvocationContext;
+import org.jboss.invocation.InvocationKey;
+import org.jboss.invocation.PayloadKey;
 
 /**
  * An invocation handler whichs sets up the client invocation and
  * starts the invocation interceptor call chain.
  * 
  * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
- * @version $Revision: 1.4 $
- *
- * <p><b>2001/11/19: marcf</b>
- * <ol>
- *   <li>Initial checkin
- * </ol>
+ * @version $Revision: 1.5 $
  */
 public class ClientContainer
    implements Externalizable, InvocationHandler
 {
-   /** The <em>static</em> information that gets attached to every invocation. */
+   /** 
+    * The <em>static</em> information that gets attached to every invocation. 
+    */ 
    public InvocationContext context;
    
    /** The first interceptor in the chain. */
@@ -75,9 +74,9 @@ public class ClientContainer
       invocation.setObjectName(context.getObjectName());
       invocation.setMethod(m);
       invocation.setArguments(args);
-      invocation.setValue(InvocationContext.INVOKER_PROXY_BINDING,
+      invocation.setValue(InvocationKey.INVOKER_PROXY_BINDING,
                           context.getInvokerProxyBinding(),
-                          Invocation.AS_IS);
+                          PayloadKey.AS_IS);
       
       // send the invocation down the client interceptor chain
       return next.invoke(invocation);

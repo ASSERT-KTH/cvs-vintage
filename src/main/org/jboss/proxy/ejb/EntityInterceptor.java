@@ -16,18 +16,15 @@ import javax.naming.InitialContext;
 
 import org.jboss.invocation.Invocation;
 import org.jboss.invocation.InvocationContext;
+import org.jboss.invocation.InvocationKey;
+import org.jboss.invocation.InvocationType;
 import org.jboss.invocation.Invoker;
 import org.jboss.proxy.ejb.handle.EntityHandleImpl;
 
 /**
  * An EJB entity bean proxy class.
  * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
- * @version $Revision: 1.4 $
- *
- * <p><b>2001/11/19: marcf</b>
- * <ol>
- *   <li>Initial checkin
- * </ol>
+ * @version $Revision: 1.5 $
  */
 public class EntityInterceptor
 extends GenericEJBInterceptor
@@ -86,7 +83,7 @@ extends GenericEJBInterceptor
       // Implement local EJB calls
       else if (m.equals(GET_HANDLE))
       {
-         String jndiName = (String) ctx.getValue(JNDI_NAME);
+         String jndiName = (String) ctx.getValue(InvocationKey.JNDI_NAME);
          Object id = ctx.getCacheId();
          return new EntityHandleImpl(jndiName, id);
       }
@@ -109,7 +106,7 @@ extends GenericEJBInterceptor
       else
       {
          // We are a Remote invocation
-         invocation.setType(Invocation.REMOTE);
+         invocation.setType(InvocationType.REMOTE);
          // We pertain to this ID (represented by cache ID)
          invocation.setId(ctx.getCacheId());
          return getNext().invoke(invocation);
@@ -121,7 +118,8 @@ extends GenericEJBInterceptor
    // Protected -----------------------------------------------------//////
    private String toString(InvocationContext ctx)
    {
-      return ctx.getValue(JNDI_NAME) + ":" + ctx.getCacheId().toString();
+      return ctx.getValue(InvocationKey.JNDI_NAME) + ":" + 
+            ctx.getCacheId().toString();
    }
    
 }

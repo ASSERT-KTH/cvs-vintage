@@ -21,24 +21,20 @@ import javax.naming.InitialContext;
 import org.jboss.invocation.Invoker;
 import org.jboss.invocation.Invocation;
 import org.jboss.invocation.InvocationContext;
+import org.jboss.invocation.InvocationKey;
+import org.jboss.invocation.InvocationType;
 import org.jboss.invocation.MarshalledInvocation;
+import org.jboss.invocation.PayloadKey;
 import org.jboss.security.SecurityAssociation;
 
 /**
  * An EJB stateful session bean handle.
  *
- * @author  <a href="mailto:marc.fleury@jboss.org>Marc Fleury</a>
+ * @author  <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
  * @author  <a href="mailto:jason@planet57.com">Jason Dillon</a>
  * @author  <a href="mailto:jason@planet57.com">Jason Dillon</a>
  * @author <a href="bill@burkecentral.com">Bill Burke</a>
- * @version $Revision: 1.8 $
- *
- * <p><b>Revisions:</b><br>
- * <p><b>2002/01/09: billb</b>
- * <ol>
- *   <li>Don't go to JNDI to get Invoker, instead, store invoker directly in handle.
- * </ol>
- * 
+ * @version $Revision: 1.9 $
  */
 public class StatefulHandleImpl
    implements Handle
@@ -75,7 +71,12 @@ public class StatefulHandleImpl
     * @param name      JNDI name.
     * @param id        Identity of the bean.
     */
-   public StatefulHandleImpl(int objectName, String jndiName, Invoker invoker, String invokerProxyBinding, Object id)
+   public StatefulHandleImpl(
+         int objectName, 
+         String jndiName, 
+         Invoker invoker, 
+         String invokerProxyBinding, 
+         Object id)
    {
       this.objectName = objectName;
       this.jndiName= jndiName;
@@ -87,13 +88,16 @@ public class StatefulHandleImpl
    /**
     * Handle implementation.
     *
-    * This differs from Stateless and Entity handles which just invoke standard methods
-    * (<tt>create</tt> and <tt>findByPrimaryKey</tt> respectively) on the Home interface (proxy).
-    * There is no equivalent option for stateful SBs, so a direct invocation on the container has to
-    * be made to locate the bean by its id (the stateful SB container provides an implementation of
+    * This differs from Stateless and Entity handles which just invoke 
+    * standard methods (<tt>create</tt> and <tt>findByPrimaryKey</tt> 
+    * respectively) on the Home interface (proxy).
+    * There is no equivalent option for stateful SBs, so a direct invocation 
+    * on the container has to be made to locate the bean by its id (the 
+    * stateful SB container provides an implementation of
     * <tt>getEJBObject</tt>).
     *
-    * This means the security context has to be set here just as it would be in the Proxy.
+    * This means the security context has to be set here just as it would 
+    * be in the Proxy.
     *
     * @return  <tt>EJBObject</tt> reference.
     *
@@ -113,10 +117,11 @@ public class StatefulHandleImpl
             SecurityAssociation.getCredential());
          
          invocation.setObjectName(new Integer(objectName));
-         invocation.setValue(InvocationContext.INVOKER_PROXY_BINDING, invokerProxyBinding, Invocation.AS_IS);
+         invocation.setValue(InvocationKey.INVOKER_PROXY_BINDING, 
+               invokerProxyBinding, PayloadKey.AS_IS);
          
          // It is a home invocation
-         invocation.setType(Invocation.HOME);
+         invocation.setType(InvocationType.HOME);
          
          // Get the invoker to the target server (cluster or node)
         

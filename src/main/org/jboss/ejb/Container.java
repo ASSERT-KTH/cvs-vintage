@@ -59,6 +59,7 @@ import org.jboss.ejb.plugins.local.BaseLocalProxyFactory;
 
 import org.jboss.invocation.Invocation;
 import org.jboss.invocation.InvocationContext;
+import org.jboss.invocation.InvocationType;
 import org.jboss.invocation.MarshalledInvocation;
 
 import org.jboss.logging.Logger;
@@ -98,35 +99,17 @@ import org.jboss.system.ServiceMBeanSupport;
  * @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>.
  * @author <a href="bill@burkecentral.com">Bill Burke</a>
  * @author <a href="mailto:d_jencks@users.sourceforge.net">David Jencks</a>
- * @version $Revision: 1.91 $
- * 
- * <p><b>Revisions:</b>
- *
- * <p><b>2001/07/26 bill burke:</b>
- * <ul>
- * <li> Added BeanLockManager.
- * </ul>
- * <p><b>2001/08/13 scott.stark:</b>
- * <ul>
- * <li> Added DynamicMBean support for method invocations and access to EJB interfaces.
- * </ul>
- * <p><b>2001/12/18 marc fleury:</b>
- * <ul>
- * <li> Moved to new Invocation layer and detached invokers.  
- *  <li> Use the method mappings for MarshalledInvocation.
- * </ul>
- * <p><b>2002/03/10 francisco reverbel:</b>
- * <ul>
- * <li> Added getCodebase/setCodebase methods.
- * </ul>
+ * @version $Revision: 1.92 $
  */
 public abstract class Container
    extends ServiceMBeanSupport
    implements MBeanRegistration, DynamicMBean
 {
-   public final static String BASE_EJB_CONTAINER_NAME = "jboss.j2ee:service=EJB";
+   public final static String BASE_EJB_CONTAINER_NAME = 
+         "jboss.j2ee:service=EJB";
 
-   public final static ObjectName EJB_CONTAINER_QUERY_NAME = ObjectNameFactory.create(BASE_EJB_CONTAINER_NAME + ",*");
+   public final static ObjectName EJB_CONTAINER_QUERY_NAME = 
+         ObjectNameFactory.create(BASE_EJB_CONTAINER_NAME + ",*");
    
    /** This is the application that this container is a part of */
    protected EjbModule ejbModule;
@@ -213,9 +196,8 @@ public abstract class Container
    protected ThreadLocal proxyFactoryTL = new ThreadLocal();
 
    /**
-    * boolean <code>started</code> indicates if this container is currently started.
-    * if not, calls to non lifecycle methods will raise exceptions.
-    *
+    * boolean <code>started</code> indicates if this container is currently 
+    * started. if not, calls to non lifecycle methods will raise exceptions.
     */
    private boolean started = false;
    
@@ -486,12 +468,14 @@ public abstract class Container
       String jndiName = getBeanMetaData().getJndiName(); 
       if (jndiName == null) 
       {
-         throw new IllegalStateException("cannot get Container object name unless jndi name is set!");
+         throw new IllegalStateException("cannot get Container object " +
+               "name unless jndi name is set!");
       }
       
       if (jmxName == null) 
       {
-         jmxName = ObjectNameFactory.create(BASE_EJB_CONTAINER_NAME + ",jndiName=" + jndiName);
+         jmxName = ObjectNameFactory.create(BASE_EJB_CONTAINER_NAME + 
+               ",jndiName=" + jndiName);
       }
       
       return jmxName;
@@ -570,7 +554,8 @@ public abstract class Container
       this.localClassLoader = null;
       this.ejbModule = null;
       
-      // this.lockManager = null; Setting this to null causes AbstractCache to fail on undeployment
+      // this.lockManager = null; Setting this to null causes AbstractCache 
+      // to fail on undeployment
       this.methodPermissionsCache.clear();
    }
 
@@ -603,7 +588,7 @@ public abstract class Container
    public abstract Object invoke(Invocation mi)
       throws Exception;
    
-   // DynamicMBean interface implementation ----------------------------------------------
+   // DynamicMBean interface implementation ----------------------------------
    
    public Object getAttribute(String attribute)
       throws AttributeNotFoundException,
@@ -646,116 +631,121 @@ public abstract class Container
    public Object invoke(String ignored, Object[] params, String[] signature)
       throws MBeanException, ReflectionException
    {      
-      if (params != null && params.length == 1 && (params[0] instanceof Invocation))
+      if (params != null && 
+            params.length == 1 && 
+            (params[0] instanceof Invocation))
       {
          if (!started) 
          {
-            throw new IllegalStateException
-               ("container is not started, you cannot invoke ejb methods on it");
+            throw new IllegalStateException("container is not started, you " +
+                  "cannot invoke ejb methods on it");
          }
       
          Object value = null;
          Invocation mi = (Invocation)params[0];
          /*
-         String jndiBinding = (String)mi.getValue(org.jboss.proxy.ejb.GenericEJBInterceptor.JNDI_NAME);
+         String jndiBinding = (String)mi.getValue(InterceptorKey.JNDI_NAME);
          if (jndiBinding == null)
          {
             log.debug("JNDI Binding is null", new Throwabel());
          }
          Object proxyFactory = Registry.lookup(jndiBinding + "/proxyFactory");
-         if (proxyFactory == null) log.debug("***************** proxyFactory is null ********");
-	 proxyFactoryTL.set(proxyFactory);
+         if (proxyFactory == null) 
+               log.debug("***************** proxyFactory is null ********");
+         proxyFactoryTL.set(proxyFactory);
          */
 
          // Must have a valid Invocation to continue
          if (mi == null)
          {
             log.error("Method invocation object is null");
-            throw new IllegalArgumentException("Method invocation object is null");
+            throw new IllegalArgumentException("Method invocation object " +
+                  "is null");
          }
       
-         ClassLoader callerClassLoader = Thread.currentThread().getContextClassLoader();
+         ClassLoader callerClassLoader = 
+               Thread.currentThread().getContextClassLoader();
          boolean trace = log.isTraceEnabled();
          try
          {
             Thread.currentThread().setContextClassLoader(this.classLoader);        
-            switch (mi.getType())  
-            {
-               // Check against home, remote, localHome, local, getHome, getRemote, getLocalHome, getLocal
-            case Invocation.REMOTE:
+            // Check against home, remote, localHome, local, getHome, 
+            // getRemote, getLocalHome, getLocal
+            Object type = mi.getType();
+            if(type == InvocationType.REMOTE) {
                if (mi instanceof MarshalledInvocation)
                {
-                  ((MarshalledInvocation) mi).setMethodMap(marshalledInvocationMapping);
+                  ((MarshalledInvocation) mi).setMethodMap(
+                        marshalledInvocationMapping);
                   
                   if( trace )
-                     log.trace("METHOD REMOTE INVOKE "+mi.getObjectName()+"||"+mi.getMethod().getName()+"||");
+                     log.trace("METHOD REMOTE INVOKE "+
+                           mi.getObjectName()+"||"+
+                           mi.getMethod().getName()+"||");
                }
                
                value= invoke(mi);
             
-               break;
-            
-            
-            case Invocation.LOCAL:
-               
-               throw new UnsupportedOperationException("local is not supported yet");
-               
-            case Invocation.HOME:
-               
+            }
+            else if(type == InvocationType.LOCAL) 
+            {
+               throw new UnsupportedOperationException(
+                     "local is not supported yet");
+            }
+            else if(type == InvocationType.HOME) 
+            {
                if (mi instanceof MarshalledInvocation)
                {
                   
-                  ((MarshalledInvocation) mi).setMethodMap(marshalledInvocationMapping);
+                  ((MarshalledInvocation) mi).setMethodMap(
+                        marshalledInvocationMapping);
                   
                   if( trace )
-                     log.trace("METHOD HOME INVOKE "+mi.getObjectName()+"||"+mi.getMethod().getName()+"||"+mi.getArguments().toString());
+                     log.trace("METHOD HOME INVOKE "+
+                           mi.getObjectName()+"||"+
+                           mi.getMethod().getName()+"||"+
+                           mi.getArguments().toString());
                
                }
                
                value = invokeHome(mi);
             
-               break;
-            
-            case Invocation.LOCALHOME:
-               
-               throw new UnsupportedOperationException("localHome is not supported yet");
-               
-            case Invocation.GETHOME:
-               
+            }
+            else if(type == InvocationType.LOCALHOME)
+            {
+               throw new UnsupportedOperationException(
+                     "localHome is not supported yet");
+            }
+            else if(type == InvocationType.GETHOME) 
+            {
                String className = this.getBeanMetaData().getHome();
                if( className != null )
                {
                   Class clazz = this.classLoader.loadClass(className);
                   value = clazz;
                }
-            
-               break;
-            
-            case Invocation.GETREMOTE:
-               
+            }
+            else if(type == InvocationType.GETREMOTE) 
+            {
                String className2 = this.getBeanMetaData().getRemote();
                if( className2 != null )
                {
                   Class clazz = this.classLoader.loadClass(className2);
                   value = clazz;
                }
-            
-               break;
-            
-            case Invocation.GETLOCALHOME:
-               
+            } 
+            else if(type == InvocationType.GETLOCALHOME) 
+            {
                value = this.localHomeInterface;
-            
-               break;
-            
-            case Invocation.GETLOCAL:
-               
+            }
+            else if(type == InvocationType.GETLOCAL)
+            {
                value = this.localInterface;
-            
-               break;
-            
-               ///throw new MBeanException(new IllegalArgumentException("Unknown action: "));
-         
+            }
+            else 
+            {
+               //throw new MBeanException(
+               //    new IllegalArgumentException("Unknown action: "));
             }
          }
          catch (Exception e)
@@ -791,19 +781,22 @@ public abstract class Container
             }
             else
             {
-               throw new IllegalArgumentException("unknown operation! " + ignored);
+               throw new IllegalArgumentException("unknown operation! " + 
+                     ignored);
             }
             
             return null;
          }
          catch (Exception e)
          {
-            throw new MBeanException(e, "Exception in service lifecyle operation: " + ignored);
+            throw new MBeanException(e, 
+                  "Exception in service lifecyle operation: " + ignored);
          }
       }
       else
       {
-         throw new IllegalArgumentException("Expected zero or single Invocation argument");
+         throw new IllegalArgumentException(
+               "Expected zero or single Invocation argument");
       }
    }
    
@@ -827,7 +820,10 @@ public abstract class Container
    public MBeanInfo getMBeanInfo()
    {
       MBeanParameterInfo[] miInfoParams = new MBeanParameterInfo[] {
-         new MBeanParameterInfo("method", Invocation.class.getName(), "Invocation data")
+         new MBeanParameterInfo(
+               "method", 
+               Invocation.class.getName(), 
+               "Invocation data")
       };
       
       MBeanParameterInfo[] noParams = new MBeanParameterInfo[] {};
@@ -952,16 +948,20 @@ public abstract class Container
             {
                // Internal link
                if (debug) {
-                  log.debug("Binding "+ref.getName()+" to internal JNDI source: "+ref.getLink());
+                  log.debug("Binding "+ref.getName()+
+                        " to internal JNDI source: "+ref.getLink());
                }
                
                Container refContainer = ejbModule.findContainer(ref.getLink());
                if (refContainer == null) {
                   throw new DeploymentException("Bean "+ref.getLink()+
-                                                " not found within this application.");
+                        " not found within this application.");
                }
                
-               Util.bind(envCtx, ref.getName(), new LinkRef(refContainer.getBeanMetaData().getJndiName()));
+               Util.bind(
+                     envCtx, 
+                     ref.getName(), 
+                     new LinkRef(refContainer.getBeanMetaData().getJndiName()));
                
                // bind(envCtx, ref.getName(), new Reference(ref.getHome(), new StringRefAddr("Container",ref.getLink()), getClass().getName()+".EjbReferenceFactory", null));
                // bind(envCtx, ref.getName(), new LinkRef(ref.getLink()));
@@ -979,17 +979,19 @@ public abstract class Container
                   {
                      throw new DeploymentException
                         ("ejb-ref "+ref.getName()+
-                         ", expected either ejb-link in ejb-jar.xml or jndi-name in jboss.xml");
+                         ", expected either ejb-link in ejb-jar.xml or " +
+                         "jndi-name in jboss.xml");
                   }
                   
                   StringRefAddr addr = new StringRefAddr(invokerBinding, name);
-                  log.debug("adding " + invokerBinding + ":" + name + " to Reference");
+                  log.debug("adding " + invokerBinding + ":" + name + 
+                        " to Reference");
                   
                   if (reference == null)
                   {
                      reference = new Reference("javax.naming.LinkRef",
-                                               ENCThreadLocalKey.class.getName(),
-                                               null);
+                           ENCThreadLocalKey.class.getName(),
+                           null);
                   }
                   reference.add(addr);
                }
@@ -998,7 +1000,8 @@ public abstract class Container
                   if (ref.getJndiName() != null)
                   {
                      // Add default
-                     StringRefAddr addr = new StringRefAddr("default", ref.getJndiName());
+                     StringRefAddr addr = 
+                           new StringRefAddr("default", ref.getJndiName());
                      reference.add(addr);
                   }
                   Util.bind(envCtx, ref.getName(), reference);
@@ -1007,11 +1010,14 @@ public abstract class Container
                {
                   if (ref.getJndiName() == null)
                   {
-                     throw new DeploymentException
-                        ("ejb-ref "+ref.getName()+
-                         ", expected either ejb-link in ejb-jar.xml or jndi-name in jboss.xml");
+                     throw new DeploymentException("ejb-ref " + ref.getName()+
+                         ", expected either ejb-link in ejb-jar.xml " +
+                         "or jndi-name in jboss.xml");
                   }
-                  Util.bind(envCtx, ref.getName(), new LinkRef(ref.getJndiName()));
+                  Util.bind(
+                        envCtx, 
+                        ref.getName(), 
+                        new LinkRef(ref.getJndiName()));
                }
             }
          }
@@ -1036,16 +1042,17 @@ public abstract class Container
                if (refContainer == null)
                {
                   throw new DeploymentException("Bean "+ref.getLink()+
-                                                " not found within this application.");
+                        " not found within this application.");
                }
                
                Util.bind(envCtx,
-                         ref.getName(),
-                         new LinkRef(refContainer.getBeanMetaData().getLocalJndiName()));
+                     ref.getName(),
+                     new LinkRef(refContainer.getBeanMetaData().getLocalJndiName()));
             }
             else
             {
-               throw new DeploymentException( "Local references currently require ejb-link" );
+               throw new DeploymentException("Local references currently " +
+                     "require ejb-link" );
             }
          }
       }
@@ -1055,7 +1062,8 @@ public abstract class Container
          Iterator enum = beanMetaData.getResourceReferences();
          
          // let's play guess the cast game ;)  New metadata should fix this.
-         ApplicationMetaData application = beanMetaData.getApplicationMetaData();
+         ApplicationMetaData application = 
+               beanMetaData.getApplicationMetaData();
          
          while(enum.hasNext())
          {
@@ -1097,7 +1105,8 @@ public abstract class Container
                // POTENTIALLY DANGEROUS: should this be a critical error?
                if (finalName == null)
                {
-                  log.warn("No resource manager found for "+ref.getResourceName());
+                  log.warn("No resource manager found for " +
+                        ref.getResourceName());
                   continue;
                }
             }
@@ -1106,7 +1115,8 @@ public abstract class Container
             {
                // URL bindings
                if (debug)
-                  log.debug("Binding URL: "+finalName+ " to JDNI ENC as: " +ref.getRefName());
+                  log.debug("Binding URL: " + finalName + 
+                        " to JDNI ENC as: " + ref.getRefName());
                Util.bind(envCtx, ref.getRefName(), new URL(finalName));
             }
             else
@@ -1127,12 +1137,14 @@ public abstract class Container
          Iterator enum = beanMetaData.getResourceEnvReferences();
          while( enum.hasNext() )
          {
-            ResourceEnvRefMetaData resRef = (ResourceEnvRefMetaData) enum.next();
+            ResourceEnvRefMetaData resRef = 
+                  (ResourceEnvRefMetaData) enum.next();
             String encName = resRef.getRefName();
             String jndiName = resRef.getJndiName();
             // Should validate the type...
             if (debug)
-               log.debug("Binding env resource: "+jndiName+ " to JDNI ENC as: " +encName);
+               log.debug("Binding env resource: " + jndiName + 
+                     " to JDNI ENC as: " +encName);
             Util.bind(envCtx, encName, new LinkRef(jndiName));
          }
       }
@@ -1141,7 +1153,8 @@ public abstract class Container
       // or application security-domain if one exists so that access to the
       // security manager can be made without knowing the global jndi name.
 
-      String securityDomain = metaData.getContainerConfiguration().getSecurityDomain();
+      String securityDomain = 
+            metaData.getContainerConfiguration().getSecurityDomain();
       if( securityDomain == null )
          securityDomain = metaData.getApplicationMetaData().getSecurityDomain();
       if( securityDomain != null )
@@ -1151,8 +1164,14 @@ public abstract class Container
                       " to JDNI ENC as: security/security-domain");
          }
          
-         Util.bind(envCtx, "security/security-domain", new LinkRef(securityDomain));
-         Util.bind(envCtx, "security/subject", new LinkRef(securityDomain+"/subject"));
+         Util.bind(
+               envCtx, 
+               "security/security-domain", 
+               new LinkRef(securityDomain));
+         Util.bind(
+               envCtx, 
+               "security/subject", 
+               new LinkRef(securityDomain+"/subject"));
       }
       
       if (debug)
@@ -1199,7 +1218,8 @@ public abstract class Container
                throw (EJBException)t;
             }
             else if (t instanceof RuntimeException) {
-               // Transform runtime exception into what a bean *should* have thrown
+               // Transform runtime exception into what a bean 
+               // *should* have thrown
                throw new EJBException((RuntimeException)t);
             }
             else if (t instanceof Exception) {

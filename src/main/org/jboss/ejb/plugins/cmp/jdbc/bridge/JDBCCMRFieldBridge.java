@@ -44,6 +44,7 @@ import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCRelationshipRoleMetaData;
 import org.jboss.ejb.plugins.cmp.ejbql.Catalog;
 import org.jboss.ejb.plugins.lock.Entrancy;
 import org.jboss.invocation.Invocation;
+import org.jboss.invocation.PayloadKey;
 import org.jboss.logging.Logger;
 import org.jboss.security.SecurityAssociation;
 
@@ -59,7 +60,7 @@ import org.jboss.security.SecurityAssociation;
  *      One for each role that entity has.       
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.36 $
+ * @version $Revision: 1.37 $
  */                            
 public class JDBCCMRFieldBridge implements JDBCFieldBridge, CMRFieldBridge {
    /**
@@ -623,9 +624,9 @@ public class JDBCCMRFieldBridge implements JDBCFieldBridge, CMRFieldBridge {
 
          Invocation invocation = new Invocation();
          invocation.setValue(CMRMessage.CMR_MESSAGE_KEY,
-               CMRMessage.GET_RELATED_ID, Invocation.AS_IS);
+               CMRMessage.GET_RELATED_ID, PayloadKey.AS_IS);
          invocation.setValue(Entrancy.ENTRANCY_KEY,
-               Entrancy.NON_ENTRANT, Invocation.AS_IS);
+               Entrancy.NON_ENTRANT, PayloadKey.AS_IS);
          invocation.setId(instanceCache.createCacheKey(myId));
          invocation.setArguments(new Object[] { this });
          invocation.setTransaction(tx);
@@ -652,9 +653,9 @@ public class JDBCCMRFieldBridge implements JDBCFieldBridge, CMRFieldBridge {
 
          Invocation invocation = new Invocation();
          invocation.setValue(CMRMessage.CMR_MESSAGE_KEY,
-               CMRMessage.ADD_RELATION, Invocation.AS_IS);
+               CMRMessage.ADD_RELATION, PayloadKey.AS_IS);
          invocation.setValue(Entrancy.ENTRANCY_KEY,
-               Entrancy.NON_ENTRANT, Invocation.AS_IS);
+               Entrancy.NON_ENTRANT, PayloadKey.AS_IS);
          invocation.setId(instanceCache.createCacheKey(myId));
          invocation.setArguments(new Object[] { this, relatedId });
          invocation.setTransaction(tx);
@@ -681,9 +682,9 @@ public class JDBCCMRFieldBridge implements JDBCFieldBridge, CMRFieldBridge {
 
          Invocation invocation = new Invocation();
          invocation.setValue(CMRMessage.CMR_MESSAGE_KEY,
-               CMRMessage.REMOVE_RELATION, Invocation.AS_IS);
+               CMRMessage.REMOVE_RELATION, PayloadKey.AS_IS);
          invocation.setValue(Entrancy.ENTRANCY_KEY,
-               Entrancy.NON_ENTRANT, Invocation.AS_IS);
+               Entrancy.NON_ENTRANT, PayloadKey.AS_IS);
          invocation.setId(instanceCache.createCacheKey(myId));
          invocation.setArguments(new Object[] { this, relatedId });
          invocation.setTransaction(tx);
