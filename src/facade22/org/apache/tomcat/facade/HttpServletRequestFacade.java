@@ -341,11 +341,11 @@ final class HttpServletRequestFacade implements HttpServletRequest {
     }
     
     public String getRemoteAddr() {
-        return request.getRemoteAddr();
+        return request.remoteAddr().toString();
     }
 
     public String getRemoteHost() {
-        return request.getRemoteHost();
+        return request.remoteHost().toString();
     }
 
     public String getRequestURI() {
