@@ -1,4 +1,4 @@
-// $Id: ModelFacade.java,v 1.53 2003/05/19 11:54:44 mkl Exp $
+// $Id: ModelFacade.java,v 1.54 2003/06/18 07:28:19 kataka Exp $
 // Copyright (c) 2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -166,6 +166,9 @@ public class ModelFacade {
 
     public static final Object ATTRIBUTE          = MAttribute.class;
     public static final Object OPERATION          = MOperation.class;
+    
+    public static final Object MODELELEMENT       = MModelElement.class;
+    public static final Object MODEL              = MModel.class;
     
     /** Constructor that forbids instantiation.
      */
