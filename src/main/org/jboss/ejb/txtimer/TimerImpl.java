@@ -6,7 +6,7 @@
  */
 package org.jboss.ejb.txtimer;
 
-// $Id: TimerImpl.java,v 1.4 2004/04/13 10:10:40 tdiesler Exp $
+// $Id: TimerImpl.java,v 1.5 2004/04/13 15:37:57 tdiesler Exp $
 
 import org.jboss.logging.Logger;
 
@@ -22,8 +22,10 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 /**
- * The Timer contains information about a txtimer that was created
- * through the EJB Timer Service
+ * An implementation of an EJB Timer.
+ *
+ * Internally it uses a java.util.Timer and maintains its state in
+ * a Tx manner.
  * 
  * @author Thomas.Diesler@jboss.org
  * @since 07-Apr-2004
@@ -125,6 +127,21 @@ public class TimerImpl implements javax.ejb.Timer, Synchronization
       return info;
    }
 
+   public boolean isActive()
+   {
+      return !isCanceled() && !isExpired();
+   }
+
+   public boolean isCanceled()
+   {
+      return timerState == CANCELED_IN_TX || timerState == CANCELED;
+   }
+
+   public boolean isExpired()
+   {
+      return timerState == EXPIRED;
+   }
+
    /**
     * Cause the txtimer and all its associated expiration notifications to be cancelled.
     *
@@ -147,7 +164,8 @@ public class TimerImpl implements javax.ejb.Timer, Synchronization
    public void killTimer()
    {
       log.debug("killTimer: " + this);
-      setTimerState(CANCELED);
+      if (timerState != EXPIRED)
+         setTimerState(CANCELED);
       TimerServiceImpl timerService = getTimerService();
       timerService.removeTimer(this);
       utilTimer.cancel();
@@ -277,10 +295,14 @@ public class TimerImpl implements javax.ejb.Timer, Synchronization
       }
    }
 
-   private void setTimerState(int timerState)
+   private void setTimerState(int state)
    {
-      log.debug("setTimerState: " + TIMER_STATES[timerState]);
-      this.timerState = timerState;
+      log.debug("setTimerState: " + TIMER_STATES[state]);
+      timerState = state;
+
+      // get rid of the expired timer
+      if (timerState == EXPIRED)
+         killTimer();
    }
 
    private void startInTx()
@@ -403,10 +425,10 @@ public class TimerImpl implements javax.ejb.Timer, Synchronization
       {
          log.debug("run: " + timer);
 
-         if ((timerState == STARTED_IN_TX || timerState == ACTIVE) && periode > 0)
+         if (isActive() && periode > 0)
             nextExpire += periode;
 
-         if (timerState == STARTED_IN_TX || timerState == ACTIVE)
+         if (isActive())
          {
             try
             {
@@ -422,7 +444,7 @@ public class TimerImpl implements javax.ejb.Timer, Synchronization
             {
                if (timerState == IN_TIMEOUT)
                {
-                  log.warn("Timer was not registered with Tx, reseting state");
+                  log.warn("Timer was not registered with Tx, reseting state: " + timer);
                   setTimerState(periode == 0 ? EXPIRED : ACTIVE);
                }
             }

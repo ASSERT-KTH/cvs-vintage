@@ -1,6 +1,6 @@
 package org.jboss.ejb.txtimer;
 
-// $Id: TimerServiceImpl.java,v 1.4 2004/04/13 10:10:40 tdiesler Exp $
+// $Id: TimerServiceImpl.java,v 1.5 2004/04/13 15:37:57 tdiesler Exp $
 
 import org.jboss.logging.Logger;
 import org.jboss.tm.TxManager;
@@ -25,7 +25,7 @@ import java.util.Map;
 /**
  * The TimerService provides enterprise bean components with access to the
  * container-provided Timer Service. The EJB Timer Service allows entity beans, stateless
- * session beans, and message-driven beans to be registered for txtimer callback events at
+ * session beans, and message-driven beans to be registered for timer callback events at
  * a specified time, after a specified elapsed time, or after a specified interval.
  *
  * @author Thomas.Diesler@jboss.org
@@ -188,14 +188,8 @@ public class TimerServiceImpl implements TimerService
          while (it.hasNext())
          {
             TimerImpl timer = (TimerImpl) it.next();
-            try
-            {
-               if (timer.getTimeRemaining() > 0)
-                  activeTimers.add(timer);
-            }
-            catch (NoSuchObjectLocalException ignore)
-            {
-            }
+            if (timer.isActive())
+               activeTimers.add(timer);
          }
       }
       return activeTimers;
@@ -214,8 +208,8 @@ public class TimerServiceImpl implements TimerService
     */
    public Timer getTimer(TimerHandle handle)
    {
-      TimerImpl timer = (TimerImpl)timers.get(handle);
-      if (timer != null && timer.getTimeRemaining() > 0)
+      TimerImpl timer = (TimerImpl) timers.get(handle);
+      if (timer != null && timer.isActive())
          return timer;
       else
          return null;
@@ -226,7 +220,7 @@ public class TimerServiceImpl implements TimerService
     */
    public void killTimer(TimerHandle handle)
    {
-      TimerImpl timer = (TimerImpl)timers.get(handle);
+      TimerImpl timer = (TimerImpl) timers.get(handle);
       if (timer != null)
          timer.killTimer();
    }

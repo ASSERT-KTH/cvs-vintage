@@ -6,13 +6,18 @@
  */
 package org.jboss.ejb.txtimer;
 
-// $Id: TimedObjectId.java,v 1.2 2004/04/13 10:10:40 tdiesler Exp $
+// $Id: TimedObjectId.java,v 1.3 2004/04/13 15:37:57 tdiesler Exp $
 
 import java.io.Serializable;
 
 /**
- * The combined TimedObjectId
- * 
+ * The combined TimedObjectId consists of a String that identifies
+ * the "class" of the TimedObject and optionally an instance primary key object.
+ *
+ * When the TimedObject is an EJB deployed on JBoss, the containerId is the JMX
+ * name of the component, and the instancePk is the entity's primary key.
+ * If the component is not an entity, the instancePk should be null.
+ *
  * @author Thomas.Diesler@jboss.org
  * @since 09-Apr-2004
  */

@@ -6,7 +6,7 @@
  */
 package org.jboss.ejb.txtimer;
 
-// $Id: EJBTimerServiceTx.java,v 1.4 2004/04/13 10:10:39 tdiesler Exp $
+// $Id: EJBTimerServiceTx.java,v 1.5 2004/04/13 15:37:57 tdiesler Exp $
 
 import org.jboss.logging.Logger;
 import org.jboss.mx.util.MBeanServerLocator;
@@ -27,8 +27,7 @@ import java.text.ParseException;
 import java.io.Serializable;
 
 /**
- * The EJBTimerService manages the TimerService for
- * an associated TimedObject.
+ * A service that implements this interface provides an Tx aware EJBTimerService.
  *
  * @jmx.mbean
  *    name="jboss:service=EJBTimerServiceTx"
@@ -69,7 +68,7 @@ public class EJBTimerServiceTx implements EJBTimerServiceTxMBean
    /**
     * Create a TimerService for a given TimedObjectId
     * @jmx.managed-operation
-    * @param timedObjectId The combined TimedObjectId
+    * @param timedObjectId combined TimedObjectId
     * @param timedObjectInvoker a TimedObjectInvoker
     * @return the TimerService
     */
@@ -90,7 +89,7 @@ public class EJBTimerServiceTx implements EJBTimerServiceTxMBean
    /**
     * Get the TimerService for a given TimedObjectId
     * @jmx.managed-operation
-    * @param timedObjectId The combined TimedObjectId
+    * @param timedObjectId combined TimedObjectId
     * @return The TimerService, or null if it does not exist
     */
    public TimerService getTimerService(TimedObjectId timedObjectId)
@@ -105,7 +104,7 @@ public class EJBTimerServiceTx implements EJBTimerServiceTxMBean
    /**
     * Invokes the ejbTimeout method on a given TimedObjectId
     * @jmx.managed-operation
-    * @param timedObjectId The combined TimedObjectId
+    * @param timedObjectId combined TimedObjectId
     * @param timer the Timer that is passed to ejbTimeout
     */
    public void callTimeout(TimedObjectId timedObjectId, Timer timer) throws Exception
@@ -118,7 +117,7 @@ public class EJBTimerServiceTx implements EJBTimerServiceTxMBean
    /**
     * Invokes the ejbTimeout method a given TimedObjectId
     * @jmx.managed-operation
-    * @param timedObjectId The combined TimedObjectId
+    * @param timedObjectId combined TimedObjectId
     * @param timer the Timer that is passed to ejbTimeout
     */
    public void retryTimeout(TimedObjectId timedObjectId, Timer timer)
@@ -157,7 +156,7 @@ public class EJBTimerServiceTx implements EJBTimerServiceTxMBean
     * Remove the TimerService for a given TimedObjectId
     * If the instance pk is left to null, it removes all timer services for the container id
     * @jmx.managed-operation
-    * @param timedObjectId The combined TimedObjectId
+    * @param timedObjectId combined TimedObjectId
     */
    public void removeTimerService(TimedObjectId timedObjectId)
    {

@@ -6,7 +6,7 @@
  */
 package org.jboss.ejb.txtimer;
 
-// $Id: TimerHandleImpl.java,v 1.4 2004/04/13 10:10:40 tdiesler Exp $
+// $Id: TimerHandleImpl.java,v 1.5 2004/04/13 15:37:57 tdiesler Exp $
 
 import javax.ejb.EJBException;
 import javax.ejb.NoSuchObjectLocalException;
@@ -168,9 +168,11 @@ public class TimerHandleImpl implements TimerHandle
 
       EJBTimerService ejbTimerService = EJBTimerServiceLocator.getEjbTimerService();
       TimerServiceImpl timerService = (TimerServiceImpl) ejbTimerService.getTimerService(timedObjectId);
-      Timer timer = timerService.getTimer(this);
+      if (timerService == null)
+         throw new NoSuchObjectLocalException("Timer not available: " + timedObjectId);
 
-      if (timer == null)
+      TimerImpl timer = (TimerImpl)timerService.getTimer(this);   
+      if (timer == null || timer.isActive() == false)
          throw new NoSuchObjectLocalException("Timer not available: " + timedObjectId);
 
       return timer;

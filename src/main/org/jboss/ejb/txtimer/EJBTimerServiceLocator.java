@@ -6,7 +6,7 @@
  */
 package org.jboss.ejb.txtimer;
 
-// $Id: EJBTimerServiceLocator.java,v 1.1 2004/04/13 10:10:39 tdiesler Exp $
+// $Id: EJBTimerServiceLocator.java,v 1.2 2004/04/13 15:37:57 tdiesler Exp $
 
 import org.jboss.logging.Logger;
 import org.jboss.mx.util.MBeanServerLocator;
@@ -16,7 +16,7 @@ import javax.ejb.TimerService;
 import javax.management.MBeanServer;
 
 /**
- * The EJBTimerServiceLocator locates EJBTimerServiceTx.
+ * Locates the EJBTimerService, either as MBean or as local instance.
  * <p/>
  * It first checks if the EJBTimerServiceTx is registerd with the MBeanServer,
  * if not it creates a singleton and uses that.
@@ -69,7 +69,7 @@ public class EJBTimerServiceLocator
       /**
        * Create a TimerService for a given TimedObjectId
        *
-       * @param timedObjectId The combined TimedObjectId
+       * @param timedObjectId combined TimedObjectId
        * @param timedObjectInvoker a TimedObjectInvoker
        * @return the TimerService
        */
@@ -94,7 +94,7 @@ public class EJBTimerServiceLocator
       /**
        * Get the TimerService for a given TimedObjectId
        *
-       * @param timedObjectId The combined TimedObjectId
+       * @param timedObjectId combined TimedObjectId
        * @return The TimerService, or null if it does not exist
        */
       public TimerService getTimerService(TimedObjectId timedObjectId)
@@ -117,7 +117,7 @@ public class EJBTimerServiceLocator
 
       /**
        * Invokes the ejbTimeout method on a given TimedObjectId
-       * @param timedObjectId The combined TimedObjectId
+       * @param timedObjectId combined TimedObjectId
        * @param timer the Timer that is passed to ejbTimeout
        */
       public void callTimeout(TimedObjectId timedObjectId, Timer timer) throws Exception
@@ -137,7 +137,7 @@ public class EJBTimerServiceLocator
 
       /**
        * Invokes the ejbTimeout method a given TimedObjectId
-       * @param timedObjectId The combined TimedObjectId
+       * @param timedObjectId combined TimedObjectId
        * @param timer the Timer that is passed to ejbTimeout
        */
       public void retryTimeout(TimedObjectId timedObjectId, Timer timer)
@@ -158,7 +158,7 @@ public class EJBTimerServiceLocator
       /**
        * Remove the TimerService for a given TimedObjectId
        *
-       * @param timedObjectId The combined TimedObjectId
+       * @param timedObjectId combined TimedObjectId
        */
       public void removeTimerService(TimedObjectId timedObjectId)
               throws IllegalStateException

@@ -6,13 +6,16 @@
  */
 package org.jboss.ejb.txtimer;
 
-// $Id: TimeoutRetryPolicy.java,v 1.1 2004/04/13 10:10:40 tdiesler Exp $
+// $Id: TimeoutRetryPolicy.java,v 1.2 2004/04/13 15:37:57 tdiesler Exp $
 
 import javax.ejb.Timer;
 
 /**
- * Invokes the ejbTimeout method on the TimedObject with the given id.
- * 
+ * An implementation can retry the invocation of the ejbTimeout method on a TimedObject.
+ *
+ * The TimeoutRetryPolicy is stateless and has no knowledge of the TimedObjectId.
+ * It does the invokation through the given TimedObjectInvoker.
+ *
  * @author Thomas.Diesler@jboss.org
  * @since 07-Apr-2004
  */

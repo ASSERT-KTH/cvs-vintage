@@ -6,14 +6,13 @@
  */
 package org.jboss.ejb.txtimer;
 
-// $Id: EJBTimerService.java,v 1.4 2004/04/13 10:10:39 tdiesler Exp $
+// $Id: EJBTimerService.java,v 1.5 2004/04/13 15:37:57 tdiesler Exp $
 
 import javax.ejb.TimerService;
 import javax.ejb.Timer;
 
 /**
- * The EJBTimerService interface manages the TimerService for
- * an associated TimedObject.
+ * A service that implements this interface provides an Tx aware EJBTimerService.
  * 
  * @author Thomas.Diesler@jboss.org
  * @since 07-Apr-2004
@@ -25,7 +24,7 @@ public interface EJBTimerService
 
    /**
     * Create a TimerService for a given TimedObjectId
-    * @param timedObjectId The combined TimedObjectId
+    * @param timedObjectId combined TimedObjectId
     * @param timedObjectInvoker a TimedObjectInvoker
     * @return the TimerService
     */
@@ -33,28 +32,28 @@ public interface EJBTimerService
 
    /**
     * Get the TimerService for a given TimedObjectId
-    * @param timedObjectId The combined TimedObjectId
+    * @param timedObjectId combined TimedObjectId
     * @return The TimerService, or null if it does not exist
     */
    TimerService getTimerService(TimedObjectId timedObjectId) throws IllegalStateException;
 
    /**
     * Invokes the ejbTimeout method on a given TimedObjectId
-    * @param timedObjectId The combined TimedObjectId
+    * @param timedObjectId combined TimedObjectId
     * @param timer the Timer that is passed to ejbTimeout
     */
    void callTimeout(TimedObjectId timedObjectId, Timer timer) throws Exception;
 
    /**
     * Invokes the ejbTimeout method a given TimedObjectId
-    * @param timedObjectId The combined TimedObjectId
+    * @param timedObjectId combined TimedObjectId
     * @param timer the Timer that is passed to ejbTimeout
     */
    void retryTimeout(TimedObjectId timedObjectId, Timer timer);
 
    /**
     * Remove the TimerService for a given TimedObjectId
-    * @param timedObjectId The combined TimedObjectId
+    * @param timedObjectId combined TimedObjectId
     */
    void removeTimerService(TimedObjectId timedObjectId) throws IllegalStateException;
 

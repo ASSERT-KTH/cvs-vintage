@@ -6,14 +6,15 @@
  */
 package org.jboss.ejb.txtimer;
 
-// $Id: FixedDelayRetryPolicy.java,v 1.1 2004/04/13 10:10:40 tdiesler Exp $
+// $Id: FixedDelayRetryPolicy.java,v 1.2 2004/04/13 15:37:57 tdiesler Exp $
 
 import org.jboss.logging.Logger;
 
 import javax.ejb.Timer;
 
 /**
- * This MBean implements an ejbTimeout retry after a fixed delay.
+ * This service implements a TimeoutRetryPolicy that retries
+ * the call to ejbTimeout after a fixed delay.
  * 
  * @jmx.mbean
  *    name="jboss:service=EJBTimerServiceRetryPolicy"
@@ -71,6 +72,10 @@ public class FixedDelayRetryPolicy implements FixedDelayRetryPolicyMBean
       new RetryThread(invoker, timer).start();
    }
 
+   /**
+    * The thread that does the actual invocation,
+    * after a short delay.
+    */
    private class RetryThread extends Thread
    {
       private TimedObjectInvoker invoker;
