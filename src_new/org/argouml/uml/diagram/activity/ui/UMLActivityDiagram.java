@@ -24,7 +24,7 @@
 // File: UMLActivityDiagram.java
 // Classes: UMLActivityDiagram
 // Original Author: your email here
-// $Id: UMLActivityDiagram.java,v 1.25 2003/06/01 13:50:52 kataka Exp $
+// $Id: UMLActivityDiagram.java,v 1.26 2003/06/20 16:17:07 kataka Exp $
 
 package org.argouml.uml.diagram.activity.ui;
 
@@ -34,6 +34,7 @@ import javax.swing.Action;
 
 import org.apache.log4j.Category;
 import org.argouml.kernel.ProjectManager;
+import org.argouml.model.ModelFacade;
 import org.argouml.ui.CmdCreateNode;
 import org.argouml.uml.diagram.state.StateDiagramGraphModel;
 import org.argouml.uml.diagram.state.ui.ActionCreatePseudostate;
@@ -45,7 +46,6 @@ import org.tigris.gef.base.LayerPerspective;
 import org.tigris.gef.base.LayerPerspectiveMutable;
 import org.tigris.gef.base.ModeCreatePolyEdge;
 
-import ru.novosoft.uml.behavior.activity_graphs.MActionState;
 import ru.novosoft.uml.behavior.activity_graphs.MActivityGraph;
 import ru.novosoft.uml.behavior.state_machines.MFinalState;
 import ru.novosoft.uml.behavior.state_machines.MStateMachine;
@@ -68,7 +68,7 @@ public class UMLActivityDiagram extends UMLDiagram {
     // actions for toolbar
 
     protected static Action _actionState =
-        new CmdCreateNode(MActionState.class, "ActionState");
+        new CmdCreateNode((Class)ModelFacade.ACTION_STATE, "ActionState");
 
     // start state, end state, forks, joins, etc.
     protected static Action _actionStartPseudoState =
