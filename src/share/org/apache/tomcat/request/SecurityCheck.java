@@ -81,12 +81,43 @@ public class SecurityCheck extends  BaseInterceptor {
     public SecurityCheck() {
     }
 	
+    public void contextInit( Context ctx)
+	throws TomcatException
+    {
+	if( "FORM".equals( ctx.getAuthMethod() )) {
+	    ServletWrapper jcheck=new ServletWrapper();
+	    jcheck.setContext( ctx );
+	    jcheck.setServletClass( "org.apache.tomcat.servlets.JSecurityCheck" );
+	    jcheck.setServletName( "tomcat.jcheck");
+	    ctx.addServlet( jcheck );
+	    
+	    // If you understand the spec you'll understand the code.
+	    // I don't understand the spec enough, so I can't comment the code 
+
+	    String form=ctx.getFormLoginPage();
+	    ctx.log( "Adding form login " + form );
+	    if( form!= null ) {
+		int lastS=form.lastIndexOf( "/" );
+		if( lastS<=0 ) {
+		    ctx.addServletMapping( "/j_security_check", "tomcat.jcheck" );
+		    ctx.log( "Map  /j_security_check to tomcat.jcheck" );
+		}  else {
+		    String dir=form.substring( 0, lastS);
+		    ctx.addServletMapping( dir + "/j_security_check", "tomcat.jcheck");
+		    ctx.log( "Map " + dir + "/j_security_check to tomcat.jcheck");
+		}
+	    }
+	}
+    }
+	    
+
     public int authenticate( Request req, Response response )
     {
 	Context ctx=req.getContext();
 	if( req.getRemoteUser() != null) return 0; // already authenticated
 
 	String authMethod=ctx.getAuthMethod();
+	//	if( ctx.getDebug() > 0 ) ctx.log( "Auth: " + authMethod );
 	if( authMethod==null || "BASIC".equals(authMethod) ) {
 	    String authorization = req.getHeader("Authorization");
 	    // XXX we may have multiple headers ?
@@ -101,7 +132,7 @@ public class SecurityCheck extends  BaseInterceptor {
 		String password = unencoded.substring(colon + 1);
 		if( checkPassword( username, password ) ) {
 		    req.setRemoteUser( username );
-		    if( ctx.getDebug() > 0 ) ctx.log( "BASEIC Auth:  " + username );
+		    if( ctx.getDebug() > 0 ) ctx.log( "BASIC Auth:  " + username );
 		} else {
 		    // wrong password
 		    errorPage( req, response );
@@ -120,16 +151,16 @@ public class SecurityCheck extends  BaseInterceptor {
 	    HttpSession session=req.getSession( false );
 	    if( session == null )
 		return 0; // not authenticated
-	    String username=(String)session.getAttribute( "j_username" );
-	    String password=(String)session.getAttribute( "j_password" );
+	    String username=(String)session.getAttribute("j_username");
+	    String password=(String)session.getAttribute("j_password");
+	    
+	    if( ctx.getDebug() > 0 ) ctx.log( "Form Auth:  " + username + " " + password);
 	    if( checkPassword( username, password ) ) {
 		req.setRemoteUser( username );
-		if( ctx.getDebug() > 0 ) ctx.log( "Form Auth:  " + username );
 	    } else {
-		// wrong password and user
+		// wrong password
 		errorPage( req, response );
 	    }
-	    if( ctx.getDebug() > 0 ) ctx.log( "FORM auth " + username + " " + password );
 	}
 
 	return 0;
@@ -160,7 +191,7 @@ public class SecurityCheck extends  BaseInterceptor {
 	    }
 	}
 
-	if( ctx.getDebug() > 0 ) ctx.log( "Unauthorized " );
+	if( ctx.getDebug() > 0 ) ctx.log( "Unauthorized " + user);
  	return HttpServletResponse.SC_UNAUTHORIZED;
 	// XXX check transport
     }

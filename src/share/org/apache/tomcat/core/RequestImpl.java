@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/RequestImpl.java,v 1.18 2000/02/16 00:30:29 costin Exp $
- * $Revision: 1.18 $
- * $Date: 2000/02/16 00:30:29 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/RequestImpl.java,v 1.19 2000/02/17 07:52:19 costin Exp $
+ * $Revision: 1.19 $
+ * $Date: 2000/02/17 07:52:19 $
  *
  * ====================================================================
  *
@@ -108,6 +108,7 @@ public class RequestImpl  implements Request {
     protected Response response;
     protected HttpServletRequestFacade requestFacade;
     protected Context context;
+    protected ContextManager contextM;
     protected Hashtable attributes = new Hashtable();
 
     protected boolean didReadFormData;
@@ -342,6 +343,14 @@ public class RequestImpl  implements Request {
     
     public void setContext(Context context) {
 	this.context = context;
+    }
+
+    public void setContextManager( ContextManager cm ) {
+	contextM=cm;
+    }
+
+    public ContextManager getContextManager() {
+	return contextM;
     }
 
     public Cookie[] getCookies() {

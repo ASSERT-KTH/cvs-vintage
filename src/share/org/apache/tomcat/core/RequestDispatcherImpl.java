@@ -157,8 +157,8 @@ public class RequestDispatcherImpl implements RequestDispatcher {
 
 	// CM should have set the wrapper - call it
 	// LOG	System.out.println("Forward " + realRequest.getServletPath());
-	realRequest.getWrapper().handleRequest((HttpServletRequestFacade)request,
-						   (HttpServletResponseFacade)response);
+	realRequest.getWrapper().handleRequest(realRequest,
+						realResponse);
     }
 
     public void include(ServletRequest request, ServletResponse response)
@@ -253,7 +253,7 @@ public class RequestDispatcherImpl implements RequestDispatcher {
  	// now it's really strange: we call the wrapper on the subrequest
 	// for the realRequest ( since the real request will still have the
 	// original handler/wrapper )
-	subRequest.getWrapper().handleRequest(realRequest.getFacade() , (HttpServletResponseFacade)response);
+	subRequest.getWrapper().handleRequest(realRequest , realResponse);
 
 	// After request, we want to restore the include attributes - for
 	// chained includes.

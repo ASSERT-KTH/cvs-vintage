@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/http/Attic/HttpConnectionHandler.java,v 1.11 2000/01/15 23:30:26 costin Exp $
- * $Revision: 1.11 $
- * $Date: 2000/01/15 23:30:26 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/http/Attic/HttpConnectionHandler.java,v 1.12 2000/02/17 07:52:23 costin Exp $
+ * $Revision: 1.12 $
+ * $Date: 2000/02/17 07:52:23 $
  *
  * ====================================================================
  *
@@ -110,6 +110,7 @@ public class HttpConnectionHandler  implements  TcpConnectionHandler {
 	    OutputStream out=socket.getOutputStream();
 	    //	    RequestImpl request=new RequestImpl();
 	    HttpRequestAdapter reqA=new HttpRequestAdapter();
+	    reqA.setContextManager( contextM );
 	    //	    ResponseImpl response=new ResponseImpl();
 	    HttpResponseAdapter resA=new HttpResponseAdapter();
 	    

@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/ServletWrapper.java,v 1.28 2000/02/16 17:13:23 costin Exp $
- * $Revision: 1.28 $
- * $Date: 2000/02/16 17:13:23 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/ServletWrapper.java,v 1.29 2000/02/17 07:52:20 costin Exp $
+ * $Revision: 1.29 $
+ * $Date: 2000/02/17 07:52:20 $
  *
  * ====================================================================
  *
@@ -82,6 +82,7 @@ public class ServletWrapper {
     protected StringManager sm = StringManager.getManager("org.apache.tomcat.core");
 
     protected Context context;
+    protected ContextManager contextM;
 
     // servletName is stored in config!
     protected String servletClassName; // required
@@ -95,6 +96,7 @@ public class ServletWrapper {
     // optional informations
     protected String description = null;
 
+    boolean initialized=false;
     // Usefull info for class reloading
     protected boolean isReloadable = false;
     // information + make sure destroy is called when no other servlet
@@ -118,6 +120,7 @@ public class ServletWrapper {
 
     public void setContext( Context context) {
         this.context = context;
+	contextM=context.getContextManager();
 	config.setContext( context );
 	isReloadable=context.getReloadable();
     }
@@ -206,16 +209,45 @@ public class ServletWrapper {
     }
     
     void destroy() {
+	initialized=false;
 	if (servlet != null) {
 	    synchronized (this) {
-		waitForDestroy();
+		// Fancy sync logic is to make sure that no threads are in the
+		// handlerequest when this is called and, furthermore, that
+		// no threads go through handle request after this method starts!
+		// Wait until there are no outstanding service calls,
+		// or until 30 seconds have passed (to avoid a hang)
+		
+		//XXX I don't think it works ( costin )
+		while (serviceCount > 0) {
+		    try {
+			wait(30000);
+			
+			break;
+		    } catch (InterruptedException e) { }
+		}
+
 		try {
-		    handleDestroy( context, servlet );
-		} catch(IOException ioe) {
-		    ioe.printStackTrace();
-		    // Should never come here...
-		} catch(ServletException se) {
-		    se.printStackTrace();
+		    ContextInterceptor cI[]=context.getContextInterceptors();
+		    for( int i=0; i<cI.length; i++ ) {
+			try {
+			    cI[i].preServletDestroy( context, this ); // ignore the error - like in the original code
+			} catch( TomcatException ex) {
+			    ex.printStackTrace();
+			}
+			
+		    }
+		    servlet.destroy();
+		    for( int i=cI.length-1; i>=0; i-- ) {
+			try {
+			    cI[i].postServletDestroy( context, this ); // ignore the error - like in the original code
+			} catch( TomcatException ex) {
+			    ex.printStackTrace();
+			}
+			
+		    }
+		} catch(Exception ex) {
+		    ex.printStackTrace();
 		    // Should never come here...
 		}
 	    }
@@ -236,58 +268,52 @@ public class ServletWrapper {
 	}
 	
 	servlet = (Servlet)servletClass.newInstance();
-
+	
 	config.setServletClassName(servlet.getClass().getName());
+	initServlet();
+    }
 
+    
+    void initServlet()
+	throws ClassNotFoundException, InstantiationException,
+	IllegalAccessException, ServletException
+    {
 	try {
 	    final Servlet sinstance = servlet;
 	    final ServletConfigImpl servletConfig = config;
 	    
-	    handleInit(context, servlet, servletConfig);
-	} catch(IOException ioe) {
+	    ContextInterceptor cI[]=context.getContextInterceptors();
+	    for( int i=0; i<cI.length; i++ ) {
+		try {
+		    cI[i].preServletInit( context, this ); // ignore the error - like in the original code
+		} catch( TomcatException ex) {
+		    ex.printStackTrace();
+		}
+	    }
+	    servlet.init(servletConfig);
+	    // if an exception is thrown in init, no end interceptors will be called.
+	    // that was in the origianl code
+	    
+	    for( int i=cI.length-1; i>=0; i-- ) {
+		try {
+		    cI[i].postServletInit( context, this ); // ignore the error - like in the original code
+		} catch( TomcatException ex) {
+		    ex.printStackTrace();
+		}
+		
+	    }
+	    initialized=true;
+	} catch(Exception ioe) {
 	    ioe.printStackTrace();
 	    // Should never come here...
 	}
     }
 
-    // XXX XXX need to go directly to Jsp API 
-    void handleJspRequest(final HttpServletRequestFacade request,
-			      final HttpServletResponseFacade response)
-	throws IOException
-    {
-	// "Special" JSP
-	String requestURI = path + request.getPathInfo();
-	RequestDispatcher rd = request.getRequestDispatcher(requestURI);
-	
-	try {
-	    if (! response.getRealResponse().isStarted())
-		rd.forward(request, response);
-	    else
-		rd.include(request, response);
-		
-	} catch (ServletException se) {
-	    se.printStackTrace();
-	    response.sendError(404);
-	} catch (IOException ioe) {
-	    ioe.printStackTrace();
-	    response.sendError(404);
-	}
-	return;
-    }
-    
-    public void handleRequest(final HttpServletRequestFacade request,
-			      final HttpServletResponseFacade response)
-	throws IOException
-    {
-	if( path != null ) handleJspRequest( request, response );
-
-	Context context = getContext();
-
-	// Reloading
-	// XXX ugly - should find a better way to deal with invoker
-	// The problem is that we are just clearing up invoker, not
-	// the class loaded by invoker.
-
+    // Reloading
+    // XXX ugly - should find a better way to deal with invoker
+    // The problem is that we are just clearing up invoker, not
+    // the class loaded by invoker.
+    void handleReload() {
 	// That will be reolved after we reset the context - and many
 	// other conflicts.
 	if( isReloadable && ! "invoker".equals( getServletName())) {
@@ -295,6 +321,7 @@ public class ServletWrapper {
 	    if( loader!=null) {
 		// XXX no need to check after we remove the old loader
 		if( loader.shouldReload() ) {
+		    initialized=false;
 		    loader.reload();
 		    servlet=null;
 		    servletClass=null;
@@ -312,232 +339,74 @@ public class ServletWrapper {
 		}
 	    }
 	}
-	
-	
-	if (servlet == null) {
-	    synchronized (this) {
-		try {
-		    loadServlet();
-		} catch (ClassNotFoundException e) {
-		    response.sendError(404, "Class not found " + servletClassName);
-		    return;
-		} catch (Exception e) {
-		    // Make sure the servlet will never
-		    // service a request
-		    servlet = null;
-		    sendInternalServletError(e, request, response);
-		    return;
-		}
-	    }
-	}
-
-        try {
-	    synchronized(this) {
-		// logic for un-loading
-		serviceCount++;
-	    }
-
-	    
-	    handleInvocation( context, servlet, request, response );
-
-	} catch (ServletException e) {
-	    // XXX
-	    // if it's an unvailable exception, we probably want
-	    // to paint a different screen
-            handleException(request, response, e);
-        } catch (SocketException e) {
-	    // replace with Log:
-	    System.out.println("Socket Exception : " + e.getMessage());
-        } catch (Throwable e) {
-	    // XXX
-	    // decide which exceptions we should not eat at this point
-            handleException(request, response, e);
-	} finally {
-	    synchronized(this) {
-		serviceCount--;
-		notifyAll();
-	    }
-	}
-    }
-
-    public void handleException(HttpServletRequestFacade request,
-				HttpServletResponseFacade response,
-				Throwable t)
-    {
-        Context context = request.getRealRequest().getContext();
-        ServletContextFacade contextFacade = context.getFacade();
-
-        // Scan the exception's inheritance tree looking for a rule
-        // that this type of exception should be forwarded
-
-        String path = null;
-        Class clazz = t.getClass();
-
-        while (path == null && clazz != null) {
-            String name = clazz.getName();
-            path = context.getErrorPage(name);
-            clazz = clazz.getSuperclass();
-        }
-	
-        // If path is non-null, we should do a forward
-        // Don't do a forward if exception_type is already defined though to
-        // avoid an infinite loop.
-
-        if (path != null &&
-	    request.getAttribute(
-                Constants.ATTRIBUTE_ERROR_EXCEPTION_TYPE) == null) {
-            RequestDispatcher rd = contextFacade.getRequestDispatcher(path);
-
-            // XXX 
-            // The spec should really be changed to allow us to include
-            // the full exception object.  Oh well.
-
-            request.setAttribute(Constants.ATTRIBUTE_ERROR_EXCEPTION_TYPE,
-				 t.getClass().getName());
-            request.setAttribute(Constants.ATTRIBUTE_ERROR_MESSAGE,
-				 t.getMessage());
-
-            try {
-		// A forward would be ideal, so reset and try it
-
-		response.getRealResponse().reset();
-
-		if (response.getRealResponse().isStarted()) 
-		    rd.include(request, response);
-		else
-		    rd.forward(request, response);
-            } catch (IOException e) {
-		e.printStackTrace();
-                // Shouldn't get here
-            } catch (ServletException e) {
-		e.printStackTrace();
-                // Shouldn't get here
-            }
-        } else {
-            try {
-		sendInternalServletError( t, request, response);
-	    } catch (IOException e) {
-                e.printStackTrace();
-		// ???
-            }
-        }
-    }
-
-    void sendInternalServletError( Throwable t, HttpServletRequestFacade request,
-				   HttpServletResponseFacade response )
-	throws IOException
-    {
-	// Used to communicate with Default Error Page
-		request.setAttribute("tomcat.error.throwable", t);
-		// XXX need to make this configurable, any servlet
-		// can act as the default error handler
-
-		// Need to do a normal servlet invocation!
-		try {
-		    Servlet errorP=new org.apache.tomcat.servlets.DefaultErrorPage();
-		    errorP.service(request,response);
-		} catch(Exception ex) {
-		    System.out.println("FATAL: error in error handler");
-		    ex.printStackTrace();
-		}
     }
     
-    /** Call the init method and all init interceptors
-     */
-    protected void handleInit(Context context, Servlet servlet, ServletConfig servletConfig )
-	throws ServletException, IOException
+    public void handleRequest(Request req, Response res)
     {
-	ContextInterceptor cI[]=context.getContextInterceptors();
-	for( int i=0; i<cI.length; i++ ) {
-	    try {
-		cI[i].preServletInit( context, this ); // ignore the error - like in the original code
-	    } catch( TomcatException ex) {
-		ex.printStackTrace();
-	    }
-	}
-	servlet.init(servletConfig);
-	// if an exception is thrown in init, no end interceptors will be called.
-	// that was in the origianl code
-
-	for( int i=cI.length-1; i>=0; i-- ) {
-	    try {
-		cI[i].postServletInit( context, this ); // ignore the error - like in the original code
-	    } catch( TomcatException ex) {
-		ex.printStackTrace();
-	    }
-
-	}
-    }
-
-    /** Call destroy(), with all interceptors before and after in the
-	right order;
-    */
-    protected void handleDestroy(Context context, Servlet servlet )
-	throws ServletException, IOException
-    {
-	ContextInterceptor cI[]=context.getContextInterceptors();
-	for( int i=0; i<cI.length; i++ ) {
-	    try {
-		cI[i].preServletDestroy( context, this ); // ignore the error - like in the original code
-	    } catch( TomcatException ex) {
-		ex.printStackTrace();
-	    }
-
-	}
-	servlet.destroy();
-	for( int i=cI.length-1; i>=0; i-- ) {
-	    try {
-		cI[i].postServletDestroy( context, this ); // ignore the error - like in the original code
-	    } catch( TomcatException ex) {
-		ex.printStackTrace();
-	    }
-
-	}
-    }
-    
-
-    /** Call service(), with all interceptors before and after in the
-	right order;
-    */
-    protected void handleInvocation(Context ctx, Servlet servlet,
-				  HttpServletRequestFacade request, HttpServletResponseFacade response )
-	throws ServletException, IOException
-    {
-	RequestInterceptor cI[]=context.getRequestInterceptors();
-	for( int i=0; i<cI.length; i++ ) {
-	    cI[i].preService( request.getRealRequest(), response.getRealResponse() ); // ignore the error - like in the original code
-	}
-	
-	if (servlet instanceof SingleThreadModel) {
-	    synchronized(servlet) {
-		servlet.service(request, response);
-	    }
-	} else {
-	    servlet.service(request, response);
-	}
-
-	for( int i=cI.length-1; i>=0; i-- ) {
-	    cI[i].postService( request.getRealRequest() , response.getRealResponse() ); // ignore the error - like in the original code
-	}
-    }
-
-    // Fancy sync logic is to make sure that no threads are in the
-    // handlerequest when this is called and, furthermore, that
-    // no threads go through handle request after this method starts!
-    protected void waitForDestroy() {
-	// Wait until there are no outstanding service calls,
-	// or until 30 seconds have passed (to avoid a hang)
-	
-	// XXX wrong logic !
-	while (serviceCount > 0) {
-	    try {
-		wait(30000);
+	try {
+	    if( path != null ) {
+		// XXX call JspServlet directly, did anyone tested it ??
+		String requestURI = path + req.getPathInfo();
+		RequestDispatcher rd = req.getContext().getRequestDispatcher(requestURI);
 		
-		break;
-	    } catch (InterruptedException e) { }
+		if (! res.isStarted())
+		    rd.forward(req.getFacade(), res.getFacade());
+		else
+		    rd.include(req.getFacade(), res.getFacade());
+		return;
+	    }
+	    
+	    handleReload();
+
+	    if( ! initialized )
+		loadServlet();
+	    
+	    // XXX to expensive  per/request, un-load is not so frequent and
+	    // the API doesn't require a special state for destroy
+	    // synchronized(this) {
+	    // 		// logic for un-loading
+	    // 		serviceCount++;
+	    //
+	    
+	    RequestInterceptor cI[]=context.getRequestInterceptors();
+	    for( int i=0; i<cI.length; i++ ) {
+		cI[i].preService( req, res ); // ignore the error - like in the original code
+	    }
+	    
+	    if (servlet instanceof SingleThreadModel) {
+		synchronized(servlet) {
+		    servlet.service(req.getFacade(), res.getFacade());
+		}
+	    } else {
+		servlet.service(req.getFacade(), res.getFacade());
+	    }
+	    
+	    for( int i=cI.length-1; i>=0; i-- ) {
+		cI[i].postService( req , res ); // ignore the error - like in the original code
+	    }
+	    // 	} finally {
+	    // 	    synchronized(this) {
+	    // 		serviceCount--;
+	    // 		notifyAll();
+	    // 	    }
+	    // 	}
+	} catch( Throwable t ) {
+	    contextM.handleError( req, res, t, 0 );
 	}
     }
 
+    /** @deprecated
+     */
+    public void handleRequest(final HttpServletRequestFacade request,
+			      final HttpServletResponseFacade response)
+    {
+	Request rrequest=request.getRealRequest();
+	Response rresponse=rrequest.getResponse();
+
+	handleRequest( rrequest, rresponse );
+    }
+
+    
     public String toString() {
 	String toS="Wrapper(" + config.getServletName() + " ";
 	if( servlet!=null ) toS=toS+ "S:" + servlet.getClass().getName();

@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/HttpServletResponseFacade.java,v 1.3 2000/02/01 21:39:38 costin Exp $
- * $Revision: 1.3 $
- * $Date: 2000/02/01 21:39:38 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/HttpServletResponseFacade.java,v 1.4 2000/02/17 07:52:19 costin Exp $
+ * $Revision: 1.4 $
+ * $Date: 2000/02/17 07:52:19 $
  *
  * ====================================================================
  *
@@ -157,18 +157,9 @@ implements HttpServletResponse {
     public void sendError(int sc, String msg) throws IOException {
 	setStatus( sc );
 	Request request=response.getRequest();
-	request.setAttribute("javax.servlet.error.status_code",
-			     String.valueOf(sc));
 	request.setAttribute("javax.servlet.error.message", msg);
-
-	// XXX need to customize it
-	Servlet errorP=new org.apache.tomcat.servlets.DefaultErrorPage();
-	try {
-	    errorP.service(request.getFacade(),this);
-	} catch (ServletException ex ) {
-	    // shouldn't happen!
-	    ex.printStackTrace();
-	}
+	ContextManager cm=request.getContextManager();
+	cm.handleError( request, response, null, sc );
     }
 
     public void sendRedirect(String location)

@@ -159,6 +159,7 @@ public class LoadOnStartupInterceptor extends BaseInterceptor {
 	String path=result.getPath();
 	RequestImpl request = new RequestImpl();
 	ResponseImpl response = new ResponseImpl();
+	request.setContextManager( context.getContextManager());
 	request.recycle();
 	response.recycle();
 	

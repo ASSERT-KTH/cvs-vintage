@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/connector/Attic/JNIConnectionHandler.java,v 1.1 2000/02/09 12:00:53 rubys Exp $
- * $Revision: 1.1 $
- * $Date: 2000/02/09 12:00:53 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/connector/Attic/JNIConnectionHandler.java,v 1.2 2000/02/17 07:52:22 costin Exp $
+ * $Revision: 1.2 $
+ * $Date: 2000/02/17 07:52:22 $
  *
  * ====================================================================
  *
@@ -100,6 +100,7 @@ public class JNIConnectionHandler {
 
         try {
     	    JNIRequestAdapter reqA = new JNIRequestAdapter(contextM, this);
+	    reqA.setContextManager( contextM );
     	    JNIResponseAdapter resA =new JNIResponseAdapter(this);
 
     	    reqA.setResponse(resA);

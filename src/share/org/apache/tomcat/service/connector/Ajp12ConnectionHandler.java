@@ -110,6 +110,7 @@ public class Ajp12ConnectionHandler implements  TcpConnectionHandler {
 
 	    //	    RequestImpl request = new RequestImpl();
 	    AJP12RequestAdapter reqA = new AJP12RequestAdapter(contextM, socket);
+	    reqA.setContextManager( contextM );
 	    //	    ResponseImpl response=new ResponseImpl();
 	    AJP12ResponseAdapter resA=new AJP12ResponseAdapter();
 

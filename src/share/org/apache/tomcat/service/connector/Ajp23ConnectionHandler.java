@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/connector/Attic/Ajp23ConnectionHandler.java,v 1.6 2000/01/15 23:30:24 costin Exp $
- * $Revision: 1.6 $
- * $Date: 2000/01/15 23:30:24 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/connector/Attic/Ajp23ConnectionHandler.java,v 1.7 2000/02/17 07:52:22 costin Exp $
+ * $Revision: 1.7 $
+ * $Date: 2000/02/17 07:52:22 $
  *
  * ====================================================================
  *
@@ -108,6 +108,7 @@ public class Ajp23ConnectionHandler implements  TcpConnectionHandler {
 	    ConnectorResponse rresponse=new ConnectorResponse(con);
 	    //	    RequestImpl  rrequest=new RequestImpl();
 	    ConnectorRequest  reqA=new ConnectorRequest(con);
+	    reqA.setContextManager( contextM );
 	    //rrequest.setRequestAdapter( reqA ); 
 
 	    boolean moreRequests=true;

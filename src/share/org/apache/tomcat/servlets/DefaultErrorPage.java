@@ -92,7 +92,7 @@ public class DefaultErrorPage extends HttpServlet {
 	int status=response.getStatus();
 	String msg=(String)request.getAttribute("javax.servlet.error.message");
 
-	Throwable e= (Throwable)request.getAttribute("tomcat.error.throwable");
+	Throwable e= (Throwable)request.getAttribute("tomcat.servlet.error.throwable");
 	if( e!=null ) {
 	    sendError(request, response, 500, exceptionString( e ));
 	    return;

@@ -72,7 +72,7 @@ import javax.servlet.http.*;
  * ( sort of "default form auth" );
  *
  */
-public class AuthServlet extends HttpServlet {
+public class JSecurityCheck extends HttpServlet {
     
     public void service(HttpServletRequest request,
 			HttpServletResponse response)
@@ -80,37 +80,22 @@ public class AuthServlet extends HttpServlet {
     {
 	Request req=((HttpServletRequestFacade)request).getRealRequest();
 	Context ctx=req.getContext();
-	String realm=ctx.getRealmName();
-	if( "FORM".equals( ctx.getAuthMethod() )) {
-	    // the code is not uglier that the spec, we are just implementing it.
-	    // if you don't understand what's here - you're not alone !
-	    // ( it helps to  read the spec > 10 times !)
-
-	    String page=ctx.getFormLoginPage();
-	    if(page!=null) {
-		HttpSession session=request.getSession( true );
-		// Because of _stupid_ "j_security_check" we have
-		// to start the session ( since login page migh not do it ),
-		// then save the current page ( since we'll have to return here
-		// and the obvious  solution is too ... simple, and we need to
-		// do something realy complex ).
-
-		// We can't forward to the page - because we set some headers in getSession
-		// 		RequestDispatcher rd= ctx.getRequestDispatcher( page );
-		// 		rd.include( request, response );
-
-		session.setAttribute( "tomcat.auth.originalLocation", req.getRequestURI());
-		ctx.log("Setting orig location " + req.getRequestURI());
-		if( ! page.startsWith("/")) page="/" + page;
-		response.sendRedirect( ctx.getPath() + page );
-		return; 
-	    }
+	ctx.log( "In JSecurityCheck");
+	HttpSession session=req.getSession( false );
+	if( session == null ) {
+	    ctx.log("TRY TO AUTHENTICATE WITHOUT A SESSION " + req);
+	    return;
 	}
+	String username=req.getFacade().getParameter( "j_username" );
+	String password=req.getFacade().getParameter( "j_password" );
+	if( ctx.getDebug() > 0 ) ctx.log( "FORM auth " + username + " " + password );
 
-	// Default is BASIC
-	if(realm==null) realm="default";
-	response.setHeader( "WWW-Authenticate", "Basic \"" + realm + "\"");
-	response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
+	session.setAttribute( "j_username", username );
+	session.setAttribute( "j_password", password );
+
+	String origLocation=(String)session.getAttribute( "tomcat.auth.originalLocation");
+	ctx.log("Back to orig location " + origLocation);
+	response.sendRedirect( origLocation );
     }
 
 }

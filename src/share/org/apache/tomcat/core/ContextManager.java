@@ -66,6 +66,8 @@ import org.apache.tomcat.context.*;
 import org.apache.tomcat.request.*;
 import org.apache.tomcat.util.*;
 import org.apache.tomcat.logging.*;
+import javax.servlet.*;
+import javax.servlet.http.*;
 import java.io.*;
 import java.net.*;
 import java.util.*;
@@ -479,71 +481,43 @@ public class ContextManager {
     */
     public void service( Request rrequest, Response rresponse ) {
 	try {
+	    rrequest.setContextManager( this );
 	    rrequest.setResponse(rresponse);
 	    rresponse.setRequest(rrequest);
 
-	    // XXX
-	    //    return if an error was detected in processing the
-	    //    request line
-	    if (rresponse.getStatus() >= 400) {
-		rresponse.finish();
-		rrequest.recycle();
-		rresponse.recycle();
-		return;
-	    }
+	    // wront request - parsing error
+	    int status=rresponse.getStatus();
 
-	    // XXX Hardcoded - it will be changed in the next step.( costin )
-	    processRequest( rrequest );
-
-	    authenticate( rrequest, rresponse );
-
-	    int err=authorize( rrequest, rresponse );
-	    if( err != 0 ) {
-		// redirect to the right servlet 
-		Context ctx=rrequest.getContext();
-		String authMethod=ctx.getAuthMethod();
-		ServletWrapper authWrapper=ctx.getServletByName( "authServlet" );
-		rrequest.setWrapper( authWrapper );
-		
-		// unauthorized access, redirect to login page.
-		// XXX authorize will set request
-	    }
+	    if( status < 400 )
+		status= processRequest( rrequest );
 	    
-	    
-	    if( rrequest.getWrapper() == null ) {
-		log("ERROR: mapper returned no wrapper ");
-		log(rrequest.toString() );
-		// XXX send an error - it shouldn't happen, mapper is broken
+	    if(status==0)
+		status=authenticate( rrequest, rresponse );
+	    if(status == 0)
+		status=authorize( rrequest, rresponse );
+	    if( status == 0 ) {
+		rrequest.getWrapper().handleRequest(rrequest,
+						    rresponse);
 	    } else {
-		// do it
-		rrequest.getWrapper().handleRequest(rrequest.getFacade(),
-						    rresponse.getFacade());
+		// something went wrong
+		handleError( rrequest, rresponse, null, status );
 	    }
 	    
-	    // finish and clean up
 	    rresponse.finish();
-	    
-	} catch (Exception e) {
-	    if(e instanceof IOException && "Broken pipe".equals(e.getMessage()) ) {
-		log("Broken pipe " + rrequest.getRequestURI());
-		return;
-	    }
-	    // XXX
-	    // this isn't what we want, we want to log the problem somehow
-	    log("HANDLER THREAD PROBLEM: " + e);
-	    log("Request: " + rrequest);
-	    e.printStackTrace();
+	    rrequest.recycle();
+	    rresponse.recycle();
+	} catch (Throwable t) {
+	    handleError( rrequest, rresponse, t, 0 );
 	}
+	return;
     }
 
-    // XXX need to be changed to use a full sub-request model (costin)
-    
     /** Will find the ServletWrapper for a servlet, assuming we already have
      *  the Context. This is used by Dispatcher and getResource - where the Context
      *  is already known.
      */
     int processRequest( Request req ) {
-
+	req.setContextManager( this );
 	log("ProcessRequest: "+req.toString(), Logger.DEBUG);
 
 	for( int i=0; i< requestInterceptors.size(); i++ ) {
@@ -580,6 +554,106 @@ public class ContextManager {
 	    ((RequestInterceptor)requestInterceptors.elementAt(i)).beforeBody( req, res );
 	}
 	return 0;
+    }
+
+    void handleError( Request req, Response res , Throwable t, int code ) {
+	Context ctx = req.getContext();
+	if(ctx==null) {
+	    ///*DEBUG*/ try {throw new Exception(); } catch(Exception ex) {ex.printStackTrace();}
+	    ctx=getContext("");
+	}
+
+	if( code!=0) 
+	    ctx.log("Status: " + code + " in " + req );
+	if( t!=null) 
+	    ctx.log("Exception: " + t.getMessage() + " in " + req );
+	
+	String path=null;
+	ServletWrapper errorServlet=null;
+
+	// normal redirects or non-errors
+	if( code!=0 && code < 400 ) {
+	    errorServlet=ctx.getServletByName("tomcat.errorPage");
+	} else if( req.getAttribute("javax.servlet.error.status_code") != null ||
+	    req.getAttribute("javax.servlet.error.exception_type")!=null) {
+	    
+	    if( ctx.getDebug() > 0 ) ctx.log( "Error: exception inside exception servlet " +
+					      req.getAttribute("javax.servlet.error.status_code") + " " +
+					      req.getAttribute("javax.servlet.error.exception_type"));
+	    errorServlet=ctx.getServletByName("tomcat.errorPage");
+	}
+
+	if( t==null) {
+	    if( code==0 )
+		code=res.getStatus();
+	    // we can't support error pages for non-errors, it's to
+	    // complex and insane
+	    if( code >= 400 )
+		path = ctx.getErrorPage( code );
+	    
+	    if( code==HttpServletResponse.SC_UNAUTHORIZED ) {
+		// set extra info for login page
+		if( errorServlet==null)
+		    errorServlet=ctx.getServletByName("tomcat.authServlet");
+		if( ctx.getDebug() > 0 ) ctx.log( "Setting auth servlet " + errorServlet );
+	    }
+            req.setAttribute("javax.servlet.error.status_code",new Integer( code));
+	} else {
+	    // Scan the exception's inheritance tree looking for a rule
+	    // that this type of exception should be forwarded
+	    Class clazz = t.getClass();
+	    while (path == null && clazz != null) {
+		String name = clazz.getName();
+		path = ctx.getErrorPage(name);
+		clazz = clazz.getSuperclass();
+	    }
+	    req.setAttribute("javax.servlet.error.exception_type", t.getClass());
+            req.setAttribute("javax.servlet.error.message", t.getMessage());
+	    req.setAttribute("tomcat.servlet.error.throwable", t);
+	}
+
+	// Save the original request, we want to report it
+	// and we need to use it in the "authentication" case to implement
+	// the strange requirements for login pages
+	req.setAttribute("tomcat.servlet.error.request", req);
+
+
+	// No error page or "Exception in exception handler", call internal servlet
+	if( path==null && errorServlet==null)
+	    errorServlet=ctx.getServletByName("tomcat.errorPage");
+
+	// Try a normal "error page"
+	if( errorServlet==null && path != null ) {
+	    try {
+		RequestDispatcher rd = ctx.getRequestDispatcher(path);
+		
+		// try a forward
+		res.reset();
+		if (res.isStarted()) 
+		    rd.include(req.getFacade(), res.getFacade());
+		else
+		    rd.forward(req.getFacade(), res.getFacade());
+		return ;
+	    } catch( Throwable t1 ) {
+		// nothing - we'll call DefaultErrorPage
+	    }
+	}
+	
+	// If No handler or an error happened in handler 
+	// Default handler
+	// loop control
+	if( req.getAttribute("tomcat.servlet.error.handler") != null &&
+	    code >= 400 ) {
+	    // error page for 404 doesn't exist... ( or watchdog tests :-)
+	    ctx.log( "Error/loop in default error handler " + req );
+	    ctx.log( "Error/loop " + code + " " + t + " " +  path );
+	} else {
+	    if( ctx.getDebug() > 0 ) ctx.log( "Error: Calling servlet " + errorServlet );
+	    req.setAttribute("tomcat.servlet.error.handler", errorServlet);
+	    errorServlet.handleRequest(req.getFacade(),res.getFacade());
+	    // will call this if any error happens
+	}
+	return;
     }
     
     // -------------------- Sub-Request mechanism --------------------

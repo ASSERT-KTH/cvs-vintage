@@ -64,4 +64,38 @@
            /WEB-INF/jsp/example-taglib.tld
         </taglib-location>
     </taglib>
+
+    <login-config>
+      <auth-method>FORM</auth-method>
+      <realm-name>examples</realm-name>
+      <form-login-config><form-login-page>/jsp/security/login.jsp</form-login-page>
+      </form-login-config>
+    </login-config>
+
+    <security-constraint>
+      <web-resource-collection>
+         <web-resource-name>a</web-resource-name>
+         <url-pattern>/jsp/security/protected/*</url-pattern>
+         <url-pattern>/jsp/security/protected1/</url-pattern>
+         <http-method>GET</http-method>
+         <http-method>POST</http-method>
+      </web-resource-collection>
+
+      <web-resource-collection>
+         <web-resource-name>a</web-resource-name>
+         <url-pattern>/foo2/*</url-pattern>
+         <url-pattern>/bar2/*</url-pattern>
+      </web-resource-collection>
+
+      <auth-constraint>
+         <role-name>tomcat</role-name>
+         <role-name>role1</role-name>
+      </auth-constraint>
+
+      <!-- No https support, later
+          user-data-constraint>
+         <transport-guarantee>CONFIDENTIAL</transport-guarantee>
+      </user-data-constraint -->
+    </security-constraint>
+
 </web-app>

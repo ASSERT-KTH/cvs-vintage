@@ -241,6 +241,12 @@ public interface Request  {
      */
     public HttpServletRequestFacade getFacade() ;
 
+    /** Pointer to the server engine - for errors, etc
+     */
+    public void setContextManager( ContextManager cm );
+
+    public ContextManager getContextManager();
+    
     // -------------------- Internal/deprecated--------------------
     // Derived from parsing query string and body (for POST)
 

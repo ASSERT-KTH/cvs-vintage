@@ -107,13 +107,19 @@ public class DefaultCMSetter extends BaseInterceptor {
 	// Set default session manager if none set
 	if( ctx.getSessionManager() == null ) 
 	    ctx.setSessionManager(new org.apache.tomcat.session.StandardSessionManager());
-
 	//  Alternative: org.apache.tomcat.session.ServerSessionManager.getManager();
+
 	ServletWrapper authWrapper=new ServletWrapper();
 	authWrapper.setContext( ctx );
 	authWrapper.setServletClass( "org.apache.tomcat.servlets.AuthServlet" );
-	authWrapper.setServletName( "authServlet");
+	authWrapper.setServletName( "tomcat.authServlet");
 	ctx.addServlet( authWrapper );
+
+	ServletWrapper errorWrapper=new ServletWrapper();
+	errorWrapper.setContext( ctx );
+	errorWrapper.setServletClass( "org.apache.tomcat.servlets.DefaultErrorPage" );
+	errorWrapper.setServletName( "tomcat.errorPage");
+	ctx.addServlet( errorWrapper );
 
 	// XXX Loader properties - need to be set on loader!!
 	//ctx.setServletLoader( new org.apache.tomcat.loader.ServletClassLoaderImpl());
