@@ -4,7 +4,7 @@
 This is the XML DTD for the JBoss 4.0 EJB deployment descriptor.
 The DOCTYPE is:
 
-$Id: jboss_4_0.dtd,v 1.10 2004/06/19 14:05:16 starksm Exp $
+$Id: jboss_4_0.dtd,v 1.11 2004/07/10 03:32:21 starksm Exp $
 
   <!DOCTYPE jboss PUBLIC
       "-//JBoss//DTD JBOSS 4.0//EN"
@@ -143,7 +143,8 @@ Overview of the architecture of jboss.xml
 
 -->
 <!ELEMENT jboss (loader-repository?, jmx-name?, enforce-ejb-restrictions?,
- security-domain?, unauthenticated-principal?, enterprise-beans?, assembly-descriptor?,
+ security-domain?, missing-method-permissions-excluded-mode?,
+ unauthenticated-principal?, enterprise-beans?, assembly-descriptor?,
  resource-managers?, invoker-proxy-bindings?, container-configurations?)>
 
 <!-- The loader-repository specifies the name of the UnifiedLoaderRepository
@@ -209,6 +210,24 @@ name and valid JMX ObjectName string.
   Used in: jboss, container-configuration
 -->
 <!ELEMENT security-domain (#PCDATA)>
+
+<!-- The missing-method-permissions-excluded-mode determines the treatment
+of missing method-permission mappings in the ejb-jar descriptor. The ejb 2.1
+spec states: "It is possible that some methods are not assigned to any security
+roles nor contained in the exclude-list element. In this case, it is the
+responsibility of the Deployer to assign method permissions for all of the
+unspecified methods, either by assigning them to security roles, or by marking
+them as unchecked." The missing-method-permissions-excluded-mode is a boolean
+that allows the deployer to globally indicate that all methods without a
+method-permission element should be treated as excluded(= true and the default),
+or that methods without a method-permission element should be treated as
+unchecked(= false)
+
+<missing-method-permissions-excluded-mode>true</missing-method-permissions-excluded-mode>
+<missing-method-permissions-excluded-mode>false</missing-method-permissions-excluded-mode>
+
+-->
+<!ELEMENT missing-method-permissions-excluded-mode (#PCDATA)>
 
 <!--
   The unauthenticated-principal element specifies the name of the principal
