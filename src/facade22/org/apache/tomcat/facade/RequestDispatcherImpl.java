@@ -193,7 +193,7 @@ final class RequestDispatcherImpl implements RequestDispatcher {
 	//realRequest.query().recycle();
 	realRequest.servletPath().recycle();
 	realRequest.pathInfo().recycle();
-    realRequest.setChild(null);
+	realRequest.setChild(null);
 
 	// merge query string as specified in specs - before, it may affect
 	// the way the request is handled by special interceptors
@@ -201,11 +201,11 @@ final class RequestDispatcherImpl implements RequestDispatcher {
 	    // Process existing parameters, if not already done so
 	    // ( otherwise we'll process some twice )
 	    realRequest.parameters().handleQueryParameters();
-	    // Set the query string - the sum of the new one and old one.
+	    // Set the query string - the new one.
 	    String oldQS=realRequest.queryString().toString();
-	    String newQS=(oldQS==null ) ? queryString : queryString + "&" +
-		oldQS;
-	    realRequest.queryString().setString(newQS);
+	    // String newQS=(oldQS==null ) ? queryString : queryString + "&" +
+	    //	oldQS;
+	    realRequest.queryString().setString(queryString);
 
 	    // Process the additional parsm. We don't know if the old
 	    // params were processed ( so we need to make sure they are,
@@ -215,6 +215,8 @@ final class RequestDispatcherImpl implements RequestDispatcher {
 
 	    child.processParameters( queryString );
 	    //realRequest.parameters().processParameters( queryString ); 
+	} else {
+	    realRequest.queryString().recycle();
 	}
 	
 	// run the new request through the context manager
