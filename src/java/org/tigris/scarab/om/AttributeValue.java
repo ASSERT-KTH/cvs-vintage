@@ -76,7 +76,7 @@ import org.tigris.scarab.om.Module;
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: AttributeValue.java,v 1.82 2002/12/20 18:41:51 jon Exp $
+ * @version $Id: AttributeValue.java,v 1.83 2002/12/29 01:12:05 jon Exp $
  */
 public abstract class AttributeValue 
     extends BaseAttributeValue
@@ -231,7 +231,7 @@ public abstract class AttributeValue
     {
         if (activitySet == null) 
         {
-            String mesg = "Cannot start a activitySet using null ActivitySet"; 
+            String mesg = "Cannot start a ActivitySet using null ActivitySet"; 
             throw new ScarabException(mesg);
         }
         
@@ -239,7 +239,7 @@ public abstract class AttributeValue
         {
             this.activitySet = activitySet;
         }
-        else 
+        else
         {
             throw new ScarabException("A new activitySet was set and " +
                 "a activitySet was already in progress.");
@@ -257,14 +257,17 @@ Leaving here so that John can remove or fix.
         oldOptionId = null;
         oldValue = null;
 */
+
         // Check for previous active activities on this attribute 
         // If they exist, set old value for this activity
-        Criteria crit = new Criteria();
-        crit.add(ActivityPeer.ISSUE_ID, getIssueId());
-        crit.add(ActivityPeer.ATTRIBUTE_ID, getAttributeId());
-        crit.add(ActivityPeer.END_DATE, null);
-        List result = ActivityPeer.doSelect(crit);
-        if (result.size() > 0)
+        List result = null;
+        Issue issue = getIssue();
+        if (issue != null)
+        {
+            result = issue
+                .getActivitiesWithNullEndDate(getAttribute());
+        }
+        if (result != null && result.size() > 0)
         {
             for (int i=0; i<result.size(); i++)
             {
@@ -882,6 +885,7 @@ Leaving here so that John can remove or fix.
 
     /**
      * Sets the properties of one attribute value based on another 
+     * NOTE: Does not copy the deleted field
      */
     public void setProperties(AttributeValue attVal1)
         throws Exception
