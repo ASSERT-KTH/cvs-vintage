@@ -20,7 +20,7 @@ import org.w3c.dom.Element;
  *
  * @see EnterpriseInstanceCache
  * @author Simone Bordet (simone.bordet@compaq.com)
- * @version $Revision: 1.2 $
+ * @version $Revision: 1.3 $
  */
 public class LRUEnterpriseContextCachePolicy extends LRUCachePolicy
 	implements EnterpriseContextCachePolicy, XmlLoadable
@@ -255,8 +255,8 @@ public class LRUEnterpriseContextCachePolicy extends LRUCachePolicy
 				{
 					if (now - entry.m_time >= m_maxBeanAge)
 					{
-						ageOut(entry);
 						log.log("Passivated overaged bean " + m_cache.getContainer().getBeanMetaData().getEjbName() + " with id = " + entry.m_key);
+						ageOut(entry);
 					}
 					else {break;}
 				}
