@@ -28,7 +28,7 @@ import org.columba.mail.util.MailResourceLoader;
  * To change this generated comment go to 
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
-public class SaveMessageAction
+public class SaveMessageAsAction
 	extends FrameAction
 	implements SelectionListener {
 
@@ -42,7 +42,7 @@ public class SaveMessageAction
 	 * 		@param mnemonic
 	 * 		@param keyStroke
 	 */
-	public SaveMessageAction(AbstractFrameController frameController) {
+	public SaveMessageAsAction(AbstractFrameController frameController) {
 		super(
 			frameController,
 			MailResourceLoader.getString(
@@ -64,7 +64,7 @@ public class SaveMessageAction
 	}
 
 	/**
-	 * Called for activation of the SaveMessageAction
+	 * Called for activation of the SaveMessageAsAction
 	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
 	 */
 	public void actionPerformed(ActionEvent evt) {

@@ -56,12 +56,15 @@ public class PrintAction
 			'0',
 			KeyStroke.getKeyStroke(KeyEvent.VK_P, ActionEvent.CTRL_MASK));
 
-			// *20030614, karlpeder* only enabled when message(s) selected
-			setEnabled(false);
-			((AbstractMailFrameController) frameController)
-					.registerTableSelectionListener(this);
-//		setEnabled(true);
-//		// *20030531, karlpeder* Print functionality reactivated
+			// *20030614, karlpeder* In main view only enabled when 
+			// message(s) selected
+			if (frameController instanceof AbstractMailFrameController) {
+				setEnabled(false);
+				((AbstractMailFrameController) frameController)
+						.registerTableSelectionListener(this);
+			} else {
+				setEnabled(false); // disables it in other views
+			}
 	}
 
 	/* (non-Javadoc)
