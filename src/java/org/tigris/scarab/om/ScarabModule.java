@@ -70,8 +70,8 @@ import org.apache.fulcrum.security.impl.db.entity.TurbineUserGroupRole;
 // Scarab classes
 import org.tigris.scarab.services.module.ModuleEntity;
 import org.tigris.scarab.util.ScarabException;
-
-
+import org.tigris.scarab.security.ScarabSecurity;
+import org.tigris.scarab.security.SecurityFactory;
 
 
 /**
@@ -99,6 +99,22 @@ public class ScarabModule
 
     private Map allRModuleOptionsMap = new HashMap();
     private Map activeRModuleOptionsMap = new HashMap();
+
+    public ScarabUser[] getEligibleIssueReporters()
+    {
+        ScarabSecurity security = SecurityFactory.getInstance();
+        ScarabUser[] users = 
+            security.getUsers(ScarabSecurity.ISSUE__ENTER, this);
+        return users;
+    }
+
+    public ScarabUser[] getEligibleAssignees()
+    {
+        ScarabSecurity security = SecurityFactory.getInstance();
+        ScarabUser[] users = 
+            security.getUsers(ScarabSecurity.ISSUE__EDIT, this);
+        return users;
+    }
 
 
     /**

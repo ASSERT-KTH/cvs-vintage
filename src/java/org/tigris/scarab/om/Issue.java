@@ -459,9 +459,7 @@ public class Issue
     public List getEligibleAssignees()
         throws Exception
     {
-        ScarabSecurity security = SecurityFactory.getInstance();
-        ScarabUser[] users = 
-            security.getUsers(ScarabSecurity.ISSUE__EDIT, getScarabModule());
+        ScarabUser[] users = getScarabModule().getEligibleAssignees();
         // remove those already assigned
         List assigneeAVs = getAssigneeAttributeValues();
         if ( users != null && assigneeAVs != null ) 
