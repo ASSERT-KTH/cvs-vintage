@@ -74,7 +74,7 @@
 #include "util_script.h"
 #include "util_date.h"
 #include "http_conf_globals.h"
-
+#include "apr_strings.h"
 /*
  * Jakarta (jk_) include files
  */
@@ -155,19 +155,19 @@ static int JK_METHOD ws_start_response(jk_ws_service_t *s,
             reason = "";
         }
 	    r->status = status;
-	    r->status_line = ap_psprintf(r->pool, "%d %s", status, reason);
+	    r->status_line = apr_psprintf(r->pool, "%d %s", status, reason);
 
         for(h = 0 ; h < num_of_headers ; h++) {
             if(!strcasecmp(header_names[h], "Content-type")) {
-                char *tmp = ap_pstrdup(r->pool, header_values[h]);
+                char *tmp = apr_pstrdup(r->pool, header_values[h]);
                 ap_content_type_tolower(tmp);
                 r->content_type = tmp;
             } else if(!strcasecmp(header_names[h], "Location")) {
-	            ap_table_set(r->headers_out, header_names[h], header_values[h]);
+	            apr_table_set(r->headers_out, header_names[h], header_values[h]);
 	        } else if(!strcasecmp(header_names[h], "Content-Length")) {
-	            ap_table_set(r->headers_out, header_names[h], header_values[h]);
+	            apr_table_set(r->headers_out, header_names[h], header_values[h]);
 	        } else if(!strcasecmp(header_names[h], "Transfer-Encoding")) {
-	            ap_table_set(r->headers_out, header_names[h], header_values[h]);
+	            apr_table_set(r->headers_out, header_names[h], header_values[h]);
             } else if(!strcasecmp(header_names[h], "Last-Modified")) {
 	            /*
 	             * If the script gave us a Last-Modified header, we can't just
@@ -176,7 +176,7 @@ static int JK_METHOD ws_start_response(jk_ws_service_t *s,
 	            ap_update_mtime(r, ap_parseHTTPdate(header_values[h]));
 	            ap_set_last_modified(r);
 	        } else {	            
-	            ap_table_add(r->headers_out, header_names[h], header_values[h]);
+	            apr_table_add(r->headers_out, header_names[h], header_values[h]);
             }
         }
 
@@ -231,7 +231,7 @@ static int JK_METHOD ws_write(jk_ws_service_t *s,
             
 	        
             //ap_bwrite(bf, (const char *)b, w, &r);
-	    r = ap_bwrite((const char *)b, w, p->r );
+	    r = ap_rwrite((const char *)b, w, p->r );
             if(w != r) {
 			    return JK_FALSE;
             }
@@ -266,7 +266,7 @@ static void jk_error_exit(const char *file,
     char *res;
 
     va_start(ap, fmt);
-    res = ap_pvsprintf(s->process->pool, fmt, ap);
+    res = apr_pvsprintf(s->process->pool, fmt, ap);
     va_end(ap);
 
     ap_log_error(file, line, level, 0, s, res);
@@ -280,7 +280,7 @@ static int get_content_length(request_rec *r)
     if(r->clength > 0) {
         return r->clength;
     } else {
-        char *lenp = (char *)ap_table_get(r->headers_in, "Content-Length");
+        char *lenp = (char *)apr_table_get(r->headers_in, "Content-Length");
 
         if(lenp) {
             int rc = atoi(lenp);
@@ -331,17 +331,17 @@ static int init_ws_service(apache_private_data_t *private_data,
     s->headers_names    = NULL;
     s->headers_values   = NULL;
     s->num_headers      = 0;
-    if(r->headers_in && ap_table_elts(r->headers_in)) {
-        apr_array_header_t *t = ap_table_elts(r->headers_in);        
+    if(r->headers_in && apr_table_elts(r->headers_in)) {
+        apr_array_header_t *t = apr_table_elts(r->headers_in);        
         if(t && t->nelts) {
             int i;
             apr_table_entry_t *elts = (apr_table_entry_t *)t->elts;
             s->num_headers = t->nelts;
-            s->headers_names  = ap_palloc(r->pool, sizeof(char *) * t->nelts);
-            s->headers_values = ap_palloc(r->pool, sizeof(char *) * t->nelts);
+            s->headers_names  = apr_palloc(r->pool, sizeof(char *) * t->nelts);
+            s->headers_values = apr_palloc(r->pool, sizeof(char *) * t->nelts);
             for(i = 0 ; i < t->nelts ; i++) {
-                char *hname = ap_pstrdup(r->pool, elts[i].key);
-                s->headers_values[i] = ap_pstrdup(r->pool, elts[i].val);
+                char *hname = apr_pstrdup(r->pool, elts[i].key);
+                s->headers_values[i] = apr_pstrdup(r->pool, elts[i].val);
                 s->headers_names[i] = hname;
                 while(*hname) {
                     *hname = tolower(*hname);
@@ -457,7 +457,7 @@ apr_status_t jk_cleanup_endpoint( void *data ) {
 
 static int jk_handler(request_rec *r)
 {   
-    const char *worker_name = ap_table_get(r->notes, JK_WORKER_ID);
+    const char *worker_name = apr_table_get(r->notes, JK_WORKER_ID);
 
     /* If this is a proxy request, we'll notify an error */
     if(r->proxyreq) {
@@ -531,7 +531,7 @@ static int jk_handler(request_rec *r)
 static void *create_jk_config(apr_pool_t *p, server_rec *s)
 {
     jk_server_conf_t *c =
-        (jk_server_conf_t *) ap_pcalloc(p, sizeof(jk_server_conf_t));
+        (jk_server_conf_t *) apr_pcalloc(p, sizeof(jk_server_conf_t));
 
     c->worker_file = NULL;
     c->log_file    = NULL;
@@ -566,7 +566,7 @@ static void *merge_jk_config(apr_pool_t *p,
             if(NULL == map_get(overrides->uri_to_context, name, NULL)) {
                 if(!map_put(overrides->uri_to_context, 
                             name,
-                            ap_pstrdup(p, map_get_string(base->uri_to_context, name, NULL)),
+                            apr_pstrdup(p, map_get_string(base->uri_to_context, name, NULL)),
                             &old)) {
                     jk_error_exit(APLOG_MARK, APLOG_EMERG, overrides->s, "Memory error");
                 }
@@ -682,8 +682,8 @@ static int jk_translate(request_rec *r)
                                              conf->log ? conf->log : main_log);
 
             if(worker) {
-                r->handler=ap_pstrdup(r->pool,JK_HANDLER);
-                ap_table_setn(r->notes, JK_WORKER_ID, worker);
+                r->handler=apr_pstrdup(r->pool,JK_HANDLER);
+                apr_table_setn(r->notes, JK_WORKER_ID, worker);
                 return OK;
             }
         }
