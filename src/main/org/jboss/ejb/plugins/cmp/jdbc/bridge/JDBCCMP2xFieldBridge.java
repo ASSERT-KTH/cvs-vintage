@@ -34,7 +34,7 @@ import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCCMPFieldMetaData;
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @author <a href="mailto:alex@jboss.org">Alex Loubyansky</a>
- * @version $Revision: 1.28 $
+ * @version $Revision: 1.29 $
  */
 public class JDBCCMP2xFieldBridge extends JDBCAbstractCMPFieldBridge
 {
@@ -170,15 +170,7 @@ public class JDBCCMP2xFieldBridge extends JDBCAbstractCMPFieldBridge
 
    public Object getInstanceValue(EntityEnterpriseContext ctx)
    {
-      // notify optimistic lock
-      FieldState fieldState = getFieldState(ctx);
-      if(!fieldState.isLoaded())
-      {
-         manager.loadField(this, ctx);
-         if(!fieldState.isLoaded())
-            throw new EJBException("Could not load field value: " + getFieldName());
-      }
-
+      FieldState fieldState = getLoadedState(ctx);
       return fieldState.getValue();
    }
 
@@ -287,7 +279,7 @@ public class JDBCCMP2xFieldBridge extends JDBCAbstractCMPFieldBridge
 
    public Object getLockedValue(EntityEnterpriseContext ctx)
    {
-      return getFieldState(ctx).getLockedValue();
+      return getLoadedState(ctx).getLockedValue();
    }
 
    public void updateState(EntityEnterpriseContext ctx, Object value)
@@ -301,6 +293,18 @@ public class JDBCCMP2xFieldBridge extends JDBCAbstractCMPFieldBridge
    }
 
    // Private
+
+   private FieldState getLoadedState(EntityEnterpriseContext ctx)
+   {
+      FieldState fieldState = getFieldState(ctx);
+      if(!fieldState.isLoaded())
+      {
+         manager.loadField(this, ctx);
+         if(!fieldState.isLoaded())
+            throw new EJBException("Could not load field value: " + getFieldName());
+      }
+      return fieldState;
+   }
 
    private void addCMRChainLink(ChainLink nextCMRChainLink)
    {
