@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/struts/src/example/org/apache/struts/webapp/example/Subscription.java,v 1.3 2002/03/05 04:23:56 craigmcc Exp $
- * $Revision: 1.3 $
- * $Date: 2002/03/05 04:23:56 $
+ * $Header: /tmp/cvs-vintage/struts/src/example/org/apache/struts/webapp/example/UserDatabase.java,v 1.1 2002/03/05 04:23:57 craigmcc Exp $
+ * $Revision: 1.1 $
+ * $Date: 2002/03/05 04:23:57 $
  *
  * ====================================================================
  *
@@ -64,85 +64,83 @@ package org.apache.struts.webapp.example;
 
 
 /**
- * <p>A <strong>Subscription</strong> which is stored, along with the
- * associated {@link User}, in a {@link UserDatabase}.</p>
+ * <p>A <strong>Data Access Object</strong> (DAO) interface describing
+ * the available operations for retrieving and storing {@link User}s
+ * (and their associated {@link Subscription}s) in some persistence layer
+ * whose characteristics are not specified here.  One or more implementations
+ * will be created to perform the actual I/O that is required.</p>
  *
  * @author Craig R. McClanahan
- * @version $Revision: 1.3 $ $Date: 2002/03/05 04:23:56 $
+ * @version $Revision: 1.1 $ $Date: 2002/03/05 04:23:57 $
+ * @since Struts 1.1
  */
 
-public interface Subscription {
+public interface UserDatabase {
 
 
-    // ------------------------------------------------------------- Properties
-
-
-    /**
-     * Return the auto-connect flag.
-     */
-    public boolean getAutoConnect();
+    // --------------------------------------------------------- Public Methods
 
 
     /**
-     * Set the auto-connect flag.
+     * <p>Create and return a new {@link User} defined in this user database.
+     * </p>
      *
-     * @param autoConnect The new auto-connect flag
-     */
-    public void setAutoConnect(boolean autoConnect);
-
-
-    /**
-     * Return the host name.
-     */
-    public String getHost();
-
-
-    /**
-     * Return the password.
-     */
-    public String getPassword();
-
-
-    /**
-     * Set the password.
+     * @param username Username of the new user
      *
-     * @param password The new password
+     * @exception IllegalArgumentExceptionif the specified username
+     *  is not unique
      */
-    public void setPassword(String password);
+    public User createUser(String username);
 
 
     /**
-     * Return the subscription type.
-     */
-    public String getType();
-
-
-    /**
-     * Set the subscription type.
+     * <p>Finalize access to the underlying persistence layer.</p>
      *
-     * @param type The new subscription type
+     * @exception Exception if a database access error occurs
      */
-    public void setType(String type);
+    public void close() throws Exception;
 
 
     /**
-     * Return the {@link User} owning this Subscription.
-     */
-    public User getUser();
-
-
-    /**
-     * Return the username.
-     */
-    public String getUsername();
-
-
-    /**
-     * Set the username.
+     * <p>Return the existing {@link User} with the specified username,
+     * if any; otherwise return <code>null</code>.</p>
      *
-     * @param username The new username
+     * @param username Username of the user to retrieve
      */
-    public void setUsername(String username);
+    public User findUser(String username);
+
+
+    /**
+     * <p>Return the set of {@link User}s defined in this user database.</p>
+     */
+    public User[] findUsers();
+
+
+    /**
+     * <p>Initiate access to the underlying persistence layer.</p>
+     *
+     * @exception Exception if a database access error occurs
+     */
+    public void open() throws Exception;
+
+
+    /**
+     * Remove the specified {@link User} from this database.
+     *
+     * @param user User to be removed
+     *
+     * @exception IllegalArgumentException if the specified user is not
+     *  associated with this database
+     */
+    public void removeUser(User user);
+
+
+    /**
+     * <p>Save any pending changes to the underlying persistence layer.</p>
+     *
+     * @exception Exception if a database access error occurs
+     */
+    public void save() throws Exception;
 
 
 }

@@ -1,13 +1,13 @@
 /*
- * $Header: /tmp/cvs-vintage/struts/src/example/org/apache/struts/webapp/example/Constants.java,v 1.2 2001/04/14 12:53:07 rleland Exp $
- * $Revision: 1.2 $
- * $Date: 2001/04/14 12:53:07 $
+ * $Header: /tmp/cvs-vintage/struts/src/example/org/apache/struts/webapp/example/Constants.java,v 1.3 2002/03/05 04:23:56 craigmcc Exp $
+ * $Revision: 1.3 $
+ * $Date: 2002/03/05 04:23:56 $
  *
  * ====================================================================
  *
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 1999-2001 The Apache Software Foundation.  All rights
+ * Copyright (c) 1999-2002 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -67,7 +67,7 @@ package org.apache.struts.webapp.example;
  * Manifest constants for the example application.
  *
  * @author Craig R. McClanahan
- * @version $Revision: 1.2 $ $Date: 2001/04/14 12:53:07 $
+ * @version $Revision: 1.3 $ $Date: 2002/03/05 04:23:56 $
  */
 
 public final class Constants {
@@ -80,8 +80,8 @@ public final class Constants {
 
 
     /**
-     * The application scope attribute under which our Hashtable of
-     * Users is stored.
+     * The application scope attribute under which our user database
+     * is stored.
      */
     public static final String DATABASE_KEY = "database";
 
