@@ -12,7 +12,8 @@ package org.jboss.ejb.plugins.cmp.jdbc;
  * mapping of java classes to multipul columns.
  * 
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.4 $
+ * @author <a href="mailto:loubyansky@ua.fm">Alex Loubyansky</a>
+ * @version $Revision: 1.5 $
  */
 public interface JDBCType {
    public String[] getColumnNames();   
@@ -20,6 +21,7 @@ public interface JDBCType {
    public int[] getJDBCTypes();   
    public String[] getSQLTypes();
    public boolean[] getNotNull();
+   public boolean[] getAutoIncrement();
    
    public Object getColumnValue(int index, Object value);
    public Object setColumnValue(int index, Object value, Object columnValue);
