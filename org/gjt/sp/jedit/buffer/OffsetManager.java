@@ -26,7 +26,7 @@ package org.gjt.sp.jedit.buffer;
 import javax.swing.text.*;
 import org.gjt.sp.jedit.syntax.*;
 import org.gjt.sp.jedit.Buffer;
-import org.gjt.sp.util.IntegerArray;
+import org.gjt.sp.util.LongArray;
 import org.gjt.sp.util.Log;
 //}}}
 
@@ -38,7 +38,7 @@ import org.gjt.sp.util.Log;
  * called through, implements such protection.
  *
  * @author Slava Pestov
- * @version $Id: OffsetManager.java,v 1.33 2003/02/23 04:05:21 spestov Exp $
+ * @version $Id: OffsetManager.java,v 1.34 2003/03/09 19:57:36 spestov Exp $
  * @since jEdit 4.0pre1
  */
 public class OffsetManager
@@ -309,7 +309,7 @@ public class OffsetManager
 
 	//{{{ contentInserted() method
 	public void contentInserted(int startLine, int offset,
-		int numLines, int length, IntegerArray endOffsets)
+		int numLines, int length, LongArray endOffsets)
 	{
 		int endLine = startLine + numLines;
 
@@ -360,7 +360,7 @@ public class OffsetManager
 				// need the line end offset to be in place
 				// for following fold level calculations
 				lineInfo[startLine + i] = (offset
-					+ endOffsets.get(i) + 1)
+					+ endOffsets.get(i))
 					| visible;
 			}
 

@@ -3,7 +3,7 @@
  * :tabSize=8:indentSize=8:noTabs=false:
  * :folding=explicit:collapseFolds=1:
  *
- * Copyright (C) 2000, 2001 Slava Pestov
+ * Copyright (C) 2000, 2003 Slava Pestov
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -35,7 +35,7 @@ import org.gjt.sp.util.*;
 /**
  * A buffer I/O request.
  * @author Slava Pestov
- * @version $Id: BufferIORequest.java,v 1.5 2003/01/28 03:07:20 spestov Exp $
+ * @version $Id: BufferIORequest.java,v 1.6 2003/03/09 19:57:36 spestov Exp $
  */
 public class BufferIORequest extends WorkRequest
 {
@@ -318,7 +318,7 @@ public class BufferIORequest extends WorkRequest
 	private void read(Buffer buffer, InputStream _in, long length)
 		throws IOException
 	{
-		IntegerArray endOffsets = new IntegerArray();
+		LongArray endOffsets = new LongArray();
 
 		// only true if the file size is known
 		boolean trackProgress = (!buffer.isTemporary() && length != 0);
@@ -395,8 +395,8 @@ public class BufferIORequest extends WorkRequest
 					// Insert a line
 					seg.append(buf,lastLine,i -
 						lastLine);
-					endOffsets.add(seg.count);
 					seg.append('\n');
+					endOffsets.add(seg.count);
 					if(trackProgress && lineCount++ % PROGRESS_INTERVAL == 0)
 						setProgressValue(seg.count);
 
@@ -433,8 +433,8 @@ public class BufferIORequest extends WorkRequest
 						CRLF = false;
 						seg.append(buf,lastLine,
 							i - lastLine);
-						endOffsets.add(seg.count);
 						seg.append('\n');
+						endOffsets.add(seg.count);
 						if(trackProgress && lineCount++ % PROGRESS_INTERVAL == 0)
 							setProgressValue(seg.count);
 						lastLine = i + 1;
