@@ -644,9 +644,30 @@
     <!-- Load default data                                                  -->
     <!-- ================================================================== -->
     <target name="load-default-data" depends="create-db-schema">
+
+        <property name="file.prefix" value="${build.sql.scarab}/"/>
+
+        <!-- Oracle does not have any type of conditional execution    -->
+        <!-- of "drop table".  So when running the table creation,     -->
+        <!-- it fails when dropping a table.  Rather than setting the  -->
+        <!-- onerror of the actual creation class to "continue", this  -->
+        <!-- pre-creates dummy tables (ignoring any errors if the      -->
+        <!-- tables already exist) so that they can be dropped.        -->
+        <sql
+            rdbms="oracle"
+            onerror="continue"
+            driver="${scarab.database.jdbc.driver}"
+            url="${scarab.database.admin.url}"
+            userid="${scarab.database.admin.username}"
+            password="${scarab.database.admin.password}">
+            <classpath refid="classpath"/>
+            <transaction 
+                src="${file.prefix}prepare-dummy-tables.sql"/>
+        </sql>
+
+
         <echo message=
             "Connecting to ${scarab.database.type} at ${scarab.database.url}"/>
-        <property name="file.prefix" value="${build.sql.scarab}/"/>
         <sql
             driver="${scarab.database.jdbc.driver}"
             url="${scarab.database.url}"
@@ -667,8 +688,6 @@
         </sql>
     </target>
 
-    <!-- ================================================================== -->
-    <!-- Generate Data DTD from Torque                                      -->
     <!-- ================================================================== -->
     <!-- Load seed data unless bypassed by setting "skip.seed.data"         -->
     <!-- to any value in "build.properties"                                 -->
@@ -699,6 +718,8 @@
     <!-- ================================================================== -->
     <target name="create-db" depends="load-seed-data"/>
 
+    <!-- ================================================================== -->
+    <!-- Generate Data DTD from Torque                                      -->
     <!-- ================================================================== -->
     <target name="datadtd-check">
         <echo message="checking: ${src.sql.dir}/${project}-data.dtd"/>
