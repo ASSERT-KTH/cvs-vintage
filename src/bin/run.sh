@@ -5,7 +5,7 @@
 ##                                                                          ##
 ### ====================================================================== ###
 
-### $Id: run.sh,v 1.28 2001/09/07 22:30:47 starksm Exp $ ###
+### $Id: run.sh,v 1.29 2001/09/10 12:40:33 kimptoc Exp $ ###
 
 DIRNAME=`dirname $0`
 PROGNAME=`basename $0`
@@ -44,7 +44,7 @@ fi
 HAS_HOTSPOT=`$JAVA -version 2>&1 | $GREP HotSpot`
 
 # If JAVA_OPTS is not set and the JVM is HOTSPOT enabled, then the server mode
-if [ "x$JAVA_OPTS" = "x" -a "x$HOTSPOT" != "x" ]; then
+if [ "x$JAVA_OPTS" = "x" -a "x$HAS_HOTSPOT" != "x" ]; then
     JAVA_OPTS="-server"
 fi
 
