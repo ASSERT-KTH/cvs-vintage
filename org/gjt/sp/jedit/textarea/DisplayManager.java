@@ -35,7 +35,7 @@ import org.gjt.sp.util.Log;
  * Manages low-level text display tasks.
  * @since jEdit 4.2pre1
  * @author Slava Pestov
- * @version $Id: DisplayManager.java,v 1.28 2003/04/21 03:21:37 spestov Exp $
+ * @version $Id: DisplayManager.java,v 1.29 2003/04/21 04:10:01 spestov Exp $
  */
 public class DisplayManager
 {
@@ -726,6 +726,24 @@ public class DisplayManager
 			int screenLines = getScreenLineCount(physicalLine);
 			if(skew >= screenLines)
 				skew = screenLines - 1;
+
+			//XXX
+			int verifyScreenLine = 0;
+			int i = 0;
+
+			for(; i < buffer.getLineCount(); i++)
+			{
+				if(!isLineVisible(i))
+					continue;
+
+				if(i >= physicalLine)
+					break;
+
+				verifyScreenLine += getScreenLineCount(i);
+			}
+			if(verifyScreenLine != scrollLine)
+				new org.gjt.sp.jedit.gui.BeanShellErrorDialog(null,new Exception(scrollLine + ":" + verifyScreenLine));
+			//XXX
 
 			textArea.updateScrollBars();
 			textArea.recalculateLastPhysicalLine();
