@@ -59,13 +59,15 @@
 package org.apache.tomcat.modules.config;
 
 import java.io.IOException;
+import java.util.*;
+import java.lang.reflect.*;
 import org.apache.tomcat.core.*;
 import org.apache.tomcat.modules.aaa.*;
 import org.apache.tomcat.modules.server.*;
 import org.apache.tomcat.util.log.Log;
 import org.apache.tomcat.util.io.*;
 
-/** 
+/**
  * <code>PasswordPrompter</code> is a add-on module for the Tomcat 3.3
  * server. By installing this module, any secure connectors listed in the
  * <code>server.xml</code> configuration file can be defined without the
@@ -76,7 +78,7 @@ import org.apache.tomcat.util.io.*;
  * need not be stored in the configuration files.
  *
  * Also, any JDBCRealm in <code>server.xml</code> defined without a
- * connectionPassword will result in a command-line prompt for the password. 
+ * connectionPassword will result in a command-line prompt for the password.
  *
  * <p>
  * <strong>Installation</strong>
@@ -84,7 +86,7 @@ import org.apache.tomcat.util.io.*;
  *
  * Place the PasswordPrompter.war file in Tomcat 3.3's modules directory
  * prior to starting Tomcat.
- * 
+ *
  * <p>
  * <strong>Notes</strong>
  * <p>
@@ -100,7 +102,7 @@ import org.apache.tomcat.util.io.*;
  *
  * @author    Larry Isaacs
  * @author    Christopher Cain
- * @version   $Revision: 1.1 $ $Date: 2001/10/08 05:23:57 $
+ * @version   $Revision: 1.2 $ $Date: 2002/03/12 04:08:30 $
  */
 public class PasswordPrompter extends BaseInterceptor {
 
@@ -115,6 +117,11 @@ public class PasswordPrompter extends BaseInterceptor {
     /** Number of lines to scroll to hide password */
     private int scroll = 25;
 
+    /** Delay (milliseconds) before prompting */
+    private int delay = 100;
+
+    private Vector prompts = new Vector();
+
     // ------------------------------------------------------------ Constructor
 
     /** Default constructor. */
@@ -126,6 +133,23 @@ public class PasswordPrompter extends BaseInterceptor {
     /** Set number of lines to scroll display to hide the password */
     public void setScroll( int lines ) {
         scroll = lines;
+    }
+
+    /** Set delay (in milliseconds) prior to outputting prompt
+        to give queue output to reach the console */
+    public void setDelay( int delay ) {
+        this.delay = delay;
+    }
+
+    /** Set a module prompt string */
+    public void setProperty( String name, String value ) {
+        if ( name.startsWith("prompt") ) {
+            UserPrompt p = new UserPrompt( value );
+            prompts.add(p);
+            if ( debug > 0 ) {
+                log("Prompt specification " + value + " added");
+            }
+        }
     }
 
     // ------------------------------------------------ Implementation (Public)
@@ -152,105 +176,302 @@ public class PasswordPrompter extends BaseInterceptor {
 
     /**
      * This callback is automatically executed by the startup process each time
-     * an interceptor is added to a context. For the purposes of this
-     * particular module, processing is only done when this interceptor itself
-     * is added.
+     * an interceptor is added to a context.
+     *
+     * This method will experience two rounds of calls.  In the first round,
+     * the ContextManager will be in the STATE_NEW state and this module will
+     * have been loaded in a "trial" classloader.  In the second round,
+     * the ContextManager will be in the STATE_CONFIG state and this
+     * module will be loaded in its "final" classloader, which could be
+     * configured differently from the "trial" classloader used in the
+     * first round.
+     *
+     * In each round, the first call to this method will be with itself as
+     * the module being added.  Any number of modules could have been previosly
+     * added. This method will be called again when any additional modules
+     * are added.
+     *
+     * The Prompting is performed the second round.
      *
      * @param cm    the <code>ContextManager</code> for which the interceptor
      *              is being added
      * @param ctx   the <code>Context</code> for which the interceptor is being
-     *              added
+     *              added. Will be null for global modules.  For add-on modules
+     *              it will always be null since they are always added as global
+     *              modules.
      * @param i     the interceptor being added to the Context
      */
     public void addInterceptor( ContextManager cm, Context ctx,
-                                BaseInterceptor i )
+                                BaseInterceptor i ) throws TomcatException
     {
         // If executing config generation, don't prompt for passwords
-        if ( cm.getProperty("jkconf") != null )
+        if ( cm.getProperty("jkconf") != null ) {
+            return;
+        }
+
+        // if time to prompt
+        if ( cm.getState() != ContextManager.STATE_CONFIG ) {
+            BaseInterceptor[] modules;
+
+            // if adding ourselves (i.e. the first call )
+            if ( i == this ) {
+                // prepare all of the prompts
+                for ( int idx = 0; idx < prompts.size(); idx++ )
+                {
+                    UserPrompt p = (UserPrompt)prompts.elementAt(idx);
+                    p.prepare( (Hashtable)cm.getNote("modules"),
+                                getLog() , debug );
+                }
+
+                // check all previously added modules
+                modules =
+                        cm.getContainer().getInterceptors( Container.H_engineInit );
+            } else {
+                // check just the module being added
+                modules = new BaseInterceptor[] { i };
+            }
+
+            for ( int idx = 0; idx < prompts.size(); idx++ ) {
+                UserPrompt p =
+                        (UserPrompt)prompts.elementAt(idx);
+                // perform this prompt for any applicable modules in the array
+                p.prompt( modules, delay, scroll );
+            }
+        }
+    }
+
+}
+
+class UserPrompt
+{
+    boolean valid=false;
+    private String spec;
+    private String module;
+    private String test;
+    private String isSet;
+    private String set;
+    private String prompt;
+    Log logger;
+    int debug;
+
+    private Class moduleClass;
+    private UserPromptMethod testMethod;
+    private UserPromptMethod isSetMethod;
+    private UserPromptMethod setMethod;
+
+    Class [] paramTypes1 = new Class[] { String.class };
+    Class [] paramTypes2 = new Class[] { String.class, Object.class };
+
+    public UserPrompt( String spec ) {
+        if ( spec == null )
             return;
 
-        if ( i == this ) {
-
-            BaseInterceptor[] interceptors = cm.getContainer().getInterceptors(
-                Container.H_engineInit
-            );
-
-            for ( int idx = 0; idx < interceptors.length; idx++ )
-            {
-
-                if ( interceptors[idx] instanceof PoolTcpConnector )
-                {
-                    // We have an Http connector, set certificate password if appropriate
-                    processTcpConnector( (PoolTcpConnector)interceptors[idx] );
-                }
-                else if ( interceptors[idx] instanceof JDBCRealm )
-                {
-                    // We have a JDBC realm, set DB connection password if appropriate
-                    processJDBCRealm( (JDBCRealm)interceptors[idx] );
-                }
-            }
-        } else {
-            if ( i instanceof PoolTcpConnector ) {
-                processTcpConnector( (PoolTcpConnector)i );
-            }
+        this.spec = spec;
+        this.logger = logger;
+        StringTokenizer st = new StringTokenizer(spec,"|");
+        try {
+            module = st.nextToken();
+            test = st.nextToken();
+            isSet = st.nextToken();
+            set = st.nextToken();
+            prompt = st.nextToken();
+            valid=true;
+        } catch ( NoSuchElementException nsee ) {
+            // leave as invalid
         }
     }
 
-    private void processTcpConnector( PoolTcpConnector connector )
-    {
-        // We have an Http connector, check to see if it's secure
-        if ( connector.isSecure() )
+    public String getSpec() {
+        return spec;
+    }
+
+    public boolean isValid() {
+        return valid;
+    }
+
+    /** Prepare needed prompt fields.
+     */
+    public void prepare( Hashtable modules, Log logger, int debug ) {
+        this.debug = debug;
+        if ( valid && logger != null )
         {
-            // It's secure, now check to see if the keystore pass was
-            // already specified in the config file
-            if (!connector.isKeypassSet()) {
-                // insure log flushed
-                Log logger = getLog();
-                if (logger != null )
-                    logger.flush();
+            this.logger = logger;
 
-                // Go ahead with the prompting
-                String certpwd = null;
-                try {
-                    certpwd = Prompter.promptForInput(
-                            "SSL socket detected, please enter " +
-                            "the certificate password:", scroll );
-                } catch (IOException ioe) {
-                    log( "IO problem with command line: " + ioe.toString() );
-                } catch (PrompterException pe) {
-                    log( "Prompter problem: " + pe.toString() );
+            String className = module;
+            // if no package, assume module name
+            if ( module.indexOf(".") < 0 ) {
+                String cn = (String)modules.get( module );
+                if ( cn != null ) {
+                    if ( debug > 0 )
+                        logger.log("Translating module name "
+                                + module + " to " + cn);
+                    className = cn;
                 }
-
-                if ( certpwd != null )
-                    connector.setKeypass(certpwd);
+            }
+            try {
+                moduleClass = Class.forName( className );
+                testMethod = new UserPromptMethod( moduleClass, test, false );
+                isSetMethod = new UserPromptMethod( moduleClass, isSet, false );
+                setMethod = new UserPromptMethod( moduleClass, set, true );
+                if ( debug > 0 ) {
+                    logger.log("Prompt for " + module + " prepared");
+                }
+            } catch ( Exception ex ) {
+                valid = false;
+                logger.log( "Exception occurred while preparing UserPrompt."
+                        + " Treating as invalid", ex );
             }
         }
     }
 
-    private void processJDBCRealm( JDBCRealm realm )
-    {
-        // Check to see if the connection password was
-        // already specified in the config file
-        if (!realm.isConnectionPasswordSet()) {
-            // insure log flushed
-            Log logger = getLog();
-            if (logger != null )
-                logger.flush();
+    /** Perform the prompt for any modules that match the module for this
+     *  prompt instance.  For each match, if the "test" and "is already set"
+     *  methods succeed, the prompt is displayed and the response is
+     *  set on the module using the "set" method.
+     */
+    public void prompt( BaseInterceptor [] modules, int delay, int scroll ) {
+        if ( !valid )
+            return;
 
-            // Go ahead with the prompting
-            String connpwd = null;
+        for ( int i = 0; i < modules.length; i++ ) {
+            BaseInterceptor module = modules[i];
+            if ( !moduleClass.isInstance( module ) ) {
+                continue;
+            }
+            if ( !testMethod.invokeBool( module, true ) ) {
+                if ( debug > 0 ) {
+                    logger.log("Module " + module + " failed test method "
+                            + testMethod.getName());
+                }
+                continue;
+            }
+            if ( !isSetMethod.invokeBool( module, false ) ) {
+                if ( debug > 0 ) {
+                    logger.log("Module " + module + " attribute already "
+                            + "set according to " + isSetMethod.getName() + " method");
+                }
+                continue;
+            }
+
+           // insure log flushed
+           logger.flush();
+           // delay in case using QueueLogger, which doesn't flush
+           try {
+               Thread.currentThread().sleep(delay);
+           } catch ( InterruptedException ie ) {
+               // ignore
+           }
+
+            // go ahead with the prompting
+            String response = null;
             try {
-                connpwd = Prompter.promptForInput(
-                        "JDBC Realm detected, please enter " +
-       	                "the connection password:", scroll );
-	    } catch (IOException ioe) {
-	        log( "IO problem with command line: " + ioe.toString() );
-	    } catch (PrompterException pe) {
-	        log( "Prompter problem: " + pe.toString() );
-	    }
-
-	    if ( connpwd != null )
-	        realm.setConnectionPassword(connpwd);
+                response = Prompter.promptForInput( prompt, scroll );
+                setMethod.invokeSet( module, response );
+            } catch (IOException ioe) {
+                logger.log( "IO problem with command line: " + ioe.toString() );
+            } catch (PrompterException pe) {
+                logger.log( "Prompter problem: " + pe.toString() );
+            } catch ( InvocationTargetException ite ) {
+                logger.log( "Error setting the response in the module: "
+                        + ite.toString() );
+            } catch ( IllegalAccessException iae ) {
+                logger.log( "Problem setting the response in the module: "
+                        + iae.toString() );
+            }
         }
+    }
+}
+
+
+class UserPromptMethod
+{
+    boolean skip=true;
+    boolean not=false;
+    Method method;
+    String param;
+
+    Class [] paramTypes1 = new Class[] { String.class };
+    Class [] paramTypes2 = new Class[] { String.class, Object.class };
+
+    public UserPromptMethod( Class moduleClass, String spec , boolean set )
+            throws NoSuchMethodException {
+        if ( moduleClass != null && !"always".equals( spec )  ) {
+
+            if ( spec.startsWith("!") ) {
+                not=true;
+                spec = spec.substring(1);
+            }
+
+            int idx = spec.indexOf(":");
+            if ( idx < 0 ) {
+                method = moduleClass.getMethod( spec,
+                        set ? paramTypes1 : null );
+                param = null;
+                skip = false;
+            } else if ( idx > 0 ) {
+                method = moduleClass.getMethod( spec.substring( 0, idx ),
+                        set ? paramTypes2 : paramTypes1 );
+                param = spec.substring( idx + 1);
+                skip = false;
+            } else {
+                throw new NoSuchMethodException("Empty method specified");
+            }
+        }
+    }
+
+    public String getName() {
+        if ( method != null ) {
+            return method.getName();
+        } else if ( skip ) {
+            return "<skipped>";
+        } else {
+            return "<invalid>";
+        }
+    }
+
+    /** Return success if boolean method returns the desired
+     *  target (or !target).  If skipping, always return true.
+     *  If error, always return false.
+     */
+    public boolean invokeBool( BaseInterceptor module, boolean target ) {
+        if ( skip ) {
+            return true;
+        }
+
+        Object [] params = null;
+        if ( param != null ) {
+            params = new Object [] { param };
+        }
+
+        try {
+            Object result = method.invoke( module, params );
+            if ( result instanceof Boolean ) {
+                if ( not ) {
+                    target = !target;
+                }
+                return ( ((Boolean)result).booleanValue() == target );
+            } else {
+                if ( not ) {
+                    target = !target;
+                }
+                return !target;
+            }
+        } catch ( Exception ex ) {
+            return false;
+        }
+    }
+
+    /** Invoke setter method with specified value
+     */
+    public void invokeSet( BaseInterceptor module, String value )
+            throws IllegalAccessException, InvocationTargetException {
+        Object [] params;
+        if ( param != null ) {
+            params = new Object [] { param, value };
+        } else {
+            params = new Object [] { value };
+        }
+
+        method.invoke( module, params );
     }
 }
