@@ -1,5 +1,5 @@
 
-// $Id: ToDoPane.java,v 1.25 2003/08/26 17:13:33 bobtarling Exp $
+// $Id: ToDoPane.java,v 1.26 2003/09/01 19:01:27 bobtarling Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -91,7 +91,7 @@ import org.tigris.gef.util.VectorSet;
  *  ToDoPerspective skill = new ToDoBySkill();
  *</pre>
 
- * $Id: ToDoPane.java,v 1.25 2003/08/26 17:13:33 bobtarling Exp $
+ * $Id: ToDoPane.java,v 1.26 2003/09/01 19:01:27 bobtarling Exp $
  */
 public class ToDoPane extends JPanel
     implements ItemListener,
@@ -207,8 +207,7 @@ public class ToDoPane extends JPanel
         Designer.TheDesigner.getToDoList().addToDoListListener(this);
         
         if (doSplash) {
-            SplashScreen splash =
-		ProjectBrowser.getInstance().getSplashScreen();
+            SplashScreen splash = SplashScreen.getInstance();
             splash.getStatusBar().showStatus("Making TodoPane: "
 					     + "Setting Perspectives");
             splash.getStatusBar().showProgress(25);

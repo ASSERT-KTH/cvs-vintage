@@ -1,4 +1,4 @@
-// $Id: ProjectBrowser.java,v 1.111 2003/08/27 19:53:23 jjones Exp $
+// $Id: ProjectBrowser.java,v 1.112 2003/09/01 19:01:27 bobtarling Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -179,7 +179,7 @@ public class ProjectBrowser
         super(appName);
         TheInstance = this;
         if (doSplash) {
-            _splash = new SplashScreen("Loading ArgoUML...", "Splash");
+            _splash = SplashScreen.getInstance();
             _splash.getStatusBar().showStatus("Making Project Browser");
             _splash.getStatusBar().showProgress(10);
             _splash.setVisible(true);
@@ -985,6 +985,8 @@ public class ProjectBrowser
     /**
      * Returns the splashscreen shown at startup. 
      * @return SplashScreen
+     * @deprecated 0.15 will be removed in 0.16 use 
+     * SplashScreen.getInstance() instead
      */
     public SplashScreen getSplashScreen() {
         return _splash;

@@ -1,4 +1,4 @@
-// $Id: ConfigLoader.java,v 1.11 2003/08/30 20:43:35 alexb Exp $
+// $Id: ConfigLoader.java,v 1.12 2003/09/01 19:01:27 bobtarling Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -38,6 +38,7 @@ import org.argouml.application.api.Configuration;
 import org.argouml.application.api.ConfigurationKey;
 import org.argouml.swingext.Orientation;
 import org.argouml.ui.ProjectBrowser;
+import org.argouml.ui.SplashScreen;
 
 public class ConfigLoader {
     private static Logger _Log = Logger.getLogger("org.argouml.util.ConfigLoader"); 
@@ -158,9 +159,9 @@ public class ConfigLoader {
 		    _Log.error(e);
 		}
 		if (res != null) {
-		    if (ProjectBrowser.getInstance().getSplashScreen() != null) {
-			ProjectBrowser.getInstance().getSplashScreen().getStatusBar().showStatus("Making Project Browser: " + tabName);
-			ProjectBrowser.getInstance().getSplashScreen().getStatusBar().incProgress(2);
+		    if (SplashScreen.getInstance() != null) {
+			SplashScreen.getInstance().getStatusBar().showStatus("Making Project Browser: " + tabName);
+			SplashScreen.getInstance().getStatusBar().incProgress(2);
 		    }
 		    return res;
 		}
