@@ -7,7 +7,7 @@
 <!-- ===================================================================== -->
 <!--  Standard JBoss EJB Configurations                                    -->
 <!-- ===================================================================== -->
-<!-- $Id: standardjboss.xml,v 1.86 2004/08/13 16:03:42 ejort Exp $ -->
+<!-- $Id: standardjboss.xml,v 1.87 2004/08/17 12:29:00 ejort Exp $ -->
 
 <jboss>
   <enforce-ejb-restrictions>false</enforce-ejb-restrictions>
@@ -299,6 +299,62 @@
         <poa>per-servant</poa>
         <register-ejbs-in-jnp-context>true</register-ejbs-in-jnp-context>
         <jnp-context>iiop</jnp-context>
+      </proxy-factory-config>
+    </invoker-proxy-binding>
+
+    <invoker-proxy-binding>
+      <name>jms-message-inflow-driven-bean</name>
+      <invoker-mbean>default</invoker-mbean>
+      <proxy-factory>org.jboss.ejb.plugins.inflow.JBossJMSMessageEndpointFactory</proxy-factory>
+      <proxy-factory-config>
+        <activation-config>
+           <activation-config-property>
+              <activation-config-property-name>providerAdapterJNDI</activation-config-property-name>
+              <activation-config-property-value>DefaultJMSProvider</activation-config-property-value>
+           </activation-config-property>
+           <activation-config-property>
+              <activation-config-property-name>minSession</activation-config-property-name>
+              <activation-config-property-value>1</activation-config-property-value>
+           </activation-config-property>
+           <activation-config-property>
+              <activation-config-property-name>maxSession</activation-config-property-name>
+              <activation-config-property-value>15</activation-config-property-value>
+           </activation-config-property>
+           <activation-config-property>
+              <activation-config-property-name>keepAlive</activation-config-property-name>
+              <activation-config-property-value>60000</activation-config-property-value>
+           </activation-config-property>
+           <activation-config-property>
+              <activation-config-property-name>maxMessages</activation-config-property-name>
+              <activation-config-property-value>1</activation-config-property-value>
+           </activation-config-property>
+           <activation-config-property>
+              <activation-config-property-name>reconnectInterval</activation-config-property-name>
+              <activation-config-property-value>10</activation-config-property-value>
+           </activation-config-property>
+           <activation-config-property>
+              <activation-config-property-name>useDLQ</activation-config-property-name>
+              <activation-config-property-value>true</activation-config-property-value>
+           </activation-config-property>
+           <activation-config-property>
+              <activation-config-property-name>dLQHandler</activation-config-property-name>
+              <activation-config-property-value>org.jboss.resource.adapter.jms.inflow.dlq.GenericDLQHandler</activation-config-property-value>
+           </activation-config-property>
+           <activation-config-property>
+              <activation-config-property-name>dLQJNDIName</activation-config-property-name>
+              <activation-config-property-value>queue/DLQ</activation-config-property-value>
+           </activation-config-property>
+           <activation-config-property>
+              <activation-config-property-name>dLQMaxResent</activation-config-property-name>
+              <activation-config-property-value>10</activation-config-property-value>
+           </activation-config-property>
+        </activation-config>
+        <endpoint-interceptors>
+          <interceptor>org.jboss.proxy.ClientMethodInterceptor</interceptor>
+          <interceptor>org.jboss.ejb.plugins.inflow.MessageEndpointInterceptor</interceptor>
+          <interceptor>org.jboss.proxy.TransactionInterceptor</interceptor>
+          <interceptor>org.jboss.invocation.InvokerInterceptor</interceptor>
+        </endpoint-interceptors>
       </proxy-factory-config>
     </invoker-proxy-binding>
   </invoker-proxy-bindings>
