@@ -1,16 +1,18 @@
-//The contents of this file are subject to the Mozilla Public License Version 1.1
-//(the "License"); you may not use this file except in compliance with the 
+// The contents of this file are subject to the Mozilla Public License Version
+// 1.1
+//(the "License"); you may not use this file except in compliance with the
 //License. You may obtain a copy of the License at http://www.mozilla.org/MPL/
 //
 //Software distributed under the License is distributed on an "AS IS" basis,
-//WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License 
+//WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
 //for the specific language governing rights and
 //limitations under the License.
 //
 //The Original Code is "The Columba Project"
 //
-//The Initial Developers of the Original Code are Frederik Dietz and Timo Stich.
-//Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
+//The Initial Developers of the Original Code are Frederik Dietz and Timo
+// Stich.
+//Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003.
 //
 //All Rights Reserved.
 package org.columba.mail.smtp;
@@ -36,16 +38,16 @@ import org.columba.ristretto.smtp.SMTPProtocol;
 
 /**
  * @author fdietz
- *
- * SMTPServer makes use of <class>SMTPProtocol</class> to add
- * a higher abstraction layer for sending messages.
+ * 
+ * SMTPServer makes use of <class>SMTPProtocol</class> to add a higher
+ * abstraction layer for sending messages.
  * 
  * It takes care of authentication all the details.
  * 
- * To send a message just create a <class>SendableMessage</class>
- * object and use <method>sendMessage</method>.
+ * To send a message just create a <class>SendableMessage</class> object and
+ * use <method>sendMessage</method>.
  * 
- * 
+ *  
  */
 public class SMTPServer {
 
@@ -53,9 +55,9 @@ public class SMTPServer {
 	protected AccountItem accountItem;
 	protected IdentityItem identityItem;
 	protected String fromAddress;
-	
+
 	protected Object observer;
-	
+
 	/**
 	 * Constructor for SMTPServer.
 	 */
@@ -68,10 +70,9 @@ public class SMTPServer {
 	}
 
 	/**
-	 * Open connection to SMTP server and login if
-	 * needed.
+	 * Open connection to SMTP server and login if needed.
 	 * 
-	 * @return	true if connection was successful, false otherwise
+	 * @return true if connection was successful, false otherwise
 	 */
 	public boolean openConnection() {
 		String username;
@@ -93,13 +94,12 @@ public class SMTPServer {
 		SmtpItem smtpItem = accountItem.getSmtpItem();
 		String host = smtpItem.get("host");
 
-		// Sent Folder 
+		// Sent Folder
 		SpecialFoldersItem specialFoldersItem =
 			accountItem.getSpecialFoldersItem();
 		Integer i = new Integer(specialFoldersItem.get("sent"));
 		int sentFolder = i.intValue();
 
-		
 		String authType = accountItem.getSmtpItem().get("login_method");
 		authenticate = !authType.equals("NONE");
 
@@ -132,10 +132,14 @@ public class SMTPServer {
 
 		// initialise protocol layer
 		try {
-			smtpProtocol = new SMTPProtocol(host, smtpItem.getInteger("port"), smtpItem.getBoolean("enable_ssl", true));
-			
+			smtpProtocol =
+				new SMTPProtocol(
+					host,
+					smtpItem.getInteger("port"),
+					smtpItem.getBoolean("enable_ssl", true));
+
 			// add observable
-			setObservable( new StatusObservableImpl() );
+			setObservable(new StatusObservableImpl());
 
 		} catch (Exception e) {
 			if (e instanceof UnknownHostException) {
@@ -169,44 +173,41 @@ public class SMTPServer {
 			password = accountItem.getSmtpItem().get("password");
 			method = accountItem.getSmtpItem().get("login_method");
 
-			if (username.length() == 0)
-			{
+			if (username.length() == 0) {
 				// there seems to be no username set in the smtp-options
 				//  -> use username from pop3 or imap options
-				if ( accountItem.isPopAccount() )
-				{
-				
+				if (accountItem.isPopAccount()) {
+
 					PopItem pop3Item = accountItem.getPopItem();
 					username = pop3Item.get("user");
-				}
-				else
-				{
+				} else {
 					ImapItem imapItem = accountItem.getImapItem();
 					username = imapItem.get("user");
 				}
-				
+
 			}
-			
+
 			// ask password from user
 			if (password.length() == 0) {
 
 				passDialog.showDialog(
-					accountItem.getIdentityItem().get("address"),
+					accountItem.getSmtpItem().get("user"),
+					accountItem.getSmtpItem().get("host"),
 					password,
 					accountItem.getSmtpItem().getBoolean("save_password"));
 
-				if (passDialog.success()) {				
+				if (passDialog.success()) {
 					password = new String(passDialog.getPassword());
-					
+
 				} else {
 					return false;
 				}
-			
+
 			}
 
 			// try to authenticate
 			while (!cont) {
-				
+
 				cont = true;
 
 				try {
@@ -215,16 +216,17 @@ public class SMTPServer {
 					cont = false;
 
 					passDialog.showDialog(
-						accountItem.getIdentityItem().get("address"),
+						accountItem.getSmtpItem().get("user"),
+						accountItem.getSmtpItem().get("host"),
 						password,
 						accountItem.getSmtpItem().getBoolean("save_password"));
 
 					if (!passDialog.success())
 						return false;
 					else {
-						
+
 						password = new String(passDialog.getPassword());
-						
+
 					}
 
 				}
@@ -234,8 +236,9 @@ public class SMTPServer {
 			// -> save name/password
 			accountItem.getSmtpItem().set("user", username);
 			accountItem.getSmtpItem().set("password", password);
-			accountItem.getSmtpItem().set("save_password", passDialog.getSave());
-			
+			accountItem.getSmtpItem().set(
+				"save_password",
+				passDialog.getSave());
 
 		}
 
@@ -245,7 +248,7 @@ public class SMTPServer {
 	/**
 	 * 
 	 * close the connection to the SMTP server
-	 *
+	 *  
 	 */
 	public void closeConnection() {
 		// Close Port
@@ -261,13 +264,11 @@ public class SMTPServer {
 
 	/**
 	 * 
-	 * POP-before-SMTP authentication makes use of the POP3
-	 * authentication mechanism, before sending mail.
+	 * POP-before-SMTP authentication makes use of the POP3 authentication
+	 * mechanism, before sending mail.
 	 * 
-	 * Basically you authenticate with the POP3 server, which
-	 * allows you to use the SMTP server for sending mail for
-	 * a specific amount of time.
-	 * 
+	 * Basically you authenticate with the POP3 server, which allows you to use
+	 * the SMTP server for sending mail for a specific amount of time.
 	 * 
 	 * @throws Exception
 	 */
@@ -284,12 +285,13 @@ public class SMTPServer {
 		// try to login until success or user cancels authentication
 		while (!login && !cancel) {
 			if (item.get("password").length() == 0) {
-				
+
 				// open password dialog
 				dialog = new PasswordDialog();
 
 				dialog.showDialog(
-					accountItem.getIdentityItem().get("address"),
+					accountItem.getPopItem().get("user"),
+					accountItem.getPopItem().get("host"),
 					password,
 					accountItem.getPopItem().getBoolean("save_password"));
 
@@ -299,9 +301,8 @@ public class SMTPServer {
 					// ok pressed
 					name = dialog.getPassword();
 					password = new String(name);
-					
+
 					save = dialog.getSave();
-					
 
 					cancel = false;
 				} else {
@@ -310,13 +311,13 @@ public class SMTPServer {
 				}
 			} else {
 				password = item.get("password");
-				
+
 				save = item.getBoolean("save_password");
-				
+
 			}
 
 			if (!cancel) {
-				
+
 				// authenticate
 				POP3Protocol pop3Connection = new POP3Protocol();
 				// open socket, query for host
@@ -324,23 +325,22 @@ public class SMTPServer {
 
 				pop3Connection.setLoginMethod(method);
 				login = pop3Connection.login(item.get("user"), password);
-				
 
 				if (!login) {
 					NotifyDialog d = new NotifyDialog();
 					d.showDialog("Authentification failed");
 
-					item.set("password","");
+					item.set("password", "");
 				}
 			}
 		}
 
-		// logged in successfully 
+		// logged in successfully
 		// -> save password in config file
 		if (login) {
-			
+
 			item.set("save_password", save);
-			item.set("login_method",method);
+			item.set("login_method", method);
 
 			if (save) {
 				// save plain text password in config file
@@ -355,34 +355,34 @@ public class SMTPServer {
 	 * 
 	 * For an complete example of creating a <class>SendableMessage</class>
 	 * object see <class>MessageComposer</class>
-	 *  
-	 * @param message	
+	 * 
+	 * @param message
 	 * @param workerStatusController
 	 * @throws Exception
 	 */
-	public void sendMessage(SendableMessage message, WorkerStatusController workerStatusController) throws Exception {
-		
+	public void sendMessage(
+		SendableMessage message,
+		WorkerStatusController workerStatusController)
+		throws Exception {
+
 		// send from address and recipient list to SMTP server
 		// ->all addresses have to be normalized
 		smtpProtocol.setupMessage(
 			AddressParser.normalizeAddress(fromAddress),
 			message.getRecipients());
 
-		// now send message source 
+		// now send message source
 		smtpProtocol.sendMessage(message.getStringSource());
 	}
-	
+
 	/**
-	 * 
 	 * @return status notification observable
 	 */
-	public StatusObservable getObservable()
-	{
+	public StatusObservable getObservable() {
 		return (StatusObservable) observer;
 	}
-	
-	public void setObservable( ProgressObserver observable )
-	{
+
+	public void setObservable(ProgressObserver observable) {
 		observer = observable;
 		smtpProtocol.registerInterest(observable);
 	}

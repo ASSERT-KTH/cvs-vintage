@@ -307,7 +307,8 @@ public class IMAPStore {
 
 				dialog = new PasswordDialog();
 				dialog.showDialog(
-					item.get("host") + "@" + item.get("user"),
+					item.get("user"),
+					item.get("host"),
 					item.get("password"),
 					item.getBoolean("save_password"));
 
@@ -956,9 +957,9 @@ public class IMAPStore {
 
 					header.set("columba.uid", uid);
 					header.set("columba.size", imapHeader.getSize());
-					
+
 					// set the attachment flag
-					
+
 					String contentType = (String) header.get("Content-Type");
 
 					if (contentType != null) {

@@ -1,16 +1,18 @@
-//The contents of this file are subject to the Mozilla Public License Version 1.1
-//(the "License"); you may not use this file except in compliance with the 
+// The contents of this file are subject to the Mozilla Public License Version
+// 1.1
+//(the "License"); you may not use this file except in compliance with the
 //License. You may obtain a copy of the License at http://www.mozilla.org/MPL/
 //
 //Software distributed under the License is distributed on an "AS IS" basis,
-//WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License 
+//WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
 //for the specific language governing rights and
 //limitations under the License.
 //
 //The Original Code is "The Columba Project"
 //
-//The Initial Developers of the Original Code are Frederik Dietz and Timo Stich.
-//Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
+//The Initial Developers of the Original Code are Frederik Dietz and Timo
+// Stich.
+//Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003.
 //
 //All Rights Reserved.
 
@@ -24,6 +26,7 @@ import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
+import java.text.MessageFormat;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -40,26 +43,26 @@ import org.columba.core.gui.util.ButtonWithMnemonic;
 import org.columba.core.gui.util.ImageLoader;
 import org.columba.mail.util.MailResourceLoader;
 
+/**
+ * Password dialog asks user the password.
+ * 
+ * @author fdietz
+ */
 public class PasswordDialog implements ActionListener {
 	private char[] password;
-	//private JFrame frame;
+
 	private JDialog dialog;
 	private boolean bool = false;
 	private JPasswordField passwordField;
-	//private JTextField loginTextField;
-	private JCheckBox checkbox;
-	//private JLabel checkLabel;
 
-	//private String user;
-	//private String host;
-	private String emailAddress;
+	private JCheckBox checkbox;
+
+	private String user;
+	private String host;
 
 	private boolean save;
 
 	private JButton okButton, cancelButton, helpButton;
-
-	//private JComboBox loginMethodComboBox;
-	//String loginMethod;
 
 	public PasswordDialog() {
 
@@ -73,13 +76,15 @@ public class PasswordDialog implements ActionListener {
 
 		//bottom.add( Box.createHorizontalStrut());
 
-		cancelButton = new ButtonWithMnemonic(
+		cancelButton =
+			new ButtonWithMnemonic(
 				MailResourceLoader.getString("global", "cancel"));
 		//$NON-NLS-1$ //$NON-NLS-2$
 		cancelButton.addActionListener(this);
 		cancelButton.setActionCommand("CANCEL"); //$NON-NLS-1$
 
-		okButton = new ButtonWithMnemonic(
+		okButton =
+			new ButtonWithMnemonic(
 				MailResourceLoader.getString("global", "ok"));
 		//$NON-NLS-1$ //$NON-NLS-2$
 		okButton.addActionListener(this);
@@ -87,7 +92,8 @@ public class PasswordDialog implements ActionListener {
 		okButton.setDefaultCapable(true);
 		dialog.getRootPane().setDefaultButton(okButton);
 
-		helpButton = new ButtonWithMnemonic(
+		helpButton =
+			new ButtonWithMnemonic(
 				MailResourceLoader.getString("global", "help"));
 		//$NON-NLS-1$ //$NON-NLS-2$
 
@@ -104,28 +110,43 @@ public class PasswordDialog implements ActionListener {
 		return bottom;
 	}
 
+	/**
+	 * Make dialog visible.
+	 * <p>
+	 * Note that the emailAddress parameter, needs to be really unique. I
+	 * therefore suggest a combination between host and login name, instead.
+	 * This way user can see his login name. -> changed method signature!
+	 * 
+	 * @param login
+	 *            login name
+	 * @param host
+	 *            host name
+	 * @param password
+	 *            password
+	 * @param save
+	 *            should the password be saved?
+	 */
 	public void showDialog(
-		String emailAddress,
+		String login,
+		String host,
 		String password,
 		boolean save) {
 
-		this.emailAddress = emailAddress;
+		this.user = login;
+		this.host = host;
 
 		//JButton[] buttons = new JButton[2];
 
 		JLabel hostLabel =
 			new JLabel(
-				MailResourceLoader.getString(
-					"dialog",
-					"password",
-					"enter_password")
-					+ " "
-					+ emailAddress
-					+ ":");
+				MessageFormat.format(
+					MailResourceLoader.getString(
+						"dialog",
+						"password",
+						"enter_password"),
+					new Object[] { user, host }));
 
 		JLabel passwordLabel = new JLabel("Password:");
-
-		
 
 		passwordField = new JPasswordField(password, 40);
 
@@ -135,7 +156,7 @@ public class PasswordDialog implements ActionListener {
 					"dialog",
 					"password",
 					"save_password"));
-                checkbox.setSelected(save);
+		checkbox.setSelected(save);
 
 		dialog = new JDialog(new JFrame(), true);
 		dialog.setTitle(
@@ -181,9 +202,11 @@ public class PasswordDialog implements ActionListener {
 
 		dialog.getContentPane().add(bottomPanel, BorderLayout.SOUTH);
 		dialog.getRootPane().setDefaultButton(okButton);
-                dialog.getRootPane().registerKeyboardAction(this, "CANCEL",
-                                    KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0),
-                                    JComponent.WHEN_IN_FOCUSED_WINDOW);
+		dialog.getRootPane().registerKeyboardAction(
+			this,
+			"CANCEL",
+			KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0),
+			JComponent.WHEN_IN_FOCUSED_WINDOW);
 		dialog.pack();
 		dialog.setLocationRelativeTo(null);
 		dialog.show();
@@ -201,8 +224,6 @@ public class PasswordDialog implements ActionListener {
 	public boolean getSave() {
 		return save;
 	}
-
-	
 
 	public void actionPerformed(ActionEvent e) {
 		String action = e.getActionCommand();
