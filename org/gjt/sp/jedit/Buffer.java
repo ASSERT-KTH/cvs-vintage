@@ -64,7 +64,7 @@ import org.gjt.sp.util.*;
  * </ul>
  *
  * @author Slava Pestov
- * @version $Id: Buffer.java,v 1.124 2003/02/18 22:03:19 spestov Exp $
+ * @version $Id: Buffer.java,v 1.125 2003/02/18 22:32:05 spestov Exp $
  */
 public class Buffer implements EBComponent
 {
@@ -3170,8 +3170,11 @@ loop:		for(int i = 0; i < seg.count; i++)
 
 		markers.removeAllElements();
 
-		EditBus.send(new BufferUpdate(this,null,
-			BufferUpdate.MARKERS_CHANGED));
+		if(!getFlag(LOADING))
+		{
+			EditBus.send(new BufferUpdate(this,null,
+				BufferUpdate.MARKERS_CHANGED));
+		}
 	} //}}}
 
 	//{{{ getMarker() method

@@ -45,7 +45,7 @@ import org.gjt.sp.util.Log;
 /**
  * The main class of the jEdit text editor.
  * @author Slava Pestov
- * @version $Id: jEdit.java,v 1.108 2003/02/18 22:03:19 spestov Exp $
+ * @version $Id: jEdit.java,v 1.109 2003/02/18 22:32:05 spestov Exp $
  */
 public class jEdit
 {
@@ -3238,13 +3238,13 @@ loop:		for(int i = 0; i < list.length; i++)
 				String str21, str22;
 				if(sortByName)
 				{
-					str21 = buffer.getName();
-					str22 = buffer.getDirectory();
+					str21 = _buffer.getName();
+					str22 = _buffer.getDirectory();
 				}
 				else
 				{
-					str21 = buffer.getDirectory();
-					str22 = buffer.getName();
+					str21 = _buffer.getDirectory();
+					str22 = _buffer.getName();
 				}
 
 				int comp = MiscUtilities.compareStrings(str11,str21,true);
