@@ -61,15 +61,6 @@
         </taglib-location>
     </taglib>
 
-    <login-config>
-      <auth-method>FORM</auth-method>
-      <realm-name>examples</realm-name>
-      <form-login-config>
-        <form-login-page>/jsp/security/login/login.jsp</form-login-page>
-        <form-error-page>/jsp/security/login/error.jsp</form-error-page>
-      </form-login-config>
-    </login-config>
-
     <security-constraint>
       <web-resource-collection>
          <web-resource-name>a</web-resource-name>
@@ -95,5 +86,14 @@
          <transport-guarantee>CONFIDENTIAL</transport-guarantee>
       </user-data-constraint -->
     </security-constraint>
+
+    <login-config>
+      <auth-method>FORM</auth-method>
+      <realm-name>examples</realm-name>
+      <form-login-config>
+        <form-login-page>/jsp/security/login/login.jsp</form-login-page>
+        <form-error-page>/jsp/security/login/error.jsp</form-error-page>
+      </form-login-config>
+    </login-config>
 
 </web-app>
