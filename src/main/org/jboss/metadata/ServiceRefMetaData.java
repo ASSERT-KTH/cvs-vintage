@@ -6,13 +6,11 @@
  */
 package org.jboss.metadata;
 
-// $Id: ServiceRefMetaData.java,v 1.5 2004/04/28 14:34:54 tdiesler Exp $
+// $Id: ServiceRefMetaData.java,v 1.6 2004/05/05 16:38:36 tdiesler Exp $
 
 import org.jboss.deployment.DeploymentException;
-import org.jboss.logging.Logger;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-import org.xml.sax.SAXException;
 
 import javax.wsdl.Definition;
 import javax.wsdl.WSDLException;
@@ -21,24 +19,19 @@ import javax.wsdl.xml.WSDLReader;
 import javax.xml.namespace.QName;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
+import java.io.InputStream;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.net.URL;
-import java.net.MalformedURLException;
-import java.io.InputStream;
-import java.io.IOException;
 
-/** The metdata data from service-ref in application-client.xml descriptor
- * 
+/** The metdata data from service-ref element in web.xml, ejb-jar.xml, and application-client.xml.
+ *
  * @author Thomas.Diesler@jboss.org
- * @version $Revision: 1.5 $
+ * @version $Revision: 1.6 $
  */
 public class ServiceRefMetaData
 {
-   // provide logging
-   private static final Logger log = Logger.getLogger(ServiceRefMetaData.class);
-
    /** The ClassLoader to load additional resources */
    private ClassLoader localCl;
 

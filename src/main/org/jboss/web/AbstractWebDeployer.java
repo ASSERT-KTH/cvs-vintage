@@ -25,7 +25,8 @@ import org.jboss.naming.NonSerializableFactory;
 import org.jboss.naming.Util;
 import org.jboss.security.plugins.NullSecurityManager;
 import org.jboss.web.AbstractWebContainer.WebDescriptorParser;
-import org.jboss.webservice.ServiceRefEnvBuilder;
+import org.jboss.webservice.WebServiceClientDeployer;
+import org.jboss.webservice.WebServiceClientHandler;
 import org.omg.CORBA.ORB;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -141,7 +142,7 @@ thread context ClassLoader as was used to dispatch the http service request.
    extends="org.jboss.deployment.SubDeployerMBean"
 
 @author  Scott.Stark@jboss.org
-@version $Revision: 1.9 $
+@version $Revision: 1.10 $
 */
 public abstract class AbstractWebDeployer
 {
@@ -465,7 +466,7 @@ public abstract class AbstractWebDeployer
       linkEjbLocalRefs(ejbLocalRefs, envCtx, di);
       Iterator serviceRefs = metaData.getServiceReferences();
       log.debug("linkServiceRefs");
-      ServiceRefEnvBuilder.setupEnvironment(envCtx, serviceRefs, di);
+      WebServiceClientHandler.setupServiceRefEnvironment(envCtx, serviceRefs, di);
       String securityDomain = metaData.getSecurityDomain();
       log.debug("linkSecurityDomain");
       linkSecurityDomain(securityDomain, envCtx);

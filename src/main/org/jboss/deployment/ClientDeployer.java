@@ -8,7 +8,8 @@ import org.jboss.metadata.ResourceEnvRefMetaData;
 import org.jboss.metadata.ResourceRefMetaData;
 import org.jboss.metadata.XmlFileLoader;
 import org.jboss.naming.Util;
-import org.jboss.webservice.ServiceRefEnvBuilder;
+import org.jboss.webservice.WebServiceClientDeployer;
+import org.jboss.webservice.WebServiceClientHandler;
 import org.w3c.dom.Element;
 
 import javax.naming.Context;
@@ -27,7 +28,7 @@ import java.util.Iterator;
  * client jars 
  * 
  * @author Scott.Stark@jboss.org
- * @version $Revision: 1.10 $
+ * @version $Revision: 1.11 $
  */
 public class ClientDeployer extends SubDeployerSupport
 {
@@ -240,7 +241,7 @@ public class ClientDeployer extends SubDeployerSupport
 
       // Bind service references
       Iterator serviceRefs = metaData.getServiceReferences().values().iterator();
-      ServiceRefEnvBuilder.setupEnvironment(envCtx, serviceRefs, di);
+      WebServiceClientHandler.setupServiceRefEnvironment(envCtx, serviceRefs, di);
       
       // Bind resource references
       HashMap resRefs = metaData.getResourceReferences();
