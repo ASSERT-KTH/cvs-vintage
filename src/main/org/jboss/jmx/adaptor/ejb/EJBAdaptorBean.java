@@ -50,7 +50,7 @@ import org.jboss.jmx.connector.RemoteMBeanServer;
 * MBean Server.
 *
 * @author Andreas Schaefer
-* @version $Revision: 1.6 $
+* @version $Revision: 1.7 $
 *
 * @ejb:bean type="Stateless"
 *           name="jmx/ejb/Adaptor"
@@ -58,6 +58,8 @@ import org.jboss.jmx.connector.RemoteMBeanServer;
 * @ejb:env-entry description="JNDI-Name of the MBeanServer to be used to look it up. If 'null' the first of all listed local MBeanServer is taken"
 *                name="Server-Name"
 *                value="null"
+* @ejb:transaction type="Supports"
+*
 **/
 public class EJBAdaptorBean
    implements SessionBean
