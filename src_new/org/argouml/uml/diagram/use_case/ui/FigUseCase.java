@@ -1,4 +1,4 @@
-// $Id: FigUseCase.java,v 1.41 2004/08/04 20:51:08 mvw Exp $
+// $Id: FigUseCase.java,v 1.42 2004/08/07 12:41:42 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -1103,6 +1103,7 @@ public class FigUseCase extends FigNodeModelElement {
 
         // Mark the text as highlighted, then parse it
 
+        /* TODO: "highlightedFigText hides a field" Warning! Is intentional? */
         CompartmentFigText highlightedFigText = (CompartmentFigText) ft;
         highlightedFigText.setHighlighted(true);
 
