@@ -7,6 +7,10 @@
 
   <body>
     <release version="b20" date="in dev">
+      <action dev="hdabbous" type="fix">
+        SCB1231 - NPE exception in ResourceBundle resolver, when Browser locale
+        was not supported by Scarab. Problem occured only on Windows platforms.
+      </action>
       <action dev="legout" type="add">
         SCB1227 - Issue attachments can now be physically deleted from disk, when the
         attachments are removed from an issue.
