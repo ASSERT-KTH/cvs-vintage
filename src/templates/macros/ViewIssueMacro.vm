@@ -303,11 +303,11 @@ There are no comments in this issue.
      #if ($canEdit)
       #set ($urlGroup = $intake.Attachment.mapTo($url))
          <td><input type="text" size="25" name="$urlGroup.DataAsString.Key" 
-                 value="!$urlGroup.DataAsString" />
+                 value="$urlGroup.DataAsString" />
          #fieldErrorMsg($urlGroup.DataAsString "")
          </td>
          <td><input type="text" size="25" name="$urlGroup.Name.Key" 
-                 value="!$urlGroup.Name" />
+                 value="$urlGroup.Name" />
          #fieldErrorMsg($urlGroup.Name "")
          </td>
      #end
