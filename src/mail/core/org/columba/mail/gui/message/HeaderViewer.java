@@ -24,10 +24,10 @@ import java.util.StringTokenizer;
 import java.util.Vector;
 
 import javax.swing.JTextPane;
+import javax.swing.UIManager;
 import javax.swing.text.html.HTMLDocument;
 import javax.swing.text.html.HTMLEditorKit;
 
-import org.columba.core.config.Config;
 import org.columba.core.io.DiskIO;
 import org.columba.core.logging.ColumbaLogger;
 import org.columba.core.xml.XmlElement;
@@ -125,13 +125,18 @@ public class HeaderViewer extends JTextPane {
 	*
 	*/
 	protected void initStyleSheet() {
+		/*
 		//	read configuration from options.xml file
 		XmlElement mainFont =
 			Config.get("options").getElement("/options/gui/mainfont");
 		String name = mainFont.getAttribute("name");
 		String size = mainFont.getAttribute("size");
 		Font font = new Font(name, Font.PLAIN, Integer.parseInt(size));
-
+		*/
+		
+		Font font = UIManager.getFont("Label.font");
+		String name = font.getName();
+		int size = font.getSize();
 		// create css-stylesheet string 
 		// set font of html-element <TD> 
 		css =
@@ -163,7 +168,7 @@ public class HeaderViewer extends JTextPane {
 		// for every existing headerfield
 		for (Iterator it = keys.iterator(); it.hasNext();) {
 			String key = (String) it.next();
-		// for (int i = 0; i < keys.size(); i++) {
+			// for (int i = 0; i < keys.size(); i++) {
 			// String key = (String) keys.get(i);
 			if (key == null)
 				continue;
