@@ -1,4 +1,4 @@
-// $Id: ClassDiagramGraphModel.java,v 1.52 2003/12/23 20:35:33 bobtarling Exp $
+// $Id: ClassDiagramGraphModel.java,v 1.53 2004/06/04 10:40:59 bobtarling Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: ClassDiagramGraphModel.java
 // Classes: ClassDiagramGraphModel
 // Original Author: jrobbins@ics.uci.edu
-// $Id: ClassDiagramGraphModel.java,v 1.52 2003/12/23 20:35:33 bobtarling Exp $
+// $Id: ClassDiagramGraphModel.java,v 1.53 2004/06/04 10:40:59 bobtarling Exp $
 
 
 package org.argouml.uml.diagram.static_structure;
@@ -49,6 +49,11 @@ import org.argouml.uml.diagram.UMLMutableGraphSupport;
 public class ClassDiagramGraphModel extends UMLMutableGraphSupport
     implements VetoableChangeListener 
 {
+    /**
+     * @deprecated visibility in vers 0.15.6
+     * Create your own logger in any subclass
+     * Bob Tarling 3 June 2004
+     */
     protected static Logger cat =
 	Logger.getLogger(ClassDiagramGraphModel.class);
     ////////////////////////////////////////////////////////////////
@@ -208,7 +213,7 @@ public class ClassDiagramGraphModel extends UMLMutableGraphSupport
 	if (ModelFacade.isARelationship(edge)) {
 	    return CoreHelper.getHelper().getSource(/*(MRelationship)*/ edge);
 	}
-	cat.debug("TODO getSourcePort");
+	cat.error("TODO getSourcePort");
 	return null;
     }
 
@@ -217,7 +222,7 @@ public class ClassDiagramGraphModel extends UMLMutableGraphSupport
 	if (ModelFacade.isARelationship(edge)) {
 	    return CoreHelper.getHelper().getDestination(/*(MRelationship)*/edge);
 	}
-	cat.debug("TODO getSourcePort");
+	cat.error("TODO getSourcePort");
 	return null;
     }
 
