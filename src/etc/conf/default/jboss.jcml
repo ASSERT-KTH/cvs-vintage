@@ -77,14 +77,29 @@
   </mbean>
   
   <!-- J2EE deployment -->
+
+  <!-- Uncomment to add JMS support. Needed for EJB message driven beans
+  <mbean code="org.jboss.jms.jndi.JMSProviderLoader" name=":service=JMSProviderLoader,name=OpenJMSProvider">
+    <attribute name="ProviderName">OpenJMSProvider</attribute>
+    <attribute name="ProviderAdapterClass">org.jboss.jms.jndi.OpenJMSProvider</attribute>
+  </mbean>
+
+  <mbean code="org.jboss.jms.asf.ServerSessionPoolLoader" name=":service=ServerSessionPoolMBean,name=OpenJMSPool">
+    <attribute name="PoolName">OpenJMSPool</attribute>
+    <attribute name="PoolFactoryClass">org.jboss.jms.asf.OpenJMSServerSessionPoolFactory</attribute>
+  </mbean>
+  -->
+    
   <mbean code="org.jboss.ejb.ContainerFactory" name=":service=ContainerFactory">
     <attribute name="VerifyDeployments">true</attribute>
     <attribute name="MetricsEnabled">false</attribute>
     <attribute name="VerifierVerbose">true</attribute>
   </mbean>
-  
+
+  <!-- Uncomment to add embedded tomcat service  
   <mbean code="org.jboss.tomcat.EmbeddedTomcatService" name="DefaultDomain:service=EmbeddedTomcat" />
-  
+   -->
+   
   <mbean code="org.jboss.spydermq.SpyderMQService" name="DefaultDomain:service=SpyderMQ" />
 
   <mbean code="org.jboss.deployment.J2eeDeployer" name="J2EE:service=J2eeDeployer">
