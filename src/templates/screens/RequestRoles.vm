@@ -9,6 +9,7 @@
 
 <form method="post" action="$link.setPage("SelectModule.vm")">
 <input type="hidden" name="action" value="HandleRoleRequests" />
+<input type="hidden" name="$scarabG.Constant.CANCEL_TEMPLATE" value="SelectModule.vm" />
 <table>
 <tr>
 <td bgcolor="#000000">
