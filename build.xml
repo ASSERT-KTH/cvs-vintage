@@ -47,6 +47,9 @@
     <mkdir dir="${tomcat.build}/conf"/>
     <mkdir dir="${tomcat.build}/src"/>
     <mkdir dir="${tomcat.build}/lib"/>
+    <mkdir dir="${tomcat.build}/lib/apps"/>
+    <mkdir dir="${tomcat.build}/lib/container"/>
+    <mkdir dir="${tomcat.build}/lib/common"/>
     <mkdir dir="${tomcat.build}/logs"/>
     <mkdir dir="${tomcat.build}/bin"/>
     <mkdir dir="${tomcat.build}/doc"/>
@@ -72,19 +75,33 @@
     <copy todir="${tomcat.build}/bin">
             <fileset dir="${ant.home}/bin"/>
         </copy>
-    <copy tofile="${tomcat.build}/lib/jaxp.jar" 
+    <copy tofile="${tomcat.build}/lib/container/jaxp.jar" 
 	  file="${ant.home}/lib/jaxp.jar"/>
-    <copy tofile="${tomcat.build}/lib/parser.jar" 
+    <copy tofile="${tomcat.build}/lib/container/parser.jar" 
 	  file="${ant.home}/lib/parser.jar"/>
-    <copy tofile="${tomcat.build}/lib/jaxp.jar" file="${jaxp}/jaxp.jar"/>
-    <copy tofile="${tomcat.build}/lib/parser.jar" file="${jaxp}/parser.jar"/>
-    <copy tofile="${tomcat.build}/lib/jaxp.jar" file="${jaxp}/jaxp.jar"/>
-    <copy tofile="${tomcat.build}/lib/crimson.jar" file="${jaxp}/crimson.jar"/>
+    <copy tofile="${tomcat.build}/lib/container/jaxp.jar" 
+	  file="${jaxp}/jaxp.jar"/>
+    <copy tofile="${tomcat.build}/lib/container/parser.jar" 
+	  file="${jaxp}/parser.jar"/>
+    <copy tofile="${tomcat.build}/lib/container/jaxp.jar" 
+	  file="${jaxp}/jaxp.jar"/>
+    <copy tofile="${tomcat.build}/lib/container/crimson.jar" 
+	  file="${jaxp}/crimson.jar"/>
+    <copy file ="src/build/readme.container"
+	  tofile="${tomcat.build}/lib/container/README" />
+
+    <copy file ="src/build/readme.shared"
+	  tofile="${tomcat.build}/lib/apps/README" />
+
+    <copy file ="src/build/readme.common"
+	  tofile="${tomcat.build}/lib/common/README" />
+
     
     <!-- This act as a "default", Tomcat3.3 will not load it in
          classpath, just a hack to ease the transition
      -->
-    <copy tofile="${tomcat.build}/lib/servlet.jar" file="${servlet22.jar}"/>
+    <copy tofile="${tomcat.build}/lib/common/servlet.jar" 
+	  file="${servlet22.jar}"/>
 
     <fixcrlf srcdir="${tomcat.build}/bin" includes="**/*.sh" cr="remove"/>
     <fixcrlf srcdir="${tomcat.build}/bin" includes="**/*.bat" cr="add"/>
@@ -111,10 +128,20 @@
       <exclude name="**/util/net/SSLSocketFactory.java" unless="jsse.present"/>
       <exclude name="**/util/compat/Jdk12Support.java" unless="jdk12.present"/>
     </javac>
-    <jar jarfile="${tomcat.build}/lib/tomcat_util.jar" 
+
+    <jar jarfile="${tomcat.build}/lib/common/core_util.jar" 
+	 basedir="${tomcat.build}/classes"> 
+      <include name="org/apache/tomcat/util/log/**"/>    
+      <include name="org/apache/tomcat/util/collections/**"/>    
+      <include name="org/apache/tomcat/util/hooks/**"/>    
+      <include name="org/apache/tomcat/util/http/**"/>    
+      <include name="org/apache/tomcat/util/res/**"/>    
+      <include name="org/apache/tomcat/util/buf/**"/>    
+    </jar>
+
+    <jar jarfile="${tomcat.build}/lib/container/tomcat_util.jar" 
 	 basedir="${tomcat.build}/classes"> 
       <include name="org/apache/tomcat/util/**"/>    
-      <include name="org/apache/tomcat/logging/**"/>    
     </jar>
   </target>
 
@@ -158,11 +185,12 @@
                 <include name="**/*.dtd"/>
             </fileset>
     </copy>
+
     <jar jarfile="${tomcat.build}/lib/stop-tomcat.jar" 
 	 basedir="${tomcat.build}/classes" 
 	 manifest="src/build/manifest.stop-tomcat"> 
       <include name="org/apache/tomcat/startup/StopTomcat.class"/> 
-      <include name="org/apache/tomcat/util/StringManager.class"/> 
+      <include name="org/apache/tomcat/util/res/StringManager.class"/> 
       <include name="org/apache/tomcat/resources/LocalStrings*"/> 
       <include name="org/apache/tomcat/util/IntrospectionUtils**"/> 
     </jar>
@@ -187,7 +215,7 @@
                 <include name="**/*.dtd"/>
             </fileset>
         </copy>
-    <jar jarfile="${tomcat.build}/lib/tomcat_core.jar" 
+    <jar jarfile="${tomcat.build}/lib/common/tomcat_core.jar" 
 	 basedir="${tomcat.build}/classes"> 
       <include name="org/apache/tomcat/core/**"/>    
       <include name="org/apache/tomcat/resources/**"/>    
@@ -209,7 +237,7 @@
       <include name="org/apache/tomcat/startup/**"/>    
       <exclude name="**/EmbededTomcat.java" unless="jdk12.present"/>
     </javac>
-    <jar jarfile="${tomcat.build}/lib/tomcat-startup.jar" 
+    <jar jarfile="${tomcat.build}/lib/container/tomcat-startup.jar" 
 	 basedir="${tomcat.build}/classes"
 	 manifest="src/build/manifest.startup"> 
       <include name="org/apache/tomcat/startup/**"/>    
@@ -231,7 +259,7 @@
       </classpath>
       <include name="org/apache/tomcat/facade/**"/>    
     </javac>
-    <jar jarfile="${tomcat.build}/lib/facade22.jar" 
+    <jar jarfile="${tomcat.build}/lib/container/facade22.jar" 
 	 basedir="${tomcat.build}/classes"
 	 manifest="src/build/manifest.facade22"> 
       <include name="org/apache/tomcat/facade/**"/> 
@@ -263,7 +291,7 @@
     </javac>
 
     <jar 
-        jarfile="${tomcat.build}/lib/tomcat_modules.jar" 
+        jarfile="${tomcat.build}/lib/container/tomcat_modules.jar" 
         basedir="${tomcat.build}/classes"> 
       <include name="org/apache/tomcat/modules/**"/> 
     </jar>
@@ -290,9 +318,26 @@
                 <include name="**/*.dtd"/>
             </fileset>
         </copy>
-    <jar jarfile="${tomcat.build}/lib/jasper.jar" 
-	 basedir="${tomcat.build}/classes" 
-	 includes="org/apache/jasper/**"/>
+    <jar jarfile="${tomcat.build}/lib/common/jasper-runtime.jar" 
+	 basedir="${tomcat.build}/classes" >
+      <include name="org/apache/jasper/Constants.class"/> 
+      <include name="org/apache/jasper/JasperException.class"/> 
+      <include name="org/apache/jasper/Options.class"/> 
+      <include name="org/apache/jasper/runtime/**"/> 
+      <include name="org/apache/jasper/resources/**"/> 
+    </jar>
+
+    <jar jarfile="${tomcat.build}/lib/container/jasper.jar" 
+	 basedir="${tomcat.build}/classes" >
+      <include name="org/apache/jasper/**"/> 
+      <!-- 
+      <exclude name="org/apache/jasper/Constants.class"/> 
+      <exclude name="org/apache/jasper/JasperException.class"/> 
+      <exclude name="org/apache/jasper/Options.class"/> 
+      <exclude name="org/apache/jasper/runtime/**"/> 
+      <exclude name="org/apache/jasper/resources/**"/> 
+       -->
+    </jar>
   </target>
 
   <target name="tomcat-jars-new" depends="tomcat_util,tomcat.jar,stop-tomcat.jar,tomcat_core,jasper,tomcat_modules,facade22,tomcat-startup">
@@ -387,9 +432,12 @@
         <exclude name="webapps/**"/>
       </fileset>
     </copy>
-    <copy tofile="${tomcat.dist}/lib/jaxp.jar" file="${jaxp}/jaxp.jar"/>
-    <copy tofile="${tomcat.dist}/lib/parser.jar" file="${jaxp}/parser.jar"/>
-    <copy tofile="${tomcat.dist}/lib/servlet.jar" file="${servlet22.jar}"/>
+    <copy tofile="${tomcat.dist}/lib/container/jaxp.jar" 
+	  file="${jaxp}/jaxp.jar"/>
+    <copy tofile="${tomcat.dist}/lib/container/parser.jar" 
+	  file="${jaxp}/parser.jar"/>
+    <copy tofile="${tomcat.dist}/lib/common/servlet.jar" 
+	  file="${servlet22.jar}"/>
 
     <!-- Add Tomcat internal javadoc -->
     <mkdir dir="${tomcat.build}/webapps/ROOT/javadoc"/>
@@ -443,29 +491,6 @@
   </target>
   
   <target name="main" depends="tomcat,webapps">
-    <copy file ="src/build/readme.container"
-	  tofile="${tomcat.build}/lib/README" />
-
-    <mkdir dir="${tomcat.build}/lib/shared"/>
-    <copy file ="src/build/readme.shared"
-	  tofile="${tomcat.build}/lib/shared/README" />
-
-    <mkdir dir="${tomcat.build}/lib/common"/>
-    <copy file ="src/build/readme.common"
-	  tofile="${tomcat.build}/lib/common/README" />
-
-    <!-- XXX extract only the run-time component of jasper -->
-    <copy file ="${tomcat.build}/lib/servlet.jar"
-        todir="${tomcat.build}/lib/common" />
-    <copy file ="${tomcat.build}/lib/jasper.jar"
-        todir="${tomcat.build}/lib/shared" />
-    <copy file ="${tomcat.build}/lib/tomcat_util.jar"
-        todir="${tomcat.build}/lib/shared" />
-<!--
-    <delete>
-        <fileset dir="${tomcat.build}/classes"/>
-    </delete>
--->
   </target>
 
 
