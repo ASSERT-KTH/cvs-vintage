@@ -58,7 +58,7 @@ import org.apache.fulcrum.TurbineServices;
  * This class provides access to security properties
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: ScarabSecurity.java,v 1.21 2004/01/31 16:09:54 dep4b Exp $
+ * @version $Id: ScarabSecurity.java,v 1.22 2004/02/17 22:01:27 pledbrook Exp $
  */
 public class ScarabSecurity 
     extends BaseService
@@ -296,9 +296,9 @@ public class ScarabSecurity
     }
 
     /**
-     * Gets the <code>LocalizationService</code> implementation.
+     * Gets the <code>ScarabSecurity</code> implementation.
      *
-     * @return the LocalizationService implementation.
+     * @return the ScarabSecurity implementation.
      */
     protected static final ScarabSecurity getService()
     {

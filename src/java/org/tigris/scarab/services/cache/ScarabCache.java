@@ -63,7 +63,7 @@ import org.tigris.scarab.util.Log;
  * current thread.
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: ScarabCache.java,v 1.6 2003/03/12 18:46:37 jmcnally Exp $
+ * @version $Id: ScarabCache.java,v 1.7 2004/02/17 22:01:27 pledbrook Exp $
  */
 public class ScarabCache 
     extends BaseService
@@ -362,9 +362,9 @@ public class ScarabCache
 
 
     /**
-     * Gets the <code>LocalizationService</code> implementation.
+     * Gets the <code>ScarabCache</code> implementation.
      *
-     * @return the LocalizationService implementation.
+     * @return the ScarabCache implementation.
      */
     protected static final ScarabCache getService()
     {
