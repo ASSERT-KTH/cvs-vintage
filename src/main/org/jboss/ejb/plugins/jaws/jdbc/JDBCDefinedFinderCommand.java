@@ -26,29 +26,29 @@ import org.jboss.ejb.plugins.jaws.metadata.TypeMappingMetaData;
  * @author <a href="mailto:shevlandj@kpi.com.au">Joe Shevland</a>
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
  * @author <a href="mailto:michel.anke@wolmail.nl">Michel de Groot</a>
- * @version $Revision: 1.11 $
+ * @version $Revision: 1.12 $
  */
 public class JDBCDefinedFinderCommand extends JDBCFinderCommand
 {
    // Attributes ----------------------------------------------------
-   
+
    private int[] parameterArray;
    private TypeMappingMetaData typeMapping;
-   
+
    // Constructors --------------------------------------------------
-   
+
    public JDBCDefinedFinderCommand(JDBCCommandFactory factory, FinderMetaData f)
    {
       super(factory, f.getName());
 
       typeMapping = jawsEntity.getJawsApplication().getTypeMapping();
-      
+
       // Replace placeholders with ?, but only if query is defined
       String query = "";
       ArrayList parameters = new ArrayList();
       if (f.getQuery() != null)  {
 	      StringTokenizer finderQuery = new StringTokenizer(f.getQuery(),"{}", true);
-	      
+
 	      while (finderQuery.hasMoreTokens())
 	      {
 	         String t = finderQuery.nextToken();
@@ -61,13 +61,13 @@ public class JDBCDefinedFinderCommand extends JDBCFinderCommand
 	         } else
 	            query += t;
 	      }
-      } 
-            
+      }
+
       // Copy index numbers to parameterArray
       parameterArray = new int[parameters.size()];
       for (int i = 0; i < parameterArray.length; i++)
          parameterArray[i] = ((Integer)parameters.get(i)).intValue();
-      
+
       // Since the fields in order clause also will form the select clause together with
       // the pk field list, we have to clean the order clause from ASC/DESC's and fields
       // that already are within the pk list
@@ -84,13 +84,13 @@ public class JDBCDefinedFinderCommand extends JDBCFinderCommand
           orderToken = orderTokens.nextToken().trim();
           //Get rid of ASC's
           int i = orderToken.toUpperCase().indexOf(" ASC");
-          if(i!=-1) 
+          if(i!=-1)
             checkedOrderTokens[ix] = orderToken.substring(0, i).trim();
           else
           {
             //Get rid of DESC's
             i = orderToken.toUpperCase().indexOf(" DESC");
-            if(i!=-1) 
+            if(i!=-1)
               checkedOrderTokens[ix] = orderToken.substring(0, i).trim();
             else
             {
@@ -100,7 +100,7 @@ public class JDBCDefinedFinderCommand extends JDBCFinderCommand
           }
           ix++;
         }
-        
+
         //Next step is to make up a Set of all pk tokens
         StringTokenizer pkTokens = new StringTokenizer(getPkColumnList(), ",");
         Set setOfPkTokens = new HashSet(pkTokens.countTokens());
@@ -108,7 +108,7 @@ public class JDBCDefinedFinderCommand extends JDBCFinderCommand
         {
           setOfPkTokens.add(pkTokens.nextToken().trim());
         }
-        
+
         //Now is the time to check for duplicates between pk and order tokens
         int i = 0;
         while(i < checkedOrderTokens.length)
@@ -120,7 +120,7 @@ public class JDBCDefinedFinderCommand extends JDBCFinderCommand
           }
           i++;
         }
-        
+
         //Ok, build a new order string that we can use later on
         StringBuffer orderTokensToUse = new StringBuffer("");
         i = 0;
@@ -140,16 +140,59 @@ public class JDBCDefinedFinderCommand extends JDBCFinderCommand
       // Construct SQL
       // In case of join query:
       // order must explicitly identify tablename.field to order on
-      // query must start with "INNER JOIN <table to join with> WHERE 
+      // query must start with "INNER JOIN <table to join with> WHERE
       // <regular query with fully identified fields>"
       String sql = null;
       if (query.toLowerCase().startsWith(",")) {
-      	  sql = "SELECT " + jawsEntity.getTableName()+"."+getPkColumnList() + strippedOrder +
-      	  	" FROM " + jawsEntity.getTableName() + " " + query;
-      } else 
+          //Modified by Vinay Menon
+          StringBuffer sqlBuffer = new StringBuffer();
+
+      	  sqlBuffer.append("SELECT ");
+
+          String primaryKeyList = getPkColumnList();
+          String tableName = jawsEntity.getTableName();
+          StringTokenizer stok = new StringTokenizer(primaryKeyList,",");
+
+          while(stok.hasMoreTokens()){
+            sqlBuffer.append(tableName);
+            sqlBuffer.append(".");
+            sqlBuffer.append(stok.nextElement().toString());
+            sqlBuffer.append(",");
+          }
+
+         sqlBuffer.setLength(sqlBuffer.length()-1);
+         sqlBuffer.append(strippedOrder);
+         sqlBuffer.append(" FROM ");
+         sqlBuffer.append(jawsEntity.getTableName());
+         sqlBuffer.append(" ");
+         sqlBuffer.append(query);
+
+         sql = sqlBuffer.toString();
+      } else
       if (query.toLowerCase().startsWith("inner join")) {
-      	  sql = "SELECT " + jawsEntity.getTableName()+"."+getPkColumnList() + strippedOrder +
-      	  	" FROM " + jawsEntity.getTableName() + " " + query;
+          StringBuffer sqlBuffer = new StringBuffer();
+
+      	  sqlBuffer.append("SELECT ");
+
+          String primaryKeyList = getPkColumnList();
+          String tableName = jawsEntity.getTableName();
+          StringTokenizer stok = new StringTokenizer(primaryKeyList,",");
+
+          while(stok.hasMoreTokens()){
+            sqlBuffer.append(tableName);
+            sqlBuffer.append(".");
+            sqlBuffer.append(stok.nextElement().toString());
+            sqlBuffer.append(",");
+          }
+
+         sqlBuffer.setLength(sqlBuffer.length()-1);
+         sqlBuffer.append(strippedOrder);
+         sqlBuffer.append(" FROM ");
+         sqlBuffer.append(jawsEntity.getTableName());
+         sqlBuffer.append(" ");
+         sqlBuffer.append(query);
+
+         sql = sqlBuffer.toString();
       } else {
       	// regular query; check if query is empty,
       	// if so, this is a select all and WHERE should not be used
@@ -165,17 +208,17 @@ public class JDBCDefinedFinderCommand extends JDBCFinderCommand
       {
          sql += " ORDER BY "+f.getOrder();
       }
-      
+
       setSQL(sql);
    }
-   
+
    // JDBCFinderCommand overrides ------------------------------------
-   
-   protected void setParameters(PreparedStatement stmt, Object argOrArgs) 
+
+   protected void setParameters(PreparedStatement stmt, Object argOrArgs)
       throws Exception
    {
       Object[] args = (Object[])argOrArgs;
-      
+
       for (int i = 0; i < parameterArray.length; i++)
       {
           Object arg = args[parameterArray[i]];
