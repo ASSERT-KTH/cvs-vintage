@@ -69,14 +69,14 @@ public  class RIssueTypeOption
     {                
         if (user.hasPermission(ScarabSecurity.DOMAIN__EDIT, module))
         {
+            List rios = getIssueType().getRIssueTypeOptions(getAttributeOption().getAttribute(), false);
             Criteria c = new Criteria()
                 .add(RIssueTypeOptionPeer.ISSUE_TYPE_ID, getIssueTypeId())
                 .add(RIssueTypeOptionPeer.OPTION_ID, getOptionId());
             RIssueTypeOptionPeer.doDelete(c);
-
+            rios.remove(this);
             // Correct the ordering of the remaining options
             ArrayList optIds = new ArrayList();
-            List rios = getIssueType().getRIssueTypeOptions(getAttributeOption().getAttribute(), false);
             for (int i=0; i<rios.size();i++)
             {
                 RIssueTypeOption rio = (RIssueTypeOption)rios.get(i);
