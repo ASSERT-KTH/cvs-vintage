@@ -8,16 +8,16 @@
     #if ($option.isAttribute())
         #set ($spaces = "")
     #else
-        #set ($spaces = "&nbsp;&nbsp;&nbsp;")
+        #set ($spaces = "&#160;&#160;&#160;")
     #end
     #set ($selected = "")
     #set ($quote = '"')
-    #foreach ($value in $selectOptions )
+    #foreach ($value in $selectOptions)
         #if ($option.Value == $value)
             #set ($selected = ' selected="selected"')
         #end
     #end
-         <option value="$option.Value"$selected>$spaces$option.Name</option>
+    <option value="$option.Value"$selected>$spaces$option.Name</option>
 #end
 #end
 
