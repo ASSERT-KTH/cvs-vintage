@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<!-- $Id: compdiag.xml,v 1.4 2003/08/26 22:08:50 linus Exp $ -->
+<!-- $Id: compdiag.xml,v 1.6 2003/10/12 16:35:36 linus Exp $ -->
 
 
     <sect1 id="diagrams">
@@ -38,7 +38,7 @@ in the classdiagram.
         <mediaobject>
 	  <imageobject>
 	    <imagedata fileref="images/cookbook/multieditorpane.gif" 
-		       format="gif"/>
+		       format="GIF"/>
 	  </imageobject>
         </mediaobject>
 </para>
