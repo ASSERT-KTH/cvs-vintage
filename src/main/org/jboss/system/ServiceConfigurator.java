@@ -42,7 +42,7 @@ import org.w3c.dom.Text;
  * 
  * @author <a href="mailto:marc@jboss.org">Marc Fleury</a>
  * @author <a href="mailto:hiram@jboss.org">Hiram Chirino</a>
- * @version $Revision: 1.6 $
+ * @version $Revision: 1.7 $
  *
  * <p><b>20010830 marc fleury:</b>
  * <ul>
@@ -237,40 +237,49 @@ public class ServiceConfigurator
       }
       // Set mbean references (object names)
       ArrayList mBeanRefs = new ArrayList();
-      NodeList mbeanRefElements = mbeanElement.getElementsByTagName("mbean-ref");
-      log.debug("found " + mbeanRefElements.getLength() + " mbean-ref elements");
-      for (int j = 0; j < mbeanRefElements.getLength(); j++) {
-         Element mbeanRefElement = (Element)mbeanRefElements.item(j);
-         String mbeanRefName = mbeanRefElement.getAttribute("name");
-         if (!mbeanRefElement.hasChildNodes()) 
+      NodeList mBeanRefElements = mbeanElement.getElementsByTagName("mbean-ref");
+      log.debug("found " + mBeanRefElements.getLength() + " mbean-ref elements");
+      for (int j = 0; j < mBeanRefElements.getLength(); j++) {
+         Element mBeanRefElement = (Element)mBeanRefElements.item(j);
+         String mBeanRefName = mBeanRefElement.getAttribute("name");
+         if (!mBeanRefElement.hasChildNodes()) 
          {
-            throw new DeploymentException("No ObjectName supplied for mbean-ref " + mbeanRefName);   
+            throw new DeploymentException("No ObjectName supplied for mbean-ref " + mBeanRefName);   
 
          }		
          // Get the mbeanRef value
-         String mbeanRefValue = ((Text)mbeanRefElement.getFirstChild()).getData().trim();
-         ObjectName mbeanRefObjectName = new ObjectName(mbeanRefValue);
-         log.debug("considering " + mbeanRefName + " with object name " + mbeanRefObjectName);
-         MBeanAttributeInfo[] attributes = info.getAttributes();
-         for (int k = 0; k < attributes.length; k++) {
-            if (mbeanRefName.equals(attributes[k].getName())) {
-               String typeName = attributes[k].getType();
-               if (!"javax.management.ObjectName".equals(typeName)) 
-               {
-                  throw new DeploymentException("Trying to set " + mbeanRefName + " as an MBeanRef when it is not of type ObjectName");   
-               } // end of if ()
-               if (!mBeanRefs.contains(mbeanRefObjectName)) 
-               {
-                  mBeanRefs.add(mbeanRefObjectName);
-               } // end of if ()
+         String mBeanRefValue = ((Text)mBeanRefElement.getFirstChild()).getData().trim();
+         ObjectName mBeanRefObjectName = new ObjectName(mBeanRefValue);
+         if (!mBeanRefs.contains(mBeanRefObjectName)) 
+         {
+            mBeanRefs.add(mBeanRefObjectName);
+         } // end of if ()
+      namefound:
+         if (mBeanRefName == null || "".equals(mBeanRefName)) 
+         {
+            log.debug("Anonymous dependency on object name " + mBeanRefObjectName);            
+         } // end of if ()
+         else 
+         {
+            log.debug("considering " + mBeanRefName + " with object name " + mBeanRefObjectName);
+            MBeanAttributeInfo[] attributes = info.getAttributes();
+            for (int k = 0; k < attributes.length; k++) {
+               if (mBeanRefName.equals(attributes[k].getName())) {
+                  String typeName = attributes[k].getType();
+                  if (!"javax.management.ObjectName".equals(typeName)) 
+                  {
+                     throw new DeploymentException("Trying to set " + mBeanRefName + " as an MBeanRef when it is not of type ObjectName");   
+                  } // end of if ()
 
-               log.debug(mbeanRefName + " set to " + mbeanRefValue + " in " + objectName);
-               server.setAttribute(objectName, new Attribute(mbeanRefName, mbeanRefObjectName));
+                  log.debug(mBeanRefName + " set to " + mBeanRefValue + " in " + objectName);
+                  server.setAttribute(objectName, new Attribute(mBeanRefName, mBeanRefObjectName));
 
-               break;
-            }
-         }
-         
+                  break namefound;
+               }//name test
+            }//for
+            throw new DeploymentException("No Attribute found with name: " + mBeanRefName);         
+         } // end of else
+         //breaks to here
       }
       // Set lists of mbean references (object names)
 
@@ -278,42 +287,51 @@ public class ServiceConfigurator
       for (int j = 0; j < mBeanRefLists.getLength(); j++) {
          Element mBeanRefListElement = (Element)mBeanRefLists.item(j);
          String mBeanRefListName = mBeanRefListElement.getAttribute("name");
+         //Make the list of object names, and add them to mbeanRefs.
+         NodeList mBeanRefList = mBeanRefListElement.getElementsByTagName("mbean-ref-list-element");
+         ArrayList mBeanRefListNames = new ArrayList();
+         for (int l = 0; l < mBeanRefList.getLength(); l++) 
+         {
+            Element mBeanRefElement = (Element)mBeanRefList.item(l);
+            if (!mBeanRefElement.hasChildNodes()) 
+            {
+               throw new DeploymentException("Empty mbean-ref-list-element!");    
+            } // end of if ()
 
-         MBeanAttributeInfo[] attributes = info.getAttributes();
-         for (int k = 0; k < attributes.length; k++) {
-            if (mBeanRefListName.equals(attributes[k].getName())) {
-
-               NodeList mBeanRefList = mBeanRefListElement.getElementsByTagName("mbean-ref-list-element");
-               ArrayList mBeanRefListNames = new ArrayList();
-               for (int l = 0; l < mBeanRefList.getLength(); l++) 
-               {
-                  Element mBeanRefElement = (Element)mBeanRefList.item(l);
-                  if (!mBeanRefElement.hasChildNodes()) 
-                  {
-                     throw new DeploymentException("Empty mbean-ref-list-element!");    
-                  } // end of if ()
-
-                  // Get the mbeanRef value
-                  String mBeanRefValue = ((Text)mBeanRefElement.getFirstChild()).getData().trim();
-                  ObjectName mBeanRefObjectName = new ObjectName(mBeanRefValue);
-                  if (!mBeanRefListNames.contains(mBeanRefObjectName)) 
-                  {
-                     mBeanRefListNames.add(mBeanRefObjectName);
-                  } // end of if ()
-                  if (!mBeanRefs.contains(mBeanRefObjectName)) 
-                  {
-                     mBeanRefs.add(mBeanRefObjectName);
-                  } // end of if ()
+            // Get the mbeanRef value
+            String mBeanRefValue = ((Text)mBeanRefElement.getFirstChild()).getData().trim();
+            ObjectName mBeanRefObjectName = new ObjectName(mBeanRefValue);
+            if (!mBeanRefListNames.contains(mBeanRefObjectName)) 
+            {
+               mBeanRefListNames.add(mBeanRefObjectName);
+            } // end of if ()
+            if (!mBeanRefs.contains(mBeanRefObjectName)) 
+            {
+               mBeanRefs.add(mBeanRefObjectName);
+            } // end of if ()
                   
-               } // end of for ()
+         } // end of for ()
+         //Now look for the name
+      listnamefound:
+         if (mBeanRefListName == null || "".equals(mBeanRefListName)) 
+         {
+            log.debug("Anonymous dependency on list of object names " + mBeanRefListNames);           
+            
+         } // end of if ()
+         else 
+         {
+            MBeanAttributeInfo[] attributes = info.getAttributes();
+            for (int k = 0; k < attributes.length; k++) {
+               if (mBeanRefListName.equals(attributes[k].getName())) {
+                  log.debug(mBeanRefListName + " set to " + mBeanRefListNames + " in " + objectName);
+                  server.setAttribute(objectName, new Attribute(mBeanRefListName, mBeanRefListNames));
 
-               log.debug(mBeanRefListName + " set to " + mBeanRefListNames + " in " + objectName);
-               server.setAttribute(objectName, new Attribute(mBeanRefListName, mBeanRefListNames));
-
-               break;
-            }
-
-         }
+                  break listnamefound;
+               }//if name matches
+            }//for
+            throw new DeploymentException("No Attribute found with name: " + mBeanRefListName);         
+         } // end of else
+         //breaks to here
       }
       return mBeanRefs;
    }
