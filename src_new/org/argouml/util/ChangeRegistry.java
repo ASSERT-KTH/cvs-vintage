@@ -24,7 +24,7 @@
 // File: ChangeRegistry.java
 // Classes: ChangeRegistry
 // Original Author: thorsten Jun 2000
-// $Id: ChangeRegistry.java,v 1.1 2001/04/06 09:43:56 1sturm Exp $
+// $Id: ChangeRegistry.java,v 1.2 2001/12/05 16:06:22 thierrylach Exp $
 
 package org.argouml.util;
 
@@ -33,7 +33,7 @@ import org.tigris.gef.graph.*;
 /** This class holds the information about the saving state of the current project.
  *  The state is changed by every change made to its diagrams.
  *
- * @see Project
+ * @see org.argouml.kernel.Project
  */
 
 public class ChangeRegistry implements GraphListener

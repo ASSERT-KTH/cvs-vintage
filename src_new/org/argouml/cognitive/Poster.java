@@ -26,7 +26,7 @@
 // File: Poster.java
 // Classes: Poster
 // Original Author: jrobbins@ics.uci.edu
-// $Id: Poster.java,v 1.1 2000/09/04 12:50:27 1sturm Exp $
+// $Id: Poster.java,v 1.2 2001/12/05 16:06:20 thierrylach Exp $
 
 package org.argouml.cognitive;
 
@@ -43,7 +43,7 @@ import org.tigris.gef.util.*;
  *
  *  Currently Critic and Designer implement this interface.
  *
- * @see Critic
+ * @see org.argouml.cognitive.critics.Critic
  * @see Designer */
 
 public interface Poster {

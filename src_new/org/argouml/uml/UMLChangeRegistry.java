@@ -24,7 +24,7 @@
 // File: UMLChangeRegistry.java
 // Classes: UMLChangeRegistry
 // Original Author: thorsten Jan 2001
-// $Id: UMLChangeRegistry.java,v 1.1 2001/04/06 09:43:54 1sturm Exp $
+// $Id: UMLChangeRegistry.java,v 1.2 2001/12/05 16:06:21 thierrylach Exp $
 
 package org.argouml.uml;
 
@@ -35,7 +35,7 @@ import org.argouml.util.*;
 /** This class holds the information about the saving state of the current UML project.
  *  The state is changed by every change made either to the model or to its diagrams.
  *
- * @see Project
+ * @see org.argouml.kernel.Project
  * @see ChangeRegistry
  */
 

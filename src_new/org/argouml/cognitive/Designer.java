@@ -26,7 +26,7 @@
 // File: Designer.java
 // Classes: Designer
 // Original Author: jrobbins@ics.uci.edu
-// $Id: Designer.java,v 1.2 2000/11/29 07:45:14 carnold Exp $
+// $Id: Designer.java,v 1.3 2001/12/05 16:06:20 thierrylach Exp $
 
 package org.argouml.cognitive;
 
@@ -334,7 +334,7 @@ implements Poster, Runnable, PropertyChangeListener, MElementListener, java.io.S
    *  future the designer could specify a condition to determine when
    *  his items expire.
    * @see ToDoItem
-   * @see Critic#stillValid
+   * @see org.argouml.cognitive.critics.Critic#stillValid
    */
   public boolean stillValid(ToDoItem i, Designer d) { return true; }
 

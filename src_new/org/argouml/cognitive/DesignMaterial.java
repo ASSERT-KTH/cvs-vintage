@@ -26,7 +26,7 @@
 // File: DesignMaterial.java
 // Classes: DesignMaterial
 // Original Author: jrobbins@ics.uci.edu
-// $Id: DesignMaterial.java,v 1.1 2000/09/04 12:50:27 1sturm Exp $
+// $Id: DesignMaterial.java,v 1.2 2001/12/05 16:06:20 thierrylach Exp $
 
 package org.argouml.cognitive;
 
@@ -61,14 +61,17 @@ import org.argouml.cognitive.critics.*;
  *  HREF="../cookbook.html#define_design_material">define_design_material</a>
  *  <p>
  *
- * @see jargo.softarch.C2BrickDM
- * @see jargo.softarch.C2CompDM
- * @see jargo.softarch.C2ConnDM
  * @see Design
- * @see jargo.ui.UiPropertyBrowser */
+ */
+
 
 public abstract class DesignMaterial extends Observable
 implements Highlightable, java.io.Serializable {
+/*
+ * @see jargo.softarch.C2BrickDM
+ * @see jargo.softarch.C2CompDM
+ * @see jargo.softarch.C2ConnDM
+ * @see jargo.ui.UiPropertyBrowser */
 
   ////////////////////////////////////////////////////////////////
   // instance variables
