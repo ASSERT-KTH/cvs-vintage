@@ -1,4 +1,4 @@
-// $Id: ActionSequenceDiagram.java,v 1.15 2003/06/30 21:59:35 linus Exp $
+// $Id: ActionSequenceDiagram.java,v 1.16 2003/07/24 19:32:49 alexb Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -122,5 +122,13 @@ public class ActionSequenceDiagram extends ActionAddDiagram {
                     == ProjectManager.getManager().getCurrentProject().getModel() ||
                     ns instanceof MPackage);
     }
+    
+    /**
+     * patch to disable SD's in 0.14.
+     * @see org.argouml.uml.ui.UMLAction#shouldBeEnabled()
+     */
+    public boolean shouldBeEnabled() {
 
+        return false;
+    }
 } /* end class ActionSequenceDiagram */
