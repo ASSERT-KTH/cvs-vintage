@@ -3,5 +3,15 @@
 <server>
 
   <mbean code="org.jboss.jmx.adaptor.rmi.RMIAdaptorService" 
-	 name="jboss.jmx:type=Connector,name=RMI"/>
+	 name="jboss.jmx:type=Connector,name=RMI">
+
+    <!-- Bind adapter to jmx:local:rmi as well as default -->
+    <attribute name="BindLocal">true</attribute>
+
+    <!-- override default JNDI name
+    <attribute name="JNDIName">jmx:whatever:rmi</attribute>
+    -->
+
+  </mbean>
+
 </server>

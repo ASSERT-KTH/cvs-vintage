@@ -52,7 +52,7 @@ import org.jboss.logging.Logger;
 /**
  * A JMX client to deploy an application into a running JBoss server via RMI.
  *
- * @version <tt>$Revision: 1.2 $</tt>
+ * @version <tt>$Revision: 1.3 $</tt>
  * @author  <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  * @author  <a href="mailto:jason@planet57.com">Jason Dillon</a>
  * @author  <a href="mailto:Christoph.Jung@infor.de">Christoph G. Jung</a>
@@ -71,9 +71,10 @@ public class RemoteDeployer
    /**
     * Construct a new <tt>RemoteDeployer</tt>.
     */
-   public RemoteDeployer(ObjectName deployerName, Hashtable env) throws Exception
+   public RemoteDeployer(ObjectName deployerName, Hashtable env, String adapterName)
+      throws Exception
    {
-      init(deployerName, env);
+      init(deployerName, env, adapterName);
    }
 
    /**
@@ -81,7 +82,7 @@ public class RemoteDeployer
     *
     * @param url   The URL of the JNDI provider or null to use the default.
     */
-   public RemoteDeployer(ObjectName deployerName, String url) throws Exception
+   public RemoteDeployer(ObjectName deployerName, String url, String adapterName) throws Exception
    {
       Hashtable env = null;
       
@@ -90,7 +91,7 @@ public class RemoteDeployer
          env.put(Context.PROVIDER_URL, url);
       }
 
-      init(deployerName, env);      
+      init(deployerName, env, adapterName);      
    }
 
    /**
@@ -98,17 +99,9 @@ public class RemoteDeployer
     *
     * <p>Uses MainDeployer and the given url for Context.PROVIDER_URL.
     */
-   public RemoteDeployer(String url) throws Exception
+   public RemoteDeployer(String url, String adapterName) throws Exception
    {
-      this(MainDeployerMBean.OBJECT_NAME, url);
-   }
-   
-   /**
-    * Construct a new <tt>RemoteDeployer</tt>.
-    */
-   public RemoteDeployer(ObjectName deployerName) throws Exception
-   {
-      init(deployerName, null);
+      this(MainDeployerMBean.OBJECT_NAME, url, adapterName);
    }
 
    /**
@@ -118,24 +111,27 @@ public class RemoteDeployer
     */
    public RemoteDeployer() throws Exception
    {
-      this(MainDeployerMBean.OBJECT_NAME);
+      this(MainDeployerMBean.OBJECT_NAME, (Hashtable)null, null);
    }
 
-   protected void init(ObjectName deployerName, Hashtable env) throws Exception
+   protected void init(ObjectName deployerName, Hashtable env, String adapterName)
+      throws Exception
    {
-      RemoteMBeanServer server = lookupRemoteMBeanServer(env);
+      RemoteMBeanServer server = lookupRemoteMBeanServer(env, adapterName);
       deployer = (Deployer)MBeanProxy.create(Deployer.class, deployerName, server);
    }
    
    /**
     * Lookup the RemoteMBeanServer which will be used to invoke methods on.
     *
-    * @param env   The initial context environment or null to use default.
+    * @param env            The initial context environment or null to use default.
+    * @param adapterName    The JNDI name of the RMI adapter or null for the default.
     *
     * @throws Exception   Failed to lookup connector reference or retruned reference
     *                     was not of type {@link RMIAdapter}.
     */
-   protected RemoteMBeanServer lookupRemoteMBeanServer(Hashtable env) throws Exception
+   protected RemoteMBeanServer lookupRemoteMBeanServer(Hashtable env, String adapterName)
+      throws Exception
    {
       RemoteMBeanServer server = null;
       InitialContext ctx;
@@ -146,11 +142,13 @@ public class RemoteDeployer
          ctx = new InitialContext(env);
       }
 
-      // jason: fix me!!!
-      String serverName = InetAddress.getLocalHost().getHostName();
+      // if adapter is null, the use the default
+      if (adapterName == null) {
+         adapterName = org.jboss.jmx.adaptor.rmi.RMIAdaptorService.LOCAL_NAME;
+      }
       
       try {
-         Object obj = ctx.lookup( "jmx:" + serverName + ":rmi" );
+         Object obj = ctx.lookup( adapterName );
          log.debug("RMI Adapter: " + obj);
          
          if (!(obj instanceof RMIAdaptor)) {
@@ -274,6 +272,7 @@ public class RemoteDeployer
       System.out.println("    -D<name>[=<value>]        Set a system property");
       System.out.println("    --                        Stop processing options");
       System.out.println("    -s, --server=<url>        Specify the JNDI URL of the remote server");
+      System.out.println("    -a, --adapter=<name>      Specify JNDI name of the RMI adapter to use");
       System.out.println();
       System.out.println("operations:");
       System.out.println("    -d, --deploy=<url>        Deploy a URL into the remote server");
@@ -290,11 +289,12 @@ public class RemoteDeployer
          System.exit(0);
       }
       
-      String sopts = "-:hD:s:d:u:i:r:";
+      String sopts = "-:hD:s:d:u:i:r:a:";
       LongOpt[] lopts =
       {
          new LongOpt("help", LongOpt.NO_ARGUMENT, null, 'h'),
          new LongOpt("server", LongOpt.NO_ARGUMENT, null, 's'),
+         new LongOpt("adapter", LongOpt.NO_ARGUMENT, null, 'a'),
          new LongOpt("deploy", LongOpt.REQUIRED_ARGUMENT, null, 'd'),
          new LongOpt("undeploy", LongOpt.REQUIRED_ARGUMENT, null, 'u'),
          new LongOpt("isdeployed", LongOpt.REQUIRED_ARGUMENT, null, 'i'),
@@ -307,6 +307,7 @@ public class RemoteDeployer
 
       List commands = new ArrayList();
       String serverURL = null;
+      String adapterName = null;
       
       while ((code = getopt.getopt()) != -1)
       {
@@ -354,6 +355,12 @@ public class RemoteDeployer
             case 's':
             {
                serverURL = getopt.getOptarg();
+               break;
+            }
+
+            case 'a':
+            {
+               adapterName = getopt.getOptarg();
                break;
             }
 
@@ -416,7 +423,7 @@ public class RemoteDeployer
       }
 
       // setup the deployer
-      Deployer deployer = new RemoteDeployer(serverURL);
+      Deployer deployer = new RemoteDeployer(serverURL, adapterName);
       
       // now execute all of the commands
       Iterator iter = commands.iterator();

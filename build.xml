@@ -12,7 +12,7 @@
 <!--                                                                        -->
 <!-- ====================================================================== -->
 
-<!-- $Id: build.xml,v 1.91 2002/05/14 03:01:32 user57 Exp $ -->
+<!-- $Id: build.xml,v 1.92 2002/05/18 05:07:21 user57 Exp $ -->
 
 <project default="main" name="JBoss/Server">
 
@@ -715,6 +715,7 @@
     <jar jarfile="${build.lib}/deployer.jar" manifest="${build.etc}/manifest/deployer.mf">
       <fileset dir="${build.classes}">
         <include name="org/jboss/jmx/service/RemoteDeployer*.class"/>
+        <include name="org/jboss/jmx/adaptor/rmi/RMIAdaptorService.class"/>
       </fileset>
       <fileset dir="${build.resources}">
         <include name="log4j.properties"/>

@@ -23,7 +23,7 @@ import org.jboss.system.ServiceMBeanSupport;
  * @jmx:mbean name="jboss.jmx:type=adaptor,protocol=RMI"
  *            extends="org.jboss.system.ServiceMBean"
  *
- * @version <tt>$Revision: 1.4 $</tt>
+ * @version <tt>$Revision: 1.5 $</tt>
  * @author  <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  * @author  <A href="mailto:andreas.schaefer@madplanet.com">Andreas &quot;Mad&quot; Schaefer</A>
  * @author  <a href="mailto:jason@planet57.com">Jason Dillon</a>
@@ -39,35 +39,97 @@ public class RMIAdaptorService
    public static final String JMX_NAME = "jmx";
    public static final String PROTOCOL_NAME = "rmi";
 
+   /**
+    * This is where the local adapter will be bound into JNDI.
+    *
+    * <p>
+    * Not using <em>localhost</em> as {@link #mHost} could potentially
+    * return that, so <em>local</em> is a little safer... I guess.
+    */
+   public static final String LOCAL_NAME = "jmx:local:rmi";
+
+   /** The RMI adapter instance. */
    private RMIAdaptor adaptor;
+
+   /** Cached host name. */
    private String mHost;
+
+   /** JNDI prefix or null for none. */
    private String mName;
 
-   public RMIAdaptorService() {
-      mName = null;
-   }
+   /** The user supplied JNDI name or null for the default. */
+   private String jndiName;
 
+   /** Flag to enable or disable binding to LOCAL_NAME. */
+   private boolean bindLocal = true;
+
+   /**
+    * @jmx:managed-constructor
+    */
    public RMIAdaptorService(String name)
    {
       mName = name;
    }
 
-   protected ObjectName getObjectName(MBeanServer server, ObjectName name)
-      throws MalformedObjectNameException
+   /**
+    * @jmx:managed-constructor
+    */
+   public RMIAdaptorService()
    {
-      return name == null ? OBJECT_NAME : name;
+      this(null);
    }
 
    /**
     * @jmx:managed-attribute
     */
-   public String getJNDIName() {
-      if (mName != null) {
-         return JMX_NAME + ":" + mHost + ":" + PROTOCOL_NAME + ":" + mName;
-      }
-      else {
+   public void setJNDIName(final String jndiName)
+   {
+      this.jndiName = jndiName;
+   }
+   
+   /**
+    * @jmx:managed-attribute
+    */
+   public String getJNDIName()
+   {
+      if (jndiName == null) {
+         if (mName != null) {
+            return JMX_NAME + ":" + mHost + ":" + PROTOCOL_NAME + ":" + mName;
+         }
+         // else
+         
          return JMX_NAME + ":" + mHost + ":" + PROTOCOL_NAME;
       }
+      // else
+      
+      return jndiName;
+   }
+
+   /**
+    * @jmx:managed-attribute
+    */
+   public void setBindLocal(final boolean flag)
+   {
+      this.bindLocal = flag;
+   }
+   
+   /**
+    * @jmx:managed-attribute
+    */
+   public boolean getBindLocal()
+   {
+      return this.bindLocal;
+   }
+
+
+   ///////////////////////////////////////////////////////////////////////////
+   //                    ServiceMBeanSupport Overrides                      //
+   ///////////////////////////////////////////////////////////////////////////
+   
+   protected ObjectName getObjectName(MBeanServer server, ObjectName name)
+      throws MalformedObjectNameException
+   {
+      return name == null ? OBJECT_NAME : name;
    }
 
    protected void startService() throws Exception
@@ -79,6 +141,10 @@ public class RMIAdaptorService
 
       try {
          ctx.bind(getJNDIName(), adaptor);
+
+         if (bindLocal) {
+            ctx.bind(LOCAL_NAME, adaptor);
+         }
       }
       finally {
          ctx.close();
@@ -91,6 +157,7 @@ public class RMIAdaptorService
 
       try {
          ctx.unbind(getJNDIName());
+         ctx.unbind(LOCAL_NAME);
       }
       finally {
          ctx.close();
