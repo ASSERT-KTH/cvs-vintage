@@ -24,7 +24,7 @@
 // File: FigNodeModelElement.java
 // Classes: FigNodeModelElement
 // Original Author: abonner
-// $Id: FigNodeModelElement.java,v 1.25 2002/10/08 20:04:31 kataka Exp $
+// $Id: FigNodeModelElement.java,v 1.26 2002/10/10 12:26:28 kataka Exp $
 
 package org.argouml.uml.diagram.ui;
 
@@ -586,6 +586,7 @@ implements VetoableChangeListener, DelayedVChangeListener, MouseListener, KeyLis
     _readyToEdit = true;
     updateBounds();
     bindPort(own, _bigPort);
+   
   }
 
     // override this method in subclasses if you want to show stereotype information
