@@ -89,7 +89,7 @@ import org.tigris.scarab.util.export.ExportFormat;
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: Search.java,v 1.128 2003/04/23 18:38:12 elicia Exp $
+ * @version $Id: Search.java,v 1.129 2003/05/01 02:42:09 dlr Exp $
  */
 public class Search extends RequireLoginFirstAction
 {
@@ -270,6 +270,7 @@ public class Search extends RequireLoginFirstAction
                 // work from the same MITList and this guarantees they 
                 // will not accidently be linked.
                 currentList = currentList.copy();
+                currentList.setName(null);
                 query.setMITList(currentList);
                 if (!currentList.isSingleModule()) 
                 {
