@@ -15,7 +15,17 @@
 <small>changes</small>
 </div>
 
+#set ($module = $scarabR.CurrentModule)
+#set ($rmits = $module.RModuleIssueTypes)
+
 <h3>Issue types</h3>
+
+#if ($rmits.isEmpty())
+   <p><strong class="alert">There are no issue types in this module.</strong></p>
+<div class="functnbar3">
+<input type="submit" value="Add new"  name="eventSubmit_doGotoothertemplate"/>&#160;
+</div>
+#else
 
 <table width="100%" border="1" cellspacing="2" cellpadding="3">
 <tr>
@@ -26,8 +36,7 @@
 <th>Sequence #</th>
 </tr>
 
-#set ($module = $scarabR.CurrentModule)
-#set ($rmits = $module.RModuleIssueTypes)
+
 
 #foreach ($rmit in $rmits)
 #set ( $rmitGroup = $intake.RModuleIssueType.mapTo($rmit) )
@@ -41,6 +50,7 @@
 #end
 </table>
 
+
 <div class="functnbar3">
 <input type="submit" value="Save"  name="eventSubmit_doSave"/>&#160;
 <input type="submit" value="Add new"  name="eventSubmit_doGotoothertemplate"/>&#160;
@@ -50,9 +60,9 @@
 <small>artifact type(s)</small>
 </div>
 
-<p>* Maximum of five Issue types in left hand navigation (first four
-selected will appear).</p>
+<p>* Maximum of five Issue types in left hand navigation.</p>
 
+#end
 <div class="functnbar2">
 <input type="submit" value="Done"  name="eventSubmit_doDone" />&#160;
 <input type="submit" value="Cancel" name="eventSubmit_doCancel" />&#160;
