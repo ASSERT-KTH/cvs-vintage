@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/http/Attic/HttpRequestAdapter.java,v 1.25 2000/08/12 04:55:48 costin Exp $
- * $Revision: 1.25 $
- * $Date: 2000/08/12 04:55:48 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/http/Attic/HttpRequestAdapter.java,v 1.26 2000/08/22 06:56:55 costin Exp $
+ * $Revision: 1.26 $
+ * $Date: 2000/08/22 06:56:55 $
  *
  * ====================================================================
  *
@@ -65,6 +65,7 @@
 package org.apache.tomcat.service.http;
 
 import org.apache.tomcat.core.*;
+import org.apache.tomcat.helper.*;
 import org.apache.tomcat.util.*;
 import org.apache.tomcat.logging.*;
 import java.io.*;

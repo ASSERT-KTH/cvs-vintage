@@ -61,7 +61,6 @@
 package org.apache.tomcat.util;
 
 import org.apache.tomcat.util.StringManager;
-import org.apache.tomcat.core.Constants;
 import java.io.*;
 
 /**
@@ -69,6 +68,8 @@ import java.io.*;
  *
  */
 public class BuffTool {
+    public static final String DEFAULT_CHAR_ENCODING = "8859_1";
+
     
     public static  void addInt( byte buff[], int pos, int v ) {
 	buff[pos]=(byte) ((v >>>  8) & 0xFF);
@@ -100,7 +101,7 @@ public class BuffTool {
     public static String getString( byte b[] , int pos, int len ) 
         throws UnsupportedEncodingException
     {
-	return new String( b, pos, len, Constants.DEFAULT_CHAR_ENCODING );
+	return new String( b, pos, len, DEFAULT_CHAR_ENCODING );
     }
 
 
@@ -115,9 +116,9 @@ public class BuffTool {
 		}
 	    }
 	    if( i+8 <len )
-		System.out.print( new String( buff, i, 8, Constants.DEFAULT_CHAR_ENCODING ));
+		System.out.print( new String( buff, i, 8, DEFAULT_CHAR_ENCODING ));
 	    else
-		System.out.print( new String( buff, i, len-i, Constants.DEFAULT_CHAR_ENCODING ));
+		System.out.print( new String( buff, i, len-i, DEFAULT_CHAR_ENCODING ));
 	    System.out.println();
 	}
 	System.out.println();

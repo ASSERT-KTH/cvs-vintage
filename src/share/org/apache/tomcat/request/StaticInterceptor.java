@@ -61,6 +61,7 @@ package org.apache.tomcat.request;
 import org.apache.tomcat.core.*;
 import org.apache.tomcat.core.Constants;
 import org.apache.tomcat.request.*;
+import org.apache.tomcat.helper.*;
 import org.apache.tomcat.util.*;
 import java.io.*;
 import java.net.*;

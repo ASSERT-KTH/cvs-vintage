@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Response.java,v 1.28 2000/08/14 17:49:13 costin Exp $
- * $Revision: 1.28 $
- * $Date: 2000/08/14 17:49:13 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Response.java,v 1.29 2000/08/22 06:56:40 costin Exp $
+ * $Revision: 1.29 $
+ * $Date: 2000/08/22 06:56:40 $
  *
  * ====================================================================
  *
@@ -70,6 +70,7 @@ import java.util.*;
 import javax.servlet.*;
 import javax.servlet.http.*;
 import org.apache.tomcat.util.*;
+import org.apache.tomcat.helper.*;
 import org.apache.tomcat.facade.*;
 import org.apache.tomcat.logging.*;
 

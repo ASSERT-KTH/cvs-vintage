@@ -59,6 +59,7 @@
 package org.apache.tomcat.request;
 
 import org.apache.tomcat.core.*;
+import org.apache.tomcat.helper.*;
 import org.apache.tomcat.util.*;
 import org.apache.tomcat.util.xml.*;
 import org.apache.tomcat.logging.*;

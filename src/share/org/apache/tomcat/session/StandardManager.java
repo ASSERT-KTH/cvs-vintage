@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/session/Attic/StandardManager.java,v 1.12 2000/08/11 21:20:41 costin Exp $
- * $Revision: 1.12 $
- * $Date: 2000/08/11 21:20:41 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/session/Attic/StandardManager.java,v 1.13 2000/08/22 06:56:55 costin Exp $
+ * $Revision: 1.13 $
+ * $Date: 2000/08/22 06:56:55 $
  *
  * ====================================================================
  *
@@ -71,6 +71,7 @@ import java.util.Vector;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpSession;
 import org.apache.tomcat.util.*;
+import org.apache.tomcat.helper.*;
 import org.apache.tomcat.core.Request;
 
 /**
@@ -102,7 +103,7 @@ import org.apache.tomcat.core.Request;
  * @author Craig R. McClanahan
  * @author costin@eng.sun.com
  * @author <a href="mailto:jon@latchkey.com">Jon S. Stevens</a>
- * @version $Revision: 1.12 $ $Date: 2000/08/11 21:20:41 $
+ * @version $Revision: 1.13 $ $Date: 2000/08/22 06:56:55 $
  */
 public final class StandardManager implements Runnable  {
     // ----------------------------------------------------- Instance Variables

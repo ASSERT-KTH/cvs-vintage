@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/util/Attic/CookieTools.java,v 1.8 2000/07/03 08:42:49 bergsten Exp $
- * $Revision: 1.8 $
- * $Date: 2000/07/03 08:42:49 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/helper/Attic/CookieTools.java,v 1.1 2000/08/22 06:56:43 costin Exp $
+ * $Revision: 1.1 $
+ * $Date: 2000/08/22 06:56:43 $
  *
  * ====================================================================
  *
@@ -61,8 +61,8 @@
  *
  */
 
-
-package org.apache.tomcat.util;
+package org.apache.tomcat.helper;
+import  org.apache.tomcat.util.*;
 import java.text.*;
 import java.util.*;
 
