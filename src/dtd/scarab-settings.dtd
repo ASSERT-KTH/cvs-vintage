@@ -1,10 +1,6 @@
 <!ELEMENT active ( #PCDATA ) >
 
-<!ELEMENT attribute ( active | attribute-option | created-date | default-text-flag | description | display-name | group-preferred-order | module-preferred-order | name | quick-search | required | type )* >
-
-<!ELEMENT attribute-group ( name, description, active, dedupe, preferred-order, attribute+ ) >
-
-<!ELEMENT attribute-option ( active | child-option | deleted | display | name | preferred-order | weight )* >
+<!ELEMENT attribute-group-preferred-order ( #PCDATA ) >
 
 <!ELEMENT child-option ( #PCDATA ) >
 
@@ -35,19 +31,27 @@
 
 <!ELEMENT firstname ( #PCDATA ) >
 
-<!ELEMENT group-preferred-order ( #PCDATA ) >
+<!ELEMENT global-attribute ( name, type, description, created-date, global-attribute-option* ) >
+
+<!ELEMENT global-attribute-option ( name, deleted, child-option, weight, preferred-order ) >
+
+<!ELEMENT global-issue-type ( name, description, template ) >
 
 <!ELEMENT history ( #PCDATA ) >
 
-<!ELEMENT issue-type ( name, description, template ) >
-
 <!ELEMENT lastname ( #PCDATA ) >
 
-<!ELEMENT module ( name, owner-id, description, url, domain, code, user*, module-issue-type+ ) >
+<!ELEMENT module ( name, owner-id, description, url, domain, code, user*, module-issue-type* ) >
 <!ATTLIST module id NMTOKEN #REQUIRED >
 <!ATTLIST module parent NMTOKEN #REQUIRED >
 
-<!ELEMENT module-issue-type ( name, active, display, preferred-order, dedupe, history, comments, display-name, display-description, attribute-group+ ) >
+<!ELEMENT module-attribute ( name, attribute-group-preferred-order, display-name, active, required, module-preferred-order, quick-search, default-text-flag, module-attribute-option* ) >
+
+<!ELEMENT module-attribute-group ( name, description, active, dedupe, preferred-order, module-attribute* ) >
+
+<!ELEMENT module-attribute-option ( display, active, preferred-order, weight ) >
+
+<!ELEMENT module-issue-type ( name, active, display, preferred-order, dedupe, history, comments, display-name, display-description, module-attribute-group+ ) >
 
 <!ELEMENT module-preferred-order ( #PCDATA ) >
 
@@ -63,7 +67,7 @@
 
 <!ELEMENT role ( #PCDATA ) >
 
-<!ELEMENT scarab ( attribute+, issue-type+, module+ ) >
+<!ELEMENT scarab ( global-attribute | global-issue-type | module )* >
 
 <!ELEMENT template ( #PCDATA ) >
 
