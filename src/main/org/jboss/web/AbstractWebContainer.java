@@ -37,7 +37,6 @@ import org.jboss.deployment.DeploymentInfo;
 import org.jboss.deployment.DeploymentException;
 import org.jboss.deployment.J2eeApplicationMetaData;
 import org.jboss.deployment.J2eeModuleMetaData;
-import org.jboss.ejb.LocalHomeObjectFactory;
 import org.jboss.metadata.EjbRefMetaData;
 import org.jboss.metadata.EjbLocalRefMetaData;
 import org.jboss.metadata.EnvEntryMetaData;
@@ -140,7 +139,7 @@ in the catalina module.
 @see org.jboss.security.SecurityAssociation;
 
 @author  Scott.Stark@jboss.org
-@version $Revision: 1.27 $
+@version $Revision: 1.28 $
 */
 public abstract class AbstractWebContainer 
    extends ServiceMBeanSupport 
@@ -653,36 +652,13 @@ public abstract class AbstractWebContainer
          String linkName = ejb.getLink();
          String jndiName = di.findEjbLink(linkName);
 
-         log.debug("Linking ejb-ref: "+name+" to JNDI name: "+jndiName);
          if( jndiName == null )
-            throw new NamingException("ejb-ref: "+name+", expected jndi-name in jboss-web.xml");
+            throw new NamingException("ejb-ref: "+name+", target not found, add valid ejb-link");
+         // The local home location is "local/"+jndiName
+         jndiName = "local/" + jndiName;
+         log.debug("Linking ejb-local-ref: "+name+" to JNDI name: "+jndiName);
          Util.bind(envCtx, name, new LinkRef(jndiName));
       }
-/*
-            String uniqueKey = Long.toString( (new java.util.Date()).getTime() );
-            while(enum.hasNext())
-            {
-                  // Internal link
-                  if (debug)
-                     log.debug("Binding "+ref.getName()+" to bean source: "+ref.getLink());
-                  if (getApplication().getContainer(ref.getLink()) == null)
-                     throw new DeploymentException ("Bean "+ref.getLink()+" not found within this application.");
-                  // get local home
-                  // bind it into the local namespace
-                  LocalHomeObjectFactory.rebind( uniqueKey + ref.getName(),
-                     getApplication(), getApplication().getContainer(ref.getLink()) );
-                  StringRefAddr refAddr = new StringRefAddr("nns", uniqueKey+ref.getName() );
-                  Reference jndiRef = new Reference(ref.getLocalHome(),
-                     refAddr, LocalHomeObjectFactory.class.getName(), null );
-                  bind(envCtx, ref.getName(), jndiRef );
-               
-               }
-               else
-               {
-                  throw new DeploymentException( "Local references currently require ejb-link" );
-               }
-            }
-*/
    }
 
    public void startService() throws Exception
