@@ -49,7 +49,7 @@ import org.gjt.sp.util.*;
  * <li>And so on
  * </ul>
  *
- * @version $Id: StatusBar.java,v 1.36 2002/06/01 07:07:01 spestov Exp $
+ * @version $Id: StatusBar.java,v 1.37 2002/06/02 03:29:43 spestov Exp $
  * @author Slava Pestov
  * @since jEdit 3.2pre2
  */
@@ -59,7 +59,8 @@ public class StatusBar extends JPanel implements WorkThreadProgressListener
 	public StatusBar(View view)
 	{
 		super(new BorderLayout());
-		setBorder(new CompoundBorder(new EmptyBorder(4,0,0,0),
+		setBorder(new CompoundBorder(new EmptyBorder(4,0,0,
+			(OperatingSystem.isMacOS() ? 18 : 0)),
 			UIManager.getBorder("TextField.border")));
 
 		this.view = view;
@@ -119,10 +120,6 @@ public class StatusBar extends JPanel implements WorkThreadProgressListener
 		panel.add(BorderLayout.EAST,box);
 
 		add(BorderLayout.CENTER,panel);
-
-		// Leave some room for OS X grow box
-		if(OperatingSystem.isMacOS())
-			add(BorderLayout.WEST,Box.createHorizontalStrut(18));
 	} //}}}
 
 	//{{{ propertiesChanged() method
