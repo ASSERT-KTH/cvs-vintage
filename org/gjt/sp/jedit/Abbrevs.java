@@ -33,7 +33,7 @@ import org.gjt.sp.util.Log;
 /**
  * Abbreviation manager.
  * @author Slava Pestov
- * @version $Id: Abbrevs.java,v 1.14 2004/05/29 01:55:24 spestov Exp $
+ * @version $Id: Abbrevs.java,v 1.15 2004/07/05 18:25:23 spestov Exp $
  */
 public class Abbrevs
 {
@@ -422,7 +422,7 @@ public class Abbrevs
 
 		try
 		{
-			Hashtable currentAbbrevs = null;
+			Hashtable currentAbbrevs = globalAbbrevs;
 
 			String line;
 			while((line = in.readLine()) != null)
