@@ -398,13 +398,16 @@
            includes="org/jboss/util/Service.java,
                      org/jboss/util/ServiceMBean.java,
                      org/jboss/util/ServiceMBeanSupport.java,
-                     org/jboss/logging/Log.java"
+                     org/jboss/logging/Log.java,
+                     org/jboss/monitor/MetricsConstants.java"
     />
     
     <mkdir dir="${external.dir}"/>
     <jar jarfile="${dist.dir}/external/jboss-util.jar"
          basedir="${build.util.classes.dir}"
-         includes="org/jboss/util/**, org/jboss/logging/**"
+         includes="org/jboss/util/**,
+                   org/jboss/logging/**,
+                   org/jboss/monitor/**"
     />
   </target>
     
