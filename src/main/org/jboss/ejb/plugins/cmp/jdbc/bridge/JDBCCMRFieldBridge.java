@@ -72,7 +72,7 @@ import org.jboss.security.SecurityAssociation;
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @author <a href="mailto:alex@jboss.org">Alex Loubyansky</a>
- * @version $Revision: 1.71 $
+ * @version $Revision: 1.72 $
  */
 public final class JDBCCMRFieldBridge implements JDBCFieldBridge, CMRFieldBridge
 {
@@ -1239,9 +1239,13 @@ public final class JDBCCMRFieldBridge implements JDBCFieldBridge, CMRFieldBridge
          return;
 
       // load the value from the database
-      Collection values;
+      Collection values = manager.loadRelation(this, myCtx.getId());
+      /*
       if(hasForeignKey())
       {
+         // this changes the lazy loading of relationships in advanced training labs.
+         // i.e. it will load lazy cmp fields first of this entity and then will lazy load the related entity
+         // instead of loading this entity JOIN related entity in one query.
          Object fk = getRelatedIdFromContext(myCtx);
          values = (fk == null ? Collections.EMPTY_LIST : Collections.singletonList(fk));
       }
@@ -1249,6 +1253,7 @@ public final class JDBCCMRFieldBridge implements JDBCFieldBridge, CMRFieldBridge
       {
          values = manager.loadRelation(this, myCtx.getId());
       }
+      */
       load(myCtx, values);
    }
 

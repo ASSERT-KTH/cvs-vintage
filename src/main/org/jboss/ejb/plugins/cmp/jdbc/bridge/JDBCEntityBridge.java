@@ -64,7 +64,7 @@ import org.jboss.logging.Logger;
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @author <a href="mailto:loubyansky@ua.fm">Alex Loubyansky</a>
  * @author <a href="mailto:heiko.rupp@cellent.de">Heiko W. Rupp</a>
- * @version $Revision: 1.41 $
+ * @version $Revision: 1.42 $
  */
 public class JDBCEntityBridge implements EntityBridge
 {
@@ -545,19 +545,28 @@ public class JDBCEntityBridge implements EntityBridge
          }
       }
 
-      // filter
-      EntityState entityState = getEntityState(ctx);
-      int fieldsToLoad = 0;
-      for(int i = 0; i < tableFields.length; ++i)
+      FieldIterator loadIter;
+      if(loadGroup != null)
       {
-         JDBCCMPFieldBridge field = tableFields[i];
-         if(loadGroup[i] && !field.isPrimaryKeyMember() && !field.isLoaded(ctx))
+         // filter
+         int fieldsToLoad = 0;
+         EntityState entityState = getEntityState(ctx);
+         for(int i = 0; i < tableFields.length; ++i)
          {
-            entityState.setLoadRequired(i);
-            ++fieldsToLoad;
+            JDBCCMPFieldBridge field = tableFields[i];
+            if(loadGroup[i] && !field.isPrimaryKeyMember() && !field.isLoaded(ctx))
+            {
+               entityState.setLoadRequired(i);
+               ++fieldsToLoad;
+            }
          }
+         loadIter = (fieldsToLoad > 0 ? entityState.getLoadIterator(ctx) : EMPTY_FIELD_ITERATOR);
       }
-      return fieldsToLoad > 0 ? entityState.getLoadIterator(ctx) : EMPTY_FIELD_ITERATOR;
+      else
+      {
+         loadIter = EMPTY_FIELD_ITERATOR;
+      }
+      return loadIter;
    }
 
    /**
