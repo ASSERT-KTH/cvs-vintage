@@ -1,4 +1,4 @@
-// $Id: PropPanelAssociationEnd.java,v 1.56 2004/12/20 23:15:10 mvw Exp $
+// $Id: PropPanelAssociationEnd.java,v 1.57 2004/12/21 17:20:44 bobtarling Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -142,16 +142,15 @@ public class PropPanelAssociationEnd extends PropPanelModelElement {
     public PropPanelAssociationEnd() {
         super("AssociationEnd", ConfigLoader.getTabPropsOrientation());
         associationLabel = Translator.localize("label.association");
-        Class mclass = (Class) ModelFacade.ASSOCIATION_END;
-        createControls(mclass);
+        createControls();
         positionStandardControls();
         positionControls();
     }
 
     /**
-     * @param mclass (not used) the association end
+     * Create the controls specific to an AssociationEnd
      */
-    protected void createControls(Class mclass) {
+    protected void createControls() {
         typeCombobox = new UMLComboBox2(
                 new UMLAssociationEndTypeComboBoxModel(),
                 ActionSetAssociationEndType.getInstance(), true);

@@ -1,4 +1,4 @@
-// $Id: ModelManagementHelper.java,v 1.4 2004/12/17 22:56:20 mvw Exp $
+// $Id: ModelManagementHelper.java,v 1.5 2004/12/21 17:20:44 bobtarling Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -175,10 +175,11 @@ public class ModelManagementHelper {
     /**
      * Returns all modelelements of the given kind
      *
-     * @param kind is the class kind
+     * @param type is the class kind
      * @return Collection
      */
-    public Collection getAllModelElementsOfKind(Class kind) {
+    public Collection getAllModelElementsOfKind(Object type) {
+        Class kind = (Class) type;
         if (kind == null)
             return Collections.EMPTY_LIST;
         Project p = ProjectManager.getManager().getCurrentProject();

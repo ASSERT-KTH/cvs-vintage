@@ -1,4 +1,4 @@
-// $Id: ActionAddInstanceClassifier.java,v 1.5 2004/11/01 19:55:17 mvw Exp $
+// $Id: ActionAddInstanceClassifier.java,v 1.6 2004/12/21 17:20:43 bobtarling Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -22,7 +22,7 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $Id: ActionAddInstanceClassifier.java,v 1.5 2004/11/01 19:55:17 mvw Exp $
+// $Id: ActionAddInstanceClassifier.java,v 1.6 2004/12/21 17:20:43 bobtarling Exp $
 package org.argouml.uml.ui.behavior.common_behavior;
 
 import org.argouml.i18n.Translator;
@@ -42,7 +42,7 @@ import org.argouml.uml.ui.AbstractActionAddModelElement;
  */
 public class ActionAddInstanceClassifier extends AbstractActionAddModelElement {
 
-    private Class choiceClass = (Class) ModelFacade.CLASSIFIER;
+    private Object choiceClass = ModelFacade.CLASSIFIER;
     
     /**
      * The constructor for ActionAddExtendExtensionPoint.
@@ -58,7 +58,7 @@ public class ActionAddInstanceClassifier extends AbstractActionAddModelElement {
      * 
      * @param choice the classifier type we are adding
      */
-    public ActionAddInstanceClassifier(Class choice) {
+    public ActionAddInstanceClassifier(Object choice) {
         super();
         choiceClass = choice;
     }
