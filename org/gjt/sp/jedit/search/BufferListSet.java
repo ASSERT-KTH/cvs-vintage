@@ -30,7 +30,7 @@ import org.gjt.sp.jedit.View;
 /**
  * A file set for searching a user-specified list of buffers.
  * @author Slava Pestov
- * @version $Id: BufferListSet.java,v 1.4 2002/06/18 02:44:52 spestov Exp $
+ * @version $Id: BufferListSet.java,v 1.5 2003/02/05 15:44:05 spestov Exp $
  */
 public abstract class BufferListSet implements SearchFileSet
 {
@@ -109,6 +109,12 @@ public abstract class BufferListSet implements SearchFileSet
 	{
 		// not supported for arbitriary filesets
 		return null;
+	} //}}}
+
+	//{{{ invalidateCachedList() method
+	public void invalidateCachedList()
+	{
+		files = null;
 	} //}}}
 
 	protected abstract String[] _getFiles(Component comp);

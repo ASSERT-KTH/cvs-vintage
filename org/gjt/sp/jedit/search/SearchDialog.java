@@ -40,7 +40,7 @@ import org.gjt.sp.jedit.*;
 /**
  * Search and replace dialog.
  * @author Slava Pestov
- * @version $Id: SearchDialog.java,v 1.32 2003/01/12 03:08:25 spestov Exp $
+ * @version $Id: SearchDialog.java,v 1.33 2003/02/05 15:44:06 spestov Exp $
  */
 public class SearchDialog extends EnhancedDialog implements EBComponent
 {
@@ -53,6 +53,12 @@ public class SearchDialog extends EnhancedDialog implements EBComponent
 	public static final int ALL_BUFFERS = 1;
 	public static final int DIRECTORY = 2;
 	//}}}
+
+	//{{{ getSearchDialog() method
+	public static SearchDialog getSearchDialog(View view)
+	{
+		return (SearchDialog)viewHash.get(view);
+	} //}}}
 
 	//{{{ showSearchDialog() method
 	/**
