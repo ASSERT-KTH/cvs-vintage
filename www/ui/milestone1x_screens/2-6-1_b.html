@@ -416,13 +416,68 @@
   
  <input type="hidden" name="depdependKeyori" value="104" />
  <h3>Dependencies</h3>
-  <div class="axial">
- <table cellspacing="2" cellpadding="3" border="0">
- <tr>
-  <th>Add dependency on issue </th>
-  <td>
-    <input type="text" size="10" name="depdependKeyodi" value = "" />
-    <select name="depdependKeydti" class="select">
+ <table width="100%" border="1" cellspacing="2" cellpadding="3">
+   <tr>
+     <th>
+     &nbsp;
+     </th>
+     <th>Issue ID #</th>
+     <th>Relationship</th>
+     <th>Dependency type</th>
+   </tr>
+     <tr class="a">
+     <td><input type="checkbox" /></td>
+     <td>
+     313PCD
+     </td>
+     <td>
+	<select name="depdependKeydti" class="select">
+          <option value="2">
+          Child</option>
+    <option value="0">Choose relationship</option>
+        </select>     </td>
+     <td>
+	<select name="depdependKeydti" class="select">
+          <option value="3">
+          non-blocking</option>
+    <option value="0">Choose dependency type</option>
+        </select>     </td>
+   </tr>
+
+     <tr class="b">
+     <td><input type="checkbox" /></td>
+     <td>
+     310PCD
+     </td>
+     <td>
+	<select name="depdependKeydti" class="select">
+          <option value="1">
+          Parent</option>
+    <option value="0">Choose relationship</option>
+        </select>     </td>
+     <td>
+	<select name="depdependKeydti" class="select">
+          <option value="1">
+          blocking</option>
+    <option value="0">Choose dependency type</option>
+        </select>     </td>
+   </tr>
+   
+     <tr class="a">
+     <td>&nbsp;</td>
+     <td>
+     <input type="text" size="5">
+     </td>
+     <td>
+	<select name="depdependKeydti" class="select">
+    <option value="0">Choose relationship</option>
+          <option value="1">
+          Parent</option>
+          <option value="2">
+          Child</option>
+        </select>     </td>
+     <td>
+	<select name="depdependKeydti" class="select">
     <option value="0">Choose dependency type</option>
           <option value="1">
           blocking</option>
@@ -430,14 +485,12 @@
           duplicate</option>
           <option value="3">
           non-blocking</option>
-        </select>
-  </td>
- </tr>
- </table>
-</div>
+        </select>     </td>
+   </tr>
+       </table>
 
 <div class="functnbar3">
-  <input type="submit" value="Add dependency"  name="eventSubmit_doAdddependency" />
+ <input type="submit" value="Save"  name="eventSubmit_doAdddependency" />&nbsp;<input type="submit" value="Add new" name="eventSubmit_doAdddependency" />&nbsp;<input type="submit" value="Delete selected"  name="eventSubmit_doAdddependency" />
 </div>
 
 
@@ -711,11 +764,20 @@ It's sort of like an opportunity to rewrite history! Exciting, no?</pre>
   </table>
 </div>
 
-<div class="functnbar3">
-     <input type="submit" value="Add comment" name="eventSubmit_doSubmitcomment" />&nbsp;<input type="submit" value="Save Changes" name="eventSubmit_doSubmitcomment" />
-</div>
-    
+<h4>Enter new comment</h4>    
 
+ <table cellspacing="2" cellpadding="3" border="0">
+ <tr>
+  <td><textarea rows="10" cols="90" name ="atchcommentKeydas">
+  </textarea>
+  </td>
+  </tr>
+  </table>
+
+
+<div class="functnbar3">
+     <input type="submit" value="Add comment" name="eventSubmit_doSubmitcomment" />&nbsp;
+</div>
 
 
 

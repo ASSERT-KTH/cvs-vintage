@@ -412,16 +412,33 @@
      <input type="submit" value="Add attachment" name="eventSubmit_doSubmiturl"  />
 </div>
 
-  
  <input type="hidden" name="depdependKeyori" value="104" />
  <h3>Dependencies</h3>
-  <div class="axial">
- <table cellspacing="2" cellpadding="3" border="0">
- <tr>
-  <th>Add dependency on issue </th>
-  <td>
-    <input type="text" size="10" name="depdependKeyodi" value = "" />
-    <select name="depdependKeydti" class="select">
+ <table width="100%" border="1" cellspacing="2" cellpadding="3">
+   <tr>
+     <th>
+     &nbsp;
+     </th>
+     <th>Issue ID #</th>
+     <th>Relationship</th>
+     <th>Dependency type</th>
+   </tr>
+   
+     <tr class="a">
+     <td>&nbsp;</td>
+     <td>
+     <input type="text" size="5">
+     </td>
+     <td>
+	<select name="depdependKeydti" class="select">
+    <option value="0">Choose relationship</option>
+          <option value="1">
+          Parent</option>
+          <option value="2">
+          Child</option>
+        </select>     </td>
+     <td>
+	<select name="depdependKeydti" class="select">
     <option value="0">Choose dependency type</option>
           <option value="1">
           blocking</option>
@@ -429,12 +446,13 @@
           duplicate</option>
           <option value="3">
           non-blocking</option>
-        </select>
-  </td>
- </tr>
- </table>
-</div>
+        </select>     </td>
+   </tr>
+       </table>
 
+<div class="functnbar3">
+ <input type="submit" value="Save"  name="eventSubmit_doAdddependency" />&nbsp;<input type="submit" value="Add new" name="eventSubmit_doAdddependency" />&nbsp;<input type="submit" value="Delete selected"  name="eventSubmit_doAdddependency" />
+</div>
 <div class="functnbar3">
   <input type="submit" value="Add dependency"  name="eventSubmit_doAdddependency" />
 </div>
@@ -687,6 +705,12 @@ Peter and Udo
   </table>
 </div>
 
+<div class="functnbar3">
+     <input type="submit" value="Save Changes" name="eventSubmit_doSubmitcomment" />
+</div>
+    
+
+
  <h4>xx/xx/200X&nbsp;|&nbsp;<a href="#">Bob Smith</a></h4>
   
   <div class="axial">
@@ -700,10 +724,25 @@ Peter and Udo
 </div>
 
 <div class="functnbar3">
-     <input type="submit" value="Add comment" name="eventSubmit_doSubmitcomment" />&nbsp;<input type="submit" value="Save Changes" name="eventSubmit_doSubmitcomment" />
+     <input type="submit" value="Save Changes" name="eventSubmit_doSubmitcomment" />
 </div>
     
 
+
+<h4>Enter new comment</h4>    
+
+ <table cellspacing="2" cellpadding="3" border="0">
+ <tr>
+  <td><textarea rows="10" cols="90" name ="atchcommentKeydas">
+  </textarea>
+  </td>
+  </tr>
+  </table>
+
+
+<div class="functnbar3">
+     <input type="submit" value="Add comment" name="eventSubmit_doSubmitcomment" />&nbsp;
+</div>
 
 
 
