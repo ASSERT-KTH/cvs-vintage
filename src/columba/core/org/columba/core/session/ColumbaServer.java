@@ -13,6 +13,7 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
+
 package org.columba.core.session;
 
 import org.columba.core.logging.ColumbaLogger;
@@ -36,7 +37,6 @@ import java.util.StringTokenizer;
 
 import javax.swing.JOptionPane;
 
-
 /**
  * Opens a server socket to manage multiple sessions of Columba
  * capable of  passing commands to the main session.
@@ -49,7 +49,7 @@ import javax.swing.JOptionPane;
  * @author fdietz
  */
 public class ColumbaServer {
-    private static final String RESOURCE_PATH = "org.columba.core.i18n.dialog";
+    static final String RESOURCE_PATH = "org.columba.core.i18n.dialog";
 
     /**
      * The anonymous user for single-user systems without user name.
@@ -175,79 +175,66 @@ public class ColumbaServer {
         return thread.isAlive();
     }
 
+    /**
+     * Handles a client connect and authentication.
+     */
     protected void handleClient(Socket client) {
         try {
             // only accept client from local machine
             String host = client.getLocalAddress().getHostAddress();
-
             if (!(host.equals("127.0.0.1"))) {
                 // client isn't from local machine
-                client.close();
-
                 return;
             }
 
             BufferedReader reader = new BufferedReader(new InputStreamReader(
                         client.getInputStream()));
             String line = reader.readLine();
-
             if (!line.startsWith("Columba ")) {
-                client.close();
-
                 return;
             }
 
             line = reader.readLine();
-
             if (!line.startsWith("User ")) {
-                client.close();
-
                 return;
             }
 
+            PrintWriter writer = new PrintWriter(client.getOutputStream());
             if (!line.substring(5).equals(System.getProperty("user.name",
                             ANONYMOUS_USER))) {
-                client.close();
-
+                writer.write("WRONG USER\r\n");
+                writer.close();
                 return;
             }
+            writer.write("\r\n");
+            writer.flush();
 
             line = reader.readLine();
-
-            ColumbaLogger.log.info("Passing to running Columba session: " +
-                line);
-
             // do something with the arguments..
-            handleCommandLine(line);
-
-            client.close();
+            List list = new LinkedList();
+            StringTokenizer st = new StringTokenizer(line, "%");
+            while (st.hasMoreTokens()) {
+                String tok = (String) st.nextToken();
+                list.add(tok);
+            }
+            handleCommandLineParameters((String[])list.toArray(new String[0]));
         } catch (IOException ioe) {
             ioe.printStackTrace();
+        } finally {
+            try {
+                client.close();
+            } catch (IOException ioe) {}
         }
     }
 
     /**
-     * Parsing the given argumentString and split this String into a StringArray. The separator is
-     * the character %, thus the whole arguments should not have this character inside. The
-     * character itselfs is added in Main.java @see Main#loadInVMInstance(String[]). After splitting
-     * is finished the CmdLineArgumentHandler is called, to do things with the arguments
-     * @see CmdLineArgumentHandler
-     * @param argumentString String which holds any arguments seperated by <br>%</br> character
+     * Uses the command line parser to validate the passed arguments
+     * and invokes handlers to process the detected options.
      */
-    protected void handleCommandLine(String argumentString) {
-        List list = new LinkedList();
-
-        StringTokenizer st = new StringTokenizer(argumentString, "%");
-
-        while (st.hasMoreTokens()) {
-            String tok = (String) st.nextToken();
-            list.add(tok);
-        }
-
+    public void handleCommandLineParameters(String[] args) {
         ColumbaCmdLineParser cmdLineParser = new ColumbaCmdLineParser();
-
         try {
-            cmdLineParser.parseCmdLine((String[]) list.toArray(new String[0]));
+            cmdLineParser.parseCmdLine(args);
             new CmdLineArgumentHandler(cmdLineParser);
         } catch (IllegalArgumentException e) {
         }
@@ -260,7 +247,6 @@ public class ColumbaServer {
         if (instance == null) {
             instance = new ColumbaServer();
         }
-
         return instance;
     }
 }

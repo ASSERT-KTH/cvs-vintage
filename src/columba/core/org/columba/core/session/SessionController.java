@@ -13,18 +13,22 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
+
 package org.columba.core.session;
 
 import org.columba.core.main.MainInterface;
+import org.columba.core.util.GlobalResourceLoader;
 
 import java.io.*;
 
+import javax.swing.JOptionPane;
 
 /**
  * Contains the logic necessary to search for running Columba sessions and
  * pass command line arguments to it or to start a new session.
  */
 public class SessionController {
+    
     /**
  * Tries to connect to a running ColumbaServer using a new ColumbaClient.
  * If this works, the given command line arguments are passed to the
@@ -36,28 +40,29 @@ public class SessionController {
         //create new client and try to connect to server
         ColumbaClient client = new ColumbaClient();
 
-        if (client.connect()) {
-            try {
-                client.sendCommandLine(args);
-            } catch (IOException ioe) {
-                ioe.printStackTrace();
-
-                //display error message
-            } finally {
-                client.close();
-            }
-
-            System.exit(5);
-        }
-
-        //no server running, start our own
         try {
-            ColumbaServer.getColumbaServer().start();
-        } catch (IOException ioe) {
-            ioe.printStackTrace();
-
-            //display error message
-            System.exit(1);
+            client.connect();
+            client.sendCommandLine(args);
+            System.exit(5);
+        } catch (IOException ioe1) {
+            //no server running, start our own
+            try {
+                ColumbaServer.getColumbaServer().start();
+            } catch (IOException ioe2) {
+                ioe2.printStackTrace();
+                //display error message
+                System.exit(1);
+            }
+        } catch (AuthenticationException ae) {
+            JOptionPane.showMessageDialog(null,
+                GlobalResourceLoader.getString(ColumbaServer.RESOURCE_PATH,
+                    "session", "err_auth_msg"),
+                GlobalResourceLoader.getString(ColumbaServer.RESOURCE_PATH,
+                    "session", "err_auth_title"),
+                JOptionPane.ERROR_MESSAGE);
+            System.exit(5);
+        } finally {
+            client.close();
         }
     }
 

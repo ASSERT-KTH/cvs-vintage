@@ -13,23 +13,20 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
+
 package org.columba.core.session;
 
 import org.columba.core.main.MainInterface;
 
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.io.Writer;
+import java.io.*;
 
 import java.net.Socket;
-
 
 /**
  * Client connecting to the {@link ColumbaServer} to check if
  * a session of Columba is already running.
  * <p>
- * If a session is running the client is able to pass requests
- * to the server.
+ * If a session is running the client tries to authenticate.
  *
  * @author fdietz
  */
@@ -37,6 +34,7 @@ public class ColumbaClient {
     protected static final String NEWLINE = "\r\n";
     protected Socket socket;
     protected Writer writer;
+    protected BufferedReader reader;
 
     public ColumbaClient() {
     }
@@ -44,25 +42,24 @@ public class ColumbaClient {
     /**
  * Tries to connect to a running server.
  */
-    public boolean connect() {
-        try {
-            socket = new Socket("127.0.0.1",
-                    SessionController.deserializePortNumber());
-            writer = new PrintWriter(socket.getOutputStream());
-            writer.write("Columba " + MainInterface.version);
-            writer.write(NEWLINE);
-            writer.flush();
+    public void connect() throws IOException, AuthenticationException {
+        socket = new Socket("127.0.0.1",
+                SessionController.deserializePortNumber());
+        writer = new PrintWriter(socket.getOutputStream());
+        writer.write("Columba " + MainInterface.version);
+        writer.write(NEWLINE);
+        writer.flush();
 
-            writer.write("User " +
-                System.getProperty("user.name", ColumbaServer.ANONYMOUS_USER));
-            writer.write(NEWLINE);
-            writer.flush();
-
-            return true;
-        } catch (IOException ex) {
+        writer.write("User " +
+            System.getProperty("user.name", ColumbaServer.ANONYMOUS_USER));
+        writer.write(NEWLINE);
+        writer.flush();
+        reader = new BufferedReader(
+                new InputStreamReader(socket.getInputStream()));
+        String response = reader.readLine();
+        if (response.equals("WRONG USER")) {
+            throw new AuthenticationException();
         }
-
-        return false;
     }
 
     /**
@@ -86,8 +83,15 @@ public class ColumbaClient {
  */
     public void close() {
         try {
-            writer.close();
-            socket.close();
+            if (writer != null) {
+                writer.close();
+            }
+            if (reader != null) {
+                reader.close();
+            }
+            if (socket != null) {
+                socket.close();
+            }
         } catch (IOException ioe) {
         }
     }

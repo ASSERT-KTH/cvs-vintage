@@ -37,6 +37,7 @@ import org.columba.core.plugin.InterpreterHandler;
 import org.columba.core.plugin.MenuPluginHandler;
 import org.columba.core.plugin.PluginManager;
 import org.columba.core.plugin.ThemePluginHandler;
+import org.columba.core.session.ColumbaServer;
 import org.columba.core.session.SessionController;
 import org.columba.core.util.GlobalResourceLoader;
 import org.columba.mail.main.MailMain;
@@ -63,8 +64,6 @@ public class Main {
         ColumbaLogger.addDefaultFileHandler();
         
         SessionController.passToRunningSessionAndExit(args);
-        
-        
 		
         StartUpFrame frame = new StartUpFrame();
         frame.setVisible(true);
@@ -122,9 +121,9 @@ public class Main {
         mail.initGui();
         
         MainInterface.frameModel = new FrameModel();
-
-        new CmdLineArgumentHandler(cmdLineParser);
         
+        ColumbaServer.getColumbaServer().handleCommandLineParameters(args);
+
         frame.setVisible(false);
 
         if (MainInterface.frameModel.getOpenFrames().length == 0) {
