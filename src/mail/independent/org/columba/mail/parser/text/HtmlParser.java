@@ -382,12 +382,6 @@ public class HtmlParser {
 		BufferedReader br = new BufferedReader(sr);
 		String ss = null;
 
-		/*
-		 * *20030618, karlpeder* Changed the way multiple spaces are 
-		 * replaced with &nbsp; to give better word wrap
-		 * *20030623, karlpeder* Added " => &quot;
-		 */
-
 		try {
 
 			while ((ss = br.readLine()) != null) {
@@ -410,10 +404,14 @@ public class HtmlParser {
 							sb.append("&quot;");
 							i++;
 							break;
+						/* *20031004, karlpeder* the special entity
+						 * apos is not handled correctly when displaying
+						 * html - let it stay as-is
 						case '\'':
 							sb.append("&apos;");
 							i++;
 							break;
+						*/
 						case ' ' :
 							//sb.append("&nbsp;");
 							if (ss.substring(i).startsWith("    ")) {
