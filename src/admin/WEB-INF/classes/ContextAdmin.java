@@ -49,18 +49,20 @@ public class ContextAdmin {
 	cm = realRequest.getContext().getContextManager();
     }
 
-    public Enumeration getContextNames() {
-        return (Enumeration) cm.getContextNames();
-    }
-
     public String[] getContextInfo(String contextName) {
 	Enumeration enum;
 	String key;
-        Context context;
+        Context context=null;
         Vector v = new Vector();
 
-
-	context = cm.getContext(contextName);
+	enum=cm.getContexts();
+	while( enum.hasMoreElements() ) {
+	    Context ctx=(Context)enum.nextElement();
+	    if( contextName.equals ( context.getPath() )) {
+		context=ctx;
+		break;
+	    }
+	}
 
 	v.addElement("DOC BASE: " + context.getDocBase());
 	v.addElement("FULL DOC BASE: " + context.getAbsolutePath());
@@ -113,12 +115,12 @@ public class ContextAdmin {
 
     public String removeContext() {
         if (removeContextName != null) {
-            Enumeration enum = cm.getContextNames();
+            Enumeration enum = cm.getContexts();
             while (enum.hasMoreElements()) {
-	        String name = (String)enum.nextElement();
-		if (removeContextName.equals(name)) {
+	        Context ctx = (Context)enum.nextElement();
+		if (removeContextName.equals(ctx.getPath())) {
 	            try {
-		        cm.removeContext(removeContextName);
+		        cm.removeContext(ctx);
 		    }
 	            catch(org.apache.tomcat.core.TomcatException ex) {
 	                ex.printStackTrace();

@@ -35,8 +35,14 @@ public class TomcatAdmin extends TagSupport {
 		ctxPath=req.getParameter( ctxPathParam );
 	    }
 	    if( ctxPath != null ) {
-		Context ctx=cm.getContext( ctxPath );
-		pageContext.setAttribute("ctx", ctx);
+		Enumeration en=cm.getContexts();
+		while( en.hasMoreElements() ) {
+		    Context ctx=(Context)en.nextElement();
+		    if( ctxPath.equals( ctx.getPath())) {
+			pageContext.setAttribute("ctx", ctx);
+			break;
+		    }
+		}
 	    }
 	} catch (Exception ex ) {
 	    ex.printStackTrace();
