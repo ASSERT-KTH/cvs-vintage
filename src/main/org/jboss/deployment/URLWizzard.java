@@ -33,11 +33,14 @@ import java.util.jar.Manifest;
 * Very scratchy! Any improvements are welcome!
 *      
 *	@author Daniel Schulze <daniel.schulze@telkel.com>
-*	@version $Revision: 1.5 $
+*	@version $Revision: 1.6 $
 */
 public class URLWizzard
 {
    
+	private static byte[] buffer = new byte[1024*512];
+
+
    // Static --------------------------------------------------------
    public static void main (String[] _args) throws Exception
    {
@@ -217,7 +220,8 @@ public class URLWizzard
          if (!f.exists ())
          {
             f.mkdirs ();
-            return f.toURL ();
+			return new URL("file:"+f.getCanonicalPath());
+            //return f.toURL ();
          }
       }
       while (true); // the endless loop should never cause trouble
@@ -245,7 +249,7 @@ public class URLWizzard
       }
       while (!file.createNewFile ());
          
-      return file.toURL ();
+      return new URL("file:"+file.getCanonicalPath());
    }
    
    
@@ -280,11 +284,17 @@ public class URLWizzard
    
    
    /** writes the content of the InputStream into the OutputStream */
-   private static void write (InputStream _in, OutputStream _out) throws IOException
+   private static synchronized void write (InputStream _in, OutputStream _out) throws IOException
    {
-      int b;
-      while ((b = _in.read ()) != -1)
-         _out.write ((byte)b);
+      int read;
+	  while (true)
+	  {
+		  read = _in.read(buffer);
+		  if (read == -1)
+			  break;
+
+		  _out.write(buffer, 0, read);
+	  }
       
       _out.flush ();
    }
