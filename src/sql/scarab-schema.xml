@@ -2,7 +2,7 @@
 <!DOCTYPE database SYSTEM
           "http://jakarta.apache.org/turbine/dtd/database.dtd">
 
-<!-- $Id: scarab-schema.xml,v 1.103 2002/06/26 01:43:52 jmcnally Exp $ -->
+<!-- $Id: scarab-schema.xml,v 1.104 2002/07/03 01:54:34 jmcnally Exp $ -->
 
 <database name="@DATABASE_PROP_NAME@">
 <!--
@@ -635,7 +635,7 @@
     <!--
         Name.
     -->
-    <column name="NAME" javaName="Name" required="true" type="VARCHAR" 
+    <column name="NAME" javaName="Name" required="false" type="VARCHAR" 
             size="100"/>
     <column name="ACTIVE" type="BOOLEANINT" default="1" size="1" />
     <column name="MODIFIABLE" type="BOOLEANINT" default="1" size="1" />
@@ -1258,11 +1258,16 @@
     <!--
         Issue type.
     -->
-    <column name="ISSUE_TYPE_ID" required="true" type="INTEGER"></column>
+    <column name="ISSUE_TYPE_ID" required="false" type="INTEGER"></column>
     <!--
         Module.
     -->
     <column name="MODULE_ID" required="false" type="INTEGER"></column>
+    <!--
+        List id.  Either issuetype/module id or list_id is used.
+    -->
+    <column name="LIST_ID" required="false" type="INTEGER"></column>
+
     <column name="DELETED" required="false" type="BOOLEANINT" 
             default="0" size="1"></column>
     <column name="APPROVED" required="false" type="BOOLEANINT"
@@ -1294,6 +1299,9 @@
     </foreign-key>
     <foreign-key foreignTable="SCARAB_ISSUE_TYPE">
         <reference local="ISSUE_TYPE_ID" foreign="ISSUE_TYPE_ID"/>
+    </foreign-key>
+    <foreign-key foreignTable="SCARAB_MIT_LIST">
+        <reference local="LIST_ID" foreign="LIST_ID"/>
     </foreign-key>
     <foreign-key foreignTable="SCARAB_FREQUENCY">
         <reference local="SUBSCRIPTION_FREQUENCY_ID" foreign="FREQUENCY_ID"/>
