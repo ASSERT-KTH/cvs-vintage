@@ -1,4 +1,4 @@
-// $Id: Project.java,v 1.130 2004/12/30 12:34:06 mvw Exp $
+// $Id: Project.java,v 1.131 2004/12/30 23:44:29 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -919,9 +919,9 @@ public class Project implements java.io.Serializable, TargetListener {
         if (ModelFacade.isABase(obj)) { // an object that can be represented
             ProjectBrowser.getInstance().getEditorPane()
         		.removePresentationFor(obj, getDiagrams());
-            // UmlModelEventPump.getPump().stopPumpingEvents();
+
             UmlFactory.getFactory().delete(obj);
-            // UmlModelEventPump.getPump().startPumpingEvents();
+
             if (members.contains(obj)) {
                 members.remove(obj);
             }
@@ -929,6 +929,19 @@ public class Project implements java.io.Serializable, TargetListener {
                 models.remove(obj);
             }           
             needSave = true;
+            
+            // scan if some diagrams need to be deleted, too
+            // copy diagrams, otherwise ConcurrentModificationException
+            Collection c = new ArrayList(diagrams);
+            Iterator i = c.iterator();
+            while (i.hasNext()) {
+                Object d = i.next();
+                if (d instanceof UMLDiagram) {
+                    if (((UMLDiagram) d).needsToBeRemoved()) {
+                        moveToTrash(d);
+                    }
+                }    
+            }
         } else {
             if (obj instanceof ArgoDiagram) {
                 removeProjectMemberDiagram((ArgoDiagram) obj);

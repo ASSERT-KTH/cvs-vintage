@@ -1,4 +1,4 @@
-// $Id: UmlFactory.java,v 1.57 2004/12/28 04:42:06 bobtarling Exp $
+// $Id: UmlFactory.java,v 1.58 2004/12/30 23:44:38 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -796,6 +796,16 @@ public class UmlFactory extends AbstractUmlModelFactory {
         }        
     }
 
+    /**
+     * The Project may check if a certain MBase has been removed.
+     * 
+     * @param o the object to be checked
+     * @return true if removed
+     */
+    public boolean isRemoved(Object o) {
+        return ((MBase) o).isRemoved();
+    }
+    
     /**
      * Factored this method out of delete to simplify the design of the delete
      * operation
