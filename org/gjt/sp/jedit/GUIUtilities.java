@@ -56,7 +56,7 @@ import org.gjt.sp.util.Log;
  * </ul>
  *
  * @author Slava Pestov
- * @version $Id: GUIUtilities.java,v 1.19 2002/01/02 04:49:58 spestov Exp $
+ * @version $Id: GUIUtilities.java,v 1.20 2002/01/06 09:32:25 spestov Exp $
  */
 public class GUIUtilities
 {
@@ -699,7 +699,11 @@ public class GUIUtilities
 	{
 		StringBuffer buf = new StringBuffer();
 
-		buf.append("color:" + getColorHexString(style.getForegroundColor()));
+		if(style.getForegroundColor() != null)
+		{
+			buf.append("color:" + getColorHexString(style.getForegroundColor()));
+		}
+
 		if(style.getBackgroundColor() != null) 
 		{
 			buf.append(" bgColor:" + getColorHexString(style.getBackgroundColor()));

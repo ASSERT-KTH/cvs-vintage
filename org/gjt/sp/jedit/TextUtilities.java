@@ -34,7 +34,7 @@ import org.gjt.sp.jedit.syntax.*;
 /**
  * Class with several text utility functions.
  * @author Slava Pestov
- * @version $Id: TextUtilities.java,v 1.18 2002/01/01 00:39:29 spestov Exp $
+ * @version $Id: TextUtilities.java,v 1.19 2002/01/06 09:32:25 spestov Exp $
  */
 public class TextUtilities
 {
@@ -258,9 +258,16 @@ public class TextUtilities
 					//	chunks.text,gfx.getFontRenderContext());
 					FontMetrics fm = gfx.getFontMetrics();
 					gfx.setColor(bgColor);
+
+					Composite com = gfx.getComposite();
+					gfx.setComposite(AlphaComposite.getInstance(
+						AlphaComposite.SRC_OVER,0.8f));
+
 					gfx.fill(new Rectangle2D.Float(
 						x1,y - fm.getAscent(),
-						x2 - x1,fm.getAscent()));
+						x2 - x1,fm.getHeight()));
+
+					gfx.setComposite(com);
 				}
 
 				gfx.setFont(font);

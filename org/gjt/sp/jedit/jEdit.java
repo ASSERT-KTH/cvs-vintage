@@ -47,7 +47,7 @@ import org.gjt.sp.util.Log;
 /**
  * The main class of the jEdit text editor.
  * @author Slava Pestov
- * @version $Id: jEdit.java,v 1.35 2002/01/02 04:49:58 spestov Exp $
+ * @version $Id: jEdit.java,v 1.36 2002/01/06 09:32:25 spestov Exp $
  */
 public class jEdit
 {
@@ -191,13 +191,13 @@ public class jEdit
 				in.close();
 
 				Socket socket = new Socket(InetAddress.getByName("127.0.0.1"),port);
-				Writer out = new OutputStreamWriter(socket.getOutputStream(),"UTF8");
-				out.write(String.valueOf(key));
-				out.write('\n');
+				DataOutputStream out = new DataOutputStream(
+					socket.getOutputStream());
+				out.writeInt(key);
 
 				String script = makeServerScript(restore,args,scriptFile);
 
-				out.write(script);
+				out.writeUTF(script);
 
 				out.close();
 

@@ -49,7 +49,7 @@ import org.gjt.sp.util.Log;
  * jEdit's text component.
  *
  * @author Slava Pestov
- * @version $Id: JEditTextArea.java,v 1.59 2002/01/02 04:49:59 spestov Exp $
+ * @version $Id: JEditTextArea.java,v 1.60 2002/01/06 09:32:26 spestov Exp $
  */
 public class JEditTextArea extends JComponent
 {
@@ -2322,11 +2322,17 @@ loop:		for(int i = 0; i < text.length(); i++)
 	public void goToNextMarker(boolean select)
 	{
 		Vector markers = buffer.getMarkers();
+		if(markers.size() == 0)
+		{
+			getToolkit().beep();
+			return;
+		}
+
 		Marker marker = null;
 
 		for(int i = 0; i < markers.size(); i++)
 		{
-			Marker _marker = (Marker)markers.elementAt(i);
+			Marker _marker = (Marker)markers.get(i);
 			if(_marker.getPosition() > caret)
 			{
 				marker = _marker;
@@ -2335,15 +2341,13 @@ loop:		for(int i = 0; i < text.length(); i++)
 		}
 
 		if(marker == null)
-			getToolkit().beep();
-		else
-		{
-			if(select)
-				extendSelection(caret,marker.getPosition());
-			else if(!multi)
-				selectNone();
-			moveCaretPosition(marker.getPosition());
-		}
+			marker = (Marker)markers.get(0);
+
+		if(select)
+			extendSelection(caret,marker.getPosition());
+		else if(!multi)
+			selectNone();
+		moveCaretPosition(marker.getPosition());
 	} //}}}
 
 	//{{{ goToNextPage() method
@@ -2577,6 +2581,12 @@ loop:		for(int i = getCaretPosition() - 1; i >= 0; i--)
 	public void goToPrevMarker(boolean select)
 	{
 		Vector markers = buffer.getMarkers();
+		if(markers.size() == 0)
+		{
+			getToolkit().beep();
+			return;
+		}
+
 		Marker marker = null;
 		for(int i = markers.size() - 1; i >= 0; i--)
 		{
@@ -2589,15 +2599,13 @@ loop:		for(int i = getCaretPosition() - 1; i >= 0; i--)
 		}
 
 		if(marker == null)
-			getToolkit().beep();
-		else
-		{
-			if(select)
-				extendSelection(caret,marker.getPosition());
-			else if(!multi)
-				selectNone();
-			moveCaretPosition(marker.getPosition());
-		}
+			marker = (Marker)markers.get(markers.size() - 1);
+
+		if(select)
+			extendSelection(caret,marker.getPosition());
+		else if(!multi)
+			selectNone();
+		moveCaretPosition(marker.getPosition());
 	} //}}}
 
 	//{{{ goToPrevPage() method
@@ -5360,6 +5368,9 @@ loop:			for(int i = lineNo + 1; i < getLineCount(); i++)
 		//{{{ focusLost() method
 		public void focusLost(FocusEvent evt)
 		{
+			if(!isShowing())
+				return;
+
 			if(bracketLine != -1)
 				invalidateLineRange(bracketLine,caretLine);
 			else

@@ -28,6 +28,7 @@ import java.awt.datatransfer.*;
 import java.awt.event.*;
 import java.awt.*;
 import org.gjt.sp.jedit.msg.ViewUpdate;
+import org.gjt.sp.jedit.textarea.JEditTextArea;
 import org.gjt.sp.jedit.EditBus;
 import org.gjt.sp.util.Log;
 //}}}
@@ -38,7 +39,7 @@ import org.gjt.sp.util.Log;
  * this file out.
  * @since jEdit 4.0pre4
  * @author Slava Pestov
- * @version $Id: Java14.java,v 1.4 2002/01/05 03:26:28 spestov Exp $
+ * @version $Id: Java14.java,v 1.5 2002/01/06 09:32:25 spestov Exp $
  */
 public class Java14
 {
@@ -93,8 +94,11 @@ public class Java14
 						((View)comp).processKeyEvent(evt);
 						return true;
 					}
-					else if(comp == null || comp instanceof Window)
+					else if(comp == null || comp instanceof Window
+						|| comp instanceof JEditTextArea)
+					{
 						break;
+					}
 					else
 						comp = comp.getParent();
 				}

@@ -34,7 +34,7 @@ import org.gjt.sp.util.Log;
 /**
  * An abstract tabbed options dialog box.
  * @author Slava Pestov
- * @version $Id: OptionsDialog.java,v 1.5 2001/12/23 05:37:00 spestov Exp $
+ * @version $Id: OptionsDialog.java,v 1.6 2002/01/06 09:32:25 spestov Exp $
  */
 public class OptionsDialog extends EnhancedDialog
 	implements ActionListener, TreeSelectionListener
@@ -336,36 +336,20 @@ public class OptionsDialog extends EnhancedDialog
 		parent.addOptionPane(pane);
 	}
 
-	class PaneNameRenderer extends JLabel implements TreeCellRenderer
+	class PaneNameRenderer extends DefaultTreeCellRenderer
 	{
 		public PaneNameRenderer()
 		{
-			setOpaque(true);
-
 			paneFont = UIManager.getFont("Tree.font");
-			groupFont = new Font(paneFont.getName(),
-				paneFont.getStyle() | Font.BOLD,
-				paneFont.getSize());
+			groupFont = paneFont.deriveFont(Font.BOLD);
 		}
 
 		public Component getTreeCellRendererComponent(JTree tree,
 			Object value, boolean selected, boolean expanded,
 			boolean leaf, int row, boolean hasFocus)
 		{
-			if (selected)
-			{
-				this.setBackground(UIManager.getColor(
-					"Tree.selectionBackground"));
-				this.setForeground(UIManager.getColor(
-					"Tree.selectionForeground"));
-			}
-			else
-			{
-				this.setBackground(UIManager.getColor(
-					"Tree.background"));
-				this.setForeground(UIManager.getColor(
-					"Tree.foreground"));
-			}
+			super.getTreeCellRendererComponent(tree,value,
+				selected,expanded,leaf,row,hasFocus);
 
 			String name = null;
 
@@ -391,7 +375,8 @@ public class OptionsDialog extends EnhancedDialog
 
 				if (label == null)
 				{
-					setText(name);
+					// hahaha, suckers!!!
+					setText("NO LABEL PROPERTY! " + name);
 				}
 				else
 				{
@@ -403,11 +388,6 @@ public class OptionsDialog extends EnhancedDialog
 
 			return this;
 		}
-
-		private Border noFocusBorder = BorderFactory.createEmptyBorder(
-			1, 1, 1, 1);
-		private Border focusBorder = BorderFactory.createLineBorder(
-			UIManager.getColor("Tree.selectionBorderColor"));
 
 		private Font paneFont;
 		private Font groupFont;
