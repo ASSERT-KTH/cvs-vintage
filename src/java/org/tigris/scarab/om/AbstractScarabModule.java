@@ -130,7 +130,7 @@ import org.tigris.scarab.services.cache.ScarabCache;
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: AbstractScarabModule.java,v 1.51 2002/09/05 00:03:01 jmcnally Exp $
+ * @version $Id: AbstractScarabModule.java,v 1.52 2002/09/11 21:47:07 elicia Exp $
  */
 public abstract class AbstractScarabModule
     extends BaseObject
@@ -1692,25 +1692,15 @@ try{
     /**
      * Adds attribute options to a module.
      */
-    public void addAttributeOption(IssueType issueType, NumberKey optionId)
+    public void addAttributeOption(IssueType issueType, AttributeOption option)
         throws Exception
     {
-        AttributeOption option = null;
-        IssueType templateType = IssueTypeManager
-                 .getInstance(issueType.getTemplateId());
-        try
-        {
-            option = AttributeOptionManager
-                .getInstance(optionId);
-        }
-        catch(Exception e)
-        {
-            e.printStackTrace();
-        }
         RModuleOption rmo = addRModuleOption(issueType, option);
         rmo.save();
 
         // add module-attributeoption mappings to template type
+        IssueType templateType = IssueTypeManager
+                 .getInstance(issueType.getTemplateId());
         RModuleOption rmo2 = addRModuleOption(templateType, option);
         rmo2.save();
     }
@@ -1725,18 +1715,124 @@ try{
         rmit.setActive(false);
         rmit.setDisplay(false);
         rmit.save();
+        addIssueType(issueType);
 
-        // Create default groups
-        AttributeGroup ag = createNewGroup(issueType);
-        ag.setOrder(1);
-        ag.setDedupe(true);
-        ag.setDescription(null);
-        ag.save();
-        AttributeGroup ag2 = createNewGroup(issueType);
-        ag2.setOrder(3);
-        ag2.setDedupe(false);
-        ag2.setDescription(null);
-        ag2.save();
+    }
+
+    public void setRmaBasedOnIssueType(RIssueTypeAttribute ria)
+        throws Exception
+    {
+        RModuleAttribute rma = new RModuleAttribute(); 
+        rma.setModuleId(getModuleId());
+        rma.setIssueTypeId(ria.getIssueTypeId());
+        rma.setAttributeId(ria.getAttributeId());
+        rma.setActive(ria.getActive());
+        rma.setRequired(ria.getRequired());
+        rma.setOrder(ria.getOrder());
+        rma.setQuickSearch(ria.getQuickSearch());
+        rma.setDefaultTextFlag(ria.getDefaultTextFlag());
+        rma.save();
+        RModuleAttribute rma2 = rma.copy();
+        rma2.setModuleId(getModuleId());
+        rma2.setIssueTypeId(ria.getIssueType().getTemplateId());
+        rma2.setAttributeId(ria.getAttributeId());
+        rma2.setActive(ria.getActive());
+        rma2.setRequired(ria.getRequired());
+        rma2.setOrder(ria.getOrder());
+        rma2.setQuickSearch(ria.getQuickSearch());
+        rma2.setDefaultTextFlag(ria.getDefaultTextFlag());
+        rma2.save();
+    }
+
+    public void addIssueType(IssueType issueType)
+        throws Exception
+    {
+        //IssueType templateType = IssueTypeManager
+        //    .getInstance(issueType.getTemplateId(), false);
+
+        // add user attributes
+        List userRIAs = issueType.getRIssueTypeAttributes(false, "user");
+        for (int m=0; m<userRIAs.size(); m++)
+        {
+            RIssueTypeAttribute userRia = (RIssueTypeAttribute)userRIAs.get(m);
+            setRmaBasedOnIssueType(userRia);
+            //RIssueTypeAttribute userRia2 = templateType.getRIssueTypeAttribute(userRia.getAttribute());
+            //setRmaBasedOnIssueType(userRia2);
+        }
+
+        // add attribute groups
+        List groups = issueType.getAttributeGroups(false);
+        if (groups.isEmpty())
+        {
+            // Create default groups
+            AttributeGroup ag = createNewGroup(issueType);
+            ag.setOrder(1);
+            ag.setDedupe(true);
+            ag.setDescription(null);
+            ag.save();
+            AttributeGroup ag2 = createNewGroup(issueType);
+            ag2.setOrder(3);
+            ag2.setDedupe(false);
+            ag2.setDescription(null);
+            ag2.save();
+        }
+        else
+        {
+            
+            // Inherit attribute groups from issue type
+            for (int i=0; i<groups.size(); i++)
+            {
+                AttributeGroup group = (AttributeGroup)groups.get(i);
+                AttributeGroup moduleGroup = new AttributeGroup();
+                moduleGroup.setModuleId(getModuleId());
+                moduleGroup.setIssueTypeId(issueType.getIssueTypeId());
+                moduleGroup.setName(group.getName());
+                moduleGroup.setDescription(group.getDescription());
+                moduleGroup.setDedupe(group.getDedupe());
+                moduleGroup.setActive(group.getActive());
+                moduleGroup.setOrder(group.getOrder());
+                moduleGroup.save(); 
+
+                // add attributes
+                List attrs = group.getAttributes();
+                if (attrs != null)
+                {
+                    for (int j=0; j<attrs.size(); j++)
+                    {
+                        // save attribute-attribute group maps
+                        Attribute attr = (Attribute)attrs.get(j);
+                        RAttributeAttributeGroup raag = group.getRAttributeAttributeGroup(attr);
+                        RAttributeAttributeGroup moduleRaag = new RAttributeAttributeGroup();
+                        moduleRaag.setAttributeId(raag.getAttributeId());
+                        moduleRaag.setOrder(raag.getOrder());
+                        moduleRaag.setGroupId(moduleGroup.getAttributeGroupId());
+                        moduleRaag.save();
+
+                        // save attribute-module maps
+                        RIssueTypeAttribute ria = issueType.getRIssueTypeAttribute(attr);
+                        setRmaBasedOnIssueType(ria);
+
+                        // save options
+                        List rios = issueType.getRIssueTypeOptions(attr, false);
+                        if (rios != null)
+                        {
+                            for (int k=0; k<rios.size(); k++)
+                            {
+                                RIssueTypeOption rio = (RIssueTypeOption)rios.get(k);
+                                RModuleOption rmo = new RModuleOption();
+                                rmo.setModuleId(getModuleId());
+                                rmo.setIssueTypeId(issueType.getIssueTypeId());
+                                rmo.setOptionId(rio.getOptionId());
+                                rmo.setActive(rio.getActive());
+                                rmo.setOrder(rio.getOrder());
+                                rmo.setWeight(rio.getWeight());
+                                rmo.save();
+                            }
+                        }
+                    }
+                }
+            }
+        }
     }
 
     public RModuleIssueType getRModuleIssueType(IssueType issueType)

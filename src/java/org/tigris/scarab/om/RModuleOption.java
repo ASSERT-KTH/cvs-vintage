@@ -257,8 +257,30 @@ public class RModuleOption
                 .add(RModuleOptionPeer.ISSUE_TYPE_ID, getIssueTypeId())
                 .add(RModuleOptionPeer.OPTION_ID, getOptionId());
             RModuleOptionPeer.doDelete(c);
-           WorkflowFactory.getInstance().deleteWorkflowsForOption(getAttributeOption(), 
+            WorkflowFactory.getInstance().deleteWorkflowsForOption(getAttributeOption(), 
                                          module, issueType);
+            // Correct the ordering of the remaining options
+            ArrayList optIds = new ArrayList();
+            List rmos = module.getRModuleOptions(getAttributeOption().getAttribute(), issueType, false);
+            for (int i=0; i<rmos.size();i++)
+            {
+                RModuleOption rmo = (RModuleOption)rmos.get(i);
+                optIds.add(rmo.getOptionId());
+            }
+            Criteria c2 = new Criteria()
+                .add(RModuleOptionPeer.MODULE_ID, getModuleId())
+                .add(RModuleOptionPeer.ISSUE_TYPE_ID, getIssueTypeId())
+                .addIn(RModuleOptionPeer.OPTION_ID, optIds)
+                .add(RModuleOptionPeer.PREFERRED_ORDER, getOrder(), Criteria.GREATER_THAN);
+            List adjustRmos = RModuleOptionPeer.doSelect(c2);
+            for (int j=0; j<adjustRmos.size();j++)
+            {
+                RModuleOption rmo = (RModuleOption)adjustRmos.get(j);
+                //rmos.remove(rmo);
+                rmo.setOrder(rmo.getOrder() -1);
+                rmo.save();
+                //rmos.add(rmo);
+            }
         } 
         else
         {

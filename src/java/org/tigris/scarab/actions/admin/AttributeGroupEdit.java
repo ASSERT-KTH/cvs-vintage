@@ -64,6 +64,7 @@ import org.tigris.scarab.actions.base.RequireLoginFirstAction;
 import org.tigris.scarab.om.ScarabUser;
 import org.tigris.scarab.om.RModuleAttribute;
 import org.tigris.scarab.om.RModuleIssueType;
+import org.tigris.scarab.om.RIssueTypeAttribute;
 import org.tigris.scarab.om.RAttributeAttributeGroup;
 import org.tigris.scarab.om.RModuleOption;
 import org.tigris.scarab.om.AttributeGroup;
@@ -82,10 +83,10 @@ import org.tigris.scarab.services.security.ScarabSecurity;
 import org.tigris.scarab.workflow.WorkflowFactory;
 
 /**
- * action methods on RModuleAttribute table
+ * action methods on RModuleAttribute or RIssueTypeAttribute tables
  *      
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: AttributeGroupEdit.java,v 1.28 2002/08/23 22:54:56 elicia Exp $
+ * @version $Id: AttributeGroupEdit.java,v 1.29 2002/09/11 21:47:07 elicia Exp $
  */
 public class AttributeGroupEdit extends RequireLoginFirstAction
 {
@@ -144,7 +145,7 @@ public class AttributeGroupEdit extends RequireLoginFirstAction
                     WorkflowFactory.getInstance().deleteWorkflowsForAttribute(
                                                   attribute, module, issueType);
                 }
-               rmaGroup.setProperties(rma);
+                rmaGroup.setProperties(rma);
                 String defaultTextKey = data.getParameters()
                     .getString("default_text");
                 if ( defaultTextKey != null && 
@@ -173,6 +174,64 @@ public class AttributeGroupEdit extends RequireLoginFirstAction
 
     }
 
+
+    /**
+     * Changes the properties of global AttributeGroups and their attributes.
+     */
+    public void doSaveglobal ( RunData data, TemplateContext context )
+        throws Exception
+    {
+        IntakeTool intake = getIntakeTool(context);
+        ScarabRequestTool scarabR = getScarabRequestTool(context);
+
+        String groupId = data.getParameters().getString("groupId");
+        AttributeGroup ag = AttributeGroupManager
+                            .getInstance(new NumberKey(groupId), false);
+        List attributes = ag.getAttributes();
+        IssueType issueType = scarabR.getIssueType();
+        String msg = DEFAULT_MSG;
+
+        if ( intake.isAllValid() )
+        {
+            for (int i=attributes.size()-1; i>=0; i--) 
+            {
+                // Set properties for module-attribute mapping
+                Attribute attribute = (Attribute)attributes.get(i);
+                RIssueTypeAttribute ria = (RIssueTypeAttribute)issueType
+                                       .getRIssueTypeAttribute(attribute);
+                Group riaGroup = intake.get("RIssueTypeAttribute", 
+                                 ria.getQueryKey(), false);
+                riaGroup.setProperties(ria);
+                String defaultTextKey = data.getParameters()
+                    .getString("default_text");
+                if ( defaultTextKey != null && 
+                     defaultTextKey.equals(ria.getAttributeId().toString()) ) 
+                {
+                    if (!ria.getRequired())
+                    {
+                        msg = "Your changes have been saved, but the default text attribute must be required. If you wish to set this attribute to not be required, please choose another text attribute to be the default.";
+                    }
+                    ria.setIsDefaultText(true);
+                    ria.setRequired(true);
+                }
+                ria.save();
+
+                // Set properties for attribute-attribute group mapping
+                RAttributeAttributeGroup raag = 
+                    ag.getRAttributeAttributeGroup(attribute);
+                Group raagGroup = intake.get("RAttributeAttributeGroup", 
+                                 raag.getQueryKey(), false);
+                raagGroup.setProperties(raag);
+                raag.save();
+            }
+            data.setMessage(msg);
+            ScarabCache.clear();
+        } 
+        else
+        {
+            scarabR.setAlertMessage(ERROR_MESSAGE);
+        }
+    }
 
     /**
      * Unmaps attributes to modules.
@@ -227,9 +286,17 @@ public class AttributeGroupEdit extends RequireLoginFirstAction
             }
             if (!areThereDedupeAttrs)
             {
-                RModuleIssueType rmit = module.getRModuleIssueType(issueType);
-                rmit.setDedupe(false);
-                rmit.save();
+                if (module == null)
+                {
+                    issueType.setDedupe(false);
+                    issueType.save();
+                }
+                else
+                {
+                    RModuleIssueType rmit = module.getRModuleIssueType(issueType);
+                    rmit.setDedupe(false);
+                    rmit.save();
+                }
             }
        }
        ScarabCache.clear();
@@ -253,7 +320,7 @@ public class AttributeGroupEdit extends RequireLoginFirstAction
 
 
     /**
-     * Selects attribute to add to artifact type and attribute group.
+     * Selects attribute to add to issue type and attribute group.
      */
     public void doSelectattribute( RunData data, TemplateContext context )
         throws Exception
@@ -287,8 +354,18 @@ public class AttributeGroupEdit extends RequireLoginFirstAction
     public void doDone ( RunData data, TemplateContext context )
         throws Exception
     {
+        String groupId = data.getParameters().getString("groupId");
+        AttributeGroup ag = AttributeGroupManager
+                            .getInstance(new NumberKey(groupId), false);
+        if (ag.isGlobal())
+        {
+            doSaveglobal( data, context);
+        }
+        else
+        {
+            doSave( data, context);
+        }
         doSaveinfo( data, context);
-        doSave( data, context);
         doCancel( data, context);
     }
         

@@ -82,6 +82,12 @@ public  class AttributeGroup
     private static final String GET_ATTRIBUTE_GROUPS = 
         "getAttributeGroups";
 
+    public boolean isGlobal()
+        throws TorqueException
+    {
+        return (getModule() == null);
+    }
+
     /**
      * Throws UnsupportedOperationException.  Use
      * <code>getModule()</code> instead.
@@ -271,10 +277,19 @@ public  class AttributeGroup
             crit = new Criteria()
                 .add(AttributeGroupPeer.ATTRIBUTE_GROUP_ID, getAttributeGroupId());
             AttributeGroupPeer.doDelete(crit);
-            List attrGroups = module.getAttributeGroups(getIssueType(), false);
-            attrGroups.remove(this);
-            attrGroups = module.getAttributeGroups(getIssueType(), true);
-            attrGroups.remove(this);
+            
+            List attrGroups = null;
+            if (isGlobal())
+            {
+                attrGroups = issueType.getAttributeGroups(false);
+            }
+            else
+            {
+                attrGroups = module.getAttributeGroups(getIssueType(), false);
+            }
+             attrGroups.remove(this);
+
+            ScarabCache.clear();
         } 
         else
         {
@@ -293,24 +308,55 @@ public  class AttributeGroup
             addRAttributeAttributeGroup(attribute);
         raag.save();          
 
-        // add module-attribute groupings
-        module.addRModuleAttribute(issueType, attribute);
-
-        // add module-attributeoption mappings
-        List options = attribute.getAttributeOptions();
-        for (int j=0;j < options.size();j++)
+        if (isGlobal())
         {
-            AttributeOption option = (AttributeOption)options.get(j);
-            RModuleOption rmo = module.addRModuleOption(issueType, 
-                                                        option);
-            rmo.save();
+            // this is a global attribute group
+            // add issuetype-attribute groupings
+            issueType.addRIssueTypeAttribute(attribute);
 
-            // add module-attributeoption mappings to template type
-            IssueType templateType = IssueTypeManager
-                .getInstance(issueType.getTemplateId(), false);
-            RModuleOption rmo2 = module.
-                 addRModuleOption(templateType, option);
-            rmo2.save();
+            // add issueType-attributeoption mappings
+            List options = attribute.getAttributeOptions();
+            for (int j=0;j < options.size();j++)
+            {
+                AttributeOption option = (AttributeOption)options.get(j);
+                List roos = option.getROptionOptionsRelatedByOption2Id();
+                ROptionOption roo = (ROptionOption)roos.get(0);
+                RIssueTypeOption rio = new RIssueTypeOption();
+                rio.setIssueTypeId(issueType.getIssueTypeId());
+                rio.setOptionId(option.getOptionId());
+                rio.setOrder(roo.getPreferredOrder());
+                rio.setWeight(roo.getWeight());
+                rio.save();
+            }
+        }
+        else
+        {
+            // add module-attribute groupings
+            module.addRModuleAttribute(issueType, attribute);
+
+            // add module-attributeoption mappings
+            List options = attribute.getAttributeOptions();
+            for (int j=0;j < options.size();j++)
+            {
+                AttributeOption option = (AttributeOption)options.get(j);
+                List roos = option.getROptionOptionsRelatedByOption2Id();
+                ROptionOption roo = (ROptionOption)roos.get(0);
+                RModuleOption rmo = new RModuleOption();
+                rmo.setModuleId(getModuleId());
+                rmo.setIssueTypeId(issueType.getIssueTypeId());
+                rmo.setOptionId(option.getOptionId());
+                rmo.setDisplayValue(option.getName());
+                rmo.setOrder(roo.getPreferredOrder());
+                rmo.setWeight(roo.getWeight());
+                rmo.save();
+
+                // add module-attributeoption mappings to template type
+                IssueType templateType = IssueTypeManager
+                    .getInstance(issueType.getTemplateId(), false);
+                RModuleOption rmo2 = module.
+                     addRModuleOption(templateType, option);
+                rmo2.save();
+            }
         }
         getAttributes().add(attribute);
     }
@@ -320,24 +366,41 @@ public  class AttributeGroup
     {                
         IssueType issueType = getIssueType();
         Module module = getModule();
-
-        // Remove attribute - module mapping
-        List rmas = module.getRModuleAttributes(issueType, false,
-                                                "data");    
-        RModuleAttribute rma = module
-            .getRModuleAttribute(attribute, issueType);
-        rma.delete(user);
-        WorkflowFactory.getInstance().deleteWorkflowsForAttribute(attribute, module, 
-                                                                  issueType);
-        rmas.remove(rma);
-
-        // Remove attribute - module mapping from template type
         IssueType template = IssueTypeManager.getInstance
                              (issueType.getTemplateId());
-        RModuleAttribute rma2 = module
-            .getRModuleAttribute(attribute, template);
-        rma2.delete(user);
-        rmas.remove(rma2);
+
+        if (isGlobal())
+        {
+            // This is a global attribute group
+            // Remove attribute - issue type mapping
+            List rias = issueType.getRIssueTypeAttributes(false, "data");    
+            RIssueTypeAttribute ria = issueType.getRIssueTypeAttribute(attribute);
+            ria.delete(user);
+            rias.remove(ria);
+
+            // Remove attribute - module mapping from template type
+            RIssueTypeAttribute ria2 = template.getRIssueTypeAttribute(attribute);
+            ria2.delete(user);
+            rias.remove(ria2);
+        }
+        else
+        {
+            // Remove attribute - module mapping
+            List rmas = module.getRModuleAttributes(issueType, false,
+                                                    "data");    
+            RModuleAttribute rma = module
+                .getRModuleAttribute(attribute, issueType);
+            rma.delete(user);
+            WorkflowFactory.getInstance().deleteWorkflowsForAttribute(attribute, module, 
+                                                                      issueType);
+            rmas.remove(rma);
+
+            // Remove attribute - module mapping from template type
+            RModuleAttribute rma2 = module
+                .getRModuleAttribute(attribute, template);
+            rma2.delete(user);
+            rmas.remove(rma2);
+        }
 
         // Remove attribute - group mapping
         RAttributeAttributeGroup raag = 
@@ -346,25 +409,38 @@ public  class AttributeGroup
 
         if (attribute.isOptionAttribute())
         {
-            // Remove module-option mapping
-            List rmos = module.getRModuleOptions(attribute, issueType);
-            if (rmos != null)
-            {
-                rmos.addAll(module.getRModuleOptions(attribute, template));
-                for (int j = 0; j<rmos.size();j++)
+            if (isGlobal())
+            { 
+                // global attributeGroup; remove issuetype-option maps
+                List rios = issueType.getRIssueTypeOptions(attribute);
+                for (int i = 0; i<rios.size();i++)
                 {
-                    RModuleOption rmo = (RModuleOption)rmos.get(j);
-                    // rmo's may be inherited by the parent module.
-                    // don't delete unless they are directly associated
-                    // with this module.  Will know by the first one.
-                    if (rmo.getModuleId().equals(module.getModuleId())) 
+                    RIssueTypeOption rio = (RIssueTypeOption)rios.get(i);
+                    rio.delete(user);
+                }
+            }
+            else
+            {
+                // Remove module-option mapping
+                List rmos = module.getRModuleOptions(attribute, issueType);
+                if (rmos != null)
+                {
+                    rmos.addAll(module.getRModuleOptions(attribute, template));
+                    for (int j = 0; j<rmos.size();j++)
                     {
-                         rmo.delete(user);
+                        RModuleOption rmo = (RModuleOption)rmos.get(j);
+                         // rmo's may be inherited by the parent module.
+                         // don't delete unless they are directly associated
+                         // with this module.  Will know by the first one.
+                         if (rmo.getModuleId().equals(module.getModuleId())) 
+                         {
+                             rmo.delete(user);
+                         }
+                         else 
+                         {
+                             break;
+                         } 
                      }
-                     else 
-                     {
-                         break;
-                     } 
                  }
              }
          }

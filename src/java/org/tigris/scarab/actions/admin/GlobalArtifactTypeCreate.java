@@ -50,23 +50,30 @@ import java.util.List;
 
 import org.apache.turbine.RunData;
 import org.apache.turbine.TemplateContext;
+import org.apache.turbine.ParameterParser;
 import org.apache.torque.om.NumberKey;
 import org.apache.turbine.tool.IntakeTool;
 import org.apache.fulcrum.intake.model.Group;
 import org.apache.fulcrum.intake.model.Field;
 
+import org.tigris.scarab.services.cache.ScarabCache;
 import org.tigris.scarab.tools.ScarabRequestTool;
 import org.tigris.scarab.actions.base.RequireLoginFirstAction;
 import org.tigris.scarab.om.IssueType;
 import org.tigris.scarab.om.IssueTypePeer;
-//import org.tigris.scarab.om.RModuleIssueType;
+import org.tigris.scarab.om.AttributeGroup;
+import org.tigris.scarab.om.Attribute;
+import org.tigris.scarab.om.AttributeManager;
+import org.tigris.scarab.om.RIssueTypeAttribute;
+import org.tigris.scarab.om.AttributeGroupManager;
+import org.tigris.scarab.om.ScarabUser;
 import org.tigris.scarab.util.ScarabConstants;
 
 /**
  * This class deals with modifying Global Artifact Types.
  *
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: GlobalArtifactTypeCreate.java,v 1.17 2002/05/03 00:54:13 elicia Exp $
+ * @version $Id: GlobalArtifactTypeCreate.java,v 1.18 2002/09/11 21:47:07 elicia Exp $
  */
 public class GlobalArtifactTypeCreate extends RequireLoginFirstAction
 {
@@ -97,6 +104,9 @@ public class GlobalArtifactTypeCreate extends RequireLoginFirstAction
                     issueType.setParentId(IssueTypePeer.ROOT_KEY);
                     issueType.save();
                     
+                    // Create default attribute groups
+                    issueType.createDefaultGroups();
+
                     // Create template type.
                     IssueType template = new IssueType();
                     template.setName(issueType.getName() + " Template");
@@ -133,4 +143,269 @@ public class GlobalArtifactTypeCreate extends RequireLoginFirstAction
             scarabR.setAlertMessage(ERROR_MESSAGE);
         }
     }
+
+
+    /**
+     * Adds or modifies an issue type's attribute groups.
+     */
+    public void doSavegroups ( RunData data, TemplateContext context )
+        throws Exception
+    {
+        IntakeTool intake = getIntakeTool(context);
+        ScarabRequestTool scarabR = getScarabRequestTool(context);
+        IssueType issueType = scarabR.getIssueType();
+        List attGroups = issueType.getAttributeGroups(false);
+        String errorMsg = ERROR_MESSAGE;
+        boolean isValid = true;
+        boolean areThereDupes = false;
+        Field order1 = null;
+        Field order2 = null;
+        int dupeOrder = 0;
+        boolean areThereDedupeAttrs = false;
+        dupeOrder = Integer.parseInt(data.getParameters()
+                                             .getString("dupe_order"));
+        // Manage attribute groups
+        // Only have dedupe if there are more than one active group
+        if (issueType.getAttributeGroups(true).size() > 1)
+        {
+            dupeOrder = Integer.parseInt(data.getParameters()
+                                                 .getString("dupe_order"));
+
+            // Check for duplicate sequence numbers
+            for (int i=0; i<attGroups.size(); i++) 
+            {
+                AttributeGroup ag1 = (AttributeGroup)attGroups.get(i);
+                Group agGroup1 = intake.get("AttributeGroup", 
+                                 ag1.getQueryKey(), false);
+                order1 = agGroup1.get("Order");
+                if (order1.toString().equals(Integer.toString(dupeOrder)))
+                {
+                    areThereDupes = true;
+                    break;
+                }
+
+                for (int j=i-1; j>=0; j--) 
+                {
+                    AttributeGroup ag2 = (AttributeGroup)attGroups.get(j);
+                    Group agGroup2 = intake.get("AttributeGroup", 
+                                 ag2.getQueryKey(), false);
+                    order2 = agGroup2.get("Order");
+
+                    if (order1.toString().equals(order2.toString()))
+                    {
+                        areThereDupes = true;
+                        break;
+                    }
+                }
+            }
+            if (areThereDupes)
+            {
+               errorMsg= "Please do not enter duplicate "
+                                + " sequence numbers for attribute groups.";
+               isValid = false;
+            }
+  
+            // Check that duplicate check is not at the beginning or end.
+            if (dupeOrder == 1 || dupeOrder == attGroups.size() +1)
+            {
+                errorMsg = "The duplicate check cannot be at the "
+                                + "beginning or the end.";
+                isValid = false;
+            }
+        }
+
+        if (intake.isAllValid() && isValid)
+        {
+            // Set properties for attribute groups
+            for (int i=attGroups.size()-1; i>=0; i--) 
+            {
+                AttributeGroup attGroup = (AttributeGroup)attGroups.get(i);
+                Group agGroup = intake.get("AttributeGroup", 
+                                 attGroup.getQueryKey(), false);
+                agGroup.setProperties(attGroup);
+
+                // If an attribute group falls before the dedupe screen,
+                // Mark it as a dedupe group
+                if (attGroup.getOrder() < dupeOrder)
+                {
+                    if (!attGroup.getAttributes().isEmpty())
+                    {
+                         areThereDedupeAttrs = true;
+                         attGroup.setDedupe(true);
+                    }
+                }
+                else
+                {
+                    attGroup.setDedupe(false);
+                }
+                attGroup.save();
+                data.setMessage(DEFAULT_MSG);  
+                ScarabCache.clear();
+            }
+        }
+        else
+        {
+            scarabR.setAlertMessage(errorMsg);
+            return;
+        }
+    }
+
+    /**
+     * Creates new attribute group.
+     */
+    public AttributeGroup doCreatenewgroup ( RunData data, 
+                                             TemplateContext context )
+        throws Exception
+    {
+        ScarabRequestTool scarabR = getScarabRequestTool(context);
+        IssueType issueType = scarabR.getIssueType();
+        data.setMessage(DEFAULT_MSG);  
+        return issueType.createNewGroup();
+    }
+
+    /**
+     * Deletes an attribute group.
+     */
+    public void doDeletegroup ( RunData data, TemplateContext context )
+        throws Exception
+    {
+        ScarabUser user = (ScarabUser)data.getUser();
+        ParameterParser params = data.getParameters();
+        Object[] keys = params.getKeys();
+        String key;
+        String groupId;
+        ScarabRequestTool scarabR = getScarabRequestTool(context);
+        IssueType issueType = scarabR.getIssueType();
+        List attributeGroups = issueType.getAttributeGroups(false);
+
+        for (int i =0; i<keys.length; i++)
+        {
+            key = keys[i].toString();
+            if (key.startsWith("group_action"))
+            {
+                try
+                {
+                    groupId = key.substring(13);
+                    AttributeGroup ag = AttributeGroupManager
+                       .getInstance(new NumberKey(groupId), false); 
+                    ag.delete(user);
+                }
+                catch (Exception e)
+                {
+                    scarabR.setAlertMessage(ScarabConstants.NO_PERMISSION_MESSAGE);
+                }
+                if (attributeGroups.size() -1 < 2)
+                {
+                    // If there are fewer than 2 attribute groups,
+                    // Turn of deduping
+                    issueType.setDedupe(false);
+                    issueType.save();
+                    data.setMessage(DEFAULT_MSG);  
+                    ScarabCache.clear();
+                }
+            }
+        }
+    }
+
+    /**
+     * Selects attribute to add to issue type.
+     */
+    public void doSelectuserattribute( RunData data, TemplateContext context )
+        throws Exception
+    {
+        IntakeTool intake = getIntakeTool(context);
+        ScarabRequestTool scarabR = getScarabRequestTool(context);
+        IssueType issueType = scarabR.getIssueType();
+        String[] attributeIds = data.getParameters()
+                                    .getStrings("attribute_ids");
+ 
+        if (attributeIds == null || attributeIds.length <= 0)
+        { 
+            scarabR.setAlertMessage("Please select an attribute.");
+            return;
+        }
+        else
+        {        
+            for (int i=0; i < attributeIds.length; i++)
+            {
+                Attribute attribute = 
+                    scarabR.getAttribute(new NumberKey(attributeIds[i]));
+                if (attribute != null)
+                {
+                    // add issuetype-attribute groupings
+                    RIssueTypeAttribute ria = issueType.addRIssueTypeAttribute(attribute);
+                }
+                doCancel(data, context);
+            }
+        }
+    }
+
+    /**
+     * Unmaps attributes to issue types.
+     */
+    public void doDeleteuserattribute( RunData data, TemplateContext context ) 
+        throws Exception
+    {
+        ScarabRequestTool scarabR = getScarabRequestTool(context);
+        ScarabUser user = (ScarabUser)data.getUser();
+        ParameterParser params = data.getParameters();
+        IssueType issueType = scarabR.getIssueType();
+        Object[] keys = params.getKeys();
+        String key;
+        String attributeId;
+
+        for (int i =0; i<keys.length; i++)
+        {
+            key = keys[i].toString();
+            if (key.startsWith("att_delete_"))
+            {
+               attributeId = key.substring(11);
+               Attribute attribute = AttributeManager
+                   .getInstance(new NumberKey(attributeId), false);
+
+               // Remove attribute - issue type mapping
+               RIssueTypeAttribute ria = issueType
+                   .getRIssueTypeAttribute(attribute);
+               try
+               {
+                   ria.delete(user);
+               }
+               catch (Exception e)
+               {
+                   scarabR.setAlertMessage(ScarabConstants.NO_PERMISSION_MESSAGE);
+               }
+
+               data.setMessage(DEFAULT_MSG);  
+               ScarabCache.clear();
+           }
+        }        
+    }
+
+    /**
+     * Adds or modifies user attributes' properties
+     */
+    public void doSaveuserattributes ( RunData data, TemplateContext context )
+        throws Exception
+    {
+        IntakeTool intake = getIntakeTool(context);
+        IssueType issueType =  getScarabRequestTool(context).getIssueType();
+
+        if (intake.isAllValid())
+        {
+            List userAttributes = issueType.getUserAttributes(false);
+            for (int i=0; i < userAttributes.size(); i++)
+            {
+                // Set properties for issue type-attribute mapping
+                Attribute attribute = (Attribute)userAttributes.get(i);
+                RIssueTypeAttribute ria = (RIssueTypeAttribute)issueType
+                        .getRIssueTypeAttribute(attribute);
+                Group riaGroup = intake.get("RIssueTypeAttribute", 
+                                 ria.getQueryKey(), false);
+                riaGroup.setProperties(ria);
+                ria.save();
+            }
+        data.setMessage(DEFAULT_MSG);  
+        }
+    }
+
 }

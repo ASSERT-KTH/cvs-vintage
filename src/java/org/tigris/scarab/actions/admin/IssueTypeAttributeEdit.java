@@ -62,7 +62,7 @@ import org.apache.fulcrum.intake.model.BooleanField;
 // Scarab Stuff
 import org.tigris.scarab.actions.base.RequireLoginFirstAction;
 import org.tigris.scarab.om.ScarabUser;
-import org.tigris.scarab.om.RModuleOption;
+import org.tigris.scarab.om.RIssueTypeOption;
 import org.tigris.scarab.om.Attribute;
 import org.tigris.scarab.om.AttributePeer;
 import org.tigris.scarab.om.AttributeOption;
@@ -77,9 +77,9 @@ import org.tigris.scarab.services.cache.ScarabCache;
 
 /**
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: ModuleAttributeEdit.java,v 1.18 2002/09/11 21:47:07 elicia Exp $
+ * @version $Id: IssueTypeAttributeEdit.java,v 1.1 2002/09/11 21:47:07 elicia Exp $
  */
-public class ModuleAttributeEdit extends RequireLoginFirstAction
+public class IssueTypeAttributeEdit extends RequireLoginFirstAction
 {
     /**
      * Changes the properties of existing AttributeOptions.
@@ -93,30 +93,17 @@ public class ModuleAttributeEdit extends RequireLoginFirstAction
 
         if ( intake.isAllValid())
         {
-            Module me = scarabR.getCurrentModule();
             IssueType issueType = scarabR.getIssueType();
-            List rmos = me.getRModuleOptions(attribute, issueType, false);
-            if (rmos != null)
+            List rios = issueType.getRIssueTypeOptions(attribute, false);
+            if (rios != null)
             {
-                for (int i=rmos.size()-1; i>=0; i--) 
+                for (int i=rios.size()-1; i>=0; i--) 
                 {
-                    RModuleOption rmo = (RModuleOption)rmos.get(i);
-                    Group rmoGroup = intake.get("RModuleOption", 
-                                     rmo.getQueryKey(), false);
-                    // if option gets set to inactive, delete dependencies
-                    if (rmoGroup != null)
-                    {
-                        String newActive = rmoGroup.get("Active").toString();
-                        String oldActive = String.valueOf(rmo.getActive());
-                        if (newActive.equals("false") && oldActive.equals("true"))
-                        {
-                            WorkflowFactory.getInstance().deleteWorkflowsForOption(
-                                                          rmo.getAttributeOption(),
-                                                          me, issueType);
-                        }
-                        rmoGroup.setProperties(rmo);
-                        rmo.save();
-                    }
+                    RIssueTypeOption rio = (RIssueTypeOption)rios.get(i);
+                    Group rioGroup = intake.get("RIssueTypeOption", 
+                                     rio.getQueryKey(), false);
+                    rioGroup.setProperties(rio);
+                    rio.save();
                     ScarabCache.clear();
                     data.setMessage(DEFAULT_MSG);  
                 }
@@ -125,7 +112,7 @@ public class ModuleAttributeEdit extends RequireLoginFirstAction
     }
 
     /**
-     * Unmaps attribute options to modules.
+     * Unmaps attribute options to issueTypes.
      */
     public void doDeleteattributeoptions( RunData data,
                                           TemplateContext context ) 
@@ -133,7 +120,6 @@ public class ModuleAttributeEdit extends RequireLoginFirstAction
     {
         ScarabRequestTool scarabR = getScarabRequestTool(context);
         ScarabUser user = (ScarabUser)data.getUser();
-        Module module = scarabR.getCurrentModule();
         IssueType issueType = scarabR.getIssueType();
         ParameterParser params = data.getParameters();
         Object[] keys = params.getKeys();
@@ -149,39 +135,23 @@ public class ModuleAttributeEdit extends RequireLoginFirstAction
                AttributeOption option = AttributeOptionManager
                   .getInstance(new NumberKey(optionId));
 
-               RModuleOption rmo = module.getRModuleOption(option, issueType);
-               List rmos = module.getRModuleOptions(option.getAttribute(),
-                                                    issueType, false);
+               RIssueTypeOption rio = issueType.getRIssueTypeOption(option);
+               List rios = issueType.getRIssueTypeOptions(option.getAttribute(),
+                                                          false);
                try
                {
-                   rmo.delete(user);
-                   //rmos.remove(rmo);
-               }
-               catch (Exception e)
-               {
-                   scarabR.setAlertMessage(ScarabConstants.NO_PERMISSION_MESSAGE);
-               }
-
-               // Remove option - module mapping from template type
-               RModuleOption rmo2 = module.getRModuleOption(option, 
-                   scarabR.getIssueType(issueType.getTemplateId().toString()));
-               try
-               {
-                   rmo2.delete(user);
-                   //rmos.remove(rmo);
-                   data.setMessage(DEFAULT_MSG);  
+                   rio.delete(user);
+                   rios.remove(rio);
                }
                catch (Exception e)
                {
                    scarabR.setAlertMessage(ScarabConstants.NO_PERMISSION_MESSAGE);
                }
                ScarabCache.clear();
-               getIntakeTool(context).removeAll();
-               data.getParameters().add("att_0id", option.getAttribute().getAttributeId().toString());
-               //setTarget(data, "admin,ModuleAttributeEdit.vm");
             }
         }        
     }
+
 
     /**
      * Selects option to add to attribute.
@@ -192,10 +162,7 @@ public class ModuleAttributeEdit extends RequireLoginFirstAction
     {
         IntakeTool intake = getIntakeTool(context);
         ScarabRequestTool scarabR = getScarabRequestTool(context);
-        Module module = scarabR.getCurrentModule();
         IssueType issueType = scarabR.getIssueType();
-        IssueType templateType = 
-            scarabR.getIssueType(issueType.getTemplateId().toString());
 
         String[] optionIds = data.getParameters().getStrings("option_ids");
  
@@ -207,12 +174,12 @@ public class ModuleAttributeEdit extends RequireLoginFirstAction
         else
         {        
             for (int i=0; i < optionIds.length; i++)
-            {
+            { 
                 AttributeOption option = null;
                 try
                 {
                     option = scarabR.getAttributeOption(new NumberKey(optionIds[i]));
-                    module.addAttributeOption(issueType, option);
+                    issueType.addRIssueTypeOption(option);
                 }
                 catch(Exception e)
                 {
@@ -223,4 +190,7 @@ public class ModuleAttributeEdit extends RequireLoginFirstAction
             data.setMessage(DEFAULT_MSG);  
         }
     }
+
+
+
 }
