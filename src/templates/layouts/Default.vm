@@ -12,7 +12,7 @@
 		<table border="0" cellspacing="12" cellpadding="0" width="100%">
 		<tr>
 		<td>
-		 <h3>Scarab</h3>
+		<a href="$link.setPage("Index.vm")"><img src="/scarab/images/logo.gif" alt="Scarab" width="118" height="23" border="0"/></a>
 		</td>
 		<td>
 		<div align="right" id="login">
@@ -122,7 +122,6 @@
 
 #actionErrorMsg()
 $renderer.render("screens", $data, $template) 
-##$screen_placeholder
 
 <!-- Structural Elements -->
 </td>
