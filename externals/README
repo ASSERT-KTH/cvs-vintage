@@ -4,9 +4,6 @@ jonathan.tag	JONATHAN_CORE_4_1
 kilim.tag       KILIM_1_1_3
 monolog.tag		MONOLOG_1_8_2
 
-# Apache :
-Commons CLI		1.0
-
 # others :
 JGroups		    2.2.7
 Junit			3.8.1
