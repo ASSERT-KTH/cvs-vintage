@@ -150,6 +150,23 @@
 -->
 </group>
 
+<group name="RModuleOption" key="rmo" mapToObject="om.RModuleOption">
+        <field name="DisplayValue" key="name" type="String">
+            <rule name="maxLength" value="255"/>
+        </field>
+        <field name="Active" key="active" type="boolean"/>
+        <field name="Order" key="order" type="int" 
+                mapToProperty="Order">
+           <rule name="maxValue" value="99">Please enter a value less than 99</rule>
+           <rule name="minValue" value="1">Please enter a value greater than 0</rule>
+        </field>
+        <field name="Weight" key="weight" type="int" 
+                mapToProperty="Weight">
+           <rule name="maxValue" value="99">Please enter a value less than 99</rule>
+           <rule name="minValue" value="1">Please enter a value greater than 0</rule>
+        </field>
+</group>
+
 <group name="RModuleIssueType" key="rmit" mapToObject="om.RModuleIssueType">
         <field name="Display" key="dis" type="boolean"/>
         <field name="Active" key="act" type="boolean"/>
