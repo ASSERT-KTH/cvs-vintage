@@ -42,7 +42,7 @@ import org.jboss.proxy.InvocationHandler;
  *      
  *   @see <related>
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
- *   @version $Revision: 1.6 $
+ *   @version $Revision: 1.7 $
  */
 public class DataSourceImpl
    extends ServiceMBeanSupport
@@ -133,9 +133,12 @@ public class DataSourceImpl
       {
          Connection con = DriverManager.getConnection(url,user,password);
          // Create proxy around it
+         ConnectionProxy proxyHandler = new ConnectionProxy(con, this);
          Connection conProxy = (Connection) Proxy.newProxyInstance(getClass().getClassLoader(),
                                           new Class[] { org.jboss.jdbc.Connection.class },
-                                          new ConnectionProxy(con, this));
+                                          proxyHandler);
+         // Set proxy (TODO: Should not be needed!)
+         proxyHandler.setProxy(conProxy);      
 //DEBUG			log.debug("Connection to "+url+" created:"+conProxy);
 			return conProxy;
       } else
@@ -232,6 +235,7 @@ class ConnectionProxy
 {
    Connection con;
 	DataSourceImpl ds;
+   Connection conProxy;
 	
    ConnectionProxy(Connection con, DataSourceImpl ds)
    {
@@ -250,9 +254,10 @@ class ConnectionProxy
             
 // TODO: Should work, but doesn't!(?)
 //         ds.release((Connection)Proxies.getTarget(this));
-			ds.release((Connection)Proxy.newProxyInstance(getClass().getClassLoader(),
-                                          new Class[] { org.jboss.jdbc.Connection.class },
-                                          new ConnectionProxy(con, ds)));
+         ds.release(this.conProxy);
+//			ds.release((Connection)Proxy.newProxyInstance(getClass().getClassLoader(),
+//                                          new Class[] { org.jboss.jdbc.Connection.class },
+//                                          new ConnectionProxy(con, ds)));
          return null;
       } else
       {
@@ -265,6 +270,11 @@ class ConnectionProxy
             return method.invoke(con, args);
          }
       }
+   }
+   
+   public void setProxy(Connection con)
+   {
+      this.conProxy = con;
    }
    
    // Package protected  --------------------------------------------
