@@ -1,4 +1,4 @@
-// $Id: Modeller.java,v 1.20 2001/11/05 14:52:07 sz9 Exp $
+// $Id: Modeller.java,v 1.21 2001/12/12 09:42:49 sz9 Exp $
 
 /*
   JavaRE - Code generation and reverse engineering for UML and Java
@@ -1214,8 +1214,10 @@ public class Modeller
       else {
         sJavaDocs = sJavaDocs.substring (0, sJavaDocs.lastIndexOf ('/') - 1);
 
-        if (sJavaDocs.charAt (sJavaDocs.length() - 1) == '\n') {
-          sJavaDocs = sJavaDocs.substring (0, sJavaDocs.length() - 1);
+        if (sJavaDocs.length() > 0) {
+          if (sJavaDocs.charAt (sJavaDocs.length() - 1) == '\n') {
+            sJavaDocs = sJavaDocs.substring (0, sJavaDocs.length() - 1);
+          }
         }
       }
       
