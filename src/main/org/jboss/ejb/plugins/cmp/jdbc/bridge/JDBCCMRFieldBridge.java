@@ -63,7 +63,7 @@ import org.jboss.security.SecurityAssociation;
  *      One for each role that entity has.
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.59 $
+ * @version $Revision: 1.60 $
  */
 public class JDBCCMRFieldBridge implements JDBCFieldBridge, CMRFieldBridge {
    /**
@@ -708,18 +708,18 @@ public class JDBCCMRFieldBridge implements JDBCFieldBridge, CMRFieldBridge {
       // from its old relationship.
       if(metadata.isMultiplicityOne()) {
          Object oldRelatedId = relatedCMRField.invokeGetRelatedId(
-               myCtx.getTransaction(), relatedId);
+               getTransaction(), relatedId);
          if(oldRelatedId != null) {
             invokeRemoveRelation(
-                  myCtx.getTransaction(), oldRelatedId, relatedId);
+                  getTransaction(), oldRelatedId, relatedId);
             relatedCMRField.invokeRemoveRelation(
-                  myCtx.getTransaction(), relatedId, oldRelatedId);
+                  getTransaction(), relatedId, oldRelatedId);
          }
       }
 
       addRelation(myCtx, relatedId);
       relatedCMRField.invokeAddRelation(
-            myCtx.getTransaction(), relatedId, myCtx.getId());
+            getTransaction(), relatedId, myCtx.getId());
    }
 
    /**
@@ -752,7 +752,7 @@ public class JDBCCMRFieldBridge implements JDBCFieldBridge, CMRFieldBridge {
 
       removeRelation(myCtx, relatedId, updateValueCollection);
       relatedCMRField.invokeRemoveRelation(
-            myCtx.getTransaction(), relatedId, myCtx.getId());
+            getTransaction(), relatedId, myCtx.getId());
    }
 
    /**
@@ -1216,6 +1216,20 @@ public class JDBCCMRFieldBridge implements JDBCFieldBridge, CMRFieldBridge {
          jdbcCtx.remove(this);
       } else {
          jdbcCtx.put(this, fieldState);
+      }
+   }
+
+   private Transaction getTransacction()
+   {
+      try
+      {
+         TransactionManager tm = container.getTransactionManager();
+         return tm.getTransaction();
+      }
+      catch(SystemException e)
+      {
+         throw new EJBException(
+               "Error getting transaction from the transaction manager", e);
       }
    }
 
