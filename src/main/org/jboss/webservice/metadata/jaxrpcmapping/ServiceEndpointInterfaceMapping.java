@@ -6,10 +6,11 @@
  */
 package org.jboss.webservice.metadata.jaxrpcmapping;
 
-// $Id: ServiceEndpointInterfaceMapping.java,v 1.1 2004/05/14 18:34:23 tdiesler Exp $
+// $Id: ServiceEndpointInterfaceMapping.java,v 1.2 2004/08/13 15:31:34 tdiesler Exp $
 
 import javax.xml.namespace.QName;
 import java.util.ArrayList;
+import java.util.Iterator;
 
 /**
  * XML mapping of the java-wsdl-mapping/service-endpoint-interface-mapping element.
@@ -81,5 +82,19 @@ public class ServiceEndpointInterfaceMapping
    public void addServiceEndpointMethodMapping(ServiceEndpointMethodMapping serviceEndpointMethodMapping)
    {
       serviceEndpointMethodMappings.add(serviceEndpointMethodMapping);
+   }
+
+   public ServiceEndpointMethodMapping getServiceEndpointMethodMappingByWsdlOperation(String wsdlOperation)
+   {
+      ServiceEndpointMethodMapping semMapping = null;
+
+      Iterator it = serviceEndpointMethodMappings.iterator();
+      while (it.hasNext())
+      {
+         ServiceEndpointMethodMapping aux = (ServiceEndpointMethodMapping)it.next();
+         if (aux.getWsdlOperation().equals(wsdlOperation))
+            semMapping = aux;
+      }
+      return semMapping;
    }
 }
