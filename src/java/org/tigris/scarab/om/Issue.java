@@ -93,7 +93,7 @@ import org.apache.commons.lang.Strings;
  * @author <a href="mailto:jmcnally@collab.new">JohnMcNally</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: Issue.java,v 1.157 2002/06/14 00:35:59 jon Exp $
+ * @version $Id: Issue.java,v 1.158 2002/06/18 00:10:32 jmcnally Exp $
  */
 public class Issue 
     extends BaseIssue
@@ -163,7 +163,7 @@ public class Issue
      * new issues are created only when the issuetype and module are known
      * Or by the Peer when retrieving from db
      */
-    Issue()
+    protected Issue()
     {
     }
 
