@@ -414,7 +414,7 @@
     </dependency>
     <dependency>
       <!-- Added by HD to make the ant-build happy -->
-      <groupId>torque-gen</groupId>
+      <groupId>torque</groupId>
       <artifactId>torque-gen</artifactId>
       <version>3.1.1-dev</version>
       <type>jar</type>
