@@ -21,7 +21,7 @@ import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCQueryMetaData;
  * This class generates a query from EJB-QL.
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.3 $
+ * @version $Revision: 1.4 $
  */
 public class JDBCEJBQLQuery extends JDBCAbstractQueryCommand {
 
@@ -47,6 +47,10 @@ public class JDBCEJBQLQuery extends JDBCAbstractQueryCommand {
       
       // match the query
       a = ejbql.soleMatch(a);
+      if(a == null) {
+         throw new DeploymentException("Unable to parse EJB-QL: " +
+               metadata.getEjbQl());
+      }
       
       // get the final target
       SQLTarget target = (SQLTarget)a.getTarget();

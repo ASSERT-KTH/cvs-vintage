@@ -57,11 +57,8 @@ public abstract class Parser {
          }
       }
 
-      if(completeMatches.size()==0) {
-         return best(set);
-      }
-      if(completeMatches.size() > 1) {
-         throw new IllegalStateException("Multiple assemblies matched: "+set.size());
+      if(completeMatches.size() != 1) {
+         return null;
       }
       return (Assembly)completeMatches.iterator().next();
    }
