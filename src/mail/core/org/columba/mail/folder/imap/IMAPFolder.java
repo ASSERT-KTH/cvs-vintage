@@ -237,7 +237,7 @@ public class IMAPFolder extends RemoteFolder {
 
 		worker.setDisplayText("Fetching header list ");
 		
-		getStore().fetchHeaderList(headerList, result, worker);
+		getStore().fetchHeaderList(headerList, result, worker, getImapPath());
 
 		updateFlags(flags);
 
@@ -353,7 +353,7 @@ public class IMAPFolder extends RemoteFolder {
 
 		//System.out.println("------------------->IMAPFolder->getMimePartTree");
 
-		return getStore().getMimePartTree(uid);
+		return getStore().getMimePartTree(uid, worker, getImapPath());
 	}
 
 	public MimePart getMimePart(
@@ -364,7 +364,7 @@ public class IMAPFolder extends RemoteFolder {
 
 		//System.out.println("------------------->IMAPFolder->getMimePart");
 
-		return getStore().getMimePart(uid, address, worker);
+		return getStore().getMimePart(uid, address, worker, getImapPath());
 	}
 
 	public Object addMessage(
@@ -428,7 +428,7 @@ public class IMAPFolder extends RemoteFolder {
 		WorkerStatusController worker)
 		throws Exception {
 
-		getStore().markMessage(uids, variant, worker);
+		getStore().markMessage(uids, variant, worker, getImapPath());
 
 		for (int i = 0; i < uids.length; i++) {
 			markMessage(uids[i], variant, worker);
@@ -452,7 +452,7 @@ public class IMAPFolder extends RemoteFolder {
 
 	public void expungeFolder(WorkerStatusController worker) throws Exception {
 
-		boolean result = getStore().expunge(worker);
+		boolean result = getStore().expunge(worker, getImapPath());
 		if (result == false)
 			return;
 
@@ -482,7 +482,7 @@ public class IMAPFolder extends RemoteFolder {
 
 	public String getMessageSource(Object uid, WorkerStatusController worker)
 		throws Exception {
-		return getStore().getMessageSource(uid, worker);
+		return getStore().getMessageSource(uid, worker, getImapPath());
 	}
 
 	public ColumbaHeader getMessageHeader(

@@ -14,6 +14,7 @@
 
 package org.columba.mail.imap.protocol;
 
+import org.columba.core.logging.ColumbaLogger;
 import org.columba.mail.imap.IMAPResponse;
 
 /**
@@ -34,5 +35,7 @@ public class DisconnectedException extends IMAPException
     public DisconnectedException( IMAPResponse response )
     {
     	super( response );
+    	
+    	ColumbaLogger.log.debug("disconnect -> reconnecting...");
     }
 }
