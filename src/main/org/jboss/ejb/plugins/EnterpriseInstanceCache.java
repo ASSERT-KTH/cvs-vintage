@@ -37,7 +37,7 @@ import org.jboss.logging.Logger;
  * </ul>
  *
  * @author Simone Bordet (simone.bordet@compaq.com)
- * @version $Revision: 1.6 $
+ * @version $Revision: 1.7 $
  */
 public abstract class EnterpriseInstanceCache 
 	implements InstanceCache, XmlLoadable
@@ -119,8 +119,18 @@ public abstract class EnterpriseInstanceCache
 	public void release(EnterpriseContext ctx) 
 	{
 		if (ctx == null) throw new IllegalArgumentException("Can't release a null object");
-
-		remove(getKey(ctx));
+		
+		// Here I remove the bean; call to remove(id) is wrong
+		// cause will remove also the cache lock that is needed
+		// by the passivation, that eventually will remove it.
+		Object id = getKey(ctx);
+		synchronized (getCacheLock())
+		{
+			if (getCache().peek(id) != null)
+			{
+				getCache().remove(id);
+			}
+		}
 		schedulePassivation(ctx);
 	}
 	/* From InstanceCache interface */
@@ -326,7 +336,14 @@ public abstract class EnterpriseInstanceCache
 						{
 							synchronized (getCacheLock())
 							{
-								getCache().insert(id, ctx);
+								// This check is done because there could have been
+								// a request for passivation of this bean, but before
+								// being passivated it got a request and has already
+								// been inserted in the cache by the instance interceptor
+								if (getCache().peek(id) == null)
+								{
+									getCache().insert(id, ctx);
+								}
 							}
 							return;
 						}
