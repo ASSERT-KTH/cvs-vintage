@@ -29,29 +29,39 @@ import org.jboss.ejb.plugins.jrmp12.interfaces.EntityProxy;
  *	@see <related>
  *	@author Rickard Öberg (rickard.oberg@telkel.com)
  *  @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
- *	@version $Revision: 1.5 $
+ *	@version $Revision: 1.6 $
  */
 public final class JRMPContainerInvoker
    extends org.jboss.ejb.plugins.jrmp.server.JRMPContainerInvoker
 {
-   public EJBHome getEJBHome()
-   {
-      if (home == null)
-      {
-         this.home = (EJBHome)Proxy.newProxyInstance(((ContainerInvokerContainer)container).getHomeClass().getClassLoader(),
-                                              new Class[] { ((ContainerInvokerContainer)container).getHomeClass() },
-                                              new HomeProxy(jndiName, ejbMetaData, this, optimize));
-      }
-      return home;
-   }
-   
-   public EJBObject getStatelessSessionEJBObject()
-   {
-      return (EJBObject)Proxy.newProxyInstance(((ContainerInvokerContainer)container).getRemoteClass().getClassLoader(),
-                                        new Class[] { ((ContainerInvokerContainer)container).getRemoteClass() },
-                                        new StatelessSessionProxy(jndiName, this, optimize));
-   }
-
+    public EJBHome getEJBHome()
+    {
+        if (home == null)
+        {
+            // We add the Handle methods to the Home
+            Class handleClass;
+            try { handleClass = Class.forName("javax.ejb.Handle");} 
+                catch (Exception e) {e.printStackTrace();handleClass = null;}
+            
+            this.home = (EJBHome)Proxy.newProxyInstance(((ContainerInvokerContainer)container).getHomeClass().getClassLoader(),
+                new Class[] { ((ContainerInvokerContainer)container).getHomeClass(), handleClass },
+                new HomeProxy(jndiName, ejbMetaData, this, optimize));
+        }
+        return home;
+    }
+    
+    public EJBObject getStatelessSessionEJBObject()
+    {
+        if (statelessObject == null) {
+            
+            this.statelessObject = (EJBObject)Proxy.newProxyInstance(((ContainerInvokerContainer)container).getRemoteClass().getClassLoader(),
+                new Class[] { ((ContainerInvokerContainer)container).getRemoteClass() },
+                new StatelessSessionProxy(jndiName, this, optimize));
+        }
+        
+        return statelessObject;
+    }
+    
    public EJBObject getStatefulSessionEJBObject(Object id)
    {
       return (EJBObject)Proxy.newProxyInstance(((ContainerInvokerContainer)container).getRemoteClass().getClassLoader(),
@@ -67,7 +77,7 @@ public final class JRMPContainerInvoker
    }
 
    public Collection getEntityCollection(Collection ids)
-   {
+   {                                                          
       ArrayList list = new ArrayList(ids.size());
       Iterator idEnum = ids.iterator();
       while(idEnum.hasNext())
