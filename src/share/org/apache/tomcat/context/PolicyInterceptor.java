@@ -101,6 +101,17 @@ public class PolicyInterceptor extends BaseInterceptor {
     public void engineInit(ContextManager cm) throws TomcatException {
 	if( System.getSecurityManager() != null ) return;
 	try {
+	    if( null == System.getProperty("java.security.policy")) {
+		if( policyFile==null ) {
+		    // XXX ugly API - change CM
+		    File f=cm.getAbsolute(new File("conf/tomcat.policy"));
+		    policyFile=f.getPath();
+		}
+		log("Setting policy file to " + policyFile);
+		System.setProperty("java.security.policy",
+				   policyFile);
+		
+	    }
 	    Class c=Class.forName(securityManagerClass);
 	    Object o=c.newInstance();
 	    System.setSecurityManager((SecurityManager)o);

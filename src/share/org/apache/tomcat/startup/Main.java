@@ -167,15 +167,25 @@ public class Main {
 		    ex.printStackTrace();
 		}
 	    }
-	    
+	    // 	    if( ! path.endsWith("jar")) {
+	    // 		// it may be a directory - support for /classes
+	    // 		File f=new File( path );
+	    // 		if( f.isDirectory() ) {
+	    // 		    File f2=new File( path, "org/apache/tomcat/startup/Main.class");
+	    // 		    if( f2.exists() ) {
+	    // 			int ending="classes".length();
+	    // 			if( path.endsWith( "/" ) || path.endsWith("\\"))
+	    // 			    ending++;
+	    // 			if( path.length() > ending ) {
+	    // 			    h=path.substring(0, path.length() - ending);
+	    // 			    return path;
+	    // 			}
+	    // 		    }
+	    // 		}
+	    // 	    }
 	}
 
-	return h;
-
-
-
-
-
+	return null;
     }
     
     
