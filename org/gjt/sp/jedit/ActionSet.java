@@ -137,7 +137,7 @@ import org.gjt.sp.util.Log;
  *
  * @author Slava Pestov
  * @author John Gellene (API documentation)
- * @version $Id: ActionSet.java,v 1.28 2004/03/20 06:08:49 spestov Exp $
+ * @version $Id: ActionSet.java,v 1.29 2004/05/12 20:44:16 spestov Exp $
  * @since jEdit 4.0pre1
  */
 public class ActionSet
@@ -214,6 +214,16 @@ public class ActionSet
 		if(label == null)
 			throw new NullPointerException();
 		this.label = label;
+	} //}}}
+
+	//{{{ getPluginJAR() method
+	/**
+	 * Return the plugin this action set was loaded from, or null.
+	 * @since jEdit 4.2pre13
+	 */
+	public PluginJAR getPluginJAR()
+	{
+		return plugin;
 	} //}}}
 
 	//{{{ addAction() method

@@ -31,7 +31,7 @@ import org.gjt.sp.jedit.*;
 /**
  * Key binding editor.
  * @author Slava Pestov
- * @version $Id: ShortcutsOptionPane.java,v 1.9 2004/02/04 00:07:22 spestov Exp $
+ * @version $Id: ShortcutsOptionPane.java,v 1.10 2004/05/12 20:44:17 spestov Exp $
  */
 public class ShortcutsOptionPane extends AbstractOptionPane
 {
@@ -92,7 +92,13 @@ public class ShortcutsOptionPane extends AbstractOptionPane
 			ActionSet actionSet = actionSets[i];
 			if(actionSet.getActionCount() != 0)
 			{
-				models.addElement(createModel(actionSet.getLabel(),
+				String modelLabel = actionSet.getLabel();
+				if(modelLabel == null)
+				{
+					System.err.println("Empty action set: "
+						+ actionSet.getPluginJAR());
+				}
+				models.addElement(createModel(modelLabel,
 					actionSet.getActionNames()));
 			}
 		}
