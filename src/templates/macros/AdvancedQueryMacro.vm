@@ -181,16 +181,19 @@ $l10n.From:&#160;<input type="text" size="20"
  <th width="120">$l10n.Attribute</th>
  <td>
      <select name="$searchGroup.StateChangeAttributeId.Key">
+     #set ( $selected = false )
 #foreach ( $attKey in $attrValues.sequence() )
     #set ( $attVal = $attrValues.get($attKey) )
     #if ($attVal.Attribute.isOptionAttribute())
         #set ( $attrInput = $intake.AttributeValue.mapTo($attVal) )
-        #set ( $selected = false )
-        #if ($searchGroup.StateChangeAttributeId.Value == $attVal.AttributeId )
+        #if (!$selected || $searchGroup.StateChangeAttributeId.Value == $attVal.AttributeId )
             #set ( $selected = true )
             #set ( $selectedAttribute = $attVal.Attribute )
-        #end
     <option#selected($selected) value="$attVal.AttributeId">
+        #else
+            <option value="$attVal.AttributeId">
+        #end
+    
  #if ($attVal.Issue.Module && $attVal.Issue.IssueType)
         $attVal.RModuleAttribute.DisplayValue
  #else

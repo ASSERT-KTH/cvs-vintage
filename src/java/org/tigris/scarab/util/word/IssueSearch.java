@@ -117,7 +117,7 @@ import org.tigris.scarab.services.security.ScarabSecurity;
  * not a more specific type of Issue.
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: IssueSearch.java,v 1.113 2003/09/17 02:27:12 jmcnally Exp $
+ * @version $Id: IssueSearch.java,v 1.114 2003/09/18 15:30:20 parun Exp $
  */
 public class IssueSearch 
     extends Issue
@@ -768,10 +768,6 @@ public class IssueSearch
      */
     public Integer getStateChangeAttributeId() 
     {
-        if (stateChangeAttributeId == null) 
-        {
-            return AttributePeer.STATUS__PK;
-        }
         return stateChangeAttributeId;
     }
     
