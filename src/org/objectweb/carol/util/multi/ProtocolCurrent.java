@@ -27,19 +27,17 @@
  */
 package org.objectweb.carol.util.multi;
 
+import java.util.Enumeration;
+import java.util.Hashtable;
+
 //javax import
 import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.rmi.CORBA.PortableRemoteObjectDelegate;
 
-import java.util.Properties;
-import java.util.Hashtable;
-import java.util.Enumeration;
-
-//carol import
+import org.objectweb.carol.util.configuration.CarolConfiguration;
 import org.objectweb.carol.util.configuration.RMIConfiguration;
-import org.objectweb.carol.util.configuration.CarolConfiguration; 
-import org.objectweb.carol.util.configuration.TraceCarol; 
+import org.objectweb.carol.util.configuration.TraceCarol;
 
 /**
  * Class <code>ProtocolCurrent</code>For handling the association Rmi/ Thread

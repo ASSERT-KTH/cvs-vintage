@@ -28,23 +28,15 @@
 package org.objectweb.carol.util.bootstrap;
 
 // Jakarta CLI 
-import org.apache.commons.cli.Options;
-import org.apache.commons.cli.CommandLine;
-import org.apache.commons.cli.HelpFormatter;
-import org.apache.commons.cli.ParseException;
-
-import java.util.Hashtable;
-import java.util.Enumeration;
-
-import java.io.OutputStream;
-import java.io.InputStream;
-
-
-import java.rmi.registry.Registry;
 import java.rmi.registry.LocateRegistry;
-import java.rmi.RemoteException;
+import java.rmi.registry.Registry;
 
 import javax.rmi.PortableRemoteObject;
+
+import org.apache.commons.cli.CommandLine;
+import org.apache.commons.cli.HelpFormatter;
+import org.apache.commons.cli.Options;
+import org.apache.commons.cli.ParseException;
 
 /**
  * Class <code>ProcessesDaemon</code>Provide a RMI accessible jvm daemon

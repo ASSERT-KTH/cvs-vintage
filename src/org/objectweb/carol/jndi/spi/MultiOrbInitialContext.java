@@ -407,7 +407,7 @@ public class MultiOrbInitialContext implements Context {
 
     public NameParser getNameParser(String name) throws NamingException {
 	if (TraceCarol.isDebugJndiCarol()) {
-            TraceCarol.debugJndiCarol("MultiOrbInitialContext.getNameParser(\""+name+"\")/rmi name=\""+pcur.getCurrent().getCurrentRMIName()+"\"");
+            TraceCarol.debugJndiCarol("MultiOrbInitialContext.getNameParser(\""+name+"\")/rmi name=\""+pcur.getCurrentRMIName()+"\"");
         }
 	try {
 	    return pcur.getCurrentInitialContext().getNameParser(name);

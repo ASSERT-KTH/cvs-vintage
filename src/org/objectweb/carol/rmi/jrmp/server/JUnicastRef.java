@@ -181,6 +181,8 @@ public class JUnicastRef extends UnicastRef {
     /**
      * v1.1 style of Stubs call this invoke
      * @param call the remote call
+     * 
+     * @deprecated
      */
     public void invoke(java.rmi.server.RemoteCall call) throws Exception {
         super.invoke(call);
@@ -194,6 +196,8 @@ public class JUnicastRef extends UnicastRef {
      * @param ops the operation
      * @param opnum the operation number
      * @param hash the hash code
+     * 
+     * @deprecated
      */
     public RemoteCall newCall(RemoteObject obj, Operation[] ops, int opnum,
                               long hash) throws RemoteException {

@@ -73,6 +73,8 @@ public class JRemoteServerCall implements RemoteCall {
      * override getResultStream to dissociate and pass contexts
      * back to the client. This method might be called several times.
      * @param success if success
+     * 
+     * @deprecated
      */
     public ObjectOutput getResultStream(boolean success) throws IOException,
             StreamCorruptedException {
@@ -88,28 +90,52 @@ public class JRemoteServerCall implements RemoteCall {
 	}
     }
 
+ 
     // standard server remote call methods
-    public ObjectOutput getOutputStream() throws IOException {
+ 	/**
+ 	 * @deprecated
+ 	 */   
+     public ObjectOutput getOutputStream() throws IOException {
         return impl.getOutputStream();
     }
 
+	/**
+	 * @see java.rmi.server.RemoteCall#releaseOutputStream()
+	 * @deprecated 
+	 */
     public void releaseOutputStream() throws IOException {
         impl.releaseOutputStream();
     }
 
+	/**
+	 * @see java.rmi.server.RemoteCall#getInputStream()
+	 * @deprecated 
+	 */
     public ObjectInput getInputStream() throws IOException {
         return impl.getInputStream();
     }
 
+	/**
+	 * 
+	 * @see java.rmi.server.RemoteCall#releaseInputStream()
+	 * @deprecated 
+	 */
     public void releaseInputStream() throws IOException {
         impl.releaseInputStream();
     }
 
+	/**
+	 * @see java.rmi.server.RemoteCall#executeCall()
+	 * @deprecated 
+	 */
     public void executeCall() throws Exception {
         throw new Error("should never be called by server");
     }
 
-
+	/**	 
+	 * @see java.rmi.server.RemoteCall#done()
+	 * @deprecated 
+	 */
     public void done() throws IOException {
         impl.done();
     }

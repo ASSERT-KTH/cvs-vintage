@@ -28,13 +28,11 @@
 package org.objectweb.carol.rmi.iiop.interceptor;
 
 // omg import 
-import org.omg.PortableInterceptor.Interceptor; 
-import org.omg.PortableInterceptor.ORBInitializer; 
-import org.omg.PortableInterceptor.ORBInitInfo; 
-import org.omg.CORBA.LocalObject;
-
-// carol import
 import org.objectweb.carol.util.configuration.TraceCarol;
+
+import org.omg.CORBA.LocalObject;
+import org.omg.PortableInterceptor.ORBInitInfo;
+import org.omg.PortableInterceptor.ORBInitializer;
 
 /**
  * Class <code>ProtocolInitializer</code> is the CAROL JNDI IIOP Interceptor initializer

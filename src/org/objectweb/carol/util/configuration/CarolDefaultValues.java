@@ -30,7 +30,6 @@ package org.objectweb.carol.util.configuration;
 //java import 
 import java.util.Properties;
 import java.util.StringTokenizer;
-import java.util.Enumeration;
 
 /*
  * Class <code>DefaultCarolValues</code> get default carol value for the properties file and

@@ -29,17 +29,14 @@ package org.objectweb.carol.jndi.spi;
 
 
 //java import
-import java.util.Enumeration;
 import java.util.Hashtable;
 
-//javax import
+import javax.naming.Context;
 import javax.naming.Name;
 import javax.naming.NamingException;
-import javax.naming.Context;
-import javax.naming.spi.ObjectFactory;
 import javax.naming.spi.InitialContextFactory;
+import javax.naming.spi.ObjectFactory;
 
-// carol import
 import org.objectweb.carol.util.configuration.TraceCarol;
 
 

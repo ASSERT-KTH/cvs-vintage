@@ -27,22 +27,14 @@
  */
 package org.objectweb.carol.util.bootstrap;
 
-import java.util.Hashtable;
-import java.util.Enumeration;
-
-import java.io.OutputStream;
-import java.io.InputStream;
-import java.io.FileOutputStream;
-import java.io.FileInputStream;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
-	   
-import java.util.jar.JarOutputStream;
-import java.util.jar.JarInputStream;
-import java.util.jar.JarFile;
-import java.util.zip.ZipEntry;
-
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.rmi.RemoteException;
+import java.util.Enumeration;
+import java.util.Hashtable;
 
 /**
  * Class <code>ProcessesManager</code>Provide a Process Manager

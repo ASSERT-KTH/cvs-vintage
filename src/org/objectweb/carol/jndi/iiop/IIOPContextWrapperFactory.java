@@ -27,16 +27,10 @@
 package org.objectweb.carol.jndi.iiop;
 
 // java import
-import java.util.Enumeration;
 import java.util.Hashtable;
 
-// javax import
 import javax.naming.Context;
-import javax.naming.InitialContext;
 import javax.naming.NamingException;
-import javax.naming.Name;
-import javax.naming.spi.InitialContextFactory;
-import javax.naming.spi.ObjectFactory;
 
 import com.sun.jndi.cosnaming.CNCtxFactory;
 

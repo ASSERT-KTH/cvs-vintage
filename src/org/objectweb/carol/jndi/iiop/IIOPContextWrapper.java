@@ -27,23 +27,17 @@
 package org.objectweb.carol.jndi.iiop;
 
 // java import 
-import java.io.Serializable;
 import java.util.Hashtable;
-import java.rmi.Remote;
 
-// javax import
-import javax.naming.Context; 
-import javax.naming.InitialContext;
+import javax.naming.Context;
 import javax.naming.Name;
 import javax.naming.NameParser;
 import javax.naming.NamingEnumeration;
 import javax.naming.NamingException;
-import javax.naming.Referenceable;
 import javax.naming.Reference;
+import javax.naming.Referenceable;
 import javax.naming.spi.ObjectFactory;
 
-// carol import 
-import org.objectweb.carol.util.multi.ProtocolCurrent;
 import org.objectweb.carol.util.configuration.TraceCarol;
 
 /*
@@ -70,8 +64,8 @@ public class IIOPContextWrapper implements Context {
      *
      * @throws NamingException if a naming exception is encountered
      */
-    public IIOPContextWrapper (Context iiopContext ) throws NamingException {
-	this.iiopContext = iiopContext;
+    public IIOPContextWrapper (Context iiopCtx) throws NamingException {
+	iiopContext = iiopCtx;
     }
 
 

@@ -71,6 +71,8 @@ public class JRemoteCall extends StreamRemoteCall {
     /**
      * override executeCall to receive and reassociate contexts that were
      * sent back from the server in the case of exeptional return
+     * 
+     * @deprecated
      */
     public void executeCall() throws Exception {
         Exception ex2 = null;

@@ -31,19 +31,16 @@ import java.io.Serializable;
 import java.rmi.Remote;
 import java.util.Hashtable;
 
-// javax import
-import javax.naming.Context; 
-import javax.naming.InitialContext;
+import javax.naming.Context;
 import javax.naming.Name;
 import javax.naming.NameParser;
 import javax.naming.NamingEnumeration;
 import javax.naming.NamingException;
-import javax.naming.Referenceable;
 import javax.naming.Reference;
+import javax.naming.Referenceable;
 import javax.naming.spi.ObjectFactory;
 
-// carol import 
-import  org.objectweb.carol.util.multi.ProtocolCurrent;
+import org.objectweb.carol.util.multi.ProtocolCurrent;
 
 /*
  * Class <code>IIOPRemoteReferenceContextWrapper</code> is the CAROL JNDI Context. This context make the 
@@ -75,9 +72,9 @@ public class IIOPReferenceContextWrapper implements Context {
      *
      * @throws NamingException if a naming exception is encountered
      */
-    public IIOPReferenceContextWrapper (Context iiopContext ) throws NamingException {
-	this.iiopContext = iiopContext;
-	this.wrapperHash = new Hashtable();
+    public IIOPReferenceContextWrapper (Context iiopCtx ) throws NamingException {
+	iiopContext = iiopCtx;
+	wrapperHash = new Hashtable();
     }
 
 

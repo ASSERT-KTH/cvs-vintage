@@ -28,32 +28,22 @@
 package org.objectweb.carol.util.bootstrap;
 
 // Jakarta CLI 
-import org.apache.commons.cli.Options;
-import org.apache.commons.cli.CommandLine;
-import org.apache.commons.cli.HelpFormatter;
-import org.apache.commons.cli.ParseException;
-
-import java.util.Hashtable;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.InputStreamReader;
 import java.util.Enumeration;
+import java.util.Hashtable;
 import java.util.Properties;
 import java.util.StringTokenizer;
 
-import java.util.jar.JarInputStream;
-
-import java.io.BufferedReader;
-import java.io.PushbackReader;
-import java.io.InputStreamReader;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-
-import java.rmi.registry.Registry;
-import java.rmi.registry.LocateRegistry;
-import java.rmi.RemoteException;
-
-import javax.rmi.PortableRemoteObject;
-
 import javax.naming.InitialContext;
+
+import org.apache.commons.cli.CommandLine;
+import org.apache.commons.cli.HelpFormatter;
+import org.apache.commons.cli.Options;
+import org.apache.commons.cli.ParseException;
+
 /**
  * Class <code>RemoteShell</code>Provide a RMI shell access to a RJVM daemon
  * For the moment it's a basic (but full) rjvm shell 

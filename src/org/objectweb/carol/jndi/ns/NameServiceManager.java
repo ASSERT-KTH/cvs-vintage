@@ -26,14 +26,12 @@
  */
 package org.objectweb.carol.jndi.ns;
 
-import java.util.Properties;
-import java.util.Hashtable;
 import java.util.Enumeration;
+import java.util.Hashtable;
 
-//carol import
+import org.objectweb.carol.util.configuration.CarolConfiguration;
 import org.objectweb.carol.util.configuration.RMIConfiguration;
-import org.objectweb.carol.util.configuration.CarolConfiguration; 
-import org.objectweb.carol.util.configuration.TraceCarol; 
+import org.objectweb.carol.util.configuration.TraceCarol;
 
 /*
  * Class <code>NameServicemanager</code> is the CAROL Name Service manager.

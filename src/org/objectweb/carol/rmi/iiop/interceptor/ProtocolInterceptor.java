@@ -28,17 +28,12 @@
 package org.objectweb.carol.rmi.iiop.interceptor;
 
 //java import 
-import java.io.IOException;
-
-//omg import 
-import org.omg.CORBA.LocalObject;
-import org.omg.IOP.ServiceContext;
-import org.omg.PortableInterceptor.ForwardRequest;
-import org.omg.PortableInterceptor.ServerRequestInterceptor;
-import org.omg.PortableInterceptor.ServerRequestInfo;
-
-//carol import 
 import org.objectweb.carol.util.multi.ProtocolCurrent;
+
+import org.omg.CORBA.LocalObject;
+import org.omg.PortableInterceptor.ForwardRequest;
+import org.omg.PortableInterceptor.ServerRequestInfo;
+import org.omg.PortableInterceptor.ServerRequestInterceptor;
 
 /**
  * Class <code>ProtocolInterceptor</code> is the CAROL JNDI IIOP Interceptor for iiop protocol

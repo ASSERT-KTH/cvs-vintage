@@ -28,26 +28,21 @@
 package org.objectweb.carol.rmi.multi;
 
 // rmi import
-import java.util.Properties;
-import java.util.Vector;
-import java.util.Enumeration;
+import java.rmi.NoSuchObjectException;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
-import java.rmi.NoSuchObjectException;
+import java.util.Enumeration;
+import java.util.Properties;
+import java.util.Vector;
 
-// corba import
 import javax.rmi.CORBA.PortableRemoteObjectDelegate;
 
-// carol jrmp import 
-import org.objectweb.carol.rmi.jrmp.server.JUnicastRemoteObject;
-import org.objectweb.carol.rmi.jrmp.interceptor.JServerRequestInterceptor;
 import org.objectweb.carol.rmi.jrmp.interceptor.JClientRequestInterceptor;
-import org.objectweb.carol.rmi.jrmp.interceptor.JInitializer;
 import org.objectweb.carol.rmi.jrmp.interceptor.JInitInfo;
+import org.objectweb.carol.rmi.jrmp.interceptor.JInitializer;
 import org.objectweb.carol.rmi.jrmp.interceptor.JRMPInitInfoImpl;
-import org.objectweb.carol.rmi.jrmp.interceptor.ProtocolInterceptor;
-
-// carol import
+import org.objectweb.carol.rmi.jrmp.interceptor.JServerRequestInterceptor;
+import org.objectweb.carol.rmi.jrmp.server.JUnicastRemoteObject;
 import org.objectweb.carol.util.configuration.TraceCarol;
 
 /**

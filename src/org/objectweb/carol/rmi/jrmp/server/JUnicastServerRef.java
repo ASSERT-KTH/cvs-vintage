@@ -29,22 +29,19 @@ package org.objectweb.carol.rmi.jrmp.server;
 
 
 // sun import
-import sun.rmi.server.UnicastServerRef;
-import sun.rmi.transport.LiveRef;
-
-// java import
 import java.io.IOException;
 import java.io.ObjectInput;
 import java.io.ObjectOutput;
 import java.rmi.Remote;
 import java.rmi.server.RemoteCall;
 import java.rmi.server.RemoteRef;
-import java.security.PrivilegedExceptionAction;
 
-//carol import 
 import org.objectweb.carol.rmi.jrmp.interceptor.JClientRequestInterceptor;
-import org.objectweb.carol.rmi.jrmp.interceptor.JServerRequestInterceptor;
 import org.objectweb.carol.rmi.jrmp.interceptor.JServerInterceptorHelper;
+import org.objectweb.carol.rmi.jrmp.interceptor.JServerRequestInterceptor;
+
+import sun.rmi.server.UnicastServerRef;
+import sun.rmi.transport.LiveRef;
 
 /**
  * Class <code>JUnicastServerRef</code> implements the remote reference layer server-side

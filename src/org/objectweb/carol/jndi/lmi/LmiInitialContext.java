@@ -28,33 +28,27 @@
 package org.objectweb.carol.jndi.lmi;
 
 //java import
-import java.util.Hashtable;
-import java.util.Enumeration;
-// java import 
-import java.io.Serializable;
 import java.rmi.Remote;
+import java.util.Enumeration;
+import java.util.Hashtable;
 
-
-//javax import
+import javax.naming.Binding;
+import javax.naming.CompositeName;
 import javax.naming.Context;
-import javax.naming.NamingException;
-import javax.naming.Name;
-import javax.naming.NamingEnumeration;
-import javax.naming.Context;
-import javax.naming.NameParser;
-import javax.naming.NameNotFoundException;
-import javax.naming.Referenceable;
-import javax.naming.Reference;
-import javax.naming.spi.ObjectFactory;
 import javax.naming.InvalidNameException;
+import javax.naming.Name;
 import javax.naming.NameAlreadyBoundException;
+import javax.naming.NameClassPair;
+import javax.naming.NameNotFoundException;
+import javax.naming.NameParser;
+import javax.naming.NamingEnumeration;
+import javax.naming.NamingException;
 import javax.naming.NotContextException;
 import javax.naming.OperationNotSupportedException;
-import javax.naming.CompositeName;
-import javax.naming.NameClassPair;
-import javax.naming.Binding;
+import javax.naming.Reference;
+import javax.naming.Referenceable;
+import javax.naming.spi.ObjectFactory;
 
-//carol import
 import org.objectweb.carol.util.configuration.TraceCarol;
 /*
  * Class <code>LmiInitialContext</code> is the CAROL LMI JNDI SPI Context for local context. This context 

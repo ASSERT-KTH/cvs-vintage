@@ -28,12 +28,10 @@
 package org.objectweb.carol.util.bootstrap;
 
 import java.io.Serializable;
-import java.io.File;
-
-import java.util.Properties;
-import java.util.Vector;
-import java.util.StringTokenizer;
 import java.util.Enumeration;
+import java.util.Properties;
+import java.util.StringTokenizer;
+import java.util.Vector;
 
 /**
  * Class <code>JVMConfiguration</code> Is a Data structure representing a Java command 

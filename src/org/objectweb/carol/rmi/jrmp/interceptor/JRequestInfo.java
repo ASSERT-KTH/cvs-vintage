@@ -27,10 +27,6 @@
  */
 package org.objectweb.carol.rmi.jrmp.interceptor;
 
-//java import  
-import java.util.Enumeration;
-import java.util.Hashtable;
-
 /**
  * Class <code>JRequestInfo</code> is the CAROL JRMP general Request info
  *

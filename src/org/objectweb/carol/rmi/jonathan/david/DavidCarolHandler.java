@@ -28,20 +28,12 @@
 package org.objectweb.carol.rmi.jonathan.david;
 
 // jonathan import
+import org.objectweb.carol.util.multi.ProtocolCurrent;
 import org.objectweb.david.apis.services.handler.Service;
 import org.objectweb.jonathan.apis.kernel.Context;
 import org.objectweb.jonathan.apis.kernel.JonathanException;
-import org.objectweb.jonathan.apis.presentation.MarshallerFactory;
-import org.objectweb.jonathan.apis.presentation.Marshaller;
-import org.objectweb.jonathan.apis.presentation.UnMarshaller;
-import org.objectweb.jonathan.apis.resources.Chunk;
-import org.objectweb.jonathan.libs.helpers.MessageHelpers;
 
-// omg import 
 import org.omg.IOP.ServiceContext;
-
-//carol import 
-import org.objectweb.carol.util.multi.ProtocolCurrent;
 
 
 /**
