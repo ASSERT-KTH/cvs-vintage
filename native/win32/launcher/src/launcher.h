@@ -27,6 +27,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #define REGVALUE_JAVA_HOME					"JavaHome"
 #define REGVALUE_COLUMBA_HOME				"ColumbaHome"
 #define REGVALUE_MAKE_DEFAULT				"MakeDefault"
+#define NO													"NO"
 
 #define _RUN_PACKED_
 //Packed = jar file.

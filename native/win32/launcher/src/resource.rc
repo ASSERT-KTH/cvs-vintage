@@ -28,7 +28,7 @@ LANGUAGE LANG_GERMAN, SUBLANG_GERMAN
 
 // Icon with lowest ID value placed first to ensure application icon
 // remains consistent on all systems.
-IDI_ICON1               ICON    DISCARDABLE     "icon2.ico"
+IDI_ICON2               ICON    DISCARDABLE     "Columba.ico"
 #endif    // Deutsch (Deutschland) resources
 /////////////////////////////////////////////////////////////////////////////
 
@@ -47,18 +47,19 @@ LANGUAGE LANG_ITALIAN, SUBLANG_ITALIAN
 // Dialog
 //
 
-IDD_DIALOG1 DIALOGEX 0, 0, 186, 79
+IDD_DIALOG1 DIALOGEX 0, 0, 202, 90
 STYLE DS_MODALFRAME | DS_SETFOREGROUND | DS_FIXEDSYS | DS_CENTER | WS_POPUP | 
     WS_VISIBLE | WS_CAPTION | WS_SYSMENU
 EXSTYLE WS_EX_CONTROLPARENT
-CAPTION "Default EMail client"
-FONT 8, "MS Shell Dlg", 0, 0, 0x1
+CAPTION "Default email client"
+FONT 8, "MS Shell Dlg"
 BEGIN
-    DEFPUSHBUTTON   "OK",ID_OK,68,58,50,14
-    CONTROL         "Make Columba my default email client",IDC_CHECK,"Button",
-                    BS_AUTOCHECKBOX | WS_TABSTOP,20,30,144,10
-    LTEXT           "Columba is not your default email client",IDC_STATIC,20,
-                    14,136,8
+    DEFPUSHBUTTON   "Yes",ID_OK,93,69,48,14
+    CONTROL         "Don't ask me again",IDC_CHECK,"Button",BS_AUTOCHECKBOX | 
+                    WS_TABSTOP,17,32,79,14
+    LTEXT           "Do you want to have Columba as your default email client?",
+                    IDC_STATIC,7,14,188,12
+    PUSHBUTTON      "No",ID_NO,147,69,48,14
 END
 
 
@@ -73,9 +74,9 @@ BEGIN
     IDD_DIALOG1, DIALOG
     BEGIN
         LEFTMARGIN, 7
-        RIGHTMARGIN, 179
+        RIGHTMARGIN, 195
         TOPMARGIN, 7
-        BOTTOMMARGIN, 72
+        BOTTOMMARGIN, 83
     END
 END
 #endif    // APSTUDIO_INVOKED

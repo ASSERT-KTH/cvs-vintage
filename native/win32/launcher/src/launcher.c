@@ -67,6 +67,7 @@ BOOL CALLBACK DialogProc (HWND, UINT, WPARAM, LPARAM);
 BOOL isDefaultClient = FALSE;
 BOOL isDialogOpen = FALSE;
 BOOL bLoadColumba = TRUE;
+BOOL askDefault = TRUE;
 
 //Function definition.
 //========== DialogProc ==========
@@ -79,8 +80,16 @@ BOOL CALLBACK DialogProc (HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
 			switch (LOWORD(wParam)) {
 				case ID_OK: //The user wants to proceed.
 					bLoadColumba = TRUE;
-					isDefaultClient = IsDlgButtonChecked(hwnd, IDC_CHECK); //We'll set it in WinMain
+					isDefaultClient = TRUE; //IsDlgButtonChecked(hwnd, IDC_CHECK); //We'll set it in WinMain
 					isDialogOpen = FALSE;
+					askDefault = !IsDlgButtonChecked(hwnd, IDC_CHECK);
+					EndDialog(hwnd, 0);
+					return (TRUE);
+				case ID_NO: //The user wants to proceed.
+					bLoadColumba = TRUE;
+					isDefaultClient = FALSE;//IsDlgButtonChecked(hwnd, IDC_CHECK); //We'll set it in WinMain
+					isDialogOpen = FALSE;
+					askDefault = !IsDlgButtonChecked(hwnd, IDC_CHECK);
 					EndDialog(hwnd, 0);
 					return (TRUE);
 				default:
@@ -106,7 +115,7 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLi
 
 	//Registry API variables.
 	int iResult = 0;
-	HKEY hkJavaVersions, hkJavaJRE, hkColumbaFingerprint;
+	HKEY hkJavaVersions, hkJavaJRE, hkColumbaFingerprint, hkMakeDefault;
 	BOOL isJREOk = FALSE;
 	double dVersion = 0;
 	//char* pszJREHome = (char*)GlobalAlloc(GMEM_FIXED | GMEM_ZEROINIT, PATH_SIZE * sizeof(char));
@@ -115,6 +124,7 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLi
 	char pszJREHome[PATH_SIZE];
 	char pszColumbaHome[PATH_SIZE];
 	char pszColumbaParameters[PATH_SIZE];
+	char pszColumbaAskDefault[PATH_SIZE];
 	//Columba variables.
 	HINSTANCE hInstColumba = NULL;
 
@@ -174,10 +184,48 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLi
 	RegCloseKey(hkJavaJRE);
 	RegCloseKey(hkJavaVersions);
 
-	//Check if columba is the default EMailClient
+	//We need to know our path and parameters.
+	iResult = RegOpenKeyEx(HKEY_LOCAL_MACHINE, REGKEY_COLUMBA_FINGERPRINT, 0, KEY_QUERY_VALUE, &hkColumbaFingerprint);
+
+	if (iResult != ERROR_SUCCESS ) {
+		MessageBox(NULL,
+		"Columba or your Windows registry entries seem to be corrupted. Please, try reinstalling Columba first.",
+		"Columba - Registry corrupted", MB_OK);
+		return 2;
+	}
+
+	dwValue = PATH_SIZE;
+	iResult = RegQueryValueEx(hkColumbaFingerprint, REGVALUE_COLUMBA_HOME, NULL, &dwType, (unsigned char*)pszColumbaHome, &dwValue);
+
+	if (iResult != ERROR_SUCCESS ) {
+		MessageBox(NULL,
+		"Columba or your Windows registry entries seem to be corrupted. Please, try reinstalling Columba first.",
+		"Columba - Registry corrupted", MB_OK);
+		return 2;
+	}
+
+
+	// Get the make default parameter
+	dwValue = PATH_SIZE;
+	iResult = RegQueryValueEx(hkColumbaFingerprint, REGVALUE_MAKE_DEFAULT, NULL, &dwType, (unsigned char*)pszColumbaAskDefault, &dwValue);
+
+	if (iResult != ERROR_SUCCESS ) {
+		MessageBox(NULL,
+		"Columba or your Windows registry entries seem to be corrupted. Please, try reinstalling Columba first.",
+		"Columba - Registry corrupted", MB_OK);
+		return 2;
+	}
+
+	askDefault = (pszColumbaAskDefault[0] == 'Y'); // Check if YES
+
+	// Close the Fingerprint
+	RegCloseKey(hkColumbaFingerprint);
+
+	
+	//Check if columba is the default EMailClient	
 	isDefaultClient = checkDefaultClient();
 
-	if (!isDefaultClient) { //Show the dialog asking theuser if he wants to set up columba as default email client.
+	if (!isDefaultClient && askDefault ) { //Show the dialog asking theuser if he wants to set up columba as default email client.
 		HWND hDialog;
 		MSG  msg;
 		int iGetMsgValue;
@@ -202,32 +250,18 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLi
 				return 0;
 			}
 		}
+		if (!askDefault) {
+			iResult = RegOpenKeyEx(HKEY_LOCAL_MACHINE, REGKEY_COLUMBA_FINGERPRINT, 0, KEY_SET_VALUE, &hkMakeDefault );
+			iResult = RegSetValueEx(hkMakeDefault, REGVALUE_MAKE_DEFAULT, (DWORD)NULL, REG_SZ, (unsigned char*) NO, sizeof(NO));
+		}
 	} //End of dialog code.
 	if (!bLoadColumba) { //The user chose not to load Columba.
 		return 1;
 	}
+	
 
-	//We can now run Columba. We need to know its path and parameters.
-	iResult = RegOpenKeyEx(HKEY_LOCAL_MACHINE, REGKEY_COLUMBA_FINGERPRINT, 0, KEY_QUERY_VALUE, &hkColumbaFingerprint);
 
-	if (iResult != ERROR_SUCCESS ) {
-		MessageBox(NULL,
-		"Columba or your Windows registry entries seem to be corrupted. Please, try reinstalling Columba first.",
-		"Columba - Registry corrupted", MB_OK);
-		return 2;
-	}
 
-	dwValue = PATH_SIZE;
-	iResult = RegQueryValueEx(hkColumbaFingerprint, REGVALUE_COLUMBA_HOME, NULL, &dwType, (unsigned char*)pszColumbaHome, &dwValue);
-
-	if (iResult != ERROR_SUCCESS ) {
-		MessageBox(NULL,
-		"Columba or your Windows registry entries seem to be corrupted. Please, try reinstalling Columba first.",
-		"Columba - Registry corrupted", MB_OK);
-		return 2;
-	}
-
-	RegCloseKey(hkColumbaFingerprint);
 
 	//We have what we need, we can start Columba.
 	lstrcpy(pszColumbaParameters, COLUMBA_JAVA_PARAMETER); //Java parameters; i.e.: "-jar Columba.jar"
