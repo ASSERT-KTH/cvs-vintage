@@ -49,7 +49,7 @@ import org.jboss.util.Sync;
 *   @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
 *   @author <a href="mailto:danch@nvisia.com">Dan Christopherson</a>
 *   @author <a href="mailto:bill@burkecentral.com">Bill Burke</a>
-*   @version $Revision: 1.25 $
+*   @version $Revision: 1.26 $
 *
 *   Revisions:
 *   20010621 Bill Burke: removed loadEntities call because CMP read-ahead is now
@@ -85,6 +85,12 @@ public class CMPPersistenceManager
       if (store != null) store.setContainer(c);
    }
 
+	/**
+	 * Gets the entity persistence store.
+	 */
+   public EntityPersistenceStore getPersistenceStore() {
+		return store;
+	}
 
    public void setPersistenceStore(EntityPersistenceStore store) {
       this.store= store;
