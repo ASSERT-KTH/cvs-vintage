@@ -28,12 +28,12 @@ import javax.transaction.Transaction;
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  * @author <a href="mailto:docodan@mvcsoft.com">Daniel OConnor</a>
- * @version $Revision: 1.21 $
+ * @version $Revision: 1.22 $
  *
  * <p><b>Revisions</b>
  * <p>20010703 marcf
  * <ol>
- * <li>setInvoked replaced by "isTxSynchronized", the reason being that we
+ * <li>setInvoked replaced by "hasTxSynchronization", the reason being that we
  *     use it for Tx registration.
  * </ol>
  */
@@ -50,7 +50,7 @@ public class EntityEnterpriseContext
     * True if this instance has been registered with the TM for transactional
     * demarcation.
     */
-   boolean isTxSynchronized = false;
+   boolean hasTxSynchronization = false;
 	
    /**
     * True if this instances' state is valid when a bean is called the state
@@ -83,7 +83,7 @@ public class EntityEnterpriseContext
    public void clear() {
       super.clear();
       
-      this.isTxSynchronized = false;
+      this.hasTxSynchronization = false;
       this.valid = false;
       key = null;
       persistenceCtx = null;
@@ -153,14 +153,14 @@ public class EntityEnterpriseContext
      }
    */
    
-   public void setTxSynchronized(boolean value)
+   public void hasTxSynchronization(boolean value)
    {
-      isTxSynchronized = value;
+      hasTxSynchronization = value;
    }
 	
-   public boolean isTxSynchronized()
+   public boolean hasTxSynchronization()
    {
-      return isTxSynchronized;
+      return hasTxSynchronization;
    }
 	
    public void setValid(boolean valid)

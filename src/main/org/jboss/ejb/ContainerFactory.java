@@ -66,7 +66,7 @@ import org.jboss.web.WebServiceMBean;
  * @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
  * @author <a href="mailto:peter.antman@tim.se">Peter Antman</a>.
  * @author <a href="mailto:scott.stark@jboss.org">Scott Stark</a>
- * @version $Revision: 1.83 $
+ * @version $Revision: 1.84 $
  */
 public class ContainerFactory
    extends ServiceMBeanSupport
@@ -776,7 +776,7 @@ public class ContainerFactory
          {
             if( confSecurityDomain == null )
                confSecurityDomain = securityDomain;
-            System.out.println("lookup securityDomain manager name: "+confSecurityDomain);
+            //System.out.println("lookup securityDomain manager name: "+confSecurityDomain);
             Object securityMgr = iniCtx.lookup(confSecurityDomain);
             EJBSecurityManager ejbS = (EJBSecurityManager) securityMgr;
             RealmMapping rM = (RealmMapping) securityMgr;
@@ -798,7 +798,7 @@ public class ContainerFactory
             Class proxyClass = cl.loadClass(securityProxyClassName);
             Object proxy = proxyClass.newInstance();
             container.setSecurityProxy(proxy);
-            System.out.println("setSecurityProxy, "+proxy);
+            //System.out.println("setSecurityProxy, "+proxy);
          }
          catch(Exception e)
          {
