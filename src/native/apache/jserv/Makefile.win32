@@ -1,6 +1,6 @@
 #############################################
 # Apache mod_jserv Makefile for Win32 systems
-# $Revision: 1.3 $
+# $Revision: 1.4 $
 #############################################
 
 #####################
@@ -103,8 +103,8 @@ build: jserv.h "$(APACHE_SRC)\CoreR\ApacheCore.lib" ApacheModuleJServ.dll
 # jserv.h: autochange.exe
 #     @autochange PACKAGE=$(PACKAGE) VERSION=$(VERSION) < jserv.h.in > jserv.h
     
-autochange.exe: autochange.c
-    $(CC) autochange.c
+#autochange.exe: autochange.c
+#    $(CC) autochange.c
 
 .c.obj:
     $(CC) $(JSERV_C_OPTS) $(JSERV_C_INCL) $(JSERV_DEFINE) $<
@@ -122,8 +122,8 @@ ApacheJServ.exe: $(JSERV_OBJS)
 clean:
     erase *.obj
     erase *.idb
-    erase jserv.h
-    erase autochange.exe
+    #    erase jserv.h
+    #    erase autochange.exe
     erase ApacheModuleJServ.exp
     erase ApacheModuleJServ.lib
     erase ApacheModuleJServ.pch
