@@ -1,3 +1,4 @@
+#set ($page.Title = $l10n.Title)
 $renderer.render("navigations", "SearchNav.vm")
 #actionErrorMsg()
 $renderer.render("screens", $template)
