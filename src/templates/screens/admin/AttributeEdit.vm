@@ -94,7 +94,7 @@ Back to <a href="$link.setPage("admin,AttributeShow.vm")">Attribute Show</a>
 
 #set ( $newOption = $scarabR.AttributeOption )
 #set ( $intakeOption = $intake.AttributeOption.mapTo($newOption) )
-<tr class="a">
+#if ( ($maxNum + 1) % 2 > 0 )<tr class="a">#else<tr class="b">#end
      <td colspan="2">New</td>
      <td>
         <input type="text" name="$intakeOption.ParentIds.Key" 
@@ -121,6 +121,16 @@ Back to <a href="$link.setPage("admin,AttributeShow.vm")">Attribute Show</a>
 </div>
 $intake.declareGroups()
 </form>
+
+
+
+
+
+
+
+
+
+
 
 #*
 
