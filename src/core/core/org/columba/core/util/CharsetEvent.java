@@ -14,6 +14,8 @@
 
 package org.columba.core.util;
 
+import java.util.EventObject;
+
 /**
  * @author -
  *
@@ -22,7 +24,7 @@ package org.columba.core.util;
  * To enable and disable the creation of type comments go to
  * Window>Preferences>Java>Code Generation.
  */
-public class CharsetEvent {
+public class CharsetEvent extends EventObject {
 	
 	private int id;
 	private String value;
@@ -63,5 +65,4 @@ public class CharsetEvent {
 	public void setValue(String value) {
 		this.value = value;
 	}
-
 }
