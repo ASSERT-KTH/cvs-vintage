@@ -1,4 +1,4 @@
-$Id: README.txt,v 1.44 2002/08/09 01:52:53 jon Exp $
+$Id: README.txt,v 1.45 2002/09/10 22:02:41 jon Exp $
 
 Welcome to Scarab!
 
@@ -27,9 +27,9 @@ Ant 1.5 or higher        --> <http://jakarta.apache.org/ant/>
 Tomcat 4.0.4 or higher   --> <http://jakarta.apache.org/tomcat/>
                              (Note: Tomcat is included with Scarab.)
 
-MySQL 3.23 or higher     --> <http://www.mysql.org/>
-                         or
-Postgresql 7.2 or higher --> <http://www.postgresql.org/>
+MySQL 3.23 or higher       --> <http://www.mysql.org/>
+                           OR
+Postgresql 7.2.1 or higher --> <http://www.postgresql.org/>
 
 NOTE: Scarab is known to not work when compiled with Jikes 1.16.
 
@@ -319,11 +319,20 @@ NOTE: The create scripts will attempt to first drop a database called
       be lost without warning!
 
 NOTE: If you get a 'Server configuration denies access to data source'
-      or 'access denied' or 'Invalid authorization' error from MySQL in
-      the log files, please read the MySQL documentation on how to fix
-      this error. We will not provide support for this since it is
-      really a MySQL configuration issue. Here is a couple links to help
-      you solve your problem:
+      or 'access denied' or 'Invalid authorization' or
+      'java.lang.NullPointerException: Connection object was null.'
+      error from MySQL in the log files, please read the MySQL
+      documentation on how to fix this error. We will not provide
+      support for this since it is really a MySQL configuration issue.
+
+      In order to setup the right permissions in MySQL, you may wish to
+      try executing this command on a Unix command line (it has been
+      reported to work for one person):
+
+        echo "GRANT ALL ON scarab.* to ''@localhost" | mysql mysql
+      
+      Here is a couple links to also help you solve the permissions
+      problem:
       
       <http://www.mysql.com/documentation/mysql/bychapter/
        manual_MySQL_Database_Administration.html#Access_denied>

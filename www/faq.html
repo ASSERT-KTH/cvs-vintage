@@ -6,7 +6,7 @@
 <body bgcolor="#ffffff">
 
 <h2>Scarab - Frequently Asked Questions</h2>
-<h4>$Id: faq.html,v 1.7 2002/09/05 23:32:25 jon Exp $</h4>
+<h4>$Id: faq.html,v 1.8 2002/09/10 22:02:29 jon Exp $</h4>
 
 <hr noshade="noshade" size="1" />
 
@@ -138,11 +138,26 @@ href="http://scarab.tigris.org/source/browse/~checkout~/scarab/README.txt">READM
 
 <p>
 NOTE: If you get a 'Server configuration denies access to data source'
-      or 'access denied' or 'Invalid authorization' error from MySQL in
-      the log files, please read the MySQL documentation on how to fix
-      this error. We will not provide support for this since it is
-      really a MySQL configuration issue. Here is a couple links to help
-      you solve your problem:
+      or 'access denied' or 'Invalid authorization' or
+      'java.lang.NullPointerException: Connection object was null.'
+      error from MySQL in the log files, please read the MySQL
+      documentation on how to fix this error. We will not provide
+      support for this since it is really a MySQL configuration issue.
+</p>
+
+<p>
+      In order to setup the right permissions in MySQL, you may wish to
+      try executing this command on a Unix command line (it has been
+      reported to work for one person):
+</p>
+
+<p>
+        echo "GRANT ALL ON scarab.* to ''@localhost" | mysql mysql
+</p>
+      
+<p>
+      Here is a couple links to also help you solve the permissions
+      problem:
 </p>
 
 <p>      
