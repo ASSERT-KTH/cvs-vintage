@@ -771,6 +771,16 @@
     </target>
 
     <!-- ================================================================== -->
+    <!-- Runs configuration                                                 -->
+    <!-- ================================================================== -->
+    <target name="configure">
+        <ant antfile="configure.xml" dir="${basedir}" inheritall="false">
+            <property name="configuration.file"
+                      value="${configuration.file}"/>
+        </ant>
+    </target>
+
+    <!-- ================================================================== -->
     <!-- Runs the test suite                                                -->
     <!-- ================================================================== -->
     <target name="tests" depends="compile-tests">

@@ -1,0 +1,239 @@
+<?xml version="1.0"?>
+
+<!-- Configuration build file for Scarab -->
+
+<project name="Scarab" default="configure" basedir=".">
+
+    <!-- Allow the user to have multiple configuration files and
+         specify them using -Dscarab.build.configuration=filename -->
+    <property name="configuration.file" value="build.properties"/> 
+
+    <!-- DON'T read any property files! -->
+
+    <!-- ================================================================== -->
+    <!-- Prepares the Build directory                                       -->
+    <!-- ================================================================== -->
+    <target name="prepare">
+
+        <tstamp/>
+
+        <available file="${configuration.file}"
+                   property="configuration.file.exists"/>
+
+        <condition property="write.file">
+            <not>
+                <isset property="configuration.file.exists"/>
+            </not>
+        </condition>
+
+
+        <echo>
+ #####
+#     #   ####     ##    #####     ##    #####
+#        #    #   #  #   #    #   #  #   #    #
+ #####   #       #    #  #    #  #    #  #####
+      #  #       ######  #####   ######  #    #
+#     #  #    #  #    #  #   #   #    #  #    #
+ #####    ####   #    #  #    #  #    #  #####
+
+           [${version}-${DSTAMP}${TSTAMP}]
+
+Configuration file is ${configuration.file}.
+
+        </echo>
+    </target>
+
+
+    <!-- ================================================================== -->
+    <!-- Prepares the Tomcat directory                                      -->
+    <!-- ================================================================== -->
+    <target name="ask-overwrite" depends="prepare"
+            if="configuration.file.exists">
+        <input validargs="y,n" addproperty="ask.overwrite.file">
+File ${configuration.file} already exists.
+Do you want to overwrite it?
+        </input>
+
+        <condition property="write.file">
+            <equals arg1="y" arg2="${ask.overwrite.file}"/>
+        </condition>
+    </target>
+
+    <!-- ================================================================== -->
+    <!-- Asks for the site name                                             -->
+    <!-- ================================================================== -->
+    <target name="ask-site-name" depends="ask-overwrite"
+            if="write.file">
+
+        <input addproperty="config.site.name">
+What is the name of your site?
+This will appear at the top of each Scarab web page.
+        </input>
+
+    </target>
+
+    <!-- ================================================================== -->
+    <!-- Asks for the database type                                         -->
+    <!-- ================================================================== -->
+    <target name="ask-database-type" depends="ask-site-name"
+            if="write.file">
+
+        <input validargs="mysql,oracle,postgresql"
+               addproperty="config.database.type">
+What database type are you using?
+Valid options are:  mysql, oracle, postgresql.
+        </input>
+
+        <condition property="is.mysql">
+            <equals arg1="mysql" arg2="${config.database.type}"/>
+        </condition>
+
+        <condition property="is.postgresql">
+            <equals arg1="postgresql" arg2="${config.database.type}"/>
+        </condition>
+
+        <condition property="is.oracle">
+            <equals arg1="oracle" arg2="${config.database.type}"/>
+        </condition>
+
+    </target>
+
+    <!-- ================================================================== -->
+    <!-- Asks for hostname                                                  -->
+    <!-- ================================================================== -->
+    <target name="ask-database-host" depends="ask-database-type"
+            if="write.file">
+        <input addproperty="config.database.host">
+What host name will you use to connect to ${config.database.type}?
+        </input>
+    </target>
+
+    <!-- ================================================================== -->
+    <!-- Asks for port number                                               -->
+    <!-- ================================================================== -->
+    <target name="ask-database-port" depends="ask-database-host"
+            if="write.file">
+        <input addproperty="config.database.port">
+What port will you use to connect to ${config.database.type}?
+        </input>
+    </target>
+
+
+    <!-- ================================================================== -->
+    <!-- Ask for the database user                                          -->
+    <!-- ================================================================== -->
+    <target name="ask-userid" depends="ask-database-port"
+            if="write.file">
+        <input addproperty="config.database.username">
+What user name will you connect to ${config.database.type} with?
+        </input>
+    </target>
+
+    <!-- ================================================================== -->
+    <!-- Ask for the database password                                      -->
+    <!-- ================================================================== -->
+    <target name="ask-password" depends="ask-userid"
+            if="write.file">
+        <input addproperty="config.database.password">
+What password will ${config.database.username} connect to ${config.database.type} with?
+        </input>
+    </target>
+
+    <!-- ================================================================== -->
+    <!-- Asks for database name                                             -->
+    <!-- ================================================================== -->
+    <target name="ask-database-name" depends="ask-password"
+            if="write.file" unless="is.oracle">
+        <input addproperty="config.database.name">
+What database will you connect to on ${config.database.host}?
+        </input>
+    </target>
+
+    <!-- ================================================================== -->
+    <!-- Asks for database SID (same as name but in oracle terminology)     -->
+    <!-- ================================================================== -->
+    <target name="ask-database-sid" depends="ask-password"
+            if="is.oracle">
+        <input addproperty="config.database.name">
+What SID will you connect to?
+        </input>
+    </target>
+
+    <!-- ================================================================== -->
+    <!-- Sets specifics for oracle                                          -->
+    <!-- ================================================================== -->
+    <target name="configure-oracle" depends="ask-database-sid"
+            if="is.oracle">
+        <echo message="Configuring oracle properties"/>
+        <property name="config.database.driver"
+                  value="oracle.jdbc.driver.OracleDriver"/>
+        <property name="config.database.url"
+                  value="jdbc:oracle:thin:@${config.database.host}:${config.database.port}:${config.database.name}"/>
+        <property name="config.database.admin.url"
+                  value="jdbc:oracle:thin:@${config.database.host}:${config.database.port}:${config.database.name}"/>
+    </target>
+
+    <!-- ================================================================== -->
+    <!-- Sets specifics for mysql                                           -->
+    <!-- ================================================================== -->
+    <target name="configure-mysql" depends="ask-database-name"
+            if="is.mysql">
+        <echo message="Configuring mysql properties"/>
+        <property name="config.database.driver"
+                  value="org.gjt.mm.mysql.Driver"/>
+        <property name="config.database.url"
+                  value="jdbc:mysql://${config.database.host}:${config.database.port}/${config.database.name}"/>
+        <property name="config.database.admin.url"
+                  value="jdbc:mysql://${config.database.host}:${config.database.port}"/>
+    </target>
+
+    <!-- ================================================================== -->
+    <!-- Sets specifics for postgresql                                      -->
+    <!-- ================================================================== -->
+    <target name="configure-postgresql" depends="ask-database-name"
+            if="is.postgresql">
+        <echo message="Configuring postgresql properties"/>
+        <property name="config.database.driver"
+                  value="org.postgresql.Driver"/>
+        <property name="config.database.url"
+                  value="jdbc:postgresql://${config.database.host}:${config.database.port}/${config.database.name}"/>
+        <property name="config.database.admin.url"
+                  value="jdbc:postgresql://${config.database.host}:${config.database.port}/${config.database.name}"/>
+    </target>
+
+    <!-- ================================================================== -->
+    <!-- Configures the database questions                                  -->
+    <!-- ================================================================== -->
+    <target name="configure-databases" depends="configure-mysql,
+                                                configure-oracle,
+                                                configure-postgresql"/>
+
+    <!-- ================================================================== -->
+    <!-- Writes the data to the configuration file                          -->
+    <!-- ================================================================== -->
+    <target name="write-configuration" depends="configure-databases"
+            if="write.file">
+        <echo file="${configuration.file}">#
+#  Configuration generated ${TODAY} at ${TSTAMP}
+#  using configuration.xml
+#
+scarab.site.name=${config.site.name}
+scarab.database.type=${config.database.type}
+scarab.database.username=${config.database.username}
+scarab.database.password=${config.database.password}
+scarab.database.jdbc.driver=${config.database.driver}
+scarab.database.host=${config.database.host}
+scarab.database.port=${config.database.port}
+scarab.database.url=${config.database.url}
+scarab.database.admin.url=${config.database.admin.url}/
+#</echo>
+    </target>
+
+    <!-- ================================================================== -->
+    <!-- Prepares the Tomcat directory                                      -->
+    <!-- ================================================================== -->
+    <target name="configure" depends="write-configuration" if="write.file">
+    </target>
+
+</project>
+
