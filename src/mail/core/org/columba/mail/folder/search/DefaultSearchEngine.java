@@ -39,12 +39,14 @@ import javax.swing.JOptionPane;
 
 
 /**
- * @author freddy
+ * Divides search requests and passes them along to the
+ * optimized {@link QueryEngine} for execution.
+ * <p>
+ * Search requests which can't be performed by the
+ * {@link QueryEngine}, are executed by DefaultSearchEngine
+ * using the plugin mechanism.
  *
- * To change this generated comment edit the template variable "typecomment":
- * Window>Preferences>Java>Templates.
- * To enable and disable the creation of type comments go to
- * Window>Preferences>Java>Code Generation.
+ * @author tstich, fdietz
  */
 public class DefaultSearchEngine {
     public static final int INIT = 0;
@@ -178,68 +180,6 @@ public class DefaultSearchEngine {
         // only for debugging purpose
         //printList( result );
         return result;
-
-        /*
-        String pattern = criteria.getPattern();
-        //String condition = criteria.getCriteria();
-        int condition = criteria.getCriteria();
-
-        //System.out.println("i="+i+ " - type="+ type );
-
-        if (type.equalsIgnoreCase("Custom Headerfield")) {
-                String headerField = criteria.getHeaderItemString();
-
-                v =
-                        processHeaderCriteria(
-                                uids,
-                                headerField,
-                                pattern,
-                                condition,
-                                worker);
-
-                //printList( v );
-        } else if (type.equalsIgnoreCase("To or Cc")) {
-                Vector v1 =
-                        processHeaderCriteria(
-                                uids,
-                                "To",
-                                pattern,
-                                condition,
-                                worker);
-                Vector v2 =
-                        processHeaderCriteria(
-                                uids,
-                                "Cc",
-                                pattern,
-                                condition,
-                                worker);
-
-                v = mergeLists(v1, v2);
-        } else if (type.equalsIgnoreCase("Date")) {
-                v = processDateCriteria(uids, pattern, condition, worker);
-        } else if (type.equalsIgnoreCase("Size")) {
-                v = processSizeCriteria(uids, pattern, condition, worker);
-        } else if (type.equalsIgnoreCase("Flags")) {
-                v = processFlagsCriteria(uids, pattern, condition, worker);
-        } else if (type.equalsIgnoreCase("Priority")) {
-                v = processPriorityCriteria(uids, pattern, condition, worker);
-        } else if (type.equalsIgnoreCase("Body")) {
-                v = processBodyCriteria(uids, pattern, condition, worker);
-        } else {
-                v =
-                        processHeaderCriteria(
-                                uids,
-                                type,
-                                pattern,
-                                condition,
-                                worker);
-                //printList( v );
-        }
-
-
-        list.add(v);
-        }
-        */
     }
 
     protected void divideFilterRule(FilterRule filterRule,

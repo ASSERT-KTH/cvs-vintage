@@ -27,7 +27,19 @@ All Rights Reserved.
 <body bgcolor="white">
 
 Provides searching functionality for folders.
-
+<p>
+{@link DefaultSearchEngine} is using filter plugins to perform search
+requests. 
+<p>
+Every {@link QueryEngine} implementation supports a subset of search
+requests, for example searching in the body or subject of a message.
+<p>
+{@link DefaultSearchEngine} is also the fall-back for every search request
+which is not performed by implementations of {@link QueryEngine}.
+<p>
+We use composition to plug the {@link QueryEngine} in the 
+{@link DefaultSearchEngine}, using a {@link DummyQueryEngine} which 
+doesn't support any special search requests, as default.
 
 </body>
 </html>
