@@ -1,4 +1,4 @@
-// $Id: ActionGoToEdit.java,v 1.5 2004/07/17 16:52:03 linus Exp $
+// $Id: ActionGoToEdit.java,v 1.6 2004/08/20 21:06:59 mvw Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -30,6 +30,10 @@ import org.argouml.kernel.Project;
 import org.argouml.kernel.ProjectManager;
 import org.argouml.uml.ui.UMLAction;
 
+/**
+ * Action to select the editor pane and shows it.
+ *
+ */
 public class ActionGoToEdit extends UMLAction {
 
     ////////////////////////////////////////////////////////////////
