@@ -382,11 +382,13 @@
         <copy todir="${tomcat.dist.dir}/bin" filtering="no">
             <fileset dir="${tomcat.cvs.dir}/build/bin"/>
         </copy>
-        <copy todir="${tomcat.dist.dir}/common" filtering="no">
-            <fileset dir="${tomcat.cvs.dir}/build/common">
+        <copy todir="${tomcat.dist.dir}/common/lib" filtering="no">
+            <fileset dir="${tomcat.cvs.dir}/build/common/lib">
                 <include name="**/naming-common.jar"/>
                 <include name="**/naming-resources.jar"/>
                 <include name="**/servlet.jar"/>
+                <include name="**/crimson.jar"/>
+                <include name="**/jaxp.jar"/>
             </fileset>
         </copy>
         <copy todir="${tomcat.dist.dir}/lib" filtering="no">
@@ -394,13 +396,14 @@
                 <include name="**/naming-factory.jar"/>
             </fileset>
         </copy>
-        <copy todir="${tomcat.dist.dir}/server" filtering="no">
-            <fileset dir="${tomcat.cvs.dir}/build/server">
-                <exclude name="**/warp.jar"/>
+        <copy todir="${tomcat.dist.dir}/server/lib" filtering="no">
+            <fileset dir="${tomcat.cvs.dir}/build/server/lib">
                 <include name="**/servlets-common.jar"/>
                 <include name="**/servlets-default.jar"/>
                 <include name="**/servlets-invoker.jar"/>
                 <include name="**/servlets-manager.jar"/>
+                <include name="**/catalina.jar"/>
+                <include name="**/jakarta-regexp*.jar"/>
             </fileset>
         </copy>
     </target>
