@@ -1,26 +1,44 @@
+$page.setTitle("Module management")
+
 #set ($userModules = $data.User.Modules)
 #set ($currentModule = $scarabR.CurrentModule)
 <div id="selectmodule" class="app">
 
+<h2>$page.Title</h2>
+
 #if ($currentModule)
-<h3>Current module</h3>
+<h3>Currently selected module</h3>
 <table cellpadding="3" cellspacing="2" border="1" width="100%">
 <tr>
-    <th>Current module name</th>
-    <th>Current module desc</th>
+    <th>Module name</th>
+    <th>Module desc</th>
 </tr>
 <tr>
     <td>
     $currentModule.Name
-    #set ($canEdit = $security.hasPermission("Module | Edit", $currentModule))
-    #if ($canEdit)<a href="$link.setPage("ModifyModule.vm")">(Edit)</a>#end
     </td>
     <td>$currentModule.Description</td>
 </tr>
 </table>
+
+#set ($canEdit = $security.hasPermission("Module | Edit", $currentModule))
+#if ($canEdit)
+<form action="$link.setPage("ModifyModule.vm")" method="post">
+<div class="functnbar2">
+<table cellpadding="4" cellspacing="0" border="1">
+ <tr>
+  <td class="firstchild">
+  <input type="submit" name="maxumusDorkus" value="Edit" />
+  </td>
+ </tr>
+</table>
+</div>
+</form>
 #end
 
-<h3>New module selection</h3>
+#end
+
+<h3>Select new module</h3>
 #if ($userModules.size() > 0)
 <table border="1" cellspacing="2" cellpadding="3" width="100%">
 <tr>
@@ -31,7 +49,7 @@
 #if ($nextTemplate && $nextTemplate.length() > 0)
 #set ($tmpNext = $nextTemplate)
 #else
-#set ($tmpNext = "Links.vm")
+#set ($tmpNext = "SelectModule.vm")
 #end
 
 #foreach ($module in $userModules)
@@ -46,6 +64,18 @@ $module.Description
 #end
 
 </table>
+
+<form action="$link.setPage("ModifyModule.vm").addPathInfo("new", "true")" method="post">
+<div class="functnbar2">
+<table cellpadding="4" cellspacing="0" border="1">
+ <tr>
+  <td class="firstchild">
+<input type="submit" name="maxumusDorkus" value="Create new module" />
+  </td>
+ </tr>
+</table>
+</div>
+</form>
 
 #else
 <p><strong class="alert">
