@@ -60,7 +60,7 @@ import org.tigris.scarab.om.ScarabUser;
  * This class provides access to security properties
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: ScarabSecurity.java,v 1.7 2001/12/07 23:18:15 dr Exp $
+ * @version $Id: ScarabSecurity.java,v 1.8 2001/12/11 17:23:45 jmcnally Exp $
  */
 public class ScarabSecurity 
     extends BaseService
@@ -201,7 +201,7 @@ public class ScarabSecurity
 
     protected String getScreenPermissionImpl(String screen)
     {
-        return props.getString(SCREEN_PREFIX + screen);
+        return getPermissionImpl(props.getString(SCREEN_PREFIX + screen));
     }
 
     protected String getPermissionImpl(String permConstant)
