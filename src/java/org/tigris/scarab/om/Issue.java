@@ -53,6 +53,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Iterator;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.Date;
 import java.sql.Connection;
@@ -553,7 +554,7 @@ public class Issue
                          attribute.getAttributeId());
                 
                 List avals = getAttributeValues(crit);               
-                if (avals.size() == 1) 
+                if (avals.size() == 1)
                 {
                     result = (AttributeValue)avals.get(0);
                 }
@@ -566,7 +567,6 @@ public class Issue
         }
         return result;
     }
-
 
     /**
      * Returns AttributeValues for the Attribute (which have not been deleted.)
@@ -1662,7 +1662,7 @@ public class Issue
         // Generate comment to deal with attributes that do not
         // Exist in destination module, as well as the user attributes.
         // Later will find another solution for user attributes.
-        if (!orphanAttributes.isEmpty() || !userAttributes.isEmpty())
+        if (!orphanAttributes.isEmpty())
         {
             // Save comment
             StringBuffer delAttrsBuf = new StringBuffer("Did not copy over the "
@@ -1671,20 +1671,13 @@ public class Issue
             {
                 AttributeValue attVal = (AttributeValue) orphanAttributes.get(i);
                 String field = null;
-                if (attVal.getAttribute().isOptionAttribute())
-                {
+                //if (attVal.getAttribute().isOptionAttribute())
+                //{
                     delAttrsBuf.append(attVal.getAttribute().getName());
-                    field = attVal.getAttributeOption().getName();
+                    //field = attVal.getAttributeOption().getValue();
+                    field = attVal.getValue();
                     delAttrsBuf.append("=").append(field).append(". ");
-                } 
-           }
-           // Add user attributes to comment.
-           for (int i=0;i<userAttributes.size();i++)
-           {
-               AttributeValue attVal = (AttributeValue)userAttributes.get(i);
-               delAttrsBuf.append(attVal.getAttribute().getName());
-               delAttrsBuf.append("=").append(attVal.getValue());
-               delAttrsBuf.append(". ");
+                //} 
            }
            attachment.setDataAsString(delAttrsBuf.toString()); 
         }
@@ -1868,34 +1861,57 @@ public class Issue
         while ( iter.hasNext() ) 
         {
             aval = (AttributeValue)setMap.get(iter.next());
-            if (!aval.getAttribute().isUserAttribute())
+            List values = getAttributeValues(aval.getAttribute());
+            // loop thru the values for this attribute
+            for (int i = 0; i<values.size(); i++)
             {
-            RModuleAttribute modAttr = newModule.
-                getRModuleAttribute(aval.getAttribute(), getIssueType());
-            
-            // If this attribute is active for the destination module,
-            // Add to matching attributes list
-            if (modAttr != null && modAttr.getActive()) 
-            {
-                // If attribute is an option attribute,
-                // Check if attribute option is active for destination module.
-                if (aval instanceof OptionAttribute)
+                AttributeValue attVal = (AttributeValue)values.get(i);
+                RModuleAttribute modAttr = newModule.
+                    getRModuleAttribute(aval.getAttribute(), getIssueType());
+                
+                // If this attribute is active for the destination module,
+                // Add to matching attributes list
+                if (modAttr != null && modAttr.getActive())
                 {
-                    Criteria crit2 = new Criteria(1)
-                        .add(RModuleOptionPeer.ACTIVE, true);
-                    RModuleOption modOpt = (RModuleOption)RModuleOptionPeer
-                                            .doSelect(crit2).get(0);
-                    if (modOpt.getActive())
+                    // If attribute is an option attribute,
+                    // Check if attribute option is active for destination module.
+                    if (aval instanceof OptionAttribute)
                     {
-                        matchingAttributes.add(aval);
-                    } 
-                }
-                else
-                {
-                    matchingAttributes.add(aval);
-                }
+                        Criteria crit2 = new Criteria(1)
+                            .add(RModuleOptionPeer.ACTIVE, true);
+                        RModuleOption modOpt = (RModuleOption)RModuleOptionPeer
+                                                .doSelect(crit2).get(0);
+                        if (modOpt.getActive())
+                        {
+                            matchingAttributes.add(attVal);
+                        } 
+                    }
+                    else if (attVal instanceof UserAttribute)
+                    {
+                        ScarabUser user = null;
+                        try
+                        {
+                            user = ScarabUserManager.getInstance(attVal.getUserId());
+                        }
+                        catch (Exception e)
+                        {
+                            e.printStackTrace();
+                        }
+                        Attribute attr = attVal.getAttribute();
+                        ScarabUser[] userArray = newModule.getUsers(attr.getPermission());
+                        // If user exists in destination module with this permission,
+                        // Add as matching value
+                        if (Arrays.asList(userArray).contains(user))
+                        {
+                            matchingAttributes.add(attVal);
+                        }
+                    }
+                    else
+                    {
+                        matchingAttributes.add(attVal);
+                    }
+                } 
             } 
-            }
         }
         return matchingAttributes;
     }
@@ -1915,18 +1931,19 @@ public class Issue
     public List getOrphanAttributeValuesList(Module newModule)
           throws Exception
     {
-        List orphanAttributes = null;
-        Object obj = ScarabCache.get(this, GET_ORPHAN_ATTRIBUTEVALUES_LIST); 
-        if ( obj == null ) 
-        {        
-            AttributeValue aval = null;
-            orphanAttributes = new ArrayList();
+        List orphanAttributes = new ArrayList();
+        AttributeValue aval = null;
             
-            HashMap setMap = this.getAttributeValuesMap();
-            Iterator iter = setMap.keySet().iterator();
-            while ( iter.hasNext() ) 
+        HashMap setMap = this.getAttributeValuesMap();
+        Iterator iter = setMap.keySet().iterator();
+        while ( iter.hasNext() ) 
+        {
+            aval = (AttributeValue)setMap.get(iter.next());
+            List values = getAttributeValues(aval.getAttribute());
+            // loop thru the values for this attribute
+            for (int i = 0; i<values.size(); i++)
             {
-                aval = (AttributeValue)setMap.get(iter.next());
+                AttributeValue attVal = (AttributeValue)values.get(i);
                 RModuleAttribute modAttr = newModule.
                     getRModuleAttribute(aval.getAttribute(), getIssueType());
                 
@@ -1934,13 +1951,13 @@ public class Issue
                 // Add to orphanAttributes list
                 if (modAttr == null || !modAttr.getActive())
                 {
-                    orphanAttributes.add(aval);
+                    orphanAttributes.add(attVal);
                 } 
                 else
                 {
                     // If attribute is an option attribute, Check if 
                     // attribute option is active for destination module.
-                    if (aval instanceof OptionAttribute) 
+                    if (attVal instanceof OptionAttribute) 
                     {
                         Criteria crit2 = new Criteria(1)
                             .add(RModuleOptionPeer.ACTIVE, true);
@@ -1948,17 +1965,31 @@ public class Issue
                             .doSelect(crit2).get(0);
                         if (!modOpt.getActive())
                         {
-                            orphanAttributes.add(aval);
+                                orphanAttributes.add(attVal);
                         } 
+                    }
+                    else if (attVal instanceof UserAttribute)
+                    {
+                        ScarabUser user = null;
+                        try
+                        {
+                            user = ScarabUserManager.getInstance(attVal.getUserId());
+                        }
+                        catch (Exception e)
+                        {
+                            e.printStackTrace();
+                        }
+                        Attribute attr = attVal.getAttribute();
+                        ScarabUser[] userArray = newModule.getUsers(attr.getPermission());
+                        // If user exists in destination module with this permission,
+                        // Add as matching value
+                        if (!Arrays.asList(userArray).contains(user))
+                        {
+                            orphanAttributes.add(attVal);
+                        }
                     }
                 }
             }
-            ScarabCache.put(orphanAttributes, this, 
-                            GET_ORPHAN_ATTRIBUTEVALUES_LIST);
-        }
-        else 
-        {
-            orphanAttributes = (List)obj;
         }
         return orphanAttributes;
     }
