@@ -94,7 +94,7 @@ public class EJBSecurityManagerService
             // Do nothing, the naming services is already stopped   
         }
         
-       } catch (Exception e)
+       catch (Exception e)
        {
          log.exception(e);
        }
