@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/util/Attic/StringManager.java,v 1.1 1999/10/09 00:20:56 duncan Exp $
- * $Revision: 1.1 $
- * $Date: 1999/10/09 00:20:56 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/util/Attic/StringManager.java,v 1.2 1999/12/08 01:37:20 rubys Exp $
+ * $Revision: 1.2 $
+ * $Date: 1999/12/08 01:37:20 $
  *
  * ====================================================================
  *
@@ -156,7 +156,16 @@ public class StringManager {
 	// objects and barf out
 	
 	try {
-	    iString = MessageFormat.format(value, args);
+            // ensure the arguments are not null so pre 1.2 VM's don't barf
+            Object nonNullArgs[] = args;
+            for (int i=0; i<args.length; i++) {
+		if (args[i] == null) {
+		    if (nonNullArgs==args) nonNullArgs=(Object[])args.clone();
+		    nonNullArgs[i] = "null";
+		}
+	    }
+ 
+            iString = MessageFormat.format(value, nonNullArgs);
 	} catch (IllegalArgumentException iae) {
 	    StringBuffer buf = new StringBuffer();
 	    buf.append(value);
