@@ -10,27 +10,46 @@ import java.lang.reflect.Method;
 import java.security.Principal;
 
 /**
- *   <description> 
+ * Provides the interface for all container interceptors.
  *      
- *   @see <related>
- *   @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
- *   @version $Revision: 1.5 $
+ * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
+ * @version $Revision: 1.6 $
  */
 public interface Interceptor
    extends ContainerPlugin
 {
-   // Constants -----------------------------------------------------
-    
-   // Static --------------------------------------------------------
+   /**
+    * Set the next interceptor in the chain.
+    *
+    * @param interceptor        The next interceptor in the chain.
+    */
+   void setNext(Interceptor interceptor);
 
-   // Public --------------------------------------------------------
-   public void setNext(Interceptor interceptor);
-   public Interceptor getNext();
+   /**
+    * Get the next interceptor in the chain.
+    *
+    * @return   The next interceptor in the chain.
+    */
+   Interceptor getNext();
    
-   public Object invokeHome(MethodInvocation mi)
-      throws Exception;
-      
-   public Object invoke(MethodInvocation mi)
-      throws Exception;
+   /**
+    * ???
+    *
+    * @param mi         ???
+    * @return           ???
+    *
+    * @throws Exception ???
+    */
+   Object invokeHome(MethodInvocation mi) throws Exception;
+
+   /**
+    * ???
+    *
+    * @param mi         ???
+    * @return           ???
+    *
+    * @throws Exception ???
+    */
+   Object invoke(MethodInvocation mi) throws Exception;
 }
 
