@@ -1,4 +1,4 @@
-$Id: recording-issues.txt,v 1.1 2002/10/16 02:43:55 jon Exp $
+$Id: recording-issues.txt,v 1.2 2002/10/23 02:13:05 jon Exp $
 
 This document details all of the database modifications for each
 'action'. In other words, if you want to create a dependency (the
@@ -15,14 +15,100 @@ data is not being saved or it is being saved in the wrong places.
 This document is a work in progress and is currently incomplete, however
 the parts that are currently in the document can be considered complete.
 
+RULE #1:
+    Comments (saved as Attachments) about the Activit(y/ies) are always
+    added to the ActivitySet, not the Activity, regardless of the number
+    of Activities in the ActivitySet.
+
+
+Attributes:
+Dependencies:
+URL:
+Comments:
+User assignment:
+File attachments:
+
 -------------------------------------------------------------------------
+Attributes:
+
+    Create (on issue entry):
+
+        One ActivitySet
+            TYPE_ID = 1
+            CREATED_BY = user that created issue
+            CREATED_DATE = date created
+            AttachmentId = null if no comment added during initial Wizard3 entry otherwise...
+                           (FIXME: the comment attachment is not being associated here)
+                ATTACHMENT_TYPE_ID = 2 (comment)
+                ATTACHMENT_NAME = comment (this column can't be null)
+                ATTACHMENT_DATA = 'reason for attribute being set'
+                ATTACHMENT_FILE_PATH = null
+                ATTACHMENT_MIME_TYPE = text/plain
+                MODIFIED_BY = NULL
+                CREATED_BY = user doing attribute/issue create
+                MODIFIED_DATE = NULL
+                CREATED_DATE = SET to cre date
+                DELETED = 0
+
+        SCARAB_ISSUE_ATTRIBUTE_VALUE (is one entry for each attribute assigned):
+            IssueId = SCB1 (100)
+            AttributeId = *VARIES depending on attribute*
+            NUMERIC_VALUE = 0 || NULL || (value of attribute)
+            OPTION_ID = NULL || (value of attribute)
+            USER_ID = NULL || (value of attribute)
+            VALUE = (text value of attribute)
+            DELETED = 0
+
+        Activity N (one for each attribute that is set)
+            IssueId = SCB1 (100)
+            AttributeId = (the attribute id that is set)
+            TransactionId = ActivitySetId
+            OLD_VALUE = NULL
+            NEW_VALUE = 'alskdjf' (if text attribute)
+            OLD_OPTION_ID = NULL
+            NEW_OPTION_ID = ID (if option attribute)
+            OLD_NUMERIC_VALUE = NULL
+            NEW_NUMERIC_VALUE = value (if integer attribute)
+            DESCRIPTION = 'Summary set to 'alskdjf''
+            AttachmentId = null
+
+    Update (NEED TO FINISH):
+    
+        One ActivitySet
+            TYPE_ID = 2
+            CREATED_BY = user that updated issue
+            CREATED_DATE = date created
+            AttachmentId = comment if provided otherwise null
+                ATTACHMENT_TYPE_ID = 2 (comment)
+                ATTACHMENT_NAME = comment (this column can't be null)
+                ATTACHMENT_DATA = 'reason for attribute being set'
+                ATTACHMENT_FILE_PATH = null
+                ATTACHMENT_MIME_TYPE = text/plain
+                MODIFIED_BY = NULL
+                CREATED_BY = user doing attribute create
+                MODIFIED_DATE = NULL
+                CREATED_DATE = SET to cre date
+                DELETED = 0
+            
+        Activity N
+            IssueId = SCB1 (100)
+            AttributeId = 0
+            TransactionId = ActivitySetId
+            OLD_VALUE = NULL
+            NEW_VALUE = 'SCB2' (issue id)
+            DESCRIPTION = 'Added 'blocking' child dependency on issue SCB2'
+            AttachmentId = null (see above requirement)
+
+    Delete (NEED TO FINISH):
+
 
 Dependencies:
 
     Create:
     
         One ActivitySet
-            AttachmentId = (Need to add a UI box to allow user to describe the change.)
+            TYPE_ID = 2
+            AttachmentId = (FIXME: future, Need to add a UI box to allow user to describe the change.)
         
         Activity 1
             IssueId = SCB1 (100)
@@ -52,7 +138,8 @@ Dependencies:
     Delete:
     
         One ActivitySet
-            AttachmentId = (Need to add a UI box to allow user to describe the change.)
+            TYPE_ID = 2
+            AttachmentId = (FIXME: future, Need to add a UI box to allow user to describe the change.)
         
         Activity 1
             IssueId = SCB1 (100)
@@ -84,7 +171,8 @@ URL:
     Create:
 
         One ActivitySet
-            AttachmentId = (Need to add a UI box to allow user to describe the change.)
+            TYPE_ID = 2
+            AttachmentId = (FIXME: future, Need to add a UI box to allow user to describe the change.)
         
         Activity 1
             IssueId = SCB1 (100)
@@ -108,7 +196,8 @@ URL:
     Update:
 
         One ActivitySet
-            AttachmentId = (Need to add a UI box to allow user to describe the change.)
+            TYPE_ID = 2
+            AttachmentId = (FIXME: future, Need to add a UI box to allow user to describe the change.)
         
         Activity 1
             IssueId = SCB1 (100)
@@ -132,7 +221,8 @@ URL:
     Delete:
 
         One ActivitySet
-            AttachmentId = (Need to add a UI box to allow user to describe the change.)
+            TYPE_ID = 2
+            AttachmentId = (FIXME: future, Need to add a UI box to allow user to describe the change.)
         
         Activity 1
             IssueId = SCB1 (100)
@@ -158,6 +248,7 @@ Comments:
     Create:
     
         One ActivitySet
+            TYPE_ID = 2
             AttachmentId = null
         
         Activity 1
@@ -182,6 +273,7 @@ Comments:
     Update:
     
         One ActivitySet
+            TYPE_ID = 2
             AttachmentId = null
         
         Activity 1
@@ -206,6 +298,7 @@ Comments:
     Delete:
     
         One ActivitySet
+            TYPE_ID = 2
             AttachmentId = null
         
         Activity 1
@@ -231,7 +324,8 @@ User assignment:
 
     Create:
 
-        One ActivitySet (FIXME: currently one ActivitySet per user assigned)
+        One ActivitySet (FIXME: currently one ActivitySet per user assigned, should be one ActivitySet and N Activites. each Activity represents one user)
+            TYPE_ID = 2
             AttachmentId = comment if provided otherwise null
                 ATTACHMENT_TYPE_ID = 4
                 ATTACHMENT_NAME = comment (this column can't be null)
@@ -244,7 +338,7 @@ User assignment:
                 CREATED_DATE = SET to cre date
                 DELETED = 0
 
-        SCARAB_ISSUE_ATTRIBUTE_VALUE (one entry for each user assigned):
+        SCARAB_ISSUE_ATTRIBUTE_VALUE (is one entry for each user assigned):
             IssueId = SCB1 (100)
             AttributeId = Assigned to (102) *VARIES depending on popup menu*
             NUMERIC_VALUE = 0
@@ -253,7 +347,7 @@ User assignment:
             VALUE = the user's login_name
             DELETED = 0
 
-        Activity N (one activity for each user assigned and goes into one activityset for all...see FIXME)
+        Activity N (FIXME: one activity for each user assigned and goes into one activityset for all...see ActivitySet FIXME)
             IssueId = SCB1 (100)
             AttributeId = Assigned to (102) *VARIES depending on popup menu*
             TransactionId = ActivitySetId
@@ -261,21 +355,22 @@ User assignment:
             NEW_USER_ID = userid
             DESCRIPTION = 'Assigned to set to 'derekewla''
             AttachmentId = NULL (FIXME: one attachment per activity is being created. these are duplicates. it should be one attachment to the activityset, not the activity.)
-            END_DATE = NULL (FIXME: currently is being set, but if multiple, last date isn't being set)
+            END_DATE = (LOGIC: if multiple user attributes, the last end date is null)
 
-    Update:
+    Update (change of attribute for user...ie: Assigned to: -> Assigned cc:):
 
         One ActivitySet
+            TYPE_ID = 2
             AttachmentId = comment if provided otherwise null
                 ATTACHMENT_TYPE_ID = 4
                 ATTACHMENT_NAME = comment (this column can't be null)
                 ATTACHMENT_DATA = 'reason for the modification'
                 ATTACHMENT_FILE_PATH = null
                 ATTACHMENT_MIME_TYPE = text/plain
-                MODIFIED_BY = NULL
-                CREATED_BY = user doing assignment (FIXME: currently being set to user being assigned)
-                MODIFIED_DATE = NULL
-                CREATED_DATE = SET to cre date
+                MODIFIED_BY = SET to mod by
+                CREATED_BY = DO NOT CHANGE (FIXME: currently being set to user being assigned)
+                MODIFIED_DATE = SET to mod date
+                CREATED_DATE = DO NOT CHANGE
                 DELETED = 0
 
         SCARAB_ISSUE_ATTRIBUTE_VALUE (uses existing data in db):
@@ -295,11 +390,12 @@ User assignment:
             NEW_USER_ID = userid
             DESCRIPTION = 'Assigned cc set to 'derekewla''
             AttachmentId = NULL (FIXME: one attachment per activity is being created. these are duplicates. it should be one attachment to the activityset, not the activity.)
-            END_DATE = NULL (FIXME: currently is being set, but if multiple, last date isn't being set)
+            END_DATE = (LOGIC: if multiple user attributes, the last end date is null)
 
     Delete:
 
-        One ActivitySet (FIXME: currently one ActivitySet per user assigned)
+        One ActivitySet (FIXME: currently one ActivitySet per user assigned, should be one ActivitySet and N Activites. each Activity represents one user)
+            TYPE_ID = 2
             AttachmentId = comment if provided otherwise null
                 ATTACHMENT_TYPE_ID = 4
                 ATTACHMENT_NAME = comment (this column can't be null)
@@ -329,5 +425,59 @@ User assignment:
             NEW_USER_ID = NULL
             DESCRIPTION = 'User turbine@tigris.org deleted user ddd from Assigned to'
             AttachmentId = NULL (FIXME: one attachment per activity is being created. these are duplicates. it should be one attachment to the activityset, not the activity.)
-            END_DATE = NULL (FIXME: currently is being set, but if multiple, last date isn't being set)
+            END_DATE = (LOGIC: if multiple user attributes, the last end date is null)
 
+File attachments:
+
+    Create:
+
+        One ActivitySet
+            TYPE_ID = 2 (or 1 depending on if this is an attachment during issue create/1 or issue edit/2)
+            AttachmentId = null (FIXME: currently is set to attachment in activity, should be set to attachment comment on creation. ui needs to be added for this.)
+
+        Activity 1
+            IssueId = SCB1 (100)
+            AttributeId = 0
+            TransactionId = ActivitySetId
+            empty for other columns
+            DESCRIPTION = 'added file 'scarab-issues-export.xml' at mod100/0/SCB1_120_scarab-issues-export.xml'
+            AttachmentId = 
+                ATTACHMENT_TYPE_ID = 1
+                ATTACHMENT_NAME = data from description field
+                ATTACHMENT_DATA = NULL
+                ATTACHMENT_FILE_PATH = Value.patch
+                ATTACHMENT_MIME_TYPE = text/plain (mime type of file uploaded)
+                MODIFIED_BY = NULL
+                CREATED_BY = user doing upload
+                MODIFIED_DATE = NULL
+                CREATED_DATE = SET to cre date
+                DELETED = 0
+
+    Update:
+        FIXME - needs to be implemented
+                   
+    Delete:
+    
+        One ActivitySet
+            TYPE_ID = 2
+            AttachmentId = null (FIXME: allow reason for deletion of file)
+
+        Activity 1
+            IssueId = SCB1 (100)
+            AttributeId = 0
+            TransactionId = ActivitySetId
+            empty for other columns
+
+            DESCRIPTION = 'deleted attachment for file 'scarab-issues-export.xml'; path=mod100/0/SCB1_120_scarab-issues-export.xml'
+            AttachmentId = 
+                ATTACHMENT_TYPE_ID = 1
+                ATTACHMENT_NAME = data from description field
+                ATTACHMENT_DATA = NULL
+                ATTACHMENT_FILE_PATH = Value.patch
+                ATTACHMENT_MIME_TYPE = text/plain (mime type of file uploaded)
+                MODIFIED_BY = SET to mod user
+                CREATED_BY = DO NOT CHANGE
+                MODIFIED_DATE = SET to mod date
+                CREATED_DATE = DO NOT CHANGE
+                DELETED = 1
+    
