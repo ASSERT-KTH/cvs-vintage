@@ -59,7 +59,8 @@ public class Query
             setTypeId(USER__PK);
 
             // Send Email to module owner to approve new query
-            if (context != null) {
+            if (context != null)
+            {
                 context.put("user", user);
                 context.put("module", module);
 
