@@ -16,7 +16,7 @@
         early tests.
     -->
 
-     <property name="revision" value="$Revision: 1.41 $" />  
+     <property name="revision" value="$Revision: 1.42 $" />  
      <property name="host" value="127.0.0.1" />
      <property name="port"     value="8080" />
      <property name="colonPort" value=":${port}" />
@@ -1380,6 +1380,24 @@ mod_webapp into mod_jk )
           <responseMatch match="getRequestURI: /test/jsp/ShowPathInfo.jsp"/>
       </httpClient>
    </target>
+
+   <!-- ==================== Mangler tests ====================  -->
+
+   <target name="mangler" depends="init">
+      <httpClient>
+          <comment>Number as first char of JSP FileName</comment>
+          <httpRequest path="/test/jsp/mangler/1test.jsp" />
+          <httpStatusMatch match="200" />
+          <responseMatch match="Test Passed"/>
+      </httpClient>
+      <httpClient>
+          <comment>Number as first char of Directory Name</comment>
+          <httpRequest path="/test/jsp/mangler/1test/test.jsp" />
+          <httpStatusMatch match="200" />
+          <responseMatch match="Test Passed"/>
+      </httpClient>
+   </target>
+
 
    <!-- ==================== All targets ====================  -->
    <target name="client" depends="file,params,writer,dispatch,get,requestMap,post,wrong_request,restricted,jsp,unavailable,headers,security_chk,aaa">
