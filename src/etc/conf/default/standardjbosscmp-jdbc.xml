@@ -7,7 +7,7 @@
 <!--                                                                       -->
 <!-- ===================================================================== -->
 
-<!-- $Id: standardjbosscmp-jdbc.xml,v 1.53 2002/12/18 07:36:32 loubyansky Exp $ -->
+<!-- $Id: standardjbosscmp-jdbc.xml,v 1.54 2003/01/27 22:08:41 binaryfeed Exp $ -->
 
 <jbosscmp-jdbc>
    
@@ -1217,8 +1217,17 @@
          <alias-header-suffix>_</alias-header-suffix>
          <alias-max-length>32</alias-max-length>
          <subquery-supported>true</subquery-supported>
-         <true-mapping>1</true-mapping>
-         <false-mapping>0</false-mapping>
+         <true-mapping>TRUE</true-mapping>
+         <false-mapping>FALSE</false-mapping>
+
+         <function-mapping>
+            <function-name>lcase</function-name>
+            <function-sql>lower(?1)</function-sql>
+         </function-mapping>    
+         <function-mapping>
+            <function-name>ucase</function-name>
+            <function-sql>upper(?1)</function-sql>
+         </function-mapping>
 
          <mapping>
             <java-type>java.lang.Character</java-type>
@@ -1247,7 +1256,7 @@
          </mapping>
          <mapping>
             <java-type>java.lang.Boolean</java-type>
-            <jdbc-type>BINARY</jdbc-type>
+            <jdbc-type>BIT</jdbc-type>
             <sql-type>BOOLEAN</sql-type>
          </mapping>
          <mapping>
