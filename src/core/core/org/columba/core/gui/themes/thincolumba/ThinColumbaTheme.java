@@ -178,8 +178,14 @@ public class ThinColumbaTheme extends DefaultCTheme {
 			"RadioButtonMenuItem.selectionBackground",
 			new ColorUIResource(235, 235, 235));
 
-		table.put("ToolTip.background", new ColorUIResource(235, 235, 235));
-
+		// set soft yellow background
+		table.put("ToolTip.background", new ColorUIResource(255,255,197));
+		Object toolTipBorder = new UIDefaults.ProxyLazyValue(
+			  "javax.swing.plaf.BorderUIResource$LineBorderUIResource",
+			  new Object[] {new ColorUIResource(0,0,0)});
+			  
+		table.put("ToolTip.border",toolTipBorder);
+		
 		table.put(
 			"SplitPane.border",
 			"javax.swing.plaf.metal.MetalBorders$TableHeaderBorder");
@@ -198,6 +204,7 @@ public class ThinColumbaTheme extends DefaultCTheme {
 		table.put("Menu.checkIcon", new ImageIcon("") );
 		table.put("MenuItem.checkIcon", new ImageIcon(""));
 		*/
+		
 		
 		table.put("CheckBoxMenuItem.checkIcon", new ImageIcon(""));
 		table.put("RadioButtonMenuItem.checkIcon", new ImageIcon("") );

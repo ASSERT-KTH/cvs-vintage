@@ -1,8 +1,11 @@
 package org.columba.core.gui.themes.thincolumba;
 
+import java.awt.Dimension;
 import java.awt.Graphics;
 
+import javax.swing.Icon;
 import javax.swing.JComponent;
+import javax.swing.JMenuItem;
 import javax.swing.JRadioButtonMenuItem;
 import javax.swing.plaf.ComponentUI;
 import javax.swing.plaf.basic.BasicRadioButtonMenuItemUI;
@@ -20,10 +23,34 @@ import org.columba.core.gui.util.ImageLoader;
  */
 public class ThinRadioButtonMenuItemUI extends BasicRadioButtonMenuItemUI {
 
+	public static EmptyIcon emptyIcon = new EmptyIcon();
+	
 	public static ComponentUI createUI(JComponent c) {
 		return new ThinRadioButtonMenuItemUI();
 	}
 
+	protected Dimension getPreferredMenuItemSize(
+		JComponent c,
+		Icon checkIcon,
+		Icon arrowIcon,
+		int defaultTextIconGap) {
+		JMenuItem b = (JMenuItem) c;
+		Icon icon = (Icon) b.getIcon();
+
+		if (icon == null)
+			b.setIcon(new EmptyIcon());
+		Dimension d =
+			super.getPreferredMenuItemSize(
+				c,
+				checkIcon,
+				arrowIcon,
+				defaultTextIconGap);
+
+		
+		
+		return d;
+	}
+	
 	public void paint(Graphics g, JComponent c) {
 		JRadioButtonMenuItem item = (JRadioButtonMenuItem) c;
 		
@@ -32,11 +59,11 @@ public class ThinRadioButtonMenuItemUI extends BasicRadioButtonMenuItemUI {
 		
 		if ( item.isSelected() )
 		{
-			item.setIcon( ImageLoader.getSmallImageIcon("menucheckedbox.png") );
+			item.setIcon( ImageLoader.getSmallImageIcon("radiobutton.png") );
 		}
 		else
 		{
-			item.setIcon( new EmptyIcon() );
+			item.setIcon( emptyIcon );
 		}
 		super.paint(g, c);
 	}
