@@ -11,7 +11,7 @@
    #set ($sortPolarity = "asc")
 #end
 
-#set ($allAttributes = $scarabG.getAllAttributes($sortColumn, $sortPolarity))
+#set ($allAttributes = $scarabG.getAllAttributes("non-user", true, $sortColumn, $sortPolarity))
 #set ($attributes = $allAttributes)
 #set ($searchString = $data.Parameters.getString("searchString" , ""))
 #set ($searchField = $data.Parameters.getString("searchField" , ""))

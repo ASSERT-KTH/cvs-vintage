@@ -60,6 +60,7 @@ import org.tigris.scarab.om.AttributeManager;
 import org.tigris.scarab.om.AttributePeer;
 import org.tigris.scarab.om.ScarabUser;
 import org.tigris.scarab.util.ScarabConstants;
+import org.tigris.scarab.services.cache.ScarabCache;
 import org.tigris.scarab.tools.ScarabRequestTool;
 import org.tigris.scarab.tools.ScarabLocalizationTool;
 
@@ -67,7 +68,7 @@ import org.tigris.scarab.tools.ScarabLocalizationTool;
  * This class deals with modifying Global Attributes.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: GlobalAttributes.java,v 1.27 2003/02/08 00:04:44 elicia Exp $
+ * @version $Id: GlobalAttributes.java,v 1.28 2003/02/12 19:23:05 elicia Exp $
  */
 public class GlobalAttributes extends RequireLoginFirstAction
 {
@@ -101,6 +102,7 @@ public class GlobalAttributes extends RequireLoginFirstAction
                 attr.save();
             }
         }
+        ScarabCache.clear();
         getScarabRequestTool(context).setConfirmMessage(getLocalizationTool(context).get(DEFAULT_MSG));
     }
 

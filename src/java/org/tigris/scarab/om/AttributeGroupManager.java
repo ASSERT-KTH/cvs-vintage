@@ -58,6 +58,7 @@ public class AttributeGroupManager
     protected void registerAsListener()
     {
         RAttributeAttributeGroupManager.addCacheListener(this);
+        AttributeManager.addCacheListener(this);
     }
 
     // -------------------------------------------------------------------
@@ -76,6 +77,10 @@ public class AttributeGroupManager
                     AttributeGroup.GET_ATTRIBUTES);
             }
         }
+        else if (om instanceof Attribute) 
+        {
+            getMethodResult().clear();
+        }
     }
 
     public void refreshedObject(Persistent om)
@@ -88,6 +93,8 @@ public class AttributeGroupManager
     {
         List interestedCacheFields = new LinkedList();
         interestedCacheFields.add(RAttributeAttributeGroupPeer.GROUP_ID);
+        interestedCacheFields.add(AttributePeer.ATTRIBUTE_ID);
+        interestedCacheFields.add(AttributeGroupPeer.ATTRIBUTE_GROUP_ID);
         return interestedCacheFields;
     }
 }

@@ -26,7 +26,7 @@
 #if (!$sortPolarity || $sortPolarity.length() == 0)
    #set ($sortPolarity = "asc")
 #end
-#set ($userAttrs = $scarabG.getUserAttributes($sortColumn, $sortPolarity))
+#set ($userAttrs = $scarabG.getUserAttributes(true, $sortColumn, $sortPolarity))
 
 ## PAGINATION
 ## if results exceed limit, get subset list

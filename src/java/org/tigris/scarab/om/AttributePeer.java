@@ -46,6 +46,7 @@ package org.tigris.scarab.om;
  * individuals on behalf of Collab.Net.
  */ 
 
+import java.io.Serializable;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -79,34 +80,29 @@ public class AttributePeer
 
     private static final String ATTRIBUTE_PEER = 
         "AttributePeer";
-    private static final String GET_DATA_ATTRIBUTES = 
-        "getDataAttributes";
-    private static final String GET_USER_ATTRIBUTES = 
-        "getUserAttributes";
 
     /**
      *  Gets a List of all of the Attribute objects in the database.
      */
-    public static List getAttributes(String attributeType,
+    public static List getAttributes(String attributeType, boolean includeDeleted,
                                      String sortColumn, String sortPolarity)
         throws Exception
     {
         List result = null;
-        String cacheKey = null;
-        if (attributeType.equals(NON_USER))
-        {  
-            cacheKey = GET_DATA_ATTRIBUTES;
-        }
-        else
-        {
-            cacheKey = GET_USER_ATTRIBUTES;
-        }
-        Object obj = ScarabCache.get(ATTRIBUTE_PEER, cacheKey);
+        Boolean deletedBool = (includeDeleted ? Boolean.TRUE : Boolean.FALSE);
+        // 4th element is ignored due to bug in torque that is being
+        // Matched in ScarabCache
+        Serializable[] keys = {ATTRIBUTE_PEER, attributeType, deletedBool, 
+                               sortColumn, null, sortPolarity};
+        Object obj = ScarabCache.get(keys); 
         if (obj == null) 
         {        
             Criteria crit = new Criteria();
             crit.add(AttributePeer.ATTRIBUTE_ID, 0, Criteria.NOT_EQUAL);
-            //crit.add(AttributePeer.DELETED, 0);
+            if (!includeDeleted)
+            {
+                crit.add(AttributePeer.DELETED, 0);
+            }
             // add user type criteria  - user or non-user
             if (attributeType.equals("user"))
             {
@@ -153,7 +149,7 @@ public class AttributePeer
             result = sortAttributesByCreatingUser(result, sortPolarity);
         }
                 
-        ScarabCache.put(result, ATTRIBUTE_PEER, cacheKey);
+        ScarabCache.put(result, keys);
         return result;
     }
 
@@ -225,7 +221,7 @@ public class AttributePeer
     public static List getAttributes()
         throws Exception
     {
-        return getAttributes(NON_USER, AttributePeer.ATTRIBUTE_NAME, "asc");
+        return getAttributes(NON_USER, false, AttributePeer.ATTRIBUTE_NAME, "asc");
     }
 
     /**
@@ -234,7 +230,17 @@ public class AttributePeer
     public static List getAttributes(String attributeType)
         throws Exception
     {
-        return getAttributes(attributeType, AttributePeer.ATTRIBUTE_NAME, 
+        return getAttributes(attributeType, false, AttributePeer.ATTRIBUTE_NAME, 
+                             "asc");
+    }
+
+    /**
+     *  Gets a List of Attribute objects in the database.
+     */
+    public static List getAttributes(String attributeType, boolean includeDeleted)
+        throws Exception
+    {
+        return getAttributes(attributeType, includeDeleted, AttributePeer.ATTRIBUTE_NAME, 
                              "asc");
     }
 
@@ -246,7 +252,7 @@ public class AttributePeer
                                      String sortPolarity)
         throws Exception
     {
-        return getAttributes(NON_USER, sortColumn, sortPolarity);
+        return getAttributes(NON_USER, false, sortColumn, sortPolarity);
     }
 
     private static List sortAttributesByCreatingUser(List result,
