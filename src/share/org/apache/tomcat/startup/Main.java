@@ -1,4 +1,4 @@
-/*
+/* $Id: Main.java,v 1.26 2001/02/26 09:42:30 nacho Exp $
  * ====================================================================
  *
  * The Apache Software License, Version 1.1
@@ -69,22 +69,101 @@ import java.net.*;
 import org.apache.tomcat.util.IntrospectionUtils;
 import org.apache.tomcat.util.compat.Jdk11Compat;
 
-// Depends:
-// JDK1.1
-// tomcat.util.IntrospectionUtils, util.compat
 
 /**
- * Starter for Tomcat.
- *
- * This is a replacement/enhancement for the .sh and .bat files - you can
- * use JDK1.2 "java -jar tomcat.jar", or ( for jdk 1.1 ) you just need to
- * include a single jar file in the classpath.
- *
- * @author Costin Manolache
- * @author Ignacio J. Ortega
- *
+	Starter class for Tomcat.
+	<p>
+	This is a replacement/enhancement for the .sh and .bat files - you can
+	use JDK1.2 "java -jar tomcat.jar", or ( for jdk 1.1 ) you just need to
+	include a single jar file in the classpath.
+	<p>
+	This class creates three class loader instances: 
+	<ol>
+	<li>a 'common' loader to be the parent of both the server
+	    container and also webapp loaders.</li>
+	<li>a 'shared' loader to load classes used by all webapps, but
+	    not the servlet engine.</i>
+	<li>a 'server' loader exclusively for the tomcat servlet engine.</li>
+	</ol>
+	Both the 'shared' loader and 'server' loader have the common loader as
+	the parent class loader.  The class path for each is assembled like so:
+	<ul>
+	<li>common - all elements of the <code>org.apache.tomcat.common.classpath</code>
+	      property plus all *.jar files found in ${TOMCAT_HOME}/lib/common/.</li>
+	<li>shared - all elements of the <code>org.apache.tomcat.shared.classpath</code>
+	      property plus all *.jar files found in ${TOMCAT_HOME}/lib/shared/.</i>
+	<li>server - all jar files found in ${TOMCAT_HOME}/lib, plus the class
+	      folder ${TOMCAT_HOME}/classes and finally also the utility jar
+	      file ${JAVA_HOME}/lib/tools.jar.</li>
+	</ol>
+	After creating the above class loaders, this class instantiates, initializes
+	and starts an instance of the class <code>org.apache.tomcat.startup.Tomcat</code>.
+	<p>
+	@author Costin Manolache
+	@author Ignacio J. Ortega
+	@author Mel Martinez mmartinez@g1440.com
+	@version $Revision: 1.26 $ $Date: 2001/02/26 09:42:30 $
  */
 public class Main {
+
+    /**
+            name of configuration property to set (using the -D option at
+            startup or via .properties file) to specify the classpath
+            to be used by the ClassLoader shared amongst all web applications
+            (but not by the servlet container).  Specify this string as
+            normal file paths separated by the path.seperator delimiter for
+            the host platform.  Example (unix):
+            <pre><code>
+            * org.apache.tomcat.shared.classpath = /home/mypath/lib/mylib.jar: \
+            *                                      /home/mypath/classes/
+            </code></pre>
+    */
+    public static final String TOMCAT_SHARED_CLASSPATH_PROPERTY =
+            "org.apache.tomcat.shared.classpath";
+
+    /**
+            the classpath shared among all web apps (in addition to any
+            jar files placed directly in $TOMCAT_HOME/lib/shared/).
+    */
+    public static final String TOMCAT_SHARED_CLASSPATH;
+
+    /**
+            name of configuration property to set (using the -D option at
+            startup or via .properties file) to specify the classpath
+            to be used by the ClassLoader common to both the servlet engine
+            and all web applications.  Specify this string as
+            normal file paths separated by the path.seperator delimiter for
+            the host platform.  Example (unix):
+            <pre><code>
+            * org.apache.tomcat.common.classpath = /home/mypath/lib/mylib.jar: \
+            *                                      /home/mypath/classes/
+            </code></pre>
+    */
+    public static final String TOMCAT_COMMON_CLASSPATH_PROPERTY =
+            "org.apache.tomcat.common.classpath";
+
+    /**
+            the classpath common to both the servlet engine and also to
+            any web applications served by it (in addition to any
+            jar files placed directly in $TOMCAT_HOME/lib/common/).
+    */
+    public static final String TOMCAT_COMMON_CLASSPATH;
+
+    static{
+        String s=null;
+        s = System.getProperty(TOMCAT_SHARED_CLASSPATH_PROPERTY);
+        if(s==null){
+            s="";
+        }
+        TOMCAT_SHARED_CLASSPATH=s;
+        s=null;
+        s = System.getProperty(TOMCAT_COMMON_CLASSPATH_PROPERTY);
+        if(s==null){
+            s="";
+        }
+        TOMCAT_COMMON_CLASSPATH=s;
+    }
+
     String installDir;
     String libBase;
     String serverBase;
@@ -95,7 +174,7 @@ public class Main {
     // if needed
     // null means user didn't set one
     String configFile;
-    
+
     public Main() {
     }
 
@@ -110,108 +189,137 @@ public class Main {
     }
 
     void log( String s ) {
-	System.out.println("TomcatStartup: " + s );
+	System.err.println("TomcatStartup: " + s );
     }
 
     // -------------------- Utils --------------------
-    
-    public String checkDir( String base ) {
+
+    public static String checkDir( String base ) {
         String r=null;
         try {
-	    File f = new File(base);
-	    r = f.getCanonicalPath();
-	    if( ! r.endsWith("/") ) r+="/";
+            File f = new File(base);
+            r = f.getCanonicalPath();
+            if( ! r.endsWith("/") ) r+="/";
         } catch (IOException ioe) {
-	    ioe.printStackTrace();
+            ioe.printStackTrace();
             r=base;
         }
         return r;
     }
 
-    URL getURL( String base, String file ) {
+    public static URL getURL( String base, String file ) {
         try {
-	    if( ! base.endsWith( "/" ) )
-		base=base + "/";
-
-	    File f = new File(base + file);
-	    String path = f.getCanonicalPath();
-	    if( f.isDirectory() )
-		path +="/";
-	    return new URL( "file", null, path );
+            File baseF = new File(base);
+            File f = new File(baseF,file);
+            String path = f.getCanonicalPath();
+            if( f.isDirectory() ){
+                    path +="/";
+            }
+            return new URL( "file", null, path );
         } catch (Exception ex) {
-	    ex.printStackTrace();
-	    return null;
+            ex.printStackTrace();
+            return null;
         }
     }
 
     public String getServerDir() {
-	if( libBase!=null ) return libBase;
-
-	if( homeDir!=null ) libBase=checkDir( homeDir + "/lib");
-	else libBase=checkDir("./lib");
-	return libBase;
+        if( libBase!=null ){
+            return libBase;
+        }
+        if( homeDir!=null ){
+            libBase=checkDir( homeDir + "/lib");
+        }else{
+            libBase=checkDir("./lib");
+        }
+        return libBase;
     }
+
     public String getSharedDir() {
-	if( serverBase!=null ) return serverBase;
-
-	if( homeDir!=null ) serverBase=checkDir( homeDir + "/lib/shared");
-	else serverBase=checkDir("./lib/shared");
-	return serverBase;
+        if( serverBase!=null ){
+            return serverBase;
+        }
+        if( homeDir!=null ){
+            serverBase=checkDir( homeDir + "/lib/shared");
+        }else{
+            serverBase=checkDir("./lib/shared");
+        }
+        return serverBase;
     }
+
     public String getCommonDir() {
-	if( commonBase!=null ) return commonBase;
-
-	if( homeDir!=null ) commonBase=checkDir( homeDir + "/lib/common");
-	else commonBase=checkDir("./lib/common");
-	return commonBase;
+        if( commonBase!=null ){
+            return commonBase;
+        }
+        if( homeDir!=null ){
+            commonBase=checkDir( homeDir + "/lib/common");
+        }else{
+            commonBase=checkDir("./lib/common");
+        }
+        return commonBase;
     }
+
 
     static final Jdk11Compat jdk11Compat=Jdk11Compat.getJdkCompat();
-    
-    void execute( String args[] ) throws Exception {
+
+    protected void execute( String args[] ) throws Exception {
 
         try {
             homeDir=IntrospectionUtils.guessHome("tomcat.home", "tomcat.jar");
-	    // System.out.println("Guessed home=" + homeDir);
 
-	    ClassLoader parentL=this.getClass().getClassLoader();
-	    //System.out.println("ParentL " + parentL );
+            ClassLoader parentL=this.getClass().getClassLoader();
+
             // the server classloader loads from classes dir too and from tools.jar
-            Vector urlV=new Vector();
-            urlV.addElement( getURL(  getServerDir() ,"../classes/" ));
+
+            Vector serverJars=new Vector();
+            serverJars.addElement( getURL(  getServerDir() ,"../classes/" ));
             Vector serverUrlV =getClassPathV(getServerDir());
-            for(int i=0; i < serverUrlV.size();i++)
-                urlV.addElement(serverUrlV.elementAt(i));
-	    urlV.addElement( new URL( "file", null ,
-				      System.getProperty( "java.home" ) +
-				      "/../lib/tools.jar"));
-            URL[] serverClassPath=getURLs(urlV);
-            // ClassLoader for webapps it uses a shared dir as repository,
-	    // distinct from lib
+            for(int i=0; i < serverUrlV.size();i++){
+                serverJars.addElement(serverUrlV.elementAt(i));
+            }
+            serverJars.addElement( new URL( "file", null ,
+                System.getProperty( "java.home" ) + "/../lib/tools.jar"));
 
-            URL[] sharedClassPath=getURLs(getClassPathV(getSharedDir()));
-            URL[] commonClassPath=getURLs(getClassPathV(getCommonDir()));
-
-	    ClassLoader commonCl=
-		jdk11Compat.newClassLoaderInstance(commonClassPath , parentL );
-	    ClassLoader sharedCl=
-		jdk11Compat.newClassLoaderInstance(sharedClassPath ,commonCl );
+            Vector commonDirJars = getClassPathV(getCommonDir());
+            Vector commonJars = getJarsFromClassPath(TOMCAT_COMMON_CLASSPATH);
+            Enumeration jars = commonDirJars.elements();
+            while(jars.hasMoreElements()){
+                URL url = (URL)jars.nextElement();
+                if(!commonJars.contains(url)){
+                    commonJars.addElement(url);
+                }
+            }
+            Vector sharedDirJars = getClassPathV(getSharedDir());
+            Vector sharedJars = getJarsFromClassPath(TOMCAT_SHARED_CLASSPATH);
+            jars = sharedDirJars.elements();
+            while(jars.hasMoreElements()){
+                URL url = (URL)jars.nextElement();
+                if(!sharedJars.contains(url)){
+                    sharedJars.addElement(url);
+                }
+            }
+            URL[] commonClassPath=getURLs(commonJars);
+            ClassLoader commonCl=
+                    jdk11Compat.newClassLoaderInstance(commonClassPath ,parentL);
+            URL[] sharedClassPath=getURLs(sharedJars);
+            ClassLoader sharedCl=
+                    jdk11Compat.newClassLoaderInstance(sharedClassPath ,commonCl);
+            URL[] serverClassPath=getURLs(serverJars);
             ClassLoader serverCl=
-		jdk11Compat.newClassLoaderInstance(serverClassPath ,commonCl);
+                    jdk11Compat.newClassLoaderInstance(serverClassPath ,commonCl);
 
-	    Class cls=serverCl.loadClass("org.apache.tomcat.startup.Tomcat");
-	    Object proxy=cls.newInstance();
 
-            IntrospectionUtils.setAttribute( proxy,"args", args );
-	    IntrospectionUtils.setAttribute( proxy,"home", homeDir );
-            IntrospectionUtils.setAttribute( proxy,"parentClassLoader",
-					     sharedCl );
+            Class cls=serverCl.loadClass("org.apache.tomcat.startup.Tomcat");
+            Object proxy=cls.newInstance();
+
+            IntrospectionUtils.setAttribute(proxy,"args", args );
+            IntrospectionUtils.setAttribute(proxy,"home", homeDir );
+            IntrospectionUtils.setAttribute(proxy,"parentClassLoader",sharedCl);
             IntrospectionUtils.execute(  proxy, "execute" );
-	    return;
-	} catch( Exception ex ) {
-	    System.out.println("Guessed home=" + homeDir);
-	    ex.printStackTrace();
-	}
+            return;
+        } catch( Exception ex ) {
+            System.out.println("Guessed home=" + homeDir);
+            ex.printStackTrace();
+        }
     }
 
     // -------------------- Command-line args processing --------------------
@@ -257,6 +365,37 @@ public class Main {
 	}
     }
 */
+    /**
+            add elements from the classpath <i>cp</i> to a Vector
+            <i>jars</i> as file URLs (We use Vector for JDK 1.1 compat).
+            <p>
+            @param <b>cp</b> a String classpath of directory or jar file
+                            elements separated by path.separator delimiters.
+            @return a Vector of URLs.
+    */
+    public static Vector getJarsFromClassPath(String cp)
+            throws IOException,MalformedURLException{
+        Vector jars = new Vector();
+        String sep = System.getProperty("path.separator");
+        String token;
+        StringTokenizer st;
+        if(cp!=null){
+            st = new StringTokenizer(cp,sep);
+            while(st.hasMoreTokens()){
+                File f = new File(st.nextToken());
+                String path = f.getCanonicalPath();
+                if(f.isDirectory()){
+                        path += "/";
+                }
+                URL url = new URL("file",null,path);
+                if(!jars.contains(url)){
+                        jars.addElement(url);
+                }
+            }
+        }
+        return jars;
+    }
+
     public String[] getJarFiles(String ld) {
 	File dir = new File(ld);
         String[] names=null;
@@ -305,13 +444,11 @@ public class Main {
 
     private URL[] getURLs(Vector v){
         URL[] urls=new URL[ v.size() ];
-	for( int i=0; i<v.size(); i++ ) {
+        for( int i=0; i<v.size(); i++ ) {
             urls[i]=(URL)v.elementAt( i );
         }
         return urls;
     }
-
-
 
 }
 
