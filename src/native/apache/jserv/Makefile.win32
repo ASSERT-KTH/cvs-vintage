@@ -1,6 +1,6 @@
 #############################################
 # Apache mod_jserv Makefile for Win32 systems
-# $Revision: 1.2 $
+# $Revision: 1.3 $
 #############################################
 
 #####################
@@ -67,7 +67,7 @@ JSERV_C_OPTS = /nologo /MD /W3 /GX /O2 /YX  /FD /c /Fp"ApacheModuleJServ.pch" \
 ################
 JSERV_L_OPTS = /nologo "$(APACHE_SRC)\CoreR\ApacheCore.lib" kernel32.lib user32.lib \
                gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib \
-               wsock32.lib /subsystem:console /incremental:no /machine:I386 \
+               ws2_32.lib /subsystem:console /incremental:no /machine:I386 \
                /pdb:".\ApacheModuleJServ.pdb" /NODEFAULTLIB:LIBC
                
 ##################################
