@@ -21,7 +21,7 @@ import org.apache.log4j.Category;
  * @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>.
  * @author <a href="mailto:hiram.chirino@jboss.org">Hiram Chirino</a>.
  * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
- * @version $Revision: 1.14 $
+ * @version $Revision: 1.15 $
  */
 public class Info
    implements InfoMBean, MBeanRegistration
@@ -58,10 +58,12 @@ public class Info
                System.getProperty("os.arch"));
 
       // dump out the entire system properties if debug is enabled
-      if (log.isDebugEnabled()) {
+      if (log.isDebugEnabled())
+      {
          log.debug("+++ Full System Properties Dump");
          Enumeration names= System.getProperties().propertyNames();
-         while (names.hasMoreElements()) {
+         while (names.hasMoreElements())
+         {
             String pname= (String) names.nextElement();
             log.debug(pname + ": " + System.getProperty(pname));
          }
@@ -69,22 +71,27 @@ public class Info
                 
       // MF TODO: say everything that needs to be said here:
       // copyright, included libs and TM, contributor and (C) jboss org 2000
-      return new ObjectName(OBJECT_NAME);
+      name = name == null ? new ObjectName(OBJECT_NAME) : name;
+      return name;
    }
 
-   public void postRegister(Boolean registrationDone) {
+   public void postRegister(Boolean registrationDone)
+   {
       // empty
    }
 
-   public void preDeregister() throws Exception {
+   public void preDeregister() throws Exception
+   {
       // empty
    }
 
-   public void postDeregister() {
+   public void postDeregister()
+   {
       // empty
    }
 
-   public String getThreadGroupInfo(ThreadGroup group) {
+   public String getThreadGroupInfo(ThreadGroup group)
+   {
       StringBuffer rc= new StringBuffer();
 
       rc.append("<BR><B>");
@@ -96,7 +103,8 @@ public class Info
       rc.append("<blockquote>");
       Thread threads[]= new Thread[group.activeCount()];
       group.enumerate(threads, false);
-      for (int i= 0; i < threads.length && threads[i] != null; i++) {
+      for (int i= 0; i < threads.length && threads[i] != null; i++)
+      {
          rc.append("<B>");
          rc.append("Thread: " + threads[i].getName());
          rc.append("</B> : ");
@@ -107,14 +115,16 @@ public class Info
 
       ThreadGroup groups[]= new ThreadGroup[group.activeGroupCount()];
       group.enumerate(groups, false);
-      for (int i= 0; i < groups.length && groups[i] != null; i++) {
+      for (int i= 0; i < groups.length && groups[i] != null; i++)
+      {
          rc.append(getThreadGroupInfo(groups[i]));
       }
       rc.append("</blockquote>");
       return rc.toString();
    }
 
-   public String runGarbageCollector() {
+   public String runGarbageCollector()
+   {
       StringBuffer buff = new StringBuffer();
       buff.append("<h3>Before</h3>");
       buff.append(listMemoryUsage());
@@ -127,7 +137,8 @@ public class Info
       return buff.toString();
    }
    
-   public String listMemoryUsage() {
+   public String listMemoryUsage()
+   {
       String rc= "<P><B>Total Memory: </B>" +
          (Runtime.getRuntime().totalMemory()) +
          " </P>" + "<P><B>Free Memory: </B>" +
@@ -135,7 +146,8 @@ public class Info
       return rc;
    }
 
-   public String listSystemInfo() {
+   public String listSystemInfo()
+   {
       // Dump out basic info as INFO priority msgs
       StringBuffer rc= new StringBuffer();
       rc.append("<pre>");
@@ -160,10 +172,12 @@ public class Info
       return rc.toString();
    }
 
-   public String listThreadDump() {
+   public String listThreadDump()
+   {
       // Get the root thread group
       ThreadGroup root= Thread.currentThread().getThreadGroup();
-      while (root.getParent() != null) {
+      while (root.getParent() != null)
+      {
          root = root.getParent();
       }
 
@@ -181,17 +195,39 @@ public class Info
       return rc;
    }
 
+   /** Display the java.lang.Package info for the pkgName  */
+   public String displayPackageInfo(String pkgName)
+   {
+      Package pkg = Package.getPackage(pkgName);
+      if( pkg == null )
+         return "<h2>Package: "+pkgName+" Not Found!</h2>\n";
+
+      StringBuffer info = new StringBuffer("<h2>Package: "+pkgName+"</h2>\n");
+      info.append("<pre>\n");
+      info.append("SpecificationTitle: "+pkg.getSpecificationTitle());
+      info.append("\nSpecificationVersion: "+pkg.getSpecificationVersion());
+      info.append("\nSpecificationVendor: "+pkg.getSpecificationVendor());
+      info.append("\nImplementationTitle: "+pkg.getImplementationTitle());
+      info.append("\nImplementationVersion: "+pkg.getImplementationVersion());
+      info.append("\nImplementationVendor: "+pkg.getImplementationVendor());
+      info.append("\nisSealed: "+pkg.isSealed());
+      info.append("</pre>\n");
+      return info.toString();
+   }
+
    /**
     * Enable or disable tracing method calls at the Runtime level.
     */
-   public void traceMethodCalls(final boolean flag) {
+   public void traceMethodCalls(final boolean flag)
+   {
       Runtime.getRuntime().traceMethodCalls(flag);
    }
    
    /**
     * Enable or disable tracing instructions the Runtime level.
     */
-   public void traceInstructions(final boolean flag) {
+   public void traceInstructions(final boolean flag)
+   {
       Runtime.getRuntime().traceInstructions(flag);
    }
 }

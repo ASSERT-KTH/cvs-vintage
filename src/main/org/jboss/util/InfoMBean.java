@@ -14,14 +14,16 @@ import java.lang.Object;
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>.
  * @author <a href="mailto:hiram.chirino@jboss.org">Hiram Chirino</a>.
  * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
- * @version $Revision: 1.7 $
+ * @version $Revision: 1.8 $
  */
 public interface InfoMBean
 {
-   String listMemoryUsage();
-   String listSystemInfo();
-   String listThreadDump();
-   String runGarbageCollector();
-   void traceMethodCalls(boolean flag);
-   void traceInstructions(boolean flag);
+   public String listMemoryUsage();
+   public String listSystemInfo();
+   public String listThreadDump();
+   public String runGarbageCollector();
+   /** Display the java.lang.Package info for the pkgName  */
+   public String displayPackageInfo(String pkgName);
+   public void traceMethodCalls(boolean flag);
+   public void traceInstructions(boolean flag);
 }
