@@ -25,6 +25,7 @@
   <!-- External packages we depend on -->
 
   <property name="ant.home" value="../jakarta-ant"/>
+  <property name="watchdog.home" value="../../build/watchdog"/>
   <property name="jaxp" value="../jaxp-1.0.1"/>
 
   <property name="servlet22.jar" value="bin/servlet22.jar"/>
@@ -331,11 +332,11 @@
     </copy>
     <copy tofile="${tomcat.build}/webapps/admin/WEB-INF/lib/ant.jar" 
 	  file="${ant.home}/lib/ant.jar"/>
-    <!-- temp - the old GTest -->
-    <javac srcdir="src/tests/share/gtest" 
-	   optimize="${optimize}" 
-	   destdir="${tomcat.build}/webapps/admin/WEB-INF/classes" 
-	   classpath="${tomcat.build}/classes;${servlet22.jar}"/>
+    <!-- admin can test tomcat, it need the client side  -->
+    <copy tofile="${tomcat.build}/webapps/admin/WEB-INF/lib/moo.jar" 
+	  file="${watchdog.home}/lib/moo.jar"/>
+    <copy tofile="${tomcat.build}/webapps/admin/WEB-INF/lib/client.jar" 
+	  file="${watchdog.home}/lib/client.jar"/>
     <javac srcdir="src/admin/WEB-INF/classes" 
 	   optimize="${optimize}" 
 	   destdir="${tomcat.build}/webapps/admin/WEB-INF/classes" 
@@ -353,42 +354,71 @@
     <ant antfile="src/tests/build.xml" target="watchdog" />
   </target>
 
+  <target name="tests" depends="main,sanity-test,watchdog-web-based" />
+  
+  <target name="tests.dist" depends="tests" >
+    <jar jarfile="${tomcat.dist}/webapps/test.war" 
+	 basedir="${tomcat.build}/webapps/test" 
+	 includes="**"/>
+    <jar jarfile="${tomcat.dist}/webapps/jsp-tests.war"
+	 basedir="${tomcat.build}/webapps/jsp-tests" 
+	 includes="**"/>
+    <jar jarfile="${tomcat.dist}/webapps/servlet-tests.war"
+	 basedir="${tomcat.build}/webapps/servlet-tests" 
+	 includes="**"/>
+  </target>
+
   <!-- ==================== Copy the files to distribution format ======== -->
   <target name="dist" depends="main,webapps,tomcat-jars-new">
 
     <mkdir dir="${tomcat.dist}"/>
+    <mkdir dir="${tomcat.dist}/webapps"/>
     <copy todir="${tomcat.dist}">
-            <fileset dir="${tomcat.build}"/>
-        </copy>
-    <!-- copy todir="${tomcat.dist}/src/org">
-            <fileset dir="src/share/org"/>
-       </copy -->
+      <fileset dir="${tomcat.build}" >
+	<exclude name="classes/**"/>
+        <exclude name="webapps/**"/>
+      </fileset>
+    </copy>
     <copy tofile="${tomcat.dist}/lib/jaxp.jar" file="${jaxp}/jaxp.jar"/>
     <copy tofile="${tomcat.dist}/lib/parser.jar" file="${jaxp}/parser.jar"/>
     <copy tofile="${tomcat.dist}/lib/servlet.jar" file="${servlet22.jar}"/>
-    <!-- copy todir="${tomcat.dist}/src/org">
-            <fileset dir="src/facade22/org"/>
-        </copy -->
 
     <!-- Add Tomcat internal javadoc -->
     <mkdir dir="${tomcat.dist}/webapps/ROOT/javadoc"/>
-    <javadoc packagenames="org.apache.tomcat.core" sourcepath="src/share;src/facade22" destdir="${tomcat.dist}/webapps/ROOT/javadoc" author="true" version="true" use="true" windowtitle="Tomcat internal API" doctitle="Tomcat internal" bottom="Copyright © 2000 Apache Software Foundation. All Rights Reserved."/>
+    <javadoc packagenames="org.apache.tomcat.core" 
+	     sourcepath="src/share;src/facade22" 
+	     destdir="${tomcat.dist}/webapps/ROOT/javadoc" 
+	     author="true" 
+	     version="true" 
+	     use="true" 
+	     windowtitle="Tomcat internal API" 
+	     doctitle="Tomcat internal" 
+	     bottom="Copyright © 2000 Apache Software Foundation. All Rights Reserved."/>
 
-    <javadoc packagenames="org.apache.tomcat.modules" sourcepath="src/share;src/facade22" destdir="${tomcat.dist}/webapps/ROOT/javadoc" author="true" version="true" use="true" windowtitle="Tomcat modules" doctitle="Tomcat modules" bottom="Copyright © 2000 Apache Software Foundation. All Rights Reserved."/>
-
-    <delete dir="${tomcat.dist}/classes"/>
+    <javadoc packagenames="org.apache.tomcat.modules.*" 
+	     sourcepath="src/share;src/facade22" 
+	     destdir="${tomcat.dist}/webapps/ROOT/javadoc" 
+	     author="true" 
+	     version="true" 
+	     use="true" 
+	     windowtitle="Tomcat modules" 
+	     doctitle="Tomcat modules" 
+	     bottom="Copyright © 2000 Apache Software Foundation. All Rights Reserved."/>
 
 
     <!-- create webapp WARS -->
-    <jar jarfile="${tomcat.dist}/webapps/examples.war" basedir="${tomcat.dist}/webapps/examples" excludes="jsp/snp/snoop.jsp" includes="**"/> 
-    <delete dir="${tomcat.dist}/webapps/examples"/>
+    <jar jarfile="${tomcat.dist}/webapps/examples.war" 
+	 basedir="${tomcat.build}/webapps/examples" 
+	 excludes="jsp/snp/snoop.jsp" 
+	 includes="**"/> 
 
-    <jar jarfile="${tomcat.dist}/webapps/admin.war" basedir="${tomcat.dist}/webapps/admin" includes="**"/> 
-    <delete dir="${tomcat.dist}/webapps/admin"/>
+    <jar jarfile="${tomcat.dist}/webapps/admin.war"
+	 basedir="${tomcat.build}/webapps/admin" 
+	 includes="**"/> 
 
-    <jar jarfile="${tomcat.dist}/webapps/ROOT.war" basedir="${tomcat.dist}/webapps/ROOT" includes="**"/>
-    <delete dir="${tomcat.dist}/webapps/ROOT"/>
-
+    <jar jarfile="${tomcat.dist}/webapps/ROOT.war" 
+	 basedir="${tomcat.build}/webapps/ROOT" 
+	 includes="**"/>
 
     <!-- Change permissions for unix -->
     <chmod perm="+x" file="${tomcat.dist}/bin/tomcat.sh"/>
@@ -428,11 +458,21 @@
     <zip zipfile="${Name}-${version}.zip" basedir="${tomcat.dist}" includes="**"/>
   </target>
   
-  <target name="main" depends="old-main">
+  <target name="main" depends="tomcat,webapps">
+    <copy file ="src/build/readme.container"
+	  tofile="${tomcat.build}/lib/README" />
+
     <mkdir dir="${tomcat.build}/lib/shared"/>
+    <copy file ="src/build/readme.shared"
+	  tofile="${tomcat.build}/lib/shared/README" />
+
     <mkdir dir="${tomcat.build}/lib/common"/>
+    <copy file ="src/build/readme.common"
+	  tofile="${tomcat.build}/lib/common/README" />
+
+    <!-- XXX extract only the run-time component of jasper -->
     <copy file ="${tomcat.build}/lib/servlet.jar"
-        todir="${tomcat.build}/lib/common" />
+        todir="${tomcat.build}/lib/shared" />
     <copy file ="${tomcat.build}/lib/jasper.jar"
         todir="${tomcat.build}/lib/shared" />
     <copy file ="${tomcat.build}/lib/tomcat_util.jar"
@@ -461,8 +501,6 @@
     <delete dir="${tomcat.dist}"/>
   </target>
 
-  
   <target name="all" depends="clean,dist"/>
-  <target name="old-main" depends="tomcat,webapps,sanity-test"/>
     
 </project>

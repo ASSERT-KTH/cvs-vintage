@@ -110,25 +110,9 @@
     <javac 
 	   srcdir="${watchdog.src}/../jakarta-tools/moo/src/share"
 	   optimize="${optimize}" 
-	   destdir="${tomcat.build}/webapps/admin/WEB-INF/classes" 
-	   classpath="${tomcat.build}/classes;${servlet22.jar}"
-	   />
-    <javac 
-	   srcdir="${watchdog.src}/../jakarta-tools/moo/src/share"
-	   optimize="${optimize}" 
 	   destdir="${tomcat.build}/webapps/servlet-tests/WEB-INF/classes" 
 	   classpath="${tomcat.build}/classes;${servlet22.jar}"
 	   />
-    <javac 
-	   srcdir="${watchdog.src}/src/clients"
-	   optimize="${optimize}" 
-	   destdir="${tomcat.build}/webapps/admin/WEB-INF/classes" 
-	   classpath="${tomcat.build}/classes;${servlet22.jar}"
-	   />
-    <copydir src="${watchdog.src}/src/clients"
-	     dest="${tomcat.build}/webapps/admin/WEB-INF/classes" >
-      <include name="**/**.properties" />
-    </copydir>
 
     <javac 
 	   srcdir="${tomcat.build}/webapps/servlet-tests/WEB-INF/classes" 

@@ -1,0 +1,20 @@
+JARs visible only inside the container ( tomcat ), but not in the 
+web applications.
+
+Tomcat uses a hierarchy of class loaders:
+
+          parent 
+  (application embeding tomcat - 
+  visible in container and web apps)
+           |
+           |
+         common 
+     ( files in lib/common - 
+  visible in container and web apps)
+   |			       |
+   |			       |
+container		     shared
+( files in lib )	       |
+(XXX move to		       |
+lib/container)		    webapps
+
