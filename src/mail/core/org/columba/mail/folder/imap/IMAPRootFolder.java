@@ -92,6 +92,8 @@ public class IMAPRootFolder extends Folder //implements ActionListener
 		((Root) MainInterface.treeModel.getRoot()).addWithXml(this);
 
 		store = new IMAPStore(accountItem.getImapItem(), this);
+
+		lock = new Lock(this);
 	}
 
 	public ImageIcon getCollapsedIcon() {
