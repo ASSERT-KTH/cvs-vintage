@@ -86,7 +86,7 @@ public class ViewHeaderListCommand extends SelectiveGuiUpdateCommand {
 
 		// fetch the headerlist
 		headerList = (folder).getHeaderList();
-
+		
 		// this is a little hack !!
 
 		// check if this is an imap folder
@@ -103,30 +103,7 @@ public class ViewHeaderListCommand extends SelectiveGuiUpdateCommand {
 			if (applyFilter == true) {
 				
 				MainInterface.processor.addOp( new ApplyFilterCommand(r));
-				/*
-				FilterList list = folder.getFilterList();
 				
-				worker.setDisplayText(
-					"Applying filter to " + folder.getName() + "...");
-				worker.setProgressBarMaximum(list.count());
-				
-				// for every filter of this folder
-				for (int i = 0; i < list.count(); i++) {
-					worker.setProgressBarValue(i);
-					Filter filter = list.get(i);
-				
-					// get search results of this filter
-					Object[] result = folder.searchMessages(filter);
-					if (result.length != 0) {
-				
-						// fire commands
-						CompoundCommand command =
-							filter.getCommand(folder, result);
-				
-						MainInterface.processor.addOp(command);
-					}
-				
-				}*/
 			}
 
 		}

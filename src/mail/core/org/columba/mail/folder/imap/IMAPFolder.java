@@ -681,7 +681,7 @@ public class IMAPFolder extends RemoteFolder {
 	 * Method getImapPath.
 	 * @return String
 	 */
-	public String getImapPath() {
+	protected String getImapPath() throws Exception{
 		StringBuffer path = new StringBuffer();
 		path.append(getName());
 		FolderTreeNode child = this;

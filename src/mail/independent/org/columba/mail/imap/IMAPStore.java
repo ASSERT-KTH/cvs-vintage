@@ -26,6 +26,7 @@ import java.util.Vector;
 
 import javax.swing.JOptionPane;
 
+import org.columba.core.command.CommandCancelledException;
 import org.columba.core.command.StatusObservable;
 import org.columba.core.logging.ColumbaLogger;
 import org.columba.mail.config.ImapItem;
@@ -192,14 +193,12 @@ public class IMAPStore {
 	 * 
 	 * @return delimiter
 	 */
-	public String getDelimiter() {
+	public String getDelimiter() throws Exception{
 		if (delimiter == null) {
-			// try to determine delimiter
-			try {
-				delimiter = fetchDelimiter();
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
+			// try to determine delimiter			
+			
+			delimiter = fetchDelimiter();
+			
 		}
 		return delimiter;
 	}
@@ -371,7 +370,7 @@ public class IMAPStore {
 				answer = false;
 
 				// escape while loop
-				throw new UserCancelledException();
+				throw new CommandCancelledException();
 			}
 		}
 
@@ -493,8 +492,9 @@ public class IMAPStore {
 	 */
 	protected String fetchDelimiter() throws Exception {
 		// make sure we are already logged in
+	
 		ensureLoginState();
-
+		
 		try {
 			printStatusMessage(
 				MailResourceLoader.getString(
@@ -750,11 +750,9 @@ public class IMAPStore {
 	 */
 	public List fetchUIDList(String path) throws Exception {
 
-		try {
-			ensureSelectedState(path);
-		} catch (UserCancelledException e) {
-			return null;
-		}
+		
+		ensureSelectedState(path);
+		
 
 		try {
 			int count = messageFolderInfo.getExists();
@@ -929,13 +927,9 @@ public class IMAPStore {
 	public void fetchHeaderList(HeaderList headerList, List list, String path)
 		throws Exception {
 
-		// make sure we are logged in
-
-		try {
-			ensureLoginState();
-		} catch (UserCancelledException e) {
-			return;
-		}
+		// make sure we are logged in		
+		ensureLoginState();
+		
 
 		// make sure this mailbox is selected
 		ensureSelectedState(path);
