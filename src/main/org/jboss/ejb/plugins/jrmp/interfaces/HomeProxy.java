@@ -20,6 +20,7 @@ import javax.ejb.EJBObject;
 import javax.ejb.Handle;
 import javax.ejb.HomeHandle;
 import javax.ejb.EJBMetaData;
+import javax.ejb.RemoveException;
 
 import org.jboss.ejb.CacheKey;
 import org.jboss.ejb.plugins.jrmp.server.JRMPContainerInvoker;
@@ -30,7 +31,7 @@ import org.jboss.ejb.plugins.jrmp.server.JRMPContainerInvoker;
  * @author  Rickard Öberg (rickard.oberg@telkel.com)
  * @author  <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  * @author  Jason Dillon <a href="mailto:jason@planet57.com">&lt;jason@planet57.com&gt;</a>
- * @version $Revision: 1.22 $
+ * @version $Revision: 1.23 $
  */
 public class HomeProxy
     extends GenericProxy
@@ -166,6 +167,10 @@ public class HomeProxy
             return Void.TYPE;
         }
         else if (m.equals(REMOVE_BY_PRIMARY_KEY)) {
+            // Session beans must throw RemoveException (EJB 1.1, 5.3.2)
+            if (ejbMetaData.isSession())
+                throw new RemoveException("Session beans cannot be removed by primary key.");
+
             // The trick is simple we trick the container in believe it
             // is a remove() on the instance
             Object id = new CacheKey(args[0]);
