@@ -148,7 +148,7 @@ from:&#160;<input type="text" size="20"
   <td><select name="add_user_attr" size="">
     #if ($userAttrs && !$userAttrs.isEmpty())
       <option value="any">$l10n.Any</option>
-      <option value="created_by">$l10n.CreatedBy</option>
+      <option value="created_by">$l10n.CommittedBy</option>
     #end
     #foreach ($selectUserAttr in $userAttrs)
       <option value="$selectUserAttr.AttributeId">$selectUserAttr.Name:</option>
