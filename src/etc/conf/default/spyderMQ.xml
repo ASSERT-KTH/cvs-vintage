@@ -8,6 +8,8 @@
 	</PersistenceManager>
 
 	<!-- The physical topics known by the server -->
+	<Topic><Name>metrics</Name></Topic>
+	<Topic><Name>beancache</Name></Topic>
 	<Topic><Name>testTopic</Name></Topic>
 	<Topic><Name>example</Name></Topic>
 	<Topic><Name>bob</Name></Topic>
