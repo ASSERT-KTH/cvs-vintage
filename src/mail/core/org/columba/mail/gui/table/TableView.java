@@ -316,6 +316,25 @@ public class TableView extends TreeTable implements OptionsSerializer {
     }
 
     /**
+     * Overwritten, because selectAll doesn't also select the 
+     * nodes of the underlying JTree, which aren't expanded and
+     * therefore not visible. 
+     * <p>
+     * Go through all nodes and expand them. Afterwards select all
+     * rows in the JTable.
+     * 
+     * @see javax.swing.JTable#selectAll()
+     */
+    public void selectAll() {
+        // expand all rows
+        for ( int i=0; i<getRowCount(); i++) {
+            TreePath path = getTree().getPathForRow(i);
+            getTree().expandPath(path);
+        }
+        // select all rows
+        super.selectAll();
+    }
+    /**
  * Change the selection to the specified row
  *
  *
