@@ -16,6 +16,7 @@
 #set ($newIssueTypeId = $context.get("newIssueTypeId"))
 #set ($newModule = $scarabR.getModule("$newModuleId"))
 #set ($newIssueType = $scarabR.getIssueType("$newIssueTypeId"))
+#set ($module = $scarabR.CurrentModule)
 
 #set ($matchingAttributes = $issue.getMatchingAttributeValuesList("$newModuleId", "$newIssueTypeId"))
 #set ($orphanAttributes = $issue.getOrphanAttributeValuesList("$newModuleId", "$newIssueTypeId"))
@@ -66,6 +67,7 @@
 </table>
 </div>
 
+#if (!$matchingAttributes.isEmpty())
 <h3>$l10n.AttributesToBeCopied</h3>
 <table width="100%" border="1" cellspacing="2" cellpadding="3">
 <tr>
@@ -76,7 +78,7 @@
 #foreach ($attr in $matchingAttributes)
 #indexedRows($velocityCount)
     <td>$attr.Attribute.Name
-     #set ($displayValue = $newModule.getRModuleAttribute($attr.Attribute, $scarabR.CurrentIssueType).getDisplayValue())
+     #set ($displayValue = $module.getRModuleAttribute($attr.Attribute, $scarabR.CurrentIssueType).getDisplayValue())
      #if (!$attr.Attribute.Name.equals($displayValue))
       ($displayValue)
      #end
@@ -86,6 +88,7 @@
 </tr>
 #end
 </table>
+#end
 
 #if (!$orphanAttributes.isEmpty())
 <h3>$l10n.AttributesThatDoNotExist</h3>
@@ -101,7 +104,7 @@
 #indexedRows($velocityCount)
 <td><input type="checkbox" name="comment_attr_ids_$attr.AttributeId" checked /></td>
     <td>$attr.Attribute.Name
-     #set ($displayValue = $newModule.getRModuleAttribute($attr.Attribute, $scarabR.CurrentIssueType).getDisplayValue())
+     #set ($displayValue = $module.getRModuleAttribute($attr.Attribute, $scarabR.CurrentIssueType).getDisplayValue())
      #if (!$attr.Attribute.Name.equals($displayValue))
       ($displayValue)
      #end
