@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/util/Attic/NetworkClassLoader.java,v 1.5 2000/02/10 18:55:55 costin Exp $
- * $Revision: 1.5 $
- * $Date: 2000/02/10 18:55:55 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/loader/Attic/NetworkClassLoader.java,v 1.1 2000/02/16 07:28:44 costin Exp $
+ * $Revision: 1.1 $
+ * $Date: 2000/02/16 07:28:44 $
  *
  * ====================================================================
  *
@@ -61,7 +61,7 @@
  *
  */ 
 
-package org.apache.tomcat.util;
+package org.apache.tomcat.loader;
 
 import java.util.zip.*;
 import java.net.*;
