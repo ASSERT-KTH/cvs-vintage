@@ -24,7 +24,7 @@
 // File: ClassDiagramRenderer.java
 // Classes: ClassDiagramRenderer
 // Original jrobbins@ics.uci.edu
-// $Id: ClassDiagramRenderer.java,v 1.10 2003/05/12 22:32:54 alexb Exp $
+// $Id: ClassDiagramRenderer.java,v 1.11 2003/05/30 04:23:23 mkl Exp $
 
 package org.argouml.uml.diagram.static_structure.ui;
 
@@ -71,6 +71,8 @@ public class ClassDiagramRenderer
         if (node instanceof MClass) return new FigClass(gm, node);
         else if (node instanceof MInterface) return new FigInterface(gm, node);
         else if (node instanceof MInstance) return new FigInstance(gm, node);
+        else if (node instanceof MModel) return new FigModel(gm, node);
+        else if (node instanceof MSubsystem) return new FigSubsystem(gm, node);
         else if (node instanceof MPackage) return new FigPackage(gm, node);
         else if (node instanceof MModel) return new FigPackage(gm, node);
         cat.debug("TODO ClassDiagramRenderer getFigNodeFor "+node);
