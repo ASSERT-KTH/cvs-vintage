@@ -7,7 +7,7 @@
 <!--                                                                        -->
 <!-- ====================================================================== -->
 
-<!-- $Id: config.xml,v 1.5 2001/08/19 18:51:29 slaboure Exp $ -->
+<!-- $Id: config.xml,v 1.6 2001/08/23 04:03:43 d_jencks Exp $ -->
 
   <!-- ================================================================== -->
   <!-- Module Setup                                                       -->
@@ -39,12 +39,12 @@
   </path>
 
   <property name="dreambean.ejbdoclet.lib" value="${tools.root}/dreambean/ejbdoclet/lib"/>
-  <property name="jedit.javastyle" value="${tools.root}/jedit"/>
+  <property name="jedit.javastyle.lib" value="${tools.root}/jedit/javastyle/lib"/>
   <path id="ejbdoclet.pretty.classpath">
     <fileset dir="${dreambean.ejbdoclet.lib}">
       <include name="**/*.jar"/>
     </fileset>
-    <fileset dir="${jedit.javastyle}">
+    <fileset dir="${jedit.javastyle.lib}">
       <include name="**/*.jar"/>
     </fileset>
   </path>
