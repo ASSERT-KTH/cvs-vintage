@@ -113,7 +113,6 @@ final class HttpSessionFacade implements HttpSession {
     // -------------------- public facade --------------------
 
     public String getId() {
-	checkValid();
 	return realSession.getId().toString();
     }
 
@@ -140,7 +139,6 @@ final class HttpSessionFacade implements HttpSession {
     }
     
     public long getLastAccessedTime() {
-	checkValid();
 	return realSession.getTimeStamp().getLastAccessedTime();
     }
 
@@ -295,7 +293,6 @@ final class HttpSessionFacade implements HttpSession {
     }
 
     public int getMaxInactiveInterval() {
-	checkValid();
 	// We use long because it's better to do /1000 here than
 	// every time the internal code does expire
 	return (int)realSession.getTimeStamp().getMaxInactiveInterval()/1000;
