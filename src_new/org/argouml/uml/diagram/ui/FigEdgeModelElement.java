@@ -1,4 +1,4 @@
-// $Id: FigEdgeModelElement.java,v 1.84 2005/02/10 20:33:17 mvw Exp $
+// $Id: FigEdgeModelElement.java,v 1.85 2005/02/13 10:28:59 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -751,6 +751,9 @@ public abstract class FigEdgeModelElement
             fig.removeFromDiagram();
         }
 
+        /* TODO: MVW: Why the next action? 
+         * Deleting a fig from 1 diagram should not influence others! 
+         * */
         // GEF does not take into account the multiple diagrams we have
         // therefore we loop through our diagrams and delete each and every
         // occurence on our own
@@ -761,10 +764,11 @@ public abstract class FigEdgeModelElement
             ArgoDiagram diagram = (ArgoDiagram) it.next();
             diagram.damage();
         }
+        
         super.removeFromDiagram();
         
+        //This partly solves issue 3042.
         this.getLayer().remove(this);
-        Globals.curEditor().remove(this);
     }
 
     /**

@@ -1,4 +1,4 @@
-// $Id: FigNodeModelElement.java,v 1.151 2005/02/10 20:33:17 mvw Exp $
+// $Id: FigNodeModelElement.java,v 1.152 2005/02/13 10:28:59 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -1526,8 +1526,8 @@ public abstract class FigNodeModelElement
         }
         shadowSize = 0;
         
+        // This partly solves issue 3042.
         this.getLayer().remove(this);
-        Globals.curEditor().remove(this);
         
         super.removeFromDiagram();
     }
