@@ -102,10 +102,16 @@ public class ThreePaneMailFrameController
 
 		getSelectionManager().addSelectionHandler(
 			new TableSelectionHandler(tableController.getView()));
+			
 		getSelectionManager().addSelectionHandler(
 			new TreeSelectionHandler(treeController.getView()));
 		getSelectionManager().addSelectionHandler(
 			new AttachmentSelectionHandler(attachmentController.getView()));
+			
+		tableController.createPopupMenu();
+		treeController.createPopupMenu();
+		attachmentController.createPopupMenu();
+		
 	}
 
 	public void saveAndClose() {

@@ -169,8 +169,13 @@ public class AttachmentController {
 		return attachmentPanel.getSelection();
 	}
 
+	public void createPopupMenu()
+	{
+		menu = new AttachmentMenu(getFrameController());
+	}
+	
 	private JPopupMenu getPopupMenu() {
-		if ( menu == null ) menu = new AttachmentMenu(getFrameController());
+		
 		return menu;
 	}
 

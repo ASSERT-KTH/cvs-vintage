@@ -474,13 +474,18 @@ public class TableController implements TreeSelectionListener {
 			new ViewMessageCommand(mailFrameController, reference));
 			*/
 	}
+	
+	public void createPopupMenu()
+	{
+		menu = new TableMenu(mailFrameController);
+	}
 
 	/**
 	 * return the PopupMenu for the table
 	 */
 	public JPopupMenu getPopupMenu() {
-		if (menu == null)
-			menu = new TableMenu(mailFrameController);
+		
+			
 		return menu;
 	}
 

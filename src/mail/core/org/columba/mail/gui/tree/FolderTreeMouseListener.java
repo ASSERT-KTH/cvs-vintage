@@ -59,7 +59,7 @@ public class FolderTreeMouseListener extends MouseAdapter
 
     public void mouseClicked(MouseEvent event)
     {
-    	if ( SwingUtilities.isLeftMouseButton(event) ) treeController.selectFolder();
+    	//if ( SwingUtilities.isLeftMouseButton(event) ) treeController.selectFolder();
 
 		if( event.getModifiers() == InputEvent.BUTTON1_MASK ) {
 			viewHeaderListAction.actionPerformed(null);
@@ -84,11 +84,11 @@ public class FolderTreeMouseListener extends MouseAdapter
          {
              Point point = e.getPoint();
              TreePath path = treeController.getView().getClosestPathForLocation( point.x, point.y );
-
+			
              treeController.getView().clearSelection();
              treeController.getView().addSelectionPath( path );
 
-             treeController.getActionListener().changeActions();
+             //treeController.getActionListener().changeActions();
 
              getPopupMenu().show(e.getComponent(), e.getX(), e.getY());
          }

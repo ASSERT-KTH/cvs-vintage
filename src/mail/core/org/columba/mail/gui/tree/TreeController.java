@@ -51,7 +51,7 @@ TreeWillExpandListener //, TreeNodeChangeListener
 
 	private FolderInfoPanel messageFolderInfoPanel;
 
-	private FolderTreeActionListener actionListener;
+	//private FolderTreeActionListener actionListener;
 
 	public JScrollPane scrollPane;
 
@@ -82,7 +82,7 @@ TreeWillExpandListener //, TreeNodeChangeListener
 
 		view = new TreeView(mailFrameController, model);
 
-		actionListener = new FolderTreeActionListener(this);
+		//actionListener = new FolderTreeActionListener(this);
 
 		treeSelectionManager = new TreeSelectionManager();
 		// FIXME
@@ -141,10 +141,11 @@ TreeWillExpandListener //, TreeNodeChangeListener
 		return view;
 	}
 
+	/*
 	public FolderTreeActionListener getActionListener() {
 		return actionListener;
 	}
-
+	*/
 	public void setSelected(Folder folder) {
 		view.clearSelection();
 
@@ -190,8 +191,14 @@ TreeWillExpandListener //, TreeNodeChangeListener
 		//if (selectedFolder == null) return;
 	}
 	*/
+	
+	public void createPopupMenu()
+	{
+		menu = new TreeMenu(mailFrameController);
+	}
+	
 	public JPopupMenu getPopupMenu() {
-		if ( menu == null ) menu = new TreeMenu(mailFrameController);
+		
 		
 		return menu;
 	}
@@ -200,8 +207,9 @@ TreeWillExpandListener //, TreeNodeChangeListener
 		return selectedFolder;
 	}
 
+	/*
 	public void selectFolder() {
-		/*
+		
 				if ( view.getLastSelectedPathComponent() == null ) return;
 				
 				if (  !getSelected().equals(oldSelection))
@@ -212,9 +220,10 @@ TreeWillExpandListener //, TreeNodeChangeListener
 						treeSelectionManager.getSelection()));
 					oldSelection = getSelected();
 				}
-		*/
+		
 	}
-
+	*/
+	
 	/**
 	 * Returns the treeSelectionManager.
 	 * @return TreeSelectionManager

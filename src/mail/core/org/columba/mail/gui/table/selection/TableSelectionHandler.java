@@ -47,7 +47,7 @@ public class TableSelectionHandler
 		super("mail.table");
 		this.view = view;
 		view.addTreeSelectionListener(this);
-
+		
 		messages = new LinkedList();
 	}
 

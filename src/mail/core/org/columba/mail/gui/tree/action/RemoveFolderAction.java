@@ -19,6 +19,7 @@ import org.columba.core.gui.selection.SelectionListener;
 import org.columba.core.gui.util.ImageLoader;
 import org.columba.core.main.MainInterface;
 import org.columba.mail.command.FolderCommandReference;
+import org.columba.mail.config.FolderItem;
 import org.columba.mail.folder.Folder;
 import org.columba.mail.folder.command.RemoveFolderCommand;
 import org.columba.mail.gui.frame.AbstractMailFrameController;
@@ -67,7 +68,10 @@ public class RemoveFolderAction
 			'D',
 			KeyStroke.getKeyStroke(KeyEvent.VK_D, ActionEvent.ALT_MASK));
 		setEnabled(false);
-		((AbstractMailFrameController) frameController).registerTreeSelectionListener(
+		(
+			(
+				AbstractMailFrameController) frameController)
+					.registerTreeSelectionListener(
 			this);
 	}
 
@@ -98,9 +102,18 @@ public class RemoveFolderAction
 					 */
 	public void selectionChanged(SelectionChangedEvent e) {
 
-		if (((TreeSelectionChangedEvent) e).getSelected().length > 0)
-			setEnabled(true);
-		else
+		if (((TreeSelectionChangedEvent) e).getSelected().length > 0) {
+			Folder folder = ((TreeSelectionChangedEvent) e).getSelected()[0];
+
+			if (folder != null) {
+
+				FolderItem item = folder.getFolderItem();
+				if (item.get("property", "accessrights").equals("user"))
+					setEnabled(true);
+				else
+					setEnabled(false);
+			}
+		} else
 			setEnabled(false);
 
 	}
