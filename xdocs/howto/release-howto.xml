@@ -1,0 +1,121 @@
+<?xml version="1.0"?>
+
+<document>
+
+<properties>
+    <title>How To Release Scarab</title>
+    <author email="epugh@upstate.com">Eric Pugh</author>
+</properties>
+
+<body>
+
+<section name="How To Release Scarab">
+<p>
+	Scarab is very easy to release.  Basically you need to test and build the distribution, and then build and commit the
+	generated documenation.  
+</p>
+	<subsection name="Building Distribution">
+	<p>
+	Make sure your working copy has no local modifications and is up-to-date. 
+(Starting with a fresh copy is preferred.)  
+	</p>
+	<p>
+	Build and execute tests.
+	    			<source>
+<![CDATA[
+    cd scarab/build
+    ant clean tests
+]]>
+				</source>
+	</p>
+	<p>
+	Fix any unexpected failures and commit changes.
+	</p>
+	<p>
+	Check out a fresh copy of Scarab.
+	    			<source>
+<![CDATA[
+    cvs co scarab
+]]>
+				</source>	
+	</p>
+	<p>
+	Edit scarab/build/default.properties and change the 
+    version number from the -dev to the final version number for the
+    release.
+	</p>
+	<p>
+	Update the scarab/www/index.html file to announce the new release.
+	</p>
+	<p>
+	Update the scarab/xdocs/changes.xml documenent to set the release date for the version.  Create a new section
+	for the next release.
+	</p>	
+	<p>
+	Check both the default.properties and index.html and changes.xml files back into CVS.
+	</p>
+	<p>
+	Tag cvs with the release tag. Mail the dev@scarab mailing list to
+    let people know that they should hold off on commits until the message
+    comes through that you are done with the tag/release process.
+    Change the version number in the example below to the version of the 
+    current release.	
+	    			<source>
+<![CDATA[
+    cd scarab
+    cvs tag SCARAB_1_0_B17
+]]>
+				</source>	    
+	</p>
+	<p>
+	Build a release. This will create a .tar.gz and a .zip file in
+    the scarab directory.
+	    			<source>
+<![CDATA[
+    cd scarab/build
+    ant package
+]]>
+				</source>	       
+	</p>
+	<p>
+	Edit scarab/build/default.properties and change the 
+    version number from the final version number  to the -dev
+    version and check this file back into CVS.  Also do the same to the project.xml file as well.
+    </p>
+    <p>
+    Log into the Scarab website with your account. Go to the
+    Downloads area (http://scarab.tigris.org/servlets/ProjectDocumentList)
+    and move the existing released files into the "Old releases" folder.
+    </p>
+	<p>
+	Upload the new releases into the "Top" folder.
+	</p>
+	<p>
+	Generate the Maven managed documentation and update the Scarab-Gen website.  Follow the directions
+	for <a href="build-docs-howto.html">generating the site docs</a> and you should have the correct 
+	site documentation at:<source>http://scarab-gen.tigris.org/nonav/${THIS VERSION}/index.html</source>.
+	</p>
+	<p>
+	Announce to the announce@scarab.tigris.org,
+    users@scarab.tigris.org, dev@scarab.tigris.org lists that there is
+    a new release available:
+    <pre>
+    Subject: [ANNOUNCEMENT] Scarab 1.0 beta 17 released
+
+    The Scarab team is pleased to announce the release of version 1.0
+    beta 17 of the Scarab issue tracking system.
+
+    This is primarily bug fix release.
+
+        http://scarab.tigris.org/
+    </pre>
+    </p>	    
+    <p>
+    Post a new release on the freshmeat.net Scarab entry.
+    </p>
+	</subsection>
+	
+</section>
+
+</body>
+</document>
