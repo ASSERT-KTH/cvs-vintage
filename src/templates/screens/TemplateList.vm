@@ -3,13 +3,15 @@
 #set ($user = $data.User)
 #if (($module.getPrivateTemplates($user, $issueType).isEmpty()) && ($module.getGlobalTemplates($issueType).isEmpty()))
    #set ($noTemplates = "true")
-#elseif (($module.getPrivateTemplates($user, $issueType).isEmpty()) || ($module.getGlobalTemplates($issueType).isEmpty()))
-   #set ($someTemplates = "true")
+#else
+   #set ($noTemplates = "false")
 #end
 
 #macro (TemplateListBar $val)
 <div class="functnbar$val">
+  #if ($noTemplates.equals("false"))
   <input type="submit" value="Done" name="eventSubmit_doGonext" />&#160;
+  #end
   <input type="submit" value="Cancel" name="eventSubmit_doCancel" />
 </div>
 #end
@@ -22,9 +24,7 @@
 <input type="hidden" name="$scarabG.Constant.NEXT_TEMPLATE" value="TemplateList.vm" />
 <input type="hidden" name="$scarabG.Constant.OTHER_TEMPLATE" value="SaveTemplate.vm" />
 
-#if ($noTemplates.equals("false"))
 #TemplateListBar("")
-#end
 
 <h3>Templates</h3>
 
@@ -38,17 +38,18 @@
 <table width="100%" border="1" cellspacing="2" cellpadding="3">
   <tr>
   <th nowrap="nowrap">
-  <img src="$data.Request.ContextPath/images/icon_uparrow.gif" width="13" height="8" alt="sort ascending" title="sort ascending" border="0" />
-  <img src="$data.Request.ContextPath/images/icon_downarrow.gif" width="13" height="8" alt="sort descending" title="sort descending" border="0" />
   </th>
-  <th>Template name</th>
+  <th>
+  <img src="$data.Request.ContextPath/images/icon_downarrow.gif" width="13" height="8" alt="sort descending" title="sort descending" border="0" />
+   Template name</th>
   <th>Template description</th>
-  <th>Location</th>
-  <th>Created by</th>
+  <th>Project</th>
+  <th>Author</th>
   </tr>
 
 #foreach ($template in $module.getPrivateTemplates($user, $issueType))
    #indexedRows($velocityCount)
+   #set ($hasDelete = "true")
   <td><input type="checkbox" name="delete_$template.IssueId" /></td>
   #set ($editLink = $link.setPathInfo("templateId", $template.IssueId.toString()).setPage("SaveTemplate.vm").toString())
   <td><a href="$editLink">$template.TemplateInfo.Name</a></td>
@@ -78,6 +79,7 @@
 #foreach ($template in $module.getGlobalTemplates($issueType))
 #indexedRows($velocityCount)
 #if ($scarabR.hasPermission($scarabG.Permission.ITEM__DELETE, $module))
+  #set ($hasDelete = "true")
   <td><input type="checkbox" name="delete_$template.IssueId" /></td>
 #else
   <td>&#160;</td>
@@ -119,14 +121,12 @@
 
 <div class="functnbar3">
   <input type="submit" value="Create new" name="eventSubmit_doGotoothertemplate" />&#160;
-  #if ($someTemplates.equals("true"))
+  #if ($hasDelete)
     <input type="submit" value="Delete selected" name="eventSubmit_doDeletetemplates" />
   #end
 </div>
 
-#if ($noTemplates.equals("false"))
 #TemplateListBar("2")
-#end
 
 </form>
 </div>
