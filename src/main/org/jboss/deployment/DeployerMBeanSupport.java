@@ -13,13 +13,13 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.jboss.deployment.DeploymentException;
-import org.jboss.util.ServiceMBeanSupport;
+import org.jboss.system.ServiceMBeanSupport;
 
 /**
  * An abstract base class for deployer service implementations.
  *
  * @author <a href="mailto:toby.allsopp@peace.com">Toby Allsopp</a>
- * @version $Revision: 1.4 $
+ * @version $Revision: 1.5 $
  *
  * <p><b>Revisions:</b>
  *

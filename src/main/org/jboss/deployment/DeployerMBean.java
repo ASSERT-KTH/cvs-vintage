@@ -10,14 +10,14 @@ import java.io.IOException;
 import java.io.FilenameFilter;
 import java.net.MalformedURLException;
 
-import org.jboss.util.ServiceMBean;
+import org.jboss.system.ServiceMBean;
 
 /**
  *   The common interface for services that deploy application
  *   components.
  *
  *   @author <a href="mailto:toby.allsopp@peace.com">Toby Allsopp</a>
- *   @version $Revision: 1.4 $
+ *   @version $Revision: 1.5 $
  */
 public interface DeployerMBean
    extends ServiceMBean
@@ -29,7 +29,7 @@ public interface DeployerMBean
    /**
     * Provides a filter that decides whether a file can be deployed by
     * this deployer based on the filename.  This is for the benefit of
-    * the {@link org.jboss.ejb.AutoDeployer} service.
+    * the {@link org.jboss.deployer.AutoDeployer} service.
     *
     * @return a <code>FilenameFilter</code> that only
     *         <code>accept</code>s files with names that can be

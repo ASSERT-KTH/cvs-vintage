@@ -9,13 +9,13 @@ package org.jboss.deployment;
 import java.net.MalformedURLException;
 import java.io.IOException;
 
-import org.jboss.util.ServiceMBean;
+import org.jboss.system.ServiceMBean;
 
 /**
  *   @see 
  *   @author <a href="mailto:daniel.schulze@telkel.com">Daniel Schulze</a>
  *   @author <a href="mailto:toby.allsopp@peace.com">Toby Allsopp</a>
- *   @version $Revision: 1.6 $
+ *   @version $Revision: 1.7 $
  */
 public interface J2eeDeployerMBean
    extends DeployerMBean

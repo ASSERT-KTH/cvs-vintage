@@ -41,7 +41,7 @@ import javax.management.ObjectName;
 
 import org.jboss.logging.Log;
 import org.jboss.util.MBeanProxy;
-import org.jboss.util.ServiceMBeanSupport;
+import org.jboss.system.ServiceMBeanSupport;
 
 import org.jboss.metadata.XmlFileLoader;
 
@@ -57,7 +57,7 @@ import org.w3c.dom.Element;
  *
  *	@see <related>
  *	@author <a href="mailto:daniel.schulze@telkel.com">Daniel Schulze</a>
- *	@version $Revision: 1.11 $
+ *	@version $Revision: 1.12 $
  */
 public class Installer
 {
