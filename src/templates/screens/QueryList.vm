@@ -10,8 +10,9 @@ $page.setTitle("Stored query list")
 <div class="tabs">
 <table cellpadding="3" cellspacing="0" border="0">
 <tr>
-	<td>$link.setPage("AdvancedQuery.vm")" title="view advanced query.setLabel("Advanced query")</td>
-	<td>$link.setPage("Search.vm")" title="view custom search.setLabel("Custom")</td>
+    #set ($quote = '"')
+	<td>$link.setPage("AdvancedQuery.vm").setAttributeText("title=${quote}view advanced query${quote}").setLabel("Advanced query")</td>
+	<td>$link.setPage("Search.vm").setAttributeText("title=${quote}view custom search${quote}").setLabel("Custom")</td>
 	<th>Saved queries</th>
 </tr>
 </table>
