@@ -805,7 +805,7 @@ class SetProperties extends XmlAction {
 	    if( !value1.equals(value) && ctx.getDebug() > -1 )
 		ctx.log( "Replace " + value + " " + value1 );
 		
-	    IntrospectionUtils.setProperty( elem, name, value );
+	    IntrospectionUtils.setProperty( elem, name, value1 );
 	}
     }
 }
