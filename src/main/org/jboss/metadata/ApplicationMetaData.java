@@ -20,17 +20,17 @@ import org.w3c.dom.NodeList;
 import org.jboss.ejb.DeploymentException;
 
 
-/**
- *   <description> 
+/** The top level meta data from the jboss.xml descriptor.
  *     
  *   MessageDriven Bean added 
  *   @see <related>
  *   @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
  *   @author <a href="mailto:peter.antman@tim.se">Peter Antman</a>.
  *   @author <a href="mailto:Scott_Stark@displayscape.com">Scott Stark</a>.
- *   @version $Revision: 1.17 $
+ *   @version $Revision: 1.18 $
  */
-public class ApplicationMetaData extends MetaData {
+public class ApplicationMetaData extends MetaData
+{
     // Constants -----------------------------------------------------
     
     // Attributes ----------------------------------------------------
@@ -41,7 +41,10 @@ public class ApplicationMetaData extends MetaData {
     private HashMap configurations = new HashMap();
     private HashMap resources = new HashMap();
     private HashMap plugins = new HashMap();
+    /** The security-domain value assigned to the application */
     private String securityDomain;
+    /** The  unauthenticated-principal value assigned to the application */
+    private String  unauthenticatedPrincipal;
     private boolean enforceEjbRestrictions;
     
     // Static --------------------------------------------------------
@@ -98,6 +101,10 @@ public class ApplicationMetaData extends MetaData {
     public String getSecurityDomain()
     {
         return securityDomain;
+    }
+    public String getUnauthenticatedPrincipal()
+    {
+        return unauthenticatedPrincipal;
     }
     public boolean getEnforceEjbRestrictions()
     {
@@ -306,6 +313,11 @@ public class ApplicationMetaData extends MetaData {
        Element securityDomainElement = getOptionalChild(element, "security-domain");
        if( securityDomainElement != null )
         securityDomain = getElementContent(securityDomainElement);
+
+       // Get the unauthenticated-principal name
+       Element unauth = getOptionalChild(element, "unauthenticated-principal");
+       if( unauth != null )
+         unauthenticatedPrincipal = getElementContent(unauth);
 
        // find the container configurations (we need them first to use them in the beans)
        Element confs = getOptionalChild(element, "container-configurations");
