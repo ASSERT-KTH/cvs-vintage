@@ -23,9 +23,9 @@ import java.net.URL;
 
 
 public abstract class AbstractViewer {
-    public abstract Process openWith(MimeHeader header, File tempFile);
+    public abstract Process openWith(MimeHeader header, File tempFile, boolean blocking);
 
-    public abstract Process open(MimeHeader header, File tempFile);
+    public abstract Process open(MimeHeader header, File tempFile, boolean blocking);
 
     public abstract Process openURL(URL url);
 

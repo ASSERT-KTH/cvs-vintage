@@ -28,7 +28,7 @@ public class MimeTypeViewer {
     public MimeTypeViewer() {
     }
 
-    public Process openWith(MimeHeader header, File tempFile) {
+    public Process openWith(MimeHeader header, File tempFile, boolean blocking) {
         AbstractViewer viewer;
 
         if (OSInfo.isWin32Platform()) {
@@ -37,10 +37,10 @@ public class MimeTypeViewer {
             viewer = new ColumbaViewer();
         }
 
-        return viewer.openWith(header, tempFile);
+        return viewer.openWith(header, tempFile, blocking);
     }
 
-    public Process open(MimeHeader header, File tempFile) {
+    public Process open(MimeHeader header, File tempFile, boolean blocking) {
         AbstractViewer viewer;
 
         if (OSInfo.isWin32Platform()) {
@@ -49,7 +49,7 @@ public class MimeTypeViewer {
             viewer = new ColumbaViewer();
         }
 
-        return viewer.open(header, tempFile);
+        return viewer.open(header, tempFile, blocking);
     }
 
     public Process openURL(URL url) {

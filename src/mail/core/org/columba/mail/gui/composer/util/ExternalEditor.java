@@ -1,16 +1,18 @@
-//The contents of this file are subject to the Mozilla Public License Version 1.1
-//(the "License"); you may not use this file except in compliance with the 
+// The contents of this file are subject to the Mozilla Public License Version
+// 1.1
+//(the "License"); you may not use this file except in compliance with the
 //License. You may obtain a copy of the License at http://www.mozilla.org/MPL/
 //
 //Software distributed under the License is distributed on an "AS IS" basis,
-//WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License 
+//WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
 //for the specific language governing rights and
 //limitations under the License.
 //
 //The Original Code is "The Columba Project"
 //
-//The Initial Developers of the Original Code are Frederik Dietz and Timo Stich.
-//Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
+//The Initial Developers of the Original Code are Frederik Dietz and Timo
+// Stich.
+//Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003.
 //
 //All Rights Reserved.
 package org.columba.mail.gui.composer.util;
@@ -32,138 +34,138 @@ import java.io.FileWriter;
 
 import javax.swing.JOptionPane;
 
-
 public class ExternalEditor {
-    String Cmd;
+	String Cmd;
 
-    public ExternalEditor() {
-    }
+	public ExternalEditor() {
+	}
 
-    // END public ExternalEditor()
-    public ExternalEditor(String EditorCommand) {
-    }
+	// END public ExternalEditor()
+	public ExternalEditor(String EditorCommand) {
+	}
 
-    // END public ExternalEditor(String EditorCommand)
-    public boolean startExternalEditor(AbstractEditorController EditCtrl) {
-        /*
- * *20030906, karlpeder* Method signature changed to take
- * an AbstractEditorController (instead of an TextEditorView) as
- * parameter since the view is no longer directly available
- */
-        MimeHeader myHeader = new MimeHeader("text", "plain");
-        MimeTypeViewer viewer = new MimeTypeViewer();
-        File tmpFile = TempFileStore.createTempFileWithSuffix("extern_edit");
-        FileWriter FO;
-        FileReader FI;
+	// END public ExternalEditor(String EditorCommand)
+	public boolean startExternalEditor(AbstractEditorController EditCtrl) {
+		/*
+		 * *20030906, karlpeder* Method signature changed to take an
+		 * AbstractEditorController (instead of an TextEditorView) as parameter
+		 * since the view is no longer directly available
+		 */
+		MimeHeader myHeader = new MimeHeader("text", "plain");
+		MimeTypeViewer viewer = new MimeTypeViewer();
+		File tmpFile = TempFileStore.createTempFileWithSuffix("extern_edit");
+		FileWriter FO;
+		FileReader FI;
 
-        try {
-            FO = new FileWriter(tmpFile);
-        } catch (java.io.IOException ex) {
-            JOptionPane.showMessageDialog(null,
-                "Error: Cannot write to temp file needed " +
-                "for external editor.");
+		try {
+			FO = new FileWriter(tmpFile);
+		} catch (java.io.IOException ex) {
+			JOptionPane.showMessageDialog(null,
+					"Error: Cannot write to temp file needed "
+							+ "for external editor.");
 
-            return false;
-        }
+			return false;
+		}
 
-        try {
-            //String M = EditView.getText();
-            String M = EditCtrl.getViewText();
+		try {
+			//String M = EditView.getText();
+			String M = EditCtrl.getViewText();
 
-            if (M != null) {
-                FO.write(M);
-            }
+			if (M != null) {
+				FO.write(M);
+			}
 
-            FO.close();
-        } catch (java.io.IOException ex) {
-            JOptionPane.showMessageDialog(null,
-                "Error: Cannot write to temp file needed " +
-                "for external editor.");
+			FO.close();
+		} catch (java.io.IOException ex) {
+			JOptionPane.showMessageDialog(null,
+					"Error: Cannot write to temp file needed "
+							+ "for external editor:\n" + ex.getMessage());
 
-            return false;
-        }
+			return false;
+		}
 
-        //Font OldFont = EditView.getFont();
-        Font OldFont = EditCtrl.getViewFont();
+		//Font OldFont = EditView.getFont();
+		Font OldFont = EditCtrl.getViewFont();
 
-        System.out.println("Setting Font to REALLY BIG!!! :-)");
+		System.out.println("Setting Font to REALLY BIG!!! :-)");
 
-        /*
-// Why doesn't this work???
-EditView.setFont(
-        new Font(Config.getOptionsConfig().getThemeItem().getTextFontName(), Font.BOLD, 30));
-*/
-        Font font = FontProperties.getTextFont();
-        font = font.deriveFont(30);
+		/*
+		 * // Why doesn't this work??? EditView.setFont( new
+		 * Font(Config.getOptionsConfig().getThemeItem().getTextFontName(),
+		 * Font.BOLD, 30));
+		 */
+		Font font = FontProperties.getTextFont();
+		font = font.deriveFont(30);
 
-        //EditView.setFont(font);
-        EditCtrl.setViewFont(font);
+		//EditView.setFont(font);
+		EditCtrl.setViewFont(font);
 
-        //EditView.setText(
-        EditCtrl.setViewText(MailResourceLoader.getString("menu", "composer",
-                "extern_editor_using_msg"));
+		//EditView.setText(
+		EditCtrl.setViewText(MailResourceLoader.getString("menu", "composer",
+				"extern_editor_using_msg"));
 
-        Process child = viewer.open(myHeader, tmpFile);
+		// execute application, enabling blocking
+		Process child = viewer.open(myHeader, tmpFile, true);
 
-        if (child == null) {
-            return false;
-        }
+		if (child == null) {
+			return false;
+		}
 
-        try {
-            // Wait for external editor to quit
-            child.waitFor();
-        } catch (InterruptedException ex) {
-            JOptionPane.showMessageDialog(null,
-                "Error: External editor exited " + "abnormally.");
+		try {
+			// Wait for external editor to quit
+			child.waitFor();
 
-            return false;
-        }
+		} catch (InterruptedException ex) {
+			JOptionPane.showMessageDialog(null,
+					"Error: External editor exited " + "abnormally.");
 
-        //EditView.setFont(OldFont);
-        EditCtrl.setViewFont(OldFont);
+			return false;
+		}
 
-        try {
-            FI = new FileReader(tmpFile);
-        } catch (java.io.FileNotFoundException ex) {
-            JOptionPane.showMessageDialog(null,
-                "Error: Cannot read from temp file used " +
-                "by external editor.");
+		//EditView.setFont(OldFont);
+		EditCtrl.setViewFont(OldFont);
 
-            return false;
-        }
+		try {
+			FI = new FileReader(tmpFile);
+		} catch (java.io.FileNotFoundException ex) {
+			JOptionPane.showMessageDialog(null,
+					"Error: Cannot read from temp file used "
+							+ "by external editor.");
 
-        //      int i = FI.available();
-        char[] buf = new char[1000];
-        int i;
-        String message = "";
+			return false;
+		}
 
-        try {
-            while ((i = FI.read(buf)) >= 0) {
-                //System.out.println( "*>"+String.copyValueOf(buf)+"<*");
-                message += new String(buf, 0, i);
+		//      int i = FI.available();
+		char[] buf = new char[1000];
+		int i;
+		String message = "";
 
-                //System.out.println( "-->"+Message+"<--");
-            }
+		try {
+			while ((i = FI.read(buf)) >= 0) {
+				//System.out.println( "*>"+String.copyValueOf(buf)+"<*");
+				message += new String(buf, 0, i);
 
-            FI.close();
-        } catch (java.io.IOException ex) {
-            JOptionPane.showMessageDialog(null,
-                "Error: Cannot read from temp file used " +
-                "by external editor.");
+				//System.out.println( "-->"+Message+"<--");
+			}
 
-            return false;
-        }
+			FI.close();
+		} catch (java.io.IOException ex) {
+			JOptionPane.showMessageDialog(null,
+					"Error: Cannot read from temp file used "
+							+ "by external editor.");
 
-        //System.out.println( "++>"+Message+"<++");
-        //System.out.println( Message.length());
-        //EditView.setText(message);
-        EditCtrl.setViewText(message);
+			return false;
+		}
 
-        return true;
-    }
+		//System.out.println( "++>"+Message+"<++");
+		//System.out.println( Message.length());
+		//EditView.setText(message);
+		EditCtrl.setViewText(message);
 
-    // END public boolean startExternalEditor()
+		return true;
+	}
+
+	// END public boolean startExternalEditor()
 }
-
 
 // END public class ExternalEditor

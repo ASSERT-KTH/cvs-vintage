@@ -88,7 +88,7 @@ public class OpenAttachmentCommand extends SaveAttachmentCommand {
         } else {
             //inline = false;
             MimeTypeViewer viewer = new MimeTypeViewer();
-            viewer.open(header, tempFile);
+            viewer.open(header, tempFile, false);
         }
     }
 

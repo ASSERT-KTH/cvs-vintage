@@ -65,7 +65,7 @@ public class ViewMessageSourceCommand extends FolderCommand {
     public void updateGUI() throws Exception {
         MimeTypeViewer viewer = new MimeTypeViewer();
         MimeHeader header = new MimeHeader();
-        viewer.open(header, tempFile);
+        viewer.open(header, tempFile, false);
     }
 
     /**

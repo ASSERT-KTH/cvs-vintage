@@ -50,7 +50,7 @@ public class OpenWithAttachmentCommand extends SaveAttachmentCommand {
      */
     public void updateGUI() throws Exception {
         MimeTypeViewer viewer = new MimeTypeViewer();
-        viewer.openWith(header, tempFile);
+        viewer.openWith(header, tempFile, false);
     }
 
     /** {@inheritDoc} */

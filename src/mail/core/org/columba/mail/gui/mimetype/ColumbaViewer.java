@@ -36,7 +36,7 @@ import org.columba.ristretto.message.MimeHeader;
  */
 public class ColumbaViewer extends AbstractViewer {
 
-	public Process openWith(MimeHeader header, File tempFile) {
+	public Process openWith(MimeHeader header, File tempFile, boolean blocking) {
 		boolean save = false;
 		
 		String viewer = promptForViewer(header);
@@ -54,7 +54,7 @@ public class ColumbaViewer extends AbstractViewer {
 		return p;
 	}
 
-	public Process open(MimeHeader header, File tempFile) {
+	public Process open(MimeHeader header, File tempFile, boolean blocking) {
 		File viewerFile = null;
 		String viewer = MimeRouter.getInstance().getViewer(header);
 		if (viewer != null) {
