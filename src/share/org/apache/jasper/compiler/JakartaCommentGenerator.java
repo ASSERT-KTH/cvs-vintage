@@ -1,7 +1,4 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/ParseEventListener.java,v 1.5 2000/02/25 19:45:38 mandar Exp $
- * $Revision: 1.5 $
- * $Date: 2000/02/25 19:45:38 $
  *
  * ====================================================================
  * 
@@ -58,66 +55,87 @@
  * <http://www.apache.org/>.
  *
  */ 
+
 package org.apache.jasper.compiler;
 
 import java.util.Hashtable;
 import java.util.Vector;
+import java.util.Enumeration;
+import java.util.StringTokenizer;
+import java.io.IOException;
+import java.io.FileNotFoundException;
+import java.io.File;
+import java.io.ObjectOutputStream;
+import java.io.FileOutputStream;
+import java.net.URL;
+import java.net.MalformedURLException;
 
 import javax.servlet.jsp.tagext.TagInfo;
 import javax.servlet.jsp.tagext.TagLibraryInfo;
 
 import org.apache.jasper.JasperException;
+import org.apache.jasper.Constants;
+import org.apache.jasper.JspCompilationContext;
 
 /**
- * Interface for the JSP code generation backend. At some point should
- * probably try and make this a SAX (XML) listener. 
+ * Generates original "Jakarta"-style comments
  *
- * @author Anil K. Vijendran
+ * @author Mandar Raje [patch submitted by Yury Kamen]
  */
-public interface ParseEventListener {
-    void setTemplateInfo(Mark start, Mark stop);
-    void beginPageProcessing() throws JasperException;
-
-    void handleComment(Mark start, Mark stop) throws JasperException;
-    void handleDirective(String directive, 
-			 Mark start, Mark stop, 
-			 Hashtable attrs) throws JasperException;
-    void handleDeclaration(Mark start, Mark stop, Hashtable attrs) throws JasperException;
-    void handleScriptlet(Mark start, Mark stop, Hashtable attrs) throws JasperException;
-    void handleExpression(Mark start, Mark stop, Hashtable attrs) throws JasperException;
-    void handleBean(Mark start, Mark stop, Hashtable attrs) 
-	throws JasperException;
-    void handleBeanEnd (Mark start, Mark stop, Hashtable attrs)
-	throws JasperException;
-    void handleGetProperty(Mark start, Mark stop, Hashtable attrs) throws JasperException;
-    void handleSetProperty(Mark start, Mark stop, Hashtable attrs) throws JasperException;
-    void handlePlugin(Mark start, Mark stop, Hashtable attrs, Hashtable param, 
-    			String fallback) throws JasperException;
-    void handleCharData(Mark start, Mark stop, char[] chars) throws JasperException;
-
-
-    /*
-     * Custom tag support
+public class JakartaCommentGenerator implements CommentGenerator {
+    
+    /**
+     * Generates "start-of the JSP-embedded code block" comment
+     *
+     * @param out The ServletWriter
+     * @param start Start position of the block
+     * @param stop End position of the block
+     * @exception JasperException 
      */
-    TagLibraries getTagLibraries();
+    public void generateStartComment(Generator generator, ServletWriter out, Mark start, Mark stop) throws JasperException {
+        //System.err.println(generator.getClass().getName());
+	String html = "";
+        if (generator instanceof CharDataGenerator) {
+	   html = "// HTML ";
+	}
+ 	if (start != null && stop != null) {
+	    if (start.fileid == stop.fileid) {
+		String fileName = out.quoteString(start.getFile ());
+		out.println(html + "// begin [file=" + fileName+";from=" + start.toShortString() + ";to=" + stop.toShortString() + "]");
+	    } else {
+		out.println(html + "// begin [from="+start+";to="+stop+"]");
+            }
+	} else {
+	    out.println(html + "// begin");
+        }
 
-    /*
-     * start: is either the start position at "<" if content type is JSP or empty, or
-     *        is the start of the body after the "/>" if content type is tag dependent
-     * stop: can be null if the body contained JSP tags... 
+      out.pushIndent();
+    }
+
+   /**
+     * Generates "end-of the JSP-embedded code block" comment
+     *
+     * @param out The ServletWriter
+     * @param start Start position of the block
+     * @param stop End position of the block
+     * @exception JasperException
      */
-    void handleTagBegin(Mark start, Mark stop, Hashtable attrs, String prefix, String shortTagName,
-			TagLibraryInfoImpl tli, TagInfo ti) 
-	throws JasperException;
-
-    void handleTagEnd(Mark start, Mark stop, String prefix, String shortTagName,
-		      Hashtable attrs, TagLibraryInfoImpl tli, TagInfo ti)
-	throws JasperException;
-
-    void handleForward(Mark start, Mark stop, Hashtable attrs, Hashtable param)
-	throws JasperException;
-    void handleInclude(Mark start, Mark stop, Hashtable attrs, Hashtable param)
-	throws JasperException;
-
-    void endPageProcessing() throws JasperException;
+    public void generateEndComment(Generator generator, ServletWriter out, Mark start, Mark stop) throws JasperException {
+	out.popIndent();
+        out.println("// end");
+    }
 }
+//        String fileName = "null";
+//         if(start != null) {
+//              fileName = out.quoteString(start.getFile());
+//         }
+//         String startString = "null";
+//         if(null != start) {
+//            startString =  start.toShortString();
+//         }
+
+//         String stopString = "null";
+//         if(null != stop) {
+//            stopString =  stop.toShortString();
+//         }
+//         out.println("// begin [file="+fileName+";from="+startString+";to="+stopString+"]");

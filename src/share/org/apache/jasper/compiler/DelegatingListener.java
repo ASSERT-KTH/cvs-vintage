@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/DelegatingListener.java,v 1.4 2000/02/23 02:23:44 mandar Exp $
- * $Revision: 1.4 $
- * $Date: 2000/02/23 02:23:44 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/DelegatingListener.java,v 1.5 2000/02/25 19:45:38 mandar Exp $
+ * $Revision: 1.5 $
+ * $Date: 2000/02/25 19:45:38 $
  *
  * ====================================================================
  * 
@@ -80,14 +80,20 @@ import org.apache.jasper.Constants;
 final class DelegatingListener implements ParseEventListener {
     ParseEventListener delegate;
     Parser.Action action;
+    Mark tmplStart, tmplStop;
     
     DelegatingListener(ParseEventListener delegate, Parser.Action action) {
         this.delegate = delegate;
         this.action = action;
     }
 
-    void doAction() throws JasperException {
-        action.execute();
+    void doAction(Mark start, Mark stop) throws JasperException {
+        action.execute(start, stop);
+    }
+
+    public void setTemplateInfo(Mark start, Mark stop) {
+	this.tmplStart = start;
+	this.tmplStop = stop;
     }
 
     public void beginPageProcessing() throws JasperException {
@@ -99,57 +105,57 @@ final class DelegatingListener implements ParseEventListener {
     }
     
     public void handleComment(Mark start, Mark stop) throws JasperException {
-        doAction();
+        doAction(this.tmplStart, this.tmplStop);
         delegate.handleComment(start, stop);
     }
 
     public void handleDirective(String directive, Mark start, Mark stop, Hashtable attrs) 
 	throws JasperException 
     {
-        doAction();
+        doAction(this.tmplStart, this.tmplStop);
         delegate.handleDirective(directive, start, stop, attrs);
     }
     
     public void handleDeclaration(Mark start, Mark stop, Hashtable attrs) throws JasperException {
-        doAction();
+        doAction(this.tmplStart, this.tmplStop);
         delegate.handleDeclaration(start, stop, attrs);
     }
     
     public void handleScriptlet(Mark start, Mark stop, Hashtable attrs) throws JasperException {
-        doAction();
+        doAction(this.tmplStart, this.tmplStop);
         delegate.handleScriptlet(start, stop, attrs);
     }
     
     public void handleExpression(Mark start, Mark stop, Hashtable attrs) throws JasperException {
-        doAction();
+        doAction(this.tmplStart, this.tmplStop);
         delegate.handleExpression(start, stop, attrs);
     }
 
     public void handleBean(Mark start, Mark stop, Hashtable attrs) 
 	throws JasperException
     {
-        doAction();
+        doAction(this.tmplStart, this.tmplStop);
         delegate.handleBean(start, stop, attrs);
     }
     
     public void handleBeanEnd(Mark start, Mark stop, Hashtable attrs) 
 	throws JasperException 
     {
-        doAction();
+        doAction(this.tmplStart, this.tmplStop);
         delegate.handleBeanEnd(start, stop, attrs);
     }
 
     public void handleGetProperty(Mark start, Mark stop, Hashtable attrs) 
 	throws JasperException 
     {
-        doAction();
+        doAction(this.tmplStart, this.tmplStop);
         delegate.handleGetProperty(start, stop, attrs);
     }
     
     public void handleSetProperty(Mark start, Mark stop, Hashtable attrs) 
 	throws JasperException 
     {
-        doAction();
+        doAction(this.tmplStart, this.tmplStop);
         delegate.handleSetProperty(start, stop, attrs);
     }
     
@@ -157,25 +163,25 @@ final class DelegatingListener implements ParseEventListener {
     				Hashtable param, String fallback) 
         throws JasperException 
     {
-        doAction();
+        doAction(this.tmplStart, this.tmplStop);
         delegate.handlePlugin(start, stop, attrs, param, fallback);
     }
     
-    public void handleCharData(char[] chars) throws JasperException {
-        delegate.handleCharData(chars);
+    public void handleCharData(Mark start, Mark stop, char[] chars) throws JasperException {
+        delegate.handleCharData(start, stop, chars);
     }
 
     public void handleForward(Mark start, Mark stop, Hashtable attrs, Hashtable param) 
         throws JasperException 
     {
-        doAction();
+        doAction(this.tmplStart, this.tmplStop);
         delegate.handleForward(start, stop, attrs, param);
     }
 
     public void handleInclude(Mark start, Mark stop, Hashtable attrs, Hashtable param) 
         throws JasperException 
     {
-        doAction();
+        doAction(this.tmplStart, this.tmplStop);
         delegate.handleInclude(start, stop, attrs, param);
     }
 
@@ -184,7 +190,7 @@ final class DelegatingListener implements ParseEventListener {
 			       TagInfo ti)
 	throws JasperException
     {
-        doAction();
+        doAction(this.tmplStart, this.tmplStop);
         delegate.handleTagBegin(start, stop, attrs, prefix, shortTagName, tli, ti);
     }
     
@@ -193,7 +199,7 @@ final class DelegatingListener implements ParseEventListener {
                              TagLibraryInfoImpl tli, TagInfo ti)
 	throws JasperException
     {
-        doAction();
+        doAction(this.tmplStart, this.tmplStop);
         delegate.handleTagEnd(start, stop, prefix, shortTagName, attrs, tli, ti);
     }
     
@@ -201,3 +207,4 @@ final class DelegatingListener implements ParseEventListener {
         return delegate.getTagLibraries();
     }
 }
+

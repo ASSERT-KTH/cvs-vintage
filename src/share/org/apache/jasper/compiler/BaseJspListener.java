@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/BaseJspListener.java,v 1.4 2000/02/23 02:23:44 mandar Exp $
- * $Revision: 1.4 $
- * $Date: 2000/02/23 02:23:44 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/BaseJspListener.java,v 1.5 2000/02/25 19:45:37 mandar Exp $
+ * $Revision: 1.5 $
+ * $Date: 2000/02/25 19:45:37 $
  *
  * ====================================================================
  * 
@@ -83,6 +83,9 @@ public class BaseJspListener implements ParseEventListener {
 	this.writer = writer;
     }
 
+    public void setTemplateInfo(Mark start, Mark stop) {
+    }
+
     public void beginPageProcessing() throws JasperException {
     }
     
@@ -142,7 +145,7 @@ public class BaseJspListener implements ParseEventListener {
 	throw new JasperException(Constants.getString("jsp.error.not.impl.plugin"));
     }
     
-    public void handleCharData(char[] chars) throws JasperException {
+    public void handleCharData(Mark start, Mark stop, char[] chars) throws JasperException {
         System.err.print(chars);
     }
 

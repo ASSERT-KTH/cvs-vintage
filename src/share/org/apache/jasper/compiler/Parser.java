@@ -90,18 +90,24 @@ public class Parser {
      */
     CharArrayWriter caw;
 
+    /*
+     * Marker for start and end of the tempate data.
+     */
+    Mark tmplStart;
+    Mark tmplStop;
+
     public interface Action {
-        void execute() throws JasperException;
+        void execute(Mark start, Mark stop) throws JasperException;
     }
 
     public Parser(JspReader reader, final ParseEventListener lnr) {
 	this.reader = reader;
 	this.listener = new DelegatingListener(lnr,
                                                new Action() {
-                                                       public void execute() 
+                                                       public void execute(Mark start, Mark stop) 
                                                            throws JasperException 
                                                        {
-                                                           Parser.this.flushCharData();
+                                                           Parser.this.flushCharData(start, stop);
                                                        }
                                                    });
 	this.caw = new CharArrayWriter();
@@ -196,7 +202,8 @@ public class Parser {
 		reader.advance(close.length());
 
 	    Mark stop = reader.mark();
-	    
+
+	    listener.setTemplateInfo(parser.tmplStart, parser.tmplStop);
 	    listener.handleDirective(match, start, stop, attrs);
 	    return true;
 	}
@@ -280,6 +287,7 @@ public class Parser {
 		else
 		    reader.advance(CLOSE_INCLUDE_NO_BODY.length());
 		Mark stop = reader.mark();
+		listener.setTemplateInfo(parser.tmplStart, parser.tmplStop);		
 		listener.handleInclude(start, stop, attrs, param);
 		return true;
 	    } else
@@ -361,6 +369,7 @@ public class Parser {
 		    reader.advance(CLOSE_FORWARD_NO_BODY.length());
 		
 		Mark stop = reader.mark();
+		listener.setTemplateInfo(parser.tmplStart, parser.tmplStop);		
 		listener.handleForward(start, stop, attrs, param);
 		return true;
 	    } else
@@ -395,7 +404,7 @@ public class Parser {
 		    throw new ParseException(Constants.getString("jsp.error.unterminated", 
                                                                  new Object[] { OPEN_COMMENT }));
 		
-		parser.flushCharData();
+		parser.flushCharData(start, stop);
 		return true;
 	    }
 	    return false;
@@ -452,6 +461,7 @@ public class Parser {
 		throw new ParseException(Constants.getString("jsp.error.unterminated", 
                                                              new Object[] { open }));
 
+	    listener.setTemplateInfo(parser.tmplStart, parser.tmplStop);	    
 	    listener.handleDeclaration(start, stop, attrs);
 	    return true;
 	}
@@ -504,6 +514,7 @@ public class Parser {
 		throw new ParseException(reader.mark(), 
                                          Constants.getString("jsp.error.unterminated", 
                                                                  new Object[] { open }));
+	    listener.setTemplateInfo(parser.tmplStart, parser.tmplStop);	    
 	    listener.handleExpression(start, stop, attrs);
 	    return true;
 	}
@@ -555,6 +566,7 @@ public class Parser {
 		throw new ParseException(reader.mark(), 
                                          Constants.getString("jsp.error.unterminated", 
                                                                  new Object[] { open }));
+	    listener.setTemplateInfo(parser.tmplStart, parser.tmplStop);	    
 	    listener.handleScriptlet(start, stop, attrs);
 	    return true;
 	}
@@ -598,6 +610,7 @@ public class Parser {
                                                                  new Object[] { "useBean" }));
 		    reader.advance(CLOSE_BEAN_3.length());
                     Mark stop = reader.mark();
+		    listener.setTemplateInfo(parser.tmplStart, parser.tmplStop);		    
                     listener.handleBean(start, stop, attrs);
 		    int oldSize = reader.size;
 		    parser.parse(CLOSE_BEAN_2);
@@ -613,11 +626,13 @@ public class Parser {
 						 );
 
 		    reader.advance (CLOSE_BEAN_2.length());
+		    
                     listener.handleBeanEnd(start, stop, attrs);
                     return true;
 		} else {
                     reader.advance(CLOSE_BEAN.length());
                     Mark stop = reader.mark();
+		    listener.setTemplateInfo(parser.tmplStart, parser.tmplStop);		    
                     listener.handleBean(start, stop, attrs);
                     listener.handleBeanEnd(start, stop, attrs);
                     return true;
@@ -660,6 +675,7 @@ public class Parser {
 		else
 		    reader.advance(CLOSE_GETPROPERTY.length());
 		Mark stop = reader.mark();
+		listener.setTemplateInfo(parser.tmplStart, parser.tmplStop);		
 		listener.handleGetProperty(start, stop, attrs);
 		return true;
 	    } else
@@ -702,6 +718,7 @@ public class Parser {
 		else
 		    reader.advance(CLOSE_SETPROPERTY.length());
 		Mark stop = reader.mark();
+		listener.setTemplateInfo(parser.tmplStart, parser.tmplStop);		
 		listener.handleSetProperty(start, stop, attrs);
 		return true;
 	    } else
@@ -781,7 +798,8 @@ public class Parser {
 		    reader.advance(CLOSE_1.length());
 		else
 		    throw new ParseException(start, "Body is supposed to be empty for "+tag);
-		
+
+		listener.setTemplateInfo(parser.tmplStart, parser.tmplStop);		
 		listener.handleTagBegin(start, reader.mark(), attrs, prefix,
 					shortTagName, tli, ti);
 		listener.handleTagEnd(start, reader.mark(), prefix, 
@@ -793,6 +811,7 @@ public class Parser {
 		if (reader.matches(CLOSE)) {
 		    reader.advance(CLOSE.length());
 		    bodyStart = reader.mark();
+		    listener.setTemplateInfo(parser.tmplStart, parser.tmplStop);		    
 		    listener.handleTagBegin(start, bodyStart, attrs, prefix, 
 					    shortTagName, tli, ti);
                     if (bc.equalsIgnoreCase(TagInfo.BODY_CONTENT_TAG_DEPENDENT) ||
@@ -932,6 +951,7 @@ public class Parser {
 
 		reader.advance(CLOSE_PLUGIN.length());
 		Mark stop = reader.mark();
+		listener.setTemplateInfo(parser.tmplStart, parser.tmplStop);		
 		listener.handlePlugin(start, stop, attrs, param, fallback);
 		return true;
 	    } else
@@ -963,21 +983,25 @@ public class Parser {
             throws JasperException 
 	{
             try {
+		Mark start = reader.mark();
                 if (reader.matches(QUOTED_START_TAG)) {
                     reader.advance(QUOTED_START_TAG.length());
+		    Mark end = reader.mark();
                     parser.caw.write(START_TAG);
-                    parser.flushCharData();
+                    parser.flushCharData(start, end);
                     return true;
                 } else if (reader.matches(APOS)) {
                     reader.advance(APOS.length());
+		    Mark end = reader.mark();
                     parser.caw.write("\'");
-                    parser.flushCharData();
+                    parser.flushCharData(start, end);
                     return true;
                 }
                 else if (reader.matches(QUOTE)) {
                     reader.advance(QUOTE.length());
+		    Mark end = reader.mark();
                     parser.caw.write("\"");
-                    parser.flushCharData();
+                    parser.flushCharData(start, end);
                     return true;
                 }
             } catch (java.io.IOException ex) {
@@ -991,10 +1015,10 @@ public class Parser {
 	coreElements.addElement(new QuoteEscape());
     }
 
-    void flushCharData() throws JasperException {
+    void flushCharData(Mark start, Mark stop) throws JasperException {
         char[] array = caw.toCharArray();
         if (array.length != 0) // Avoid unnecessary out.write("") statements...
-            listener.handleCharData(caw.toCharArray());
+            listener.handleCharData(start, stop, caw.toCharArray());
         caw = new CharArrayWriter();
     }
 
@@ -1007,6 +1031,8 @@ public class Parser {
     }
     
     public void parse(String until, Class[] accept) throws JasperException {
+
+	boolean noJspElement = false;
 	while (reader.hasMoreInput()) {
             if (until != null && reader.matches(until)) 
                 return;
@@ -1033,14 +1059,25 @@ public class Parser {
                                       new Object[] { c.getClass().getName(), m },
                                       Logger.DEBUG);
 		    accepted = true;
+		    noJspElement = false;
 		    break;
 		} 
 	    }
 	    if (!accepted) {
+
+		// This is a hack. "reader.nextContent()" will just return 
+		// after it sees "<" -- not necessarily a JSP element. Using
+		// a boolean we will ensure that tmplStart changes only when
+		// strictly necessary.
+		if (noJspElement == false) {
+		    tmplStart = reader.mark();
+		    noJspElement = true;
+		}
 		String s = reader.nextContent();
+		tmplStop = reader.mark();
 		caw.write(s, 0, s.length());
 	    }
 	}
-	flushCharData();
+	flushCharData(tmplStart, tmplStop);
     }
 }
