@@ -39,7 +39,7 @@ import org.gjt.sp.util.Log;
  * this file out.
  * @since jEdit 4.0pre4
  * @author Slava Pestov
- * @version $Id: Java14.java,v 1.14 2003/01/11 03:56:48 spestov Exp $
+ * @version $Id: Java14.java,v 1.15 2003/01/15 01:50:25 spestov Exp $
  */
 public class Java14
 {
@@ -131,7 +131,7 @@ public class Java14
 	{
 		public Component getDefaultComponent(Container focusCycleRoot)
 		{
-			return ((View)focusCycleRoot).getTextArea();
+			return GUIUtilities.getView(focusCycleRoot).getTextArea();
 		}
 	} //}}}
 
