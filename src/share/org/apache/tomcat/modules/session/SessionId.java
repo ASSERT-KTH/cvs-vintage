@@ -237,13 +237,7 @@ public class SessionId extends  BaseInterceptor
 
 	    // if the session was NEW ( never accessed - change it's state )
 	    if( sess.getState() == ServerSession.STATE_NEW ) {
-		reqI= request.getContainer().
-		    getInterceptors(Container.H_sessionState);
-		for( int i=0; i< reqI.length; i++ ) {
-		    reqI[i].sessionState( request,
-					  sess,  ServerSession.STATE_ACCESSED);
-		}
-		sess.setState( ServerSession.STATE_ACCESSED);
+		sess.setState( ServerSession.STATE_ACCESSED, request);
 	    }
 	}
 	return sess;
