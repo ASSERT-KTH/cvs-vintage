@@ -49,7 +49,7 @@ import org.gjt.sp.util.Log;
  * @see JEditTextArea
  *
  * @author Slava Pestov
- * @version $Id: TextAreaPainter.java,v 1.75 2003/03/31 01:42:33 spestov Exp $
+ * @version $Id: TextAreaPainter.java,v 1.76 2003/04/02 01:45:27 spestov Exp $
  */
 public class TextAreaPainter extends JComponent implements TabExpander
 {
@@ -1079,23 +1079,21 @@ public class TextAreaPainter extends JComponent implements TabExpander
 				gfx.setColor(bgColor);
 				gfx.fillRect(0,y,getWidth(),fm.getHeight());
 			} //}}}
-			//{{{ Paint token backgrounds
-			else
-			{
-				ChunkCache.LineInfo lineInfo = textArea.chunkCache
-					.getLineInfo(screenLine);
-				if(!lineInfo.chunksValid)
-					Log.log(Log.ERROR,this,"Chunks not valid for " + screenLine);
 
-				if(lineInfo.chunks != null)
-				{
-					float baseLine = y + fm.getHeight()
-						- fm.getLeading() - fm.getDescent();
-					Chunk.paintChunkBackgrounds(
-						lineInfo.chunks,gfx,
-						textArea.getHorizontalOffset(),
-						baseLine);
-				}
+			//{{{ Paint token backgrounds
+			ChunkCache.LineInfo lineInfo = textArea.chunkCache
+				.getLineInfo(screenLine);
+			if(!lineInfo.chunksValid)
+				Log.log(Log.ERROR,this,"Chunks not valid for " + screenLine);
+
+			if(lineInfo.chunks != null)
+			{
+				float baseLine = y + fm.getHeight()
+					- fm.getLeading() - fm.getDescent();
+				Chunk.paintChunkBackgrounds(
+					lineInfo.chunks,gfx,
+					textArea.getHorizontalOffset(),
+					baseLine);
 			} //}}}
 		} //}}}
 	} //}}}

@@ -39,7 +39,7 @@ import org.gjt.sp.util.Log;
  * called through, implements such protection.
  *
  * @author Slava Pestov
- * @version $Id: OffsetManager.java,v 1.51 2003/03/31 01:42:33 spestov Exp $
+ * @version $Id: OffsetManager.java,v 1.52 2003/04/02 01:45:26 spestov Exp $
  * @since jEdit 4.0pre1
  */
 public class OffsetManager
@@ -244,17 +244,28 @@ public class OffsetManager
 			Anchor anchor = anchors;
 			for(;;)
 			{
-				if(anchor == null || anchor.physicalLine <= line)
+				if(anchor == null || anchor.physicalLine < line)
 					break;
 
-				long anchorVisibilityMask = (1L << (anchor.index + VISIBLE_SHIFT));
-				if((info & anchorVisibilityMask) != 0)
+				// now, this is strange semantics, but since the
+				// only two uses of the 'anchor' API are first
+				// line and scroll line count trackers in
+				// DisplayManager, its ok.
+
+				// the scroll line count never satisifies this
+				// condition. if the first line satisfies this,
+				// we have to make sure the skew does not exceed
+				// the screen line count of the first line.
+				if(anchor.physicalLine == line)
+					anchor.callChanged = true;
+				else
 				{
-					//System.err.println("anchor screen shift from "
-					//	+ anchor.scrollLine + " to "
-					//	+ (anchor.scrollLine + (count - oldCount)));
-					if(count != oldCount)
+					long anchorVisibilityMask = (1L << (anchor.index + VISIBLE_SHIFT));
+					if((info & anchorVisibilityMask) != 0)
 					{
+						//System.err.println("anchor screen shift from "
+						//	+ anchor.scrollLine + " to "
+						//	+ (anchor.scrollLine + (count - oldCount)));
 						anchor.scrollLine += (count - oldCount);
 						anchor.callChanged = true;
 					}
@@ -381,7 +392,11 @@ public class OffsetManager
 					lineInfo[i] &= ~VISIBLE_MASK;
 			}
 		}
+	} //}}}
 
+	//{{{ resetAnchors() method
+	public void resetAnchors()
+	{
 		Anchor anchor = anchors;
 		while(anchor != null)
 		{
@@ -393,6 +408,7 @@ public class OffsetManager
 	//{{{ invalidateScreenLineCounts() method
 	public void invalidateScreenLineCounts()
 	{
+		System.err.println(buffer + ": islc: here is a scan for you");
 		for(int i = 0; i < lineCount; i++)
 			lineInfo[i] &= ~SCREEN_LINES_VALID_MASK;
 	} //}}}
@@ -416,13 +432,6 @@ public class OffsetManager
 
 		for(int i = 0; i < positionCount; i++)
 			positions[i].offset = 0;
-
-		Anchor anchor = anchors;
-		while(anchor != null)
-		{
-			anchor.reset();
-			anchor = anchor.next;
-		}
 	} //}}}
 
 	//{{{ contentInserted() method

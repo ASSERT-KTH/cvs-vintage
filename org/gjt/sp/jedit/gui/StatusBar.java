@@ -50,7 +50,7 @@ import org.gjt.sp.util.*;
  * <li>Displaying memory status
  * </ul>
  *
- * @version $Id: StatusBar.java,v 1.54 2003/04/01 02:58:08 spestov Exp $
+ * @version $Id: StatusBar.java,v 1.55 2003/04/02 01:45:26 spestov Exp $
  * @author Slava Pestov
  * @since jEdit 3.2pre2
  */
@@ -494,19 +494,23 @@ public class StatusBar extends JPanel implements WorkThreadProgressListener
 			 * components/strings
 			 */
 			buf.setLength(0);
-			if (showEditMode)
-				buf.append(buffer.getMode().getName());
-			if (showFoldMode)
+
+			if (buffer.isLoaded())
 			{
 				if (showEditMode)
-					buf.append(",");
-				buf.append((String)view.getBuffer().getProperty("folding"));
-			}
-			if (showEncoding)
-			{
-				if (showEditMode || showFoldMode)
-					buf.append(",");
-				buf.append(buffer.getStringProperty("encoding"));
+					buf.append(buffer.getMode().getName());
+				if (showFoldMode)
+				{
+					if (showEditMode)
+						buf.append(",");
+					buf.append((String)view.getBuffer().getProperty("folding"));
+				}
+				if (showEncoding)
+				{
+					if (showEditMode || showFoldMode)
+						buf.append(",");
+					buf.append(buffer.getStringProperty("encoding"));
+				}
 			}
 
 			mode.setText("(" + buf.toString() + ")");

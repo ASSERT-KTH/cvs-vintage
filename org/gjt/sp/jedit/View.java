@@ -74,7 +74,7 @@ import org.gjt.sp.jedit.textarea.*;
  *
  * @author Slava Pestov
  * @author John Gellene (API documentation)
- * @version $Id: View.java,v 1.67 2003/03/29 20:29:31 spestov Exp $
+ * @version $Id: View.java,v 1.68 2003/04/02 01:45:26 spestov Exp $
  */
 public class View extends JFrame implements EBComponent
 {
@@ -1088,8 +1088,6 @@ public class View extends JFrame implements EBComponent
 
 		status = new StatusBar(this);
 
-		setJMenuBar(GUIUtilities.loadMenuBar("view.mbar"));
-
 		inputHandler = new DefaultInputHandler(this,(DefaultInputHandler)
 			jEdit.getInputHandler());
 
@@ -1308,6 +1306,8 @@ public class View extends JFrame implements EBComponent
 	 */
 	private void propertiesChanged()
 	{
+		setJMenuBar(GUIUtilities.loadMenuBar("view.mbar"));
+
 		loadToolBars();
 
 		showFullPath = jEdit.getBooleanProperty("view.showFullPath");

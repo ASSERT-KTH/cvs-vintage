@@ -54,7 +54,7 @@ import org.gjt.sp.util.Log;
  *
  * @author Slava Pestov
  * @author John Gellene (API documentation)
- * @version $Id: JEditTextArea.java,v 1.219 2003/04/01 02:58:09 spestov Exp $
+ * @version $Id: JEditTextArea.java,v 1.220 2003/04/02 01:45:27 spestov Exp $
  */
 public class JEditTextArea extends JComponent
 {
@@ -4554,6 +4554,8 @@ loop:			for(int i = lineNo + 1; i < getLineCount(); i++)
 		}
 
 		maxHorizontalScrollWidth = 0;
+
+		displayManager.propertiesChanged();
 		updateScrollBars();
 
 		chunkCache.invalidateAll();

@@ -40,7 +40,7 @@ import org.gjt.sp.jedit.MiscUtilities;
  *
  * @author Slava Pestov
  * @author John Gellene (API documentation)
- * @version $Id: Selection.java,v 1.14 2003/03/31 01:42:33 spestov Exp $
+ * @version $Id: Selection.java,v 1.15 2003/04/02 01:45:27 spestov Exp $
  * @since jEdit 3.2pre1
  */
 public abstract class Selection implements Cloneable
@@ -243,7 +243,7 @@ public abstract class Selection implements Cloneable
 		{
 			boolean changed = false;
 
-			if(this.start > start)
+			if(this.start >= start)
 			{
 				this.start += length;
 				if(numLines != 0)

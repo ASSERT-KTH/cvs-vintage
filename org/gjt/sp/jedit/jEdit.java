@@ -45,7 +45,7 @@ import org.gjt.sp.util.Log;
 /**
  * The main class of the jEdit text editor.
  * @author Slava Pestov
- * @version $Id: jEdit.java,v 1.122 2003/04/01 02:58:08 spestov Exp $
+ * @version $Id: jEdit.java,v 1.123 2003/04/02 01:45:26 spestov Exp $
  */
 public class jEdit
 {
@@ -837,6 +837,15 @@ public class jEdit
 			jEdit.getBooleanProperty("showTooltips"));
 
 		initProxy();
+
+		// we do this here instead of adding buffers to the bus.
+		Buffer buffer = buffersFirst;
+		while(buffer != null)
+		{
+			buffer.resetCachedProperties();
+			buffer.propertiesChanged();
+			buffer = buffer.next;
+		}
 
 		EditBus.send(new PropertiesChanged(null));
 	} //}}}
