@@ -26,6 +26,7 @@ $l10n.PageForSelectingAttributes
    <th>$l10n.FilterString</th>
    <td><input type="text" name="searchString" value="$searchString" />&nbsp;
      <select name="searchField" >
+      <option value="Any" #if($searchField.equals("Any")) selected="selected"#end>$l10n.Any</option>
       <option value="Name" #if($searchField.equals("Name")) selected="selected"#end>$l10n.Name</option>
       <option value="Description" #if($searchField.equals("Description")) selected="selected"#end>$l10n.Description</option>
      </select>&nbsp;<input type="submit" name="eventSubmit_doRefresh" value="$l10n.Filter" /></td>
