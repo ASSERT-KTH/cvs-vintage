@@ -48,7 +48,7 @@ import org.jboss.metadata.XmlLoadable;
 import org.jboss.security.AuthenticationManager;
 import org.jboss.security.RealmMapping;
 import org.jboss.system.ServiceMBeanSupport;
-import org.jboss.util.MBeanProxy;
+import org.jboss.util.jmx.MBeanProxy;
 import org.jboss.verifier.BeanVerifier;
 import org.jboss.verifier.event.VerificationEvent;
 import org.jboss.verifier.event.VerificationListener;
@@ -74,7 +74,7 @@ import org.jboss.management.j2ee.EjbModule;
 * @author <a href="mailto:peter.antman@tim.se">Peter Antman</a>.
 * @author <a href="mailto:scott.stark@jboss.org">Scott Stark</a>
 * @author <a href="mailto:sacha.labourey@cogito-info.ch">Sacha Labourey</a>
-* @version $Revision: 1.7 $ 
+* @version $Revision: 1.8 $ 
 */
 public class EJBDeployer
 extends ServiceMBeanSupport

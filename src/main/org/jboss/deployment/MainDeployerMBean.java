@@ -15,7 +15,7 @@ import java.util.Collection;
 import javax.management.ObjectName;
 
 import org.jboss.system.ServiceMBean;
-import org.jboss.util.ObjectNameFactory;
+import org.jboss.util.jmx.ObjectNameFactory;
 
 /**
  * This is the interface of the AutoDeployer that is exposed for
@@ -26,7 +26,7 @@ import org.jboss.util.ObjectNameFactory;
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  * @author <a href="mailto:toby.allsopp@peace.com">Toby Allsopp</a>
  * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
- * @version $Revision: 1.6 $
+ * @version $Revision: 1.7 $
  *      <p><b>20011223 marc fleury:</b>
  *      <ul> 
  *      <li>add/RemoveURL, added the capacity to dynamically add a URL to watch

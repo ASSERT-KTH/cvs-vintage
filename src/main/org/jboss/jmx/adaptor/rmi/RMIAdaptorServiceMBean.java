@@ -8,13 +8,13 @@
 package org.jboss.jmx.adaptor.rmi;
 
 import javax.management.ObjectName;
-import org.jboss.util.ObjectNameFactory;
+import org.jboss.util.jmx.ObjectNameFactory;
 
 /**
  * RMI Adaptor allowing an network aware client
  * to work directly with a remote JMX Agent.
  *
- * @version $Revision: 1.3 $
+ * @version $Revision: 1.4 $
  * @author  <A href="mailto:andreas.schaefer@madplanet.com">Andreas &quot;Mad&quot; Schaefer</A>
  */
 public interface RMIAdaptorServiceMBean

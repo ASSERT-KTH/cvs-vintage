@@ -50,7 +50,7 @@ import org.jboss.system.Service;
 import org.jboss.system.ServiceControllerMBean;
 import org.jboss.system.ServiceLibraries;
 import org.jboss.system.ServiceMBeanSupport;
-import org.jboss.util.MBeanProxy;
+import org.jboss.util.jmx.MBeanProxy;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -67,7 +67,7 @@ import org.xml.sax.SAXException;
  * @author <a href="mailto:David.Maplesden@orion.co.nz">David Maplesden</a>
  * @author <a href="mailto:d_jencks@users.sourceforge.net">David Jencks</a>
  * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
- * @version $Revision: 1.12 $
+ * @version $Revision: 1.13 $
  *
  * <p><b>20010830 marc fleury:</b>
  * <ul>

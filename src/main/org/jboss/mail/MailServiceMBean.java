@@ -8,13 +8,13 @@
 package org.jboss.mail;
 
 import javax.management.ObjectName;
-import org.jboss.util.ObjectNameFactory;
+import org.jboss.util.jmx.ObjectNameFactory;
 
 /**
  * MBean interface for the mail service.
  * 
  * @author <a href="mailto:simone.bordet@compaq.com">Simone Bordet</a>
- * @version $Revision: 1.6 $
+ * @version $Revision: 1.7 $
  */
 public interface MailServiceMBean
    extends org.jboss.system.ServiceMBean

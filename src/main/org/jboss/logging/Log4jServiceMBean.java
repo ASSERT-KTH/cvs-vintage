@@ -8,14 +8,14 @@ package org.jboss.logging;
 
 import javax.management.ObjectName;
 
-import org.jboss.util.ObjectNameFactory;
+import org.jboss.util.jmx.ObjectNameFactory;
 
 /**
  * Management interface for log4j
  *
  * @author <a href="mailto:phox@galactica.it">Fulco Muriglio</a>
  * @author <a href="mailto:Scott_Stark@displayscape.com">Scott Stark</a>.
- * @version $Revision: 1.4 $
+ * @version $Revision: 1.5 $
  */
 public interface Log4jServiceMBean
 {

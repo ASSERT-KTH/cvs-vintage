@@ -11,7 +11,7 @@ import java.util.Map;
 
 import javax.management.ObjectName;
 
-import org.jboss.util.ObjectNameFactory;
+import org.jboss.util.jmx.ObjectNameFactory;
 
 /**
  * The management interface for the Info bean.
@@ -20,7 +20,7 @@ import org.jboss.util.ObjectNameFactory;
  * @author <a href="mailto:hiram.chirino@jboss.org">Hiram Chirino</a>
  * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
  * @author <a href="mailto:marc.fleurY@jboss.org">Marc Fleury</a>
- * @version $Revision: 1.6 $
+ * @version $Revision: 1.7 $
  */
 public interface InfoMBean
 {

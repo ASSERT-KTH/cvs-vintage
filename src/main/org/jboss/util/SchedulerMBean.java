@@ -12,7 +12,7 @@ import java.util.Date;
 
 import javax.management.ObjectName;
 
-import org.jboss.util.ObjectNameFactory;
+import org.jboss.util.jmx.ObjectNameFactory;
 import org.jboss.system.ServiceMBean;
 
 /**
@@ -28,7 +28,7 @@ import org.jboss.system.ServiceMBean;
  * defines which one is used. Therefore you should <b>never mixed these two</b>.
  *
  * @author <a href="mailto:andreas.schaefer@madplanet.com">Andreas Schaefer</a>
- * @version $Revision: 1.11 $
+ * @version $Revision: 1.12 $
  **/
 interface SchedulerMBean
    extends ServiceMBean

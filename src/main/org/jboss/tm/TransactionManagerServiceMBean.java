@@ -9,7 +9,7 @@ package org.jboss.tm;
 
 import javax.management.ObjectName;
 
-import org.jboss.util.ObjectNameFactory;
+import org.jboss.util.jmx.ObjectNameFactory;
 import org.jboss.system.ServiceMBean;
 
 /**
@@ -17,7 +17,7 @@ import org.jboss.system.ServiceMBean;
  *      
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  * @author <a href="mailto:toby.allsopp@peace.com">Toby Allsopp</a>
- * @version $Revision: 1.9 $
+ * @version $Revision: 1.10 $
  */
 public interface TransactionManagerServiceMBean
    extends ServiceMBean

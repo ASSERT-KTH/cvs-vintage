@@ -13,13 +13,13 @@ import java.net.URL;
 
 import javax.management.ObjectName;
 
-import org.jboss.util.ObjectNameFactory;
+import org.jboss.util.jmx.ObjectNameFactory;
 
 /**
  * The JMX MBean interface for the <tt>ServerConfig</tt> component.
  *      
  * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
- * @version $Revision: 1.4 $
+ * @version $Revision: 1.5 $
  */
 public interface ServerConfigMBean
 {

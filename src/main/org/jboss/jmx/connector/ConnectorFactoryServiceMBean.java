@@ -14,7 +14,7 @@ import javax.management.DynamicMBean;
 import javax.management.MBeanServer;
 import javax.management.ObjectName;
 
-import org.jboss.util.ObjectNameFactory;
+import org.jboss.util.jmx.ObjectNameFactory;
 import org.jboss.jmx.connector.RemoteMBeanServer;
 import org.jboss.system.ServiceMBean;
 
@@ -24,7 +24,7 @@ import org.jboss.system.ServiceMBean;
  *
  * This is just the (incomplete) interface of it
  *
- * @version $Revision: 1.5 $
+ * @version $Revision: 1.6 $
  * @author <A href="mailto:andreas.schaefer@madplanet.com">Andreas &quot;Mad&quot; Schaefer</A>
  */
 public interface ConnectorFactoryServiceMBean

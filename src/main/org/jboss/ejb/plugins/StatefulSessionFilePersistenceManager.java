@@ -35,7 +35,7 @@ import org.jboss.ejb.StatefulSessionPersistenceManager;
 import org.jboss.ejb.StatefulSessionEnterpriseContext;
 import org.jboss.logging.Logger;
 import org.jboss.system.ServerConfigMBean;
-import org.jboss.util.MBeanServerLocator;
+import org.jboss.util.jmx.MBeanServerLocator;
 
 /**
  *  This class is one of the passivating plugins for JBoss.
@@ -44,7 +44,7 @@ import org.jboss.util.MBeanServerLocator;
  *  @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  *  @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  *  @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
- *  @version $Revision: 1.30 $
+ *  @version $Revision: 1.31 $
  */
 public class StatefulSessionFilePersistenceManager
    implements StatefulSessionPersistenceManager

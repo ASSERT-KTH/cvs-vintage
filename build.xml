@@ -12,7 +12,7 @@
 <!--                                                                        -->
 <!-- ====================================================================== -->
 
-<!-- $Id: build.xml,v 1.59 2002/02/15 01:17:35 user57 Exp $ -->
+<!-- $Id: build.xml,v 1.60 2002/02/15 06:18:30 user57 Exp $ -->
 
 <project default="main" name="JBoss/Server">
 
@@ -211,6 +211,13 @@
       <pathelement path="${jboss.j2ee.lib}/jboss-j2ee.jar"/>
     </path>
 
+    <!-- Common -->
+    <property name="jboss.common.root" value="${project.root}/common/output"/>
+    <property name="jboss.common.lib" value="${jboss.common.root}/lib"/>
+    <path id="jboss.common.classpath">
+      <pathelement path="${jboss.common.lib}/jboss-common.jar"/>
+    </path>
+
     <!-- Naming -->
     <property name="jboss.naming.root" value="${project.root}/naming/output"/>
     <property name="jboss.naming.lib" value="${jboss.naming.root}/lib"/>
@@ -221,6 +228,7 @@
     <!-- The combined dependant module classpath -->
     <path id="dependentmodule.classpath">
       <path refid="jboss.j2ee.classpath"/>
+      <path refid="jboss.common.classpath"/>
       <path refid="jboss.naming.classpath"/>
     </path>
 
@@ -481,9 +489,6 @@
         <!-- Exclude command line utilities -->
         <exclude name="org/jboss/*"/>
 
-        <!-- Exclude utilities, they are now in jboss-util.jar -->
-        <exclude name="org/jboss/util/*"/>
-        
         <!-- Exclude JMX Connector stuff we will use the connector SAR for that -->
         <exclude name="org/jboss/jmx/**"/>
       </fileset>
@@ -504,13 +509,6 @@
       </fileset>
     </jar>
 
-    <!-- Build jboss-util.jar -->
-    <jar jarfile="${build.lib}/jboss-util.jar">
-      <fileset dir="${build.classes}">
-        <include name="org/jboss/util/**"/>
-      </fileset>
-    </jar>
-
     <!-- 
        | Build jboss-boot.jar
        |
@@ -526,12 +524,14 @@
         <include name="org/jboss/system/ServiceLibraries*.class"/>
         <include name="org/jboss/system/Server*.class"/>
         <include name="org/jboss/deployment/DeploymentException.class"/>
-
-        <!-- Included as a duplicate class to allow core components to use it. -->
-        <include name="org/jboss/util/ObjectNameFactory.class"/>
       </fileset>
       <fileset dir="${build.resources}">
         <include name="org/jboss/version.properties"/>
+      </fileset>
+
+      <!-- HACK, HACK, HACK to allow core components to use these common classes -->
+      <fileset dir="${jboss.common.root}/classes">
+        <include name="org/jboss/util/jmx/ObjectNameFactory*.class"/>
       </fileset>
     </jar>
 
@@ -552,9 +552,6 @@
         <include name="org/jboss/deployment/SARDeployer*.class"/>
         <include name="org/jboss/deployment/DeploymentInfo.class"/>
         <include name="org/jboss/deployment/DeployerMBean*.class"/>
-
-        <!-- Currently duplicated to allow the testsuite to run -->
-        <include name="org/jboss/deployment/DeploymentException.class"/>
       </fileset>
     </jar>
 	 
@@ -562,7 +559,7 @@
     <jar jarfile="${build.lib}/jboss-client.jar"
          manifest="${build.etc}/jboss-client.mf">
       <fileset dir="${build.classes}">
-        <include name="org/jboss/ejb/DeploymentException.class"/>
+        <include name="org/jboss/deployment/DeploymentException.class"/>
         <include name="org/jboss/proxy/**"/>
         <include name="org/jboss/invocation/Invoker.class"/>
         <include name="org/jboss/invocation/Invocation.class"/>
@@ -705,6 +702,7 @@
     <jar jarfile="${build.lib}/deploy.jar"
          manifest="${build.etc}/deploy.mf">
       <fileset dir="${build.classes}">
+         <include name="org/jboss/deployment/**"/>
          <include name="org/jboss/jmx/service/Deployer.class"/>
          <include name="org/jboss/jmx/connector/RemoteMBeanServer**"/>
          <include name="org/jboss/jmx/connector/notification/RMI**"/>
@@ -786,19 +784,6 @@
       </fileset>
       <fileset dir="${build.etc}/conf/default">
         <include name="standardjboss.xml"/>
-      </fileset>
-    </jar>
-
-    <!-- Build jboss-util.jar -->
-    <jar jarfile="${build.lib}/jboss-util.jar">
-      <fileset dir="${build.classes}">
-        <include name="org/jboss/util/Service.class"/>
-        <include name="org/jboss/util/ServiceMBean*"/>
-        <include name="org/jboss/util/MBeanProxy*"/>
-        <include name="org/jboss/proxy/**"/>
-        <include name="org/jboss/logging/Log.class"/>
-        <include name="org/jboss/logging/LogWriter.class"/>
-        <include name="org/jboss/monitor/MetricsConstants.class"/>
       </fileset>
     </jar>
 

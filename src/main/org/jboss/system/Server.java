@@ -32,7 +32,7 @@ import org.jboss.Version;
  *      
  * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
  * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
- * @version $Revision: 1.14 $
+ * @version $Revision: 1.15 $
  */
 public class Server
    implements ServerMBean
@@ -223,10 +223,8 @@ public class Server
       // Add the local path stuff
       URL libURL = config.getLibraryURL();
       list.add(new URL(libURL, "log4j.jar"));
+      list.add(new URL(libURL, "jboss-common.jar"));
       list.add(new URL(libURL, "jboss-spine.jar"));
-      list.add(new URL(libURL, "jboss-util.jar"));
-      
-      // list.add(new URL(config.getLibraryURL(), "jboss-proxy.jar"));
       
       // Create loaders for each URL
       Iterator iter = list.iterator();

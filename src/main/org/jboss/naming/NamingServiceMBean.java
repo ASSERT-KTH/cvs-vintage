@@ -11,14 +11,14 @@ import javax.management.ObjectName;
 
 import org.jnp.server.MainMBean;
 
-import org.jboss.util.ObjectNameFactory;
+import org.jboss.util.jmx.ObjectNameFactory;
 import org.jboss.system.ServiceMBean;
 
 /**
  * The JMX management interface for the {@link NamingService} MBean.
  *      
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
- * @version $Revision: 1.9 $
+ * @version $Revision: 1.10 $
  */
 public interface NamingServiceMBean
    extends ServiceMBean, MainMBean

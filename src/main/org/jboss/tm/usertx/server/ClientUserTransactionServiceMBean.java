@@ -8,13 +8,13 @@
 package org.jboss.tm.usertx.server;
 
 import javax.management.ObjectName;
-import org.jboss.util.ObjectNameFactory;
+import org.jboss.util.jmx.ObjectNameFactory;
 
 /**
  * MBean for ClientUserTransaction service.
  *
  * @author <a href="mailto:osh@sparre.dk">Ole Husgaard</a>
- * @version $Revision: 1.5 $
+ * @version $Revision: 1.6 $
  */
 public interface ClientUserTransactionServiceMBean
    extends org.jboss.system.ServiceMBean

@@ -12,7 +12,7 @@ import javax.management.ObjectName;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
-import org.jboss.util.ObjectNameFactory;
+import org.jboss.util.jmx.ObjectNameFactory;
 
 /** 
  * This is the main Service Controller API.
@@ -23,7 +23,7 @@ import org.jboss.util.ObjectNameFactory;
  * @see Service
  *
  * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
- * @version $Revision: 1.10 $
+ * @version $Revision: 1.11 $
  *
  * <p><b>20010830 marc fleury:</b>
  * <ul>

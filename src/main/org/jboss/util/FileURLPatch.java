@@ -18,13 +18,14 @@ import java.net.URLStreamHandler;
 import java.net.URLConnection;
 
 import org.jboss.logging.Logger;
+import org.jboss.util.jmx.ObjectNameFactory;
 
 /** A MBean that patches the file URL handing implementation so that JBoss
  * can be run in directories with a space in it.  Has the weird side-effect that
  * all file based URLs when externalized with have spaces replaced with pluses.
  *      
  *   @author <a href="mailto:hiram.chirino@jboss.org">Hiram Chirino</a>.
- *   @version $Revision: 1.5 $
+ *   @version $Revision: 1.6 $
  */
 public class FileURLPatch implements FileURLPatchMBean, MBeanRegistration {
 

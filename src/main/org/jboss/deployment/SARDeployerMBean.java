@@ -9,7 +9,7 @@ package org.jboss.deployment;
 
 import javax.management.ObjectName;
 
-import org.jboss.util.ObjectNameFactory;
+import org.jboss.util.jmx.ObjectNameFactory;
 
 import org.jboss.system.Service;
 
@@ -19,7 +19,7 @@ import org.jboss.system.Service;
  * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
  * @see org.jboss.system.Service
  *
- * @version $Revision: 1.3 $
+ * @version $Revision: 1.4 $
  *
  * <p><b>20010830 marc fleury:</b>
  * <ul>

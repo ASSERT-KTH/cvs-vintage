@@ -12,7 +12,7 @@ import org.w3c.dom.Element;
 
 import javax.management.ObjectName;
 
-import org.jboss.util.ObjectNameFactory;
+import org.jboss.util.jmx.ObjectNameFactory;
 import org.jboss.system.ServiceMBean;
 
 /**
@@ -21,7 +21,7 @@ import org.jboss.system.ServiceMBean;
  *
  * @author Andreas Schaefer (andreas.schaefer@madplanet.com)
  * @created   June 22, 2001
- * @version   $Revision: 1.2 $
+ * @version   $Revision: 1.3 $
  */
 public interface XMLTestServiceMBean
   extends ServiceMBean

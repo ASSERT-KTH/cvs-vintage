@@ -12,14 +12,14 @@ import java.net.URL;
 
 import javax.management.ObjectName;
 
-import org.jboss.util.ObjectNameFactory;
+import org.jboss.util.jmx.ObjectNameFactory;
 
 /**
  * An mbean for configuring the classloader web service.
  *      
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>.
  * @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>.
- * @version $Revision: 1.9 $
+ * @version $Revision: 1.10 $
  */
 public interface WebServiceMBean
    extends org.jboss.system.ServiceMBean

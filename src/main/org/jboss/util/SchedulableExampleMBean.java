@@ -12,6 +12,7 @@ import javax.management.Notification;
 import javax.management.ObjectName;
 
 import org.jboss.system.ServiceMBean;
+import org.jboss.util.jmx.ObjectNameFactory;
 
 /**
  *

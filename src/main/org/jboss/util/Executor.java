@@ -13,13 +13,14 @@ import javax.management.*;
 import javax.management.loading.MLet;
 
 import org.jboss.logging.Logger;
+import org.jboss.util.jmx.ObjectNameFactory;
 
 /**
  *   <description> 
  *      
  *   @see <related>
  *   @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>.
- *   @version $Revision: 1.10 $
+ *   @version $Revision: 1.11 $
  */
 public class Executor
    implements ExecutorMBean, MBeanRegistration

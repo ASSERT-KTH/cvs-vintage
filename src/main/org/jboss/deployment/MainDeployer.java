@@ -37,7 +37,7 @@ import javax.management.ObjectName;
 import org.jboss.system.ServiceMBeanSupport;
 import org.jboss.system.ServerConfigMBean;
 
-import org.jboss.util.MBeanProxy;
+import org.jboss.util.jmx.MBeanProxy;
 
 /**
  * MainDeployer
@@ -45,7 +45,7 @@ import org.jboss.util.MBeanProxy;
  * Takes a series of URL to watch, detects changes and calls the appropriate Deployers 
  *
  * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
- * @version $Revision: 1.18 $
+ * @version $Revision: 1.19 $
  */
 public class MainDeployer
    extends ServiceMBeanSupport

@@ -19,7 +19,7 @@
 package org.jboss.jms.asf;
 
 import javax.management.ObjectName;
-import org.jboss.util.ObjectNameFactory;
+import org.jboss.util.jmx.ObjectNameFactory;
 
 import org.jboss.system.ServiceMBean;
 
@@ -29,7 +29,7 @@ import org.jboss.system.ServiceMBean;
  * <p>Created: Wed Nov 29 16:20:17 2000
  *
  * @author <a href="mailto:peter.antman@tim.se">Peter Antman</a>.
- * @version $Revision: 1.6 $
+ * @version $Revision: 1.7 $
  */
 public interface ServerSessionPoolLoaderMBean 
    extends ServiceMBean 

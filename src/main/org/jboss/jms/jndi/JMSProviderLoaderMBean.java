@@ -20,7 +20,7 @@ package org.jboss.jms.jndi;
 
 import javax.management.ObjectName;
 
-import org.jboss.util.ObjectNameFactory;
+import org.jboss.util.jmx.ObjectNameFactory;
 
 import org.jboss.system.ServiceMBean;
 
@@ -31,7 +31,7 @@ import org.jboss.system.ServiceMBean;
  * 6/22/01 - hchirino - The queue/topic jndi references are now configed via JMX
  *
  * @author  <a href="mailto:cojonudo14@hotmail.com">Hiram Chirino</a>
- * @version $Revision: 1.6 $
+ * @version $Revision: 1.7 $
  */
 public interface JMSProviderLoaderMBean  
    extends ServiceMBean

@@ -10,7 +10,7 @@ import java.net.URL;
 
 import javax.management.ObjectName;
 
-import org.jboss.util.ObjectNameFactory;
+import org.jboss.util.jmx.ObjectNameFactory;
 
 /**
  * The management interface for the {@link ServiceLibraries} MBean.
@@ -18,7 +18,7 @@ import org.jboss.util.ObjectNameFactory;
  * @see ServiceLibraries
  * 
  * @author  <a href="mailto:marc@jboss.org">Marc Fleury</a>
- * @version $Revision: 1.5 $
+ * @version $Revision: 1.6 $
  *
  * <p><b>Revisions:</b>
  * <p><b>2001/06/22 , marcf</b>:

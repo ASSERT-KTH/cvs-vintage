@@ -11,7 +11,7 @@ import java.util.Iterator;
 import java.net.MalformedURLException;
 
 import javax.management.ObjectName;
-import org.jboss.util.ObjectNameFactory;
+import org.jboss.util.jmx.ObjectNameFactory;
 
 import org.jboss.deployment.DeployerMBean;
 import org.jboss.deployment.DeploymentException;
@@ -26,7 +26,7 @@ import org.jboss.system.ServiceMBean;
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  * @author <a href="mailto:juha.lindfors@jboss.org">Juha Lindfors</a>
  * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
- * @version $Revision: 1.3 $
+ * @version $Revision: 1.4 $
  * 
  * <p><b>20011227 marc fleury:</b>
  * <ul>

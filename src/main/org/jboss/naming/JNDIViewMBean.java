@@ -12,13 +12,13 @@ import javax.naming.NamingException;
 
 import javax.management.ObjectName;
 
-import org.jboss.util.ObjectNameFactory;
+import org.jboss.util.jmx.ObjectNameFactory;
 
 /**
  * The JMX management interface for the {@link JNDIView} MBean.
  * 
  * @author <a href="mailto:Scott_Stark@displayscape.com">Scott Stark</a>.
- * @version $Revision: 1.9 $
+ * @version $Revision: 1.10 $
  */
 public interface JNDIViewMBean
    extends org.jboss.system.ServiceMBean
