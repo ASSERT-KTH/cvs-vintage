@@ -1,4 +1,4 @@
-// $Id: ExplorerTree.java,v 1.12 2003/11/08 12:28:39 alexb Exp $
+// $Id: ExplorerTree.java,v 1.13 2003/11/08 13:02:28 alexb Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -295,21 +295,16 @@ extends DisplayTextTree
      */
     private void setSelection(Object[] targets){
         
-        int rowToSelect = 0;
-        int[] rowIndexes = new int[targets.length];
-        int rowIndexCounter = 0;
+        this.clearSelection();
+        
         int rows = getRowCount();
         for (int i = 0; i < targets.length; i++) {
             Object target = targets[i];
-            target =
-            target instanceof Fig
-            ? ((Fig)target).getOwner()
-            : target;
+            target = target instanceof Fig ? ((Fig)target).getOwner() : target;
             for (int j = 0; j < rows; j++) {
-                Object rowItem =
-                ((DefaultMutableTreeNode)getPathForRow(j)
-                .getLastPathComponent())
-                .getUserObject();
+                Object rowItem = ((DefaultMutableTreeNode)getPathForRow(j)
+                                    .getLastPathComponent())
+                                    .getUserObject();
                 if (rowItem == target) {
                     this.addSelectionRow(j);
                 }
