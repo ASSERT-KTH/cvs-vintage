@@ -1,4 +1,4 @@
-// $Id: XmiFilePersister.java,v 1.17 2005/02/18 01:06:40 bobtarling Exp $
+// $Id: XmiFilePersister.java,v 1.18 2005/02/24 17:58:03 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -24,7 +24,6 @@
 package org.argouml.persistence;
 
 import java.io.BufferedOutputStream;
-import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -94,7 +93,7 @@ public class XmiFilePersister extends AbstractFilePersister {
 
         OutputStreamWriter writer = null;
         try {
-            project.setFile(file);
+            //project.setFile(file);
 
             OutputStream stream = new FileOutputStream(file);
             OutputStream bout = new BufferedOutputStream(stream);
