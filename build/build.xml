@@ -132,6 +132,7 @@
         <filter token="DB_HOST" value="${scarab.database.host}"/>
         <filter token="DB_PORT" value="${scarab.database.port}"/>
         <filter token="DB_ADMIN_USER" value="${scarab.database.admin.username}"/>
+        <filter token="SCARAB_CONTEXT" value="${scarab.context}"/>
         
         <copy tofile="${src.sql.dir}/create-db.sh"
               file="create-db.sh.tmpl"
