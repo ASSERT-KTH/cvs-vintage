@@ -47,18 +47,12 @@ import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Vector;
+import java.util.*;
 
 import javax.swing.*;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
-import javax.swing.tree.DefaultMutableTreeNode;
-import javax.swing.tree.DefaultTreeModel;
-import javax.swing.tree.TreePath;
-import javax.swing.tree.TreeSelectionModel;
+import javax.swing.tree.*;
 
 /**
  * ExportDialog lets you select a number of folders for exporting
@@ -209,15 +203,12 @@ public class ExportDialog extends JDialog implements ActionListener {
             JComponent.WHEN_IN_FOCUSED_WINDOW);
     }
 
-    private void getTreeNodeIteration(CheckableTreeNode parent, Vector v)
-    {
-        v.add(parent);
+    private void getTreeNodeIteration(TreeNode parent, List l) {
+        l.add(parent);
         
-        for ( int i=0; i<parent.getChildCount(); i++)
-        {
-            v.add(parent.getChildAt(i));
-            getTreeNodeIteration((CheckableTreeNode) parent.getChildAt(i), v);
-                
+        for ( int i=0; i<parent.getChildCount(); i++) {
+            l.add(parent.getChildAt(i));
+            getTreeNodeIteration((TreeNode)parent.getChildAt(i), l);
         }
     }
     
@@ -235,6 +226,16 @@ public class ExportDialog extends JDialog implements ActionListener {
             try {
                 c.open(new URL("help.html"));
             } catch (MalformedURLException mue) {
+            }
+        } else if (action.equals("SELECTALL")) {
+            List list = new LinkedList();
+            getTreeNodeIteration((TreeNode)tree.getModel().getRoot(), list);
+            Iterator iterator = list.iterator();
+            CheckableTreeNode node;
+            while (iterator.hasNext()) {
+                node = (CheckableTreeNode)iterator.next();
+                node.setSelected(true);
+                ((DefaultTreeModel)tree.getModel()).nodeChanged(node);
             }
         } else if (action.equals("EXPORT")) {
             File destFile = null;
@@ -258,8 +259,8 @@ public class ExportDialog extends JDialog implements ActionListener {
 
             // get list of all folders
        
-            Vector list = new Vector();
-            getTreeNodeIteration( (CheckableTreeNode) tree.getModel().getRoot(), list);
+            List list = new LinkedList();
+            getTreeNodeIteration((TreeNode) tree.getModel().getRoot(), list);
 
             Iterator it = list.iterator();
             
