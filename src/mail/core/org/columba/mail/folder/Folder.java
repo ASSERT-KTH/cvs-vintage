@@ -618,36 +618,6 @@ public abstract class Folder extends FolderTreeNode {
 	*/
 
 	/**
-	 * Method isParent.
-	 * @param folder
-	 * @return boolean
-	 */
-	
-	
-	public boolean isParent(Folder folder) {
-
-		Folder parent = (Folder) folder.getParent();
-		if (parent == null)
-			return false;
-
-		//while ( parent.getUid() != 100 )
-		while (parent.getFolderItem() != null) {
-
-			if (parent.getUid() == getUid()) {
-
-				return true;
-			}
-
-			parent = (Folder) parent.getParent();
-		}
-
-		return false;
-	}
-
-	/**
-	 * @see org.columba.mail.folder.FolderTreeNode#getName()
-	 */
-	/**
 	 * @see org.columba.modules.mail.folder.FolderTreeNode#getName()
 	 */
 	public String getName() {

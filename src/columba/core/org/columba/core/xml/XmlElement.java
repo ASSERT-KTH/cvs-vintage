@@ -25,6 +25,9 @@
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 //
 // $Log: XmlElement.java,v $
+// Revision 1.4  2003/02/10 19:05:58  fdietz
+// [intern]re-added folder DND operations
+//
 // Revision 1.3  2003/01/31 10:27:46  tstich
 // [intern]Refined SearchEngine structure, Lucene supported as Standard SearchEngine
 //
@@ -44,6 +47,8 @@ package org.columba.core.xml;
 import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Vector;
+
+import org.columba.core.logging.ColumbaLogger;
 /////////////////////////////////////////////////////////////////////////////
 //                                 CODE                                    //
 /////////////////////////////////////////////////////////////////////////////
@@ -180,6 +185,7 @@ public class XmlElement {
 	 *
 	 */
 	public boolean addElement(XmlElement E) {
+		E.setParent(this);
 		return (SubElements.add(E));
 	}
 
@@ -203,6 +209,44 @@ public class XmlElement {
 
 	public void removeAllElements() {
 		SubElements.removeAllElements();
+	}
+	
+	/**
+	 * convienience method for the TreeView
+	 * 
+	 * this method is modeled after the DefaultMutableTreeNode-class
+	 * 
+	 * DefaultMutableTreeNode wraps XmlElement for this purpose
+	 * 
+	 */
+	public void removeFromParent()
+	{
+		XmlElement parent = getParent();
+		ColumbaLogger.log.debug("element="+parent.getName());
+		
+		parent.removeElement(this);
+	}
+	
+	
+	public void append( XmlElement e )
+	{
+		e.removeFromParent();
+		
+		addElement(e);
+	}
+	/**
+	 * 
+	 * convienience method for the TreeView 
+	 * 
+	 * @param e
+	 * @param index
+	 */
+	public void insertElement( XmlElement e, int index)
+	{
+		e.removeFromParent();
+		
+		SubElements.insertElementAt(e, index );
+		e.setParent(this);
 	}
 
 	/**
@@ -295,7 +339,9 @@ public class XmlElement {
 	public XmlElement addSubElement(String Name, String Data) {
 		XmlElement E = new XmlElement(Name);
 		E.setData(Data);
+		E.setParent(this);
 		SubElements.add(E);
+		
 		return (E);
 	}
 
