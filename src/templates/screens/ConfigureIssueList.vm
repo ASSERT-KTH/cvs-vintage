@@ -1,0 +1,75 @@
+#set ( $action = $link.setPage("ConfigureIssueList.vm").setAction("ConfigureIssueList").addPathInfo("nextTemplate", "ConfigureIssueList.vm") )
+
+#set ($user = $scarabR.User)
+#set ($module = $user.CurrentModule)
+
+#if( $user.UserId )
+
+#set ($moduleAttributes = $module.getRModuleAttributes(true))
+#set ($maxNum = $moduleAttributes.size() )
+
+<form action=$action method="post">
+<input type="hidden" name="user_id" value="$user.UserId">
+<input type="hidden" name="module_id" value="$module.ModuleId">
+      <div class="app" id="div2-6-1">
+      <h2>Add/remove attributes from view (2.6.0.1)</h2>
+
+      <p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip</p>
+            
+            
+<p class="functnbar"><input type="submit" value="save" name="eventSubmit_doSelectattributes" />&nbsp;<input type="submit" value="cancel" name="eventSubmit_doCancel" class="button"/>&nbsp;<input type="submit" value="reset to default"  name="eventSubmit_doCancel" class="button" /></p>
+      
+      <h3>attributes</h3>
+
+       <table width="100%" border="1" cellspacing="2" cellpadding="3">
+        <tr>
+         <th><a href="#" title="sort">show/hide:</a></th>
+
+         <th><a href="#" title="sort">attribute name:</a></th>
+
+         <th><a href="#" title="sort">columnar sequence:</a></th>
+        </tr>
+
+
+#foreach ($moduleAttribute in $moduleAttributes)
+    #set( $checked = "")
+    #set( $attribute = $moduleAttribute.Attribute )
+    #set( $userAttribute = $user.getModuleUserAttribute($module.ModuleId, $attribute.AttributeId) )
+    #set ( $intakeUserAttr = $intake.RModuleUserAttribute.mapTo($userAttribute) )
+
+    #foreach ($moduleUserAttribute in $user.getRModuleUserAttributes($module))
+       #if ($attribute.Name.equals($moduleUserAttribute.Attribute.Name))
+          #set( $checked = "checked")
+       #end
+    #end
+        <tr class="a">
+         <td><input type="checkbox" name="$intakeUserAttr.Selected.Key" $checked /></td>
+         ##<td><input type="checkbox" name="selected_$attribute.AttributeId" $checked /></td>
+
+         <td>$attribute.Name</td>
+
+         <td> 
+          #numericSelect( $intakeUserAttr.Order.Key 1 $maxNum $intakeUserAttr.Order.Value 1 )
+         </td>
+        </tr>
+
+    #end
+        </table>
+<p>
+<input type="submit" value="resort" />
+</p>
+
+            
+<p class="functnbar"><input type="submit" value="save" name="eventSubmit_doSelectattributes" />&nbsp;<input type="submit" value="cancel" name="eventSubmit_doCancel" class="button"/>&nbsp;<input type="submit" value="reset to default"  name="eventSubmit_doCancel" class="button" /></p>
+        
+     </div></td>
+    </tr>
+   </table>
+$intake.declareGroups()
+  </form>
+
+#else
+  You need to be logged in to see this page. <a href="$link.setPage("Login.vm")">Log in</a>
+#end
+
+
