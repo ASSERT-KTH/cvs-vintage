@@ -80,8 +80,8 @@ public class LocalHeaderCache extends AbstractHeaderCache {
 			column = (String) headerItem.get("name");
 			o = p.readObject();
 
-			if (o == null) {
-			} else if (o instanceof String) {
+			if (o == null) continue;
+			if (o instanceof String) {
 				String value = (String) o;
 				h.set(column, value);
 			} else if (o instanceof Integer) {
