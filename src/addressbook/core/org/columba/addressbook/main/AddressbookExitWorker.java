@@ -13,6 +13,7 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
+
 package org.columba.addressbook.main;
 
 import org.columba.addressbook.folder.AddressbookFolder;
@@ -20,21 +21,12 @@ import org.columba.addressbook.folder.Folder;
 
 import java.util.Enumeration;
 
-
-/**
- * @version         1.0
- * @author
- */
 public class AddressbookExitWorker {
-    private AddressbookInterface addressbookInterface;
-
-    public AddressbookExitWorker(AddressbookInterface i) {
-        this.addressbookInterface = i;
-    }
+    public AddressbookExitWorker() {}
 
     public void saveAllAddressbooks() {
         //mainInterface.addressbookInterface.
-        Folder rootFolder = (Folder) addressbookInterface.tree.getRootFolder();
+        Folder rootFolder = (Folder)AddressbookInterface.addressbookTreeModel.getRoot();
 
         //timer.start();
         saveAddressbookFolder(rootFolder);

@@ -17,28 +17,9 @@
 package org.columba.addressbook.main;
 
 import org.columba.addressbook.config.AddressbookConfig;
-import org.columba.addressbook.gui.action.AddressbookActionListener;
-import org.columba.addressbook.gui.frame.AddressbookFrameView;
-import org.columba.addressbook.gui.menu.AddressbookMenu;
-import org.columba.addressbook.gui.table.TableView;
 import org.columba.addressbook.gui.tree.AddressbookTreeModel;
-import org.columba.addressbook.gui.tree.TreeView;
-
-import org.columba.core.command.TaskManager;
-import org.columba.core.gui.statusbar.StatusBar;
 
 public class AddressbookInterface {
-    public AddressbookFrameView frame;
-    public AddressbookMenu menu;
-    public TableView table;
-    public TreeView tree;
-    public AddressbookTreeModel treeModel;
-
-    //public AddressbookConfig config;
-    public StatusBar statusbar;
-    public TaskManager taskManager;
-    public AddressbookActionListener actionListener;
-
     /** Addressbook treemodel */
     // TODO: move this to the addressbook component
     public static AddressbookTreeModel addressbookTreeModel;
@@ -46,5 +27,8 @@ public class AddressbookInterface {
     /** Addressbook configuration */
     public static AddressbookConfig config;
 
+    /**
+     * No need for creating instances.
+     */
     private AddressbookInterface() {}
 }

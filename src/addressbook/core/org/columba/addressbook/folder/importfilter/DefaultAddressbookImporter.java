@@ -15,6 +15,7 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003.
 //
 //All Rights Reserved.
+
 package org.columba.addressbook.folder.importfilter;
 
 import java.io.File;
@@ -31,17 +32,11 @@ import org.columba.core.gui.util.ImageLoader;
 import org.columba.core.gui.util.NotifyDialog;
 import org.columba.core.plugin.PluginInterface;
 
-
-/**
- * @version 1.0
- * @author
- */
 public abstract class DefaultAddressbookImporter implements PluginInterface {
     public static int TYPE_FILE = 0;
     public static int TYPE_DIRECTORY = 1;
     protected Folder destinationFolder;
     protected File sourceFile;
-    protected AddressbookInterface addressbookInterface;
 
     //protected AddressbookFolder tempFolder;
     protected int counter;
@@ -80,11 +75,6 @@ public abstract class DefaultAddressbookImporter implements PluginInterface {
      * this method does all the import work
      */
     public abstract void importAddressbook(File file) throws Exception;
-
-    /** ********* intern methods (no need to overwrite these) *************** */
-    public void setAddressbookInterface(AddressbookInterface i) {
-        this.addressbookInterface = i;
-    }
 
     public void setSourceFile(File file) {
         this.sourceFile = file;
@@ -131,20 +121,12 @@ public abstract class DefaultAddressbookImporter implements PluginInterface {
             NotifyDialog dialog = new NotifyDialog();
             dialog.showDialog(
                 AddressbookResourceLoader.getString("dialog", "addressbookimport", "addressbook_import_failed_2")); //$NON-NLS-1$
-
-            return;
-        }
-
-        if (getCount() > 0) {
+        } else {
             JOptionPane.showMessageDialog(null,
                 AddressbookResourceLoader.getString("dialog", "addressbookimport", "addressbook_import_was_successfull"), AddressbookResourceLoader.getString("dialog", "contact", "information"), //$NON-NLS-1$ //$NON-NLS-2$
                 JOptionPane.INFORMATION_MESSAGE,
                 ImageLoader.getImageIcon("stock_dialog_info_48.png")); //$NON-NLS-1$
-
-            addressbookInterface.table.setFolder(destinationFolder);
         }
-
-        return;
     }
 
     /**
