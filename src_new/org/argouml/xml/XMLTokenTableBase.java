@@ -1,4 +1,4 @@
-// $Id: XMLTokenTableBase.java,v 1.8 2004/09/11 19:14:20 mvw Exp $
+// $Id: XMLTokenTableBase.java,v 1.9 2004/09/12 23:52:46 bobtarling Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -98,7 +98,7 @@ public abstract class XMLTokenTableBase {
      * @param i the token number
      */
     protected void addToken(String s, Integer i) {
-	boolean error = false;
+        boolean error = false;
 	if (dbg) {
 	    if (tokens.contains(i) || tokens.containsKey(s)) {
 		LOG.error("ERROR: token table already contains " + s);
@@ -107,8 +107,12 @@ public abstract class XMLTokenTableBase {
 	}
 	tokens.put(s, i);
 	if (dbg && !error) {
-	    LOG.debug("NOTE: added '" + s + "' to token table");
-	}
+            LOG.debug("NOTE: added '" + s + "' to token table");
+        }
+    }
+    
+    public boolean contains(String token) {
+        return tokens.containsKey(token);
     }
 
     /**
