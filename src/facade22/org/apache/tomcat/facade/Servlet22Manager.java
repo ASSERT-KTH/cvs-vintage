@@ -87,14 +87,13 @@ public final class Servlet22Manager implements FacadeManager {
     private Servlet22Manager() {
     }
 
-    // XXX XXX XXX The key to open the gate - this is the first attempt,
-    // we need a safer mechanism ! 
-    // 
-    /** The only way to construct a FacadeManager is if you have a valid Context.
+    /** The only way to construct a FacadeManager is if you have a valid
+     *  Context.
      *  XXX make sure Context can't be constructed without right permission.
      *  ( all internal tomcat objects have to be revisited ).
      *
-     * The FacadeManager will work only for the Context used at construction time.
+     * The FacadeManager will work only for the Context used at construction
+     * time.
      */
     public Servlet22Manager(Context ctx)  {
 	//	checkAccess();

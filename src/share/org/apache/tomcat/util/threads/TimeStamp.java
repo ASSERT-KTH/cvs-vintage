@@ -56,7 +56,7 @@
  * [Additional notices, if required by prior licensing conditions]
  *
  */ 
-package org.apache.tomcat.session;
+package org.apache.tomcat.util.threads;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -80,7 +80,7 @@ public final class TimeStamp implements  Serializable {
     private long lastAccessedTime = creationTime;
     private long thisAccessedTime = creationTime;
     private boolean isNew = true;
-    private int maxInactiveInterval = -1;
+    private long maxInactiveInterval = -1;
     private boolean isValid = false;
 
     Object parent;
@@ -125,11 +125,14 @@ public final class TimeStamp implements  Serializable {
 	return lastAccessedTime;
     }
 
-    public int getMaxInactiveInterval() {
+    /** Inactive interval in millis - the time is computed
+     *  in millis, convert to secs in the upper layer
+     */
+    public long getMaxInactiveInterval() {
 	return maxInactiveInterval;
     }
 
-    public void setMaxInactiveInterval(int interval) {
+    public void setMaxInactiveInterval(long interval) {
 	maxInactiveInterval = interval;
     }
 

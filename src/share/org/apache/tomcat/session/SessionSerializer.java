@@ -81,8 +81,8 @@ public final class SessionSerializer
     /**
        This is the method that does the serialization.
     */
-    public static final Hashtable doSerialization(ClassLoader cl,
-					     Hashtable sessions)
+    public static final Object doSerialization(ClassLoader cl,
+					       Object sessions)
     {
 	// get the hashtable of sessions
 	try {
@@ -101,7 +101,7 @@ public final class SessionSerializer
 	    ObjectInputStream oOut= new ACLObjectInputStream(cl, bIn);
 			
 	    // unserialize the sessions
-	    sessions = (Hashtable) oOut.readObject();
+	    sessions = oOut.readObject();
 
 	    return sessions;
 	} catch (Exception e) {

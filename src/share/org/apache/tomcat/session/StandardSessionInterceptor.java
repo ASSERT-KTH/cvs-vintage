@@ -58,13 +58,14 @@
  */ 
 package org.apache.tomcat.session;
 
-import java.io.IOException;
+import java.io.*;
 import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Vector;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpSession;
 import org.apache.tomcat.util.*;
+import org.apache.tomcat.util.threads.*;
 import org.apache.tomcat.core.*;
 
 
@@ -87,13 +88,27 @@ import org.apache.tomcat.core.*;
  */
 public final class StandardSessionInterceptor  extends BaseInterceptor {
     int manager_note;
+
+    int checkInterval = 60;
+    int maxActiveSessions = -1;
     
     public StandardSessionInterceptor() {
     }
 
     // -------------------- Configuration properties --------------------
 
-    
+    /**
+     * Set the check interval (in seconds) for this Manager.
+     *
+     * @param checkInterval The new check interval
+     */
+    public void setCheckInterval( int secs ) {
+	checkInterval=secs;
+    }
+
+    public void setMaxActiveSessions( int count ) {
+	maxActiveSessions=count;
+    }
     
     
     // -------------------- Tomcat request events --------------------
@@ -145,14 +160,37 @@ public final class StandardSessionInterceptor  extends BaseInterceptor {
     public void reload( Request req, Context ctx ) {
 	ClassLoader newLoader = ctx.getClassLoader();
 	ServerSessionManager sM = getManager( ctx );    
-	sM.handleReload(req, newLoader);
-	if (req.getSession(false) != null) {
-	    // replace the current session in the current request
-	    Hashtable sessions=sM.getSessions();
-	    HttpSession newSession = 
-		(HttpSession)sessions.get(req.getRequestedSessionId());
-	    req.setSession(newSession);
-	    req.setSessionId( newSession.getId());
+
+	// remove all non-serializable objects from session
+	Enumeration sessionEnum=sM.getSessions().keys();
+	while( sessionEnum.hasMoreElements() ) {
+	    ServerSession session = (ServerSession)sessionEnum.nextElement();
+	    Enumeration e = session.getAttributeNames();
+	    while( e.hasMoreElements() )   {
+		String key = (String) e.nextElement();
+		Object value = session.getAttribute(key);
+		// XXX XXX We don't have to change loader for objects loaded
+		// by the parent loader ?
+		if (! ( value instanceof Serializable)) {
+		    session.removeAttribute( key );
+		    // XXX notification!!
+		}
+	    }
+	}
+
+	// XXX We should change the loader for each object, and
+	// avoid accessing object's internals
+	// XXX PipeStream !?!
+	Hashtable orig= sM.getSessions();
+	Object newS = SessionSerializer.doSerialization( newLoader, orig);
+	sM.setSessions( (Hashtable)newS );
+	
+	// Update the request session id
+	String reqId=req.getRequestedSessionId();
+	ServerSession sS=sM.findSession( reqId );
+	if ( sS != null) {
+	    req.setSession(sS);
+	    req.setSessionId( reqId );
 	}
     }
     
@@ -170,26 +208,6 @@ public final class StandardSessionInterceptor  extends BaseInterceptor {
 	return 0;
     }
 
-    /** Called after request - we need to release the session object.
-     *  This is used to prevent removal of session objects during execution,
-     *	and may be used by interceptors that want to limit or count the
-     *	sessions.
-     */
-    public int postService(  Request rrequest, Response response ) {
-	// Not used, maybe add it back later if we need to
-
-	// 	Context ctx=rrequest.getContext();
-	// 	if( ctx==null ) return 0; 
-
-	// 	ServerSessionManager sm= getManager( ctx );
-	// 	HttpSession sess=(HttpSession)rrequest.getSession(false);
-	// 	if( sess == null ) return 0;
-	//	sm.release( sess );
-	return 0;
-    }
-
-
-    
     //--------------------  Tomcat context events --------------------
     
     /** Init session management stuff for this context. 
@@ -200,18 +218,25 @@ public final class StandardSessionInterceptor  extends BaseInterceptor {
 	
 	if( sm == null ) {
 	    sm=new ServerSessionManager();
-	    setManager(ctx, sm);
+	    ctx.getContainer().setNote( manager_note, sm );
+	    sm.setMaxInactiveInterval( (long)ctx.getSessionTimeOut() *
+				       60 * 1000 );
+	    // debug
+	    sm.setMaxInactiveInterval( 60000 );
 	}
+	sm.setMaxActiveSessions( maxActiveSessions );
 
-	// init is called after all context properties are set.
-	sm.setSessionTimeOut( ctx.getSessionTimeOut() );
-	sm.setDistributable( ctx.isDistributable() );
-
-	try {
-	    sm.start();
-	} catch(IllegalStateException ex ) {
-	    throw new TomcatException( ex );
-	}
+	Expirer expirer=new Expirer();
+	expirer.setCheckInterval( checkInterval );
+	expirer.setExpireCallback( new Expirer.ExpireCallback() {
+		public void expired(TimeStamp o ) {
+		    ServerSession sses=(ServerSession)o.getParent();
+		    ServerSessionManager ssm=sses.getSessionManager();
+		    ssm.removeSession( sses );
+		}
+	    });
+	expirer.start();
+	sm.setExpirer(expirer);
     }
     
     /** Notification of context shutdown.
@@ -223,12 +248,8 @@ public final class StandardSessionInterceptor  extends BaseInterceptor {
     {
 	if( ctx.getDebug() > 0 ) ctx.log("Removing sessions from " + ctx );
 	ServerSessionManager sm=getManager(ctx);
-	try {
-	    if( sm != null )
-		sm.stop();
-	} catch(IllegalStateException ex ) {
-	    throw new TomcatException( ex );
-	}
+	sm.getExpirer().stop();
+	sm.removeAllSessions();
     }
 
     // -------------------- Internal methods --------------------
@@ -236,9 +257,6 @@ public final class StandardSessionInterceptor  extends BaseInterceptor {
 	return (ServerSessionManager)ctx.getContainer().getNote(manager_note);
     }
 
-    private void setManager( Context ctx, Object sm ) {
-	ctx.getContainer().setNote( manager_note, sm );
-    }
 
 
 }

@@ -113,6 +113,7 @@ final class HttpSessionFacade implements HttpSession {
     // -------------------- public facade --------------------
 
     public String getId() {
+	checkValid();
 	return realSession.getId().toString();
     }
 
@@ -151,7 +152,10 @@ final class HttpSessionFacade implements HttpSession {
      */
     public void invalidate() {
 	checkValid();
-	realSession.expire();
+	ServerSessionManager ssm=realSession.getSessionManager();
+	ssm.removeSession( realSession );
+	realSession.removeAllAttributes();
+	realSession.getTimeStamp().setValid( false );
     }
 
     /**
@@ -179,12 +183,19 @@ final class HttpSessionFacade implements HttpSession {
     public void setAttribute(String name, Object value) {
 	checkValid();
 
-	if (realSession.isDistributable() &&
-	  !(value instanceof Serializable))
-	    throw new IllegalArgumentException
-		(sm.getString("standardSession.setAttribute.iae"));
+	ServerSessionManager ssm=realSession.getSessionManager();
+	// Original code - it's up to session manager to decide
+	// what it can handle. 
+	// 	if (ssm.isDistributable() &&
+	// 	  !(value instanceof Serializable))
+	// 	    throw new IllegalArgumentException
+	// 		(sm.getString("standardSession.setAttribute.iae"));
 	
 	realSession.setAttribute( name, value );
+	if (value instanceof HttpSessionBindingListener)
+	    ((HttpSessionBindingListener) value).valueBound
+		(new HttpSessionBindingEvent( this, name));
+
     }
 
     /**
@@ -228,7 +239,7 @@ final class HttpSessionFacade implements HttpSession {
      * @deprecated
      */
     public void removeValue(String name) {
-	realSession.removeAttribute(name);
+	removeAttribute(name);
     }
 
     /**
@@ -247,16 +258,24 @@ final class HttpSessionFacade implements HttpSession {
      */
     public void removeAttribute(String name) {
 	checkValid();
+	Object object=realSession.getAttribute( name );
 	realSession.removeAttribute(name);
+	if (object instanceof HttpSessionBindingListener) {
+	    ((HttpSessionBindingListener) object).valueUnbound
+		(new HttpSessionBindingEvent( this, name));
+	}
+
     }
 
     public void setMaxInactiveInterval(int interval) {
-	realSession.getTimeStamp().setMaxInactiveInterval( interval );
+	realSession.getTimeStamp().setMaxInactiveInterval( interval * 1000 );
     }
 
     public int getMaxInactiveInterval() {
 	checkValid();
-	return realSession.getTimeStamp().getMaxInactiveInterval();
+	// We use long because it's better to do /1000 here than
+	// every time the internal code does expire
+	return (int)realSession.getTimeStamp().getMaxInactiveInterval()/1000;
     }
 
     // duplicated code, private

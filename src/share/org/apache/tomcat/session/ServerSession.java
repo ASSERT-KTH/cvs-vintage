@@ -66,7 +66,7 @@ import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Vector;
 import org.apache.tomcat.util.*;
-import javax.servlet.http.*;
+import org.apache.tomcat.util.threads.*;
 
 /**
  * Server representation of a Session.
@@ -88,10 +88,17 @@ public final class ServerSession  implements  Serializable {
 
     TimeStamp ts=new TimeStamp();
     boolean distributable=false;
-    
-    public ServerSession() {
+    ServerSessionManager ssm;
+
+    /** Only ServerSessionManager can create ServerSessions
+     */
+    ServerSession(ServerSessionManager ssm) {
+	this.ssm=ssm;
     }
 
+    public ServerSessionManager getSessionManager() {
+	return ssm;
+    }
     // ----------------------------------------------------- Session Properties
     /** The time stamp associated with this session
      */
@@ -105,45 +112,6 @@ public final class ServerSession  implements  Serializable {
     public MessageBytes getId() {
 	return id;
     }
-
-    public boolean isDistributable() {
-	return distributable;
-    }
-
-    public void setDistributable( boolean b ) {
-	distributable=b;
-    }
-    
-    // --------------------
-
-    /**
-     * Perform the internal processing required to invalidate this session,
-     * without triggering an exception if the session has already expired.
-     */
-    public void expire() {
-
-	// Remove this session from our manager's active sessions
-// 	if (manager != null) 
-// 	    manager.remove(this);
-
-	// Unbind any objects associated with this session
-	Vector results = new Vector();
-	Enumeration attrs = getAttributeNames();
-	while (attrs.hasMoreElements()) {
-	    String attr = (String) attrs.nextElement();
-	    results.addElement(attr);
-	}
-	Enumeration names = results.elements();
-	while (names.hasMoreElements()) {
-	    String name = (String) names.nextElement();
-	    removeAttribute(name);
-	}
-
-	// Mark this session as invalid
-	ts.setValid(false);
-
-    }
-
 
     // -------------------- Attribute access --------------------
 
@@ -160,55 +128,23 @@ public final class ServerSession  implements  Serializable {
 	return attributes.size();
     }
 
-    public void removeAttribute(String name) {
-	synchronized (attributes) {
-	    Object object = attributes.get(name);
-	    if (object == null)
-		return;
-	    attributes.remove(name);
-	    //	    System.out.println( "Removing attribute " + name );
-// 	    if (object instanceof HttpSessionBindingListener) {
-// 		((HttpSessionBindingListener) object).valueUnbound
-// 		    (new HttpSessionBindingEvent((HttpSession) this, name));
-// 	    }
+    public void removeAllAttributes() {
+	Enumeration attrs = getAttributeNames();
+	while (attrs.hasMoreElements()) {
+	    String attr = (String) attrs.nextElement();
+	    removeAttribute(attr);
 	}
+    }
+
+    public void removeAttribute(String name) {
+	// Hashtable is already synchronized
+	attributes.remove(name);
     }
 
     public void setAttribute(String name, Object value) {
-	synchronized (attributes) {
-	    removeAttribute(name);
-	    attributes.put(name, value);
-// 	    if (value instanceof HttpSessionBindingListener)
-// 		((HttpSessionBindingListener) value).valueBound
-// 		    (new HttpSessionBindingEvent((HttpSession) this, name));
-	}
+	attributes.put(name, value);
     }
 
-
-
-    /** Normal serialization can be used for this object, but before
-	serializing you _must_ call prepareSerialize() to remove all
-	non-serializable attributes and notify about their removal.
-    */
-    private void prepareSerialize()
-    {
-	for (Enumeration e = attributes.keys(); e.hasMoreElements() ; ) {
-	    String key = (String) e.nextElement();
-	    Object value = attributes.get(key);
-	    if (! ( value instanceof Serializable)) {
-		if (value instanceof HttpSessionBindingListener ) {
-// 		    try {
-// 			((HttpSessionBindingListener)value)
-// 			    .valueUnbound(new
-// 				HttpSessionBindingEvent(this, key));
-// 		    } catch (Exception f) {
-// 			// ignored
-// 		    }
-		}
-		attributes.remove( key );
-	    }
-	}
-    }
 
     /**
      * Release all object references, and initialize instance variables, in

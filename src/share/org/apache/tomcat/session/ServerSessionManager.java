@@ -69,28 +69,14 @@ import javax.servlet.http.HttpSession;
 import org.apache.tomcat.util.*;
 import org.apache.tomcat.util.threads.*;
 import org.apache.tomcat.helper.*;
-import org.apache.tomcat.core.Request;
+import org.apache.tomcat.core.*;
 
 /**
  *
  * 
  */
-public final class ServerSessionManager  implements ThreadPoolRunnable
+public final class ServerSessionManager  
 {
-    // ----------------------------------------------------- Instance Variables
-    /**
-     * The distributable flag for Sessions created by this Manager.  If this
-     * flag is set to <code>true</code>, any user attributes added to a
-     * session controlled by this Manager must be Serializable.
-     */
-    protected boolean distributable;
-
-    /**
-     * The default maximum inactive interval for Sessions created by
-     * this Manager.
-     */
-    protected int maxInactiveInterval = 60;
-
     /** The set of previously recycled Sessions for this Manager.
      */
     protected SimplePool recycled = new SimplePool();
@@ -101,6 +87,7 @@ public final class ServerSessionManager  implements ThreadPoolRunnable
      */
     protected Hashtable sessions = new Hashtable();
 
+    protected Expirer expirer;
     /**
      * The interval (in seconds) between checks for expired sessions.
      */
@@ -111,88 +98,22 @@ public final class ServerSessionManager  implements ThreadPoolRunnable
      */
     protected int maxActiveSessions = -1;
 
-    /**
-     * The string manager for this package.
-     */
-    private static StringManager sm =
-        StringManager.getManager("org.apache.tomcat.resources");
-
+    long maxInactiveInterval;
+    
     protected Reaper reaper;
 
     public ServerSessionManager() {
     }
 
+    public void setExpirer( Expirer ex ) {
+	expirer = ex;
+    }
+
+    public Expirer getExpirer() {
+	return expirer;
+    }
+    
     // ------------------------------------------------------------- Properties
-    /**
-     * Return the distributable flag for the sessions supported by
-     * this Manager.
-     */
-    public boolean getDistributable() {
-	return (this.distributable);
-    }
-
-    /**
-     * Set the distributable flag for the sessions supported by this
-     * Manager.  If this flag is set, all user data objects added to
-     * sessions associated with this manager must implement Serializable.
-     *
-     * @param distributable The new distributable flag
-     */
-    public void setDistributable(boolean distributable) {
-	this.distributable = distributable;
-    }
-
-    /**
-     * Return the default maximum inactive interval (in seconds)
-     * for Sessions created by this Manager.
-     */
-    public int getMaxInactiveInterval() {
-	return (this.maxInactiveInterval);
-    }
-
-    /**
-     * Set the default maximum inactive interval (in seconds)
-     * for Sessions created by this Manager.
-     *
-     * @param interval The new default value
-     */
-    public void setMaxInactiveInterval(int interval) {
-	this.maxInactiveInterval = interval;
-    }
-
-    /**
-     * Used by context to configure the session manager's inactivity timeout.
-     *
-     * The SessionManager may have some default session time out, the
-     * Context on the other hand has it's timeout set by the deployment
-     * descriptor (web.xml). This method lets the Context conforgure the
-     * session manager according to this value.
-     *
-     * @param minutes The session inactivity timeout in minutes.
-     */
-    public void setSessionTimeOut(int minutes) {
-        if(-1 != minutes) {
-            // The manager works with seconds...
-            setMaxInactiveInterval(minutes * 60);
-        }
-    }
-
-    /**
-     * Return the check interval (in seconds) for this Manager.
-     */
-    public int getCheckInterval() {
-	return (this.checkInterval);
-    }
-
-    /**
-     * Set the check interval (in seconds) for this Manager.
-     *
-     * @param checkInterval The new check interval
-     */
-    public void setCheckInterval(int checkInterval) {
-	this.checkInterval = checkInterval;
-    }
-
     public int getMaxActiveSessions() {
 	return maxActiveSessions;
     }
@@ -203,13 +124,45 @@ public final class ServerSessionManager  implements ThreadPoolRunnable
 
     // --------------------------------------------------------- Public Methods
 
-    public Hashtable getSessions() {
-	return this.sessions;
+    public void setMaxInactiveInterval( long l ) {
+	maxInactiveInterval=l;
+    }
+    
+    /**
+     * Return the default maximum inactive interval (in miliseconds)
+     * for Sessions created by this Manager. We use miliseconds
+     * because that's how the time is expressed, avoid /1000
+     * in the common code
+     */
+    public long getMaxInactiveInterval() {
+	return maxInactiveInterval;
+    }
+
+
+    Hashtable getSessions() {
+	return sessions;
+    }
+    
+    void setSessions(Hashtable s) {
+	sessions=s;
     }
 
     public ServerSession findSession(String id) {
 	if (id == null) return null;
 	return (ServerSession)sessions.get(id);
+    }
+
+    /**
+     * Remove this Session from the active Sessions for this Manager.
+     *
+     * @param session Session to be removed
+     */
+    public void removeSession(ServerSession session) {
+	sessions.remove(session.getId().toString());
+	recycled.put(session);
+	session.removeAllAttributes();
+	expirer.removeManagedObject( session.getTimeStamp());
+	session.getTimeStamp().setValid(false);
     }
 
     public ServerSession getNewSession() {
@@ -220,10 +173,10 @@ public final class ServerSessionManager  implements ThreadPoolRunnable
 	// Recycle or create a Session instance
 	ServerSession session = (ServerSession)recycled.get();
 	if (session == null) {
-	    session = new ServerSession();
+	    session = new ServerSession(this);
 	    recycled.put( session );
 	}
-
+	
 	// XXX can return MessageBytes !!!
 	String newId=SessionUtil.generateSessionId();
 
@@ -232,88 +185,34 @@ public final class ServerSessionManager  implements ThreadPoolRunnable
 	ServerSession oldS=findSession( newId );
 	if( oldS!=null) {
 	    // that's what the original code did
-	    remove( oldS );
+	    removeSession( oldS );
 	}
 
 	// Initialize the properties of the new session and return it
 	session.getId().setString( newId );
-	
-	session.getTimeStamp().setNew(true);
-	session.getTimeStamp().setValid(true);
-	session.getTimeStamp().setCreationTime(System.currentTimeMillis());
-	session.getTimeStamp().setMaxInactiveInterval(maxInactiveInterval);
+
+	TimeStamp ts=session.getTimeStamp();
+	ts.setNew(true);
+	ts.setValid(true);
+
+	ts.setCreationTime(System.currentTimeMillis());
+	ts.setMaxInactiveInterval(getMaxInactiveInterval());
+	session.getTimeStamp().setParent( session );
 
 	//	System.out.println("New session: " + newId );
 	sessions.put( newId, session );
-
+	expirer.addManagedObject( session.getTimeStamp());
 	return (session);
     }
 
-    public void handleReload(Request req, ClassLoader newLoader) {
-	sessions = SessionSerializer.doSerialization( newLoader, sessions);
-    }
-
-    public void start() {
-	// Start the background reaper thread
-	reaper=new Reaper("StandardManager");
-	reaper.addCallback( this, checkInterval * 1000 );
-	reaper.startReaper();
-    }
-
-    public void stop() {
-	reaper.stopReaper();
-
-	// expire all active sessions
+    public void removeAllSessions() {
 	Enumeration ids = sessions.keys();
 	while (ids.hasMoreElements()) {
 	    String id = (String) ids.nextElement();
 	    ServerSession session = (ServerSession) sessions.get(id);
 	    if (!session.getTimeStamp().isValid())
 		continue;
-	    session.expire();
-	}
-    }
-
-    /**
-     * Remove this Session from the active Sessions for this Manager.
-     *
-     * @param session Session to be removed
-     */
-    void remove(ServerSession session) {
-	sessions.remove(session.getId().toString());
-	recycled.put(session);
-    }
-
-
-    // -------------------------------------------------------- Private Methods
-
-    // ThreadPoolRunnable impl
-
-    public Object[] getInitData() {
-	return null;
-    }
-
-    public void runIt( Object td[] ) {
-	//	System.out.println("Expiring " + this);
-	long timeNow = System.currentTimeMillis();
-	Enumeration ids = sessions.keys();
-	while (ids.hasMoreElements()) {
-	    String id = (String) ids.nextElement();
-	    ServerSession session = (ServerSession) sessions.get(id);
-	    TimeStamp ts=session.getTimeStamp();
-	    
-	    if (!ts.isValid())
-		continue;
-	    
-	    int maxInactiveInterval = ts.getMaxInactiveInterval();
-	    if (maxInactiveInterval < 0)
-		continue;
-	    
-	    int timeIdle = // Truncate, do not round up
-		(int) ((timeNow - ts.getLastAccessedTime()) / 1000L);
-
-	    if (timeIdle >= maxInactiveInterval)
-		session.expire();
+	    removeSession( session );
 	}
     }
 
