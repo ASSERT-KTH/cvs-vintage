@@ -152,22 +152,23 @@ public  class Report
 
     public void save(DBConnection dbCon) throws TorqueException
     {
-       try{
-         if (isNew())
-         {
-            super.save(dbCon);
-            setModified(true);
-            super.save(dbCon);
-         }
-         else
-         {
-            super.save(dbCon);
-         }
+       try
+       {
+           if (isNew())
+           {
+               super.save(dbCon);
+               setModified(true);
+               super.save(dbCon);
+            }
+            else
+            {
+               super.save(dbCon);
+            }
         }
         catch (Exception e)
         {
-   org.apache.turbine.Log.error(e);
-          }
+            org.apache.turbine.Log.error(e);
+         }
     }
 
     public List getReportTypes()
