@@ -13,10 +13,14 @@ import java.io.StringWriter;
 import java.net.URL;
 import java.util.Properties;
 import java.util.Iterator;
-import javax.management.*;
-import javax.naming.*;
-
-import org.jnp.server.Main;
+import javax.management.MBeanServer;
+import javax.management.ObjectName;
+import javax.naming.Context;
+import javax.naming.InitialContext;
+import javax.naming.LinkRef;
+import javax.naming.NameClassPair;
+import javax.naming.NamingEnumeration;
+import javax.naming.NamingException;
 
 import org.jboss.ejb.Application;
 import org.jboss.ejb.Container;
@@ -33,7 +37,7 @@ to the jboss.jcml file.
 
 @author Scott_Stark@displayscape.com
 @author Vladimir Blagojevic <vladimir@xisnext.2y.net>
-@version $Revision: 1.2 $
+@version $Revision: 1.3 $
 */
 public class JNDIView extends ServiceMBeanSupport implements JNDIViewMBean
 {
@@ -164,20 +168,6 @@ public class JNDIView extends ServiceMBeanSupport implements JNDIViewMBean
         return "JNDIView";
     }
 
-    public void initService()
-      throws Exception
-    {
-    }
-
-    public void startService()
-      throws Exception
-    {
-    }
-
-    public void stopService()
-    {
-    }
-
     private void list(Context ctx, String indent, StringBuffer buffer, boolean verbose)
     {
         ClassLoader loader = Thread.currentThread().getContextClassLoader();
@@ -188,26 +178,45 @@ public class JNDIView extends ServiceMBeanSupport implements JNDIViewMBean
              {
                 NameClassPair pair = (NameClassPair) ne.next();
                 boolean recursive = false;
+                boolean isLinkRef = false;
                 try
                 {
                     Class c = loader.loadClass(pair.getClassName());
-                    if (Context.class.isAssignableFrom (c))
+                    if( Context.class.isAssignableFrom(c) )
                         recursive = true;
+                    if( LinkRef.class.isAssignableFrom(c) )
+                        isLinkRef = true;
                 }
                 catch(ClassNotFoundException cnfe)
                 {
                 }
 
-                buffer.append(indent +  " +- " + pair.getName());
+                String name = pair.getName();
+                buffer.append(indent +  " +- " + name);
+                if( isLinkRef )
+                {
+                    // Get the 
+                    try
+                    {
+                        LinkRef link = (LinkRef) ctx.lookupLink(name);
+                        buffer.append("[link -> ");
+                        buffer.append(link.getLinkName());
+                        buffer.append(']');
+                    }
+                    catch(Throwable e)
+                    {
+                        e.printStackTrace();
+                        buffer.append("[invalid]");
+                    }
+                }
                 if( verbose )
                     buffer.append(" (class: "+pair.getClassName()+")");
                 buffer.append('\n');
                 if( recursive )
                 {
-                    String ctxName = pair.getName();
-                    try
+                   try
                     {
-                        Object value = ctx.lookup(ctxName);
+                        Object value = ctx.lookup(name);
                         if( value instanceof Context )
                         {
                             Context subctx = (Context) value;
@@ -221,12 +230,12 @@ public class JNDIView extends ServiceMBeanSupport implements JNDIViewMBean
                     }
                     catch(Throwable t)
                     {
-                        buffer.append("Failed to lookup: "+ctxName+", errmsg="+t.getMessage());
+                        buffer.append("Failed to lookup: "+name+", errmsg="+t.getMessage());
                         buffer.append('\n');
                     }
                }
             }
-            ne.close ();
+            ne.close();
         }
         catch(NamingException ne)
         {
@@ -245,4 +254,3 @@ public class JNDIView extends ServiceMBeanSupport implements JNDIViewMBean
         buffer.append("</pre>\n");
     }
 }
-
