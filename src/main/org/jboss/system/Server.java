@@ -32,14 +32,14 @@ import org.jboss.Version;
  *
  * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
  * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
- * @version $Revision: 1.17 $
+ * @version $Revision: 1.18 $
  */
 public class Server
    implements ServerMBean
 {
    /** Class logger */
    private static final BootstrapLogger log =
-   BootstrapLogger.getLogger(Server.class);
+      BootstrapLogger.getLogger(Server.class);
    
    /** Container for version information. */
    private final Version version = Version.getInstance();
@@ -72,7 +72,7 @@ public class Server
       log.info("JBoss Release: " + mainPkg.getImplementationTitle());
       
       this.config = config;
-      log.debug("Using config: " + config);
+      log.info("Using config: " + config);
       
       // remeber when we we started
       started = new Date();
