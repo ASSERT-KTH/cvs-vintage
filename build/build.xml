@@ -12,7 +12,6 @@
          (and without using -D arguments each time they build) -->
     <property file="${user.home}/scarab.build.properties" /> 
     <property file="${basedir}/${configuration.file}" />
-    <property file="${basedir}/build.properties" />
     <property file="${basedir}/default.properties" />
 
     <property name="ant.home" value="."/>
@@ -447,7 +446,7 @@
             <srcfiles dir="${src.sql.dir}" includes="${project}-schema.xml"/>
             <srcfiles dir="${user.home}" includes="scarab.build.properties"/>
             <srcfiles dir="${user.home}" includes="build.properties"/>
-            <srcfiles dir="${basedir}" includes="build.properties"/>
+            <srcfiles dir="${basedir}" includes="${configuration.file}"/>
         </uptodate>
     </target>
 
