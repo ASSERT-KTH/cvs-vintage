@@ -98,7 +98,7 @@ import org.apache.commons.lang.StringUtils;
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: Issue.java,v 1.280 2003/03/21 17:59:13 jmcnally Exp $
+ * @version $Id: Issue.java,v 1.281 2003/03/21 18:21:19 jon Exp $
  */
 public class Issue 
     extends BaseIssue
@@ -168,7 +168,7 @@ public class Issue
     protected static final String GET_HISTORY_LIMIT =
         "getHistoryLimit";
 
-    private static NumberKey NUMBERKEY_0 = new NumberKey(0);
+    private static final NumberKey NUMBERKEY_0 = new NumberKey(0);
 
     /** storage for any attachments which have not been saved yet */
     private List unSavedAttachments = null;
