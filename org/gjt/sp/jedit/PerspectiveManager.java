@@ -30,7 +30,7 @@ import org.gjt.sp.util.Log;
  * Manages persistence of open buffers and views across jEdit sessions.
  * @since jEdit 4.2pre1
  * @author Slava Pestov
- * @version $Id: PerspectiveManager.java,v 1.10 2004/05/29 01:55:24 spestov Exp $
+ * @version $Id: PerspectiveManager.java,v 1.11 2004/07/16 21:07:46 spestov Exp $
  */
 public class PerspectiveManager
 {
@@ -340,8 +340,6 @@ public class PerspectiveManager
 				config.splitConfig = charData;
 			else if(name.equals("VIEW"))
 			{
-				if(jEdit.getBufferCount() == 0)
-					jEdit.newFile(null);
 				view = jEdit.newView(view,null,config);
 				config = new View.ViewConfig();
 			}

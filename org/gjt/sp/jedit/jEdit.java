@@ -47,7 +47,7 @@ import org.gjt.sp.util.Log;
 /**
  * The main class of the jEdit text editor.
  * @author Slava Pestov
- * @version $Id: jEdit.java,v 1.231 2004/07/12 19:25:07 spestov Exp $
+ * @version $Id: jEdit.java,v 1.232 2004/07/16 21:07:46 spestov Exp $
  */
 public class jEdit
 {
@@ -3445,19 +3445,22 @@ public class jEdit
 			{
 				Buffer buffer = openFiles(null,userDir,args);
 
+				int count = getBufferCount();
+				if(count == 0)
+					buffer = newFile(null);
+
 				View view = null;
 
 				boolean restoreFiles = restore
 					&& jEdit.getBooleanProperty("restore")
-					&& (getBufferCount() == 0
-					|| jEdit.getBooleanProperty("restore.cli"));
+					&& (getBufferCount() == 0 ||
+					jEdit.getBooleanProperty("restore.cli"));
 
-				if(gui || getBufferCount() != 0)
+				if(gui || count != 0)
 				{
-					view = PerspectiveManager.loadPerspective(restoreFiles);
-
-					if(getBufferCount() == 0)
-						buffer = newFile(null);
+					view = PerspectiveManager
+						.loadPerspective(
+						restoreFiles);
 
 					if(view == null)
 						view = newView(null,buffer);

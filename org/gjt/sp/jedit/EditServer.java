@@ -54,7 +54,7 @@ import org.gjt.sp.util.Log;
  * complicated stuff can be done too.
  *
  * @author Slava Pestov
- * @version $Id: EditServer.java,v 1.21 2004/05/29 01:55:24 spestov Exp $
+ * @version $Id: EditServer.java,v 1.22 2004/07/16 21:07:46 spestov Exp $
  */
 public class EditServer extends Thread
 {
@@ -205,10 +205,16 @@ public class EditServer extends Thread
 
 			Buffer buffer = jEdit.openFiles(null,parent,args);
 
-			boolean restoreFiles = restore && jEdit.getBooleanProperty("restore")
-				&& (buffer == null || jEdit.getBooleanProperty("restore.cli"));
+			if(jEdit.getBufferCount() == 0)
+				jEdit.newFile(null);
 
-			View view = PerspectiveManager.loadPerspective(restoreFiles);
+			boolean restoreFiles = restore
+				&& jEdit.getBooleanProperty("restore")
+				&& (buffer == null
+				|| jEdit.getBooleanProperty("restore.cli"));
+
+			View view = PerspectiveManager.loadPerspective(
+				restoreFiles);
 
 			if(view == null)
 			{
