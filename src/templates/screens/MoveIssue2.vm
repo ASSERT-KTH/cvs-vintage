@@ -27,7 +27,7 @@
 #set ($orphanAttributes = $issue.getOrphanAttributeValuesList("$moduleId"))
 
 <form method="post" action="$link.setPage("MoveIssue2.vm").setAction("MoveIssue")">
-<input type="hidden" name="$scarabG.Constant.NEXT_TEMPLATE" value="Index.vm" />
+<input type="hidden" name="$scarabG.Constant.NEXT_TEMPLATE" value="ViewIssue.vm" />
 <input type="hidden" name="$scarabG.Constant.CANCEL_TEMPLATE" value="MoveIssue.vm" />
 <input type="hidden" name="id" value="$issueId" />
 <input type="hidden" name="$moveIssueGroup.IssueId.key" value="$issueId" />
@@ -45,14 +45,16 @@
 </div>
 
 #set ($attrValues = $issue.AllAttributeValuesMap)
-#set ($attVal = $attrValues.get("SUMMARY"))
 #set ($attrInput = $intake.AttributeValue.mapTo($attVal))
 
 <h3>Issue to be copied/moved</h3>
 <table width="100%" border="1" cellspacing="2" cellpadding="3">
  <tr>
+#if ($issue.DefaultTextAttributeValue)
+   #set ($attVal = $issue.DefaultTextAttributeValue)
+#end
 #if ($attVal)
-  <th>Summary</th>
+  <th>$attVal.RModuleAttribute.DisplayValue:</th>
 #end
   <th>Date committed</th>
   <th>Committed by</th>
@@ -63,7 +65,7 @@
    $attVal.Value
   </td>
 #end
-  ##<td>$format.getDate($scarabR.DateFormat, $issue.CreatedDate)</td>
+  <td>$format.getDate($scarabR.DateFormat, $issue.CreatedDate)</td>
   <td>
    #set ($createdUser = $issue.CreatedBy)
    <a href="mailTo:$createdUser.Email">$createdUser.FirstName $createdUser.LastName</a>
