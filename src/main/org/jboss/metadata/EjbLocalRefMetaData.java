@@ -45,9 +45,9 @@ public class EjbLocalRefMetaData extends MetaData {
 	
    public String getType() { return type; }
 	
-   public String getHome() { return localHome; }
+   public String getLocalHome() { return localHome; }
 	
-   public String getRemote() { return local; }
+   public String getLocal() { return local; }
 	
    public String getLink() { return link; }
 
