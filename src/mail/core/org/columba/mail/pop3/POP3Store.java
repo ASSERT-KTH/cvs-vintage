@@ -235,6 +235,7 @@ public class POP3Store {
 		if (popItem.getBoolean("enable_pop3preprocessingfilter", false))
 			rawString = modifyMessage(rawString);
 
+		
 		int i = rawString.indexOf("\n\n");
 		String headerString = rawString.substring(0, i);
 
@@ -251,7 +252,7 @@ public class POP3Store {
 		h.set("columba.fetchstate", new Boolean(true));
 
 		//h.set("columba.pop3uid", (String) uids.get(number - 1));
-
+		
 		return m;
 	}
 

@@ -17,26 +17,21 @@
 package org.columba.mail.pop3.command;
 
 import java.io.IOException;
-import java.util.List;
 import java.text.MessageFormat;
+import java.util.List;
 
 import javax.swing.JOptionPane;
 
 import org.columba.core.command.Command;
 import org.columba.core.command.CommandCancelledException;
-import org.columba.core.command.CompoundCommand;
 import org.columba.core.command.DefaultCommandReference;
 import org.columba.core.command.Worker;
 import org.columba.core.command.WorkerStatusController;
 import org.columba.core.logging.ColumbaLogger;
 import org.columba.core.main.MainInterface;
+import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.command.POP3CommandReference;
-import org.columba.mail.filter.Filter;
-import org.columba.mail.filter.FilterList;
 import org.columba.mail.folder.Folder;
-import org.columba.mail.gui.frame.TableUpdater;
-import org.columba.mail.gui.table.TableChangedEvent;
-import org.columba.mail.message.HeaderInterface;
 import org.columba.mail.message.Message;
 import org.columba.mail.pop3.POP3Server;
 import org.columba.mail.util.MailResourceLoader;
@@ -78,10 +73,12 @@ public class FetchNewMessagesCommand extends Command {
 
 		server = r[0].getServer();
 
-		log(MailResourceLoader.getString(
-                                "statusbar",
-                                "message",
-                                "authenticating"), worker);
+		log(
+			MailResourceLoader.getString(
+				"statusbar",
+				"message",
+				"authenticating"),
+			worker);
 
 		try {
 			// login and get # of messages on server
@@ -108,7 +105,7 @@ public class FetchNewMessagesCommand extends Command {
 		} catch (CommandCancelledException e) {
 			server.forceLogout();
 		} catch (IOException e) {
-                        String name = e.getClass().getName();
+			String name = e.getClass().getName();
 			JOptionPane.showMessageDialog(
 				null,
 				e.getLocalizedMessage(),
@@ -147,38 +144,16 @@ public class FetchNewMessagesCommand extends Command {
 			new Integer(Math.round(size / 1024)));
 		message.getHeader().set("columba.flags.seen", Boolean.FALSE);
 
-		// get inbox-folder from pop3-server preferences
+		//get inbox-folder from pop3-server preferences
 		Folder inboxFolder = server.getFolder();
-		Object uid = inboxFolder.addMessage(message, worker);
-		Object[] uids = new Object[1];
-		uids[0] = uid;
 
-		HeaderInterface[] headerList = new HeaderInterface[1];
-		headerList[0] = message.getHeader();
-		headerList[0].set("columba.uid", uid);
+		// start command which adds message to folder
+		// and calls apply-filter on this specific message
+		FolderCommandReference[] r = new FolderCommandReference[1];
+		r[0] = new FolderCommandReference(inboxFolder, message);
 
-		// update table-viewer
-		TableChangedEvent ev =
-			new TableChangedEvent(
-				TableChangedEvent.ADD,
-				inboxFolder,
-				headerList);
+		MainInterface.processor.addOp(new AddPOP3MessageCommand(r));
 
-		TableUpdater.tableChanged(ev);
-
-		// apply filter on message
-		FilterList list = inboxFolder.getFilterList();
-		for (int j = 0; j < list.count(); j++) {
-			Filter filter = list.get(j);
-
-			Object[] result = inboxFolder.searchMessages(filter, uids, worker);
-			if (result.length != 0) {
-				CompoundCommand command =
-					filter.getCommand(inboxFolder, result);
-
-				MainInterface.processor.addOp(command);
-			}
-		}
 	}
 
 	protected int calculateTotalSize(
@@ -230,10 +205,15 @@ public class FetchNewMessagesCommand extends Command {
 				ColumbaLogger.log.info("fetch message with UID=" + serverUID);
 			}
 
-			log(MessageFormat.format(MailResourceLoader.getString(
-                                        "statusbar",
-                                        "message",
-                                        "fetch_messages"), new Object[]{new Integer(i + 1), new Integer(newMessageCount)}),
+			log(
+				MessageFormat.format(
+					MailResourceLoader.getString(
+						"statusbar",
+						"message",
+						"fetch_messages"),
+					new Object[] {
+						new Integer(i + 1),
+						new Integer(newMessageCount)}),
 				worker);
 
 			// lookup index of message 
@@ -310,10 +290,12 @@ public class FetchNewMessagesCommand extends Command {
 	public List fetchMessageSizes(WorkerStatusController worker)
 		throws Exception {
 
-		log(MailResourceLoader.getString(
-                                "statusbar",
-                                "message",
-                                "fetch_size_list"), worker);
+		log(
+			MailResourceLoader.getString(
+				"statusbar",
+				"message",
+				"fetch_size_list"),
+			worker);
 		// fetch message-size list
 		List messageSizeList = server.getMessageSizeList(worker);
 		if (MainInterface.DEBUG) {
@@ -329,10 +311,12 @@ public class FetchNewMessagesCommand extends Command {
 		throws Exception {
 		// fetch UID list 
 
-		log(MailResourceLoader.getString(
-                                "statusbar",
-                                "message",
-                                "fetch_uid_list"), worker);
+		log(
+			MailResourceLoader.getString(
+				"statusbar",
+				"message",
+				"fetch_uid_list"),
+			worker);
 
 		List newUIDList = server.getUIDList(totalMessageCount, worker);
 		if (MainInterface.DEBUG) {
@@ -350,16 +334,17 @@ public class FetchNewMessagesCommand extends Command {
 			ColumbaLogger.log.info("logout");
 		}
 
-		log(MailResourceLoader.getString(
-                                "statusbar",
-                                "message",
-                                "logout"), worker);
+		log(
+			MailResourceLoader.getString("statusbar", "message", "logout"),
+			worker);
 
 		if (newMessageCount == 0) {
-			log(MailResourceLoader.getString(
-                                        "statusbar",
-                                        "message",
-                                        "no_new_messages"), worker);
-                }
+			log(
+				MailResourceLoader.getString(
+					"statusbar",
+					"message",
+					"no_new_messages"),
+				worker);
+		}
 	}
 }

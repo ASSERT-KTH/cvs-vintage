@@ -141,7 +141,9 @@ public abstract class CachedFolder extends LocalFolder {
 
 		for (int i = 0; i < uids.length; i++) {
 			Object uid = uids[i];
-
+			
+			if ( uid == null ) continue;
+			
 			// if message with uid doesn't exist -> skip
 			if (exists(uid, worker) == false) {
 				ColumbaLogger.log.debug("uid " + uid + " doesn't exist");
@@ -258,7 +260,10 @@ public abstract class CachedFolder extends LocalFolder {
 		// which should be re-used if possible
 		aktMessage = message;
 
-		return (AbstractMessage) message.clone();
+		// there's no need to clone() here
+		
+		//return (AbstractMessage) message.clone();
+		return (AbstractMessage) message;
 	}
 
 	/**

@@ -19,6 +19,7 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.util.ResourceBundle;
 
+import javax.swing.BorderFactory;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
@@ -92,6 +93,7 @@ public class MailFrameView extends AbstractFrameView {
 		//this.statusBar = statusBar;
 
 		mainSplitPane = new JSplitPane();
+		mainSplitPane.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
 		//mainSplitPane.setDividerSize(5);
 
 		//mainSplitPane.setBorder(BorderFactory.createEmptyBorder(1, 0, 0, 0));
@@ -122,6 +124,7 @@ public class MailFrameView extends AbstractFrameView {
 		tableScrollPane.getViewport().setBackground(Color.white);
 		tablePanel.add(tableScrollPane, BorderLayout.CENTER);
 		rightSplitPane = new JSplitPane();
+		rightSplitPane.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
 		rightSplitPane.setOrientation(JSplitPane.VERTICAL_SPLIT);
 		rightSplitPane.add(tablePanel, JSplitPane.LEFT);
 		rightSplitPane.add(messagePanel, JSplitPane.RIGHT);

@@ -38,7 +38,7 @@ public class ThemeSwitcher {
 				(ThemePluginHandler) MainInterface.pluginManager.getHandler(
 					"org.columba.core.theme");
 			// if no theme available -> set ThinColumba as default
-			String pluginName = themeConfig.getAttribute("name", "ThinColumba");
+			String pluginName = themeConfig.getAttribute("name", "Plastic");
 			if (pluginName == null) {
 				themeConfig.addAttribute("name", "ThinColumba");
 				pluginName = "ThinColumba";

@@ -39,7 +39,9 @@ public class MetalLookAndFeelPlugin extends AbstractThemePlugin {
 	 * @see org.columba.core.gui.themes.plugin.AbstractThemePlugin#setLookAndFeel()
 	 */
 	public void setLookAndFeel() throws Exception {
+
 		MetalLookAndFeel.setCurrentTheme(new DefaultMetalTheme());
+
 		UIManager.setLookAndFeel(
 			UIManager.getCrossPlatformLookAndFeelClassName());
 
