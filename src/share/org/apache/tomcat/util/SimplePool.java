@@ -108,11 +108,11 @@ public final class SimplePool  {
     public  void put(Object o) {
 	int idx=-1;
 	synchronized( lock ) {
-	    if( current < max )
+	    if( current < max - 1 )
 		idx=++current;
+	    if( idx > 0 ) 
+		pool[idx]=o;
 	}
-	if( idx > 0 ) 
-	    pool[idx]=o;
     }
 
     /**
@@ -123,9 +123,9 @@ public final class SimplePool  {
 	synchronized( lock ) {
 	    if( current >= 0 )
 		idx=current--;
+	    if( idx >= 0  ) 
+		return pool[idx];
 	}
-	if( idx >= 0  ) 
-	    return pool[idx];
 	return null;
     }
 
