@@ -46,12 +46,17 @@ package org.tigris.scarab.util.xml;
  * individuals on behalf of Collab.Net.
  */
 
+import org.xml.sax.Attributes;
+
 import java.util.List;
 import java.util.ArrayList;
 
 import org.apache.commons.digester.Rule;
 import org.apache.commons.digester.Digester;
+import org.apache.fulcrum.security.TurbineSecurity;
 import org.apache.log4j.Category;
+
+import org.tigris.scarab.om.ScarabUser;
 
 /**
  * This is a base class where commonly used code goes.
@@ -81,48 +86,48 @@ public abstract class BaseRule extends Rule
      * Sets the state and DependencyTree and calls super(digester)
      */
     protected BaseRule(Digester digester, String state, 
-                    DependencyTree dependencyTree)
+                       DependencyTree dependencyTree)
     {
         this(digester, state);
         this.dependencyTree = dependencyTree;
     }
-
+    
     public BaseRule(Digester digester, String state, ArrayList userList)
     {
         this(digester, state);
         this.userList = userList;
     }
-
+    
     private void initLogging()
     {
         cat = Category.getInstance(org.tigris.scarab.util.xml.XMLImport.class);
     }
-
+    
     public Category log()
     {
         return cat;
     }
-
+    
     public String getState()
     {
         return this.state;
     }
-
+    
     public Digester getDigester()
     {
         return this.digester;
     }
-
+    
     public DependencyTree getDependencyTree()
     {
         return this.dependencyTree;
     }    
-
+    
     public List getUserList()
     {
         return this.userList;
     }
-
+    
     /**
      * This method is called when the body of a matching XML element
      * is encountered.  If the element has no body, this method is
@@ -130,15 +135,19 @@ public abstract class BaseRule extends Rule
      *
      * @param text The text of the body of this element
      */
-    protected void digesterPush(String text)
+    protected void doInsertionOrValidationAtBegin(Attributes attributes)
         throws Exception
     {
         if(getState().equals(XMLImport.STATE_DB_INSERTION))
         {
-            digester.push(text);
+            doInsertionAtBegin(attributes);
+        }
+        else if (getState().equals(XMLImport.STATE_DB_VALIDATION))
+        {
+            doValidationAtBegin(attributes);
         }
     }
-
+    
     /**
      * This method is called when the body of a matching XML element
      * is encountered.  If the element has no body, this method is
@@ -158,7 +167,7 @@ public abstract class BaseRule extends Rule
             doValidationAtBody(text);
         }
     }
-
+    
     /**
      * This method is called when the end of a matching XML element
      * is encountered.
@@ -175,19 +184,31 @@ public abstract class BaseRule extends Rule
             doValidationAtEnd();
         }
     }
-
+    
+    protected void doInsertionAtBegin(Attributes attributes)
+        throws Exception
+    {
+        throw new Exception("You should extend this method and implement it.");
+    }
+    
+    protected void doValidationAtBegin(Attributes attributes)
+        throws Exception
+    {
+        throw new Exception("You should extend this method and implement it.");
+    }
+    
     protected void doInsertionAtBody(String value)
         throws Exception
     {
         throw new Exception("You should extend this method and implement it.");
     }
-
+    
     protected void doValidationAtBody(String value)
         throws Exception
     {
         throw new Exception("You should extend this method and implement it.");
     }
-
+    
     protected void doInsertionAtEnd()
         throws Exception
     {
@@ -198,5 +219,24 @@ public abstract class BaseRule extends Rule
         throws Exception
     {
         throw new Exception("You should extend this method and implement it.");
+    }
+    
+    /**
+     * Validates a user to exist in the database, or will be created prior to import.
+     */
+    protected void validateUser(String username)
+        throws Exception
+    {
+        try
+        {
+            ScarabUser user = (ScarabUser)TurbineSecurity.getUser(username);
+        }
+        catch(Exception e)
+        {
+            if (!userList.contains(username))
+            {
+                throw new Exception("User: " + username + ", is not defined");
+            }
+        }
     }
 }
