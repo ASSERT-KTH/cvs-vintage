@@ -59,6 +59,7 @@ import org.apache.turbine.RunData;
 import org.apache.commons.util.SequencedHashtable;
 
 import org.apache.turbine.tool.IntakeTool;
+import org.apache.torque.om.NumberKey; 
 import org.apache.fulcrum.intake.model.Group;
 import org.apache.fulcrum.intake.model.Field;
 
@@ -67,6 +68,9 @@ import org.tigris.scarab.om.ScarabUser;
 import org.tigris.scarab.om.AttributeValue;
 import org.tigris.scarab.om.Issue;
 import org.tigris.scarab.om.Query;
+import org.tigris.scarab.om.RQueryUser;
+import org.tigris.scarab.om.ScarabModule;
+import org.tigris.scarab.om.ScarabUserImplPeer;
 import org.tigris.scarab.util.ScarabConstants;
 import org.tigris.scarab.tools.ScarabRequestTool;
 import org.tigris.scarab.util.ScarabConstants;
@@ -77,7 +81,7 @@ import org.tigris.scarab.security.ScarabSecurityPull;
     This class is responsible for report issue forms.
     ScarabIssueAttributeValue
     @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
-    @version $Id: Search.java,v 1.32 2001/09/12 21:25:32 jmcnally Exp $
+    @version $Id: Search.java,v 1.33 2001/09/19 22:55:34 elicia Exp $
 */
 public class Search extends TemplateAction
 {
@@ -207,10 +211,15 @@ public class Search extends TemplateAction
     public void doEditstoredquery( RunData data, TemplateContext context )
          throws Exception
     {        
-        String newValue = getQueryString(data);
+        IntakeTool intake = (IntakeTool)context
+            .get(ScarabConstants.INTAKE_TOOL);
         ScarabRequestTool scarabR = (ScarabRequestTool)context
             .get(ScarabConstants.SCARAB_REQUEST_TOOL);
         Query query = scarabR.getQuery();
+        Group queryGroup = intake.get("Query", 
+                                      query.getQueryKey() );
+        String newValue = getQueryString(data);
+        queryGroup.setProperties(query);
         query.setValue(newValue);
         query.saveAndSendEmail((ScarabUser)data.getUser(), 
                         scarabR.getCurrentModule(), 
@@ -309,6 +318,42 @@ public class Search extends TemplateAction
         }
     }
     
+    /**
+        Unsubscribes users from query (admin function)
+    */
+    public void doUnsubscribeusers( RunData data, TemplateContext context )
+         throws Exception
+    {        
+        Object[] keys = data.getParameters().getKeys();
+        String key;
+        String userId;
+        ScarabUser adminUser = (ScarabUser)data.getUser();
+        ScarabRequestTool scarabR = (ScarabRequestTool)context
+            .get(ScarabConstants.SCARAB_REQUEST_TOOL);
+        Query query = scarabR.getQuery();
+
+        for (int i =0; i<keys.length; i++)
+        {
+            key = keys[i].toString();
+            if (key.startsWith("subscribed_user_"))
+            {
+               userId = key.substring(16);
+               ScarabUser subscribedUser = (ScarabUser) ScarabUserImplPeer
+                                           .retrieveByPK(new NumberKey(userId));
+               RQueryUser rqu = query
+                         .getSubscription(subscribedUser.getUserId());
+              try
+              {
+                  rqu.delete(subscribedUser, (ScarabModule)scarabR.getCurrentModule());
+               }
+               catch (Exception e)
+               {
+                  data.setMessage(ScarabConstants.NO_PERMISSION_MESSAGE);
+               }
+            }
+        } 
+    }
+         
     /**
         This manages clicking the Cancel button
     */
