@@ -252,5 +252,27 @@
     </field>
 </group>
 
+<group name="IssueTemplate" key="template" mapToObject="om.IssueTemplate">
+    <field name="Id" key="o" type="NumberKey" mapToProperty="PrimaryKey">
+        <rule name="mask" value="[0-9]+">badIdMessage</rule>
+    </field>
+    <field name="Name" key="n" type="String">
+        <required-message>Please enter a name for this template.</required-message>
+        <rule name="maxLength" value="255">Please keep the name to less than 256 characters</rule>
+    </field>
+    <field name="Description" key="d" type="String">
+        <rule name="maxLength" value="255">Please keep the description to less than 256 characters</rule>
+    </field>
+    <field name="Value" key="v" type="String" />
+    <field name="TypeId" key="tti" type="NumberKey" >
+        <required-message>Please select an option.</required-message>
+        <rule name="mask" value="[0-9]+">badIdMessage</rule>
+    </field>
+    <field name="ModuleId" key="mi" type="NumberKey" >
+        <required-message>If you have selected a project-level query, you must select a project.</required-message>
+        <rule name="mask" value="[0-9]+">badIdMessage</rule>
+    </field>
+</group>
+
 
 </input-data>
