@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/runtime/Attic/JspServlet.java,v 1.2 1999/10/15 00:11:56 akv Exp $
- * $Revision: 1.2 $
- * $Date: 1999/10/15 00:11:56 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/runtime/Attic/JspServlet.java,v 1.3 1999/10/17 22:21:32 mandar Exp $
+ * $Revision: 1.3 $
+ * $Date: 1999/10/17 22:21:32 $
  *
  * ====================================================================
  * 
@@ -235,8 +235,6 @@ public class JspServlet extends HttpServlet {
 	    wrapper = new JspServletWrapper(jspUri, isErrorPage);
 	    jsps.put(jspUri, wrapper);
 	}
-	if (exception != null) 
-	    request.setAttribute("javax.servlet.jsp.jspException", exception);
 	
 	wrapper.service(request, response, precompile);
     }

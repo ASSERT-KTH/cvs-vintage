@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/JspParseEventListener.java,v 1.1 1999/10/09 00:20:36 duncan Exp $
- * $Revision: 1.1 $
- * $Date: 1999/10/09 00:20:36 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/JspParseEventListener.java,v 1.2 1999/10/17 22:21:31 mandar Exp $
+ * $Revision: 1.2 $
+ * $Date: 1999/10/17 22:21:31 $
  *
  * ====================================================================
  * 
@@ -310,17 +310,12 @@ public class JspParseEventListener extends BaseJspListener {
 
     private void generateFooter() throws JasperException {
 	writer.popIndent();
-	writer.println("} catch (Throwable t) {");
+	//writer.println("} catch (Throwable t) {");
+	writer.println("} catch (Exception ex) {");
 	writer.pushIndent();
         writer.println("if (out.getBufferSize() != 0)");
         writer.pushIndent(); writer.println("out.clear();"); writer.popIndent();
-	if (!error.equals("") && !ctxt.isErrorPage())
-	    writer.println("throw new HandleErrorPageException("+"\""+error+"\", t, out);");
-	else {
-            writer.println("throw new JasperException(t);");
-        }
-        
-	/* Do something reasonable for errpages and stuff here... */
+	writer.println("pageContext.handlePageException(ex);");
 	writer.popIndent();
 	writer.println("} finally {");
 	writer.pushIndent();

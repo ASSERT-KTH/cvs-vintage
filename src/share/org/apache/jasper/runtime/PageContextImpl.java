@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/runtime/PageContextImpl.java,v 1.2 1999/10/14 04:07:54 akv Exp $
- * $Revision: 1.2 $
- * $Date: 1999/10/14 04:07:54 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/runtime/PageContextImpl.java,v 1.3 1999/10/17 22:21:32 mandar Exp $
+ * $Revision: 1.3 $
+ * $Date: 1999/10/17 22:21:32 $
  *
  * ====================================================================
  * 
@@ -354,8 +354,18 @@ public class PageContextImpl extends PageContext {
         return out;
     }
     
-    public void handlePageException(Exception e) {
-        /* FIXME: Not yet Implemented */
+    public void handlePageException(Exception e)
+    throws IOException, ServletException {
+	
+	// set the request attribute with the exception.
+	request.setAttribute("javax.servlet.jsp.jspException", e);
+	
+	if (errorPageURL != null && !errorPageURL.equals("")) {
+	    forward(errorPageURL);
+	} // Otherwise throw the exception wrapped inside a ServletException.
+	else
+	    throw new ServletException(e.getMessage());
+	    
     }
 
     protected JspWriter _createOut(int bufferSize, boolean autoFlush) 
