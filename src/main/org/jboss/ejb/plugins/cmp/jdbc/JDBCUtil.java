@@ -30,6 +30,8 @@ import java.sql.Statement;
 import java.sql.SQLException;
 import java.sql.Types;
 import java.sql.CallableStatement;
+import java.sql.Blob;
+import java.sql.Clob;
 
 import java.util.Map;
 import java.util.HashMap;
@@ -466,14 +468,57 @@ public final class JDBCUtil
    {
       protected Object readResult(ResultSet rs, int index, Class destination) throws SQLException
       {
-         Object value = JDBCUtil.getLongString(rs, index);
+         Clob clob = rs.getClob(index);
+
+         String content;
+         if(clob == null)
+         {
+            content = null;
+         }
+         else
+         {
+            final Reader reader = clob.getCharacterStream();
+            int intLength = (int)clob.length();
+
+            char[] chars;
+            try
+            {
+               if(intLength <= clob.length())
+               {
+                  chars = new char[intLength];
+                  reader.read(chars);
+                  content = String.valueOf(chars);
+               }
+               else
+               {
+                  StringBuffer buf = new StringBuffer(intLength);
+                  chars = new char[8192];
+                  int i = reader.read(chars);
+                  while(i > 0)
+                  {
+                     buf.append(chars, 0, i);
+                     i = reader.read(chars);
+                  }
+                  content = buf.toString();
+               }
+            }
+            catch(IOException e)
+            {
+               throw new SQLException("Failed to read CLOB character stream: " + e.getMessage());
+            }
+            finally
+            {
+               safeClose(reader);
+            }
+         }
+
          if(log.isTraceEnabled())
          {
-            log.trace("Get result: index=" + index +
-               ", javaType=" + destination.getName() +
-               ", Big Char, value=" + value);
+            log.trace("Get result: index=" + index
+               + ", javaType=" + destination.getName()
+               + ", CLOB, value=" + content);
          }
-         return value;
+         return content;
       }
    };
 
@@ -543,28 +588,43 @@ public final class JDBCUtil
    {
       protected Object readResult(ResultSet rs, int index, Class destination) throws SQLException
       {
-         Object value = null;
-         InputStream binaryData = rs.getBinaryStream(index);
-         if(binaryData != null)
+         Blob blob = rs.getBlob(index);
+
+         Object value;
+         if(blob == null)
          {
-            try
+            value = null;
+         }
+         else
+         {
+            InputStream binaryData = blob.getBinaryStream();
+            if(binaryData != null)
             {
-               if(destination == byte[].class)
-                  value = getByteArray(binaryData);
-               else
-                  value = convertToObject(binaryData);
+               try
+               {
+                  if(destination == byte[].class)
+                     value = getByteArray(binaryData);
+                  else
+                     value = convertToObject(binaryData);
+               }
+               finally
+               {
+                  safeClose(binaryData);
+               }
             }
-            finally
+            else
             {
-               safeClose(binaryData);
+               value = null;
             }
          }
+
          if(log.isTraceEnabled())
          {
             log.trace("Get result: index=" + index +
                ", javaType=" + destination.getName() +
                ", Big Binary, value=" + value);
          }
+
          return value;
       }
    };
