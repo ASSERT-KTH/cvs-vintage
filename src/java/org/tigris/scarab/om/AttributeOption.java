@@ -75,7 +75,7 @@ import org.tigris.scarab.services.cache.ScarabCache;
  * TurbineGlobalCache service.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: AttributeOption.java,v 1.33 2003/04/01 02:50:43 jon Exp $
+ * @version $Id: AttributeOption.java,v 1.34 2003/06/25 04:49:16 irk_tpt Exp $
  */
 public class AttributeOption 
     extends BaseAttributeOption
@@ -266,9 +266,9 @@ public class AttributeOption
         throws Exception
     {
         List children = getChildren();
-        for (int i=children.size()-1; i>=0; i--) 
+        for (int i=children.size()-1; i>=0; i--)
         {
-            AttributeOption child = (AttributeOption) 
+            AttributeOption child = (AttributeOption)
                 children.get(i);
             descendants.add(child);
             child.addDescendants(descendants);
@@ -296,10 +296,7 @@ public class AttributeOption
     public List getParents()
         throws Exception
     {
-        if (sortedParents == null)
-        {
-            buildParents();
-        }
+        buildParents();
         return sortedParents;
     }
 
