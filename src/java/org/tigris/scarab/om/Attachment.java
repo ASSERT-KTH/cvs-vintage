@@ -83,7 +83,7 @@ import org.tigris.scarab.util.word.SearchFactory;
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: Attachment.java,v 1.61 2003/10/17 09:43:04 dep4b Exp $
+ * @version $Id: Attachment.java,v 1.62 2003/10/17 13:55:33 dep4b Exp $
  */
 public class Attachment 
     extends BaseAttachment
@@ -251,7 +251,7 @@ public class Attachment
                 {
                     mkdirs(parent);
                 }                
-                file.write(uploadFile.getAbsoluteFile());
+                file.write(uploadFile.getPath());
             }
         }
         catch (Exception e)
