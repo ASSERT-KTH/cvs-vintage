@@ -12,8 +12,6 @@ import java.util.Collection;
 
 import javax.ejb.RemoveException;
 
-// import org.jboss.util.FinderResults;
-
 import org.jboss.monitor.StatisticsProvider;
 
 /**
@@ -27,7 +25,7 @@ import org.jboss.monitor.StatisticsProvider;
  * @see EntityContainer
  * 
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
- * @version $Revision: 1.11 $
+ * @version $Revision: 1.12 $
  */
 public interface EntityPersistenceManager
    extends ContainerPlugin, StatisticsProvider
