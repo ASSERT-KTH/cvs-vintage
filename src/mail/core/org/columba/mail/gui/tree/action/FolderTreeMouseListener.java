@@ -14,6 +14,7 @@
 
 package org.columba.mail.gui.tree.action;
 
+import java.awt.Point;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
@@ -42,37 +43,12 @@ public class FolderTreeMouseListener extends MouseAdapter
 
     public void mousePressed(MouseEvent e)
     {
-         if ( e.isPopupTrigger() )
-            {
-                java.awt.Point point = e.getPoint();
-                TreePath path = treeController.getView().getClosestPathForLocation( point.x, point.y );
-
-                treeController.getView().clearSelection();
-                treeController.getView().addSelectionPath( path );
-
-                treeController.getActionListener().changeActions();
-
-
-                getPopupMenu().show(e.getComponent(), e.getX(), e.getY());
-            }
-
+        maybeShowPopup(e);
     }
 
     public void mouseReleased(MouseEvent e)
     {
-         if ( e.isPopupTrigger() )
-            {
-                java.awt.Point point = e.getPoint();
-                TreePath path = treeController.getView().getClosestPathForLocation( point.x, point.y );
-
-                treeController.getView().clearSelection();
-                treeController.getView().addSelectionPath( path );
-
-                treeController.getActionListener().changeActions();
-
-
-                getPopupMenu().show(e.getComponent(), e.getX(), e.getY());
-            }
+        maybeShowPopup(e);
     }
 
     public void mouseClicked(MouseEvent e)
@@ -91,14 +67,19 @@ public class FolderTreeMouseListener extends MouseAdapter
 
     }
 
-    /*
     private void maybeShowPopup(MouseEvent e)
     {
-        if (e.isPopupTrigger())
-        {
-            getPopupMenu().show(e.getComponent(),
-                       e.getX(), e.getY());
-        }
+         if ( e.isPopupTrigger() )
+         {
+             Point point = e.getPoint();
+             TreePath path = treeController.getView().getClosestPathForLocation( point.x, point.y );
+
+             treeController.getView().clearSelection();
+             treeController.getView().addSelectionPath( path );
+
+             treeController.getActionListener().changeActions();
+
+             getPopupMenu().show(e.getComponent(), e.getX(), e.getY());
+         }
     }
-    */
 }
