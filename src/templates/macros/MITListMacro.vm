@@ -166,6 +166,11 @@ $l10n.CurrentModuleTypesIntro
     <p><em>$l10n.NoMoreIssueTypes</em></p>
 #else
 
+#if ($searchField.equals("module"))
+ #set ($searchValue = $l10n.Modules.toLowerCase())
+#else
+ #set ($searchValue = $l10n.IssueTypes.toLowerCase())
+#end
 
 ## FILTERING
 <div class="axial">
@@ -185,7 +190,7 @@ $l10n.CurrentModuleTypesIntro
 </div>
 
 #if ($filterIgnored)
-   <p class="infomark"><em>$l10n.FilterNoResults</em></p>
+   <p class="infomark"><em>$l10n.format("FilterNoResults", $searchValue)</em></p>
 #end
 
 ## PAGINATION
