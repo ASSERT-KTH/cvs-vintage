@@ -1,4 +1,4 @@
-$Id: readme,v 1.3 2000/03/26 02:36:11 craigmcc Exp $
+$Id: readme,v 1.4 2000/04/06 17:49:21 craigmcc Exp $
         
                            Release Notes for
                            =================
@@ -14,6 +14,7 @@ $Id: readme,v 1.3 2000/03/26 02:36:11 craigmcc Exp $
     4.  New Features In This Release
     5.  Known Bugs and Issues
 
+
 =============================================================================
 1.  INTRODUCTION
 
@@ -26,6 +27,7 @@ be used stand alone, or in conjunction with several popular web servers:
 
 You should read the License Agreement (in the LICENSE file of the top level
 directory), which applies to all software included in this release.
+
 
 =============================================================================
 2.  INSTALLING AND RUNNING TOMCAT
@@ -52,13 +54,39 @@ which you unpacked the Tomcat distribution.
 =============================================================================
 4.  NEW FEATURES IN THIS RELEASE
 
-FIXME
+Many new features have been added to Tomcat since the 3.0 release.  Among the
+most important are:
+
+- Connectors for using Tomcat to run servlets with Microsoft's IIS
+  and Netscape's NES web server, as well as Apache and stand-alone.
+
+- Automatic generation of configuration files for Apache integration.
+
+- Automatic deployment of applications delivered as Web ARchive (WAR)
+  files.  To deploy an application, copy the WAR file to the
+  $TOMCAT_HOME/webapps directory and restart Tomcat, after which the
+  WAR file will be automatically expanded.  To remove an application,
+  remove the expanded directory (and the WAR file) for that application.
+
+- Automatic servlet reloading when servlet classes are changed in
+  WEB-INF/classes or WEB-INF/lib/*.jar.  This support can be configured
+  on a per-web-application basis.
+
+- Enhanced support for logging on a per-Tomcat-component basis.
+
+- Minimal administration tool, allowing new web applications to be deployed
+  into a running Tomcat environment, as well as removing existing applications.
+
+- Command line tool (jspc) to compile the JSP pages that comprise your
+  application ahead of time.
+
+- Substantially improved installation and development documentation.
 
 
 =============================================================================
 5.  KNOWN BUGS AND ISSUES
 
-6.1 Using An Absolute Path as Document Root Under Windows
+5.1 Using An Absolute Path as Document Root Under Windows
 
 In the TOMCAT_HOME/conf/server.xml file, you can declare a relative or absolute
 directory pathname for the docRoot attribute.  If you wish to use an absolute
@@ -72,6 +100,36 @@ conform to Java's definition of an absolute path on this platform:
 
 Under Unix, absolute pathnames must begin with a slash ('/') character.
 
+5.2 Container Managed Security
 
-FIXME
+Tomcat 3.1 has an experimental implementation of container managed security,
+as described in the Servlet API Specification, version 2.2, section 11.  Please
+note the following information about this implementation:
+
+- BASIC authentication appears to work correctly, but has not been
+  extensively tested.  Please report any bugs you encounter here
+  at <http://jakarta.apache.org/bugs>.  The example application has
+  a protected area defined at the following URL:
+
+	http://localhost:8080/examples/jsp/security/protected
+
+  which can be accessed by any user defined in the configuration file
+  $TOMCAT_HOME/conf/tomcat-users.xml that has been granted the
+  appropriate roles.
+
+  WARNING:  Basic authentication is not suitable for general security
+  use across the Internet, or across other insecure networks, because
+  usernames and passwords are sent encoded, but not encrypted, with
+  every single request.
+
+- FORM based authentication is partially supported, although there are
+  known bugs and specification compliance issues.  This implementation
+  is *not* suitable for general application use.
+
+  If you wish to participate in debugging and enhancing this portion of
+  Tomcat, please subscribe to the TOMCAT-DEV mailing list, and assist in
+  locating and fixing all of the outstanding problems.
+
+- DIGEST authentication and HTTPS client authentication (i.e. SSL)
+  are not supported in this release.
 

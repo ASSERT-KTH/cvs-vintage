@@ -201,7 +201,7 @@ public class SecurityCheck extends  BaseInterceptor {
     /** Wrong user/password
      */
     protected int errorPage( Request req, Response response ) {
-	System.out.println("Wrong user/password");
+	//	System.out.println("Wrong user/password");
 	return 0;
     }
     
