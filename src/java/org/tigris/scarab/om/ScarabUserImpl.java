@@ -70,7 +70,7 @@ import org.tigris.scarab.om.Issue;
     implementation needs.
 
     @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
-    @version $Id: ScarabUserImpl.java,v 1.16 2001/08/31 01:29:55 jmcnally Exp $
+    @version $Id: ScarabUserImpl.java,v 1.17 2001/09/14 19:39:15 elicia Exp $
 */
 public class ScarabUserImpl extends BaseScarabUserImpl implements ScarabUser
 {    
@@ -254,7 +254,6 @@ public class ScarabUserImpl extends BaseScarabUserImpl implements ScarabUser
     public List getAttributesForIssueList(ModuleEntity module) throws Exception
     {
         Criteria crit = new Criteria(4)
-            .add(RModuleUserAttributePeer.DELETED, false)
             .add(RModuleUserAttributePeer.MODULE_ID, module.getModuleId())
             .add(RModuleUserAttributePeer.USER_ID, getUserId())
             .addAscendingOrderByColumn(RModuleUserAttributePeer.PREFERRED_ORDER);
@@ -307,7 +306,7 @@ public class ScarabUserImpl extends BaseScarabUserImpl implements ScarabUser
     }
 
     /**
-     * Returns an RModuleUserAttribute objects.
+     * Returns an RModuleUserAttribute object.
      */
     public RModuleUserAttribute getModuleUserAttribute(NumberKey moduleId, 
                                                        NumberKey attributeId) 
@@ -315,7 +314,6 @@ public class ScarabUserImpl extends BaseScarabUserImpl implements ScarabUser
     {
         RModuleUserAttribute mua = null;
         Criteria crit = new Criteria(4)
-           .add(RModuleUserAttributePeer.DELETED, false)
            .add(RModuleUserAttributePeer.MODULE_ID, moduleId)
            .add(RModuleUserAttributePeer.USER_ID, getUserId())
            .add(RModuleUserAttributePeer.ATTRIBUTE_ID, attributeId);
