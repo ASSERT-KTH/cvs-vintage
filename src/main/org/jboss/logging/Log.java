@@ -17,7 +17,7 @@ import javax.management.*;
  *
  *   @see <related>
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
- *   @version $Revision: 1.8 $
+ *   @version $Revision: 1.9 $
  */
 public abstract class Log
 {
@@ -173,7 +173,8 @@ public abstract class Log
       exception.printStackTrace(out);
       out.close();
 
-      DataInputStream din = new DataInputStream(new ByteArrayInputStream(baos.toByteArray()));
+      BufferedReader din = new BufferedReader(
+            new InputStreamReader(new ByteArrayInputStream(baos.toByteArray())));
 
       String error;
       try
