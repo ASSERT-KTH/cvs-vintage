@@ -12,7 +12,7 @@ import javax.naming.NamingException;
 /** The ExternalContext mbean interface.
 
 @author Scott_Stark@displayscape.com
-@version $Revision: 1.3 $
+@version $Revision: 1.4 $
 */
 public interface ExternalContextMBean extends org.jboss.util.ServiceMBean
 {
@@ -32,6 +32,19 @@ public interface ExternalContextMBean extends org.jboss.util.ServiceMBean
         remotely.
     */
     public void setRemoteAccess(boolean remoteAccess);
+
+    /** Get the cacheContext flag.
+    */
+    public boolean getCacheContext();
+    /** set the cacheContext flag. When set to true, the external Context
+        is only created when the mbean is started and then stored as an in
+        memory object until the mbean is stopped. If cacheContext if set to
+        false, the external Context is created on each lookup using the
+        mbean Properties and InitialContext class. When the uncached Context
+        is looked up by a client, the client should invoke close() on the
+        Context to prevent resource leaks.
+    */
+    public void setCacheContext(boolean flag);
 
     /** Get the class name of the InitialContext implementation to
 	use. Should be one of:

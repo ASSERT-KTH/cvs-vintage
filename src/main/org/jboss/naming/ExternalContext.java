@@ -12,6 +12,10 @@ import java.io.InvalidObjectException;
 import java.io.ObjectStreamException;
 import java.io.Serializable;
 import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.lang.reflect.Proxy;
 import java.net.URL;
 import java.util.Hashtable;
 import java.util.Properties;
@@ -43,12 +47,10 @@ that can only be used from within this VM.
 @see org.jboss.naming.NonSerializableFactory
 
 @author Scott_Stark@displayscape.com
-@version $Revision: 1.4 $
+@version $Revision: 1.5 $
 */
 public class ExternalContext extends ServiceMBeanSupport implements ExternalContextMBean
 {
-    // Constants -----------------------------------------------------
-
     // Attributes ----------------------------------------------------
     private boolean remoteAccess;
     private SerializableInitialContext contextInfo = new SerializableInitialContext();
@@ -98,6 +100,14 @@ public class ExternalContext extends ServiceMBeanSupport implements ExternalCont
     public void setRemoteAccess(boolean remoteAccess)
     {
         this.remoteAccess = remoteAccess;
+    }
+    public boolean getCacheContext()
+    {
+        return contextInfo.getCacheContext();
+    }
+    public void setCacheContext(boolean cacheContext)
+    {
+        contextInfo.setCacheContext(cacheContext);
     }
 
     /** Get the class name of the InitialContext implementation to
@@ -154,7 +164,8 @@ public class ExternalContext extends ServiceMBeanSupport implements ExternalCont
     */
     public void stopService()
     {
-        unbind(contextInfo.getJndiName());
+        if( contextInfo.getCacheContext() )
+            unbind(contextInfo.getJndiName());
     }
 
     // Protected -----------------------------------------------------
@@ -197,20 +208,41 @@ public class ExternalContext extends ServiceMBeanSupport implements ExternalCont
         log.debug("parentCtx="+parentCtx);
         Name atomName = fullName.getSuffix(fullName.size()-1);
         String atom = atomName.get(0);
+        boolean cacheContext = contextInfo.getCacheContext();
         if( remoteAccess == true )
         {
             // Bind contextInfo as a Referenceable
             parentCtx.rebind(atom, contextInfo);
-            /* Cache the context in the NonSerializableFactory to avoid creating
+            /* Cache the context using NonSerializableFactory to avoid creating
                 more than one context for in VM lookups
             */
-            NonSerializableFactory.rebind(jndiName, ctx);
+            if( cacheContext == true )
+            {
+                /* If cacheContext is true we need to wrap the Context in a
+                    proxy that allows the user to issue close on the lookup
+                    Context without closing the inmemory Context.
+                */
+                ctx = CachedContext.createProxyContext(ctx);
+                NonSerializableFactory.rebind(jndiName, ctx);
+            }
+        }
+        else if( cacheContext == true )
+        {
+            /* Bind a reference to the extern context using
+             NonSerializableFactory as the ObjectFactory. The Context must
+             be wrapped in a proxy that allows the user to issue close on the
+             lookup Context without closing the inmemory Context.
+            */
+            Context proxyCtx = CachedContext.createProxyContext(ctx);
+            NonSerializableFactory.rebind(rootCtx, jndiName, proxyCtx);
         }
         else
         {
-            /* Bind a reference to the extern context using
-             NonSerializableFactory as the ObjectFactory */
-            NonSerializableFactory.rebind(rootCtx, jndiName, ctx);
+            /* Bind the contextInfo so that each lookup results in the creation
+                of a new Context object. The returned Context must be closed
+                by the user to prevent resource leaks.
+            */
+            parentCtx.rebind(atom, contextInfo);
         }
     }
 
@@ -218,7 +250,7 @@ public class ExternalContext extends ServiceMBeanSupport implements ExternalCont
     {
         try
         {
-            Context rootCtx = (Context) new InitialContext();
+            Context rootCtx = new InitialContext();
             Context ctx = (Context) rootCtx.lookup(jndiName);
             if( ctx != null )
                 ctx.close();
@@ -242,6 +274,7 @@ public class ExternalContext extends ServiceMBeanSupport implements ExternalCont
         private String jndiName;
         private Class contextClass = javax.naming.InitialContext.class;
         private Properties contextProps;
+        private boolean cacheContext = true;
         private transient Context initialContext;
 
         public SerializableInitialContext()
@@ -260,6 +293,14 @@ public class ExternalContext extends ServiceMBeanSupport implements ExternalCont
         public void setJndiName(String jndiName)
         {
             this.jndiName = jndiName;
+        }
+        public boolean getCacheContext()
+        {
+            return cacheContext;
+        }
+        public void setCacheContext(boolean cacheContext)
+        {
+            this.cacheContext = cacheContext;
         }
         public String getInitialContext()
         {
@@ -302,13 +343,11 @@ public class ExternalContext extends ServiceMBeanSupport implements ExternalCont
 
         Context newContext() throws Exception
         {
+            // First check the NonSerializableFactory cache
+            initialContext = (Context) NonSerializableFactory.lookup(jndiName);
+            // Create the context from the contextClass and contextProps
             if( initialContext == null )
-            {   // First check the NonSerializableFactory cache
-                initialContext = (Context) NonSerializableFactory.lookup(jndiName);
-                // Create the context from the contextClass and contextProps
-                if( initialContext == null )
-                    initialContext = newContext(contextClass, contextProps);
-            }
+                initialContext = newContext(contextClass, contextProps);
             return initialContext;
         }
 
@@ -366,4 +405,46 @@ public class ExternalContext extends ServiceMBeanSupport implements ExternalCont
         }
     }
 
+    /** A proxy implementation of Context that simply intercepts the
+        close() method and ignores it since the underlying Context
+        object is being maintained in memory.
+    */
+    static class CachedContext implements InvocationHandler
+    {
+        Context externalCtx;
+        CachedContext(Context externalCtx)
+        {
+            this.externalCtx = externalCtx;
+        }
+
+        static Context createProxyContext(Context ctx)
+        {
+            ClassLoader loader = Thread.currentThread().getContextClassLoader();
+            Class[] interfaces = ctx.getClass().getInterfaces();
+            InvocationHandler handler = new CachedContext(ctx);
+            Context proxyCtx = (Context) Proxy.newProxyInstance(loader, interfaces, handler);
+            return proxyCtx;
+        }
+
+        public Object invoke(Object proxy, Method method, Object[] args) throws Throwable
+        {
+            Object value = null;
+            if( method.getName().equals("close") )
+            {
+                // We just ignore the close method 
+            }
+            else
+            {
+                try
+                {
+                    value = method.invoke(externalCtx, args);
+                }
+                catch(InvocationTargetException e)
+                {
+                    throw e.getTargetException();
+                }
+            }
+            return value;
+        }
+    }
 }
