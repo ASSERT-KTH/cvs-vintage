@@ -21,7 +21,7 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $Id: ProjectManager.java,v 1.9 2003/05/05 19:44:02 kataka Exp $
+// $Id: ProjectManager.java,v 1.10 2003/05/05 19:51:59 kataka Exp $
 
 package org.argouml.kernel;
 
@@ -29,6 +29,7 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.IOException;
 import java.net.URL;
+import java.util.Vector;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
@@ -159,7 +160,9 @@ public final class ProjectManager {
         Project oldProject = _currentProject;        
         _currentProject = newProject;
         if (_currentProject.getActiveDiagram() == null) {
-            _currentProject.setActiveDiagram((ArgoDiagram)_currentProject.getDiagrams().get(0));
+            Vector diagrams = _currentProject.getDiagrams();
+            if (diagrams != null && !diagrams.isEmpty())
+                _currentProject.setActiveDiagram((ArgoDiagram)_currentProject.getDiagrams().get(0));
         }
         firePropertyChanged(CURRENT_PROJECT_PROPERTY_NAME, oldProject, newProject);
     }
