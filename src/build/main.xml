@@ -36,6 +36,7 @@
   <target name="tomcat" depends="init">
      <ant dir="${ws.dir}/jakarta-tomcat" antfile="${ws.dir}/jakarta-tomcat/build.xml" target="dist" >
         <property name="tomcat.home" value="${ws.dir}/dist/tomcat" />
+        <property name="ant.home" value="${ws.dir}/jakarta-ant" />
      </ant>
   </target>
 
