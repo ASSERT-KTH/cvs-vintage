@@ -8,7 +8,7 @@ REM  the correct version is being used with the correct configuration.
 REM
 REM  ======================================================================
 REM
-REM $Id: build.bat,v 1.3 2001/09/12 00:49:55 user57 Exp $
+REM $Id: build.bat,v 1.4 2001/12/06 02:16:10 user57 Exp $
 REM
 REM Authors:
 REM     Jason Dillon <jason@planet57.com>
@@ -32,7 +32,7 @@ set JAXP_SAX_FACTORY=org.apache.crimson.jaxp.SAXParserFactoryImpl
 REM set JAXP_DOM_FACTORY=org.apache.xerces.jaxp.DocumentBuilderFactoryImpl
 REM set JAXP_SAX_FACTORY=org.apache.xerces.jaxp.SAXParserFactoryImpl
 
-set ANT_OPTS=-Djavax.xml.parsers.DocumentBuilderFactory=%JAXP_DOM_FACTORY% -Djavax.xml.parsers.SAXParserFactory=%JAXP_SAX_FACTORY%
+set ANT_OPTS=-Djava.protocol.handler.pkgs=planet57.net.protocol -Djavax.xml.parsers.DocumentBuilderFactory=%JAXP_DOM_FACTORY% -Djavax.xml.parsers.SAXParserFactory=%JAXP_SAX_FACTORY% -Dbuild.script=build.bat
 
 REM ******************************************************
 REM - "for" loops have been unrolled for compatibility

@@ -8,7 +8,7 @@
 ##                                                                          ##
 ### ====================================================================== ###
 
-# $Id: build.sh,v 1.8 2001/09/12 00:49:55 user57 Exp $
+# $Id: build.sh,v 1.9 2001/12/06 02:16:10 user57 Exp $
 
 PROGNAME=`basename $0`
 DIRNAME=`dirname $0`
@@ -129,12 +129,25 @@ main() {
 	ANT_OPTS="$ANT_OPTS -Djavax.xml.parsers.SAXParserFactory=$JAXP_SAX_FACTORY"
     fi
 
+    # need to specify planet57/buildmagic protocol handler package
+    ANT_OPTS="$ANT_OPTS -Djava.protocol.handler.pkgs=planet57.net.protocol"
+
+    # setup some build properties
+    ANT_OPTS="$ANT_OPTS -Dbuild.script=$0"
+
     # change to the directory where the script lives so users are not forced
     # to be in the same directory as build.xml
     cd $DIRNAME
 
+    # export some stuff for ant
     export ANT ANT_HOME ANT_OPTS
-    exec $ANT $ANT_OPTIONS "$@"
+
+    # execute in debug mode, or simply execute
+    if [ "x$ANT_DEBUG" != "x" ]; then
+	/bin/sh -x $ANT $ANT_OPTIONS "$@"
+    else
+	exec $ANT $ANT_OPTIONS "$@"
+    fi
 }
 
 ##

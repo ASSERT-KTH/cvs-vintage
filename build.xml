@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE project>
+<!DOCTYPE project [
+  <!ENTITY buildmagic SYSTEM "resource://planet57/tools/buildmagic/common.xml">
+]>
 
 <!-- ====================================================================== -->
 <!--                                                                        -->
@@ -10,116 +12,34 @@
 <!--                                                                        -->
 <!-- ====================================================================== -->
 
-<!-- $Id: build.xml,v 1.41 2001/12/06 00:31:21 schaefera Exp $ -->
+<!-- $Id: build.xml,v 1.42 2001/12/06 02:16:10 user57 Exp $ -->
 
 <project default="main" name="JBoss/Server">
+
+  <!-- ================================================================== -->
+  <!-- Setup                                                              -->
+  <!-- ================================================================== -->
+
+  <!--
+     | Include the common Buildmagic elements.
+     |
+     | This defines several different targets, properties and paths.
+     | It also sets up the basic extention tasks amoung other things.
+   -->
+
+  &buildmagic;
+
 
   <!-- ================================================================== -->
   <!-- Initialization                                                     -->
   <!-- ================================================================== -->
 
-  <!-- Load Buildmagic extention tasks. -->
-  <taskdef resource="planet57/tools/buildmagic/task/autoload.properties"/>
-  <taskdef name="property" classname="planet57.tools.buildmagic.task.Property"/>
+  <!--
+     | Initialize the build system.  Must depend on '_buildmagic:init'.  
+     | Other targets should depend on 'init' or things will mysteriously fail.
+   -->
 
-  <!-- Initialize the build system. -->
-  <target name="init" depends="_init-prepare" unless="init.disable">
-    <!-- Perform any setup required if we are a child of another build -->
-    <call target="_init-child"/>
-
-    <!-- Setup the basic project roots. -->
-    <path id="project.root"><pathelement location=".."/></path>
-    <property name="project.root" refid="project.root"/> 
-    <property name="project.build" value="${project.root}/build"/>
-  
-    <!-- Include user and project property overrides. -->
-    <property file="${user.home}/.buildmagic.properties"/>
-    <property file="${user.home}/.ant.properties"/>
-
-    <!-- Setup the project environment. -->
-    <property file="${project.build}/local.properties"/>
-    <property name="project.tools" value="${project.root}/tools"/>
-    <property name="project.thirdparty" value="${project.root}/thirdparty"/>
-
-    <!-- Setup the module environment. -->
-    <property name="module.root" value="${basedir}"/>
-    <call target="_init-local-properties"/>
-    <property file="${module.root}/local.properties"/>
-    <property name="module.source" value="${module.root}/src"/>
-    <property name="module.output" value="${module.root}/output"/>
-    <property name="module.tools" value="${module.root}/tools"/>
-    <property name="module.thirdparty" value="${module.root}/thirdparty"/>
-
-    <!-- Setup the build.log -->
-    <call target="_init-buildlog"/>
-
-    <!-- Load common properties -->
-    <property resource="planet57/tools/buildmagic/common.properties"/>
-
-    <!-- Setup the build timestamp & build identifer properties -->
-    <tstamp>
-      <format property="build.number" pattern="yyyyMMddHHmm"/>
-    </tstamp>
-    <property name="build.id" value="${build.number}"/>
-
-    <!-- Invoke the configure task -->
-    <call target="_configure"/>
-
-    <!-- Late bind properties & install filters -->
-    <resolver force="${buildmagic.resolveproperties.force}"/>
-    <propertyfilter all="${buildmagic.propertyfilter.all}"/>
-
-    <!-- Show some information -->
-    <call target="_init-show-environment"/>
-
-    <!-- Finish up -->
-    <property name="init.disable" value="true"/>
-  </target>
-
-  <!-- Perform any preperation before init. -->
-  <target name="_init-prepare">
-    <available file="${module.root}/etc/local.properties-example"
-	       property="init.have-local-properties"/>
-  </target>
-
-  <!-- Perform any setup required if we are a child of another build -->
-  <target name="_init-child" if="init.have-parent">
-    <!-- Disable the build.log, our parent will catch it -->
-    <property name="init-buildlog.disable" value="true"/>
-  </target>
-
-  <!-- Install the local.properties example if it is there -->
-  <target name="_init-local-properties" if="init.have-local-properties">
-    <!-- Setup the local.properties file as needed -->
-    <copy file="${module.root}/etc/local.properties-example"
-          tofile="${module.root}/local.properties" filtering="yes"/>
-    <property file="${module.root}/local.properties"/>
-  </target>
-
-  <!-- Initialize the build.log -->
-  <target name="_init-buildlog" unless="init-buildlog.disable">
-    <record name="${basedir}/build.log" append="no" loglevel="info"/>
-    <property name="init-buildlog.disable" value="true"/>
-  </target>
-
-  <!-- Show the running environment if -Dinit.verbose=true -->
-  <target name="_init-show-environment" if="init.verbose">
-    <echo><![CDATA[
-project.root:    ${project.root}
-module.root:     ${module.root}
-user.home:       ${user.home}
-build.compiler:  ${build.compiler}
-java.home:       ${java.home}
-java.class.path: ${java.class.path}
-java.version:    ${java.version}
-java.vendor:     ${java.vendor}
-java.vm.version: ${java.vm.version}
-java.vm.name:    ${java.vm.name}
-java.vm.info:    ${java.vm.info}
-os.name:         ${os.name}
-os.arch:         ${os.arch}
-os.version:      ${os.version}
-]]></echo>
+  <target name="init" unless="init.disable" depends="_buildmagic:init">
   </target>
 
 
@@ -128,35 +48,26 @@ os.version:      ${os.version}
   <!-- ================================================================== -->
 
   <!--
-     | Configure the build system.
+     | Configure the build system.  
      |
-     | Configuration elements should be placed in the appropriate 
-     | _configure-* targets.
+     | This target is invoked by the Buildmagic initialization logic and 
+     | should contain module specific configuration elements.
    -->
 
-  <target name="_configure" unless="configure.disable">
+  <target name="configure" unless="configure.disable">
+
+    <!-- =================== -->
+    <!-- Basic Configuration -->
+    <!-- =================== -->
+
     <!-- Module name(s) & version -->
     <property name="module.name" value="server"/>
     <property name="module.Name" value="JBoss Server"/>
-    <property name="module.version" value="unspecified"/>
+    <property name="module.version" value="DEV"/>
 
-    <!-- Invoke the rest of the configuration targets -->
-    <call target="_configure-tools"/>
-    <call target="_configure-libraries"/>
-    <call target="_configure-modules"/>
-    <call target="_configure-tasks"/>
-
-    <!-- Load common task properties -->
-    <property resource="planet57/tools/buildmagic/task.properties"/>
-  </target>
-
-  <!-- Configure the thirdparty tools required to build this module. -->
-  <target name="_configure-tools" unless="configure-tools.disable">
-    <!-- No non-standard tools are required for this module. -->
-  </target>
-
-  <!-- Configure the thirdparty libraries required by this module. -->
-  <target name="_configure-libraries" unless="configure-libraries.disable">
+    <!-- ========= -->
+    <!-- Libraries -->
+    <!-- ========= -->
 
     <!-- Java Naming and Directory Interface (JNDI) -->
     <property name="sun.jndi.root" value="${project.thirdparty}/sun/jndi"/>
@@ -288,10 +199,10 @@ os.version:      ${os.version}
       <path refid="junit.junit.classpath"/>
       <path refid="sun.jsr77.classpath"/>
     </path>
-  </target>
 
-  <!-- Configure the external modules which this module depends on. -->
-  <target name="_configure-modules" unless="configure-modules.disable">
+    <!-- ======= -->
+    <!-- Modules -->
+    <!-- ======= -->
 
     <!-- J2EE -->
     <property name="jboss.j2ee.root" value="${project.root}/j2ee/output"/>
@@ -312,10 +223,11 @@ os.version:      ${os.version}
       <path refid="jboss.j2ee.classpath"/>
       <path refid="jboss.naming.classpath"/>
     </path>
-  </target>
 
-  <!-- Configure the tasks used by this module. -->
-  <target name="_configure-tasks" unless="configure-tasks.disable">
+    <!-- ===== -->
+    <!-- Tasks -->
+    <!-- ===== -->
+
     <!-- Where source files live -->
     <property name="source.java" value="${module.source}/main"/>
     <property name="source.etc" value="${module.source}/etc"/>
@@ -938,124 +850,30 @@ os.version:      ${os.version}
 
 
   <!-- ================================================================== -->
-  <!-- Install                                                            -->
+  <!-- Install & Release                                                  -->
   <!-- ================================================================== -->
 
-  <target name="install" depends="all">
-    <!-- Copy the output directory to the install directory -->
-    <mkdir dir="${install.root}"/>
-    <copy todir="${install.root}" filtering="no">
-      <fileset dir="${module.output}">
-         <include name="**/*"/>
-         <exclude name="${install.id}/**"/>
-      </fileset>
-    </copy>
-  </target>
+  <target name="install" 
+	  description="Install the structure for a release."
+	  depends="all, _buildmagic:install:default"/>
 
+  <target name="release" depends="install"/>
 
-  <!-- ================================================================== -->
-  <!-- Release                                                            -->
-  <!-- ================================================================== -->
+  <target name="release-zip" 
+	  description="Builds a ZIP distribution."
+	  depends="release, _buildmagic:release:zip"/>
 
-  <!-- 
-     | Builds a release distribution.
-   -->
+  <target name="release-tar" 
+	  description="Builds a TAR distribution."
+	  depends="release, _buildmagic:release:tar"/>
 
-  <target name="release" depends="install">
-    <!-- install handles most of the work -->
-  </target>
+  <target name="release-tgz" 
+	  description="Builds a TAR-GZ distribution."
+	  depends="release, _buildmagic:release:tgz"/>
 
-  <target name="release-zip" depends="release"
-	  description="Builds a ZIP release distribution.">
-    <zip zipfile="${module.output}/${release.id}.zip">
-      <fileset dir="${module.output}">
-        <include name="${release.id}/**"/>
-      </fileset>
-    </zip>
-  </target>
-
-  <target name="release-tar" depends="release"
-	  description="Builds a TAR release distribution.">
-    <tar tarfile="${module.output}/${release.id}.tar" longfile="gnu"
-	 basedir="${module.output}"
-	 includes="${release.id}/**">
-    </tar>
-  </target>
-
-  <target name="release-tgz" depends="release-tar"
-	  description="Builds a TAR-GZIP release distribution.">
-    <gzip src="${module.output}/${release.id}.tar"
-	  zipfile="${module.output}/${release.id}.tgz"/>
-  </target>
-
-  <target name="release-all" depends="release-zip, release-tgz"
-	  description="Builds a distribution for each archive type."/>
-
-
-  <!-- ================================================================== -->
-  <!-- Tests                                                              -->
-  <!-- ================================================================== -->
-
-  <!--
-     | Run all tests.
-   -->
-
-  <target name="tests" depends="init, tests-junit, tests-reports" 
-	  description="Execute all tests.">
-  </target>
-
-  <!--
-     | Run JUnit tests.
-   -->
-
-  <target name="tests-junit" depends="jars">
-    <mkdir dir="${build.reports}"/>
-    <junit dir="${module.output}"
-	   printsummary="${junit.printsummary}" 
-	   haltonerror="${junit.haltonerror}" 
-	   haltonfailure="${junit.haltonfailure}" 
-	   fork="${junit.fork}"
-	   timeout="${junit.timeout}"
-	   jvm="${junit.jvm}">
-
-      <jvmarg value="${junit.jvm.options}"/>
-
-      <classpath>
-        <pathelement location="${build.classes}"/>
-        <path refid="javac.classpath"/>
-      </classpath>
-
-      <formatter type="${junit.formatter.type}"
-		 usefile="${junit.formatter.usefile}"/>
-
-      <batchtest todir="${build.reports}"
-		 haltonerror="${junit.batchtest.haltonerror}" 
-		 haltonfailure="${junit.batchtest.haltonfailure}" 
-		 fork="${junit.batchtest.fork}">
-
-        <fileset dir="${build.classes}">
-          <include name="**/*TestCase.class"/>
-          <include name="**/*TestSuite.class"/>
-        </fileset>
-      </batchtest>
-    </junit>
-  </target>
-
-  <target name="reports" depends="tests-reports" 
-	  description="Generates all reports."/>
-
-  <target name="tests-reports" depends="tests-reports-html"/>
-
-  <target name="tests-reports-html" depends="compile">
-    <mkdir dir="${build.reports}/html"/>
-
-    <junitreport todir="${build.reports}">
-      <fileset dir="${build.reports}">
-        <include name="TEST-*.xml"/>
-      </fileset>
-      <report format="frames" todir="${build.reports}/html"/>
-    </junitreport>
-  </target>
+  <target name="release-all"
+	  description="Builds a distribution for each archive type."
+	  depends="release-zip, release-tgz"/>
 
 
   <!-- ================================================================== -->
@@ -1063,48 +881,15 @@ os.version:      ${os.version}
   <!-- ================================================================== -->
 
   <!-- Clean up all build output -->
-  <target name="clean" depends="init"
-	  description="Cleans up most generated files.">
-    <delete dir="${module.output}"/>
+  <target name="clean" 
+	  description="Cleans up most generated files."
+	  depends="_buildmagic:clean">
   </target>
 
   <!-- Clean up all generated files -->
-  <target name="clobber" depends="clean"
-	  description="Cleans up all generated files.">
-    <delete file="${module.root}/local.properties"/>
-    <delete file="${module.root}/build.log"/>
-  </target>
-
-
-  <!-- ================================================================== -->
-  <!-- Workspace                                                          -->
-  <!-- ================================================================== -->
-
-  <target name="update-project" depends="init">
-    <echo>Updating project workspace...</echo>
-    <cvs command="update -d" dest="${project.root}"/>
-  </target>
-
-  <target name="update-module" depends="init">
-    <echo>Updating module workspace...</echo>
-    <cvs command="update -d" dest="${module.root}"/>
-  </target>
-
-
-  <!-- ================================================================== -->
-  <!-- Help                                                               -->
-  <!-- ================================================================== -->
-
-  <target name="help" depends="init">
-    <projecthelp taskname="help">
-      <header><![CDATA[
-  The ${module.Name} module.
-]]></header>
-      <footer><![CDATA[
-    -projecthelp for all targets
-    -help for full options
-]]></footer>
-    </projecthelp>
+  <target name="clobber" 
+	  description="Cleans up all generated files."
+	  depends="_buildmagic:clobber, clean">
   </target>
 
 
@@ -1112,39 +897,20 @@ os.version:      ${os.version}
   <!-- Misc.                                                              -->
   <!-- ================================================================== -->
 
-  <target name="main" depends="most"
-	  description="Executes the default target (most)."/>
+  <target name="main"
+	  description="Executes the default target (most)."
+	  depends="most"/>
     
-  <target name="all" depends="jars, docs"
-	  description="Builds everything."/>
+  <target name="all"
+	  description="Builds everything."
+	  depends="jars, docs"/>
 
-  <target name="most" depends="jars"
-	  description="Builds almost everything."/>
+  <target name="most" 
+	  description="Builds almost everything."
+	  depends="jars"/>
 
-
-  <!-- ================================================================== -->
-  <!-- Pretty                                                             -->
-  <!-- ================================================================== -->
-
-  <!-- 
-     |  Pretty print everything.
-     |
-     |  This uses the jedit JavaStyle plugin via the xdoclet pretty ant task.
-     |
-     |  cvs="true" only pretties files you have already modified.
-     |  cvs="false" pretties all files.
-    -->
-
-  <property name="pretty.cvs" value="true"/>
-  <property name="pretty.includes" value="**/*.java"/>
-
-  <target name="pretty" depends="init">
-    <taskdef name="pretty" classname="pretty.Pretty"/>
-    <pretty settingsDir="${project.build}/etc" cvs="${pretty.cvs}">
-      <fileset dir="${source.java}">
-        <include name="${pretty.includes}"/>
-      </fileset>
-    </pretty>
-  </target>
+  <target name="help" 
+          description="Show this help message."
+	  depends="_buildmagic:help:standard"/>
 
 </project>
