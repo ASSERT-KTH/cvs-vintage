@@ -52,7 +52,7 @@ import org.gjt.sp.util.Log;
 /**
  * The main class of the jEdit text editor.
  * @author Slava Pestov
- * @version $Id: jEdit.java,v 1.89 2002/09/23 20:46:59 spestov Exp $
+ * @version $Id: jEdit.java,v 1.90 2002/10/07 21:13:19 spestov Exp $
  */
 public class jEdit
 {
@@ -73,7 +73,7 @@ public class jEdit
 	public static String getBuild()
 	{
 		// (major).(minor).(<99 = preX, 99 = final).(bug fix)
-		return "04.01.05.00";
+		return "04.01.06.00";
 	} //}}}
 
 	//{{{ main() method

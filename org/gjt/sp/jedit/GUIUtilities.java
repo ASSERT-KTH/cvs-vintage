@@ -55,7 +55,7 @@ import org.gjt.sp.util.Log;
  * </ul>
  *
  * @author Slava Pestov
- * @version $Id: GUIUtilities.java,v 1.40 2002/10/04 19:06:51 spestov Exp $
+ * @version $Id: GUIUtilities.java,v 1.41 2002/10/07 21:13:19 spestov Exp $
  */
 public class GUIUtilities
 {
@@ -852,14 +852,14 @@ public class GUIUtilities
 		x = jEdit.getIntegerProperty(name + ".x",x);
 		y = jEdit.getIntegerProperty(name + ".y",y);
 
-		// Make sure the window is diaplyed in visible region
-		if ( x < 0 || x+width > screen.width)
+		// Make sure the window is displayed in visible region
+		if ( x + width < 0 || x > screen.width)
 		{
 			if (width > screen.width)
 				width = screen.width;
 			x = (screen.width - width) / 2;
 		}
-		if ( y < 0 || y+height > screen.height)
+		if ( y + height < 0 || y > screen.height)
 		{
 			if (height >= screen.height)
 				height = screen.height;

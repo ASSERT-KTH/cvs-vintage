@@ -29,14 +29,28 @@ import java.awt.*;
  * Enter is pressed) and cancel() (called when Escape is pressed, or window
  * is closed).
  * @author Slava Pestov
- * @version $Id: EnhancedDialog.java,v 1.1 2001/09/02 05:37:40 spestov Exp $
+ * @version $Id: EnhancedDialog.java,v 1.2 2002/10/07 21:13:19 spestov Exp $
  */
 public abstract class EnhancedDialog extends JDialog
 {
 	public EnhancedDialog(Frame parent, String title, boolean modal)
 	{
 		super(parent,title,modal);
+		_init();
+	}
+	
+	public EnhancedDialog(Dialog parent, String title, boolean modal)
+	{
+		super(parent,title,modal);
+		_init();
+	}
 
+	public abstract void ok();
+	public abstract void cancel();
+
+	//{{{ Private members
+	
+	private void _init() {
 		((Container)getLayeredPane()).addContainerListener(
 			new ContainerHandler());
 		getContentPane().addContainerListener(new ContainerHandler());
@@ -48,9 +62,8 @@ public abstract class EnhancedDialog extends JDialog
 		setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
 	}
 
-	public abstract void ok();
-	public abstract void cancel();
-
+	//}}}
+	
 	// protected members
 	protected KeyHandler keyHandler;
 
