@@ -1,4 +1,4 @@
-// $Id: TestUmlModelEventPump.java,v 1.6 2003/01/09 19:53:20 kataka Exp $
+// $Id: TestUmlModelEventPump.java,v 1.7 2003/02/01 01:09:16 kataka Exp $
 // Copyright (c) 2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -140,6 +140,7 @@ public class TestUmlModelEventPump extends TestCase {
      * modelevent listeners as the object modelevent listeners
      */
     public void testAddLegalListener() {
+        UmlModelEventPump.getPump().cleanUp();
         assertTrue(UmlModelEventPump.getPump().getListenerClassModelEventsMap().isEmpty());
         assertEquals(UmlModelEventPump.getPump().getListenerModelEventsMap().size(), 0);
         UmlModelEventPump.getPump().addClassModelEventListener(listener, elem.getClass(), new String[] {"name"});
