@@ -22,7 +22,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.columba.core.command.DefaultCommandReference;
-import org.columba.core.command.Worker;
 import org.columba.core.command.WorkerStatusController;
 import org.columba.core.io.StreamUtils;
 import org.columba.mail.command.FolderCommand;

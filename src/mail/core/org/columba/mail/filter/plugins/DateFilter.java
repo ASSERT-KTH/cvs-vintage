@@ -19,7 +19,6 @@ package org.columba.mail.filter.plugins;
 
 import java.text.DateFormat;
 import java.util.Date;
-import java.util.Locale;
 import java.util.logging.Logger;
 
 import org.columba.mail.filter.FilterCriteria;

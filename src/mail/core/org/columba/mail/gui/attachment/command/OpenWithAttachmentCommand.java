@@ -21,7 +21,6 @@ import org.columba.core.io.TempFileStore;
 
 import org.columba.mail.gui.mimetype.MimeTypeViewer;
 
-import org.columba.ristretto.message.LocalMimePart;
 import org.columba.ristretto.message.MimeHeader;
 
 import java.io.File;
