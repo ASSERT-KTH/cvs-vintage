@@ -24,7 +24,7 @@
 // File: Generator.java
 // Classes: Generator
 // Original Author:
-// $Id: Generator.java,v 1.12 2002/11/24 19:19:11 thn Exp $
+// $Id: Generator.java,v 1.13 2003/02/24 06:10:36 thn Exp $
 
 // 10 Apr 2002: Jeremy Bennett (mail@jeremybennett.com). Extended to support
 // extension points.
@@ -36,6 +36,7 @@
 package org.argouml.uml.generator;
 import org.argouml.application.api.*;
 import org.argouml.language.helpers.*;
+import org.argouml.model.ModelFacade;
 
 import ru.novosoft.uml.foundation.core.*;
 import ru.novosoft.uml.foundation.data_types.*;
@@ -240,18 +241,10 @@ public void setTestModus(boolean _testModus)
  * @param me The model element
  * @return String
  */
-public static String getCodePath(MModelElement me) {
-  Collection tValues = me.getTaggedValues();
-  if (!tValues.isEmpty()) {
-    Iterator iter = tValues.iterator();
-    while(iter.hasNext()) {
-      MTaggedValue tv = (MTaggedValue)iter.next();
-      String tag = tv.getTag();
-      if (tag.equals("src_path")) {
-        return tv.getValue().trim();
-      }
-    }
-  }
+public static String getCodePath(Object me) {
+  String s = ModelFacade.getValueOfTag(ModelFacade.getTaggedValue(me,"src_path"));
+  if (s != null)
+    return s.trim();
   return null;
 }
 
