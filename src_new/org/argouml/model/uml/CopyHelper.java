@@ -1,4 +1,4 @@
-// $Id: CopyHelper.java,v 1.11 2005/01/02 16:43:45 linus Exp $
+// $Id: CopyHelper.java,v 1.12 2005/01/06 23:04:54 linus Exp $
 // Copyright (c) 2003-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -163,7 +163,11 @@ final class CopyHelper {
     }
 
     /**
-     * Make a copy of element.
+     * Make a copy of element in the given namespace.<p>
+     *
+     * This function is a dispatcher that calls the 
+     * copyElement(Element,Namespace) function from
+     * XXXFactory.
      *
      * This function may fail and return null for any of the following
      * reasons:
@@ -174,28 +178,48 @@ final class CopyHelper {
      * @param ans the namespace
      * @return a copy of element, or null.
      *
-     * @throws NullPointerException if element is null.
+     * @throws IllegalArgumentException if element is null.
      */
     public Object/*MModelElement*/ copy(Object/*MModelElement*/ anelement,
 					Object/*MNamespace*/ ans) {
 	// Don't explicitly check if element is null
         MModelElement element = (MModelElement) anelement;
         MNamespace ns = (MNamespace) ans;
-	CopyFunction f =
-	    (CopyFunction) copyfunctions.get(element.getClass());
-	if (f == null) {
-	    LOG.warn("CopyHelper is unable to copy element of "
-		     + "type: " + element.getClass());
-	    return null;
-	}
 
-	try {
-	    Object[] args = {element, ns};
-	    return (MModelElement) f.getMethod().invoke(f.getObject(), args);
-	} catch (Exception e) {
-	    LOG.error("CopyHelper copy method exception", e);
-	    return null;
-	}
+        if (element instanceof MPackage) {
+            return Model.getModelManagementFactory().copyPackage((MPackage) element, ns);
+        }
+        if (element instanceof MClass) {
+            return Model.getCoreFactory().copyClass(element, ns);
+        }
+        if (element instanceof MDataType) {
+            return Model.getCoreFactory().copyDataType(element, ns);
+        }
+        if (element instanceof MInterface) {
+            return Model.getCoreFactory().copyInterface(element, ns);
+        }
+        if (element instanceof MStereotype) {
+            return
+            	Model.getExtensionMechanismsFactory()
+            		.copyStereotype((MStereotype) element, ns);
+        }
+        throw new IllegalArgumentException();
+//        
+//	CopyFunction f =
+//	    (CopyFunction) copyfunctions.get(element.getClass());
+//	if (f == null) {
+//	    LOG.warn("CopyHelper is unable to copy element of "
+//		     + "type: " + element.getClass());
+//	    return null;
+//	}
+//
+//	try {
+//	    Object[] args = {element, ns};
+//	    return (MModelElement) f.getMethod().invoke(f.getObject(), args);
+//	} catch (Exception e) {
+//	    LOG.error("CopyHelper copy method exception", e);
+//	    return null;
+//	}
     }
 }
 

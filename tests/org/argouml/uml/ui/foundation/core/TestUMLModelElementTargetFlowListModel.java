@@ -1,4 +1,4 @@
-// $Id: TestUMLModelElementTargetFlowListModel.java,v 1.10 2005/01/03 18:21:21 linus Exp $
+// $Id: TestUMLModelElementTargetFlowListModel.java,v 1.11 2005/01/06 23:04:47 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -22,14 +22,11 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $header$
 package org.argouml.uml.ui.foundation.core;
 
 import org.argouml.model.Model;
+import org.argouml.model.ModelFacade;
 import org.argouml.uml.ui.AbstractUMLModelElementListModel2Test;
-
-import ru.novosoft.uml.foundation.core.MFlow;
-import ru.novosoft.uml.foundation.core.MModelElement;
 
 /**
  * @since Oct 30, 2002
@@ -64,10 +61,10 @@ public class TestUMLModelElementTargetFlowListModel
      * @see org.argouml.uml.ui.AbstractUMLModelElementListModel2Test#fillModel()
      */
     protected Object[] fillModel() {
-        MFlow[] ext = new MFlow[10];
+        Object[] ext = new Object[10];
         for (int i = 0; i < 10; i++) {
             ext[i] = Model.getCoreFactory().createFlow();
-            ((MModelElement) getElem()).addTargetFlow(ext[i]);
+            ModelFacade.addTargetFlow(getElem(), ext[i]);
         }
         return ext;
     }
@@ -77,7 +74,7 @@ public class TestUMLModelElementTargetFlowListModel
      */
     protected void removeHalfModel(Object[] elements) {
         for (int i = 0; i < 5; i++) {
-            ((MModelElement) getElem()).removeTargetFlow((MFlow) elements[i]);
+            ModelFacade.removeTargetFlow(getElem(), elements[i]);
         }
     }
 }

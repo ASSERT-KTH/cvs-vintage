@@ -1,4 +1,4 @@
-// $Id: TestCollaborationsFactory.java,v 1.5 2005/01/04 16:54:40 linus Exp $
+// $Id: TestCollaborationsFactory.java,v 1.6 2005/01/06 23:04:51 linus Exp $
 // Copyright (c) 2002-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,9 +27,6 @@ package org.argouml.model.uml;
 import java.lang.ref.WeakReference;
 
 import junit.framework.TestCase;
-
-import org.argouml.util.CheckUMLModelHelper;
-
 import ru.novosoft.uml.behavior.collaborations.MAssociationRole;
 import ru.novosoft.uml.behavior.collaborations.MClassifierRole;
 import ru.novosoft.uml.behavior.collaborations.MCollaboration;
@@ -90,7 +87,7 @@ public class TestCollaborationsFactory extends TestCase {
 	    null,
 	};
 
-        CheckUMLModelHelper.createAndRelease(
+        CheckNSUMLModelHelper.createAndRelease(
             this,
             nsumlmodel.getCollaborationsFactory(),
             objs);
@@ -101,7 +98,7 @@ public class TestCollaborationsFactory extends TestCase {
      * Test for deletion.
      */
     public void testDeleteComplete() {
-        CheckUMLModelHelper.deleteComplete(
+        CheckNSUMLModelHelper.deleteComplete(
             this,
             nsumlmodel.getCollaborationsFactory(),
             allModelElements);

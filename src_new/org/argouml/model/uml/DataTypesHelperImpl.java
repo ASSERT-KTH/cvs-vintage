@@ -1,4 +1,4 @@
-// $Id: DataTypesHelperImpl.java,v 1.1 2005/01/02 10:08:15 linus Exp $
+// $Id: DataTypesHelperImpl.java,v 1.2 2005/01/06 23:04:54 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -54,11 +54,18 @@ class DataTypesHelperImpl implements DataTypesHelper {
      * @param from source
      * @param to destination
      */
-    public void copyTaggedValues(MModelElement from, MModelElement to) {
-	Iterator it = from.getTaggedValues().iterator();
+    public void copyTaggedValues(Object from, Object to) {
+        if (!(from instanceof MModelElement)) {
+            throw new IllegalArgumentException();
+        }
+        if (!(to instanceof MModelElement)) {
+            throw new IllegalArgumentException();
+        }        
+        
+	Iterator it = ((MModelElement) from).getTaggedValues().iterator();
 	while (it.hasNext()) {
 	    MTaggedValue tv = (MTaggedValue) it.next();
-	    to.setTaggedValue(tv.getTag(), tv.getValue());
+	    ((MModelElement) to).setTaggedValue(tv.getTag(), tv.getValue());
 	}
     }
 

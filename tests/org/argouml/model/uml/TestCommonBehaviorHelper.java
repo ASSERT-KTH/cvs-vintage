@@ -1,4 +1,4 @@
-// $Id: TestCommonBehaviorHelper.java,v 1.4 2005/01/02 16:43:41 linus Exp $
+// $Id: TestCommonBehaviorHelper.java,v 1.5 2005/01/06 23:04:51 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,7 +27,6 @@ package org.argouml.model.uml;
 import junit.framework.TestCase;
 
 import org.argouml.model.Model;
-import org.argouml.util.CheckUMLModelHelper;
 
 /**
  * @since Oct 10, 2002
@@ -48,7 +47,7 @@ public class TestCommonBehaviorHelper extends TestCase {
      * Test the metamodel name.
      */
     public void testGetMetaModelName() {
-	CheckUMLModelHelper.metaModelNameCorrect(
+	CheckNSUMLModelHelper.metaModelNameCorrect(
 			 this,
 			 Model.getCommonBehaviorFactory(),
 			 TestCommonBehaviorFactory.getAllModelElements());
@@ -58,7 +57,7 @@ public class TestCommonBehaviorHelper extends TestCase {
      * Test if the steareotype is valid.
      */
     public void testIsValidStereoType() {
-	CheckUMLModelHelper.isValidStereoType(
+	CheckNSUMLModelHelper.isValidStereoType(
 		      this,
 		      Model.getCommonBehaviorFactory(),
 		      TestCommonBehaviorFactory.getAllModelElements());

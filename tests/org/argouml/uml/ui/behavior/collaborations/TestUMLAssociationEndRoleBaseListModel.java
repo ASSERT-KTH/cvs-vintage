@@ -1,4 +1,4 @@
-// $Id: TestUMLAssociationEndRoleBaseListModel.java,v 1.13 2005/01/03 18:21:19 linus Exp $
+// $Id: TestUMLAssociationEndRoleBaseListModel.java,v 1.14 2005/01/06 23:04:52 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -32,9 +32,6 @@ import org.argouml.uml.ui.UMLModelElementListModel2;
 
 import ru.novosoft.uml.MFactoryImpl;
 import ru.novosoft.uml.behavior.collaborations.MAssociationEndRole;
-import ru.novosoft.uml.behavior.collaborations.MAssociationRole;
-import ru.novosoft.uml.foundation.core.MAssociation;
-import ru.novosoft.uml.foundation.core.MAssociationEnd;
 
 /**
  * @since Oct 27, 2002
@@ -46,7 +43,7 @@ public class TestUMLAssociationEndRoleBaseListModel extends TestCase {
     private Object elem;
     private UMLModelElementListModel2 model;
     private Object baseAssoc;
-    private MAssociationEnd baseEnd;
+    private Object baseEnd;
     private Object assocRole;
 
     /**
@@ -70,7 +67,7 @@ public class TestUMLAssociationEndRoleBaseListModel extends TestCase {
         baseAssoc = Model.getCoreFactory().createAssociation();
         ModelFacade.setAssociation(elem, assocRole);
         ModelFacade.setBase(assocRole, baseAssoc);
-        baseEnd.setAssociation((MAssociation) baseAssoc);
+        ModelFacade.setAssociation(baseEnd, baseAssoc);
         oldEventPolicy = MFactoryImpl.getEventPolicy();
         MFactoryImpl.setEventPolicy(MFactoryImpl.EVENT_POLICY_IMMEDIATE);
         model = new UMLAssociationEndRoleBaseListModel();

@@ -1,4 +1,4 @@
-// $Id: TestUmlModelEventPumpDeprecated.java,v 1.7 2005/01/02 16:43:41 linus Exp $
+// $Id: TestUmlModelEventPumpDeprecated.java,v 1.8 2005/01/06 23:04:51 linus Exp $
 // Copyright (c) 2002-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -120,7 +120,7 @@ public class TestUmlModelEventPumpDeprecated extends TestCase {
     protected void setUp() throws Exception {
         super.setUp();
         MFactoryImpl.setEventPolicy(MFactoryImpl.EVENT_POLICY_IMMEDIATE);
-        elem = Model.getCoreFactory().createClass();
+        elem = (MClass) Model.getCoreFactory().createClass();
         Project project = ProjectManager.getManager().getCurrentProject();
         MModel model = (MModel) project.getRoot();
         model.addOwnedElement(elem);
@@ -134,7 +134,9 @@ public class TestUmlModelEventPumpDeprecated extends TestCase {
      */
     protected void tearDown() throws Exception {
         super.tearDown();
-        if (elem != null) Model.getUmlFactory().delete(elem);
+        if (elem != null) {
+            Model.getUmlFactory().delete(elem);
+        }
         UmlModelEventPump.getPump().cleanUp();
         listener2 = null;
         listener = null;
@@ -142,7 +144,7 @@ public class TestUmlModelEventPumpDeprecated extends TestCase {
 
     /**
      * Test wether a listener can be registred to both the registry with class
-     * modelevent listeners as the object modelevent listeners
+     * modelevent listeners as the object modelevent listeners.
      */
     public void testAddLegalListener() {
         UmlModelEventPump.getPump().cleanUp();
@@ -153,13 +155,13 @@ public class TestUmlModelEventPumpDeprecated extends TestCase {
 							       listener,
 							       elem.getClass(),
 							       new String[] {
-								   "name" 
+								   "name",
 							       });
         UmlModelEventPump.getPump().addModelEventListener(
 							  listener,
 							  elem,
 							  new String[] {
-							      "name" 
+							      "name",
 							  });
         assertTrue(
 	    !UmlModelEventPump.getPump().getClassListenerMap().isEmpty());
@@ -177,7 +179,7 @@ public class TestUmlModelEventPumpDeprecated extends TestCase {
 
     /**
      * Tests wether it is possible (it should not be) to give empty arguments
-     * while registring a listener
+     * while registring a listener.
      */
     public void testAddEmptyParametersListener() {
         try {
@@ -185,7 +187,7 @@ public class TestUmlModelEventPumpDeprecated extends TestCase {
 		.addClassModelEventListener(null,
 					    elem.getClass(),
 					    new String[] {
-						"name"
+						"name",
 					    });
             fail();
         } catch (Exception ex) {
@@ -195,7 +197,7 @@ public class TestUmlModelEventPumpDeprecated extends TestCase {
 		.addClassModelEventListener(listener,
 					    null,
 					    new String[] {
-						"name" 
+						"name",
 					    });
             fail();
         } catch (Exception ex) {
@@ -205,7 +207,7 @@ public class TestUmlModelEventPumpDeprecated extends TestCase {
 							      null,
 							      elem,
 							      new String[] {
-								  "name" 
+								  "name",
 							      });
             fail();
         } catch (Exception ex) {
@@ -215,7 +217,7 @@ public class TestUmlModelEventPumpDeprecated extends TestCase {
 							      listener,
 							      null,
 							      new String[] {
-								  "name" 
+								  "name",
 							      });
         } catch (Exception ex) {
         }
@@ -309,7 +311,7 @@ public class TestUmlModelEventPumpDeprecated extends TestCase {
      * be too sure :))
      */
     public void testFireNonRegistredListener() {
-        MClass elem2 = Model.getCoreFactory().createClass();
+        MClass elem2 = (MClass) Model.getCoreFactory().createClass();
         elem.addParameter(new MParameterImpl());
         assertTrue(!eventcalled);
     }

@@ -1,4 +1,4 @@
-// $Id: ExtensionMechanismsHelperImpl.java,v 1.1 2005/01/02 10:08:14 linus Exp $
+// $Id: ExtensionMechanismsHelperImpl.java,v 1.2 2005/01/06 23:04:54 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -179,10 +179,14 @@ class ExtensionMechanismsHelperImpl implements ExtensionMechanismsHelper {
      * @param m the ModelElement
      * @return the meta name of the ModelElement
      */
-    public String getMetaModelName(MModelElement m) {
+    public String getMetaModelName(Object m) {
         if (m == null) {
             return null;
         }
+        if (!(m instanceof MModelElement)) {
+            throw new IllegalArgumentException();
+        }
+
         return getMetaModelName(m.getClass());
     }
 

@@ -1,4 +1,4 @@
-// $Id: CollaborationsFactoryImpl.java,v 1.5 2005/01/04 21:41:07 linus Exp $
+// $Id: CollaborationsFactoryImpl.java,v 1.6 2005/01/06 23:04:54 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -294,11 +294,11 @@ public class CollaborationsFactoryImpl
             throw new IllegalArgumentException();
         }
 
-        if (!(agg2 instanceof MAggregationKind)) {
-            throw new IllegalArgumentException();
-        }
         if (agg2 == null) {
             agg2 = MAggregationKind.NONE;
+        }
+        if (!(agg2 instanceof MAggregationKind)) {
+            throw new IllegalArgumentException();
         }
 
         if (colFrom != null && colFrom.equals(colTo)) {
@@ -367,6 +367,10 @@ public class CollaborationsFactoryImpl
      * last to the list of messages allready attached to the
      * role. Effectively, the allready attached messages become
      * predecessors of this message.
+     *
+     * @param inter The Interaction.
+     * @param role The Association Role.
+     * @return The newly created Message.
      */
     private MMessage buildMessageInteraction(MInteraction inter,
 					     MAssociationRole role) {
