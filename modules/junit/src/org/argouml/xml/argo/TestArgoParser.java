@@ -1,4 +1,4 @@
-// $Id: TestArgoParser.java,v 1.9 2004/08/30 22:19:35 bobtarling Exp $
+// $Id: TestArgoParser.java,v 1.10 2004/08/31 08:07:08 bobtarling Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -31,9 +31,7 @@ import junit.framework.TestCase;
 import junit.framework.TestSuite;
 
 import org.argouml.kernel.Project;
-import org.argouml.kernel.ProjectManager;
 import org.argouml.kernel.ZargoFilePersister;
-import org.argouml.uml.util.namespace.TestStringNamespace;
 
 /** Testcase to load projects without exception. */
 public class TestArgoParser extends TestCase {
