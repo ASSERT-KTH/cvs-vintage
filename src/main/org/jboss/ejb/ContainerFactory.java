@@ -76,7 +76,7 @@ import org.jboss.logging.Logger;
 *   @author <a href="mailto:jplindfo@helsinki.fi">Juha Lindfors</a>
 *   @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
 *
-*   @version $Revision: 1.55 $
+*   @version $Revision: 1.56 $
 */
 public class ContainerFactory
     extends org.jboss.util.ServiceMBeanSupport
@@ -699,8 +699,8 @@ public class ContainerFactory
          app.start();
 
          // Add to webserver so client can access classes through dynamic class downloading
-         //WebServiceMBean webServer = (WebServiceMBean)MBeanProxy.create(WebServiceMBean.class, WebServiceMBean.OBJECT_NAME);
-         //webServer.addClassLoader(cl);
+         WebServiceMBean webServer = (WebServiceMBean)MBeanProxy.create(WebServiceMBean.class, WebServiceMBean.OBJECT_NAME);
+         webServer.addClassLoader(cl);
 
          // Done
          log.log("Deployed application: "+app.getName());
