@@ -1,4 +1,4 @@
-// $Id: SimpleTimer.java,v 1.4 2003/06/30 19:23:20 linus Exp $
+// $Id: SimpleTimer.java,v 1.5 2003/09/28 01:44:18 linus Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -73,7 +73,8 @@ public class SimpleTimer {
 			    else
 				res.append(_labels.get(count - 1));
 			    res.append("                            ");
-			    res.setLength(18);
+			    res.append("                            ");
+			    res.setLength(60);
 			    res.append((((Long) _points.elementAt(count)).
 					longValue()
 					- ((Long) _points.elementAt(count - 1))
