@@ -52,6 +52,8 @@ import org.columba.core.util.GlobalResourceLoader;
  */
 class LocationStep extends AbstractStep implements ActionListener {
 
+	private static final String RESOURCE_PATH = "org.columba.core.i18n.dialog";
+        
 	protected DataModel data;
 	protected JButton sourceButton;
 	protected File sourceFile;
@@ -62,11 +64,11 @@ class LocationStep extends AbstractStep implements ActionListener {
 	 */
 	public LocationStep(DataModel data) {
 		super(GlobalResourceLoader.getString(
-                                "dialog",
+                                RESOURCE_PATH,
                                 "externaltools",
                                 "LocationStep.title"),
                         GlobalResourceLoader.getString(
-                                "dialog",
+                                RESOURCE_PATH,
                                 "externaltools",
                                 "LocationStep.description"));
 
@@ -94,7 +96,7 @@ class LocationStep extends AbstractStep implements ActionListener {
 		if (sourceFile == null) {
 			MultiLineLabel label =
 				new MultiLineLabel(GlobalResourceLoader.getString(
-                                        "dialog",
+                                        RESOURCE_PATH,
                                         "externaltools",
                                         "LocationStep.noauto"));
 			panel.add(label, BorderLayout.NORTH);
@@ -114,7 +116,7 @@ class LocationStep extends AbstractStep implements ActionListener {
 			JPanel northPanel = new JPanel(new GridLayout(2, 1, 0, 15));
 			MultiLineLabel label =
 				new MultiLineLabel(GlobalResourceLoader.getString(
-                                        "dialog",
+                                        RESOURCE_PATH,
                                         "externaltools",
                                         "LocationStep.auto"));
 			northPanel.add(label);

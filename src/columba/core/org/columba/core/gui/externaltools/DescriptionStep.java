@@ -13,6 +13,7 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
+
 package org.columba.core.gui.externaltools;
 
 import java.awt.BorderLayout;
@@ -44,8 +45,10 @@ import org.columba.mail.gui.util.URLLabel;
  * 
  * @author fdietz
  */
-public class DescriptionStep extends AbstractStep {
+class DescriptionStep extends AbstractStep {
 
+	private static final String RESOURCE_PATH = "org.columba.core.i18n.dialog";
+        
 	protected DataModel data;
 
 	/**
@@ -54,11 +57,11 @@ public class DescriptionStep extends AbstractStep {
 	 */
 	public DescriptionStep(DataModel data) {
 		super(GlobalResourceLoader.getString(
-                                "dialog",
+                                RESOURCE_PATH,
                                 "externaltools",
                                 "DescriptionStep.title"),
                         GlobalResourceLoader.getString(
-                                "dialog",
+                                RESOURCE_PATH,
                                 "externaltools",
                                 "DescriptionStep.description"));
 
@@ -69,7 +72,6 @@ public class DescriptionStep extends AbstractStep {
 	 * @see net.javaprog.ui.wizard.AbstractStep#createComponent()
 	 */
 	protected JComponent createComponent() {
-
 		JPanel panel = new JPanel();
 		panel.setLayout(new BorderLayout());
 
@@ -105,9 +107,7 @@ public class DescriptionStep extends AbstractStep {
 		try {
 			URLLabel label = new URLLabel(new URL(plugin.getWebsite()));
 			panel.add(label, BorderLayout.SOUTH);
-
 		} catch (MalformedURLException e) {
-
 			e.printStackTrace();
 		}
 
@@ -120,5 +120,4 @@ public class DescriptionStep extends AbstractStep {
 	public void prepareRendering() {
 
 	}
-
 }

@@ -32,15 +32,17 @@ import org.columba.core.util.GlobalResourceLoader;
  * 
  * @author fdietz
  */
-public class InfoStep extends AbstractStep {
+class InfoStep extends AbstractStep {
 
+	private static final String RESOURCE_PATH = "org.columba.core.i18n.dialog";
+        
 	public InfoStep() {
 		super(GlobalResourceLoader.getString(
-                                "dialog",
+                                RESOURCE_PATH,
                                 "externaltools",
                                 "InfoStep.title"),
                         GlobalResourceLoader.getString(
-                                "dialog",
+                                RESOURCE_PATH,
                                 "externaltools",
                                 "InfoStep.description"));
 	}
@@ -53,7 +55,7 @@ public class InfoStep extends AbstractStep {
 
 		MultiLineLabel label =
 			new MultiLineLabel(GlobalResourceLoader.getString(
-                                "dialog",
+                                RESOURCE_PATH,
                                 "externaltools",
                                 "InfoStep.text"));
 
