@@ -19,17 +19,12 @@ package org.columba.mail.gui.table;
 import java.util.Iterator;
 import java.util.Vector;
 
-import javax.swing.ImageIcon;
-import javax.swing.JLabel;
 import javax.swing.JPopupMenu;
 import javax.swing.table.TableColumn;
-import javax.swing.table.TableColumnModel;
 import javax.swing.tree.TreePath;
 
 import org.columba.core.config.HeaderItem;
 import org.columba.core.config.TableItem;
-import org.columba.core.gui.util.AscendingIcon;
-import org.columba.core.gui.util.DescendingIcon;
 import org.columba.core.gui.util.treetable.Tree;
 import org.columba.core.logging.ColumbaLogger;
 import org.columba.core.main.MainInterface;
@@ -159,24 +154,10 @@ public class TableController {
 		// MouseListener sorts table when clicking on a column header
 		new TableHeaderMouseListener(getView(), getTableModelSorter());
 
-		loadColumnConfig();
+		getTableModelSorter().loadConfig(getView());
 	}
 
-	protected void loadColumnConfig() {
-		String column = getTableModelSorter().getSortingColumn();
-		int columnNumber = getTableModelSorter().getSortInt();
-		ImageIcon icon = null;
-		if (getTableModelSorter().getSortingOrder() == true)
-			icon = new AscendingIcon();
-		else
-			icon = new DescendingIcon();
-
-		TableColumnModel columnModel = getView().getColumnModel();
-		JLabel renderer =
-			(JLabel) columnModel.getColumn(columnNumber).getHeaderRenderer();
-
-		renderer.setIcon(icon);
-	}
+	
 
 	/********************* table change listener ************************/
 
