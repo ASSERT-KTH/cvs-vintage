@@ -61,7 +61,7 @@ public class ViewHeaderListCommand extends SelectiveGuiUpdateCommand {
 				"mail.table")).setFolder(
 			folder);
 
-		((TableOwnerInterface) frameController).showHeaderList(folder, headerList);
+		((TableOwnerInterface) frameController).getTableController().showHeaderList(folder, headerList);
 
 		MainInterface.treeModel.nodeChanged(folder);
 

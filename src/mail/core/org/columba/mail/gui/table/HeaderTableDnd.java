@@ -24,6 +24,10 @@ import java.awt.dnd.DragSourceDragEvent;
 import java.awt.dnd.DragSourceDropEvent;
 import java.awt.dnd.DragSourceEvent;
 import java.awt.dnd.DragSourceListener;
+import java.awt.dnd.DropTargetDragEvent;
+import java.awt.dnd.DropTargetDropEvent;
+import java.awt.dnd.DropTargetEvent;
+import java.awt.dnd.DropTargetListener;
 import java.awt.event.InputEvent;
 
 import javax.swing.JTable;
@@ -39,7 +43,7 @@ import javax.swing.JTable;
  */
 
 public class HeaderTableDnd
-	implements DragGestureListener, DragSourceListener {
+	implements DragGestureListener, DragSourceListener, DropTargetListener {
 	private JTable table;
 	private DragSource dragSource;
 	private HeaderTableSelectionModel slm;
@@ -103,4 +107,49 @@ public class HeaderTableDnd
 	}
 	public void dropActionChanged(DragSourceDragEvent e) {
 	}
+	
+	
+	/********************* DropTargetListener ***************************/
+	
+	
+	/* (non-Javadoc)
+	 * @see java.awt.dnd.DropTargetListener#dragEnter(java.awt.dnd.DropTargetDragEvent)
+	 */
+	public void dragEnter(DropTargetDragEvent arg0) {
+		// TODO Auto-generated method stub
+
+	}
+
+	/* (non-Javadoc)
+	 * @see java.awt.dnd.DropTargetListener#dragExit(java.awt.dnd.DropTargetEvent)
+	 */
+	public void dragExit(DropTargetEvent arg0) {
+		// TODO Auto-generated method stub
+
+	}
+
+	/* (non-Javadoc)
+	 * @see java.awt.dnd.DropTargetListener#dragOver(java.awt.dnd.DropTargetDragEvent)
+	 */
+	public void dragOver(DropTargetDragEvent arg0) {
+		// TODO Auto-generated method stub
+
+	}
+
+	/* (non-Javadoc)
+	 * @see java.awt.dnd.DropTargetListener#drop(java.awt.dnd.DropTargetDropEvent)
+	 */
+	public void drop(DropTargetDropEvent arg0) {
+		// TODO Auto-generated method stub
+
+	}
+
+	/* (non-Javadoc)
+	 * @see java.awt.dnd.DropTargetListener#dropActionChanged(java.awt.dnd.DropTargetDragEvent)
+	 */
+	public void dropActionChanged(DropTargetDragEvent arg0) {
+		// TODO Auto-generated method stub
+
+	}
+
 }

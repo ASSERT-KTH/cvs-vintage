@@ -182,38 +182,7 @@ public class ThreePaneMailFrameController
 		return true;
 	}
 
-	/* (non-Javadoc)
-	 * @see org.columba.mail.gui.frame.ViewHeaderListInterface#showHeaderList(org.columba.mail.folder.Folder, org.columba.mail.message.HeaderList)
-	 */
-	public void showHeaderList(Folder folder, HeaderList headerList)
-		throws Exception {
-		tableController.getHeaderTableModel().setHeaderList(headerList);
-
-		boolean enableThreadedView =
-			folder.getFolderItem().getBoolean(
-				"property",
-				"enable_threaded_view",
-				false);
-
-		
-		tableController.getView().enableThreadedView(enableThreadedView);
-
-		tableController.getView().getTableModelThreadedView().toggleView(
-			enableThreadedView);
-		
-		TableChangedEvent ev =
-			new TableChangedEvent(TableChangedEvent.UPDATE, folder);
-
-		TableUpdater.tableChanged(ev);
-
-		// FIXME
-		//boolean ascending = tableController.isAscending();
-
-		tableController.getView().clearSelection();
-		tableController.getView().scrollRectToVisible(
-			new Rectangle(0, 0, 0, 0));
-
-	}
+	
 
 	/* (non-Javadoc)
 	 * @see org.columba.mail.gui.frame.ViewHeaderListInterface#getTableController()

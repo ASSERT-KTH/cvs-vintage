@@ -18,6 +18,7 @@ import org.columba.core.gui.util.ImageLoader;
 import org.columba.core.main.MainInterface;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.gui.frame.AbstractMailFrameController;
+import org.columba.mail.gui.frame.TableOwnerInterface;
 import org.columba.mail.gui.message.command.ViewMessageCommand;
 import org.columba.mail.gui.table.TableController;
 import org.columba.mail.gui.table.selection.TableSelectionChangedEvent;
@@ -66,7 +67,10 @@ public class NextMessageAction
 			KeyStroke.getKeyStroke("F"),
 			false);
 		setEnabled(false);
-		((AbstractMailFrameController) frameController).registerTableSelectionListener(
+		(
+			(
+				AbstractMailFrameController) frameController)
+					.registerTableSelectionListener(
 			this);
 
 	}
@@ -76,17 +80,19 @@ public class NextMessageAction
 	 */
 	public void actionPerformed(ActionEvent evt) {
 		FolderCommandReference[] r =
-			((AbstractMailFrameController) getFrameController()).getTableSelection();
+			((AbstractMailFrameController) getFrameController())
+				.getTableSelection();
 
 		// TODO: fix next-message action
-		/*
+
 		if (r.length > 0) {
 			FolderCommandReference ref = r[0];
 			TableController table =
-				((AbstractMailFrameController) getFrameController()).tableController;
-			MessageNode node = table.getView().getSelectedNode();
-			if ( node == null ) return;
-			
+				((TableOwnerInterface) getFrameController()).getTableController();
+			MessageNode node = table.getView().getSelectedNodes()[0];
+			if (node == null)
+				return;
+
 			MessageNode nextNode = (MessageNode) node.getNextNode();
 			Object nextUid = nextNode.getUid();
 
@@ -94,15 +100,17 @@ public class NextMessageAction
 			uids[0] = nextUid;
 			ref.setUids(uids);
 
-			
-			((AbstractMailFrameController) getFrameController()).setTableSelection(r);
+			(
+				(AbstractMailFrameController) getFrameController())
+					.setTableSelection(
+				r);
 			table.setSelected(uids);
 
 			MainInterface.processor.addOp(
 				new ViewMessageCommand(getFrameController(), r));
-			
+
 		}
-		*/
+
 	}
 	/* (non-Javadoc)
 			 * @see org.columba.core.gui.util.SelectionListener#selectionChanged(org.columba.core.gui.util.SelectionChangedEvent)

@@ -15,12 +15,8 @@
 //All Rights Reserved.
 package org.columba.mail.gui.tree;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.KeyEvent;
-
 import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
-import javax.swing.KeyStroke;
 import javax.swing.event.TreeExpansionEvent;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
@@ -33,8 +29,9 @@ import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.folder.Folder;
 import org.columba.mail.folder.FolderTreeNode;
 import org.columba.mail.gui.frame.AbstractMailFrameController;
+import org.columba.mail.gui.frame.TableOwnerInterface;
 import org.columba.mail.gui.infopanel.FolderInfoPanel;
-import org.columba.mail.gui.table.action.PasteAction;
+import org.columba.mail.gui.table.MessageTransferHandler;
 import org.columba.mail.gui.table.command.ViewHeaderListCommand;
 import org.columba.mail.gui.tree.command.FetchSubFolderListCommand;
 import org.columba.mail.gui.tree.selection.TreeSelectionManager;
@@ -111,6 +108,8 @@ public class TreeController
 		view.setCellRenderer(renderer);
 
 		getView().addTreeSelectionListener(this);
+		
+		getView().setTransferHandler(new MessageTransferHandler( ((TableOwnerInterface)getMailFrameController()).getTableController()));
 
 	}
 

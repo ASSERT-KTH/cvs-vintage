@@ -16,6 +16,8 @@
 
 package org.columba.mail.gui.table;
 
+import java.awt.Rectangle;
+import java.util.Iterator;
 import java.util.Vector;
 
 import javax.swing.JPopupMenu;
@@ -43,8 +45,6 @@ import org.columba.mail.gui.table.selection.TableSelectionManager;
 import org.columba.mail.gui.table.util.MarkAsReadTimer;
 import org.columba.mail.gui.table.util.MessageNode;
 import org.columba.mail.message.HeaderList;
-import java.util.List;
-import java.util.Iterator;
 
 /**
  * This class shows the messageheaderlist
@@ -101,7 +101,7 @@ public class TableController implements TreeSelectionListener {
 
 	protected MarkAsReadTimer markAsReadTimer;
 
-	protected List tableChangedListenerList;
+	protected Vector tableChangedListenerList;
 
 	protected TableMenu menu;
 	public TableController(AbstractMailFrameController mailFrameController) {
@@ -116,11 +116,10 @@ public class TableController implements TreeSelectionListener {
 		//.clone();
 		//headerTableItem.removeEnabledItem();
 
-	
 		headerTableModel = new HeaderTableModel(headerTableItem);
-		
+
 		view = new TableView(headerTableModel);
-		headerTableModel.setTree((Tree)view.getTree());
+		headerTableModel.setTree((Tree) view.getTree());
 
 		tableSelectionManager = new TableSelectionManager();
 
@@ -135,7 +134,7 @@ public class TableController implements TreeSelectionListener {
 
 		//menu = new HeaderTableMenu(this);
 
-		headerTableDnd = new HeaderTableDnd(view);
+		//headerTableDnd = new HeaderTableDnd(view);
 
 		headerTableMouseListener = new HeaderTableMouseListener(this);
 		view.addMouseListener(headerTableMouseListener);
@@ -153,16 +152,16 @@ public class TableController implements TreeSelectionListener {
 
 		//view.addTreeSelectionListener(this);
 
-		
 		getHeaderTableModel().getTableModelSorter().setSortingColumn(
 			headerTableItem.get("selected"));
 		getHeaderTableModel().getTableModelSorter().setSortingOrder(
 			headerTableItem.getBoolean("ascending"));
-		
-		
-	}
 
-	
+		getView().setTransferHandler(new MessageTransferHandler(this));
+
+		getView().setDragEnabled(true);
+
+	}
 
 	public boolean isAscending() {
 		return getHeaderTableModel().getTableModelSorter().getSortingOrder();
@@ -173,11 +172,13 @@ public class TableController implements TreeSelectionListener {
 	}
 
 	public void fireTableChangedEvent(TableChangedEvent e) {
-		for (Iterator it = tableChangedListenerList.iterator(); it.hasNext();) {
-			TableChangeListener l =	(TableChangeListener) it.next();
-		// for (int i = 0; i < tableChangedListenerList.size(); i++) {
+		for (Iterator it = tableChangedListenerList.iterator();
+			it.hasNext();
+			) {
+			TableChangeListener l = (TableChangeListener) it.next();
+			// for (int i = 0; i < tableChangedListenerList.size(); i++) {
 			// TableChangeListener l =
-				// (TableChangeListener) tableChangedListenerList.get(i);
+			// (TableChangeListener) tableChangedListenerList.get(i);
 			l.tableChanged(e);
 		}
 	}
@@ -603,5 +604,46 @@ public class TableController implements TreeSelectionListener {
 	 */
 	public MarkAsReadTimer getMarkAsReadTimer() {
 		return markAsReadTimer;
+	}
+
+	/* (non-Javadoc)
+		 * @see org.columba.mail.gui.frame.ViewHeaderListInterface#showHeaderList(org.columba.mail.folder.Folder, org.columba.mail.message.HeaderList)
+		 */
+	public void showHeaderList(Folder folder, HeaderList headerList)
+		throws Exception {
+		getHeaderTableModel().setHeaderList(headerList);
+
+		boolean enableThreadedView =
+			folder.getFolderItem().getBoolean(
+				"property",
+				"enable_threaded_view",
+				false);
+
+		getView().enableThreadedView(enableThreadedView);
+
+		getView().getTableModelThreadedView().toggleView(enableThreadedView);
+
+		TableChangedEvent ev =
+			new TableChangedEvent(TableChangedEvent.UPDATE, folder);
+
+		tableChanged(ev);
+
+		
+		boolean ascending = isAscending();
+		int row = getView().getTree().getRowCount();
+
+		getView().clearSelection();
+		//getView().scrollRectToVisible(new Rectangle(0, 0, 0, 0));
+		
+		getView().getParent().validate();
+		
+		if (!ascending)
+			getView().scrollRectToVisible(new Rectangle(0, 0, 0, 0));
+		else
+			getView().scrollRectToVisible(getView().getCellRect(row-1, 0, false));
+			
+			
+		
+
 	}
 }

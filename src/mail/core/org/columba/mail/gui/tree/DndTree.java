@@ -49,6 +49,7 @@ import java.io.IOException;
 
 import javax.swing.Icon;
 import javax.swing.JLabel;
+import javax.swing.JTable;
 import javax.swing.JTree;
 import javax.swing.Timer;
 import javax.swing.event.TreeModelEvent;
@@ -100,7 +101,9 @@ public class DndTree
 
 	}
 
-	public DndTree(AbstractMailFrameController frameController, TreeModel model) {
+	public DndTree(
+		AbstractMailFrameController frameController,
+		TreeModel model) {
 		super(model);
 		this.frameController = frameController;
 
@@ -116,6 +119,7 @@ public class DndTree
 		// Also, make this JTree a drag target
 		DropTarget dropTarget = new DropTarget(this, new CDropTargetListener());
 		dropTarget.setDefaultActions(DnDConstants.ACTION_COPY_OR_MOVE);
+
 	}
 
 	//	Interface: DragGestureListener
@@ -379,6 +383,9 @@ public class DndTree
 		}
 
 		public void drop(DropTargetDropEvent e) {
+			
+			if ( e.getSource() instanceof JTable ) return;
+			
 			_timerHover.stop();
 			// Prevent hover timer from doing an unwanted expandPath or collapsePath
 
@@ -394,8 +401,9 @@ public class DndTree
 			DataFlavor[] flavors = transferable.getTransferDataFlavors();
 			for (int i = 0; i < flavors.length; i++) {
 				DataFlavor flavor = flavors[i];
-				if (flavor
-					.isMimeTypeEqual(DataFlavor.javaJVMLocalObjectMimeType)) {
+				 if (
+					flavor.isMimeTypeEqual(
+						DataFlavor.javaJVMLocalObjectMimeType)) {
 					try {
 						Point pt = e.getLocation();
 						TreePath pathTarget =
