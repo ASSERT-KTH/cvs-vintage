@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<!-- $Id: compi18n.xml,v 1.7 2003/12/17 21:42:16 linus Exp $ -->
+<!-- $Id: compi18n.xml,v 1.8 2003/12/27 16:52:50 linus Exp $ -->
 
   <sect1 id="internationalization">
     <title>Internationalization</title>
@@ -19,7 +19,7 @@
 	<primary>ResourceBundles</primary>
       </indexterm>
       <para>
-Purpose - to provide the infrastructure that the other components can
+Purpose - to provide the infrastructure that the other subsystems can
 use to translate strings;
 to provide the infrastructure that makes it possible to plug in
 new languages;
@@ -37,7 +37,7 @@ and partly in
 - all files for a specific language.
 </para>
       <para>
-The Internationalization is a Layer 0 component. 
+The Internationalization is a Layer 0 subsystem. 
 See <xref linkend="layer0"></xref>.
 </para>
 

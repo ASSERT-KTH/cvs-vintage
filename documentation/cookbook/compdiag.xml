@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<!-- $Id: compdiag.xml,v 1.6 2003/10/12 16:35:36 linus Exp $ -->
+<!-- $Id: compdiag.xml,v 1.7 2003/12/27 16:52:50 linus Exp $ -->
 
 
     <sect1 id="diagrams">
@@ -18,7 +18,7 @@ TODO: Notation!
 The Diagrams will be located in <classname>org.argouml.???</classname>.
 </para>
       <para>
-The Diagrams is a Layer 2 component. <xref linkend="layer2"></xref>.
+The Diagrams is a Layer 2 subsystem. <xref linkend="layer2"></xref>.
 </para>
       <para>
 The Diagrams are depending on the Model and the GUI framework.

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<!-- $Id: compprpp.xml,v 1.3 2003/08/26 22:08:50 linus Exp $ -->
+<!-- $Id: compprpp.xml,v 1.4 2003/12/27 16:52:50 linus Exp $ -->
 
     <sect1 id="propertypanels">
       <title>Property panels</title>
@@ -12,7 +12,7 @@ The Property panels will be located in
 <classname>org.argouml.?</classname>.
 </para>
       <para>
-The Property panels is a Layer 2 component. See <xref linkend="layer2"></xref>.
+The Property panels is a Layer 2 subsystem. See <xref linkend="layer2"></xref>.
 </para>
       <para>
 Currently the PropPanels for the diagrams are in

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<!-- $Id: cvs.xml,v 1.4 2003/12/17 21:42:16 linus Exp $ -->
+<!-- $Id: cvs.xml,v 1.5 2003/12/27 16:52:50 linus Exp $ -->
 
   <chapter id="cvs">
   <title>CVS in the ArgoUML project</title>
@@ -673,14 +673,14 @@ Code generation for C#.
 Source code.
 </para>
 	<para>
-This will contain one directory for each component within
+This will contain one directory for each subsystem within
 ArgoUML.
 They will all compile and be tested with controlled dependencies
-to other components.
+to other subsystems.
 </para>
         <para>
 The upcoming structure is used for the different language part of the
-internationalization component under
+internationalization subsystem under
 <filename class="directory">i18n/<replaceable>language</replaceable></filename>.
 </para>
       </listitem>
