@@ -19,7 +19,7 @@ package org.jboss.verifier.strategy;
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  *
  * This package and its source code is available at www.jboss.org
- * $Id: EJBVerifier11.java,v 1.18 2000/09/30 07:38:43 juha Exp $
+ * $Id: EJBVerifier11.java,v 1.19 2000/09/30 12:03:03 oleg Exp $
  */
 
 
@@ -58,11 +58,11 @@ import org.jboss.metadata.EntityMetaData;
  *
  * @see     org.jboss.verifier.strategy.AbstractVerifier
  *
- * @author 	Juha Lindfors (jplindfo@helsinki.fi)
+ * @author  Juha Lindfors (jplindfo@helsinki.fi)
  * @author  Aaron Mulder  (ammulder@alumni.princeton.edu)
  *
- * @version $Revision: 1.18 $
- * @since  	JDK 1.3
+ * @version $Revision: 1.19 $
+ * @since   JDK 1.3
  */
 public class EJBVerifier11 extends AbstractVerifier {
 
@@ -78,12 +78,14 @@ public class EJBVerifier11 extends AbstractVerifier {
      */
     public EJBVerifier11(VerificationContext context) {
 
-        URL[] list = { context.getJarLocation() };
+        this.classloader = context.getClassLoader();
+        if (this.classloader == null) {
+            URL[] list = { context.getJarLocation() };
 
-        ClassLoader parent = Thread.currentThread().getContextClassLoader();
-        URLClassLoader cl  = new URLClassLoader(list, parent);
+            ClassLoader parent = Thread.currentThread().getContextClassLoader();
+            this.classloader   = new URLClassLoader(list, parent);
+        }
 
-        this.classloader   = cl;
         this.context       = context;
 
         this.factory       = new DefaultEventFactory();

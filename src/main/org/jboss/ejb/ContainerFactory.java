@@ -76,7 +76,7 @@ import org.jboss.logging.Logger;
 *   @author <a href="mailto:jplindfo@helsinki.fi">Juha Lindfors</a>
 *   @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
 *
-*   @version $Revision: 1.44 $
+*   @version $Revision: 1.45 $
 */
 public class ContainerFactory
     extends org.jboss.util.ServiceMBeanSupport
@@ -403,7 +403,7 @@ public class ContainerFactory
                     
                     Logger.log("Verifying " + url);
                     
-                    verifier.verify(url, metaData);
+                    verifier.verify(url, metaData, cl);
                 }
             }
             catch (Throwable t) {

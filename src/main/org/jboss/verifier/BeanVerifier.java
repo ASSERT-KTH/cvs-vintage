@@ -19,7 +19,7 @@ package org.jboss.verifier;
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  *
  * This package and its source code is available at www.jboss.org
- * $Id: BeanVerifier.java,v 1.5 2000/08/20 20:48:09 juha Exp $
+ * $Id: BeanVerifier.java,v 1.6 2000/09/30 12:03:02 oleg Exp $
  */
 
  
@@ -59,14 +59,15 @@ import org.jboss.metadata.SessionMetaData;
  * @see     org.jboss.verifier.strategy.VerificationStrategy
  * @see     org.jboss.verifier.factory.VerificationEventFactory
  *
- * @author 	Juha Lindfors (jplindfo@helsinki.fi)
- * @version $Revision: 1.5 $
- * @since  	JDK 1.3
+ * @author  Juha Lindfors (jplindfo@helsinki.fi)
+ * @version $Revision: 1.6 $
+ * @since   JDK 1.3
  */
 public class BeanVerifier implements VerificationContext {
 
     private ApplicationMetaData ejbMetaData = null;
     private URL  ejbURL = null;
+    private ClassLoader ejbClassLoader = null;
                                       
     private VerificationStrategy verifier = null;
                     
@@ -100,9 +101,23 @@ public class BeanVerifier implements VerificationContext {
      * @param   url     URL to the bean jar file
      */
     public void verify(URL url, ApplicationMetaData metaData) {
+        verify(url, metaData, null);
+    }
+
+    /**
+     * Checks the Enterprise Java Beans found in this Jar for EJB spec
+     * compliance (EJB Spec. 1.1). Ensures that the given interfaces
+     * and implementation classes implement required methods and follow
+     * the contract given in the spec.
+     *
+     * @param   url     URL to the bean jar file
+     * @param   cl      The ClassLoader to use
+     */
+    public void verify(URL url, ApplicationMetaData metaData, ClassLoader cl) {
         
         ejbURL = url;
         ejbMetaData = metaData;
+        ejbClassLoader = cl;
          
         setVerifier(VERSION_1_1);
         
@@ -110,14 +125,14 @@ public class BeanVerifier implements VerificationContext {
         Iterator beans = ejbMetaData.getEnterpriseBeans();
         
         while (beans.hasNext()) {
-			BeanMetaData bean = (BeanMetaData)beans.next();
-			if (bean.isEntity()) {
-				verifier.checkEntity((EntityMetaData)bean);
-			} else {
-				verifier.checkSession((SessionMetaData)bean);
-			}
-		}
-		
+            BeanMetaData bean = (BeanMetaData)beans.next();
+            if (bean.isEntity()) {
+                verifier.checkEntity((EntityMetaData)bean);
+            } else {
+                verifier.checkSession((SessionMetaData)bean);
+            }
+        }
+        
     }
 
 
@@ -160,6 +175,10 @@ public class BeanVerifier implements VerificationContext {
         return ejbURL;
     }
     
+    public ClassLoader getClassLoader() {
+        return ejbClassLoader;
+    }
+
     public String getEJBVersion() {
         return VERSION_1_1;
         
