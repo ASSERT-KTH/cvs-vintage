@@ -1,4 +1,4 @@
-<!-- $Id: HOWTO-release.html,v 1.2 2003/05/09 21:01:45 dlr Exp $ -->
+<!-- $Id: HOWTO-release.html,v 1.3 2003/05/09 21:02:55 dlr Exp $ -->
 <!doctype html public "-//w3c//dtd html 4.0 transitional//en">
 <html>
 <head>
@@ -12,7 +12,7 @@ This documents the process for doing a release of Scarab.
 </p>
 
 <ol>
-<li>Check out a fresh copy of Scarab.
+<li>Check out a fresh copy of Scarab.<br><br>
 
     cvs co scarab</li>
 
@@ -30,13 +30,13 @@ This documents the process for doing a release of Scarab.
     let people know that they should hold off on commits until the message
     comes through that you are done with the tag/release process.
     Change the version number in the example below to the version of the 
-    current release.<br>
+    current release.<br><br>
 
     cd scarab<br>
     cvs tag SCARAB_1_0_B15</li>
 
 <li>Build a release. This will create a .tar.gz and a .zip file in
-    the scarab directory.<br>
+    the scarab directory.<br><br>
 
     cd scarab/build<br>
     ant package</li>
