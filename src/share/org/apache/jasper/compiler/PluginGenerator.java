@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/PluginGenerator.java,v 1.7 2000/06/11 21:41:06 mandar Exp $
- * $Revision: 1.7 $
- * $Date: 2000/06/11 21:41:06 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/PluginGenerator.java,v 1.8 2000/07/25 01:11:38 craigmcc Exp $
+ * $Revision: 1.8 $
+ * $Date: 2000/07/25 01:11:38 $
  *
  * ====================================================================
  * 
@@ -100,6 +100,7 @@ public class PluginGenerator
     public void generate(ServletWriter writer, Class phase) 
     				throws JasperException
     {
+
 	String type = getAttribute ("type");
 	String code = getAttribute ("code");
 	String codebase = getAttribute ("codebase");
@@ -118,6 +119,7 @@ public class PluginGenerator
 
 	writer.popIndent ();
 	writer.println ("/*Code generated for plugin*/");
+	writer.println("{");	// Work around multi-plugin-tag bug
 	writer.indent ();
 	writer.print ("out.println (\"<OBJECT classid=\\\"");
 	writer.print (ieClassId);
@@ -342,6 +344,7 @@ public class PluginGenerator
 	writer.println ("out.println (\"</NOEMBED></EMBED>\");");
 	writer.println ("out.println (\"</OBJECT>\");");
 	writer.pushIndent ();
+	writer.println("}");	// Work around multi-plugin-tag bug
     }
 
     public void generateCommon (ServletWriter writer) {
