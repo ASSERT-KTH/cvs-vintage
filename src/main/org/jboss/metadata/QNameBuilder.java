@@ -6,7 +6,7 @@
  */
 package org.jboss.metadata;
 
-// $Id: QNameBuilder.java,v 1.1 2004/04/20 16:57:32 tdiesler Exp $
+// $Id: QNameBuilder.java,v 1.2 2004/05/06 15:53:43 tdiesler Exp $
 
 import org.jboss.logging.Logger;
 import org.w3c.dom.Element;
@@ -25,7 +25,7 @@ import javax.xml.namespace.QName;
  * but then common would have to depend on j2ee
  *
  * @author Thomas.Diesler@jboss.org
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  */
 public final class QNameBuilder
 {
@@ -51,10 +51,16 @@ public final class QNameBuilder
 
       Node currNode = element;
       String namespaceURI = getNamespaceURI (currNode, prefix);
-      while (namespaceURI == null && currNode.getParentNode() != null)
+      while (namespaceURI == null && currNode != null)
       {
-         currNode = element.getParentNode();
-         namespaceURI = getNamespaceURI (currNode, prefix);
+         Node parentNode = currNode.getParentNode();
+         if (parentNode != null && parentNode != currNode)
+            namespaceURI = getNamespaceURI (parentNode, prefix);
+
+         if (parentNode == currNode)
+            break;
+
+         currNode = parentNode;
       }
 
       if (namespaceURI != null)
