@@ -31,7 +31,7 @@ import org.jboss.logging.Logger;
  * Compiles EJB-QL and JBossQL into SQL using OUTER and INNER joins.
  *
  * @author <a href="mailto:alex@jboss.org">Alex Loubyansky</a>
- * @version $Revision: 1.10 $
+ * @version $Revision: 1.11 $
  */
 public final class EJBQLToSQL92Compiler
    implements QLCompiler, JBossQLParserVisitor
@@ -621,7 +621,7 @@ public final class EJBQLToSQL92Compiler
             final JDBCFieldBridge[] keyFields;
             if(cmrField.getMetaData().getRelationMetaData().isTableMappingStyle())
             {
-               keyFields = cmrField.getTableKeyFields();
+               keyFields = cmrField.getRelatedCMRField().getEntity().getPrimaryKeyFields();
             }
             else
             {
