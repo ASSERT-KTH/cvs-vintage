@@ -102,7 +102,8 @@ public class JspInterceptor extends BaseInterceptor {
     {
 	Servlet theServlet = sw.getServlet();
 	if (theServlet instanceof HttpJspBase)  {
-	    log( "PreServletInit: HttpJspBase.setParentClassLoader" + sw );
+	    if( debug > 0 )
+		log( "PreServletInit: HttpJspBase.setParentClassLoader" + sw );
 	    HttpJspBase h = (HttpJspBase) theServlet;
 	    h.setClassLoader(ctx.getServletLoader().getClassLoader());
 	}
@@ -123,7 +124,7 @@ public class JspInterceptor extends BaseInterceptor {
 	// If this Wrapper was already used, we have all the info
 	JspInfo jspInfo=(JspInfo)wrapper.getNote( jspInfoNOTE );
 	if( jspInfo == null ) {
-	    log("New jsp page - no jspInfo ");
+	    if( debug > 0 ) log("New jsp page - no jspInfo ");
 	    jspInfo=new JspInfo(req);
 	    mapJspPage( req, jspInfo, jspInfo.uri, jspInfo.fullClassN);
 	}
@@ -177,13 +178,13 @@ public class JspInterceptor extends BaseInterceptor {
 	    return ;
 	}
 	req.setWrapper( wrapper );
-	log("Wrapper " + wrapper);
+	if( debug>0) log("Wrapper " + wrapper);
     }
 
     /** Convert the .jsp file to a java file, then compile it to class
      */
     void compile(Request req, JspInfo jspInfo ) {
-	log( "Compiling ");
+	log( "Compiling " + jspInfo.realClassPath);
 	try {
 	    // make sure we have the directories
 	    File dir=new File( jspInfo.outputDir + "/" + jspInfo.pkgDir);
@@ -206,7 +207,7 @@ public class JspInterceptor extends BaseInterceptor {
 	    
 	    javac( createJavaCompiler( options ), ctxt, mangler );
 	    
-	    log( "Compiled to " + jspInfo.realClassPath );
+	    if(debug>0)log( "Compiled to " + jspInfo.realClassPath );
 	    jspInfo.touch();
 	} catch( Exception ex ) {
 	    ex.printStackTrace();
@@ -229,7 +230,7 @@ public class JspInterceptor extends BaseInterceptor {
 	String cp=System.getProperty("java.class.path")+ sep + 
 	    ctxt.getClassPath() + sep + ctxt.getOutputDir();
         javac.setClasspath( cp );
-	log( "ClassPath " + cp);
+	if( debug>0) log( "ClassPath " + cp);
 	
 	ByteArrayOutputStream out = new ByteArrayOutputStream (256);
 	javac.setOutputDir(ctxt.getOutputDir());
@@ -348,10 +349,10 @@ class JspInfo {
 	    classN + ".java";
 	fullClassN = pkg +"." + classN;
 	
-	System.out.println("ClassN=" + classN +
-			   " realClassPath=" + realClassPath +
-			   " javaFilePath=" + javaFilePath +
-			   " fullClassN =" + fullClassN);
+// 	System.out.println("ClassN=" + classN +
+// 			   " realClassPath=" + realClassPath +
+// 			   " javaFilePath=" + javaFilePath +
+// 			   " fullClassN =" + fullClassN);
 	writeVersion();
 	// save to mapFile 
     }
@@ -406,14 +407,14 @@ class JspInfo {
 	    updateVersionedPaths();
 	}
 
-	System.out.println("uri=" + uri +
-			   //" outputDir=" + outputDir +
-			   //" jspSource=" + jspSource +
-			   " pkgDir=" + pkgDir +
-			   " baseClassN=" + baseClassN +
-			   " ext=" + ext +
-			   " mapPath=" + mapPath +
-			   " version=" + version);
+// 	System.out.println("uri=" + uri +
+// 			   //" outputDir=" + outputDir +
+// 			   //" jspSource=" + jspSource +
+// 			   " pkgDir=" + pkgDir +
+// 			   " baseClassN=" + baseClassN +
+// 			   " ext=" + ext +
+// 			   " mapPath=" + mapPath +
+// 			   " version=" + version);
 	
 	
     }
@@ -428,7 +429,7 @@ class JspInfo {
 	try {
 	    FileInputStream fis=new FileInputStream( mapFile );
 	    version=(int)fis.read();
-	    System.out.println("Version=" + version );
+// 	    System.out.println("Version=" + version );
 	    fis.close();
 	} catch( Exception ex ) {
 	    ex.printStackTrace();
@@ -445,7 +446,7 @@ class JspInfo {
 	try {
 	    FileOutputStream fis=new FileOutputStream( mapFile );
 	    fis.write(version);
-	    System.out.println("WVersion=" + version );
+// 	    System.out.println("WVersion=" + version );
 	    fis.close();
 	} catch( Exception ex ) {
 	    ex.printStackTrace();

@@ -88,9 +88,9 @@ public class J2EEInterceptor extends BaseInterceptor {
 	    invM.postServletInvoke( ctx.getFacade(), sw.getServlet(), 
 				    request.getFacade(),
 				    response.getFacade() );
-// 	    intLogRequest( request.getContext().getPath(),
-// 			   request.getRequestURI(),
-// 			   null);
+	    intLogRequest( request.getContext().getPath(),
+			   request.getRequestURI(),
+			   null);
 	} catch(Exception ex ) {
 	    return -1;
 	}

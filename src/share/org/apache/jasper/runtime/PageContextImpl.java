@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/runtime/PageContextImpl.java,v 1.12 2000/06/19 20:13:57 costin Exp $
- * $Revision: 1.12 $
- * $Date: 2000/06/19 20:13:57 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/runtime/PageContextImpl.java,v 1.13 2000/06/30 20:21:04 costin Exp $
+ * $Revision: 1.13 $
+ * $Date: 2000/06/30 20:21:04 $
  *
  * ====================================================================
  *
@@ -178,6 +178,7 @@ public class PageContextImpl extends PageContext {
 	    throw new IllegalStateException("Page needs a session and none is available");
 
 	// initialize the initial out ...
+	//	System.out.println("Initialize PageContextImpl " + out );
 	if( out == null ) {
 	    out = _createOut(bufferSize, autoFlush); // throws
 	} else

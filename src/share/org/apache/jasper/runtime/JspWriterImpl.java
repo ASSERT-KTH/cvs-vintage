@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/runtime/JspWriterImpl.java,v 1.3 2000/05/24 01:58:13 costin Exp $
- * $Revision: 1.3 $
- * $Date: 2000/05/24 01:58:13 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/runtime/JspWriterImpl.java,v 1.4 2000/06/30 20:21:03 costin Exp $
+ * $Revision: 1.4 $
+ * $Date: 2000/06/30 20:21:03 $
  *
  * ====================================================================
  * 
@@ -162,8 +162,10 @@ public class JspWriterImpl extends JspWriter {
     }
 
     protected void initOut() throws IOException {
-        if (out == null) 
+        if (out == null) {
             out = response.getWriter();
+	    //System.out.println("JspWriterImpl: initOut: " + this + " " +out);
+	}
     }
 	
 

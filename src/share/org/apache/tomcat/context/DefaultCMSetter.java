@@ -343,7 +343,7 @@ class RedirectHandler extends ServletWrapper {
 	
 	location = makeAbsolute(req, location);
 
-	ctx.log("Redirect " + location + " " + req );
+	if( debug>0) ctx.log("Redirect " + location + " " + req );
 
 	res.setContentType("text/html");	// ISO-8859-1 default
 	res.setHeader("Location", location);

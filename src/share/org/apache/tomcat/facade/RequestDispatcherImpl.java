@@ -189,6 +189,10 @@ final class RequestDispatcherImpl implements RequestDispatcher {
 	// CM should have set the wrapper - call it
 	ServletWrapper wr=realRequest.getWrapper();
 	if( wr!=null ) wr.service(realRequest, realResponse);
+
+	// close the response - output after this point will be discarded.
+	realResponse.finish();
+	
     }
 
     public void include(ServletRequest request, ServletResponse response)

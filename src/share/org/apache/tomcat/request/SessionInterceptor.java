@@ -81,17 +81,11 @@ public class SessionInterceptor extends  BaseInterceptor
 
     // GS, separates the session id from the jvm route
     static final char SESSIONID_ROUTE_SEP = '.';
-    int debug=0;
     ContextManager cm;
     
     public SessionInterceptor() {
     }
 
-    public void setDebug( int i ) {
-	System.out.println("Set debug to " + i);
-	debug=i;
-    }
-    
     public void setContextManager( ContextManager cm ) {
 	this.cm=cm;
     }

@@ -169,7 +169,7 @@ public class EmbededTomcat { // extends WebService
     /** Remove a context
      */
     public void removeContext( ServletContext sctx ) {
-	if(debug>-1) log( "remove context " + sctx );
+	if(debug>0) log( "remove context " + sctx );
 	try {
 	    if( facadeM==null ) {
 		System.out.println("XXX ERROR: no facade manager");
@@ -188,7 +188,7 @@ public class EmbededTomcat { // extends WebService
 	to the context.
     */
     public void addClassPath( ServletContext context, String cpath ) {
-	if(debug>-1) log( "addClassPath " + context.getRealPath("") + " " +
+	if(debug>0) log( "addClassPath " + context.getRealPath("") + " " +
 			  cpath );
 
 	try {
@@ -363,7 +363,7 @@ public class EmbededTomcat { // extends WebService
 	// access control ( find if a resource have constraints )
 	AccessInterceptor accessI=new AccessInterceptor();
 	addRequestInterceptor( accessI );
-	accessI.setDebug(20);
+	accessI.setDebug(0);
 
 	// set context class loader
 	Jdk12Interceptor jdk12I=new Jdk12Interceptor();

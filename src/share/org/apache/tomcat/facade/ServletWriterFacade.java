@@ -81,6 +81,7 @@ import javax.servlet.ServletOutputStream;
 public final class ServletWriterFacade extends PrintWriter {
     Response resA;
     RequestImpl req;
+    static final boolean ACCT=false;// a smart compiler will remove all in/out
     
     public ServletWriterFacade( Writer w, Response resp ) {
 	super( w );
@@ -91,33 +92,33 @@ public final class ServletWriterFacade extends PrintWriter {
     // -------------------- Write methods --------------------
 
     public void flush() {
-	in();
+	if( ACCT ) in();
 	super.flush();
-	out();
+	if( ACCT ) out();
     }
 
     public void print( String str ) {
-	in();
+	if( ACCT ) in();
 	super.print( str );
-	out(); 
+	if( ACCT ) out(); 
    }
 
     public void println( String str ) {
-	in();
+	if( ACCT ) in();
 	super.println( str );
-	out(); 
+	if( ACCT ) out(); 
    }
 
     public void write( char buf[], int offset, int count ) {
-	in();
+	if( ACCT ) in();
 	super.write( buf, offset, count );
-	out();
+	if( ACCT ) out();
     }
 
     public void write( String str ) {
-	in();
+	if( ACCT ) in();
 	super.write( str );
-	out();
+	if( ACCT ) out();
     }
 
     private void in() {

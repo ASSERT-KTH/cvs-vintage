@@ -150,9 +150,9 @@ public class InvokerInterceptor extends BaseInterceptor {
 	// it's a much cleaner way to construct the servlet and
 	// make sure all interceptors are up to date.
 	try {
+	    wrapper = ctx.addServlet( servletName, servletName );
 	    ctx.addServletMapping( newServletPath + "/*" ,
 				   servletName );
-	    wrapper = ctx.getServletByName( servletName);
 	    wrapper.setOrigin( ServletWrapper.ORIGIN_INVOKER );
 	    if( debug > 0)
 		log( "Added mapping " + wrapper +

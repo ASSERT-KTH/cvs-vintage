@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/ResponseImpl.java,v 1.32 2000/06/26 21:59:30 costin Exp $
- * $Revision: 1.32 $
- * $Date: 2000/06/26 21:59:30 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/ResponseImpl.java,v 1.33 2000/06/30 20:21:25 costin Exp $
+ * $Revision: 1.33 $
+ * $Date: 2000/06/30 20:21:25 $
  *
  * ====================================================================
  *
@@ -389,6 +389,8 @@ public class ResponseImpl implements Response {
 
     // Reset the response buffer but not headers and cookies
     public void resetBuffer() throws IllegalStateException {
+	if( usingWriter && writer != null )
+	    writer.flush();
 
 	out.reset();	// May throw IllegalStateException
 

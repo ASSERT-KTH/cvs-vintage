@@ -930,13 +930,14 @@ public class ContextManager {
 	Context ctx = req.getContext();
 	if(ctx==null) ctx=getContext("");
 
-	ctx.log( "Status Handler: " + code + " req=" + req);
+	ctx.log( code + " "  + req + " " +
+		 req.getAttribute("javax.servlet.error.message"));
 
 	errorPath = ctx.getErrorPage( code );
 	if( errorPath != null ) {
 	    errorServlet=getHandlerForPath( ctx, errorPath );
 	}
-	if( debug>-1 )
+	if( debug>0 )
 	    ctx.log( "Handler " + errorServlet + " " + errorPath);
 	
 	if( errorServlet==null )

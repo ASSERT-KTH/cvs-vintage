@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/BufferedServletOutputStream.java,v 1.13 2000/06/22 19:49:32 costin Exp $
- * $Revision: 1.13 $
- * $Date: 2000/06/22 19:49:32 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/BufferedServletOutputStream.java,v 1.14 2000/06/30 20:21:19 costin Exp $
+ * $Revision: 1.14 $
+ * $Date: 2000/06/30 20:21:19 $
  *
  * ====================================================================
  * 
@@ -299,6 +299,7 @@ public class BufferedServletOutputStream extends ServletOutputStream {
 	// Reset the buffer.
 	bufferCount = 0;
 	totalCount = 0;
+	//	System.out.println("Reset buffer ");
     }
 
     /** Reuse the object instance, avoid GC

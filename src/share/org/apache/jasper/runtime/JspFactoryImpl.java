@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/runtime/JspFactoryImpl.java,v 1.3 2000/06/10 01:41:19 costin Exp $
- * $Revision: 1.3 $
- * $Date: 2000/06/10 01:41:19 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/runtime/JspFactoryImpl.java,v 1.4 2000/06/30 20:21:02 costin Exp $
+ * $Revision: 1.4 $
+ * $Date: 2000/06/30 20:21:02 $
  *
  * ====================================================================
  * 
@@ -95,6 +95,7 @@ public class JspFactoryImpl extends JspFactory {
 		pc =  new PageContextImpl(this);
 	    }
 
+	    //	    System.out.println("JspFactoryImpl.getPC"  + pc);
 	    pc.initialize(servlet, request, response, errorPageURL, 
                           needsSession, bufferSize, autoflush);
 	    
@@ -108,8 +109,9 @@ public class JspFactoryImpl extends JspFactory {
 
     public void releasePageContext(PageContext pc) {
         pc.release();
-	if( usePool)
+	if( usePool) {
 	    pool.put( pc );
+	}
     }
 
     static class SunJspEngineInfo extends JspEngineInfo {
