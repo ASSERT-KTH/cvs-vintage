@@ -1,16 +1,16 @@
 <div id="home-enternew" class="app">
 
-<h3>$l10n.IssueTypesInProject</h3>
-<div class="colbar">
-  $l10n.EnterNewBriefInstructions
-</div>
-
 #set ($currentModule = $scarabR.CurrentModule)
 #set ($currentModuleIssueTypes = $currentModule.IssueTypes)
 
 #if ($currentModuleIssueTypes.isEmpty())
 <p><em>$l10n.NoIssueTypesInModule</em></p>
 #else
+<h3>$l10n.IssueTypesInProject</h3>
+<div class="colbar">
+  $l10n.EnterNewBriefInstructions
+</div>
+
   <table width="100%" border="1" cellspacing="2" cellpadding="3">
     <tr>
       <th>$l10n.Name</th>
