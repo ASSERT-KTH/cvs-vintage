@@ -53,7 +53,6 @@ import org.jboss.metadata.SessionMetaData;
 import org.jboss.metadata.XmlFileLoader;
 import org.jboss.metadata.XmlLoadable;
 import org.jboss.mx.loading.UnifiedClassLoader;
-import org.jboss.proxy.ProxyFactoryRegistry;
 import org.jboss.security.AuthenticationManager;
 import org.jboss.security.RealmMapping;
 import org.jboss.system.Registry;
@@ -86,7 +85,7 @@ import org.w3c.dom.Element;
  * @author <a href="mailto:d_jencks@users.sourceforge.net">David Jencks</a>
  * @author <a href="mailto:reverbel@ime.usp.br">Francisco Reverbel</a>
  * @author <a href="mailto:Adrian.Brock@HappeningTimes.com">Adrian.Brock</a>
- * @version $Revision: 1.24 $
+ * @version $Revision: 1.25 $
  *
  * @jmx:mbean extends="org.jboss.system.ServiceMBean"
  */
