@@ -1,0 +1,232 @@
+
+
+Version 0.9.9
+
+ - mail-component:
+    * mailbox import filter added (mbox, pegasus, mozilla, evolution)
+    * open message with composer now handles contact-lists correctly
+    * redesigned filter toolbar enables faster filtering
+    * selected words in the messageviewer can now be looked up in a online 
+      dictionary ( utilities->dict.org lookup )
+    * added preliminary spell-check support (using aspell 
+      as backend) (John Murga)
+    * new drag'n'drop system enables dnd for tree and table with the 
+      left mouse button
+    * imap header-synchronization bugs fixed
+    * imap folder-list bugfix
+    * added expunge-folder action for imap
+    * delete/move messages in imap only marks messages as expunged
+    * added automatically apply filter on inbox for imap
+    * multipart/alternative messages are now handled better 
+      (text/html is first viewed)
+    * fixed a bug which doesn't show the html-part of the message correctly
+    * signed messages now show up as expected
+    * Columba works now with JDK1.3 (John Murga)
+    * esmtp authentication saves password
+    * Columba automatically detects anther running version and uses only 
+      one VM (commands can be send to the running version). You can for 
+      example open a composer from your favourite web-browser.
+    * some new command-line options:
+        - debug (show debugging info from pop3, smtp, imap)
+        - composer (open composer window)
+        - rcpt (specify recipients)
+        - body (specifiy message body)
+        - message-url (this is for MS Windows integration)
+    * you can now change the wav-file for mail-check notification
+      in the account-dialog
+    * new menu arrangement to comply more with ui recommendations 
+      like Gnome2 (www.gnome.org)
+    * wheel-mouse support (JDK1.4 only)
+    * new general options dialog, lets you configure:
+       - mark message as read interval
+       - prefer HTML messages, if available
+       - configure path to aspell-executable
+       - themes and icons (new iconsets/pulsators install button)
+       - fonts
+    * Search history-functionality. Every search is automatically
+      appended to the "Search" vFolder as child-folder. 
+      History functionality saves the last 10 searches. If you
+      want to keep vFolders just drag'n'drop them to somewhere  
+      else
+    * added some default vFolders, for first time startup
+    * added "expunge folder" action for imap-folders
+    * delete/move message just marks message "as expunged". You have
+      to manually "expunge folder" to remove them.
+    * added some links to our website in the Help-menu
+    * fixed attachment encoding/decoding bug (this affects only
+      binary attachments)
+    * fixed attachment sending bug on Windows platform
+    * added tooltips to Tree-View to show total/unread/recent messages
+      count
+    * numerous i18n fixes
+    * added ant-build system (Thomas Wabner alias Waffel)
+
+ - addressbook-component: 
+    * vcard, csv and ldif addressbook import filter 
+    * new addressbook folder format
+    * new collected addresses addressbook saves all emails 
+      from your replies automatically and therefor helps to keep 
+      your personal addressbook clean
+    * new edit contact dialog ( respects vcard keywords )
+    * numerious address/lists parsing bugfixes 
+    * added tooltips to contact-lists widget to have easy access
+      to name and email address
+    
+      
+
+
+Version 0.9.8
+
+    * Fixed the ELHO/HELO smtp commands to use "localhost.localdomain" 
+      instead of the real hostname. This should fix problems with 
+      TCP-tunneling, NAT (IP Masquerading in Linux), and hosts without 
+      fully qualified domainname (Eduardo Pérez)
+    * Fixed imap folder bug, which prevented INBOX from appearing (Frederik)
+    * Changed imap folder hierarchy parser. The delimiter character isn't 
+      hardcoded anymore. This fixes the folder hierarchy view for cyrus 
+      imapd. (Frederik)
+    * Imap serverside copying/moving/deleting operates on all messages at 
+      once, instead of sending a command for every message. (Frederik)
+    * Fixed imap headerlist synchronization bug (Frederik)
+    * Imap headercache-file is regenerated automatically on startup, 
+      if corrupted. (Frederik)
+    * Imap adding/removing folders now correctly un-/subscribes folder 
+      automatically. This fixes a problem with uw-imapd server, 
+      which showed folders as subscribed even if they didn't 
+      exist anymore. (Frederik)
+    * Fixed a outbox-folder bug, which prevented sending mails, if you 
+      didn't selected it at some time before. (Frederik)
+    * Added AUTH PLAIN SMTP authentication method.
+    * Changed the smtp-authenticate default behaviour. Columba tries to 
+      use ESMTP now, if the user wants to, even if the CAPABILITY response 
+      didn't comply to RFC.
+    * Applying filters is know blazingly fast (Timo)
+    * Fixed a threading bug, which made the gui-worker freeze. A worker 
+      can now be cancelled, which automatically cancels the corresponding 
+      worker on the other end of the channel. (Timo)
+
+
+
+Version 0.9.7
+   
+   - ported to JDK1.4
+   - no more need for jaxp.jar/parser.jar packages (just do a 
+     "java org.columba.main.Main",no classpath modification needed) 
+   - you can use now one config-folder for different operation systems
+   - default behavior for "reply"-action is know to show the message inline
+   - added "reply as attachment"
+   - added "forward inline"
+   - added "open message in composer" action
+   - in the composer you can save a message as draft or template
+   - you can open now multiple instances of the composer frame
+   - added "send later" action
+   - fixes attachment encoding/decoding bug
+   - fixed some gui bugs (treeviewer, attachmentviewer)
+
+   
+
+Version 0.9.6
+    
+    * imap subscribe/unsubscribe-dialog works now correctly
+    * implemented imap server-side searching (you can now apply filters on 
+      imap folders and especially use VFolders)
+    * added POP-before-SMTP (SMTP-after-POP) authentification to mail sending
+    * fixed some pop3 synchronization bugs
+
+
+
+
+
+Version 0.9.5
+
+This release finally fixed those POP3 authentification problems people had. 
+We have to thank James Beam for his extraordinary help on this subject. 
+But we have also added some new features:
+
+    * POP3 mailchecking plays a soundfile when new messages arrive
+    * new options for POP3 mailchecking to enable/disable automatic message 
+      downloading
+    * serverside IMAP copying/moving/deleting of messages
+    * when downloading bodytext or mimepart from IMAP server you can now 
+      see the download progress
+    * bodytext doesn't get fetched twice times from IMAP server anymore
+
+
+
+Version 0.9.4
+
+This is a minor bugfix release. We had complains from people who couldn't 
+authenticate via POP3. So I hope this version fixes the problem.
+Also added a small feature: if you reply or forward a message it gets 
+marked as replied.
+
+
+
+
+Version 0.9.3
+
+This is a *must have* release. We fixed some very serious bugs and added some 
+mailing-list specific features. So if you are not already subscribed to our 
+<http://columba.sourceforge.net/img/dok.gif>  mailinglist, this is the right time ;-)
+
+    * fixed some imap parsing stuff, attachments work now correctly (Timo)
+    * Popup-Menus work now on Windows (Timo)
+    * fixed a date-parsing bug, which lead to wrong sorting of messages (Timo)
+    * fixed a pop3-fetch bug, which created a out-of-memory exception (Timo)
+    * "save as .."-dialog shows now attachment-filenames, even when changing 
+      folders (Timo)
+    * reply to mailinglist works now as expected (Frederik)
+    * added Message-ID, In-Reply-To and References headers - we need these for 
+      message threading (Frederik)
+    * fixed some pop3-remote-control bugs (Frederik)
+
+
+
+Version 0.9.2
+
+    * fixed a translation bug, which prevented Columba from starting
+    * fixed a pop3 mail fetch bug
+
+
+
+Version 0.9.1:
+
+    * Tree Component:
+          * folder renaming now works as expected
+          * folders can be moved up and down
+          * folders can be rearranged with drag'n'drop (middle mouse button!)
+          * folders mailbox-file is loaded dynamically, instead of on program start
+          * imap Folder renaming, removing and rearranging up and down implemented
+    * Table Component:
+          * sort in order received added
+          * message filtering is also possible with Menu entry. You don't need to 
+            use the filter toolbar.
+          * message threading implemented. This is useful for mailing lists
+          * message are marked as read after 2sec delay. Timespan can be customizied.
+    * Message Viewer Component:
+          * Headers are now hyperlink aware. This is an easy way to add a sender 
+            to your addressbook or reply.
+          * new plugin system: At the moment you have the choice between our old 
+            raw text Viewer (fast), or you choose the Advanced Viewer which 
+	    shows Hyperlinks in the message text. You also have the choise to use 
+            a html viewer for html messages.
+    * POP3:
+          * message download size limit implemented
+          * added a remote server control window. You can easily see what 
+            message are on the server, 
+            and remove and fetch them individually.
+          * added the interval message checking feature
+          * better compatibility with older servers which do not support APOP
+    * IMAP:
+          * added folder adding, removing and renaming
+          * messages can be copied, moved, deleted and marked
+          * added subscribe folder dialog
+    * Filters:
+          * added much more filter options like body, date, size, etc.
+          * filters now run non-blocking
+          * much improved filter dialog
+    * We added PGP support this time (VERY unstable). You need the commandline 
+      GnuPG for this to work:
+          * encryption/decryption works
+          * signing/verifying doesn't work yet
+
