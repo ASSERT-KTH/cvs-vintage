@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/util/Attic/Constants.java,v 1.2 2000/01/08 21:31:41 rubys Exp $
- * $Revision: 1.2 $
- * $Date: 2000/01/08 21:31:41 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/util/Attic/Constants.java,v 1.3 2000/01/09 03:21:16 craigmcc Exp $
+ * $Revision: 1.3 $
+ * $Date: 2000/01/09 03:21:16 $
  *
  * ====================================================================
  *
@@ -91,6 +91,11 @@ public class Constants {
 
     public static class MIME {
         public static final String WAR = "war";
+    }
+
+    public static class SESSION {
+	public static final String COOKIE_NAME = "JSESSIONID";
+	public static final String PARAMETER_NAME = "jsessionid";
     }
 
     public static class CharacterEncoding {
