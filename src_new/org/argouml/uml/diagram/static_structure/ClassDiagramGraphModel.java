@@ -24,7 +24,7 @@
 // File: ClassDiagramGraphModel.java
 // Classes: ClassDiagramGraphModel
 // Original Author: jrobbins@ics.uci.edu
-// $Id: ClassDiagramGraphModel.java,v 1.4 2002/03/02 07:46:38 mkl Exp $
+// $Id: ClassDiagramGraphModel.java,v 1.5 2002/03/13 04:32:36 mkl Exp $
 
 package org.argouml.uml.diagram.static_structure;
 
@@ -376,6 +376,13 @@ implements MutableGraphModel, VetoableChangeListener, MElementListener {
               addEdge(asc);
               return asc;
           }
+          else if (edgeClass == MDependencyImpl.class) {
+                  // nsuml: using Binding as default
+                  MDependency dep = 
+                      MMUtil.SINGLETON.buildDependency(fromCls, toIntf);
+                  addEdge(dep);
+                  return dep;
+              }
           else {
               System.out.println("Cannot make a "+ edgeClass.getName() +
                                  " between a " + fromPort.getClass().getName() +
@@ -397,6 +404,13 @@ implements MutableGraphModel, VetoableChangeListener, MElementListener {
                                                         toCls, false);
                   addEdge(asc);
                   return asc;
+              }
+              else if (edgeClass == MDependencyImpl.class) {
+                  // nsuml: using Binding as default
+                  MDependency dep = 
+                      MMUtil.SINGLETON.buildDependency(fromIntf, toCls);
+                  addEdge(dep);
+                  return dep;
               }
 
               // 	else if (edgeClass == MAbstractionImpl.class) {
