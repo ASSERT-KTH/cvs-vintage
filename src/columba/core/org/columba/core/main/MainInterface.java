@@ -32,32 +32,35 @@ import org.columba.core.plugin.PluginManager;
  * @author fdietz
  */
 public class MainInterface {
-    // current version
+    /** Current version */
     public static final String version = "1.0 Milestone M1";
 
-    // if true, enables debugging output from org.columba.core.logging 
+    /** If true, enables debugging output from org.columba.core.logging */
     public static boolean DEBUG = false;
 
-    // configuration file management
+    /** Configuration file management */
     public static Config config;
 
-    // addressbook treemodel
+    /** Addressbook treemodel */
     // TODO: move this to the addressbook component
     public static AddressbookTreeModel addressbookTreeModel;
 
-    // scheduler
+    /** Scheduler */
     public static DefaultProcessor processor;
     public static PluginManager pluginManager;
 
-    // tasks which are executed by a timer in the background
-    // if the program is currently in idle mode
+    /**
+     * Tasks which are executed by a timer in the background
+     * if the program is currently in idle mode
+     */
     public static BackgroundTaskManager backgroundTaskManager;
 
-    // every component using cut/copy/paste/etc. uses this manager
+    /** Every component using cut/copy/paste/etc. uses this manager */
     public static ClipboardManager clipboardManager;
 
-    // focus manager needed for cut/copy/paste/etc.
+    /** Focus manager needed for cut/copy/paste/etc. */
     public static FocusManager focusManager;
 
+    /** No need to create instances of this class. */
     private MainInterface() {}
 }
