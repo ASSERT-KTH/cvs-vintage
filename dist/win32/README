@@ -3,8 +3,6 @@ Inno Setup Installer Script
 
 Install Inno Setup from:	http://www.jrsoftware.org/isinfo.php
 
-Open the context-menu with Windows Explorer and select "compile".
+Call 'ant winsetup' and 'ant winsetup-bundlejre'
 
-This will automatically create "/ColumbaSetup.exe".
-
-Edit the columba_setup.iss to adjust the Version info and to bundle a JRE
+to automatically create a ColumbaSetup.

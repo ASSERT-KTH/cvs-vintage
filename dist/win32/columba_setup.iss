@@ -1,12 +1,16 @@
 ;Columba Setup file
 ;InnoSetup Version > 4.2.7
 
-#define VERSION="1.0 RC1"
-
-;Uncomment this line to bundle a JRE
+;This is normally defined by the ant winsetup task
+;Uncomment if you want to compile the task from
+;ISTools
+;#define VERSION="1.0 RC1"
 ;#define BUNDLE_JRE
-#define DOWNLOADED_JRE_PATH="C:\Documents and Settings\user\My Documents\My Downloads\"
-#define JRE_FILE="j2re-1_4_2_05-windows-i586-p.exe"
+;#define JRE_FILE="j2re-1_4_2_05-windows-i586-p.exe"
+
+;The JRE which gets bundled is expected to be in
+;the extras directory
+#define JRE_SRC_PATH="extras\"
 
 [Setup]
 AppName=Columba
@@ -19,11 +23,15 @@ DefaultGroupName=Columba
 LicenseFile=LICENSE
 AlwaysShowComponentsList=false
 InfoAfterFile=CHANGES
+#ifdef BUNDLE_JRE
+OutputBaseFilename=ColumbaSetupwithJRE
+#else
 OutputBaseFilename=ColumbaSetup
+#endif
 Compression=bzip
 ; we are in dest/win32/
 SourceDir=..\..\
-OutputDir=.
+OutputDir=release\
 
 [Tasks]
 Name: desktopicon; Description: Create a &desktop icon; GroupDescription: Additional icons:; MinVersion: 4,4
@@ -37,25 +45,25 @@ Source: columba.jar; DestDir: {app}
 Source: LICENSE; DestDir: {app}
 Source: README; DestDir: {app}
 Source: run.bat; DestDir: {app}
-Source: lib\ristretto-1.0_RC2.jar; DestDir: {app}\lib\
-Source: lib\jhall.jar; DestDir: {app}\lib\
-Source: lib\usermanual.jar; DestDir: {app}\lib\
-Source: lib\forms-1.0.4.jar; DestDir: {app}\lib\
-Source: lib\macchiato-1.0pre1.jar; DestDir: {app}\lib\
-Source: lib\winpack.jar; DestDir: {app}\lib\
-Source: lib\jniwrap-2.4.jar; DestDir: {app}\lib\
-Source: lib\frappucino-1.0pre1.jar; DestDir: {app}\lib\
-Source: lib\jscf-0.2.jar; DestDir: {app}\lib\
-Source: lib\jargs.jar; DestDir: {app}\lib\
-Source: lib\lucene-1.3-final.jar; DestDir: {app}\lib\
-Source: lib\jwizz-0.1.2.jar; DestDir: {app}\lib\
-Source: lib\plastic-1.2.0.jar; DestDir: {app}\lib\
-Source: lib\je.jar; DestDir: {app}\lib\
-Source: lib\jdom.jar; DestDir: {app}\lib\
-Source: lib\jpim.jar; DestDir: {app}\lib\
+Source: {#RISTRETTO}; DestDir: {app}\lib\
+Source: {#JHALL}; DestDir: {app}\lib\
+Source: {#USERMANUAL}; DestDir: {app}\lib\
+Source: {#FORMS}; DestDir: {app}\lib\
+Source: {#MACCHIATO}; DestDir: {app}\lib\
+Source: {#WINPACK}; DestDir: {app}\lib\
+Source: {#JNIWRAP}; DestDir: {app}\lib\
+Source: {#FRAPPUCINO}; DestDir: {app}\lib\
+Source: {#JSCF}; DestDir: {app}\lib\
+Source: {#JARGS}; DestDir: {app}\lib\
+Source: {#LUCENE}; DestDir: {app}\lib\
+Source: {#JWIZZ}; DestDir: {app}\lib\
+Source: {#PLASTIC}; DestDir: {app}\lib\
+Source: {#JE}; DestDir: {app}\lib\
+Source: {#JDOM}; DestDir: {app}\lib\
+Source: {#JPIM}; DestDir: {app}\lib\
 Source: native\win32\JNI-wrapper\jniwrap.dll; DestDir: {app}\native\win32\JNI-wrapper\
 #ifdef BUNDLE_JRE
-Source: {#DOWNLOADED_JRE_PATH}{#JRE_FILE}; DestDir: {tmp}; Flags: deleteafterinstall dontcopy
+Source: {#JRE_SRC_PATH}{#JRE_FILE}; DestDir: {tmp}; Flags: deleteafterinstall dontcopy
 #endif
 
 [Icons]

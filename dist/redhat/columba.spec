@@ -16,6 +16,7 @@ Columba is an Email Client written in Java, featuring a user-friendly graphical 
 Its a powerful email management tool with features to enhance your productivity and communication. So, take control of your email before it takes control of you!
 
 %prep
+rm -rf $RPM_BUILD_ROOT
 %setup
 
 %build
@@ -29,6 +30,10 @@ rm -rf $RPM_BUILD_ROOT/etc
 mkdir -p $RPM_BUILD_ROOT/etc
 cp -R * $RPM_BUILD_ROOT/opt/columba-%{version}
 ln -sf /opt/columba-%{version}/run.sh $RPM_BUILD_ROOT/usr/bin/columba
+
+
+%clean
+rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(-,root,root)
