@@ -41,6 +41,7 @@
         <field name="RequiredOptionId" key="requiredoptionid" type="int">
             <rule name="mask" value="[0-9]+">intake_BadIdMessage</rule>
         </field>                 
+		<field name="AttributeRequirements" key="attributerequirements" type="int" multiValued="true"/>
 </group>
 
 <group name="AttributeOption" key="atto" mapToObject="om.AttributeOption">
@@ -165,7 +166,8 @@
         </field>
         <field name="RequiredOptionId" key="requiredoptionid" type="int">
             <rule name="mask" value="[0-9]+">intake_BadIdMessage</rule>
-        </field>                 
+        </field>
+        <field name="AttributeRequirements" key="attributerequirements" type="int" multiValued="true"/>
 </group>
 
 <group name="RIssueTypeAttribute" key="ria" mapToObject="om.RIssueTypeAttribute">

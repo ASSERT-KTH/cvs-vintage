@@ -128,7 +128,7 @@
 <tr>
   <th>$l10n.RequiredIf:</th>
   <td>
-<select name="$attgroup.RequiredOptionId.Key">
+<select multiple="true" size="5" name="$attgroup.AttributeRequirements.Key">
         <optgroup>
         <option value="0">$l10n.RequiredNone</option>
     #set ($attributeIdPrev = -1)
@@ -140,7 +140,7 @@
 	    #end
              <optgroup label="$opt.attribute.name">
 	  #end
-	  <option value="$opt.optionId" #if ($attribute.requiredOptionId == $opt.optionId) selected #end>$opt.name</option>
+	  <option value="$opt.optionId" #if ($attribute.isRequiredIf($opt.optionId)) selected #end>$opt.name</option>
 	  #set ($attributeIdPrev = $attributeId)
 	#end
 </select>

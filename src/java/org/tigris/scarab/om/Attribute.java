@@ -78,7 +78,7 @@ import org.tigris.scarab.services.cache.ScarabCache;
   * and AttributeOption objects.
   *
   * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
-  * @version $Id: Attribute.java,v 1.80 2004/10/24 19:47:05 jorgeuriarte Exp $
+  * @version $Id: Attribute.java,v 1.81 2004/11/27 01:11:12 jorgeuriarte Exp $
   */
 public class Attribute 
     extends BaseAttribute
@@ -689,6 +689,7 @@ public class Attribute
         newAttribute.setTypeId(getTypeId());
         newAttribute.setPermission(getPermission());
         newAttribute.setRequiredOptionId(getRequiredOptionId());
+        newAttribute.setAttributeRequirements(getAttributeRequirements());
         newAttribute.setAction(getAction());
         newAttribute.setCreatedBy(user.getUserId());
         newAttribute.setCreatedDate(new Date());
@@ -920,5 +921,72 @@ public class Attribute
             e.printStackTrace();
         }
         return option;
+    }
+    
+    /**
+     * Returns the array of attributeOptionIds that will force the requiment of this
+     * attribute if set. Used by templates to load the combo.
+     * @return
+     */
+    public Integer[] getAttributeRequirements()
+    {
+        List requirements = new ArrayList();
+        Integer[] aIDs = null;
+        try
+        {
+            requirements = this.getRAttributeRequirements();
+            aIDs = new Integer[requirements.size()];
+            int i=0;
+            for (Iterator iter = requirements.iterator(); iter.hasNext(); i++)
+            {
+                RAttributeRequirement req = (RAttributeRequirement)iter.next();
+                aIDs[i] = req.getOptionId();
+            }
+        }
+        catch (TorqueException e)
+        {
+            this.getLog().error("getAttributeRequirements: " + e);
+        }
+        return aIDs;
+    }
+    /**
+     * Load the attribute options' IDs from the template combo.
+     * @param aOptionId
+     * @throws Exception
+     */
+    public void setAttributeRequirements(Integer aOptionId[]) throws Exception
+    {
+        Criteria crit = new Criteria();
+        crit.add(RAttributeRequirementPeer.ATTRIBUTE_ID, this.getAttributeId());
+        crit.add(RAttributeRequirementPeer.MODULE_ID, new Integer(0));
+        crit.add(RAttributeRequirementPeer.ISSUE_TYPE_ID, new Integer(0));
+        RAttributeRequirementPeer.doDelete(crit);
+        this.save();
+        for (int i=0; i<aOptionId.length; i++)
+        {
+            RAttributeRequirement r = new RAttributeRequirement();
+            r.setAttributeId(this.getAttributeId());
+            r.setOptionId(aOptionId[i]);
+            r.setModuleId(new Integer(0));
+            r.setIssueTypeId(new Integer(0));
+            this.addRAttributeRequirement(r);
+            r.save();
+        }
+    }
+    /**
+     * Return true if the given attributeOptionId will make the current
+     * attribute required.
+     * @param optionID
+     * @return
+     * @throws TorqueException
+     */
+    public boolean isRequiredIf(Integer optionID) throws TorqueException
+    {
+        RAttributeRequirement requirement = new RAttributeRequirement();
+        requirement.setAttributeId(this.getAttributeId());
+        requirement.setOptionId(optionID);
+        requirement.setModuleId(new Integer(0));
+        requirement.setIssueTypeId(new Integer(0));
+        return this.getRAttributeRequirements().contains(requirement);
     }
 }

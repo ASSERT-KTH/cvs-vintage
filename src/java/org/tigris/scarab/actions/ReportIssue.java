@@ -73,6 +73,7 @@ import org.tigris.scarab.om.AttributeValue;
 import org.tigris.scarab.om.Issue;
 import org.tigris.scarab.om.IssueType;
 import org.tigris.scarab.om.Module;
+import org.tigris.scarab.om.RAttributeRequirement;
 import org.tigris.scarab.om.RModuleAttribute;
 import org.tigris.scarab.om.RModuleIssueType;
 import org.tigris.scarab.om.ScarabUser;
@@ -94,7 +95,7 @@ import org.tigris.scarab.util.word.QueryResult;
  * This class is responsible for report issue forms.
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: ReportIssue.java,v 1.187 2004/11/14 21:06:55 dep4b Exp $
+ * @version $Id: ReportIssue.java,v 1.188 2004/11/27 01:11:12 jorgeuriarte Exp $
  */
 public class ReportIssue extends RequireLoginFirstAction
 {
@@ -349,16 +350,22 @@ public class ReportIssue extends RequireLoginFirstAction
                  * If the field has any conditional constraint, will be added to the collection
                  * in the hash.
                  */ 
-                if (aval.getRModuleAttribute().getRequiredOptionId() != null)
+                //if (aval.getRModuleAttribute().getRequiredOptionId() != null)
+                List attributeRequirements = aval.getRModuleAttribute().getRAttributeRequirements(); 
+                if (attributeRequirements.size() > 0)
                 {
-                    Integer id = aval.getRModuleAttribute().getRequiredOptionId();
-                    List fields = (List)conditionallyRequiredFields.get(id);
-                    if (fields == null)
+                    for (Iterator it = attributeRequirements.iterator(); it.hasNext(); )
                     {
-                        fields = new ArrayList();
+                        RAttributeRequirement requirement = (RAttributeRequirement)it.next();
+                        Integer id = requirement.getOptionId();
+                        List fields = (List)conditionallyRequiredFields.get(id);
+                        if (fields == null)
+                        {
+                            fields = new ArrayList();
+                        }
+                        fields.add(field);
+                        conditionallyRequiredFields.put(id, fields);
                     }
-                    fields.add(field);
-                    conditionallyRequiredFields.put(id, fields);
                 }                
                 
                 for (int j=requiredAttributes.size()-1; j>=0; j--) 

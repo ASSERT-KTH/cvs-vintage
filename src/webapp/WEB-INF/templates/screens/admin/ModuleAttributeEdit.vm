@@ -12,10 +12,7 @@
 
 #macro (ModuleAttributeEditBar $val)
 <div class="functnbar$val">
-#if ($attTypeName.equals("select-one") &&  (!$issueType.Locked && !$ria.Locked))
 <input type="submit" value="$l10n.Done"  name="eventSubmit_doDone" />
-#end
-<input type="submit" value="$l10n.Cancel"  name="eventSubmit_doCancel" />
 </div>
 #end
 
@@ -71,19 +68,19 @@ $link.setPage("admin,ManageArtifactTypes.vm").setLabel("$l10n.Here").</em></p>
   <th>$l10n.RequiredIf: </th>
   <td>
 #set ($attGroup = $intake.RModuleAttribute.mapTo($rma))
-<select name="$attGroup.RequiredOptionId.Key">
+<select multiple="true" size="5" name="$attGroup.AttributeRequirements.Key">
         <optgroup>
         <option value="0">$l10n.RequiredNone</option>
     #set ($attributeIdPrev = -1)
 	#foreach ($opt in $scarabR.sortedAttributeOptions)
 	  #set ($attributeId = $opt.attributeId)
 	  #if ($attributeId != $attributeIdPrev)
-	    #if ($!attributeId != -1)
+	    #if ($!attributeIdPrev != -1)
 	      </optgroup>
 	    #end
-		<optgroup label="$opt.attribute.name">
+             <optgroup label="$opt.attribute.name">
 	  #end
-	  <option value="$opt.optionId" #if ($rma.requiredOptionId == $opt.optionId) selected #end>$opt.name</option>
+	  <option value="$opt.optionId" #if ($rma.isRequiredIf($opt.optionId)) selected #end>$opt.name</option>
 	  #set ($attributeIdPrev = $attributeId)
 	#end
 </select>
@@ -93,6 +90,9 @@ $link.setPage("admin,ManageArtifactTypes.vm").setLabel("$l10n.Here").</em></p>
   #end
 </tr>
 </table>
+</div>
+<div class="functnbar3">
+   <input type="submit" value="$l10n.Save"  name="eventSubmit_doSave" />
 </div>
 
 #set ($rmos = $scarabR.CurrentModule.getRModuleOptions($attribute, $issueType, false))

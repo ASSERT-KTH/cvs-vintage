@@ -73,7 +73,7 @@ import org.tigris.scarab.util.ScarabConstants;
  * Default.java Screen except that it has a few helper methods.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: RequireLoginFirstAction.java,v 1.58 2004/11/14 21:07:01 dep4b Exp $    
+ * @version $Id: RequireLoginFirstAction.java,v 1.59 2004/11/27 01:11:12 jorgeuriarte Exp $    
  */
 public abstract class RequireLoginFirstAction extends TemplateSecureAction
 {
@@ -366,7 +366,7 @@ public abstract class RequireLoginFirstAction extends TemplateSecureAction
         throws Exception
     {
         boolean dupeSequenceFound = false;
-        int listSize = list.size();
+        int listSize = (list==null)?0:list.size();
         Field order1 = null;
         Field order2 = null;
         for (int i = 0; i < listSize && !dupeSequenceFound; i++)
