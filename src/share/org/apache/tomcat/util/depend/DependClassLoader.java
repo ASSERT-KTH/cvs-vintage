@@ -87,7 +87,7 @@ public class DependClassLoader extends ClassLoader {
     protected ClassLoader parent;
     protected ClassLoader parent2;
     
-    final static int debug=10;
+    final static int debug=0;
     DependManager dependM;
     protected Object pd;
     static Jdk11Compat jdkCompat=Jdk11Compat.getJdkCompat();
