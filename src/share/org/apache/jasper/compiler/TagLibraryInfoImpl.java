@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/TagLibraryInfoImpl.java,v 1.22 2000/06/27 20:59:40 costin Exp $
- * $Revision: 1.22 $
- * $Date: 2000/06/27 20:59:40 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/TagLibraryInfoImpl.java,v 1.23 2000/07/28 21:41:44 jiricka Exp $
+ * $Revision: 1.23 $
+ * $Date: 2000/07/28 21:41:44 $
  *
  * The Apache Software License, Version 1.1
  *
@@ -160,67 +160,68 @@ public class TagLibraryInfoImpl extends TagLibraryInfo {
         boolean relativeURL = false;
 	this.uri = uriIn;
 
-	if (!uriIn.endsWith("jar")) {
-	    // Parse web.xml.
-	    InputStream is = getResourceAsStream(WEBAPP_INF);
-	    
-	    if (is != null) {
-                Document webtld =
-		    JspUtil.parseXMLDoc(is,
-					Constants.WEBAPP_DTD_RESOURCE,
-					Constants.WEBAPP_DTD_PUBLIC_ID);
-                NodeList nList =  webtld.getElementsByTagName("taglib");
-	    
-                if (nList.getLength() != 0) {
-		    for(int i = 0; i < nList.getLength(); i++) {
-			String tagLoc = null;
-			boolean match = false;
-			Element e =  (Element) nList.item(i);
-			
-			// Assume only one entry for location and uri.
-			NodeList uriList = e.getElementsByTagName("taglib-uri");
-			Element uriElem = (Element) uriList.item(0);
-			Text t = (Text) uriElem.getFirstChild();
-			
-			if (t != null) {
-			    String tmpUri = t.getData();
-			    if (tmpUri != null) {
-				tmpUri = tmpUri.trim();
-				if (tmpUri.equals(uriIn)) {
-				    match = true;
-				    NodeList locList = e.getElementsByTagName
-					("taglib-location");
-				    Element locElem = (Element) locList.item(0);
-				    Text tl = (Text) locElem.getFirstChild();
-				    if (tl != null) {
-					tagLoc = tl.getData();
-					if (tagLoc != null)
-					    tagLoc = tagLoc.trim();
-				    }
-				}
-			    }
-			}
-			if (match == true && tagLoc != null) {
-			    this.uri = tagLoc;
-			    
-			    // If this is a relative path, then it has to be
-			    // relative to where web.xml is.
-			    
-			    // I'm taking the simple way out. Since web.xml 
-			    // has to be directly under WEB-INF, I'm making 
-			    // an absolute URI out of it by prepending WEB-INF
-			    
-			    if (!uri.startsWith("/"))
-				uri = "/WEB-INF/"+uri;
-			}
-		    }
-		}
-	    }
+        // Parse web.xml.
+        InputStream is = getResourceAsStream(WEBAPP_INF);
 
-	    // Try to resolve URI relative to the current JSP page
-            if (!uri.startsWith("/"))
-		uri = ctxt.resolveRelativeUri(uri);
+        if (is != null) {
+            Document webtld =
+                JspUtil.parseXMLDoc(is,
+                                    Constants.WEBAPP_DTD_RESOURCE,
+                                    Constants.WEBAPP_DTD_PUBLIC_ID);
+            NodeList nList =  webtld.getElementsByTagName("taglib");
 
+            if (nList.getLength() != 0) {
+                for(int i = 0; i < nList.getLength(); i++) {
+                    String tagLoc = null;
+                    boolean match = false;
+                    Element e =  (Element) nList.item(i);
+
+                    // Assume only one entry for location and uri.
+                    NodeList uriList = e.getElementsByTagName("taglib-uri");
+                    Element uriElem = (Element) uriList.item(0);
+                    Text t = (Text) uriElem.getFirstChild();
+
+                    if (t != null) {
+                        String tmpUri = t.getData();
+                        if (tmpUri != null) {
+                            tmpUri = tmpUri.trim();
+                            if (tmpUri.equals(uriIn)) {
+                                match = true;
+                                NodeList locList = e.getElementsByTagName
+                                    ("taglib-location");
+                                Element locElem = (Element) locList.item(0);
+                                Text tl = (Text) locElem.getFirstChild();
+                                if (tl != null) {
+                                    tagLoc = tl.getData();
+                                    if (tagLoc != null)
+                                        tagLoc = tagLoc.trim();
+                                }
+                            }
+                        }
+                    }
+                    if (match == true && tagLoc != null) {
+                        this.uri = tagLoc;
+
+                        // If this is a relative path, then it has to be
+                        // relative to where web.xml is.
+
+                        // I'm taking the simple way out. Since web.xml 
+                        // has to be directly under WEB-INF, I'm making 
+                        // an absolute URI out of it by prepending WEB-INF
+
+                        if (!uri.startsWith("/") && isRelativeURI(uri))
+                            uri = "/WEB-INF/"+uri;
+                    }
+                }
+            }
+        }
+
+        // Try to resolve URI relative to the current JSP page
+        if (!uri.startsWith("/") && isRelativeURI(uri))
+            uri = ctxt.resolveRelativeUri(uri);
+
+
+        if (!uri.endsWith("jar")) {
 	    in = getResourceAsStream(uri);
 	    
 	    if (in == null)
@@ -231,14 +232,14 @@ public class TagLibraryInfoImpl extends TagLibraryInfo {
 	}
 	    
 	// FIXME Take this stuff out when taglib changes are thoroughly tested.
-	if (uriIn.endsWith("jar")) {
+	if (uri.endsWith("jar")) {
 	    
-	    if (!uriIn.startsWith("/")) {
-		url = new URL(uriIn);
+	    if (!isRelativeURI(uri)) {
+		url = new URL(uri);
 		in = url.openStream();
 	    } else {
 		relativeURL = true;
-		in = getResourceAsStream(uriIn);
+		in = getResourceAsStream(uri);
 	    }
 	    
 	    zin = new ZipInputStream(in);
@@ -326,6 +327,12 @@ public class TagLibraryInfoImpl extends TagLibraryInfo {
 			}
 							      ));
 	} // Take this out (END of if(endsWith("jar")))
+    }
+    
+    /** Returns true if the given URI is relative in this web application, false if it is an internet URI.
+     */
+    private boolean isRelativeURI(String uri) {
+        return (uri.indexOf(':') == -1);
     }
     
         
