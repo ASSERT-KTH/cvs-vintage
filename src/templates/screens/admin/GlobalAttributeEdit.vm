@@ -14,7 +14,7 @@ On this screen, one can modify system wide Attribute information.
 </p>
 
 <p>
-Back to <a href="$link.setPage("admin,GlobalAttributeShow.vm")">Global Attribute Show</a>
+Back to <a href="$link.setPage("admin,GlobalAttributeShow.vm")">Attribute Select</a>
 </p>
 
 <form action="$link.setPage("admin,GlobalAttributeEdit.vm")" method="get">
@@ -70,11 +70,10 @@ Back to <a href="$link.setPage("admin,GlobalAttributeShow.vm")">Global Attribute
 </table>
 </div>
 
-<div class="functnbar">
+<div class="functnbar2">
 <table cellpadding="4" cellspacing="0" border="1">
     <tr>
         <td class="firstchild">
-        <div>General info</div>
         <input type="submit" name="eventSubmit_doModifyattributedata" value="Save" /> 
         </td>
     </tr>
@@ -116,7 +115,6 @@ $intake.declareGroups()
      #else
         <option value="0" />Root
      #end
-     <option$select value="0">Root</option>
      #foreach ($parentAttrOption in $attribute.ParentChildAttributeOptions)
        #if (! $parentAttrOption.Name.equals($pcao.Name) )
          #set ($pcaoGroupTemp = $intake.ParentChildAttributeOption.mapTo($parentAttrOption))
@@ -131,16 +129,17 @@ $intake.declareGroups()
      </td>
      <td><input type="text" size="25" name="$pcaoGroup.Name.Key" value="$pcaoGroup.Name" /></td>
      <td>
-        #numericSelect( $pcaoGroup.PreferredOrder.Key 1 $maxNum $pcaoGroup.PreferredOrder.Value 1 )
+        #numericSelect($pcaoGroup.PreferredOrder.Key 1 $maxNum $pcaoGroup.PreferredOrder.Value 1)
      </td>
      <td>
-        #numericSelect( $pcaoGroup.Weight.Key 1 $maxNum $pcaoGroup.Weight.Value 1 )
+        #numericSelect($pcaoGroup.Weight.Key 1 $maxNum $pcaoGroup.Weight.Value 1)
      </td>
     </tr>
 #end
 #set ($newPCAO = $scarabR.ParentChildAttributeOption)
 #set ($newPCAOGroup = $intake.ParentChildAttributeOption.mapTo($newPCAO))
-    #indexedRows($maxNum + 1)
+    #set ($number = $maxNum + 1)
+    #indexedRows($number)
      <td>New</td>
      <td>
      <select name="$newPCAOGroup.ParentId.Key">
@@ -153,24 +152,25 @@ $intake.declareGroups()
      </td>
      <td><input type="text" size="25" name="$newPCAOGroup.NewName.Key" value="$newPCAOGroup.NewName" /></td>
      <td>
-#set ( $maxNum = $maxNum + 1 )
+#set ($maxNum = $maxNum + 1)
 #if ($newPCAOGroup.PreferredOrder.Value != 0)
-    #set ( $selected = $newPCAOGroup.PreferredOrder.Value )
+    #set ($selected = $newPCAOGroup.PreferredOrder.Value)
 #else
-    #set ( $selected = $maxNum )
+    #set ($selected = $maxNum)
 #end
-#numericSelect( $newPCAOGroup.PreferredOrder.Key 1 $maxNum $selected 1 )
+#numericSelect($newPCAOGroup.PreferredOrder.Key 1 $maxNum $selected 1)
      </td>
      <td>
 #if ($newPCAOGroup.Weight.Value != 0)
-    #set ( $selected = $newPCAOGroup.Weight.Value )
+    #set ($selected = $newPCAOGroup.Weight.Value)
 #else
-    #set ( $selected = $maxNum )
+    #set ($selected = $maxNum)
 #end
-#numericSelect( $newPCAOGroup.Weight.Key 1 $maxNum $selected 1 )
+#numericSelect($newPCAOGroup.Weight.Key 1 $maxNum $selected 1)
      </td>
 </tr>
 </table>
+
 <p><strong>Please note: Once created, Attribute Options cannot be deleted
 from the database. They can only be marked as deleted and will always
 show up in the list above (but will not show up in the application
@@ -181,7 +181,6 @@ Options because you can quickly end up with a mess.</strong></p>
 <table cellpadding="4" cellspacing="0" border="1">
   <tr>
     <td class="firstchild">
-    <div>Attribute Options</div>
     <input type="submit" name="eventSubmit_doAddormodifyattributeoptions" value="Save" /> 
     </td>
   </tr>
