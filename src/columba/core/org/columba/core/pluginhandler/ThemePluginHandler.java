@@ -47,6 +47,7 @@ public class ThemePluginHandler extends AbstractPluginHandler {
         // which aren't supported by this system
         UIManager.LookAndFeelInfo[] list = UIManager.getInstalledLookAndFeels();
 
+        /*
         for (int i = 0; i < parentNode.count(); i++) {
             XmlElement child = parentNode.getElement(i);
             String name = child.getAttribute("name");
@@ -71,6 +72,7 @@ public class ThemePluginHandler extends AbstractPluginHandler {
                 }
             }
         }
+        */
     }
 
     /**
