@@ -35,7 +35,7 @@ import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCCMPFieldMetaData;
  *      One for each entity bean cmp field.       
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.9 $
+ * @version $Revision: 1.10 $
  */                            
 public class JDBCCMP1xFieldBridge extends JDBCAbstractCMPFieldBridge {
    private Field field;
@@ -57,28 +57,45 @@ public class JDBCCMP1xFieldBridge extends JDBCAbstractCMPFieldBridge {
    }
 
    public Object getInstanceValue(EntityEnterpriseContext ctx) {
+      FieldState fieldState = getFieldState(ctx);
+      if(!fieldState.isLoaded) {
+         throw new EJBException("CMP 1.1 field not loaded: " + getFieldName());
+      }
+
       try {
          return field.get(ctx.getInstance());
       } catch(Exception e) {
          // Non recoverable internal exception
          throw new EJBException("Internal error getting instance field " +
-               getFieldName() + ": " + e);
+               getFieldName(), e);
       }
    }
    
    public void setInstanceValue(EntityEnterpriseContext ctx, Object value) {
+      if(isPrimaryKeyMember() && manager.getEntityBridge().isCreated(ctx)) {
+//         throw new IllegalStateException("A field that is a member " +
+//               "of the primary key can only be set in ejbCreate");
+      }
+      
       try {
          field.set(ctx.getInstance(), value);
+
+         FieldState fieldState = getFieldState(ctx);
+         fieldState.isLoaded = true;
       } catch(Exception e) {
          // Non recoverable internal exception
          throw new EJBException("Internal error setting instance field " + 
-               getFieldName() + ": " + e);
+               getFieldName(), e);
       }
    }
+
+   public boolean isLoaded(EntityEnterpriseContext ctx) {
+      return getFieldState(ctx).isLoaded;
+   }
    
-  /**
-   * Has the value of this field changes since the last time clean was called.
-   */
+   /**
+    * Has the value of this field changes since the last time clean was called.
+    */
    public boolean isDirty(EntityEnterpriseContext ctx) {
       // read only and primary key fields are never dirty
       if(isReadOnly() || isPrimaryKeyMember()) {
@@ -90,10 +107,10 @@ public class JDBCCMP1xFieldBridge extends JDBCAbstractCMPFieldBridge {
    }
    
    /**
-   * Mark this field as clean.
-   * Saves the current state in context, so it can be compared when 
-   * isDirty is called.
-   */
+    * Mark this field as clean.
+    * Saves the current state in context, so it can be compared when 
+    * isDirty is called.
+    */
    public void setClean(EntityEnterpriseContext ctx) {
       FieldState fieldState = getFieldState(ctx);
       fieldState.originalValue = getInstanceValue(ctx);
@@ -133,6 +150,7 @@ public class JDBCCMP1xFieldBridge extends JDBCAbstractCMPFieldBridge {
    }
 
    private static class FieldState {
+      boolean isLoaded = false;
       Object originalValue;
       long lastRead = -1;
    }      
