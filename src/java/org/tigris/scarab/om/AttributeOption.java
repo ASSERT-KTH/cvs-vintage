@@ -10,8 +10,8 @@ import org.apache.turbine.util.ObjectUtils;
 import org.apache.turbine.util.StringUtils;
 import org.apache.turbine.util.ParameterParser;
 import org.apache.turbine.util.Log;
-// import org.apache.turbine.util.db.pool.DBConnection;
 
+import org.tigris.scarab.services.module.ModuleEntity;
 import org.tigris.scarab.util.ScarabException;
 
 /** 
@@ -321,7 +321,7 @@ public class AttributeOption
         }
     }
 
-    public List descendantsInModule(Module module)
+    public List descendantsInModule(ModuleEntity module)
         throws Exception
     {
         List moduleOptions = 

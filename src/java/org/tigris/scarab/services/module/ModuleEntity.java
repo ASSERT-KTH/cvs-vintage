@@ -47,6 +47,7 @@ package org.tigris.scarab.services.module;
  */ 
 
 import java.util.List;
+import java.util.Vector;
 
 import org.tigris.scarab.om.Attribute;
 import org.tigris.scarab.om.Issue;
@@ -63,7 +64,7 @@ import org.apache.turbine.services.db.util.Criteria;
  * This class describes a Module
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ModuleEntity.java,v 1.6 2001/07/05 00:04:38 jon Exp $
+ * @version $Id: ModuleEntity.java,v 1.7 2001/07/05 00:49:04 jon Exp $
  */
 public interface ModuleEntity
 {
@@ -99,7 +100,12 @@ public interface ModuleEntity
     public void setModuleRelatedByParentId(ModuleEntity module) 
         throws Exception;
 
+    public ModuleEntity getModuleRelatedByParentIdCast() throws Exception;
+
     public List getRModuleAttributes(boolean activeOnly)
+        throws Exception;
+
+    public Vector getRModuleAttributes(Criteria criteria)
         throws Exception;
 
     public List 

@@ -75,6 +75,11 @@ public abstract class Module
         super.setModuleRelatedByParentId((Module)v);
     }
 
+    public ModuleEntity getModuleRelatedByParentIdCast() throws Exception
+    {
+        return (ModuleEntity) super.getModuleRelatedByParentId();
+    }
+
     /**
      * Creates a new Issue.
      *
@@ -247,13 +252,13 @@ public abstract class Module
         crit.addAscendingOrderByColumn(RModuleAttributePeer.DISPLAY_VALUE);
 
         List rModAtts = null;
-        Module module = this;
-        Module prevModule = null;
+        ModuleEntity module = this;
+        ModuleEntity prevModule = null;
         do
         {
             rModAtts = module.getRModuleAttributes(crit);
             prevModule = module;
-            module = prevModule.getModuleRelatedByParentId();
+            module = (ModuleEntity) prevModule.getModuleRelatedByParentIdCast();
         }
         while ( rModAtts.size() == 0 && 
                !ROOT_ID.equals(prevModule.getModuleId()));
