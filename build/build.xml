@@ -513,7 +513,8 @@
     <!-- ================================================================== -->
     <!-- Copy all of the xml schema files into the torque directory         -->
     <!-- ================================================================== -->
-    <target name="torque-copy-all-schema" depends="torque-init">
+    <target name="torque-copy-all-schema" depends="torque-init" 
+            unless="schema.uptodate">
         <!-- copy the schema's to the torque directory -->
         <copy file="${src.sql.dir}/${project}-schema.xml" 
               todir="${torque.dir.scarab}/schema"
@@ -530,7 +531,7 @@
     </target>
 
     <!-- ================================================================== -->
-    <!-- Generate SQL from Torque                                           -->
+    <!-- Check to see if SQL related stuff is up to date                    -->
     <!-- ================================================================== -->
     <target name="schema-check">
         <echo message="checking: ${build.sql.scarab}/${project}.sql"/>
@@ -546,6 +547,9 @@
         </uptodate>
     </target>
 
+    <!-- ================================================================== -->
+    <!-- Generate SQL from Torque                                           -->
+    <!-- ================================================================== -->
     <target name="sql" depends="prepare-build-dir,schema-check,torque-init,torque-copy-all-schema" 
             unless="schema.uptodate">
 
