@@ -62,7 +62,7 @@ import org.tigris.scarab.services.module.ModuleEntity;
  *
  * @author <a href="mailto:jon@latchkey.com">Jon S. Stevens</a>
  * @author <a href="mailto:dlr@finemaltcoding.com">Daniel Rall</a>
- * @version $Id: BaseTestCase.java,v 1.4 2001/09/29 16:26:02 mumbly Exp $
+ * @version $Id: BaseTestCase.java,v 1.5 2001/10/05 19:01:04 jon Exp $
  */
 public class BaseTestCase extends TestCase
 {
@@ -171,5 +171,13 @@ public class BaseTestCase extends TestCase
                 fail(errMsg);
             }
         }
+    }
+
+    /**
+     * Just prints to System.out
+     */
+    public void log(String message)
+    {
+        System.out.println(message);
     }
 }

@@ -2,7 +2,7 @@
 <!DOCTYPE app-data SYSTEM
           "http://jakarta.apache.org/turbine/dtd/database.dtd">
 
-<!-- $Id: scarab-schema.xml,v 1.52 2001/10/05 16:40:40 jmcnally Exp $ -->
+<!-- $Id: scarab-schema.xml,v 1.53 2001/10/05 19:01:04 jon Exp $ -->
 
 <app-data>
 <database>
@@ -575,13 +575,13 @@
     -->
     <column name="PARENT_ID" required="true" type="INTEGER"></column>
     <!--
-        Person that is responsible for the module.
+        Person that is responsible for the module. @deprecated
     -->
-    <column name="OWNER_ID" required="true" type="INTEGER"></column>
+    <column name="OWNER_ID" required="false" type="INTEGER"></column>
     <!--
-        Key quality assurance person for the module.
+        Key quality assurance person for the module. @deprecated
     -->
-    <column name="QA_CONTACT_ID" required="true" type="INTEGER"></column>
+    <column name="QA_CONTACT_ID" required="false" type="INTEGER"></column>
     <!--
         Flag, which marks that module has been deleted.
     -->

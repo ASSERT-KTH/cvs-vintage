@@ -87,7 +87,7 @@ import org.tigris.scarab.security.SecurityFactory;
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: ScarabModule.java,v 1.30 2001/10/04 23:21:14 jon Exp $
+ * @version $Id: ScarabModule.java,v 1.31 2001/10/05 19:01:04 jon Exp $
  */
 public class ScarabModule
     extends BaseScarabModule
@@ -809,6 +809,16 @@ try{
         {
             if ( isNew() )
             {
+                Criteria crit = new Criteria();
+                crit.add(ScarabModulePeer.MODULE_NAME, getRealName());
+                crit.add(ScarabModulePeer.PARENT_ID, getParentId());
+                List result = (List) ScarabModulePeer.doSelect(crit);
+                if (result.size() > 0)
+                {
+                    throw new Exception("Sorry, a module with that name " + 
+                        "and parent already exist.");
+                }
+
                 String code = getCode();
                 if ( code == null || code.length() == 0 )
                 {
@@ -818,19 +828,30 @@ try{
                             "A top level module addition was"
                             + " attempted without assigning a Code");
                     }
-                    
+
                     setCode(getModuleRelatedByParentIdCast().getCode());
-                    
-                    // insert a row into the id_table.
-                    Criteria criteria = new Criteria(
-                        ScarabModulePeer.getTableMap()
-                        .getDatabaseMap().getName(), 5)
-                        .add(IDBroker.TABLE_NAME, getCode())
-                        .add(IDBroker.NEXT_ID, 1)
-                        .add(IDBroker.QUANTITY, 1);
-                    BasePeer.doInsert(criteria);
+
+                    // try to insert a row into the id_table just to be safe.
+                    try
+                    {
+                        // FIXME: UGLY! IDBroker doesn't have a Peer yet.
+                        String sql = "insert into " + IDBroker.TABLE_NAME + 
+                                     " set " + 
+                                     IDBroker.TABLE_NAME + "='" + 
+                                                            getCode() + "'," +
+                                     IDBroker.NEXT_ID  + "=1," + 
+                                     IDBroker.QUANTITY  + "=1";
+                        BasePeer.executeStatement(sql);
+                    }
+                    catch (Exception e)
+                    {
+                    }
                 }
-                
+
+                // need to do this before the relationship save below
+                // in order to set the moduleid for the new module.
+                super.save();
+
                 // FIXME! should use fulcrum security's grant methods
                 // instead of directly accessing TurbineUserGroupRole.
                 // relate the Module to the user who created it.
@@ -839,14 +860,17 @@ try{
                 {
                     throw new ScarabException(
                      "Can't save a project without first assigning an owner.");
-                }         
+                }
                 relation.setUserId(getOwnerId());
                 // !FIXME! this needs to be set to the Module Owner Role
                 relation.setRoleId(new NumberKey("1"));
                 relation.setGroupId(getModuleId());
                 relation.save();
             }
-            super.save();
+            else
+            {
+                super.save();
+            }
         }
         catch (Exception e)
         {
