@@ -30,7 +30,6 @@
   </path>
 
   <property name="compiler.jeremie" value="org.objectweb.jeremie.tools.jrmic.JRMICompiler" />
-  <property name="jonathan.jvmarg"  value="-Xbootclasspath/p:${test.externals}/jonathan.jar:${test.externals}/kilim.jar:${test.externals}/kilim-tools.jar:${test.externals}/nanoxml-lite-2.2.1.jar:${test.build}/classes:${test.ext}/jonathan.xml"/>
 
   <target name="compile.all"> 
     <antcall target="compile.jeremie"/>
@@ -41,7 +40,6 @@
   <target name="compile.jeremie">
     <mkdir dir="${test.build.stub}/jeremie"/>
     <java classname="${compiler.jeremie}" fork="true" failonerror="true">
-      <jvmarg line="${jonathan.jvmarg}"/>
       <arg value="-opt"/>
       <arg value="-owext"/>
       <arg value="-d"/>

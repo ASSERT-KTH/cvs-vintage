@@ -51,7 +51,6 @@
   <!-- jonathan jar properties -->
   <property name="jeremie.jar"   value="${externals}/jeremie.jar"/> 
   <property name="compiler.jeremie" value="org.objectweb.jeremie.tools.jrmic.JRMICompiler" />
-  <property name="jonathan.jvmarg"  value="-Xbootclasspath/p:${test.externals}/jeremie.jar:${test.externals}/kilim.jar:${test.externals}/kilim-tools.jar:${test.externals}/nanoxml-lite-2.2.1.jar:${test.build}/classes:${test.ext}/jonathan.xml"/>
 
   <!-- externals classpath -->
   <path id="externals.classpath">
@@ -170,9 +169,7 @@
     <!-- for jeremie -->
       <echo message="Compiling stub for jeremie"/>
       <java classname="${compiler.jeremie}" fork="true" failonerror="true">
-      <jvmarg line="${jonathan.jvmarg}"/>
       <arg value="-opt"/>
-
       <arg value="-owext"/>
       <arg value="-d"/>
       <arg path="${build}/classes"/>
